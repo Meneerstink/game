@@ -277,6 +277,7 @@ object AncientCurses {
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it, playSound = false) }
         setTurmoil(player, true)
         player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
+        Prayers.markActivated(player, TURMOIL_KEY)
         syncTurmoilVarbits(player)
         if (playActivationVisual) {
             player.animate(TURMOIL_ACTIVATION_ANIMATION)
@@ -412,6 +413,23 @@ object AncientCurses {
      * Slot 0 uses the normal book's shared Protect Item state for drain/death integration, but
      * retains the Ancient-book level-50 and unlock requirements before entering that path.
      */
+    /**
+     * A curse-book click handled on its own tick (PvP run 2026-10-03, see Prayers.toggleNow): every curse and Turmoil. Protect Item
+     * shares the normal book's queued path (its requirement dialogue), so it returns false.
+     */
+    fun onBookButtonNow(
+        player: Player,
+        slot: Int,
+    ): Boolean {
+        when (slot) {
+            AncientCurse.PROTECT_ITEM_SLOT -> return false
+            AncientCurse.TURMOIL_SLOT -> toggleTurmoil(player)
+            else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it) }
+        }
+        player.setVarc(Prayers.QUICK_PRAYERS_ACTIVE_VARC, 0)
+        return true
+    }
+
     suspend fun onBookButton(
         task: QueueTask,
         slot: Int,
@@ -533,9 +551,13 @@ object AncientCurses {
      * [Prayer.drainEffect] uses. Summed into [Prayers.drainPrayer]'s counter, so curses drain on
      * exactly the same schedule and with exactly the same prayer-bonus resistance as prayers.
      */
+    /** The drain key of Turmoil (it is not an [AncientCurse] entry) for [Prayers.markActivated]. */
+    const val TURMOIL_KEY = "turmoil"
+
     fun activeCurseDrainEffect(player: Player): Int {
-        var rate = activeCurses(player).sumOf { it.drainEffect }
-        if (isTurmoilActive(player)) rate += AncientCurse.TURMOIL_DRAIN_EFFECT
+        // A curse switched on this tick does not drain this tick (OSRS Wiki "Prayer flicking"; Prayers.activatedThisTick).
+        var rate = activeCurses(player).filter { !Prayers.activatedThisTick(player, it) }.sumOf { it.drainEffect }
+        if (isTurmoilActive(player) && !Prayers.activatedThisTick(player, TURMOIL_KEY)) rate += AncientCurse.TURMOIL_DRAIN_EFFECT
         return rate
     }
 
@@ -599,6 +621,7 @@ object AncientCurses {
         }
         activeCurses(player).add(curse)
         player.setVarbit(curse.varbit, 1)
+        Prayers.markActivated(player, curse)
         if (playActivationVisual) {
             curse.activationAnimation?.let { player.animate(it) }
             curse.activationGraphic?.let { player.graphic(it) }

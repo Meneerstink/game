@@ -315,7 +315,9 @@ fun Pawn.dealHit(
     // and the victim's right to retaliate without one); it gave neither.
     val skullAttacker = this as? Player ?: (attr[DAMAGE_CREDIT_ATTR]?.get() as? Player)
     if (skullAttacker != null && target is Player) {
-        hit.addAction { PvpSkull.onHitRegistered(skullAttacker, target) }
+        // A retaliation or not is decided now, at the attack (PvpSkull.onHitRegistered).
+        val retaliation = PvpSkull.isRetaliation(skullAttacker, target)
+        hit.addAction { PvpSkull.onHitRegistered(skullAttacker, target, retaliation) }
     }
 
     // Special attacks give the normal combat experience for their damage (SpecialAttackXp, OSRS Wiki "Combat").

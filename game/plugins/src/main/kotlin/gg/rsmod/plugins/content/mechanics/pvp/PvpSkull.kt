@@ -106,6 +106,7 @@ object PvpSkull {
     fun onHitRegistered(
         attacker: Player,
         victim: Player,
+        retaliationAtAttack: Boolean? = null,
     ) {
         if (attacker === victim || !AreaState.canPlayersFight(attacker, victim)) {
             return
@@ -114,7 +115,11 @@ object PvpSkull {
         // makes ends it - a retaliation too, and the same victim again after their respawn. Only the trailing hits of the
         // attack that made the kill are exempt ([KillGrace.isTrailingHit]).
         if (!KillGrace.isTrailingHit(attacker, victim)) KillGrace.endEarly(attacker)
-        if (!isRetaliation(attacker, victim)) {
+        // PvP run 2026-10-03 (conform combat "pid"): whether this is a retaliation is decided when the attack is made
+        // ([retaliationAtAttack], captured by dealHit), not when the hitsplat registers. Two players attacking each other on the same
+        // tick both marked each other as aggressor at the swing, so at registration both hits counted as retaliations and nobody was
+        // skulled; OSRS Wiki "Player identification number": the player processed first is the one skulled.
+        if (!(retaliationAtAttack ?: isRetaliation(attacker, victim))) {
             applySkull(attacker)
         }
         markAggression(attacker, victim)

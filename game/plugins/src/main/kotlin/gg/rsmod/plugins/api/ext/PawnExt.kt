@@ -156,15 +156,23 @@ fun Pawn.freeze(
     }
 }
 
+/** The stun timer plus one tick: while it runs the pawn cannot be stunned again ([stun]). */
+val STUN_IMMUNITY_TIMER = gg.rsmod.game.model.timer.TimerKey(resetOnDeath = true)
+
+/** Not stunned and not in the one-tick immunity after a stun. */
+fun Pawn.canBeStunned(): Boolean = !timers.has(STUN_TIMER) && !timers.has(STUN_IMMUNITY_TIMER)
+
 fun Pawn.stun(
     cycles: Int,
     onStun: () -> Unit,
 ): Boolean {
-    if (timers.has(STUN_TIMER)) {
+    if (!canBeStunned()) {
         return false
     }
     stopMovement()
     timers[STUN_TIMER] = cycles
+    // OSRS Wiki "Dragon spear": "a one tick (0.6 seconds) period of immunity after a stun wears off" (PvP run 2026-10-03).
+    timers[STUN_IMMUNITY_TIMER] = cycles + 1
     onStun()
     return true
 }
@@ -178,7 +186,7 @@ fun Pawn.stun(cycles: Int) {
             playSound(Sfx.STUNNED, delay = 20)
             resetInteractions()
             interruptQueues()
-            filterableMessage("You have been stunned!")
+            message("You have been stunned!")
         }
     }
 }

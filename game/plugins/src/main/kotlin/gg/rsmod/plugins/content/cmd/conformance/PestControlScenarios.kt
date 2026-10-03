@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.cmd.conformance
 
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.message.impl.OpLoc1Message
 import gg.rsmod.game.message.impl.OpLoc3Message
 import gg.rsmod.game.model.Tile
@@ -173,7 +174,7 @@ object PestControlScenarios {
             PestControlHandler.lobbyOf(a) == PestControlTier.NOVICE && PestControlTier.NOVICE.lander.contains(a.tile) && a.interfaces.isVisible(PC_LANDER_INTERFACE),
             "lobby=${PestControlHandler.lobbyOf(a)} tile=${a.tile} 407=${a.interfaces.isVisible(PC_LANDER_INTERFACE)}",
         )
-        run.expectTrue(E, "the deck is a safe zone", GuardedZones.contains(a.tile), "tile=${a.tile}")
+        run.expectTrue(E, "the deck is a safe zone", GuardedZones.contains(a.zoneTile()), "tile=${a.tile}")
         ladder(a)
         repeat(6) { wait(1) }
         run.expectTrue(
@@ -194,7 +195,7 @@ object PestControlScenarios {
         }
         run.expectTrue(E, "all five in the instance, overlay 408", bots.all { PestControlHandler.gameOf(it) === game && it.interfaces.isVisible(PC_GAME_INTERFACE) }, "tiles=${bots.map { it.tile }}")
         run.expectTrue(E, "the instance is not the real island", game.base != gg.rsmod.plugins.content.activity.pest_control.PC_REGION_BASE, "base=${game.base}")
-        run.expectTrue(E, "inside the game is a safe zone (no PvP)", GuardedZones.contains(a.tile), "tile=${a.tile}")
+        run.expectTrue(E, "inside the game is a safe zone (no PvP)", GuardedZones.contains(a.zoneTile()), "tile=${a.tile}")
         // ROOT_CAUSES #142: the island is multi-combat (multi.yml region 10536); its instance copy must be too.
         run.expectTrue(
             E, "the island instance is multi-combat (multi.yml region 10536)",

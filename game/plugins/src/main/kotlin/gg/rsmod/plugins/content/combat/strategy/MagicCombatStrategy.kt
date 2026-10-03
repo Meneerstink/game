@@ -278,7 +278,10 @@ object MagicCombatStrategy : CombatStrategy {
                 target.graphic(Graphic(gfx.id, gfx.height, projectile.lifespan, impactGfxRotation))
             }
         } else {
-            hitDelay = if (spell.fixedHitDelay > -1) spell.fixedHitDelay else getHitDelay(pawn, target)
+            // PvP run 2026-10-03 (conform combat "hit delay"): the spells without a projectile (Blood/Shadow/Smoke bursts and barrages,
+            // Ice Blitz, Miasmic) had a fixed delay of 2 at every distance; OSRS Wiki "Hit delay": every spell, barrages included, uses
+            // 1 + floor((1 + Distance) / 3).
+            hitDelay = getHitDelay(pawn, target)
             spell.impactGfx?.let { gfx ->
                 target.graphic(Graphic(gfx.id, gfx.height, hitDelay * 30, impactGfxRotation))
             }

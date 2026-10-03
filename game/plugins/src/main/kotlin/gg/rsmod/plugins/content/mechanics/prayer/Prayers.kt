@@ -17,6 +17,27 @@ import gg.rsmod.plugins.api.ext.*
 object Prayers {
     private val PRAYER_DRAIN_COUNTER = AttributeKey<Int>()
 
+    /**
+     * PvP run 2026-10-03 (conform combat "prayer flicking"). OSRS Wiki "Prayer flicking": "The game does not drain prayer for prayers on
+     * the tick they are activated" - what makes 1-tick flicking free. Prayer, curse or Turmoil -> the cycle it was last switched on.
+     */
+    private val ACTIVATED_CYCLE = AttributeKey<MutableMap<Any, Int>>()
+
+    /** Records that [key] (a [Prayer], an [AncientCurse] or [AncientCurses.TURMOIL_KEY]) was switched on this cycle. */
+    fun markActivated(
+        p: Player,
+        key: Any,
+    ) {
+        val map = p.attr[ACTIVATED_CYCLE] ?: mutableMapOf<Any, Int>().also { p.attr[ACTIVATED_CYCLE] = it }
+        map[key] = p.world.currentCycle
+    }
+
+    /** True on the cycle [key] was switched on: it does not drain on that tick. */
+    fun activatedThisTick(
+        p: Player,
+        key: Any,
+    ): Boolean = p.attr[ACTIVATED_CYCLE]?.get(key) == p.world.currentCycle
+
     val PRAYER_DRAIN = TimerKey(removeOnZero = false)
     private val DISABLE_OVERHEADS = TimerKey()
 
@@ -272,6 +293,13 @@ object Prayers {
         while (p.lock.delaysPrayer()) {
             it.wait(1)
         }
+        flip(p, prayer)
+    }
+
+    private fun flip(
+        p: Player,
+        prayer: Prayer,
+    ) {
         p.syncVarp(ACTIVE_PRAYERS_VARP)
         val active = p.getVarbit(prayer.varbit) != 0
         if (active) {
@@ -280,6 +308,41 @@ object Prayers {
             activate(p, prayer)
         }
         p.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
+    }
+
+    /**
+     * A prayer-book click handled at once, on the click's own tick (PvP run 2026-10-03). It used to run in a STRONG queue: a second
+     * click in the same tick terminated the first before it ran, so 1-tick flicking (off + on in one tick) turned the prayer off, and
+     * every prayer click cancelled the player's other queued actions - OSRS prayer clicks interrupt nothing and every click of a tick
+     * applies (OSRS Wiki "Prayer flicking"). Returns false when the click needs the queued [toggle] (a requirement dialogue, or a
+     * lock that delays prayers).
+     */
+    fun toggleNow(
+        p: Player,
+        prayer: Prayer,
+    ): Boolean {
+        if (p.lock.delaysPrayer() || p.skills.getMaxLevel(Skills.PRAYER) < prayer.level || knightWavesRefusal(p, prayer) != null) {
+            return false
+        }
+        if (p.isDead() || !p.lock.canUsePrayer()) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            return true
+        }
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
+                p, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.PRAYER,
+            )
+        ) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            return true
+        }
+        if (prayer.group == PrayerGroup.OVERHEAD && p.timers.has(DISABLE_OVERHEADS)) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            p.message("You cannot use overhead prayers right now.")
+            return true
+        }
+        if (p.getVarp(PRAYER_POINTS_VARP) == 0) return true
+        flip(p, prayer)
+        return true
     }
 
     fun activate(
@@ -307,6 +370,7 @@ object Prayers {
                 prayer.varbit,
                 1,
             )
+            markActivated(p, prayer)
             if (prayer.sound != -1 && AncientCurses.getBook(p) != AncientCurses.PrayerBook.ANCIENT) {
                 p.playSound(prayer.sound, volume = PRAYER_SOUND_VOLUME)
             }
@@ -594,7 +658,8 @@ object Prayers {
      * that stacking a curse with Protect Item costs what stacking two prayers costs.
      */
     private fun calculateDrainRate(p: Player): Int {
-        var rate = Prayer.values.filter { isActive(p, it) }.sumOf { it.drainEffect }
+        // A prayer switched on this tick does not drain this tick (OSRS Wiki "Prayer flicking").
+        var rate = Prayer.values.filter { isActive(p, it) && !activatedThisTick(p, it) }.sumOf { it.drainEffect }
         rate += AncientCurses.activeCurseDrainEffect(p)
         return rate
     }

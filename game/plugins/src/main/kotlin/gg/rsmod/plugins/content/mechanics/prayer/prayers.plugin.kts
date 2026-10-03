@@ -60,8 +60,17 @@ on_button(interfaceId = 749, component = 1) {
  * Activate prayers.
  */
 on_button(interfaceId = 271, component = 8) {
+    val clickedSlot = player.getInteractingSlot()
+    // PvP run 2026-10-03: handled on the click's own tick, every click of a tick applies (1-tick flicking) and nothing else is
+    // interrupted; only a click that needs a dialogue or waits out a lock still goes through the queue (Prayers.toggleNow).
+    if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) {
+        if (AncientCurses.onBookButtonNow(player, clickedSlot)) return@on_button
+    } else {
+        val instant = Prayer.values().firstOrNull { it.slot == clickedSlot }
+        if (instant == null || Prayers.toggleNow(player, instant)) return@on_button
+    }
     player.queue(TaskPriority.STRONG) {
-        val buttonSlot = player.getInteractingSlot()
+        val buttonSlot = clickedSlot
         // Curse book: the same grid shows the 20 curse slots (enum 862 order) while varbit 6840 is set.
         if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) {
             AncientCurses.onBookButton(this, buttonSlot)

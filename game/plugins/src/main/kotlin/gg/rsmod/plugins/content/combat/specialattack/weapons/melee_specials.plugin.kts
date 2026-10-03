@@ -75,15 +75,18 @@ SpecialAttacks.register(
     player.animate(1064)
     // Graphic 253's sequence 2039 carries the Shove sound (cache: synth 5274, radius 20); the server cue doubled it.
     player.graphic(253, 96)
-    if (victim.getSize() > 1 || victim.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) {
+    if (victim.getSize() > 1 || !victim.canBeStunned()) {
         player.message("That creature is too large to knock back.")
         return@register
     }
     val dx = victim.tile.x - player.tile.x
     val dz = victim.tile.z - player.tile.z
     val dest = victim.tile.transform(Integer.signum(dx), Integer.signum(dz))
+    // OSRS Wiki "Dragon spear": "the brief stun causes all incoming damage to be stalled until it expires, after which all damage
+    // taken is applied at once" (PvP run 2026-10-03, conform combat "stun").
     if (world.collision.isBlocked(victim.tile, gg.rsmod.game.model.Direction.between(victim.tile, dest), false)) {
         victim.stun(5)
+        victim.timers[gg.rsmod.game.model.timer.DAMAGE_STALL_TIMER] = 5
         return@register
     }
     victim.stun(5) {
@@ -91,6 +94,7 @@ SpecialAttacks.register(
         victim.graphic(80, 96)
         if (victim is Player) victim.message("You have been stunned!")
     }
+    victim.timers[gg.rsmod.game.model.timer.DAMAGE_STALL_TIMER] = 5
     victim.moveTo(dest.x, dest.z, dest.height)
 }
 

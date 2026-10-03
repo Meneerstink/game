@@ -110,6 +110,12 @@ val FREEZE_IMMUNITY_TIMER = TimerKey(resetOnDeath = true)
 val STUN_TIMER = TimerKey(resetOnDeath = true)
 
 /**
+ * PvP run 2026-10-03: while it runs, every hit on the pawn is held and lands when it ends (Pawn.hitsCycle). OSRS Wiki "Dragon spear"
+ * (Shove): "the brief stun causes all incoming damage to be stalled until it expires, after which all damage taken is applied at once".
+ */
+val DAMAGE_STALL_TIMER = TimerKey(resetOnDeath = true)
+
+/**
  * Timer key for poison ticks.
  */
 val POISON_TIMER = TimerKey(persistenceKey = "poison", tickOffline = false, resetOnDeath = true)

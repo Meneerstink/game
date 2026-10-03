@@ -459,7 +459,8 @@ abstract class Pawn(
                 continue
             }
 
-            if (lock.delaysDamage()) {
+            // A damage stall (Shove stun, DAMAGE_STALL_TIMER) holds every hit like a delaying lock; they land together when it ends.
+            if (lock.delaysDamage() || timers.has(gg.rsmod.game.model.timer.DAMAGE_STALL_TIMER)) {
                 hit.damageDelay = Math.max(0, hit.damageDelay - 1)
                 continue
             }

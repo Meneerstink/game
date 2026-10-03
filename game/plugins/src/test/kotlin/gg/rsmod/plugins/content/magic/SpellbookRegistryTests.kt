@@ -81,7 +81,12 @@ class SpellbookRegistryTests {
             assertTrue("${spell.name} effect ${effect!!::class.simpleName} should be ${expected.simpleName}", expected.isInstance(effect))
             val multi = spell.name.endsWith("BURST") || spell.name.endsWith("BARRAGE")
             assertEquals("${spell.name} multi-target flag", multi, spell.multiTarget)
-            assertTrue("${spell.name} needs either a projectile or a fixed hit delay", spell.projectile > -1 || spell.fixedHitDelay > -1)
+        }
+        // PvP run 2026-10-03: every Ancient spell, with or without a projectile, lands after OSRS Wiki "Hit delay" 1 + floor((1 + d) / 3)
+        // (+ the server's one-tick offset); the no-projectile bursts/barrages used a fixed 2 at every distance.
+        val strategy = gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
+        for ((d, wiki) in listOf(1 to 1, 2 to 2, 5 to 3, 8 to 4, 10 to 4)) {
+            assertEquals("hit delay at distance $d", wiki + 1, strategy.hitDelayForDistance(d))
         }
         // Freeze durations: rush 5s, burst 10s, blitz 15s, barrage 20s (8/16/24/32 ticks).
         assertEquals(8, (CombatSpell.ICE_RUSH.effect as SpellEffect.Freeze).ticks)

@@ -36,8 +36,6 @@ enum class CombatSpell(
     val requiredWeaponMessage: String = "",
     /** Effect-only spells (Bind, Confuse, Teleport Block) roll accuracy but never show a damage hit. */
     val damaging: Boolean = true,
-    /** Delay (cycles) before the impact graphic/hit when the spell has no projectile; -1 = use projectile lifespan. */
-    val fixedHitDelay: Int = -1,
 ) {
     /**
      * Standard.
@@ -619,7 +617,6 @@ enum class CombatSpell(
         interfaceId = 193,
         multiTarget = true,
         effect = SpellEffect.BloodHeal,
-        fixedHitDelay = 2,
     ),
     ICE_BURST(
         uniqueId = 326,
@@ -660,7 +657,6 @@ enum class CombatSpell(
         experience = 43.0,
         interfaceId = 193,
         effect = SpellEffect.ShadowDrain,
-        fixedHitDelay = 2,
     ),
     BLOOD_BLITZ(
         uniqueId = 335,
@@ -687,7 +683,6 @@ enum class CombatSpell(
         experience = 46.0,
         interfaceId = 193,
         effect = SpellEffect.Freeze(24),
-        fixedHitDelay = 2,
     ),
     SMOKE_BARRAGE(
         uniqueId = 332,
@@ -716,7 +711,6 @@ enum class CombatSpell(
         interfaceId = 193,
         multiTarget = true,
         effect = SpellEffect.ShadowDrain,
-        fixedHitDelay = 2,
     ),
     BLOOD_BARRAGE(
         uniqueId = 336,
@@ -731,7 +725,6 @@ enum class CombatSpell(
         interfaceId = 193,
         multiTarget = true,
         effect = SpellEffect.BloodHeal,
-        fixedHitDelay = 2,
     ),
     ICE_BARRAGE(
         uniqueId = 328,
@@ -777,7 +770,6 @@ enum class CombatSpell(
         effect = SpellEffect.Miasmic(40),
         requiredWeapons = ZURIELS_STAVES,
         requiredWeaponMessage = ZURIELS_MESSAGE,
-        fixedHitDelay = 2,
     ),
     MIASMIC_BLITZ(
         uniqueId = 1567,
@@ -809,7 +801,6 @@ enum class CombatSpell(
         effect = SpellEffect.Miasmic(80),
         requiredWeapons = ZURIELS_STAVES,
         requiredWeaponMessage = ZURIELS_MESSAGE,
-        fixedHitDelay = 2,
     ),
 
     /**
