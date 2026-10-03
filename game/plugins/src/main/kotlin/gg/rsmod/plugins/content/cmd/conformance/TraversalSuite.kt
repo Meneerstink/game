@@ -214,9 +214,12 @@ object TraversalSuite : Conformance.Suite {
                 continue
             }
             for (p in placements) {
-                val obj = run.world.chunks.get(Tile(p.x, p.z, p.plane), createIfNeeded = true)
-                    ?.getEntities<gg.rsmod.game.model.entity.GameObject>(Tile(p.x, p.z, p.plane), gg.rsmod.game.model.EntityType.STATIC_OBJECT)
-                    ?.firstOrNull { it.id == id }
+                // Bridge tiles: the census keeps the raw plane, the live map has the loc one plane lower.
+                val obj = (p.plane downTo maxOf(0, p.plane - 1)).asSequence().mapNotNull { h ->
+                    run.world.chunks.get(Tile(p.x, p.z, h), createIfNeeded = true)
+                        ?.getEntities<gg.rsmod.game.model.entity.GameObject>(Tile(p.x, p.z, h), gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                        ?.firstOrNull { it.id == id }
+                }.firstOrNull()
                 if (obj == null) {
                     rows += "$id@${p.x},${p.z},${p.plane}\t${def.name}\t${verb.second}\tyes\t-\t-\t-\tNOT_TESTED\tnot on the live map (removed or replaced)"
                     continue
@@ -267,10 +270,10 @@ object TraversalSuite : Conformance.Suite {
         val l = def.getRotatedLength(obj)
         val sides =
             listOf(
-                "W" to { d: Int -> Tile(p.x - d, p.z + l / 2, p.plane) },
-                "E" to { d: Int -> Tile(p.x + wd - 1 + d, p.z + l / 2, p.plane) },
-                "S" to { d: Int -> Tile(p.x + wd / 2, p.z - d, p.plane) },
-                "N" to { d: Int -> Tile(p.x + wd / 2, p.z + l - 1 + d, p.plane) },
+                "W" to { d: Int -> Tile(p.x - d, p.z + l / 2, obj.tile.height) },
+                "E" to { d: Int -> Tile(p.x + wd - 1 + d, p.z + l / 2, obj.tile.height) },
+                "S" to { d: Int -> Tile(p.x + wd / 2, p.z - d, obj.tile.height) },
+                "N" to { d: Int -> Tile(p.x + wd / 2, p.z + l - 1 + d, obj.tile.height) },
             )
         var crossedFromSomeSide = false
         var sidesTried = 0
@@ -348,6 +351,9 @@ object TraversalSuite : Conformance.Suite {
         val end = Tile(bot.tile)
         val msgs = run.recording.of(bot.username, "msg").filter { it.cycle >= c0 }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
         val nothing = msgs.any { it.contains("Nothing interesting happens") }
+        // A refusal or a requirement can be a chat-box dialogue (Abbot Langley, the Stronghold reward gate, "you will need a rope"):
+        // an interface opened in the chatbox pane (752) counts as the obstacle answering (batch 6 report 2026-10-03).
+        val dialogue = run.recording.of(bot.username, "msg").any { it.cycle >= c0 && it.text.contains("IfOpenSubMessage(parent=752") }
         val moved = !end.sameAs(start)
         val problems = ArrayList<String>()
         if (nothing) problems += "unhandled option"
@@ -373,7 +379,7 @@ object TraversalSuite : Conformance.Suite {
                 // A short moveTo (Chaos Tunnels portal 3266,5552 -> 3262,5552, Void chaos_tunnels.teles.toml) goes out as a
                 // movement-type jump, not a teleport block: a tile change of more than one tile in a single tick is the action.
                 run.recording.of(bot.username, "state").filter { it.cycle >= c0 && it.text.startsWith("tile: ") }.any { e -> jumped(e.text) }
-        if (moved && !acted && msgs.isEmpty()) {
+        if (moved && !acted && msgs.isEmpty() && !dialogue) {
             problems += "click did nothing: walked to the loc, then no action and no message"
         } else if (moved) {
             if (!chainStop) {
@@ -386,7 +392,7 @@ object TraversalSuite : Conformance.Suite {
                     if (bot.tile.sameAs(end)) problems += "cannot walk on after the crossing (click to ${next.x},${next.z} did nothing)"
                 }
             }
-        } else if (msgs.isEmpty()) {
+        } else if (msgs.isEmpty() && !dialogue) {
             problems += "click did nothing: no movement and no message"
         }
         val detail = "from ${start.x},${start.z} to ${end.x},${end.z} in $waited ticks; ${msgs.joinToString(" / ").take(120)}" + (if (problems.isEmpty()) "" else "; PROBLEM " + problems.joinToString("; "))

@@ -90,7 +90,9 @@ on_world_init_late {
                 }
                 val destination = GenericLadders.destination(world, obj, player.tile, direction)
                 if (destination == null) {
-                    logger.info("Generic ladders: no counterpart for object {} ({}) at {} [{}]", obj.id, def.name, obj.tile, option)
+                    // A dead ladder must answer, not swallow the click (batch 6 report: the player walked there and nothing happened).
+                    player.message(Entity.NOTHING_INTERESTING_HAPPENS)
+                    gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "generic ladder ${obj.id} (${def.name}) at ${obj.tile} [$option]: no source and no counterpart" }
                     return@on_obj_option
                 }
                 player.lockingQueue(lockState = LockState.FULL) {

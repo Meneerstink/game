@@ -95,8 +95,10 @@ class GenericLaddersTests {
 
         val destination = GenericLadders.destination(world, ladder, from = Tile(3201, 3200, 0), direction = GenericLadders.Direction.UP)
 
+        // 998ebc9a6: the usable tile beside the counterpart nearest to the mirrored start (3201,3200 is clipped) - 3201,3199 or
+        // 3201,3201 (distance 1), never the clipped tile, never the counterpart itself.
         assertNotEquals(Tile(3201, 3200, 1), destination)
-        assertEquals(Tile(3200, 3201, 1), destination)
+        kotlin.test.assertTrue(destination in setOf(Tile(3201, 3199, 1), Tile(3201, 3201, 1)), "landed on $destination")
     }
 
     private fun obj(
@@ -121,6 +123,9 @@ class GenericLaddersTests {
             objects.filter { it.tile == tile }
         }
         every { collision.isClipped(any()) } answers { firstArg<Tile>() in clipped }
+        // Landings are judged by isUsableLanding (998ebc9a6): open ground unless the tile itself is clipped.
+        every { collision.isBlocked(any(), any(), any()) } answers { firstArg<Tile>() in clipped }
+        every { collision.canTraverse(any(), any(), any(), any()) } answers { firstArg<Tile>() !in clipped }
         return world
     }
 

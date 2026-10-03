@@ -28,24 +28,32 @@ on_obj_option(obj = Objs.STAIRCASE_24075, option = "climb-down") {
 }
 
 // Juliet's House (and others, including Champion's Guild)
-on_obj_option(obj = Objs.STAIRCASE_24357, option = "climb-up") {
-    when(player.getInteractingGameObj().rot) {
-        1 -> player.handleStairs(player.tile.x + 4, player.tile.z, player.tile.height + 1)
-        2 -> player.handleStairs(player.tile.x, player.tile.z - 4, player.tile.height + 1)
-        3 -> player.handleStairs(player.tile.x - 4, player.tile.z, player.tile.height + 1)
-        4 -> player.handleStairs(player.tile.x, player.tile.z + 4, player.tile.height + 1)
+/*
+ * 24357 / 24359 are shared by staircases all over Varrock (Juliet's house, the Champions' Guild, ...). The old handler matched
+ * rotations 1..4 (real rotations are 0..3: rotation 0 did nothing at all) and moved the player 4 tiles from wherever he clicked,
+ * collision-free. Now: the sourced Void table entry for this exact staircase, else the map-proven counterpart on the other floor
+ * (GenericLadders: same anchor or up to 2 tiles off), landing beside it (conform traversal 2026-10-03, batch 6).
+ */
+fun climbVarrockStairs(player: Player, up: Boolean) {
+    val obj = player.getInteractingGameObj()
+    val slot = player.attr[gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR] ?: 1
+    if (gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.tryTeleport(player, obj, slot)) return
+    val dir = if (up) gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.Direction.UP else gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.Direction.DOWN
+    val destination = gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.destination(world, obj, player.tile, dir)
+    if (destination == null) {
+        player.message(gg.rsmod.game.model.entity.Entity.NOTHING_INTERESTING_HAPPENS)
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "staircase ${obj.id} at ${obj.tile} has no source and no counterpart" }
+        return
+    }
+    player.lockingQueue(lockState = LockState.FULL) {
+        wait(1)
+        player.moveTo(destination)
     }
 }
 
-on_obj_option(obj = Objs.STAIRCASE_24359, option = "climb-down") {
-    when(player.getInteractingGameObj().rot) {
-        1 -> player.handleStairs(player.tile.x - 4, player.tile.z, player.tile.height - 1)
-        2 -> player.handleStairs(player.tile.x, player.tile.z + 4, player.tile.height - 1)
-        3 -> player.handleStairs(player.tile.x + 4, player.tile.z, player.tile.height - 1)
-        4 -> player.handleStairs(player.tile.x, player.tile.z - 4, player.tile.height - 1)
-    }
+on_obj_option(obj = Objs.STAIRCASE_24357, option = "climb-up") { climbVarrockStairs(player, up = true) }
 
-}
+on_obj_option(obj = Objs.STAIRCASE_24359, option = "climb-down") { climbVarrockStairs(player, up = false) }
 
 // Varrock Wall
 

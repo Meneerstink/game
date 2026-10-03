@@ -20,7 +20,9 @@ on_obj_option(obj = Objs.LADDER_12389, option = "Climb-Down") {
 }
 
 on_obj_option(obj = Objs.LADDER_29358, option = "Climb-Down") {
-    player.handleLadder()
+    // Void / object-teleports.json send this ladder to 3089,9971; handleLadder() kept the player's own tile (nothing moved).
+    if (gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.tryTeleport(player, player.getInteractingGameObj(), player.attr[gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR] ?: 1)) return@on_obj_option
+    player.handleLadder(underground = true)
 }
 
 fun handleDoor(player: Player) {

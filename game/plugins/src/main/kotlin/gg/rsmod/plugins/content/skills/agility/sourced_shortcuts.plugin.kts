@@ -157,6 +157,27 @@ fun brimhavenLog(
     }
 }
 
+/*
+ * Coal Truck log balance (Void LogBalance "coal_truck_log_balance"): 20 Agility, rope-balance render onto the clicked end of the
+ * log, then along it to the other end (2602 -> 2598, 2599 -> 2603), 8.5 xp. Was an unbounded collision-free walk from the click
+ * tile with the render set after the walk began (conform traversal 2026-10-03: OB7 + through the oak at 2605,3477).
+ */
+shortcut(Objs.LOG_BALANCE_2296, "Walk-across") {
+    if (!player.hasAgility(20, "You need at least 20 Agility to do that.")) return@shortcut
+    obstacle { target ->
+        player.filterableMessage("You walk carefully across the slippery log...")
+        player.setRenderAnimation(RENDER_ROPE_BALANCE)
+        walkOverTile(player, target.tile, Render.ROPE_BALANCE)
+        when {
+            target.tile.x == 2602 && target.tile.z == 3477 -> walkOverTile(player, Tile(2598, 3477, target.tile.height), Render.ROPE_BALANCE)
+            target.tile.x == 2599 && target.tile.z == 3477 -> walkOverTile(player, Tile(2603, 3477, target.tile.height), Render.ROPE_BALANCE)
+        }
+        player.resetRenderAnimation()
+        player.addXp(Skills.AGILITY, 8.5)
+        player.filterableMessage("... and make it safely to the other side.")
+    }
+}
+
 fun ardougneLog(
     id: Int,
     direction: Direction,
@@ -876,7 +897,7 @@ on_world_init {
                 }
                 player.animate(if (up) 828 else 827)
                 wait(2)
-                player.moveTo(Tile(player.tile.x, player.tile.z, player.tile.height + if (up) 1 else -1))
+                player.moveTo(gg.rsmod.plugins.api.ext.climbLanding(player, Tile(player.tile.x, player.tile.z, player.tile.height + if (up) 1 else -1)))
                 player.addXp(Skills.AGILITY, if (success) 3.0 else 6.0)
             }
         }

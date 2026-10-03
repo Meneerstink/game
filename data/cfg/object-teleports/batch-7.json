@@ -1,0 +1,797 @@
+{
+ "provenance": "Obstacle batch 7 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/fail-batch-7.tsv. Each entry names its source; every landing was checked on this 667 map with MapProbe (walkable, beside the counterpart loc) and every tile plane is the live plane (MapProbe find).",
+ "teleports": [
+  {
+   "id": 6085,
+   "name": "keldagrim_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2828,
+    "z": 10225,
+    "height": 0
+   },
+   "to": {
+    "x": 2829,
+    "z": 10225,
+    "height": 1
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6086@2828,10226,1; landing 2829,10225,1 is a walkable tile beside it (MapProbe reach 29). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6086,
+   "name": "keldagrim_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2932,
+    "z": 10165,
+    "height": 1
+   },
+   "to": {
+    "x": 2930,
+    "z": 10165,
+    "height": 0
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6085@2931,10165,0; landing 2930,10165,0 is a walkable tile beside it (MapProbe reach 24). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6087,
+   "name": "keldagrim_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2894,
+    "z": 10188,
+    "height": 0
+   },
+   "to": {
+    "x": 2896,
+    "z": 10189,
+    "height": 1
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6088@2895,10188,1; landing 2896,10189,1 is a walkable tile beside it (MapProbe reach 38). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6087,
+   "name": "keldagrim_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2894,
+    "z": 10209,
+    "height": 0
+   },
+   "to": {
+    "x": 2896,
+    "z": 10209,
+    "height": 1
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6088@2895,10209,1; landing 2896,10209,1 is a walkable tile beside it (MapProbe reach 31). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6088,
+   "name": "keldagrim_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2895,
+    "z": 10188,
+    "height": 1
+   },
+   "to": {
+    "x": 2893,
+    "z": 10188,
+    "height": 0
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6087@2894,10188,0; landing 2893,10188,0 is a walkable tile beside it (MapProbe reach 58). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6088,
+   "name": "keldagrim_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2895,
+    "z": 10209,
+    "height": 1
+   },
+   "to": {
+    "x": 2893,
+    "z": 10209,
+    "height": 0
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6087@2894,10209,0; landing 2893,10209,0 is a walkable tile beside it (MapProbe reach 68). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 6090,
+   "name": "keldagrim_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2866,
+    "z": 10198,
+    "height": 2
+   },
+   "to": {
+    "x": 2868,
+    "z": 10199,
+    "height": 1
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6089@2866,10198,1 (2x3); landing 2868,10199,1 is a walkable tile beside it (MapProbe reach 18). The generic staircase rule only accepts a counterpart on the same tile; here it is on the same anchor, but the landing must clear its 2x3 footprint"
+  },
+  {
+   "id": 6090,
+   "name": "keldagrim_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2892,
+    "z": 10198,
+    "height": 2
+   },
+   "to": {
+    "x": 2890,
+    "z": 10199,
+    "height": 1
+   },
+   "source": "Keldagrim: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 6089@2891,10198,1 (2x3); landing 2890,10199,1 is a walkable tile beside it (MapProbe reach 24). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 5008,
+   "name": "rellekka_keldagrim_tunnel",
+   "option": "Enter",
+   "tile": {
+    "x": 2731,
+    "z": 3712,
+    "height": 0
+   },
+   "to": {
+    "x": 2773,
+    "z": 10162,
+    "height": 0
+   },
+   "source": "2009scape RellekkaZone.java case 5008 enter -> 2773,10162,0; 667 map: beside the return tunnel 5014@2771,10161 (MapProbe reach 33); OSRS Wiki Keldagrim: the tunnel north-east of Rellekka leads to the Keldagrim entrance mine"
+  },
+  {
+   "id": 5014,
+   "name": "keldagrim_tunnel_exit",
+   "option": "Enter",
+   "tile": {
+    "x": 2771,
+    "z": 10161,
+    "height": 0
+   },
+   "to": {
+    "x": 2730,
+    "z": 3713,
+    "height": 0
+   },
+   "source": "2009scape KeldagrimPlugin.kt 5014 enter -> 2730,3713,0; 667 map: beside the Rellekka tunnel 5008@2731,3712 (MapProbe reach 48). Added in batch 7 so the 5008 entry has a way back"
+  },
+  {
+   "id": 5973,
+   "name": "keldagrim_city_cave_entrance",
+   "option": "Go-through",
+   "tile": {
+    "x": 2781,
+    "z": 10161,
+    "height": 0
+   },
+   "to": {
+    "x": 2838,
+    "z": 10125,
+    "height": 0
+   },
+   "source": "2009scape KeldagrimPlugin.kt 5973 go-through -> 2838,10125; 667 map: beside the city entrance 5998@2838,10123 (MapProbe reach 50). Added in batch 7 so the city is reachable from the 5008 tunnel"
+  },
+  {
+   "id": 5998,
+   "name": "keldagrim_city_entrance",
+   "option": "Go-through",
+   "tile": {
+    "x": 2838,
+    "z": 10123,
+    "height": 0
+   },
+   "to": {
+    "x": 2780,
+    "z": 10161,
+    "height": 0
+   },
+   "source": "2009scape KeldagrimPlugin.kt 5998 go-through -> 2780,10161; 667 map: beside the cave entrance 5973@2781,10161 (MapProbe reach 23)"
+  },
+  {
+   "id": 23287,
+   "name": "keldagrim_doorway",
+   "option": "Enter",
+   "tile": {
+    "x": 2942,
+    "z": 10179,
+    "height": 0
+   },
+   "to": {
+    "x": 2435,
+    "z": 5535,
+    "height": 0
+   },
+   "source": "2009scape KeldagrimListeners.kt DOORWAY_23287 enter -> 2435,5535,0; 667 map: beside the return doorway 23286@2434,5535 (live plane 0 by MapProbe find, census says 1), landing reach 46"
+  },
+  {
+   "id": 22937,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2713,
+    "z": 5278,
+    "height": 0
+   },
+   "to": {
+    "x": 2713,
+    "z": 5281,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22938@2713,5279,1; landing 2713,5281,1 is a walkable tile beside it (MapProbe reach 39). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22937,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2722,
+    "z": 5269,
+    "height": 0
+   },
+   "to": {
+    "x": 2722,
+    "z": 5272,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22938@2722,5270,1; landing 2722,5272,1 is a walkable tile beside it (MapProbe reach 52). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22937,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2722,
+    "z": 5292,
+    "height": 0
+   },
+   "to": {
+    "x": 2725,
+    "z": 5293,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22938@2723,5292,1; landing 2725,5293,1 is a walkable tile beside it (MapProbe reach 19). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22937,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2731,
+    "z": 5306,
+    "height": 0
+   },
+   "to": {
+    "x": 2734,
+    "z": 5306,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22938@2732,5306,1; landing 2734,5306,1 is a walkable tile beside it (MapProbe reach 33). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22937,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2738,
+    "z": 5278,
+    "height": 0
+   },
+   "to": {
+    "x": 2738,
+    "z": 5281,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22938@2738,5279,1; landing 2738,5281,1 is a walkable tile beside it (MapProbe reach 30). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2702,
+    "z": 5305,
+    "height": 1
+   },
+   "to": {
+    "x": 2705,
+    "z": 5305,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2702,5305,0; landing 2705,5305,0 is a walkable tile beside it (MapProbe reach 35). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2713,
+    "z": 5279,
+    "height": 1
+   },
+   "to": {
+    "x": 2713,
+    "z": 5277,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2713,5278,0; landing 2713,5277,0 is a walkable tile beside it (MapProbe reach 26). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2713,
+    "z": 5282,
+    "height": 1
+   },
+   "to": {
+    "x": 2713,
+    "z": 5285,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2713,5282,0; landing 2713,5285,0 is a walkable tile beside it (MapProbe reach 33). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2722,
+    "z": 5270,
+    "height": 1
+   },
+   "to": {
+    "x": 2722,
+    "z": 5268,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2722,5269,0; landing 2722,5268,0 is a walkable tile beside it (MapProbe reach 39). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2722,
+    "z": 5273,
+    "height": 1
+   },
+   "to": {
+    "x": 2722,
+    "z": 5276,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2722,5273,0; landing 2722,5276,0 is a walkable tile beside it (MapProbe reach 50). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2723,
+    "z": 5292,
+    "height": 1
+   },
+   "to": {
+    "x": 2721,
+    "z": 5292,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2722,5292,0; landing 2721,5292,0 is a walkable tile beside it (MapProbe reach 60). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2729,
+    "z": 5301,
+    "height": 1
+   },
+   "to": {
+    "x": 2729,
+    "z": 5304,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2729,5301,0; landing 2729,5304,0 is a walkable tile beside it (MapProbe reach 33). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2732,
+    "z": 5306,
+    "height": 1
+   },
+   "to": {
+    "x": 2730,
+    "z": 5306,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2731,5306,0; landing 2730,5306,0 is a walkable tile beside it (MapProbe reach 42). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22938,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2738,
+    "z": 5279,
+    "height": 1
+   },
+   "to": {
+    "x": 2738,
+    "z": 5277,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22937@2738,5278,0; landing 2738,5277,0 is a walkable tile beside it (MapProbe reach 29). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22939,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2722,
+    "z": 5257,
+    "height": 0
+   },
+   "to": {
+    "x": 2722,
+    "z": 5257,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22940@2722,5258,1; landing 2722,5257,1 is a walkable tile beside it (MapProbe reach 53). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22940,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2722,
+    "z": 5258,
+    "height": 1
+   },
+   "to": {
+    "x": 2722,
+    "z": 5260,
+    "height": 0
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22939@2722,5257,0; landing 2722,5260,0 is a walkable tile beside it (MapProbe reach 37). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22941,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2722,
+    "z": 5252,
+    "height": 1
+   },
+   "to": {
+    "x": 2722,
+    "z": 5249,
+    "height": 3
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22942@2722,5250,3 (plane 2 is solid here: the flight runs from floor 1 to floor 3); landing 2722,5249,3 is a walkable tile beside it (MapProbe reach 29). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 22942,
+   "name": "dorgesh_kaan_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2722,
+    "z": 5250,
+    "height": 3
+   },
+   "to": {
+    "x": 2722,
+    "z": 5255,
+    "height": 1
+   },
+   "source": "Dorgesh-Kaan: 667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 22941@2722,5252,1 (two floors down); landing 2722,5255,1 is a walkable tile beside it (MapProbe reach 43). The generic staircase rule only accepts a counterpart on the same tile; here it is off the clicked anchor"
+  },
+  {
+   "id": 6841,
+   "name": "ogre_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2485,
+    "z": 3042,
+    "height": 0
+   },
+   "to": {
+    "x": 2477,
+    "z": 9437,
+    "height": 2
+   },
+   "source": "Void quest/member/ogre/ZogreFleshEaters.kt objectOperate(Climb-down, ogre_stairs_down), rotation != 1 -> tele(2477,9437,2); placement rot 0; landing MapProbe reach 77"
+  },
+  {
+   "id": 6841,
+   "name": "ogre_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2443,
+    "z": 9417,
+    "height": 2
+   },
+   "to": {
+    "x": 2442,
+    "z": 9418,
+    "height": 0
+   },
+   "source": "Void ZogreFleshEaters.kt ogre_stairs_down, rotation == 1 -> tele(2442,9418,0); placement rot 1; landing MapProbe reach 62"
+  },
+  {
+   "id": 6842,
+   "name": "ogre_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2443,
+    "z": 9417,
+    "height": 0
+   },
+   "to": {
+    "x": 2446,
+    "z": 9417,
+    "height": 2
+   },
+   "source": "Void ZogreFleshEaters.kt objectOperate(Climb-up, ogre_stairs) at 2443,9417 -> tele(2446,9417,2); landing MapProbe reach 66"
+  },
+  {
+   "id": 6842,
+   "name": "ogre_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2478,
+    "z": 9437,
+    "height": 2
+   },
+   "to": {
+    "x": 2485,
+    "z": 3045,
+    "height": 0
+   },
+   "source": "Void ZogreFleshEaters.kt ogre_stairs, other tile -> tele(2485,3045,0); landing beside 6841@2485,3042 (MapProbe reach 73)"
+  },
+  {
+   "id": 5207,
+   "name": "fenk_stairs_lv1_top",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3537,
+    "z": 3552,
+    "height": 1
+   },
+   "to": {
+    "x": 3537,
+    "z": 3550,
+    "height": 0
+   },
+   "near": {
+    "width": 2,
+    "height": 1
+   },
+   "source": "Void quest/members/creature_of_fenkenstrain/creature_of_fenkenstrain.teles.toml fenk_stairs_lv1_top near {x=3537, y=3550, width=2} (a quest file the Void conversion left out; the stairs are ordinary castle stairs); landing MapProbe reach 27"
+  },
+  {
+   "id": 5207,
+   "name": "fenk_stairs_lv1_top",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3559,
+    "z": 3552,
+    "height": 1
+   },
+   "to": {
+    "x": 3559,
+    "z": 3550,
+    "height": 0
+   },
+   "near": {
+    "width": 2,
+    "height": 1
+   },
+   "source": "Void quest/members/creature_of_fenkenstrain/creature_of_fenkenstrain.teles.toml fenk_stairs_lv1_top near {x=3559, y=3550, width=2} (a quest file the Void conversion left out; the stairs are ordinary castle stairs); landing MapProbe reach 27"
+  },
+  {
+   "id": 21512,
+   "name": "neitiznot_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2363,
+    "z": 3799,
+    "height": 0
+   },
+   "to": {
+    "x": 2364,
+    "z": 3799,
+    "height": 2
+   },
+   "source": "2009scape NeitiznotListeners.kt addClimbDest(2363,3799,0 -> 2364,3799,2); 667 map: the tower top is a 3x3 platform (2362-2364,3798-3800, plane 2) around the top ladder 21513@2363,3799,2 - two planes up, so the generic +-1 floor rule finds nothing"
+  },
+  {
+   "id": 21455,
+   "name": "jatizso_mine_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2397,
+    "z": 3812,
+    "height": 0
+   },
+   "to": {
+    "x": 2406,
+    "z": 10187,
+    "height": 0
+   },
+   "source": "667 map counterpart: the Jatizso mine's only staircase 21578@2406,10188,0 (Climb-up, 2x2, music Major Miner); landing 2406,10187 is the walkable tile south of it (MapProbe map)"
+  },
+  {
+   "id": 21578,
+   "name": "jatizso_mine_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2406,
+    "z": 10188,
+    "height": 0
+   },
+   "to": {
+    "x": 2397,
+    "z": 3811,
+    "height": 0
+   },
+   "source": "667 map counterpart: Jatizso's only staircase down 21455@2397,3812,0 (2x2); landing 2397,3811 is the walkable tile south of it (MapProbe map)"
+  },
+  {
+   "id": 15791,
+   "name": "mos_le_harmless_cave_stairs",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3829,
+    "z": 3062,
+    "height": 0
+   },
+   "to": {
+    "x": 3828,
+    "z": 9462,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 15790@3829,9462,0 (Climb-up, exact z+6400 mirror); landing 3828,9462,0 is a walkable tile beside it (MapProbe reach 81). The generic staircase rule only accepts a counterpart on the same tile; here it is a 2x2 staircase on the mirrored dungeon tile (the generic dungeon-mirror rule only runs for ladders)"
+  },
+  {
+   "id": 15790,
+   "name": "mos_le_harmless_cave_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3829,
+    "z": 9462,
+    "height": 0
+   },
+   "to": {
+    "x": 3828,
+    "z": 3062,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 15791@3829,3062,0 (Climb-down, exact z-6400 mirror); landing 3828,3062,0 is a walkable tile beside it (MapProbe reach 72). The generic staircase rule only accepts a counterpart on the same tile; here it is a 2x2 staircase on the mirrored surface tile"
+  },
+  {
+   "id": 15790,
+   "name": "mos_le_harmless_cave_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3814,
+    "z": 9462,
+    "height": 0
+   },
+   "to": {
+    "x": 3813,
+    "z": 3062,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 15791@3814,3062,0 (Climb-down, exact z-6400 mirror); landing 3813,3062,0 is a walkable tile beside it (MapProbe reach 55). The generic staircase rule only accepts a counterpart on the same tile; here it is a 2x2 staircase on the mirrored surface tile"
+  },
+  {
+   "id": 4756,
+   "name": "ape_atoll_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2795,
+    "z": 2794,
+    "height": 0
+   },
+   "to": {
+    "x": 2796,
+    "z": 2797,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 4755@2795,2795,1 (Climb-down, 2x2); landing 2796,2797,1 is a walkable tile beside it (MapProbe reach 33). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 4756,
+   "name": "ape_atoll_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2799,
+    "z": 2794,
+    "height": 0
+   },
+   "to": {
+    "x": 2798,
+    "z": 2797,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 4755@2799,2795,1 (Climb-down, 2x2); landing 2798,2797,1 is a walkable tile beside it (MapProbe reach 36). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 16734,
+   "name": "lunar_isle_stairs",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2078,
+    "z": 3910,
+    "height": 0
+   },
+   "to": {
+    "x": 2079,
+    "z": 3909,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv / MapProbe 2026-10-03): 16732@2078,3909,1 (Climb-down, 1x2); landing 2079,3909,1 is a walkable tile beside it (MapProbe reach 43). The generic staircase rule only accepts a counterpart on the same tile; here it is one tile off"
+  },
+  {
+   "id": 1747,
+   "name": "basic_ladder_bottom",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2532,
+    "z": 3545,
+    "height": 0
+   },
+   "to": {
+    "x": 2532,
+    "z": 3546,
+    "height": 1
+   },
+   "source": "Void area/kandarin/barbarian_outpost/barbarian_outpost.teles.toml basic_ladder_bottom (delta level +1) keeps the climber's own x/z, which upstairs is solid scenery from every side but north (sweep: pocket). 667 map (MapProbe): the top ladder 3205@2532,3545,1 opens only onto the tower floor 2532,3546 / 2532-2534,3547 - fixed landing 2532,3546,1 (a small tower top is the real floor here)"
+  },
+  {
+   "id": 1747,
+   "name": "basic_ladder_bottom",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2408,
+    "z": 3435,
+    "height": 0
+   },
+   "to": {
+    "x": 2408,
+    "z": 3436,
+    "height": 1
+   },
+   "source": "Void area/kandarin/tree_gnome_stronghold/tree_gnome_stronghold.teles.toml basic_ladder_bottom (delta level +1) lands the climber on his own x/z, a pocket from the S/W sides; 667 map (MapProbe): 2408,3436,1 is the floor tile beside the top ladder 1746@2408,3435,1 (reach 11)"
+  },
+  {
+   "id": 1747,
+   "name": "basic_ladder_bottom",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2449,
+    "z": 3464,
+    "height": 0
+   },
+   "to": {
+    "x": 2449,
+    "z": 3463,
+    "height": 1
+   },
+   "source": "Void tree_gnome_stronghold.teles.toml basic_ladder_bottom (delta level +1); 667 map (MapProbe): the only floor tile beside the top ladder 1746@2449,3464,1 is 2449,3463,1 (every other neighbour is solid) - fixed so no side lands inside scenery"
+  }
+ ]
+}

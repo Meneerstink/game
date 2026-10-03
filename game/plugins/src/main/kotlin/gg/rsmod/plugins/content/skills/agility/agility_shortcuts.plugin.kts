@@ -115,25 +115,7 @@ on_obj_option(obj = Objs.MONKEY_BARS_29375, option = 1) {
  * Notes: Near the Coal Trucks west of Seers' Village. Provides easier access between the Mining spot and the pickup location
  *        near Seers' Village.
  */
-on_obj_option(obj = Objs.LOG_BALANCE_2296, option = "Walk-across") {
-    if (player.skills.getCurrentLevel(Skills.AGILITY) < 20) {
-        player.message("You need at least 20 Agility to do that.")
-        return@on_obj_option
-    }
-    val obj = player.getInteractingGameObj()
-    val isWest = player.tile.x <= obj.tile.x
-    val destination = if (isWest) Tile(obj.tile.x + 4, obj.tile.z) else Tile(obj.tile.x - 4, obj.tile.z)
-    val distance = player.tile.getDistance(destination)
-    player.lockingQueue(lockState = LockState.FULL) {
-        player.filterableMessage("You walk carefully across the slippery log...")
-        player.walkTo(destination, MovementQueue.StepType.FORCED_WALK, detectCollision = false)
-        player.setRenderAnimation(155)
-        wait(distance + 2)
-        player.resetRenderAnimation()
-        player.filterableMessage("... and make it safely to the other side.")
-        player.addXp(Skills.AGILITY, 8.5, checkBrawlingGloves = true)
-    }
-}
+// Ported to sourced_shortcuts.plugin.kts (coalTruckLog, Void LogBalance): the old handler walked collision-free from the click tile.
 
 /**
  * Location: Grand Exchange underwall tunnel shortcut.

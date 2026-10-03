@@ -150,15 +150,27 @@ on_item_on_npc(item = Items.EXPLOSIVE_POTION, npc = Npcs.BARRICADE) {
 // multi-branch "Staircase"/generic ladder objects that map to different destinations depending on
 // which physical copy was clicked. Every (objId, tile) pair and destination tile below is copied
 // verbatim from Novite's `CastleWarsPlaying.processObjectClick1`, not guessed.
+// Novite CastleWarsPlaying 368-381: 36691 is the surface trapdoor (z 3099 / 3108, useStairs 827), 36644 the ladder below
+// (z 9499 / 9508, useStairs 828); both delay 1 tick. The two z checks were swapped between the handlers, so neither ever matched
+// (conform traversal 2026-10-03, batch 7: both trapdoors "did nothing").
+fun castleWarsClimb(player: Player, anim: Int, to: Tile) {
+    player.lockingQueue(lockState = LockState.FULL) {
+        player.animate(anim)
+        wait(1)
+        player.moveTo(to)
+        wait(1)
+        player.animate(-1)
+    }
+}
 on_obj_option(obj = Objs.TRAPDOOR_36691, option = "Climb-down") {
     val obj = player.getInteractingGameObj()
-    if (obj.tile.z == 9508) player.moveTo(Tile(2400, 3106, 0))
-    else if (obj.tile.z == 9499) player.moveTo(Tile(2399, 3100, 0))
+    if (obj.tile.z == 3099) castleWarsClimb(player, 827, Tile(2399, 9500, 0))
+    else if (obj.tile.z == 3108) castleWarsClimb(player, 827, Tile(2400, 9507, 0))
 }
 on_obj_option(obj = 36644, option = "Climb-up") {
     val obj = player.getInteractingGameObj()
-    if (obj.tile.z == 3099) player.moveTo(Tile(2399, 9500, 0))
-    else if (obj.tile.z == 3108) player.moveTo(Tile(2400, 9507, 0))
+    if (obj.tile.z == 9508) castleWarsClimb(player, 828, Tile(2400, 3106, 0))
+    else if (obj.tile.z == 9499) castleWarsClimb(player, 828, Tile(2399, 3100, 0))
 }
 on_obj_option(obj = 36693, option = "Climb-down") { player.moveTo(Tile(2430, 9483, 0)) }
 on_obj_option(obj = 36694, option = "Climb-down") { player.moveTo(Tile(2369, 9524, 0)) }

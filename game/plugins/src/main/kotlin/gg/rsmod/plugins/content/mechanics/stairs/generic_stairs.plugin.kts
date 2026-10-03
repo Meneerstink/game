@@ -8,7 +8,17 @@ import gg.rsmod.plugins.content.mechanics.stairs.GenericStairs
 fun climbGenericStairs(player: Player, slot: Int, direction: GenericStairs.Direction) {
     val obj = player.getInteractingGameObj()
     if (ObjectTeleports.tryTeleport(player, obj, slot)) return
-    val destination = GenericStairs.destination(world, obj, player.tile, direction)
+    // Same-tile counterpart first; else the ladder rule (counterpart up to 2 tiles off on the next floor, or the mirrored dungeon
+    // tile) - a staircase re-placed one tile off answered "Nothing interesting happens" (conform traversal 2026-10-03, batch 7:
+    // 30+ placements in one batch; ~340 Stairs/Staircase rows sweep-wide).
+    val destination =
+        GenericStairs.destination(world, obj, player.tile, direction)
+            ?: gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.destination(
+                world,
+                obj,
+                player.tile,
+                if (direction == GenericStairs.Direction.UP) gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.Direction.UP else gg.rsmod.plugins.content.mechanics.ladders.GenericLadders.Direction.DOWN,
+            )
     if (destination == null) {
         player.message(Entity.NOTHING_INTERESTING_HAPPENS)
         return

@@ -1543,6 +1543,29 @@ fun Player.getWeaponRenderAnimation(): Int {
     return 1
 }
 
+/**
+ * Where a ladder / staircase climb really lands (conform traversal 2026-10-03, batch 6: 87 handlers move the player to his own x/z
+ * on the other floor; when the counterpart is not straight above, that tile is inside the floor's scenery - Varrock West Bank
+ * 3184,3446, the Yanille wall ladder 2562,3074). The computed tile when it is usable ground, else the nearest usable tile within
+ * two tiles on that floor; none at all is traced as a PROBLEM and the computed tile kept (it is sourced).
+ */
+fun climbLanding(
+    player: Player,
+    target: Tile,
+): Tile {
+    val world = player.world
+    if (gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, target)) return target
+    val near =
+        (-2..2).flatMap { dx -> (-2..2).map { dz -> Tile(target.x + dx, target.z + dz, target.height) } }
+            .filter { it != target && gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, it) }
+            .minByOrNull { (it.x - target.x) * (it.x - target.x) + (it.z - target.z) * (it.z - target.z) }
+    if (near == null) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "climb landing ${target} for ${player.username} is no usable ground and nothing usable within 2 tiles" }
+        return target
+    }
+    return near
+}
+
 fun Player.handleLadder(
     x: Int = -1,
     z: Int = -1,
@@ -1560,16 +1583,14 @@ fun Player.handleLadder(
                 false -> 6400
             }
         moveTo(
-            x = if (x > -1) x else player.tile.x,
-            z =
-                if (z > -1) {
-                    z
-                } else if (underground) {
-                    player.tile.z + zOffset
-                } else {
-                    player.tile.z
-                },
-            height = height,
+            climbLanding(
+                this@handleLadder,
+                Tile(
+                    if (x > -1) x else player.tile.x,
+                    if (z > -1) z else if (underground) player.tile.z + zOffset else player.tile.z,
+                    height,
+                ),
+            ),
         )
     }
 }
@@ -1589,16 +1610,14 @@ fun Player.handleStairs(
             }
         wait(2)
         moveTo(
-            x = if (x > -1) x else player.tile.x,
-            z =
-                if (z > -1) {
-                    z
-                } else if (underground) {
-                    player.tile.z + zOffset
-                } else {
-                    player.tile.z
-                },
-            height = height,
+            climbLanding(
+                this@handleStairs,
+                Tile(
+                    if (x > -1) x else player.tile.x,
+                    if (z > -1) z else if (underground) player.tile.z + zOffset else player.tile.z,
+                    height,
+                ),
+            ),
         )
     }
 }

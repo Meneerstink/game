@@ -1,0 +1,713 @@
+{
+ "provenance": "Obstacle batch 6 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/fail-batch-6.tsv. Each entry names its source; destinations checked as usable tiles of this 667 map (MapProbe: reach within 4 tiles >= 6, as isUsableLanding).",
+ "teleports": [
+  {
+   "id": 28782,
+   "name": "chaos_tunnels_exit",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3291,
+    "z": 5538,
+    "height": 0
+   },
+   "source": "Void chaos_tunnels.teles.toml chaos_tunnels_exit 3291,5538 (2009scape ChaosTunnelZone agrees: exit beside 3290,5538 -> rift 3165,3617); the only 667 rift of that pair is 28892 at 3176,3585 (object-teleports.json retarget), its collision blocks 3175-3178,3585-3586 so the old landing 3177,3585 was a pocket; landing = free tile south of the rift, 667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03) reach 81. Overrides the object-teleports.json entry (batch files load first).",
+   "to": {
+    "x": 3176,
+    "z": 3584,
+    "height": 0
+   }
+  },
+  {
+   "id": 37454,
+   "name": "ahoy_tower_stairs_lv1_withwall",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3666,
+    "z": 3518,
+    "height": 0
+   },
+   "source": "Void port_phasmatys.teles.toml ahoy_tower_stairs_lv1_withwall (to 3666,3522,1); in the 667 map the top staircase 5281 (2x2) stands on 3666-3667,3521-3522 plane 1, so 3666,3522 was a pocket; landing = free tile north of 5281, 667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03) reach 42. Overrides object-teleports.json.",
+   "to": {
+    "x": 3666,
+    "z": 3523,
+    "height": 1
+   }
+  },
+  {
+   "id": 22600,
+   "name": "dorgesh_kaan_course_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2716,
+    "z": 5241,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): ladder 22600 (2716,5241,0; its upper sections 2717,5241,1 and 2718,5241,2 have no own exit) ends at Ladder top 22666 (2719,5241,3, Climb-down); landing = free tile north of 22666",
+   "to": {
+    "x": 2719,
+    "z": 5242,
+    "height": 3
+   }
+  },
+  {
+   "id": 22666,
+   "name": "dorgesh_kaan_course_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2719,
+    "z": 5241,
+    "height": 3
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Ladder top 22666 (2719,5241,3) is the top of ladder 22600 (2716,5241,0); landing = the only free tile beside 22600 (west)",
+   "to": {
+    "x": 2715,
+    "z": 5241,
+    "height": 0
+   }
+  },
+  {
+   "id": 22609,
+   "name": "dorgesh_kaan_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2742,
+    "z": 5237,
+    "height": 3
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22609 (2742,5237,3) pair with Stairs 22608 Climb-up (2742,5238,2); landing = the free tile north of 22608",
+   "to": {
+    "x": 2742,
+    "z": 5239,
+    "height": 2
+   }
+  },
+  {
+   "id": 22609,
+   "name": "dorgesh_kaan_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2743,
+    "z": 5237,
+    "height": 3
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22609 (2743,5237,3) pair with Stairs 22608 Climb-up (2743,5238,2); landing = the free tile north of 22608",
+   "to": {
+    "x": 2743,
+    "z": 5239,
+    "height": 2
+   }
+  },
+  {
+   "id": 22651,
+   "name": "dorgesh_kaan_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2702,
+    "z": 5196,
+    "height": 3
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22651 (2702,5196,3) pair with Stairs 22650 Climb-up (2702,5195,2); landing = the free tile south of 22650",
+   "to": {
+    "x": 2702,
+    "z": 5194,
+    "height": 2
+   }
+  },
+  {
+   "id": 22651,
+   "name": "dorgesh_kaan_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2703,
+    "z": 5196,
+    "height": 3
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22651 (2703,5196,3) pair with Stairs 22650 Climb-up (2703,5195,2); landing = the free tile south of 22650",
+   "to": {
+    "x": 2703,
+    "z": 5194,
+    "height": 2
+   }
+  },
+  {
+   "id": 44253,
+   "name": "frozen_waste_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2829,
+    "z": 3866,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 44253 (1x2, 2829,3866,0) pair with Stairs 44255 Climb-down (2829,3867,1); landing = free tile south of 44255",
+   "to": {
+    "x": 2829,
+    "z": 3866,
+    "height": 1
+   }
+  },
+  {
+   "id": 44255,
+   "name": "frozen_waste_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2829,
+    "z": 3867,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 44255 (2829,3867,1) pair with Stairs 44253 Climb-up (1x2 on 2829,3866-3867,0); landing = free tile south of 44253",
+   "to": {
+    "x": 2829,
+    "z": 3865,
+    "height": 0
+   }
+  },
+  {
+   "id": 44254,
+   "name": "frozen_waste_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2836,
+    "z": 3866,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 44254 (1x2, 2836,3866,0) pair with Stairs 44255 Climb-down (2836,3867,1); landing = free tile south of 44255",
+   "to": {
+    "x": 2836,
+    "z": 3866,
+    "height": 1
+   }
+  },
+  {
+   "id": 44255,
+   "name": "frozen_waste_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2836,
+    "z": 3867,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 44255 (2836,3867,1) pair with Stairs 44254 Climb-up (1x2 on 2836,3866-3867,0); landing = free tile south of 44254",
+   "to": {
+    "x": 2836,
+    "z": 3865,
+    "height": 0
+   }
+  },
+  {
+   "id": 1738,
+   "name": "burthorpe_castle_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2839,
+    "z": 3533,
+    "height": 0
+   },
+   "source": "Void burthorpe.teles.toml 1738 (tile 2839,3537 in rev 634, to 2840,3538,1); the 667 map moved it to 2839,3533 (2x2) with staircase 38012 on the same footprint one floor up, so the 634 offset would land inside 38012; every approach tile of 1738 is free one floor up (667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03)), so the player keeps his tile one floor up",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": 1
+   }
+  },
+  {
+   "id": 38012,
+   "name": "burthorpe_castle_stairs_up_2",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2839,
+    "z": 3533,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): staircase 38012 (2839,3533,1) continues to Staircase 15638 Climb-down (2840,3534,2); landing = free tile north of 15638 (tower room, pocket 51)",
+   "to": {
+    "x": 2840,
+    "z": 3535,
+    "height": 2
+   }
+  },
+  {
+   "id": 48677,
+   "name": "blood_pact_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3858,
+    "z": 5533,
+    "height": 0
+   },
+   "source": "Void blood_pact.teles.toml 48677 tile 3858,5533 delta x-4 level+1 (pure stairs of the Lumbridge Catacombs); 667 counterpart 48678 (2x2, 3858,5533,1) has its free west side on 3857,5533-5534 -> fixed landing there instead of the delta (a delta from the north/south approach would land off the stairs)",
+   "to": {
+    "x": 3857,
+    "z": 5533,
+    "height": 1
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 48677,
+   "name": "blood_pact_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3858,
+    "z": 5543,
+    "height": 0
+   },
+   "source": "Void blood_pact.teles.toml 48677 tile 3858,5543 delta x-4 level+1 (pure stairs of the Lumbridge Catacombs); 667 counterpart 48678 (2x2, 3858,5543,1) has its free west side on 3857,5543-5544 -> fixed landing there instead of the delta (a delta from the north/south approach would land off the stairs)",
+   "to": {
+    "x": 3857,
+    "z": 5543,
+    "height": 1
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 48679,
+   "name": "blood_pact_stairs_up_east",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3870,
+    "z": 5524,
+    "height": 0
+   },
+   "source": "Void blood_pact.teles.toml 48679 tile 3870,5524 to 3875,5527 level 1; 667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03) reach 35 (Catacomb exit 48798 at 3877,5525,1)",
+   "to": {
+    "x": 3875,
+    "z": 5527,
+    "height": 1
+   }
+  },
+  {
+   "id": 46936,
+   "name": "web_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3809,
+    "z": 5276,
+    "height": 0
+   },
+   "source": "Void blood_pact.teles.toml 46936 tile 3809,5276 delta x-65 y-1 -> beside Web ladder 46938 (3744,5275,0); every approach tile of 46936 maps onto a free tile beside 46938 (667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03))",
+   "delta": {
+    "x": -65,
+    "z": -1,
+    "height": 0
+   }
+  },
+  {
+   "id": 46938,
+   "name": "web_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3744,
+    "z": 5275,
+    "height": 0
+   },
+   "source": "Void halloween.teles.toml 46938 tile 3744,5275 delta x+65 y+1 (the pair of 46936 at 3809,5276); the delta from the west approach lands on 3808,5276 (blocked in the 667 map), so a fixed landing: the free tile east of 46936 (the mirror of the down landing)",
+   "to": {
+    "x": 3810,
+    "z": 5276,
+    "height": 0
+   }
+  },
+  {
+   "id": 2593,
+   "name": "port_sarim_lady_lumbridge_gangplank_enter",
+   "option": "Cross",
+   "tile": {
+    "x": 3047,
+    "z": 3205,
+    "height": 0
+   },
+   "source": "Void port_sarim.teles.toml tile 3047,3205 to 3047,3207 level 1 (Void keyed it to the void-outpost name, so object-teleports.json carries id 14304 there and the 667 loc 2593 was placement-rejected); 2009scape PortsObjectPlugin 2593 -> 3047,3207,1 agrees; landing reach 20",
+   "to": {
+    "x": 3047,
+    "z": 3207,
+    "height": 1
+   }
+  },
+  {
+   "id": 20356,
+   "name": "sophanem_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3308,
+    "z": 2803,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): ladder 20356 (3308,2803,0) has its counterpart Ladder 20357 Climb-down on the same tile two floors up (3308,2803,2), every side of it free there -> the player keeps his tile two floors up",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": 2
+   }
+  },
+  {
+   "id": 12780,
+   "name": "burgh_de_rott_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3513,
+    "z": 3238,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): ladder 12780 (3513,3238,0) pairs with Ladder 12781 Climb-down on the same tile two floors up; its only free side is north (pocket 20)",
+   "to": {
+    "x": 3513,
+    "z": 3239,
+    "height": 2
+   }
+  },
+  {
+   "id": 10525,
+   "name": "nardah_staircase_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3446,
+    "z": 2911,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): staircase 10525 (3x2, 3446-3448,2911-2912,0) pairs with Staircase 10526 Climb-down (2x2, 3447-3448,2911-2912,1); bottom on the west side, landing = free east side of 10526",
+   "to": {
+    "x": 3449,
+    "z": 2911,
+    "height": 1
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 10526,
+   "name": "nardah_staircase_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3447,
+    "z": 2911,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): staircase 10526 pairs with Staircase 10525 (3x2 from 3446,2911,0); landing = free west foot of 10525",
+   "to": {
+    "x": 3445,
+    "z": 2911,
+    "height": 0
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 22937,
+   "name": "cave_goblin_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2472,
+    "z": 4322,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22937 (3x2, 2472,4322,0) pair with Stairs 22938 Climb-down (2x2, 2473,4322,1) whose only free side is east (2475,4322-4323)",
+   "to": {
+    "x": 2475,
+    "z": 4322,
+    "height": 1
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 22938,
+   "name": "cave_goblin_stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2473,
+    "z": 4322,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22938 pair with Stairs 22937 (3x2, 2472,4322,0); landing = its free west foot 2471,4322-4323",
+   "to": {
+    "x": 2471,
+    "z": 4322,
+    "height": 0
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 22938,
+   "name": "cave_goblin_stairs_down_2",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2446,
+    "z": 4303,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22938 (2446,4303,1, top free on the west) pair with Stairs 22937 (3x2 rot 2, 2446,4303,0); landing = its free east foot 2449,4303-4304",
+   "to": {
+    "x": 2449,
+    "z": 4303,
+    "height": 0
+   },
+   "near": {
+    "width": 1,
+    "height": 2
+   }
+  },
+  {
+   "id": 22939,
+   "name": "cave_goblin_stairs_up_2",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2464,
+    "z": 4335,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22939 (2x3, 2464,4335,0) pair with Stairs 22940 Climb-down (2x1, 2464,4336,1); landing = its free north side 2464-2465,4337",
+   "to": {
+    "x": 2464,
+    "z": 4337,
+    "height": 1
+   },
+   "near": {
+    "width": 2,
+    "height": 1
+   }
+  },
+  {
+   "id": 22940,
+   "name": "cave_goblin_stairs_down_2",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2464,
+    "z": 4336,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): stairs 22940 pair with Stairs 22939 (2x3, 2464,4335,0); landing = its free south foot 2464-2465,4334",
+   "to": {
+    "x": 2464,
+    "z": 4334,
+    "height": 0
+   },
+   "near": {
+    "width": 2,
+    "height": 1
+   }
+  },
+  {
+   "id": 17976,
+   "name": "stairs_up_14387",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3625,
+    "z": 3269,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stairs up 17976 (2x1, 3625,3269,0) pair with Stairs down 17978 on the same tiles one floor up; landing = its free west side (pocket 8)",
+   "to": {
+    "x": 3624,
+    "z": 3269,
+    "height": 1
+   }
+  },
+  {
+   "id": 57464,
+   "name": "stone_stairs_up_6470",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1636,
+    "z": 4531,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stone stairs 57464 (3x3, 1636,4531,0; free foot west/south) pair with Stone stairs 57465 Climb-down (3x3, same tiles, one floor up; free top north/east, pocket 60)",
+   "to": {
+    "x": 1637,
+    "z": 4534,
+    "height": 1
+   }
+  },
+  {
+   "id": 18599,
+   "name": "workshop_stairs_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1948,
+    "z": 5159,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stairs 18599 (2x2, 1948,5159,0) pair with Stairwell 18597 Climb-down (2x2, 1948,5158,2); landing = free east side of 18597",
+   "to": {
+    "x": 1950,
+    "z": 5158,
+    "height": 2
+   }
+  },
+  {
+   "id": 18597,
+   "name": "workshop_stairwell_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 1948,
+    "z": 5158,
+    "height": 2
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stairwell 18597 pairs with Stairs 18599 (2x2, 1948,5159,0); landing = free east side of 18599",
+   "to": {
+    "x": 1950,
+    "z": 5159,
+    "height": 0
+   }
+  },
+  {
+   "id": 18610,
+   "name": "workshop_stairs_up_2",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1949,
+    "z": 5149,
+    "height": 2
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stairs 18610 (1949,5149,2) pair with Stairs 18611 Climb-down on the same tile one floor up; its only free side is west",
+   "to": {
+    "x": 1948,
+    "z": 5149,
+    "height": 3
+   }
+  },
+  {
+   "id": 18610,
+   "name": "workshop_stairs_up_3",
+   "option": "Climb-up",
+   "tile": {
+    "x": 1958,
+    "z": 5159,
+    "height": 2
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Stairs 18610 (1958,5159,2) pair with Stairs 18611 Climb-down on the same tile one floor up; its only free side is east",
+   "to": {
+    "x": 1959,
+    "z": 5159,
+    "height": 3
+   }
+  },
+  {
+   "id": 1738,
+   "name": "staircase_up_2776",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2776,
+    "z": 4683,
+    "height": 0
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Staircase 1738 (2x2, 2776,4683,0) pairs with Staircase 1740 Climb-down (2777,4684,1); landing = free tile north of 1740 (pocket 34)",
+   "to": {
+    "x": 2777,
+    "z": 4685,
+    "height": 1
+   }
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2836,
+    "z": 5585,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Ladder 38762 (2836,5585,1) stands on Ladder 38761 (Climb, same tile one floor down); every side of 38761 is free on plane 0 (pocket 35), so the player keeps his side one floor down",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": -1
+   }
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2849,
+    "z": 5584,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Ladder 38762 (2849,5584,1) stands on Ladder 38761 (Climb, same tile one floor down); every side of 38761 is free on plane 0 (pocket 35), so the player keeps his side one floor down",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": -1
+   }
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3028,
+    "z": 5585,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Ladder 38762 (3028,5585,1) stands on Ladder 38761 (Climb, same tile one floor down); every side of 38761 is free on plane 0 (pocket 35), so the player keeps his side one floor down",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": -1
+   }
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3041,
+    "z": 5584,
+    "height": 1
+   },
+   "source": "667 map (tools/conformance/traversal/placements_667.tsv + MapProbe collision 2026-10-03): Ladder 38762 (3041,5584,1) stands on Ladder 38761 (Climb, same tile one floor down); every side of 38761 is free on plane 0 (pocket 35), so the player keeps his side one floor down",
+   "delta": {
+    "x": 0,
+    "z": 0,
+    "height": -1
+   }
+  },
+  {
+   "id": 42577,
+   "name": "chosen_commander_cave_exit",
+   "option": "Go-through",
+   "tile": {
+    "x": 2370,
+    "z": 4234,
+    "height": 0
+   },
+   "source": "Void chasm_of_tears.teles.toml chosen_commander_cave_exit (2370,4274 -> 3248,9500 level 2, already in object-teleports.json); the 667 region 9538 holds three copies of the same arena, the other two exits (2370,4234; live plane 0, census plane 1 = bridge tiles) get the same exit",
+   "to": {
+    "x": 3248,
+    "z": 9500,
+    "height": 2
+   }
+  },
+  {
+   "id": 42577,
+   "name": "chosen_commander_cave_exit",
+   "option": "Go-through",
+   "tile": {
+    "x": 2404,
+    "z": 4255,
+    "height": 0
+   },
+   "source": "Void chasm_of_tears.teles.toml chosen_commander_cave_exit (2370,4274 -> 3248,9500 level 2, already in object-teleports.json); the 667 region 9538 holds three copies of the same arena, the other two exits (2404,4255; live plane 0, census plane 1 = bridge tiles) get the same exit",
+   "to": {
+    "x": 3248,
+    "z": 9500,
+    "height": 2
+   }
+  }
+ ]
+}
