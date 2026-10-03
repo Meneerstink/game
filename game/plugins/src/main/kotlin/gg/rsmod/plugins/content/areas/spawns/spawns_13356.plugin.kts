@@ -1,7 +1,7 @@
 package gg.rsmod.plugins.content.areas.spawns
 
-spawn_npc(npc = 3124, x = 3366, z = 2845, height = 3, walkRadius = 5, direction = Direction.NORTH, static = false) // Pyramid block
-spawn_npc(npc = 3125, x = 3372, z = 2847, height = 1, walkRadius = 5, direction = Direction.NORTH, static = false) // Pyramid block
+spawn_npc(npc = 3124, x = 3366, z = 2845, height = 3, walkRadius = 0, direction = Direction.NORTH, static = false) // Pyramid block
+spawn_npc(npc = 3125, x = 3372, z = 2847, height = 1, walkRadius = 0, direction = Direction.NORTH, static = false) // Pyramid block
 spawn_npc(
     npc = Npcs.MUMMY_6753,
     x = 3381,
