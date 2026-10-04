@@ -26,16 +26,20 @@ import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
  * ([OsrsGuidePrices.seed]) of the unnoted item, so a note costs exactly what the item costs.
  */
 object QuartermasterSupplies {
-    const val CONSUMABLES = "Home PK Supplies"
-    const val CONSUMABLES_NOTED = "Home PK Supplies (noted)"
-    const val AMMUNITION = "Home PK Runes and Ammunition"
+    /**
+     * Owner 2026-10-04 02:40 (bug 024055: "now there is no shop just a chat interface i did not ask for this"): Trade opens ONE
+     * shop directly again - no "which supplies?" dialogue. Owner's choice the same night: the consumables as banknotes plus the
+     * runes, sacks, arrows and one bolt type, exactly the 40 rows the window draws ([droppedForWindow] lists what made way).
+     */
+    const val SHOP = "Home PK Supplies"
 
     /** Food and potions (4 doses): every one of these has a banknote in this cache, so the noted shop sells only notes of them. */
     val foodAndPotions: List<Pair<Int, Int>> =
         listOf(
             // High-tier and combo food (owner 2026-09-30: no shark, summer pie or tuna potato).
             Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000, Items.DARK_CRAB to 1_000,
-            Items.MARLIN to 1_000, Items.HALIBUT to 1_000, Items.COOKED_KARAMBWAN to 2_000,
+            // Halibut made way for the one bolt row (2026-10-04, 40-row window; [droppedForWindow]).
+            Items.MARLIN to 1_000, Items.COOKED_KARAMBWAN to 2_000,
             // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion.
             Items.SARADOMIN_BREW_4 to 1_000, Items.SUPER_RESTORE_4 to 1_000, Items.SUPER_COMBAT_POTION_4 to 500,
             Items.SUPER_ATTACK_4 to 500, Items.SUPER_STRENGTH_4 to 500, Items.SUPER_DEFENCE_4 to 500,
@@ -71,12 +75,21 @@ object QuartermasterSupplies {
             Items.BLIGHTED_TELEPORT_SPELL_SACK to 2_000, Items.BLIGHTED_VENGEANCE_SACK to 5_000,
             // Arrows (owner 2026-09-30: rune and dragon only).
             Items.RUNE_ARROW to 2_000, Items.DRAGON_ARROW to 1_000,
-            // Crossbow ammunition.
-            Items.RUNITE_BOLTS to 3_000, Items.DIAMOND_BOLTS_E to 1_000, Items.RUBY_BOLTS_E to 1_000,
-            Items.DRAGON_BOLTS_E to 1_000, Items.ONYX_BOLTS_E to 300, Items.DRAGON_BOLTS to 1_000,
-            Items.OPAL_DRAGON_BOLTS_E to 500, Items.DIAMOND_DRAGON_BOLTS_E to 500, Items.RUBY_DRAGON_BOLTS_E to 500,
-            Items.DRAGONSTONE_DRAGON_BOLTS_E to 300, Items.MOONLIGHT_ANTLER_BOLTS to 500,
+            // Crossbow ammunition: the one bolt row that fits the window (owner 2026-10-04: "one shop, noted + top 40").
+            Items.RUBY_DRAGON_BOLTS_E to 500,
         ).distinctBy { it.first }
+
+    /** Rows dropped on 2026-10-04 so the single shop fits the 40-row window (the owner can swap any back in). */
+    val droppedForWindow: List<Int> =
+        listOf(
+            Items.HALIBUT,
+            Items.RUNITE_BOLTS, Items.DIAMOND_BOLTS_E, Items.RUBY_BOLTS_E, Items.DRAGON_BOLTS_E, Items.ONYX_BOLTS_E,
+            Items.DRAGON_BOLTS, Items.OPAL_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E, Items.DRAGONSTONE_DRAGON_BOLTS_E,
+            Items.MOONLIGHT_ANTLER_BOLTS,
+        )
+
+    /** The single shop's stock, in window order: consumables (sold noted where a note exists), then the stackables. */
+    val stock: List<Pair<Int, Int>> = (consumables + ammunition).distinctBy { it.first }
 
     /** One stocked row: the id the shop hands out, its stock, and the price of one (the unnoted item's price). */
     data class Row(val item: Int, val amount: Int, val price: Int, val unnoted: Int)

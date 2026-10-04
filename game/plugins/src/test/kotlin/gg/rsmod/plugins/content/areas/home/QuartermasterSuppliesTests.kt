@@ -23,39 +23,38 @@ import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/** Owner 2026-10-03 (bug 205926, buglist E4/E5): Quartermaster noted supplies, no Prayer potion, every row visible. */
+/**
+ * Owner 2026-10-03 (bug 205926, buglist E4/E5): Quartermaster noted supplies, no Prayer potion, every row visible.
+ * Owner 2026-10-04 (bug 024055): ONE shop that Trade opens directly - no three-shop chooser.
+ */
 class QuartermasterSuppliesTests {
     private fun def(id: Int) = DEFINITIONS.get(ItemDef::class.java, id)
 
-    private val shops =
-        mapOf(
-            QuartermasterSupplies.CONSUMABLES to QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.consumables, noted = false),
-            QuartermasterSupplies.CONSUMABLES_NOTED to QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.consumables, noted = true),
-            QuartermasterSupplies.AMMUNITION to QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.ammunition, noted = false),
-        )
+    /** The one shop, exactly as home_transport.plugin.kts builds it. */
+    private val shop = QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.stock, noted = true)
 
     @Test
     fun `no Prayer potion in any Quartermaster shop`() {
         val prayer = setOf(Items.PRAYER_POTION_4, Items.PRAYER_POTION_3, Items.PRAYER_POTION_2, Items.PRAYER_POTION_1)
-        val offenders = shops.flatMap { (title, rows) -> rows.filter { it.unnoted in prayer || def(it.unnoted).name.startsWith("Prayer potion") }.map { "$title: ${it.unnoted}" } }
+        val offenders = shop.filter { it.unnoted in prayer || def(it.unnoted).name.startsWith("Prayer potion") }.map { it.unnoted }
         assertTrue(offenders.isEmpty(), "Prayer potion still stocked: $offenders")
     }
 
     @Test
     fun `every row exists, is priced and fits the 40-slot shop window`() {
-        val all = QuartermasterSupplies.consumables + QuartermasterSupplies.ammunition
-        shops.forEach { (title, rows) ->
-            assertTrue(rows.size <= Shop.CLIENT_VISIBLE_SLOTS, "$title has ${rows.size} rows, the window draws ${Shop.CLIENT_VISIBLE_SLOTS}")
-            rows.forEach { assertTrue(it.price > 0, "$title: ${it.unnoted} '${def(it.unnoted).name}' has no price") }
-        }
-        assertEquals(all.size, shops.getValue(QuartermasterSupplies.CONSUMABLES).size + shops.getValue(QuartermasterSupplies.AMMUNITION).size, "a stock row is missing from this cache")
+        val all = QuartermasterSupplies.stock
+        assertTrue(shop.size <= Shop.CLIENT_VISIBLE_SLOTS, "the shop has ${shop.size} rows, the window draws ${Shop.CLIENT_VISIBLE_SLOTS}")
+        shop.forEach { assertTrue(it.price > 0, "${it.unnoted} '${def(it.unnoted).name}' has no price") }
+        assertEquals(all.size, shop.size, "a stock row is missing from this cache")
         assertEquals(all.size, all.map { it.first }.distinct().size, "a row is stocked twice")
+        assertTrue(QuartermasterSupplies.droppedForWindow.none { id -> shop.any { it.unnoted == id } }, "a dropped bolt row is still stocked")
     }
 
     @Test
     fun `the noted shop sells the banknote of every consumable that has one, at the item's own price`() {
-        val loose = shops.getValue(QuartermasterSupplies.CONSUMABLES)
-        val noted = shops.getValue(QuartermasterSupplies.CONSUMABLES_NOTED)
+        val loose = QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.consumables, noted = false)
+        val consumableIds = QuartermasterSupplies.consumables.map { it.first }.toSet()
+        val noted = shop.filter { it.unnoted in consumableIds }
         assertEquals(loose.map { it.unnoted }, noted.map { it.unnoted })
         val report = mutableListOf<String>()
         loose.zip(noted).forEach { (l, n) ->
@@ -90,16 +89,17 @@ class QuartermasterSuppliesTests {
     }
 
     @Test
-    fun `the ammunition shop holds only items that stack by themselves`() {
-        shops.getValue(QuartermasterSupplies.AMMUNITION).forEach { assertTrue(def(it.item).stackable, "${def(it.item).name} does not stack") }
+    fun `the runes, sacks, arrows and bolts stack by themselves`() {
+        val ammunitionIds = QuartermasterSupplies.ammunition.map { it.first }.toSet()
+        shop.filter { it.unnoted in ammunitionIds }.forEach { assertTrue(def(it.item).stackable, "${def(it.item).name} does not stack") }
     }
 
     @Test
     fun `buying 500 noted brews takes one slot and charges exactly`() {
-        val row = shops.getValue(QuartermasterSupplies.CONSUMABLES_NOTED).first { it.unnoted == Items.SARADOMIN_BREW_4 }
+        val row = shop.first { it.unnoted == Items.SARADOMIN_BREW_4 }
         val items = arrayOfNulls<ShopItem?>(Shop.CLIENT_VISIBLE_SLOTS)
         items[0] = ShopItem(row.item, row.amount, sellPrice = row.price)
-        val shop = Shop(QuartermasterSupplies.CONSUMABLES_NOTED, StockType.NORMAL, PurchasePolicy.BUY_NONE, CoinCurrency(), items, arrayOfNulls(6), false)
+        val shop = Shop(QuartermasterSupplies.SHOP, StockType.NORMAL, PurchasePolicy.BUY_NONE, CoinCurrency(), items, arrayOfNulls(6), false)
         val currency = CoinCurrency()
         val price = currency.sellPriceOf(world, items[0]!!)
 

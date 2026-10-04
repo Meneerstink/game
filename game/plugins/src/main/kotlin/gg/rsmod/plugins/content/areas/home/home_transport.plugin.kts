@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
-import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.game.model.shop.PurchasePolicy
 
@@ -49,9 +48,9 @@ import gg.rsmod.game.model.shop.PurchasePolicy
  * store unbound (bulk_shops found the Trade slot taken). The Quartermaster is npc 11679 (cache "Shop assistant",
  * Talk-to/Trade, spawned nowhere else), renamed in both caches by NpcRenameTool (tx-20260922-141234).
  *
- * Stock, prices and the 40-row window limit: [QuartermasterSupplies]. Three shops (bug run 2026-10-03, owner E4/E5):
- * consumables unnoted, the same consumables as banknotes, and runes/sacks/arrows/bolts (stackable already). Trade asks
- * which one; the amount is the shop's stock, which restocks 1% of it per resupply tick.
+ * Stock, prices and the 40-row window limit: [QuartermasterSupplies]. ONE shop that Trade opens directly (owner 2026-10-04
+ * 02:40, bug 024055: the three-shop "which supplies?" dialogue of 2026-10-03 was not wanted): consumables as banknotes where
+ * the cache has a note, then runes, sacks, arrows and one bolt type. The amount restocks 1% of it per resupply tick.
  */
 val QUARTERMASTER = gg.rsmod.plugins.content.areas.grandexchange.GeHomeHall.QUARTERMASTER
 
@@ -79,24 +78,10 @@ fun createSupplyShop(
     }
 }
 
-createSupplyShop(QuartermasterSupplies.CONSUMABLES, QuartermasterSupplies.consumables, noted = false)
-createSupplyShop(QuartermasterSupplies.CONSUMABLES_NOTED, QuartermasterSupplies.consumables, noted = true)
-createSupplyShop(QuartermasterSupplies.AMMUNITION, QuartermasterSupplies.ammunition, noted = false)
-
-/** Asks which of the three Quartermaster shops to open and opens it (nothing when the dialogue is closed). */
-suspend fun QueueTask.chooseSupplyShop() {
-    val shop =
-        when (options("Supplies as banknotes (bulk).", "Supplies, unnoted.", "Runes, sacks, arrows and bolts.", "Nothing for now.", title = "Which supplies?")) {
-            FIRST_OPTION -> QuartermasterSupplies.CONSUMABLES_NOTED
-            SECOND_OPTION -> QuartermasterSupplies.CONSUMABLES
-            THIRD_OPTION -> QuartermasterSupplies.AMMUNITION
-            else -> return
-        }
-    player.openShop(shop)
-}
+createSupplyShop(QuartermasterSupplies.SHOP, QuartermasterSupplies.stock, noted = true)
 
 on_npc_option(QUARTERMASTER, "trade") {
-    player.queue { chooseSupplyShop() }
+    player.openShop(QuartermasterSupplies.SHOP)
 }
 
 on_npc_option(QUARTERMASTER, "talk-to") {
@@ -108,22 +93,22 @@ on_npc_option(QUARTERMASTER, "talk-to") {
             facialExpression = FacialExpression.CALM_TALK,
         )
         when (options("Let's see your supplies.", "What do you stock?", "Nothing for now.")) {
-            FIRST_OPTION -> chooseSupplyShop()
+            FIRST_OPTION -> player.openShop(QuartermasterSupplies.SHOP)
             SECOND_OPTION -> {
                 chatPlayer("What do you stock?", facialExpression = FacialExpression.THINKING)
                 chatNpc(
                     "Brews, restores and super combats. Anglerfish, dark",
-                    "crabs, mantas and karambwans for combo eating - loose",
-                    "or as banknotes, so you can stock a whole bank.",
+                    "crabs, mantas and karambwans for combo eating - all",
+                    "as banknotes, so you can stock a whole bank.",
                     facialExpression = FacialExpression.CALM_TALK,
                 )
                 chatNpc(
                     "Combination runes, blighted sacks, rune and dragon",
-                    "arrows, enchanted bolts, rune pouches, glories, house",
+                    "arrows, ruby dragon bolts, rune pouches, glories, house",
                     "tabs, burning amulets and seeds. Have a look.",
                     facialExpression = FacialExpression.HAPPY,
                 )
-                chooseSupplyShop()
+                player.openShop(QuartermasterSupplies.SHOP)
             }
         }
     }
