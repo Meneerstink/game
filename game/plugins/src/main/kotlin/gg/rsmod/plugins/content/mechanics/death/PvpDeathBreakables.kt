@@ -4,6 +4,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.items.osrs.Blowpipe
 import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
@@ -90,6 +91,7 @@ object PvpDeathBreakables {
             itemId in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
             gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null ||
             gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId) ||
+            itemId in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR || itemId == Items.SERPENTINE_HELM ||
             pointsDeath(itemId) || crystalSeedOnDeath(itemId) != null
 
     /**
@@ -211,6 +213,27 @@ object PvpDeathBreakables {
                 drop(Item(Items.REVENANT_ETHER, ether))
                 continue
             }
+            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR) {
+                // OSRS Wiki "Craw's bow": "any revenant ether stored as ammo within the bow will always be dropped and the initial
+                // 1,000 activation ether will always disappear"; "Webweaver bow": "... will always be dropped and the initial 1,000
+                // activation ether will always be provided to the killer". The killer gets the uncharged bow as well.
+                val bow = container[slotItem.slot]!!
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR.getValue(bow.id), 1))
+                revenantBowEther(bow).takeIf { it > 0 }?.let { drop(Item(Items.REVENANT_ETHER, it)) }
+                continue
+            }
+            if (slotItem.item.id == Items.SERPENTINE_HELM) {
+                // OSRS Wiki "Serpentine helm": "If a player dies with the helmet in PvP and it is not protected, any scales that were
+                // used to charge it will appear on the floor along with the uncharged helmet."
+                val scales = gg.rsmod.plugins.content.items.osrs.SerpentineHelm.scales(container[slotItem.slot]!!)
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(Items.SERPENTINE_HELM_UNCHARGED, 1))
+                if (scales > 0) drop(Item(Items.ZULRAHS_SCALES, scales))
+                continue
+            }
             val chargedStaff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(slotItem.item.id)
             if (chargedStaff != null) {
                 // OSRS Wiki "Trident of the Seas": "If lost on death, only the uncharged trident will appear on the
@@ -256,5 +279,73 @@ object PvpDeathBreakables {
         }
         if (equipmentChanged) victim.refreshBonuses()
         return broken
+    }
+
+    /** The ether a lost or protected revenant bow gives the killer: what it stores, plus the 1,000 deposit for the Webweaver bow. */
+    private fun revenantBowEther(bow: Item): Int {
+        val stored = gg.rsmod.plugins.content.items.osrs.RevenantBows.ether(bow)
+        val deposit = if (bow.id == Items.WEBWEAVER_BOW) gg.rsmod.plugins.content.items.osrs.RevenantBows.ACTIVATION_ETHER else 0
+        return stored + deposit
+    }
+
+    /**
+     * OSRS Wiki, every revenant weapon page: on a death in the Wilderness the stored ether "will always be dropped, even if it is
+     * one of the player's protected items". A protected chainmace or sceptre keeps its activation and loses only the stored ether;
+     * a protected Craw's or Webweaver bow is left uncharged (the deposit disappears, or goes to the killer for the Webweaver bow -
+     * [revenantBowEther]). Returns the ether for the killer.
+     */
+    fun stripProtectedEther(
+        victim: gg.rsmod.game.model.entity.Player,
+        result: DeathResolutionResult,
+    ): List<Item> {
+        if (result.context != DeathContext.WILDERNESS_PVP) return emptyList()
+        val dropped = mutableListOf<Item>()
+        var equipmentChanged = false
+        for (slotItem in result.itemRisk.protected) {
+            val container =
+                when (slotItem.source) {
+                    DeathContainerSource.INVENTORY -> victim.inventory
+                    DeathContainerSource.EQUIPMENT -> victim.equipment
+                }
+            val current = container[slotItem.slot]?.takeIf { it.id == slotItem.item.id } ?: continue
+            when {
+                current.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR -> {
+                    revenantBowEther(current).takeIf { it > 0 }?.let { dropped += Item(Items.REVENANT_ETHER, it) }
+                    container[slotItem.slot] = Item(gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR.getValue(current.id), 1)
+                    if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                }
+                gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(current.id) -> {
+                    val stored = gg.rsmod.plugins.content.items.osrs.RevenantWeapons.ether(current)
+                    if (stored <= 0) continue
+                    dropped += Item(Items.REVENANT_ETHER, stored)
+                    container[slotItem.slot] =
+                        Item(current.id, current.amount).copyAttr(current).also { it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 0 }
+                    if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                }
+            }
+        }
+        if (equipmentChanged) victim.refreshBonuses()
+        return dropped
+    }
+
+    /**
+     * OSRS Wiki "Amulet of the Damned" / audit 2026-10-04 (degradation): the used amulet turns to dust on death - PvM and PvP, kept
+     * or not (the full amulet goes the normal way). Removed before the death is resolved, so it is never kept, dropped or graved.
+     */
+    fun crumbleUsedAmulets(victim: gg.rsmod.game.model.entity.Player): Int {
+        var crumbled = 0
+        listOf(victim.inventory, victim.equipment).forEach { container ->
+            for (slot in 0 until container.capacity) {
+                if (container[slot]?.id == Items.AMULET_OF_THE_DAMNED) {
+                    container[slot] = null
+                    crumbled++
+                }
+            }
+        }
+        if (crumbled > 0) {
+            victim.refreshBonuses()
+            victim.message("<col=ff0000>Your amulet of the damned has crumbled to dust.")
+        }
+        return crumbled
     }
 }

@@ -64,6 +64,7 @@ fun resolveDeath(victim: Player) {
     val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else null
 
     val pvpDeath = (contextOverride ?: DeathResolver.resolveContext(victim, killer)) == DeathContext.WILDERNESS_PVP
+    PvpDeathBreakables.crumbleUsedAmulets(victim)
     // Owner 2026-09-26: Protect Item keeps 1 item (skull irrelevant), ranked by guide price / untradeable repair price.
     val resolved =
         DeathResolver.resolve(
@@ -93,6 +94,7 @@ fun resolveDeath(victim: Player) {
                 PvpDeathBreakables.execute(world, result, converting) { converted += it }
                 converted += UntradeableDeathProtection.execute(victim, untradeables)
                 val droppedProtectedAmmo = QuiverDeathRules.stripProtected(victim, result)
+                converted += PvpDeathBreakables.stripProtectedEther(victim, result)
                 converted += droppedLostAmmo + droppedProtectedAmmo
                 // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch.
                 converted += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim)

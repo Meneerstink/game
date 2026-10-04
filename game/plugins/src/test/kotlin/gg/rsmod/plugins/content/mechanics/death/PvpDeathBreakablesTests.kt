@@ -221,6 +221,80 @@ class PvpDeathBreakablesTests {
         assertTrue(PvpDeathBreakables.split(pvp).second.isEmpty(), "a protected defender stays intact")
     }
 
+    private fun charged(id: Int, charges: Int) = Item(id, 1).also { it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = charges }
+
+    private fun runConversions(victim: Player, lost: List<DeathSlotItem>, protected: List<DeathSlotItem> = emptyList()): List<Item> {
+        val killer = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        val (result, breaking) =
+            PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(protected.size, protected, lost)))
+        val loot = mutableListOf<Item>()
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        try {
+            every { victim.refreshBonuses() } just Runs
+            PvpDeathBreakables.execute(world, result, breaking) { loot += it }
+            loot += PvpDeathBreakables.stripProtectedEther(victim, result)
+        } finally {
+            unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        }
+        return loot
+    }
+
+    @Test
+    fun `an unprotected serpentine helm drops uncharged with its scales`() {
+        val victim = newPlayer()
+        victim.equipment[0] = charged(Items.SERPENTINE_HELM, 5_000)
+        val loot = runConversions(victim, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, victim.equipment[0]!!)))
+        assertNull(victim.equipment[0])
+        assertEquals(listOf(Items.SERPENTINE_HELM_UNCHARGED to 1, Items.ZULRAHS_SCALES to 5_000), loot.map { it.id to it.amount })
+    }
+
+    @Test
+    fun `lost revenant bows - Craw's activation disappears, Webweaver's goes to the killer`() {
+        val craws = newPlayer()
+        craws.equipment[3] = charged(Items.CRAWS_BOW, 400)
+        val crawsLoot = runConversions(craws, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 3, craws.equipment[3]!!)))
+        assertEquals(listOf(Items.CRAWS_BOW_U to 1, Items.REVENANT_ETHER to 400), crawsLoot.map { it.id to it.amount })
+
+        val webweaver = newPlayer()
+        webweaver.equipment[3] = charged(Items.WEBWEAVER_BOW, 400)
+        val webLoot = runConversions(webweaver, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 3, webweaver.equipment[3]!!)))
+        assertEquals(listOf(Items.WEBWEAVER_BOW_U to 1, Items.REVENANT_ETHER to 1_400), webLoot.map { it.id to it.amount })
+    }
+
+    @Test
+    fun `protected revenant weapons still drop their stored ether`() {
+        val victim = newPlayer()
+        victim.equipment[3] = charged(Items.VIGGORAS_CHAINMACE, 250)
+        victim.inventory[0] = charged(Items.CRAWS_BOW, 100)
+        val protected =
+            listOf(
+                DeathSlotItem(DeathContainerSource.EQUIPMENT, 3, victim.equipment[3]!!),
+                DeathSlotItem(DeathContainerSource.INVENTORY, 0, victim.inventory[0]!!),
+            )
+        val loot = runConversions(victim, emptyList(), protected)
+        assertEquals(listOf(Items.REVENANT_ETHER to 250, Items.REVENANT_ETHER to 100), loot.map { it.id to it.amount })
+        assertEquals(Items.VIGGORAS_CHAINMACE, victim.equipment[3]?.id, "the chainmace stays activated")
+        assertEquals(0, victim.equipment[3]?.attr?.get(gg.rsmod.game.model.item.ItemAttribute.CHARGES))
+        assertEquals(Items.CRAWS_BOW_U, victim.inventory[0]?.id, "the kept Craw's bow loses its activation")
+    }
+
+    @Test
+    fun `a used amulet of the damned turns to dust on any death, the full one does not`() {
+        val victim = newPlayer()
+        victim.equipment[2] = Item(Items.AMULET_OF_THE_DAMNED, 1)
+        victim.inventory[5] = Item(Items.AMULET_OF_THE_DAMNED_FULL, 1)
+        mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        try {
+            every { victim.refreshBonuses() } just Runs
+            assertEquals(1, PvpDeathBreakables.crumbleUsedAmulets(victim))
+        } finally {
+            unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        }
+        assertNull(victim.equipment[2])
+        assertEquals(Items.AMULET_OF_THE_DAMNED_FULL, victim.inventory[5]?.id)
+    }
+
     private fun newPlayer(): Player {
         val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
