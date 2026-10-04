@@ -114,3 +114,32 @@ on_button(PC_REWARD_INTERFACE, PestControlRewards.CONFIRM) {
 on_button(PC_REWARD_INTERFACE, 94) {
     player.closeInterface(PC_REWARD_INTERFACE)
 }
+
+/*
+ * Elite void (owner 2026-10-04: Pest Control rewards = OSRS - the elite top and robe cost 200 points each and replace the normal piece).
+ * This cache's 2009 reward interface 267 has no elite slot, so the upgrade uses Darkan's route (CommendationExchange.kt: a Void Knight
+ * top or robe used on Commodore Tyr, npc 11681, spawned at the outpost) at the OSRS price instead of Darkan's 100.
+ */
+val ELITE_VOID_UPGRADE_POINTS = 200
+val COMMODORE_TYR = 11681
+
+mapOf(
+    Items.VOID_KNIGHT_TOP to Items.ELITE_VOID_KNIGHT_TOP,
+    Items.VOID_KNIGHT_TOP_10611 to Items.ELITE_VOID_KNIGHT_TOP,
+    Items.VOID_KNIGHT_ROBE to Items.ELITE_VOID_KNIGHT_ROBE,
+).forEach { (piece, elite) ->
+    on_item_on_npc(item = piece, npc = COMMODORE_TYR) {
+        if ((player.attr[PEST_POINTS] ?: 0) < ELITE_VOID_UPGRADE_POINTS) {
+            player.message("You need $ELITE_VOID_UPGRADE_POINTS Void Knight Commendation Points to upgrade void knight armour.")
+            return@on_item_on_npc
+        }
+        player.queue {
+            val choice = options("Yes, upgrade my armour.", "Nevermind.", title = "Upgrade this piece to elite for $ELITE_VOID_UPGRADE_POINTS commendations?")
+            val points = player.attr[PEST_POINTS] ?: 0
+            if (choice != 1 || points < ELITE_VOID_UPGRADE_POINTS || !player.inventory.remove(piece).hasSucceeded()) return@queue
+            player.inventory.add(elite)
+            player.attr[PEST_POINTS] = points - ELITE_VOID_UPGRADE_POINTS
+            player.message("<col=571D07>Remaining Void Knight Commendation Points: ${player.attr[PEST_POINTS]}")
+        }
+    }
+}

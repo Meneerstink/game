@@ -32,7 +32,9 @@ class GodWarsHuntModeTests {
                 }
             val actual = GodWars.huntMode(id)
             if (actual != expected) problems += "$id ${entry.key}: hunt mode $actual, Void ${entry.mode.ifEmpty { "none" }}"
-            if (GodWars.huntRange(id) != entry.range) problems += "$id ${entry.key}: hunt range ${GodWars.huntRange(id)}, Void ${entry.range}"
+            // Generals and bodyguards hunt the whole chamber (Darkan GWDBoss/GWDMinion setForceAggroDistance(64)); followers keep Void's range.
+            val expectedRange = if (actual == GodWars.HuntMode.GENERAL) GodWars.CHAMBER_HUNT_RANGE else entry.range
+            if (GodWars.huntRange(id) != expectedRange) problems += "$id ${entry.key}: hunt range ${GodWars.huntRange(id)}, expected $expectedRange"
         }
         assertTrue(problems.isEmpty(), problems.joinToString("\n"))
     }

@@ -11,6 +11,9 @@ import kotlin.math.abs
 
 val AGGRO_CHECK_TIMER = TimerKey()
 
+/** Above this aggro radius [checkRadius] walks the player list instead of every tile of the square. */
+val PLAYER_LIST_SCAN_RADIUS = 16
+
 // RCV-012.B14: load data/cfg/npcs/hunt-modes.json when the plugin loads, so a missing or malformed table fails at boot instead of
 // inside every aggressive npc's AGGRO_CHECK_TIMER.
 val huntModeTable = NpcHuntModes.table
@@ -166,12 +169,26 @@ fun checkRadius(npc: Npc): Boolean {
     val size = npc.getSize().coerceAtLeast(1)
     val range = gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1
     val candidates = ArrayList<Player>()
-    for (x in -radius until radius + size) {
-        for (z in -radius until radius + size) {
-            val tile = npc.tile.transform(x, z)
-            val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
-            chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { p ->
-                if (p !in candidates && mayTarget(npc, p, range)) candidates += p
+    if (radius > PLAYER_LIST_SCAN_RADIUS) {
+        // A whole-chamber hunt (GWD generals, radius 64) would look up 129 x 129 tiles every search: walk the player list instead,
+        // over the same square.
+        world.players.forEach { p ->
+            val dx = p.tile.x - npc.tile.x
+            val dz = p.tile.z - npc.tile.z
+            if (p.tile.height == npc.tile.height && dx >= -radius && dx < radius + size && dz >= -radius && dz < radius + size &&
+                mayTarget(npc, p, range)
+            ) {
+                candidates += p
+            }
+        }
+    } else {
+        for (x in -radius until radius + size) {
+            for (z in -radius until radius + size) {
+                val tile = npc.tile.transform(x, z)
+                val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
+                chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { p ->
+                    if (p !in candidates && mayTarget(npc, p, range)) candidates += p
+                }
             }
         }
     }

@@ -12,6 +12,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.tools.importer.ObjectPlacementProbeTool
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.setComponentItem
 import gg.rsmod.plugins.api.ext.setVarc
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
 import gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
@@ -161,6 +162,26 @@ class BarrowsRunTests {
             assertTrue(sent.zipWithNext().none { (a, b) -> a.second == b.second }, "$sent")
             assertEquals(4761, Barrows.headValue(Barrows.Brother.AHRIM, Tile(3557, 9703, 3)), "crypt face (Void ahrims)")
             assertEquals(4772, Barrows.headValue(Barrows.Brother.VERAC, Tile(3551, 9690, 0)), "tunnel face (Void verac_tunnels)")
+        } finally {
+            io.mockk.unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        }
+    }
+
+    @Test
+    fun `clearing the faces empties every head component of interface 24 (client script 1715 ignores varc -1)`() {
+        // Owner 19:12 "multiple barrows animations with the face ... continue also outside": script 1715 puts each brother's head on
+        // its own component 24:8..24:13 and returns on varc -1, so only Darkan's setIFItem(24, comp, -1) removes a face.
+        io.mockk.mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
+        try {
+            val player = player()
+            val cleared = ArrayList<Int>()
+            every { player.setVarc(any(), any()) } answers { Unit }
+            every { player.setComponentItem(any(), any(), any(), any()) } answers {
+                if (secondArg<Int>() == Barrows.OVERLAY_INTERFACE && arg<Int>(3) == -1) cleared += thirdArg<Int>()
+                Unit
+            }
+            Barrows.clearHeads(player)
+            assertEquals((8..13).toList(), cleared.sorted())
         } finally {
             io.mockk.unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         }

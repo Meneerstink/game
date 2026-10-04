@@ -19,8 +19,10 @@ object PestControlTrace {
  * The seven pest monsters' own behaviour (2009scape monsters/PC*NPC.java). Their combat itself (stats, attack, animations)
  * is the shared npc combat from combat-defs.json; this adds what each type does besides fighting:
  *
- * - Defiler, Torcher: attack the Void Knight whenever they have nothing else to fight.
- * - Shifter: sometimes goes for the knight, and teleports next to its target when it is more than 5 tiles away.
+ * - Target choice (Darkan PestMonsters.getPossibleTargets, every idle tick, every pest but the spinner and the ravager): a player of
+ *   this game within 10 tiles, or the Void Knight when there is none - and 1 time in 3 the knight anyway. (Was: only defilers and
+ *   torchers ever went for the knight, so the knight was never threatened.)
+ * - Shifter: teleports next to its target when more than 10 tiles away, and 1 tick in 15 at random (Darkan Shifter.processNPC).
  * - Ravager: walks to the nearest barricade or gate within 5 tiles and smashes it (one step every 5 ticks); otherwise wanders
  *   towards the knight, or back to its portal once inside the camp.
  * - Spinner: heals its own portal by 10 % when within 5 tiles of it; explodes (5 poison damage) when that portal falls.
@@ -34,8 +36,11 @@ object PestControlMonsters {
     fun tick(game: PestControlGame) {
         for (m in game.monsters.toList()) {
             if (m.isDead() || !m.isSpawned()) continue
-            when (pestMonsterOf(m.id)) {
-                PestMonster.DEFILER, PestMonster.TORCHER -> if (idle(m)) m.attack(game.knight, notifyRefusal = false)
+            val type = pestMonsterOf(m.id)
+            if (type != PestMonster.SPINNER && type != PestMonster.RAVAGER && idle(m)) {
+                pickTarget(game, m, Random.nextInt(3))?.let { m.attack(it, notifyRefusal = false) }
+            }
+            when (type) {
                 PestMonster.SHIFTER -> shifter(game, m)
                 PestMonster.RAVAGER -> ravager(game, m)
                 PestMonster.SPINNER -> spinner(game, m)
@@ -49,16 +54,36 @@ object PestControlMonsters {
 
     private fun idle(m: Npc): Boolean = m.getCombatTarget().let { it == null || it.isDead() }
 
+    const val TARGET_PLAYER_RANGE = 10
+
+    /**
+     * Darkan PestMonsters.getPossibleTargets: the living players of [game] within 10 tiles of [m]; when there is none, or when
+     * [roll] (0..2) is 0, the Void Knight.
+     */
+    fun pickTarget(
+        game: PestControlGame,
+        m: Npc,
+        roll: Int,
+    ): gg.rsmod.game.model.entity.Pawn? {
+        val near = game.players.filter { !it.isDead() && it.tile.height == m.tile.height && it.tile.isWithinRadius(m.tile, TARGET_PLAYER_RANGE) }
+        if (near.isEmpty() || roll == 0) return game.knight.takeIf { it.isSpawned() && !it.isDead() }
+        return near.random()
+    }
+
+    const val SHIFTER_TELEPORT_RANGE = 10
+    const val SHIFTER_RANDOM_TELEPORT = 15
+
+    /** Offsets around its target a shifter may land on: every tile within 2 except the target tile itself. */
+    fun shifterLandingOffsets(): List<Pair<Int, Int>> = (-2..2).flatMap { x -> (-2..2).map { z -> x to z } }.filter { it != (0 to 0) }
+
     private fun shifter(
         game: PestControlGame,
         m: Npc,
     ) {
-        if (idle(m) && Random.nextInt(50) < 2) m.attack(game.knight, notifyRefusal = false)
         val target = m.getCombatTarget() ?: return
-        if (!m.tile.isWithinRadius(target.tile, 5)) {
+        if (!m.tile.isWithinRadius(target.tile, SHIFTER_TELEPORT_RANGE) || Random.nextInt(SHIFTER_RANDOM_TELEPORT) == 0) {
             val dest =
-                (-2..2).flatMap { x -> (-2..2).map { z -> x to z } }
-                    .filter { (x, z) -> x != 0 && z != 0 }
+                shifterLandingOffsets()
                     .shuffled()
                     .map { (x, z) -> target.tile.transform(x, z, 0) }
                     .firstOrNull { game.map.area.contains(it) && game.world.collision.isClipped(it).not() }

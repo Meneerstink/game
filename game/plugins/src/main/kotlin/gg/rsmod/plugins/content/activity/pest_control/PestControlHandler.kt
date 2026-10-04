@@ -528,7 +528,26 @@ class PestControlGame(
             sendAll(1, if (lp > PC_KNIGHT_LIFEPOINTS / 4) lp.toString() else "<col=FF0000>$lp")
             knightDirty = false
         }
+        if (ticks % KNIGHT_SPAWN_TICKS == 0 && spawnKnightShifter() && Random.nextInt(5) == 0) spawnKnightShifter()
         PestControlMonsters.tick(this)
+    }
+
+    /** Shifters spawned beside the Void Knight (Darkan: the knight is spawn index 4). */
+    private val knightShifters = HashSet<Npc>()
+
+    /**
+     * Darkan PestPortal.processNPC / PestControl.createPestNPC for index 4: every 15 ticks the knight brings a shifter (and 1 time in 5 a
+     * second one) on a free tile within 5 tiles of it, at most 4 alive. Our 2009scape port spawned nothing at the knight.
+     */
+    private fun spawnKnightShifter(): Boolean {
+        knightShifters.removeIf { !it.isSpawned() || it.isDead() }
+        if (knightShifters.size >= KNIGHT_MAX_SHIFTERS || !knight.isSpawned() || knight.isDead()) return false
+        val ids = PC_SHIFTERS[tier.difficulty]
+        val tile =
+            (0 until 10).map { knight.tile.transform(Random.nextInt(-5, 6), Random.nextInt(-5, 6), 0) }
+                .firstOrNull { map.area.contains(it) && !world.collision.isClipped(it) } ?: knight.tile
+        knightShifters += spawnMonster(ids[Random.nextInt(ids.size)], tile, KNIGHT_SPAWN_INDEX)
+        return true
     }
 
     private fun sendAll(

@@ -18,9 +18,8 @@ import gg.rsmod.plugins.content.drops.VoidDropTables
  * crushed nest (Armadyl bodyguards), Zamorakian spear (K'ril and Zamorak bodyguards) and dragon bolts (e) (Kree'arra)
  * are excluded too; their roll share becomes nothing, every other rate is unchanged.
  *
- * SOURCE_BLOCKED: Frozen key pieces have no rate in any donor (Void leaves the bodyguard piece commented out). The
- * generals keep the pre-existing 3/1000 piece roll, labelled legacy, so the Ancient Prison stays reachable until the
- * owner decides.
+ * Frozen key pieces are not in these tables: Darkan Player.sendGodwarsKill drops them from the followers
+ * ([gg.rsmod.plugins.content.areas.godwars.GodWars.frozenKeyPiece]); the generals (combat > 134) never drop one.
  */
 object GodWarsDrops {
     const val PATH = "./data/cfg/npcs/godwars-drops.json"
@@ -33,30 +32,10 @@ object GodWarsDrops {
             Npcs.KRIL_TSUTSAROTH, Npcs.TSTANON_KARLAK, Npcs.ZAKLN_GRITCH, Npcs.BALFRUG_KREEYATH,
         )
 
-    /** Legacy (unsourced) Frozen key piece per general: 3 slots of 1000, exactly the removed placeholder tables' rate. */
-    val LEGACY_FROZEN_KEY_PIECE =
-        mapOf(
-            Npcs.GENERAL_GRAARDOR to Items.FROZEN_KEY_PIECE_BANDOS,
-            Npcs.KREEARRA to Items.FROZEN_KEY_PIECE_ARMADYL,
-            Npcs.COMMANDER_ZILYANA to Items.FROZEN_KEY_PIECE_SARADOMIN,
-            Npcs.KRIL_TSUTSAROTH to Items.FROZEN_KEY_PIECE_ZAMORAK,
-        )
-    const val LEGACY_PIECE_SLOTS = 3
-    const val LEGACY_PIECE_TOTAL = 1000
-
     fun tables(doc: VoidDropTables.Document): Map<Int, DropTableBuilder.() -> Unit> =
         NPC_IDS.associateWith { id ->
             val root = doc.npcs[id.toString()] ?: error("godwars-drops.json has no table for npc $id")
-            val piece = LEGACY_FROZEN_KEY_PIECE[id]
-            VoidDropTables.builder(doc, root) {
-                if (piece != null) {
-                    table("legacy_frozen_key_piece") {
-                        total(LEGACY_PIECE_TOTAL)
-                        obj(piece, slots = LEGACY_PIECE_SLOTS)
-                        nothing(LEGACY_PIECE_TOTAL - LEGACY_PIECE_SLOTS)
-                    }
-                }
-            }
+            VoidDropTables.builder(doc, root)
         }
 
     fun register(doc: VoidDropTables.Document) {

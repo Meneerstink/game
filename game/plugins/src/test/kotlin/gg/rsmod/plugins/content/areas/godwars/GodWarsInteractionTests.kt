@@ -56,11 +56,26 @@ class GodWarsInteractionTests {
     }
 
     @Test
+    fun `followers drop their god's frozen key piece like Darkan sendGodwarsKill`() {
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.FROZEN_KEY_PIECE_SARADOMIN, GodWars.frozenKeyPiece(6247))
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.FROZEN_KEY_PIECE_BANDOS, GodWars.frozenKeyPiece(6283))
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.FROZEN_KEY_PIECE_ARMADYL, GodWars.frozenKeyPiece(6222))
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.FROZEN_KEY_PIECE_ZAMORAK, GodWars.frozenKeyPiece(6221))
+        assertEquals(null, GodWars.frozenKeyPiece(13447)) // Zaros followers drop none
+        assertEquals(null, GodWars.frozenKeyPiece(6202))
+    }
+
+    @Test
     fun `ancient prison remains inside the God Wars lifecycle`() {
         assertTrue(GodWars.inDungeon(Tile(2910, 5203, 0)))
         assertTrue(GodWars.inDungeon(Tile(2899, 5203, 0)))
         assertTrue(GodWars.inDungeon(Tile(2864, 5354, 2)))
-        assertFalse(GodWars.inDungeon(Tile(2900, 5189, 0)))
+        // Darkan isAtGodwars regions: the Zaros approach (11345: followers at x 2860..2894, hole 57254 lands at 2855,5221).
+        assertTrue(GodWars.inDungeon(Tile(2855, 5221, 0)))
+        assertTrue(GodWars.inDungeon(Tile(2870, 5210, 0)))
+        assertTrue(GodWars.inDungeon(Tile(2900, 5189, 0)))
+        assertFalse(GodWars.inDungeon(Tile(2815, 5203, 0)))
+        assertFalse(GodWars.inDungeon(Tile(2900, 5183, 0)))
         assertFalse(GodWars.inDungeon(Tile(3000, 5203, 0)))
     }
 

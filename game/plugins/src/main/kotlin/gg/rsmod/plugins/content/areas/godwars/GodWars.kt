@@ -5,6 +5,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.api.ext.setVarbit
@@ -20,12 +21,13 @@ import gg.rsmod.plugins.api.ext.setVarbit
  * Faction npc lists match the Void god_wars npc definitions and the Novite faction classes.
  */
 object GodWars {
-    /** Whole multi-combat dungeon (all planes). */
+    /**
+     * Whole dungeon, all planes = Darkan GodwarsController.isAtGodwars regions 11345, 11346, 11347, 11601, 11602, 11603 (x 2816..2943,
+     * z 5184..5375). The old box started at z 5248 plus a prison box from x 2899, so the Zaros approach (followers at x 2860..2894,
+     * hole 57254 landing at 2855,5221) counted as outside: crossing it closed overlay 601 and wiped every kill count.
+     */
     val DUNGEON_X = 2816..2943
-    val DUNGEON_Z = 5248..5375
-    /** Ancient Prison access/chamber area, which sits north of the main dungeon bounds. */
-    val ANCIENT_PRISON_X = 2899..2938
-    val ANCIENT_PRISON_Z = 5190..5222
+    val DUNGEON_Z = 5184..5375
 
     /*
      * RCV-011 Q-043-b altars. Void `GodwarsAltars.kt` + `god_wars_dungeon.vars.toml`: refuse at full Prayer, then while
@@ -132,8 +134,18 @@ object GodWars {
         }
     }
 
-    /** Void `hunt_range`: default 5 (Hunting.kt), 8 for Graardor and his sergeants (bandos.npcs.toml). */
-    fun huntRange(id: Int): Int = if (id in 6260..6265) 8 else 5
+    /**
+     * Generals and bodyguards: Darkan GWDBoss / GWDMinion `setForceAggroDistance(64)` - the whole chamber (they stood idle while a player
+     * was more than 5 tiles away in their own room). Followers: Void `hunt_range` default 5 (Hunting.kt), 8 for Bandos (bandos.npcs.toml).
+     */
+    const val CHAMBER_HUNT_RANGE = 64
+
+    fun huntRange(id: Int): Int =
+        when {
+            id in GENERAL_HUNTERS -> CHAMBER_HUNT_RANGE
+            id in 6260..6265 -> 8
+            else -> 5
+        }
 
     /** Void `check_same_god` (Hunting.wearsGodArmour): an item of the follower's god or of Zaros. */
     fun followerIgnores(player: Player, god: God): Boolean = isProtected(player, god) || isProtected(player, God.ZAROS)
@@ -310,9 +322,30 @@ object GodWars {
         }
     }
 
-    fun inDungeon(tile: Tile): Boolean =
-        (tile.x in DUNGEON_X && tile.z in DUNGEON_Z) ||
-            (tile.x in ANCIENT_PRISON_X && tile.z in ANCIENT_PRISON_Z)
+    fun inDungeon(tile: Tile): Boolean = tile.x in DUNGEON_X && tile.z in DUNGEON_Z
+
+    /**
+     * Darkan Player.sendGodwarsKill: every killed follower of combat level 134 or lower drops its god's Frozen key piece on the ground
+     * for the killer with chance 11/501 (`Utils.getRandomInclusive(500) <= 10`). Npc id ranges are Darkan's; Zaros followers drop none.
+     */
+    fun frozenKeyPiece(npcId: Int): Int? =
+        when (npcId) {
+            in 6247..6259 -> Items.FROZEN_KEY_PIECE_SARADOMIN
+            in 6260..6283 -> Items.FROZEN_KEY_PIECE_BANDOS
+            in 6222..6246 -> Items.FROZEN_KEY_PIECE_ARMADYL
+            in 6203..6221 -> Items.FROZEN_KEY_PIECE_ZAMORAK
+            else -> null
+        }
+
+    const val KEY_PIECE_MAX_COMBAT = 134
+    const val KEY_PIECE_ROLL_BOUND = 500
+    const val KEY_PIECE_ROLL_HIT = 10
+
+    /** The piece [npc] drops this kill, or null: Darkan's roll of 0..500 inclusive, a hit at 10 or lower. */
+    fun rollFrozenKeyPiece(npc: Npc, roll: Int): Int? {
+        if (npc.def.combatLevel > KEY_PIECE_MAX_COMBAT || roll > KEY_PIECE_ROLL_HIT) return null
+        return frozenKeyPiece(npc.id)
+    }
 
     /**
      * Q-043-f: faction gates that ignore boosts (RuneScape Wiki "God Wars Dungeon" revision 2011-12-30): Bandos "Strength potions have

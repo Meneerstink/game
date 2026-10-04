@@ -44,6 +44,20 @@ object Barrows {
      * space), so the client never saw it and no face ever appeared.
      */
     const val BROTHER_HEAD_VARC = 1043
+
+    /**
+     * Owner 2026-10-04 19:12 ("i still see multiple barrows animations with the face ... they continue also outside"): the 667 client
+     * script 1715 (varc 1043 transmit) puts each brother's head on its own component of interface 24 (24:8..24:13) with animation
+     * 12554 - and returns at once when the varc is -1, so resetting the varc never removed a face. Every brother whose face had
+     * shown kept it, and the overlay stays open on the hills. Darkan BarrowsController.process clears the face by sending item -1 to
+     * the head component (`setIFItem(24, headComponentId, -1, 0)`); [clearHeads] does that for all six.
+     */
+    val HEAD_COMPONENTS = 8..13
+
+    fun clearHeads(player: Player) {
+        HEAD_COMPONENTS.forEach { player.setComponentItem(OVERLAY_INTERFACE, it, -1, 0) }
+        player.setVarc(BROTHER_HEAD_VARC, -1)
+    }
     const val KILLS_VARBIT = 463
     const val KILLED_MONSTERS_VARBIT = 464
     const val IN_TUNNEL_VARBIT = 5028
@@ -456,21 +470,22 @@ object Barrows {
 
     /**
      * Rolls the run's doors: exit corner (also where the hidden tunnel lands) and Darkan's door maze. [incorrect] (a wrong puzzle
-     * answer, ours - Darkan keeps the doors): only the open chest door moves to another one, so the rest of the route stays open.
+     * answer) = Void BarrowsCrypts.shufflePuzzle(true) and OSRS Wiki Barrows/Strategies ("the doors and rooms within the tunnels will
+     * shift around, meaning that the exit ladder will be in a different room and the doors that can be opened will be in a different
+     * arrangement"): the whole layout is rolled again, and the open puzzle door is never the one that was open before. (Was: only the
+     * chest door moved - owner 03-2050 "when u enter wrong puzzle the doors need to reset".)
      */
     fun shufflePuzzle(player: Player, incorrect: Boolean = false) {
-        val previouslyLocked = player.attr[LOCKED_DOORS] ?: ""
-        val previouslyOpenPuzzle = PUZZLE_LETTERS.firstOrNull { it !in previouslyLocked }
-        if (incorrect && previouslyOpenPuzzle != null && player.attr[EXIT_CORNER] != null) {
-            val openPuzzle = (PUZZLE_LETTERS - previouslyOpenPuzzle).random()
-            val locked = previouslyLocked.toSet() - openPuzzle + PUZZLE_LETTERS.filter { it != openPuzzle }
-            player.attr[LOCKED_DOORS] = DOOR_LETTERS.filter { it in locked }.joinToString("")
-            refreshVarbits(player)
-            return
-        }
-        val corner = Corner.values().random()
+        val previouslyOpenPuzzle = (player.attr[LOCKED_DOORS] ?: "").let { locked -> PUZZLE_LETTERS.firstOrNull { it !in locked } }
+        var corner: Corner
+        var locked: Set<Char>
+        var tries = 0
+        do {
+            corner = Corner.values().random()
+            locked = generateLockedDoors(corner.key)
+            tries++
+        } while (incorrect && previouslyOpenPuzzle != null && previouslyOpenPuzzle !in locked && tries < 64)
         player.attr[EXIT_CORNER] = corner.key
-        val locked = generateLockedDoors(corner.key)
         player.attr[LOCKED_DOORS] = DOOR_LETTERS.filter { it in locked }.joinToString("")
         refreshVarbits(player)
     }
@@ -494,8 +509,8 @@ object Barrows {
     }
 
     fun closeOverlay(player: Player) {
+        clearHeads(player)
         player.closeInterface(dest = InterfaceDestination.PVP_OVERLAY)
-        player.setVarc(BROTHER_HEAD_VARC, -1)
     }
 
     fun spawnBrother(player: Player, brother: Brother, tile: Tile): Npc? {

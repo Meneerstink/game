@@ -225,7 +225,6 @@ class GodWarsDropTablesTests {
         GodWarsDrops.tables(DOC).forEach { (npc, builder) ->
             val expected = HashMap<Int, Double>()
             voidExpectation(DOC.npcs.getValue(npc.toString()), null, 1.0, expected)
-            GodWarsDrops.LEGACY_FROZEN_KEY_PIECE[npc]?.let { expected.merge(it, GodWarsDrops.LEGACY_PIECE_SLOTS.toDouble() / GodWarsDrops.LEGACY_PIECE_TOTAL, Double::plus) }
             val built = builtExpectation(builder)
             assertEquals(expected.keys, built.keys, "npc $npc item set")
             expected.forEach { (item, p) -> assertTrue(abs(p - built.getValue(item)) < 1e-12, "npc $npc item $item expected $p got ${built[item]}") }

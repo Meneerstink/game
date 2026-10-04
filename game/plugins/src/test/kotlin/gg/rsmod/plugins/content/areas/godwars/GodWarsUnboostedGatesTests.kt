@@ -21,7 +21,8 @@ class GodWarsUnboostedGatesTests {
     @Test
     fun `Bandos Strength, Saradomin Agility and Armadyl Ranged gates use the base level`() {
         val unboosted = Regex("""GodWars\.hasUnboostedLevel\(player, Skills\.(\w+), 70\)""").findAll(plugin).map { it.groupValues[1] }.toList()
-        assertEquals(listOf("STRENGTH", "AGILITY", "AGILITY", "RANGED"), unboosted)
+        // Saradomin: the rock bases 26444/26445 (Darkan, 70 Agility), tying the rope, climbing the rope.
+        assertEquals(listOf("STRENGTH", "AGILITY", "AGILITY", "AGILITY", "RANGED"), unboosted)
         val boostable = Regex("""getCurrentLevel\(Skills\.(\w+)\) < (\d+)""").findAll(plugin).map { "${it.groupValues[1]} ${it.groupValues[2]}" }.toList()
         // Boulder 60 Strength (boosts allowed) and crevice 60 Agility; the Ancient Prison pipe's 70 Agility (no 2011 no-boost
         // statement) is the shared `player.hasAgility(70)` since 85e053263, which reads the current level too.

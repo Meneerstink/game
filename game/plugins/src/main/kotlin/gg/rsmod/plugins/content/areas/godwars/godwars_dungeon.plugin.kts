@@ -15,6 +15,9 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.content.areas.godwars.GodWars.God
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.magic.TeleportType
+import gg.rsmod.plugins.content.magic.teleport
+import gg.rsmod.plugins.content.magic.teleportRefusal
 
 /**
  * God Wars Dungeon (2011): overlay, kill counts, faction aggression, altars, boss chamber doors,
@@ -26,7 +29,8 @@ import gg.rsmod.plugins.content.combat.CombatConfigs
  */
 val OVERLAY_INTERFACE = 601
 val KILLCOUNT_REQUIRED = 40
-val GWD_REGIONS = intArrayOf(11346, 11347, 11601, 11602, 11603)
+// Darkan GodwarsController.isAtGodwars: 11345 (Zaros approach) was missing, so walking into it never reopened the overlay.
+val GWD_REGIONS = intArrayOf(11345, 11346, 11347, 11601, 11602, 11603)
 val GWD_CHILL_REGIONS = intArrayOf(11322, 11323, 11578, 11579)
 val GWD_CHILL_TIMER = TimerKey()
 
@@ -49,6 +53,10 @@ val ANIM_GRAPPLE_SWING_REVERSE = 6072
 val SFX_CROSSBOW_GRAPPLING = 2928
 val SFX_LAND_FLATTER = 2455
 val ANIM_PRAYER_ALTAR = 645
+
+/** Darkan GodwarsController.processObjectClick2: altar (Zamorak, Saradomin, Armadyl, Bandos) -> teleport landing. */
+val ALTAR_TELEPORT_LANDING =
+    mapOf(26286 to Tile(2922, 5345, 2), 26287 to Tile(2912, 5268, 0), 26288 to Tile(2842, 5266, 2), 26289 to Tile(2837, 5355, 2))
 
 /* ------------------------------------------------------------------------------------------
  * Overlay + kill counts
@@ -124,6 +132,10 @@ on_npc_killed { killer, npc ->
     val god = God.forNpc(npc) ?: return@on_npc_killed
     if (GodWars.inDungeon(npc.tile) || god == God.ZAROS) {
         GodWars.incrementKillCount(killer, god)
+        // Darkan Player.sendGodwarsKill: the follower's Frozen key piece, on the ground for the killer.
+        GodWars.rollFrozenKeyPiece(npc, world.random(GodWars.KEY_PIECE_ROLL_BOUND))?.let { piece ->
+            world.spawn(GroundItem(piece, 1, Tile(npc.tile), killer))
+        }
     }
 }
 
@@ -214,16 +226,17 @@ God.values().filter { it.altarId != -1 }.forEach { god ->
             player.message(GodWars.MSG_ALTAR_DONE)
         }
     }
-    // Teleport sound: SOURCE_BLOCKED (2026-09-30) - Void GodwarsAltars (tele), Novite GodWars (useStairs), 2009scape
-    // GodwarsMapzone (setTeleportLocation) and the OSRS Wiki give no sound for this exit, so none is invented here.
+    // Darkan GodwarsController.processObjectClick2: a normal teleport (Modern animation, graphics and sounds; Tele Block, Wilderness and
+    // activity locks apply) to a fixed tile further out. Was an instant move to the tile outside the chamber door.
     on_obj_option(obj = god.altarId, option = "teleport") {
-        player.queue {
-            player.lock()
-            player.message("The gods pity you and allow you to leave their encampment.")
-            wait(1)
-            player.moveTo(god.chamberExit)
-            player.unlock()
+        val landing = ALTAR_TELEPORT_LANDING[god.altarId] ?: return@on_obj_option
+        val refusal = player.teleportRefusal(TeleportType.MODERN)
+        if (refusal != null) {
+            refusal.forEach { player.message(it) }
+            return@on_obj_option
         }
+        player.message("The gods pity you and allow you to leave their encampment.")
+        player.teleport(landing, TeleportType.MODERN)
     }
 }
 
@@ -518,10 +531,23 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
  * Saradomin rocks: tie a rope (70 Agility), then climb the ropes on both ledges.
  * ---------------------------------------------------------------------------------------- */
 
-// Novite's processObjectClick1 handles the placed bottom-rock base directly. The target cache
-// places this base as 26445 without a menu option, so bind the first object-click index explicitly.
-on_obj_option(obj = 26445, option = 1) {
-    player.moveTo(Tile(2920, 5273, 0))
+// The placed rock bases 26444 (top) / 26445 (bottom) = Darkan GodwarsController.kt:100-110: 70 Agility, climb animation 828, to
+// (2914,5300,1) / (2920,5274,0). They answer a first-option click the tied-rope children (below) do not handle; this was an instant
+// moveTo with no Agility check (Novite), and 26444 had nothing.
+mapOf(26444 to Tile(2914, 5300, 1), 26445 to Tile(2920, 5274, 0)).forEach { (base, landing) ->
+    on_obj_option(obj = base, option = 1) {
+        if (!GodWars.hasUnboostedLevel(player, Skills.AGILITY, 70)) {
+            player.message("You need an Agility level of 70 to maneuver this obstacle.")
+            return@on_obj_option
+        }
+        player.queue {
+            player.lock()
+            player.animate(ANIM_CLIMB_UP)
+            wait(2)
+            player.moveTo(landing)
+            player.unlock()
+        }
+    }
 }
 
 data class RopeLedge(val rockId: Int, val ropeId: Int, val varbit: Int, val top: Tile, val bottom: Tile)
@@ -664,35 +690,45 @@ on_obj_option(obj = Objs.OBSTACLE_PIPE_57234, option = "Squeeze-through") {
     }
 }
 
+// Darkan GodwarsController.kt:207-210 (hole 57254 at 2883,5270,2): lands at (2855,5221,0), beside the rope (2855,5222 is the rope itself).
 on_obj_option(obj = Objs.HOLE_57256, option = "climb-down") {
     player.queue {
         player.lock()
         player.animate(ANIM_CLIMB_UP)
         wait(2)
-        player.moveTo(Tile(2855, 5222, 0))
+        player.moveTo(Tile(2855, 5221, 0))
         player.unlock()
     }
 }
 
+// Darkan GodwarsController.kt:202-205: the rope (2855,5222,0) climbs back up to (2886,5274,2), inside the Frozen door. The Novite tile
+// (2887,5276,0) was a closed antechamber on this map, so the only way out of the Zaros wing was a teleport.
 on_obj_option(obj = Objs.ROPE_57260, option = "climb") {
     player.queue {
         player.lock()
         player.animate(ANIM_CLIMB_UP)
         wait(2)
-        player.moveTo(Tile(2887, 5276, 0))
+        player.moveTo(Tile(2886, 5274, 2))
         player.unlock()
     }
 }
 
 /*
- * RCV-010 D8: the Frozen door. Novite 667 `GodWars.java` handles it under id 75089, which is not a revision-667 object
- * (absent from both the production and the pristine openrs2 667 cache), so the door was never bound. The 667 map places
- * `Frozen door` 57211 (op1 Open) at (2884,5276,2); Novite's semantics are applied to that id: with the Frozen key the
- * player is flung into the Ancient Prison at (2887,5278,0), otherwise the key-hole message. Novite's inside-gate branch
- * (y <= 5278 on its plane-0 object) cannot occur for the plane-2 667 door and is not ported.
+ * The Frozen door 57211 at (2884,5276,2), 2x3 = Darkan GodwarsController.kt:189-200 (the 667 map is the same as Darkan's): from the
+ * outside (z 5279) a charged Frozen key lets the player in to (2885,5275,2); from the inside it opens freely back to (2885,5279,2).
+ * Was Novite's id-75089 door, landing on plane 0 at (2887,5278) with no way back out. Charges: one per entry (FrozenKey, Q-043-e).
  */
 on_obj_option(obj = Objs.FROZEN_DOOR, option = "open") {
-    // Q-043-e: one charge per opening; a key without charges needs recharging (FrozenKey, 2011 wiki).
+    if (player.tile.z != 5279) {
+        player.queue {
+            player.lock()
+            player.animate(ANIM_CLIMB_UP)
+            wait(2)
+            player.moveTo(Tile(2885, 5279, 2))
+            player.unlock()
+        }
+        return@on_obj_option
+    }
     val keySlot = FrozenKey.chargedSlot(player)
     if (keySlot == null) {
         player.queue { messageBox("You try to push the door open, but it wont budge.... It looks like there is some kind of key hole.") }
@@ -703,10 +739,9 @@ on_obj_option(obj = Objs.FROZEN_DOOR, option = "open") {
     player.message("You flash the key in front of the door")
     player.queue {
         player.lock()
-        player.animate(1133)
-        wait(1)
-        player.moveTo(Tile(2887, 5278, 0))
-        wait(1)
+        player.animate(ANIM_CLIMB_UP)
+        wait(2)
+        player.moveTo(Tile(2885, 5275, 2))
         player.unlock()
         player.message("...and a strange force flings you in.")
     }

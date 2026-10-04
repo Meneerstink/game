@@ -193,7 +193,7 @@ on_timer(BARROWS_TIMER) {
         if (!Barrows.onSurface(player.tile)) Barrows.closeOverlay(player)
         player.attr[Barrows.IN_TUNNEL] = false
         player.setVarbit(Barrows.IN_TUNNEL_VARBIT, 0)
-        player.setVarc(Barrows.BROTHER_HEAD_VARC, -1)
+        Barrows.clearHeads(player)
         player.attr.remove(HEAD_CLEAR_TICK)
     } else if (underground) {
         Barrows.syncTunnelDarkness(player)
@@ -210,7 +210,7 @@ on_timer(BARROWS_TIMER) {
         if (clear != null) {
             if (clear <= 1) {
                 player.attr.remove(HEAD_CLEAR_TICK)
-                player.setVarc(Barrows.BROTHER_HEAD_VARC, -1)
+                Barrows.clearHeads(player)
             } else {
                 player.attr[HEAD_CLEAR_TICK] = clear - 1
             }

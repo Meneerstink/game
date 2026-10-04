@@ -25,7 +25,7 @@ enum class PestControlTier(
     val portalBaseId: Int,
     /** Portal lifepoints (667 scale: 2009scape 200/250 hitpoints x 10). */
     val portalLifepoints: Int,
-    /** 2009scape `type.ordinal() + 2` commendation points per won game. */
+    /** Commendation points per won game: OSRS (owner 2026-10-04 "OSRS"): novice 3, intermediate 4, veteran 5 (2009scape gave 2/3/4). */
     val pointsPerWin: Int,
     /** Index into the monster tables below (2009scape PCPortalNPC.getDifficultyIndex). */
     val difficulty: Int,
@@ -41,9 +41,9 @@ enum class PestControlTier(
     val gangplankId: Int,
     val exitLadderId: Int,
 ) {
-    NOVICE("Novice", 40, Npcs.PORTAL, 2000, 2, 0, Tile(2657, 2639, 0), Area(2659, 2637, 2664, 2644), Tile(2661, 2639, 0), 14315, 14314),
-    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 2500, 3, 1, Tile(2644, 2644, 0), Area(2637, 2641, 2642, 2648), Tile(2640, 2644, 0), 25631, 25629),
-    VETERAN("Veteran", 100, Npcs.PORTAL_6150, 2500, 4, 2, Tile(2638, 2653, 0), Area(2631, 2648, 2636, 2655), Tile(2634, 2653, 0), 25632, 25630),
+    NOVICE("Novice", 40, Npcs.PORTAL, 2000, 3, 0, Tile(2657, 2639, 0), Area(2659, 2637, 2664, 2644), Tile(2661, 2639, 0), 14315, 14314),
+    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 2500, 4, 1, Tile(2644, 2644, 0), Area(2637, 2641, 2642, 2648), Tile(2640, 2644, 0), 25631, 25629),
+    VETERAN("Veteran", 100, Npcs.PORTAL_6150, 2500, 5, 2, Tile(2638, 2653, 0), Area(2631, 2648, 2636, 2655), Tile(2634, 2653, 0), 25632, 25630),
     ;
 
     val shieldedPortalBaseId: Int get() = portalBaseId + 4
@@ -99,9 +99,17 @@ fun pestMonsterOf(id: Int): PestMonster? =
         else -> null
     }
 
-/** Real durations, ported verbatim from 2009scape PestControlActivityPlugin/PestControlSession. */
-const val PC_MIN_TEAM_SIZE = 5
+/**
+ * Real durations, ported verbatim from 2009scape PestControlActivityPlugin/PestControlSession. Minimum team: owner 2026-10-04 "2 players"
+ * (RS/Darkan Lander need 5, which no solo-ish server ever fills; Darkan's debug minimum is 2).
+ */
+const val PC_MIN_TEAM_SIZE = 2
 const val PC_MAX_TEAM_SIZE = 25
+
+/** Darkan PestControl.createPestNPC: the Void Knight is spawn index 4 - a shifter every 15 ticks, at most 4 alive. */
+const val KNIGHT_SPAWN_INDEX = 4
+const val KNIGHT_SPAWN_TICKS = 15
+const val KNIGHT_MAX_SHIFTERS = 4
 const val PC_LOBBY_DEPARTURE_TICKS = 500
 const val PC_GAME_DURATION_TICKS = 2000
 val PC_SHIELD_DROP_TICKS = intArrayOf(50, 100, 150, 200)
