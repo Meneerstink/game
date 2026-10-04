@@ -341,9 +341,10 @@ fun Pawn.dealHit(
         }
     }
 
-    // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - monster hits only,
-    // nothing when a protection prayer negated the damage (CrystalEquipment).
-    if (target is Player && this is Npc && executeHit) {
+    // Crystal armour: "One charge is depleted for each successful hit that is received from combat" - from monsters and players
+    // alike (the Wiki excludes only "non-monster sources such as divine potions"; audit 2026-10-04: PvP hits never counted, so the
+    // armour never degraded in Deadman), nothing when a protection prayer negated the damage (CrystalEquipment).
+    if (target is Player && (this is Npc || (this is Player && this !== target)) && executeHit) {
         hit.addAction {
             if (hit.hitmarks.sumOf { it.damage } > 0) gg.rsmod.plugins.content.items.osrs.CrystalEquipment.onHitReceived(target)
         }

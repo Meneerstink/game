@@ -90,7 +90,16 @@ object PvpDeathBreakables {
             itemId in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
             gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null ||
             gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId) ||
-            pointsDeath(itemId)
+            pointsDeath(itemId) || crystalSeedOnDeath(itemId) != null
+
+    /**
+     * OSRS Wiki "Crystal equipment": "Upon death in the Wilderness, the killer will receive the seed form of the crystal equipment."
+     * Crystal armour (active or inactive) gives its Crystal armour seed (the same one seed per piece its Revert returns, owner
+     * document 2026-09-16), the classic OSRS crystal bow its Crystal seed. The Bow of Faerdhinen has its own rule (inactive bow).
+     */
+    fun crystalSeedOnDeath(itemId: Int): Int? =
+        gg.rsmod.plugins.content.items.osrs.CrystalEquipment.REVERT_SEED[itemId]
+            ?: if (itemId == Items.CRYSTAL_BOW_OSRS || itemId == Items.CRYSTAL_BOW_OSRS_INACTIVE) Items.CRYSTAL_SEED else null
 
     /**
      * OSRS Wiki "Items Kept on Death", rows "Degradeable items" / "Degraded items" (Barrows and Moon equipment): PvP - "Dropped to
@@ -144,6 +153,13 @@ object PvpDeathBreakables {
                 if (slotItem.item.id == Items.BLAZING_BLOWPIPE) drop(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1))
                 Blowpipe.dart(blowpipe)?.let { drop(Item(it.itemId, Blowpipe.darts(blowpipe))) }
                 Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { drop(Item(Items.ZULRAHS_SCALES, it)) }
+                continue
+            }
+            val crystalSeed = crystalSeedOnDeath(slotItem.item.id)
+            if (crystalSeed != null) {
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                drop(Item(crystalSeed, 1))
                 continue
             }
             if (pointsDeath(slotItem.item.id)) {

@@ -373,6 +373,11 @@ gg.rsmod.game.CommandServerCommands.handlers["hud"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) "usage: hud <name> <payload>" else { gg.rsmod.game.model.hud.ClientHud.send(p, a.drop(1).joinToString(" ")); "sent to ${p.username}" }
 }
+// `chatplayer <name> <text>`: the player's own chathead line (chathead checks with worn gear in the agent's client).
+gg.rsmod.game.CommandServerCommands.handlers["chatplayer"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null || a.size < 2) "usage: chatplayer <name> <text>" else { p.queue { chatPlayer(a.drop(1).joinToString(" ")) }; "chathead for ${p.username}" }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {

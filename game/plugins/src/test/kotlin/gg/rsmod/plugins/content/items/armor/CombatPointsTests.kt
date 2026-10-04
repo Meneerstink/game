@@ -66,4 +66,15 @@ class CombatPointsTests {
         assertEquals(Items.AMULET_OF_THE_DAMNED, spendN(amulet, 999)!!.id)
         assertNull(spendN(amulet, 1000))
     }
+
+    @Test
+    fun `PvP death - Barrows and Moon drop broken, the used amulet is dust, crystal gives its seed`() {
+        val death = gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables
+        listOf(Items.DHAROKS_HELM, Items.DHAROKS_HELM_100, Items.ECLIPSE_MOON_HELM, Items.ECLIPSE_MOON_HELM_DEGRADED, Items.AMULET_OF_THE_DAMNED).forEach {
+            kotlin.test.assertTrue(death.converts(it), "$it converts on a PvP death")
+        }
+        kotlin.test.assertFalse(death.pointsDeath(Items.AMULET_OF_THE_DAMNED_FULL), "the full amulet drops as it is")
+        assertEquals(Items.CRYSTAL_ARMOUR_SEED, death.crystalSeedOnDeath(Items.CRYSTAL_HELM))
+        assertEquals(Items.CRYSTAL_SEED, death.crystalSeedOnDeath(Items.CRYSTAL_BOW_OSRS))
+    }
 }

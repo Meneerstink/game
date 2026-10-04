@@ -17,6 +17,15 @@ import java.lang.ref.WeakReference
  * @author Tom <rspsmods@gmail.com>
  */
 class OpHeld5Handler : MessageHandler<OpHeld5Message> {
+    companion object {
+        /**
+         * The id an item lands on the floor as when dropped (null = itself); plugins. OSRS Wiki "Barrows equipment": "When dropped,
+         * any piece of Barrows equipment will automatically degrade to 0."
+         */
+        @Volatile
+        var dropAs: ((Int) -> Int?)? = null
+    }
+
     override fun handle(
         client: Client,
         world: World,
@@ -65,8 +74,9 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
         if (world.plugins.canDropItem(client, item.id)) {
             val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
             if (remove.completed > 0) {
-                val floor = GroundItem(item.id, remove.completed, client.tile, client)
-                remove.firstOrNull()?.let { removed ->
+                val droppedAs = dropAs?.invoke(item.id)
+                val floor = GroundItem(droppedAs ?: item.id, remove.completed, client.tile, client)
+                remove.firstOrNull()?.takeIf { droppedAs == null }?.let { removed ->
                     floor.copyAttr(removed.item.attr)
                 }
                 world.spawn(floor)
