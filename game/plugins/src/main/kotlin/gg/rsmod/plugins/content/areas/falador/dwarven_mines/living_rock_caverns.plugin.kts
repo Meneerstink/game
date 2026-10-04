@@ -180,8 +180,15 @@ fun climbDownRope(
     val ropeObject = p.world.getObject(tile, ObjectType.LENGTHWISE_WALL)
     // Lock the player's actions during this interaction sequence
     p.lockingQueue {
-        p.moveTo(obj.tile.x, obj.tile.z)
-        wait(2)
+        // Void LivingRockCaverns: walkToDelay(target.tile) - the old moveTo snapped the player onto the entrance from wherever the
+        // click had left him (audit 2026-10-04 fork D).
+        try {
+            gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, p, Tile(obj.tile.x, obj.tile.z, obj.tile.height))
+        } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
+            p.message("I can't reach that!")
+            return@lockingQueue
+        }
+        wait(1)
         p.faceTile(faceWest)
         wait(2)
         p.animate(Anims.CRAWL_ONTO_ROPE_LEDGE)

@@ -251,92 +251,29 @@ on_obj_option(obj = Objs.PIPE_29370, option = 1) {
         player.message("You need an agility level of 51 to use this obstacle.")
         return@on_obj_option
     }
-    val obj = player.getInteractingGameObj()
-    val isWest = player.tile.x <= obj.tile.x
-    player.lockingQueue {
-        val pipeStartTile = if (isWest) Tile(obj.tile.x - 1, obj.tile.z) else Tile(obj.tile.x + 2, obj.tile.z)
-        if (player.tile != pipeStartTile) {
-            val distance = player.tile.getDistance(pipeStartTile)
-            player.walkTo(pipeStartTile)
-            wait(distance + 2)
-            player.faceTile(obj.tile)
-        } else {
-            wait(2)
-        }
+    // Void Pipes.squeezeThroughHorizontal(target, 3149, 3152, 3155): walk to the pipe mouth with arrival, crawl to the middle,
+    // on to the far mouth. The old handler walked without arrival and waited blind (distance + 2), then slid from wherever the
+    // player stood (audit 2026-10-04 section 4).
+    obstacle { target ->
+        val east = player.tile.x < 3152
+        val start = Tile(if (east) 3149 else 3155, target.tile.z)
+        val end = Tile(if (east) 3155 else 3149, target.tile.z)
+        val direction = if (east) Direction.EAST else Direction.WEST
+        walkToTile(player, start)
+        face(player, direction)
         player.filterableMessage("You squeeze into the pipe...")
-        player.animate(Anims.AGIL_SQUEEZE_INTO_PIPE)
-        val move =
-            if (isWest) {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x + 2, obj.tile.z),
-                    clientDuration1 = 0,
-                    clientDuration2 = 62,
-                    directionAngle = Direction.EAST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            } else {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x, obj.tile.z),
-                    clientDuration1 = 0,
-                    clientDuration2 = 62,
-                    directionAngle = Direction.WEST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            }
-
-        player.forceMove(this, move)
-        wait(2)
-        val move2 =
-            if (isWest) {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x + 4, obj.tile.z),
-                    clientDuration1 = 10,
-                    clientDuration2 = 70,
-                    directionAngle = Direction.EAST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            } else {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x - 2, obj.tile.z),
-                    clientDuration1 = 10,
-                    clientDuration2 = 70,
-                    directionAngle = Direction.WEST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            }
-        player.forceMove(this, move2)
-        wait(2)
-        player.animate(Anims.AGIL_SQUEEZE_OUT_PIPE)
-        val move3 =
-            if (isWest) {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x + 5, obj.tile.z),
-                    clientDuration1 = 20,
-                    clientDuration2 = 70,
-                    directionAngle = Direction.EAST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            } else {
-                ForcedMovement.of(
-                    player.tile,
-                    Tile(obj.tile.x - 4, obj.tile.z),
-                    clientDuration1 = 20,
-                    clientDuration2 = 70,
-                    directionAngle = Direction.WEST.ordinal,
-                    lockState = LockState.NONE,
-                )
-            }
-        player.forceMove(this, move3)
-        wait(2)
+        player.animate(ANIM_CLIMB_THROUGH_PIPE_10580, delay = 30)
+        exactMove(player, Tile(3152, target.tile.z), delay = 126, direction = direction, startDelay = 30)
+        player.moveTo(Tile(end.x - (if (east) 2 else -2), target.tile.z))
+        player.animate(ANIM_CLIMB_THROUGH_PIPE_10580)
+        exactMove(player, end, delay = 96, direction = direction)
         player.filterableMessage("You pulled yourself through the pipes.")
-        player.addXp(Skills.AGILITY, 7.5)
+        player.addXp(Skills.AGILITY, 10.0)
     }
 }
+
+/** Void climb_through_pipe. */
+val ANIM_CLIMB_THROUGH_PIPE_10580 = 10580
 
 /**
  * Location: (Grapple) Karamja Volcano

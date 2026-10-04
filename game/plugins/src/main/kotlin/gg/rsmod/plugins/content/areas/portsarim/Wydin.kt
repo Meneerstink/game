@@ -78,24 +78,15 @@ class Wydin(r: PluginRepository, world: World, server: Server) : KotlinPlugin(r,
     private fun handleDoor(player: Player) {
         val employed = player.attr.has(EMPLOYED_ATTR) && player.attr[EMPLOYED_ATTR]!!
         if ((employed && player.equipment.contains(Items.WHITE_APRON)) || player.tile.x < 3012) {
-            player.lockingQueue (lockState = LockState.DELAY_ACTIONS) {
+            // Void Wydin `enterDoor`: up to the door with collision, the door swings open on its hinge, the player walks through the
+            // doorway. The old script teleported to x 3011/3012 keeping the player's own z (a diagonal click popped him through the
+            // shop wall) and stood a loc-0 "blocking object" in the doorway (audit 2026-10-04 fork D).
+            player.lockingQueue(lockState = LockState.FULL) {
                 val obj = player.getInteractingGameObj()
-                val blockingObject = DynamicObject(id = 0, type = 0, rot = 0, tile = obj.tile)
-                val openDoor =
-                    world.openDoor(
-                        obj,
-                        opened = 40109,
-                        invertTransform = obj.type == ObjectType.DIAGONAL_WALL.value,
-                    )
-                world.spawn(blockingObject)
-                wait(2)
-                player.moveTo(Tile(x = if (player.tile.x >= 3012) 3011 else 3012, player.tile.z, player.tile.height))
-                wait(2)
-                world.closeDoor(
-                        openDoor,
-                        closed = Objs.DOOR_2069,
-                        invertTransform = obj.type == ObjectType.DIAGONAL_WALL.value,
-                    )
+                gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+                    this, player, obj,
+                    open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, obj, 2070, ticks = 2) },
+                )
             }
         }
         else {
