@@ -118,10 +118,11 @@ on_button(PC_REWARD_INTERFACE, 94) {
 /*
  * Elite void (owner 2026-10-04: Pest Control rewards = OSRS - the elite top and robe cost 200 points each and replace the normal piece).
  * This cache's 2009 reward interface 267 has no elite slot, so the upgrade uses Darkan's route (CommendationExchange.kt: a Void Knight
- * top or robe used on Commodore Tyr, npc 11681, spawned at the outpost) at the OSRS price instead of Darkan's 100.
+ * top or robe used on Commodore Tyr) at the OSRS price instead of Darkan's 100. Darkan's 11681 is the quest multinpc (invisible here, no
+ * Void Stares Back); the outpost spawns his visible form 11682 (owner 2026-10-04 "make Tyr visible").
  */
 val ELITE_VOID_UPGRADE_POINTS = 200
-val COMMODORE_TYR = 11681
+val COMMODORE_TYR = Npcs.COMMODORE_TYR_11682
 
 mapOf(
     Items.VOID_KNIGHT_TOP to Items.ELITE_VOID_KNIGHT_TOP,

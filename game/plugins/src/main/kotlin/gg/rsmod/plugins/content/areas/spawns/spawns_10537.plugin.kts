@@ -17,7 +17,9 @@ spawn_npc(npc = 11521, x = 2676, z = 2663, height = 0, walkRadius = 5, direction
 spawn_npc(npc = 11651, x = 2682, z = 2670, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Captain Korasi
 spawn_npc(npc = 11661, x = 2686, z = 2661, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Jessika
 spawn_npc(npc = 11662, x = 2687, z = 2662, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Jessika
-spawn_npc(npc = 11681, x = 2683, z = 2670, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Commodore Tyr
+// Owner 2026-10-04: Commodore Tyr visible for everyone. 11681 is the quest multinpc (varbit 7451, Void Stares Back), invisible at 0 and
+// no quest of ours sets it; 11682 is its visible form. Elite void upgrade: pest_control.plugin.kts.
+spawn_npc(npc = 11682, x = 2683, z = 2670, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Commodore Tyr
 spawn_npc(
     npc = Npcs.CAPTAIN_ETHAR,
     x = 2644,
