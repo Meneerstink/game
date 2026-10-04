@@ -92,11 +92,13 @@ class OsrsGuidePricesTests {
         // 12252 -> 12278; 23 of them are named in the OSRS snapshot: seeded 3332 -> 3355 (unmatched 8920 -> 8923).
         // 2026-10-03 owner bug (Steel titan pouch not on the GE): 453 items the 2011 base data marked untradeable that Void (rev 634)
         // sells on the GE (a buy limit, no tradeable = false) - every summoning pouch and scroll among them: 12278 -> 12731.
-        assertEquals(12731, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        // 2026-10-04: + the imported Kraken tentacle (OSRS 12004, tradeable; Abyssal tentacle degradation) -> 12732.
+        assertEquals(12732, items.size, "exchangeable items (tradeable, unnoted, not coins)")
         // 2026-10-02 OsrsGuidePrices.RENAMED_IN_OSRS (OSRS Wiki item ids): 8013 "Teleport to house" = "Teleport to house (tablet)",
         // 9244 "Dragon bolts (e)" = "Dragonstone bolts (e)": seeded 3355 -> 3357 (unmatched 8923 -> 8921).
         // 2026-10-03: 62 of those 453 are named in the OSRS snapshot: seeded 3357 -> 3419.
-        assertEquals(3419, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-10-04: the Kraken tentacle is in the snapshot too: seeded 3419 -> 3420.
+        assertEquals(3420, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test
