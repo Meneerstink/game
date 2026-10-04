@@ -154,9 +154,11 @@ class DefinitionSet {
             val files = archive!!.files
 
             val definitions = Int2ObjectOpenHashMap<T?>(files.size + 1 + custom.size)
-            for (i in 0 until files.size) {
-                val file = files[i] ?: continue
-                val data = file.data ?: continue
+            // `files` is keyed by file id, and config groups have gaps (varp ids 603, 606, ... are unused): walking the keys
+            // 0 until size dropped the highest ids - varps 2385-2403, among them 2396 of the Adventurer's Log settings
+            // (owner 2026-10-04 032152), whose switches crashed the button handler.
+            for (file in files.values) {
+                val data = file?.data ?: continue
                 val def = createDefinition(type, file.id, data)
                 definitions[file.id] = def
             }

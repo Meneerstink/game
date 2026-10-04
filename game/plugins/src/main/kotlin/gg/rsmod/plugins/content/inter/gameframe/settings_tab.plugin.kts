@@ -39,13 +39,28 @@ on_button(interfaceId = 261, component = 16) {
  * `Adventurer's Log Options`. Interface 623 is the page behind it - it is the only other place in
  * the cache that mentions the Adventurer's Log (component 66 reads "Adventurers Log Settings"),
  * found with `runInterfaceHookProbeTool --args="../data/cache search adventurer"`.
- *
- * Its own twenty-odd `Toggle On/Off` switches are left unbound on purpose: they all read varp 2396
- * and pass an index to clientscript 4732, so which bit each one owns is not established from the
- * cache, and the Adventurer's Log they would configure does not exist on this server yet.
  */
 on_button(interfaceId = 261, component = 18) {
     player.openInterface(interfaceId = 623, dest = InterfaceDestination.MAIN_SCREEN)
+}
+
+/**
+ * Owner 2026-10-04 032152 ("adventurers log options does nothing"): the page's 19 `Toggle On/Off` switches. Each switch's
+ * own onVarTransmit hook in the cache is `clientscript 4732(component, bit)`, which draws sprite 6004 when that bit of varp
+ * 2396 is set and 6011 when it is clear (`runInterfaceHookProbeTool --args="../data/cache interface 623"`), so the bit a
+ * switch owns is that hook argument and a click flips it. Varp 2396 is saved with the player.
+ */
+private val ADVENTURERS_LOG_VARP = 2396
+private val ADVENTURERS_LOG_SWITCHES =
+    mapOf(
+        2 to 1, 4 to 2, 6 to 3, 8 to 4, 10 to 5, 12 to 6, 14 to 7, 16 to 8, 18 to 9, 20 to 10,
+        22 to 11, 24 to 13, 26 to 14, 28 to 15, 30 to 16, 32 to 17, 34 to 18, 36 to 19, 38 to 20,
+    )
+
+ADVENTURERS_LOG_SWITCHES.forEach { (component, bit) ->
+    on_button(interfaceId = 623, component = component) {
+        player.setVarp(ADVENTURERS_LOG_VARP, player.getVarp(ADVENTURERS_LOG_VARP) xor (1 shl bit))
+    }
 }
 
 on_button(261, 5) {
