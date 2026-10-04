@@ -40,13 +40,14 @@ val defaultAggressiveness: (Npc, Player) -> Boolean = boolean@{ n, p ->
         return@boolean false
     }
 
-    if (abs(world.currentCycle - (p.attr[LAST_MAP_BUILD_TIME] ?: 0)) > n.combatDef.aggressiveTimer) {
-        return@boolean false
-    }
-
     // OSRS Wiki Crypt rat: "As with all monsters in the crypts, they are aggressive to any player regardless of their combat level."
+    // Checked before the 10-minute tolerance: Darkan BarrowsController keeps every crypt creature hunting (darkan-bug-map 7i).
     if (gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.aggressiveRegardlessOfLevel(n)) {
         return@boolean n.tile.height == p.tile.height && world.collision.raycast(n.tile, p.tile, projectile = true)
+    }
+
+    if (abs(world.currentCycle - (p.attr[LAST_MAP_BUILD_TIME] ?: 0)) > n.combatDef.aggressiveTimer) {
+        return@boolean false
     }
 
     val npcLvl = n.def.combatLevel

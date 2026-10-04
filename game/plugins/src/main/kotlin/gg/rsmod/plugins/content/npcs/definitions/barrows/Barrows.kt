@@ -327,7 +327,7 @@ object Barrows {
     fun aggressiveRegardlessOfLevel(npc: Npc): Boolean = underground(npc.tile) && npc.id in CRYPT_MONSTERS
 
     /** The crypt / tunnel monsters (Void BarrowsCrypts npcDeath list, 667 ids). */
-    val CRYPT_MONSTERS = setOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYPT_RAT, Npcs.CRYPT_SPIDER, 2035, 2036, Npcs.SKELETON_2037, 5381, 5422)
+    val CRYPT_MONSTERS = setOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYPT_RAT, Npcs.CRYPT_SPIDER, 2035, 2036, Npcs.SKELETON_2037, 5381, 5422, Npcs.GIANT_CRYPT_RAT_4920, Npcs.GIANT_CRYPT_RAT_4921)
 
     enum class SearchResult { HIDDEN_TUNNEL, WAKE_BROTHER, NOTHING }
 

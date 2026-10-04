@@ -904,8 +904,11 @@ object Familiar {
      * different plane, or beyond the distance at which the client can even render it), which is
      * the same "your familiar reappears next to you" behaviour real RS has after a teleport.
      */
-    /** Void `Follow.tick`: a following NPC is only repositioned when it is further than this (Chebyshev) or on another plane. */
-    const val FOLLOW_RECOVERY_DISTANCE = 15
+    /**
+     * Darkan Familiar.processNPC / Pet (revision 727): a follower is called back next to its owner when it is not within 12 tiles
+     * (or on another plane). Was Void's 15 (owner 2026-10-04: "port everything from darkan"; follow reported 3x STILL).
+     */
+    const val FOLLOW_RECOVERY_DISTANCE = 12
 
     /**
      * RCV-010 D2 root cause ("familiar noclips while following"): the recovery teleport used the rounded-up Euclidean
@@ -958,10 +961,16 @@ object Familiar {
         // decides it - by the type of the first queued step (a ctrl-click walk while the run toggle is on is a WALK, resting and
         // zero energy never run) and only with a second step queued. Before, the run *toggle* alone (Player.isRunning) chose
         // two steps, so a familiar ran beside an owner who was walking.
+        // Darkan EntityFollow targets the owner's current tile after the owner has moved (Darkan moves players before npcs); this server
+        // moves npcs first, so the equivalent target is the owner's end-of-cycle tile (routing to his current tile left every familiar
+        // two tiles behind, running to catch up - FamiliarFollowSimulationTests). A follower that [runs] takes two steps only while its
+        // owner runs this cycle (the first queued step's type, as MovementQueue.cycle decides).
         val ownerRuns = ownerRunsThisCycle(player)
         val ownerSteps = player.movementQueue.peekSteps(if (ownerRuns) 2 else 1)
         val target = ownerSteps.lastOrNull()?.tile ?: player.tile
         val stepType = if (runs && ownerRuns) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
+        // Darkan EntityFollow.addSteps(route, run ? 2 : 1): only this tick's steps are queued; the route is computed again next tick.
+        val maxSteps = if (stepType == MovementQueue.StepType.FORCED_RUN) 2 else 1
         val ownerFootprint = footprint(target, player.getSize())
         if (isInFollowSlot(npc.tile, npc.getSize(), target, player.getSize())) {
             // Already beside the owner's end-of-cycle tile: stop here. The queue still held last cycle's route, which walked
@@ -1005,7 +1014,7 @@ object Familiar {
             val partial = route.path.toList()
             val gapNow = footprintGap(npc.tile, npc.getSize(), target, player.getSize())
             if (partial.isNotEmpty() && footprintGap(route.tail, npc.getSize(), target, player.getSize()) < gapNow) {
-                npc.walkPath(java.util.ArrayDeque(partial), stepType = stepType, detectCollision = true)
+                npc.walkPath(java.util.ArrayDeque(partial.take(maxSteps)), stepType = stepType, detectCollision = true)
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
                     "familiar ${npc.id} cannot reach ${player.username}: walks to the closest tile ${route.tail}, no teleport"
                 }
@@ -1039,7 +1048,8 @@ object Familiar {
          */
         val path: java.util.Queue<Tile> =
             java.util.ArrayDeque(
-                route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } },
+                // Darkan EntityFollow.addSteps(route, run ? 2 : 1): only this tick's steps; the route is computed again next tick.
+                route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } }.take(maxSteps),
             )
         if (path.isEmpty()) npc.movementQueue.clear() else npc.walkPath(path, stepType = stepType, detectCollision = true)
         // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the

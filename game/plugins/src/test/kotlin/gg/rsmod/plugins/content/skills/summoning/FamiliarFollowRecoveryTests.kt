@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
  */
 class FamiliarFollowRecoveryTests {
     @Test
-    fun `recovery teleport only beyond Chebyshev 15 or on another plane, whole grid`() {
+    fun `recovery teleport only beyond Chebyshev 12 (Darkan) or on another plane, whole grid`() {
         val owner = Tile(3200, 3200, 0)
         val wrong = mutableListOf<String>()
         for (dx in -20..20) {
@@ -32,11 +32,11 @@ class FamiliarFollowRecoveryTests {
     @Test
     fun `the old Euclidean cases now keep walking`() {
         val owner = Tile(3200, 3200, 0)
-        // Euclidean ceil distance 16 but Chebyshev 11 / 12 / 15: the old rule teleported, Void walks.
-        listOf(11 to 11, 12 to 10, 15 to 15, -13 to 9).forEach { (dx, dz) ->
+        // Euclidean ceil distance 16 but Chebyshev 11 / 12: the old rule teleported; Darkan recalls only outside 12 (Chebyshev).
+        listOf(11 to 11, 12 to 10, -12 to 9).forEach { (dx, dz) ->
             assertNull(Familiar.followRecoveryReason(Tile(owner.x + dx, owner.z + dz, 0), owner), "($dx,$dz)")
         }
-        assertEquals("distance", Familiar.followRecoveryReason(Tile(owner.x + 16, owner.z, 0), owner))
+        assertEquals("distance", Familiar.followRecoveryReason(Tile(owner.x + 13, owner.z, 0), owner))
     }
 
     @Test

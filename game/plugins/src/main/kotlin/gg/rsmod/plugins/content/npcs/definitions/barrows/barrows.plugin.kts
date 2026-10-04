@@ -13,7 +13,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
  */
 val BARROWS_TIMER = TimerKey()
 val WAS_UNDERGROUND = AttributeKey<Boolean>()
-val CRYPT_CREATURES = intArrayOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYPT_RAT, Npcs.CRYPT_SPIDER, 2035, 2036, Npcs.SKELETON_2037, 5381, 5422)
+val CRYPT_CREATURES = intArrayOf(Npcs.BLOODWORM, Npcs.CRYPT_RAT, Npcs.GIANT_CRYPT_RAT, Npcs.CRYPT_SPIDER, 2035, 2036, Npcs.SKELETON_2037, 5381, 5422, Npcs.GIANT_CRYPT_RAT_4920, Npcs.GIANT_CRYPT_RAT_4921)
 
 /* ---------------------------------------- mounds ---------------------------------------- */
 

@@ -805,6 +805,9 @@ object GrandExchangeInterface {
         COLLECT.forEach { player.setInterfaceEvents(interfaceId = MAIN, component = it, range = -1..-1, setting = 6) }
     }
 
+    /** Darkan GE.java: the abort button's sound. */
+    const val SFX_ABORT = 4039
+
     fun abort(
         player: Player,
         slot: Int,
@@ -812,6 +815,8 @@ object GrandExchangeInterface {
         val service = service(player) ?: return
         val offer = service.offerInSlot(username(player), slot) ?: return
         service.cancel(username(player), offer.id)
+        // Owner 031717 "aborting an offer makes no sound": Darkan GE.java component 200 (abort) plays sound 4039.
+        player.playSound(SFX_ABORT)
         player.message(MSG_ABORT)
         refresh(player, service, slot)
         player.sendItemContainer(collectContainerKey(slot), collectItems(player.world.definitions, service.offerInSlot(username(player), slot)))
