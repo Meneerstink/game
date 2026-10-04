@@ -95,6 +95,41 @@ class GeHistoryInterfaceLayoutTests {
     }
 
     @Test
+    fun `the Exchange button is the 667 GE stone button and leads back`() {
+        val current = current()
+        val built = tool.build(current)
+        // Source: 667 105:186 "Confirm Offer" draws its stone pieces with script 93 on load / leave and 97 on hover.
+        val confirm = LIBRARY.data(tool.INDEX_INTERFACES, 105, 186)!!
+        val confirmHooks = InterfaceHookProbeTool.componentHooks(confirm)
+        assertEquals(tool.SCRIPT_STONE_BUTTON, confirmHooks["onLoad"]!![0])
+        assertEquals(tool.SCRIPT_STONE_BUTTON_HOVER, confirmHooks["onMouseOver"]!![0])
+        val button = built.getValue(tool.EXCHANGE_BUTTON)
+        val hooks = InterfaceHookProbeTool.componentHooks(button)
+        assertEquals(listOf<Any>(tool.SCRIPT_STONE_BUTTON, tool.EVENT_COM), hooks["onLoad"])
+        assertEquals(listOf<Any>(tool.SCRIPT_STONE_BUTTON_HOVER, tool.EVENT_COM), hooks["onMouseOver"])
+        assertEquals(listOf<Any>(tool.SCRIPT_STONE_BUTTON, tool.EVENT_COM), hooks["onMouseLeave"])
+        assertEquals(listOf<String?>(tool.EXCHANGE_TEXT), InterfaceHookProbeTool.componentOps(button), "OSRS 383:2 \"Exchange\"")
+        assertEquals(0, tool.typeOf(button))
+        val label = built.getValue(tool.EXCHANGE_LABEL)
+        assertEquals(4, tool.typeOf(label))
+        listOf(button, label).forEach { bytes ->
+            assertEquals(
+                listOf(tool.EXCHANGE_X, tool.EXCHANGE_Y, tool.EXCHANGE_WIDTH, tool.EXCHANGE_HEIGHT, -1),
+                listOf(tool.x(bytes), tool.y(bytes), tool.width(bytes), tool.height(bytes), tool.parent(bytes)),
+            )
+        }
+        // In the title bar (643:19), right of the GE icon (643:20), left of the close button (643:7).
+        val title = current.getValue(19)
+        val icon = current.getValue(20)
+        assertTrue(tool.EXCHANGE_Y >= tool.y(title) && tool.EXCHANGE_Y + tool.EXCHANGE_HEIGHT <= tool.y(title) + tool.height(title))
+        assertTrue(tool.EXCHANGE_X >= tool.x(icon) + tool.width(icon))
+        assertTrue(tool.EXCHANGE_X + tool.EXCHANGE_WIDTH < tool.x(current.getValue(7)))
+        assertTrue(tool.EXCHANGE_LABEL > tool.EXCHANGE_BUTTON, "the label is drawn over the stone pieces")
+        assertEquals(tool.EXCHANGE_BUTTON, GrandExchangeHistory.CURRENT.exchange)
+        assertEquals(-1, GrandExchangeHistory.LEGACY.exchange)
+    }
+
+    @Test
     fun `a re-run rebuilds the same bytes`() {
         val built = tool.build(current())
         val again = tool.build(current() + built)

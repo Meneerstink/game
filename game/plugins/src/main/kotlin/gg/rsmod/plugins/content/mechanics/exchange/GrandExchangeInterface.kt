@@ -124,14 +124,19 @@ object GrandExchangeInterface {
     /** RspsGrandExchange.SCRIPT_BUTTON: (layer, firstChild, x, y, width, height, label, op1, op2) -> background + text child. */
     const val SCRIPT_RSPS_BUTTON = 40100
 
-    /** Every button is two children: the button sprite at its first index, the clickable label one above. */
+    /**
+     * Every button is the 667 GE's own stone button (owner 2026-10-04 "the collect and history button seem odd"; the look of
+     * "Confirm Offer" 105:186/187): nine stone pieces at its first indices, the clickable label last
+     * (RspsGrandExchange.BUTTON_CHILDREN).
+     */
+    const val BUTTON_CHILDREN = 10
     const val INDEX_HISTORY_FIRST_CHILD = 0
-    const val INDEX_COLLECT_FIRST_CHILD = 2
+    const val INDEX_COLLECT_FIRST_CHILD = BUTTON_CHILDREN
     const val BOX_INVENTORY_FIRST_CHILD = 0
-    const val BOX_BANK_FIRST_CHILD = 2
+    const val BOX_BANK_FIRST_CHILD = BUTTON_CHILDREN
 
     /** The clickable label child of a button whose first child is [firstChild]. */
-    fun buttonLabelChild(firstChild: Int) = firstChild + 1
+    fun buttonLabelChild(firstChild: Int) = firstChild + BUTTON_CHILDREN - 1
 
     const val INDEX_TEXT = 18
     const val MSG_INDEX = "Select an offer slot to set up or view an offer."
@@ -412,15 +417,15 @@ object GrandExchangeInterface {
     /** OSRS: History top left, Collect top right of the offer-box page, either side of the index line (105:18, y 60). */
     val INDEX_BUTTONS =
         listOf(
-            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_HISTORY_FIRST_CHILD, 30, 55, 70, 22, "History", "History"),
-            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_COLLECT_FIRST_CHILD, 412, 55, 70, 22, "Collect", OP_COLLECT_INVENTORY, OP_COLLECT_BANK),
+            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_HISTORY_FIRST_CHILD, 30, 53, 80, 24, "History", "History"),
+            RspsButton((MAIN shl 16) or INDEX_LAYER, INDEX_COLLECT_FIRST_CHILD, 402, 53, 80, 24, "Collect", OP_COLLECT_INVENTORY, OP_COLLECT_BANK),
         )
 
     /** OSRS collection box: "Inventory" and "Bank" top right of the frame (109:1 is 366 wide; close button at its right). */
     val COLLECTION_BOX_BUTTONS =
         listOf(
-            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_INVENTORY_FIRST_CHILD, 234, 6, 60, 20, "Inventory", OP_COLLECT_INVENTORY),
-            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_BANK_FIRST_CHILD, 298, 6, 40, 20, "Bank", OP_COLLECT_BANK),
+            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_INVENTORY_FIRST_CHILD, 234, 6, 66, 22, "Inventory", OP_COLLECT_INVENTORY),
+            RspsButton((COLLECTION_BOX shl 16) or COLLECTION_BOX_LAYER, BOX_BANK_FIRST_CHILD, 302, 6, 38, 22, "Bank", OP_COLLECT_BANK),
         )
 
     fun sendButtons(

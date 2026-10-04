@@ -18,7 +18,9 @@ import com.displee.cache.CacheLibrary
  *    rows 0..4 keep their ids, rows 5..19 are new ids;
  *  - one transparent hit layer per row ([hit]) that carries the row's "Buy-offer" / "Examine" (the 667 separators only
  *    covered the top half of a row);
- *  - the "Quantity" / "Price" headers (643:23 / 643:24) moved over their columns, which make room for the scrollbar.
+ *  - the "Quantity" / "Price" headers (643:23 / 643:24) moved over their columns, which make room for the scrollbar;
+ *  - the OSRS "Exchange" button back to the offer screen ([EXCHANGE_BUTTON] / [EXCHANGE_LABEL], OSRS 383:2) as the 667 GE's
+ *    own stone button.
  *
  * Components 0..22 (frame, title, close button, header bar and the other headers) are not touched.
  *
@@ -63,7 +65,30 @@ object GeHistoryInterfaceImportTool {
     const val PRICE_NEW_FIRST = NAME_NEW_FIRST + (ROWS - LEGACY_ROWS) // 98..112
     const val SEPARATOR_NEW_FIRST = PRICE_NEW_FIRST + (ROWS - LEGACY_ROWS) // rows 6..19 -> 113..126
     const val HIT_FIRST = SEPARATOR_NEW_FIRST + (ROWS - LEGACY_SEPARATORS) // 127..146
-    const val COMPONENT_COUNT = HIT_FIRST + ROWS // 147
+
+    /**
+     * OSRS 383:2 (pinned OSRS cache 2686): the History screen's "Exchange" button, top left of the title bar, back to the offer
+     * screen (owner 2026-10-04 "there is no option to return when u click history"). Built as the 667 GE's own stone button
+     * "Confirm Offer" (105:186 / 187): a layer whose pieces cache script 93 (-> 680) draws on load, 97 (-> 915) on hover and
+     * 93 again on leave, and a sibling label in b12, 0xCC9800.
+     */
+    const val EXCHANGE_BUTTON = HIT_FIRST + ROWS // 147
+    const val EXCHANGE_LABEL = EXCHANGE_BUTTON + 1 // 148
+    const val COMPONENT_COUNT = EXCHANGE_LABEL + 1 // 149
+
+    const val EXCHANGE_TEXT = "Exchange"
+
+    /** Right of the GE icon (643:20 at x 26..51) in the title bar (643:19, y 27..49), clear of the centred title. */
+    const val EXCHANGE_X = 56
+    const val EXCHANGE_Y = 27
+    const val EXCHANGE_WIDTH = 80
+    const val EXCHANGE_HEIGHT = 22
+
+    /** 667 stone button scripts (105:186): 93 = normal look (680), 97 = hover look (915). */
+    const val SCRIPT_STONE_BUTTON = 93
+    const val SCRIPT_STONE_BUTTON_HOVER = 97
+    const val BUTTON_FONT = 496
+    const val BUTTON_COLOUR = 0xCC9800
 
     // ---- geometry (643 is a 512x334 main-screen window; frame inner area x 17..505) ----
     /** Below the header bar's line (643:15, sprite 851: 3 px at y 84 + 13). */
@@ -190,6 +215,36 @@ object GeHistoryInterfaceImportTool {
         onLoad: List<Int> = emptyList(),
     ): ByteArray = DeathsOfficeInterfaceImportTool.encode(DeathsOfficeInterfaceImportTool.Comp(id, TYPE_LAYER, x, y, width, height, parent, onLoad = onLoad))
 
+    /** Hooks [DeathsOfficeInterfaceImportTool.encode] leaves empty after onLoad: 19 (onMouseOver .. onVarcstrTransmit) + 5 transmit lists. */
+    private const val EMPTY_TAIL = 24
+
+    /**
+     * [encoded] (a legacy component from [DeathsOfficeInterfaceImportTool.encode], which writes onLoad and then 19 empty hooks
+     * and 5 empty transmit lists) with its second and third hook - onMouseOver and onMouseLeave - set to [mouseOver] /
+     * [mouseLeave] (script id then int arguments, as onLoad).
+     */
+    fun withHoverHooks(
+        encoded: ByteArray,
+        mouseOver: List<Int>,
+        mouseLeave: List<Int>,
+    ): ByteArray {
+        require(encoded.size > EMPTY_TAIL && (encoded.size - EMPTY_TAIL until encoded.size).all { encoded[it].toInt() == 0 }) { "hooks after onLoad are not empty" }
+        val out = java.io.ByteArrayOutputStream()
+        out.write(encoded, 0, encoded.size - EMPTY_TAIL)
+        listOf(mouseOver, mouseLeave).forEach { hook ->
+            out.write(hook.size)
+            hook.forEach { value ->
+                out.write(0) // int argument
+                out.write(value ushr 24)
+                out.write(value ushr 16)
+                out.write(value ushr 8)
+                out.write(value)
+            }
+        }
+        repeat(EMPTY_TAIL - 2) { out.write(0) }
+        return out.toByteArray()
+    }
+
     /**
      * Every component this tool writes, by id, built from [current] (interface 643's files as the cache holds them: the 667
      * layout or this tool's own). Components 0..22 are not part of the result.
@@ -229,6 +284,25 @@ object GeHistoryInterfaceImportTool {
             out[separator(row)] = relocate(separatorTemplate, x = 0, y = top + ROW_HEIGHT - 18, width = LIST_WIDTH, height = 32, parent = LIST)
             out[hit(row)] = layer(hit(row), 0, top, LIST_WIDTH, ROW_HEIGHT, LIST)
         }
+        val hook = listOf(SCRIPT_STONE_BUTTON, EVENT_COM)
+        out[EXCHANGE_BUTTON] =
+            withHoverHooks(
+                DeathsOfficeInterfaceImportTool.encode(
+                    DeathsOfficeInterfaceImportTool.Comp(
+                        EXCHANGE_BUTTON, TYPE_LAYER, EXCHANGE_X, EXCHANGE_Y, EXCHANGE_WIDTH, EXCHANGE_HEIGHT, -1,
+                        ops = listOf(EXCHANGE_TEXT), onLoad = hook,
+                    ),
+                ),
+                mouseOver = listOf(SCRIPT_STONE_BUTTON_HOVER, EVENT_COM),
+                mouseLeave = hook,
+            )
+        out[EXCHANGE_LABEL] =
+            DeathsOfficeInterfaceImportTool.encode(
+                DeathsOfficeInterfaceImportTool.Comp(
+                    EXCHANGE_LABEL, TYPE_TEXT, EXCHANGE_X, EXCHANGE_Y, EXCHANGE_WIDTH, EXCHANGE_HEIGHT, -1,
+                    font = BUTTON_FONT, text = EXCHANGE_TEXT, colour = BUTTON_COLOUR,
+                ),
+            )
         val ids = (0 until COMPONENT_COUNT).filter { it !in out && it >= LEGACY_COMPONENT_COUNT }
         check(ids.isEmpty()) { "new components without bytes: $ids" }
         return out

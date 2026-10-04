@@ -70,6 +70,8 @@ object GrandExchangeHistory {
         val list: Int,
         val scrollbar: Int,
         val componentCount: Int,
+        /** The "Exchange" button back to the offer screen (OSRS 383:2), -1 when the layout has none. */
+        val exchange: Int = -1,
     )
 
     /** The 667 cache's five rows (probe 2026-10-04: every row text and the separator lines 45..50 are root-level). */
@@ -98,6 +100,7 @@ object GrandExchangeHistory {
             list = GeHistoryInterfaceImportTool.LIST,
             scrollbar = GeHistoryInterfaceImportTool.SCROLLBAR,
             componentCount = GeHistoryInterfaceImportTool.COMPONENT_COUNT,
+            exchange = GeHistoryInterfaceImportTool.EXCHANGE_BUTTON,
         )
 
     /** Every component a row op can arrive on, in either layout (the clerk plugin binds them all; [rowOf] maps them back). */
@@ -190,6 +193,9 @@ object GrandExchangeHistory {
             }
             player.setInterfaceEvents(interfaceId = INTERFACE, component = layout.hit[i], range = -1..-1, setting = if (entry != null) ROW_EVENTS else 0)
         }
+        if (layout.exchange >= 0) {
+            player.setInterfaceEvents(interfaceId = INTERFACE, component = layout.exchange, range = -1..-1, setting = EXCHANGE_EVENTS)
+        }
         if (layout.list >= 0) {
             // Scroll height for the trades there are (at least the five visible rows), clamp the scroll position, redraw the scrollbar.
             player.runClientScript(
@@ -200,6 +206,12 @@ object GrandExchangeHistory {
             )
         }
     }
+
+    /** IF_SETEVENTS of the "Exchange" button: op1. */
+    const val EXCHANGE_EVENTS = 2
+
+    /** The "Exchange" button (OSRS 383:2): back to the offer screen, as OSRS. */
+    fun backToExchange(player: Player) = GrandExchangeInterface.openMain(player)
 
     /** A history row's op: Buy-offer opens a buy offer for the item ([GrandExchangeInterface.buyOffer]), Examine its text. */
     fun press(

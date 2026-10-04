@@ -25,6 +25,9 @@ CLERKS.forEach { clerk ->
     }
 }
 
+/** E6 (owner 2026-10-04): the History screen's "Exchange" button back to the offer screen (OSRS 383:2). */
+on_button(GrandExchangeHistory.INTERFACE, GrandExchangeHistory.CURRENT.exchange) { GrandExchangeHistory.backToExchange(player) }
+
 /** E6: a History row's "Buy-offer" (op1) and "Examine" (op10), OSRS script 1645 - every row of either 643 layout. */
 GrandExchangeHistory.ROW_COMPONENTS.forEach { component ->
     on_button(GrandExchangeHistory.INTERFACE, component) {

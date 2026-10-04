@@ -333,7 +333,8 @@ class GrandExchangeOsrsButtonsTests {
         val opRows = sent.filterIsInstance<RunClientScriptMessage>().filter { it.id == GrandExchangeHistory.SCRIPT_RSPS_SET_OPS }.map { (it.args[0] as Int) and 0xFFFF }
         assertEquals((0 until trades).map { current.hit[it] }, opRows)
         val events = sent.filterIsInstance<IfSetEventsMessage>().filter { it.hash shr 16 == GrandExchangeHistory.INTERFACE }.associate { (it.hash and 0xFFFF) to it.setting }
-        assertEquals(current.hit.toSet(), events.keys)
+        assertEquals(current.hit.toSet() + current.exchange, events.keys)
+        assertEquals(GrandExchangeHistory.EXCHANGE_EVENTS, events[tool.EXCHANGE_BUTTON], "the Exchange button back to the offers (OSRS 383:2)")
         (0 until current.rows).forEach { row -> assertEquals(if (row < trades) GrandExchangeHistory.ROW_EVENTS else 0, events[current.hit[row]], "row $row events") }
         // The list scrolls over the trades there are.
         val scroll = sent.filterIsInstance<RunClientScriptMessage>().single { it.id == DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT }
@@ -362,10 +363,18 @@ class GrandExchangeOsrsButtonsTests {
         g.COLLECTION_BOX_BUTTONS.forEach { b ->
             assertTrue(b.x + b.width <= 342 && b.y + b.height <= 39, "109:1 ${b.label} must stay left of the close button and above the boxes")
         }
-        // Two children per button, in order without gaps (the client's CC_CREATE refuses a gap).
+        // Ten children per button (nine 667 stone pieces, then the label), in order without gaps (the client's CC_CREATE refuses a gap).
+        assertEquals(10, g.BUTTON_CHILDREN)
         listOf(g.INDEX_BUTTONS, g.COLLECTION_BOX_BUTTONS).forEach { buttons ->
-            assertEquals(buttons.indices.map { it * 2 }, buttons.map { it.firstChild })
+            assertEquals(buttons.indices.map { it * g.BUTTON_CHILDREN }, buttons.map { it.firstChild })
+            buttons.forEach { b -> assertEquals(b.firstChild + 9, g.buttonLabelChild(b.firstChild), "${b.label}: the label is the last child") }
+            // The stone border is 9 px on every side (cache script 680): a button needs room for both borders.
+            buttons.forEach { b -> assertTrue(b.width > 18 && b.height > 18, "${b.label} ${b.width}x${b.height}") }
         }
+        // A click on any other child (a stone piece) is no button.
+        val service = newService()
+        assertTrue(!g.pressButton(newPlayer(service), g.INDEX_BUTTONS, g.INDEX_HISTORY_FIRST_CHILD, op2 = false))
+        assertTrue(!g.pressButton(newPlayer(service), g.INDEX_BUTTONS, g.INDEX_COLLECT_FIRST_CHILD + 4, op2 = false))
         assertEquals(6, g.INDEX_BUTTONS[1].events, "Collect: op1 + op2")
         assertEquals(2, g.INDEX_BUTTONS[0].events, "History: op1")
     }
@@ -390,6 +399,9 @@ class GrandExchangeOsrsButtonsTests {
         val text = source.readText()
         assertTrue("SCRIPT_BUTTON = ${GrandExchangeInterface.SCRIPT_RSPS_BUTTON};" in text)
         assertTrue("SCRIPT_SET_OPS = ${GrandExchangeHistory.SCRIPT_RSPS_SET_OPS};" in text)
+        // Server and client agree on the button's children: nine stone pieces + the label.
+        assertTrue("BUTTON_PIECES = ${GrandExchangeInterface.BUTTON_CHILDREN - 1};" in text)
+        assertTrue("BUTTON_CHILDREN = BUTTON_PIECES + 1;" in text)
         assertTrue("PREFIX = \"${GrandExchangeInterface.CLIENT_PREFIX}\";" in text)
     }
 
