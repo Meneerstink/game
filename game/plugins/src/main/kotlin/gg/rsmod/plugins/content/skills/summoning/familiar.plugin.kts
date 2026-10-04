@@ -729,10 +729,13 @@ suspend fun QueueTask.chooseLeftClickAction(player: Player) {
  * divider graphics' baked positions. See [FamiliarInventory] for the whole evidence trail.
  */
 on_button(671, FamiliarInventory.CLOSE_COMPONENT) { // "Close"
+    // The rune pouch window reuses 671/665 (gg.rsmod.plugins.content.magic.RunePouchInterface).
+    gg.rsmod.plugins.content.magic.RunePouchInterface.close(player)
     FamiliarInventory.close(player)
 }
 
 on_interface_close(671) {
+    gg.rsmod.plugins.content.magic.RunePouchInterface.onClosed(player)
     FamiliarInventory.onClosed(player)
 }
 
@@ -746,6 +749,10 @@ on_button(671, FamiliarInventory.TAKE_BOB_COMPONENT) { // "Take BoB, Take Beast 
  * 91 = "-All", 81 = "-X"), so the meaning of each opcode is established by working code.
  */
 on_button(671, FamiliarInventory.GRID_COMPONENT) p@{
+    if (gg.rsmod.plugins.content.magic.RunePouchInterface.isOpen(player)) {
+        gg.rsmod.plugins.content.magic.RunePouchInterface.withdraw(player, player.getInteractingSlot(), player.getInteractingOpcode())
+        return@p
+    }
     if (!FamiliarInventory.isOpen(player)) {
         return@p
     }
@@ -773,6 +780,15 @@ on_button(671, FamiliarInventory.GRID_COMPONENT) p@{
 
 /* Storing: a click on the backpack panel that sits alongside the window. */
 on_button(665, FamiliarInventory.SIDE_COMPONENT) p@{
+    if (gg.rsmod.plugins.content.magic.RunePouchInterface.isOpen(player)) {
+        val slot = player.getInteractingSlot()
+        if (player.getInteractingOpcode() == gg.rsmod.plugins.content.magic.RunePouchInterface.EXAMINE) {
+            player.inventory[slot]?.let { world.sendExamine(player, it.id, ExamineEntityType.ITEM) }
+            return@p
+        }
+        gg.rsmod.plugins.content.magic.RunePouchInterface.store(player, slot, player.getInteractingOpcode())
+        return@p
+    }
     if (!FamiliarInventory.isOpen(player)) {
         return@p
     }

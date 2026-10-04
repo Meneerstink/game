@@ -8,8 +8,8 @@ import gg.rsmod.game.model.item.Item
 /**
  * Rune pouch / divine rune pouch actions (rules and sources in [RunePouch]).
  *
- * ADAPTED_TO_667: the OSRS pouch interface (and its bank load-outs / Configure) does not exist in the 667 client, so Open lists the
- * stored runes in a dialogue with the OSRS quantities 1 / 5 / X / All, and a rune used on the pouch offers the same quantities. The
+ * Open shows the pouch window ([RunePouchInterface]: Withdraw-1/5/All/X from its slots, Store-1/5/All/X from the backpack); a rune
+ * used on the pouch offers the same quantities in a dialogue. ADAPTED_TO_667: OSRS bank load-outs / Configure are not ported. The
  * "Revert" warning follows the item page ("if the player has a rune in the 4th slot they will be warned all of the runes in that slot will
  * be lost"); the wording of every message is not sourced.
  */
@@ -66,34 +66,11 @@ RunePouch.POUCHES.forEach { pouchId ->
         }
     }
 
+    // Owner 2026-10-04 024434: Open shows the pouch window (RunePouchInterface) - Withdraw from its slots, Store from the backpack.
     on_item_option(item = pouchId, option = "Open") {
         val slot = player.getInteractingItemSlot()
-        val pouch = player.inventory[slot]?.takeIf { it.id == pouchId } ?: return@on_item_option
-        val contents = RunePouch.contents(pouch)
-        if (contents.isEmpty()) {
-            player.message("Your pouch is empty. Use runes on it to store them.")
-            return@on_item_option
-        }
-        // Owner live report 2026-09-17c ("open on rune pouches doesnt show the runes its holding"): the contents are always listed in
-        // the chat box, and the dialogue gets a closing line - a 667 options dialogue with a single line (one stored rune type) showed nothing.
-        player.message("Your pouch holds: " + contents.joinToString(", ") { "${it.amount} x ${runeName(it.id)}" } + ".")
-        player.queue {
-            val labels = contents.map { "${runeName(it.id)} (${it.amount})" } + "Close"
-            val choice = options(*labels.toTypedArray(), title = "Withdraw which rune?")
-            val rune = contents.getOrNull(choice - 1) ?: return@queue
-            val current = player.inventory[slot]?.takeIf { it.id == pouchId } ?: return@queue
-            val stored = RunePouch.count(current, rune.id)
-            val amount = chooseAmount("Withdraw", stored)
-            if (amount <= 0) return@queue
-            val latest = player.inventory[slot]?.takeIf { it.id == pouchId } ?: return@queue
-            val taken = minOf(amount, RunePouch.count(latest, rune.id))
-            val added = player.inventory.add(rune.id, taken).completed
-            if (added <= 0) {
-                player.message("You don't have enough inventory space.")
-                return@queue
-            }
-            player.inventory[slot] = RunePouch.withdraw(latest, rune.id, added)
-        }
+        if (player.inventory[slot]?.id != pouchId) return@on_item_option
+        RunePouchInterface.open(player, slot)
     }
 
     on_item_option(item = pouchId, option = "Empty") {
