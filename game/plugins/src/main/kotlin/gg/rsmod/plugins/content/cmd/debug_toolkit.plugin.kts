@@ -350,6 +350,19 @@ gg.rsmod.game.CommandServerCommands.handlers["magearena"] = { w, a ->
         "${p.username} Mage Arena completed"
     }
 }
+// `pouchfill <name> <rune> <amount> [<rune> <amount>...]`: sets the carried rune pouch's contents (spellbook checks in the agent's
+// own client; the real deposit asks "How many?" in a dialogue).
+gg.rsmod.game.CommandServerCommands.handlers["pouchfill"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val slot = if (p != null) gg.rsmod.plugins.content.magic.RunePouch.pouchSlot(p.inventory) else -1
+    val runes = a.drop(1).chunked(2).mapNotNull { c -> if (c.size == 2) gg.rsmod.game.model.item.Item(c[0].toInt(), c[1].toInt()) else null }
+    if (p == null || slot < 0) {
+        "usage: pouchfill <name> <rune> <amount>... (a pouch in the inventory)"
+    } else {
+        p.inventory[slot] = gg.rsmod.plugins.content.magic.RunePouch.withContents(p.inventory[slot]!!, runes)
+        "${p.username} pouch: $runes"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {

@@ -14,6 +14,9 @@ import gg.rsmod.game.model.item.Item
  * be lost"); the wording of every message is not sourced.
  */
 
+/** Client-only inventory of the carried pouch's runes (client RspsRunePouch.INV). */
+val RUNE_POUCH_CLIENT_INV = 30001
+
 fun runeName(runeId: Int): String = world.definitions.get(ItemDef::class.java, runeId).name
 
 fun usedPouchSlot(player: Player): Int? {
@@ -160,4 +163,18 @@ on_item_option(item = Items.DIVINE_RUNE_POUCH, option = "Revert") {
         player.inventory[slot] = RunePouch.withContents(Item(Items.RUNE_POUCH), RunePouch.contents(current).take(3))
         player.inventory.add(Items.THREAD_OF_ELIDINIS, 1)
     }
+}
+
+/*
+ * Owner bug 2026-10-04 024552 ("runes in a (divine) rune pouch are not recognised by the spellbook"): the 667 spellbook greys a
+ * spell from the cache's rune counter (script 19), which only reads inventory 93. The carried pouch's runes go to the client as
+ * inventory 30001 just before inventory 93, and the client's rune counter adds them (client RspsRunePouch) - OSRS counts pouch
+ * runes for a spell. Casting itself already pays from the pouch (RunePayment).
+ */
+gg.rsmod.game.model.entity.Player.inventoryFlushHook = { p ->
+    val slot = RunePouch.pouchSlot(p.inventory)
+    val runes = if (slot < 0) emptyList() else RunePouch.contents(p.inventory[slot]!!)
+    val items = arrayOfNulls<Item>(4)
+    runes.take(4).forEachIndexed { i, rune -> items[i] = rune }
+    p.write(gg.rsmod.game.message.impl.UpdateInvFullMessage(containerKey = RUNE_POUCH_CLIENT_INV, items = items))
 }

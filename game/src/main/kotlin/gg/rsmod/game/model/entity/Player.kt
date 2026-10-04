@@ -731,6 +731,8 @@ abstract class Player(
      */
     private fun updateInventory() {
         if (inventory.dirty) {
+            // Before inventory 93: the client's spellbook redraw on 93 then already sees the pouch runes (RspsRunePouch).
+            inventoryFlushHook?.invoke(this)
             write(UpdateInvFullMessage(containerKey = 93, items = inventory.rawItems))
             sendInventoryEvents()
             inventory.dirty = false
@@ -1395,6 +1397,13 @@ abstract class Player(
             .toString()
 
     companion object {
+        /**
+         * Runs whenever the inventory is sent to the client, just before it (plugins: the rune pouch's runes as client inventory
+         * 30001 for the spellbook's rune counter, owner bug 2026-10-04 024552).
+         */
+        @Volatile
+        var inventoryFlushHook: ((Player) -> Unit)? = null
+
         /**
          * Game cycles a client slide of [clientDuration] client cycles (20 ms, 30 per game cycle) occupies, rounded up: the
          * next movement update may only follow once the slide has visibly ended, or it replaces the slide mid-way (owner
