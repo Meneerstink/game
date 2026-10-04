@@ -142,10 +142,12 @@ GE.COLLECTION_BOX_OFFERS.forEachIndexed { slot, component ->
 }
 
 on_button(GE.SELL_INVENTORY, GE.SELL_INVENTORY_ITEMS) {
-    val selection = player.attr[GE.SELECTION_ATTR] ?: return@on_button
-    if (selection.type != OfferType.SELL) return@on_button
     val item = player.inventory[player.getInteractingSlot()] ?: return@on_button
-    GE.select(player, item.id, item.amount)
+    val selection = player.attr[GE.SELECTION_ATTR]
+    when {
+        selection == null -> GE.offerFromInventory(player, item.id, item.amount)
+        selection.type == OfferType.SELL -> GE.select(player, item.id, item.amount)
+    }
 }
 
 on_obj_dialog {

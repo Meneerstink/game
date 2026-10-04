@@ -386,6 +386,7 @@ object GrandExchangeInterface {
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
         player.openInterface(MAIN, InterfaceDestination.MAIN_SCREEN)
+        showOfferInventory(player)
         // The client script shows the "far less than its guide price" warning (container 196); its Dismiss button (layer 220,
         // label component 0 in the rev-667 cache) only receives clicks once op1 events are enabled for it (owner 2026-09-18:
         // the warning could not be dismissed, blocking every sell).
@@ -511,10 +512,35 @@ object GrandExchangeInterface {
         player.attr[SELECTION_ATTR] = selection
         sendSelection(player, selection)
         sendExamine(player, -1)
+        showOfferInventory(player)
+    }
+
+    /**
+     * OSRS (owner 2026-10-04 025511, "ge needs to work the same like osrs ge"): while the exchange is open the side panel is the
+     * inventory with "Offer" on every item - clicking one starts a sell offer in the first free box - instead of whatever tab
+     * the player had open. Shown on open, while selling and again when an offer is placed or abandoned.
+     */
+    fun showOfferInventory(player: Player) {
         player.openInterface(SELL_INVENTORY, InterfaceDestination.TAB_AREA)
         player.runClientScript(SCRIPT_INVENTORY_OPTIONS, (SELL_INVENTORY shl 16) or SELL_INVENTORY_ITEMS, INVENTORY_INTERFACE_KEY, 4, 7, 0, -1, "Offer", "", "", "", "")
         player.setInterfaceEvents(interfaceId = SELL_INVENTORY, component = SELL_INVENTORY_ITEMS, range = 0..27, setting = 1026)
         player.sendItemContainer(INVENTORY_INTERFACE_KEY, player.inventory)
+    }
+
+    /** OSRS: "Offer" on an inventory item with no offer box open starts a sell offer for it in the first free box. */
+    fun offerFromInventory(
+        player: Player,
+        itemId: Int,
+        amount: Int,
+    ) {
+        val service = service(player) ?: return
+        val slot = (0 until GrandExchangeService.SLOTS).firstOrNull { service.offerInSlot(username(player), it) == null }
+        if (slot == null) {
+            player.message("You have no free offer slots.")
+            return
+        }
+        beginSell(player, slot)
+        select(player, itemId, amount)
     }
 
     /** Picks [itemId] for the current buy/sell selection (item search result or sell-inventory click); false when refused. */
@@ -694,7 +720,7 @@ object GrandExchangeInterface {
                     service.submit(username, OfferType.SELL, selection.itemId, selection.price, selection.quantity, selection.slot, token)
                 } ?: return false
             fills = submitted.second
-            player.closeInterface(dest = InterfaceDestination.TAB_AREA)
+            showOfferInventory(player)
         }
         player.attr.remove(SELECTION_ATTR)
         resetConfigs(player)
@@ -935,8 +961,7 @@ object GrandExchangeInterface {
         resetConfigs(player)
         sendExamine(player, -1)
         player.runClientScript(SCRIPT_CLOSE_SEARCH)
-        player.closeInterface(dest = InterfaceDestination.TAB_AREA)
-        player.openInterface(dest = InterfaceDestination.INVENTORY_TAB)
+        showOfferInventory(player)
         service(player)?.let { refreshAll(player, it) }
     }
 
