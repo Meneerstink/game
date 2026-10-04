@@ -539,7 +539,8 @@ class ItemContainer(
                 totalRemoved += removeCount
 
                 curItem.amount -= removeCount
-                if (curItem.amount == 0) {
+                // A bank placeholder (amount 0) passed over on the way to a later stack keeps its slot.
+                if (removeCount > 0 && curItem.amount == 0) {
                     val removedItem = Item(items[i]!!)
                     items[i] = null
                     removed.add(SlotItem(i, removedItem))

@@ -86,9 +86,12 @@ object GeHistoryInterfaceImportTool {
     /** One text column: the row-0 component it copies, its x inside [LIST] and its width. */
     class Column(val template: Int, val x: Int, val width: Int)
 
-    /** 667 columns kept (type x 25 w 95, item name x 140 w 140); quantity and price move left 10 / 17 px for the scrollbar. */
+    /**
+     * 667 columns kept (type x 25 w 95, item name x 140); quantity and price move left 10 / 17 px for the scrollbar, so the
+     * item name column ends at the quantity column (x 278: width 138, was 140 - the columns may not overlap).
+     */
     val TYPE_COLUMN = Column(LEGACY_TYPE_FIRST, 25 - LIST_X, 95)
-    val NAME_COLUMN = Column(LEGACY_NAME_FIRST, 140 - LIST_X, 140)
+    val NAME_COLUMN = Column(LEGACY_NAME_FIRST, 140 - LIST_X, 138)
     val AMOUNT_COLUMN = Column(LEGACY_AMOUNT_FIRST, 278 - LIST_X, 90)
     val PRICE_COLUMN = Column(LEGACY_PRICE_FIRST, 370 - LIST_X, LIST_WIDTH - (370 - LIST_X) - 1)
 
