@@ -480,42 +480,16 @@ fun moveThroughDoor(
     player: Player,
     obj: GameObject,
 ) {
-    // Determine the new X-coordinate for the player based on the door's rotation and the player's position relative to the door.
-    val newX =
-        when (obj.rot) {
-            0, 2 ->
-                when {
-                    // If the player is to the left of a north/south rotated door, move them to the right of the door.
-                    player.tile.x < obj.tile.x -> obj.tile.x + 1
-                    // If the player is to the right of a north/south rotated door, move them to the left of the door.
-                    player.tile.x > obj.tile.x -> obj.tile.x - 1
-                    // If the player is on the same tile as a north/south rotated door, move them south (increase x-coordinate).
-                    else -> obj.tile.x - 1
-                }
-            // If the door's rotation is neither north nor south, the X-coordinate remains unchanged.
-            else -> obj.tile.x
-        }
-
-    // Determine the new Z-coordinate for the player based on the door's rotation and the player's position relative to the door.
-    val newZ =
-        when (obj.rot) {
-            1, 3 ->
-                when {
-                    // If the player is in front of an east/west rotated door, move them behind the door.
-                    player.tile.z < obj.tile.z -> obj.tile.z + 1
-                    // If the player is behind an east/west rotated door, move them in front of the door.
-                    player.tile.z > obj.tile.z -> obj.tile.z - 1
-                    // If the player is on the same tile as an east/west rotated door, move them west (decrease z-coordinate).
-                    else -> obj.tile.z - 1
-                }
-            // If the door's rotation is neither east nor west, the Z-coordinate remains unchanged.
-            else -> obj.tile.z
-        }
-
-    // Teleport the player to the new coordinates.
+    // Void StrongholdOfSecurityDoors: the door is a wall face (rot 0 W, 1 N, 2 E, 3 S) and the player goes between the door tile and
+    // the tile its face looks at (DoorCrossing.destination). The old per-axis mirror landed two tiles away from the outer side and
+    // went backwards from the door tile of a north / east facing door (audit 2026-10-04 fork A). A click from a corner tile crosses
+    // from the nearer side.
+    val dc = gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
+    val from = if (dc.destination(player.tile, obj) != null) player.tile else dc.nearSide(player.tile, obj) ?: return
+    val destination = dc.destination(from, obj) ?: return
     it.player.teleportTo(
-        x = newX,
-        z = newZ,
+        x = destination.x,
+        z = destination.z,
         height = player.tile.height,
     )
 }

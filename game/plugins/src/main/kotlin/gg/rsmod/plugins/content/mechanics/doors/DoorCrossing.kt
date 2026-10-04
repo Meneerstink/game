@@ -124,10 +124,12 @@ object DoorCrossing {
         door: GameObject,
         openedId: Int,
         ticks: Int,
+        /** The other leaf of a double door (closed -> opened) when the Void pair list does not have it. */
+        otherLeaves: Map<Int, Int> = emptyMap(),
     ) {
         val world = player.world
         val defs = world.definitions
-        val closedToOpened = HashMap(VoidDoors.knownClosedToOpened).apply { put(door.id, openedId) }
+        val closedToOpened = HashMap(VoidDoors.knownClosedToOpened).apply { putAll(otherLeaves); put(door.id, openedId) }
         val plan =
             VoidDoors.plan(
                 obj = door,

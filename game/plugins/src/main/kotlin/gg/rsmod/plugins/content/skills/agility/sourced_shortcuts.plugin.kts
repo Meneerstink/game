@@ -590,7 +590,10 @@ on_world_init {
                 player.animate(if (direction == Direction.SOUTH) ANIM_SPEAR_TRAP_CAUGHT_RIGHT else ANIM_SPEAR_TRAP_CAUGHT_LEFT)
                 face(player, direction)
                 exactMove(player, target.tile, delay = 48, direction = direction, startDelay = 28)
+                // Void Zanaris: the spear trap 12126 west of the wall fires (spear_trap_release 459) on every hurt tick.
+                val trap = locAt(world, target.tile.transform(-1, 0), 12126)
                 for (ouch in listOf("Ahhh...", "Owww...", "Arrgghhhh!")) {
+                    trap?.let { animateLoc(world, it, 459) }
                     player.animate(ANIM_SIDE_HURT_LEFT)
                     player.forceChat(ouch)
                     wait(1)

@@ -77,28 +77,23 @@ on_obj_option(obj = Objs.CHEST_12309, option = "buy-items") {
 }
 
 on_obj_option(obj = Objs.HOLE_6905, option = "squeeze-through", lineOfSightDistance = 1) {
-    val obj = player.getInteractingGameObj()
-    if (obj.isSpawned(world)) {
-        if (player.tile.x < 3220) {
-            enterHole(player, obj, 2, 0)
-        } else {
-            enterHole(player, obj, -2, 0)
+    // Void LumbridgeCellar: walk onto the hole, face through it, the pipe climb (10580) sliding two tiles on. The old script
+    // teleported 2 tiles from wherever the click left the player, unlocked (audit 2026-10-04 fork B).
+    val hole = player.getInteractingGameObj()
+    player.lockingQueue(lockState = LockState.FULL) {
+        try {
+            gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, player, hole.tile)
+        } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
+            player.message("I can't reach that!")
+            return@lockingQueue
         }
+        val direction = if (hole.tile.x == 3219) Direction.EAST else Direction.WEST
+        player.faceTile(player.tile.step(direction))
+        player.animate(ANIM_CLIMB_THROUGH_PIPE)
+        gg.rsmod.plugins.content.skills.agility.exactMoveFrom(this, player, hole.tile.step(direction).step(direction), direction = direction)
+        player.message("You squeeze through the hole.")
     }
 }
 
-fun enterHole(
-    p: Player,
-    obj: GameObject,
-    xOffset: Int,
-    zOffset: Int,
-) {
-    val tile = obj.tile
-    p.queue {
-        p.animate(Anims.CRAWL_INTO_TUNNEL_HOLE, idleOnly = true)
-        wait(2)
-        p.animate(Anims.EXIT_FROM_TUNNEL_HOLE)
-        p.teleportTo(tile.x + xOffset, tile.z + zOffset)
-        p.message("You squeeze through the hole.")
-    }
-}
+/** Void climb_through_pipe. */
+val ANIM_CLIMB_THROUGH_PIPE = 10580

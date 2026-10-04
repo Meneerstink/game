@@ -45,24 +45,20 @@ on_obj_option(Objs.DOOR_1805, "Open") {
         return@on_obj_option
     }
 
-    val closedDoor = DynamicObject(Objs.DOOR_1805, 0, 3, Tile(3191, 3363))
-    val blockingObj = DynamicObject(0, 0, 0, Tile(3191, 3363))
-    val openDoor = DynamicObject(Objs.DOOR_23637, 0, 0, Tile(3191, 3362))
-    val start = player.tile
+    // Void ChampionsGuild `enterDoor`: up to the door with collision, the door swings open on its hinge, the player walks through
+    // the doorway. The old script walked a collision-free line from the click tile (through the guild wall from any x but 3191) and
+    // stood a loc-0 "blocking object" in the doorway (audit 2026-10-04 fork B).
+    val door = player.getInteractingGameObj()
+    val entering = player.tile.z >= 3363
     player.lockingQueue(lockState = LockState.FULL) {
-        wait(2)
-        world.remove(closedDoor)
-        world.spawn(blockingObj)
-        world.spawn(openDoor)
-        player.playSound(Sfx.DOOR_OPEN)
-        val newZ = if (start.z >= 3363) 3362 else 3363
-        player.walkTo(tile = Tile(start.x, newZ), stepType = MovementQueue.StepType.FORCED_WALK)
-        wait(2)
-        world.remove(openDoor)
-        world.spawn(closedDoor)
-        player.playSound(Sfx.DOOR_CLOSE)
+        val opened = gg.rsmod.plugins.content.mechanics.doors.VoidDoors.knownClosedToOpened[Objs.DOOR_1805] ?: Objs.DOOR_23637
+        val crossed =
+            gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+                this, player, door,
+                open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, door, opened, ticks = 2) },
+            )
         player.lock = LockState.NONE
-        if (start.z >= 3363) {
+        if (crossed && entering) {
             chatNpc(npc = Npcs.GUILDMASTER,
                 message = arrayOf("Greetings bold adventurer. Welcome to the guild of Champions."),
                 facialExpression = FacialExpression.HAPPY_TALKING,

@@ -1,34 +1,35 @@
 package gg.rsmod.plugins.content.areas.draynor
 
+import gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
+
 val closedDoorIds = listOf(Objs.LARGE_DOOR_47421, Objs.LARGE_DOOR_47424)
 
-closedDoorIds.forEachIndexed { index, id ->
+/** Closed leaf -> opened leaf of the manor's front double door. */
+val MANOR_DOOR_LEAVES = mapOf(Objs.LARGE_DOOR_47421 to Objs.LARGE_DOOR_47423, Objs.LARGE_DOOR_47424 to Objs.LARGE_DOOR_47425)
+
+/** Void draynor_manor sounds: big_door_close. */
+val SFX_BIG_DOOR_CLOSE = 45
+
+closedDoorIds.forEach { id ->
     on_obj_option(id, "Open") {
+        val door = player.getInteractingGameObj()
         if (player.tile.z <= 3353) {
-            player.lockingQueue (lockState = LockState.DELAY_ACTIONS) {
-                val blockingObjectLeft = DynamicObject(id = 0, type = 0, rot = 0, tile = Tile(3108, 3353))
-                val blockingObjectRight = DynamicObject(id = 0, type = 0, rot = 0, tile = Tile(3109, 3353))
-                val leftDoor = DynamicObject(id = Objs.LARGE_DOOR_47421, type = 0, rot = 1, tile = Tile(3108, 3353))
-                val rightDoor = DynamicObject(id = Objs.LARGE_DOOR_47424, type = 0, rot = 1, tile = Tile(3109, 3353))
-                val leftOpenDoor = DynamicObject(id = Objs.LARGE_DOOR_47423, type = 0, rot = 0, tile = Tile(3108, 3354))
-                val rightOpenDoor = DynamicObject(id = Objs.LARGE_DOOR_47425, type = 0, rot = 2, tile = Tile(3109,
-                    3354))
-                world.spawn(blockingObjectLeft)
-                world.spawn(blockingObjectRight)
-                world.spawn(leftOpenDoor)
-                world.spawn(rightOpenDoor)
-                wait(2)
-                player.moveTo(Tile(x = if (player.tile.x == 3108) 3108 else 3109, 3354))
-                wait(2)
-                world.remove(leftOpenDoor)
-                world.remove(rightOpenDoor)
-                world.spawn(leftDoor)
-                world.spawn(rightDoor)
-                wait(1)
-                player.message("The doors slam shut behind you.")
+            // Void DraynorManor `enterDoor`: up to the doorway with collision, both leaves swing open on their hinges, the player
+            // walks through, the doors slam shut. The old script teleported to x 3108/3109 from wherever the click left the player
+            // and stood loc 0 "blocking objects" in the doorway (audit 2026-10-04 fork B).
+            player.lockingQueue(lockState = LockState.FULL) {
+                val crossed =
+                    DoorCrossing.enter(
+                        this, player, door,
+                        open = { DoorCrossing.swingOpenFor(player, door, MANOR_DOOR_LEAVES.getValue(id), ticks = 2, otherLeaves = MANOR_DOOR_LEAVES) },
+                    )
+                if (crossed) {
+                    wait(2)
+                    player.message("The doors slam shut behind you.")
+                    player.playSound(SFX_BIG_DOOR_CLOSE)
+                }
             }
-        }
-        else {
+        } else {
             player.lockingQueue(lockState = LockState.FULL) {
                 player.message("The doors won't open.")
                 wait(1)
@@ -36,4 +37,3 @@ closedDoorIds.forEachIndexed { index, id ->
         }
     }
 }
-
