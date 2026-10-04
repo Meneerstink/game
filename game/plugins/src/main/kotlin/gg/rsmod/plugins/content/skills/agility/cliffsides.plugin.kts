@@ -51,8 +51,8 @@ listOf(Objs.CLIFFSIDE_34877, Objs.CLIFFSIDE_34878, Objs.CLIFFSIDE_34889).forEach
         }
         if (!player.hasAgility(cliff.level, "You need an Agility level of ${cliff.level} in order to climb this cliffside.")) return@shortcut
         obstacle { target ->
-            // human_climbing_down 1148, the Trollheim rocks' own (Void Trollheim.kt).
-            if (climbCliff(player, target, 1148)) player.addXp(Skills.AGILITY, cliff.xp)
+            // Darkan Trollheim.kt (revision 727, same map): 3381 up / 3382 down, landing 4 tiles across (Cliffside.kt climbCliffside).
+            if (climbCliffside(player, target)) player.addXp(Skills.AGILITY, cliff.xp)
         }
     }
 }

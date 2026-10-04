@@ -25,10 +25,15 @@ import gg.rsmod.plugins.api.ext.message
  * moves in the animation's last cycle (one exact move held to that cycle), so the server tile and the drawn body meet at the end.
  */
 object Cliffside {
-    const val ANIM_UP = 3393
-    const val UP_CYCLES = 180
-    const val ANIM_DOWN = 15239
-    const val DOWN_CYCLES = 120
+    /** Darkan Trollheim.kt / Agility.handleObstacle (revision 727, GitLab darkanrs/world-server): climb up 3381, climb down 3382. */
+    const val ANIM_UP = 3381
+    const val ANIM_DOWN = 3382
+
+    /** Darkan: the animation plays 3 ticks, then the player is placed on the landing and the animation is stopped. */
+    const val CLIMB_TICKS = 3
+
+    /** Darkan: the landing is 4 tiles across the rock along its axis. */
+    const val CROSS = 4
 
     /** The wall piece on the lane's low end / high end. */
     const val LANE_LOW = 11449
@@ -75,30 +80,45 @@ object Cliffside {
 }
 
 /**
- * One Cliffside climb: walk to the lane end on the player's side, face across, then Jagex's climb animation carries the body over
- * the boulder and the tile follows in its last cycle. Returns false (with a PROBLEM trace and a message) when the map has no lane.
+ * One climb over a 2011 cliffside loc (Trollheim Cliffsides 3803 / 9303-9306, Death Plateau and Wilderness cliffsides 34877 / 34878 /
+ * 34889), ported from Darkan (revision 727 on the same post-2011 map; owner 2026-10-04: "do what RuneScape does", approved in the
+ * agent's client: no body in the rock). Darkan Agility.handleObstacle: animation at once, after 3 ticks the player is placed on the
+ * landing 4 tiles across along the loc's axis (rotation 0/2: x, 1/3: z) and the animation is stopped; 3381 climbs up, 3382 down.
+ * The start is this map's lane end (11449 / 11450 walls) when the loc has one, else the tile the interaction route ended on (Darkan).
+ * The earlier slides at ground height (1148, 3393, 15239) put the body inside the boulder (owner reports 154847 and the live review).
  */
 suspend fun QueueTask.climbCliffside(
     player: Player,
     target: GameObject,
 ): Boolean {
-    val lane = Cliffside.lane(player.world, target)
-    if (lane == null) {
-        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
-            "cliffside ${target.id} at ${target.tile.x},${target.tile.z}: no 11449/11450 lane walls on this map"
+    val world = player.world
+    val lane = Cliffside.lane(world, target)
+    val start =
+        if (lane != null) {
+            if (player.tile.getDistance(lane.high) < player.tile.getDistance(lane.low)) lane.high else lane.low
+        } else {
+            Tile(player.tile)
         }
-        player.message("You can't climb the rocks from here.")
-        return false
+    val alongX = target.rot == 0 || target.rot == 2
+    val landing =
+        if (alongX) {
+            Tile(start.x + if (start.x < target.tile.x) Cliffside.CROSS else -Cliffside.CROSS, start.z, start.height)
+        } else {
+            Tile(start.x, start.z + if (start.z < target.tile.z) Cliffside.CROSS else -Cliffside.CROSS, start.height)
+        }
+    if (lane != null && !landing.sameAs(if (start.sameAs(lane.high)) lane.low else lane.high)) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+            "cliffside ${target.id} at ${target.tile.x},${target.tile.z}: Darkan landing ${landing.x},${landing.z} is not the lane end"
+        }
     }
-    val down = Cliffside.goesDown(lane, player.tile)
-    val start = if (down) lane.high else lane.low
-    val landing = if (down) lane.low else lane.high
     walkToTile(player, start)
     val direction = Direction.between(start, landing)
     face(player, direction)
     wait(1)
-    val cycles = if (down) Cliffside.DOWN_CYCLES else Cliffside.UP_CYCLES
-    player.animate(if (down) Cliffside.ANIM_DOWN else Cliffside.ANIM_UP)
+    val up = (TerrainHeight.of(world, landing) ?: 0) < (TerrainHeight.of(world, start) ?: 0)
+    player.animate(if (up) Cliffside.ANIM_UP else Cliffside.ANIM_DOWN)
+    val cycles = Cliffside.CLIMB_TICKS * 30
     exactMove(player, landing, delay = cycles, direction = direction, startDelay = cycles - 1)
+    player.animate(-1)
     return true
 }
