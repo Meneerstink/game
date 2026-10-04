@@ -73,13 +73,15 @@ object PlayerDeathAction : KLogging() {
             val carried = (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).joinToString(",") { "${it.id}x${it.amount}" }
             "death ${player.username} at ${player.tile.x},${player.tile.z},${player.tile.height} killer=${(killer as? Player)?.username ?: (killer as? gg.rsmod.game.model.entity.Npc)?.let { "npc ${it.id}" } ?: "-"} carried=[$carried]"
         }
-        runDeathHook(player, "player-pre-death") { world.plugins.executePlayerPreDeath(player) }
-
         player.resetFacePawn()
         wait(2)
         player.animate(deathAnim.id)
-        player.playJingle(90)
         wait(deathAnim.cycleLength + 1)
+        // Void PlayerDeath: the death animation plays out first, then the death jingle and the items (owner 2026-10-04 030147:
+        // "the character loses the inventory first, then the death animation; no sound"). The pre-death hook resolves the items
+        // on the death tile, before the respawn teleport below.
+        player.playJingle(90)
+        runDeathHook(player, "player-pre-death") { world.plugins.executePlayerPreDeath(player) }
         player.skills.restoreAll()
         player.animate(-1)
         if (instancedMap == null) {
@@ -149,5 +151,7 @@ private fun Player.playJingle(
     id: Int,
     volume: Int = 255,
 ) {
+    // The client plays jingles at the music volume (a muted music slider silences them); traced like the plugin jingles.
+    gg.rsmod.game.model.AvTrace.log { "jingle player index=$index id=$id volume=$volume (death)" }
     write(MusicEffectMessage(id = id, volume = volume))
 }
