@@ -392,17 +392,85 @@ object Barrows {
         }
     }
 
-    /** Void `shufflePuzzle`: pick the exit corner, one open door of its room and one open puzzle door. */
+    /**
+     * The tunnel rooms joined by each door varbit letter (469 + index) - Darkan BarrowsPath.DOORS (its "EASTEEDGE" typo for 475 fixed:
+     * NORTHEAST - EASTEDGE). Corners NW/NE/SW/SE, edge rooms N/W/E/S, CHEST.
+     */
+    val DOOR_LINKS =
+        mapOf(
+            'a' to ("NW" to "NE"), 'b' to ("NW" to "SW"), 'c' to ("NW" to "W"), 'd' to ("NW" to "N"), 'e' to ("N" to "CHEST"),
+            'f' to ("NE" to "N"), 'g' to ("NE" to "E"), 'h' to ("NE" to "SE"), 'i' to ("W" to "CHEST"), 'j' to ("E" to "CHEST"),
+            'k' to ("SW" to "W"), 'l' to ("S" to "CHEST"), 'm' to ("SE" to "E"), 'n' to ("SW" to "S"), 'o' to ("SE" to "S"),
+            'p' to ("SW" to "SE"),
+        )
+    private val CORNER_ROOM = mapOf("north_west" to "NW", "north_east" to "NE", "south_west" to "SW", "south_east" to "SE")
+
+    /**
+     * Darkan BarrowsPath.generateBarrowsPath (owner E10: "a fixed set of doors is locked each run, only one route leads to the
+     * chest"): a link keeps the first state it gets. From the start corner one of its four doors opens; the edge rooms beside it open
+     * towards their other corners; every other corner reached opens one of its two remaining doors; the chest room opens one of four.
+     * Returns the locked letters.
+     */
+    fun generateLockedDoors(startCorner: String, random: java.util.Random = java.util.Random()): Set<Char> {
+        val state = HashMap<Char, Boolean>() // letter -> open
+        fun set(letter: Char, open: Boolean) { if (letter !in state) state[letter] = open }
+        fun links(room: String) = DOOR_LINKS.filter { (_, ab) -> ab.first == room || ab.second == room }.keys.toList()
+        fun other(letter: Char, room: String) = DOOR_LINKS.getValue(letter).let { if (it.first == room) it.second else it.first }
+        fun isCorner(room: String) = room.length == 2
+        val seen = LinkedHashSet<Char>()
+        val start = CORNER_ROOM.getValue(startCorner)
+        val paths = links(start)
+        set(paths[random.nextInt(paths.size)], true)
+        paths.forEach { seen += it; set(it, false) }
+        for (l in paths) {
+            val o = other(l, start)
+            if (!isCorner(o)) {
+                for (ll in links(o)) {
+                    if (!seen.add(ll)) continue
+                    if (isCorner(other(ll, o))) set(ll, true)
+                }
+            }
+        }
+        for (l in paths) {
+            val o = other(l, start)
+            if (isCorner(o)) {
+                val toCheck = links(o).filter { seen.add(it) }
+                for (l2 in toCheck) {
+                    val o2 = other(l2, o)
+                    if (!isCorner(o2) && o2 != "CHEST") {
+                        for (lll in links(o2)) {
+                            if (!seen.add(lll)) continue
+                            if (isCorner(other(lll, o2))) set(lll, true)
+                        }
+                    }
+                }
+                if (toCheck.isNotEmpty()) set(toCheck[random.nextInt(toCheck.size)], true)
+                toCheck.forEach { set(it, false) }
+            }
+        }
+        val chest = links("CHEST")
+        set(chest[random.nextInt(chest.size)], true)
+        chest.forEach { set(it, false) }
+        return DOOR_LETTERS.filter { state[it] == false }.toSet()
+    }
+
+    /**
+     * Rolls the run's doors: exit corner (also where the hidden tunnel lands) and Darkan's door maze. [incorrect] (a wrong puzzle
+     * answer, ours - Darkan keeps the doors): only the open chest door moves to another one, so the rest of the route stays open.
+     */
     fun shufflePuzzle(player: Player, incorrect: Boolean = false) {
-        val previouslyOpenPuzzle = PUZZLE_LETTERS.firstOrNull { it !in (player.attr[LOCKED_DOORS] ?: "") }
+        val previouslyLocked = player.attr[LOCKED_DOORS] ?: ""
+        val previouslyOpenPuzzle = PUZZLE_LETTERS.firstOrNull { it !in previouslyLocked }
+        if (incorrect && previouslyOpenPuzzle != null && player.attr[EXIT_CORNER] != null) {
+            val openPuzzle = (PUZZLE_LETTERS - previouslyOpenPuzzle).random()
+            val locked = previouslyLocked.toSet() - openPuzzle + PUZZLE_LETTERS.filter { it != openPuzzle }
+            player.attr[LOCKED_DOORS] = DOOR_LETTERS.filter { it in locked }.joinToString("")
+            refreshVarbits(player)
+            return
+        }
         val corner = Corner.values().random()
         player.attr[EXIT_CORNER] = corner.key
-        val cornerDoors = CORNER_DOORS.getValue(corner.key)
-        val validCornerDoor = cornerDoors.random()
-        // An incorrect answer can't pick the same puzzle door again.
-        val puzzleCandidates = if (incorrect && previouslyOpenPuzzle != null) PUZZLE_LETTERS - previouslyOpenPuzzle else PUZZLE_LETTERS
-        val openPuzzle = puzzleCandidates.random()
-        val locked = (cornerDoors.filter { it != validCornerDoor } + PUZZLE_LETTERS.filter { it != openPuzzle }).toSet()
+        val locked = generateLockedDoors(corner.key)
         player.attr[LOCKED_DOORS] = DOOR_LETTERS.filter { it in locked }.joinToString("")
         refreshVarbits(player)
     }

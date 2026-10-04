@@ -231,4 +231,28 @@ class BarrowsRunTests {
         assertFalse(NpcAttacks.drainSucceeds(weaken, landed = false, accurate = false), "a splash does not drain")
         assertFalse(NpcAttacks.drainSucceeds(fireWave, landed = false, accurate = true), "a 0 Fire Wave is still a miss")
     }
+
+    @Test
+    fun `Darkan's door maze always leaves one route from the start corner to the chest (owner E10)`() {
+        val corners = mapOf("north_west" to "NW", "north_east" to "NE", "south_west" to "SW", "south_east" to "SE")
+        for ((key, room) in corners) {
+            repeat(200) { seed ->
+                val locked = Barrows.generateLockedDoors(key, java.util.Random(seed.toLong()))
+                val open = Barrows.DOOR_LINKS.filterKeys { it !in locked }
+                fun linksOf(r: String) = Barrows.DOOR_LINKS.filter { it.value.first == r || it.value.second == r }.keys
+                assertEquals(1, linksOf(room).count { it !in locked }, "$key/$seed start corner has one open door")
+                assertEquals(1, linksOf("CHEST").count { it !in locked }, "$key/$seed chest room has one open door")
+                val reached = HashSet<String>().apply { add(room) }
+                var grew = true
+                while (grew) {
+                    grew = false
+                    open.values.forEach { (a, b) ->
+                        if (a in reached && reached.add(b)) grew = true
+                        if (b in reached && reached.add(a)) grew = true
+                    }
+                }
+                assertTrue("CHEST" in reached, "$key/$seed: no route to the chest, locked=$locked")
+            }
+        }
+    }
 }

@@ -107,7 +107,8 @@ class BarrowsMapBindingTests {
             val open = Barrows.DOOR_LETTERS.filter { l -> varbits[Barrows.doorVarbit(l)] == 0 }
             assertTrue(Barrows.CORNER_DOORS.getValue(corner).count { l -> l in open } == 1, "corner $corner open=$open")
             assertTrue(Barrows.PUZZLE_LETTERS.count { l -> l in open } == 1, "puzzle open=$open")
-            assertTrue(Barrows.DOOR_LETTERS.count { l -> l !in open } == 6, "locked count open=$open")
+            // Darkan BarrowsPath maze: more doors are locked than Void's 6; the route to the chest is checked in BarrowsRunTests.
+            assertTrue(Barrows.DOOR_LETTERS.count { l -> l !in open } >= 6, "locked count open=$open")
             if (previousOpenPuzzle != null) assertTrue(previousOpenPuzzle !in open, "wrong answer re-picked $previousOpenPuzzle")
             Barrows.Corner.values().forEach { c -> assertTrue(varbits[c.ropeVarbit] == (if (c.key == corner) 1 else 0), "rope ${c.key}") }
         } } finally {
