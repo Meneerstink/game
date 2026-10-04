@@ -10,6 +10,7 @@ import gg.rsmod.plugins.api.ext.getEquipment
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
@@ -113,6 +114,62 @@ object FairyRings {
 
     fun travelLog(player: Player): List<String> = player.attr[TRAVEL_LOG]?.split(',')?.filter { it.length == 3 } ?: emptyList()
 
+    /**
+     * Travel log 735 entries (667 cache): components 14..77 are the 64 codes in alphabetical order (a-d, i-l, p-s; op names "A I P"
+     * .. "D L S"), all with EMPTY text. The log's own client script 959 (run by 957 on load and on varp 816) shows only the entries
+     * whose text is not empty and draws the code letters itself (enum 1466) over the first line - so the server sends "<br>" + the
+     * destination name for every visited code (Void `TravelLog`: `sendText(id, code, "<br>${def.name}")`). Bug 2026-10-04 (owner,
+     * Trinket of fairies): the visited codes were stored but never sent, so the log always came up empty.
+     */
+    const val LOG_FIRST_COMPONENT = 14
+    const val LOG_LAST_COMPONENT = 77
+
+    /** The travel log component of [code], or null for anything that is not a dialable code. */
+    fun logComponent(code: String): Int? {
+        if (code.length != 3) return null
+        val a = code[0] - 'a'
+        val b = code[1] - 'i'
+        val c = code[2] - 'p'
+        if (a !in 0..3 || b !in 0..3 || c !in 0..3) return null
+        return LOG_FIRST_COMPONENT + a * 16 + b * 4 + c
+    }
+
+    /** The code of travel log [component], or null outside 14..77. */
+    fun codeOfLogComponent(component: Int): String? {
+        if (component !in LOG_FIRST_COMPONENT..LOG_LAST_COMPONENT) return null
+        val n = component - LOG_FIRST_COMPONENT
+        return "${'a' + n / 16}${'i' + (n / 4) % 4}${'p' + n % 4}"
+    }
+
+    /** Sends every visited code's entry to the open travel log (after the open, before varp 816 makes script 957 lay it out). */
+    fun sendTravelLog(player: Player) {
+        for (code in travelLog(player)) {
+            val component = logComponent(code) ?: continue
+            val destination = CODES[code] ?: continue
+            player.setComponentText(TRAVEL_LOG_INTERFACE, component, "<br>${destination.name}")
+        }
+    }
+
+    /** Records a completed journey to [code]: the last destination (dials + Last-destination) and the persisted travel log. */
+    fun record(
+        player: Player,
+        code: String,
+    ) {
+        if (CODES[code] == null) return
+        player.attr[LAST_CODE] = code
+        val log = travelLog(player)
+        if (code !in log) player.attr[TRAVEL_LOG] = (log + code).joinToString(",")
+    }
+
+    /** Clicking a travel log entry puts its code on the dials (Void `TravelLog`: travel_log:* sets fairy_ring_code_1..3). */
+    fun dialFromLog(
+        player: Player,
+        component: Int,
+    ) {
+        val dials = codeOfLogComponent(component)?.let(::dialsFor) ?: return
+        DIAL_VARBITS.forEachIndexed { i, varbit -> player.setVarbit(varbit, dials[i]) }
+    }
+
     /** The dial values that show [code], or null for anything that is not a dialable code. */
     fun dialsFor(code: String): IntArray? {
         if (code.length != 3) return null
@@ -137,6 +194,7 @@ object FairyRings {
         DIAL_VARBITS.forEachIndexed { i, varbit -> player.setVarbit(varbit, dials[i]) }
         player.openInterface(DIAL_INTERFACE, InterfaceDestination.MAIN_SCREEN)
         player.openInterface(TRAVEL_LOG_INTERFACE, InterfaceDestination.TAB_AREA)
+        sendTravelLog(player)
         return true
     }
 
@@ -159,11 +217,7 @@ object FairyRings {
         val destination = CODES[code]
         player.canTeleport(source.teleport) {
             player.teleport(destination?.tile ?: ZANARIS, source.teleport)
-            if (destination != null) {
-                player.attr[LAST_CODE] = code
-                val log = travelLog(player)
-                if (code !in log) player.attr[TRAVEL_LOG] = (log + code).joinToString(",")
-            }
+            record(player, code)
         }
     }
 

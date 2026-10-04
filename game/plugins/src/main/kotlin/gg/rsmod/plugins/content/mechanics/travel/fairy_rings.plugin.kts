@@ -41,6 +41,11 @@ on_button(FairyRings.TRAVEL_LOG_INTERFACE, FairyRings.RESORT_BUTTON) {
     player.setVarbit(FairyRings.RESORT_VARBIT, 1 - player.getVarbit(FairyRings.RESORT_VARBIT))
 }
 
+// Travel log entries 14..77 (only the visited ones are shown): clicking one puts its code on the dials, as Void's travel_log:*.
+(FairyRings.LOG_FIRST_COMPONENT..FairyRings.LOG_LAST_COMPONENT).forEach { component ->
+    on_button(FairyRings.TRAVEL_LOG_INTERFACE, component) { FairyRings.dialFromLog(player, component) }
+}
+
 // Closing the dial gives the inventory tab back (the travel log sat in its place).
 on_interface_close(FairyRings.DIAL_INTERFACE) {
     player.attr.remove(FairyRings.SOURCE)
