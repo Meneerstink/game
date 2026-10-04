@@ -20,14 +20,23 @@ import gg.rsmod.game.tools.importer.RoyalHallMapTool
  * hidden row as level-0 locs lifted to its storey (RoyalHallLocTool.CURTAIN_1 / CURTAIN_2, not solid): standing inside the
  * ground floor, both upper storeys' rows; inside level 1, the level-2 rows; anywhere else (outside, on a balcony, on the
  * storey itself) none, so the doorway there is open.
+ *
+ * Why the holes stayed after the 2026-09-29 fix (owner B5/C5/E15/E20/F11, ROOT_CAUSES #154): the client keeps one changed
+ * loc per tile and layer, and both storeys' pieces were centrepieces on the same doorway tiles - each replaced or deleted
+ * the other ([Piece.type]); and the server's own zone refresh on a plane change to level 0 (PlayerPostSynchronizationTask,
+ * UPDATE_ZONE_FULL_FOLLOWS on the player's level) wiped every piece while this object still counted them as shown
+ * ([update]).
  */
 object GeHomeHallCurtains {
-    /** One facade piece: [tile] on level 0, facing like the storey wall of that ring side, closing the row of [storey]. */
+    /**
+     * One facade piece: [tile] on level 0, facing like the storey wall of that ring side, closing the row of [storey].
+     * [type] keeps the two storeys in different client loc layers (RoyalHallLocTool.CURTAIN_1_SHAPE / CURTAIN_2_SHAPE).
+     */
     data class Piece(val tile: Tile, val rot: Int, val storey: Int) {
         val id: Int get() = if (storey == 1) RoyalHallLocTool.CURTAIN_1 else RoyalHallLocTool.CURTAIN_2
+        val type: Int get() = if (storey == 1) RoyalHallLocTool.CURTAIN_1_SHAPE else RoyalHallLocTool.CURTAIN_2_SHAPE
     }
 
-    private const val TYPE = 10
     private val MIN_X = RoyalHallMapTool.FLOOR_MIN_X - 1
     private val MAX_X = RoyalHallMapTool.FLOOR_MAX_X + 1
     private val MIN_Z = RoyalHallMapTool.FLOOR_MIN_Z - 1
@@ -57,30 +66,75 @@ object GeHomeHallCurtains {
         return (1..2).filter { it > t.height }.fold(0) { mask, storey -> mask or (1 shl storey) }
     }
 
+    /**
+     * Whether the client has lost every piece since the last [update]: a map rebuild (a new base object) drops every loc
+     * change, and the full zone refresh the server sends on a plane change (PlayerPostSynchronizationTask) clears the loc
+     * changes of the player's NEW level only (client UPDATE_ZONE_FULL_FOLLOWS) - so arriving on level 0 (down the stairs, a
+     * teleport, a login) wipes the pieces, while going up leaves them. [sentHeight] null = nothing sent yet.
+     */
+    fun clientLostPieces(
+        sentBase: Any?,
+        base: Any,
+        sentHeight: Int?,
+        height: Int,
+    ): Boolean = sentBase !== base || (height == 0 && sentHeight != 0)
+
+    /**
+     * The pieces to send to go from [shown] to [want] (storey bit masks): true adds, false deletes. [readd] sends every
+     * wanted piece again although the client should hold it (the tick after a loss, in case the zone refresh reached the
+     * client after the first resend).
+     */
+    fun changes(
+        want: Int,
+        shown: Int,
+        readd: Boolean,
+    ): List<Pair<Piece, Boolean>> =
+        PIECES.mapNotNull { piece ->
+            val bit = 1 shl piece.storey
+            val on = want and bit != 0
+            val was = shown and bit != 0
+            when {
+                on && (readd || !was) -> piece to true
+                !on && was -> piece to false
+                else -> null
+            }
+        }
+
     private val SENT = AttributeKey<Int>()
     private val SENT_BASE = AttributeKey<Any>()
+    private val SENT_HEIGHT = AttributeKey<Int>()
+    private val READD = AttributeKey<Boolean>()
 
-    /** Brings [player]'s client in line with [wanted]; sends only on a change (or after the client rebuilt its map). */
+    /**
+     * Brings [player]'s client in line with [wanted]; sends only on a change, after the client lost the pieces
+     * ([clientLostPieces]) and once more on the tick after such a loss. Runs from the world timer (after the tick's
+     * synchronization, so after any zone refresh of the same tick).
+     */
     fun update(player: Player) {
         val base = player.lastKnownRegionBase
         val want = wanted(player.tile)
-        // A map rebuild (a new base object) drops every loc the server sent to this client, so nothing counts as shown.
-        val shown = if (base != null && player.attr[SENT_BASE] === base) player.attr[SENT] ?: 0 else 0
-        if (want == shown) return
         if (base == null) {
-            Trace.problem(Trace.Cat.PLUGIN) { "hall facade not sent to ${player.username} at ${player.tile}: no map base yet" }
+            if (want != 0) Trace.problem(Trace.Cat.PLUGIN) { "hall facade not sent to ${player.username} at ${player.tile}: no map base yet" }
             return
         }
-        PIECES.forEach { piece ->
-            val bit = 1 shl piece.storey
-            if ((want and bit) == (shown and bit)) return@forEach
+        val height = player.tile.height
+        val lost = clientLostPieces(player.attr[SENT_BASE], base, player.attr[SENT_HEIGHT], height)
+        val readd = lost || player.attr[READD] == true
+        val shown = if (lost) 0 else player.attr[SENT] ?: 0
+        player.attr[SENT_BASE] = base
+        player.attr[SENT_HEIGHT] = height
+        player.attr[READD] = lost
+        if (want == shown && (!readd || want == 0)) {
+            player.attr[SENT] = want
+            return
+        }
+        changes(want, shown, readd).forEach { (piece, add) ->
             val local = base.toLocal(piece.tile)
             player.write(UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, 0))
-            val settings = (TYPE shl 2) or piece.rot
+            val settings = (piece.type shl 2) or piece.rot
             val packed = (piece.tile.chunkOffsetX shl 4) or piece.tile.chunkOffsetZ
-            player.write(if (want and bit != 0) LocAddChangeMessage(piece.id, settings, packed) else LocDelMessage(settings, packed))
+            player.write(if (add) LocAddChangeMessage(piece.id, settings, packed) else LocDelMessage(settings, packed))
         }
         player.attr[SENT] = want
-        player.attr[SENT_BASE] = base
     }
 }

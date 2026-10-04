@@ -79,7 +79,7 @@ class BankTabs {
         /**
          * Returns the range of slots that fall within this tab
          */
-        private fun tabIndices(
+        fun tabIndices(
             player: Player,
             tab: Int,
         ): IntRange {

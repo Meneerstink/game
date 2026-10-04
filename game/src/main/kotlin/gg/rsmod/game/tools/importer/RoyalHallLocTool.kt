@@ -589,20 +589,33 @@ object RoyalHallLocTool {
     /**
      * The facade of a balcony's wall-ring row as seen from inside a lower storey (owner 2026-09-29: from inside no balcony and
      * no hole). That row hides with its balcony (RoyalHallMapTool.BELOW_BUILDING), so GeHomeHallCurtains sends these to a
-     * player inside below it, on level 0 (never hidden by the roof flood): the plain storey wall 33868 as a centrepiece
-     * (shape 10, same model and rotation as the wall), lifted to its storey and 1.5x high like [TALL_WALL] ([CURTAIN_1] 360,
+     * player inside below it, on level 0 (never hidden by the roof flood): the plain storey wall 33868 (same model and
+     * rotation as the wall; shape per storey: [CURTAIN_1_SHAPE], [CURTAIN_2_SHAPE]), lifted to its storey and 1.5x high like [TALL_WALL] ([CURTAIN_1] 360,
      * [CURTAIN_2] 720 since every storey is 360 high, 2026-10-02), not solid and not in the way of route finding - the doorway
      * under it stays walkable.
      */
     const val CURTAIN_1 = 62906
     const val CURTAIN_2 = 62907
 
-    private fun curtain(def: ByteArray, lift: Int, scaleY: Int): ByteArray {
+    /**
+     * The shape each facade piece is sent as. The client keeps ONE changed loc per tile and loc layer
+     * (client Static553.changeLocation: walls 0-3, wall decoration 4-8, scenery 9-21, ground decoration 22), and the two
+     * storeys' rows share the four doorway tiles of every side on the ground. Until 2026-10-04 both were centrepieces (10):
+     * the level-2 piece replaced the level-1 piece on those tiles (from the ground floor the level-1 facade over every
+     * doorway was a hole), and deleting the level-1 pieces on the way up deleted the level-2 ones (from level 1 the level-2
+     * facade was a hole) - owner B5/C5/E15/E20/F11 "balkon als gat". Storey 1 stays a centrepiece: its row's end tiles hold
+     * the ground floor's own wall in the wall layer. Storey 2 is a wall (shape 0): its row is only doorway tiles, whose
+     * wall layer is empty on the ground floor. GeHomeHallCollisionTests guards both.
+     */
+    const val CURTAIN_1_SHAPE = 10
+    const val CURTAIN_2_SHAPE = 0
+
+    private fun curtain(def: ByteArray, lift: Int, scaleY: Int, shape: Int): ByteArray {
         check(listOf(65, 66, 67, 70, 71, 72).none { opcodePosition(33868, def, it) >= 0 }) { "wall already scaled or offset" }
         val out = def.copyOf()
         val at = opcodePosition(33868, out, 1)
         check(at >= 0 && out[at + 2] == 0.toByte()) { "wall models do not start with shape 0" }
-        out[at + 2] = 10
+        out[at + 2] = shape.toByte()
         check(out.last() == 0.toByte()) { "definition does not end with opcode 0" }
         val y = -lift / 4
         val prefix = byteArrayOf(71, (y shr 8).toByte(), y.toByte()) + (if (scaleY != 128) byteArrayOf(66, (scaleY shr 8).toByte(), scaleY.toByte()) else ByteArray(0))
@@ -739,8 +752,8 @@ object RoyalHallLocTool {
             Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
             Variant(BALCONY_PARAPET_SIDE, 11831, "Royal Hall upper balcony parapet as a wall decoration (beside the level-2 doorways)", ::marbleParapetDecor),
             Variant(TALL_WALL, 33868, "Royal Hall storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
-            Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 360, 1.5x high)") { curtain(it, 360, 192) },
-            Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (not solid, lifted 720, 1.5x high)") { curtain(it, 720, 192) },
+            Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 360, 1.5x high)") { curtain(it, 360, 192, CURTAIN_1_SHAPE) },
+            Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (wall shape, not solid, lifted 720, 1.5x high)") { curtain(it, 720, 192, CURTAIN_2_SHAPE) },
             Variant(TALL_WINDOW_WALL, 33877, "Royal Hall storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),

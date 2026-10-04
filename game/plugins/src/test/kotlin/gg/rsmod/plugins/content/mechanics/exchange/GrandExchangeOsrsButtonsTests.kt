@@ -6,6 +6,7 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.impl.IfSetEventsMessage
+import gg.rsmod.game.message.impl.IfSetTextMessage
 import gg.rsmod.game.message.impl.MessageGameMessage
 import gg.rsmod.game.message.impl.RunClientScriptMessage
 import gg.rsmod.game.model.PawnList
@@ -23,6 +24,8 @@ import gg.rsmod.game.model.interf.InterfaceSet
 import gg.rsmod.game.model.interf.listener.InterfaceListener
 import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.game.service.serializer.PlayerSerializerService
+import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
+import gg.rsmod.game.tools.importer.GeHistoryInterfaceImportTool
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.util.ServerProperties
 import io.mockk.every
@@ -273,7 +276,8 @@ class GrandExchangeOsrsButtonsTests {
         assertEquals(GrandExchangeHistory.Row("Sold:", "Dragon bones", "10", GrandExchangeHistory.price(sellFee)), rows[0])
         assertEquals(GrandExchangeHistory.Row("Bought:", "Dragon bones", "1,000", GrandExchangeHistory.price(buyMany)), rows[1])
         assertEquals(GrandExchangeHistory.Row("", "", "", ""), rows[2])
-        assertEquals(GrandExchangeHistory.ROWS, rows.size)
+        assertEquals(GrandExchangeHistory.KEPT, rows.size, "one row per kept trade (OSRS shows 20)")
+        assertEquals(GrandExchangeHistory.LEGACY.rows, GrandExchangeHistory.rows(listOf(sellFee), GrandExchangeHistory.LEGACY.rows) { "Dragon bones" }.size)
     }
 
     @Test
@@ -284,14 +288,65 @@ class GrandExchangeOsrsButtonsTests {
         val offer = service.offerInSlot("buyer", 0)!!
         service.takePart("buyer", offer.id, coins = false)
         service.releaseIfDrained("buyer", offer.id)
-        GrandExchangeHistory.open(newPlayer(service, "buyer"))
+        // The 667 five-row screen (what a cache without GeHistoryInterfaceImportTool holds).
+        val legacy = GrandExchangeHistory.LEGACY
+        GrandExchangeHistory.open(newPlayer(service, "buyer"), legacy)
         val scripts = sent.filterIsInstance<RunClientScriptMessage>().filter { it.id == GrandExchangeHistory.SCRIPT_RSPS_SET_OPS }
         assertEquals(1, scripts.size, "one filled row")
         val events = sent.filterIsInstance<IfSetEventsMessage>().filter { it.hash shr 16 == GrandExchangeHistory.INTERFACE }
-        assertEquals(GrandExchangeHistory.ROWS, events.size)
-        assertEquals(GrandExchangeHistory.ROW_EVENTS, events.first { it.hash and 0xFFFF == GrandExchangeHistory.ROW[0] }.setting)
-        assertTrue(events.filter { it.hash and 0xFFFF != GrandExchangeHistory.ROW[0] }.all { it.setting == 0 })
+        assertEquals(legacy.rows, events.size)
+        assertEquals(GrandExchangeHistory.ROW_EVENTS, events.first { it.hash and 0xFFFF == legacy.hit[0] }.setting)
+        assertTrue(events.filter { it.hash and 0xFFFF != legacy.hit[0] }.all { it.setting == 0 })
+        assertTrue(sent.filterIsInstance<RunClientScriptMessage>().none { it.id == DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT }, "the 667 rows do not scroll")
         assertEquals(2 or 1024, GrandExchangeHistory.ROW_EVENTS, "op1 Buy-offer (IF_BUTTON1 61) + op10 Examine (IF_BUTTON10 25)")
+    }
+
+    @Test
+    fun `the 20-row history shows every kept trade, gives every filled row its ops and scrolls`() {
+        val service = newService()
+        val trades = 13
+        repeat(trades) { i ->
+            service.submit("seller", OfferType.SELL, DRAGON_BONES, 12_000 + i, 1, 0)
+            service.submit("buyer", OfferType.BUY, DRAGON_BONES, 12_000 + i, 1, 0)
+            listOf("seller", "buyer").forEach { name ->
+                val offer = service.offerInSlot(name, 0)!!
+                service.takePart(name, offer.id, coins = true)
+                service.takePart(name, offer.id, coins = false)
+                service.releaseIfDrained(name, offer.id)
+            }
+        }
+        assertEquals(trades, service.historyFor("buyer").size)
+        val current = GrandExchangeHistory.CURRENT
+        val tool = GeHistoryInterfaceImportTool
+        GrandExchangeHistory.open(newPlayer(service, "buyer"), current)
+        val texts = sent.filterIsInstance<IfSetTextMessage>().filter { it.parent == GrandExchangeHistory.INTERFACE }.associate { it.child to it.text }
+        // Rows beyond the 667 five (5..12) are filled on their own components; the rest are cleared.
+        (0 until trades).forEach { row ->
+            assertEquals("Bought:", texts[current.type[row]], "row $row type")
+            assertEquals("Dragon bones", texts[current.name[row]], "row $row name")
+            assertEquals("1", texts[current.amount[row]], "row $row quantity")
+        }
+        assertEquals("<col=ffb83f>12,012 coins</col>", texts[current.price[0]], "newest first")
+        (trades until current.rows).forEach { row -> assertEquals("", texts[current.type[row]], "row $row empty") }
+        assertEquals(4 * current.rows, (current.type + current.amount + current.name + current.price).distinct().size)
+        // Every filled row gets Buy-offer / Examine on its own hit layer; empty rows get no ops.
+        val opRows = sent.filterIsInstance<RunClientScriptMessage>().filter { it.id == GrandExchangeHistory.SCRIPT_RSPS_SET_OPS }.map { (it.args[0] as Int) and 0xFFFF }
+        assertEquals((0 until trades).map { current.hit[it] }, opRows)
+        val events = sent.filterIsInstance<IfSetEventsMessage>().filter { it.hash shr 16 == GrandExchangeHistory.INTERFACE }.associate { (it.hash and 0xFFFF) to it.setting }
+        assertEquals(current.hit.toSet(), events.keys)
+        (0 until current.rows).forEach { row -> assertEquals(if (row < trades) GrandExchangeHistory.ROW_EVENTS else 0, events[current.hit[row]], "row $row events") }
+        // The list scrolls over the trades there are.
+        val scroll = sent.filterIsInstance<RunClientScriptMessage>().single { it.id == DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT }
+        assertEquals(listOf<Any>((GrandExchangeHistory.INTERFACE shl 16) or tool.LIST, (GrandExchangeHistory.INTERFACE shl 16) or tool.SCROLLBAR, trades * tool.ROW_HEIGHT), scroll.args.toList())
+        // A click on any row's component reaches that row (both layouts are bound by the clerk plugin).
+        (0 until current.rows).forEach { row -> assertEquals(row, GrandExchangeHistory.rowOf(current.hit[row])) }
+        (0 until GrandExchangeHistory.LEGACY.rows).forEach { row -> assertEquals(row, GrandExchangeHistory.rowOf(GrandExchangeHistory.LEGACY.hit[row])) }
+        assertTrue(GrandExchangeHistory.ROW_COMPONENTS.containsAll(current.hit.toList() + GrandExchangeHistory.LEGACY.hit.toList()))
+        assertEquals(-1, GrandExchangeHistory.rowOf(GrandExchangeHistory.TITLE))
+        // The layout is chosen by 643's component count: the 667 cache (51) or the tool's list (147).
+        assertTrue(GrandExchangeHistory.layoutFor(tool.LEGACY_COMPONENT_COUNT) === GrandExchangeHistory.LEGACY)
+        assertTrue(GrandExchangeHistory.layoutFor(tool.COMPONENT_COUNT) === current)
+        assertEquals(GrandExchangeHistory.KEPT, current.rows)
     }
 
     @Test
@@ -324,7 +379,7 @@ class GrandExchangeOsrsButtonsTests {
                 assertEquals(-1, data[0].toInt(), "$i:$c format")
                 assertEquals(0, data[1].toInt(), "$i:$c must be a LAYER")
             }
-        (GrandExchangeHistory.ROW.toList() + GrandExchangeHistory.TITLE).forEach { assertNotNull(LIBRARY.data(3, GrandExchangeHistory.INTERFACE, it), "643:$it") }
+        (GrandExchangeHistory.LEGACY.hit.toList() + GrandExchangeHistory.TITLE).forEach { assertNotNull(LIBRARY.data(3, GrandExchangeHistory.INTERFACE, it), "643:$it") }
         assertNotNull(LIBRARY.data(3, GrandExchangeInterface.ITEM_SEARCH, GrandExchangeInterface.SEARCH_TEXT))
     }
 

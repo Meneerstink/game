@@ -3,6 +3,7 @@ package gg.rsmod.game.model.container
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.item.Item
 import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.*
@@ -228,6 +229,29 @@ class ItemContainerTests {
         } finally {
             ItemContainer.creationRedirect = saved
         }
+    }
+
+    /*
+     * E7: an OSRS bank placeholder is the item with count 0. It is not "contained" (no quest / pet / unique-item check
+     * may count it as owned), and it is the item's stack slot: a full bank still takes the item into it.
+     */
+    @Test
+    fun bankPlaceholderIsNotContainedButTakesTheItem() {
+        val bank = ItemContainer(definitions, 2, ContainerStackType.STACK)
+        bank[0] = Item(4151, 0)
+        bank[1] = Item(995, 10)
+        assertFalse(bank.contains(4151))
+        assertFalse(bank.containsAny(4151))
+        assertTrue(bank.contains(995))
+        assertEquals(0, bank.freeSlotCount)
+
+        assertEquals(1, bank.add(item = 4151, amount = 1, assureFullInsertion = false, applyCreationRedirect = false).completed)
+        assertEquals(4151, bank[0]!!.id)
+        assertEquals(1, bank[0]!!.amount)
+        assertTrue(bank.contains(4151))
+
+        // Without a placeholder a full bank still refuses a new item.
+        assertEquals(0, bank.add(item = 4153, amount = 1, assureFullInsertion = false).completed)
     }
 
     companion object {

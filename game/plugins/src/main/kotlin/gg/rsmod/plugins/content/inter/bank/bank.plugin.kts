@@ -134,6 +134,7 @@ on_button(interfaceId = Bank.INV_INTERFACE_ID, component = Bank.INV_INTERFACE_CH
         return@p
     }
 
+    // E7: OSRS layout (script 172) - op1 the default quantity of the bank's quantity toggle, then 1 / 5 / 10 / X / All.
     val amount = Bank.bankInventoryDepositAmount(player, opcode, player.inventory.getItemCount(item.id)) ?: return@p
     if (amount == -1) {
         player.queue(TaskPriority.WEAK) {
@@ -156,38 +157,72 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 93) p@{
 
     val item = player.bank[slot] ?: return@p
 
-    if (opcode == 25) {
-        world.sendExamine(player, item.id, ExamineEntityType.ITEM)
+    /*
+     * E7: the OSRS menu (script 669, patched 1453 in the 78 client): op1 the default quantity, Withdraw-1 / 5 / 10 / <n> /
+     * X / All / All-but-1, 'Placeholder'; a placeholder (count 0) only has op8 'Release' and 'Examine' (script 278).
+     */
+    val action = BankOptions.withdrawAction(opcode, placeholder = Bank.isPlaceholder(item))
+    if (action == null) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERFACE) {
+            "bank 762:93 opcode $opcode on ${item.id}x${item.amount} (slot $slot) for ${player.username} maps to no OSRS bank op (old client menu?)"
+        }
         return@p
     }
-
-    val amount = Bank.withdrawAmount(player, opcode, item.amount) ?: return@p
-
-    if (amount == -1) {
-        /**
-         * Placeholders' "release" option uses the same option
-         * as "withdraw-x" would.
-         */
-        if (item.amount == 0) {
-            player.bank[slot] = null
-            return@p
-        }
-        player.queue(TaskPriority.WEAK) {
-            val input = inputInt(Bank.AMOUNT_PROMPT)
-            if (input > 0) {
-                player.setVarp(Bank.LAST_X_INPUT, input)
-                Bank.withdraw(player, item.id, input, slot)
+    when (action) {
+        BankOptions.WithdrawAction.EXAMINE -> world.sendExamine(player, item.id, ExamineEntityType.ITEM)
+        BankOptions.WithdrawAction.RELEASE -> Bank.releasePlaceholder(player, slot)
+        BankOptions.WithdrawAction.PLACEHOLDER -> Bank.withdraw(player, item.id, item.amount, slot, placeholder = true)
+        BankOptions.WithdrawAction.X ->
+            player.queue(TaskPriority.WEAK) {
+                val input = inputInt(Bank.AMOUNT_PROMPT)
+                if (input > 0) {
+                    player.setVarp(Bank.LAST_X_INPUT, input)
+                    Bank.withdraw(player, item.id, input, slot)
+                }
+            }
+        else -> {
+            val amount = Bank.withdrawAmount(player, opcode, item.amount) ?: return@p
+            if (action == BankOptions.WithdrawAction.ALL_BUT_ONE && amount <= 0) {
+                player.filterableMessage(Bank.ALL_BUT_ONE_MESSAGE)
+                return@p
+            }
+            if (amount > 0) {
+                Bank.withdraw(player, item.id, amount, slot)
             }
         }
-        return@p
     }
+}
 
-    if (opcode == 18 && amount <= 0) {
-        player.filterableMessage(Bank.ALL_BUT_ONE_MESSAGE)
+/*
+ * E7: the 78 client's OSRS bank buttons on the root layer 762:0 (BankOptions.buttons): the quantity toggle 1 / 5 / 10 / X /
+ * All ('Set custom quantity' on X) and 'Always set placeholders' ('Release all placeholders' as its second op).
+ */
+on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 0) p@{
+    val pressed = BankOptions.pressed(player.getInteractingSlot(), player.getInteractingOpcode())
+    if (pressed == null) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERFACE) {
+            "bank button 762:0 child ${player.getInteractingSlot()} opcode ${player.getInteractingOpcode()} for ${player.username} is no OSRS bank button"
+        }
         return@p
     }
-    if (amount > 0) {
-        Bank.withdraw(player, item.id, amount, slot)
+    val (press, mode) = pressed
+    when (press) {
+        BankOptions.ButtonPress.QUANTITY -> BankOptions.setQuantityMode(player, mode)
+        BankOptions.ButtonPress.SET_CUSTOM ->
+            player.queue(TaskPriority.WEAK) {
+                val input = inputInt(Bank.AMOUNT_PROMPT)
+                if (input > 0) {
+                    player.setVarp(Bank.LAST_X_INPUT, input)
+                    BankOptions.setQuantityMode(player, BankOptions.MODE_X)
+                }
+            }
+        BankOptions.ButtonPress.TOGGLE_PLACEHOLDER -> BankOptions.setAlwaysPlaceholder(player, !BankOptions.alwaysPlaceholder(player))
+        BankOptions.ButtonPress.RELEASE_ALL ->
+            player.queue(TaskPriority.WEAK) {
+                if (options("Yes", "No", title = "${BankOptions.RELEASE_ALL_PLACEHOLDERS}?") == 1) {
+                    Bank.releaseAllPlaceholders(player)
+                }
+            }
     }
 }
 

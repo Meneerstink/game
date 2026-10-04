@@ -784,7 +784,8 @@ obj 62903 3162 3496 2 0 0
 obj 62903 3167 3496 2 0 2
 obj 62903 3162 3497 2 0 0
 obj 62903 3167 3497 2 0 2
-# wall lights on the outer walls as on the floor below, candelabras in the side rooms' south corners
+# wall lights on the outer walls as on the floor below, candelabras in the side rooms' south corners (the corner tile
+# itself, 3158/3171,3486, lies inside the corner turret: those two stood hidden in the tower until 2026-10-04)
 obj 15545 3157 3486 2 4 2
 obj 15545 3172 3486 2 4 0
 obj 15545 3157 3488 2 4 2
@@ -795,10 +796,10 @@ obj 15545 3160 3498 2 4 3
 obj 15545 3169 3498 2 4 3
 obj 15560 3160 3485 2 4 1
 obj 15560 3169 3485 2 4 1
-obj 203 3158 3486 2 10 0
+obj 203 3159 3487 2 10 0
 obj 203 3161 3486 2 10 0
 obj 203 3168 3486 2 10 0
-obj 203 3171 3486 2 10 0
+obj 203 3170 3487 2 10 0
 # ---- the second upper floor's balconies (plane 2, RoyalHallMapTool.BALCONIES_2; owner 2026-09-27 option C "Stenen
 # balkon"): 4 wide, one tile out, round the outer tile a white marble crenellated parapet (62902) - straight on the
 # front, the L corner piece (type 2) on the two corner tiles

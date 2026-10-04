@@ -18,10 +18,21 @@ slots.forEach {
         when (player.getInteractingOpcode()) {
 
             /**
-             * Handle collapsing a tab
+             * Handle collapsing a tab; on 'View all' (762:62, tab 0) op2 is 'Remove placeholders' (OSRS script 506).
              */
             64 -> {
-                BankTabs.collapseTab(player, tab)
+                if (tab == 0) {
+                    Bank.removeTabPlaceholders(player, 0)
+                } else {
+                    BankTabs.collapseTab(player, tab)
+                }
+            }
+
+            /**
+             * E7: op3 'Remove placeholders' (OSRS script 507), added by BankOptions.sendControls.
+             */
+            4 -> {
+                Bank.removeTabPlaceholders(player, tab)
             }
 
             /**

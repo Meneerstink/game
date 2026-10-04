@@ -80,7 +80,7 @@ class ItemContainer(
      * Checks if the container has an [Item] which has the same [Item.id] as
      * [item].
      */
-    fun contains(item: Int): Boolean = items.any { it?.id == item }
+    fun contains(item: Int): Boolean = items.any { it?.id == item && it.amount > 0 }
 
     /**
      * Checks if the container has an [Item] which has the same [Item.id] as [item]
@@ -109,7 +109,7 @@ class ItemContainer(
         vararg others: Int,
     ): Boolean =
         items.any {
-            it != null &&
+            it != null && it.amount > 0 &&
                 (it.id == item || it.id in others)
         }
 
@@ -339,7 +339,8 @@ class ItemContainer(
          * is not set or the container does not have [item] at all,
          * the transaction will fail.
          */
-        if (freeSlotCount == 0 && (!stack || stack && previousAmount == 0)) {
+        // E7: a bank placeholder (the item with count 0) is the item's stack slot, so a full bank still takes the item into it.
+        if (freeSlotCount == 0 && (!stack || stack && previousAmount == 0 && getItemIndex(item, skipAttrItems = true) == -1)) {
             return ItemTransaction(amount, 0, emptyList())
         }
 

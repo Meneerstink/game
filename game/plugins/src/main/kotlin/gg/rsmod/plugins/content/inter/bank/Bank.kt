@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.inter.bank
 
 import gg.rsmod.game.action.EquipAction
-import gg.rsmod.game.model.World
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
@@ -267,10 +266,7 @@ class Bank {
             player: Player,
             item: Item,
         ): Int {
-            val placeholderSlot = player.bank.removePlaceholder(player.world, item)
-            if (placeholderSlot >= 0) {
-                return placeholderSlot
-            }
+            // A bank placeholder (the item with count 0, see [isPlaceholder]) is that item's stack: the deposit fills it in place.
             val bankId = item.toUnnoted(player.world.definitions).id
             return player.bank
                 .indexOfFirst {
@@ -278,11 +274,83 @@ class Bank {
                 }.takeUnless { it == -1 } ?: player.bank.nextFreeSlot
         }
 
+        /**
+         * E7: an OSRS bank placeholder is the item itself with count 0 (OSRS script 278 draws it with `cc_setobject(obj, 0)`,
+         * transparency 120, "Release" / "Examine"). It keeps its slot and tab; a deposit of the item fills it
+         * ([determineDepositSlot]).
+         */
+        fun isPlaceholder(item: Item?): Boolean = item != null && item.amount == 0
+
+        /** Leaves a placeholder in [slot] (just emptied by a withdraw) when [explicit] ('Placeholder') or 'Always set placeholders' is on. */
+        private fun leavesPlaceholder(
+            player: Player,
+            explicit: Boolean,
+        ): Boolean = explicit || BankOptions.alwaysPlaceholder(player)
+
+        /** 'Release' (op8 of a placeholder): the slot is freed and the bank closes up, like withdrawing the last item. */
+        fun releasePlaceholder(
+            player: Player,
+            slot: Int,
+        ): Boolean {
+            if (slot !in 0 until player.bank.capacity || !isPlaceholder(player.bank[slot])) {
+                player.bank.dirty = true
+                return false
+            }
+            val tab = BankTabs.getCurrentTab(player, slot)
+            player.bank[slot] = null
+            onSlotEmptied(player, tab)
+            return true
+        }
+
+        /** Releases every placeholder in [slots] (descending, so a release never moves a slot still to be visited). */
+        private fun releasePlaceholders(
+            player: Player,
+            slots: IntRange,
+        ): Int {
+            var released = 0
+            for (slot in slots.reversed()) {
+                if (slot in 0 until player.bank.capacity && isPlaceholder(player.bank[slot]) && releasePlaceholder(player, slot)) {
+                    released++
+                }
+            }
+            return released
+        }
+
+        /** 'Release all placeholders' (OSRS script 1272). */
+        fun releaseAllPlaceholders(player: Player): Int = releasePlaceholders(player, 0 until player.bank.capacity)
+
+        /** Tab op 'Remove placeholders' (OSRS scripts 506 / 507); tab 0 is the 'View all' tab: the whole bank. */
+        fun removeTabPlaceholders(
+            player: Player,
+            tab: Int,
+        ): Int {
+            if (tab == 0) return releaseAllPlaceholders(player)
+            if (tab !in 1..BankTabs.MAX_BANK_TABS || BankTabs.getTabSize(player, tab) == 0) return 0
+            return releasePlaceholders(player, BankTabs.tabIndices(player, tab))
+        }
+
+        /** A bank slot just became empty: close the gap, shrink its tab (a tab that empties disappears) and recount the space. */
+        private fun onSlotEmptied(
+            player: Player,
+            tab: Int,
+        ) {
+            player.bank.shift()
+            if (tab != 0) {
+                BankTabs.updateTabSize(player, tab, -1)
+                if (BankTabs.getTabSize(player, tab) == 0) {
+                    BankTabs.shiftTabs(player)
+                    BankTabs.afterTabRemoved(player, tab)
+                }
+            }
+            refreshSpaceCounts(player)
+        }
+
         fun withdraw(
             player: Player,
             id: Int,
             amt: Int,
             fromSlot: Int,
+            placeholder: Boolean = false,
         ) {
             val from = player.bank
             val to = player.inventory
@@ -298,7 +366,8 @@ class Bank {
                 return
             }
             val slotItem = from[fromSlot]
-            if (slotItem == null || slotItem.id != id || amt <= 0) {
+            // A placeholder (count 0) has nothing to withdraw.
+            if (slotItem == null || slotItem.id != id || amt <= 0 || slotItem.amount <= 0) {
                 player.bank.dirty = true
                 return
             }
@@ -317,17 +386,13 @@ class Bank {
             if (withdrawn > 0) {
                 gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
                 if (from[fromSlot] == null) {
-                    player.bank.shift()
-
-                    if (tab != 0) {
-                        BankTabs.updateTabSize(player, tab, -1)
-
-                        if (BankTabs.getTabSize(player, tab) == 0) {
-                            BankTabs.shiftTabs(player)
-                            BankTabs.afterTabRemoved(player, tab)
-                        }
+                    if (leavesPlaceholder(player, placeholder)) {
+                        // The slot, its tab and its place in the bank stay: the item's placeholder (OSRS 'Placeholder' /
+                        // 'Always set placeholders').
+                        from[fromSlot] = Item(slotItem.id, 0)
+                    } else {
+                        onSlotEmptied(player, tab)
                     }
-                    refreshSpaceCounts(player)
                 }
             }
 
@@ -338,22 +403,28 @@ class Bank {
             }
         }
 
-        /** The withdraw amount of a bank item menu option (762:93), or null for an option that withdraws nothing. */
+        /**
+         * The withdraw amount of a bank item menu option (762:93, OSRS script 669 layout - see [BankOptions.withdrawMenu]):
+         * -1 for 'Withdraw-X' (asks), null for an op that withdraws no amount ('Placeholder', 'Examine', none).
+         */
         fun withdrawAmount(
             player: Player,
             opcode: Int,
             stackAmount: Int,
-        ): Int? =
-            when (opcode) {
-                61 -> 1 // op1 Withdraw-1
-                64 -> 5 // op2 Withdraw-5
-                4 -> 10 // op3 Withdraw-10
-                52 -> player.getVarp(LAST_X_INPUT) // op4 Withdraw-<last X>
-                81 -> -1 // op5 Withdraw-X
-                91 -> stackAmount // op6 Withdraw-All
-                18 -> stackAmount - 1 // op7 Withdraw-All but one
+        ): Int? {
+            val custom = BankOptions.customQuantity(player)
+            return when (BankOptions.withdrawAction(opcode, placeholder = false)) {
+                BankOptions.WithdrawAction.DEFAULT -> BankOptions.defaultAmount(BankOptions.quantityMode(player), custom, stackAmount)
+                BankOptions.WithdrawAction.ONE -> 1
+                BankOptions.WithdrawAction.FIVE -> 5
+                BankOptions.WithdrawAction.TEN -> 10
+                BankOptions.WithdrawAction.CUSTOM -> custom.takeIf { it > 0 }
+                BankOptions.WithdrawAction.X -> -1
+                BankOptions.WithdrawAction.ALL -> stackAmount
+                BankOptions.WithdrawAction.ALL_BUT_ONE -> stackAmount - 1
                 else -> null
             }
+        }
 
         /**
          * Sends the bank space counters (varc 1038 free-to-play slots used, varc 192 all slots used) that CS2 1465 prints
@@ -409,11 +480,15 @@ class Bank {
             }
             // The bank is the visible screen again (CS2 2319 hides 762:0 while varbit 8348 is 1).
             player.setVarbit(EQUIPMENT_VIEW_VARBIT, 0)
+            // E7: the quantity / placeholder state first, so the client's first build of both item menus already uses it.
+            BankOptions.sendState(player)
             player.openInterface(BANK_INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
             player.openInterface(INV_INTERFACE_ID, InterfaceDestination.TAB_AREA)
             player.inventory.dirty = true
             player.bank.dirty = true
-            player.setEvents(interfaceId = BANK_INTERFACE_ID, component = BANK_MAINTAB_COMPONENT, to = player.bank.capacity - 1, setting = 0x2804FE)
+            // Ops 1-10: the OSRS menu has 'Withdraw-All-but-1' at op8 and 'Placeholder' at op9 (placeholders: op8 'Release').
+            player.setEvents(interfaceId = BANK_INTERFACE_ID, component = BANK_MAINTAB_COMPONENT, to = player.bank.capacity - 1, setting = BankOptions.BANK_ITEM_EVENTS)
+            BankOptions.sendControls(player)
             player.setEvents(interfaceId = INV_INTERFACE_ID, to = 27, setting = 0x25047E)
 
             /*
@@ -504,40 +579,25 @@ class Bank {
                 else -> null
             }
 
-        /** The deposit amount of a bank side inventory op (763:0): op4 is Deposit-<last X>. */
+        /**
+         * The deposit amount of a bank side inventory op (763:0, OSRS script 172 layout - see [BankOptions.depositMenu]):
+         * op1 the default quantity, op2-4 1 / 5 / 10, op5 Deposit-X (-1, asks), op6 Deposit-All.
+         */
         fun bankInventoryDepositAmount(
             player: Player,
             opcode: Int,
             inventoryCount: Int,
         ): Int? =
-            when (opcode) {
-                61 -> 1
-                64 -> 5
-                4 -> 10
-                52 -> player.getVarp(LAST_X_INPUT)
-                81 -> -1
-                91 -> inventoryCount
+            when (BankOptions.depositAction(opcode)) {
+                BankOptions.DepositAction.DEFAULT ->
+                    BankOptions.defaultAmount(BankOptions.quantityMode(player), BankOptions.customQuantity(player), inventoryCount)
+                BankOptions.DepositAction.ONE -> 1
+                BankOptions.DepositAction.FIVE -> 5
+                BankOptions.DepositAction.TEN -> 10
+                BankOptions.DepositAction.X -> -1
+                BankOptions.DepositAction.ALL -> inventoryCount
                 else -> null
             }
-
-        private fun ItemContainer.removePlaceholder(
-            world: World,
-            item: Item,
-        ): Int {
-            val def = item.toUnnoted(world.definitions).getDef(world.definitions)
-            val slot =
-                if (def.placeholderLink >
-                    0
-                ) {
-                    indexOfFirst { it?.id == def.placeholderLink && it.amount == 0 }
-                } else {
-                    -1
-                }
-            if (slot != -1) {
-                this[slot] = null
-            }
-            return slot
-        }
 
         fun swap(
             player: Player,

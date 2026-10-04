@@ -25,9 +25,11 @@ CLERKS.forEach { clerk ->
     }
 }
 
-/** E6: a History row's "Buy-offer" (op1) and "Examine" (op10), OSRS script 1645. */
-GrandExchangeHistory.ROW.forEachIndexed { row, component ->
-    on_button(GrandExchangeHistory.INTERFACE, component) { GrandExchangeHistory.press(player, row, player.getInteractingOpcode()) }
+/** E6: a History row's "Buy-offer" (op1) and "Examine" (op10), OSRS script 1645 - every row of either 643 layout. */
+GrandExchangeHistory.ROW_COMPONENTS.forEach { component ->
+    on_button(GrandExchangeHistory.INTERFACE, component) {
+        GrandExchangeHistory.press(player, GrandExchangeHistory.rowOf(component), player.getInteractingOpcode())
+    }
 }
 
 suspend fun clerkDialogue(task: QueueTask) {

@@ -186,12 +186,194 @@ class BankBehaviourTests {
     fun `menu ops map to the OSRS amounts`() {
         val player = newPlayer()
         player.setVarp(Bank.LAST_X_INPUT, 250)
-        assertEquals(listOf(1, 5, 10, 250, -1, 40, 39), listOf(61, 64, 4, 52, 81, 91, 18).map { Bank.withdrawAmount(player, it, 40) })
+        // OSRS script 669 with the default quantity 1: op1 Withdraw-1, op3 -5, op4 -10, op5 -<n>, op6 -X, op7 -All, op8 -All-but-1.
+        assertEquals(
+            listOf(1, 1, 5, 10, 250, -1, 40, 39),
+            listOf(61, 64, 4, 52, 81, 91, 18, 10).map { Bank.withdrawAmount(player, it, 40) },
+        )
+        assertNull(Bank.withdrawAmount(player, 20, 40), "op9 is 'Placeholder', no amount")
         assertNull(Bank.withdrawAmount(player, 25, 40))
-        assertEquals(0, Bank.withdrawAmount(player, 18, 1), "all-but-one of a single item withdraws nothing")
-        assertEquals(listOf(1, 5, 10, 250, -1, 7), listOf(61, 64, 4, 52, 81, 91).map { Bank.bankInventoryDepositAmount(player, it, 7) })
+        assertEquals(0, Bank.withdrawAmount(player, 10, 1), "all-but-one of a single item withdraws nothing")
+        // OSRS script 172: op1 the default, op2-4 1 / 5 / 10, op5 Deposit-X, op6 Deposit-All.
+        assertEquals(listOf(1, 1, 5, 10, -1, 7), listOf(61, 64, 4, 52, 81, 91).map { Bank.bankInventoryDepositAmount(player, it, 7) })
         // Deposit box menu (openDepositBox): op4 'Deposit-All', op5 'Deposit-X'.
         assertEquals(listOf(1, 5, 10, 7, -1, 7), listOf(61, 64, 4, 52, 81, 91).map { Bank.depositBoxAmount(it, 7) })
+    }
+
+    @Test
+    fun `the default quantity is what a left-click withdraws and deposits`() {
+        val player = newPlayer()
+        val expected = mapOf(BankOptions.MODE_ONE to 1, BankOptions.MODE_FIVE to 5, BankOptions.MODE_TEN to 10, BankOptions.MODE_ALL to 40)
+        expected.forEach { (mode, amount) ->
+            BankOptions.setQuantityMode(player, mode)
+            assertEquals(amount, Bank.withdrawAmount(player, BankOptions.OP1, 40), "withdraw, mode $mode")
+            assertEquals(amount, Bank.bankInventoryDepositAmount(player, BankOptions.OP1, 40), "deposit, mode $mode")
+        }
+        // X: the custom amount, at least 1 (OSRS script 2579: max(1, n)).
+        BankOptions.setQuantityMode(player, BankOptions.MODE_X)
+        assertEquals(1, Bank.withdrawAmount(player, BankOptions.OP1, 40))
+        player.setVarp(Bank.LAST_X_INPUT, 14)
+        assertEquals(14, Bank.withdrawAmount(player, BankOptions.OP1, 40))
+        assertEquals(14, Bank.bankInventoryDepositAmount(player, BankOptions.OP1, 40))
+        // The mode is kept on the player (persisted attribute) and named to the client on the side channel.
+        assertEquals(BankOptions.MODE_X, BankOptions.quantityMode(player))
+        assertTrue(messages().any { it == "${BankOptions.CLIENT_PREFIX}state|${BankOptions.MODE_X}|0" })
+        BankOptions.setQuantityMode(player, 9)
+        assertEquals(BankOptions.MODE_X, BankOptions.quantityMode(player), "an unknown mode changes nothing")
+    }
+
+    @Test
+    fun `the item menus are the OSRS menus for every default quantity`() {
+        assertEquals(
+            listOf("Withdraw-1", "", "Withdraw-5", "Withdraw-10", "", "Withdraw-X", "Withdraw-All", "Withdraw-All-but-1", "Placeholder", "Examine"),
+            BankOptions.withdrawMenu(BankOptions.MODE_ONE, custom = 0, alwaysPlaceholder = false),
+        )
+        assertEquals(
+            listOf("Withdraw-All", "Withdraw-1", "Withdraw-5", "Withdraw-10", "Withdraw-25", "Withdraw-X", "Withdraw-All", "Withdraw-All-but-1", "", "Examine"),
+            BankOptions.withdrawMenu(BankOptions.MODE_ALL, custom = 25, alwaysPlaceholder = true),
+        )
+        assertEquals("Withdraw-25", BankOptions.withdrawMenu(BankOptions.MODE_X, custom = 25, alwaysPlaceholder = false)[0])
+        assertEquals("Withdraw-1", BankOptions.withdrawMenu(BankOptions.MODE_X, custom = 0, alwaysPlaceholder = false)[0])
+        assertEquals(
+            listOf("Deposit-5", "Deposit-1", "", "Deposit-10", "Deposit-X", "Deposit-All"),
+            BankOptions.depositMenu(BankOptions.MODE_FIVE, custom = 0),
+        )
+        assertEquals(
+            listOf("Deposit-All", "Deposit-1", "Deposit-5", "Deposit-10", "Deposit-X", ""),
+            BankOptions.depositMenu(BankOptions.MODE_ALL, custom = 0),
+        )
+        // Every op the menu shows maps to the action its text names.
+        val opcodes = listOf(BankOptions.OP1, BankOptions.OP2, BankOptions.OP3, BankOptions.OP4, BankOptions.OP5, BankOptions.OP6, BankOptions.OP7, BankOptions.OP8, BankOptions.OP9, BankOptions.OP10)
+        val named =
+            mapOf(
+                "Withdraw-1" to BankOptions.WithdrawAction.ONE,
+                "Withdraw-5" to BankOptions.WithdrawAction.FIVE,
+                "Withdraw-10" to BankOptions.WithdrawAction.TEN,
+                "Withdraw-X" to BankOptions.WithdrawAction.X,
+                "Withdraw-All" to BankOptions.WithdrawAction.ALL,
+                "Withdraw-All-but-1" to BankOptions.WithdrawAction.ALL_BUT_ONE,
+                "Placeholder" to BankOptions.WithdrawAction.PLACEHOLDER,
+                "Examine" to BankOptions.WithdrawAction.EXAMINE,
+            )
+        BankOptions.withdrawMenu(BankOptions.MODE_TEN, custom = 7, alwaysPlaceholder = false).forEachIndexed { index, text ->
+            val action = BankOptions.withdrawAction(opcodes[index], placeholder = false)
+            if (index == 0) {
+                assertEquals(BankOptions.WithdrawAction.DEFAULT, action)
+            } else if (text == "Withdraw-7") {
+                assertEquals(BankOptions.WithdrawAction.CUSTOM, action)
+            } else if (text.isNotEmpty()) {
+                assertEquals(named[text], action, text)
+            }
+        }
+        // A placeholder: only op8 'Release' and 'Examine' (OSRS script 278).
+        assertEquals(BankOptions.WithdrawAction.RELEASE, BankOptions.withdrawAction(BankOptions.OP8, placeholder = true))
+        assertEquals(BankOptions.WithdrawAction.EXAMINE, BankOptions.withdrawAction(BankOptions.OP10, placeholder = true))
+        assertNull(BankOptions.withdrawAction(BankOptions.OP1, placeholder = true))
+    }
+
+    @Test
+    fun `Placeholder withdraws everything and keeps the slot and tab, and a deposit fills it again`() {
+        val player = newPlayer()
+        player.bank[0] = Item(Items.ABYSSAL_WHIP, 1)
+        player.bank[1] = Item(Items.DRAGON_DAGGER, 1)
+        player.bank[2] = Item(Items.COINS_995, 50)
+        BankTabs.setTabSize(player, 1, 2)
+
+        Bank.withdraw(player, Items.ABYSSAL_WHIP, 1, 0, placeholder = true)
+
+        assertEquals(1, player.inventory.getItemCount(Items.ABYSSAL_WHIP))
+        assertTrue(Bank.isPlaceholder(player.bank[0]))
+        assertEquals(Items.ABYSSAL_WHIP, player.bank[0]!!.id)
+        assertEquals(listOf(2, 0, 0, 0, 0, 0, 0, 0), player.tabSizes(), "the tab keeps its slot")
+        assertFalse(player.bank.contains(Items.ABYSSAL_WHIP), "a placeholder is not an owned item")
+
+        // Nothing to withdraw from a placeholder.
+        Bank.withdraw(player, Items.ABYSSAL_WHIP, 1, 0)
+        assertEquals(1, player.inventory.getItemCount(Items.ABYSSAL_WHIP))
+
+        // Viewing another tab: the deposit still goes back into the placeholder's slot.
+        player.setVarbit(BankTabs.SELECTED_TAB_VARBIT, 1)
+        assertTrue(Bank.deposit(player, player.inventory, player.inventory.getItemIndex(Items.ABYSSAL_WHIP, false), 1))
+        assertEquals(listOf(Items.ABYSSAL_WHIP, Items.DRAGON_DAGGER, Items.COINS_995), player.bankIds())
+        assertEquals(1, player.bank[0]!!.amount)
+        assertEquals(listOf(2, 0, 0, 0, 0, 0, 0, 0), player.tabSizes())
+    }
+
+    @Test
+    fun `Always set placeholders leaves a placeholder when the last item is withdrawn, off removes the slot`() {
+        val player = newPlayer()
+        player.bank[0] = Item(Items.COINS_995, 50)
+        player.bank[1] = Item(Items.ABYSSAL_WHIP, 2)
+
+        BankOptions.setAlwaysPlaceholder(player, true)
+        Bank.withdraw(player, Items.COINS_995, 20, 0)
+        assertEquals(30, player.bank[0]!!.amount, "a partial withdraw leaves the stack")
+        Bank.withdraw(player, Items.COINS_995, 30, 0)
+        assertTrue(Bank.isPlaceholder(player.bank[0]))
+        assertTrue(messages().any { it == "${BankOptions.CLIENT_PREFIX}state|${BankOptions.MODE_ONE}|1" })
+
+        BankOptions.setAlwaysPlaceholder(player, false)
+        Bank.withdraw(player, Items.ABYSSAL_WHIP, 2, 1)
+        assertEquals(listOf(Items.COINS_995), player.bankIds(), "without the setting the slot goes")
+    }
+
+    @Test
+    fun `a full bank still takes an item back into its placeholder`() {
+        val bank = ItemContainer(DEFINITIONS, ContainerKey("bank", capacity = 2, stackType = ContainerStackType.STACK))
+        val player = newPlayer(bank)
+        player.bank[0] = Item(Items.ABYSSAL_WHIP, 0)
+        player.bank[1] = Item(Items.COINS_995, 50)
+        player.inventory[0] = Item(Items.ABYSSAL_WHIP)
+        player.inventory[1] = Item(Items.DRAGON_DAGGER)
+
+        Bank.depositInventory(player)
+
+        assertEquals(1, player.bank[0]!!.amount)
+        assertEquals(Items.DRAGON_DAGGER, player.inventory[1]?.id, "no room for a new item")
+        assertEquals(1, messages().count { it == Bank.BANK_FULL_MESSAGE })
+    }
+
+    @Test
+    fun `release, release all and remove placeholders of a tab close the bank up like a withdraw`() {
+        val player = newPlayer()
+        player.bank[0] = Item(Items.ABYSSAL_WHIP, 0) // tab 1
+        player.bank[1] = Item(Items.DRAGON_DAGGER, 1) // tab 1
+        player.bank[2] = Item(Items.DRAGON_SCIMITAR, 0) // tab 2 (only a placeholder)
+        player.bank[3] = Item(Items.COINS_995, 10) // main
+        player.bank[4] = Item(Items.DRAGON_LONGSWORD, 0) // main
+        BankTabs.setTabSize(player, 1, 2)
+        BankTabs.setTabSize(player, 2, 1)
+
+        assertFalse(Bank.releasePlaceholder(player, 1), "a real item is not released")
+        assertTrue(Bank.releasePlaceholder(player, 0))
+        assertEquals(listOf(Items.DRAGON_DAGGER, Items.DRAGON_SCIMITAR, Items.COINS_995, Items.DRAGON_LONGSWORD), player.bankIds())
+        assertEquals(listOf(1, 1, 0, 0, 0, 0, 0, 0), player.tabSizes())
+
+        // Tab 2 holds only a placeholder: removing its placeholders removes the tab.
+        assertEquals(1, Bank.removeTabPlaceholders(player, 2))
+        assertEquals(listOf(1, 0, 0, 0, 0, 0, 0, 0), player.tabSizes())
+        assertEquals(listOf(Items.DRAGON_DAGGER, Items.COINS_995, Items.DRAGON_LONGSWORD), player.bankIds())
+
+        assertEquals(1, Bank.releaseAllPlaceholders(player))
+        assertEquals(listOf(Items.DRAGON_DAGGER, Items.COINS_995), player.bankIds())
+    }
+
+    @Test
+    fun `client-built buttons map to their actions`() {
+        val buttons = BankOptions.buttons(BankOptions.MODE_TEN, alwaysPlaceholder = false)
+        assertEquals(listOf("1", "5", "10", "X", "All", "Placeholders: Off"), buttons.map { it.label })
+        assertEquals(listOf(false, false, true, false, false, false), buttons.map { it.selected })
+        assertEquals(listOf(1, 3, 5, 7, 9, 11), buttons.map { it.labelChild }, "consecutive children: the client refuses gaps")
+        assertEquals(BankOptions.ButtonPress.QUANTITY to BankOptions.MODE_ALL, BankOptions.pressed(9, BankOptions.OP1))
+        assertEquals(BankOptions.ButtonPress.SET_CUSTOM to BankOptions.MODE_X, BankOptions.pressed(7, BankOptions.OP2))
+        assertNull(BankOptions.pressed(5, BankOptions.OP2), "only X has a second op")
+        assertNull(BankOptions.pressed(4, BankOptions.OP1), "a background is not clickable")
+        assertEquals(BankOptions.ButtonPress.TOGGLE_PLACEHOLDER to 0, BankOptions.pressed(11, BankOptions.OP1))
+        assertEquals(BankOptions.ButtonPress.RELEASE_ALL to 0, BankOptions.pressed(11, BankOptions.OP2))
+        assertEquals("Disable", BankOptions.buttons(BankOptions.MODE_ONE, alwaysPlaceholder = true).last().op1)
+        // Quantity buttons sit between Search (762:17, x 64..99) and the centred note toggle (x 238..273).
+        val quantity = buttons.take(5)
+        assertTrue(quantity.first().x >= 100 && quantity.last().x + quantity.last().width <= 238)
     }
 
     @Test

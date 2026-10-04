@@ -189,8 +189,9 @@ class GrandExchangeBuyLimitTests {
     @Test
     fun `history screen components exist in the 667 cache and clerks offer History`() {
         val H = GrandExchangeHistory
-        (H.TYPE + H.AMOUNT + H.NAME + H.PRICE).forEach { assertNotNull(LIBRARY.data(3, H.INTERFACE, it), "643:$it missing") }
-        assertEquals(20, (H.TYPE + H.AMOUNT + H.NAME + H.PRICE).distinct().size)
+        val legacy = H.LEGACY.type + H.LEGACY.amount + H.LEGACY.name + H.LEGACY.price
+        legacy.forEach { assertNotNull(LIBRARY.data(3, H.INTERFACE, it), "643:$it missing") }
+        assertEquals(20, legacy.distinct().size)
         listOf(Npcs.GRAND_EXCHANGE_CLERK, Npcs.GRAND_EXCHANGE_CLERK_2240, Npcs.GRAND_EXCHANGE_CLERK_2241, Npcs.GRAND_EXCHANGE_CLERK_2593).forEach { id ->
             val options = DEFINITIONS.get(NpcDef::class.java, id).options.filterNotNull()
             assertTrue("History" in options, "clerk $id options $options")
