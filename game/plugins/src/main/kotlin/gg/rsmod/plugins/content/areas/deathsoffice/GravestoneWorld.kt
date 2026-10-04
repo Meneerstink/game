@@ -36,6 +36,8 @@ object GravestoneWorld {
         npc.attr[OWNER] = player
         npc.respawns = false
         npc.walkRadius = 0
+        // A gravestone never turns to the player looting it (owner 2026-10-04 030706: it kept rotating towards him).
+        npc.static = true
         npc.setSpawnFacing(Direction.RS_ORDER.random())
         if (!player.world.spawn(npc)) return
         player.attr[NPC] = npc
