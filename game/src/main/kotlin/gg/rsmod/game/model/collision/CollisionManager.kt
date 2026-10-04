@@ -192,6 +192,34 @@ class CollisionManager(
         applyUpdate(builder.build())
     }
 
+    /**
+     * Removes [removed]'s collision, then puts back the flags every other object still standing on the same tiles sets there.
+     * The matrix holds one bit per direction, not a count, so removing an object cleared the same bits of everything sharing
+     * its tiles: a planter spawned over the Royal Hall's west wall and removed again (the owner's developer-mode edits, world
+     * edit groups 367/368) took the wall's collision with it - a drawn wall the player walked through (GeHomeHallCollisionTests,
+     * owner 2026-10-04 "invisible walls"). [others] lists the objects to consider (those near [removed], [removed] excluded).
+     */
+    fun removeKeepingOthers(
+        definitions: DefinitionSet,
+        removed: GameObject,
+        others: Collection<GameObject>,
+    ) {
+        val removal = CollisionUpdate.Builder().apply { setType(CollisionUpdate.Type.REMOVE); putObject(definitions, removed) }.build()
+        applyUpdate(removal)
+        val touched = removal.flags.keys
+        if (touched.isEmpty()) return
+        for (other in others) {
+            if (other === removed) continue
+            val add = CollisionUpdate.Builder().apply { setType(CollisionUpdate.Type.ADD); putObject(definitions, other) }.build()
+            val overlap = add.flags.filterKeys { it in touched }
+            if (overlap.isEmpty()) continue
+            val partial = CollisionUpdate.Builder()
+            partial.setType(CollisionUpdate.Type.ADD)
+            overlap.forEach { (tile, flags) -> flags.forEach { partial.putTile(tile, it.impenetrable, it.direction) } }
+            applyUpdate(partial.build())
+        }
+    }
+
     fun applyUpdate(update: CollisionUpdate) {
         var chunk: Chunk? = null
 

@@ -191,7 +191,17 @@ class Chunk(
          * collision map.
          */
         if (entity.entityType.isObject) {
-            world.collision.applyCollision(world.definitions, entity as GameObject, CollisionUpdate.Type.REMOVE)
+            // Objects sharing its tiles keep their collision (CollisionManager.removeKeepingOthers): the largest loc footprint
+            // here is 5 tiles, so everything within 5 tiles on the plane is a candidate.
+            val obj = entity as GameObject
+            val near = ArrayList<GameObject>()
+            for (dx in -5..5) {
+                for (dz in -5..5) {
+                    val t = Tile(tile.x + dx, tile.z + dz, tile.height)
+                    world.chunks.get(t, createIfNeeded = false)?.getEntities<GameObject>(t, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)?.let { near.addAll(it) }
+                }
+            }
+            world.collision.removeKeepingOthers(world.definitions, obj, near)
         }
 
         entities[tile]?.remove(entity)
