@@ -68,6 +68,38 @@ class GodWarsGatesTests {
         assertTrue(gg.rsmod.game.model.collision.Landing.pocket(world.collision, gg.rsmod.game.model.Tile(2850, 5334, 2)).size < 4, "Novite's tile is a pocket")
     }
 
+    /**
+     * Audit 2026-10-04 section 1: the chamber doors are crossed like Void `enterDoor` - through the doorway onto the far side -
+     * instead of a teleport to a fixed chamber tile. For every god: the door is placed next to its chamber, the crossing from the
+     * outside ends inside the chamber on open ground, and the way back from inside ends outside on open ground.
+     */
+    @Test
+    fun `every chamber door is crossed through its doorway into the chamber, on open ground`() {
+        val world = gg.rsmod.plugins.testutil.RealMapWorld.world
+        val dc = gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
+        val landing = gg.rsmod.game.model.collision.Landing
+        for (god in GodWars.God.values().filter { it.doorId != -1 }) {
+            val c = god.chamberEntry
+            val door =
+                (-8..8).flatMap { dx -> (-8..8).map { dz -> gg.rsmod.game.model.Tile(c.x + dx, c.z + dz, c.height) } }.flatMap { t ->
+                    world.chunks.get(t, true)!!.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                }.firstOrNull { it.id == god.doorId }
+            assertTrue(door != null, "$god door ${god.doorId} near ${c.x},${c.z},${c.height}")
+            val sides = listOf(door!!.tile, door.tile.step(dc.faceDirection(door.rot)))
+            // Nex's door (Zaros) leads into the Ancient Prison, x >= 2900 (the door handler's own rule); the others into the chamber.
+            val inChamber = { t: gg.rsmod.game.model.Tile -> if (god == GodWars.God.ZAROS) t.x >= 2900 else god.inChamber(t) }
+            val inside = sides.single(inChamber)
+            val outside = sides.single { !inChamber(it) }
+            if (god != GodWars.God.ZAROS) assertEquals(god.chamberEntry, inside, "$god lands on its chamber entry")
+            assertEquals(inside, dc.destination(outside, door), "$god in")
+            assertEquals(outside, dc.destination(inside, door), "$god out")
+            // The Ancient Prison's antechamber behind Nex's door is a closed room of 29 tiles (its old fixed entry 2900,5203 was a
+            // blocked tile, pocket 1).
+            val room = if (god == GodWars.God.ZAROS) 20 else landing.OPEN_GROUND
+            sides.forEach { assertTrue(landing.pocket(world.collision, it).size >= room, "$god $it open ground") }
+        }
+    }
+
     @Test
     fun `altar refuses in Void's order with the sourced texts`() {
         assertEquals(GodWars.MSG_ALTAR_FULL, GodWars.altarRefusal(prayerFull = true, recharging = true, underAttack = true))

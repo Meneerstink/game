@@ -23,7 +23,9 @@ class GodWarsUnboostedGatesTests {
         val unboosted = Regex("""GodWars\.hasUnboostedLevel\(player, Skills\.(\w+), 70\)""").findAll(plugin).map { it.groupValues[1] }.toList()
         assertEquals(listOf("STRENGTH", "AGILITY", "AGILITY", "RANGED"), unboosted)
         val boostable = Regex("""getCurrentLevel\(Skills\.(\w+)\) < (\d+)""").findAll(plugin).map { "${it.groupValues[1]} ${it.groupValues[2]}" }.toList()
-        // Boulder 60 Strength (boosts allowed), crevice 60 Agility and the Ancient Prison pipe 70 Agility (no 2011 no-boost statement).
-        assertEquals(listOf("STRENGTH 60", "AGILITY 60", "AGILITY 60", "AGILITY 70"), boostable)
+        // Boulder 60 Strength (boosts allowed) and crevice 60 Agility; the Ancient Prison pipe's 70 Agility (no 2011 no-boost
+        // statement) is the shared `player.hasAgility(70)` since 85e053263, which reads the current level too.
+        assertEquals(listOf("STRENGTH 60", "AGILITY 60", "AGILITY 60"), boostable)
+        assertTrue("player.hasAgility(70)" in plugin)
     }
 }

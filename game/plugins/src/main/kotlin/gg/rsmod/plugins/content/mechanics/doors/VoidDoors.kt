@@ -26,6 +26,12 @@ object VoidDoors {
 
     private val CARDINAL = arrayOf(0 to 1, 1 to 0, 0 to -1, -1 to 0)
 
+    /** Every Void door pair (closed -> opened) the generic door plugin loaded at boot, for scripted crossings ([DoorCrossing.swingOpenFor]). */
+    val knownClosedToOpened: MutableMap<Int, Int> = java.util.concurrent.ConcurrentHashMap()
+
+    /** Void "single" doors: opened in place (no hinge move). */
+    val knownInPlace: MutableSet<Int> = java.util.concurrent.ConcurrentHashMap.newKeySet()
+
     fun rotate(
         rotation: Int,
         clockwise: Int,

@@ -42,6 +42,12 @@ val ANIM_MOVE_BOULDER_NORTH = 6978
 val ANIM_MOVE_BOULDER_SOUTH = 6979
 val ANIM_HUMAN_CRAWL = 7023
 val GFX_BIG_SPLASH = 68
+// Void god_wars_dungeon *.toml: godwars_grapple_shoot gfx, godwars_grapple_swing / _reverse (loc 26302), crossbow_grappling / land_flatter.
+val GFX_GODWARS_GRAPPLE_SHOOT = 1036
+val ANIM_GRAPPLE_SWING = 6070
+val ANIM_GRAPPLE_SWING_REVERSE = 6072
+val SFX_CROSSBOW_GRAPPLING = 2928
+val SFX_LAND_FLATTER = 2455
 val ANIM_PRAYER_ALTAR = 645
 
 /* ------------------------------------------------------------------------------------------
@@ -164,16 +170,17 @@ God.values().filter { it.doorId != -1 && it != God.ZAROS }.forEach { god ->
             player.message("You don't have enough kills to enter the lair of the gods.")
             return@on_obj_option
         }
-        GodWars.setKillCount(player, god, kc - KILLCOUNT_REQUIRED)
-        walkThroughDoor(player, obj.tile, god.chamberEntry)
-    }
-}
-
-fun walkThroughDoor(player: Player, doorTile: Tile, destination: Tile) {
-    // Void GodwarsDoors enterDoor: up to the door with collision, then through (owner hard rule E17 - the old walk went onto the
-    // door tile collision-free from wherever the click left the player, then teleported).
-    player.lockingQueue(lockState = LockState.FULL) {
-        if (gg.rsmod.plugins.content.skills.agility.doorStepFrom(this, player, doorTile)) player.moveTo(destination)
+        // Void GodwarsDoors `enterDoor`: up to the door with collision, the door swings open (big_door_*_opened 26851, 3 ticks), the
+        // player walks through the doorway. The old route walked onto the shut door's tile through its model and then teleported
+        // to a fixed chamber tile (audit 2026-10-04 section 1). The kill count is paid once the player is through.
+        player.lockingQueue(lockState = LockState.FULL) {
+            val crossed =
+                gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+                    this, player, obj,
+                    open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, obj, GodWars.CHAMBER_DOOR_OPENED, ticks = 3) },
+                )
+            if (crossed) GodWars.setKillCount(player, god, GodWars.getKillCount(player, god) - KILLCOUNT_REQUIRED)
+        }
     }
 }
 
@@ -469,8 +476,7 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
         player.message(GodWars.MSG_ZAMORAK_RIVER)
         return@on_obj_option
     }
-    val withinZamorak = GodWars.inZamorakPrepare(player.tile)
-    val destination = GodWars.zamorakBridgeDestination(player.tile)
+    val north = player.tile.z <= obj.tile.z
     player.lockingQueue(lockState = LockState.FULL) {
         // Void ZamorakBridge: walkToDelay(target.tile) - with collision and arrival - before the jump (the old walk was collision-free
         // and unlocked from the click tile).
@@ -480,16 +486,22 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
             player.message("I can't reach that!")
             return@lockingQueue
         }
-        player.moveTo(Tile(obj.tile.x, obj.tile.z, obj.tile.height))
-        world.spawn(TileGraphic(player.tile, GFX_BIG_SPLASH, 0))
+        // Void ZamorakBridge: into the river two tiles past the bridge end, swimming (render "swim"), splash, 4 ticks, out on the far
+        // bank 12 tiles on, on the bridge's own plane. The port stood the player on the ice bridge loc itself (no swim) and landed on
+        // Novite's plane-0 tiles (audit 2026-10-04 section 1).
+        face(player, if (north) Direction.NORTH else Direction.SOUTH)
+        wait(1)
+        player.moveTo(GodWars.zamorakBridgeSwimTile(obj.tile, north))
+        player.setRenderAnimation(Render.SWIM)
+        world.spawn(TileGraphic(Tile(player.tile), GFX_BIG_SPLASH, 0))
         wait(4)
         player.message("Dripping, you climb out of the water.")
-        if (!withinZamorak) {
+        if (north) {
             player.skills.setCurrentLevel(Skills.PRAYER, 0)
             player.message("The extreme evil of this area leaves your Prayer drained.")
         }
-        player.moveTo(destination)
-        player.unlock()
+        player.moveTo(GodWars.zamorakBridgeLanding(obj.tile, north))
+        player.resetRenderAnimation()
     }
 }
 
@@ -576,32 +588,42 @@ on_obj_option(obj = Objs.PILLAR_26303, option = "grapple") {
         player.message("You need a crossbow equipped to fire a grapple.")
         return@on_obj_option
     }
-    if (!player.hasEquipped(EquipmentType.AMMO, Items.MITH_GRAPPLE)) {
+    if (!player.hasEquipped(EquipmentType.AMMO, Items.MITH_GRAPPLE_9419)) {
         player.message("You need a mithril grapple equipped to fire at the pillar.")
         return@on_obj_option
     }
     val middle = Tile(2872, 5274, 2)
     val south = player.tile.z > obj.tile.z
     val offset = if (south) 5 else -5
-    player.queue {
-        player.walkTo(this, middle.transform(0, offset))
-        wait(1)
-        player.lock()
-        player.faceTile(middle)
+    val direction = if (south) Direction.SOUTH else Direction.NORTH
+    // Void ArmadylPillar: walk to the ledge (with arrival), fire, the grapple loc 26302 swings, and the player swings across in two
+    // exact moves over the chasm. The port teleported twice (moveTo middle, moveTo far side) without the grapple's animation, and
+    // started from wherever the unlocked walk had got to (audit 2026-10-04 section 1).
+    player.lockingQueue(lockState = LockState.FULL) {
+        try {
+            walkToTile(player, middle.transform(0, offset))
+        } catch (e: ObstacleApproachFailed) {
+            player.message("I can't reach that!")
+            return@lockingQueue
+        }
+        face(player, direction)
         player.filterableMessage("You fire your grapple at the pillar...")
-        player.animate(ANIM_ARMADYL_PILLAR_SWING)
-        wait(4)
-        player.moveTo(middle)
         wait(1)
-        player.moveTo(middle.transform(0, -offset))
+        player.playSound(SFX_CROSSBOW_GRAPPLING)
+        player.animate(ANIM_ARMADYL_PILLAR_SWING, delay = 6)
+        player.graphic(GFX_GODWARS_GRAPPLE_SHOOT, delay = 6)
+        locAt(world, Tile(2872, 5270, 2), Objs.PILLAR_26302)?.let { animateLoc(world, it, if (south) ANIM_GRAPPLE_SWING_REVERSE else ANIM_GRAPPLE_SWING) }
+        wait(3)
+        exactMove(player, middle, delay = 29, direction = direction, startDelay = 15)
+        exactMove(player, middle.transform(0, -offset), delay = 21, direction = direction)
         player.filterableMessage("...and swing safely to the other side.")
-        player.unlock()
+        player.playSound(SFX_LAND_FLATTER)
     }
 }
 
 on_obj_option(obj = Objs.CRATE_26440, option = "search") {
     val hasCrossbow = player.hasWeaponType(WeaponType.CROSSBOW) || player.inventory.contains(Items.BRONZE_CROSSBOW) || player.inventory.contains(Items.CROSSBOW)
-    val hasGrapple = player.inventory.contains(Items.MITH_GRAPPLE) || player.hasEquipped(EquipmentType.AMMO, Items.MITH_GRAPPLE)
+    val hasGrapple = player.inventory.contains(Items.MITH_GRAPPLE_9419) || player.hasEquipped(EquipmentType.AMMO, Items.MITH_GRAPPLE_9419)
     if (hasCrossbow && hasGrapple) {
         player.message("You search the crate but find nothing of use.")
         return@on_obj_option
@@ -611,7 +633,7 @@ on_obj_option(obj = Objs.CRATE_26440, option = "search") {
         return@on_obj_option
     }
     if (!hasCrossbow) player.inventory.add(Items.BRONZE_CROSSBOW)
-    if (!hasGrapple) player.inventory.add(Items.MITH_GRAPPLE)
+    if (!hasGrapple) player.inventory.add(Items.MITH_GRAPPLE_9419)
     player.message("You find a crossbow and a grapple in the crate.")
 }
 
@@ -686,18 +708,22 @@ on_obj_option(obj = Objs.FROZEN_DOOR, option = "open") {
 on_obj_option(obj = Objs.BIG_DOOR_57258, option = "open") {
     val obj = player.getInteractingGameObj()
     val insidePrison = player.tile.x >= 2900
+    val hasCeremonial = GodWars.hasFullAncientCeremonial(player)
     if (!insidePrison) {
-        val hasCeremonial = GodWars.hasFullAncientCeremonial(player)
         val kc = GodWars.getKillCount(player, God.ZAROS)
         if (kc < KILLCOUNT_REQUIRED && !hasCeremonial) {
             player.message("You don't have enough kills to enter the lair of Zaros.")
             return@on_obj_option
         }
-        if (hasCeremonial) {
-            player.message("The door recognises your familiarity with the area and allows you to pass through.")
-        } else {
-            GodWars.setKillCount(player, God.ZAROS, kc - KILLCOUNT_REQUIRED)
-        }
+        if (hasCeremonial) player.message("The door recognises your familiarity with the area and allows you to pass through.")
     }
-    walkThroughDoor(player, obj.tile, if (insidePrison) God.ZAROS.chamberExit else God.ZAROS.chamberEntry)
+    // Void enterDoor over big_door_11_closed / _opened (57258 / 57257): through the doorway with the door swung open, no teleport.
+    player.lockingQueue(lockState = LockState.FULL) {
+        val crossed =
+            gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+                this, player, obj,
+                open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, obj, Objs.BIG_DOOR_57257, ticks = 3) },
+            )
+        if (crossed && !insidePrison && !hasCeremonial) GodWars.setKillCount(player, God.ZAROS, GodWars.getKillCount(player, God.ZAROS) - KILLCOUNT_REQUIRED)
+    }
 }

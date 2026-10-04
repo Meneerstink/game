@@ -464,12 +464,8 @@ suspend fun QueueTask.passDoor(
     door: GameObject,
     openedId: Int,
 ): Boolean {
-    val world = player.world
-    world.spawn(gg.rsmod.game.model.entity.DynamicObject(door, openedId))
-    world.queue {
-        wait(3)
-        world.spawn(gg.rsmod.game.model.entity.DynamicObject(door))
-    }
+    // Void enterDoor: the door swings open on its hinge (both leaves of a double gate) for the crossing, then shuts.
+    gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, door, openedId, ticks = 2)
     return gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.cross(this, player, door)
 }
 

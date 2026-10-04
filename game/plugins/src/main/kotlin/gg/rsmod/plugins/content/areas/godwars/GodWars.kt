@@ -76,6 +76,9 @@ object GodWars {
      *  walled pocket on this map (owner 030006). */
     fun bandosDoorDestination(outside: Boolean): Tile = Tile(if (outside) 2850 else 2851, 5333, 2)
 
+    /** Void god_wars_dungeon.objs.toml big_door_*_opened: the swung-open chamber door. */
+    const val CHAMBER_DOOR_OPENED = 26851
+
     const val MSG_BANDOS_STRENGTH = "You need to have a Strength level of 70."
     const val MSG_BANDOS_HAMMER = "You need a suitable hammer to ring the gong."
 
@@ -167,8 +170,11 @@ object GodWars {
     fun inZamorakPrepare(tile: Tile): Boolean = tile.x in 2884..2890 && tile.z in 5343..5352
 
     /** Exact Novite bridge destinations; both exits land on plane 0. */
-    fun zamorakBridgeDestination(tile: Tile): Tile =
-        Tile(2887, if (inZamorakPrepare(tile)) 5336 else 5346, 0)
+    /** Void ZamorakBridge: the river tile two tiles past the bridge loc [bridge], going [north] (towards Zamorak) or south. */
+    fun zamorakBridgeSwimTile(bridge: Tile, north: Boolean): Tile = bridge.transform(0, if (north) 2 else -2)
+
+    /** Void ZamorakBridge: the far bank, 12 tiles past the bridge loc on its own plane. */
+    fun zamorakBridgeLanding(bridge: Tile, north: Boolean): Tile = bridge.transform(0, if (north) 12 else -12)
 
     /** Exact orthogonal polygon from Void's `godwars_chill_area` definition. */
     fun inGodWarsChillArea(tile: Tile): Boolean =

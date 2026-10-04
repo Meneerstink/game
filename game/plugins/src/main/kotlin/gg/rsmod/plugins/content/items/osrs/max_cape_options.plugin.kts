@@ -109,7 +109,7 @@ fun searchCape(player: Player) {
         val choice = options("Mithril grapple", "Bronze crossbow", "Pestle and mortar", "Cancel", title = "Search the cape")
         when (choice) {
             1, 2 -> {
-                val item = if (choice == 1) Items.MITH_GRAPPLE else Items.BRONZE_CROSSBOW
+                val item = if (choice == 1) Items.MITH_GRAPPLE_9419 else Items.BRONZE_CROSSBOW
                 if (!SkillcapePerks.takeDailyUse(player, DailyUse.FLETCHING_SEARCH)) {
                     player.message("You have searched the cape ${MaxCapeTeleports.SEARCHES_PER_DAY} times today already.")
                     return@queue

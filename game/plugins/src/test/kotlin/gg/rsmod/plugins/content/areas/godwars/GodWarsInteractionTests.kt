@@ -71,10 +71,19 @@ class GodWarsInteractionTests {
     }
 
     @Test
-    fun `zamorak bridge uses the sourced preparation side and plane zero destinations`() {
+    fun `zamorak bridge uses the sourced preparation side and lands on the far bank of this map`() {
         assertTrue(GodWars.inZamorakPrepare(Tile(2887, 5348, 0)))
         assertFalse(GodWars.inZamorakPrepare(Tile(2887, 5333, 3)))
-        assertEquals(Tile(2887, 5336, 0), GodWars.zamorakBridgeDestination(Tile(2887, 5348, 0)))
-        assertEquals(Tile(2887, 5346, 0), GodWars.zamorakBridgeDestination(Tile(2887, 5333, 3)))
+        // Void ZamorakBridge on this map's two ice bridges (2885,5333,2 south end, 2885,5344,2 north end; probe 2026-10-04): the
+        // swim tile is river, the landing is the open bank beside the other bridge end, on plane 2 (Novite's plane-0 tiles were not).
+        val south = Tile(2885, 5333, 2)
+        val north = Tile(2885, 5344, 2)
+        val world = gg.rsmod.plugins.testutil.RealMapWorld.world
+        val landing = gg.rsmod.game.model.collision.Landing
+        assertEquals(Tile(2885, 5345, 2), GodWars.zamorakBridgeLanding(south, north = true))
+        assertEquals(Tile(2885, 5332, 2), GodWars.zamorakBridgeLanding(north, north = false))
+        listOf(GodWars.zamorakBridgeLanding(south, true), GodWars.zamorakBridgeLanding(north, false)).forEach {
+            assertTrue(landing.pocket(world.collision, it).size >= landing.OPEN_GROUND)
+        }
     }
 }

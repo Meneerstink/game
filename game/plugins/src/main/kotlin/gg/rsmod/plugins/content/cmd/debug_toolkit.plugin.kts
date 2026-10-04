@@ -312,6 +312,34 @@ gg.rsmod.game.CommandServerCommands.handlers["opheld"] = { w, a ->
         "item option $option of $item (slot $slot) for ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height}"
     }
 }
+// `equip <name> <item id>...`: wears inventory items through the real equip path (EquipAction, as the client's Wear click) - the
+// agent's own client checks gear around obstacles with 667 and OSRS-ported items (AGENTS.md 3, OSRS GEAR IS PORTED).
+gg.rsmod.game.CommandServerCommands.handlers["equip"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val ids = a.drop(1).mapNotNull { it.toIntOrNull() }
+    if (p == null || ids.isEmpty()) {
+        "usage: equip <name> <item id>..."
+    } else {
+        val results =
+            ids.map { id ->
+                val slot = p.inventory.rawItems.indexOfFirst { it?.id == id }
+                if (slot < 0) "$id not in inventory" else "$id ${gg.rsmod.game.action.EquipAction.equip(p, p.inventory[slot]!!, slot)}"
+            }
+        results.joinToString("; ")
+    }
+}
+// `gwdkc <name> <god> <amount>`: a God Wars kill count, so the agent can walk through the chamber doors in its own client.
+gg.rsmod.game.CommandServerCommands.handlers["gwdkc"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val god = gg.rsmod.plugins.content.areas.godwars.GodWars.God.values().firstOrNull { it.name.equals(a.getOrNull(1), ignoreCase = true) }
+    val amount = a.getOrNull(2)?.toIntOrNull()
+    if (p == null || god == null || amount == null) {
+        "usage: gwdkc <name> <bandos|armadyl|saradomin|zamorak|zaros> <amount>"
+    } else {
+        gg.rsmod.plugins.content.areas.godwars.GodWars.setKillCount(p, god, amount)
+        "${p.username} $god kc=$amount"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {

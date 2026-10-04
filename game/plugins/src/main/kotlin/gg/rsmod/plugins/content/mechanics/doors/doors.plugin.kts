@@ -154,9 +154,11 @@ fun bind_void_sourced_doors() {
         val opened: Int = pair.get("opened").asInt
         closedToOpened[closed] = opened
         openedToClosed[opened] = closed
+        VoidDoors.knownClosedToOpened[closed] = opened
         if (pair.get("name").asString.contains("single")) {
             singleNamed.add(closed)
             singleNamed.add(opened)
+            VoidDoors.knownInPlace.add(closed)
         }
     }
 

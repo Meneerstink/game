@@ -5,7 +5,9 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.collision.ObjectGroup
 import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 
 /**
  * Where a player crosses a door-like loc to, from where he stands - one shared rule for every "walk through the door" script
@@ -105,15 +107,47 @@ object DoorCrossing {
         if (open != null) {
             open()
         } else if (openedId != -1) {
-            val world = player.world
-            world.spawn(gg.rsmod.game.model.entity.DynamicObject(door, openedId))
-            world.queue {
-                wait(openTicks + 1)
-                world.spawn(gg.rsmod.game.model.entity.DynamicObject(door))
-            }
+            swingOpenFor(player, door, openedId, openTicks)
         }
         player.faceTile(door.tile)
         return cross(task, player, door)
+    }
+
+    /**
+     * Void `Door.openDoor(.., ticks)` for a scripted crossing: [door] swings open as [openedId] on its hinge ([VoidDoors.plan]: the
+     * opened leaf on the hinge tile turned a quarter, both leaves of a double door or gate), with the door sound, and swings shut
+     * again after [ticks]. The old helpers spawned the opened id on the closed leaf's own tile and rotation - a 667 door model only
+     * looks open at its hinge position, so the player walked through a door that still looked shut (audit 2026-10-04 section 2).
+     */
+    fun swingOpenFor(
+        player: gg.rsmod.game.model.entity.Player,
+        door: GameObject,
+        openedId: Int,
+        ticks: Int,
+    ) {
+        val world = player.world
+        val defs = world.definitions
+        val closedToOpened = HashMap(VoidDoors.knownClosedToOpened).apply { put(door.id, openedId) }
+        val plan =
+            VoidDoors.plan(
+                obj = door,
+                open = true,
+                closedToOpened = closedToOpened,
+                openedToClosed = emptyMap(),
+                objectAt = { tile, type -> ObjectType.values().firstOrNull { it.value == type }?.let { world.getObject(tile, it) } },
+                defOf = { defs.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, it) },
+                inPlace = { it in VoidDoors.knownInPlace },
+            ) ?: listOf(VoidDoors.Replacement(door, openedId, door.tile, door.rot))
+        val gate = VoidDoors.isGate(defs.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, door.id))
+        plan.forEach { world.remove(it.original) }
+        val spawned = plan.map { gg.rsmod.game.model.entity.DynamicObject(id = it.id, type = it.original.type, rot = it.rot, tile = Tile(it.tile)).also { o -> world.spawn(o) } }
+        player.playSound(if (gate) Sfx.GATE_OPEN else Sfx.DOOR_OPEN)
+        world.queue {
+            wait(ticks + 1)
+            spawned.forEach { world.remove(it) }
+            plan.forEach { world.spawn(gg.rsmod.game.model.entity.DynamicObject(it.original)) }
+            world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = Tile(door.tile), id = if (gate) Sfx.GATE_CLOSE else Sfx.DOOR_CLOSE, radius = 5, volume = 1))
+        }
     }
 
     /** Void `GameObject.remove(ticks)`: [door] is gone for [ticks] (the doorway shows open), then the same loc is back. */
