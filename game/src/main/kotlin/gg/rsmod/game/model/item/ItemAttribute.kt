@@ -77,4 +77,10 @@ enum class ItemAttribute {
      * when the item is handed back, so it never reaches an inventory, bank or trade.
      */
     DEATH_FEE_FREE,
+
+    /**
+     * OSRS degradation points left on a Barrows / Moon / Amulet of the damned item (plugins CombatPoints): 1 per combat entry
+     * and 1 per 90 combat ticks.
+     */
+    DEGRADE_POINTS,
 }

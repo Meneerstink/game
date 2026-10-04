@@ -18,9 +18,13 @@ class OsrsMoonsImportTests {
     fun `every moon armour piece degrades new - degraded - broken over 3000 points`() {
         assertEquals(9, MoonArmour.values().size)
         MoonArmour.values().forEach { piece ->
-            assertEquals(piece.degradedId, DegradeTable.step(piece.newId, null, "piece")?.replaceWith, "$piece first combat tick")
-            assertEquals(2_999 * 90 - 1, DegradeTable.step(piece.degradedId, null, "piece")?.charges, "$piece degraded points")
-            assertEquals(piece.brokenId, DegradeTable.step(piece.degradedId, 1, "piece")?.replaceWith, "$piece breaks at 0")
+            // OSRS points (CombatPoints): the first point on entering combat makes the degraded piece, 3,000 points in all.
+            val cp = gg.rsmod.plugins.content.items.armor.CombatPoints
+            val first = cp.spend(gg.rsmod.game.model.item.Item(piece.newId, 1))!!.item!!
+            assertEquals(piece.degradedId, first.id, "$piece first combat point")
+            assertEquals(2_999, first.attr[gg.rsmod.game.model.item.ItemAttribute.DEGRADE_POINTS], "$piece degraded points")
+            val last = gg.rsmod.game.model.item.Item(piece.degradedId, 1).apply { attr[gg.rsmod.game.model.item.ItemAttribute.DEGRADE_POINTS] = 1 }
+            assertEquals(piece.brokenId, cp.spend(last)!!.item!!.id, "$piece breaks at 0")
         }
         assertEquals(MoonSets.MoonSet.values().flatMap { it.pieces }.toSet(), MoonArmour.values().toSet(), "every piece belongs to one set")
     }

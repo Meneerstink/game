@@ -89,7 +89,18 @@ object PvpDeathBreakables {
             itemId in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || itemId == Items.ANCIENT_SCEPTRE ||
             itemId in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS ||
             gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(itemId) != null ||
-            gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId)
+            gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(itemId) ||
+            pointsDeath(itemId)
+
+    /**
+     * OSRS Wiki "Items Kept on Death", rows "Degradeable items" / "Degraded items" (Barrows and Moon equipment): PvP - "Dropped to
+     * the PKer as the item's broken version". "Amulet of the Damned": the used amulet "will turn to dust" on death (the full one
+     * drops as usual). Audit 2026-10-04 (degradation), [gg.rsmod.plugins.content.items.armor.CombatPoints].
+     */
+    fun pointsDeath(itemId: Int): Boolean {
+        val chain = gg.rsmod.plugins.content.items.armor.CombatPoints.chainFor(itemId) ?: return false
+        return chain.end >= 0 || itemId != chain.unused
+    }
 
     fun split(result: DeathResolutionResult): Pair<DeathResolutionResult, List<DeathSlotItem>> {
         if (result.context != DeathContext.WILDERNESS_PVP) return result to emptyList()
@@ -133,6 +144,13 @@ object PvpDeathBreakables {
                 if (slotItem.item.id == Items.BLAZING_BLOWPIPE) drop(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1))
                 Blowpipe.dart(blowpipe)?.let { drop(Item(it.itemId, Blowpipe.darts(blowpipe))) }
                 Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { drop(Item(Items.ZULRAHS_SCALES, it)) }
+                continue
+            }
+            if (pointsDeath(slotItem.item.id)) {
+                val chain = gg.rsmod.plugins.content.items.armor.CombatPoints.chainFor(slotItem.item.id)!!
+                container[slotItem.slot] = null
+                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+                if (chain.end >= 0) drop(Item(chain.end, slotItem.item.amount))
                 continue
             }
             if (slotItem.item.id == Items.BOW_OF_FAERDHINEN) {

@@ -21,21 +21,30 @@ import kotlin.math.ceil
  * carried or worn in one go.
  */
 object BarrowsRepair {
+    /**
+     * Every carried or worn Barrows / Moon piece with spent points and its price (OSRS Wiki: "determined by its internal degradation
+     * state (out of 1,000), multiplied by 100 coins when repairing a weapon; 90 coins when repairing a body slot item; 80 coins for
+     * a leg slot item; and finally 60 coins for a helmet"; Moon equipment "out of 3,000, multiplied by 500 coins").
+     */
+    fun repairable(player: gg.rsmod.game.model.entity.Player): List<Pair<Item, Int>> =
+        (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).mapNotNull { item ->
+            val chain = CombatPoints.chainFor(item.id) ?: return@mapNotNull null
+            if (chain.coinsPerPoint <= 0 || chain.unused < 0) return@mapNotNull null
+            val cost = CombatPoints.repairCost(item)
+            if (cost > 0) item to cost else null
+        }
+
     suspend fun repair(task: QueueTask) {
         val player = task.player
         task.chatPlayer("Can you repair my items for me?")
         val damaged = mutableListOf<Pair<Item, Int>>()
-        (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).forEach { item ->
-            val piece = BarrowsPiece.forId(item.id) ?: return@forEach
-            val cost = piece.repairCost(item.id)
-            if (cost > 0) damaged.add(item to cost)
-        }
+        damaged += repairable(player)
         if (damaged.isEmpty()) {
             task.chatNpc("You don't have anything that needs repairing!")
             return
         }
         val total = damaged.sumOf { it.second }
-        task.chatNpc("I can repair your Barrows equipment for a total of ${total.format()} coins. Shall I go ahead?")
+        task.chatNpc("I can repair your equipment for a total of ${total.format()} coins. Shall I go ahead?")
         if (task.options("Yes, please.", "No, thanks.") != 1) {
             return
         }
@@ -45,8 +54,7 @@ object BarrowsRepair {
         }
         player.inventory.remove(Items.COINS_995, total)
         damaged.forEach { (item, _) ->
-            val piece = BarrowsPiece.forId(item.id)!!
-            val fixed = Item(piece.baseId, item.amount)
+            val fixed = Item(CombatPoints.chainFor(item.id)!!.unused, item.amount)
             if (player.inventory.remove(item).hasSucceeded()) {
                 player.inventory.add(fixed)
             } else if (player.equipment.remove(item).hasSucceeded()) {
@@ -66,11 +74,7 @@ object BarrowsRepair {
     suspend fun repairAtStand(task: QueueTask) {
         val player = task.player
         val damaged = mutableListOf<Pair<Item, Int>>()
-        (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).forEach { item ->
-            val piece = BarrowsPiece.forId(item.id) ?: return@forEach
-            val cost = piece.repairCost(item.id)
-            if (cost > 0) damaged.add(item to cost)
-        }
+        damaged += repairable(player)
         if (damaged.isEmpty()) {
             player.message("Nothing you are carrying needs repairing.")
             return
@@ -86,8 +90,7 @@ object BarrowsRepair {
         }
         player.inventory.remove(Items.COINS_995, total)
         damaged.forEach { (item, _) ->
-            val piece = BarrowsPiece.forId(item.id)!!
-            val fixed = Item(piece.baseId, item.amount)
+            val fixed = Item(CombatPoints.chainFor(item.id)!!.unused, item.amount)
             if (player.inventory.remove(item).hasSucceeded()) {
                 player.inventory.add(fixed)
             } else if (player.equipment.remove(item).hasSucceeded()) {

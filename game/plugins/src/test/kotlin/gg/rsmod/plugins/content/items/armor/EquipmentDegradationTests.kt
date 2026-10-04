@@ -37,8 +37,8 @@ class EquipmentDegradationTests {
     fun `table covers every family once and ids are unique`() {
         // OSRS-IMPORT moons: nine moon armour pieces, each new -> degraded -> broken.
         val expected =
-            BarrowsPiece.values.size * 5 + CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2 +
-                MoonArmour.values().size * 2 + 2 // + the Amulet of the damned (full -> used -> dust), owner 2026-09-29
+            // Barrows, Moon armour and the Amulet of the damned left this table for the OSRS points (CombatPoints, owner 2026-10-04).
+            CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2
         assertEquals(9, MoonArmour.values().size)
         assertEquals(expected, DegradeTable.rows.size)
         assertEquals(DegradeTable.rows.size, DegradeTable.rows.map { it.id }.toSet().size, "one row per item id")
@@ -78,8 +78,7 @@ class EquipmentDegradationTests {
     @Test
     fun `lifetimes of every family match their source values`() {
         BarrowsPiece.values.forEach { piece ->
-            assertEquals(1 + 4 * BarrowsDegradation.STAGE_CYCLES to piece.idForStage(BarrowsPiece.BROKEN), lifetime(piece.baseId), piece.name)
-            assertEquals(3 * BarrowsDegradation.STAGE_CYCLES to piece.idForStage(BarrowsPiece.BROKEN), lifetime(piece.idForStage(2)), "${piece.name} from 75")
+            assertEquals(null, DegradeTable.rowFor(piece.baseId), "${piece.name}: OSRS points (CombatPoints)")
         }
         CorruptArmor.values().forEach { armour ->
             assertEquals(1 + armour.maxCharges to null, lifetime(armour.newId), armour.name)
@@ -92,19 +91,18 @@ class EquipmentDegradationTests {
         }
         // "3000 degradable points": one point on entering combat, the other 2,999 at 90 combat ticks each.
         MoonArmour.values().forEach { armour ->
-            assertEquals(1 + 2_999 * 90 to armour.brokenId, lifetime(armour.newId), armour.name)
+            assertEquals(null, DegradeTable.rowFor(armour.newId), "${armour.name}: OSRS points (CombatPoints)")
         }
     }
 
     @Test
     fun `saved charges continue and transitions carry the family message`() {
         val piece = BarrowsPiece.DHAROKS_HELM
-        assertEquals(DegradeStep(4, null, false, null), DegradeTable.step(piece.idForStage(BarrowsPiece.FULL), 5, "Dharok's helm 100"))
-        assertEquals(
-            DegradeStep(null, piece.idForStage(BarrowsPiece.BROKEN), false, "<col=ff0000>Your Dharok's helm has degraded completely and needs repairing."),
-            DegradeTable.step(piece.idForStage(4), 1, "Dharok's helm 25"),
-        )
-        assertEquals(DegradeStep(null, piece.idForStage(BarrowsPiece.FULL), false, null), DegradeTable.step(piece.baseId, null, "Dharok's helm"))
+        val stage25 = gg.rsmod.game.model.item.Item(piece.idForStage(4), 1).apply { attr[gg.rsmod.game.model.item.ItemAttribute.DEGRADE_POINTS] = 1 }
+        val spent = CombatPoints.spend(stage25)!!
+        assertEquals(piece.idForStage(BarrowsPiece.BROKEN), spent.item!!.id)
+        assertEquals("<col=ff0000>Your Dharok's helm has degraded completely and needs repairing.", spent.message)
+        assertEquals(piece.idForStage(BarrowsPiece.FULL), CombatPoints.spend(gg.rsmod.game.model.item.Item(piece.baseId, 1))!!.item!!.id)
         val vesta = CorruptArmor.VESTAS_LONGSWORD
         assertEquals(DegradeStep(null, null, true, "<col=ff0000>Your Vesta's longsword (deg) has degraded into dust."), DegradeTable.step(vesta.degradedId, 1, "Vesta's longsword (deg)"))
         val torva = NexArmour.TORVA_PLATEBODY

@@ -120,9 +120,9 @@ if (helmHasOption(Items.NEITIZNOT_FACEGUARD, "Dismantle", worn = false)) {
 
 // Amulet of the damned "Check": the degradation left of the used amulet (EquipmentDegradation charges). ADAPTED wording.
 fun damnedStatus(item: gg.rsmod.game.model.item.Item?): String {
-    val total = gg.rsmod.plugins.content.items.armor.BarrowsDegradation.STAGE_CYCLES * 4
-    val left = item?.attr?.get(gg.rsmod.game.model.item.ItemAttribute.CHARGES) ?: total
-    return "Your amulet of the damned has ${(left.toLong() * 100 / total).coerceIn(0, 100)}% of its charge left."
+    // The 1,000 OSRS points (CombatPoints, "the same rate as any other barrows armour").
+    val percent = if (item == null) 100 else gg.rsmod.plugins.content.items.armor.CombatPoints.percentLeft(item)
+    return "Your amulet of the damned has $percent% of its charge left."
 }
 if (helmHasOption(Items.AMULET_OF_THE_DAMNED, "Check", worn = false)) {
     on_item_option(item = Items.AMULET_OF_THE_DAMNED, option = "Check") {

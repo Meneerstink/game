@@ -61,26 +61,9 @@ data class DegradeStep(
 object DegradeTable {
     const val NEX_USED_CHARGES = 60_000
 
-    /** Moon armour: 2,999 remaining degrade points x 90 combat ticks each. */
-    const val MOON_DEGRADED_CHARGES = 2_999 * 90
-
     val rows: List<DegradeRow> =
         buildList {
-            BarrowsPiece.values.forEach { piece ->
-                add(DegradeRow(piece.idForStage(BarrowsPiece.PRISTINE), piece.idForStage(BarrowsPiece.FULL), 1) { null })
-                for (stage in BarrowsPiece.FULL until BarrowsPiece.BROKEN) {
-                    val next = stage + 1
-                    add(
-                        DegradeRow(piece.idForStage(stage), piece.idForStage(next), BarrowsDegradation.STAGE_CYCLES) {
-                            if (next == BarrowsPiece.BROKEN) {
-                                "<col=ff0000>Your ${piece.displayName} has degraded completely and needs repairing."
-                            } else {
-                                "<col=ff0000>Your ${piece.displayName} has degraded."
-                            }
-                        },
-                    )
-                }
-            }
+            // Barrows, Moon armour and the Amulet of the damned degrade by OSRS points instead (CombatPoints).
             CorruptArmor.values().forEach { armour ->
                 add(DegradeRow(armour.newId, armour.degradedId, 1) { null })
                 add(DegradeRow(armour.degradedId, DegradeRow.DESTROY, armour.maxCharges) { name -> "<col=ff0000>Your $name has degraded into dust." })
@@ -91,19 +74,6 @@ object DegradeTable {
             NexArmour.values().forEach { armour ->
                 add(DegradeRow(armour.pristineId, armour.usedId, 1) { name -> "Your $name degraded." })
                 add(DegradeRow(armour.usedId, armour.brokenId, NEX_USED_CHARGES) { name -> "Your $name degraded." })
-            }
-            // OSRS-IMPORT moons (OSRS Wiki "Moon equipment"): "The status of each item consists of 3000 degradable points"; "A piece of Moon
-            // equipment will immediately degrade when the player enters combat, and deduct one more point from the total if the player is
-            // still in combat after 90 ticks"; at 0 it "will lose all stat bonuses" (broken). ADAPTED to this per-combat-tick table: the
-            // first point turns the new piece into its degraded id, the other 2,999 points take 90 combat ticks each (a new combat session
-            // does not spend an extra point). No message is sourced.
-            // Amulet of the damned (OSRS Wiki): the (full) amulet becomes the used one in combat and "will degrade at the same rate as
-            // any other barrows armour" (four Barrows stages), then "turns to dust". ADAPTED: the message.
-            add(DegradeRow(Items.AMULET_OF_THE_DAMNED_FULL, Items.AMULET_OF_THE_DAMNED, 1) { null })
-            add(DegradeRow(Items.AMULET_OF_THE_DAMNED, DegradeRow.DESTROY, BarrowsDegradation.STAGE_CYCLES * 4) { name -> "<col=ff0000>Your $name has crumbled to dust." })
-            MoonArmour.values().forEach { armour ->
-                add(DegradeRow(armour.newId, armour.degradedId, 1) { null })
-                add(DegradeRow(armour.degradedId, armour.brokenId, MOON_DEGRADED_CHARGES) { null })
             }
         }
 
@@ -175,11 +145,46 @@ class EquipmentDegradation(
         on_timer(degradeCheck) {
             if (player.isAttacking() || player.isBeingAttacked()) {
                 tick(player)
+                pointsTick(player)
                 gg.rsmod.plugins.content.items.osrs.SerpentineHelm.combatTick(player)
             } else {
                 gg.rsmod.plugins.content.items.osrs.SerpentineHelm.resetCombat(player)
+                player.attr.remove(pointTicks)
             }
             player.timers[degradeCheck] = 1
+        }
+    }
+
+    /** Combat ticks of the current combat session for [CombatPoints] (absent = out of combat). */
+    private val pointTicks = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+    /**
+     * OSRS points ([CombatPoints]): one point off every worn Barrows / Moon / Amulet of the damned item on the first combat tick of
+     * a combat session ("immediately degrade by 1 point when the player enters combat") and one more every 90 ticks of it.
+     */
+    private fun pointsTick(player: Player) {
+        val ticks = player.attr[pointTicks]
+        val spend = ticks == null || (ticks + 1) % CombatPoints.TICKS_PER_POINT == 0
+        player.attr[pointTicks] = if (ticks == null) 0 else ticks + 1
+        if (!spend) return
+        for (slot in 0 until player.equipment.capacity) {
+            val item = player.equipment[slot] ?: continue
+            val spent = CombatPoints.spend(item) ?: continue
+            val next = spent.item
+            val def = player.world.definitions.get(ItemDef::class.java, item.id)
+            when {
+                next == null -> player.equipment[slot] = null
+                next.id == item.id || player.world.definitions.get(ItemDef::class.java, next.id).equipSlot == def.equipSlot -> player.equipment[slot] = next
+                else -> {
+                    // A stage this cache cannot wear comes off into the inventory (or onto the floor) - never deleted.
+                    player.equipment[slot] = null
+                    if (!player.inventory.add(next, applyCreationRedirect = false).hasSucceeded()) {
+                        player.world.spawn(gg.rsmod.game.model.entity.GroundItem(next, player.tile, player))
+                    }
+                }
+            }
+            spent.message?.let { player.message(it) }
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "degrade point ${player.username} ${item.id} -> ${next?.id ?: "dust"} points=${next?.attr?.get(gg.rsmod.game.model.item.ItemAttribute.DEGRADE_POINTS)}" }
         }
     }
 

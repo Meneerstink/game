@@ -109,15 +109,8 @@ fun moonStatus(
     item: Item,
 ): String {
     val id = item.id
-    val percent =
-        when (id) {
-            armour.brokenId -> 0
-            armour.newId -> 100
-            else -> {
-                val left = item.attr[ItemAttribute.CHARGES] ?: DegradeTable.MOON_DEGRADED_CHARGES
-                ((left.toLong() * 100 + DegradeTable.MOON_DEGRADED_CHARGES - 1) / DegradeTable.MOON_DEGRADED_CHARGES).toInt().coerceIn(1, 100)
-            }
-        }
+    // The 3,000 OSRS points (CombatPoints), rounded up while any point is left.
+    val percent = gg.rsmod.plugins.content.items.armor.CombatPoints.percentLeft(item)
     return if (percent == 0) {
         "Your ${itemName(id)} is fully degraded and must be repaired."
     } else {
