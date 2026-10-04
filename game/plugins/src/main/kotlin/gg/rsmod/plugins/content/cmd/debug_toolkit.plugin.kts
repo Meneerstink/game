@@ -378,6 +378,17 @@ gg.rsmod.game.CommandServerCommands.handlers["chatplayer"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) "usage: chatplayer <name> <text>" else { p.queue { chatPlayer(a.drop(1).joinToString(" ")) }; "chathead for ${p.username}" }
 }
+// `chatnpc <name> <npc id> <anim|auto> <text>`: an npc dialogue head with a chosen head animation (chathead rig checks).
+gg.rsmod.game.CommandServerCommands.handlers["chatnpc"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val npc = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || npc == null || a.size < 4) {
+        "usage: chatnpc <name> <npc id> <anim|auto> <text>"
+    } else {
+        p.queue { chatNpc(a.drop(3).joinToString(" "), npc = npc, animationOverride = a[2].toIntOrNull()) }
+        "npc $npc head for ${p.username}"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {

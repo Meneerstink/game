@@ -397,10 +397,12 @@ suspend fun QueueTask.chatNpc(
         val interfaceId = 240 + page.size
         player.openInterface(interfaceId = interfaceId, parent = 752, child = 13)
         player.setComponentNpcHead(interfaceId = interfaceId, component = 2, npc = npcId)
+        val headAnim = animationOverride ?: facialExpression.chatheadAnimation(player.world, npcId)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue head npc $npcId anim $headAnim on $interfaceId:2" }
         player.setComponentAnim(
             interfaceId = interfaceId,
             component = 2,
-            anim = animationOverride ?: facialExpression.chatheadAnimation(player.world, npcId),
+            anim = headAnim,
         )
         player.setComponentText(interfaceId = interfaceId, component = 3, text = dialogTitle)
         for (i in page.indices) {
