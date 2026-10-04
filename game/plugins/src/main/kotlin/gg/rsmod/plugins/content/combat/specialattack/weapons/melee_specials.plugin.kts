@@ -122,6 +122,8 @@ SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
     victim.graphic(341, 96)
     player.playSound(Sfx.ENERGYDRAIN)
     meleeHit(player, victim, accuracy = 1.25)
+    // The special is an attack too: one charge, hit or miss (AbyssalTentacle).
+    gg.rsmod.plugins.content.items.osrs.AbyssalTentacle.afterAttack(player)
     victim.freeze(8, player)
     // The special's own 1/2 poison roll, hit or miss (WeaponPoison skips its landed-hit roll for this special).
     if (world.random(gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.TENTACLE_SPECIAL_CHANCE - 1) == 0) {

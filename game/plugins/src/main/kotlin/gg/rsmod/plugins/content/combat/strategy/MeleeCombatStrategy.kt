@@ -146,6 +146,8 @@ object MeleeCombatStrategy : CombatStrategy {
 
         // Revenant chainmaces: "1 ether per attack whether the player hits or not" (after the formula read the passive).
         if (pawn is Player) gg.rsmod.plugins.content.items.osrs.RevenantWeapons.afterAttack(pawn)
+        // Abyssal tentacle: "the weapon will degrade after 10,000 attacks, including misses".
+        if (pawn is Player) gg.rsmod.plugins.content.items.osrs.AbyssalTentacle.afterAttack(pawn)
 
         if (damage > 0 && pawn.entityType.isPlayer) {
             addCombatXp(pawn as Player, target, damage)

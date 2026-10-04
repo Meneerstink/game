@@ -20366,4 +20366,6 @@ object Items {
     const val SERPENTINE_VISAGE_NOTED = 23937
     const val BASILISK_JAW = 23938
     const val BASILISK_JAW_NOTED = 23939
+    const val KRAKEN_TENTACLE = 24120
+    const val KRAKEN_TENTACLE_NOTED = 24121
 }

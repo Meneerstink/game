@@ -75,7 +75,7 @@ fun resolveDeath(victim: Player) {
         )
     // The OSRS level-20 rule reads the death tile (the same tile the Items Kept on Death screen and the risk skull read).
     val deepWilderness = pvpDeath && DeathRules.deepWilderness(victim.tile)
-    val (stripped, droppedLostAmmo) = QuiverDeathRules.stripLost(resolved)
+    val (stripped, droppedLostAmmo) = QuiverDeathRules.stripLost(gg.rsmod.plugins.content.items.osrs.AbyssalTentacle.degradeLost(resolved))
     val (afterConversions, converting) = PvpDeathBreakables.split(stripped)
     val (result, untradeables) = UntradeableDeathProtection.splitPvp(world.definitions, afterConversions, deepWilderness)
     // OSRS: "In instanced areas, the Gravestone will aim to appear outside the instance where its owner can loot it."

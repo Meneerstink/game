@@ -561,6 +561,13 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(24187, noted = true), // Trouver parchment
                 ),
+            // Degradation audit 2026-10-04 (OSRS Wiki "Abyssal tentacle"): what the tentacle leaves after 10,000 attacks, on an
+            // unprotected death and when dissolved; used on an abyssal whip it makes a new tentacle. OSRS Wiki "Kraken tentacle":
+            // item id 12004, tradeable, noteable, not equipable.
+            "kraken" to
+                listOf(
+                    Spec(12004, noted = true), // Kraken tentacle
+                ),
             // Step 3 roster batch "bows" (ids by Jagex name, RuneLite gameval ItemID): main-game bows and thrown weapons with ranged
             // strength plus their charge/creation items. Classes: Magic shortbow 861 (686 16, 687 1, 749/750 Ranged) for bows, Dragon
             // knife class for the Tonalztics, Heavy ballista 19481 for the (or). Not imported: Starter bow (Deadman), Nature's recurve/
