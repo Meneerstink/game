@@ -363,6 +363,11 @@ gg.rsmod.game.CommandServerCommands.handlers["pouchfill"] = { w, a ->
         "${p.username} pouch: $runes"
     }
 }
+// `bankpin <name>`: opens the bank PIN settings (Bank "Set a Bank PIN"), for own-client checks of the keypad.
+gg.rsmod.game.CommandServerCommands.handlers["bankpin"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: bankpin <name>" else { w.queue { gg.rsmod.plugins.content.inter.bank.BankPin.manage(p) }; "${p.username} bank PIN settings" }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {

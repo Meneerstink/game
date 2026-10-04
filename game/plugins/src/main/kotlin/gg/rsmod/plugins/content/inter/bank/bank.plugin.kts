@@ -45,6 +45,9 @@ BankPin.DIGIT_COMPONENTS.forEach { component ->
     }
 }
 
+// The keypad's fourth digit arrives as a pause button on 13:(digit + 6) (BankPin.pressPauseDigit).
+gg.rsmod.game.message.handler.ResumePauseButtonHandler.hook = { p, interfaceId, component -> BankPin.pressPauseDigit(p, interfaceId, component) }
+
 on_button(interfaceId = BankPin.PIN_INTERFACE_ID, component = BankPin.EXIT_COMPONENT) {
     BankPin.pressExit(player)
 }

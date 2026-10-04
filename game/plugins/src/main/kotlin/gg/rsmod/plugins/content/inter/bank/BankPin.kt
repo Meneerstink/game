@@ -112,6 +112,22 @@ object BankPin {
     /** The digit behind interface 759 component [component], or null for anything that is not a digit button. */
     fun digitForComponent(component: Int): Int? = if (component in DIGIT_COMPONENTS) component / 4 - 1 else null
 
+    /**
+     * The fourth digit: the 667 client sends it as a pause button on [PIN_INTERFACE_ID] component digit + 6 (13:6..15), not as
+     * a 759 click (Novite `finishPin(componentId - 6)`; seen in the agent's client 2026-10-04: three 759 clicks, then
+     * RESUME_PAUSEBUTTON 13:10 for the digit 4). True when it was a keypad digit.
+     */
+    fun pressPauseDigit(
+        player: Player,
+        interfaceId: Int,
+        component: Int,
+    ): Boolean {
+        if (interfaceId != PIN_INTERFACE_ID || component !in 6..15) return false
+        val input = player.attr[INPUT] ?: return false
+        input.press(component - 6)
+        return true
+    }
+
     /** A 759 digit click (bank.plugin.kts). */
     fun pressDigit(
         player: Player,
