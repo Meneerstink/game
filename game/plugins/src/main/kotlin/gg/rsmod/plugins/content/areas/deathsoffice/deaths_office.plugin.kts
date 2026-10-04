@@ -165,7 +165,11 @@ on_timer(GRAVE_TIMER) {
         GravestoneWorld.despawn(player)
         if (OfficeInterface.isOpen(player)) OfficeInterface.refresh(player)
     }
-    if (Gravestone.exists(player)) player.timers[GRAVE_TIMER] = 1
+    if (Gravestone.exists(player)) {
+        player.timers[GRAVE_TIMER] = 1
+        // The world map marker's countdown runs on in the client; resynced every 30 s (the timer pauses while idle).
+        if (world.currentCycle % 50 == 0) GravestoneWorld.sendMapMarker(player)
+    }
 }
 
 fun timeLeft(owner: gg.rsmod.game.model.entity.Player): String {

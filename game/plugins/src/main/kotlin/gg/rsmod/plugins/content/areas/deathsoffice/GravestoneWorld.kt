@@ -42,6 +42,24 @@ object GravestoneWorld {
         if (!player.world.spawn(npc)) return
         player.attr[NPC] = npc
         player.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_NPC, target = npc.index))
+        sendMapMarker(player)
+    }
+
+    /**
+     * Owner 2026-10-04 031637 ("when you still have a grave and a timer it must always show the exact location in the
+     * worldmap, even when you log out"): the gravestone's tile and the time left, for the client's world map marker
+     * (GraveWorldMapMarker); "grave|" once there is none. Sent when it appears (death, login), when it goes and every
+     * 30 seconds of its timer, which pauses while the player is idle.
+     */
+    fun sendMapMarker(player: Player) {
+        val tile = Gravestone.tile(player)
+        val payload =
+            if (tile == null || player.gravestone.isEmpty) {
+                "grave|"
+            } else {
+                "grave|${tile.x}|${tile.z}|${tile.height}|${Gravestone.ticksLeft(player) * 3 / 5}"
+            }
+        gg.rsmod.game.model.hud.ClientHud.send(player, payload)
     }
 
     fun despawn(player: Player) {
@@ -51,5 +69,6 @@ object GravestoneWorld {
             if (npc.isSpawned()) player.world.remove(npc)
             player.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_CLEAR))
         }
+        if (player.isOnline) sendMapMarker(player)
     }
 }

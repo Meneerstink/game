@@ -368,6 +368,11 @@ gg.rsmod.game.CommandServerCommands.handlers["bankpin"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null) "usage: bankpin <name>" else { w.queue { gg.rsmod.plugins.content.inter.bank.BankPin.manage(p) }; "${p.username} bank PIN settings" }
 }
+// `hud <name> <payload>`: one HUD side-channel payload to that player's client (client-side checks, e.g. "grave|x|z|plane|seconds").
+gg.rsmod.game.CommandServerCommands.handlers["hud"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null || a.size < 2) "usage: hud <name> <payload>" else { gg.rsmod.game.model.hud.ClientHud.send(p, a.drop(1).joinToString(" ")); "sent to ${p.username}" }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {
