@@ -288,6 +288,38 @@ object Barrows {
     fun underground(tile: Tile): Boolean = tile.x in UNDERGROUND_X && tile.z in UNDERGROUND_Z
 
     fun inTunnels(tile: Tile): Boolean = underground(tile) && tile.height == 0
+    /**
+     * The nine tunnel rooms, bounded by the tunnel doors of this map (cache placements of 6716-6731 / 6735-6750: west/east walls at
+     * x 3528|3541, 3545|3558, 3562|3575, south/north walls at z 9671|9684, 9688|9701, 9705|9718). Everything else in the tunnels is a
+     * corridor.
+     */
+    private val ROOM_X = listOf(3529..3540, 3546..3557, 3563..3574)
+    private val ROOM_Z = listOf(9672..9683, 9689..9700, 9706..9717)
+
+    fun inTunnelRoom(tile: Tile): Boolean = ROOM_X.any { tile.x in it } && ROOM_Z.any { tile.z in it }
+
+    /**
+     * Varbit 5028 (varp 1270 bit 0) swaps the tunnel's darkness locs 37736 (37731 / 37732): 0 in a room (the corridors behind its
+     * doors stay dark), 1 in a corridor (it is drawn). Darkan BarrowsController flips varp 1270 on every door crossed; one crossing
+     * without that door (a teleport, ::noclip, a relog) inverted it for the rest of the run - owner 154436 "when walking in the
+     * tunnels u see black sometimes between the doors" (seen in the agent's client: corridor black at 0, drawn at 1). It now follows
+     * the player's tile, which is what the flip produces when nothing goes wrong.
+     */
+    fun syncTunnelDarkness(
+        player: Player,
+        force: Boolean = false,
+    ) {
+        val corridor = inTunnels(player.tile) && !inTunnelRoom(player.tile)
+        val value = if (corridor) 1 else 0
+        if (force || player.attr[DARKNESS_SENT] != value) {
+            player.attr[IN_TUNNEL] = corridor
+            player.attr[DARKNESS_SENT] = value
+            player.setVarbit(IN_TUNNEL_VARBIT, value)
+        }
+    }
+
+    private val DARKNESS_SENT = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
 
     fun inInnerRoom(tile: Tile): Boolean = tile.height == 0 && tile.x in INNER_ROOM_X && tile.z in INNER_ROOM_Z
 
@@ -385,7 +417,7 @@ object Barrows {
         DOOR_LETTERS.forEach { player.setVarbit(doorVarbit(it), if (it in locked) 1 else 0) }
         player.setVarbit(CHEST_VARBIT, if (player.attr[CHEST_OPEN] == true) 1 else 0)
         // Void BarrowsCrypts: `barrows_in_tunnel` starts false on entering and toggles with every tunnel door crossed.
-        player.setVarbit(IN_TUNNEL_VARBIT, if (inTunnels(player.tile) && player.attr[IN_TUNNEL] == true) 1 else 0)
+        syncTunnelDarkness(player, force = true)
     }
 
     fun openOverlay(player: Player) {
@@ -411,16 +443,19 @@ object Barrows {
         world.queue {
             wait(1)
             if (npc.isSpawned() && !npc.isDead()) npc.attack(player)
-            // Brothers give up after a minute out of combat.
-            var idle = 0
+            // Darkan BarrowsBrother extends OwnedNPC (owner 03-2046 "Verac loses aggro after one hit and clicking away"): the brother's
+            // only possible target is his owner, re-targeted every tick he is out of combat; OwnedNPC.processNPC removes him when the
+            // owner is more than 15 tiles away (here also offline / out of the crypts).
             while (npc.isSpawned() && !npc.isDead()) {
-                wait(10)
-                idle = if (npc.getCombatTarget() == null) idle + 10 else 0
-                if (idle >= 100 || !player.isOnline || !underground(player.tile)) {
+                wait(1)
+                val gone = !player.isOnline || player.isDead() || !underground(player.tile) ||
+                    player.tile.height != npc.tile.height || !player.tile.isWithinRadius(npc.tile, 15)
+                if (gone) {
                     if (npc.isSpawned()) world.remove(npc)
                     spawned(player).remove(brother.key)
                     break
                 }
+                if (npc.getCombatTarget() == null) npc.attack(player)
             }
         }
         return npc
@@ -454,14 +489,35 @@ object Barrows {
     /** Void `barrows_brother_head`: the crypt face on the crypt plane (3), the `_tunnels` face in the tunnels (plane 0). */
     fun headValue(brother: Brother, tile: Tile): Int = if (tile.height == 0) brother.tunnelHeadValue else brother.headValue
 
+    /** Darkan BarrowsController.resetHeadTimer: 20 + random(6) ticks between two faces (owner 154404/154545 "too often, 4 at once"). */
+    fun nextDrainTicks(): Int = 20 + java.util.concurrent.ThreadLocalRandom.current().nextInt(6)
+
+    /** Darkan BarrowsController: a face stays 3 ticks, then the component is cleared. */
+    const val HEAD_SHOW_TICKS = 3
+
+    private val HEAD_INDEX = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+    /**
+     * One prayer drain with its brother face. Darkan BarrowsController.getAndIncreaseHeadIndex walks the brothers in order and shows
+     * killed brothers; with none killed yet the next brother in the order shows (OSRS: faces appear from the first drain). The varc is
+     * written once per face (the old "-1 then the face in the same tick" made the overlay play twice) and cleared by the caller after
+     * [HEAD_SHOW_TICKS]. Drain amount: OSRS (8 + brothers killed, [drainAmount]).
+     */
     fun drainPrayer(player: Player) {
-        val brother = Brother.values().random()
-        // OSRS Wiki Barrows/Strategies: "the brothers' faces will occasionally appear on-screen" with every drain. Void sets the
-        // varc to the drawn brother; the same brother twice in a row would leave the value unchanged, so the client got no new
-        // value and showed no face for that drain. Clear first (Void `clear` = -1), then the face: every drain is a change.
-        player.setVarc(BROTHER_HEAD_VARC, -1)
-        player.setVarc(BROTHER_HEAD_VARC, headValue(brother, player.tile))
-        player.alterPrayerPoints(-drainAmount(Brother.values().count { isKilled(player, it) }))
+        val order = Brother.values()
+        val start = player.attr[HEAD_INDEX] ?: 0
+        val killedAny = order.any { isKilled(player, it) }
+        var index = start
+        for (i in order.indices) {
+            val candidate = (start + i) % order.size
+            if (!killedAny || isKilled(player, order[candidate])) {
+                index = candidate
+                break
+            }
+        }
+        player.attr[HEAD_INDEX] = (index + 1) % order.size
+        player.setVarc(BROTHER_HEAD_VARC, headValue(order[index], player.tile))
+        player.alterPrayerPoints(-drainAmount(order.count { isKilled(player, it) }))
     }
 
     /** OSRS Wiki Barrows/Strategies: "No new monster spawns if a room already contains eleven enemies." */

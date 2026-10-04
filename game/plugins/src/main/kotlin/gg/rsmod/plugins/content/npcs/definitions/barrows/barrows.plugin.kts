@@ -103,8 +103,7 @@ suspend fun QueueTask.passDoor(door: GameObject) {
     val near = DoorCrossing.nearSide(player.tile, door) ?: return
     val far = DoorCrossing.destination(near, door) ?: return
     if (!DoorCrossing.enter(this, player, door, open = { Barrows.swingOpen(player, door) })) return
-    player.attr[Barrows.IN_TUNNEL] = player.attr[Barrows.IN_TUNNEL] != true
-    player.setVarbit(Barrows.IN_TUNNEL_VARBIT, if (player.attr[Barrows.IN_TUNNEL] == true) 1 else 0)
+    Barrows.syncTunnelDarkness(player)
     Barrows.onTunnelDoor(player, far.transform(far.x - near.x, far.z - near.z))
 }
 
@@ -187,7 +186,7 @@ on_timer(BARROWS_TIMER) {
         player.attr[Barrows.IN_TUNNEL] = false
         Barrows.ensureRun(player)
         Barrows.openOverlay(player)
-        player.attr[PRAYER_DRAIN_TICK] = Barrows.PRAYER_DRAIN_TICKS
+        player.attr[PRAYER_DRAIN_TICK] = Barrows.nextDrainTicks()
     } else if (!underground && was) {
         player.attr[WAS_UNDERGROUND] = false
         Barrows.resetRun(player)
@@ -195,13 +194,26 @@ on_timer(BARROWS_TIMER) {
         player.attr[Barrows.IN_TUNNEL] = false
         player.setVarbit(Barrows.IN_TUNNEL_VARBIT, 0)
         player.setVarc(Barrows.BROTHER_HEAD_VARC, -1)
+        player.attr.remove(HEAD_CLEAR_TICK)
     } else if (underground) {
-        val drain = (player.attr[PRAYER_DRAIN_TICK] ?: Barrows.PRAYER_DRAIN_TICKS) - 1
+        Barrows.syncTunnelDarkness(player)
+        val drain = (player.attr[PRAYER_DRAIN_TICK] ?: Barrows.nextDrainTicks()) - 1
         if (drain <= 0) {
             Barrows.drainPrayer(player)
-            player.attr[PRAYER_DRAIN_TICK] = Barrows.PRAYER_DRAIN_TICKS
+            player.attr[PRAYER_DRAIN_TICK] = Barrows.nextDrainTicks()
+            player.attr[HEAD_CLEAR_TICK] = Barrows.HEAD_SHOW_TICKS
         } else {
             player.attr[PRAYER_DRAIN_TICK] = drain
+        }
+        // Darkan: the face is cleared 3 ticks after it was shown.
+        val clear = player.attr[HEAD_CLEAR_TICK]
+        if (clear != null) {
+            if (clear <= 1) {
+                player.attr.remove(HEAD_CLEAR_TICK)
+                player.setVarc(Barrows.BROTHER_HEAD_VARC, -1)
+            } else {
+                player.attr[HEAD_CLEAR_TICK] = clear - 1
+            }
         }
         val collapse = player.attr[Barrows.COLLAPSE_TICKS]
         if (collapse != null && Barrows.inTunnels(player.tile)) {
@@ -223,6 +235,7 @@ on_timer(BARROWS_TIMER) {
 }
 
 val PRAYER_DRAIN_TICK = AttributeKey<Int>()
+val HEAD_CLEAR_TICK = AttributeKey<Int>()
 val WAS_ON_SURFACE = AttributeKey<Boolean>()
 
 on_logout {

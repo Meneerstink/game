@@ -145,20 +145,20 @@ class BarrowsRunTests {
     }
 
     @Test
-    fun `every prayer drain sends a face change, even for the same brother twice`() {
+    fun `every prayer drain sends one face, the brothers in turn (Darkan getAndIncreaseHeadIndex)`() {
         io.mockk.mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         try {
             val player = player()
             val sent = ArrayList<Pair<Int, Int>>()
             every { player.tile } returns Tile(3551, 9690, 0)
             every { player.setVarc(any(), any()) } answers { sent += secondArg<Int>() to thirdArg<Int>(); Unit }
-            repeat(20) { Barrows.drainPrayer(player) }
-            assertEquals(40, sent.size)
+            repeat(12) { Barrows.drainPrayer(player) }
+            // One write per face (the old clear + face in one tick made the overlay play twice, owner 154545 "4 at once"); the timer
+            // clears it after Barrows.HEAD_SHOW_TICKS. No brother killed yet: every brother in turn, so consecutive faces differ.
+            assertEquals(12, sent.size)
             assertTrue(sent.all { it.first == Barrows.BROTHER_HEAD_VARC })
-            sent.chunked(2).forEach { (clear, face) ->
-                assertEquals(-1, clear.second)
-                assertTrue(Barrows.Brother.values().any { it.tunnelHeadValue == face.second }, "tunnel face ${face.second}")
-            }
+            assertTrue(sent.all { (_, face) -> Barrows.Brother.values().any { it.tunnelHeadValue == face } })
+            assertTrue(sent.zipWithNext().none { (a, b) -> a.second == b.second }, "$sent")
             assertEquals(4761, Barrows.headValue(Barrows.Brother.AHRIM, Tile(3557, 9703, 3)), "crypt face (Void ahrims)")
             assertEquals(4772, Barrows.headValue(Barrows.Brother.VERAC, Tile(3551, 9690, 0)), "tunnel face (Void verac_tunnels)")
         } finally {
