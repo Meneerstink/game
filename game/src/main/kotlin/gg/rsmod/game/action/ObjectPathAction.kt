@@ -79,6 +79,14 @@ object ObjectPathAction {
                 player.write(SetMapFlagMessage(255, 255))
             }
 
+            val approach =
+                resolveInteractionDistance(obj.id, obj.getTransform(player)) { id -> player.world.plugins.getObjApproachDistance(id) }
+            if (approach != null && player.tile.height == obj.tile.height && player.tile.getDistance(obj.tile) <= approach) {
+                logRoute(player, obj, "within approach range $approach")
+                player.executePlugin(logic)
+                return@queue
+            }
+
             val route = walkTo(obj, lineOfSightRange)
             if (route.success) {
                 logRoute(player, obj, "route succeeded")

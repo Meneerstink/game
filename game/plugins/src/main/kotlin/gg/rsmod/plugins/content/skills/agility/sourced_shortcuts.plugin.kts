@@ -286,6 +286,11 @@ on_world_init {
 
     // ---- Stepping stones (Void SteppingStones) ----
     // Stone in water, start tiles 2 tiles away: the click acts from there (batch 16: "I can't reach that!").
+    // Void binds both Lumbridge swamp-cave stones with objectApproach: the handler walks to its own start tile. The 2-tile line of
+    // sight fails over the water, so the router took the player round the whole cave to the far bank (live traversal run
+    // 2026-10-04: 3208,9572 -> ~60 tiles -> 3204,9572, then the jump the other way). Within 6 tiles no routing (approach range).
+    world.plugins.setObjApproachDistance(5948, 6)
+    world.plugins.setObjApproachDistance(5949, 6)
     shortcut(5948, "Jump-across", lineOfSightDistance = 2) {
         obstacle { target ->
             val direction = if (player.tile.x > target.tile.x) Direction.WEST else Direction.EAST

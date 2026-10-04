@@ -735,6 +735,22 @@ class PluginRepository(
 
     fun getObjInteractionDistance(obj: Int): Int? = objInteractionDistancePlugins.getOrDefault(obj, null)
 
+    /**
+     * Void's `objectApproach` (owner priority #1, 2026-10-04): a player already within this many tiles of the object (same plane)
+     * runs the option without being routed to it - the handler walks to its own start tile. For obstacles whose start tile cannot
+     * see the object (a stepping stone across water), where routing to the object detoured round the whole area.
+     */
+    private val objApproachDistancePlugins = Int2IntOpenHashMap()
+
+    fun setObjApproachDistance(
+        obj: Int,
+        distance: Int,
+    ) {
+        objApproachDistancePlugins[obj] = distance
+    }
+
+    fun getObjApproachDistance(obj: Int): Int? = objApproachDistancePlugins.getOrDefault(obj, null)
+
     fun bindWorldInit(plugin: Plugin.() -> Unit) {
         worldInitPlugins.add(plugin)
     }
