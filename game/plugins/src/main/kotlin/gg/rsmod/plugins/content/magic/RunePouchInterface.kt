@@ -110,7 +110,8 @@ object RunePouchInterface {
         }
         val amount = amountFor(opcode, rune.amount)
         if (amount == null) {
-            player.queue {
+            // WEAK: a STANDARD task waits for the open window (a modal) to close, so the amount prompt never showed.
+            player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
                 val asked = inputInt("How many would you like to withdraw?")
                 if (asked > 0) take(player, rune.id, asked)
             }
@@ -145,7 +146,8 @@ object RunePouchInterface {
         val available = player.inventory.getItemCount(item.id)
         val amount = amountFor(opcode, available)
         if (amount == null) {
-            player.queue {
+            // WEAK: a STANDARD task waits for the open window (a modal) to close, so the amount prompt never showed.
+            player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
                 val asked = inputInt("How many would you like to store?")
                 if (asked > 0) put(player, item.id, asked)
             }
