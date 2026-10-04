@@ -29,55 +29,40 @@ val ANIM_CRACK_WALK = 2590
 val ANIM_CRACK_OUT = 2595
 
 on_world_init {
+    // Darkan AgilityDungeon.java:81-97 (handleLedge 2303 / 35969): level 40; north start (2580,9520), south start (2580,9512); north =
+    // player.y > 9516; on !skillSuccess(level, -67, 416) crossLedge(start, start +- 2, 20, north) and 6 ticks after the click
+    // tele(2572,9568) + a 20 % max-hitpoints hit; else crossLedge(start, the other end, 20, north) = route to the start, face, anim
+    // 752 (from the north) / 753 + BAS 156 / 157, the collision-free walk, stop anim 758 / 759 (DarkanShortcuts.darkanCrossLedge).
+    // Experience 22.5 (2009scape; OSRS Wiki 22) kept.
     listOf(LEDGE_SOUTH, LEDGE_NORTH).forEach { id ->
         shortcut(id, "Walk-across") {
             if (!player.hasAgility(40, "You need an Agility level of at least 40 in order to do this.")) return@shortcut
-            obstacle { target ->
-                // South of both ledges -> north from 2580,9512; north of both -> south from 2580,9520; on the walkway between
-                // them -> across the clicked ledge.
-                val north =
-                    when {
-                        player.tile.z <= 9512 -> true
-                        player.tile.z >= 9520 -> false
-                        else -> target.tile.z > player.tile.z
-                    }
-                val start =
-                    when {
-                        player.tile.z <= 9512 -> Tile(2580, 9512)
-                        player.tile.z >= 9520 -> Tile(2580, 9520)
-                        else -> Tile(2580, if (north) 9518 else 9514)
-                    }
-                val landing = if (north) Tile(2580, 9520) else Tile(2580, 9512)
-                val direction = if (north) Direction.NORTH else Direction.SOUTH
-                walkToTile(player, start)
-                face(player, direction)
-                player.animate(ANIM_LEDGE_STAND_RIGHT)
-                wait(1)
-                walkOverTile(player, landing, Render.LEDGE_BALANCE)
-                player.resetRenderAnimation()
-                player.animate(ANIM_LEDGE_STAND_AWAY_RIGHT)
-                player.addXp(Skills.AGILITY, 22.5)
+            obstacle {
+                val north = player.tile.z > 9516
+                val start = if (north) Tile(2580, 9520) else Tile(2580, 9512)
+                if (!darkanSkillSuccess(player, -67, 416)) {
+                    darkanCrossLedge(player, start, start.transform(0, if (north) -2 else 2), 0.0, north)
+                    wait(2)
+                    player.moveTo(Tile(2572, 9568, 0))
+                    player.darkanPercentHit(0.2)
+                    return@obstacle
+                }
+                darkanCrossLedge(player, start, if (north) Tile(2580, 9512) else Tile(2580, 9520), 22.5, north)
             }
         }
     }
 
+    // Darkan DwarvenMine.java:49-61 (5906 @3029,9806 r0 / 3034,9806 r2): level 42; from the route tile three chained forced moves -
+    // obj.x +-2 (2594, 0/120), obj.x +-5 (2590, 0/120), obj.x +-6 (2595, 0/75) (minus for rotation 2). Was Void's three 1-tile-per-30
+    // slides from a fixed start.
     shortcut(DWARVEN_CREVICE, "Squeeze-through") {
-        if (!player.hasAgility(42)) return@shortcut
-        obstacle {
-            val east = player.tile.x <= 3031
-            val direction = if (east) Direction.EAST else Direction.WEST
-            val start = if (east) Tile(3028, 9806) else Tile(3035, 9806)
-            val entry = if (east) Tile(3029, 9806) else Tile(3034, 9806)
-            val exit = if (east) Tile(3034, 9806) else Tile(3029, 9806)
-            val landing = if (east) Tile(3035, 9806) else Tile(3028, 9806)
-            walkToTile(player, start)
-            face(player, direction)
-            player.animate(ANIM_CRACK_IN)
-            exactMove(player, entry, direction = direction)
-            player.animate(ANIM_CRACK_WALK)
-            exactMove(player, exit, direction = direction)
-            player.animate(ANIM_CRACK_OUT)
-            exactMove(player, landing, direction = direction)
+        if (!player.hasAgility(42, "You need an agility level of 42 to use this obstacle.")) return@shortcut
+        obstacle { target ->
+            val sign = if (target.rot == 2) -1 else 1
+            val z = target.tile.z
+            darkanForceMove(player, Tile(target.tile.x + 2 * sign, z, 0), startCycles = 0, speedCycles = 120, anim = ANIM_CRACK_IN)
+            darkanForceMove(player, Tile(target.tile.x + 5 * sign, z, 0), startCycles = 0, speedCycles = 120, anim = ANIM_CRACK_WALK)
+            darkanForceMove(player, Tile(target.tile.x + 6 * sign, z, 0), startCycles = 0, speedCycles = 75, anim = ANIM_CRACK_OUT)
         }
     }
 }

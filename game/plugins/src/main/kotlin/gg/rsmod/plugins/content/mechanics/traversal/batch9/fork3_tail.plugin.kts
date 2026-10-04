@@ -4,6 +4,8 @@ import gg.rsmod.plugins.content.mechanics.lightsource.LightSource
 import gg.rsmod.plugins.content.quests.QuestStatus
 import gg.rsmod.plugins.content.quests.foundation.DesertTreasure
 import gg.rsmod.plugins.content.skills.agility.Render
+import gg.rsmod.plugins.content.skills.agility.darkanForceMove
+import gg.rsmod.plugins.content.skills.agility.darkanTransform
 import gg.rsmod.plugins.content.skills.agility.doorStep
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
@@ -89,16 +91,15 @@ shortcut(6481, "Enter") {
 // the hole at y 9603 to 3224,9601 (south) and from the hole at y 9601 to 3224,9603 (north). Map: 3224,9603 (wall on its south
 // edge) and 3224,9601 (wall on its north edge) are walkable, 3224,9602 between them is the solid rock the player squeezes through.
 val ANIM_SQUEEZE_HOLE = 2240
+// Darkan UndergroundDungeonController.java:142-146 (6912): anim 10578, then useStairs(-1, obj.tile) and useStairs(10579, (x, y == 9601 ?
+// y + 2 : y - 2)) in the same tick - the client gets 10579 and the player is teleported 2 tiles across one tick later (was a 2240 slide
+// through the rock from a fixed front tile). The 2009scape message is kept.
 shortcut(6912, "Squeeze-through") {
-    obstacle { target ->
-        val south = target.tile.z == 9603
-        val front = Tile(3224, if (south) 9603 else 9601, 0)
-        val behind = Tile(3224, if (south) 9601 else 9603, 0)
-        walkToTile(player, front)
-        face(player, if (south) Direction.SOUTH else Direction.NORTH)
+    obstacle {
         player.message("You squeeze through the hole.")
-        player.animate(ANIM_SQUEEZE_HOLE)
-        exactMove(player, behind, delay = 60, direction = if (south) Direction.SOUTH else Direction.NORTH)
+        player.animate(10579)
+        wait(1)
+        player.moveTo(player.darkanTransform(0, if (player.tile.z == 9601) 2 else -2))
         player.animate(-1)
     }
 }
@@ -132,21 +133,17 @@ shortcut(6620, "Climb-through") {
 // far side, five tiles from the start. Map: the fence line is z 3652-3653; 2344,3650 (in front of the south hole) and 2344,3655 (in
 // front of the north hole) are walkable. The crawl under the fence is a tunnel (the player is out of sight), so it is one move
 // between the two hole fronts - never a slide through the fence.
+// Darkan Piscatoris.java:58-79 (handleColonyTunnels; Swan Song gate - completed here): north = player.y > 3653, landing (2344,3650) from
+// the north / (2344,3655) from the south; t1 forceMove(the hole's own tile, 2589, 0, 30) then anim 2590; t5 anim 2591; t6 tele(landing).
 shortcut(14922, "Enter") {
     obstacle { target ->
-        val north = target.tile.z == 3651
-        val front = Tile(2344, if (north) 3650 else 3655, 0)
-        val out = Tile(2344, if (north) 3655 else 3650, 0)
-        walkToTile(player, front)
-        face(player, if (north) Direction.NORTH else Direction.SOUTH)
-        player.animate(2589)
-        wait(2)
+        val fromNorth = player.tile.z > 3653
+        darkanForceMove(player, Tile(target.tile), startCycles = 0, speedCycles = 30, anim = 2589)
         player.animate(2590)
-        player.moveTo(out)
-        wait(1)
-        face(player, if (north) Direction.NORTH else Direction.SOUTH)
+        wait(3)
         player.animate(2591)
         wait(1)
+        player.moveTo(Tile(2344, if (fromNorth) 3650 else 3655, 0))
     }
 }
 

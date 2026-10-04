@@ -6,6 +6,11 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.GameObject
 
 /**
+ * 2026-10-04: the handlers in agility_pyramid.plugin.kts are now Darkan's (AgilityPyramidController.java: player- / loc-relative
+ * landings, no lanes). Of this file they still use STONE_BLOCKS, MOVING_BLOCKS, stairsFront, fallLanding (a Darkan drop tile that is
+ * not standable here moves to the nearest usable one), TOP_VARBIT, BASE and the region ids; the lane tables (LEDGES, GAP_CROSSINGS,
+ * PLANKS, JUMP_FALLS, laneOver, stairsLanding) are kept as AgilityPyramidLaneTests' map checks of the course's end and fall tiles.
+ *
  * Agility Pyramid data (agility_pyramid.plugin.kts), ported 2026-10-03 from 2009scape
  * `content/global/skill/agility/pyramid/{AgilityPyramidCourse,RollingBlock,MovingBlockNPC}` (Void has no course code) and checked
  * against the OSRS Wiki pages "Agility Pyramid", "Ledge/Gap/Plank/Low wall/Stone block/Pyramid block/Doorway (Agility Pyramid)".

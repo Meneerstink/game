@@ -2,77 +2,70 @@ package gg.rsmod.plugins.content.skills.agility
 
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.MovementQueue
-import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.content.skills.agility.AgilityPyramid as Pyr
 
 /**
- * Agility Pyramid (Jaleustrophos), owner priority #1 2026-10-03: one plugin owns every id of the course - stairs 10857 / 10858,
- * jump gaps 10859, ledges 10860 / 10886-10889, hand-over-hand gaps 10861-10864 / 10882-10885, low walls 10865, planks 10867 /
- * 10868, the top's climbing rocks 10851, the doorway 10855 / 10856, the climbing rocks 16535 / 16536 to the pyramid, the five
- * rolling stone blocks and the two moving pyramid blocks (NPCs 3124 / 3125).
+ * Agility Pyramid (Jaleustrophos) - ported from Darkan on 2026-10-04 (owner: "port everything from Darkan";
+ * agent-handoffs/darkan-obstacles-map.md section 1d). Donor: import-source/donors/darkan/world-server-dev/.../skills/agility/
+ * agilitypyramid/AgilityPyramidController.java and AgilityPyramidBlock.java (revision 727; same ids and tiles as this 667 map).
+ * One plugin owns every id of the course: stairs 10857 / 10858, jump gaps 10859, ledges 10860 / 10886-10889, hand-over-hand gaps
+ * 10861-10864 / 10882-10885, low walls 10865, planks 10867 / 10868, the top 10851, the doorway 10855 / 10856, the climbing rocks
+ * 16535 / 16536, the five rolling stone blocks and the two moving pyramid blocks (NPCs 3124 / 3125).
  *
- * Source: 2009scape AgilityPyramidCourse / RollingBlock / MovingBlockNPC (tiles, animations, messages, fail tiles; Void has no
- * course code), checked against the OSRS Wiki obstacle pages: level 30; XP stone block 12, low wall 8, ledge 52, plank 56.4,
- * gap (cross) 56.4, gap (jump) 22, climbing rocks 0, doorway 300 + 8 x Agility level (max 1000, base level, only with the top
- * taken - "if you forget to get the relic beforehand, you will earn nothing"); success chances = the wiki's Jagex
- * success charts; damage stone block 6 (1 backwards, always fails), low wall 4, ledge 10, plank 10, gaps 8, pyramid block 8.
+ * Darkan's rules, literally: landings are player- or loc-relative offsets (no home-made lanes) - low wall player +-2, gap player +-3,
+ * ledge / hand-holds loc +-4, plank loc +-5, stairs player + (0, +-3, +-1); animations and BAS are Darkan's (ledges 752/753 + BAS
+ * 156/157, hand-holds 3057/3053 + BAS 387/386, low wall 1560, rolling block 1115 / 3064, push 3066); client cycles are Darkan's
+ * (darkanForceMove, no SlideTiming). The failure chance is Darkan's failed(): success = min(Agility level / 75, 1). Darkan's
+ * ledges and hand-holds have a course side: the locs not in its list (crossed backwards) always fall. Experience is Darkan's
+ * (ledge and hand-holds 52, plank 56.4 only the course-way 10868, gap 22, low wall 8, block 12); damage is Darkan's / 10 (this
+ * server counts life points 1:1). A fall tile that is not standable on this map is moved to the nearest usable one
+ * (AgilityPyramid.fallLanding), never left inside scenery. The doorway keeps the OSRS Wiki rule (see there).
  *
- * Owner hard rule (E17): every crossing walks normally to the tile in front of the obstacle, then one exactMove with the sourced
- * animation to the usable tile behind it; a fall is a fall animation on a walkable tile and a move to a usable tile one floor down
- * (Pyr.fallLanding) - never a slide into a blocked tile. Tiles: AgilityPyramid.kt, guarded by AgilityPyramidLaneTests.
+ * Tick mapping as DarkanShortcuts.kt: the task starts at Darkan's T+1 (WorldTasks.schedule(0) = now, schedule(n) = wait(n));
+ * darkanForceMove resumes when its glide has ended. AgilityPyramid.kt's lane tables stay for AgilityPyramidLaneTests (map checks
+ * of every end and fall tile); the handlers below no longer read them.
  */
 
 val PYRAMID_TICK = TimerKey()
-val PYRAMID_LAST_TILE = AttributeKey<Tile>()
 val PYRAMID_TOP_ITEM = 6970
 val PYRAMID_TOP_JINGLE = 151
 val MOVING_BLOCK_NPCS = intArrayOf(3124, 3125)
 
+/** The hand-over-hand gap locs (type 10) a wall-decoration end (10863 / 10864, type 4) stands for (Darkan :245). */
+val HANDHOLD_GAPS = intArrayOf(10861, 10862, 10882, 10883, 10884, 10885)
+
+/** Darkan RollingBlock (:184): the failure drop per block (by its varbit) - its rotation's offset, one plane down; D into the main pyramid. */
+val BLOCK_DROPS =
+    mapOf(
+        1551 to Triple(-2, 0, -1),
+        1552 to Triple(0, 2, -1),
+        1553 to Triple(2, 0, -1),
+        1554 to Triple(322, -1856, 1),
+        1555 to Triple(0, 2, -1),
+    )
+
 fun Player.pyramidXp(xp: Double) = addXp(Skills.AGILITY, xp)
 
-fun Player.pyramidSuccess(chance: Pair<Int, Int>) = agilitySuccess(this, chance.first, chance.second)
+/** Darkan AgilityPyramidController.failed() (:277): success with probability min(Agility level / 75, 1). */
+fun Player.pyramidFailed(): Boolean =
+    java.util.concurrent.ThreadLocalRandom.current().nextDouble() > Math.min(skills.getCurrentLevel(Skills.AGILITY) / 75.0, 1.0)
 
-/** The farthest tile up to [steps] along [dir] reachable without passing a blocked tile (a failed crossing stops there). */
-fun slideBeforeGap(
-    player: Player,
-    dir: Direction,
-    steps: Int,
-): Tile {
-    var tile = player.tile
-    repeat(steps) {
-        val next = tile.add(dir)
-        if (player.world.collision.isClipped(next)) return tile
-        tile = next
-    }
-    return tile
-}
-
-/** One fall down a floor: the fall animation where the player stands, then the move to a usable tile below and the hit. */
-suspend fun QueueTask.fallDown(
-    player: Player,
-    target: Tile,
-    anim: Int,
-    damage: Int,
-    message: String? = null,
-    wait: Int = 2,
-) {
-    val landing = Pyr.fallLanding(player.world, target)
-    player.animate(anim)
-    message?.let { player.filterableMessage(it) }
-    wait(wait)
-    if (landing == null) {
-        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
-            "agility pyramid: no usable fall tile near ${target.x},${target.z},${target.height} for ${player.username} - stays on ${player.tile}"
-        }
+/** Darkan's 14-bit glide angle collapsed to this client's cardinal byte: the dominant axis of the move. */
+fun cardinal(
+    from: Tile,
+    to: Tile,
+): Direction {
+    val dx = to.x - from.x
+    val dz = to.z - from.z
+    return if (Math.abs(dx) >= Math.abs(dz)) {
+        if (dx >= 0) Direction.EAST else Direction.WEST
     } else {
-        player.moveTo(landing)
+        if (dz >= 0) Direction.NORTH else Direction.SOUTH
     }
-    player.playSound(Sfx.FALL_LAND)
-    player.animate(-1)
-    player.hit(damage)
 }
 
 fun unknownPlacement(
@@ -85,228 +78,281 @@ fun unknownPlacement(
     player.message(gg.rsmod.game.model.entity.Entity.NOTHING_INTERESTING_HAPPENS)
 }
 
-// ---- Stairs (2009scape handleStairs: up = +2 north one floor up, down = one south one floor down; no climb animation) ----
+/** Darkan's drop tile when it is standable here, else the nearest usable tile (AgilityPyramid.fallLanding); null = stay (traced). */
+fun pyramidDrop(
+    player: Player,
+    darkan: Tile,
+): Tile? {
+    val landing = Pyr.fallLanding(player.world, darkan)
+    if (landing == null) {
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
+            "agility pyramid: no usable fall tile near ${darkan.x},${darkan.z},${darkan.height} for ${player.username} - stays on ${player.tile}"
+        }
+    }
+    return landing
+}
 
+/**
+ * Darkan AgilityPyramidController.shimmy (:357), a WorldTasks.scheduleLooping(0, 1) from the task start: tick 0 [startAnim] + BAS
+ * [render]; tick 1 addWalkSteps([to]) without clipping (walk speed); a failure stops the walk on tick 3 (two tiles along) with
+ * [endAnim] and on tick 4 drops one plane onto the nearest free tile with 100 (10 here) damage; a success plays [endAnim] on
+ * arrival with 52 xp.
+ */
+suspend fun QueueTask.shimmy(
+    player: Player,
+    to: Tile,
+    startAnim: Int,
+    render: Int,
+    endAnim: Int,
+    fail: Boolean,
+) {
+    player.animate(startAnim)
+    player.setRenderAnimation(render)
+    wait(1)
+    if (fail) {
+        val from = player.tile
+        val stop =
+            Tile(
+                from.x + Integer.signum(to.x - from.x) * Math.min(2, Math.abs(to.x - from.x)),
+                from.z + Integer.signum(to.z - from.z) * Math.min(2, Math.abs(to.z - from.z)),
+                from.height,
+            )
+        walkOverTile(player, stop, render)
+        player.animate(endAnim)
+        wait(1)
+        pyramidDrop(player, player.tile.transform(-1))?.let { player.moveTo(it) }
+        player.resetRenderAnimation()
+        player.playSound(Sfx.FALL_LAND)
+        player.hit(10)
+        return
+    }
+    walkOverTile(player, to, render)
+    player.animate(endAnim)
+    player.resetRenderAnimation()
+    player.pyramidXp(52.0)
+}
+
+/** Darkan shimmySideways / shimmyHandholds landing (:328-331, :351-354): the loc's tile +-4 across, by the loc's rotation. */
+fun shimmyEnd(
+    obj: gg.rsmod.game.model.entity.GameObject,
+    from: Tile,
+): Tile =
+    if (obj.rot % 2 == 0) {
+        obj.tile.transform(if (obj.rot == 0) 1 else 0, if (from.z < obj.tile.z) 4 else -4)
+    } else {
+        obj.tile.transform(if (from.x < obj.tile.x) 4 else -4, if (obj.rot == 3) 1 else 0)
+    }
+
+// ---- Stairs ----
+
+// Darkan AgilityPyramidController.java:220 (10857): lvl 30; useStairs(-1, player + (0, 3, +1), 1, 1); on plane 3 into the top
+// copy: player + (-320, 1859, -1). No animation. The climb starts from the stairs' front row (the route end on this map).
 shortcut(10857, "Climb-up") {
+    if (!player.hasAgility(30, "You need an agility level of 30 to use this obstacle.")) return@shortcut
     obstacle { target ->
-        val front = Pyr.stairsFront(world, target, player.tile, up = true)
-        val landing = Pyr.stairsLanding(world, target, player.tile, up = true)
-        if (front == null || landing == null) return@obstacle unknownPlacement(player, target)
+        val front = Pyr.stairsFront(world, target, player.tile, up = true) ?: return@obstacle unknownPlacement(player, target)
+        val moved = !player.tile.sameAs(front)
         walkToTile(player, front)
         face(player, Direction.NORTH)
-        wait(1)
-        player.moveTo(landing)
+        if (moved) wait(1)
+        player.moveTo(if (player.tile.height == 3) player.tile.transform(-320, 1859, -1) else player.tile.transform(0, 3, 1))
     }
 }
 
+// Darkan AgilityPyramidController.java:232 (10858): useStairs(-1, player + (0, -3, -1), 1, 1); in the top copy on plane 2 back into
+// the main pyramid: player + (320, -1859, +1).
 shortcut(10858, "Climb-down") {
     obstacle { target ->
-        val front = Pyr.stairsFront(world, target, player.tile, up = false)
-        val landing = Pyr.stairsLanding(world, target, player.tile, up = false)
-        if (front == null || landing == null) return@obstacle unknownPlacement(player, target)
+        val front = Pyr.stairsFront(world, target, player.tile, up = false) ?: return@obstacle unknownPlacement(player, target)
+        val moved = !player.tile.sameAs(front)
         walkToTile(player, front)
         face(player, Direction.SOUTH)
-        wait(1)
-        player.moveTo(landing)
+        if (moved) wait(1)
+        val top = player.tile.z > 4000 && player.tile.height == 2
+        player.moveTo(if (top) player.tile.transform(320, -1859, 1) else player.tile.transform(0, -3, -1))
     }
 }
 
-// ---- Climbing rocks to the pyramid (16535 / 16536: two rock rows two tiles apart, climbed as one band) ----
+// ---- Climbing rocks to the pyramid ----
 
+// Darkan AgilityPyramidController.java:395 climbRocks (16535 / 16536): from the east side a collision-free walk 4 tiles west with
+// BAS 0 (the climbing render); from the west anim 740 + forceMove(player + (4, 0), 20, 120), anim -1. Each rock band is two rock
+// rows two tiles apart (three blocked tiles); the climb starts on the band's edge in the rock's own row (the straight route end).
 intArrayOf(16535, 16536).forEach { id ->
     shortcut(id, "Climb") {
         val target = player.getInteractingGameObj()
-        // 2009scape: "You must be level 30 agility or higher to climb down the rocks." (the 16536 rocks gate the course).
+        // 2009scape (Darkan has no check): "You must be level 30 agility or higher to climb down the rocks." (16536 gates the course).
         if (id == 16536 && player.skills.getCurrentLevel(Skills.AGILITY) < 30) {
             player.message("You must be level 30 agility or higher to climb down the rocks.")
             return@shortcut
         }
         obstacle {
-            val east = locAt(world, target.tile.transform(2, 0), id) != null
-            val partner = target.tile.transform(if (east) 2 else -2, 0)
-            val crossing = pairCrossing(world, target.tile, partner)
-            if (crossing == null) return@obstacle unknownPlacement(player, target)
-            walkToTile(player, crossing.start)
-            face(player, crossing.direction)
-            wait(1)
+            val partnerEast = locAt(world, target.tile.transform(2, 0), id) != null
+            val westEdge = (if (partnerEast) target.tile.x else target.tile.x - 2) - 1
+            val eastEdge = (if (partnerEast) target.tile.x + 2 else target.tile.x) + 1
+            val fromEast = player.tile.x > target.tile.x
+            walkToTile(player, Tile(if (fromEast) eastEdge else westEdge, target.tile.z))
             player.playSound(Sfx.CLIMBING_LOOP, loops = 6)
-            // 2009scape handleRockClimb: 1148 climbing eastwards, 740 westwards.
-            player.animate(if (crossing.direction == Direction.EAST) 1148 else 740)
-            exactMove(player, crossing.landing, delay = 120, direction = crossing.direction)
-            player.animate(-1)
+            if (fromEast) {
+                walkOverTile(player, player.tile.transform(-4, 0), Render.CLIMBING)
+                player.resetRenderAnimation()
+            } else {
+                darkanForceMove(player, player.tile.transform(4, 0), startCycles = 20, speedCycles = 120, anim = 740, direction = Direction.EAST)
+                player.animate(-1)
+            }
         }
     }
 }
 
-// ---- Low walls 10865 (2009scape handleLowWall; wiki 8 xp, slip = 4 damage) ----
+// ---- Low walls ----
 
+// Darkan AgilityPyramidController.java:471 climbOver (10865): failed() first - 40 (4 here) damage, "Ouch!", locked 3 ticks, no
+// crossing; else the landing is the player's tile +-2 along the wall's axis (rotation even: x, odd: z), anim 1560 +
+// forceMove(landing, 5, 60), 8 xp.
 shortcut(10865, "Climb-over") {
     obstacle { target ->
-        val crossing = Pyr.laneOver(world, target, player.tile) ?: return@obstacle unknownPlacement(player, target)
-        walkToTile(player, crossing.start)
-        face(player, crossing.direction)
-        wait(1)
-        player.filterableMessage("You climb the low wall...")
-        player.playSound(Sfx.CLIMB_WALL, delay = 40)
-        if (!player.pyramidSuccess(Pyr.LOW_WALL_CHANCE)) {
-            player.animate(1106)
-            wait(2)
-            player.filterableMessage("You lost your balance!")
-            player.animate(-1)
+        if (player.pyramidFailed()) {
             player.hit(4)
+            player.forceChat("Ouch!")
+            wait(3)
             return@obstacle
         }
-        player.animate(1252)
-        exactMove(player, crossing.landing, delay = 60, direction = crossing.direction)
-        player.animate(-1)
-        player.filterableMessage("... and make it over.")
+        val to =
+            if (target.rot % 2 == 0) {
+                player.tile.transform(if (player.tile.x < target.tile.x) 2 else -2, 0)
+            } else {
+                player.tile.transform(0, if (player.tile.z < target.tile.z) 2 else -2)
+            }
+        player.playSound(Sfx.CLIMB_WALL, delay = 40)
+        darkanForceMove(player, to, startCycles = 5, speedCycles = 60, anim = 1560, direction = cardinal(player.tile, to))
         player.pyramidXp(8.0)
     }
 }
 
-// ---- Ledges 10860 / 10886-10889 (2009scape handleLedge; wiki 52 xp, fall 10 damage) ----
+// ---- Ledges ----
 
+// Darkan AgilityPyramidController.java:335 shimmySideways (10860 / 10886-10889): 10886, 10888 and 10860 at (3372,2839) / (3364,2851)
+// are the course-way locs - anim 753, BAS 157, end 759 (fail roll: end 761); every other ledge loc (crossed backwards) is anim 752,
+// BAS 156 and always falls with 760. Landing = the loc +-4 across ([shimmyEnd]).
 intArrayOf(10860, 10886, 10887, 10888, 10889).forEach { id ->
     shortcut(id, "Cross") {
         obstacle { target ->
-            val lane = Pyr.lane(Pyr.LEDGES, target.tile) ?: return@obstacle unknownPlacement(player, target)
-            val fromA = player.tile.getDistance(lane.a) <= player.tile.getDistance(lane.b)
-            val start = if (fromA) lane.a else lane.b
-            val end = if (fromA) lane.b else lane.a
-            val dir = Direction.between(start, end)
-            walkToTile(player, start)
-            face(player, dir)
-            wait(1)
+            val courseWay =
+                id == 10886 || id == 10888 ||
+                    (id == 10860 && ((target.tile.x == 3372 && target.tile.z == 2839) || (target.tile.x == 3364 && target.tile.z == 2851)))
+            val fail = if (courseWay) player.pyramidFailed() else true
             player.filterableMessage("You put your foot on the ledge and try to edge across...")
             player.playSound(Sfx.BALANCING_LEDGE, loops = 5)
-            // ADAPTED: 2009scape's walk sequences 156 / 157 are other sequences in this 667 cache (157 = a 107-frame weapon
-            // sequence); the ledge is the 667 ledge-balance render (Void barbarian ledge) during the slide.
-            player.setRenderAnimation(Render.LEDGE_BALANCE)
-            if (!player.pyramidSuccess(Pyr.LEDGE_CHANCE)) {
-                val stop = slideBeforeGap(player, dir, 3)
-                if (!stop.sameAs(player.tile)) exactMove(player, stop, delay = player.tile.getDistance(stop) * 30, direction = dir)
-                player.resetRenderAnimation()
-                fallDown(player, lane.fall, 761, 10, "You slip and fall to the level below.")
-                return@obstacle
-            }
-            exactMove(player, end, delay = 150, direction = dir)
-            player.resetRenderAnimation()
-            player.filterableMessage("You skillfully edge across the gap.")
-            player.pyramidXp(52.0)
+            shimmy(
+                player,
+                shimmyEnd(target, player.tile),
+                startAnim = if (courseWay) 753 else 752,
+                render = if (courseWay) 157 else 156,
+                endAnim = if (!courseWay) 760 else if (fail) 761 else 759,
+                fail = fail,
+            )
         }
     }
 }
 
-// ---- Hand-over-hand gaps 10861-10864 / 10882-10885 (2009scape handleGapCross; wiki 56.4 xp, fall 8 damage) ----
+// ---- Hand-over-hand gaps ----
 
+// Darkan AgilityPyramidController.java:317 shimmyHandholds (10861-10864 / 10882-10885): a click on a wall-decoration end (type 4:
+// 10863 / 10864) acts as the gap loc within 2 tiles (:246); 10883, 10885 and 10862 (crossed backwards) are anim 3053, BAS 386,
+// end 3055 and always fall; the others anim 3057, BAS 387, end 3058 (fail roll: 3056). Landing = the loc +-4 across.
 intArrayOf(10861, 10862, 10863, 10864, 10882, 10883, 10884, 10885).forEach { id ->
     shortcut(id, "Cross") {
-        obstacle { target ->
-            val lane = Pyr.lane(Pyr.GAP_CROSSINGS, target.tile) ?: return@obstacle unknownPlacement(player, target)
-            val fromA = player.tile.getDistance(lane.a) <= player.tile.getDistance(lane.b)
-            val start = if (fromA) lane.a else lane.b
-            val end = if (fromA) lane.b else lane.a
-            val dir = Direction.between(start, end)
-            walkToTile(player, start)
-            face(player, dir)
-            wait(1)
-            // 2009scape "387 - mod": mod 0 from the a-ends of all three lanes, 1 from the b-ends (worked out per lane).
-            val mod = if (fromA) 0 else 1
-            player.playSound(Sfx.HANDHOLDS_GRAB_TO_SECOND)
-            if (!player.pyramidSuccess(Pyr.GAP_CROSS_CHANCE)) {
-                player.animate(387 - mod)
-                val stop = slideBeforeGap(player, dir, 4)
-                if (!stop.sameAs(player.tile)) exactMove(player, stop, delay = player.tile.getDistance(stop) * 30, direction = dir)
-                fallDown(player, lane.fall, 3056 - mod, 8, wait = 3)
-                return@obstacle
+        obstacle { clicked ->
+            var found: GameObject? = null
+            if (clicked.type == 4) {
+                val tiles =
+                    (-2..2).flatMap { dx -> (-2..2).map { dz -> clicked.tile.transform(dx, dz) } }
+                        .sortedBy { Math.abs(it.x - clicked.tile.x) + Math.abs(it.z - clicked.tile.z) }
+                search@ for (t in tiles) {
+                    for (gap in HANDHOLD_GAPS) {
+                        val loc = locAt(world, t, gap)
+                        if (loc != null) {
+                            found = loc
+                            break@search
+                        }
+                    }
+                }
+            } else {
+                found = clicked
             }
-            player.animate(387 - mod)
-            exactMove(player, end, delay = 150, direction = dir)
-            player.animate(-1)
-            player.pyramidXp(56.4)
+            val target: GameObject = found ?: return@obstacle unknownPlacement(player, clicked)
+            val backwards = target.id == 10883 || target.id == 10885 || target.id == 10862
+            val fail = backwards || player.pyramidFailed()
+            player.playSound(Sfx.HANDHOLDS_GRAB_TO_SECOND)
+            shimmy(
+                player,
+                shimmyEnd(target, player.tile),
+                startAnim = if (backwards) 3053 else 3057,
+                render = if (backwards) 386 else 387,
+                endAnim = if (backwards) 3055 else if (fail) 3056 else 3058,
+                fail = fail,
+            )
         }
     }
 }
 
-// ---- Jump gaps 10859 (2009scape handleJumpGap; wiki 22 xp, fall 8 damage) ----
+// ---- Jump gaps ----
 
+// Darkan AgilityPyramidController.java:457 jumpGap (10859): landing = the player's tile +-3 (rotation even: z, odd: x); anim 3067 +
+// forceMove(landing, 5, 60), 22 xp. Darkan has no failure here.
 shortcut(10859, "Jump") {
     obstacle { target ->
-        val crossing = Pyr.laneOver(world, target, player.tile)
-        val fall = Pyr.JUMP_FALLS.entries.firstOrNull { it.key.sameAs(target.tile) }?.value
-        if (crossing == null || fall == null) return@obstacle unknownPlacement(player, target)
-        walkToTile(player, crossing.start)
-        face(player, crossing.direction)
-        wait(1)
+        val to =
+            if (target.rot % 2 == 0) {
+                player.tile.transform(0, if (player.tile.z < target.tile.z) 3 else -3)
+            } else {
+                player.tile.transform(if (player.tile.x < target.tile.x) 3 else -3, 0)
+            }
         player.filterableMessage("You jump the gap...")
-        if (!player.pyramidSuccess(Pyr.GAP_JUMP_CHANCE)) {
-            player.playSound(Sfx.JUMP_NO_LAND, delay = 30)
-            fallDown(player, fall, 3068, 8, "... and miss your footing.", wait = 4)
-            return@obstacle
-        }
         player.playSound(Sfx.JUMP2, delay = 30)
-        player.animate(3067)
-        exactMove(player, crossing.landing, delay = 60, direction = crossing.direction)
-        player.animate(-1)
+        darkanForceMove(player, to, startCycles = 5, speedCycles = 60, anim = 3067, direction = cardinal(player.tile, to))
         player.pyramidXp(22.0)
     }
 }
 
-// ---- Planks 10867 / 10868 (2009scape handlePlank; wiki 56.4 xp, fall 10 damage) ----
+// ---- Planks ----
 
+// Darkan AgilityPyramidController.java:424 walkLog (10867 / 10868): to = the plank loc +5 (10867) / -5 (10868) along its axis
+// (rotation even: x, odd: z); one collision-free walk from the route end with BAS 155; 56.4 xp for 10868 (the course way) only.
 intArrayOf(10867, 10868).forEach { id ->
     shortcut(id, "Cross") {
         obstacle { target ->
-            val lane = Pyr.lane(Pyr.PLANKS, target.tile) ?: return@obstacle unknownPlacement(player, target)
-            // The near end is where the walk starts (2009scape walks onto the plank loc first); either end loc can be clicked.
-            val fromA = player.tile.getDistance(lane.a) <= player.tile.getDistance(lane.b)
-            val start = if (fromA) lane.a else lane.b
-            val end = if (fromA) lane.b else lane.a
-            val dir = Direction.between(start, end)
-            walkToTile(player, start)
-            face(player, dir)
-            wait(1)
+            val d = if (id == 10867) 5 else -5
+            val end = if (target.rot % 2 == 0) target.tile.transform(d, 0) else target.tile.transform(0, d)
             player.playSound(Sfx.PLANKWALK, loops = 3)
-            // 2009scape walks the plank in sequence 155; this cache's render 155 is that balance walk (Render.ROPE_BALANCE).
-            player.setRenderAnimation(Render.ROPE_BALANCE)
-            if (!player.pyramidSuccess(Pyr.PLANK_CHANCE)) {
-                val stop = slideBeforeGap(player, dir, 2)
-                if (!stop.sameAs(player.tile)) exactMove(player, stop, delay = player.tile.getDistance(stop) * 30, direction = dir)
-                player.resetRenderAnimation()
-                fallDown(player, lane.fall, 764, 10)
-                return@obstacle
-            }
-            player.filterableMessage("You walk carefully across the slippery plank...")
-            exactMove(player, end, delay = 150, direction = dir)
+            walkOverTile(player, Tile(end.x, end.z, player.tile.height), Render.ROPE_BALANCE)
             player.resetRenderAnimation()
-            player.pyramidXp(56.4)
+            if (id == 10868) player.pyramidXp(56.4)
         }
     }
 }
 
 // ---- The top: climbing rocks 10851 take the pyramid top, the doorway 10855 / 10856 leads back to the base ----
 
+// Darkan AgilityPyramidController.java:303 grabTop (10851): face east, anim 3063 now, two ticks later the pyramid top (6970) and
+// "You find a pyramid top!"; nothing once it is taken (the top loc shows taken: varbit 1556 = 1 until the doorway).
 shortcut(10851, "Climb") {
     obstacle {
-        if (player.getVarbit(Pyr.TOP_VARBIT) == 1) {
-            player.animate(3063)
-            wait(3)
-            player.filterableMessage("You find nothing on top of the pyramid.")
-            return@obstacle
-        }
+        if (player.getVarbit(Pyr.TOP_VARBIT) == 1) return@obstacle
+        player.faceTile(player.tile.transform(1, 0))
         player.animate(3063)
-        wait(3)
-        player.animate(-1)
-        // The top loc 10869 shows taken (varbit 1556 = 1) until the doorway; 2009scape addConfig(10869, 1).
+        wait(2)
         player.setVarbit(Pyr.TOP_VARBIT, 1)
         if (!player.inventory.add(PYRAMID_TOP_ITEM).hasSucceeded()) {
             world.spawn(GroundItem(PYRAMID_TOP_ITEM, amount = 1, tile = player.tile, owner = player))
         }
         player.playJingle(PYRAMID_TOP_JINGLE)
-        player.queue { itemMessageBox("You find a golden pyramid!", PYRAMID_TOP_ITEM) }
+        player.queue { itemMessageBox("You find a pyramid top!", PYRAMID_TOP_ITEM) }
     }
 }
 
+// NOT Darkan (AgilityPyramidController.java:288 finishCourse refuses to leave without the top and gives a flat 500): the OSRS Wiki
+// "Doorway (Agility Pyramid)" rule stays - the doorway always leads to the base, 300 + 8 x Agility level (max 1,000) with the top.
 intArrayOf(10855, 10856).forEach { id ->
     shortcut(id, "Enter") {
         obstacle {
@@ -315,7 +361,6 @@ intArrayOf(10855, 10856).forEach { id ->
             player.setVarbit(Pyr.TOP_VARBIT, 0)
             player.moveTo(Pyr.BASE)
             if (topTaken) {
-                // OSRS Wiki Doorway (Agility Pyramid): 300 + Agility level x 8, capped at 1,000 (88+); boosts do not count.
                 player.pyramidXp(minOf(1000, 300 + player.skills.getMaxLevel(Skills.AGILITY) * 8).toDouble())
             }
             player.queue { messageBox("You climb down the steep passage. It leads to the base of the", "pyramid.") }
@@ -323,34 +368,36 @@ intArrayOf(10855, 10856).forEach { id ->
     }
 }
 
-// ---- Rolling stone blocks (2009scape RollingBlock; wiki 12 xp, fail 6 damage, backwards always fails for 1) ----
+// ---- Rolling stone blocks ----
 
+/**
+ * Darkan AgilityPyramidController.jumpRoller (:491): the player faces along the block's axis (his last step); success: anim 1115 +
+ * forceMove(player + facing x 2, 5, 50), 12 xp; a failure (or a diagonal facing): anim 3064 + forceMove(Darkan's drop, 10, 60) one
+ * plane down, then 60 (6 here) damage. The block loc shows rolled (its varbit = 1) for the jump.
+ */
 fun rollStoneBlock(
     player: Player,
     block: Pyr.StoneBlock,
-    from: Tile,
-    to: Tile,
-    backwards: Boolean,
 ) {
+    val facing = player.faceDirection
     player.stopMovement()
     player.lockingQueue(lockState = LockState.FULL) {
         player.obstacleUntilUnlocked = true
         try {
             player.setVarbit(block.varbit, 1)
             player.playSound(Sfx.PYRAMID_SCRAPE)
-            player.playSound(Sfx.LAND_FLAT, delay = 40)
-            val dir = Direction.between(from, to)
-            face(player, dir)
-            if (backwards || !player.pyramidSuccess(Pyr.STONE_BLOCK_CHANCE)) {
-                // 2009scape: two tiles back, one floor down (the top copy's level 4 falls into the main pyramid's level 3).
-                val back = from.add(dir, -1)
-                val below = if (back.regionId == Pyr.REGION_TOP && back.height == 2) Tile(back.x + 320, back.z - 1856, 3) else back.transform(-1)
-                fallDown(player, below, 1116, if (backwards) 1 else 6, wait = 1)
+            val diagonal = facing.getDeltaX() != 0 && facing.getDeltaZ() != 0
+            if (diagonal || player.pyramidFailed()) {
+                val (dx, dz, dh) = BLOCK_DROPS[block.varbit] ?: Triple(0, 0, -1)
+                val drop = pyramidDrop(player, player.tile.transform(dx, dz, dh))
+                player.animate(3064)
+                if (drop != null) darkanForceMove(player, drop, startCycles = 10, speedCycles = 60, direction = cardinal(player.tile, drop))
+                player.playSound(Sfx.FALL_LAND)
+                player.hit(6)
                 return@lockingQueue
             }
-            player.animate(1115)
-            exactMove(player, to, delay = 90, direction = dir)
-            player.animate(-1)
+            player.playSound(Sfx.LAND_FLAT, delay = 40)
+            darkanForceMove(player, player.tile.add(facing, 2), startCycles = 5, speedCycles = 50, anim = 1115, direction = facing)
             player.pyramidXp(12.0)
         } finally {
             player.setVarbit(block.varbit, 0)
@@ -358,29 +405,29 @@ fun rollStoneBlock(
     }
 }
 
+/**
+ * Darkan AgilityPyramidController.process (:208): a player standing on a block's 2x2 tiles with no walk steps left and not locked
+ * jumps it - on this map the block's far edge is walled, so a walk over the block stops on it and the jump follows. A player who
+ * stopped there walking across the block's axis (along the 2-wide lane) does not jump: Darkan's sideways jump would land in the
+ * pyramid wall.
+ */
 fun checkStoneBlocks(player: Player) {
-    val prev = player.attr[PYRAMID_LAST_TILE]
-    val now = player.tile
-    player.attr[PYRAMID_LAST_TILE] = Tile(now)
-    if (prev == null || prev.sameAs(now) || player.isLocked() || player.isDead()) return
-    for (block in Pyr.STONE_BLOCKS) {
-        val dx = block.forward.getDeltaX()
-        val dz = block.forward.getDeltaZ()
-        val along = (now.x - prev.x) * dx + (now.z - prev.z) * dz
-        for ((near, far) in block.lanes) {
-            if (now.sameAs(near) && along > 0) return rollStoneBlock(player, block, near, far, backwards = false)
-            if (now.sameAs(far) && along < 0) return rollStoneBlock(player, block, far, near, backwards = true)
-        }
-    }
+    if (player.isLocked() || player.isDead() || player.hasMoveDestination()) return
+    val t = player.tile
+    val block =
+        Pyr.STONE_BLOCKS.firstOrNull { b -> t.height == b.corner.height && t.x - b.corner.x in 0..1 && t.z - b.corner.z in 0..1 } ?: return
+    val facing = player.faceDirection
+    val axisX = block.forward == Direction.EAST || block.forward == Direction.WEST
+    val sideways = if (axisX) facing.getDeltaX() == 0 else facing.getDeltaZ() == 0
+    if (sideways) return
+    rollStoneBlock(player, block)
 }
 
 listOf(Pyr.REGION_MAIN, Pyr.REGION_TOP).forEach { region ->
     on_enter_region(region) {
-        player.attr.remove(PYRAMID_LAST_TILE)
         player.timers[PYRAMID_TICK] = 1
     }
     on_exit_region(region) {
-        player.attr.remove(PYRAMID_LAST_TILE)
         player.timers.remove(PYRAMID_TICK)
     }
 }
@@ -395,8 +442,13 @@ on_timer(PYRAMID_TICK) {
     player.timers[PYRAMID_TICK] = 1
 }
 
-// ---- Moving pyramid blocks (NPCs 3124 / 3125; OSRS Wiki: 15-tick cycle, 5 ticks out; 2009scape MovingBlockNPC pushes) ----
+// ---- Moving pyramid blocks (NPCs 3124 / 3125) ----
 
+/**
+ * Darkan AgilityPyramidBlock.processNPC (:41): a player on the extended block's tiles is pushed off - anim 3066 and forceMove(player
+ * + the push to two tiles past the block's edge, one plane down, 10, 30), then 80 (8 here) damage. The block's own cycle stays the
+ * OSRS Wiki / 2009scape one (15 ticks, out for 5; Darkan: 11 ticks, 3 of them dangerous) - NPC movement, not a crossing.
+ */
 fun pushOff(
     player: Player,
     block: Pyr.MovingBlock,
@@ -405,8 +457,10 @@ fun pushOff(
     player.lockingQueue(lockState = LockState.FULL) {
         player.obstacleUntilUnlocked = true
         player.playSound(Sfx.LAND_FLAT, delay = 50)
-        face(player, block.push.getOpposite())
-        fallDown(player, block.fall(player.tile), 3066, 8, wait = 2)
+        val drop = pyramidDrop(player, block.fall(player.tile))
+        player.animate(3066)
+        if (drop != null) darkanForceMove(player, drop, startCycles = 10, speedCycles = 30, direction = block.push)
+        player.hit(8)
     }
 }
 

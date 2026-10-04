@@ -3,7 +3,8 @@ package gg.rsmod.plugins.content.mechanics.traversal.batch12
 import gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR
 import gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports
 import gg.rsmod.plugins.content.skills.agility.Render
-import gg.rsmod.plugins.content.skills.agility.climbCliff
+import gg.rsmod.plugins.content.skills.agility.darkanHandleObstacle
+import gg.rsmod.plugins.content.skills.agility.darkanTransform
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
 import gg.rsmod.plugins.content.skills.agility.hasAgility
@@ -183,9 +184,23 @@ on_world_init {
             player.message("You need climbing boots to negotiate these rocks.")
             return@shortcut
         }
+        // Darkan Trollheim.kt:259-264 (handleObstacleInteractions 35391): Agility.handleObstacle(3303, 1, player.transform(+-2 along the
+        // loc's axis), 1.0) - rotation 1/3: x (+2 when the player is west of the loc), else z. Start = the route tile; the body stays
+        // there while 3303 plays and is teleported after 1 tick (the old climbCliff lane slid through the rock at ground height).
+        // Darkan's Troll Stronghold quest gate is not applied; level 15 and the climbing boots stay (RS/OSRS Wiki above), xp 1.0 Darkan.
+        // Map (667): 35391 at 2834,3626 r3 (lane z 3628: 2833 <-> 2835, lands 2836 / 2832) and 2900,3608 r3 (lanes z 3609-3611).
         obstacle { target ->
+            val alongX = target.rot == 1 || target.rot == 3
+            val landing =
+                if (alongX) {
+                    player.darkanTransform(if (player.tile.x < target.tile.x) 2 else -2, 0)
+                } else {
+                    player.darkanTransform(0, if (player.tile.z < target.tile.z) 2 else -2)
+                }
             player.message("You climb onto the rock...")
-            if (climbCliff(player, target, 839)) player.message("...and step down the other side.")
+            darkanHandleObstacle(player, 3303, 1, landing)
+            player.addXp(Skills.AGILITY, 1.0)
+            player.message("...and step down the other side.")
         }
     }
 

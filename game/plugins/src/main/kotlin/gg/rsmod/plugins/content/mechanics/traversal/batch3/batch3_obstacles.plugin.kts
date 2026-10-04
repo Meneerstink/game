@@ -6,6 +6,8 @@ import gg.rsmod.plugins.content.mechanics.ladders.GenericLadders
 import gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports
 import gg.rsmod.plugins.content.skills.agility.Render
 import gg.rsmod.plugins.content.skills.agility.climbOver
+import gg.rsmod.plugins.content.skills.agility.darkanHandleObstacle
+import gg.rsmod.plugins.content.skills.agility.darkanTransform
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
 import gg.rsmod.plugins.content.skills.agility.hasAgility
@@ -127,22 +129,14 @@ shortcut(9323, "Walk-across") {
     }
 }
 
-// ---- Isafdar: the trees 8742 "Pass" (2305,3191) / (2305,3195) -----------------------------------------------------------------
-// Tirannwn is reachable (Port Tyras charter). 2009scape RovingElvesObstacles case 8742: the player passes the tree two tiles east or
-// west (a teleport, no animation; Mourning's End Part I requirement - there is no quest system here, like every other Isafdar obstacle
-// in batch2/isafdar.plugin.kts). Here: a forced move over the tree's short (x) axis from the tile in front of it to the tile behind.
+// ---- Isafdar: the trees 8742 "Pass" (2305,3191 r0) / (2305,3195 r2) -----------------------------------------------------------
+// Tirannwn is reachable (Port Tyras charter). Darkan Tirannwn.java:158-162 (handleLletyaTreePass): Agility.handleObstacle(3303, 1,
+// player.transform(x < obj.x ? +2 : -2, 0), 0) from the route tile - 3303 plays on the start tile and the player is teleported past the
+// tree one tick later (was a 60-cycle slide on a shortAxisCrossing lane). Darkan's Roving Elves quest gate is not applied (no quest
+// system for it here, like every other Isafdar obstacle).
 shortcut(8742, "Pass") {
     obstacle { target ->
-        val crossing = shortAxisCrossing(world, target, player.tile)
-        if (crossing == null) {
-            Trace.problem(Trace.Cat.PLUGIN) { "isafdar tree 8742 at ${target.tile.x},${target.tile.z}: no lane from ${player.tile.x},${player.tile.z}" }
-            player.message("You can't get past from here.")
-            return@obstacle
-        }
-        walkToTile(player, crossing.start)
-        face(player, crossing.direction)
-        wait(1)
-        exactMove(player, crossing.landing, delay = 60, direction = crossing.direction)
+        darkanHandleObstacle(player, 3303, 1, player.darkanTransform(if (player.tile.x < target.tile.x) 2 else -2, 0))
     }
 }
 
@@ -164,8 +158,20 @@ shortcut(2542, "Climb-up") {
 // 2009scape DragonSlayerPlugin case 25161: a force movement two tiles over the wall (x 2845 <-> 2847) with animation 839. Quest stage
 // checks are not applicable (no Dragon Slayer progress here; Elvarg is spawned, spawns_11414). climbOver = the same 839 climb over the
 // 1x1 wall loc from the tile in front of it to the tile behind it.
+// Darkan Karamja.java:220-255 (handleElvargEntrance; its Dragon Slayer stage gate is not applied here): only from x 2845 (face east)
+// or x 2847 (face west), anim 839, the next tick tele((2847 | 2845, player.z)) - the body stays in front of the wall during the climb
+// (was the shared lane + a 94-cycle slide over the wall). From any other tile the shared lane's start is walked to first.
 shortcut(25161, "Climb-over") {
-    obstacle { target -> climbOver(player, target, 839) }
+    obstacle { target ->
+        if (player.tile.x != 2845 && player.tile.x != 2847) {
+            walkToTile(player, Tile(if (player.tile.x < target.tile.x) 2845 else 2847, player.tile.z, player.tile.height))
+        }
+        val east = player.tile.x == 2845
+        face(player, if (east) Direction.EAST else Direction.WEST)
+        player.animate(839)
+        wait(1)
+        player.moveTo(Tile(if (east) 2847 else 2845, player.tile.z, player.tile.height))
+    }
 }
 
 // ---- Karamja: Jungle Potion cave hand holds 2585 (2827,9522) --------------------------------------------------------------------

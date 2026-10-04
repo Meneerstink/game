@@ -20,16 +20,14 @@ val ANIM_FENCE_SQUEEZE = 9221
 val BONE_STILES = listOf(44378, 44379)
 
 on_world_init {
+    // Darkan Varrock.java:254-257 (handleLumberYardFence): entering = player.x <= obj.x; useStairs(entering ? 9221 : 9220, (obj.x +
+    // (entering ? 1 : 0), obj.z)) - the squeeze animation (9220 from the east) and the teleport across one tick later, no slide.
     shortcut(LUMBER_YARD_FENCE, "Squeeze-under") {
-        obstacle {
-            val fromEast = player.tile.x > 3295
-            val start = if (fromEast) Tile(3296, 3498) else Tile(3295, 3498)
-            val landing = if (fromEast) Tile(3295, 3498) else Tile(3296, 3498)
-            val direction = if (fromEast) Direction.WEST else Direction.EAST
-            walkToTile(player, start)
-            face(player, direction)
-            player.animate(ANIM_FENCE_SQUEEZE)
-            exactMove(player, landing, direction = direction)
+        obstacle { target ->
+            val entering = player.tile.x <= target.tile.x
+            player.animate(if (entering) ANIM_FENCE_SQUEEZE else 9220)
+            wait(1)
+            player.moveTo(Tile(target.tile.x + if (entering) 1 else 0, target.tile.z, target.tile.height))
         }
     }
     BONE_STILES.forEach { id ->

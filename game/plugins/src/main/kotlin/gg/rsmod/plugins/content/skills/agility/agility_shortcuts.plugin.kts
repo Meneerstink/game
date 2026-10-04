@@ -16,56 +16,20 @@ package gg.rsmod.plugins.content.skills.agility
  */
 
 /**
- * TODO: Remove Monkey bar swing delay once a forceMove function run movement speed is implemented.
- * Once running speed has been added to the function set the start client duration for movements 2-5 to 0.
- * Then set the flag to enable running in the forceMove. Crossing the monkey bars should take no longer than 6 cycles.
+ * Darkan Edgeville.java:75-79 (handleEdgevilleMonkeybars) -> Agility.crossMonkeybars (Agility.java:120-130): level 15; route onto the
+ * bars' own tile (obj.tile), face the end obj.tile + (0, y > 9967 ? -5 : 5), next tick anim 742 + the monkey-bar BAS, then a 5-tile
+ * collision-free swing (BAS walk) and the stop anim 743, 20 xp. Replaces the five 25/60 forced moves from obj.x + 1 with a blind
+ * wait. Darkan's BAS 2405 is absent from the 667 cache: BAS 662 (ready 745 / walk 744) is this cache's monkey-bar set.
+ * Note: 29375 has no placement in the 667 map dump (region 12443 has no loc data in tools/conformance/traversal/placements_667.tsv).
  */
-
 on_obj_option(obj = Objs.MONKEY_BARS_29375, option = 1) {
     if (player.skills.getCurrentLevel(Skills.AGILITY) < 15) {
         player.message("You need an agility level of 15 to use this obstacle.")
         return@on_obj_option
     }
-
-    val obj = player.getInteractingGameObj()
-    val isNorth = player.tile.z > obj.tile.z
-    val offsetZ = if (isNorth) -1 else 1
-    val monkeyBarsStartTile = Tile(obj.tile.x + 1, obj.tile.z)
-    val monkeyBarsEndTile = Tile(obj.tile.x + 1, obj.tile.z + 5 * offsetZ)
-
-    player.lockingQueue {
-        if (player.tile != monkeyBarsStartTile) {
-            val distance = player.tile.getDistance(monkeyBarsStartTile)
-            player.walkTo(monkeyBarsStartTile)
-            wait(distance + 2)
-        } else {
-            wait(2)
-        }
-
-        player.faceTile(Tile(obj.tile.x + 1, obj.tile.z + offsetZ))
-        wait(1)
-
-        // Loop for forced movement
-        for (i in 1..5) {
-            player.animate(if (i == 1) Anims.AGIL_JUMP_UP_BARS else Anims.AGIL_SWING_BARS)
-            player.queue {
-                val move =
-                    ForcedMovement.of(
-                        player.tile,
-                        Tile(obj.tile.x + 1, obj.tile.z + i * offsetZ),
-                        clientDuration1 = if (i == 1) 25 else 25,
-                        clientDuration2 = 60,
-                        directionAngle = if (isNorth) Direction.SOUTH.ordinal else Direction.NORTH.ordinal,
-                        lockState = LockState.NONE,
-                    )
-                player.forceMove(this, Animation(id = 745), move)
-            }
-            wait(1)
-        }
-        player.animate(Anims.AGIL_SWING_BARS)
-        waitTile(monkeyBarsEndTile)
-        player.animate(Anims.AGIL_JUMP_DOWN_BARS)
-        player.addXp(Skills.AGILITY, 20.0)
+    obstacle { target ->
+        val end = target.tile.transform(0, if (player.tile.z > 9967) -5 else 5)
+        darkanCrossMonkeyBars(player, Tile(target.tile), end, 20.0)
     }
 }
 
@@ -245,28 +209,19 @@ on_obj_option(obj = Objs.MONKEY_BARS_29375, option = 1) {
  *        There's a chance of taking a few points of damage when using this shortcut.
  */
 on_obj_option(obj = Objs.PIPE_29370, option = 1) {
-    // Level corrected 2026-09-18: this checked 53 while the header comment above claimed 51; 2009scape's
-    // PipeShortcut sources obj 29370 (Edgeville Dungeon) at level 51, matching the OSRS Wiki value.
+    // Level corrected 2026-09-18: 2009scape's PipeShortcut sources obj 29370 (Edgeville Dungeon) at level 51, matching the OSRS
+    // Wiki value (Darkan: 53); xp 10 as the header above.
     if (player.skills.getCurrentLevel(Skills.AGILITY) < 51) {
         player.message("You need an agility level of 51 to use this obstacle.")
         return@on_obj_option
     }
-    // Void Pipes.squeezeThroughHorizontal(target, 3149, 3152, 3155): walk to the pipe mouth with arrival, crawl to the middle,
-    // on to the far mouth. The old handler walked without arrival and waited blind (distance + 2), then slid from wherever the
-    // player stood (audit 2026-10-04 section 4).
-    obstacle { target ->
-        val east = player.tile.x < 3152
-        val start = Tile(if (east) 3149 else 3155, target.tile.z)
-        val end = Tile(if (east) 3155 else 3149, target.tile.z)
-        val direction = if (east) Direction.EAST else Direction.WEST
-        walkToTile(player, start)
-        face(player, direction)
+    // Darkan Edgeville.java:207-216 (handleEdgevilleDungeonPipe, pipes at 3150,9906 r2 / 3153,9906 r0): entering = player.x < 3153;
+    // Agility.walkToAgility(player, BAS 295, entering ? EAST : WEST, 6, 6, xp) - from the route tile a 6-tile collision-free crawl
+    // with the pipe BAS 295 (ready 2338 / walk 844), no forced move. Replaces Void's two 10580 slides + mid-pipe teleport.
+    obstacle {
+        val entering = player.tile.x < 3153
         player.filterableMessage("You squeeze into the pipe...")
-        player.animate(ANIM_CLIMB_THROUGH_PIPE_10580, delay = 30)
-        exactMove(player, Tile(3152, target.tile.z), delay = 126, direction = direction, startDelay = 30)
-        player.moveTo(Tile(end.x - (if (east) 2 else -2), target.tile.z))
-        player.animate(ANIM_CLIMB_THROUGH_PIPE_10580)
-        exactMove(player, end, delay = 96, direction = direction)
+        darkanWalkAgility(player, 295, if (entering) Direction.EAST else Direction.WEST, 6)
         player.filterableMessage("You pulled yourself through the pipes.")
         player.addXp(Skills.AGILITY, 10.0)
     }

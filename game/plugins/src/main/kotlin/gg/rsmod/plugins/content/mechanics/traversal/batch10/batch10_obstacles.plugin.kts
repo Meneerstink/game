@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.traversal.batch10
 
 import gg.rsmod.plugins.content.skills.agility.animateLoc
+import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 import gg.rsmod.plugins.content.skills.agility.doorStep
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
@@ -71,10 +72,14 @@ shortcut(12762, "Climb-over") {
 // it."). The fence is a wall on the edge between 2541,3331 and 2542,3331 (MapProbe: 2541 blocked east, 2542 blocked west, both
 // walkable). No source gives an animation or message, so it is crossed as the shared doorway step (doorStep: walk to the tile in front,
 // one step through the wall edge), never through scenery.
+// Darkan MournerHQFence.kt:9-23: walk to (obj.x + 1, obj.z) from the east / obj.tile from the west, then forceMove((2541,3331) |
+// (2542,3331), 3844, 25, 75) and "You squeeze through the fence." (was the plain doorway step, no animation).
 shortcut(2068, "Squeeze-through") {
     obstacle { target ->
-        val far = if (player.tile.x <= target.tile.x) Tile(target.tile.x + 1, target.tile.z, 0) else Tile(target.tile.x, target.tile.z, 0)
-        doorStep(player, far)
+        val east = player.tile.x > target.tile.x
+        walkToTile(player, if (east) Tile(target.tile.x + 1, target.tile.z, 0) else Tile(target.tile.x, target.tile.z, 0))
+        darkanForceMove(player, if (east) Tile(2541, 3331, 0) else Tile(2542, 3331, 0), startCycles = 25, speedCycles = 75, anim = 3844)
+        player.message("You squeeze through the fence.")
     }
 }
 

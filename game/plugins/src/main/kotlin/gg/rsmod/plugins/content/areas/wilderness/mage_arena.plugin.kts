@@ -5,6 +5,7 @@ import gg.rsmod.game.model.attr.prayedAtStatue
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
+import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 
 val humanForm = Npcs.KOLODION_907
 val ogreForm = Npcs.KOLODION_908
@@ -235,9 +236,10 @@ set_combat_def(demonForm) {
 }
 
 /**
- * Void MageArenaChamber `jumpIn`: walk to the pool's edge (with arrival), face the pool, step sound, the jump animation sliding
- * into the water, splash, then out at the other pool. The port teleported three times (onto the edge from wherever the click
- * ended, into the pool, out) - audit 2026-10-04 section 7. Chamber edge 2509,4689 as Void (ours had 2507,4687).
+ * Darkan Wilderness.java:124-136 (handleSparklingPool 2878 / 2879): "You step into the pool of sparkling water. You feel the energy
+ * rush through your veins."; from the route tile forceMove(pool tile (2542,4720) | (2509,4687), anim 13842, 0, 60), then anim -1 and
+ * tele to the other chamber (2509,4689) | (2542,4718). Replaces the Void walk-to-edge + waits + 7269 slide + splash ([start] is no
+ * longer walked to: Darkan starts where the route to the pool ended). The splash sound/graphic of the Void port are kept at the end.
  */
 fun jumpIntoPool(
     p: Player,
@@ -247,23 +249,9 @@ fun jumpIntoPool(
 ) {
     p.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
         p.message("You step into the pool of sparkling water. You feel the energy rush through your veins.")
-        try {
-            gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, p, start)
-        } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
-            p.message("I can't reach that!")
-            return@lockingQueue
-        }
-        wait(1)
-        p.faceTile(pool)
-        wait(1)
-        p.playSound(SFX_SPARKLING_POOL_STEP)
-        val distance = p.tile.getDistance(pool)
-        p.animate(Anims.MA_JUMP_POOL)
-        gg.rsmod.plugins.content.skills.agility.exactMoveFrom(this, p, pool, delay = distance * 30)
-        if (distance > 1) wait(distance - 1)
+        darkanForceMove(p, pool, startCycles = 0, speedCycles = 60, anim = 13842)
         p.graphic(Gfx.GIANT_WATER_SPLASH)
         p.playSound(SFX_WATER_SPLASH)
-        wait(2)
         p.animate(-1)
         p.moveTo(destination)
     }

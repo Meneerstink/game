@@ -357,22 +357,31 @@ on_obj_option(obj = Objs.HOLE_26341, option = "Climb-down") {
     descendIntoDungeon(player)
 }
 
+// Darkan GodwarsController.kt:38-57 (onObjectClick 26342, the 727 id of this hole/rope): lock; face the object; wait 1; anim 828;
+// wait 2; tele(2881,5310,2); wait 1; unlock.
 fun descendIntoDungeon(player: Player) {
+    val obj = player.getInteractingGameObj()
     player.queue {
         player.lock()
-        player.animate(ANIM_CLIMB_DOWN)
+        player.faceTile(obj.tile)
+        wait(1)
+        player.animate(ANIM_CLIMB_UP)
         wait(2)
         player.moveTo(Tile(2881, 5310, 2))
+        wait(1)
         player.unlock()
     }
 }
 
+// Darkan GodwarsController.kt:60 (onObjectClick 26293): useStairs(828, (2916,3746,0)) = anim 828, teleport one tick later, locked 2
+// ticks. 2916,3746 is the open tile west of the surface hole on this map (the old landing 2913,3741 was south of the ridge).
 on_obj_option(obj = Objs.ROPE_26293, option = "climb") {
     player.queue {
         player.lock()
         player.animate(ANIM_CLIMB_UP)
-        wait(2)
-        player.moveTo(Tile(2913, 3741, 0))
+        wait(1)
+        player.moveTo(Tile(2916, 3746, 0))
+        wait(1)
         player.unlock()
     }
 }
@@ -642,18 +651,16 @@ on_obj_option(obj = Objs.CRATE_26440, option = "search") {
  * lives in nex/nex_arena.plugin.kts.
  * ---------------------------------------------------------------------------------------- */
 
-// Novite's 70 Agility obstacle-pipe shortcut (GodWars.java 57234: anim 1133, a 1-tick forced move, then the tile). Novite's tiles
-// 2863 <-> 2860 are one tile east of this map's pipe (clip 2026-10-03: the 2x1 pipe covers 2860-2861,5219, the walkable ends are
-// 2859,5219 west and 2862,5219 east): from the east end Novite "travelled east" one tile away from the pipe, from the west it
-// landed on the pipe itself. Now the shared lane through the pipe's footprint, from the tile in front to the tile behind it.
+// Nex prison obstacle pipe 57234 (70 Agility; 2x1 at 2860,5219: walkable ends 2859,5219 west / 2862,5219 east). Darkan
+// GodwarsController.kt:212-216: from x 2859 tele(player.transform(+3, 0)), from x 2862 tele(player.transform(-3, 0)), no animation,
+// no forced move - the body never passes through the pipe. Replaces the longAxisCrossing lane + 1133 slide (Novite).
 on_obj_option(obj = Objs.OBSTACLE_PIPE_57234, option = "Squeeze-through") {
     if (!player.hasAgility(70)) return@on_obj_option
-    obstacle { target ->
-        val crossing = longAxisCrossing(world, target, player.tile) ?: throw ObstacleApproachFailed("no lane through the pipe", target.tile)
-        walkToTile(player, crossing.start)
-        face(player, crossing.direction)
-        player.animate(1133)
-        exactMove(player, crossing.landing, delay = 30, direction = crossing.direction)
+    obstacle {
+        when (player.tile.x) {
+            2859 -> player.moveTo(Tile(2862, player.tile.z, player.tile.height))
+            2862 -> player.moveTo(Tile(2859, player.tile.z, player.tile.height))
+        }
     }
 }
 

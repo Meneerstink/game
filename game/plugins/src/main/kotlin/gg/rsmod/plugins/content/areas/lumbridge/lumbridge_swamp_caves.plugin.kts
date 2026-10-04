@@ -148,7 +148,15 @@ on_obj_option(obj = Objs.DARK_HOLE_UNDER_TREE, option = "climb-down") {
         }
         return@on_obj_option
     }
-    player.handleLadder(x = 3168, z = 9572)
+    // Darkan Lumbridge.java:207-213 (handleDarkHole 5947): useStairs(540, (3170,9571,0), 8, 9) = lock 9, anim 540, the teleport 7 ticks
+    // later; anim -1 the tick after. The rope requirement of this server is kept.
+    player.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
+        player.animate(540)
+        wait(7)
+        player.moveTo(Tile(3170, 9571, 0))
+        wait(1)
+        player.animate(-1)
+    }
 }
 
 /**

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.traversal.batch1
 
 import gg.rsmod.plugins.content.skills.agility.Render
 import gg.rsmod.plugins.content.skills.agility.add
+import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
 import gg.rsmod.plugins.content.skills.agility.hasAgility
@@ -60,38 +61,17 @@ val GHOST_SHIP_ROCKS =
         (3601 to 3564) to Direction.WEST,
     )
 
+// Darkan ShipAgility.kt:41-75 (mapShipRocks / jumpGap): route to the clicked rock, then anim 3067, drain 5 % of the run energy,
+// forceMove(the partner rock's tile, 5, 60) from the route tile, 10 xp. Replaces Void's walk onto the clicked rock + 1604 (delay 26)
+// and a 47/59 slide. Void's level 25 is kept.
 shortcut(5269, "Jump-to") {
     obstacle { target ->
         val direction = GHOST_SHIP_ROCKS[target.tile.x to target.tile.z] ?: return@obstacle
-        // Void objectApproach: the jump goes from the clicked rock to its partner when the player comes from the rock's own
-        // side; from the partner's side Void only walks onto the clicked rock.
-        val sameSide =
-            when (direction) {
-                Direction.NORTH -> player.tile.z <= target.tile.z
-                Direction.EAST -> player.tile.x <= target.tile.x
-                Direction.SOUTH -> player.tile.z >= target.tile.z
-                Direction.WEST -> player.tile.x >= target.tile.x
-                else -> false
-            }
-        walkToTile(player, target.tile)
-        if (!sameSide) {
-            return@obstacle
-        }
-        wait(1)
-        if (!player.hasAgility(25, "You need level 25 agility to make that jump.")) {
-            player.queue { messageBox("You need level 25 agility to make that jump.") }
-            return@obstacle
-        }
-        // Void: 500 of 10000 run energy = 5%.
-        if (player.runEnergy < 5.0) {
-            player.message("You don't have enough energy to make that jump")
-            return@obstacle
-        }
-        face(player, direction)
-        player.animate(ANIM_ROCK_JUMP, delay = 26)
+        if (!player.hasAgility(25, "You need level 25 agility to make that jump.")) return@obstacle
+        val partner = target.tile.add(direction, 2)
+        player.runEnergy = (player.runEnergy * 0.95).coerceAtLeast(0.0)
         player.playSound(SOUND_JUMP)
-        exactMove(player, target.tile.add(direction, 2), delay = 59, direction = direction, startDelay = 47)
-        player.runEnergy = (player.runEnergy - 5.0).coerceAtLeast(0.0)
+        darkanForceMove(player, Tile(partner.x, partner.z, player.tile.height), startCycles = 5, speedCycles = 60, anim = 3067)
         player.addXp(Skills.AGILITY, 10.0)
     }
 }
