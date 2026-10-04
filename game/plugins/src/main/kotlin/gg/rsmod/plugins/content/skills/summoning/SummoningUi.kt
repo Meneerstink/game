@@ -186,11 +186,19 @@ object SummoningUi {
     }
 
     /**
-     * Mounts interface 662 on slot 95 for the session and focuses it only when a familiar is out.
+     * Mounts interface 662 on slot 95 for the session. It never focuses the panel: [settle] does that once, when a
+     * follower appears (summon, login with one out, a renew that swapped the npc).
      *
      * Mounting is deliberately unconditional: the spare-tab entry must open a genuinely empty
      * Follower Details panel when the player has no familiar, rather than sending a focus request
      * to an unmounted slot. The panel contents are blanked by [refreshPanel].
+     *
+     * Owner 2026-10-04 032111 ("interfaces keep hanging ... sometimes it doesn't open"): this used to focus tab 8 whenever a
+     * follower was out, and it runs on every gameframe rebuild - every bank, shop, GE, price checker, equipment stats or BoB
+     * mount and close (GameframeRebuild.rearm), now and again 3 ticks later. CS2 71 stores the focused tab in VARC 168 even
+     * while a side inventory hides the tabs, and 1364 reopens VARC 168 when the side inventory closes, so closing any of
+     * those screens showed the Summoning panel instead of the player's tab, and a tab clicked within 3 ticks of a close was
+     * switched away again.
      */
     fun restorePanel(player: Player) {
         if (!panelMounted(player)) {
@@ -198,7 +206,6 @@ object SummoningUi {
             // A fresh mount comes up with the cache's baked flags; redraw the gating on the next cycle.
             invalidate(player)
         }
-        if (Familiar.current(player) != null || Pets.current(player) != null) showPanel(player)
     }
 
     /**

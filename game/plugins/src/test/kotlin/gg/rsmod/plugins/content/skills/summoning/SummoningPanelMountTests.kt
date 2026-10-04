@@ -60,4 +60,21 @@ class SummoningPanelMountTests {
         assertEquals(2, opens.count { it.component == SummoningUi.PANEL })
         assertEquals(SummoningUi.PANEL, player.interfaces.getInterfaceAt(746, 107))
     }
+
+    @Test
+    fun `a gameframe rebuild with a pet out never focuses the panel`() {
+        // Owner 2026-10-04 032111: restorePanel runs on every bank/shop/GE/equipment-stats mount and close
+        // (GameframeRebuild.rearm); focusing tab 8 there made VARC 168 reopen the Summoning panel when the screen closed.
+        val (player, _) = player(DisplayMode.RESIZABLE_NORMAL)
+        val scripts = mutableListOf<gg.rsmod.game.message.impl.RunClientScriptMessage>()
+        every { player.write(*anyVararg<Message>()) } answers {
+            firstArg<Array<Message>>().filterIsInstance<gg.rsmod.game.message.impl.RunClientScriptMessage>().forEach { scripts += it }
+        }
+        val pet = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        every { player.world.npcs.contains(pet) } returns true
+        player.attr[Pets.PET_ATTR] = java.lang.ref.WeakReference(pet)
+        SummoningUi.restorePanel(player)
+        SummoningUi.restorePanel(player)
+        assertEquals("no focusTab (clientscript 115) from a rebuild", 0, scripts.count { it.id == 115 })
+    }
 }

@@ -569,8 +569,8 @@ object Familiar {
         player.addXp(Skills.SUMMONING, data.summonExperience)
         player.message("You summon your familiar.")
         updateHud(player)
-        // Mount the panel before focusing it. The same mount is kept when no familiar is out so
-        // the owner's permanent spare-tab entry can still open an empty Follower Details panel.
+        // Mount the panel; SummoningUi.settle focuses it on the next cycle (the follower changed). The same mount is kept
+        // when no familiar is out so the owner's permanent spare-tab entry can still open an empty Follower Details panel.
         SummoningUi.restorePanel(player)
         return true
     }
