@@ -539,6 +539,11 @@ abstract class Player(
         task: QueueTask,
         requested: ForcedMovement,
         requestedCycles: Int = slideCycles(requested.maxDuration),
+        /**
+         * Darkan ports (owner 2026-10-04 "port everything from darkan"): the donor's own client cycles go to the client unchanged -
+         * no SlideTiming lead or shortening. Darkan Entity.forceMove sends the caller's raw startClientCycles / speedClientCycles.
+         */
+        verbatim: Boolean = false,
     ) {
         movementQueue.clear()
 
@@ -552,7 +557,9 @@ abstract class Player(
                 null
             }
         val plan =
-            gg.rsmod.game.model.SlideTiming.plan(
+            if (verbatim) {
+                gg.rsmod.game.model.SlideTiming.Plan(requested.clientDuration1, requested.clientDuration2, null, 0, null)
+            } else gg.rsmod.game.model.SlideTiming.plan(
                 clientDuration1 = requested.clientDuration1,
                 clientDuration2 = requested.clientDuration2,
                 distance = tile.getDistance(requested.finalDestination),

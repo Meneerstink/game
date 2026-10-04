@@ -799,3 +799,70 @@ private fun reachable(
     }
     return seen
 }
+
+/*
+ * ---- Darkan ports (owner 2026-10-04: "darkan is the way - port everything from darkan") ----
+ * Literal translations of Darkan's agility helpers (import-source/donors/darkan, revision 727 = our post-2011 map;
+ * agent-handoffs/darkan-obstacles-map.md section 9). Start tile = where the normal route to the object ended (Darkan never
+ * computes a lane), landing = Darkan's fixed tile or route tile + offset. No home-made lanes, waits or SlideTiming.
+ */
+
+/**
+ * Darkan `Agility.handleObstacle(player, anim, delay, toTile, xp)`: the animation plays with the server tile left on the start tile,
+ * after [delay] ticks the player is placed on [to] and the animation is stopped. The body never slides through the object - this is
+ * the mechanism behind every "body in the rock" report (owner approved it on the Trollheim Cliffside, 2026-10-04).
+ */
+suspend fun QueueTask.darkanObstacle(
+    player: Player,
+    anim: Int,
+    delay: Int,
+    to: Tile,
+) {
+    player.animate(anim)
+    wait(delay)
+    player.moveTo(to)
+    player.animate(-1)
+}
+
+/**
+ * Darkan `Entity.forceMove(dest, anim, startClientCycles, speedClientCycles)`: animation and exact move with Darkan's raw client
+ * cycles (no SlideTiming lead or shortening - [Player.forceMove] verbatim). Direction is the cardinal start -> dest (the 667 block
+ * carries N/E/S/W only).
+ */
+suspend fun QueueTask.darkanForceMove(
+    player: Player,
+    to: Tile,
+    startCycles: Int,
+    speedCycles: Int,
+    anim: Int = -1,
+    direction: Direction = Direction.between(player.tile, to),
+) {
+    if (anim != -1) player.animate(anim)
+    val move =
+        ForcedMovement.of(
+            player.tile,
+            to,
+            clientDuration1 = startCycles,
+            clientDuration2 = speedCycles,
+            directionAngle = direction.ordinal,
+            lockState = LockState.NONE,
+        )
+    player.forceMove(this, move, requestedCycles = Player.slideCycles(maxOf(startCycles, speedCycles)), verbatim = true)
+}
+
+/**
+ * Darkan `Agility.walkToAgility(player, renderEmote, direction, distance, delay, xp, stopAnim)`: a collision-free walk of [distance]
+ * tiles in [direction] with the render emote (BAS) [render], then [stopAnim] and the render reset.
+ */
+suspend fun QueueTask.darkanWalkAgility(
+    player: Player,
+    render: Int,
+    direction: Direction,
+    distance: Int,
+    stopAnim: Int = -1,
+) {
+    val to = player.tile.transform(direction.getDeltaX() * distance, direction.getDeltaZ() * distance)
+    walkOverTile(player, to, render)
+    if (stopAnim != -1) player.animate(stopAnim)
+    player.resetRenderAnimation()
+}
