@@ -154,6 +154,16 @@ suspend fun walkToTileFrom(
     tile: Tile,
 ) = task.walkToTile(player, tile)
 
+/** [exactMove] for callers that are not a QueueTask extension. */
+suspend fun exactMoveFrom(
+    task: QueueTask,
+    player: Player,
+    target: Tile,
+    delay: Int = player.tile.getDistance(target) * 30,
+    direction: Direction = Direction.between(player.tile, target),
+    startDelay: Int = 0,
+) = task.exactMove(player, target, delay, direction, startDelay)
+
 /** Normal, collision-respecting approach to the obstacle's start tile; see [arriveAt]. */
 suspend fun QueueTask.walkToTile(
     player: Player,

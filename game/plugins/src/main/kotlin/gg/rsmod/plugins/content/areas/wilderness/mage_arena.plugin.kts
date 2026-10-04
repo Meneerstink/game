@@ -234,33 +234,50 @@ set_combat_def(demonForm) {
     }
 }
 
+/**
+ * Void MageArenaChamber `jumpIn`: walk to the pool's edge (with arrival), face the pool, step sound, the jump animation sliding
+ * into the water, splash, then out at the other pool. The port teleported three times (onto the edge from wherever the click
+ * ended, into the pool, out) - audit 2026-10-04 section 7. Chamber edge 2509,4689 as Void (ours had 2507,4687).
+ */
+fun jumpIntoPool(
+    p: Player,
+    start: Tile,
+    pool: Tile,
+    destination: Tile,
+) {
+    p.lockingQueue(lockState = gg.rsmod.game.model.LockState.FULL) {
+        p.message("You step into the pool of sparkling water. You feel the energy rush through your veins.")
+        try {
+            gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, p, start)
+        } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {
+            p.message("I can't reach that!")
+            return@lockingQueue
+        }
+        wait(1)
+        p.faceTile(pool)
+        wait(1)
+        p.playSound(SFX_SPARKLING_POOL_STEP)
+        val distance = p.tile.getDistance(pool)
+        p.animate(Anims.MA_JUMP_POOL)
+        gg.rsmod.plugins.content.skills.agility.exactMoveFrom(this, p, pool, delay = distance * 30)
+        if (distance > 1) wait(distance - 1)
+        p.graphic(Gfx.GIANT_WATER_SPLASH)
+        p.playSound(SFX_WATER_SPLASH)
+        wait(2)
+        p.animate(-1)
+        p.moveTo(destination)
+    }
+}
+
+/** Void mage_arena sounds: sparkling_pool_step / water_splash. */
+val SFX_SPARKLING_POOL_STEP = 2467
+val SFX_WATER_SPLASH = 2496
+
 fun stepIntoPool(
     p: Player,
     obj: GameObject,
 ): Boolean {
-    p.lockingQueue {
-        var ticks = 0
-        while (true) {
-            when (ticks) {
-                1 -> p.moveTo(2542, 4718, 0)
-                2 -> p.faceTile(obj.tile, 3, 3)
-                3 -> wait(1)
-                4 -> p.moveTo(2542, 4720, 0)
-                5 -> p.animate(Anims.MA_JUMP_POOL)
-                6 -> {
-                    p.graphic(Gfx.GIANT_WATER_SPLASH)
-                    p.resetRenderAnimation()
-                }
-                7 -> p.moveTo(2509, 4689)
-                8 -> {
-                    p.unlock()
-                    break
-                }
-            }
-            ticks++
-            wait(1)
-        }
-    }
+    jumpIntoPool(p, start = Tile(2542, 4718, 0), pool = Tile(2542, 4720, 0), destination = Tile(2509, 4689, 0))
     return true
 }
 
@@ -268,29 +285,7 @@ fun stepIntoPool2(
     p: Player,
     obj: GameObject,
 ): Boolean {
-    p.lockingQueue {
-        var ticks = 0
-        while (true) {
-            when (ticks) {
-                1 -> p.moveTo(2507, 4687, 0)
-                2 -> p.faceTile(obj.tile, 3, 3)
-                3 -> wait(1)
-                4 -> p.moveTo(2509, 4687, 0)
-                5 -> p.animate(Anims.MA_JUMP_POOL)
-                6 -> {
-                    p.graphic(Gfx.GIANT_WATER_SPLASH)
-                    p.resetRenderAnimation()
-                }
-                7 -> p.moveTo(2542, 4718)
-                8 -> {
-                    p.unlock()
-                    break
-                }
-            }
-            ticks++
-            wait(1)
-        }
-    }
+    jumpIntoPool(p, start = Tile(2509, 4689, 0), pool = Tile(2509, 4687, 0), destination = Tile(2542, 4718, 0))
     return true
 }
 

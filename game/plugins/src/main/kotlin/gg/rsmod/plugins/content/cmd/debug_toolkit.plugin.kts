@@ -340,6 +340,16 @@ gg.rsmod.game.CommandServerCommands.handlers["gwdkc"] = { w, a ->
         "${p.username} $god kc=$amount"
     }
 }
+// `magearena <name>`: marks the Mage Arena completed (the sparkling pools need it), for own-client checks.
+gg.rsmod.game.CommandServerCommands.handlers["magearena"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) {
+        "usage: magearena <name>"
+    } else {
+        p.attr[gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA] = true
+        "${p.username} Mage Arena completed"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {
