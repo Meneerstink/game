@@ -531,10 +531,12 @@ on_obj_option(obj = Objs.ICE_BRIDGE, option = "climb-off") {
  * Saradomin rocks: tie a rope (70 Agility), then climb the ropes on both ledges.
  * ---------------------------------------------------------------------------------------- */
 
-// The placed rock bases 26444 (top) / 26445 (bottom) = Darkan GodwarsController.kt:100-110: 70 Agility, climb animation 828, to
-// (2914,5300,1) / (2920,5274,0). They answer a first-option click the tied-rope children (below) do not handle; this was an instant
-// moveTo with no Agility check (Novite), and 26444 had nothing.
-mapOf(26444 to Tile(2914, 5300, 1), 26445 to Tile(2920, 5274, 0)).forEach { (base, landing) ->
+// The placed rock bases 26444 (top, 2913,5300,2) / 26445 (2920,5274,1) = Darkan GodwarsController.kt:100-110: 70 Agility, climb
+// animation 828. They answer a first-option click the tied-rope children (below) do not handle; this was an instant moveTo with no
+// Agility check (Novite), and 26444 had nothing. Landing: Darkan's (2914,5300,1) / (2920,5274,0) hold the solid hanging-rope locs
+// 26294 / 26298 (no clip-off opcode) on this map, so the player lands on the free ledge tile beside them that the rope climbs use
+// (SARADOMIN_LEDGES bottoms, Void) - never inside scenery (owner priority #1).
+mapOf(26444 to Tile(2915, 5300, 1), 26445 to Tile(2919, 5274, 0)).forEach { (base, landing) ->
     on_obj_option(obj = base, option = 1) {
         if (!GodWars.hasUnboostedLevel(player, Skills.AGILITY, 70)) {
             player.message("You need an Agility level of 70 to maneuver this obstacle.")
