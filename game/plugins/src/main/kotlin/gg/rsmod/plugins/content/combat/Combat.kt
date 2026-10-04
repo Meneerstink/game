@@ -71,7 +71,19 @@ object Combat {
      * 671 is the Familiar Inventory window (see
      * [gg.rsmod.plugins.content.skills.summoning.FamiliarInventory]).
      */
-    private val COMBAT_PERSISTENT_MODALS = intArrayOf(-1, 671)
+    private val COMBAT_PERSISTENT_MODALS =
+        intArrayOf(
+            -1,
+            671,
+            // Owner 2026-10-04 (031046 / 030437): the Graphics (742) and Audio (743) settings and the gravestone loot screen stay
+            // open while the player is hit ("in osrs the gui keeps open"; a grave could not be looted under attack).
+            742,
+            743,
+            gg.rsmod.plugins.content.mechanics.death.GraveInterface.INTERFACE_ID,
+        )
+
+    /** A hit leaves this player's open window alone (and does not make him auto-retaliate, which would walk away from it). */
+    fun keepsWindowOpen(player: Player): Boolean = player.interfaces.getModal() != -1 && player.interfaces.getModal() in COMBAT_PERSISTENT_MODALS
 
     val CASTING_SPELL = AttributeKey<CombatSpell>()
     val DAMAGE_DEAL_MULTIPLIER = AttributeKey<Double>()
@@ -194,7 +206,7 @@ object Combat {
             }
         }
 
-        if (target is Player && !bankKeptOpen && target.interfaces.isVisible(740)) {
+        if (target is Player && !bankKeptOpen && !keepsWindowOpen(target) && target.interfaces.isVisible(740)) {
             if (target.getVarp(AttackTab.DISABLE_AUTO_RETALIATE_VARP) == 0) {
                 target.interruptQueues()
                 target.closeComponent(parent = 752, child = 13)
