@@ -47,6 +47,12 @@ val ANIM_ROCKS_CLIMB_DOWN = 740
 val ANIM_GODWARS_HUMAN_CRAWLING = 7023
 val ANIM_MOVE_BOULDER_NORTH = 6978
 val ANIM_MOVE_BOULDER_SOUTH = 6979
+// Void god_wars_dungeon.anims.toml godwars_boulder_move / godwars_boulder_rollback (loc animations of 35390).
+val ANIM_GODWARS_BOULDER_MOVE = 6980
+val ANIM_GODWARS_BOULDER_ROLLBACK = 6981
+// Void god_wars_dungeon.sounds.toml godwars_move_boulder / godwars_boulder_rollback.
+val SFX_GODWARS_MOVE_BOULDER = 3840
+val SFX_GODWARS_BOULDER_ROLLBACK = 3843
 val ANIM_LOW_FENCE_JUMP = 11574
 val ANIM_ROPE_SWING = 751
 val ANIM_SPEAR_TRAP_WALK_RIGHT = 3276
@@ -457,11 +463,21 @@ on_world_init {
             val north = player.tile.z < target.tile.z
             val start = Tile(target.tile.x, target.tile.z + if (north) -1 else 3)
             val end = Tile(target.tile.x, target.tile.z + if (north) 3 else -1)
+            // Void GodwarsBoulder "Move", step for step: the boulder rolls aside (6980) before the player passes and rolls back (6981)
+            // after him. The port had dropped the boulder's own animations and the waits, so the player slid through a rock that
+            // never moved (owner 2026-10-04 025931 "noclips into the object").
             walkToTile(player, start)
             face(player, if (north) Direction.NORTH else Direction.SOUTH)
+            wait(2)
             player.animate(if (north) ANIM_MOVE_BOULDER_NORTH else ANIM_MOVE_BOULDER_SOUTH)
+            wait(2)
+            animateLoc(world, target, ANIM_GODWARS_BOULDER_MOVE)
+            world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = Tile(target.tile), id = SFX_GODWARS_MOVE_BOULDER, radius = 5, volume = 1))
             wait(3)
             exactMove(player, end, delay = 210, direction = if (north) Direction.NORTH else Direction.SOUTH)
+            wait(2)
+            world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = Tile(target.tile), id = SFX_GODWARS_BOULDER_ROLLBACK, radius = 5, volume = 1))
+            animateLoc(world, target, ANIM_GODWARS_BOULDER_ROLLBACK)
         }
     }
     shortcut(Objs.BOULDER_35390, "Squeeze past") {

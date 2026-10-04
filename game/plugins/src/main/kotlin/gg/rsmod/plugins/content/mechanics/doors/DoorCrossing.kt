@@ -116,6 +116,19 @@ object DoorCrossing {
         return cross(task, player, door)
     }
 
+    /** Void `GameObject.remove(ticks)`: [door] is gone for [ticks] (the doorway shows open), then the same loc is back. */
+    fun removeFor(
+        world: gg.rsmod.game.model.World,
+        door: GameObject,
+        ticks: Int,
+    ) {
+        world.remove(door)
+        world.queue {
+            wait(ticks + 1)
+            world.spawn(gg.rsmod.game.model.entity.DynamicObject(door))
+        }
+    }
+
     /**
      * The tile a crossing of [door] starts from on [playerTile]'s side: for a wall door the nearer of its own tile and the tile its
      * face looks at; for a 1x1 gate / free-standing door the nearest cardinal neighbour whose mirror through the door is a tile too.

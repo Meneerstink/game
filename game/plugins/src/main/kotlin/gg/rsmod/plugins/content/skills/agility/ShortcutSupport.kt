@@ -90,7 +90,10 @@ suspend fun QueueTask.arriveAt(
     stepType: MovementQueue.StepType,
     detectCollision: Boolean,
 ) {
-    if (player.tile.sameAs(tile)) return
+    if (player.tile.sameAs(tile)) {
+        settleAfterStep(player)
+        return
+    }
     if (player.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER)) throw ObstacleApproachFailed("frozen", tile)
     if (player.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) throw ObstacleApproachFailed("stunned", tile)
     val route = player.walkTo(this, tile, stepType, detectCollision)
@@ -118,6 +121,23 @@ suspend fun QueueTask.arriveAt(
             throw ObstacleApproachFailed("too slow (${waited} ticks, stalled $stalled at ${last.x},${last.z})", tile)
         }
     }
+    settleAfterStep(player)
+}
+
+/** Game cycles after a walk / run step before the client has drawn the body onto the step's tile. */
+const val CLIENT_STEP_SETTLE = 2
+
+/**
+ * Waits until the client has drawn the player's last step (at most [CLIENT_STEP_SETTLE] cycles after it). The 667 client holds
+ * the body where it is drawn while an action animation with animating precedence 0 plays over a path it had not finished
+ * (`Static256.movementTick`, walktrace "PROBLEM body held by action animation"): started on the arrival cycle, the boulder push
+ * 6978 / hammer bang 7002 / climbs played one tile short of the obstacle and the body then jumped through it (owner 2026-10-04
+ * 02:56, GWD boulder: logical 2907,3708, drawn 2908,3708). Void waits the same way before its obstacle animations
+ * (GodwarsBoulder `walkToDelay` then `delay(2)`).
+ */
+suspend fun QueueTask.settleAfterStep(player: Player) {
+    var guard = 0
+    while (player.world.currentCycle - player.lastStepCycle in 0 until CLIENT_STEP_SETTLE && guard++ < CLIENT_STEP_SETTLE + 1) wait(1)
 }
 
 /** [walkOverTile] in the ordinary walk (a passage: a barrier field, a doorway) for callers that are not a QueueTask extension. */
@@ -256,6 +276,9 @@ fun Plugin.obstacle(block: suspend QueueTask.(GameObject) -> Unit) {
             restoreRender()
         }
         try {
+            // The interaction route has just brought the player next to the loc: the obstacle's first animation waits for the
+            // client to draw that last step ([settleAfterStep]).
+            settleAfterStep(player)
             block(obj)
         } catch (e: ObstacleApproachFailed) {
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {

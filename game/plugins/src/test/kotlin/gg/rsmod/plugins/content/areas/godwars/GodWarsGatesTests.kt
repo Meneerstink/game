@@ -41,8 +41,31 @@ class GodWarsGatesTests {
             }
             assertTrue(kotlin.math.abs(doorZ - 5334) <= 1, "door row next to the Novite walk tiles (z=$doorZ)")
         }
-        assertTrue(noviteInsideBandos(GodWars.bandosDoorDestination(outside = true).x, 5334), "entering lands inside")
-        assertFalse(noviteInsideBandos(GodWars.bandosDoorDestination(outside = false).x, 5334), "leaving lands outside")
+        assertTrue(noviteInsideBandos(GodWars.bandosDoorDestination(outside = true).x, 5333), "entering lands inside")
+        assertFalse(noviteInsideBandos(GodWars.bandosDoorDestination(outside = false).x, 5333), "leaving lands outside")
+    }
+
+    /**
+     * Owner 030006 (2026-10-04, "noclipped into the door then got stuck" at 2850,5334,2): the door is a west-facing wall at
+     * 2851,5333; its crossing ([gg.rsmod.plugins.content.mechanics.doors.DoorCrossing]) runs between 2851,5333 and 2850,5333, and
+     * both lie on open ground. Novite's 2850/2851,5334 are one-tile pockets beside the doorway on this map.
+     */
+    @Test
+    fun `the Bandos door is crossed through its doorway onto open ground, never into the pockets beside it`() {
+        val world = gg.rsmod.plugins.testutil.RealMapWorld.world
+        val tile = gg.rsmod.game.model.Tile(2851, 5333, 2)
+        val door =
+            world.chunks.get(tile, true)!!.getEntities<gg.rsmod.game.model.entity.GameObject>(tile, gg.rsmod.game.model.EntityType.STATIC_OBJECT)
+                .first { it.id == Objs.BIG_DOOR_26384 }
+        val dc = gg.rsmod.plugins.content.mechanics.doors.DoorCrossing
+        for (outside in listOf(true, false)) {
+            val far = GodWars.bandosDoorDestination(outside)
+            val near = GodWars.bandosDoorDestination(!outside)
+            assertEquals(far, dc.destination(near, door), "outside=$outside")
+            val open = gg.rsmod.game.model.collision.Landing.OPEN_GROUND
+            assertTrue(gg.rsmod.game.model.collision.Landing.pocket(world.collision, far).size >= open, "$far is open ground")
+        }
+        assertTrue(gg.rsmod.game.model.collision.Landing.pocket(world.collision, gg.rsmod.game.model.Tile(2850, 5334, 2)).size < 4, "Novite's tile is a pocket")
     }
 
     @Test

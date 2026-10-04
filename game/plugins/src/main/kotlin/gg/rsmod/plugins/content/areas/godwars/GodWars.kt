@@ -72,7 +72,9 @@ object GodWars {
         doorX: Int,
     ): Boolean = playerX >= doorX
 
-    fun bandosDoorDestination(outside: Boolean): Tile = Tile(if (outside) 2850 else 2851, 5334, 2)
+    /** The doorway tile on the far side of the door (26384 at 2851,5333,2, a west-facing wall): Void doorTarget. Novite's z 5334 is a
+     *  walled pocket on this map (owner 030006). */
+    fun bandosDoorDestination(outside: Boolean): Tile = Tile(if (outside) 2850 else 2851, 5333, 2)
 
     const val MSG_BANDOS_STRENGTH = "You need to have a Strength level of 70."
     const val MSG_BANDOS_HAMMER = "You need a suitable hammer to ring the gong."

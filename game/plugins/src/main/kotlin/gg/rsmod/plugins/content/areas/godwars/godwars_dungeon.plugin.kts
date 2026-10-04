@@ -436,15 +436,26 @@ on_obj_option(obj = Objs.BIG_DOOR_26384, option = "bang") {
             return@on_obj_option
         }
     }
-    val destination = GodWars.bandosDoorDestination(outside)
-    player.queue {
-        player.lock()
+    // Void BandosDoor: the bang (from outside), then the door is taken away for 2 ticks and the player walks through the doorway
+    // (walkOverDelay(doorTarget)). The old script teleported to Novite's 2850/2851,5334 - on this map the walled pockets beside
+    // the doorway, so the player stood inside the door frame and could not move (owner 030006 / 025931, 2850,5334,2).
+    player.lockingQueue(lockState = LockState.FULL) {
+        val near = gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.nearSide(player.tile, obj) ?: return@lockingQueue
+        try {
+            walkToTile(player, near)
+        } catch (e: ObstacleApproachFailed) {
+            player.message("I can't reach that!")
+            return@lockingQueue
+        }
+        player.faceTile(obj.tile)
         if (outside) {
             player.animate(ANIM_HAMMER_BANG)
             wait(3)
         }
-        player.moveTo(destination)
-        player.unlock()
+        gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+            this, player, obj, farSide = GodWars.bandosDoorDestination(outside),
+            open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.removeFor(world, obj, ticks = 2) },
+        )
     }
 }
 
