@@ -249284,7 +249284,7 @@
     equip_slot: 0
     equip_type: -1
     weapon_type: -1
-    remove_head: false
+    remove_head: true
     remove_beard: false
     remove_arms: false
     attack_audio: -1

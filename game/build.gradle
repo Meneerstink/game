@@ -171,6 +171,14 @@ task runOsrsItemImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsItemImportTool'
 }
 
+task runOsrsLookTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS look (meshes, icon camera, recolours, hide flags) on existing 667 items: max cape/hood, Barrows/Void ' +
+        'gloves, Regen bracelet (CacheTransaction, both caches). Usage: ./gradlew :game:runOsrsLookTool [--args="--apply"]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsLookTool'
+}
+
 task runOsrsNpcProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Read-only OSRS/667 npc definition probe. Usage: ./gradlew :game:runOsrsNpcProbeTool --args="osrs <npcId>..." | --args="npc667 <npcId>..." | --args="bas667 <basId>..."'
@@ -314,6 +322,14 @@ task runStoreInterfaceImportTool(type: JavaExec) {
         'Usage: ./gradlew :game:runStoreInterfaceImportTool --args="[--apply] [--replace-from-journal=<tx id>]"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.StoreInterfaceImportTool'
+}
+
+task runGeHistoryInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Rebuilds the GE Trade History rows (interface 643) as a 20-row scroll list in both production caches ' +
+        '(CacheTransaction). Usage: ./gradlew :game:runGeHistoryInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.GeHistoryInterfaceImportTool'
 }
 
 task runCasinoMinimapIconTool(type: JavaExec) {
