@@ -51,8 +51,10 @@ class DrainSpellConditionsTests {
     fun `every drain condition is registered on the shared rule`() {
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/combat/attack/npc_attack_conditions.plugin.kts").readText()
         spells.forEach { (condition, spell) ->
-            assertTrue("""NpcAttacks.condition("$condition") { _, target -> StatDrainRule.canDrain(target, CombatSpell.${spell.name}) }""" in plugin, condition)
+            assertTrue("""NpcAttacks.condition("$condition") { _, target -> npcMayCurse(target, CombatSpell.${spell.name}) }""" in plugin, condition)
         }
+        // npcMayCurse (c4dddff99) = the shared rule plus "not while the stat is still lowered" (NpcAttacks.stillLowered).
+        assertTrue("return StatDrainRule.canDrain(target, spell) && !NpcAttacks.stillLowered(target, skill)" in plugin)
         val strategy = File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
         assertTrue("StatDrainRule.canDrain(base, current, percent, boost)" in strategy)
     }

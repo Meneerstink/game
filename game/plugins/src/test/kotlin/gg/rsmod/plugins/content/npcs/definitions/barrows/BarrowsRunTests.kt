@@ -215,4 +215,20 @@ class BarrowsRunTests {
         attack = 118
         assertFalse(NpcAttacks.stillLowered(player, gg.rsmod.plugins.api.Skills.ATTACK), "re-boosted")
     }
+
+    @Test
+    fun `Ahrim's Fire Wave flies at melee distance and his curses drain on accuracy at 0 damage (owner 154222)`() {
+        NpcAttacks.load(File("../../data/cfg/npcs/npc-attacks.json"))
+        val ahrim = NpcAttacks.rowFor(2025)!!
+        val fireWave = ahrim.attacks.first { it.id == "magic" }
+        for (attack in ahrim.attacks) {
+            for (p in attack.projectiles) {
+                for (distance in 0..9) assertTrue(NpcAttacks.flightTime(p, distance) > 0, "${attack.id} projectile ${p.id} at distance $distance")
+            }
+        }
+        val weaken = ahrim.attacks.first { it.id == "weaken" }
+        assertTrue(NpcAttacks.drainSucceeds(weaken, landed = false, accurate = true), "accurate 0-damage Weaken drains")
+        assertFalse(NpcAttacks.drainSucceeds(weaken, landed = false, accurate = false), "a splash does not drain")
+        assertFalse(NpcAttacks.drainSucceeds(fireWave, landed = false, accurate = true), "a 0 Fire Wave is still a miss")
+    }
 }

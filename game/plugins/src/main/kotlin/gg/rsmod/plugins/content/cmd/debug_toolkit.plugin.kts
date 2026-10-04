@@ -328,6 +328,27 @@ gg.rsmod.game.CommandServerCommands.handlers["equip"] = { w, a ->
         results.joinToString("; ")
     }
 }
+// `slide <name> <anim> <x> <z> <startDelay> <delay> [anim2 x2 z2 startDelay2 delay2]`: plays an animation with one exact move (and an
+// optional second step) on the agent's own test character, so an obstacle's motion can be compared by eye before it is coded
+// (owner priority #1, noclip: the Trollheim Cliffsides had no donor motion to port).
+gg.rsmod.game.CommandServerCommands.handlers["slide"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val n = a.drop(1).map { it.toIntOrNull() }
+    if (p == null || n.size < 5 || n.any { it == null }) {
+        "usage: slide <name> <anim> <x> <z> <startDelay> <delay> [anim2 x2 z2 startDelay2 delay2]"
+    } else {
+        val v = n.map { it!! }
+        p.queue {
+            for (step in v.chunked(5)) {
+                if (step.size < 5) break
+                val target = gg.rsmod.game.model.Tile(step[1], step[2], p.tile.height)
+                if (step[0] >= 0) p.animate(step[0])
+                gg.rsmod.plugins.content.skills.agility.exactMoveFrom(this, p, target, delay = step[4], startDelay = step[3])
+            }
+        }
+        "slide ${p.username} from ${p.tile.x},${p.tile.z} steps=${v.chunked(5).size}"
+    }
+}
 // `gwdkc <name> <god> <amount>`: a God Wars kill count, so the agent can walk through the chamber doors in its own client.
 gg.rsmod.game.CommandServerCommands.handlers["gwdkc"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")

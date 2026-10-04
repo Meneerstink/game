@@ -431,22 +431,22 @@ on_world_init {
     // climbCliff: a fixed lane through the loc, down = Void's climb-down sequence, up = Void's "climbing" render, levels / xp as Void
     // (9305: OSRS Wiki 47, Void has a TODO). Owner FAIL 2026-10-03 02:24 (walked through the rock) and the stuck / noclip reports
     // 09-30 .. 10-03 were the slides from wherever the click left the player and the plain walk up (OB7).
-    listOf(
-        // id, level, down sequence, xp down, xp up
-        listOf(9306, 0, ANIM_HUMAN_CLIMBING_DOWN, 1, 8),
-        listOf(3803, 0, ANIM_ROCKS_CLIMB_DOWN, 1, 8),
-        listOf(3804, 0, ANIM_ROCKS_CLIMB_DOWN, 1, 8),
-        listOf(9305, 47, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
-        listOf(9304, 43, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
-        listOf(9303, 41, ANIM_HUMAN_CLIMBING_DOWN, 8, 8),
-    ).forEach { (id, level, downAnim, xpDown, xpUp) ->
+    // Owner 154847 (2026-10-04, "still noclip when crossing obstacles" at 9305): the Cliffsides now climb Jagex's own lane with
+    // Jagex's own climbs (Cliffside.kt: 3393 up / 15239 down carry the body over the boulder); the climbCliff slide through the
+    // rock stays only for locs without such a lane. Levels as the RuneScape Wiki per object (9305 was 47, 9306 had none).
+    Cliffside.LEVELS.forEach { (id, level) ->
         shortcut(id, "Climb") {
             if (level > 0 && !player.hasAgility(level)) return@shortcut
             obstacle { target ->
-                val crossing = cliffCrossing(world, target, player.tile)
-                val down = crossing != null && goesDown(world, crossing)
-                if (climbCliff(player, target, downAnim)) player.addXp(Skills.AGILITY, (if (down) xpDown else xpUp).toDouble())
+                if (climbCliffside(player, target)) player.addXp(Skills.AGILITY, Cliffside.XP)
             }
+        }
+    }
+    shortcut(3804, "Climb") {
+        obstacle { target ->
+            val crossing = cliffCrossing(world, target, player.tile)
+            val down = crossing != null && goesDown(world, crossing)
+            if (climbCliff(player, target, ANIM_ROCKS_CLIMB_DOWN)) player.addXp(Skills.AGILITY, if (down) 1.0 else 8.0)
         }
     }
     shortcut(3748, "Climb") {

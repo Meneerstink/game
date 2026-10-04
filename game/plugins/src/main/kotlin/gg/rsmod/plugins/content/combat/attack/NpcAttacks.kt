@@ -530,6 +530,8 @@ object NpcAttacks {
             attackHooks["${row.combatDef}:${attack.id}"]?.invoke(npc, target)
 
             val impactDelay = delays.firstOrNull()
+            // A curse that hits on accuracy drains (and shows its impact) also at 0 damage - see drainSucceeds.
+            if (drainSucceeds(attack, landed, accurate)) landed = true
             val showImpact = attack.impactRegardless || landed
             playGfx(target, targetHeight, if (showImpact) attack.impactGfx else attack.missGfx, impactDelay)
             playSounds(target, if (showImpact) attack.impactSounds else attack.missSounds, impactDelay, areaRadiusFor(npc))
@@ -700,11 +702,7 @@ object NpcAttacks {
                 else -> Tile(target.tile.x.coerceIn(npc.tile.x, npc.tile.x + size - 1), target.tile.z.coerceIn(npc.tile.z, npc.tile.z + size - 1), npc.tile.height)
             }
         val distance = max(abs(source.x - target.tile.x), abs(source.z - target.tile.z)) - 1
-        var flightTime = p.timeOffset + distance * p.multiplier
-        // Owner decision 2026-09-27: a breach monster always shows its projectile, also next to its target (Dagannoth Prime's
-        // Void timing -5 + 10 x distance gave none at melee distance). ADAPTED: at least one tile's flight time.
-        if (flightTime < 0 && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) flightTime = abs(p.multiplier).coerceAtLeast(5)
-        if (flightTime < 0) return -1
+        val flightTime = flightTime(p, distance)
         val startDelay = p.delay ?: p.defDelay
         val curveMin = p.curveMin
         val curveMax = p.curveMax
@@ -726,6 +724,31 @@ object NpcAttacks {
         npc.world.spawn(projectile)
         return flightTime + startDelay
     }
+
+    /**
+     * Void ShootProjectile.flightTime (time_offset + (distance - 1) x multiplier). Owner decision 2026-09-27 (breach monsters),
+     * extended to every npc 2026-10-04 (owner 154222 "ahrims is still only casting weakening spells": next to the player Void's
+     * -5 + 10 x 0 dropped Ahrim's Fire Wave, so only Weaken's projectile was ever seen). OSRS shows a spell's projectile at any
+     * distance. ADAPTED: at least one tile's flight time instead of no projectile.
+     */
+    fun flightTime(
+        p: Proj,
+        distance: Int,
+    ): Int {
+        val time = p.timeOffset + distance * p.multiplier
+        return if (time < 0) abs(p.multiplier).coerceAtLeast(5) else time
+    }
+
+    /**
+     * A stat-drain spell (Confuse/Weaken/Curse) succeeds on accuracy, not on damage: Void Magic.castSpell drains on damage != -1,
+     * and OSRS Wiki Ahrim "his stat reduction spells can still work" through Protect from Magic ([accurate] ignores prayer). With
+     * damage > 0 Weaken (max 1) almost never drained, so it stayed castable and Ahrim kept choosing it (owner 154222).
+     */
+    fun drainSucceeds(
+        attack: Attack,
+        landed: Boolean,
+        accurate: Boolean,
+    ): Boolean = landed || (attack.drains.isNotEmpty() && accurate)
 
     // ---- hits (Void Attack.kt target hits + Damage.roll) -------------------------------------------------
 
