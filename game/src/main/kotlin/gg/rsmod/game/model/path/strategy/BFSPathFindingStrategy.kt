@@ -282,6 +282,14 @@ class BFSPathFindingStrategy(
                     val gapZ = maxOf(0, end.z - (tile.z + sourceLength - 1), tile.z - (end.z + targetLength - 1))
                     if (gapX > 1 || gapZ > 1 || (gapX == 0 && gapZ == 0)) continue
                     if (clipDiagonals && gapX == 1 && gapZ == 1) continue
+                    // Melee (diagonals clipped) also needs the shared edge free of walls - Darkan World.checkMeleeStep, as the
+                    // 1x1 branch below already does with isDirectionBlocked. Without it a 2x2+ familiar "arrived" beside its owner
+                    // on the other side of a house wall (owner 2026-10-04, POH).
+                    if (clipDiagonals &&
+                        !gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(collision, tile, sourceWidth, sourceLength, end, targetWidth, targetLength)
+                    ) {
+                        continue
+                    }
                     validTiles.add(tile)
                 }
             }

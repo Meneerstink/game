@@ -391,7 +391,9 @@ class FamiliarPathingTests {
                 val what = "size-${sizeOf(familiar)} running=$running\n$log"
                 assertEquals(0, teleports, what)
                 assertEquals(0, ranWhileWalking, what)
-                assertTrue(worstGap <= 2, "worst gap $worstGap $what")
+                // Darkan EntityFollow (npcs move before players, route to the owner's start-of-tick tile): one empty tile behind a
+                // walking owner, two behind a running one - a constant gap, never growing.
+                assertTrue(worstGap <= if (running) 3 else 2, "worst gap $worstGap $what")
                 assertTrue(Familiar.footprintGap(npc.tile, npc.getSize(), owner, 1) <= 1, what)
             }
         }
@@ -498,6 +500,51 @@ class FamiliarPathingTests {
     fun `the movement tests use a genuinely size-1 and a genuinely size-2 familiar`() {
         assertEquals(1, sizeOf(SMALL_FAMILIAR), "the small-familiar constant is not size 1 in this cache")
         assertEquals(2, sizeOf(LARGE_FAMILIAR), "the large-familiar constant is not size 2 in this cache")
+    }
+
+    /**
+     * Owner 2026-10-04 (bug 155035, priority 2): a pack yak walked straight through solid room walls in the POH. Every house entry
+     * is a teleport, and the placement only asked whether each footprint tile was clipped, so a 2x2 body was put straddling a room
+     * wall. Darkan World.findAdjacentFreeSpace places it only where the whole body can step from the owner's tile.
+     */
+    @Test
+    fun `a big familiar is never placed straddling a wall or behind one`() {
+        val world = newWorld()
+        val owner = Tile(3200, 3200, 0)
+        val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        every { player.tile } answers { owner }
+        every { player.getSize() } returns 1
+        every { player.world } returns world
+        fun wallX(x: Int) = (3190..3210).forEach { z -> block(world, Tile(x, z, 0), Direction.EAST); block(world, Tile(x + 1, z, 0), Direction.WEST) }
+        fun wallZ(z: Int) = (3190..3210).forEach { x -> block(world, Tile(x, z, 0), Direction.NORTH); block(world, Tile(x, z + 1, 0), Direction.SOUTH) }
+        // A wall through the middle of each side's 2x2 body (west 3198-3199, east 3201-3202, south 3198-3199, north 3201-3202).
+        wallX(3198); wallX(3201); wallZ(3198); wallZ(3201)
+        repeat(20) { assertEquals(owner, Familiar.placementTile(player, LARGE_FAMILIAR), "every side straddles a wall: last resort only") }
+
+        val open = newWorld()
+        every { player.world } returns open
+        // A wall right between the owner and his west side: that side is behind a wall, the others are open.
+        (3190..3210).forEach { z -> block(open, Tile(3199, z, 0), Direction.EAST); block(open, Tile(3200, z, 0), Direction.WEST) }
+        repeat(20) {
+            val placed = Familiar.placementTile(player, LARGE_FAMILIAR)
+            assertTrue(placed != Tile(3198, 3200, 0) && placed != owner, "never behind the wall ($placed)")
+            assertTrue(gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(open.collision, placed, 2, 2, owner, 1, 1), "$placed")
+        }
+        assertTrue(!gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(open.collision, Tile(3198, 3200, 0), 2, 2, owner, 1, 1), "a wall in between is not 'beside'")
+    }
+
+    /** Owner 2026-10-04 (bug 154831): familiars faced where the player looked. Darkan EntityFollow keeps faceEntity(owner) while following. */
+    @Test
+    fun `a following familiar holds its owner as face target`() {
+        val world = newWorld()
+        val owner = Tile(3200, 3200, 0)
+        val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        every { player.tile } answers { owner }
+        every { player.getSize() } returns 1
+        every { player.world } returns world
+        val npc = newNpc(world, LARGE_FAMILIAR, Tile(3195, 3200, 0))
+        Familiar.follow(player, npc, runs = true)
+        assertEquals(true, npc.attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR], "Npc.cycle must not drop the owner face target at range")
     }
 
     // --- harness ------------------------------------------------------------------------------

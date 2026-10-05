@@ -215,7 +215,9 @@ class Tile {
         fun fromRotatedHash(packed: Int): Tile {
             val x = ((packed shr 14) and 0x3FF) shl 3
             val z = ((packed shr 3) and 0x7FF) shl 3
-            val height = (packed shr 28) and 0x3
+            // toRotatedInteger packs the plane at bit 24 (the 667 client's dynamic-region word); reading bit 28 made every
+            // instance copy its source plane 0 (owner 2026-10-04, POH: walls taken from another floor than the one drawn).
+            val height = (packed shr 24) and 0x3
             return Tile(x, z, height)
         }
 

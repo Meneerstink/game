@@ -195,7 +195,8 @@ class InstancedMapAllocator {
                         val copyChunk = world.chunks.get(copyTile.chunkCoords, createIfNeeded = true)!!
 
                         copyChunk.getEntities<StaticObject>(EntityType.STATIC_OBJECT).forEach { obj ->
-                            if (obj.tile.height == chunkH && obj.tile.isInSameChunk(copyTile)) {
+                            // The SOURCE plane's objects (copyTile.height), placed on this chunk's plane - the floor the client draws.
+                            if (obj.tile.height == copyTile.height && obj.tile.isInSameChunk(copyTile)) {
                                 val def = obj.getDef(world.definitions)
                                 val width = def.getRotatedWidth(obj)
                                 val length = def.getRotatedLength(obj)
@@ -224,7 +225,7 @@ class InstancedMapAllocator {
                         }
 
                         copyChunk.blockedTiles.forEach { tile ->
-                            if (tile.height == chunkH && tile.isInSameChunk(copyTile)) {
+                            if (tile.height == copyTile.height && tile.isInSameChunk(copyTile)) {
                                 val localX = tile.x % 8
                                 val localZ = tile.z % 8
                                 val local = baseTile.transformAndRotate(localX, localZ, chunk.rot)
