@@ -6,15 +6,18 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.isInterfaceVisible
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.messageBox
 import gg.rsmod.plugins.api.ext.openInterface
-import gg.rsmod.plugins.api.ext.options
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.api.ext.setVarbit
 import gg.rsmod.plugins.api.ext.setVarc
+import gg.rsmod.plugins.api.ext.setVarcString
 import gg.rsmod.plugins.api.ext.setVarp
 import java.security.MessageDigest
 import java.security.SecureRandom
@@ -43,8 +46,15 @@ import java.security.SecureRandom
  * tried on another account. (Before RCV-012.B17 the hash covered keypad component ids; no PIN could ever be entered through that
  * keypad, so no stored PIN uses the old form.)
  *
- * NOT IMPLEMENTED, and deliberately so: interface 14 ("Bank PIN Settings") and the recovery delay it offers - the dialogue used here
- * cannot mislabel itself, and the delay needs an owner decision about its length.
+ * Bank PIN Settings (owner 2026-10-04: "PIN settings have no interface, only the chatbox"; "a wrong PIN plays no sound"): the
+ * mechanism is Void `BankPin` / `BankPinSettings` (set takes effect at once, a change waits the recovery delay of 3 or 7 days,
+ * escalating lockout after wrong entries, sounds 1040 pending / 1042 cancel / 2274 success / 2277 wrong), drawn on the 667
+ * interface 14 as Novite `BankPinManager` drives it. 667 contract (clientscript 4146 = 14:1 onLoad / onVarcTransmit 98 /
+ * onVarcstrTransmit 344): varc 98 & 3 = 0 "No PIN set" (14:18 Set a PIN, 14:19 Change recovery delay), 1 "You have a PIN"
+ * (18 Change your PIN, 19 Delete your PIN, 20 Change recovery delay), 3 "PIN coming soon" (18 Cancel the PIN); bit 10 = 7 days
+ * instead of 3; bit 31 = the confirm view (14:31, question 14:32, 33 yes / 34 its text, 35 no / 36 its text); varcstr 344 = the
+ * message. 14:18-20 / 33 / 35 are pause buttons, 14:11 is Close (IF_BUTTON1). The 667 keypad (interface 13) has no "I don't know
+ * it" button, so Void's forgotten-PIN deletion has no entry point here.
  */
 object BankPin {
     const val PIN_INTERFACE_ID = 13
@@ -66,6 +76,38 @@ object BankPin {
      * login session, which is what makes the PIN worth having.
      */
     private val VERIFIED = AttributeKey<Boolean>()
+
+    const val SETTINGS_INTERFACE_ID = 14
+    const val SETTINGS_CLOSE = 11
+    private const val SETTINGS_MESSAGE_VARCSTR = 344
+    private const val CONFIRM_VIEW = -1
+    private const val STATE_PENDING = 3
+    private const val LONG_RECOVERY_BIT = 1 shl 10
+
+    const val SOUND_PENDING = 1040
+    const val SOUND_CANCEL = 1042
+    const val SOUND_SUCCESS = 2274
+    const val SOUND_WRONG = 2277
+
+    /** A changed PIN waiting for the recovery delay (Void `bank_pin_pending`), salted like [PIN_HASH]. */
+    val PENDING_HASH = AttributeKey<String>(persistenceKey = "bank_pin_pending_hash")
+    val PENDING_SALT = AttributeKey<String>(persistenceKey = "bank_pin_pending_salt")
+
+    /** A PIN deletion waiting for the recovery delay (Void `bank_pin_delete`). */
+    val DELETE_PENDING = AttributeKey<Boolean>(persistenceKey = "bank_pin_delete")
+
+    /** Epoch second the pending change or deletion takes effect (Void clock `bank_pin_change`). */
+    val CHANGE_AT = AttributeKey<Int>(persistenceKey = "bank_pin_change_at")
+
+    /** 7 days recovery instead of 3 (Void `bank_pin_long_recovery`). */
+    val LONG_RECOVERY = AttributeKey<Boolean>(persistenceKey = "bank_pin_long_recovery")
+    val TRIES = AttributeKey<Int>(persistenceKey = "bank_pin_tries")
+    val LOCKOUT_UNTIL = AttributeKey<Int>(persistenceKey = "bank_pin_lockout_until")
+
+    /** What the settings' Yes button confirms: "set" or "delete" (Void `bank_pin_confirm`). */
+    private val CONFIRM = AttributeKey<String>()
+
+    private fun now(): Int = (System.currentTimeMillis() / 1000).toInt()
 
     /** Presses waiting to be read by the keypad task; kept per player and never persisted. */
     private val INPUT = AttributeKey<KeypadInput>()
@@ -148,68 +190,300 @@ object BankPin {
     fun required(player: Player): Boolean = isSet(player) && player.attr[VERIFIED] != true
 
     /**
-     * Asks for the PIN and runs [onVerified] once it is given correctly.
-     *
-     * Getting it wrong [MAX_ATTEMPTS] times, or closing the keypad, simply leaves the bank shut -
-     * there is nothing to punish here, since the only thing behind the PIN is the player's own bank.
+     * Void `verifyBankAccess`: asks for the PIN once and runs [onVerified] when it is right. A wrong PIN plays the wrong sound and
+     * counts towards the escalating lockout ([lockoutSeconds]); the bank simply stays shut.
      */
     fun request(
         player: Player,
         onVerified: (Player) -> Unit,
     ) {
-        player.queue(TaskPriority.STRONG) {
-            var attempts = 0
-            while (attempts < MAX_ATTEMPTS) {
-                val entered = enterPin(player, "Bank PIN", "Please enter your bank PIN.") ?: return@queue
-                if (matches(player, entered)) {
-                    player.attr[VERIFIED] = true
-                    onVerified(player)
-                    return@queue
-                }
-                attempts++
-                if (attempts < MAX_ATTEMPTS) {
-                    player.message("That PIN is incorrect. You have ${MAX_ATTEMPTS - attempts} attempts left.")
-                }
-            }
-            player.message("Too many incorrect PINs. Try again later.")
-        }
-    }
-
-    /** The `Set a Bank PIN` button on the bank interface: set, change or delete the PIN. */
-    fun manage(player: Player) {
-        player.queue(TaskPriority.STRONG) {
-            managePin(player)
-            /*
-             * Both the dialogue and the keypad take the main screen away from the bank, and this is
-             * only ever reached from the bank's own button, so put the bank back afterwards.
-             */
-            Bank.open(player)
-        }
-    }
-
-    private suspend fun QueueTask.managePin(player: Player) {
-        if (!isSet(player)) {
-            if (options("Set a bank PIN", "Cancel", title = "Bank PIN") != 1) {
-                return
-            }
-            setNewPin(player)
+        checkPending(player)
+        if (!required(player)) {
+            onVerified(player)
             return
         }
-
-        when (options("Change your PIN", "Delete your PIN", "Cancel", title = "Bank PIN")) {
-            1 -> {
-                if (confirmCurrentPin(player)) {
-                    setNewPin(player)
-                }
+        player.queue(TaskPriority.STRONG) {
+            if (isLockedOut(player)) {
+                lockoutStatement(player)
+                return@queue
             }
-            2 -> {
-                if (confirmCurrentPin(player)) {
-                    clear(player)
-                    refreshState(player)
-                    player.message("Your bank PIN has been deleted.")
-                }
+            val entered = enterPin(player, "Bank PIN", "Please enter your PIN using the buttons below.") ?: return@queue
+            if (!matches(player, entered)) {
+                wrongPin(player)
+                return@queue
             }
+            player.attr[VERIFIED] = true
+            player.attr[TRIES] = 0
+            player.playSound(SOUND_SUCCESS)
+            player.message("You have correctly entered your PIN.")
+            onVerified(player)
         }
+    }
+
+    /** Void `wrongPin`: sound, message, and from the second wrong entry a lockout. */
+    private suspend fun QueueTask.wrongPin(player: Player) {
+        player.playSound(SOUND_WRONG)
+        player.message("The PIN you entered is incorrect.")
+        val tries = (player.attr[TRIES] ?: 0) + 1
+        player.attr[TRIES] = tries
+        if (tries >= 2) {
+            player.attr[LOCKOUT_UNTIL] = now() + lockoutSeconds(tries)
+            lockoutStatement(player)
+        }
+    }
+
+    /** Void `BankPin.lockoutSeconds`: escalating retry cooldown. */
+    fun lockoutSeconds(tries: Int): Int =
+        when {
+            tries <= 2 -> 10
+            tries == 3 -> 15
+            else -> 1000
+        }
+
+    fun isLockedOut(player: Player): Boolean = (player.attr[LOCKOUT_UNTIL] ?: 0) > now()
+
+    private suspend fun QueueTask.lockoutStatement(player: Player) {
+        val seconds = (player.attr[LOCKOUT_UNTIL] ?: 0) - now()
+        if (seconds <= 60) {
+            messageBox("You will be able to access your bank in less than 1 minute.")
+        } else {
+            messageBox("You will be able to access your bank pin in ${(seconds + 59) / 60} minutes.")
+        }
+    }
+
+    fun recoveryDays(player: Player): Int = if (player.attr[LONG_RECOVERY] == true) 7 else 3
+
+    fun isChangePending(player: Player): Boolean = !player.attr[PENDING_HASH].isNullOrEmpty()
+
+    fun isDeletePending(player: Player): Boolean = player.attr[DELETE_PENDING] == true
+
+    fun pendingDays(player: Player): Int {
+        val remaining = (player.attr[CHANGE_AT] ?: 0) - now()
+        return if (remaining <= 0) 0 else (remaining + 86399) / 86400
+    }
+
+    /** Void `checkPending`: a pending change or deletion takes effect once its recovery delay has passed. */
+    fun checkPending(player: Player) {
+        if ((isChangePending(player) || isDeletePending(player)) && (player.attr[CHANGE_AT] ?: 0) <= now()) {
+            if (isDeletePending(player)) {
+                player.attr.remove(PIN_HASH)
+                player.attr.remove(PIN_SALT)
+            } else {
+                player.attr[PIN_HASH] = player.attr[PENDING_HASH]!!
+                player.attr[PIN_SALT] = player.attr[PENDING_SALT]!!
+                player.attr[VERIFIED] = false
+            }
+            clearPending(player)
+        }
+    }
+
+    fun clearPending(player: Player) {
+        player.attr.remove(PENDING_HASH)
+        player.attr.remove(PENDING_SALT)
+        player.attr.remove(DELETE_PENDING)
+        player.attr.remove(CHANGE_AT)
+    }
+
+    /** Void `setPending`: a changed PIN waits the recovery delay; the old PIN stays active until then. */
+    fun setPending(
+        player: Player,
+        digits: List<Int>,
+    ) {
+        val salt = newSalt()
+        player.attr[PENDING_SALT] = salt
+        player.attr[PENDING_HASH] = hash(digits, salt)
+        player.attr[CHANGE_AT] = now() + recoveryDays(player) * 86400
+    }
+
+    /** Void `isEasyGuess`: all the same digit, or a run of adjacent digits. */
+    fun isEasyGuess(digits: List<Int>): Boolean =
+        digits.all { it == digits[0] } || (0 until digits.size - 1).all { kotlin.math.abs(digits[it + 1] - digits[it]) == 1 }
+
+    /** The `Set a Bank PIN` button on the bank (and the bankers' PIN option): the Bank PIN Settings screen. */
+    fun manage(player: Player) {
+        openSettings(player)
+    }
+
+    /** Void `BankPinSettings` opened: pending changes applied, the default message, the pending sound. */
+    fun openSettings(
+        player: Player,
+        message: String? = null,
+    ) {
+        checkPending(player)
+        refreshSettings(player, message ?: defaultMessage(player))
+        player.playSound(SOUND_PENDING)
+    }
+
+    private fun refreshSettings(
+        player: Player,
+        message: String,
+    ) {
+        player.attr.remove(CONFIRM)
+        mountSettings(player)
+        player.setVarcString(SETTINGS_MESSAGE_VARCSTR, message)
+        player.setVarc(STATE_VARC, settingsState(player))
+    }
+
+    /**
+     * (Re)opens interface 14. The 667 client takes no further pause button after one was clicked until the server opens or closes a
+     * sub-interface (MiniMenu PAUSE_BUTTON sets InterfaceManager.dialog; only IF_OPENSUB / IF_CLOSESUB clear it), so every
+     * settings click answers with the screen again - Novite `openSettingsScreen` / `showConfirmSetPin` do the same.
+     */
+    private fun mountSettings(player: Player) {
+        player.openInterface(interfaceId = SETTINGS_INTERFACE_ID, dest = InterfaceDestination.MAIN_SCREEN)
+    }
+
+    /** varc 98 for interface 14 (clientscript 4146). */
+    fun settingsState(player: Player): Int {
+        val base =
+            when {
+                isChangePending(player) || isDeletePending(player) -> STATE_PENDING
+                isSet(player) -> 1
+                else -> STATE_NO_PIN
+            }
+        return base or if (player.attr[LONG_RECOVERY] == true) LONG_RECOVERY_BIT else 0
+    }
+
+    private fun defaultMessage(player: Player): String =
+        when {
+            isDeletePending(player) ->
+                "You have requested that your PIN be deleted. This will take effect in another ${daysText(pendingDays(player))}.<br><br>" +
+                    "Your PIN stays active until then. To cancel, use the button on the left."
+            isChangePending(player) ->
+                "You have requested that your PIN be changed. This will take effect in another ${daysText(pendingDays(player))}.<br><br>" +
+                    "Your old PIN stays active until then. To cancel, use the button on the left."
+            else ->
+                "Customers are reminded that they should NEVER tell anyone their Bank PINs or passwords, nor should they ever enter " +
+                    "their PINs on any website form.<br><br>Have you read the PIN guide on the website?"
+        }
+
+    private fun daysText(days: Int) = "$days day${if (days == 1) "" else "s"}"
+
+    /** Void `BankPinSettings.confirm`: the yes / no view. */
+    private fun confirm(
+        player: Player,
+        action: String,
+        question: String,
+        yes: String,
+        no: String,
+    ) {
+        mountSettings(player)
+        player.setComponentText(SETTINGS_INTERFACE_ID, 32, question)
+        player.setComponentText(SETTINGS_INTERFACE_ID, 34, yes)
+        player.setComponentText(SETTINGS_INTERFACE_ID, 36, no)
+        player.setVarc(STATE_VARC, CONFIRM_VIEW)
+        player.attr[CONFIRM] = action
+        player.playSound(SOUND_PENDING)
+    }
+
+    /** A pause button on interface 14 (bank.plugin.kts). True when it was one of the settings buttons. */
+    fun pressSettingsButton(
+        player: Player,
+        interfaceId: Int,
+        component: Int,
+    ): Boolean {
+        if (interfaceId != SETTINGS_INTERFACE_ID || !player.isInterfaceVisible(SETTINGS_INTERFACE_ID)) return false
+        val pending = isChangePending(player) || isDeletePending(player)
+        when (component) {
+            18 ->
+                when {
+                    pending -> {
+                        val deletion = isDeletePending(player)
+                        clearPending(player)
+                        player.playSound(SOUND_CANCEL)
+                        refreshSettings(
+                            player,
+                            if (deletion) {
+                                "The PIN deletion has been cancelled.<br><br>Your PIN remains active."
+                            } else {
+                                "The PIN change has been cancelled.<br><br>Your old PIN remains active."
+                            },
+                        )
+                    }
+                    isSet(player) -> player.queue(TaskPriority.STRONG) { changePin(player) }
+                    else ->
+                        confirm(
+                            player, "set", "Do you really wish to set a PIN on your bank account?",
+                            "Yes, I really want a Bank PIN. I will never forget it!", "No, I might forget it!",
+                        )
+                }
+            19 ->
+                if (isSet(player) && !pending) {
+                    confirm(
+                        player, "delete", "Do you really wish to delete your Bank PIN?",
+                        "Yes, I don't need a PIN anymore.", "No thanks, I'd rather keep the extra security.",
+                    )
+                } else if (!isSet(player)) {
+                    toggleRecovery(player)
+                }
+            20 -> if (isSet(player) && !pending) toggleRecovery(player)
+            33 ->
+                when (player.attr[CONFIRM]) {
+                    "set" -> player.queue(TaskPriority.STRONG) { setPinFromSettings(player) }
+                    "delete" -> player.queue(TaskPriority.STRONG) { deletePinFromSettings(player) }
+                }
+            35 -> refreshSettings(player, "No changes made.")
+            else -> return false
+        }
+        return true
+    }
+
+    private fun toggleRecovery(player: Player) {
+        player.attr[LONG_RECOVERY] = player.attr[LONG_RECOVERY] != true
+        refreshSettings(
+            player,
+            "Your recovery delay has now been set to ${recoveryDays(player)} days.<br><br>You would have to wait this long to delete " +
+                "your PIN if you forgot it. But you ${if (isSet(player)) "do have one." else "haven't got one..."}",
+        )
+    }
+
+    /** Void `choosePin`: enter twice, refuse an easy guess or a mismatch (settings reopened with the reason). */
+    private suspend fun QueueTask.choosePin(player: Player): List<Int>? {
+        val first = enterPin(player, "Set new PIN", "Please choose a new FOUR DIGIT PIN using the buttons below.") ?: return reopen(player)
+        val second = enterPin(player, "Confirm new PIN", "Now please enter that number again!") ?: return reopen(player)
+        if (isEasyGuess(first)) {
+            openSettings(player, "That number wouldn't be very hard to guess. Please try something different!")
+            return null
+        }
+        if (first != second) {
+            openSettings(player, "Those numbers did not match.<br><br>Your PIN has not been set; please try again if you wish to set a new PIN.")
+            return null
+        }
+        return first
+    }
+
+    private fun reopen(player: Player): List<Int>? {
+        openSettings(player)
+        return null
+    }
+
+    private suspend fun QueueTask.setPinFromSettings(player: Player) {
+        val pin = choosePin(player) ?: return
+        store(player, pin)
+        refreshState(player)
+        openSettings(player, "A PIN has been set on your bank account.<br><br>You will be asked for it next time you visit the bank.")
+    }
+
+    private suspend fun QueueTask.changePin(player: Player) {
+        if (!confirmCurrentPin(player)) return
+        val pin = choosePin(player) ?: return
+        if (matches(player, pin)) {
+            player.message("Your current PIN matches your new one.")
+            openSettings(player)
+            return
+        }
+        setPending(player, pin)
+        player.message("Your PIN change will take effect in ${recoveryDays(player)} days.")
+        openSettings(player)
+    }
+
+    private suspend fun QueueTask.deletePinFromSettings(player: Player) {
+        if (player.attr[VERIFIED] != true && !confirmCurrentPin(player)) return
+        clear(player)
+        clearPending(player)
+        refreshState(player)
+        player.playSound(SOUND_CANCEL)
+        openSettings(player, "Your Bank PIN has now been deleted.<br><br>This means that there is no PIN protection on your bank account.")
     }
 
     /** Forgets the PIN entirely - used when it is deleted, and by the tests. */
@@ -259,24 +533,23 @@ object BankPin {
         return bytes.joinToString("") { "%02x".format(it) }
     }
 
-    private suspend fun QueueTask.setNewPin(player: Player) {
-        val first = enterPin(player, "Set new PIN", "Please choose a new FOUR DIGIT PIN using the buttons below.") ?: return
-        val second = enterPin(player, "Confirm new PIN", "Now please enter that number again.") ?: return
-        if (first != second) {
-            player.message("Those PINs don't match. Your PIN has not been changed.")
-            return
-        }
-        store(player, first)
-        refreshState(player)
-        player.message("Your bank PIN has been set. Don't tell it to anyone.")
-    }
-
+    /** The current PIN before a change or a deletion (Void: wrong -> [wrongPin], locked out -> the statement). */
     private suspend fun QueueTask.confirmCurrentPin(player: Player): Boolean {
-        val entered = enterPin(player, "Bank PIN", "Please enter your current bank PIN.") ?: return false
-        if (!matches(player, entered)) {
-            player.message("That PIN is incorrect.")
+        if (isLockedOut(player)) {
+            player.closeInterface(SETTINGS_INTERFACE_ID)
+            lockoutStatement(player)
             return false
         }
+        val entered = enterPin(player, "Bank PIN", "Please enter your PIN using the buttons below.") ?: run {
+            openSettings(player)
+            return false
+        }
+        if (!matches(player, entered)) {
+            wrongPin(player)
+            return false
+        }
+        player.attr[VERIFIED] = true
+        player.attr[TRIES] = 0
         return true
     }
 

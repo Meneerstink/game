@@ -46,7 +46,14 @@ BankPin.DIGIT_COMPONENTS.forEach { component ->
 }
 
 // The keypad's fourth digit arrives as a pause button on 13:(digit + 6) (BankPin.pressPauseDigit).
-gg.rsmod.game.message.handler.ResumePauseButtonHandler.hook = { p, interfaceId, component -> BankPin.pressPauseDigit(p, interfaceId, component) }
+// Bank PIN Settings (interface 14): its buttons 18-20 / 33 / 35 are pause buttons too (BankPin.pressSettingsButton).
+gg.rsmod.game.message.handler.ResumePauseButtonHandler.hook = { p, interfaceId, component ->
+    BankPin.pressPauseDigit(p, interfaceId, component) || BankPin.pressSettingsButton(p, interfaceId, component)
+}
+
+on_button(interfaceId = BankPin.SETTINGS_INTERFACE_ID, component = BankPin.SETTINGS_CLOSE) {
+    player.closeInterface(BankPin.SETTINGS_INTERFACE_ID)
+}
 
 on_button(interfaceId = BankPin.PIN_INTERFACE_ID, component = BankPin.EXIT_COMPONENT) {
     BankPin.pressExit(player)
