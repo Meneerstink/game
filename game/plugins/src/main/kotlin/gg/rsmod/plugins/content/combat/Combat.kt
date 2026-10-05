@@ -79,6 +79,8 @@ object Combat {
             // open while the player is hit ("in osrs the gui keeps open"; a grave could not be looted under attack).
             742,
             743,
+            // ... and the Options tab's third settings page, Adventurer's Log settings (623): "or whatever setting" (031046).
+            623,
             gg.rsmod.plugins.content.mechanics.death.GraveInterface.INTERFACE_ID,
             // Barrows puzzle (25): a crypt rat's hit closed it in the cycle it opened - the door "did nothing" (owner 03-2049,
             // reproduced 2026-10-05 in the agent's client: IfOpenSub 25 then IfCloseSub after the same OpLoc1).
@@ -87,6 +89,9 @@ object Combat {
 
     /** A hit leaves this player's open window alone (and does not make him auto-retaliate, which would walk away from it). */
     fun keepsWindowOpen(player: Player): Boolean = player.interfaces.getModal() != -1 && player.interfaces.getModal() in COMBAT_PERSISTENT_MODALS
+
+    /** Whether a hit leaves the main-screen interface [modal] open (CombatPersistentModalTests). */
+    fun staysOpenWhenHit(modal: Int): Boolean = modal != -1 && modal in COMBAT_PERSISTENT_MODALS
 
     val CASTING_SPELL = AttributeKey<CombatSpell>()
     val DAMAGE_DEAL_MULTIPLIER = AttributeKey<Double>()
