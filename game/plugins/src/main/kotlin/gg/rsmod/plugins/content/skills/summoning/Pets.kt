@@ -55,11 +55,6 @@ object Pets {
     private fun sound(player: Player, id: Int, at: gg.rsmod.game.model.Tile? = null) =
         FamiliarAudio.play(player, id, volume = PET_SOUND_VOLUME, at = at)
 
-    /**
-     * Metamorphosis: OSRS plays no documented sound (wiki "Metamorphosis" and the pet pages: none; Y3 SOURCE_BLOCKED). ADAPTED:
-     * the pet changes form in a puff like a follower's arrival, so the same cue - [Familiar.ARRIVAL_SOUND] 188.
-     */
-    const val METAMORPH_SOUND = Familiar.ARRIVAL_SOUND
 
     const val MSG_FOLLOWED = "<col=ef1020>You have a funny feeling like you're being followed.</col>"
     const val MSG_BACKPACK = "<col=ef1020>You feel something weird sneaking into your backpack.</col>"
@@ -315,7 +310,8 @@ object Pets {
         val tile = npc.tile
         player.world.remove(npc)
         spawn(player, variant, tile)
-        sound(player, METAMORPH_SOUND, tile)
+        // No sound: OSRS documents none for Metamorphosis (wiki "Metamorphosis", re-checked 2026-10-05). The summoning-arrival cue
+        // that played here was invented (owner 032316: "a lot of pets still do have sounds").
     }
 
     /** Metamorphosis on the pet item (the OSRS items that carry it as an inventory option). */
