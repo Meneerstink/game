@@ -1640,7 +1640,11 @@ on_command("equ", Privilege.ADMIN_POWER) {
     tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::equ 3 19709</col>") { values ->
         val id = values[1].toInt()
         val slot = values[0].toInt()
-        if (id < world.definitions.getCount(ItemDef::class.java)) {
+        if (id < 0) {
+            // `equ <slot> -1` empties the slot (it threw on the -1 item definition).
+            player.equipment[slot] = null
+            player.message("Equipment slot <col=42C66C>($slot)</col> emptied.", type = ChatMessageType.CONSOLE)
+        } else if (id < world.definitions.getCount(ItemDef::class.java)) {
             val def = world.definitions.get(ItemDef::class.java, Item(id).toUnnoted(world.definitions).id)
             player.equipment[slot] = Item(id)
             player.message(
