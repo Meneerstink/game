@@ -80,6 +80,9 @@ object Combat {
             742,
             743,
             gg.rsmod.plugins.content.mechanics.death.GraveInterface.INTERFACE_ID,
+            // Barrows puzzle (25): a crypt rat's hit closed it in the cycle it opened - the door "did nothing" (owner 03-2049,
+            // reproduced 2026-10-05 in the agent's client: IfOpenSub 25 then IfCloseSub after the same OpLoc1).
+            gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.PUZZLE_INTERFACE,
         )
 
     /** A hit leaves this player's open window alone (and does not make him auto-retaliate, which would walk away from it). */

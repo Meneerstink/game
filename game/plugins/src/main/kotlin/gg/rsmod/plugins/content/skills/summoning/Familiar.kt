@@ -381,34 +381,29 @@ object Familiar {
     }
 
     /**
-     * Real RS puts a summoned or recalled familiar *beside* its owner, on tiles its own footprint
-     * actually fits on - it does not stack it on the owner's exact tile, which is what this code
-     * used to do for summon, call, plane changes and teleport recovery alike.
+     * Darkan (rev 727) `Familiar.call` -> `owner.getNearestTeleTile(size)` -> `World.findAdjacentFreeSpace`: the familiar is put on
+     * one of the four sides of its owner, in random order, only where its whole body can step there from the owner's tile through
+     * the collision map (`StepValidator.canTravel(size)`). The old check only asked whether each footprint tile was clipped, so a
+     * 2x2/3x3 body was placed straddling a wall - every house entry is a teleport - and then slid along it (owner 2026-10-04: "a
+     * big familiar walks straight through solid walls in my POH").
      *
-     * The eight candidates are the whole adjacent ring expressed as south-west corner tiles, so
-     * they stay correct for the 2x2 and 3x3 familiars (titans, pack yak) as well as the 1x1 ones.
-     * Which direction real RS prefers is not sourced, so the order here is only deterministic;
-     * adjacency and collision validity are the parts that are sourced.
-     *
-     * If nothing in the ring fits - a doorway, a dense object cluster - the owner's own tile is
-     * the last resort. A familiar must always arrive; being stranded is worse than overlapping.
+     * A side is valid when every body tile is free, no wall runs between two body tiles ([bodyOpen]) and the body shares an edge
+     * with the owner without a wall between ([gg.rsmod.game.model.path.MeleeReach]) - exactly where the follow stops. If no
+     * side is free (a doorway, a dense object cluster) the owner's own tile is the last resort: a summon must always arrive.
      */
     internal fun placementTile(
         player: Player,
         npcId: Int,
     ): Tile {
         val size = player.world.definitions.get(NpcDef::class.java, npcId).size.coerceAtLeast(1)
-        val offsets =
-            arrayOf(
-                -size to 0, 1 to 0, 0 to -size, 0 to 1,
-                -size to -size, 1 to -size, -size to 1, 1 to 1,
-            )
-        val ownerFootprint = footprint(player.tile, player.getSize())
-        offsets.forEach { (x, z) ->
+        val ownerSize = player.getSize().coerceAtLeast(1)
+        val sides = mutableListOf(-size to 0, ownerSize to 0, 0 to -size, 0 to ownerSize)
+        sides.shuffle()
+        for ((x, z) in sides) {
             val candidate = player.tile.transform(x, z)
-            // Never place a familiar on a tile its owner is standing on: at 2x2 and 3x3 an
-            // otherwise-legal ring offset can still swallow the owner.
-            if (fits(player, candidate, size) && footprint(candidate, size).none { it in ownerFootprint }) {
+            if (bodyOpen(player, candidate, size) &&
+                gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(player.world.collision, candidate, size, size, player.tile, ownerSize, ownerSize)
+            ) {
                 return candidate
             }
         }
@@ -417,22 +412,14 @@ object Familiar {
 
     /**
      * Where a follow recovery may put the familiar, decided BEFORE anything is committed (owner 2026-09-30: with walls or
-     * scenery around the owner the familiar teleported again and again - blue GFX and teleport sound every cycle). The tile
-     * must fit the familiar's footprint, not overlap its owner, and be a real follow slot ([isInFollowSlot]), so the very
-     * next follow cycle is satisfied where it stands and neither routes nor recovers again. [placementTile]'s last resort
-     * (the owner's own tile) is exactly what looped: from there the familiar is never in a follow slot, its route fails,
-     * and it was recalled once more. Null when no such tile exists: then nothing happens at all.
+     * scenery around the owner the familiar teleported again and again - blue GFX and teleport sound every cycle). Only a real
+     * side of the owner ([placementTile]); its last resort (the owner's own tile) is never a recovery target. Null: nothing
+     * happens at all.
      */
     internal fun recoveryPlacement(
         player: Player,
         npc: Npc,
-    ): Tile? {
-        val tile = placementTile(player, npc.id)
-        val size = npc.getSize()
-        if (tile.sameAs(player.tile) && footprint(tile, size).any { it in footprint(player.tile, player.getSize()) }) return null
-        if (!fits(player, tile, size)) return null
-        return if (isInFollowSlot(tile, size, player.tile, player.getSize())) tile else null
-    }
+    ): Tile? = placementTile(player, npc.id).takeUnless { it.sameAs(player.tile) }
 
     /** Owner tile at which the last recovery found no placement (traced once per tile; see [recover]). */
     private val RECOVERY_BLOCKED_AT = gg.rsmod.game.model.attr.AttributeKey<Tile>()
@@ -451,6 +438,10 @@ object Familiar {
         val destination = recoveryPlacement(player, npc)
         if (destination == null) {
             if (npc.attr[RECOVERY_BLOCKED_AT]?.sameAs(player.tile) != true) {
+                // Darkan Familiar.call (sentRequestMoveMessage) / Novite: told once until the familiar appears again.
+                if (!npc.attr.has(RECOVERY_BLOCKED_AT)) {
+                    player.message("Theres not enough space for your familiar to appear.")
+                }
                 npc.attr[RECOVERY_BLOCKED_AT] = Tile(player.tile)
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) {
                     "familiar ${npc.id} (size ${npc.getSize()}) has no free tile beside ${player.username} at ${player.tile} ($reason): waits, no teleport"
@@ -468,16 +459,19 @@ object Familiar {
         npc.facePawn(player)
     }
 
-    private fun fits(
+    /** Every tile of a [size] body at [tile] is free and no wall runs between two of its tiles (Darkan canTravel(size)). */
+    private fun bodyOpen(
         player: Player,
         tile: Tile,
         size: Int,
     ): Boolean {
+        val collision = player.world.collision
         for (x in 0 until size) {
             for (z in 0 until size) {
-                if (player.world.collision.isClipped(tile.transform(x, z))) {
-                    return false
-                }
+                val part = tile.transform(x, z)
+                if (collision.isClipped(part)) return false
+                if (x < size - 1 && collision.isBlocked(part, gg.rsmod.game.model.Direction.EAST, projectile = false)) return false
+                if (z < size - 1 && collision.isBlocked(part, gg.rsmod.game.model.Direction.NORTH, projectile = false)) return false
             }
         }
         return true
@@ -862,8 +856,10 @@ object Familiar {
             expire(player, npc)
             return
         }
-        // Novite 667 Familiar: setRun(true) + calcFollow(owner, 2, ...) - a familiar keeps up with a running owner.
-        follow(player, npc, runs = true)
+        // Owner 2026-10-04 (priority 2, after testing the Darkan port: "summoning familiars are still running" - answer: "always
+        // walk", also while he runs): Void Follow - a follower never runs (Movement.kt: a run step only if character.running, never
+        // set for followers); it falls behind a running owner and is called back beside him past FOLLOW_RECOVERY_DISTANCE.
+        follow(player, npc, runs = false)
         updateHud(player)
     }
 
@@ -953,30 +949,28 @@ object Familiar {
             npc.removeCombatTarget()
             npc.resetFacePawn()
         }
-        // The owner's pending movement is the route target so a running owner does not make the follower chase an already
-        // stale tile. A follower that [runs] matches the owner's speed this cycle (two queued steps = running), see (2) above;
-        // the 2026-09-24 save point had made every familiar walk, so it fell behind a running owner (conform summoning
-        // "run: never more than 2 tiles behind", every familiar).
-        // E18/F6 (owner: "familiars RUN"): whether the owner really runs this cycle is decided exactly as MovementQueue.cycle
-        // decides it - by the type of the first queued step (a ctrl-click walk while the run toggle is on is a WALK, resting and
-        // zero energy never run) and only with a second step queued. Before, the run *toggle* alone (Player.isRunning) chose
-        // two steps, so a familiar ran beside an owner who was walking.
-        // Darkan EntityFollow targets the owner's current tile after the owner has moved (Darkan moves players before npcs); this server
-        // moves npcs first, so the equivalent target is the owner's end-of-cycle tile (routing to his current tile left every familiar
-        // two tiles behind, running to catch up - FamiliarFollowSimulationTests). A follower that [runs] takes two steps only while its
-        // owner runs this cycle (the first queued step's type, as MovementQueue.cycle decides).
-        val ownerRuns = ownerRunsThisCycle(player)
-        val ownerSteps = player.movementQueue.peekSteps(if (ownerRuns) 2 else 1)
-        val target = ownerSteps.lastOrNull()?.tile ?: player.tile
-        val stepType = if (runs && ownerRuns) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
-        // Darkan EntityFollow.addSteps(route, run ? 2 : 1): only this tick's steps are queued; the route is computed again next tick.
-        val maxSteps = if (stepType == MovementQueue.StepType.FORCED_RUN) 2 else 1
-        val ownerFootprint = footprint(target, player.getSize())
-        if (isInFollowSlot(npc.tile, npc.getSize(), target, player.getSize())) {
-            // Already beside the owner's end-of-cycle tile: stop here. The queue still held last cycle's route, which walked
-            // the familiar on past the slot (onto/around its owner) and made it stop-start every tick (Void Follow.tick:
-            // "an npc already beside its target just faces it" - clearDestination).
-            npc.movementQueue.clear()
+        /*
+         * Darkan EntityFollow (rev 727, game/model/entity/actions/EntityFollow.java) - owner 2026-10-04 priority 2: "familiars still
+         * run", "pathing weird", "they face wherever the player looks"; every earlier home-made follow failed.
+         *
+         *  - Facing: Darkan faceEntity(owner) on start and on every re-route and keeps it until the follow stops; Npc.cycle used to
+         *    drop the face target whenever the familiar's corner was more than one tile from its owner (every tick it trailed, and
+         *    always for a 2x2+ body on the west/south side), so it faced its walking direction = where the owner looked.
+         *  - Target: the owner's tile at the start of the tick. Darkan moves npcs before players and routes to that tile; here the
+         *    familiar moves after its owner, towards the same tile, which ends in the same place. The old end-of-cycle target
+         *    (justified by a reversed tick order) re-routed the familiar to a tile it could only reach by running.
+         *  - Stop: in range 0 and lineOfSightTo(owner, melee) = MeleeReach.bordersWithoutWall (an edge shared with the owner, no
+         *    wall between). Nothing else happens then (Darkan does not reset its steps).
+         *  - Route: routeEntityToEntity(objShape -2) = a melee route to the owner's body; addSteps(route, run ? 2 : 1) - familiars
+         *    are setRun(true) (2 steps when the route has 2), pets walk (1). rsmod2 findPath walks to the closest tile when the
+         *    owner cannot be reached (moveNear), which the search's partial route is.
+         */
+        npc.attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] = true
+        val target = player.tile
+        if (gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+                npc.world.collision, npc.tile, npc.getSize(), npc.getSize(), target, player.getSize(), player.getSize(),
+            )
+        ) {
             npc.facePawn(player)
             return
         }
@@ -987,74 +981,27 @@ object Familiar {
                 .setTargetSize(player.getSize(), player.getSize())
                 .setTouchRadius(1)
                 .clipPathNodes(node = true, link = true)
+                .clipDiagonalTiles()
                 .clipOverlapTiles()
                 .build()
         val route = BFSPathFindingStrategy(npc.world.collision).calculateRoute(request)
+        val ownerFootprint = footprint(target, player.getSize())
+        // Darkan addSteps(route, run ? 2 : 1). Owner 2026-10-04 ("familiars still run" - 154124: speed-2 bursts while he walked):
+        // a familiar takes its second step only while its owner really runs this tick (MovementQueue's own decision), so it walks
+        // beside a walking owner and runs beside a running one.
+        val steps = route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } }
+            .take(if (runs && ownerRunsThisCycle(player)) 2 else 1)
         if (!route.success) {
-            /*
-             * E18 (owner 2026-10-03, weeks of reports: "teleporten om de 1 seconde"). Void `Follow.tick` never teleports a follower
-             * because a path fails; it repositions only on another plane or past 15 tiles (followRecoveryReason above).
-             * Live log 2026-10-03 20:57 (War tortoise by the Grand Exchange): the previous fallback - ONE diagonal step - was
-             * blocked by a wall corner every tick for 50 s while a straight step was free, so the familiar froze until the
-             * distance teleport (with its sound) fired. Now, like a player's own pathfinder: walk the search's partial route to
-             * the closest tile it can reach; only when that is where it already stands, Void Movement.nextDirection's dumb step
-             * (diagonal, else its horizontal part, else its vertical part), each checked for the familiar's whole footprint.
-             *
-             * A follower that genuinely cannot reach its owner (a 2x2 titan at a one-tile door such as the Varrock general
-             * store's, the other side of a wall after a shortcut) is NOT teleported: both donors leave it where it is - Void
-             * `Follow.tick` dumb-steps and repositions only on another plane or past 15 tiles, Novite 667 `Familiar.sendFollow`
-             * uses the non-intelligent `calcFollow(owner, 2, true, false)` and repositions only outside 12 tiles - and 2011 RS
-             * gives the player "Call Follower" for exactly that case. (A bounded "unreachable" teleport was tried on 2026-10-04 and
-             * removed: the titan teleported into and out of the Varrock general store while its owner simply walked through.)
-             *
-             * The partial route is only taken when its end really brings the familiar's BODY closer to its owner. The search
-             * picks its closest tile by the south-west corner alone, which for a 2x2 body can be a tile beside the obstacle that
-             * is no closer at all (sim 2026-10-04: the titan stepped east along the store front while its owner went south inside).
-             */
-            val partial = route.path.toList()
-            val gapNow = footprintGap(npc.tile, npc.getSize(), target, player.getSize())
-            if (partial.isNotEmpty() && footprintGap(route.tail, npc.getSize(), target, player.getSize()) < gapNow) {
-                npc.walkPath(java.util.ArrayDeque(partial.take(maxSteps)), stepType = stepType, detectCollision = true)
-                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
-                    "familiar ${npc.id} cannot reach ${player.username}: walks to the closest tile ${route.tail}, no teleport"
-                }
-            } else {
-                val step = dumbStep(npc, target)
-                if (step != null) {
-                    npc.walkPath(java.util.ArrayDeque(listOf(step)), stepType = MovementQueue.StepType.FORCED_WALK, detectCollision = true)
-                } else {
-                    npc.movementQueue.clear()
-                }
-                gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
-                    "familiar ${npc.id} cannot reach ${player.username}: ${if (step != null) "dumb step to $step" else "waits"}, no teleport"
-                }
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) {
+                "familiar ${npc.id} cannot reach ${player.username}: ${if (steps.isEmpty()) "waits" else "walks to the closest tile ${route.tail}"}, no teleport"
             }
-            npc.facePawn(player)
-            return
         }
-        /*
-         * The familiar must not *stop* on its owner. It may legitimately pass over them - a
-         * familiar does not collide with players, which is why [Npc.ignoresEntityCollision] is set
-         * at spawn - so the tiles to remove are the trailing ones, not every overlapping one.
-         *
-         * This used to be a `filterNot` over the whole route, which is unsafe for a different
-         * reason than it looks: removing a tile from the *middle* of a path leaves two
-         * non-adjacent tiles next to each other in the queue, and [MovementQueue.addStep]
-         * interpolates a straight line between them. Those interpolated tiles were never seen by
-         * the pathfinder, so the familiar could be handed a step around a corner that no
-         * breadth-first search had ever approved. Truncating instead keeps every remaining step
-         * exactly as the route produced it, which is the only form in which the route's collision
-         * guarantee still means anything.
-         */
-        val path: java.util.Queue<Tile> =
-            java.util.ArrayDeque(
-                // Darkan EntityFollow.addSteps(route, run ? 2 : 1): only this tick's steps; the route is computed again next tick.
-                route.path.toList().dropLastWhile { step -> footprint(step, npc.getSize()).any { it in ownerFootprint } }.take(maxSteps),
-            )
-        if (path.isEmpty()) npc.movementQueue.clear() else npc.walkPath(path, stepType = stepType, detectCollision = true)
-        // Movement and combat may leave a stale face target on the NPC. Reassert the owner as the
-        // sole facing target for the non-combat follow state; combat takes ownership again in
-        // FamiliarCombat.handleCombat before it attacks.
+        if (steps.isEmpty()) {
+            npc.movementQueue.clear()
+        } else {
+            val stepType = if (steps.size >= 2) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
+            npc.walkPath(java.util.ArrayDeque(steps), stepType = stepType, detectCollision = true)
+        }
         npc.facePawn(player)
     }
 
