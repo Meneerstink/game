@@ -237,6 +237,8 @@ on_world_init {
 }
 
 on_login {
+    // Perdu's Lost Property: an item seen with the player counts as earned (OSRS: "only has to be unlocked once").
+    gg.rsmod.plugins.content.mechanics.death.PerduLostProperty.observe(player)
     DeathsOffice.migrateLegacy(player)
     RespawnPoints.sanitize(player)
     if (Gravestone.exists(player) && player.gravestone.isEmpty) Gravestone.clear(player)

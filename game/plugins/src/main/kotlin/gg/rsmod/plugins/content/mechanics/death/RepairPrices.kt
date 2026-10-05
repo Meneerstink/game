@@ -32,7 +32,9 @@ object RepairPrices {
         val map = HashMap<Int, Long>()
         PvpDeathBreakables.ALL.forEach { map[it.itemId] = it.repairCost.toLong() }
         map[Items.FIRE_CAPE] = 150_000L
-        for (quiver in intArrayOf(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_UNCHARGED, Items.BLESSED_DIZANAS_QUIVER)) map[quiver] = 270_000L
+        for (quiver in intArrayOf(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_UNCHARGED)) map[quiver] = 270_000L
+        // OSRS Wiki "(broken)" PvP breakable table: Blessed Dizana's quiver 400,000 (death audit 2026-10-04).
+        map[Items.BLESSED_DIZANAS_QUIVER] = 400_000L
         map
     }
 

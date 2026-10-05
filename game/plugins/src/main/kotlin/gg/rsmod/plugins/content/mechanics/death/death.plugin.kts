@@ -64,6 +64,8 @@ fun resolveDeath(victim: Player) {
     val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else null
 
     val pvpDeath = (contextOverride ?: DeathResolver.resolveContext(victim, killer)) == DeathContext.WILDERNESS_PVP
+    // Everything the victim carried before the death takes it counts as earned for Perdu's Lost Property.
+    PerduLostProperty.observe(victim)
     PvpDeathBreakables.crumbleUsedAmulets(victim)
     // Owner 2026-09-26: Protect Item keeps 1 item (skull irrelevant), ranked by guide price / untradeable repair price.
     val resolved =

@@ -51,6 +51,17 @@ object ItemsKeptOnDeath {
     /** The four "what if" toggles (protect item, skulled, killed by a player, deep Wilderness). */
     data class Toggles(val protectItem: Boolean, val skulled: Boolean, val killedByPlayer: Boolean, val deepWilderness: Boolean)
 
+    /**
+     * Owner 2026-10-04: the notice in the free space of the right panel ("a message telling players that above level 20 Wilderness
+     * some items need a Trouver parchment ... and that a PvM death is safe", as professional as possible). 138 px wide, 8 lines.
+     */
+    const val NOTICE_TEXT =
+        "<col=ffffff>PvM deaths are safe:</col> your items wait in your gravestone.<br>" +
+            "<col=ffffff>Above Wilderness level 20,</col> lock untradeables with a Trouver parchment at Perdu or lose them."
+
+    /** The "PK Skull active" toggle (deathkeep_right_initbutton index 1), hidden - see [open]. */
+    private const val SKULL_TOGGLE = 1
+
     private val TOGGLES = AttributeKey<Toggles>()
     private val SHOWN = AttributeKey<List<Entry>>()
 
@@ -83,7 +94,9 @@ object ItemsKeptOnDeath {
         fun line(item: Item, one: String, many: String) =
             if (item.amount > 1) "${spaced(item.amount.toLong())} x ${name(player, item.id)}: $many" else "${name(player, item.id)}: $one"
         result.itemRisk.protected.forEach {
-            entries += Entry(Section.KEPT, it.item, line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
+            // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
+            val always = !pvp && UntradeableDeathProtection.lockable(it.item.id)
+            entries += Entry(Section.KEPT, it.item, if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
         }
         // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
         untradeables.forEach { outcome ->
@@ -98,6 +111,8 @@ object ItemsKeptOnDeath {
                     entries += Entry(Section.KEPT, item, line(item, "You keep the empty pouch; its runes are lost to the player who kills you.", "You keep the empty pouches; their runes are lost to the player who kills you."))
                 UntradeableFate.UNCHANGED ->
                     entries += Entry(Section.KEPT, item, line(item, "You'll keep this item.", "You'll keep these items."))
+                UntradeableFate.LOST_FOR_COINS ->
+                    entries += Entry(Section.LOST, item, line(item, "This untradeable item is lost; the player who kills you receives $coins coins.", "These untradeable items are lost; the player who kills you receives $coins coins."))
                 UntradeableFate.DESTROYED ->
                     entries += Entry(Section.DELETED, item, line(item, "This item will be destroyed; the player who kills you receives $coins coins.", "These items will be destroyed; the player who kills you receives $coins coins."))
             }
@@ -108,11 +123,25 @@ object ItemsKeptOnDeath {
         var risk = 0L
         if (pvp) {
             val lost =
-                result.itemRisk.lost.map { it.item }.filterNot { LootingBag.isBag(it.id) } + converting.map { it.item } +
+                result.itemRisk.lost.map { it.item }.filterNot { LootingBag.isBag(it.id) } +
                     bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo + cargo
             lost.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.LOST, item, line(item, "This item will be lost to the player who kills you.", "These items will be lost to the player who kills you."))
+            }
+            // Converting items show what the killer really receives (PvpDeathBreakables.killerItems, the same call the death makes):
+            // Barrows/Moon armour as its broken version, an ornamented item as the base item plus its kit, and so on.
+            converting.forEach { slot ->
+                val from = name(player, slot.item.id)
+                val loot = PvpDeathBreakables.killerItems(slot.item)
+                when {
+                    loot == null -> entries += Entry(Section.KEPT, slot.item, line(slot.item, "You'll keep this item.", "You'll keep these items."))
+                    loot.isEmpty() -> deleted(player, entries, slot.item)
+                    else -> loot.forEach { item ->
+                        risk += value.getValue(item.id) * item.amount
+                        entries += Entry(Section.LOST, item, line(item, "The player who kills you receives this from your $from.", "The player who kills you receives these from your $from."))
+                    }
+                }
             }
             UntradeableDeathProtection.killerLoot(untradeables).forEach { risk += value.getValue(it.id) * it.amount }
             (result.itemRisk.lost.map { it.item }.filter { LootingBag.isBag(it.id) } + bag.filter { LootingBag.destroyedOnPvpDeath(player, it) }).forEach { deleted(player, entries, it) }
@@ -143,12 +172,15 @@ object ItemsKeptOnDeath {
             )
     }
 
-    /** The toggles start at the player's real situation (deathkeep_init arguments). */
+    /**
+     * The toggles start at the player's real situation (deathkeep_init arguments). Owner 2026-10-04: standing in a dangerous
+     * zone (Wilderness or Deadman, [AreaState.isDangerous] - the predicate the HUD and the PvP gate share) opens the PvP view.
+     */
     fun currentToggles(player: Player): Toggles =
         Toggles(
             protectItem = player.attr[PROTECT_ITEM_ATTR] == true,
             skulled = PvpSkull.isSkulled(player),
-            killedByPlayer = false,
+            killedByPlayer = gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.tile),
             deepWilderness = DeathRules.deepWilderness(player.tile),
         )
 
@@ -156,7 +188,16 @@ object ItemsKeptOnDeath {
         player.attr[TOGGLES] = currentToggles(player)
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, EVENTS_OP1)
-        for (i in 0 until 4) player.setInterfaceEvents(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, -1..-1, EVENTS_OP1)
+        for (i in 0 until 4) if (i != SKULL_TOGGLE) player.setInterfaceEvents(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, -1..-1, EVENTS_OP1)
+        // Owner 2026-10-04: "pk skull active needs to be removed from items kept on death - every player is skulled" (and the skull
+        // changes nothing, DeathRules.keepCount). The toggle is hidden and the two below it move up into its place.
+        player.setComponentHidden(INTERFACE_ID, Layout.TOGGLE_FIRST + SKULL_TOGGLE * Layout.TOGGLE_STRIDE, hidden = true)
+        player.setComponentText(INTERFACE_ID, Layout.NOTICE, NOTICE_TEXT)
+        var y = 30 + Layout.TOGGLE_HEIGHTS[0] + 5
+        for (i in SKULL_TOGGLE + 1 until 4) {
+            player.setComponentPosition(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, 10, y)
+            y += Layout.TOGGLE_HEIGHTS[i] + 5
+        }
         for (i in 0 until Layout.SLOTS) player.setInterfaceEvents(INTERFACE_ID, Layout.SLOT_FIRST + i, -1..-1, EVENTS_OP1)
         refresh(player)
     }
@@ -174,7 +215,6 @@ object ItemsKeptOnDeath {
         player.attr[TOGGLES] =
             when (index) {
                 0 -> t.copy(protectItem = !t.protectItem)
-                1 -> t.copy(skulled = !t.skulled)
                 2 -> t.copy(killedByPlayer = !t.killedByPlayer)
                 3 -> t.copy(deepWilderness = !t.deepWilderness)
                 else -> t

@@ -30,8 +30,15 @@ enum class UntradeableFate {
     /** Rune pouch that is kept (locked, or below level 20): the victim keeps the empty pouch, the runes go to the killer. */
     POUCH_EMPTIED,
 
-    /** Already broken/mangled, stackable (tokens) or without combat use: stays with the victim as it is, nothing for the killer. */
+    /** Already broken/mangled (a lockable item): stays with the victim as it is, nothing for the killer. */
     UNCHANGED,
+
+    /**
+     * Owner 2026-10-04: an untradeable that is not [UntradeableDeathProtection.lockable] (Barrows gloves, quest rewards ...) is
+     * always lost; the killer receives its High Alchemy value in coins (OSRS Wiki "Barrows gloves": "When lost in a PvP death,
+     * they turn into 78,000 coins" = 60 % of 130,000). Nothing goes to Perdu.
+     */
+    LOST_FOR_COINS,
 }
 
 data class UntradeableOutcome(
@@ -68,6 +75,43 @@ object UntradeableDeathProtection {
     fun isDamaged(item: Item): Boolean =
         isBroken(item) || PvpDeathBreakables.forBroken(item.id) != null || TrouverRegistry.entryForDamaged(item.id) != null
 
+    /**
+     * Owner 2026-10-04 death rules: "you always lose everything but keep 1 item with Protect Item; an untradeable you normally
+     * need to lock in OSRS (rune pouch ...) you keep, unless you die above level 20 Wilderness and it is not locked with a Trouver
+     * parchment; Barrows gloves you always lose". The lockable group is the OSRS Wiki "(l)" list (rune pouches, Dizana's quivers
+     * and max cape, Infernal cape and max cape, Void, Fighter torso, ancient sceptres) plus this server's own lockables (owner:
+     * fire cape, imbued god/max capes, assemblers stay "kept like lockables") and the PvP-breakable capes/defender.
+     */
+    val OSRS_LOCKABLE: Set<Int> =
+        setOf(
+            Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES,
+            Items.VOID_MAGE_HELM, Items.VOID_RANGER_HELM, Items.VOID_MELEE_HELM,
+            Items.VOID_MAGE_HELM_11674, Items.VOID_RANGER_HELM_11675, Items.VOID_MELEE_HELM_11676,
+            Items.FIGHTER_TORSO, Items.INFERNAL_MAX_CAPE, Items.BLESSED_DIZANAS_QUIVER, Items.BLESSED_DIZANAS_QUIVER_L,
+            // Elite void (OSRS (l) list; untradeable since the 2026-10-04 audit, items.yml).
+            Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_KNIGHT_TOP_19787, Items.ELITE_VOID_KNIGHT_ROBE_19788,
+            Items.ELITE_VOID_KNIGHT_TOP_19789, Items.ELITE_VOID_KNIGHT_ROBE_19790,
+        )
+
+    /**
+     * OSRS Wiki "Max cape" / "Accumulator max cape": "On a PvP death, the cape is always kept in the inventory, even if not
+     * protected." (owner 2026-10-04: max cape untradeable and kept). The hoods have no death text; they stay with their cape.
+     */
+    val ALWAYS_KEPT_PVP: Set<Int> =
+        setOf(Items.MAX_CAPE, Items.MAX_CAPE_20767, Items.MAX_HOOD, Items.MAX_HOOD_20768, Items.ACCUMULATOR_MAX_CAPE, Items.ACCUMULATOR_MAX_HOOD)
+
+    /**
+     * Fixed OSRS coins for the killer when one of these untradeables is lost (else [lostCoins] uses the High Alchemy value):
+     * "Colossal blade": "If lost in PVP, the item will drop as 225,000 coins for the killer"; "Ring of shadows": "In PvP death, the
+     * ring turns into 75,000 coins regardless of Wilderness location"; "Barrows gloves": "they turn into 78,000 coins".
+     */
+    val FIXED_KILLER_COINS: Map<Int, Long> =
+        mapOf(Items.COLOSSAL_BLADE to 225_000L, Items.RING_OF_SHADOWS to 75_000L, Items.GLOVES_7462 to 78_000L)
+
+    fun lockable(itemId: Int): Boolean =
+        RunePouch.isPouch(itemId) || itemId in gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.IDS ||
+            PvpDeathBreakables.breakableFor(itemId) != null || PvpDeathBreakables.forBroken(itemId) != null || itemId in OSRS_LOCKABLE
+
     /** Untradeables this rule handles on a PvP death. */
     fun handles(
         definitions: DefinitionSet,
@@ -89,19 +133,19 @@ object UntradeableDeathProtection {
     fun valuedAtRepairPrice(
         definitions: DefinitionSet,
         itemId: Int,
-    ): Boolean {
-        if (!handles(definitions, itemId)) return false
-        if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
-        val def = RepairPrices.itemDef(definitions, itemId) ?: return false
-        return !def.stackable && def.equipSlot >= 0
-    }
+    ): Boolean = handles(definitions, itemId) && lockable(itemId)
 
     fun fateOf(
         definitions: DefinitionSet,
         item: Item,
         deepWilderness: Boolean,
     ): UntradeableOutcomeFate {
-        val locked = TrouverRegistry.isLockedAnyState(item.id)
+        if (item.id in ALWAYS_KEPT_PVP) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        // A pet stays with its owner (owner confirmed 2026-10-04: "pet kept" on a PvP death; OSRS 2026: pets respawn with you).
+        if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        // A damaged item already paid its killer once (a broken item left over from the old rules): lost, but for nothing.
+        if (!lockable(item.id)) return UntradeableOutcomeFate(UntradeableFate.LOST_FOR_COINS, if (isDamaged(item)) 0L else lostCoins(definitions, item))
+        val locked = gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.ALL.any { item.id == it.lockedItemId || item.id == it.brokenItemId || item.id == it.mangledItemId }
         if (isDamaged(item)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         if (RunePouch.isPouch(item.id)) {
             return if (locked || !deepWilderness) {
@@ -110,18 +154,18 @@ object UntradeableDeathProtection {
                 UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
             }
         }
-        if (RepairPrices.itemDef(definitions, item.id)?.stackable == true) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
-        // OSRS Wiki "Items Kept on Death": "Any untradeable item without any combat use is kept on death" - only equipment breaks
-        // (and pays the killer), so a pile of free non-combat untradeables can never mint coins.
-        if (!locked && PvpDeathBreakables.breakableFor(item.id) == null && (RepairPrices.itemDef(definitions, item.id)?.equipSlot ?: -1) < 0) {
-            return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
-        }
         return when {
             !deepWilderness -> UntradeableOutcomeFate(UntradeableFate.BROKEN, RepairPrices.repairPrice(definitions, item.id))
             locked -> UntradeableOutcomeFate(UntradeableFate.MANGLED, RepairPrices.MANGLED_REPAIR)
             else -> UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
         }
     }
+
+    /** The killer's coins for a lost non-lockable untradeable: its High Alchemy value (60 % of its value) per item. */
+    fun lostCoins(
+        definitions: DefinitionSet,
+        item: Item,
+    ): Long = (FIXED_KILLER_COINS[item.id] ?: ((RepairPrices.itemDef(definitions, item.id)?.cost?.toLong() ?: 0L) * 60L / 100L)) * item.amount
 
     data class UntradeableOutcomeFate(val fate: UntradeableFate, val killerCoins: Long)
 
@@ -182,7 +226,7 @@ object UntradeableDeathProtection {
             val replacement: Item? =
                 when (outcome.fate) {
                     UntradeableFate.UNCHANGED -> continue
-                    UntradeableFate.DESTROYED -> null
+                    UntradeableFate.DESTROYED, UntradeableFate.LOST_FOR_COINS -> null
                     UntradeableFate.POUCH_EMPTIED -> RunePouch.withContents(current, emptyList())
                     UntradeableFate.BROKEN -> damagedCopy(slotItem.item, current, mangled = false)
                     UntradeableFate.MANGLED -> damagedCopy(slotItem.item, current, mangled = true)

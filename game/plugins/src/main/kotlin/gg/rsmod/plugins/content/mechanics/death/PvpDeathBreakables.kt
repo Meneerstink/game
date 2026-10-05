@@ -83,8 +83,53 @@ object PvpDeathBreakables {
      * Items with their own OSRS conversion on an unprotected PvP death (owner 2026-09-26: unchanged). Every other
      * untradeable - including the broken-id [entries] and the rune pouch - follows [UntradeableDeathProtection].
      */
+    /**
+     * Death audit 2026-10-04 (owner: "OSRS conversion" for charged/imbued/modified gear; data agent-handoffs/
+     * perdu-death-data-2026-10-04.md). What the killer receives for these unprotected items, OSRS Wiki:
+     *  - imbued rings: "dying to another player will cause the imbued ring to lose its imbued status" -> the plain ring;
+     *    "Ring of suffering (r)/(ri)": the plain ring, the recoil charges are lost;
+     *  - "Magic shortbow (i)": "will drop a regular magic shortbow for the person who killed them";
+     *  - Slayer helmets (any): "Dropped to the PKer as a black mask ... The other parts are lost";
+     *  - "Neitiznot faceguard": "If lost in PvP, it will revert to the normal helm of Neitiznot and basilisk jaw";
+     *  - Amulet of rancour (s), volcanic/frozen whip, painted dark bows: "Dropped to the PKer as base item, recolour is destroyed";
+     *  - Lava/Steam battlestaff (or): "the staff will revert to its default appearance";
+     *  - Dragonfire ward / Ancient wyvern shield: "when recovered, the ... will be completely uncharged".
+     * Venator bow and Tonalztics of Ralos ("Chargable items": "the tradeable uncharged item, and ... the items that would result
+     * from uncharging the item") are in [killerItems] with their charges.
+     */
+    val PVP_BASE: Map<Int, List<Int>> =
+        mapOf(
+            Items.RING_OF_THE_GODS_I to listOf(Items.RING_OF_THE_GODS),
+            Items.TYRANNICAL_RING_I to listOf(Items.TYRANNICAL_RING),
+            Items.TREASONOUS_RING_I to listOf(Items.TREASONOUS_RING),
+            Items.RING_OF_SUFFERING_I to listOf(Items.RING_OF_SUFFERING),
+            Items.RING_OF_SUFFERING_R to listOf(Items.RING_OF_SUFFERING),
+            Items.RING_OF_SUFFERING_RI to listOf(Items.RING_OF_SUFFERING),
+            Items.MAGIC_SHORTBOW_I to listOf(Items.MAGIC_SHORTBOW),
+            Items.SLAYER_HELMET to listOf(Items.BLACK_MASK),
+            Items.SLAYER_HELMET_E to listOf(Items.BLACK_MASK),
+            Items.SLAYER_HELMET_CHARGED to listOf(Items.BLACK_MASK),
+            Items.FULL_SLAYER_HELMET to listOf(Items.BLACK_MASK),
+            Items.FULL_SLAYER_HELMET_E to listOf(Items.BLACK_MASK),
+            Items.FULL_SLAYER_HELMET_CHARGED to listOf(Items.BLACK_MASK),
+            Items.NEITIZNOT_FACEGUARD to listOf(Items.HELM_OF_NEITIZNOT, Items.BASILISK_JAW),
+            Items.AMULET_OF_RANCOUR_S to listOf(Items.AMULET_OF_RANCOUR),
+            Items.VOLCANIC_ABYSSAL_WHIP to listOf(Items.ABYSSAL_WHIP),
+            Items.FROZEN_ABYSSAL_WHIP to listOf(Items.ABYSSAL_WHIP),
+            Items.DARK_BOW_GREEN to listOf(Items.DARK_BOW),
+            Items.DARK_BOW_BLUE to listOf(Items.DARK_BOW),
+            Items.DARK_BOW_YELLOW to listOf(Items.DARK_BOW),
+            Items.DARK_BOW_WHITE to listOf(Items.DARK_BOW),
+            Items.LAVA_BATTLESTAFF_OR to listOf(Items.LAVA_BATTLESTAFF),
+            Items.STEAM_BATTLESTAFF_OR to listOf(Items.STEAM_BATTLESTAFF),
+            Items.MYSTIC_STEAM_STAFF_OR to listOf(Items.MYSTIC_STEAM_STAFF),
+            Items.DRAGONFIRE_WARD to listOf(Items.DRAGONFIRE_WARD_UNCHARGED),
+            Items.ANCIENT_WYVERN_SHIELD to listOf(Items.ANCIENT_WYVERN_SHIELD_UNCHARGED),
+        )
+
     fun converts(itemId: Int): Boolean =
-        OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId == Items.TOXIC_BLOWPIPE ||
+        itemId in PVP_BASE || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
+            OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
             itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY || itemId == Items.TOXIC_STAFF_OF_THE_DEAD ||
             itemId in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || itemId == Items.ANCIENT_SCEPTRE ||
@@ -135,7 +180,6 @@ object PvpDeathBreakables {
         drop: (Item) -> Unit = { world.spawn(GroundItem(it, result.victim.tile, result.killer)) },
     ): Int {
         val victim = result.victim
-        var broken = 0
         var equipmentChanged = false
         for (slotItem in breaking) {
             val container =
@@ -143,142 +187,100 @@ object PvpDeathBreakables {
                     DeathContainerSource.INVENTORY -> victim.inventory
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
-            if (container[slotItem.slot]?.id != slotItem.item.id) continue
-            if (slotItem.item.id == Items.TOXIC_BLOWPIPE || slotItem.item.id == Items.BLAZING_BLOWPIPE) {
-                // OSRS Wiki "Toxic blowpipe": unprotected, "all scale and dart charges will appear on the floor alongside
-                // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer. Blazing blowpipe: the
-                // tradeable ornament kit rule ("Items Kept on Death") also applies - the Toxic blowpipe plus the kit.
-                val blowpipe = container[slotItem.slot]!!
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1))
-                if (slotItem.item.id == Items.BLAZING_BLOWPIPE) drop(Item(Items.BLOWPIPE_ORNAMENT_KIT, 1))
-                Blowpipe.dart(blowpipe)?.let { drop(Item(it.itemId, Blowpipe.darts(blowpipe))) }
-                Blowpipe.scales(blowpipe).takeIf { it > 0 }?.let { drop(Item(Items.ZULRAHS_SCALES, it)) }
-                continue
-            }
-            val crystalSeed = crystalSeedOnDeath(slotItem.item.id)
-            if (crystalSeed != null) {
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(crystalSeed, 1))
-                continue
-            }
-            if (pointsDeath(slotItem.item.id)) {
-                val chain = gg.rsmod.plugins.content.items.armor.CombatPoints.chainFor(slotItem.item.id)!!
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                if (chain.end >= 0) drop(Item(chain.end, slotItem.item.amount))
-                continue
-            }
-            if (slotItem.item.id == Items.BOW_OF_FAERDHINEN) {
-                // OSRS Wiki "Bow of Faerdhinen": "On unprotected death in PvP, the inactive bow is dropped, and all shards used
-                // to charge it will be lost."
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1))
-                continue
-            }
-            if (slotItem.item.id == Items.AMULET_OF_BLOOD_FURY) {
-                // OSRS Wiki "Amulet of blood fury": unprotected PvP death - "the amulet is converted to a normal amulet of fury;
-                // the blood shard and any remaining charges are lost" (the fury is lost to the killer as usual).
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.AMULET_OF_FURY, 1))
-                continue
-            }
-            if (slotItem.item.id == Items.ANCIENT_SCEPTRE) {
-                // OSRS Wiki "Ancient sceptre": "Unprotected PvP deaths convert it to an Ancient staff for the killer" (the icon is lost).
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.ANCIENT_STAFF, 1))
-                continue
-            }
-
-            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS) {
-                // OSRS Wiki "Emberlight", "Scorching bow", "Purging staff" (2026-09-17): "A player killer will receive the synapse from their
-                // opponent if it is not one of the protected items." The rest of the weapon is lost.
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.TORMENTED_SYNAPSE, 1))
-                continue
-            }
-            if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(slotItem.item.id)) {
-                // OSRS Wiki (revenant weapons): "Upon death in the Wilderness, stored ether is always dropped" - the killer gets the
-                // uncharged weapon and every ether, the activation deposit included (the Uncharge refund).
-                val (uncharged, ether) = gg.rsmod.plugins.content.items.osrs.RevenantWeapons.uncharge(container[slotItem.slot]!!)
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(uncharged.id, 1))
-                drop(Item(Items.REVENANT_ETHER, ether))
-                continue
-            }
-            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR) {
-                // OSRS Wiki "Craw's bow": "any revenant ether stored as ammo within the bow will always be dropped and the initial
-                // 1,000 activation ether will always disappear"; "Webweaver bow": "... will always be dropped and the initial 1,000
-                // activation ether will always be provided to the killer". The killer gets the uncharged bow as well.
-                val bow = container[slotItem.slot]!!
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR.getValue(bow.id), 1))
-                revenantBowEther(bow).takeIf { it > 0 }?.let { drop(Item(Items.REVENANT_ETHER, it)) }
-                continue
-            }
-            if (slotItem.item.id == Items.SERPENTINE_HELM) {
-                // OSRS Wiki "Serpentine helm": "If a player dies with the helmet in PvP and it is not protected, any scales that were
-                // used to charge it will appear on the floor along with the uncharged helmet."
-                val scales = gg.rsmod.plugins.content.items.osrs.SerpentineHelm.scales(container[slotItem.slot]!!)
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.SERPENTINE_HELM_UNCHARGED, 1))
-                if (scales > 0) drop(Item(Items.ZULRAHS_SCALES, scales))
-                continue
-            }
-            val chargedStaff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(slotItem.item.id)
-            if (chargedStaff != null) {
-                // OSRS Wiki "Trident of the Seas": "If lost on death, only the uncharged trident will appear on the
-                // floor" - explicitly sourced for both tridents. SOURCE_GAP (ADAPTED): the Sanguinesti staff's own page
-                // does not restate this, but it is the same charged-powered-staff mechanic (`PoweredStaves.Staff`) and
-                // this is applied to it too rather than leaving its charges droppable intact - flagged, not silently
-                // assumed equally sourced.
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(chargedStaff.uncharged, 1))
-                continue
-            }
-            if (slotItem.item.id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED) {
-                // OSRS Wiki "Avernic treads": "the base avernic treads and any applied boots will be dropped for the killer and all
-                // used tears will be lost."
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.AVERNIC_TREADS, 1))
-                gg.rsmod.plugins.content.items.osrs.AvernicTreads.appliedBoots(slotItem.item.id).forEach { boots ->
-                    drop(Item(boots, 1))
-                }
-                continue
-            }
-            if (slotItem.item.id == Items.TOXIC_STAFF_OF_THE_DEAD) {
-                // OSRS Wiki "Toxic staff of the dead": "any scales that were used to charge it will appear on the floor along with
-                // the uncharged staff."
-                val scales = StaffOfTheDead.scales(container[slotItem.slot]!!)
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(Items.TOXIC_STAFF_UNCHARGED, 1))
-                if (scales > 0) drop(Item(Items.ZULRAHS_SCALES, scales))
-                continue
-            }
-            val ornament = OsrsOrnamentKits.forPvpConversion(slotItem.item.id)
-            if (ornament != null) {
-                // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
-                container[slotItem.slot] = null
-                if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
-                drop(Item(ornament.base, slotItem.item.amount))
-                drop(Item(ornament.kit, slotItem.item.amount))
-                continue
-            }
+            val current = container[slotItem.slot]?.takeIf { it.id == slotItem.item.id } ?: continue
+            val loot = killerItems(current) ?: continue
+            container[slotItem.slot] = null
+            if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
+            loot.forEach(drop)
         }
         if (equipmentChanged) victim.refreshBonuses()
-        return broken
+        return 0
+    }
+
+    /**
+     * What the killer receives for one unprotected [item] that [converts] (its OSRS conversion), or `null` when it has none and
+     * stays where it is. The one source for the real death ([execute]), the Items Kept on Death screen and the risk skull
+     * ([DeathRules.pvpLoss]), so the screen shows exactly what the death drops (owner 2026-10-04: "exactly 100%").
+     */
+    fun killerItems(item: Item): List<Item>? {
+        val id = item.id
+        PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } }
+        if (id == Items.VENATOR_BOW) {
+            return listOfNotNull(Item(Items.VENATOR_BOW_UNCHARGED, 1), gg.rsmod.plugins.content.items.osrs.VenatorBow.essence(item).takeIf { it > 0 }?.let { Item(Items.ANCIENT_ESSENCE, it) })
+        }
+        if (id == Items.TONALZTICS_OF_RALOS) {
+            return listOfNotNull(Item(Items.TONALZTICS_OF_RALOS_UNCHARGED, 1), gg.rsmod.plugins.content.items.osrs.Tonalztics.charges(item).takeIf { it > 0 }?.let { Item(Items.SUNFIRE_SPLINTERS, it) })
+        }
+        if (id == Items.TOXIC_BLOWPIPE || id == Items.BLAZING_BLOWPIPE) {
+            // OSRS Wiki "Toxic blowpipe": unprotected, "all scale and dart charges will appear on the floor alongside
+            // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer. Blazing blowpipe: the
+            // tradeable ornament kit rule ("Items Kept on Death") also applies - the Toxic blowpipe plus the kit.
+            val loot = mutableListOf(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1))
+            if (id == Items.BLAZING_BLOWPIPE) loot += Item(Items.BLOWPIPE_ORNAMENT_KIT, 1)
+            Blowpipe.dart(item)?.let { loot += Item(it.itemId, Blowpipe.darts(item)) }
+            Blowpipe.scales(item).takeIf { it > 0 }?.let { loot += Item(Items.ZULRAHS_SCALES, it) }
+            return loot
+        }
+        crystalSeedOnDeath(id)?.let { return listOf(Item(it, 1)) }
+        if (pointsDeath(id)) {
+            // OSRS Wiki "Items Kept on Death": Barrows and Moon equipment are "dropped to the PKer as the item's broken version".
+            val chain = gg.rsmod.plugins.content.items.armor.CombatPoints.chainFor(id)!!
+            return if (chain.end >= 0) listOf(Item(chain.end, item.amount)) else emptyList()
+        }
+        // OSRS Wiki "Bow of Faerdhinen": "On unprotected death in PvP, the inactive bow is dropped, and all shards used
+        // to charge it will be lost."
+        if (id == Items.BOW_OF_FAERDHINEN) return listOf(Item(Items.BOW_OF_FAERDHINEN_INACTIVE, 1))
+        // OSRS Wiki "Amulet of blood fury": unprotected PvP death - "the amulet is converted to a normal amulet of fury;
+        // the blood shard and any remaining charges are lost" (the fury is lost to the killer as usual).
+        if (id == Items.AMULET_OF_BLOOD_FURY) return listOf(Item(Items.AMULET_OF_FURY, 1))
+        // OSRS Wiki "Ancient sceptre": "Unprotected PvP deaths convert it to an Ancient staff for the killer" (the icon is lost).
+        if (id == Items.ANCIENT_SCEPTRE) return listOf(Item(Items.ANCIENT_STAFF, 1))
+        // OSRS Wiki "Emberlight", "Scorching bow", "Purging staff" (2026-09-17): "A player killer will receive the synapse from their
+        // opponent if it is not one of the protected items." The rest of the weapon is lost.
+        if (id in gg.rsmod.plugins.content.items.osrs.Demonbane.SYNAPSE_PRODUCTS) return listOf(Item(Items.TORMENTED_SYNAPSE, 1))
+        if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.isCharged(id)) {
+            // OSRS Wiki (revenant weapons): "Upon death in the Wilderness, stored ether is always dropped" - the killer gets the
+            // uncharged weapon and every ether, the activation deposit included (the Uncharge refund).
+            val (uncharged, ether) = gg.rsmod.plugins.content.items.osrs.RevenantWeapons.uncharge(item)
+            return listOf(Item(uncharged.id, 1), Item(Items.REVENANT_ETHER, ether))
+        }
+        if (id in gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR) {
+            // OSRS Wiki "Craw's bow": "any revenant ether stored as ammo within the bow will always be dropped and the initial
+            // 1,000 activation ether will always disappear"; "Webweaver bow": "... will always be dropped and the initial 1,000
+            // activation ether will always be provided to the killer". The killer gets the uncharged bow as well.
+            val loot = mutableListOf(Item(gg.rsmod.plugins.content.items.osrs.RevenantBows.UNCHARGED_FOR.getValue(id), 1))
+            revenantBowEther(item).takeIf { it > 0 }?.let { loot += Item(Items.REVENANT_ETHER, it) }
+            return loot
+        }
+        if (id == Items.SERPENTINE_HELM) {
+            // OSRS Wiki "Serpentine helm": "If a player dies with the helmet in PvP and it is not protected, any scales that were
+            // used to charge it will appear on the floor along with the uncharged helmet."
+            val scales = gg.rsmod.plugins.content.items.osrs.SerpentineHelm.scales(item)
+            return listOfNotNull(Item(Items.SERPENTINE_HELM_UNCHARGED, 1), scales.takeIf { it > 0 }?.let { Item(Items.ZULRAHS_SCALES, it) })
+        }
+        gg.rsmod.plugins.content.items.osrs.PoweredStaves.chargedTierOf(id)?.let {
+            // OSRS Wiki "Trident of the Seas": "If lost on death, only the uncharged trident will appear on the
+            // floor" - explicitly sourced for both tridents. SOURCE_GAP (ADAPTED): the Sanguinesti staff's own page
+            // does not restate this, but it is the same charged-powered-staff mechanic (`PoweredStaves.Staff`) and
+            // this is applied to it too rather than leaving its charges droppable intact - flagged, not silently
+            // assumed equally sourced.
+            return listOf(Item(it.uncharged, 1))
+        }
+        if (id in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED) {
+            // OSRS Wiki "Avernic treads": "the base avernic treads and any applied boots will be dropped for the killer and all
+            // used tears will be lost."
+            return listOf(Item(Items.AVERNIC_TREADS, 1)) +
+                gg.rsmod.plugins.content.items.osrs.AvernicTreads.appliedBoots(id).map { Item(it, 1) }
+        }
+        if (id == Items.TOXIC_STAFF_OF_THE_DEAD) {
+            // OSRS Wiki "Toxic staff of the dead": "any scales that were used to charge it will appear on the floor along with
+            // the uncharged staff."
+            val scales = StaffOfTheDead.scales(item)
+            return listOfNotNull(Item(Items.TOXIC_STAFF_UNCHARGED, 1), scales.takeIf { it > 0 }?.let { Item(Items.ZULRAHS_SCALES, it) })
+        }
+        // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
+        OsrsOrnamentKits.forPvpConversion(id)?.let { return listOf(Item(it.base, item.amount), Item(it.kit, item.amount)) }
+        return null
     }
 
     /** The ether a lost or protected revenant bow gives the killer: what it stores, plus the 1,000 deposit for the Webweaver bow. */

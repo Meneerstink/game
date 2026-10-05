@@ -63,14 +63,28 @@ object PerduReclaim {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "perdu reclaim recorded for ${player.username}: ${item.id}x${item.amount} at $price" }
     }
 
-    fun has(player: Player): Boolean = records(player).isNotEmpty()
+    fun has(player: Player): Boolean = records(player).isNotEmpty() || PerduLostProperty.available(player).isNotEmpty()
 
-    /** Perdu's Trade: lists the reclaims, [PER_PAGE] per page, and hands back the one chosen for its price. */
+    /** One line of Perdu's list: a destroyed item ([record]) or an OSRS Lost Property item ([PerduLostProperty]). */
+    private data class Offer(
+        val itemId: Int,
+        val amount: Int,
+        val price: Long,
+        val record: Reclaim? = null,
+        val property: PerduLostProperty.Entry? = null,
+    )
+
+    private fun offers(player: Player): List<Offer> =
+        records(player).map { Offer(it.itemId, it.amount, it.price, record = it) } +
+            PerduLostProperty.available(player).map { Offer(it.itemId, 1, it.price, property = it) }
+
+    /** Perdu's Trade: lists what he can give back, [PER_PAGE] per page, and hands back the one chosen for its price. */
     suspend fun trade(task: QueueTask) {
         val player = task.player
+        PerduLostProperty.observe(player)
         var page = 0
         while (true) {
-            val all = records(player)
+            val all = offers(player)
             if (all.isEmpty()) {
                 task.chatNpc("I don't have anything of yours at the moment. If you lose something valuable, come and see me.", wrap = true)
                 return
@@ -88,32 +102,39 @@ object PerduReclaim {
                 }
                 return
             }
-            val reclaim = shown.getOrNull(choice - 1) ?: return
-            if (task.options("Pay ${"%,d".format(reclaim.price)} coins.", "No, thanks.", title = "Reclaim ${name(player, reclaim.itemId)}?") != 1) return
-            claim(task, reclaim)
+            val offer = shown.getOrNull(choice - 1) ?: return
+            if (task.options("Pay ${"%,d".format(offer.price)} coins.", "No, thanks.", title = "Reclaim ${name(player, offer.itemId)}?") != 1) return
+            claim(task, offer)
             return
         }
     }
 
     private suspend fun claim(
         task: QueueTask,
-        reclaim: Reclaim,
+        offer: Offer,
     ) {
         val player = task.player
         // Re-read: the list may have changed while the dialogue was open.
         val current = records(player).toMutableList()
-        val index = current.indexOf(reclaim)
-        if (index < 0) return
+        val index = offer.record?.let { current.indexOf(it) } ?: -1
+        if (offer.record != null && index < 0) return
+        if (offer.property != null && offer.property !in PerduLostProperty.available(player)) return
+        // OSRS Wiki "Perdu" (25 Feb 2026): "Perdu will no longer sell you an item that you don't have space to carry."
         if (player.inventory.freeSlotCount < 1) {
             task.chatNpc("You'll need a free inventory space for that.")
             return
         }
-        val due = reclaim.price.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        val consumes = offer.property?.consumes
+        if (consumes != null && player.inventory.getItemCount(consumes) < 1) {
+            task.chatNpc("I'll need ${name(player, consumes).replaceFirstChar { it.lowercase() }} for that one.")
+            return
+        }
+        val due = offer.price.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         // OSRS Wiki "Perdu": Lost Property takes "coins from either inventory or directly from the bank" - carried coins first.
         val carried = player.inventory.getItemCount(Items.COINS_995)
         val banked = player.bank.getItemCount(Items.COINS_995)
         if (carried.toLong() + banked < due) {
-            task.chatNpc("That will be ${"%,d".format(reclaim.price)} coins, which you don't have.")
+            task.chatNpc("That will be ${"%,d".format(offer.price)} coins, which you don't have.")
             return
         }
         val fromInventory = minOf(due, carried)
@@ -123,15 +144,25 @@ object PerduReclaim {
             if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
             return
         }
-        if (!player.inventory.add(reclaim.itemId, reclaim.amount, assureFullInsertion = true).hasSucceeded()) {
-            // Refund: nothing may be lost between the payment and the hand-over.
+        fun refund() {
             if (fromInventory > 0) player.inventory.add(Items.COINS_995, fromInventory)
             if (fromBank > 0) player.bank.add(Items.COINS_995, fromBank)
+        }
+        if (consumes != null && !player.inventory.remove(consumes, 1, assureFullRemoval = true).hasSucceeded()) {
+            refund()
+            return
+        }
+        if (!player.inventory.add(offer.itemId, offer.amount, assureFullInsertion = true).hasSucceeded()) {
+            // Refund: nothing may be lost between the payment and the hand-over.
+            refund()
+            if (consumes != null) player.inventory.add(consumes, 1)
             task.chatNpc("You'll need a free inventory space for that.")
             return
         }
-        current.removeAt(index)
-        store(player, current)
+        if (offer.record != null) {
+            current.removeAt(index)
+            store(player, current)
+        }
         task.chatNpc("There you go. Try to hold on to it this time.")
     }
 

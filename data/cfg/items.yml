@@ -180391,7 +180391,7 @@
 - id: 15345
   name: "Ardougne cloak 1"
   examine: "A shadowy Ardougne cloak."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 2
@@ -180429,7 +180429,7 @@
 - id: 15347
   name: "Ardougne cloak 2"
   examine: "A shadowy Ardougne cloak."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 4
@@ -180467,7 +180467,7 @@
 - id: 15349
   name: "Ardougne cloak 3"
   examine: "A shadowy Ardougne cloak."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 5
@@ -181833,7 +181833,7 @@
 - id: 15492
   name: "Full slayer helmet"
   examine: "You don't want to wear it inside-out."
-  tradeable: true
+  tradeable: false
   weight: 2.2
   equipment:
     attack_stab: 0
@@ -181884,7 +181884,7 @@
 - id: 15496
   name: "Full slayer helmet (e)"
   examine: "You don't want to wear it inside-out."
-  tradeable: true
+  tradeable: false
   weight: 2.2
   equipment:
     attack_stab: 0
@@ -181917,7 +181917,7 @@
 - id: 15497
   name: "Full slayer helmet (charged)"
   examine: "You don't want to wear it inside-out."
-  tradeable: true
+  tradeable: false
   weight: 2.2
   equipment:
     attack_stab: 0
@@ -238936,7 +238936,7 @@
 - id: 19613
   name: "Bandos' book of war"
   examine: "The holy book of the Big High War God."
-  tradeable: true
+  tradeable: false
   weight: 1.0
   equipment:
     attack_stab: 6
@@ -238974,7 +238974,7 @@
 - id: 19615
   name: "Armadyl's book of law"
   examine: "The holy book of Armadyl."
-  tradeable: true
+  tradeable: false
   weight: 1.0
   equipment:
     attack_stab: 4
@@ -239012,7 +239012,7 @@
 - id: 19617
   name: "Ancient book"
   examine: "The unholy book of a forgotten god."
-  tradeable: true
+  tradeable: false
   weight: 1.0
   equipment:
     attack_stab: 4
@@ -239957,7 +239957,7 @@
 - id: 19748
   name: "Ardougne cloak 4"
   examine: "A shadowy Ardougne cloak."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 6
@@ -239989,7 +239989,7 @@
 - id: 19749
   name: "Falador shield 4"
   examine: "An elite kiteshield from Falador."
-  tradeable: true
+  tradeable: false
   weight: 7.2
   equipment:
     attack_stab: 0
@@ -240045,7 +240045,7 @@
 - id: 19754
   name: "Karamja gloves 4"
   examine: "A pair of greenish-black Karamja gloves."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 1
@@ -240089,7 +240089,7 @@
 - id: 19757
   name: "Varrock armour 4"
   examine: "Varrock Smithing armour."
-  tradeable: true
+  tradeable: false
   weight: 1.0
   equipment:
     attack_stab: 0
@@ -240133,7 +240133,7 @@
 - id: 19760
   name: "Explorer's ring 4"
   examine: "A Lumbridge explorer's ring."
-  tradeable: true
+  tradeable: false
   weight: 0.1
   equipment:
     attack_stab: 0
@@ -240221,7 +240221,7 @@
 - id: 19766
   name: "Fremennik sea boots 4"
   examine: "Incredibly sturdy boots for northern winters."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -240520,7 +240520,7 @@
 - id: 19785
   name: "Elite void knight top"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -240552,7 +240552,7 @@
 - id: 19786
   name: "Elite void knight robe"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -240584,7 +240584,7 @@
 - id: 19787
   name: "Elite void knight top"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -240616,7 +240616,7 @@
 - id: 19788
   name: "Elite void knight robe"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -240648,7 +240648,7 @@
 - id: 19789
   name: "Elite void knight top"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -240680,7 +240680,7 @@
 - id: 19790
   name: "Elite void knight robe"
   examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
-  tradeable: true
+  tradeable: false
   weight: 8.0
   equipment:
     attack_stab: 0
@@ -242855,7 +242855,7 @@
 - id: 20072
   name: "Dragon defender"
   examine: "A defensive weapon."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 25
@@ -249003,7 +249003,7 @@
 - id: 20747
   name: "Max cape"
   examine: "A cape worn by those who've achieved 99 in all skills."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment: null
 - id: 20748
@@ -249027,7 +249027,7 @@
 - id: 20751
   name: "Max hood"
   examine: "A cape worn by those who've achieved 99 in all skills."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 0
@@ -249227,7 +249227,7 @@
 - id: 20767
   name: "Max cape"
   examine: "A cape worn by those who've achieved 99 in all skills."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 0
@@ -249259,7 +249259,7 @@
 - id: 20768
   name: "Max hood"
   examine: "A cape worn by those who've achieved 99 in all skills."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 0
@@ -257622,7 +257622,7 @@
 - id: 21576
   name: "Drakan's medallion"
   examine: "It's an Drakan's medallion"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 21577

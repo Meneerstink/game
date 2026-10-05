@@ -41,21 +41,26 @@ class UntradeableDeathProtectionTests {
     }
 
     @Test
-    fun `below level 20 an untradeable breaks and the killer gets the repair price`() {
-        val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.FEROCIOUS_GLOVES), deepWilderness = false)
+    fun `below level 20 a lockable untradeable breaks and the killer gets the repair price`() {
+        // Owner 2026-10-04: Void is on the OSRS "(l)" list - kept (broken) at <= 20.
+        val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.VOID_KNIGHT_TOP), deepWilderness = false)
         assertEquals(UntradeableFate.BROKEN, fate.fate)
-        assertEquals(RepairPrices.repairPrice(DEFINITIONS, Items.FEROCIOUS_GLOVES), fate.killerCoins)
+        assertEquals(RepairPrices.repairPrice(DEFINITIONS, Items.VOID_KNIGHT_TOP), fate.killerCoins)
         assertTrue(fate.killerCoins >= RepairPrices.MIN_REPAIR)
     }
 
     @Test
-    fun `an untradeable without combat use is kept unchanged and pays nothing (OSRS)`() {
-        val ammoMould = 4 // untradeable, not equipable (items.yml)
-        assertFalse(DEFINITIONS.get(ItemDef::class.java, ammoMould).tradeable)
-        for (deep in listOf(false, true)) {
-            val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(ammoMould), deep)
-            assertEquals(UntradeableFate.UNCHANGED, fate.fate)
-            assertEquals(0L, fate.killerCoins)
+    fun `a non-lockable untradeable is always lost and the killer gets its high alchemy value`() {
+        // Owner 2026-10-04: "Barrows gloves you always lose"; OSRS Wiki "Barrows gloves": "When lost in a PvP death, they turn into
+        // 78,000 coins" (60 % of 130,000).
+        for (id in listOf(Items.FEROCIOUS_GLOVES, Items.GLOVES_7462, 4)) {
+            assertFalse(DEFINITIONS.get(ItemDef::class.java, id).tradeable)
+            for (deep in listOf(false, true)) {
+                val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(id), deep)
+                assertEquals(UntradeableFate.LOST_FOR_COINS, fate.fate, "$id")
+                val expected = UntradeableDeathProtection.FIXED_KILLER_COINS[id] ?: (DEFINITIONS.get(ItemDef::class.java, id).cost.toLong() * 60 / 100)
+                assertEquals(expected, fate.killerCoins, "$id")
+            }
         }
     }
 
@@ -81,10 +86,12 @@ class UntradeableDeathProtectionTests {
 
     @Test
     fun `an already damaged item is never paid out twice`() {
-        val broken = Item(Items.FEROCIOUS_GLOVES).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
+        val broken = Item(Items.VOID_KNIGHT_TOP).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
         val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, broken, deepWilderness = true)
         assertEquals(UntradeableFate.UNCHANGED, fate.fate)
         assertEquals(0L, fate.killerCoins)
+        val oldBroken = Item(Items.FEROCIOUS_GLOVES).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
+        assertEquals(0L, UntradeableDeathProtection.fateOf(DEFINITIONS, oldBroken, deepWilderness = false).killerCoins, "a broken non-lockable pays nothing again")
         assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.AVERNIC_DEFENDER_BROKEN), false).fate)
         assertFalse(UntradeableDeathProtection.isBroken(UntradeableDeathProtection.repaired(broken)))
     }

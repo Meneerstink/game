@@ -38,8 +38,9 @@ class ItemsKeptOnDeathTests {
         player.inventory[0] = Item(Items.AVERNIC_DEFENDER, 1)
         player.inventory[1] = Item(Items.COINS_995, 100)
         val preview = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(true, false, false, false), value)
-        assertEquals(listOf(Items.AVERNIC_DEFENDER), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id })
-        assertEquals(listOf(Items.COINS_995 to 100), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
+        // Owner 2026-10-04: killed by a monster, a lockable untradeable (Avernic defender) is always kept; Protect Item keeps 1 more.
+        assertEquals(listOf(Items.AVERNIC_DEFENDER, Items.COINS_995), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id })
+        assertEquals(listOf(Items.COINS_995 to 99), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
         assertEquals(0, preview.graveFee, "the gravestone is free")
     }
 
