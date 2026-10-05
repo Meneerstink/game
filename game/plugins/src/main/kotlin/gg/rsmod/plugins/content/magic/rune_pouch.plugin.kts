@@ -155,3 +155,27 @@ gg.rsmod.game.model.entity.Player.inventoryFlushHook = { p ->
     runes.take(4).forEachIndexed { i, rune -> items[i] = rune }
     p.write(gg.rsmod.game.message.impl.UpdateInvFullMessage(containerKey = RUNE_POUCH_CLIENT_INV, items = items))
 }
+
+// The OSRS rune pouch window (RunePouchInterface, interface 1177): Withdraw from the Pouch box, Store from the Inventory box, the
+// 1 / 5 / X / All quantity buttons and Close.
+on_button(RunePouchInterface.WINDOW, RunePouchInterface.POUCH_GRID) {
+    RunePouchInterface.withdraw(player, player.getInteractingSlot(), player.getInteractingOpcode())
+}
+
+on_button(RunePouchInterface.WINDOW, RunePouchInterface.INVENTORY_GRID) {
+    RunePouchInterface.store(player, player.getInteractingSlot(), player.getInteractingOpcode())
+}
+
+RunePouchInterface.QUANTITIES.indices.forEach { index ->
+    on_button(RunePouchInterface.WINDOW, RunePouchInterface.BUTTON_FIRST + index * RunePouchInterface.BUTTON_STRIDE) {
+        RunePouchInterface.selectQuantity(player, index)
+    }
+}
+
+on_button(RunePouchInterface.WINDOW, RunePouchInterface.CLOSE) {
+    RunePouchInterface.close(player)
+}
+
+on_interface_close(RunePouchInterface.WINDOW) {
+    RunePouchInterface.onClosed(player)
+}

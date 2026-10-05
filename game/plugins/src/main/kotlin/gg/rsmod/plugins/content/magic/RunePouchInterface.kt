@@ -17,39 +17,49 @@ import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
 /**
  * The rune pouch window (owner 2026-10-04 024434: "the rune pouch and the divine rune pouch need an GUI just like osrs when storing
- * runes or withdrawing them"). OSRS opens a window with the pouch's rune slots - Withdraw-1 / Withdraw-5 / Withdraw-All / Withdraw-X -
- * next to the backpack, whose runes offer Store-1 / Store-5 / Store-All / Store-X (OSRS Wiki "Rune pouch": "the player can store and
- * withdraw runes through its interface").
- *
- * ADAPTED_TO_667: this client has no OSRS pouch interface; the window is the 667 storage pair the Beast of Burden uses - 671 (a grid
- * filled by clientscript 150 from any inventory, here [GRID_INV]) and 665 (the backpack beside it) - titled "Rune pouch" with the
- * BoB's "Take BoB" button hidden. Bank load-outs (OSRS 2023) are not part of it.
+ * runes or withdrawing them"). OSRS interface 190, built into the 667 cache as [WINDOW] by `RunePouchInterfaceImportTool`: the
+ * "Pouch" box with the pouch's rune slots, the "Inventory" box with the runes the player carries, and the 1 / 5 / X / All quantity
+ * buttons below them. As in OSRS, a left-click moves the chosen quantity (Withdraw from the pouch, Store from the inventory) and
+ * the right-click menu offers every quantity. The rune slots are the 667 item grid (clientscript 150 on [POUCH_GRID] /
+ * [INVENTORY_GRID], filled from the client-only inventories [GRID_INV] / [CARRIED_INV]). Bank load-outs (OSRS 2023) are not part
+ * of it.
  */
 object RunePouchInterface {
-    const val WINDOW = 671
-    const val GRID = 27
-    const val TITLE = 14
-    const val TAKE_BOB = 29
-    const val SIDE = 665
-    const val SIDE_GRID = 0
+    const val WINDOW = 1177
+    const val TITLE = 11
+    const val CLOSE = 12
+    const val POUCH_GRID = 15
+    const val INVENTORY_GRID = 18
+
+    /** Quantity buttons 1 / 5 / X / All (RunePouchInterfaceImportTool): button 19 + 3i, its highlight one above it. */
+    const val BUTTON_FIRST = 19
+    const val BUTTON_STRIDE = 3
+    val QUANTITIES = listOf("1", "5", "X", "All")
 
     /** Client-side inventory of the opened pouch's slots (the spellbook's own pouch inventory is 30001). */
     const val GRID_INV = 30002
-    private const val INVENTORY_INV = 93
-    private const val GRID_SLOTS = 30
 
-    /** Ops 1..6 plus examine, the same events the Beast of Burden window uses (0x47E). */
+    /** Client-side inventory of the runes the player carries, in backpack order, packed (OSRS shows only runes there). */
+    const val CARRIED_INV = 30003
+    private const val CARRIED_SLOTS = 28
+
+    private const val GRID_SCRIPT = 150
+
+    /** Ops 1..6 plus examine, the same events the Beast of Burden / bank grids use (0x47E). */
     private const val ITEM_EVENTS = 0x47E
 
-    /** Op opcodes as the BoB / bank handlers decode them: op1 61, op2 64, op3 4, op4 52. */
-    private const val OP1 = 61
-    private const val OP2 = 64
-    private const val OP3 = 4
-    private const val OP4 = 52
+    /** Op opcodes as the bank / BoB handlers decode them: op1 61, op2 64, op3 4, op4 52; 25 = examine. */
+    private val OPCODES = listOf(61, 64, 4, 52)
     const val EXAMINE = 25
 
     /** The inventory slot of the pouch the window shows. */
     private val OPEN_SLOT = AttributeKey<Int>()
+
+    /** The chosen quantity (index into [QUANTITIES]); kept like OSRS's own setting. */
+    private val QUANTITY = AttributeKey<Int>(persistenceKey = "rune_pouch_quantity")
+
+    /** Rune ids in [CARRIED_INV] slot order, as last sent. */
+    private val CARRIED = AttributeKey<List<Int>>()
 
     fun isOpen(player: Player): Boolean = player.attr[OPEN_SLOT] != null
 
@@ -59,6 +69,11 @@ object RunePouchInterface {
         return slot to pouch
     }
 
+    private fun quantity(player: Player): Int = (player.attr[QUANTITY] ?: 0).coerceIn(0, QUANTITIES.size - 1)
+
+    /** The quantity each op stands for: op1 the chosen one (left-click), then the others in button order. */
+    fun opOrder(selected: Int): List<Int> = listOf(selected) + QUANTITIES.indices.filter { it != selected }
+
     fun open(
         player: Player,
         pouchSlot: Int,
@@ -66,36 +81,67 @@ object RunePouchInterface {
         val pouch = player.inventory[pouchSlot]?.takeIf { RunePouch.isPouch(it.id) } ?: return
         player.attr[OPEN_SLOT] = pouchSlot
         player.openInterface(WINDOW, InterfaceDestination.MAIN_SCREEN)
-        player.openInterface(SIDE, InterfaceDestination.TAB_AREA)
-        player.setComponentText(WINDOW, TITLE, player.world.definitions.get(ItemDef::class.java, pouch.id).name)
-        player.setComponentHidden(WINDOW, TAKE_BOB, true)
-        player.runClientScript(150, (WINDOW shl 16) or GRID, GRID_INV, 6, 5, 0, "Withdraw-1", "Withdraw-5", "Withdraw-All", "Withdraw-X")
-        player.setInterfaceEvents(WINDOW, GRID, 0 until GRID_SLOTS, ITEM_EVENTS)
-        player.runClientScript(150, (SIDE shl 16) or SIDE_GRID, INVENTORY_INV, 4, 7, 0, "Store-1", "Store-5", "Store-All", "Store-X")
-        player.setInterfaceEvents(SIDE, SIDE_GRID, 0 until player.inventory.capacity, ITEM_EVENTS)
+        player.setComponentText(WINDOW, TITLE, player.world.definitions.get(ItemDef::class.java, pouch.id).name.split(' ').joinToString(" ") { w -> w.replaceFirstChar { it.uppercase() } })
+        // if3 ops are clickable only once the server enables them (op1 = bit 1), as the quiver / grave windows do.
+        player.setInterfaceEvents(WINDOW, CLOSE, -1..-1, 0x2)
+        QUANTITIES.indices.forEach { i -> player.setInterfaceEvents(WINDOW, BUTTON_FIRST + i * BUTTON_STRIDE, -1..-1, 0x2) }
+        drawGrids(player)
         refresh(player)
+    }
+
+    /** The two grids and their ops for the chosen quantity, and the button highlight. */
+    private fun drawGrids(player: Player) {
+        val (_, pouch) = pouch(player) ?: return
+        val order = opOrder(quantity(player))
+        val withdraw = order.map { "Withdraw-${QUANTITIES[it]}" }
+        val store = order.map { "Store-${QUANTITIES[it]}" }
+        val slots = RunePouch.slots(pouch.id)
+        player.runClientScript(GRID_SCRIPT, (WINDOW shl 16) or POUCH_GRID, GRID_INV, slots, 1, 0, *withdraw.toTypedArray())
+        player.setInterfaceEvents(WINDOW, POUCH_GRID, 0 until slots, ITEM_EVENTS)
+        player.runClientScript(GRID_SCRIPT, (WINDOW shl 16) or INVENTORY_GRID, CARRIED_INV, 7, 4, 0, *store.toTypedArray())
+        player.setInterfaceEvents(WINDOW, INVENTORY_GRID, 0 until CARRIED_SLOTS, ITEM_EVENTS)
+        QUANTITIES.indices.forEach { i -> player.setComponentHidden(WINDOW, BUTTON_FIRST + i * BUTTON_STRIDE + 1, i != quantity(player)) }
     }
 
     fun refresh(player: Player) {
         val (_, pouch) = pouch(player) ?: return
-        val items = arrayOfNulls<Item>(GRID_SLOTS)
-        RunePouch.contents(pouch).forEachIndexed { i, rune -> if (i < GRID_SLOTS) items[i] = rune }
-        player.sendItemContainer(GRID_INV, items)
+        val stored = arrayOfNulls<Item>(RunePouch.slots(pouch.id))
+        RunePouch.contents(pouch).forEachIndexed { i, rune -> if (i < stored.size) stored[i] = rune }
+        player.sendItemContainer(GRID_INV, stored)
+        val carried = RunePouch.RUNES.let { runes -> player.inventory.rawItems.filterNotNull().filter { it.id in runes } }.take(CARRIED_SLOTS)
+        player.attr[CARRIED] = carried.map { it.id }
+        val shown = arrayOfNulls<Item>(CARRIED_SLOTS)
+        carried.forEachIndexed { i, rune -> shown[i] = Item(rune.id, rune.amount) }
+        player.sendItemContainer(CARRIED_INV, shown)
         player.inventory.dirty = true
     }
 
-    /** The amount a click asks for (op1 1, op2 5, op3 all), or null for op4 "-X" (an amount prompt). */
+    /** A quantity button (1 / 5 / X / All). */
+    fun selectQuantity(
+        player: Player,
+        index: Int,
+    ) {
+        if (!isOpen(player) || index !in QUANTITIES.indices) return
+        player.attr[QUANTITY] = index
+        drawGrids(player)
+        refresh(player)
+    }
+
+    /** The amount a click asks for, or null for "-X" (an amount prompt). */
     private fun amountFor(
+        player: Player,
         opcode: Int,
         available: Int,
-    ): Int? =
-        when (opcode) {
-            OP1 -> 1
-            OP2 -> 5
-            OP3 -> available
-            OP4 -> null
-            else -> 0
+    ): Int? {
+        val op = OPCODES.indexOf(opcode)
+        if (op < 0) return 0
+        return when (QUANTITIES[opOrder(quantity(player))[op]]) {
+            "1" -> 1
+            "5" -> 5
+            "All" -> available
+            else -> null
         }
+    }
 
     fun withdraw(
         player: Player,
@@ -108,7 +154,7 @@ object RunePouchInterface {
             player.world.sendExamine(player, rune.id, gg.rsmod.game.model.ExamineEntityType.ITEM)
             return
         }
-        val amount = amountFor(opcode, rune.amount)
+        val amount = amountFor(player, opcode, rune.amount)
         if (amount == null) {
             // WEAK: a STANDARD task waits for the open window (a modal) to close, so the amount prompt never showed.
             player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
@@ -137,23 +183,27 @@ object RunePouchInterface {
         refresh(player)
     }
 
+    /** A click on a carried rune in the window's Inventory box. */
     fun store(
         player: Player,
-        inventorySlot: Int,
+        carriedSlot: Int,
         opcode: Int,
     ) {
-        val item = player.inventory[inventorySlot] ?: return
-        val available = player.inventory.getItemCount(item.id)
-        val amount = amountFor(opcode, available)
+        val runeId = player.attr[CARRIED]?.getOrNull(carriedSlot) ?: return
+        if (opcode == EXAMINE) {
+            player.world.sendExamine(player, runeId, gg.rsmod.game.model.ExamineEntityType.ITEM)
+            return
+        }
+        val available = player.inventory.getItemCount(runeId)
+        val amount = amountFor(player, opcode, available)
         if (amount == null) {
-            // WEAK: a STANDARD task waits for the open window (a modal) to close, so the amount prompt never showed.
             player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
                 val asked = inputInt("How many would you like to store?")
-                if (asked > 0) put(player, item.id, asked)
+                if (asked > 0) put(player, runeId, asked)
             }
             return
         }
-        if (amount > 0) put(player, item.id, amount)
+        if (amount > 0) put(player, runeId, amount)
     }
 
     private fun put(
@@ -178,12 +228,11 @@ object RunePouchInterface {
         onClosed(player)
     }
 
-    /** Restores the backpack tab however the window went away (its Close button, Escape, walking off). */
+    /** However the window went away (its Close button, Escape, walking off). */
     fun onClosed(player: Player) {
         if (!isOpen(player)) return
         player.attr.remove(OPEN_SLOT)
-        player.closeInterface(InterfaceDestination.TAB_AREA)
-        player.openInterface(InterfaceDestination.INVENTORY_TAB)
+        player.attr.remove(CARRIED)
         player.inventory.dirty = true
     }
 }
