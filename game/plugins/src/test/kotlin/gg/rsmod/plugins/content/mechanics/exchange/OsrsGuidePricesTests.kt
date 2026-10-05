@@ -93,7 +93,9 @@ class OsrsGuidePricesTests {
         // 2026-10-03 owner bug (Steel titan pouch not on the GE): 453 items the 2011 base data marked untradeable that Void (rev 634)
         // sells on the GE (a buy limit, no tradeable = false) - every summoning pouch and scroll among them: 12278 -> 12731.
         // 2026-10-04: + the imported Kraken tentacle (OSRS 12004, tradeable; Abyssal tentacle degradation) -> 12732.
-        assertEquals(12732, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        // 2026-10-04 21:37 (owner: Perdu exactly OSRS, flags untradeable): 27 items.yml flags -> untradeable (Dragon defender,
+        // Max cape/hood, Elite void, Full slayer helmets, god books, Drakan's medallion, diary items) -> 12705.
+        assertEquals(12705, items.size, "exchangeable items (tradeable, unnoted, not coins)")
         // 2026-10-02 OsrsGuidePrices.RENAMED_IN_OSRS (OSRS Wiki item ids): 8013 "Teleport to house" = "Teleport to house (tablet)",
         // 9244 "Dragon bolts (e)" = "Dragonstone bolts (e)": seeded 3355 -> 3357 (unmatched 8923 -> 8921).
         // 2026-10-03: 62 of those 453 are named in the OSRS snapshot: seeded 3357 -> 3419.

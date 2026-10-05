@@ -34,7 +34,9 @@ class DeadmanRouteGateTests {
         assertTrue(read("areas/entrana/entrana.plugin.kts").contains("canTeleport(TeleportType.FAIRY)"))
         assertTrue(read("areas/zanaris/zanaris.plugin.kts").contains("canTeleport(TeleportType.FAIRY)"))
         assertTrue(read("areas/lumbridge/lostcity_shed.plugin.kts").contains("canTeleport(TeleportType.FAIRY)"))
-        assertTrue(read("areas/poh/poh_furniture.plugin.kts").contains("canTeleport(TeleportType.FAIRY)"))
+        // The house fairy ring opens the world dial since 2026-10-02 (FairyRings.Source.HOUSE), gated like every ring.
+        val rings = read("mechanics/travel/FairyRings.kt")
+        assertTrue(rings.contains("HOUSE(TeleportType.FAIRY)") && rings.contains("player.canTeleport(source.teleport)"))
         assertTrue(read("objs/levers/levers.plugin.kts").contains("canTeleport(TeleportType.LEVER)"))
         assertTrue(read("areas/wilderness/wilderness_obelisk.plugin.kts").contains("canTeleport(TeleportType.WILDERNESS_OBELISK)"))
         assertTrue(read("areas/barbarianvillage/stronghold_of_security.plugin.kts").contains("canTeleport(TeleportType.SKULL_SCEPTRE)"))

@@ -73,7 +73,7 @@ object PestControlScenarios {
         repeat(30) { wait(1) }
         run.expectTrue(E, "spinner heals its portal", portal.getCurrentLifepoints() > half, "lp $half -> ${portal.getCurrentLifepoints()}")
         // Portal death: its spinners explode, the knight regains 50 hitpoints.
-        game.knight.setCurrentLifepoints(1000)
+        game.knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS / 2)
         portal.hit(portal.getCurrentLifepoints())
         repeat(5) { wait(1) }
         // The pests keep hitting the knight meanwhile, so +500 is allowed a few small hits.

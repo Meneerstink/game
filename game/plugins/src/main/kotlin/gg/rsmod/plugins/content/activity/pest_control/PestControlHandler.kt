@@ -641,7 +641,7 @@ class PestControlGame(
         for ((spinner, portalIndex) in spinnerPortal.toList()) {
             if (portalIndex == index) PestControlMonsters.spinnerExplode(this, spinner)
         }
-        knight.setCurrentLifepoints(minOf(PC_KNIGHT_LIFEPOINTS, knight.getCurrentLifepoints() + 500))
+        knight.setCurrentLifepoints(minOf(PC_KNIGHT_LIFEPOINTS, knight.getCurrentLifepoints() + PC_KNIGHT_PORTAL_HEAL))
         knightDirty = true
     }
 

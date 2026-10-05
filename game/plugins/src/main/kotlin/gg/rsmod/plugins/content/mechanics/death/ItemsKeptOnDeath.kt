@@ -19,6 +19,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
 import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.Kept as Layout
+import gg.rsmod.game.model.entity.zoneTile
 
 /**
  * The OSRS "Items Kept on Death" screen (OSRS interface 4, built as 667 interface [INTERFACE_ID] by
@@ -180,8 +181,8 @@ object ItemsKeptOnDeath {
         Toggles(
             protectItem = player.attr[PROTECT_ITEM_ATTR] == true,
             skulled = PvpSkull.isSkulled(player),
-            killedByPlayer = gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.tile),
-            deepWilderness = DeathRules.deepWilderness(player.tile),
+            killedByPlayer = gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.zoneTile()),
+            deepWilderness = DeathRules.deepWilderness(player.zoneTile()),
         )
 
     fun open(player: Player) {

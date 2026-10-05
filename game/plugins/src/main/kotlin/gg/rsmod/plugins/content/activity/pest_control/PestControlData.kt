@@ -65,6 +65,9 @@ val PC_KNIGHT_IDS = intArrayOf(Npcs.VOID_KNIGHT, Npcs.VOID_KNIGHT_3785)
 /** Void Knight lifepoints: the 2009scape overlay starts at "200" hitpoints (x 10). */
 const val PC_KNIGHT_LIFEPOINTS = 2000
 
+/** 2009scape: a destroyed portal gives the Void Knight 50 hitpoints back (x 10). */
+const val PC_KNIGHT_PORTAL_HEAL = 500
+
 /** The squire by the landing (667 cache 3781 "Squire": Talk-to, Leave) at local (30, 47). */
 const val PC_LEAVE_SQUIRE = Npcs.SQUIRE_3781
 val PC_LEAVE_SQUIRE_OFFSET = 30 to 47

@@ -112,7 +112,8 @@ class QuestTravelWarningTests {
         // Every raw book switch outside Spellbooks is either Spellbook Swap's revert or behind hasAccess.
         val root = sourceRoot()
         val cape = File(root, "gg/rsmod/plugins/content/items/osrs/max_cape_options.plugin.kts").readText()
-        assertTrue("Spellbooks.hasAccess(player, it)" in cape, "the Max cape offers locked books")
+        // Owner 2026-10-03 (buglist E2): the Max cape has no Spellbook option at all - so it cannot open a locked book.
+        assertTrue("option = \"Spellbook\"" !in cape && "Spellbooks.hasAccess(player, it)" !in cape, "the Max cape offers spellbooks again")
         val swap = File(root, "gg/rsmod/plugins/content/magic/lunar/lunar_spells.plugin.kts").readText()
         assertTrue("Spellbooks.hasAccess(player, book)" in swap, "Spellbook Swap opens Ancient Magicks without Desert Treasure")
     }

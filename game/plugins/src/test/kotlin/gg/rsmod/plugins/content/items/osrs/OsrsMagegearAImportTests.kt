@@ -32,7 +32,8 @@ class OsrsMagegearAImportTests {
         assertEquals(Items.AVERNIC_TREADS_PR_ET, AvernicTreads.upgraded(Items.AVERNIC_TREADS_ET, AvernicTreads.Boots.PRIMORDIAL))
         assertEquals(setOf(Items.PRIMORDIAL_BOOTS, Items.PEGASIAN_BOOTS, Items.ETERNAL_BOOTS), AvernicTreads.appliedBoots(Items.AVERNIC_TREADS_MAX).toSet())
         assertEquals(4_000, AvernicTreads.TEARS_PER_PAIR)
-        assertTrue("AvernicTreads.appliedBoots(slotItem.item.id)" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText())
+        // PvpDeathBreakables.killerItems (2026-10-04 refactor): base treads + every applied pair go to the killer.
+        assertTrue("AvernicTreads.appliedBoots(id).map { Item(it, 1) }" in File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText())
     }
 
     @Test

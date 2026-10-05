@@ -42,7 +42,8 @@ class OsrsSceptresImportTests {
         assertEquals(mapOf(6 to 75, 2 to 60, 0 to 50), reqs(Items.ICE_ANCIENT_SCEPTRE_L))
         assertEquals(mapOf(6 to 65), reqs(Items.DRAGON_HUNTER_WAND))
         assertEquals(mapOf(6 to 77, 0 to 50), reqs(Items.PURGING_STAFF))
-        val trouver = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/trouver/trouver.plugin.kts").readText()
+        // The lockables moved to TrouverLockables.kt (2026-10-04 Perdu / trouver work).
+        val trouver = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/trouver/TrouverLockables.kt").readText()
         listOf("ANCIENT_SCEPTRE_L_BROKEN", "BLOOD_ANCIENT_SCEPTRE_L_BROKEN", "ICE_ANCIENT_SCEPTRE_L_BROKEN", "SMOKE_ANCIENT_SCEPTRE_L_BROKEN", "SHADOW_ANCIENT_SCEPTRE_L_BROKEN").forEach {
             assertTrue("brokenItemId = Items.$it" in trouver, it)
         }
