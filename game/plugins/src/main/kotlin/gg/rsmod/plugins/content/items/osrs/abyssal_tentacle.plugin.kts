@@ -65,6 +65,8 @@ on_item_on_item(item1 = Items.KRAKEN_TENTACLE, item2 = Items.ABYSSAL_WHIP) {
         val whipSlot = player.inventory.getItemIndex(Items.ABYSSAL_WHIP, false)
         if (whipSlot < 0) return@queue
         player.inventory[whipSlot] = AbyssalTentacle.created()
+        // The shared attach rule (owner 2026-10-03, every attach makes a sound; ItemAttachSoundsTests).
+        gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.KRAKEN_TENTACLE, Items.ABYSSAL_WHIP)
         player.message("You attach the kraken tentacle to the abyssal whip.")
     }
 }

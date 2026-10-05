@@ -36,6 +36,8 @@ fun crystalHasOption(
     return (if (worn) def.equipmentMenu else def.inventoryMenu).any { it.equals(option, ignoreCase = true) }
 }
 
+val CRYSTAL_RECHARGE_SOUND = 6
+
 /** Owner 2026-10-04 153844 ("it needs to say shard"): Check counts the crystal shards in it (100 charges each, a started shard counts). */
 fun crystalStatus(item: gg.rsmod.game.model.item.Item): String {
     val charges = CrystalEquipment.charges(item)
@@ -58,6 +60,9 @@ fun crystalStatus(item: gg.rsmod.game.model.item.Item): String {
         player.inventory.remove(Items.CRYSTAL_SHARD, shards)
         val charged = CrystalEquipment.withCharges(item, CrystalEquipment.charges(item) + shards * CrystalEquipment.CHARGES_PER_SHARD)
         player.inventory[slot] = charged
+        // OSRS `eyeglo_crystal_axe_recharge` (synth 6, wiki "List of sound IDs"; byte-identical in the 667 cache): crystal recharged
+        // with shards (owner 153708: "no sound adding shards").
+        player.playSound(CRYSTAL_RECHARGE_SOUND)
         player.message(crystalStatus(charged))
     }
     if (crystalHasOption(id, "Check", worn = false)) {
