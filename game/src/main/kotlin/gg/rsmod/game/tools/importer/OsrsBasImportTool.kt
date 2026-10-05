@@ -52,6 +52,8 @@ object OsrsBasImportTool {
             Stance("nightmare_staff", ready = 4504, template = 28),
             // HUMAN_ZAMORAKSPEAR_READY / WALK_F / RUN / TURNONSPOT / WALK_B / WALKLEFT / WALKRIGHT: Blue moon spear.
             Stance("zamorak_spear_osrs", ready = 1713, walk = 1703, run = 1707, readyTurn = 1702, walkBack = 1704, walkLeft = 1706, walkRight = 1705),
+            // HUMAN_WEAPON_GIANT01_READY / WALK / RUN / WALKL / WALKR: Colossal blade (owner 153608).
+            Stance("colossal_blade", ready = 9460, walk = 9461, run = 9459, walkLeft = 10055, walkRight = 10054),
         )
 
     /** Payload width of every fixed-size BASType opcode (`BASType.decode`, rev-667 client). */

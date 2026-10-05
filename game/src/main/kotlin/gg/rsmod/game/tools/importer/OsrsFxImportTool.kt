@@ -227,6 +227,9 @@ object OsrsFxImportTool {
             "osrsweaponseq2" to listOf(395, 400, 401, 406, 407, 429, 426, 4230, 6600, 929, 2779, 7618, 1665),
             // Claws (D_CLAWS_PUNCH 1067) and whips (SLAYER_ABYSSAL_WHIP_ATTACK 1658 / _DEFEND 1659).
             "osrsweaponseq3" to listOf(1067, 1658, 1659),
+            // Owner 2026-10-04 153608 ("collosal blade is not wielded like the osrs item"): the blade's own stance, gameval AnimationID
+            // HUMAN_WEAPON_GIANT01_RUN 9459 / _READY 9460 / _WALK 9461 / _WALKR 10054 / _WALKL 10055 (it attacks with the anchor's 5865).
+            "colossalseq" to listOf(9459, 9460, 9461, 10054, 10055),
             // OSRS max cape emote, player side: MAX_CAPE_PLAYER_ANIM 7121 (the spotanim is in BATCHES under the same name).
             "maxcapeemote" to listOf(7121),
             // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
