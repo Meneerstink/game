@@ -29,7 +29,7 @@ import kotlin.random.Random
  * - every game runs in its own copy of the island (an [InstancedMap] of region 10536), so all three landers - and several
  *   games of one lander - run at the same time;
  * - the game overlay (408): time left, the knight's and the four portals' health, the shields and the player's zeal;
- * - shielded portals that drop one by one (ticks 50/100/150/200, random order), monster waves from every portal, the
+ * - shielded portals that drop one by one (ticks 25/75/125/175 = OSRS 15 s then every 30 s, random order), monster waves from every portal, the
  *   monsters' own behaviour (PestControlMonsters.kt), barricades and gates (PestControlBarricades.kt);
  * - zeal from every hit on a portal or monster (PawnExt.dealHit -> [onDamage]) and from repairs; at the end a won game pays
  *   the lander's commendation points plus combat level x 10 coins to every player with 50 zeal or more;

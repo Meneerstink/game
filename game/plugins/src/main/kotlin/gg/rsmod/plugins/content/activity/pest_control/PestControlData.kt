@@ -112,7 +112,12 @@ const val KNIGHT_SPAWN_TICKS = 15
 const val KNIGHT_MAX_SHIFTERS = 4
 const val PC_LOBBY_DEPARTURE_TICKS = 500
 const val PC_GAME_DURATION_TICKS = 2000
-val PC_SHIELD_DROP_TICKS = intArrayOf(50, 100, 150, 200)
+/**
+ * OSRS Wiki "Pest Control": "The first shield will always drop 15 seconds into the game, and the remaining shields deactivate every
+ * 30 seconds thereafter. All shields will be down by 1 minute and 45 seconds" (owner: Pest Control rules = OSRS). Was 2009scape's
+ * 50/100/150/200.
+ */
+val PC_SHIELD_DROP_TICKS = intArrayOf(25, 75, 125, 175)
 
 /** 2009scape: a won game pays only players with at least 50 zeal (damage dealt, in hitpoints, plus 5 per repair). */
 const val PC_MIN_ZEAL = 50
