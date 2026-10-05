@@ -36,7 +36,12 @@ fun crystalHasOption(
     return (if (worn) def.equipmentMenu else def.inventoryMenu).any { it.equals(option, ignoreCase = true) }
 }
 
-fun crystalStatus(item: gg.rsmod.game.model.item.Item): String = "It has ${CrystalEquipment.charges(item)} charges."
+/** Owner 2026-10-04 153844 ("it needs to say shard"): Check counts the crystal shards in it (100 charges each, a started shard counts). */
+fun crystalStatus(item: gg.rsmod.game.model.item.Item): String {
+    val charges = CrystalEquipment.charges(item)
+    val shards = (charges + CrystalEquipment.CHARGES_PER_SHARD - 1) / CrystalEquipment.CHARGES_PER_SHARD
+    return "It holds $shards crystal shard${if (shards == 1) "" else "s"} ($charges charges)."
+}
 
 (CrystalEquipment.INACTIVE_FOR.keys + CrystalEquipment.INACTIVE_FOR.values).forEach { id ->
     // "crystal shards must be used on it (this can be done before it is inactive as well)".
@@ -86,12 +91,9 @@ CrystalEquipment.REVERT_SEED.forEach { (id, seed) ->
             player.inventory[slot]?.takeIf { it.id == id } ?: return@on_item_option
             val itemName = world.definitions.get(ItemDef::class.java, seed).name.lowercase()
             player.queue {
-                val choice =
-                    options(
-                        "Yes, revert it.",
-                        "No, cancel.",
-                        title = "Revert this item back into a $itemName? Any crystal shard charges are lost.",
-                    )
+                // Owner 2026-10-04 153739 ("the text is too long ... it cuts off"): the warning in its own box, a short question.
+                messageBox("Reverting turns this item back into a $itemName.", "Any crystal shard charges are lost.")
+                val choice = options("Yes, revert it.", "No, cancel.", title = "Revert this item?")
                 if (choice != 1) return@queue
                 player.inventory[slot]?.takeIf { it.id == id } ?: return@queue
                 player.inventory[slot] = gg.rsmod.game.model.item.Item(seed, 1)
