@@ -39,6 +39,18 @@ on_command("pcstart", Privilege.ADMIN_POWER) {
 
 // ---- the game ---------------------------------------------------------------------------------------------------------
 
+// Darkan PestControlGameController: no teleport out of a game ("You can't leave the pest control area like this." - only the
+// squire's boat, an object/npc route, leaves) and no familiar during a game ("You feel it's best to keep your Familiar away
+// during this game."). Through the shared activity gate, so every teleport / summon route asks it.
+gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { p, action ->
+    if (PestControlHandler.gameOf(p) == null) return@register null
+    when (action) {
+        gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT -> "You can't leave the pest control area like this."
+        gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.SUMMON -> "You feel it's best to keep your Familiar away during this game."
+        else -> null
+    }
+}
+
 world.timers[PC_MASTER_TICK] = 1
 on_timer(PC_MASTER_TICK) {
     PestControlHandler.tick(world)

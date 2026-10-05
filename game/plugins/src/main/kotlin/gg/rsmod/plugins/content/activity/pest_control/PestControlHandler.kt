@@ -617,6 +617,9 @@ class PestControlGame(
         val monster = Npc(id, tile, world)
         monster.respawnOverride = false
         monster.walkRadius = 64
+        // Darkan PestControlGameController.canMove / PestControl.isBrawlerAt: a player cannot step onto a brawler's tile (they
+        // wall off the knight's path); every other pest is walked through as in OSRS.
+        monster.blocksPlayers = pestMonsterOf(id) == PestMonster.BRAWLER
         world.spawn(monster)
         monster.aggroCheck = { _, target -> target.attr[PestControlHandler.GAME_ATTR] === this }
         monsters.add(monster)
