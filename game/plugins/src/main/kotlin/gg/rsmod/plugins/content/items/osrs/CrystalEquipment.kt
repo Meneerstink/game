@@ -42,7 +42,7 @@ import kotlin.math.floor
  *   (NPC 9623) is, so only her assist route is wired.
  * - Upgrading: bow + 2,000 shards at the singing bowl -> Bow of Faerdhinen (c), 82 Smithing[b]/Crafting[b], no XP; Reese's
  *   fee for this is an extra 1,000 shards. Passive corruption progress from consuming charges ("Check" option, 1% per
- *   2,000 charges used) is SOURCE_GAP/NOT BUILT - only the direct 2,000-shard singing-bowl route is implemented.
+ *   2,000 charges used, max 100%; progress and the charges in the bow lower the 2,000 shards) - [corruptShardsNeeded].
  * - Reverting the bow to its seed: inactive bow + 250 shards at the singing bowl -> enhanced crystal weapon seed (the
  *   existing plain "Uncharge" stays a shard-losing discharge only, per the Wiki's "not recommended" framing).
  * SOURCE_GAP (not built, recorded): Bow of Faerdhinen (c)'s own Uncharge result (stated to stay charged permanently, so
@@ -139,8 +139,33 @@ object CrystalEquipment {
         // OSRS-IMPORT bows: the crystal bow degrades one charge per shot too ("will last for ... 2,500 shots", "Crystal shards can be
         // used to recharge the weapon to a maximum of 20,000 charges, with each shard providing 100 charges").
         if (weapon.id != Items.BOW_OF_FAERDHINEN && weapon.id != Items.CRYSTAL_BOW_OSRS) return
-        player.equipment[EquipmentType.WEAPON.id] = withCharges(weapon, charges(weapon) - 1)
+        val shot = withCharges(weapon, charges(weapon) - 1)
+        if (weapon.id == Items.BOW_OF_FAERDHINEN) addCorruptionProgress(shot, 1)
+        player.equipment[EquipmentType.WEAPON.id] = shot
     }
+
+    /** Charges this Bow of Faerdhinen has used towards corruption (capped at 100%). */
+    fun corruptionChargesUsed(item: Item): Int = item.attr[ItemAttribute.CORRUPTION_CHARGES_USED] ?: 0
+
+    fun addCorruptionProgress(
+        item: Item,
+        chargesUsed: Int,
+    ) {
+        item.attr[ItemAttribute.CORRUPTION_CHARGES_USED] =
+            (corruptionChargesUsed(item) + chargesUsed).coerceAtMost(BowfaCreation.CHARGES_PER_CORRUPTION_PERCENT * 100)
+    }
+
+    /** OSRS Wiki "Bow of Faerdhinen": "Each 1% progress is equivalent to 2,000 charges used". */
+    fun corruptionPercent(item: Item): Int = corruptionChargesUsed(item) / BowfaCreation.CHARGES_PER_CORRUPTION_PERCENT
+
+    /**
+     * Shards still needed to corrupt [bow] (without Reese's fee): "Any combination of progress towards corruption, charges in
+     * the bow, and crystal shards can be used to meet the 2,000 crystal shard requirement ... a newly created bow will have
+     * 10,000 charges and only costs 1,900 crystal shards to corrupt." 1% progress = 20 shards, 100 charges = 1 shard.
+     */
+    fun corruptShardsNeeded(bow: Item): Int =
+        (BowfaCreation.CORRUPT_SHARDS - corruptionPercent(bow) * BowfaCreation.SHARDS_PER_CORRUPTION_PERCENT - charges(bow) / CHARGES_PER_SHARD)
+            .coerceAtLeast(0)
 
     /** "One charge is depleted for each successful hit that is received from combat", per worn active piece. */
     fun onHitReceived(player: Player) {
@@ -181,6 +206,8 @@ object CrystalEquipment {
         const val START_CHARGES = 10_000
         const val CORRUPT_SHARDS = 2000
         const val CORRUPT_NPC_FEE_SHARDS = 1000
+        const val CHARGES_PER_CORRUPTION_PERCENT = 2000
+        const val SHARDS_PER_CORRUPTION_PERCENT = 20
         const val REVERT_SHARDS = 250
     }
 }

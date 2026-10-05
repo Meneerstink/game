@@ -116,11 +116,13 @@ fun corruptBow(
     player: Player,
     viaReese: Boolean,
 ): Boolean {
-    if (player.inventory.getItemCount(Items.BOW_OF_FAERDHINEN) < 1) {
+    val bowSlot = player.inventory.getItemIndex(Items.BOW_OF_FAERDHINEN, skipAttrItems = false)
+    if (bowSlot == -1) {
         player.message("You need a charged bow of Faerdhinen to corrupt it.")
         return false
     }
-    val shardsNeeded = CrystalEquipment.BowfaCreation.CORRUPT_SHARDS + if (viaReese) CrystalEquipment.BowfaCreation.CORRUPT_NPC_FEE_SHARDS else 0
+    val bow = player.inventory[bowSlot]!!
+    val shardsNeeded = CrystalEquipment.corruptShardsNeeded(bow) + if (viaReese) CrystalEquipment.BowfaCreation.CORRUPT_NPC_FEE_SHARDS else 0
     if (player.inventory.getItemCount(Items.CRYSTAL_SHARD) < shardsNeeded) {
         player.message("You need $shardsNeeded crystal shards to corrupt the bow${if (viaReese) " (Reese's fee included)" else ""}.")
         return false
@@ -136,8 +138,9 @@ fun corruptBow(
         )
         return false
     }
-    if (!player.inventory.remove(Items.BOW_OF_FAERDHINEN, 1).hasSucceeded()) return false
-    player.inventory.remove(Items.CRYSTAL_SHARD, shardsNeeded)
+    if (player.inventory[bowSlot] !== bow) return false
+    player.inventory[bowSlot] = null
+    if (shardsNeeded > 0) player.inventory.remove(Items.CRYSTAL_SHARD, shardsNeeded)
     player.inventory.add(Items.BOW_OF_FAERDHINEN_C, 1)
     player.message("The singing bowl corrupts your bow of Faerdhinen. It will now stay charged permanently.")
     return true
@@ -159,9 +162,19 @@ fun revertBowToSeed(player: Player): Boolean {
     return true
 }
 
-/** "crystal items need to give a warning when your try to revert" (owner instruction, `cRYSTAL.rtf`). */
-suspend fun QueueTask.confirmRevert(action: String): Boolean =
-    options("Yes, revert it.", "No, cancel.", title = "Revert $action? Any crystal shard charges are lost.") == 1
+/**
+ * "crystal items need to give a warning when your try to revert" (owner instruction, `cRYSTAL.rtf`). Owner 2026-10-04 153739 ("the
+ * text is too long ... it cuts off"): the warning in its own box, then a short question.
+ */
+suspend fun QueueTask.confirmBowRevert(): Boolean {
+    messageBox("Reverting turns your inactive bow of Faerdhinen back into", "an enhanced crystal weapon seed.", "Any crystal shard charges are lost.")
+    return options("Yes, revert it.", "No, cancel.", title = "Revert this bow?") == 1
+}
+
+suspend fun QueueTask.confirmCorrupt(shards: Int): Boolean {
+    messageBox("Corrupting your bow of Faerdhinen costs $shards crystal shards.", "It will then stay charged permanently.")
+    return options("Yes, corrupt it.", "No, cancel.", title = "Corrupt this bow?") == 1
+}
 
 // Item-on-bowl: the real OSRS singing-bowl creation flow.
 singingBowls.forEach { bowl ->
@@ -181,7 +194,8 @@ singingBowls.forEach { bowl ->
 
     on_item_on_obj(item = Items.BOW_OF_FAERDHINEN, obj = bowl) {
         player.queue {
-            if (confirmRevert("your bow of Faerdhinen into a corrupted (permanent) bow, consuming ${CrystalEquipment.BowfaCreation.CORRUPT_SHARDS} shards")) {
+            val bow = player.inventory.getItemIndex(Items.BOW_OF_FAERDHINEN, skipAttrItems = false).let { player.inventory[it] } ?: return@queue
+            if (confirmCorrupt(CrystalEquipment.corruptShardsNeeded(bow))) {
                 corruptBow(player, viaReese = false)
             }
         }
@@ -189,7 +203,7 @@ singingBowls.forEach { bowl ->
 
     on_item_on_obj(item = Items.BOW_OF_FAERDHINEN_INACTIVE, obj = bowl) {
         player.queue {
-            if (confirmRevert("your inactive bow of Faerdhinen back into an enhanced crystal weapon seed")) {
+            if (confirmBowRevert()) {
                 revertBowToSeed(player)
             }
         }
@@ -209,7 +223,7 @@ singingBowls.forEach { bowl ->
 
     on_obj_option(obj = bowl, option = "Revert-crystal") {
         player.queue {
-            if (confirmRevert("your inactive bow of Faerdhinen back into an enhanced crystal weapon seed")) {
+            if (confirmBowRevert()) {
                 revertBowToSeed(player)
             }
         }

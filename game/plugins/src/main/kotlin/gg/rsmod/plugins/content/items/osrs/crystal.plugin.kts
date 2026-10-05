@@ -45,6 +45,17 @@ fun crystalStatus(item: gg.rsmod.game.model.item.Item): String {
     return "It holds $shards crystal shard${if (shards == 1) "" else "s"} ($charges charges)."
 }
 
+/** Check: the shards, and for the Bow of Faerdhinen its progress towards corruption (OSRS Wiki: "indicated through the "Check" option"). */
+fun crystalCheck(
+    player: Player,
+    item: gg.rsmod.game.model.item.Item,
+) {
+    player.message(crystalStatus(item))
+    if (item.id == Items.BOW_OF_FAERDHINEN || item.id == Items.BOW_OF_FAERDHINEN_INACTIVE) {
+        player.message("It is ${CrystalEquipment.corruptionPercent(item)}% of the way towards corruption.")
+    }
+}
+
 (CrystalEquipment.INACTIVE_FOR.keys + CrystalEquipment.INACTIVE_FOR.values).forEach { id ->
     // "crystal shards must be used on it (this can be done before it is inactive as well)".
     on_item_on_item(item1 = Items.CRYSTAL_SHARD, item2 = id) {
@@ -68,13 +79,13 @@ fun crystalStatus(item: gg.rsmod.game.model.item.Item): String {
     if (crystalHasOption(id, "Check", worn = false)) {
         on_item_option(item = id, option = "Check") {
             val item = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
-            player.message(crystalStatus(item))
+            crystalCheck(player, item)
         }
     }
     if (crystalHasOption(id, "Check", worn = true)) {
         on_equipment_option(item = id, option = "Check") {
             val worn = EquipmentType.values().mapNotNull { player.getEquipment(it) }.firstOrNull { it.id == id } ?: return@on_equipment_option
-            player.message(crystalStatus(worn))
+            crystalCheck(player, worn)
         }
     }
     if (crystalHasOption(id, "Uncharge", worn = false)) {

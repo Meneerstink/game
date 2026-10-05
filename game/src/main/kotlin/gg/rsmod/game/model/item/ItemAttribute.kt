@@ -83,4 +83,9 @@ enum class ItemAttribute {
      * and 1 per 90 combat ticks.
      */
     DEGRADE_POINTS,
+
+    /**
+     * Charges a Bow of Faerdhinen has used (plugins CrystalEquipment): OSRS progress towards corruption, 1% per 2,000.
+     */
+    CORRUPTION_CHARGES_USED,
 }

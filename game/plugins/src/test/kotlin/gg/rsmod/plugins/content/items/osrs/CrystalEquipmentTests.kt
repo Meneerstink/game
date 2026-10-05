@@ -113,7 +113,7 @@ class CrystalEquipmentTests {
         assertTrue("check(singingBowls.size == 50)" in bowlPlugin, "the real cache singing bowl roster must be enumerated, not one hardcoded id")
         assertTrue("Items.CRYSTAL_ARMOUR_SEED, obj = bowl" in bowlPlugin)
         assertTrue("Items.ENHANCED_CRYSTAL_WEAPON_SEED, obj = bowl" in bowlPlugin)
-        assertTrue("fun corruptBow(" in bowlPlugin && "CORRUPT_SHARDS" in bowlPlugin)
+        assertTrue("fun corruptBow(" in bowlPlugin && "CrystalEquipment.corruptShardsNeeded(bow)" in bowlPlugin)
         assertTrue("fun revertBowToSeed(" in bowlPlugin && "REVERT_SHARDS" in bowlPlugin)
         assertTrue("Npcs.REESE" in bowlPlugin, "Conwenna is absent from this cache; only Reese's assist route is wired")
         assertTrue("QuestStubs.songOfTheElvesCompleted(player)" in bowlPlugin, "bow and armour singing must check Song of the Elves")
@@ -129,5 +129,26 @@ class CrystalEquipmentTests {
         assertTrue(revertBlockStart in 0 until revertConfirm && revertConfirm in 0 until revertAssignment, "armour Revert must ask before executing")
         val bowsPlugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/osrs/osrs_bows.plugin.kts").readText()
         assertTrue("Revert this item back into a crystal seed?" in bowsPlugin, "classic crystal bow Revert must also warn")
+    }
+
+    @Test
+    fun `charges used count towards corruption, 1 percent per 2000, and lower the 2000 shard price`() {
+        // OSRS Wiki "Bow of Faerdhinen": "a newly created bow will have 10,000 charges and only costs 1,900 crystal shards to corrupt."
+        val fresh = CrystalEquipment.withCharges(Item(Items.BOW_OF_FAERDHINEN_INACTIVE), CrystalEquipment.BowfaCreation.START_CHARGES)
+        assertEquals(0, CrystalEquipment.corruptionPercent(fresh))
+        assertEquals(1900, CrystalEquipment.corruptShardsNeeded(fresh))
+        // "Each 1% progress is equivalent to 2,000 charges used, which costs 20 crystal shards."
+        val used = CrystalEquipment.withCharges(fresh, 6000)
+        CrystalEquipment.addCorruptionProgress(used, 3999)
+        assertEquals(1, CrystalEquipment.corruptionPercent(used))
+        assertEquals(2000 - 20 - 60, CrystalEquipment.corruptShardsNeeded(used))
+        // The progress survives running out of charges (inactive) and recharging.
+        val inactive = CrystalEquipment.withCharges(used, 0)
+        assertEquals(Items.BOW_OF_FAERDHINEN_INACTIVE, inactive.id)
+        assertEquals(3999, CrystalEquipment.corruptionChargesUsed(CrystalEquipment.withCharges(inactive, 100)))
+        // "If the bow reaches 100% progress towards corruption, it will still continue to consume charges": capped at 100%.
+        CrystalEquipment.addCorruptionProgress(used, 500_000)
+        assertEquals(100, CrystalEquipment.corruptionPercent(used))
+        assertEquals(0, CrystalEquipment.corruptShardsNeeded(CrystalEquipment.withCharges(used, 20_000)))
     }
 }
