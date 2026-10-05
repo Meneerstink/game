@@ -231,6 +231,27 @@ class FamiliarPathingTests {
         assertFalse(route.success, "a size-2 npc walled in on all four sides still found a route out: $route")
     }
 
+    /**
+     * 2026-10-05 (agent's client, POH garden -> study with a pack yak): an owner the familiar cannot reach made it step to a
+     * neighbour every tick and back the next one, because the search's "closest tile" never counted the tile it stood on.
+     * rsmod-pathfinder (Darkan routeEntityToEntity) and the RS client keep the walker where it is when that tile is already
+     * the closest: no steps.
+     */
+    @Test
+    fun `an unreachable owner leaves a familiar on its closest tile instead of stepping back and forth`() {
+        val world = newWorld()
+        val origin = Tile(3200, 3200, 0)
+        // Longer than the search radius (PathFindingStrategy.MAX_DISTANCE 20): no way around.
+        for (z in -25..25) {
+            block(world, Tile(3201, 3200 + z, 0), Direction.EAST)
+            block(world, Tile(3202, 3200 + z, 0), Direction.WEST)
+        }
+        val route = BFSPathFindingStrategy(world.collision).calculateRoute(requestFor(origin, size = 2, target = origin.transform(5, 0)))
+        assertFalse(route.success)
+        assertTrue(route.path.isEmpty(), "the familiar already stands on the closest tile but was routed to ${route.tail}")
+        assertEquals(origin, route.tail)
+    }
+
     /** Builds the exact [PathRequest] shape [Familiar.follow] uses, for a direct BFS assertion. */
     /**
      * Owner 2026-09-30: with walls or scenery around the owner a familiar teleported again and again (blue GFX and teleport

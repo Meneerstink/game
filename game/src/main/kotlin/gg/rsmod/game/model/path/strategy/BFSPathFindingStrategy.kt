@@ -87,12 +87,14 @@ class BFSPathFindingStrategy(
             }
         }
 
-        if (tail == null && closed.isNotEmpty()) {
-            val min = closed.minBy { it.tile.getDistance(end) }!!
-            val valid = closed.filter { it.tile.getDistance(end) <= min.tile.getDistance(end) }
-            if (valid.isNotEmpty()) {
-                tail = valid.minBy { it.tile.getDelta(start) }
-            }
+        if (tail == null) {
+            // The walker's own tile is a candidate too, and of equally close tiles the shortest route wins (rsmod-pathfinder
+            // findClosestApproachPoint, used by Darkan routeEntityToEntity; the RS client's alternative route does the same).
+            // Without the start tile, a follower that could not reach its owner (2x2 familiar in the POH, 2026-10-05) stepped
+            // to a neighbour every tick and back the next one.
+            val candidates = closed.toList() + Node(tile = start, parent = null)
+            val min = candidates.minOf { it.tile.getDistance(end) }
+            tail = candidates.filter { it.tile.getDistance(end) <= min }.minBy { it.cost }
         }
 
         val last = tail?.tile
