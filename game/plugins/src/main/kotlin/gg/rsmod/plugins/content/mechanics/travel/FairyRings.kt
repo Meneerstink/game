@@ -148,7 +148,20 @@ object FairyRings {
             val destination = CODES[code] ?: continue
             player.setComponentText(TRAVEL_LOG_INTERFACE, component, "<br>${destination.name}")
         }
+        // Script 957 (735:13 onLoad + varp 816 trigger) laid the log out when it opened - before these texts arrived - and hides every
+        // entry with empty text, so the log stayed empty (owner 024316, seen 2026-10-05). Varp 816 again, now, re-runs that layout.
+        val state = player.varps.getState(LOG_LAYOUT_VARP)
+        player.write(
+            if (state in -Byte.MAX_VALUE..Byte.MAX_VALUE) {
+                gg.rsmod.game.message.impl.VarpSmallMessage(LOG_LAYOUT_VARP, state)
+            } else {
+                gg.rsmod.game.message.impl.VarpLargeMessage(LOG_LAYOUT_VARP, state)
+            },
+        )
     }
+
+    /** The varp whose transmit makes the travel log's script 957 lay out the visited entries (holds the re-sort varbit 4618). */
+    const val LOG_LAYOUT_VARP = 816
 
     /** Records a completed journey to [code]: the last destination (dials + Last-destination) and the persisted travel log. */
     fun record(
