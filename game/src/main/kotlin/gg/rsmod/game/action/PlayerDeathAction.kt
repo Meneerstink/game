@@ -116,6 +116,8 @@ object PlayerDeathAction : KLogging() {
         // that stale killer a loot key, killstreak and Trouver compensation). Cleared here, after
         // the KILLER_ATTR snapshot and the pre-death hook have both consumed the map.
         player.damageMap.reset()
+        // Hits that were in flight while he was dying ([Player.isDead] held them) belong to the fight that killed him.
+        player.clearHits()
 
         runDeathHook(player, "player-death") { world.plugins.executePlayerDeath(player) }
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {

@@ -251,7 +251,7 @@ abstract class Pawn(
      */
     abstract fun cycle()
 
-    fun isDead(): Boolean = getCurrentLifepoints() == 0
+    open fun isDead(): Boolean = getCurrentLifepoints() == 0
 
     fun isAlive(): Boolean = !isDead()
 

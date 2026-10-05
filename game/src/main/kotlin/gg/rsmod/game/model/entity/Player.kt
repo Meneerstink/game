@@ -1199,6 +1199,14 @@ abstract class Player(
     /**
      * Invoked when the player should close their current interface modal.
      */
+    /**
+     * Void `character.dead` (PlayerDeath sets it for the whole sequence): a player in the death sequence is dead even when something
+     * puts lifepoints back above 0 before the respawn - otherwise the npcs still fighting him hit again, a second death restarted
+     * the animation and the item resolution (owner 030147, seen 2026-10-05: death traced twice, 836 played twice, HP 1 at the time).
+     * Hits, aggression and combat all ask this.
+     */
+    override fun isDead(): Boolean = super.isDead() || attr[DEATH_FLAG] == true
+
     internal fun closeInterfaceModal() {
         world.plugins.executeModalClose(this)
     }
