@@ -14,10 +14,8 @@ import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.service.Service
 import gg.rsmod.game.service.xtea.XteaKeyService
-import gg.rsmod.game.tools.importer.Rev667LocType
 import gg.rsmod.game.tools.importer.Rev667TileCodec
 import gg.rsmod.game.tools.importer.Rev667TileMap
-import gg.rsmod.game.tools.importer.RoyalHallLocTool
 import gg.rsmod.game.tools.importer.RoyalHallMapTool
 import gg.rsmod.util.ServerProperties
 import io.mockk.mockk
@@ -25,8 +23,6 @@ import org.junit.BeforeClass
 import java.io.File
 import java.nio.file.Paths
 import kotlin.test.Test
-import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
 /**
@@ -261,73 +257,5 @@ class GeHomeHallCollisionTests {
                 t.x !in 3158..3171 || t.z !in 3486..3497 || (t.x to t.z) in turrets
             }.map { "${it.id} at ${it.tile.x},${it.tile.z},${it.tile.height} rot ${it.rot}" }
         assertTrue(problems.isEmpty(), "outside or in a turret: $problems")
-    }
-
-    /** The client's loc layer per shape (client LOC_LAYERS_BY_SHAPE, [World.locLayer]). */
-    private fun layer(type: Int) = world.locLayer(type)
-
-    @Test
-    fun `every facade piece has a client loc slot of its own on the ground floor`() {
-        val pieces = GeHomeHallCurtains.PIECES
-        // The client keeps one changed loc per tile and layer: two pieces in one slot replace or delete each other (the
-        // level-1 facade over every doorway was a hole from the ground floor, the level-2 one from level 1).
-        val slots = pieces.groupBy { Triple(it.tile.x, it.tile.z, layer(it.type)) }.filterValues { it.size > 1 }
-        assertTrue(slots.isEmpty(), "pieces sharing a slot: $slots")
-        assertEquals(setOf(1, 2), pieces.map { it.storey }.toSet())
-        // Nor may a piece share its slot with a loc of the hall itself, a removal included: a piece would replace it, and its
-        // deletion or a zone refresh's LOC_DEL would take the piece away.
-        val problems = ArrayList<String>()
-        pieces.forEach { p ->
-            objectsAt(p.tile).filter { layer(it.type) == layer(p.type) }.forEach { problems += "piece storey ${p.storey} at ${p.tile} on ${name(it)}" }
-            design.removals.filter { r -> r.tile == p.tile && r.type.let { it == null || layer(it) == layer(p.type) } }.forEach { problems += "decor del at ${p.tile}" }
-            edits.filter { it["op"].asText() == "remove" && Tile(it["x"].asInt(), it["z"].asInt(), it["level"].asInt()) == p.tile && layer(it["type"]?.asInt() ?: 10) == layer(p.type) }
-                .forEach { problems += "world edit remove ${it["id"].asInt()} at ${p.tile}" }
-        }
-        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
-    }
-
-    @Test
-    fun `each facade loc carries its model for the shape it is sent as`() {
-        // RoyalHallLocTool apply (both caches) writes the shapes; until then this fails on CURTAIN_2.
-        listOf(RoyalHallLocTool.CURTAIN_1 to RoyalHallLocTool.CURTAIN_1_SHAPE, RoyalHallLocTool.CURTAIN_2 to RoyalHallLocTool.CURTAIN_2_SHAPE).forEach { (id, shape) ->
-            val data = world.filestore.data(16, id ushr 8, id and 0xFF)!!
-            val def = Rev667LocType.decode(id, data)
-            assertTrue(shape in def.modelsByShape.keys, "loc $id has no model for shape $shape: ${def.modelsByShape.keys}")
-            assertFalse(world.definitions.get(ObjectDef::class.java, id).solid, "loc $id is solid")
-        }
-        GeHomeHallCurtains.PIECES.forEach { assertEquals(if (it.storey == 1) RoyalHallLocTool.CURTAIN_1_SHAPE else RoyalHallLocTool.CURTAIN_2_SHAPE, it.type) }
-    }
-
-    @Test
-    fun `the facade comes back after the client lost it - down the stairs, a teleport, a login, a map rebuild`() {
-        val base = Any()
-        // Nothing sent yet (login): lost.
-        assertTrue(GeHomeHallCurtains.clientLostPieces(null, base, null, 0))
-        // Down to the ground floor: the server's zone refresh cleared level 0, where every piece lives.
-        assertTrue(GeHomeHallCurtains.clientLostPieces(base, base, 1, 0))
-        assertTrue(GeHomeHallCurtains.clientLostPieces(base, base, 2, 0))
-        // Up the stairs: the refresh clears the new level only, the pieces stay.
-        assertFalse(GeHomeHallCurtains.clientLostPieces(base, base, 0, 1))
-        assertFalse(GeHomeHallCurtains.clientLostPieces(base, base, 1, 2))
-        assertFalse(GeHomeHallCurtains.clientLostPieces(base, base, 0, 0))
-        // A map rebuild drops every loc change.
-        assertTrue(GeHomeHallCurtains.clientLostPieces(base, Any(), 1, 1))
-
-        val storey1 = GeHomeHallCurtains.PIECES.count { it.storey == 1 }
-        val storey2 = GeHomeHallCurtains.PIECES.count { it.storey == 2 }
-        val inside0 = GeHomeHallCurtains.wanted(Tile(3164, 3488, 0))
-        val inside1 = GeHomeHallCurtains.wanted(Tile(3164, 3488, 1))
-        // Down from level 1 (level 2 row shown) into the ground floor: after the loss every wanted piece is sent, the level-2
-        // row too (before 2026-10-04 only the level-1 row was, and the level-2 facade stayed a hole).
-        val down = GeHomeHallCurtains.changes(inside0, shown = 0, readd = true)
-        assertEquals(storey1 + storey2, down.count { it.second })
-        // Up from the ground floor: only the level-1 row goes, the level-2 row stays.
-        val up = GeHomeHallCurtains.changes(inside1, shown = inside0, readd = false)
-        assertTrue(up.none { it.second } && up.size == storey1 && up.all { it.first.storey == 1 })
-        // The tick after a loss everything wanted is sent once more, and what is no longer wanted still goes.
-        assertEquals(storey1 + storey2, GeHomeHallCurtains.changes(inside0, inside0, readd = true).count { it.second })
-        val out = GeHomeHallCurtains.changes(0, inside0, readd = true)
-        assertTrue(out.none { it.second } && out.size == storey1 + storey2)
-        assertTrue(GeHomeHallCurtains.changes(inside0, inside0, readd = false).isEmpty())
     }
 }

@@ -60,17 +60,9 @@ on_world_init {
     }
 }
 
-// ------------------------------------------------------------------ the facade over the balconies, seen from inside
+// ------------------------------------------------------------------ the storeys above a player hide, like any building
 
-// Owner 2026-09-29: from inside a lower storey no balcony and no hole - GeHomeHallCurtains closes each hidden balcony row
-// for that player. Checked every tick for the players near the hall (cheap: a tile test, packets only on a change).
-val HALL_CURTAINS = gg.rsmod.game.model.timer.TimerKey()
-
-on_world_init { world.timers[HALL_CURTAINS] = 1 }
-
-on_timer(HALL_CURTAINS) {
-    world.players.forEach { p ->
-        if (p.tile.isWithinRadius(gg.rsmod.game.model.Tile(3164, 3491, p.tile.height), 40)) GeHomeHallCurtains.update(p)
-    }
-    world.timers[HALL_CURTAINS] = 1
-}
+// Owner 2026-10-06 (bug 170607): the hall behaves like a normal RuneScape building - inside, everything above the player's
+// storey hides (floors, walls, balconies, roof); from outside the roof always shows. That is the client's own roof flood over
+// RoyalHallMapTool's tile flags; the per-player facade pieces of 2026-09-29 (GeHomeHallCurtains, which closed the balcony
+// doorways while the rest of the upper walls stayed drawn) are gone with the ring's ZERO_LEVEL flag.

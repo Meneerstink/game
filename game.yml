@@ -13,8 +13,12 @@ commandServer:
 # exactly on the preserved Tile(3140, 3640, 0) BH/Wilderness connection point.
 # Ferox Enclave (imported into map squares 12344/12600): arrival tile on the open plaza east of
 # the bank chest. The safe zone is the enclave footprint itself (plugins areas/home/BountyHunterHome.kt).
+# Owner 2026-10-06 ("make the mansion the home ... the spawn inside it"): the Royal Hall's ground floor, on the gold carpet
+# north of the fountain (3164,3495) - the default camera then stands inside the hall and looks south over the fountain to
+# the open south doors (screens/mansion-2026-10-06/c03-spawn-3164-3495.png). Until 2026-10-06 it was 3164,3487, just inside
+# the south door, where the default camera stood outside behind a portico pillar (b01-home-arrival-default.png).
 home-x: 3164
-home-z: 3487
+home-z: 3495
 home-height: 0
 
 # Privileges

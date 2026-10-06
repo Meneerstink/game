@@ -22,7 +22,9 @@ import java.io.File
  *  - sets the heights of levels 1-3 for the two upper storeys and the slate roof ([STOREY_STEPS]), lays both upper
  *    floors with their balconies ([BALCONIES], [BALCONIES_2]) and marks only the floor tiles inside the walls "remove
  *    roof" (tile flag 4, every storey), so with the client's selective roof removal the roof shows from
- *    outside - thresholds, porticoes and balconies included - and disappears when a player walks in.
+ *    outside - thresholds, porticoes and balconies included - and disappears when a player walks in. Like every
+ *    RuneScape building (owner 2026-10-06), everything above the player's storey hides with it: the upper storeys'
+ *    walls on the ring too (no ZERO_LEVEL on the ring since 2026-10-06), as in Lumbridge castle.
  * It removes the centre's four planters (47119) with their plane-1 fences (84), the canopy ring on pillars (47174,
  * 47175, 47244, 47246), the map copy of the fountain (47150 on the raised paving; the hall places it on the floor) and the
  * paving decals (type 22) under the hall. Byte-exact codec round-trips, one [CacheTransaction] (preflight, journal,
@@ -63,8 +65,11 @@ object RoyalHallMapTool {
     private const val BRIDGE = 2
     private const val REMOVE_ROOF = 4
 
-    /** Client TileFlag.ZERO_LEVEL: the tile is drawn as part of level 0, so roof removal never hides it. */
-    private const val ZERO_LEVEL = 8
+    /**
+     * Client TileFlag.ZERO_LEVEL (8): the tile is drawn as part of level 0, so roof removal never hides it. The old canopy
+     * carried it on levels 2 and 3; this tool clears it everywhere on the footprint (owner 2026-10-06: a normal building).
+     */
+    const val ZERO_LEVEL = 8
 
     /**
      * RSPS tile flag 0x20 ("part of the building below", client Static409 / RspsGraphicsProfile): the roof flood of a player
@@ -354,22 +359,16 @@ object RoyalHallMapTool {
             }
             val repaved = band + BRICK_PATH
 
-            // See-through walls (owner 2026-09-27, fotos pp.png / wr.png: "I can see through the walls everywhere, first and
-            // second floor"). The client's selective roof removal (Static409 flood fill over flag-4 tiles) hides every level
-            // above the player's on the whole footprint - wall ring included - unless that tile carries ZERO_LEVEL (8).
-            // Inside on the ground floor the upper-storey walls vanished (one-storey walls to look over, beside full-height
-            // turrets); on the upper floor the parapet above vanished and the walls looked cut open. The wall ring keeps
-            // its upper walls and parapet always drawn, as the Grand Exchange's own canopy did with the same flag; the
-            // floor inside still clears above the player. The balconies' ring rows are the exception: they hide with their
-            // balcony (BELOW_BUILDING) and GeHomeHallCurtains draws the facade there for a player inside below.
-            for (x in MIN_X..MAX_X) for (z in MIN_Z..MAX_Z) {
-                val ring = x == MIN_X || x == MAX_X || z == MIN_Z || z == MAX_Z
-                if (!ring) continue
-                for (level in 1..3) {
-                    if (tile(level, x, z).flags == BELOW_BUILDING) continue
-                    tile(level, x, z).flags = tile(level, x, z).flags or ZERO_LEVEL
-                }
-            }
+            // A normal RuneScape building (owner 2026-10-06, bug 170607: "the mansion is completely broken, our mansion needs
+            // to behave exactly like a normal runescape building, the only exception is the roof needs to be always visible
+            // outside"). From 2026-09-27 to 2026-10-06 the wall ring's upper levels carried ZERO_LEVEL (8), so the storey
+            // walls and the parapet stayed drawn while the floors above the player hid: a walled box without floors,
+            // walls "cut out" over every balcony doorway (bug 165725, foto 165655) and per-player facade pieces
+            // (GeHomeHallCurtains) to patch those holes. Jagex's own castles (Lumbridge castle, region 12850: the outer
+            // walls 33868 stand on the unflagged tile outside the flag-4 floor, facing in - exactly this hall's ring) carry
+            // no such flag: the roof flood (client Static409) reaches the ring as its edge and hides every level above the
+            // player there, walls and parapet included, and the roof shows again from outside. So the ring's upper levels
+            // keep only BLOCKED (set above) or BELOW_BUILDING (the balcony rows), never ZERO_LEVEL.
 
             // The corner turrets (62766, home_decor.txt) are the 2 x 2 Falador turret drawn 1.375x wide, so the model hangs
             // about 0.4 tile over each side of its 2 x 2 collision, and players stood inside the tower with their weapon
