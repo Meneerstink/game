@@ -158,9 +158,6 @@ object RoyalHallMapTool {
     /** The brown ring road / path overlay (stored id 188 = FloType 187, 4e4329, texture 441). */
     const val DIRT_ROAD_OVERLAY = 188
 
-    /** Falador square cobbles: overlay 137 = FloType 136 (746949, texture 608), Falador 2965,3380. */
-    const val BRICK_OVERLAY = 137
-
     /** The path between the grey blocks south of the south entrance (owner's tags, foto d.png). */
     val BRICK_PATH: Set<Pair<Int, Int>> = (3164..3165).flatMap { x -> (3478..3482).map { z -> x to z } }.toSet()
 
@@ -349,13 +346,11 @@ object RoyalHallMapTool {
             check(band.size in 100..1200) { "grass band has ${band.size} tiles" }
 
             // The dirt path south of the south entrance, between the grey paving blocks (owner 2026-09-27, foto d.png and
-            // his tags 3164-3165, 3478-3482): Falador square cobbles instead of the brown ring road overlay.
+            // his tags 3164-3165, 3478-3482) was Falador square cobbles (overlay 137); they draw flat pale tan between the brown
+            // paths - the owner's "weird colour on the ground in front of the mansion" (032742). Owner 2026-10-06: "Brown like
+            // the paths" - the pristine brown path overlay stays; only its dirt decals still go (repaved below).
             BRICK_PATH.forEach { (x, z) ->
-                val ground = tile(0, x, z)
-                check((ground.overlayId and 0xFF) == DIRT_ROAD_OVERLAY) { "brick path tile $x,$z is not the dirt road (overlay ${ground.overlayId})" }
-                ground.overlayId = BRICK_OVERLAY
-                ground.overlayShape = 0
-                ground.overlayRotation = 0
+                check((tile(0, x, z).overlayId and 0xFF) == DIRT_ROAD_OVERLAY) { "brick path tile $x,$z is not the dirt road" }
             }
             val repaved = band + BRICK_PATH
 
