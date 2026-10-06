@@ -8,6 +8,15 @@ const val CURSE_DRAIN_SPECIAL = -1
 const val CURSE_DRAIN_RUN_ENERGY = -2
 
 /**
+ * Per-hit proc chance of every Leech curse: Darkan `CurseManager.LEECH_PROC_CHANCE = 0.20` (world-server-dev
+ * `game/model/entity/player/managers/CurseManager.java:15`, rolled for each active Leech on every hit). Owner decision 2026-10-06
+ * (bug 031309, OWNER_QUESTIONS Q5 answer A "Darkan numbers") replaces the Novite 1-in-8 / 1-in-11 rolls for the Leeches; the
+ * owner's 45-second proc cooldown ([AncientCurses.SAP_LEECH_COOLDOWN_TICKS]) still applies on top. File-level because enum
+ * entries cannot read the companion.
+ */
+const val LEECH_PROC_CHANCE_PERCENT = 20.0
+
+/**
  * The 19 toggleable Ancient Curses of the 2011 book (Turmoil keeps its own implementation in
  * [AncientCurses]; Protect Item is the normal book's shared effect, routed by book slot 0).
  *
@@ -101,6 +110,7 @@ enum class AncientCurse(
      * `getRandom(4)==0` is 1-in-5, `getRandom(7)==0` is 1-in-8, `getRandom(10)==0` is 1-in-11) -
      * replaces this file's previous single shared 25% *provisional* guess for every curse alike,
      * which the 2011 wiki reference never actually published. Meaningless for non-Sap/Leech curses.
+     * Since the owner's 2026-10-06 decision every Leech uses Darkan's 20 % ([LEECH_PROC_CHANCE_PERCENT]); the Saps keep Novite's.
      */
     val activationChancePercent: Double = 100.0,
     /**
@@ -151,27 +161,27 @@ enum class AncientCurse(
     LEECH_ATTACK(
         "Leech Attack", 10, level = 74, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2231, targetGraphic = 2232,
-        activationChancePercent = 12.5, drains = setOf(Skills.ATTACK),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(Skills.ATTACK),
     ),
     LEECH_RANGED(
         "Leech Ranged", 11, level = 76, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2236, targetGraphic = 2238,
-        activationChancePercent = 12.5, drains = setOf(Skills.RANGED),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(Skills.RANGED),
     ),
     LEECH_MAGIC(
         "Leech Magic", 12, level = 78, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2240, targetGraphic = 2242,
-        activationChancePercent = 12.5, drains = setOf(Skills.MAGIC),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(Skills.MAGIC),
     ),
     LEECH_DEFENCE(
         "Leech Defence", 13, level = 80, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2244, targetGraphic = 2246,
-        activationChancePercent = 100.0 / 11.0, drains = setOf(Skills.DEFENCE),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(Skills.DEFENCE),
     ),
     LEECH_STRENGTH(
         "Leech Strength", 14, level = 82, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, projectileGraphic = 2248, targetGraphic = 2250,
-        activationChancePercent = 12.5, drains = setOf(Skills.STRENGTH),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(Skills.STRENGTH),
     ),
     /*
      * Leech Energy and Leech Special Attack are the only Leeches with a caster graphic (2251/2255).
@@ -189,12 +199,12 @@ enum class AncientCurse(
     LEECH_ENERGY(
         "Leech Energy", 15, level = 84, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, castGraphic = 2251, projectileGraphic = 2252, targetGraphic = 2254,
-        activationChancePercent = 100.0 / 11.0, drains = setOf(CURSE_DRAIN_RUN_ENERGY),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(CURSE_DRAIN_RUN_ENERGY),
     ),
     LEECH_SPECIAL_ATTACK(
         "Leech Special Attack", 16, level = 86, drainEffect = 100, category = Category.LEECH,
         castAnimation = 12575, castGraphic = 2255, projectileGraphic = 2256, targetGraphic = 2258,
-        activationChancePercent = 100.0 / 11.0, drains = setOf(CURSE_DRAIN_SPECIAL),
+        activationChancePercent = LEECH_PROC_CHANCE_PERCENT, drains = setOf(CURSE_DRAIN_SPECIAL),
     ),
     WRATH("Wrath", 17, level = 89, drainEffect = 30, category = Category.WRATH, icon = PrayerIcon.WRATH),
     SOUL_SPLIT("Soul Split", 18, level = 92, drainEffect = 180, category = Category.SOUL_SPLIT, icon = PrayerIcon.SOUL_SPLIT),

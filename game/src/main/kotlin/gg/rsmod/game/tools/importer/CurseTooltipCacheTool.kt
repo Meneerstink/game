@@ -36,13 +36,16 @@ object CurseTooltipCacheTool {
                 listOf(
                     "Boosts Magic by 5%, increasing to 10% over time, while draining enemy Magic by 10%, increasing to 25% over time.",
                     "Boosts Magic accuracy by 25% and Magic damage by 4%, while draining enemy Magic by 10%, increasing to 25% over time.",
+                    "Boosts Magic accuracy by 25%, while draining enemy Magic by 10%, increasing to 25% over time.",
                 ),
-                "Boosts Magic accuracy by 25%, while draining enemy Magic by 10%, increasing to 25% over time.",
+                // Owner 2026-10-06 (bug 031309): Leech Magic is a +1 level per proc boost again, so the 667 original wording is back.
+                "Boosts Magic by 5%, increasing to 10% over time, while draining enemy Magic by 10%, increasing to 25% over time.",
             ),
             Tooltip(
                 901,
-                listOf("Boosts Defence by 5%, increasing to 10% over time, while draining enemy Defence by 10%, increasing to 25% over time."),
-                "Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time.",
+                listOf("Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time."),
+                // Owner 2026-10-06 (bug 031309): Leech Defence is a +1 level per proc boost again, so the 667 original wording is back.
+                "Boosts Defence by 5%, increasing to 10% over time, while draining enemy Defence by 10%, increasing to 25% over time.",
             ),
         )
 

@@ -89,6 +89,13 @@ fun Player.openShop(
     val freeStockComponent = 26
 
     if (currentShop != null) {
+        // A shop opened over an open shop (a page turn of ShopPageGroups, a second Trade): close the old window first, with the old
+        // shop still current so its close handler runs for it. Re-sending IF_OPENSUB for the same interface would keep the client's
+        // old 620 state (InterfaceManager.closeSubInterface discards only when the id changes: shown sample headings, the samples
+        // layer's children) and the replaced 620's close handler would close the 621 side panel opened just before it.
+        if (isInterfaceVisible(shopInterface)) {
+            closeInterface(shopInterface)
+        }
         // Set the current shop attribute
         attr[CURRENT_SHOP_ATTR] = currentShop
 
@@ -145,6 +152,8 @@ fun Player.openShop(
         // The previous state leaked from a prior general store into specialist shops.
         val acceptsPlayerItems = currentShop.purchasePolicy != PurchasePolicy.BUY_NONE
         setComponentHidden(interfaceId = shopInterface, component = 19, hidden = !acceptsPlayerItems)
+        // Prev page / Page n / m / Next page row: shown only for a shop that is a page of a ShopPageGroups group.
+        gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.render(this, currentShop)
     } else {
         // Log a warning message if the shop does not exist
         World.logger.warn { "Player \"$username\" is unable to open shop \"$shop\" as it does not exist." }

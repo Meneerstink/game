@@ -51,6 +51,25 @@ class PerduLostPropertyTests {
     }
 
     @Test
+    fun `achievement diary items cost 200 each, every tier, and can be bought while the player owns one`() {
+        // Owner Q14=A (2026-10-06): Perdu StoreLine "Karamja gloves 200 | Ardougne cloak 200 | ...", exceptions "Achievement diary
+        // reward items" "can be purchased multiples of". Every tier 1-4 of the six diary items this cache has.
+        assertEquals(24, PerduLostProperty.DIARY_ITEMS.toSet().size)
+        for (id in PerduLostProperty.DIARY_ITEMS) {
+            val entry = PerduLostProperty.ENTRIES.single { it.itemId == id }
+            assertEquals(200L, entry.price, "$id costs 200 coins")
+            assertTrue(entry.multiple, "$id: multiples allowed")
+            assertTrue(DEFINITIONS.getNullable(ItemDef::class.java, id) != null, "$id exists in the cache")
+        }
+        val player = newPlayer()
+        player.equipment[9] = Item(Items.KARAMJA_GLOVES_4)
+        assertTrue(PerduLostProperty.available(player).none { it.itemId == Items.KARAMJA_GLOVES_4 }, "never seen: not offered")
+        PerduLostProperty.observe(player)
+        assertEquals(200L, PerduLostProperty.available(player).single { it.itemId == Items.KARAMJA_GLOVES_4 }.price, "offered while worn")
+        assertTrue(PerduLostProperty.available(player).none { it.itemId == Items.KARAMJA_GLOVES_3 }, "a tier never seen is not offered")
+    }
+
+    @Test
     fun `a broken or locked imbued cape counts as owning one`() {
         val player = newPlayer()
         player.inventory[0] = Item(Items.IMBUED_ZAMORAK_CAPE)

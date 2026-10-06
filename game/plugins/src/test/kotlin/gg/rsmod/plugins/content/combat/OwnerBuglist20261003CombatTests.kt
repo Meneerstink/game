@@ -302,19 +302,22 @@ class OwnerBuglist20261003CombatTests {
 
     // ---------------------------------------------------------------- D8 owner leech decision (2026-09-29)
 
-    /** "leech ranged en leech maged structureel 1 hit verlagen, accuracy blijven, leech defence 15 %, verander ook tooltips". */
+    /**
+     * "leech ranged en leech maged structureel 1 hit verlagen, accuracy blijven, leech defence 15 %, verander ook tooltips".
+     * Owner 2026-10-06 (bug 031309, Q5 answer A) replaced the Leech Magic / Leech Defence part: they boost the visible level by
+     * +1 per proc like Leech Attack / Strength (AncientCurses2011Tests covers the whole set), so their tooltips are the 667
+     * originals again; Leech Ranged keeps the 2026-09-29 values.
+     */
     @Test
     fun `the owner's Leech balance and its tooltips are in place`() {
         assertEquals(1.20, AncientCurses.LEECH_RANGED_ACCURACY, 1e-9)
         assertEquals(1.18, AncientCurses.LEECH_RANGED_DAMAGE, 1e-9)
-        assertEquals(1.25, AncientCurses.LEECH_MAGIC_ACCURACY, 1e-9)
-        assertEquals(0.0, AncientCurses.LEECH_MAGIC_DAMAGE, 1e-9)
-        assertEquals(1.15, AncientCurses.LEECH_DEFENCE_BOOST, 1e-9)
+        assertTrue(Skills.MAGIC in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST && Skills.DEFENCE in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
         val texts =
             gg.rsmod.game.tools.importer.CurseTooltipCacheTool.TOOLTIPS.associate { it.struct to it.new }
         assertTrue(texts.getValue(899).contains("Ranged damage by 18%"), texts.getValue(899))
-        assertTrue(!texts.getValue(900).contains("damage"), texts.getValue(900))
-        assertTrue(texts.getValue(901).startsWith("Boosts Defence by 15%"), texts.getValue(901))
+        assertTrue(texts.getValue(900).startsWith("Boosts Magic by 5%, increasing to 10% over time"), texts.getValue(900))
+        assertTrue(texts.getValue(901).startsWith("Boosts Defence by 5%, increasing to 10% over time"), texts.getValue(901))
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "data", "cache").toFile().toString()).isEmpty(), "tooltips applied to the game cache")
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "..", "..", "file-server", "cache").toFile().toString()).isEmpty(), "tooltips applied to the file-server cache")
     }

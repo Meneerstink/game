@@ -15,7 +15,9 @@ import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
+import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
 import io.mockk.Runs
 import io.mockk.every
 import io.mockk.just
@@ -160,7 +162,8 @@ class PvpDeathBreakablesTests {
             ),
             kept.map { it.ornamented }.toSet(),
         )
-        kept.forEach { ornament ->
+        // Elidinis' ward (or) has its own row since owner Q14=A (2026-10-06): see the conversion-set test below.
+        kept.filterNot { it.ornamented == Items.ELIDINIS_WARD_OR }.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
             assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")
@@ -223,7 +226,13 @@ class PvpDeathBreakablesTests {
 
     private fun charged(id: Int, charges: Int) = Item(id, 1).also { it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = charges }
 
-    private fun runConversions(victim: Player, lost: List<DeathSlotItem>, protected: List<DeathSlotItem> = emptyList()): List<Item> {
+    private fun runConversions(
+        victim: Player,
+        lost: List<DeathSlotItem>,
+        protected: List<DeathSlotItem> = emptyList(),
+        grave: MutableList<Item> = mutableListOf(),
+        prices: ItemRiskValueProvider = ItemRiskValueProvider { 0L },
+    ): List<Item> {
         val killer = newPlayer()
         val world = mockk<World>(relaxed = true)
         val (result, breaking) =
@@ -232,7 +241,8 @@ class PvpDeathBreakablesTests {
         mockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
         try {
             every { victim.refreshBonuses() } just Runs
-            PvpDeathBreakables.execute(world, result, breaking) { loot += it }
+            every { victim.message(any(), any(), any()) } just Runs
+            PvpDeathBreakables.execute(world, result, breaking, toGrave = { grave += it }, prices = prices) { loot += it }
             loot += PvpDeathBreakables.stripProtectedEther(victim, result)
         } finally {
             unmockkStatic("gg.rsmod.plugins.api.ext.PlayerExtKt")
@@ -293,6 +303,65 @@ class PvpDeathBreakablesTests {
         }
         assertNull(victim.equipment[2])
         assertEquals(Items.AMULET_OF_THE_DAMNED_FULL, victim.inventory[5]?.id)
+    }
+
+    /** One row of the owner Q14=A (2026-10-06) set: what the killer, the victim's gravestone and the victim's points receive. */
+    private data class Expected(val item: Int, val killer: List<Pair<Int, Int>>, val grave: List<Int> = emptyList(), val deadmanRefund: Int = 0)
+
+    @Test
+    fun `owner Q14 conversions - killer loot, victim gravestone share and imbue refund for the whole set`() {
+        // Granite maul + ornate maul handle guide prices: "converted to 90% of Grand Exchange price of the granite maul and the
+        // ornate maul handle".
+        val prices = ItemRiskValueProvider { if (it == Items.GRANITE_MAUL) 100_000L else if (it == Items.ORNATE_MAUL_HANDLE) 1_000_000L else 0L }
+        val imbue = 600 // StoreCatalogue "Imbue services": base ring + 600 Deadman Points.
+        val fullHelmetImbue = listOf(Items.HEXCREST, Items.FOCUS_SIGHT)
+        val set =
+            listOf(
+                Expected(Items.RING_OF_THE_GODS_I, listOf(Items.RING_OF_THE_GODS to 1), deadmanRefund = imbue),
+                Expected(Items.TYRANNICAL_RING_I, listOf(Items.TYRANNICAL_RING to 1), deadmanRefund = imbue),
+                Expected(Items.TREASONOUS_RING_I, listOf(Items.TREASONOUS_RING to 1), deadmanRefund = imbue),
+                Expected(Items.RING_OF_SUFFERING_I, listOf(Items.RING_OF_SUFFERING to 1), deadmanRefund = imbue),
+                Expected(Items.RING_OF_SUFFERING_RI, listOf(Items.RING_OF_SUFFERING to 1), deadmanRefund = imbue),
+                Expected(Items.FULL_SLAYER_HELMET, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
+                Expected(Items.FULL_SLAYER_HELMET_E, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
+                Expected(Items.FULL_SLAYER_HELMET_CHARGED, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
+                // Not imbued (plain helmet, Summoning-enchanted helmets, recoil ring without imbue, magic shortbow (i)): no refund.
+                Expected(Items.SLAYER_HELMET, listOf(Items.BLACK_MASK to 1)),
+                Expected(Items.SLAYER_HELMET_E, listOf(Items.BLACK_MASK to 1)),
+                Expected(Items.SLAYER_HELMET_CHARGED, listOf(Items.BLACK_MASK to 1)),
+                Expected(Items.RING_OF_SUFFERING_R, listOf(Items.RING_OF_SUFFERING to 1)),
+                Expected(Items.MAGIC_SHORTBOW_I, listOf(Items.MAGIC_SHORTBOW to 1)),
+                Expected(Items.ELIDINIS_WARD_F, listOf(Items.ELIDINIS_WARD to 1, Items.ARCANE_SIGIL to 1)),
+                Expected(Items.ELIDINIS_WARD_OR, listOf(Items.ELIDINIS_WARD to 1, Items.ARCANE_SIGIL to 1), grave = listOf(Items.MENAPHITE_ORNAMENT_KIT)),
+                Expected(Items.GRANITE_MAUL_ORNATE_HANDLE, listOf(Items.COINS_995 to 990_000)),
+            )
+        for (row in set) {
+            assertTrue(PvpDeathBreakables.converts(row.item), "${row.item} converts on a PvP death")
+            assertTrue(!UntradeableDeathProtection.handles(DEFINITIONS, row.item), "${row.item} never takes the untradeable coins route")
+            val victim = newPlayer()
+            victim.equipment[3] = Item(row.item, 1)
+            val grave = mutableListOf<Item>()
+            val loot = runConversions(victim, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 3, victim.equipment[3]!!)), grave = grave, prices = prices)
+            assertNull(victim.equipment[3], "${row.item} leaves the victim")
+            assertEquals(row.killer, loot.map { it.id to it.amount }, "killer loot for ${row.item}")
+            assertEquals(row.grave, grave.map { it.id }, "victim gravestone share for ${row.item}")
+            assertEquals(row.deadmanRefund, victim.attr[StoreCatalogue.Currency.DEADMAN.attr] ?: 0, "Deadman Points refunded for ${row.item}")
+            // The Items Kept on Death screen and the risk skull read the same table.
+            assertEquals(row.killer, PvpDeathBreakables.killerItems(Item(row.item, 1), prices)?.map { it.id to it.amount })
+            assertEquals(row.grave, PvpDeathBreakables.victimGraveItems(Item(row.item, 1)).map { it.id })
+        }
+        // Every refunded imbue is priced by exactly one StoreCatalogue route, in the currency the player paid.
+        for (ring in PvpDeathBreakables.IMBUE_REFUNDED) {
+            val route = StoreCatalogue.ENTRIES.single { it.kind == StoreCatalogue.Kind.UPGRADE && it.purchaseItem == ring }
+            assertEquals(PvpDeathBreakables.ImbueRefund(route.currency, route.price), PvpDeathBreakables.imbueRefund(ring))
+            assertEquals(StoreCatalogue.Currency.DEADMAN, route.currency)
+        }
+    }
+
+    @Test
+    fun `granite maul (or) without a Grand Exchange price gives nothing instead of a wrong amount`() {
+        assertEquals(emptyList<Item>(), PvpDeathBreakables.killerItems(Item(Items.GRANITE_MAUL_ORNATE_HANDLE, 1), null))
+        assertEquals(emptyList<Item>(), PvpDeathBreakables.killerItems(Item(Items.GRANITE_MAUL_ORNATE_HANDLE, 1), ItemRiskValueProvider { 0L }))
     }
 
     private fun newPlayer(): Player {

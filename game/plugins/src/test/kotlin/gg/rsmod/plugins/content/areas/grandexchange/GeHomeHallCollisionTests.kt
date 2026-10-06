@@ -217,6 +217,52 @@ class GeHomeHallCollisionTests {
         assertTrue(problems.isEmpty(), "hidden inside a turret: $problems")
     }
 
+    /**
+     * Owner 2026-10-06 (OWNER_QUESTIONS Q12, A): the summoning obelisk he moved to 3156,3482,0 stood on a tile whose level-1
+     * record carries the bridge flag (the client draws and walks that column one level down, DefinitionSet), so it looked
+     * sunk and the client walked through it - move it one tile. Guard: no ground loc the owner's world edits place in the
+     * hall area stands on a bridge tile; the message lists the plain neighbours to move it to.
+     */
+    @Test
+    fun `no ground loc placed by the world edits stands on a bridge tile`() {
+        fun bridged(x: Int, z: Int) = map.tiles[1][x - 3136][z - 3456].flags and 0x2 != 0
+        // Every tile the loc covers (its cache size, turned by its rotation) must be plain.
+        fun covers(id: Int, rot: Int, x: Int, z: Int): List<Pair<Int, Int>> {
+            val def = world.definitions.get(ObjectDef::class.java, id)
+            val w = if (rot and 1 == 1) def.length else def.width
+            val d = if (rot and 1 == 1) def.width else def.length
+            return (0 until w).flatMap { dx -> (0 until d).map { dz -> x + dx to z + dz } }
+        }
+        val problems =
+            edits.filter { it["op"].asText() == "spawn" && it["level"].asInt() == 0 && (it["type"]?.asInt() ?: 10) in 10..11 }
+                .filter { inBox(Tile(it["x"].asInt(), it["z"].asInt())) }
+                .filter { e -> covers(e["id"].asInt(), e["rot"]?.asInt() ?: 0, e["x"].asInt(), e["z"].asInt()).any { (a, b) -> bridged(a, b) } }
+                .map { e ->
+                    val x = e["x"].asInt()
+                    val z = e["z"].asInt()
+                    val free = (-2..2).flatMap { dx -> (-2..2).map { dz -> x + dx to z + dz } }
+                        .filter { (a, b) -> covers(e["id"].asInt(), e["rot"]?.asInt() ?: 0, a, b).none { (c, d) -> bridged(c, d) } }
+                        .sortedBy { (a, b) -> Math.abs(a - x) + Math.abs(b - z) }
+                    "loc ${e["id"].asInt()} at $x,$z size ${covers(e["id"].asInt(), e["rot"]?.asInt() ?: 0, x, z).size} (group ${e["group"]?.asInt()}): plain spots nearest first $free"
+                }
+        assertTrue(problems.isEmpty(), "on a bridge tile:\n" + problems.joinToString("\n"))
+    }
+
+    /**
+     * Owner 2026-10-06 (OWNER_QUESTIONS Q10 = A): the hall's sconces, paintings, shields and lanterns hang on the inside face of the
+     * outer walls (x 3157 / 3172, z 3485 / 3498), never outside and never on a corner-turret tile.
+     */
+    @Test
+    fun `the hall's wall decorations hang inside, not on the outer face or in a turret`() {
+        val turrets = RoyalHallMapTool.TURRETS.flatMap { (x, z) -> listOf(x to z, x + 1 to z, x to z + 1, x + 1 to z + 1) }.toSet()
+        val problems =
+            design.placements.filter { it.type == 4 && it.id in setOf(15545, 15560, 24200, 9145) && inBox(it.tile) }.filter {
+                val t = it.tile
+                t.x !in 3158..3171 || t.z !in 3486..3497 || (t.x to t.z) in turrets
+            }.map { "${it.id} at ${it.tile.x},${it.tile.z},${it.tile.height} rot ${it.rot}" }
+        assertTrue(problems.isEmpty(), "outside or in a turret: $problems")
+    }
+
     /** The client's loc layer per shape (client LOC_LAYERS_BY_SHAPE, [World.locLayer]). */
     private fun layer(type: Int) = world.locLayer(type)
 

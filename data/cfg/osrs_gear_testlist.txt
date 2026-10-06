@@ -247,7 +247,7 @@ item 13876 1   // Morrigan's coif
 item 13870 1   // Morrigan's leather body
 item 13873 1   // Morrigan's leather chaps
 
-# ===== MAGIC ARMOUR (43) =====
+# ===== MAGIC ARMOUR (40) =====
 item 23424 1   // 3rd Age druidic robe bottoms
 item 22876 1   // Ancestral hat
 item 22880 1   // Ancestral robe bottom
@@ -285,9 +285,6 @@ item 23143 1   // Swampbark legs
 item 22883 1   // Twisted ancestral hat
 item 22885 1   // Twisted ancestral robe bottom
 item 22884 1   // Twisted ancestral robe top
-item 20159 1   // Virtus mask
-item 20167 1   // Virtus robe legs
-item 20163 1   // Virtus robe top
 item 13864 1   // Zuriel's hood
 item 13861 1   // Zuriel's robe bottom
 item 13858 1   // Zuriel's robe top

@@ -96,13 +96,10 @@ class AncientCursesVisualAudioTests {
         assertEquals(20.0, AncientCurse.SAP_RANGER.activationChancePercent, 0.0001)
         assertEquals(20.0, AncientCurse.SAP_MAGE.activationChancePercent, 0.0001)
         assertEquals(100.0 / 11.0, AncientCurse.SAP_SPIRIT.activationChancePercent, 0.0001)
-        assertEquals(12.5, AncientCurse.LEECH_ATTACK.activationChancePercent, 0.0001)
-        assertEquals(12.5, AncientCurse.LEECH_RANGED.activationChancePercent, 0.0001)
-        assertEquals(12.5, AncientCurse.LEECH_MAGIC.activationChancePercent, 0.0001)
-        assertEquals(12.5, AncientCurse.LEECH_STRENGTH.activationChancePercent, 0.0001)
-        assertEquals(100.0 / 11.0, AncientCurse.LEECH_DEFENCE.activationChancePercent, 0.0001)
-        assertEquals(100.0 / 11.0, AncientCurse.LEECH_ENERGY.activationChancePercent, 0.0001)
-        assertEquals(100.0 / 11.0, AncientCurse.LEECH_SPECIAL_ATTACK.activationChancePercent, 0.0001)
+        // Owner 2026-10-06 (bug 031309, Q5 answer A): every Leech rolls Darkan's CurseManager.LEECH_PROC_CHANCE 0.20.
+        val leeches = AncientCurse.values().filter { it.category == AncientCurse.Category.LEECH }
+        assertEquals(7, leeches.size)
+        leeches.forEach { assertEquals(it.name, 20.0, it.activationChancePercent, 0.0001) }
     }
 
     @Test

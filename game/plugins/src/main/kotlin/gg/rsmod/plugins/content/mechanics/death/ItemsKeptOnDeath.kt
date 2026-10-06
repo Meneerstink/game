@@ -134,13 +134,24 @@ object ItemsKeptOnDeath {
             // Barrows/Moon armour as its broken version, an ornamented item as the base item plus its kit, and so on.
             converting.forEach { slot ->
                 val from = name(player, slot.item.id)
-                val loot = PvpDeathBreakables.killerItems(slot.item)
+                val loot = PvpDeathBreakables.killerItems(slot.item, value)
+                // Owner Q14=A (2026-10-06): an imbue refund and the victim's gravestone share come from the same table as the death.
+                val refund =
+                    PvpDeathBreakables.imbueRefund(slot.item.id)?.let {
+                        val total = it.points.toLong() * slot.item.amount
+                        " Your imbue is refunded: ${spaced(total)} ${if (total == 1L) it.currency.singular else it.currency.plural}."
+                    } ?: ""
                 when {
                     loot == null -> entries += Entry(Section.KEPT, slot.item, line(slot.item, "You'll keep this item.", "You'll keep these items."))
                     loot.isEmpty() -> deleted(player, entries, slot.item)
                     else -> loot.forEach { item ->
                         risk += value.getValue(item.id) * item.amount
-                        entries += Entry(Section.LOST, item, line(item, "The player who kills you receives this from your $from.", "The player who kills you receives these from your $from."))
+                        entries += Entry(Section.LOST, item, line(item, "The player who kills you receives this from your $from.$refund", "The player who kills you receives these from your $from.$refund"))
+                    }
+                }
+                if (loot != null) {
+                    PvpDeathBreakables.victimGraveItems(slot.item).forEach { item ->
+                        entries += Entry(Section.GRAVESTONE, item, line(item, "This part of your $from will be sent to your gravestone.", "These parts of your $from will be sent to your gravestone."))
                     }
                 }
             }

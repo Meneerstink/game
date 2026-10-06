@@ -125,10 +125,75 @@ object PvpDeathBreakables {
             Items.MYSTIC_STEAM_STAFF_OR to listOf(Items.MYSTIC_STEAM_STAFF),
             Items.DRAGONFIRE_WARD to listOf(Items.DRAGONFIRE_WARD_UNCHARGED),
             Items.ANCIENT_WYVERN_SHIELD to listOf(Items.ANCIENT_WYVERN_SHIELD_UNCHARGED),
+            // Owner Q14=A (2026-10-06), OSRS Wiki "Elidinis' ward (f)": "it can be dismantled to return the sigil and ward. However, the
+            // soul runes will not be returned" - the killer gets the tradeable parts, the soul runes are lost. "Elidinis' ward (or)":
+            // the same, and "the Menaphite ornament kit will be placed in their gravestone" ([VICTIM_GRAVE]).
+            Items.ELIDINIS_WARD_F to listOf(Items.ELIDINIS_WARD, Items.ARCANE_SIGIL),
+            Items.ELIDINIS_WARD_OR to listOf(Items.ELIDINIS_WARD, Items.ARCANE_SIGIL),
         )
 
+    /**
+     * Owner Q14=A (2026-10-06), OSRS Wiki "Granite maul (ornate handle)": "When this weapon is lost on death in PvP, it is converted
+     * to 90% of Grand Exchange price of the granite maul and the ornate maul handle." Item -> the parts whose guide price counts.
+     */
+    val PVP_COINS_FROM_PARTS: Map<Int, List<Int>> =
+        mapOf(Items.GRANITE_MAUL_ORNATE_HANDLE to listOf(Items.GRANITE_MAUL, Items.ORNATE_MAUL_HANDLE))
+
+    const val PARTS_COINS_PERCENT = 90L
+
+    /**
+     * What an unprotected PvP conversion sends to the VICTIM's gravestone (owner Q14=A, 2026-10-06):
+     *  - "Elidinis' ward (or)": "If a player loses Elidinis' ward (or) in a PvP death, the Menaphite ornament kit will be placed in
+     *    their gravestone" (the kit comes from the [OsrsOrnamentKits] row);
+     *  - Slayer helmets, "Items Kept on Death": "Dropped to the PKer as a black mask. The imbue cost is refunded to the victim. The
+     *    other parts are lost." ADAPTED: this server's imbued tier is the 667 Full slayer helmet, paid for with a hexcrest and a
+     *    focus sight (slayer_helmet.plugin.kts) instead of points or a scroll of imbuing, so those two parts are the refund. The
+     *    plain Slayer helmet (e)/(charged) carry a Summoning enchantment, not a paid imbue: no refund (UNSOURCED, owner list).
+     */
+    val VICTIM_GRAVE: Map<Int, List<Int>> by lazy {
+        val fullHelmetImbue = listOf(Items.HEXCREST, Items.FOCUS_SIGHT)
+        mapOf(
+            Items.ELIDINIS_WARD_OR to listOfNotNull(OsrsOrnamentKits.forOrnamented(Items.ELIDINIS_WARD_OR)?.kit),
+            Items.FULL_SLAYER_HELMET to fullHelmetImbue,
+            Items.FULL_SLAYER_HELMET_E to fullHelmetImbue,
+            Items.FULL_SLAYER_HELMET_CHARGED to fullHelmetImbue,
+        )
+    }
+
+    /**
+     * Imbued items whose unprotected PvP death refunds the imbue to the victim (owner Q14=A, 2026-10-06). OSRS Wiki "Ring of the
+     * gods (i)" / "Tyrannical ring (i)" / "Treasonous ring (i)" / "Ring of suffering (i)": "If not protected, dying to another player
+     * will cause the imbued ring to lose its imbued status, but the player will be reimbursed the Nightmare Zone points, Zeal Tokens,
+     * or Scroll of imbuing". The killer gets the plain ring ([PVP_BASE]); the refund is the price of the one imbue route this server
+     * sells for the ring ([StoreCatalogue] "Imbue services": the base ring + Deadman Points), in that route's currency.
+     */
+    val IMBUE_REFUNDED: Set<Int> =
+        setOf(Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING_I, Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING_I, Items.RING_OF_SUFFERING_RI)
+
+    data class ImbueRefund(val currency: gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency, val points: Int)
+
+    /** The imbue refund of one [itemId] (null when it has none); a missing or ambiguous shop route is a PROBLEM line, no refund. */
+    fun imbueRefund(itemId: Int): ImbueRefund? {
+        if (itemId !in IMBUE_REFUNDED) return null
+        val routes =
+            gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES.filter {
+                it.kind == gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Kind.UPGRADE && it.purchaseItem == itemId
+            }
+        val route = routes.singleOrNull()
+        if (route == null) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                "PvP imbue refund: item $itemId has ${routes.size} imbue routes in StoreCatalogue (need exactly 1) - no refund"
+            }
+            return null
+        }
+        return ImbueRefund(route.currency, route.price)
+    }
+
+    /** Victim-side items of a converted [item] ([VICTIM_GRAVE]), per stack. */
+    fun victimGraveItems(item: Item): List<Item> = VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
+
     fun converts(itemId: Int): Boolean =
-        itemId in PVP_BASE || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
+        itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
             OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
             itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY || itemId == Items.TOXIC_STAFF_OF_THE_DEAD ||
@@ -173,10 +238,16 @@ object PvpDeathBreakables {
      * a kill gives a loot key OR ground loot, never a key with converted loot lying beside it. The
      * default sink spawns ground loot, for callers outside the loot-key flow.
      */
+    /**
+     * @param toGrave receives the victim-side items ([VICTIM_GRAVE]); `death.plugin.kts` puts them in the victim's gravestone.
+     * @param prices Grand Exchange guide prices for [PVP_COINS_FROM_PARTS].
+     */
     fun execute(
         world: World,
         result: DeathResolutionResult,
         breaking: List<DeathSlotItem>,
+        toGrave: (Item) -> Unit = {},
+        prices: ItemRiskValueProvider = GuidePriceValueProvider(world),
         drop: (Item) -> Unit = { world.spawn(GroundItem(it, result.victim.tile, result.killer)) },
     ): Int {
         val victim = result.victim
@@ -188,23 +259,44 @@ object PvpDeathBreakables {
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             val current = container[slotItem.slot]?.takeIf { it.id == slotItem.item.id } ?: continue
-            val loot = killerItems(current) ?: continue
+            val loot = killerItems(current, prices) ?: continue
             container[slotItem.slot] = null
             if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
             loot.forEach(drop)
+            victimGraveItems(current).forEach(toGrave)
+            refundImbue(victim, current)
         }
         if (equipmentChanged) victim.refreshBonuses()
         return 0
+    }
+
+    /** Credits the victim the imbue of a lost imbued item ([imbueRefund]) in the currency it was bought with. */
+    private fun refundImbue(
+        victim: gg.rsmod.game.model.entity.Player,
+        item: Item,
+    ) {
+        val refund = imbueRefund(item.id) ?: return
+        val total = refund.points.toLong() * item.amount
+        val attr = refund.currency.attr
+        victim.attr[attr] = ((victim.attr[attr] ?: 0).toLong() + total).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        val name = runCatching { victim.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, item.id)?.name }.getOrNull() ?: "imbued item"
+        victim.message("Your $name lost its imbue. You have been refunded ${"%,d".format(total)} ${if (total == 1L) refund.currency.singular else refund.currency.plural}.")
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "PvP imbue refund: ${victim.username} ${item.id}x${item.amount} -> $total ${refund.currency.name}" }
     }
 
     /**
      * What the killer receives for one unprotected [item] that [converts] (its OSRS conversion), or `null` when it has none and
      * stays where it is. The one source for the real death ([execute]), the Items Kept on Death screen and the risk skull
      * ([DeathRules.pvpLoss]), so the screen shows exactly what the death drops (owner 2026-10-04: "exactly 100%").
+     * [prices] (Grand Exchange guide prices) is needed for the [PVP_COINS_FROM_PARTS] items; every real caller passes it.
      */
-    fun killerItems(item: Item): List<Item>? {
+    fun killerItems(
+        item: Item,
+        prices: ItemRiskValueProvider? = null,
+    ): List<Item>? {
         val id = item.id
         PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } }
+        PVP_COINS_FROM_PARTS[id]?.let { parts -> return partsCoins(id, parts, item.amount, prices) }
         if (id == Items.VENATOR_BOW) {
             return listOfNotNull(Item(Items.VENATOR_BOW_UNCHARGED, 1), gg.rsmod.plugins.content.items.osrs.VenatorBow.essence(item).takeIf { it > 0 }?.let { Item(Items.ANCIENT_ESSENCE, it) })
         }
@@ -281,6 +373,29 @@ object PvpDeathBreakables {
         // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
         OsrsOrnamentKits.forPvpConversion(id)?.let { return listOf(Item(it.base, item.amount), Item(it.kit, item.amount)) }
         return null
+    }
+
+    /**
+     * [PARTS_COINS_PERCENT] of the parts' Grand Exchange guide price, as coins for the killer ([PVP_COINS_FROM_PARTS]). Without a
+     * price source, or when the parts have no guide price, nothing can be converted: a PROBLEM line and no coins.
+     */
+    private fun partsCoins(
+        itemId: Int,
+        parts: List<Int>,
+        amount: Int,
+        prices: ItemRiskValueProvider?,
+    ): List<Item> {
+        if (prices == null) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "PvP conversion of $itemId to coins called without Grand Exchange prices" }
+            return emptyList()
+        }
+        val each = parts.sumOf { prices.getValue(it).coerceAtLeast(0L) } * PARTS_COINS_PERCENT / 100L
+        val coins = (each * amount).coerceAtMost(Int.MAX_VALUE.toLong())
+        if (coins <= 0L) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "PvP conversion of $itemId to coins: parts $parts have no Grand Exchange price" }
+            return emptyList()
+        }
+        return listOf(Item(Items.COINS_995, coins.toInt()))
     }
 
     /** The ether a lost or protected revenant bow gives the killer: what it stores, plus the 1,000 deposit for the Webweaver bow. */

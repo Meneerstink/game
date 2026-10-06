@@ -762,12 +762,12 @@ on_obj_option(obj = Objs.BIG_DOOR_57258, option = "open") {
         if (hasCeremonial) player.message("The door recognises your familiarity with the area and allows you to pass through.")
     }
     // Void enterDoor over big_door_11_closed / _opened (57258 / 57257): through the doorway with the door swung open, no teleport.
+    // The Zaros kills are NOT spent here (owner 2026-10-06, OWNER_QUESTIONS Q4 = RS Wiki rule; Darkan GodwarsController 57258
+    // only checks >= 40): the kill count lasts until you leave the dungeon (on_exit_region resetKillCounts above).
     player.lockingQueue(lockState = LockState.FULL) {
-        val crossed =
-            gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
-                this, player, obj,
-                open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, obj, Objs.BIG_DOOR_57257, ticks = 3) },
-            )
-        if (crossed && !insidePrison && !hasCeremonial) GodWars.setKillCount(player, God.ZAROS, GodWars.getKillCount(player, God.ZAROS) - KILLCOUNT_REQUIRED)
+        gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+            this, player, obj,
+            open = { gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.swingOpenFor(player, obj, Objs.BIG_DOOR_57257, ticks = 3) },
+        )
     }
 }

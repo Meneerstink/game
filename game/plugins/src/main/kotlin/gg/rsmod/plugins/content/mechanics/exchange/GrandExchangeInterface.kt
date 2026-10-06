@@ -274,9 +274,12 @@ object GrandExchangeInterface {
         return fromInventory to (total - fromInventory)
     }
 
-    /** Items that may be offered: tradeable, not coins, never the noted form (offers are made for the real item), never a removed item. */
+    /**
+     * Items that may be offered: tradeable, not coins, never the noted form (offers are made for the real item), never a removed
+     * or no-longer-obtainable item (Pernix/Virtus, owner 2026-10-06) - the house quote ([GrandExchangeService.houseQuote]) asks this too.
+     */
     fun exchangeable(def: ItemDef): Boolean =
-        def.tradeable && !def.noted && def.id != Items.COINS_995 && !gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isRemoved(def)
+        def.tradeable && !def.noted && def.id != Items.COINS_995 && !gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(def)
 
     /** The unnoted id of [def]. */
     fun unnoted(def: ItemDef): Int = if (def.noted) def.noteLinkId else def.id

@@ -20,18 +20,16 @@ val drops =
         }
 
         main {
-            // 2011 Nex drop table (RS wiki, Jan 2011 release): unique Torva/Pernix/Virtus/Zaryte at
-            // roughly 1/384 per piece, ancient ceremonial robes, and a supplies table otherwise.
+            // 2011 Nex drop table (RS wiki, Jan 2011 release): unique Torva/Zaryte at 1/384 per piece
+            // (Darkan data/npcs/drops/nex.json: each unique its own 1/384 roll), ancient ceremonial robes,
+            // and a supplies table otherwise.
+            // Owner 2026-10-06: "remove pernix and virtus completely from our rsps" - their six 10-slot rows
+            // are gone. total(3840) stays the roll denominator, so every remaining row keeps its exact rate
+            // and the freed 60 slots are part of the declared-but-unfilled "nothing" tail.
             total(3840)
             obj(Items.TORVA_FULL_HELM, slots = 10)
             obj(Items.TORVA_PLATEBODY, slots = 10)
             obj(Items.TORVA_PLATELEGS, slots = 10)
-            obj(Items.PERNIX_COWL, slots = 10)
-            obj(Items.PERNIX_BODY, slots = 10)
-            obj(Items.PERNIX_CHAPS, slots = 10)
-            obj(Items.VIRTUS_MASK, slots = 10)
-            obj(Items.VIRTUS_ROBE_TOP, slots = 10)
-            obj(Items.VIRTUS_ROBE_LEGS, slots = 10)
             obj(Items.ZARYTE_BOW, slots = 10)
             obj(Items.ANCIENT_CEREMONIAL_MASK, slots = 40)
             obj(Items.ANCIENT_CEREMONIAL_TOP, slots = 40)

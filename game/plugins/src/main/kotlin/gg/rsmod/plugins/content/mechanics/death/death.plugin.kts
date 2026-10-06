@@ -93,7 +93,11 @@ fun resolveDeath(victim: Player) {
             // player killer (a skulled player killed by a guard) it all becomes public ground loot like the rest.
             extraPvpLoot = {
                 val converted = mutableListOf<Item>()
-                PvpDeathBreakables.execute(world, result, converting) { converted += it }
+                // Owner Q14=A (2026-10-06): a conversion's victim share (Menaphite ornament kit, the full slayer helmet's imbue
+                // parts) goes to the victim's gravestone; imbue point refunds are credited inside execute.
+                val toGrave = mutableListOf<Item>()
+                PvpDeathBreakables.execute(world, result, converting, toGrave = { toGrave += it }) { converted += it }
+                DeathExecutor.graveForPvpVictim(victim, toGrave, graveTile, logger)
                 converted += UntradeableDeathProtection.execute(victim, untradeables)
                 val droppedProtectedAmmo = QuiverDeathRules.stripProtected(victim, result)
                 converted += PvpDeathBreakables.stripProtectedEther(victim, result)

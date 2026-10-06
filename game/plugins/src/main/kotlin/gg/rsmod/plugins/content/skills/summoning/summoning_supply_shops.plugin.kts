@@ -3,7 +3,7 @@ import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.game.model.shop.PurchasePolicy
 
 
-create_shop("Pikkupstix's Summoning Shop", CoinCurrency(), purchasePolicy = PurchasePolicy.BUY_STOCK) {
+create_shop(SummoningShopStock.SUPPLIES_SHOP, CoinCurrency(), purchasePolicy = PurchasePolicy.BUY_STOCK) {
     sampleItems[0] = ShopItem(Items.SPIRIT_SHARDS, 7)
     sampleItems[1] = ShopItem(Items.POUCH, 1)
     sampleItems[2] = ShopItem(Items.GOLD_CHARM, 1)
@@ -52,15 +52,12 @@ SummoningShopStock.pages.forEach { page ->
     }
 }
 
+// Owner 2026-10-06 (bug 204956 "Pikkupstix opens it in chat dialogue, needs to be a shop"; OWNER_QUESTIONS Q2 = A): Trade opens the
+// supplies shop directly; the shop window's Prev page / Next page buttons walk through the supplies, pouch and scroll pages.
+gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.register(SummoningShopStock.PAGE_GROUP)
+
 on_npc_option(Npcs.PIKKUPSTIX, "trade") {
-    player.queue {
-        val choices = listOf("Summoning supplies.") + SummoningShopStock.pages.map { it.option }
-        val choice = options(*choices.toTypedArray(), title = "What would you like to buy?")
-        when {
-            choice == 1 -> player.openShop("Pikkupstix's Summoning Shop")
-            choice in 2..choices.size -> player.openShop(SummoningShopStock.pages[choice - 2].title)
-        }
-    }
+    gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.open(player, SummoningShopStock.PAGE_GROUP)
 }
 
 on_npc_option(Npcs.BOGROG, "trade") {

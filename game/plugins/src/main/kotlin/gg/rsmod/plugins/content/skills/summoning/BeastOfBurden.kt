@@ -243,7 +243,7 @@ object BeastOfBurden {
             withdrawn += transaction.completed
         }
         synchronise(player)
-        if (withdrawn > 0) gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
+        if (withdrawn > 0) takenOut(player)
         return withdrawn
     }
 
@@ -263,8 +263,18 @@ object BeastOfBurden {
         if (transaction.completed <= 0) return 0
         container[slot] = if (transaction.completed == item.amount) null else Item(item, item.amount - transaction.completed)
         synchronise(player)
-        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
+        takenOut(player)
         return transaction.completed
+    }
+
+    /**
+     * Taking items out of a beast of burden: the take sound (ItemMoveSounds) and the bury-bones reach-down animation 827 -
+     * owner 2026-10-06 (bug 025058, OWNER_QUESTIONS Q8: "bob animation is the bury bones animation the same"); no donor
+     * (Void, Novite, 2009scape, Darkan) animates it.
+     */
+    fun takenOut(player: Player) {
+        player.animate(gg.rsmod.plugins.api.cfg.Anims.REACH_DOWN)
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
     }
 
     /** Deposits every permitted inventory item into the active familiar, best-effort. */

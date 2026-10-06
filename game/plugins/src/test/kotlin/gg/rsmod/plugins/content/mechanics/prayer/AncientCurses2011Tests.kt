@@ -8,8 +8,12 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.content.inter.attack.AttackTab
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import io.mockk.verify
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -145,11 +149,11 @@ class AncientCurses2011Tests {
         assertEquals(1.0, AncientCurses.turmoilMultiplier(inactive, Skills.ATTACK, opponent), 1e-9)
     }
 
-    private fun procAfterCooldown(attacker: Player, target: Player) {
+    private fun procAfterCooldown(attacker: Player, target: Player, style: CombatClass = CombatClass.MELEE) {
         val world = attacker.world
         val now = world.currentCycle
         every { world.currentCycle } returns now + AncientCurses.SAP_LEECH_COOLDOWN_TICKS
-        AncientCurses.onDamageDealt(attacker, target, damage = 10)
+        AncientCurses.onDamageDealt(attacker, target, damage = 10, style = style)
     }
 
     @Test
@@ -305,40 +309,76 @@ class AncientCurses2011Tests {
         }
     }
 
+    /**
+     * One test for the whole Leech set (owner 2026-10-06, bug 031309, OWNER_QUESTIONS Q5 answer A). Leech Attack, Strength,
+     * Defence and Magic share one path: the base 5 % modifier while active plus a visible +1 level per proc up to +5 % of the
+     * base level, and the target's drain (one level per proc, 10 % base modifier, 25 % cap). Leech Defence and Magic used to
+     * carry a hidden +15 % / Augury modifier with no visible level (owner 2026-09-29) - that is gone. Leech Ranged keeps its
+     * 2026-09-29 Rigour-style modifier (+20 % accuracy / +18 % damage, no levels). Leech Energy / Special Attack move 10 run
+     * energy / 5 % special energy. Every Leech rolls Darkan's 20 % (LEECH_PROC_CHANCE_PERCENT).
+     */
     @Test
-    /** Owner 2026-09-29: Leech Ranged / Magic = Rigour / Augury accuracy, damage one hit lower (+18 % / none); Leech Defence +15 %. */
-    fun `Leech Ranged and Leech Magic carry Rigour and Augury offence and keep their drain`() {
-        val ranger = newPlayer(mapOf(Skills.RANGED to 99))
-        AncientCurses.switchBook(ranger, AncientCurses.PrayerBook.ANCIENT)
-        assertEquals(1.0, AncientCurses.leechMultiplier(ranger, Skills.RANGED), 1e-9)
-        AncientCurses.toggleCurse(ranger, AncientCurse.LEECH_RANGED)
-        assertEquals(1.20, AncientCurses.leechMultiplier(ranger, Skills.RANGED), 1e-9)
-        assertEquals(1.18, AncientCurses.leechMultiplier(ranger, Skills.RANGED, damage = true), 1e-9)
-        assertEquals(0.0, AncientCurses.leechMagicDamage(ranger), 1e-9)
-        val rangeTarget = newPlayer(mapOf(Skills.RANGED to 99))
-        AncientCurses.onDamageDealt(ranger, rangeTarget, damage = 10, style = CombatClass.RANGED)
-        assertEquals(98, rangeTarget.skills.getCurrentLevel(Skills.RANGED))
-        assertEquals(99, ranger.skills.getCurrentLevel(Skills.RANGED))
+    fun `the whole Leech set - stat leeches share one visible level path, ranged keeps its modifier, energy and special transfer`() {
+        AncientCurse.values().filter { it.category == AncientCurse.Category.LEECH }.forEach {
+            assertEquals(it.name, LEECH_PROC_CHANCE_PERCENT, it.activationChancePercent, 1e-9)
+        }
+        assertEquals(setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.MAGIC), AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
+        val statLeeches =
+            listOf(
+                Triple(AncientCurse.LEECH_ATTACK, Skills.ATTACK, CombatClass.MELEE),
+                Triple(AncientCurse.LEECH_STRENGTH, Skills.STRENGTH, CombatClass.MELEE),
+                Triple(AncientCurse.LEECH_DEFENCE, Skills.DEFENCE, CombatClass.MELEE),
+                Triple(AncientCurse.LEECH_MAGIC, Skills.MAGIC, CombatClass.MAGIC),
+                Triple(AncientCurse.LEECH_RANGED, Skills.RANGED, CombatClass.RANGED),
+            )
+        statLeeches.forEach { (curse, skill, style) ->
+            val visible = skill != Skills.RANGED
+            val attacker = newPlayer(mapOf(skill to 99))
+            AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
+            assertEquals(curse.name, 1.0, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
+            AncientCurses.toggleCurse(attacker, curse)
+            val target = newPlayer(mapOf(skill to 99))
+            AncientCurses.onDamageDealt(attacker, target, damage = 10, style = style)
+            // The target: one real level and the 10 % base modifier on the first proc.
+            assertEquals(curse.name, 98, target.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, 0.9, AncientCurses.drainMultiplier(target, skill), 1e-9)
+            // The caster: a visible +1 (all but Ranged) and the shared 5 % base modifier (Ranged: its Rigour-style one).
+            assertEquals(curse.name, if (visible) 100 else 99, attacker.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, if (visible) 1.05 else AncientCurses.LEECH_RANGED_ACCURACY, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
+            assertEquals(curse.name, if (visible) 1.05 else AncientCurses.LEECH_RANGED_DAMAGE, AncientCurses.leechMultiplier(attacker, skill, damage = true), 1e-9)
+            // One proc per 45-second cooldown (owner 2026-09-18); the caps: drain 25 % (99 - 14), boost 10 % (99 + 4).
+            repeat(30) { procAfterCooldown(attacker, target, style) }
+            assertEquals(curse.name, 85, target.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, if (visible) 103 else 99, attacker.skills.getCurrentLevel(skill))
+            AncientCurses.toggleCurse(attacker, curse)
+            assertEquals(curse.name, 1.0, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
+            assertEquals(curse.name, 1.0, AncientCurses.drainMultiplier(target, skill), 1e-9)
+            assertEquals(curse.name, if (visible) 103 else 99, attacker.skills.getCurrentLevel(skill))
+        }
 
-        val mage = newPlayer(mapOf(Skills.MAGIC to 99))
-        AncientCurses.switchBook(mage, AncientCurses.PrayerBook.ANCIENT)
-        AncientCurses.toggleCurse(mage, AncientCurse.LEECH_MAGIC)
-        assertEquals(1.25, AncientCurses.leechMultiplier(mage, Skills.MAGIC), 1e-9)
-        assertEquals(0.0, AncientCurses.leechMagicDamage(mage), 1e-9)
-        val mageTarget = newPlayer(mapOf(Skills.MAGIC to 99))
-        AncientCurses.onDamageDealt(mage, mageTarget, damage = 10, style = CombatClass.MAGIC)
-        assertEquals(98, mageTarget.skills.getCurrentLevel(Skills.MAGIC))
-        assertEquals(99, mage.skills.getCurrentLevel(Skills.MAGIC))
-        AncientCurses.toggleCurse(mage, AncientCurse.LEECH_MAGIC)
-        assertEquals(1.0, AncientCurses.leechMultiplier(mage, Skills.MAGIC), 1e-9)
+        val runner = newPlayer()
+        AncientCurses.switchBook(runner, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleCurse(runner, AncientCurse.LEECH_ENERGY)
+        val runTarget = newPlayer()
+        every { runTarget.runEnergy } returns 50.0
+        every { runner.runEnergy } returns 30.0
+        AncientCurses.onDamageDealt(runner, runTarget, damage = 10)
+        verify { runTarget.runEnergy = 40.0 }
+        verify { runner.runEnergy = 40.0 }
 
-        val tank = newPlayer(mapOf(Skills.DEFENCE to 99))
-        AncientCurses.switchBook(tank, AncientCurses.PrayerBook.ANCIENT)
-        AncientCurses.toggleCurse(tank, AncientCurse.LEECH_DEFENCE)
-        assertEquals(1.15, AncientCurses.leechMultiplier(tank, Skills.DEFENCE), 1e-9)
-        val defTarget = newPlayer(mapOf(Skills.DEFENCE to 99))
-        AncientCurses.onDamageDealt(tank, defTarget, damage = 10, style = CombatClass.MELEE)
-        assertEquals(99, tank.skills.getCurrentLevel(Skills.DEFENCE))
-        assertEquals(0.0, AncientCurses.leechMagicDamage(mage), 1e-9)
+        mockkObject(AttackTab)
+        try {
+            val specer = newPlayer()
+            AncientCurses.switchBook(specer, AncientCurses.PrayerBook.ANCIENT)
+            AncientCurses.toggleCurse(specer, AncientCurse.LEECH_SPECIAL_ATTACK)
+            val specTarget = newPlayer()
+            every { AttackTab.getEnergy(specTarget) } returns 100
+            every { AttackTab.getEnergy(specer) } returns 50
+            AncientCurses.onDamageDealt(specer, specTarget, damage = 10)
+            verify { AttackTab.setEnergy(specTarget, 100 - AncientCurses.LEECH_SPECIAL_PCT) }
+            verify { AttackTab.setEnergy(specer, 50 + AncientCurses.LEECH_SPECIAL_PCT) }
+        } finally {
+            unmockkObject(AttackTab)
+        }
     }
 }

@@ -40,14 +40,16 @@ class SummoningShopStockTests {
     }
 
     @Test
-    fun `every page fits the shop window and the trade dialogue`() {
+    fun `every page fits the shop window and the fallback page chooser`() {
         SummoningShopStock.pages.forEach { page ->
             assertTrue(page.stock.size <= Shop.CLIENT_VISIBLE_SLOTS, "${page.title}: ${page.stock.size} rows")
             assertTrue(page.stock.isNotEmpty())
         }
         assertEquals(SummoningShopStock.pages.size, SummoningShopStock.pages.map { it.title }.distinct().size, "shop titles must be unique")
-        // "Summoning supplies." plus one line per page.
+        // Owner 2026-10-06: Trade opens the shop directly and the window pages; the chat chooser ("Summoning supplies." plus one line
+        // per page) is only the fallback while the cache lacks the page row (ShopPageGroups.open), so every page must still fit it.
         assertTrue(SummoningShopStock.pages.size + 1 <= MAX_DIALOG_OPTIONS)
+        assertEquals(SummoningShopStock.pages.size + 1, SummoningShopStock.PAGE_GROUP.pages.size)
     }
 
     @Test

@@ -17,8 +17,29 @@ object RemovedItems {
     // Owner 2026-09-26: the Crown of Helios item is removed too (the staff `crown` menu stays, without the item).
     val IDS: Set<Int> = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST, Items.CROWN_OF_HELIOS)
 
+    /**
+     * Owner 2026-10-06: "remove pernix and virtus completely from our rsps the rest needs to be degraded". Nothing may
+     * offer them any more: Nex no longer drops them and the Grand Exchange (player offers and the house, which sells every
+     * exchangeable item) refuses them through [isUnobtainable]. Deliberately NOT in [IDS]: copies already in player saves
+     * are the owner's call (moving these ids into [IDS] makes the login [purge] take them).
+     * Intact, used (id + 2) and broken ids of the native 667 sets; the noted forms follow through [isUnobtainable].
+     */
+    val UNOBTAINABLE_IDS: Set<Int> =
+        setOf(
+            Items.PERNIX_COWL, Items.PERNIX_COWL_20149, Items.PERNIX_COWL_BROKEN,
+            Items.PERNIX_BODY, Items.PERNIX_BODY_20153, Items.PERNIX_BODY_BROKEN,
+            Items.PERNIX_CHAPS, Items.PERNIX_CHAPS_20157, Items.PERNIX_CHAPS_BROKEN,
+            Items.VIRTUS_MASK, Items.VIRTUS_MASK_20161, Items.VIRTUS_MASK_BROKEN,
+            Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_TOP_BROKEN,
+            Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN,
+        )
+
     /** True for a removed item or its noted form. */
     fun isRemoved(def: ItemDef): Boolean = def.id in IDS || (def.noted && def.noteLinkId in IDS)
+
+    /** True for anything nothing may offer: a removed item, a no-longer-obtainable item, or the noted form of either. */
+    fun isUnobtainable(def: ItemDef): Boolean =
+        isRemoved(def) || def.id in UNOBTAINABLE_IDS || (def.noted && def.noteLinkId in UNOBTAINABLE_IDS)
 
     fun isRemoved(
         player: Player,

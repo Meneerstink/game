@@ -198,6 +198,21 @@ object DeathExecutor {
     /** The last PvM death's gravestone outcome, read by the respawn hook for the OSRS chat messages. Not persisted. */
     val LAST_DEPOSIT = AttributeKey<GraveDeposit>()
 
+    /**
+     * Owner Q14=A (2026-10-06): what an unprotected PvP death leaves to the VICTIM's gravestone (OSRS Wiki "Elidinis' ward (or)":
+     * "the Menaphite ornament kit will be placed in their gravestone"; [PvpDeathBreakables.VICTIM_GRAVE]) goes through the same
+     * gravestone route as a PvM death, so the grave appears after the respawn and Death's Office takes the overflow.
+     */
+    fun graveForPvpVictim(
+        victim: Player,
+        items: List<Item>,
+        graveTile: Tile,
+        logger: LoggerService? = null,
+    ) {
+        if (items.isEmpty()) return
+        createGravestone(victim, emptyList(), logger, items, graveTile)
+    }
+
     private fun createGravestone(
         victim: Player,
         lost: List<DeathSlotItem>,

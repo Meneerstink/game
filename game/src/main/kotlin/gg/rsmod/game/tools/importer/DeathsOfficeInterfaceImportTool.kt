@@ -162,6 +162,10 @@ object DeathsOfficeInterfaceImportTool {
         const val MARGIN = 2
         const val FREE_ROW_STEP = 36
         const val PAY_ROW_STEP = 48
+
+        /** Visible heights of the free / fee item lists (the free one fills the window, owner 2026-10-06). */
+        const val FREE_VIEW_HEIGHT = 206
+        const val PAY_VIEW_HEIGHT = 111
     }
 
     // ---- 1162 Death's Coffer (OSRS 670, 460x320) ----
@@ -225,7 +229,15 @@ object DeathsOfficeInterfaceImportTool {
         const val DIVIDERS = 4
         const val SLOT_FIRST = 136
         const val SLOTS = 60
-        const val COUNT = SLOT_FIRST + SLOTS // 196
+
+        /**
+         * Owner 2026-10-04: a notice in the free space of the right panel (below the toggles, above the risk value). The server
+         * writes its text (ItemsKeptOnDeath.NOTICE_TEXT), so the wording can change without a cache edit.
+         */
+        const val NOTICE = SLOT_FIRST + SLOTS // 196
+        const val NOTICE_Y = 142
+        const val NOTICE_HEIGHT = 98
+        const val COUNT = NOTICE + 1 // 197
 
         /** deathkeep_init: 311 px wide list -> 7 columns 45 px apart (36 + 9), 2 px margin; rows 32 + 9. */
         const val COLUMNS = 7
@@ -590,19 +602,22 @@ object DeathsOfficeInterfaceImportTool {
         val g = Grave
         val b = Builder(fonts)
         b.frame(g.WIDTH, g.HEIGHT, "Gravestone <col=ffb83f>(0/120)</col>")
-        // gravestone_generic_window_set at 341x296: free section (10, 40) 321x98, pay section (10, 137) 321x149.
-        b.layer(g.FREE_CONTAINER, 10, 40, 321, 98, WINDOW)
+        // gravestone_generic_window_set at 341x296 gives the free section (10, 40) 321x98 and the pay section (10, 137) 321x149.
+        // Owner 2026-10-06 (OWNER_QUESTIONS Q13 = A): with his no-fee rule the pay section is always empty, so the free list fills
+        // the window down to the info line: free section (10, 40) 321x222, its list 259x[Grave.FREE_VIEW_HEIGHT]; the pay
+        // section shrinks to the info line at the bottom (10, 262) and its (always hidden, GraveInterface) fee block hangs off it.
+        b.layer(g.FREE_CONTAINER, 10, 40, 321, 222, WINDOW)
         b.text(g.FREE_TEXT, 2, 2, 317, 12, g.FREE_CONTAINER, fonts.p11, "Free to reclaim:", alignX = 0)
-        b.layer(g.FREE_ITEMS, 18, 14, 259, 82, g.FREE_CONTAINER)
-        b.scrollbarFor(g.FREE_SCROLLBAR, 2, 14, 82, g.FREE_CONTAINER, GRAVE, g.FREE_ITEMS)
+        b.layer(g.FREE_ITEMS, 18, 14, 259, g.FREE_VIEW_HEIGHT, g.FREE_CONTAINER)
+        b.scrollbarFor(g.FREE_SCROLLBAR, 2, 14, g.FREE_VIEW_HEIGHT, g.FREE_CONTAINER, GRAVE, g.FREE_ITEMS)
         b.layer(g.FREE_BUTTON, 278, 28, 41, 41, g.FREE_CONTAINER, ops = listOf("Take-All"))
         b.optionsButton(g.FREE_BUTTON + 1, 41, 41, g.FREE_BUTTON)
         b.graphic(g.FREE_BUTTON + 10, 6, 10, 29, 22, g.FREE_BUTTON, sprite(1226))
-        b.layer(g.PAY_CONTAINER, 10, 137, 321, 149, WINDOW)
+        b.layer(g.PAY_CONTAINER, 10, 262, 321, 24, WINDOW)
         b.layer(g.PAY_TOP, 2, 2, 317, 123, g.PAY_CONTAINER)
         b.text(g.FEE, 0, 0, 317, 12, g.PAY_TOP, fonts.p11, "Loading...", alignX = 0, alignY = 0)
-        b.layer(g.PAY_ITEMS, 16, 12, 259, 111, g.PAY_TOP)
-        b.scrollbarFor(g.PAY_SCROLLBAR, 0, 12, 111, g.PAY_TOP, GRAVE, g.PAY_ITEMS)
+        b.layer(g.PAY_ITEMS, 16, 12, 259, g.PAY_VIEW_HEIGHT, g.PAY_TOP)
+        b.scrollbarFor(g.PAY_SCROLLBAR, 0, 12, g.PAY_VIEW_HEIGHT, g.PAY_TOP, GRAVE, g.PAY_ITEMS)
         // gravestone_generic_resynchdata: "Unlock" with the padlock while a fee is due, else "Take-All" with the inventory icon.
         b.layer(g.UNLOCK_BUTTON, 276, 0, 41, 41, g.PAY_TOP, ops = listOf("Unlock"))
         b.optionsButton(g.UNLOCK_BUTTON + 1, 41, 41, g.UNLOCK_BUTTON)
@@ -617,7 +632,7 @@ object DeathsOfficeInterfaceImportTool {
                 xan = 114, yan = 0, zan = 1396, zoom = 4000,
             ),
         )
-        b.text(g.INFO, 0, 125, 321, 22, g.PAY_CONTAINER, fonts.p11, "Loading...")
+        b.text(g.INFO, 0, 0, 321, 22, g.PAY_CONTAINER, fonts.p11, "Loading...")
         for (slot in 0 until g.SLOTS) {
             val column = slot % g.COLUMNS
             val row = slot / g.COLUMNS
@@ -719,6 +734,7 @@ object DeathsOfficeInterfaceImportTool {
             y += h + 5
         }
         b.text(k.VALUE, 0, 242, 150, 28, k.RIGHT, fonts.p11, "Guide risk value:<br>0", lineHeight = 12)
+        b.text(k.NOTICE, 6, k.NOTICE_Y, 138, k.NOTICE_HEIGHT, k.RIGHT, fonts.p11, "", lineHeight = 12)
         b.rect(121, 0, 0, 150, 272, k.RIGHT, THINBOX_OUTER)
         b.rect(122, 1, 1, 148, 270, k.RIGHT, THINBOX_INNER)
         for (i in 0 until k.HEADERS) {

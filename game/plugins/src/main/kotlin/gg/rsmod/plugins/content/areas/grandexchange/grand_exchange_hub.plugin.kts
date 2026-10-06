@@ -40,6 +40,7 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
         chatNpc(gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.statusLine(), wrap = true)
         // Every PvP-damaged item: imported broken/mangled ids and attribute-broken untradeables (owner 2026-09-26).
         val hasBroken = player.inventory.rawItems.filterNotNull().any(gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection::isDamaged)
+        gg.rsmod.plugins.content.mechanics.death.PerduLostProperty.observe(player)
         val hasLost = gg.rsmod.plugins.content.mechanics.death.PerduReclaim.has(player)
         if (!hasBroken && !hasLost) {
             chatNpc("I can repair and protect eligible equipment, and I return things you've lost - for a price.", wrap = true)

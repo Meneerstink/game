@@ -307,6 +307,14 @@ task runLootKeyInterfaceImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool'
 }
 
+task runDeathsOfficeInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds the death screens (Deaths Office, grave, coffer, Items Kept on Death 1164) in both production caches ' +
+        '(CacheTransaction). Usage: ./gradlew :game:runDeathsOfficeInterfaceImportTool --args="[--apply] [--replace-from-journal=<tx id>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool'
+}
+
 task runCasinoInterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Builds the four casino screens (Dice 1152, Mines 1153, Blackjack 1154, Flower Poker 1155) as 667 ' +
@@ -437,6 +445,13 @@ task runRunePouchInterfaceImportTool(type: JavaExec) {
         './gradlew :game:runRunePouchInterfaceImportTool --args="[--apply]"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.RunePouchInterfaceImportTool'
+}
+task runShopPageInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Appends the hidden Prev page / Page n / m / Next page row (620:35..38) to the 667 shop window in both caches ' +
+        '(CacheTransaction). Usage: ./gradlew :game:runShopPageInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ShopPageInterfaceImportTool'
 }
 task runShrineOfRalosImportTool(type: JavaExec) {
     group = 'tools'

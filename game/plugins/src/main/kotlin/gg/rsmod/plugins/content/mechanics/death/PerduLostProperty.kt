@@ -13,9 +13,8 @@ import gg.rsmod.plugins.api.cfg.Items
  *
  * "Earned once" is recorded the first time this server sees the item with the player ([observe]: on login, on death and when
  * Perdu is asked), so an item lost in any way afterwards can be bought back. Payment as OSRS: carried coins, then the bank.
- * Not ported: the 200-coin achievement diary items (the wiki does not say which tier Perdu returns) and the items this cache
- * lacks (Book of the Dead, Chronicle, Arkan blade, ...); the POH costume room is not searched (this server stores no
- * costume-room items).
+ * The 200-coin achievement diary items are [DIARY_ITEMS] (owner Q14=A, 2026-10-06). Not ported: the items this cache lacks
+ * (Book of the Dead, Chronicle, Arkan blade, ...); the POH costume room is not searched (this server stores no costume-room items).
  */
 object PerduLostProperty {
     data class Entry(
@@ -27,6 +26,26 @@ object PerduLostProperty {
         /** An item Perdu takes as well (Ava's assembler: "Vorkath's head is required to purchase an assembler"). */
         val consumes: Int? = null,
     )
+
+    /**
+     * Owner Q14=A (2026-10-06): the achievement diary items, OSRS Wiki "Perdu" StoreLine list "Karamja gloves 200 | Ardougne cloak
+     * 200 | Falador shield 200 | Fremennik sea boots 200 | ... | Explorer's ring 200 | ... | Varrock armour 200", and "Lost Property
+     * shop" exceptions: "Achievement diary reward items" "can be purchased multiples of". The wiki does not say which tier Perdu
+     * returns (UNSOURCED) and this server does not track diary completion, so every tier this cache has (1-4) is on the list; like
+     * every Lost Property item, a tier is offered once the player has been seen with it ([observe]). Kandarin headgear, Desert
+     * amulet, Morytania legs, Wilderness sword, Western banner and Rada's blessing are not in this cache.
+     */
+    const val DIARY_PRICE = 200L
+
+    val DIARY_ITEMS: List<Int> =
+        listOf(
+            Items.KARAMJA_GLOVES_1, Items.KARAMJA_GLOVES_2, Items.KARAMJA_GLOVES_3, Items.KARAMJA_GLOVES_4,
+            Items.ARDOUGNE_CLOAK_1, Items.ARDOUGNE_CLOAK_2, Items.ARDOUGNE_CLOAK_3, Items.ARDOUGNE_CLOAK_4,
+            Items.FALADOR_SHIELD_1, Items.FALADOR_SHIELD_2, Items.FALADOR_SHIELD_3, Items.FALADOR_SHIELD_4,
+            Items.FREMENNIK_SEA_BOOTS_1, Items.FREMENNIK_SEA_BOOTS_2, Items.FREMENNIK_SEA_BOOTS_3, Items.FREMENNIK_SEA_BOOTS_4,
+            Items.EXPLORERS_RING_1, Items.EXPLORERS_RING_2, Items.EXPLORERS_RING_3, Items.EXPLORERS_RING_4,
+            Items.VARROCK_ARMOUR_1, Items.VARROCK_ARMOUR_2, Items.VARROCK_ARMOUR_3, Items.VARROCK_ARMOUR_4,
+        )
 
     val ENTRIES: List<Entry> =
         listOf(
@@ -73,7 +92,7 @@ object PerduLostProperty {
             Entry(Items.IMBUED_SARADOMIN_CAPE, 250_000, variants = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L)),
             Entry(Items.DRAKANS_MEDALLION, 30_000, multiple = true),
             Entry(Items.THREAD_OF_ELIDINIS, 350_000),
-        )
+        ) + DIARY_ITEMS.map { Entry(it, DIARY_PRICE, multiple = true) }
 
     private val byVariant: Map<Int, Entry> = ENTRIES.flatMap { e -> e.variants.map { it to e } }.toMap()
 

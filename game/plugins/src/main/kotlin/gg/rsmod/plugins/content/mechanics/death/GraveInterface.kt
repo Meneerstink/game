@@ -86,7 +86,7 @@ object GraveInterface {
         player.setComponentText(INTERFACE_ID, Layout.INFO, "Taking items from your gravestone is free.")
         val freeRows = (free.size + Layout.COLUMNS - 1) / Layout.COLUMNS
         val payRows = (pay.size + Layout.COLUMNS - 1) / Layout.COLUMNS
-        // The scroll height is never below the visible height of its list (82 / 111, DeathsOfficeInterfaceImportTool): a shorter
+        // The scroll height is never below the visible height of its list ([FREE_VIEW_HEIGHT] / [PAY_VIEW_HEIGHT], DeathsOfficeInterfaceImportTool): a shorter
         // scroll (0 for an empty list, 32 for one row) made the 667 scrollbar (script 30/31) run off its track - the owner's
         // "infinity scroll" (2026-10-04 030503).
         setScroll(player, Layout.FREE_ITEMS, Layout.FREE_SCROLLBAR, maxOf(FREE_VIEW_HEIGHT, if (freeRows == 0) 0 else (freeRows - 1) * Layout.FREE_ROW_STEP + 32))
@@ -117,9 +117,9 @@ object GraveInterface {
         }
     }
 
-    /** Visible heights of the free / fee item lists (DeathsOfficeInterfaceImportTool: layers 259x82 and 259x111). */
-    const val FREE_VIEW_HEIGHT = 82
-    const val PAY_VIEW_HEIGHT = 111
+    /** Visible heights of the free / fee item lists (DeathsOfficeInterfaceImportTool.Grave: the free list fills the window). */
+    const val FREE_VIEW_HEIGHT = Layout.FREE_VIEW_HEIGHT
+    const val PAY_VIEW_HEIGHT = Layout.PAY_VIEW_HEIGHT
 
     private val LAST_SHOWN = AttributeKey<HashMap<Int, Pair<Int, Int>>>()
 

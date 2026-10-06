@@ -311,8 +311,9 @@ object MagicCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
             Prayers.isActive(player, Prayer.AUGURY) -> 0.04
-            // Leech Magic carries Augury's +4 % (owner 2026-09-29); the curse book excludes the prayers above.
-            else -> AncientCurses.leechMagicDamage(player)
+            // Leech Magic gives no magic damage: its 2026-09-29 Augury-style modifier (already at 0 % damage) was removed by the
+            // owner's 2026-10-06 decision (bug 031309) - it boosts the visible Magic level per proc instead (AncientCurses.leech).
+            else -> 0.0
         }
 
     private fun getEffectiveDefenceLevel(player: Player): Double {

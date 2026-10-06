@@ -5231,16 +5231,6 @@
     },
     {
       "op": "remove",
-      "id": 17239,
-      "x": 3163,
-      "z": 3494,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 366
-    },
-    {
-      "op": "remove",
       "id": 47119,
       "x": 3157,
       "z": 3495,
@@ -5288,16 +5278,6 @@
       "type": 10,
       "rot": 0,
       "group": 374
-    },
-    {
-      "op": "remove",
-      "id": 62746,
-      "x": 3163,
-      "z": 3499,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 375
     },
     {
       "op": "remove",
@@ -7489,6 +7469,27 @@
       "type": 10,
       "rot": 6,
       "group": 576
+    },
+    {
+      "op": "remove",
+      "id": 50205,
+      "x": 3163,
+      "z": 3497,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 577
+    },
+    {
+      "op": "spawn",
+      "id": 50205,
+      "x": 3155,
+      "z": 3481,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 577,
+      "note": "owner moved it here 2026-10-04 (3156,3482); one tile south-west 2026-10-06 (OWNER_QUESTIONS Q12 = A): every tile of it off the bridge-flag tiles"
     }
   ]
 }

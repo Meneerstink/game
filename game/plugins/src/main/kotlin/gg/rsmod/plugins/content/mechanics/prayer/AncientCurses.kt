@@ -832,12 +832,18 @@ object AncientCurses {
      * Owner 2026-09-29, after testing: "one hit lower" than Rigour / Augury by a lower damage percentage, accuracy kept -
      * Leech Ranged damage +18 % (Rigour +23 %), Leech Magic no magic damage (Augury +4 %); Leech Defence a flat +15 % Defence
      * while active (no real levels per proc), its drain unchanged.
+     *
+     * Owner decision 2026-10-06 (bug 031309 "the leech prayers do not up my combat stats", OWNER_QUESTIONS Q5 answer A) replaces
+     * the 2026-09-29 rule for Leech Magic and Leech Defence: they no longer carry a hidden Augury / +15 % modifier and give a
+     * visible +1 level per proc exactly like Leech Attack / Leech Strength - one shared path ([STAT_LEECHES_WITH_LEVEL_BOOST],
+     * [escalateBoost], the 5 % base in [leechMultiplier]). Leech Ranged keeps its 2026-09-29 Rigour-style modifier (not part of
+     * that decision). Proc chance: Darkan `CurseManager.LEECH_PROC_CHANCE` 0.20 ([LEECH_PROC_CHANCE_PERCENT]).
      */
     const val LEECH_RANGED_ACCURACY = 1.20
     const val LEECH_RANGED_DAMAGE = 1.18
-    const val LEECH_MAGIC_ACCURACY = 1.25
-    const val LEECH_MAGIC_DAMAGE = 0.0
-    const val LEECH_DEFENCE_BOOST = 1.15
+
+    /** The stat Leeches whose every proc is a visible +1 level (owner 2026-09-19 Attack/Strength; Magic/Defence 2026-10-06). */
+    val STAT_LEECHES_WITH_LEVEL_BOOST: Set<Int> = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.MAGIC)
 
     /** The Leech self-boost: a combat modifier that exists exactly while the Leech is active ([damage]: the damage roll). */
     fun leechMultiplier(player: Player, skill: Int, damage: Boolean = false): Double {
@@ -845,22 +851,14 @@ object AncientCurses {
         if (!isCurseActive(player, curse)) return 1.0
         return when (skill) {
             Skills.RANGED -> if (damage) LEECH_RANGED_DAMAGE else LEECH_RANGED_ACCURACY
-            Skills.MAGIC -> LEECH_MAGIC_ACCURACY
-            Skills.DEFENCE -> LEECH_DEFENCE_BOOST
             else -> 1.0 + LEECH_BOOST_BASE_PCT / 100.0
         }
     }
-
-    /** Leech Magic's +4 % magic damage (Augury's), added where the prayer magic damage is. */
-    fun leechMagicDamage(player: Player): Double =
-        if (getBook(player) == PrayerBook.ANCIENT && isCurseActive(player, AncientCurse.LEECH_MAGIC)) LEECH_MAGIC_DAMAGE else 0.0
 
     /** Prayer-tab percentage of the Leech self-boost modifier for [skill]. */
     private fun leechBoostPct(skill: Int): Int =
         when (skill) {
             Skills.RANGED -> Math.round((LEECH_RANGED_ACCURACY - 1.0) * 100).toInt()
-            Skills.MAGIC -> Math.round((LEECH_MAGIC_ACCURACY - 1.0) * 100).toInt()
-            Skills.DEFENCE -> Math.round((LEECH_DEFENCE_BOOST - 1.0) * 100).toInt()
             else -> LEECH_BOOST_BASE_PCT
         }
 
@@ -926,8 +924,9 @@ object AncientCurses {
         npcSkill: Int,
     ) {
         escalateDrain(attacker, curse, target, playerSkill, npcSkill, LEECH_DRAIN_BASE_PCT, LEECH_DRAIN_CAP_PCT)
-        // Leech Ranged / Magic / Defence carry their whole boost as the modifier (owner 2026-09-29): no real levels per proc.
-        if (playerSkill != Skills.RANGED && playerSkill != Skills.MAGIC && playerSkill != Skills.DEFENCE) escalateBoost(attacker, playerSkill)
+        // Leech Ranged carries its whole boost as the modifier (owner 2026-09-29): no real levels per proc. Leech Magic / Defence
+        // did the same until the owner's 2026-10-06 decision (bug 031309): now +1 visible level per proc like Attack / Strength.
+        if (playerSkill in STAT_LEECHES_WITH_LEVEL_BOOST) escalateBoost(attacker, playerSkill)
     }
 
     /**

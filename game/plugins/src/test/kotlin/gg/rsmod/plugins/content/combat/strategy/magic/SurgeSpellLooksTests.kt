@@ -23,6 +23,25 @@ class SurgeSpellLooksTests {
         assertEquals(emptyList(), wrong)
     }
 
+    /**
+     * Owner bug 031354 (answer 2026-10-06: the cast looks wrong on Entangle and Fire Surge, cast with a Harmonised nightmare
+     * staff). The spell definition alone picks the cast sequence (Darkan `CombatSpell.getCastAnim`, RuneLite gameval
+     * HUMAN_CASTENTANGLE(_STAFF) 710/1161): a staff only selects the staff variant, it never swaps in another spell's animation.
+     */
+    @Test
+    fun `a staff casts each spell's own staff animation, never the surge one`() {
+        val cast = gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy::castAnimation
+        assertEquals(15758, cast(CombatSpell.ENTANGLE, false, true), "Entangle with a staff = OSRS 1161 HUMAN_CASTENTANGLE_STAFF")
+        assertEquals(15757, cast(CombatSpell.ENTANGLE, false, false), "Entangle without a staff = OSRS 710 HUMAN_CASTENTANGLE")
+        listOf(CombatSpell.BIND, CombatSpell.SNARE, CombatSpell.ENTANGLE, CombatSpell.FIRE_STRIKE, CombatSpell.FIRE_WAVE).forEach { spell ->
+            assertTrue(cast(spell, false, true) != OsrsSeq.HUMAN_CAST_SURGE, "${spell.name} casts the surge animation with a staff")
+        }
+        surges.forEach { assertEquals(OsrsSeq.HUMAN_CAST_SURGE, cast(it, false, true), it.name) }
+        // No weapon-wide override may come back (it forced HUMAN_CAST_SURGE onto every spell cast with the Harmonised nightmare staff).
+        val strategy = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/combat/strategy/MagicCombatStrategy.kt").readText()
+        assertTrue("HARMONISED_NIGHTMARE_STAFF" !in strategy && "HUMAN_CAST_SURGE" !in strategy.substringAfter("override fun attack("))
+    }
+
     @Test
     fun `no wave casts the surge animation`() {
         val wrong = waves.filter { w -> w.castAnimation.any { it == OsrsSeq.HUMAN_CAST_SURGE } }

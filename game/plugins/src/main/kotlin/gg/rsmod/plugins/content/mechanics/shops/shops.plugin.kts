@@ -93,6 +93,15 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 25) {
     }
 }
 
+// Owner 2026-10-06 (bug 204956): Prev page / Next page on a paged shop (ShopPageGroups, row 620:35..38 from ShopPageInterfaceImportTool).
+on_button(interfaceId = SHOP_INTERFACE_ID, component = gg.rsmod.game.tools.importer.ShopPageInterfaceImportTool.PAGE_PREVIOUS) {
+    ShopPageGroups.turnPage(player, -1)
+}
+
+on_button(interfaceId = SHOP_INTERFACE_ID, component = gg.rsmod.game.tools.importer.ShopPageInterfaceImportTool.PAGE_NEXT) {
+    ShopPageGroups.turnPage(player, 1)
+}
+
 on_button(interfaceId = INFO_INTERFACE_ID, component = 21) {
     player.attr[CURRENT_SHOP_ATTR]?.let { shop ->
         val opcode = player.getInteractingOpcode()

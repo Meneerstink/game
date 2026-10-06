@@ -95,12 +95,16 @@ class OsrsGuidePricesTests {
         // 2026-10-04: + the imported Kraken tentacle (OSRS 12004, tradeable; Abyssal tentacle degradation) -> 12732.
         // 2026-10-04 21:37 (owner: Perdu exactly OSRS, flags untradeable): 27 items.yml flags -> untradeable (Dragon defender,
         // Max cape/hood, Elite void, Full slayer helmets, god books, Drakan's medallion, diary items) -> 12705.
-        assertEquals(12705, items.size, "exchangeable items (tradeable, unnoted, not coins)")
+        // 2026-10-06 owner: "remove pernix and virtus completely" - the 18 unnoted Pernix/Virtus ids (intact, used, broken; all
+        // tradeable in items.yml) leave the exchange (RemovedItems.UNOBTAINABLE_IDS): 12705 -> 12687.
+        assertEquals(12687, items.size, "exchangeable items (tradeable, unnoted, not coins)")
         // 2026-10-02 OsrsGuidePrices.RENAMED_IN_OSRS (OSRS Wiki item ids): 8013 "Teleport to house" = "Teleport to house (tablet)",
         // 9244 "Dragon bolts (e)" = "Dragonstone bolts (e)": seeded 3355 -> 3357 (unmatched 8923 -> 8921).
         // 2026-10-03: 62 of those 453 are named in the OSRS snapshot: seeded 3357 -> 3419.
         // 2026-10-04: the Kraken tentacle is in the snapshot too: seeded 3419 -> 3420.
-        assertEquals(3420, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        // 2026-10-06: of the removed Pernix/Virtus ids the snapshot names "Virtus mask" and "Virtus robe top" (intact + used id each;
+        // "Virtus robe legs" is OSRS "Virtus robe bottom", Pernix is not in OSRS): seeded 3420 -> 3416.
+        assertEquals(3416, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
     }
 
     @Test

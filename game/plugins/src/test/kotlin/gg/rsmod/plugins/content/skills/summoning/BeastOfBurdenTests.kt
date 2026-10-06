@@ -16,6 +16,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.verify
 import org.junit.BeforeClass
 import java.lang.ref.WeakReference
 import java.nio.file.Paths
@@ -101,6 +102,8 @@ class BeastOfBurdenTests {
         assertEquals(3, withdrawn)
         assertEquals(3, player.inventory.getItemCount(TEST_STACKABLE))
         assertEquals(true, player.containers.getValue(BeastOfBurden.WAR_TORTOISE_KEY).isEmpty)
+        // Owner 2026-10-06 (bug 025058): taking items out plays the bury-bones reach-down animation.
+        verify(exactly = 1) { player.animate(gg.rsmod.plugins.api.cfg.Anims.REACH_DOWN, any(), any(), any()) }
     }
 
     /**

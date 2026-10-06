@@ -157,6 +157,28 @@ object MagicCombatStrategy : CombatStrategy {
         return lookupTable[targetDirection.orientationValue][attackDirection.orientationValue]
     }
 
+    /**
+     * The cast sequence comes from the spell definition alone: [CombatSpell.castAnimation] holds the without-staff and the staff
+     * variant (and an optional npc one). Darkan `CombatSpell.kt` `getCastAnim` (:491-506) and RuneLite gameval `AnimationID`
+     * (HUMAN_CASTENTANGLE 710 / HUMAN_CASTENTANGLE_STAFF 1161, HUMAN_CAST_SURGE 7855) do the same: the spell picks its animation,
+     * the weapon only picks the staff variant.
+     *
+     * Owner bug 031354 (2026-10-04, answer 2026-10-06: "the cast (hands/animation) looks wrong" on Entangle and Fire Surge,
+     * cast with a Harmonised nightmare staff): a weapon-wide override used to force HUMAN_CAST_SURGE onto EVERY spell cast with
+     * that staff, so Entangle / Bind / Snare / strikes played the Surge animation. Removed; the staff is a STAFF (weapon_type 1)
+     * and casts each spell's own staff variant, so Surges still play OSRS 7855.
+     */
+    internal fun castAnimation(
+        spell: CombatSpell,
+        isNpc: Boolean,
+        wieldsStaff: Boolean,
+    ): Int =
+        when {
+            isNpc -> spell.castAnimation.getOrNull(2) ?: spell.castAnimation[0]
+            wieldsStaff -> spell.castAnimation[1]
+            else -> spell.castAnimation[0]
+        }
+
     override fun attack(
         pawn: Pawn,
         target: Pawn,
@@ -174,17 +196,8 @@ object MagicCombatStrategy : CombatStrategy {
         pawn.attr[Combat.SPELL_OF_THIS_ATTACK] = spell
         pawn.stopMovement()
         spell.castGfx?.let { gfx -> pawn.graphic(gfx) }
-        var animation = spell.castAnimation[0]
-        if (pawn is Player && pawn.hasWeaponType(WeaponType.STAFF, WeaponType.BLADED_STAFF)) {
-            animation = spell.castAnimation[1]
-        }
-        if (pawn is Npc) {
-            animation = spell.castAnimation.getOrNull(2) ?: spell.castAnimation[0]
-        }
-        // OSRS-IMPORT Harmonised nightmare staff (RuneLite combat-logger: HUMAN_CAST_SURGE "Surge, Harmonised nightmare staff").
-        if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.HARMONISED_NIGHTMARE_STAFF) {
-            animation = gg.rsmod.plugins.content.items.osrs.OsrsSeq.HUMAN_CAST_SURGE
-        }
+        val animation =
+            castAnimation(spell, isNpc = pawn is Npc, wieldsStaff = pawn is Player && pawn.hasWeaponType(WeaponType.STAFF, WeaponType.BLADED_STAFF))
         pawn.animate(animation)
 
         if (pawn is Player) {
