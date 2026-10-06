@@ -306,7 +306,7 @@ class PvpDeathBreakablesTests {
     }
 
     /** One row of the owner Q14=A (2026-10-06) set: what the killer, the victim's gravestone and the victim's points receive. */
-    private data class Expected(val item: Int, val killer: List<Pair<Int, Int>>, val grave: List<Int> = emptyList(), val deadmanRefund: Int = 0)
+    private data class Expected(val item: Int, val killer: List<Pair<Int, Int>>, val grave: List<Int> = emptyList(), val deadmanRefund: Int = 0, val loyaltyRefund: Int = 0)
 
     @Test
     fun `owner Q14 conversions - killer loot, victim gravestone share and imbue refund for the whole set`() {
@@ -322,6 +322,9 @@ class PvpDeathBreakablesTests {
                 Expected(Items.TREASONOUS_RING_I, listOf(Items.TREASONOUS_RING to 1), deadmanRefund = imbue),
                 Expected(Items.RING_OF_SUFFERING_I, listOf(Items.RING_OF_SUFFERING to 1), deadmanRefund = imbue),
                 Expected(Items.RING_OF_SUFFERING_RI, listOf(Items.RING_OF_SUFFERING to 1), deadmanRefund = imbue),
+                // Owner 2026-10-06: Berserker / Warrior ring (i), imbued for 20,000 Loyalty Points (StoreCatalogue "Imbue services").
+                Expected(Items.BERSERKER_RING_I, listOf(Items.BERSERKER_RING to 1), loyaltyRefund = 20_000),
+                Expected(Items.WARRIOR_RING_I, listOf(Items.WARRIOR_RING to 1), loyaltyRefund = 20_000),
                 Expected(Items.FULL_SLAYER_HELMET, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
                 Expected(Items.FULL_SLAYER_HELMET_E, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
                 Expected(Items.FULL_SLAYER_HELMET_CHARGED, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
@@ -346,6 +349,7 @@ class PvpDeathBreakablesTests {
             assertEquals(row.killer, loot.map { it.id to it.amount }, "killer loot for ${row.item}")
             assertEquals(row.grave, grave.map { it.id }, "victim gravestone share for ${row.item}")
             assertEquals(row.deadmanRefund, victim.attr[StoreCatalogue.Currency.DEADMAN.attr] ?: 0, "Deadman Points refunded for ${row.item}")
+            assertEquals(row.loyaltyRefund, victim.attr[StoreCatalogue.Currency.LOYALTY.attr] ?: 0, "Loyalty Points refunded for ${row.item}")
             // The Items Kept on Death screen and the risk skull read the same table.
             assertEquals(row.killer, PvpDeathBreakables.killerItems(Item(row.item, 1), prices)?.map { it.id to it.amount })
             assertEquals(row.grave, PvpDeathBreakables.victimGraveItems(Item(row.item, 1)).map { it.id })
@@ -354,7 +358,8 @@ class PvpDeathBreakablesTests {
         for (ring in PvpDeathBreakables.IMBUE_REFUNDED) {
             val route = StoreCatalogue.ENTRIES.single { it.kind == StoreCatalogue.Kind.UPGRADE && it.purchaseItem == ring }
             assertEquals(PvpDeathBreakables.ImbueRefund(route.currency, route.price), PvpDeathBreakables.imbueRefund(ring))
-            assertEquals(StoreCatalogue.Currency.DEADMAN, route.currency)
+            val paid = if (ring == Items.BERSERKER_RING_I || ring == Items.WARRIOR_RING_I) StoreCatalogue.Currency.LOYALTY else StoreCatalogue.Currency.DEADMAN
+            assertEquals(paid, route.currency)
         }
     }
 

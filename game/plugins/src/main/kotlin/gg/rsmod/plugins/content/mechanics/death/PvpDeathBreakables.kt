@@ -105,6 +105,9 @@ object PvpDeathBreakables {
             Items.RING_OF_SUFFERING_I to listOf(Items.RING_OF_SUFFERING),
             Items.RING_OF_SUFFERING_R to listOf(Items.RING_OF_SUFFERING),
             Items.RING_OF_SUFFERING_RI to listOf(Items.RING_OF_SUFFERING),
+            // Owner 2026-10-06 ("yes give berserker ring to"): the same OSRS rule on "Berserker ring (i)" / "Warrior ring (i)".
+            Items.BERSERKER_RING_I to listOf(Items.BERSERKER_RING),
+            Items.WARRIOR_RING_I to listOf(Items.WARRIOR_RING),
             Items.MAGIC_SHORTBOW_I to listOf(Items.MAGIC_SHORTBOW),
             Items.SLAYER_HELMET to listOf(Items.BLACK_MASK),
             Items.SLAYER_HELMET_E to listOf(Items.BLACK_MASK),
@@ -165,10 +168,14 @@ object PvpDeathBreakables {
      * gods (i)" / "Tyrannical ring (i)" / "Treasonous ring (i)" / "Ring of suffering (i)": "If not protected, dying to another player
      * will cause the imbued ring to lose its imbued status, but the player will be reimbursed the Nightmare Zone points, Zeal Tokens,
      * or Scroll of imbuing". The killer gets the plain ring ([PVP_BASE]); the refund is the price of the one imbue route this server
-     * sells for the ring ([StoreCatalogue] "Imbue services": the base ring + Deadman Points), in that route's currency.
+     * sells for the ring ([StoreCatalogue] "Imbue services": the base ring + Deadman Points, or for the Berserker / Warrior ring
+     * (owner 2026-10-06, same wiki sentence on their (i) pages) + 20,000 Loyalty Points), in that route's currency.
      */
     val IMBUE_REFUNDED: Set<Int> =
-        setOf(Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING_I, Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING_I, Items.RING_OF_SUFFERING_RI)
+        setOf(
+            Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING_I, Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING_I, Items.RING_OF_SUFFERING_RI,
+            Items.BERSERKER_RING_I, Items.WARRIOR_RING_I,
+        )
 
     data class ImbueRefund(val currency: gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency, val points: Int)
 
