@@ -20,8 +20,8 @@ object RemovedItems {
     /**
      * Owner 2026-10-06: "remove pernix and virtus completely from our rsps the rest needs to be degraded". Nothing may
      * offer them any more: Nex no longer drops them and the Grand Exchange (player offers and the house, which sells every
-     * exchangeable item) refuses them through [isUnobtainable]. Deliberately NOT in [IDS]: copies already in player saves
-     * are the owner's call (moving these ids into [IDS] makes the login [purge] take them).
+     * exchangeable item) refuses them through [isUnobtainable]. Copies already held are taken by the login [purge] too
+     * (owner 2026-10-06: "Delete on login"); they stay out of [IDS], which also drives the removed-runes rules.
      * Intact, used (id + 2) and broken ids of the native 667 sets; the noted forms follow through [isUnobtainable].
      */
     val UNOBTAINABLE_IDS: Set<Int> =
@@ -46,7 +46,7 @@ object RemovedItems {
         itemId: Int,
     ): Boolean = itemId in IDS || isRemoved(player.world.definitions.get(ItemDef::class.java, itemId))
 
-    /** Removes every removed item the player holds; returns how many item stacks were taken. */
+    /** Removes every removed or no-longer-obtainable item the player holds; returns how many item stacks were taken. */
     fun purge(player: Player): Int {
         var taken = 0
         // The gravestone and Death's Office too: a removed item must not come back through a death.
@@ -63,7 +63,7 @@ object RemovedItems {
         var taken = 0
         for (slot in 0 until container.capacity) {
             val item = container[slot] ?: continue
-            if (isRemoved(player, item.id)) {
+            if (isRemoved(player, item.id) || isUnobtainable(player.world.definitions.get(ItemDef::class.java, item.id))) {
                 container[slot] = null
                 taken++
                 continue

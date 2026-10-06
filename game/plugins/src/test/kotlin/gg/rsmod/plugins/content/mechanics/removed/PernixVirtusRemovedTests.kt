@@ -34,9 +34,9 @@ class PernixVirtusRemovedTests {
         }
 
     @Test
-    fun `every Pernix and Virtus id is unobtainable but not purged from saves`() {
+    fun `every Pernix and Virtus id is unobtainable and taken by the login purge`() {
         assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS)
-        // Copies already in saves are the owner's call: the login purge only takes RemovedItems.IDS.
+        // Owner 2026-10-06 "Delete on login": the login purge takes them through isUnobtainable; IDS stays the removed runes.
         assertTrue(RemovedItems.UNOBTAINABLE_IDS.none { it in RemovedItems.IDS })
         removed.forEach { id ->
             assertTrue(RemovedItems.isUnobtainable(tradeable(id)), "$id")
