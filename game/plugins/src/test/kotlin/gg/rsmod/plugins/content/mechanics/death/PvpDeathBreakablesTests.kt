@@ -147,11 +147,10 @@ class PvpDeathBreakablesTests {
         val kept = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
         assertEquals(
             setOf(
-                // No "Items Kept on Death" rule covers a tradeable item carrying an untradeable kit (SOURCE_GAP, OSRS_IMPORT_MASTER.yml):
-                // the elder chaos (or) and Dagon'hai (or) pieces stay in the normal lost list instead of being converted.
+                // Bounty Hunter kits (untradeable): the kit goes to the victim's gravestone, not to the killer - their own row since owner
+                // 2026-10-06 (PvpDeathBreakables.BOUNTY_HUNTER_KITTED, conversion-set test below).
                 Items.ELDER_CHAOS_TOP_OR, Items.ELDER_CHAOS_ROBE_OR, Items.ELDER_CHAOS_HOOD_OR,
                 Items.DAGONHAI_HAT_OR, Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_BOTTOM_OR,
-                // Heavy ballista (or): the Heavy ballista ornament kit is an untradeable Bounty Hunter reward (same SOURCE_GAP as above).
                 Items.HEAVY_BALLISTA_OR,
                 // Elidinis' ward (or): OSRS Wiki "Elidinis' ward (or)" - on a PvP death "the Menaphite ornament kit will be placed in their
                 // gravestone" (no base + kit drop to the PKer).
@@ -162,8 +161,8 @@ class PvpDeathBreakablesTests {
             ),
             kept.map { it.ornamented }.toSet(),
         )
-        // Elidinis' ward (or) has its own row since owner Q14=A (2026-10-06): see the conversion-set test below.
-        kept.filterNot { it.ornamented == Items.ELIDINIS_WARD_OR }.forEach { ornament ->
+        // Elidinis' ward (or) (owner Q14=A) and the Bounty Hunter kits (owner 2026-10-06) have their own rows: see the conversion-set test below.
+        kept.filterNot { it.ornamented == Items.ELIDINIS_WARD_OR || it.ornamented in PvpDeathBreakables.BOUNTY_HUNTER_KITTED }.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
             assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")
@@ -325,6 +324,9 @@ class PvpDeathBreakablesTests {
                 // Owner 2026-10-06: Berserker / Warrior ring (i), imbued for 20,000 Loyalty Points (StoreCatalogue "Imbue services").
                 Expected(Items.BERSERKER_RING_I, listOf(Items.BERSERKER_RING to 1), loyaltyRefund = 20_000),
                 Expected(Items.WARRIOR_RING_I, listOf(Items.WARRIOR_RING to 1), loyaltyRefund = 20_000),
+                // Owner 2026-10-06 ("Yes, 20,000 Loyalty"): Seers / Archers ring (i), the same route.
+                Expected(Items.SEERS_RING_I, listOf(Items.SEERS_RING to 1), loyaltyRefund = 20_000),
+                Expected(Items.ARCHERS_RING_I, listOf(Items.ARCHERS_RING to 1), loyaltyRefund = 20_000),
                 Expected(Items.FULL_SLAYER_HELMET, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
                 Expected(Items.FULL_SLAYER_HELMET_E, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
                 Expected(Items.FULL_SLAYER_HELMET_CHARGED, listOf(Items.BLACK_MASK to 1), grave = fullHelmetImbue),
@@ -337,7 +339,18 @@ class PvpDeathBreakablesTests {
                 Expected(Items.ELIDINIS_WARD_F, listOf(Items.ELIDINIS_WARD to 1, Items.ARCANE_SIGIL to 1)),
                 Expected(Items.ELIDINIS_WARD_OR, listOf(Items.ELIDINIS_WARD to 1, Items.ARCANE_SIGIL to 1), grave = listOf(Items.MENAPHITE_ORNAMENT_KIT)),
                 Expected(Items.GRANITE_MAUL_ORNATE_HANDLE, listOf(Items.COINS_995 to 990_000)),
+                // Owner 2026-10-06: ferocious gloves -> hydra leather; Bounty Hunter (or) items -> base to the killer, kit to the gravestone
+                // (OSRS Wiki kit pages: "the item will be lost to the killer but the kit will be sent to the gravestone").
+                Expected(Items.FEROCIOUS_GLOVES, listOf(Items.HYDRA_LEATHER to 1)),
+                Expected(Items.HEAVY_BALLISTA_OR, listOf(Items.HEAVY_BALLISTA to 1), grave = listOf(Items.HEAVY_BALLISTA_ORNAMENT_KIT)),
+                Expected(Items.ELDER_CHAOS_TOP_OR, listOf(Items.ELDER_CHAOS_TOP to 1), grave = listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT)),
+                Expected(Items.ELDER_CHAOS_ROBE_OR, listOf(Items.ELDER_CHAOS_ROBE to 1), grave = listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT)),
+                Expected(Items.ELDER_CHAOS_HOOD_OR, listOf(Items.ELDER_CHAOS_HOOD to 1), grave = listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT)),
+                Expected(Items.DAGONHAI_HAT_OR, listOf(Items.DAGONHAI_HAT to 1), grave = listOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT)),
+                Expected(Items.DAGONHAI_ROBE_TOP_OR, listOf(Items.DAGONHAI_ROBE_TOP to 1), grave = listOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT)),
+                Expected(Items.DAGONHAI_ROBE_BOTTOM_OR, listOf(Items.DAGONHAI_ROBE_BOTTOM to 1), grave = listOf(Items.DAGONHAI_ROBES_ORNAMENT_KIT)),
             )
+        assertEquals(PvpDeathBreakables.BOUNTY_HUNTER_KITTED, set.map { it.item }.filter { it in PvpDeathBreakables.BOUNTY_HUNTER_KITTED }.toSet(), "every Bounty Hunter kitted item has a row")
         for (row in set) {
             assertTrue(PvpDeathBreakables.converts(row.item), "${row.item} converts on a PvP death")
             assertTrue(!UntradeableDeathProtection.handles(DEFINITIONS, row.item), "${row.item} never takes the untradeable coins route")
@@ -358,8 +371,37 @@ class PvpDeathBreakablesTests {
         for (ring in PvpDeathBreakables.IMBUE_REFUNDED) {
             val route = StoreCatalogue.ENTRIES.single { it.kind == StoreCatalogue.Kind.UPGRADE && it.purchaseItem == ring }
             assertEquals(PvpDeathBreakables.ImbueRefund(route.currency, route.price), PvpDeathBreakables.imbueRefund(ring))
-            val paid = if (ring == Items.BERSERKER_RING_I || ring == Items.WARRIOR_RING_I) StoreCatalogue.Currency.LOYALTY else StoreCatalogue.Currency.DEADMAN
+            val loyalty = setOf(Items.BERSERKER_RING_I, Items.WARRIOR_RING_I, Items.SEERS_RING_I, Items.ARCHERS_RING_I)
+            val paid = if (ring in loyalty) StoreCatalogue.Currency.LOYALTY else StoreCatalogue.Currency.DEADMAN
             assertEquals(paid, route.currency)
+        }
+    }
+
+    @Test
+    fun `a lost charged slayer helmet drops its stored Summoning scrolls to the killer, the screen shows them`() {
+        val headgear = gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear
+        val scroll = 12_425 // any id: the per-player stored scroll is read back as-is
+        val victim = newPlayer()
+        victim.attr[headgear.SCROLL_ATTR] = scroll
+        victim.attr[headgear.COUNT_ATTR] = 37
+        victim.equipment[0] = Item(Items.SLAYER_HELMET_CHARGED, 1)
+        // Items Kept on Death screen / risk skull: the same call with the victim.
+        assertEquals(listOf(Items.BLACK_MASK to 1, scroll to 37), PvpDeathBreakables.killerItems(Item(Items.SLAYER_HELMET_CHARGED, 1), null, victim)?.map { it.id to it.amount })
+        val loot = runConversions(victim, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, victim.equipment[0]!!)))
+        assertEquals(listOf(Items.BLACK_MASK to 1, scroll to 37), loot.map { it.id to it.amount })
+        assertNull(victim.attr[headgear.SCROLL_ATTR], "the scrolls left the victim")
+        assertNull(victim.attr[headgear.COUNT_ATTR])
+
+        // Only the charged id holds scrolls: the (e) helmet, the plain helmet and the full slayer helmet (charged) (not a scroll helmet
+        // here, EnchantedHeadgear SOURCE_GAP) drop none and leave the count alone.
+        for (id in listOf(Items.SLAYER_HELMET_E, Items.SLAYER_HELMET, Items.FULL_SLAYER_HELMET_CHARGED)) {
+            val other = newPlayer()
+            other.attr[headgear.SCROLL_ATTR] = scroll
+            other.attr[headgear.COUNT_ATTR] = 5
+            other.equipment[0] = Item(id, 1)
+            val otherLoot = runConversions(other, listOf(DeathSlotItem(DeathContainerSource.EQUIPMENT, 0, other.equipment[0]!!)))
+            assertEquals(listOf(Items.BLACK_MASK to 1), otherLoot.map { it.id to it.amount }, "$id drops no scrolls")
+            assertEquals(5, other.attr[headgear.COUNT_ATTR])
         }
     }
 

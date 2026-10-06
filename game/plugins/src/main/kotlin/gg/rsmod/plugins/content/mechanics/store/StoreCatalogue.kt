@@ -338,7 +338,9 @@ object StoreCatalogue {
             Items.ARMADYL_CROSSBOW to 75_000, Items.DRAGON_WARHAMMER to 100_000)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Active progression") }
         // Imbues: Loyalty Points plus the existing base ring, never a ring from nothing.
-        listOf(Items.BERSERKER_RING to Items.BERSERKER_RING_I, Items.WARRIOR_RING to Items.WARRIOR_RING_I)
+        // Seers / Archers ring (i): owner 2026-10-06 ("Yes, 20,000 Loyalty"), so their PvP imbue refund works like the other two.
+        listOf(Items.BERSERKER_RING to Items.BERSERKER_RING_I, Items.WARRIOR_RING to Items.WARRIOR_RING_I,
+            Items.SEERS_RING to Items.SEERS_RING_I, Items.ARCHERS_RING to Items.ARCHERS_RING_I)
             .forEach { (base, imbued) -> list += upgradeEntry(l, base, imbued, 20_000, "Imbue services") }
         list += itemEntry(l, Items.BRIMSTONE_RING, 40_000, "Jewellery")
         // Moon sets: the tradeable (full) piece of each set; the same-named untradeable ids are the degraded state (EquipmentDegradation).

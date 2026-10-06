@@ -54,7 +54,7 @@ class StoreCatalogueTests {
     @Test
     fun `imbued rings are upgrades that need the base ring, never sold outright`() {
         val imbues = StoreCatalogue.ENTRIES.filter { it.category == "Imbue services" }
-        assertEquals(7, imbues.size)
+        assertEquals(9, imbues.size)
         imbues.forEach { assertEquals(Kind.UPGRADE, it.kind, "entry ${it.purchaseItem}") }
         assertEquals(listOf(Items.RING_OF_SUFFERING_R), imbues.single { it.purchaseItem == Items.RING_OF_SUFFERING_RI }.requiredBaseItems)
         assertEquals(emptyList(), StoreCatalogue.ENTRIES.filter { it.purchaseItem == Items.DIVINE_RUNE_POUCH }.map { it.shop })

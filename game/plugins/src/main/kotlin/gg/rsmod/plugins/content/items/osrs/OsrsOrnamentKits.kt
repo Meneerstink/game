@@ -8,9 +8,9 @@ import gg.rsmod.plugins.api.cfg.Items
  * PvP death conversion ("Items Kept on Death": an ornamented tradeable item is dropped to the PKer as
  * the non-ornamented item together with its tradeable ornament kit).
  *
- * [Ornament.pvpConvert] is false for kits that are not tradeable (the Bounty Hunter elder chaos and Dagon'hai kits): "Items Kept
- * on Death" gives no rule for a tradeable item carrying an untradeable kit (SOURCE_GAP), so those pieces keep the default death
- * handling.
+ * [Ornament.pvpConvert] is false for kits that are not tradeable (the Bounty Hunter heavy ballista, elder chaos and Dagon'hai kits):
+ * their own kit pages give the PvP rule "the item will be lost to the killer but the kit will be sent to the gravestone", built in
+ * `PvpDeathBreakables.BOUNTY_HUNTER_KITTED` (owner 2026-10-06).
  */
 object OsrsOrnamentKits {
     data class Ornament(
@@ -60,7 +60,7 @@ object OsrsOrnamentKits {
             // "the kit could be detached from the item"; kit untradeable (Bounty Hunter). Base robes are the 667 Dagon'hai robes.
             Ornament(Items.DAGONHAI_HAT_OR, Items.DAGONHAI_HAT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
             Ornament(Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_TOP, Items.DAGONHAI_ROBES_ORNAMENT_KIT, pvpConvert = false),
-            // Heavy ballista (or): "It can be dismantled at any time, returning both parts"; untradeable Bounty Hunter kit (no PvP rule).
+            // Heavy ballista (or): "It can be dismantled at any time, returning both parts"; untradeable Bounty Hunter kit.
             Ornament(Items.HEAVY_BALLISTA_OR, Items.HEAVY_BALLISTA, Items.HEAVY_BALLISTA_ORNAMENT_KIT, pvpConvert = false),
             // Blazing blowpipe (empty): tradeable Trailblazer reloaded kit on the emptied Toxic blowpipe; "reverted anytime".
             Ornament(Items.BLAZING_BLOWPIPE_EMPTY, Items.TOXIC_BLOWPIPE_EMPTY, Items.BLOWPIPE_ORNAMENT_KIT, pvpConvert = true),

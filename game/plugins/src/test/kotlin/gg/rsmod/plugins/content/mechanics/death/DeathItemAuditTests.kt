@@ -111,6 +111,15 @@ class DeathItemAuditTests {
             assertTrue(!defs.get(ItemDef::class.java, flipped).tradeable, "$flipped is untradeable like OSRS")
         }
         assertTrue(UntradeableDeathProtection.lockable(Items.ELITE_VOID_KNIGHT_TOP))
+        // Owner 2026-10-06 ("your untradeable rule"): Arclight has no OSRS PvP rule - always lost, the killer gets its High Alchemy value.
+        for (arclight in listOf(Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE)) {
+            assertTrue(!PvpDeathBreakables.converts(arclight) && UntradeableDeathProtection.handles(defs, arclight), "$arclight takes the untradeable route")
+            for (deep in listOf(false, true)) {
+                val fate = UntradeableDeathProtection.fateOf(defs, Item(arclight, 1), deep)
+                assertEquals(UntradeableFate.LOST_FOR_COINS, fate.fate, "$arclight is lost")
+                assertEquals(300L, fate.killerCoins, "$arclight: 300 coins (High Alchemy value in this cache)")
+            }
+        }
         assertEquals(listOf(Items.BLACK_MASK), PvpDeathBreakables.killerItems(Item(Items.FULL_SLAYER_HELMET, 1))?.map { it.id })
         assertEquals(listOf(Items.HELM_OF_NEITIZNOT, Items.BASILISK_JAW), PvpDeathBreakables.killerItems(Item(Items.NEITIZNOT_FACEGUARD, 1))?.map { it.id })
         assertEquals(listOf(Items.RING_OF_SUFFERING), PvpDeathBreakables.killerItems(Item(Items.RING_OF_SUFFERING_RI, 1))?.map { it.id })

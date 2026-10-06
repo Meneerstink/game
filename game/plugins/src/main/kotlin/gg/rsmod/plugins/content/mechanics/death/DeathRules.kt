@@ -87,7 +87,7 @@ object DeathRules {
                 else -> loss += slot.item
             }
         }
-        loss += converting.flatMap { PvpDeathBreakables.killerItems(it.item, value) ?: emptyList() }
+        loss += converting.flatMap { PvpDeathBreakables.killerItems(it.item, value, player) ?: emptyList() }
         loss += lostAmmo
         loss += UntradeableDeathProtection.killerLoot(untradeables)
         loss += LootingBag.peekContents(player).filterNot { LootingBag.destroyedOnPvpDeath(player, it) }

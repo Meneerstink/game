@@ -27,9 +27,9 @@ class UntradeableDeathProtectionTests {
     fun clearRegistry() = TrouverRegistry.clear()
 
     @Test
-    fun `an untradeable item such as Ferocious gloves is handled, a tradeable one is not`() {
-        assertFalse(DEFINITIONS.get(ItemDef::class.java, Items.FEROCIOUS_GLOVES).tradeable, "sanity: must actually be untradeable")
-        assertTrue(UntradeableDeathProtection.handles(DEFINITIONS, Items.FEROCIOUS_GLOVES))
+    fun `an untradeable item such as Arclight is handled, a tradeable one is not`() {
+        assertFalse(DEFINITIONS.get(ItemDef::class.java, Items.ARCLIGHT).tradeable, "sanity: must actually be untradeable")
+        assertTrue(UntradeableDeathProtection.handles(DEFINITIONS, Items.ARCLIGHT))
         assertTrue(DEFINITIONS.get(ItemDef::class.java, Items.ABYSSAL_WHIP).tradeable, "sanity: the whip is tradeable")
         assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, Items.ABYSSAL_WHIP))
     }
@@ -38,6 +38,7 @@ class UntradeableDeathProtectionTests {
     fun `loot keys, conversions and emblems keep their own rules`() {
         assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, LootKeys.KEY_IDS.first()), "loot keys must stay always-lost (RCV-012 3b)")
         assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, Items.TOXIC_BLOWPIPE), "the blowpipe keeps its OSRS conversion")
+        assertFalse(UntradeableDeathProtection.handles(DEFINITIONS, Items.FEROCIOUS_GLOVES), "ferocious gloves convert to hydra leather (owner 2026-10-06)")
     }
 
     @Test
@@ -53,7 +54,7 @@ class UntradeableDeathProtectionTests {
     fun `a non-lockable untradeable is always lost and the killer gets its high alchemy value`() {
         // Owner 2026-10-04: "Barrows gloves you always lose"; OSRS Wiki "Barrows gloves": "When lost in a PvP death, they turn into
         // 78,000 coins" (60 % of 130,000).
-        for (id in listOf(Items.FEROCIOUS_GLOVES, Items.GLOVES_7462, 4)) {
+        for (id in listOf(Items.ARCLIGHT, Items.GLOVES_7462, 4)) {
             assertFalse(DEFINITIONS.get(ItemDef::class.java, id).tradeable)
             for (deep in listOf(false, true)) {
                 val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(id), deep)
@@ -90,7 +91,7 @@ class UntradeableDeathProtectionTests {
         val fate = UntradeableDeathProtection.fateOf(DEFINITIONS, broken, deepWilderness = true)
         assertEquals(UntradeableFate.UNCHANGED, fate.fate)
         assertEquals(0L, fate.killerCoins)
-        val oldBroken = Item(Items.FEROCIOUS_GLOVES).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
+        val oldBroken = Item(Items.ARCLIGHT).also { it.attr[ItemAttribute.BROKEN] = UntradeableDeathProtection.STATE_BROKEN }
         assertEquals(0L, UntradeableDeathProtection.fateOf(DEFINITIONS, oldBroken, deepWilderness = false).killerCoins, "a broken non-lockable pays nothing again")
         assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.AVERNIC_DEFENDER_BROKEN), false).fate)
         assertFalse(UntradeableDeathProtection.isBroken(UntradeableDeathProtection.repaired(broken)))

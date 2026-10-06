@@ -108,6 +108,9 @@ object PvpDeathBreakables {
             // Owner 2026-10-06 ("yes give berserker ring to"): the same OSRS rule on "Berserker ring (i)" / "Warrior ring (i)".
             Items.BERSERKER_RING_I to listOf(Items.BERSERKER_RING),
             Items.WARRIOR_RING_I to listOf(Items.WARRIOR_RING),
+            // Owner 2026-10-06 ("Yes, 20,000 Loyalty"): Seers ring (i) / Archers ring (i), the same imbue route and refund.
+            Items.SEERS_RING_I to listOf(Items.SEERS_RING),
+            Items.ARCHERS_RING_I to listOf(Items.ARCHERS_RING),
             Items.MAGIC_SHORTBOW_I to listOf(Items.MAGIC_SHORTBOW),
             Items.SLAYER_HELMET to listOf(Items.BLACK_MASK),
             Items.SLAYER_HELMET_E to listOf(Items.BLACK_MASK),
@@ -133,7 +136,24 @@ object PvpDeathBreakables {
             // the same, and "the Menaphite ornament kit will be placed in their gravestone" ([VICTIM_GRAVE]).
             Items.ELIDINIS_WARD_F to listOf(Items.ELIDINIS_WARD, Items.ARCANE_SIGIL),
             Items.ELIDINIS_WARD_OR to listOf(Items.ELIDINIS_WARD, Items.ARCANE_SIGIL),
-        )
+            // Owner 2026-10-06 ("Killer gets hydra leather"): no OSRS PvP rule on "Ferocious gloves"; "Items Kept on Death" - untradeables
+            // are "converted into their tradeable form and offered to the killer", and the gloves revert to hydra leather at the machine.
+            Items.FEROCIOUS_GLOVES to listOf(Items.HYDRA_LEATHER),
+        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.base) }
+
+    /**
+     * Owner 2026-10-06 ("OSRS rule"), OSRS Wiki "Heavy ballista ornament kit" / "Elder chaos robes ornament kit" (Bounty Hunter, 24 May
+     * 2023): "When a kitted item is lost to a PvP death, the item will be lost to the killer but the kit will be sent to the gravestone."
+     * The killer gets the base item ([PVP_BASE]), the kit goes to the victim's gravestone ([VICTIM_GRAVE]); the Dagon'hai robes ornament
+     * kit is the same Bounty Hunter kit family. Base and kit come from the [OsrsOrnamentKits] rows.
+     */
+    val BOUNTY_HUNTER_KITTED: Set<Int>
+        get() =
+            setOf(
+                Items.HEAVY_BALLISTA_OR,
+                Items.ELDER_CHAOS_TOP_OR, Items.ELDER_CHAOS_ROBE_OR, Items.ELDER_CHAOS_HOOD_OR,
+                Items.DAGONHAI_HAT_OR, Items.DAGONHAI_ROBE_TOP_OR, Items.DAGONHAI_ROBE_BOTTOM_OR,
+            )
 
     /**
      * Owner Q14=A (2026-10-06), OSRS Wiki "Granite maul (ornate handle)": "When this weapon is lost on death in PvP, it is converted
@@ -151,7 +171,9 @@ object PvpDeathBreakables {
      *  - Slayer helmets, "Items Kept on Death": "Dropped to the PKer as a black mask. The imbue cost is refunded to the victim. The
      *    other parts are lost." ADAPTED: this server's imbued tier is the 667 Full slayer helmet, paid for with a hexcrest and a
      *    focus sight (slayer_helmet.plugin.kts) instead of points or a scroll of imbuing, so those two parts are the refund. The
-     *    plain Slayer helmet (e)/(charged) carry a Summoning enchantment, not a paid imbue: no refund (UNSOURCED, owner list).
+     *    plain Slayer helmet (e)/(charged) carry a Summoning enchantment, not a paid imbue: no refund; the stored Summoning scrolls
+     *    go to the killer ([storedScrolls]);
+     *  - Bounty Hunter kitted items ([BOUNTY_HUNTER_KITTED]): the ornament kit.
      */
     val VICTIM_GRAVE: Map<Int, List<Int>> by lazy {
         val fullHelmetImbue = listOf(Items.HEXCREST, Items.FOCUS_SIGHT)
@@ -160,7 +182,7 @@ object PvpDeathBreakables {
             Items.FULL_SLAYER_HELMET to fullHelmetImbue,
             Items.FULL_SLAYER_HELMET_E to fullHelmetImbue,
             Items.FULL_SLAYER_HELMET_CHARGED to fullHelmetImbue,
-        )
+        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.kit) }
     }
 
     /**
@@ -168,13 +190,13 @@ object PvpDeathBreakables {
      * gods (i)" / "Tyrannical ring (i)" / "Treasonous ring (i)" / "Ring of suffering (i)": "If not protected, dying to another player
      * will cause the imbued ring to lose its imbued status, but the player will be reimbursed the Nightmare Zone points, Zeal Tokens,
      * or Scroll of imbuing". The killer gets the plain ring ([PVP_BASE]); the refund is the price of the one imbue route this server
-     * sells for the ring ([StoreCatalogue] "Imbue services": the base ring + Deadman Points, or for the Berserker / Warrior ring
-     * (owner 2026-10-06, same wiki sentence on their (i) pages) + 20,000 Loyalty Points), in that route's currency.
+     * sells for the ring ([StoreCatalogue] "Imbue services": the base ring + Deadman Points, or for the Berserker / Warrior / Seers /
+     * Archers ring (owner 2026-10-06, same wiki sentence on their (i) pages) + 20,000 Loyalty Points), in that route's currency.
      */
     val IMBUE_REFUNDED: Set<Int> =
         setOf(
             Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING_I, Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING_I, Items.RING_OF_SUFFERING_RI,
-            Items.BERSERKER_RING_I, Items.WARRIOR_RING_I,
+            Items.BERSERKER_RING_I, Items.WARRIOR_RING_I, Items.SEERS_RING_I, Items.ARCHERS_RING_I,
         )
 
     data class ImbueRefund(val currency: gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency, val points: Int)
@@ -266,10 +288,14 @@ object PvpDeathBreakables {
                     DeathContainerSource.EQUIPMENT -> victim.equipment
                 }
             val current = container[slotItem.slot]?.takeIf { it.id == slotItem.item.id } ?: continue
-            val loot = killerItems(current, prices) ?: continue
+            val loot = killerItems(current, prices, victim) ?: continue
             container[slotItem.slot] = null
             if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
             loot.forEach(drop)
+            if (storedScrolls(victim, current) != null) {
+                victim.attr.remove(gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.SCROLL_ATTR)
+                victim.attr.remove(gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.COUNT_ATTR)
+            }
             victimGraveItems(current).forEach(toGrave)
             refundImbue(victim, current)
         }
@@ -292,17 +318,36 @@ object PvpDeathBreakables {
     }
 
     /**
+     * The Summoning scrolls stored in a lost charged helmet (owner 2026-10-06 "Scrolls to killer"), or null. OSRS Wiki "Items Kept on
+     * Death", "Chargable items": "drops the items that would result from uncharging the item to the PKer" - uncharging a charged helmet
+     * gives back its scrolls ([gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear.uncharge]). The scrolls are kept per player
+     * (Void), so only the charged id of a headgear row carries them.
+     */
+    fun storedScrolls(
+        victim: gg.rsmod.game.model.entity.Player,
+        item: Item,
+    ): Item? {
+        val headgear = gg.rsmod.plugins.content.skills.summoning.EnchantedHeadgear
+        if (headgear.forItem(item.id)?.charged != item.id) return null
+        val scroll = victim.attr[headgear.SCROLL_ATTR] ?: return null
+        val count = victim.attr[headgear.COUNT_ATTR] ?: 0
+        return if (count > 0) Item(scroll, count) else null
+    }
+
+    /**
      * What the killer receives for one unprotected [item] that [converts] (its OSRS conversion), or `null` when it has none and
      * stays where it is. The one source for the real death ([execute]), the Items Kept on Death screen and the risk skull
      * ([DeathRules.pvpLoss]), so the screen shows exactly what the death drops (owner 2026-10-04: "exactly 100%").
      * [prices] (Grand Exchange guide prices) is needed for the [PVP_COINS_FROM_PARTS] items; every real caller passes it.
+     * [victim] adds the Summoning scrolls stored in a charged helmet ([storedScrolls]); every real caller passes it.
      */
     fun killerItems(
         item: Item,
         prices: ItemRiskValueProvider? = null,
+        victim: gg.rsmod.game.model.entity.Player? = null,
     ): List<Item>? {
         val id = item.id
-        PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } }
+        PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } + listOfNotNull(victim?.let { storedScrolls(it, item) }) }
         PVP_COINS_FROM_PARTS[id]?.let { parts -> return partsCoins(id, parts, item.amount, prices) }
         if (id == Items.VENATOR_BOW) {
             return listOfNotNull(Item(Items.VENATOR_BOW_UNCHARGED, 1), gg.rsmod.plugins.content.items.osrs.VenatorBow.essence(item).takeIf { it > 0 }?.let { Item(Items.ANCIENT_ESSENCE, it) })

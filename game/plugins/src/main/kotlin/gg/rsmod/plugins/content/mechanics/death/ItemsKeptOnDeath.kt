@@ -134,7 +134,7 @@ object ItemsKeptOnDeath {
             // Barrows/Moon armour as its broken version, an ornamented item as the base item plus its kit, and so on.
             converting.forEach { slot ->
                 val from = name(player, slot.item.id)
-                val loot = PvpDeathBreakables.killerItems(slot.item, value)
+                val loot = PvpDeathBreakables.killerItems(slot.item, value, player)
                 // Owner Q14=A (2026-10-06): an imbue refund and the victim's gravestone share come from the same table as the death.
                 val refund =
                     PvpDeathBreakables.imbueRefund(slot.item.id)?.let {

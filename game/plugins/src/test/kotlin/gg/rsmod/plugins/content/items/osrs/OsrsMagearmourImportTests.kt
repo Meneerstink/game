@@ -33,7 +33,8 @@ class OsrsMagearmourImportTests {
             val combo = CombinationData.values().firstOrNull { it.resultItem == piece } ?: error("$piece has no combination")
             assertEquals(setOf(ornament.kit, ornament.base), combo.items.toSet(), "$piece combination")
         }
-        // Tradeable colour kits: base + kit to the PKer; untradeable Bounty Hunter kits: no sourced rule (SOURCE_GAP).
+        // Tradeable colour kits: base + kit to the PKer; untradeable Bounty Hunter kits: base to the PKer, kit to the gravestone
+        // (PvpDeathBreakables.BOUNTY_HUNTER_KITTED, owner 2026-10-06), never the base + kit drop.
         assertTrue(OsrsOrnamentKits.forPvpConversion(Items.TWISTED_ANCESTRAL_HAT) != null)
         assertTrue(OsrsOrnamentKits.forPvpConversion(Items.LIGHT_INFINITY_TOP) != null)
         assertNull(OsrsOrnamentKits.forPvpConversion(Items.ELDER_CHAOS_TOP_OR))
