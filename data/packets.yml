@@ -555,6 +555,26 @@ out-packets:
         type: SHORT
         trans: ADD
 
+  # LOC_CUSTOMISE (client ServerProt 99 / ZoneProt 2): settings g1_alt1 (+128), flags g1, tile g1_alt3 (128 - v),
+  # id ig2 (little endian); flag 0x10 = RSPS per-placement fit, five big-endian shorts (LocCustomiseEncoder).
+  - message: gg.rsmod.game.message.impl.LocCustomiseMessage
+    type: VARIABLE_BYTE
+    opcode: 99
+    structure:
+      - name: settings
+        type: BYTE
+        trans: ADD
+      - name: flags
+        type: BYTE
+      - name: tile
+        type: BYTE
+        trans: SUBTRACT
+      - name: id
+        type: SHORT
+        order: LITTLE
+      - name: payload
+        type: BYTES
+
   - message: gg.rsmod.game.message.impl.IfSetTextMessage
     type: VARIABLE_SHORT
     opcode: 33

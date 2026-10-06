@@ -39,6 +39,7 @@ class MessageEncoderSet {
         put(UpdateZonePartialEnclosedEncoder(), UpdateZonePartialEnclosedMessage::class.java)
         put(LodAddChangeEncoder(), LocAddChangeMessage::class.java)
         put(LocDelEncoder(), LocDelMessage::class.java)
+        put(LocCustomiseEncoder(), LocCustomiseMessage::class.java)
         put(IfSetEventsEncoder(), IfSetEventsMessage::class.java)
         put(IfSetTextEncoder(), IfSetTextMessage::class.java)
         put(RunClientScriptEncoder(), RunClientScriptMessage::class.java)

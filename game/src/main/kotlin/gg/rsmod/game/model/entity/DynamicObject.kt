@@ -14,9 +14,13 @@ class DynamicObject(
     rot: Int,
     tile: Tile,
 ) : GameObject(id, type, rot, tile) {
-    constructor(other: GameObject) : this(other.id, other.type, other.rot, Tile(other.tile))
+    constructor(other: GameObject) : this(other.id, other.type, other.rot, Tile(other.tile)) {
+        fit = other.fit
+    }
 
-    constructor(other: GameObject, id: Int) : this(id, other.type, other.rot, Tile(other.tile))
+    constructor(other: GameObject, id: Int) : this(id, other.type, other.rot, Tile(other.tile)) {
+        fit = other.fit
+    }
 
     override val entityType: EntityType = EntityType.DYNAMIC_OBJECT
 }

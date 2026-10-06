@@ -8,6 +8,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.collision.CollisionUpdate
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
+import gg.rsmod.game.model.entity.LocFit
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.plugins.content.mechanics.npcwalk.NpcRandomWalk
 import java.io.File
@@ -40,8 +41,17 @@ object WorldEdits {
         val note: String? = null,
         /** Edits made by one click share a group, so undo takes the whole click back. */
         val group: Long = 0,
+        /**
+         * Per-placement fit of a "spawn" (place mode, 2026-10-06): position along / off the wall, height, uniform scale
+         * and angle on top of tile + rotation ([LocFit] units). Absent (null) for every older edit and for plain placements,
+         * so the file stays backwards compatible.
+         */
+        val fit: LocFit? = null,
     ) {
         val tile: Tile get() = Tile(x, z, level)
+
+        /** The fit as the client gets it: ranges applied, a plain placement when it is the identity. */
+        val effectiveFit: LocFit? get() = fit?.normalised()?.takeUnless { it.isIdentity }
     }
 
     private data class EditFile(val edits: List<Edit> = emptyList())
@@ -202,6 +212,7 @@ object WorldEdits {
                         if (it in spawned) spawned.remove(it) else takenOut += it
                     }
                     val obj = DynamicObject(edit.id, edit.type, edit.rot and 3, edit.tile)
+                    obj.fit = edit.effectiveFit
                     world.spawn(obj)
                     spawned += obj
                     applied++
@@ -303,7 +314,8 @@ object WorldEdits {
         val obj = objectsAt(world, from).firstOrNull { it.id == id } ?: return false
         val action = ArrayList<Edit>()
         if (!copy) action += Edit("remove", id, from.x, from.z, from.height)
-        action += Edit("spawn", id, to.x, to.z, to.height, obj.type, obj.rot)
+        // A placed decoration keeps its fit (height, scale, angle ...) when it is moved or copied.
+        action += Edit("spawn", id, to.x, to.z, to.height, obj.type, obj.rot, fit = obj.fit)
         commit(world, action)
         return true
     }
@@ -396,7 +408,7 @@ object WorldEdits {
             world,
             listOf(
                 Edit("remove", id, tile.x, tile.z, tile.height),
-                Edit("spawn", id, tile.x, tile.z, tile.height, obj.type, (obj.rot + 1) and 3),
+                Edit("spawn", id, tile.x, tile.z, tile.height, obj.type, (obj.rot + 1) and 3, fit = obj.fit),
             ),
         )
         return true

@@ -54,6 +54,12 @@ abstract class GameObject : Entity {
 
     val rot: Int get() = settings.toInt() and 3
 
+    /**
+     * Per-placement position / scale / angle of this one loc ([LocFit]), or null for the plain cache placement. Sent
+     * to the client right after the loc itself (LOC_CUSTOMISE), also to players who enter the chunk later.
+     */
+    var fit: LocFit? = null
+
     private constructor(id: Int, settings: Int, tile: Tile) {
         this.id = id
         this.settings = settings.toByte()

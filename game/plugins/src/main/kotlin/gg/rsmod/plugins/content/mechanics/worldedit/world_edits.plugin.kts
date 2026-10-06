@@ -301,3 +301,46 @@ on_command("place", Privilege.ADMIN_POWER) {
     WorldEdits.add(world, WorldEdits.Edit("spawn", a[0], t.x, t.z, t.height, type = a.getOrNull(2) ?: 10, rot = a.getOrNull(1) ?: 0))
     player.message("Placed ${a[0]} at ${t.x},${t.z},${t.height}.")
 }
+
+/*
+ * Place mode (owner 2026-10-06, DecoPlacer): devdeco start <locId> <x> <z> <level> [wallId] hangs a new decoration on
+ * that wall (or stands it on the tile); devdeco adjust|copy <x> <z> <level> <id> takes an existing one; every other op
+ * is a key of the mode (along/up/out/scale/yaw [+|-], turn, flip, step, save, cancel, delete, copy, undo, status).
+ * The preview is only sent to the editor; Save writes one world-edit group with the placement's fit.
+ */
+on_command("devdeco", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val op = args.getOrNull(0) ?: return@on_command
+    val a = args.drop(1).mapNotNull { it.toIntOrNull() }
+    when (op) {
+        "start" -> {
+            if (a.size < 4) return@on_command
+            if (runCatching { world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, a[0]) }.getOrNull() == null) {
+                player.message("Unknown loc ${a[0]}.")
+                return@on_command
+            }
+            val tile = Tile(a[1], a[2], a[3])
+            val wall = a.getOrNull(4)?.let { id -> WorldEdits.objectsAt(world, tile).firstOrNull { it.id == id && (it.type == 0 || it.type == 2) } }
+            DecoPlacer.startNew(player, a[0], tile, wall)
+        }
+        "adjust", "copy" -> {
+            // Without a tile it is the mode's own key (C = save and continue with a copy), not the menu entry.
+            if (a.size < 4) {
+                DecoPlacer.key(player, op, 1)
+                return@on_command
+            }
+            val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+            if (obj == null) {
+                player.message("Nothing with id ${a[3]} on that tile.")
+                return@on_command
+            }
+            if (codePosted(player, obj, locName(player, a[3]), op)) return@on_command
+            DecoPlacer.startAdjust(player, obj, copy = op == "copy")
+        }
+        else -> DecoPlacer.key(player, op, if (args.getOrNull(1) == "-") -1 else 1)
+    }
+}
+
+on_logout {
+    DecoPlacer.drop(player)
+}

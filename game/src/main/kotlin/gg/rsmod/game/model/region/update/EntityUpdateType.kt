@@ -11,7 +11,8 @@ enum class EntityUpdateType(
 ) {
     UPDATE_GROUND_ITEM(id = 0),
     SPAWN_PROJECTILE(id = 1),
-    UNKNOWN(id = 2),
+    /** LOC_CUSTOMISE: a spawned loc's per-instance fit ([LocCustomiseUpdate]). */
+    CUSTOMISE_OBJECT(id = 2),
     MAP_ANIM(id = 3),
     ANIMATE_OBJECT(id = 4),
     PLAY_TILE_SOUND(id = 5),

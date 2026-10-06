@@ -49,6 +49,12 @@ class ObjectDef(
     /** The client's ground decoration rule: only blockwalk 1 adds the GROUND_DECOR flag. */
     val blocksGroundDecor: Boolean get() = blockwalk == 1 && !breakroutefinding
     var interactive = false
+
+    /**
+     * Opcode 177: the client always builds this loc as a dynamic loc (its own LocEntity), the only kind that takes a
+     * per-instance LOC_CUSTOMISE - so only such a loc can carry a placement fit (place mode, 2026-10-06).
+     */
+    var customisable = false
     var obstructive = false
     var clipMask = 0
     var varbit = -1
@@ -252,7 +258,7 @@ class ObjectDef(
                 buf.readUnsignedShort()
                 buf.readUnsignedShort()
             }
-            177 -> {}
+            177 -> customisable = true
             178 -> buf.readUnsignedByte()
             189 -> {}
             249 -> readParams(buf)

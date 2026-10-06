@@ -171,6 +171,16 @@ class Chunk(
                  * Send the update to all players in viewport.
                  */
                 sendUpdate(world, update)
+                /*
+                 * A spawned loc with a per-placement fit (LocFit): the LOC_CUSTOMISE follows its LOC_ADD_CHANGE, live
+                 * and for players who enter the chunk later (kept in [updates] in that order; removeEntity drops both).
+                 */
+                val fit = (entity as? GameObject)?.fit
+                if (fit != null && !fit.isIdentity) {
+                    val customise = LocCustomiseUpdate(EntityUpdateType.CUSTOMISE_OBJECT, entity)
+                    updates.add(customise)
+                    sendUpdate(world, customise)
+                }
             }
         }
     }

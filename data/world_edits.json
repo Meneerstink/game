@@ -7488,8 +7488,221 @@
       "level": 0,
       "type": 10,
       "rot": 0,
-      "group": 577,
-      "note": "owner moved it here 2026-10-04 (3156,3482); one tile south-west 2026-10-06 (OWNER_QUESTIONS Q12 = A): every tile of it off the bridge-flag tiles"
+      "note": "owner moved it here 2026-10-04 (3156,3482); one tile south-west 2026-10-06 (OWNER_QUESTIONS Q12 \u003d A): every tile of it off the bridge-flag tiles",
+      "group": 577
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 3098,
+      "z": 3497,
+      "level": 0,
+      "type": 4,
+      "rot": 2,
+      "group": 578,
+      "fit": {
+        "dx": -32,
+        "dy": 192,
+        "dz": 128,
+        "scale": 176,
+        "yaw": 456
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62908,
+      "x": 3097,
+      "z": 3496,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 579,
+      "fit": {
+        "dx": 228,
+        "dy": 64,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3094,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 580,
+      "fit": {
+        "dx": 0,
+        "dy": 44,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 4094
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 3098,
+      "z": 3497,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 581
+    },
+    {
+      "op": "remove",
+      "id": 62908,
+      "x": 3097,
+      "z": 3496,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 582
+    },
+    {
+      "op": "spawn",
+      "id": 62908,
+      "x": 3097,
+      "z": 3496,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 582,
+      "fit": {
+        "dx": -156,
+        "dy": 64,
+        "dz": 0,
+        "scale": 192,
+        "yaw": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 3096,
+      "z": 3496,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 583,
+      "fit": {
+        "dx": 192,
+        "dy": -32,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 584,
+      "fit": {
+        "dx": 128,
+        "dy": 0,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 585
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 585,
+      "fit": {
+        "dx": 128,
+        "dy": 0,
+        "dz": 0,
+        "scale": 192,
+        "yaw": 456
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 586
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "group": 586,
+      "fit": {
+        "dx": 128,
+        "dy": 0,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 3159,
+      "z": 3497,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 587
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3160,
+      "z": 3503,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 588,
+      "fit": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0,
+        "scale": 192,
+        "yaw": 684
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62910,
+      "x": 3160,
+      "z": 3503,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 589
     }
   ]
 }
