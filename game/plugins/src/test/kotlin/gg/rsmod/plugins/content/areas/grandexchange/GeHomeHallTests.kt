@@ -322,9 +322,11 @@ class GeHomeHallTests {
         assertTrue(ring(1).all { w -> ring(2).any { it.tile.x == w.tile.x && it.tile.z == w.tile.z && it.rot == w.rot } })
         assertTrue(decor.none { it.id in walls }, "a 240-high wall left in the hall")
         (0..2).forEach { level -> assertTrue(ring(level).isNotEmpty() && ring(level).all { it.id in tall }, "storey $level wall ring") }
-        // Three rooms: an inner wall on x 3162 and x 3167 with a two-tile opening (z 3491-3492) in each.
+        // Three rooms: an inner wall on the west edge of x 3162 and the east edge of x 3167 with a two-tile opening (z 3491-3492)
+        // in each - drawn from the side rooms' tiles (x 3161 east edge, x 3168 west edge) so the cream faces look into the casino
+        // (owner 2026-10-06, OWNER_QUESTIONS Q9 = B).
         val inner = decor.filter { it.id in tall && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
-        listOf(3162 to 0, 3167 to 2).forEach { (x, rot) ->
+        listOf(3161 to 2, 3168 to 0).forEach { (x, rot) ->
             assertEquals(floorZ.filter { it !in 3491..3492 }.toSet(), inner.filter { it.tile.x == x && it.rot == rot }.map { it.tile.z }.toSet())
         }
         // Every level-2 balcony's parapet runs on to the building: a wall-decoration piece on the open edge of each wall-ring
