@@ -110,6 +110,10 @@ object NpcAttacks {
         val min: Int = 0,
         val max: Int = 0,
         val multiplier: Double = 0.0,
+        /** One in [chance] landed hits drains (1 = every hit); Darkan AhrimCombat: Utils.random(3) == 0. */
+        val chance: Int = 1,
+        /** Spot animation on the target when the drain happens (-1: none); Darkan AhrimCombat: SpotAnim(400, 0, 100). */
+        val gfx: Int = -1,
     )
 
     class Area(
@@ -900,6 +904,8 @@ object NpcAttacks {
         drain: Drain,
     ) {
         if (target !is Player) return
+        if (drain.chance > 1 && Random.nextInt(drain.chance) != 0) return
+        if (drain.gfx >= 0) target.graphic(drain.gfx, 100)
         val skills =
             when (drain.skill) {
                 "all" -> SKILLS.values.toList()

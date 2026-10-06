@@ -131,6 +131,8 @@ Barrows.PUZZLE_CHOICE_COMPONENTS.forEachIndexed { index, component ->
         if (!Barrows.puzzleAnswered(index, answer)) {
             // OSRS Wiki Barrows/Strategies: "If you get the puzzle wrong, the doors and rooms within the tunnels will shift around".
             Barrows.shufflePuzzle(player, incorrect = true)
+            // Owner 2026-10-06 (bug 162848, choice "667 rumbling sound"): no donor plays a sound here; 667 sound 1678 "rumbling".
+            player.playSound(Sfx.RUMBLING)
             player.message("You got the puzzle wrong! You can hear the catacombs moving around you.")
             return@on_button
         }
@@ -164,6 +166,12 @@ on_obj_option(obj = Objs.CHEST_6775, option = "search") {
     }
     // OSRS Wiki Barrows/Strategies: killing the brother the chest wakes "is not required to loot".
     Barrows.loot(player)
+}
+
+// The reward window's item grid (Barrows.showReward): Examine, the only option, as in 2009scape RewardChest.
+on_button(interfaceId = Barrows.REWARD_INTERFACE, component = Barrows.REWARD_LAYER) {
+    val item = player.attr[Barrows.REWARD_ITEMS]?.getOrNull(player.getInteractingSlot()) ?: return@on_button
+    player.message(world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.id).examine ?: "It's a ${world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.id).name}.")
 }
 
 on_obj_option(obj = Objs.CHEST_6775, option = "close") {
@@ -216,6 +224,7 @@ on_timer(BARROWS_TIMER) {
             }
         }
         val collapse = player.attr[Barrows.COLLAPSE_TICKS]
+        Barrows.collapseShake(player, Barrows.inTunnels(player.tile))
         if (collapse != null && Barrows.inTunnels(player.tile)) {
             if (collapse % 9 == 0) {
                 player.graphic(60)

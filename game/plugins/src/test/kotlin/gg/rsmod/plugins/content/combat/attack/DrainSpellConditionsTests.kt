@@ -60,11 +60,13 @@ class DrainSpellConditionsTests {
     }
 
     @Test
-    fun `Ahrim casts Confuse, Weaken and Curse as the OSRS Wiki lists`() {
+    fun `Ahrim keeps the Confuse, Weaken and Curse sections, switched off by the owner's Fire Wave rule`() {
         val rows = ObjectMapper().readTree(File("../../data/cfg/npcs/npc-attacks.json"))
         val ahrim = rows.first { it["id"].asInt() == 2025 }
         val conditions = ahrim["attacks"].map { it["condition"].asText() }
         assertTrue(listOf("not_confused", "not_weakened", "not_cursed").all { it in conditions }, "$conditions")
+        // Owner 2026-10-06 "Darkan: always Fire Wave" (BarrowsOwnerFixesTests): the curses stay as data with chance 0.
+        assertTrue(ahrim["attacks"].filter { it["condition"].asText().startsWith("not_") }.all { it["chance"].asInt() == 0 })
         val curse = ahrim["attacks"].first { it["id"].asText() == "curse" }
         // Void magic.anims/gfx/sounds: curse_staff 1165, curse_cast 108, curse 109, curse_impact 110; sounds curse_cast 127, curse_impact 126.
         assertEquals(1165, curse["anim"].asInt())

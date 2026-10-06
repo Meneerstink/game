@@ -613,12 +613,18 @@ object Barrows {
      */
     fun onTunnelDoor(player: Player, spawnTile: Tile) {
         val world = player.world
-        val nearby = world.npcs.count { n -> n.isSpawned() && !n.isDead() && n.tile.height == spawnTile.height && n.tile.isWithinRadius(spawnTile, 8) && underground(n.tile) }
+        // "Eleven enemies": familiars and pets are no enemies (owner bug 162809: his familiar filled the room's count).
+        val nearby =
+            world.npcs.count { n ->
+                n.isSpawned() && !n.isDead() && n.tile.height == spawnTile.height && n.tile.isWithinRadius(spawnTile, 8) && underground(n.tile) &&
+                    gg.rsmod.plugins.content.skills.summoning.FamiliarCapabilityTable.forNpc(n.id) == null &&
+                    !gg.rsmod.plugins.content.skills.summoning.Pets.isPetNpc(n.id)
+            }
         if (nearby >= MAX_ROOM_ENEMIES) return
         val collapsing = player.attr[LOOTED] == true && player.attr[COLLAPSE_TICKS] != null
         val roll = if (collapsing) 0 else world.random(127)
         if (roll < 12) {
-            val brother = Brother.values().firstOrNull { !isKilled(player, it) && liveBrother(player, it) == null } ?: return
+            val brother = randomDoorBrother(player, collapsing, world.random(Brother.values().size - 1)) ?: return
             spawnBrother(player, brother, spawnTile)
             return
         }
@@ -638,6 +644,20 @@ object Barrows {
                 if (npc.isSpawned() && !npc.isDead()) world.remove(npc)
             }
         }
+    }
+
+    /**
+     * The brother a tunnel door summons (owner bug 162809: "every brother needs to spawn when opening doors, completely random").
+     * Darkan BarrowsController.getRandomBrother: a random brother not killed this run and not already up; OSRS Wiki
+     * Barrows/Strategies: "any of the remaining Barrows brothers". Owner 2026-10-06: the hidden-tunnel ("last") brother too - he
+     * comes from a door or, if still alive, at the chest (Darkan skips him here). [collapsing] is kept for the call site; after
+     * looting the same brothers remain. [roll] in 0 until 6 picks among the candidates.
+     */
+    @Suppress("UNUSED_PARAMETER")
+    fun randomDoorBrother(player: Player, collapsing: Boolean, roll: Int): Brother? {
+        val candidates = Brother.values().filter { !isKilled(player, it) && liveBrother(player, it) == null }
+        if (candidates.isEmpty()) return null
+        return candidates[roll.coerceAtLeast(0) % candidates.size]
     }
 
     /**
@@ -699,6 +719,7 @@ object Barrows {
             }
         }
         if (items.isEmpty()) player.message("You find nothing of value in the chest.")
+        showReward(player, items)
         player.attr[LOOTED] = true
         // Owner 2026-10-03 20:3x (F9): no Barrows kill count after looting.
         val count = (player.attr[CHEST_COUNT] ?: 0) + 1
@@ -713,7 +734,56 @@ object Barrows {
         refreshVarbits(player)
         player.attr[COLLAPSE_TICKS] = 0
         player.message("The cave begins to collapse!")
+        collapseShake(player, inTunnels(player.tile))
     }
+
+    /** The camera is shaking for the collapse (client state; [collapseShake]). */
+    val SHAKING = AttributeKey<Boolean>()
+
+    /**
+     * Darkan BarrowsController:297 sendCameraShake(3, 12, 25, 12, 25) - slot 3, jitter 12, amplitude 25, frequency 12, time 25
+     * (client CAM_SHAKE: index / center / amplitude / frequency / time). Owner 2026-10-06: the shake (and the falling rocks) end when
+     * leaving the tunnels; it starts again on going back in while they still collapse. Called each Barrows tick.
+     */
+    fun collapseShake(player: Player, inTunnels: Boolean) {
+        val shake = inTunnels && player.attr[COLLAPSE_TICKS] != null
+        if (shake == (player.attr[SHAKING] == true)) return
+        if (shake) {
+            player.shakeCamera(frequency = 12, index = 3, time = 25, center = 12, amplitude = 25)
+            player.attr[SHAKING] = true
+        } else {
+            player.resetCamera()
+            player.attr.remove(SHAKING)
+        }
+    }
+
+    /** The 667 Barrows chest reward window (2009scape RewardChest: interface 364, the items in layer 4). */
+    const val REWARD_INTERFACE = 364
+    const val REWARD_LAYER = 4
+
+    /** Client-only inventory of the reward window's item grid (client script 150; ClientInventory accepts any id). */
+    const val REWARD_CLIENT_INV = 30010
+
+    /**
+     * Owner 2026-10-06 (bug 162954: "no sound and no loot notification in the chatbox"): OSRS Wiki Chest (Barrows) - the jingle
+     * "Grave Robber" (77, Void barrows.jingles.toml barrows_chest) "plays upon opening the chest" and "An interface will appear
+     * showing the rewards"; owner choice also a chat line listing the loot.
+     */
+    fun showReward(player: Player, items: List<Item>) {
+        player.playJingle(GRAVE_ROBBER_JINGLE)
+        if (items.isEmpty()) return
+        val defs = player.world.definitions
+        player.message("Barrows chest: " + items.joinToString(", ") { "${"%,d".format(it.amount)} x ${defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, it.id).name}" } + ".")
+        player.attr[REWARD_ITEMS] = items.map { Item(it) }
+        player.write(gg.rsmod.game.message.impl.UpdateInvFullMessage(containerKey = REWARD_CLIENT_INV, items = items.map { Item(it) }.toTypedArray<Item?>()))
+        player.openInterface(REWARD_INTERFACE, InterfaceDestination.MAIN_SCREEN)
+        player.runClientScript(150, (REWARD_INTERFACE shl 16) or REWARD_LAYER, REWARD_CLIENT_INV, 4, 3, 0, -1, "Examine")
+    }
+
+    const val GRAVE_ROBBER_JINGLE = 77
+
+    /** The items shown in the reward window, for its Examine option. */
+    val REWARD_ITEMS = AttributeKey<List<Item>>()
 
     fun chestCountMessage(count: Int): String = "Your Barrows chest count is: <col=ff0000>$count</col>."
 
@@ -729,6 +799,8 @@ object Barrows {
     }
 
     fun resetRun(player: Player) {
+        if (player.attr[SHAKING] == true) player.resetCamera()
+        player.attr.remove(SHAKING)
         removeBrothers(player)
         player.attr.remove(PRAYER_DRAIN_STEP)
         player.attr.remove(CHEST_OPEN)
