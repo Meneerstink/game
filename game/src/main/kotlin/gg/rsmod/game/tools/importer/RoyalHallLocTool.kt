@@ -627,12 +627,29 @@ object RoyalHallLocTool {
         // The door definitions carry opcodes this walker cannot size (170 and up) after their model opcodes; a scale opcode
         // would come before them, so a walk that stops there has seen every place one could be.
         check(listOf(65, 66, 67).none { runCatching { opcodePosition(id, def, it) }.getOrDefault(-1) >= 0 }) { "door $id already scaled" }
-        return byteArrayOf(66, 0, 192.toByte()) + def
+        return byteArrayOf(66, 0, 192.toByte()) + withoutOcclusion(id, def)
     }
 
     private fun tallWall(id: Int, def: ByteArray): ByteArray {
         check(listOf(65, 66, 67).none { opcodePosition(id, def, it) >= 0 }) { "wall $id already scaled" }
-        return byteArrayOf(66, 0, 192.toByte()) + def
+        return byteArrayOf(66, 0, 192.toByte()) + withoutOcclusion(id, def)
+    }
+
+    /**
+     * [def] without loc opcode 23 ("occludes everything": the client adds a 960-high occluder plane on the wall's line,
+     * LocType.occlusionHeight default, and culls whatever lies fully behind it). The Lumbridge wall 33868 and the Large
+     * door leaves carry it; the window wall 33877, the crenellation 33504 and the parapet 11831 do not. In the hall the
+     * same wall stands on three storeys on one line, and the client only drops occluders ABOVE the player's storey when
+     * his roof is hidden (Static494.method6601: level >= player level + 1), so the planes of the storeys below culled
+     * the walls above them - from inside the top floor the plain outer walls vanished while every window wall (no
+     * opcode 23) stayed (owner 2026-10-06, fotos o.png / r.png / ss.png; reproduced screens/mansion-2026-10-06/e12-e14).
+     * Like Jagex's upper-floor pieces, the hall's walls and door leaves occlude nothing.
+     */
+    internal fun withoutOcclusion(id: Int, def: ByteArray): ByteArray {
+        // Doors: 23 comes before the unsized opcode 170, so the walk reaches it; a walk that fails has seen none.
+        val at = runCatching { opcodePosition(id, def, 23) }.getOrDefault(-1)
+        if (at < 0) return def
+        return def.copyOfRange(0, at) + def.copyOfRange(at + 1, def.size)
     }
 
     private fun marbleParapetDecor(def: ByteArray): ByteArray {
@@ -751,7 +768,7 @@ object RoyalHallLocTool {
             Variant(62780, 34873, "Royal Hall spiral staircase (top): white marble, gilded rails", ::premiumStairs),
             Variant(BALCONY_PARAPET, 11831, "Royal Hall upper balcony parapet: the crenellated parapet 11831 in white marble", ::marbleParapet),
             Variant(BALCONY_PARAPET_SIDE, 11831, "Royal Hall upper balcony parapet as a wall decoration (beside the level-2 doorways)", ::marbleParapetDecor),
-            Variant(TALL_WALL, 33868, "Royal Hall storey wall: 33868 at 1.5x height (360)") { tallWall(33868, it) },
+            Variant(TALL_WALL, 33868, "Royal Hall storey wall: 33868 at 1.5x height (360), no occlusion") { tallWall(33868, it) },
             Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 360, 1.5x high)") { curtain(it, 360, 192, CURTAIN_1_SHAPE) },
             Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (wall shape, not solid, lifted 720, 1.5x high)") { curtain(it, 720, 192, CURTAIN_2_SHAPE) },
             Variant(TALL_WINDOW_WALL, 33877, "Royal Hall storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
@@ -760,11 +777,11 @@ object RoyalHallLocTool {
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
             Variant(62766, TURRET_LOC, "Royal Hall corner turret (closed Falador castle turret 43731 at 1.375x)", ::grandTurret),
             Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
-            Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option)", ::withoutLeadingOption),
-            Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option)", ::withoutLeadingOption),
+            Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option, no occlusion)") { withoutOcclusion(22435, withoutLeadingOption(it)) },
+            Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option, no occlusion)") { withoutOcclusion(22437, withoutLeadingOption(it)) },
             // 1.5x high like the 360-high storeys (2026-10-02): the doorways are open up to the floor above.
-            Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option, 1.5x high)") { tallDoor(1506, withoutOptions(it)) },
-            Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option, 1.5x high)") { tallDoor(1508, withoutOptions(it)) },
+            Variant(62784, 1506, "Royal Hall open door, west leaf: white with gold studs (1506 without its option, 1.5x high, no occlusion)") { tallDoor(1506, withoutOptions(it)) },
+            Variant(62785, 1508, "Royal Hall open door, east leaf: white with gold studs (1508 without its option, 1.5x high, no occlusion)") { tallDoor(1508, withoutOptions(it)) },
             Variant(62765, 37169, "Royal Hall 1x1 white marble stall counter (37169 at half length)", ::halfCounter),
             // The casino upstairs (owner 2026-09-27): one gilded sign (14869, as in the Skilling Basement) named after the game
             // beside each card table.

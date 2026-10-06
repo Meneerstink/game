@@ -328,10 +328,10 @@ obj 62773 3158 3495 3 12 2
 obj 62773 3171 3495 3 12 0
 obj 62773 3158 3496 3 12 2
 obj 62773 3171 3496 3 12 0
-obj 62773 3158 3486 3 16 1
-obj 62773 3171 3486 3 16 0
-obj 62773 3171 3497 3 16 3
-obj 62773 3158 3497 3 16 2
+# The outermost ring has no corner pieces (owner 2026-10-06, foto 182733 "de plafondranden gaan in de towers"): its four
+# corner tiles (3158/3171, 3486/3497) lie inside the 2 x 2 corner towers, and their hip ridge and eave beams came out of the
+# middle of each tower. Without them the eaves end at the tower wall, as Falador castle's roofs meet their turrets; the
+# notch is hidden inside the tower. Ring 2's corners (3159,3487 ...) start just outside the tower wall.
 obj 62900 3160 3487 3 12 1
 obj 62900 3160 3496 3 12 3
 obj 62900 3161 3487 3 12 1
