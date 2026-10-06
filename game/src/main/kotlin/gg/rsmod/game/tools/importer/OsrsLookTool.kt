@@ -51,9 +51,9 @@ object OsrsLookTool {
         listOf(
             Look(20767, "Max cape", 13280, "Max cape", "E1: plain max cape drew the 2011 RS max cape"),
             Look(20768, "Max hood", 13281, "Max hood", "E1: max hood of the same set"),
-            Look(7462, "Gloves", 7462, "Barrows gloves", "B6: OSRS gauntlet cuff over the lower forearm"),
-            Look(8842, "Void knight gloves", 8842, "Void knight gloves", "B6 class: OSRS cuff over the lower forearm"),
-            Look(11133, "Regen bracelet", 11133, "Regen bracelet", "B6 class: OSRS lower-forearm piece"),
+            // Barrows gloves 7462, Void knight gloves 8842, Regen bracelet 11133 had the OSRS look here (B6, 2026-10-03); its converted
+            // hand sat inside the 667 forearm (owner 2026-10-06: "when unequiping barrows gloves my hands are visible"). Owner choice
+            // 2026-10-06 "Original 667 look": their 667 item definitions are restored (CacheJournalRestoreTool, tx-20261003-235150).
         )
 
     /** Rev-667 ObjType model opcodes: inventory, worn male/female 0-2, chathead male/female 0-1. */

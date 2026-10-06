@@ -155,10 +155,33 @@ object OsrsBodyFrame {
     private val RIGHT_HAND = Shift(27, -4, -30, 9)
     private val LEFT_HAND = Shift(28, 4, -30, 12)
 
+    /** Equipment slot of gloves, gauntlets, vambraces and bracelets. */
+    const val HANDS_SLOT = 9
+
+    /**
+     * The hands slot per gender (owner 2026-10-06, Eclipse / crystal / Barrows gloves "invisible hands"; foto\Schermafbeelding
+     * 2026-10-06 161923.png). The rows above (Key(9, 19/22), [RIGHT_HAND], [LEFT_HAND]) were one median over male AND female
+     * gloves: the hand moved -30, where the male hand needs +16 and the female hand -50, so every male OSRS glove drew its hand
+     * 46 units up inside the 667 forearm and its cuff at mid-forearm. Measured on the player's own hands kits, the same model id
+     * in both caches (tools\cache667, label centres, 667 - OSRS x4): male 176 / 10218 - wrist 19/22 (-+11, +14, -2), hand
+     * 27 -> 196/207/209 and 28 -> 195/194/204 (-+4, +16, -8); female 353 / 10706 - wrist (-+7, -67, +10), hand (-5 / +8, -50, +13).
+     * Labels keep their ids (27/28 animate as the 667 hands, see [RIGHT_HAND]).
+     */
+    private val MALE_HANDS: Map<Int, Shift> =
+        mapOf(19 to Shift(19, -11, 14, -2), 22 to Shift(22, 11, 14, -2), 27 to Shift(27, -4, 16, -8), 28 to Shift(28, 4, 16, -8))
+    private val FEMALE_HANDS: Map<Int, Shift> =
+        mapOf(19 to Shift(19, -7, -67, 10), 22 to Shift(22, 7, -67, 10), 27 to Shift(27, -5, -50, 13), 28 to Shift(28, 8, -50, 13))
+
+    /**
+     * [female]: the gender of a hands-slot mesh; null gives the shift as it was before 2026-10-06 (one row for both genders),
+     * which only [OsrsWristTool] uses, to recognise a mesh converted that way.
+     */
     fun shift(
         slot: Int,
         label: Int,
+        female: Boolean? = null,
     ): Shift {
+        if (slot == HANDS_SLOT && female != null) (if (female) FEMALE_HANDS else MALE_HANDS)[label]?.let { return it }
         BY_SLOT[Key(slot, label)]?.let { return it }
         if (label == 27) return RIGHT_HAND
         if (label == 28) return LEFT_HAND
@@ -219,30 +242,37 @@ object OsrsBodyFrame {
 
     /**
      * Converts a version-12 (coarse, 2007 body) worn [model] of equipment [slot] in place to a version-13 mesh on the 667 body:
-     * [shiftToRev667], and for the legs [fitShin] ([female] = the mesh is a female wear model; required for the legs).
+     * [shiftToRev667], and for the legs [fitShin] ([female] = the mesh is a female wear model; required for the legs and the hands).
+     * [legacyHands]: a hands mesh converted the pre-2026-10-06 way (no gender), only for recognition in [OsrsWristTool].
      * Refuses a mesh that is already version 13 or more, so no model is ever moved twice.
      */
     fun toRev667Frame(
         model: ModelData,
         slot: Int,
         female: Boolean? = null,
+        legacyHands: Boolean = false,
     ): ModelData {
         require(slot != LEGS_SLOT || female != null) { "a legs mesh needs its gender for the shin fit" }
-        shiftToRev667(model, slot)
+        require(slot != HANDS_SLOT || female != null || legacyHands) { "a hands mesh needs its gender for the hand position" }
+        shiftToRev667(model, slot, if (slot == HANDS_SLOT && legacyHands) null else female)
         if (slot == LEGS_SLOT) fitShin(model, female!!)
         return model
     }
 
-    /** The per-label translation alone - [toRev667Frame] as it was before the shin fit (2026-09-30), used by [OsrsShinTool]. */
+    /**
+     * The per-label translation alone - [toRev667Frame] as it was before the shin fit (2026-09-30), used by [OsrsShinTool].
+     * [female] picks the hands-slot rows of that gender ([shift]).
+     */
     fun shiftToRev667(
         model: ModelData,
         slot: Int,
+        female: Boolean? = null,
     ): ModelData {
         require(model.version < FRAME_VERSION) { "mesh is already version ${model.version}; the body-frame conversion runs once" }
         require(slot in RENDERED_SLOTS) { "slot $slot is not drawn on the player" }
         val labels = model.vertexLabel
         for (i in 0 until model.vertexCount) {
-            val s = if (labels == null) Shift(-1, ROOT.dx, ROOT.dy, ROOT.dz) else shift(slot, labels[i])
+            val s = if (labels == null) Shift(-1, ROOT.dx, ROOT.dy, ROOT.dz) else shift(slot, labels[i], female)
             model.vertexX[i] = model.vertexX[i] * 4 + s.dx
             model.vertexY[i] = model.vertexY[i] * 4 + s.dy
             model.vertexZ[i] = model.vertexZ[i] * 4 + s.dz

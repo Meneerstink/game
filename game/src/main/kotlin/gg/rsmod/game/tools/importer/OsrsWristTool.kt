@@ -13,6 +13,10 @@ import java.io.File
  * only when the cache still holds exactly the plain conversion the importer wrote before the fit; one that already holds the
  * fitted mesh is done, any other content is reported and left alone. One transaction on both caches; a second run finds
  * nothing to change. Usage: `[--apply]`.
+ *
+ * Owner 2026-10-06 (invisible hands with Eclipse / crystal + Tormented bracelet (or)): the conversion now places the hand and
+ * cuff per gender ([OsrsBodyFrame.shift]). A mesh that still holds the conversion of before (`legacyHands`: plain, fitted or an
+ * earlier fit) is replaced by the gendered one, fitted the same way.
  */
 object OsrsWristTool {
     private const val INDEX_MODEL = 7
@@ -65,13 +69,19 @@ object OsrsWristTool {
             println("HANDS MESHES ${targets.size}")
             targets.forEach { t ->
                 val current = library.data(INDEX_MODEL, t.local, 0) ?: error("model ${t.local} missing")
-                val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsWristFit.HANDS_SLOT)
+                val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsWristFit.HANDS_SLOT, t.female)
                 val fitted = OsrsWristFit.fitBytes(plain, pieces.getValue(t.female))
                 if (current.contentEquals(fitted)) {
                     done++
                     return@forEach
                 }
-                if (!current.contentEquals(plain) && !isEarlierFit(Rev667ModelDecoder.decode(current), Rev667ModelDecoder.decode(plain))) {
+                val legacy = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsWristFit.HANDS_SLOT, legacyHands = true)
+                val decoded = Rev667ModelDecoder.decode(current)
+                val ours =
+                    current.contentEquals(plain) || current.contentEquals(legacy) ||
+                        current.contentEquals(OsrsWristFit.fitBytes(legacy, pieces.getValue(t.female))) ||
+                        isEarlierFit(decoded, Rev667ModelDecoder.decode(plain)) || isEarlierFit(decoded, Rev667ModelDecoder.decode(legacy))
+                if (!ours) {
                     foreign += "model ${t.local} (${t.item}, upstream ${t.upstream}) holds neither the plain nor a fitted conversion"
                     return@forEach
                 }

@@ -1264,12 +1264,19 @@ object OsrsItemImportTool {
                         val worn = wornModels(entry.def)
                         fun converted(model: Int): ByteArray {
                             val slot = if (model in worn) entry.def.wearPos1 else null
-                            val bytes = convertModel(model, slot, if (slot == OsrsBodyFrame.LEGS_SLOT) wornFemale(entry.def, model) else null)
+                            // A hands mesh worn by both genders counts as male (hand position, OsrsBodyFrame; forearm fit), as
+                            // OsrsWristTool does.
+                            val handsFemale = model !in setOf(entry.def.maleModel0, entry.def.maleModel1, entry.def.maleModel2)
+                            val gender =
+                                when (slot) {
+                                    OsrsBodyFrame.LEGS_SLOT -> wornFemale(entry.def, model)
+                                    OsrsWristFit.HANDS_SLOT -> handsFemale
+                                    else -> null
+                                }
+                            val bytes = convertModel(model, slot, gender)
                             if (slot != OsrsWristFit.HANDS_SLOT) return bytes
-                            // The cuff of an OSRS glove sits inside the thicker 667 forearm unless fitted (OsrsWristFit); a mesh
-                            // worn by both genders is fitted to the male forearm, as OsrsWristTool does.
-                            val female = model !in setOf(entry.def.maleModel0, entry.def.maleModel1, entry.def.maleModel2)
-                            return OsrsWristFit.fitBytes(bytes, forearmPieces.first { it.female == female })
+                            // The cuff of an OSRS glove sits inside the thicker 667 forearm unless fitted (OsrsWristFit).
+                            return OsrsWristFit.fitBytes(bytes, forearmPieces.first { it.female == handsFemale })
                         }
                         val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", converted(it)) }
                         val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces, ::converted) else emptyMap()

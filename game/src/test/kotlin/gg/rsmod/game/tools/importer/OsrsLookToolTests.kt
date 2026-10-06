@@ -131,7 +131,8 @@ class OsrsLookToolTests {
         val imported = OsrsFxImportTool.importedItems(File(OsrsItemImportTool.ASSET_MAP)).values.toSet()
         assertTrue(OsrsLookTool.LOOKS.none { it.local in imported }, "the importer owns the look of imported items")
         assertTrue(OsrsLookTool.LOOKS.any { it.local == 20767 } && OsrsLookTool.LOOKS.any { it.local == 20768 }, "E1")
-        assertTrue(OsrsLookTool.LOOKS.any { it.local == 7462 }, "B6: the owner's Barrows gloves")
+        // Owner 2026-10-06 "Original 667 look": the 667 gloves keep their own look.
+        assertTrue(OsrsLookTool.LOOKS.none { it.local in RESTORED_667 }, "Barrows gloves / Void knight gloves / Regen bracelet stay 667")
     }
 
     /**
@@ -165,31 +166,26 @@ class OsrsLookToolTests {
     }
 
     /**
-     * B6 class guard (cache state): under an OSRS body that hides the arms kit (the owner's Eclipse moon chestplate 23102), each
-     * listed hands item covers the lower forearm up to where the body's sleeve ends - as the OSRS hands slot does - instead of
-     * leaving the bare skin piece of [WornForearm] showing between the sleeve and a 667 wrist ring.
+     * Owner 2026-10-06 "Original 667 look" (cache state): Barrows gloves, Void knight gloves and Regen bracelet hold their original
+     * 667 item definitions again - byte for byte the files OsrsLookTool replaced (journal tx-20261003-235150).
      */
     @Test
-    fun `listed hands items cover the lower forearm up to the end of an OSRS sleeve`() {
+    fun `Barrows gloves, Void knight gloves and Regen bracelet hold their original 667 definition`() {
+        val journal = Paths.get("..", "..", "..", "import-journal", "tx-20261003-235150").toFile()
         val library = gameCache()
         try {
-            fun mesh(model: Int) = Rev667ModelDecoder.decode(library.data(7, model, 0)!!, geometryOnly = true)
-            fun forearmTop(m: ModelData): Int? {
-                val labels = m.vertexLabel ?: return null
-                val scale = if (m.version < OsrsBodyFrame.FRAME_VERSION) 4 else 1
-                return (0 until m.vertexCount).filter { labels[it] in WornForearm.FOREARM_LABELS }.minOfOrNull { m.vertexY[it] * scale }
-            }
-            val chest = OsrsLookTool.payloads(CacheItemProbeTool.itemData(library, 23102)!!).getValue(23).toInt()
-            val sleeveEnd = WornForearm.forearmEnd(listOf(mesh(chest)))!!
-            val bare = mutableListOf<String>()
-            OsrsLookTool.LOOKS.filter { it.local in setOf(7462, 8842, 11133) }.forEach { look ->
-                val male = OsrsLookTool.payloads(CacheItemProbeTool.itemData(library, look.local)!!).getValue(23).toInt()
-                val top = forearmTop(mesh(male))
-                if (top == null || top > sleeveEnd) bare += "${look.local} ${look.localName}: forearm from ${top ?: "none"}, sleeve ends at $sleeveEnd"
-            }
-            assertTrue(bare.isEmpty(), "bare forearm between an OSRS sleeve and these hands items (run OsrsLookTool --apply): $bare")
+            val changed =
+                RESTORED_667.filter { id ->
+                    val orig = File(journal, "C_RSPS_game_game_data_cache__idx19_grp${id shr 8}_file${id and 0xFF}.orig").readBytes()
+                    !orig.contentEquals(CacheItemProbeTool.itemData(library, id)!!)
+                }
+            assertTrue(changed.isEmpty(), "not the original 667 definition (run CacheJournalRestoreTool): $changed")
         } finally {
             library.close()
         }
+    }
+
+    private companion object {
+        val RESTORED_667 = setOf(7462, 8842, 11133)
     }
 }

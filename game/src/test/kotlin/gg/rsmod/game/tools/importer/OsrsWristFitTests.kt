@@ -30,6 +30,22 @@ class OsrsWristFitTests {
                 }
             }
             assertTrue(covered.isEmpty(), "OSRS cuffs still inside the 667 forearm: $covered")
+            // Owner 2026-10-06 (invisible hands): the hand (labels 27/28) hangs below the end of the 667 forearm of its gender, not
+            // inside it (the pre-2026-10-06 conversion put the male hand's centre exactly at the forearm's end).
+            val inside = mutableListOf<String>()
+            targets.forEach { t ->
+                val glove = Rev667ModelDecoder.decode(library.data(7, t.local, 0)!!, geometryOnly = true)
+                val skin = skins.getValue(t.female)
+                val labels = glove.vertexLabel ?: return@forEach
+                val forearmEnd = OsrsWristFit.sides(skin).maxOf { it.bottom }
+                for (hand in listOf(27, 28)) {
+                    val ys = (0 until glove.vertexCount).filter { labels[it] == hand }.map { glove.vertexY[it] }
+                    if (ys.isNotEmpty() && ys.average() < forearmEnd + 10) {
+                        inside += "model ${t.local} ${t.item} ${if (t.female) "female" else "male"} label $hand centre ${ys.average().toInt()}, forearm ends $forearmEnd"
+                    }
+                }
+            }
+            assertTrue(inside.isEmpty(), "OSRS hands inside the 667 forearm (run OsrsWristTool --apply): $inside")
         } finally {
             reader.close()
             library.close()

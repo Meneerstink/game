@@ -74,6 +74,18 @@ class OsrsBodyFrameTests {
         assertEquals(listOf(-9, -9, 24 - 10), legs.vertexY.toList())
     }
 
+    @Test
+    fun `a hands mesh needs its gender and its hand lands on the 667 hand of that gender`() {
+        // Owner 2026-10-06 (invisible hands): one row for both genders moved every hand -30; the kits measure male +16, female -50.
+        assertTrue(runCatching { OsrsBodyFrame.toRev667Frame(mesh(27, 28, 19), slot = 9) }.isFailure)
+        val male = OsrsBodyFrame.toRev667Frame(mesh(27, 28, 19), slot = 9, female = false)
+        assertEquals(listOf(24 + 16, 24 + 16, 24 + 14), male.vertexY.toList())
+        val female = OsrsBodyFrame.toRev667Frame(mesh(27, 28, 19), slot = 9, female = true)
+        assertEquals(listOf(24 - 50, 24 - 50, 24 - 67), female.vertexY.toList())
+        val legacy = OsrsBodyFrame.toRev667Frame(mesh(27, 28, 19), slot = 9, legacyHands = true)
+        assertEquals(listOf(24 - 30, 24 - 30, 24 - 33), legacy.vertexY.toList())
+    }
+
     /** OSRS identity kit models (opcode 5: count, then 4-byte model ids). */
     private fun osrsKitModels(data: ByteArray): List<Int> {
         val models = mutableListOf<Int>()
