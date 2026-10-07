@@ -301,6 +301,9 @@ object DeathsOfficeInterfaceImportTool {
         val animation: Int = -1,
         /** Script id followed by its int arguments ([EVENT_COM] = this component). */
         val onLoad: List<Int> = emptyList(),
+        /** Mouse-over / mouse-leave hooks, same shape as [onLoad] (the OSRS `cc_colour_swapper` text highlight). */
+        val onMouseOver: List<Int> = emptyList(),
+        val onMouseLeave: List<Int> = emptyList(),
         /** Graphic drawn mirrored left-right (the OSRS tab pieces reuse one sprite for both sides). */
         val hflip: Boolean = false,
     )
@@ -411,17 +414,16 @@ object DeathsOfficeInterfaceImportTool {
         o.p1(0) // drag dead time
         o.p1(0) // drag render behaviour
         o.pjstr("") // target verb
-        // 20 hooks (onLoad .. onVarcstrTransmit; no onOpT for a legacy component): only onLoad is ever set here.
-        if (c.onLoad.isEmpty()) {
-            o.p1(0)
-        } else {
-            o.p1(c.onLoad.size)
-            c.onLoad.forEach {
+        // 20 hooks (onLoad, onMouseOver, onMouseLeave, .. onVarcstrTransmit; no onOpT for a legacy component): only the first
+        // three are ever set here. An empty hook is a single 0, so components without hover hooks encode exactly as before.
+        listOf(c.onLoad, c.onMouseOver, c.onMouseLeave).forEach { hook ->
+            o.p1(hook.size)
+            hook.forEach {
                 o.p1(0) // int argument
                 o.p4(it)
             }
         }
-        repeat(19) { o.p1(0) }
+        repeat(17) { o.p1(0) }
         repeat(5) { o.p1(0) } // transmit lists
         return o.bytes.toByteArray()
     }

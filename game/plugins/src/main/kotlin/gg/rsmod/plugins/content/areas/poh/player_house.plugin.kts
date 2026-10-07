@@ -169,11 +169,11 @@ mapOf(
 ).forEach { (portal, spell) ->
     on_obj_option(obj = portal, option = "enter") {
         // Owner 2026-09-19: every teleport in the game is reachable from the house - the portal's own city first,
-        // then the full directory (PohTeleports).
+        // then the full directory on the Portal Nexus screen (PohTeleportUi).
         player.queue {
             when (options(spell.spellName.removeSuffix(" Teleport"), "All teleports...", "Cancel", title = "House portal")) {
                 1 -> player.canTeleport(TeleportType.MODERN) { player.moveTo(gg.rsmod.game.model.collision.Landing.pick(player.world.collision, spell.endArea)) }
-                2 -> with(PohTeleports) { openDirectory(player) }
+                2 -> PohTeleportUi.openNexus(player)
             }
         }
     }

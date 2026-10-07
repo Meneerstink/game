@@ -446,6 +446,13 @@ task runRunePouchInterfaceImportTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.RunePouchInterfaceImportTool'
 }
+task runPohTeleportInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds OSRS interfaces 17 (Portal Nexus) / 590 (jewellery box) as 667 interfaces 1178 / 1179 in both caches (CacheTransaction). Usage: ' +
+        './gradlew :game:runPohTeleportInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.PohTeleportInterfaceImportTool'
+}
 task runShopPageInterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Appends the hidden Prev page / Page n / m / Next page row (620:35..38) to the 667 shop window in both caches ' +

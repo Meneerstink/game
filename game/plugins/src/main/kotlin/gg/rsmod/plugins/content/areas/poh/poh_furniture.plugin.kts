@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.areas.poh
 
+import gg.rsmod.game.tools.importer.PohTeleportInterfaceImportTool
 import gg.rsmod.plugins.content.items.armor.BarrowsRepair
 
 /**
@@ -20,14 +21,26 @@ import gg.rsmod.plugins.content.items.armor.BarrowsRepair
 /*
  * The teleport nexus. Revision 667 has no Portal Nexus loc - it is a much later OSRS object - so the house uses the
  * cache's own Scrying pool (13639), the one POH loc that exists to send a player somewhere of their choosing. Its
- * "Direct-portal" and "Scry" both open the full directory ([PohTeleports]), which already holds every teleport in the
- * game (owner 2026-09-19: "all the teleports in the game must be in the POH").
+ * "Direct-portal" and "Scry" both open the OSRS Portal Nexus Teleport Menu ([PohTeleportUi.openNexus], owner bug
+ * 2026-10-06 183223) with the full directory ([PohTeleports]), which holds every teleport in the game (owner 2026-09-19:
+ * "all the teleports in the game must be in the POH").
  */
 listOf("direct-portal", "scry").forEach { option ->
     on_obj_option(obj = PlayerHouse.NEXUS, option = option) {
-        player.queue {
-            with(PohTeleports) { openDirectory(player) }
-        }
+        PohTeleportUi.openNexus(player)
+    }
+}
+
+(0 until PohTeleportInterfaceImportTool.Nexus.ROWS).forEach { r ->
+    on_button(interfaceId = PohTeleportUi.NEXUS, component = PohTeleportInterfaceImportTool.Nexus.row(r)) {
+        val leaf = PohTeleportUi.NEXUS_ROWS.getOrNull(r) ?: return@on_button
+        PohTeleportUi.go(player, PohTeleportUi.NEXUS, leaf)
+    }
+}
+
+listOf(PohTeleportUi.NEXUS, PohTeleportUi.JEWELLERY_BOX).forEach { screen ->
+    on_button(interfaceId = screen, component = PohTeleportUi.CLOSE) {
+        player.closeInterface(screen)
     }
 }
 
@@ -54,10 +67,17 @@ on_obj_option(obj = PlayerHouse.ARMOUR_STAND, option = "repair") {
     }
 }
 
-// Jewellery box: every jewellery teleport in the directory, and nothing else.
+// Jewellery box: the OSRS jewellery box screen (OSRS 590) with the six jewellery items' destinations.
 on_obj_option(obj = PlayerHouse.JEWELLERY_BOX, option = "teleport") {
-    player.queue {
-        with(PohTeleports) { openBranch(player, "Jewellery") }
+    PohTeleportUi.openJewelleryBox(player)
+}
+
+PohTeleportInterfaceImportTool.BOXES.forEachIndexed { i, box ->
+    box.destinations.indices.forEach { d ->
+        on_button(interfaceId = PohTeleportUi.JEWELLERY_BOX, component = PohTeleportInterfaceImportTool.Box.button(i, d)) {
+            val leaf = PohTeleportUi.jewelleryLeaf(PohTeleportInterfaceImportTool.Box.button(i, d)) ?: return@on_button
+            PohTeleportUi.go(player, PohTeleportUi.JEWELLERY_BOX, leaf)
+        }
     }
 }
 
