@@ -543,10 +543,12 @@ object SystemsSuite : Conformance.Suite {
         Bots.itemOption(a, slot, "Last-destination")
         repeat(12) { wait(1) }
         run.expectTrue("trinket", "Last-destination", a.tile.isWithinRadius(FairyRings.CODES.getValue("cks").tile, 2), "at ${a.tile}")
-        // Spirit tree: menu of the five stations, option 1.
+        // Spirit tree: the real destination menu (interface 864 since 558f72624, owner 2026-10-02: interfaces, not chat menus); row 0.
         Bots.itemOption(a, slot, "Spirit-tree")
         wait(2)
-        Bots.answerOption(a, 1)
+        val treeMenu = gg.rsmod.plugins.content.mechanics.travel.SpiritTrees
+        run.expectTrue("trinket", "Spirit-tree opens the destination menu", a.interfaces.isVisible(treeMenu.INTERFACE), "${treeMenu.INTERFACE} visible")
+        Bots.button(a, treeMenu.INTERFACE, treeMenu.LIST, slot = 0)
         repeat(12) { wait(1) }
         run.expectTrue("trinket", "Spirit-tree teleport", a.tile.isWithinRadius(gg.rsmod.plugins.content.mechanics.travel.SpiritTrees.STATIONS[0].tile, 3), "at ${a.tile}")
         // Tool-leprechauns: a menu of the tool leprechauns standing in this world; option 1 lands next to one.
