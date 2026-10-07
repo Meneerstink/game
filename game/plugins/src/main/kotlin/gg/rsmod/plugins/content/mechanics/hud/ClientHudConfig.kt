@@ -61,6 +61,14 @@ object ClientHudConfig {
             // Owner 2026-10-01: the resizable/fullscreen chatbox background (client RspsChatbox); 667 default transparent.
             bool("chatbox.enabled", true),
             bool("chatbox.transparent", true),
+            // Owner 2026-10-07 ("questhelper needs a plugin just like the others"): the Quest Helper (quests/foundation/QuestHelper)
+            // as a plugin. Keys and names from the RuneLite Quest Helper plugin's QuestHelperConfig (autoStartQuests,
+            // showOverlayPanel, showMiniMapArrow); showStepMessages is this server's chat line of the helper.
+            bool("questhelper.enabled", true),
+            bool("questhelper.autoStartQuests", true),
+            bool("questhelper.showOverlayPanel", true),
+            bool("questhelper.showMiniMapArrow", true),
+            bool("questhelper.showStepMessages", true),
             // Boosts Information (BoostsConfig).
             choice("boosts.displayBoosts", "COMBAT", "NONE", "COMBAT", "NON_COMBAT", "BOTH"),
             bool("boosts.relativeBoost", false),
@@ -137,7 +145,7 @@ object ClientHudConfig {
 
     private val BY_KEY = SETTINGS.associateBy { it.key }
 
-    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox")
+    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox", "questhelper")
 
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")

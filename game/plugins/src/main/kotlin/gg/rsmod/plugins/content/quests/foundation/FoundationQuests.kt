@@ -362,8 +362,9 @@ object LunarDiplomacy : ShortQuest(
                         facialExpression = FacialExpression.LAUGH,
                     )
                     if (!DangerWarning.confirmQuestTravel(this, LUNAR_DOCK)) return@QuestStep false
-                    messageBox("Lokar sails you across the sea to Lunar Isle.")
+                    // Owner 2026-10-07: the trip starts on "Enter" - the move first, the line in the chatbox, no click in between.
                     player.moveTo(LUNAR_DOCK)
+                    player.message("Lokar sails you across the sea to Lunar Isle.")
                     wait(2)
                     true
                 },
@@ -589,7 +590,7 @@ object TempleAtSenntisten : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.AZZANADRA,
-                journal = listOf("I should bring the Frostenhorn and the Barrows icon", "to ${red("Azzanadra")} in the Grand Exchange hall."),
+                journal = listOf("I won the Frostenhorn and the Barrows icon. I should", "tell ${red("Azzanadra")} in the Grand Exchange hall."),
                 done = listOf("Azzanadra rededicated the temple and taught me the", "Ancient Curses."),
                 place = "the Grand Exchange hall",
                 location = GE_HALL,
@@ -885,15 +886,15 @@ object DesertTreasureII : ShortQuest(
                 location = NARDAH,
                 talk = {
                     chatNpc(
-                        "The vault holds the Forgotten Four: Vardorvis,",
-                        "Duke Sucellus, the Leviathan and the Whisperer -",
-                        "Zaros's greatest servants, sealed in stone.",
+                        "The vault holds the Forgotten Four, Zaros's greatest",
+                        "servants, sealed in stone: Vardorvis the blade, Duke",
+                        "Sucellus in his ice, the Leviathan of the deep...",
                         facialExpression = FacialExpression.WORRIED,
                     )
                     chatNpc(
-                        "Each statue answers to a medallion. Tell me in",
-                        "which order the seals were set, and I will know",
-                        "you have read the vault's walls with care.",
+                        "...and the Whisperer, whose voice is a whisper.",
+                        "Each statue answers to a seal. The vault's walls",
+                        "tell the order the seals were set - read it to me.",
                         facialExpression = FacialExpression.THINKING,
                     )
                     true
@@ -907,13 +908,19 @@ object DesertTreasureII : ShortQuest(
                 location = NARDAH,
                 talk = {
                     messageBox("The inscription reads: \"The blade before the ice, the ice before the deep, the deep before the whisper.\"")
-                    val order = listOf("Vardorvis", "Duke Sucellus", "The Leviathan", "The Whisperer")
+                    // Owner 2026-10-07 (stuck at Ali): the seals carry their clue word, so the inscription alone solves the order.
+                    val order = listOf("Vardorvis (the blade)", "Duke Sucellus (the ice)", "The Leviathan (the deep)", "The Whisperer (the whisper)")
                     val remaining = order.toMutableList()
                     for (i in order.indices) {
                         val shown = remaining.sorted()
-                        val pick = shown.getOrNull(options(*shown.toTypedArray(), title = "Seal ${i + 1}") - 1)
+                        val pick = shown.getOrNull(options(*shown.toTypedArray(), title = "Which seal was set ${listOf("first", "second", "third", "last")[i]}?") - 1)
                         if (pick != order[i]) {
-                            chatNpc("No... that is not the order the walls give. Read them again.", facialExpression = FacialExpression.UPSET)
+                            chatNpc(
+                                "No... the walls say the blade before the ice, the",
+                                "ice before the deep, the deep before the whisper.",
+                                "Speak to me again and set them in that order.",
+                                facialExpression = FacialExpression.UPSET,
+                            )
                             return@QuestStep false
                         }
                         remaining.remove(pick)
@@ -1102,8 +1109,9 @@ object DragonSlayerII : ShortQuest(
                         facialExpression = FacialExpression.LAUGH,
                     )
                     if (!DangerWarning.confirmQuestTravel(this, CRANDOR)) return@QuestStep false
-                    messageBox("Ned sails you out to Crandor. Galvek's call has woken Elvarg again.")
+                    // Owner 2026-10-07: the trip starts on "Enter" - the move first, the line in the chatbox, no click in between.
                     player.moveTo(CRANDOR)
+                    player.message("Ned sails you out to Crandor. Galvek's call has woken Elvarg again.")
                     wait(2)
                     true
                 },
@@ -1351,8 +1359,9 @@ object MonkeyMadnessII : ShortQuest(
                         facialExpression = FacialExpression.WORRIED,
                     )
                     if (!DangerWarning.confirmQuestTravel(this, APE_ATOLL)) return@QuestStep false
-                    messageBox("Daero flies you south to Ape Atoll.")
+                    // Owner 2026-10-07: the trip starts on "Enter" - the move first, the line in the chatbox, no click in between.
                     player.moveTo(APE_ATOLL)
+                    player.message("Daero flies you south to Ape Atoll.")
                     wait(2)
                     true
                 },
@@ -1589,7 +1598,7 @@ object FoundationQuests {
         task.player.message("You've started a new quest: <col=5861e9>${quest.name}")
         QuestHelper.onStarted(task.player, quest)
         val first = quest.steps.first()
-        if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location) }
+        if (first.location != null && first.place != null) with(quest) { task.offerTravel(first.place, first.location, first.npc.takeIf { first.fight == null }) }
     }
 
     private suspend fun runStep(task: QueueTask, quest: ShortQuest, stage: Int) {
@@ -1666,7 +1675,32 @@ object FoundationQuests {
             lost.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
         }
         task.chatPlayer(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.THINKING)
-        if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location) }
+        if (step.location != null && step.place != null) with(quest) { task.offerTravel(step.place, step.location, step.npc.takeIf { step.fight == null }) }
+    }
+
+    /**
+     * Where a quest travel to [location] for a talk with [npc] lands (owner 2026-10-07, conform quests: Eblis, Anna, Edmond
+     * could not be reached - "I can't reach that!" - from a landing outside their house): a free tile beside the npc's own
+     * post when it stands near [location] on the same floor, in the walkable area of that post; otherwise [location].
+     */
+    fun landing(world: gg.rsmod.game.model.World, npc: Int?, location: Tile): Tile {
+        if (npc == null) return location
+        var post: Tile? = null
+        world.npcs.forEach { n ->
+            val t = n.spawnTile
+            if (n.id != npc || n.owner != null || t.height != location.height || !t.isWithinRadius(location, QuestHelper.NPC_RANGE)) return@forEach
+            if (post == null || t.getDistance(location) < post!!.getDistance(location)) post = t
+        }
+        val at = post ?: return location
+        val area = gg.rsmod.game.model.collision.Landing.pocket(world.collision, at, 256)
+        for (r in 1..3) {
+            for (dx in -r..r) for (dz in -r..r) {
+                if (maxOf(Math.abs(dx), Math.abs(dz)) != r) continue
+                val t = Tile(at.x + dx, at.z + dz, at.height)
+                if (t in area) return t
+            }
+        }
+        return location
     }
 
     /** The journal/stage summary the Quest Guide uses. */

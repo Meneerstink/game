@@ -434,6 +434,45 @@ public class ChoosePathArt {
         });
     }
 
+    /**
+     * Mouse-over light for a card (owner 2026-10-07: "highlight it beautifully"): drawn over the card's face, under its
+     * icon and texts. A warm light across the card, a white-gold aura inside the rim and a bright polished-gold rim with
+     * a sparkle on each upper corner - the selected face's language, softer, so hover and selection stay distinct.
+     */
+    public static BufferedImage hover() {
+        return art(CARD_W, CARD_H, g -> {
+            RoundRectangle2D shape = rr(1.5, 1.5, CARD_W - 3, CARD_H - 3, 8);
+            g.setClip(shape);
+            // Warm light from the top, strongest behind the icon.
+            g.setPaint(new RadialGradientPaint(new Point2D.Double(CARD_W / 2.0, 14), 70f, new float[] {0f, .55f, 1f},
+                new Color[] {a(G0, .26), a(G1, .10), a(G1, 0)}));
+            g.fill(shape);
+            g.setPaint(vert(0, CARD_H, new float[] {0f, .5f, 1f}, new Color[] {a(Color.WHITE, .07), a(Color.WHITE, .02), a(Color.WHITE, 0)}));
+            g.fill(shape);
+            g.setClip(null);
+            glow(g, rr(3.5, 3.5, CARD_W - 7, CARD_H - 7, 6.5), G0, 5, .75);
+            g.setPaint(goldBand(0, CARD_H));
+            g.setStroke(new BasicStroke(2.2f));
+            g.draw(shape);
+            g.setColor(a(G0, .6));
+            g.setStroke(new BasicStroke(.6f));
+            g.draw(rr(4.2, 4.2, CARD_W - 8.4, CARD_H - 8.4, 5.5));
+            for (double[] p : new double[][] {{8, 8}, {CARD_W - 8, 8}}) {
+                GeneralPath star = new GeneralPath();
+                for (int i = 0; i < 8; i++) {
+                    double rad = i % 2 == 0 ? 4.2 : 1.0;
+                    double an = -Math.PI / 2 + i * Math.PI / 4;
+                    double x = p[0] + Math.cos(an) * rad, y = p[1] + Math.sin(an) * rad;
+                    if (i == 0) star.moveTo(x, y); else star.lineTo(x, y);
+                }
+                star.closePath();
+                glow(g, star, G1, 3, .7);
+                g.setColor(a(Color.WHITE, .9));
+                g.fill(star);
+            }
+        });
+    }
+
     public static BufferedImage tick() {
         return art(20, 20, g -> {
             Ellipse2D disc = new Ellipse2D.Double(1.5, 1.5, 17, 17);

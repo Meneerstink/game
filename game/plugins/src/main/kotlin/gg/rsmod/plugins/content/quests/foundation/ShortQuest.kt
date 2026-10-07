@@ -154,11 +154,14 @@ abstract class ShortQuest(
     }
 
     /** Offers the teleport to [location]; used by the quest's own npcs. */
-    suspend fun QueueTask.offerTravel(place: String, location: Tile) {
+    suspend fun QueueTask.offerTravel(place: String, location: Tile, npc: Int? = null) {
+        // Already there (a quest that starts where its first step is): nothing to offer.
+        if (player.tile.height == location.height && player.tile.isWithinRadius(location, 15)) return
         if (options("Can you get me to $place?", "I'll find my own way.", title = "Travel") != 1) return
         // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
-        if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, location)) return
-        player.canTeleport(TeleportType.MODERN) { player.teleport(location, TeleportType.MODERN) }
+        val landing = FoundationQuests.landing(player.world, npc, location)
+        if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, landing)) return
+        player.canTeleport(TeleportType.MODERN) { player.teleport(landing, TeleportType.MODERN, exact = landing != location) }
     }
 
 

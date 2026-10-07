@@ -30,6 +30,12 @@ object ChoosePathArtTool {
     const val CLOSE = BASE + 20
     const val COUNT = 21
 
+    /**
+     * The cards' mouse-over light (owner 2026-10-07), outside the first block: 8321.. went to the quest tab. The first id
+     * above every sprite in both caches (probe 2026-10-07); [main] refuses to overwrite a sprite it did not write.
+     */
+    const val HOVER = 8400
+
     fun card(row: Int, state: Int) = CARD_FIRST + row * 4 + state
 
     fun all(): Map<Int, BufferedImage> {
@@ -45,6 +51,7 @@ object ChoosePathArtTool {
         out[NO] = ChoosePathArt.button(96, 28, 2)
         out[CLOSE] = ChoosePathArt.close()
         check(out.size == COUNT && out.keys == (BASE until BASE + COUNT).toSet()) { "sprite ids must be $BASE..${BASE + COUNT - 1}" }
+        out[HOVER] = ChoosePathArt.hover()
         return out
     }
 
@@ -61,6 +68,12 @@ object ChoosePathArtTool {
         val current: Map<Int, String?>
         try {
             current = art.keys.associateWith { id -> library.data(LootKeyInterfaceImportTool.INDEX_SPRITES, id, 0)?.let(CacheItemProbeTool::sha1) }
+            // The hover sprite may only replace itself: an existing 8400 must already be this tool's hover art.
+            current[HOVER]?.let { existing ->
+                check(existing == CacheItemProbeTool.sha1(StoreArtTool.encode(art.getValue(HOVER))) || "--replace-hover" in args) {
+                    "sprite $HOVER is in use by something else - pick a free id (or pass --replace-hover when it is this tool's older hover art)"
+                }
+            }
         } finally {
             library.close()
         }

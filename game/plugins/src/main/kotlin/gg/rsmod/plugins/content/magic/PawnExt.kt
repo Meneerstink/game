@@ -117,11 +117,14 @@ fun Pawn.prepareForTeleport() {
 
 /**
  * @param startSound false when the caller already played the start sound (a spell's own cast sound).
+ * @param exact true when the caller already chose a walkable tile in the area it means (quest travel lands beside the
+ *   step's npc, FoundationQuests.landing): no Landing correction, which would move it out of a small room.
  */
 fun Pawn.teleport(
     endTile: Tile,
     type: TeleportType,
     startSound: Boolean = true,
+    exact: Boolean = false,
 ) {
     lock = LockState.FULL_WITH_DAMAGE_IMMUNITY
 
@@ -137,7 +140,7 @@ fun Pawn.teleport(
         wait(type.teleportDelay)
 
         // The destination's walkable ground, never a tile inside scenery (Landing, owner 2026-09-30 Trollheim).
-        teleportTo(gg.rsmod.game.model.collision.Landing.resolve(world.collision, endTile))
+        teleportTo(if (exact) endTile else gg.rsmod.game.model.collision.Landing.resolve(world.collision, endTile))
         type.landSound?.let { (this@teleport as? Player)?.playSound(it) }
 
         type.endAnimation?.let {

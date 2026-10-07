@@ -106,7 +106,8 @@ object Conformance {
                 "systems" -> SystemsSuite
                 "deadman", "dmm" -> DeadmanSuite
                 "traversal", "obstacles" -> TraversalSuite
-                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat, hud, systems, deadman, traversal)."
+                "quests", "quest" -> QuestsSuite
+                else -> return "Unknown conformance domain '$domain' (summoning, curses, equipment, combat, hud, systems, deadman, traversal, quests)."
             }
         val at = rawArgs.indexOf("at")
         val from =
@@ -171,7 +172,7 @@ object Conformance {
         args: List<String>,
     ): String =
         when (val d = args.getOrNull(0)?.lowercase()) {
-            null -> "conform summoning|curses|equipment|combat|hud|systems|deadman|traversal [name] [at x z h] | stop | status"
+            null -> "conform summoning|curses|equipment|combat|hud|systems|deadman|traversal|quests [name] [at x z h] | stop | status"
             "stop" -> {
                 stopRequested = true
                 "The conformance run stops after its current entry."

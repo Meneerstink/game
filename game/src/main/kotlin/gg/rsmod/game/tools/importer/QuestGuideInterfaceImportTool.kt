@@ -17,6 +17,12 @@ import gg.rsmod.game.tools.importer.ChoosePathArtTool as Art
  * window. Each card stacks its four painted faces (normal / selected / chosen / locked), the item icon, name, unlock text
  * and the tick or padlock badge; the server shows the right ones (content: `QuestGuideUi`).
  *
+ * Owner 2026-10-07: a card lights up under the mouse ([CARD_HOVER], the [Art.HOVER] sprite between the face and the icon,
+ * and the name turning white) - client side, like every OSRS hover: the card's onMouseOver / onMouseLeave hooks run
+ * [HOVER_SCRIPT], a new clientscript (IF_SETHIDE on the light + IF_SETCOLOUR on the name, the OSRS `cc_colour_swapper`
+ * idea for one static component). The server gives the light only to cards that can still be picked (a locked or
+ * finished card's light sprite is -1). The texts are larger and brighter for readability.
+ *
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool [--apply]`. The tool owns
  * interface [INTERFACE_ID]; a re-run replaces its own components (pinned to what is there) and removes left-overs.
  */
@@ -40,7 +46,6 @@ object QuestGuideInterfaceImportTool {
 
     const val ROWS = 3
     const val ROW_FIRST = 5
-    const val ROW_STRIDE = 34
     const val ROW_CONFIRM = 0
     const val CONFIRM_ACTIVE = 1
     const val CONFIRM_DISABLED = 2
@@ -48,21 +53,31 @@ object QuestGuideInterfaceImportTool {
 
     const val CARDS = 3
     const val CARD_OFFSET = 4
-    const val CARD_STRIDE = 10
+    const val CARD_STRIDE = 11
     const val FACE_FIRST = 1 // +1 normal, +2 selected, +3 chosen, +4 locked
-    const val CARD_ICON = 5
-    const val CARD_NAME = 6
-    const val CARD_DESC = 7
-    const val CARD_TICK = 8
-    const val CARD_LOCK = 9
+    const val CARD_HOVER = 5
+    const val CARD_ICON = 6
+    const val CARD_NAME = 7
+    const val CARD_DESC = 8
+    const val CARD_TICK = 9
+    const val CARD_LOCK = 10
+    const val ROW_STRIDE = CARD_OFFSET + CARDS * CARD_STRIDE // 37
 
-    const val DIM = ROW_FIRST + ROWS * ROW_STRIDE // 107
-    const val DIALOG = DIM + 1 // 108
+    const val DIM = ROW_FIRST + ROWS * ROW_STRIDE // 116
+    const val DIALOG = DIM + 1 // 117
     const val DIALOG_ART = DIALOG + 1
     const val DIALOG_TEXT = DIALOG + 2
-    const val YES = DIALOG + 3 // 111: layer, +1 art, +2 text
-    const val NO = YES + 3 // 114
-    const val COUNT = NO + 3 // 117
+    const val YES = DIALOG + 3 // 120: layer, +1 art, +2 text
+    const val NO = YES + 3 // 123
+    const val COUNT = NO + 3 // 126
+
+    /** The first clientscript id above the cache's last one (5379 = the POH colour script, probe 2026-10-07). */
+    const val HOVER_SCRIPT = 5380
+
+    /** Card name colours: gold, white under the mouse. */
+    const val NAME_GOLD = 0xFFDF6E
+    const val NAME_HOVER = WHITE
+    const val DESC_COLOUR = 0xFFF3DC
 
     const val CARD_WIDTH = 124
     const val CARD_HEIGHT = 72
@@ -71,6 +86,7 @@ object QuestGuideInterfaceImportTool {
     const val ROWS_Y = 68
     const val ROW_PITCH = 78
 
+    private const val TYPE_LAYER = 0
     private const val TYPE_RECTANGLE = 3
 
     fun rowBase(row: Int) = ROW_FIRST + row * ROW_STRIDE
@@ -82,6 +98,9 @@ object QuestGuideInterfaceImportTool {
 
     fun rowY(row: Int) = ROWS_Y + row * ROW_PITCH
 
+    /** A component of this interface as a clientscript argument (interface id << 16 | component). */
+    fun packed(component: Int) = (INTERFACE_ID shl 16) or component
+
     fun components(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
         b.add(Comp(ROOT, 0, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
@@ -89,9 +108,9 @@ object QuestGuideInterfaceImportTool {
         b.graphic(BACKGROUND, 0, 0, WIDTH, HEIGHT, WINDOW, Art.BACKGROUND)
         b.graphic(CLOSE, WIDTH - 32, 10, 22, 22, WINDOW, Art.CLOSE, ops = listOf("Close"))
         b.text(
-            SUBTITLE, 30, 42, WIDTH - 60, 24, WINDOW, fonts.p11,
-            "Choose one unlock per row. Your choice is permanent - other options can be earned by completing their quest.",
-            colour = CREAM, lineHeight = 12,
+            SUBTITLE, 26, 41, WIDTH - 52, 26, WINDOW, fonts.p12,
+            "Pick one unlock in each row - your choice is permanent.<br>The others can still be earned by completing their quests.",
+            colour = CREAM, lineHeight = 13,
         )
         for (r in 0 until ROWS) {
             val base = rowBase(r)
@@ -102,13 +121,20 @@ object QuestGuideInterfaceImportTool {
             b.text(base + CONFIRM_TEXT, 0, 0, 66, 26, base + ROW_CONFIRM, fonts.b12, "Confirm", colour = GREY)
             for (c in 0 until CARDS) {
                 val card = cardBase(r, c)
-                b.layer(card, cardX(c, CARDS), y, CARD_WIDTH, CARD_HEIGHT, WINDOW, hidden = true, ops = listOf("Select"))
+                b.add(
+                    Comp(
+                        card, TYPE_LAYER, cardX(c, CARDS), y, CARD_WIDTH, CARD_HEIGHT, WINDOW, hidden = true, ops = listOf("Select"),
+                        onMouseOver = listOf(HOVER_SCRIPT, packed(card + CARD_HOVER), 0, packed(card + CARD_NAME), NAME_HOVER),
+                        onMouseLeave = listOf(HOVER_SCRIPT, packed(card + CARD_HOVER), 1, packed(card + CARD_NAME), NAME_GOLD),
+                    ),
+                )
                 for (state in 0 until 4) {
                     b.add(Comp(card + FACE_FIRST + state, 5, 0, 0, CARD_WIDTH, CARD_HEIGHT, card, hidden = state != 0, graphic = Art.card(r, state)))
                 }
+                b.add(Comp(card + CARD_HOVER, 5, 0, 0, CARD_WIDTH, CARD_HEIGHT, card, hidden = true, graphic = Art.HOVER))
                 b.item(card + CARD_ICON, (CARD_WIDTH - 36) / 2, 2, card, emptyList(), outline = 1, hidden = false)
-                b.text(card + CARD_NAME, 3, 36, CARD_WIDTH - 6, 14, card, fonts.p12, "", colour = GOLD)
-                b.text(card + CARD_DESC, 4, 50, CARD_WIDTH - 8, 22, card, fonts.p11, "", colour = CREAM, alignY = 0, lineHeight = 10)
+                b.text(card + CARD_NAME, 2, 35, CARD_WIDTH - 4, 14, card, fonts.p12, "", colour = NAME_GOLD)
+                b.text(card + CARD_DESC, 3, 49, CARD_WIDTH - 6, 22, card, fonts.p11, "", colour = DESC_COLOUR, alignY = 0, lineHeight = 11)
                 b.add(Comp(card + CARD_TICK, 5, CARD_WIDTH - 23, 4, 20, 20, card, hidden = true, graphic = Art.TICK))
                 b.add(Comp(card + CARD_LOCK, 5, CARD_WIDTH - 23, 4, 20, 20, card, hidden = true, graphic = Art.LOCK))
             }
@@ -125,18 +151,65 @@ object QuestGuideInterfaceImportTool {
         return b.done(COUNT)
     }
 
+    /**
+     * [HOVER_SCRIPT](light, hidden, name, colour): IF_SETHIDE(hidden, light), IF_SETCOLOUR(colour, name). Same encoding as
+     * PohTeleportInterfaceImportTool.colourScript (IF_ variants are the CC_ ones + 1000 and pop their component last).
+     */
+    fun hoverScript(): ByteArray {
+        val out = java.io.ByteArrayOutputStream()
+        fun u16(v: Int) {
+            out.write(v ushr 8 and 0xFF)
+            out.write(v and 0xFF)
+        }
+        fun i32(v: Int) {
+            u16(v ushr 16)
+            u16(v and 0xFFFF)
+        }
+        var count = 0
+        fun op(opcode: Int, operand: Int, byteOperand: Boolean = false) {
+            u16(opcode)
+            if (byteOperand) out.write(operand and 0xFF) else i32(operand)
+            count++
+        }
+        val pushLocal = 33
+        val ret = 21
+        out.write(0) // no name
+        op(pushLocal, 1) // hidden
+        op(pushLocal, 0) // light
+        op(2003, 0, byteOperand = true) // IF_SETHIDE
+        op(pushLocal, 3) // colour
+        op(pushLocal, 2) // name
+        op(2101, 0, byteOperand = true) // IF_SETCOLOUR
+        op(ret, 0, byteOperand = true)
+        i32(count)
+        u16(4) // int locals
+        u16(0)
+        u16(0)
+        u16(4) // int arguments
+        u16(0)
+        u16(0)
+        out.write(0) // switch table count
+        u16(1) // switch section length (the count byte)
+        return out.toByteArray()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
         val library = CacheLibrary(LootKeyInterfaceImportTool.TARGETS[0])
         val fonts: LootKeyInterfaceImportTool.Fonts
         val current: Map<Int, String>
+        val currentScript: String?
         try {
             fonts = LootKeyInterfaceImportTool.fonts(library)
             val files = library.index(DeathsOfficeInterfaceImportTool.INDEX_INTERFACES).archive(INTERFACE_ID)?.fileIds()?.toList() ?: emptyList()
             current = files.associateWith { f -> CacheItemProbeTool.sha1(library.data(DeathsOfficeInterfaceImportTool.INDEX_INTERFACES, INTERFACE_ID, f)!!) }
             // The window's own art must be imported first (ChoosePathArtTool --apply).
             require(library.index(DeathsOfficeInterfaceImportTool.INDEX_SPRITES).archive(Art.BACKGROUND) != null) { "Choose-your-path sprites missing: run ChoosePathArtTool --apply first" }
+            require(library.index(DeathsOfficeInterfaceImportTool.INDEX_SPRITES).archive(Art.HOVER) != null) { "hover sprite ${Art.HOVER} missing: run ChoosePathArtTool --apply first" }
+            currentScript = library.data(DeathsOfficeInterfaceImportTool.INDEX_CLIENTSCRIPTS, HOVER_SCRIPT, 0)?.let(CacheItemProbeTool::sha1)
+            // The hover script id may only hold this tool's own script.
+            check(currentScript == null || currentScript == CacheItemProbeTool.sha1(hoverScript())) { "clientscript $HOVER_SCRIPT is in use by something else" }
         } finally {
             library.close()
         }
@@ -152,7 +225,12 @@ object QuestGuideInterfaceImportTool {
             current.keys.filter { it >= COUNT }.sorted().map { f ->
                 CacheMutation(DeathsOfficeInterfaceImportTool.INDEX_INTERFACES, INTERFACE_ID, f, null, "interface $INTERFACE_ID:$f (old layout)")
             }
-        val mutations = writes + removals
+        val script =
+            CacheMutation(
+                DeathsOfficeInterfaceImportTool.INDEX_CLIENTSCRIPTS, HOVER_SCRIPT, 0, hoverScript(), "clientscript $HOVER_SCRIPT (choose-your-path hover)",
+                expectedCurrentSha1 = currentScript,
+            )
+        val mutations = writes + removals + script
         val transaction = CacheTransaction(targets = LootKeyInterfaceImportTool.TARGETS, mutations = mutations)
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)

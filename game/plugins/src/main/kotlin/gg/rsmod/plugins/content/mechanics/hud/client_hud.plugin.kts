@@ -118,4 +118,6 @@ on_command("hud") {
         }
     }
     ClientHudConfig.push(player)
+    // The Quest Helper plugin's switches act at once (arrow, panel and chat line on or off).
+    gg.rsmod.plugins.content.quests.foundation.QuestHelper.refresh(player)
 }

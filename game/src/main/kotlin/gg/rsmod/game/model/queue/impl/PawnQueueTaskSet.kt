@@ -63,8 +63,14 @@ class PawnQueueTaskSet : QueueTaskSet() {
         }
     }
 
+    /**
+     * A standard task waits while a main-screen modal is open - except when its own answer has arrived: like the RS
+     * engine, whose resume-button packet resumes the suspended script directly, a task that opened a modal and waits for
+     * its button (interface 382 "Enter" from a quest dialogue, owner 2026-10-07) continues on the click, not only after
+     * the window is closed.
+     */
     private fun isPaused(task: QueueTask): Boolean =
-        task.priority == TaskPriority.STANDARD && task.ctx is Player && task.ctx.hasMenuOpen()
+        task.priority == TaskPriority.STANDARD && task.ctx is Player && task.requestReturnValue == null && task.ctx.hasMenuOpen()
 
     /**
      * Runs one cycle of [task]; returns true while it is still suspended.

@@ -57,6 +57,45 @@ on_command("questhelper") {
     }
 }
 
+// Admin test tool (2026-10-07, "play every quest"): the account becomes a new-player ("choice") account with every short
+// quest, choice and reward record back at the start, so the quests can be replayed (use it on the test server: it saves
+// nothing there). Unlocks already held stay.
+on_command("questreset", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    player.attr[QuestChoices.COHORT] = QuestChoices.CHOICE
+    ChoiceGroup.values().forEach { player.attr.remove(it.key) }
+    FoundationQuests.SHORT.forEach { quest ->
+        player.attr.remove(FoundationRewards.rewardedKey(quest))
+        quest.setStage(player, 0)
+    }
+    QuestHelper.stop(player, silent = true)
+    player.attr.remove(QuestHelper.OFF)
+    gg.rsmod.plugins.content.quests.QuestStatus.sync(player)
+    player.message("Quest reset: all eight short quests and the quest choices are open again.")
+}
+
+// Admin test tools (2026-10-07): `talknpc <id> [option]` clicks the nearest such npc's option exactly as the client does
+// (the conformance bots' OpNpc packet, real handler and walk), `questguide` opens "Choose your path".
+on_command("talknpc", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val id = args.getOrNull(0)?.toIntOrNull() ?: return@on_command player.message("talknpc <npc id> [option 1-5]")
+    val option = args.getOrNull(1)?.toIntOrNull() ?: 1
+    var best: gg.rsmod.game.model.entity.Npc? = null
+    player.world.npcs.forEach { n ->
+        if (n.id == id && n.tile.height == player.tile.height && n.tile.isWithinRadius(player.tile, 40) &&
+            (best == null || n.tile.getDistance(player.tile) < best!!.tile.getDistance(player.tile))
+        ) {
+            best = n
+        }
+    }
+    val npc = best ?: return@on_command player.message("No npc $id within 40 tiles.")
+    val client = player as? gg.rsmod.game.model.entity.Client ?: return@on_command
+    gg.rsmod.plugins.content.cmd.conformance.Bots.npcOption(client, npc, option)
+}
+
+on_command("questguide", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    QuestGuideUi.open(player)
+}
+
 // ---------------------------------------------------------------------------------------------- the Quest Guide
 
 // Moved or replaced through data/cfg/new_player.yml (choice_npc) - the later intro sends new players here.
@@ -244,21 +283,23 @@ suspend fun QueueTask.questDirections() {
     val stage = chosen.stage(player)
     if (stage <= 0) {
         chatNpc("${chosen.name} begins with ${chosen.startNpcName}, at ${chosen.startPlace}.", facialExpression = FacialExpression.CALM_TALK)
-        chosen.startLocation?.let { if (chosen.startPlace != "the Grand Exchange hall") travel(chosen.startPlace, it) }
+        chosen.startLocation?.let { if (chosen.startPlace != "the Grand Exchange hall") travel(chosen.startPlace, it, chosen.startNpc) }
     } else {
         val step = chosen.steps[stage - 1]
         chatNpc(*step.journal.map { it.replace(Regex("<[^>]+>"), "") }.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
         val place = step.place
         val location = step.location
-        if (location != null && place != null && place != "the Grand Exchange hall") travel(place, location)
+        if (location != null && place != null && place != "the Grand Exchange hall") travel(place, location, step.npc.takeIf { step.fight == null })
     }
 }
 
-suspend fun QueueTask.travel(place: String, tile: Tile) {
+suspend fun QueueTask.travel(place: String, destination: Tile, npc: Int? = null) {
     if (options("Send me to $place.", "I'll find my own way.", title = "Travel") != 1) return
+    // Beside the npc the player is sent to (FoundationQuests.landing), so it can be reached on foot.
+    val tile = FoundationQuests.landing(player.world, npc, destination)
     // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
     if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, tile)) return
-    player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN) }
+    player.canTeleport(TeleportType.MODERN) { player.teleport(tile, TeleportType.MODERN, exact = tile != destination) }
 }
 
 // ------------------------------------------------------------------------------------- the quests' own npcs

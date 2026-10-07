@@ -60,6 +60,7 @@ on_npc_option(npc = Npcs.AZZANADRA, option = "talk-to") {
 }
 
 on_item_option(item = Items.ANCIENT_HYMNAL, option = "read") {
+    val slot = player.getInteractingItemSlot()
     player.queue {
         if (player.attr[AncientCurses.UNLOCKED_ATTR] == true) {
             messageBox("The hymnal's verses are the Ancient Curses you learned at the temple of Senntisten.")
@@ -68,6 +69,10 @@ on_item_option(item = Items.ANCIENT_HYMNAL, option = "read") {
                 AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
                 player.message("<col=ef1020>The words of the hymnal fill your mind: your prayer book is now the Ancient Curses.</col>")
                 player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
+            }
+            // Owner 2026-10-07: once read, the hymnal is gone (the curses stay; Azzanadra switches books from then on).
+            if (player.inventory.remove(Items.ANCIENT_HYMNAL, beginSlot = slot).hasSucceeded()) {
+                player.message("The hymnal crumbles to dust as the last verse is spoken.")
             }
         } else {
             messageBox("The hymnal is written in an ancient Zarosian tongue you cannot follow.")

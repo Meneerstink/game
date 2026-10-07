@@ -8,9 +8,11 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentItem
 import gg.rsmod.plugins.api.ext.setComponentPosition
+import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
@@ -20,11 +22,18 @@ import gg.rsmod.plugins.api.ext.setInterfaceEvents
  * (the one choice path, idempotent per group), so a double click or a click on a closed window can never claim twice.
  *
  * [open] is the one entry point (the Quest Guide now, the intro later).
+ *
+ * Owner 2026-10-07: a card lights up under the mouse (client side, QuestGuideInterfaceImportTool.HOVER_SCRIPT) - only a
+ * card that can still be picked gets the light sprite - and picking a card or confirming plays the OSRS interface select
+ * sound ([SELECT_SOUND]); the final Yes plays the quest-complete jingle with the scroll.
  */
 object QuestGuideUi {
     const val INTERFACE_ID = L.INTERFACE_ID
 
     private const val EVENTS_OP1 = 0x2
+
+    /** OSRS `interface_select1` (sound 2266), the click of OSRS menus and option screens. */
+    const val SELECT_SOUND = gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1
 
     /** The card picked in each row (quest name), before Confirm. */
     private val PICKS = AttributeKey<String>()
@@ -55,7 +64,7 @@ object QuestGuideUi {
         mapOf(
             DesertTreasure to "Ancient Magicks<br>spellbook",
             LunarDiplomacy to "Lunar spellbook<br>and Vengeance",
-            DesertTreasureII to "Ancient sceptres<br>and Magus ring",
+            DesertTreasureII to "Ancient rings and<br>ancient sceptres",
             TempleAtSenntisten to "Ancient Curses<br>prayer book",
             KingsRansom to "Piety and<br>Chivalry",
             DragonSlayerII to "Ava's assembler<br>and Myths' Guild",
@@ -146,6 +155,9 @@ object QuestGuideUi {
                 for (state in 0 until 4) player.setComponentHidden(INTERFACE_ID, card + L.FACE_FIRST + state, hidden = state != face)
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_TICK, hidden = !(isChosen || finished))
                 player.setComponentHidden(INTERFACE_ID, card + L.CARD_LOCK, hidden = !lockedOut)
+                // The mouse-over light only on a card that can still be picked.
+                val pickable = !rowLocked && !finished
+                player.setComponentSprite(INTERFACE_ID, card + L.CARD_HOVER, if (pickable) gg.rsmod.game.tools.importer.ChoosePathArtTool.HOVER else -1)
                 player.setComponentItem(INTERFACE_ID, card + L.CARD_ICON, ICON[quest] ?: quest.reward.icon, 1)
                 val name = NAMES[quest] ?: quest.name
                 player.setComponentText(INTERFACE_ID, card + L.CARD_NAME, if (lockedOut) "$GREY$name$END" else name)
@@ -164,6 +176,7 @@ object QuestGuideUi {
         val picks = picks(player)
         picks[row] = quest.name
         setPicks(player, picks)
+        player.playSound(SELECT_SOUND)
         draw(player)
     }
 
@@ -173,6 +186,7 @@ object QuestGuideUi {
         val pick = picks(player)[row]?.let { name -> group.quests.firstOrNull { it.name == name } } ?: return
         if (locked(player, group) || !QuestChoices.available(player, group).contains(pick)) return
         player.attr[CONFIRMING] = row
+        player.playSound(SELECT_SOUND)
         draw(player)
     }
 

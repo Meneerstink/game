@@ -19,6 +19,10 @@ import gg.rsmod.plugins.api.ext.setComponentText
  * place (the minimap edge arrow shows the way) - and the step is written in the chatbox whenever it changes. Starting a
  * quest tracks it; "Toggle Map Hint" in the quest list, or ::questhelper, switches it on and off.
  *
+ * Owner 2026-10-07: the helper is a plugin of the 78 Plugins sidebar like the others ([PLUGIN] in ClientHudConfig, the
+ * RuneLite Quest Helper's own config items): switched off, no arrow, panel or chat line is shown and starting a quest
+ * tracks nothing; each part can also be switched off on its own. Fight steps still bring their foe (quest logic, not help).
+ *
  * The same tick spawns a fight step's foe as soon as the player reaches the fight's place, so a boss waits where the
  * quest says it is.
  */
@@ -30,12 +34,37 @@ object QuestHelper {
     private val LAST_TARGET = AttributeKey<String>()
     private val LAST_STEP = AttributeKey<String>()
 
+    private val FLOORS = listOf("ground floor", "first floor", "second floor", "third floor")
+
+    /** Staircases the helper sends a player to for an npc on another floor: the Grand Exchange hall's two (GeHomeHall). */
+    private val STAIRS: List<Tile> by lazy { gg.rsmod.plugins.content.areas.grandexchange.GeHomeHall.STAIRS.map { it.floor } }
+
     /** Hint arrow slot (the gravestone uses 0). */
     const val SLOT = 1
     const val INTERVAL = 3
 
     /** How far an npc of the step may be for the arrow to sit on it instead of on the step's place. */
     const val NPC_RANGE = 30
+
+    const val PLUGIN = "questhelper"
+
+    private fun setting(player: Player, key: String): Boolean =
+        gg.rsmod.plugins.content.mechanics.hud.ClientHudConfig.bool(player, "$PLUGIN.$key")
+
+    /** The plugin's main switch (78 Plugins sidebar, `hud questhelper on|off`). */
+    fun enabled(player: Player): Boolean = setting(player, "enabled")
+
+    /** A plugin switch changed: clear what is shown and draw it again on the next tick with the new settings. */
+    fun refresh(player: Player) {
+        player.attr.remove(LAST_STEP)
+        player.attr.remove(LAST_TARGET)
+        clearArrow(player)
+        Panel.close(player)
+        if (needsTimer(player)) {
+            start(player)
+            tick(player)
+        }
+    }
 
     fun tracked(player: Player): ShortQuest? =
         player.attr[TRACKED]?.let { slot -> FoundationQuests.SHORT.firstOrNull { it.slot == slot } }
@@ -68,9 +97,9 @@ object QuestHelper {
         }
     }
 
-    /** A quest was started: track it unless the player switched the helper off. */
+    /** A quest was started: track it unless the player switched the helper (or its auto start) off. */
     fun onStarted(player: Player, quest: ShortQuest) {
-        if (player.attr[OFF] != true) track(player, quest) else start(player)
+        if (player.attr[OFF] != true && enabled(player) && setting(player, "autoStartQuests")) track(player, quest) else start(player)
     }
 
     fun start(player: Player) {
@@ -84,11 +113,12 @@ object QuestHelper {
         player.write(HintArrowMessage(slot = SLOT, type = HintArrowMessage.TYPE_CLEAR))
     }
 
+    /** The step's npc near the player, on any floor (the Grand Exchange hall's quest npcs stand on its first floor). */
     private fun nearestNpc(player: Player, id: Int): Npc? {
         var best: Npc? = null
         var bestDistance = Int.MAX_VALUE
         player.world.npcs.forEach { npc ->
-            if (npc.id != id || npc.tile.height != player.tile.height || (npc.owner != null && npc.owner != player)) return@forEach
+            if (npc.id != id || (npc.owner != null && npc.owner != player)) return@forEach
             val distance = npc.tile.getDistance(player.tile)
             if (distance <= NPC_RANGE && distance < bestDistance) {
                 best = npc
@@ -109,6 +139,16 @@ object QuestHelper {
             }
         }
         val quest = tracked(player) ?: return
+        if (!enabled(player)) {
+            // Plugin off: nothing on screen; the tracked quest is kept for when it is switched on again.
+            if (player.attr[LAST_TARGET] != "off") {
+                player.attr[LAST_TARGET] = "off"
+                player.attr.remove(LAST_STEP)
+                clearArrow(player)
+                Panel.close(player)
+            }
+            return
+        }
         if (quest.isFinished(player)) {
             stop(player, silent = true)
             player.message("<col=0b6fb8>Quest Helper: ${quest.name} is complete.</col>")
@@ -135,13 +175,39 @@ object QuestHelper {
         val stepKey = "${quest.slot}:$stage"
         if (player.attr[LAST_STEP] != stepKey) {
             player.attr[LAST_STEP] = stepKey
-            player.message("<col=0b6fb8>Quest Helper (${quest.name}):</col> ${lines.joinToString(" ")}")
+            if (setting(player, "showStepMessages")) player.message("<col=0b6fb8>Quest Helper (${quest.name}):</col> ${lines.joinToString(" ")}")
         }
         val step = quest.steps.getOrNull(stage - 1)
-        Panel.show(player, quest, stage, lines.joinToString(" "), if (stage <= 0) quest.startPlace else step?.place, place, step?.tip)
         val foe = QuestFights.active(player)
-        val npc = foe ?: nearestNpc(player, npcId)
+        val found = foe ?: nearestNpc(player, npcId)
+        // Owner 2026-10-07 ("quest helper stays stuck"): an npc on another floor (the hall's first floor) is reached by the
+        // stairs - the arrow goes to the nearest staircase and the panel names the floor, never to an empty tile below it.
+        val goal = found?.tile ?: place
+        val otherFloor = goal != null && goal.height != player.tile.height && goal.isWithinRadius(Tile(player.tile.x, player.tile.z, goal.height), NPC_RANGE)
+        val floorHint = if (otherFloor) " - ${FLOORS.getOrElse(goal!!.height) { "level ${goal.height}" }} (take the stairs ${if (goal.height > player.tile.height) "up" else "down"})" else ""
+        if (setting(player, "showOverlayPanel")) {
+            val placeName = (if (stage <= 0) quest.startPlace else step?.place)?.let { it + floorHint }
+            Panel.show(player, quest, stage, lines.joinToString(" "), placeName, place, step?.tip)
+        } else {
+            Panel.close(player)
+        }
+        if (!setting(player, "showMiniMapArrow")) {
+            if (player.attr[LAST_TARGET] != "none") {
+                player.attr[LAST_TARGET] = "none"
+                clearArrow(player)
+            }
+            return
+        }
+        val npc = found?.takeIf { it.tile.height == player.tile.height }
         val key: String
+        if (otherFloor) {
+            val stairs = STAIRS.map { Tile(it.x, it.z, player.tile.height) }.minByOrNull { it.getDistance(player.tile) }
+            if (stairs != null && stairs.isWithinRadius(player.tile, NPC_RANGE)) {
+                player.attr[LAST_TARGET] = "stairs:${stairs.x},${stairs.z}"
+                player.write(HintArrowTileMessage(slot = SLOT, x = stairs.x, z = stairs.z, level = stairs.height, height = 0, drawDistance = 0))
+                return
+            }
+        }
         if (npc != null) {
             key = "npc:${npc.index}"
             if (player.attr[LAST_TARGET] != key) {
@@ -191,7 +257,7 @@ object QuestHelper {
             val dangerous = place != null && gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(place)
             val total = quest.steps.size
             val done = if (stage <= 0) 0 else stage - 1
-            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}"
+            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}:$placeName"
             if (there == ID && player.attr[SHOWN] == key) return
             if (there != ID) player.openInterface(ID, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN_OVERLAY)
             player.attr[SHOWN] = key

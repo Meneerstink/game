@@ -230,7 +230,7 @@ on_command("sweep", Privilege.ADMIN_POWER) {
 on_command("conform", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs().toList()
     when (val domain = args.getOrNull(0)?.lowercase()) {
-        null -> player.message("conform summoning [name] | stop")
+        null -> player.message("conform summoning|curses|equipment|combat|hud|systems|deadman|traversal|quests [name] | stop")
         "stop" -> {
             gg.rsmod.plugins.content.cmd.conformance.Conformance.stopRequested = true
             player.message("The conformance run stops after its current entry.")
