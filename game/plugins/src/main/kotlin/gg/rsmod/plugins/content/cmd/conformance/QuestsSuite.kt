@@ -46,6 +46,7 @@ import gg.rsmod.plugins.content.quests.foundation.QuestHelper
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 import gg.rsmod.plugins.content.quests.foundation.SongOfTheElves
 import gg.rsmod.plugins.content.quests.foundation.TempleAtSenntisten
+import gg.rsmod.plugins.content.quests.foundation.TutorIntro
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 import gg.rsmod.game.tools.importer.QuestGuideInterfaceImportTool as GuideUi
 import gg.rsmod.game.tools.importer.QuestHelperPanelImportTool as HelperPanel
@@ -132,6 +133,10 @@ object QuestsSuite : Conformance.Suite {
             group.quests.forEachIndexed { card, quest -> scenario("choose ${key(quest)}") { choose(run, row, card, group, quest) } }
         }
         scenario("tutor directions") { tutorDirections(run) }
+        // Owner 2026-10-07 night run: the Quest Tutor's new-player introduction (TutorIntro).
+        scenario("intro tour") { introTour(run, "intro tour", skipAfter = null, logoutAt = null) }
+        scenario("intro skip") { introTour(run, "intro skip", skipAfter = 2, logoutAt = null) }
+        scenario("intro logout") { introTour(run, "intro logout", skipAfter = null, logoutAt = 3) }
         ClassicQuests.ALL.forEach { classic -> scenario("classic ${classic.key}") { with(ClassicQuests) { play(run, classic) } } }
     }
 
@@ -1157,6 +1162,104 @@ object QuestsSuite : Conformance.Suite {
     }
 
     /** The Quest Tutor's directions: "Where do the quests start?" -> King's Ransom -> "Send me to ..." (382 + teleport). */
+    /**
+     * The new-player introduction (owner 2026-10-07): a fresh account watches the Quest Tutor's camera tour with real
+     * input (Click here to continue, the "Next / Skip" choice after every stop). Measured every tick: the player is locked
+     * and invisible (nothing can attack an invisible pawn), the Dangerous-area warning (382) never opens; every stop is
+     * reached (the player stands at the stop's tile, in the house for the house stop); at the end the player stands in
+     * front of the Tutor, unlocked and visible, "Choose your path" is open, the intro is marked seen, the Quest Helper
+     * tracks the first unfinished quest and no item or experience changed. [skipAfter]: "Skip" after that stop.
+     * [logoutAt]: the client closes (Player.requestLogout) during that stop - the player must end in the hall, intro seen.
+     */
+    private suspend fun QueueTask.introTour(
+        run: Conformance.Run,
+        entry: String,
+        skipAfter: Int?,
+        logoutAt: Int?,
+    ) {
+        val guide = guideNpc(run, entry) ?: return
+        val bot = run.bot(standNear(run, guide.tile), "QINTRO")
+        freshAccount(bot)
+        bot.attr.remove(TutorIntro.SEEN)
+        wait(2)
+        val itemsBefore = (0 until bot.inventory.capacity).mapNotNull { bot.inventory[it]?.let { i -> "${i.id}x${i.amount}" } }.sorted()
+        val xpBefore = xpOf(bot)
+        TutorIntro.start(bot)
+        val scenes = TutorIntro.SCENES
+        val reached = BooleanArray(scenes.size)
+        var scene = 0
+        var hiddenEveryTick = true
+        var notHidden = ""
+        var warning = false
+        var loggedOut = false
+        // After the last choice (or Skip) the player is back in front of the Tutor: the closing fade plays with the player
+        // already unlocked and visible in the hall (restore runs behind the black screen).
+        var ending = false
+        var ticks = 0
+        while (ticks++ < 1500) {
+            wait(1)
+            val active = TutorIntro.isActive(bot)
+            if (!active) break
+            if (!ending && (bot.lock != gg.rsmod.game.model.LockState.FULL_WITH_LOGOUT || !bot.invisible)) {
+                if (hiddenEveryTick) notHidden = "t$ticks scene $scene lock=${bot.lock} invisible=${bot.invisible}"
+                hiddenEveryTick = false
+            }
+            if (bot.interfaces.isVisible(DangerWarning.INTERFACE_ID)) warning = true
+            val s = scenes.getOrNull(scene)
+            if (s != null) {
+                val there = if (s.house) gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(bot.tile) else bot.tile.isWithinRadius(s.stand, 1)
+                if (there) reached[scene] = true
+            }
+            if (logoutAt != null && scene == logoutAt && reached[scene] && !loggedOut) {
+                loggedOut = true
+                bot.requestLogout()
+                continue
+            }
+            val chat = chatOpen(bot)
+            if (chat == -1) continue
+            if (isOptions(chat)) {
+                val skip = skipAfter != null && scene >= skipAfter
+                Bots.answerOption(bot, if (skip) 2 else 1)
+                if (skip || scene == scenes.size - 1) ending = true
+                scene++
+            } else {
+                Bots.inject(bot, ResumePauseButtonMessage(chat, continueComponent(chat), -1))
+            }
+            wait(1)
+        }
+        // The closing lines and the window come after the last scene's choice.
+        var n = 0
+        while (n++ < 40 && TutorIntro.isActive(bot)) {
+            wait(1)
+            val chat = chatOpen(bot)
+            if (chat != -1 && !isOptions(chat)) Bots.inject(bot, ResumePauseButtonMessage(chat, continueComponent(chat), -1))
+        }
+        wait(2)
+        val last = when {
+            logoutAt != null -> logoutAt
+            skipAfter != null -> skipAfter
+            else -> scenes.size - 1
+        }
+        run.expectTrue(entry, "the tour ended (finished, skipped or interrupted)", !TutorIntro.isActive(bot), "after $ticks ticks, scene $scene")
+        run.expectTrue(entry, "locked and invisible (cannot be attacked) every tick of every stop", hiddenEveryTick, notHidden)
+        run.expectTrue(entry, "the Dangerous-area warning (382) never opened during the tour", !warning, "")
+        val missing = (0..last).filter { !reached[it] }.map { scenes[it].title }
+        run.expectTrue(entry, "every stop up to '${scenes[last].title}' was reached", missing.isEmpty(), "missing $missing")
+        run.expectTrue(entry, "ends in front of the Quest Tutor", bot.tile == TutorIntro.endTile(), "bot at ${bot.tile.x},${bot.tile.z},${bot.tile.height}")
+        run.expectTrue(entry, "unlocked and visible again", bot.lock == gg.rsmod.game.model.LockState.NONE && !bot.invisible, "lock=${bot.lock} invisible=${bot.invisible}")
+        run.expectTrue(entry, "the intro is marked seen (saved attribute)", bot.attr[TutorIntro.SEEN] == true, "${bot.attr[TutorIntro.SEEN]}")
+        run.expectTrue(entry, "the Dangerous-area warning's intro window is closed", bot.attr[DangerWarning.INTRO] != true && bot.attr[DangerWarning.SUPPRESSED] != true, "intro=${bot.attr[DangerWarning.INTRO]} suppressed=${bot.attr[DangerWarning.SUPPRESSED]}")
+        val first = FoundationQuests.SHORT.firstOrNull { !it.isFinished(bot) }
+        run.expectTrue(entry, "the Quest Helper tracks the first quest (${first?.name})", QuestHelper.tracked(bot) == first, "tracked ${QuestHelper.tracked(bot)?.name}")
+        if (logoutAt == null) {
+            run.expectTrue(entry, "Choose your path (${QuestGuideUi.INTERFACE_ID}) is open at the end", bot.interfaces.isVisible(QuestGuideUi.INTERFACE_ID), describeScreen(run, bot))
+        }
+        val itemsAfter = (0 until bot.inventory.capacity).mapNotNull { bot.inventory[it]?.let { i -> "${i.id}x${i.amount}" } }.sorted()
+        run.expectTrue(entry, "no item changed", itemsAfter == itemsBefore, "before $itemsBefore after $itemsAfter")
+        val xpChanged = xpOf(bot).filter { (k, v) -> v != xpBefore[k] }.keys
+        run.expectTrue(entry, "no experience changed", xpChanged.isEmpty(), "skills $xpChanged")
+    }
+
     private suspend fun QueueTask.tutorDirections(run: Conformance.Run) {
         val entry = "tutor directions"
         val guide = guideNpc(run, entry) ?: return

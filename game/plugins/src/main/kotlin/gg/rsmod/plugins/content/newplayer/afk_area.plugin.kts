@@ -60,6 +60,8 @@ on_npc_option(npc = AfkArea.SURVIVAL_EXPERT, option = "talk-to") {
 
 // The first time a player comes down, the Survival Expert explains the basement (once, saved on the account).
 on_enter_region(AfkArea.REGION_ID) {
+    // The Quest Tutor's camera tour only flies through: the welcome waits for the player's own first visit.
+    if (gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(player)) return@on_enter_region
     if (AfkArea.markIntro(player)) {
         player.queue {
             wait(2)

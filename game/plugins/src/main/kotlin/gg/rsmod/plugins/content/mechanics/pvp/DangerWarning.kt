@@ -44,6 +44,12 @@ object DangerWarning {
     val ENABLED = AttributeKey<Boolean>("danger_warnings_on")
     private val BYPASS_UNTIL = AttributeKey<Int>()
 
+    /**
+     * The Quest Tutor's camera tour is moving the player (owner 2026-10-07: the warning never pops up during the tour).
+     * A one-shot bypass is not enough there: a teleport move passes the gate more than once. Never saved.
+     */
+    val SUPPRESSED = AttributeKey<Boolean>()
+
     /** Opens the warning for a held-back move; installed by `danger_warning.plugin.kts`. */
     var open: ((Player, Tile, Boolean) -> Unit)? = null
 
@@ -127,6 +133,7 @@ object DangerWarning {
     ): Boolean {
         if (player.entityType != EntityType.CLIENT || !player.initiated) return false
         if (!isActive(player)) return false
+        if (player.attr[SUPPRESSED] == true) return false
         if (AreaState.isDangerous(from) || !AreaState.isDangerous(to)) return false
         val bypass = player.attr[BYPASS_UNTIL]
         if (bypass != null) {

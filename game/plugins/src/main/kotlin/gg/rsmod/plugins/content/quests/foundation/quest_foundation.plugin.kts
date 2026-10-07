@@ -28,6 +28,9 @@ on_login {
     FoundationQuests.applyQuestListOrder(player)
 }
 
+// The new-player introduction (TutorIntro): a logout or disconnect mid-tour leaves the player in the hall, intro seen.
+on_logout { TutorIntro.finish(player, interrupted = true) }
+
 // The short quests' fight steps: the owner's kill of a quest foe completes the step (QuestFights).
 on_npc_killed { killer, npc -> QuestFights.onKilled(killer, npc) }
 
@@ -90,6 +93,29 @@ on_command("talknpc", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val npc = best ?: return@on_command player.message("No npc $id within 40 tiles.")
     val client = player as? gg.rsmod.game.model.entity.Client ?: return@on_command
     gg.rsmod.plugins.content.cmd.conformance.Bots.npcOption(client, npc, option)
+}
+
+on_command("introscene", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val n = player.getCommandArgs().getOrNull(0)?.toIntOrNull()
+    if (n == null) TutorIntro.start(player) else TutorIntro.preview(player, n)
+}
+
+// Camera tuning for the intro (admin): `camworld x z height lookX lookZ lookHeight [rate step]` in world tiles; a rate below
+// 100 glides there. `camworld` alone resets the camera.
+on_command("camworld", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val relative = args.firstOrNull() == "r"
+    val a = args.mapNotNull { it.toIntOrNull() }.mapIndexed { i, v -> if (!relative) v else when (i) { 0, 3 -> v + player.tile.x; 1, 4 -> v + player.tile.z; else -> v } }
+    if (a.size < 6) {
+        player.resetCamera()
+        return@on_command
+    }
+    val base = player.lastKnownRegionBase ?: return@on_command
+    val rate = a.getOrElse(6) { 100 }
+    val step = a.getOrElse(7) { 0 }
+    player.moveCameraTo(rate, a[0] - base.x, a[1] - base.z, a[2], step)
+    player.cameraLookAt(a[3] - base.x, a[4] - base.z, a[5], step, rate)
+    player.message("camworld from ${a[0]},${a[1]} h${a[2]} look ${a[3]},${a[4]} h${a[5]} rate $rate (base ${base.x},${base.z}, me ${player.tile.x},${player.tile.z})")
 }
 
 on_command("questguide", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
@@ -170,11 +196,15 @@ suspend fun QueueTask.questGuide() {
         menu += (if (!QuestChoices.isLegacy(player) && ChoiceGroup.values().any { QuestChoices.chosen(player, it) == null }) "Make my quest choices." else "View my quest choices.") to { QuestGuideUi.open(player) }
         if (player.attr[SummoningKit.CLAIMED] != true) menu += "Claim my Summoning start." to { claimSummoning() }
         menu += "Where do the quests start?" to { questDirections() }
+        // Owner 2026-10-07: the new-player introduction can be watched again here.
+        menu += "Show me the introduction again." to { TutorIntro.start(player) }
         menu += "Goodbye." to { }
         val choice = options(*menu.take(5).map { it.first }.toTypedArray(), title = "Quest Tutor")
         val entry = menu.getOrNull(choice - 1) ?: return
         if (entry.first == "Goodbye.") return
         entry.second(this)
+        // The tour runs in its own queue.
+        if (entry.first.startsWith("Show me the introduction")) return
         // The choice window replaces the dialogue.
         if (entry.first.endsWith("my quest choices.")) return
     }
@@ -280,6 +310,12 @@ suspend fun QueueTask.questDirections() {
         }
     }
     val chosen = quest ?: return
+    // Owner 2026-10-07: the Tutor's quest menu starts the Quest Helper for the chosen quest.
+    if (QuestHelper.enabled(player) && QuestHelper.tracked(player) != chosen &&
+        options("Start the Quest Helper for this quest.", "No thanks.", title = chosen.name) == 1
+    ) {
+        QuestHelper.track(player, chosen)
+    }
     val stage = chosen.stage(player)
     if (stage <= 0) {
         chatNpc("${chosen.name} begins with ${chosen.startNpcName}, at ${chosen.startPlace}.", facialExpression = FacialExpression.CALM_TALK)

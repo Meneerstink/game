@@ -67,39 +67,10 @@ on_login {
         player.setVarp(Bank.LAST_X_INPUT, 50)
         player.attr[CREATION_DATE] = System.currentTimeMillis()
 
-        // R14.10/11: a short, skippable dialogue-based introduction (a real interface tutorial
-        // widget would need cache interface ids this environment can't currently decode - see
-        // the R03.4/R02.3 notes in OWNER_TASK_STATUS.md - so this reuses the existing,
-        // already-working dialogue system instead of guessing new interface ids). Every account
-        // reaching this branch is by definition a fresh level-3 account, so the training-first
-        // guidance always applies here without needing a separate level check.
-        // Owner 2026-09-23: the Dangerous-area warning exists only while this introduction runs;
-        // finished, skipped or interrupted, it never shows again.
-        gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.startIntro(player)
-        player.queue {
-            terminateAction = { gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.endIntro(player) }
-            val skip =
-                options(
-                    "Start the introduction (about a minute).",
-                    "Skip the introduction.",
-                    title = "Welcome",
-                ) == 2
-            if (!skip) {
-                chatPlayer(
-                    "Welcome! This home area is your safe hub - shops, a prayer altar, a " +
-                        "restoration pool and travel options are all within a short walk.",
-                )
-                chatPlayer(
-                    "Starting out, it's worth training your combat and gathering skills before " +
-                        "heading into the Wilderness or high-level PvM.",
-                )
-                chatPlayer(
-                    "Check the activity board for today's objectives and the current " +
-                        "Wilderness hotspot whenever you're ready.",
-                )
-            }
-            gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.endIntro(player)
-        }
+        // Owner 2026-10-07: the old three-line welcome is replaced by the Quest Tutor's camera tour (TutorIntro) - after the
+        // starter kit, cash and beginner protection above. It opens the Dangerous-area warning's intro window
+        // (DangerWarning.startIntro, owner 2026-09-23) and closes it when the tour ends, is skipped or is interrupted.
+        gg.rsmod.plugins.content.quests.foundation.TutorIntro.start(player)
 
         world.players.entries.filterNotNull().filter { it != player }.forEach {
             val color =
