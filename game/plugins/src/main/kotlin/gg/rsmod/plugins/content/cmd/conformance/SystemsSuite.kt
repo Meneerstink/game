@@ -599,10 +599,15 @@ object SystemsSuite : Conformance.Suite {
         run: Conformance.Run,
         arena: Tile,
     ) {
-        // Real account names (the friend list only takes existing characters); bots are never saved.
-        val names = java.io.File("data/saves").listFiles()?.map { it.name }?.filter { !it.contains('.') }?.sorted() ?: emptyList()
+        // Real account names (the friend list only takes existing characters); bots are never saved. Only the agent's own test
+        // accounts and never one that is online: on 2026-10-07 the sorted save list put a bot on the owner's account "anudd" and
+        // his own login was refused with ALREADY_ONLINE while the suite ran.
+        val online = run.world.players.entries.filterNotNull().map { it.username.lowercase() }.toSet()
+        val names =
+            java.io.File("data/saves").listFiles()?.map { it.name }
+                ?.filter { !it.contains('.') && it.lowercase().startsWith("sumtest") && it.lowercase() !in online }?.sorted() ?: emptyList()
         if (names.size < 3) {
-            run.notTested("social", "friends / chats", "needs three saved characters, found ${names.size}")
+            run.notTested("social", "friends / chats", "needs three offline sumtest* test characters, found ${names.size}: $names")
             return
         }
         val a = run.bot(arena.transform(0, -3), names[0])
