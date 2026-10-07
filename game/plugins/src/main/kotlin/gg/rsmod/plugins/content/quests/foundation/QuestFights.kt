@@ -1,6 +1,9 @@
 package gg.rsmod.plugins.content.quests.foundation
 
+import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.collision.Landing
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.message
@@ -34,8 +37,11 @@ object QuestFights {
             player.message("The ${fight.name} waits for you at ${quest.steps[stage - 1].place ?: "the quest location"}.")
             return false
         }
+        // Still landing (teleport lock): the foe's first attack would be dropped and it would stand idle; the helper tick
+        // starts the fight once the player is free (conform quests 2026-10-07, Song of the Elves armed Mourner).
+        if (player.isLocked()) return false
         val world = player.world
-        val foe = Npc(player, fight.npc, fight.tile, world)
+        val foe = Npc(player, fight.npc, spawnTile(player, fight.npc, fight.tile), world)
         foe.respawnOverride = false
         foe.attr[FOE_QUEST] = quest.slot
         foe.attr[FOE_STAGE] = stage
@@ -79,7 +85,7 @@ object QuestFights {
         if (next != null) {
             val (second, shout) = next
             val world = killer.world
-            val foe = Npc(killer, second, if (fight.chainAtTile) fight.tile else npc.tile, world)
+            val foe = Npc(killer, second, spawnTile(killer, second, if (fight.chainAtTile) fight.tile else npc.tile), world)
             foe.respawnOverride = false
             foe.attr[FOE_QUEST] = slot
             foe.attr[FOE_STAGE] = stage
@@ -93,6 +99,27 @@ object QuestFights {
         }
         killer.attr.remove(ACTIVE_FOE)
         FoundationQuests.completeStep(killer, quest, stage)
+    }
+
+    /**
+     * Where a foe of [player] appears (conform quests 2026-10-07): [wanted] when the player can walk to it and the foe would
+     * not stand on the player, else the nearest such tile. King's Ransom's third knight appeared on the fight tile the player
+     * stood on; stacked, player and knight stepped out and back every tick and never came orthogonally next to each other.
+     * Song of the Elves' armed Mourner stood behind a wall of West Ardougne: "I can't reach that!".
+     */
+    fun spawnTile(player: Player, npcId: Int, wanted: Tile): Tile {
+        val world = player.world
+        val size = world.definitions.getNullable(NpcDef::class.java, npcId)?.size?.coerceAtLeast(1) ?: 1
+        val reachable = Landing.pocket(world.collision, player.tile, 2048)
+        fun fits(t: Tile): Boolean {
+            for (dx in 0 until size) for (dz in 0 until size) {
+                val f = Tile(t.x + dx, t.z + dz, t.height)
+                if (f == player.tile || f !in reachable) return false
+            }
+            return true
+        }
+        if (fits(wanted)) return wanted
+        return reachable.filter { it.height == wanted.height && fits(it) }.minByOrNull { it.getDistance(wanted) } ?: wanted
     }
 
     private fun questNpcName(quest: ShortQuest, stage: Int): String =
