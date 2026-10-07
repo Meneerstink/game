@@ -105,10 +105,21 @@ object TutorIntro {
                     listOf(
                         line("Inside is the hall - your home in 78. You start", "here, and you come back here after a death."),
                         line("The Quartermaster keeps supplies: food, potions,", "runes and house teleport tabs."),
-                        line("I stand by the fountain. Talk to me any time for", "your quest choices and quest lamps, or to watch", "this tour again."),
-                        line("Most quests start right here in the hall. The", "Archaeologist, Azzanadra and the Oneiromancer stand", "by the south entrance, Aleck in the north-east corner."),
-                        line("King Narnode waits upstairs in the lounge - take", "one of the marble staircases to the first floor."),
-                        line("Two quests start further away: the Gossip at", "Sinclair Mansion and Edmond in East Ardougne.", "The Quest Helper will show you the way."),
+                        line("I stand by the fountain. Talk to me any time for", "your quest choices, the way to every quest, or to", "watch this tour again."),
+                    ),
+            ),
+            Scene(
+                "the quest lounge",
+                // The hall's first floor (level 1): every hall quest giver stands here (world_edits.json, owner 2026-09-27
+                // layout plus his later moves). The player waits in the lounge's south-east corner, out of frame.
+                stand = Tile(3170, 3487, 1),
+                from = Cam(3169, 3485, 380), to = Cam(3166, 3486, 330),
+                lookFrom = Cam(3159, 3493, 120), lookTo = Cam(3160, 3492, 120),
+                lines =
+                    listOf(
+                        line("Upstairs, in the lounge, the quest givers wait: the", "Archaeologist, Azzanadra, the Oneiromancer, Aleck", "and King Narnode. Take a marble staircase up."),
+                        line("Two quests start further away: the Gossip at", "Sinclair Mansion and Edmond in East Ardougne."),
+                        line("The Quest Helper's arrow always shows who to talk", "to next - and when they're on another floor, it", "points you to the stairs."),
                     ),
             ),
             Scene(

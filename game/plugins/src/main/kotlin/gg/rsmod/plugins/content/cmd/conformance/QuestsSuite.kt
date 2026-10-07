@@ -963,6 +963,49 @@ object QuestsSuite : Conformance.Suite {
         val occupant = bot.interfaces.getInterfaceAt(getDisplayComponentId(mode), getChildId(InterfaceDestination.MAIN_SCREEN_OVERLAY, mode))
         run.check(entry, "$where panel (1166) shows the step", stepText, "QuestHelper.Panel" to "Step $stage of ${quest.steps.size}")
         if (stepText == null) run.note("$entry: overlay slot holds interface $occupant, so the helper panel stepped aside")
+        sidePanel(run, entry, bot, quest, stage)
+    }
+
+    /**
+     * The 78 Plugins sidebar's Quest Helper panel (owner 2026-10-07 night run, QuestHelperPanel.kt -> client RspsQuestHelper):
+     * the HUD payloads the bot was sent are decoded exactly as the client's RspsQuestHelper.handle does (the last
+     * qhb..qhe overview and the last qhq rows) and compared with the server's quest state at this step.
+     */
+    private fun sidePanel(
+        run: Conformance.Run,
+        entry: String,
+        bot: Client,
+        quest: ShortQuest,
+        stage: Int,
+    ) {
+        val where = "step $stage: Quest Helper side panel"
+        val payloads =
+            run.recording.of(bot.username, "msg").mapNotNull { e ->
+                val at = e.text.indexOf("message=__RSPS_HUD__:")
+                if (at < 0) null else e.text.substring(at + "message=__RSPS_HUD__:".length).removeSuffix(")")
+            }
+        val begin = payloads.indexOfLast { it.startsWith("qhb|") }
+        val end = payloads.indexOfLast { it == "qhe" }
+        if (begin < 0 || end < begin) {
+            run.expectTrue(entry, "$where received an overview (qhb..qhe)", false, "payloads ${payloads.filter { it.startsWith("qh") }.takeLast(4)}")
+            return
+        }
+        val head = payloads[begin].split("|")
+        val steps = mutableMapOf<Int, String>()
+        for (p in payloads.subList(begin + 1, end)) {
+            val f = p.split("|", limit = 4)
+            if (f.size == 4 && f[0] == "qhs" && f[1] == "step") steps[f[2].toInt()] = (steps[f[2].toInt()] ?: "") + f[3]
+        }
+        val shown = "slot ${head[1]} state ${head[2]} stage ${head[3]} tracked ${head[4]} steps ${head[5]}"
+        run.expectTrue(
+            entry, "$where shows this quest at this step, tracked", head[1].toInt() == quest.slot && head[3].toInt() == stage && head[4] == "1" && head[5].toInt() == quest.steps.size,
+            "$shown (server: slot ${quest.slot} stage $stage of ${quest.steps.size})",
+        )
+        val journal = quest.steps[stage - 1].journal.joinToString(" ").replace(Regex("<[^>]+>"), "").replace('|', '/').trim()
+        run.expectTrue(entry, "$where current step text = the journal's open step", steps[stage] == journal, "panel '${steps[stage]?.take(80)}' journal '${journal.take(80)}'")
+        run.expectTrue(entry, "$where lists every step", steps.keys == (1..quest.steps.size).toSet(), "steps ${steps.keys}")
+        val row = payloads.lastOrNull { it.startsWith("qhq|${quest.slot}|") }?.split("|")
+        run.expectTrue(entry, "$where quest list: in progress and tracked", row != null && row[2] == "1" && row[3] == "1", "row $row")
     }
 
     /** The reward of the finished quest, measured across its last step. */

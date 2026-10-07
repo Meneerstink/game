@@ -64,6 +64,7 @@ object QuestHelper {
             start(player)
             tick(player)
         }
+        QuestHelperPanel.push(player, force = true)
     }
 
     fun tracked(player: Player): ShortQuest? =
@@ -77,6 +78,7 @@ object QuestHelper {
         player.message("<col=0b6fb8>Quest Helper: now tracking ${quest.name}.</col>")
         start(player)
         tick(player)
+        QuestHelperPanel.push(player, force = true)
     }
 
     fun stop(player: Player, silent: Boolean = false) {
@@ -86,6 +88,7 @@ object QuestHelper {
         clearArrow(player)
         Panel.close(player)
         if (!silent) player.message("<col=0b6fb8>Quest Helper: off.</col>")
+        QuestHelperPanel.push(player, force = true)
     }
 
     fun toggle(player: Player, quest: ShortQuest) {
@@ -138,6 +141,8 @@ object QuestHelper {
                 QuestFights.start(player, quest, stage)
             }
         }
+        // The side panel follows every stage change (a step done, a quest started or finished).
+        QuestHelperPanel.push(player)
         val quest = tracked(player) ?: return
         if (!enabled(player)) {
             // Plugin off: nothing on screen; the tracked quest is kept for when it is switched on again.
@@ -184,10 +189,11 @@ object QuestHelper {
         // stairs - the arrow goes to the nearest staircase and the panel names the floor, never to an empty tile below it.
         val goal = found?.tile ?: place
         val otherFloor = goal != null && goal.height != player.tile.height && goal.isWithinRadius(Tile(player.tile.x, player.tile.z, goal.height), NPC_RANGE)
-        val floorHint = if (otherFloor) " - ${FLOORS.getOrElse(goal!!.height) { "level ${goal.height}" }} (take the stairs ${if (goal.height > player.tile.height) "up" else "down"})" else ""
+        // The floor goes into the (wrapping) instruction: the one-line "Go to" cut it off ("... hall - first fl", 2026-10-07).
+        val floorHint = if (otherFloor) " It is on the ${FLOORS.getOrElse(goal!!.height) { "level ${goal.height}" }}: take the stairs ${if (goal.height > player.tile.height) "up" else "down"}." else ""
         if (setting(player, "showOverlayPanel")) {
-            val placeName = (if (stage <= 0) quest.startPlace else step?.place)?.let { it + floorHint }
-            Panel.show(player, quest, stage, lines.joinToString(" "), placeName, place, step?.tip)
+            val placeName = if (stage <= 0) quest.startPlace else step?.place
+            Panel.show(player, quest, stage, lines.joinToString(" ") + floorHint, placeName, place, step?.tip)
         } else {
             Panel.close(player)
         }
@@ -257,7 +263,7 @@ object QuestHelper {
             val dangerous = place != null && gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(place)
             val total = quest.steps.size
             val done = if (stage <= 0) 0 else stage - 1
-            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}:$placeName"
+            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}:$placeName:$instruction"
             if (there == ID && player.attr[SHOWN] == key) return
             if (there != ID) player.openInterface(ID, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN_OVERLAY)
             player.attr[SHOWN] = key

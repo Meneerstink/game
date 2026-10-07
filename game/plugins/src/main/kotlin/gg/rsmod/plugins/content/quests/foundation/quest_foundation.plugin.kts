@@ -44,6 +44,35 @@ QuestBosses.SCRIPTS.forEach { script ->
 // Quest Helper (QuestHelper): arrows to the tracked quest's next step, and fight-step bosses appearing on arrival.
 on_login {
     if (QuestHelper.needsTimer(player)) QuestHelper.start(player)
+    QuestHelperPanel.push(player, force = true)
+}
+
+// The Quest Helper side panel (QuestHelperPanel, client RspsQuestHelper): its buttons send these.
+on_command("questpanel") {
+    val args = player.getCommandArgs()
+    val quest = args.getOrNull(1)?.toIntOrNull()?.let { slot -> FoundationQuests.SHORT.firstOrNull { it.slot == slot } }
+    when (args.getOrNull(0)) {
+        "list" -> player.attr.remove(QuestHelperPanel.VIEW)
+        "view" -> if (quest != null) player.attr[QuestHelperPanel.VIEW] = quest.slot
+        "track" -> if (quest != null) {
+            player.attr.remove(QuestHelperPanel.VIEW)
+            QuestHelper.track(player, quest)
+        }
+        "stop" -> {
+            // "Stop helper" keeps it off until the player starts it again (as the quest list's Toggle Map Hint does).
+            player.attr[QuestHelper.OFF] = true
+            QuestHelper.stop(player)
+        }
+        "travel" -> {
+            val target = quest?.let { QuestHelperPanel.travelTarget(player, it) }
+            if (quest != null && target != null && QuestHelperPanel.inHall(player)) {
+                player.queue { travel(target.first, target.second, target.third) }
+            } else {
+                player.message("The Quest Tutor sends you on from the Grand Exchange.")
+            }
+        }
+    }
+    QuestHelperPanel.push(player, force = true)
 }
 
 on_timer(QuestHelper.TIMER) {
