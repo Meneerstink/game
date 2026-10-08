@@ -1396,6 +1396,8 @@ object QuestsSuite : Conformance.Suite {
                     when (title) {
                         "Quest Tutor" -> options.indexOf("Where do the quests start?").takeIf { it >= 0 }?.plus(1)
                         "Which quest?" -> (options.indexOf(target.name).takeIf { it >= 0 } ?: options.indexOf("More quests").takeIf { it >= 0 })?.plus(1)
+                        // Night run 2026-10-08: the Tutor's quest menu offers the Quest Helper for the chosen quest.
+                        target.name -> options.indexOf("Start the Quest Helper for this quest.").takeIf { it >= 0 }?.plus(1)
                         else -> null
                     }
                 },
@@ -1409,6 +1411,7 @@ object QuestsSuite : Conformance.Suite {
             "bot at ${bot.tile.x},${bot.tile.z},${bot.tile.height}; ${conv.brief()}",
         )
         run.expectTrue(entry, "every option dialogue was the tutor's", conv.unexpected.isEmpty(), conv.unexpected.joinToString(" ").take(250))
+        run.expectTrue(entry, "the tutor's quest menu starts the Quest Helper for ${target.name}", QuestHelper.tracked(bot) == target, "tracked ${QuestHelper.tracked(bot)?.name}")
     }
 }
 

@@ -234,6 +234,9 @@ suspend fun QueueTask.questGuide() {
         entry.second(this)
         // The tour runs in its own queue.
         if (entry.first.startsWith("Show me the introduction")) return
+        // Night run 2026-10-08: after the directions (and the travel they offer) the conversation ends - the menu used to
+        // open again at the travel's destination, far from the Tutor.
+        if (entry.first == "Where do the quests start?") return
         // The choice window replaces the dialogue.
         if (entry.first.endsWith("my quest choices.")) return
     }
