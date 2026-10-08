@@ -691,7 +691,9 @@ object KingsRansom : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.ANNA,
-                journal = listOf("I should speak for ${red("Anna")} at her trial, using what", "the ${red("Gossip")} saw on the night of the murder."),
+                // Night run 2026-10-08 (played as a new player): the Gossip's clue was told once only; the journal, the
+                // Quest Helper and the reminder now carry it, so nobody has to remember an old line.
+                journal = listOf("I should speak for ${red("Anna")} at her trial with what the ${red("Gossip")}", "saw: a man in black armour at the back door, and the", "butler had a wet boot."),
                 done = listOf("I proved at the trial that the Black Knights framed", "the Sinclairs."),
                 place = "Sinclair Mansion",
                 location = SINCLAIR_MANSION,

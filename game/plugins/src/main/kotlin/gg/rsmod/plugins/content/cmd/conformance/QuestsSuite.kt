@@ -657,6 +657,76 @@ object QuestsSuite : Conformance.Suite {
         wait(2)
     }
 
+    /**
+     * Night run 2026-10-08 (played in the client): Anna stood in a bedroom with no doorway ("I can't reach that!" from every
+     * side) while every check passed - the quest travel and [goTo] both put the player inside the npc's own walkable area.
+     * This walks the map from the step's place (where the travel or the previous step leaves the player) and needs a tile
+     * orthogonally next to the npc's post. A closed door counts as passable (a player opens it): a blocked step is crossed
+     * when a wall loc with an "Open" option stands on either side of that edge.
+     */
+    private fun reachable(
+        run: Conformance.Run,
+        entry: String,
+        where: String,
+        bot: Client,
+        npc: Npc,
+        place: Tile?,
+    ) {
+        val location = place ?: return
+        // Where the player is: still at the previous step's npc when the place is near (no travel is offered within 15
+        // tiles, ShortQuest.offerTravel), else where the quest travel lands (FoundationQuests.landing).
+        val from =
+            if (bot.tile.height == location.height && bot.tile.isWithinRadius(location, 15)) bot.tile
+            else FoundationQuests.landing(run.world, npc.id, location)
+        val post = npc.spawnTile
+        if (from.height != post.height || !from.isWithinRadius(post, 60)) return
+        val world = run.world
+        val doorCache = HashMap<Tile, Boolean>()
+        fun door(t: Tile): Boolean =
+            doorCache.getOrPut(t) {
+                (0..3).any { type ->
+                    val obj = world.getObject(t, gg.rsmod.game.model.collision.ObjectType.values().first { it.value == type }) ?: return@any false
+                    val def = world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, obj.id) ?: return@any false
+                    def.options.any { it != null && it.equals("open", ignoreCase = true) }
+                }
+            }
+        val start = from
+        val seen = hashSetOf(start)
+        val parent = HashMap<Tile, Tile>()
+        val queue = ArrayDeque(listOf(start))
+        val goals = gg.rsmod.game.model.Direction.NESW.map { post.step(it) }.toSet()
+        var found = start in goals
+        while (queue.isNotEmpty() && !found && seen.size < 20000) {
+            val t = queue.removeFirst()
+            for (dir in gg.rsmod.game.model.Direction.NESW) {
+                val next = t.step(dir)
+                if (next in seen || !next.isWithinRadius(post, 70)) continue
+                if (!world.collision.canStep(t, dir) && !door(t) && !door(next)) continue
+                seen += next
+                parent[next] = t
+                if (next in goals) found = true
+                queue.addLast(next)
+            }
+        }
+        if (found) {
+            // Which closed doors the route needs (a player has to open them): named in the notes for the handoff.
+            var t = goals.first { it in seen }
+            val doors = mutableListOf<String>()
+            while (parent[t] != null) {
+                val p = parent[t]!!
+                val dir = gg.rsmod.game.model.Direction.NESW.first { p.step(it) == t }
+                if (!world.collision.canStep(p, dir)) doors += "${p.x},${p.z}->${t.x},${t.z}"
+                t = p
+            }
+            if (doors.isNotEmpty()) run.note("$entry $where: route to the npc opens doors at ${doors.reversed()}")
+        }
+        run.expectTrue(
+            entry, "$where: the npc's post ${post.x},${post.z},${post.height} is reachable on foot from ${from.x},${from.z} (doors opened)", found,
+            "searched ${seen.size} tiles from ${start.x},${start.z}",
+            rule = "night run 2026-10-08: every quest npc can be walked to from where the quest leaves the player",
+        )
+    }
+
     /** Before a talk: no window left from the last step, out of combat (a teleport offer would wait 7 seconds otherwise). */
     private suspend fun QueueTask.prepare(bot: Client) {
         if (bot.interfaces.getModal() != -1) {
@@ -746,6 +816,7 @@ object QuestsSuite : Conformance.Suite {
         val where = "step $stage ($name)"
         prepare(bot)
         val npc = locate(run, entry, where, step.npc, step.location, step.place) ?: run.npc(step.npc, standNear(run, step.location ?: bot.tile), "step-npc")
+        reachable(run, entry, where, bot, npc, step.location)
         goTo(run, bot, npc, step.location)
         val policy = Policy(quest, wrongFirst = true, travel = { dest -> dest != null && !bot.tile.isWithinRadius(dest, 20) })
         var conv = talkTo(run, bot, npc, entry, where, policy)
@@ -943,7 +1014,14 @@ object QuestsSuite : Conformance.Suite {
                 last == null -> false
                 text.startsWith("HintArrowTileMessage") -> {
                     val m = Regex("""x=(\d+), z=(\d+)""").find(text)
-                    tile != null && m != null && m.groupValues[1].toInt() == tile.x && m.groupValues[2].toInt() == tile.z
+                    val onPlace = tile != null && m != null && m.groupValues[1].toInt() == tile.x && m.groupValues[2].toInt() == tile.z
+                    // Night run 2026-10-08: when the step is on another floor the arrow shows the way there - a staircase or
+                    // ladder on the player's floor (QuestHelper.climbLoc, or the one that reaches the npc offering the travel).
+                    val onClimb =
+                        tile != null && m != null && tile.height != bot.tile.height && run.world.chunks.get(Tile(m.groupValues[1].toInt(), m.groupValues[2].toInt(), bot.tile.height))
+                            ?.getEntities<gg.rsmod.game.model.entity.GameObject>(Tile(m.groupValues[1].toInt(), m.groupValues[2].toInt(), bot.tile.height), gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                            ?.any { o -> run.world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, o.id)?.options?.any { it != null && it.lowercase().startsWith("climb") } == true } == true
+                    onPlace || onClimb
                 }
                 else -> {
                     val type = Regex("""type=(\d+)""").find(text)?.groupValues?.get(1)?.toInt()
@@ -955,7 +1033,7 @@ object QuestsSuite : Conformance.Suite {
                     }
                 }
             }
-        run.expectTrue(entry, "$where arrow on the open step (npc ${ids.first()} or ${tile?.x},${tile?.z})", ok, "last arrow: $text", rule = "QuestHelper: npc/foe of the step when near, else the step's place")
+        run.expectTrue(entry, "$where arrow on the open step (npc ${ids.first()} or ${tile?.x},${tile?.z})", ok, "last arrow: $text", rule = "QuestHelper: npc/foe of the step when near, else the step's place; on another floor a staircase/ladder on the player's floor")
         val stepText =
             msgs.lastOrNull { SET_TEXT.find(it.text)?.let { m -> m.groupValues[1].toInt() == HelperPanel.INTERFACE_ID && m.groupValues[2].toInt() == HelperPanel.STEP } == true }
                 ?.let { SET_TEXT.find(it.text)!!.groupValues[3] }

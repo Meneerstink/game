@@ -17,7 +17,10 @@ object QuestHelperPanelImportTool {
     const val INTERFACE_ID = 1166
 
     const val WIDTH = 204
-    const val HEIGHT = 120
+    // 156 (was 120): six instruction lines (a long step plus "It is on the second floor: take the stairs up." overflowed
+    // into the Go-to line) and two Go-to lines - a long place ("the graveyard north of Castle Drakan (Dangerous)") was
+    // cut off on one line (night run 2026-10-08, seen in the client).
+    const val HEIGHT = 156
 
     const val ROOT = 0
     const val PANEL = 1
@@ -60,9 +63,9 @@ object QuestHelperPanelImportTool {
         for (i in 0 until SEGMENTS) {
             b.add(Comp(SEGMENT_FIRST + i, TYPE_RECTANGLE, 6 + i * segment, 21, segment - 1, 4, PANEL, colour = GOLD, filled = true, hidden = true))
         }
-        b.text(INSTRUCTION, 6, 28, WIDTH - 12, 50, PANEL, fonts.p11, "", colour = WHITE, alignX = 0, alignY = 0, lineHeight = 12)
-        b.text(GOTO, 6, 79, WIDTH - 12, 13, PANEL, fonts.p11, "", colour = CREAM, alignX = 0, alignY = 0)
-        b.text(TIP, 6, 93, WIDTH - 12, 25, PANEL, fonts.p11, "", colour = ORANGE, alignX = 0, alignY = 0, lineHeight = 12)
+        b.text(INSTRUCTION, 6, 28, WIDTH - 12, 74, PANEL, fonts.p11, "", colour = WHITE, alignX = 0, alignY = 0, lineHeight = 12)
+        b.text(GOTO, 6, 103, WIDTH - 12, 25, PANEL, fonts.p11, "", colour = CREAM, alignX = 0, alignY = 0, lineHeight = 12)
+        b.text(TIP, 6, 129, WIDTH - 12, 25, PANEL, fonts.p11, "", colour = ORANGE, alignX = 0, alignY = 0, lineHeight = 12)
         return b.done(COUNT)
     }
 

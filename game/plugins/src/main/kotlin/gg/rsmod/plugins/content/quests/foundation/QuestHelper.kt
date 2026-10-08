@@ -190,7 +190,28 @@ object QuestHelper {
         val goal = found?.tile ?: place
         val otherFloor = goal != null && goal.height != player.tile.height && goal.isWithinRadius(Tile(player.tile.x, player.tile.z, goal.height), NPC_RANGE)
         // The floor goes into the (wrapping) instruction: the one-line "Go to" cut it off ("... hall - first fl", 2026-10-07).
-        val floorHint = if (otherFloor) " It is on the ${FLOORS.getOrElse(goal!!.height) { "level ${goal.height}" }}: take the stairs ${if (goal.height > player.tile.height) "up" else "down"}." else ""
+        // The way to the other floor: the hall's staircases, else a staircase / ladder here that leads towards the goal
+        // (climbLoc). None (Camelot: the nearby ladders end in closed tower tops, night run 2026-10-08): the step npc's
+        // travel is the way - the helper never sends a player up a dead end.
+        val climb =
+            if (!otherFloor) {
+                null
+            } else {
+                STAIRS.map { Tile(it.x, it.z, player.tile.height) }.minByOrNull { it.getDistance(player.tile) }?.takeIf { it.isWithinRadius(player.tile, NPC_RANGE) }
+                    ?: climbLoc(player, up = goal!!.height > player.tile.height, goal = goal)
+            }
+        val floorName = goal?.let { g -> FLOORS.getOrElse(g.height) { "level ${g.height}" } }
+        // No way: the npc who offers the travel (on any floor near here), and the way to that npc.
+        val guide = if (otherFloor && climb == null) (if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc)?.let { nearestNpc(player, it) } else null
+        val guideClimb = guide?.takeIf { it.tile.height != player.tile.height }?.let { climbLoc(player, up = it.tile.height > player.tile.height, goal = it.tile) }
+        val floorHint =
+            when {
+                !otherFloor -> ""
+                climb != null -> " ${floorName!!.replaceFirstChar { it.uppercase() }}: take the stairs ${if (goal!!.height > player.tile.height) "up" else "down"}."
+                guide != null && guide.tile.height != player.tile.height ->
+                    " Ask ${travelNpcName(player, quest, stage)} (${FLOORS.getOrElse(guide.tile.height) { "level ${guide.tile.height}" }}) to take you there."
+                else -> " Ask ${travelNpcName(player, quest, stage)} to take you there."
+            }
         if (setting(player, "showOverlayPanel")) {
             val placeName = if (stage <= 0) quest.startPlace else step?.place
             Panel.show(player, quest, stage, lines.joinToString(" ") + floorHint, placeName, place, step?.tip)
@@ -207,10 +228,25 @@ object QuestHelper {
         val npc = found?.takeIf { it.tile.height == player.tile.height }
         val key: String
         if (otherFloor) {
-            val stairs = STAIRS.map { Tile(it.x, it.z, player.tile.height) }.minByOrNull { it.getDistance(player.tile) }
-            if (stairs != null && stairs.isWithinRadius(player.tile, NPC_RANGE)) {
+            val stairs = climb
+            if (stairs != null) {
                 player.attr[LAST_TARGET] = "stairs:${stairs.x},${stairs.z}"
                 player.write(HintArrowTileMessage(slot = SLOT, x = stairs.x, z = stairs.z, level = stairs.height, height = 0, drawDistance = 0))
+                return
+            }
+            // No way up or down from here: the arrow goes to the npc who offers the travel - over it on this floor, else
+            // to the staircase that reaches it (Camelot: Sir Lancelot stands on the first floor).
+            if (guide != null && guide.tile.height == player.tile.height) {
+                val guideKey = "npc:${guide.index}"
+                if (player.attr[LAST_TARGET] != guideKey) {
+                    player.attr[LAST_TARGET] = guideKey
+                    player.write(HintArrowMessage(slot = SLOT, type = HintArrowMessage.TYPE_NPC, target = guide.index))
+                }
+                return
+            }
+            if (guideClimb != null) {
+                player.attr[LAST_TARGET] = "stairs:${guideClimb.x},${guideClimb.z}"
+                player.write(HintArrowTileMessage(slot = SLOT, x = guideClimb.x, z = guideClimb.z, level = guideClimb.height, height = 0, drawDistance = 0))
                 return
             }
         }
@@ -283,6 +319,100 @@ object QuestHelper {
             val (parent, child) = slot(player)
             if (player.interfaces.getInterfaceAt(parent, child) == ID) player.closeInterface(ID)
         }
+    }
+
+    private val CLIMB_CACHE = AttributeKey<MutableMap<String, Tile?>>()
+
+    /**
+     * The nearest loc on the player's floor (within [CLIMB_RADIUS]) whose options climb [up] or down - "Climb-up",
+     * "Climb up", "Climb" on stairs and ladders. Cached per floor area, so the scan runs once per arrival.
+     */
+    private fun climbLoc(player: Player, up: Boolean, goal: Tile): Tile? {
+        val key = "${player.tile.x shr 3},${player.tile.z shr 3},${player.tile.height},$up,${goal.x},${goal.z},${goal.height}"
+        val cache = player.attr[CLIMB_CACHE] ?: LinkedHashMap<String, Tile?>().also { player.attr[CLIMB_CACHE] = it }
+        if (cache.containsKey(key)) return cache[key]
+        if (cache.size > 8) cache.clear()
+        val world = player.world
+        val want = if (up) listOf("climb-up", "climb up") else listOf("climb-down", "climb down")
+        var best: Tile? = null
+        var bestDistance = Int.MAX_VALUE
+        var bestScore = Int.MAX_VALUE
+        val seen = HashSet<Int>()
+        for (dx in -CLIMB_RADIUS..CLIMB_RADIUS) for (dz in -CLIMB_RADIUS..CLIMB_RADIUS) {
+            val t = Tile(player.tile.x + dx, player.tile.z + dz, player.tile.height)
+            val chunk = world.chunks.get(t) ?: continue
+            for (obj in chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)) {
+                if (!seen.add(System.identityHashCode(obj))) continue
+                val def = world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, obj.id) ?: continue
+                val options = def.options.filterNotNull().map { it.lowercase() }
+                val option = def.options.filterNotNull().firstOrNull { o -> want.any { o.lowercase().startsWith(it) } }
+                if (option == null && !(options.contains("climb") && def.name.lowercase().let { "stair" in it || "ladder" in it })) continue
+                // Route-aware (night run 2026-10-08, Camelot): a castle has several staircases and the nearest one can lead
+                // into a closed tower. Score by where it lands (ObjectTeleports): 0 = the goal is walkable from there, 1 =
+                // a floor nearer the goal, 2 = unknown landing; then the distance.
+                val entry = gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.find(t, listOf(obj.id), option ?: "climb")
+                val landing = entry?.let { gg.rsmod.plugins.content.mechanics.objteleports.ObjectTeleports.destination(it, t) }
+                val score =
+                    when {
+                        landing == null -> 2
+                        landing.height == goal.height && walkable(world, landing, goal) -> 0
+                        Math.abs(landing.height - goal.height) < Math.abs(player.tile.height - goal.height) && landing.height != goal.height -> 1
+                        else -> 3
+                    }
+                val d = t.getDistance(player.tile)
+                if (score < bestScore || (score == bestScore && d < bestDistance)) {
+                    bestScore = score
+                    bestDistance = d
+                    best = t
+                }
+            }
+        }
+        // Only a staircase that lands on the goal's floor with a walkable route counts (score 0): one that leads to an
+        // in-between floor or a closed tower top would send a new player up a dead end.
+        if (bestScore != 0) best = null
+        cache[key] = best
+        if (best == null) {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "quest helper: no ${if (up) "up" else "down"} staircase/ladder within $CLIMB_RADIUS tiles of ${player.username} at ${player.tile} leads to the step's floor - the helper names the quest travel" }
+        } else {
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "quest helper: stairs arrow for ${player.username} at $best (${if (up) "up" else "down"})" }
+        }
+        return best
+    }
+
+    private const val CLIMB_RADIUS = 24
+
+    /** Who offers the quest travel for this stage: the step's npc (a fight step's npc sends the player in). */
+    private fun travelNpcName(player: Player, quest: ShortQuest, stage: Int): String {
+        val id = if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc ?: return "the quest's contact"
+        return FoundationQuests.NPC_NAMES[id] ?: player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)?.name ?: "the quest's contact"
+    }
+
+    /**
+     * The goal (or a tile next to it) can be walked to from [from] on its floor. A closed door counts as passable (a player
+     * opens it): a blocked step is crossed when a wall loc with an "Open" option stands on either side of that edge.
+     */
+    private fun walkable(world: gg.rsmod.game.model.World, from: Tile, goal: Tile): Boolean {
+        val goals = gg.rsmod.game.model.Direction.NESW.map { goal.step(it) }.toSet() + goal
+        val doors = HashMap<Tile, Boolean>()
+        fun door(t: Tile): Boolean =
+            doors.getOrPut(t) {
+                world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                    ?.any { o -> o.type in 0..3 && world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, o.id)?.options?.any { it.equals("open", ignoreCase = true) } == true } == true
+            }
+        val seen = hashSetOf(from)
+        val queue = ArrayDeque(listOf(from))
+        while (queue.isNotEmpty() && seen.size < 4000) {
+            val t = queue.removeFirst()
+            if (t in goals) return true
+            for (dir in gg.rsmod.game.model.Direction.NESW) {
+                val next = t.step(dir)
+                if (next in seen) continue
+                if (!world.collision.canStep(t, dir) && !door(t) && !door(next)) continue
+                seen += next
+                queue.addLast(next)
+            }
+        }
+        return false
     }
 
     /** After a region rebuild the client forgets tile arrows: send the current one again. */
