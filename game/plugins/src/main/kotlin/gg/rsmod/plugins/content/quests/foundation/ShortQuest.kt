@@ -65,6 +65,12 @@ class QuestFight(
     }
 
     val secondForm: Int? get() = chain.firstOrNull()?.first
+
+    /**
+     * The foe at the start of a sentence: "The suqah", "The elf warrior" - but a name stays bare ("Sir Bedivere", "Dessous";
+     * the messages said "The Sir Bedivere", seen 2026-10-08). [name] is lower case exactly for the common nouns.
+     */
+    val subject: String get() = if (name.first().isLowerCase()) "The $name" else name
 }
 
 /**

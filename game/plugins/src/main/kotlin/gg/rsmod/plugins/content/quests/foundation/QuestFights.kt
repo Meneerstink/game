@@ -34,7 +34,7 @@ object QuestFights {
         val fight = quest.steps.getOrNull(stage - 1)?.fight ?: return false
         if (active(player) != null) return true
         if (player.tile.height != fight.tile.height || !player.tile.isWithinRadius(fight.tile, REACH)) {
-            player.message("The ${fight.name} waits for you at ${quest.steps[stage - 1].place ?: "the quest location"}.")
+            player.message("${fight.subject} waits for you at ${quest.steps[stage - 1].place ?: "the quest location"}.")
             return false
         }
         // Still landing (teleport lock): the foe's first attack would be dropped and it would stand idle; the helper tick
@@ -48,7 +48,7 @@ object QuestFights {
         if (!world.spawn(foe)) return false
         player.attr[ACTIVE_FOE] = WeakReference(foe)
         foe.forceChat(fight.shout)
-        player.message("<col=ef1020>The ${fight.name} (level ${fight.level}) attacks! Dying here follows the normal death rules of this area.")
+        player.message("<col=ef1020>${fight.subject} (level ${fight.level}) attacks! Dying here follows the normal death rules of this area.")
         foe.attack(player)
         leash(player, quest, stage, foe, fight)
         return true
@@ -66,7 +66,7 @@ object QuestFights {
                 if (gone && foe.isSpawned() && foe.isAlive()) {
                     world.remove(foe)
                     player.attr.remove(ACTIVE_FOE)
-                    if (player.isOnline && !player.isDead()) player.message("The ${fight.name} has fled. Return to ${quest.steps[stage - 1].place ?: "the quest location"} to face it again.")
+                    if (player.isOnline && !player.isDead()) player.message("${fight.subject} has fled. Return to ${quest.steps[stage - 1].place ?: "the quest location"} to face it again.")
                 }
             }
         }

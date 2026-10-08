@@ -85,6 +85,8 @@ import gg.rsmod.game.tools.importer.QuestHelperPanelImportTool as HelperPanel
  *                     full reward once, the other quests of the row stay locked and unpaid, a second Yes pays nothing.
  *  - `tutor directions` the Quest Tutor's "Where do the quests start?" travel (382 + teleport timing).
  *  - `tutor combat 3`  the same for a combat-3 player: the Tutor says to train combat first (owner Q17 A).
+ *  - `foe anims`       every quest foe (and chain foe) attacks and dies with an animation that exists in the cache; a
+ *                     block animation no donor has is UNSOURCED.
  *  - `classic <quest>` the twelve 2011 quests in quests/impl, see [ClassicQuests].
  */
 object QuestsSuite : Conformance.Suite {
@@ -135,6 +137,7 @@ object QuestsSuite : Conformance.Suite {
         }
         scenario("tutor directions") { tutorDirections(run) }
         scenario("tutor combat 3") { tutorDirections(run, combat = 3) }
+        scenario("foe anims") { foeAnims(run) }
         // Owner 2026-10-07 night run: the Quest Tutor's new-player introduction (TutorIntro).
         scenario("bank seal") { bankSeal(run) }
         scenario("intro tour") { introTour(run, "intro tour", skipAfter = null, logoutAt = null) }
@@ -1403,6 +1406,37 @@ object QuestsSuite : Conformance.Suite {
         val said = conv.transcript.joinToString(" / ")
         run.expectTrue(entry, "the step waits (no Seal carried)", quest.stage(bot) == 3, "stage ${quest.stage(bot)}")
         run.expectTrue(entry, "the npc says the Seal is in the bank", said.contains("in your bank"), said.take(300))
+    }
+
+    /**
+     * 2026-10-08, King's Ransom fought by hand: the Knight Waves knights hit without any animation (combat-defs.json
+     * attack/block/death -1). Every quest foe's registered combat definition - the one World.spawn gives the npc - needs
+     * an attack and a death animation that exist in the cache (tools\npc-combat-defs\fill-anims-2009scape.js).
+     */
+    private fun foeAnims(run: Conformance.Run) {
+        val entry = "foe anims"
+        val defs = run.world.definitions
+        FoundationQuests.SHORT.forEach { quest ->
+            quest.steps.mapNotNull { it.fight }.forEach { fight ->
+                (listOf(fight.npc) + fight.chain.map { it.first }).forEach { id ->
+                    val name = defs.getNullable(NpcDef::class.java, id)?.name ?: "?"
+                    val combat = run.world.plugins.allNpcCombatDefs()[id]
+                    val exists = { anim: Int -> anim >= 0 && defs.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim) != null }
+                    val fights = combat != null && exists(combat.attackAnimation) && combat.deathAnimation.isNotEmpty() && combat.deathAnimation.all(exists)
+                    run.expectTrue(
+                        entry, "${quest.name}: $name ($id) attacks and dies with cache animations", fights,
+                        if (combat == null) "no combat definition" else "attack ${combat.attackAnimation} death ${combat.deathAnimation}",
+                    )
+                    // No donor (Matrix, 2009scape, Darkan, Void) has a block animation for some foes: recorded, not invented.
+                    val block = combat?.blockAnimation ?: -1
+                    if (block >= 0) {
+                        run.expectTrue(entry, "${quest.name}: $name ($id) blocks with a cache animation", exists(block), "block $block")
+                    } else {
+                        run.check(entry, "${quest.name}: $name ($id) block animation", block)
+                    }
+                }
+            }
+        }
     }
 
     private suspend fun QueueTask.tutorDirections(run: Conformance.Run, combat: Int? = null) {

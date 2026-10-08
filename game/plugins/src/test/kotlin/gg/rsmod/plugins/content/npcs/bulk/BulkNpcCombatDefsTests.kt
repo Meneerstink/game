@@ -6,6 +6,7 @@ import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.plugins.api.NpcSkills
+import gg.rsmod.plugins.content.combat.attack.AnimSkeletons
 import gg.rsmod.plugins.api.NpcSpecies
 import gg.rsmod.plugins.api.ext.NPC_STRENGTH_BONUS_INDEX
 import org.junit.BeforeClass
@@ -129,6 +130,26 @@ class BulkNpcCombatDefsTests {
         deathAnim = deathAnim,
         source = "test",
     )
+
+    /**
+     * 2026-10-08: tools\npc-combat-defs\fill-anims-2009scape.js filled the -1 animations of 814 rows from 2009scape and
+     * same-body npcs ("anim_source"). Every such animation must animate the npc's own rev-667 skeleton (its BAS idle
+     * animation's frame base) - a donor id reused for another npc would play on the wrong body.
+     */
+    @Test
+    fun `filled animations animate the npc's own skeleton`() {
+        val rows = com.google.gson.JsonParser().parse(TABLE.readText()).asJsonArray.map { it.asJsonObject }
+            .filter { it.has("anim_source") }
+        assertTrue(rows.size > 800, "filled rows: ${rows.size}")
+        val wrong =
+            rows.flatMap { r ->
+                val id = r["id"].asInt
+                listOf("attack_anim", "block_anim", "death_anim").map { it to r[it].asInt }
+                    .filter { (_, anim) -> anim >= 0 && !AnimSkeletons.fits(definitions, store, id, anim) }
+                    .map { (field, anim) -> "$id ${r["name"].asString} $field $anim" }
+            }
+        assertTrue(wrong.isEmpty(), "${wrong.size} filled animations on another skeleton: $wrong")
+    }
 
     companion object {
         private val TABLE = Paths.get("..", "..", "data", "cfg", "npcs", "combat-defs.json").toFile()
