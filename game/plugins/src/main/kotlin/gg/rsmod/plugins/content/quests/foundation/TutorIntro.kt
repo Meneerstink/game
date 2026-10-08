@@ -186,8 +186,8 @@ object TutorIntro {
                 "a Dangerous area",
                 // North over the Wilderness ditch at Edgeville; the player waits south of the camera.
                 stand = Tile(3093, 3497, 0),
-                from = Cam(3094, 3505, 1500), to = Cam(3094, 3513, 750),
-                lookFrom = Cam(3094, 3532, 0), lookTo = Cam(3095, 3526, 0),
+                from = Cam(3094, 3505, 1600), to = Cam(3094, 3510, 1250),
+                lookFrom = Cam(3094, 3532, 0), lookTo = Cam(3094, 3524, 0),
                 lines =
                     listOf(
                         line("Everywhere else is Dangerous - Edgeville, and the", "Wilderness beyond this ditch."),
