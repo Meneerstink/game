@@ -223,8 +223,17 @@ abstract class Pawn(
 
     /**
      * A flag which indicates if this pawn is visible to players in the world.
+     *
+     * A player's own client reads it from the appearance block ("hidden" byte, PlayerUpdateBlockSegment), so a change
+     * re-sends the appearance - as Darkan's Appearance.setHidden regenerates the appearance data. Without it the
+     * player stayed invisible to themselves after the new-player tour (2026-10-08) until the next appearance change.
      */
     var invisible = false
+        set(value) {
+            if (field == value) return
+            field = value
+            if (entityType.isPlayer) addBlock(UpdateBlockType.APPEARANCE)
+        }
 
     /**
      * A flag which indicates if this pawn has teleported.
