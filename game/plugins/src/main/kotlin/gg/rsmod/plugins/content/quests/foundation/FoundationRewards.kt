@@ -131,6 +131,18 @@ object FoundationRewards {
         }
     }
 
+    /**
+     * Night run 2026-10-08 (new players): [grant] sends a quest item to the bank when the inventory is full, and the next
+     * step's npc then refused with no hint ("Bring all four diamonds", "No Seal, no voyage"). True when every item of
+     * [items] the player does not carry is in the bank - the npc then says where it is.
+     */
+    fun waitingInBank(player: Player, items: Collection<Int>): Boolean {
+        val missing = items.filter { !player.inventory.contains(it) && !player.equipment.contains(it) }
+        return missing.isNotEmpty() && missing.all { player.bank.contains(it) }
+    }
+
+    const val IN_BANK_LINE = "It's in your bank - your inventory was full when you got it. Take it out and come back."
+
     val COMBAT_SKILLS = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.RANGED, Skills.MAGIC)
     val ALL_SKILLS = (Skills.ATTACK..Skills.DUNGEONEERING).toList()
 }

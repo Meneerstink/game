@@ -221,6 +221,7 @@ object DesertTreasure : ShortQuest(
                             "stones themselves. Bring all four diamonds.",
                             facialExpression = FacialExpression.ANGRY,
                         )
+                        if (FoundationRewards.waitingInBank(player, DIAMONDS)) chatNpc(FoundationRewards.IN_BANK_LINE.replace("It's", "They are").replace("it out", "them out").replace("got it", "got them"), facialExpression = FacialExpression.CALM_TALK)
                         false
                     } else {
                         DIAMONDS.forEach { player.inventory.remove(it) }
@@ -353,6 +354,7 @@ object LunarDiplomacy : ShortQuest(
                 talk = {
                     if (!hasSeal(player)) {
                         chatNpc("No Seal, no voyage. Brundt's in the longhall.", facialExpression = FacialExpression.CALM_TALK)
+                        if (FoundationRewards.waitingInBank(player, listOf(Items.SEAL_OF_PASSAGE))) chatNpc("Your Seal? " + FoundationRewards.IN_BANK_LINE, facialExpression = FacialExpression.CALM_TALK)
                         return@QuestStep false
                     }
                     chatNpc(
@@ -395,6 +397,7 @@ object LunarDiplomacy : ShortQuest(
                             "you speak for them. Bring it to me.",
                             facialExpression = FacialExpression.UPSET,
                         )
+                        if (FoundationRewards.waitingInBank(player, listOf(Items.SEAL_OF_PASSAGE))) chatNpc("Your Seal? " + FoundationRewards.IN_BANK_LINE, facialExpression = FacialExpression.CALM_TALK)
                         return@QuestStep false
                     }
                     chatNpc(

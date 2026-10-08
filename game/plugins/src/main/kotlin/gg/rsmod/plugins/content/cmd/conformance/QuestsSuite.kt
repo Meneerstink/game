@@ -134,6 +134,7 @@ object QuestsSuite : Conformance.Suite {
         }
         scenario("tutor directions") { tutorDirections(run) }
         // Owner 2026-10-07 night run: the Quest Tutor's new-player introduction (TutorIntro).
+        scenario("bank seal") { bankSeal(run) }
         scenario("intro tour") { introTour(run, "intro tour", skipAfter = null, logoutAt = null) }
         scenario("intro skip") { introTour(run, "intro skip", skipAfter = 2, logoutAt = null) }
         scenario("intro logout") { introTour(run, "intro logout", skipAfter = null, logoutAt = 3) }
@@ -1379,6 +1380,27 @@ object QuestsSuite : Conformance.Suite {
         run.expectTrue(entry, "no item changed", itemsAfter == itemsBefore, "before $itemsBefore after $itemsAfter")
         val xpChanged = xpOf(bot).filter { (k, v) -> v != xpBefore[k] }.keys
         run.expectTrue(entry, "no experience changed", xpChanged.isEmpty(), "skills $xpChanged")
+    }
+
+    /**
+     * Night run 2026-10-08 (prompt: "items sent to the bank when the inventory is full must not leave a step waiting"):
+     * FoundationRewards.grant banks a quest item when the inventory is full; the next npc must say where it is. Lunar
+     * Diplomacy step 3 with the Seal of passage in the bank: Lokar refuses and names the bank.
+     */
+    private suspend fun QueueTask.bankSeal(run: Conformance.Run) {
+        val entry = "bank seal"
+        val quest = LunarDiplomacy
+        val step = quest.steps[2]
+        val npc = locate(run, entry, "step 3", step.npc, step.location, step.place) ?: return
+        val bot = run.bot(standNear(run, npc.tile), "QBANK")
+        freshAccount(bot)
+        quest.setStage(bot, 3)
+        bot.bank.add(Items.SEAL_OF_PASSAGE, 1)
+        wait(2)
+        val conv = talkTo(run, bot, npc, entry, "Lokar with the Seal in the bank", Policy(quest, travel = { false }))
+        val said = conv.transcript.joinToString(" / ")
+        run.expectTrue(entry, "the step waits (no Seal carried)", quest.stage(bot) == 3, "stage ${quest.stage(bot)}")
+        run.expectTrue(entry, "the npc says the Seal is in the bank", said.contains("in your bank"), said.take(300))
     }
 
     private suspend fun QueueTask.tutorDirections(run: Conformance.Run) {
