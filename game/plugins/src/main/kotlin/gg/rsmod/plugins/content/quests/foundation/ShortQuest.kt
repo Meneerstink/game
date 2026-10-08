@@ -120,6 +120,20 @@ abstract class ShortQuest(
     /** Completed in the server's one quest status (QuestStatus reads this quest's stage against [completedValue]). */
     fun isFinished(player: Player): Boolean = gg.rsmod.plugins.content.quests.QuestStatus.isCompleted(player, this)
 
+    /**
+     * The highest-level foe of every fight step, chain foes included (their cache combat level), as name to level, or null
+     * for a quest without fights. Owner 2026-10-08 (OWNER_QUESTIONS Q17 A): the Quest Tutor tells a player below it to
+     * train combat first.
+     */
+    fun strongestFoe(player: Player): Pair<String, Int>? {
+        val defs = player.world.definitions
+        return steps.mapNotNull { it.fight }.flatMap { fight ->
+            listOf(fight.name to fight.level) + fight.chain.mapNotNull { (id, _) ->
+                defs.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id)?.let { it.name to it.combatLevel }
+            }
+        }.maxByOrNull { it.second }
+    }
+
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {
         if (usesVarbits) player.setVarbit(questId, value) else player.setVarp(questId, value)

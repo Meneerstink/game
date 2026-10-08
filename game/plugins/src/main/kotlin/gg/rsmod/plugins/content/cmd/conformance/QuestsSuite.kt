@@ -84,6 +84,7 @@ import gg.rsmod.game.tools.importer.QuestHelperPanelImportTool as HelperPanel
  *  - `choose <quest>` the permanent choice: Quest Guide "Quest choices" -> card -> Confirm -> Yes (QuestGuideUi), the
  *                     full reward once, the other quests of the row stay locked and unpaid, a second Yes pays nothing.
  *  - `tutor directions` the Quest Tutor's "Where do the quests start?" travel (382 + teleport timing).
+ *  - `tutor combat 3`  the same for a combat-3 player: the Tutor says to train combat first (owner Q17 A).
  *  - `classic <quest>` the twelve 2011 quests in quests/impl, see [ClassicQuests].
  */
 object QuestsSuite : Conformance.Suite {
@@ -133,6 +134,7 @@ object QuestsSuite : Conformance.Suite {
             group.quests.forEachIndexed { card, quest -> scenario("choose ${key(quest)}") { choose(run, row, card, group, quest) } }
         }
         scenario("tutor directions") { tutorDirections(run) }
+        scenario("tutor combat 3") { tutorDirections(run, combat = 3) }
         // Owner 2026-10-07 night run: the Quest Tutor's new-player introduction (TutorIntro).
         scenario("bank seal") { bankSeal(run) }
         scenario("intro tour") { introTour(run, "intro tour", skipAfter = null, logoutAt = null) }
@@ -487,7 +489,7 @@ object QuestsSuite : Conformance.Suite {
                         pending = Pending(now, TRAVEL, Tile(bot.tile), destinationOf(policy.quest, chosen))
                     }
                 } else {
-                    conv.transcript += texts.toSortedMap().values.joinToString(" ").take(100)
+                    conv.transcript += texts.toSortedMap().values.joinToString(" ").take(200)
                     Bots.inject(bot, ResumePauseButtonMessage(chat, continueComponent(chat), -1))
                 }
                 continue
@@ -1403,11 +1405,12 @@ object QuestsSuite : Conformance.Suite {
         run.expectTrue(entry, "the npc says the Seal is in the bank", said.contains("in your bank"), said.take(300))
     }
 
-    private suspend fun QueueTask.tutorDirections(run: Conformance.Run) {
-        val entry = "tutor directions"
+    private suspend fun QueueTask.tutorDirections(run: Conformance.Run, combat: Int? = null) {
+        val entry = if (combat == null) "tutor directions" else "tutor combat $combat"
         val guide = guideNpc(run, entry) ?: return
-        val bot = run.bot(standNear(run, guide.tile), "QTUTOR")
+        val bot = run.bot(standNear(run, guide.tile), if (combat == null) "QTUTOR" else "QTUTORLOW")
         freshAccount(bot)
+        if (combat != null) bot.combatLevel = combat
         wait(2)
         val target = KingsRansom
         val policy =
@@ -1434,6 +1437,16 @@ object QuestsSuite : Conformance.Suite {
         )
         run.expectTrue(entry, "every option dialogue was the tutor's", conv.unexpected.isEmpty(), conv.unexpected.joinToString(" ").take(250))
         run.expectTrue(entry, "the tutor's quest menu starts the Quest Helper for ${target.name}", QuestHelper.tracked(bot) == target, "tracked ${QuestHelper.tracked(bot)?.name}")
+        // Owner 2026-10-08 (OWNER_QUESTIONS Q17 A): a player below the quest's strongest foe is told to train combat first.
+        val foe = target.strongestFoe(bot)
+        run.expectTrue(entry, "${target.name} has a strongest foe", foe != null, "$foe")
+        if (foe != null) {
+            val warned = conv.transcript.any { it.contains("Train your combat first") && it.contains("${foe.first}, level ${foe.second}") }
+            run.expectTrue(
+                entry, "the tutor tells a combat-${bot.combatLevel} player to train combat first (${foe.first}, level ${foe.second})",
+                warned == (bot.combatLevel < foe.second), conv.brief(),
+            )
+        }
     }
 }
 
