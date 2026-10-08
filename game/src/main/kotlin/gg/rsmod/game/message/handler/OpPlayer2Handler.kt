@@ -40,6 +40,15 @@ class OpPlayer2Handler : MessageHandler<OpPlayer2Message> {
 
         client.attr[INTERACTING_PLAYER_ATTR] = WeakReference(other)
         client.attr[INTERACTING_OPT_ATTR] = option
+        beforeAttack?.invoke(client)
         client.attack(other)
+    }
+
+    companion object {
+        /**
+         * Runs before a player's Attack click on another player (set by the combat plugin): a manual spell still queued is
+         * dropped, so the click attacks with the weapon instead of firing that spell (intro scene 2026-10-08).
+         */
+        var beforeAttack: ((Client) -> Unit)? = null
     }
 }

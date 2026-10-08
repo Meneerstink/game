@@ -851,6 +851,37 @@ suspend fun QueueTask.darkanForceMove(
 }
 
 /**
+ * An underwall tunnel crawl, 2009scape `GrandExchangeShortcut` (rev 530, tick for tick; owner 2026-10-08 "check the donors" -
+ * Darkan's port left the player standing on the far hole for a tick and then teleported him one tile on, the "stuck" look):
+ *  - forced move from where he stands onto [hole] with the climb-down animation 2589;
+ *  - teleport to [farHole] with the crawl-through animation 2590 (the body is below the ground, so nothing slides through
+ *    the wall - the Void port's underground exactMove did, owner 2026-10-04);
+ *  - one tick later a forced move off [farHole] onto [landing] with the climb-up animation 2591 (Void's exit timing:
+ *    start 15, speed 33 client cycles) - he climbs out onto the landing instead of standing on the hole.
+ * [underground] / [surfacing] run when he goes under and comes up (the intro's guard scene cuts its camera there).
+ */
+suspend fun QueueTask.underwallTunnelCrawl(
+    player: Player,
+    hole: Tile,
+    farHole: Tile,
+    landing: Tile,
+    underground: () -> Unit = {},
+    surfacing: () -> Unit = {},
+) {
+    darkanForceMove(player, hole, startCycles = 5, speedCycles = 35, anim = UNDERWALL_CLIMB_DOWN)
+    player.moveTo(farHole)
+    player.animate(UNDERWALL_CRAWL)
+    underground()
+    wait(1)
+    surfacing()
+    darkanForceMove(player, landing, startCycles = 15, speedCycles = 33, anim = UNDERWALL_CLIMB_UP, direction = Direction.between(farHole, landing))
+}
+
+const val UNDERWALL_CLIMB_DOWN = 2589
+const val UNDERWALL_CRAWL = 2590
+const val UNDERWALL_CLIMB_UP = 2591
+
+/**
  * Darkan `Agility.walkToAgility(player, renderEmote, direction, distance, delay, xp, stopAnim)`: a collision-free walk of [distance]
  * tiles in [direction] with the render emote (BAS) [render], then [stopAnim] and the render reset.
  */

@@ -25,12 +25,24 @@ object GameframeRebuild {
 
     fun registeredKeys(): Set<String> = listeners.keys.toSet()
 
-    /** Re-arms now and once more a few ticks later, in case the client rebuild lands after the first pass. */
+    /** A delayed pass is queued and has not run yet. */
+    private val PENDING = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+    /**
+     * Re-arms now and once more a few ticks later, in case the client rebuild lands after the first pass. One delayed pass
+     * at a time: a listener that re-mounts a tab-area interface calls [rearm] again, and every new task goes to the front of
+     * the queue - with the world map open (intro scene 2026-10-08) each pass queued the next, the WEAK pass always held the
+     * head and the tour's STRONG task behind it never ran again (the map never closed, the tour never went on).
+     */
     fun rearm(player: Player) {
         listeners.values.forEach { it(player) }
+        if (player.attr[PENDING] == true) return
+        player.attr[PENDING] = true
         player.queue(TaskPriority.WEAK) {
+            terminateAction = { player.attr.remove(PENDING) }
             wait(3)
             listeners.values.forEach { it(player) }
+            player.attr.remove(PENDING)
         }
     }
 

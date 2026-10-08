@@ -108,24 +108,22 @@ fun tunnel(
 }
 
 /**
- * Darkan Varrock.java:175-200 (handleGrandExchangeShortcut 9311 / 9312, level 21), tick for tick: t1 forceMove(the clicked tunnel's
- * own tile, 2589, 5, 35, no unlock); t3 anim 2590; t5 anim 2591 + tele to the other tunnel's tile ((3139,3516) from 9312, (3143,3514)
- * from 9311); t6 tele one tile out ((3138,3516) / (3144,3514)) and unlock. The body is never slid through the wall: the old Void
- * port's middle exactMove ran diagonally 4x2 from 3139,3516 to 3143,3514 through the wall while 2590 played.
+ * The Grand Exchange underwall tunnel (9311 outside at 3139,3516 / 9312 inside at 3143,3514, level 21): 2009scape
+ * GrandExchangeShortcut tick for tick (underwallTunnelCrawl): climb down onto the clicked hole (2589), crawl (2590) at the far
+ * hole, climb up off it onto the landing (2591). Darkan Varrock.java:175-200 (the earlier port) left him standing on the far
+ * hole and teleported him a tile on; the Void port slid him through the wall.
  */
 fun geTunnel(id: Int) =
     shortcut(id, "Climb-into") {
         if (!player.hasAgility(21, "You need an Agility level of 21 to negotiate this tunnel.")) return@shortcut
         obstacle { target ->
+            // Owner 2026-10-08: 2009scape GrandExchangeShortcut's sequence (underwallTunnelCrawl) - Darkan's port above left
+            // him on the far hole and teleported him off it a tick later.
             val withinGe = id == 9312
-            val other = if (withinGe) Tile(3139, 3516, 0) else Tile(3143, 3514, 0)
-            darkanForceMove(player, Tile(target.tile), startCycles = 5, speedCycles = 35, anim = ANIM_CLIMB_INTO_TUNNEL)
-            player.animate(ANIM_TUNNEL_INVISIBLE)
-            wait(2)
-            player.animate(ANIM_CLIMB_OUT_OF_TUNNEL)
-            player.moveTo(other)
-            wait(1)
-            player.moveTo(Tile(other.x + if (withinGe) -1 else 1, other.z, other.height))
+            // The far hole relative to the clicked one (9311 at 3139,3516 <-> 9312 at 3143,3514), so the shortcut also works in
+            // an instanced copy of the wall (the new-player intro's pk escape) instead of sending him to the real Exchange.
+            val other = if (withinGe) target.tile.transform(-4, 2) else target.tile.transform(4, -2)
+            underwallTunnelCrawl(player, Tile(target.tile), other, Tile(other.x + if (withinGe) -1 else 1, other.z, other.height))
         }
     }
 

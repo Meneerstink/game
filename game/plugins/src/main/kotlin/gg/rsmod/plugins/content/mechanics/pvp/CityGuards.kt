@@ -682,6 +682,9 @@ object CityGuards {
         }
     }
 
+    /** The combination a scripted actor always gets (IntroGuardScene); unset for every real player. */
+    val SCENE_COMBINATION = AttributeKey<List<Kind>>()
+
     /** Random group per [SPAWN_COMBINATIONS]; exposed for tests. */
     fun pickCombination(random: Int): List<Kind> = SPAWN_COMBINATIONS[Math.floorMod(random, SPAWN_COMBINATIONS.size)]
 
@@ -696,7 +699,9 @@ object CityGuards {
         world: World,
         player: Player,
     ) {
-        val plan = pickCombination(world.random(SPAWN_COMBINATIONS.size - 1))
+        // A scripted scene may name one of the two real combinations (the intro's pker always meets the sword guard - owner
+        // 2026-10-08 "die fast"; the crossbow guard's wiki Ranged 1 misses almost every shot). Real players roll as before.
+        val plan = player.attr[SCENE_COMBINATION]?.takeIf { it in SPAWN_COMBINATIONS } ?: pickCombination(world.random(SPAWN_COMBINATIONS.size - 1))
         // The Wizguard is driven by wizguardStrike on the plan alone; the physical guard is placed below and, Audit
         // D-12, retried from onZoneCheck until one is actually engaged - the plan no longer pretends it was.
         player.attr[REACTIVE_PLAN_ATTR] = plan
@@ -809,6 +814,10 @@ object CityGuards {
         // never reached the damage map, so a skulled player it killed had no guard killer and death.plugin's guard-death rule
         // (Audit D-09) gave them the safe PvM death - Death's Domain kept the items the guards should have dropped.
         val barrage = player.hit(world.random(WIZGUARD_MAX_HIT), delay = 1)
+        // Being attacked cancels a skulled 7-second teleport / logout countdown (Combat.kt, "being attacked by anything"); the
+        // Wizguard's barrage never went through Combat, so a skulled intruder broke a teleport tab and left while it froze and
+        // hit him (intro scene 2026-10-08: the pker teleported to Varrock from the Grand Exchange).
+        SevenSecondAction.cancel(player, "You have been attacked!")
         barrage.addAction { player.damageMap.add(wizguard, barrage.hitmarks.sumOf { it.damage }) }
         world.queue {
             wait(1)

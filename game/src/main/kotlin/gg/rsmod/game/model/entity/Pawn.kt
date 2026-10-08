@@ -228,6 +228,9 @@ abstract class Pawn(
      * re-sends the appearance - as Darkan's Appearance.setHidden regenerates the appearance data. Without it the
      * player stayed invisible to themselves after the new-player tour (2026-10-08) until the next appearance change.
      */
+    /** While true a hit to 0 lifepoints starts no death (a cutscene plays its own); see the hit processing. */
+    var scriptedDeath = false
+
     var invisible = false
         set(value) {
             if (field == value) return
@@ -501,6 +504,12 @@ abstract class Pawn(
                          */
                         if (getCurrentLifepoints() <= 0) {
                             invokeHitActions(hit)
+                            // A scripted death (the new-player intro's guard scene): the hit takes the bar to 0, the scene plays
+                            // the death look itself and restores the lifepoints - no real death, nothing lost.
+                            if (scriptedDeath) {
+                                pendingHits.remove(hit)
+                                break@processing
+                            }
                             if (entityType.isPlayer) {
                                 executePlugin(PlayerDeathAction.deathPlugin)
                             } else {

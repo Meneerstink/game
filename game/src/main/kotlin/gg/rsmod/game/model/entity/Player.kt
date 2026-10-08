@@ -107,6 +107,19 @@ abstract class Player(
 
     val equipment = ItemContainer(world.definitions, EQUIPMENT_KEY)
 
+    /**
+     * A scripted look: when set, the appearance block shows these items instead of [equipment] (nothing is worn, moved or
+     * saved). The new-player intro's guard scene dresses the player in a costume with it (2026-10-08). Changing it must
+     * be followed by an APPEARANCE update.
+     */
+    var appearanceEquipment: ItemContainer? = null
+
+    /**
+     * Never written to a save file, by any path (autosave, logout, shutdown): a scripted actor player (the new-player intro's
+     * escaper, 2026-10-08) that only lives in a cutscene. Checked in JsonPlayerSerializer.saveClientData itself.
+     */
+    var neverSave = false
+
     val bank = ItemContainer(world.definitions, BANK_KEY)
 
     val randomEventGift = ItemContainer(world.definitions, RANDOM_EVENT_GIFT_KEY)

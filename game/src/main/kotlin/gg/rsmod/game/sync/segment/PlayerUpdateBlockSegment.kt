@@ -182,11 +182,14 @@ class PlayerUpdateBlockSegment(
                 appBuf.put(DataType.BYTE, if (other.invisible) 1 else 0) // hidden
 
                 val transmog = other.getTransmogId() >= 0
+                // A scripted look (Player.appearanceEquipment, the intro's guard scene costume) replaces the worn items in the
+                // appearance only; the real equipment is never touched.
+                val equipment = other.appearanceEquipment ?: other.equipment
 
                 if (!transmog) {
                     // displays weapon, amulet, cape, and head item
                     for (i in 0 until 4) {
-                        val item = other.equipment[i]
+                        val item = equipment[i]
                         if (item != null) {
                             val shown = Player.appearanceItemOverride?.invoke(other, i, item.id) ?: item.id
                             val def = other.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, shown) ?: item.getDef(other.world.definitions)
@@ -197,7 +200,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // chest
-                    var item = other.equipment[4]
+                    var item = equipment[4]
                     if (item != null) {
                         appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
                     } else {
@@ -205,7 +208,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // shield
-                    item = other.equipment[5]
+                    item = equipment[5]
                     if (item != null) {
                         appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
                     } else {
@@ -213,7 +216,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // arms
-                    item = other.equipment[4]
+                    item = equipment[4]
                     if (item != null && item.getDef(other.world.definitions).removeArms) {
                         appBuf.put(DataType.BYTE, 0)
                     } else {
@@ -221,7 +224,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // legs
-                    item = other.equipment[7]
+                    item = equipment[7]
                     if (item != null) {
                         appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
                     } else {
@@ -229,7 +232,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // hair
-                    item = other.equipment[0]
+                    item = equipment[0]
                     if (item != null && item.getDef(other.world.definitions).removeHead) {
                         appBuf.put(DataType.BYTE, 0)
                     } else if (item != null) {
@@ -247,7 +250,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // wrists
-                    item = other.equipment[9]
+                    item = equipment[9]
                     if (item != null) {
                         appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
                     } else {
@@ -255,7 +258,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // feet
-                    item = other.equipment[10]
+                    item = equipment[10]
                     if (item != null) {
                         appBuf.put(DataType.SHORT, 0x8000 + item.getDef(other.world.definitions).appearanceId)
                     } else {
@@ -263,7 +266,7 @@ class PlayerUpdateBlockSegment(
                     }
 
                     // beard
-                    item = other.equipment[0]
+                    item = equipment[0]
                     if (item != null && item.getDef(other.world.definitions).removeBeard) {
                         appBuf.put(DataType.BYTE, 0)
                     } else {
@@ -283,7 +286,7 @@ class PlayerUpdateBlockSegment(
                 }
 
                 if (!transmog) {
-                    val weapon = other.equipment[3] // Assume slot 3 is the weapon.
+                    val weapon = equipment[3] // Assume slot 3 is the weapon.
                     if (renderAnim == -1) {
                         if (weapon != null) {
                             val def: Any =

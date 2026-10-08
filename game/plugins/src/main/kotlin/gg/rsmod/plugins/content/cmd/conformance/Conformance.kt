@@ -417,6 +417,8 @@ object Bots {
         world: World,
         tile: Tile,
         name: String,
+        /** Runs before the login plugins (the intro's escaper sets its never-save and intro-seen flags here). */
+        beforeLogin: (Client) -> Unit = {},
     ): Client {
         val channel =
             EmbeddedChannel(
@@ -439,6 +441,7 @@ object Bots {
         bot.tile = tile
         bot.gameSystem = GameSystem(channel, world, bot, world.getService(GameService::class.java)!!)
         for (skill in 0..Skills.DUNGEONEERING) bot.skills.setBaseLevel(skill, 99)
+        beforeLogin(bot)
         check(world.register(bot)) { "conformance bot not registered" }
         bot.login()
         // Never saved: the autosave timer would write a save file for the test player, and a death / trade saves at once.

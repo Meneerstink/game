@@ -348,21 +348,8 @@ object QuestsSuite : Conformance.Suite {
         ): Int? {
             custom?.invoke(title, options)?.let { return it }
             fun index(text: String): Int? = options.indexOfFirst { it == text }.takeIf { it >= 0 }?.plus(1)
-            val correct: String? =
-                when {
-                    title == "Brundt's question" -> "Honour."
-                    title == "Your evidence" -> "A man in black armour was seen at the back door."
-                    title == "And the butler?" -> "The butler had a wet boot - he came in from the moat."
-                    title.startsWith("Tumbler ") -> listOf("High", "Low", "Low", "High").getOrNull((title.removePrefix("Tumbler ").toIntOrNull() ?: 0) - 1)
-                    // DT2 (owner 2026-10-07, stuck at Ali): solved from the inscription alone - "the blade before the ice, the ice
-                    // before the deep, the deep before the whisper" - by the clue word each seal carries.
-                    title.startsWith("Which seal was set ") -> {
-                        val n = listOf("first", "second", "third", "last").indexOf(title.removePrefix("Which seal was set ").removeSuffix("?"))
-                        val clue = listOf("(the blade)", "(the ice)", "(the deep)", "(the whisper)").getOrNull(n)
-                        options.firstOrNull { clue != null && it.endsWith(clue) } ?: "(no option carries the clue $clue)"
-                    }
-                    else -> null
-                }
+            // The Quest Helper's highlighted answers are the bot's answers (QuestDialogueHints, one source).
+            val correct: String? = gg.rsmod.plugins.content.quests.foundation.QuestDialogueHints.puzzleAnswer(title, options)
             if (correct != null) {
                 puzzle = true
                 if (wrongFirst) {
@@ -1090,6 +1077,25 @@ object QuestsSuite : Conformance.Suite {
         run.expectTrue(entry, "$where lists every step", steps.keys == (1..quest.steps.size).toSet(), "steps ${steps.keys}")
         val row = payloads.lastOrNull { it.startsWith("qhq|${quest.slot}|") }?.split("|")
         run.expectTrue(entry, "$where quest list: in progress and tracked", row != null && row[2] == "1" && row[3] == "1", "row $row")
+        // RuneLite Quest Helper hints (owner 2026-10-08, client RspsQuestHelperHints): the world-map icon / minimap arrow /
+        // npc outline target is this step's npc (or foe) and place, and the dialogue highlights are this step's.
+        val step = quest.steps[stage - 1]
+        val wantNpc = step.fight?.npc ?: step.npc
+        val target = payloads.lastOrNull { it == "qht" || it.startsWith("qht|") }?.split("|")
+        val npcOk = target != null && target.size == 5 && target[4].toInt() == wantNpc
+        val near = target != null && target.size == 5 && (step.fight?.tile ?: step.location)?.let { Tile(target[1].toInt(), target[2].toInt(), target[3].toInt()).isWithinRadius(it, 40) } ?: true
+        run.expectTrue(entry, "step $stage: Quest Helper map/minimap target is the step's npc, at its place", npcOk && near, "qht $target (npc $wantNpc at ${step.fight?.tile ?: step.location})")
+        // Decoded as the client does: the last qhd starts the list, the qhda messages after it continue it.
+        val start = payloads.indexOfLast { it == "qhd" || it.startsWith("qhd|") }
+        val hints =
+            if (start < 0) {
+                null
+            } else {
+                payloads.subList(start, payloads.size).takeWhile { it == payloads[start] || it.startsWith("qhda|") || !it.startsWith("qhd") }
+                    .filter { it.startsWith("qhd|") || it.startsWith("qhda|") }.flatMap { it.split("|").drop(1) }.joinToString("|")
+            }
+        val want = gg.rsmod.plugins.content.quests.foundation.QuestDialogueHints.hints(quest, stage).joinToString("|") { "${it.first}~${it.second}" }
+        run.expectTrue(entry, "step $stage: Quest Helper dialogue highlights are this step's", hints == want, "${hints?.take(120)}")
     }
 
     /** The reward of the finished quest, measured across its last step. */

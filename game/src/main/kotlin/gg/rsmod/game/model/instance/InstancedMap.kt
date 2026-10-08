@@ -73,4 +73,22 @@ class InstancedMap internal constructor(
 
         return coordinates
     }
+
+    /**
+     * The real-world tile an instance [tile] copies (the packed source chunk of [InstancedChunkSet.Builder.set]), or null
+     * when its chunk copies nothing. Unrotated chunks map tile for tile; a rotated chunk maps to its source chunk's corner
+     * (enough for area rules, which are drawn on whole map squares). Used so an instanced copy of a real place follows that
+     * place's rules (2026-10-08: the new-player intro's private copy of the Edgeville / Grand Exchange border).
+     */
+    fun sourceTile(tile: Tile): Tile? {
+        if (!area.contains(tile)) return null
+        val chunkX = (tile.x - area.bottomLeftX) shr 3
+        val chunkZ = (tile.z - area.bottomLeftZ) shr 3
+        val chunk = chunks.values[InstancedChunkSet.getCoordinates(chunkX, chunkZ, tile.height)] ?: return null
+        val packed = chunk.packed
+        val height = (packed shr 24) and 0x3
+        val sourceX = ((packed shr 14) and 0x3FF) shl 3
+        val sourceZ = ((packed shr 3) and 0x7FF) shl 3
+        return if (chunk.rot == 0) Tile(sourceX + (tile.x and 7), sourceZ + (tile.z and 7), height) else Tile(sourceX, sourceZ, height)
+    }
 }

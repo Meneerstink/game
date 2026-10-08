@@ -21,11 +21,11 @@ class PawnQueueTaskSet : QueueTaskSet() {
         var firstCycled: QueueTask? = null
         var additionalCycled: ArrayList<QueueTask>? = null
         while (true) {
-            val task = queue.peekFirst() ?: break
-
-            if (isPaused(task)) {
-                break
-            }
+            // A task that may not run now (a standard task while a modal is open) keeps its place and is skipped; the next one
+            // still runs (Void ActionQueue.process checks every action on its own). Stopping at a paused head left a STRONG
+            // task behind it frozen for good: the intro's world map (a modal) with a standard task queued in front of the
+            // tour - the map never closed and the tour never went on (2026-10-08).
+            val task = queue.firstOrNull { !isPaused(it) } ?: break
 
             if (firstCycled == null) {
                 firstCycled = task

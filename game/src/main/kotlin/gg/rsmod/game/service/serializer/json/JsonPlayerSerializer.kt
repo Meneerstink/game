@@ -206,6 +206,8 @@ class JsonPlayerSerializer : PlayerSerializerService() {
         // ROOT_CAUSES #109: a headless test server (conformance / breach harness) never writes a player save - a bot that logs
         // out (X-log scenario) went through Client.handleLogout -> here, past the plugins' NEVER_SAVE_ATTR.
         if (gg.rsmod.util.io.SharedDataFiles.testServer()) return true
+        // A scripted actor (Player.neverSave) is never saved - not on logout, autosave or the shutdown hook.
+        if (client.neverSave) return true
         client.loginUsername = client.loginUsername.lowercase() // Convert username to lowercase
         // Audit S-10: one save of a given account at a time (autosave, logout save, shutdown hook
         // and ::changepass could overlap), so the snapshot and the file move stay in order.

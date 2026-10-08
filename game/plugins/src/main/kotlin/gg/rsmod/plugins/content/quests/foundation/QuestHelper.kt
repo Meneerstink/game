@@ -86,6 +86,7 @@ object QuestHelper {
         player.attr.remove(LAST_STEP)
         player.attr.remove(LAST_TARGET)
         clearArrow(player)
+        clearClientHints(player)
         Panel.close(player)
         if (!silent) player.message("<col=0b6fb8>Quest Helper: off.</col>")
         QuestHelperPanel.push(player, force = true)
@@ -114,6 +115,53 @@ object QuestHelper {
 
     private fun clearArrow(player: Player) {
         player.write(HintArrowMessage(slot = SLOT, type = HintArrowMessage.TYPE_CLEAR))
+    }
+
+    private val LAST_MAP = AttributeKey<String>()
+    private val LAST_HINTS = AttributeKey<String>()
+
+    /** `qht|x|z|plane|npc` - the step's target for the client's world-map icon, minimap arrow and npc outline; `qht` clears. */
+    private fun sendTarget(
+        player: Player,
+        tile: Tile?,
+        npc: Int,
+    ) {
+        val payload = if (tile == null) "qht" else "qht|${tile.x}|${tile.z}|${tile.height}|$npc"
+        if (player.attr[LAST_MAP] == payload) return
+        player.attr[LAST_MAP] = payload
+        gg.rsmod.game.model.hud.ClientHud.send(player, payload)
+    }
+
+    /**
+     * `qhd|title~answer|...` - the dialogue options to highlight (QuestDialogueHints); `qhd` clears. A message holds at most
+     * ClientHud.MAX_PAYLOAD characters, so a long list goes on in `qhda|...` messages that the client appends.
+     */
+    private fun sendDialogueHints(
+        player: Player,
+        quest: ShortQuest?,
+        stage: Int,
+    ) {
+        val hints = quest?.let { QuestDialogueHints.hints(it, stage) }.orEmpty().map { "${it.first}~${it.second}" }
+        val key = hints.joinToString("|")
+        if (player.attr[LAST_HINTS] == key) return
+        player.attr[LAST_HINTS] = key
+        val messages = ArrayList<String>()
+        var line = "qhd"
+        for (hint in hints) {
+            if (line.length + 1 + hint.length > gg.rsmod.game.model.hud.ClientHud.MAX_PAYLOAD) {
+                messages += line
+                line = "qhda"
+            }
+            line += "|$hint"
+        }
+        messages += line
+        messages.forEach { gg.rsmod.game.model.hud.ClientHud.send(player, it) }
+    }
+
+    /** The helper is off or idle: no map icon, minimap arrow, outline or highlights. */
+    private fun clearClientHints(player: Player) {
+        sendTarget(player, null, -1)
+        sendDialogueHints(player, null, 0)
     }
 
     /** The step's npc near the player, on any floor (the Grand Exchange hall's quest npcs stand on its first floor). */
@@ -150,6 +198,7 @@ object QuestHelper {
                 player.attr[LAST_TARGET] = "off"
                 player.attr.remove(LAST_STEP)
                 clearArrow(player)
+                clearClientHints(player)
                 Panel.close(player)
             }
             return
@@ -200,6 +249,10 @@ object QuestHelper {
                 STAIRS.map { Tile(it.x, it.z, player.tile.height) }.minByOrNull { it.getDistance(player.tile) }?.takeIf { it.isWithinRadius(player.tile, NPC_RANGE) }
                     ?: climbLoc(player, up = goal!!.height > player.tile.height, goal = goal)
             }
+        // RuneLite Quest Helper: the step's world point carries the quest icon on the world map and the minimap arrow, the
+        // step npc is outlined in the game view, and the right dialogue options are highlighted (client RspsQuestHelper).
+        sendTarget(player, goal, npcId)
+        sendDialogueHints(player, quest, stage)
         val floorName = goal?.let { g -> FLOORS.getOrElse(g.height) { "level ${g.height}" } }
         // No way: the npc who offers the travel (on any floor near here), and the way to that npc.
         val guide = if (otherFloor && climb == null) (if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc)?.let { nearestNpc(player, it) } else null

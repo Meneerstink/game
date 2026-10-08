@@ -40,8 +40,20 @@ set_combat_logic {
     }
 }
 
+// A new Attack click replaces a manual spell still queued (OSRS; Novite PlayerCombat.mageAttack stops a manual cast on the next
+// action): it no longer fires in its place - a javelin throw and a crossbow bolt went out as a queued Ice Barrage (intro scene
+// 2026-10-08). The player-on-player Attack click is option 2, handled in the engine (OpPlayer2Handler), which calls this first.
+fun dropQueuedManualSpell(player: gg.rsmod.game.model.entity.Player) {
+    if (player.attr.has(Combat.CASTING_SPELL) && player.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] != true) {
+        player.attr.remove(Combat.CASTING_SPELL)
+        player.attr.remove(gg.rsmod.plugins.content.combat.magic.Autocast.MANUAL_TARGET)
+    }
+}
+gg.rsmod.game.message.handler.OpPlayer2Handler.beforeAttack = { dropQueuedManualSpell(it) }
+
 on_player_option("Attack") {
     val target = pawn.attr[INTERACTING_PLAYER_ATTR]?.get() ?: return@on_player_option
+    dropQueuedManualSpell(player)
 
     // R14.25: initiating PvP while protected needs explicit confirmation that permanently
     // forfeits protection - only for a real, explicit click here, never for auto-retaliation

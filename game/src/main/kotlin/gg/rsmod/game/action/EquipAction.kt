@@ -262,6 +262,9 @@ object EquipAction {
                     val equipment = p.equipment[slot] ?: return@forEach
                     val equipmentId = equipment.id
 
+                    // A move, not a creation (audit E-06, as the bank and trade): with the creation redirect a worn charged
+                    // weapon swapped out (a Toxic staff of the dead under a crossbow switch) became its uncharged id and the
+                    // charges were copied onto that (intro scene 2026-10-08, ledger -1 x22763 +1 x22761).
                     val transaction =
                         p.inventory.add(
                             equipment.id,
@@ -274,6 +277,7 @@ object EquipAction {
                                 } else {
                                     0
                                 },
+                            applyCreationRedirect = false,
                         )
                     transaction.items
                         .firstOrNull()
@@ -321,7 +325,8 @@ object EquipAction {
             return Result.PLUGIN
         }
 
-        val addition = p.inventory.add(item.id, item.amount, assureFullInsertion = false)
+        // A move (audit E-06): the worn item keeps its id and its attributes are copied below.
+        val addition = p.inventory.add(item.id, item.amount, assureFullInsertion = false, applyCreationRedirect = false)
 
         if (addition.completed == 0) {
             p.writeMessage("You don't have enough free space to do that.")

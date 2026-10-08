@@ -233,7 +233,11 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
     ) {
-        if (pawn.attr.has(CASTING_SPELL)) {
+        // An npc's spell and a player's autocast spell are cleared here (loaded again each cycle). A manual cast already ends itself after its
+        // swing (MagicCombatStrategy: the single cast); clearing here wiped the NEXT manual cast queued while the previous one
+        // was still in flight, so that swing became a melee whack with the staff (intro scene 2026-10-08, barrage spam-clicks;
+        // Novite PlayerCombat.mageAttack: a manual cast stops only its own attack).
+        if (pawn.attr.has(CASTING_SPELL) && (pawn !is Player || pawn.attr[gg.rsmod.plugins.content.combat.magic.Autocast.AUTO_CAST] == true)) {
             pawn.attr.remove(CASTING_SPELL)
         }
         if (target.isDead()) {

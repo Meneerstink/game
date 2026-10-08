@@ -896,6 +896,12 @@ object AncientCurses {
     const val LEECH_SPECIAL_PCT = 5
     private val CURSE_PROC_CYCLE_ATTR = AttributeKey<MutableMap<AncientCurse, Int>>()
 
+    /**
+     * Only the new-player intro's pker actor (IntroGuardScene, owner 2026-10-08 "with every hit we want to see the leeches"):
+     * his curses skip the cooldown above and the proc roll, so every landed hit shows a leech. Real players never carry it.
+     */
+    val SCENE_ALWAYS_PROC = AttributeKey<Boolean>()
+
     private fun cooldownTicks(curse: AncientCurse): Int =
         if (curse == AncientCurse.LEECH_SPECIAL_ATTACK) LEECH_SPECIAL_COOLDOWN_TICKS else SAP_LEECH_COOLDOWN_TICKS
 
@@ -949,7 +955,8 @@ object AncientCurses {
         }
 
         fun tryCurse(curse: AncientCurse): Boolean {
-            if (!active.contains(curse) || !offCooldown(attacker, curse) || !attacker.world.percentChance(curse.activationChancePercent)) return false
+            val scene = attacker.attr[SCENE_ALWAYS_PROC] == true
+            if (!active.contains(curse) || (!scene && (!offCooldown(attacker, curse) || !attacker.world.percentChance(curse.activationChancePercent)))) return false
             startCooldown(attacker, curse)
             applySapLeech(attacker, target, curse)
             return true
@@ -1119,7 +1126,10 @@ object AncientCurses {
         target: Pawn,
         curse: AncientCurse,
     ) {
-        curse.castAnimation?.let { attacker.animate(it) }
+        // The intro scene's leech on every hit (SCENE_ALWAYS_PROC) took the place of the pker's Armadyl godsword spec animation
+        // (owner 2026-10-08 "the ancient curses animation overridden it"): there it never replaces an attack animation still
+        // playing; the graphic, projectile and sounds stay. Real players keep Novite's unconditional animation (1 in 7 rolls).
+        curse.castAnimation?.let { attacker.animate(it, priority = attacker.attr[SCENE_ALWAYS_PROC] != true) }
         curse.castGraphic?.let { attacker.graphic(it) }
         curse.projectileGraphic?.let {
             attacker.world.spawn(

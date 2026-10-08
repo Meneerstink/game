@@ -44,7 +44,12 @@ object PlayerPreSynchronizationTask : SynchronizationTask<Player> {
                             0,
                             instance.getCoordinates(pawn.tile),
                             0,
-                            1,
+                            // Area mode 2 keeps the client's local npcs (Novite DefaultGameEncoder dynamic map region, Matrix;
+                            // Void DynamicRegionLoadType.STANDARD_NO_ENTITY_RESET). Mode 1 (from the 2011scape base) made the
+                            // client clear them on every rebuild inside an instance while localNpcs kept them, so the next npc
+                            // update's count was above the client's and it threw "gnpov1" and logged out (intro scene
+                            // 2026-10-08, four runs). Entering or leaving an instance still clears both sides (movedToInstance).
+                            2,
                             xteaService,
                         )
                     }

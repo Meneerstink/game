@@ -83,6 +83,17 @@ class GuardedZonesTests {
     }
 
     /**
+     * Owner 2026-10-08: a skulled player at the underwall tunnel's outer mouth was attacked by the guards before he crawled -
+     * the zone's north-west corner lay on the wall's outer corner pieces. Outside the wall stays Dangerous, the inner end Guarded.
+     */
+    @Test
+    fun `the underwall tunnel's outer mouth is outside the Grand Exchange, its inner end inside`() {
+        listOf(Tile(3139, 3516, 0), Tile(3138, 3516, 0), Tile(3139, 3515, 0), Tile(3140, 3516, 0), Tile(3141, 3517, 0), Tile(3142, 3518, 0))
+            .forEach { assertFalse(GuardedZones.contains(it), "$it is outside the wall at the tunnel") }
+        assertTrue(GuardedZones.contains(Tile(3143, 3514, 0)), "the tunnel's inner end")
+    }
+
+    /**
      * Owner 2026-09-23: "in grand exchange mag nooit dangerous zijn" (3158,3465 was Dangerous). The strip inside the
      * south wall and the whole gate passage are Guarded; the Dangerous side starts at the gatehouse front (z 3461).
      */

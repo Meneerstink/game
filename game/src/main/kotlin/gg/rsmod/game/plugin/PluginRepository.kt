@@ -470,6 +470,11 @@ class PluginRepository(
         multiCombatRegions.add(region)
     }
 
+    /** Undoes [addMultiCombatRegion] when a dynamic instance is released (the new-player intro's copy). */
+    fun removeMultiCombatRegion(region: Int) {
+        multiCombatRegions.remove(region)
+    }
+
     /**
      * Temporarily holds all npc spawns set from plugins for this [PluginRepository].
      * This is then passed onto the [World] and is cleared.

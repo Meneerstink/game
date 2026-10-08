@@ -108,6 +108,9 @@ object EnchantedBolts {
     /** The water staves that negate Sea Curse (Pearl page: "a water staff"; combination staves unsourced, not included). */
     private val WATER_STAVES = intArrayOf(Items.STAFF_OF_WATER, Items.WATER_BATTLESTAFF, Items.MYSTIC_WATER_STAFF)
 
+    /** One-shot: the attacker's next applicable bolt activates (IntroGuardScene - the owner's single Armour Piercing). */
+    val FORCE_NEXT_PROC = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
     fun boltFor(ammoId: Int?): Bolt? = ammoId?.let { ROSTER[it] }
 
     fun chance(
@@ -149,6 +152,11 @@ object EnchantedBolts {
         roll: Double,
     ): Boolean {
         if (!applicable(bolt, attacker, target)) return false
+        // A scripted scene (the new-player intro's pk escape) may force exactly one proc; the effect itself stays the real one.
+        if (attacker.attr[FORCE_NEXT_PROC] == true) {
+            attacker.attr.remove(FORCE_NEXT_PROC)
+            return true
+        }
         if (special == Special.ZARYTE_EVOKE) return landedHit
         if (bolt.needsSuccessfulHit && !landedHit) return false
         return roll < chance(bolt, target, special)

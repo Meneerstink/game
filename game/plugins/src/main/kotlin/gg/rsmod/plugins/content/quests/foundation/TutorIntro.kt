@@ -90,7 +90,7 @@ object TutorIntro {
                 lookFrom = Cam(3165, 3492, 0), lookTo = Cam(3165, 3488, 350),
                 lines =
                     listOf(
-                        line("Welcome to 78, adventurer! I'm the Quest Tutor.", "Let me show you around before you set off."),
+                        line("Now let me show you around before you set off."),
                         line("This is the Grand Exchange, the heart of 78.", "Buy and sell almost anything here with other", "players - your offers keep working while you're away."),
                         line("The Exchange stands in Varrock, a Guarded city.", "No other player can attack you here."),
                     ),
@@ -155,49 +155,6 @@ object TutorIntro {
                         line("Train here before you face the dangers outside.", "The cellar is a Safe place too."),
                     ),
             ),
-            Scene(
-                "a Safe area",
-                // Falador's square and north gate from the south (Guarded: GuardedZones Falador); the player waits behind on dry land -
-                // standing in the park pond (2966,3361) put the client in its underwater render path and froze the picture.
-                stand = Tile(2965, 3345, 0),
-                from = Cam(2965, 3352, 1600), to = Cam(2965, 3364, 1200),
-                lookFrom = Cam(2965, 3388, 0), lookTo = Cam(2965, 3385, 100),
-                lines =
-                    listOf(
-                        line("Now, the most important part: this is Deadman", "Mode. The world is split into Safe and Dangerous", "ground."),
-                        line("Cities like Falador, Varrock and Lumbridge are", "Safe: no player can attack you inside them. The", "box in the corner of your screen always shows", "where you are."),
-                        line("For your first hour of play you also have beginner", "protection: nobody can attack you and you can't", "attack them. Attacking a player ends it for good."),
-                    ),
-            ),
-            Scene(
-                "a Guarded city",
-                // Varrock square down the south street.
-                stand = Tile(3212, 3400, 0),
-                from = Cam(3212, 3404, 1300), to = Cam(3212, 3413, 900),
-                lookFrom = Cam(3212, 3430, 0), lookTo = Cam(3212, 3428, 100),
-                lines =
-                    listOf(
-                        line("Safe cities are Guarded. Attack a player who", "didn't attack you first and you're skulled for", "five minutes."),
-                        line("Walk into a city with a skull and the guards come", "for you - level 1337, and protection prayers won't", "stop them."),
-                        line("A skulled player can't use the city banks either.", "Wait until your skull has gone before you come home."),
-                    ),
-            ),
-            Scene(
-                "a Dangerous area",
-                // North over the Wilderness ditch at Edgeville; the player waits south of the camera.
-                stand = Tile(3093, 3497, 0),
-                from = Cam(3094, 3505, 1600), to = Cam(3094, 3510, 1250),
-                lookFrom = Cam(3094, 3532, 0), lookTo = Cam(3094, 3524, 0),
-                lines =
-                    listOf(
-                        line("Everywhere else is Dangerous - Edgeville, and the", "Wilderness beyond this ditch."),
-                        line("Here any player within 14 combat levels of yours", "can attack you. The box in your corner shows that", "level range."),
-                        line("Die here and you lose what you carry. The Protect", "Item prayer keeps your single most valuable item."),
-                        line("Killed by a player, your items go into a loot key", "for them. Killed by a monster, they wait at your", "gravestone for fifteen minutes."),
-                        line("Skulled, a teleport takes seven seconds and any", "hit cancels it. Without a skull, you must be out", "of combat for seven seconds before you can teleport."),
-                        line("Quests that send you somewhere Dangerous always", "ask you first. Never carry more than you can", "afford to lose!"),
-                    ),
-            ),
         )
     }
 
@@ -216,13 +173,23 @@ object TutorIntro {
     fun start(player: Player) {
         if (isActive(player)) return
         player.attr[ACTIVE] = true
+        // Black from the very first frame (client RspsCinematic curtain): a new account's intro starts at login, before the
+        // fade to black has run, and the hall showed for a few frames (owner 2026-10-08).
+        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|black")
         // Owner 2026-09-23: the Dangerous-area warning exists only while the introduction runs.
         DangerWarning.startIntro(player)
         player.queue(TaskPriority.STRONG) {
             terminateAction = { finish(player, interrupted = true) }
             begin(player)
             var skipped = false
+            // Owner 2026-10-08: the intro opens with the guard scene - the game's only Deadman explanation - and its world map.
+            IntroGuardScene.play(this)
+            val first = SCENES.firstOrNull()?.title ?: "back to the hall"
+            if (options("Next: ${first.replaceFirstChar { it.uppercase() }}.", "Skip the rest of the introduction.", title = "Introduction") != 1) {
+                skipped = true
+            }
             for ((index, scene) in SCENES.withIndex()) {
+                if (skipped) break
                 if (!play(this, scene)) {
                     skipped = true
                     break
@@ -265,6 +232,8 @@ object TutorIntro {
         player.setMinimapState(2)
     }
 
+    suspend fun say(task: QueueTask, text: Array<String>) = tutor(task, text)
+
     private suspend fun tutor(task: QueueTask, text: Array<String>) {
         task.chatNpc(*text, npc = NewPlayerConfig.current.choiceNpc, title = "Quest Tutor", facialExpression = FacialExpression.CALM_TALK, wrap = false)
     }
@@ -306,7 +275,7 @@ object TutorIntro {
      * front of the tour (a queued task goes first and waits while a modal is open - the Guild Cellar's welcome froze the
      * tour behind a black screen, 2026-10-07). Closed as soon as their fade has played.
      */
-    private fun closeFade(player: Player) {
+    fun closeFade(player: Player) {
         if (player.isInterfaceVisible(FADE_FROM_BLACK)) player.closeInterface(FADE_FROM_BLACK)
         if (player.isInterfaceVisible(FADE_TO_BLACK)) player.closeInterface(FADE_TO_BLACK)
     }
@@ -346,6 +315,9 @@ object TutorIntro {
 
     /** Darkan Cutscene.stopCutscene: end tile, minimap and camera back (facing the Tutor), unlocked. */
     private fun restore(player: Player) {
+        // A logout or skip during the guard scene: costume, head icons and lifepoints back (IntroGuardScene).
+        if (IntroGuardScene.isActive(player)) IntroGuardScene.cleanUp(player)
+        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|0")
         val end = endTile()
         if (player.tile != end) player.moveTo(end)
         player.setMinimapState(0)

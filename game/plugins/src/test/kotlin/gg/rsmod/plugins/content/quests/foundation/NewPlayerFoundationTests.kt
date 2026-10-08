@@ -236,8 +236,9 @@ class NewPlayerFoundationTests {
     @Test
     fun `no main source outside the foundation writes a choice quest or its unlock`() {
         val root = File("src/main/kotlin/gg/rsmod/plugins")
-        // QuestsSuite.kt (conform quests) resets its own never-saved headless bots to a fresh account before playing.
-        val allowed = setOf("FoundationQuests.kt", "QuestChoices.kt", "FoundationRewards.kt", "ShortQuest.kt", "QuestsSuite.kt")
+        // QuestsSuite.kt (conform quests) resets its own never-saved headless bots to a fresh account before playing; the intro's
+        // pk scene (IntroGuardScene.kt) arms its two never-saved actor bots with the curses and Ancient Magicks they fight with.
+        val allowed = setOf("FoundationQuests.kt", "QuestChoices.kt", "FoundationRewards.kt", "ShortQuest.kt", "QuestsSuite.kt", "IntroGuardScene.kt")
         val forbidden =
             listOf(
                 "ANCIENT_MAGIC_UNLOCKED] = true", "LUNAR_MAGIC_UNLOCKED] = true", "UNLOCKED_ATTR] = true",

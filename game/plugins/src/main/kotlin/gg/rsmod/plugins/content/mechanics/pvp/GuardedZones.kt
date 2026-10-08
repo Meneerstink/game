@@ -99,7 +99,12 @@ object GuardedZones {
                     // left a 6x3 wedge of dangerous tiles (3160..3167, 3515..3517) standing in the middle of the
                     // Grand Exchange courtyard. The edge is run straight along z 3518 instead, so the whole
                     // enclosure is one safe zone; `GuardedZonesTests` sweeps every tile of it as a guard.
-                    3190, 3518, 3142, 3518, 3138, 3514, 3138, 3494,
+                    // Owner 2026-10-08 (intro scene: "got attacked outside the shortcut by the guards"): the north-west corner
+                    // ran along the wall's OUTER corner pieces (x - z = -376: 3139,3515 .. 3142,3518, cache map square 12598
+                    // locs 23795 type 1), so the walkable tiles at the underwall tunnel's outer mouth counted as the Exchange
+                    // and the guards came for a skulled player before he crawled. The edge now runs on the wall body
+                    // (x - z = -375, locs 23795 type 9): outside the wall is Dangerous, the tunnel's inner end (3143,3514) Guarded.
+                    3190, 3518, 3143, 3518, 3138, 3513, 3138, 3494,
                     3141, 3491, 3141, 3486, 3138, 3483, 3138, 3472, 3142, 3467,
                     // Owner 2026-09-23: "in grand exchange mag nooit dangerous zijn" (3158,3465 was Dangerous). The wiki
                     // edge ran along z 3467, leaving the strip inside the south wall and the gate passage Dangerous. The
@@ -240,7 +245,10 @@ object GuardedZones {
             Zone("Void Knights' Outpost", intArrayOf(2624, 2560, 2624, 2681, 2688, 2681, 2688, 2560)),
         )
 
-    fun zoneAt(tile: Tile): Zone? = ZONES.firstOrNull { it.contains(tile) }
+    fun zoneAt(tile: Tile): Zone? =
+        ZONES.firstOrNull { it.contains(tile) }
+            // A private copy of a real place keeps that place's zone (MirroredInstances, the intro's guard scene).
+            ?: MirroredInstances.realTile(tile)?.let { real -> ZONES.firstOrNull { it.contains(real) } }
 
     /**
      * Owner 2026-09-21: "make sure the poh is a safezone just like osrs deadmanmode poh". A player-owned house is not

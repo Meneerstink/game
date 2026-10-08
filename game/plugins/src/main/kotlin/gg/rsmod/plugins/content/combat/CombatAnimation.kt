@@ -190,6 +190,28 @@ enum class CombatAnimation(
         itemIds = listOf(*Darts.DARTS, *gg.rsmod.plugins.content.items.osrs.Blowpipe.CHARGED_IDS.toTypedArray()),
     ),
 
+    // Morrigan's javelins and throwing axes throw with their own sequences, not the generic thrown 929 (owner 2026-10-08, intro
+    // scene: "i saw the hit but not the weapon"): Darkan items config.json attackAnims 13879-13882 / 13953-13956 -> 10501,
+    // 13883 / 13957 -> 10504; Novite 667 PlayerCombat.getWeaponAttackEmote "javelin" 10501, "morrigan's throwing axe" 10504.
+    MORRIGANS_JAVELIN(
+        style(CombatStyle.FIRST, Animation(10501)),
+        style(CombatStyle.SECOND, Animation(10501)),
+        style(CombatStyle.THIRD, Animation(10501)),
+        weaponType = WeaponType.THROWN,
+        itemIds =
+            listOf(
+                Items.MORRIGANS_JAVELIN, Items.MORRIGANS_JAVELIN_P, Items.MORRIGANS_JAVELIN_P_13881, Items.MORRIGANS_JAVELIN_P_13882,
+                Items.CORRUPT_MORRIGANS_JAVELIN, Items.C_MORRIGANS_JAVELIN_P, Items.C_MORRIGANS_JAVELIN_P_13955, Items.C_MORRIGANS_JAVELIN_P_13956,
+            ),
+    ),
+    MORRIGANS_THROWING_AXE(
+        style(CombatStyle.FIRST, Animation(10504)),
+        style(CombatStyle.SECOND, Animation(10504)),
+        style(CombatStyle.THIRD, Animation(10504)),
+        weaponType = WeaponType.THROWN,
+        itemIds = listOf(Items.MORRIGANS_THROWING_AXE, Items.C_MORRIGANS_THROWING_AXE),
+    ),
+
     DEFENDERS(
         blockAnimation = Animations.DEFENDER.block,
         itemIds =

@@ -104,6 +104,8 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
         player: Player,
         valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ) {
+        // The intro's guard scene draws its own skull and loot keys (IntroGuardScene restores the real ones afterwards).
+        if (gg.rsmod.plugins.content.quests.foundation.IntroGuardScene.isActive(player)) return
         val keys = heldKeys(player)
         var changed = false
         if (player.lootKeyIcons != keys) {

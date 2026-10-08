@@ -40,6 +40,9 @@ import kotlin.math.floor
  * Mechanics sourced from the 2009scape spell handlers and the 2011 RuneScape Wiki.
  */
 object MagicCombatStrategy : CombatStrategy {
+    /** One-shot: the caster's next spell lands on its primary target (IntroGuardScene - the owner's Ice Blitz refreeze). */
+    val FORCE_NEXT_LAND = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
     /** OSRS Wiki Smoke spells: "a 1/8 chance on hit" to poison. */
     const val SMOKE_POISON_CHANCE = 8
 
@@ -306,7 +309,12 @@ object MagicCombatStrategy : CombatStrategy {
         // secondary targets or ice spells against players (ConflictionGauntlets).
         val iceAgainstPlayer = target is Player && spell in setOf(CombatSpell.ICE_RUSH, CombatSpell.ICE_BURST, CombatSpell.ICE_BLITZ, CombatSpell.ICE_BARRAGE)
         val landHit =
-            if (pawn is Player) {
+            if (primary && pawn.attr[FORCE_NEXT_LAND] == true) {
+                // A scripted scene (the new-player intro's Ice Blitz over the Wilderness ditch, owner 2026-10-08) may force
+                // exactly one cast to land; damage, freeze, graphic and sound stay the real spell's.
+                pawn.attr.remove(FORCE_NEXT_LAND)
+                true
+            } else if (pawn is Player) {
                 gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(pawn, target, spell.uniqueId, accuracy, primary && !iceAgainstPlayer) { world.randomDouble() }
             } else {
                 accuracy >= world.randomDouble()
