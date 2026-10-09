@@ -75,13 +75,16 @@ fun Pawn.hit(
     damage: Int,
     type: HitType = if (damage == 0) HitType.BLOCK else HitType.REGULAR_HIT,
     delay: Int = 0,
+    /** Who dealt it, when a pawn did (OSRS hitsplats: the source sees its own hit lit, not tinted). */
+    source: Pawn? = null,
 ): Hit {
     val hit =
         Hit
             .Builder()
             .setDamageDelay(delay)
-            .addHit(damage = damage, type = type.id)
+            .addHit(damage = damage, type = type.id, group = type.group)
             .build()
+    hit.source = source
 
     addHit(hit)
     return hit
@@ -97,13 +100,13 @@ fun Pawn.hit(
     if (this is Player && attr.has(SPEAR_WALL) && type == HitType.MELEE.id) {
         Hit.Builder()
             .setDamageDelay(delay)
-            .addHit(damage = 0, type = HitType.BLOCK.id)
+            .addHit(damage = 0, type = HitType.BLOCK.id, group = HitType.BLOCK.group)
             .build()
     }
     else {
         Hit.Builder()
             .setDamageDelay(delay)
-            .addHit(damage = damage, type = type)
+            .addHit(damage = damage, type = type, group = HitType.groupOf(type))
             .build()
     }
 

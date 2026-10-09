@@ -46,6 +46,21 @@ class Hit private constructor(
     internal var cancelCondition: () -> Boolean = { false }
 
     /**
+     * The pawn that dealt this hit, when known (combat `dealHit`). OSRS hitsplats (owner 2026-10-09, RSMod HitBuilder): the
+     * target and this source see the lit splat, everyone else the tinted one; null = no source (poison, scripted damage).
+     */
+    var source: gg.rsmod.game.model.entity.Pawn? = null
+
+    /** The source's max hit for this attack (-1 = unknown): a player source shows the max splat at max(10, this). */
+    var sourceMaxHit: Int = -1
+
+    /** Damage at which the target and source see the [HitmarkGroup.max] splat; NPC or unknown sources never do. */
+    fun maxHitThreshold(): Int {
+        val player = source?.entityType?.isPlayer == true
+        return if (player && sourceMaxHit >= 0) maxOf(HitmarkGroup.MAX_HIT_MIN_THRESHOLD, sourceMaxHit) else Int.MAX_VALUE
+    }
+
+    /**
      * @see actions
      */
     fun addAction(action: Hit.() -> Unit): Hit {
@@ -86,7 +101,18 @@ class Hit private constructor(
     data class Hitmark(
         val type: Int,
         var damage: Int,
-    )
+    ) {
+        /** The OSRS hitsplat group this mark is drawn with (owner 2026-10-09); [type] stays the server's own hit type. */
+        var group: HitmarkGroup = HitmarkGroup.REGULAR_DAMAGE
+
+        /**
+         * The number the splat shows when it differs from [damage]: PvP shows the full damage even above the target's
+         * remaining lifepoints (OSRS 2016), while [damage] is capped to them. -1 = show [damage].
+         */
+        var shownDamage: Int = -1
+
+        fun displayDamage(): Int = if (shownDamage >= 0) shownDamage else damage
+    }
 
     data class Hitbar(
         val type: Int,
@@ -170,8 +196,9 @@ class Hit private constructor(
         fun addHit(
             damage: Int,
             type: Int,
+            group: HitmarkGroup = HitmarkGroup.REGULAR_DAMAGE,
         ): Builder {
-            hitmarks.add(Hitmark(type, damage))
+            hitmarks.add(Hitmark(type, damage).also { it.group = group })
             return this
         }
 

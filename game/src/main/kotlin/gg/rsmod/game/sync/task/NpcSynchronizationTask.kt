@@ -84,12 +84,12 @@ class NpcSynchronizationTask(
                     ),
                 )
                 if (requiresBlockUpdate) {
-                    segments.add(NpcUpdateBlockSegment(npc, false))
+                    segments.add(NpcUpdateBlockSegment(npc, false, player))
                 }
             } else if (requiresBlockUpdate) {
                 segments.add(NpcSkipSegment(skip = false))
                 segments.add(NpcNoMovementSegment())
-                segments.add(NpcUpdateBlockSegment(npc, false))
+                segments.add(NpcUpdateBlockSegment(npc, false, player))
             } else {
                 segments.add(NpcSkipSegment(skip = true))
             }
@@ -115,7 +115,7 @@ class NpcSynchronizationTask(
             val requiresBlockUpdate = npc.blockBuffer.isDirty() || hasPersistentBlockState(npc.blockBuffer)
             segments.add(AddLocalNpcSegment(player, npc, requiresBlockUpdate, player.hasLargeViewport()))
             if (requiresBlockUpdate) {
-                segments.add(NpcUpdateBlockSegment(npc, true))
+                segments.add(NpcUpdateBlockSegment(npc, true, player))
             }
 
             added++

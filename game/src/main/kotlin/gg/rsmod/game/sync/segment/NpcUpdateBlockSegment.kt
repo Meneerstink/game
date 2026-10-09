@@ -1,6 +1,7 @@
 package gg.rsmod.game.sync.segment
 
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.sync.SynchronizationSegment
 import gg.rsmod.game.sync.block.GraphicBlock
 import gg.rsmod.game.sync.block.UpdateBlockBuffer
@@ -14,6 +15,8 @@ import gg.rsmod.net.packet.GamePacketBuilder
 class NpcUpdateBlockSegment(
     val npc: Npc,
     private val newAddition: Boolean,
+    /** The player this update is written for (OSRS hitsplats are lit or tinted per viewer). */
+    private val observer: Player? = null,
 ) : SynchronizationSegment {
     override fun encode(buf: GamePacketBuilder) {
         var mask = npc.blockBuffer.blockValue()
@@ -164,7 +167,7 @@ class NpcUpdateBlockSegment(
                 val hitmarkCountStructure = structure[0]
                 val hitbarPercentageStructure = structure[1]
 
-                val entries = HitmarkEntries.of(npc.blockBuffer.hits)
+                val entries = HitmarkEntries.of(npc.blockBuffer.hits, npc, observer)
 
                 buf.put(
                     hitmarkCountStructure.type,

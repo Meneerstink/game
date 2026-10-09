@@ -1,29 +1,42 @@
 package gg.rsmod.plugins.api
 
+import gg.rsmod.game.model.HitmarkGroup
+
 /**
+ * The server's own hit types. [id] is the internal type every combat rule, trace and conformance suite reads; the client
+ * draws the OSRS hitsplat [group] (owner 2026-10-09: OSRS hitsplats, lit / tint / max per viewer - see [HitmarkGroup]).
+ * The revision-667 combat-style icons, critical and soak splats are gone: every damage type shares OSRS regular damage.
+ *
  * @author Tom <rspsmods@gmail.com>
  */
 enum class HitType(
     val id: Int,
+    val group: HitmarkGroup = HitmarkGroup.REGULAR_DAMAGE,
 ) {
     BLOCK(id = 8),
     REGULAR_HIT(id = 3),
     MELEE(id = 0),
     RANGE(id = 1),
     MAGIC(id = 2),
-    REFLECTED(id = 4),
+
+    /** Ring of recoil, vengeance and other reflected damage: untinted for every viewer since 2020 (OSRS Wiki "Hitsplat"). */
+    REFLECTED(id = 4, group = HitmarkGroup.UNTINTED_DAMAGE),
     CANNON(id = 13),
     ABSORB(id = 5),
-    POISON(id = 6),
-    DISEASE(id = 7),
-    HEAL(id = 9),
+    POISON(id = 6, group = HitmarkGroup.POISON),
+    DISEASE(id = 7, group = HitmarkGroup.DISEASE),
+    HEAL(id = 9, group = HitmarkGroup.HEAL),
     CRIT_MELEE(id = 10),
     CRIT_RANGE(id = 11),
     CRIT_MAGIC(id = 12),
+    VENOM(id = 14, group = HitmarkGroup.VENOM),
+    BURN(id = 28, group = HitmarkGroup.BURN),
+    ;
 
-    /** Owner 2026-09-18 (OSRS venom): the OSRS venom splat - no cache entry; the client draws OSRS sprite 1632 on the poison type (VenomHitmarkType). */
-    VENOM(id = 14),
+    companion object {
+        private val byId = values().associateBy { it.id }
 
-    /** Owner 2026-09-19 (OSRS burn): the OSRS burn splat (OSRS hitsplat 74, sprite 4767) on the regular damage type; past the cache's 0-27. */
-    BURN(id = 28),
+        /** The OSRS hitsplat group of internal hit type [id] (regular damage for an unknown id). */
+        fun groupOf(id: Int): HitmarkGroup = byId[id]?.group ?: HitmarkGroup.REGULAR_DAMAGE
+    }
 }

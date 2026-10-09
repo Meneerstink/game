@@ -1,6 +1,8 @@
 package gg.rsmod.game.sync.segment
 
 import gg.rsmod.game.model.Hit
+import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
 
 /**
  * The HITMARK update-block entries for a cycle's [Hit]s, one entry per hitmark.
@@ -17,13 +19,27 @@ internal object HitmarkEntries {
 
     data class Entry(val type: Int, val damage: Int, val delay: Int)
 
-    fun of(hits: List<Hit>): List<Entry> {
+    /**
+     * The entries [observer] receives for [hits] on [target]. Each mark is sent as the OSRS hitsplat its group resolves to
+     * for this viewer (owner 2026-10-09, RSMod HitBuilder): lit for the target and the hit's source, tinted for everyone
+     * else, block for a regular 0, max for a big player hit. A null [observer] counts as privileged (tests, replays).
+     */
+    fun of(
+        hits: List<Hit>,
+        target: Pawn? = null,
+        observer: Player? = null,
+    ): List<Entry> {
         val entries = ArrayList<Entry>()
         hits.forEach { hit ->
             if (hit.hitmarks.isEmpty()) {
                 entries += Entry(NO_HITMARK, 0, hit.clientDelay)
             } else {
-                hit.hitmarks.forEach { entries += Entry(it.type, it.damage, hit.clientDelay) }
+                val privileged = observer == null || observer === target || (hit.source != null && observer === hit.source)
+                val threshold = hit.maxHitThreshold()
+                hit.hitmarks.forEach {
+                    val shown = it.displayDamage()
+                    entries += Entry(it.group.resolve(shown, privileged, threshold), shown, hit.clientDelay)
+                }
             }
         }
         // The count is written as one unsigned byte.

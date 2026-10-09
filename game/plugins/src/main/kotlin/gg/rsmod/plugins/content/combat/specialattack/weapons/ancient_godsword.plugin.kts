@@ -43,7 +43,7 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
         // sacrifice mechanic, so it plays OSRS 5239 nex2021_sacrifice_attack_impact (ADAPTED by name).
         attacker.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.NEX2021_SACRIFICE_ATTACK_IMPACT)
         if (victim is Player) victim.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.NEX2021_SACRIFICE_ATTACK_IMPACT)
-        victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT)
+        victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT, source = attacker)
         val dealt = minOf(AncientGodsword.SACRIFICE_DAMAGE, before)
         val heal = AncientGodsword.heal(victim.getMaximumLifepoints(), victim is Player, dealt)
         if (heal > 0) attacker.heal(heal)

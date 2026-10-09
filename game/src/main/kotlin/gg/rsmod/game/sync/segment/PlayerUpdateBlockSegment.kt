@@ -333,7 +333,7 @@ class PlayerUpdateBlockSegment(
                 val hitmarkCountStructure = structure[0]
                 val hitbarPercentageStructure = structure[1]
 
-                val entries = HitmarkEntries.of(other.blockBuffer.hits)
+                val entries = HitmarkEntries.of(other.blockBuffer.hits, other, observer)
 
                 buf.put(
                     hitmarkCountStructure.type,

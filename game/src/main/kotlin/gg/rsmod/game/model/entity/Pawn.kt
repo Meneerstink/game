@@ -489,6 +489,8 @@ abstract class Pawn(
                     for (hitmark in hit.hitmarks) {
                         val hp = getCurrentLifepoints()
                         if (hitmark.damage > hp) {
+                            // PvP splats show the full damage above the remaining lifepoints (OSRS 2016); the damage dealt stays capped.
+                            if (entityType.isPlayer && hit.source?.entityType?.isPlayer == true) hitmark.shownDamage = hitmark.damage
                             hitmark.damage = hp
                         }
                         /*

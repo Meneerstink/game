@@ -67,7 +67,7 @@ SpecialAttacks.register(BEAR_DOWN_ENERGY, Items.URSINE_CHAINMACE) {
         // "deals 20 damage over 6 seconds".
         repeat(BLEED_HITS) {
             if (victim.isDead() || (victim is Player && !victim.isOnline)) return@queue
-            victim.hit(damage = BLEED_DAMAGE, type = HitType.REGULAR_HIT)
+            victim.hit(damage = BLEED_DAMAGE, type = HitType.REGULAR_HIT, source = player)
             wait(BLEED_INTERVAL)
         }
     }

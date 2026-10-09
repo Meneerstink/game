@@ -299,6 +299,14 @@ task runAutocastInterfaceImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.AutocastInterfaceImportTool'
 }
 
+task runOsrsHitsplatImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Imports the OSRS hitsplat definitions 0-82, their sprites and the OSRS p11 hitsplat font into both ' +
+        'production caches (CacheTransaction). Usage: ./gradlew :game:runOsrsHitsplatImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsHitsplatImportTool'
+}
+
 task runLootKeyInterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Builds the OSRS Loot keys chest interface (OSRS 742) as 667 interface 1149 and imports its OSRS ' +

@@ -250,14 +250,8 @@ fun Pawn.dealHit(
     if (applyDeflectProtection) {
         damage = AncientCurses.deflectDamageTaken(this, target, curseHitStyle, deflectDamage).toDouble()
     }
-    var type = hitType.id
     var executeHit = landHit
     val dmg = damage.toInt()
-
-    // Handles critical hit markers for Npc targets
-    if (damage >= (maxHit * 0.90) && target is Npc) {
-        type += 10
-    }
 
     // Handles death blow condition for Npc targets
     if (target is Npc) {
@@ -278,10 +272,13 @@ fun Pawn.dealHit(
     // Create the hit object with the calculated damage, type, and delay
     val hit =
         if (executeHit) {
-            target.hit(damage = damage.toInt(), type = type, delay = delay)
+            target.hit(damage = damage.toInt(), type = hitType.id, delay = delay)
         } else {
             target.hit(damage = 0, type = HitType.BLOCK, delay = delay)
         }
+    // OSRS hitsplats (owner 2026-10-09): the attacker sees its own hit lit and, from a player, the max splat at its max hit.
+    hit.source = this
+    hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
     val pawnHit = PawnHit(hit, executeHit)
 
