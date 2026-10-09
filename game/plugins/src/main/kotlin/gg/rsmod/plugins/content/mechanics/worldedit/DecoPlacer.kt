@@ -140,7 +140,9 @@ object DecoPlacer {
             val nz = DIAGONAL_NZ[wall.rot]
             val side = if ((p.x - tile.x) * nx + (p.z - tile.z) * nz >= 0) 1 else -1
             type = 4
-            rot = diagonalRot(-side * nx, -side * nz)
+            // Seen in the client (owner test 2026-10-09, screens/placemode-2026-10-09/15-16): with the back toward -n the
+            // player looked at the navy back, so the face turns to the player's side with the back toward +n here.
+            rot = diagonalRot(side * nx, side * nz)
             fit = LocFit(dz = -LocFit.UNITS_PER_TILE / 2, yaw = LocFit.YAW_QUARTER / 2)
             diagonal = true
         } else if (wall.type != 0 && wall.type != 2) {

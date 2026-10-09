@@ -222,7 +222,7 @@ class DecoPlacerTests {
             assertEquals(LocFit.YAW_QUARTER / 2, s.fit.yaw)
             assertEquals(-LocFit.UNITS_PER_TILE / 2, s.fit.dz, "back in the middle of the tile")
             // the back points away from the player's side: rotation r + 45 degrees -> NE, SE, SW, NW
-            assertEquals(DecoPlacer.diagonalRot(-DecoPlacer.DIAGONAL_NX[wallRot], -DecoPlacer.DIAGONAL_NZ[wallRot]), s.rot, "wall rot $wallRot")
+            assertEquals(DecoPlacer.diagonalRot(DecoPlacer.DIAGONAL_NX[wallRot], DecoPlacer.DIAGONAL_NZ[wallRot]), s.rot, "wall rot $wallRot (face toward the player, client-verified)")
             val rot = s.rot
             DecoPlacer.key(player, "flip", 0)
             assertEquals(Tile(3200, 3201, 0), s.tile, "F stays on the tile")
