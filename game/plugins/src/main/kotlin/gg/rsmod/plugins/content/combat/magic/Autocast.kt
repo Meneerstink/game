@@ -475,7 +475,13 @@ object Autocast {
         val l = AutocastInterfaceLayout
         if (player.getInterfaceAt(InterfaceDestination.ATTACK_TAB) != l.SELECT_INTERFACE) return
         val mode = Mode.values().getOrNull(player.attr[PENDING_MODE] ?: 0)?.takeIf { it != Mode.OFF }
-        if (component == l.SELECT_CANCEL || mode == null) {
+        if (component == l.SELECT_CANCEL) {
+            // Owner 2026-10-09: "de cancel moet de spell daadwerkelijk annuleren" - Cancel ends autocast and empties the Spell box.
+            closeSelection(player)
+            clear(player, Reason.CANCELLED)
+            return
+        }
+        if (mode == null) {
             closeSelection(player)
             return
         }
