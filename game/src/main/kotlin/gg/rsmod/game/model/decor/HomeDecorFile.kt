@@ -1,4 +1,4 @@
-package gg.rsmod.plugins.content.areas.grandexchange
+package gg.rsmod.game.model.decor
 
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile

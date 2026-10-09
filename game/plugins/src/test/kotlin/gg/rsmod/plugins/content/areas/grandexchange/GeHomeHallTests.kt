@@ -6,6 +6,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.decor.HomeDecorFile
 import gg.rsmod.game.tools.importer.ModernRegionProbeTool
 import gg.rsmod.game.tools.importer.Rev667LocCodec
 import gg.rsmod.game.tools.importer.Rev667TileCodec

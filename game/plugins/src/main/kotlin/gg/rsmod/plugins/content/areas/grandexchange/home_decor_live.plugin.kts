@@ -3,6 +3,9 @@ package gg.rsmod.plugins.content.areas.grandexchange
 import gg.rsmod.game.Server.Companion.logger
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.Trace
+import gg.rsmod.game.model.decor.HomeDecorBake
+import gg.rsmod.game.model.decor.HomeDecorFile
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Npc
@@ -15,6 +18,11 @@ import java.nio.file.Files
  * home can be dressed while players watch. A file that does not parse is reported and the current dressing stays.
  * The first pass waits until every boot-time npc (home hall, 78 Store, GE audit) is in place, so `npc` lines move those
  * npcs instead of spawning a second copy.
+ *
+ * Owner 2026-10-09: the hall is baked into region 12598's map file (RoyalHallDecorBakeTool, HomeDecorBake.MANIFEST), so it
+ * is complete when the loading screen ends. Lines in the file and the manifest are already in the map and are not spawned;
+ * only lines the file has beyond the bake are spawned, and baked locs the file dropped are taken out (and come back when
+ * the line does). Both are reported as a PROBLEM: the next bake puts them in the map.
  */
 
 val DECOR_POLL = TimerKey()
@@ -32,6 +40,9 @@ val spawned = ArrayList<DynamicObject>()
 /** Cache objects hidden by `del` lines, keyed by tile and type, and the copies put back when a line is dropped. */
 val hidden = LinkedHashMap<Pair<Tile, Int>, GameObject>()
 val restored = HashMap<Pair<Tile, Int>, DynamicObject>()
+
+/** Baked locs (manifest lines) the file no longer has, taken out of the world; a line that returns brings a copy back. */
+val unbaked = LinkedHashSet<HomeDecorFile.Placement>()
 
 /** Npcs already placed by this file, by id. */
 val placedNpcs = HashMap<Int, Npc>()
@@ -89,13 +100,28 @@ fun applyDesign(design: HomeDecorFile.Design): String {
         restored[key] = copy
     }
 
-    design.placements.forEach { placement ->
+    val bake = HomeDecorBake.diff(design, HomeDecorBake.loadManifest())
+    bake.missing.filter { it !in unbaked }.forEach { p ->
+        world.chunks.getOrCreate(p.tile).getEntities<GameObject>(p.tile, EntityType.STATIC_OBJECT)
+            .firstOrNull { it.id == p.id && it.type == p.type && it.rot == p.rot }?.let { world.remove(it) }
+        unbaked += p
+    }
+    val back = unbaked.filter { it !in bake.missing }
+    (bake.extra + back).forEach { placement ->
         val obj = DynamicObject(placement.id, placement.type, placement.rot, placement.tile)
         world.spawn(obj)
         spawned += obj
     }
+    if (bake.extra.isNotEmpty() || bake.missing.isNotEmpty()) {
+        Trace.problem(Trace.Cat.PLUGIN) {
+            "home_decor.txt differs from the baked map (${HomeDecorBake.MANIFEST}): ${bake.extra.size} lines spawned one by one " +
+                "(first ${bake.extra.take(3).map { "${it.id}@${it.tile.x},${it.tile.z},${it.tile.height}" }}), ${bake.missing.size} baked locs taken out " +
+                "- run RoyalHallDecorBakeTool to put them in the map"
+        }
+    }
     design.npcs.forEach { placeNpc(it) }
-    return "${design.placements.size} objects, ${design.removals.size} del lines ($found found, $blind blind), ${design.npcs.size} npcs"
+    return "${design.placements.size} objects (${bake.inMap.size} in the map, ${bake.extra.size + back.size} spawned, ${bake.missing.size} taken out), " +
+        "${design.removals.size} del lines ($found found, $blind blind), ${design.npcs.size} npcs"
 }
 
 fun reloadIfChanged() {

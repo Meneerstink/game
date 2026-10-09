@@ -1036,6 +1036,16 @@ object RoyalHallLocTool {
         return def.copyOfRange(0, def.size - 1) + byteArrayOf(2) + name.toByteArray(Charsets.ISO_8859_1) + byteArrayOf(0, 0)
     }
 
+    /**
+     * [def] with opcode 73 (client LocType.forcedecor): a walk-through, non-interactive ground decoration from the map file is
+     * then drawn even while "Ground decoration" is off (client MapRegion / Static213 skip it otherwise).
+     */
+    private fun withForceDecor(def: ByteArray): ByteArray {
+        check(opcodePosition(0, def, 73) < 0) { "already forcedecor" }
+        check(def.last() == 0.toByte()) { "definition does not end with opcode 0" }
+        return def.copyOf(def.size - 1) + byteArrayOf(73, 0)
+    }
+
     /** Variants that keep their menu options (the staircases). */
     val WITH_OPTIONS = setOf(62779, 62780, STAIRS_MIDDLE)
 
@@ -1089,6 +1099,9 @@ object RoyalHallLocTool {
             Variant(CASINO_SIGNS[1], SIGN, "Royal Hall casino sign 'Dice'") { named(it, "Dice") },
             Variant(CASINO_SIGNS[2], SIGN, "Royal Hall casino sign 'Flower Poker'") { named(it, "Flower Poker") },
             Variant(CASINO_SIGNS[3], SIGN, "Royal Hall casino sign 'Mines'") { named(it, "Mines") },
+            // The carpet baked into the map file (RoyalHallDecorBakeTool, owner 2026-10-09): forcedecor, so the low preset (Ground
+            // decoration off) still draws it like the dynamic carpet it replaces.
+            *gg.rsmod.game.model.decor.HomeDecorBake.FORCEDECOR_CARPETS.map { (source, id) -> Variant(id, source, "Royal Hall carpet $source with forcedecor, for the map file", ::withForceDecor) }.toTypedArray(),
         )
 
     /**

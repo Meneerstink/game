@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.grandexchange
 
 import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.decor.HomeDecorFile
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals

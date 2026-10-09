@@ -21,8 +21,8 @@
 # purple 78 removed (owner 2026-10-09): obj 62750 3159 3469
 # purple 78 removed (owner 2026-10-09): obj 62750 3170 3469
 # safe side, at the gate exit: skull-and-crossbones danger signs warn players before they walk out into the Wilderness
-obj 1032 3161 3468 0 10 0
-obj 1032 3168 3468 0 10 0# gatehouse facade and ring-pillar banners: their red cloth (texture 973) now carries the 78 texture (GeHomeBannerTool retex)
+# not baked (owner 2026-10-09, danger sign, already removed by a world edit): obj 1032 3161 3468 0 10 0
+# not baked (owner 2026-10-09, danger sign, already removed by a world edit): obj 1032 3168 3468 0 10 0# gatehouse facade and ring-pillar banners: their red cloth (texture 973) now carries the 78 texture (GeHomeBannerTool retex)
 
 # ---- 78 house banners outside the Grand Exchange (owner 2026-09-23). Wall banner loc 62749: rot 0 back north,
 # 1 back east, 2 back south, 3 back west (it hangs on the named edge of its own tile, facing away from it).
@@ -727,10 +727,10 @@ obj 24216 3172 3494 0 5 0
 # rotation 0 faces east, 2 west), candelabras and wall lights. The casino tables are in their own block below.
 obj 24310 3164 3494 1 10 0
 obj 24310 3165 3494 1 10 0
-obj 35454 3164 3491 1 10 0
-obj 35454 3165 3491 1 10 0
-obj 203 3164 3490 1 10 0
-obj 203 3165 3490 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 35454 3164 3491 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 35454 3165 3491 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 203 3164 3490 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 203 3165 3490 1 10 0
 obj 13614 3158 3488 1 10 0
 obj 13614 3171 3488 1 10 2
 obj 9149 3158 3494 1 10 0
@@ -749,22 +749,22 @@ obj 15545 3160 3497 1 4 1
 obj 15545 3169 3497 1 4 1
 obj 15560 3160 3486 1 4 3
 obj 15560 3169 3486 1 4 3
-obj 39838 3163 3491 1 10 3
-obj 39838 3166 3491 1 10 1
-obj 39838 3163 3492 1 10 3
-obj 39838 3166 3492 1 10 1
+# not baked (owner 2026-10-09, already removed by a world edit): obj 39838 3163 3491 1 10 3
+# not baked (owner 2026-10-09, already removed by a world edit): obj 39838 3166 3491 1 10 1
+# not baked (owner 2026-10-09, already removed by a world edit): obj 39838 3163 3492 1 10 3
+# not baked (owner 2026-10-09, already removed by a world edit): obj 39838 3166 3492 1 10 1
 # ---- the casino (owner 2026-09-27): one card table 12975 per marble corner of the upper floor, its dealer behind it
 # (data/world_edits.json) and a gilded sign named after the game on the inner side (RoyalHallLocTool.CASINO_SIGNS:
 # 62895 Blackjack, 62896 Dice, 62897 Flower Poker, 62898 Mines). North tables face south, south tables north; players
 # stand on the carpet side. The one minimap star is the map marker 62899 (RoyalHallMapTool), not placed here.
-obj 12975 3160 3494 1 10 0
-obj 62895 3162 3496 1 10 0
-obj 12975 3167 3494 1 10 0
-obj 62896 3167 3496 1 10 0
-obj 12975 3160 3487 1 10 2
-obj 62897 3162 3486 1 10 0
-obj 12975 3167 3487 1 10 2
-obj 62898 3167 3486 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 12975 3160 3494 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 62895 3162 3496 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 12975 3167 3494 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 62896 3167 3496 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 12975 3160 3487 1 10 2
+# not baked (owner 2026-10-09, already removed by a world edit): obj 62897 3162 3486 1 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 12975 3167 3487 1 10 2
+# not baked (owner 2026-10-09, already removed by a world edit): obj 62898 3167 3486 1 10 0
 # ---- balconies: two gilded benches (39838) on each, looking out over the exchange (the lamp posts stand on the outer corners)
 obj 39838 3163 3483 1 10 0
 obj 39838 3166 3483 1 10 0
@@ -1045,14 +1045,14 @@ obj 15548 3174 3490 0 22 2
 obj 15549 3174 3491 0 22 1
 obj 15549 3174 3492 0 22 1
 obj 15548 3174 3493 0 22 1
-obj 50993 3162 3482 0 10 0
-obj 50993 3167 3482 0 10 0
-obj 50993 3162 3501 0 10 0
-obj 50993 3167 3501 0 10 0
-obj 50993 3154 3489 0 10 0
-obj 50993 3154 3494 0 10 0
-obj 50993 3175 3489 0 10 0
-obj 50993 3175 3494 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3162 3482 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3167 3482 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3162 3501 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3167 3501 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3154 3489 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3154 3494 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3175 3489 0 10 0
+# not baked (owner 2026-10-09, already removed by a world edit): obj 50993 3175 3494 0 10 0
 obj 2163 3156 3484 0 10 0
 obj 2163 3173 3484 0 10 0
 obj 2163 3156 3499 0 10 0

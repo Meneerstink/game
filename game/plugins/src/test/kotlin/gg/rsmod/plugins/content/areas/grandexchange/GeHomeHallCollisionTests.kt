@@ -10,6 +10,8 @@ import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.decor.HomeDecorBake
+import gg.rsmod.game.model.decor.HomeDecorFile
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.service.Service
@@ -71,13 +73,18 @@ class GeHomeHallCollisionTests {
             w.chunks.getOrCreate(Tile(3164, 3491, 0))
             map = Rev667TileCodec.decode(w.filestore.data(5, w.filestore.index(5).archive("m49_54")!!.id, 0)!!)
 
-            // home_decor_live.plugin.kts applyDesign: the del lines, then every placement (World.spawn replaces the loc of the
-            // same client layer on the tile).
+            // home_decor_live.plugin.kts applyDesign: the del lines, then the placements beyond the bake (the baked ones are
+            // in the map already; World.spawn replaces the loc of the same client layer on the tile) and the baked locs the
+            // file dropped taken out.
             design = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt"))
             design.removals.filter { inBox(it.tile) }.forEach { r ->
                 objectsAt(r.tile).filter { r.type == null || it.type == r.type }.forEach { w.remove(it) }
             }
-            design.placements.filter { inBox(it.tile) }.forEach { w.spawn(DynamicObject(it.id, it.type, it.rot, it.tile)) }
+            val bake = HomeDecorBake.diff(design, HomeDecorBake.loadManifest(Paths.get("..", "..", "data", "cfg", "home_decor.baked.txt")))
+            bake.missing.filter { inBox(it.tile) }.forEach { p ->
+                objectsAt(p.tile).filter { it.id == p.id && it.type == p.type && it.rot == p.rot }.forEach { w.remove(it) }
+            }
+            bake.extra.filter { inBox(it.tile) }.forEach { w.spawn(DynamicObject(it.id, it.type, it.rot, it.tile)) }
 
             // WorldEdits.reload on top (ROOT_CAUSES #144: the owner's edits win over the dressing).
             edits = ObjectMapper().readTree(File("../../data/world_edits.json"))["edits"].toList()
