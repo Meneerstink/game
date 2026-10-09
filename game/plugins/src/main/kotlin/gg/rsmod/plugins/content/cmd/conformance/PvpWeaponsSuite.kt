@@ -123,7 +123,7 @@ object PvpWeaponsSuite : Conformance.Suite {
                 AttackTab.setEnergy(a, 100)
                 a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
                 // Only the special's own hits: the bot stops after it (the next normal swing would land in the window too).
-                specials[state] = swings(6, stopAfter = 2, stop = { a.resetInteractions(); Combat.reset(a) }) { a.attack(b) }
+                specials[state] = swings(6, stopAfter = 3, stop = { a.resetInteractions(); Combat.reset(a) }) { a.attack(b) }
             }
         }
         val base = bySate["no prayer"].orEmpty()
@@ -161,8 +161,9 @@ object PvpWeaponsSuite : Conformance.Suite {
             run.expectTrue(e, "special: fires at a player", sp.isNotEmpty(), "no hit line within 6 ticks of the special")
             if (sp.isNotEmpty()) {
                 val spStyle = sp.first().style
-                val spMax = sp.maxOf { it.max }
-                val prot = specials[protectOf[spStyle] ?: ""].orEmpty()
+                val spMax = sp.filter { it.style == spStyle }.maxOf { it.max }
+                // Only hits of the special's own style (a normal swing of another style can still fall in the window).
+                val prot = specials[protectOf[spStyle] ?: ""].orEmpty().filter { it.style == spStyle }
                 if (prot.isNotEmpty()) {
                     val pm = prot.maxOf { it.max }
                     run.expectTrue(
