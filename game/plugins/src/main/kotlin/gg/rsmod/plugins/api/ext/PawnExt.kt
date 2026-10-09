@@ -85,6 +85,12 @@ fun Pawn.hit(
             .addHit(damage = damage, type = type.id, group = type.group)
             .build()
     hit.source = source
+    // Kill credit for a pawn's damage outside dealHit (Ancient godsword sacrifice, revenant bleed, Karil's second hit - block 3
+    // audit 2026-10-09), the way Deflect, Ring of recoil and Vengeance credit theirs: damage map and Deadman breach record.
+    if (source != null && damage > 0) {
+        damageMap.add(source, damage)
+        gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(this, source, damage)
+    }
 
     addHit(hit)
     return hit

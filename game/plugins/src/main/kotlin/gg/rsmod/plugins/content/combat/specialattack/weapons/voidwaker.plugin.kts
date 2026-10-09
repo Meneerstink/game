@@ -6,6 +6,9 @@ import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
 import gg.rsmod.plugins.content.items.osrs.Voidwaker
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.plugins.api.ext.isProtectedFrom
+import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 
 /**
  * OSRS-IMPORT Voidwaker - Disrupt (rules in [Voidwaker]): a guaranteed magic-type hit of 50-150% of the melee max hit that
@@ -23,11 +26,15 @@ SpecialAttacks.register(Voidwaker.SPECIAL_ENERGY, Items.VOIDWAKER) {
     player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.SUPERIOR_DEMONBANE_CAST)
     player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.TOA_WARDENS_SQUARE_THUNDER1)
     victim.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.VOIDWAKER_IMPACT)
-    val (minimum, maximum) = Voidwaker.disruptRange(MeleeCombatFormula.getMaxHit(player, victim))
+    // Magic damage from the melee max hit: Protect from Melee does not apply, Protect from Magic does (x0.6 against a player,
+    // the PvP protection-prayer reduction; Deflect Magic is applied by dealHit from the MAGIC hit type).
+    val (minimum, maximum) = Voidwaker.disruptRange(MeleeCombatFormula.getMaxHitIgnoringMeleeProtection(player, victim))
+    val prayer =
+        if (victim is Player && victim.isProtectedFrom(CombatClass.MAGIC) && !AncientCurses.deflects(victim, CombatClass.MAGIC)) 0.6 else 1.0
     player.dealHit(
         target = victim,
-        minHit = Voidwaker.minHitArgument(minimum),
-        maxHit = maximum.toDouble(),
+        minHit = Voidwaker.minHitArgument(kotlin.math.floor(minimum * prayer).toInt()),
+        maxHit = kotlin.math.floor(maximum * prayer),
         landHit = true,
         delay = 1,
         hitType = HitType.MAGIC,

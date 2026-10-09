@@ -131,9 +131,26 @@ object MeleeCombatFormula : CombatFormula {
         // OSRS Wiki "Colossal blade": "MaxHit + [2 × min(MonsterSize,5)]" (a player is size 1).
         if (pawn is Player && pawn.getEquipment(EquipmentType.WEAPON)?.id == gg.rsmod.plugins.api.cfg.Items.COLOSSAL_BLADE) base += 2 * minOf(target.getSize(), 5)
         if (pawn is Player) {
-            base = applyStrengthSpecials(pawn, target, base, specialAttackMultiplier, specialPassiveMultiplier)
+            base = applyStrengthSpecials(pawn, target, base, specialAttackMultiplier, specialPassiveMultiplier, meleeProtection)
         }
         return base
+    }
+
+    /** Set only inside [getMaxHitIgnoringMeleeProtection]: the max hit is computed without the Protect from Melee step. */
+    private var meleeProtection = true
+
+    /**
+     * The player's melee max hit without the Protect from Melee step, for a special that deals its melee-based damage as another
+     * style: Voidwaker Disrupt is magic damage ("guaranteed Magic damage between 50-150% of the wielder's maximum melee hit",
+     * OSRS Wiki), so Protect from Magic - not Protect from Melee - reduces it (block 3 audit 2026-10-09).
+     */
+    fun getMaxHitIgnoringMeleeProtection(player: Player, target: Pawn): Double {
+        meleeProtection = false
+        try {
+            return getMaxHit(player, target, 1.0, 1.0)
+        } finally {
+            meleeProtection = true
+        }
     }
 
     private fun getAttackRoll(
@@ -184,6 +201,7 @@ object MeleeCombatFormula : CombatFormula {
         base: Double,
         specialAttackMultiplier: Double,
         specialPassiveMultiplier: Double,
+        protectPrayer: Boolean = true,
     ): Double {
         // OSRS Wiki "Maximum melee hit" step three: ⌊⌊Base⌋ × Special Bonus⌋ - every multiplier is floored before the next.
         var hit = base
@@ -205,7 +223,7 @@ object MeleeCombatFormula : CombatFormula {
         hit = floor(hit * specialAttackMultiplier)
 
         // "Damage per second/Melee": against a player praying Protect from Melee, multiply by 6/10.
-        if ((target.isProtectedFrom(CombatClass.MELEE) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MELEE))) {
+        if (protectPrayer && (target.isProtectedFrom(CombatClass.MELEE) && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MELEE))) {
             hit = floor(hit * 0.6)
         }
 

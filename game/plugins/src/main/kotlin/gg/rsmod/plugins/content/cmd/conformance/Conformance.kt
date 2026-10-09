@@ -101,6 +101,7 @@ object Conformance {
                 "summoning" -> SummoningSuite
                 "curses", "prayers" -> CursesSuite
                 "equipment", "weapons", "armour" -> EquipmentSuite
+                "pvpweapons" -> PvpWeaponsSuite
                 "combat" -> CombatSuite
                 "hud" -> HudSuite
                 "systems" -> SystemsSuite
