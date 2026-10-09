@@ -270,8 +270,9 @@ object DecoPlacer {
             "yaw" -> f = f.copy(yaw = f.yaw + d * YAW_STEPS[s.stepLevel])
             "pitch" -> f = f.copy(pitch = f.pitch + d * YAW_STEPS[s.stepLevel])
             "flat" -> {
-                // L: lay it flat on the floor of its tile (a loc standing on the tile, face up), or stand it up again.
-                if (f.pitch % LocFit.YAW_TURN == 0) {
+                // L: lay it flat on the floor of its tile (a loc standing on the tile, face up); when it already lies
+                // flat, stand it up again (a tilted one goes flat first, owner test 2026-10-09).
+                if (((f.pitch % LocFit.YAW_TURN) + LocFit.YAW_TURN) % LocFit.YAW_TURN != LocFit.PITCH_FLAT) {
                     s.type = 10
                     s.diagonal = false
                     f = LocFit(scale = f.scale, yaw = f.yaw, pitch = LocFit.PITCH_FLAT)

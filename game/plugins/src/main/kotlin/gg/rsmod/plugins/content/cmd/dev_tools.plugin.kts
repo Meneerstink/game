@@ -46,7 +46,14 @@ on_command("devmode", Privilege.ADMIN_POWER) {
 }
 
 on_login {
-    if (player.attr[DEV_ON] != true || !player.privilege.powers.contains(Privilege.ADMIN_POWER)) return@on_login
+    // The client keeps developer / place mode in statics across logout and server restarts: a client that was in place
+    // mode on one account kept the panel and swallowed keys on the next login (owner test 2026-10-09, typed text became
+    // place-mode keys and saved a decoration). Every login starts from the server's real state.
+    player.message("__RSPS_DEV__:deco|off", type = ChatMessageType.CONSOLE)
+    if (player.attr[DEV_ON] != true || !player.privilege.powers.contains(Privilege.ADMIN_POWER)) {
+        player.message("__RSPS_DEV__:off", type = ChatMessageType.CONSOLE)
+        return@on_login
+    }
     player.message("__RSPS_DEV__:on", type = ChatMessageType.CONSOLE)
     player.timers[DEV_POSITION_TIMER] = 2
 }

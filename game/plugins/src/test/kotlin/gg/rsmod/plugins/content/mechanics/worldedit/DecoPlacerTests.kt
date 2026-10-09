@@ -283,6 +283,8 @@ class DecoPlacerTests {
         DecoPlacer.key(player, "pitch", +1)
         assertEquals(LocFit.PITCH_FLAT + 46, s.fit.pitch, "Z/X tilt one degree")
         DecoPlacer.key(player, "flat", 0)
+        assertEquals(LocFit.PITCH_FLAT, s.fit.pitch, "a tilted one goes flat first")
+        DecoPlacer.key(player, "flat", 0)
         assertEquals(0, s.fit.pitch, "upright again")
         DecoPlacer.end(player, restore = false)
         assertTrue(DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null, flat = true))
