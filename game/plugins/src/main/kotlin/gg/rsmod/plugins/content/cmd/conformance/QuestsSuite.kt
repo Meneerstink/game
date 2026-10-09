@@ -372,14 +372,15 @@ object QuestsSuite : Conformance.Suite {
         }
     }
 
-    fun isTravelYes(text: String) = text.startsWith("Can you get me to ") || text.startsWith("Send me to ")
+    /** A travel offer's yes: a quest npc's ("Can you get me to ...?") or the quest's own after a step (owner 2026-10-09 "Take me to ..."). */
+    fun isTravelYes(text: String) = text.startsWith("Can you get me to ") || text.startsWith("Send me to ") || text.startsWith("Take me to ")
 
     /** The tile a travel offer names: a step's place or the quest's start place. */
     fun destinationOf(
         quest: ShortQuest?,
         option: String,
     ): Tile? {
-        val place = option.removePrefix("Can you get me to ").removePrefix("Send me to ").trimEnd('?', '.')
+        val place = option.removePrefix("Can you get me to ").removePrefix("Send me to ").removePrefix("Take me to ").trimEnd('?', '.')
         val quests = if (quest != null) listOf(quest) else FoundationQuests.SHORT
         for (q in quests) {
             q.steps.firstOrNull { it.place == place && it.location != null }?.let { return it.location }
@@ -934,6 +935,13 @@ object QuestsSuite : Conformance.Suite {
         stage: Int,
     ) {
         wait(QuestHelper.INTERVAL + 1)
+        // The quest's own trip to the next step (owner 2026-10-09) waits until the player may teleport (Deadman: 7 seconds after a
+        // hit), so it can open after the step's conversation ended: answer it like a player would.
+        var n = 0
+        while (n++ < 14 && chatOpen(bot) == -1 && !bot.interfaces.isVisible(DangerWarning.INTERFACE_ID)) wait(1)
+        if (chatOpen(bot) != -1 || bot.interfaces.isVisible(DangerWarning.INTERFACE_ID)) {
+            converse(run, bot, entry, "step $stage (trip on)", Policy(quest, travel = { true }), maxTicks = 30)
+        }
         val now = quest.stage(bot)
         val finished = quest.isFinished(bot)
         val where = "step $stage"
@@ -1083,7 +1091,7 @@ object QuestsSuite : Conformance.Suite {
         val wantNpc = step.fight?.npc ?: step.npc
         val target = payloads.lastOrNull { it == "qht" || it.startsWith("qht|") }?.split("|")
         val npcOk = target != null && target.size == 5 && target[4].toInt() == wantNpc
-        val near = target != null && target.size == 5 && (step.fight?.tile ?: step.location)?.let { Tile(target[1].toInt(), target[2].toInt(), target[3].toInt()).isWithinRadius(it, 40) } ?: true
+        val near = target != null && target.size == 5 && (step.fight?.tile ?: step.location)?.let { Tile(target[1].toInt(), target[2].toInt(), it.height).isWithinRadius(it, 40) } ?: true // any floor of the place (GE hall npcs stand on its first floor)
         run.expectTrue(entry, "step $stage: Quest Helper map/minimap target is the step's npc, at its place", npcOk && near, "qht $target (npc $wantNpc at ${step.fight?.tile ?: step.location})")
         // Decoded as the client does: the last qhd starts the list, the qhda messages after it continue it.
         val start = payloads.indexOfLast { it == "qhd" || it.startsWith("qhd|") }

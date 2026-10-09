@@ -66,6 +66,9 @@ private val APE_ATOLL = Tile(2805, 2762, 0)
 private val APE_ATOLL_GUARD = Tile(2795, 2775, 0)
 private val MERLIN_CELL = Tile(2757, 3502, 0)
 
+/** Sir Lancelot's post on Camelot castle's first floor (spawns_11062), where the quest travel lands beside him. */
+private val LANCELOT_FLOOR = Tile(2758, 3516, 1)
+
 private val DIAMONDS = listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND)
 
 // ------------------------------------------------------------------------------------------------ Desert Treasure
@@ -770,29 +773,27 @@ object KingsRansom : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.SIR_LANCELOT,
-                journal = listOf("I must defeat all eight knights of the ${red("Knight Waves")}", "${red("Training Ground")} in Camelot, one after another,", "from Sir Bedivere (level 110) to Sir Lancelot (level 127)."),
-                done = listOf("I defeated all eight Knight Waves."),
+                journal = listOf("I must defeat the four strongest knights of the ${red("Knight Waves")}", "${red("Training Ground")} in Camelot, one after another,", "from Sir Lucan (level 120) to Sir Lancelot (level 127)."),
+                done = listOf("I defeated the Knight Waves."),
                 place = "the Knight Waves Training Ground",
                 location = KNIGHT_WAVES,
-                tip = "Eight knights in a row, no rest between them. Bring plenty of food.",
+                tip = "Four knights in a row, no rest between them. Bring plenty of food.",
                 fight =
+                    // Owner 2026-10-09: fewer waves - the four strongest of the eight (OSRS Knight Waves levels 120-127), so the
+                    // quest stays within ten minutes.
                     QuestFight(
-                        Npcs.SIR_BEDIVERE_6177, "Sir Bedivere", 110, KNIGHT_WAVES, "Wave one! Have at you!",
+                        Npcs.SIR_LUCAN_6173, "Sir Lucan", 120, KNIGHT_WAVES, "Wave one! Have at you!",
                         chain =
                             listOf(
-                                Npcs.SIR_PELLEAS_6176 to "Wave two: Sir Pelleas!",
-                                Npcs.SIR_TRISTRAM_6175 to "Wave three: Sir Tristram!",
-                                Npcs.SIR_PALOMEDES_1883 to "Wave four: Sir Palomedes!",
-                                Npcs.SIR_LUCAN_6173 to "Wave five: Sir Lucan!",
-                                Npcs.SIR_GAWAIN_6172 to "Wave six: Sir Gawain!",
-                                Npcs.SIR_KAY_6171 to "Wave seven: Sir Kay!",
+                                Npcs.SIR_GAWAIN_6172 to "Wave two: Sir Gawain!",
+                                Npcs.SIR_KAY_6171 to "Wave three: Sir Kay!",
                                 Npcs.SIR_LANCELOT_6170 to "The last wave. Face me, if you dare!",
                             ),
                         chainAtTile = true,
                     ),
                 talk = {
                     chatNpc(
-                        "Eight knights, one after another. Keep your",
+                        "Four knights, one after another. Keep your",
                         "guard up and your head down.",
                         facialExpression = FacialExpression.TOUGH,
                     )
@@ -804,7 +805,7 @@ object KingsRansom : ShortQuest(
                 journal = listOf("I should speak to ${red("Sir Lancelot")} in Camelot."),
                 done = listOf("Sir Lancelot taught me the prayers of the Round Table."),
                 place = "Camelot",
-                location = CAMELOT,
+                location = LANCELOT_FLOOR,
                 talk = {
                     chatNpc(
                         "Well fought! The prayers of Chivalry and Piety",
@@ -941,12 +942,14 @@ object DesertTreasureII : ShortQuest(
             ),
             QuestStep(
                 npc = Npcs.ALI_THE_WISE,
-                journal = listOf("I must defeat the ${red("mummy")} (level 84) that came out of", "the Ancient Vault into Nardah."),
+                journal = listOf("I must defeat the ${red("mummy")} (level 103) that came out of", "the Ancient Vault into Nardah."),
                 done = listOf("I put the vault's mummy back to rest."),
                 place = "Nardah",
                 location = NARDAH,
                 tip = "Bring food and a weapon for the mummy.",
-                fight = QuestFight(Npcs.MUMMY_2018, "mummy", 84, NARDAH, "Mmmhhh..."),
+                // Owner 2026-10-09 (stats fit the level): the level-103 Ancient Pyramid mummy (OSRS 720: 90 hitpoints, max hit 24), not
+                // the level-84 Klenter's Pyramid mummy (max 6).
+                fight = QuestFight(Npcs.MUMMY_1961, "mummy", 103, NARDAH, "Mmmhhh..."),
                 talk = {
                     chatNpc("The mummy still walks. Please, hurry.", facialExpression = FacialExpression.SCARED)
                     true
@@ -1128,7 +1131,7 @@ object DragonSlayerII : ShortQuest(
                 place = "Crandor",
                 location = CRANDOR,
                 tip = "Wear an anti-dragon shield or drink an antifire potion: Elvarg breathes fire.",
-                fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!", returnTo = DRAYNOR),
+                fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!"),
                 talk = {
                     chatNpc("Back to Crandor, then? Hold on to your hat.", facialExpression = FacialExpression.LAUGH)
                     if (!DangerWarning.confirmQuestTravel(this, CRANDOR)) return@QuestStep false
@@ -1628,6 +1631,29 @@ object FoundationQuests {
         // The conversation suspends: never advance a stage another path changed meanwhile.
         if (quest.stage(player) != stage) return
         completeStep(player, quest, stage)
+        offerNextStep(task, quest, afterKill = false)
+    }
+
+    /**
+     * Owner 2026-10-09 (quests within ten minutes): as soon as a step is done - a talk or a kill - the quest offers the trip to
+     * where the next step happens, so nobody walks back to a quest npc between fights. After a kill this is also the way home
+     * from the boss, out of deep Wilderness too (Ghorrock, level 45): [TeleportType.QUEST_RETURN]. Nothing is offered when the
+     * next step is close by or its fight has already started.
+     */
+    suspend fun offerNextStep(task: QueueTask, quest: ShortQuest, afterKill: Boolean) {
+        val player = task.player
+        if (quest.isFinished(player)) return
+        val step = quest.steps.getOrNull(quest.stage(player) - 1) ?: return
+        val place = step.place ?: return
+        val location = step.location ?: return
+        if (step.fight != null && QuestFights.active(player) != null) return
+        with(quest) {
+            if (afterKill) {
+                task.offerTravel(place, location, step.npc.takeIf { step.fight == null }, gg.rsmod.plugins.content.magic.TeleportType.QUEST_RETURN, ask = "Take me to $place.")
+            } else {
+                task.offerTravel(place, location, step.npc.takeIf { step.fight == null })
+            }
+        }
     }
 
     /**
@@ -1636,12 +1662,8 @@ object FoundationQuests {
      */
     fun completeStep(player: Player, quest: ShortQuest, stage: Int) {
         val step = quest.steps[stage - 1]
-        step.fight?.let { fight ->
+        step.fight?.let {
             step.gives.forEach { (item, amount) -> FoundationRewards.grant(player, item, amount) }
-            // The trip back is a quest move too: a Dangerous destination asks first; "No" stays (owner 2026-09-27).
-            fight.returnTo?.let { back ->
-                player.queue { if (DangerWarning.confirmQuestTravel(this, back)) player.moveTo(back) }
-            }
         }
         if (stage == quest.steps.size) {
             FoundationRewards.complete(player, quest)
@@ -1651,7 +1673,14 @@ object FoundationQuests {
         player.message("Your quest journal has been updated: <col=5861e9>${quest.name}")
         QuestHelper.start(player)
         val next = quest.steps[stage]
-        if (next.fight != null && next.npc == step.npc) QuestFights.start(player, quest, stage + 1)
+        if (next.fight != null && next.npc == step.npc && player.tile.height == next.fight.tile.height &&
+            player.tile.isWithinRadius(next.fight.tile, QuestFights.REACH)
+        ) {
+            QuestFights.start(player, quest, stage + 1)
+        }
+        // After a kill the trip on (a Dangerous destination asks first, "No" stays - owner 2026-09-27); a talk step's npc
+        // offers it in its own conversation (runStep).
+        if (step.fight != null) player.queue { offerNextStep(this, quest, afterKill = true) }
     }
 
     /** Names of the quest npcs, for messages that point the player back to one. */
@@ -1690,11 +1719,15 @@ object FoundationQuests {
      */
     fun landing(world: gg.rsmod.game.model.World, npc: Int?, location: Tile): Tile {
         if (npc == null) return location
+        // Any floor of the place (owner 2026-10-09, quests within ten minutes): the Grand Exchange hall's quest npcs stand on its
+        // first floor and Sir Lancelot on Camelot's; the trip lands beside the npc instead of at the foot of the stairs.
+        // The same floor wins a tie.
         var post: Tile? = null
+        fun flat(t: Tile) = Tile(t.x, t.z, location.height).getDistance(location) * 2 + if (t.height == location.height) 0 else 1
         world.npcs.forEach { n ->
             val t = n.spawnTile
-            if (n.id != npc || n.owner != null || t.height != location.height || !t.isWithinRadius(location, QuestHelper.NPC_RANGE)) return@forEach
-            if (post == null || t.getDistance(location) < post!!.getDistance(location)) post = t
+            if (n.id != npc || n.owner != null || !Tile(t.x, t.z, location.height).isWithinRadius(location, QuestHelper.NPC_RANGE)) return@forEach
+            if (post == null || flat(t) < flat(post!!)) post = t
         }
         val at = post ?: return location
         val area = gg.rsmod.game.model.collision.Landing.pocket(world.collision, at, 256)

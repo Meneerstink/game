@@ -24,6 +24,19 @@ enum class TeleportType(
         endAnimation = Anims.MODERN_TELEPORT_END,
         endGraphic = Graphic(Gfx.MODERN_TELEPORT_END, 0),
     ),
+    /**
+     * Owner 2026-10-09: the quest's own trip to the next step right after a quest foe falls - the way home from a boss, out of
+     * deep Wilderness too (Temple at Senntisten's ice demon at Ghorrock, level 45). The modern teleport's look; Tele Block, the
+     * Deadman countdown and activity locks still apply (canTeleport).
+     */
+    QUEST_RETURN(
+        teleportDelay = 5,
+        animation = Anims.MODERN_TELEPORT_START,
+        graphic = Graphic(Gfx.MODERN_TELEPORT_START, 0),
+        endAnimation = Anims.MODERN_TELEPORT_END,
+        endGraphic = Graphic(Gfx.MODERN_TELEPORT_END, 0),
+        wildLvlRestriction = Int.MAX_VALUE,
+    ),
     TAB(
         teleportDelay = 4,
         animation = Anims.TAB_TELEPORT_START,

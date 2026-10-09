@@ -77,11 +77,13 @@ object QuestBosses {
         override suspend fun handleSpecialCombat(it: QueueTask) =
             fight(
                 it,
-                // 2009scape DessousBehavior: "Teleport nearer, if too far" - 5 tiles or more.
+                // 2009scape DessousBehavior: "Teleport nearer, if too far" - 5 tiles or more. Beside the player, never onto his
+                // tile (research 2026-10-09: stacked on the player both kept stepping out and nobody could hit).
                 beforeMove = { npc, target ->
                     if (!npc.tile.isWithinRadius(target.tile, 4) && npc.tile.height == target.tile.height) {
+                        val to = if (target is Player) QuestFights.spawnTile(target, npc.id, target.tile) else target.tile
                         npc.graphic(86)
-                        npc.moveTo(target.tile.x, target.tile.z, target.tile.height)
+                        npc.moveTo(to.x, to.z, to.height)
                         npc.graphic(86)
                     }
                 },
@@ -141,8 +143,12 @@ object QuestBosses {
 
         override suspend fun handleSpecialCombat(it: QueueTask) =
             fight(it) { npc, target ->
-                // The normal unequip route (stats, weapon tab and appearance update; refused when the inventory is full).
-                if (target is Player && !target.equipment.contains(Items.ICE_GLOVES) && target.equipment[3] != null) {
+                // OSRS Wiki "Fareed": he disarms players "not wearing ice gloves when they are attacking him close up" - melee only;
+                // ranged and magic (water spells) from a distance keep their weapon. The normal unequip route (stats, weapon tab and
+                // appearance update; refused when the inventory is full).
+                if (target is Player && !target.equipment.contains(Items.ICE_GLOVES) && target.equipment[3] != null &&
+                    CombatConfigs.getCombatClass(target) == CombatClass.MELEE
+                ) {
                     if (gg.rsmod.game.action.EquipAction.unequip(target, 3) == gg.rsmod.game.action.EquipAction.Result.SUCCESS) {
                         target.message("The heat from the warrior causes you to drop your weapon.")
                     }

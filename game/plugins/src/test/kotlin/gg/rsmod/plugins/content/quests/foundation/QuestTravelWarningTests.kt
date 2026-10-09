@@ -93,7 +93,6 @@ class QuestTravelWarningTests {
             quest.startLocation?.let { tiles += "start ${quest.startPlace}" to it }
             quest.steps.forEach { step ->
                 if (step.location != null) tiles += "step ${step.place}" to step.location!!
-                step.fight?.returnTo?.let { tiles += "return trip" to it }
             }
             tiles.distinctBy { it.second }.forEach { (what, tile) ->
                 println("QUEST-DEST ${quest.name} | $what | ${tile.x},${tile.z},${tile.height} | ${if (AreaState.isDangerous(tile)) "DANGEROUS" else "SAFE"}")

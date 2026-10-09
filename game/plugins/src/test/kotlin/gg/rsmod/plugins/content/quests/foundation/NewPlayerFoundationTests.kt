@@ -424,8 +424,15 @@ class NewPlayerFoundationTests {
             assertEquals(fightStage + 1, DesertTreasure.stage(account.player))
         }
         listOf(Items.BLOOD_DIAMOND, Items.ICE_DIAMOND, Items.SMOKE_DIAMOND, Items.SHADOW_DIAMOND).forEach { assertEquals(1, account.inventory.getItemCount(it)) }
-        // Dragon Slayer II's fight on Crandor sends the player back to Draynor.
-        assertTrue(DragonSlayerII.steps.first { it.fight != null }.fight!!.returnTo != null)
+        // Owner 2026-10-09: after every kill the quest offers the trip to the next step (the way home from the boss), so every
+        // fight step is followed by a step with a place and a location (no quest ends on a fight).
+        FoundationQuests.SHORT.forEach { quest ->
+            quest.steps.forEachIndexed { index, step ->
+                if (step.fight == null) return@forEachIndexed
+                val next = quest.steps.getOrNull(index + 1)
+                assertTrue(next?.location != null && next.place != null, "${quest.name} step ${index + 1}: no trip on after the kill")
+            }
+        }
     }
 
     // ------------------------------------------------------------------------------------------ config

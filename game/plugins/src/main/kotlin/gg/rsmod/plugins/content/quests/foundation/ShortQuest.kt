@@ -47,8 +47,6 @@ class QuestFight(
     val level: Int,
     val tile: Tile,
     val shout: String,
-    /** Where the player is taken back to after the kill (a fight the step npc sailed or sent them to), or null. */
-    val returnTo: Tile? = null,
     /**
      * Foes that follow when this one dies, in order, each with its shout: a second form (Damis) or waves (the eight
      * Knight Waves knights). Only the last kill completes the step.
@@ -173,15 +171,33 @@ abstract class ShortQuest(
         FoundationRewards.complete(player, this)
     }
 
-    /** Offers the teleport to [location]; used by the quest's own npcs. */
-    suspend fun QueueTask.offerTravel(place: String, location: Tile, npc: Int? = null) {
+    /**
+     * Offers the teleport to [location]; used by the quest's own npcs and, after a step, by the quest itself ([ask] then reads as
+     * the player's own choice, [type] [TeleportType.QUEST_RETURN] after a kill).
+     */
+    suspend fun QueueTask.offerTravel(
+        place: String,
+        location: Tile,
+        npc: Int? = null,
+        type: TeleportType = TeleportType.MODERN,
+        ask: String = "Can you get me to $place?",
+    ) {
         // Already there (a quest that starts where its first step is): nothing to offer.
         if (player.tile.height == location.height && player.tile.isWithinRadius(location, 15)) return
-        if (options("Can you get me to $place?", "I'll find my own way.", title = "Travel") != 1) return
+        // Deadman rule: no teleport within 7 seconds of a hit. Right after a quest fight the offer waits for that, so "Enter"
+        // always starts the trip instead of "You must be out of combat ..." and a dead end (conform quests 2026-10-09, Lunar
+        // Diplomacy step 5 right after the suqah).
+        var waited = 0
+        while (gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.teleportDecision(player) ==
+            gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate.Teleport.BLOCKED_IN_COMBAT && waited++ < 12
+        ) {
+            wait(1)
+        }
+        if (options(ask, "I'll find my own way.", title = "Travel") != 1) return
         // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
         val landing = FoundationQuests.landing(player.world, npc, location)
         if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, landing)) return
-        player.canTeleport(TeleportType.MODERN) { player.teleport(landing, TeleportType.MODERN, exact = landing != location) }
+        player.canTeleport(type) { player.teleport(landing, type, exact = landing != location) }
     }
 
 
