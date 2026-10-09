@@ -145,7 +145,9 @@ object AutocastWeapons {
  * - [SELECTED] (persisted): the chosen spell, by [CombatSpell.autoCastId]. Kept while the spell is temporarily unusable: "Autocast will
  *   now remain selected if you do not have the required level or runes to cast the selected spell" (9 April 2025), and through death
  *   (22 July 2026). Forgotten only when "you equip a staff that cannot autocast the chosen spell", on the PvP swap rule below, on a
- *   spellbook change. Picking a melee style only switches autocast OFF ([MODE]); the choice is kept.
+ *   spellbook change, and when a melee style is picked: owner 2026-10-09 174151 / 175432 ("i cant cancel a combat spell ... the
+ *   autocast always remembers", "u can whack and autocast") - Bash / Pound / Focus switch autocast off AND empty the Spell box,
+ *   so the staff only whacks until a spell is chosen again ([onMeleeStyle]).
  * - [MODE] (persisted): OFF / STANDARD / DEFENSIVE - chosen with the Combat Options "Spell" box.
  * - [AUTO_CAST] (transient): the spell in [Combat.CASTING_SPELL] came from autocast, not from a manual cast.
  * - PvP swap rule (25 March 2026): "In PvP areas, if you have not attacked another player in the last 20 ticks, swapping between
@@ -243,6 +245,9 @@ object Autocast {
             player.attr.remove(AUTO_CAST)
         }
     }
+
+    /** A melee style box was picked (owner 2026-10-09): autocast off and the chosen spell forgotten. */
+    fun onMeleeStyle(player: Player) = clear(player, Reason.MELEE_STYLE)
 
     /** A weapon was equipped or removed. */
     fun onWeaponChanged(player: Player) {

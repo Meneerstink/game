@@ -38,8 +38,8 @@ on_item_unequip(item = Items.LIGHTBEARER) {
 listOf(11, 12, 13, 14).forEachIndexed { style, component ->
     on_button(interfaceId = 884, component = component) {
         player.setVarp(AttackTab.ATTACK_STYLE_VARP, style)
-        // OSRS: choosing a melee style turns autocast off; the chosen spell is remembered for the Spell box.
-        gg.rsmod.plugins.content.combat.magic.Autocast.deactivate(player, gg.rsmod.plugins.content.combat.magic.Autocast.Reason.MELEE_STYLE)
+        // Choosing a melee style turns autocast off and empties the Spell box (owner 2026-10-09 174151 / 175432).
+        gg.rsmod.plugins.content.combat.magic.Autocast.onMeleeStyle(player)
     }
 }
 

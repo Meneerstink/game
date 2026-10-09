@@ -280,8 +280,8 @@ class AutocastTests {
         assertTrue(Autocast.isDefensiveCast(player))
 
         player.setVarp(AttackTab.ATTACK_STYLE_VARP, 0)
-        Autocast.deactivate(player, Autocast.Reason.MELEE_STYLE)
-        assertEquals(CombatSpell.EARTH_BLAST, Autocast.selected(player))
+        Autocast.onMeleeStyle(player)
+        assertNull(Autocast.selected(player), "a melee style forgets the spell (owner 2026-10-09)")
         assertNull(Autocast.resolve(player))
         Autocast.prepareAttack(player, target)
         assertNull(player.attr[Combat.CASTING_SPELL], "a stale autocast spell never fires after autocast is switched off")
