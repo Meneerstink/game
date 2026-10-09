@@ -116,7 +116,7 @@ class DecoPlacerTests {
             repeat(9) { DecoPlacer.key(player, "along", +1) } // 9 x 4 = 36 units: well within the tile
             assertEquals(36, s.fit.dx)
             assertEquals(Tile(3200, 3201, 0), s.tile)
-            s.coarse = true
+            s.stepLevel = 1
             repeat(8) { DecoPlacer.key(player, "along", +1) } // + 8 x 32 = 292 > 256: one tile further along
             assertEquals(292 - 512, s.fit.dx)
             assertEquals(Tile(3200 + DecoPlacer.ALONG_DX[rot], 3201 + DecoPlacer.ALONG_DZ[rot], 0), s.tile, "rotation $rot")
@@ -149,7 +149,7 @@ class DecoPlacerTests {
         val player = player(Tile(3200, 3200, 0))
         DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null)
         val s = DecoPlacer.session(player)!!
-        s.coarse = true
+        s.stepLevel = 1
         repeat(200) { DecoPlacer.key(player, "scale", +1) }
         assertEquals(LocFit.MAX_SCALE, s.fit.scale)
         repeat(400) { DecoPlacer.key(player, "scale", -1) }
@@ -176,5 +176,83 @@ class DecoPlacerTests {
         every { player.tile } returns Tile(3300, 3200, 0)
         assertFalse(DecoPlacer.key(player, "along", +1))
         assertNull(DecoPlacer.session(player))
+    }
+
+    @Test
+    fun `along and away follow the decoration's own angle`() {
+        val player = player(Tile(3200, 3200, 0))
+        DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null)
+        val s = DecoPlacer.session(player)!!
+        s.type = 4
+        s.rot = 0
+        s.fit = LocFit(yaw = LocFit.YAW_QUARTER) // a quarter turn: its own "along" is the loc frame's -z
+        s.stepLevel = 1
+        DecoPlacer.key(player, "along", +1)
+        assertEquals(0, s.fit.dx, "no sideways drift")
+        assertEquals(-32, s.fit.dz)
+        DecoPlacer.key(player, "out", +1)
+        assertEquals(-32, s.fit.dx, "away from its own back")
+        assertEquals(-32, s.fit.dz)
+    }
+
+    @Test
+    fun `three step sizes, T cycles them`() {
+        val player = player(Tile(3200, 3200, 0))
+        DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null)
+        val s = DecoPlacer.session(player)!!
+        val seen = ArrayList<Int>()
+        repeat(4) {
+            val before = s.fit.dy
+            DecoPlacer.key(player, "up", +1)
+            seen += before - s.fit.dy
+            DecoPlacer.key(player, "step", 0)
+        }
+        assertEquals(listOf(4, 32, 128, 4), seen)
+    }
+
+    @Test
+    fun `a diagonal wall gets the decoration at 45 degrees with its back on the wall line, F turns it on the spot`() {
+        for (wallRot in 0..3) {
+            val player = player(Tile(3200 + DecoPlacer.DIAGONAL_NX[wallRot] * 2, 3201 + DecoPlacer.DIAGONAL_NZ[wallRot] * 2, 0))
+            val wall = gg.rsmod.game.model.entity.DynamicObject(1902, 9, wallRot, Tile(3200, 3201, 0))
+            assertTrue(DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall))
+            val s = DecoPlacer.session(player)!!
+            assertEquals(4, s.type)
+            assertEquals(Tile(3200, 3201, 0), s.tile, "on the wall's own tile")
+            assertEquals(LocFit.YAW_QUARTER / 2, s.fit.yaw)
+            assertEquals(-LocFit.UNITS_PER_TILE / 2, s.fit.dz, "back in the middle of the tile")
+            // the back points away from the player's side: rotation r + 45 degrees -> NE, SE, SW, NW
+            assertEquals(DecoPlacer.diagonalRot(-DecoPlacer.DIAGONAL_NX[wallRot], -DecoPlacer.DIAGONAL_NZ[wallRot]), s.rot, "wall rot $wallRot")
+            val rot = s.rot
+            DecoPlacer.key(player, "flip", 0)
+            assertEquals(Tile(3200, 3201, 0), s.tile, "F stays on the tile")
+            assertEquals((rot + 2) and 3, s.rot)
+            DecoPlacer.end(player, restore = false)
+        }
+    }
+
+    @Test
+    fun `scenery such as a facade gets the decoration on its face toward the player`() {
+        val player = player(Tile(3200, 3205, 0)) // north of the loc
+        val facade = gg.rsmod.game.model.entity.DynamicObject(1902, 10, 0, Tile(3200, 3201, 0))
+        assertTrue(DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), facade))
+        val s = DecoPlacer.session(player)!!
+        assertEquals(4, s.type)
+        assertEquals(Tile(3200, 3202, 0), s.tile, "the tile in front of the north face")
+        assertEquals(DecoPlacer.rotFor(3), s.rot, "hung on that tile's south edge, against the loc")
+    }
+
+    @Test
+    fun `the editor's preview is recognised so Remove and Adjust act on it`() {
+        val player = player(Tile(3200, 3200, 0))
+        DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null)
+        val s = DecoPlacer.session(player)!!
+        s.previewTile = s.tile
+        assertTrue(DecoPlacer.isPreview(player, Tile(3200, 3201, 0), 62754))
+        assertFalse(DecoPlacer.isPreview(player, Tile(3200, 3201, 0), 62755))
+        assertFalse(DecoPlacer.isPreview(player, Tile(3201, 3201, 0), 62754))
+        DecoPlacer.key(player, "delete", 0)
+        assertNull(DecoPlacer.session(player), "Remove on an unsaved preview discards it")
+        assertFalse(DecoPlacer.isPreview(player, Tile(3200, 3201, 0), 62754))
     }
 }

@@ -41,7 +41,14 @@ object DecoPlacer {
         var fit: LocFit,
         val original: Original?,
     ) {
-        var coarse = false
+        /** Step size: 0 fine, 1 medium, 2 coarse ([OFFSET_STEPS], [SCALE_STEPS], [YAW_STEPS]); T cycles it. */
+        var stepLevel = 0
+
+        /**
+         * Hung on a diagonal wall (or anything else hung in the middle of its tile): the other side is a half turn on the
+         * same tile, not the neighbouring tile across the edge.
+         */
+        var diagonal = false
 
         /** Where the editor's client currently shows the preview (tile and settings), to take it away again. */
         var previewTile: Tile? = null
@@ -51,13 +58,42 @@ object DecoPlacer {
 
     private val SESSION = AttributeKey<Session>()
 
-    /** Steps in [LocFit] units: 4 = 1/128 tile (the finest the client can show, 512 units per tile). */
-    const val OFFSET_FINE = 4
-    const val OFFSET_COARSE = 32
-    const val SCALE_FINE = 2
-    const val SCALE_COARSE = 16
-    const val YAW_FINE = 46
-    const val YAW_COARSE = 228
+    /**
+     * Steps in [LocFit] units per step size (fine / medium / coarse): offsets 4 = 1/128 tile (the finest the client can
+     * show, 512 units per tile), 32 = 1/16, 128 = 1/4 tile; scale 1.6% / 12.5% / 25%; angle 1 / 5 / 45 degrees (owner
+     * 2026-10-09: high gables and slanted walls took hundreds of presses).
+     */
+    val OFFSET_STEPS = intArrayOf(4, 32, 128)
+    val SCALE_STEPS = intArrayOf(2, 16, 32)
+    val YAW_STEPS = intArrayOf(46, 228, 2048)
+    private val STEP_NAMES = arrayOf("fine 1/128 tile, 1.6%, 1 deg", "medium 1/16 tile, 12.5%, 5 deg", "coarse 1/4 tile, 25%, 45 deg")
+
+    /**
+     * Diagonal wall (shape 9) with rotation r: the side its native decorations face (MapRegion WALLDECOR_DIAGONAL_X/ZOFFSET,
+     * the 667 client's offset of a shape-6 decoration off that wall).
+     */
+    val DIAGONAL_NX = intArrayOf(1, -1, -1, 1)
+    val DIAGONAL_NZ = intArrayOf(-1, -1, 1, 1)
+
+    /**
+     * Loc rotation whose back points to (bx, bz) once the 78 decoration is turned 45 degrees ([LocFit.yaw] 2048): the
+     * models hang with their back to local north, so rotation 0 + 45 degrees puts the back north-east, each quarter-turn
+     * a quarter clockwise further (north-east, south-east, south-west, north-west).
+     */
+    fun diagonalRot(bx: Int, bz: Int): Int =
+        when {
+            bx > 0 && bz > 0 -> 0
+            bx > 0 -> 1
+            bz < 0 -> 2
+            else -> 3
+        }
+
+    /** The editor's own unsaved preview of [id] on [tile] (it exists only in his client, the server has no loc there). */
+    fun isPreview(player: Player, tile: Tile, id: Int): Boolean {
+        val s = session(player) ?: return false
+        val at = s.previewTile ?: return false
+        return s.locId == id && at.sameAs(tile)
+    }
 
     /** Beyond this distance the preview is out of the editor's loaded area; the session is dropped. */
     private const val MAX_DISTANCE = 30
@@ -89,14 +125,57 @@ object DecoPlacer {
         var at = tile
         var type = 10
         var rot = 0
-        if (wall != null) {
-            val edges = when (wall.type) {
-                0 -> listOf(wall.rot)
-                2 -> listOf(wall.rot, (wall.rot + 1) and 3)
-                else -> emptyList()
-            }
-            if (edges.isNotEmpty()) {
-                val p = player.tile
+        var fit = LocFit()
+        var diagonal = false
+        val p = player.tile
+        if (wall == null) {
+            // On the floor: stand it on the tile facing the player (its back away from him).
+            val dx = p.x - tile.x
+            val dz = p.z - tile.z
+            rot = if (Math.abs(dz) >= Math.abs(dx)) (if (dz > 0) 2 else 0) else (if (dx > 0) 3 else 1)
+        } else if (wall.type == 9) {
+            // Diagonal wall: a wall decoration in the middle of the tile (the diagonal runs through it), turned 45 degrees
+            // with its back on the wall line, on the side the player stands (F: the other side).
+            val nx = DIAGONAL_NX[wall.rot]
+            val nz = DIAGONAL_NZ[wall.rot]
+            val side = if ((p.x - tile.x) * nx + (p.z - tile.z) * nz >= 0) 1 else -1
+            type = 4
+            rot = diagonalRot(-side * nx, -side * nz)
+            fit = LocFit(dz = -LocFit.UNITS_PER_TILE / 2, yaw = LocFit.YAW_QUARTER / 2)
+            diagonal = true
+        } else if (wall.type != 0 && wall.type != 2) {
+            // Anything else (a facade, a gable, a pillar, a corner post, a table): hang it flat on the face of the loc's
+            // footprint that looks at the player, as a wall decoration on the tile in front of that face.
+            val def = runCatching { world.definitions.get(ObjectDef::class.java, wall.id) }.getOrNull()
+            val w = if (wall.rot and 1 == 1) def?.length ?: 1 else def?.width ?: 1
+            val l = if (wall.rot and 1 == 1) def?.width ?: 1 else def?.length ?: 1
+            val x0 = tile.x
+            val z0 = tile.z
+            val x1 = x0 + w - 1
+            val z1 = z0 + l - 1
+            // Distance outside the footprint per side (0 west, 1 north, 2 east, 3 south); inside: the nearest face.
+            val outside = intArrayOf(x0 - p.x, p.z - z1, p.x - x1, z0 - p.z)
+            val face =
+                if (outside.any { it > 0 }) {
+                    outside.indices.maxByOrNull { outside[it] }!!
+                } else {
+                    val inside = intArrayOf(p.x - x0, z1 - p.z, x1 - p.x, p.z - z0)
+                    inside.indices.minByOrNull { inside[it] }!!
+                }
+            val cx = p.x.coerceIn(x0, x1)
+            val cz = p.z.coerceIn(z0, z1)
+            at =
+                when (face) {
+                    0 -> Tile(x0 - 1, cz, tile.height)
+                    1 -> Tile(cx, z1 + 1, tile.height)
+                    2 -> Tile(x1 + 1, cz, tile.height)
+                    else -> Tile(cx, z0 - 1, tile.height)
+                }
+            type = 4
+            rot = rotFor((face + 2) and 3)
+        } else {
+            val edges = if (wall.type == 0) listOf(wall.rot) else listOf(wall.rot, (wall.rot + 1) and 3)
+            run {
                 val outside = edges.firstOrNull { e -> (p.x - tile.x) * EDGE_DX[e] + (p.z - tile.z) * EDGE_DZ[e] > 0 }
                 val (hangTile, edge) =
                     if (outside != null) {
@@ -112,10 +191,11 @@ object DecoPlacer {
         if (!tooFar(player, at)) return false
         if (!customisable(player, locId)) return false
         end(player, restore = true)
-        val session = Session(locId, name(world, locId), at, type, rot, LocFit(), original = null)
+        val session = Session(locId, name(world, locId), at, type, rot, fit, original = null)
+        session.diagonal = diagonal
         player.attr[SESSION] = session
         show(player, session)
-        player.message("Place mode: ${session.name} - arrows move, PgUp/PgDn wall distance, +/- size, Q/E angle, R turn, F other side, T step, Enter save, Esc cancel.")
+        player.message("Place mode: ${session.name} - arrows move, PgUp/PgDn wall distance, +/- size, Q/E angle, R turn, F other side, T step size. ENTER SAVES it, Esc cancels.")
         return true
     }
 
@@ -135,6 +215,8 @@ object DecoPlacer {
         val fit = obj.fit ?: LocFit()
         val original = if (copy) null else Original(obj.id, obj.tile, obj.type, obj.rot)
         val session = Session(obj.id, name(player.world, obj.id), obj.tile, obj.type, obj.rot, fit, original)
+        // Hung in the middle of its tile at an angle (a diagonal wall): F turns it on the spot.
+        session.diagonal = obj.type in 4..8 && fit.dz <= -LocFit.UNITS_PER_TILE * 3 / 8 && fit.yaw % LocFit.YAW_QUARTER != 0
         player.attr[SESSION] = session
         show(player, session)
         player.message(if (copy) "Copy of ${session.name}: move it with the keys, Enter saves it as a new placement." else "Adjusting ${session.name}: keys move it, Enter saves, Esc puts it back.")
@@ -171,23 +253,30 @@ object DecoPlacer {
             end(player, restore = true)
             return false
         }
-        val step = if (s.coarse) OFFSET_COARSE else OFFSET_FINE
+        val step = OFFSET_STEPS[s.stepLevel]
         val d = if (dir >= 0) 1 else -1
         var f = s.fit
+        // Along / away follow the decoration's own angle (its yaw), so an angled one keeps sliding along its own face
+        // (owner 2026-10-09). The client turns x' = x cos + z sin, z' = z cos - x sin: local +x -> (cos, -sin), +z -> (sin, cos).
+        val angle = f.yaw * 2 * Math.PI / LocFit.YAW_TURN
+        val cos = Math.cos(angle)
+        val sin = Math.sin(angle)
         when (op) {
-            "along" -> f = f.copy(dx = f.dx + d * step)
+            "along" -> f = f.copy(dx = f.dx + Math.round(d * step * cos).toInt(), dz = f.dz - Math.round(d * step * sin).toInt())
             "up" -> f = f.copy(dy = f.dy - d * step)
-            "out" -> f = f.copy(dz = f.dz - d * step)
-            "scale" -> f = f.copy(scale = (f.scale + d * (if (s.coarse) SCALE_COARSE else SCALE_FINE)).coerceIn(LocFit.MIN_SCALE, LocFit.MAX_SCALE))
-            "yaw" -> f = f.copy(yaw = f.yaw + d * (if (s.coarse) YAW_COARSE else YAW_FINE))
+            "out" -> f = f.copy(dx = f.dx - Math.round(d * step * sin).toInt(), dz = f.dz - Math.round(d * step * cos).toInt())
+            "scale" -> f = f.copy(scale = (f.scale + d * SCALE_STEPS[s.stepLevel]).coerceIn(LocFit.MIN_SCALE, LocFit.MAX_SCALE))
+            "yaw" -> f = f.copy(yaw = f.yaw + d * YAW_STEPS[s.stepLevel])
             "turn" -> s.rot = (s.rot + d) and 3
             "flip" -> {
-                val e = edgeOf(s.rot)
-                s.tile = Tile(s.tile.x + EDGE_DX[e], s.tile.z + EDGE_DZ[e], s.tile.height)
+                if (!s.diagonal) {
+                    val e = edgeOf(s.rot)
+                    s.tile = Tile(s.tile.x + EDGE_DX[e], s.tile.z + EDGE_DZ[e], s.tile.height)
+                }
                 s.rot = (s.rot + 2) and 3
                 f = f.copy(dx = -f.dx)
             }
-            "step" -> s.coarse = !s.coarse
+            "step" -> s.stepLevel = (s.stepLevel + 1) % OFFSET_STEPS.size
             "status" -> {}
             "save" -> return save(player)
             "cancel" -> {
@@ -264,7 +353,8 @@ object DecoPlacer {
         val s = session(player) ?: return false
         if (!save(player)) return false
         val copy = Session(s.locId, s.name, s.tile, s.type, s.rot, s.fit, original = null)
-        copy.coarse = s.coarse
+        copy.stepLevel = s.stepLevel
+        copy.diagonal = s.diagonal
         player.attr[SESSION] = copy
         show(player, copy)
         player.message("Copy of ${s.name}: move it with the keys and press Enter to save it; both are independent.")
@@ -329,7 +419,7 @@ object DecoPlacer {
         return listOf(
             "${s.name}  ${s.tile.x},${s.tile.z},${s.tile.height}  $where  ($mode)",
             describe(s),
-            "step: ${if (s.coarse) "coarse 1/16 tile, 12.5%, 5 deg" else "fine 1/128 tile, 1.6%, 1 deg"}",
+            "step: ${STEP_NAMES[s.stepLevel]}   (T: next step size)   ENTER = SAVE",
         )
     }
 }

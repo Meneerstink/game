@@ -227,7 +227,17 @@ on_command("devnpcinfo", Privilege.ADMIN_POWER) {
 on_command("devremove", Privilege.ADMIN_POWER) {
     val a = intArgs(player)
     if (a.size < 4) return@on_command
+    // The editor's own unsaved place-mode preview only exists in his client: Remove on it discards the preview
+    // (owner 2026-10-09: Remove on a preview said "Removed" and wrote an empty edit while the preview stayed).
+    if (DecoPlacer.isPreview(player, Tile(a[0], a[1], a[2]), a[3])) {
+        DecoPlacer.key(player, "delete", 1)
+        return@on_command
+    }
     val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
+    if (obj == null) {
+        player.message("Nothing with id ${a[3]} on that tile - nothing removed.")
+        return@on_command
+    }
     if (codePosted(player, obj, locName(player, a[3]), "remove")) return@on_command
     WorldEdits.removeLoc(world, Tile(a[0], a[1], a[2]), a[3])
     player.message("Removed ${a[3]} at ${a[0]},${a[1]},${a[2]} (undoedit to take it back).")
@@ -320,13 +330,19 @@ on_command("devdeco", Privilege.ADMIN_POWER) {
                 return@on_command
             }
             val tile = Tile(a[1], a[2], a[3])
-            val wall = a.getOrNull(4)?.let { id -> WorldEdits.objectsAt(world, tile).firstOrNull { it.id == id && (it.type == 0 || it.type == 2) } }
+            // Any right-clicked loc: straight / corner / diagonal wall, or scenery such as a facade (DecoPlacer picks how).
+            val wall = a.getOrNull(4)?.let { id -> WorldEdits.objectsAt(world, tile).firstOrNull { it.id == id } }
             DecoPlacer.startNew(player, a[0], tile, wall)
         }
         "adjust", "copy" -> {
             // Without a tile it is the mode's own key (C = save and continue with a copy), not the menu entry.
             if (a.size < 4) {
                 DecoPlacer.key(player, op, 1)
+                return@on_command
+            }
+            if (DecoPlacer.isPreview(player, Tile(a[0], a[1], a[2]), a[3])) {
+                // Adjust on the preview: it is already selected; Copy & place on it saves it and continues with a copy.
+                if (op == "copy") DecoPlacer.key(player, "copy", 1) else player.message("That is your unsaved preview - it is already selected: move it with the keys, Enter saves, Esc cancels.")
                 return@on_command
             }
             val obj = WorldEdits.objectsAt(world, Tile(a[0], a[1], a[2])).firstOrNull { it.id == a[3] }
