@@ -163,9 +163,6 @@ object DeathExecutor {
         return true
     }
 
-    /** The death sequence's wait(2) + animation 836 (~4 ticks); exact OSRS tick niet geverifieerd. */
-    const val PVP_LOOT_SPAWN_DELAY_TICKS = 5
-
     private fun spawnPvpLoot(
         world: World,
         result: DeathResolutionResult,
@@ -181,16 +178,15 @@ object DeathExecutor {
         // No gravestone and no GP printing for Wilderness/PvP deaths - the
         // ground loot itself is the entire PK reward, unless loot keys take it (RCV-012 decision 3b).
         val groundItems = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.onWildernessPvpDeath(world, victim, result.killer, lostItems)
-        // Audit X-12: ground loot appears when the death animation has played (OSRS), not before it.
+        // Audit X-12: ground loot appears when the death animation has played (OSRS), not before it. Since 2026-10-04 this runs
+        // after the animation (PlayerDeathAction, Void PlayerDeath dropItems after delay(5)), so it spawns at once; the old
+        // 5-tick wait for the animation came on top and the loot appeared after the victim had respawned (conform deadman guards).
         if (groundItems.isNotEmpty()) {
             val tile = victim.tile
             val owner = result.killer
-            world.queue {
-                wait(PVP_LOOT_SPAWN_DELAY_TICKS)
-                groundItems.forEach { item -> world.spawn(GroundItem(Item(item), tile, owner)) }
-                // RuneLite Loot Tracker (PlayerLootReceived): the PK loot that appeared for the killer, one event per kill.
-                owner?.let { gg.rsmod.plugins.content.mechanics.hud.LootTracker.playerKill(it, victim.username, groundItems.map { Item(it) }) }
-            }
+            groundItems.forEach { item -> world.spawn(GroundItem(Item(item), tile, owner)) }
+            // RuneLite Loot Tracker (PlayerLootReceived): the PK loot that appeared for the killer, one event per kill.
+            owner?.let { gg.rsmod.plugins.content.mechanics.hud.LootTracker.playerKill(it, victim.username, groundItems.map { Item(it) }) }
         }
         logger?.logDeathLootTransfer(victim, result.killer, lostItems)
     }

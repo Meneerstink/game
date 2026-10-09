@@ -7,10 +7,10 @@ on_player_death {
 }
 
 /**
- * Retribution's explosion must fire before life points are restored/reset by
- * [gg.rsmod.game.action.PlayerDeathAction] - see Retribution.kt for sourcing.
+ * Retribution's explosion fires at the moment of death, before the death animation (Void PlayerDeath retribution(this)) -
+ * see Retribution.kt for sourcing.
  */
-on_player_pre_death {
+on_player_death_start {
     Retribution.onPlayerDeath(player)
 }
 

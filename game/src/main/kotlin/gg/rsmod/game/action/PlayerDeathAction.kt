@@ -73,6 +73,9 @@ object PlayerDeathAction : KLogging() {
             val carried = (player.inventory.rawItems.filterNotNull() + player.equipment.rawItems.filterNotNull()).joinToString(",") { "${it.id}x${it.amount}" }
             "death ${player.username} at ${player.tile.x},${player.tile.z},${player.tile.height} killer=${(killer as? Player)?.username ?: (killer as? gg.rsmod.game.model.entity.Npc)?.let { "npc ${it.id}" } ?: "-"} carried=[$carried]"
         }
+        // Void PlayerDeath: retribution(this) / wrath(this) fire at the moment of death, before the death animation; only the
+        // items wait for the animation (pre-death hook below). Moving the whole pre-death hook (2026-10-04) had delayed both.
+        runDeathHook(player, "player-death-start") { world.plugins.executePlayerDeathStart(player) }
         player.resetFacePawn()
         wait(2)
         player.animate(deathAnim.id)

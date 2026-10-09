@@ -87,9 +87,10 @@ class DeathExecutorTests {
         assertNull(victim.inventory[0], "lost item's slot must be cleared")
         assertNotNull(victim.inventory[1], "kept item must remain")
         assertTrue(victim.deathRecovery.isEmpty, "PvP deaths must not use the recovery container")
-        // Audit X-12: the ground loot is queued to appear after the death animation, exactly once.
-        verify(exactly = 1) { world.queue(any()) }
-        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+        // Audit X-12: the ground loot appears exactly once; execute() runs after the death animation (PlayerDeathAction, Void
+        // order since 2026-10-04), so it spawns at once instead of waiting another 5 ticks after the victim respawned.
+        verify(exactly = 0) { world.queue(any()) }
+        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
     }
 
     @Test
@@ -131,8 +132,8 @@ class DeathExecutorTests {
 
         assertTrue(first)
         assertFalse(second, "a second execute() for the same death must be a no-op")
-        // Audit X-12: ground loot is queued once, to appear after the death animation.
-        verify(exactly = 1) { world.queue(any()) }
+        // Audit X-12: ground loot appears once (spawned directly - execute() already runs after the death animation).
+        verify(exactly = 1) { world.spawn(any<GroundItem>()) }
     }
 
     @Test

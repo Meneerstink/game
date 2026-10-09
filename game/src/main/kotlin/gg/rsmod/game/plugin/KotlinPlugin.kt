@@ -617,6 +617,11 @@ abstract class KotlinPlugin(
     ) = r.bindPlayerOption(option, plugin)
 
     /**
+     * Invoked at the very start of a player's death, before the death animation (Void PlayerDeath: retribution / wrath).
+     */
+    fun on_player_death_start(plugin: Plugin.() -> Unit) = r.bindPlayerDeathStart(plugin)
+
+    /**
      * Invoked when a player hits 0 hp and is starting their death task.
      */
     fun on_player_pre_death(plugin: Plugin.() -> Unit) = r.bindPlayerPreDeath(plugin)

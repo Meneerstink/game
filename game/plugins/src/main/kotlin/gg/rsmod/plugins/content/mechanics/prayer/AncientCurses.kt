@@ -1267,7 +1267,7 @@ object AncientCurses {
 
     /**
      * Wrath: on the WEARER's own death, up to 300% of the Prayer level in a 5x5 area - called from
-     * the curse plugin's `on_player_pre_death`, before respawn and curses are cleared. Only pawns that could legally
+     * the curse plugin's `on_player_death_start` (before the death animation, Void PlayerDeath), before respawn and curses are cleared. Only pawns that could legally
      * be hit are struck: NPCs always, players only where the two could fight (Wilderness rules).
      * The 300% multiplier and centre graphic 2259 are PROVEN from Novite `Player.sendDeath`
      * (`Utils.getRandom(skills.getLevelForXp(Skills.PRAYER) * 3)`); this file previously used 2.5,
@@ -1319,7 +1319,7 @@ object AncientCurses {
                     if (!it.isDead() && it.def.isAttackable() && it.combatDef.lifepoints != -1 &&
                         it.tile.isWithinRadius(origin, 2)
                     ) {
-                        it.hit(damage = world.random(damage))
+                        it.hit(damage = world.random(damage), source = player)
                     }
                 }
                 world.players.forEach {
@@ -1327,13 +1327,13 @@ object AncientCurses {
                         it.tile.isWithinRadius(origin, 2) &&
                         gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(player, it)
                     ) {
-                        it.hit(damage = world.random(damage))
+                        it.hit(damage = world.random(damage), source = player)
                     }
                 }
             } else if (killer != null && killer != player && !killer.isDead() && killer.isOnline && killer.tile.isWithinRadius(origin, 2) &&
                 gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(player, killer)
             ) {
-                killer.hit(damage = world.random(damage))
+                killer.hit(damage = world.random(damage), source = player)
             }
 
             (WRATH_OUTER_OFFSETS + WRATH_INNER_OFFSETS).forEach { (dx, dz) ->

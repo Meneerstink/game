@@ -39,9 +39,9 @@ on_logout {
 /** Sap/Leech escalation restarts from the base drain on a fresh target. */
 on_npc_killed { _, npc -> AncientCurses.clearDrainState(npc) }
 
-// The death hook runs after PlayerDeathAction has respawned and reset the player. Wrath must
-// capture the real death tile and killer during the pre-death stage, just like Retribution.
-on_player_pre_death {
+// The death hook runs after PlayerDeathAction has respawned and reset the player. Wrath fires at the moment of death, before
+// the death animation, just like Retribution (Void PlayerDeath wrath(this)).
+on_player_death_start {
     if (AncientCurses.isCurseActive(player, AncientCurse.WRATH)) {
         AncientCurses.wrathExplosion(player)
     }

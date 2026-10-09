@@ -1208,6 +1208,9 @@ object CombatSuite : Conformance.Suite {
         p.timers.remove(gg.rsmod.game.model.timer.FROZEN_TIMER)
         p.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
         gg.rsmod.plugins.content.mechanics.freeze.FreezeLeash.stop(p)
+        // Poison/venom from an earlier scenario (smoke spells in hit delay) would land a tick inside the next one's measurement.
+        gg.rsmod.plugins.content.mechanics.poison.Poison.cure(p)
+        gg.rsmod.plugins.content.mechanics.poison.Venom.cure(p, immunityTicks = 0, announce = false)
         p.equipment.removeAll()
         p.inventory.removeAll()
         p.moveTo(tile)

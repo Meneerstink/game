@@ -399,6 +399,9 @@ class PluginRepository(
      */
     private val playerPreDeathPlugins = mutableListOf<Plugin.() -> Unit>()
 
+    /** Plugins invoked at the very start of a player's death, before the death animation (Void PlayerDeath: retribution, wrath). */
+    private val playerDeathStartPlugins = mutableListOf<Plugin.() -> Unit>()
+
     /**
      * A list of plugins that will be invoked when a player dies and is teleported
      * back to the respawn location (after death animation played out).
@@ -864,6 +867,20 @@ class PluginRepository(
             return false
         } finally {
             notifyAttackRefusal = previous
+        }
+    }
+
+    fun bindPlayerDeathStart(plugin: Plugin.() -> Unit) {
+        playerDeathStartPlugins.add(plugin)
+    }
+
+    fun executePlayerDeathStart(p: Player) {
+        playerDeathStartPlugins.forEach { plugin ->
+            try {
+                p.executePlugin(plugin)
+            } catch (e: Exception) {
+                logger.error("Death-start hook failed for username=${p.username}; continuing with the next hook.", e)
+            }
         }
     }
 

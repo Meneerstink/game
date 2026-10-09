@@ -56,7 +56,7 @@ object Retribution {
                 if (multi) {
                     hitAllAt(world, tile, player, damage)
                 } else if (killer != null && killer.tile == tile) {
-                    killer.hit(damage = damage, delay = 1)
+                    killer.hit(damage = damage, delay = 1, source = player)
                 }
             }
         }
@@ -72,11 +72,11 @@ object Retribution {
         chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { other ->
             // Same PvP area/level rules as Wrath; players outside a PvP area are never hit by a death effect.
             if (other !== source && (source !is Player || gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(source, other))) {
-                other.hit(damage = damage, delay = 1)
+                other.hit(damage = damage, delay = 1, source = source)
             }
         }
         chunk.getEntities<Npc>(tile, EntityType.NPC).forEach { other ->
-            if (other !== source) other.hit(damage = damage, delay = 1)
+            if (other !== source) other.hit(damage = damage, delay = 1, source = source)
         }
     }
 }
