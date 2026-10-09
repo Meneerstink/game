@@ -223,7 +223,9 @@ obj 62903 3157 3493 2 0 2
 obj 62903 3172 3490 2 0 0
 obj 62903 3172 3493 2 0 0
 # ---- royal hip roof (on plane 3 since the second upper storey: 62773, its lifted rings 62900 and 62754-62756, a glass lantern), a cream crenellated parapet
-# (Falador castle 11831) and four identical round towers (62766, without the guard) rising from the ground at the corners
+# (Falador castle 11831) and four identical round towers (without the guard) rising from the ground at the corners. Each tower is
+# built per storey like Lumbridge castle's (owner 2026-10-09): 62766 on plane 0, 62774 / 62775 / 62777 on planes 1-3, so the
+# pieces above the player's storey hide with the roof (RoyalHallLocTool.TURRET_STOREY_LOCS)
 obj 11831 3157 3486 3 0 2
 obj 11831 3172 3486 3 0 0
 obj 11831 3157 3487 3 0 2
@@ -284,6 +286,18 @@ obj 62766 3157 3485 0 10 0
 obj 62766 3171 3485 0 10 2
 obj 62766 3157 3497 0 10 0
 obj 62766 3171 3497 0 10 2
+obj 62774 3157 3485 1 10 0
+obj 62774 3171 3485 1 10 2
+obj 62774 3157 3497 1 10 0
+obj 62774 3171 3497 1 10 2
+obj 62775 3157 3485 2 10 0
+obj 62775 3171 3485 2 10 2
+obj 62775 3157 3497 2 10 0
+obj 62775 3171 3497 2 10 2
+obj 62777 3157 3485 3 10 0
+obj 62777 3171 3485 3 10 2
+obj 62777 3157 3497 3 10 0
+obj 62777 3171 3497 3 10 2
 obj 62773 3159 3486 3 12 1
 obj 62773 3159 3497 3 12 3
 obj 62773 3160 3486 3 12 1

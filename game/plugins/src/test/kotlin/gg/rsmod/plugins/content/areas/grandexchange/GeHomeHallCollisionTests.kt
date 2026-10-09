@@ -16,6 +16,7 @@ import gg.rsmod.game.service.Service
 import gg.rsmod.game.service.xtea.XteaKeyService
 import gg.rsmod.game.tools.importer.Rev667TileCodec
 import gg.rsmod.game.tools.importer.Rev667TileMap
+import gg.rsmod.game.tools.importer.RoyalHallLocTool
 import gg.rsmod.game.tools.importer.RoyalHallMapTool
 import gg.rsmod.util.ServerProperties
 import io.mockk.mockk
@@ -201,7 +202,7 @@ class GeHomeHallCollisionTests {
         val turrets = RoyalHallMapTool.TURRETS.flatMap { (x, z) -> listOf(Tile(x, z), Tile(x + 1, z), Tile(x, z + 1), Tile(x + 1, z + 1)) }.map { it.x to it.z }.toSet()
         val problems = ArrayList<String>()
         for (level in 0..3) for (x in BOX_X) for (z in BOX_Z) {
-            objectsAt(Tile(x, z, level)).filter { it.type in 10..11 && it.id != 62766 }.forEach { o ->
+            objectsAt(Tile(x, z, level)).filter { it.type in 10..11 && it.id !in RoyalHallLocTool.TURRET_STOREY_LOCS }.forEach { o ->
                 val def = world.definitions.get(ObjectDef::class.java, o.id)
                 if (!def.solid) return@forEach
                 val w = if (o.rot and 1 == 1) def.length else def.width

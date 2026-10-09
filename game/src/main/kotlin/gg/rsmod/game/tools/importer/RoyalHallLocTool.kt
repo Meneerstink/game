@@ -489,6 +489,301 @@ object RoyalHallLocTool {
         out.write(trailer)
         return out.toByteArray() to guard.count { it }
     }
+
+    /**
+     * The corner turret cut into storey pieces (owner 2026-10-09, Q2 = A: "the parts above you hide like Lumbridge castle's
+     * towers"). Jagex builds Lumbridge castle's towers per storey - one loc per level - so the client's roof flood (Static409)
+     * hides every piece above the player's level with the floors and walls there; the hall's turret was one model from the
+     * ground to the crown on level 0 and stayed full height. Piece s stands on level s ([TURRET_STOREY_LOCS], placed by
+     * home_decor.txt) and is lowered 360 per level (opcode 71), so all four meet exactly where the whole turret stood.
+     */
+    val TURRET_STOREY_LOCS = intArrayOf(62766, 62774, 62775, 62777)
+
+    /** The pieces' meshes: proven-free model ids of [ModelNamespaceCensusTool] (census 2026-10-09, both caches). */
+    val TURRET_STOREY_MODELS = intArrayOf(4898, 4899, 4900, 4901)
+
+    /**
+     * Where the pieces meet, in turret model units. A storey is 360 high (RoyalHallMapTool.STOREY_STEPS) and the model is
+     * drawn 454/128 high ([grandTurret]), so the floors lie at 101.5, 203 and 304.5. 101 cuts the plain shaft; the second
+     * cut is the inner edge (213) of the ledge on top of the toothed corbel band 193-213 instead of 203 inside the band,
+     * whose cap came out jagged along the teeth (screens/roof-2026-10-09/v1-4lr2, w1-4lr2): the first-floor piece keeps the
+     * whole band with its ledge and its cap only closes the narrow shaft's round opening. 304 is the mesh's own ring under
+     * the crown. Every piece is drawn exactly where the whole turret stood (the opcode-71 offset cancels the level's
+     * height), so neighbours meet without a slit.
+     */
+    private val TURRET_CUTS = intArrayOf(101, 213, 304)
+    private const val STOREY_HEIGHT = 360
+
+    /** The turret shaft's stone texture, which the caps over the cuts wear too. */
+    private const val CAP_TEXTURE = 96
+
+    /**
+     * Piece [storey] of the turret [mesh] (the guardless [TURRET_MODEL_CLEAN] mesh): the faces that overlap its height band,
+     * every vertex of them outside the band clamped onto the band's edge, so a wall face crossing a storey boundary is cut
+     * exactly there. A clamped vertex is a new copy appended to the vertex list - the originals stay where they are, because
+     * the texture spaces (planar, cylindrical and cube mappings) are anchored on them. Like [turretWithoutGuard] the mesh is
+     * rebuilt section by section in client `Mesh.decodeNew` order; texture mapping blocks are copied unchanged.
+     * Every piece below the top is closed by a flat stone cap at its upper edge (a fan from the turret's axis over the
+     * outermost cut vertices, in the shaft's own stone texture and colour): the shell has no inside faces, so from above an
+     * open cut showed only the near half of the ring (screens/roof-2026-10-09/t0-2r3).
+     */
+    fun turretStorey(data: ByteArray, storey: Int): ByteArray {
+        val lo = if (storey == 0) Int.MIN_VALUE else TURRET_CUTS[storey - 1]
+        val hi = if (storey == TURRET_CUTS.size) Int.MAX_VALUE else TURRET_CUTS[storey]
+        fun u8(p: Int) = data[p].toInt() and 0xFF
+        fun u16(p: Int) = (u8(p) shl 8) or u8(p + 1)
+        val t = data.size - 23
+        val vertexCount = u16(t)
+        val faceCount = u16(t + 2)
+        val texSpaceCount = u8(t + 4)
+        val flags = u8(t + 5)
+        check(flags and 0xE == 0) { "particles, billboards or a version block are not handled (flags $flags)" }
+        val flat = flags and 0x1 != 0
+        val priorityFlag = u8(t + 6)
+        val faceAlphaFlag = u8(t + 7)
+        val faceGroupFlag = u8(t + 8)
+        val faceTextureFlag = u8(t + 9)
+        val vertexLabelFlag = u8(t + 10)
+        val lenX = u16(t + 11)
+        val lenY = u16(t + 13)
+        val lenZ = u16(t + 15)
+        val faceDataSize = u16(t + 17)
+        val texSpaceSize = u16(t + 19)
+        var ptr = texSpaceCount
+        val vertexFlagsPtr = ptr
+        ptr += vertexCount
+        val smoothingPtr = ptr
+        if (flat) ptr += faceCount
+        val faceTypePtr = ptr
+        ptr += faceCount
+        val priorityPtr = ptr
+        if (priorityFlag == 255) ptr += faceCount
+        val groupPtr = ptr
+        if (faceGroupFlag == 1) ptr += faceCount
+        val labelPtr = ptr
+        if (vertexLabelFlag == 1) ptr += vertexCount
+        val alphaPtr = ptr
+        if (faceAlphaFlag == 1) ptr += faceCount
+        val faceDataPtr = ptr
+        ptr += faceDataSize
+        val faceTexturePtr = ptr
+        if (faceTextureFlag == 1) ptr += faceCount * 2
+        val texSpacePtr = ptr
+        ptr += texSpaceSize
+        val colourPtr = ptr
+        ptr += faceCount * 2
+        val vertexXPtr = ptr
+        val restPtr = vertexXPtr + lenX + lenY + lenZ
+
+        class Reader(var p: Int) {
+            fun smart(): Int {
+                val v = u8(p)
+                return if (v < 128) { p++; v - 64 } else { val r = u16(p) - 49152; p += 2; r }
+            }
+        }
+        val xs = ArrayList<Int>()
+        val ys = ArrayList<Int>()
+        val zs = ArrayList<Int>()
+        val rx = Reader(vertexXPtr)
+        val ry = Reader(vertexXPtr + lenX)
+        val rz = Reader(vertexXPtr + lenX + lenY)
+        var cx = 0
+        var cy = 0
+        var cz = 0
+        for (i in 0 until vertexCount) {
+            val mask = u8(vertexFlagsPtr + i)
+            if (mask and 1 != 0) cx += rx.smart()
+            if (mask and 2 != 0) cy += ry.smart()
+            if (mask and 4 != 0) cz += rz.smart()
+            xs += cx
+            ys += cy
+            zs += cz
+        }
+        check(rx.p == vertexXPtr + lenX && ry.p == vertexXPtr + lenX + lenY && rz.p == restPtr) { "vertex streams did not line up" }
+        val fr = Reader(faceDataPtr)
+        val faces = Array(faceCount) { IntArray(3) }
+        var a = 0
+        var b = 0
+        var c = 0
+        var last = 0
+        for (i in 0 until faceCount) {
+            when (u8(faceTypePtr + i)) {
+                1 -> { a = fr.smart() + last; b = fr.smart() + a; c = fr.smart() + b; last = c }
+                2 -> { b = c; c = fr.smart() + last; last = c }
+                3 -> { a = c; c = fr.smart() + last; last = c }
+                4 -> { val pa = a; a = b; b = pa; c = fr.smart() + last; last = c }
+                else -> error("face type")
+            }
+            faces[i][0] = a
+            faces[i][1] = b
+            faces[i][2] = c
+        }
+        check(fr.p == faceDataPtr + faceDataSize) { "face stream did not line up" }
+
+        // The winding of an upward-facing face: the top platform's floor (texture 505), flat.
+        fun area(p: Int, q: Int, r: Int) = (xs[q] - xs[p]).toLong() * (zs[r] - zs[p]) - (zs[q] - zs[p]).toLong() * (xs[r] - xs[p])
+        val upSign = (0 until faceCount).first { f ->
+            faceTextureFlag == 1 && u16(faceTexturePtr + f * 2) - 1 == 505 && faces[f].map { ys[it] }.distinct().size == 1 && area(faces[f][0], faces[f][1], faces[f][2]) != 0L
+        }.let { f -> java.lang.Long.signum(area(faces[f][0], faces[f][1], faces[f][2])) }
+        // The cap is shaft stone: texture 96 with the shaft's own texture space (a cube mapping, so it projects onto a
+        // horizontal face as well), and the shaft's commonest colour (a TURRET_STONE tone, greyed to granite) and priority.
+        check(faceTextureFlag == 1 && texSpaceCount > 0) { "the turret mesh has no texture spaces" }
+        val shaft = (0 until faceCount).filter { u16(faceTexturePtr + it * 2) - 1 == CAP_TEXTURE }
+        val capColour = shaft.groupingBy { u16(colourPtr + it * 2) }.eachCount().maxByOrNull { it.value }!!.key
+        check(capColour in TURRET_STONE) { "cap colour $capColour is not a stone tone" }
+        val capPriority = if (priorityFlag == 255) shaft.groupingBy { u8(priorityPtr + it) }.eachCount().maxByOrNull { it.value }!!.key else 0
+        val textured = (0 until faceCount).filter { u16(faceTexturePtr + it * 2) != 0 }
+        val shaftSpaces = textured.withIndex().filter { u16(faceTexturePtr + it.value * 2) - 1 == CAP_TEXTURE }.map { u8(texSpacePtr + it.index) }.distinct()
+        check(shaftSpaces.size == 1) { "the shaft uses texture spaces $shaftSpaces" }
+        val capSpace = shaftSpaces.single()
+
+        // Heights are -y (the client's y points down).
+        val keep = BooleanArray(faceCount) { f ->
+            val h = faces[f].map { -ys[it] }
+            val min = h.minOrNull()!!
+            val max = h.maxOrNull()!!
+            if (min == max) min >= lo && min < hi else max > lo && min < hi
+        }
+        val labels = if (vertexLabelFlag == 1) (0 until vertexCount).mapTo(ArrayList()) { u8(labelPtr + it) } else null
+        val copies = HashMap<Long, Int>()
+        for (f in 0 until faceCount) {
+            if (!keep[f]) continue
+            for (k in 0..2) {
+                val v = faces[f][k]
+                val h = -ys[v]
+                val clamped = h.coerceIn(lo, hi)
+                if (clamped == h) continue
+                faces[f][k] = copies.getOrPut((v.toLong() shl 32) or (clamped.toLong() and 0xFFFFFFFFL)) {
+                    xs += xs[v]
+                    ys += -clamped
+                    zs += zs[v]
+                    labels?.add(labels[v])
+                    xs.size - 1
+                }
+            }
+        }
+        val kept = (0 until faceCount).filter { keep[it] }
+        // The cap over the cut: the outermost vertex per direction round the axis at the piece's upper edge, fanned from a
+        // new vertex on the axis, wound like the upward platform floor.
+        val caps = ArrayList<IntArray>()
+        if (storey < TURRET_CUTS.size) {
+            val edge = kept.flatMap { f -> faces[f].toList() }.distinct().filter { -ys[it] == hi }
+            val outermost = edge.groupBy { Math.round(Math.toDegrees(Math.atan2(zs[it].toDouble(), xs[it].toDouble())) * 4) }
+                .toSortedMap().values.map { group -> group.maxByOrNull { xs[it].toLong() * xs[it] + zs[it].toLong() * zs[it] }!! }
+            check(outermost.size >= 8) { "storey $storey: only ${outermost.size} cut vertices for the cap" }
+            // Own copies of the rim, so the cap's vertex normals point straight up (shared with the shaft, the rim shaded the
+            // cap like an umbrella: screens/roof-2026-10-09/u0-2r3).
+            val rim = outermost.map { v ->
+                xs += xs[v]
+                ys += ys[v]
+                zs += zs[v]
+                labels?.add(labels[v])
+                xs.size - 1
+            }
+            xs += 0
+            ys += -hi
+            zs += 0
+            labels?.add(labels[outermost[0]])
+            val centre = xs.size - 1
+            for (i in rim.indices) {
+                val p = rim[i]
+                val q = rim[(i + 1) % rim.size]
+                val fan = if (java.lang.Long.signum(area(centre, p, q)) == upSign) intArrayOf(centre, p, q) else intArrayOf(centre, q, p)
+                if (area(fan[0], fan[1], fan[2]) != 0L) caps += fan
+            }
+        }
+        val newVertexCount = xs.size
+        val newFaceCount = kept.size + caps.size
+
+        fun smart(out: java.io.ByteArrayOutputStream, v: Int) {
+            if (v in -64..63) out.write(v + 64) else { check(v in -16384..16383) { "smart $v out of range" }; val w = v + 49152; out.write(w shr 8); out.write(w and 0xFF) }
+        }
+        val vertexFlags = java.io.ByteArrayOutputStream()
+        val sx = java.io.ByteArrayOutputStream()
+        val sy = java.io.ByteArrayOutputStream()
+        val sz = java.io.ByteArrayOutputStream()
+        var px = 0
+        var py = 0
+        var pz = 0
+        for (i in 0 until newVertexCount) {
+            var mask = 0
+            if (xs[i] != px) { mask = mask or 1; smart(sx, xs[i] - px) }
+            if (ys[i] != py) { mask = mask or 2; smart(sy, ys[i] - py) }
+            if (zs[i] != pz) { mask = mask or 4; smart(sz, zs[i] - pz) }
+            vertexFlags.write(mask)
+            px = xs[i]
+            py = ys[i]
+            pz = zs[i]
+        }
+        val faceData = java.io.ByteArrayOutputStream()
+        last = 0
+        for (f in kept) {
+            smart(faceData, faces[f][0] - last)
+            smart(faceData, faces[f][1] - faces[f][0])
+            smart(faceData, faces[f][2] - faces[f][1])
+            last = faces[f][2]
+        }
+        for (cap in caps) {
+            smart(faceData, cap[0] - last)
+            smart(faceData, cap[1] - cap[0])
+            smart(faceData, cap[2] - cap[1])
+            last = cap[2]
+        }
+        /** The kept faces' entries of a per-face stream, then [capEntry] for every cap face. */
+        fun perFace(at: Int, width: Int, capEntry: Int = 0) = java.io.ByteArrayOutputStream().also { o ->
+            kept.forEach { f -> o.write(data, at + f * width, width) }
+            caps.forEach { _ -> if (width == 2) o.write(capEntry shr 8) ; o.write(capEntry and 0xFF) }
+        }.toByteArray()
+        // One texture-space byte per textured face, in face order.
+        val texSpace = java.io.ByteArrayOutputStream()
+        if (faceTextureFlag == 1 && texSpaceCount > 0) {
+            var p = texSpacePtr
+            for (f in 0 until faceCount) {
+                if (u16(faceTexturePtr + f * 2) == 0) continue
+                if (keep[f]) texSpace.write(data[p].toInt())
+                p++
+            }
+            check(p == texSpacePtr + texSpaceSize) { "texture-space stream did not line up" }
+            caps.forEach { texSpace.write(capSpace) }
+        } else {
+            check(texSpaceSize == 0) { "texture-space bytes without textured faces" }
+        }
+
+        val out = java.io.ByteArrayOutputStream()
+        out.write(data, 0, texSpaceCount)
+        out.write(vertexFlags.toByteArray())
+        if (flat) out.write(perFace(smoothingPtr, 1))
+        out.write(ByteArray(newFaceCount) { 1 })
+        if (priorityFlag == 255) out.write(perFace(priorityPtr, 1, capPriority))
+        if (faceGroupFlag == 1) out.write(perFace(groupPtr, 1))
+        labels?.forEach { out.write(it) }
+        if (faceAlphaFlag == 1) out.write(perFace(alphaPtr, 1))
+        out.write(faceData.toByteArray())
+        if (faceTextureFlag == 1) out.write(perFace(faceTexturePtr, 2, CAP_TEXTURE + 1))
+        out.write(texSpace.toByteArray())
+        out.write(perFace(colourPtr, 2, capColour))
+        out.write(sx.toByteArray())
+        out.write(sy.toByteArray())
+        out.write(sz.toByteArray())
+        out.write(data, restPtr, t - restPtr)
+        val trailer = data.copyOfRange(t, data.size)
+        fun put16(at: Int, v: Int) { check(v in 0..0xFFFF); trailer[at] = (v shr 8).toByte(); trailer[at + 1] = v.toByte() }
+        put16(0, newVertexCount)
+        put16(2, newFaceCount)
+        put16(11, sx.size())
+        put16(13, sy.size())
+        put16(15, sz.size())
+        put16(17, faceData.size())
+        put16(19, texSpace.size())
+        out.write(trailer)
+        return out.toByteArray()
+    }
+
+    /** Loc [TURRET_STOREY_LOCS] of [storey]: the scaled, granite turret showing that piece, lowered 360 per level. */
+    private fun turretStoreyLoc(def: ByteArray, storey: Int): ByteArray {
+        val piece = withModel(TURRET_LOC, grandTurret(def), TURRET_MODEL_CLEAN, TURRET_STOREY_MODELS[storey])
+        return if (storey == 0) piece else withOffset(TURRET_LOC, piece, STOREY_HEIGHT * storey)
+    }
     /**
      * The premium spiral staircase: the stone spiral 34872 (bottom) / 34873 (top) in white marble with gilded rails - its
      * stone textures (70, 377, 67, 105) become the white marble 254 tinted near-white, its wooden rails (the recoloured
@@ -775,7 +1070,11 @@ object RoyalHallLocTool {
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
             Variant(62770, 15550, "78 carpet middle (Varrock carpet 15550 with the 78 texture)", ::with78Carpet),
-            Variant(62766, TURRET_LOC, "Royal Hall corner turret (closed Falador castle turret 43731 at 1.375x)", ::grandTurret),
+            // The corner turret per storey (owner 2026-10-09, Q2 = A): ground floor, first, second floor and the top with the crown.
+            Variant(TURRET_STOREY_LOCS[0], TURRET_LOC, "Royal Hall corner turret, ground-floor piece (closed Falador castle turret 43731 at 1.375x)") { turretStoreyLoc(it, 0) },
+            Variant(TURRET_STOREY_LOCS[1], TURRET_LOC, "Royal Hall corner turret, first-floor piece (level 1, lowered 360)") { turretStoreyLoc(it, 1) },
+            Variant(TURRET_STOREY_LOCS[2], TURRET_LOC, "Royal Hall corner turret, second-floor piece (level 2, lowered 720)") { turretStoreyLoc(it, 2) },
+            Variant(TURRET_STOREY_LOCS[3], TURRET_LOC, "Royal Hall corner turret, top piece with the crown (level 3, lowered 1080)") { turretStoreyLoc(it, 3) },
             Variant(ICON_LOC, GE_MARKER, "Royal Hall map marker (27990 carrying map element $ICON_ELEMENT)") { withElement(it, ICON_ELEMENT) },
             Variant(62763, 22435, "Royal Hall open gold door, west leaf (22435 without its option, no occlusion)") { withoutOcclusion(22435, withoutLeadingOption(it)) },
             Variant(62764, 22437, "Royal Hall open gold door, east leaf (22437 without its option, no occlusion)") { withoutOcclusion(22437, withoutLeadingOption(it)) },
@@ -1044,12 +1343,28 @@ object RoyalHallLocTool {
             if (currentTurret == null || !currentTurret.contentEquals(turretMesh)) {
                 mutations += CacheMutation(MODEL_INDEX, TURRET_MODEL_CLEAN, 0, turretMesh, "Royal Hall turret without the guard", currentTurret?.let { CacheItemProbeTool.sha1(it) })
             }
+            // Its storey pieces. A piece's model id must be free or already shown by that piece's loc (never someone else's).
+            TURRET_STOREY_MODELS.forEachIndexed { storey, model ->
+                val piece = turretStorey(turretMesh, storey)
+                val decoded = Rev667ModelDecoder.decode(piece, geometryOnly = true)
+                val current = library.data(MODEL_INDEX, model, 0)
+                if (current != null && !current.contentEquals(piece)) {
+                    val loc = TURRET_STOREY_LOCS[storey]
+                    val owner = library.data(LOC_INDEX, loc ushr 8, loc and 0xFF)?.let { Rev667LocType.decode(loc, it).allModels }
+                    check(owner?.contains(model) == true) { "model $model is taken by something else; pick another proven-free id" }
+                }
+                println("MODEL $model = turret storey $storey (${decoded.vertexCount} vertices, ${decoded.faceCount} faces) ${if (current == null) "create" else if (current.contentEquals(piece)) "in place" else "REPLACE"}")
+                if (current == null || !current.contentEquals(piece)) {
+                    mutations += CacheMutation(MODEL_INDEX, model, 0, piece, "Royal Hall corner turret, storey $storey piece", current?.let { CacheItemProbeTool.sha1(it) })
+                }
+            }
             VARIANTS.forEach { v ->
                 val source = library.data(LOC_INDEX, v.source ushr 8, v.source and 0xFF) ?: error("loc ${v.source} missing")
                 val wanted = v.edit(source)
                 val before = Rev667LocType.decode(v.source, source)
                 val after = Rev667LocType.decode(v.id, wanted)
-                val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == TURRET_LOC) TURRET_MODEL_CLEAN else it }
+                val turretModel = TURRET_STOREY_LOCS.indexOf(v.id).let { if (it >= 0) TURRET_STOREY_MODELS[it] else TURRET_MODEL_CLEAN }
+                val expectedModels = before.allModels.map { if (it == TURRET_MODEL && v.source == TURRET_LOC) turretModel else it }
                 check(after.allModels == expectedModels && (v.id in WITH_OPTIONS || after.options.all { it == null || it.equals("hidden", true) })) { "variant ${v.id} is wrong" }
                 check(v.id != 62779 || after.options.toList() == listOf("Climb-up", null, null, null, null)) { "bottom staircase options ${after.options.toList()}" }
                 check(v.id != STAIRS_MIDDLE || after.options.toList() == listOf("Climb-up", "Climb-down", null, null, null)) { "middle staircase options ${after.options.toList()}" }
