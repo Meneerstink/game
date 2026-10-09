@@ -8935,6 +8935,27 @@
       "rot": 0,
       "note": "Xuan out of the hall (owner 2026-10-09 213012: Xuan weg; Loyalty Shop stays a 78 Store tab)",
       "group": 750
+    },
+    {
+      "op": "npc_remove",
+      "id": 670,
+      "x": 3167,
+      "z": 3497,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 751
+    },
+    {
+      "op": "npc_spawn",
+      "id": 670,
+      "x": 3166,
+      "z": 3497,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "note": "King Narnode out of the Standard (owner 2026-10-09: 1 tile opschuiven)",
+      "group": 751
     }
   ]
 }
