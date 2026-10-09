@@ -11,6 +11,9 @@ package gg.rsmod.game.model.entity
  * hangs on the north edge of its tile, so +dx runs east along the wall, -dz goes away from the wall into the tile and
  * -dy is up. [scale] is uniform, 128 = 100%. [yaw] is a turn around the vertical axis, 16384 = a full turn (clockwise
  * from above, like the quarter-turns: 4096 = one quarter). Wall shapes scale and turn about their wall contact.
+ * [pitch] tips it over its own left-right axis (same units; owner 2026-10-09: lay the 78 logo flat on a floor, tilt it to a
+ * slanted surface): with a pitch the client turns it about its own centre, and a loc standing on a tile (not a wall
+ * decoration) then rests with its lowest point on the ground, centred on the tile, before the offsets.
  */
 data class LocFit(
     val dx: Int = 0,
@@ -18,8 +21,9 @@ data class LocFit(
     val dz: Int = 0,
     val scale: Int = SCALE_ONE,
     val yaw: Int = 0,
+    val pitch: Int = 0,
 ) {
-    val isIdentity: Boolean get() = dx == 0 && dy == 0 && dz == 0 && (scale == SCALE_ONE || scale == 0) && yaw % YAW_TURN == 0
+    val isIdentity: Boolean get() = dx == 0 && dy == 0 && dz == 0 && (scale == SCALE_ONE || scale == 0) && yaw % YAW_TURN == 0 && pitch % YAW_TURN == 0
 
     /** The same fit with every value inside the ranges the client packet carries (and a scale of 0 read as 100%). */
     fun normalised(): LocFit =
@@ -29,6 +33,7 @@ data class LocFit(
             dz.coerceIn(-MAX_OFFSET, MAX_OFFSET),
             (if (scale == 0) SCALE_ONE else scale).coerceIn(MIN_SCALE, MAX_SCALE),
             ((yaw % YAW_TURN) + YAW_TURN) % YAW_TURN,
+            ((pitch % YAW_TURN) + YAW_TURN) % YAW_TURN,
         )
 
     companion object {
@@ -38,6 +43,9 @@ data class LocFit(
         const val MAX_SCALE = 1024
         const val YAW_TURN = 16384
         const val YAW_QUARTER = 4096
+
+        /** Pitch that lays an upright decoration flat on the floor, its face up (-90 degrees about its x axis). */
+        const val PITCH_FLAT = YAW_TURN - YAW_QUARTER
 
         /** Offsets are kept within four tiles; a loc further off its tile than that belongs on another tile. */
         const val MAX_OFFSET = 4 * UNITS_PER_TILE

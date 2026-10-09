@@ -332,7 +332,8 @@ on_command("devdeco", Privilege.ADMIN_POWER) {
             val tile = Tile(a[1], a[2], a[3])
             // Any right-clicked loc: straight / corner / diagonal wall, or scenery such as a facade (DecoPlacer picks how).
             val wall = a.getOrNull(4)?.let { id -> WorldEdits.objectsAt(world, tile).firstOrNull { it.id == id } }
-            DecoPlacer.startNew(player, a[0], tile, wall)
+            // "devdeco start <id> x z level floor": flat on the floor of that tile (ground menu "... on floor").
+            DecoPlacer.startNew(player, a[0], tile, wall, flat = args.lastOrNull() == "floor")
         }
         "adjust", "copy" -> {
             // Without a tile it is the mode's own key (C = save and continue with a copy), not the menu entry.

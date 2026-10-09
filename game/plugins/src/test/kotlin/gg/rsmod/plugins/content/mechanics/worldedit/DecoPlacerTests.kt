@@ -255,4 +255,37 @@ class DecoPlacerTests {
         assertNull(DecoPlacer.session(player), "Remove on an unsaved preview discards it")
         assertFalse(DecoPlacer.isPreview(player, Tile(3200, 3201, 0), 62754))
     }
+
+    @Test
+    fun `a tilt is sent as flag 0x20 with one more short, an untilted fit exactly as before`() {
+        val plain = LocCustomiseMessage(62908, 4 shl 2, 0, LocFit(dx = 4, yaw = 46))
+        assertEquals(0x10, plain.flags)
+        assertEquals(10, LocCustomiseEncoder().extractBytes(plain, "payload").size)
+        val flat = LocCustomiseMessage(62908, 10 shl 2, 0, LocFit(pitch = LocFit.PITCH_FLAT))
+        assertEquals(0x30, flat.flags)
+        val bytes = LocCustomiseEncoder().extractBytes(flat, "payload")
+        assertEquals(12, bytes.size)
+        assertEquals(LocFit.PITCH_FLAT, ((bytes[10].toInt() and 0xFF) shl 8) or (bytes[11].toInt() and 0xFF))
+        assertFalse(LocFit(pitch = LocFit.PITCH_FLAT).isIdentity, "a tilt alone is a fit")
+    }
+
+    @Test
+    fun `L lays it flat on the floor of its tile and back up, the floor menu starts flat`() {
+        val player = player(Tile(3200, 3200, 0))
+        DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null)
+        val s = DecoPlacer.session(player)!!
+        s.type = 4
+        DecoPlacer.key(player, "out", +1)
+        DecoPlacer.key(player, "flat", 0)
+        assertEquals(10, s.type, "stands on the tile")
+        assertEquals(LocFit.PITCH_FLAT, s.fit.pitch)
+        assertEquals(0, s.fit.dz, "off-the-wall distance dropped")
+        DecoPlacer.key(player, "pitch", +1)
+        assertEquals(LocFit.PITCH_FLAT + 46, s.fit.pitch, "Z/X tilt one degree")
+        DecoPlacer.key(player, "flat", 0)
+        assertEquals(0, s.fit.pitch, "upright again")
+        DecoPlacer.end(player, restore = false)
+        assertTrue(DecoPlacer.startNew(player, 62754, Tile(3200, 3201, 0), wall = null, flat = true))
+        assertEquals(LocFit.PITCH_FLAT, DecoPlacer.session(player)!!.fit.pitch)
+    }
 }

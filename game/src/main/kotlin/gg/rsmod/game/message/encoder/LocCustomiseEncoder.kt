@@ -24,7 +24,7 @@ class LocCustomiseEncoder : MessageEncoder<LocCustomiseMessage>() {
         if (key != "payload") throw Exception("Unhandled value key.")
         val fit = message.fit?.normalised() ?: return ByteArray(0)
         return ByteArrayOutputStream().apply {
-            listOf(fit.dx, fit.dy, fit.dz, fit.scale, fit.yaw).forEach { v ->
+            (listOf(fit.dx, fit.dy, fit.dz, fit.scale, fit.yaw) + (if (fit.pitch != 0) listOf(fit.pitch) else emptyList())).forEach { v ->
                 write((v shr 8) and 0xFF)
                 write(v and 0xFF)
             }

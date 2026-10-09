@@ -120,7 +120,7 @@ object DecoPlacer {
      * wall decoration, first on the side the player stands (F turns it to the other side); without, it stands on
      * [tile] as scenery. Returns false (with a message) when the player cannot place there.
      */
-    fun startNew(player: Player, locId: Int, tile: Tile, wall: GameObject?): Boolean {
+    fun startNew(player: Player, locId: Int, tile: Tile, wall: GameObject?, flat: Boolean = false): Boolean {
         val world = player.world
         var at = tile
         var type = 10
@@ -191,6 +191,7 @@ object DecoPlacer {
         if (!tooFar(player, at)) return false
         if (!customisable(player, locId)) return false
         end(player, restore = true)
+        if (flat && wall == null) fit = LocFit(pitch = LocFit.PITCH_FLAT)
         val session = Session(locId, name(world, locId), at, type, rot, fit, original = null)
         session.diagonal = diagonal
         player.attr[SESSION] = session
@@ -267,6 +268,17 @@ object DecoPlacer {
             "out" -> f = f.copy(dx = f.dx - Math.round(d * step * sin).toInt(), dz = f.dz - Math.round(d * step * cos).toInt())
             "scale" -> f = f.copy(scale = (f.scale + d * SCALE_STEPS[s.stepLevel]).coerceIn(LocFit.MIN_SCALE, LocFit.MAX_SCALE))
             "yaw" -> f = f.copy(yaw = f.yaw + d * YAW_STEPS[s.stepLevel])
+            "pitch" -> f = f.copy(pitch = f.pitch + d * YAW_STEPS[s.stepLevel])
+            "flat" -> {
+                // L: lay it flat on the floor of its tile (a loc standing on the tile, face up), or stand it up again.
+                if (f.pitch % LocFit.YAW_TURN == 0) {
+                    s.type = 10
+                    s.diagonal = false
+                    f = LocFit(scale = f.scale, yaw = f.yaw, pitch = LocFit.PITCH_FLAT)
+                } else {
+                    f = f.copy(pitch = 0, dy = 0)
+                }
+            }
             "turn" -> s.rot = (s.rot + d) and 3
             "flip" -> {
                 if (!s.diagonal) {
@@ -307,7 +319,7 @@ object DecoPlacer {
             f = f.copy(dx = f.dx + LocFit.UNITS_PER_TILE)
             s.tile = Tile(s.tile.x - ALONG_DX[s.rot], s.tile.z - ALONG_DZ[s.rot], s.tile.height)
         }
-        s.fit = f.copy(dy = f.dy.coerceIn(-LocFit.MAX_OFFSET, LocFit.MAX_OFFSET), dz = f.dz.coerceIn(-LocFit.MAX_OFFSET, LocFit.MAX_OFFSET), yaw = ((f.yaw % LocFit.YAW_TURN) + LocFit.YAW_TURN) % LocFit.YAW_TURN)
+        s.fit = f.copy(dy = f.dy.coerceIn(-LocFit.MAX_OFFSET, LocFit.MAX_OFFSET), dz = f.dz.coerceIn(-LocFit.MAX_OFFSET, LocFit.MAX_OFFSET), yaw = ((f.yaw % LocFit.YAW_TURN) + LocFit.YAW_TURN) % LocFit.YAW_TURN, pitch = ((f.pitch % LocFit.YAW_TURN) + LocFit.YAW_TURN) % LocFit.YAW_TURN)
         show(player, s)
         return true
     }
@@ -409,7 +421,8 @@ object DecoPlacer {
 
     fun describe(s: Session): String {
         val f = s.fit
-        return "along ${tiles(f.dx)} up ${tiles(-f.dy)} out ${tiles(-f.dz)} tile, size ${f.scale * 100 / LocFit.SCALE_ONE}%, angle ${String.format(java.util.Locale.ROOT, "%+.1f", LocFit.degrees(if (f.yaw > LocFit.YAW_TURN / 2) f.yaw - LocFit.YAW_TURN else f.yaw))} deg"
+        return "along ${tiles(f.dx)} up ${tiles(-f.dy)} out ${tiles(-f.dz)} tile, size ${f.scale * 100 / LocFit.SCALE_ONE}%, angle ${String.format(java.util.Locale.ROOT, "%+.1f", LocFit.degrees(if (f.yaw > LocFit.YAW_TURN / 2) f.yaw - LocFit.YAW_TURN else f.yaw))} deg" +
+            if (f.pitch % LocFit.YAW_TURN == 0) "" else (if (f.pitch == LocFit.PITCH_FLAT) ", flat on the floor" else ", tilt ${String.format(java.util.Locale.ROOT, "%+.1f", LocFit.degrees(if (f.pitch > LocFit.YAW_TURN / 2) f.pitch - LocFit.YAW_TURN else f.pitch))} deg")
     }
 
     /** The overlay lines: what, where and how (values the client shows next to the keys). */
