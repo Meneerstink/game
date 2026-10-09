@@ -1065,10 +1065,68 @@ on_command("zone") {
     player.message("Tile ${player.tile.x},${player.tile.z},${player.tile.height}: $text", type = ChatMessageType.GAME_MESSAGE)
 }
 
-/** Gives yourself the real 5-minute Deadman PK skull, so guards/HUD/teleport rules can be tested alone. */
+/**
+ * `skullme`: the real 5-minute Deadman PK skull, so guards/HUD/teleport rules can be tested alone.
+ * `skullme <colour>` (owner 2026-10-09 Q9, for photos): the same skull with its timer, shown in that colour - the five Deadman
+ * tiers the client draws (DeadmanIcons: the cache's own white/red frames are never drawn), white = the white-grey iron tier,
+ * yellow-eyed like any skulled player; `skullme off` = the real risk colour again (the timer runs on).
+ */
 on_command("skullme", Privilege.ADMIN_POWER) {
+    val colour = player.getCommandArgs().firstOrNull()?.lowercase()
+    if (colour == null) {
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(player)
+        player.message("You are now PK-skulled for 5 minutes.", type = ChatMessageType.GAME_MESSAGE)
+        return@on_command
+    }
+    val icons =
+        mapOf(
+            "white" to SkullIcon.DMM_LOW_RISK_SKULLED, "bronze" to SkullIcon.DMM_VERY_LOW_RISK_SKULLED,
+            "green" to SkullIcon.DMM_MEDIUM_RISK_SKULLED, "blue" to SkullIcon.DMM_HIGH_RISK_SKULLED,
+            "red" to SkullIcon.DMM_VERY_HIGH_RISK_SKULLED,
+        )
+    val risk = gg.rsmod.plugins.content.mechanics.pvp.RiskSkull
+    if (colour == "off") {
+        player.attr.remove(risk.ADMIN_ICON)
+        risk.refresh(player)
+        player.message("Your skull shows your real risk again.", type = ChatMessageType.GAME_MESSAGE)
+        return@on_command
+    }
+    val icon = icons[colour]
+    if (icon == null) {
+        player.message("Usage: skullme [${icons.keys.joinToString("|")}|off]", type = ChatMessageType.GAME_MESSAGE)
+        return@on_command
+    }
+    player.attr[risk.ADMIN_ICON] = icon.id
     gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(player)
-    player.message("You are now PK-skulled for 5 minutes.", type = ChatMessageType.GAME_MESSAGE)
+    risk.refresh(player)
+    player.message("You are PK-skulled for 5 minutes with a $colour skull (skullme off = your real colour).", type = ChatMessageType.GAME_MESSAGE)
+}
+
+/**
+ * `lootkeys <1-5>` (owner 2026-10-09 Q9, for photos): puts that many loot keys in your inventory (empty keys on free key
+ * slots, LootKeys.KEY_IDS), so the skull shows the key count; `lootkeys 0` takes the empty ones away again.
+ */
+on_command("lootkeys", Privilege.ADMIN_POWER) {
+    val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
+    val wanted = player.getCommandArgs().firstOrNull()?.toIntOrNull()
+    if (wanted == null || wanted !in 0..keys.MAX_KEYS) {
+        player.message("Usage: lootkeys <0-${keys.MAX_KEYS}>", type = ChatMessageType.GAME_MESSAGE)
+        return@on_command
+    }
+    if (wanted == 0) {
+        val slots = keys.slots(player)
+        var removed = 0
+        keys.KEY_IDS.forEachIndexed { i, id -> if (slots[i].isEmpty() && player.inventory.remove(id, 1).hasSucceeded()) removed++ }
+        player.message("Removed $removed empty loot key(s).", type = ChatMessageType.GAME_MESSAGE)
+    } else {
+        var added = 0
+        for (i in keys.freeSlots(player)) {
+            if (keys.heldKeyIndexes(player).size >= wanted) break
+            if (player.inventory.add(keys.KEY_IDS[i], 1).hasSucceeded()) added++
+        }
+        player.message("You now carry ${keys.heldKeyIndexes(player).size} loot key(s) (+$added).", type = ChatMessageType.GAME_MESSAGE)
+    }
+    gg.rsmod.plugins.content.mechanics.pvp.RiskSkull.refresh(player)
 }
 
 /** Teleports to Deadman guard post n (1-based) and names its city; without a number lists the count per city. */

@@ -70,6 +70,12 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
      */
     val FROZEN_TIER = gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "risk_skull_tier")
 
+    /**
+     * Admin `skullme <colour>` (owner 2026-10-09 Q9, for photos): the head icon shown instead of the risk skull until
+     * `skullme off` or logout (not persisted). Only the icon - every "is skulled" rule keeps reading [PvpSkull.isSkulled].
+     */
+    val ADMIN_ICON = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
     /** The dark-eyed tier [player] shows right now: live in a dangerous area, frozen in a safe one (bronze if never seen). */
     fun tierNow(
         player: Player,
@@ -92,6 +98,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
         player: Player,
         valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
     ): SkullIcon {
+        player.attr[ADMIN_ICON]?.let { forced -> SkullIcon.forId(forced)?.let { return it } }
         val tier = tierNow(player, valueProvider)
         return if (PvpSkull.isSkulled(player) || heldKeys(player) > 0) tier.skulled() else tier
     }
