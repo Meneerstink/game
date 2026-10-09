@@ -23,146 +23,6 @@
       "group": 0
     },
     {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3140,
-      "z": 3499,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 1
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3140,
-      "z": 3499,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 2
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3189,
-      "z": 3488,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 3
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3189,
-      "z": 3488,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 4
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3189,
-      "z": 3486,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 5
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3189,
-      "z": 3486,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 6
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3189,
-      "z": 3486,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 6
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3189,
-      "z": 3486,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 7
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3191,
-      "z": 3488,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 8
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3191,
-      "z": 3488,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 9
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3181,
-      "z": 3488,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 10
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3178,
-      "z": 3487,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 11
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3178,
-      "z": 3487,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 12
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3181,
-      "z": 3488,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 13
-    },
-    {
       "op": "remove",
       "id": 38787,
       "x": 3173,
@@ -206,106 +66,6 @@
     },
     {
       "op": "remove",
-      "id": 62750,
-      "x": 3171,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 17
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3171,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 1,
-      "group": 17
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3171,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 18
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3171,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 2,
-      "group": 18
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3158,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 19
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3158,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 1,
-      "group": 19
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3158,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 20
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3158,
-      "z": 3460,
-      "level": 0,
-      "type": 10,
-      "rot": 2,
-      "group": 20
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3187,
-      "z": 3442,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 21
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3187,
-      "z": 3442,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 22
-    },
-    {
-      "op": "remove",
       "id": 62582,
       "x": 3184,
       "z": 3446,
@@ -343,76 +103,6 @@
       "type": 10,
       "rot": 0,
       "group": 24
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3188,
-      "z": 3446,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 25
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3189,
-      "z": 3448,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 26
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3188,
-      "z": 3447,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 27
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3188,
-      "z": 3447,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 28
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3189,
-      "z": 3448,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 29
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3188,
-      "z": 3447,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 30
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3188,
-      "z": 3447,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 31
     },
     {
       "op": "remove",
@@ -565,106 +255,6 @@
       "group": 40
     },
     {
-      "op": "spawn",
-      "id": 62753,
-      "x": 2617,
-      "z": 3329,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 41
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 2617,
-      "z": 3329,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 42
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 2615,
-      "z": 3335,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 43
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 44
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3231,
-      "z": 3214,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 45
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3230,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 46
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3230,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 47
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 47
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 48
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 48
-    },
-    {
       "op": "remove",
       "id": 57481,
       "x": 3232,
@@ -673,256 +263,6 @@
       "type": 10,
       "rot": 0,
       "group": 49
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 50
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3233,
-      "z": 3224,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 51
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3233,
-      "z": 3224,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 52
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3233,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 52
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3233,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 53
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 53
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 54
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 54
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 55
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 55
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 56
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 56
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 57
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 3,
-      "group": 57
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 58
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 58
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3231,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 59
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 59
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3232,
-      "z": 3223,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 60
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3184,
-      "z": 3432,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 61
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3184,
-      "z": 3432,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 62
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3213,
-      "z": 3429,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 63
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3213,
-      "z": 3429,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 64
-    },
-    {
-      "op": "spawn",
-      "id": 62751,
-      "x": 3212,
-      "z": 3429,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 64
-    },
-    {
-      "op": "remove",
-      "id": 62751,
-      "x": 3212,
-      "z": 3429,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 65
     },
     {
       "op": "remove",
@@ -1456,26 +796,6 @@
     },
     {
       "op": "remove",
-      "id": 62750,
-      "x": 2444,
-      "z": 3084,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 98
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 2445,
-      "z": 3087,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 99
-    },
-    {
-      "op": "remove",
       "id": 36337,
       "x": 2442,
       "z": 3082,
@@ -1496,76 +816,6 @@
     },
     {
       "op": "remove",
-      "id": 62753,
-      "x": 2445,
-      "z": 3087,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 102
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 103
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 104
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 104
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 105
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 105
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 2442,
-      "z": 3081,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 106
-    },
-    {
-      "op": "remove",
       "id": 18497,
       "x": 2446,
       "z": 3096,
@@ -1573,66 +823,6 @@
       "type": 10,
       "rot": 0,
       "group": 107
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 2098,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 108
-    },
-    {
-      "op": "spawn",
-      "id": 62749,
-      "x": 2099,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 108
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 2099,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 109
-    },
-    {
-      "op": "spawn",
-      "id": 62749,
-      "x": 2100,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 109
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 2100,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 110
-    },
-    {
-      "op": "spawn",
-      "id": 62749,
-      "x": 2101,
-      "z": 3921,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 110
     },
     {
       "op": "remove",
@@ -1663,26 +853,6 @@
       "type": 10,
       "rot": 0,
       "group": 113
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3098,
-      "z": 3489,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 116
-    },
-    {
-      "op": "spawn",
-      "id": 62749,
-      "x": 3098,
-      "z": 3490,
-      "level": 0,
-      "type": 10,
-      "rot": 1,
-      "group": 116
     },
     {
       "op": "npc_remove",
@@ -1813,86 +983,6 @@
       "type": 10,
       "rot": 0,
       "group": 127
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3132,
-      "z": 3631,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 128
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3132,
-      "z": 3631,
-      "level": 0,
-      "type": 10,
-      "rot": 1,
-      "group": 128
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3132,
-      "z": 3631,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 129
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3132,
-      "z": 3631,
-      "level": 0,
-      "type": 10,
-      "rot": 2,
-      "group": 129
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3132,
-      "z": 3631,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 130
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3132,
-      "z": 3632,
-      "level": 0,
-      "type": 10,
-      "rot": 2,
-      "group": 130
-    },
-    {
-      "op": "remove",
-      "id": 62750,
-      "x": 3132,
-      "z": 3632,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 131
-    },
-    {
-      "op": "spawn",
-      "id": 62750,
-      "x": 3132,
-      "z": 3633,
-      "level": 0,
-      "type": 10,
-      "rot": 2,
-      "group": 131
     },
     {
       "op": "remove",
@@ -2736,66 +1826,6 @@
     },
     {
       "op": "spawn",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 4,
-      "rot": 3,
-      "group": 193
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 194
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 194
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 195
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 195
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3091,
-      "z": 3498,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 196
-    },
-    {
-      "op": "spawn",
       "id": 1032,
       "x": 3174,
       "z": 3430,
@@ -3433,126 +2463,6 @@
       "type": 10,
       "rot": 3,
       "group": 235
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 0,
-      "group": 236
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 237
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 1,
-      "group": 237
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 238
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 238
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3214,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 239
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3215,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 239
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3215,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 240
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3216,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 240
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3216,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 241
-    },
-    {
-      "op": "spawn",
-      "id": 62753,
-      "x": 3217,
-      "z": 3249,
-      "level": 0,
-      "type": 4,
-      "rot": 2,
-      "group": 241
-    },
-    {
-      "op": "remove",
-      "id": 62753,
-      "x": 3217,
-      "z": 3249,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 242
     },
     {
       "op": "spawn",
@@ -5338,26 +4248,6 @@
       "type": 10,
       "rot": 0,
       "group": 381
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3164,
-      "z": 3495,
-      "level": 1,
-      "type": 10,
-      "rot": 0,
-      "group": 385
-    },
-    {
-      "op": "remove",
-      "id": 62749,
-      "x": 3165,
-      "z": 3495,
-      "level": 1,
-      "type": 10,
-      "rot": 0,
-      "group": 386
     },
     {
       "op": "remove",
@@ -7505,7 +6395,8 @@
         "dy": 192,
         "dz": 128,
         "scale": 176,
-        "yaw": 456
+        "yaw": 456,
+        "pitch": 0
       }
     },
     {
@@ -7522,7 +6413,8 @@
         "dy": 64,
         "dz": 0,
         "scale": 128,
-        "yaw": 0
+        "yaw": 0,
+        "pitch": 0
       }
     },
     {
@@ -7539,7 +6431,8 @@
         "dy": 44,
         "dz": 0,
         "scale": 128,
-        "yaw": 4094
+        "yaw": 4094,
+        "pitch": 0
       }
     },
     {
@@ -7576,7 +6469,8 @@
         "dy": 64,
         "dz": 0,
         "scale": 192,
-        "yaw": 0
+        "yaw": 0,
+        "pitch": 0
       }
     },
     {
@@ -7593,7 +6487,8 @@
         "dy": -32,
         "dz": 0,
         "scale": 128,
-        "yaw": 0
+        "yaw": 0,
+        "pitch": 0
       }
     },
     {
@@ -7610,7 +6505,8 @@
         "dy": 0,
         "dz": 0,
         "scale": 128,
-        "yaw": 0
+        "yaw": 0,
+        "pitch": 0
       }
     },
     {
@@ -7637,7 +6533,8 @@
         "dy": 0,
         "dz": 0,
         "scale": 192,
-        "yaw": 456
+        "yaw": 456,
+        "pitch": 0
       }
     },
     {
@@ -7664,7 +6561,8 @@
         "dy": 0,
         "dz": 0,
         "scale": 128,
-        "yaw": 0
+        "yaw": 0,
+        "pitch": 0
       }
     },
     {
@@ -7691,7 +6589,8 @@
         "dy": 0,
         "dz": 0,
         "scale": 192,
-        "yaw": 684
+        "yaw": 684,
+        "pitch": 0
       }
     },
     {
@@ -7703,6 +6602,448 @@
       "type": 10,
       "rot": 0,
       "group": 589
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 2974,
+      "z": 6119,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "note": "purple 78 banner in the AFK basement map out (owner 2026-10-09: new branding only)",
+      "group": 590
+    },
+    {
+      "op": "remove",
+      "id": 62749,
+      "x": 2977,
+      "z": 6119,
+      "level": 0,
+      "type": 4,
+      "rot": 0,
+      "note": "purple 78 banner in the AFK basement map out (owner 2026-10-09: new branding only)",
+      "group": 590
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 3096,
+      "z": 3496,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 599
+    },
+    {
+      "op": "remove",
+      "id": 62908,
+      "x": 3097,
+      "z": 3496,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 600
+    },
+    {
+      "op": "remove",
+      "id": 62910,
+      "x": 3094,
+      "z": 3487,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 601
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3089,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 602,
+      "fit": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 92,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62910,
+      "x": 3089,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 603
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3090,
+      "z": 3488,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 604,
+      "fit": {
+        "dx": 112,
+        "dy": 300,
+        "dz": -148,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3158,
+      "z": 3464,
+      "level": 0,
+      "type": 4,
+      "rot": 1,
+      "group": 605,
+      "fit": {
+        "dx": -50,
+        "dy": -824,
+        "dz": 151,
+        "scale": 128,
+        "yaw": 16338,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3171,
+      "z": 3464,
+      "level": 0,
+      "type": 4,
+      "rot": 3,
+      "group": 606,
+      "fit": {
+        "dx": -64,
+        "dy": -872,
+        "dz": 116,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3194,
+      "z": 3430,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 607,
+      "fit": {
+        "dx": 252,
+        "dy": -640,
+        "dz": 440,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3219,
+      "z": 3421,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 608,
+      "fit": {
+        "dx": 60,
+        "dy": -532,
+        "dz": 400,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3274,
+      "z": 3428,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 609,
+      "fit": {
+        "dx": 252,
+        "dy": -612,
+        "dz": -48,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 2736,
+      "z": 3475,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 610,
+      "fit": {
+        "dx": 240,
+        "dy": -240,
+        "dz": 532,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3232,
+      "z": 3213,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 611,
+      "fit": {
+        "dx": 68,
+        "dy": -340,
+        "dz": 380,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3232,
+      "z": 3224,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 612,
+      "fit": {
+        "dx": -136,
+        "dy": -304,
+        "dz": 368,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62910,
+      "x": 3232,
+      "z": 3213,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 613
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3232,
+      "z": 3213,
+      "level": 0,
+      "type": 10,
+      "rot": 3,
+      "group": 613,
+      "fit": {
+        "dx": 68,
+        "dy": 428,
+        "dz": 380,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 2960,
+      "z": 3396,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 614,
+      "fit": {
+        "dx": 16,
+        "dy": -40,
+        "dz": -812,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 2934,
+      "z": 3351,
+      "level": 0,
+      "type": 4,
+      "rot": 1,
+      "group": 615,
+      "fit": {
+        "dx": 0,
+        "dy": -8,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "remove",
+      "id": 62909,
+      "x": 2934,
+      "z": 3351,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 616
+    },
+    {
+      "op": "spawn",
+      "id": 62909,
+      "x": 2967,
+      "z": 3218,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 617,
+      "fit": {
+        "dx": -252,
+        "dy": 432,
+        "dz": -860,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3250,
+      "z": 3425,
+      "level": 0,
+      "type": 4,
+      "rot": 2,
+      "group": 618,
+      "fit": {
+        "dx": 152,
+        "dy": -740,
+        "dz": 444,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3092,
+      "z": 3247,
+      "level": 0,
+      "type": 10,
+      "rot": 2,
+      "group": 619,
+      "fit": {
+        "dx": -256,
+        "dy": -1520,
+        "dz": 512,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3274,
+      "z": 3173,
+      "level": 0,
+      "type": 4,
+      "rot": 3,
+      "group": 620,
+      "fit": {
+        "dx": 256,
+        "dy": -1132,
+        "dz": 416,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 2806,
+      "z": 3438,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 621,
+      "fit": {
+        "dx": -200,
+        "dy": 436,
+        "dz": -508,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62910,
+      "x": 3508,
+      "z": 3484,
+      "level": 0,
+      "type": 10,
+      "rot": 1,
+      "group": 622,
+      "fit": {
+        "dx": 248,
+        "dy": -124,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 0
+      }
+    },
+    {
+      "op": "spawn",
+      "id": 62908,
+      "x": 3137,
+      "z": 3629,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 623,
+      "fit": {
+        "dx": 0,
+        "dy": 0,
+        "dz": 0,
+        "scale": 128,
+        "yaw": 0,
+        "pitch": 12288
+      }
     }
   ]
 }
