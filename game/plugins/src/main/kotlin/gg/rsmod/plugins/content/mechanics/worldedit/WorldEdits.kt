@@ -293,6 +293,8 @@ object WorldEdits {
                 }
             }
         }
+        // World-map icons of the moved npcs (the minimap follows the npc by itself).
+        NpcMapIcons.broadcast(world)
         return applied
     }
 

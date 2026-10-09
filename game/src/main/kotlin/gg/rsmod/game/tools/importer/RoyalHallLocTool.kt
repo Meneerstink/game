@@ -1341,7 +1341,12 @@ object RoyalHallLocTool {
             if (currentSprite == null || !currentSprite.contentEquals(sprite)) {
                 mutations += CacheMutation(SPRITE_INDEX, ICON_SPRITE, 0, sprite, "Royal Hall map icon sprite", currentSprite?.let { CacheItemProbeTool.sha1(it) })
             }
-            val element = withSprite(library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, GE_ELEMENT) ?: error("map element $GE_ELEMENT missing"), ICON_SPRITE)
+            // Its own "Mansion" category since 2026-10-09 (MansionMapIconTool: the world map hover said "Grand Exchange").
+            val element =
+                MansionMapIconTool.withCategory(
+                    withSprite(library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, GE_ELEMENT) ?: error("map element $GE_ELEMENT missing"), ICON_SPRITE),
+                    MansionMapIconTool.categoryOf(ICON_ELEMENT)!!,
+                )
             val currentElement = library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, ICON_ELEMENT)
             when {
                 currentElement == null -> {

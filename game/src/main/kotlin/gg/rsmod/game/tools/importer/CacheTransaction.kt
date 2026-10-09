@@ -94,8 +94,14 @@ class CacheTransaction(
                     val current = library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
                     // A named group may only be created under a name no other group of the index already carries.
                     val nameTaken =
-                        mutation.groupName != null && current == null &&
-                            library.index(mutation.indexId).archive(mutation.groupName)?.let { it.id != mutation.groupId } == true
+                        (
+                            mutation.groupName != null && current == null &&
+                                library.index(mutation.indexId).archive(mutation.groupName)?.let { it.id != mutation.groupId } == true
+                        ) ||
+                            (
+                                mutation.groupNameHash != null && current == null &&
+                                    library.index(mutation.indexId).archives().any { it.hashName == mutation.groupNameHash && it.id != mutation.groupId }
+                            )
                     PreflightEntry(
                         target = target,
                         mutation = mutation,
@@ -193,6 +199,9 @@ class CacheTransaction(
                             mutation.groupName?.let { name ->
                                 val index = library.index(mutation.indexId)
                                 index.archive(mutation.groupId)!!.hashName = index.toHash(name)
+                            }
+                            mutation.groupNameHash?.let { hash ->
+                                library.index(mutation.indexId).archive(mutation.groupId)!!.hashName = hash
                             }
                             mutation.fileName?.let { name ->
                                 val index = library.index(mutation.indexId)
@@ -304,6 +313,12 @@ class CacheTransaction(
                             problems += "NAME_MISMATCH at $target ${mutation.describeLocation()}: group name '${mutation.groupName}' resolves to ${named ?: "nothing"}"
                         }
                     }
+                    if (mutation.groupNameHash != null && mutation.newBytes != null) {
+                        val hash = library.index(mutation.indexId).archive(mutation.groupId)?.hashName
+                        if (hash != mutation.groupNameHash) {
+                            problems += "NAME_MISMATCH at $target ${mutation.describeLocation()}: group name hash ${mutation.groupNameHash} not set (hash $hash)"
+                        }
+                    }
                     if (mutation.fileName != null && mutation.newBytes != null) {
                         val index = library.index(mutation.indexId)
                         val hash = index.archive(mutation.groupId)?.file(mutation.fileId)?.hashName
@@ -381,7 +396,7 @@ class CacheTransaction(
         library: CacheLibrary,
         mutation: CacheMutation,
     ) {
-        if (mutation.groupName != null) {
+        if (mutation.groupName != null || mutation.groupNameHash != null) {
             library.remove(mutation.indexId, mutation.groupId)
         } else {
             library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
@@ -447,6 +462,12 @@ class CacheMutation(
      * [groupId] on every target. Null = unnamed / existing group.
      */
     val groupName: String? = null,
+    /**
+     * Raw name hash of a group this mutation CREATES, for indexes looked up by an int key rather than a string: rev-667
+     * client-script triggers are found by `js5.getgroupid(id)` with id = trigger | (key << 10) (ClientScriptList.trigger).
+     * Same preflight / verify / rollback rules as [groupName].
+     */
+    val groupNameHash: Int? = null,
     /**
      * Name of the file this mutation writes, for indexes whose files are looked up by name (world map data: the client
      * reads `getfile("<area>", "area")`). Applied as the file's hash name; verify checks it. Null = keep / unnamed.

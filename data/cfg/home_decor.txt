@@ -1104,5 +1104,5 @@ obj 9145 3158 3494 2 4 0
 obj 9145 3171 3494 2 4 2
 obj 9145 3163 3497 2 4 1
 obj 9145 3166 3497 2 4 1
-# The casino's minimap star, on this storey only (south doorway, no carpet there).
-obj 62899 3164 3485 2 22 0
+# The casino's minimap star is no loc any more (owner 2026-10-09 212609: in the middle of the casino, where the rug lies on
+# every tile): a minimap-only static element of this storey, MansionMapIconTool.

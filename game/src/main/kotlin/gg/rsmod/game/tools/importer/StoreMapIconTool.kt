@@ -26,12 +26,10 @@ import javax.imageio.ImageIO
  * position (`Minimap.draw`), so the icon is hung on the npc type itself - exactly like the casino croupier
  * ([CasinoMinimapIconTool]) - and follows the npc wherever `data/world_edits.json` posts it, with no cache change.
  *
- * **World map.** The world map (`WorldMap.java`) knows nothing of live npcs: it draws its own prebuilt data plus the
- * `main_staticelements` files of the world-map index (u32 packed coord, u16 element, u8 members - [RoyalHallLocTool] put the
- * hall's icon there the same way). This tool therefore reads every npc post of the three store npcs out of
- * `data/world_edits.json` (the one source of every hall npc: spawns and removes replayed in order) and writes one static
- * element per post at that tile. After moving a store npc, re-run `apply`: an earlier placement of the same icon is moved,
- * never duplicated.
+ * **World map.** Until 2026-10-09 this tool also wrote a `main_staticelements` entry at every npc post; the minimap draws
+ * those too, so a devmode move left an icon on the old tile (owner 213724). Since then the world map shows npc icons at
+ * their live posts (server NpcMapIcons -> client NpcWorldMapIcons) and MansionMapIconTool deleted the static entries; each
+ * element also carries its own category, so the world map hover names the store instead of "Grand Exchange".
  *
  * **Icons.** Three 15 x 15 badges (the size of every 667 map icon: sprite 1361, the Grand Exchange icon, is 15 x 15) painted
  * here at 8x and box-filtered down, in the store themes of [StoreArtTool]: Donator a gold gem on royal purple, Deadman a skull
@@ -70,8 +68,6 @@ object StoreMapIconTool {
     private const val MAP_ELEMENT_GROUP = 36
     private const val GE_ELEMENT = 637
     private const val NPC_INDEX = 18
-    private const val WORLD_MAP_INDEX = 23
-    private const val STATIC_ELEMENTS = "main_staticelements"
 
     // ---------------------------------------------------------------- painting
 
@@ -231,11 +227,6 @@ object StoreMapIconTool {
         return current
     }
 
-    private fun staticEntry(element: Int, post: Post): ByteArray {
-        val coord = (post.level shl 28) or (post.x shl 14) or post.z
-        return byteArrayOf((coord ushr 24).toByte(), (coord ushr 16).toByte(), (coord ushr 8).toByte(), coord.toByte(), (element shr 8).toByte(), element.toByte(), 0)
-    }
-
     private fun withSprite(def: ByteArray, sprite: Int): ByteArray {
         check(def[0] == 1.toByte()) { "expected the sprite first" }
         return def.copyOf().also {
@@ -263,8 +254,6 @@ object StoreMapIconTool {
         val library = CacheLibrary(TARGETS[0])
         try {
             val geElement = library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, GE_ELEMENT) ?: error("map element $GE_ELEMENT missing")
-            val staticGroup = library.index(WORLD_MAP_INDEX).archive(STATIC_ELEMENTS) ?: error("$STATIC_ELEMENTS missing")
-            var nextStaticFile = (staticGroup.fileIds().maxOrNull() ?: -1) + 1
             STORES.forEach { store ->
                 // 1. The sprite.
                 val sprite = StoreArtTool.encode(icon(store))
@@ -277,8 +266,8 @@ object StoreMapIconTool {
                 if (currentSprite == null || !currentSprite.contentEquals(sprite)) {
                     mutations += CacheMutation(SPRITE_INDEX, store.sprite, 0, sprite, "${store.name} map icon sprite", currentSprite?.let { CacheItemProbeTool.sha1(it) })
                 }
-                // 2. The map element: 637 with this sprite.
-                val element = withSprite(geElement, store.sprite)
+                // 2. The map element: 637 with this sprite (and the store's own category, MansionMapIconTool).
+                val element = withSprite(geElement, store.sprite).let { e -> MansionMapIconTool.categoryOf(store.element)?.let { MansionMapIconTool.withCategory(e, it) } ?: e }
                 val currentElement = library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, store.element)
                 when {
                     currentElement == null -> {
@@ -304,34 +293,7 @@ object StoreMapIconTool {
                     }
                     else -> error("npc ${store.npc} already carries map element $before; refusing")
                 }
-                // 4. The world map: one static element per current post of the npc.
-                val posts = posts(store.npc)
-                check(posts.isNotEmpty()) { "${store.name}: npc ${store.npc} has no post in $WORLD_EDITS" }
-                val wanted = posts.map { staticEntry(store.element, it) }
-                val existing = mutableListOf<Pair<Int, ByteArray>>()
-                for (f: Int in staticGroup.fileIds()) {
-                    val d: ByteArray = library.data(WORLD_MAP_INDEX, staticGroup.id, f) ?: continue
-                    if (d.size == 7 && d[4] == (store.element shr 8).toByte() && d[5] == store.element.toByte()) existing += Pair(f, d)
-                }
-                wanted.forEachIndexed { i, entry ->
-                    val post = posts[i]
-                    val same = existing.indexOfFirst { it.second.contentEquals(entry) }
-                    if (same >= 0) {
-                        println("WORLD MAP ${store.name} icon already at ${post.x},${post.z},${post.level} (file ${existing[same].first})")
-                        existing.removeAt(same)
-                        return@forEachIndexed
-                    }
-                    if (existing.isNotEmpty()) {
-                        val (file, old) = existing.removeAt(0)
-                        println("MOVE world map ${store.name} icon: file $file to ${post.x},${post.z},${post.level}")
-                        mutations += CacheMutation(WORLD_MAP_INDEX, staticGroup.id, file, entry, "${store.name} world map icon (moved)", CacheItemProbeTool.sha1(old))
-                    } else {
-                        val file = nextStaticFile++
-                        println("CREATE world map ${store.name} icon: $STATIC_ELEMENTS file $file, element ${store.element} at ${post.x},${post.z},${post.level}")
-                        mutations += CacheMutation(WORLD_MAP_INDEX, staticGroup.id, file, entry, "${store.name} world map icon", null)
-                    }
-                }
-                existing.forEach { (file, _) -> println("WARNING stale world map ${store.name} icon in $STATIC_ELEMENTS file $file (npc no longer posted there); left in place") }
+                // 4. No world-map static element any more: the npc carries the icon (see the class comment).
             }
         } finally {
             library.close()

@@ -237,8 +237,14 @@ class GeHomeHallCollisionTests {
             val d = if (rot and 1 == 1) def.width else def.length
             return (0 until w).flatMap { dx -> (0 until d).map { dz -> x + dx to z + dz } }
         }
+        // Only locs still standing once the file is replayed (WorldEdits.reload): a later "remove" of the same loc takes it out.
+        fun removedLater(i: Int) =
+            edits.drop(i + 1).any { r ->
+                r["op"].asText() == "remove" && r["id"].asInt() == edits[i]["id"].asInt() && r["x"].asInt() == edits[i]["x"].asInt() &&
+                    r["z"].asInt() == edits[i]["z"].asInt() && r["level"].asInt() == edits[i]["level"].asInt()
+            }
         val problems =
-            edits.filter { it["op"].asText() == "spawn" && it["level"].asInt() == 0 && (it["type"]?.asInt() ?: 10) in 10..11 }
+            edits.filterIndexed { i, it -> it["op"].asText() == "spawn" && it["level"].asInt() == 0 && (it["type"]?.asInt() ?: 10) in 10..11 && !removedLater(i) }
                 .filter { inBox(Tile(it["x"].asInt(), it["z"].asInt())) }
                 .filter { e -> covers(e["id"].asInt(), e["rot"]?.asInt() ?: 0, e["x"].asInt(), e["z"].asInt()).any { (a, b) -> bridged(a, b) } }
                 .map { e ->

@@ -48,6 +48,11 @@ on_world_init {
     }
 }
 
+// The world map draws the icons of npcs with a map element at their posts (NpcMapIcons); the minimap needs nothing.
+on_login {
+    NpcMapIcons.send(player)
+}
+
 /**
  * A move, copy, rotation or removal of something code posts ([WorldEdits.codePostOf]) is refused with where its post is set:
  * the editor's edit would only look right while the code keeps the old post. PROBLEM line with the wanted spot.
