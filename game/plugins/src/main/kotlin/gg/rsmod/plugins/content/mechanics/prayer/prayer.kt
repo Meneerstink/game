@@ -16,6 +16,12 @@ enum class Prayer(
     val qpVarbit: Int,
     val level: Int,
     val sound: Int,
+    /**
+     * Drain per tick against a resistance of 60 + 2 x prayer bonus (x10 here: points are whole, Prayers.drainPrayer). Smite,
+     * Chivalry, Rapid Renewal, Rigour and Augury follow Novite's 667 table (Prayer.prayerDrainRate: 0.18 / 0.18 / 0.24 / 0.2 /
+     * 0.18 s per tenth) and Darkan's (Prayer.java: 10/3, 10/3, 5/2, 3, 10/3 per tick), which agree: 1.8 / 1.8 / 2.4 / 2.0 /
+     * 1.8 s per point at bonus 0 (conform curses 2026-10-09; they were 180 / 240 guesses, Rigour/Augury "TODO MAKE SURE FINE").
+     */
     val drainEffect: Int,
     val group: PrayerGroup?,
     val curse: Boolean,
@@ -334,7 +340,7 @@ enum class Prayer(
         qpVarbit = Varbits.SMITE_QUICK_PRAYER,
         level = 52,
         sound = Sfx.SMITE,
-        drainEffect = 180,
+        drainEffect = 200,
         group = PrayerGroup.OVERHEAD,
         curse = false,
     ),
@@ -346,7 +352,7 @@ enum class Prayer(
         qpVarbit = Varbits.CHIVALRY_QUICK_PRAYER,
         level = 60,
         sound = 3826,
-        drainEffect = 240,
+        drainEffect = 200,
         group = PrayerGroup.MELEE_COMBAT,
         curse = false,
         overlap =
@@ -366,7 +372,7 @@ enum class Prayer(
         qpVarbit = Varbits.RAPID_RENEWAL_QUICK_PRAYER,
         level = 65,
         sound = Sfx.RAPID_RENEWAL,
-        drainEffect = 240,
+        drainEffect = 150,
         group = PrayerGroup.DUNGEONEERING_RESTORATION,
         curse = false,
         overlap = arrayOf(PrayerGroup.RESTORATION),
@@ -399,7 +405,7 @@ enum class Prayer(
         qpVarbit = Varbits.RIGOUR_QUICK_PRAYER,
         level = 74,
         sound = Sfx.RIGOUR,
-        drainEffect = 240, // TODO MAKE SURE FINE
+        drainEffect = 180,
         group = PrayerGroup.RANGED,
         curse = false,
         overlap =
@@ -419,7 +425,7 @@ enum class Prayer(
         qpVarbit = Varbits.AUGURY_QUICK_PRAYER,
         level = 77,
         sound = Sfx.AUGURY,
-        drainEffect = 240, // TODO MAKE SURE FINE
+        drainEffect = 200,
         group = PrayerGroup.MAGIC,
         curse = false,
         overlap =

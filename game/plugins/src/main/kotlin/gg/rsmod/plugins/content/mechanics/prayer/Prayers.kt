@@ -345,22 +345,45 @@ object Prayers {
         return true
     }
 
+    private val ATTACK_TIERS = setOf(Prayer.CLARITY_OF_THOUGHT, Prayer.IMPROVED_REFLEXES, Prayer.INCREDIBLE_REFLEXES)
+    private val STRENGTH_TIERS = setOf(Prayer.BURST_OF_STRENGTH, Prayer.SUPERHUMAN_STRENGTH, Prayer.ULTIMATE_STRENGTH)
+    private val DEFENCE_TIERS = setOf(Prayer.THICK_SKIN, Prayer.ROCK_SKIN, Prayer.STEEL_SKIN)
+    private val RANGED_TIERS = setOf(Prayer.SHARP_EYE, Prayer.HAWK_EYE, Prayer.EAGLE_EYE)
+    private val MAGIC_TIERS = setOf(Prayer.MYSTIC_WILL, Prayer.MYSTIC_LORE, Prayer.MYSTIC_MIGHT)
+    private val ALL_ROUND = setOf(Prayer.CHIVALRY, Prayer.PIETY, Prayer.RIGOUR, Prayer.AUGURY)
+    private val PROTECTS = setOf(Prayer.PROTECT_FROM_MAGIC, Prayer.PROTECT_FROM_MISSILES, Prayer.PROTECT_FROM_MELEE)
+    private val SMITE_GROUP = setOf(Prayer.RETRIBUTION, Prayer.REDEMPTION, Prayer.SMITE)
+
+    /**
+     * What switching [prayer] on switches off: Darkan `PrayerManager.activatePrayer` (owner 2026-10-04: "darkan is the way"),
+     * which Novite's `switchPrayer` close lists match apart from Rigour/Augury and the restore prayers. The former group /
+     * overlap rule (rsmod) let Thick Skin and Rigour/Augury stand together, made Rapid Restore close Rapid Renewal, and turned
+     * Protect from Summoning off with every other Protect prayer, while the 667 cache has the combined head icons for exactly
+     * that pair (conform curses 2026-10-09: 234 ordered pairs differed).
+     */
+    private val CLOSES: Map<Prayer, Set<Prayer>> by lazy {
+        val map = HashMap<Prayer, Set<Prayer>>()
+        ATTACK_TIERS.forEach { map[it] = ATTACK_TIERS + RANGED_TIERS + MAGIC_TIERS + ALL_ROUND }
+        STRENGTH_TIERS.forEach { map[it] = STRENGTH_TIERS + RANGED_TIERS + MAGIC_TIERS + ALL_ROUND }
+        DEFENCE_TIERS.forEach { map[it] = DEFENCE_TIERS + ALL_ROUND }
+        (RANGED_TIERS + MAGIC_TIERS).forEach { map[it] = ATTACK_TIERS + STRENGTH_TIERS + RANGED_TIERS + MAGIC_TIERS + ALL_ROUND }
+        ALL_ROUND.forEach { map[it] = ATTACK_TIERS + STRENGTH_TIERS + RANGED_TIERS + MAGIC_TIERS + DEFENCE_TIERS + ALL_ROUND }
+        setOf(Prayer.RAPID_RENEWAL, Prayer.RAPID_HEAL).forEach { map[it] = setOf(Prayer.RAPID_RENEWAL, Prayer.RAPID_HEAL) }
+        PROTECTS.forEach { map[it] = PROTECTS + SMITE_GROUP }
+        map[Prayer.PROTECT_FROM_SUMMONING] = setOf(Prayer.PROTECT_FROM_SUMMONING) + SMITE_GROUP
+        SMITE_GROUP.forEach { map[it] = PROTECTS + Prayer.PROTECT_FROM_SUMMONING + SMITE_GROUP }
+        map
+    }
+
+    /** The other prayers [prayer] switches off when it goes on ([CLOSES]; Rapid Restore and Protect Item close nothing). */
+    fun closes(prayer: Prayer): List<Prayer> = (CLOSES[prayer] ?: emptySet()).filter { it != prayer }
+
     fun activate(
         p: Player,
         prayer: Prayer,
     ) {
         if (!isActive(p, prayer)) {
-            val others =
-                Prayer.values.filter { other -> // TODO PROBABLY REDO for readability
-                    val matchingGroup = prayer.group == other.group && prayer.group != PrayerGroup.RESTORATION
-                    val matchingPrayer = prayer == other
-                    val groupNull = other.group == null
-                    !matchingPrayer &&
-                        !groupNull &&
-                        (matchingGroup || prayer.overlap.contains(other.group))
-                }
-
-            others.forEach { other ->
+            closes(prayer).forEach { other ->
                 if (isActive(p, other)) {
                     deactivate(p, other)
                 }
@@ -465,12 +488,7 @@ object Prayers {
              * Same mutual-exclusion rule the live activation path uses: a quick-prayer set may not
              * contain two prayers that could never be active at the same time.
              */
-            Prayer.values
-                .filter { other ->
-                    prayer != other &&
-                        other.group != null &&
-                        (prayer.group == other.group || prayer.overlap.contains(other.group))
-                }.forEach { other ->
+            closes(prayer).forEach { other ->
                     if (isQuickPrayerSelected(player, other)) {
                         player.setVarbit(other.qpVarbit, 0)
                     }
@@ -566,6 +584,33 @@ object Prayers {
         player.setCurrentPrayerPoints(player.skills.getMaxLevel(Skills.PRAYER))
     }
 
+    /** Cache enums of the prayer book's slot structs: 2279 normal prayers, 863 Ancient Curses (Void all.enums.toml). */
+    private const val PRAYER_STRUCTS_ENUM = 2279
+    private const val CURSE_STRUCTS_ENUM = 863
+
+    /** Struct param 738, the prayer's own refusal text (Void Params.PRAYER_REQUIREMENT_TEXT). */
+    private const val REQUIREMENT_TEXT_PARAM = 738
+
+    /**
+     * The 667 cache's own refusal line for a prayer-book slot ([curse]: the curse book), e.g. "You need a Prayer level of at
+     * least 74 to use Leech Attack.", and Chivalry's "You need a Prayer level of 60, a Defence level of 65 and have completed
+     * the King's Ransom quest's Knight Wave reward to use Chivalry." Void sends this struct text; Novite and Darkan send a chat
+     * line of their own ("... at least N to use this prayer."), so the line is a chat message here too, never the dialogue box
+     * this server showed for normal prayers (conform curses 2026-10-09: no refusal message for normal prayers). Null when the
+     * cache has none.
+     */
+    fun requirementText(
+        p: Player,
+        curse: Boolean,
+        slot: Int,
+    ): String? {
+        val defs = p.world.definitions
+        return runCatching {
+            val struct = defs.getNullable(gg.rsmod.game.fs.def.EnumDef::class.java, if (curse) CURSE_STRUCTS_ENUM else PRAYER_STRUCTS_ENUM)?.getInt(slot) ?: 0
+            if (struct <= 0) null else defs.getNullable(gg.rsmod.game.fs.def.StructDef::class.java, struct)?.getString(REQUIREMENT_TEXT_PARAM)?.takeIf { it.isNotEmpty() }
+        }.getOrNull()
+    }
+
     private suspend fun checkRequirements(
         it: QueueTask,
         prayer: Prayer,
@@ -574,9 +619,7 @@ object Prayers {
 
         if (p.skills.getMaxLevel(Skills.PRAYER) < prayer.level) {
             p.syncVarp(ACTIVE_PRAYERS_VARP)
-            it.messageBox(
-                "You need a <col=000080>Prayer</col> level of ${prayer.level} to use <col=000080>${prayer.named}.",
-            )
+            p.message(requirementText(p, curse = false, slot = prayer.slot) ?: "You need a Prayer level of at least ${prayer.level} to use ${prayer.named}.")
             return false
         }
 

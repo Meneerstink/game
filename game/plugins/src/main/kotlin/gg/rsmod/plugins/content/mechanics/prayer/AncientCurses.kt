@@ -140,6 +140,32 @@ object AncientCurses {
     const val SOUL_SPLIT_HIT_SOUND = 8113
     const val SOUL_SPLIT_RETURN_SOUND = 8119
 
+    /**
+     * Owner 2026-10-09 (question "curse sound", answer C, then "both sounds"): switching a curse on plays Darkan's activation
+     * animation and graphic (PrayerManager.activatePrayer `sync(anim, spotanim)`; Wrath the animation only) on top of the
+     * owner's sound. Novite and Void show nothing there. Protect Item, Berserker and Turmoil keep their own visuals.
+     */
+    val DARKAN_ACTIVATION: Map<AncientCurse, Pair<Int, Int?>> =
+        mapOf(
+            AncientCurse.SAP_WARRIOR to (12569 to 2214),
+            AncientCurse.SAP_RANGER to (12569 to 2217),
+            AncientCurse.SAP_MAGE to (12569 to 2220),
+            AncientCurse.SAP_SPIRIT to (12569 to 2223),
+            AncientCurse.DEFLECT_SUMMONING to (12573 to 2227),
+            AncientCurse.DEFLECT_MAGIC to (12573 to 2228),
+            AncientCurse.DEFLECT_MISSILES to (12573 to 2229),
+            AncientCurse.DEFLECT_MELEE to (12573 to 2230),
+            AncientCurse.LEECH_ATTACK to (12575 to 2232),
+            AncientCurse.LEECH_RANGED to (12575 to 2238),
+            AncientCurse.LEECH_MAGIC to (12575 to 2242),
+            AncientCurse.LEECH_DEFENCE to (12575 to 2246),
+            AncientCurse.LEECH_STRENGTH to (12575 to 2250),
+            AncientCurse.LEECH_ENERGY to (12575 to 2254),
+            AncientCurse.LEECH_SPECIAL_ATTACK to (12575 to 2258),
+            AncientCurse.WRATH to (12575 to null),
+            AncientCurse.SOUL_SPLIT to (12575 to 2264),
+        )
+
     fun activationSound(curse: AncientCurse): Int? = ACTIVATION_SOUND_BY_CURSE[curse] ?: ACTIVATION_SOUND_BY_CATEGORY[curse.category]
 
     /** Novite's Sap/Leech projectile packet: start/end 35, speed 20, delay 5, curve 0. */
@@ -179,6 +205,9 @@ object AncientCurses {
 
     /** Per-caster: skill -> escalated self-boost steps already applied as real levels by Leeches. */
     private val LEECH_BOOST_PCT_ATTR = AttributeKey<MutableMap<Int, Int>>()
+
+    /** Per-caster: skill -> the level the stat had at the first proc of the current Leech run ([LEECH_LEVEL_CAP]). */
+    private val LEECH_START_LEVEL_ATTR = AttributeKey<MutableMap<Int, Int>>()
 
     private val STAT_MODIFIER_VARBITS =
         mapOf(Skills.ATTACK to 6857, Skills.STRENGTH to 6858, Skills.DEFENCE to 6859, Skills.RANGED to 6860, Skills.MAGIC to 6861)
@@ -230,6 +259,7 @@ object AncientCurses {
             if (target is Player) syncStatVarbits(target)
         }
         player.attr[LEECH_BOOST_PCT_ATTR]?.let { state -> curse.drains.forEach { state.remove(it) } }
+        player.attr[LEECH_START_LEVEL_ATTR]?.let { starts -> curse.drains.forEach { starts.remove(it) } }
         syncStatVarbits(player)
     }
 
@@ -266,7 +296,7 @@ object AncientCurses {
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < TURMOIL_LEVEL) {
-            player.filterableMessage("You need a Prayer level of $TURMOIL_LEVEL to use Turmoil.")
+            player.message(Prayers.requirementText(player, curse = true, slot = AncientCurse.TURMOIL_SLOT) ?: "You need a Prayer level of at least $TURMOIL_LEVEL to use Turmoil.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
@@ -442,7 +472,7 @@ object AncientCurses {
                     return
                 }
                 if (player.skills.getMaxLevel(Skills.PRAYER) < PROTECT_ITEM_LEVEL) {
-                    player.filterableMessage("You need a Prayer level of $PROTECT_ITEM_LEVEL to use Protect Item.")
+                    player.message(Prayers.requirementText(player, curse = true, slot = AncientCurse.PROTECT_ITEM_SLOT) ?: "You need a Prayer level of at least $PROTECT_ITEM_LEVEL to use Protect Item.")
                     return
                 }
                 // Protect Item is the normal book's shared state (class KDoc), so `Prayers.toggle`
@@ -599,7 +629,7 @@ object AncientCurses {
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < curse.level) {
-            player.filterableMessage("You need a Prayer level of ${curse.level} to use ${curse.curseName}.")
+            player.message(Prayers.requirementText(player, curse = true, slot = curse.slot) ?: "You need a Prayer level of at least ${curse.level} to use ${curse.curseName}.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
@@ -623,9 +653,11 @@ object AncientCurses {
         player.setVarbit(curse.varbit, 1)
         Prayers.markActivated(player, curse)
         if (playActivationVisual) {
-            curse.activationAnimation?.let { player.animate(it) }
-            curse.activationGraphic?.let { player.graphic(it) }
-            // Graphic-borne sounds play client-side; only graphic-less curses get a server sound.
+            val darkan = DARKAN_ACTIVATION[curse]
+            (curse.activationAnimation ?: darkan?.first)?.let { player.animate(it) }
+            (curse.activationGraphic ?: darkan?.second)?.let { player.graphic(it) }
+            // Berserker's own graphic carries its sound (client side). Every other curse keeps the owner's by-ear sound; for the Saps
+            // and Deflects the Darkan graphic adds its cache sound (8115 / 8107) - both are heard (owner 2026-10-09).
             if (curse.activationGraphic == null) activationSound(curse)?.let { player.playSound(it, volume = Prayers.PRAYER_SOUND_VOLUME) }
         }
         player.filterableMessage("You activate ${curse.curseName}.")
@@ -840,10 +872,30 @@ object AncientCurses {
      * that decision). Proc chance: Darkan `CurseManager.LEECH_PROC_CHANCE` 0.20 ([LEECH_PROC_CHANCE_PERCENT]).
      */
     const val LEECH_RANGED_ACCURACY = 1.20
-    const val LEECH_RANGED_DAMAGE = 1.18
 
-    /** The stat Leeches whose every proc is a visible +1 level (owner 2026-09-19 Attack/Strength; Magic/Defence 2026-10-06). */
-    val STAT_LEECHES_WITH_LEVEL_BOOST: Set<Int> = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.MAGIC)
+    /**
+     * Owner 2026-10-09 (on advice): x1.13, so even at the +5 Leech maximum it stays one hit under Rigour's x1.23 (122 x 1.13 = 138 vs
+     * 117 x 1.23 = 144), the 2026-09-29 rule "one hit lower" (1.18 equalled Rigour once the +1 levels came in).
+     */
+    const val LEECH_RANGED_DAMAGE = 1.13
+
+    /**
+     * Owner 2026-10-09: the 10-06 question Q5 offered "visible +1 per proc" OR "keep the hidden modifier", never both, so the
+     * Augury-even Leech Magic of 2026-09-29 was dropped by mistake. Leech Magic gives Augury-level offence again (+20 % magic
+     * accuracy, no magic damage, no Defence) while on, and Leech Ranged keeps Rigour's (above) - each with the visible +1 level
+     * per proc on top.
+     */
+    /** Owner 2026-10-09 (on advice): x1.20, about Augury's x1.25 at the +5 Leech maximum and a little under it at the start. */
+    const val LEECH_MAGIC_ACCURACY = 1.20
+
+    /**
+     * The stat Leeches whose every proc is a visible +1 level (owner 2026-09-19 Attack/Strength; Magic/Defence 2026-10-06;
+     * Ranged 2026-10-09).
+     */
+    val STAT_LEECHES_WITH_LEVEL_BOOST: Set<Int> = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)
+
+    /** Owner 2026-10-09: a Leech lifts a stat at most this many levels above the level it had at the first proc, potion included. */
+    const val LEECH_LEVEL_CAP = 5
 
     /** The Leech self-boost: a combat modifier that exists exactly while the Leech is active ([damage]: the damage roll). */
     fun leechMultiplier(player: Player, skill: Int, damage: Boolean = false): Double {
@@ -851,6 +903,7 @@ object AncientCurses {
         if (!isCurseActive(player, curse)) return 1.0
         return when (skill) {
             Skills.RANGED -> if (damage) LEECH_RANGED_DAMAGE else LEECH_RANGED_ACCURACY
+            Skills.MAGIC -> if (damage) 1.0 else LEECH_MAGIC_ACCURACY
             else -> 1.0 + LEECH_BOOST_BASE_PCT / 100.0
         }
     }
@@ -859,6 +912,7 @@ object AncientCurses {
     private fun leechBoostPct(skill: Int): Int =
         when (skill) {
             Skills.RANGED -> Math.round((LEECH_RANGED_ACCURACY - 1.0) * 100).toInt()
+            Skills.MAGIC -> Math.round((LEECH_MAGIC_ACCURACY - 1.0) * 100).toInt()
             else -> LEECH_BOOST_BASE_PCT
         }
 
@@ -866,33 +920,41 @@ object AncientCurses {
      * Escalated self-boost: the first proc only establishes the base modifier; each later proc adds
      * one real level up to `(cap - base)` percent of the max level, which then decays like a potion.
      */
+    /** Returns false when the stat is already [LEECH_LEVEL_CAP] levels above its start (the proc then lifts nothing). */
     private fun escalateBoost(
         player: Player,
         skill: Int,
-    ) {
+    ): Boolean {
         val state = boostState(player)
         val maxExtra = LEECH_BOOST_CAP_PCT - LEECH_BOOST_BASE_PCT
-        // Every proc, the first included, is a real +1 level (owner 2026-09-19, see escalateDrain) up to the cap above the base
-        // level. The real level is the state (owner 2026-09-23: a lifetime counter stopped every boost after five procs).
         val max = player.skills.getMaxLevel(skill)
-        val cap = (max * maxExtra / 100.0).toInt().coerceAtLeast(1)
-        // Owner 2026-09-29 ("never break a boost, always only +1", every Leech): a proc is exactly +1 up to the Leech cap and never
-        // touches a level that is already higher (a potion boost stays as it is).
+        // Every proc, the first included, is a real +1 level (owner 2026-09-19 / 09-29 "always only +1"). Owner 2026-10-09: also on
+        // top of a potion (117 Ranged -> 118), at most [LEECH_LEVEL_CAP] levels above the level the stat had at the first proc; the
+        // extra decays like a potion boost. A stat back at (or under) that level starts a new run from where it is now.
+        val starts = player.attr[LEECH_START_LEVEL_ATTR] ?: mutableMapOf<Int, Int>().also { player.attr[LEECH_START_LEVEL_ATTR] = it }
         val current = player.skills.getCurrentLevel(skill)
-        if (current < max + cap) player.skills.setCurrentLevel(skill, current + 1)
-        val boosted = (player.skills.getCurrentLevel(skill) - max).coerceAtLeast(0)
-        state[skill] = (boosted * 100 / max).coerceIn(0, maxExtra).let { if (boosted > 0) it.coerceAtLeast(1) else it }
+        val start = starts[skill]?.takeIf { current > it } ?: current
+        starts[skill] = start
+        val raised = current < start + LEECH_LEVEL_CAP
+        if (raised) player.skills.setCurrentLevel(skill, current + 1)
+        // The curse tab shows the Leech's own share (not the potion's): the levels above the start, as a percentage.
+        val leeched = (player.skills.getCurrentLevel(skill) - start).coerceAtLeast(0)
+        state[skill] = (leeched * 100 / max).coerceIn(0, maxExtra).let { if (leeched > 0) it.coerceAtLeast(1) else it }
         syncStatVarbits(player)
+        return raised
     }
 
     /**
      * Owner balance decision (2026-09-18, P0 buglist): Sap and Leech curses were draining far too much. Each Sap/Leech
-     * curse may proc at most once per [SAP_LEECH_COOLDOWN_TICKS] (45 s) per caster, and every proc drains at most one
+     * curse may proc at most once per [SAP_LEECH_COOLDOWN_TICKS] (45 s then; 15 s since 2026-10-09) per caster, and every proc drains at most one
      * level (the escalation step), boosted stats included. Leech Special Attack is limited separately to
-     * [LEECH_SPECIAL_PCT] % once per [LEECH_SPECIAL_COOLDOWN_TICKS] (60 s). These are owner values, not 2011 values.
+     * [LEECH_SPECIAL_PCT] % once per [LEECH_SPECIAL_COOLDOWN_TICKS] (60 s then; 15 s since 2026-10-09). These are owner values, not 2011 values.
      */
-    const val SAP_LEECH_COOLDOWN_TICKS = 75
-    const val LEECH_SPECIAL_COOLDOWN_TICKS = 100
+    // Owner 2026-10-09 (on advice): 15 s for every Sap/Leech, Leech Special Attack included, keeping its 5 %. The 45 s / 60 s of
+    // 2026-09-18 were set when a proc drained a large share; with "+1 level per proc, at most +5" and the potion-like decay of
+    // 1 level per 60 s a proc about every 57 s never got past +1. Novite, Darkan and Void have no cooldown at all.
+    const val SAP_LEECH_COOLDOWN_TICKS = 25
+    const val LEECH_SPECIAL_COOLDOWN_TICKS = 25
     const val LEECH_SPECIAL_PCT = 5
     private val CURSE_PROC_CYCLE_ATTR = AttributeKey<MutableMap<AncientCurse, Int>>()
 
@@ -922,17 +984,22 @@ object AncientCurses {
         vararg skills: Pair<Int, Int>,
     ): Boolean = skills.map { (p, n) -> escalateDrain(attacker, curse, target, p, n, SAP_BASE_PCT, SAP_CAP_PCT) }.any { it }
 
+    /** Returns false when the caster's stat was already at the Leech maximum, so the proc boosted nothing. */
     private fun leech(
         attacker: Player,
         curse: AncientCurse,
         target: Pawn,
         playerSkill: Int,
         npcSkill: Int,
-    ) {
+    ): Boolean {
         escalateDrain(attacker, curse, target, playerSkill, npcSkill, LEECH_DRAIN_BASE_PCT, LEECH_DRAIN_CAP_PCT)
         // Leech Ranged carries its whole boost as the modifier (owner 2026-09-29): no real levels per proc. Leech Magic / Defence
         // did the same until the owner's 2026-10-06 decision (bug 031309): now +1 visible level per proc like Attack / Strength.
-        if (playerSkill in STAT_LEECHES_WITH_LEVEL_BOOST) escalateBoost(attacker, playerSkill)
+        val raised = playerSkill !in STAT_LEECHES_WITH_LEVEL_BOOST || escalateBoost(attacker, playerSkill)
+        // The caster's prayer tab shows the boost from the first proc (Novite adjustStat on every leech proc); Leech Energy and
+        // Leech Special Attack have no escalateBoost (conform curses 2026-10-09: Leech Ranged's tab stayed at 30 before 10-09).
+        syncStatVarbits(attacker)
+        return raised
     }
 
     /**
@@ -1172,13 +1239,18 @@ object AncientCurses {
                     if (energy > 0) {
                         AttackTab.setEnergy(target, (energy - 10).coerceIn(0, 100))
                         curseMessages(attacker, target, "special attack energy")
+                    } else {
+                        // Owner 2026-10-09 (the proc said nothing at all): both are told there was nothing to drain; the opponent gets
+                        // the same line as every other curse without effect.
+                        attacker.message("Your opponent has no special attack energy left.")
+                        target.message("Your opponent's curse has no effect.")
                     }
                 }
-            AncientCurse.LEECH_ATTACK -> leech(attacker, curse, target, Skills.ATTACK, NpcSkills.ATTACK).also { leechMessages(attacker, target, "Attack") }
-            AncientCurse.LEECH_RANGED -> leech(attacker, curse, target, Skills.RANGED, NpcSkills.RANGED).also { leechMessages(attacker, target, "Ranged") }
-            AncientCurse.LEECH_MAGIC -> leech(attacker, curse, target, Skills.MAGIC, NpcSkills.MAGIC).also { leechMessages(attacker, target, "Magic") }
-            AncientCurse.LEECH_DEFENCE -> leech(attacker, curse, target, Skills.DEFENCE, NpcSkills.DEFENCE).also { leechMessages(attacker, target, "Defence") }
-            AncientCurse.LEECH_STRENGTH -> leech(attacker, curse, target, Skills.STRENGTH, NpcSkills.STRENGTH).also { leechMessages(attacker, target, "Strength") }
+            AncientCurse.LEECH_ATTACK -> leech(attacker, curse, target, Skills.ATTACK, NpcSkills.ATTACK).let { raised -> if (raised) leechMessages(attacker, target, "Attack") else leechMaxMessages(attacker, target) }
+            AncientCurse.LEECH_RANGED -> leech(attacker, curse, target, Skills.RANGED, NpcSkills.RANGED).let { raised -> if (raised) leechMessages(attacker, target, "Ranged") else leechMaxMessages(attacker, target) }
+            AncientCurse.LEECH_MAGIC -> leech(attacker, curse, target, Skills.MAGIC, NpcSkills.MAGIC).let { raised -> if (raised) leechMessages(attacker, target, "Magic") else leechMaxMessages(attacker, target) }
+            AncientCurse.LEECH_DEFENCE -> leech(attacker, curse, target, Skills.DEFENCE, NpcSkills.DEFENCE).let { raised -> if (raised) leechMessages(attacker, target, "Defence") else leechMaxMessages(attacker, target) }
+            AncientCurse.LEECH_STRENGTH -> leech(attacker, curse, target, Skills.STRENGTH, NpcSkills.STRENGTH).let { raised -> if (raised) leechMessages(attacker, target, "Strength") else leechMaxMessages(attacker, target) }
             AncientCurse.LEECH_ENERGY ->
                 if (target is Player) {
                     if (target.runEnergy <= 0.0) {
@@ -1221,6 +1293,15 @@ object AncientCurses {
     ) {
         attacker.message("Your curse drains $what from the enemy, boosting your $what.")
         if (target is Player) target.message("Your $what has been leeched by an enemy curse.")
+    }
+
+    /** Novite's line when a Leech proc finds the caster's stat already at its maximum (owner 2026-10-09, answer A). */
+    private fun leechMaxMessages(
+        attacker: Player,
+        target: Pawn,
+    ) {
+        attacker.message("Your opponent has been weakened so much that your leech curse has no effect.")
+        if (target is Player) target.message("Your opponent's curse has no effect.")
     }
 
     private fun curseNoEffectMessage(

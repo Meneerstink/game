@@ -229,6 +229,11 @@ enum class AncientCurse(
         val a = category
         val b = other.category
         return when {
+            // Owner 2026-10-09 (Darkan PrayerManager.activatePrayer): Sap Spirit and Leech Energy switch each other off; Sap Spirit
+            // switches Leech Special Attack off, but Leech Special Attack switches nothing off. `this` is the curse going on.
+            setOf(this, other) == setOf(SAP_SPIRIT, LEECH_ENERGY) -> true
+            this == SAP_SPIRIT && other == LEECH_SPECIAL_ATTACK -> true
+            this == LEECH_SPECIAL_ATTACK && other == SAP_SPIRIT -> false
             a == Category.SAP && b == Category.LEECH -> drains.intersect(other.drains).isNotEmpty()
             a == Category.LEECH && b == Category.SAP -> drains.intersect(other.drains).isNotEmpty()
             // Owner decision 2026-09-18 (overrides the KB for this pair set): Leech Strength, Leech

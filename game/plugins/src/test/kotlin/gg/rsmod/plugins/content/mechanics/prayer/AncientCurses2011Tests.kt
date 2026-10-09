@@ -193,9 +193,12 @@ class AncientCurses2011Tests {
         expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_MAGIC, false)
         expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_MAGIC, true)
         expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_RANGED, false)
-        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_SPECIAL_ATTACK, true)
-        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_ENERGY, false)
-        AncientCurse.values().filter { it.category == AncientCurse.Category.SAP }.forEach { expect(it, AncientCurse.LEECH_ENERGY, false) }
+        // Owner 2026-10-09 (Darkan): Sap Spirit and Leech Energy close each other; Sap Spirit closes Leech Special Attack, which
+        // closes nothing (`conflictsWith` is asked of the curse going on).
+        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_ENERGY, true)
+        assertTrue(AncientCurse.SAP_SPIRIT.conflictsWith(AncientCurse.LEECH_SPECIAL_ATTACK))
+        assertFalse(AncientCurse.LEECH_SPECIAL_ATTACK.conflictsWith(AncientCurse.SAP_SPIRIT))
+        listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE).forEach { expect(it, AncientCurse.LEECH_ENERGY, false) }
         listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { a ->
             listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { b -> if (a != b) expect(a, b, a in AncientCurse.STYLE_SAPS && b in AncientCurse.STYLE_SAPS) }
         }
@@ -240,12 +243,25 @@ class AncientCurses2011Tests {
         // Owner 2026-09-18: one proc per 45-second cooldown; the cap itself is unchanged.
         repeat(30) { procAfterCooldown(attacker, target) }
         assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 14 (extra 15 % of 99)
-        assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK)) // 99 + 4 (extra 5 % of 99)
+        assertEquals(104, attacker.skills.getCurrentLevel(Skills.ATTACK)) // 99 + 5 (owner 2026-10-09: at most +5 levels per Leech run)
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
         assertEquals(1.0, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
-        assertEquals(103, attacker.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(104, attacker.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK))
+    }
+
+    @Test
+    fun `owner 2026-10-09 - a Leech lifts a potted stat one level per proc, at most five above the first proc`() {
+        val attacker = newPlayer(mapOf(Skills.RANGED to 99))
+        AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_RANGED)
+        attacker.skills.setCurrentLevel(Skills.RANGED, 117)
+        val target = newPlayer(mapOf(Skills.RANGED to 99))
+        AncientCurses.onDamageDealt(attacker, target, damage = 10, style = CombatClass.RANGED)
+        assertEquals(118, attacker.skills.getCurrentLevel(Skills.RANGED))
+        repeat(10) { procAfterCooldown(attacker, target, CombatClass.RANGED) }
+        assertEquals(117 + AncientCurses.LEECH_LEVEL_CAP, attacker.skills.getCurrentLevel(Skills.RANGED))
     }
 
     @Test
@@ -322,7 +338,7 @@ class AncientCurses2011Tests {
         AncientCurse.values().filter { it.category == AncientCurse.Category.LEECH }.forEach {
             assertEquals(it.name, LEECH_PROC_CHANCE_PERCENT, it.activationChancePercent, 1e-9)
         }
-        assertEquals(setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.MAGIC), AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
+        assertEquals(setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC), AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
         val statLeeches =
             listOf(
                 Triple(AncientCurse.LEECH_ATTACK, Skills.ATTACK, CombatClass.MELEE),
@@ -332,7 +348,18 @@ class AncientCurses2011Tests {
                 Triple(AncientCurse.LEECH_RANGED, Skills.RANGED, CombatClass.RANGED),
             )
         statLeeches.forEach { (curse, skill, style) ->
-            val visible = skill != Skills.RANGED
+            // Owner 2026-10-09: every stat Leech gives the visible +1 (Ranged too); Ranged keeps its Rigour-style modifier and
+            // Magic has an Augury-style accuracy one, the others the shared 5 %.
+            val accuracy = when (skill) {
+                Skills.RANGED -> AncientCurses.LEECH_RANGED_ACCURACY
+                Skills.MAGIC -> AncientCurses.LEECH_MAGIC_ACCURACY
+                else -> 1.05
+            }
+            val damage = when (skill) {
+                Skills.RANGED -> AncientCurses.LEECH_RANGED_DAMAGE
+                Skills.MAGIC -> 1.0
+                else -> 1.05
+            }
             val attacker = newPlayer(mapOf(skill to 99))
             AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
             assertEquals(curse.name, 1.0, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
@@ -342,18 +369,18 @@ class AncientCurses2011Tests {
             // The target: one real level and the 10 % base modifier on the first proc.
             assertEquals(curse.name, 98, target.skills.getCurrentLevel(skill))
             assertEquals(curse.name, 0.9, AncientCurses.drainMultiplier(target, skill), 1e-9)
-            // The caster: a visible +1 (all but Ranged) and the shared 5 % base modifier (Ranged: its Rigour-style one).
-            assertEquals(curse.name, if (visible) 100 else 99, attacker.skills.getCurrentLevel(skill))
-            assertEquals(curse.name, if (visible) 1.05 else AncientCurses.LEECH_RANGED_ACCURACY, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
-            assertEquals(curse.name, if (visible) 1.05 else AncientCurses.LEECH_RANGED_DAMAGE, AncientCurses.leechMultiplier(attacker, skill, damage = true), 1e-9)
-            // One proc per 45-second cooldown (owner 2026-09-18); the caps: drain 25 % (99 - 14), boost 10 % (99 + 4).
+            // The caster: a visible +1 and the curse's modifier.
+            assertEquals(curse.name, 100, attacker.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, accuracy, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
+            assertEquals(curse.name, damage, AncientCurses.leechMultiplier(attacker, skill, damage = true), 1e-9)
+            // One proc per cooldown (owner 2026-09-18, 15 s since 2026-10-09); the caps: drain 25 % (99 - 14), boost +5 levels.
             repeat(30) { procAfterCooldown(attacker, target, style) }
             assertEquals(curse.name, 85, target.skills.getCurrentLevel(skill))
-            assertEquals(curse.name, if (visible) 103 else 99, attacker.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, 104, attacker.skills.getCurrentLevel(skill))
             AncientCurses.toggleCurse(attacker, curse)
             assertEquals(curse.name, 1.0, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
             assertEquals(curse.name, 1.0, AncientCurses.drainMultiplier(target, skill), 1e-9)
-            assertEquals(curse.name, if (visible) 103 else 99, attacker.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, 104, attacker.skills.getCurrentLevel(skill))
         }
 
         val runner = newPlayer()
