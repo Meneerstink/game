@@ -572,14 +572,18 @@ object EquipmentSuite : Conformance.Suite {
         maxTicks: Int,
     ): List<Int> {
         val c = run.world.currentCycle
+        // The bot's block animation (the dummy hits back) is not a swing: counted, it halved the measured interval and the ammo
+        // per shot (Heavy ballista run 2026-10-09: BALLISTA_DEFEND 15415 between the 15420 shots -> "rapid 4, ammo 0.61").
+        val block = runCatching { CombatConfigs.getBlockAnimation(bot) }.getOrDefault(-1)
+        fun swing(text: String) = text.startsWith("anim ") && !text.startsWith("anim id=$block ")
         var t = 0
         while (t++ < maxTicks) {
             keep(bot, dummy)
             wait(1)
-            if (run.recording.of(botLabel, "out").count { it.cycle >= c && it.text.startsWith("anim ") } >= count + 1) break
+            if (run.recording.of(botLabel, "out").count { it.cycle >= c && swing(it.text) } >= count + 1) break
             if (bot.getCombatTarget() == null) bot.attack(dummy)
         }
-        return run.recording.of(botLabel, "out").filter { it.cycle >= c && it.text.startsWith("anim ") }.map { it.cycle }.distinct()
+        return run.recording.of(botLabel, "out").filter { it.cycle >= c && swing(it.text) }.map { it.cycle }.distinct()
     }
 
     private fun swingSound(
