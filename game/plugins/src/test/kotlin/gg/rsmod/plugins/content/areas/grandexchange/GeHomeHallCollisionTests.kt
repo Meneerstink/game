@@ -253,6 +253,61 @@ class GeHomeHallCollisionTests {
     }
 
     /**
+     * Owner 2026-10-09 20:09 ("je kunt tussen de muren kijken op elke verdieping"): the storey wall 33868 has no end faces, so a
+     * wall that simply stopped at a doorway showed its open inside. Jagex closes such an end with 33873 / 33874 (Lumbridge castle's
+     * courtyard entrance); every end of a hall wall, on every storey, meets another wall or is that end piece's closed end.
+     */
+    @Test
+    fun `every hall wall ends against another wall or in a Jagex end piece, on every storey`() {
+        val hallWalls = setOf(RoyalHallLocTool.TALL_WALL, RoyalHallLocTool.TALL_WINDOW_WALL, RoyalHallLocTool.TALL_WALL_END_Z0, RoyalHallLocTool.TALL_WALL_END_Z1)
+        val connectors = hallWalls + RoyalHallLocTool.BALCONY_PARAPET
+
+        // The two corner points of a straight wall: model z0 end first (rot 0 south, 1 west, 2 north, 3 east).
+        fun ends(o: GameObject): List<Pair<Int, Int>> {
+            val x = o.tile.x
+            val z = o.tile.z
+            return when (o.rot) {
+                0 -> listOf(x to z, x to z + 1)
+                1 -> listOf(x to z + 1, x + 1 to z + 1)
+                2 -> listOf(x + 1 to z + 1, x + 1 to z)
+                else -> listOf(x + 1 to z, x to z)
+            }
+        }
+
+        fun points(o: GameObject): List<Pair<Int, Int>> =
+            when (o.type) {
+                0 -> ends(o)
+                2 -> {
+                    val x = o.tile.x
+                    val z = o.tile.z
+                    // L piece: the two edges of [Direction.WNES_DIAGONAL] (rot 0 west + north, 1 north + east, 2 east + south, 3 south + west)
+                    val edges = listOf(listOf(x to z, x to z + 1, x + 1 to z + 1), listOf(x to z + 1, x + 1 to z + 1, x + 1 to z), listOf(x + 1 to z + 1, x + 1 to z, x to z), listOf(x + 1 to z, x to z, x to z + 1))
+                    edges[o.rot]
+                }
+                else -> emptyList()
+            }
+        val problems = ArrayList<String>()
+        for (level in 0..3) {
+            val pieces = ArrayList<GameObject>()
+            for (x in BOX_X) for (z in BOX_Z) pieces += objectsAt(Tile(x, z, level)).filter { it.id in connectors && it.type in setOf(0, 2) }
+            val degree = HashMap<Pair<Int, Int>, Int>()
+            pieces.forEach { o ->
+                val pts = points(o)
+                // an L piece's middle point is its own corner; only its two outer points meet other walls
+                val outer = if (o.type == 2) listOf(pts.first(), pts.last()) else pts
+                outer.forEach { degree.merge(it, 1, Int::plus) }
+            }
+            pieces.filter { it.type == 0 && it.id in hallWalls }.forEach { o ->
+                ends(o).forEachIndexed { i, p ->
+                    val capped = (i == 0 && o.id == RoyalHallLocTool.TALL_WALL_END_Z0) || (i == 1 && o.id == RoyalHallLocTool.TALL_WALL_END_Z1)
+                    if ((degree[p] ?: 0) < 2 && !capped) problems += "level $level ${name(o)}: open end at ${p.first},${p.second}"
+                }
+            }
+        }
+        assertTrue(problems.isEmpty(), "walls you can look into: " + problems.joinToString("; "))
+    }
+
+    /**
      * Owner 2026-10-06 (OWNER_QUESTIONS Q10 = A): the hall's sconces, paintings, shields and lanterns hang on the inside face of the
      * outer walls (x 3157 / 3172, z 3485 / 3498), never outside and never on a corner-turret tile.
      */

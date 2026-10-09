@@ -34,6 +34,9 @@ object RoyalHallDecorBakeTool {
     private val COVERED_DECALS = setOf(46541, 46976)
     private const val FIRST_BAKE_DECALS = 7
 
+    /** Map-file markers RoyalHallMapTool once laid itself; when home_decor.txt places one, its old copy leaves (casino star, owner 2026-10-09). */
+    private val MOVABLE_MARKERS = setOf(RoyalHallLocTool.CASINO_MARKER)
+
     private fun layer(type: Int) =
         when (type) {
             in 0..3 -> 0
@@ -66,7 +69,9 @@ object RoyalHallDecorBakeTool {
             placements.map { it.id }.distinct().forEach { id ->
                 require(library.data(LOC_INDEX, id ushr 8, id and 0xFF) != null) { "loc $id is not in the cache (run RoyalHallLocTool apply first for the carpet copies)" }
             }
-            val walkThroughDecor = placements.filter { it.type == 22 && it.id !in HomeDecorBake.FORCEDECOR_CARPETS.values }.map { it.id }.distinct()
+            val walkThroughDecor =
+                placements.filter { it.type == 22 }.map { it.id }.distinct()
+                    .filterNot { id -> RoyalHallLocTool.hasOpcode(id, library.data(LOC_INDEX, id ushr 8, id and 0xFF)!!, 73) }
             require(walkThroughDecor.isEmpty()) { "ground decorations without a forcedecor copy (low preset would drop them): $walkThroughDecor" }
 
             val mapArchive = library.index(Rev667RegionProbeTool.MAP_INDEX).archive("m${rx}_$rz") ?: error("m${rx}_$rz missing")
@@ -100,7 +105,10 @@ object RoyalHallDecorBakeTool {
             check(dropped.all { it.type == 22 && it.id in COVERED_DECALS }) { "a placement would replace a cache loc other than the covered decals: ${dropped.map { it.id }}" }
             check(oldManifest.isNotEmpty() || dropped.size == FIRST_BAKE_DECALS) { "first bake: expected $FIRST_BAKE_DECALS covered decals, found ${dropped.size}" }
 
-            val baked = (base - dropped.toSet()) + newLocs
+            val placedMarkers = placements.map { it.id }.filter { it in MOVABLE_MARKERS }.toSet()
+            val movedMarkers = base.filter { it.id in placedMarkers }
+            movedMarkers.forEach { println("MOVE marker ${it.id} from ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane} (home_decor.txt places it)") }
+            val baked = (base - dropped.toSet() - movedMarkers.toSet()) + newLocs
             val bytes = Rev667LocCodec.encode(baked)
             check(Rev667LocCodec.decode(bytes).size == baked.size) { "$locName encode/decode lost locs" }
             placements.groupingBy { it.id }.eachCount().entries.sortedByDescending { it.value }.forEach { (id, n) -> println("BAKE loc $id x$n") }

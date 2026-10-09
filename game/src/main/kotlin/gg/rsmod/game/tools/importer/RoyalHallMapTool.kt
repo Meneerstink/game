@@ -432,7 +432,7 @@ object RoyalHallMapTool {
                     Rev667Loc(AfkBasementMapTool.ENTRANCE_LOC, AfkBasementMapTool.ENTRANCE_X - rx * 64, AfkBasementMapTool.ENTRANCE_Z - rz * 64, 0, 10, AfkBasementMapTool.ENTRANCE_ROTATION) +
                     AfkBasementMapTool.ENTRANCE_TORCHES.map { (x, z) -> Rev667Loc(AfkBasementMapTool.STANDING_TORCH, x - rx * 64, z - rz * 64, 0, 10, 0) } +
                     // The casino's one minimap star, on the upper floor (a map-file loc: server-spawned ones never reach the minimap).
-                    Rev667Loc(RoyalHallLocTool.CASINO_MARKER, RoyalHallLocTool.CASINO_MARKER_X - rx * 64, RoyalHallLocTool.CASINO_MARKER_Z - rz * 64, 1, 22, 0)
+                    Rev667Loc(RoyalHallLocTool.CASINO_MARKER, RoyalHallLocTool.CASINO_MARKER_X - rx * 64, RoyalHallLocTool.CASINO_MARKER_Z - rz * 64, RoyalHallLocTool.CASINO_MARKER_PLANE, 22, 0)
             kept.filter(inHall).forEach { println("REMAINS ${it.id} type=${it.type} at ${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}") }
             val updatedLocs = Rev667LocCodec.encode(kept)
             if (!updatedLocs.contentEquals(locBytes)) {

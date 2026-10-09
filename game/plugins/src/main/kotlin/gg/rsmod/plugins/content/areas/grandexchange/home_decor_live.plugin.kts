@@ -131,6 +131,10 @@ fun reloadIfChanged() {
     lastModified = modified
     try {
         val design = HomeDecorFile.load(path)
+        // A loc id the cache does not have would fail half-way through applyDesign (2026-10-09 20:42: a design with new ids
+        // was saved before the cache had them); refuse the whole file before anything in the world changes.
+        val unknown = design.placements.map { it.id }.distinct().filter { id -> runCatching { world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id) }.getOrNull() == null }
+        require(unknown.isEmpty()) { "loc ids not in the cache: $unknown" }
         var summary = ""
         // ROOT_CAUSES #144: the dressing goes in under the owner's developer-mode edits, which are applied again on top.
         val edits = gg.rsmod.plugins.content.mechanics.worldedit.WorldEdits.underEdits(world) { summary = applyDesign(design) }

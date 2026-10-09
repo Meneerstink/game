@@ -280,7 +280,8 @@ class GeHomeHallTests {
         val decor = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements
         GeHomeHall.STAIRS.forEach { s ->
             listOf(GeHomeHall.STAIRS_BOTTOM, GeHomeHall.STAIRS_MIDDLE, GeHomeHall.STAIRS_TOP).forEachIndexed { level, id ->
-                assertEquals(listOf(id), decor.filter { it.tile == Tile(s.base.x, s.base.z, level) }.map { it.id }, "staircase at ${s.base} level $level")
+                // (ground decoration - the casino storey's rug - may lie under a staircase)
+                assertEquals(listOf(id), decor.filter { it.tile == Tile(s.base.x, s.base.z, level) && it.type != 22 }.map { it.id }, "staircase at ${s.base} level $level")
             }
         }
         assertEquals(RoyalHallMapTool.DEATHS_DOMAIN_ROT, gg.rsmod.game.tools.importer.AfkBasementMapTool.ENTRANCE_ROTATION)
@@ -295,19 +296,16 @@ class GeHomeHallTests {
         // The second upper storey repeats the first one's outer walls, plus the wall beside each of its narrower doorways -
         // all as the 1.5x high copies (360), like every other storey since 2026-10-02 - none of the 240 originals anywhere.
         val walls = setOf(33868, 33877)
-        val tall = setOf(RoyalHallLocTool.TALL_WALL, RoyalHallLocTool.TALL_WINDOW_WALL)
+        val tall = setOf(RoyalHallLocTool.TALL_WALL, RoyalHallLocTool.TALL_WINDOW_WALL, RoyalHallLocTool.TALL_WALL_END_Z0, RoyalHallLocTool.TALL_WALL_END_Z1)
         fun ring(level: Int) = decor.filter { (it.id in walls || it.id in tall) && it.type == 0 && it.tile.height == level && (it.tile.x !in floorX || it.tile.z !in floorZ) }
         assertEquals(ring(1).size + 8, ring(2).size)
         assertTrue(ring(1).all { w -> ring(2).any { it.tile.x == w.tile.x && it.tile.z == w.tile.z && it.rot == w.rot } })
         assertTrue(decor.none { it.id in walls }, "a 240-high wall left in the hall")
         (0..2).forEach { level -> assertTrue(ring(level).isNotEmpty() && ring(level).all { it.id in tall }, "storey $level wall ring") }
-        // Three rooms: an inner wall on the west edge of x 3162 and the east edge of x 3167 with a two-tile opening (z 3491-3492)
-        // in each - drawn from the side rooms' tiles (x 3161 east edge, x 3168 west edge) so the cream faces look into the casino
-        // (owner 2026-10-06, OWNER_QUESTIONS Q9 = B).
+        // One open gambling room (owner 2026-10-09: "de muren in t midden weg"; replaces the 2026-10-06 three rooms, Q9 = B):
+        // no wall stands inside the second upper storey.
         val inner = decor.filter { it.id in tall && it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }
-        listOf(3161 to 2, 3168 to 0).forEach { (x, rot) ->
-            assertEquals(floorZ.filter { it !in 3491..3492 }.toSet(), inner.filter { it.tile.x == x && it.rot == rot }.map { it.tile.z }.toSet())
-        }
+        assertEquals(emptyList(), inner.map { "${it.tile.x},${it.tile.z} rot ${it.rot}" }, "walls inside the casino storey")
         // Every level-2 balcony's parapet runs on to the building: a wall-decoration piece on the open edge of each wall-ring
         // tile beside its doorway (owner 2026-09-29: "de balkon sluit niet goed aan").
         val sides = decor.filter { it.id == RoyalHallLocTool.BALCONY_PARAPET_SIDE }

@@ -77,6 +77,23 @@ class HomeDecorBakeTests {
         }
     }
 
+    /**
+     * Owner 2026-10-09: the casino's minimap star only on the casino storey. The client draws a level's loc icons only while you
+     * stand on that level (Minimap, Static696.isTileVisibleFrom), so the star is one map-file loc on the top storey.
+     */
+    @Test
+    fun `the casino star is one map-file loc, on the casino storey`() {
+        val library = CacheLibrary(DATA.resolve("cache").toString())
+        try {
+            val key = Rev667RegionProbeTool.loadKeys(DATA.resolve("xteas").resolve("xteas.json").toFile())[HomeDecorBake.REGION_ID]!!
+            val stars = Rev667LocCodec.decode(library.index(5).archive("l49_54", key)!!.file(0)!!.data!!).filter { it.id == gg.rsmod.game.tools.importer.RoyalHallLocTool.CASINO_MARKER }
+            assertEquals(1, stars.size, "casino stars in l49_54")
+            assertEquals(gg.rsmod.game.tools.importer.RoyalHallLocTool.CASINO_MARKER_PLANE, stars.single().plane, "casino star level")
+        } finally {
+            library.close()
+        }
+    }
+
     @Test
     fun `home_decor txt adds nothing beyond the bake - no decor loc is sent one by one`() {
         val design = HomeDecorFile.load(DATA.resolve("cfg").resolve("home_decor.txt"))

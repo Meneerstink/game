@@ -27,8 +27,10 @@ object HomeDecorBake {
      * The hall's carpet (Varrock carpet 15548 corner / 15549 edge / 15550 middle) as forcedecor copies (opcode 73,
      * RoyalHallLocTool). A non-interactive, walk-through ground decoration in a map file is dropped by the client while
      * "Ground decoration" is off - the low preset turns it off (MapRegion / Static213) - where a dynamic one is always drawn.
+     * The casino storey's Opulent rug (Jagex POH 13594 corner / 13595 edge / 13596 middle, Darkan HouseObjects.OPULENT_RUG;
+     * owner 2026-10-09) the same way.
      */
-    val FORCEDECOR_CARPETS = linkedMapOf(15548 to 62911, 15549 to 62912, 15550 to 62913)
+    val FORCEDECOR_CARPETS = linkedMapOf(15548 to 62911, 15549 to 62912, 15550 to 62913, 13594 to 62916, 13595 to 62917, 13596 to 62918)
 
     /** [placement] as it stands in the map file: a carpet piece as its forcedecor copy. */
     fun baked(placement: HomeDecorFile.Placement): HomeDecorFile.Placement =

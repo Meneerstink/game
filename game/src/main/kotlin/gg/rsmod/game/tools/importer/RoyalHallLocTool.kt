@@ -874,6 +874,23 @@ object RoyalHallLocTool {
     const val TALL_WINDOW_WALL = 62904
 
     /**
+     * [TALL_WALL]'s end pieces beside a doorway (owner 2026-10-09 20:09: "tussen de muren kijken" - the straight wall 33868 has
+     * no end faces, so at every doorway you looked between its two faces). Jagex closes 33868 walls with 33873 (end face at
+     * model z0) and 33874 (at z1) on both sides of Lumbridge castle's courtyard entrance (3217,3217 / 3217,3220 and on level 2);
+     * these are those, 1.5x high like [TALL_WALL]. Model z0 is the wall's south end at rot 0, west at 1, north at 2, east at 3.
+     */
+    const val TALL_WALL_END_Z0 = 62914
+    const val TALL_WALL_END_Z1 = 62915
+
+    /**
+     * The casino's chandeliers (owner 2026-10-09: the top storey a gambling room): Jagex's Varrock chandelier 23933 at half
+     * size (it stands 60-499 high, more than the 360 storey), lifted so it hangs from the ceiling over a card table.
+     */
+    const val CASINO_CHANDELIER = 62919
+    private const val CHANDELIER_SCALE = 64
+    private const val CHANDELIER_LIFT = -100
+
+    /**
      * The upper balcony parapet as a straight wall decoration (shape 4), on the wall-ring tile either side of a level-2
      * doorway, whose wall slot holds the storey wall - so the parapet runs on to the building like the gilded railing 62786
      * of the balconies below (owner 2026-09-29: "de balkon sluit niet goed aan" - the ring tile beside the doorway was an
@@ -923,6 +940,12 @@ object RoyalHallLocTool {
         // would come before them, so a walk that stops there has seen every place one could be.
         check(listOf(65, 66, 67).none { runCatching { opcodePosition(id, def, it) }.getOrDefault(-1) >= 0 }) { "door $id already scaled" }
         return byteArrayOf(66, 0, 192.toByte()) + withoutOcclusion(id, def)
+    }
+
+    private fun casinoChandelier(def: ByteArray): ByteArray {
+        check(listOf(65, 66, 67).none { opcodePosition(23933, def, it) >= 0 }) { "chandelier already scaled" }
+        val s = CHANDELIER_SCALE.toByte()
+        return withOffset(23933, byteArrayOf(65, 0, s, 66, 0, s, 67, 0, s) + def, CHANDELIER_LIFT)
     }
 
     private fun tallWall(id: Int, def: ByteArray): ByteArray {
@@ -1024,8 +1047,15 @@ object RoyalHallLocTool {
      */
     const val CASINO_MARKER = 62899
     const val CASINO_ELEMENT = 635
-    const val CASINO_MARKER_X = 3165
-    const val CASINO_MARKER_Z = 3495
+    const val CASINO_MARKER_X = 3164
+    const val CASINO_MARKER_Z = 3485
+
+    /**
+     * The casino moved to the top storey (owner 2026-09-27), and its minimap star belongs there only (owner 2026-10-09). The
+     * client draws a level's loc icons only while you stand on that level (Minimap / Static696.isTileVisibleFrom); the star
+     * stands on the top storey's south doorway, a tile without the casino carpet (both ground decorations).
+     */
+    const val CASINO_MARKER_PLANE = 2
 
     /** Casino signs Blackjack, Dice, Flower Poker, Mines (copies of [SIGN] under their game's name). */
     val CASINO_SIGNS = listOf(62895, 62896, 62897, 62898)
@@ -1040,6 +1070,9 @@ object RoyalHallLocTool {
      * [def] with opcode 73 (client LocType.forcedecor): a walk-through, non-interactive ground decoration from the map file is
      * then drawn even while "Ground decoration" is off (client MapRegion / Static213 skip it otherwise).
      */
+    /** True when loc [id]'s definition carries opcode [opcode] (e.g. 73 = forcedecor). */
+    fun hasOpcode(id: Int, def: ByteArray, opcode: Int): Boolean = opcodePosition(id, def, opcode) >= 0
+
     private fun withForceDecor(def: ByteArray): ByteArray {
         check(opcodePosition(0, def, 73) < 0) { "already forcedecor" }
         check(def.last() == 0.toByte()) { "definition does not end with opcode 0" }
@@ -1076,6 +1109,9 @@ object RoyalHallLocTool {
             Variant(TALL_WALL, 33868, "Royal Hall storey wall: 33868 at 1.5x height (360), no occlusion") { tallWall(33868, it) },
             Variant(CURTAIN_1, 33868, "Royal Hall facade over a level-1 balcony row, seen from inside the ground floor (not solid, lifted 360, 1.5x high)") { curtain(it, 360, 192, CURTAIN_1_SHAPE) },
             Variant(CURTAIN_2, 33868, "Royal Hall facade over a level-2 balcony row, seen from inside below (wall shape, not solid, lifted 720, 1.5x high)") { curtain(it, 720, 192, CURTAIN_2_SHAPE) },
+            Variant(TALL_WALL_END_Z0, 33873, "Royal Hall storey wall end piece (end face at z0): 33873 at 1.5x height (360), no occlusion") { tallWall(33873, it) },
+            Variant(TALL_WALL_END_Z1, 33874, "Royal Hall storey wall end piece (end face at z1): 33874 at 1.5x height (360), no occlusion") { tallWall(33874, it) },
+            Variant(CASINO_CHANDELIER, 23933, "Royal Hall casino chandelier: Varrock chandelier 23933 at half size, hanging from the 360 ceiling", ::casinoChandelier),
             Variant(TALL_WINDOW_WALL, 33877, "Royal Hall storey window wall: 33877 at 1.5x height (360)") { tallWall(33877, it) },
             Variant(62768, 15548, "78 carpet corner (Varrock carpet 15548 with the 78 texture)", ::with78Carpet),
             Variant(62769, 15549, "78 carpet edge (Varrock carpet 15549 with the 78 texture)", ::with78Carpet),
@@ -1242,6 +1278,8 @@ object RoyalHallLocTool {
             78 -> 3
             99, 100 -> 3
             163 -> 4
+            // client LocType: occlusionHeight / occlusionOffset = gsmart (1 byte below 128, else 2)
+            170, 171 -> if (u8(0) < 128) 1 else 2
             173 -> 4
             else -> error("loc $id: opcode $op at $pos is not handled by RoyalHallLocTool")
         }
