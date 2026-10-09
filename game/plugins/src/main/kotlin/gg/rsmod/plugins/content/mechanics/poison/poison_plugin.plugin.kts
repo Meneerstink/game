@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.mechanics.poison
 import gg.rsmod.game.model.attr.POISON_TICKS_LEFT_ATTR
 import gg.rsmod.game.model.timer.POISON_TIMER
 
-val poisonTickDelay = 30
+val poisonTickDelay = Poison.POISON_TICK_DELAY
 
 /**
  * Callback for the poison timer. Deals damage to the pawn and decrements the number of ticks left for the poison effect.

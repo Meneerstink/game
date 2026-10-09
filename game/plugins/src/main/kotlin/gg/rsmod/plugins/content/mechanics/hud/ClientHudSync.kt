@@ -108,7 +108,8 @@ object ClientHudSync {
      * The `tmr` fields, all live server state: Vengeance (active flag, cooldown), Teleblock, freeze, then the damage-over-time block -
      * poison/venom (0 none, 1 poison, 2 venom), the damage of its next hit (Poison.getDamageForTicks / Venom.damageForTick, the exact
      * numbers the timer plugins deal), ticks to that hit (the POISON_TIMER / VENOM_TIMER itself), antipoison and antivenom immunity,
-     * burn stacks (= the next combined burn hit) and ticks to that hit (the Burns cycle driver).
+     * burn stacks (= the next combined burn hit) and ticks to that hit (the Burns cycle driver), then ticks until regular poison
+     * wears off (RuneLite Poison tooltip "Time until cure": the next hit, then one hit per 30 ticks for the hits left; venom never).
      */
     fun timers(player: Player): IntArray {
         val venomTicks = player.attr[VENOM_TICKS_ELAPSED_ATTR]
@@ -145,7 +146,7 @@ object ClientHudSync {
             remaining(player, VENOM_IMMUNITY),
             burns,
             burnNext,
-            0,
+            if (dot == 1) dotNext + poisonTicks!! * Poison.POISON_TICK_DELAY else 0,
         )
     }
 

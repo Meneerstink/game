@@ -2245,3 +2245,12 @@ on_command("packettrace", Privilege.ADMIN_POWER) {
     gg.rsmod.game.protocol.GameMessageEncoder.traceOutbound = enabled
     player.message("Outbound packet trace: ${if (enabled) "<col=178000>enabled</col>" else "<col=42C66C>disabled</col>"}", type = ChatMessageType.CONSOLE)
 }
+
+/** `poisonme [venom|burn]` (admin, HUD tests): poison at 6 (OSRS weapon poison start), venom, or one burn - for the infoboxes. */
+on_command("poisonme", Privilege.ADMIN_POWER) {
+    when (player.getCommandArgs().firstOrNull()) {
+        "venom" -> gg.rsmod.plugins.content.mechanics.poison.Venom.envenom(player)
+        "burn" -> gg.rsmod.plugins.content.items.osrs.Burns.apply(player)
+        else -> gg.rsmod.plugins.content.mechanics.poison.Poison.poison(player, 6)
+    }
+}

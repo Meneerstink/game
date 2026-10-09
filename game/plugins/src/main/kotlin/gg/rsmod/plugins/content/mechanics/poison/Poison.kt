@@ -27,6 +27,9 @@ object Poison {
     /** The VARP id for the player's HP orb. */
     private const val POISON_VARP = 102
 
+    /** OSRS Wiki "Poison": damage "once every 30 game ticks". */
+    const val POISON_TICK_DELAY = 30
+
     /**
      * Gets the damage that will be dealt after a given number of ticks.
      *
@@ -100,7 +103,7 @@ object Poison {
         // Combat run 2026-09-29: a repeat application resets the severity but never the 30-tick damage cycle (Void Poison.kt:
         // `timers.contains("poison") || timers.start("poison")`; OSRS Wiki "Poison": damage "once every 30 game ticks"). Restarting
         // it here meant a weapon re-poisoning every few hits (1/4 per melee hit) kept pushing the next poison hit away.
-        if (!pawn.timers.has(POISON_TIMER)) pawn.timers[POISON_TIMER] = 30
+        if (!pawn.timers.has(POISON_TIMER)) pawn.timers[POISON_TIMER] = POISON_TICK_DELAY
         pawn.attr[POISON_TICKS_LEFT_ATTR] = ticks
         if (pawn is Player) {
             setPoisonVarp(pawn, OrbState.POISON)

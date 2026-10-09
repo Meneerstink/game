@@ -28,7 +28,7 @@ import gg.rsmod.game.model.entity.Player
  *  - `tmr|<vengActive>|<vengCd>|<teleblock>|<frozen>|<dot>|<dotDamage>|<dotNext>|<antiPoison>|<antiVenom>|<burns>|<burnNext>|0`
  *                                             remaining ticks, 0 = not active; dot 0 none / 1 poison / 2 venom with the damage
  *                                             of its next hit; burns = active burn stacks = the next combined burn hit
- *  - `gi|<entry>;<entry>...`                  ground items: `<level>,<x>,<z>,<id>,<despawnTicks>,<unitValue>,<unitAlch>,<flags>`
+ *  - `gi|<entry>;<entry>...`                  ground items: `<level>,<x>,<z>,<id>,<despawnTicks>,<unitValue>,<unitAlch>,<flags>,<amount>`
  *                                             per tile and item id the player can see; despawnTicks -1 = never despawns,
  *                                             -2 = none left; flags: 1 untradeable, 2 dropped for this player, 4 dropped
  *                                             for another player, 8 still private, 16 dropped this cycle
@@ -92,8 +92,12 @@ object ClientHud {
         var soonest = Int.MAX_VALUE
         var first: GroundItem? = null
         var fresh = false
+        // The real total: the 667 OBJ_ADD packet carries the count in 16 bits, so the client's own stack shows 2 500 000 coins as
+        // 9 632 (owner 2026-10-09 Ground Items check); the label takes this amount instead.
+        var amount = 0L
         for (item in items) {
             if (item.item != itemId || !item.canBeViewedBy(player)) continue
+            amount += item.amount
             // World.cycle: an item despawns once currentCycle reaches gItemDespawnDelay; world spawns (respawnCycles set) never do.
             val remaining = if (item.respawnCycles != -1) Int.MAX_VALUE else maxOf(0, world.gameContext.gItemDespawnDelay - item.currentCycle)
             if (first == null || remaining < soonest) {
@@ -110,7 +114,7 @@ object ClientHud {
         if (owner != null) flags = flags or (if (owner.value == player.uid.value) FLAG_MINE else FLAG_OTHERS)
         if (!shown.isPublic()) flags = flags or FLAG_PRIVATE
         if (fresh) flags = flags or FLAG_FRESH
-        return "$level,$x,$z,$itemId,$ticks,${cachedValue(world, player, itemId)},${cachedAlch(world, itemId)},$flags"
+        return "$level,$x,$z,$itemId,$ticks,${cachedValue(world, player, itemId)},${cachedAlch(world, itemId)},$flags,$amount"
     }
 
     // ---- 100-player load (owner 2026-09-29: "er gaan 100 players deze plugins gebruiken") -------------------------------
