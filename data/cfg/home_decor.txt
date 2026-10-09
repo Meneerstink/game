@@ -978,6 +978,12 @@ obj 15549 3174 3491 1 22 1
 obj 15549 3174 3492 1 22 1
 obj 15549 3174 3493 1 22 1
 obj 15548 3174 3494 1 22 1
+# Owner 2026-10-09 212746 ("the gold carpet needs to align perfectly ... on every floor"): the north half now mirrors the south
+# half - the carpet also runs under the two thrones (it stopped short of them and left a bare patch beside the cross).
+obj 15549 3162 3495 1 22 0
+rect 15550 3163 3495 3166 3495 1 22 0
+obj 15549 3167 3495 1 22 0
+rect 15550 3162 3494 3167 3494 1 22 0
 obj 62783 3174 3490 1 0 2
 obj 62783 3174 3491 1 0 2
 obj 62783 3174 3492 1 0 2
@@ -1075,21 +1081,35 @@ obj 47756 3173 3496 0 10 0
 # ===== Casino storey (level 2), owner 2026-10-09: one open gambling room =====
 # Opulent rug (Jagex POH 13594 corner / 13595 edge / 13596 middle, laid like the POH parlour: corners SW r3 NW r0 NE r1 SE r2,
 # edges W r3 N r0 E r1 S r2, middle r2); baked as forcedecor copies so the low preset keeps it.
+# Owner 2026-10-09 212210 ("the red carpet laid overlaps the beautiful stairs"): the rug stops at both staircase tops (62780,
+# 2x2 at 3159-3160 / 3169-3170 x 3496-3497) and is bordered round them - the north edge runs below each staircase, between them
+# the rug goes on to the north wall with its own corners and side edges.
 obj 13594 3158 3486 2 22 3
-obj 13594 3158 3497 2 22 0
-obj 13594 3171 3497 2 22 1
 obj 13594 3171 3486 2 22 2
-rect 13595 3158 3487 3158 3496 2 22 3
-rect 13595 3159 3497 3170 3497 2 22 0
-rect 13595 3171 3487 3171 3496 2 22 1
+obj 13594 3158 3495 2 22 0
+obj 13594 3171 3495 2 22 1
+obj 13594 3161 3497 2 22 0
+obj 13594 3168 3497 2 22 1
+rect 13595 3158 3487 3158 3494 2 22 3
+rect 13595 3171 3487 3171 3494 2 22 1
 rect 13595 3159 3486 3170 3486 2 22 2
-rect 13596 3159 3487 3170 3496 2 22 2
-# Bar: the Blue Moon Inn bar (Varrock 3224-3228 x 3397-3402) turned round against the west wall, one counter row shorter
-# (counter on x 3160 with the barman's gap at z 3489, back wall on x 3158; barman 737 in casino.plugin.kts).
+rect 13595 3159 3495 3160 3495 2 22 0
+rect 13595 3169 3495 3170 3495 2 22 0
+rect 13595 3162 3497 3167 3497 2 22 0
+obj 13595 3161 3496 2 22 3
+obj 13595 3168 3496 2 22 1
+rect 13596 3159 3487 3170 3494 2 22 2
+rect 13596 3161 3495 3168 3495 2 22 2
+rect 13596 3162 3496 3167 3496 2 22 2
+# Bar: the Blue Moon Inn bar (Varrock 3224-3228 x 3397-3402) turned round against the west wall (back wall on x 3158; barman 737
+# in casino.plugin.kts). Owner 2026-10-09 212641 ("the bar cuts in half, make the bar more beautiful"): one unbroken counter on
+# x 3160 - Jagex's own run end 24001, 23999, 23998 and the corner 157 (Varrock x 3225, z 3402 -> 3397), the flap gap closed.
 obj 24001 3160 3486 2 10 2
 obj 23999 3160 3487 2 10 2
 obj 23999 3160 3488 2 10 2
-obj 157 3160 3490 2 10 2
+obj 23999 3160 3489 2 10 2
+obj 23998 3160 3490 2 10 2
+obj 157 3160 3491 2 10 2
 obj 24212 3159 3486 2 10 3
 obj 24212 3158 3487 2 10 3
 obj 136 3158 3488 2 10 2

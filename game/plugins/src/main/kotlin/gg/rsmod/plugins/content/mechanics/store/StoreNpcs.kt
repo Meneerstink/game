@@ -7,7 +7,8 @@ import gg.rsmod.game.model.Tile
  *
  * - [DONATOR_STORE] 14436 "Donator Store": clone of OSRS Sigmund The Merchant 3894 (Talk-to, Trade).
  * - [DEADMAN_STORE] 14437 "Deadman Store": clone of OSRS Emblem Trader 308 (Talk-to, Rewards, Skull).
- * - `Npcs.XUAN` 13727: the 667 loyalty programme npc, which already opens the Loyalty tab.
+ * - `Npcs.XUAN` 13727: the 667 loyalty programme npc - left the hall on 2026-10-09 (owner: "Xuan weg"); the Loyalty Shop is a
+ *   tab of the same 78 Store window.
  * (`OsrsNpcImportTool` clone batch `store-npcs`, tx-20260919-154310.)
  *
  * Owner 2026-09-27: they stand in the Royal Hall's "stores" corner (north-east of the ground floor), posted once by

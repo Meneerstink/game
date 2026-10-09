@@ -92,6 +92,24 @@ SafeDeath.register { gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(i
 
 // ---- entrances and the portal ----
 
+/**
+ * OSRS (owner 2026-10-09 201554: "als je death room binnen komt net als bij osrs moet de character automatisch naar death toelopen
+ * en met hem praten"): on arrival the player walks up to Death and talks to him - exactly the Talk-to click (OpNpc1Handler: the
+ * interaction attributes and the shared walk-then-interact action), one tick after the move so it starts from the arrival tile.
+ */
+fun walkToDeath(player: Player) {
+    player.queue(TaskPriority.STANDARD) {
+        wait(1)
+        val death =
+            player.world.npcs.entries.filterNotNull().firstOrNull {
+                it.id == DeathsOfficeArea.DEATH && it.tile.height == player.tile.height && it.tile.isWithinRadius(player.tile, 15)
+            } ?: return@queue
+        player.attr[gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR] = 1
+        player.attr[gg.rsmod.game.model.attr.INTERACTING_NPC_ATTR] = java.lang.ref.WeakReference(death)
+        player.executePlugin(gg.rsmod.game.action.PawnPathAction.walkPlugin)
+    }
+}
+
 on_world_init {
     DeathsOfficeArea.ENTRANCES.forEach { entrance ->
         entrance.replaces.forEach { tile ->
@@ -114,6 +132,7 @@ DeathsOfficeArea.ENTRANCE_LOCS.forEach { loc ->
         val enter = {
             player.attr[DEATHS_OFFICE_RETURN_ATTR] = from.as30BitInteger
             player.moveTo(DeathsOfficeArea.ARRIVAL)
+            walkToDeath(player)
         }
         // The displayed tile (zoneTile): mid-transit the player still counts where the move started (ZoneTransitGuardTests).
         if (GuardedZones.contains(player.zoneTile())) {

@@ -281,6 +281,22 @@ object GrandExchangeInterface {
     fun exchangeable(def: ItemDef): Boolean =
         def.tradeable && !def.noted && def.id != Items.COINS_995 && !gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(def)
 
+    /**
+     * The price a new offer starts at (owner 2026-10-09 182114: "all items should be buyable for medium price from grand exchange").
+     * The guide price moves with player trades, but the house always deals at its fixed OSRS seed ([GeHousePricing]); a guide
+     * below the house's ask (Crystal armour seed: guide 5 295 412, ask 5 574 117) left a buy at the guide price unfilled forever.
+     * A buy therefore starts at least at the house's ask and a sell at most at its bid, so the offered "medium price" always fills.
+     */
+    fun offerGuide(
+        service: GrandExchangeService,
+        def: ItemDef,
+        type: OfferType,
+    ): Int {
+        val guide = service.guidePrice(def.id, OsrsGuidePrices.seed(def))
+        val quote = service.houseQuote(def.id) ?: return guide
+        return if (type == OfferType.BUY) maxOf(guide, quote.ask) else minOf(guide, quote.bid).coerceAtLeast(1)
+    }
+
     /** The unnoted id of [def]. */
     fun unnoted(def: ItemDef): Int = if (def.noted) def.noteLinkId else def.id
 
@@ -567,7 +583,7 @@ object GrandExchangeInterface {
             return false
         }
         selection.itemId = real.id
-        selection.guide = service.guidePrice(real.id, OsrsGuidePrices.seed(real))
+        selection.guide = offerGuide(service, real, selection.type)
         selection.price = clampPrice(selection, selection.guide)
         // Void `stock_side:items` / OSRS: a sell offer starts at the clicked stack's amount (a whole stack or note pile).
         selection.quantity = if (selection.type == OfferType.SELL) quantity.coerceIn(1, ownedCount(player, real.id).coerceAtLeast(1)) else 1

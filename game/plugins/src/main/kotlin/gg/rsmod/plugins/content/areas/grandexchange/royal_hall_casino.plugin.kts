@@ -37,7 +37,8 @@ on_npc_option(npc = Npcs.MUBARIZ, option = "talk-to") {
     }
 }
 
-on_npc_option(npc = Npcs.BARTENDER_737, option = "talk-to") {
+// Spoken to across the unbroken counter (owner 2026-10-09: the flap gap is closed), as Death across his desk.
+on_npc_option(npc = Npcs.BARTENDER_737, option = "talk-to", lineOfSightDistance = 2) {
     player.queue {
         chatNpc("Welcome to the casino bar. Good luck at the tables!")
         chatPlayer("Thanks!")
