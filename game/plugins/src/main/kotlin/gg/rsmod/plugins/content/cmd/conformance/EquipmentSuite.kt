@@ -179,7 +179,20 @@ object EquipmentSuite : Conformance.Suite {
         // the Swamp lane threw "Index -1" when the bare item turned uncharged, DMM run 2026-10-01, X4).
         val staff = gg.rsmod.plugins.content.items.osrs.PoweredStaves.staffFor(def.id)
         if (staff != null && def.id == staff.charged) {
-            bot.inventory.add(gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(Item(def.id), staff.maxCharges - if (staff.full != null) 1 else 0))
+            val charged = gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(Item(def.id), staff.maxCharges - if (staff.full != null) 1 else 0)
+            (0 until bot.inventory.capacity).firstOrNull { bot.inventory[it] == null }?.let { bot.inventory[it] = charged }
+        } else if (gg.rsmod.plugins.content.items.osrs.ChargedItems.unchargedFor(def.id) != null) {
+            // Every other charged item (toxic staff of the dead, blowpipes, Venator, Tonalztics, Craw's ...) turns into its uncharged
+            // form when added bare (ChargedItems creation redirect) - "not in the inventory", the old "Index -1" (run 2026-10-01):
+            // it is added charged.
+            val charged = Item(def.id)
+            charged.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 10_000
+            if (gg.rsmod.plugins.content.items.osrs.Blowpipe.isBlowpipe(def.id)) {
+                charged.attr[gg.rsmod.game.model.item.ItemAttribute.ATTACHED_ITEM_ID] = Items.DRAGON_DART
+                charged.attr[gg.rsmod.game.model.item.ItemAttribute.ATTACHED_ITEM_COUNT] = 10_000
+            }
+            // Into a free slot directly: ItemContainer.add(Item) keeps only id and amount, so the charges would be lost.
+            (0 until bot.inventory.capacity).firstOrNull { bot.inventory[it] == null }?.let { bot.inventory[it] = charged }
         } else {
             bot.inventory.add(def.id, if (def.stackable) 5000 else 1)
         }

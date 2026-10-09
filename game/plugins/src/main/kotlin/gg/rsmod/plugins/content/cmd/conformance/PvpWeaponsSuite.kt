@@ -244,7 +244,7 @@ object PvpWeaponsSuite : Conformance.Suite {
         }
         a.equipment[3] = null
         a.inventory.removeAll()
-        a.inventory.add(weapon)
+        a.inventory[0] = weapon // keeps the charges (ItemContainer.add(Item) keeps only id and amount)
         val option = listOf("Wield", "Wear", "Equip", "Hold").firstOrNull { o -> def.inventoryMenu.any { it?.equals(o, true) == true } } ?: "Wield"
         Bots.itemOption(a, 0, option)
         a.equipment[13] =
