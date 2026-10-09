@@ -307,6 +307,9 @@ object CursesSuite : Conformance.Suite {
             run.add(Result(e, "combat: curse on for the fight", Verdict.FAIL, "on", "off"))
             return
         }
+        // Owner 2026-10-09: switching a curse on plays Darkan's animation, the same one a proc casts (12569 Sap, 12575 Leech);
+        // the fight is measured from two ticks later, so the switch-on is never counted as a proc.
+        wait(2)
         val c0 = run.world.currentCycle
         val hp0 = defender.getCurrentLifepoints()
         val lp = HashMap<Int, Int>()
@@ -861,14 +864,14 @@ object CursesSuite : Conformance.Suite {
             val levels = ArrayList<Int>()
             bot.attack(target)
             var guard = 0
-            while (levels.size < 7 && guard++ < 120) {
+            while (levels.size < 6 && guard++ < 200) {
                 val before = bot.skills.getCurrentLevel(Skills.RANGED)
                 target.setCurrentLifepoints(target.getMaximumLifepoints())
                 bot.setCurrentPrayerPoints(99)
                 if (bot.getCombatTargetOrNull() == null) bot.attack(target)
                 wait(1)
-                val procs = run.recording.of("Conf1", "out").count { it.cycle == run.world.currentCycle - 1 && it.text.startsWith("anim ") && idOf(it.text) == 12575 }
-                if (procs > 0 || bot.skills.getCurrentLevel(Skills.RANGED) != before) levels += bot.skills.getCurrentLevel(Skills.RANGED)
+                // A proc is a rise of the level (the switch-on plays the same animation as a proc, owner 2026-10-09).
+                if (bot.skills.getCurrentLevel(Skills.RANGED) > before) levels += bot.skills.getCurrentLevel(Skills.RANGED)
             }
             bot.resetInteractions()
             Combat.reset(bot)
@@ -892,7 +895,12 @@ object CursesSuite : Conformance.Suite {
     ) {
         val e = "curses vs npcs"
         book(bot, true)
-        target.moveTo(arena.transform(-3, -3))
+        // The other bot may still be fighting back from the scenario before (auto retaliate): it is stopped and kept out of it,
+        // so every hit the caster takes here is the npc's (run 2026-10-09 17:12: its whip hits were counted as the giant's).
+        target.resetInteractions()
+        Combat.reset(target)
+        target.setVarp(gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP, 1)
+        target.moveTo(arena.transform(-6, -6))
         bot.moveTo(arena)
         bot.resetInteractions()
         Combat.reset(bot)
@@ -902,6 +910,7 @@ object CursesSuite : Conformance.Suite {
         try {
             wait(1)
             click(bot, AncientCurse.SAP_WARRIOR.slot)
+            wait(2)
             val c0 = run.world.currentCycle
             bot.attack(npc)
             fun procs() = run.recording.of("Conf1", "out").count { it.cycle >= c0 && it.text.startsWith("anim ") && idOf(it.text) == 12569 }
@@ -919,6 +928,8 @@ object CursesSuite : Conformance.Suite {
             Combat.reset(bot)
             offAll(bot, true)
             click(bot, AncientCurse.DEFLECT_MELEE.slot)
+            npc.resetInteractions()
+            wait(4)
             val c1 = run.world.currentCycle
             npc.attack(bot)
             repeat(40) {
@@ -937,7 +948,7 @@ object CursesSuite : Conformance.Suite {
             bot.resetInteractions()
             Combat.reset(bot)
             offAll(bot, true)
-            unplace(bot)
+            unplace(bot, target)
             target.moveTo(arena.transform(1, 0))
         }
     }
