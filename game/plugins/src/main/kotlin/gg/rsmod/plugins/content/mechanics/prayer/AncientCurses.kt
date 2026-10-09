@@ -885,8 +885,12 @@ object AncientCurses {
      * accuracy, no magic damage, no Defence) while on, and Leech Ranged keeps Rigour's (above) - each with the visible +1 level
      * per proc on top.
      */
-    /** Owner 2026-10-09 (on advice): x1.20, about Augury's x1.25 at the +5 Leech maximum and a little under it at the start. */
-    const val LEECH_MAGIC_ACCURACY = 1.20
+    /**
+     * Owner 2026-10-09 (final): Leech Magic has Augury's offence - x1.25 magic accuracy and +4 % magic damage
+     * ([LEECH_MAGIC_DAMAGE], MagicCombatFormula.getPrayerMagicDamage) - but not its Defence, plus the +1 Magic level per proc.
+     */
+    const val LEECH_MAGIC_ACCURACY = 1.25
+    const val LEECH_MAGIC_DAMAGE = 0.04
 
     /**
      * The stat Leeches whose every proc is a visible +1 level (owner 2026-09-19 Attack/Strength; Magic/Defence 2026-10-06;

@@ -311,8 +311,10 @@ object MagicCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
             Prayers.isActive(player, Prayer.AUGURY) -> 0.04
-            // Leech Magic gives no magic damage: its 2026-09-29 Augury-style modifier (already at 0 % damage) was removed by the
-            // owner's 2026-10-06 decision (bug 031309) - it boosts the visible Magic level per proc instead (AncientCurses.leech).
+            // Owner 2026-10-09: Leech Magic hits like Augury (+4 % magic damage) on top of its +1 Magic level per proc.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT &&
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isCurseActive(player, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.LEECH_MAGIC) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.LEECH_MAGIC_DAMAGE
             else -> 0.0
         }
 
