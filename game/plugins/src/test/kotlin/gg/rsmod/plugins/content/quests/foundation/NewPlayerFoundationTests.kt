@@ -484,6 +484,19 @@ class NewPlayerFoundationTests {
     }
 
     /**
+     * Quests run 2026-10-10: a new account's quest list did not show Desert Treasure, Lunar Diplomacy, King's Ransom or The
+     * Temple at Senntisten at all - clientscript 2162 hides a not-started quest whose requirements (2149: struct params
+     * 859-898) are not met, and the server lets anyone start them. Every choice quest's struct carries no start requirement
+     * (QuestStartRequirementTool) and every choice slot is one of the tool's slots.
+     */
+    @Test
+    fun `every choice quest is listed for a new player`() {
+        val choiceSlots = FoundationQuests.SHORT.map { it.slot }.toSet()
+        assertEquals(choiceSlots, gg.rsmod.game.tools.importer.QuestStartRequirementTool.CHOICE_SLOTS.toSet())
+        assertTrue(gg.rsmod.game.tools.importer.QuestStartRequirementTool.plan(CACHE_PATH).isEmpty(), "QuestStartRequirementTool must be applied to the cache")
+    }
+
+    /**
      * Quests run 2026-10-10: the Quest Helper overlay (interface 1166, QuestHelperPanelImportTool) cut 7 of the 15 tips after
      * their second line ("... drink an antifire potion: Elvarg" - "breathes fire." was lost). Every tip fits the 2 tip lines and
      * every step instruction, with the longest floor hint, the 6 instruction lines - word-wrapped at the boxes' 192 px in the
