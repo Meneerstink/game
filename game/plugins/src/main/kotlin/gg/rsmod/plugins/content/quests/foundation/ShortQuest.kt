@@ -139,12 +139,20 @@ abstract class ShortQuest(
     }
 
     /**
-     * The foe the Quest Tutor warns [player] about ("Train your combat first!"), or null when they are ready. Foes above the
-     * highest reachable combat level (Damis 174, the ice demon 177) count as that level: a maxed player was told to train at
-     * combat 138 (quests run 2026-10-10).
+     * The combat level recommended for this quest: its strongest foe's level, at most [RECOMMENDED_CAP] (owner 2026-10-10:
+     * "strongest boss level, max 126"), or null for a quest without fights. One rule for the Quest Tutor's warning, the
+     * quest journal's Combat row, the Quest Helper side panel and its overlay before the quest starts.
      */
-    fun combatWarning(player: Player): Pair<String, Int>? =
-        strongestFoe(player)?.takeIf { (_, level) -> player.combatLevel < minOf(level, MAX_COMBAT_LEVEL) }
+    fun recommendedCombat(player: Player): Int? = strongestFoe(player)?.let { (_, level) -> minOf(level, RECOMMENDED_CAP) }
+
+    /** The recommendation as one line ("Recommended: combat level 126+"), or null without fights. */
+    fun recommendedLine(player: Player): String? = recommendedCombat(player)?.let { "Recommended: combat level $it+" }
+
+    /** The foe the Quest Tutor warns [player] about ("Train your combat first!"): below [recommendedCombat], else null. */
+    fun combatWarning(player: Player): Pair<String, Int>? {
+        val recommended = recommendedCombat(player) ?: return null
+        return strongestFoe(player)?.takeIf { player.combatLevel < recommended }
+    }
 
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {
@@ -215,7 +223,7 @@ abstract class ShortQuest(
     companion object {
         const val questCompleteLine = "<col=FF0000>QUEST COMPLETE!"
 
-        /** The highest combat level of revision 667 (RuneScape Wiki "Combat level": 138 with Summoning). */
-        const val MAX_COMBAT_LEVEL = 138
+        /** The highest recommended combat level (owner 2026-10-10): stronger foes (Damis 174, the ice demon 177) count as this. */
+        const val RECOMMENDED_CAP = 126
     }
 }

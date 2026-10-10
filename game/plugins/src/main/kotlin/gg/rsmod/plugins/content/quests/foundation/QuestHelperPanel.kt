@@ -122,6 +122,8 @@ object QuestHelperPanel {
         line(player, "start", 0, "Speak to ${quest.startNpcName} at ${quest.startPlace}.")
         // The short quests ask nothing of a player: no levels, items or earlier quests (owner 2026-09-26, Quest Tutor).
         line(player, "req", 0, "None - every player can do this quest.")
+        // Owner 2026-10-10: the recommended combat level (strongest foe, at most 126) - advice, not a requirement.
+        quest.recommendedLine(player)?.let { line(player, "req", 0, it) }
         quest.steps.forEachIndexed { i, step ->
             val fight = step.fight ?: return@forEachIndexed
             val more = fight.chain.size

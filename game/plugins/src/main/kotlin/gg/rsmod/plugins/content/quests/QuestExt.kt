@@ -100,7 +100,9 @@ fun Player.buildQuestOverview(quest: Quest) {
         setComponentText(interfaceId = 178, component = 55, text = getRequirements(this, quest))
     }
     setComponentText(interfaceId = 178, component = 59, text = "<br>${quest.requiredItems}")
-    setComponentText(interfaceId = 178, component = 62, text = quest.combat)
+    // The short quests: the recommended combat level (owner 2026-10-10, ShortQuest.recommendedCombat), not "None.".
+    val combat = (quest as? gg.rsmod.plugins.content.quests.foundation.ShortQuest)?.recommendedLine(this) ?: quest.combat
+    setComponentText(interfaceId = 178, component = 62, text = combat)
     setComponentText(interfaceId = 178, component = 66, text = "<br>${quest.rewards}")
 
     openInterface(dest = InterfaceDestination.MAIN_SCREEN, interfaceId = 178)

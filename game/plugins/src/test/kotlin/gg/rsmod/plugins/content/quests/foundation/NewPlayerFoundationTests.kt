@@ -484,6 +484,29 @@ class NewPlayerFoundationTests {
     }
 
     /**
+     * Owner 2026-10-10: every short quest shows a recommended combat level - its strongest foe's level, at most 126 - in the
+     * journal, the Quest Helper side panel and overlay; the Quest Tutor warns exactly the players below it.
+     */
+    @Test
+    fun `recommended combat level is the strongest foe capped at 126`() {
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns DEFINITIONS
+        val player = mockk<Player>(relaxed = true)
+        every { player.world } returns world
+        FoundationQuests.SHORT.forEach { quest ->
+            val strongest = quest.strongestFoe(player)
+            assertTrue(strongest != null, "${quest.name} has a fight")
+            val recommended = quest.recommendedCombat(player)!!
+            assertEquals(minOf(strongest!!.second, 126), recommended, quest.name)
+            assertEquals("Recommended: combat level $recommended+", quest.recommendedLine(player))
+            every { player.combatLevel } returns recommended - 1
+            assertTrue(quest.combatWarning(player) != null, "${quest.name}: combat ${recommended - 1} is warned")
+            every { player.combatLevel } returns recommended
+            assertNull(quest.combatWarning(player), "${quest.name}: combat $recommended is not warned")
+        }
+    }
+
+    /**
      * Quests run 2026-10-10: a new account's quest list did not show Desert Treasure, Lunar Diplomacy, King's Ransom or The
      * Temple at Senntisten at all - clientscript 2162 hides a not-started quest whose requirements (2149: struct params
      * 859-898) are not met, and the server lets anyone start them. Every choice quest's struct carries no start requirement

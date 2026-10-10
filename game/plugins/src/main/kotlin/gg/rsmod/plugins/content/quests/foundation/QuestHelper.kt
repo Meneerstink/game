@@ -273,7 +273,9 @@ object QuestHelper {
             }
         if (setting(player, "showOverlayPanel")) {
             val placeName = if (stage <= 0) quest.startPlace else step?.place
-            Panel.show(player, quest, stage, lines.joinToString(" ") + floorHint, placeName, place, step?.tip)
+            // Before the quest starts the tip line carries the recommended combat level (owner 2026-10-10).
+            val tip = if (stage <= 0) quest.recommendedLine(player) else step?.tip?.let { "Tip: $it" }
+            Panel.show(player, quest, stage, lines.joinToString(" ") + floorHint, placeName, place, tip)
         } else {
             Panel.close(player)
         }
@@ -358,7 +360,7 @@ object QuestHelper {
             val dangerous = place != null && gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(place)
             val total = quest.steps.size
             val done = if (stage <= 0) 0 else stage - 1
-            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}:$placeName:$instruction"
+            val key = "${quest.slot}:$stage:$dangerous:${player.interfaces.displayMode}:$placeName:$instruction:$tip"
             if (there == ID && player.attr[SHOWN] == key) return
             if (there != ID) player.openInterface(ID, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN_OVERLAY)
             player.attr[SHOWN] = key
@@ -371,7 +373,7 @@ object QuestHelper {
             player.setComponentText(ID, L.INSTRUCTION, instruction)
             val where = placeName?.replaceFirstChar { it.uppercase() } ?: "-"
             player.setComponentText(ID, L.GOTO, "Go to: $where" + if (dangerous) " <col=ff3030>(Dangerous)</col>" else "")
-            player.setComponentText(ID, L.TIP, tip?.let { "Tip: $it" } ?: "")
+            player.setComponentText(ID, L.TIP, tip ?: "")
         }
 
         /**
