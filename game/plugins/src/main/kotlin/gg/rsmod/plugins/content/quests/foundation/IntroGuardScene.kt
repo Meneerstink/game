@@ -103,6 +103,11 @@ object IntroGuardScene {
     private val ESCAPER_WATCH = Tile(3146, 3516)
     /** Where the world map opens afterwards: the border at the tunnel. */
     val BORDER = Tile(3139, 3512)
+    /**
+     * The INSIDE view's centre never lies north of this row: the camera stands 6 tiles north of it, so a centre on the tunnel's
+     * inner end (3143,3514) put the camera outside the north wall and the guards killed the pker behind it (run 2026-10-09 00:47).
+     */
+    private const val INSIDE_MAX_Z = 3512
 
     // ---- Kits (owner's picks), slot -> item --------------------------------------------------------------------------
     private val PKER_WORN =
@@ -161,6 +166,9 @@ object IntroGuardScene {
     private const val AGS_ENERGY = 50
     private const val RUN_ORB = 750
     private const val RUN_ORB_COMPONENT = 1
+    /** "Call familiar" on the follower details tab (familiar.plugin.kts on_button(662, 49)). */
+    private const val FOLLOWER_TAB = 662
+    private const val CALL_FAMILIAR = 49
 
     fun isActive(player: Player): Boolean = player.attr[ACTIVE] == true
 
@@ -197,6 +205,8 @@ object IntroGuardScene {
                 pker.switchSpellbook(Spellbook.ANCIENT)
                 // Owner: a leech on every landed hit (scene-only; real players keep the 45 s cooldown and the roll).
                 pker.attr[AncientCurses.SCENE_ALWAYS_PROC] = true
+                // Owner 2026-10-10: no leech on the Voidwaker and godsword specs and the javelin throws - its animation hid them.
+                pker.attr[AncientCurses.SCENE_NO_LEECH_WEAPONS] = setOf(Items.VOIDWAKER, Items.ARMADYL_GODSWORD_OR, Items.MORRIGANS_JAVELIN)
                 // Owner 2026-10-08: the guards kill him fast in the Exchange - the real sword guard + Wizguard pick (the crossbow
                 // guard's wiki Ranged 1 missed almost every shot: a 54 s last stand in the 19:52 run).
                 pker.attr[CityGuards.SCENE_COMBINATION] = listOf(CityGuards.Kind.MELEE, CityGuards.Kind.MAGE)
@@ -289,8 +299,15 @@ object IntroGuardScene {
         )
     }
 
-    /** Everything back as it was; safe to call twice (logout mid-scene goes through TutorIntro.restore). */
-    fun cleanUp(player: Player) {
+    /**
+     * Everything back as it was; safe to call twice (logout mid-scene goes through TutorIntro.restore). [lift] = false keeps
+     * the client in scene mode (the end of the scene lifts it once the world map covers the view).
+     */
+    fun cleanUp(
+        player: Player,
+        lift: Boolean = true,
+        keepMap: Boolean = false,
+    ) {
         val world = player.world
         player.attr[CAST]?.let { cast ->
             listOf(cast.pker, cast.escaper).forEach { bot ->
@@ -299,13 +316,19 @@ object IntroGuardScene {
             }
         }
         player.attr.remove(CAST)
+        if (!keepMap) releaseMap(player)
+        player.attr.remove(ACTIVE)
+        if (lift) gg.rsmod.game.model.hud.ClientHud.send(player, "cine|0")
+    }
+
+    /** The copy's mirror and multi-combat regions go; called once the watcher has been moved out of it. Safe to call twice. */
+    fun releaseMap(player: Player) {
+        val world = player.world
         player.attr[MAP]?.let { map ->
             MirroredInstances.unregister(map)
             regionsOf(map).forEach { world.plugins.removeMultiCombatRegion(it) }
         }
         player.attr.remove(MAP)
-        player.attr.remove(ACTIVE)
-        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|0")
     }
 
     // ---- The scene ----------------------------------------------------------------------------------------------------
@@ -361,6 +384,7 @@ object IntroGuardScene {
             var stepAt = 0
             var wasFrozen = false
             var escaperSafe = false
+            var safeAt = -1
             var pkerInGe = false
             var dead = -1
             var lateDeflect = false
@@ -382,8 +406,10 @@ object IntroGuardScene {
             var lastFrozenAt = 0
             var javelinStop = false
             var lastView = View.EAST
+            var cameraBase = player.lastKnownRegionBase
             var deathTile: Tile? = null
             val ditchRow = at(Tile(0, DITCH_Z)).z
+            val insideMaxZ = at(Tile(0, INSIDE_MAX_Z)).z
             fun since() = tick - phaseAt
             // Owner 2026-10-08: specs are 1-ticked - the weapon switch, the special bar and the attack in one tick, from a tile
             // next to him (he is frozen); re-sent every 3 ticks until the energy drops (the swing), at most [limit] ticks.
@@ -396,12 +422,40 @@ object IntroGuardScene {
             }
             // Melee reach: a tile straight next to him (no diagonal hit). Walks there with the current weapon.
             fun inMelee() = (kotlin.math.abs(pker.tile.x - e.tile.x) + kotlin.math.abs(pker.tile.z - e.tile.z)) == 1
-            fun approach() {
-                if (inMelee() || pker.hasMoveDestination()) return
-                val dx = Integer.signum(pker.tile.x - e.tile.x)
-                val dz = Integer.signum(pker.tile.z - e.tile.z)
-                val side = if (kotlin.math.abs(pker.tile.x - e.tile.x) >= kotlin.math.abs(pker.tile.z - e.tile.z)) Tile(e.tile.x + dx, e.tile.z, e.tile.height) else Tile(e.tile.x, e.tile.z + dz, e.tile.height)
-                Bots.walk(pker, side, run = true)
+            /**
+             * Walks next to him for a melee spec; true once he stands there. Owner 2026-10-10: the escaper's geyser titan (size 2)
+             * stood beside him and hid the specs - the pker takes the free side farthest from the titan, as a player picks a side.
+             */
+            fun approach(): Boolean {
+                val titan = Familiar.current(e)
+                // Twice the distance from a tile to the titan's centre (its footprint spans getSize() tiles).
+                fun fromTitan(t: Tile): Int =
+                    titan?.let { kotlin.math.abs(2 * t.x - (2 * it.tile.x + it.getSize() - 1)) + kotlin.math.abs(2 * t.z - (2 * it.tile.z + it.getSize() - 1)) } ?: 0
+                fun underTitan(t: Tile): Boolean =
+                    titan != null && t.x in titan.tile.x until titan.tile.x + titan.getSize() && t.z in titan.tile.z until titan.tile.z + titan.getSize()
+                val sides =
+                    listOf(e.tile.transform(1, 0), e.tile.transform(-1, 0), e.tile.transform(0, 1), e.tile.transform(0, -1)).filter { side ->
+                        !underTitan(side) && !world.collision.isClipped(side) &&
+                            !world.collision.isBlocked(e.tile, gg.rsmod.game.model.Direction.between(e.tile, side), false)
+                    }
+                val best =
+                    sides.maxWithOrNull(compareBy<Tile> { fromTitan(it) }.thenBy { -(kotlin.math.abs(it.x - pker.tile.x) + kotlin.math.abs(it.z - pker.tile.z)) })
+                if (best == null) {
+                    // No free side: the old way, straight at him.
+                    if (inMelee()) return true
+                    if (!pker.hasMoveDestination()) {
+                        val dx = Integer.signum(pker.tile.x - e.tile.x)
+                        val dz = Integer.signum(pker.tile.z - e.tile.z)
+                        val side = if (kotlin.math.abs(pker.tile.x - e.tile.x) >= kotlin.math.abs(pker.tile.z - e.tile.z)) Tile(e.tile.x + dx, e.tile.z, e.tile.height) else Tile(e.tile.x, e.tile.z + dz, e.tile.height)
+                        Bots.walk(pker, side, run = true)
+                    }
+                    return false
+                }
+                // In melee on a side as good as the best one: there.
+                if (inMelee() && !underTitan(pker.tile) && fromTitan(pker.tile) >= fromTitan(best)) return true
+                if (pker.tile.sameAs(best)) return true
+                if (!pker.hasMoveDestination() || pker.movementQueue.peekLast()?.let { !it.sameAs(best) } == true) Bots.walk(pker, best, run = true)
+                return false
             }
             fun awaitSpec(limit: Int = 12): Boolean {
                 if (swungAt >= 0) return true
@@ -491,11 +545,16 @@ object IntroGuardScene {
                         3 -> if (GuardedZones.contains(e.zoneTile())) {
                             Bots.walk(e, at(ESCAPER_WATCH), run = false)
                             escaperSafe = true
+                            safeAt = tick
                         } else if (tick - stepAt >= 6 && !e.hasMoveDestination()) {
                             escaperStep = 2
                         }
                     }
                 }
+                // Through the tunnel he calls his titan, as a player does after a shortcut: a familiar does not crawl after its
+                // owner, and within 12 tiles it is never recalled by itself - it stood outside the wall for the rest of the scene
+                // (run 2026-10-09 00:47, owner: "the escaper laughs with his geyser titan next to him").
+                if (safeAt > 0 && tick - safeAt == 2) Bots.button(e, FOLLOWER_TAB, CALL_FAMILIAR)
                 // Refrozen south of the ditch: the tunnel is clicked again once the freeze is over.
                 if (frozen && escaperStep == 3) {
                     escaperStep = 2
@@ -569,8 +628,7 @@ object IntroGuardScene {
                             // godsword hit). The phase waits for the swing itself (the spec energy drops).
                             if (since() == 0) lateDeflect = true
                             if (specFrom < 0 && swungAt < 0) {
-                                approach()
-                                if (inMelee() || since() >= 8) startSpec(Items.ARMADYL_GODSWORD_OR, Items.INFERNAL_CAPE)
+                                if (approach() || since() >= 8) startSpec(Items.ARMADYL_GODSWORD_OR, Items.INFERNAL_CAPE)
                             } else if (awaitSpec()) {
                                 wield(pker, staffOf(pker), Items.MAGES_BOOK, Items.ELDER_CHAOS_ROBE_OR, Items.IMBUED_GUTHIX_CAPE)
                                 castSpell(pker, e, ICE_BARRAGE)
@@ -648,8 +706,7 @@ object IntroGuardScene {
                             }
                             when (specStep) {
                                 0 -> {
-                                    approach()
-                                    if (inMelee() || since() >= 8) {
+                                    if (approach() || since() >= 8) {
                                         startSpec(Items.VOIDWAKER, Items.INFERNAL_CAPE)
                                         specStep = 1
                                     }
@@ -725,8 +782,12 @@ object IntroGuardScene {
                             if (since() >= 1 && pker.equipment[3]?.id == Items.MORRIGANS_JAVELIN && javelinsAt - javelins(pker) >= 2) {
                                 wield(pker, Items.ZARYTE_CROSSBOW, Items.DIZANAS_QUIVER, Items.ARMADYL_CHAPS)
                             }
-                            if (since() % 2 == 1 && !escaperSafe) Bots.inject(pker, OpPlayer2Message(e.index))
-                            if (escaperSafe) next(Phase.FOLLOW)
+                            // Owner 2026-10-10 ("pker hangt bij tunnel"): once the escaper crawls into the tunnel the pker clicks it
+                            // after him, as a player does - attacking on, his combat path found no way through the wall and walked
+                            // him east along it, and the tunnel was clicked only when the escaper stood in the Exchange (5 s lost).
+                            val escaperCrawling = escaperStep == 3 && e.lock != LockState.NONE
+                            if (since() % 2 == 1 && !escaperSafe && !escaperCrawling) Bots.inject(pker, OpPlayer2Message(e.index))
+                            if (escaperSafe || escaperCrawling) next(Phase.FOLLOW)
                         }
                         Phase.FOLLOW -> {
                             // Into the Exchange after him - through the tunnel; the real guards meet his skull there.
@@ -774,13 +835,18 @@ object IntroGuardScene {
                     // Owner 2026-10-08: he dies fast, his loot lies on the ground, then the introduction goes on.
                     if (tick - dead >= 14) break
                 }
+                // A watcher move that rebuilt his map shifts the client's local tiles under the camera: the glide then started from
+                // a point across the Exchange and showed its roof for seconds (run 2026-10-09 01:38). After a rebuild it cuts.
+                val base = player.lastKnownRegionBase
+                val rebuilt = base != cameraBase
+                cameraBase = base
                 val fallen = deathTile
                 if (fallen != null) {
                     // After the death: the laughing PvMer two tiles from the loot pile, his titan beside him - the same steep
                     // view as the guards' fight (a separate pile-and-PvMer framing centred over the wall, run 22:12).
                     // Cuts, not a glide: after the death the glide never settled and drifted over the wall (run 22:23).
                     if (!player.tile.isWithinRadius(fallen, 5)) player.moveTo(fallen)
-                    if (tick - dead == 1 || tick - dead == 5) camera(player, e, null, 0, View.INSIDE)
+                    if (tick - dead == 1 || tick - dead == 5 || rebuilt) camera(player, e, null, 0, View.INSIDE, insideMaxZ)
                 } else if (map.area.contains(pker.tile)) {
                     keepClose(player, pker, if (pkerInGe || escaperSafe) null else e)
                     // Owner 2026-10-08 ("High, from the north"): past the ditch the camera stands high on the Wilderness side
@@ -789,7 +855,7 @@ object IntroGuardScene {
                     // Owner: "when crossing the ditch we need to see the combat perfectly" - the north view from his run-up on.
                     val view = if (pkerInGe) View.INSIDE else if (e.tile.z <= ditchRow + 6 || pker.tile.z <= ditchRow + 4) View.NORTH else View.EAST
                     // Through the tunnel the camera cuts inside (a glide over the wall started on the trees, run 21:44).
-                    camera(player, pker, if (pkerInGe) null else e, if (view == View.INSIDE && lastView != View.INSIDE) 0 else 4, view)
+                    camera(player, pker, if (pkerInGe) null else e, if (rebuilt || (view == View.INSIDE && lastView != View.INSIDE)) 0 else 4, view, insideMaxZ)
                     lastView = view
                 }
                 task.wait(1)
@@ -800,8 +866,14 @@ object IntroGuardScene {
             )
             TutorIntro.say(task, arrayOf("Your world map shows where Safe and Dangerous", "ground lies. Take a look."))
         } finally {
+            // Owner 2026-10-09: the loot flashed before the map - cine|0 here switched the client back to its own graphics
+            // while the fade to black was only starting. The curtain goes black at once, still in scene mode (no switch).
+            gg.rsmod.game.model.hud.ClientHud.send(player, "cine|black")
             player.openInterface(TutorIntro.FADE_TO_BLACK, InterfaceDestination.MAIN_SCREEN_FULL)
-            cleanUp(player)
+            // The copy stays mirrored until he leaves it (the tour's next move, releaseMap): released here, he stood on
+            // unmirrored ground and his zone box said "Deadman" over the world map and the "Next" choice (run 2026-10-09 00:47).
+            // A move to the hall instead held the world map on "Loading..." for most of its 10 s (run 00:59).
+            cleanUp(player, lift = false, keepMap = true)
         }
         task.wait(2)
         // The world map on that border, the Deadman zones drawn on it (client DeadmanWorldMapOverlay); centred by its varcs.
@@ -809,9 +881,16 @@ object IntroGuardScene {
         val tileId = (BORDER.z and 0x3fff) + ((BORDER.x and 0x3fff) shl 14)
         player.setVarc(622, tileId)
         player.setVarc(674, tileId)
+        // Curtain off, scene mode kept (client RspsCinematic.hide draws the world map in full). Owner 2026-10-10: cine|0 here
+        // switched the client back to the player's own graphics and the map stood on "Loading - please wait" for 8 of its 10 s.
+        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|1")
         var waited = 0
         while (waited++ < MAP_TICKS && player.interfaces.isVisible(755)) task.wait(1)
         if (player.interfaces.isVisible(755)) player.closeFullscreenInterface()
+        // Owner 2026-10-08: after the map the loot stayed in view under the "Next" choice - the client closes the fade with the
+        // map and the reopened one (not loaded after the map) never went black. The client curtain (as at the opening) holds
+        // the black until the next stop's fade covers the view (TutorIntro.liftCurtain).
+        TutorIntro.curtain(player)
         player.openInterface(TutorIntro.FADE_TO_BLACK, InterfaceDestination.MAIN_SCREEN_FULL)
         task.wait(2)
     }
@@ -939,11 +1018,13 @@ object IntroGuardScene {
         other: Player?,
         rate: Int,
         view: View = View.EAST,
+        insideMaxZ: Int = Int.MAX_VALUE,
     ) {
         val base = watcher.lastKnownRegionBase ?: return
         if (subject.invisible) return
         val cx = if (other != null) (subject.tile.x + other.tile.x) / 2 else subject.tile.x
-        val cz = if (other != null) (subject.tile.z + other.tile.z) / 2 else subject.tile.z
+        val midZ = if (other != null) (subject.tile.z + other.tile.z) / 2 else subject.tile.z
+        val cz = if (view == View.INSIDE) minOf(midZ, insideMaxZ) else midZ
         val x = cx - base.x
         val z = cz - base.z
         // The further apart they are, the higher and further back the camera, so both stay in the frame.

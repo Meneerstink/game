@@ -420,6 +420,8 @@ fun Pawn.dealHit(
 
     // Capture the special's identity now: its hit action may execute after the special context ends.
     val deflectAttackToken = attr[AncientCurses.DEFLECT_ATTACK_TOKEN_ATTR]
+    // The intro pker's spec and javelin hits show no leech: decided by the weapon in hand now, not when the hit lands.
+    val sapLeech = (this as? Player)?.let { p -> p.attr[AncientCurses.SCENE_NO_LEECH_WEAPONS]?.contains(p.equipment[3]?.id ?: -1) } != true
     // BATCH 2: Ancient Curses' Sap/Leech/Soul Split trigger once per landed hit - this is the
     // single point every combat style (melee/ranged/magic) routes through, so it only needs
     // wiring here rather than in each *CombatFormula.kt.
@@ -427,7 +429,7 @@ fun Pawn.dealHit(
         hit.addAction {
             val pawn = this@dealHit
             val totalDamage = hit.hitmarks.sumOf { it.damage }
-            AncientCurses.onDamageDealt(pawn, target, totalDamage, curseHitStyle)
+            AncientCurses.onDamageDealt(pawn, target, totalDamage, curseHitStyle, sapLeech)
             // P6 (2026-09-02): reflect/recoil/vengeance now routed through one deterministic
             // dispatcher instead of calling AncientCurses.onIncomingHit directly - Deflect
             // curse is still evaluated first inside it, unchanged, just moved up a level so

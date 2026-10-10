@@ -5,6 +5,7 @@ import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.plugins.content.inter.bank.Bank
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
+import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 import gg.rsmod.util.Misc
 
 load_metadata {
@@ -14,37 +15,13 @@ load_metadata {
     name = "Starter Kit"
     description = "Give items to new accounts."
 
-    properties(
-        // Inventory first row
-        0.getItem to Items.BRONZE_HATCHET,
-        1.getItem to Items.TINDERBOX_590,
-        2.getItem to Items.SMALL_FISHING_NET,
-        3.getItem to Items.SHRIMPS,
-        // Inventory second row
-        4.getItem to Items.BUCKET,
-        5.getItem to Items.EMPTY_POT,
-        6.getItem to Items.BREAD,
-        7.getItem to Items.BRONZE_PICKAXE,
-        // Inventory third row
-        8.getItem to Items.BRONZE_DAGGER,
-        9.getItem to Items.BRONZE_SWORD,
-        10.getItem to Items.WOODEN_SHIELD,
-        11.getItem to Items.SHORTBOW,
-        // Inventory fourth row
-        12.getItem to Items.BRONZE_ARROW,
-        12.getItemAmount to 25,
-        13.getItem to Items.AIR_RUNE,
-        13.getItemAmount to 25,
-        14.getItem to Items.MIND_RUNE,
-        14.getItemAmount to 15,
-        15.getItem to Items.WATER_RUNE,
-        15.getItemAmount to 6,
-        // Inventory sixth row
-        16.getItem to Items.EARTH_RUNE,
-        16.getItemAmount to 4,
-        17.getItem to Items.BODY_RUNE,
-        17.getItemAmount to 2,
-    )
+    // Owner 2026-10-08: a new player starts with an empty inventory - no bronze tools, food or runes. His only item is the
+    // Deadman starter pack, handed out when the introduction is over (NewPlayerStart.grantStarterPack, TutorIntro.finish).
+    properties()
+}
+
+on_item_option(item = NewPlayerConfig.current.starterChestItem, option = "open") {
+    NewPlayerStart.openStarterPack(player)
 }
 
 on_login {
@@ -63,7 +40,9 @@ on_login {
         check(NewPlayerStart.grantStarterCash(player)) { "Unable to grant new-player starter cash." }
         BeginnerProtection.grantOnFirstLogin(player)
 
-        player.setCurrentPrayerPoints(10)
+        // 1:1 prayer points (runetek5.plugin.kts): a full bar at his Prayer level. The old 10 here was the 667 x10 unit and
+        // gave every new account 10 points at Prayer 1 (owner 2026-10-10: "wrm heeft onze character 10 prayer").
+        player.setCurrentPrayerPoints(player.getMaximumPrayerPoints())
         player.setVarp(Bank.LAST_X_INPUT, 50)
         player.attr[CREATION_DATE] = System.currentTimeMillis()
 

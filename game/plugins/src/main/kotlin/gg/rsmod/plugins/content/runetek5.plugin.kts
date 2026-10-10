@@ -189,6 +189,11 @@ on_login {
 
         player.attr[LIFEPOINT_SCALE_MIGRATED_ATTR] = true
     }
+    // Accounts made while the starter kit still set 10 prayer points (x10 unit) at Prayer 1 kept them after the one-time
+    // migration above; prayer points never exceed the Prayer level, so the excess goes (owner 2026-10-10).
+    if (player.getCurrentPrayerPoints() > player.getMaximumPrayerPoints()) {
+        player.setCurrentPrayerPoints(player.getMaximumPrayerPoints())
+    }
 
     // The 667 gameframe reads current HP from varbit 7198, while the Skills tab and the orb's
     // onStatTransmit dependency read Constitution's current level. Keep both client inputs equal

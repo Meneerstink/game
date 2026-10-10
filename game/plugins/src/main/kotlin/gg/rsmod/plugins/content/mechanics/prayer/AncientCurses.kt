@@ -968,6 +968,13 @@ object AncientCurses {
      */
     val SCENE_ALWAYS_PROC = AttributeKey<Boolean>()
 
+    /**
+     * The intro pker's weapons whose hits show no Sap/Leech (owner 2026-10-10: the leech animation hid the Voidwaker and
+     * Armadyl godsword specs and the Morrigan's javelin throw; on every barrage and crossbow hit it stays). Read from the
+     * weapon in hand when the hit is dealt (PawnExt.dealHit), not when it lands - the scene switches weapons in between.
+     */
+    val SCENE_NO_LEECH_WEAPONS = AttributeKey<Set<Int>>()
+
     private fun cooldownTicks(curse: AncientCurse): Int =
         if (curse == AncientCurse.LEECH_SPECIAL_ATTACK) LEECH_SPECIAL_COOLDOWN_TICKS else SAP_LEECH_COOLDOWN_TICKS
 
@@ -1017,6 +1024,7 @@ object AncientCurses {
         target: Pawn,
         damage: Int,
         style: CombatClass = CombatClass.MELEE,
+        sapLeech: Boolean = true,
     ) {
         if (attacker !is Player || damage <= 0) return
         val active = activeCurses(attacker)
@@ -1024,6 +1032,8 @@ object AncientCurses {
         if (active.contains(AncientCurse.SOUL_SPLIT)) {
             applySoulSplit(attacker, target, damage)
         }
+        // [SCENE_NO_LEECH_WEAPONS]: the intro pker's spec and javelin hits.
+        if (!sapLeech) return
 
         fun tryCurse(curse: AncientCurse): Boolean {
             val scene = attacker.attr[SCENE_ALWAYS_PROC] == true

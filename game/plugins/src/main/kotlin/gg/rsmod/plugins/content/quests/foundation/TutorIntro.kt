@@ -26,7 +26,7 @@ import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 /**
  * The new-player introduction by the Quest Tutor (owner 2026-10-07 night run): a 3-4 minute camera tour - the Grand
  * Exchange and its hall, the player's own house, the Guild Cellar, then a Safe, a Guarded and a Dangerous Deadman area -
- * narrated by the Tutor, ending back at the Tutor with "Choose your path" open and the Quest Helper on the first quest.
+ * narrated by the Tutor, ending back at the Tutor with "Choose your path" open (the Quest Helper is the player's own choice).
  * Only new accounts get it on their first login (starter_kit.plugin.kts); anyone can watch it again through the Tutor.
  *
  * The mechanism is ported from Darkan's cutscene engine (com.rs.engine.cutscene.Cutscene + its actions): on start the
@@ -42,6 +42,9 @@ import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 object TutorIntro {
     /** The introduction was shown (or skipped / interrupted) once: new accounts get it only until then. */
     val SEEN = AttributeKey<Boolean>(persistenceKey = "tutor_intro_seen")
+
+    /** The client's black curtain (cine|black) is up between the guard scene's world map and the next stop (never saved). */
+    private val CURTAIN = AttributeKey<Boolean>()
 
     /** The tour is running (never saved). */
     val ACTIVE = AttributeKey<Boolean>()
@@ -112,9 +115,13 @@ object TutorIntro {
                 "the quest lounge",
                 // The hall's first floor (level 1): every hall quest giver stands here (world_edits.json, owner 2026-09-27
                 // layout plus his later moves). The player waits in the lounge's south-east corner, out of frame.
+                // Owner 2026-10-10 ("alle 5 in beeld"): the givers stand all round the lounge (Azzanadra east, Aleck and King
+                // Narnode north, the Archaeologist and the Oneiromancer west), so the camera sweeps east -> north -> west in
+                // ~10 s while the first line names them (framed in the client 2026-10-10, camworld ... 1 1).
                 stand = Tile(3170, 3487, 1),
-                from = Cam(3169, 3485, 380), to = Cam(3166, 3486, 330),
-                lookFrom = Cam(3159, 3493, 120), lookTo = Cam(3160, 3492, 120),
+                from = Cam(3168, 3487, 340), to = Cam(3161, 3487, 340),
+                lookFrom = Cam(3172, 3491, 120), lookTo = Cam(3156, 3491, 120),
+                moveRate = 1, lookRate = 1,
                 lines =
                     listOf(
                         line("Upstairs, in the lounge, the quest givers wait: the", "Archaeologist, Azzanadra, the Oneiromancer, Aleck", "and King Narnode. Take a marble staircase up."),
@@ -164,10 +171,23 @@ object TutorIntro {
             line("And that's 78! Now, your quests."),
             line("Eight quests can be played here. Some choices are", "permanent: pick one quest of a group and it counts", "as done, rewards and all - the others you play", "yourself."),
             line("The Quest Helper plugin, in the 78 Plugins sidebar", "on the right, lists every step, points an arrow at", "who to talk to next and can take you there."),
-            line("I've opened Choose your path for you, and the", "Quest Helper is ready on your first quest. Good luck!"),
+            line("I've opened Choose your path for you. Good luck!"),
         )
 
     fun isActive(player: Player): Boolean = player.attr[ACTIVE] == true
+
+    /** Black over the game view (client RspsCinematic curtain) until [liftCurtain] or [restore]. */
+    fun curtain(player: Player) {
+        player.attr[CURTAIN] = true
+        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|black")
+    }
+
+    /** Lifted under a fade to black, so the view stays black until that fade opens again. */
+    private fun liftCurtain(player: Player) {
+        if (player.attr[CURTAIN] != true) return
+        player.attr.remove(CURTAIN)
+        gg.rsmod.game.model.hud.ClientHud.send(player, "cine|0")
+    }
 
     /** Starts the tour for [player] (a new account's first login, or "Show me the introduction again"). */
     fun start(player: Player) {
@@ -243,6 +263,7 @@ object TutorIntro {
         val player = task.player
         player.openInterface(FADE_TO_BLACK, InterfaceDestination.MAIN_SCREEN_FULL)
         task.wait(2)
+        liftCurtain(player)
         val origin: Tile
         if (scene.house) {
             origin = gg.rsmod.plugins.content.areas.poh.PlayerHouse.build(player) ?: return true.also { closeFade(player) }
@@ -251,6 +272,8 @@ object TutorIntro {
             origin = Tile(0, 0, 0)
             player.moveTo(scene.stand)
         }
+        // Out of the guard scene's copy: its mirror goes now (kept over the world map so the zone box stayed right).
+        IntroGuardScene.releaseMap(player)
         // The map rebuild goes out with this tick's update; the camera works in the new scene's local tiles.
         task.wait(2)
         val base = player.lastKnownRegionBase ?: return true
@@ -317,9 +340,11 @@ object TutorIntro {
     private fun restore(player: Player) {
         // A logout or skip during the guard scene: costume, head icons and lifepoints back (IntroGuardScene).
         if (IntroGuardScene.isActive(player)) IntroGuardScene.cleanUp(player)
+        player.attr.remove(CURTAIN)
         gg.rsmod.game.model.hud.ClientHud.send(player, "cine|0")
         val end = endTile()
         if (player.tile != end) player.moveTo(end)
+        IntroGuardScene.releaseMap(player)
         player.setMinimapState(0)
         player.resetCamera()
         // The player's own camera faces north, at the Tutor (client Camera.forceAngle sets the player camera too).
@@ -331,8 +356,8 @@ object TutorIntro {
 
     /**
      * The tour is over - finished, skipped or interrupted (logout, disconnect, another strong action). The player is back
-     * in the hall, the warning's intro window is closed and the intro counts as seen; the Quest Helper is ready on the
-     * first quest that is not finished yet.
+     * in the hall, the warning's intro window is closed and the intro counts as seen. The Quest Helper does not start by
+     * itself (owner 2026-10-09: "choose your path opens but no questhelper runeliteplugin").
      */
     fun finish(player: Player, interrupted: Boolean) {
         if (!isActive(player)) return
@@ -341,10 +366,11 @@ object TutorIntro {
             closeFade(player)
             restore(player)
         }
+        val firstTime = player.attr[SEEN] != true
         player.attr[SEEN] = true
         DangerWarning.endIntro(player)
-        val first = FoundationQuests.SHORT.firstOrNull { !it.isFinished(player) }
-        if (first != null && QuestHelper.enabled(player) && QuestHelper.tracked(player) == null) QuestHelper.track(player, first)
+        // Owner 2026-10-08: the Deadman starter pack is a new player's only item, handed out once the introduction is over.
+        if (firstTime) gg.rsmod.plugins.content.starter.NewPlayerStart.grantStarterPack(player)
         if (interrupted) player.message("<col=0b6fb8>Talk to the Quest Tutor any time to watch the introduction again.</col>")
     }
 }

@@ -7,8 +7,10 @@ import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.BANK_KEY
+import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.BeforeClass
@@ -56,6 +58,27 @@ class NewPlayerStartTests {
         assertEquals(0, reconnected.bank.getItemCount(Items.COINS_995))
     }
 
+    @Test
+    fun `the Deadman starter pack is handed out once and opens into its contents`() {
+        val config = NewPlayerConfig.DEFAULTS
+        val player = newPlayer(isNew = true)
+
+        NewPlayerStart.grantStarterPack(player)
+        NewPlayerStart.grantStarterPack(player)
+        assertEquals(1, player.inventory.getItemCount(config.starterChestItem))
+        assertEquals(1, player.inventory.occupiedSlotCount)
+
+        NewPlayerStart.openStarterPack(player)
+        assertEquals(0, player.inventory.getItemCount(config.starterChestItem))
+        config.starterChestContents.forEach { (item, amount) -> assertEquals(amount, player.inventory.getItemCount(item)) }
+    }
+
+    @Test
+    fun `the Deadman starter pack has the Open option the handler binds`() {
+        val options = DEFINITIONS.get(ItemDef::class.java, NewPlayerConfig.DEFAULTS.starterChestItem).inventoryMenu
+        assertTrue(options.any { it?.lowercase() == "open" }, "options=${options.toList()}")
+    }
+
     private fun newPlayer(isNew: Boolean): Player {
         val player = mockk<Player>(relaxed = true)
         val attributes = AttributeMap()
@@ -64,6 +87,8 @@ class NewPlayerStartTests {
         }
         every { player.attr } returns attributes
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
+        every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
+        every { player.world.definitions } returns DEFINITIONS
         return player
     }
 
