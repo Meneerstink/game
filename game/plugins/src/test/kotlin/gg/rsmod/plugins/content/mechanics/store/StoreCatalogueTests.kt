@@ -129,4 +129,34 @@ class StoreCatalogueTests {
             }
         }
     }
+
+    /** Owner 2026-10-10 "per categorie": every entry sits in exactly one category button, and All shows each entry once. */
+    @Test
+    fun `every shop splits into its category buttons without losing or doubling an entry`() {
+        StoreCatalogue.Shop.values().forEach { shop ->
+            val all = StoreCatalogue.entries(shop)
+            val sections = StoreCatalogue.sections(shop)
+            assertEquals(StoreCatalogue.Section.ALL, sections.first())
+            assertTrue(sections.size <= gg.rsmod.game.tools.importer.StoreInterfaceImportTool.SECTION_COUNT, "$shop: ${sections.size} buttons")
+            val split = sections.drop(1).flatMap { StoreCatalogue.entries(shop, it) }
+            assertEquals(all.size, split.size, "$shop")
+            assertEquals(all.toSet(), split.toSet(), "$shop")
+            assertEquals(all.toSet(), StoreCatalogue.entries(shop, StoreCatalogue.Section.ALL).toSet())
+            assertEquals(all.size, StoreCatalogue.entries(shop, StoreCatalogue.Section.ALL).size)
+            sections.drop(1).forEach { assertTrue(StoreCatalogue.entries(shop, it).isNotEmpty(), "$shop shows an empty $it button") }
+        }
+    }
+
+    @Test
+    fun `kits, pets, capes and cosmetics land in their own category`() {
+        val section = { item: Int -> StoreCatalogue.section(StoreCatalogue.ENTRIES.first { it.purchaseItem == item && it.kind != StoreCatalogue.Kind.UNLOCK }) }
+        assertEquals(StoreCatalogue.Section.KITS, section(Items.ARMADYL_GODSWORD_ORNAMENT_KIT))
+        assertEquals(StoreCatalogue.Section.KITS, section(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT))
+        assertEquals(StoreCatalogue.Section.GEAR, section(Items.ANCESTRAL_HAT))
+        assertEquals(StoreCatalogue.Section.GEAR, section(Items.RING_OF_THE_GODS_I))
+        assertEquals(StoreCatalogue.Section.PETS, section(Items.HELLKITTEN))
+        assertEquals(StoreCatalogue.Section.CAPES, section(Items.IMBUED_ZAMORAK_CAPE))
+        assertEquals(StoreCatalogue.Section.COSMETICS, section(Items.SANTA_HAT))
+        StoreCatalogue.ENTRIES.filter { it.kind == StoreCatalogue.Kind.UNLOCK }.forEach { assertEquals(StoreCatalogue.Section.CAPES, StoreCatalogue.section(it)) }
+    }
 }

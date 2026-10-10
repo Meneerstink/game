@@ -60,6 +60,47 @@ object StoreCatalogue {
         NONE(""),
     }
 
+    /**
+     * The category buttons of the store window (owner 2026-10-10: "per categorie" - kits, pets, capes / max cape looks, cosmetics;
+     * the gear the shops also sell gets its own button). Derived from [Entry.kind] and [Entry.category], so a new entry never needs
+     * a second list; the website shop reads the same mapping.
+     */
+    enum class Section(val label: String) {
+        ALL("All"),
+        KITS("Kits"),
+        GEAR("Gear"),
+        PETS("Pets"),
+        CAPES("Capes"),
+        COSMETICS("Cosmetics"),
+    }
+
+    private val CAPE_CATEGORIES = setOf("Imbued capes", "Max cape looks")
+    private val PET_CATEGORIES = setOf("Pets", StorePets.CATEGORY)
+    private val COSMETIC_CATEGORIES = setOf("Prestige cosmetics", "Costumes", "Masks", "Holiday cosmetics", "Clue cosmetics")
+
+    fun section(entry: Entry): Section =
+        when {
+            entry.kind == Kind.KIT -> Section.KITS
+            entry.kind == Kind.UNLOCK || entry.category in CAPE_CATEGORIES -> Section.CAPES
+            entry.category in PET_CATEGORIES -> Section.PETS
+            entry.category in COSMETIC_CATEGORIES -> Section.COSMETICS
+            else -> Section.GEAR
+        }
+
+    /** The buttons a shop shows: All, then every category it has stock in, in [Section] order. */
+    fun sections(shop: Shop): List<Section> = listOf(Section.ALL) + Section.values().filter { s -> s != Section.ALL && entries(shop).any { section(it) == s } }
+
+    /** A shop's entries in one category; [Section.ALL] lists every category one after another, each in the [entries] order. */
+    fun entries(
+        shop: Shop,
+        section: Section,
+    ): List<Entry> =
+        if (section == Section.ALL) {
+            entries(shop).sortedBy { section(it).ordinal }
+        } else {
+            entries(shop).filter { section(it) == section }
+        }
+
     enum class Kind {
         /** An ornament / colour kit, paint, mix or upgrade kit: bought alone, attached by the player to the base item. */
         KIT,
@@ -291,7 +332,8 @@ object StoreCatalogue {
             Items.STATIUSS_FULL_HELM, Items.STATIUSS_PLATEBODY, Items.STATIUSS_PLATELEGS, Items.STATIUSS_WARHAMMER,
             Items.MORRIGANS_COIF, Items.MORRIGANS_LEATHER_BODY, Items.MORRIGANS_LEATHER_CHAPS, Items.MORRIGANS_JAVELIN, Items.MORRIGANS_THROWING_AXE,
             Items.ZURIELS_HOOD, Items.ZURIELS_ROBE_TOP, Items.ZURIELS_ROBE_BOTTOM, Items.ZURIELS_STAFF)
-            .forEach { list += itemEntry(m, it, 1_500, "PvP armour") }
+            // "PvP gear", not "PvP armour": the list holds the weapons too (owner 2026-10-10 store check: the javelin read "PvP armour").
+            .forEach { list += itemEntry(m, it, 1_500, "PvP gear") }
         listOf(Items.ELDER_CHAOS_HOOD, Items.ELDER_CHAOS_TOP, Items.ELDER_CHAOS_ROBE)
             .forEach { list += itemEntry(m, it, 300, "PvP equipment") }
         list += itemEntry(m, Items.HEAVY_BALLISTA, 1_000, "PvP equipment")

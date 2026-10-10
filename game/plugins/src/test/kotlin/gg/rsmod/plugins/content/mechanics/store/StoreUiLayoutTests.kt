@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
  * render code addresses grid and later components only through the live layout.
  */
 class StoreUiLayoutTests {
-    private val layouts = listOf(StoreInterfaceImportTool.CURRENT, StoreInterfaceImportTool.LEGACY)
+    private val layouts = listOf(StoreInterfaceImportTool.CURRENT, StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.PREVIOUS, StoreInterfaceImportTool.LEGACY)
 
     @Test
     fun `every button of both window layouts is bound, Prev page included`() {
@@ -21,6 +21,11 @@ class StoreUiLayoutTests {
                 assertTrue(it in StoreUi.CLICKABLE, "${l.columns}x${l.rows}: component $it not bound")
             }
             (0 until l.slotCount).forEach { assertTrue(l.slotFirst + it in StoreUi.CLICKABLE, "${l.columns}x${l.rows}: slot $it not bound") }
+            if (l.sections) {
+                (0 until StoreInterfaceImportTool.SECTION_COUNT).forEach {
+                    assertTrue(l.sectionFirst + it * StoreInterfaceImportTool.SECTION_STRIDE in StoreUi.CLICKABLE, "category button $it not bound")
+                }
+            }
         }
         assertTrue(StoreUi.CLOSE in StoreUi.CLICKABLE)
         assertTrue(StoreInterfaceImportTool.CURRENT.slotCount > StoreInterfaceImportTool.LEGACY.slotCount, "more kits a page")
@@ -41,6 +46,7 @@ class StoreUiLayoutTests {
                 "SLOT_COUNT", "SLOT_FIRST", "SLOT_BACKGROUND_FIRST", "SELECT_GLOW_FIRST", "SELECT_OUTLINE_FIRST", "PAGE_PREVIOUS",
                 "PAGE_TEXT", "PAGE_NEXT", "PREVIEW_MODEL", "CAROUSEL_PREVIOUS", "CAROUSEL_NEXT", "RESULT_NAME", "KIT_NAME",
                 "REQUIREMENT", "COSMETIC", "PRICE_ICON", "PRICE", "BUY_LAYER", "BUY_GRAPHIC", "BUY_TEXT", "EMPTY_TEXT",
+                "SECTION_FIRST", "OWNED", "TRADEABLE",
             )
         val offenders = moved.filter { Regex("""Ui\.$it\b""").containsMatchIn(text) }
         assertEquals(emptyList<String>(), offenders, "StoreUi must use layout(player) for these")

@@ -57,39 +57,76 @@ object StoreArtTool {
     const val CLOSE = BASE + 19
     const val COUNT = 20
 
+    /**
+     * Category buttons (owner 2026-10-10): one lit button per shop theme plus one shared unlit button. The 7941.. block ends at
+     * 7962 (7961/7962 belong to another tool), so these start in the free 7963..8099 gap (probe 2026-10-10, both caches).
+     */
+    const val SECTION_BASE = 8060
+    const val SECTION_NORMAL = SECTION_BASE
+    const val SECTION_SELECTED_FIRST = SECTION_BASE + 1 // 8061..8063 in tab order
+    const val SECTION_SPRITE_COUNT = 4
+
+    /** Slot frames by tier (owner 2026-10-10 "luxer"): Premium green, Elite blue, Prestige purple; Basic and untiered use [SLOT]. */
+    const val SLOT_TIER_FIRST = SECTION_BASE + SECTION_SPRITE_COUNT // 8064..8066
+    val SLOT_TIER_COLOURS = listOf(Color(0x3CD33C), Color(0x3FA7FF), Color(0xC77DFF))
+
+    /**
+     * Prev / Next page buttons (owner 2026-10-11: "make the prev page and next page button in the stores nice"): a glossy pill
+     * with a gold arrow and its label painted in, and a dimmed state for the first / last page. 8067 Prev, 8068 Next, 8069 Prev
+     * dimmed, 8070 Next dimmed.
+     */
+    const val PAGE_BUTTON_FIRST = SLOT_TIER_FIRST + 3 // 8067..8070
+    const val PAGE_BUTTON_WIDTH = 88
+    const val PAGE_BUTTON_HEIGHT = 24
+
     // ---- geometry shared with StoreInterfaceImportTool ------------------------------------------------------------
 
     // Owner 2026-10-03 (bug 210545): "can be a bit bigger like 8 procent bigger visually also make it shows more items on one
-    // page". The window grew from 488x330 to 527x360 (+8% wide, +9% high; the header moved up 4 px to make room), the grid from
-    // 6x5 to 7x6 slots (42 a page instead of 30) and the showcase from 208x120 to 209x138. The owner plays resizable (gameframe
-    // 746); the fixed-mode viewport (512x334) clips the outer frame by a few pixels.
-    const val WIDTH = 527
-    const val HEIGHT = 360
+    // page" (488x330 -> 527x360, 6x5 -> 7x6 grid). Owner 2026-10-10 ("check alle stores ... betere leesbaarheid", then "kan veel
+    // beter"): 660x470 in the resizable game view (owner choice; the 512x334 fixed viewport clips it), a category row under the
+    // shop tabs, a 7x7 grid, a tall showcase for a big model and a roomy card where every fact has its own row.
+    const val WIDTH = 660
+    const val HEIGHT = 470
     const val HEADER_SHIFT = -4
     const val TAB_Y = 46
-    const val TAB_WIDTH = 162
-    const val TAB_HEIGHT = 26
+    const val TAB_WIDTH = 206
+    const val TAB_HEIGHT = 28
     const val TAB_X = 14
-    const val TAB_PITCH = 168
+    const val TAB_PITCH = 213
+
+    /** Category buttons (All / Kits / Gear / Pets / Capes / Cosmetics) under the shop tabs. */
+    const val SECTION_Y = 80
+    const val SECTION_X = 14
+    const val SECTION_WIDTH = 102
+    const val SECTION_HEIGHT = 24
+    const val SECTION_PITCH = 106
+    const val SECTION_COUNT = 6
     const val STRIP_X = 14
-    const val STRIP_Y = 76
-    const val STRIP_WIDTH = 499
-    const val STRIP_HEIGHT = 20
+    const val STRIP_Y = 110
+    const val STRIP_WIDTH = 632
+    const val STRIP_HEIGHT = 24
     const val GRID_X = 14
-    const val GRID_Y = 100
+    const val GRID_Y = 140
     const val GRID_WIDTH = 282
-    const val GRID_HEIGHT = 230
-    const val SHOW_X = 304
-    const val SHOW_Y = 100
-    const val SHOW_WIDTH = 209
-    const val SHOW_HEIGHT = 138
-    const val CARD_X = 304
-    const val CARD_Y = 242
-    const val CARD_WIDTH = 209
-    const val CARD_HEIGHT = 70
+    const val GRID_HEIGHT = 282
+
+    /** Page bar under the grid (Prev / page / Next), level with the Buy button. */
+    const val NAV_Y = 428
+    const val NAV_HEIGHT = 28
+    const val SHOW_X = 306
+    const val SHOW_Y = 140
+    const val SHOW_WIDTH = 340
+    const val SHOW_HEIGHT = 160
+    const val CARD_X = 306
+    const val CARD_Y = 304
+    const val CARD_WIDTH = 340
+    const val CARD_HEIGHT = 120
+
+    /** The lit price band at the bottom of the card. */
+    const val PRICE_BAND_HEIGHT = 24
     const val SLOT_SIZE = 36
-    const val BUY_WIDTH = 162
-    const val BUY_HEIGHT = 26
+    const val BUY_WIDTH = 220
+    const val BUY_HEIGHT = 28
     const val ICON_SIZE = 16
     const val ARROW_WIDTH = 18
     const val ARROW_HEIGHT = 28
@@ -363,7 +400,7 @@ object StoreArtTool {
             // Faint diagonal light streaks.
             g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.05f)
             g.color = Color.WHITE
-            for (i in 0 until 5) {
+            for (i in 0 until 7) {
                 val x0 = 40.0 + i * 120
                 val p = GeneralPath()
                 p.moveTo(x0, 0.0)
@@ -433,8 +470,9 @@ object StoreArtTool {
             // Panels painted into the window so the components only carry text, items and buttons.
             inset(g, STRIP_X.toDouble(), STRIP_Y.toDouble(), STRIP_WIDTH.toDouble(), STRIP_HEIGHT.toDouble(), 6.0, alpha(t.accentLight, 0.45), 0.45)
             inset(g, GRID_X.toDouble(), GRID_Y.toDouble(), GRID_WIDTH.toDouble(), GRID_HEIGHT.toDouble(), 9.0, alpha(GOLD, 0.45), 0.55)
+            inset(g, GRID_X.toDouble(), NAV_Y.toDouble(), GRID_WIDTH.toDouble(), NAV_HEIGHT.toDouble(), 7.0, alpha(GOLD, 0.35), 0.5)
             showcase(g, t)
-            inset(g, CARD_X.toDouble(), CARD_Y.toDouble(), CARD_WIDTH.toDouble(), CARD_HEIGHT.toDouble(), 8.0, alpha(t.accentLight, 0.35), 0.45)
+            card(g, t)
 
             // Outer gold frame with jewelled corners.
             goldBorder(g, 3.5, 3.5, w - 7, h - 7, 14.0, 5f)
@@ -450,7 +488,49 @@ object StoreArtTool {
         }
     }
 
-    /** The preview stage: a spotlight in the theme colour, light rays and a glowing pedestal. */
+    /**
+     * The item card (owner 2026-10-10 "betere leesbaarheid"): a near-black glass panel so the bitmap text has full contrast, a thin
+     * accent rule under the name and a lit price band at the bottom in the theme colour.
+     */
+    private fun card(
+        g: Graphics2D,
+        t: Theme,
+    ) {
+        val x = CARD_X.toDouble()
+        val y = CARD_Y.toDouble()
+        val w = CARD_WIDTH.toDouble()
+        val h = CARD_HEIGHT.toDouble()
+        inset(g, x, y, w, h, 8.0, alpha(t.accentLight, 0.45), 0.78)
+        // accent rule under the item name
+        g.paint = LinearGradientPaint(
+            Point2D.Double(x + 8, 0.0),
+            Point2D.Double(x + w - 8, 0.0),
+            floatArrayOf(0f, 0.5f, 1f),
+            arrayOf(alpha(t.accentLight, 0.0), alpha(t.accentLight, 0.75), alpha(t.accentLight, 0.0)),
+        )
+        g.stroke = BasicStroke(1f)
+        g.draw(java.awt.geom.Line2D.Double(x + 8, y + 24.5, x + w - 8, y + 24.5))
+        // price band
+        val by = y + h - PRICE_BAND_HEIGHT - 3
+        val band = round(x + 4, by, w - 8, PRICE_BAND_HEIGHT.toDouble(), 6.0)
+        g.paint = LinearGradientPaint(
+            Point2D.Double(x, 0.0),
+            Point2D.Double(x + w, 0.0),
+            floatArrayOf(0f, 0.6f, 1f),
+            arrayOf(alpha(t.glow, 0.34), alpha(t.glow, 0.12), alpha(t.glow, 0.02)),
+        )
+        g.fill(band)
+        g.paint = vertical(by, by + 8, 0f to alpha(Color.WHITE, 0.10), 1f to alpha(Color.WHITE, 0.0))
+        g.fill(band)
+        g.color = alpha(GOLD, 0.55)
+        g.stroke = BasicStroke(1f)
+        g.draw(band)
+    }
+
+    /**
+     * The preview stage. Owner 2026-10-10 ("lichtstralen storen"): no light rays - a dark stage with one soft halo in the theme
+     * colour behind the item, so the item itself is what catches the eye, and a glowing pedestal under it.
+     */
     private fun showcase(
         g: Graphics2D,
         t: Theme,
@@ -460,39 +540,27 @@ object StoreArtTool {
         val w = SHOW_WIDTH.toDouble()
         val h = SHOW_HEIGHT.toDouble()
         val shape = round(x, y, w, h, 9.0)
-        g.paint = vertical(y, y + h, 0f to alpha(Color.BLACK, 0.55), 1f to alpha(Color.BLACK, 0.75))
+        g.paint = vertical(y, y + h, 0f to alpha(Color.BLACK, 0.62), 1f to alpha(Color.BLACK, 0.8))
         g.fill(shape)
         val old = g.clip
         g.clip = shape
+        // one soft halo behind the item
         g.paint = RadialGradientPaint(
-            Point2D.Double(x + w / 2, y + h * 0.45),
-            (h * 0.95).toFloat(),
-            floatArrayOf(0f, 0.55f, 1f),
-            arrayOf(alpha(t.glow, 0.42), alpha(t.glow, 0.12), alpha(t.glow, 0.0)),
+            Point2D.Double(x + w / 2, y + h * 0.46),
+            (h * 0.62).toFloat(),
+            floatArrayOf(0f, 0.6f, 1f),
+            arrayOf(alpha(t.glow, 0.26), alpha(t.glow, 0.08), alpha(t.glow, 0.0)),
         )
         g.fill(shape)
-        // light rays from the top
-        g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.09f)
-        g.color = Color.WHITE
-        for (i in -2..2) {
-            val p = GeneralPath()
-            p.moveTo(x + w / 2 + i * 6 - 3, y)
-            p.lineTo(x + w / 2 + i * 6 + 3, y)
-            p.lineTo(x + w / 2 + i * 34 + 14, y + h)
-            p.lineTo(x + w / 2 + i * 34 - 14, y + h)
-            p.closePath()
-            g.fill(p)
-        }
-        g.composite = AlphaComposite.SrcOver
         // pedestal
-        val pedestal = Ellipse2D.Double(x + w / 2 - 70, y + h - 24, 140.0, 16.0)
+        val pedestal = Ellipse2D.Double(x + w / 2 - 88, y + h - 24, 176.0, 16.0)
         g.paint = RadialGradientPaint(
             Point2D.Double(x + w / 2, y + h - 16),
-            74f,
+            94f,
             floatArrayOf(0f, 1f),
             arrayOf(alpha(t.glow, 0.55), alpha(t.glow, 0.0)),
         )
-        g.fill(Ellipse2D.Double(x + w / 2 - 90, y + h - 34, 180.0, 36.0))
+        g.fill(Ellipse2D.Double(x + w / 2 - 112, y + h - 34, 224.0, 36.0))
         g.paint = vertical(y + h - 24, y + h - 8, 0f to alpha(t.bgTop.brighter(), 0.95), 1f to alpha(Color.BLACK, 0.95))
         g.fill(pedestal)
         g.paint = goldVertical(y + h - 24, y + h - 8)
@@ -552,6 +620,33 @@ object StoreArtTool {
         }
     }
 
+    /** A category button: glossy theme-lit pill when [themeIndex] is selected, a dark glass pill (shared) otherwise. */
+    fun section(themeIndex: Int?): BufferedImage =
+        canvas(SECTION_WIDTH, SECTION_HEIGHT) { g ->
+            val w = SECTION_WIDTH.toDouble()
+            val h = SECTION_HEIGHT.toDouble()
+            val shape = round(1.0, 1.0, w - 2, h - 2, (h - 2) / 2)
+            if (themeIndex != null) {
+                val t = THEMES[themeIndex]
+                glow(g, shape, t.glow, 2, 0.35)
+                g.paint = vertical(0.0, h, 0f to t.accentLight, 0.55f to t.accentDark.brighter(), 1f to t.accentDark)
+                g.fill(shape)
+                g.paint = vertical(0.0, h / 2, 0f to alpha(Color.WHITE, 0.5), 1f to alpha(Color.WHITE, 0.06))
+                g.fill(round(4.0, 2.0, w - 8, h / 2 - 1, (h / 2 - 1) / 2))
+                g.paint = goldVertical(0.0, h)
+                g.stroke = BasicStroke(1.5f)
+                g.draw(shape)
+            } else {
+                g.paint = vertical(0.0, h, 0f to Color(0x2A2632), 1f to Color(0x0E0C12))
+                g.fill(shape)
+                g.paint = vertical(0.0, h / 2, 0f to alpha(Color.WHITE, 0.10), 1f to alpha(Color.WHITE, 0.0))
+                g.fill(round(4.0, 2.0, w - 8, h / 2 - 1, (h / 2 - 1) / 2))
+                g.color = alpha(GOLD_MID, 0.7)
+                g.stroke = BasicStroke(1f)
+                g.draw(shape)
+            }
+        }
+
     fun slot(): BufferedImage =
         canvas(SLOT_SIZE, SLOT_SIZE) { g ->
             val s = SLOT_SIZE.toDouble()
@@ -567,6 +662,66 @@ object StoreArtTool {
             g.draw(shape)
             g.color = alpha(Color.WHITE, 0.08)
             g.draw(java.awt.geom.Line2D.Double(6.0, s - 2.0, s - 6, s - 2.0))
+        }
+
+    /** A slot of a tiered item: the glass slot lit from below in the tier colour, with a tier-coloured rim and corner gem. */
+    fun slotTier(colour: Color): BufferedImage =
+        canvas(SLOT_SIZE, SLOT_SIZE) { g ->
+            val s = SLOT_SIZE.toDouble()
+            val shape = round(0.5, 0.5, s - 1, s - 1, 6.0)
+            g.paint = vertical(0.0, s, 0f to Color(0x2C2934), 1f to Color(0x121016))
+            g.fill(shape)
+            g.paint = RadialGradientPaint(Point2D.Double(s / 2, s * 0.85), (s * 0.75).toFloat(), floatArrayOf(0f, 1f), arrayOf(alpha(colour, 0.32), alpha(colour, 0.0)))
+            g.fill(shape)
+            g.paint = vertical(0.0, 6.0, 0f to alpha(Color.BLACK, 0.4), 1f to alpha(Color.BLACK, 0.0))
+            g.fill(shape)
+            g.color = alpha(colour, 0.85)
+            g.stroke = BasicStroke(1.2f)
+            g.draw(shape)
+            val corner = gem(s - 6.0, 6.0, 3.0)
+            g.paint = vertical(2.0, 9.0, 0f to colour.brighter(), 1f to colour.darker())
+            g.fill(corner)
+            g.color = alpha(Color.WHITE, 0.6)
+            g.stroke = BasicStroke(0.6f)
+            g.draw(corner)
+        }
+
+    /** A page button: "Prev" with a left arrow or "Next" with a right arrow, lit when it can be used, dimmed when it cannot. */
+    fun pageButton(
+        next: Boolean,
+        enabled: Boolean,
+    ): BufferedImage =
+        canvas(PAGE_BUTTON_WIDTH, PAGE_BUTTON_HEIGHT) { g ->
+            val w = PAGE_BUTTON_WIDTH.toDouble()
+            val h = PAGE_BUTTON_HEIGHT.toDouble()
+            if (!enabled) g.composite = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.38f)
+            val shape = round(1.0, 1.0, w - 2, h - 2, (h - 2) / 2)
+            g.paint = vertical(0.0, h, 0f to Color(0x3A3346), 0.5f to Color(0x221E2A), 1f to Color(0x100E14))
+            g.fill(shape)
+            g.paint = vertical(0.0, h / 2, 0f to alpha(Color.WHITE, 0.22), 1f to alpha(Color.WHITE, 0.02))
+            g.fill(round(4.0, 2.0, w - 8, h / 2 - 1, (h / 2 - 1) / 2))
+            g.paint = goldVertical(0.0, h)
+            g.stroke = BasicStroke(1.4f)
+            g.draw(shape)
+            // arrow: a small gold chevron on the outer side
+            val ax = if (next) w - 16 else 16.0
+            val dir = if (next) 1 else -1
+            val arrow = GeneralPath()
+            arrow.moveTo(ax - dir * 4.5, h / 2 - 6)
+            arrow.lineTo(ax + dir * 3.5, h / 2)
+            arrow.lineTo(ax - dir * 4.5, h / 2 + 6)
+            arrow.lineTo(ax - dir * 1.5, h / 2)
+            arrow.closePath()
+            if (enabled) glow(g, arrow, GOLD_HI, 2, 0.5)
+            g.paint = goldVertical(h / 2 - 6, h / 2 + 6)
+            g.fill(arrow)
+            // label beside the arrow
+            val label = textShape(g, if (next) "Next" else "Prev", font(12.5f), if (next) w / 2 - 6 else w / 2 + 6, h / 2 + 4.5, 0.04f)
+            g.color = alpha(Color.BLACK, 0.7)
+            g.fill(AffineTransform.getTranslateInstance(1.0, 1.2).createTransformedShape(label))
+            val lb = label.bounds2D
+            g.paint = vertical(lb.minY, lb.maxY, 0f to Color(0xFFF1B8), 1f to Color(0xD9A845))
+            g.fill(label)
         }
 
     fun slotGlow(): BufferedImage =
@@ -697,6 +852,13 @@ object StoreArtTool {
         out[ARROW_RIGHT] = arrow(false)
         out[CLOSE] = close()
         check(out.size == COUNT && out.keys == (BASE until BASE + COUNT).toSet()) { "sprite ids must be $BASE..${BASE + COUNT - 1}" }
+        out[SECTION_NORMAL] = section(null)
+        for (i in THEMES.indices) out[SECTION_SELECTED_FIRST + i] = section(i)
+        SLOT_TIER_COLOURS.forEachIndexed { i, colour -> out[SLOT_TIER_FIRST + i] = slotTier(colour) }
+        out[PAGE_BUTTON_FIRST] = pageButton(next = false, enabled = true)
+        out[PAGE_BUTTON_FIRST + 1] = pageButton(next = true, enabled = true)
+        out[PAGE_BUTTON_FIRST + 2] = pageButton(next = false, enabled = false)
+        out[PAGE_BUTTON_FIRST + 3] = pageButton(next = true, enabled = false)
         return out
     }
 

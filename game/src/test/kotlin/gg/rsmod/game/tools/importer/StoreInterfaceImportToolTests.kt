@@ -25,22 +25,70 @@ class StoreInterfaceImportToolTests {
     }
 
     /**
-     * Owner 2026-10-03 (bug 210545): the window ~8% larger than the 488x330 one and more kits a page than its 6x5 grid. The owner
-     * plays resizable (gameframe 746); in fixed mode (512x334 main screen, window centred) only the painted outer frame may be
-     * clipped - every button, text and slot must stay inside that viewport.
+     * Owner 2026-10-03 (bug 210545): larger than the 488x330 window with more kits a page than its 6x5 grid. Owner 2026-10-10
+     * ("betere leesbaarheid", multiple choice "Groter, alleen resizable"): larger again than the 527x360 one; it is built for the
+     * resizable game view (the 512x334 fixed viewport clips it, the owner's choice), so it only has to fit the smallest resizable
+     * client (765x503).
      */
     @Test
-    fun `the window is 8 percent larger, shows more kits a page and stays usable in fixed mode`() {
-        assertTrue(StoreInterfaceImportTool.WIDTH >= 488 * 108 / 100 && StoreInterfaceImportTool.HEIGHT >= 330 * 108 / 100, "window ${StoreInterfaceImportTool.WIDTH}x${StoreInterfaceImportTool.HEIGHT}")
-        assertTrue(StoreInterfaceImportTool.SLOT_COUNT > 30, "kits a page: ${StoreInterfaceImportTool.SLOT_COUNT}")
-        val dx = (StoreInterfaceImportTool.WIDTH - 512) / 2
-        val dy = (StoreInterfaceImportTool.HEIGHT - 334) / 2
-        val offenders =
-            StoreInterfaceImportTool.components(fonts)
-                .filter { it.parent == StoreInterfaceImportTool.WINDOW && it.id > StoreInterfaceImportTool.BACKGROUND_FIRST + StoreInterfaceImportTool.TAB_COUNT - 1 }
-                .filter { it.x - dx < 0 || it.y - dy < 0 || it.x - dx + it.width > 512 || it.y - dy + it.height > 334 }
-                .map { "${it.id} (${it.x},${it.y} ${it.width}x${it.height})" }
-        assertEquals(emptyList<String>(), offenders, "clipped in fixed mode")
+    fun `the window is larger than the 2026-10-03 one, shows 49 items a page and fits the smallest resizable client`() {
+        assertTrue(StoreInterfaceImportTool.WIDTH > 527 && StoreInterfaceImportTool.HEIGHT > 360, "window ${StoreInterfaceImportTool.WIDTH}x${StoreInterfaceImportTool.HEIGHT}")
+        assertTrue(StoreInterfaceImportTool.WIDTH <= 765 && StoreInterfaceImportTool.HEIGHT <= 503, "window ${StoreInterfaceImportTool.WIDTH}x${StoreInterfaceImportTool.HEIGHT}")
+        assertEquals(49, StoreInterfaceImportTool.SLOT_COUNT)
+    }
+
+    /** Owner 2026-10-10: category buttons in one row under the shop tabs, none overlapping a tab, the strip or another button. */
+    @Test
+    fun `the category buttons sit in one row between the shop tabs and the info strip`() {
+        val byId = StoreInterfaceImportTool.components(fonts).associateBy { it.id }
+        val buttons = (0 until StoreInterfaceImportTool.SECTION_COUNT).map { byId.getValue(StoreInterfaceImportTool.SECTION_FIRST + it * StoreInterfaceImportTool.SECTION_STRIDE) }
+        buttons.forEach {
+            assertEquals(listOf("View"), it.ops)
+            assertTrue(it.y >= StoreArtTool.TAB_Y + StoreArtTool.TAB_HEIGHT && it.y + it.height <= StoreArtTool.STRIP_Y, "button ${it.id} at y=${it.y}")
+        }
+        buttons.zipWithNext().forEach { (a, b) -> assertTrue(a.x + a.width < b.x, "buttons ${a.id} and ${b.id} overlap") }
+        assertTrue(buttons.last().x + buttons.last().width <= StoreArtTool.STRIP_X + StoreArtTool.STRIP_WIDTH)
+        (0 until StoreInterfaceImportTool.SECTION_COUNT).forEach {
+            val base = StoreInterfaceImportTool.SECTION_FIRST + it * StoreInterfaceImportTool.SECTION_STRIDE
+            assertEquals(base, byId.getValue(base + StoreInterfaceImportTool.SECTION_GRAPHIC_OFFSET).parent)
+            assertEquals(base, byId.getValue(base + StoreInterfaceImportTool.SECTION_TEXT_OFFSET).parent)
+        }
+    }
+
+    /** Owner 2026-10-10 "onduidelijk wat je koopt": every card line has its own row inside the card, above the price band. */
+    @Test
+    fun `the card lines do not overlap each other or the price band`() {
+        val byId = StoreInterfaceImportTool.components(fonts).associateBy { it.id }
+        val lines =
+            listOf(
+                StoreInterfaceImportTool.RESULT_NAME, StoreInterfaceImportTool.KIT_NAME, StoreInterfaceImportTool.REQUIREMENT,
+                StoreInterfaceImportTool.TRADEABLE, StoreInterfaceImportTool.COSMETIC,
+            ).map { byId.getValue(it) }
+        lines.zipWithNext().forEach { (a, b) -> assertTrue(a.y + a.height <= b.y, "card lines ${a.id} and ${b.id} overlap") }
+        val price = byId.getValue(StoreInterfaceImportTool.PRICE)
+        assertTrue(lines.last().y + lines.last().height <= price.y, "effect line overlaps the price")
+        assertTrue(price.y + price.height <= StoreArtTool.CARD_Y + StoreArtTool.CARD_HEIGHT)
+        assertTrue(lines.first().y >= StoreArtTool.CARD_Y)
+        // The owned status shares the requirement's row, right of it.
+        val requirement = byId.getValue(StoreInterfaceImportTool.REQUIREMENT)
+        val owned = byId.getValue(StoreInterfaceImportTool.OWNED)
+        assertEquals(requirement.y, owned.y)
+        assertTrue(requirement.x + requirement.width <= owned.x)
+        assertTrue(owned.x + owned.width <= StoreArtTool.CARD_X + StoreArtTool.CARD_WIDTH)
+    }
+
+    /** The npc preview clientscript: name byte, eight-byte trailer with four int args, the IF_SETNPCMODEL opcode inside. */
+    @Test
+    fun `the npc preview script encodes four int arguments and sets the npc model`() {
+        val script = StoreInterfaceImportTool.npcPreviewScript()
+        assertEquals(0, script[0].toInt())
+        val text = script.toList()
+        val setNpcModel = listOf(2203 ushr 8, 2203 and 0xFF).map { it.toByte() }
+        assertTrue(text.windowed(2).any { it == setNpcModel }, "IF_SETNPCMODEL")
+        val n = script.size
+        // ... int locals 4, string 0, long 0, int args 4, string 0, long 0, switch count 0, section length 1
+        val tail = script.copyOfRange(n - 15, n).map { it.toInt() and 0xFF }
+        assertEquals(listOf(0, 4, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 0, 1), tail)
     }
 
     /** The server addresses components through [StoreInterfaceImportTool.Layout]; the built window and both layouts must agree. */
@@ -60,11 +108,32 @@ class StoreInterfaceImportToolTests {
         assertEquals(135, legacy.pagePrevious)
         assertEquals(137, legacy.pageNext)
         assertEquals(148, legacy.buyLayer)
+        // The 2026-10-03 window: the same ids up to the empty text, no category buttons (what both caches hold until 2026-10-10).
+        val previous = StoreInterfaceImportTool.PREVIOUS
+        assertEquals(200, previous.componentCount)
+        assertEquals(196, previous.buyLayer)
+        // The first 2026-10-10 window: 7x6 with category buttons.
+        assertEquals(220, StoreInterfaceImportTool.SECTIONS_7X6.componentCount)
+        assertEquals(StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.layoutFor(220))
+        assertEquals(StoreInterfaceImportTool.COMPONENT_COUNT, current.componentCount)
+        assertEquals(StoreInterfaceImportTool.SECTION_FIRST, current.sectionFirst)
+        assertEquals(StoreInterfaceImportTool.OWNED, current.owned)
+        assertEquals(StoreInterfaceImportTool.TRADEABLE, current.tradeable)
         assertEquals(current, StoreInterfaceImportTool.layoutFor(current.componentCount))
+        assertEquals(previous, StoreInterfaceImportTool.layoutFor(200))
         assertEquals(legacy, StoreInterfaceImportTool.layoutFor(152))
         val byId = StoreInterfaceImportTool.components(fonts).associateBy { it.id }
-        assertEquals("Prev page", byId.getValue(current.pagePrevious).text)
+        // Owner 2026-10-11: the labels are painted into the page buttons, drawn over the empty click areas.
+        assertEquals("", byId.getValue(current.pagePrevious).text)
         assertEquals(listOf("Previous page"), byId.getValue(current.pagePrevious).ops)
+        assertEquals(listOf("Next page"), byId.getValue(current.pageNext).ops)
+        for ((area, graphic) in listOf(current.pagePrevious to current.pagePreviousGraphic, current.pageNext to current.pageNextGraphic)) {
+            val a = byId.getValue(area)
+            val g = byId.getValue(graphic)
+            assertEquals(listOf(a.x, a.y, a.width, a.height), listOf(g.x, g.y, g.width, g.height), "button $graphic covers its click area")
+            assertTrue(graphic > area, "the button is drawn over its click area")
+        }
+        assertTrue(!StoreInterfaceImportTool.SECTIONS_7X6.pageButtons && current.pageButtons)
     }
 
     /**
