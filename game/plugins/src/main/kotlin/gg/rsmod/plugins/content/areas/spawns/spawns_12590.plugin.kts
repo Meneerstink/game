@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.spawns
 
-spawn_npc(npc = 1922, x = 3185, z = 2982, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Eblis
+// Eblis (1922) is not spawned here: Desert Treasure posts its own Eblis (1923) on Void's tile 3185,2983 (FoundationQuests.NPC_POSTS);
+// both stood in the tent, one wandering (quests run 2026-10-10).
 spawn_npc(npc = 2384, x = 3161, z = 2983, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Mysterious ghost
 spawn_npc(
     npc = Npcs.BANDIT_1928,

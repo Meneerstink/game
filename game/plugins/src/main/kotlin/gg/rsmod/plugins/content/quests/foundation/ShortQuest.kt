@@ -138,6 +138,14 @@ abstract class ShortQuest(
         }.maxByOrNull { it.second }
     }
 
+    /**
+     * The foe the Quest Tutor warns [player] about ("Train your combat first!"), or null when they are ready. Foes above the
+     * highest reachable combat level (Damis 174, the ice demon 177) count as that level: a maxed player was told to train at
+     * combat 138 (quests run 2026-10-10).
+     */
+    fun combatWarning(player: Player): Pair<String, Int>? =
+        strongestFoe(player)?.takeIf { (_, level) -> player.combatLevel < minOf(level, MAX_COMBAT_LEVEL) }
+
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {
         if (usesVarbits) player.setVarbit(questId, value) else player.setVarp(questId, value)
@@ -182,8 +190,11 @@ abstract class ShortQuest(
         type: TeleportType = TeleportType.MODERN,
         ask: String = "Can you get me to $place?",
     ) {
-        // Already there (a quest that starts where its first step is): nothing to offer.
+        // Already there (a quest that starts where its first step is): nothing to offer. "There" is also beside the npc the trip
+        // would land at: Anna, inside Sinclair Mansion, offered "Can you get me to Sinclair Mansion?" (quests run 2026-10-10).
         if (player.tile.height == location.height && player.tile.isWithinRadius(location, 15)) return
+        val near = FoundationQuests.landing(player.world, npc, location)
+        if (near != location && player.tile.height == near.height && player.tile.isWithinRadius(near, 15)) return
         // Deadman rule: no teleport within 7 seconds of a hit. Right after a quest fight the offer waits for that, so "Enter"
         // always starts the trip instead of "You must be out of combat ..." and a dead end (conform quests 2026-10-09, Lunar
         // Diplomacy step 5 right after the suqah).
@@ -195,7 +206,7 @@ abstract class ShortQuest(
         }
         if (options(ask, "I'll find my own way.", title = "Travel") != 1) return
         // Owner 2026-09-26/27: a Dangerous destination always asks first (interface 382).
-        val landing = FoundationQuests.landing(player.world, npc, location)
+        val landing = near
         if (!gg.rsmod.plugins.content.mechanics.pvp.DangerWarning.confirmQuestTravel(this, landing)) return
         player.canTeleport(type) { player.teleport(landing, type, exact = landing != location) }
     }
@@ -203,5 +214,8 @@ abstract class ShortQuest(
 
     companion object {
         const val questCompleteLine = "<col=FF0000>QUEST COMPLETE!"
+
+        /** The highest combat level of revision 667 (RuneScape Wiki "Combat level": 138 with Summoning). */
+        const val MAX_COMBAT_LEVEL = 138
     }
 }

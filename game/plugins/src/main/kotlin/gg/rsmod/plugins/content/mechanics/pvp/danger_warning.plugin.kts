@@ -15,7 +15,7 @@ on_world_init {
     DangerWarning.open = { player, destination, walk ->
         player.queue(TaskPriority.STRONG) { showDangerWarning(this, destination, walk) }
     }
-    DangerWarning.confirm = { task, text -> confirmDanger(task, text) }
+    DangerWarning.confirm = { task, text, destination -> confirmDanger(task, text, destination) }
 }
 
 on_login {
@@ -63,6 +63,7 @@ suspend fun showDangerWarning(
     player.animate(-1)
     player.openInterface(DangerWarning.INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
     player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.BODY, DangerWarning.BODY_TEXT)
+    player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.ENTER_TEXT, DangerWarning.enterLabel(destination))
     sendDontAsk(player)
     task.terminateAction = { player.closeInterface(DangerWarning.INTERFACE_ID) }
     while (true) {
@@ -86,10 +87,11 @@ suspend fun showDangerWarning(
 }
 
 /** Interface 382 with [text]; true when the player clicked "Enter" (close, or anything else, cancels). */
-suspend fun confirmDanger(task: QueueTask, text: String): Boolean {
+suspend fun confirmDanger(task: QueueTask, text: String, destination: Tile): Boolean {
     val player = task.player
     player.openInterface(DangerWarning.INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
     player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.BODY, text)
+    player.setComponentText(DangerWarning.INTERFACE_ID, DangerWarning.ENTER_TEXT, DangerWarning.enterLabel(destination))
     player.setComponentHidden(DangerWarning.INTERFACE_ID, DangerWarning.DONT_ASK, true)
     task.terminateAction = { player.closeInterface(DangerWarning.INTERFACE_ID) }
     task.waitReturnValue()

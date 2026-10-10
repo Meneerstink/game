@@ -118,8 +118,8 @@ object QuestBosses {
                     flat(npc, target, 5, HitType.MAGIC, CombatClass.MAGIC, 1)
                     flat(npc, target, 5, HitType.RANGE, CombatClass.RANGED, 1)
                     target.graphic(539)
-                    target.freeze(8)
-                    (target as? Player)?.message("You've been frozen!")
+                    // 2009scape KamilBehavior's own line only: the plain freeze added "You have been frozen." to it (quests run 2026-10-10).
+                    target.freeze(8, null) { (target as? Player)?.message("You've been frozen!") }
                 } else {
                     melee(npc, target, 440)
                 }

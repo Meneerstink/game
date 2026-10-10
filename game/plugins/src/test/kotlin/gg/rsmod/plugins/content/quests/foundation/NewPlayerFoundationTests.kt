@@ -391,6 +391,165 @@ class NewPlayerFoundationTests {
         assertTrue(problems.isEmpty(), problems.joinToString("\n"))
     }
 
+    /** Every region spawn (spawns_*.plugin.kts) as file name, npc id and tile. */
+    private fun regionSpawns(): List<Triple<String, Int, gg.rsmod.game.model.Tile>> {
+        val constant = Regex("""Npcs\.(\w+)""")
+        fun id(value: String): Int? =
+            value.toIntOrNull() ?: constant.matchEntire(value)?.let { m ->
+                runCatching { gg.rsmod.plugins.api.cfg.Npcs::class.java.getField(m.groupValues[1]).getInt(null) }.getOrNull()
+            }
+        val spawn = Regex("""spawn_npc\((.*?)\)""", RegexOption.DOT_MATCHES_ALL)
+        fun field(body: String, key: String) = Regex("""$key\s*=\s*([\w.]+)""").find(body)?.groupValues?.get(1)
+        return File("src/main/kotlin/gg/rsmod/plugins/content/areas/spawns").listFiles { f -> f.name.endsWith(".plugin.kts") }!!.flatMap { file ->
+            spawn.findAll(file.readText()).mapNotNull { m ->
+                val body = m.groupValues[1]
+                val npc = field(body, "npc")?.let(::id) ?: return@mapNotNull null
+                val x = field(body, "x")?.toIntOrNull() ?: return@mapNotNull null
+                val z = field(body, "z")?.toIntOrNull() ?: return@mapNotNull null
+                Triple(file.name, npc, gg.rsmod.game.model.Tile(x, z, field(body, "height")?.toIntOrNull() ?: 0))
+            }.toList()
+        }
+    }
+
+    /**
+     * Quests run 2026-10-10: Daero's glider set the player down on APE_ATOLL - Garkor's own post, so they stood inside each
+     * other. Quest travels land beside the npc (FoundationQuests.landing); a boat or glider trip that moves the player straight
+     * to a place (`player.moveTo(PLACE)` in FoundationQuests.kt) must not use a tile an npc stands on.
+     */
+    @Test
+    fun `no boat or glider trip lands on an npc`() {
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/quests/foundation/FoundationQuests.kt").readText()
+        val tiles = Regex("""private val (\w+) = Tile\((\d+), (\d+)(?:, (\d+))?\)""").findAll(source)
+            .associate { it.groupValues[1] to gg.rsmod.game.model.Tile(it.groupValues[2].toInt(), it.groupValues[3].toInt(), it.groupValues[4].ifEmpty { "0" }.toInt()) }
+        val moves = Regex("""player\.moveTo\((\w+)\)""").findAll(source).map { it.groupValues[1] }.toSet()
+        assertTrue(moves.isNotEmpty(), "no direct quest moves found - the test reads the wrong file")
+        val taken = regionSpawns().map { (file, npc, at) -> at to "npc $npc ($file)" } + FoundationQuests.NPC_POSTS.map { it.tile to "quest post ${it.npc}" }
+        val problems = moves.flatMap { name -> val tile = tiles[name] ?: return@flatMap listOf("$name: no tile"); taken.filter { it.first == tile }.map { "$name $tile: ${it.second}" } }
+        assertTrue(problems.isEmpty(), problems.joinToString("; "))
+    }
+
+    /**
+     * Quests run 2026-10-10: Lunar Diplomacy landed the player on a wild suqah's own spawn tile; after the quest suqah the wild
+     * one kept him in combat and "Take me to the Grand Exchange hall" failed. No aggressive world npc spawns within its hunt
+     * range (5, data/cfg/npcs/hunt-modes.json) of a quest landing or fight tile.
+     */
+    @Test
+    fun `no aggressive world npc spawns on a quest landing`() {
+        val aggressive = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/combat-defs.json").readText()).asJsonArray
+            .map { it.asJsonObject }.filter { it.get("aggressive")?.asBoolean == true }.map { it.get("id").asInt }.toSet()
+        val tiles =
+            FoundationQuests.SHORT.flatMap { q ->
+                q.steps.flatMap { s -> listOfNotNull(s.location?.let { "${q.name} travel to ${s.place}" to it }, s.fight?.let { "${q.name} fight ${it.name}" to it.tile }) }
+            }.distinctBy { it.second }
+        val problems = mutableListOf<String>()
+        regionSpawns().forEach { (file, npc, at) ->
+            if (npc !in aggressive) return@forEach
+            tiles.forEach { (label, tile) ->
+                if (tile.height == at.height && Math.max(Math.abs(tile.x - at.x), Math.abs(tile.z - at.z)) <= 5) problems += "$label $tile: aggressive npc $npc spawns at $at ($file)"
+            }
+        }
+        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
+    }
+
+    /**
+     * Quests run 2026-10-10: the world's own Eblis (1922, a multinpc showing Eblis), Lokar (413) and Elena (335) stood a tile
+     * from the quests' posted ones - two of each, one wandering (and Edmond in East Ardougne). Every npc a quest sends the
+     * player to is the only npc of its name within 20 tiles of that place: one region spawn (spawns_*.plugin.kts, multinpc
+     * forms included) or one quest post.
+     */
+    @Test
+    fun `no world spawn doubles a quest npc post`() {
+        val npcDef = { id: Int -> DEFINITIONS.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, id) }
+        fun names(id: Int): Set<String> {
+            val def = npcDef(id) ?: return emptySet()
+            val forms = def.transforms?.filter { it >= 0 }?.mapNotNull { npcDef(it)?.name } ?: emptyList()
+            return (forms + def.name).filter { it.isNotBlank() && it != "null" }.toSet()
+        }
+        // Every npc a quest sends the player to, where it sends him: the posts, the start npcs and every step npc at its place
+        // (Song of the Elves: Edmond 714 in East Ardougne and a 3213 multinpc showing Edmond in his garden).
+        val wanted =
+            FoundationQuests.NPC_POSTS.map { it.npc to it.tile } +
+                FoundationQuests.SHORT.flatMap { q ->
+                    listOfNotNull(q.startLocation?.let { q.startNpc to it }) + q.steps.mapNotNull { s -> s.location?.takeIf { s.fight == null }?.let { s.npc to it } }
+                }
+        val spawns = regionSpawns()
+        val problems = mutableListOf<String>()
+        wanted.distinct().forEach { (questNpc, place) ->
+            val name = npcDef(questNpc)?.name ?: return@forEach
+            val near = spawns.filter { (_, npc, at) -> at.height == place.height && Math.abs(place.x - at.x) <= 20 && Math.abs(place.z - at.z) <= 20 && name in names(npc) }
+            val posted = FoundationQuests.NPC_POSTS.count { it.npc == questNpc && it.tile.height == place.height && Math.abs(place.x - it.tile.x) <= 20 && Math.abs(place.z - it.tile.z) <= 20 }
+            if (near.size + posted > 1) problems += "'$name' near $place: ${near.map { (f, n, t) -> "$n at ${t.x},${t.z} ($f)" } + List(posted) { "quest post" }}"
+        }
+        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
+    }
+
+    /**
+     * Quests run 2026-10-10: the Quest Helper overlay (interface 1166, QuestHelperPanelImportTool) cut 7 of the 15 tips after
+     * their second line ("... drink an antifire potion: Elvarg" - "breathes fire." was lost). Every tip fits the 2 tip lines and
+     * every step instruction, with the longest floor hint, the 6 instruction lines - word-wrapped at the boxes' 192 px in the
+     * cache's own p11 glyph widths (font metrics, index 13), as the client wraps them.
+     */
+    @Test
+    fun `every quest helper tip and instruction fits the overlay`() {
+        val library = CacheLibrary(CACHE_PATH)
+        val font = library.index(8).archive("p11_full")!!.id
+        val data = library.data(13, font, 0)!!
+        library.close()
+        val glyphs = IntArray(256) { data[2 + it].toInt() and 0xFF }
+        val box = gg.rsmod.game.tools.importer.QuestHelperPanelImportTool.WIDTH - 12
+        fun lines(text: String): Int {
+            var count = 1
+            var line = 0
+            for (word in text.replace(Regex("<[^>]+>"), "").split(' ')) {
+                val w = word.sumOf { glyphs[it.code and 0xFF] }
+                val space = if (line == 0) 0 else glyphs[' '.code]
+                if (line > 0 && line + space + w > box) {
+                    count++
+                    line = w
+                } else {
+                    line += space + w
+                }
+            }
+            return count
+        }
+        val problems = mutableListOf<String>()
+        FoundationQuests.SHORT.forEach { quest ->
+            quest.steps.forEachIndexed { i, step ->
+                step.tip?.let { if (lines("Tip: $it") > 2) problems += "${quest.name} step ${i + 1} tip: ${lines("Tip: $it")} lines" }
+                val text = step.journal.joinToString(" ") + " Ask ${FoundationQuests.NPC_NAMES[step.npc] ?: "Sir Lancelot"} (first floor) to take you there."
+                if (lines(text) > 6) problems += "${quest.name} step ${i + 1} instruction: ${lines(text)} lines"
+            }
+        }
+        assertTrue(problems.isEmpty(), problems.joinToString("; "))
+    }
+
+    /**
+     * Quests run 2026-10-10: Damis's OSRS table drops the Diamond of Shadow while the step hands it out too - two diamonds,
+     * one on the ground. A fight step's own quest items come from the step only, never from its foes' drop tables.
+     */
+    @Test
+    fun `no quest foe drops the item its step hands out`() {
+        val tables = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/drop-tables.json").readText()).asJsonArray
+            .map { it.asJsonObject }.associateBy { it.get("id").asInt }
+        val problems = mutableListOf<String>()
+        FoundationQuests.SHORT.forEach { quest ->
+            quest.steps.forEach { step ->
+                val fight = step.fight ?: return@forEach
+                val handed = step.gives.map { it.first }.toSet()
+                (listOf(fight.npc) + fight.chain.map { it.first }).forEach { foe ->
+                    val table = tables[foe] ?: return@forEach
+                    listOf("guaranteed", "main", "tertiary").forEach { part ->
+                        table.getAsJsonArray(part)?.forEach { e ->
+                            val item = e.asJsonObject.get("item")?.asInt
+                            if (item != null && item in handed) problems += "${quest.name}: foe $foe drops item $item ($part) that the step hands out"
+                        }
+                    }
+                }
+            }
+        }
+        assertTrue(problems.isEmpty(), problems.joinToString("\n"))
+    }
+
     @Test
     fun `every short quest has fights against real npcs with their real combat levels`() {
         val defs = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/combat-defs.json").readText()).asJsonArray

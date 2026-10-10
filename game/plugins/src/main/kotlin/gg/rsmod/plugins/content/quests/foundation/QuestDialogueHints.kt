@@ -40,12 +40,14 @@ object QuestDialogueHints {
         stage: Int,
     ): List<Pair<String, String>> {
         val out = ArrayList<Pair<String, String>>()
-        if (stage <= 0) {
-            out += "Quests" to "${quest.name}."
-            out += "Start *" to "#1"
-        }
+        // The quest's own row whenever an npc lists several quests - also mid-quest (quests run 2026-10-10: Azzanadra's
+        // "Desert Treasure. / The Temple at Senntisten." showed no highlight at the hand-in).
+        out += "Quests" to "${quest.name}."
+        if (stage <= 0) out += "Start *" to "#1"
         out += "Travel" to "Can you get me to *"
         out += "Travel" to "Send me to *"
+        // The offer after a kill reads as the player's own choice (FoundationQuests.offerNextStep).
+        out += "Travel" to "Take me to *"
         out += PUZZLES[quest].orEmpty()
         return out
     }

@@ -312,7 +312,9 @@ object IntroGuardScene {
         player.attr[CAST]?.let { cast ->
             listOf(cast.pker, cast.escaper).forEach { bot ->
                 runCatching { Familiar.dismiss(bot) }
-                world.unregister(bot)
+                // The normal logout (the bot logged in through bot.login()), so its logout plugins run: the pker's gravestone
+                // from his guard death used to stay in the hall, ownerless, in front of the Quest Tutor (quests run 2026-10-10).
+                runCatching { bot.handleLogout() }.onFailure { runCatching { world.unregister(bot) } }
             }
         }
         player.attr.remove(CAST)

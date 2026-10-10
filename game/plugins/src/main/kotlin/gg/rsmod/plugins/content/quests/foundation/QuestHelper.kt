@@ -251,15 +251,21 @@ object QuestHelper {
             }
         // RuneLite Quest Helper: the step's world point carries the quest icon on the world map and the minimap arrow, the
         // step npc is outlined in the game view, and the right dialogue options are highlighted (client RspsQuestHelper).
-        sendTarget(player, goal, npcId)
+        // The live foe's own id: a second form or the next wave (Damis 1975, Knight Waves) is another npc than the fight's first,
+        // and the game view outlined nobody while it fought (quests run 2026-10-10).
+        sendTarget(player, goal, foe?.id ?: npcId)
         sendDialogueHints(player, quest, stage)
         val floorName = goal?.let { g -> FLOORS.getOrElse(g.height) { "level ${g.height}" } }
         // No way: the npc who offers the travel (on any floor near here), and the way to that npc.
         val guide = if (otherFloor && climb == null) (if (stage <= 0) quest.startNpc else quest.steps.getOrNull(stage - 1)?.npc)?.let { nearestNpc(player, it) } else null
         val guideClimb = guide?.takeIf { it.tile.height != player.tile.height }?.let { climbLoc(player, up = it.tile.height > player.tile.height, goal = it.tile) }
+        // The step's own npc is the one to reach (a talk step): "Ask Sir Lancelot (first floor) to take you there" sent the player
+        // to the very npc he could not reach (quests run 2026-10-10, King's Ransom after the Knight Waves).
+        val guideIsGoal = guide != null && step?.fight == null && guide.id == npcId
         val floorHint =
             when {
                 !otherFloor -> ""
+                climb == null && guideIsGoal -> " ${floorName!!.replaceFirstChar { it.uppercase() }}: no stairs lead there from here - take the quest's trip or teleport."
                 climb != null -> " ${floorName!!.replaceFirstChar { it.uppercase() }}: take the stairs ${if (goal!!.height > player.tile.height) "up" else "down"}."
                 guide != null && guide.tile.height != player.tile.height ->
                     " Ask ${travelNpcName(player, quest, stage)} (${FLOORS.getOrElse(guide.tile.height) { "level ${guide.tile.height}" }}) to take you there."
@@ -357,8 +363,9 @@ object QuestHelper {
             if (there != ID) player.openInterface(ID, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN_OVERLAY)
             player.attr[SHOWN] = key
             val L = gg.rsmod.game.tools.importer.QuestHelperPanelImportTool
-            player.setComponentText(ID, L.TITLE, quest.name.substringBefore(" - "))
-            player.setComponentText(ID, L.STEP, if (stage <= 0) "Not started" else "Step $stage of $total")
+            val (title, step) = header(player.world, quest.name.substringBefore(" - "), if (stage <= 0) null else stage to total)
+            player.setComponentText(ID, L.TITLE, title)
+            player.setComponentText(ID, L.STEP, step)
             val filled = if (total == 0) 0 else (L.SEGMENTS * done + total / 2) / total
             for (i in 0 until L.SEGMENTS) player.setComponentHidden(ID, L.SEGMENT_FIRST + i, hidden = i >= filled)
             player.setComponentText(ID, L.INSTRUCTION, instruction)
@@ -366,6 +373,41 @@ object QuestHelper {
             player.setComponentText(ID, L.GOTO, "Go to: $where" + if (dangerous) " <col=ff3030>(Dangerous)</col>" else "")
             player.setComponentText(ID, L.TIP, tip?.let { "Tip: $it" } ?: "")
         }
+
+        /**
+         * The header's quest name and step label, fitted side by side (title from x 6, step right-aligned up to x 198, 4 px
+         * apart), measured with the cache's own glyph widths (font metrics, index 13): "The Temple at Senntisten" (164 px in
+         * b12) ran into "Step 1 of 5" (quests run 2026-10-10). A long name keeps its full text and the label shortens to "1/5";
+         * only a name too long even for that loses a leading "The " and then its end ("...").
+         */
+        fun header(world: gg.rsmod.game.model.World, name: String, progress: Pair<Int, Int>?): Pair<String, String> {
+            val L = gg.rsmod.game.tools.importer.QuestHelperPanelImportTool
+            val long = progress?.let { (n, of) -> "Step $n of $of" } ?: "Not started"
+            val bold = glyphs(world, "b12_full") ?: return name to long
+            val plain = glyphs(world, "p11_full") ?: return name to long
+            fun room(step: String) = L.WIDTH - 6 - 6 - width(plain, step) - 4
+            if (width(bold, name) <= room(long)) return name to long
+            // Not started: the instruction below already says whom to speak to, so the label goes.
+            val step = progress?.let { (n, of) -> "$n/$of" } ?: ""
+            if (width(bold, name) <= room(step)) return name to step
+            val short = name.removePrefix("The ")
+            if (width(bold, short) <= room(step)) return short to step
+            var cut = short
+            while (cut.isNotEmpty() && width(bold, "$cut...") > room(step)) cut = cut.dropLast(1)
+            return cut.trimEnd() + "..." to step
+        }
+
+        private fun width(glyphs: IntArray, text: String): Int = text.sumOf { glyphs[it.code and 0xFF] }
+
+        private val GLYPHS = java.util.concurrent.ConcurrentHashMap<String, IntArray>()
+
+        /** A font's 256 glyph advances: its sprite group's id (index 8, by name) in the font metrics index 13, byte 2 on. */
+        private fun glyphs(world: gg.rsmod.game.model.World, font: String): IntArray? =
+            GLYPHS[font] ?: runCatching {
+                val id = world.filestore.index(8).archive(font)!!.id
+                val data = world.filestore.data(13, id, 0)!!
+                IntArray(256) { data[2 + it].toInt() and 0xFF }
+            }.getOrNull()?.also { GLYPHS[font] = it }
 
         fun close(player: Player) {
             player.attr.remove(SHOWN)

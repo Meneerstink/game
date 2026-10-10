@@ -6,6 +6,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.player
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.isInterfaceVisible
 
 /**
@@ -29,6 +30,12 @@ object DangerWarning {
     const val BODY = 26
     const val DONT_ASK = 31
     const val DONT_ASK_TEXT = 32
+
+    /** 382:21, the Enter button's label: the cache's "Enter Wilderness" said so for every Dangerous place, the desert too. */
+    const val ENTER_TEXT = 21
+
+    /** The Enter button's label for [destination] (quests run 2026-10-10: the Bandit Camp trip read "Enter Wilderness"). */
+    fun enterLabel(destination: Tile): String = if (destination.getWildernessLevel() > 0) "Enter Wilderness" else "Enter"
 
     /** Ticks a confirmed crossing stays valid (the walk or teleport that follows the confirmation). */
     const val BYPASS_TICKS = 50
@@ -58,7 +65,7 @@ object DangerWarning {
      * or not the general warning is on. [confirm] shows interface 382 with [QUEST_TEXT] and runs the teleport on "Enter".
      * Installed by `danger_warning.plugin.kts`; without it (tests) the teleport simply runs.
      */
-    var confirm: (suspend (QueueTask, String) -> Boolean)? = null
+    var confirm: (suspend (QueueTask, String, Tile) -> Boolean)? = null
 
     /** Owner 2026-09-27, word for word. */
     const val QUEST_TEXT =
@@ -74,7 +81,7 @@ object DangerWarning {
     suspend fun confirmQuestTravel(task: QueueTask, destination: Tile): Boolean {
         if (!AreaState.isDangerous(destination)) return true
         val ask = confirm ?: return true
-        if (!ask(task, QUEST_TEXT)) return false
+        if (!ask(task, QUEST_TEXT, destination)) return false
         allowNextCrossing(task.player)
         return true
     }

@@ -317,15 +317,8 @@ spawn_npc(
     direction = Direction.NORTH,
     static = false,
 ) // Warrior woman
-spawn_npc(
-    npc = Npcs.ELENA_335,
-    x = 2592,
-    z = 3337,
-    height = 0,
-    walkRadius = 5,
-    direction = Direction.NORTH,
-    static = false,
-) // Elena
+// Elena (335, Elena 3209 once varbit 1784 is set) is not spawned here: Song of the Elves posts its own Elena on Void's
+// tile 2592,3336 (FoundationQuests.NPC_POSTS), one tile away (quests run 2026-10-10).
 spawn_npc(
     npc = Npcs.MOURNER_719,
     x = 2581,

@@ -37,7 +37,7 @@ class QuestTravelWarningTests {
         every { player.world } returns world
         val task = mockk<QueueTask>(relaxed = true)
         every { task.ctx } returns player
-        DangerWarning.confirm = { _, text -> asked += text; answer }
+        DangerWarning.confirm = { _, text, _ -> asked += text; answer }
         return task
     }
 
@@ -74,7 +74,8 @@ class QuestTravelWarningTests {
         val raw =
             // TutorIntro.kt: the new-player tour moves an invisible, locked player between camera stand tiles with the warning
             // suppressed on purpose (DangerWarning.SUPPRESSED) and always ends in the guarded hall - not a quest travel.
-            dir.walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name != "TutorIntro.kt" }.flatMap { f ->
+            // IntroGuardScene.kt is a stop of that tour: it moves the same hidden watcher inside its private mirrored scene.
+            dir.walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name !in setOf("TutorIntro.kt", "IntroGuardScene.kt") }.flatMap { f ->
                 val lines = f.readLines()
                 lines.indices.filter { i ->
                     val l = lines[i]

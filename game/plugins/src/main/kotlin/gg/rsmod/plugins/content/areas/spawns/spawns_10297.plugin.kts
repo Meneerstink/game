@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.spawns
 
-spawn_npc(npc = 413, x = 2621, z = 3688, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Lokar Searunner
+// Lokar Searunner (413, always Lokar 406) is not spawned here: Lunar Diplomacy posts its own Lokar on the dock
+// (FoundationQuests.NPC_POSTS); both stood side by side, one wandering (quests run 2026-10-10).
 spawn_npc(npc = 2435, x = 2620, z = 3686, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Jarvald
 spawn_npc(
     npc = Npcs.WARRIOR_1318,

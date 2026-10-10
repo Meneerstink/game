@@ -27,6 +27,9 @@ object QuestFights {
     /** Beyond this distance from the foe the fight is abandoned. */
     const val LEASH = 20
 
+    /** How many walkable tiles round the player a foe may appear on (a radius of about 12 on open ground). */
+    const val NEAR_WALK = 600
+
     fun active(player: Player): Npc? = player.attr[ACTIVE_FOE]?.get()?.takeIf { it.isSpawned() && it.isAlive() }
 
     /** Spawns the foe of [quest]'s fight step [stage] for [player]; false when it cannot (wrong place or no fight). */
@@ -110,7 +113,10 @@ object QuestFights {
     fun spawnTile(player: Player, npcId: Int, wanted: Tile): Tile {
         val world = player.world
         val size = world.definitions.getNullable(NpcDef::class.java, npcId)?.size?.coerceAtLeast(1) ?: 1
-        val reachable = Landing.pocket(world.collision, player.tile, 2048)
+        // A short walk only (breadth-first, nearest tiles first): with 2048 tiles a fight tile on the far side of a wall counted as
+        // "reachable" round the building, and Song of the Elves' elf warrior stood outside Lletya's hall with no route to the
+        // player inside (quests run 2026-10-10). Within NEAR_WALK tiles the foe always walks straight up to the player.
+        val reachable = Landing.pocket(world.collision, player.tile, NEAR_WALK)
         fun fits(t: Tile): Boolean {
             for (dx in 0 until size) for (dz in 0 until size) {
                 val f = Tile(t.x + dx, t.z + dz, t.height)

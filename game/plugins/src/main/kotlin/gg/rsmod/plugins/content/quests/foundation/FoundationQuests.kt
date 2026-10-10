@@ -31,7 +31,9 @@ import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 const val KNIGHT_WAVES_VARBIT = 3909
 const val KNIGHT_WAVES_COMPLETE = 8
 
-private val GE_HALL = Tile(3164, 3491, 0)
+// In front of the Quest Tutor: 3164,3491 is under the Fountain of Heroes (loc 62778), a fallback landing stood in the water
+// (NewPlayerFoundationTests, quests run 2026-10-10).
+private val GE_HALL = Tile(3162, 3489, 0)
 private val BANDIT_CAMP = Tile(3183, 2982, 0)
 private val RELLEKKA_DOCK = Tile(2621, 3685, 0)
 private val NARDAH = Tile(3419, 2936, 0)
@@ -52,7 +54,10 @@ private val FAREED_PIT = Tile(3315, 9376, 0)
 
 // The other short quests' places (npc spawns of this world and Void 2011 spawn data; checked against the map by tests).
 private val RELLEKKA_LONGHALL = Tile(2658, 3667, 0)
-private val LUNAR_DOCK = Tile(2142, 3900, 0)
+// The foot of the dock ladder (Void lunar_isle.teles.toml "lunar_isle_dock_ladder_top" -> 2118,3895): where a boat's passengers
+// step onto the isle. It was 2142,3900 - a wild, aggressive suqah's own spawn (Void lunar_isle.npc-spawns.toml), so after the
+// quest suqah a second one kept the player in combat and the trip home failed (quests run 2026-10-10).
+private val LUNAR_DOCK = Tile(2118, 3895, 0)
 private val LUNAR_ALTAR = Tile(2151, 3868, 0)
 private val DIGSITE = Tile(3361, 3341, 0)
 private val GHORROCK = Tile(2978, 3872, 0)
@@ -158,7 +163,7 @@ object DesertTreasure : ShortQuest(
                 place = "the graveyard north of Castle Drakan",
                 location = DESSOUS_GRAVE,
                 gives = listOf(Items.BLOOD_DIAMOND to 1),
-                tip = "Dessous hisses magic and ranged at you while you protect from melee. Bring food.",
+                tip = "He hisses magic and ranged when you pray against melee. Bring food.",
                 fight = QuestFight(Npcs.DESSOUS, "Dessous", 139, DESSOUS_GRAVE, "Who dares disturb my rest?"),
                 talk = {
                     chatNpc("Dessous waits in his grave. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
@@ -186,7 +191,7 @@ object DesertTreasure : ShortQuest(
                 place = "the Shadow Dungeon",
                 location = DAMIS_LAIR,
                 gives = listOf(Items.SHADOW_DIAMOND to 1),
-                tip = "Damis rises a second time and then drains your Prayer with every hit.",
+                tip = "Damis rises a second time, then drains Prayer with every hit.",
                 fight =
                     QuestFight(
                         Npcs.DAMIS, "Damis", 103, DAMIS_LAIR, "The shadows will take you.",
@@ -204,7 +209,7 @@ object DesertTreasure : ShortQuest(
                 place = "the Smoke Dungeon",
                 location = FAREED_PIT,
                 gives = listOf(Items.SMOKE_DIAMOND to 1),
-                tip = "Wear ice gloves to keep your weapon, or use water spells - other magic does nothing.",
+                tip = "Ice gloves keep your weapon in hand. Only water spells hurt him.",
                 fight = QuestFight(Npcs.FAREED, "Fareed", 167, FAREED_PIT, "Burn, fool!"),
                 talk = {
                     chatNpc("Fareed burns in the Smoke Dungeon. Ice gloves!", facialExpression = FacialExpression.WORRIED)
@@ -424,7 +429,7 @@ object LunarDiplomacy : ShortQuest(
                 done = listOf("I defeated my own doubt in the dream world."),
                 place = "the Lunar Isle altar",
                 location = LUNAR_ALTAR,
-                tip = "You cannot change equipment in the dream: wear your gear before you go.",
+                tip = "No equipment changes in the dream: gear up before you go.",
                 fight = QuestFight(Npcs.ME, "Me", 79, LUNAR_ALTAR, "You can't beat me. I know all your moves."),
                 talk = {
                     chatNpc("Go to the altar on Lunar Isle and dream.", facialExpression = FacialExpression.EYES_CLOSED)
@@ -569,7 +574,7 @@ object TempleAtSenntisten : ShortQuest(
                 done = listOf("I shattered the ice demon and took the Frostenhorn."),
                 place = "Ghorrock, in the Wilderness",
                 location = GHORROCK,
-                tip = "Ghorrock is deep in the Wilderness. Water spells do not harm the ice demon.",
+                tip = "Deep Wilderness. Water spells do not harm the ice demon.",
                 fight = QuestFight(Npcs.ICE_DEMON, "Ice demon", 177, GHORROCK, "Cold... so cold... you will join me!"),
                 talk = {
                     chatNpc("The Frostenhorn waits in Ghorrock. Beware the Wilderness.", facialExpression = FacialExpression.WORRIED)
@@ -582,7 +587,7 @@ object TempleAtSenntisten : ShortQuest(
                 done = listOf("I defeated Dharok and took the Barrows icon."),
                 place = "the Barrows",
                 location = BARROWS,
-                tip = "Dharok hits harder the lower his life points are. Protect from Melee helps.",
+                tip = "Dharok hits harder as his life drops. Protect from Melee helps.",
                 fight = QuestFight(Npcs.DHAROK_THE_WRETCHED_14264, "Dharok the Wretched", 115, BARROWS, "You dare disturb my rest?"),
                 talk = {
                     chatNpc(
@@ -1130,7 +1135,7 @@ object DragonSlayerII : ShortQuest(
                 done = listOf("I slew Elvarg again and Ned sailed me back."),
                 place = "Crandor",
                 location = CRANDOR,
-                tip = "Wear an anti-dragon shield or drink an antifire potion: Elvarg breathes fire.",
+                tip = "Elvarg breathes fire: wear an anti-dragon shield or drink antifire.",
                 fight = QuestFight(Npcs.ELVARG, "Elvarg", 83, CRANDOR, "Rrrooaaarr!"),
                 talk = {
                     chatNpc("Back to Crandor, then? Hold on to your hat.", facialExpression = FacialExpression.LAUGH)
@@ -1172,7 +1177,7 @@ object SongOfTheElves : ShortQuest(
     usesVarbits = false,
     startNpc = Npcs.EDMOND,
     startNpcName = "Edmond",
-    startPlace = "his home in East Ardougne",
+    startPlace = "Edmond's house in East Ardougne",
     startLocation = EAST_ARDOUGNE,
 ) {
     override val reward =
@@ -1368,7 +1373,8 @@ object MonkeyMadnessII : ShortQuest(
                     )
                     if (!DangerWarning.confirmQuestTravel(this, APE_ATOLL)) return@QuestStep false
                     // Owner 2026-10-07: the trip starts on "Enter" - the move first, the line in the chatbox, no click in between.
-                    player.moveTo(APE_ATOLL)
+                    // Beside Garkor: APE_ATOLL is his own post and the glider put the player on top of him (quests run 2026-10-10).
+                    player.moveTo(FoundationQuests.landing(player.world, Npcs.GARKOR, APE_ATOLL))
                     player.message("Daero flies you south to Ape Atoll.")
                     wait(2)
                     true
@@ -1512,6 +1518,9 @@ object FoundationQuests {
             QuestNpcPost(Npcs.WAYDAR, Tile(2891, 2724), gg.rsmod.game.model.Direction.EAST, listOf("Crash Island is quiet now.", "I rather miss the excitement.")),
             QuestNpcPost(Npcs.DR_NABANIK, DIGSITE, gg.rsmod.game.model.Direction.SOUTH, listOf("The Exam Centre keeps me busy.", "Mind the dig trenches on your way out.")),
             QuestNpcPost(Npcs.MERLIN, MERLIN_CELL, gg.rsmod.game.model.Direction.SOUTH, listOf("Camelot has never been safer.", "Well - not since the last time, anyway.")),
+            // In Lletya's south porch, where the elf warrior fight takes place (Void's 2352,3172 post is in the hall behind the
+            // counter: the warrior in the porch found no way to the player - quests run 2026-10-10). The world's own Arianwyn
+            // (8951) there is not spawned any more.
             QuestNpcPost(Npcs.ARIANWYN, LLETYA, gg.rsmod.game.model.Direction.SOUTH, listOf("Tirannwn breathes again.", "Prifddinas sings for all of us now.")),
         )
 
@@ -1730,7 +1739,17 @@ object FoundationQuests {
             if (post == null || flat(t) < flat(post!!)) post = t
         }
         val at = post ?: return location
-        val area = gg.rsmod.game.model.collision.Landing.pocket(world.collision, at, 256)
+        // An npc whose post is a blocked tile (Aleck stands on the lounge's Standard, a solid loc) has no way out of it: the pocket
+        // is then grown from its free neighbours, or the trip fell back to the ground floor (quests run 2026-10-10, Dragon Slayer II).
+        val own = gg.rsmod.game.model.collision.Landing.pocket(world.collision, at, 256)
+        val area =
+            if (own.size > 1) {
+                own
+            } else {
+                gg.rsmod.game.model.Direction.NESW.map { at.step(it) }
+                    .filter { n -> gg.rsmod.game.model.Direction.NESW.any { world.collision.canStep(n, it) } }
+                    .flatMap { gg.rsmod.game.model.collision.Landing.pocket(world.collision, it, 256) }.toSet()
+            }
         for (r in 1..3) {
             for (dx in -r..r) for (dz in -r..r) {
                 if (maxOf(Math.abs(dx), Math.abs(dz)) != r) continue

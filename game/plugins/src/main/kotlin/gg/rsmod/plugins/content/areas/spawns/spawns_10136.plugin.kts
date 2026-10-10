@@ -9,13 +9,6 @@ spawn_npc(
     direction = Direction.NORTH,
     static = false,
 ) // Edmond in Ardougne Sewers
-spawn_npc(
-    npc = Npcs.EDMOND_3213,
-    x = 2568,
-    z = 3333,
-    height = 0,
-    walkRadius = 5,
-    direction = Direction.NORTH,
-    static = false,
-) // Edmond in Ardougne Sewers
+// Edmond (3213, a multinpc showing Edmond) at 2568,3333 is not spawned: East Ardougne's Edmond (714, spawns_10292) talks for Song
+// of the Elves and stood three tiles away - two Edmonds in his garden (quests run 2026-10-10).
 

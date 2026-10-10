@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.spawns
 
-spawn_npc(npc = 8951, x = 2352, z = 3172, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Arianwyn
+// Arianwyn (8951, a multinpc showing Arianwyn) at 2352,3172 is not spawned: Song of the Elves posts its own Arianwyn nine tiles
+// south (FoundationQuests.NPC_POSTS); there were two (quests run 2026-10-10).
 spawn_npc(
     npc = Npcs.AMAETHWR,
     x = 2347,

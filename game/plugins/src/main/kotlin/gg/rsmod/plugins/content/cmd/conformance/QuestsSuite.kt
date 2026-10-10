@@ -101,7 +101,7 @@ object QuestsSuite : Conformance.Suite {
     private const val JOURNAL = 275
     private const val QUEST_COMPLETE = 277
 
-    private val GE_HALL = Tile(3164, 3491, 0)
+    private val GE_HALL = Tile(3162, 3489, 0)
 
     private const val TRAVEL = "travel answer"
     private const val ENTER = "Enter on 382"
@@ -721,6 +721,20 @@ object QuestsSuite : Conformance.Suite {
         )
     }
 
+    /** A tile orthogonally next to [foe]'s footprint can be walked to from [from] without opening anything (60-tile search). */
+    private fun meleeReach(
+        run: Conformance.Run,
+        from: Tile,
+        foe: Npc,
+    ): Boolean {
+        val size = maxOf(1, foe.getSize())
+        val body = (0 until size).flatMap { dx -> (0 until size).map { dz -> Tile(foe.tile.x + dx, foe.tile.z + dz, foe.tile.height) } }.toSet()
+        val goals = body.flatMap { t -> gg.rsmod.game.model.Direction.NESW.map { t.step(it) } }.filter { it !in body }.toSet()
+        if (from in goals) return true
+        val area = gg.rsmod.game.model.collision.Landing.pocket(run.world.collision, from, 3600)
+        return goals.any { it in area }
+    }
+
     /** Before a talk: no window left from the last step, out of combat (a teleport offer would wait 7 seconds otherwise). */
     private suspend fun QueueTask.prepare(bot: Client) {
         if (bot.interfaces.getModal() != -1) {
@@ -881,6 +895,13 @@ object QuestsSuite : Conformance.Suite {
             "active=${first?.id} at ${first?.tile}; bot at ${bot.tile}",
         )
         if (first == null) return Triple(false, travels, warnings)
+        // Quests run 2026-10-10: the elf warrior appeared behind Lletya's counter and shot a melee player who could only answer
+        // "I can't reach that!". A melee player must be able to walk up to every foe (no door, no counter in between).
+        run.expectTrue(
+            entry, "$where: a melee player can walk up to the foe", meleeReach(run, bot.tile, first),
+            "foe ${first.id} at ${first.tile}; bot at ${bot.tile}",
+            rule = "quests run 2026-10-10: QuestFights.spawnTile places the foe within a short walk of the player",
+        )
         val attack = optionIndex(run, fight.npc, "attack")
         run.expectTrue(entry, "$where: the foe has an Attack option", attack > 0, "cache menu ${run.world.definitions.getNullable(NpcDef::class.java, fight.npc)?.options?.toList()}")
         val seen = LinkedHashSet<Int>()
@@ -1040,7 +1061,9 @@ object QuestsSuite : Conformance.Suite {
                 ?.let { SET_TEXT.find(it.text)!!.groupValues[3] }
         val mode = bot.interfaces.displayMode
         val occupant = bot.interfaces.getInterfaceAt(getDisplayComponentId(mode), getChildId(InterfaceDestination.MAIN_SCREEN_OVERLAY, mode))
-        run.check(entry, "$where panel (1166) shows the step", stepText, "QuestHelper.Panel" to "Step $stage of ${quest.steps.size}")
+        // The header fits the quest name beside the label (QuestHelper.Panel.header): "Step n of N", or "n/N" beside a long name.
+        val header = gg.rsmod.plugins.content.quests.foundation.QuestHelper.Panel.header(run.world, quest.name.substringBefore(" - "), stage to quest.steps.size)
+        run.check(entry, "$where panel (1166) shows the step", stepText, "QuestHelper.Panel.header" to header.second)
         if (stepText == null) run.note("$entry: overlay slot holds interface $occupant, so the helper panel stepped aside")
         sidePanel(run, entry, bot, quest, stage)
     }
@@ -1308,8 +1331,9 @@ object QuestsSuite : Conformance.Suite {
      * input (Click here to continue, the "Next / Skip" choice after every stop). Measured every tick: the player is locked
      * and invisible (nothing can attack an invisible pawn), the Dangerous-area warning (382) never opens; every stop is
      * reached (the player stands at the stop's tile, in the house for the house stop); at the end the player stands in
-     * front of the Tutor, unlocked and visible, "Choose your path" is open, the intro is marked seen, the Quest Helper
-     * tracks the first unfinished quest and no item or experience changed. [skipAfter]: "Skip" after that stop.
+     * front of the Tutor, unlocked and visible, "Choose your path" is open, the intro is marked seen, the Quest Helper is
+     * left to the player, only the Deadman starter pack was added and no experience changed (quests run 2026-10-10: the
+     * guard scene now comes before stop 0). [skipAfter]: "Skip" after that stop.
      * [logoutAt]: the client closes (Player.requestLogout) during that stop - the player must end in the hall, intro seen.
      */
     private suspend fun QueueTask.introTour(
@@ -1328,7 +1352,8 @@ object QuestsSuite : Conformance.Suite {
         TutorIntro.start(bot)
         val scenes = TutorIntro.SCENES
         val reached = BooleanArray(scenes.size)
-        var scene = 0
+        // The guard scene comes first (owner 2026-10-08) and its "Next / Skip" choice leads to stop 0: -1 is the guard scene.
+        var scene = -1
         var hiddenEveryTick = true
         var notHidden = ""
         var warning = false
@@ -1359,7 +1384,7 @@ object QuestsSuite : Conformance.Suite {
             val chat = chatOpen(bot)
             if (chat == -1) continue
             if (isOptions(chat)) {
-                val skip = skipAfter != null && scene >= skipAfter
+                val skip = skipAfter != null && scene >= skipAfter && scene >= 0
                 Bots.answerOption(bot, if (skip) 2 else 1)
                 if (skip || scene == scenes.size - 1) ending = true
                 scene++
@@ -1390,13 +1415,16 @@ object QuestsSuite : Conformance.Suite {
         run.expectTrue(entry, "unlocked and visible again", bot.lock == gg.rsmod.game.model.LockState.NONE && !bot.invisible, "lock=${bot.lock} invisible=${bot.invisible}")
         run.expectTrue(entry, "the intro is marked seen (saved attribute)", bot.attr[TutorIntro.SEEN] == true, "${bot.attr[TutorIntro.SEEN]}")
         run.expectTrue(entry, "the Dangerous-area warning's intro window is closed", bot.attr[DangerWarning.INTRO] != true && bot.attr[DangerWarning.SUPPRESSED] != true, "intro=${bot.attr[DangerWarning.INTRO]} suppressed=${bot.attr[DangerWarning.SUPPRESSED]}")
-        val first = FoundationQuests.SHORT.firstOrNull { !it.isFinished(bot) }
-        run.expectTrue(entry, "the Quest Helper tracks the first quest (${first?.name})", QuestHelper.tracked(bot) == first, "tracked ${QuestHelper.tracked(bot)?.name}")
+        // TutorIntro (owner): the tour ends at the Tutor with "Choose your path" open - the Quest Helper is the player's own choice.
+        run.expectTrue(entry, "the Quest Helper is left to the player (nothing tracked)", QuestHelper.tracked(bot) == null, "tracked ${QuestHelper.tracked(bot)?.name}")
         if (logoutAt == null) {
             run.expectTrue(entry, "Choose your path (${QuestGuideUi.INTERFACE_ID}) is open at the end", bot.interfaces.isVisible(QuestGuideUi.INTERFACE_ID), describeScreen(run, bot))
         }
         val itemsAfter = (0 until bot.inventory.capacity).mapNotNull { bot.inventory[it]?.let { i -> "${i.id}x${i.amount}" } }.sorted()
-        run.expectTrue(entry, "no item changed", itemsAfter == itemsBefore, "before $itemsBefore after $itemsAfter")
+        // Owner 2026-10-08: the Deadman starter pack is a new player's only item, handed out once the first introduction is over.
+        val pack = gg.rsmod.plugins.content.newplayer.NewPlayerConfig.current.starterChestItem
+        val expected = (itemsBefore + "${pack}x1").sorted()
+        run.expectTrue(entry, "only the Deadman starter pack was added", itemsAfter == expected, "before $itemsBefore after $itemsAfter", rule = "NewPlayerStart.grantStarterPack after the first introduction")
         val xpChanged = xpOf(bot).filter { (k, v) -> v != xpBefore[k] }.keys
         run.expectTrue(entry, "no experience changed", xpChanged.isEmpty(), "skills $xpChanged")
     }
@@ -1492,7 +1520,7 @@ object QuestsSuite : Conformance.Suite {
             val warned = conv.transcript.any { it.contains("Train your combat first") && it.contains("${foe.first}, level ${foe.second}") }
             run.expectTrue(
                 entry, "the tutor tells a combat-${bot.combatLevel} player to train combat first (${foe.first}, level ${foe.second})",
-                warned == (bot.combatLevel < foe.second), conv.brief(),
+                warned == (target.combatWarning(bot) != null), conv.brief(),
             )
         }
     }
