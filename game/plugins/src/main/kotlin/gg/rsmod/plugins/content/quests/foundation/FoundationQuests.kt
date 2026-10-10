@@ -92,6 +92,9 @@ object DesertTreasure : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Desert Treasure I": Recommended 70 Combat level.
+    override val recommendation = Recommendation.combat(70)
+
     override val reward =
         QuestReward(
             icon = Items.ANCIENT_STAFF,
@@ -266,6 +269,9 @@ object LunarDiplomacy : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Lunar Diplomacy": Recommended 50 Combat level.
+    override val recommendation = Recommendation.combat(50)
+
     override val reward =
         QuestReward(
             icon = Items.SEAL_OF_PASSAGE,
@@ -479,6 +485,8 @@ object TempleAtSenntisten : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // No recommendation (owner 2026-10-10): neither the OSRS nor the RuneScape Wiki gives one for this quest.
+
     override val reward =
         QuestReward(
             icon = Items.ANCIENT_HYMNAL,
@@ -640,6 +648,9 @@ object KingsRansom : ShortQuest(
     startPlace = "Sinclair Mansion, north of Seers' Village",
     startLocation = SINCLAIR_MANSION,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - the wikis give the quest none; OSRS Wiki "Knight Waves Training Ground": "With at least 65 Attack, Strength and Defence, the activity can be completed relatively easily".
+    override val recommendation = Recommendation.skills(65, "Attack, Strength and Defence", Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE)
+
     override val reward =
         QuestReward(
             icon = Items.ANTIQUE_LAMP,
@@ -839,6 +850,9 @@ object DesertTreasureII : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Desert Treasure II - The Fallen Empire": Recommended 100 Combat level.
+    override val recommendation = Recommendation.combat(100)
+
     override val reward =
         QuestReward(
             icon = Items.RING_OF_SHADOWS_UNCHARGED,
@@ -1016,6 +1030,9 @@ object DragonSlayerII : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Dragon Slayer II": Recommended 100 Combat level.
+    override val recommendation = Recommendation.combat(100)
+
     override val reward =
         QuestReward(
             icon = Items.VORKATHS_HEAD,
@@ -1180,6 +1197,9 @@ object SongOfTheElves : ShortQuest(
     startPlace = "Edmond's house in East Ardougne",
     startLocation = EAST_ARDOUGNE,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Song of the Elves": Recommended 95 Combat level.
+    override val recommendation = Recommendation.combat(95)
+
     override val reward =
         QuestReward(
             icon = Items.CRYSTAL_SEED,
@@ -1312,6 +1332,9 @@ object MonkeyMadnessII : ShortQuest(
     startPlace = "the Grand Exchange hall",
     startLocation = GE_HALL,
 ) {
+    // Owner 2026-10-10: the wiki's recommended level - OSRS Wiki "Monkey Madness II": Recommended 90 Combat level.
+    override val recommendation = Recommendation.combat(90)
+
     override val reward =
         QuestReward(
             icon = Items.ZENYTE_SHARD,

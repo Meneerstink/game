@@ -139,20 +139,17 @@ abstract class ShortQuest(
     }
 
     /**
-     * The combat level recommended for this quest: its strongest foe's level, at most [RECOMMENDED_CAP] (owner 2026-10-10:
-     * "strongest boss level, max 126"), or null for a quest without fights. One rule for the Quest Tutor's warning, the
-     * quest journal's Combat row, the Quest Helper side panel and its overlay before the quest starts.
+     * The quest's recommended level (owner 2026-10-10: the OSRS / RuneScape Wiki "Recommended" values), or null when the wiki
+     * gives none. One rule for the Quest Tutor's "train first" warning, the quest journal's Combat row, the Quest Helper side
+     * panel and its overlay before the quest starts.
      */
-    fun recommendedCombat(player: Player): Int? = strongestFoe(player)?.let { (_, level) -> minOf(level, RECOMMENDED_CAP) }
+    open val recommendation: Recommendation? = null
 
-    /** The recommendation as one line ("Recommended: combat level 126+"), or null without fights. */
-    fun recommendedLine(player: Player): String? = recommendedCombat(player)?.let { "Recommended: combat level $it+" }
+    /** The recommendation as one line ("Recommended: combat level 70+"), or null without one. */
+    fun recommendedLine(): String? = recommendation?.let { "Recommended: ${it.text}" }
 
-    /** The foe the Quest Tutor warns [player] about ("Train your combat first!"): below [recommendedCombat], else null. */
-    fun combatWarning(player: Player): Pair<String, Int>? {
-        val recommended = recommendedCombat(player) ?: return null
-        return strongestFoe(player)?.takeIf { player.combatLevel < recommended }
-    }
+    /** The recommendation when [player] does not meet it yet (the Quest Tutor then says to train first), else null. */
+    fun trainingAdvice(player: Player): Recommendation? = recommendation?.takeUnless { it.met(player) }
 
     /** Writes [value] and pokes the quest list so the client re-evaluates its colours. */
     fun setStage(player: Player, value: Int) {
@@ -222,8 +219,16 @@ abstract class ShortQuest(
 
     companion object {
         const val questCompleteLine = "<col=FF0000>QUEST COMPLETE!"
+    }
+}
 
-        /** The highest recommended combat level (owner 2026-10-10): stronger foes (Damis 174, the ice demon 177) count as this. */
-        const val RECOMMENDED_CAP = 126
+/** A wiki "Recommended" level of a quest: [text] for the player ("combat level 70+"), [met] whether a player reaches it. */
+class Recommendation(val text: String, val met: (Player) -> Boolean) {
+    companion object {
+        fun combat(level: Int) = Recommendation("combat level $level+") { it.combatLevel >= level }
+
+        /** Base levels of [skills], each at least [level]; [names] as the wiki words them. */
+        fun skills(level: Int, names: String, vararg skills: Int) =
+            Recommendation("$level $names") { p -> skills.all { p.skills.getMaxLevel(it) >= level } }
     }
 }

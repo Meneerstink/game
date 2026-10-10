@@ -349,12 +349,12 @@ suspend fun QueueTask.questDirections() {
         QuestHelper.track(player, chosen)
     }
     // Owner 2026-10-08 (OWNER_QUESTIONS Q17 A): the quests stay as they are; a player below the quest's strongest foe is
-    // told to train combat first (ShortQuest.combatWarning).
-    chosen.combatWarning(player)?.let { (foe, level) ->
+    // told to train first - below the quest's wiki recommendation (ShortQuest.trainingAdvice, owner 2026-10-10).
+    chosen.trainingAdvice(player)?.let { advice ->
         chatNpc(
-            "Train your combat first! This quest has you fight",
-            "$foe, level $level - and you are only",
-            "combat level ${player.combatLevel}. Come back when you are ready.",
+            "Train your combat first! For this quest I'd",
+            "recommend ${advice.text}.",
+            "Come back when you are ready.",
             facialExpression = FacialExpression.WORRIED,
         )
     }

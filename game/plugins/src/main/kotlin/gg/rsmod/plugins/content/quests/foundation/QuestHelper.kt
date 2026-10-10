@@ -274,7 +274,7 @@ object QuestHelper {
         if (setting(player, "showOverlayPanel")) {
             val placeName = if (stage <= 0) quest.startPlace else step?.place
             // Before the quest starts the tip line carries the recommended combat level (owner 2026-10-10).
-            val tip = if (stage <= 0) quest.recommendedLine(player) else step?.tip?.let { "Tip: $it" }
+            val tip = if (stage <= 0) quest.recommendedLine() else step?.tip?.let { "Tip: $it" }
             Panel.show(player, quest, stage, lines.joinToString(" ") + floorHint, placeName, place, tip)
         } else {
             Panel.close(player)

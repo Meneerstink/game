@@ -1513,16 +1513,15 @@ object QuestsSuite : Conformance.Suite {
         )
         run.expectTrue(entry, "every option dialogue was the tutor's", conv.unexpected.isEmpty(), conv.unexpected.joinToString(" ").take(250))
         run.expectTrue(entry, "the tutor's quest menu starts the Quest Helper for ${target.name}", QuestHelper.tracked(bot) == target, "tracked ${QuestHelper.tracked(bot)?.name}")
-        // Owner 2026-10-08 (OWNER_QUESTIONS Q17 A): a player below the quest's strongest foe is told to train combat first.
-        val foe = target.strongestFoe(bot)
-        run.expectTrue(entry, "${target.name} has a strongest foe", foe != null, "$foe")
-        if (foe != null) {
-            val warned = conv.transcript.any { it.contains("Train your combat first") && it.contains("${foe.first}, level ${foe.second}") }
-            run.expectTrue(
-                entry, "the tutor tells a combat-${bot.combatLevel} player to train combat first (${foe.first}, level ${foe.second})",
-                warned == (target.combatWarning(bot) != null), conv.brief(),
-            )
-        }
+        // Owner 2026-10-10: a player below the quest's wiki recommendation is told to train first, with that recommendation;
+        // a quest without one (The Temple at Senntisten) never warns.
+        val advice = target.trainingAdvice(bot)
+        val warned = conv.transcript.any { it.contains("Train your combat first") }
+        run.expectTrue(
+            entry, "the tutor warns a combat-${bot.combatLevel} player exactly when below the recommendation (${target.recommendation?.text ?: "none"})",
+            warned == (advice != null) && (advice == null || conv.transcript.any { it.contains(advice.text) }), conv.brief(),
+            rule = "ShortQuest.recommendation (OSRS / RuneScape Wiki 'Recommended', owner 2026-10-10)",
+        )
     }
 }
 

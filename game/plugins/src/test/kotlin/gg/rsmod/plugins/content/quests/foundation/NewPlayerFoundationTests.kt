@@ -484,26 +484,33 @@ class NewPlayerFoundationTests {
     }
 
     /**
-     * Owner 2026-10-10: every short quest shows a recommended combat level - its strongest foe's level, at most 126 - in the
-     * journal, the Quest Helper side panel and overlay; the Quest Tutor warns exactly the players below it.
+     * Owner 2026-10-10: each short quest recommends the OSRS / RuneScape Wiki "Recommended" level (journal, Quest Helper side
+     * panel and overlay); the Quest Tutor warns exactly the players below it. The Temple at Senntisten has none on either wiki.
      */
     @Test
-    fun `recommended combat level is the strongest foe capped at 126`() {
-        val world = mockk<World>(relaxed = true)
-        every { world.definitions } returns DEFINITIONS
-        val player = mockk<Player>(relaxed = true)
-        every { player.world } returns world
-        FoundationQuests.SHORT.forEach { quest ->
-            val strongest = quest.strongestFoe(player)
-            assertTrue(strongest != null, "${quest.name} has a fight")
-            val recommended = quest.recommendedCombat(player)!!
-            assertEquals(minOf(strongest!!.second, 126), recommended, quest.name)
-            assertEquals("Recommended: combat level $recommended+", quest.recommendedLine(player))
-            every { player.combatLevel } returns recommended - 1
-            assertTrue(quest.combatWarning(player) != null, "${quest.name}: combat ${recommended - 1} is warned")
-            every { player.combatLevel } returns recommended
-            assertNull(quest.combatWarning(player), "${quest.name}: combat $recommended is not warned")
+    fun `recommended levels are the wiki values`() {
+        val expected =
+            mapOf(
+                DesertTreasure to "combat level 70+", LunarDiplomacy to "combat level 50+", TempleAtSenntisten to null,
+                KingsRansom to "65 Attack, Strength and Defence", DesertTreasureII to "combat level 100+",
+                DragonSlayerII to "combat level 100+", SongOfTheElves to "combat level 95+", MonkeyMadnessII to "combat level 90+",
+            )
+        assertEquals(FoundationQuests.SHORT.toSet(), expected.keys)
+        expected.forEach { (quest, text) ->
+            assertEquals(text, quest.recommendation?.text, quest.name)
+            assertEquals(text?.let { "Recommended: $it" }, quest.recommendedLine(), quest.name)
         }
+        val skills = SkillSet(maxSkills = 25)
+        val player = mockk<Player>(relaxed = true)
+        every { player.skills } returns skills
+        every { player.combatLevel } returns 69
+        assertTrue(DesertTreasure.trainingAdvice(player) != null, "combat 69 is warned for Desert Treasure (70)")
+        every { player.combatLevel } returns 70
+        assertNull(DesertTreasure.trainingAdvice(player), "combat 70 is not warned for Desert Treasure")
+        assertNull(TempleAtSenntisten.trainingAdvice(player), "no recommendation, no warning")
+        assertTrue(KingsRansom.trainingAdvice(player) != null, "level 1 Attack/Strength/Defence is warned for King's Ransom")
+        listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE).forEach { skills.setBaseLevel(it, 65) }
+        assertNull(KingsRansom.trainingAdvice(player), "65 Attack, Strength and Defence is not warned")
     }
 
     /**
