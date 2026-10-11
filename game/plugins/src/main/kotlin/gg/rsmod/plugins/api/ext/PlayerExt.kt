@@ -583,8 +583,15 @@ fun Player.getInterfaceAt(dest: InterfaceDestination): Int {
 
 fun Player.isInterfaceVisible(interfaceId: Int): Boolean = interfaces.isVisible(interfaceId)
 
+/** Panes without an interface of their own that minigames mount their overlays in (Pest Control, GWD, Barrows, ...). */
+private val OVERLAY_PANES = listOf(InterfaceDestination.PVP_OVERLAY, InterfaceDestination.MAIN_SCREEN_OVERLAY)
+
 fun Player.toggleDisplayInterface(newMode: DisplayMode) {
     if (interfaces.displayMode != newMode) {
+        // Owner 2026-10-11 (tab audit): the loop below re-opens only panes with an interface of their own, so a minigame's
+        // overlay (Pest Control, GWD kill count, Barrows, Fight Caves, clan wars, duel) vanished after a window-mode switch
+        // until the player left and came back. Remember them here and mount them again in the new gameframe.
+        val overlays = OVERLAY_PANES.mapNotNull { pane -> getInterfaceAt(pane).takeIf { it != -1 }?.let { pane to it } }
         val previousParent = getDisplayComponentId(interfaces.displayMode)
         interfaces.displayMode = newMode
 
@@ -596,6 +603,7 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
         InterfaceDestination.values.filter { pane -> pane.interfaceId != -1 }.forEach { pane ->
             openInterface(spellbookInterfaceId(pane), pane)
         }
+        overlays.forEach { (pane, interfaceId) -> openInterface(interfaceId, pane) }
     }
 }
 

@@ -153,13 +153,21 @@ on_song_end {
  * When the player logs in we need to set the interface events for the main music tab and the playlist tab.
  * Setting is larger for the playlist tab because we need to enable dragging the playlist items.
  */
-on_login {
+fun sendMusicTabEvents(p: gg.rsmod.game.model.entity.Player) {
     // Enabling clicking music in main tab
-    player.setEvents(interfaceId = 187, component = 1, to = 2030, setting = 30)
+    p.setEvents(interfaceId = 187, component = 1, to = 2030, setting = 30)
 
     // Enabling clicking music in the playlist tab
-    player.setEvents(interfaceId = 187, component = 9, to = 23, setting = 0x24001E)
+    p.setEvents(interfaceId = 187, component = 9, to = 23, setting = 0x24001E)
 }
+
+on_login {
+    sendMusicTabEvents(player)
+}
+
+// Owner 2026-10-11 (tab audit): 187:1 / 187:9 have no events in the cache, and a re-mounted tab loses the server's - after a
+// window-mode switch no track or playlist entry could be clicked until a relog. Sent again after every mount (TabEvents).
+gg.rsmod.plugins.api.ext.PaneMountHooks.register(187) { p -> sendMusicTabEvents(p) }
 
 /**
  * When the play logs in we need to unlock all of the default songs if they haven't already been

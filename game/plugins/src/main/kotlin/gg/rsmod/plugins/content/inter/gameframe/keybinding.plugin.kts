@@ -6,8 +6,9 @@ import gg.rsmod.game.tools.importer.KeybindingInterfaceImportTool as Ui
  * The OSRS Keybinding window (owner 2026-10-11): Settings tab > Keybinding (261:23, appended by KeybindingInterfaceImportTool)
  * opens it; KeybindingUi does the rest.
  */
-on_interface_open(interfaceId = Ui.SETTINGS_INTERFACE) {
-    player.setInterfaceEvents(Ui.SETTINGS_INTERFACE, Ui.SETTINGS_BUTTON, -1..-1, 0x2)
+// After the Settings tab is mounted (on_interface_open runs before its IF_OPENSUB, which drops server events in the client).
+gg.rsmod.plugins.api.ext.PaneMountHooks.register(Ui.SETTINGS_INTERFACE) { p ->
+    p.setInterfaceEvents(Ui.SETTINGS_INTERFACE, Ui.SETTINGS_BUTTON, -1..-1, 0x2)
 }
 
 on_login {

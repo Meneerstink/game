@@ -281,6 +281,7 @@ object AncientCurses {
 
     fun toggleTurmoil(player: Player, playActivationVisual: Boolean = true) {
         if (isTurmoilActive(player)) {
+            traceOff(player, "Turmoil")
             setTurmoil(player, false)
             resetTurmoilBonus(player)
             player.playSound(CURSE_DEACTIVATE_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
@@ -288,24 +289,29 @@ object AncientCurses {
             return
         }
         if (getBook(player) != PrayerBook.ANCIENT) {
+            refused(player, "Turmoil", "book is ${getBook(player)}")
             player.filterableMessage("You must switch to the ancient prayer book first.")
             return
         }
         if (player.attr[UNLOCKED_ATTR] != true) {
+            refused(player, "Turmoil", "curses not unlocked")
             player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < TURMOIL_LEVEL) {
+            refused(player, "Turmoil", "prayer level ${player.skills.getMaxLevel(Skills.PRAYER)} < $TURMOIL_LEVEL")
             player.message(Prayers.requirementText(player, curse = true, slot = AncientCurse.TURMOIL_SLOT) ?: "You need a Prayer level of at least $TURMOIL_LEVEL to use Turmoil.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
+            refused(player, "Turmoil", "no prayer points")
             player.filterableMessage("You don't have enough Prayer points left.")
             return
         }
         // Turmoil never runs together with a Sap or Leech.
         activeCurses(player).filter { it.conflictsWithTurmoil }.forEach { deactivateCurse(player, it, playSound = false) }
         setTurmoil(player, true)
+        traceOn(player, "Turmoil")
         player.attr[TURMOIL_BONUS_ATTR] = mutableMapOf()
         Prayers.markActivated(player, TURMOIL_KEY)
         syncTurmoilVarbits(player)
@@ -459,7 +465,7 @@ object AncientCurses {
         when (slot) {
             AncientCurse.PROTECT_ITEM_SLOT -> return false
             AncientCurse.TURMOIL_SLOT -> toggleTurmoil(player)
-            else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it) }
+            else -> AncientCurse.bySlot(slot)?.let { toggleCurse(player, it) } ?: refused(player, "slot $slot", "no curse in that grid slot")
         }
         player.setVarc(Prayers.QUICK_PRAYERS_ACTIVE_VARC, 0)
         return true
@@ -610,6 +616,17 @@ object AncientCurses {
         curse: AncientCurse,
     ): Boolean = activeCurses(player).contains(curse)
 
+    // Owner 2026-10-11 ("curses sometimes do not turn on", clicked curse does not light): every curse decision is traced, a
+    // refusal as a PROBLEM line with its reason - several refusals only show a filterable message the chat filter can hide.
+    private fun traceOn(player: Player, name: String) =
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "curse on ${player.username} $name points=${player.getCurrentPrayerPoints()}" }
+
+    private fun traceOff(player: Player, name: String) =
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "curse off ${player.username} $name" }
+
+    private fun refused(player: Player, name: String, reason: String) =
+        gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "curse $name refused for ${player.username}: $reason" }
+
     fun toggleCurse(
         player: Player,
         curse: AncientCurse,
@@ -619,6 +636,7 @@ object AncientCurses {
                 player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.PRAYER,
             )
         ) {
+            refused(player, curse.curseName, "prayer restricted here")
             return
         }
         if (isCurseActive(player, curse)) {
@@ -626,24 +644,29 @@ object AncientCurses {
             return
         }
         if (player.attr[UNLOCKED_ATTR] != true) {
+            refused(player, curse.curseName, "curses not unlocked")
             player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
         }
         if (getBook(player) != PrayerBook.ANCIENT) {
+            refused(player, curse.curseName, "book is ${getBook(player)}")
             player.filterableMessage("You must switch to the ancient book first - use: curse book ancient.")
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < curse.level) {
+            refused(player, curse.curseName, "prayer level ${player.skills.getMaxLevel(Skills.PRAYER)} < ${curse.level}")
             player.message(Prayers.requirementText(player, curse = true, slot = curse.slot) ?: "You need a Prayer level of at least ${curse.level} to use ${curse.curseName}.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
+            refused(player, curse.curseName, "no prayer points")
             player.filterableMessage("You don't have enough Prayer points left.")
             return
         }
         // Dragon scimitar Sever (and every other overhead-disabling effect) blocks the curse book's Deflects too; before,
         // only the normal book checked the timer, so a severed player could re-enable a Deflect at once (owner 2026-09-18).
         if (curse.category == AncientCurse.Category.DEFLECT_COMBAT && Prayers.overheadsDisabled(player)) {
+            refused(player, curse.curseName, "overhead prayers disabled")
             player.setVarbit(curse.varbit, 0)
             player.message("You cannot use overhead prayers right now.")
             return
@@ -656,6 +679,7 @@ object AncientCurses {
         }
         activeCurses(player).add(curse)
         player.setVarbit(curse.varbit, 1)
+        traceOn(player, curse.curseName)
         Prayers.markActivated(player, curse)
         if (playActivationVisual) {
             val darkan = DARKAN_ACTIVATION[curse]
@@ -675,6 +699,7 @@ object AncientCurses {
         playSound: Boolean = true,
     ) {
         if (activeCurses(player).remove(curse)) {
+            traceOff(player, curse.curseName)
             player.setVarbit(curse.varbit, 0)
             if (playSound) player.playSound(CURSE_DEACTIVATE_SOUND, volume = Prayers.PRAYER_SOUND_VOLUME)
             player.filterableMessage("You deactivate ${curse.curseName}.")

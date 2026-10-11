@@ -17,6 +17,15 @@ on_timer(key = BONUS_EXPERIENCE_TIME_ELAPSED) {
     player.timers[BONUS_EXPERIENCE_TIME_ELAPSED] = 100
 }
 
+// Owner 2026-10-11 (tab audit): the orb sprite sits on the gameframe top level itself, which every rebuild (window-mode switch,
+// world map close) sends again with the cache's sprite - restore the bonus-XP orb while it is on.
+gg.rsmod.plugins.api.ext.GameframeRebuild.register("bonus_experience") { p ->
+    if (p.getVarbit(ENABLED_VARBIT) == 1) {
+        p.setComponentSprite(interfaceId = 548, component = 0, sprite = 5568)
+        p.setComponentSprite(interfaceId = 746, component = 229, sprite = 5568)
+    }
+}
+
 on_login {
     /**
      * Handle the timer for bonus experience

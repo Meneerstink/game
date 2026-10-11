@@ -253,6 +253,13 @@ val QUIVER_DISPLAY_SLOT = DizanasQuiver.DISPLAY_SLOT
 /** Equipment Bonuses (667) slot background of the same display slot; the client moves it above the ammo slot (owner 2026-09-19). */
 val BONUSES_QUIVER_SLOT_COMPONENT = 14
 
+// Owner 2026-10-11 (tab audit): the slot's hide flag was sent only when the equipment changed, so after a window-mode switch the
+// re-mounted Equipment tab showed the cache's default until the next equipment change.
+gg.rsmod.plugins.api.ext.PaneMountHooks.register(387) { p ->
+    val cape = p.equipment[EquipmentType.CAPE.id]
+    p.setComponentHidden(interfaceId = 387, component = QUIVER_SLOT_COMPONENT, hidden = !(cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS))
+}
+
 gg.rsmod.game.model.entity.Player.equipmentDisplay = { p, items ->
     val cape = items.getOrNull(EquipmentType.CAPE.id)
     val holder = cape != null && cape.id in DizanasQuiver.AMMO_HOLDERS
