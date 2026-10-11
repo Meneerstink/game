@@ -177,7 +177,8 @@ object ClientHudConfig {
             bool("stretchedmode.keepAspectRatio", false),
             bool("stretchedmode.increasedPerformance", false),
             bool("stretchedmode.integerScaling", false),
-            int("stretchedmode.scalingFactor", 50, 0, 100),
+            // No @Range in RuneLite (0 .. Int.MAX_VALUE); the old 100 cap blocked 200 %.
+            int("stretchedmode.scalingFactor", 50),
             // Keybinding (owner 2026-10-11: "f keys customize like osrs", then "in de client ipv sidebar"): saved here, edited in the
             // in-game OSRS Keybinding window (content/inter/gameframe/Keybinding), not in the 78 Plugins sidebar. No donor has it.
             bool("keybinding.enabled", true),

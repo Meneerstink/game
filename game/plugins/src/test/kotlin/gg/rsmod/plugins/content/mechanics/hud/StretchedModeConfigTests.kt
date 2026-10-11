@@ -33,8 +33,11 @@ class StretchedModeConfigTests {
             assert(ClientHudConfig.set(player, key, value)) { key }
             assertEquals(value, ClientHudConfig.get(player, key))
         }
-        assert(!ClientHudConfig.set(player, "stretchedmode.scalingFactor", "101"))
-        assertEquals("84", ClientHudConfig.get(player, "stretchedmode.scalingFactor"))
+        // RuneLite's scalingFactor has no @Range: 0 .. Int.MAX_VALUE (night run 2026-10-12, the test matrix asks for 200 %).
+        assert(ClientHudConfig.set(player, "stretchedmode.scalingFactor", "200"))
+        assertEquals("200", ClientHudConfig.get(player, "stretchedmode.scalingFactor"))
+        assert(!ClientHudConfig.set(player, "stretchedmode.scalingFactor", "-1"))
+        assertEquals("200", ClientHudConfig.get(player, "stretchedmode.scalingFactor"))
     }
 
     @Test
