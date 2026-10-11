@@ -7,6 +7,7 @@ import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
@@ -199,6 +200,9 @@ class CombatEngageTests {
         // its early "no weapon equipped" branch instead of touching a
         // relaxed-mocked ItemContainer.
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
+        // A real attribute map: a relaxed mock answers attr[JAILED_UNTIL] (Punishments.isJailed, read by
+        // AreaState.canPlayersFight) with a bare Object, which threw ClassCastException before any PvP rule ran.
+        every { player.attr } returns AttributeMap()
         return player
     }
 

@@ -71,7 +71,66 @@ class GamePacketDecoderDesyncTests {
         channel.finish()
     }
 
+    /**
+     * The whole class, not only "Leave chat": EVERY variable-length packet the 667 client can send (ClientProtSizes), with an
+     * empty payload, through both decoder paths (registered in packets.yml / skipped as unregistered), must leave the next
+     * packet aligned.
+     */
+    @Test
+    fun `every empty variable packet of the client keeps the next packet aligned on both decoder paths`() {
+        val variable = ClientProtSizes.SIZES.filterValues { it < 0 }
+        assert(variable.size > 10) { "ClientProtSizes lost its variable packets" }
+        for (registered in listOf(true, false)) {
+            val all =
+                object : IPacketMetadata {
+                    override fun getType(opcode: Int): PacketType? {
+                        if (!registered && opcode != COUNT_DIALOG) return null
+                        return when (ClientProtSizes.SIZES[opcode]) {
+                            null -> null
+                            ClientProtSizes.VARIABLE_BYTE -> PacketType.VARIABLE_BYTE
+                            ClientProtSizes.VARIABLE_SHORT -> PacketType.VARIABLE_SHORT
+                            else -> PacketType.FIXED
+                        }
+                    }
+
+                    override fun getLength(opcode: Int): Int = ClientProtSizes.SIZES[opcode]?.coerceAtLeast(0) ?: 0
+
+                    override fun shouldIgnore(opcode: Int): Boolean = false
+                }
+            for ((opcode, size) in variable) {
+                val channel = EmbeddedChannel(GamePacketDecoder(null, all))
+                val input = Unpooled.buffer()
+                input.writeByte(opcode)
+                if (size == ClientProtSizes.VARIABLE_SHORT) input.writeShort(0) else input.writeByte(0)
+                input.writeByte(COUNT_DIALOG)
+                input.writeInt(0x0A0B0C0D)
+
+                channel.writeInbound(input)
+
+                val label = "opcode $opcode (${if (registered) "registered" else "unregistered"})"
+                if (registered) {
+                    val empty = channel.readInbound() as GamePacket
+                    assertEquals(opcode, empty.opcode, label)
+                    assertEquals(0, empty.payload.readableBytes(), label)
+                }
+                val next = channel.readInbound() as GamePacket
+                try {
+                    assertEquals(COUNT_DIALOG, next.opcode, label)
+                    assertEquals(0x0A0B0C0D, next.payload.readInt(), label)
+                } finally {
+                    next.payload.release()
+                }
+                assertNull(channel.readInbound(), label)
+                assert(channel.isOpen) { "$label closed the connection" }
+                channel.finish()
+            }
+        }
+    }
+
     private companion object {
+        /** ClientProt RESUME_P_COUNTDIALOG (3, fixed 4 bytes) - the packet that must still decode after the empty one. */
+        const val COUNT_DIALOG = 3
+
         /** ClientProt FRIENDS_CHAT_CHANGE (1, variable byte). */
         const val FRIENDS_CHAT_CHANGE = 1
         const val REAL = 7
