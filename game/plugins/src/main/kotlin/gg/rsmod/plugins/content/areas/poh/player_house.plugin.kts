@@ -57,6 +57,12 @@ on_magic_spell_button("Teleport to House") { metadata ->
         return@on_magic_spell_button
     }
     val self = player
+    // Handoff 9b: the runes used to be taken before the house was allocated, and lost when no space was free (the tab path refunds
+    // its tablet); now the spell is refused before anything is paid when the instance allocator has no room.
+    if (!self.world.instanceAllocator.hasFreeSpace()) {
+        self.message("Your house can't be reached right now. Try again in a moment.")
+        return@on_magic_spell_button
+    }
     self.canTeleport(TeleportType.MODERN) {
         MagicSpells.removeRunes(self, requirements, metadata.sprite)
         self.addXp(Skills.MAGIC, 30.0, checkBrawlingGloves = true)
@@ -77,42 +83,46 @@ on_magic_spell_button("Teleport to House") { metadata ->
     }
 }
 
-fun enterHouse(player: Player): Boolean {
-    val arrival = PlayerHouse.build(player)
-    if (arrival == null) {
-        player.message("Your house can't be reached right now. Try again in a moment.")
-        return false
-    }
-    player.moveTo(arrival)
-    // OSRS Wiki "Vengeance": "the effect will wear off upon logout or when teleporting into a player-owned house".
-    gg.rsmod.plugins.content.mechanics.combatresponse.Vengeance.clear(player)
-    return true
-}
+fun enterHouse(player: Player): Boolean = PlayerHouse.enter(player)
 
-// Rimmington house portal: walks into the same private house.
-on_obj_option(obj = PlayerHouse.RIMMINGTON_PORTAL, option = "enter") {
-    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
-        enterHouse(player)
+/*
+ * House portals (owner 2026-10-10 night run: every location the cache has a portal for). The rev-667 portal locs carry only
+ * "Enter"; it opens the choice OSRS gives as separate options - Home, Build mode, Friend's house (2009scape PortalOptionPlugin /
+ * Darkan HouseController: "Go to your house" / "(building mode)" / "Go to a friend's house"). A portal of another town answers
+ * "Your house is in <town>." (2009scape). Every way in waits out the Deadman 7-second portal timer (handoff 9b). Owner: nobody
+ * but the owner enters a house, so "Friend's house" lets nobody in.
+ */
+PlayerHouse.Location.values().forEach { location ->
+    on_obj_option(obj = location.portal, option = "enter") {
+        val home = PlayerHouse.locationOf(player)
+        if (home != location) {
+            player.message("<col=FF0000>Your house is in ${home.displayName}.")
+            return@on_obj_option
+        }
+        player.queue {
+            when (val choice = options("Go to your house.", "Go to your house (building mode).", "Go to a friend's house.", "Never mind.")) {
+                1, 2 ->
+                    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
+                        PohBuild.setBuildMode(player, choice == 2)
+                        enterHouse(player)
+                    }
+                3 -> messageBox("Only a house's owner can enter it in this world.")
+            }
+        }
     }
 }
 
 // Exit portal.
 on_obj_option(obj = PlayerHouse.PORTAL, option = "enter") {
     DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
-        player.moveTo(PlayerHouse.EXIT_TILE)
+        player.moveTo(PlayerHouse.locationOf(player).exit)
     }
 }
 
 // Rejuvenation pool (OSRS Wiki "Ornate rejuvenation pool"): restores hitpoints, prayer, run energy and special
-// attack, raises reduced stats back to their base level (boosts are kept) and cures poison and venom. The 667
-// ornamental fountain carries name "Rejuvenation pool" and option "Drink" via PohObjectOptionTool.
+// attack, raises reduced stats back to their base level (boosts are kept) and cures poison and venom. The pool is
+// the imported OSRS loc (PlayerHouse.POOL), whose only option is "Drink".
 on_obj_option(obj = PlayerHouse.POOL, option = "drink") {
-    drinkFromPool(player)
-}
-
-// Slot 5 is the fountain's former "Remove" option: a client that has not yet downloaded the updated loc definition
-// still shows that option, and it must drink too rather than do nothing.
-on_obj_option(obj = PlayerHouse.POOL, option = 5) {
     drinkFromPool(player)
 }
 
@@ -179,9 +189,42 @@ mapOf(
     }
 }
 
-// Combat dummy: appears once the owner is inside (see PlayerHouse.DUMMY_SPAWN_TIMER).
+// Combat dummy and demon butler: appear once the owner is inside (see PlayerHouse.DUMMY_SPAWN_TIMER).
 on_timer(PlayerHouse.DUMMY_SPAWN_TIMER) {
     PlayerHouse.spawnDummy(player)
+    PohServant.spawn(player)
+}
+
+/*
+ * Owner 2026-10-10 night run: "log back in inside your house". The instance allocator records where the player stood when it
+ * moved them out on logout (INSTANCE_LOGOUT_TILE_ATTR); a house is rebuilt around that spot on the next login. The house itself
+ * is released on logout as before (DEALLOCATE_ON_LOGOUT), so items dropped in it are gone and a relog never brings them back.
+ * A butler errand still under way is settled first (un-noted planks to the bank).
+ */
+on_logout {
+    PohServant.settleAway(player)
+    val tile = player.attr[gg.rsmod.game.model.attr.INSTANCE_LOGOUT_TILE_ATTR] ?: return@on_logout
+    val offset = PlayerHouse.offsetInReleasedHouse(player.attr[gg.rsmod.game.model.attr.INSTANCE_LOGOUT_MAP_ATTR], tile) ?: return@on_logout
+    player.attr[PlayerHouse.LOGOUT_OFFSET_ATTR] = (offset.first shl 8) or offset.second
+}
+
+on_login {
+    player.setVarbit(PlayerHouse.BUILD_MODE_VARBIT, if (PlayerHouse.isBuildMode(player)) 1 else 0)
+    val packed = player.attr[PlayerHouse.LOGOUT_OFFSET_ATTR] ?: return@on_login
+    player.attr.remove(PlayerHouse.LOGOUT_OFFSET_ATTR)
+    // The login's own map load must reach the client first: moving into an instance in the login tick left the client on a
+    // black scene (checked in the client 2026-10-10), so the house is built and entered once the login has settled.
+    player.queue(TaskPriority.STRONG) {
+        wait(LOGIN_SETTLE_TICKS)
+        val arrival = PlayerHouse.build(player, keepOffset = (packed shr 8) to (packed and 0xFF)) ?: return@queue
+        player.moveTo(arrival)
+    }
+}
+
+val LOGIN_SETTLE_TICKS = 2
+
+on_timer(PohServant.TRIP_TIMER) {
+    PohServant.returnFromTrip(player)
 }
 
 // Mounted amulet of glory: the four glory destinations (amulet_of_glory.plugin.kts), never runs out of charges.

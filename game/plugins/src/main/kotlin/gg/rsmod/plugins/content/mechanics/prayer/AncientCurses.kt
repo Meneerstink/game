@@ -229,18 +229,69 @@ object AncientCurses {
     private fun hasPotionBoost(target: Pawn, skill: Int): Boolean =
         target is Player && target.skills.getCurrentLevel(skill) > target.skills.getMaxLevel(skill)
 
-    /** Pushes the prayer-tab stat modifiers (boost minus drain) for a player caster or victim. */
+    /**
+     * Pushes the prayer-tab stat modifiers (boost minus drain) for a player caster or victim.
+     *
+     * Owner 2026-10-11 ("Show stat adjustments klopt niet"): the cache reads these varbits as LEVELS - cs2 1711 shows
+     * `(varbit - 30) x 100 / base level` (1697 -> 1714) and itself adds the 2011 +5 % of an active Leech (1713, the curse's
+     * active varbit 6830..6834), capped by 1711 ([StatAdjustmentCapCacheTool]). The old value was a percentage on Void's
+     * guessed 12/15 scale with the 5 % counted again, so Leech Attack showed about +9 % for a +5 % curse. Now: the Leech
+     * modifier above the client's 5 % (Leech Ranged 15 %, Leech Magic 20 %) plus the leeched levels, minus the levels an
+     * enemy Sap/Leech really drained, all in levels.
+     *
+     * The initial 10 % an enemy Sap/Leech takes is the client's own: cs2 1712 shows -10 % while this player's "sapped" flag
+     * (6847..6851) or "leeched" flag (6852..6856) is set, and 1711 then floors the total at -20 % (Sap) or -25 % (Leech) - the
+     * 2011 maxima. 1710 shows only the player's OWN stats, so a Sap shows on the opponent's book, never on the caster's.
+     */
     fun syncStatVarbits(player: Player) {
         STAT_MODIFIER_VARBITS.forEach { (skill, varbit) ->
-            val boost =
-                (if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) leechBoostPct(skill) else 0) +
-                    (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0)
-            val drain =
-                (if (player.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill)?.isNotEmpty() == true) SAP_BASE_PCT else 0) +
-                    (player.attr[CURSE_DRAIN_PCT_ATTR]?.get(skill) ?: 0)
-            val value = 30 + Math.round(boost * 12.0 / 15.0).toInt() - Math.round(drain * 19.0 / 25.0).toInt()
+            val (sapped, leeched) = drainedBy(player, skill)
+            val index = varbit - STAT_MODIFIER_VARBITS.getValue(Skills.ATTACK)
+            player.setVarbit(SAPPED_FLAG_VARBIT + index, if (sapped && !leeched) 1 else 0)
+            player.setVarbit(LEECHED_FLAG_VARBIT + index, if (leeched) 1 else 0)
+            val base = player.skills.getMaxLevel(skill).coerceAtLeast(1)
+            val modifierPct =
+                if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) leechBoostPct(skill) - LEECH_BOOST_BASE_PCT else 0
+            // The levels this Leech run lifted the stat above its start ([escalateBoost]), not the rounded percentage it stores.
+            val start = player.attr[LEECH_START_LEVEL_ATTR]?.get(skill)
+            val leechedLevels =
+                if (start == null || (player.attr[LEECH_BOOST_PCT_ATTR]?.get(skill) ?: 0) <= 0) 0
+                else (player.skills.getCurrentLevel(skill) - start).coerceIn(0, LEECH_LEVEL_CAP)
+            // The levels the escalation really took and has not regenerated yet: never more than it recorded, and less as the
+            // stat climbs back ([refreshStatAdjustments] runs on every restore step).
+            val recorded = Math.round((player.attr[CURSE_DRAIN_PCT_ATTR]?.get(skill) ?: 0) * base / 100.0).toInt()
+            val drainedLevels = minOf(recorded, (base - player.skills.getCurrentLevel(skill)).coerceAtLeast(0))
+            val value = 30 + Math.round(modifierPct * base / 100.0).toInt() + leechedLevels - drainedLevels
             player.setVarbit(varbit, value.coerceIn(0, 63))
         }
+    }
+
+    /** Cache varbits read by cs2 1695 / 1712: this player's stat is being drained by an enemy Sap / Leech (attack .. magic). */
+    const val SAPPED_FLAG_VARBIT = 6847
+    const val LEECHED_FLAG_VARBIT = 6852
+
+    /** Whether an active enemy Sap / Leech currently holds its initial drain on [target]'s [skill]. */
+    private fun drainedBy(target: Pawn, skill: Int): Pair<Boolean, Boolean> {
+        val casters = target.attr[CURSE_BASE_DRAIN_ATTR]?.get(skill) ?: return false to false
+        var sapped = false
+        var leeched = false
+        for (caster in casters) {
+            val cursed = caster.attr[CURSED_TARGETS_ATTR] ?: continue
+            for ((curse, targets) in cursed) {
+                if (skill !in curse.drains || target !in targets || !isCurseActive(caster, curse)) continue
+                if (curse.name.startsWith("LEECH_")) leeched = true else sapped = true
+            }
+        }
+        return sapped to leeched
+    }
+
+    /**
+     * Keeps the curse tab's stat adjustments in step with the real levels while leeched levels decay and drained levels
+     * regenerate (BoostedCombatStats / stat restoration call it). Only on the curse book: the normal book's stat varbits
+     * belong to [Prayers]. Unchanged varbits send nothing.
+     */
+    fun refreshStatAdjustments(player: Player) {
+        if (getBook(player) == PrayerBook.ANCIENT) syncStatVarbits(player)
     }
 
     /** Immediate release of everything bound to [curse] staying active (KB: the initial 10 % / 5 %). */
@@ -679,6 +730,9 @@ object AncientCurses {
         }
         activeCurses(player).add(curse)
         player.setVarbit(curse.varbit, 1)
+        // Owner 2026-10-11 (Show stat adjustments): Leech Ranged / Magic's modifier shows from the moment the curse is on, not
+        // only after its first proc in a fight (tested: the tab showed only the client's own +5 %).
+        syncStatVarbits(player)
         traceOn(player, curse.curseName)
         Prayers.markActivated(player, curse)
         if (playActivationVisual) {
@@ -941,6 +995,13 @@ object AncientCurses {
             else -> 1.0 + LEECH_BOOST_BASE_PCT / 100.0
         }
     }
+
+    /**
+     * The highest own stat varbit (6857+) value above 30 a Leech can reach for a stat of [baseLevel]: its modifier above the
+     * client's own 5 % plus [LEECH_LEVEL_CAP] leeched levels ([syncStatVarbits]).
+     */
+    fun leechStatVarbitMax(skill: Int, baseLevel: Int): Int =
+        Math.round((leechBoostPct(skill) - LEECH_BOOST_BASE_PCT) * baseLevel / 100.0).toInt() + LEECH_LEVEL_CAP
 
     /** Prayer-tab percentage of the Leech self-boost modifier for [skill]. */
     private fun leechBoostPct(skill: Int): Int =

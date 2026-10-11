@@ -14,6 +14,43 @@ class StoreInterfaceImportToolTests {
         components.forEach { assertTrue(LootKeyInterfaceImportTool.encode(it).isNotEmpty()) }
     }
 
+    /** Owner 2026-10-11 bank-size window: no panel or button overlaps another or the 6 px gold frame. */
+    @Test
+    fun `no panel or button overlaps another or the frame`() {
+        val a = StoreArtTool
+        val ui = StoreInterfaceImportTool
+        val byId = ui.components(fonts).associateBy { it.id }
+        val buy = byId.getValue(ui.BUY_LAYER)
+        val close = byId.getValue(ui.CLOSE)
+        val boxes =
+            mapOf(
+                "close" to intArrayOf(close.x, close.y, close.width, close.height),
+                "tabs" to intArrayOf(a.TAB_X, a.TAB_Y, a.TAB_PITCH * 2 + a.TAB_WIDTH, a.TAB_HEIGHT),
+                "categories" to intArrayOf(a.SECTION_X, a.SECTION_Y, a.SECTION_PITCH * 5 + a.SECTION_WIDTH, a.SECTION_HEIGHT),
+                "strip" to intArrayOf(a.STRIP_X, a.STRIP_Y, a.STRIP_WIDTH, a.STRIP_HEIGHT),
+                "grid" to intArrayOf(a.GRID_X, a.GRID_Y, a.GRID_WIDTH, a.GRID_HEIGHT),
+                "pages" to intArrayOf(a.GRID_X, a.NAV_Y, a.GRID_WIDTH, a.NAV_HEIGHT),
+                "showcase" to intArrayOf(a.SHOW_X, a.SHOW_Y, a.SHOW_WIDTH, a.SHOW_HEIGHT),
+                "card" to intArrayOf(a.CARD_X, a.CARD_Y, a.CARD_WIDTH, a.CARD_HEIGHT),
+                "buy" to intArrayOf(buy.x, buy.y, buy.width, buy.height),
+            )
+        boxes.forEach { (name, b) ->
+            assertTrue(b[0] >= 6 && b[1] >= 6 && b[0] + b[2] <= ui.WIDTH - 6 && b[1] + b[3] <= ui.HEIGHT - 6, "$name ${b.toList()} touches the frame")
+        }
+        boxes.entries.toList().let { list ->
+            for (i in list.indices) for (j in i + 1 until list.size) {
+                val (n1, p) = list[i]
+                val (n2, q) = list[j]
+                val overlap = p[0] < q[0] + q[2] && q[0] < p[0] + p[2] && p[1] < q[1] + q[3] && q[1] < p[1] + p[3]
+                assertTrue(!overlap, "$n1 ${p.toList()} overlaps $n2 ${q.toList()}")
+            }
+        }
+        // every slot inside the grid panel
+        (0 until ui.SLOT_COUNT).forEach {
+            assertTrue(ui.slotX(it) + a.SLOT_SIZE <= a.GRID_X + a.GRID_WIDTH && ui.slotY(it) + a.SLOT_SIZE <= a.GRID_Y + a.GRID_HEIGHT, "slot $it")
+        }
+    }
+
     @Test
     fun `every window child stays inside the window`() {
         val offenders =
@@ -31,10 +68,12 @@ class StoreInterfaceImportToolTests {
      * client (765x503).
      */
     @Test
-    fun `the window is larger than the 2026-10-03 one, shows 49 items a page and fits the smallest resizable client`() {
-        assertTrue(StoreInterfaceImportTool.WIDTH > 527 && StoreInterfaceImportTool.HEIGHT > 360, "window ${StoreInterfaceImportTool.WIDTH}x${StoreInterfaceImportTool.HEIGHT}")
-        assertTrue(StoreInterfaceImportTool.WIDTH <= 765 && StoreInterfaceImportTool.HEIGHT <= 503, "window ${StoreInterfaceImportTool.WIDTH}x${StoreInterfaceImportTool.HEIGHT}")
-        assertEquals(49, StoreInterfaceImportTool.SLOT_COUNT)
+    fun `the window is the bank's size, so it fits the fixed and resizable modal slot, and shows 30 items a page`() {
+        // Owner 2026-10-11: "stores moeten niet overlappen zeker niet in fixed mode" - the 512x334 game view (fixed 548:9, resizable 746).
+        assertEquals(512, StoreInterfaceImportTool.WIDTH)
+        assertEquals(334, StoreInterfaceImportTool.HEIGHT)
+        assertEquals(0, StoreInterfaceImportTool.WINDOW_OFFSET_X)
+        assertEquals(30, StoreInterfaceImportTool.SLOT_COUNT)
     }
 
     /** Owner 2026-10-10: category buttons in one row under the shop tabs, none overlapping a tab, the strip or another button. */
@@ -115,6 +154,9 @@ class StoreInterfaceImportToolTests {
         // The first 2026-10-10 window: 7x6 with category buttons.
         assertEquals(220, StoreInterfaceImportTool.SECTIONS_7X6.componentCount)
         assertEquals(StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.layoutFor(220))
+        // The 660x470 window of 2026-10-10/11 (what both caches hold until the bank-size window is applied): 7x7, 250 components.
+        assertEquals(250, StoreInterfaceImportTool.WIDE_7X7.componentCount)
+        assertEquals(StoreInterfaceImportTool.WIDE_7X7, StoreInterfaceImportTool.layoutFor(250))
         assertEquals(StoreInterfaceImportTool.COMPONENT_COUNT, current.componentCount)
         assertEquals(StoreInterfaceImportTool.SECTION_FIRST, current.sectionFirst)
         assertEquals(StoreInterfaceImportTool.OWNED, current.owned)

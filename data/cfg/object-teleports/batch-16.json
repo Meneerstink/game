@@ -1,0 +1,260 @@
+{
+ "teleports": [
+  {
+   "id": 37684,
+   "name": "lumbridge_cellar_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3290,
+    "z": 4935,
+    "height": 0
+   },
+   "to": {
+    "x": 3230,
+    "z": 3240,
+    "height": 0
+   },
+   "source": "Void data/minigame/mage_training_arena/mage_training_arena.teles.toml [37684] Climb-up 3290,4935 delta (-60,-1696) and 2009scape core/game/global/action/SpecialLadders.java INTRO_LEAVE (3290,4935 -> 3230,3240) agree; the cellar is entered by ladder 37683 (3230,3241 -> 3290,4936, PASS in the sweep traversal-20261003-185406 catalogue.tsv), so without this the player had no way out. 3230,3240 is 37683's S start tile in the same sweep (standable, PASS)."
+  },
+  {
+   "id": 7433,
+   "name": "phasmatys_brewery_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3682,
+    "z": 9962,
+    "height": 0
+   },
+   "to": {
+    "x": 3681,
+    "z": 3497,
+    "height": 0
+   },
+   "source": "2009scape core/game/global/action/SpecialLadders.java PHASMATYS_BAR_UP (3682,9962 -> 3681,3497): the Port Phasmatys bar cellar (brewery, 2009scape AppleMushListener 3676-3678,9957-9959); 3681,3497 is the bar floor south of the trapdoor 7434 (3681,3498)."
+  },
+  {
+   "id": 4965,
+   "name": "haunted_mine_ladder",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3422,
+    "z": 9625,
+    "height": 0
+   },
+   "to": {
+    "x": 2783,
+    "z": 4569,
+    "height": 0
+   },
+   "source": "2009scape content/region/morytania/quest/hauntedmine/HauntedMineListeners.kt LADDER_4965 'Climb-down', south ladder (x 3421-3423) -> 2783,4569; the 667 counterpart Ladder 4966 'Climb-up' stands at 2782,4569 (placements_667.tsv) and 2783,4569 is its E start in the sweep traversal-20261003-185406 catalogue.tsv (standable, PASS back up to 3422,9624 - batch-9.json). Batch 9 added the north pair and the south way up only."
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3034,
+    "z": 5600,
+    "height": 1
+   },
+   "to": {
+    "x": 3034,
+    "z": 5601,
+    "height": 0
+   },
+   "source": "667 map (placements_667.tsv): Ladder 38762 (3034,5600,1) stands on Ladder 38761 'Climb' (same tile one floor down), as at the four placements of batch-6.json; every side of 38761@3034,5600,0 is a standable start in the sweep traversal-20261003-185406 catalogue.tsv (PASS from E/N/S/W); 3034,5601 is the N tile, the side every bot used the upper ladder from."
+  },
+  {
+   "id": 12781,
+   "name": "burgh_de_rott_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3513,
+    "z": 3238,
+    "height": 2
+   },
+   "to": {
+    "x": 3513,
+    "z": 3239,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 12780 'Climb-up' on the same tile two floors down (no loc on plane 1); reverse of batch-6.json burgh_de_rott_ladder_up (-> 3513,3239,2). 3513,3239,0 is 12780's N start in the sweep traversal-20261003-185406 catalogue.tsv (standable, PASS)."
+  },
+  {
+   "id": 20357,
+   "name": "sophanem_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3308,
+    "z": 2803,
+    "height": 2
+   },
+   "to": {
+    "x": 3309,
+    "z": 2803,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 20356 'Climb-up' on the same tile two floors down (3308,2803,0; no loc on plane 1); reverse of batch-6.json sophanem_ladder_up. 3309,2803,0 is the tile every bot in the sweep traversal-20261003-185406 catalogue.tsv used 20356 from (E start, PASS)."
+  },
+  {
+   "id": 20356,
+   "name": "sophanem_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3279,
+    "z": 2771,
+    "height": 1
+   },
+   "to": {
+    "x": 3279,
+    "z": 2770,
+    "height": 3
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 20357 'Climb-down' on the same tile two floors up (3279,2771,3; nothing on plane 2) - the same 20356/20357 two-floor pair as 3308,2803 (batch-6.json). 3279,2770,3 is 20357's S start in the sweep traversal-20261003-185406 catalogue.tsv, the side it is used from (N/W: I can't reach that!)."
+  },
+  {
+   "id": 20356,
+   "name": "sophanem_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3283,
+    "z": 2771,
+    "height": 1
+   },
+   "to": {
+    "x": 3283,
+    "z": 2770,
+    "height": 3
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 20357 'Climb-down' on the same tile two floors up (3283,2771,3; nothing on plane 2). 3283,2770,3 is 20357's S start in the sweep traversal-20261003-185406 catalogue.tsv, the side it is used from (E/N: I can't reach that!)."
+  },
+  {
+   "id": 20357,
+   "name": "sophanem_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3283,
+    "z": 2771,
+    "height": 3
+   },
+   "to": {
+    "x": 3283,
+    "z": 2772,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 20356 'Climb-up' on the same tile two floors down (3283,2771,1). 3283,2772,1 is the N tile every bot in the sweep traversal-20261003-185406 catalogue.tsv used 20356 from (standable)."
+  },
+  {
+   "id": 20357,
+   "name": "sophanem_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3279,
+    "z": 2771,
+    "height": 3
+   },
+   "to": {
+    "x": 3279,
+    "z": 2772,
+    "height": 1
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ladder 20356 'Climb-up' on the same tile two floors down (3279,2771,1). Without this entry GenericLadders took its mirrored-dungeon branch from plane 3 and dropped the player into the Sophanem dungeon at 3278,9171 beside ladder 6645 (sweep traversal-20261003-185406 catalogue.tsv: 20357@3279,2771,3 E/S -> 3278,9171,0). 3279,2772,1 is the N tile every bot used 20356 from."
+  },
+  {
+   "id": 245,
+   "name": "ships_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3044,
+    "z": 3207,
+    "height": 1
+   },
+   "to": {
+    "x": 3043,
+    "z": 3207,
+    "height": 2
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ship's ladder 246 'Climb-down' on the same tile one floor up (3044,3207,2). 3043,3207,2 is the tile 246 is used from (W start in the sweep traversal-20261003-185406 catalogue.tsv, PASS down to 3043,3207,1); GenericLadders refused it because the poop deck has fewer than MIN_LANDING_ROOM tiles."
+  },
+  {
+   "id": 245,
+   "name": "ships_ladder_up",
+   "option": "Climb-up",
+   "tile": {
+    "x": 3044,
+    "z": 3209,
+    "height": 1
+   },
+   "to": {
+    "x": 3043,
+    "z": 3209,
+    "height": 2
+   },
+   "source": "667 map counterpart (placements_667.tsv): Ship's ladder 246 'Climb-down' on the same tile one floor up (3044,3209,2). 3043,3209,2 is the tile 246 is used from (W start in the sweep traversal-20261003-185406 catalogue.tsv, PASS down to 3043,3209,1); GenericLadders refused it because the poop deck has fewer than MIN_LANDING_ROOM tiles."
+  },
+  {
+   "id": 15898,
+   "name": "copper_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3813,
+    "z": 2952,
+    "height": 2
+   },
+   "to": {
+    "x": 3812,
+    "z": 2952,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Copper Ladder 15896 'Climb-up' on the same tile two floors down (plane 1 holds the option-less 15897); reverse of batch-8.json copper_ladder_up. 3812,2952,0 is 15896's W start in the sweep traversal-20261003-185406 catalogue.tsv (standable, the side it is used from: 5 ticks, PASS)."
+  },
+  {
+   "id": 15901,
+   "name": "copper_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 3820,
+    "z": 2999,
+    "height": 2
+   },
+   "to": {
+    "x": 3821,
+    "z": 2999,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Copper Ladder 15899 'Climb-up' on the same tile two floors down (plane 1 holds the option-less 15900); reverse of batch-8.json copper_ladder_up. 3821,2999,0 is 15899's E start in the sweep traversal-20261003-185406 catalogue.tsv (standable, the side it is used from: 5 ticks, PASS)."
+  },
+  {
+   "id": 16371,
+   "name": "stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 4116,
+    "z": 5586,
+    "height": 2
+   },
+   "to": {
+    "x": 4116,
+    "z": 5583,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Stairs 16369 'Climb-up' two floors down at 4116,5584,0 (no stairs on plane 1); reverse of batch-8.json stairs_up. 16371 is used from N (4116,5587,2) and 16369 from S (4116,5583,0: 3-tick start in the sweep traversal-20261003-185406 catalogue.tsv, PASS), so down lands on 16369's south side."
+  },
+  {
+   "id": 16371,
+   "name": "stairs_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 4116,
+    "z": 5597,
+    "height": 2
+   },
+   "to": {
+    "x": 4116,
+    "z": 5600,
+    "height": 0
+   },
+   "source": "667 map counterpart (placements_667.tsv): Stairs 16369 'Climb-up' two floors down at 4116,5599,0; reverse of batch-8.json stairs_up. 16371 is used from S (4116,5596,2) and 16369 from N (4116,5600,0: 3-tick start in the sweep traversal-20261003-185406 catalogue.tsv, PASS), so down lands on 16369's north side."
+  }
+ ]
+}

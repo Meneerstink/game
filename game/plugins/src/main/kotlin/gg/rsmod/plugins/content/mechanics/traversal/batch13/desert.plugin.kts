@@ -146,9 +146,7 @@ shortcut(31314, "Pass") {
 // ---- Pollnivneach house portal 15479 (3338,3001) ------------------------------------------------------------------------------------
 // Every house here is in Rimmington (areas/poh/PlayerHouse.kt). 2009scape PortalOptionPlugin: a portal of another town answers "Your
 // house is in <location>." - the same answer batch 3 (Taverley 15477) and batch 9 (Rellekka/Brimhaven/Yanille) give.
-shortcut(15479, "Enter") {
-    player.message("<col=FF0000>Your house is in Rimmington.")
-}
+// Bound in areas/poh/player_house.plugin.kts since the house can be moved to this town (owner 2026-10-10 night run).
 
 // ---- Ruins of Ullek low wall 28512 (3391,2818, level 1) -----------------------------------------------------------------------------
 // RS3 Wiki "Ullek": "A low wall separates [the mummies] from the rest of the plateau; the player must click on the wall to climb over

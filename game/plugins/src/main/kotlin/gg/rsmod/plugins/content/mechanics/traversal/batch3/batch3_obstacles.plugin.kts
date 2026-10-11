@@ -143,9 +143,7 @@ shortcut(8742, "Pass") {
 // ---- Taverley house portal 15477 ------------------------------------------------------------------------------------------------
 // Every house here is in Rimmington (areas/poh/PlayerHouse.kt). 2009scape PortalOptionPlugin: a portal of another town answers
 // "Your house is in <location>.".
-shortcut(15477, "Enter") {
-    player.message("<col=FF0000>Your house is in Rimmington.")
-}
+// Bound in areas/poh/player_house.plugin.kts since the house can be moved to this town (owner 2026-10-10 night run).
 
 // ---- West Ardougne sewer pipe 2542 (2514,9737) -----------------------------------------------------------------------------------
 // Void PlagueCity.kt: without the opened grill (Plague City progress - no quest system here) the pipe answers the statement

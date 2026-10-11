@@ -10,7 +10,7 @@ import java.io.File
  * on the server, the packet, or the client instead of being guessed. Lines naming a failure start with `PROBLEM`.
  */
 object AvTrace : KLogging() {
-    const val TOGGLE_FILE = "C:/RSPS/avtrace.on"
+    val TOGGLE_FILE = gg.rsmod.game.RspsPaths.root("avtrace.on")
 
     @Volatile
     var enabled: Boolean = File(TOGGLE_FILE).exists() || File(Trace.ALL_FILE).exists()

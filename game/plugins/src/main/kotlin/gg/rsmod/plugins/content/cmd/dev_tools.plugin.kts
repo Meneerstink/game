@@ -17,7 +17,7 @@ import java.time.format.DateTimeFormatter
  */
 
 val DEV_POSITION_TIMER = TimerKey()
-val DEV_DIR = File("C:/RSPS/screens")
+val DEV_DIR = File(gg.rsmod.game.RspsPaths.root("screens"))
 /** Saved with the player: developer mode stays on across logins until switched off. */
 val DEV_ON = gg.rsmod.game.model.attr.AttributeKey<Boolean>("dev_mode_on")
 val DEV_LAST_TILE = gg.rsmod.game.model.attr.AttributeKey<Tile>()

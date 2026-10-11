@@ -108,7 +108,7 @@ object SpecialAttackSupport {
 
         if (consumeAmmo) {
             // Same retrieval rule as a normal shot (Ava's devices / upgraded quiver): specials used to ignore the devices.
-            val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99))
+            val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99), target)
             if (outcome != gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.RECOVERED) {
                 gg.rsmod.plugins.content.combat.strategy.ranged.RangedAmmo.consume(player, fired!!, 1)
             }

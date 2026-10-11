@@ -469,7 +469,7 @@ object Sweeps {
         report: List<String>,
         counts: Map<String, Int>,
     ): File {
-        val dir = File("C:/RSPS/bugs")
+        val dir = File(gg.rsmod.game.RspsPaths.root("bugs"))
         dir.mkdirs()
         val file = File(dir, "sweep-$what-${LocalDateTime.now().format(STAMP)}.txt")
         file.writeText("RSPS sweep '$what' ${LocalDateTime.now()}  ok=${counts["ok"]} problem=${counts["problem"]}\n\n" + report.joinToString("\n") + "\n")

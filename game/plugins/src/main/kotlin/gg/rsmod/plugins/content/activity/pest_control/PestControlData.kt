@@ -23,9 +23,15 @@ enum class PestControlTier(
     val displayName: String,
     val combatReq: Int,
     val portalBaseId: Int,
-    /** Portal lifepoints (667 scale: 2009scape 200/250 hitpoints x 10). */
+    /**
+     * Portal hitpoints: 2009scape / OSRS 200 novice, 250 above. Owner 2026-10-10 "portals have 2000hp thats to much": npc HP is 1:1
+     * since the HP unit migration (NpcCombatDsl divides its x10 input), so the old 667 x10 values gave portals ten times their health.
+     */
     val portalLifepoints: Int,
-    /** Commendation points per won game: OSRS (owner 2026-10-04 "OSRS"): novice 3, intermediate 4, veteran 5 (2009scape gave 2/3/4). */
+    /**
+     * Commendation points per won game: six times OSRS's novice 3 / intermediate 4 / veteran 5 (owner 2026-10-10 "6x points": full void
+     * in about 29 veteran games instead of 170; the item prices stay OSRS's).
+     */
     val pointsPerWin: Int,
     /** Index into the monster tables below (2009scape PCPortalNPC.getDifficultyIndex). */
     val difficulty: Int,
@@ -41,9 +47,9 @@ enum class PestControlTier(
     val gangplankId: Int,
     val exitLadderId: Int,
 ) {
-    NOVICE("Novice", 40, Npcs.PORTAL, 2000, 3, 0, Tile(2657, 2639, 0), Area(2659, 2637, 2664, 2644), Tile(2661, 2639, 0), 14315, 14314),
-    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 2500, 4, 1, Tile(2644, 2644, 0), Area(2637, 2641, 2642, 2648), Tile(2640, 2644, 0), 25631, 25629),
-    VETERAN("Veteran", 100, Npcs.PORTAL_6150, 2500, 5, 2, Tile(2638, 2653, 0), Area(2631, 2648, 2636, 2655), Tile(2634, 2653, 0), 25632, 25630),
+    NOVICE("Novice", 40, Npcs.PORTAL, 200, 18, 0, Tile(2657, 2639, 0), Area(2659, 2637, 2664, 2644), Tile(2661, 2639, 0), 14315, 14314),
+    INTERMEDIATE("Intermediate", 70, Npcs.PORTAL_6150, 250, 24, 1, Tile(2644, 2644, 0), Area(2637, 2641, 2642, 2648), Tile(2640, 2644, 0), 25631, 25629),
+    VETERAN("Veteran", 100, Npcs.PORTAL_6150, 250, 30, 2, Tile(2638, 2653, 0), Area(2631, 2648, 2636, 2655), Tile(2634, 2653, 0), 25632, 25630),
     ;
 
     val shieldedPortalBaseId: Int get() = portalBaseId + 4
@@ -62,11 +68,11 @@ val PC_SQUIRE_OFFSET = 32 to 32
 /** The Void Knight being defended: 2009scape picks 3782 or 3785 (667 cache: both "Void Knight", no options). */
 val PC_KNIGHT_IDS = intArrayOf(Npcs.VOID_KNIGHT, Npcs.VOID_KNIGHT_3785)
 
-/** Void Knight lifepoints: the 2009scape overlay starts at "200" hitpoints (x 10). */
-const val PC_KNIGHT_LIFEPOINTS = 2000
+/** Void Knight hitpoints: the 2009scape overlay starts at "200" (1:1 since the HP unit migration, was x 10). */
+const val PC_KNIGHT_LIFEPOINTS = 200
 
-/** 2009scape: a destroyed portal gives the Void Knight 50 hitpoints back (x 10). */
-const val PC_KNIGHT_PORTAL_HEAL = 500
+/** 2009scape: a destroyed portal gives the Void Knight 50 hitpoints back. */
+const val PC_KNIGHT_PORTAL_HEAL = 50
 
 /** The squire by the landing (667 cache 3781 "Squire": Talk-to, Leave) at local (30, 47). */
 const val PC_LEAVE_SQUIRE = Npcs.SQUIRE_3781
@@ -168,5 +174,14 @@ const val PC_SHIFTER_TELEPORT_ANIM = 3904
 
 /** Pest points balance - persisted under the same key since Q-050, so existing balances are kept. */
 val PEST_POINTS = AttributeKey<Int>(persistenceKey = "pest_points")
+
+/**
+ * Won Pest Control games (every game whose portals all fell), counted from 2026-10-10. It was the elite void requirement (50 wins
+ * instead of the OSRS Hard Western Provinces Diary); owner 2026-10-10 later the same day: "no win requirement" - points only.
+ */
+val PEST_WINS = AttributeKey<Int>(persistenceKey = "pest_wins")
+
+/** OSRS: the elite top and robe cost 200 commendation points each and replace the normal piece (Tyr and the reward screen). */
+const val ELITE_VOID_UPGRADE_POINTS = 200
 
 val PC_MASTER_TICK = TimerKey()

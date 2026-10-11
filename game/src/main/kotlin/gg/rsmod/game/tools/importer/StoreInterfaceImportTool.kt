@@ -47,9 +47,12 @@ object StoreInterfaceImportTool {
     const val BALANCE_ICON = 13
     const val BALANCE = 14
 
-    /** Owner 2026-10-03 (bug 210545): 7x6 = 42 kits a page (was 6x5 = 30) in the 8% larger window ([StoreArtTool.WIDTH]). */
-    const val GRID_COLUMNS = 7
-    const val GRID_ROWS = 7
+    /**
+     * Owner 2026-10-11 (bank-size window, [StoreArtTool.WIDTH]): 6x5 = 30 a page. Before: 7x7 in the 660x470 window, which overlapped
+     * the chat, tabs and minimap in fixed mode and in small resizable views.
+     */
+    const val GRID_COLUMNS = 6
+    const val GRID_ROWS = 5
     const val SLOT_COUNT = GRID_COLUMNS * GRID_ROWS
     const val SLOT_BACKGROUND_FIRST = 15 // 15..56
     const val SELECT_GLOW_FIRST = SLOT_BACKGROUND_FIRST + SLOT_COUNT // 57..98
@@ -98,7 +101,7 @@ object StoreInterfaceImportTool {
      * with the slot count. The server ([CURRENT] or [LEGACY]) picks the layout the cache actually holds by its component count,
      * so a server build that reaches players before this tool was applied (or the reverse) never addresses a missing component.
      */
-    class Layout(val columns: Int, val rows: Int, val sections: Boolean = false) {
+    class Layout(val columns: Int, val rows: Int, val sections: Boolean = false, val pageButtons: Boolean = false) {
         val slotCount = columns * rows
         val slotBackgroundFirst = SLOT_BACKGROUND_FIRST
         val selectGlowFirst = slotBackgroundFirst + slotCount
@@ -127,13 +130,14 @@ object StoreInterfaceImportTool {
         val pagePreviousGraphic = tradeable + 1
         val pageNextGraphic = tradeable + 2
 
-        /** The first 2026-10-10 window had the categories but not yet the painted page buttons. */
-        val pageButtons = sections && columns * rows == GRID_COLUMNS * GRID_ROWS
         val componentCount = if (pageButtons) pageNextGraphic + 1 else if (sections) tradeable + 1 else emptyText + 1
     }
 
-    /** The layout this tool builds (2026-10-10 v3: 7x7 grid plus category buttons and the owned / tradeable card lines). */
-    val CURRENT = Layout(GRID_COLUMNS, GRID_ROWS, sections = true)
+    /** The layout this tool builds (2026-10-11 bank size: 6x5 grid, category buttons, owned / tradeable lines, painted page buttons). */
+    val CURRENT = Layout(GRID_COLUMNS, GRID_ROWS, sections = true, pageButtons = true)
+
+    /** The 660x470 window of 2026-10-10/11 (7x7 grid with categories and painted page buttons, 250 components). */
+    val WIDE_7X7 = Layout(7, 7, sections = true, pageButtons = true)
 
     /** The first 2026-10-10 window (7x6 grid with category buttons, 220 components). */
     val SECTIONS_7X6 = Layout(7, 6, sections = true)
@@ -145,7 +149,7 @@ object StoreInterfaceImportTool {
     val LEGACY = Layout(6, 5)
 
     /** The layout of a cache whose interface [INTERFACE_ID] has [componentCount] components (the legacy one for anything unknown). */
-    fun layoutFor(componentCount: Int): Layout = listOf(CURRENT, SECTIONS_7X6, PREVIOUS).firstOrNull { it.componentCount == componentCount } ?: LEGACY
+    fun layoutFor(componentCount: Int): Layout = listOf(CURRENT, WIDE_7X7, SECTIONS_7X6, PREVIOUS).firstOrNull { it.componentCount == componentCount } ?: LEGACY
 
     const val GOLD = 0xFFD700
     const val WHITE = LootKeyInterfaceImportTool.WHITE
@@ -154,18 +158,20 @@ object StoreInterfaceImportTool {
     const val GREEN = 0x5CE05C
 
     /** The preview model's box: above the painted pedestal, clear of the carousel arrows. */
-    const val PREVIEW_X = Art.SHOW_X + 28
-    const val PREVIEW_Y = Art.SHOW_Y + 6
-    const val PREVIEW_WIDTH = Art.SHOW_WIDTH - 56
-    const val PREVIEW_HEIGHT = Art.SHOW_HEIGHT - 26
+    // Owner 2026-10-11 bank-size window: the model may use the whole stage between the carousel arrows and stand on the pedestal
+    // (tested in game: a 204x68 box drew the amulets tiny).
+    const val PREVIEW_X = Art.SHOW_X + Art.ARROW_WIDTH + 6
+    const val PREVIEW_Y = Art.SHOW_Y + 3
+    const val PREVIEW_WIDTH = Art.SHOW_WIDTH - 2 * (Art.ARROW_WIDTH + 6)
+    const val PREVIEW_HEIGHT = Art.SHOW_HEIGHT - 10
 
     /**
      * Fallback scale for a client without the per-item fit: width * 512 / aspect, kept within the box for a long weapon's
      * ~48-unit diagonal and equal on both axes. 2026-10-03 box 161x118: 161/67 = 2.40x and 118/49 = 2.41x (a 48-unit
      * diagonal is 115.6 px of the 118 px box). 2026-10-10 box 284x134: 284/102 = 2.78x and 134/48 = 2.79x (a 48-unit diagonal fills
-     * the 134 px height exactly).
+     * the 134 px height exactly). 2026-10-11 box 208x78: 208/128 = 78/48 = 1.63x.
      */
-    const val PREVIEW_ASPECT_X = 102
+    const val PREVIEW_ASPECT_X = 128
     const val PREVIEW_ASPECT_Y = 48
 
     /**
@@ -230,25 +236,22 @@ object StoreInterfaceImportTool {
         return out.toByteArray()
     }
 
-    /**
-     * The window is centred in the game view this many pixels left of the middle (owner client 2026-10-10, 978x709 resizable: centred,
-     * the minimap and its orbs covered the window's top-right corner and the close button). Negative = left.
-     */
-    const val WINDOW_OFFSET_X = -120
+    /** The window fills the 512x334 modal slot it opens in (fixed 548, resizable 746), as the bank. */
+    const val WINDOW_OFFSET_X = 0
 
     const val PAGE_PREVIOUS_X = Art.GRID_X + 4
     const val PAGE_NEXT_X = Art.GRID_X + Art.GRID_WIDTH - 4 - Art.PAGE_BUTTON_WIDTH
 
     /** Width of the owned status at the right of the requirement row. */
-    const val OWNED_WIDTH = 110
+    const val OWNED_WIDTH = 70
 
     private const val TYPE_LAYER = 0
     private const val TYPE_TEXT = 4
     private const val TYPE_GRAPHIC = 5
 
-    fun slotX(slot: Int) = Art.GRID_X + 2 + 40 * (slot % GRID_COLUMNS)
+    fun slotX(slot: Int) = Art.GRID_X + 2 + Art.SLOT_PITCH * (slot % GRID_COLUMNS)
 
-    fun slotY(slot: Int) = Art.GRID_Y + 2 + 40 * (slot / GRID_COLUMNS)
+    fun slotY(slot: Int) = Art.GRID_Y + 2 + Art.SLOT_PITCH * (slot / GRID_COLUMNS)
 
     fun components(fonts: LootKeyInterfaceImportTool.Fonts): List<Component> {
         val list = mutableListOf<Component>()
@@ -266,7 +269,7 @@ object StoreInterfaceImportTool {
         add(Component(ROOT, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
         add(Component(WINDOW, TYPE_LAYER, WINDOW_OFFSET_X, 0, WIDTH, HEIGHT, ROOT, reposX = 1, reposY = 1))
         for (i in 0 until TAB_COUNT) graphic(BACKGROUND_FIRST + i, 0, 0, WIDTH, HEIGHT, WINDOW, Art.BACKGROUND_FIRST + i, hidden = i != 0)
-        graphic(CLOSE, WIDTH - 34, 14, Art.CLOSE_SIZE, Art.CLOSE_SIZE, WINDOW, Art.CLOSE, ops = listOf("Close"))
+        graphic(CLOSE, WIDTH - 30, 7, Art.CLOSE_SIZE, Art.CLOSE_SIZE, WINDOW, Art.CLOSE, ops = listOf("Close"))
 
         val tabNames = listOf("Donator Shop", "Deadman Shop", "Loyalty Shop")
         for (i in 0 until TAB_COUNT) {
@@ -276,9 +279,9 @@ object StoreInterfaceImportTool {
         }
 
         // Info strip: tagline left, currency icon and balance right.
-        text(TAGLINE, Art.STRIP_X + 10, Art.STRIP_Y, 400, Art.STRIP_HEIGHT, WINDOW, fonts.p12, "", CREAM, alignX = 0)
-        graphic(BALANCE_ICON, Art.STRIP_X + Art.STRIP_WIDTH - 200, Art.STRIP_Y + 4, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
-        text(BALANCE, Art.STRIP_X + Art.STRIP_WIDTH - 180, Art.STRIP_Y, 172, Art.STRIP_HEIGHT, WINDOW, fonts.b12, "", WHITE, alignX = 0)
+        text(TAGLINE, Art.STRIP_X + 8, Art.STRIP_Y, Art.STRIP_WIDTH - 208, Art.STRIP_HEIGHT, WINDOW, fonts.p12, "", CREAM, alignX = 0)
+        graphic(BALANCE_ICON, Art.STRIP_X + Art.STRIP_WIDTH - 196, Art.STRIP_Y + 1, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
+        text(BALANCE, Art.STRIP_X + Art.STRIP_WIDTH - 176, Art.STRIP_Y, 170, Art.STRIP_HEIGHT, WINDOW, fonts.b12, "", WHITE, alignX = 0)
 
         // Item grid: glass slot, gold glow under the selected item, the item, gold ring over it.
         val slotOps = listOf("Select", "", "", "", "", "", "", "", "", "Examine")
@@ -294,7 +297,7 @@ object StoreInterfaceImportTool {
         // Owner 2026-10-11: the words are painted into the Prev / Next buttons ([PAGE_PREVIOUS_GRAPHIC]); these stay the click areas.
         val buttonY = navY + (navH - Art.PAGE_BUTTON_HEIGHT) / 2
         text(PAGE_PREVIOUS, PAGE_PREVIOUS_X, buttonY, Art.PAGE_BUTTON_WIDTH, Art.PAGE_BUTTON_HEIGHT, WINDOW, fonts.p12, "", GOLD, alignX = 0, ops = listOf("Previous page"))
-        text(PAGE_TEXT, Art.GRID_X + 96, navY, Art.GRID_WIDTH - 192, navH, WINDOW, fonts.p12, "Page 1 / 1", CREAM)
+        text(PAGE_TEXT, Art.GRID_X + Art.PAGE_BUTTON_WIDTH + 8, navY, Art.GRID_WIDTH - 2 * Art.PAGE_BUTTON_WIDTH - 16, navH, WINDOW, fonts.p12, "Page 1 / 1", CREAM)
         text(PAGE_NEXT, PAGE_NEXT_X, buttonY, Art.PAGE_BUTTON_WIDTH, Art.PAGE_BUTTON_HEIGHT, WINDOW, fonts.p12, "", GOLD, alignX = 2, ops = listOf("Next page"))
 
         // Showcase: the result item's model standing on the painted pedestal, carousel arrows at the sides.
@@ -314,17 +317,17 @@ object StoreInterfaceImportTool {
         val cx = Art.CARD_X + 10
         val cw = Art.CARD_WIDTH - 20
         val cy = Art.CARD_Y
-        text(RESULT_NAME, cx, cy + 5, cw, 16, WINDOW, fonts.b12, "", WHITE, alignX = 0)
-        text(KIT_NAME, cx, cy + 28, cw, 14, WINDOW, fonts.p12, "", ORANGE, alignX = 0)
-        text(REQUIREMENT, cx, cy + 44, cw - OWNED_WIDTH, 14, WINDOW, fonts.p12, "", CREAM, alignX = 0)
-        text(COSMETIC, cx, cy + 76, cw, 14, WINDOW, fonts.p12, "", GREEN, alignX = 0)
+        text(RESULT_NAME, cx, cy + 3, cw, 16, WINDOW, fonts.b12, "", WHITE, alignX = 0)
+        text(KIT_NAME, cx, cy + 23, cw, 13, WINDOW, fonts.p12, "", ORANGE, alignX = 0)
+        text(REQUIREMENT, cx, cy + 36, cw - OWNED_WIDTH, 13, WINDOW, fonts.p12, "", CREAM, alignX = 0)
+        text(COSMETIC, cx, cy + 62, cw, 13, WINDOW, fonts.p12, "", GREEN, alignX = 0)
         val bandY = cy + Art.CARD_HEIGHT - Art.PRICE_BAND_HEIGHT - 3
-        graphic(PRICE_ICON, cx, bandY + 4, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
+        graphic(PRICE_ICON, cx, bandY + 2, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
         text(PRICE, cx + 22, bandY, cw - 22, Art.PRICE_BAND_HEIGHT, WINDOW, fonts.b12, "", GOLD, alignX = 0)
 
         val buyX = Art.CARD_X + (Art.CARD_WIDTH - Art.BUY_WIDTH) / 2
         // Owner 2026-10-10: items and kits are bought 1 / 5 / 10 / X at a time (StoreUi.buyClicked); right-click lists the amounts.
-        layer(BUY_LAYER, buyX, Art.CARD_Y + Art.CARD_HEIGHT + 4, Art.BUY_WIDTH, Art.BUY_HEIGHT, WINDOW, ops = listOf("Buy", "Buy 5", "Buy 10", "Buy X"))
+        layer(BUY_LAYER, buyX, Art.NAV_Y, Art.BUY_WIDTH, Art.BUY_HEIGHT, WINDOW, ops = listOf("Buy", "Buy 5", "Buy 10", "Buy X"))
         graphic(BUY_GRAPHIC, 0, 0, Art.BUY_WIDTH, Art.BUY_HEIGHT, BUY_LAYER, Art.BUY)
         text(BUY_TEXT, 0, 0, Art.BUY_WIDTH, Art.BUY_HEIGHT, BUY_LAYER, fonts.b12, "Buy", WHITE)
         text(EMPTY_TEXT, Art.GRID_X + 4, Art.GRID_Y + 4, Art.GRID_WIDTH - 8, Art.GRID_HEIGHT - 8, WINDOW, fonts.p12, "", CREAM)
@@ -337,8 +340,8 @@ object StoreInterfaceImportTool {
             text(base + SECTION_TEXT_OFFSET, 0, 0, Art.SECTION_WIDTH, Art.SECTION_HEIGHT, base, fonts.p12, "", CREAM)
         }
         // Owned sits right-aligned on the requirement's row ("Needs: Amulet of fury ........ Not owned").
-        text(OWNED, cx + cw - OWNED_WIDTH, cy + 44, OWNED_WIDTH, 14, WINDOW, fonts.p12, "", CREAM, alignX = 2)
-        text(TRADEABLE, cx, cy + 60, cw, 14, WINDOW, fonts.p12, "", CREAM, alignX = 0)
+        text(OWNED, cx + cw - OWNED_WIDTH, cy + 36, OWNED_WIDTH, 13, WINDOW, fonts.p12, "", CREAM, alignX = 2)
+        text(TRADEABLE, cx, cy + 49, cw, 13, WINDOW, fonts.p12, "", CREAM, alignX = 0)
         graphic(PAGE_PREVIOUS_GRAPHIC, PAGE_PREVIOUS_X, buttonY, Art.PAGE_BUTTON_WIDTH, Art.PAGE_BUTTON_HEIGHT, WINDOW, Art.PAGE_BUTTON_FIRST + 2)
         graphic(PAGE_NEXT_GRAPHIC, PAGE_NEXT_X, buttonY, Art.PAGE_BUTTON_WIDTH, Art.PAGE_BUTTON_HEIGHT, WINDOW, Art.PAGE_BUTTON_FIRST + 3)
 

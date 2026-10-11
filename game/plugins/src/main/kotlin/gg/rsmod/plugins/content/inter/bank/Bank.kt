@@ -351,7 +351,8 @@ class Bank {
             amt: Int,
             fromSlot: Int,
             placeholder: Boolean = false,
-        ) {
+            forceUnnoted: Boolean = false,
+        ): Int {
             val from = player.bank
             val to = player.inventory
 
@@ -363,18 +364,19 @@ class Bank {
              */
             if (fromSlot !in 0 until from.capacity) {
                 player.bank.dirty = true
-                return
+                return 0
             }
             val slotItem = from[fromSlot]
             // A placeholder (count 0) has nothing to withdraw.
             if (slotItem == null || slotItem.id != id || amt <= 0 || slotItem.amount <= 0) {
                 player.bank.dirty = true
-                return
+                return 0
             }
             val tab = BankTabs.getCurrentTab(player, fromSlot)
 
             val amount = from.getItemCount(id).coerceAtMost(amt)
-            val note = player.getVarp(WITHDRAW_AS_VARB) == 1
+            // The POH demon butler always brings the item itself (forceUnnoted), whatever the bank's note setting.
+            val note = !forceUnnoted && player.getVarp(WITHDRAW_AS_VARB) == 1
             // Stackable items need no note; only an unstackable item without a noted form is refused (and withdrawn as itself).
             if (note && !slotItem.getDef(player.world.definitions).stackable && slotItem.toNoted(player.world.definitions).id == slotItem.id) {
                 player.filterableMessage(CANNOT_NOTE_MESSAGE)
@@ -401,6 +403,7 @@ class Bank {
             } else if (withdrawn != amount) {
                 player.filterableMessage("You don't have enough inventory space to withdraw that many.")
             }
+            return withdrawn
         }
 
         /**

@@ -426,11 +426,11 @@ gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
 on_world_init { gg.rsmod.plugins.content.cmd.conformance.Conformance.startHeadless(world) }
 
 on_world_init {
-    if (File("C:/RSPS/scan.on").exists()) {
+    if (File(gg.rsmod.game.RspsPaths.root("scan.on")).exists()) {
         world.queue {
             wait(10)
             // One-shot: the switch file is removed, so only the next start pays the few seconds again when it is recreated.
-            File("C:/RSPS/scan.on").delete()
+            File(gg.rsmod.game.RspsPaths.root("scan.on")).delete()
             WorldScan.runInBackground(world) { result -> result.getOrNull()?.let { logger.info("World scan written to {}", it) } }
         }
     }
@@ -517,7 +517,7 @@ fun writeBugReport(
     out.appendLine()
     out.appendLine("---- client log tail (newest launcher-logs\\client-*.out.log) ----")
     runCatching {
-        File("C:/RSPS/launcher-logs").listFiles { f -> f.name.startsWith("client-") && f.name.endsWith(".out.log") }
+        File(gg.rsmod.game.RspsPaths.root("launcher-logs")).listFiles { f -> f.name.startsWith("client-") && f.name.endsWith(".out.log") }
             ?.maxByOrNull { it.lastModified() }?.let { log ->
                 out.appendLine("(${log.name})")
                 log.readLines().takeLast(200).forEach { out.appendLine(it) }

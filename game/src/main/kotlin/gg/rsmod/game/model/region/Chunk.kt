@@ -287,7 +287,7 @@ class Chunk(
         world: World,
         update: EntityUpdate<*>,
     ) {
-        val traced = BreachTrace.active() && (update.entity is AreaSound || update.entity is Projectile || update.entity is TileGraphic)
+        val traced = BreachTrace.engineActive() && (update.entity is AreaSound || update.entity is Projectile || update.entity is TileGraphic)
         val sound = update.entity as? AreaSound
         world.players.forEach { client ->
             // AvTrace (owner 2026-09-28 "we hebben nog steeds veel sound issues"): per nearby player, did the area sound reach him, and

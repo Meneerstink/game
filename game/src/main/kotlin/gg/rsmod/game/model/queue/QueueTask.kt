@@ -29,6 +29,10 @@ data class QueueTask(
      */
     var requestReturnValue: Any? = null
 
+    /** Suspended in [waitReturnValue]: a dialogue or input answer (resume packet) belongs to this task. */
+    var awaitingReturnValue = false
+        private set
+
     /**
      * Represents an action that should be executed if, and only if, this task
      * was terminated via [terminate].
@@ -98,6 +102,7 @@ data class QueueTask(
         val next = nextStep ?: return
 
         if (next.condition.resume()) {
+            awaitingReturnValue = false
             next.continuation.resume(Unit)
             requestReturnValue = null
         }
@@ -110,6 +115,7 @@ data class QueueTask(
     fun terminate() {
         terminated = true
         nextStep = null
+        awaitingReturnValue = false
         requestReturnValue = null
         terminateAction?.invoke(this)
     }
@@ -166,6 +172,7 @@ data class QueueTask(
      */
     suspend fun waitReturnValue(): Unit =
         suspendCoroutine {
+            awaitingReturnValue = true
             nextStep = SuspendableStep(PredicateCondition { requestReturnValue != null }, it)
         }
 

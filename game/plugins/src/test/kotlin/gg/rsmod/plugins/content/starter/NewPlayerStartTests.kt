@@ -23,21 +23,21 @@ import kotlin.test.assertTrue
 
 class NewPlayerStartTests {
     @Test
-    fun `new account receives exactly fifty thousand coins once`() {
+    fun `new account receives exactly the starter cash once`() {
         val player = newPlayer(isNew = true)
 
         assertTrue(NewPlayerStart.grantStarterCash(player))
-        assertEquals(50_000, player.bank.getItemCount(Items.COINS_995))
+        assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
         assertFalse(NewPlayerStart.grantStarterCash(player))
-        assertEquals(50_000, player.bank.getItemCount(Items.COINS_995))
+        assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
     }
  @Test
- fun `legacy starter coins are included in exact fifty thousand total`() {
+ fun `legacy starter coins are included in the exact starter cash total`() {
  val player = newPlayer(isNew = true)
  player.bank.add(Items.COINS_995, 25)
 
  assertTrue(NewPlayerStart.grantStarterCash(player))
- assertEquals(50_000, player.bank.getItemCount(Items.COINS_995))
+ assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
  }
 
  @Test

@@ -58,6 +58,14 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             return
         }
 
+        // Darkan IFOpHandler: a locked player's button clicks are ignored during a cutscene. Owner 2026-10-08: in the
+        // introduction the Graphics settings (261:16) opened over the Quest Tutor, and closing them closed his dialogue on
+        // the client - the tour hung. Logging out (182) and the world map the introduction opens itself (755) stay usable.
+        if (client.lock == gg.rsmod.game.model.LockState.FULL_WITH_LOGOUT && interfaceId != 182 && interfaceId != 755) {
+            gg.rsmod.game.model.AvTrace.log { "button refused gate=lock lock=${client.lock} component=$interfaceId:$component" }
+            return
+        }
+
         log(
             client,
             "Click button: component=[%d:%d], option=%d, slot=%d, item=%d",

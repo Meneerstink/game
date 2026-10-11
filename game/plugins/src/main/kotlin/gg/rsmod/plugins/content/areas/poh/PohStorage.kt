@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.areas.poh
 
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * The costume room's storage (owner 2026-09-21: "please search in the donor and port every poh thing we can port",
@@ -191,6 +192,32 @@ object PohStorage {
         val map = read(player)
         map.getValue(family).add(itemId)
         write(player, map)
+    }
+
+    /**
+     * Owner 2026-10-10 removed the costume room from the house: everything still stored moves to the bank. An item the bank
+     * has no room for stays stored and is retried on the next login, so nothing is ever lost.
+     */
+    fun returnToBank(player: Player) {
+        val map = read(player)
+        var moved = 0
+        map.values.forEach { ids ->
+            val iterator = ids.iterator()
+            while (iterator.hasNext()) {
+                if (player.bank.add(iterator.next(), 1).hasSucceeded()) {
+                    iterator.remove()
+                    moved++
+                }
+            }
+        }
+        val left = map.values.any { it.isNotEmpty() }
+        if (moved > 0) {
+            write(player, map)
+            player.message("Your house's costume room is gone: the $moved item${if (moved == 1) "" else "s"} you had stored there ${if (moved == 1) "is" else "are"} in your bank.")
+        }
+        if (left) {
+            player.message("Your bank is full - the rest of your costume room items will follow when there is space.")
+        }
     }
 
     /** Takes [itemId] out of [family] and reports whether it was there; the caller gives the item back. */

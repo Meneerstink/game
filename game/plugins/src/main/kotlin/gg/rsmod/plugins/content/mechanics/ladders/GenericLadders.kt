@@ -78,7 +78,9 @@ object GenericLadders {
             }
         }
 
-        // 2. Mirrored dungeon tile.
+        // 2. Mirrored dungeon tile - only between ground floors: a roof ladder (Sophanem 20357 at 3279,2771,3) with no counterpart on
+        // the floor below dropped the player into the dungeon at 3278,9171 (batch 16).
+        if (ladder.tile.height != 0) return null
         val mirroredZ =
             when {
                 direction == Direction.DOWN && ladder.tile.z < DUNGEON_OFFSET -> ladder.tile.z + DUNGEON_OFFSET
@@ -129,7 +131,12 @@ object GenericLadders {
             (counterpart.x - 1..counterpart.x + w).flatMap { x -> (counterpart.z - 1..counterpart.z + l).map { z -> Tile(x, z, counterpart.height) } }
                 .filter { !inside(it) }
         if (around.any { it.sameAs(preferred) } && gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, preferred)) return preferred
-        return around.filter { gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, it) }
+        // A small floor (a ship's deck, a tower top) has no "usable landing" room anywhere; then any standable tile beside the
+        // counterpart, the way back down being that ladder (batch 16: 245 at 2062,5516 / 2062,5518).
+        val pool =
+            around.filter { gg.rsmod.plugins.content.skills.agility.isUsableLanding(world, it) }
+                .ifEmpty { around.filter { gg.rsmod.game.model.collision.Landing.pocket(world.collision, it).size >= 2 } }
+        return pool
             .minByOrNull { (it.x - preferred.x) * (it.x - preferred.x) + (it.z - preferred.z) * (it.z - preferred.z) }
     }
 }

@@ -199,7 +199,11 @@ object DeadmanBreach {
 
     @Volatile
     var active: Active? = null
-        private set
+        private set(value) {
+            field = value
+            // Engine-level breach lines (every projectile / tile graphic / area sound) only while a breach is open.
+            gg.rsmod.game.model.BreachTrace.breachOpen = value != null
+        }
 
     /** Declared before [nextOpening], whose initializer reads it. */
     @Volatile

@@ -25,6 +25,14 @@ class GamePacketDecoder(
 
     private var ignore = false
 
+    /** The last [RECENT] complete packets as "opcode/length", for the desync report. */
+    private val recent = ArrayDeque<String>(RECENT)
+
+    private fun remember(length: Int) {
+        if (recent.size == RECENT) recent.removeFirst()
+        recent.addLast("$opcode/$length")
+    }
+
     override fun decode(
         ctx: ChannelHandlerContext,
         buf: ByteBuf,
@@ -51,8 +59,17 @@ class GamePacketDecoder(
                 // and the ISAAC opcode stream stay aligned. Only a truly unknown opcode still drops the buffer.
                 val size = ClientProtSizes.SIZES[opcode]
                 if (size == null) {
-                    logger.warn("Channel {} sent message with no valid metadata: {}.", ctx.channel(), opcode)
+                    // A1/A34 (owner 2026-10-11 19:35, "this may never happen, certainly not on a Deadman server"): an opcode no
+                    // client can send means the stream is already misaligned, and the ISAAC opcode cipher with it - every
+                    // later packet decoded as garbage, the player stood frozen in the world until he closed the client.
+                    // Donor Void (LoginServer.readPackets): no decoder for the opcode -> log and disconnect. The client then
+                    // runs its own connection-lost / reconnect, and the logout goes through the normal Deadman hold.
+                    logger.error(
+                        "Channel {} sent unknown opcode {} - stream desynchronised, disconnecting. Last packets (opcode/length, oldest first): {}",
+                        ctx.channel(), opcode, recent.joinToString(" "),
+                    )
                     buf.skipBytes(buf.readableBytes())
+                    ctx.channel().close()
                     return
                 }
                 if (unhandledLogged.add(opcode)) {
@@ -67,7 +84,7 @@ class GamePacketDecoder(
                     }
                 if (type == PacketType.FIXED) {
                     length = size
-                    if (length != 0) setState(GameDecoderState.PAYLOAD)
+                    if (length != 0) setState(GameDecoderState.PAYLOAD) else remember(0)
                 } else {
                     setState(GameDecoderState.LENGTH)
                 }
@@ -81,8 +98,9 @@ class GamePacketDecoder(
                     length = packetMetadata.getLength(opcode)
                     if (length != 0) {
                         setState(GameDecoderState.PAYLOAD)
-                    } else if (!ignore) {
-                        out.add(GamePacket(opcode, type, Unpooled.EMPTY_BUFFER))
+                    } else {
+                        remember(0)
+                        if (!ignore) out.add(GamePacket(opcode, type, Unpooled.EMPTY_BUFFER))
                     }
                 }
                 PacketType.VARIABLE_BYTE, PacketType.VARIABLE_SHORT -> setState(GameDecoderState.LENGTH)
@@ -99,8 +117,12 @@ class GamePacketDecoder(
             length = if (type == PacketType.VARIABLE_SHORT) buf.readUnsignedShort() else buf.readUnsignedByte().toInt()
             if (length != 0) {
                 setState(GameDecoderState.PAYLOAD)
-            } else if (!ignore) {
-                out.add(GamePacket(opcode, type, Unpooled.EMPTY_BUFFER))
+            } else {
+                // A zero-length variable packet is complete here: back to OPCODE (it stayed in LENGTH and read the next
+                // packet's opcode byte as this one's length).
+                setState(GameDecoderState.OPCODE)
+                remember(0)
+                if (!ignore) out.add(GamePacket(opcode, type, Unpooled.EMPTY_BUFFER))
             }
         }
     }
@@ -111,6 +133,7 @@ class GamePacketDecoder(
     ) {
         if (buf.readableBytes() >= length) {
             setState(GameDecoderState.OPCODE)
+            remember(length)
 
             /**
              * If the packet isn't flagged as being a packet we should ignore,
@@ -130,6 +153,9 @@ class GamePacketDecoder(
     }
 
     companion object : KLogging() {
+        /** Packets kept for the desync report. */
+        private const val RECENT = 20
+
         /** Unregistered opcodes already reported, so a chatty packet logs once per server run. */
         private val unhandledLogged = java.util.concurrent.ConcurrentHashMap.newKeySet<Int>()
     }

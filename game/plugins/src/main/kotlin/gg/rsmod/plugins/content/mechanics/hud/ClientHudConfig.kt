@@ -273,7 +273,9 @@ object ClientHudConfig {
             return
         }
         val map = stored(player)
-        map.keys.removeIf { it.startsWith("$plugin.") }
+        // RuneLite's Reset ("reset this plugin's configuration") resets the settings, never switches the plugin off - tested
+        // 2026-10-11: Reset turned Stretched Mode off.
+        map.keys.removeIf { it.startsWith("$plugin.") && it != "$plugin.enabled" }
         store(player, map)
         if (plugin == "grounditems") {
             player.attr.remove(HIGHLIGHT)

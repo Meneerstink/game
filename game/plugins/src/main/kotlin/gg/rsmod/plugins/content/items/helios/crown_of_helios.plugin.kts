@@ -1058,6 +1058,7 @@ fun Player.openCrownMenu() {
     queue(TaskPriority.STRONG) { if (CrownOfHelios.isAdmin(player)) crownMenu() else moderatorCrownMenu() }
 }
 
-on_command("helios", Privilege.MOD_POWER) { player.openCrownMenu() }
-on_command("teleport", Privilege.MOD_POWER) { player.openCrownMenu() }
-on_command("crown", Privilege.MOD_POWER) { player.openCrownMenu() }
+// Owner 2026-10-10 (staff tools): the crown commands are admin commands; moderators keep only moderation tools.
+on_command("helios", Privilege.ADMIN_POWER) { player.openCrownMenu() }
+on_command("teleport", Privilege.ADMIN_POWER) { player.openCrownMenu() }
+on_command("crown", Privilege.ADMIN_POWER) { player.openCrownMenu() }

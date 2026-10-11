@@ -44,12 +44,12 @@ object PestControlHandler {
     val GAME_ATTR = AttributeKey<PestControlGame>()
 
     /**
-     * Zeal in the current game (2009scape attribute "pc_zeal"), kept in lifepoints: 2009scape counts hitpoints of damage, and a
-     * 667 hit is in lifepoints (x 10), so every lifepoint is kept and 10 make one zeal - small hits add up instead of rounding away.
+     * Zeal in the current game (2009scape attribute "pc_zeal"): 2009scape counts hitpoints of damage. Hits are 1:1 hitpoints since the
+     * HP unit migration, so one point of damage is one zeal (the old x10 lifepoint bookkeeping needed 500 damage for 50 zeal).
      */
     val ZEAL_ATTR = AttributeKey<Int>()
 
-    fun zealOf(player: Player): Int = (player.attr[ZEAL_ATTR] ?: 0) / 10
+    fun zealOf(player: Player): Int = player.attr[ZEAL_ATTR] ?: 0
 
     private class Lobby(
         val tier: PestControlTier,
@@ -270,21 +270,16 @@ object PestControlHandler {
         val game = source.attr[GAME_ATTR] ?: return
         if (!game.active || !game.owns(target)) return
         if (game.isPortal(target)) game.portalHit(target)
-        addZealLifepoints(source, dealt)
+        addZeal(source, dealt)
     }
 
-    /** [zeal] whole zeal (a repair is 5). */
+    /** [zeal] whole zeal: damage dealt, or 5 for a repair. */
     fun addZeal(
         player: Player,
         zeal: Int,
-    ) = addZealLifepoints(player, zeal * 10)
-
-    private fun addZealLifepoints(
-        player: Player,
-        lifepoints: Int,
     ) {
-        if (lifepoints <= 0) return
-        player.attr[ZEAL_ATTR] = (player.attr[ZEAL_ATTR] ?: 0) + lifepoints
+        if (zeal <= 0) return
+        player.attr[ZEAL_ATTR] = zealOf(player) + zeal
         sendZeal(player, zealOf(player))
     }
 
@@ -336,6 +331,7 @@ object PestControlHandler {
                 player.message("The Void Knight was killed, another of our Order has fallen and that Island is lost.")
             }
             zeal >= PC_MIN_ZEAL -> {
+                player.attr[PEST_WINS] = (player.attr[PEST_WINS] ?: 0) + 1
                 player.playJingle(PC_JINGLE_WIN)
                 val points = game.tier.pointsPerWin
                 val total = (player.attr[PEST_POINTS] ?: 0) + points
@@ -349,6 +345,7 @@ object PestControlHandler {
                 player.message("Commendation points. Please also accept these coins as a reward. You now have $total points.")
             }
             else -> {
+                player.attr[PEST_WINS] = (player.attr[PEST_WINS] ?: 0) + 1
                 player.playJingle(PC_JINGLE_WIN)
                 player.message("Congratulations! You managed to destroy all the portals! However, you did not succeed in reaching")
                 player.message("the required amount of damage dealt, so we cannot grant you a reward.")

@@ -570,16 +570,22 @@ fun bind_trapdoor_teleport_doors() {
         }
         on_obj_option(obj = id, option = "open") {
             val obj = player.getInteractingGameObj()
-            val destination = Tile(obj.tile.x, obj.tile.z + 6400, obj.tile.height)
+            // A sourced landing wins over the mirrored tile (Port Phasmatys bar 7434: 2009scape PHASMATYS_BAR_DOWN 3682,9961, the
+            // brewery beside its ladder 7433 - the mirrored 3681,9898 is another cellar; batch 16); the mirrored tile itself lands on
+            // usable ground beside it, never inside the cellar's scenery (climbLanding, as every ladder).
+            val sourced = TRAPDOOR_LANDINGS[Tile(obj.tile.x, obj.tile.z, obj.tile.height)]
+            val destination = sourced ?: Tile(obj.tile.x, obj.tile.z + 6400, obj.tile.height)
             if (!world.definitions.createRegion(world, destination.regionId)) {
                 player.message("This doesn't seem to go anywhere.")
                 return@on_obj_option
             }
             player.playSound(Sfx.DOOR_OPEN)
-            player.moveTo(destination)
+            player.moveTo(if (sourced != null) sourced else gg.rsmod.plugins.api.ext.climbLanding(player, destination))
         }
     }
 }
+
+val TRAPDOOR_LANDINGS = mapOf(Tile(3681, 3498, 0) to Tile(3682, 9961, 0))
 
 fun bind_walkthrough_doors() {
     val keywords = listOf("door", "gate", "fence", "wall", "exit", "entrance")

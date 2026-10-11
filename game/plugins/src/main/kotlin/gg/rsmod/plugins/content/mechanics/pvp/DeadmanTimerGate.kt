@@ -56,9 +56,18 @@ object DeadmanTimerGate {
             PvpSkull.isSkulled(player) -> Teleport.COUNTDOWN
             recentlyHitByPlayer(player) -> Teleport.BLOCKED_IN_COMBAT
             BossAreas.isBossArea(player.world, player.tile) -> Teleport.INSTANT
+            inMinigame(player) -> Teleport.INSTANT
             recentlyHitByNonBoss(player) -> Teleport.BLOCKED_IN_COMBAT
             else -> Teleport.INSTANT
         }
+
+    /**
+     * Owner 2026-10-10 ("minigames such as pest control should be instant teleport"): inside a minigame a recent npc hit never
+     * delays a teleport, like a boss area. A skull or a recent player hit still apply (checked first in [teleportDecision]).
+     */
+    fun inMinigame(player: Player): Boolean =
+        gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.gameOf(player) != null ||
+            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.lobbyOf(player) != null
 
     /**
      * Owner exception: logout counts down only when skulled or in combat with a player / non-boss npc. Audit D-11: a

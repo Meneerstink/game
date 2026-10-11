@@ -10,6 +10,7 @@ import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.LocFit
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.npcwalk.NpcRandomWalk
 import java.io.File
 
@@ -21,7 +22,7 @@ import java.io.File
  * removed or replaced originals put back), then applies the file again, so the file is always the single truth.
  */
 object WorldEdits {
-    val FILE = File("C:/RSPS/game/game/data/world_edits.json")
+    val FILE = File(gg.rsmod.game.RspsPaths.data("world_edits.json"))
 
     /**
      * One edit. [op] is "remove" (take loc [id] off the tile) or "spawn" (put loc [id] there with [type]/[rot]); for
@@ -381,12 +382,22 @@ object WorldEdits {
         world: World,
         action: List<Edit>,
     ): Int {
+        // ROOT_CAUSES #171: an edit inside the dynamic-instance area (x >= 6400, player houses and every other instance) would
+        // re-appear in every instance later allocated on those coordinates, so it is refused instead of saved.
+        if (action.any { it.x >= INSTANCE_MIN_X }) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "world edit refused inside the instance area: $action" }
+            world.players.forEach { p -> if (action.any { e -> p.tile.x >= INSTANCE_MIN_X && kotlin.math.abs(p.tile.x - e.x) < 64 }) p.message("World edits can't be made inside an instance (a house, a minigame): they would appear in every later one.") }
+            return 0
+        }
         val edits = load()
         val group = (edits.maxOfOrNull { it.group } ?: 0L) + 1
         edits += action.map { it.copy(group = group) }
         save(edits)
         return reload(world)
     }
+
+    /** The first x of the dynamic-instance area (InstancedMapAllocator.VALID_AREA). */
+    const val INSTANCE_MIN_X = 6400
 
     fun add(
         world: World,

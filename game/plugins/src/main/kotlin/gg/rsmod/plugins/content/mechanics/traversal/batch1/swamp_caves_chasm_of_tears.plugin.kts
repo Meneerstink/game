@@ -25,7 +25,8 @@ val SOUND_JUMP = 2461
 val SOUND_CLIMBING_LOOP = 2454
 
 // Void LumbridgeSwampCave: "Jump-across" lumbridge_cave_stepping_stone - two leaps over the stone, north or south.
-shortcut(5949, "Jump-across") {
+// Stone in water, start tiles 2 tiles away: the click acts from there (batch 16: "I can't reach that!").
+shortcut(5949, "Jump-across", lineOfSightDistance = 2) {
     obstacle { target ->
         val direction = if (player.tile.z > target.tile.z) Direction.SOUTH else Direction.NORTH
         val back = direction.getOpposite()

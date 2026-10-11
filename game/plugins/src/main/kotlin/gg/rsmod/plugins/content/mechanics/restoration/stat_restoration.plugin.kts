@@ -59,6 +59,9 @@ on_timer(key = STAT_RESTORE) {
         }
     }
 
+    // A drained level that regenerates leaves the curse tab's stat adjustment too (owner 2026-10-11).
+    gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.refreshStatAdjustments(player)
+
     repeat(life) {
         if (player.getMaximumLifepoints() > player.getCurrentLifepoints()) {
             player.alterLifepoints(value = 1, capValue = 0)

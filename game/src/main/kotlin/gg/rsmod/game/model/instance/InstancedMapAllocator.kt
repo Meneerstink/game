@@ -70,6 +70,21 @@ class InstancedMapAllocator {
         return null
     }
 
+    /**
+     * True when a map of [regionSize] regions would find a free place right now - lets content refuse an action that costs
+     * something (a spell's runes) before it is paid for, instead of paying and then finding no space.
+     */
+    fun hasFreeSpace(regionSize: Int = 1): Boolean {
+        val area = VALID_AREA
+        val totalTiles = regionSize * Chunk.REGION_SIZE
+        for (x in area.bottomLeftX until area.topRightX step 64) {
+            for (z in area.bottomLeftZ until area.topRightZ step 64) {
+                if (maps.none { it.area.contains(x, z) || it.area.contains(x + totalTiles - 1, z + totalTiles - 1) }) return true
+            }
+        }
+        return false
+    }
+
     private fun allocate(
         x: Int,
         z: Int,
@@ -119,6 +134,8 @@ class InstancedMapAllocator {
         val world = player.world
 
         getMap(player.tile)?.let { map ->
+            player.attr[gg.rsmod.game.model.attr.INSTANCE_LOGOUT_TILE_ATTR] = player.tile
+            player.attr[gg.rsmod.game.model.attr.INSTANCE_LOGOUT_MAP_ATTR] = map
             player.moveTo(map.exitTile)
 
             if (map.attr.contains(InstancedMapAttribute.DEALLOCATE_ON_LOGOUT)) {
@@ -145,8 +162,9 @@ class InstancedMapAllocator {
 
     internal fun cycle(world: World) {
         if (deallocationScanCycle++ == SCAN_MAPS_CYCLES) {
-            for (i in 0 until maps.size) {
-                val map = maps[i]
+            // A copy: deallocate removes from [maps], which made the indexed loop run past the end once two maps existed
+            // and one was released (IndexOutOfBoundsException in the world cycle, seen 2026-10-10 with two player houses).
+            for (map in maps.toList()) {
 
                 /*
                  * If there's no players in the [map] area, we can de-allocate

@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setComponentText
 import kotlin.random.Random
+import gg.rsmod.game.tools.importer.PestControlRewardsInterfaceImportTool as Tool
 
 /**
  * The Void Knights' reward screen (interface 267, "Exchange" on Void Knight 3786/3788/3789), ported from 2009scape
@@ -44,6 +45,10 @@ object PestControlRewards {
         val charm: Boolean = false,
         val skillReq: Pair<Int, Int>? = null,
         val void: Boolean = false,
+        /** Elite void: swaps one of these pieces from the inventory (as at Commodore Tyr). */
+        val upgradeFrom: IntArray = intArrayOf(),
+        /** Only on the extended screen (PestControlRewardsInterfaceImportTool, owner 2026-10-10). */
+        val extended: Boolean = false,
     ) {
         ATTACK("Attack", intArrayOf(10, 34, 49, 56), skill = Skills.ATTACK),
         STRENGTH("Strength", intArrayOf(11, 35, 50, 57), skill = Skills.STRENGTH),
@@ -65,6 +70,27 @@ object PestControlRewards {
         VOID_RANGER_HELM("Void Knight Ranger Helm", intArrayOf(64, 68), points = 200, items = intArrayOf(11664), void = true),
         VOID_MELEE_HELM("Void Knight Melee Helm", intArrayOf(65, 69), points = 200, items = intArrayOf(11665), void = true),
         VOID_SEAL("Void Knight Seal", intArrayOf(66, 70), points = 10, items = intArrayOf(11666)),
+        ELITE_VOID_TOP(
+            "Elite Void Top",
+            intArrayOf(Tool.ELITE_TOP_TITLE, Tool.ELITE_TOP_BUTTON),
+            points = ELITE_VOID_UPGRADE_POINTS,
+            items = intArrayOf(19785),
+            void = true,
+            upgradeFrom = intArrayOf(8839, 10611),
+            extended = true,
+        ),
+        ELITE_VOID_ROBE(
+            "Elite Void Robe",
+            intArrayOf(Tool.ELITE_ROBE_TITLE, Tool.ELITE_ROBE_BUTTON),
+            points = ELITE_VOID_UPGRADE_POINTS,
+            items = intArrayOf(19786),
+            void = true,
+            upgradeFrom = intArrayOf(8840),
+            extended = true,
+        ),
+
+        /** RuneScape Wiki "Void Knight deflector": 150 commendation points. */
+        VOID_DEFLECTOR("Void Knight Deflector", intArrayOf(Tool.DEFLECTOR_TITLE, Tool.DEFLECTOR_BUTTON), points = 150, items = intArrayOf(19711), void = true, extended = true),
         SPINNER_CHARM("Spinner Charm", intArrayOf(71, 75, 76, 77), items = intArrayOf(12166), charm = true),
         RAVAGER_CHARM("Ravager Charm", intArrayOf(72, 81, 82, 83), items = intArrayOf(12164), charm = true),
         TORCHER_CHARM("Torcher Charm", intArrayOf(74, 78, 79, 80), items = intArrayOf(12167), charm = true),
@@ -107,6 +133,15 @@ object PestControlRewards {
 
     private fun points(player: Player): Int = player.attr[PEST_POINTS] ?: 0
 
+    /** Whether the cache's 267 has the elite / deflector rows ([Tool], by component count as `GrandExchangeHistory.layout`). */
+    fun hasExtendedRows(player: Player): Boolean =
+        runCatching { player.world.filestore.index(3).archive(PC_REWARD_INTERFACE)?.fileIds()?.size ?: 0 }.getOrDefault(0) == Tool.COMPONENT_COUNT
+
+    private fun shown(
+        player: Player,
+        extended: Boolean = hasExtendedRows(player),
+    ): List<Reward> = Reward.values().filter { !it.extended || extended }
+
     private fun text(
         player: Player,
         child: Int,
@@ -123,7 +158,7 @@ object PestControlRewards {
         val pts = points(player)
         text(player, 105, "Points: $pts")
         text(player, 104, "")
-        for (r in Reward.values()) {
+        for (r in shown(player)) {
             when {
                 r.isSkill -> text(player, r.header, skillLine(player, r))
                 r.charm -> text(player, r.header, if (pts < 2) "${RED}You need 2 points." else "$GREEN${r.title}")
@@ -190,6 +225,7 @@ object PestControlRewards {
             return
         }
         val (reward, option) = Reward.forButton(button) ?: return
+        if (reward !in shown(player)) return
         if (points(player) < reward.cost(option)) {
             player.message("You don't have enough points.")
             return
@@ -211,7 +247,8 @@ object PestControlRewards {
                 player.message("Please choose a reward.")
                 return
             }
-        if (!reward.isSkill && player.inventory.freeSlotCount == 0) {
+        // An elite upgrade swaps the normal piece, so it needs no free slot.
+        if (!reward.isSkill && reward.upgradeFrom.isEmpty() && player.inventory.freeSlotCount == 0) {
             player.message("You don't have enough inventory space.")
             return
         }
@@ -221,6 +258,15 @@ object PestControlRewards {
             return
         }
         if (!meetsItemRequirement(player, reward)) return
+        if (reward.upgradeFrom.isNotEmpty()) {
+            // Elite void (owner 2026-10-10, same rule as Commodore Tyr): the normal piece is swapped for the elite one.
+            val piece = reward.upgradeFrom.firstOrNull { player.inventory.contains(it) }
+            if (piece == null) {
+                player.message("You need a ${reward.title.removePrefix("Elite Void ").lowercase().let { "void knight $it" }} in your inventory to upgrade.")
+                return
+            }
+            if (!player.inventory.remove(piece).hasSucceeded()) return
+        }
         player.closeInterface(PC_REWARD_INTERFACE)
         player.attr.remove(SELECTED)
         player.attr[PEST_POINTS] = points(player) - cost

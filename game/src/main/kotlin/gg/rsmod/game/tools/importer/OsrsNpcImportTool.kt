@@ -92,13 +92,17 @@ object OsrsNpcImportTool {
             // Owner 2026-09-30 ("import all osrs pets ... just like summoning"): the follower npc of every pet variant whose movement
             // uses classic frames (OsrsPetRoster; the skeletal ones: OsrsPetImportTool skeletal).
             "pets" to OsrsPetRoster.load().filterNot { it.skeletal }.map { it.osrsFollower }.distinct(),
+            // Owner 2026-10-10 (POH: the OSRS combat dummy): OSRS Wiki "Ornate undead combat dummy" 10507 and the variants its
+            // Swap option changes to - Ornate combat dummy 8598, wilderness 10508, kalphite 10509, kurask 10510, vampyre 10511,
+            // dragon 10512 (npc ids from the wiki's variant table).
+            "poh-dummy" to listOf(10507, 8598, 10508, 10509, 10510, 10511, 10512),
         )
 
     /**
      * Npcs that never move and have no movement sequences in OSRS: they keep their model's rest pose (no humanoid default).
-     * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig.
+     * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig; the POH combat dummies 10507/8598/10508-10512 are posts.
      */
-    val STATIC_NPCS = setOf(9856, 9857)
+    val STATIC_NPCS = setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512)
 
     /**
      * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.

@@ -348,6 +348,22 @@ task runGeHistoryInterfaceImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.GeHistoryInterfaceImportTool'
 }
 
+task runPestControlRewardsInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Adds the Elite void top / robe and Void Knight deflector rows to the Void Knights reward screen (interface 267) ' +
+        'in both production caches (CacheTransaction). Usage: ./gradlew :game:runPestControlRewardsInterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.PestControlRewardsInterfaceImportTool'
+}
+
+task runStaffCommandsInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Builds the staff command list (::commands, interface 1180) in both production caches (CacheTransaction). ' +
+        'Usage: ./gradlew :game:runStaffCommandsInterfaceImportTool --args="[--apply] [--replace-from-journal=<tx id>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.StaffCommandsInterfaceImportTool'
+}
+
 task runCasinoMinimapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Hangs the gold activity star (map element 635) on the Grand Exchange blackjack croupier so the ' +
@@ -460,6 +476,13 @@ task runPohTeleportInterfaceImportTool(type: JavaExec) {
         './gradlew :game:runPohTeleportInterfaceImportTool --args="[--apply]"'
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.PohTeleportInterfaceImportTool'
+}
+task runPohMinimapIconTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Fixed (non-wandering) copies of the altar / transport / portal minimap elements and their marker locs for the ' +
+        'player-owned house, in both caches (CacheTransaction). Usage: ./gradlew :game:runPohMinimapIconTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.PohMinimapIconTool'
 }
 task runShopPageInterfaceImportTool(type: JavaExec) {
     group = 'tools'

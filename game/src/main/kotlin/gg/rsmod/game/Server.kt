@@ -280,6 +280,23 @@ class Server {
                     }
                 }
             }
+            command.startsWith("reboot") -> {
+                // Owner 2026-10-10 (VPS deploys): the same countdown as the in-game ::reboot, in seconds. At zero every player
+                // is logged out (saved) by World.cycle; the deploy script then sends `shutdown`.
+                val seconds = command.substringAfter(" ", "").trim().toIntOrNull()
+                if (seconds == null || seconds < 1) {
+                    reply("Invalid usage! Expected: reboot <seconds>")
+                    return
+                }
+                onGameThread(world, reply) {
+                    world.rebootTimer = Math.ceil(seconds / 0.6).toInt()
+                    world.sendRebootTimer()
+                    "System update in $seconds seconds (${world.rebootTimer} cycles)."
+                }
+            }
+            command == "online" -> {
+                onGameThread(world, reply) { "online ${world.players.count()}" }
+            }
             command == "object_inventory" -> {
                 onGameThread(world, reply) { ObjectCensus.writeCsv(world) }
             }

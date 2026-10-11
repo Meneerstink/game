@@ -12,7 +12,7 @@ import kotlin.test.assertTrue
  * render code addresses grid and later components only through the live layout.
  */
 class StoreUiLayoutTests {
-    private val layouts = listOf(StoreInterfaceImportTool.CURRENT, StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.PREVIOUS, StoreInterfaceImportTool.LEGACY)
+    private val layouts = listOf(StoreInterfaceImportTool.CURRENT, StoreInterfaceImportTool.WIDE_7X7, StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.PREVIOUS, StoreInterfaceImportTool.LEGACY)
 
     @Test
     fun `every button of both window layouts is bound, Prev page included`() {
@@ -28,7 +28,7 @@ class StoreUiLayoutTests {
             }
         }
         assertTrue(StoreUi.CLOSE in StoreUi.CLICKABLE)
-        assertTrue(StoreInterfaceImportTool.CURRENT.slotCount > StoreInterfaceImportTool.LEGACY.slotCount, "more kits a page")
+        assertTrue(StoreInterfaceImportTool.CURRENT.componentCount != StoreInterfaceImportTool.LEGACY.componentCount, "the layouts are told apart")
     }
 
     @Test

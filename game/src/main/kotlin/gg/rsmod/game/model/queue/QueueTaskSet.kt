@@ -93,7 +93,10 @@ abstract class QueueTaskSet {
      * The return value that the plugin has asked for.
      */
     fun submitReturnValue(value: Any) {
-        val task = queue.peek() ?: return // Shouldn't call this method without a queued task.
+        // The answer goes to the task waiting for it (Void: the resume packet resumes the player's one suspension). Every new
+        // task goes to the front, so the head can be one queued after the dialogue opened: 2026-10-09 the window-mode
+        // rearm (GameframeRebuild) took the intro's "Next" choice and the client stayed on "Please wait..." for good.
+        val task = queue.firstOrNull { it.awaitingReturnValue } ?: queue.peek() ?: return // Shouldn't call this method without a queued task.
         task.requestReturnValue = value
     }
 

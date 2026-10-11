@@ -460,10 +460,10 @@
    },
    "to": {
     "x": 4116,
-    "z": 5585,
+    "z": 5587,
     "height": 2
    },
-   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5586,2 (no stairs loc on plane 1); 4116,5585,2 is a walkable tile beside it (MapProbe land, pocket >= 64)"
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5586,2 (no stairs loc on plane 1); 4116,5585,2 is a walkable tile beside it (MapProbe land, pocket >= 64) | landing moved to the stairs' open side 2026-10-03 (sweep 18:54: 16371 answered \"I can't reach that!\" from the old landing side, batch 16)"
   },
   {
    "id": 16369,
@@ -476,10 +476,10 @@
    },
    "to": {
     "x": 4116,
-    "z": 5598,
+    "z": 5596,
     "height": 2
    },
-   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5597,2 (no stairs loc on plane 1); 4116,5598,2 is a walkable tile beside it (MapProbe land, pocket >= 64)"
+   "source": "667 map counterpart two planes up (placements_667.tsv / MapProbe 2026-10-03): Stairs 16371 'Climb-down' at 4116,5597,2 (no stairs loc on plane 1); 4116,5598,2 is a walkable tile beside it (MapProbe land, pocket >= 64) | landing moved to the stairs' open side 2026-10-03 (sweep 18:54: 16371 answered \"I can't reach that!\" from the old landing side, batch 16)"
   }
  ]
 }

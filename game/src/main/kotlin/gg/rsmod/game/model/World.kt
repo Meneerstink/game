@@ -106,6 +106,36 @@ class World(
 
     val players = PawnList(arrayOfNulls<Player>(gameContext.playerLimit))
 
+    /*
+     * OSRS Wiki "Player identification number": "the engine resolves them sequentially each game tick, with lower PIDs processed
+     * first", and PID is randomised "every 100 to 150 game ticks" on standard worlds. Input, queues (the combat loop) and the player
+     * cycle (hits) follow this order (PV1 2026-10-03: players were cycled in index order and never reshuffled, so the lower index
+     * always won simultaneous attacks). A key per player slot: a random permutation of the slots, redrawn at every reshuffle.
+     */
+    private val pidKeys = IntArray(gameContext.playerLimit) { it }
+    private var pidReshuffleCycle = 0
+
+    /** The player's PID: lower is processed earlier in every tick. */
+    fun pid(player: Player): Int = pidKeys.getOrElse(player.index) { player.index }
+
+    /** The online players in processing order (lower PID first). */
+    fun playersInPidOrder(): List<Player> {
+        val list = ArrayList<Player>(players.count())
+        players.forEach { list.add(it) }
+        list.sortBy { pid(it) }
+        return list
+    }
+
+    private fun reshufflePid() {
+        for (i in pidKeys.size - 1 downTo 1) {
+            val j = random.nextInt(i + 1)
+            val t = pidKeys[i]
+            pidKeys[i] = pidKeys[j]
+            pidKeys[j] = t
+        }
+        pidReshuffleCycle = currentCycle + random(100..150)
+    }
+
     val npcs = PawnList(arrayOfNulls<Npc>(Short.MAX_VALUE.toInt()))
 
     val temporaryObjects = mutableListOf<TemporaryGameObject>()
@@ -277,6 +307,7 @@ class World(
             logger.info("World cycle has been reset.")
         }
         BreachTrace.cycle = currentCycle
+        if (currentCycle >= pidReshuffleCycle) reshufflePid()
 
         /*
          * Copy the timers to a mutable map just in case a timer has to modify
@@ -561,7 +592,7 @@ class World(
         val tile = projectile.tile
         val chunk = chunks.getOrCreate(tile)
         AvTrace.log { "projectile gfx=${projectile.gfx} from=$tile to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile} cycle=$currentCycle" }
-        BreachTrace.log("projectile.spawn") { "gfx=${projectile.gfx} from=${tile.x},${tile.z} to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile}" }
+        if (BreachTrace.engineActive()) BreachTrace.log("projectile.spawn") { "gfx=${projectile.gfx} from=${tile.x},${tile.z} to=${projectile.targetPawn?.let { "${it.entityType}#${it.index}" } ?: projectile.targetTile}" }
 
         Probe.projectile(projectile)
         chunk.addEntity(this, projectile, tile)
@@ -583,7 +614,7 @@ class World(
         if (AvTrace.enabled && !soundExists(sound.id)) {
             AvTrace.log { "PROBLEM areasound id=${sound.id} at=$tile does not exist in the cache (synth 4 / vorbis 14) - nobody hears it" }
         }
-        BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
+        if (BreachTrace.engineActive()) BreachTrace.log("areasound.spawn") { "id=${sound.id} at=${tile.x},${tile.z},${tile.height} radius=${sound.radius} delay=${sound.delay}" }
 
         Probe.areaSound(sound)
         chunk.addEntity(this, sound, tile)
@@ -592,7 +623,7 @@ class World(
     fun spawn(graphic: TileGraphic) {
         val tile = graphic.tile
         val chunk = chunks.getOrCreate(tile)
-        BreachTrace.log("tilegfx.spawn") { "id=${graphic.id} at=${tile.x},${tile.z},${tile.height}" }
+        if (BreachTrace.engineActive()) BreachTrace.log("tilegfx.spawn") { "id=${graphic.id} at=${tile.x},${tile.z},${tile.height}" }
 
         chunk.addEntity(this, graphic, tile)
     }

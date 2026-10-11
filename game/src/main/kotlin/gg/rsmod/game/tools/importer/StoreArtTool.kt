@@ -76,8 +76,8 @@ object StoreArtTool {
      * dimmed, 8070 Next dimmed.
      */
     const val PAGE_BUTTON_FIRST = SLOT_TIER_FIRST + 3 // 8067..8070
-    const val PAGE_BUTTON_WIDTH = 88
-    const val PAGE_BUTTON_HEIGHT = 24
+    const val PAGE_BUTTON_WIDTH = 70
+    const val PAGE_BUTTON_HEIGHT = 18
 
     // ---- geometry shared with StoreInterfaceImportTool ------------------------------------------------------------
 
@@ -85,52 +85,59 @@ object StoreArtTool {
     // page" (488x330 -> 527x360, 6x5 -> 7x6 grid). Owner 2026-10-10 ("check alle stores ... betere leesbaarheid", then "kan veel
     // beter"): 660x470 in the resizable game view (owner choice; the 512x334 fixed viewport clips it), a category row under the
     // shop tabs, a 7x7 grid, a tall showcase for a big model and a roomy card where every fact has its own row.
-    const val WIDTH = 660
-    const val HEIGHT = 470
-    const val HEADER_SHIFT = -4
-    const val TAB_Y = 46
-    const val TAB_WIDTH = 206
-    const val TAB_HEIGHT = 28
-    const val TAB_X = 14
-    const val TAB_PITCH = 213
+    // Owner 2026-10-11 ("stores moeten niet overlappen zeker niet in fixed mode", then "bank-formaat"): 512x334, the bank's
+    // size - it opens in the game view's modal slot like the bank (fixed 548 and resizable 746), so it never covers the chat,
+    // the tabs or the minimap, in either mode and with Stretched Mode. 6x5 grid (30 a page), every card fact on its own row.
+    const val WIDTH = 512
+    const val HEIGHT = 334
+    const val HEADER_SHIFT = -12
+    const val TITLE_SIZE = 18f
+    const val TAB_Y = 37
+    const val TAB_WIDTH = 158
+    const val TAB_HEIGHT = 22
+    const val TAB_X = 12
+    const val TAB_PITCH = 164
 
     /** Category buttons (All / Kits / Gear / Pets / Capes / Cosmetics) under the shop tabs. */
-    const val SECTION_Y = 80
-    const val SECTION_X = 14
-    const val SECTION_WIDTH = 102
-    const val SECTION_HEIGHT = 24
-    const val SECTION_PITCH = 106
+    const val SECTION_Y = 62
+    const val SECTION_X = 12
+    const val SECTION_WIDTH = 78
+    const val SECTION_HEIGHT = 18
+    const val SECTION_PITCH = 82
     const val SECTION_COUNT = 6
-    const val STRIP_X = 14
-    const val STRIP_Y = 110
-    const val STRIP_WIDTH = 632
-    const val STRIP_HEIGHT = 24
-    const val GRID_X = 14
-    const val GRID_Y = 140
-    const val GRID_WIDTH = 282
-    const val GRID_HEIGHT = 282
+    const val STRIP_X = 12
+    const val STRIP_Y = 83
+    const val STRIP_WIDTH = 488
+    const val STRIP_HEIGHT = 18
+    const val GRID_X = 12
+    const val GRID_Y = 104
+
+    /** Slot pitch: a 36 px slot and a 2 px gap. */
+    const val SLOT_PITCH = 38
+    const val GRID_WIDTH = 6 * SLOT_PITCH + 4
+    const val GRID_HEIGHT = 5 * SLOT_PITCH + 4
 
     /** Page bar under the grid (Prev / page / Next), level with the Buy button. */
-    const val NAV_Y = 428
-    const val NAV_HEIGHT = 28
-    const val SHOW_X = 306
-    const val SHOW_Y = 140
-    const val SHOW_WIDTH = 340
-    const val SHOW_HEIGHT = 160
-    const val CARD_X = 306
-    const val CARD_Y = 304
-    const val CARD_WIDTH = 340
-    const val CARD_HEIGHT = 120
+    const val NAV_Y = 302
+    const val NAV_HEIGHT = 22
+    const val SHOW_X = 252
+    const val SHOW_Y = 104
+    const val SHOW_WIDTH = 248
+    const val SHOW_HEIGHT = 88
+    const val CARD_X = 252
+    const val CARD_Y = 195
+    const val CARD_WIDTH = 248
+    const val CARD_HEIGHT = 104
 
     /** The lit price band at the bottom of the card. */
-    const val PRICE_BAND_HEIGHT = 24
+    const val PRICE_BAND_HEIGHT = 20
     const val SLOT_SIZE = 36
-    const val BUY_WIDTH = 220
-    const val BUY_HEIGHT = 28
+    const val BUY_WIDTH = 170
+    const val BUY_HEIGHT = 22
     const val ICON_SIZE = 16
-    const val ARROW_WIDTH = 18
-    const val ARROW_HEIGHT = 28
-    const val CLOSE_SIZE = 22
+    const val ARROW_WIDTH = 14
+    const val ARROW_HEIGHT = 24
+    const val CLOSE_SIZE = 20
 
     class Theme(
         val title: String,
@@ -414,10 +421,10 @@ object StoreArtTool {
             g.clip = null
 
             // Header: emblem, title in engraved gold with a glow, flanking ornaments and a jewelled divider.
-            val titleFont = font(21f)
+            val titleFont = font(TITLE_SIZE)
             val titleShape = textShape(g, t.title, titleFont, w / 2 + 12, 34.0 + HEADER_SHIFT, 0.08f)
             val tb = titleShape.bounds2D
-            val emblemShape = emblem(themeIndex, tb.minX - 20, 26.0 + HEADER_SHIFT, 9.0)
+            val emblemShape = emblem(themeIndex, tb.minX - 18, 27.0 + HEADER_SHIFT, 7.5)
             glow(g, titleShape, t.glow, 7, 0.5)
             glow(g, emblemShape, t.glow, 6, 0.55)
             g.color = alpha(Color.BLACK, 0.7)
@@ -509,7 +516,7 @@ object StoreArtTool {
             arrayOf(alpha(t.accentLight, 0.0), alpha(t.accentLight, 0.75), alpha(t.accentLight, 0.0)),
         )
         g.stroke = BasicStroke(1f)
-        g.draw(java.awt.geom.Line2D.Double(x + 8, y + 24.5, x + w - 8, y + 24.5))
+        g.draw(java.awt.geom.Line2D.Double(x + 8, y + 21.5, x + w - 8, y + 21.5))
         // price band
         val by = y + h - PRICE_BAND_HEIGHT - 3
         val band = round(x + 4, by, w - 8, PRICE_BAND_HEIGHT.toDouble(), 6.0)
@@ -553,17 +560,17 @@ object StoreArtTool {
         )
         g.fill(shape)
         // pedestal
-        val pedestal = Ellipse2D.Double(x + w / 2 - 88, y + h - 24, 176.0, 16.0)
+        val pedestal = Ellipse2D.Double(x + w / 2 - 70, y + h - 20, 140.0, 13.0)
         g.paint = RadialGradientPaint(
-            Point2D.Double(x + w / 2, y + h - 16),
-            94f,
+            Point2D.Double(x + w / 2, y + h - 13),
+            76f,
             floatArrayOf(0f, 1f),
             arrayOf(alpha(t.glow, 0.55), alpha(t.glow, 0.0)),
         )
-        g.fill(Ellipse2D.Double(x + w / 2 - 112, y + h - 34, 224.0, 36.0))
-        g.paint = vertical(y + h - 24, y + h - 8, 0f to alpha(t.bgTop.brighter(), 0.95), 1f to alpha(Color.BLACK, 0.95))
+        g.fill(Ellipse2D.Double(x + w / 2 - 90, y + h - 28, 180.0, 30.0))
+        g.paint = vertical(y + h - 20, y + h - 7, 0f to alpha(t.bgTop.brighter(), 0.95), 1f to alpha(Color.BLACK, 0.95))
         g.fill(pedestal)
-        g.paint = goldVertical(y + h - 24, y + h - 8)
+        g.paint = goldVertical(y + h - 20, y + h - 7)
         g.stroke = BasicStroke(1.4f)
         g.draw(pedestal)
         g.clip = old
@@ -601,7 +608,7 @@ object StoreArtTool {
                 g.stroke = BasicStroke(1.1f)
                 g.draw(shape)
             }
-            val label = textShape(g, t.tab, font(13f), w / 2 + 9, h / 2 + 5, 0.04f)
+            val label = textShape(g, t.tab, font(12f), w / 2 + 9, h / 2 + 4.5, 0.04f)
             val lb = label.bounds2D
             val icon = emblem(themeIndex, lb.minX - 12, h / 2, 5.5)
             g.color = alpha(Color.BLACK, if (selected) 0.55 else 0.8)
@@ -716,7 +723,7 @@ object StoreArtTool {
             g.paint = goldVertical(h / 2 - 6, h / 2 + 6)
             g.fill(arrow)
             // label beside the arrow
-            val label = textShape(g, if (next) "Next" else "Prev", font(12.5f), if (next) w / 2 - 6 else w / 2 + 6, h / 2 + 4.5, 0.04f)
+            val label = textShape(g, if (next) "Next" else "Prev", font(11f), if (next) w / 2 - 6 else w / 2 + 6, h / 2 + 4, 0.04f)
             g.color = alpha(Color.BLACK, 0.7)
             g.fill(AffineTransform.getTranslateInstance(1.0, 1.2).createTransformedShape(label))
             val lb = label.bounds2D

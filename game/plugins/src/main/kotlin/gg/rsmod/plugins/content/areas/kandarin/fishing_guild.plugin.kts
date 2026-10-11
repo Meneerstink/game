@@ -45,9 +45,5 @@ fun handleGate(player: Player) {
     }
 }
 
-// Fishing Guild staircase
-
-// floor 1
-on_obj_option(obj = Objs.STAIRCASE_49031, option = "climb-up") {
-    player.message("Nothing interesting happens.")
-}
+// Fishing Guild staircase 49031: no stub here - the generic stairs binding uses its object-teleports.json entry (2609,3398,0 ->
+// 2608,3399,1; the stub answered "Nothing interesting happens." before the table, batch 15).

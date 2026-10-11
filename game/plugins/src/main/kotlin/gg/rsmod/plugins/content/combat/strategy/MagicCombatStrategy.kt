@@ -540,6 +540,8 @@ object MagicCombatStrategy : CombatStrategy {
         damage: Int,
         baseXp: Double,
     ) {
+        // OSRS Wiki "Combat dummy": "no experience will be granted for hitting it".
+        if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return
         val modDamage = if (target.entityType.isNpc) target.getCurrentLifepoints().coerceAtMost(damage) else damage
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
         // Audit C-02: OSRS 2 Magic (1.33 + 1 Defence defensively) and 1.33 Hitpoints per 1:1 damage point.

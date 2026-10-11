@@ -203,6 +203,12 @@ fun Pawn.dealHit(
     val combatDummy = target is Npc && target.attr[gg.rsmod.plugins.content.areas.poh.PlayerHouse.COMBAT_DUMMY_ATTR] == true
     @Suppress("NAME_SHADOWING")
     val landHit = landHit || combatDummy
+    // OSRS Wiki "Hit delay": "If the entity receiving the hit is processed earlier than the entity dealing the hit, then the hit will
+    // be delayed by an additional one tick"; NPCs are processed before players. Every delay passed in here carries that tick (melee 1
+    // = 0 + 1, ranged/magic 2 + ...), right for any hit on an NPC. Between two players PID decides: a receiver processed after the
+    // dealer (World.pid) takes the hit without it (PV1 2026-10-03, conform combat pid).
+    @Suppress("NAME_SHADOWING")
+    val delay = if (this is Player && target is Player && delay > 0 && world.pid(target) > world.pid(this)) delay - 1 else delay
     var damage =
         when {
             combatDummy -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()

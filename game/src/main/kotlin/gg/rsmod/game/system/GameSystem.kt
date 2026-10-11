@@ -290,6 +290,8 @@ class GameSystem(
         when (message) {
             is gg.rsmod.game.message.impl.MessageGameMessage -> {
                 val text = message.message
+                // The client's own HUD protocol (__RSPS_HUD__:dmmz / dmmt ...) is no chat: 974 of 1,379 msg lines (2026-10-09).
+                if (text.startsWith("__RSPS_HUD__")) return
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.MSG) { "$who type=${message.type} '$text'" }
                 if (text == gg.rsmod.game.model.entity.Entity.NOTHING_INTERESTING_HAPPENS || text.startsWith("Nothing interesting happens")) {
                     gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.MSG) { "$who got 'Nothing interesting happens.' (no handler) after $lastAction" }

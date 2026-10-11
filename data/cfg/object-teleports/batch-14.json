@@ -1,0 +1,165 @@
+{
+ "provenance": "Obstacle batch 14 (2026-10-03, owner priority #1): sourced object teleports for agent-handoffs/obstacle-batches/rest-batch-14.tsv (Jatizso / Neitiznot tower ladders). Every landing checked on this 667 map (MapProbe / conform traversal start tiles); each entry names its source (2009scape destination + CACHE ladder stack).",
+ "teleports": [
+  {
+   "id": 21395,
+   "name": "jatizso_guard_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2388,
+    "z": 3804,
+    "height": 0
+   },
+   "to": {
+    "x": 2387,
+    "z": 3804,
+    "height": 2
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2388, 3804, 0), Location.create(2387, 3804, 2)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). MapProbe 2026-10-03: 2387,3804,2 is the walkable ring around the top ladder."
+  },
+  {
+   "id": 21396,
+   "name": "jatizso_guard_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2388,
+    "z": 3804,
+    "height": 2
+   },
+   "to": {
+    "x": 2387,
+    "z": 3804,
+    "height": 0
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2388, 3804, 2), Location.create(2387, 3804, 0)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). 2387,3804,0 = the tile the conform traversal bots stood on beside the bottom ladder (sweep 2026-10-03 18:54)."
+  },
+  {
+   "id": 21395,
+   "name": "jatizso_guard_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2388,
+    "z": 3793,
+    "height": 0
+   },
+   "to": {
+    "x": 2387,
+    "z": 3793,
+    "height": 2
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2388, 3793, 0), Location.create(2387, 3793, 2)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). MapProbe 2026-10-03: 2387,3793,2 is the walkable ring around the top ladder."
+  },
+  {
+   "id": 21396,
+   "name": "jatizso_guard_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2388,
+    "z": 3793,
+    "height": 2
+   },
+   "to": {
+    "x": 2387,
+    "z": 3793,
+    "height": 0
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2388, 3793, 2), Location.create(2387, 3793, 0)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). 2387,3793,0 = the tile the conform traversal bots stood on beside the bottom ladder (sweep 2026-10-03 18:54)."
+  },
+  {
+   "id": 21395,
+   "name": "jatizso_guard_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2410,
+    "z": 3823,
+    "height": 0
+   },
+   "to": {
+    "x": 2410,
+    "z": 3824,
+    "height": 2
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2410, 3823, 0), Location.create(2410, 3824, 2)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). MapProbe 2026-10-03: 2410,3824,2 is the walkable ring around the top ladder."
+  },
+  {
+   "id": 21396,
+   "name": "jatizso_guard_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2410,
+    "z": 3823,
+    "height": 2
+   },
+   "to": {
+    "x": 2410,
+    "z": 3824,
+    "height": 0
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2410, 3823, 2), Location.create(2410, 3824, 0)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). 2410,3824,0 = the tile the conform traversal bots stood on beside the bottom ladder (sweep 2026-10-03 18:54)."
+  },
+  {
+   "id": 21395,
+   "name": "jatizso_guard_tower_ladder",
+   "option": "Climb-up",
+   "tile": {
+    "x": 2421,
+    "z": 3823,
+    "height": 0
+   },
+   "to": {
+    "x": 2421,
+    "z": 3824,
+    "height": 2
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2421, 3823, 0), Location.create(2421, 3824, 2)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). MapProbe 2026-10-03: 2421,3824,2 is the walkable ring around the top ladder."
+  },
+  {
+   "id": 21396,
+   "name": "jatizso_guard_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2421,
+    "z": 3823,
+    "height": 2
+   },
+   "to": {
+    "x": 2421,
+    "z": 3824,
+    "height": 0
+   },
+   "source": "2009scape content/region/fremennik/jatizso/handlers/JatizsoListeners.kt addClimbDest(Location.create(2421, 3823, 2), Location.create(2421, 3824, 0)). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). 2421,3824,0 = the tile the conform traversal bots stood on beside the bottom ladder (sweep 2026-10-03 18:54)."
+  },
+  {
+   "id": 21396,
+   "name": "jatizso_shout_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2373,
+    "z": 3800,
+    "height": 2
+   },
+   "to": {
+    "x": 2374,
+    "z": 3800,
+    "height": 0
+   },
+   "source": "2009scape core/game/global/action/SpecialLadders.java JATIZSO_SHOUT_TOWER_UP(Location.create(2373, 3800, 2), Location.create(2374, 3800, 0)) - the counterpart of batch-9's 21395 2373,3800,0 -> 2374,3800,2 (JATIZSO_SHOUT_TOWER_DOWN). CACHE: 667 ladder stack on this tile = 21395 'Climb-up' plane 0, 21395 'Climb-up' plane 1, 21396 'Climb-down' plane 2 (placements_667.tsv) - the plane-1 ladder has no 'Climb-down', so the stack runs 0 <-> 2 (the generic rule stopped on plane 1, a floor with no way down). 2374,3800,0 = walkable start tile of the bottom ladder (sweep 18:54, PASS from E)."
+  },
+  {
+   "id": 21513,
+   "name": "neitiznot_tower_ladder_down",
+   "option": "Climb-down",
+   "tile": {
+    "x": 2363,
+    "z": 3799,
+    "height": 2
+   },
+   "to": {
+    "x": 2362,
+    "z": 3799,
+    "height": 0
+   },
+   "source": "2009scape content/region/fremennik/neitiznot/handlers/NeitiznotListeners.kt addClimbDest(Location.create(2363, 3799, 2), Location.create(2362, 3799, 0)) - the counterpart of batch-7's 21512 2363,3799,0 -> 2364,3799,2. CACHE: stack 21512 'Climb-up' plane 0 / 21511 (unnamed 'Climb-up') plane 1 / 21513 'Climb-down' plane 2; MapProbe 2026-10-03: 2362,3799,0 walkable (open ground west of the ladder, the W start tile of 21512 in the 18:54 sweep)."
+  }
+ ]
+}

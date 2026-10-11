@@ -36,6 +36,9 @@ class GuardedZonesTests {
             "Sophanem" to Tile(3300, 2780, 0),
             "Tutorial Island" to Tile(3100, 3100, 0),
             "Void Knights' Outpost" to Tile(2660, 2650, 0),
+            // Owner 2026-10-10: the outpost's north tip and east shore / islet were outside the old rectangle.
+            "Void Knights' Outpost" to Tile(2645, 2686, 0),
+            "Void Knights' Outpost" to Tile(2699, 2665, 0),
         ).forEach { (name, tile) ->
             assertEquals(name, GuardedZones.zoneAt(tile)?.name, "$tile must be inside $name")
         }

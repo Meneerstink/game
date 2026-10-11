@@ -49,10 +49,15 @@ class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
         }
 
         if (unpacked.startsWith("::commands")) {
-            client.writeMessage("To use commands, press the (`) key on your keyboard. The available commands are:")
-            client.writeMessage("-> male, female, players, rate skill_name")
+            // Owner 2026-10-10: the staff command list (moderators and up); everyone else gets the console hint.
+            if (!world.plugins.executeCommand(client, "commands")) {
+                client.writeMessage("To use commands, press the (`) key on your keyboard.")
+            }
             return
         }
+
+        // Owner 2026-10-10 (staff tools): a muted player's typed chat - public, global, friends and clan chat - goes nowhere.
+        if (gg.rsmod.game.model.priv.Punishments.refuseChat(client)) return
 
         /*
          * The client has no protocol of its own for friends-chat text: the chatbox sends everything

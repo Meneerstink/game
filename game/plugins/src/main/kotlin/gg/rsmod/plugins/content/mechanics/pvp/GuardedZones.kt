@@ -242,7 +242,10 @@ object GuardedZones {
                 "Tutorial Island",
                 intArrayOf(3154, 3136, 3054, 3136, 3054, 3057, 3085, 3040, 3085, 3004, 3125, 3004, 3125, 3037, 3154, 3064),
             ),
-            Zone("Void Knights' Outpost", intArrayOf(2624, 2560, 2624, 2681, 2688, 2681, 2688, 2560)),
+            // Owner 2026-10-10 (world map screenshot: "a section is now dangerous ... the pest control island fully guarded"): the
+            // old rectangle (x < 2688, z < 2681) left the outpost's north tip and its east shore and islet dangerous. Now the whole
+            // island with margin: north to z 2696 west of x 2690, east to x 2712 south of z 2684 - clear of Ape Atoll to the north-east.
+            Zone("Void Knights' Outpost", intArrayOf(2624, 2560, 2624, 2696, 2690, 2696, 2690, 2684, 2712, 2684, 2712, 2560)),
         )
 
     fun zoneAt(tile: Tile): Zone? =

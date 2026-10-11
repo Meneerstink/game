@@ -80,7 +80,9 @@ object RevenantBows {
     fun wildernessBuff(
         player: Player,
         target: Pawn,
-    ): Boolean = target is Npc && player.getEquipment(EquipmentType.WEAPON)?.id in UNCHARGED_FOR && player.tile.getWildernessLevel() > 0
+    ): Boolean =
+        target is Npc && player.getEquipment(EquipmentType.WEAPON)?.id in UNCHARGED_FOR &&
+            (player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target))
 
     /** One ether per attack, hit or miss; an empty bow stays charged (activated). */
     fun afterShot(player: Player) {

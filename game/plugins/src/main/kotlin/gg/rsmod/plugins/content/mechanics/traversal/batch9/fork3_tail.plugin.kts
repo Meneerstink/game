@@ -27,11 +27,7 @@ import gg.rsmod.plugins.content.skills.agility.walkToTile
 // ---- Player-owned house portals of other towns: Rellekka 15480, Brimhaven 15481, Yanille 15482 ------------------------------------
 // Every house here is in Rimmington (areas/poh/PlayerHouse.kt). 2009scape PortalOptionPlugin / HouseLocation: a portal of another
 // town answers "Your house is in <location>." - the same answer batch 3 gives for the Taverley portal 15477.
-for (portal in intArrayOf(15480, 15481, 15482)) {
-    shortcut(portal, "Enter") {
-        player.message("<col=FF0000>Your house is in Rimmington.")
-    }
-}
+// Bound in areas/poh/player_house.plugin.kts since the house can be moved to this town (owner 2026-10-10 night run).
 
 // ---- Haunted Mine (Abandoned Mine) cart tunnels -------------------------------------------------------------------------------
 // 2009scape HauntedMineListeners: "Crawl-through" on mine level 1 animates HUMAN_CRAWL 844 and one tick later teleports to the

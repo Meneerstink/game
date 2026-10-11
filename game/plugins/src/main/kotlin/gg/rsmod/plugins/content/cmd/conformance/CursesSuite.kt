@@ -37,7 +37,7 @@ import java.io.File
  * Normal prayers: level gates, every ordered pair (groups), drain.
  */
 object CursesSuite : Conformance.Suite {
-    private const val REF = "C:/RSPS/reference/prayer/curses.json"
+    private val REF = gg.rsmod.game.RspsPaths.root("reference/prayer/curses.json")
     private const val BOOK = 271
     private const val BOOK_GRID = 8
     private const val HITS = 250
@@ -418,7 +418,11 @@ object CursesSuite : Conformance.Suite {
             } else {
                 val v = runCatching { bot.getVarbit(base + idx) }.getOrNull()
                 run.expectTrue(e, "stat varbit ${base + idx} (${s.asText()}) shows a bonus after ${procs.size} procs", v != null && v > neutral, "varbit=${v}", "> $neutral (30 = no bonus, novite adjustStat)")
-                if (cap != null && v != null) run.expectTrue(e, "stat varbit ${base + idx} (${s.asText()}) within the cap", v <= neutral + cap, "varbit=$v", "<= ${neutral + cap}")
+                // Owner 2026-10-11: the varbit is levels (cs2 1711) and Leech Ranged / Magic carry the owner's Rigour / Augury
+                // modifier, so the cap is AncientCurses' own (modifier above the client's 5 % + the +5 leeched levels).
+                val skill = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)[idx]
+                val ownCap = AncientCurses.leechStatVarbitMax(skill, bot.skills.getMaxLevel(skill))
+                if (v != null) run.expectTrue(e, "stat varbit ${base + idx} (${s.asText()}) within the cap", v <= neutral + ownCap, "varbit=$v", "<= ${neutral + ownCap}")
             }
         }
         val said = messages(run, c0)

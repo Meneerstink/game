@@ -94872,6 +94872,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 8840
   name: "Void knight robe"
   examine: "Leg armour of the order of the Void Knights."
@@ -94905,6 +94906,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 8841
   name: "Void knight mace"
   examine: "A mace used by the order of the Void Knights."
@@ -94938,6 +94940,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 8842
   name: "Void knight gloves"
   examine: "Gloves as used by the order of the Void Knights."
@@ -94971,6 +94974,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 8843
   name: "null"
   examine: "It's an null"
@@ -117363,6 +117367,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 10612
   name: "Rogue mask"
   examine: "Black banded leather armour, a rogue's dream!"
@@ -131292,6 +131297,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11664
   name: "Void ranger helm"
   examine: "A ranger helm from the order of the Void Knights"
@@ -131325,6 +131331,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11665
   name: "Void melee helm"
   examine: "A melee helm from the order of the Void Knights."
@@ -131358,6 +131365,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11666
   name: "Void seal (8)"
   examine: "It's a Void seal (8)."
@@ -131655,6 +131663,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11675
   name: "Void ranger helm"
   examine: "A ranger helm from the order of the Void Knights"
@@ -131688,6 +131697,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11676
   name: "Void melee helm"
   examine: "A melee helm from the order of the Void Knights."
@@ -131721,6 +131731,7 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 11677
   name: "Explorer's notes"
   examine: "'Beyond Trollheim' by Nestor Peregrine."
@@ -240519,7 +240530,7 @@
     attack_audio: -1
 - id: 19785
   name: "Elite void knight top"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior torso armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240539,7 +240550,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5019
     equip_slot: 4
@@ -240549,9 +240560,10 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19786
   name: "Elite void knight robe"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240571,7 +240583,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5020
     equip_slot: 7
@@ -240581,9 +240593,10 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19787
   name: "Elite void knight top"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior torso armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240603,7 +240616,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5021
     equip_slot: 4
@@ -240613,9 +240626,10 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19788
   name: "Elite void knight robe"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240635,7 +240649,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5022
     equip_slot: 7
@@ -240645,9 +240659,10 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19789
   name: "Elite void knight top"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior torso armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240667,7 +240682,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5023
     equip_slot: 4
@@ -240677,9 +240692,10 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19790
   name: "Elite void knight robe"
-  examine: "Armour worn by Void Knight [Guardians/Justiciars/Executioners]."
+  examine: "Superior leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -240699,7 +240715,7 @@
     absorb_ranged: 0
     melee_strength: 0
     ranged_strength: 0
-    prayer: 4
+    prayer: 3
     magic_damage: 0
     appearance_id: 5024
     equip_slot: 7
@@ -240709,6 +240725,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 19791
   name: "Book of equilibrium"
   examine: "The secrets of Void Knight combat."

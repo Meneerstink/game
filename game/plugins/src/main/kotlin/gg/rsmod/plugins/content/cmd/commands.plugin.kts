@@ -448,7 +448,8 @@ on_command("bonusxp", Privilege.ADMIN_POWER) {
     }
 }
 
-on_command("teleto", Privilege.ADMIN_POWER) {
+// Owner 2026-10-10 (staff tools): moderators go to and fetch players for reports.
+on_command("teleto", Privilege.MOD_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(
         player,
@@ -460,7 +461,7 @@ on_command("teleto", Privilege.ADMIN_POWER) {
     }
 }
 
-on_command("teletome", Privilege.ADMIN_POWER) {
+on_command("teletome", Privilege.MOD_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(
         player,
@@ -538,7 +539,8 @@ on_command("rate") {
     }
 }
 
-on_command("home", Privilege.MOD_POWER) {
+// Owner 2026-10-10 (staff tools): a free teleport is not a moderator tool.
+on_command("home", Privilege.ADMIN_POWER) {
     val home = world.gameContext.home
     player.moveTo(home)
 }
@@ -1709,11 +1711,11 @@ on_command("equ", Privilege.ADMIN_POWER) {
                 "You have equipped <col=42C66C>${def.name}</col> ($id) to equipment slot <col=42C66C>($slot)</col>.",
                 type = ChatMessageType.CONSOLE,
             )
-        } else {
-            player.message("Item $id does not exist in cache.", type = ChatMessageType.CONSOLE)
             // A weapon put in by this command attacked with the previous weapon's type (night run 2026-10-11: a Bow of
             // Faerdhinen swung as melee after a Colossal blade); refresh it as the equip route does.
             if (slot == EquipmentType.WEAPON.id) player.sendWeaponComponentInformation()
+        } else {
+            player.message("Item $id does not exist in cache.", type = ChatMessageType.CONSOLE)
         }
     }
 }
@@ -2225,7 +2227,14 @@ on_command("clearspawns", Privilege.OWNER_POWER) {
     player.message("clearspawns: removed $npcCount test npc(s) and $objCount test object(s).", type = ChatMessageType.CONSOLE)
 }
 
-on_command("completequests", Privilege.OWNER_POWER) {
+/** Owner 2026-10-11: besides the owner, only these moderators may use `::completequests`. */
+val COMPLETE_QUESTS_MODERATORS = setOf("hakim", "sous")
+
+on_command("completequests", Privilege.MOD_POWER) {
+    if (!player.privilege.powers.contains(Privilege.OWNER_POWER) && player.username.lowercase() !in COMPLETE_QUESTS_MODERATORS) {
+        player.message("You can't use this command.", type = ChatMessageType.CONSOLE)
+        return@on_command
+    }
     var count = 0
     gg.rsmod.plugins.content.quests.Quest.quests.forEach { quest ->
         if (quest.usesVarbits) {

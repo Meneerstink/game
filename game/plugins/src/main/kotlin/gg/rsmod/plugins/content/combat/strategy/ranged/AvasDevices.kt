@@ -86,7 +86,10 @@ object AvasDevices {
     fun outcome(
         player: Player,
         chance: Int,
+        target: gg.rsmod.game.model.entity.Pawn? = null,
     ): AmmoOutcome {
+        // OSRS Wiki "Combat dummy": "Any ammunition fired at it will always be lost."
+        if (target != null && gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return AmmoOutcome.BROKEN
         if (chance in 0..19) return AmmoOutcome.BROKEN
         val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver.wornAvaEffect(player)
         val cape = player.getEquipment(EquipmentType.CAPE)?.id

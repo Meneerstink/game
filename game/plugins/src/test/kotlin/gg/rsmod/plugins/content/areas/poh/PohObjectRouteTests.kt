@@ -24,30 +24,36 @@ class PohObjectRouteTests {
             13631 to mapOf("enter" to "player_house.plugin.kts"),
             13632 to mapOf("enter" to "player_house.plugin.kts"),
             13405 to mapOf("enter" to "player_house.plugin.kts"),
-            13480 to mapOf("drink" to "player_house.plugin.kts"),
+            PlayerHouse.POOL to mapOf("drink" to "player_house.plugin.kts"),
             13523 to mapOf("rub" to "player_house.plugin.kts"),
-            13639 to mapOf("direct-portal" to "poh_furniture.plugin.kts", "scry" to "poh_furniture.plugin.kts"),
-            12003 to mapOf("use" to "poh_furniture.plugin.kts"),
+            PlayerHouse.NEXUS to mapOf("teleport" to "poh_furniture.plugin.kts", "teleport menu" to "poh_furniture.plugin.kts"),
             13715 to mapOf("repair" to "poh_furniture.plugin.kts"),
-            40173 to mapOf("teleport" to "poh_furniture.plugin.kts"),
-            13658 to mapOf("observe" to "poh_furniture.plugin.kts"),
-            13599 to mapOf("search" to "poh_furniture.plugin.kts"),
-            13648 to mapOf("study" to "poh_furniture.plugin.kts"),
-            13664 to mapOf("study" to "poh_furniture.plugin.kts"),
+            PlayerHouse.JEWELLERY_BOX to mapOf("teleport menu" to "poh_furniture.plugin.kts"),
             14826 to mapOf("activate" to "wilderness_obelisk.plugin.kts"),
-            8355 to mapOf("talk-to" to "spirit_tree.plugin.kts", "inspect" to "spirit_tree.plugin.kts", "guide" to "spirit_tree.plugin.kts", "teleport" to "spirit_tree.plugin.kts"),
-            18771 to mapOf("search" to "poh_furniture.plugin.kts"),
-            18796 to mapOf("open" to "poh_furniture.plugin.kts"),
-            18802 to mapOf("open" to "poh_furniture.plugin.kts"),
-            18808 to mapOf("open" to "poh_furniture.plugin.kts"),
-            18776 to mapOf("open" to "poh_furniture.plugin.kts"),
-            18782 to mapOf("open" to "poh_furniture.plugin.kts"),
-        )
+            PlayerHouse.SPIRITUAL_FAIRY_TREE to
+                mapOf(
+                    "tree" to "poh_furniture.plugin.kts",
+                    "ring-zanaris" to "poh_furniture.plugin.kts",
+                    "ring-configure" to "poh_furniture.plugin.kts",
+                    "ring-last-destination" to "poh_furniture.plugin.kts",
+                ),
+            PlayerHouse.TABLE_SPACE to mapOf("build" to "poh_build.plugin.kts"),
+            PlayerHouse.BELL_PULL to mapOf("ring" to "poh_build.plugin.kts", "remove" to "poh_build.plugin.kts"),
+            PlayerHouse.THEME_SPACE to mapOf("build" to "poh_build.plugin.kts"),
+            PlayerHouse.OTHERWORLDLY_THEME to mapOf("remove" to "poh_build.plugin.kts"),
+        ) + PlayerHouse.OCCULT_ALTAR_VARIANTS.associateWith { OCCULT } +
+            PohBuild.DINING_TABLES.associate { it.obj to mapOf("remove" to "poh_build.plugin.kts") }
+
+    /** The Altar of the Occult variants: Venerate and the two other spellbooks. */
+    private val OCCULT
+        get() = listOf("venerate", "standard", "ancient", "lunar").associateWith { "poh_furniture.plugin.kts" }
 
     @Test
     fun `every option of every loc the house places has a route`() {
         val missing = mutableListOf<String>()
-        PlayerHouse.PLACED_OBJECTS.forEach { id ->
+        // A multiloc (the Altar of the Occult) shows its variants' menus, so those are checked instead of the empty base.
+        val shown = PlayerHouse.PLACED_OBJECTS.flatMap { id -> DEFINITIONS.get(ObjectDef::class.java, id).transforms?.filter { it >= 0 }?.distinct() ?: listOf(id) }
+        shown.forEach { id ->
             val def = DEFINITIONS.get(ObjectDef::class.java, id)
             def.options.filterNotNull().filter { it.isNotBlank() && it.lowercase() != "examine" }.forEach { option ->
                 if (routes[id]?.containsKey(option.lowercase()) != true) missing += "$id ${def.name}: $option"
@@ -62,10 +68,9 @@ class PohObjectRouteTests {
         val files = root.walkTopDown().filter { it.isFile }.associateBy { it.name }
         routes.values.flatMap { it.values }.toSet().forEach { name -> assertTrue(files.containsKey(name), "$name missing") }
         val furniture = files.getValue("poh_furniture.plugin.kts").readText()
-        assertTrue("on_obj_option(obj = Objs.LECTERN_13648, option = \"study\")" in furniture)
-        assertTrue("on_obj_option(obj = Objs.INFERNAL_CHART_13664, option = \"study\")" in furniture)
-        val tree = files.getValue("spirit_tree.plugin.kts").readText()
-        listOf("Talk-to", "Guide", "Inspect").forEach { assertTrue("on_obj_option(obj = Objs.SPIRIT_TREE_8355, option = \"$it\")" in tree, it) }
+        listOf("tree", "ring-configure", "ring-zanaris", "ring-last-destination").forEach {
+            assertTrue("on_obj_option(obj = PlayerHouse.SPIRITUAL_FAIRY_TREE, option = \"$it\")" in furniture, it)
+        }
     }
 
     companion object {

@@ -57,12 +57,13 @@ on_obj_option(obj = Objs.STAIRCASE_24359, option = "climb-down") { climbVarrockS
 
 // Varrock Wall
 
+// One floor from the ladder's own floor (24361 stands on floors 0 and 1, e.g. 3224,3472,1: a fixed height 1 went nowhere; batch 16).
 on_obj_option(obj = Objs.LADDER_24361, option = "climb-up") {
-    player.handleLadder(height = 1)
+    player.handleLadder(height = player.getInteractingGameObj().tile.height + 1)
 }
 
 on_obj_option(obj = Objs.LADDER_24362, option = "climb-down") {
-    player.handleLadder(height = 0)
+    player.handleLadder(height = (player.getInteractingGameObj().tile.height - 1).coerceAtLeast(0))
 }
 
 // Varrock West Bank

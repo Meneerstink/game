@@ -1,0 +1,92 @@
+{
+ "teleports": [
+  {
+   "id": 1738,
+   "name": "etceteria_castle_staircase_up",
+   "option": "Climb-up",
+   "tile": {"x": 2613, "z": 3867, "height": 0},
+   "to": {"x": 2615, "z": 3867, "height": 1},
+   "source": "CACHE counterpart: Staircase 1738 (2x2, rot 0, 2613,3867,0) pairs with Staircase 1740 'Climb-down' (2614,3867,1) (placements_667.tsv, MapProbe find). Landing = Void's rule for this staircase pair at rot 0 (heroes_guild.teles.toml 1738 2895,3513 -> 2897,3513,1; kandarin.teles.toml 2595,3208 -> 2597,3208,1 and 2616,3208 -> 2618,3208,1: anchor x+2, same z, one floor up); 2615,3867,1 is open floor of the same plane-1 room (MapProbe comp 2615,3867,1 = 27 tiles, bbox 2612,3865-2617,3870). Batch 15, 2026-10-03."
+  },
+  {
+   "id": 1740,
+   "name": "etceteria_castle_staircase_down",
+   "option": "Climb-down",
+   "tile": {"x": 2614, "z": 3867, "height": 1},
+   "to": {"x": 2614, "z": 3866, "height": 0},
+   "source": "CACHE counterpart: Staircase 1740 (2614,3867,1) pairs with Staircase 1738 'Climb-up' (2x2 on 2613-2614,3867-3868,0). Landing = Void's rule at rot 0 (heroes_guild.teles.toml 1740 2896,3513,1 -> 2896,3512,0; kandarin.teles.toml 2596,3208,1 -> 2596,3207,0: same x, z-1, one floor down); 2614,3866,0 is open floor of the staircase room (MapProbe comp 2615,3868,0 = 29 tiles, bbox 2612,3865-2617,3870). Batch 15."
+  },
+  {
+   "id": 1738,
+   "name": "fisher_realm_staircase_up_2633",
+   "option": "Climb-up",
+   "tile": {"x": 2633, "z": 4680, "height": 0},
+   "to": {"x": 2634, "z": 4682, "height": 1},
+   "source": "CACHE counterpart: Staircase 1738 (2x2, rot 3, 2633,4680,0, Realm of the Fisher King region 10569 = fairy ring BJR, FairyRings.kt) pairs with Staircase 1740 'Climb-down' (2634,4681,1). Landing = Void's rule at rot 3 (baxtorian_falls.teles.toml 1738 2517,3429 -> 2518,3431,1: x+1, z+2, one floor up; batch-6.json uses the same for 2776,4683); 2634,4682,1 is open floor (MapProbe comp 2634,4682,1 = 41 tiles). Batch 15."
+  },
+  {
+   "id": 1740,
+   "name": "fisher_realm_staircase_down_2634",
+   "option": "Climb-down",
+   "tile": {"x": 2634, "z": 4681, "height": 1},
+   "to": {"x": 2635, "z": 4681, "height": 0},
+   "source": "CACHE counterpart: Staircase 1740 (rot 3, 2634,4681,1) pairs with Staircase 1738 'Climb-up' (2x2 on 2633-2634,4680-4681,0). Landing = Void's rule at rot 3 (baxtorian_falls.teles.toml 1740 2518,3430,1 -> 2519,3430,0: x+1, same z, one floor down); 2635,4681,0 is open floor of the staircase room (MapProbe comp 2632,4681,0 = 49 tiles, bbox 2629,4678-2637,4685). Batch 15."
+  },
+  {
+   "id": 1738,
+   "name": "fisher_realm_staircase_up_2648",
+   "option": "Climb-up",
+   "tile": {"x": 2648, "z": 4683, "height": 0},
+   "to": {"x": 2649, "z": 4685, "height": 1},
+   "source": "CACHE counterpart: Staircase 1738 (2x2, rot 3, 2648,4683,0, region 10569) pairs with Staircase 1740 'Climb-down' (2649,4684,1). Landing = Void's rot-3 rule (baxtorian_falls.teles.toml: x+1, z+2); 2649,4685,1 is open floor (MapProbe comp 2649,4685,1 = 44 tiles, bbox 2646,4681-2652,4687). Batch 15."
+  },
+  {
+   "id": 1740,
+   "name": "fisher_realm_staircase_down_2649",
+   "option": "Climb-down",
+   "tile": {"x": 2649, "z": 4684, "height": 1},
+   "to": {"x": 2650, "z": 4684, "height": 0},
+   "source": "CACHE counterpart: Staircase 1740 (rot 3, 2649,4684,1) pairs with Staircase 1738 'Climb-up' (2x2 on 2648-2649,4683-4684,0). Landing = Void's rot-3 rule (baxtorian_falls.teles.toml 1740: x+1, same z); 2650,4684,0 is open floor east of the staircase (MapProbe map). Batch 15."
+  },
+  {
+   "id": 1738,
+   "name": "fisher_realm_copy_staircase_up_2761",
+   "option": "Climb-up",
+   "tile": {"x": 2761, "z": 4680, "height": 0},
+   "to": {"x": 2762, "z": 4682, "height": 1},
+   "source": "CACHE counterpart: Staircase 1738 (2x2, rot 3, 2761,4680,0; region 11081 = the second Fisher Realm copy, same layout as 10569 shifted x+128) pairs with Staircase 1740 'Climb-down' (2762,4681,1). Landing = Void's rot-3 rule (baxtorian_falls.teles.toml: x+1, z+2), the same rule batch-6.json applied to 1738 at 2776,4683 in this copy; 2762,4682,1 is open floor (MapProbe map). Batch 15."
+  },
+  {
+   "id": 1740,
+   "name": "fisher_realm_copy_staircase_down_2762",
+   "option": "Climb-down",
+   "tile": {"x": 2762, "z": 4681, "height": 1},
+   "to": {"x": 2763, "z": 4681, "height": 0},
+   "source": "CACHE counterpart: Staircase 1740 (rot 3, 2762,4681,1) pairs with Staircase 1738 'Climb-up' (2x2 on 2761-2762,4680-4681,0). Landing = Void's rot-3 rule (baxtorian_falls.teles.toml 1740: x+1, same z); 2763,4681,0 is open floor (MapProbe comp 2760,4681,0 = 46 tiles). Batch 15."
+  },
+  {
+   "id": 1740,
+   "name": "fisher_realm_copy_staircase_down_2777",
+   "option": "Climb-down",
+   "tile": {"x": 2777, "z": 4684, "height": 1},
+   "to": {"x": 2778, "z": 4684, "height": 0},
+   "source": "CACHE counterpart: Staircase 1740 (rot 3, 2777,4684,1) pairs with Staircase 1738 'Climb-up' (2x2 on 2776-2777,4683-4684,0; its up-route is batch-6.json -> 2777,4685,1). Landing = Void's rot-3 rule (baxtorian_falls.teles.toml 1740: x+1, same z); 2778,4684,0 is open floor (MapProbe map). Batch 15."
+  },
+  {
+   "id": 4160,
+   "name": "swensen_maze_final_ladder_up",
+   "option": "Climb-up",
+   "tile": {"x": 2665, "z": 10037, "height": 0},
+   "to": {"x": 2644, "z": 3658, "height": 0},
+   "source": "Swensen's portal maze (region 10652): Ladder 4160 'Climb-up' (2665,10037, only placement) stands in the final room that portal 2504 leads to (batch3 swensen_maze.plugin.kts, 2009scape TFTInteractionListeners DestRoom 2662,10034-2668,10039). The maze has one surface exit: Void rellekka.teles.toml 4159 'Climb-up' (2631,10005) -> 2644,3658 (beside Swensen's ladder 4158 at 2644,3657), the same exit batch-3.json gives every escape rope 4161. OSRS Wiki The Fremennik Trials (Swensen): 'After you finish, talk to Swensen to get his vote' - the final room leads back up to Swensen. No counterpart loc at z-6400 (2665,3637: only portal 15480). Batch 15."
+  },
+  {
+   "id": 38762,
+   "name": "clan_wars_ffa_ladder_down_2842",
+   "option": "Climb-down",
+   "tile": {"x": 2842, "z": 5600, "height": 1},
+   "delta": {"x": 0, "z": 0, "height": -1},
+   "source": "CACHE counterpart: Ladder 38762 (2842,5600,1) stands on Ladder 38761 'Climb' (same tile one floor down; GenericLadders cannot pair them because 38761 only says 'Climb'). Same rule batch-6.json applies to the other 38762 placements (2836,5585 / 2849,5584 / 3028,5585 / 3041,5584). The plane-1 ladder is used from its north tile 2842,5601,1 (MapProbe map: 2841 east-blocked, 2843 west-blocked); 2842,5601,0 and every other side of 38761 on plane 0 are free (MapProbe comp 2842,5601,0 = 47 tiles), so the player keeps his side one floor down. Batch 15."
+  }
+ ]
+}

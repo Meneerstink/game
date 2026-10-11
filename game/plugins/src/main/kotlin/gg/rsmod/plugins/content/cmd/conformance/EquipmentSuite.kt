@@ -40,7 +40,7 @@ import kotlin.math.floor
  * `conform equipment [name filter] [lanes=8] [from=0] [count=N] [armour|weapons]`.
  */
 object EquipmentSuite : Conformance.Suite {
-    private const val REF = "C:/RSPS/reference/weapons/osrs_weapons.json"
+    private val REF = gg.rsmod.game.RspsPaths.root("reference/weapons/osrs_weapons.json")
     private const val DUMMY_NPC = 1
     private const val DUMMY_LIFE = 1_000_000
     private const val STAT_SWINGS = 40

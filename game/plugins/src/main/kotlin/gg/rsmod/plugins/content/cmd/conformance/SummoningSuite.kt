@@ -38,7 +38,7 @@ import kotlin.math.max
  * sound, damage, boosts), beast of burden (capacity, refusal, withdraw, no item lost or made), dismiss (npc and varps gone).
  */
 object SummoningSuite : Conformance.Suite {
-    private const val REF = "C:/RSPS/reference/summoning/familiars.json"
+    private val REF = gg.rsmod.game.RspsPaths.root("reference/summoning/familiars.json")
     private const val DUMMY_NPC = 1
     private const val DUMMY_LIFE = 100000
     private const val ORB = 747

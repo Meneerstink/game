@@ -3740,26 +3740,6 @@
       "group": 335
     },
     {
-      "op": "remove",
-      "id": 13417,
-      "x": 6409,
-      "z": 13,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 336
-    },
-    {
-      "op": "spawn",
-      "id": 13417,
-      "x": 6408,
-      "z": 13,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 336
-    },
-    {
       "op": "npc_spawn",
       "id": 99,
       "x": 3096,
@@ -4038,26 +4018,6 @@
       "type": 10,
       "rot": 2,
       "group": 356
-    },
-    {
-      "op": "remove",
-      "id": 8355,
-      "x": 6413,
-      "z": 8,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 357
-    },
-    {
-      "op": "spawn",
-      "id": 8355,
-      "x": 6420,
-      "z": 4,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 357
     },
     {
       "op": "spawn",
@@ -6151,56 +6111,6 @@
       "group": 561
     },
     {
-      "op": "remove",
-      "id": 13480,
-      "x": 6411,
-      "z": 11,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 562
-    },
-    {
-      "op": "spawn",
-      "id": 13480,
-      "x": 6411,
-      "z": 12,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 562
-    },
-    {
-      "op": "remove",
-      "id": 13480,
-      "x": 6411,
-      "z": 12,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 563
-    },
-    {
-      "op": "spawn",
-      "id": 13480,
-      "x": 6411,
-      "z": 13,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 563
-    },
-    {
-      "op": "remove",
-      "id": 13480,
-      "x": 6411,
-      "z": 11,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 564
-    },
-    {
       "op": "npc_remove",
       "id": 14465,
       "x": 2980,
@@ -6299,16 +6209,6 @@
       "type": 10,
       "rot": 2,
       "group": 570
-    },
-    {
-      "op": "remove",
-      "id": 13480,
-      "x": 6411,
-      "z": 13,
-      "level": 0,
-      "type": 10,
-      "rot": 0,
-      "group": 573
     },
     {
       "op": "remove",
@@ -8956,6 +8856,57 @@
       "rot": 4,
       "note": "King Narnode out of the Standard (owner 2026-10-09: 1 tile opschuiven)",
       "group": 751
+    },
+    {
+      "op": "npc_remove",
+      "id": 1863,
+      "x": 3151,
+      "z": 3493,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 752
+    },
+    {
+      "op": "remove",
+      "id": 62746,
+      "x": 3157,
+      "z": 3501,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 753
+    },
+    {
+      "op": "remove",
+      "id": 17239,
+      "x": 3163,
+      "z": 3494,
+      "level": 0,
+      "type": 10,
+      "rot": 0,
+      "group": 754
+    },
+    {
+      "op": "npc_remove",
+      "id": 1918,
+      "x": 3156,
+      "z": 3492,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 755
+    },
+    {
+      "op": "npc_spawn",
+      "id": 1918,
+      "x": 3156,
+      "z": 3490,
+      "level": 1,
+      "type": 10,
+      "rot": 6,
+      "note": "Archaeologist out from under the upper storey (owner 2026-10-10: visible from every camera angle)",
+      "group": 755
     }
   ]
 }

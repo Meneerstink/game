@@ -235,6 +235,12 @@ object OsrsFxImportTool {
             // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
             // COWBOSS_PET_EMOTE_CHARGE 13803 (5.16 s, the length of the whirlwind's own sequence 13802). RuneLite gameval AnimationID.
             "pet-beef" to listOf(13801, 13803),
+            // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren"): the water animation of OSRS loc 29241
+            // "Ornate pool of Rejuvenation" (OsrsLocImportTool batch of the same name keeps it once this is imported).
+            "poh-pool" to listOf(7304),
+            // Owner 2026-10-10 (POH OSRS pieces): the idle animations of the Altar of the Occult multiloc 29150 (7303) and the
+            // Portal Nexus 33410 (367), for OsrsLocImportTool batch "poh-house".
+            "poh-house" to listOf(7303, 367),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */

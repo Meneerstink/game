@@ -445,6 +445,9 @@ class ModernObjectDef(val id: Int) {
     var params: Map<Int, Any>? = null
     val unknownOpcodes = mutableListOf<Int>()
 
+    /** Opcode 101 sub-menu entries: parent op (as stored) to text. */
+    val subOps = mutableListOf<Pair<Int, String>>()
+
     companion object {
         fun decode(
             id: Int,
@@ -579,6 +582,16 @@ class ModernObjectDef(val id: Int) {
                     94 -> {}
                     95 -> buf.u8()
                     96 -> buf.u8()
+                    // Conditional sub-menu entry (OSRS POH spirit tree / fairy ring "Tree > Grand Exchange"): the parent op, a varp
+                    // and varbit (0xFFFF = none), the value range that shows it, then its text. Rev 667 has no sub-menus.
+                    101 -> {
+                        val parent = buf.u8()
+                        buf.u16()
+                        buf.u16()
+                        buf.i32()
+                        buf.i32()
+                        def.subOps += parent to buf.string()
+                    }
                     249 -> {
                         val n = buf.u8()
                         val map = LinkedHashMap<Int, Any>()

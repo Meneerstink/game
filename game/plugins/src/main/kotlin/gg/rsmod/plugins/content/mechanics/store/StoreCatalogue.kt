@@ -26,7 +26,8 @@ import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
  *
  * Stock per store follows the owner's layout page of 2026-09-29 ("Vier stores, met ruimte voor de Grand Exchange": every imported
  * OSRS item id assigned to Donator / Loyalty / Deadman / Breach / GE / no sale). Items native to revision 667 that the page did not
- * cover (Void, defenders (t), rune scimitar kits, costumes, pets, the three original halos) keep their earlier owner placement.
+ * cover (defenders (t), rune scimitar kits, costumes, pets, the three original halos) keep their earlier owner placement; Void left
+ * the stores on 2026-10-10 (owner: Pest Control only).
  * Global stock and purchase limits are deliberately not built yet (page: "limieten pas afstellen op echte verkrijging").
  *
  * Prices are owner-approved ADAPTED values (2026-09-19 tiers, 2026-09-29 table) and live only in [TIER_PRICE] / the explicit
@@ -309,9 +310,7 @@ object StoreCatalogue {
         // ---- Deadman Shop: PvP-earned; Elder chaos, Dagon'hai and Heavy ballista kits are exclusive here ----
         listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.HEAVY_BALLISTA_ORNAMENT_KIT)
             .forEach { list += kitEntry(m, it, "Deadman kits", price = 750, tradeable = TradeablePolicy.UNTRADEABLE) }
-        listOf(Items.VOID_KNIGHT_TOP to 250, Items.VOID_KNIGHT_ROBE to 250, Items.VOID_KNIGHT_MACE to 250, Items.VOID_KNIGHT_GLOVES to 150,
-            Items.VOID_MELEE_HELM to 200, Items.VOID_RANGER_HELM to 200, Items.VOID_MAGE_HELM to 200, Items.VOID_KNIGHT_DEFLECTOR to 300)
-            .forEach { (item, price) -> list += itemEntry(m, item, price, "Void knight") }
+        // Owner 2026-10-10: Void and elite void are earned only through Pest Control (Void Knights' rewards), never in a mansion store.
         listOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_ZAMORAK_CAPE)
             .forEach { list += itemEntry(m, it, 400, "Imbued capes") }
         // Imbues (owner page 2026-09-29): the existing base ring + Deadman Points; the normal ring stays a PvM/GE product.

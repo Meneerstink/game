@@ -46,8 +46,8 @@ object StoreUi : KLogging() {
             val layout = Ui.layoutFor(count)
             if (layout !== Ui.CURRENT) {
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERFACE) {
-                    "store interface $INTERFACE_ID has $count components, not the ${Ui.CURRENT.componentCount} of the 7x6 layout: the cache still " +
-                        "holds the old 6x5 store window - run StoreInterfaceImportTool --apply with the servers stopped"
+                    "store interface $INTERFACE_ID has $count components, not the ${Ui.CURRENT.componentCount} of the bank-size layout: the cache " +
+                        "still holds an older store window - run StoreInterfaceImportTool --apply with the servers stopped"
                 }
             }
             logger.info { "Store window: interface $INTERFACE_ID has $count components -> ${layout.columns}x${layout.rows} grid" }
@@ -61,7 +61,7 @@ object StoreUi : KLogging() {
 
     /** Every component a click can arrive on, in any layout (the plugin binds them all and [click] dispatches). */
     val CLICKABLE: Set<Int> =
-        listOf(Ui.CURRENT, Ui.SECTIONS_7X6, Ui.PREVIOUS, Ui.LEGACY).flatMap { l ->
+        listOf(Ui.CURRENT, Ui.WIDE_7X7, Ui.SECTIONS_7X6, Ui.PREVIOUS, Ui.LEGACY).flatMap { l ->
             listOf(CLOSE, l.pagePrevious, l.pageNext, l.carouselPrevious, l.carouselNext, l.buyLayer) +
                 (0 until Shop.values().size).map { TAB_FIRST + it * TAB_STRIDE } +
                 (0 until l.slotCount).map { l.slotFirst + it } +
@@ -100,9 +100,10 @@ object StoreUi : KLogging() {
     /** Header tagline per shop (tab order). */
     private val TAGLINES =
         mapOf(
-            Shop.DONATOR to "Exclusive kits, gear and looks - points at 78legacy.com",
-            Shop.DEADMAN to "Earned in Deadman combat - never for sale",
-            Shop.LOYALTY to "Earned by playing - time online, dailies and events",
+            // Owner 2026-10-11 bank-size window: one line of at most ~270 px beside the balance.
+            Shop.DONATOR to "Kits, gear and looks - 78legacy.com",
+            Shop.DEADMAN to "Earned in Deadman combat only",
+            Shop.LOYALTY to "Earned by playing and dailies",
         )
 
     /** Tier label colours (text <col> tags): Basic silver, Premium green, Elite blue, Prestige purple. */
@@ -117,7 +118,7 @@ object StoreUi : KLogging() {
     /** The store's painted art (StoreArtTool): tabs, Buy button and currency icons, per shop in tab order. */
     private val Art = gg.rsmod.game.tools.importer.StoreArtTool
 
-    /** The store is open as the fixed-mode full-screen top level (see [open]). */
+    /** A store opened before 2026-10-11 as the fixed-mode full-screen top level; [close] still gives the gameframe back. */
     private val FULLSCREEN_ATTR = AttributeKey<Boolean>()
 
     private val SHOP_ATTR = AttributeKey<Int>()
@@ -173,19 +174,11 @@ object StoreUi : KLogging() {
         player.attr[CAROUSEL_ATTR] = 0
         player.attr.remove(CONFIRM_ATTR)
         if (!isOpen(player)) {
-            // Owner 2026-10-10: the 600x420 window. The resizable gameframe's modal slot (746:12) is a 512x334 box that clipped it
-            // (and the 527x360 one before it); 746:11 is the whole game view (as the skill guide). Fixed mode maps both to 548:9.
-            // Owner 2026-10-11 (bugs 030753, "Over whole screen"): fixed mode has only the 512x334 game view (548:9), where the
-            // 660x470 window spilled over chat and tabs. There it opens as the full-screen top level over the whole 765x503
-            // frame, the world map's route (openFullscreenInterface / closeFullscreenInterface).
-            if (player.interfaces.displayMode.isResizable()) {
-                // A fixed-mode full-screen store closed by a window-mode switch leaves no full-screen state behind.
-                player.attr.remove(FULLSCREEN_ATTR)
-                player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN_FULL)
-            } else {
-                player.openFullscreenInterface(INTERFACE_ID)
-                player.attr[FULLSCREEN_ATTR] = true
-            }
+            // Owner 2026-10-11 ("stores moeten niet overlappen zeker niet in fixed mode", answer: bank size): the window is 512x334
+            // and opens in the game view's modal slot like the bank (fixed 548, resizable 746), so it never covers the chat, the
+            // tabs or the minimap. Before: a 660x470 window over the whole resizable view / as the fixed-mode full-screen top level.
+            player.attr.remove(FULLSCREEN_ATTR)
+            player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         }
         val l = layout(player)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, OP1)

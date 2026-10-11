@@ -187,7 +187,7 @@ object WorldScan {
                 "sound" to Regex("""AreaSound\([^)]*?\bid\s*=\s*(\d+)"""),
                 "graphic" to Regex("""TileGraphic\([^)]*?\bid\s*=\s*(\d+)"""),
             )
-        listOf(File("C:/RSPS/game/game/game/plugins/src/main"), File("C:/RSPS/game/game/game/src/main")).filter { it.isDirectory }.forEach { root ->
+        listOf(File(gg.rsmod.game.RspsPaths.root("game/game/game/plugins/src/main")), File(gg.rsmod.game.RspsPaths.root("game/game/game/src/main"))).filter { it.isDirectory }.forEach { root ->
             root.walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) }.forEach { f ->
                 f.readLines().forEachIndexed { i, line ->
                     if (line.trimStart().startsWith("//") || line.trimStart().startsWith("*")) return@forEachIndexed
@@ -233,7 +233,7 @@ object WorldScan {
             }
         }
 
-        val dir = File("C:/RSPS/bugs")
+        val dir = File(gg.rsmod.game.RspsPaths.root("bugs"))
         dir.mkdirs()
         val file = File(dir, "scan-${LocalDateTime.now().format(STAMP)}.txt")
         val out = StringBuilder()

@@ -676,7 +676,7 @@ object CombatSuite : Conformance.Suite {
      * OSRS Wiki "Player identification number": players are processed in PID order (lower first); PID "determines which player gets
      * skulled or hits first when both players simultaneously attack each other"; it is re-randomised every 100-150 ticks. OSRS Wiki
      * "Hit delay": melee hits have delay 0; "in the case of PvP, PID will be the determining factor whether or not processing order
-     * delay will delay attacks by one tick". The engine's PID is the player index (players are cycled in index order).
+     * delay will delay attacks by one tick". The engine cycles players in World.pid order.
      */
     private suspend fun QueueTask.pidOrder(
         run: Conformance.Run,
@@ -720,17 +720,18 @@ object CombatSuite : Conformance.Suite {
         val skulls = "C1=${gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.hasSkullTimer(a)} C2=${gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.hasSkullTimer(b)}"
         run.check(e, "simultaneous first attack: who is skulled", skulls, "osrs wiki PID (the player processed first skulls)" to (if (aFirst) "C1=true C2=false" else "C1=false C2=true"))
         for (p in listOf(a, b)) clearSkull(p)
-        // PID shuffle: the processing order of the two players must change within 150 ticks.
-        val order0 = pidRank(run, a) < pidRank(run, b)
+        // PID shuffle: both players' PID must be redrawn within 150 ticks (a redraw keeps the order of two players half of the time,
+        // so the values are compared, not the order).
+        val pid0 = pidRank(run, a) to pidRank(run, b)
         var changed = -1
         for (i in 1..160) {
             wait(1)
-            if ((pidRank(run, a) < pidRank(run, b)) != order0) {
+            if (pidRank(run, a) != pid0.first && pidRank(run, b) != pid0.second) {
                 changed = i
                 break
             }
         }
-        run.check(e, "processing order of two players re-randomised within 160 ticks", changed in 1..160, "osrs wiki PID (randomised every 100-150 ticks)" to true)
+        run.check(e, "PID of both players re-randomised within 160 ticks", changed in 1..160, "osrs wiki PID (randomised every 100-150 ticks)" to true)
     }
 
     /**
@@ -844,7 +845,7 @@ object CombatSuite : Conformance.Suite {
             return
         }
         val offset = hit - swing
-        run.note("hit delay: melee offset C1 -> C2 = $offset tick(s) (OSRS melee 0); spell delays are measured relative to it")
+        run.check(e, "melee offset C1 -> C2 follows PID order", offset, "osrs wiki Hit delay (melee 0, +1 when the target was processed first)" to (if (run.world.pid(b) < run.world.pid(a)) 1 else 0))
         val gods = setOf("SARADOMIN_STRIKE", "CLAWS_OF_GUTHIX", "FLAMES_OF_ZAMORAK")
         val spells = CombatSpell.values.filter {
             it.damaging && (it.interfaceId == 193 || it.name in gods || it.name.endsWith("_WAVE") || it.name.endsWith("_SURGE"))
@@ -870,6 +871,9 @@ object CombatSuite : Conformance.Suite {
                 var c = run.world.currentCycle
                 while (measured == null && tries++ < 4) {
                     c = run.world.currentCycle
+                    // The processing-order tick of this cast (OSRS Wiki "Hit delay": +1 when the receiver is processed first): PID is
+                    // redrawn every 100-150 ticks, so it is read per cast, not taken from the one melee offset measured at the start.
+                    val orderTick = if (run.world.pid(b) < run.world.pid(a)) 1 else 0
                     manualCast(a, b, spell)
                     a.attack(b)
                     t = 0
@@ -884,13 +888,15 @@ object CombatSuite : Conformance.Suite {
                     }
                     val cast = run.recording.of("C1", "out").firstOrNull { ev -> ev.cycle >= c && spell.castAnimation.any { ev.text.startsWith("anim id=$it ") } }?.cycle
                     val landed = hitEvents(run, "C2", c).firstOrNull { it.second !in ignored }?.first
-                    if (cast != null && landed != null) measured = landed - cast - offset else wait(3)
+                    // A PID redraw between the cast and the hitsplat changes the order tick mid-flight: measure that cast again.
+                    val orderAfter = if (run.world.pid(b) < run.world.pid(a)) 1 else 0
+                    if (cast != null && landed != null && orderAfter == orderTick) measured = landed - cast - orderTick else wait(3)
                 }
                 if (measured == null) {
                     run.add(Result(e, "${spell.name} at distance $d", Verdict.FAIL, "a hitsplat", "no hit in 4 casts (${lastMessages(run, "C1", c)})"))
                     continue
                 }
-                run.check(e, "${spell.name} at distance $d: ticks from cast to hitsplat (minus the melee offset)", measured, "osrs wiki Hit delay 1+floor((1+d)/3)" to 1 + (1 + d) / 3)
+                run.check(e, "${spell.name} at distance $d: ticks from cast to hitsplat (minus the PID order tick)", measured, "osrs wiki Hit delay 1+floor((1+d)/3)" to 1 + (1 + d) / 3)
             }
         }
         b.skills.setBaseLevel(Skills.DEFENCE, 99)
@@ -1179,12 +1185,11 @@ object CombatSuite : Conformance.Suite {
     ) = run.recording.of(who, "out").filter { it.cycle >= from && it.text.startsWith("hits ") }
         .flatMap { ev -> Regex("type=(\\d+) dmg=(\\d+)").findAll(ev.text).map { m -> Triple(ev.cycle, m.groupValues[1].toInt(), m.groupValues[2].toInt()) }.toList() }
 
-    /** The player's processing position this tick (the engine cycles players in index order - its PID). */
-    @Suppress("UNUSED_PARAMETER")
+    /** The player's processing position this tick (World.pid: players are cycled in PID order, reshuffled every 100-150 ticks). */
     private fun pidRank(
         run: Conformance.Run,
         p: Client,
-    ): Int = p.index
+    ): Int = run.world.pid(p)
 
     private fun clearSkull(p: Client) {
         p.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)

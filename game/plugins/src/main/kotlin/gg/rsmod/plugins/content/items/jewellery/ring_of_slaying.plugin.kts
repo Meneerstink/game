@@ -17,12 +17,14 @@ val RING_OF_SLAYING =
     )
 
 
+// Darkan ItemTeleports (ring of slaying row; night run 2026-10-10: the old Slayer Tower tile was the tower's closed door and
+// Tarn's Lair's a clipped tile - found by the house's nexus landing check, `pohdev leaves`).
 private val LOCATIONS =
     mapOf(
-        "Sumona" to Tile(3359, 2993, 0),
-        "Slayer Tower" to Tile(3428, 3535, 0),
-        "Fremennik Slayer Dungeon" to Tile(2791, 3615, 0),
-        "Tarn's Lair" to Tile(3187, 4601, 0),
+        "Sumona" to Tile(3353, 3006, 0),
+        "Slayer Tower" to Tile(3427, 3538, 0),
+        "Fremennik Slayer Dungeon" to Tile(2787, 3616, 0),
+        "Tarn's Lair" to Tile(3150, 4666, 0),
     )
 
 RING_OF_SLAYING.forEach { ring ->

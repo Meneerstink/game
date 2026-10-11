@@ -166,7 +166,7 @@ object PestControlMonsters {
         }
     }
 
-    /** 2009scape PCSpinnerNPC.explode: 5 poison damage (x 10 lifepoints) to every player next to it, then gone. */
+    /** 2009scape PCSpinnerNPC.explode: 5 poison damage and poison of strength 1 to every player next to it, then gone (1:1 HP). */
     fun spinnerExplode(
         game: PestControlGame,
         m: Npc,
@@ -174,8 +174,8 @@ object PestControlMonsters {
         if (!m.isSpawned()) return
         m.animate(m.combatDef.deathAnimation.firstOrNull() ?: -1)
         for (p in playersNear(game, m, 1)) {
-            p.hit(50, HitType.POISON)
-            p.poison(10)
+            p.hit(5, HitType.POISON)
+            p.poison(1)
         }
         game.spinnerPortal.remove(m)
         game.monsters.remove(m)
@@ -200,8 +200,8 @@ object PestControlMonsters {
         m.attr[EXPLODED_ATTR] = true
         m.animate(PC_SPLATTER_EXPLODE_ANIM)
         m.graphic(PC_SPLATTER_EXPLODE_GFX_BASE + (m.id - 3727))
-        // 2009scape: maximum = combat level / 3 hitpoints, minimum half of that; x 10 for 667 lifepoints.
-        val maximum = m.def.combatLevel / 3 * 10
+        // 2009scape: maximum = combat level / 3 hitpoints, minimum half of that (1:1 HP).
+        val maximum = m.def.combatLevel / 3
         val minimum = maximum / 2
         for (obj in game.barricades.toList()) {
             if (obj.tile.isWithinRadius(m.tile, 1)) PestControlBarricades.damage(game, obj)

@@ -286,7 +286,7 @@ object RangedCombatStrategy : CombatStrategy {
                     if (fired != null) RangedAmmo.consume(pawn, fired, 1) else pawn.equipment.remove(ammo.id, 1)
                 } else {
                     // One shared retrieval rule (Ava's devices, upgraded quivers, metal torsos): AvasDevices.outcome.
-                    val outcome = AvasDevices.outcome(pawn, world.random(99))
+                    val outcome = AvasDevices.outcome(pawn, world.random(99), target)
                     val breakAmmo = outcome == AvasDevices.AmmoOutcome.BROKEN
                     val dropAmmo = outcome == AvasDevices.AmmoOutcome.DROPPED
                     val amount = 1
@@ -587,7 +587,7 @@ object RangedCombatStrategy : CombatStrategy {
         arrowId: Int,
     ): (PawnHit).() -> Unit {
         val world = pawn.world
-        val outcome = AvasDevices.outcome(pawn, world.random(99))
+        val outcome = AvasDevices.outcome(pawn, world.random(99), target)
         val dropAmmo = outcome == AvasDevices.AmmoOutcome.DROPPED
         if (outcome != AvasDevices.AmmoOutcome.RECOVERED) RangedAmmo.consume(pawn, fired, 1)
         return if (dropAmmo) ({ world.spawn(GroundItem(arrowId, 1, target.tile, pawn)) }) else ({})
@@ -598,6 +598,8 @@ object RangedCombatStrategy : CombatStrategy {
         target: Pawn,
         damage: Int,
     ) {
+        // OSRS Wiki "Combat dummy": "no experience will be granted for hitting it".
+        if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return
         val modDamage = if (target.entityType.isNpc) Math.min(target.getCurrentLifepoints(), damage) else damage
         val mode = CombatConfigs.getXpMode(player)
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0

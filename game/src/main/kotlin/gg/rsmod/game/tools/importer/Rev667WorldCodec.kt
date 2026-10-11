@@ -384,11 +384,15 @@ class Rev667LocType(val id: Int) {
          * Encodes a modern loc definition as a rev-667 LocType. Fields with no 667 equivalent or
          * whose ids live in a different table (animations, retextures, map scenes, varbit
          * transforms, ambient sounds, params) are dropped and reported in [dropped].
+         *
+         * [multiloc] keeps a varbit transform table instead: the 667 varbit that selects the variant and the local loc id of
+         * each variant, the last entry being the default (-1 = none), written as opcode 92 (77 when there is no default).
          */
         fun encodeFromModern(
             src: ModernObjectDef,
             modelRemap: (Int) -> Int,
             dropped: MutableList<String>,
+            multiloc: Pair<Int, IntArray>? = null,
             seqRemap: ((Int) -> Int?)? = null,
         ): ByteArray {
             val out = ByteArrayOutputStream()
@@ -524,7 +528,19 @@ class Rev667LocType(val id: Int) {
                 u8(75)
                 u8(src.supportsItems)
             }
-            if (src.transforms != null) dropped.add("loc ${src.id}: varbit/varp transform table (base definition used)")
+            if (multiloc != null) {
+                val (varbit, dest) = multiloc
+                val default = dest.last()
+                u8(if (default != -1) 92 else 77)
+                u16(varbit)
+                u16(0xFFFF)
+                if (default != -1) u16(default)
+                u8(dest.size - 2)
+                for (i in 0 until dest.size - 1) u16(if (dest[i] == -1) 0xFFFF else dest[i])
+            } else if (src.transforms != null) {
+                dropped.add("loc ${src.id}: varbit/varp transform table (base definition used)")
+            }
+            if (src.subOps.isNotEmpty()) dropped.add("loc ${src.id}: ${src.subOps.size} sub-menu entries (no rev-667 sub-menus)")
             if (src.ambientSoundId != -1) dropped.add("loc ${src.id}: ambient sound")
             if (src.params != null) dropped.add("loc ${src.id}: params")
             u8(0)

@@ -42,13 +42,16 @@ class AncientCursesRuntimeTests {
                 val id = secondArg<Int>()
                 VarbitDef(id).apply {
                     val prayer = Prayer.values.firstOrNull { it.varbit == id }
+                    endBit = -1
                     when {
                         id in 6820..6839 -> { varp = 1582; startBit = id - 6820 }
                         id in 6862..6881 -> { varp = 1587; startBit = id - 6862 }
+                        // The curse tab's stat adjustments: varp 1583, 6 bits each (cache).
+                        id in 6857..6861 -> { varp = 1583; startBit = (id - 6857) * 6; endBit = startBit + 5 }
                         prayer != null -> { varp = Prayers.ACTIVE_PRAYERS_VARP; startBit = prayer.slot }
                         else -> varp = id
                     }
-                    endBit = startBit
+                    if (endBit < 0) endBit = startBit
                 }
             }
             every { world.definitions } returns definitions
@@ -69,6 +72,34 @@ class AncientCursesRuntimeTests {
         }
 
         fun ancient() = AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+    }
+
+    /**
+     * Owner 2026-10-11 ("Show stat adjustments klopt niet"): cs2 1711 shows `(varbit - 30) x 100 / base level` plus its own
+     * +5 % for an active Leech, so the server writes LEVELS above 30 and only the part above that 5 %, from the moment the
+     * curse is switched on.
+     */
+    @Test
+    fun `curse tab stat adjustments are levels on top of the client's own Leech 5 percent`() {
+        val fixture = Fixture()
+        val player = fixture.player
+        listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC).forEach { player.skills.setBaseLevel(it, 99) }
+        fixture.ancient()
+        val expected =
+            mapOf(
+                AncientCurse.LEECH_ATTACK to (6857 to 30),
+                AncientCurse.LEECH_STRENGTH to (6858 to 30),
+                AncientCurse.LEECH_DEFENCE to (6859 to 30),
+                AncientCurse.LEECH_RANGED to (6860 to 30 + 15),
+                AncientCurse.LEECH_MAGIC to (6861 to 30 + 20),
+            )
+        for ((curse, varbitValue) in expected) {
+            val (varbit, value) = varbitValue
+            AncientCurses.toggleCurse(player, curse)
+            assertEquals("${curse.curseName} on", value, player.getVarbit(varbit))
+            AncientCurses.toggleCurse(player, curse)
+            assertEquals("${curse.curseName} off", 30, player.getVarbit(varbit))
+        }
     }
 
     @Test

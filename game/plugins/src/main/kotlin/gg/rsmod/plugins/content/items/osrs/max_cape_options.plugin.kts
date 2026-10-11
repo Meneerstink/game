@@ -56,8 +56,7 @@ fun teleportHome(player: Player) {
             wait(type.teleportDelay)
             player.animate(Anims.RESET)
             player.unlock()
-            val arrival = PlayerHouse.build(player)
-            if (arrival == null) player.message("Your house can't be reached right now. Try again in a moment.") else player.moveTo(arrival)
+            PlayerHouse.enter(player)
         }
     }
 }

@@ -18,7 +18,7 @@ import gg.rsmod.plugins.api.ext.message
  */
 object BankSecurity {
     fun isBankBlocked(player: Player): Boolean =
-        PvpSkull.isSkulled(player) && GuardedZones.contains(player.zoneTile())
+        PvpSkull.hasSkullTimer(player) && GuardedZones.contains(player.zoneTile())
 
     /** Owner 2026-09-19: "only 2 tick weapons should cancel the banking of every pker in a dangerous bank". */
     const val BANK_CLOSING_MAX_ATTACK_TICKS = 2

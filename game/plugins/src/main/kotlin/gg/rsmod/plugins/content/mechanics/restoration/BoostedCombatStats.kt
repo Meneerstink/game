@@ -32,5 +32,7 @@ object BoostedCombatStats {
                 player.skills.alterCurrentLevel(skill, -1)
             }
         }
+        // A decayed Leech level leaves the curse tab's stat adjustment too (owner 2026-10-11).
+        AncientCurses.refreshStatAdjustments(player)
     }
 }

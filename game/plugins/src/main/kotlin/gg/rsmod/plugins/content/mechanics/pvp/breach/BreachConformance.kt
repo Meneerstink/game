@@ -132,7 +132,7 @@ object BreachConformance {
             val report = ArrayList<String>()
             BreachTrace.sink = { trace += it }
             val bots = ArrayList<Client>()
-            val dir = File("../../launcher-logs").takeIf { it.isDirectory } ?: File("C:/RSPS/launcher-logs")
+            val dir = File("../../launcher-logs").takeIf { it.isDirectory } ?: File(gg.rsmod.game.RspsPaths.root("launcher-logs"))
             val reportFile = File(dir, "breach-conformance-$stamp.txt")
             val traceFile = File(dir, "breach-conformance-$stamp.trace.log")
             var flushed = 0

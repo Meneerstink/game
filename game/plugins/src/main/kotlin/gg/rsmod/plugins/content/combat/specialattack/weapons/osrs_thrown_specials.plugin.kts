@@ -47,7 +47,7 @@ fun throwOne(
     val landHit = RangedCombatFormula.getAccuracy(player, victim, accuracy) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay, hitType = HitType.RANGE)
     // Shared retrieval rule: Ava's devices recover knives and thrownaxes too (OSRS Wiki "Ava's device").
-    val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99))
+    val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99), victim)
     if (outcome != gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.RECOVERED) player.equipment.remove(weapon.id, 1)
     if (outcome == gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.DROPPED) {
         world.spawn(GroundItem(weapon.id, 1, victim.tile, player))

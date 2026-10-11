@@ -57,4 +57,24 @@ class ModalResumeTests {
         repeat(3) { set.cycle() }
         assertFalse(ran, "a standard task never starts under an open modal")
     }
+
+    @Test
+    fun `the answer goes to the task waiting for it, not to a task queued in front of it later`() {
+        // 2026-10-09: the intro's "Next" choice went to a window-mode task queued after the options opened; the tour never
+        // got it and the client stayed on "Please wait...".
+        val p = player { true }
+        val set = PawnQueueTaskSet()
+        var answer: Any? = null
+        set.queue(p, Dispatchers.Unconfined, TaskPriority.STRONG, {
+            waitReturnValue()
+            answer = requestReturnValue
+        })
+        set.cycle()
+        var otherRan = false
+        set.queue(p, Dispatchers.Unconfined, TaskPriority.STANDARD, { otherRan = true })
+        set.submitReturnValue("next")
+        set.cycle()
+        assertEquals("next", answer)
+        assertFalse(otherRan, "the later standard task still waits under the open modal")
+    }
 }

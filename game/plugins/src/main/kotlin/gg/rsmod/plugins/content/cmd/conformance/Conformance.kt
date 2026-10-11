@@ -72,7 +72,7 @@ object Conformance {
     var stopRequested = false
 
     private val STAMP: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
-    private val ROOT = File("C:/RSPS/bugs/conformance")
+    private val ROOT = File(gg.rsmod.game.RspsPaths.root("bugs/conformance"))
 
     fun start(
         world: World,

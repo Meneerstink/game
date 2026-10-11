@@ -21,8 +21,10 @@ on_obj_option(obj = Objs.MANHOLE_882, option = "climb-down") {
     player.filterableMessage("You climb down through the manhole.")
 }
 
+// The hole leads into the sewers below (Void delta z + 6400, beside ladder 29355 at 3230,9904); handleLadder() without arguments
+// kept the player on the surface (batch 16).
 on_obj_option(obj = Objs.HOLE_24264, option = "climb-down") {
-    player.handleLadder()
+    player.handleLadder(underground = true)
 }
 
 fun close(

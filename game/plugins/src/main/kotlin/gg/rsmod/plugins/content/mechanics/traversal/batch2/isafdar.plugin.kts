@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.traversal.batch2
 
+import gg.rsmod.game.model.EntityType
 import gg.rsmod.plugins.content.skills.agility.Crossing
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.face
@@ -30,14 +31,62 @@ val ANIM_THROUGH = 1237
 val ANIM_STICK_TRAP = 819
 val ANIM_LEAF_TRAP = 1115
 
+val FOREST_LOCS = setOf(3922, 3937, 3938, 3939, 3998, 3999)
+
+/** The dense forest / stick loc whose footprint covers [t], if any. */
+fun forestAt(t: Tile): GameObject? {
+    for (dx in -2..0) for (dz in -2..0) {
+        val a = t.transform(dx, dz)
+        val loc =
+            world.chunks.get(a, createIfNeeded = true)
+                ?.getEntities<GameObject>(a, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)?.firstOrNull { it.id in FOREST_LOCS } ?: continue
+        val def = loc.getDef(world.definitions)
+        if (t.x < a.x + def.getRotatedWidth(loc) && t.z < a.z + def.getRotatedLength(loc)) return loc
+    }
+    return null
+}
+
+/** Dense forests in a row (3939 2230,3218 / 3937 2233,3218 / 3939 2236,3218): the one-tile stop between two is a chain landing. */
+fun forestCrossing(
+    target: GameObject,
+    from: Tile,
+): Crossing? =
+    shortAxisCrossing(world, target, from) { t ->
+        isUsableLanding(world, t) || Direction.NESW.any { d -> forestAt(t.step(d))?.let { it.tile != target.tile } == true }
+    }
+
+/**
+ * 2009scape RovingElvesObstacles 3922: a stick trap is passed along its length, over the wall through its middle (MapProbe 2026-10-03,
+ * batch 14: across the short axis none of the six traps of this map had a lane - every click answered "You can't get past from here.").
+ */
+fun stickCrossing(
+    obj: GameObject,
+    from: Tile,
+): Crossing? {
+    val def = obj.getDef(world.definitions)
+    val w = def.getRotatedWidth(obj)
+    val l = def.getRotatedLength(obj)
+    val alongX = w >= l
+    val n = if (alongX) w else l
+    fun at(i: Int) = if (alongX) Tile(obj.tile.x + i, obj.tile.z, obj.tile.height) else Tile(obj.tile.x, obj.tile.z + i, obj.tile.height)
+    fun lane(forward: Boolean): Crossing? {
+        val start = listOf(at(if (forward) -1 else n), at(if (forward) 0 else n - 1)).firstOrNull { isUsableLanding(world, it) } ?: return null
+        val landing = listOf(at(if (forward) n else -1), at(if (forward) n - 1 else 0)).firstOrNull { isUsableLanding(world, it) } ?: return null
+        val dir = if (alongX) (if (forward) Direction.EAST else Direction.WEST) else (if (forward) Direction.NORTH else Direction.SOUTH)
+        return Crossing(start, landing, dir)
+    }
+    return listOfNotNull(lane(true), lane(false)).minByOrNull { it.start.getDistance(from) }
+}
+
 fun crossLoc(
     id: Int,
     option: String,
     anim: Int,
     success: String?,
+    lane: (GameObject, Tile) -> Crossing? = { t, f -> forestCrossing(t, f) },
 ) = shortcut(id, option) {
     obstacle { target ->
-        val crossing = shortAxisCrossing(world, target, player.tile)
+        val crossing = lane(target, player.tile)
         if (crossing == null) {
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) {
                 "isafdar $id at ${target.tile.x},${target.tile.z}: no lane from ${player.tile.x},${player.tile.z}"
@@ -56,7 +105,7 @@ fun crossLoc(
 
 crossLoc(3937, "Enter", ANIM_OVER, null)
 listOf(3938, 3939, 3998, 3999).forEach { crossLoc(it, "Enter", ANIM_THROUGH, null) }
-crossLoc(3922, "Pass", ANIM_STICK_TRAP, "You manage to skillfully pass the trap.")
+crossLoc(3922, "Pass", ANIM_STICK_TRAP, "You manage to skillfully pass the trap.") { t, f -> stickCrossing(t, f) }
 
 /** The leaf pit around [clicked]: its centre 3924 (the loc itself or one tile away), else null. */
 fun leafPitCentre(clicked: GameObject): Tile? {
@@ -70,10 +119,14 @@ fun leafPitCentre(clicked: GameObject): Tile? {
 
 /** Straight over the 3x3 pit along the axis the player stands off, in his own lane clamped to the pit. */
 fun leafCrossing(centre: Tile, from: Tile): Crossing? {
+    // A click on a leaf routes the player onto the pit's own leaf tiles: from there the jump still clears the pit, along the axis
+    // he stands off the centre (batch 14: "You can't jump across from here." for every leaf click).
+    val inside = Math.abs(from.x - centre.x) <= 1 && Math.abs(from.z - centre.z) <= 1
+    if (inside && from.x == centre.x && from.z == centre.z) return null
     val outX = Math.abs(from.x - centre.x) - 1
     val outZ = Math.abs(from.z - centre.z) - 1
-    val alongX = outX >= outZ && outX > 0
-    if (!alongX && outZ <= 0) return null
+    val alongX = if (inside) from.z == centre.z else outX >= outZ && outX > 0
+    if (!inside && !alongX && outZ <= 0) return null
     val lanes =
         if (alongX) (-1..1).sortedBy { Math.abs(centre.z + it - from.z) } else (-1..1).sortedBy { Math.abs(centre.x + it - from.x) }
     for (lane in lanes) {

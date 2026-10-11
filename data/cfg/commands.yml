@@ -1,0 +1,1238 @@
+# Staff command list (::commands). Generated 2026-10-10 from the on_command bindings; one entry per command.
+# rank: player | moderator | admin | owner  (the lowest rank that may use it)
+# Not fully understood (described from what the code visibly does): devdeco (place-mode keys are handled in DecoPlacer); pohdev (many sub-options); hudtour (tour steps not fully read); questpanel (button protocol of the Quest Helper panel).
+- name: clearspawns
+  rank: owner
+  usage: "::clearspawns"
+  description: "Remove every test NPC/object spawned with ::npc or ::obj (and hitsplats) this session."
+  example: "::clearspawns"
+- name: completequests
+  rank: moderator
+  usage: "::completequests"
+  description: "Test tool: mark every implemented quest as completed on your account (with rewards). Owner, and the moderators Hakim and sous only."
+  example: "::completequests"
+- name: drainskills
+  rank: owner
+  usage: "::drainskills"
+  description: "Test tool: drop all your current skill levels to 1 (base levels stay)."
+  example: "::drainskills"
+- name: item_inventory
+  rank: owner
+  usage: "::item_inventory"
+  description: "Dev tool: write the item census CSV (item options vs. code handlers) on the server."
+  example: "::item_inventory"
+- name: maxtest
+  rank: owner
+  usage: "::maxtest"
+  description: "Test tool: all your skills 99, stats restored, 10m coins and a rune/mystic gear kit."
+  example: "::maxtest"
+- name: npc_inventory
+  rank: owner
+  usage: "::npc_inventory"
+  description: "Dev tool: rewrite the NPC census CSV (every NPC definition) on the server."
+  example: "::npc_inventory"
+- name: object_inventory
+  rank: owner
+  usage: "::object_inventory"
+  description: "Dev tool: write the object census CSV (object options vs. code handlers) on the server."
+  example: "::object_inventory"
+- name: osrsgear
+  rank: owner
+  usage: "::osrsgear [group number|list]"
+  description: "Test tool: put the OSRS gear test list (all groups or one) into your bank."
+  example: "::osrsgear list"
+- name: testgear
+  rank: owner
+  usage: "::testgear"
+  description: "Test tool: give yourself the baseline rune melee, rune crossbow and mystic magic kit."
+  example: "::testgear"
+- name: add_item
+  rank: admin
+  usage: "::add_item <itemId> [amount]"
+  description: "Dev tool: add a permanent ground-item spawn here (writes a spawn file) and drop it."
+  example: "::add_item 995 100"
+- name: add_npc
+  rank: admin
+  usage: "::add_npc <npcId>"
+  description: "Dev tool: add a permanent NPC spawn here (writes a spawn file) and spawn it."
+  example: "::add_npc 1"
+- name: addchunks
+  rank: admin
+  usage: "::addchunks <northEastX> <northEastZ> <southWestX> <southWestZ>"
+  description: "Add the chunks of an area to the multi-combat zones."
+  example: "::addchunks 3135 3520 3100 3490"
+- name: addloyalty
+  rank: admin
+  usage: "::addloyalty <player> [amount]"
+  description: "Give an online player loyalty points (default 1)."
+  example: "::addloyalty anudd 10"
+- name: addregions
+  rank: admin
+  usage: "::addregions <regionId> [regionId...]"
+  description: "Add whole map regions to the multi-combat zones."
+  example: "::addregions 12342"
+- name: addslayerpoints
+  rank: admin
+  usage: "::addslayerpoints <player> [amount]"
+  description: "Give an online player slayer points (default 1)."
+  example: "::addslayerpoints anudd 10"
+- name: anim
+  rank: admin
+  usage: "::anim <animId>"
+  description: "Play an animation on yourself and show its length."
+  example: "::anim 866"
+- name: autocast
+  rank: admin
+  usage: "::autocast [debug]"
+  description: "Dev tool: show your autocast state; 'debug' toggles autocast logging."
+  example: "::autocast"
+- name: avtrace
+  rank: admin
+  usage: "::avtrace"
+  description: "Dev tool: toggle logging of graphics, sounds and summoning casts."
+  example: "::avtrace"
+- name: bank
+  rank: admin
+  usage: "::bank"
+  description: "Open your bank anywhere."
+  example: "::bank"
+- name: bonusxp
+  rank: admin
+  usage: "::bonusxp <list|add|remove> [player]"
+  description: "Grant, revoke or list bonus XP access for players."
+  example: "::bonusxp add anudd"
+- name: breach
+  rank: admin
+  usage: "::breach [local|region|<number>|<name>]"
+  description: "Close any open Deadman breach and open a new one (random or chosen location)."
+  example: "::breach region"
+- name: breachclose
+  rank: admin
+  usage: "::breachclose"
+  description: "Close the open Deadman breach and remove its monsters."
+  example: "::breachclose"
+- name: breachlist
+  rank: admin
+  usage: "::breachlist"
+  description: "List every Deadman breach location with its number."
+  example: "::breachlist"
+- name: breachtele
+  rank: admin
+  usage: "::breachtele [<number>|<name>|site <1|2>]"
+  description: "Teleport to a breach location, or to a site of the open breach."
+  example: "::breachtele site 2"
+- name: breachtest
+  rank: admin
+  usage: "::breachtest [npcId]"
+  description: "Dev tool: spawn test breach monsters beside you (they give no loot or points)."
+  example: "::breachtest"
+- name: breachtrace
+  rank: admin
+  usage: "::breachtrace"
+  description: "Dev tool: toggle breach trace lines in the game-server log."
+  example: "::breachtrace"
+- name: camangle
+  rank: admin
+  usage: "::camangle <pitch> <yaw>"
+  description: "Dev tool: force your camera angle."
+  example: "::camangle 300 0"
+- name: camlookat
+  rank: admin
+  usage: "::camlookat <x> <z> <height> <step> <speed>"
+  description: "Dev tool: aim your camera at a position in the loaded scene."
+  example: "::camlookat 52 52 200 0 100"
+- name: cammoveto
+  rank: admin
+  usage: "::cammoveto <rate> <x> <z> <height> <step>"
+  description: "Dev tool: move your camera to a position in the loaded scene."
+  example: "::cammoveto 100 52 52 800 0"
+- name: camreset
+  rank: admin
+  usage: "::camreset"
+  description: "Reset your camera to normal."
+  example: "::camreset"
+- name: camresetsmooth
+  rank: admin
+  usage: "::camresetsmooth"
+  description: "Reset your camera to normal with a smooth transition."
+  example: "::camresetsmooth"
+- name: camshake
+  rank: admin
+  usage: "::camshake <frequency> <index> <time> <center> <amplitude>"
+  description: "Dev tool: shake your camera."
+  example: "::camshake 4 2 10 0 25"
+- name: camworld
+  rank: admin
+  usage: "::camworld [r] <x> <z> <height> <lookX> <lookZ> <lookHeight> [rate] [step]"
+  description: "Dev tool: place the camera at world tiles and aim it; no arguments resets it."
+  example: "::camworld 3222 3210 800 3222 3218 200"
+- name: change
+  rank: admin
+  usage: "::change"
+  description: "Open the character appearance (makeover) screen."
+  example: "::change"
+- name: changeobj
+  rank: admin
+  usage: "::changeobj <objectId> <x> <z> <rotation> [newRotation] [newX] [newZ] [newObjectId]"
+  description: "Dev tool: change an object's rotation, position or id."
+  example: "::changeobj 1530 3093 3488 0 1"
+- name: clear
+  rank: admin
+  usage: "::clear <slots>"
+  description: "Delete the items in your first N inventory slots."
+  example: "::clear 5"
+- name: clip
+  rank: admin
+  usage: "::clip [x z [height]]"
+  description: "Dev tool: show the collision (walk blocking) of a tile and its neighbours."
+  example: "::clip 3222 3218"
+- name: close_inter
+  rank: admin
+  usage: "::close_inter"
+  description: "Close the full-screen interface you have open."
+  example: "::close_inter"
+- name: componenttext
+  rank: admin
+  usage: "::componenttext <interfaceId> <componentId> <text>"
+  description: "Dev tool: set the text of an interface component (one word)."
+  example: "::componenttext 214 2 Hello"
+- name: conform
+  rank: admin
+  usage: "::conform <summoning|curses|equipment|combat|hud|systems|deadman|traversal|quests|stop> [name]"
+  description: "Dev tool: run a conformance test suite against the donor references."
+  example: "::conform summoning"
+- name: crown
+  rank: admin
+  usage: "::crown"
+  description: "Open the staff crown menu (teleports, dev tools, player management)."
+  example: "::crown"
+- name: damage
+  rank: admin
+  usage: "::damage <player> <amount>"
+  description: "Hit an online player for an exact amount of damage."
+  example: "::damage anudd 99"
+- name: devcopyloc
+  rank: admin
+  usage: "::devcopyloc <x> <z> <level> <objectId> <toX> <toZ> <toLevel>"
+  description: "World editor: copy an object to another tile (saved; undoedit reverts)."
+  example: "::devcopyloc 3093 3488 0 1530 3094 3488 0"
+- name: devdeco
+  rank: admin
+  usage: "::devdeco <start|adjust|copy|save|cancel|...> [objectId] [x z level] [wallId|floor]"
+  description: "World editor place mode: position a decoration step by step (sent by the client)."
+  example: "::devdeco start 62753 3093 3488 0"
+- name: devhang
+  rank: admin
+  usage: "::devhang <x> <z> <level> <wallId> <bannerId>"
+  description: "World editor: hang a wall banner on a wall, on the side you stand on."
+  example: "::devhang 3093 3488 0 1902 62751"
+- name: devinfo
+  rank: admin
+  usage: "::devinfo <x> <z> <level> <objectId>"
+  description: "World editor: show an object's details (type, rotation, size, teleport, passable)."
+  example: "::devinfo 3093 3488 0 1530"
+- name: devmode
+  rank: admin
+  usage: "::devmode"
+  description: "Toggle developer mode: right-click shows ids and 'Tag' entries (world editor)."
+  example: "::devmode"
+- name: devmoveloc
+  rank: admin
+  usage: "::devmoveloc <x> <z> <level> <objectId> <toX> <toZ> <toLevel>"
+  description: "World editor: move an object to another tile (saved; undoedit reverts)."
+  example: "::devmoveloc 3093 3488 0 1530 3094 3488 0"
+- name: devnpc
+  rank: admin
+  usage: "::devnpc <remove|rotate|move|copy> <x> <z> <level> <npcId> [toX toZ toLevel]"
+  description: "World editor: remove, turn, move or copy an NPC spawn."
+  example: "::devnpc move 3094 3491 0 494 3095 3491 0"
+- name: devnpcinfo
+  rank: admin
+  usage: "::devnpcinfo <x> <z> <level> <npcId>"
+  description: "World editor: show an NPC's details (index, tile, spawn spot, walk radius)."
+  example: "::devnpcinfo 3094 3491 0 494"
+- name: devnpcname
+  rank: admin
+  usage: "::devnpcname <x> <z> <level> <npcId>"
+  description: "World editor: rename an NPC (this one or its whole type); asks for the new name."
+  example: "::devnpcname 3094 3491 0 494"
+- name: devnpcradius
+  rank: admin
+  usage: "::devnpcradius <x> <z> <level> <npcId>"
+  description: "World editor: set how far an NPC may roam from its spot (asks; 0 = stands still)."
+  example: "::devnpcradius 3094 3491 0 494"
+- name: devpassable
+  rank: admin
+  usage: "::devpassable <x> <z> <level> <objectId>"
+  description: "World editor: toggle whether an object blocks walking (it stays visible)."
+  example: "::devpassable 3093 3488 0 1530"
+- name: devplace
+  rank: admin
+  usage: "::devplace <x> <z> <level> <objectId> [rotation] [type]"
+  description: "World editor: place an object on a tile (saved world edit)."
+  example: "::devplace 3093 3488 0 62750"
+- name: devremove
+  rank: admin
+  usage: "::devremove <x> <z> <level> <objectId>"
+  description: "World editor: remove an object from a tile (saved; undoedit brings it back)."
+  example: "::devremove 3093 3488 0 1530"
+- name: devrotate
+  rank: admin
+  usage: "::devrotate <x> <z> <level> <objectId>"
+  description: "World editor: rotate an object on a tile (saved world edit)."
+  example: "::devrotate 3093 3488 0 1530"
+- name: devtag
+  rank: admin
+  usage: "::devtag <x> <z> [level] [objectId] [note]"
+  description: "Dev tool: save a tile/object tag line to C:/RSPS/screens/tags.txt."
+  example: "::devtag 3093 3488 0 1530 banner here"
+- name: devtele
+  rank: admin
+  usage: "::devtele <x> <z> <level> <objectId> <toX> <toZ> <toLevel>"
+  description: "World editor: make an object teleport whoever clicks it to a destination."
+  example: "::devtele 3093 3488 0 1530 3222 3218 0"
+- name: devuntele
+  rank: admin
+  usage: "::devuntele <x> <z> <level> <objectId>"
+  description: "World editor: remove a teleport added to an object with devtele."
+  example: "::devuntele 3093 3488 0 1530"
+- name: emblem
+  rank: admin
+  usage: "::emblem <1-6|info> [player]"
+  description: "Create a Deadman emblem of a tier for you or a player, or show their emblems (info)."
+  example: "::emblem 3 anudd"
+- name: empty
+  rank: admin
+  usage: "::empty [all]"
+  description: "Empty your inventory; 'all' also removes everything you wear."
+  example: "::empty all"
+- name: equ
+  rank: admin
+  usage: "::equ <slot> <itemId>"
+  description: "Put an item straight into an equipment slot (-1 empties the slot)."
+  example: "::equ 3 4151"
+- name: farm_tick
+  rank: admin
+  usage: "::farm_tick"
+  description: "Dev tool: run one farming growth tick on your patches now."
+  example: "::farm_tick"
+- name: food
+  rank: admin
+  usage: "::food"
+  description: "Fill your free inventory slots with manta rays."
+  example: "::food"
+- name: get_item_look
+  rank: admin
+  usage: "::get_item_look <item_name>"
+  description: "Dev tool: show an item's appearance (worn model) id."
+  example: "::get_item_look abyssal_whip"
+- name: getmultichunks
+  rank: admin
+  usage: "::getmultichunks"
+  description: "Dev tool: print the multi-combat chunk list to the server console."
+  example: "::getmultichunks"
+- name: getvarbit
+  rank: admin
+  usage: "::getvarbit <varbitId>"
+  description: "Dev tool: show the value of a client variable bit (varbit)."
+  example: "::getvarbit 5451"
+- name: getvarbits
+  rank: admin
+  usage: "::getvarbits <varpId>"
+  description: "Dev tool: list every varbit stored in a varp with its current value."
+  example: "::getvarbits 83"
+- name: getvarc
+  rank: admin
+  usage: "::getvarc <varcId>"
+  description: "Dev tool: show the value of a client-side variable (varc)."
+  example: "::getvarc 83"
+- name: getvarp
+  rank: admin
+  usage: "::getvarp <varpId>"
+  description: "Dev tool: show the value of a client variable (varp)."
+  example: "::getvarp 83"
+- name: gfx
+  rank: admin
+  usage: "::gfx <gfxId> [height]"
+  description: "Play a graphic (spot animation) on yourself."
+  example: "::gfx 1 100"
+- name: give
+  rank: admin
+  usage: "::give <item_name> [amount]"
+  description: "Spawn an item by exact name (_ for spaces, .n = noted) and show its details."
+  example: "::give abyssal_whip 1"
+- name: givepoints
+  rank: admin
+  usage: "::givepoints <player> <donator|deadman|loyalty|breach> <amount>"
+  description: "Give an online player points of one store currency."
+  example: "::givepoints anudd loyalty 100"
+- name: guardinfo
+  rank: admin
+  usage: "::guardinfo"
+  description: "Show the state of every Deadman guard within 15 tiles (target, facing, patrol)."
+  example: "::guardinfo"
+- name: guardpost
+  rank: admin
+  usage: "::guardpost [number]"
+  description: "Teleport to a Deadman guard post; without a number lists the posts per city."
+  example: "::guardpost 1"
+- name: helios
+  rank: admin
+  usage: "::helios"
+  description: "Open the staff crown menu (teleports, dev tools, player management)."
+  example: "::helios"
+- name: hit
+  rank: admin
+  usage: "::hit <damage>"
+  description: "Hit yourself for an amount of damage."
+  example: "::hit 10"
+- name: hitsplats
+  rank: admin
+  usage: "::hitsplats [self|npc]"
+  description: "Dev tool: show every hitsplat type on yourself or on a test NPC."
+  example: "::hitsplats npc"
+- name: home
+  rank: admin
+  usage: "::home"
+  description: "Teleport yourself to the home location."
+  example: "::home"
+- name: hudtour
+  rank: admin
+  usage: "::hudtour"
+  description: "Dev tool: run the HUD overlay tour and save client screenshots of each step."
+  example: "::hudtour"
+- name: infhp
+  rank: admin
+  usage: "::infhp"
+  description: "Toggle unlimited hitpoints for yourself."
+  example: "::infhp"
+- name: infpray
+  rank: admin
+  usage: "::infpray"
+  description: "Toggle unlimited prayer points for yourself."
+  example: "::infpray"
+- name: infrun
+  rank: admin
+  usage: "::infrun"
+  description: "Toggle unlimited run energy for yourself."
+  example: "::infrun"
+- name: instanceregion
+  rank: admin
+  usage: "::instanceregion"
+  description: "Dev tool: copy your current map region into a private instance and enter it."
+  example: "::instanceregion"
+- name: interface
+  rank: admin
+  usage: "::interface <interfaceId>"
+  description: "Dev tool: open an interface by id."
+  example: "::interface 214"
+- name: introscene
+  rank: admin
+  usage: "::introscene [scene number]"
+  description: "Play the new-player intro tour, or preview one scene of it."
+  example: "::introscene 2"
+- name: invisible
+  rank: admin
+  usage: "::invisible"
+  description: "Toggle being invisible to other players."
+  example: "::invisible"
+- name: item
+  rank: admin
+  usage: "::item <itemId> [amount]"
+  description: "Spawn an item into your inventory by id."
+  example: "::item 4151 1"
+- name: itemsearch
+  rank: admin
+  usage: "::itemsearch <name>"
+  description: "Search the cache for items by name (first 20 ids with details)."
+  example: "::itemsearch korasi"
+- name: jingle
+  rank: admin
+  usage: "::jingle <jingleId>"
+  description: "Play a music jingle to yourself."
+  example: "::jingle 1"
+- name: lootkeys
+  rank: admin
+  usage: "::lootkeys <0-5>"
+  description: "Put that many empty loot keys in your inventory (0 removes them)."
+  example: "::lootkeys 3"
+- name: master
+  rank: admin
+  usage: "::master"
+  description: "Set all your skills to level 99."
+  example: "::master"
+- name: maxpoints
+  rank: admin
+  usage: "::maxpoints [player]"
+  description: "Set every point currency (donator, deadman, loyalty, breach) to maximum."
+  example: "::maxpoints anudd"
+- name: noclip
+  rank: admin
+  usage: "::noclip"
+  description: "Toggle no-clip: walk through walls and objects."
+  example: "::noclip"
+- name: npc
+  rank: admin
+  usage: "::npc <npcId> [walkRadius]"
+  description: "Spawn a temporary NPC on your tile (::clearspawns removes it)."
+  example: "::npc 1 5"
+- name: obj
+  rank: admin
+  usage: "::obj <objectId> [type] [rotation]"
+  description: "Spawn a temporary object on your tile (::clearspawns removes it)."
+  example: "::obj 1530 0 0"
+- name: objanim
+  rank: admin
+  usage: "::objanim <objectType> <animId>"
+  description: "Dev tool: play an animation on the object of that type on your tile."
+  example: "::objanim LENGTHWISE_WALL 1"
+- name: object_varbit
+  rank: admin
+  usage: "::object_varbit <objectId>"
+  description: "Dev tool: show which variable (varbit/varp) controls an object."
+  example: "::object_varbit 8151"
+- name: objsearch
+  rank: admin
+  usage: "::objsearch <name>"
+  description: "Search the cache for objects by name (first 20 ids with their options)."
+  example: "::objsearch wall"
+- name: objsnear
+  rank: admin
+  usage: "::objsnear [radius]"
+  description: "List placed objects around you (default 10 tiles) with id, rotation and tile."
+  example: "::objsnear 5"
+- name: oploc
+  rank: admin
+  usage: "::oploc <objectId> [option 1-5] [x z]"
+  description: "Dev tool: click an object's option as the client would (nearest within 20 tiles)."
+  example: "::oploc 1530 1"
+- name: packettrace
+  rank: admin
+  usage: "::packettrace"
+  description: "Dev tool: toggle logging of every outgoing packet in the server log."
+  example: "::packettrace"
+- name: pcstart
+  rank: admin
+  usage: "::pcstart [novice|intermediate|veteran]"
+  description: "Start a Pest Control game now, however few players are waiting."
+  example: "::pcstart novice"
+- name: place
+  rank: admin
+  usage: "::place <objectId> [rotation] [type]"
+  description: "World editor: place an object on your own tile (saved world edit)."
+  example: "::place 62750 0 10"
+- name: pnpc
+  rank: admin
+  usage: "::pnpc <npcId>"
+  description: "Make yourself look like an NPC (transform)."
+  example: "::pnpc 1"
+- name: pohdev
+  rank: admin
+  usage: "::pohdev <info|enter|build on|off|rot|reset|location|style|rebuild|...> [args]"
+  description: "Dev tool: player-owned house test command (state info, enter, build mode, rooms)."
+  example: "::pohdev info"
+- name: poisonme
+  rank: admin
+  usage: "::poisonme [venom|burn]"
+  description: "Poison yourself (or venom / burn) to test the HUD."
+  example: "::poisonme venom"
+- name: problems
+  rank: admin
+  usage: "::problems"
+  description: "Dev tool: show the last 12 PROBLEM lines from the debug traces."
+  example: "::problems"
+- name: questguide
+  rank: admin
+  usage: "::questguide"
+  description: "Open the 'Choose your path' quest guide window."
+  example: "::questguide"
+- name: questreset
+  rank: admin
+  usage: "::questreset"
+  description: "Test tool: reset your eight short quests and quest choices to the start."
+  example: "::questreset"
+- name: questtabshots
+  rank: admin
+  usage: "::questtabshots"
+  description: "Dev tool: open every quest tab and info window and save client screenshots."
+  example: "::questtabshots"
+- name: reboot
+  rank: admin
+  usage: "::reboot <ticks>"
+  description: "Start the server update countdown (1 tick = 0.6 seconds)."
+  example: "::reboot 500"
+- name: reloadedits
+  rank: admin
+  usage: "::reloadedits"
+  description: "World editor: reload and re-apply every saved world edit (data/world_edits.json)."
+  example: "::reloadedits"
+- name: removenpc
+  rank: admin
+  usage: "::removenpc"
+  description: "Remove the NPC standing on your tile."
+  example: "::removenpc"
+- name: removeobj
+  rank: admin
+  usage: "::removeobj"
+  description: "Remove the object on your tile."
+  example: "::removeobj"
+- name: render
+  rank: admin
+  usage: "::render <renderId>"
+  description: "Set your stand/walk/run animation set (render animation)."
+  example: "::render 1426"
+- name: rendertest
+  rank: admin
+  usage: "::rendertest <cull on|off|alpha on|off|reset>"
+  description: "Dev tool: switch client render options (back faces, alpha depth) to find render bugs."
+  example: "::rendertest cull off"
+- name: reset
+  rank: admin
+  usage: "::reset"
+  description: "Reset all your skills to level 1 (Constitution 10)."
+  example: "::reset"
+- name: resettracks
+  rank: admin
+  usage: "::resettracks"
+  description: "Lock all music tracks again for yourself."
+  example: "::resettracks"
+- name: restore
+  rank: admin
+  usage: "::restore"
+  description: "Restore your hitpoints, run energy, special attack and all skill levels."
+  example: "::restore"
+- name: scan
+  rank: admin
+  usage: "::scan"
+  description: "Dev tool: run a read-only world scan; the report goes to C:/RSPS/bugs."
+  example: "::scan"
+- name: screenshot
+  rank: admin
+  usage: "::screenshot [distance 4-30]"
+  description: "Dev tool: camera tour around you that saves client screenshots to C:/RSPS/screens."
+  example: "::screenshot 12"
+- name: set_item_look
+  rank: admin
+  usage: "::set_item_look <itemId> <appearanceId>"
+  description: "Dev tool: change an item's appearance id until the server restarts."
+  example: "::set_item_look 4151 100"
+- name: setlvl
+  rank: admin
+  usage: "::setlvl <skill> <level>"
+  description: "Set your level in a skill (skill name or number)."
+  example: "::setlvl attack 99"
+- name: setxp
+  rank: admin
+  usage: "::setxp <skill> <xp>"
+  description: "Set your experience in a skill (skill name or number)."
+  example: "::setxp attack 13034431"
+- name: shop
+  rank: admin
+  usage: "::shop"
+  description: "Open the Edgeville General Store."
+  example: "::shop"
+- name: skullme
+  rank: admin
+  usage: "::skullme [white|bronze|green|blue|red|off]"
+  description: "Give yourself a 5-minute Deadman PK skull, optionally in a chosen colour."
+  example: "::skullme red"
+- name: song
+  rank: admin
+  usage: "::song <songId>"
+  description: "Play a music track to yourself."
+  example: "::song 1"
+- name: sound
+  rank: admin
+  usage: "::sound <soundId>"
+  description: "Play a sound effect to yourself."
+  example: "::sound 1"
+- name: spawn
+  rank: admin
+  usage: "::spawn <item name> [amount]"
+  description: "Spawn an item into your inventory by name."
+  example: "::spawn dragon claws 1"
+- name: spellbook
+  rank: admin
+  usage: "::spellbook [standard|ancient|lunar]"
+  description: "Switch your spellbook (no argument = standard)."
+  example: "::spellbook ancient"
+- name: sweep
+  rank: admin
+  usage: "::sweep <weapons|spells|familiars|npcs|dialogues|drops|stop> [from] [count]"
+  description: "Dev tool: automated test sweep with a headless test player; writes a report."
+  example: "::sweep weapons 0 20"
+- name: talknpc
+  rank: admin
+  usage: "::talknpc <npcId> [option 1-5]"
+  description: "Dev tool: click an option on the nearest NPC with that id (within 40 tiles)."
+  example: "::talknpc 494 1"
+- name: tele
+  rank: admin
+  usage: "::tele <x> <z> [height]"
+  description: "Teleport yourself to a coordinate."
+  example: "::tele 3222 3218"
+- name: telechunk
+  rank: admin
+  usage: "::telechunk <chunkX> <chunkZ> [height]"
+  description: "Teleport to the corner of a map chunk (chunk coordinates, 8 tiles each)."
+  example: "::telechunk 400 400"
+- name: teleport
+  rank: admin
+  usage: "::teleport"
+  description: "Open the staff crown menu (teleports, dev tools, player management)."
+  example: "::teleport"
+- name: teler
+  rank: admin
+  usage: "::teler <regionId>"
+  description: "Teleport to the corner of a map region."
+  example: "::teler 12850"
+- name: tempobj
+  rank: admin
+  usage: "::tempobj <objectId> [type] [rotation] [ticks]"
+  description: "Spawn an object on your tile that disappears after a number of ticks."
+  example: "::tempobj 1530 10 0 100"
+- name: traces
+  rank: admin
+  usage: "::traces [on|off|status|<category> [on|off]]"
+  description: "Dev tool: turn server debug traces on or off (all or one category)."
+  example: "::traces status"
+- name: undoall
+  rank: admin
+  usage: "::undoall"
+  description: "World editor: undo every saved world edit."
+  example: "::undoall"
+- name: undoedit
+  rank: admin
+  usage: "::undoedit [count]"
+  description: "World editor: undo the last world-edit click(s) (default 1)."
+  example: "::undoedit 2"
+- name: unlockalltracks
+  rank: admin
+  usage: "::unlockalltracks"
+  description: "Unlock every music track for yourself."
+  example: "::unlockalltracks"
+- name: unlocksong
+  rank: admin
+  usage: "::unlocksong <trackId>"
+  description: "Unlock a music track for yourself."
+  example: "::unlocksong 83"
+- name: varbit
+  rank: admin
+  usage: "::varbit <varbitId> <value>"
+  description: "Dev tool: set a client variable bit (varbit) for yourself."
+  example: "::varbit 5451 1"
+- name: varbits
+  rank: admin
+  usage: "::varbits <fromId> <toId> <value>"
+  description: "Dev tool: set a range of varbits to one value."
+  example: "::varbits 10 20 1"
+- name: varc
+  rank: admin
+  usage: "::varc <varcId> <value>"
+  description: "Dev tool: set a client-side variable (varc) for yourself."
+  example: "::varc 173 1"
+- name: varp
+  rank: admin
+  usage: "::varp <varpId> <value>"
+  description: "Dev tool: set a client variable (varp) for yourself."
+  example: "::varp 173 1"
+- name: varps
+  rank: admin
+  usage: "::varps <fromId> <toId> <value>"
+  description: "Dev tool: set a range of varps to one value."
+  example: "::varps 10 20 1"
+- name: visualtour
+  rank: admin
+  usage: "::visualtour [place]"
+  description: "Dev tool: visit fixed places and save client screenshots for visual comparison."
+  example: "::visualtour lumbridge"
+- name: ban
+  rank: moderator
+  usage: "::ban <player> <hours> <reason>"
+  description: "Ban a player from logging in for N hours (0 = permanent)."
+  example: "::ban anudd 24 spamming"
+- name: cmds
+  rank: moderator
+  usage: "::cmds"
+  description: "Open this staff command list window (short for ::commands)."
+  example: "::cmds"
+- name: commands
+  rank: moderator
+  usage: "::commands"
+  description: "Open this staff command list window (same as ::mod)."
+  example: "::commands"
+- name: mod
+  rank: moderator
+  usage: "::mod [search]"
+  description: "Open the staff command list: click a command to run it (it asks for arguments), right-click Info for its example; tabs Recent and Gear."
+  example: "::mod tele"
+- name: jail
+  rank: moderator
+  usage: "::jail <player>"
+  description: "Send a player to jail; they cannot teleport or walk out."
+  example: "::jail anudd"
+- name: kick
+  rank: moderator
+  usage: "::kick <player>"
+  description: "Disconnect a player from the server."
+  example: "::kick anudd"
+- name: mute
+  rank: moderator
+  usage: "::mute <player> <minutes>"
+  description: "Mute a player's public chat and yell for N minutes (0 = permanent)."
+  example: "::mute anudd 30"
+- name: teleto
+  rank: moderator
+  usage: "::teleto <player>"
+  description: "Teleport yourself to an online player."
+  example: "::teleto anudd"
+- name: teletome
+  rank: moderator
+  usage: "::teletome <player>"
+  description: "Teleport an online player to you."
+  example: "::teletome anudd"
+- name: unban
+  rank: moderator
+  usage: "::unban <player>"
+  description: "Lift a player's ban."
+  example: "::unban anudd"
+- name: unjail
+  rank: moderator
+  usage: "::unjail <player>"
+  description: "Release a player from jail."
+  example: "::unjail anudd"
+- name: unmute
+  rank: moderator
+  usage: "::unmute <player>"
+  description: "Lift a player's mute."
+  example: "::unmute anudd"
+- name: blackjack
+  rank: player
+  usage: "::blackjack"
+  description: "Open the casino Blackjack game."
+  example: "::blackjack"
+- name: bosskc
+  rank: player
+  usage: "::bosskc"
+  description: "Show your boss kill counts (same as ::bosskills)."
+  example: "::bosskc"
+- name: bosskills
+  rank: player
+  usage: "::bosskills"
+  description: "Show your boss kill counts."
+  example: "::bosskills"
+- name: breachinfo
+  rank: player
+  usage: "::breachinfo"
+  description: "Show the status of the Deadman breach."
+  example: "::breachinfo"
+- name: breachpoints
+  rank: player
+  usage: "::breachpoints"
+  description: "Show your Breach Points and how many you earned from breach damage."
+  example: "::breachpoints"
+- name: bug
+  rank: player
+  usage: "::bug <what went wrong>"
+  description: "Save a bug report with your position, gear and recent traces."
+  example: "::bug the bank door does not open"
+- name: casinohistory
+  rank: player
+  usage: "::casinohistory"
+  description: "Show your recent casino rounds and results."
+  example: "::casinohistory"
+- name: cc
+  rank: player
+  usage: "::cc <message>"
+  description: "Send a message to your clan chat."
+  example: "::cc hello clan"
+- name: changepass
+  rank: player
+  usage: "::changepass <old password> <new password>"
+  description: "Change your account password."
+  example: "::changepass oldpass123 newpass456"
+- name: checknpckill
+  rank: player
+  usage: "::checknpckill <npc name|npc id>"
+  description: "Show your kill count for a monster (same as ::kc)."
+  example: "::checknpckill 50"
+- name: checknpckills
+  rank: player
+  usage: "::checknpckills <npc name|npc id>"
+  description: "Show your kill count for a monster (same as ::kc)."
+  example: "::checknpckills kalphite queen"
+- name: clan
+  rank: player
+  usage: "::clan <create|invite|rank|leave> [name] [rank]"
+  description: "Create a clan, invite a player, set a member's rank or leave your clan."
+  example: "::clan invite anudd"
+- name: clanwaraccept
+  rank: player
+  usage: "::clanwaraccept"
+  description: "Accept the current Clan War terms (the war starts when both accept)."
+  example: "::clanwaraccept"
+- name: clanwarchallenge
+  rank: player
+  usage: "::clanwarchallenge <player>"
+  description: "Challenge another player's clan to a Clan War."
+  example: "::clanwarchallenge anudd"
+- name: clanwarconfigure
+  rank: player
+  usage: "::clanwarconfigure"
+  description: "Toggle a Clan War rule while negotiating a war."
+  example: "::clanwarconfigure"
+- name: clanwarenter
+  rank: player
+  usage: "::clanwarenter"
+  description: "Enter the arena of your clan's arranged Clan War."
+  example: "::clanwarenter"
+- name: clanwarleave
+  rank: player
+  usage: "::clanwarleave"
+  description: "Leave the Clan War (walks you out of the arena)."
+  example: "::clanwarleave"
+- name: clanwartime
+  rank: player
+  usage: "::clanwartime"
+  description: "Choose the Clan War time limit."
+  example: "::clanwartime"
+- name: clanwarvictory
+  rank: player
+  usage: "::clanwarvictory"
+  description: "Choose the Clan War victory condition (knockout, most kills, kill target)."
+  example: "::clanwarvictory"
+- name: confirmemail
+  rank: player
+  usage: "::confirmemail <code>"
+  description: "Confirm your recovery e-mail with the code from the mail."
+  example: "::confirmemail 123456"
+- name: curse
+  rank: player
+  usage: "::curse <unlock|turmoil|book normal|book ancient|curse name>"
+  description: "Unlock or switch to Ancient Curses, or toggle a curse by name."
+  example: "::curse book ancient"
+- name: deadmanstore
+  rank: player
+  usage: "::deadmanstore"
+  description: "Open the Deadman points store."
+  example: "::deadmanstore"
+- name: dice
+  rank: player
+  usage: "::dice"
+  description: "Open the casino Dice game."
+  example: "::dice"
+- name: donatorstore
+  rank: player
+  usage: "::donatorstore"
+  description: "Open the Donator store."
+  example: "::donatorstore"
+- name: drops
+  rank: player
+  usage: "::drops"
+  description: "Open the drop table viewer."
+  example: "::drops"
+- name: duel
+  rank: player
+  usage: "::duel <player>"
+  description: "Challenge a player in the Duel Arena lobby to a duel."
+  example: "::duel anudd"
+- name: duelaccept
+  rank: player
+  usage: "::duelaccept"
+  description: "Accept a duel challenge, or accept the current duel settings."
+  example: "::duelaccept"
+- name: dueldecline
+  rank: player
+  usage: "::dueldecline"
+  description: "Decline the duel you are setting up (stakes are returned)."
+  example: "::dueldecline"
+- name: duellock
+  rank: player
+  usage: "::duellock <slot>"
+  description: "Lock or unlock an equipment slot while setting up a duel."
+  example: "::duellock weapon"
+- name: dueloffer
+  rank: player
+  usage: "::dueloffer <inventory slot> [amount]"
+  description: "Stake an item from an inventory slot in a staked duel."
+  example: "::dueloffer 0 1"
+- name: duelrule
+  rank: player
+  usage: "::duelrule <rule>"
+  description: "Toggle a duel rule while setting up a duel."
+  example: "::duelrule no_ranged"
+- name: dungeon
+  rank: player
+  usage: "::dungeon"
+  description: "Travel to Daemonheim for Dungeoneering (safe-zone rules apply)."
+  example: "::dungeon"
+- name: fair
+  rank: player
+  usage: "::fair"
+  description: "Show the casino provably-fair details (seeds) to check past rounds."
+  example: "::fair"
+- name: female
+  rank: player
+  usage: "::female"
+  description: "Switch your character to the default female look."
+  example: "::female"
+- name: forfeit
+  rank: player
+  usage: "::forfeit"
+  description: "Forfeit the duel you are fighting (if the rules allow it)."
+  example: "::forfeit"
+- name: fp
+  rank: player
+  usage: "::fp <player>"
+  description: "Challenge a player to Flower Poker."
+  example: "::fp anudd"
+- name: fpaccept
+  rank: player
+  usage: "::fpaccept"
+  description: "Accept a Flower Poker challenge."
+  example: "::fpaccept"
+- name: ge_buy
+  rank: player
+  usage: "::ge_buy <itemId> <quantity> <pricePerItem>"
+  description: "Place a Grand Exchange buy offer (safe zone, out of combat)."
+  example: "::ge_buy 4151 1 1500000"
+- name: ge_cancel
+  rank: player
+  usage: "::ge_cancel <offerId>"
+  description: "Cancel one of your Grand Exchange offers."
+  example: "::ge_cancel 12"
+- name: ge_collect
+  rank: player
+  usage: "::ge_collect [offerId]"
+  description: "Collect items and coins from your Grand Exchange offers."
+  example: "::ge_collect"
+- name: ge_offers
+  rank: player
+  usage: "::ge_offers"
+  description: "List your Grand Exchange offers and what is owed to you."
+  example: "::ge_offers"
+- name: ge_sell
+  rank: player
+  usage: "::ge_sell <itemId> <quantity> <pricePerItem>"
+  description: "Place a Grand Exchange sell offer (safe zone, out of combat)."
+  example: "::ge_sell 4151 1 1500000"
+- name: hotspot
+  rank: player
+  usage: "::hotspot"
+  description: "Show the current Wilderness hotspot (daily objective location)."
+  example: "::hotspot"
+- name: house
+  rank: player
+  usage: "::house"
+  description: "Open the house (Construction) menu."
+  example: "::house"
+- name: hud
+  rank: player
+  usage: "::hud [status|set|list|reset|<plugin> on|off]"
+  description: "Open or change the client overlay plugins (ground items, timers, boosts...)."
+  example: "::hud status"
+- name: kc
+  rank: player
+  usage: "::kc <npc name|npc id>"
+  description: "Show your kill count for a monster."
+  example: "::kc general graardor"
+- name: kills
+  rank: player
+  usage: "::kills <npc name|npc id>"
+  description: "Show your kill count for a monster (same as ::kc)."
+  example: "::kills zulrah"
+- name: killstreaks
+  rank: player
+  usage: "::killstreaks"
+  description: "Show the top 10 killstreaks and your own best and current streak."
+  example: "::killstreaks"
+- name: locate
+  rank: player
+  usage: "::locate <player>"
+  description: "Show which area an online player is in (_ for spaces in names)."
+  example: "::locate anudd"
+- name: loyaltystore
+  rank: player
+  usage: "::loyaltystore"
+  description: "Open the Loyalty points store."
+  example: "::loyaltystore"
+- name: male
+  rank: player
+  usage: "::male"
+  description: "Switch your character to the default male look."
+  example: "::male"
+- name: mines
+  rank: player
+  usage: "::mines"
+  description: "Open the casino Mines game."
+  example: "::mines"
+- name: mypos
+  rank: player
+  usage: "::mypos"
+  description: "Show your current coordinates and region (and copy them to your clipboard)."
+  example: "::mypos"
+- name: pestcontrolintermediate
+  rank: player
+  usage: "::pestcontrolintermediate"
+  description: "Board the intermediate Pest Control lander (safe-zone rules apply)."
+  example: "::pestcontrolintermediate"
+- name: pestcontrolnovice
+  rank: player
+  usage: "::pestcontrolnovice"
+  description: "Board the novice Pest Control lander (safe-zone rules apply)."
+  example: "::pestcontrolnovice"
+- name: pestcontrolveteran
+  rank: player
+  usage: "::pestcontrolveteran"
+  description: "Board the veteran Pest Control lander (safe-zone rules apply)."
+  example: "::pestcontrolveteran"
+- name: pkpoints
+  rank: player
+  usage: "::pkpoints"
+  description: "Show how many PK points you have."
+  example: "::pkpoints"
+- name: players
+  rank: player
+  usage: "::players"
+  description: "Show who is online (list window, or count in chat while busy)."
+  example: "::players"
+- name: plugins
+  rank: player
+  usage: "::plugins"
+  description: "Open the client's Plugins sidebar (overlay settings)."
+  example: "::plugins"
+- name: points
+  rank: player
+  usage: "::points"
+  description: "Show your Donator, Deadman and Loyalty point balances."
+  example: "::points"
+- name: practice
+  rank: player
+  usage: "::practice [melee|range|mage]"
+  description: "Queue for a Practice PvP match with free gear (empty inventory needed)."
+  example: "::practice range"
+- name: questhelper
+  rank: player
+  usage: "::questhelper"
+  description: "Toggle the Quest Helper for your tracked or in-progress quest."
+  example: "::questhelper"
+- name: questpanel
+  rank: player
+  usage: "::questpanel <list|view|track|stop|travel> [slot]"
+  description: "Quest Helper side panel actions (normally sent by its buttons)."
+  example: "::questpanel list"
+- name: rate
+  rank: player
+  usage: "::rate <skill>"
+  description: "Show your current XP rate for a skill (skill name or number)."
+  example: "::rate attack"
+- name: reclaim
+  rank: player
+  usage: "::reclaim"
+  description: "Tells you where your lost items are (gravestone or Death's Office)."
+  example: "::reclaim"
+- name: recovery
+  rank: player
+  usage: "::recovery"
+  description: "Show your recovery e-mail and the lost-password page."
+  example: "::recovery"
+- name: setemail
+  rank: player
+  usage: "::setemail <e-mail address>"
+  description: "Link a recovery e-mail to your account (a code is mailed to you)."
+  example: "::setemail me@example.com"
+- name: slayerkc
+  rank: player
+  usage: "::slayerkc"
+  description: "Show your slayer monster kill counts (same as ::slayerkills)."
+  example: "::slayerkc"
+- name: slayerkills
+  rank: player
+  usage: "::slayerkills"
+  description: "Show your slayer monster kill counts."
+  example: "::slayerkills"
+- name: soulwarsleave
+  rank: player
+  usage: "::soulwarsleave"
+  description: "Leave the Soul Wars lobby."
+  example: "::soulwarsleave"
+- name: store
+  rank: player
+  usage: "::store"
+  description: "Open the Donator store."
+  example: "::store"
+- name: trouverunlock
+  rank: player
+  usage: "::trouverunlock <itemId>"
+  description: "Unlock a Trouver-locked item in your inventory."
+  example: "::trouverunlock 13576"
+- name: warnings
+  rank: player
+  usage: "::warnings"
+  description: "Turn dangerous-area warnings back on."
+  example: "::warnings"
+- name: yell
+  rank: player
+  usage: "::yell"
+  description: "Explains global chat: start a public chat message with a period (.)."
+  example: "::yell"
+- name: zone
+  rank: player
+  usage: "::zone"
+  description: "Show whether your tile is a guarded safe zone, Wilderness or dangerous zone."
+  example: "::zone"
+- name: gear_eclipse
+  rank: owner
+  usage: "::gear_eclipse"
+  description: "Gear preset (Gear tab of ::mod): wear Eclipse moon armour + Eclipse atlatl and atlatl darts, rancour, infernal cape, ferocious gloves, primordial boots, twisted buckler, berserker ring (i). Worn gear goes to the bank."
+  example: "::gear_eclipse"
+- name: gear_crystal
+  rank: owner
+  usage: "::gear_crystal"
+  description: "Gear preset (Gear tab of ::mod): wear Crystal armour + Bow of Faerdhinen (c), anguish, blessed Dizana's quiver, zaryte vambraces, pegasian boots, venator ring. Worn gear goes to the bank."
+  example: "::gear_crystal"
+- name: gear_tbow
+  rank: owner
+  usage: "::gear_tbow"
+  description: "Gear preset (Gear tab of ::mod): wear Masori (f) + Twisted bow and dragon arrows, anguish, blessed Dizana's quiver, zaryte vambraces, pegasian boots, venator ring. Worn gear goes to the bank."
+  example: "::gear_tbow"
+- name: gear_zcb
+  rank: owner
+  usage: "::gear_zcb"
+  description: "Gear preset (Gear tab of ::mod): wear Masori (f) + Zaryte crossbow with diamond dragon bolts (e); ruby, dragonstone and onyx dragon bolts (e) in the inventory. Worn gear goes to the bank."
+  example: "::gear_zcb"
+- name: gear_ballista
+  rank: owner
+  usage: "::gear_ballista"
+  description: "Gear preset (Gear tab of ::mod): wear Morrigan's leather + Heavy ballista and dragon javelins (Morrigan's javelins in the inventory), ranged accessories. Worn gear goes to the bank."
+  example: "::gear_ballista"
+- name: gear_ancestral
+  rank: owner
+  usage: "::gear_ancestral"
+  description: "Gear preset (Gear tab of ::mod): wear Twisted ancestral + Kodai wand and Elidinis' ward (f), occult, imbued cape, tormented, eternal, magus; Volatile staff and barrage runes in the inventory. Worn gear goes to the bank."
+  example: "::gear_ancestral"
+- name: gear_bluemoon
+  rank: owner
+  usage: "::gear_bluemoon"
+  description: "Gear preset (Gear tab of ::mod): wear Blue moon armour + Blue moon spear, magic accessories, barrage runes in the inventory. Worn gear goes to the bank."
+  example: "::gear_bluemoon"
+- name: gear_bloodmoon
+  rank: owner
+  usage: "::gear_bloodmoon"
+  description: "Gear preset (Gear tab of ::mod): wear Blood moon armour + Dual macuahuitl, rancour, infernal cape, ferocious gloves, primordial boots, berserker ring (i). Worn gear goes to the bank."
+  example: "::gear_bloodmoon"
+- name: gear_torva
+  rank: owner
+  usage: "::gear_torva"
+  description: "Gear preset (Gear tab of ::mod): wear Torva + Osmumten's fang and avernic defender, melee accessories; Ancient godsword, Voidwaker and Burning claws in the inventory. Worn gear goes to the bank."
+  example: "::gear_torva"
+- name: gear_statius
+  rank: owner
+  usage: "::gear_statius"
+  description: "Gear preset (Gear tab of ::mod): wear Statius's armour + Vesta's longsword and avernic defender, melee accessories; Statius's warhammer and Vesta's chainbody/plateskirt in the inventory. Worn gear goes to the bank."
+  example: "::gear_statius"
+- name: vote
+  rank: player
+  usage: "::vote"
+  description: "Show the toplists to vote on: 1,000,000 coins per site every 12 hours, straight into your bank."
+  example: "::vote"

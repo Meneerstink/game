@@ -1,0 +1,62 @@
+# Voting system (owner 2026-10-10): 1,000,000 coins per vote, one per site per 12 hours, straight into the bank (VoteRewards).
+# Read on every use - no rebuild needed. A site without a link is left out of ::vote (fill it in once the server is listed).
+#
+# Callback / postback URL to enter on each site's dashboard (the VPS address + the secret from game.yml VoteService):
+#   https://<vps-domain>/vote/<secret>/<id>
+# The protocols below are the sites' own documentation, read 2026-10-10:
+#   rsps-list  https://www.rsps-list.com/incentive/   POST+GET userid, voted (1 = unique vote, 0 = refused duplicate), secret, userip
+#   rulocus    https://www.rulocus.com/tutorials/callback-documentation/   (RuneLocus' new name) POST+GET callback, ip, secret
+#   topg       https://topg.org/voting_check           GET p_resp, ip - no secret, the call comes from monitor.topg.org
+#   moparscape no official documentation; a 2023 community example reads the name from "name" - verify with a real vote.
+#   rsps.org / rspslist.com  https://rsps.org/tutorials/callback-documentation  GET callback, ip, secret (same platform; the vote
+#              link must carry &username= or the vote does not count)
+#   rsps100    https://rsps100.com/ (add_server page)   GET user - sent only on a valid vote, no secret
+#
+# site_secret: the site's own callback secret from its dashboard (rsps-list "API secret", rulocus "Callback Secret"); empty = not checked.
+sites:
+  - id: rspslist
+    name: RSPS-List
+    username_param: userid
+    success_param: voted
+    secret_param: secret
+    site_secret: ""
+    # u = your rsps-list account name (78legacy per the dashboard URL - check it).
+    link: "https://www.rsps-list.com/index.php?a=in&u=78legacy&id={name}"
+  - id: rulocus
+    name: RuneLocus
+    username_param: callback
+    secret_param: secret
+    site_secret: ""
+    # Fill in once listed: https://www.rulocus.com/top-rsps-list/<your-server-slug>/vote?callback={name}&username={name}
+    link: ""
+  - id: topg
+    name: TopG
+    username_param: p_resp
+    allowed_host: monitor.topg.org
+    # Fill in once listed: https://topg.org/runescape-private-servers/server-<your-site-id>-{name}
+    link: ""
+  - id: moparscape
+    name: MoparScape
+    username_param: name
+    # Fill in once listed: https://www.moparscape.org/rsps-list/server/<your-slug>?name={name}
+    link: ""
+  # Owner 2026-10-10 (ad plan): 7 sites at 1m per vote. RSPS.org requires a callback URL to list the server at all.
+  - id: rspsorg
+    name: RSPS.org
+    username_param: callback
+    secret_param: secret
+    site_secret: ""
+    # Fill in once listed: https://rsps.org/server/<your-slug>/vote/?callback={name}&username={name}
+    link: ""
+  - id: rspslistcom
+    name: RSPSList.com
+    username_param: callback
+    secret_param: secret
+    site_secret: ""
+    # Fill in once listed: https://rspslist.com/server/<your-slug>/vote/?callback={name}&username={name}
+    link: ""
+  - id: rsps100
+    name: RSPS100
+    username_param: user
+    # Fill in once listed: https://rsps100.com/vote/<your-server-id>/{name}
+    link: ""

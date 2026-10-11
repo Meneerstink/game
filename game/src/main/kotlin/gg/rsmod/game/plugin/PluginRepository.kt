@@ -9,6 +9,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.COMMAND_ARGS_ATTR
 import gg.rsmod.game.model.attr.COMMAND_ATTR
 import gg.rsmod.game.model.attr.DEATH_FLAG
+import gg.rsmod.game.model.attr.RECENT_COMMANDS_ATTR
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.container.key.*
 import gg.rsmod.game.model.entity.*
@@ -1324,6 +1325,21 @@ class PluginRepository(
         pluginCount++
     }
 
+    /** Read-only view of every bound command and the power it needs (null = everyone), for the staff command list. */
+    fun allCommands(): Map<String, String?> = commandPlugins.mapValues { it.value.first }
+
+    /** [RECENT_COMMANDS_ATTR] for staff, newest first and without duplicates; password commands and the list itself are left out. */
+    private fun rememberCommand(
+        p: Player,
+        command: String,
+        args: Array<String>?,
+    ) {
+        if (p.privilege.powers.isEmpty() || command in RECENT_COMMANDS_SKIPPED) return
+        val line = (listOf(command) + args.orEmpty()).joinToString(" ")
+        val recent = p.attr[RECENT_COMMANDS_ATTR].orEmpty().map { it.toString() }
+        p.attr[RECENT_COMMANDS_ATTR] = (listOf(line) + recent.filter { it != line }).take(RECENT_COMMANDS_MAX).toMutableList()
+    }
+
     fun executeCommand(
         p: Player,
         command: String,
@@ -1339,6 +1355,7 @@ class PluginRepository(
                 return false
             }
 
+            rememberCommand(p, command, args)
             p.attr.put(COMMAND_ATTR, command)
             if (args != null) {
                 p.attr.put(COMMAND_ARGS_ATTR, args)
@@ -2201,5 +2218,10 @@ class PluginRepository(
 
     companion object : KLogging() {
         private val TOLERATE_DUPLICATE_BINDS = System.getProperty("rsmod.tolerateDuplicateBinds") == "true"
+
+        const val RECENT_COMMANDS_MAX = 25
+
+        /** Never kept in [RECENT_COMMANDS_ATTR]: the list's own commands, and commands whose arguments are secrets. */
+        val RECENT_COMMANDS_SKIPPED = setOf("mod", "commands", "cmds", "setemail") + gg.rsmod.game.message.handler.ClientCheatHandler.SENSITIVE_COMMANDS
     }
 }

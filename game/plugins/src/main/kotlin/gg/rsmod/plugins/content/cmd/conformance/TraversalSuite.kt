@@ -61,8 +61,9 @@ object TraversalSuite : Conformance.Suite {
      */
     private val notApplicableFile: File get() = File("../../reference/traversal/not_applicable.tsv")
 
-    private class NotApplicable(val x0: Int, val z0: Int, val x1: Int, val z1: Int, val id: Int, val reason: String) {
-        fun matches(p: Placement) = if (id >= 0) p.id == id else p.x in x0..x1 && p.z in z0..z1
+    /** [plane] -1 = all planes; a `boxp` line names one (a floorless middle floor above working ladders, batch 14). */
+    private class NotApplicable(val x0: Int, val z0: Int, val x1: Int, val z1: Int, val id: Int, val reason: String, val plane: Int = -1) {
+        fun matches(p: Placement) = if (id >= 0) p.id == id else p.x in x0..x1 && p.z in z0..z1 && (plane < 0 || p.plane == plane)
     }
 
     private fun notApplicable(): List<NotApplicable> {
@@ -74,6 +75,7 @@ object TraversalSuite : Conformance.Suite {
                 when (c[0]) {
                     "box" -> NotApplicable(c[1].toInt(), c[2].toInt(), c[3].toInt(), c[4].toInt(), -1, c[5])
                     "id" -> NotApplicable(0, 0, 0, 0, c[1].toInt(), c[2])
+                    "boxp" -> NotApplicable(c[2].toInt(), c[3].toInt(), c[4].toInt(), c[5].toInt(), -1, c[6], c[1].toInt())
                     else -> null
                 }
             }.getOrNull()
@@ -252,6 +254,13 @@ object TraversalSuite : Conformance.Suite {
             }
         }
         while (done.get() < laneCount) wait(5)
+        for (c in deadCandidates) {
+            val chained =
+                (-1..1).any { dx -> (-1..1).any { dz -> (dx != 0 || dz != 0) && Triple(c.p.id, c.p.plane, (c.p.x + dx) to (c.p.z + dz)) in crossedPlacements } }
+            run.expectTrue("${c.p.id}@${c.p.x},${c.p.z},${c.p.plane}", c.check, chained, if (chained) "a neighbouring piece of the same loc was crossed" else c.measured)
+        }
+        deadCandidates.clear()
+        crossedPlacements.clear()
         File(run.dir, "catalogue.tsv").writeText("key\tname\toption\tbound\tside\tstart\tend\tverdict\tdetail\n" + rows.sorted().joinToString("\n") + "\n")
         run.note("traversal catalogue: ${all.size} census placements, ${tested.get()} placement-sides tested, $open placements with a traversal option and no handler (OPEN), $na NOT_APPLICABLE (reference/traversal/not_applicable.tsv)")
     }
@@ -297,7 +306,7 @@ object TraversalSuite : Conformance.Suite {
             run.laneStarts[lane] = from
             val (verdict, end, detail) = cross(run, key, obj.id, obj.tile, w.verb.first, start)
             run.laneStarts.remove(lane)
-            if (!end.sameAs(start)) crossedFromSomeSide = true else refusals += "$side: ${detail.substringAfter("ticks; ").take(60)}"
+            if (!end.sameAs(start)) crossedFromSomeSide = true else refusals += "$side: ${refusalText(detail)}"
             rows += "${p.id}@${p.x},${p.z},${p.plane}\t${def.name}\t${w.verb.second}\tyes\t$side\t${start.x},${start.z}\t${end.x},${end.z},${end.height}\t$verdict\t$detail"
             run.expectTrue(key, "${def.name} '${w.verb.second}' from $side", verdict == "PASS", detail.take(250))
             // The recorder is pruned either way; a failing crossing's own timeline is written by cross() (bot-only, capped - the
@@ -308,10 +317,30 @@ object TraversalSuite : Conformance.Suite {
         // ("I can't reach that!" from everywhere = the object cannot be routed to), unless a requirement refused it.
         if (sidesTried > 0 && !crossedFromSomeSide) {
             // A warning screen first (the Clan Wars free-for-all portals, interface 793) is the obstacle's own answer, not a dead loc.
-            val requirement = refusals.any { it.contains("level") || it.contains("need") || it.contains("quest", ignoreCase = true) || it.contains(" interface ") }
-            run.expectTrue("${p.id}@${p.x},${p.z},${p.plane}", "${def.name} '${w.verb.second}' is usable from at least one side", requirement, refusals.joinToString(" | ").take(250))
+            // Any real answer of the obstacle (a requirement, "Your house is in Rimmington.", a chat-box line, a warning screen) is
+            // a usable loc refusing; only "I can't reach that!" / "Nothing interesting happens." from every side is a dead loc. The
+            // old check read the first 60 characters, about 10 of the message after the MessageGameMessage wrapper (batch 16).
+            val requirement =
+                refusals.any { r ->
+                    val m = r.substringAfter(": ").trim()
+                    m.isNotEmpty() && !m.startsWith("I can't reach that") && !m.startsWith("Nothing interesting happens") && REFUSAL_NOISE.none { m.contains(it) }
+                }
+            if (requirement) {
+                run.expectTrue("${p.id}@${p.x},${p.z},${p.plane}", "${def.name} '${w.verb.second}' is usable from at least one side", true, refusals.joinToString(" | ").take(250))
+            } else {
+                // Judged after every lane: a chain piece (a middle stepping stone, a rope segment in mid-air) is used from its
+                // neighbour of the same id, not from the ground (batch 14/15: Castle Wars stones 4411, gnome rope 4059, stone 2334).
+                deadCandidates += DeadCandidate(p, "${def.name} '${w.verb.second}' is usable from at least one side", refusals.joinToString(" | ").take(250))
+            }
+        } else if (crossedFromSomeSide) {
+            crossedPlacements += Triple(p.id, p.plane, p.x to p.z)
         }
     }
+
+    private class DeadCandidate(val p: Placement, val check: String, val measured: String)
+
+    private val deadCandidates = java.util.concurrent.ConcurrentLinkedQueue<DeadCandidate>()
+    private val crossedPlacements: MutableSet<Triple<Int, Int, Pair<Int, Int>>> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 
     private fun opLoc(
         slot: Int,
@@ -352,7 +381,10 @@ object TraversalSuite : Conformance.Suite {
         do {
             wait(1)
             waited++
-            idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit() || startedTaskRunning(run, bot, c0)) 0 else idle + 1
+            idle = if (bot.lock != LockState.NONE || bot.movementQueue.hasDestination() || bot.inTransit() || startedTaskRunning(run, bot, c0) ||
+                    // The Deadman 7-second countdown (SevenSecondAction) runs before a boarding / gangplank action (batch 15).
+                    gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction.isActive(bot)
+            ) 0 else idle + 1
             // A middle-floor "Climb" (Void Stairs.kt) asks "What would you like to do?" - the bot picks "Go up the stairs."
             // like a player would; any other options dialogue gets its first line too. Answering counts as the click acting.
             if (answered < 2 && Bots.answerOption(bot, 1)) {
@@ -418,11 +450,12 @@ object TraversalSuite : Conformance.Suite {
                     if (bot.tile.sameAs(end)) problems += "cannot walk on after the crossing (click to ${next.x},${next.z} did nothing)"
                 }
             }
-        } else if (msgs.isEmpty() && !dialogue) {
+        } else if (msgs.isEmpty() && !dialogue && !acted) {
             problems += "click did nothing: no movement and no message"
         }
         val modal = run.recording.of(bot.username, "state").lastOrNull { it.cycle >= c0 && it.text.startsWith("modal: -1 -> ") }?.text?.substringAfter("-> ")
         val detail = "from ${start.x},${start.z} to ${end.x},${end.z} in $waited ticks; ${msgs.joinToString(" / ").take(120)}" + (if (modal != null) " interface $modal" else "") +
+            (if (dialogue && modal == null) " dialogue" else "") +
             (if (problems.isEmpty()) "" else "; PROBLEM " + problems.joinToString("; "))
         if (problems.isNotEmpty() && timelines.incrementAndGet() <= MAX_TIMELINES) {
             runCatching {
@@ -467,6 +500,13 @@ object TraversalSuite : Conformance.Suite {
         val now = names(changes.last().text.substringAfter(" -> ", ""))
         return (now - background).any { !it.startsWith("ObjectPathAction") }
     }
+
+    /** Server lines that are no answer of the obstacle (world events, rewards) - never counted as its refusal. */
+    private val REFUSAL_NOISE = listOf("unlocked a new music track", "star has crashed", "loyalty point", "daily timer", "Warning: You are entering")
+
+    /** The messages of a crossing's detail without the MessageGameMessage wrapper (and without its PROBLEM tail). */
+    private fun refusalText(detail: String): String =
+        detail.substringAfter("ticks; ").replace(Regex("MessageGameMessage\\(type=\\d+, username=null, message="), "").substringBefore("; PROBLEM").take(100)
 
     /** `tile: a -> b` is one step on one plane that the collision map does not allow. */
     private fun refusedStep(

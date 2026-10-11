@@ -146,7 +146,7 @@ SpecialAttacks.register(10, Items.RUNE_THROWNAXE) {
         delay++
     }
     // Shared retrieval rule (Ava's devices recover thrownaxes too - OSRS Wiki "Ava's device").
-    val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99))
+    val outcome = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.outcome(player, world.random(99), victim)
     if (outcome != gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.RECOVERED) player.equipment.remove(weapon.id, 1)
     if (outcome == gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.AmmoOutcome.DROPPED) {
         world.spawn(gg.rsmod.game.model.entity.GroundItem(weapon.id, 1, previous.tile, player))

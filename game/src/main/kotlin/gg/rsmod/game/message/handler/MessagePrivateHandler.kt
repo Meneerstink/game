@@ -20,6 +20,8 @@ class MessagePrivateHandler : MessageHandler<MessagePrivateMessage> {
 
         val unpacked = String(decompressed, 0, message.length)
         val fromPlayer = client as Player
+        // Owner 2026-10-10 (staff tools): a muted player sends no private messages either.
+        if (gg.rsmod.game.model.priv.Punishments.refuseChat(fromPlayer)) return
         // RCV-010 D4: shared delivery rule (see PrivateMessagePolicy) - no more `!!` on an offline name.
         val toPlayer = world.getPlayerForName(message.username)
         val senderName = Misc.formatForDisplay(fromPlayer.username)

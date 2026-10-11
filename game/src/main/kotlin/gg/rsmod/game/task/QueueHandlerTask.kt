@@ -18,7 +18,8 @@ class QueueHandlerTask : GameTask {
         var playerQueues = 0
         var npcQueues = 0
 
-        world.players.forEach { player ->
+        // PID order (World.playersInPidOrder, OSRS Wiki "Player identification number").
+        world.playersInPidOrder().forEach { player ->
             try {
                 player.queues.cycle()
                 playerQueues += player.queues.size

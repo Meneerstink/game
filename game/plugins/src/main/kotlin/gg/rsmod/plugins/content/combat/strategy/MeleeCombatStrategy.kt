@@ -160,6 +160,8 @@ object MeleeCombatStrategy : CombatStrategy {
         target: Pawn,
         damage: Int,
     ) {
+        // OSRS Wiki "Combat dummy": "no experience will be granted for hitting it".
+        if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return
         val modDamage = if (target.entityType.isNpc) min(target.getCurrentLifepoints(), damage) else damage
         val mode = CombatConfigs.getXpMode(player)
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0

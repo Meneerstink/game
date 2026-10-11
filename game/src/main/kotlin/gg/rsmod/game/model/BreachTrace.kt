@@ -16,7 +16,7 @@ import java.io.File
  * watched ids in [watchedNpcIds]; plugin-side hooks decide with their own breach check.
  */
 object BreachTrace : KLogging() {
-    const val TOGGLE_FILE = "C:/RSPS/breachtrace.on"
+    val TOGGLE_FILE = gg.rsmod.game.RspsPaths.root("breachtrace.on")
     const val PROPERTY = "rsps.breachTrace"
 
     @Volatile
@@ -35,6 +35,16 @@ object BreachTrace : KLogging() {
     var sink: ((String) -> Unit)? = null
 
     fun active(): Boolean = enabled || sink != null
+
+    /**
+     * True while a Deadman breach is open (DeadmanBreach.active). The engine-level lines - every projectile, tile graphic
+     * and area sound in the world and who received it - are only logged then (owner 2026-10-09 clean-up: 5,670 ambient
+     * tile-graphic lines per log with no breach running); the in-engine test run ([sink]) always gets them.
+     */
+    @Volatile
+    var breachOpen: Boolean = false
+
+    fun engineActive(): Boolean = sink != null || (enabled && breachOpen)
 
     fun watches(npcId: Int): Boolean = npcId in watchedNpcIds
 

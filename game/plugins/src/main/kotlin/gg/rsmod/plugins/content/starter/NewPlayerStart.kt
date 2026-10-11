@@ -10,7 +10,8 @@ import gg.rsmod.plugins.api.cfg.Items
 
 /** New-account rewards whose values are confirmed product requirements. */
 object NewPlayerStart {
-    const val STARTER_CASH = 50_000
+    /** Owner 2026-10-10: 1m (was 50k) - the same as one vote. */
+    const val STARTER_CASH = 1_000_000
 
     private val CASH_GRANTED_THIS_LOGIN = AttributeKey<Boolean>()
 

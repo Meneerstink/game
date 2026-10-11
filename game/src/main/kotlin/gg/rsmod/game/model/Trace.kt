@@ -28,8 +28,8 @@ object Trace : KLogging() {
      */
     fun gcMillis(): Long = java.lang.management.ManagementFactory.getGarbageCollectorMXBeans().sumOf { it.collectionTime.coerceAtLeast(0L) }
 
-    const val ALL_FILE = "C:/RSPS/trace.on"
-    const val BUGS_DIR = "C:/RSPS/bugs"
+    val ALL_FILE = gg.rsmod.game.RspsPaths.root("trace.on")
+    val BUGS_DIR = gg.rsmod.game.RspsPaths.root("bugs")
     const val RECENT_LINES = 600
 
     enum class Cat(val key: String, val what: String) {
@@ -55,8 +55,14 @@ object Trace : KLogging() {
     @Volatile
     var onProblem: ((String) -> Unit)? = null
 
+    /**
+     * Categories "all traces on" leaves off (owner 2026-10-09 clean-up): VAR logs every varp/varbit packet - 2.4 million lines,
+     * 384 MB in one log. Still switched on alone with `traces var`.
+     */
+    val NOT_IN_ALL = setOf(Cat.VAR)
+
     init {
-        if (File(ALL_FILE).exists()) on.addAll(Cat.values())
+        if (File(ALL_FILE).exists()) on.addAll(Cat.values().filter { it !in NOT_IN_ALL })
     }
 
     fun enabled(cat: Cat): Boolean = cat in on
@@ -75,7 +81,7 @@ object Trace : KLogging() {
      * too, so the client (it reads the file at start) and the next server start follow.
      */
     fun setAll(value: Boolean) {
-        if (value) on.addAll(Cat.values()) else on.clear()
+        if (value) on.addAll(Cat.values().filter { it !in NOT_IN_ALL }) else on.clear()
         AvTrace.enabled = value
         BreachTrace.enabled = value
         runCatching {

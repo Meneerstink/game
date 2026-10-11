@@ -193,7 +193,9 @@ object DeadmanHud {
         val previousState = player.attr[LAST_STATE_ATTR]
         if (previousState != state) {
             player.attr[LAST_STATE_ATTR] = state
-            if (previousState == State.GUARDED) {
+            // Not for a hidden intro watcher (DangerWarning.SUPPRESSED, TutorIntro): moved into the scene's Wilderness copy and out
+            // of it, he found the warning twice in his chat after the introduction (run 2026-10-09 00:47).
+            if (previousState == State.GUARDED && player.attr[DangerWarning.SUPPRESSED] != true) {
                 // Owner 2026-09-23: the warning must stand out in the chatbox - red.
                 player.message("<col=ff0000>$DANGER_WARNING</col>")
             }

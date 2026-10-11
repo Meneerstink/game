@@ -231,7 +231,7 @@ object PestControlScenarios {
         val zealA = PestControlHandler.zealOf(a)
         // Wave spinners may heal the portal meanwhile, so the damage is read from the portal's damage record.
         val dealt = portal.damageMap.getDamageFrom(a)
-        run.expectTrue(E, "attacking the portal: damage and zeal (10 lifepoints = 1 zeal)", dealt > 0 && (a.attr[PestControlHandler.ZEAL_ATTR] ?: 0) >= dealt, "dealt=$dealt lp $before -> ${portal.getCurrentLifepoints()} zeal=$zealA")
+        run.expectTrue(E, "attacking the portal: damage and zeal (1 damage = 1 zeal)", dealt > 0 && zealA >= dealt, "dealt=$dealt lp $before -> ${portal.getCurrentLifepoints()} zeal=$zealA")
 
         // 5. Repair a damaged barricade (hammer + logs).
         val target = game.barricades.firstOrNull { it.id == 14227 || it.id == 14228 || it.id == 14229 }
@@ -309,7 +309,7 @@ object PestControlScenarios {
 
         // 7. Win: all portals destroyed. PC1 has the zeal for a reward, PC2 is held under 50.
         PestControlHandler.addZeal(a, 60)
-        b.attr[PestControlHandler.ZEAL_ATTR] = 100 // 10 zeal
+        b.attr[PestControlHandler.ZEAL_ATTR] = 10
         while (game.active && game.ticks < 202) wait(1)
         val pointsBefore = a.attr[PEST_POINTS] ?: 0
         val bPoints = b.attr[PEST_POINTS] ?: 0
@@ -320,8 +320,8 @@ object PestControlScenarios {
         repeat(10) { wait(1) }
         run.expectTrue(E, "all portals down: the game ends", !game.active, "active=${game.active}")
         run.expectTrue(
-            E, "won with 60+ zeal: +2 points and combat x 10 coins",
-            (a.attr[PEST_POINTS] ?: 0) == pointsBefore + 2 && a.inventory.getItemCount(995) == coinsBefore + a.combatLevel * 10,
+            E, "won with 60+ zeal: +${game.tier.pointsPerWin} points and combat x 10 coins",
+            (a.attr[PEST_POINTS] ?: 0) == pointsBefore + game.tier.pointsPerWin && a.inventory.getItemCount(995) == coinsBefore + a.combatLevel * 10,
             "points $pointsBefore -> ${a.attr[PEST_POINTS]} coins $coinsBefore -> ${a.inventory.getItemCount(995)}",
         )
         run.expectTrue(E, "won with 10 zeal: no points", (b.attr[PEST_POINTS] ?: 0) == bPoints, "points=${b.attr[PEST_POINTS]}")

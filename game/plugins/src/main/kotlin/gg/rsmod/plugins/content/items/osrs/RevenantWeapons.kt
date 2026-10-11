@@ -96,7 +96,9 @@ object RevenantWeapons {
         player: Player,
         target: Pawn,
     ): Boolean {
-        if (target !is Npc || player.tile.getWildernessLevel() <= 0) return false
+        // The ornate wilderness combat dummy counts as a Wilderness npc (OSRS Wiki "Ornate undead combat dummy").
+        val wilderness = player.tile.getWildernessLevel() > 0 || gg.rsmod.plugins.content.areas.poh.PlayerHouse.isWildernessDummy(target)
+        if (target !is Npc || !wilderness) return false
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return false
         return isCharged(weapon.id) && ether(weapon) > 0
     }

@@ -13,7 +13,7 @@ import gg.rsmod.plugins.content.skills.agility.*
  * greegree can complete it; a human always falls ("...you're not monkey enough to try this!").
  *
  * Ape Atoll is reachable on this server (fairy ring CLR 2735,2742 FairyRings.kt; Teleport to Ape Atoll TeleportSpell.kt; the
- * Port Sarim boat void_outpost_boat.plugin.kts), but there is NO greegree transformation here (areas/apeatroll/*: "TODO Add missing
+ * Port Sarim boat void_outpost_boat.plugin.kts), but there is NO greegree transformation here (areas/apeatroll: "TODO Add missing
  * function greegree"). So every player is a human: this port carries Void's human (failure) branch of every obstacle and Void's
  * refusal for a wielded greegree other than the small ninja monkey greegree. Not ported, recorded: Void's monkey (success) branches
  * (agility stages, lap bonus, ninja monkey anims/renders) - they need the greegree transformation, a shared feature that does not exist.
@@ -81,7 +81,7 @@ fun Player.damageSound() {
 
 /** Void ApeAtoll.damage(): (constitution / 100) * 10 life points = a tenth of the current hitpoints. */
 fun Player.courseDamage() {
-    hit(skills.getCurrentLevel(Skills.HITPOINTS) / 10)
+    hit(skills.getCurrentLevel(Skills.CONSTITUTION) / 10)
     damageSound()
 }
 

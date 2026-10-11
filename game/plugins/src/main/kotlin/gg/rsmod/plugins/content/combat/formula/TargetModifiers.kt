@@ -95,6 +95,8 @@ object TargetModifiers {
         player: Player,
         target: Pawn,
     ): Boolean {
+        // The POH combat dummy "functions as any slayer task" (OSRS Wiki "Ornate undead combat dummy").
+        if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return true
         val assignment = player.getSlayerAssignment() ?: return false
         return target is Npc && target.combatDef.slayerAssignment == assignment
     }

@@ -44,8 +44,11 @@ object PohTeleportInterfaceImportTool {
     const val ORANGE = 0xFF981F
     const val WHITE = 0xFFFFFF
 
-    /** The house nexus loc's model (Scrying pool 13639, loc opcode 1 shape 10). */
-    const val NEXUS_MODEL_ID = 13192
+    /**
+     * The house nexus loc's model: the OSRS crystalline Portal Nexus (OSRS model 36052 -> local 4905, OsrsLocImportTool batch
+     * "poh-house", owner 2026-10-10); it was the Scrying pool 13639's 13192 while that loc stood in for the nexus.
+     */
+    const val NEXUS_MODEL_ID = 4905
 
     /** Key labels of the first 35 rows / buttons, OSRS enum 1401: 1-9 then A-Z. */
     val KEYS: List<String> = (1..9).map { it.toString() } + ('A'..'Z').map { it.toString() }

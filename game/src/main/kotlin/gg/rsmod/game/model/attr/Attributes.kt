@@ -256,6 +256,12 @@ val COMMAND_ATTR = AttributeKey<String>()
 val COMMAND_ARGS_ATTR = AttributeKey<Array<String>>()
 
 /**
+ * Owner 2026-10-10 (the staff command list, "its not working easy"): the last commands a staff member ran, newest first, each as
+ * "name arg1 arg2" - the list's Recent tab runs them again with one click. Written by [gg.rsmod.game.plugin.PluginRepository.executeCommand].
+ */
+val RECENT_COMMANDS_ATTR = AttributeKey<MutableList<String>>(persistenceKey = "recent_commands")
+
+/**
  * The option that was last selected on any entity message.
  * For example: object action one will set this attribute to [1].
  */
@@ -803,3 +809,13 @@ val GOD_SPELL_CHARGE_ATTR = AttributeKey<Boolean>()
  * rather than re-run indefinitely for the character's entire lifetime.
  */
 val LIFEPOINT_SCALE_MIGRATED_ATTR = AttributeKey<Boolean>(persistenceKey = "lifepoint_scale_migrated")
+
+/**
+ * The tile a player stood on inside an instance when they logged out, recorded by `InstancedMapAllocator.logout` right before
+ * it moves them to the instance's exit tile - so logout plugins (the player-owned house: "log back in inside your house",
+ * owner 2026-10-10) still know where the player was.
+ */
+val INSTANCE_LOGOUT_TILE_ATTR = AttributeKey<gg.rsmod.game.model.Tile>()
+
+/** The instance [INSTANCE_LOGOUT_TILE_ATTR] was in (it is released right after; its area may be reused by another instance). */
+val INSTANCE_LOGOUT_MAP_ATTR = AttributeKey<gg.rsmod.game.model.instance.InstancedMap>()

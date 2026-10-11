@@ -408,4 +408,63 @@ class AncientCurses2011Tests {
             unmockkObject(AttackTab)
         }
     }
+
+    /** A player whose curse-tab varbits are real: 6857..6861 six bits each, the sapped / leeched flags one bit each. */
+    private fun tabPlayer(level: Int = 99): Player {
+        val player = newPlayer(listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC).associateWith { level })
+        every { player.varps } returns gg.rsmod.game.model.varp.VarpSet((0 until 8000).toSet())
+        val definitions = player.world.definitions
+        every { definitions.get(VarbitDef::class.java, any()) } answers {
+            val id = secondArg<Int>()
+            VarbitDef(id).apply {
+                varp = id
+                startBit = 0
+                endBit = if (id in 6857..6861) 5 else 0
+            }
+        }
+        AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+        return player
+    }
+
+    private fun tab(player: Player) = (0..4).map { player.varps.getBit(6857 + it, 0, 5) - 30 }
+
+    private fun flags(player: Player, base: Int) = (0..4).map { player.varps.getBit(base + it, 0, 0) }
+
+    /**
+     * Owner 2026-10-11 ("de show stat adjustment van alle curses moet volledig kloppen"): cs2 1710/1711 show only the player's
+     * OWN stats. An enemy Sap / Leech sets the sapped (6847+) / leeched (6852+) flag, from which the client shows its initial
+     * -10 % and floors the total at -20 % / -25 %; the server adds only the levels the escalation really took. The caster's
+     * own book shows nothing for a Sap.
+     */
+    @Test
+    fun `an enemy Sap or Leech shows on the victim's curse tab, never on the Sap caster's`() {
+        val caster = tabPlayer()
+        val victim = tabPlayer()
+        AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
+        AncientCurses.onDamageDealt(caster, victim, damage = 10)
+        // Sap Warrior: Attack, Strength and Defence sapped, one real level each drained by the first proc.
+        assertEquals(listOf(1, 1, 1, 0, 0), flags(victim, 6847))
+        assertEquals(listOf(0, 0, 0, 0, 0), flags(victim, 6852))
+        assertEquals(listOf(-1, -1, -1, 0, 0), tab(victim))
+        assertEquals(listOf(0, 0, 0, 0, 0), tab(caster))
+        assertEquals(listOf(0, 0, 0, 0, 0), flags(caster, 6847))
+        // The caster switches the Sap off: the initial 10 % is released at once, the drained levels regenerate as usual.
+        AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
+        assertEquals(listOf(0, 0, 0, 0, 0), flags(victim, 6847))
+        assertEquals(listOf(-1, -1, -1, 0, 0), tab(victim))
+        victim.skills.setCurrentLevel(Skills.ATTACK, 99)
+        AncientCurses.refreshStatAdjustments(victim)
+        assertEquals(0, tab(victim)[0])
+
+        // Leech Ranged: the victim's Ranged is leeched (floor -25 % in the client), the caster sees its own boost.
+        val leecher = tabPlayer()
+        val other = tabPlayer()
+        AncientCurses.toggleCurse(leecher, AncientCurse.LEECH_RANGED)
+        assertEquals(15, tab(leecher)[3])
+        AncientCurses.onDamageDealt(leecher, other, damage = 10, style = CombatClass.RANGED)
+        assertEquals(listOf(0, 0, 0, 1, 0), flags(other, 6852))
+        assertEquals(listOf(0, 0, 0, 0, 0), flags(other, 6847))
+        assertEquals(-1, tab(other)[3])
+        assertEquals(16, tab(leecher)[3])
+    }
 }

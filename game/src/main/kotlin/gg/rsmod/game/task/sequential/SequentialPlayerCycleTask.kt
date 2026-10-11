@@ -17,7 +17,8 @@ class SequentialPlayerCycleTask : GameTask {
         world: World,
         service: GameService,
     ) {
-        world.players.forEach { p ->
+        // PID order (World.playersInPidOrder, OSRS Wiki "Player identification number").
+        world.playersInPidOrder().forEach { p ->
             val start = System.currentTimeMillis()
             try {
                 p.cycle()

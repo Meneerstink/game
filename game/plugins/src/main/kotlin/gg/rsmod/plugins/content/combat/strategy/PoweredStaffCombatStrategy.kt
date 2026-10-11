@@ -143,6 +143,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         target: Pawn,
         damage: Int,
     ) {
+        // OSRS Wiki "Combat dummy": "no experience will be granted for hitting it".
+        if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return
         val modDamage = if (target is Npc) target.getCurrentLifepoints().coerceAtMost(damage) else damage
         val multiplier = if (target is Npc) Combat.getNpcXpMultiplier(target) else 1.0
         // Owner decision 2026-09-14 (a): Longrange gives "Magic / Defence / Hitpoints" (wiki combat styles table of the Trident of

@@ -780,8 +780,14 @@ object DeadmanSuite : Conformance.Suite {
                 p.inventory.toList().filterNotNull().filterNot { keys.isKey(it.id) }.forEach { p.inventory.remove(it.id, it.amount) }
                 p.setCurrentLifepoints(p.getMaximumLifepoints())
             }
-            killer.moveTo(arena)
-            victim.moveTo(arena.transform(1, 0))
+            // A respawn teleport still pending from the previous death can land after these moves (it put the victim back home,
+            // in a safe zone, for a whole kill: 2026-10-03 PID run, "five keys held" 4): place both until they really stand there.
+            for (attempt in 0 until 6) {
+                killer.moveTo(arena)
+                victim.moveTo(arena.transform(1, 0))
+                wait(2)
+                if (killer.tile.sameAs(arena) && victim.tile.sameAs(arena.transform(1, 0))) break
+            }
             wield(killer, Item(Items.ABYSSAL_WHIP))
             items.forEach { victim.inventory.add(it) }
             wait(1)

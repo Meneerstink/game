@@ -38,21 +38,23 @@ suspend fun estateAgentChat(task: QueueTask) {
     when (
         task.options(
             "I'd like to redecorate.",
+            "Can I move my house?",
             "What style is my house right now?",
             "How do I get to my house?",
             "Nothing, thanks.",
         )
     ) {
         1 -> redecorate(task)
-        2 -> {
+        2 -> moveHouse(task)
+        3 -> {
             task.chatPlayer("What style is my house right now?", facialExpression = FacialExpression.NORMAL)
             task.chatNpc("Your house is ${style.displayName.lowercase()}. A fine choice, if I say so myself.", facialExpression = FacialExpression.HAPPY)
             estateAgentChat(task)
         }
-        3 -> {
+        4 -> {
             task.chatPlayer("How do I get to my house?", facialExpression = FacialExpression.NORMAL)
             task.chatNpc(
-                "Break a house teleport tablet, cast the house teleport spell, or walk through the portal in Rimmington.",
+                "Break a house teleport tablet, cast the house teleport spell, or walk through the portal in ${PlayerHouse.locationOf(player).displayName}.",
                 "Your house is yours from the day you arrive - you needn't build a thing.",
                 facialExpression = FacialExpression.NORMAL,
             )
@@ -114,4 +116,30 @@ suspend fun applyStyle(
         "It will be waiting for you the next time you go home.",
         facialExpression = FacialExpression.HAPPY,
     )
+}
+
+/**
+ * "Can I move my house?" (Darkan `EstateAgentDialogue.promptHouseLocation`): every town the cache has a house portal for, at its
+ * OSRS level and price; Yanille is not offered (OSRS Deadman Mode disables its house portal).
+ */
+suspend fun moveHouse(task: QueueTask) {
+    val player = task.player
+    val current = PlayerHouse.locationOf(player)
+    val towns = PlayerHouse.Location.values().filter { it.offered && it != current }
+    val labels = towns.map { "${it.displayName} (${it.cost} coins)" }
+    val pick = task.options(*labels.toTypedArray(), title = "Move my house to...")
+    val town = towns.getOrNull(pick - 1) ?: return
+    if (player.skills.getMaxLevel(Skills.CONSTRUCTION) < town.level) {
+        task.chatNpc("I'm afraid a house in ${town.displayName} needs ${town.level} Construction.", facialExpression = FacialExpression.SAD)
+        return
+    }
+    if (player.inventory.getItemCount(Items.COINS_995) < town.cost) {
+        task.chatNpc("That will cost ${town.cost} coins, and you don't have them on you.", facialExpression = FacialExpression.SAD)
+        return
+    }
+    if (task.options("Yes", "No, that's too much money.", title = "Are you sure?") != 1) return
+    if (player.inventory.remove(Items.COINS_995, town.cost).completed != town.cost) return
+    player.attr[PlayerHouse.LOCATION_ATTR] = town.ordinal
+    player.message("Your house location has been set to ${town.displayName}.")
+    task.chatNpc("Your house is now in ${town.displayName}. Its portal there will take you home.", facialExpression = FacialExpression.HAPPY)
 }

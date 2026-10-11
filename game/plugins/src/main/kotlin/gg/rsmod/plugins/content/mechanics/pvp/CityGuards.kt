@@ -239,8 +239,9 @@ object CityGuards {
         GuardedZones.zoneAt(tile)?.name
             ?: if (gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile)) AFK_BASEMENT_GUARDS else null
 
-    /** The only thing a guard ever acts on: a PK-skulled player standing inside a guarded zone. */
-    fun isSkulledIntruder(target: Player): Boolean = PvpSkull.isSkulled(target) && isGuardedZone(target.zoneTile())
+    /** The only thing a guard ever acts on: a player with a running skull timer standing inside a guarded zone. Owner
+     * 2026-10-10: "guard only need to attack when having a timer" - carried loot keys alone (no timer) never draw the guards. */
+    fun isSkulledIntruder(target: Player): Boolean = PvpSkull.hasSkullTimer(target) && isGuardedZone(target.zoneTile())
 
     /**
      * Whether [guard] may engage [target]: the target is a skulled intruder and the guard itself
@@ -588,7 +589,7 @@ object CityGuards {
         val wasInZone = player.attr[WAS_IN_GUARDED_ZONE_ATTR] ?: false
         player.attr[WAS_IN_GUARDED_ZONE_ATTR] = inZone
 
-        if (!inZone || !PvpSkull.isSkulled(player)) {
+        if (!inZone || !PvpSkull.hasSkullTimer(player)) {
             if (player.attr.has(REACTIVE_PLAN_ATTR) || (wasInZone && !inZone)) {
                 release(player)
             }

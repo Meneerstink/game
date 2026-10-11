@@ -314,6 +314,10 @@ object AreaState {
         if (BeginnerProtection.isProtected(attacker) || BeginnerProtection.isProtected(target)) {
             return false
         }
+        // Owner 2026-10-10 (staff tools): a jailed player sits out his punishment - nobody fights him and he fights nobody.
+        if (gg.rsmod.game.model.priv.Punishments.isJailed(attacker) || gg.rsmod.game.model.priv.Punishments.isJailed(target)) {
+            return false
+        }
         // Deadman PvP guards plan (2026-09-16): a player currently protected by the post-kill
         // grace period cannot be attacked at all, by anyone - checked unconditionally like
         // BeginnerProtection above, not folded into the practice-PvP-exempt clause below.

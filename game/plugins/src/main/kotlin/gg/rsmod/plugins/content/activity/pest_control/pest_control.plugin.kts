@@ -39,13 +39,12 @@ on_command("pcstart", Privilege.ADMIN_POWER) {
 
 // ---- the game ---------------------------------------------------------------------------------------------------------
 
-// Darkan PestControlGameController: no teleport out of a game ("You can't leave the pest control area like this." - only the
-// squire's boat, an object/npc route, leaves) and no familiar during a game ("You feel it's best to keep your Familiar away
-// during this game."). Through the shared activity gate, so every teleport / summon route asks it.
+// Darkan PestControlGameController: no familiar during a game ("You feel it's best to keep your Familiar away during this game.").
+// Through the shared activity gate, so every summon route asks it. Owner 2026-10-10: teleporting out of a minigame such as Pest
+// Control is allowed and instant (Darkan refused it), see DeadmanTimerGate.inMinigame; the game's tick drops whoever left.
 gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { p, action ->
     if (PestControlHandler.gameOf(p) == null) return@register null
     when (action) {
-        gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT -> "You can't leave the pest control area like this."
         gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.SUMMON -> "You feel it's best to keep your Familiar away during this game."
         else -> null
     }
@@ -133,7 +132,6 @@ on_button(PC_REWARD_INTERFACE, 94) {
  * top or robe used on Commodore Tyr) at the OSRS price instead of Darkan's 100. Darkan's 11681 is the quest multinpc (invisible here, no
  * Void Stares Back); the outpost spawns his visible form 11682 (owner 2026-10-04 "make Tyr visible").
  */
-val ELITE_VOID_UPGRADE_POINTS = 200
 val COMMODORE_TYR = Npcs.COMMODORE_TYR_11682
 
 mapOf(
@@ -142,6 +140,7 @@ mapOf(
     Items.VOID_KNIGHT_ROBE to Items.ELITE_VOID_KNIGHT_ROBE,
 ).forEach { (piece, elite) ->
     on_item_on_npc(item = piece, npc = COMMODORE_TYR) {
+        // Owner 2026-10-10: no requirement besides the points (no Hard Western Provinces Diary, no won-games count).
         if ((player.attr[PEST_POINTS] ?: 0) < ELITE_VOID_UPGRADE_POINTS) {
             player.message("You need $ELITE_VOID_UPGRADE_POINTS Void Knight Commendation Points to upgrade void knight armour.")
             return@on_item_on_npc
