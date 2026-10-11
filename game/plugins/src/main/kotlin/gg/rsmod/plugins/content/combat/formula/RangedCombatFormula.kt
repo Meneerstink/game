@@ -339,7 +339,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getPrayerRangedMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED, damage = true)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.RANGED, damage = true)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
             Prayers.isActive(player, Prayer.HAWK_EYE) -> 1.10
             Prayers.isActive(player, Prayer.EAGLE_EYE) -> 1.15
@@ -350,7 +350,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.RANGED)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.RANGED)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
             Prayers.isActive(player, Prayer.HAWK_EYE) -> 1.10
             Prayers.isActive(player, Prayer.EAGLE_EYE) -> 1.15
@@ -361,7 +361,7 @@ object RangedCombatFormula : CombatFormula {
     private fun getPrayerDefenceMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.DEFENCE)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15

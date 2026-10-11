@@ -415,6 +415,13 @@ object CursesSuite : Conformance.Suite {
                 val v = runCatching { target.getVarbit(base + idx) }.getOrNull()
                 run.expectTrue(e, "victim's stat varbit ${base + idx} (${s.asText()}) shows the drain after ${procs.size} procs", v != null && v < neutral, "varbit=${v}", "< $neutral (30 = no change; Darkan Sap / Novite: the target's stat mod)")
                 if (cap != null && v != null) run.expectTrue(e, "victim's stat varbit ${base + idx} (${s.asText()}) within the cap", v >= neutral - cap, "varbit=$v", ">= ${neutral - cap}")
+                // Owner curse table 2026-10-11: a Sap now boosts its caster (Sap Warrior Attack + Strength, Sap Ranger Ranged, Sap
+                // Mage Magic, never Defence) and the caster's own tab shows exactly that boost in levels.
+                val skill = listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)[idx]
+                val selfPct = if (AncientCurses.sapMultiplier(bot, skill) > 1.0) AncientCurses.SAP_SELF_BOOST_PCT else 0
+                val expected = neutral + Math.round(selfPct * bot.skills.getMaxLevel(skill) / 100.0).toInt()
+                val own = runCatching { bot.getVarbit(base + idx) }.getOrNull()
+                run.expectTrue(e, "caster's own stat varbit ${base + idx} (${s.asText()}) shows the Sap's own boost", own == expected, "varbit=$own", "$expected (owner 2026-10-11: +$selfPct %)")
             } else {
                 val v = runCatching { bot.getVarbit(base + idx) }.getOrNull()
                 run.expectTrue(e, "stat varbit ${base + idx} (${s.asText()}) shows a bonus after ${procs.size} procs", v != null && v > neutral, "varbit=${v}", "> $neutral (30 = no bonus, novite adjustStat)")

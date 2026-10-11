@@ -284,7 +284,8 @@ class AncientCursesTests {
         assertEquals(49, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(61, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
+        // Owner curse table 2026-10-11: Leech Attack +15 %.
+        assertEquals(1.15, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
     }
 
     @Test

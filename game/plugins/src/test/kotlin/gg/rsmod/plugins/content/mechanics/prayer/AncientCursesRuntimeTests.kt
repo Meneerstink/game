@@ -85,13 +85,20 @@ class AncientCursesRuntimeTests {
         val player = fixture.player
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC).forEach { player.skills.setBaseLevel(it, 99) }
         fixture.ancient()
+        // Owner curse table 2026-10-11: Leech Attack +15 % / Strength +18 % / Defence +10 % -> above the client's own 5 %: 10 / 13 / 5
+        // levels of 99; Sap Warrior +10 % Attack and Strength (the client adds nothing for a Sap), Sap Ranger Ranged, Sap Mage Magic.
         val expected =
-            mapOf(
-                AncientCurse.LEECH_ATTACK to (6857 to 30),
-                AncientCurse.LEECH_STRENGTH to (6858 to 30),
-                AncientCurse.LEECH_DEFENCE to (6859 to 30),
+            listOf(
+                AncientCurse.LEECH_ATTACK to (6857 to 30 + 10),
+                AncientCurse.LEECH_STRENGTH to (6858 to 30 + 13),
+                AncientCurse.LEECH_DEFENCE to (6859 to 30 + 5),
                 AncientCurse.LEECH_RANGED to (6860 to 30 + 15),
                 AncientCurse.LEECH_MAGIC to (6861 to 30 + 20),
+                AncientCurse.SAP_WARRIOR to (6857 to 30 + 10),
+                AncientCurse.SAP_WARRIOR to (6858 to 30 + 10),
+                AncientCurse.SAP_WARRIOR to (6859 to 30),
+                AncientCurse.SAP_RANGER to (6860 to 30 + 10),
+                AncientCurse.SAP_MAGE to (6861 to 30 + 10),
             )
         for ((curse, varbitValue) in expected) {
             val (varbit, value) = varbitValue

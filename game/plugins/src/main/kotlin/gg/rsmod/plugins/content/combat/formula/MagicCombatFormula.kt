@@ -354,7 +354,7 @@ object MagicCombatFormula : CombatFormula {
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.MAGIC)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.MAGIC)
             Prayers.isActive(player, Prayer.MYSTIC_WILL) -> 1.05
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 1.10
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 1.15
@@ -365,7 +365,7 @@ object MagicCombatFormula : CombatFormula {
     private fun getPrayerDefenceMultiplier(player: Player): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.DEFENCE)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05
             Prayers.isActive(player, Prayer.ROCK_SKIN) -> 1.10
             Prayers.isActive(player, Prayer.STEEL_SKIN) -> 1.15

@@ -26,8 +26,13 @@ object CurseTooltipCacheTool {
     // (Protect Item, the three Saps, Berserker, Soul Split, Turmoil) already matched and stay.
     private const val LEECH_DRAIN = "while draining enemy %s by 10%%, increasing to 25%% over time."
 
-    private fun leech(skill: String) =
-        "Boosts $skill by 5% and raises it up to 5 levels over time, " + LEECH_DRAIN.format(skill)
+    private fun leech(skill: String, pct: Int) =
+        "Boosts $skill by $pct% and raises it up to 5 levels over time, " + LEECH_DRAIN.format(skill)
+
+    /** The 667 Sap sentence (only the drain). */
+    private fun sapOriginal(drained: String) = "Drains 10% of enemy $drained, increasing to 20% over time."
+
+    private const val SAP_DRAIN = "while draining enemy %s by 10%%, increasing to 20%% over time."
 
     private fun deflect(attacks: String) =
         "Protects against $attacks (40% against players) and has a 15% chance to deflect 10% of the damage back to the attacker."
@@ -37,6 +42,15 @@ object CurseTooltipCacheTool {
 
     val TOOLTIPS =
         listOf(
+            // Owner curse table 2026-10-11 (FINAL, dossier 4a-2): a Sap boosts its caster while on (AncientCurses.sapMultiplier,
+            // SAP_SELF_BOOST_PCT 10) - Sap Warrior Attack + Strength, Sap Ranger ranged accuracy + damage, Sap Mage magic accuracy.
+            Tooltip(
+                889,
+                listOf(sapOriginal("Attack, Strength and Defence")),
+                "Boosts Attack and Strength by 10%, " + SAP_DRAIN.format("Attack, Strength and Defence"),
+            ),
+            Tooltip(890, listOf(sapOriginal("Ranged and Defence")), "Boosts Ranged accuracy and damage by 10%, " + SAP_DRAIN.format("Ranged and Defence")),
+            Tooltip(891, listOf(sapOriginal("Magic and Defence")), "Boosts Magic accuracy by 10%, " + SAP_DRAIN.format("Magic and Defence")),
             // AncientCurses SAP_SPIRIT: AttackTab energy - 10.
             Tooltip(892, listOf("Drains enemy special attack energy."), "Drains 10% of enemy special attack energy."),
             // FamiliarCombat.blockedBySummoningProtection: a familiar's attacks and special moves do not land; nothing is reflected.
@@ -52,8 +66,9 @@ object CurseTooltipCacheTool {
             Tooltip(895, listOf("Protects against magical attacks and can deflect some of the damage back to the attacker."), deflect("magical attacks")),
             Tooltip(896, listOf("Protects against ranged attacks and can deflect some of the damage back to the attacker."), deflect("ranged attacks")),
             Tooltip(897, listOf("Protects against melee attacks and can deflect some of the damage back to the attacker."), deflect("melee attacks")),
-            // leechMultiplier 1.05 while active + escalateBoost +1 level per proc, at most LEECH_LEVEL_CAP 5.
-            Tooltip(898, listOf(original("Attack")), leech("Attack")),
+            // leechMultiplier while active (owner 2026-10-11: LEECH_ATTACK_BOOST_PCT 15, was 5) + escalateBoost +1 level per proc,
+            // at most LEECH_LEVEL_CAP 5. The A8 wording with 5 % is the one now in the cache.
+            Tooltip(898, listOf(original("Attack"), leech("Attack", 5)), leech("Attack", 15)),
             // Earlier wordings first (667 original, 2026-09-29 Rigour, 2026-09-29 second round); now x1.20 accuracy, x1.13 damage.
             Tooltip(
                 899,
@@ -76,12 +91,17 @@ object CurseTooltipCacheTool {
                 "Boosts Magic accuracy by 25% and Magic damage by 4%, and raises Magic up to 5 levels over time, " +
                     LEECH_DRAIN.format("Magic"),
             ),
+            // Owner 2026-10-11: Leech Defence +10 % (LEECH_DEFENCE_BOOST_PCT), Leech Strength +18 % (LEECH_STRENGTH_BOOST_PCT).
             Tooltip(
                 901,
-                listOf(original("Defence"), "Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time."),
-                leech("Defence"),
+                listOf(
+                    original("Defence"),
+                    "Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time.",
+                    leech("Defence", 5),
+                ),
+                leech("Defence", 10),
             ),
-            Tooltip(902, listOf(original("Strength")), leech("Strength")),
+            Tooltip(902, listOf(original("Strength"), leech("Strength", 5)), leech("Strength", 18)),
             // LEECH_ENERGY: +10 / -10 run energy; LEECH_SPECIAL_ATTACK: LEECH_SPECIAL_PCT 5.
             Tooltip(903, listOf("Drains enemy run energy, while increasing your own"), "Drains 10% of enemy run energy and gives it to you."),
             Tooltip(

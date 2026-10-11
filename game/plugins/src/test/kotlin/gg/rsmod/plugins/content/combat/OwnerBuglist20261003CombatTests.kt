@@ -324,7 +324,15 @@ class OwnerBuglist20261003CombatTests {
         assertTrue(texts.getValue(900).contains(magic), texts.getValue(900))
         val cap = "up to ${AncientCurses.LEECH_LEVEL_CAP} levels"
         listOf(898, 899, 900, 901, 902).forEach { assertTrue(texts.getValue(it).contains(cap), texts.getValue(it)) }
-        assertTrue(texts.getValue(901).startsWith("Boosts Defence by ${AncientCurses.LEECH_BOOST_BASE_PCT}%"), texts.getValue(901))
+        // Owner curse table 2026-10-11: the tooltips carry the new boosts exactly.
+        assertTrue(texts.getValue(898).startsWith("Boosts Attack by ${AncientCurses.LEECH_ATTACK_BOOST_PCT}%"), texts.getValue(898))
+        assertTrue(texts.getValue(902).startsWith("Boosts Strength by ${AncientCurses.LEECH_STRENGTH_BOOST_PCT}%"), texts.getValue(902))
+        assertTrue(texts.getValue(901).startsWith("Boosts Defence by ${AncientCurses.LEECH_DEFENCE_BOOST_PCT}%"), texts.getValue(901))
+        val sap = AncientCurses.SAP_SELF_BOOST_PCT
+        assertTrue(texts.getValue(889).startsWith("Boosts Attack and Strength by $sap%"), texts.getValue(889))
+        assertTrue(texts.getValue(890).startsWith("Boosts Ranged accuracy and damage by $sap%"), texts.getValue(890))
+        assertTrue(texts.getValue(891).startsWith("Boosts Magic accuracy by $sap%,"), texts.getValue(891))
+        listOf(889, 890, 891).forEach { assertTrue(texts.getValue(it).endsWith("by 10%, increasing to 20% over time."), texts.getValue(it)) }
         assertTrue(texts.getValue(904).contains("${AncientCurses.LEECH_SPECIAL_PCT}%"), texts.getValue(904))
         assertTrue(texts.getValue(897).contains("${AncientCurses.DEFLECT_REFLECT_CHANCE_PCT.toInt()}% chance"), texts.getValue(897))
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "data", "cache").toFile().toString()).isEmpty(), "tooltips applied to the game cache")

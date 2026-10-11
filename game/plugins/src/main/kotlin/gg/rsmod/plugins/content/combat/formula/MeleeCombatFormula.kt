@@ -380,7 +380,7 @@ object MeleeCombatFormula : CombatFormula {
     private fun getPrayerStrengthMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.STRENGTH)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.STRENGTH)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent)
             Prayers.isActive(player, Prayer.BURST_OF_STRENGTH) -> 1.05
@@ -394,7 +394,7 @@ object MeleeCombatFormula : CombatFormula {
     private fun getPrayerAttackMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.ATTACK)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.ATTACK)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent)
             Prayers.isActive(player, Prayer.CLARITY_OF_THOUGHT) -> 1.05
@@ -408,7 +408,7 @@ object MeleeCombatFormula : CombatFormula {
     private fun getPrayerDefenceMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
-                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.leechMultiplier(player, Skills.DEFENCE)
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.DEFENCE)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent)
             Prayers.isActive(player, Prayer.THICK_SKIN) -> 1.05

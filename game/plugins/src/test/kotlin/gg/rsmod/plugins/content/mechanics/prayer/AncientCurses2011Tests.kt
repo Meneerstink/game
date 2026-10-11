@@ -239,7 +239,8 @@ class AncientCurses2011Tests {
         assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(100, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(1.05, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
+        // Owner curse table 2026-10-11: Leech Attack +15 % (was 5 %).
+        assertEquals(1.15, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         // Owner 2026-09-18: one proc per 45-second cooldown; the cap itself is unchanged.
         repeat(30) { procAfterCooldown(attacker, target) }
         assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 14 (extra 15 % of 99)
@@ -350,15 +351,20 @@ class AncientCurses2011Tests {
         statLeeches.forEach { (curse, skill, style) ->
             // Owner 2026-10-09: every stat Leech gives the visible +1 (Ranged too); Ranged keeps its Rigour-style modifier and
             // Magic has an Augury-style accuracy one, the others the shared 5 %.
+            // Owner curse table 2026-10-11: Leech Attack +15 %, Leech Strength +18 %, Leech Defence +10 % (all were 5 %).
             val accuracy = when (skill) {
                 Skills.RANGED -> AncientCurses.LEECH_RANGED_ACCURACY
                 Skills.MAGIC -> AncientCurses.LEECH_MAGIC_ACCURACY
-                else -> 1.05
+                Skills.ATTACK -> 1.15
+                Skills.STRENGTH -> 1.18
+                else -> 1.10
             }
             val damage = when (skill) {
                 Skills.RANGED -> AncientCurses.LEECH_RANGED_DAMAGE
                 Skills.MAGIC -> 1.0
-                else -> 1.05
+                Skills.ATTACK -> 1.15
+                Skills.STRENGTH -> 1.18
+                else -> 1.10
             }
             val attacker = newPlayer(mapOf(skill to 99))
             AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
@@ -433,11 +439,11 @@ class AncientCurses2011Tests {
     /**
      * Owner 2026-10-11 ("de show stat adjustment van alle curses moet volledig kloppen"): cs2 1710/1711 show only the player's
      * OWN stats. An enemy Sap / Leech sets the sapped (6847+) / leeched (6852+) flag, from which the client shows its initial
-     * -10 % and floors the total at -20 % / -25 %; the server adds only the levels the escalation really took. The caster's
-     * own book shows nothing for a Sap.
+     * -10 % and floors the total at -20 % / -25 %; the server adds only the levels the escalation really took. Owner curse table
+     * 2026-10-11: a Sap now boosts its caster, and the caster's own book shows that boost (Sap Warrior +10 % Attack / Strength).
      */
     @Test
-    fun `an enemy Sap or Leech shows on the victim's curse tab, never on the Sap caster's`() {
+    fun `an enemy Sap or Leech shows on the victim's curse tab, a Sap shows its caster's own boost`() {
         val caster = tabPlayer()
         val victim = tabPlayer()
         AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
@@ -446,10 +452,12 @@ class AncientCurses2011Tests {
         assertEquals(listOf(1, 1, 1, 0, 0), flags(victim, 6847))
         assertEquals(listOf(0, 0, 0, 0, 0), flags(victim, 6852))
         assertEquals(listOf(-1, -1, -1, 0, 0), tab(victim))
-        assertEquals(listOf(0, 0, 0, 0, 0), tab(caster))
+        // The caster: +10 % Attack and Strength (10 levels of 99), no Defence; never "sapped" itself.
+        assertEquals(listOf(10, 10, 0, 0, 0), tab(caster))
         assertEquals(listOf(0, 0, 0, 0, 0), flags(caster, 6847))
         // The caster switches the Sap off: the initial 10 % is released at once, the drained levels regenerate as usual.
         AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
+        assertEquals(listOf(0, 0, 0, 0, 0), tab(caster))
         assertEquals(listOf(0, 0, 0, 0, 0), flags(victim, 6847))
         assertEquals(listOf(-1, -1, -1, 0, 0), tab(victim))
         victim.skills.setCurrentLevel(Skills.ATTACK, 99)
@@ -466,5 +474,73 @@ class AncientCurses2011Tests {
         assertEquals(listOf(0, 0, 0, 0, 0), flags(other, 6847))
         assertEquals(-1, tab(other)[3])
         assertEquals(16, tab(leecher)[3])
+    }
+
+    /**
+     * Owner curse table 2026-10-11 (FINAL, dossier 4a-2): exactly the six changed curses, and the unchanged ones exactly as before.
+     * The combat formulas take [AncientCurses.curseBoostMultiplier] for every stat; the curse tab (own book) shows the boost in
+     * levels above the +5 % cs2 1713 adds for an active Leech.
+     */
+    @Test
+    fun `the owner's 2026-10-11 curse table - six changed curses, the others unchanged`() {
+        data class Row(val curse: AncientCurse, val skill: Int, val accuracy: Double, val damage: Double, val tab: Int)
+        val rows = listOf(
+            // Changed.
+            Row(AncientCurse.SAP_WARRIOR, Skills.ATTACK, 1.10, 1.10, 10),
+            Row(AncientCurse.SAP_WARRIOR, Skills.STRENGTH, 1.10, 1.10, 10),
+            Row(AncientCurse.SAP_WARRIOR, Skills.DEFENCE, 1.0, 1.0, 0),
+            Row(AncientCurse.SAP_RANGER, Skills.RANGED, 1.10, 1.10, 10),
+            Row(AncientCurse.SAP_RANGER, Skills.DEFENCE, 1.0, 1.0, 0),
+            Row(AncientCurse.SAP_MAGE, Skills.MAGIC, 1.10, 1.0, 10),
+            Row(AncientCurse.SAP_MAGE, Skills.DEFENCE, 1.0, 1.0, 0),
+            Row(AncientCurse.LEECH_ATTACK, Skills.ATTACK, 1.15, 1.15, 10),
+            Row(AncientCurse.LEECH_STRENGTH, Skills.STRENGTH, 1.18, 1.18, 13),
+            Row(AncientCurse.LEECH_DEFENCE, Skills.DEFENCE, 1.10, 1.10, 5),
+            // Unchanged (regression targets).
+            Row(AncientCurse.LEECH_RANGED, Skills.RANGED, 1.20, 1.13, 15),
+            Row(AncientCurse.LEECH_MAGIC, Skills.MAGIC, 1.25, 1.0, 20),
+            Row(AncientCurse.SAP_SPIRIT, Skills.ATTACK, 1.0, 1.0, 0),
+        )
+        for (row in rows) {
+            val player = tabPlayer()
+            val label = "${row.curse.name} skill ${row.skill}"
+            assertEquals(label, 1.0, AncientCurses.curseBoostMultiplier(player, row.skill), 1e-9)
+            AncientCurses.toggleCurse(player, row.curse)
+            assertTrue(label, AncientCurses.isCurseActive(player, row.curse))
+            assertEquals(label, row.accuracy, AncientCurses.curseBoostMultiplier(player, row.skill), 1e-9)
+            assertEquals(label, row.damage, AncientCurses.curseBoostMultiplier(player, row.skill, damage = true), 1e-9)
+            assertEquals(label, row.tab, tab(player)[listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC).indexOf(row.skill)])
+            AncientCurses.toggleCurse(player, row.curse)
+            assertEquals("$label off", 1.0, AncientCurses.curseBoostMultiplier(player, row.skill), 1e-9)
+            assertEquals("$label off", 0, tab(player)[listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC).indexOf(row.skill)])
+        }
+        assertEquals(15, AncientCurses.LEECH_ATTACK_BOOST_PCT)
+        assertEquals(18, AncientCurses.LEECH_STRENGTH_BOOST_PCT)
+        assertEquals(10, AncientCurses.LEECH_DEFENCE_BOOST_PCT)
+        assertEquals(10, AncientCurses.SAP_SELF_BOOST_PCT)
+    }
+
+    @Test
+    fun `a Sap's drain on the target is unchanged and no curse boost stacks with Turmoil`() {
+        // Drain: the first proc takes one real level and the 10 % base modifier, the escalation stops at 20 %.
+        val caster = tabPlayer()
+        val target = tabPlayer()
+        AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
+        AncientCurses.onDamageDealt(caster, target, damage = 10)
+        assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
+        repeat(30) { procAfterCooldown(caster, target) }
+        assertEquals(90, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 9 (the extra 10 % of 99 rounded down, like the Leech's 14)
+        // The Sap gives the caster no real levels (only the modifier while on).
+        assertEquals(99, caster.skills.getCurrentLevel(Skills.ATTACK))
+
+        // Turmoil switches the Sap / Leech off and the other way round: never both boosts at once.
+        AncientCurses.toggleTurmoil(caster)
+        assertTrue(AncientCurses.isTurmoilActive(caster))
+        assertFalse(AncientCurses.isCurseActive(caster, AncientCurse.SAP_WARRIOR))
+        assertEquals(1.0, AncientCurses.curseBoostMultiplier(caster, Skills.ATTACK), 1e-9)
+        AncientCurses.toggleCurse(caster, AncientCurse.LEECH_STRENGTH)
+        assertFalse(AncientCurses.isTurmoilActive(caster))
+        assertEquals(1.18, AncientCurses.curseBoostMultiplier(caster, Skills.STRENGTH), 1e-9)
     }
 }

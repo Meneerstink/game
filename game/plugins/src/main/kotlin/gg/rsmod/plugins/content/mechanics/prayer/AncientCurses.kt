@@ -63,8 +63,28 @@ object AncientCurses {
     const val SAP_CAP_PCT = 20
     const val LEECH_DRAIN_BASE_PCT = 10
     const val LEECH_DRAIN_CAP_PCT = 25
+    /**
+     * The +5 % cs2 1713 itself adds to the curse tab for an active Leech (varbits 6830..6834); the server writes only what lies
+     * above it ([syncStatVarbits]). Since the owner's 2026-10-11 curse table this is no longer any Leech's own boost.
+     */
     const val LEECH_BOOST_BASE_PCT = 5
     const val LEECH_BOOST_CAP_PCT = 10
+
+    /**
+     * Owner curse table 2026-10-11 (FINAL, dossier 4a-2, "Chivalry" values): the caster's own boost while the Leech is on -
+     * Leech Attack +15 % Attack, Leech Strength +18 % Strength, Leech Defence +10 % Defence (all three were +5 %). Drain on the
+     * target, +1 level per proc up to [LEECH_LEVEL_CAP] and the 20 % proc chance are unchanged.
+     */
+    const val LEECH_ATTACK_BOOST_PCT = 15
+    const val LEECH_STRENGTH_BOOST_PCT = 18
+    const val LEECH_DEFENCE_BOOST_PCT = 10
+
+    /**
+     * Owner curse table 2026-10-11 (FINAL): a Sap now boosts its caster while it is on (before: none) - Sap Warrior +10 % Attack
+     * and +10 % Strength (no Defence), Sap Ranger +10 % ranged accuracy and +10 % ranged damage (Hawk Eye), Sap Mage +10 %
+     * magic accuracy and no damage (Mystic Lore without its Defence). Sap Spirit and every Sap's drain on the target unchanged.
+     */
+    const val SAP_SELF_BOOST_PCT = 10
     const val TURMOIL_TARGET_LEVEL_CAP = 99
 
     /** Source-proven rev-667 curse-book activation visuals from Novite's Prayer.java. */
@@ -250,8 +270,11 @@ object AncientCurses {
             player.setVarbit(SAPPED_FLAG_VARBIT + index, if (sapped && !leeched) 1 else 0)
             player.setVarbit(LEECHED_FLAG_VARBIT + index, if (leeched) 1 else 0)
             val base = player.skills.getMaxLevel(skill).coerceAtLeast(1)
+            // A Leech: its boost above the +5 % cs2 1713 adds by itself. A Sap (owner 2026-10-11): its whole +10 % (the client adds
+            // nothing for a Sap).
             val modifierPct =
-                if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) leechBoostPct(skill) - LEECH_BOOST_BASE_PCT else 0
+                if (leechSkills[skill]?.let { isCurseActive(player, it) } == true) leechBoostPct(skill) - LEECH_BOOST_BASE_PCT
+                else sapBoostPct(player, skill)
             // The levels this Leech run lifted the stat above its start ([escalateBoost]), not the rounded percentage it stores.
             val start = player.attr[LEECH_START_LEVEL_ATTR]?.get(skill)
             val leechedLevels =
@@ -992,9 +1015,35 @@ object AncientCurses {
         return when (skill) {
             Skills.RANGED -> if (damage) LEECH_RANGED_DAMAGE else LEECH_RANGED_ACCURACY
             Skills.MAGIC -> if (damage) 1.0 else LEECH_MAGIC_ACCURACY
-            else -> 1.0 + LEECH_BOOST_BASE_PCT / 100.0
+            else -> 1.0 + leechBoostPct(skill) / 100.0
         }
     }
+
+    /**
+     * The Sap self-boost ([SAP_SELF_BOOST_PCT], owner 2026-10-11): while the Sap is on - Sap Warrior Attack (accuracy) and
+     * Strength (max hit), Sap Ranger ranged accuracy and damage, Sap Mage magic accuracy only ([damage]: the damage roll).
+     */
+    fun sapMultiplier(player: Player, skill: Int, damage: Boolean = false): Double {
+        val boost = 1.0 + SAP_SELF_BOOST_PCT / 100.0
+        return when {
+            (skill == Skills.ATTACK || skill == Skills.STRENGTH) && isCurseActive(player, AncientCurse.SAP_WARRIOR) -> boost
+            skill == Skills.RANGED && isCurseActive(player, AncientCurse.SAP_RANGER) -> boost
+            skill == Skills.MAGIC && !damage && isCurseActive(player, AncientCurse.SAP_MAGE) -> boost
+            else -> 1.0
+        }
+    }
+
+    /**
+     * What the curse book adds to [skill] in the combat formulas: the Leech or the Sap of that stat (a Sap and a Leech of the
+     * same type never run together, [AncientCurse.conflictsWith]; both are off while Turmoil runs, and the formulas take
+     * Turmoil instead - the owner's "no stacking with Turmoil").
+     */
+    fun curseBoostMultiplier(player: Player, skill: Int, damage: Boolean = false): Double =
+        maxOf(leechMultiplier(player, skill, damage), sapMultiplier(player, skill, damage))
+
+    /** Prayer-tab percentage of the caster's own active Sap boost for [skill] (0 when none). */
+    private fun sapBoostPct(player: Player, skill: Int): Int =
+        if (sapMultiplier(player, skill) > 1.0) SAP_SELF_BOOST_PCT else 0
 
     /**
      * The highest own stat varbit (6857+) value above 30 a Leech can reach for a stat of [baseLevel]: its modifier above the
@@ -1008,7 +1057,10 @@ object AncientCurses {
         when (skill) {
             Skills.RANGED -> Math.round((LEECH_RANGED_ACCURACY - 1.0) * 100).toInt()
             Skills.MAGIC -> Math.round((LEECH_MAGIC_ACCURACY - 1.0) * 100).toInt()
-            else -> LEECH_BOOST_BASE_PCT
+            Skills.ATTACK -> LEECH_ATTACK_BOOST_PCT
+            Skills.STRENGTH -> LEECH_STRENGTH_BOOST_PCT
+            Skills.DEFENCE -> LEECH_DEFENCE_BOOST_PCT
+            else -> 0
         }
 
     /**
