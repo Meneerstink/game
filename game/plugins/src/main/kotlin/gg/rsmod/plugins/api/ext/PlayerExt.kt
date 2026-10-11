@@ -609,6 +609,10 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
         interfaces.hashesOn(previousParent)
             .filter { hash -> hash in modalSlots || hash == modalHash }
             .forEach { hash -> write(IfCloseSubMessage(hash)) }
+        // A full-screen top level (the fixed-mode store, world map, canoe map; openFullscreenInterface keeps it at 0:0) is replaced
+        // by the new gameframe in the client, but stayed "open" here: the store then refused to open again (StoreUi.isOpen) until a
+        // relog (night run 2026-10-11, store open in fixed mode -> switch to resizable). Close it here too, with its close hooks.
+        if (interfaces.getInterfaceAt(0, 0) != -1) interfaces.close(0, 0)
         interfaces.displayMode = newMode
 
         openOverlayInterface(newMode)

@@ -179,6 +179,8 @@ object StoreUi : KLogging() {
             // 660x470 window spilled over chat and tabs. There it opens as the full-screen top level over the whole 765x503
             // frame, the world map's route (openFullscreenInterface / closeFullscreenInterface).
             if (player.interfaces.displayMode.isResizable()) {
+                // A fixed-mode full-screen store closed by a window-mode switch leaves no full-screen state behind.
+                player.attr.remove(FULLSCREEN_ATTR)
                 player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN_FULL)
             } else {
                 player.openFullscreenInterface(INTERFACE_ID)
