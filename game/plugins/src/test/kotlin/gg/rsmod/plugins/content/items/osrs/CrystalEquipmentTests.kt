@@ -45,6 +45,18 @@ class CrystalEquipmentTests {
     }
 
     @Test
+    fun `a charged item without a charge count is new and an inactive one with charges still counts them`() {
+        // Owner C3 2026-10-11: a store / spawned Bow of Faerdhinen went inactive on its first shot (no CHARGES attribute = 0).
+        assertEquals(10_000, CrystalEquipment.charges(Item(Items.BOW_OF_FAERDHINEN)), "OSRS: the bow starts with 10,000 charges")
+        assertEquals(2_500, CrystalEquipment.charges(Item(Items.CRYSTAL_BODY)), "crystal armour starts with 2,500")
+        assertEquals(0, CrystalEquipment.charges(Item(Items.BOW_OF_FAERDHINEN_INACTIVE)))
+        // The owner's bank: inactive bows that still hold 19,994 charges.
+        val inactive = Item(Items.BOW_OF_FAERDHINEN_INACTIVE).also { it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 19_994 }
+        assertEquals(19_994, CrystalEquipment.charges(inactive))
+        assertEquals(Items.BOW_OF_FAERDHINEN, CrystalEquipment.withCharges(inactive, CrystalEquipment.charges(inactive) - 1).id)
+    }
+
+    @Test
     fun `formula, ammo, projectile, charge use and PvP death are wired in`() {
         val formula = File("src/main/kotlin/gg/rsmod/plugins/content/combat/formula/RangedCombatFormula.kt").readText()
         assertTrue(formula.indexOf("CrystalEquipment.applyDamage(player, hit)") in 0 until formula.indexOf("TargetModifiers.rangedDamageMultiplier(player, target)"))
