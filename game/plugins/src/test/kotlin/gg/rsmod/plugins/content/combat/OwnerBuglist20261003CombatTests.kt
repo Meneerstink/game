@@ -311,13 +311,22 @@ class OwnerBuglist20261003CombatTests {
     @Test
     fun `the owner's Leech balance and its tooltips are in place`() {
         assertEquals(1.20, AncientCurses.LEECH_RANGED_ACCURACY, 1e-9)
-        assertEquals(1.18, AncientCurses.LEECH_RANGED_DAMAGE, 1e-9)
+        // Owner 2026-10-09: x1.13 (one hit under Rigour even at +5 levels). Owner A8 2026-10-11: every tooltip states the real effect.
+        assertEquals(1.13, AncientCurses.LEECH_RANGED_DAMAGE, 1e-9)
         assertTrue(Skills.MAGIC in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST && Skills.DEFENCE in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
         val texts =
             gg.rsmod.game.tools.importer.CurseTooltipCacheTool.TOOLTIPS.associate { it.struct to it.new }
-        assertTrue(texts.getValue(899).contains("Ranged damage by 18%"), texts.getValue(899))
-        assertTrue(texts.getValue(900).startsWith("Boosts Magic by 5%, increasing to 10% over time"), texts.getValue(900))
-        assertTrue(texts.getValue(901).startsWith("Boosts Defence by 5%, increasing to 10% over time"), texts.getValue(901))
+        val ranged = "accuracy by ${Math.round((AncientCurses.LEECH_RANGED_ACCURACY - 1) * 100)}% and Ranged damage by " +
+            "${Math.round((AncientCurses.LEECH_RANGED_DAMAGE - 1) * 100)}%"
+        assertTrue(texts.getValue(899).contains(ranged), texts.getValue(899))
+        val magic = "accuracy by ${Math.round((AncientCurses.LEECH_MAGIC_ACCURACY - 1) * 100)}% and Magic damage by " +
+            "${Math.round(AncientCurses.LEECH_MAGIC_DAMAGE * 100)}%"
+        assertTrue(texts.getValue(900).contains(magic), texts.getValue(900))
+        val cap = "up to ${AncientCurses.LEECH_LEVEL_CAP} levels"
+        listOf(898, 899, 900, 901, 902).forEach { assertTrue(texts.getValue(it).contains(cap), texts.getValue(it)) }
+        assertTrue(texts.getValue(901).startsWith("Boosts Defence by ${AncientCurses.LEECH_BOOST_BASE_PCT}%"), texts.getValue(901))
+        assertTrue(texts.getValue(904).contains("${AncientCurses.LEECH_SPECIAL_PCT}%"), texts.getValue(904))
+        assertTrue(texts.getValue(897).contains("${AncientCurses.DEFLECT_REFLECT_CHANCE_PCT.toInt()}% chance"), texts.getValue(897))
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "data", "cache").toFile().toString()).isEmpty(), "tooltips applied to the game cache")
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "..", "..", "file-server", "cache").toFile().toString()).isEmpty(), "tooltips applied to the file-server cache")
     }

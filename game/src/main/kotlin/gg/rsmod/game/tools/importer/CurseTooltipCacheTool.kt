@@ -21,32 +21,76 @@ object CurseTooltipCacheTool {
 
     // Owner 2026-09-29, second round: Leech Ranged damage +23 % -> +18 % and Leech Magic damage +4 % -> 0 % ("one hit lower",
     // accuracy unchanged); Leech Defence a flat +15 %.
+    // Owner A8 2026-10-11 (night run): "the curse tooltips are wrong" - every one of the 20 was compared with what
+    // AncientCurses really does; these 13 said something else and now state the real effect in the 2011 wording. The other 7
+    // (Protect Item, the three Saps, Berserker, Soul Split, Turmoil) already matched and stay.
+    private const val LEECH_DRAIN = "while draining enemy %s by 10%%, increasing to 25%% over time."
+
+    private fun leech(skill: String) =
+        "Boosts $skill by 5% and raises it up to 5 levels over time, " + LEECH_DRAIN.format(skill)
+
+    private fun deflect(attacks: String) =
+        "Protects against $attacks (40% against players) and has a 15% chance to deflect 10% of the damage back to the attacker."
+
+    private fun original(skill: String) =
+        "Boosts $skill by 5%, increasing to 10% over time, while draining enemy $skill by 10%, increasing to 25% over time."
+
     val TOOLTIPS =
         listOf(
+            // AncientCurses SAP_SPIRIT: AttackTab energy - 10.
+            Tooltip(892, listOf("Drains enemy special attack energy."), "Drains 10% of enemy special attack energy."),
+            // FamiliarCombat.blockedBySummoningProtection: a familiar's attacks and special moves do not land; nothing is reflected.
+            Tooltip(
+                894,
+                listOf(
+                    "Reduces damage dealt from Summoning scrolls, prevents the use of a familiar's special attack, and can deflect some " +
+                        "of the damage back to the attacker.",
+                ),
+                "Protects against the attacks and special moves of familiars.",
+            ),
+            // deflectDamageTaken: all of an npc's hit, 40 % of a player's; onIncomingHit: 15 % chance to reflect 10 %.
+            Tooltip(895, listOf("Protects against magical attacks and can deflect some of the damage back to the attacker."), deflect("magical attacks")),
+            Tooltip(896, listOf("Protects against ranged attacks and can deflect some of the damage back to the attacker."), deflect("ranged attacks")),
+            Tooltip(897, listOf("Protects against melee attacks and can deflect some of the damage back to the attacker."), deflect("melee attacks")),
+            // leechMultiplier 1.05 while active + escalateBoost +1 level per proc, at most LEECH_LEVEL_CAP 5.
+            Tooltip(898, listOf(original("Attack")), leech("Attack")),
+            // Earlier wordings first (667 original, 2026-09-29 Rigour, 2026-09-29 second round); now x1.20 accuracy, x1.13 damage.
             Tooltip(
                 899,
                 listOf(
-                    "Boosts Ranged by 5%, increasing to 10% over time, while draining enemy Ranged by 10%, increasing to 25% over time.",
+                    original("Ranged"),
                     "Boosts Ranged accuracy by 20% and Ranged damage by 23%, while draining enemy Ranged by 10%, increasing to 25% over time.",
+                    "Boosts Ranged accuracy by 20% and Ranged damage by 18%, while draining enemy Ranged by 10%, increasing to 25% over time.",
                 ),
-                "Boosts Ranged accuracy by 20% and Ranged damage by 18%, while draining enemy Ranged by 10%, increasing to 25% over time.",
+                "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
+                    LEECH_DRAIN.format("Ranged"),
             ),
+            // Owner 2026-10-09 (final): x1.25 magic accuracy, +4 % magic damage, +1 Magic level per proc.
             Tooltip(
                 900,
                 listOf(
-                    "Boosts Magic by 5%, increasing to 10% over time, while draining enemy Magic by 10%, increasing to 25% over time.",
+                    original("Magic"),
                     "Boosts Magic accuracy by 25% and Magic damage by 4%, while draining enemy Magic by 10%, increasing to 25% over time.",
                     "Boosts Magic accuracy by 25%, while draining enemy Magic by 10%, increasing to 25% over time.",
                 ),
-                // Owner 2026-10-06 (bug 031309): Leech Magic is a +1 level per proc boost again, so the 667 original wording is back.
-                "Boosts Magic by 5%, increasing to 10% over time, while draining enemy Magic by 10%, increasing to 25% over time.",
+                "Boosts Magic accuracy by 25% and Magic damage by 4%, and raises Magic up to 5 levels over time, " +
+                    LEECH_DRAIN.format("Magic"),
             ),
             Tooltip(
                 901,
-                listOf("Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time."),
-                // Owner 2026-10-06 (bug 031309): Leech Defence is a +1 level per proc boost again, so the 667 original wording is back.
-                "Boosts Defence by 5%, increasing to 10% over time, while draining enemy Defence by 10%, increasing to 25% over time.",
+                listOf(original("Defence"), "Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time."),
+                leech("Defence"),
             ),
+            Tooltip(902, listOf(original("Strength")), leech("Strength")),
+            // LEECH_ENERGY: +10 / -10 run energy; LEECH_SPECIAL_ATTACK: LEECH_SPECIAL_PCT 5.
+            Tooltip(903, listOf("Drains enemy run energy, while increasing your own"), "Drains 10% of enemy run energy and gives it to you."),
+            Tooltip(
+                904,
+                listOf("Drains enemy special attack energy, while increasing your own"),
+                "Drains 5% of enemy special attack energy and gives it to you.",
+            ),
+            // wrathMaxDamage: up to 30 % of the Prayer level, to every target within two tiles (multi) or the killer (single).
+            Tooltip(905, listOf("Inflicts damage to nearby<br>targets if you die"), "Inflicts up to 30% of your Prayer level as damage<br>to nearby targets if you die"),
         )
 
     @JvmStatic
