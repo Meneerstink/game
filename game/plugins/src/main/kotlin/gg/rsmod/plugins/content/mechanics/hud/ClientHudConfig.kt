@@ -18,7 +18,7 @@ import gg.rsmod.game.model.hud.ClientHud
  *    bones by default - on a Deadman server coin stacks matter).
  */
 object ClientHudConfig {
-    enum class Type { BOOL, INT, ENUM, COLOR }
+    enum class Type { BOOL, INT, ENUM, COLOR, DECIMAL }
 
     class Setting(
         val key: String,
@@ -34,6 +34,8 @@ object ClientHudConfig {
                 Type.INT -> value.toIntOrNull()?.let { it in min..max } == true
                 Type.ENUM -> value in options
                 Type.COLOR -> value.length == 6 && value.toIntOrNull(16) != null
+                // RuneLite's double config items (e.g. CameraConfig.cameraSpeed): any finite number.
+                Type.DECIMAL -> value.toDoubleOrNull()?.isFinite() == true
             }
     }
 
@@ -44,6 +46,8 @@ object ClientHudConfig {
     private fun choice(key: String, default: String, vararg options: String) = Setting(key, Type.ENUM, default, options.toList())
 
     private fun color(key: String, default: String) = Setting(key, Type.COLOR, default)
+
+    private fun decimal(key: String, default: Double) = Setting(key, Type.DECIMAL, default.toString())
 
     private val TIERS = arrayOf("OFF", "LOW", "MEDIUM", "HIGH", "INSANE")
 
@@ -148,6 +152,17 @@ object ClientHudConfig {
             choice("zoom.controlFunction", "NONE", "NONE", "CONTROL_TO_ZOOM", "CONTROL_TO_RESET"),
             int("zoom.ctrlZoomValue", 512, -400, 1400),
             int("zoom.zoomIncrement", 25),
+            // Owner 2026-10-11 ("whole RuneLite plugin"): the rest of RuneLite CameraConfig, same keys and defaults.
+            bool("zoom.relaxCameraPitch", false),
+            decimal("zoom.cameraSpeed", 1.0),
+            bool("zoom.disableCameraShake", false),
+            bool("zoom.rightClickMovesCamera", false),
+            bool("zoom.rightClickObjects", true),
+            bool("zoom.rightClickExamine", false),
+            bool("zoom.rightClickMenuBlocksCamera", true),
+            bool("zoom.middleClickMenu", false),
+            bool("zoom.invertYaw", false),
+            bool("zoom.invertPitch", false),
             // Minimap (RuneLite MinimapConfig): "Zoom" - mouse wheel over the minimap; right-click resets.
             bool("minimap.zoom", true),
             // Loot Tracker (RuneLite LootTrackerConfig).
@@ -229,6 +244,7 @@ object ClientHudConfig {
                 Type.ENUM -> value.uppercase()
                 Type.BOOL -> value.lowercase()
                 Type.INT -> value
+                Type.DECIMAL -> value.toDoubleOrNull()?.toString() ?: value
             }
         if (!setting.valid(normalised)) return false
         val map = stored(player)
