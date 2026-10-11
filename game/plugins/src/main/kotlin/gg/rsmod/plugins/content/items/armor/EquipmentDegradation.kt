@@ -28,11 +28,10 @@ import gg.rsmod.plugins.content.combat.isBeingAttacked
  * Values per family (sources and conflicts):
  * - Barrows/Akrisae: pristine → 100 on the first combat tick, then 22,500 ticks per stage to 0 (Void rows + 2011 wiki
  *   15 hours). SOURCE_CONFLICT: Novite uses 1,000 ticks per stage; Void only charges the 100 stage.
- * - Vesta/Statius/Zuriel/Morrigan: 6,000 combat ticks then dust (Void and the existing table agree).
- * - Corrupt PvP and corrupt dragon: the existing 1,500 / 3,000 combat ticks are kept. SOURCE_CONFLICT: Void depletes
- *   both while worn ("equip") with 1,500; no second source — not flipped.
+ * - Vesta/Statius/Zuriel/Morrigan, corrupt PvP and corrupt dragon: NO LONGER DEGRADE (owner 2026-10-11, OSRS Deadman Mode:
+ *   "released with their degradation mechanic removed", no corrupt versions) - see [DeadmanGear].
  * - Chaotics: 30,000 combat ticks then broken (Void).
- * - Torva/Pernix/Virtus/Zaryte bow: pristine → used (id + 2) on the first combat tick (Novite
+ * - Torva: NO LONGER DEGRADES (owner 2026-10-11, OSRS Torva). Pernix/Virtus/Zaryte bow: pristine → used (id + 2) on the first combat tick (Novite
  *   `getDegradeItemWhenCombating`, Void), used → broken (id + 1) after 60,000 combat ticks (Void; the broken ids exist in
  *   the 667 cache). Novite never breaks the used item; Void's virtus_robe_legs_used points at the robe top's broken id
  *   (data slip) — the cache legs id is used. Message "Your <item> degraded." (Novite).
@@ -64,14 +63,12 @@ object DegradeTable {
     val rows: List<DegradeRow> =
         buildList {
             // Barrows, Moon armour and the Amulet of the damned degrade by OSRS points instead (CombatPoints).
-            CorruptArmor.values().forEach { armour ->
-                add(DegradeRow(armour.newId, armour.degradedId, 1) { null })
-                add(DegradeRow(armour.degradedId, DegradeRow.DESTROY, armour.maxCharges) { name -> "<col=ff0000>Your $name has degraded into dust." })
-            }
+            // Owner 2026-10-11 (OSRS Deadman Mode, DeadmanGear): Vesta's / Statius's / Zuriel's / Morrigan's and every corrupt
+            // piece never degrade (no CorruptArmor rows any more), and neither does Torva (no Torva rows below).
             ChaoticWeapon.values().forEach { weapon ->
                 add(DegradeRow(weapon.chargedId, weapon.brokenId, ChaoticWeaponCharges.MAX_CHARGES) { name -> "<col=ff0000>Your $name has degraded and broken." })
             }
-            NexArmour.values().forEach { armour ->
+            NexArmour.values().filter { it !in NexArmour.TORVA }.forEach { armour ->
                 add(DegradeRow(armour.pristineId, armour.usedId, 1) { name -> "Your $name degraded." })
                 add(DegradeRow(armour.usedId, armour.brokenId, NEX_USED_CHARGES) { name -> "Your $name degraded." })
             }
@@ -111,6 +108,12 @@ enum class NexArmour(
     VIRTUS_ROBE_TOP(Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_TOP_BROKEN),
     VIRTUS_ROBE_LEGS(Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN),
     ZARYTE_BOW(Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN),
+    ;
+
+    companion object {
+        /** OSRS Torva never degrades (owner 2026-10-11); the Zaryte bow keeps degrading (2011). */
+        val TORVA: Set<NexArmour> = setOf(TORVA_FULL_HELM, TORVA_PLATEBODY, TORVA_PLATELEGS)
+    }
 }
 
 /** Moon armour: new, degraded and broken ids (OSRS-IMPORT moons). */

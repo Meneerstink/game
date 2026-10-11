@@ -9,6 +9,8 @@ val table = DropTableFactory
 val ork =
     table.build {
         main {
+            // Owner 2026-10-11 (OSRS Deadman Mode: no corrupt versions): the corrupt pieces are gone from this table; the
+            // declared total() is the roll denominator, so every other item keeps exactly its chance.
             total(90_915)
 
             // Least rare, but still rare 1/2k
@@ -26,17 +28,6 @@ val ork =
             obj(Items.GUTHIXIAN_BRAZIER, 1, 30)
             obj(Items.RUBY_CHALICE, 1, 30)
 
-            obj(Items.CORRUPT_DRAGON_BATTLEAXE, 1, 30)
-            obj(Items.CORRUPT_DRAGON_DAGGER, 1, 30)
-            obj(Items.CORRUPT_DRAGON_LONGSWORD, 1, 30)
-            obj(Items.CORRUPT_DRAGON_MACE, 1, 30)
-            obj(Items.CORRUPT_DRAGON_SCIMITAR, 1, 30)
-            obj(Items.CORRUPT_DRAGON_SPEAR, 1, 30)
-            obj(Items.CORRUPT_DRAGON_CHAINBODY, 1, 30)
-            obj(Items.CORRUPT_DRAGON_MED_HELM, 1, 30)
-            obj(Items.CORRUPT_DRAGON_PLATELEGS, 1, 30)
-            obj(Items.CORRUPT_DRAGON_PLATESKIRT, 1, 30)
-            obj(Items.CORRUPT_DRAGON_SQ_SHIELD, 1, 30)
 
             // Rare AF ~1/6k
             obj(Items.BANDOS_STATUETTE, 1, 15)
@@ -65,23 +56,6 @@ val ork =
             obj(Items.ZURIELS_ROBE_TOP, 1, 9)
             obj(Items.ZURIELS_ROBE_BOTTOM, 1, 9)
 
-            obj(Items.CORRUPT_MORRIGANS_JAVELIN, quantityRange = 15..50, 9)
-            obj(Items.C_MORRIGANS_THROWING_AXE, quantityRange = 15..50, 9)
-            obj(Items.CORRUPT_STATIUSS_WARHAMMER, 1, 9)
-            obj(Items.CORRUPT_VESTAS_LONGSWORD, 1, 9)
-            obj(Items.CORRUPT_VESTAS_SPEAR, 1, 9)
-            obj(Items.CORRUPT_ZURIELS_STAFF, 1, 9)
-            obj(Items.CORRUPT_MORRIGANS_COIF, 1, 9)
-            obj(Items.CORRUPT_MORRIGANS_LEATHER_BODY, 1, 9)
-            obj(Items.CORRUPT_MORRIGANS_LEATHER_CHAPS, 1, 9)
-            obj(Items.CORRUPT_STATIUSS_FULL_HELM, 1, 9)
-            obj(Items.CORRUPT_STATIUSS_PLATEBODY, 1, 9)
-            obj(Items.CORRUPT_STATIUSS_PLATELEGS, 1, 9)
-            obj(Items.CORRUPT_VESTAS_CHAINBODY, 1, 9)
-            obj(Items.CORRUPT_VESTAS_PLATESKIRT, 1, 9)
-            obj(Items.CORRUPT_ZURIELS_HOOD, 1, 9)
-            obj(Items.CORRUPT_ZURIELS_ROBE_TOP, 1, 9)
-            obj(Items.CORRUPT_ZURIELS_ROBE_BOTTOM, 1, 9)
 
             // Rarest 1 or 2 in 90k
             obj(Items.BRAWLING_GLOVES_AGILITY, slots = 1)

@@ -31,6 +31,8 @@ val CUSTOM_RARE_TOTAL = 10000
 
 val wildyWyrmDrops =
     DropTableFactory.build {
+        // Owner 2026-10-11 (OSRS Deadman Mode: no corrupt versions): the four corrupt Statius's tables are gone; the normal
+        // pieces keep their own independent 0.75 % rolls.
         table("statiuss_platebody") {
             total(CUSTOM_RARE_TOTAL)
             obj(Items.STATIUSS_PLATEBODY, slots = CUSTOM_RARE_SLOTS)
@@ -49,26 +51,6 @@ val wildyWyrmDrops =
         table("statiuss_warhammer") {
             total(CUSTOM_RARE_TOTAL)
             obj(Items.STATIUSS_WARHAMMER, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("corrupt_statiuss_platebody") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.CORRUPT_STATIUSS_PLATEBODY, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("corrupt_statiuss_platelegs") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.CORRUPT_STATIUSS_PLATELEGS, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("corrupt_statiuss_full_helm") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.CORRUPT_STATIUSS_FULL_HELM, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("corrupt_statiuss_warhammer") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.CORRUPT_STATIUSS_WARHAMMER, slots = CUSTOM_RARE_SLOTS)
             nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
         }
     }

@@ -119,7 +119,7 @@ class OwnerBuglist20261003CombatTests {
      * Guard on the real tick: the worn piece stays worn, as its next stage, with its amount.
      */
     @Test
-    fun `the first combat degrade tick keeps every PvP weapon in the hand`() {
+    fun `the first combat degrade tick keeps every PvP weapon in the hand, unchanged since they no longer degrade`() {
         val pairs =
             listOf(
                 Items.VESTAS_LONGSWORD to Items.VESTAS_LONGSWORD_DEG,
@@ -143,7 +143,8 @@ class OwnerBuglist20261003CombatTests {
             tick.invoke(plugin, player)
             val worn = equipment[EquipmentType.WEAPON.id]
             assertNotNull(worn, "$fresh vanished on the first combat tick")
-            assertEquals(degraded, worn.id, "$fresh becomes its (deg) id")
+            // Owner 2026-10-11 (OSRS Deadman Mode): no (deg) step any more - the piece stays exactly what it was.
+            assertEquals(fresh, worn.id, "$fresh stays $fresh (not $degraded)")
             assertEquals(1, worn.amount, "$fresh amount")
         }
     }

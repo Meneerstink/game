@@ -38,7 +38,9 @@ class EquipmentDegradationTests {
         // OSRS-IMPORT moons: nine moon armour pieces, each new -> degraded -> broken.
         val expected =
             // Barrows, Moon armour and the Amulet of the damned left this table for the OSRS points (CombatPoints, owner 2026-10-04).
-            CorruptArmor.values().size * 2 + ChaoticWeapon.values().size + NexArmour.values().size * 2
+            // Owner 2026-10-11 (OSRS Deadman Mode, DeadmanGear): no CorruptArmor rows (Vesta/Statius/Zuriel/Morrigan and corrupt never
+            // degrade) and no Torva rows (OSRS Torva never degrades); the Zaryte bow (and the removed Pernix/Virtus) keep theirs.
+            ChaoticWeapon.values().size + (NexArmour.values().size - NexArmour.TORVA.size) * 2
         assertEquals(9, MoonArmour.values().size)
         assertEquals(expected, DegradeTable.rows.size)
         assertEquals(DegradeTable.rows.size, DegradeTable.rows.map { it.id }.toSet().size, "one row per item id")
@@ -80,14 +82,20 @@ class EquipmentDegradationTests {
         BarrowsPiece.values.forEach { piece ->
             assertEquals(null, DegradeTable.rowFor(piece.baseId), "${piece.name}: OSRS points (CombatPoints)")
         }
+        // Owner 2026-10-11: every Vesta's / Statius's / Zuriel's / Morrigan's / corrupt piece, fresh or (deg), never degrades.
         CorruptArmor.values().forEach { armour ->
-            assertEquals(1 + armour.maxCharges to null, lifetime(armour.newId), armour.name)
+            assertEquals(0 to armour.newId, lifetime(armour.newId), armour.name)
+            assertEquals(0 to armour.degradedId, lifetime(armour.degradedId), "${armour.name} (deg)")
         }
         ChaoticWeapon.values().forEach { weapon ->
             assertEquals(ChaoticWeaponCharges.MAX_CHARGES to weapon.brokenId, lifetime(weapon.chargedId), weapon.name)
         }
         NexArmour.values().forEach { armour ->
-            assertEquals(1 + DegradeTable.NEX_USED_CHARGES to armour.brokenId, lifetime(armour.pristineId), armour.name)
+            if (armour in NexArmour.TORVA) {
+                assertEquals(0 to armour.pristineId, lifetime(armour.pristineId), "${armour.name}: OSRS Torva never degrades")
+            } else {
+                assertEquals(1 + DegradeTable.NEX_USED_CHARGES to armour.brokenId, lifetime(armour.pristineId), armour.name)
+            }
         }
         // "3000 degradable points": one point on entering combat, the other 2,999 at 90 combat ticks each.
         MoonArmour.values().forEach { armour ->
@@ -103,11 +111,12 @@ class EquipmentDegradationTests {
         assertEquals(piece.idForStage(BarrowsPiece.BROKEN), spent.item!!.id)
         assertEquals("<col=ff0000>Your Dharok's helm has degraded completely and needs repairing.", spent.message)
         assertEquals(piece.idForStage(BarrowsPiece.FULL), CombatPoints.spend(gg.rsmod.game.model.item.Item(piece.baseId, 1))!!.item!!.id)
-        val vesta = CorruptArmor.VESTAS_LONGSWORD
-        assertEquals(DegradeStep(null, null, true, "<col=ff0000>Your Vesta's longsword (deg) has degraded into dust."), DegradeTable.step(vesta.degradedId, 1, "Vesta's longsword (deg)"))
-        val torva = NexArmour.TORVA_PLATEBODY
-        assertEquals(DegradeStep(null, torva.usedId, false, "Your Torva platebody degraded."), DegradeTable.step(torva.pristineId, null, "Torva platebody"))
-        assertNull(DegradeTable.step(torva.brokenId, null, "Torva platebody (broken)"), "broken is terminal")
+        // Owner 2026-10-11: Vesta's and Torva no longer have a degrade step at all.
+        assertNull(DegradeTable.step(CorruptArmor.VESTAS_LONGSWORD.newId, null, "Vesta's longsword"))
+        assertNull(DegradeTable.step(NexArmour.TORVA_PLATEBODY.pristineId, null, "Torva platebody"))
+        val bow = NexArmour.ZARYTE_BOW
+        assertEquals(DegradeStep(null, bow.usedId, false, "Your Zaryte bow degraded."), DegradeTable.step(bow.pristineId, null, "Zaryte bow"))
+        assertNull(DegradeTable.step(bow.brokenId, null, "Zaryte bow (broken)"), "broken is terminal")
     }
 
     @Test

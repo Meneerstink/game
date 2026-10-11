@@ -162857,7 +162857,7 @@
     attack_audio: -1
 - id: 13858
   name: "Zuriel's robe top"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful robe top."
   tradeable: true
   weight: 4.0
   equipment:
@@ -162897,7 +162897,7 @@
   equipment: null
 - id: 13860
   name: "Zuriel's robe top (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful robe top."
   destroy_message: "Drop"
   tradeable: false
   weight: 4.0
@@ -162932,7 +162932,7 @@
     absorb_ranged: 0
 - id: 13861
   name: "Zuriel's robe bottom"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful robe bottom."
   tradeable: true
   weight: 5.0
   equipment:
@@ -162972,7 +162972,7 @@
   equipment: null
 - id: 13863
   name: "Zuriel's robe bottom (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful robe bottom."
   destroy_message: "Drop"
   tradeable: false
   weight: 5.0
@@ -163007,7 +163007,7 @@
     absorb_ranged: 0
 - id: 13864
   name: "Zuriel's hood"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful hood."
   tradeable: true
   weight: 0.0
   equipment:
@@ -163047,7 +163047,7 @@
   equipment: null
 - id: 13866
   name: "Zuriel's hood (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful hood."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -163082,7 +163082,7 @@
     absorb_ranged: 0
 - id: 13867
   name: "Zuriel's staff"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful staff."
   tradeable: true
   weight: 2.2
   equipment:
@@ -163122,7 +163122,7 @@
   equipment: null
 - id: 13869
   name: "Zuriel's staff (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful staff."
   destroy_message: "Drop"
   tradeable: false
   weight: 2.2
@@ -163157,7 +163157,7 @@
     absorb_ranged: 0
 - id: 13870
   name: "Morrigan's leather body"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful leather body."
   tradeable: true
   weight: 6.8
   equipment:
@@ -163197,7 +163197,7 @@
   equipment: null
 - id: 13872
   name: "Morrigan's leather body (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful leather body."
   destroy_message: "Drop"
   tradeable: false
   weight: 6.8
@@ -163232,7 +163232,7 @@
     absorb_ranged: 6
 - id: 13873
   name: "Morrigan's leather chaps"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful pair of leather chaps."
   tradeable: true
   weight: 5.4
   equipment:
@@ -163272,7 +163272,7 @@
   equipment: null
 - id: 13875
   name: "Morrigan's leather chaps (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful pair of leather chaps."
   destroy_message: "Drop, Destroy after degrading."
   tradeable: false
   weight: 5.4
@@ -163307,7 +163307,7 @@
     absorb_ranged: 4
 - id: 13876
   name: "Morrigan's coif"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful coif."
   tradeable: true
   weight: 1.0
   equipment:
@@ -163347,7 +163347,7 @@
   equipment: null
 - id: 13878
   name: "Morrigan's coif (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful coif."
   destroy_message: "Drop"
   tradeable: false
   weight: 1.0
@@ -163552,7 +163552,7 @@
     absorb_ranged: 0
 - id: 13884
   name: "Statius's platebody"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful platebody."
   tradeable: true
   weight: 9.0
   equipment:
@@ -163592,7 +163592,7 @@
   equipment: null
 - id: 13886
   name: "Statius's platebody (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful platebody."
   destroy_message: "Drop"
   tradeable: false
   weight: 9.0
@@ -163627,7 +163627,7 @@
     absorb_ranged: 12
 - id: 13887
   name: "Vesta's chainbody"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful chainbody."
   tradeable: true
   weight: 6.0
   equipment:
@@ -163667,7 +163667,7 @@
   equipment: null
 - id: 13889
   name: "Vesta's chainbody (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful chainbody."
   destroy_message: "Drop, Destroy once it has been degraded."
   tradeable: false
   weight: 6.0
@@ -163702,7 +163702,7 @@
     absorb_ranged: 12
 - id: 13890
   name: "Statius's platelegs"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful pair of platelegs."
   tradeable: true
   weight: 8.0
   equipment:
@@ -163742,7 +163742,7 @@
   equipment: null
 - id: 13892
   name: "Statius's platelegs (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful pair of platelegs."
   destroy_message: "Drop"
   tradeable: false
   weight: 8.0
@@ -163777,7 +163777,7 @@
     absorb_ranged: 8
 - id: 13893
   name: "Vesta's plateskirt"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful plateskirt."
   tradeable: true
   weight: 8.0
   equipment:
@@ -163817,7 +163817,7 @@
   equipment: null
 - id: 13895
   name: "Vesta's plateskirt (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful plateskirt."
   destroy_message: "Drop"
   tradeable: false
   weight: 8.0
@@ -163852,7 +163852,7 @@
     absorb_ranged: 8
 - id: 13896
   name: "Statius's full helm"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful helmet."
   tradeable: true
   weight: 8.0
   equipment:
@@ -163892,7 +163892,7 @@
   equipment: null
 - id: 13898
   name: "Statius' full helm (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful helmet."
   destroy_message: "Drop"
   tradeable: false
   weight: 8.0
@@ -163927,7 +163927,7 @@
     absorb_ranged: 6
 - id: 13899
   name: "Vesta's longsword"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful longsword."
   tradeable: true
   weight: 1.0
   equipment:
@@ -163967,7 +163967,7 @@
   equipment: null
 - id: 13901
   name: "Vesta's longsword (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful longsword."
   destroy_message: "Drop"
   tradeable: false
   weight: 1.0
@@ -164002,7 +164002,7 @@
     absorb_ranged: 0
 - id: 13902
   name: "Statius's warhammer"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful warhammer."
   tradeable: true
   weight: 1.8
   equipment:
@@ -164042,7 +164042,7 @@
   equipment: null
 - id: 13904
   name: "Statius' warhammer (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful warhammer."
   destroy_message: "Drop, Destroy once it has been degraded."
   tradeable: false
   weight: 1.8
@@ -164077,7 +164077,7 @@
     absorb_ranged: 0
 - id: 13905
   name: "Vesta's spear"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful spear."
   tradeable: true
   weight: 4.0
   equipment:
@@ -164117,7 +164117,7 @@
   equipment: null
 - id: 13907
   name: "Vesta's spear (deg)"
-  examine: "This item degrades in combat, and will turn to dust."
+  examine: "A powerful spear."
   destroy_message: "Drop"
   tradeable: false
   weight: 4.0
@@ -164152,7 +164152,7 @@
     absorb_ranged: 0
 - id: 13908
   name: "Corrupt statius's platebody"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful platebody."
   tradeable: true
   weight: 9.0
   equipment:
@@ -164192,7 +164192,7 @@
   equipment: null
 - id: 13910
   name: "Corrupt statius's platebody (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful platebody."
   destroy_message: "Drop"
   tradeable: false
   weight: 9.0
@@ -164227,7 +164227,7 @@
     absorb_ranged: 12
 - id: 13911
   name: "Corrupt vesta's chainbody"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful chainbody."
   tradeable: true
   weight: 6.0
   equipment:
@@ -164267,7 +164267,7 @@
   equipment: null
 - id: 13913
   name: "Corrupt vesta's chainbody (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful chainbody."
   destroy_message: "Drop"
   tradeable: false
   weight: 6.0
@@ -164302,7 +164302,7 @@
     absorb_ranged: 12
 - id: 13914
   name: "Corrupt statius's platelegs"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful pair of platelegs."
   tradeable: true
   weight: 0.0
   equipment:
@@ -164342,7 +164342,7 @@
   equipment: null
 - id: 13916
   name: "Corrupt statius's platelegs (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful pair of platelegs."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -164377,7 +164377,7 @@
     absorb_ranged: 8
 - id: 13917
   name: "Corrupt vesta's plateskirt"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful plateskirt."
   tradeable: true
   weight: 8.0
   equipment:
@@ -164417,7 +164417,7 @@
   equipment: null
 - id: 13919
   name: "Corrupt vesta's plateskirt (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful plateskirt."
   destroy_message: "Drop"
   tradeable: false
   weight: 8.0
@@ -164452,7 +164452,7 @@
     absorb_ranged: 8
 - id: 13920
   name: "Corrupt statius's full helm"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful helmet."
   tradeable: true
   weight: 0.0
   equipment:
@@ -164492,7 +164492,7 @@
   equipment: null
 - id: 13922
   name: "Corrupt statius' full helm (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful helmet."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -164527,7 +164527,7 @@
     absorb_ranged: 6
 - id: 13923
   name: "Corrupt vesta's longsword"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful longsword."
   tradeable: true
   weight: 1.0
   equipment:
@@ -164567,7 +164567,7 @@
   equipment: null
 - id: 13925
   name: "C. vesta's longsword (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful longsword."
   destroy_message: "Drop"
   tradeable: false
   weight: 1.0
@@ -164602,7 +164602,7 @@
     absorb_ranged: 0
 - id: 13926
   name: "Corrupt statius's warhammer"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful warhammer."
   tradeable: true
   weight: 15.0
   equipment:
@@ -164642,7 +164642,7 @@
   equipment: null
 - id: 13928
   name: "C. statius's warhammer (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful warhammer."
   destroy_message: "Drop"
   tradeable: false
   weight: 15.0
@@ -164677,7 +164677,7 @@
     absorb_ranged: 0
 - id: 13929
   name: "Corrupt vesta's spear"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful spear."
   tradeable: true
   weight: 2.0
   equipment:
@@ -164717,7 +164717,7 @@
   equipment: null
 - id: 13931
   name: "Corrupt vesta's spear (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful spear."
   destroy_message: "Drop"
   tradeable: false
   weight: 2.0
@@ -164752,7 +164752,7 @@
     absorb_ranged: 0
 - id: 13932
   name: "Corrupt zuriel's robe top"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful robe top."
   tradeable: true
   weight: 27.0
   equipment:
@@ -164792,7 +164792,7 @@
   equipment: null
 - id: 13934
   name: "Corrupt zuriel's robe top (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful robe top."
   destroy_message: "Drop"
   tradeable: false
   weight: 27.0
@@ -164827,7 +164827,7 @@
     absorb_ranged: 0
 - id: 13935
   name: "Corrupt zuriel's robe bottom"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful robe bottom."
   tradeable: true
   weight: 0.0
   equipment:
@@ -164867,7 +164867,7 @@
   equipment: null
 - id: 13937
   name: "Corrupt zuriel's robe bottom (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful robe bottom."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -164902,7 +164902,7 @@
     absorb_ranged: 0
 - id: 13938
   name: "Corrupt zuriel's hood"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful hood."
   tradeable: true
   weight: 0.0
   equipment:
@@ -164942,7 +164942,7 @@
   equipment: null
 - id: 13940
   name: "Corrupt zuriel's hood (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful hood."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -164977,7 +164977,7 @@
     absorb_ranged: 0
 - id: 13941
   name: "Corrupt zuriel's staff"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful staff."
   tradeable: true
   weight: 2.0
   equipment:
@@ -165016,7 +165016,7 @@
   equipment: null
 - id: 13943
   name: "Corrupt zuriel's staff (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful staff."
   destroy_message: "Drop"
   tradeable: false
   weight: 2.0
@@ -165051,7 +165051,7 @@
     absorb_ranged: 0
 - id: 13944
   name: "Corrupt morrigan's leather body"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful leather body."
   tradeable: true
   weight: 0.0
   equipment:
@@ -165091,7 +165091,7 @@
   equipment: null
 - id: 13946
   name: "Corrupt morrigan's leather body (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful leather body."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -165126,7 +165126,7 @@
     absorb_ranged: 6
 - id: 13947
   name: "Corrupt morrigan's leather chaps"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful pair of leather chaps."
   tradeable: true
   weight: 0.0
   equipment:
@@ -165166,7 +165166,7 @@
   equipment: null
 - id: 13949
   name: "Corrupt morrigan's leather chaps (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful pair of leather chaps."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -165201,7 +165201,7 @@
     absorb_ranged: 4
 - id: 13950
   name: "Corrupt morrigan's coif"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful coif."
   tradeable: true
   weight: 0.0
   equipment:
@@ -165241,7 +165241,7 @@
   equipment: null
 - id: 13952
   name: "Corrupt morrigan's coif (deg)"
-  examine: "This item degrades while worn, and will turn to dust."
+  examine: "A powerful coif."
   destroy_message: "Drop"
   tradeable: false
   weight: 0.0
@@ -243381,7 +243381,7 @@
     skill_reqs: [{'skill': 1, 'level': 80}, {'skill': 3, 'level': 80}, {'skill': 2, 'level': 80}]
 - id: 20139
   name: "Torva platebody"
-  examine: "An Ancient warrior's Platebody."
+  examine: "An ancient warrior's platebody."
   tradeable: true
   weight: 9.0
   equipment:
@@ -243420,7 +243420,7 @@
   equipment: null
 - id: 20141
   name: "Torva platebody"
-  examine: "An Ancient warrior's Platebody."
+  examine: "An ancient warrior's platebody."
   tradeable: true
   weight: 9.0
   equipment:
@@ -243453,7 +243453,7 @@
     skill_reqs: [{'skill': 1, 'level': 80}, {'skill': 3, 'level': 80}, {'skill': 2, 'level': 80}]
 - id: 20142
   name: "Torva platebody (broken)"
-  examine: "An Ancient warrior's Platebody."
+  examine: "An ancient warrior's platebody."
   tradeable: true
   weight: 9.0
   equipment:

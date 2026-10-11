@@ -32,7 +32,10 @@ object RemovedItems {
             Items.VIRTUS_MASK, Items.VIRTUS_MASK_20161, Items.VIRTUS_MASK_BROKEN,
             Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_TOP_BROKEN,
             Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN,
-        )
+        ) +
+            // Owner 2026-10-11 (OSRS Deadman Mode): every degraded, corrupt, used and broken Deadman gear / Torva id. A held copy
+            // becomes the normal item at login first (DeadmanGear.migrate runs before [purge]); nothing may offer these again.
+            gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys
 
     /** True for a removed item or its noted form. */
     fun isRemoved(def: ItemDef): Boolean = def.id in IDS || (def.noted && def.noteLinkId in IDS)

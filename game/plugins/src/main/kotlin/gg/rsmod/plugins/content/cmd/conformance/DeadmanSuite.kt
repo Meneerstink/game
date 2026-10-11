@@ -1847,7 +1847,8 @@ object DeadmanSuite : Conformance.Suite {
         }
     }
 
-    // ---- corrupt: the corrupt Morrigan's javelin and throwing axe carry their special (owner 2026-10-01, Novite) --------------
+    // ---- corrupt: Morrigan's javelin and throwing axe carry their special (owner 2026-10-01, Novite). Owner 2026-10-11 (OSRS
+    // Deadman Mode, no corrupt versions): the corrupt copies became the normal items (DeadmanGear), so the normal ones are measured.
 
     private suspend fun QueueTask.corruptSpecials(
         run: Conformance.Run,
@@ -1857,7 +1858,7 @@ object DeadmanSuite : Conformance.Suite {
         val a = run.bot(arena.transform(-3, -6), "KA")
         val b = run.bot(arena.transform(0, -6), "KB")
         wait(2)
-        for ((weapon, cost) in listOf(Items.C_MORRIGANS_THROWING_AXE to 25, Items.CORRUPT_MORRIGANS_JAVELIN to 50)) {
+        for ((weapon, cost) in listOf(Items.MORRIGANS_THROWING_AXE to 25, Items.MORRIGANS_JAVELIN to 50)) {
             reset(a, arena.transform(-3, -6))
             reset(b, arena.transform(0, -6))
             wield(a, Item(weapon, 100))
@@ -1875,7 +1876,7 @@ object DeadmanSuite : Conformance.Suite {
                 if (spent > 0) break
                 wait(4)
             }
-            run.check(e, "item $weapon performs its special", spent, "Novite PlayerCombat: the corrupt items share the special" to cost)
+            run.check(e, "item $weapon performs its special", spent, "Novite PlayerCombat: Morrigan's thrown weapons' special" to cost)
             b.attr.remove(gg.rsmod.game.model.attr.HAMSTRING)
             b.attr.remove(gg.rsmod.game.model.attr.PHANTOM_STRIKE_BLEED)
             wait(12)
