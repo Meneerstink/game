@@ -28,7 +28,7 @@ class KeyTypedHandler : MessageHandler<KeyTypedMessage> {
 
         when (keycode) {
             13 -> { // ESC
-                if (player.interfaces.getModal() != -1 && player.lock.canInterfaceInteract()) {
+                if (player.interfaces.getModal() != -1 && player.lock.canInterfaceInteract() && gg.rsmod.game.model.hud.ClientHud.escClosesInterface(player)) {
                     player.closeInterfaceModal()
                 }
             }

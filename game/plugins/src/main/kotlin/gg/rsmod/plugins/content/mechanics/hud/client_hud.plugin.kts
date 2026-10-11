@@ -30,6 +30,11 @@ on_world_init {
     }
 }
 
+// Owner 2026-10-11 (OSRS Keybinding): Esc closes the open window unless the player switched that off (or keybinding off).
+gg.rsmod.game.model.hud.ClientHud.escClosesInterface = { p ->
+    !ClientHudConfig.bool(p, "keybinding.enabled") || ClientHudConfig.bool(p, "keybinding.escCloses")
+}
+
 on_login {
     ClientHudSync.reset(player)
     ClientHudConfig.push(player)

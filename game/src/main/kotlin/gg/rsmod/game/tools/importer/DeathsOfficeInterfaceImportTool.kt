@@ -306,6 +306,8 @@ object DeathsOfficeInterfaceImportTool {
         val onMouseLeave: List<Int> = emptyList(),
         /** Graphic drawn mirrored left-right (the OSRS tab pieces reuse one sprite for both sides). */
         val hflip: Boolean = false,
+        /** Graphic drawn upside down (OSRS flipV: the keybinding dropdown's down arrow is its up arrow, sprite 316, flipped). */
+        val vflip: Boolean = false,
     )
 
     /**
@@ -314,7 +316,7 @@ object DeathsOfficeInterfaceImportTool {
      * deob names are swapped. A left-right mirror ([Comp.hflip]) therefore goes in the second byte; in the first it
      * turned the quest tab's right-hand tab pieces upside down (owner 2026-09-26).
      */
-    fun flipBytes(c: Comp): Pair<Int, Int> = 0 to (if (c.hflip) 1 else 0)
+    fun flipBytes(c: Comp): Pair<Int, Int> = (if (c.vflip) 1 else 0) to (if (c.hflip) 1 else 0)
 
     private class Out {
         val bytes = ByteArrayOutputStream()

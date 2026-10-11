@@ -54,6 +54,13 @@ object ClientHud {
     const val FLAG_PRIVATE = 8
     const val FLAG_FRESH = 16
 
+    /**
+     * Whether Esc closes [Player]'s open window (OSRS Keybinding "Esc closes the current interface", owner 2026-10-11); bound
+     * by the plugins to the player's keybinding settings. Off, Esc only opens the tab bound to it (client RspsFunctionKeys).
+     */
+    @JvmStatic
+    var escClosesInterface: (Player) -> Boolean = { true }
+
     /** Per-player sync, run by [Player.postCycle] at the very end of every cycle; bound by the plugins (ClientHudSync). */
     @JvmStatic
     var tick: ((Player) -> Unit)? = null

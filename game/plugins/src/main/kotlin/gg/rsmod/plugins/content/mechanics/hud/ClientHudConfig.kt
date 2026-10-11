@@ -47,6 +47,21 @@ object ClientHudConfig {
 
     private val TIERS = arrayOf("OFF", "LOW", "MEDIUM", "HIGH", "INSANE")
 
+    /** The keys a tab can be bound to (OSRS Keybinding: None, F1-F12, Esc). */
+    val KEYBIND_KEYS = arrayOf("NONE", "F1", "F2", "F3", "F4", "F5", "F6", "F7", "F8", "F9", "F10", "F11", "F12", "ESC")
+
+    /**
+     * The fourteen tabs of the OSRS Keybinding window (interface 121, KeybindingInterfaceImportTool.ROWS) in its order, with the
+     * OSRS defaults (OSRS Wiki "Shortcut keys"). 667 has no Account Management tab: its row (OSRS F9) is the 667 Friends Chat
+     * tab; the OSRS chat-channel row is the 667 Clan Chat tab. The client maps each tab to its gameframe slot.
+     */
+    val KEYBIND_TABS: List<Pair<String, String>> =
+        listOf(
+            "combat" to "F1", "skills" to "F2", "quests" to "F3", "inventory" to "ESC", "equipment" to "F4",
+            "prayer" to "F5", "magic" to "F6", "friends" to "F8", "friendschat" to "F9", "logout" to "NONE",
+            "settings" to "F10", "emotes" to "F11", "clanchat" to "F7", "music" to "F12",
+        )
+
     val SETTINGS: List<Setting> =
         listOf(
             // The four plugins' own switches (RuneLite's plugin list).
@@ -141,11 +156,23 @@ object ClientHudConfig {
             bool("loottracker.syncPanel", true),
             bool("loottracker.npcKillChatMessage", false),
             bool("loottracker.pvpKillChatMessage", false),
-        )
+            // Owner 2026-10-11 (bug 012046 "we need the runelite stretched plugin"): RuneLite StretchedModeConfig, group "stretchedmode";
+            // the plugin is off by default in RuneLite (enabledByDefault = false), Resizable Scaling 50%.
+            bool("stretchedmode.enabled", false),
+            bool("stretchedmode.keepAspectRatio", false),
+            bool("stretchedmode.increasedPerformance", false),
+            bool("stretchedmode.integerScaling", false),
+            int("stretchedmode.scalingFactor", 50, 0, 100),
+            // Keybinding (owner 2026-10-11: "f keys customize like osrs", then "in de client ipv sidebar"): saved here, edited in the
+            // in-game OSRS Keybinding window (content/inter/gameframe/Keybinding), not in the 78 Plugins sidebar. No donor has it.
+            bool("keybinding.enabled", true),
+            // OSRS "Esc closes the current interface" (default off there); on here because Esc always closed windows on this server.
+            bool("keybinding.escCloses", true),
+        ) + KEYBIND_TABS.map { (tab, key) -> choice("keybinding.$tab", key, *KEYBIND_KEYS) }
 
     private val BY_KEY = SETTINGS.associateBy { it.key }
 
-    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox", "questhelper")
+    val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox", "questhelper", "stretchedmode")
 
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")
@@ -206,6 +233,14 @@ object ClientHudConfig {
         if (!setting.valid(normalised)) return false
         val map = stored(player)
         if (normalised == setting.default) map.remove(setting.key) else map[setting.key] = normalised
+        // OSRS Keybinding: a key opens one tab - binding it here unbinds the tab that had it.
+        if (setting.key.startsWith("keybinding.") && setting.type == Type.ENUM && normalised != "NONE") {
+            for ((tab, default) in KEYBIND_TABS) {
+                val other = "keybinding.$tab"
+                if (other == setting.key || (map[other] ?: default) != normalised) continue
+                if (default == "NONE") map.remove(other) else map[other] = "NONE"
+            }
+        }
         store(player, map)
         return true
     }
