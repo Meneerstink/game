@@ -113,7 +113,28 @@ object CrystalEquipment {
         weight: Int,
     ): Double = floor(maxHit * (40 + weight) / 40.0)
 
-    fun charges(item: Item): Int = if (item.id in INACTIVE_FOR) item.attr[ItemAttribute.CHARGES] ?: 0 else 0
+    /**
+     * Owner C3 2026-10-11 ("the Bow of Faerdhinen shot is broken"): a charged item that never got a charge count - one from a
+     * store, a staff spawn, a drop, the Grand Exchange; only the Singing bowl wrote one - counted as 0 charges, so its very
+     * first shot turned the bow into the inactive one (no stats, the classic crystal bow's arrow 250 / 249). An active item
+     * without a count is a new one, as OSRS's: "the bow will start with 10,000 charges", armour 2,500, crystal bow 2,500.
+     * An inactive item that still carries charges (seen in the owner's bank) counts them, so the next charge action wakes it.
+     */
+    fun charges(item: Item): Int =
+        when (item.id) {
+            in INACTIVE_FOR -> item.attr[ItemAttribute.CHARGES] ?: startCharges(item.id)
+            in CHARGED_FOR -> item.attr[ItemAttribute.CHARGES] ?: 0
+            else -> 0
+        }
+
+    /** The charges a new active item starts with (OSRS Wiki: bow 10,000, crystal armour and the crystal bow 2,500). */
+    fun startCharges(active: Int): Int =
+        when (active) {
+            Items.BOW_OF_FAERDHINEN -> BowfaCreation.START_CHARGES
+            else -> ARMOUR_CREATION[active]?.startCharges ?: CRYSTAL_BOW_START_CHARGES
+        }
+
+    private const val CRYSTAL_BOW_START_CHARGES = 2_500
 
     /** The charged item holding [charges], or the inactive item at 0. */
     fun withCharges(
@@ -138,9 +159,15 @@ object CrystalEquipment {
         val weapon = player.getEquipment(EquipmentType.WEAPON) ?: return
         // OSRS-IMPORT bows: the crystal bow degrades one charge per shot too ("will last for ... 2,500 shots", "Crystal shards can be
         // used to recharge the weapon to a maximum of 20,000 charges, with each shard providing 100 charges").
-        if (weapon.id != Items.BOW_OF_FAERDHINEN && weapon.id != Items.CRYSTAL_BOW_OSRS) return
+        // An inactive bow still holding charges is woken first (the shot pays from those charges).
+        if (weapon.id != Items.BOW_OF_FAERDHINEN && weapon.id != Items.CRYSTAL_BOW_OSRS &&
+            !(weapon.id == Items.BOW_OF_FAERDHINEN_INACTIVE || weapon.id == Items.CRYSTAL_BOW_OSRS_INACTIVE)
+        ) {
+            return
+        }
+        if (charges(weapon) <= 0) return
         val shot = withCharges(weapon, charges(weapon) - 1)
-        if (weapon.id == Items.BOW_OF_FAERDHINEN) addCorruptionProgress(shot, 1)
+        if (shot.id == Items.BOW_OF_FAERDHINEN || weapon.id == Items.BOW_OF_FAERDHINEN) addCorruptionProgress(shot, 1)
         player.equipment[EquipmentType.WEAPON.id] = shot
     }
 

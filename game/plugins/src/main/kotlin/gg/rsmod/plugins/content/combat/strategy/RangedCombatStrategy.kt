@@ -311,7 +311,14 @@ object RangedCombatStrategy : CombatStrategy {
             // A server shot cue: the shooter gets it directly, the players around him as an area sound.
             val shot = { id: Int -> pawn.playSound(id); pawn.soundToBystanders(id) }
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.CROSSBOW)) shot(Sfx.CROSSBOW) // crossbow sound
-            if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) shot(Sfx.SHORTBOW) // bow sound
+            // Crystal bows / Bow of Faerdhinen shoot with their own item sound (OSRS crystal_bow2 1352, owner C3 2026-10-11); every
+            // other bow keeps the shortbow cue.
+            val crystalSound =
+                pawn.getEquipment(EquipmentType.WEAPON)?.id
+                    ?.takeIf { gg.rsmod.plugins.content.items.osrs.CrystalEquipment.isCrystalBow(it) }
+                    ?.let { world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, it).attackAudio }
+                    ?.takeIf { it > 0 }
+            if (sequenceSilent && pawn.hasWeaponType(WeaponType.BOW)) shot(crystalSound ?: Sfx.SHORTBOW) // bow sound
             // OSRS throws a chinchompa with chinchompa_attack 359 (xrsps weapon table); 361 chinchompa_hit is the damage sound.
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.CHINCHOMPA)) shot(Sfx.CHINCHOMPA_ATTACK)
             if (sequenceSilent && pawn.hasWeaponType(WeaponType.THROWN)) {

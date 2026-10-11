@@ -1711,6 +1711,9 @@ on_command("equ", Privilege.ADMIN_POWER) {
             )
         } else {
             player.message("Item $id does not exist in cache.", type = ChatMessageType.CONSOLE)
+            // A weapon put in by this command attacked with the previous weapon's type (night run 2026-10-11: a Bow of
+            // Faerdhinen swung as melee after a Colossal blade); refresh it as the equip route does.
+            if (slot == EquipmentType.WEAPON.id) player.sendWeaponComponentInformation()
         }
     }
 }
