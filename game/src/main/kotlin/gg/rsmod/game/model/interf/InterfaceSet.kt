@@ -220,6 +220,15 @@ class InterfaceSet(
     }
 
     /**
+     * Every destination hash on [parent], the gameframe's own root key included. A window-mode switch closes the modal ones
+     * of these in the client before the new top level (Player.toggleDisplayInterface, after Darkan's switchDisplayModes).
+     */
+    fun hashesOn(parent: Int): IntArray = visible.keys.toIntArray().filter { it ushr 16 == parent }.toIntArray()
+
+    /** The destination hash of the modal (parent shl 16 or child), -1 without one. */
+    fun getModalHash(): Int = currentModalHash
+
+    /**
      * Checks if an interface id was placed on interface ([parent], [child]).
      */
     fun isOccupied(

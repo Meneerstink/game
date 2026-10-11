@@ -67,4 +67,23 @@ class InterfaceSetTests {
         assertEquals(-1, interfaces.getModal())
         assertEquals(listOf(667), listener.closed)
     }
+
+    @Test
+    fun `window-mode switch lists every old gameframe hash for the client close and the modal destination`() {
+        // Owner A1 2026-10-11: the client keeps sub-interfaces across IF_OPENTOP, so the switch closes each of these first.
+        val interfaces = InterfaceSet(RecordingListener())
+        interfaces.setVisible(746, 0, true)
+        interfaces.open(746, 93, 679)
+        interfaces.openModal(746, 9, 742)
+        interfaces.open(752, 9, 137)
+
+        assertEquals(
+            setOf((746 shl 16) or 0, (746 shl 16) or 93, (746 shl 16) or 9),
+            interfaces.hashesOn(746).toSet(),
+        )
+        assertEquals((746 shl 16) or 9, interfaces.getModalHash())
+        interfaces.clearDisplay(746)
+        assertEquals(0, interfaces.hashesOn(746).size)
+        assertEquals(-1, interfaces.getModalHash())
+    }
 }

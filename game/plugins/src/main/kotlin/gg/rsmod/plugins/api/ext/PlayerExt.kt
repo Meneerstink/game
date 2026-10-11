@@ -593,6 +593,22 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
         // until the player left and came back. Remember them here and mount them again in the new gameframe.
         val overlays = OVERLAY_PANES.mapNotNull { pane -> getInterfaceAt(pane).takeIf { it != -1 }?.let { pane to it } }
         val previousParent = getDisplayComponentId(interfaces.displayMode)
+        // Owner A1 2026-10-11 "zoom gone after a window-mode switch": IF_OPENTOP does NOT discard sub-interfaces in the 667
+        // client (ServerConnectionReader IF_OPENTOP only sets the top level), so the Graphics Options window (742, the switch
+        // is clicked there) stayed behind as an invisible MODAL under the old gameframe and blocked the wheel zoom
+        // (InterfaceManager.hasSceneModalSubInterface) until the window was opened and closed again. Darkan
+        // (InterfaceManager.switchDisplayModes) closes the open subs in the client first (removeSub -> IF_CLOSESUB), sets the
+        // new top level and opens them again, the central one included. Closed here: the MODAL (type 0) ones - the main
+        // screen destinations and the tracked modal. Tabs and the chatbox pane are overlays and are re-mounted below; closing
+        // the chatbox pane would also close a running dialogue nested in it.
+        val oldMode = interfaces.displayMode
+        val modal = interfaces.getModal()
+        val modalHash = interfaces.getModalHash()
+        val mainScreen = (previousParent shl 16) or getChildId(InterfaceDestination.MAIN_SCREEN, oldMode)
+        val modalSlots = setOf(mainScreen, (previousParent shl 16) or getChildId(InterfaceDestination.MAIN_SCREEN_FULL, oldMode))
+        interfaces.hashesOn(previousParent)
+            .filter { hash -> hash in modalSlots || hash == modalHash }
+            .forEach { hash -> write(IfCloseSubMessage(hash)) }
         interfaces.displayMode = newMode
 
         openOverlayInterface(newMode)
@@ -604,8 +620,16 @@ fun Player.toggleDisplayInterface(newMode: DisplayMode) {
             openInterface(spellbookInterfaceId(pane), pane)
         }
         overlays.forEach { (pane, interfaceId) -> openInterface(interfaceId, pane) }
+        // Darkan re-sends the central sub too: the Graphics Options window stays open in the new mode. Only that window -
+        // other main-screen modals (bank, shops) need their own open logic and stay closed (their close hook already ran).
+        if (modal == GRAPHICS_OPTIONS_INTERFACE && modalHash == mainScreen) {
+            openInterface(interfaceId = modal, dest = InterfaceDestination.MAIN_SCREEN)
+        }
     }
 }
+
+/** Graphics Options (Settings tab -> monitor icon): fixed / resizable / fullscreen are switched from here. */
+private const val GRAPHICS_OPTIONS_INTERFACE = 742
 
 fun Player.openOverlayInterface(displayMode: DisplayMode) {
     val component = getDisplayComponentId(displayMode)
