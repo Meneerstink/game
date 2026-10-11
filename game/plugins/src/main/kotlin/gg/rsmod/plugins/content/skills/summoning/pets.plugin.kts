@@ -11,6 +11,13 @@ import gg.rsmod.plugins.api.ext.getInteractingOtherItemId
 import gg.rsmod.plugins.api.ext.getInteractingOtherItemSlot
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.options
+import gg.rsmod.plugins.api.ext.chatheadAnimation
+import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.getCommandArgs
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setComponentAnim
+import gg.rsmod.plugins.api.ext.setComponentNpcHead
+import gg.rsmod.plugins.api.ext.setComponentText
 
 /**
  * The OSRS pets ([Pets]): drop the item and it follows, Pick-up, Metamorphosis (npc and item, unlocked variants: [PetMorphs]), the
@@ -117,4 +124,56 @@ on_world_init {
     Pets.variants.filter { it.osrsItem < 0 }.forEach { problems += "pet ${it.name} (${it.item}) has no OSRS item id in pets.tsv" }
     problems.forEach { p -> gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pets: $p" } }
     println("OSRS pets: $loadedPets variants of ${pets.size} pets, ${Pets.infos.values.count { it.dropOnly }} boss-drop pets, $loadedEmotes emotes, ${problems.size} problems.")
+}
+
+/**
+ * Owner A4 2026-10-11 (OSRS pet heads overflow the chat dialogue and the Follower Details frame): `petheads [from] [count] [ticks]`
+ * shows every pet variant in turn - out as the follower (Follower Details head) and in an npc dialogue (chat head), [ticks] (default 4) game ticks each - so the whole list can be checked in the client (its log names each head's size, InterfaceManager.capNpcHead).
+ */
+on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    // `petheads npc <id> ...`: any npc's chat head, 12 ticks each (the native 667 heads the pets are compared with).
+    if (args.getOrNull(0) == "npc") {
+        player.queue {
+            args.drop(1).mapNotNull { it.toIntOrNull() }.forEach { id ->
+                player.openInterface(interfaceId = 242, parent = 752, child = 13)
+                player.setComponentNpcHead(interfaceId = 242, component = 2, npc = id)
+                player.setComponentAnim(interfaceId = 242, component = 2, anim = gg.rsmod.plugins.api.cfg.FacialExpression.HAPPY_TALKING.chatheadAnimation(player.world, id))
+                player.setComponentText(interfaceId = 242, component = 3, text = "npc $id")
+                player.setComponentText(interfaceId = 242, component = 4, text = "")
+                player.setComponentText(interfaceId = 242, component = 5, text = "")
+                wait(12)
+            }
+            player.closeInterface(242)
+        }
+        return@on_command
+    }
+    val from = args.getOrNull(0)?.toIntOrNull() ?: 0
+    val count = args.getOrNull(1)?.toIntOrNull() ?: Pets.variants.size
+    val ticks = (args.getOrNull(2)?.toIntOrNull() ?: 4).coerceIn(1, 100)
+    val list = Pets.variants.drop(from).take(count)
+    player.queue {
+        var previous = -1
+        list.forEachIndexed { i, variant ->
+            // Dismiss puts the pet item back in the pack; take it out again so a long run never fills the inventory.
+            if (Pets.current(player) != null) Pets.dismiss(player)
+            if (previous != -1) player.inventory.remove(previous, 1)
+            previous = variant.item
+            if (player.inventory.add(variant.item, 1).hasSucceeded()) {
+                val slot = player.inventory.getItemIndex(variant.item, false)
+                Pets.drop(player, variant.item, slot)
+            }
+            player.message("petheads ${from + i}: ${variant.name} (npc ${variant.npc})", type = gg.rsmod.plugins.api.ChatMessageType.CONSOLE)
+            player.openInterface(interfaceId = 242, parent = 752, child = 13)
+            player.setComponentNpcHead(interfaceId = 242, component = 2, npc = variant.npc)
+            player.setComponentAnim(interfaceId = 242, component = 2, anim = gg.rsmod.plugins.api.cfg.FacialExpression.HAPPY_TALKING.chatheadAnimation(player.world, variant.npc))
+            player.setComponentText(interfaceId = 242, component = 3, text = variant.name)
+            player.setComponentText(interfaceId = 242, component = 4, text = "petheads ${from + i}")
+            player.setComponentText(interfaceId = 242, component = 5, text = "")
+            wait(ticks)
+        }
+        if (Pets.current(player) != null) Pets.dismiss(player)
+        if (previous != -1) player.inventory.remove(previous, 1)
+        player.closeInterface(242)
+    }
 }

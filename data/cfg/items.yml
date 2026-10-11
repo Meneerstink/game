@@ -270670,7 +270670,7 @@
     prayer: 0
     ranged_strength: 106
     magic_damage: 0
-    attack_audio: 2700
+    attack_audio: 1352
     skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
     absorb_melee: 0
     absorb_magic: 0
@@ -270704,7 +270704,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0
-    attack_audio: 2700
+    attack_audio: 1352
     skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
     absorb_melee: 0
     absorb_magic: 0
@@ -270744,7 +270744,7 @@
     prayer: 0
     ranged_strength: 106
     magic_damage: 0
-    attack_audio: 2700
+    attack_audio: 1352
     skill_reqs: [{'skill': 4, 'level': 80}, {'skill': 16, 'level': 70}]
     absorb_melee: 0
     absorb_magic: 0
@@ -287373,7 +287373,7 @@
     prayer: 0
     ranged_strength: 0
     magic_damage: 0.0
-    attack_audio: 2503
+    attack_audio: 3454
     skill_reqs: [{'skill': 0, 'level': 60}]
     absorb_melee: 0
     absorb_magic: 0

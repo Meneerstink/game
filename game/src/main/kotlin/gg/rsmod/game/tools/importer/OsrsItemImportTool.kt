@@ -326,16 +326,17 @@ object OsrsItemImportTool {
                 ),
             // Bow of Faerdhinen and crystal armour. The bow follows the 667 crystal bow 4212 (ItemParamProbeTool 2026-09-14: 686 16,
             // 23 requirement, no 644 render param, two requirements 749/750 + 751/752) with upstream 434-437 = 80 Ranged + 70
-            // Agility; weapon type 16 and attack audio 2700 as the 667 crystal bow. Crystal armour: upstream 434/436 = Defence
+            // Agility; weapon type 16 as the 667 crystal bow; attack audio crystal_bow2 1352 (OSRS Wiki sound list, owner C3 2026-10-11 -
+            // it was the 667 crystal bow's longbow 2700). Crystal armour: upstream 434/436 = Defence
             // 70, 435/437 = Agility 50 on the active pieces only (the inactive pieces carry no requirement params upstream).
             // Worn "Check" (upstream op 451) on the charged bow and active armour. Canonical ids only: the (c) colour variants
             // 25884-25896 / 33021, the LMS copies 27187 / 33166-33170, the recoloured armour 27697+ and the Gauntlet items are
             // not imported.
             "crystal" to
                 listOf(
-                    Spec(25865, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700, rev667StringParams = mapOf(528 to "Check")), // Bow of Faerdhinen
-                    Spec(25862, noted = true, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700), // Bow of Faerdhinen (inactive)
-                    Spec(25867, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 2700), // Bow of Faerdhinen (c)
+                    Spec(25865, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 1352, rev667StringParams = mapOf(528 to "Check")), // Bow of Faerdhinen
+                    Spec(25862, noted = true, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 1352), // Bow of Faerdhinen (inactive)
+                    Spec(25867, rev667Params = bowfaParams(), weaponType = 16, attackAudio = 1352), // Bow of Faerdhinen (c)
                     Spec(23971, rev667Params = crystalArmourParams(), rev667StringParams = mapOf(528 to "Check")), // Crystal helm
                     Spec(23973), // Crystal helm (inactive)
                     Spec(23975, rev667Params = crystalArmourParams(), rev667StringParams = mapOf(528 to "Check")), // Crystal body
@@ -883,7 +884,7 @@ object OsrsItemImportTool {
                     // Owner 2026-09-29 ("the colossal blade has its own attack animation"): the wiki gives it the Barrelchest anchor attack
                     // sound and its walk GIF drags the blade one-handed like the anchor, so it takes the anchor's render set 985 (667
                     // Barrelchest anchor 10887: 644 985) with the 2h-sword styles.
-                    Spec(27021, rev667Params = mapOf(644 to 985, 686 to 7, 749 to 0, 750 to 60), weaponType = 7, attackAudio = 2503), // Colossal blade
+                    Spec(27021, rev667Params = mapOf(644 to 985, 686 to 7, 749 to 0, 750 to 60), weaponType = 7, attackAudio = 3454), // Colossal blade: brain_anchor_attack (OSRS Wiki: anchor sounds since 15 June 2022; owner C2 2026-10-11)
                     // Second round (owner answers 2026-09-29): Bellator 28316, Brimstone 22975, Neitiznot faceguard 24271, Serpentine
                     // helm uncharged 12929 / charged 12931, Amulet of the damned (full) 12851 / used 12853; blighted supplies (manta ray
                     // 24589, anglerfish 24592, karambwan 24595, super restore 24598/24601/24603/24605) - RuneLite gameval ItemID.
