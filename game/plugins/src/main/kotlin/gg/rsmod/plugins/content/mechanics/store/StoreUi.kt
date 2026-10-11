@@ -77,7 +77,7 @@ object StoreUi : KLogging() {
         val l = layout(player)
         val tab = (component - TAB_FIRST) / TAB_STRIDE
         when {
-            component == CLOSE -> player.closeInterface(INTERFACE_ID)
+            component == CLOSE -> close(player)
             component >= TAB_FIRST && (component - TAB_FIRST) % TAB_STRIDE == 0 && tab in Shop.values().indices -> switchShop(player, tab)
             l.sections && component in l.sectionFirst until l.owned && (component - l.sectionFirst) % Ui.SECTION_STRIDE == 0 ->
                 switchSection(player, (component - l.sectionFirst) / Ui.SECTION_STRIDE)
@@ -117,6 +117,9 @@ object StoreUi : KLogging() {
     /** The store's painted art (StoreArtTool): tabs, Buy button and currency icons, per shop in tab order. */
     private val Art = gg.rsmod.game.tools.importer.StoreArtTool
 
+    /** The store is open as the fixed-mode full-screen top level (see [open]). */
+    private val FULLSCREEN_ATTR = AttributeKey<Boolean>()
+
     private val SHOP_ATTR = AttributeKey<Int>()
     private val SECTION_ATTR = AttributeKey<Int>()
     private val PAGE_ATTR = AttributeKey<Int>()
@@ -144,6 +147,17 @@ object StoreUi : KLogging() {
 
     fun isOpen(player: Player): Boolean = player.isInterfaceVisible(INTERFACE_ID)
 
+    /** Closes the window: the fixed-mode full-screen store gives the gameframe back, the resizable one closes as a sub-interface. */
+    fun close(player: Player) {
+        if (player.attr[FULLSCREEN_ATTR] == true) {
+            player.attr.remove(FULLSCREEN_ATTR)
+            player.interfaces.close(0, 0)
+            player.closeFullscreenInterface()
+        } else {
+            player.closeInterface(INTERFACE_ID)
+        }
+    }
+
     fun open(
         player: Player,
         shop: Shop,
@@ -161,7 +175,15 @@ object StoreUi : KLogging() {
         if (!isOpen(player)) {
             // Owner 2026-10-10: the 600x420 window. The resizable gameframe's modal slot (746:12) is a 512x334 box that clipped it
             // (and the 527x360 one before it); 746:11 is the whole game view (as the skill guide). Fixed mode maps both to 548:9.
-            player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN_FULL)
+            // Owner 2026-10-11 (bugs 030753, "Over whole screen"): fixed mode has only the 512x334 game view (548:9), where the
+            // 660x470 window spilled over chat and tabs. There it opens as the full-screen top level over the whole 765x503
+            // frame, the world map's route (openFullscreenInterface / closeFullscreenInterface).
+            if (player.interfaces.displayMode.isResizable()) {
+                player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN_FULL)
+            } else {
+                player.openFullscreenInterface(INTERFACE_ID)
+                player.attr[FULLSCREEN_ATTR] = true
+            }
         }
         val l = layout(player)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, OP1)

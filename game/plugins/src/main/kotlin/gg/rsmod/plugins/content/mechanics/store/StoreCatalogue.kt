@@ -163,7 +163,7 @@ object StoreCatalogue {
     const val UNLIMITED = Int.MAX_VALUE
 
     /** Charged weapons the Donator shop sells in their empty/uncharged form on purpose (owner page 2026-09-29: no free charges). */
-    val SOLD_UNCHARGED: Set<Int> = setOf(Items.TOXIC_BLOWPIPE_EMPTY, Items.UNCHARGED_TOXIC_TRIDENT)
+    val SOLD_UNCHARGED: Set<Int> = setOf(Items.TOXIC_BLOWPIPE_EMPTY, Items.UNCHARGED_TOXIC_TRIDENT, Items.DIZANAS_QUIVER_UNCHARGED)
 
     /** PROVISIONAL prices per Donator tier (owner gave the tiers only). */
     val TIER_PRICE = mapOf(Tier.BASIC to 100, Tier.PREMIUM to 250, Tier.ELITE to 500, Tier.PRESTIGE to 1_000)
@@ -346,6 +346,11 @@ object StoreCatalogue {
             Items.ZALCANO_SHARD to 30_000, Items.HARMONISED_ORB to 75_000, Items.VOLATILE_ORB to 75_000, Items.ELDRITCH_ORB to 75_000,
             Items.DRAGON_PICKAXE_UPGRADE_KIT to 30_000)
             .forEach { (kit, price) -> list += kitEntry(l, kit, "High-end rewards", price = price) }
+        // Owner 2026-10-11 (bug 031129, prices "All 50,000"): the normal Infernal cape, Dizana's quiver and Ava's assembler. The
+        // quiver is sold uncharged, the form OSRS gives; it charges with Sunfire splinters (dizanas_quiver.plugin.kts).
+        // Belle's folly (owner 2026-10-11: "where is bellys folly" -> Loyalty Shop, 50,000): it was in the game but obtainable nowhere.
+        listOf(Items.INFERNAL_CAPE, Items.DIZANAS_QUIVER_UNCHARGED, Items.AVAS_ASSEMBLER, Items.BELLES_FOLLY)
+            .forEach { list += itemEntry(l, it, 50_000, "High-end rewards") }
         // Owner 2026-09-20: "remove the crown of helious out of the shop" - the Crown of Helios is not sold here.
         listOf(Items.GUTHIX_HALO to 2_500, Items.SARADOMIN_HALO to 2_500, Items.ZAMORAK_HALO to 2_500,
             Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE to 7_500, Items.TOP_HAT to 5_000, Items.SNOWMAN_TOP_HAT to 5_000,

@@ -433,6 +433,11 @@ object AncientCurses {
         deactivateAllCurses(player)
         player.attr[CURRENT_BOOK_ATTR] = book.name
         syncBookVarbit(player)
+        // Novite Prayer.setPrayerBook -> InterfaceManager.sendPrayerBook: the prayer tab is sent again so the client builds the
+        // grid, tooltips and slot clicks of the new book. With only the varbit the tab kept the old book's grid until a relog:
+        // curse clicks did not activate (or hit another slot) and the tooltips were the other book's (owner 2026-10-11 031301,
+        // 031458).
+        player.openInterface(gg.rsmod.plugins.api.InterfaceDestination.PRAYER_TAB)
         player.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayers.confirmQuickPrayerSelection(player)
         player.filterableMessage("You switch to the ${book.name.lowercase()} prayer book.")

@@ -76,5 +76,6 @@ on_login {
  * Update friend lists of other players who have this player as a friend when this player logs out
  */
 on_logout {
-    player.updateOthersFriendLists()
+    // Still registered while on_logout runs: shown offline explicitly (Void FriendsList playerDespawn, online = false).
+    player.updateOthersFriendLists(online = false)
 }

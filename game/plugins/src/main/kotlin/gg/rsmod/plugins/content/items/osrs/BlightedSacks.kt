@@ -60,10 +60,10 @@ object BlightedSacks {
         player: Player,
         sack: Sack,
     ): Boolean {
+        // Owner 2026-10-11 (bug 030442, "Work everywhere"): the sacks work in the safe zones too, replacing the 2026-09-22 rule
+        // "not in the safe zones" (OSRS allows them in safe areas as well, e.g. Ferox Enclave). The spellbook varc follows this.
         if (player.tile.getWildernessLevel() > 0) return true
-        if (sack.wildernessOnly) return false
-        val home = player.world.gameContext.home
-        return AreaState.isPvpAllowed(player.zoneTile(), home)
+        return !sack.wildernessOnly
     }
 
     /** True when a sack in the inventory replaces the runes of [spellId] here. */

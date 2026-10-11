@@ -1243,11 +1243,14 @@ abstract class Player(
 
     /**
      * Sends an updated friend list to the player.
+     *
+     * @param loggingOut a friend in the middle of logging out: still registered in the world during on_logout, so shown as
+     * offline explicitly (Void `FriendsList` playerDespawn -> `notifyBefriends(online = false)`).
      */
-    fun updateFriendList() {
+    fun updateFriendList(loggingOut: Player? = null) {
         val friendList = mutableListOf<Friend>()
         friends.forEach { friend ->
-            val friendPlayer = world.getPlayerForName(friend)
+            val friendPlayer = world.getPlayerForName(friend)?.takeIf { it !== loggingOut }
             // The 667 client treats world 1 as the local game world. Sending 15
             // makes an actually connected friend render as offline.
             var worldId = if (friendPlayer != null) 1 else 0
@@ -1283,17 +1286,20 @@ abstract class Player(
     }
 
     /**
-     * Updates the friendlists of all players that have this player on their friendlist
+     * Updates the friendlists of all players that have this player on their friendlist.
+     *
+     * Owner bug 2026-10-11 030911 ("messaging friends in the friends list doesnt work"): this used to be a STANDARD queue task
+     * on every friend (wait 1 tick, then update). Such a task waits while that friend has a window open and is dropped by any
+     * walk/attack/teleport (interruptQueues), so a friend who logged in stayed "Offline" in the list; the 667 friend list
+     * (script 125) then gives the row its offline "Message" op, which script 126 answers on the client with "That player is
+     * currently offline." - no private message packet ever reached the server. Ported from Void `FriendsList.notifyBefriends`:
+     * the update is sent at once, with an explicit online flag for a player who is logging out.
      */
-    fun updateOthersFriendLists() {
+    fun updateOthersFriendLists(online: Boolean = true) {
+        val displayName = Misc.formatForDisplay(username)
         world.players.forEach { otherPlayer ->
-            val displayName = Misc.formatForDisplay(username)
-            if (otherPlayer.friends.any { Misc.formatForDisplay(it).equals(displayName, ignoreCase = true) }) {
-                otherPlayer.queue {
-                    // Queue for next cycle, needed when updating for a friend logging off
-                    wait(1)
-                    otherPlayer.updateFriendList()
-                }
+            if (otherPlayer !== this && otherPlayer.friends.any { Misc.formatForDisplay(it).equals(displayName, ignoreCase = true) }) {
+                otherPlayer.updateFriendList(loggingOut = if (online) null else this)
             }
         }
     }

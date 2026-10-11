@@ -38,14 +38,14 @@ object QuartermasterSupplies {
         listOf(
             // High-tier and combo food (owner 2026-09-30: no shark, summer pie or tuna potato).
             Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000, Items.DARK_CRAB to 1_000,
-            // Halibut made way for the one bolt row (2026-10-04, 40-row window; [droppedForWindow]).
-            Items.MARLIN to 1_000, Items.COOKED_KARAMBWAN to 2_000,
+            // Halibut is back (owner 2026-10-11, bug 030542); the Stamina potion made way for it in the 40-row window.
+            Items.HALIBUT to 1_000, Items.MARLIN to 1_000, Items.COOKED_KARAMBWAN to 2_000,
             // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion.
             Items.SARADOMIN_BREW_4 to 1_000, Items.SUPER_RESTORE_4 to 1_000, Items.SUPER_COMBAT_POTION_4 to 500,
             Items.SUPER_ATTACK_4 to 500, Items.SUPER_STRENGTH_4 to 500, Items.SUPER_DEFENCE_4 to 500,
             Items.RANGING_POTION_4 to 500, Items.MAGIC_POTION_4 to 500,
             Items.BASTION_POTION_4 to 300, Items.BATTLEMAGE_POTION_4 to 300,
-            Items.SANFEW_SERUM_4 to 300, Items.GUTHIX_REST_4 to 300, Items.STAMINA_POTION_4 to 300,
+            Items.SANFEW_SERUM_4 to 300, Items.GUTHIX_REST_4 to 300,
             Items.EXTENDED_ANTIFIRE_4 to 300, Items.ANTI_VENOM_PLUS_4 to 300,
         )
 
@@ -79,10 +79,10 @@ object QuartermasterSupplies {
             Items.RUBY_DRAGON_BOLTS_E to 500,
         ).distinctBy { it.first }
 
-    /** Rows dropped on 2026-10-04 so the single shop fits the 40-row window (the owner can swap any back in). */
+    /** Rows dropped so the single shop fits the 40-row window (2026-10-04; Stamina potion for Halibut 2026-10-11). */
     val droppedForWindow: List<Int> =
         listOf(
-            Items.HALIBUT,
+            Items.STAMINA_POTION_4,
             Items.RUNITE_BOLTS, Items.DIAMOND_BOLTS_E, Items.RUBY_BOLTS_E, Items.DRAGON_BOLTS_E, Items.ONYX_BOLTS_E,
             Items.DRAGON_BOLTS, Items.OPAL_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E, Items.DRAGONSTONE_DRAGON_BOLTS_E,
             Items.MOONLIGHT_ANTLER_BOLTS,
