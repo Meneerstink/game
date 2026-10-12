@@ -14,6 +14,8 @@ import gg.rsmod.plugins.api.ext.setSkullIcon
 on_timer(SKULL_ICON_DURATION_TIMER) {
     player.timers.remove(SKULL_ICON_DURATION_TIMER)
     RiskSkull.refresh(player)
+    // Owner A7: no OSRS text for this - a red line (TimerExpiry).
+    player.message(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.SKULL_EXPIRED)
 }
 
 on_timer(PVP_AGGRESSOR_WINDOW_TIMER) {

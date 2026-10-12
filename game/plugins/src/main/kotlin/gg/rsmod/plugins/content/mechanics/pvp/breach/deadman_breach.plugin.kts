@@ -172,7 +172,7 @@ listOf("breach_justiciar", "breach_derwen").forEach { def ->
     NpcAttacks.onLandedImpact(def, "magic") { npc, target ->
         if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
             gg.rsmod.game.model.BreachTrace.log("mech.teleblock") { "def=$def player=${target.username}" }
-            target.timers[TELEBLOCK_TIMER] = TELEBLOCK_TICKS
+            gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, TELEBLOCK_TICKS)
             // Owner live test 2026-09-28 ("Derwen mist de teleblock animatie en teleblock sound"): the players' Tele Block impact
             // look and sound (CombatSpell.TELEPORT_BLOCK: OSRS spotanim 345 TELE_BLOCK_IMPACT, SpellSounds impact 203).
             target.graphic(gg.rsmod.plugins.content.items.osrs.OsrsGfx.TELE_BLOCK_IMPACT, 0)

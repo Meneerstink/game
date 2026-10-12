@@ -116,7 +116,7 @@ on_magic_spell_button("Charge") { metadata ->
 
 on_timer(GOD_SPELL_CHARGE_TIMER) {
     player.attr.remove(GOD_SPELL_CHARGE_ATTR)
-    player.message("Your magical charge fades away.")
+    player.message(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.CHARGE_EXPIRED)
 }
 
 /*

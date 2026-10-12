@@ -5,9 +5,19 @@ package gg.rsmod.plugins.content.items.potion
  * [DivinePotions]). ADAPTED: the recipe message.
  */
 
+/** The cycle the divine expiry line was last written (one line for the three timers of a divine super combat). */
+val DIVINE_EXPIRY_CYCLE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
 DivinePotions.TIMERS.forEach { (skill, timer) ->
     on_timer(timer) {
         DivinePotions.expire(player, skill)
+        // Owner A7 (red line, no OSRS text): once, when the last divine boost ends - a divine super combat runs three timers that
+        // end on the same tick.
+        val others = DivinePotions.TIMERS.values.filter { it != timer && player.timers.has(it) && player.timers[it] > 0 }
+        if (others.isEmpty() && player.attr[DIVINE_EXPIRY_CYCLE] != world.currentCycle) {
+            player.attr[DIVINE_EXPIRY_CYCLE] = world.currentCycle
+            player.message(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.DIVINE_EXPIRED)
+        }
     }
 }
 

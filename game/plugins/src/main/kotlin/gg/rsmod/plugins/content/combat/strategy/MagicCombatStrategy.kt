@@ -457,7 +457,8 @@ object MagicCombatStrategy : CombatStrategy {
                 if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
                     val protectedFromMagic =
                         Prayers.isActive(target, Prayer.PROTECT_FROM_MAGIC) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MAGIC)
-                    target.timers[TELEBLOCK_TIMER] = if (protectedFromMagic) 250 else 500
+                    // With the OSRS 30-second warning (owner A7, TimerExpiry).
+                    gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protectedFromMagic) 250 else 500)
                     target.message("You have been teleblocked!")
                     if (pawn is Player) pawn.message("You have teleblocked ${target.username}.")
                 }

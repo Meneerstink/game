@@ -474,7 +474,7 @@ val MAGIC_IMBUE_TIMER = TimerKey()
 
 on_timer(MAGIC_IMBUE_TIMER) {
     player.attr.remove(MAGIC_IMBUE_ATTR)
-    player.message("Your Magic Imbue charge has worn off.")
+    player.message(gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.MAGIC_IMBUE_EXPIRED)
 }
 
 on_magic_spell_button("Magic Imbue") { metadata ->
