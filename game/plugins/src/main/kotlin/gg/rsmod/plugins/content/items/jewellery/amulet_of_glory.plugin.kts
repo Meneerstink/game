@@ -17,6 +17,8 @@ private val LOCATIONS =
 
 val AMULET_OF_GLORY =
     intArrayOf(
+        Items.AMULET_OF_GLORY_6,
+        Items.AMULET_OF_GLORY_5,
         Items.AMULET_OF_GLORY_4,
         Items.AMULET_OF_GLORY_3,
         Items.AMULET_OF_GLORY_2,
@@ -115,6 +117,9 @@ fun Player.teleport(
  */
 fun replacement(original: Int): Int {
     return when (original) {
+        // Owner A31 (night run 2026-10-12): glory(6) and (5) are OSRS imports at 24122 / 24124, not next to the 2011 glories.
+        Items.AMULET_OF_GLORY_6 -> Items.AMULET_OF_GLORY_5
+        Items.AMULET_OF_GLORY_5 -> Items.AMULET_OF_GLORY_4
         in Items.AMULET_OF_GLORY_T4..Items.AMULET_OF_GLORY_T1 -> original + 2
         else -> original - 2
     }
@@ -128,6 +133,8 @@ fun replacement(original: Int): Int {
  */
 fun message(original: Int): String {
     return when (original) {
+        Items.AMULET_OF_GLORY_6 -> "Your amulet of glory has five charges left."
+        Items.AMULET_OF_GLORY_5 -> "Your amulet of glory has four charges left."
         Items.AMULET_OF_GLORY_4, Items.AMULET_OF_GLORY_T4 -> "Your amulet of glory has three charges left."
         Items.AMULET_OF_GLORY_3, Items.AMULET_OF_GLORY_T3 -> "Your amulet of glory has two charges left."
         Items.AMULET_OF_GLORY_2, Items.AMULET_OF_GLORY_T2 -> "Your amulet of glory has one charge left."

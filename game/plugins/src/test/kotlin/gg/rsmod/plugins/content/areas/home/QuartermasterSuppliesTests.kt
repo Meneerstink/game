@@ -89,6 +89,24 @@ class QuartermasterSuppliesTests {
     }
 
     @Test
+    fun `A31 - glory(6) and (5) exist with their notes and teleport options, glory(6) is sold noted at its OSRS price`() {
+        val glory6 = def(Items.AMULET_OF_GLORY_6)
+        val glory5 = def(Items.AMULET_OF_GLORY_5)
+        assertEquals("Amulet of glory(6)", glory6.name)
+        assertEquals("Amulet of glory(5)", glory5.name)
+        listOf(glory6 to Items.AMULET_OF_GLORY_6_NOTED, glory5 to Items.AMULET_OF_GLORY_5_NOTED).forEach { (item, note) ->
+            assertEquals(note, QuartermasterSupplies.notedId(DEFINITIONS, item), "${item.name} has its banknote")
+            assertTrue("Rub" in item.inventoryMenu, "${item.name} inventory ${item.inventoryMenu.toList()}")
+            // The same equipment options as glory(4): the plugin binds Edgeville / Karamja / Draynor Village / Al Kharid by name.
+            assertEquals(def(Items.AMULET_OF_GLORY_4).equipmentMenu.filterNotNull(), item.equipmentMenu.filterNotNull(), item.name)
+        }
+        val row = shop.single { it.unnoted == Items.AMULET_OF_GLORY_6 }
+        assertEquals(Items.AMULET_OF_GLORY_6_NOTED, row.item)
+        assertEquals(10_139, row.price, "OSRS guide price of Amulet of glory(6)")
+        assertTrue(shop.none { it.unnoted == Items.AMULET_OF_GLORY_4 }, "glory(4) made way for glory(6) in the 40-row window")
+    }
+
+    @Test
     fun `the runes, sacks, arrows and bolts stack by themselves`() {
         val ammunitionIds = QuartermasterSupplies.ammunition.map { it.first }.toSet()
         shop.filter { it.unnoted in ammunitionIds }.forEach { assertTrue(def(it.item).stackable, "${def(it.item).name} does not stack") }

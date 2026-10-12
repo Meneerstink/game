@@ -123,6 +123,8 @@ object Mining {
         val chanceOfGem =
             if (player.hasEquipped(
                     EquipmentType.AMULET,
+                    Items.AMULET_OF_GLORY_6,
+                    Items.AMULET_OF_GLORY_5,
                     Items.AMULET_OF_GLORY_1,
                     Items.AMULET_OF_GLORY_2,
                     Items.AMULET_OF_GLORY_3,

@@ -186,6 +186,10 @@ object ImportBatchOrchestrator {
             plannedModels.forEach { pm ->
                 val key = ModelIdAllocator.mappingKey(pm.source.sourceIdentity, pm.source.role)
                 if (!emittedModelKeys.add(key)) return@forEach
+                // A mesh an earlier batch already imported (asset map) is reused as it is in the caches, never written again: later
+                // tools legitimately change imported meshes (OsrsDecalLiftTool, the wrist / shin fits) and re-writing the upstream
+                // bytes would undo them - or, as for Amulet of glory(6) on 2026-10-12, stop the batch with a CONFLICT on mesh 64021.
+                if (existing.modelLocalIdByMappingKey[key] == pm.localId) return@forEach
                 mutations +=
                     CacheMutation(
                         indexId = ModelConvertTool.MODEL_INDEX,

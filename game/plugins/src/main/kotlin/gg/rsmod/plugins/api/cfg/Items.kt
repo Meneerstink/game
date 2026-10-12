@@ -20368,4 +20368,8 @@ object Items {
     const val BASILISK_JAW_NOTED = 23939
     const val KRAKEN_TENTACLE = 24120
     const val KRAKEN_TENTACLE_NOTED = 24121
+    const val AMULET_OF_GLORY_6 = 24122
+    const val AMULET_OF_GLORY_6_NOTED = 24123
+    const val AMULET_OF_GLORY_5 = 24124
+    const val AMULET_OF_GLORY_5_NOTED = 24125
 }

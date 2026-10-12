@@ -874,6 +874,10 @@ object OsrsItemImportTool {
             // Serpentine visage 12927 ("charged with a chisel on a serpentine visage", 52 Crafting) and Basilisk jaw 24268 (the Neitiznot
             // faceguard's component) - gameval ItemID.
             "owner0929c" to listOf(Spec(12927, noted = true), Spec(24268, noted = true)),
+            // Owner A31 2026-10-11: Amulet of glory(6) does not exist in the 667 cache (11976/11978 are scabarite notes there) - the
+            // OSRS item (RuneLite gameval AMULET_OF_GLORY6 11978) and glory(5) 11976, the charge it becomes after one teleport (OSRS
+            // 6 -> 5 -> 4), both with noted forms; no wield requirement upstream, no client params.
+            "glory6" to listOf(Spec(11978, noted = true), Spec(11976, noted = true)),
             "owner0929" to
                 listOf(
                     Spec(11936, noted = true), // Dark crab

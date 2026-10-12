@@ -50,14 +50,15 @@ object QuartermasterSupplies {
         )
 
     /**
-     * Teleports and utility. Sold noted where the cache has a note (glory 1713). The rest has no banknote in this cache
+     * Teleports and utility. Sold noted where the cache has a note (glory(6) 24123 - an OSRS import with
+     * its note, owner A31 night run 2026-10-12). The rest has no banknote in this cache
      * (the OSRS-imported burning amulet 23849..23853 was imported without one: consecutive ids, no note def links to it;
      * likewise the house tab, rune pouch and seeds), so the noted shop hands those out as themselves - a boot PROBLEM line
      * names every non-stacking one, and QuartermasterSuppliesTests proves no note exists for each.
      */
     val utility: List<Pair<Int, Int>> =
         listOf(
-            Items.TELEPORT_TO_HOUSE to 1_000, Items.BURNING_AMULET_5 to 200, Items.AMULET_OF_GLORY_4 to 200,
+            Items.TELEPORT_TO_HOUSE to 1_000, Items.BURNING_AMULET_5 to 200, Items.AMULET_OF_GLORY_6 to 200,
             Items.RUNE_POUCH to 50, Items.MITHRIL_SEEDS to 1_000, Items.ADAMANT_SEEDS to 1_000,
         )
 
@@ -79,10 +80,15 @@ object QuartermasterSupplies {
             Items.RUBY_DRAGON_BOLTS_E to 500,
         ).distinctBy { it.first }
 
-    /** Rows dropped so the single shop fits the 40-row window (2026-10-04; Stamina potion for Halibut 2026-10-11). */
+    /**
+     * Rows dropped so the single shop fits the 40-row window (2026-10-04; Stamina potion for Halibut 2026-10-11). Glory(4) made way
+     * for glory(6) (owner A31, night run 2026-10-12): the window was full, (6) is the same amulet with two more charges and costs
+     * less on the OSRS GE (10,139 against 11,807); glory(4) stays on the GE and is what a rubbed (6) becomes after two teleports.
+     */
     val droppedForWindow: List<Int> =
         listOf(
             Items.STAMINA_POTION_4,
+            Items.AMULET_OF_GLORY_4,
             Items.RUNITE_BOLTS, Items.DIAMOND_BOLTS_E, Items.RUBY_BOLTS_E, Items.DRAGON_BOLTS_E, Items.ONYX_BOLTS_E,
             Items.DRAGON_BOLTS, Items.OPAL_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E, Items.DRAGONSTONE_DRAGON_BOLTS_E,
             Items.MOONLIGHT_ANTLER_BOLTS,

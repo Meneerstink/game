@@ -77,6 +77,23 @@ class ImportBatchOrchestratorTests {
     }
 
     @Test
+    fun anAlreadyImportedMeshIsReusedAsItIsAndNeverWrittenAgain() {
+        // Night run 2026-10-12 (Amulet of glory(6)): the burning amulets' mesh 64021 had been reworked by OsrsDecalLiftTool; the new
+        // item that shares it re-wrote the upstream bytes and stopped at a CONFLICT. A mapped mesh is reused, a new one written.
+        val existing =
+            ImportBatchOrchestrator.ExistingMapping(
+                itemLocalIdBySourceIdentity = emptyMap(),
+                modelLocalIdByMappingKey = mapOf(ModelIdAllocator.mappingKey("upstream_model:10", "inventory") to 65517),
+                mappedItemSourceIdentities = emptySet(),
+            )
+        val batch = listOf(item("upstream_item:7", "New item", listOf(model("upstream_model:10", "inventory"), model("upstream_model:11", "worn"))))
+        val plan = ImportBatchOrchestrator.plan(FAKE_TARGETS, batch, existing, nextFreeItemId = 999, modelSafeFreeStart = 900, modelSafeFreeEnd = 910)
+        val modelGroups = plan.transaction.mutations.filter { it.indexId == ModelConvertTool.MODEL_INDEX }.map { it.groupId }
+        assertEquals("only the newly allocated mesh is written", listOf(plan.items.single().models.single { it.localId != 65517 }.localId), modelGroups)
+        assertEquals(65517, plan.items.single().models.first().localId)
+    }
+
+    @Test
     fun aMeshSharedByTwoItemsOfOneBatchIsAllocatedAndWrittenOnce() {
         val batch =
             listOf(
