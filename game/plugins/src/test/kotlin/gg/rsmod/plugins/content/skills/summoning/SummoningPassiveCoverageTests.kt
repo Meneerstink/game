@@ -114,6 +114,9 @@ class SummoningPassiveCoverageTests {
      * So the rule to assert is that defensive-only implies *fightable* and *retaliating*, while
      * the command gate rejects an owner-selected offensive target. A defensive-only familiar that
      * could not fight at all would be miscategorised - it would belong in `NONE`.
+     *
+     * Owner A10 (night run 2026-10-12): a beast of burden never attacks and never hits back - the Pack yak is the one
+     * defensive-only familiar that carries, so it is exempt from the retaliation rule (FamiliarSingleCombatTests asserts it).
      */
     @Test
     fun `defensive-only familiars are combat-capable, and the restriction lives in the assist gate`() {
@@ -125,7 +128,7 @@ class SummoningPassiveCoverageTests {
                 when {
                     !definition.canFight ->
                         "${definition.pouch.name} is defensive-only but cannot fight; it belongs in NONE"
-                    FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.retaliates != true ->
+                    FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.let { it.retaliates != true && !it.isBeastOfBurden } != false ->
                         "${definition.pouch.name} is defensive-only but does not retaliate"
                     FamiliarCapabilityTable.forNpc(definition.pouch.npc)?.canReceiveAttackCommand == true ->
                         "${definition.pouch.name} is defensive-only but accepts an offensive Attack command"

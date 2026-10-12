@@ -35,7 +35,9 @@ class PernixVirtusRemovedTests {
 
     @Test
     fun `every Pernix and Virtus id is unobtainable and taken by the login purge`() {
-        assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS)
+        // Owner A13 (night run 2026-10-12): the Deadman (deg) / corrupt / Torva used-broken ids are unobtainable too - converted to
+        // the normal item at login (DeadmanGear.migrate) before this purge runs; every other unobtainable id is Pernix / Virtus.
+        assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS - gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys)
         // Owner 2026-10-06 "Delete on login": the login purge takes them through isUnobtainable; IDS stays the removed runes.
         assertTrue(RemovedItems.UNOBTAINABLE_IDS.none { it in RemovedItems.IDS })
         removed.forEach { id ->
