@@ -25,11 +25,22 @@ class KeyTypedHandler : MessageHandler<KeyTypedMessage> {
     ) {
         val keycode = message.keycode
         val player = client as Player
+        // Owner A42 2026-10-11: during an "interface hang" only two KeyTyped packets arrived and nobody could tell which keys they
+        // were. Every typed key is in the input trace now, with whether a window was open and what Esc does for this player.
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) {
+            "key ${player.username} code=$keycode${if (keycode == 13) " (Esc)" else ""} modal=${player.interfaces.getModal()}" +
+                if (keycode == 13) " escClosesInterface=${gg.rsmod.game.model.hud.ClientHud.escClosesInterface(player)}" else ""
+        }
 
         when (keycode) {
             13 -> { // ESC
                 if (player.interfaces.getModal() != -1 && player.lock.canInterfaceInteract() && gg.rsmod.game.model.hud.ClientHud.escClosesInterface(player)) {
                     player.closeInterfaceModal()
+                } else if (player.interfaces.getModal() != -1) {
+                    gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) {
+                        "Esc left window ${player.interfaces.getModal()} open for ${player.username}: " +
+                            if (!player.lock.canInterfaceInteract()) "locked (${player.lock})" else "the player's keybinding 'Esc closes the current interface' is off"
+                    }
                 }
             }
             83 -> { // SPACE
