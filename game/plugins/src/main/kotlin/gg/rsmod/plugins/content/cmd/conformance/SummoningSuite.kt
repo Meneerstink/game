@@ -672,15 +672,23 @@ object SummoningSuite : Conformance.Suite {
         val c = world.currentCycle
         // The follower panel's Attack is the real "order your familiar to attack" (the bot itself does not fight).
         Bots.targetNpc(bot, PANEL, PANEL_ATTACK, dummy)
-        val selfDefenceOnly =
-            gg.rsmod.plugins.content.skills.summoning.FamiliarCapabilityTable.forNpc(fam.id)?.combatMode ==
-                gg.rsmod.plugins.content.skills.summoning.FamiliarCombatMode.SELF_DEFENCE_ONLY
+        val capabilities = gg.rsmod.plugins.content.skills.summoning.FamiliarCapabilityTable.forNpc(fam.id)
+        val selfDefenceOnly = capabilities?.combatMode == gg.rsmod.plugins.content.skills.summoning.FamiliarCombatMode.SELF_DEFENCE_ONLY
+        // Owner A10 (2026-10-10, approved 2026-10-11): a beast of burden NEVER attacks - the owner's rule replaces the donor's
+        // combat data for them, so an order must be refused and no attack may follow.
+        val neverAttacks = capabilities?.attacks == false
         val distances = HashMap<Int, Int>()
-        for (t in 0 until (if (selfDefenceOnly) 3 else 80)) {
+        for (t in 0 until (if (selfDefenceOnly || neverAttacks) 3 else 80)) {
             distances[world.currentCycle] = gap(fam.tile, runCatching { world.definitions.get(NpcDef::class.java, fam.id).size }.getOrDefault(1), dummy.tile, dummy.getSize())
             dummy.setCurrentLifepoints(DUMMY_LIFE)
             bot.setCurrentLifepoints(bot.getMaximumLifepoints())
             wait(1)
+        }
+        if (neverAttacks) {
+            val said = gameMessages(run, "Conf1", c)
+            val swung = run.recording.of("familiar", "out").count { it.cycle >= c && it.text.startsWith("anim ") && a["anim"]?.takeIf { n -> !n.isNull }?.asInt() == idOf(it.text) }
+            run.expectTrue(e, "beast of burden refuses an attack order (owner A10)", said.any { it.contains("Your familiar cannot fight that target.") } && swung == 0,
+                "${said.joinToString(" / ").ifEmpty { "(no message)" }}; attack animations=$swung", "Your familiar cannot fight that target. and no attack")
         }
         if (selfDefenceOnly) {
             // Pack yak, unicorn stallion, bunyip, void spinner (SummoningCombatDefinitions DEFENSIVE_ONLY, rev-634 data): they
@@ -688,29 +696,31 @@ object SummoningSuite : Conformance.Suite {
             val said = gameMessages(run, "Conf1", c)
             run.expectTrue(e, "defensive-only familiar refuses an attack order", said.any { it.contains("Your familiar cannot fight that target.") }, said.joinToString(" / ").ifEmpty { "(no message)" }, "Your familiar cannot fight that target.")
         }
-        val expectedAnim = a["anim"]?.takeIf { !it.isNull }?.asInt()
-        val anims = run.recording.of("familiar", "out").filter { it.cycle >= c && it.text.startsWith("anim ") }
-        val attackCycles = anims.filter { expectedAnim == null || idOf(it.text) == expectedAnim }.map { it.cycle }
-        val mostFrequent = anims.groupBy { idOf(it.text) }.maxByOrNull { it.value.size }?.key
-        if (!selfDefenceOnly) run.check(e, "attack ($style) animation", mostFrequent, "void" to expectedAnim)
-        attackCycles.firstOrNull()?.let { sound(run, e, "attack", it, it + 1, "familiar") }
-        run.recording.of("dummy", "out").firstOrNull { it.cycle >= c && it.text.startsWith("hits ") }?.let { sound(run, e, "familiar hit lands", it.cycle, it.cycle, "dummy") }
-        if (!selfDefenceOnly) run.expectTrue(e, "attacks when ordered (80 ticks)", attackCycles.size >= 2, "attack animations=${attackCycles.size}", ">= 2")
-        val intervals = attackCycles.zipWithNext { x, y -> y - x }
-        val speed = intervals.groupBy { it }.maxByOrNull { it.value.size }?.key
-        run.check(e, "attack speed (ticks)", speed, "void" to (a["speed"]?.takeIf { !it.isNull }?.asInt() ?: v["attack_speed"]?.takeIf { !it.isNull }?.asInt()))
-        a["projectile"]?.takeIf { !it.isNull }?.asInt()?.let { p ->
-            val projs = run.recording.events.filter { it.cycle >= c && it.kind == "proj" && it.text.contains("to=dummy") }.map { idOf(it.text.replace("gfx=", "id=")) }
-            run.check(e, "attack projectile", projs.groupBy { it }.maxByOrNull { it.value.size }?.key, "void" to p)
+        if (!neverAttacks) {
+            val expectedAnim = a["anim"]?.takeIf { !it.isNull }?.asInt()
+            val anims = run.recording.of("familiar", "out").filter { it.cycle >= c && it.text.startsWith("anim ") }
+            val attackCycles = anims.filter { expectedAnim == null || idOf(it.text) == expectedAnim }.map { it.cycle }
+            val mostFrequent = anims.groupBy { idOf(it.text) }.maxByOrNull { it.value.size }?.key
+            if (!selfDefenceOnly) run.check(e, "attack ($style) animation", mostFrequent, "void" to expectedAnim)
+            attackCycles.firstOrNull()?.let { sound(run, e, "attack", it, it + 1, "familiar") }
+            run.recording.of("dummy", "out").firstOrNull { it.cycle >= c && it.text.startsWith("hits ") }?.let { sound(run, e, "familiar hit lands", it.cycle, it.cycle, "dummy") }
+            if (!selfDefenceOnly) run.expectTrue(e, "attacks when ordered (80 ticks)", attackCycles.size >= 2, "attack animations=${attackCycles.size}", ">= 2")
+            val intervals = attackCycles.zipWithNext { x, y -> y - x }
+            val speed = intervals.groupBy { it }.maxByOrNull { it.value.size }?.key
+            run.check(e, "attack speed (ticks)", speed, "void" to (a["speed"]?.takeIf { !it.isNull }?.asInt() ?: v["attack_speed"]?.takeIf { !it.isNull }?.asInt()))
+            a["projectile"]?.takeIf { !it.isNull }?.asInt()?.let { p ->
+                val projs = run.recording.events.filter { it.cycle >= c && it.kind == "proj" && it.text.contains("to=dummy") }.map { idOf(it.text.replace("gfx=", "id=")) }
+                run.check(e, "attack projectile", projs.groupBy { it }.maxByOrNull { it.value.size }?.key, "void" to p)
+            }
+            val hits = run.recording.of("dummy", "out").filter { it.cycle >= c && it.text.startsWith("hits ") }.flatMap { damages(it.text) }
+            val max = a["max"]?.takeIf { !it.isNull }?.asInt()?.div(voidScale(run))
+            if (max != null) {
+                val observed = hits.maxOrNull() ?: 0
+                run.expectTrue(e, "attack max hit never exceeded", observed <= max, "max observed $observed over ${hits.size} hits", "<= $max (void)")
+                run.add(Result(e, "attack damage sample", Verdict.PASS, "max $max (void)", "${hits.size} hits, max ${hits.maxOrNull()}, mean ${if (hits.isEmpty()) 0 else hits.average().toInt()}"))
+            }
+            combatStats(run, fam, dummy, style, a, v, attackCycles, distances, c, e)
         }
-        val hits = run.recording.of("dummy", "out").filter { it.cycle >= c && it.text.startsWith("hits ") }.flatMap { damages(it.text) }
-        val max = a["max"]?.takeIf { !it.isNull }?.asInt()?.div(voidScale(run))
-        if (max != null) {
-            val observed = hits.maxOrNull() ?: 0
-            run.expectTrue(e, "attack max hit never exceeded", observed <= max, "max observed $observed over ${hits.size} hits", "<= $max (void)")
-            run.add(Result(e, "attack damage sample", Verdict.PASS, "max $max (void)", "${hits.size} hits, max ${hits.maxOrNull()}, mean ${if (hits.isEmpty()) 0 else hits.average().toInt()}"))
-        }
-        combatStats(run, fam, dummy, style, a, v, attackCycles, distances, c, e)
         // Defend animation: the dummy hits the familiar once.
         // Stop the fight first: an attack animation still running would (rightly) hide the block animation.
         // The dummy too: it fought back during the 80 ticks and kept attacking the familiar, which kept retaliating, so every
