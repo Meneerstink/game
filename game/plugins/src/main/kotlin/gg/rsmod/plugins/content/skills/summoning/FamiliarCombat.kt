@@ -29,6 +29,7 @@ import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.combat.getLastHitBy
+import gg.rsmod.plugins.content.combat.isAttackedByOtherThan
 import gg.rsmod.plugins.content.combat.isAttackDelayReady
 import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.combat.moveToAttackRange
@@ -180,20 +181,7 @@ object FamiliarCombat {
             if (!silent) player.message("Your familiar cannot attack that target.")
             return false
         }
-        /*
-         * The multi-way rule is two separate rules with two separate messages, and collapsing them
-         * into one told the player the wrong thing half the time: standing in single combat is a
-         * different failure from standing in multi and pointing at something that is not.
-         * Wordings supplied by the owner from period screenshots.
-         */
-        if (!player.tile.isMulti(player.world)) {
-            if (!silent) player.message("Your familiar cannot fight unless it is in a multi-way combat area.")
-            return false
-        }
-        if (!target.tile.isMulti(player.world)) {
-            if (!silent) player.message("Your familiar cannot fight a target that is not in a multi-way combat area.")
-            return false
-        }
+        if (!mayFightHere(player, familiar, target, silent)) return false
         // Combat.canEngage holds the owner's rules for a familiar too (Deadman guards, the PvP gate); checked here so the familiar
         // never takes a target it may not fight.
         if (!player.world.plugins.canAttack(player, target) || !gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target)) {
@@ -202,6 +190,36 @@ object FamiliarCombat {
         }
         familiar.attack(target)
         return familiar.getCombatTarget() === target
+    }
+
+    /**
+     * Where a familiar may fight [target] (owner A9 2026-10-11, dossier 4a "alleen tegen NPC's; tegen spelers alleen in multi",
+     * replacing 2011's multi-way-only rule): an npc anywhere - in single-way combat as long as nobody else is fighting it (the
+     * owner and his familiar count as one attacker, Combat.sameSide) - and a player, or another player's familiar, only in
+     * multi-way combat as before. The two multi-way messages are the owner's period wordings.
+     */
+    fun mayFightHere(
+        player: Player,
+        familiar: Npc,
+        target: Pawn,
+        silent: Boolean,
+    ): Boolean {
+        val playerMulti = player.tile.isMulti(player.world)
+        val targetMulti = target.tile.isMulti(player.world)
+        if (playerMulti && targetMulti) return true
+        if (target is Npc && target.owner == null) {
+            if (target.isAttackedByOtherThan(player)) {
+                if (!silent) player.message("Someone is already fighting this.")
+                return false
+            }
+            return true
+        }
+        if (!playerMulti) {
+            if (!silent) player.message("Your familiar cannot fight unless it is in a multi-way combat area.")
+            return false
+        }
+        if (!silent) player.message("Your familiar cannot fight a target that is not in a multi-way combat area.")
+        return false
     }
 
     /** Joins a deliberate owner fight, while preserving the four defensive-only exceptions. */
@@ -224,6 +242,8 @@ object FamiliarCombat {
         if (current != null && !retarget) return
         val definition = SummoningCombatDefinitions.getByNpc(familiar.id) ?: return
         if (!definition.isExecutable || definition.assistMode == FamiliarAssistMode.NONE) return
+        // Owner A10: a beast of burden never joins a fight.
+        if (FamiliarCapabilityTable.forNpc(familiar.id)?.attacks == false) return
         val target = ownerAssistTarget(player, definition.assistMode) ?: return
         if (current === target) return
         commandAttack(player, target, silent = true)
@@ -251,7 +271,8 @@ object FamiliarCombat {
             return
         }
         var target = familiar.getCombatTarget() ?: return
-        while (Familiar.current(owner) === familiar && familiar.canEngageCombat(target)) {
+        // Owner A9 2026-10-11: re-checked every attack (an npc someone else took meanwhile, a player stepping out of multi).
+        while (Familiar.current(owner) === familiar && familiar.canEngageCombat(target) && mayFightHere(owner, familiar, target, silent = true)) {
             if (!familiar.isAttackDelayReady()) {
                 task.wait(1)
                 target = familiar.getCombatTarget() ?: break

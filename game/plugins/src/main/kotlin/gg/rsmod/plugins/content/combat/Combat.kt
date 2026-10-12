@@ -403,6 +403,17 @@ object Combat {
     private fun actingFor(pawn: Pawn): Player? = pawn as? Player ?: pawn.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR]?.get() as? Player
 
     /**
+     * [a] and [b] fight on the same side: the same pawn, or a player and the familiar fighting for him (DAMAGE_CREDIT_ATTR).
+     * Owner A9 2026-10-11: a combat familiar may join its owner's fight against an npc in single-way combat; the single-way
+     * "already under attack" / "someone is already fighting this" rules count owner and familiar as one attacker, so the
+     * familiar's hits never lock its own owner out of his fight.
+     */
+    fun sameSide(
+        a: Pawn,
+        b: Pawn,
+    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true
+
+    /**
      * The Slayer gate (one rule for every attack route): an npc with a Slayer requirement above the player's Slayer level cannot be
      * wounded. The primary target gets [SLAYER_LEVEL_MESSAGE] (combat.plugin.kts); an area attack's other victims are skipped silently
      * (SpecialAttackSupport.canSplash; owner 2026-10-01: "splash slaat monsters over die je niet mag aanvallen", ROOT_CAUSES #115).

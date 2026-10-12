@@ -5,9 +5,10 @@ import gg.rsmod.game.model.entity.Player
 /**
  * The six actions exposed by the revision-667 Summoning orb.
  *
- * This set is capability-driven and deliberately **smaller** than the eight entries interface
- * 747 bakes. Generic Attack is not an orb action in the requested 2011 layout; attack targeting
- * remains a separate, server-validated Follower Details control.
+ * This set is capability-driven and smaller than the eight entries interface 747 bakes. Owner A41
+ * 2026-10-11 ("Attack op de orb", 2011/OSRS): Attack is an orb action again for every familiar that
+ * can be ordered to fight - 747:14 / 747:23 carry the cache's own target events (0x5000, target mask
+ * npc + player), so "Attack" then a click on a target sends the same validated command as the panel.
  *
  * * **Interact** (747:15 / 747:26) — the familiar's own npc option already carries it, so on the
  *   orb it was a duplicate entry for the same conversation.
@@ -38,8 +39,8 @@ enum class FamiliarAction(
 ) {
     /** 747:16 -> 24 -> 25 is the baked "Spell/Cast" twin; 747:17 is the dynamic button. */
     SPECIAL_MOVE(intArrayOf(16, 17, 24, 25), 1, "Special move"),
-    /** Kept for the panel/server action; deliberately excluded from the orb selector. */
-    ATTACK(intArrayOf(14, 23), 2, "Attack", orbAction = false),
+    /** Owner A41 2026-10-11: on the orb (and the left-click selector) for a commandable combat familiar. */
+    ATTACK(intArrayOf(14, 23), 2, "Attack"),
     FOLLOWER_DETAILS(intArrayOf(9, 18), 0, "Follower Details"),
     CALL(intArrayOf(10, 19), 3, "Call Follower"),
     DISMISS(intArrayOf(11, 20), 4, "Dismiss"),
@@ -55,10 +56,9 @@ enum class FamiliarAction(
 
         /**
          * Interact (15/26) is deliberately not offered because it duplicates the familiar's own
-         * npc option. Attack (14/23) is also hidden, but is represented separately above so the
-         * Follower Details panel and stale packet guards can still share its capability decision.
+         * npc option. (Attack 14/23 was hidden here until the owner's A41 decision of 2026-10-11.)
          */
-        val REMOVED_ORB_COMPONENTS = intArrayOf(15, 26, 14, 23)
+        val REMOVED_ORB_COMPONENTS = intArrayOf(15, 26)
 
         /** Every per-familiar option component on 747, whether offered or removed. */
         val ALL_ORB_COMPONENTS: IntArray =
@@ -106,9 +106,8 @@ data class FamiliarCapabilities(
     /**
      * The orb actions this familiar authentically supports (requirement H7).
      *
-     * Follower Details, Call, Dismiss and Renew are unconditional. Take BoB and Special Move are
-     * gated on the corresponding sourced capability. Attack is intentionally not in this set: it
-     * remains a panel/server action, never an orb menu item.
+     * Follower Details, Call, Dismiss and Renew are unconditional. Take BoB, Special Move and Attack
+     * (owner A41 2026-10-11: a commandable combat familiar) are gated on the corresponding capability.
      */
     val actions: Set<FamiliarAction> =
         buildSet {
@@ -118,6 +117,7 @@ data class FamiliarCapabilities(
             add(FamiliarAction.FOLLOWER_DETAILS)
             if (carries) add(FamiliarAction.TAKE_BOB)
             if (special != null) add(FamiliarAction.SPECIAL_MOVE)
+            if (canReceiveAttackCommand) add(FamiliarAction.ATTACK)
         }
 
     fun supports(action: FamiliarAction): Boolean =
@@ -157,8 +157,14 @@ data class FamiliarCapabilities(
             else -> FamiliarInventoryKind.NONE
         }
     val bobEssenceOnly: Boolean get() = BeastOfBurden.storageFor(pouch)?.essenceOnly == true
-    val canReceiveAttackCommand: Boolean get() = combatMode == FamiliarCombatMode.COMMANDABLE_COMBAT
-    val retaliates: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
+    /**
+     * Owner A10 2026-10-10 (approved 2026-10-11): a beast of burden NEVER attacks - it only carries. No Attack command, no assist,
+     * no retaliation; it can still be attacked like before ([canBeTargetedInPvm] / [canBeTargetedInPvp]). Until the A9 single-combat
+     * rule this held only because familiars could not fight in single-way combat at all; now it is a rule of its own.
+     */
+    val attacks: Boolean get() = !isBeastOfBurden
+    val canReceiveAttackCommand: Boolean get() = combatMode == FamiliarCombatMode.COMMANDABLE_COMBAT && attacks
+    val retaliates: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT && attacks
     val canBeTargetedInPvm: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
     val canBeTargetedInPvp: Boolean get() = combatMode != FamiliarCombatMode.NON_COMBAT
     val summonPoints: Int get() = SummoningFamiliarDefinitions.get(pouch).summonPoints

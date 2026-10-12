@@ -947,7 +947,8 @@ object SummoningSpecialMoves {
             return false
         }
         // ROOT_CAUSES #115: Combat.canEngage carries the owner's rules for the familiar (Deadman guards, the PvP gate, Attack option).
-        if (!player.tile.isMulti(player.world) || !target.tile.isMulti(player.world) || !player.world.plugins.canAttack(player, target) ||
+        // Owner A9 2026-10-11: an npc target in single-way combat too when it is the owner's own fight (FamiliarCombat.mayFightHere).
+        if (!FamiliarCombat.mayFightHere(player, familiar, target, silent = true) || !player.world.plugins.canAttack(player, target) ||
             !gg.rsmod.plugins.content.combat.Combat.canEngage(familiar, target)
         ) {
             player.message("Your familiar cannot attack that target here.")

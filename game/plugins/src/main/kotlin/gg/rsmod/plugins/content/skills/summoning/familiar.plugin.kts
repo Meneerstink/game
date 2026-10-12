@@ -516,8 +516,8 @@ on_spell_on_player(662, 65) {
     FamiliarCombat.commandAttack(player, player.getInteractingPlayer())
 }
 
-// Fixed/resizable Summoning-orb Attack components are hidden by SummoningUi. These handlers stay
-// as stale-client guards and route through the same capability-validated command path.
+// Summoning-orb "Attack" (fixed 747:14 / resizable 747:23, the cache's own target components - owner A41 2026-10-11: on the orb
+// again for a commandable combat familiar): the target click routes through the same capability-validated command path.
 arrayOf(14, 23).forEach { component ->
     on_spell_on_npc(747, component) {
         FamiliarCombat.commandAttack(player, player.getInteractingNpc())
