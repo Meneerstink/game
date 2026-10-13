@@ -61,6 +61,19 @@ class JsonPlayerSerializer : PlayerSerializerService() {
     ): PlayerLoadResult {
         client.loginUsername = client.loginUsername.lowercase()
 
+        // T3: a team test account on a test server is always fresh - a live save with the same name is never loaded.
+        if (gg.rsmod.game.service.serializer.TeamTestAccounts.isTeamAccount(client.loginUsername)) {
+            if (request.reconnecting) {
+                return PlayerLoadResult.INVALID_RECONNECTION
+            }
+            if (!PasswordPolicy.isAcceptable(client.loginUsername, request.password)) {
+                return PlayerLoadResult.INVALID_NEW_PASSWORD
+            }
+            configureTeamTestAccount(client, request)
+            client.uid = PlayerUID(client.loginUsername)
+            return PlayerLoadResult.NEW_ACCOUNT
+        }
+
         if (!characterExists(client.loginUsername)) {
             // Audit S-06: a reconnect carries no password - it used to create an account with an
             // empty password hash for any unknown name.

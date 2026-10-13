@@ -5,6 +5,7 @@ import gg.rsmod.game.Server
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
+import gg.rsmod.game.model.attr.TEAM_TEST_ACCOUNT_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.service.Service
 import gg.rsmod.net.codec.login.LoginRequest
@@ -67,6 +68,20 @@ abstract class PlayerSerializerService : Service {
 
         client.passwordHash = Argon2Factory.create().hash(2, 65536, 1, request.password.toCharArray())
         client.tile = startTile
+    }
+
+    /**
+     * T3: a fresh team test account ([TeamTestAccounts]) - home tile, owner rank, no NEW_ACCOUNT_ATTR (no intro, starter
+     * kit or beginner protection, so the accounts can PvP each other at once). The test server never saves it.
+     */
+    fun configureTeamTestAccount(
+        client: Client,
+        request: LoginRequest,
+    ) {
+        client.attr.put(TEAM_TEST_ACCOUNT_ATTR, true)
+        client.passwordHash = Argon2Factory.create().hash(2, 65536, 1, request.password.toCharArray())
+        client.tile = startTile
+        client.privilege = client.world.privileges.get(TeamTestAccounts.PRIVILEGE_ID) ?: client.privilege
     }
 
     abstract fun initSerializer(

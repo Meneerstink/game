@@ -23,6 +23,12 @@ import java.lang.ref.WeakReference
 val NEW_ACCOUNT_ATTR = AttributeKey<Boolean>()
 
 /**
+ * T3 (owner 2026-10-13): this login is one of the agent team's fixed test accounts on a test server
+ * ([gg.rsmod.game.service.serializer.TeamTestAccounts]); the plugins put on its preset. Transient, never saved.
+ */
+val TEAM_TEST_ACCOUNT_ATTR = AttributeKey<Boolean>()
+
+/**
  * R14.25: permanently true once a beginner-protected player has explicitly confirmed they
  * want to initiate PvP. Separate from [gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER]
  * (the time budget) so forfeiting protection early doesn't need to fake-exhaust the timer, and
