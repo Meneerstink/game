@@ -16,7 +16,12 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.TELEBLOCK_TIMER
 import gg.rsmod.plugins.api.EquipmentType
+import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Sfx
+import gg.rsmod.plugins.api.ext.getSpellbook
+import gg.rsmod.plugins.content.areas.poh.PlayerHouse
+import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getVarp
@@ -415,6 +420,7 @@ object SystemsSuite : Conformance.Suite {
         run.expectTrue("poh", "no Guard / Wizguard in the house (skulled owner, 25 ticks)", guards.isEmpty(), guards.joinToString { "${it.def.name}@${it.tile}" })
         run.expectTrue("poh", "the house is not a guard zone", !CityGuards.isGuardedZone(a.tile), "tile=${a.tile}")
         run.expectTrue("poh", "the house is still safe (PvP gate)", GuardedZones.contains(a.zoneTile()), "tile=${a.zoneTile()}")
+        occultAltarSound(run, a)
         if (cityTile != null) {
             run.expectTrue("poh", "world city still guarded", CityGuards.isGuardedZone(cityTile), "tile=$cityTile")
             a.moveTo(cityTile)
@@ -425,6 +431,69 @@ object SystemsSuite : Conformance.Suite {
         }
         a.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER)
     }
+
+    /**
+     * A24 (owner 2026-10-10 "altar of occult in poh maakt geen geluid"): the bot clicks the Altar of the Occult in its own
+     * house the way the client does (multiloc 62924, the slot of the book's option on the variant it sees) and every switch
+     * sends sound 2674 exactly once - 2009scape MagicAltarListener.swapSpellBook `playAudio(PRAYER_RECHARGE_2674)`.
+     */
+    private suspend fun QueueTask.occultAltarSound(
+        run: Conformance.Run,
+        a: Client,
+    ) {
+        val house = PlayerHouse
+        val area = run.world.instanceAllocator.getMap(a.tile)?.area
+        val altar =
+            area?.let { ar ->
+                (ar.bottomLeftX..ar.topRightX).asSequence().flatMap { x -> (ar.bottomLeftZ..ar.topRightZ).asSequence().map { z -> Tile(x, z, a.tile.height) } }
+                    .mapNotNull { t ->
+                        run.world.chunks.get(t, createIfNeeded = false)
+                            ?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                            ?.firstOrNull { it.id == house.OCCULT_ALTAR }
+                    }.firstOrNull()
+            }
+        if (altar == null) {
+            run.add(Conformance.Result("poh", "occult altar in the PvP/PvM room", Verdict.FAIL, "loc ${house.OCCULT_ALTAR}", "not found in the house"))
+            return
+        }
+        a.skills.setBaseLevel(gg.rsmod.plugins.api.Skills.MAGIC, 99)
+        a.attr[gg.rsmod.plugins.content.unlocks.UnlockNpcRewards.ANCIENT_MAGIC_UNLOCKED] = true
+        a.attr[gg.rsmod.plugins.content.unlocks.UnlockNpcRewards.LUNAR_MAGIC_UNLOCKED] = true
+        Spellbooks.select(a, Spellbook.STANDARD)
+        wait(2)
+        for (target in listOf(Spellbook.LUNAR, Spellbook.ANCIENT, Spellbook.STANDARD)) {
+            val current = a.getSpellbook()
+            val name = target.name.lowercase()
+            // the variant the client shows is the one without the current book's option
+            val variant =
+                house.OCCULT_ALTAR_VARIANTS.map { run.world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, it) }
+                    .firstOrNull { d -> d.options.none { it?.lowercase() == current.name.lowercase() } }
+            val slot = variant?.options?.indexOfFirst { it?.lowercase() == name }?.plus(1) ?: 0
+            val c0 = run.world.currentCycle
+            if (slot in 1..5) Bots.inject(a, opLocAt(slot, house.OCCULT_ALTAR, altar.tile))
+            repeat(12) { wait(1) }
+            val sounds = run.recording.of("HA", "msg").filter { it.cycle >= c0 && it.text.startsWith("SynthSoundMessage(sound=${Sfx.PRAYER_RECHARGE},") }
+            run.check(
+                "poh",
+                "occult altar $current -> $target (option $slot): book + sound 2674 once",
+                "${a.getSpellbook()} sounds=${sounds.size}",
+                "2009scape MagicAltarListener: PRAYER_RECHARGE_2674" to "$target sounds=1",
+            )
+        }
+    }
+
+    private fun opLocAt(
+        slot: Int,
+        id: Int,
+        tile: Tile,
+    ): gg.rsmod.game.message.Message =
+        when (slot) {
+            1 -> OpLoc1Message(0, tile.x, id, tile.z)
+            2 -> gg.rsmod.game.message.impl.OpLoc2Message(id, tile.x, tile.z, 0)
+            3 -> gg.rsmod.game.message.impl.OpLoc3Message(id, tile.x, tile.z, 0)
+            4 -> gg.rsmod.game.message.impl.OpLoc4Message(id, tile.x, tile.z, 0)
+            else -> gg.rsmod.game.message.impl.OpLoc5Message(id, tile.x, tile.z, 0)
+        }
 
     // ---- 8. Cliffside -----------------------------------------------------------------------------------------------------
 

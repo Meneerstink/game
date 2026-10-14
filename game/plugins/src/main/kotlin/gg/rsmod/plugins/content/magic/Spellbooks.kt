@@ -3,9 +3,10 @@ package gg.rsmod.plugins.content.magic
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.Spellbook
-
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.getSpellbook
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.switchSpellbook
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
@@ -13,8 +14,9 @@ import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 /**
  * Spellbook switching rules shared by the Ancient/Astral altars, the Ferox home altar menu and
  * the ::spellbook command. Level gates, animation and messages sourced from the 2009scape
- * MagicAltarListener (same-era content); Grand Exchange NPC unlock flags are enforced here so
- * altars, commands and other callers cannot bypass the NPC conversations.
+ * MagicAltarListener (same-era content), including its `playAudio(player, Sounds.PRAYER_RECHARGE_2674)` before the
+ * animation (A24: the first port dropped that line, so every altar switch was silent); Grand Exchange NPC unlock
+ * flags are enforced here so altars, commands and other callers cannot bypass the NPC conversations.
  */
 object Spellbooks {
     const val SWITCH_ANIM = 645
@@ -84,6 +86,8 @@ object Spellbooks {
             player.message("You need a Magic level of at least $level in order to do this.")
             return false
         }
+        // 2009scape MagicAltarListener.swapSpellBook: the sound plays after the gates, right before the pray animation.
+        player.playSound(Sfx.PRAYER_RECHARGE)
         player.animate(SWITCH_ANIM)
         player.switchSpellbook(book)
         player.message(if (ancientDrain) "You feel a strange drain upon your memory..." else activationMessage(book))
