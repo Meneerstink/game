@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.moderation
 
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.service.serializer.TeamTestAccounts
 import gg.rsmod.plugins.api.cfg.Items
@@ -63,6 +64,23 @@ object TeamAccountPresets {
 
     fun forName(name: String): Account? = ALL.firstOrNull { it.name == name.trim().lowercase() }
 
+    /**
+     * Set once [apply] ran for this login (T1): a bug replay (BugReplay) waits for it, because the preset runs 2 ticks after
+     * login and would otherwise overwrite the replayed gear. Not persisted - every login is a fresh account.
+     */
+    val PRESET_APPLIED_ATTR = AttributeKey<Boolean>()
+
+    /**
+     * The Ancient Curses book on a team test account (the preset, and a bug replay of a curses report - BugReplay): unlocked
+     * as the Temple at Senntisten reward does (FoundationQuests), what a real curses player has.
+     */
+    fun useCurses(player: Player) {
+        if (forName(player.username) == null) return
+        player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
+        player.attr[AncientCurses.UNLOCKED_ATTR] = true
+        if (AncientCurses.getBook(player) != AncientCurses.PrayerBook.ANCIENT) AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+    }
+
     /** All skills 99, stats full, the account's prayer book and gear set. */
     fun apply(player: Player) {
         val account = forName(player.username) ?: return
@@ -73,13 +91,9 @@ object TeamAccountPresets {
         player.setCurrentLifepoints(player.getMaximumLifepoints())
         player.setCurrentPrayerPoints(player.getMaximumPrayerPoints())
         player.runEnergy = 100.0
-        if (account.curses) {
-            // the Temple at Senntisten reward (FoundationQuests), what a real curses player has
-            player.attr[AncientCurses.NPC_UNLOCKED_ATTR] = true
-            player.attr[AncientCurses.UNLOCKED_ATTR] = true
-            AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
-        }
+        if (account.curses) useCurses(player)
         GearPresets.apply(player, account.preset)
+        player.attr[PRESET_APPLIED_ATTR] = true
         player.message("<col=ff981f>Team test account ${account.name}</col>: 99 all, ${if (account.curses) "Ancient Curses" else "normal prayers"}, " +
             "test server only, nothing is saved. Other sets: ::gear_<set>, ::osrsgear list.")
     }

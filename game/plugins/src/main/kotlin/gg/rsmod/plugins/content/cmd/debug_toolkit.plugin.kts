@@ -412,6 +412,44 @@ gg.rsmod.game.CommandServerCommands.handlers["chatnpc"] = { w, a ->
         "npc $npc head for ${p.username}"
     }
 }
+// T1 `replay <team account> <bug-*.txt>`: puts a bugs\ report's position, gear, inventory, skills, books, run/spec and traces on
+// a team test account (test server only; BugReplay). `replaycheck <team account> <bug-*.txt>`: what still differs.
+gg.rsmod.game.CommandServerCommands.handlers["replay"] = { w, a -> bugReplayCommand(w, a, check = false) }
+gg.rsmod.game.CommandServerCommands.handlers["replaycheck"] = { w, a -> bugReplayCommand(w, a, check = true) }
+
+fun bugReplayCommand(
+    w: gg.rsmod.game.model.World,
+    a: List<String>,
+    check: Boolean,
+): String {
+    val replay = gg.rsmod.plugins.content.cmd.BugReplay
+    val verb = if (check) "replaycheck" else "replay"
+    if (a.size < 2) return "usage: $verb <teamtest1-4> <bug-*.txt in bugs\\>"
+    val p = w.getPlayerForName(a[0].replace("_", " "))
+    replay.refusal(a[0], p, gg.rsmod.util.io.SharedDataFiles.testServer())?.let {
+        Trace.log(Trace.Cat.INPUT) { "$verb ${a[0]} ${a[1]}: $it" }
+        return it
+    }
+    val file = replay.reportFile(a[1], File(Trace.BUGS_DIR))
+    if (file == null || !file.isFile) return "refused: no bug report '${a[1]}' in ${Trace.BUGS_DIR}"
+    val report = replay.parse(file.readLines())
+    val player = p!!
+    if (check) {
+        val diff = replay.diff(player, report)
+        return if (diff.isEmpty()) {
+            val instance = (report.position?.x ?: 0) >= replay.INSTANCE_X
+            "replaycheck ${file.name} on ${player.username}: IDENTICAL (${if (instance) "position NOT checked (instance)" else "position"}, ${report.inventory.size} inventory + ${report.equipment.size} equipment slots" +
+                "${if (report.replay.isEmpty()) ", old report without a Replay line" else ", skills/books/run/spec/style"})"
+        } else {
+            "replaycheck ${file.name} on ${player.username}: DIFF ${diff.joinToString(" | ")}"
+        }
+    }
+    val result = replay.apply(player, report)
+    result.filter { it.startsWith("PROBLEM") }.forEach { line -> Trace.problem(Trace.Cat.INPUT) { "replay ${file.name} -> ${player.username}: ${line.removePrefix("PROBLEM ")}" } }
+    Trace.log(Trace.Cat.INPUT) { "replay ${file.name} -> ${player.username}: ${result.joinToString(" | ")}" }
+    return "replay ${file.name} onto ${player.username}: ${result.joinToString(" | ")}"
+}
+
 gg.rsmod.game.CommandServerCommands.handlers["as"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null || a.size < 2) {
@@ -490,13 +528,17 @@ fun writeBugReport(
     out.appendLine("BUG REPORT ${LocalDateTime.now()}  by ${player.username}")
     out.appendLine("What went wrong: $text")
     out.appendLine()
-    out.appendLine("Position: ${t.x},${t.z},${t.height}  region=${t.regionId}  chunk=${t.chunkCoords}")
+    out.appendLine(gg.rsmod.plugins.content.cmd.BugReplay.positionLine(player))
     out.appendLine("Traces: ${Trace.status()}")
     out.appendLine("Combat level=${player.combatLevel}  hp=${player.getCurrentLifepoints()}/${player.getMaximumLifepoints()}  lock=${player.lock}")
-    out.appendLine("Interfaces open: ${runCatching { player.interfaces.toString() }.getOrDefault("?")}")
+    // T1: the open interfaces as parent:child=interface ids (was the InterfaceSet object's toString) and the display mode.
+    out.appendLine("Interfaces open: ${runCatching { player.interfaces.describeVisible() + "  mode=" + player.interfaces.displayMode }.getOrDefault("?")}")
     out.appendLine()
     out.appendLine("Inventory: " + player.inventory.rawItems.mapIndexedNotNull { i, it -> it?.let { "$i:${it.id}x${it.amount}" } }.joinToString(" "))
     out.appendLine("Equipment: " + player.equipment.rawItems.mapIndexedNotNull { i, it -> it?.let { "$i:${it.id}x${it.amount}" } }.joinToString(" "))
+    // T1 bug replay (tools\team\Replay-Bug.ps1): skills, prayer book, spellbook, run, spec, style, familiar ... in one line.
+    // Never let it cost the report itself (every player's `bug` command on the live server).
+    out.appendLine(runCatching { gg.rsmod.plugins.content.cmd.BugReplay.stateLines(player).last() }.getOrElse { "Replay: unavailable (${it.javaClass.simpleName})" })
     out.appendLine()
     out.appendLine("Npcs within 10 tiles:")
     world.npcs.forEach { n ->
@@ -515,13 +557,18 @@ fun writeBugReport(
     out.appendLine("---- last server trace lines (oldest first) ----")
     Trace.recent().forEach { out.appendLine(it) }
     out.appendLine()
-    out.appendLine("---- client log tail (newest launcher-logs\\client-*.out.log) ----")
+    out.appendLine("---- client log tail (the reporter's client log in launcher-logs, T1) ----")
     runCatching {
-        File(gg.rsmod.game.RspsPaths.root("launcher-logs")).listFiles { f -> f.name.startsWith("client-") && f.name.endsWith(".out.log") }
-            ?.maxByOrNull { it.lastModified() }?.let { log ->
-                out.appendLine("(${log.name})")
-                log.readLines().takeLast(200).forEach { out.appendLine(it) }
-            }
+        val address = ((player as? gg.rsmod.game.model.entity.Client)?.channel?.remoteAddress() as? java.net.InetSocketAddress)?.address
+        val local = address != null && (address.isLoopbackAddress || java.net.NetworkInterface.getByInetAddress(address) != null)
+        val logs = File(gg.rsmod.game.RspsPaths.root("launcher-logs")).listFiles()?.toList().orEmpty()
+        val log = gg.rsmod.plugins.content.cmd.BugReplay.pickClientLog(logs, gg.rsmod.util.io.SharedDataFiles.testServer(), local)
+        if (log == null) {
+            out.appendLine("(not available: ${if (local) "no matching client log" else "the reporter's client does not run on the server PC"})")
+        } else {
+            out.appendLine("(${log.name})")
+            log.readLines().takeLast(200).forEach { out.appendLine(it) }
+        }
     }
     file.writeText(out.toString())
     Trace.log(Trace.Cat.INPUT) { "bug report ${file.name} by ${player.username}: $text" }
