@@ -1,9 +1,12 @@
 package gg.rsmod.plugins.content.combat.specialattack.weapons
 
+import gg.rsmod.game.model.entity.AreaSound
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.combat.PLAYER_COMBAT_SOUND_RADIUS
 import gg.rsmod.plugins.content.combat.createProjectile
 import gg.rsmod.plugins.content.combat.dealHit
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
+import gg.rsmod.plugins.content.combat.soundToBystanders
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.adjacentTargets
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.currentLevel
 import gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.drain
@@ -75,6 +78,17 @@ SpecialAttacks.register(55, *DARK_BOWS) {
     val multiplier = if (dragon) 1.5 else 1.3
     val minimum = if (dragon) 8.0 else 5.0
     player.animate(426)
+    // A12 sounds (OSRS Wiki "Dark bow" sound table; structure of Void DarkBow.kt:20-25/61-69, ids not Darkan's swapped ones):
+    // launch darkbow_dragon_attack 3733 (dragon arrows) / darkbow_shadow_attack 3736 (other arrows), heard by the shooter and the
+    // players around him; darkbow_shadow_impact 3737 when each arrow lands (2009scape DescentOfDarknessSpecialHandler:147-151
+    // plays it at the victim). Anim 426's own 667 bow frame sound stays: a different sound, not a duplicate.
+    val launch = if (dragon) Sfx.DARKBOW_DRAGON_ATTACK else Sfx.DARKBOW_SHADOW_ATTACK
+    player.playSound(launch)
+    player.soundToBystanders(launch)
+    val impactSound = {
+        player.playSound(Sfx.DARKBOW_SHADOW_IMPACT)
+        world.spawn(AreaSound(victim.tile, Sfx.DARKBOW_SHADOW_IMPACT, radius = PLAYER_COMBAT_SOUND_RADIUS, volume = 1).also { it.excluded = player })
+    }
     val maxHit = RangedCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = multiplier).toInt()
     repeat(2) { arrow ->
         // Calculator: the normal hit distribution (0..max on an accurate roll, 0 on a miss), then limited to [minimum, 48].
@@ -89,6 +103,7 @@ SpecialAttacks.register(55, *DARK_BOWS) {
             projectileGfx = projectile,
             projectileDelayOffset = arrow,
             maxHitOverride = { damage },
+            onHit = { impactSound() },
         )
     }
     victim.graphic(impact, 96, 60)
