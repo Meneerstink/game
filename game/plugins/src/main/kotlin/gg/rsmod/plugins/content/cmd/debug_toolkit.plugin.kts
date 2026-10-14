@@ -7,7 +7,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
 import java.io.File
 import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 
 /*
  * Debug toolkit, in-game side (owner 2026-09-28; manual for every agent: C:\RSPS\TRACES.md).
@@ -31,7 +30,6 @@ import java.time.format.DateTimeFormatter
 val liveViewers: MutableSet<String> = java.util.concurrent.ConcurrentHashMap.newKeySet()
 val lastShown = java.util.concurrent.ConcurrentHashMap<String, Long>()
 val sending = ThreadLocal.withInitial { false }
-val STAMP: DateTimeFormatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss")
 
 fun showLive(line: String) {
     if (liveViewers.isEmpty() || sending.get()) return
@@ -514,6 +512,8 @@ on_command("bug") {
     }
     val file = writeBugReport(player, text)
     player.message("<col=178000>Bug report saved</col> (${file.name}).${if (!Trace.anyOn()) " Tip: type traces first, then repeat the action, for a full trace." else ""}")
+    // T2: the reporter's client saves its next frame as <report>.png (RspsBugShot; RuneLite ScreenshotPlugin route).
+    BugShot.request(player, file)
 }
 
 fun writeBugReport(
@@ -522,7 +522,8 @@ fun writeBugReport(
 ): File {
     val dir = File(Trace.BUGS_DIR)
     dir.mkdirs()
-    val file = File(dir, "bug-${LocalDateTime.now().format(STAMP)}-${player.username}.txt")
+    // T2: a second report in the same second gets its own stem, so neither report nor screenshot is overwritten.
+    val file = BugShot.reportFile(dir, LocalDateTime.now(), player.username)
     val t = player.tile
     val out = StringBuilder()
     out.appendLine("BUG REPORT ${LocalDateTime.now()}  by ${player.username}")
@@ -533,6 +534,7 @@ fun writeBugReport(
     out.appendLine("Combat level=${player.combatLevel}  hp=${player.getCurrentLifepoints()}/${player.getMaximumLifepoints()}  lock=${player.lock}")
     // T1: the open interfaces as parent:child=interface ids (was the InterfaceSet object's toString) and the display mode.
     out.appendLine("Interfaces open: ${runCatching { player.interfaces.describeVisible() + "  mode=" + player.interfaces.displayMode }.getOrDefault("?")}")
+    out.appendLine(BugShot.reportLine(file))
     out.appendLine()
     out.appendLine("Inventory: " + player.inventory.rawItems.mapIndexedNotNull { i, it -> it?.let { "$i:${it.id}x${it.amount}" } }.joinToString(" "))
     out.appendLine("Equipment: " + player.equipment.rawItems.mapIndexedNotNull { i, it -> it?.let { "$i:${it.id}x${it.amount}" } }.joinToString(" "))
