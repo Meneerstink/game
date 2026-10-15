@@ -258,6 +258,53 @@ class BugShotUploadsTests {
         assertEquals(0, refused(rep), "the rest of a finished upload is dropped quietly: $told")
     }
 
+    /**
+     * Round 4 (AUDIT T2-93): after a kick the old client went on sending teamtest2's PNG over teamtest3's new login. The 78
+     * client now drops an upload when its game connection is gone (RspsBugShot.checkSession); the server forgets the player's
+     * open uploads when his session ends, at every moment of an upload: nothing of an ended session is ever written, nobody
+     * is told (the player is gone), another player is not touched, and the next login's report works whole.
+     */
+    @Test
+    fun `a session that ends closes the player's open uploads quietly and the next login's report works`() {
+        val bytes = png(300, 200, noisy = true)
+        val all = pieces(bytes)
+        assertTrue(all.size >= 4, "test needs several pieces: ${all.size}")
+        for (cut in 0..all.size - 1) {
+            BugShotUploads.clear()
+            told.clear()
+            dir.listFiles()!!.forEach { it.delete() }
+            val a = report("teamtest2", "20261015-052119")
+            val b = report("teamtest2", "20261015-052130")
+            val other = report("teamtest3", "20261015-052131")
+            assertTrue(expect("teamtest2", a))
+            assertTrue(expect("teamtest2", b))
+            assertTrue(expect("teamtest3", other))
+            for ((off, piece) in all.take(cut)) {
+                assertEquals(BugShotUploads.Status.CHUNK, BugShotUploads.receive("teamtest2", a.nameWithoutExtension, bytes.size, off, piece).status)
+            }
+            BugShotUploads.endSession("TeamTest2")
+            assertEquals(emptyList(), BugShotUploads.openStems("teamtest2"), "cut $cut: the session's end closes every open upload of the player")
+            assertEquals(listOf(other.nameWithoutExtension), BugShotUploads.openStems("teamtest3"), "cut $cut: another player's upload is not touched")
+            // whatever an old client still sends of A or B: never written, nobody told
+            for ((off, piece) in all.drop(cut)) {
+                assertEquals(BugShotUploads.Status.REFUSED, BugShotUploads.receive("teamtest2", a.nameWithoutExtension, bytes.size, off, piece).status, "cut $cut")
+            }
+            assertEquals(BugShotUploads.Status.REFUSED, send("teamtest2", b, bytes).status, "cut $cut: B closed too")
+            assertEquals(emptyList(), pngs(), "cut $cut")
+            assertEquals(emptyList(), told, "cut $cut: an ended session is not told anything")
+            // the next login's report goes through whole; teamtest3 still gets his
+            val next = report("teamtest2", "20261015-053000")
+            assertTrue(expect("teamtest2", next))
+            assertEquals(BugShotUploads.Status.COMPLETE, send("teamtest2", next, bytes).status, "cut $cut")
+            assertEquals(BugShotUploads.Status.COMPLETE, send("teamtest3", other, bytes).status, "cut $cut")
+            assertEquals(listOf(next.nameWithoutExtension + ".png", other.nameWithoutExtension + ".png").sorted(), pngs(), "cut $cut")
+            assertEquals(1, saved(next))
+            assertEquals(1, saved(other))
+        }
+        BugShotUploads.endSession("nobody-reported")
+        BugShotUploads.endSession("teamtest2")
+    }
+
     @Test
     fun `a waiting report does not expire while an earlier upload of the player is still sending`() {
         val t0 = 1_000_000_000L

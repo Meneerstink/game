@@ -291,6 +291,24 @@ object BugShotUploads : KLogging() {
         lastWarned.clear()
     }
 
+    /**
+     * Round 4 (AUDIT T2-93: after a kick the client went on sending the old account's PNG over a new login): the player's
+     * session ended (logout, kick, lost connection - plugin on_logout). His open uploads are closed quietly: the 78 client drops
+     * them on any new connection too (RspsBugShot.checkSession), so no piece of them can come any more, and the partial data
+     * is freed. Nobody is told (the player is gone); a finished upload already being written is not affected.
+     */
+    fun endSession(username: String) {
+        val p = players[key(username)] ?: return
+        val ended: List<String>
+        synchronized(p) {
+            ended = p.open.values.map { "${it.stem} ${it.received}/${it.data?.size ?: 0}" }
+            for (up in p.open.values.toList()) close(p, up, "the player's session ended")
+        }
+        if (ended.isNotEmpty()) {
+            logger.info { "[bugshot] $username's session ended - ${ended.size} screenshot upload(s) closed, not saved: ${ended.joinToString()}" }
+        }
+    }
+
     /** The stems of [username]'s open uploads, oldest first (tests). */
     fun openStems(username: String): List<String> = players[key(username)]?.let { p -> synchronized(p) { p.open.keys.toList() } } ?: emptyList()
 

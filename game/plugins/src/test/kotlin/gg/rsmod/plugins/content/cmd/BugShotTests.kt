@@ -212,4 +212,36 @@ class BugShotTests {
         assertTrue(writer.contains("BugShot.reportLine(file)"), "writeBugReport must name the screenshot in the report")
         assertTrue(!writer.contains("File(dir, \"bug-"), "writeBugReport still builds its own file name")
     }
+    /** Round 4 (AUDIT T2-93): a logout (also a kick) closes the player's unfinished uploads; nothing is sent to anybody. */
+    @Test
+    fun `a logout closes the player's unfinished screenshot uploads`() {
+        BugShotUploads.clear()
+        BugShotUploads.executor = { it.run() }
+        BugShot.onGameThread = { _, job -> job() }
+        val dir = Files.createTempDirectory("bugshot-logout").toFile()
+        try {
+            val sent = mutableListOf<Any>()
+            val player = mockk<Player>(relaxed = true)
+            every { player.username } returns "teamtest2"
+            every { player.isOnline } returns true
+            every { player.write(*anyVararg<Message>()) } answers {
+                it.invocation.args.forEach { a -> if (a is Array<*>) sent.addAll(a.filterNotNull()) else if (a != null) sent += a }
+            }
+            val report = File(dir, "bug-20261015-052119-teamtest2.txt").also { it.writeText("report\n") }
+            BugShot.request(player, report)
+            assertEquals(listOf(report.nameWithoutExtension), BugShotUploads.openStems("teamtest2"))
+            assertEquals(BugShotUploads.Status.CHUNK, BugShotUploads.receive("teamtest2", report.nameWithoutExtension, 5000, 0, ByteArray(1250)).status)
+            sent.clear()
+            BugShot.sessionEnded(player)
+            assertEquals(emptyList(), BugShotUploads.openStems("teamtest2"), "the logout closed the unfinished upload")
+            assertEquals(BugShotUploads.Status.REFUSED, BugShotUploads.receive("teamtest2", report.nameWithoutExtension, 5000, 1250, ByteArray(1250)).status)
+            assertEquals(emptyList(), sent, "nothing is sent to a player whose session ended")
+            assertTrue(dir.listFiles()!!.none { it.name.endsWith(".png") })
+        } finally {
+            BugShotUploads.clear()
+            dir.deleteRecursively()
+        }
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/cmd/debug_toolkit.plugin.kts").readText().replace("\r\n", "\n")
+        assertTrue(script.contains("on_logout {\n    BugShot.sessionEnded(player)\n}"), "debug_toolkit must close the uploads on logout")
+    }
 }

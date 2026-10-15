@@ -516,6 +516,12 @@ on_command("bug") {
     BugShot.request(player, file)
 }
 
+// T2 round 4 (AUDIT T2-93): a session that ends closes the player's open screenshot uploads (the 78 client drops them on a new
+// connection as well, so nothing of an old session is ever sent over a new login).
+on_logout {
+    BugShot.sessionEnded(player)
+}
+
 fun writeBugReport(
     player: Player,
     text: String,

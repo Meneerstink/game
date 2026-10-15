@@ -97,11 +97,17 @@ object BugShot {
         val upload =
             BugShotUploads.expect(player.username, report) { outcome, detail ->
                 onGameThread(player) {
-                    // a relog during the upload: the client goes on with this report on its new session (a new Player)
+                    // a finished upload saved while the reporter relogged: the answer goes to whoever is online under that name
+                    // (round 4: an unfinished upload never continues on a new session - sessionEnded / RspsBugShot.checkSession)
                     val target = if (player.isOnline) player else player.world.getPlayerForName(player.username)
                     target?.message(replyLine(report, outcome, detail), type = ChatMessageType.CONSOLE)
                 }
             }
         player.message(consoleLine(report, upload), type = ChatMessageType.CONSOLE)
+    }
+
+    /** on_logout (debug_toolkit): the player's session ended - his unfinished screenshot uploads are closed (round 4). */
+    fun sessionEnded(player: Player) {
+        BugShotUploads.endSession(player.username)
     }
 }

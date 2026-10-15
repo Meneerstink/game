@@ -113,7 +113,12 @@ class GamePacketDecoder(
         buf: ByteBuf,
         out: MutableList<Any>,
     ) {
-        if (buf.isReadable) {
+        // T2 AUDIT T2-93 (owner window, 2.18 MB screenshot upload): a TCP read that ended between the two length bytes of a
+        // var-short packet threw "readerIndex(1) + length(2) exceeds writerIndex(2)" here and the player was kicked. Over the
+        // internet a read may end at any byte. Donor 2009scape GameReadEvent.getPacketSize: wait until the whole length
+        // header is there (1 byte var-byte, 2 bytes var-short); ByteToMessageDecoder calls again when more bytes arrive.
+        val header = if (type == PacketType.VARIABLE_SHORT) 2 else 1
+        if (buf.readableBytes() >= header) {
             length = if (type == PacketType.VARIABLE_SHORT) buf.readUnsignedShort() else buf.readUnsignedByte().toInt()
             if (length != 0) {
                 setState(GameDecoderState.PAYLOAD)
