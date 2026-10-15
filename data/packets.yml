@@ -1204,6 +1204,17 @@ in-packets:
       - name: command
         type: STRING
 
+  # T2 (2026-10-15): 78 client only - one piece of a bug-report screenshot (RspsBugShot.pump: p4 total, p4 offset, bytes).
+  # Read by BugShotChunkDecoder; GameSystem hands it to BugShotUploads on the network thread, never into the cycle queue.
+  - message: gg.rsmod.game.message.impl.BugShotChunkMessage
+    type: VARIABLE_SHORT
+    opcode: 94
+    structure:
+      - name: total
+        type: INT
+      - name: offset
+        type: INT
+
   - message: gg.rsmod.game.message.impl.CloseModalMessage
     type: FIXED
     opcode: 56

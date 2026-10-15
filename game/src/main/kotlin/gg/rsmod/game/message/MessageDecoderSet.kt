@@ -40,6 +40,8 @@ class MessageDecoderSet {
         put(WindowStatusMessage::class.java, WindowStatusDecoder(), WindowStatusHandler(), structures)
         put(MapBuildCompleteMessage::class.java, MapBuildCompleteDecoder(), MapBuildCompleteHandler(), structures)
         put(DetectModifiedClientMessage::class.java, DetectModifiedClientDecoder(), DetectModifiedClientHandler(), structures)
+        // T2: the 78 client's bug-report screenshot pieces (GameSystem hands them to BugShotUploads without queueing them).
+        put(BugShotChunkMessage::class.java, BugShotChunkDecoder(), BugShotChunkHandler(), structures)
 
         put(OpLoc1Message::class.java, OpLoc1Decoder(), OpLoc1Handler(), structures)
         put(OpLoc2Message::class.java, OpLoc2Decoder(), OpLoc2Handler(), structures)

@@ -64,7 +64,7 @@ class ClientChannelInitializer(
         val crcs = filestore.indices().map { it.crc }.toIntArray()
 
         p.addLast("global_traffic", globalTrafficHandler)
-        p.addLast("channel_traffic", ChannelTrafficShapingHandler(0, 1024 * 5, 1000))
+        p.addLast("channel_traffic", ChannelTrafficShapingHandler(0, CHANNEL_READ_LIMIT, 1000))
         // Audit S-06: GameHandler closes a channel that is still idle before login when this fires.
         p.addLast("timeout", IdleStateHandler(30, 0, 0))
         p.addLast("handshake_encoder", HandshakeEncoder())
@@ -77,5 +77,14 @@ class ClientChannelInitializer(
 
     companion object : KLogging() {
         const val DEFAULT_MAX_CONNECTIONS_PER_IP = 8
+
+        /**
+         * Bytes per second read from one player's connection (anti-flood shaping; rsmod upstream had 5 KB/s). T2 2026-10-15:
+         * a bug-report screenshot is sent over this connection at RspsBugShot's pace (~16 KB/s, BugShotUploads.CLIENT_RATE);
+         * at 5 KB/s the reads were throttled, the client's socket ring overflowed and the player was disconnected, and the
+         * player's own clicks would wait behind screenshot bytes. Twice the upload pace keeps half the budget free for input
+         * (a playing client sends well under 1 KB/s); the per-cycle packet cap in GameSystem still bounds the work per player.
+         */
+        const val CHANNEL_READ_LIMIT = 32L * 1024
     }
 }

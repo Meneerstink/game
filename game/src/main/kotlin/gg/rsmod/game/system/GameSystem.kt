@@ -2,6 +2,7 @@ package gg.rsmod.game.system
 
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.MessageHandler
+import gg.rsmod.game.message.impl.BugShotChunkMessage
 import gg.rsmod.game.message.impl.ClientCheatMessage
 import gg.rsmod.game.message.impl.DetectModifiedClientMessage
 import gg.rsmod.game.message.impl.EventAppletFocusMessage
@@ -10,6 +11,7 @@ import gg.rsmod.game.message.impl.EventMouseIdleMessage
 import gg.rsmod.game.message.impl.SoundSongEndMessage
 import gg.rsmod.game.message.impl.WindowStatusMessage
 import gg.rsmod.game.model.AvTrace
+import gg.rsmod.game.model.BugShotUploads
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
 import gg.rsmod.game.model.attr.PLAYER_ACTION_INTERRUPT_ATTR
@@ -74,6 +76,12 @@ class GameSystem(
                     gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INPUT) {
                         "packet opcode=${msg.opcode} ${message.javaClass.simpleName} left $left of $packetBytes bytes unread - its decoder reads the wrong layout"
                     }
+                }
+                if (message is BugShotChunkMessage) {
+                    // T2: a bug-report screenshot comes in hundreds of pieces; through the queue they would take the
+                    // messages-per-cycle slots (and the buffer) of the player's real clicks. BugShotUploads is thread-safe.
+                    BugShotUploads.receive(client.username, message.total, message.offset, message.data)
+                    return
                 }
                 val queued = messages.offer(
                     MessageHandle(

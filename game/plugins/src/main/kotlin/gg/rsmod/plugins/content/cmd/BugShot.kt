@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.cmd
 
+import gg.rsmod.game.model.BugShotUploads
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.ext.message
@@ -11,11 +12,15 @@ import java.time.format.DateTimeFormatter
  * T2 (owner 2026-10-13: "client maakt automatisch een screenshot bij elk bug-commando (bewijs bij de melding)").
  *
  * Donor: RuneLite ScreenshotPlugin.takeScreenshot (runelite-client plugins/screenshot): on an event the client asks for its
- * own NEXT rendered frame (drawManager.requestNextFrameListener) and an executor writes it to a file named after the event.
- * Here the event is the `bug` command: after the report is written the server sends the reporter ONE console line
- * "__RSPS_BUGSHOT__:<report stem>" and the 78 client (RspsBugShot) saves its next frame as <stem>.png - in C:\RSPS\bugs next
- * to the report on the server PC, else in the player's own 78legacy\bugs folder. A client without RspsBugShot only prints
- * the line in its dev console. Tests: BugShotTests (server), :runescape:bugShotRegression (client).
+ * own NEXT rendered frame (drawManager.requestNextFrameListener) and an executor writes it to a file named after the event;
+ * RuneLite ImageCapture.uploadScreenshot then sends it to a server. Here the event is the `bug` command: after the report is
+ * written the server opens ONE upload for this report (core BugShotUploads.expect) and sends the reporter ONE console line
+ * "__RSPS_BUGSHOT__:<report stem>|upload". The 78 client (RspsBugShot) takes its next frame, keeps a copy in the player's
+ * own 78legacy\bugs and sends the PNG over the game connection; the server writes it as bugs\<stem>.png next to the report
+ * and adds "Screenshot received: ..." (round 1 FAIL: the PNG stayed on the reporter's PC - friends / VPS).
+ * Above BugShotUploads.MAX_PER_HOUR requests the line has no "|upload": the client only keeps its own copy.
+ * A client without RspsBugShot only prints the line in its dev console. Tests: BugShotTests, BugShotUploadsTests (core),
+ * :runescape:bugShotRegression (client).
  */
 object BugShot {
     /** Console marker the client listens for (RspsBugShot.PREFIX). A new prefix: "__RSPS_SHOT__" stays the screenshot tour's. */
@@ -43,18 +48,27 @@ object BugShot {
         }
     }
 
-    fun consoleLine(report: File): String = PREFIX + report.nameWithoutExtension
+    /** Marks a request the server will take the PNG of (BugShotUploads.expect said yes); without it the client keeps its copy. */
+    const val UPLOAD = "|upload"
 
-    /** The report's own line: where the reporter's client puts the screenshot. */
+    fun consoleLine(
+        report: File,
+        upload: Boolean = true,
+    ): String = PREFIX + report.nameWithoutExtension + if (upload) UPLOAD else ""
+
+    /** The report's own line: where the screenshot goes. */
     fun reportLine(report: File): String =
-        "Screenshot: ${report.nameWithoutExtension}.png (made by the reporter's 78 client: next to this report when that client runs " +
-            "on the server PC, else on the reporter's PC in <home>\\78legacy\\bugs)"
+        "Screenshot: ${report.nameWithoutExtension}.png (taken by the reporter's 78 client and sent to the server into this folder; " +
+            "the line 'Screenshot received:' at the end of this report confirms it - missing = an old client, the upload was " +
+            "refused (server log '[bugshot] PROBLEM') or more than ${BugShotUploads.MAX_PER_HOUR} reports in an hour; the " +
+            "reporter keeps a copy in <home>\\78legacy\\bugs)"
 
-    /** Asks the reporter's client for the screenshot: exactly one console line, nothing else. */
+    /** Opens the upload for [report] and asks the reporter's client for the screenshot: exactly one console line, nothing else. */
     fun request(
         player: Player,
         report: File,
     ) {
-        player.message(consoleLine(report), type = ChatMessageType.CONSOLE)
+        val upload = BugShotUploads.expect(player.username, report)
+        player.message(consoleLine(report, upload), type = ChatMessageType.CONSOLE)
     }
 }

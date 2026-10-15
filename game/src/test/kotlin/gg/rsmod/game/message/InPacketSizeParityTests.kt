@@ -43,7 +43,9 @@ class InPacketSizeParityTests {
 
     @Test
     fun `the size table covers the whole rev-667 client protocol`() {
-        assertEquals(94, ClientProtSizes.SIZES.size)
+        // 94 rev-667 packets (0..93) + 94 RSPS_BUGSHOT_CHUNK, the 78 client's bug-report screenshot piece (T2 2026-10-15).
+        assertEquals(95, ClientProtSizes.SIZES.size)
+        assertEquals((0..94).toSet(), ClientProtSizes.SIZES.keys)
         assertTrue(ClientProtSizes.SIZES[42] == 15, "OPLOCT is a fixed 15-byte packet")
     }
 }

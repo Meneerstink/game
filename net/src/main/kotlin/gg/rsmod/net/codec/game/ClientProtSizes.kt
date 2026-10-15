@@ -110,5 +110,6 @@ object ClientProtSizes {
             91 to 8, // IF_BUTTON6
             92 to 3, // OPNPC6
             93 to 1, // EVENT_APPLET_FOCUS
+            94 to -2, // RSPS_BUGSHOT_CHUNK - 78 client only (T2 2026-10-15, RspsBugShot.pump): a piece of a bug-report screenshot
         )
 }
