@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.cmd
 
 import gg.rsmod.game.model.BugShotUploads
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.service.GameService
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.ext.message
 import java.io.File
@@ -19,6 +20,10 @@ import java.time.format.DateTimeFormatter
  * own 78legacy\bugs and sends the PNG over the game connection; the server writes it as bugs\<stem>.png next to the report
  * and adds "Screenshot received: ..." (round 1 FAIL: the PNG stayed on the reporter's PC - friends / VPS).
  * Above BugShotUploads.MAX_PER_HOUR requests the line has no "|upload": the client only keeps its own copy.
+ * Round 3 (Keurmeester FAIL round 2: two reports close together lost both pictures and the client still said "sent"): every
+ * report has its own upload on the server, and the server answers the client per report with "<stem>|saved|<file size>"
+ * (after the PNG is on disk) or "<stem>|refused|<why>" ([replyLine]) - the client stops sending a refused report and only
+ * tells the player what the server really did.
  * A client without RspsBugShot only prints the line in its dev console. Tests: BugShotTests, BugShotUploadsTests (core),
  * :runescape:bugShotRegression (client).
  */
@@ -63,12 +68,40 @@ object BugShot {
             "refused (server log '[bugshot] PROBLEM') or more than ${BugShotUploads.MAX_PER_HOUR} reports in an hour; the " +
             "reporter keeps a copy in <home>\\78legacy\\bugs)"
 
-    /** Opens the upload for [report] and asks the reporter's client for the screenshot: exactly one console line, nothing else. */
+    /**
+     * Runs [job] on the game thread (GameService job queue): the upload ends on the network or the writer thread, a player is
+     * only written to from the game thread. Tests run it inline.
+     */
+    @Volatile
+    var onGameThread: (Player, () -> Unit) -> Unit = { player, job -> player.world.getService(GameService::class.java)?.submitGameThreadJob(job) }
+
+    /** "<PREFIX><stem>|saved|<detail>" or "<PREFIX><stem>|refused|<why>" - [detail] never carries a '|' or a path separator. */
+    fun replyLine(
+        report: File,
+        outcome: BugShotUploads.Outcome,
+        detail: String,
+    ): String {
+        val word = if (outcome == BugShotUploads.Outcome.SAVED) "saved" else "refused"
+        val clean = detail.replace('|', ' ').replace('\\', ' ').replace('/', ' ').take(120)
+        return "$PREFIX${report.nameWithoutExtension}|$word|$clean"
+    }
+
+    /**
+     * Opens the upload for [report] and asks the reporter's client for the screenshot: exactly one console line. When the
+     * upload ends the client gets one more line ([replyLine]) if the reporter is online (also after a relog).
+     */
     fun request(
         player: Player,
         report: File,
     ) {
-        val upload = BugShotUploads.expect(player.username, report)
+        val upload =
+            BugShotUploads.expect(player.username, report) { outcome, detail ->
+                onGameThread(player) {
+                    // a relog during the upload: the client goes on with this report on its new session (a new Player)
+                    val target = if (player.isOnline) player else player.world.getPlayerForName(player.username)
+                    target?.message(replyLine(report, outcome, detail), type = ChatMessageType.CONSOLE)
+                }
+            }
         player.message(consoleLine(report, upload), type = ChatMessageType.CONSOLE)
     }
 }

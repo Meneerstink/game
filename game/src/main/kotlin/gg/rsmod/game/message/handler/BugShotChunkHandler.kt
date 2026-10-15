@@ -16,6 +16,6 @@ class BugShotChunkHandler : MessageHandler<BugShotChunkMessage> {
         world: World,
         message: BugShotChunkMessage,
     ) {
-        BugShotUploads.receive(client.username, message.total, message.offset, message.data)
+        BugShotUploads.receive(client.username, message.stem, message.total, message.offset, message.data)
     }
 }

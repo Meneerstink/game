@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.cmd
 import gg.rsmod.game.message.Message
 import gg.rsmod.game.message.impl.MessageGameMessage
 import gg.rsmod.game.model.BugShotUploads
+import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ChatMessageType
 import io.mockk.every
@@ -79,11 +80,17 @@ class BugShotTests {
     fun `one bug report sends exactly one console request to the reporter, opens its upload, and the report names the screenshot`() {
         BugShotUploads.clear()
         BugShotUploads.executor = { it.run() }
+        var gameThreadJobs = 0
+        BugShot.onGameThread = { _, job ->
+            gameThreadJobs++
+            job()
+        }
         val dir = Files.createTempDirectory("bugshot").toFile()
         try {
             val sent = mutableListOf<Any>()
             val player = mockk<Player>(relaxed = true)
             every { player.username } returns "teamtest1"
+            every { player.isOnline } returns true
             every { player.write(*anyVararg<Message>()) } answers {
                 it.invocation.args.forEach { a -> if (a is Array<*>) sent.addAll(a.filterNotNull()) else if (a != null) sent += a }
             }
@@ -97,8 +104,13 @@ class BugShotTests {
 
             // the upload the client then sends lands next to the report (whatever PC the client runs on)
             val png = java.io.ByteArrayOutputStream().also { javax.imageio.ImageIO.write(java.awt.image.BufferedImage(40, 30, 1), "png", it) }.toByteArray()
-            assertEquals(BugShotUploads.Status.COMPLETE, BugShotUploads.receive("teamtest1", png.size, 0, png).status)
+            assertEquals(BugShotUploads.Status.COMPLETE, BugShotUploads.receive("teamtest1", report.nameWithoutExtension, png.size, 0, png).status)
             assertTrue(png.contentEquals(File(dir, "bug-20261014-234610-teamtest1.png").readBytes()), "screenshot not next to the report")
+            // round 3: the client hears that the server saved it - one console line, sent on the game thread
+            val replies = sent.filterIsInstance<MessageGameMessage>().map { it.message }.drop(1)
+            assertEquals(1, replies.size, "replies: $replies")
+            assertTrue(replies[0].startsWith("__RSPS_BUGSHOT__:bug-20261014-234610-teamtest1|saved|bug-20261014-234610-teamtest1.png 40x30"), replies[0])
+            assertEquals(1, gameThreadJobs, "the reply must be sent from the game thread")
 
             val line = BugShot.reportLine(report)
             assertTrue(line.startsWith("Screenshot: bug-20261014-234610-teamtest1.png"), line)
@@ -110,6 +122,80 @@ class BugShotTests {
             sent.clear()
             BugShot.request(player, File(dir, "bug-20261014-234611-teamtest2.txt"))
             assertEquals(listOf("__RSPS_BUGSHOT__:bug-20261014-234611-teamtest2"), sent.filterIsInstance<MessageGameMessage>().map { it.message })
+        } finally {
+            BugShotUploads.clear()
+            dir.deleteRecursively()
+        }
+    }
+
+    @Test
+    fun `the reporter's client hears refused with the reason, also after a relog, an offline reporter hears nothing, and a reply never names a path`() {
+        BugShotUploads.clear()
+        BugShotUploads.executor = { it.run() }
+        BugShot.onGameThread = { _, job -> job() }
+        val dir = Files.createTempDirectory("bugshot").toFile()
+        try {
+            val sent = mutableListOf<String>()
+            var online = true
+            val world = mockk<World>(relaxed = true)
+            var onlineNow: Player? = null
+            every { world.getPlayerForName(any()) } answers { onlineNow }
+            fun player(into: MutableList<String>): Player {
+                val p = mockk<Player>(relaxed = true)
+                every { p.username } returns "teamtest1"
+                every { p.world } returns world
+                every { p.write(*anyVararg<Message>()) } answers {
+                    it.invocation.args.forEach { a -> (if (a is Array<*>) a.toList() else listOf(a)).filterIsInstance<MessageGameMessage>().forEach { m -> into += m.message } }
+                }
+                return p
+            }
+            val player = player(sent)
+            every { player.isOnline } answers { online }
+            onlineNow = player
+            val a = File(dir, "bug-20261015-022906-teamtest1.txt").also { it.writeText("a\n") }
+            val b = File(dir, "bug-20261015-022921-teamtest1.txt").also { it.writeText("b\n") }
+            BugShot.request(player, a)
+            BugShot.request(player, b)
+            // A's upload breaks (a gap): its client is told to stop A - B stays open
+            BugShotUploads.receive("teamtest1", a.nameWithoutExtension, 5000, 0, ByteArray(1000))
+            BugShotUploads.receive("teamtest1", a.nameWithoutExtension, 5000, 2000, ByteArray(1000))
+            assertEquals(
+                listOf(
+                    "__RSPS_BUGSHOT__:bug-20261015-022906-teamtest1|upload",
+                    "__RSPS_BUGSHOT__:bug-20261015-022921-teamtest1|upload",
+                    "__RSPS_BUGSHOT__:bug-20261015-022906-teamtest1|refused|a piece at 2000, expected 1000",
+                ),
+                sent,
+            )
+            assertEquals(listOf(b.nameWithoutExtension), BugShotUploads.openStems("teamtest1"))
+            // the reporter logged out before B finished: nothing is sent to a player who is gone
+            online = false
+            onlineNow = null
+            sent.clear()
+            val png = java.io.ByteArrayOutputStream().also { javax.imageio.ImageIO.write(java.awt.image.BufferedImage(20, 10, 1), "png", it) }.toByteArray()
+            assertEquals(BugShotUploads.Status.COMPLETE, BugShotUploads.receive("teamtest1", b.nameWithoutExtension, png.size, 0, png).status)
+            assertEquals(emptyList(), sent)
+            assertTrue(File(dir, b.nameWithoutExtension + ".png").isFile, "the server copy is kept even when the reporter is gone")
+            // test server 2026-10-15 04:13: a relog in the middle of an upload - the client goes on with the same report on its new
+            // session; the answer must reach the new session (a new Player object), not the logged-out one
+            val c = File(dir, "bug-20261015-041238-teamtest1.txt").also { it.writeText("c\n") }
+            online = true
+            onlineNow = player
+            BugShot.request(player, c)
+            online = false
+            val relogged = mutableListOf<String>()
+            val again = player(relogged)
+            every { again.isOnline } returns true
+            onlineNow = again
+            sent.clear()
+            assertEquals(BugShotUploads.Status.COMPLETE, BugShotUploads.receive("teamtest1", c.nameWithoutExtension, png.size, 0, png).status)
+            assertEquals(emptyList(), sent, "nothing to the logged-out session")
+            assertEquals(1, relogged.size, "the relogged session hears the answer: $relogged")
+            assertTrue(relogged[0].startsWith("__RSPS_BUGSHOT__:bug-20261015-041238-teamtest1|saved|"), relogged[0])
+            for (line in listOf(BugShot.replyLine(a, BugShotUploads.Outcome.SAVED, "x.png 1x1"), BugShot.replyLine(a, BugShotUploads.Outcome.REFUSED, "C:\\RSPS\\bugs | x"))) {
+                assertTrue(line.startsWith(BugShot.PREFIX + a.nameWithoutExtension + "|"), line)
+                assertTrue(!line.contains("C:\\") && line.count { it == '|' } == 2, "reply carries a path or an extra field: $line")
+            }
         } finally {
             BugShotUploads.clear()
             dir.deleteRecursively()

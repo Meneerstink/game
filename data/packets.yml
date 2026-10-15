@@ -1204,7 +1204,8 @@ in-packets:
       - name: command
         type: STRING
 
-  # T2 (2026-10-15): 78 client only - one piece of a bug-report screenshot (RspsBugShot.pump: p4 total, p4 offset, bytes).
+  # T2 (2026-10-15): 78 client only - one piece of a bug-report screenshot (RspsBugShot.pump: p1 stem length, report stem,
+  # p4 total, p4 offset, bytes; round 3 added the stem).
   # Read by BugShotChunkDecoder; GameSystem hands it to BugShotUploads on the network thread, never into the cycle queue.
   - message: gg.rsmod.game.message.impl.BugShotChunkMessage
     type: VARIABLE_SHORT

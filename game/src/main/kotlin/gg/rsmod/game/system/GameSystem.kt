@@ -80,7 +80,7 @@ class GameSystem(
                 if (message is BugShotChunkMessage) {
                     // T2: a bug-report screenshot comes in hundreds of pieces; through the queue they would take the
                     // messages-per-cycle slots (and the buffer) of the player's real clicks. BugShotUploads is thread-safe.
-                    BugShotUploads.receive(client.username, message.total, message.offset, message.data)
+                    BugShotUploads.receive(client.username, message.stem, message.total, message.offset, message.data)
                     return
                 }
                 val queued = messages.offer(
