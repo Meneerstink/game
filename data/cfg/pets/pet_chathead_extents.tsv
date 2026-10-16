@@ -4,7 +4,7 @@
 # head anchor. dialogue = 241-244:2 (zoom 2150, xan 40, yan 1882); panel = Follower Details 662:1 (zoom 2168).
 # npc	surface	up	down	left	right	name
 14484	dialogue	40	55	40	60	Abyssal orphan
-14484	panel	46	44	40	61	Abyssal orphan
+14484	panel	46	59	42	61	Abyssal orphan
 14485	dialogue	53	58	59	60	Aggy
 14485	panel	63	55	66	66	Aggy
 14486	dialogue	29	39	50	51	Baby Mole
@@ -112,9 +112,9 @@
 14537	dialogue	54	54	53	56	Pet Snakeling
 14537	panel	50	38	57	62	Pet Snakeling
 14538	dialogue	41	35	45	41	Pet Zilyana
-14538	panel	48	32	49	50	Pet Zilyana
+14538	panel	48	32	50	50	Pet Zilyana
 14539	dialogue	37	44	36	48	Phoenix
-14539	panel	42	41	39	55	Phoenix
+14539	panel	42	41	39	56	Phoenix
 14540	dialogue	37	44	36	48	Phoenix
 14540	panel	42	41	39	56	Phoenix
 14541	dialogue	37	44	36	48	Phoenix
