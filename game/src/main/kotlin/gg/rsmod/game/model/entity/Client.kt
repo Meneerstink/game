@@ -91,9 +91,15 @@ class Client(
 
     override fun handleLogout() {
         try {
-            super.handleLogout()
-            attr[LAST_LOGOUT_DATE] = System.currentTimeMillis()
-            world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(this)
+            // N56: the logout save runs even when the logout itself failed (2009scape DisconnectionQueue.kt:70-89:
+            // finishClear under a Throwable net, then removePlayer, then the save). It used to be skipped, so a
+            // failed logout lost the session's progress on top of leaving the player online.
+            try {
+                super.handleLogout()
+            } finally {
+                attr[LAST_LOGOUT_DATE] = System.currentTimeMillis()
+                world.getService(PlayerSerializerService::class.java, searchSubclasses = true)?.saveClientData(this)
+            }
         } finally {
             // Audit S-03: the account stays claimed until its logout save is on disk, so a new
             // login in the same tick is refused instead of loading the previous save.

@@ -21,6 +21,7 @@ import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.model.timer.*
 import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.game.sync.block.UpdateBlockType
+import gg.rsmod.game.task.rethrowIfFatal
 import gg.rsmod.util.Misc
 import it.unimi.dsi.fastutil.objects.ObjectArrayList
 import java.util.*
@@ -945,13 +946,34 @@ abstract class Player(
      *
      * The [Client] implementation overrides this method and will handle saving
      * data for the player and call this super method at the end.
+     *
+     * N56: the player always leaves the world. Each step before the unregister runs under its own
+     * non-fatal Throwable net and the unregister sits in a `finally` (2009scape
+     * DisconnectionQueue.kt:43-45 `try { finishClear() } finally { removePlayer() }` and :70-71;
+     * Void AccountManager.kt:120 queues the removal before the despawn handlers run). A failing step
+     * used to leave a ghost in [World.players]: "already online" until a restart, no logout save.
      */
     open fun handleLogout() {
-        interruptQueues()
-        unlock()
-        world.instanceAllocator.logout(this)
-        world.plugins.executeLogout(this)
-        world.unregister(this)
+        try {
+            logoutStep("interrupt queues") { interruptQueues() }
+            logoutStep("unlock") { unlock() }
+            logoutStep("instance logout") { world.instanceAllocator.logout(this) }
+            logoutStep("logout hooks") { world.plugins.executeLogout(this) }
+        } finally {
+            world.unregister(this)
+        }
+    }
+
+    private inline fun logoutStep(
+        step: String,
+        action: () -> Unit,
+    ) {
+        try {
+            action()
+        } catch (e: Throwable) {
+            e.rethrowIfFatal()
+            gg.rsmod.game.model.Trace.crash("logout step '$step' for $username", e)
+        }
     }
 
     /**

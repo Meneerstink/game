@@ -10,6 +10,7 @@ import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.service.log.LoggerService
+import gg.rsmod.game.task.rethrowIfFatal
 import java.lang.ref.WeakReference
 import mu.KLogging
 
@@ -97,7 +98,9 @@ object NpcDeathAction : KLogging() {
     ) {
         try {
             hook()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            // N56: every non-fatal Throwable (ExceptionInInitializerError, NoClassDefFoundError, TODO()), not only Exception.
+            e.rethrowIfFatal()
             logger.error("NPC death hook '$stage' failed for id=${npc.id}; continuing lifecycle.", e)
         }
     }

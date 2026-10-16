@@ -16,6 +16,7 @@ import gg.rsmod.game.model.entity.*
 import gg.rsmod.game.model.shop.Shop
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.service.Service
+import gg.rsmod.game.task.rethrowIfFatal
 import gg.rsmod.util.ServerProperties
 import io.github.classgraph.ClassGraph
 import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap
@@ -879,8 +880,10 @@ class PluginRepository(
         playerDeathStartPlugins.forEach { plugin ->
             try {
                 p.executePlugin(plugin)
-            } catch (e: Exception) {
-                logger.error("Death-start hook failed for username=${p.username}; continuing with the next hook.", e)
+            } catch (e: Throwable) {
+                // N56: every non-fatal Throwable (ExceptionInInitializerError, NoClassDefFoundError, TODO()), not only Exception.
+                e.rethrowIfFatal()
+                lifecycleHookFailed("Death-start", p, e)
             }
         }
     }
@@ -894,8 +897,9 @@ class PluginRepository(
         playerPreDeathPlugins.forEach { plugin ->
             try {
                 p.executePlugin(plugin)
-            } catch (e: Exception) {
-                logger.error("Pre-death hook failed for username=${p.username}; continuing with the next hook.", e)
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
+                lifecycleHookFailed("Pre-death", p, e)
             }
         }
     }
@@ -921,7 +925,15 @@ class PluginRepository(
     }
 
     fun executePlayerDeath(p: Player) {
-        playerDeathPlugins.forEach { plugin -> p.executePlugin(plugin) }
+        // N56: same per-hook net as the death-start and pre-death hooks - one failing hook must not skip the others.
+        playerDeathPlugins.forEach { plugin ->
+            try {
+                p.executePlugin(plugin)
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
+                lifecycleHookFailed("Death", p, e)
+            }
+        }
     }
 
     fun bindNpcPreDeath(
@@ -1129,14 +1141,20 @@ class PluginRepository(
      * after it (friend lists, familiars, trade sessions), and on logout it must not prevent the
      * save and unregister that follow - which previously left the player stuck "online" and
      * re-throwing every tick without ever being saved.
+     *
+     * N56 (VPS 2026-10-16): the nets caught only Exception, so an ExceptionInInitializerError /
+     * NoClassDefFoundError from a logout hook still escaped and stranded the player. Every
+     * non-fatal Throwable is caught now (2009scape DisconnectionQueue.kt:70 `catch (t: Throwable)`
+     * around the logout listeners; Audit T-01 [rethrowIfFatal] convention).
      */
     fun executeLogin(p: Player) {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INPUT) { "login ${p.username} at ${p.tile.x},${p.tile.z},${p.tile.height} privilege=${p.privilege.name}" }
         loginPlugins.forEach { logic ->
             try {
                 p.executePlugin(logic)
-            } catch (e: Exception) {
-                logger.error("Login hook failed for username=${p.username}; continuing lifecycle.", e)
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
+                lifecycleHookFailed("Login", p, e)
             }
         }
     }
@@ -1151,10 +1169,21 @@ class PluginRepository(
         logoutPlugins.forEach { logic ->
             try {
                 p.executePlugin(logic)
-            } catch (e: Exception) {
-                logger.error("Logout hook failed for username=${p.username}; continuing lifecycle.", e)
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
+                lifecycleHookFailed("Logout", p, e)
             }
         }
+    }
+
+    /** N56: a failed lifecycle hook is logged and traced as a PROBLEM line (TRACES.md); the lifecycle continues. */
+    private fun lifecycleHookFailed(
+        stage: String,
+        p: Player,
+        e: Throwable,
+    ) {
+        logger.error("$stage hook failed for username=${p.username}; continuing lifecycle.", e)
+        gg.rsmod.game.model.Trace.crash("${stage.lowercase()} hook for ${p.username}", e)
     }
 
     fun bindComponentItemSwap(

@@ -11,6 +11,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.game.plugin.Plugin
 import gg.rsmod.game.service.log.LoggerService
+import gg.rsmod.game.task.rethrowIfFatal
 import java.lang.ref.WeakReference
 import mu.KLogging
 
@@ -141,7 +142,9 @@ object PlayerDeathAction : KLogging() {
     ) {
         try {
             hook()
-        } catch (e: Exception) {
+        } catch (e: Throwable) {
+            // N56: every non-fatal Throwable (ExceptionInInitializerError, NoClassDefFoundError, TODO()), not only Exception.
+            e.rethrowIfFatal()
             logger.error("Player death hook '$stage' failed for username=${player.username}; continuing lifecycle.", e)
         }
     }

@@ -443,9 +443,17 @@ class World(
             if (rebootTimer == 0) {
                 for (i in 0 until players.capacity) {
                     players[i]?.let { player ->
-                        player.handleLogout()
-                        player.write(LogoutFullMessage())
-                        player.channelClose()
+                        // N56: one player's failed logout must not skip everybody after him in the reboot
+                        // (same per-player net as SequentialPlayerCycleTask, Audit T-01).
+                        try {
+                            player.handleLogout()
+                            player.write(LogoutFullMessage())
+                            player.channelClose()
+                        } catch (e: Throwable) {
+                            e.rethrowIfFatal()
+                            logger.error("Reboot logout failed for ${player.username}; continuing with the next player.", e)
+                            gg.rsmod.game.model.Trace.crash("reboot logout for ${player.username}", e)
+                        }
                     }
                 }
             }
