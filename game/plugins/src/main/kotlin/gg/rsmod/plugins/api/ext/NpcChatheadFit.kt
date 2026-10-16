@@ -63,6 +63,9 @@ object NpcChatheadFit {
     /** Projection is not exactly linear in the zoom (the near half of a head shrinks a little less): keep 4% spare. */
     private const val MARGIN = 1.04
 
+    /** A sweep samples the talking animation, it can miss its widest frame by a pixel or two: every side counts 2 px more. */
+    private const val PAD = 2
+
     const val TABLE_NAME = "pet_chathead_extents.tsv"
     private val TABLE_CANDIDATES = listOf("./data/cfg/pets/$TABLE_NAME", "../../data/cfg/pets/$TABLE_NAME")
 
@@ -91,9 +94,10 @@ object NpcChatheadFit {
     fun extents(surface: Surface, npc: Int): Extents? = table()[surface.name]?.get(npc)
 
     /** The camera and position that keep [extents] inside [surface]'s frame; the cache values when it already fits. */
-    fun fit(surface: Surface, extents: Extents?): Fit {
+    fun fit(surface: Surface, measured: Extents?): Fit {
         val cache = Fit(surface.zoom, surface.boxX, surface.boxY, false)
-        if (extents == null) return cache
+        if (measured == null) return cache
+        val extents = Extents(measured.up + PAD, measured.down + PAD, measured.left + PAD, measured.right + PAD)
         val roomUp = surface.anchorY - surface.frameY1
         val roomDown = surface.frameY2 - surface.anchorY
         val roomLeft = surface.anchorX - surface.frameX1

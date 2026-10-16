@@ -156,12 +156,29 @@ class PetChatheadFitTests {
                 player.setComponentNpcHead(interfaceId = iface, component = 2, npc = npc)
                 val hash = (iface shl 16) or 2
                 assertEquals(DIALOGUE.zoom, zoomOf(sent, hash, DIALOGUE.zoom), "npc $npc on $iface:2 zoom")
-                assertTrue(sent.filterIsInstance<IfSetPositionMessage>().none { it.hash == hash }, "npc $npc on $iface:2 was moved")
+                sent.filterIsInstance<IfSetPositionMessage>().filter { it.hash == hash }.forEach {
+                    assertEquals(DIALOGUE.boxX to DIALOGUE.boxY, it.x to it.y, "npc $npc on $iface:2 was moved")
+                }
                 sent.filter { it.javaClass.simpleName == "IfSetAngleMessage" }.forEach {
                     assertEquals(40, field(it, "xan"))
                     assertEquals(1882, field(it, "yan"))
                 }
             }
+        }
+    }
+
+    @Test
+    fun `a native head after a moved pet head on the same dialogue is back at the cache camera and position`() {
+        // The client keeps a component's IF_SETPOSITION / IF_SETANGLE while the same interface stays open (petheads
+        // re-opens 242 for every pet; a conversation re-opens 243 for the next page): Smol Heredit, then the GE clerk.
+        for (iface in 241..244) {
+            val (player, sent) = capturing()
+            val hash = (iface shl 16) or 2
+            player.setComponentNpcHead(interfaceId = iface, component = 2, npc = 14652)
+            player.setComponentNpcHead(interfaceId = iface, component = 2, npc = 2241)
+            assertEquals(DIALOGUE.zoom, zoomOf(sent, hash, DIALOGUE.zoom), "GE clerk after Smol Heredit on $iface:2 zoom")
+            val pos = sent.filterIsInstance<IfSetPositionMessage>().lastOrNull { it.hash == hash }
+            assertTrue(pos == null || (pos.x to pos.y) == (DIALOGUE.boxX to DIALOGUE.boxY), "GE clerk after Smol Heredit on $iface:2 at ${pos?.x},${pos?.y}")
         }
     }
 
