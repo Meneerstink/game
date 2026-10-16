@@ -478,14 +478,36 @@ class World(
         return false
     }
 
+    /**
+     * N56 round 2: the removal from [players] comes FIRST and nothing can stand in front of it (Void
+     * AccountManager.kt:120-125 queues Players.remove before the despawn handlers; 2009scape DisconnectionQueue.kt:43-45
+     * removes the player in a finally). The friends-chat leave used to run first: its broadcast writes to every
+     * remaining member, and one failing member write left this function before players.remove - the leaver stayed
+     * "already online" with his claim released. Every later step has its own non-fatal net so one failure cannot skip
+     * the others.
+     */
     fun unregister(p: Player) {
+        players.remove(p)
+        unregisterStep(p, "chunk removal") { chunks.get(p.tile)?.removeEntity(this, p, p.tile) }
         /*
          * Friends-chat membership holds a strong reference to the player, and the remaining members
          * are shown a list that would otherwise still name someone who has logged out.
          */
-        friendsChat.leave(p, notifyLeaver = false)
-        players.remove(p)
-        chunks.get(p.tile)?.removeEntity(this, p, p.tile)
+        unregisterStep(p, "friends chat leave") { friendsChat.leave(p, notifyLeaver = false) }
+    }
+
+    private inline fun unregisterStep(
+        p: Player,
+        step: String,
+        action: () -> Unit,
+    ) {
+        try {
+            action()
+        } catch (e: Throwable) {
+            e.rethrowIfFatal()
+            logger.error("Unregister step '$step' failed for ${p.username}; the player is already out of the world.", e)
+            gg.rsmod.game.model.Trace.crash("unregister step '$step' for ${p.username}", e)
+        }
     }
 
     fun spawn(npc: Npc): Boolean {
