@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Lets an "Enter amount" box take B for billions, as OSRS does ("1b"; owner buglist E7, the bank must work like the OSRS bank).
@@ -12,8 +13,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.CountInputSuffixTool plan|apply` (servers stopped for apply).
  */
 object CountInputSuffixTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val CLIENTSCRIPT_INDEX = 12
     const val SCRIPT = 802
 

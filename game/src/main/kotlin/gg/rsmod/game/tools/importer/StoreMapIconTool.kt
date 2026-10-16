@@ -2,6 +2,7 @@ package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
 import com.google.gson.JsonParser
+import gg.rsmod.game.RspsPaths
 import gg.rsmod.game.fs.def.NpcDef
 import io.netty.buffer.Unpooled
 import java.awt.BasicStroke
@@ -57,7 +58,7 @@ object StoreMapIconTool {
             Store("Loyalty Store (Xuan)", 13727, LOYALTY_SPRITE, LOYALTY_ELEMENT, ::paintLoyalty),
         )
 
-    const val WORLD_EDITS = "C:/RSPS/game/game/data/world_edits.json"
+    val WORLD_EDITS = RspsPaths.data("world_edits.json")
     val TARGETS = OsrsItemImportTool.TARGETS
 
     private const val SIZE = 15

@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 import kotlin.math.abs
 import kotlin.math.ceil
@@ -23,9 +24,9 @@ import kotlin.math.sqrt
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.OsrsDecalLiftTool plan|apply [modelId ...]`
  */
 object OsrsDecalLiftTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val MASTER = "C:/RSPS/OSRS_IMPORT_MASTER.yml"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val MASTER = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
     private const val MODEL_INDEX = 7
 
     /** Deepest a hidden detail face may lie behind the covering face (model units). */

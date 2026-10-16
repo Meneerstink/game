@@ -1,5 +1,6 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -11,10 +12,10 @@ import java.io.File
  * Which of the two npc ids is the follower is decided by the cache: OSRS npc opcode 122 (follower flag) - never by position.
  */
 object OsrsPetRoster {
-    const val SOURCE = "C:\\RSPS\\game\\game\\data\\cfg\\pets\\osrs_pets.tsv"
+    val SOURCE = RspsPaths.data("cfg/pets/osrs_pets.tsv")
 
     /** Server table written by [OsrsPetImportTool] after a successful apply: local item and follower npc ids per variant. */
-    const val SERVER_TABLE = "C:\\RSPS\\game\\game\\data\\cfg\\pets\\pets.tsv"
+    val SERVER_TABLE = RspsPaths.data("cfg/pets/pets.tsv")
 
     data class Row(
         val pet: String,

@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * A19 (owner 2026-10-11: "a weird fart sound" on backspace in the chat; owner rule: "that sound must not play - OSRS:
@@ -21,8 +22,8 @@ import com.displee.cache.CacheLibrary
  * (apply only with 50015/50016 stopped; writes both caches through one [CacheTransaction]).
  */
 object TypingSoundClientScriptPatchTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     const val CLIENTSCRIPT_INDEX = 12
     const val SCRIPT = 802
     const val REJECT_SOUND = 4173

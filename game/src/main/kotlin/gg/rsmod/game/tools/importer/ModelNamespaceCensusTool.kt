@@ -4,6 +4,7 @@ import com.displee.cache.CacheLibrary
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import gg.rsmod.game.RspsPaths
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import java.io.File
@@ -427,7 +428,7 @@ object ModelNamespaceCensusTool {
         }
     }
 
-    private const val DEFAULT_ASSET_MAP_PATH = "C:\\RSPS\\OSRS_IMPORT_MASTER.yml"
+    private val DEFAULT_ASSET_MAP_PATH = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
     private const val USAGE =
         "Usage: <gameCachePath> <fileServerCachePath> [--asset-map=<path>]"
 }

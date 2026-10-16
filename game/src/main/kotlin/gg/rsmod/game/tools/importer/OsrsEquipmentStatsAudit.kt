@@ -3,6 +3,7 @@ package gg.rsmod.game.tools.importer
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
+import gg.rsmod.game.RspsPaths
 import java.io.File
 import java.util.Locale
 
@@ -21,7 +22,7 @@ import java.util.Locale
  * of the named entries in `items.yml`, line by line, keeping every other byte.
  */
 object OsrsEquipmentStatsAudit {
-    const val ITEMS_YML = "C:\\RSPS\\game\\game\\data\\cfg\\items.yml"
+    val ITEMS_YML = RspsPaths.data("cfg/items.yml")
 
     val BONUS_FIELDS =
         listOf(

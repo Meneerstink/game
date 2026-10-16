@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -12,9 +13,9 @@ import java.io.File
  * Usage: `./gradlew :game:runGeHomeHallMapTool --args="plan|apply"`.
  */
 object GeHomeHallMapTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
 
     private const val MIN_X = 3152
     private const val MIN_Z = 3470

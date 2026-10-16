@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -33,15 +34,15 @@ import java.io.File
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.RoyalHallMapTool plan|apply`
  */
 object RoyalHallMapTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
     private const val REGION_ID = 12598
 
     /** Region 12598's map and locs as journaled by the first Royal Hall transactions, before any hall change. */
-    private const val PRISTINE_MAP = "C:/RSPS/import-journal/tx-20260925-185824/C_RSPS_game_game_data_cache__idx5_grp266_file0.orig"
+    private val PRISTINE_MAP = RspsPaths.root("import-journal/tx-20260925-185824/C_RSPS_game_game_data_cache__idx5_grp266_file0.orig")
     private const val PRISTINE_MAP_SHA1 = "bae2a674ac89"
-    private const val PRISTINE_LOCS = "C:/RSPS/import-journal/tx-20260925-184002/C_RSPS_game_game_data_cache__idx5_grp267_file0.orig"
+    private val PRISTINE_LOCS = RspsPaths.root("import-journal/tx-20260925-184002/C_RSPS_game_game_data_cache__idx5_grp267_file0.orig")
     private const val PRISTINE_LOCS_SHA1 = "1ce8d4f83f33"
 
     const val FLOOR_MIN_X = 3158

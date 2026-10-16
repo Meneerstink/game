@@ -51,7 +51,11 @@ object OsrsNpcImportTool {
      */
     val OWN_OSRS_MOVEMENT_NPCS = setOf(13660)
 
-    val BATCHES: Map<String, List<Int>> =
+    /**
+     * Lazy (T17): the "pets" batch reads [OsrsPetRoster.SOURCE]; no class initialiser may open a file - plugin code touches these
+     * tool objects as layout holders on every host (the VPS crashed at logout when this was eager).
+     */
+    val BATCHES: Map<String, List<Int>> by lazy {
         mapOf(
             // OSRS Wiki "Ferox Enclave" personalities, ids from each npc's infobox.
             "ferox" to
@@ -97,6 +101,7 @@ object OsrsNpcImportTool {
             // dragon 10512 (npc ids from the wiki's variant table).
             "poh-dummy" to listOf(10507, 8598, 10508, 10509, 10510, 10511, 10512),
         )
+    }
 
     /**
      * Npcs that never move and have no movement sequences in OSRS: they keep their model's rest pose (no humanoid default).

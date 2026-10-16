@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -12,9 +13,9 @@ import java.io.File
  * Usage: `./gradlew :game:runGeHomeFloorRestoreTool --args="plan|apply"`.
  */
 object GeHomeFloorRestoreTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val ORIGINAL = "C:/RSPS/import-journal/tx-20260922-184728/C_RSPS_game_game_data_cache__idx5_grp266_file0.orig"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val ORIGINAL = RspsPaths.root("import-journal/tx-20260922-184728/C_RSPS_game_game_data_cache__idx5_grp266_file0.orig")
     private const val REGION_ID = 12598
     private const val DARK_STONE = 217
     private val X = 3150..3180

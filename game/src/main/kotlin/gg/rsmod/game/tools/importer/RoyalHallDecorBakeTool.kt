@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import gg.rsmod.game.model.decor.HomeDecorBake
 import gg.rsmod.game.model.decor.HomeDecorFile
 import java.io.File
@@ -24,10 +25,11 @@ import java.nio.file.Paths
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.RoyalHallDecorBakeTool plan|apply`
  */
 object RoyalHallDecorBakeTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
-    private const val DATA = "C:/RSPS/game/game"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
+    /** The server working directory (the parent of [RspsPaths.DATA]): home_decor.txt and the bake manifest are relative to it. */
+    private val DATA: String = File(RspsPaths.DATA).parent
     private const val LOC_INDEX = 16
 
     /** The cache decals the carpet covers (3163-3166 x 3483-3484): dirt 46541 x4, 46976 x3 (research 2026-10-09). */

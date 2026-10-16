@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 import java.io.PrintStream
 
@@ -17,8 +18,8 @@ import java.io.PrintStream
  * Usage: `./gradlew :game:runFeroxMapDataProbeTool --args="[outFile]"`
  */
 object FeroxMapDataProbeTool {
-    const val ASSET_MAP = "C:/RSPS/OSRS_IMPORT_MASTER.yml"
-    const val IMPORT_LOG = "C:/RSPS/import-source/ferox/ferox_apply_tx-20260905-052852.txt"
+    val ASSET_MAP = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
+    val IMPORT_LOG = RspsPaths.root("import-source/ferox/ferox_apply_tx-20260905-052852.txt")
     val REFERENCE_NAMES =
         listOf("bank booth", "bank chest", "altar", "staircase", "stairs", "tree", "bush", "flowers", "pool", "fountain", "ladder", "portal", "barrier", "roots")
 

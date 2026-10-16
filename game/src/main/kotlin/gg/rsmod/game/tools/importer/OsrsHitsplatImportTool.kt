@@ -24,7 +24,7 @@ import java.io.File
  * Usage: `./gradlew :game:runOsrsHitsplatImportTool --args="[--apply]"` (servers stopped; CacheTransaction refuses otherwise).
  */
 object OsrsHitsplatImportTool {
-    const val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
+    val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
     val TARGETS = OsrsItemImportTool.TARGETS
 
     const val INDEX_CONFIG = 2

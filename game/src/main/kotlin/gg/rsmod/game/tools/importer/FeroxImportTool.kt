@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -30,13 +31,13 @@ import java.io.File
  * Usage: `./gradlew :game:runFeroxImportTool --args="plan|apply"`
  */
 object FeroxImportTool {
-    const val MODERN_CACHE = "C:/RSPS/import-source/openrs2-2499/cache"
-    const val MODERN_KEYS = "C:/RSPS/import-source/openrs2-2499-keys.json"
-    const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
-    const val ASSET_MAP = "C:/RSPS/OSRS_IMPORT_MASTER.yml"
-    const val OUT_DIR = "C:/RSPS/import-source/ferox"
+    val MODERN_CACHE = RspsPaths.root("import-source/openrs2-2499/cache")
+    val MODERN_KEYS = RspsPaths.root("import-source/openrs2-2499-keys.json")
+    val GAME_CACHE = RspsPaths.data("cache")
+    val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
+    val ASSET_MAP = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
+    val OUT_DIR = RspsPaths.root("import-source/ferox")
     val REGIONS = listOf(12344, 12600)
 
     /** Footprint (inclusive absolute tiles): Ferox walls span x 3123..3187, z 3603..3646 on planes 0-3. */

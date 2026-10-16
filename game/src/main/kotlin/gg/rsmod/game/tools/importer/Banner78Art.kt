@@ -1,5 +1,6 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
 import java.awt.BasicStroke
 import java.awt.Color
 import java.awt.Font
@@ -41,7 +42,7 @@ object Banner78Art {
      * Owner 2026-09-24 master artwork (1122 x 1402 RGBA, transparent background), byte-exact copy of `C:\RSPS\foto\vf`.
      * Never edited; everything in-game is derived from it.
      */
-    val MASTER = java.io.File("C:/RSPS/tools/ge-banner/banner78_master.png")
+    val MASTER = java.io.File(RspsPaths.root("tools/ge-banner/banner78_master.png"))
 
     /** Cloth box inside [MASTER] (alpha-measured): below the rod, the full tattered width, down to the lowest shreds. */
     private const val MASTER_X0 = 125
@@ -116,7 +117,7 @@ object Banner78Art {
     }
 
     /** Owner 2026-09-23: "onze banners zijn lelijk" - his reference artwork is the cloth when present. */
-    val REFERENCE = java.io.File("C:/RSPS/tools/ge-banner/banner78_reference.png")
+    val REFERENCE = java.io.File(RspsPaths.root("tools/ge-banner/banner78_reference.png"))
 
     /** Cloth box inside [REFERENCE] (measured: below the rod, full width, down to the centre point). */
     private const val REF_X0 = 450

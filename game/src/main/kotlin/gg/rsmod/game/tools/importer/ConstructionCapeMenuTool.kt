@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Gives the Construct. cape and its trimmed form (667 items 9789 / 9790) the OSRS menus (owner 2026-10-10 night run: "Construction
@@ -13,8 +14,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.ConstructionCapeMenuTool plan|apply`
  */
 object ConstructionCapeMenuTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val INDEX_ITEMS = 19
     val CAPES = intArrayOf(9789, 9790)
 

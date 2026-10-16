@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -15,7 +16,7 @@ import java.io.File
  */
 object NpcPristineRestoreTool {
     const val NPC_INDEX = 18
-    const val PRISTINE_CACHE = "C:\\RSPS\\reference\\openrs2_667\\cache"
+    val PRISTINE_CACHE = RspsPaths.root("reference/openrs2_667/cache")
 
     @JvmStatic
     fun main(args: Array<String>) {

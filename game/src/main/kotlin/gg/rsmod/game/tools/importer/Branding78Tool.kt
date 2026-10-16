@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.awt.RenderingHints
 import java.awt.image.BufferedImage
 import java.io.ByteArrayOutputStream
@@ -35,11 +36,11 @@ import kotlin.math.sqrt
  * servers stopped; CacheTransaction journals a backup and verifies both caches).
  */
 object Branding78Tool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val SOURCE_DIR = "C:/RSPS/tools/78-branding-approved"
-    private const val DERIVED_DIR = "$SOURCE_DIR/derived"
-    private const val IDS_FILE = "$DERIVED_DIR/branding78_ids.properties"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val SOURCE_DIR = RspsPaths.root("tools/78-branding-approved")
+    private val DERIVED_DIR = "$SOURCE_DIR/derived"
+    private val IDS_FILE = "$DERIVED_DIR/branding78_ids.properties"
     private const val MODEL_INDEX = 7
     private const val LOC_INDEX = 16
 

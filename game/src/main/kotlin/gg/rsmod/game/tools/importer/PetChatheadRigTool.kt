@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import gg.rsmod.game.fs.def.NpcDef
 import io.netty.buffer.Unpooled
 import java.io.File
@@ -26,7 +27,7 @@ object PetChatheadRigTool {
     private const val CLASSIC_MAX_LABEL = 50
     private const val NO_GROUP = 255
     const val WHOLE_HEAD = 50
-    private const val PETS = "C:\\RSPS\\game\\game\\data\\cfg\\pets\\pets.tsv"
+    private val PETS = RspsPaths.data("cfg/pets/pets.tsv")
 
     /** Offset of the vertex-label block of a rev-667 `decodeNew` mesh (same walk as [Rev667ModelDecoder]), or null when it has none. */
     fun vertexLabelOffset(data: ByteArray): Int? {

@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -13,7 +14,7 @@ import java.io.File
  * Usage: `java -cp "game/build/install/game/lib/(all jars)" gg.rsmod.game.tools.importer.OsrsFxProbeTool [spotanimId ...]`
  */
 object OsrsFxProbeTool {
-    private const val TARGET = "C:\\RSPS\\game\\game\\data\\cache"
+    private val TARGET = RspsPaths.data("cache")
 
     @JvmStatic
     fun main(args: Array<String>) {

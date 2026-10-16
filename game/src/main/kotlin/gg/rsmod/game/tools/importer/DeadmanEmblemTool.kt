@@ -1,6 +1,7 @@
 ﻿package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.awt.Color
 import java.awt.image.BufferedImage
 import java.io.File
@@ -21,10 +22,10 @@ import javax.imageio.ImageIO
  * backup). `preview` only writes PNGs to `tools/deadman-emblem`.
  */
 object DeadmanEmblemTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val OUT_DIR = "C:/RSPS/tools/deadman-emblem"
-    private const val IDS_FILE = "$OUT_DIR/emblem_ids.properties"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val OUT_DIR = RspsPaths.root("tools/deadman-emblem")
+    private val IDS_FILE = "$OUT_DIR/emblem_ids.properties"
     private const val MODEL_INDEX = 7
     private const val TEMPLATE_TEXTURE = 12
     private const val COL_MIPMAP = 12

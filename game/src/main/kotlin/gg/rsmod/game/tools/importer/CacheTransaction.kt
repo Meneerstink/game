@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 import java.time.Instant
 import java.time.ZoneOffset
@@ -416,7 +417,7 @@ class CacheTransaction(
     }
 
     companion object {
-        const val DEFAULT_JOURNAL_ROOT = "C:\\RSPS\\import-journal"
+        val DEFAULT_JOURNAL_ROOT = RspsPaths.root("import-journal")
 
         /** Game-server and file-server ports; either one listening means the live caches are in use. */
         val LIVE_PORTS = listOf(50015, 50016)

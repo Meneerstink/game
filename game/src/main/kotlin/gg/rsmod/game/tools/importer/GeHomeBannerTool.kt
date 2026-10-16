@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
@@ -16,9 +17,9 @@ import javax.imageio.ImageIO
  *  * `plan|apply <textureId>=<png> ...` - replace the sprite behind each texture with the PNG (same size) in both caches.
  */
 object GeHomeBannerTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val OUT_DIR = "C:/RSPS/tools/ge-banner"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val OUT_DIR = RspsPaths.root("tools/ge-banner")
 
     private fun spriteOf(library: CacheLibrary, texture: Int): Int? {
         val program = library.data(OsrsTextureImportTool.INDEX_TEXTURES, texture) ?: return null

@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -16,7 +17,7 @@ import java.io.File
  * Usage: `plan|apply`.
  */
 object OsrsMusicImportTool {
-    const val SOURCE_CACHE = "C:\\RSPS\\import-source\\openrs2-2686\\cache"
+    val SOURCE_CACHE = RspsPaths.root("import-source/openrs2-2686/cache")
     const val MUSIC_INDEX_ID = 6
     const val ENUM_INDEX_ID = 17
     const val NAMES_ENUM = 1345

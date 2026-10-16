@@ -1,5 +1,6 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -1216,7 +1217,7 @@ object CasinoInterfaceImportTool {
             problems.forEach { println("  VERIFY_PROBLEM: $it") }
             error("verify failed")
         }
-        File("C:/RSPS/import-journal/${transaction.id}/casino-interfaces.txt")
+        File(RspsPaths.root("import-journal/${transaction.id}/casino-interfaces.txt"))
             .writeText(screens(fonts).joinToString("\n") { "${it.id}\t${it.title}\t${it.build().size} components" })
     }
 }

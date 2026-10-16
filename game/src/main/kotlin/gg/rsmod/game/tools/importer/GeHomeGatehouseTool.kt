@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -21,9 +22,9 @@ import java.io.File
  * Usage: `./gradlew :game:runGeHomeGatehouseTool --args="plan|apply"`.
  */
 object GeHomeGatehouseTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
     private const val LOC_INDEX = 16
     private const val REGION_ID = 12598
 

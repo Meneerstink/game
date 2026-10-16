@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -18,9 +19,9 @@ import java.io.File
  * without ids (or with `*`) every loc of the named types in the rectangle goes.
  */
 object GeHomeGroundDecorTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
     private const val REGION_ID = 12598
 
     @JvmStatic

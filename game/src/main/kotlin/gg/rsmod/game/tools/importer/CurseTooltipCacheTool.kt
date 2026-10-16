@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Owner 2026-09-29 (Leech Ranged / Leech Magic now carry Rigour's / Augury's offence, AncientCurses.leechMultiplier): the
@@ -11,8 +12,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.CurseTooltipCacheTool plan|apply`
  */
 object CurseTooltipCacheTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val CONFIG_INDEX = 2
     private const val STRUCT_GROUP = 26
 

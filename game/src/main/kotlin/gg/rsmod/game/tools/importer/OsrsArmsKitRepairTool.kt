@@ -1,5 +1,6 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
 import java.io.File
 
 /**
@@ -12,7 +13,7 @@ import java.io.File
  * Usage: `[--apply]` - without it the planned changes are only printed. items.yml is read at server start.
  */
 object OsrsArmsKitRepairTool {
-    const val ITEMS_YML = "C:\\RSPS\\game\\game\\data\\cfg\\items.yml"
+    val ITEMS_YML = RspsPaths.data("cfg/items.yml")
 
     private val ID = Regex("""^- id: (\d+)\s*$""")
     private val REMOVE_ARMS = Regex("""^(\s+remove_arms: )(true|false)\s*$""")

@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 
 /**
@@ -17,8 +18,8 @@ import java.io.ByteArrayOutputStream
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.QuestStartRequirementTool plan|apply|dump`
  */
 object QuestStartRequirementTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
 
     /** Quest-list slots of the eight choice quests (QuestList / FoundationQuests). */
     val CHOICE_SLOTS = listOf(30, 70, 126, 157, 185, 186, 187, 188)

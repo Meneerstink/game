@@ -1,5 +1,6 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -28,7 +29,7 @@ import java.io.File
  * Usage: `./gradlew :game:runLootKeyInterfaceImportTool --args="[--apply]"`
  */
 object LootKeyInterfaceImportTool {
-    const val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
+    val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
     val TARGETS = OsrsItemImportTool.TARGETS
 
     const val INDEX_INTERFACES = 3
@@ -419,7 +420,7 @@ object LootKeyInterfaceImportTool {
      * dialog) while any other content in those files still blocks as a CONFLICT.
      */
     fun journalIntendedSha1s(transactionId: String): Map<String, String> {
-        val plan = File("C:/RSPS/import-journal/$transactionId/plan.txt")
+        val plan = File(RspsPaths.root("import-journal/$transactionId/plan.txt"))
         require(plan.isFile) { "journal plan not found: $plan" }
         val result = HashMap<String, String>()
         plan.readLines().filter { it.startsWith("plan\t") }.forEach { line ->

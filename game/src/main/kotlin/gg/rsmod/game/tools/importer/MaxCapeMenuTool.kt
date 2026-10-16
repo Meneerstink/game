@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Gives the plain max cape (667 item 20767) the OSRS menus (owner 2026-09-24, OSRS Wiki "Max cape": inventory "Wear, Teleports,
@@ -13,8 +14,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.MaxCapeMenuTool plan|apply`
  */
 object MaxCapeMenuTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val INDEX_ITEMS = 19
     const val MAX_CAPE = 20767
 

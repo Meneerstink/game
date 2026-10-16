@@ -1,11 +1,12 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /** Bounded, transactional floor design for the GE Home entrance, avenue, and casino. */
 object GeHomeArrivalMapTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val REGION_ID = 12598
     // Exact overlay/underlay pair sampled from existing grey GE paving at 3164,3487.
     private const val GE_PAVING = 188

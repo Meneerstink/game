@@ -1,5 +1,7 @@
 package gg.rsmod.game.tools.importer
 
+import gg.rsmod.game.RspsPaths
+
 /**
  * Gives the Abyssal tentacle (item 22325) its OSRS menus (degradation audit 2026-10-04, OSRS Wiki "Abyssal tentacle" infobox:
  * "options = Wield, Check, Dissolve | wornoptions = Check | destroy = Dissolve"). This cache's item only had "Wield". The 667
@@ -10,8 +12,8 @@ package gg.rsmod.game.tools.importer
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.AbyssalTentacleMenuTool plan|apply` (servers stopped for apply).
  */
 object AbyssalTentacleMenuTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val INDEX_ITEMS = 19
     const val ABYSSAL_TENTACLE = 22325
 

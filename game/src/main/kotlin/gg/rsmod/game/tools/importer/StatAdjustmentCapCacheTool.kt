@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Owner 2026-10-11 ("Show stat adjustments klopt niet"): the curse tab's stat adjustment (clientscript 1711) clamps the
@@ -12,8 +13,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.StatAdjustmentCapCacheTool plan|apply`
  */
 object StatAdjustmentCapCacheTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val SCRIPT_INDEX = 12
     private const val SCRIPT = 1711
     private const val OLD_CAP = 15

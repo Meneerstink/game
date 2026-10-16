@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonArray
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -34,9 +35,9 @@ import java.io.File
  * Usage: `java -cp <game classes + lib> gg.rsmod.game.tools.importer.AfkBasementMapTool probe <locId...>|elements|plan|apply`
  */
 object AfkBasementMapTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val XTEAS_FILE = "C:/RSPS/game/game/data/xteas/xteas.json"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val XTEAS_FILE = RspsPaths.data("xteas/xteas.json")
 
     const val SQUARE_X = 46
     const val SQUARE_Z = 95

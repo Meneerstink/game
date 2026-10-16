@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.io.File
 
@@ -24,8 +25,8 @@ import java.io.File
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.QuestListCacheTool plan|apply`
  */
 object QuestListCacheTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
 
     const val CONFIG_INDEX = 2
     const val STRUCT_GROUP = 26

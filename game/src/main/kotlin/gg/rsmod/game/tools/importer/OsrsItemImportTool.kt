@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import io.netty.buffer.ByteBuf
 import io.netty.buffer.Unpooled
 import java.io.File
@@ -19,9 +20,9 @@ import kotlin.math.roundToInt
  * Usage: `<batch> [--apply] [--yml-out=<file>]`. Without `--apply` only plan + preflight run.
  */
 object OsrsItemImportTool {
-    const val SOURCE_CACHE = "C:\\RSPS\\import-source\\openrs2-2686\\cache"
-    val TARGETS = listOf("C:\\RSPS\\game\\game\\data\\cache", "C:\\RSPS\\file-server\\cache")
-    const val ASSET_MAP = "C:\\RSPS\\OSRS_IMPORT_MASTER.yml"
+    val SOURCE_CACHE = RspsPaths.root("import-source/openrs2-2686/cache")
+    val TARGETS = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
+    val ASSET_MAP = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
 
     /** Rev-667 bank-note template (item 1216 = `97=1215 98=799`). */
     const val NOTE_TEMPLATE = 799
@@ -61,8 +62,12 @@ object OsrsItemImportTool {
      * 644 = render animation (Rune sword 1289: 1381), 686 = weapon style interface (sword 5,
      * dagger 2, bow 16), 749/750 = wield requirement skill/level shown client side (Rune sword 0/40,
      * Dragon dagger 0/60, the magic-shortbow-derived Twisted bow 4/50).
+     *
+     * Lazy (T17): the "pets" batch reads [OsrsPetRoster.SOURCE]; no class initialiser may open a file - plugin code touches this
+     * object through the layout holders (LootKeyInterfaceImportTool.TARGETS ...) on every host, and on the VPS the eager table
+     * threw ExceptionInInitializerError at every logout.
      */
-    val BATCHES: Map<String, List<Spec>> =
+    val BATCHES: Map<String, List<Spec>> by lazy {
         mapOf(
             "pilot" to
                 listOf(
@@ -1055,6 +1060,7 @@ object OsrsItemImportTool {
             // Owner 2026-09-30 ("import all osrs pets"): every pet item of the 71 OSRS pets, one per variant (OsrsPetRoster).
             "pets" to OsrsPetRoster.load().map { Spec(it.osrsItem) },
         )
+    }
 
     /**
      * 687 = 1 shows the special attack bar (CS2 1136 / interface 884:19, proven at the Twisted bow gate; the 667 Hand

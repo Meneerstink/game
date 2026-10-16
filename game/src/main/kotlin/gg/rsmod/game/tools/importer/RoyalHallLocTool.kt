@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 
 /**
  * Raised copies of two roof locs for the Grand Exchange Royal Hall's tall hip roof (owner 2026-09-25: "het gebouw ziet er
@@ -18,8 +19,8 @@ import com.displee.cache.CacheLibrary
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.RoyalHallLocTool plan|apply`
  */
 object RoyalHallLocTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val LOC_INDEX = 16
 
     const val SLATE = 41409

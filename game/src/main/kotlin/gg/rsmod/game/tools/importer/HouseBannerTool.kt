@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.util.Properties
@@ -31,9 +32,9 @@ import kotlin.math.sin
  * Usage: `HouseBannerTool plan|apply` (apply needs the servers stopped; CacheTransaction journals a backup).
  */
 object HouseBannerTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
-    private const val IDS_FILE = "C:/RSPS/tools/ge-banner/house_banner_ids.properties"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
+    private val IDS_FILE = RspsPaths.root("tools/ge-banner/house_banner_ids.properties")
     private const val MODEL_INDEX = 7
     private const val LOC_INDEX = 16
 
@@ -251,7 +252,7 @@ object HouseBannerTool {
 
             // Texture: the master cloth with its alpha (index 0 of the sprite palette is transparent).
             val image = Banner78Art.masterTexture()
-            File("C:/RSPS/tools/ge-banner/banner78_texture_512.png").also { ImageIO.write(image, "png", it) }
+            File(RspsPaths.root("tools/ge-banner/banner78_texture_512.png")).also { ImageIO.write(image, "png", it) }
             put(OsrsTextureImportTool.INDEX_SPRITES, sprite, 0, StoreArtTool.encode(image), "78 banner sprite ${image.width}x${image.height} with alpha")
 
             // Materials row: copy of the alpha-tested template, clamped (no edge bleeding), mipmapped, own average colour.

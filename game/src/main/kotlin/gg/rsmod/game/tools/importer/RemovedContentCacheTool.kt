@@ -1,6 +1,7 @@
 package gg.rsmod.game.tools.importer
 
 import com.displee.cache.CacheLibrary
+import gg.rsmod.game.RspsPaths
 import java.io.ByteArrayOutputStream
 import java.nio.ByteBuffer
 
@@ -20,8 +21,8 @@ import java.nio.ByteBuffer
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.RemovedContentCacheTool plan|apply`
  */
 object RemovedContentCacheTool {
-    private const val GAME_CACHE = "C:/RSPS/game/game/data/cache"
-    private const val FILE_SERVER_CACHE = "C:/RSPS/file-server/cache"
+    private val GAME_CACHE = RspsPaths.data("cache")
+    private val FILE_SERVER_CACHE = RspsPaths.root("file-server/cache")
     private const val INDEX_INTERFACES = 3
     private const val INDEX_ENUMS = 17
     private const val INDEX_ITEMS = 19
