@@ -24,6 +24,9 @@ class DeadmanRouteGateTests {
             "mechanics/canoes/canoes_interfaces.plugin.kts",
             "areas/portsarim/charter.plugin.kts",
             "areas/lumbridge/fremennik_shipmaster.plugin.kts",
+            // N49 / N50: the Shilo cart and the Waterbirth boat keep the gate after their trip became a WEAK task.
+            "areas/karamja/travel_cart.plugin.kts",
+            "mechanics/travel/waterbirth_boat.plugin.kts",
         ).forEach { route -> assertTrue(read(route).contains("DeadmanTimerGate.requestRoute"), route) }
     }
 

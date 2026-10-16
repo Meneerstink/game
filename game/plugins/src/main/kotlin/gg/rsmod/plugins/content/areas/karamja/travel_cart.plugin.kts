@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.karamja
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.queue.TaskPriority
 
 /*
  * Brimhaven <-> Shilo Village travel cart (667 cache: Hajedy 510 / Vigroy 511 "Pay-fare", travel carts 2230 / 2265 "Board" and
@@ -62,8 +63,16 @@ suspend fun board(task: QueueTask, cart: Cart, offer: Boolean) {
     }
 }
 
+/*
+ * N49 (LC19 2026-10-16): the ride ran in a STANDARD lockingQueue, opened its own fade 115 in MAIN_SCREEN_FULL (a menu for the
+ * runetek5 menu check) and then wait(3)ed - a STANDARD task is paused while a menu is open, so it waited on its own fade for good:
+ * fare gone, black screen, FULL lock. The donors never let anything wait on a travel fade (Void Vigroy.kt:68-93 fade_out/fade_in
+ * are overlays; Darkan FadingScreen.java + InterfaceManager Sub.FADING); on our engine the trip is a WEAK task, exactly like the
+ * charter ships (charter.plugin.kts sail) and the Void outpost boat (void_outpost_boat.plugin.kts sailVoid). The arrival text runs
+ * in its own task after the lock ends (like sailVoid), so the player is free while it shows.
+ */
 fun ride(player: Player, cart: Cart, offer: Boolean) {
-    player.lockingQueue {
+    player.lockingQueue(TaskPriority.WEAK) {
         player.openInterface(FADE_IN, InterfaceDestination.MAIN_SCREEN_FULL)
         wait(3)
         val rum = player.inventory.getItemCount(Items.KARAMJAN_RUM)
@@ -76,10 +85,12 @@ fun ride(player: Player, cart: Cart, offer: Boolean) {
         wait(2)
         player.closeMainInterface()
         if (offer) {
-            messageBox(
-                "You hop into the cart and the driver urges the horses on. You take a taxing journey through the jungle to ${cart.destinationName}. " +
-                    "You feel tired from the journey, but at least you didn't have to walk all that distance.",
-            )
+            player.queue(TaskPriority.WEAK) {
+                messageBox(
+                    "You hop into the cart and the driver urges the horses on. You take a taxing journey through the jungle to ${cart.destinationName}. " +
+                        "You feel tired from the journey, but at least you didn't have to walk all that distance.",
+                )
+            }
         } else {
             player.filterableMessage("You feel tired from the journey, but at least you didn't have to walk all that distance.")
         }

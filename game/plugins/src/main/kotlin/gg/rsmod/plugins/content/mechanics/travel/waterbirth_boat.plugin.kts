@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.travel
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.queue.TaskPriority
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
@@ -44,14 +45,21 @@ fun voyage(player: Player, destination: Tile, arrivalLine: String?, arrivalNpc: 
     DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.TRANSPORT) {
         // The fee is taken only when the boat actually leaves (the Deadman timer can cancel the trip).
         if (fee > 0 && !player.inventory.remove(Items.COINS_995, fee, assureFullRemoval = true).hasSucceeded()) return@requestRoute
-        player.lockingQueue {
+        // N50 (LC19 2026-10-16): a STANDARD lockingQueue here was paused by its own fade 115 (MAIN_SCREEN_FULL is a menu for the
+        // runetek5 menu check) and never resumed - fee gone, black screen, FULL lock. Donor 2009scape JarvaldDialogue.kt:63-79 runs the
+        // trip as a SOFT queue script that its own interface does not pause; on our engine that is a WEAK task, exactly like the
+        // charter ships and the Void outpost boat (void_outpost_boat.plugin.kts sailVoid). Jarvald's arrival line runs in its own task
+        // after the lock ends (like sailVoid), so the player is free while it shows.
+        player.lockingQueue(TaskPriority.WEAK) {
             player.openInterface(115, InterfaceDestination.MAIN_SCREEN_FULL)
             wait(3)
             player.moveTo(destination)
             player.openInterface(170, InterfaceDestination.MAIN_SCREEN_FULL)
             wait(2)
             player.closeMainInterface()
-            if (arrivalLine != null) chatNpc(arrivalLine, npc = arrivalNpc, facialExpression = FacialExpression.CALM_TALK)
+            if (arrivalLine != null) {
+                player.queue(TaskPriority.WEAK) { chatNpc(arrivalLine, npc = arrivalNpc, facialExpression = FacialExpression.CALM_TALK) }
+            }
         }
     }
 }

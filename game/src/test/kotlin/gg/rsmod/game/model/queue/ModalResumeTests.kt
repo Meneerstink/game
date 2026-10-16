@@ -58,6 +58,33 @@ class ModalResumeTests {
         assertFalse(ran, "a standard task never starts under an open modal")
     }
 
+    /**
+     * N49 / N50 (LC19 2026-10-16): the Shilo cart and the Waterbirth boat ran their trip as a STANDARD task that opened its own
+     * full-screen fade (115 in MAIN_SCREEN_FULL = a menu) and then waited 3 ticks: the task paused on its own fade for good. The
+     * trip is a WEAK task now, like the charter ships and the Void outpost boat: menus never pause it.
+     */
+    @Test
+    fun `a travel task that opens its own full-screen fade arrives only when it is not a standard task`() {
+        for (priority in listOf(TaskPriority.STANDARD, TaskPriority.WEAK)) {
+            var fade = false
+            val p = player { fade }
+            val set = PawnQueueTaskSet()
+            var arrived = false
+            set.queue(p, Dispatchers.Unconfined, priority, {
+                fade = true // openInterface(115, MAIN_SCREEN_FULL)
+                wait(3)
+                arrived = true // moveTo(destination)
+                fade = false
+            })
+            repeat(8) { set.cycle() }
+            if (priority == TaskPriority.STANDARD) {
+                assertFalse(arrived, "the old shape: a standard task is paused by its own fade (this is why N49/N50 hung)")
+            } else {
+                assertTrue(arrived, "a WEAK travel task arrives within 8 ticks while its fade is open")
+            }
+        }
+    }
+
     @Test
     fun `the answer goes to the task waiting for it, not to a task queued in front of it later`() {
         // 2026-10-09: the intro's "Next" choice went to a window-mode task queued after the options opened; the tour never
