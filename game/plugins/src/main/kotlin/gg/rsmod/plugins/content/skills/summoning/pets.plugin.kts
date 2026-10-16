@@ -128,7 +128,7 @@ on_world_init {
 
 /**
  * Owner A4 2026-10-11 (OSRS pet heads overflow the chat dialogue and the Follower Details frame): `petheads [from] [count] [ticks]`
- * shows every pet variant in turn - out as the follower (Follower Details head) and in an npc dialogue (chat head), [ticks] (default 4) game ticks each - so the whole list can be checked in the client (its log names each head's size, InterfaceManager.capNpcHead).
+ * shows every pet variant in turn - out as the follower (Follower Details head) and in an npc dialogue (chat head), [ticks] (default 4) game ticks each - so the whole list can be checked in the client (the test client logs each head's largest box vs its frame, InterfaceManager.measureNpcHead; tools\cache667\chathead_extents.py turns that log into data\cfg\pets\pet_chathead_extents.tsv, read by NpcChatheadFit).
  */
 on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()

@@ -67,6 +67,7 @@ class MessageEncoderSet {
         put(UpdateRebootTimerEncoder(), UpdateRebootTimerMessage::class.java)
         put(IfSetSpriteEncoder(), IfSetSpriteMessage::class.java)
         put(IfSetPositionEncoder(), IfSetPositionMessage::class.java)
+        put(IfSetAngleEncoder(), IfSetAngleMessage::class.java)
         put(IfSetScrollVerticalEncoder(), IfSetScrollVerticalMessage::class.java)
         put(MidiSongEncoder(), MidiSongMessage::class.java)
         put(MapAnimEncoder(), MapAnimMessage::class.java)

@@ -373,6 +373,11 @@ fun Player.setComponentNpcHead(
     npc: Int,
 ) {
     write(IfSetNpcHeadMessage(hash = ((interfaceId shl 16) or component), npc = npc))
+    // A4: an npc dialogue head always gets its camera (2009scape sends it with every npc dialogue) - the cache camera, or
+    // for an OSRS pet head bigger than the dialogue the zoom/position that keeps it inside (NpcChatheadFit).
+    if (NpcChatheadFit.isDialogueHead(interfaceId, component)) {
+        NpcChatheadFit.send(this, NpcChatheadFit.DIALOGUE, interfaceId, component, npc, resetPosition = false)
+    }
 }
 
 fun Player.setComponentPlayerHead(

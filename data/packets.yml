@@ -609,6 +609,27 @@ out-packets:
         order: INVERSED_MIDDLE
         type: INT
 
+  # IF_SETANGLE (client ServerProt 122, size 10): zoom2d g2_alt2, yan2d g2_alt3, idAndSlot g4_alt1, xan2d g2_alt3
+  # (A4: per-npc chathead zoom, port of 2009scape PacketDispatch.sendAngleOnInterface).
+  - message: gg.rsmod.game.message.impl.IfSetAngleMessage
+    type: FIXED
+    opcode: 122
+    structure:
+      - name: zoom
+        type: SHORT
+        trans: ADD
+      - name: yan
+        order: LITTLE
+        type: SHORT
+        trans: ADD
+      - name: hash
+        order: LITTLE
+        type: INT
+      - name: xan
+        order: LITTLE
+        type: SHORT
+        trans: ADD
+
   - message: gg.rsmod.game.message.impl.IfSetScrollVerticalMessage
     type: FIXED
     opcode: 8

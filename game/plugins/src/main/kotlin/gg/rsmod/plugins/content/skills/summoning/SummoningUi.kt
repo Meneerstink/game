@@ -382,6 +382,9 @@ object SummoningUi {
         // familiar's selector cannot survive in client state even though the component is cleared.
         player.setVarbit(SummoningChatheadAnimations.SELECTOR_VARBIT, selector ?: -1)
         player.setComponentAnim(PANEL, PANEL_MODEL, resolveChatheadAnimation(player, npcId) ?: -1)
+        // A4: 662 stays mounted, so its head keeps whatever camera/position it was last sent - send both for every follower
+        // (the cache values for every familiar and every pet whose head fits; NpcChatheadFit for the oversized OSRS heads).
+        gg.rsmod.plugins.api.ext.NpcChatheadFit.send(player, gg.rsmod.plugins.api.ext.NpcChatheadFit.PANEL, PANEL, PANEL_MODEL, npcId, resetPosition = true)
     }
 
     private fun refreshPanel(
