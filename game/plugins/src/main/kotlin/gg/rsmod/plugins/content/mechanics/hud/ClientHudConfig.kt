@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.hud
 
+import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.hud.ClientHud
@@ -193,6 +194,55 @@ object ClientHudConfig {
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")
     private val HIDDEN = AttributeKey<String>(persistenceKey = "hud_hidden")
+
+    /**
+     * One setting of one account that the owner ordered the team to change once. It is applied at that account's next login
+     * (before the login push, so the client gets it at once) and its [id] is recorded in the save, so it never runs again: the
+     * player may switch the setting back afterwards. Never through the player's client prefs or a hand-edited save.
+     */
+    class OneTimeChange(
+        val id: String,
+        val username: String,
+        val key: String,
+        val value: String,
+    )
+
+    val ONE_TIME_CHANGES: List<OneTimeChange> =
+        listOf(
+            // A42 (owner 2026-10-14, VRAGEN #2 = B; again 2026-10-15 23:50): his own save had "Esc closes the current interface"
+            // off, so Esc left Equipment Stats (667 + 670) open - "interface hanging". Only this key, only his account.
+            OneTimeChange("A42", "anudd", "keybinding.escCloses", "true"),
+        )
+
+    /** The [OneTimeChange.id]s already applied to this account (comma list; never reset by Restore defaults). */
+    private val ONE_TIME_DONE = AttributeKey<String>(persistenceKey = "hud_one_time")
+
+    private val logger = mu.KotlinLogging.logger {}
+
+    /** Applies the account's pending [ONE_TIME_CHANGES] once; returns the ones applied now. */
+    fun applyOneTimeChanges(player: Player): List<OneTimeChange> {
+        val done = (player.attr[ONE_TIME_DONE] ?: "").split(',').map { it.trim() }.filter { it.isNotEmpty() }.toMutableList()
+        val applied = mutableListOf<OneTimeChange>()
+        for (change in ONE_TIME_CHANGES) {
+            if (change.id in done || !change.username.equals(player.username, ignoreCase = true)) continue
+            val before = get(player, change.key)
+            if (!set(player, change.key, change.value)) {
+                Trace.problem(Trace.Cat.PLUGIN) { "one-time change ${change.id} for ${player.username}: ${change.key}=${change.value} refused" }
+                continue
+            }
+            done += change.id
+            applied += change
+            logger.info { "one-time change ${change.id} for ${player.username}: ${change.key} $before -> ${get(player, change.key)}" }
+        }
+        if (applied.isNotEmpty()) player.attr[ONE_TIME_DONE] = done.joinToString(",")
+        return applied
+    }
+
+    /** Login: pending one-time changes first, then every setting to the client. */
+    fun login(player: Player) {
+        applyOneTimeChanges(player)
+        push(player)
+    }
 
     const val MAX_LIST = 60
 

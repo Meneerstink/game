@@ -37,7 +37,8 @@ gg.rsmod.game.model.hud.ClientHud.escClosesInterface = { p ->
 
 on_login {
     ClientHudSync.reset(player)
-    ClientHudConfig.push(player)
+    // Owner-ordered one-time setting changes (A42) are applied here, before the push, so the client starts with them.
+    ClientHudConfig.login(player)
     LootTracker.push(player)
     // Ground Items' pie timer: a new drop's full despawn time on this server.
     ClientHud.send(player, "gdelay|${world.gameContext.gItemDespawnDelay}")
