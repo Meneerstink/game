@@ -37,22 +37,15 @@ class RebuildNormalEncoder : MessageEncoder<RebuildNormalMessage>() {
                 val rz = (chunkZ + (Chunk.MAX_VIEWPORT shr 4)) shr 3
 
                 val buf = Unpooled.buffer(Short.SIZE_BYTES + (Int.SIZE_BYTES * 10))
-                var forceSend = false
-                if ((chunkX / 8 == 48 || chunkX / 8 == 49) && chunkZ / 8 == 48) {
-                    forceSend = true
-                }
-                if (chunkX / 8 == 48 && chunkZ / 8 == 148) {
-                    forceSend = true
-                }
-
+                // N41: one key block for EVERY region in view, like the 667 client loop (Static434.rebuildNormal) and
+                // Novite DefaultGameEncoder.sendMapRegion. rsmod's OSRS Tutorial Island skip (regions z 49/147/149,
+                // x 50, 49_47) is an OSRS-client rule; the 667 client has none, so it crashed with T2 on the island.
                 for (x in lx..rx) {
                     for (z in lz..rz) {
-                        if (!forceSend || z != 49 && z != 149 && z != 147 && x != 50 && (x != 49 || z != 47)) {
-                            val region = z + (x shl 8)
-                            val keys = message.xteaKeyService?.get(region) ?: XteaKeyService.EMPTY_KEYS
-                            for (xteaKey in keys) {
-                                buf.writeInt(xteaKey) // Client always reads as int
-                            }
+                        val region = z + (x shl 8)
+                        val keys = message.xteaKeyService?.get(region) ?: XteaKeyService.EMPTY_KEYS
+                        for (xteaKey in keys) {
+                            buf.writeInt(xteaKey) // Client always reads as int
                         }
                     }
                 }
