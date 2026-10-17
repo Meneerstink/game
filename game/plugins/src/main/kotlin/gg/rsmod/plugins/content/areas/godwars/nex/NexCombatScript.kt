@@ -75,19 +75,34 @@ object NexCombatScript : CombatScript() {
     private var shadowTrapsActive = false
     private var busy = false
 
+    /**
+     * N25 (LC10 2026-10-16: after a pull Nex stood still for minutes). The old loop `while (canEngage && isAttackDelayReady ...)` +
+     * `wait(attackSpeed)` woke one tick before its own ATTACK_DELAY ran out and quit after every attack (class 191, N24/N84): only a
+     * player's hit made her attack again, so a frozen, pulled or passive player was never attacked. Ported Darkan's per-tick npc
+     * combat process (NPCCombat.java:48-61: the delay counts down each tick, an attack fires when it is 0) as for the strykewyrm
+     * (N24, 99a3ecc32). Darkan's Nex fights every player in her arena (aggressive, Nex.getPossibleTargets): a lost target is
+     * replaced by another arena player instead of ending her fight.
+     */
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
-        var target = npc.getCombatTarget() ?: return
         val world = npc.world
         val enc = NexEncounter
+        var exit = "no-target"
 
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady() && enc.fightActive && enc.nex === npc) {
-            npc.facePawn(target)
-            if (enc.awaitingMinion || enc.intro || enc.siphoning || busy) {
+        while (true) {
+            if (!enc.fightActive || enc.nex !== npc) { exit = "fight-over"; break }
+            val current = npc.getCombatTarget()
+            val target: Pawn =
+                if (current != null && npc.canEngageCombat(current)) {
+                    current
+                } else {
+                    enc.players().filter { npc.canEngageCombat(it) }.randomOrNull()?.also { npc.setCombatTarget(it) } ?: break
+                }
+            if (enc.awaitingMinion || enc.intro || enc.siphoning || busy || !npc.isAttackDelayReady()) {
                 it.wait(1)
-                target = enc.players().randomOrNull() ?: break
                 continue
             }
+            npc.facePawn(target)
             if (virusCooldown > 0) virusCooldown--
             val inMelee = npc.getFrontFacingTile(target).getDistance(target.tile) <= 1
             // RCV-011: the overhead follows the Zaros-phase form (NexZarosForms, ticked by NexEncounter.cycle).
@@ -97,8 +112,7 @@ object NexCombatScript : CombatScript() {
                     Phase.SMOKE -> {
                         virusAttack(npc)
                         npc.postAttackLogic(target)
-                        it.wait(npc.combatDef.attackSpeed)
-                        target = npc.getCombatTarget() ?: enc.players().randomOrNull() ?: break
+                        it.wait(1)
                         continue
                     }
                     Phase.SHADOW -> if (world.random(6) == 0) shadowTraps(npc) else embraceDarkness(npc)
@@ -157,8 +171,11 @@ object NexCombatScript : CombatScript() {
                 }
             }
             npc.postAttackLogic(target)
-            it.wait(npc.combatDef.attackSpeed)
-            target = npc.getCombatTarget() ?: enc.players().randomOrNull() ?: break
+            it.wait(1)
+        }
+        // N25: why Nex stopped attacking - breach trace (watched npc ids).
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("combat.exit") { "npc=${npc.id}#${npc.index} script=nex reason=$exit cycle=${world.currentCycle}" }
         }
         npc.resetFacePawn()
         npc.removeCombatTarget()
@@ -215,7 +232,17 @@ object NexCombatScript : CombatScript() {
     /** Pulls the farthest player to Nex, disabling protection prayers and stunning them. */
     private fun pullAttack(npc: Npc) {
         val player = NexEncounter.players().maxByOrNull { it.tile.getDistance(npc.tile) } ?: return
+        // N25: the fight the player was in when he was pulled. Darkan (InteractionManager/PlayerCombat) and Novite
+        // (sendPullAttack: actionManager delay, action kept) keep the victim's combat through the 3-tick lock; our full lock ends
+        // the player's combat loop (combat.plugin.kts cycle: !canAttack -> Combat.reset), so it is handed back when the lock ends.
+        val fighting = player.getCombatTarget()
         player.stopMovement()
+        // Darkan Drag.java:47-48: Nex animates (6986) and only SETS her combat target. The old `npc.attack(player)` ran
+        // Pawn.attack -> interruptQueues on Nex, which killed this running combat loop; the fresh loop then quit on the still
+        // running attack delay and Nex stood still until a player hit her again (LC10).
+        npc.animate(ANIM_MAGIC)
+        npc.setCombatTarget(player)
+        npc.facePawn(player)
         // Keep the delayed pull owned by the player. A world queue outlives the player death/
         // logout queue and could otherwise leave a stale lock or apply the special after the
         // victim had already respawned. STRONG also prevents an open standard menu from pausing
@@ -227,13 +254,41 @@ object NexCombatScript : CombatScript() {
             }
             player.animate(14388)
             player.graphic(GFX_PLAYER_SACRIFICE)
-            npc.attack(player)
             wait(1)
-            player.moveTo(npc.world.findRandomTileAround(npc.getCentreTile(), radius = 2) ?: Tile(npc.tile))
+            if (!npc.isSpawned() || npc.isDead() || !player.isOnline || player.isDead() || !NexEncounter.inArena(player.tile)) {
+                return@lockingQueue
+            }
+            besideBody(npc)?.let { player.moveTo(it) }
             player.message("You've been injured and you cannot use ${if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) "protective curses" else "protective prayers"}!")
             NexPrayer.disableProtection(player, 5 + npc.world.random(15))
             player.freeze(5 + npc.world.random(5))
+            // The stun ends with this task (Darkan lock(3) / Novite lock(3)): the queue releases the lock when the task completes, and
+            // the player's queue then runs the combat loop queued here in the same tick, unlocked. The player fights on against
+            // whatever he was fighting, without a new click - unless a live combat loop of his still holds a target.
+            if (fighting != null && fighting.isAlive() && (fighting !is Npc || fighting.isSpawned()) && player.getCombatTarget() == null) {
+                player.setCombatTarget(fighting)
+                player.world.plugins.executeCombat(player)
+            }
         }
+    }
+
+    /**
+     * A free tile touching Nex's body (Darkan Drag.java:46 `nex.getNearestTeleTile(1)` - a free tile next to Nex). The old
+     * `findRandomTileAround(centre, 2)` also picked the nine tiles under her 3x3 body (class test: pulled to 2925,5204 with Nex
+     * on 2924,5202), from where no melee attack can reach her. The four diagonal corners are left out too (no melee reach).
+     */
+    private fun besideBody(npc: Npc): Tile? {
+        val size = npc.getSize()
+        val ring = ArrayList<Tile>()
+        for (dx in -1..size) {
+            for (dz in -1..size) {
+                if (dx in 0 until size && dz in 0 until size) continue
+                if ((dx == -1 || dx == size) && (dz == -1 || dz == size)) continue
+                val tile = npc.tile.transform(dx, dz)
+                if (!npc.world.collision.isClipped(tile)) ring.add(tile)
+            }
+        }
+        return if (ring.isEmpty()) null else ring[npc.world.random(ring.size - 1)]
     }
 
     /** "There is... NO ESCAPE!": rush from a random edge through the centre, hitting anyone in the path. */
