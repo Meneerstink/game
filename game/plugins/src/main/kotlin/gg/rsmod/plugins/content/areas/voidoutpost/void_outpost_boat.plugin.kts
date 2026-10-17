@@ -10,15 +10,18 @@ import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
  * Port Sarim <-> Void Knights' Outpost boat. Both squires offer "Travel" in the 667 cache but nothing was bound, the Port Sarim squire
  * (3801) was never spawned and the charter journeys 14/15 were never used - the outpost (bank booths, general store) could not be
  * reached by boat. Sources: 667 Void donor SquirePortSarim.kt (spawn 3041,3202; journey "port_sarim_to_ape_atoll" = 14, 10 ticks;
- * arrival Tile(2663, 2676, 1); "The ship arrives at the Void Knight outpost."). Void has no return trip: it uses journey 15 and lands
- * beside the Port Sarim squire (ADAPTED arrival tile). Free, like the Void trip. Routed through the Deadman transport gate.
+ * arrival Tile(2663, 2676, 1); "The ship arrives at the Void Knight outpost."). Void has no return trip: it uses journey 15. The
+ * return landing is Darkan's (TravelMethods.java:69 VOID_OUTPOST_FARE origin Tile.of(3041, 3202, 0), :250 `returning ?
+ * ship.getOrigon()`): the Port Sarim pier, one tile north (3041,3203) because squire 3801 stands on 3041,3202 (ROOT_CAUSES 174).
+ * N51: the old invented tile 3041,3201 is the Gangplank 14304 (blockwalk) - moveTo does not go through Landing, so the player
+ * could not step off it (TravelLandingTests). Free, like the Void trip. Routed through the Deadman transport gate.
  */
 val CHARTER_INTERFACE = 299
 val CHARTER_VARP = 75
 val FADE_OUT_INTERFACE = 170
 
 val TO_OUTPOST = Tile(2663, 2676, 1)
-val TO_PORT_SARIM = Tile(3041, 3201, 0)
+val TO_PORT_SARIM = Tile(3041, 3203, 0)
 
 spawn_npc(npc = Npcs.SQUIRE_3801, x = 3041, z = 3202, height = 0, walkRadius = 0, direction = Direction.WEST)
 
