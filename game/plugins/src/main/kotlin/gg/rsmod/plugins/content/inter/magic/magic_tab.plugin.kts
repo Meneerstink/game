@@ -28,7 +28,9 @@ val LEGACY_AUTOCAST_OPS: Map<Int, List<Pair<Int, Int>>> =
         430 to listOf(20 to (0x000402 and 0x2.inv())),
     )
 
-LEGACY_AUTOCAST_OPS.forEach { (book, components) ->
+LEGACY_AUTOCAST_OPS.forEach { (book, legacy) ->
+    // N76: plus the player-only / NPC-only target masks (Tele Block offers no NPC target, OSRS 2019) - same open, same cycle.
+    val components = legacy + SpellTargetMasks.overrides(book)
     on_interface_open(interfaceId = book) {
         val p = player
         world.queue {
