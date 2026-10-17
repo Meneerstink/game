@@ -15,7 +15,6 @@ import java.io.File
  * file to [DEFAULTS].
  */
 data class NewPlayerConfig(
-    val normalXpRate: Double,
     val afkRate: Double,
     val afkXpPerTick: Double,
     val afkLevelCap: Int,
@@ -31,7 +30,6 @@ data class NewPlayerConfig(
     data class PlanRow(val pouch: SummoningPouchData, val fromLevel: Int)
 
     init {
-        require(normalXpRate > 0.0) { "xp.normal_rate must be positive" }
         require(afkRate > 0.0 && afkXpPerTick > 0.0) { "afk_area rate and xp_per_tick must be positive" }
         require(afkLevelCap in 2..99) { "afk_area.level_cap must be 2..99" }
         require(summoningTargetLevel in 2..99) { "summoning_kit.target_level must be 2..99" }
@@ -47,7 +45,6 @@ data class NewPlayerConfig(
 
         val DEFAULTS =
             NewPlayerConfig(
-                normalXpRate = 1.0,
                 afkRate = 1.0,
                 afkXpPerTick = 30.0,
                 afkLevelCap = 55,
@@ -83,7 +80,6 @@ data class NewPlayerConfig(
             val root = ObjectMapper(YAMLFactory()).readValue(file, Map::class.java)
             fun section(name: String) = root[name] as? Map<*, *> ?: error("$file: missing section '$name'")
             fun Map<*, *>.num(key: String) = (this[key] as? Number) ?: error("$file: missing number '$key'")
-            val xp = section("xp")
             val afk = section("afk_area")
             val kit = section("summoning_kit")
             val npc = section("choice_npc")
@@ -103,7 +99,6 @@ data class NewPlayerConfig(
                     row.num("item").toInt() to row.num("amount").toInt()
                 }
             return NewPlayerConfig(
-                normalXpRate = xp.num("normal_rate").toDouble(),
                 afkRate = afk.num("rate").toDouble(),
                 afkXpPerTick = afk.num("xp_per_tick").toDouble(),
                 afkLevelCap = afk.num("level_cap").toInt(),

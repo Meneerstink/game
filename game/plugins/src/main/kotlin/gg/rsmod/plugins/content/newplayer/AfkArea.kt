@@ -111,7 +111,7 @@ object AfkArea {
     }
 
     /**
-     * One training tick: adds [tickXp] raw (modifiers off, so no level curve, bonus XP or xp.normal_rate multiplier can
+     * One training tick: adds [tickXp] raw (modifiers off, so the Annihilation XP rate (N92) does not apply and nothing can
      * push it past the cap) and says whether training may go on.
      */
     fun train(player: Player, skill: Int, config: NewPlayerConfig = NewPlayerConfig.current): Boolean {

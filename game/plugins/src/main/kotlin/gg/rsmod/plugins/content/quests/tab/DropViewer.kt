@@ -42,21 +42,23 @@ object DropViewer {
     /** King Black Dragon, the reference screenshot's source, when it has a table; else the first table. */
     private const val DEFAULT_NPC = 50
 
-    /** Rows per npc id; the tables are built once (the builder only needs a player for conditional tables). */
-    private val cache = HashMap<Int, List<Row>>()
+    /** Rows per npc id and drop rate; the tables are built once (the builder only needs a player for conditional tables). */
+    private val cache = HashMap<Pair<Int, Double>, List<Row>>()
 
+    /** The chance per kill [player] has - [rate] is his Annihilation drop rate (N100), read by the roll too. */
     fun rows(
         player: Player,
         npcId: Int,
+        rate: Double = DropTableFactory.killRate(player),
     ): List<Row> =
-        cache.getOrPut(npcId) {
+        cache.getOrPut(npcId to rate) {
             val built = DropTableFactory.tables(player, npcId) ?: return@getOrPut emptyList()
             val out = ArrayList<Row>()
             for (table in built) {
                 if (table.name.equals(gg.rsmod.plugins.content.drops.GUARANTEED_TABLE_NAME, ignoreCase = true)) {
                     collect(table, 1.0, out, guaranteed = true)
                 } else {
-                    collect(table, 1.0, out, guaranteed = false)
+                    collect(table, 1.0, out, guaranteed = false, rate = rate)
                 }
             }
             // Same item and quantity from two tables: one row, chances added (at most "Always").
@@ -74,6 +76,7 @@ object DropViewer {
         weight: Double,
         out: MutableList<Row>,
         guaranteed: Boolean,
+        rate: Double = 1.0,
     ) {
         val entries = table.entries
         if (entries.isEmpty()) return
@@ -81,7 +84,8 @@ object DropViewer {
         val denominator = maxOf(table.totalSlots, occupied).toDouble()
         var previous = 0
         for (entry in entries) {
-            val chance = if (guaranteed) weight else weight * (entry.index - previous) / denominator
+            // The same chance the roll uses (DropTableFactory.lineChance); a nested table is rolled at 1x inside it.
+            val chance = if (guaranteed) weight else weight * DropTableFactory.lineChance((entry.index - previous) / denominator, rate)
             previous = entry.index
             when (val drop = entry.drop) {
                 is DropEntry.ItemDrop -> out += Row(drop.item.id, drop.item.amount.toString(), chance)

@@ -16,9 +16,10 @@ import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
  * infuse pouches up to [NewPlayerConfig.summoningTargetLevel].
  *
  * Wolf Whistle (RuneScape Wiki / Void quests.toml): 276 Summoning XP and 275 gold charms, and the skill unlocked. The kit
- * is computed from the account's own Summoning XP after that, the plan and the XP rate in `new_player.yml` - the same
- * arithmetic as infusing (`summoning_crafting.plugin.kts`: pouch creation XP through Player.addXp, i.e. times the level
- * curve and the normal rate; bonus xp is not counted, so the kit is never short).
+ * is computed from the account's own Summoning XP after that, the plan and the account's own XP rate - the same
+ * arithmetic as infusing (`summoning_crafting.plugin.kts`: pouch creation XP through Player.addXp, i.e. times the
+ * Annihilation rate, N92). The rate at the claim is the lowest the account will infuse at (a tier never goes down), so
+ * the kit is never short.
  */
 object SummoningKit {
     val CLAIMED = AttributeKey<Boolean>(persistenceKey = "foundation_summoning_kit_claimed")
@@ -28,17 +29,16 @@ object SummoningKit {
 
     data class Kit(val pouches: Map<SummoningPouchData, Int>, val items: List<Pair<Int, Int>>)
 
-    /** The engine's level curve (Player.interpolate(1.0, 5.0, level)). */
-    fun levelCurve(level: Int): Double = 1.0 + (5.0 - 1.0) / 97 * (level - 1)
-
-    fun compute(config: NewPlayerConfig, startXp: Double, alreadyHeldGoldCharms: Int = 0): Kit {
+    /** [xpRate]: the factor Player.addXp gives Summoning XP (Player.xpMultiplier); 1.0 = raw. */
+    fun compute(config: NewPlayerConfig, startXp: Double, alreadyHeldGoldCharms: Int = 0, xpRate: Double = 1.0): Kit {
+        require(xpRate > 0.0 && xpRate.isFinite()) { "xp rate must be positive, was $xpRate" }
         val pouches = linkedMapOf<SummoningPouchData, Int>()
         var xp = startXp
         val targetXp = SkillSet.getXpForLevel(config.summoningTargetLevel).toDouble()
         while (xp < targetXp) {
             val level = SkillSet.getLevelForXp(xp)
             val row = config.summoningPlan.last { it.fromLevel <= level }
-            xp += row.pouch.creationExperience * levelCurve(level) * config.normalXpRate
+            xp += row.pouch.creationExperience * xpRate
             pouches[row.pouch] = (pouches[row.pouch] ?: 0) + 1
         }
         val items = linkedMapOf<Int, Int>()
@@ -66,12 +66,15 @@ object SummoningKit {
         if (player.attr[UnlockNpcRewards.SUMMONING_REWARDED] != true) {
             player.attr[UnlockNpcRewards.SUMMONING_REWARDED] = true
             Familiar.unlockInterface(player)
-            player.addXp(Skills.SUMMONING, WOLF_WHISTLE_XP, modifiers = false)
+            // N92: quest XP gets the Annihilation rate (owner 10-17); the line names the real gain.
+            val gained = WOLF_WHISTLE_XP * player.xpMultiplier(Skills.SUMMONING)
+            player.addXp(Skills.SUMMONING, WOLF_WHISTLE_XP)
             FoundationRewards.grant(player, Items.GOLD_CHARM, WOLF_WHISTLE_GOLD_CHARMS)
             wolfWhistleCharms = WOLF_WHISTLE_GOLD_CHARMS
-            player.message("Wolf Whistle: Summoning unlocked, 276 Summoning XP and 275 gold charms.")
+            player.message("Wolf Whistle: Summoning unlocked, ${String.format(java.util.Locale.US, "%,d", gained.toLong())} Summoning XP and 275 gold charms.")
         }
-        val kit = compute(config, player.skills.getCurrentXp(Skills.SUMMONING), wolfWhistleCharms)
+        val rate = player.xpMultiplier(Skills.SUMMONING).takeIf { it > 0.0 && it.isFinite() } ?: 1.0
+        val kit = compute(config, player.skills.getCurrentXp(Skills.SUMMONING), wolfWhistleCharms, rate)
         kit.items.forEach { (item, amount) -> FoundationRewards.grant(player, item + noteOffset(player, item), amount) }
         if (kit.items.isEmpty()) {
             player.message("Your Summoning is already level ${config.summoningTargetLevel} or higher, so you need no training supplies.")

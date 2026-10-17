@@ -66,12 +66,13 @@ on_button(interfaceId = 1139, component = 2) {
     }
     if (player.inventory.remove(lamp).hasSucceeded()) {
         player.attr.remove(LampInterfaceState.RUBBED_LAMP)
-        player.addXp(skill = skill, xp = experience.toDouble(), disableBonusExperience = true)
+        val gained = (experience * player.xpMultiplier(skill)).toLong() // N92: the lamp gets the Annihilation rate
+        player.addXp(skill = skill, xp = experience.toDouble())
         player.playSound(2655)
         player.queue {
             messageBox(
                 "Your wish has been granted!",
-                "You have been awarded $experience $skillName experience!",
+                "You have been awarded ${String.format(java.util.Locale.US, "%,d", gained)} $skillName experience!",
             )
         }
     }

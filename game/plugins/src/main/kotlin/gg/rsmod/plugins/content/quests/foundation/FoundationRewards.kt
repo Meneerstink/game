@@ -70,7 +70,7 @@ object FoundationRewards {
         quest.setStage(player, quest.completedValue)
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         reward.unlock(player)
-        reward.xp.forEach { (skill, amount) -> player.addXp(skill, amount, modifiers = false) }
+        reward.xp.forEach { (skill, amount) -> player.addXp(skill, amount) } // N92: quest XP gets the Annihilation rate (owner 10-17)
         reward.lamps.forEach {
             addLamp(player, it)
             grant(player, it.item, 1)

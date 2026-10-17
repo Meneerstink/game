@@ -23,7 +23,7 @@ class DropViewerTests {
             },
             id,
         )
-        val rows = DropViewer.rows(mockk<Player>(relaxed = true), id)
+        val rows = DropViewer.rows(mockk<Player>(relaxed = true), id, rate = 1.0) // the 1x table; the Annihilation rates: AnnihilationRatesTests
         fun chance(item: Int) = rows.single { it.item == item }.chance
         assertEquals(1.0, chance(536))
         assertEquals(1.0 / 128, chance(1149), 1e-12)

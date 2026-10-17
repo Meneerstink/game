@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.quests.foundation
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.queue.QueueTask
-import gg.rsmod.game.model.skill.XpRates
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
@@ -16,7 +15,6 @@ import gg.rsmod.plugins.content.newplayer.SummoningKit
  */
 
 val config = NewPlayerConfig.reload()
-XpRates.normal = config.normalXpRate
 FoundationQuests.register()
 
 // ------------------------------------------------------------------------------------------------------ login
@@ -313,8 +311,10 @@ suspend fun QueueTask.claimLamps() {
                 val current = FoundationRewards.pendingLamps(player).toMutableList()
                 if (!current.remove(lamp)) return
                 FoundationRewards.setPendingLamps(player, current)
-                player.addXp(skill, lamp.xp.toDouble(), modifiers = false)
-                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", lamp.xp)} ${Skills.getSkillName(world, skill)} experience.")
+                // N92: lamps get the Annihilation rate (owner 10-17, OSRS); the line names the real gain.
+                val gained = lamp.xp * player.xpMultiplier(skill)
+                player.addXp(skill, lamp.xp.toDouble())
+                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained.toLong())} ${Skills.getSkillName(world, skill)} experience.")
                 return
             }
         }

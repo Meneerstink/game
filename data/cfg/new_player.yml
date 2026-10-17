@@ -2,18 +2,13 @@
 # Quest Guide hands out once, the quest-choice npc and the Deadman Mode starter chest. The running server reads this file
 # at boot (NewPlayerConfig); a value missing here falls back to the default written next to it.
 
-xp:
-  # Multiplier on every XP gain that goes through Player.addXp with modifiers switched on (skilling, combat and the
-  # older quests). It is applied on top of - never instead of - the engine's own two factors:
-  #   gained = base xp * level curve (x1.0 at level 1 rising linearly to x5.0 at level 98) * bonus xp (the time-played
-  #            multiplier 2.7 .. 1.1, only when game.yml bonus-experience is on) * normal_rate
-  # 1.0 keeps today's rates exactly. Calls that pass modifiers = false ignore all three factors: the eight choice
-  # quests and their lamps pay the exact wiki experience, and the AFK area below pays exactly its own numbers.
-  normal_rate: 1.0
+# N92 (owner 2026-10-17): the XP rate is the Deadman Annihilation tier (combat 10x/15x/15x/20x per combat bracket, skilling
+# 10x), one table in plugins mechanics/pvp/annihilation/AnnihilationTier.kt; the old xp.normal_rate knob, the level curve and
+# the time-played bonus are gone. Only the AFK area below keeps its own fixed numbers.
 
 afk_area:
   # XP per game tick (0.6 s) while a player trains at a station in the AFK area, multiplied by rate. This XP is added
-  # raw: the level curve, bonus xp and normal_rate above do NOT apply, so what you set here is exactly what players get.
+  # raw: the Annihilation XP rate does NOT apply, so what you set here is exactly what players get.
   # Default 30 per tick = 180,000 XP an hour; level 55 (166,636 XP) takes about 55 minutes from level 1.
   # OWNER: fill in the Skilling Basement XP rate you want - these two values are defaults (the same for all 15 skills);
   # rate multiplies xp_per_tick. The server reads them at boot.
@@ -24,8 +19,8 @@ afk_area:
 
 summoning_kit:
   # The Quest Guide hands every account this kit once, together with the Wolf Whistle completion. The amounts are
-  # computed from the plan below and the xp rates above: pouches are infused level by level (each pouch's cache XP * the
-  # level curve * normal_rate, bonus xp not counted) until target_level is reached, and each pouch needs its charm, its
+  # computed from the plan below: pouches are infused level by level (each pouch's cache XP times
+  # the account's own Annihilation XP rate) until target_level is reached, and each pouch needs its charm, its
   # spirit shards, one empty pouch and its tertiary. A plan row uses the pouch from its level until the next row starts.
   target_level: 55
   plan:

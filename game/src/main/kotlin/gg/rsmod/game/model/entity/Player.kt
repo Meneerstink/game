@@ -1031,11 +1031,11 @@ abstract class Player(
     }
 
     /**
-     * Adds experience points to a specific skill for the player, taking into account any modifiers or bonus experience.
+     * Adds experience points to a specific skill for the player at the player's experience rate ([xpMultiplier]).
      *
      * @param skill The ID of the skill to add experience points to.
      * @param xp The amount of experience points to be added.
-     * @param modifiers A flag indicating whether to apply modifiers and bonus experience (default is true).
+     * @param modifiers Whether the rate applies (default true); false = exact XP (AFK area, test bots).
      */
     private var accumulatedTime = 0.0 // Field to store the accumulated time
 
@@ -1052,17 +1052,10 @@ abstract class Player(
             return
         }
 
-        // calculate bonus experience
-        // based on players elapsed time in-game
-        val bonusExperience = bonusXpMultiplier(modifiers, disableBonusExperience)
-        if (bonusExperience != 1.0) {
-            // set the "bonus xp gained" varp
-            val bonusGained = (xp * bonusExperience) - xp
-            varps.setState(1878, varps[1878].state.plus(bonusGained.toInt() * 10))
-        }
-        val modifier = levelXpModifier(skill, modifiers)
+        // N92: one rate (the Annihilation tier through XpRates); no level curve, no time-played bonus (varp 1878 stays as it is).
+        val modifier = xpMultiplier(skill, modifiers, disableBonusExperience)
 
-        val newXp = min(SkillSet.MAX_XP.toDouble(), (oldXp + (xp * modifier * bonusExperience)))
+        val newXp = min(SkillSet.MAX_XP.toDouble(), (oldXp + (xp * modifier)))
 
         /*
          * Amount of levels that have increased with the addition of [xp].
@@ -1072,7 +1065,7 @@ abstract class Player(
         /*
          * Updates the XP counter orb
          */
-        varps.setState(1801, varps[1801].state + ((xp * modifier * bonusExperience) * 10).toInt())
+        varps.setState(1801, varps[1801].state + ((xp * modifier) * 10).toInt())
 
         /*
          * Only increment the 'current' level if it's set at its capped level.
@@ -1105,24 +1098,17 @@ abstract class Player(
         }
     }
 
-    /** The level curve times data/cfg/new_player.yml xp.normal_rate (1.0 = unchanged); 1.0 when [modifiers] is off. */
-    private fun levelXpModifier(
-        skill: Int,
-        modifiers: Boolean,
-    ): Double = if (!modifiers) 1.0 else interpolate(1.0, 5.0, skills.getMaxLevel(skill)) * gg.rsmod.game.model.skill.XpRates.normal
-
-    /** The bonus-experience factor (play-time based) while bonus experience is on; 1.0 otherwise. */
-    private fun bonusXpMultiplier(
-        modifiers: Boolean,
-        disableBonusExperience: Boolean,
-    ): Double = if (!world.gameContext.bonusExperience || !modifiers || disableBonusExperience) 1.0 else calculateXpMultiplier()
-
-    /** The factor [addXp] multiplies [skill] experience by - what the player really gains per raw point. No side effects. */
+    /**
+     * The factor [addXp] multiplies [skill] experience by - what the player really gains per raw point. No side effects.
+     * N92 (owner 2026-10-17): the ONE rate is the Deadman Annihilation tier ([gg.rsmod.game.model.skill.XpRates], installed
+     * by the plugins); the 2011 level curve (x1 -> x5) and the time-played bonus XP no longer apply to normal XP.
+     * [disableBonusExperience] is kept for the callers' signature and has no effect any more.
+     */
     fun xpMultiplier(
         skill: Int,
         modifiers: Boolean = true,
-        disableBonusExperience: Boolean = false,
-    ): Double = levelXpModifier(skill, modifiers) * bonusXpMultiplier(modifiers, disableBonusExperience)
+        @Suppress("UNUSED_PARAMETER") disableBonusExperience: Boolean = false,
+    ): Double = if (!modifiers) 1.0 else gg.rsmod.game.model.skill.XpRates.of(this, skill)
 
     /**
      * Interpolates a value based on the given level within a range defined by low and high values.
@@ -1145,50 +1131,6 @@ abstract class Player(
 
         // Calculate and return the interpolated value based on the level and increment
         return low + increment * (level - 1)
-    }
-
-    /**
-     * Calculates the XP multiplier based on the current value of varp[7233].
-     *
-     * This function uses a predefined list of multipliers and selects the appropriate
-     * multiplier based on the current value of varp[7233], which represents the game time.
-     * The game time is divided into 30-minute intervals, and each interval has a corresponding
-     * multiplier in the list.
-     *
-     * @return The XP multiplier for the current game time.
-     */
-    private fun calculateXpMultiplier(): Double {
-        // A list of predefined multipliers corresponding to 30-minute intervals
-        val multipliers =
-            listOf(
-                2.7,
-                2.55,
-                2.4,
-                2.25,
-                2.1,
-                2.0,
-                1.9,
-                1.8,
-                1.7,
-                1.6,
-                1.5,
-                1.45,
-                1.4,
-                1.35,
-                1.3,
-                1.25,
-                1.2,
-                1.175,
-                1.15,
-                1.125,
-                1.1,
-            )
-
-        // Calculate the index in the list based on the value of varps[7233] (game time)
-        val index = minOf((varps.getVarbit(world, 7233) - 1) / 30, multipliers.lastIndex)
-
-        // Return the appropriate multiplier from the list based on the calculated index
-        return multipliers[index]
     }
 
     /**

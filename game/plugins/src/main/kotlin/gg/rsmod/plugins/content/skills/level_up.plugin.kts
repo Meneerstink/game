@@ -95,6 +95,8 @@ set_level_up_logic {
         val currentCombatLevel = player.combatLevel
         val changed = currentCombatLevel != oldCombat
         if (changed) {
+            // N92/N100: a new Annihilation tier (61, 81, 96) -> the red rate line, once per rise.
+            gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.announceIfRaised(player)
             player.attr[LAST_COMBAT_LEVEL] = oldCombat
             val combatArray = Skills.COMBAT_MILESTONE_ARRAY
             val lastCombat = player.attr[LAST_COMBAT_LEVEL] ?: player.combatLevel

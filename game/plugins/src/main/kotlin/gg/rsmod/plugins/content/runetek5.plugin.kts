@@ -153,11 +153,7 @@ on_login {
 
     player.openChatboxInterface(interfaceId = 137, child = 9, dest = InterfaceDestination.CHAT_BOX_PANE)
 
-    // send the active bonus experience weekend
-    // message only if bonus experience is active
-    if (world.gameContext.bonusExperience) {
-        player.message("Bonus XP Weekend is now active!")
-    }
+    // N92: no "Bonus XP Weekend is now active!" any more - the time-played bonus XP is gone (Annihilation rate only).
 
     player.message("Welcome to ${world.gameContext.name}.", ChatMessageType.GAME_MESSAGE)
 

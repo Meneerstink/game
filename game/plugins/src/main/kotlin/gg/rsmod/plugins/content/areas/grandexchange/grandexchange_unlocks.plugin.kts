@@ -153,13 +153,12 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
                 if (!player.inventory.remove(item).hasSucceeded()) return
                 if (questLamp != null) {
                     gg.rsmod.plugins.content.quests.foundation.FoundationRewards.takeLamp(player, item)
-                    // Quest experience is exact (no rate or bonus), like every foundation quest reward.
-                    player.addXp(selected.second, xp, modifiers = false)
-                } else {
-                    player.addXp(selected.second, xp)
                 }
+                // N92: every lamp gets the Annihilation rate (owner 10-17, OSRS); the line names the real gain.
+                val gained = xp * player.xpMultiplier(selected.second)
+                player.addXp(selected.second, xp)
                 player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
-                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", xp.toInt())} ${selected.first} experience.")
+                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained.toLong())} ${selected.first} experience.")
                 return
             }
         }

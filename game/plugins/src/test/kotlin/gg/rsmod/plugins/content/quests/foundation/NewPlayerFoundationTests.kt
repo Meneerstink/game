@@ -315,7 +315,7 @@ class NewPlayerFoundationTests {
         val kit = SummoningKit.compute(config, SummoningKit.WOLF_WHISTLE_XP, SummoningKit.WOLF_WHISTLE_GOLD_CHARMS)
         // Infusing exactly the kit's pouches from 276 XP ends at level 55 or above.
         var xp = SummoningKit.WOLF_WHISTLE_XP
-        kit.pouches.forEach { (pouch, count) -> repeat(count) { xp += pouch.creationExperience * SummoningKit.levelCurve(SkillSet.getLevelForXp(xp)) } }
+        kit.pouches.forEach { (pouch, count) -> repeat(count) { xp += pouch.creationExperience } } // raw: the relaxed mock has no rate (N92)
         assertTrue(SkillSet.getLevelForXp(xp) >= 55, "kit reaches level ${SkillSet.getLevelForXp(xp)}")
         kit.pouches.forEach { (pouch, count) ->
             val shardsNeeded = kit.pouches.entries.sumOf { it.key.shards * it.value }

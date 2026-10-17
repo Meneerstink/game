@@ -78,7 +78,7 @@ object DropTableFactory {
         type: DropTableType = DropTableType.KILL,
     ) {
         try {
-            val items = getDrop(player, npcId, type) ?: run {
+            val items = getDrop(player, npcId, type, killRate(player, type)) ?: run {
                 gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "drop $type table $npcId for ${player.username}: no table" }
                 return
             }
@@ -114,6 +114,25 @@ object DropTableFactory {
     }
 
     /**
+     * N100 (owner 2026-10-17): the chance factor of a monster-kill roll for [player] - the Annihilation tier's drop rate
+     * (3x / 3x / 4x / 5x per combat bracket). Every other roll (boxes, chests, caskets, pickpocketing, stalls and the
+     * bird-nest route, which calls [getDrop] without a rate) stays 1x (VRAGEN 34 b, team default A).
+     */
+    fun killRate(
+        player: Player,
+        type: DropTableType = DropTableType.KILL,
+    ): Double = if (type == DropTableType.KILL) gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.dropRate(player) else 1.0
+
+    /**
+     * The chance of one non-guaranteed drop line with [base] chance at [rate] - the ONE formula the roll and the Drop Viewer
+     * read (owner 10-17: "KANS x3/x3/x4/x5 op elke drop (max 100%)"). At 1x a table is one pick, as before.
+     */
+    fun lineChance(
+        base: Double,
+        rate: Double,
+    ): Double = if (rate <= 1.0) base else minOf(1.0, base * rate)
+
+    /**
      * The built tables of [tableId] without rolling them (the Drop Viewer reads the chances from these), or null without a table.
      */
     fun tables(
@@ -137,6 +156,7 @@ object DropTableFactory {
         player: Player,
         tableId: Int,
         type: DropTableType = DropTableType.KILL,
+        rate: Double = 1.0,
     ): MutableList<Item>? {
         val items = mutableListOf<Item>()
 
@@ -158,7 +178,7 @@ object DropTableFactory {
             }
 
             val remainingTables = remaining.map { DropEntry.TableDrop(it) }
-            items.addAll(remainingTables.flatMap { it.getDrop() })
+            items.addAll(remainingTables.flatMap { it.getDrop(rate) })
             return items
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)
@@ -258,11 +278,12 @@ object DropTableFactory {
      * Gets a drop from a table. This operates recursively on
      * nested tables.
      */
-    private fun DropEntry.TableDrop.getDrop(): List<Item> {
+    private fun DropEntry.TableDrop.getDrop(rate: Double = 1.0): List<Item> {
         val entries = table.entries
         if (entries.isEmpty()) {
             return emptyList()
         }
+        if (rate > 1.0) return boostedDrop(rate)
         // The roll denominator is the table size the script declared with `total(n)`. Slots the
         // script never filled are a chance of nothing - that is what `total(1024)` with a few rare
         // items has always meant, and the builder's own "N total slots, but M were used" check
@@ -284,6 +305,36 @@ object DropTableFactory {
             is DropEntry.TableDrop -> drop.getDrop()
             is DropEntry.ItemRangeDrop -> listOf(drop.getDrop())
         }
+    }
+
+    /**
+     * N100, owner 10-17 (VRAGEN 34 a, team default B "elke drop apart"): at [rate] > 1 every line of the table is its own
+     * chance, [lineChance] (base x rate, at most 100 %), so a kill can give more than one item of a table; quantities are
+     * unchanged. A nested table is entered with that chance and then rolled at 1x, so its items get the factor exactly
+     * once (never rate x rate). Donor for the boosted roll: Void DropTable.roll(multiplier) (engine/.../drop/DropTable.kt:29-44,
+     * same seam: the factor sits in the roll, the caller passes it); the one-item clamp of Void is not used because the
+     * owner wants every line x rate.
+     */
+    private fun DropEntry.TableDrop.boostedDrop(rate: Double): List<Item> {
+        val entries = table.entries
+        val denominator = maxOf(table.totalSlots, entries.last().index).toDouble()
+        val out = ArrayList<Item>()
+        var previous = 0
+        for (entry in entries) {
+            val base = (entry.index - previous) / denominator
+            previous = entry.index
+            val drop = entry.drop
+            if (drop is DropEntry.NothingDrop || base <= 0.0) continue
+            if (prng.nextDouble() >= lineChance(base, rate)) continue
+            when (drop) {
+                is DropEntry.ItemDrop -> out += drop.item
+                is DropEntry.MultiDrop -> out += drop.getDrop()
+                is DropEntry.TableDrop -> out += drop.getDrop()
+                is DropEntry.ItemRangeDrop -> out += drop.getDrop()
+                DropEntry.NothingDrop -> Unit
+            }
+        }
+        return out
     }
 
     /**

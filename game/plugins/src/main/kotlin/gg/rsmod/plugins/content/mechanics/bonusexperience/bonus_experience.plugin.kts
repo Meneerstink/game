@@ -27,46 +27,26 @@ gg.rsmod.plugins.api.ext.GameframeRebuild.register("bonus_experience") { p ->
 }
 
 on_login {
-    /**
-     * Handle the timer for bonus experience
+    /*
+     * N92 (owner 2026-10-17 "VERVANGEN: alleen de Annihilation-rate telt"): the time-played bonus XP no longer exists -
+     * Player.addXp gains at the Annihilation tier rate only - so the orb never promises a bonus, whatever the server's
+     * bonus-experience flag or ::bonusxp say. A login clears what an older session left (timer, counter, time, orb).
      */
-    val isBonusXPEnabled =
-        world.gameContext.bonusExperience || world.playersWithBonusXP.contains(player.username.lowercase())
-    when (isBonusXPEnabled) {
-        true -> {
-
-            // Begin counting down the time elapsed timer
-            player.timers[BONUS_EXPERIENCE_TIME_ELAPSED] = 100
-
-            // Enable bonus experience counter orb
-            player.setVarbit(ENABLED_VARBIT, 1)
-
-            // Refresh the orb
-            player.runClientScript(REFRESH_BONUS_EXP_SCRIPT)
-            player.setComponentSprite(interfaceId = 548, component = 0, sprite = 5568)
-            player.setComponentSprite(interfaceId = 746, component = 229, sprite = 5568)
-        }
-        false -> {
-
-            // If the player has a bonus experience timer
-            // then remove it
-            if (player.timers.has(BONUS_EXPERIENCE_TIME_ELAPSED)) {
-                player.timers.remove(BONUS_EXPERIENCE_TIME_ELAPSED)
-            }
-
-            // Set their bonus experience gained varp to 0
-            player.setVarp(XP_EARNED_VARP, 0)
-
-            // Set their time elapsed varbit to 0
-            player.setVarbit(TIME_ELAPSED_VARBIT, 0)
-
-            // Disable the bonus experience counter
-            player.setVarbit(ENABLED_VARBIT, 0)
-
-            // Refresh the orb
-            player.runClientScript(REFRESH_BONUS_EXP_SCRIPT)
-            player.setComponentSprite(interfaceId = 548, component = 0, sprite = 2730)
-            player.setComponentSprite(interfaceId = 746, component = 229, sprite = 2730)
-        }
+    if (player.timers.has(BONUS_EXPERIENCE_TIME_ELAPSED)) {
+        player.timers.remove(BONUS_EXPERIENCE_TIME_ELAPSED)
     }
+
+    // Set their bonus experience gained varp to 0
+    player.setVarp(XP_EARNED_VARP, 0)
+
+    // Set their time elapsed varbit to 0
+    player.setVarbit(TIME_ELAPSED_VARBIT, 0)
+
+    // Disable the bonus experience counter
+    player.setVarbit(ENABLED_VARBIT, 0)
+
+    // Refresh the orb
+    player.runClientScript(REFRESH_BONUS_EXP_SCRIPT)
+    player.setComponentSprite(interfaceId = 548, component = 0, sprite = 2730)
+    player.setComponentSprite(interfaceId = 746, component = 229, sprite = 2730)
 }
