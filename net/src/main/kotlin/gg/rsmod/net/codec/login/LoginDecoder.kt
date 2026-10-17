@@ -130,8 +130,15 @@ class LoginDecoder(
             return
         }
 
-        val clientSettings = xteaBuf.readByte().toInt()
-        val clientResizable = (clientSettings shr 1) == 1
+        // A2 round 5: the 667 client writes p1(anInt7113) [social-login id, -1 from the login screen] and THEN
+        // p1(InterfaceManager.getWindowMode()) (LoginManager.doLogin). The old code took the social byte as the mode, so every
+        // resizable / fullscreen login opened the FIXED gameframe 548 until WINDOW_STATUS switched to 746 (the wrong-size
+        // frame at login) and read the canvas size one byte early. Donor: Novite LoginPacketsDecoder l.80-84 ("unknown"
+        // byte, displayMode, screenWidth, screenHeight); Void LoginServer l.99-100. Resizable = WindowMode RESIZABLE 2 or
+        // FULLSCREEN 3 (Novite InterfaceManager l.110; set_window_status_logic).
+        xteaBuf.readUnsignedByte() // social-login id
+        val windowMode = xteaBuf.readUnsignedByte().toInt()
+        val clientResizable = windowMode == 2 || windowMode == 3
         val clientWidth = xteaBuf.readUnsignedShort()
         val clientHeight = xteaBuf.readUnsignedShort()
         logger.info { "User '$username' login request from ${ctx.channel()}." }
