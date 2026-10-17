@@ -1,8 +1,11 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
+import gg.rsmod.game.model.Trace
+import gg.rsmod.game.model.entity.AreaSound
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
+import gg.rsmod.plugins.content.magic.teleportRefusal
 
 // A list of obelisk object IDs that can be activated.
 val ObeliskIDs =
@@ -27,13 +30,23 @@ ObeliskIDs.forEach { obeliskID ->
     }
 }
 
-// Randomly selects a new obelisk to teleport to, excluding the current one.
-fun randomObelisk(exclude: Obelisk): Obelisk {
-    val eligibleObelisks = Obelisk.values().filter { it != exclude }
-    return eligibleObelisks[world.random(eligibleObelisks.indices)]
+/**
+ * N6: any of the six obelisks, the current one included - Darkan WildernessObelisk.java:59
+ * `OBELISK_CENTER_TILES[Utils.random(OBELISK_CENTER_TILES.length)]`; OSRS wiki "Wilderness Obelisk": "Players may even be
+ * teleported to the same location." (The 2009scape port excluded the current one.)
+ */
+fun randomObelisk(): Obelisk {
+    val all = Obelisk.values()
+    return all[world.random(all.indices)]
 }
 
-// Activates an obelisk and teleports the players to another random obelisk.
+/** OSRS wiki "Wilderness Obelisk" arrival line (N6; the 2009scape port had "...in the wilderness."). */
+val ARRIVAL_MESSAGE = "Ancient magic teleports you somewhere in the Wilderness!"
+
+/** N28: obelisks between activation and firing - Darkan WildernessObelisk.java:34 IS_ACTIVE. One script instance per world. */
+val activeObelisks = mutableSetOf<Obelisk>()
+
+// Activates an obelisk and teleports the players on its centre 3x3 to a random obelisk (the same one included).
 fun activateObelisk(
     player: Player,
     obj: GameObject,
@@ -55,6 +68,30 @@ fun activateObelisk(
     }
     val world: World = player.world
 
+    // Darkan WildernessObelisk.java:39 `player.soundEffect(204, true)`: sound 204 to the activator and as an area sound
+    // (radius 10) for everyone around, played on every touch - also when the obelisk is already active.
+    player.playSound(Sfx.WILDERNESS_TELEPORT)
+    world.spawn(AreaSound(player.tile, Sfx.WILDERNESS_TELEPORT, radius = 10, volume = 1).also { it.excluded = player })
+    // Darkan :40-43. Our pillars are 14825 (no Activate) for 9 ticks and the obelisk fires at tick 10; a touch in between
+    // used to start a second run.
+    if (!activeObelisks.add(stationObelisk)) {
+        player.message("The obelisk is already active.")
+        return
+    }
+    try {
+        startObelisk(player, obj, stationObelisk, world)
+    } catch (t: Throwable) {
+        activeObelisks.remove(stationObelisk) // a failed start must not leave the obelisk "already active" for good
+        throw t
+    }
+}
+
+fun startObelisk(
+    player: Player,
+    obj: GameObject,
+    stationObelisk: Obelisk,
+    world: World,
+) {
     // Define the corners relative to the obelisk location for animation purposes.
     val corners = arrayOf(Tile(2, 2, 0), Tile(-2, 2, 0), Tile(-2, -2, 0), Tile(2, -2, 0))
 
@@ -67,13 +104,18 @@ fun activateObelisk(
     }
 
     // Handle the actual teleportation after a short delay.
+    val activator = player.username
     world.queue {
-        val newObelisk = randomObelisk(stationObelisk)
+        val newObelisk = randomObelisk()
         val destination = newObelisk.location
         val filteredPlayers = mutableListOf<Player>()
         val tile = stationObelisk.location
 
-        wait(10)
+        try {
+            wait(10)
+        } finally {
+            activeObelisks.remove(stationObelisk)
+        }
 
         // Collect all players within a 1-tile radius of the obelisk.
         for (p in world.players.entries) {
@@ -82,8 +124,14 @@ fun activateObelisk(
             }
         }
 
-        // Abort if no players are near the obelisk.
+        // Nobody on the centre 3x3: OSRS moves nobody. Say so - LC12 (2026-10-16) judged the obelisk dead because the
+        // activator was still next to the pillar he touched (outer ring of the 5x5) and nothing was traced (N28).
         if (filteredPlayers.isEmpty()) {
+            val where = world.players.entries.firstOrNull { it?.username == activator }?.tile?.let { "${it.x},${it.z},${it.height}" } ?: "offline"
+            Trace.problem(Trace.Cat.INTERACT) {
+                "obelisk ${stationObelisk.name} fired with nobody on its centre 3x3 (${tile.x - 1}..${tile.x + 1},${tile.z - 1}..${tile.z + 1}): " +
+                    "only players standing there are teleported; activator $activator stood at $where"
+            }
             return@queue
         }
 
@@ -99,9 +147,21 @@ fun activateObelisk(
             // Activation is allowed while fighting or frozen; only the actual teleport is gated.
             // This preserves chase counterplay while making Tele Block and the Deadman timer
             // authoritative for every player caught on the platform.
+            val refusal = filteredPlayer.teleportRefusal(TeleportType.WILDERNESS_OBELISK)
+            if (refusal != null) {
+                Trace.problem(Trace.Cat.INTERACT) {
+                    "obelisk ${stationObelisk.name}: ${filteredPlayer.username} on the platform was not teleported: " +
+                        refusal.ifEmpty { listOf("dead or locked (silent)") }.joinToString(" / ")
+                }
+            } else {
+                Trace.log(Trace.Cat.INTERACT) {
+                    "obelisk ${stationObelisk.name} -> ${newObelisk.name}: ${filteredPlayer.username} " +
+                        "${filteredPlayer.tile.x},${filteredPlayer.tile.z} -> ${destinationWithOffset.x},${destinationWithOffset.z}"
+                }
+            }
             filteredPlayer.canTeleport(TeleportType.WILDERNESS_OBELISK) {
                 filteredPlayer.teleport(destinationWithOffset, TeleportType.WILDERNESS_OBELISK)
-                filteredPlayer.message("Ancient magic teleports you somewhere in the wilderness.")
+                filteredPlayer.message(ARRIVAL_MESSAGE)
             }
         }
 

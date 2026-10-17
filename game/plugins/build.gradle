@@ -27,6 +27,12 @@ test {
     // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.
     maxHeapSize = '4g'
     maxParallelForks = 1
+    // N28/N6 (2026-10-17): WildernessObeliskPlatformTests drives the compiled wilderness_obelisk.plugin.kts from
+    // scripts/build/classes. Kotlin compiles in a worker, so a sibling task on the same command line could start before
+    // those classes exist; a real dependency makes every run (targeted or the full suite) use the current scripts.
+    dependsOn ':game:plugins:scripts:compileKotlin'
+    // ...and a changed script must re-run the tests instead of reusing a cached result.
+    inputs.files(fileTree("$projectDir/scripts/build/classes/kotlin/main")).withPropertyName('pluginScriptClasses').withPathSensitivity(PathSensitivity.RELATIVE)
     // A fresh test JVM every 25 classes: cache-backed test classes keep full DefinitionSets in companion objects, and the single
     // worker of a full `:game:plugins:test` run reached its 4 GB cap and stalled (2026-09-14 regression: HandCannonTests stuck in
     // GC, TravelNetworkCacheTests / TrouverTests class setup failed; all pass alone).
