@@ -1,11 +1,5 @@
 package gg.rsmod.plugins.content.inter.magic
 
-
-val FILTER_COMBAT_SPELLS_VARBIT = 6459
-val FILTER_TELEPORT_SPELLS_VARBIT = 6462
-val FILTER_MISC_SPELLS_VARBIT = 6461
-val FILTER_SKILL_SPELLS_VARBIT = 6460
-
 // Saves from before 2026-09-19 carry only the server spellbook varbit: mirror it into the client's spellbook varbit 357 so the
 // autocast highlight (CS2 1121) follows the open book.
 on_login {
@@ -41,18 +35,28 @@ LEGACY_AUTOCAST_OPS.forEach { (book, legacy) ->
     }
 }
 
-on_button(interfaceId = 192, 7) {
-    player.toggleVarbit(FILTER_COMBAT_SPELLS_VARBIT)
+/*
+ * N72: the OSRS spell filters (SpellFilters) - one saved state in varp 1376 shared by all three books. Every 667 bottom-row Filter
+ * and Sort button of every book is handled (Novite ButtonHandler; before N72 only the Standard Filter buttons were bound), and the
+ * client's OSRS filter menu (RspsSpellFilters: tab-stone "Enable/Disable spell filtering", the Filters button's menu) arrives as
+ * IF_BUTTON1 on the book's full-size layer with the action as slot.
+ */
+on_login {
+    SpellFilters.refresh(player)
 }
 
-on_button(interfaceId = 192, 9) {
-    player.toggleVarbit(FILTER_TELEPORT_SPELLS_VARBIT)
-}
-
-on_button(interfaceId = 192, 11) {
-    player.toggleVarbit(FILTER_MISC_SPELLS_VARBIT)
-}
-
-on_button(interfaceId = 192, 13) {
-    player.toggleVarbit(FILTER_SKILL_SPELLS_VARBIT)
+SpellFilters.Book.values().forEach { book ->
+    book.filterButtons.forEach { (component, category) ->
+        on_button(interfaceId = book.interfaceId, component = component) {
+            SpellFilters.clickLegacyFilter(player, category)
+        }
+    }
+    book.sortButtons.forEachIndexed { index, component ->
+        on_button(interfaceId = book.interfaceId, component = component) {
+            SpellFilters.clickSort(player, index)
+        }
+    }
+    on_button(interfaceId = book.interfaceId, component = book.menuLayer) {
+        SpellFilters.clickMenu(player, player.attr[gg.rsmod.game.model.attr.INTERACTING_SLOT_ATTR] ?: -1)
+    }
 }
