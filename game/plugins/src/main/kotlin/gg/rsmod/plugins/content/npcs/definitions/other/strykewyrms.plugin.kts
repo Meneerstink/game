@@ -87,6 +87,12 @@ WYRMS.forEach { wyrm ->
         aggro {
             radius = 0
         }
+        // N24 round 2: the Slayer gate of every attack path (Combat.slayerLevelTooLow: attack, splash, brews), not only Investigate.
+        // Void: slayer_level 93/77/73 on the mound defs (ice_strykewyrm_cave / desert_strykewyrm / feldip_hills .npcs.toml),
+        // checked on attack (content/entity/player/combat/Attack.kt:27,88). No master assigns wyrms here: no task type.
+        slayer {
+            level = wyrm.slayer
+        }
     }
 
     val drops = table.build {

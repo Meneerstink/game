@@ -173,6 +173,68 @@ class StrykewyrmFightTests {
         }
     }
 
+    @Test
+    fun `every wyrm's combat definition carries its Slayer level - the gate every attack path reads`() {
+        // N24 round 2 (Keurmeester FAIL N24-1): only "Investigate" checked Slayer 93/77/73; the combat def had slayerReq 1, so once a
+        // wyrm was awake anybody could hit it. Void puts slayer_level on the mound def (ice_strykewyrm_cave / desert_strykewyrm /
+        // feldip_hills .npcs.toml) and Attack.kt:27/88 refuses a player below it; ours is NpcCombatDef.slayerReq read by
+        // Combat.slayerLevelTooLow (attack, splash, brews).
+        Strykewyrms.WYRMS.forEach { w ->
+            val npc = mound(w, spawnTile(w))
+            assertEquals("${w.name}: combatDef.slayerReq", w.slayer, npc.combatDef.slayerReq)
+            remove(npc)
+        }
+    }
+
+    @Test
+    fun `a player below the wyrm's Slayer level cannot wound a wyrm a friend woke`() {
+        // The Keurmeester's case: A (Slayer 99) investigates, B (one level short) clicks Attack on the awake wyrm.
+        Strykewyrms.WYRMS.forEach { w ->
+            val (waker, npc) = wake(w)
+            val low = player("low${w.mound}", standTile(npc).transform(0, 1))
+            low.skills.setBaseLevel(Skills.SLAYER, w.slayer - 1)
+            low.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+            click(low, npc)
+            fight(waker, 30)
+            assertTrue("${w.name}: '${gg.rsmod.plugins.content.combat.Combat.SLAYER_LEVEL_MESSAGE}' for Slayer ${w.slayer - 1}: ${messages(low)}",
+                gg.rsmod.plugins.content.combat.Combat.SLAYER_LEVEL_MESSAGE in messages(low))
+            assertFalse("${w.name}: no swing from the Slayer ${w.slayer - 1} player${log(low, npc)}", swung(low, npc))
+            remove(waker, low, npc)
+        }
+    }
+
+    @Test
+    fun `area attacks skip an awake wyrm for a player below its Slayer level`() {
+        Strykewyrms.WYRMS.forEach { w ->
+            val region = spawnTile(w).regionId
+            world.plugins.addMultiCombatRegion(region)
+            try {
+                val (waker, npc) = wake(w)
+                val low = player("splash${w.mound}", standTile(npc).transform(0, 1))
+                low.skills.setBaseLevel(Skills.SLAYER, w.slayer - 1)
+                assertFalse("${w.name}: no splash from a Slayer ${w.slayer - 1} player", SpecialAttackSupport.canSplash(low, npc))
+                low.skills.setBaseLevel(Skills.SLAYER, w.slayer)
+                assertTrue("${w.name}: a Slayer ${w.slayer} player's splash reaches it", SpecialAttackSupport.canSplash(low, npc))
+                remove(waker, low, npc)
+            } finally {
+                world.plugins.removeMultiCombatRegion(region)
+            }
+        }
+    }
+
+    @Test
+    fun `a player at exactly the wyrm's Slayer level wakes it and hits it`() {
+        Strykewyrms.WYRMS.forEach { w ->
+            val (player, npc) = wake(w, slayer = w.slayer)
+            player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+            click(player, npc)
+            fight(player, 20)
+            assertFalse("${w.name}: ${messages(player)}", gg.rsmod.plugins.content.combat.Combat.SLAYER_LEVEL_MESSAGE in messages(player))
+            assertTrue("${w.name}: a Slayer ${w.slayer} player hits the wyrm${log(player, npc)}", swung(player, npc))
+            remove(player, npc)
+        }
+    }
+
     // ---------------------------------------------------------------------------------------------------------------- helpers
 
     private fun spawnTile(w: Wyrm) =
@@ -202,10 +264,14 @@ class StrykewyrmFightTests {
     }
 
     /** The real Investigate click on the real mound spawn, then the 2-tick stomp and the 2-tick emerge. */
-    private fun wake(w: Wyrm): Pair<Client, Npc> {
+    private fun wake(
+        w: Wyrm,
+        slayer: Int = 99,
+    ): Pair<Client, Npc> {
         val at = spawnTile(w)
         val npc = mound(w, at)
         val player = player("w${w.mound}", standTile(npc))
+        player.skills.setBaseLevel(Skills.SLAYER, slayer)
         player.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
         player.attr[INTERACTING_OPT_ATTR] = 1
         assertTrue("Investigate is bound by strykewyrms.plugin.kts", repo.executeNpc(player, npc.id, 1))

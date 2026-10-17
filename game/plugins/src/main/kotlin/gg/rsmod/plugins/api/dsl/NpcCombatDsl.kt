@@ -113,7 +113,14 @@ object NpcCombatDsl {
             val builder = SlayerBuilder()
             init(builder)
 
-            combatBuilder.setSlayerParams(builder.level, builder.experience, builder.assignment!!)
+            val assignment = builder.assignment
+            if (assignment != null) {
+                combatBuilder.setSlayerParams(builder.level, builder.experience, assignment)
+            } else {
+                // A Slayer monster no master assigns (strykewyrms, N24): the level gate and xp without a task type.
+                combatBuilder.setSlayerRequirement(builder.level)
+                combatBuilder.setSlayerXp(builder.experience)
+            }
             combatBuilder.setDeathBlowLifepoints(builder.deathBlowLifepoints)
         }
     }
