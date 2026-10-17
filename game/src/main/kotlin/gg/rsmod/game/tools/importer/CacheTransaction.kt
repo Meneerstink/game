@@ -92,7 +92,30 @@ class CacheTransaction(
         targets.flatMap { target ->
             withLibrary(target) { library ->
                 mutations.map { mutation ->
-                    val current = library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
+                    pinnedUndecodable(library, mutation)?.let { stored ->
+                        return@map PreflightEntry(target, mutation, CacheItemProbeTool.sha1(stored), stored.size, MutationOutcome.REPLACE)
+                    }
+                    val current =
+                        try {
+                            library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
+                        } catch (e: Exception) {
+                            // Only a mutation that declares its group undecodable gets here with garbage: anything that is not
+                            // the pinned container is unknown content.
+                            if (mutation.undecodableCurrentSha1 == null) throw e
+                            return@map PreflightEntry(
+                                target,
+                                mutation,
+                                storedGroup(library, mutation)?.let { CacheItemProbeTool.sha1(it) },
+                                null,
+                                MutationOutcome.CONFLICT,
+                            )
+                        }
+                    if (current == null && mutation.undecodableCurrentSha1 != null) {
+                        // displee returns null for a group it cannot decode: stored bytes that are not the pin are unknown content, never a CREATE.
+                        storedGroup(library, mutation)?.let { stored ->
+                            return@map PreflightEntry(target, mutation, CacheItemProbeTool.sha1(stored), stored.size, MutationOutcome.CONFLICT)
+                        }
+                    }
                     // A named group may only be created under a name no other group of the index already carries.
                     val nameTaken =
                         (
@@ -170,6 +193,14 @@ class CacheTransaction(
         // Journal first, for every target, before a single byte is written anywhere.
         changing.forEach { entry ->
             withLibrary(entry.target) { library ->
+                pinnedUndecodable(library, entry.mutation)?.let { stored ->
+                    // N10: the old group cannot be decoded (no key), so the journal keeps it as stored plus its reference entry.
+                    storedJournal(entry.target, entry.mutation).writeBytes(stored)
+                    val archive = library.index(entry.mutation.indexId).archive(entry.mutation.groupId, null, true)!!
+                    val whirlpool = archive.whirlpool?.joinToString("") { "%02x".format(it) } ?: ""
+                    referenceJournal(entry.target, entry.mutation).writeText("crc=${archive.crc}\nrevision=${archive.revision}\nwhirlpool=$whirlpool\n")
+                    return@withLibrary
+                }
                 val current = library.data(entry.mutation.indexId, entry.mutation.groupId, entry.mutation.fileId, entry.mutation.xtea)
                 journalFile(entry.target, entry.mutation).writeBytes(current ?: ByteArray(0))
                 if (current == null) {
@@ -196,6 +227,14 @@ class CacheTransaction(
                         if (mutation.newBytes == null) {
                             library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
                         } else {
+                            if (storedJournal(target, mutation).isFile) {
+                                // The pinned undecodable group is replaced whole without decoding it first (displee would
+                                // inflate the ciphertext): mark it read with no files, then the put below writes the new file.
+                                library.index(mutation.indexId).archive(mutation.groupId, null, true)!!.let { archive ->
+                                    archive.files.clear()
+                                    archive.read = true
+                                }
+                            }
                             library.put(mutation.indexId, mutation.groupId, mutation.fileId, mutation.newBytes, mutation.xtea)
                             mutation.groupName?.let { name ->
                                 val index = library.index(mutation.indexId)
@@ -271,7 +310,9 @@ class CacheTransaction(
                 withLibrary(target) { library ->
                     entries.forEach { entry ->
                         val mutation = entry.mutation
-                        if (absentMarker(target, mutation).isFile) {
+                        if (storedJournal(target, mutation).isFile) {
+                            restoreStored(library, target, mutation)
+                        } else if (absentMarker(target, mutation).isFile) {
                             removeCreated(library, mutation)
                         } else {
                             library.put(mutation.indexId, mutation.groupId, mutation.fileId, journalFile(target, mutation).readBytes(), mutation.xtea)
@@ -348,11 +389,13 @@ class CacheTransaction(
         if (!journalDir.isDirectory) return 0
         var restored = 0
         targets.forEach { target ->
-            val forTarget = mutations.filter { journalFile(target, it).isFile }
+            val forTarget = mutations.filter { journalFile(target, it).isFile || storedJournal(target, it).isFile }
             if (forTarget.isEmpty()) return@forEach
             withLibrary(target) { library ->
                 forTarget.forEach { mutation ->
-                    if (absentMarker(target, mutation).isFile) {
+                    if (storedJournal(target, mutation).isFile) {
+                        restoreStored(library, target, mutation)
+                    } else if (absentMarker(target, mutation).isFile) {
                         removeCreated(library, mutation)
                     } else {
                         library.put(mutation.indexId, mutation.groupId, mutation.fileId, journalFile(target, mutation).readBytes(), mutation.xtea)
@@ -402,6 +445,55 @@ class CacheTransaction(
         } else {
             library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
         }
+    }
+
+    private fun storedJournal(
+        target: String,
+        mutation: CacheMutation,
+    ) = File(journalDir, "${targetSlug(target)}__${mutation.describeLocation()}.stored")
+
+    private fun referenceJournal(
+        target: String,
+        mutation: CacheMutation,
+    ) = File(journalDir, "${targetSlug(target)}__${mutation.describeLocation()}.ref")
+
+    /** The group exactly as the cache stores it (container + version trailer), read without decoding. */
+    private fun storedGroup(
+        library: CacheLibrary,
+        mutation: CacheMutation,
+    ): ByteArray? = library.index(mutation.indexId).readArchiveSector(mutation.groupId)?.data
+
+    /** The stored group when the mutation pins it as undecodable ([CacheMutation.undecodableCurrentSha1]) and it still is exactly that. */
+    private fun pinnedUndecodable(
+        library: CacheLibrary,
+        mutation: CacheMutation,
+    ): ByteArray? {
+        val pin = mutation.undecodableCurrentSha1 ?: return null
+        return storedGroup(library, mutation)?.takeIf { CacheItemProbeTool.sha1(it) == pin }
+    }
+
+    /** Rollback of a pinned undecodable group: the stored container and its reference entry (crc, revision, whirlpool) come back as they were. */
+    private fun restoreStored(
+        library: CacheLibrary,
+        target: String,
+        mutation: CacheMutation,
+    ) {
+        val index = library.index(mutation.indexId)
+        check(index.writeArchiveSector(mutation.groupId, storedJournal(target, mutation).readBytes())) {
+            "could not restore the stored group ${mutation.describeLocation()} on $target"
+        }
+        val reference =
+            referenceJournal(target, mutation).readLines().filter { '=' in it }.associate { it.substringBefore('=') to it.substringAfter('=') }
+        val archive = index.archive(mutation.groupId, null, true)!!
+        archive.crc = reference.getValue("crc").toInt()
+        archive.revision = reference.getValue("revision").toInt()
+        reference["whirlpool"]?.takeIf { it.isNotEmpty() }?.let { hex ->
+            archive.whirlpool = ByteArray(hex.length / 2) { hex.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+        }
+        // The file table stays (the write kept the same file ids, here file 0): only the content and the reference entry go back.
+        archive.read = false
+        archive.unFlag()
+        index.flag()
     }
 
     private fun <T> withLibrary(
@@ -474,7 +566,19 @@ class CacheMutation(
      * reads `getfile("<area>", "area")`). Applied as the file's hash name; verify checks it. Null = keep / unnamed.
      */
     val fileName: String? = null,
+    /**
+     * N10: SHA-1 of the group AS STORED (container + version trailer, displee `readArchiveSector`) for a group whose current
+     * content cannot be decoded - a rev-667 map loc file `l<x>_<z>` that is XTEA-encrypted while no key for it exists. The
+     * stored bytes are the pin instead of [expectedCurrentSha1]: preflight classifies them REPLACE, the journal keeps them
+     * as stored (plus the reference entry), the write replaces the group without decoding it, and rollback writes the stored
+     * container back. After the write the group decodes normally, so a re-run is a NO_OP.
+     */
+    val undecodableCurrentSha1: String? = null,
 ) {
+    init {
+        require(undecodableCurrentSha1 == null || newBytes != null) { "an undecodable group can only be replaced, not removed" }
+    }
+
     fun describeLocation(): String = "idx${indexId}_grp${groupId}_file$fileId"
 
     companion object {

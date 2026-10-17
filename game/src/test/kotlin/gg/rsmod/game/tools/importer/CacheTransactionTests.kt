@@ -394,6 +394,69 @@ class CacheTransactionTests {
         assertTrue(runCatching { transaction.apply(plan) }.exceptionOrNull() is IllegalStateException)
     }
 
+    /**
+     * N10: a rev-667 loc file that is XTEA-encrypted while no key exists cannot be decoded, so it is pinned by its stored
+     * bytes. The whole lifecycle must work without ever decoding it: REPLACE, apply, verify, re-run NO_OP, rollback to the
+     * exact stored container (the original plaintext comes back under the original key), and a wrong pin is a CONFLICT.
+     */
+    @Test
+    fun anUndecodableEncryptedGroupIsReplacedByItsStoredBytesAndRolledBackExactly() {
+        val targets = scratchTargets(seed = null)
+        val key = intArrayOf(-308446968, 133463944, -1258259786, 567848919)
+        val plaintext = ByteArray(600) { (it * 31 + 7).toByte() }
+        targets.forEach { target ->
+            CacheLibrary(target).use {
+                it.index(5).flagMask(com.displee.cache.index.ReferenceTable.FLAG_NAME)
+                it.put(5, "m1_1", "TILES".toByteArray())
+                it.put(5, "l1_1", plaintext, key)
+                it.update()
+            }
+        }
+        fun stored(target: String): ByteArray =
+            CacheLibrary(target).use { lib -> lib.index(5).readArchiveSector(lib.index(5).archiveId("l1_1"))!!.data }
+        val group = CacheLibrary(targets[0]).use { it.index(5).archiveId("l1_1") }
+        val before = targets.map { stored(it) }
+        val crcBefore = targets.map { t -> CacheLibrary(t).use { it.index(5).archive(group, null, true)!!.crc } }
+        val pin = CacheItemProbeTool.sha1(before[0])
+        assertTrue("both scratch caches hold the same ciphertext", before[0].contentEquals(before[1]))
+        assertTrue("the stored group is encrypted (not readable without the key)", ClientMapLocDecode.classify(before[0], IntArray(4)) != ClientMapLocDecode.Outcome.DECODES)
+
+        fun transaction(id: String, sha: String = pin) =
+            CacheTransaction(
+                targets = targets,
+                mutations = listOf(CacheMutation(5, group, 0, byteArrayOf(0), "N10 keyless test", undecodableCurrentSha1 = sha)),
+                journalRoot = scratch.newFolder("journal-undecodable-$id"),
+                id = id,
+            )
+
+        val wrong = transaction("tx-test-undecodable-wrong", sha = "0".repeat(40)).preflight()
+        assertTrue("a wrong pin is unknown content: ${wrong.map { it.outcome }}", wrong.all { it.outcome == MutationOutcome.CONFLICT })
+
+        val tx = transaction("tx-test-undecodable-1")
+        assertTrue(tx.preflight().all { it.outcome == MutationOutcome.REPLACE })
+        assertEquals(2, tx.apply().applied)
+        assertEquals(emptyList<String>(), tx.verify())
+        targets.forEach { target ->
+            assertArrayEquals("$target: the empty loc file", byteArrayOf(0), CacheLibrary(target).use { it.data(5, group, 0) })
+            val outcome = ClientMapLocDecode.classify(stored(target), IntArray(4))
+            assertTrue("$target: the client reads it with no key, got $outcome", !outcome.crashesClient)
+            CacheLibrary(target).use { lib ->
+                assertEquals("$target: the name still resolves", group, lib.index(5).archiveId("l1_1"))
+                assertEquals("TILES", lib.data(5, "m1_1")?.let { String(it) })
+            }
+        }
+        assertTrue("a re-run is a no-op", transaction("tx-test-undecodable-2").preflight().all { it.outcome == MutationOutcome.NO_OP })
+
+        assertEquals(2, tx.rollback())
+        targets.forEachIndexed { i, target ->
+            assertArrayEquals("$target: the stored container is back byte for byte", before[i], stored(target))
+            CacheLibrary(target).use { lib ->
+                assertEquals("$target: the reference crc is back", crcBefore[i], lib.index(5).archive(group, null, true)!!.crc)
+                assertArrayEquals("$target: the original plaintext under the original key", plaintext, lib.data(5, group, 0, key))
+            }
+        }
+    }
+
     private fun transactionFor(
         targets: List<String>,
         newBytes: ByteArray?,
