@@ -47,6 +47,18 @@ class DeadmanRouteGateTests {
         val summoning = read("skills/summoning/SummoningSpecialMoves.kt")
         assertTrue(summoning.contains("CALL_TO_ARMS_SCROLL"))
         assertTrue(summoning.contains("canTeleport(TeleportType.SCROLL)"))
+        // N30: spirit trees are teleports (OSRS Deadman Mode, Darkan SpiritTree.java:79-81 sendTeleportSpell): every entry
+        // (world trees, POH tree 8355, trinket of fairies) ends in SpiritTrees.select -> canTeleport, never the always-7-s
+        // transport route. Behaviour: HomeTeleportDeadmanGateTests (same answer as every teleport spell in every state).
+        val trees = read("mechanics/travel/SpiritTrees.kt")
+        assertTrue(trees.contains("player.canTeleport(type)") && !trees.contains("requestRoute"), "SpiritTrees.select uses the teleport gate")
+        listOf("mechanics/travel/spirit_tree.plugin.kts", "mechanics/travel/trinket_of_fairies.plugin.kts", "areas/poh/poh_furniture.plugin.kts")
+            .forEach { assertTrue(read(it).contains("SpiritTrees.") && !read(it).contains("Kind.TRANSPORT) { SpiritTrees"), it) }
+        // N90/N91: home teleport (all three books) has no 2011 refusal of its own in front of the shared gate.
+        val home = read("magic/teleports/home_teleport_spells.plugin.kts")
+        assertTrue(home.contains("player.canTeleport(TeleportType.MODERN)"), "home teleport uses the teleport gate")
+        listOf("hasMoveDestination()", "isAttacking()", "ACTIVE_COMBAT_TIMER")
+            .forEach { assertTrue(!home.contains(it), "home_teleport_spells.plugin.kts must not refuse on $it") }
     }
 
     @Test

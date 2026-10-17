@@ -1,17 +1,9 @@
 package gg.rsmod.plugins.content.magic.teleports
 
-import gg.rsmod.plugins.content.combat.isAttacking
-import gg.rsmod.plugins.content.combat.isBeingAttacked
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
-import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
-
-val TERMINATE_HOME_TELEPORT_NEUTRAL: QueueTask.() -> Unit = {
-    player.animate(Anims.RESET)
-    player.graphic(Gfx.RESET)
-}
 
 /**
  * NOTE: Alycia
@@ -31,14 +23,14 @@ val HOME_TELEPORT_TIMER = TimerKey(persistenceKey = "home_teleport_delay", tickO
 HomeTeleport.values.forEach { teleport ->
 
     on_magic_spell_button(teleport.spellName) {
-        if (player.hasMoveDestination()) {
-            player.message("You can't use that teleport at the moment.")
-            return@on_magic_spell_button
-        } else if (player.isAttacking()) {
-            player.message("You can't use that teleport at the moment.")
-            return@on_magic_spell_button
-        }
-
+        // N90/N91 (owner 2026-10-17: refused "at the moment" while running away; refused for ten seconds after npc combat
+        // where he expected the Deadman timer): the
+        // 2011scape-base refusals that stood here - no cast while walking or attacking, and the 10-second combat wait of the
+        // 2011 lodestone cast (Darkan LodestoneAction.java:167-173, Novite HomeTeleport.java:62-69) - are gone. Home teleport
+        // is an ordinary instant book teleport (owner 09-06 / 09-19), so the shared Deadman gate decides like for every
+        // other teleport (canTeleport -> DeadmanTimerGate.teleportDecision): skulled -> the 7-second countdown; unskulled
+        // and hit by a player / non-boss npc in the last 7 seconds -> "You must be out of combat for another X seconds to
+        // teleport."; otherwise instant, also while running (player.teleport stops the walk). Guard: HomeTeleportDeadmanGateTests.
         if (HOME_TELEPORT_TIMER_ENABLED && player.timers.has(HOME_TELEPORT_TIMER) && player.privilege.id != 2) {
             val minutes = player.timers.getMinutesLeft(HOME_TELEPORT_TIMER)
 
@@ -50,86 +42,16 @@ HomeTeleport.values.forEach { teleport ->
             return@on_magic_spell_button
         }
 
-        if (player.timers.has(ACTIVE_COMBAT_TIMER)) {
-            player.message("You can't home teleport until 10 seconds after the end of combat.")
-            return@on_magic_spell_button
-        }
-
         // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
         // player's 7-second countdown complete this action automatically.
         player.canTeleport(TeleportType.MODERN) {
             // Owner 2026-09-19: the home teleports get their spellbook's teleport animation, graphic and sound (the same
             // route as every other teleport spell of that book) instead of the silent instant snap of 2026-09-06.
-            val bookType = teleport.bookType
-            if (bookType != null) {
-                player.teleport(teleport.endTile(world), bookType, startSound = false)
-                world.spawn(AreaSound(player.tile, HOME_TELEPORT_SOUND, 10, 1))
-                player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
-                return@canTeleport
-            }
-            player.queue(TaskPriority.STRONG) {
-                if (teleport.instant) {
-                    instantTeleport(teleport.endTile(world))
-                } else {
-                    teleport(teleport.endTile(world))
-                }
-            }
+            player.teleport(teleport.endTile(world), teleport.bookType, startSound = false)
+            world.spawn(AreaSound(player.tile, HOME_TELEPORT_SOUND, 10, 1))
+            player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
         }
     }
-}
-
-val animations =
-    arrayOf(Anims.HOME_TELEPORT_STAGE_1, Anims.HOME_TELEPORT_STAGE_2, Anims.HOME_TELEPORT_STAGE_3, Anims.HOME_TELEPORT_STAGE_4,
-        Anims.HOME_TELEPORT_STAGE_5, Anims.HOME_TELEPORT_STAGE_6, Anims.HOME_TELEPORT_STAGE_7, Anims.HOME_TELEPORT_STAGE_8,
-        Anims.HOME_TELEPORT_STAGE_9, Anims.HOME_TELEPORT_STAGE_10, Anims.HOME_TELEPORT_STAGE_11, Anims.HOME_TELEPORT_STAGE_12,
-        Anims.HOME_TELEPORT_STAGE_13, Anims.HOME_TELEPORT_STAGE_14, Anims.HOME_TELEPORT_STAGE_15, Anims.HOME_TELEPORT_STAGE_16,
-        Anims.HOME_TELEPORT_STAGE_17)
-val graphics = arrayOf(Gfx.HOME_TELEPORT_STAGE_1, Gfx.HOME_TELEPORT_STAGE_2, Gfx.HOME_TELEPORT_STAGE_3, Gfx.HOME_TELEPORT_STAGE_4,
-    Gfx.HOME_TELEPORT_STAGE_5, Gfx.HOME_TELEPORT_STAGE_6, Gfx.HOME_TELEPORT_STAGE_7, Gfx.HOME_TELEPORT_STAGE_8,
-    Gfx.HOME_TELEPORT_STAGE_9, Gfx.HOME_TELEPORT_STAGE_10, Gfx.HOME_TELEPORT_STAGE_11, Gfx.HOME_TELEPORT_STAGE_12,
-    Gfx.HOME_TELEPORT_STAGE_13, Gfx.HOME_TELEPORT_STAGE_14, Gfx.HOME_TELEPORT_STAGE_15, Gfx.HOME_TELEPORT_STAGE_16,
-    Gfx.HOME_TELEPORT_STAGE_17)
-
-suspend fun QueueTask.teleport(endTile: Tile) {
-    waitAndCheckCombat(2)
-    terminateAction = TERMINATE_HOME_TELEPORT_NEUTRAL
-    repeat(17) { cycle ->
-        player.animate(animations[cycle])
-        player.graphic(graphics[cycle])
-        waitAndCheckCombat(1)
-    }
-    player.animate(Anims.RESET)
-    // moveTo() only flags a real teleport (instant snap) when the destination is beyond normal
-    // view distance - casting Home Teleport from just outside/near Ferox (well within that
-    // distance of the arrival tile) rendered as a walk/glide into place instead of a teleport.
-    // teleportTo() always snaps, matching every other teleport spell (see magic/PawnExt.kt).
-    player.teleportTo(endTile)
-    player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
-}
-
-/**
- * 2026-09-06 owner human retest: the Ferox Home Teleport destination is correct and must stay
- * correct, but casting it must be INSTANT - no standard 17-stage animation/graphic sequence, no
- * casting-time delay, no glide. Skips [teleport]'s whole cycle loop and its 2-tick pre-cast
- * combat-interrupt window entirely rather than shortening either, since an instant teleport has
- * no casting time for combat to interrupt in the first place - it simply fires.
- */
-suspend fun QueueTask.instantTeleport(endTile: Tile) {
-    player.animate(Anims.RESET)
-    player.graphic(Gfx.RESET)
-    player.teleportTo(endTile)
-    player.timers[HOME_TELEPORT_TIMER] = HOME_TELEPORT_TIMER_DELAY
-}
-
-suspend fun QueueTask.waitAndCheckCombat(cycles: Int): Boolean {
-    for (i in 0 until cycles) {
-        wait(1)
-        if (player.isBeingAttacked()) {
-            terminate()
-            return false
-        }
-    }
-    return true
 }
 
 /** Sound 200 (teleport_all): the sound every standard/Ancient/Lunar teleport spell of this server plays (teleport_spells). */
@@ -138,17 +60,18 @@ val HOME_TELEPORT_SOUND = 200
 enum class HomeTeleport(
     val spellName: String,
     val endTile: World.() -> Tile,
-    /** True for a teleport that must fire with no animation/casting delay - see [instantTeleport]. */
-    val instant: Boolean = false,
-    /** The spellbook's own teleport (animation, graphic, delay); null keeps the old instant/staged route. */
-    val bookType: TeleportType? = null,
+    /**
+     * The spellbook's own teleport (animation, graphic, delay). The 2011 staged 17-stage lodestone cast and the 09-06 silent
+     * snap were removed with N90: every home teleport is this book teleport behind the shared Deadman gate.
+     */
+    val bookType: TeleportType,
 ) {
     // This project's home destination is Ferox Enclave. 2026-09-06 the owner asked for an instant teleport; 2026-09-19 the
     // owner asked for the same teleport animation and sound in every book, so each book uses its own teleport type.
-    HOME("Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.MODERN),
+    HOME("Home Teleport", { gameContext.home }, bookType = TeleportType.MODERN),
     // The same Ferox home teleport from the Ancient Magicks (193:48) and Lunar (430:39) books.
-    ANCIENT_HOME("Edgeville Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.ANCIENT),
-    LUNAR_HOME("Lunar Home Teleport", { gameContext.home }, instant = true, bookType = TeleportType.LUNAR),
+    ANCIENT_HOME("Edgeville Home Teleport", { gameContext.home }, bookType = TeleportType.ANCIENT),
+    LUNAR_HOME("Lunar Home Teleport", { gameContext.home }, bookType = TeleportType.LUNAR),
     ;
 
     companion object {

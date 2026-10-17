@@ -15,8 +15,8 @@ import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 
 /**
- * Shared teleport restrictions. The 2011 ten-second combat wait belongs to Home Teleport
- * (Novite HomeTeleport.process), not to ordinary teleports.
+ * Shared teleport restrictions, the one gate of every teleport route - Home Teleport included since N90 (2026-10-17): the
+ * 2011 ten-second combat wait (Novite HomeTeleport.process) and its walking/attacking refusals are gone.
  *
  * Compatibility check for tests and callers that only need a yes/no result. Production routes
  * use the callback overload so delayed teleports complete automatically. Delayed approval is
@@ -43,11 +43,11 @@ fun Player.canTeleport(
         return false
     }
 
-    // Owner 2026-09-17 (supersedes the 2026-09-16 "blocked with a message when hit in the last 7
-    // seconds" rule and, before that, RCV-005): the Deadman 7-second countdown interface opens
-    // only when the player is PK-skulled or in combat with a player or a non-boss npc
-    // (DeadmanTimerGate); a fight with any boss never delays a teleport. Otherwise the teleport is
-    // instant. The deferred callback revalidates every server-side restriction at completion so a
+    // Owner 2026-09-17 ("deadmanmode vervijning", OSRS Deadman wiki wording; DeadmanTimerGate): a PK-skulled
+    // player gets the 7-second countdown interface; an unskulled player hit by a player or a non-boss npc in
+    // the last 7 seconds is refused with "You must be out of combat for another X seconds to teleport." (no
+    // interface); a fight with any boss never delays a teleport. Otherwise the teleport is instant.
+    // (N91 / VRAGEN 30 asks the owner whether npc/player combat should give the countdown instead.) The deferred callback revalidates every server-side restriction at completion so a
     // same-tick Tele Block, movement into deeper Wilderness, activity lock, or death cannot race it.
     when (DeadmanTimerGate.teleportDecision(this)) {
         DeadmanTimerGate.Teleport.COUNTDOWN -> {
