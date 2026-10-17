@@ -223,6 +223,43 @@ class StrykewyrmFightTests {
     }
 
     @Test
+    fun `a Wrath death blast skips an awake wyrm for a player below its Slayer level`() {
+        // N24 round 3 (Keurmeester note N24-2): the Wrath blast (AncientCurses.wrathExplosion, the third area attack beside splash and
+        // brews) only read the attack option, so a dying Slayer-1 player still wounded a wyrm a friend woke. Darkan Strykewyrm.kt:114-124
+        // zeroes every hit of a player below the level (handlePreHit, so Wrath too); Novite Player.sendDeath skips an npc the
+        // controller may not hit. Ours: the one silent area-victim check, SpecialAttackSupport.canSplash (Slayer gate, guards, hooks).
+        Strykewyrms.WYRMS.forEach { w ->
+            val region = spawnTile(w).regionId
+            world.plugins.addMultiCombatRegion(region)
+            try {
+                val (waker, npc) = wake(w)
+                waker.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+                // Wrath reaches every npc whose tile is within 2 of the death tile (AncientCurses.wrathExplosion).
+                val blastTile = listOf(Tile(-1, 0), Tile(0, -1), Tile(-1, -1), Tile(-2, 0), Tile(0, -2), Tile(-2, -2))
+                    .map { npc.tile.transform(it.x, it.z) }.firstOrNull { !world.collision.isClipped(it) }
+                    ?: throw AssertionError("no walkable tile within 2 of ${npc.tile}")
+                val low = player("wrath${w.mound}", blastTile)
+                low.skills.setBaseLevel(Skills.PRAYER, 99)
+                low.skills.setBaseLevel(Skills.SLAYER, w.slayer - 1)
+                repeat(3) {
+                    gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.wrathExplosion(low)
+                    tick(2)
+                }
+                assertEquals("${w.name}: Wrath damage from a Slayer ${w.slayer - 1} player", 0, npc.damageMap.getDamageFrom(low))
+                low.skills.setBaseLevel(Skills.SLAYER, w.slayer)
+                repeat(3) {
+                    gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.wrathExplosion(low)
+                    tick(2)
+                }
+                assertTrue("${w.name}: a Slayer ${w.slayer} player's Wrath wounds it", npc.damageMap.getDamageFrom(low) > 0)
+                remove(waker, low, npc)
+            } finally {
+                world.plugins.removeMultiCombatRegion(region)
+            }
+        }
+    }
+
+    @Test
     fun `a player at exactly the wyrm's Slayer level wakes it and hits it`() {
         Strykewyrms.WYRMS.forEach { w ->
             val (player, npc) = wake(w, slayer = w.slayer)

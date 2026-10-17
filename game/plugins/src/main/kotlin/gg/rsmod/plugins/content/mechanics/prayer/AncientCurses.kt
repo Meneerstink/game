@@ -1554,9 +1554,11 @@ object AncientCurses {
 
             if (multi) {
                 world.npcs.forEach {
-                    // N24: the player's view of the npc (an awake strykewyrm is its transmog), like Combat.canEngage.
-                    if (!it.isDead() && gg.rsmod.plugins.content.combat.Combat.attackOptionDef(it).isAttackable() && it.combatDef.lifepoints != -1 &&
-                        it.tile.isWithinRadius(origin, 2)
+                    // N24 round 3: the one silent area-victim check (SpecialAttackSupport.canSplash) - the option of the definition the
+                    // player sees (an awake strykewyrm's transmog), lifepoints, the Slayer gate (Darkan Strykewyrm.kt:114-124 zeroes every hit
+                    // of a player below the level), Deadman guards and the can_attack hooks (Novite Player.sendDeath: controller canHit(npc)).
+                    if (it.tile.isWithinRadius(origin, 2) &&
+                        gg.rsmod.plugins.content.combat.specialattack.SpecialAttackSupport.canSplash(player, it)
                     ) {
                         it.hit(damage = world.random(damage), source = player)
                     }
