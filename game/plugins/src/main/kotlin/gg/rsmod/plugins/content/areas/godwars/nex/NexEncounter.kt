@@ -193,6 +193,9 @@ object NexEncounter {
 
     fun start() {
         if (fightActive) return
+        // N25 round 2: a fight starts from Nex's clean rotation state - a No Escape rush left over from the last fight must not
+        // keep the new Nex waiting (only on_npc_pre_death reset it before; a fight that ended by leaving/logout kept busy=true).
+        NexCombatScript.reset()
         fightActive = true
         intro = true
         firstStageAttack = false
@@ -239,6 +242,7 @@ object NexEncounter {
 
     fun end() {
         fightActive = false
+        NexCombatScript.reset()
         intro = false
         firstStageAttack = false
         awaitingMinion = false

@@ -75,6 +75,9 @@ object NexCombatScript : CombatScript() {
     private var shadowTrapsActive = false
     private var busy = false
 
+    /** The running No Escape rush (world-owned, see [noEscape]); [busy] is set while it runs. */
+    private var rush: Any? = null
+
     /**
      * N25 (LC10 2026-10-16: after a pull Nex stood still for minutes). The old loop `while (canEngage && isAttackDelayReady ...)` +
      * `wait(attackSpeed)` woke one tick before its own ATTACK_DELAY ran out and quit after every attack (class 191, N24/N84): only a
@@ -127,7 +130,7 @@ object NexCombatScript : CombatScript() {
                     4 -> if (virusCooldown == 0) virusAttack(npc) else magicAttack(npc, true)
                     5, 6 -> magicAttack(npc, true)
                     7, 8, 9 -> meleeAttack(npc, target)
-                    else -> noEscape(it, npc)
+                    else -> noEscape(npc)
                 }
                 Phase.SHADOW -> when (world.random(3)) {
                     0 -> if (!shadowTrapsActive) shadowTraps(npc) else shadowAttack(npc)
@@ -167,7 +170,7 @@ object NexCombatScript : CombatScript() {
                     0, 1 -> magicAttack(npc, true)
                     2 -> magicAttack(npc, false)
                     3, 4, 5, 6, 7, 8, 9, 10, 11, 12 -> meleeAttack(npc, target)
-                    13 -> noEscape(it, npc)
+                    13 -> noEscape(npc)
                 }
             }
             npc.postAttackLogic(target)
@@ -291,40 +294,69 @@ object NexCombatScript : CombatScript() {
         return if (ring.isEmpty()) null else ring[npc.world.random(ring.size - 1)]
     }
 
-    /** "There is... NO ESCAPE!": rush from a random edge through the centre, hitting anyone in the path. */
-    private suspend fun noEscape(it: QueueTask, npc: Npc) {
+    /**
+     * "There is... NO ESCAPE!": rush from a random edge through the centre, hitting anyone in the path.
+     *
+     * N25 round 2 (AUDIT 10-17): the rush ran inside Nex's own combat queue and cleared [busy] only on its last line, so any
+     * Pawn.attack on Nex mid-rush (npc retaliation Combat.kt:275, a phase change's NexEncounter.engageRandomPlayer) killed it with
+     * busy=true for ever - her loop waits on busy, she never attacked again, not even in the next fight. Darkan NoEscape.java:42-79
+     * (and Novite NexCombat.java:532-560) run the rush in a WORLD task and return Nex's attack speed: her combat cycle cannot strand
+     * it. The rush is world-owned here too, keyed by its own [rush] token (a new fight's [reset] retires an old rush), and every step
+     * checks that the fight is still this Nex's.
+     */
+    private fun noEscape(npc: Npc) {
+        val token = Any()
+        rush = token
         busy = true
         npc.forceChat("There is...")
         NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_NO_ESCAPE_START)
         npc.animate(ANIM_NO_ESCAPE)
         npc.graphic(GFX_NO_ESCAPE)
-        it.wait(1)
-        val index = npc.world.random(NO_ESCAPE_TILES.size - 1)
-        val start = NO_ESCAPE_TILES[index]
-        npc.moveTo(Tile(start.x - 1, start.z - 1, 0))
-        npc.forceChat("NO ESCAPE!")
-        NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_NO_ESCAPE_HIT)
-        val vertical = index == 0 || index == 2
-        val victims = NexEncounter.players().filter { player ->
-            if (vertical) {
-                player.tile.x in (CENTRE.x - 2)..(CENTRE.x + 2) && player.tile.z in minOf(start.z, CENTRE.z)..maxOf(start.z, CENTRE.z)
-            } else {
-                player.tile.z in (CENTRE.z - 2)..(CENTRE.z + 2) && player.tile.x in minOf(start.x, CENTRE.x)..maxOf(start.x, CENTRE.x)
+        val world = npc.world
+        world.queue {
+            try {
+                wait(1)
+                if (!rushing(token, npc)) return@queue
+                val index = world.random(NO_ESCAPE_TILES.size - 1)
+                val start = NO_ESCAPE_TILES[index]
+                npc.moveTo(Tile(start.x - 1, start.z - 1, 0))
+                npc.forceChat("NO ESCAPE!")
+                NexEncounter.playEncounterSound(npc, NexEncounter.SOUND_NO_ESCAPE_HIT)
+                val vertical = index == 0 || index == 2
+                val victims = NexEncounter.players().filter { player ->
+                    if (vertical) {
+                        player.tile.x in (CENTRE.x - 2)..(CENTRE.x + 2) && player.tile.z in minOf(start.z, CENTRE.z)..maxOf(start.z, CENTRE.z)
+                    } else {
+                        player.tile.z in (CENTRE.z - 2)..(CENTRE.z + 2) && player.tile.x in minOf(start.x, CENTRE.x)..maxOf(start.x, CENTRE.x)
+                    }
+                }
+                wait(1)
+                if (!rushing(token, npc)) return@queue
+                for (player in victims) {
+                    // A victim who died, logged out or left the arena in the meantime is not hit or moved back in.
+                    if (!player.isOnline || player.isDead() || !NexEncounter.inArena(player.tile)) continue
+                    player.animate(10070)
+                    val damage = world.random(70)
+                    player.hit(damage, HitType.REGULAR_HIT)
+                    soulSplit(npc, damage)
+                    player.moveTo(world.findRandomTileAround(CENTRE, radius = 2) ?: CENTRE)
+                }
+                wait(1)
+                if (!rushing(token, npc)) return@queue
+                npc.moveTo(Tile(CENTRE.x - 1, CENTRE.z - 1, 0))
+                wait(1)
+            } finally {
+                if (rush === token) {
+                    rush = null
+                    busy = false
+                }
             }
         }
-        it.wait(1)
-        for (player in victims) {
-            player.animate(10070)
-            val damage = npc.world.random(70)
-            player.hit(damage, HitType.REGULAR_HIT)
-            soulSplit(npc, damage)
-            player.moveTo(npc.world.findRandomTileAround(CENTRE, radius = 2) ?: CENTRE)
-        }
-        it.wait(1)
-        npc.moveTo(Tile(CENTRE.x - 1, CENTRE.z - 1, 0))
-        it.wait(1)
-        busy = false
     }
+
+    /** The rush [token] is still the live one and its Nex is still fighting (not dead, removed or replaced by a new fight). */
+    private fun rushing(token: Any, npc: Npc): Boolean =
+        rush === token && NexEncounter.fightActive && NexEncounter.nex === npc && npc.isSpawned() && !npc.isDead()
 
     /* ------------------------------- smoke ------------------------------- */
 
@@ -516,6 +548,7 @@ object NexCombatScript : CombatScript() {
         virusCooldown = 0
         shadowTrapsActive = false
         busy = false
+        rush = null
     }
 }
 

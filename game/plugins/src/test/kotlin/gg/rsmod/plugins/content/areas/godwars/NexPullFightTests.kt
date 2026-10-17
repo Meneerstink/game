@@ -72,6 +72,7 @@ class NexPullFightTests {
         BreachTrace.sink = { synchronized(traced) { traced += it } }
         World::class.java.getDeclaredField("random").apply { isAccessible = true }.set(world, java.util.Random(25L))
         NexCombatScript.reset()
+        removeLeftoverNexObjects()
     }
 
     @After
@@ -82,6 +83,7 @@ class NexPullFightTests {
         NexCombatScript.reset()
         // Nex's temporary objects (ice prison stalagmites: 5 + 12 ticks) must be gone before the next test walks the arena.
         tick(25)
+        removeLeftoverNexObjects()
         Trace.stopCapture()
         AvTrace.enabled = false
         BreachTrace.sink = null
@@ -185,7 +187,129 @@ class NexPullFightTests {
         assertEquals("no lock left", LockState.NONE, player.lock)
     }
 
+    /*
+     * N25 round 2 (AUDIT 10-17): "There is... NO ESCAPE!" set the `busy` flag inside Nex's own combat queue and cleared it only at
+     * its last line. Anything that kills that queue mid-rush (Pawn.attack -> interruptQueues: npc retaliation Combat.kt:275, the
+     * phase-change re-engage NexEncounter.engageRandomPlayer) left busy=true for ever, and the per-tick loop waits on it - Nex stood
+     * still, even in the NEXT fight. Darkan NoEscape.java:44-79 runs the rush in a world task (WorldTasks.scheduleLooping) and
+     * returns her attack speed, so her combat cycle cannot strand it. The class: every interruption of Nex's combat queue during the
+     * rush - and a fight that ends during it - must leave her attacking again within a few ticks, back on her centre tile.
+     */
+
+    @Test
+    fun `No Escape interrupted by a retaliation switch - Nex attacks on`() {
+        // The audit's case: two players (multi, like live multi.yml 11601); Nex's target dies mid-rush and the other player hits her.
+        val a = enter("rushA", Tile(2923, 5203))
+        val b = enter("rushB", Tile(2921, 5199))
+        val nex = awaitFight(a)
+        a.attack(nex)
+        b.attack(nex)
+        awaitRush(nex, listOf(a, b))
+        tick(1)
+        val target = nex.getCombatTarget() as Client
+        val other = if (target === a) b else a
+        target.setCurrentLifepoints(0)
+        gg.rsmod.plugins.content.combat.Combat.postDamage(other, nex)
+        assertRushRecovered(nex, listOf(other), "retaliation switch")
+    }
+
+    @Test
+    fun `No Escape interrupted by a re-engage - Nex attacks on`() {
+        // Pawn.attack on Nex from outside her loop (a phase change's NexEncounter.engageRandomPlayer) interrupts her queues.
+        val a = enter("rushC", Tile(2923, 5203))
+        a.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(a)
+        awaitRush(nex, listOf(a))
+        tick(1)
+        NexEncounter.engageRandomPlayer(nex)
+        assertRushRecovered(nex, listOf(a), "re-engage")
+    }
+
+    @Test
+    fun `a fight that ends during No Escape leaves nothing behind for the next fight`() {
+        val a = enter("rushD", Tile(2923, 5203))
+        a.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(a)
+        awaitRush(nex, listOf(a))
+        tick(1)
+        world.plugins.executeLogout(a)
+        world.unregister(a)
+        players.remove(a)
+        tick(10)
+        assertTrue("the fight ended with the last player: fightActive=${NexEncounter.fightActive}", !NexEncounter.fightActive)
+        val c = enter("rushE", Tile(2918, 5202))
+        c.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex2 = awaitFight(c)
+        val attacks = fight(c, nex2, 60)
+        assertTrue("new fight: not busy (busy=${busy()})", !busy())
+        assertTrue("new fight: Nex attacks the new player >= 8 times in 60 ticks, saw $attacks${log(c, nex2)}", attacks.size >= 8)
+    }
+
     // ---------------------------------------------------------------------------------------------------------------- helpers
+
+    /**
+     * Test isolation only (side finding N25 round 2, own BUGLIJST item): World.spawnTemporaryObject spawns a COPY of the object and
+     * on expiry removes the original, which Chunk.removeEntity matches by identity - the copy and its collision stay. Nex's
+     * "Contain this!" ring and shadow traps then block tiles around her in every later test (run 1 of round 2: column 2923,5201-5205
+     * clipped, the next test's player could not reach her). Remove what is left in the arena so each test starts on a clean map.
+     */
+    private fun removeLeftoverNexObjects() {
+        val ids = setOf(gg.rsmod.plugins.api.cfg.Objs.STALAGMITE_57263, gg.rsmod.plugins.api.cfg.Objs.SHADOW_57261)
+        for (x in NexEncounter.ARENA_X) {
+            for (z in NexEncounter.ARENA_Z) {
+                val t = Tile(x, z, 0)
+                val chunk = world.chunks.get(t, createIfNeeded = false) ?: continue
+                chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                    .filter { it.id in ids }
+                    .forEach { world.remove(it) }
+            }
+        }
+    }
+
+    /** Nex's No Escape flag (NexCombatScript.busy): her loop waits while it is set. */
+    private fun busy(): Boolean = NexCombatScript::class.java.getDeclaredField("busy").apply { isAccessible = true }.getBoolean(NexCombatScript)
+
+    /** Ticks the fight (smoke phase, melee range: No Escape is 1 roll in 11) until Nex starts her No Escape rush. */
+    private fun awaitRush(
+        nex: Npc,
+        alive: List<Client>,
+    ) {
+        repeat(3000) {
+            tick(1)
+            alive.forEach { keepAlive(it, nex) }
+            if (busy()) return
+        }
+        fail("No Escape never rolled in 3000 ticks: phase=${NexEncounter.phase} target=${nex.getCombatTarget()}${log(alive.first(), nex)}")
+    }
+
+    /** After an interrupt mid-rush: the rush finishes (busy cleared, Nex back on her centre tile) and her own combat goes on. */
+    private fun assertRushRecovered(
+        nex: Npc,
+        alive: List<Client>,
+        what: String,
+    ) {
+        val speed = nex.combatDef.attackSpeed
+        val attacks = mutableListOf<Int>()
+        var last = nex.attr[GraniteMaul.LAST_ATTACK_CYCLE]
+        var clearedAt = -1
+        var clearedTile: Tile? = null
+        for (t in 1..60) {
+            tick(1)
+            alive.forEach { keepAlive(it, nex) }
+            if (clearedAt < 0 && !busy()) {
+                clearedAt = t
+                clearedTile = Tile(nex.tile)
+            }
+            val now = nex.attr[GraniteMaul.LAST_ATTACK_CYCLE]
+            if (now != null && now != last) attacks += t
+            last = now
+        }
+        val centre = Tile(NexEncounter.CENTRE.x - 1, NexEncounter.CENTRE.z - 1, 0)
+        assertTrue("$what: the rush ends within 5 ticks (busy cleared at tick $clearedAt, busy=${busy()})${log(alive.first(), nex)}", clearedAt in 1..5)
+        assertEquals("$what: Nex is back on her centre tile when the rush ends", centre, clearedTile)
+        assertTrue("$what: Nex attacks again within ${speed + 4} ticks, attack ticks $attacks${log(alive.first(), nex)}", attacks.isNotEmpty() && attacks.first() <= speed + 4)
+        assertTrue("$what: Nex keeps attacking (>= 8 attacks in 60 ticks), saw $attacks${log(alive.first(), nex)}", attacks.size >= 8)
+    }
 
     /** Nex's smoke-phase pull exactly as her rotation calls it (roll 3). */
     private fun pull(nex: Npc) {
@@ -336,6 +460,8 @@ class NexPullFightTests {
                 .invoke(world, Paths.get("..", "..", "data", "blocks.yml").toFile())
             repoOf(world)
             world.plugins.executeWorldInit(world)
+            // Live data/cfg/areas/multi.yml lists the Ancient Prison (region 11601): Nex's arena is multi-combat.
+            world.plugins.addMultiCombatRegion(11601)
             world
         }
 
