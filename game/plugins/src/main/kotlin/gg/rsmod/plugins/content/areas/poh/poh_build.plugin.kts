@@ -142,7 +142,7 @@ on_command("pohdev", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         "unskull" -> { player.timers.remove(gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER); gg.rsmod.plugins.content.mechanics.pvp.RiskSkull.refresh(player) }
         "pest" -> {
             player.attr[gg.rsmod.plugins.content.activity.pest_control.PEST_WINS] = args[1].toInt()
-            player.attr[gg.rsmod.plugins.content.activity.pest_control.PEST_POINTS] = args[2].toInt()
+            gg.rsmod.game.model.attr.PointBalance.set(player.attr, gg.rsmod.plugins.content.activity.pest_control.PEST_POINTS, args[2].toLong())
         }
         // The rotations the door-hotspot dialogue offers per room, and the door hotspots of the house the player stands in.
         "allowed" -> {

@@ -269,7 +269,7 @@ object PestControlRewards {
         }
         player.closeInterface(PC_REWARD_INTERFACE)
         player.attr.remove(SELECTED)
-        player.attr[PEST_POINTS] = points(player) - cost
+        gg.rsmod.game.model.attr.PointBalance.take(player.attr, PEST_POINTS, cost) // N106: one balance helper, never below 0
         val message =
             if (reward.isSkill) {
                 // The server's experience rate and bonus experience apply as to all experience; the message names what was gained.

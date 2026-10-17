@@ -50,8 +50,9 @@ object RingOfSufferingImbue {
         val currency = entry.currency
         val balance = player.attr[currency.attr] ?: 0
         if (balance < entry.price) return Result.NOT_ENOUGH_POINTS
+        // N106: pay through the one balance helper first (never below 0), then exchange the ring.
+        if (!gg.rsmod.game.model.attr.PointBalance.take(player.attr, currency.attr, entry.price)) return Result.NOT_ENOUGH_POINTS
         player.inventory[slot] = RingOfSuffering.exchanged(ring, entry.resultItems.single())
-        player.attr[currency.attr] = balance - entry.price
         StoreUi.audit(player, entry, 1, entry.price)
         player.playSound(gg.rsmod.plugins.content.mechanics.shops.ShopSounds.TRANSACTION)
         return Result.IMBUED

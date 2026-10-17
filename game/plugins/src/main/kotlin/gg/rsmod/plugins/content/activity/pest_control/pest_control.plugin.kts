@@ -150,7 +150,7 @@ mapOf(
             val points = player.attr[PEST_POINTS] ?: 0
             if (choice != 1 || points < ELITE_VOID_UPGRADE_POINTS || !player.inventory.remove(piece).hasSucceeded()) return@queue
             player.inventory.add(elite)
-            player.attr[PEST_POINTS] = points - ELITE_VOID_UPGRADE_POINTS
+            gg.rsmod.game.model.attr.PointBalance.take(player.attr, PEST_POINTS, ELITE_VOID_UPGRADE_POINTS) // N106: never below 0
             player.message("<col=571D07>Remaining Void Knight Commendation Points: ${player.attr[PEST_POINTS]}")
         }
     }

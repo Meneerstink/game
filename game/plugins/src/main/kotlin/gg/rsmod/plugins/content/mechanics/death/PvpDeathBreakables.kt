@@ -311,7 +311,7 @@ object PvpDeathBreakables {
         val refund = imbueRefund(item.id) ?: return
         val total = refund.points.toLong() * item.amount
         val attr = refund.currency.attr
-        victim.attr[attr] = ((victim.attr[attr] ?: 0).toLong() + total).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        gg.rsmod.game.model.attr.PointBalance.adjust(victim.attr, attr, total) // N106: stops at 2,147,483,647
         val name = runCatching { victim.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, item.id)?.name }.getOrNull() ?: "imbued item"
         victim.message("Your $name lost its imbue. You have been refunded ${"%,d".format(total)} ${if (total == 1L) refund.currency.singular else refund.currency.plural}.")
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "PvP imbue refund: ${victim.username} ${item.id}x${item.amount} -> $total ${refund.currency.name}" }

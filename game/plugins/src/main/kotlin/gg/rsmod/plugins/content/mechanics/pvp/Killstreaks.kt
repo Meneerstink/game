@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.*
 import java.io.File
@@ -95,13 +96,13 @@ object Killstreaks {
 
         val streakBonus = (newStreak / 5).coerceAtMost(10)
         val points = POINTS_PER_KILL + streakBonus
-        killer.attr[PK_POINTS_ATTR] = (killer.attr[PK_POINTS_ATTR] ?: 0) + points
-        killer.filterableMessage("You have been awarded $points PK points.")
+        // N106: both balances stop at 2,147,483,647 (PointBalance.add), never wrap.
+        PointBalance.add(killer.attr, PK_POINTS_ATTR, points)
+        killer.message("You have been awarded $points PK points.")
         // Deadman Points (store currency, earned only through Deadman/PvP kills). PROVISIONAL amount.
-        val deadman = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
         val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
-        killer.attr[deadman] = (killer.attr[deadman] ?: 0) + deadmanPoints
-        killer.filterableMessage("You have been awarded $deadmanPoints Deadman Points.")
+        PointBalance.add(killer.attr, gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr, deadmanPoints)
+        killer.message("You have been awarded $deadmanPoints Deadman Points.")
     }
 
     const val DEADMAN_POINTS_PER_KILL = 10

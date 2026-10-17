@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.shops
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.LOYALTY_POINTS
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.shop.Shop
@@ -130,7 +131,11 @@ open class PointCurrency(
 
         // Debit first, but refund every uninserted unit below. This is a transaction: a full
         // inventory must not consume points, and a negative client amount must never credit them.
-        p.attr[balanceAttr] = currencyCount - totalCost.toInt()
+        // N106: through the one balance helper (never below 0; the check above guarantees the points are there).
+        if (!PointBalance.take(p.attr, balanceAttr, totalCost.toInt())) {
+            p.message("You don't have enough $pluralCurrency.")
+            return
+        }
 
         val add = p.inventory.add(item = shopItem.item, amount = amount, assureFullInsertion = false)
         if (add.completed == 0) {
@@ -139,7 +144,7 @@ open class PointCurrency(
 
         if (add.getLeftOver() > 0) {
             val refund = add.getLeftOver() * currencyCost
-            p.attr[balanceAttr] = (p.attr[balanceAttr] ?: 0) + refund
+            PointBalance.add(p.attr, balanceAttr, refund)
         }
 
         if (add.completed > 0 && shopItem.amount != Int.MAX_VALUE) {

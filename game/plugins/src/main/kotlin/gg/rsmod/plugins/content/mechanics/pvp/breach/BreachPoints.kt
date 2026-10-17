@@ -47,6 +47,11 @@ object BreachPoints {
         player: Player,
         amount: Int,
     ) {
-        player.attr[BALANCE] = (balance(player).toLong() + amount).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        // N106: the one balance helper (stops at 2,147,483,647; a negative amount is an admin take, floored at 0).
+        if (amount >= 0) {
+            gg.rsmod.game.model.attr.PointBalance.add(player.attr, BALANCE, amount)
+        } else {
+            gg.rsmod.game.model.attr.PointBalance.adjust(player.attr, BALANCE, amount.toLong())
+        }
     }
 }

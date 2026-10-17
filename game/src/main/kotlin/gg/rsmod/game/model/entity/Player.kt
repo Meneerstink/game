@@ -1192,32 +1192,24 @@ abstract class Player(
     }
 
     /**
-     * Add loyalty points to this player
+     * Add loyalty points to this player; stops at 2,147,483,647 (N106, [PointBalance.add]). Returns the new balance.
      */
-    fun addLoyalty(amount: Int) {
-        attr[LOYALTY_POINTS] = (attr[LOYALTY_POINTS] ?: 0) + amount
-    }
+    fun addLoyalty(amount: Int): Int = PointBalance.add(attr, LOYALTY_POINTS, amount)
 
     /**
-     * Remove loyalty points from this player
+     * Remove loyalty points from this player; refused (false, balance unchanged) when the balance does not hold them (N106).
      */
-    fun subtractLoyalty(amount: Int) {
-        attr[LOYALTY_POINTS] = (attr[LOYALTY_POINTS] ?: 0) - amount
-    }
+    fun subtractLoyalty(amount: Int): Boolean = PointBalance.take(attr, LOYALTY_POINTS, amount)
 
     /**
-     * Add slayer points to this player
+     * Add slayer points to this player; stops at 2,147,483,647 (N106, [PointBalance.add]). Returns the new balance.
      */
-    fun addSlayerPoints(amount: Int) {
-        attr[SLAYER_POINTS] = (attr[SLAYER_POINTS] ?: 0) + amount
-    }
+    fun addSlayerPoints(amount: Int): Int = PointBalance.add(attr, SLAYER_POINTS, amount)
 
     /**
-     * Remove slayer points from this player
+     * Remove slayer points from this player; refused (false, balance unchanged) when the balance does not hold them (N106).
      */
-    fun subtractSlayerPoints(amount: Int) {
-        attr[SLAYER_POINTS] = (attr[SLAYER_POINTS] ?: 0) - amount
-    }
+    fun subtractSlayerPoints(amount: Int): Boolean = PointBalance.take(attr, SLAYER_POINTS, amount)
 
     /**
      * Get the current count of slayer points for this player

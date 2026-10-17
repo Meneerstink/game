@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.store
 
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachPoints
@@ -44,8 +45,7 @@ on_command("givepoints", Privilege.ADMIN_POWER) {
         player.message("${target.username} now has ${total.format()} Breach Points.")
         return@on_command
     }
-    val total = ((target.attr[currency!!.attr] ?: 0).toLong() + amount).coerceIn(0, Int.MAX_VALUE.toLong()).toInt()
-    target.attr[currency.attr] = total
+    val total = PointBalance.adjust(target.attr, currency!!.attr, amount.toLong())
     target.message("You have received ${amount.format()} ${currency.plural}. You now have ${total.format()}.")
     player.message("${target.username} now has ${total.format()} ${currency.plural}.")
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
@@ -59,8 +59,8 @@ on_command("maxpoints", Privilege.ADMIN_POWER) {
         player.message("Usage: maxpoints [player] (the player must be online).")
         return@on_command
     }
-    Currency.values().forEach { target.attr[it.attr] = Int.MAX_VALUE }
-    target.attr[BreachPoints.BALANCE] = Int.MAX_VALUE
+    Currency.values().forEach { PointBalance.set(target.attr, it.attr, PointBalance.MAX.toLong()) }
+    PointBalance.set(target.attr, BreachPoints.BALANCE, PointBalance.MAX.toLong())
     target.message("Donator, Deadman, Loyalty and Breach Points set to ${Int.MAX_VALUE.format()}.")
     if (target != player) player.message("${target.username} now has maximum points in every currency.")
     if (StoreUi.isOpen(target)) StoreUi.renderPreview(target)
@@ -87,7 +87,8 @@ on_login {
 }
 
 on_timer(LOYALTY_PLAYTIME_TIMER) {
-    player.attr[Currency.LOYALTY.attr] = (player.attr[Currency.LOYALTY.attr] ?: 0) + LOYALTY_PLAYTIME_POINTS
+    // N106: stops at 2,147,483,647, never wraps (the owner's maxpoints account crossed it after ~263 h online).
+    PointBalance.add(player.attr, Currency.LOYALTY.attr, LOYALTY_PLAYTIME_POINTS)
     // A reward is not a filterable effect line (lint #msg): it must reach the player with the Game filter on too.
     player.message("You have been awarded $LOYALTY_PLAYTIME_POINTS Loyalty Points for your time online.")
     player.timers[LOYALTY_PLAYTIME_TIMER] = LOYALTY_PLAYTIME_CYCLES

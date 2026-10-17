@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp.emblem
 
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
@@ -158,9 +159,9 @@ object DeadmanEmblem {
         EmblemLog.write("CASHOUT", player, "tierBefore" to held.tier, "tierAfter" to 0, "reward" to "${points(held.tier)} points", "reason" to "auto: $reason")
     }
 
+    /** N106: stops at 2,147,483,647 ([PointBalance.add]), never wraps. */
     private fun payPoints(player: Player, tier: Int) {
-        val attr = StoreCatalogue.Currency.DEADMAN.attr
-        player.attr[attr] = (player.attr[attr] ?: 0) + points(tier)
+        PointBalance.add(player.attr, StoreCatalogue.Currency.DEADMAN.attr, points(tier))
     }
 
     // ------------------------------------------------------------------ PvM

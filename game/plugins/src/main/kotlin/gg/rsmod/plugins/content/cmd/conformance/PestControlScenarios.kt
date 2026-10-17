@@ -344,7 +344,7 @@ object PestControlScenarios {
         }
 
         // 9. Rewards: Exchange on a Void Knight, the mace (250) and Attack experience (1 point).
-        a.attr[PEST_POINTS] = 251
+        gg.rsmod.game.model.attr.PointBalance.set(a.attr, PEST_POINTS, 251)
         a.inventory.removeAll()
         val knight: Npc? = run.world.npcs.firstOrNull { it.id == gg.rsmod.plugins.api.cfg.Npcs.VOID_KNIGHT_3788 }
         if (knight == null) {

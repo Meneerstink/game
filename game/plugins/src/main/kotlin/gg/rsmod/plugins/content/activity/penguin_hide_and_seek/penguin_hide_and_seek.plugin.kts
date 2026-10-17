@@ -39,7 +39,7 @@ PenguinDisguise.values().forEach { disguise ->
             player.filterableMessage("You've already spotted this penguin spy.")
         } else {
             player.attr[PenguinFoundMask] = mask or bit
-            player.attr[PenguinPoints] = player.attr.getOrDefault(PenguinPoints, 0) + 1
+            gg.rsmod.game.model.attr.PointBalance.add(player.attr, PenguinPoints, 1) // N106: one balance helper
             player.filterableMessage(
                 "You spy on the penguin. You now have ${player.attr.getOrDefault(PenguinPoints, 0)} Penguin Points.",
             )

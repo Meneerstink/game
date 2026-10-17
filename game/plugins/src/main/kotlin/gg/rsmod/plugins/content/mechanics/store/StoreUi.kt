@@ -584,7 +584,10 @@ object StoreUi : KLogging() {
             return
         }
         val cost = entry.price * bought
-        player.attr[currency.attr] = balance - cost
+        // N106: through the one balance helper; cost <= balance (affordableCount), so the take always succeeds here.
+        if (!gg.rsmod.game.model.attr.PointBalance.take(player.attr, currency.attr, cost)) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "78 Store: ${player.username} got $bought x ${entry.purchaseItem} but ${cost} ${currency.plural} could not be taken from $balance" }
+        }
         audit(player, entry, bought, cost)
         // Owner 2026-09-23: every shop (Loyalty, Deadman, Donator stores included) plays the shared purchase sound.
         player.playSound(gg.rsmod.plugins.content.mechanics.shops.ShopSounds.TRANSACTION)

@@ -334,8 +334,7 @@ object PestControlHandler {
                 player.attr[PEST_WINS] = (player.attr[PEST_WINS] ?: 0) + 1
                 player.playJingle(PC_JINGLE_WIN)
                 val points = game.tier.pointsPerWin
-                val total = (player.attr[PEST_POINTS] ?: 0) + points
-                player.attr[PEST_POINTS] = total
+                val total = gg.rsmod.game.model.attr.PointBalance.add(player.attr, PEST_POINTS, points) // N106: one balance helper
                 val coins = player.combatLevel * 10
                 val added = player.inventory.add(995, coins)
                 if (!added.hasSucceeded()) {
