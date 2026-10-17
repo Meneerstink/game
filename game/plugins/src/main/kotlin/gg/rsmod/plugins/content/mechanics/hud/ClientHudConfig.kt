@@ -191,6 +191,19 @@ object ClientHudConfig {
 
     val PLUGINS = listOf("boosts", "opponent", "grounditems", "timers", "zoom", "minimap", "loottracker", "chatbox", "questhelper", "stretchedmode")
 
+    /**
+     * A2 round 3 / N93 (owner 2026-10-17): RuneLite keeps Stretched Mode in the CLIENT's config, so logging in to an account -
+     * new or old - never switches it off or changes its scaling. Every login here pushed the account's values, defaults
+     * included: a new player who switched Stretched Mode on at the login screen (maximised window) had it switched OFF by his
+     * first login, and the game fell back to 765x503 in a black window under the intro's dark opening. A Stretched Mode setting
+     * the account never set is therefore not pushed; at login the client is asked to hand its own value over ("cfgadopt"), it
+     * answers with an ordinary `hud set`, and from then on the account remembers it. These keys are stored even at their
+     * default value, so "set to off" stays off and is told apart from "never set".
+     */
+    private const val CLIENT_OWNED = "stretchedmode."
+
+    private fun clientOwned(key: String) = key.startsWith(CLIENT_OWNED)
+
     private val VALUES = AttributeKey<String>(persistenceKey = "hud_settings")
     private val HIGHLIGHT = AttributeKey<String>(persistenceKey = "hud_highlight")
     private val HIDDEN = AttributeKey<String>(persistenceKey = "hud_hidden")
@@ -238,10 +251,16 @@ object ClientHudConfig {
         return applied
     }
 
-    /** Login: pending one-time changes first, then every setting to the client. */
+    /**
+     * Login: pending one-time changes first, then every setting to the client; the Stretched Mode settings this account never
+     * set are taken over from the client (see [CLIENT_OWNED]).
+     */
     fun login(player: Player) {
         applyOneTimeChanges(player)
         push(player)
+        val own = stored(player)
+        val adopt = SETTINGS.filter { clientOwned(it.key) && it.key !in own }.joinToString(",") { it.key }
+        if (adopt.isNotEmpty()) ClientHud.send(player, "cfgadopt|$adopt")
     }
 
     const val MAX_LIST = 60
@@ -251,7 +270,7 @@ object ClientHudConfig {
 
     fun setting(key: String): Setting? = BY_KEY[key]
 
-    /** The stored values that differ from the defaults (invalid or unknown ones are ignored). */
+    /** The stored values: those that differ from the defaults, and every Stretched Mode value set (invalid or unknown ones are ignored). */
     private fun stored(player: Player): MutableMap<String, String> {
         val map = LinkedHashMap<String, String>()
         for (part in (player.attr[VALUES] ?: "").split(';')) {
@@ -299,7 +318,7 @@ object ClientHudConfig {
             }
         if (!setting.valid(normalised)) return false
         val map = stored(player)
-        if (normalised == setting.default) map.remove(setting.key) else map[setting.key] = normalised
+        if (normalised == setting.default && !clientOwned(setting.key)) map.remove(setting.key) else map[setting.key] = normalised
         // OSRS Keybinding: a key opens one tab - binding it here unbinds the tab that had it.
         if (setting.key.startsWith("keybinding.") && setting.type == Type.ENUM && normalised != "NONE") {
             for ((tab, default) in KEYBIND_TABS) {
@@ -321,12 +340,16 @@ object ClientHudConfig {
             player.attr.remove(VALUES)
             player.attr.remove(HIGHLIGHT)
             player.attr.remove(HIDDEN)
+            // Everything back to the defaults: the Stretched Mode defaults are stored, so they are pushed (not taken from the client).
+            store(player, SETTINGS.filter { clientOwned(it.key) }.associate { it.key to it.default })
             return
         }
         val map = stored(player)
         // RuneLite's Reset ("reset this plugin's configuration") resets the settings, never switches the plugin off - tested
         // 2026-10-11: Reset turned Stretched Mode off.
         map.keys.removeIf { it.startsWith("$plugin.") && it != "$plugin.enabled" }
+        // Stretched Mode: the reset values are stored, so the push sends them instead of leaving the client's own.
+        SETTINGS.filter { clientOwned(it.key) && it.key.startsWith("$plugin.") && it.key != "$plugin.enabled" }.forEach { map[it.key] = it.default }
         store(player, map)
         if (plugin == "grounditems") {
             player.attr.remove(HIGHLIGHT)
@@ -378,10 +401,15 @@ object ClientHudConfig {
     /** Lower case; the separators (,;|=) and markup brackets (<>) removed; "*" stays as a wildcard. */
     fun normalise(name: String): String = name.lowercase().filterNot { it in ",;|=<>" }.trim().take(MAX_NAME)
 
-    /** Pushes every setting (defaults included) and both lists, in as few packets as fit. */
+    /**
+     * Pushes every setting (defaults included) and both lists, in as few packets as fit. Not the Stretched Mode settings the
+     * account never set: the client keeps its own ([CLIENT_OWNED]).
+     */
     fun push(player: Player) {
+        val own = stored(player)
         val line = StringBuilder()
         for (setting in SETTINGS) {
+            if (clientOwned(setting.key) && setting.key !in own) continue
             val entry = "${setting.key}=${get(player, setting.key)}"
             if (line.isNotEmpty() && line.length + entry.length + 1 > ClientHud.MAX_PAYLOAD) {
                 ClientHud.send(player, "cfg|$line")
@@ -395,10 +423,14 @@ object ClientHudConfig {
         pushList(player, "hide", list(player, true))
     }
 
-    /** Tours and tests: every setting at its default on the client, without touching what the account saved. */
+    /**
+     * Tours and tests: every setting at its default on the client, without touching what the account saved. Not Stretched
+     * Mode: the tour must not change the player's display, and the push at its end would not bring a client-owned value back.
+     */
     fun pushDefaults(player: Player) {
         val line = StringBuilder()
         for (setting in SETTINGS) {
+            if (clientOwned(setting.key)) continue
             val entry = "${setting.key}=${setting.default}"
             if (line.isNotEmpty() && line.length + entry.length + 1 > ClientHud.MAX_PAYLOAD) {
                 ClientHud.send(player, "cfg|$line")
