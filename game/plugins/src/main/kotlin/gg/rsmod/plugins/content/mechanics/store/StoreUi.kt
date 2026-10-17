@@ -571,7 +571,10 @@ object StoreUi : KLogging() {
                         player.message("You need a ${name(player, base)} in your inventory for this upgrade.")
                         0
                     } else {
-                        player.inventory[slot] = Item(entry.resultItems.first())
+                        // N82: the item handed in becomes the result with its data (an (r)'s recoil charges and recoil setting,
+                        // ROOT_CAUSES #133) - a fresh Item wiped up to 100,000 charges.
+                        val handedIn = player.inventory[slot]!!
+                        player.inventory[slot] = gg.rsmod.plugins.content.items.osrs.RingOfSuffering.exchanged(handedIn, entry.resultItems.first())
                         1
                     }
                 }
@@ -594,7 +597,8 @@ object StoreUi : KLogging() {
         renderPreview(player)
     }
 
-    private fun audit(
+    /** One line in `data/logs/store_purchases.log` (also Perdu's imbue, which sells the same catalogue entry). */
+    fun audit(
         player: Player,
         entry: Entry,
         amount: Int,

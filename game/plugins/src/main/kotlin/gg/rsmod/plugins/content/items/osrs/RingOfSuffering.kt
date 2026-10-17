@@ -41,6 +41,16 @@ object RingOfSuffering {
         }
     }
 
+    /**
+     * The same item as [newId] with everything stored on it (charges, recoil setting, any other item data) - an imbue or store upgrade
+     * of the item the player hands in, never a fresh item (A11/N82, ROOT_CAUSES #133; Darkan SoulwarsRewards.kt:150-151 changes the
+     * id of the SAME item).
+     */
+    fun exchanged(
+        item: Item,
+        newId: Int,
+    ): Item = Item(newId, item.amount).copyAttr(item)
+
     fun toggled(item: Item): Item =
         Item(item.id, item.amount).copyAttr(item).also {
             if (recoilEnabled(item)) it.attr[ItemAttribute.TOGGLED_OFF] = 1 else it.attr.remove(ItemAttribute.TOGGLED_OFF)
