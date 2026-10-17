@@ -1554,7 +1554,8 @@ object AncientCurses {
 
             if (multi) {
                 world.npcs.forEach {
-                    if (!it.isDead() && it.def.isAttackable() && it.combatDef.lifepoints != -1 &&
+                    // N24: the player's view of the npc (an awake strykewyrm is its transmog), like Combat.canEngage.
+                    if (!it.isDead() && gg.rsmod.plugins.content.combat.Combat.attackOptionDef(it).isAttackable() && it.combatDef.lifepoints != -1 &&
                         it.tile.isWithinRadius(origin, 2)
                     ) {
                         it.hit(damage = world.random(damage), source = player)

@@ -52,22 +52,41 @@ object Strykewyrms {
 object StrykewyrmCombatScript : CombatScript() {
     override val ids = Strykewyrms.WYRMS.map { it.mound }.toIntArray()
 
+    /**
+     * N24 (LC10 2026-10-16: the wyrm cast once and then stood still). The old loop `while (canEngage && isAttackDelayReady)` +
+     * `wait(attackSpeed)` woke one tick before its own ATTACK_DELAY ran out (breach trace: delayReady=false delay=1) and quit after
+     * every attack; only the player's next hit started it again. Ported Darkan's per-tick npc combat process instead
+     * (NPCCombat.java:48-61: each tick the delay counts down, a lost target ends the fight, an attack fires when the delay is 0)
+     * with Darkan's strykewyrm attack table (Strykewyrm.kt:69-86: getRandomInclusive(20) <= 7 and in melee range = melee,
+     * <= 19 = magic, 20 = burrow).
+     */
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         val wyrm = Strykewyrms.wyrmFor(npc) ?: return
-        var target = npc.getCombatTarget() ?: return
         val world = npc.world
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady() && npc.getTransmogId() != -1) {
+        var exit = "no-target"
+        while (true) {
+            val target = npc.getCombatTarget() ?: break
+            if (npc.getTransmogId() == -1) { exit = "asleep"; break }
+            if (!npc.canEngageCombat(target)) { exit = "cannot-engage"; break }
+            if (!npc.isAttackDelayReady()) {
+                it.wait(1)
+                continue
+            }
             npc.facePawn(target)
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
-            when (world.random(if (distance <= 1) 5 else 3)) {
-                0, 1 -> if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) cast(npc, wyrm, target)
-                2 -> if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) burrow(it, npc, wyrm, target)
-                else -> melee(npc, target)
+            val roll = world.random(20)
+            when {
+                roll <= 7 && distance <= 1 -> melee(npc, target)
+                roll <= 19 -> if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) cast(npc, wyrm, target)
+                else -> if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) burrow(it, npc, wyrm, target)
             }
             npc.postAttackLogic(target)
-            it.wait(npc.combatDef.attackSpeed)
-            target = npc.getCombatTarget() ?: break
+            it.wait(1)
+        }
+        // N24: why the wyrm stopped attacking - breach trace for the three mounds.
+        if (gg.rsmod.game.model.BreachTrace.watches(npc.id)) {
+            gg.rsmod.game.model.BreachTrace.log("combat.exit") { "npc=${npc.id}#${npc.index} script=strykewyrm reason=$exit cycle=${world.currentCycle}" }
         }
         npc.resetFacePawn()
         npc.removeCombatTarget()

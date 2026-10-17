@@ -107,6 +107,20 @@ object Combat {
     const val SELECTED_AUTOCAST_VARP = 108
 
     /**
+     * N24 (2026-10-17): the npc definition a PLAYER sees and attacks - the transmog's while [npc] shows one, else its own. The
+     * client builds the menu from the transmog (an awake strykewyrm 9465 shows "Attack"), but the attack gates read the base
+     * definition (the mound 9464, [Investigate] only), so every Attack click and auto-retaliate on an awake wyrm was refused.
+     * Donor: Void `NPC.def(player)` (engine NPC.kt:98-103, the "transform_id" definition) as used by Void `Target.attackable`
+     * (Target.kt:56-58) for a player attacker; npc attackers keep the base definition (Target.kt:59-63). A transmog of 0 or less
+     * is "none" (relaxed test mocks answer 0).
+     */
+    fun attackOptionDef(npc: Npc): gg.rsmod.game.fs.def.NpcDef {
+        val transmog = npc.getTransmogId()
+        if (transmog <= 0) return npc.def
+        return npc.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, transmog) ?: npc.def
+    }
+
+    /**
      * Ends [pawn]'s fight. The pawn also stops facing that target (owner 2026-09-25: after combat ended - a weapon switch left
      * without ammo, "already under attack", a lock - the player kept turning towards the npc). [keepFacing] is only for a
      * manual single cast, which ends the fight but still looks at the target it just cast on.
@@ -494,7 +508,9 @@ object Combat {
             // ordinary players need the option; public familiars are the explicit multi-combat
             // exception above, while npc attackers may still fight an owned familiar.
             val npcOnlyTarget = pawn !is Player && target.attr[NPC_ONLY_TARGET_ATTR] == true
-            if ((!target.def.isAttackable() && !publicFamiliar && !npcOnlyTarget && (pawn is Player || target.owner == null)) ||
+            // N24: a player is gated on the definition his client shows (the transmog's), an npc attacker on the base one.
+            val gateDef = if (pawn is Player) attackOptionDef(target) else target.def
+            if ((!gateDef.isAttackable() && !publicFamiliar && !npcOnlyTarget && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
                 // Owner 2026-09-24: players only ever see the game message, never internal npc ids.
                 (pawn as? Player)?.message("You can't attack this npc.")

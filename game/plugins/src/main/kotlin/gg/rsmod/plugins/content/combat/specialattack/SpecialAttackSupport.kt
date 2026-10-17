@@ -195,7 +195,9 @@ object SpecialAttackSupport {
     ): Boolean {
         if (other.isDead() || other.invisible || !other.tile.isMulti(attacker.world)) return false
         return when (other) {
-            is Npc -> other.isSpawned() && other.def.isAttackable() && other.combatDef.lifepoints != -1 && other.getCurrentLifepoints() > 0 &&
+            is Npc -> other.isSpawned() &&
+                // N24: a player's splash reads the definition his client shows (an awake strykewyrm's transmog), like Combat.canEngage.
+                (if (attacker is Player) gg.rsmod.plugins.content.combat.Combat.attackOptionDef(other) else other.def).isAttackable() && other.combatDef.lifepoints != -1 && other.getCurrentLifepoints() > 0 &&
                 // Deadman guards are no can_attack hook (Combat.canAttack refuses them for the primary target): a splash on a guard the
                 // attacker may not attack - unskulled, outside the guarded zone, any Wizguard - was hit all the same.
                 !(attacker is Player && CityGuards.isGuard(other) && !CityGuards.mayBeAttackedBy(other, attacker)) &&
