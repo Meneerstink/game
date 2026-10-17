@@ -20,6 +20,10 @@ import gg.rsmod.plugins.api.ext.calculateAndSetCombatLevel
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.content.areas.godwars.GodWars
+import gg.rsmod.plugins.content.drops.DropBoost
+import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot
+import gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows
 import gg.rsmod.plugins.content.drops.DropEntry
 import gg.rsmod.plugins.content.drops.DropTable
 import gg.rsmod.plugins.content.drops.DropTableFactory
@@ -55,11 +59,14 @@ import kotlin.math.sqrt
  *
  * N92 (bug-20261017-092934-anudd, 3168,3487 GE mansion, combat 138, all skills 99): "our rsps needs the same exp as dmm
  * anihilation". Owner VRAGEN 22 = A + "VERVANGEN": combat XP 10x (3-60) / 15x (61-80) / 15x (81-95) / 20x (96+), skilling
- * 10x, Prayer = combat (OSRS Wiki Deadman: Annihilation), Summoning = combat (VRAGEN 33 team default A), lamps and quest XP
- * get the rate too, the 2011 curve (x1 -> x5) and the time-played bonus are gone, a RED chat line once per rate change.
- * N100 (owner 10-17): drop rate 3x / 3x / 4x / 5x per bracket on the CHANCE of every non-guaranteed drop line, max 100 %,
- * quantities unchanged, guaranteed drops 1x; monster/boss kills only (VRAGEN 34 team default b = A, mechanism a = B
- * "every line its own chance"); the Drop Viewer shows the real chance.
+ * 10x, Prayer = combat (OSRS Wiki Deadman: Annihilation), Summoning = SKILLING rate, always 10x (owner 2026-10-18, VRAGEN 33 = B),
+ * lamps and quest XP get the rate too, the 2011 curve (x1 -> x5) and the time-played bonus are gone, a RED chat line once per
+ * rate change.
+ * N100 (owner 10-17, round 2 = owner 2026-10-18 VRAGEN 34): drop rate 3x / 3x / 4x / 5x per bracket on the CHANCE of every
+ * non-guaranteed drop line, max 100 %, quantities unchanged, guaranteed drops 1x; mechanism a = A "zeldzaam eerst" (the roll is
+ * still ONE pick per table: the rarest lines get rate x, the commons give way a little - DropBoost); sources b = A + B + C: monster
+ * and boss kills, the Barrows chest, the Godwars key pieces and breach monsters; NOT clue caskets, boxes, skilling, pickpocketing,
+ * stalls, bird nests; the Drop Viewer shows the real chance.
  *
  * Old cause: Player.addXp = xp * interpolate(1.0, 5.0, level) * bonus (the 2011 curve: ~x5.04 at 99 for every skill, x1 at
  * level 1); quest XP / quest lamps / the Wolf Whistle reward used modifiers = false (exact); the drop roll had no factor.
@@ -92,6 +99,11 @@ class AnnihilationRatesTests {
         assertEquals("Attack: 4 raw x 20 (Annihilation 96+ combat), not the 2011 curve x5.04", 80.0, attack, 1e-6)
         assertEquals("Hitpoints count as combat (wiki: ALL combat skills including Hitpoints)", 1.33 * 20, hitpoints, 1e-6)
         assertEquals("Woodcutting: 25 raw x 10 (skilling is 10x in every bracket)", 250.0, woodcutting, 1e-6)
+        val prayer = gain(owner, Skills.PRAYER, 10.0)
+        val summoning = gain(owner, Skills.SUMMONING, 10.0) // one pouch-sized gain
+        assertEquals("Prayer counts as combat: 10 raw x 20", 200.0, prayer, 1e-6)
+        assertEquals("Summoning is NOT combat for XP (owner 2026-10-18, VRAGEN 33 = B): 10 raw x 10 at combat 138, not x20", 100.0, summoning, 1e-6)
+        assertEquals("xpMultiplier(Summoning) tells the real gain", 10.0, owner.xpMultiplier(Skills.SUMMONING), 1e-9)
     }
 
     @Test
@@ -142,8 +154,8 @@ class AnnihilationRatesTests {
         val startXp = s.skills.getCurrentXp(Skills.SUMMONING)
         repeat(27) { s.inventory.add(gg.rsmod.plugins.api.cfg.Items.BRONZE_DAGGER) }
         assertTrue(SummoningKit.claim(s, NewPlayerConfig.DEFAULTS))
-        val rate = WIKI.first().combatXp // VRAGEN 33 team default: Summoning = combat rate
-        assertEquals("Wolf Whistle 276 XP x rate", startXp + 276.0 * rate, s.skills.getCurrentXp(Skills.SUMMONING), 1e-6)
+        val rate = WIKI.first().skillingXp // VRAGEN 33 = B: Summoning = skilling rate, 10x in every bracket
+        assertEquals("Wolf Whistle 276 XP x 10", startXp + 276.0 * rate, s.skills.getCurrentXp(Skills.SUMMONING), 1e-6)
         assertTrue("the whistle line prints the real gain: ${messages(s)}", messages(s).any { it.startsWith("Wolf Whistle:") && "2,760 Summoning XP" in it })
         // The kit line: "You receive Summoning supplies to train to level 55: 3 spirit wolf, 2 granite crab pouches."
         val line = messages(s).single { it.startsWith("You receive Summoning supplies") }
@@ -223,32 +235,50 @@ class AnnihilationRatesTests {
     // ------------------------------------------------------------------------------------------------------------- N100 drops
 
     @Test
-    fun `N100 kill drops - every non-guaranteed line gets its bracket chance, guaranteed and quantities stay, nested once`() {
+    fun `N100 kill drops - rarest first, one pick per table, guaranteed and quantities stay, nested once`() {
         DropTableFactory.register(TEST_TABLE, TEST_KILL_ID)
         val random = DropTableFactory.prng
         try {
             DropTableFactory.prng = SecureRandom.getInstance("SHA1PRNG").apply { setSeed(9200L) }
+            // Hand-derived per bracket (main table 128 slots: med helm 1, coins 32, nested table 4 (longsword 1/2 inside), 91 nothing;
+            // tertiary table 1/1000 whip). 3x fits in 100 % (111/128): every line exactly 3x. At 4x / 5x it does not fit: the rarest
+            // lines get the full factor, the coins (the common line) get what is left: 4x: 1 - 4/128 - 16/128, 5x: 1 - 5/128 - 20/128.
+            class Expect(val helm: Double, val coins: Double, val nested: Double, val whip: Double)
+            val expected =
+                mapOf(
+                    3.0 to Expect(3 / 128.0, 96 / 128.0, 12 / 128.0, 3 / 1000.0),
+                    4.0 to Expect(4 / 128.0, 1 - 4 / 128.0 - 16 / 128.0, 16 / 128.0, 4 / 1000.0),
+                    5.0 to Expect(5 / 128.0, 1 - 5 / 128.0 - 20 / 128.0, 20 / 128.0, 5 / 1000.0),
+                )
             for ((combat, k) in listOf(138 to 5.0, 3 to 3.0, 85 to 4.0, 70 to 3.0)) {
+                val e = expected.getValue(k)
                 val killer = player("n100k$combat", DROP_TILE)
                 setCombat(killer, combat)
                 val counts = HashMap<Int, Int>()
                 val amounts = HashMap<Int, MutableSet<Int>>()
+                var mainPicks = 0
                 repeat(KILLS) {
                     DropTableFactory.getDrop(world, killer, TEST_KILL_ID, DROP_TILE)
+                    var main = 0
                     while (true) {
                         val item = world.getGroundItem { it.tile == DROP_TILE } ?: break
                         counts.merge(item.item, 1, Int::plus)
                         amounts.getOrPut(item.item) { HashSet() } += item.amount
+                        if (item.item in MAIN_ITEMS) main++
                         world.remove(item)
                     }
+                    assertTrue("ONE pick from the main table per kill at ${k}x (owner: 'nog steeds 1 item per kill uit de hoofdtabel')", main <= 1)
+                    mainPicks += main
                 }
                 assertEquals("bones are guaranteed: exactly 1 per kill at ${k}x", KILLS, counts[BONES] ?: 0)
                 assertTrue("bones quantity 1", amounts.getValue(BONES) == setOf(1))
-                assertEquals("coins 32/128 x $k capped at 100%", min(1.0, k * 32 / 128) * KILLS, (counts[COINS] ?: 0).toDouble(), tolerance(min(1.0, k * 32 / 128)))
+                assertEquals("coins ${e.coins} at ${k}x", e.coins * KILLS, (counts[COINS] ?: 0).toDouble(), tolerance(e.coins))
                 assertTrue("coin stacks keep their 100-200 range: ${amounts[COINS]}", amounts.getValue(COINS).all { it in 100..200 })
-                assertEquals("med helm 1/128 x $k", k / 128 * KILLS, (counts[MED_HELM] ?: 0).toDouble(), tolerance(k / 128))
-                assertEquals("longsword through a nested table: (4/128 x $k) x 1/2, boosted once (never k*k)", k * 4 / 128 * 0.5 * KILLS, (counts[LONGSWORD] ?: 0).toDouble(), tolerance(k * 4 / 128 * 0.5))
-                assertEquals("tertiary whip 1/1000 x $k", k / 1000 * KILLS, (counts[WHIP] ?: 0).toDouble(), tolerance(k / 1000))
+                assertEquals("med helm ${e.helm} at ${k}x (rare lines get the full factor)", e.helm * KILLS, (counts[MED_HELM] ?: 0).toDouble(), tolerance(e.helm))
+                assertEquals("longsword through a nested table: ${e.nested} x 1/2, boosted once (never k*k)", e.nested * 0.5 * KILLS, (counts[LONGSWORD] ?: 0).toDouble(), tolerance(e.nested * 0.5))
+                assertEquals("tertiary whip ${e.whip} at ${k}x", e.whip * KILLS, (counts[WHIP] ?: 0).toDouble(), tolerance(e.whip))
+                val mainChance = e.helm + e.coins + e.nested * 0.5
+                assertEquals("main-table picks (helm + coins + longsword) follow the boosted chances", mainChance * KILLS, mainPicks.toDouble(), tolerance(mainChance))
             }
         } finally {
             DropTableFactory.prng = random
@@ -290,7 +320,7 @@ class AnnihilationRatesTests {
             for (npc in bulk.keys) {
                 val id = VIEWER_OFFSET + npc
                 val built = DropTableFactory.tables(viewer, id) ?: continue
-                val expected = expectedRows(built, k)
+                val expected = expectedRows(built, k, failures)
                 val shown = DropViewer.rows(viewer, id).associate { "${it.item}|${it.quantity}" to it.chance }
                 if (shown.keys != expected.keys) {
                     failures += "npc $npc at ${k}x: lines ${shown.keys} != ${expected.keys}"
@@ -304,12 +334,105 @@ class AnnihilationRatesTests {
         assertTrue("${failures.size} wrong viewer lines, first: ${failures.take(15).joinToString("\n")}", failures.isEmpty())
     }
 
+    @Test
+    fun `N100 Barrows chest - every roll stays one result, the rare lines get the bracket factor, the commons give way`() {
+        val armour = Barrows.REWARD_ARMOUR.values.flatMap { it.toList() }.toSet()
+        val loopTooth = setOf(gg.rsmod.plugins.api.cfg.Items.LOOP_HALF_OF_A_KEY, gg.rsmod.plugins.api.cfg.Items.TOOTH_HALF_OF_A_KEY)
+        val helm = gg.rsmod.plugins.api.cfg.Items.DRAGON_MED_HELM
+        // Six brothers + 1000 kill levels: potential 1012, seven rolls. Armour 1/(450-58*6) = 1/102 per roll, then the 1012-slot table:
+        // loop half 3, tooth half 3, dragon med helm 1 (the rest is coins and runes) - after the armour miss (101/102).
+        val armourBase = 1.0 / 102
+        val afterMiss = 101.0 / 102
+        val rolls = 7
+        val kills = 6_000
+        for (rate in listOf(1.0, 3.0, 4.0, 5.0)) {
+            val player = player("n100b${rate.toInt()}", DROP_TILE)
+            Barrows.Brother.values().forEach { player.attr[it.killedAttr] = true }
+            player.attr[Barrows.KILL_LEVELS] = 1000
+            var armourN = 0
+            var keysN = 0
+            var helmN = 0
+            var total = 0
+            repeat(kills) {
+                val items = Barrows.reward(player, rate)
+                assertEquals("seven rolls, ONE result each at ${rate}x", rolls, items.size)
+                total += items.size
+                items.forEach {
+                    when (it.id) {
+                        in armour -> armourN++
+                        in loopTooth -> keysN++
+                        helm -> helmN++
+                    }
+                }
+            }
+            assertEquals("armour piece at ${rate}x", rate * armourBase * total, armourN.toDouble(), tolerance2(total, rate * armourBase))
+            assertEquals("loop/tooth halves at ${rate}x (3+3 of 1012 after the armour miss)", rate * afterMiss * 6 / 1012 * total, keysN.toDouble(), tolerance2(total, rate * afterMiss * 6 / 1012))
+            assertEquals("dragon med helm at ${rate}x (1 of 1012)", rate * afterMiss / 1012 * total, helmN.toDouble(), tolerance2(total, rate * afterMiss / 1012))
+        }
+    }
+
+    @Test
+    fun `N100 Godwars Frozen key pieces - the hit window is rate times wider, capped, nothing above combat 134`() {
+        val followerId = (6203..6283).first { GodWars.frozenKeyPiece(it) != null && Npc(it, DROP_TILE, world).def.combatLevel in 1..GodWars.KEY_PIECE_MAX_COMBAT }
+        val zamorakFollower = Npc(followerId, DROP_TILE, world)
+        assertTrue("a Godwars follower the key piece applies to (combat ${zamorakFollower.def.combatLevel})", zamorakFollower.def.combatLevel <= GodWars.KEY_PIECE_MAX_COMBAT)
+        for ((combat, rate) in listOf(3 to 3.0, 70 to 3.0, 90 to 4.0, 138 to 5.0)) {
+            val killer = player("n100g$combat", DROP_TILE)
+            setCombat(killer, combat)
+            assertEquals("the killer's rate", rate, DropTableFactory.killRate(killer), 0.0)
+            // world.random(500) = 0..500 inclusive: 501 rolls, Darkan hits on 0..10 = 11 of them; at rate k the window is 11 k.
+            val hits = (0..GodWars.KEY_PIECE_ROLL_BOUND).count { GodWars.rollFrozenKeyPiece(zamorakFollower, it, DropTableFactory.killRate(killer)) != null }
+            assertEquals("rolls that give a Frozen key piece at ${rate}x", (rate * 11).toInt(), hits)
+        }
+        assertEquals("1x is Darkan's roll unchanged", 11, (0..GodWars.KEY_PIECE_ROLL_BOUND).count { GodWars.rollFrozenKeyPiece(zamorakFollower, it) != null })
+        assertEquals("a huge rate never exceeds the 501 rolls", 501, (0..GodWars.KEY_PIECE_ROLL_BOUND).count { GodWars.rollFrozenKeyPiece(zamorakFollower, it, 1000.0) != null })
+    }
+
+    @Test
+    fun `N100 breach monsters - the unique chances get the rate, the regular lines are served rarest first, one line per roll`() {
+        val megaRare = BreachLoot.MEGA_RARE.toSet()
+        for (rate in listOf(1.0, 3.0, 4.0, 5.0)) {
+            val chances = BreachLoot.regularChances(rate)
+            val total = BreachLoot.REGULAR.sumOf { it.weight }.toDouble()
+            val weights = BreachLoot.REGULAR.map { it.weight / total }
+            assertTrue("one pick per roll at ${rate}x: ${chances.sum()}", chances.sum() <= 1.0 + 1e-9)
+            chances.indices.forEach {
+                assertTrue("regular line $it above rate x at ${rate}x", chances[it] <= min(1.0, rate * weights[it]) + 1e-9)
+                assertTrue("regular line $it below half its chance at ${rate}x", chances[it] >= 0.5 * weights[it] - 1e-9)
+            }
+            // Exact, not statistical: a scripted Random answers the rare trigger (bound 9576) and the mega-rare chance (bound 92) with
+            // the value under test, every other roll with its highest value. The trigger window is 133 values at 1x -> 133 x rate;
+            // inside it 1 of 92 values is a mega rare at 1x -> rate of them.
+            fun scripted(trigger: Int, mega: Int) =
+                object : java.util.Random(0) {
+                    override fun nextInt(bound: Int): Int =
+                        when (bound) {
+                            BreachLoot.RARE_DENOMINATOR -> trigger
+                            BreachLoot.MEGA_RARE_CHANCE -> mega
+                            else -> bound - 1
+                        }
+
+                    override fun nextDouble(): Double = 0.9999
+                }
+            val plain = BreachLoot.roll(scripted(BreachLoot.RARE_DENOMINATOR - 1, 0), rate).size
+            val triggers = (0 until BreachLoot.RARE_DENOMINATOR).count { BreachLoot.roll(scripted(it, BreachLoot.MEGA_RARE_CHANCE - 1), rate).size == plain + 1 }
+            assertEquals("rare trigger values at ${rate}x (133 x rate of 9576)", (BreachLoot.RARE_TRIGGER * rate).toInt(), triggers)
+            val megas = (0 until BreachLoot.MEGA_RARE_CHANCE).count { m -> BreachLoot.roll(scripted(0, m), rate).any { it.item in megaRare } }
+            assertEquals("mega-rare values of the 92 at ${rate}x", rate.toInt(), megas)
+        }
+    }
+
     // ------------------------------------------------------------------------------------------------------------- helpers
 
-    /** The chance per (item|quantity) a kill gives at [k]: guaranteed 1, each top line min(1, k x base), nested lines once. */
+    /**
+     * The chance per (item|quantity) a kill gives at [k]: guaranteed 1, every top-level table's lines at the DropBoost chances (the
+     * test builds the slot shares itself), nested tables entered with that chance and rolled at 1x inside (the factor once).
+     * Also asserts the owner's rules on every top-level table: ONE pick (sum <= 100 %), no line above k x or below half its chance.
+     */
     private fun expectedRows(
         tables: List<DropTable>,
         k: Double,
+        broken: MutableList<String>,
     ): Map<String, Double> {
         val out = LinkedHashMap<String, Double>()
         fun add(
@@ -328,10 +451,21 @@ class AnnihilationRatesTests {
             if (entries.isEmpty()) return
             val denominator = maxOf(table.totalSlots, entries.last().index).toDouble()
             var previous = 0
-            for (entry in entries) {
-                val base = (entry.index - previous) / denominator
-                previous = entry.index
-                val chance = if (guaranteed) weight else if (top) min(1.0, k * base) else weight * base
+            val base =
+                DoubleArray(entries.size) { i ->
+                    val share = (entries[i].index - previous) / denominator
+                    previous = entries[i].index
+                    if (entries[i].drop is DropEntry.NothingDrop) 0.0 else share
+                }
+            val boosted = if (top && !guaranteed) DropBoost.chances(base, k) else base
+            if (top && !guaranteed) {
+                if (boosted.sum() > 1.0 + 1e-9) broken += "table ${table.name} at ${k}x adds up to ${boosted.sum()} (more than one pick)"
+                base.indices.forEach { i ->
+                    if (boosted[i] > min(1.0, k * base[i]) + 1e-9 || boosted[i] < 0.5 * base[i] - 1e-9) broken += "table ${table.name} at ${k}x line $i: ${base[i]} -> ${boosted[i]}"
+                }
+            }
+            for ((i, entry) in entries.withIndex()) {
+                val chance = if (guaranteed) weight else weight * boosted[i]
                 when (val drop = entry.drop) {
                     is DropEntry.ItemDrop -> add("${drop.item.id}|${drop.item.amount}", chance)
                     is DropEntry.ItemRangeDrop -> add("${drop.item.id}|${drop.quantityRange.first}-${drop.quantityRange.last}", chance)
@@ -346,6 +480,8 @@ class AnnihilationRatesTests {
     }
 
     private fun tolerance(p: Double): Double = 5 * sqrt(KILLS * p * (1 - p)) + 2
+
+    private fun tolerance2(n: Int, p: Double): Double = 5 * sqrt(n * p * (1 - p)) + 2
 
     private fun gain(
         p: Client,
@@ -460,8 +596,8 @@ class AnnihilationRatesTests {
                 Tier(96..138, 20.0, 10.0, 5.0),
             )
 
-        /** Prayer counts as combat (wiki); Summoning too (VRAGEN 33 team default A); Slayer is skilling. */
-        val COMBAT_SKILLS = setOf(Skills.ATTACK, Skills.DEFENCE, Skills.STRENGTH, Skills.CONSTITUTION, Skills.RANGED, Skills.PRAYER, Skills.MAGIC, Skills.SUMMONING)
+        /** Prayer counts as combat (wiki); Summoning does NOT - it gains the skilling rate (VRAGEN 33 = B); Slayer is skilling. */
+        val COMBAT_SKILLS = setOf(Skills.ATTACK, Skills.DEFENCE, Skills.STRENGTH, Skills.CONSTITUTION, Skills.RANGED, Skills.PRAYER, Skills.MAGIC)
 
         const val SKILL_COUNT = 25
 

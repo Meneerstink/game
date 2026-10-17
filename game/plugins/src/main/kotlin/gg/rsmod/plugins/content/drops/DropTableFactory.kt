@@ -124,13 +124,27 @@ object DropTableFactory {
     ): Double = if (type == DropTableType.KILL) gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.dropRate(player) else 1.0
 
     /**
-     * The chance of one non-guaranteed drop line with [base] chance at [rate] - the ONE formula the roll and the Drop Viewer
-     * read (owner 10-17: "KANS x3/x3/x4/x5 op elke drop (max 100%)"). At 1x a table is one pick, as before.
+     * The chance of every line of [table] for one roll at [rate] (N100, owner 2026-10-18 VRAGEN 34 a = A, "zeldzaam eerst"): the
+     * ONE function the roll ([boostedDrop]) and the Drop Viewer read. At 1x it is the plain slot share, as before; an explicit
+     * `nothing` line is 0 (the remainder of the roll is nothing). See [DropBoost] for the boost.
      */
-    fun lineChance(
-        base: Double,
+    fun lineChances(
+        table: DropTable,
         rate: Double,
-    ): Double = if (rate <= 1.0) base else minOf(1.0, base * rate)
+    ): DoubleArray {
+        val entries = table.entries
+        if (entries.isEmpty()) return DoubleArray(0)
+        val denominator = maxOf(table.totalSlots, entries.last().index).toDouble()
+        var previous = 0
+        val base =
+            DoubleArray(entries.size) { i ->
+                val entry = entries[i]
+                val share = (entry.index - previous) / denominator
+                previous = entry.index
+                if (entry.drop is DropEntry.NothingDrop) 0.0 else share
+            }
+        return DropBoost.chances(base, rate)
+    }
 
     /**
      * The built tables of [tableId] without rolling them (the Drop Viewer reads the chances from these), or null without a table.
@@ -308,33 +322,23 @@ object DropTableFactory {
     }
 
     /**
-     * N100, owner 10-17 (VRAGEN 34 a, team default B "elke drop apart"): at [rate] > 1 every line of the table is its own
-     * chance, [lineChance] (base x rate, at most 100 %), so a kill can give more than one item of a table; quantities are
-     * unchanged. A nested table is entered with that chance and then rolled at 1x, so its items get the factor exactly
-     * once (never rate x rate). Donor for the boosted roll: Void DropTable.roll(multiplier) (engine/.../drop/DropTable.kt:29-44,
-     * same seam: the factor sits in the roll, the caller passes it); the one-item clamp of Void is not used because the
-     * owner wants every line x rate.
+     * N100, owner 2026-10-18 (VRAGEN 34 a = A "zeldzaam eerst"): at [rate] > 1 the roll is still ONE pick from the table, but the
+     * chances are [lineChances] - the rarest lines get rate x their chance, the common ones give way a little ([DropBoost]).
+     * Quantities are unchanged. A nested table is entered with its boosted chance and then rolled at 1x, so its items get the
+     * factor exactly once (never rate x rate). Donor: Void DropTable.roll(multiplier) (engine/.../drop/DropTable.kt:29-44: the
+     * factor sits in the roll, the caller passes it; rarest-first order :46-49).
      */
     private fun DropEntry.TableDrop.boostedDrop(rate: Double): List<Item> {
-        val entries = table.entries
-        val denominator = maxOf(table.totalSlots, entries.last().index).toDouble()
-        val out = ArrayList<Item>()
-        var previous = 0
-        for (entry in entries) {
-            val base = (entry.index - previous) / denominator
-            previous = entry.index
-            val drop = entry.drop
-            if (drop is DropEntry.NothingDrop || base <= 0.0) continue
-            if (prng.nextDouble() >= lineChance(base, rate)) continue
-            when (drop) {
-                is DropEntry.ItemDrop -> out += drop.item
-                is DropEntry.MultiDrop -> out += drop.getDrop()
-                is DropEntry.TableDrop -> out += drop.getDrop()
-                is DropEntry.ItemRangeDrop -> out += drop.getDrop()
-                DropEntry.NothingDrop -> Unit
-            }
+        val chances = lineChances(table, rate)
+        val at = DropBoost.pick(chances, prng.nextDouble())
+        if (at < 0) return emptyList()
+        return when (val drop = table.entries[at].drop) {
+            is DropEntry.ItemDrop -> listOf(drop.item)
+            is DropEntry.MultiDrop -> drop.getDrop()
+            is DropEntry.TableDrop -> drop.getDrop()
+            is DropEntry.ItemRangeDrop -> listOf(drop.getDrop())
+            DropEntry.NothingDrop -> emptyList()
         }
-        return out
     }
 
     /**

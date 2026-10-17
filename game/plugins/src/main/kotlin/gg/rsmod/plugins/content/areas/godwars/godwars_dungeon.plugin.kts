@@ -15,6 +15,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.sendRunEnergy
 import gg.rsmod.plugins.content.areas.godwars.GodWars.God
 import gg.rsmod.plugins.content.combat.CombatConfigs
+import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.magic.teleportRefusal
@@ -133,7 +134,7 @@ on_npc_killed { killer, npc ->
     if (GodWars.inDungeon(npc.tile) || god == God.ZAROS) {
         GodWars.incrementKillCount(killer, god)
         // Darkan Player.sendGodwarsKill: the follower's Frozen key piece, on the ground for the killer.
-        GodWars.rollFrozenKeyPiece(npc, world.random(GodWars.KEY_PIECE_ROLL_BOUND))?.let { piece ->
+        GodWars.rollFrozenKeyPiece(npc, world.random(GodWars.KEY_PIECE_ROLL_BOUND), DropTableFactory.killRate(killer))?.let { piece ->
             world.spawn(GroundItem(piece, 1, Tile(npc.tile), killer))
         }
     }

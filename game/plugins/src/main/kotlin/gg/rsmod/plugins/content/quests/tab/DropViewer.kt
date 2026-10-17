@@ -80,13 +80,10 @@ object DropViewer {
     ) {
         val entries = table.entries
         if (entries.isEmpty()) return
-        val occupied = entries.last().index
-        val denominator = maxOf(table.totalSlots, occupied).toDouble()
-        var previous = 0
-        for (entry in entries) {
-            // The same chance the roll uses (DropTableFactory.lineChance); a nested table is rolled at 1x inside it.
-            val chance = if (guaranteed) weight else weight * DropTableFactory.lineChance((entry.index - previous) / denominator, rate)
-            previous = entry.index
+        // The same chances the roll uses (DropTableFactory.lineChances); a nested table is rolled at 1x inside it.
+        val chances = if (guaranteed) null else DropTableFactory.lineChances(table, rate)
+        for ((at, entry) in entries.withIndex()) {
+            val chance = if (guaranteed) weight else weight * chances!![at]
             when (val drop = entry.drop) {
                 is DropEntry.ItemDrop -> out += Row(drop.item.id, drop.item.amount.toString(), chance)
                 is DropEntry.ItemRangeDrop -> out += Row(drop.item.id, "${drop.quantityRange.first}-${drop.quantityRange.last}", chance)

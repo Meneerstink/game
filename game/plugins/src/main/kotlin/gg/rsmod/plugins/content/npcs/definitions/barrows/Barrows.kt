@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.npcs.definitions.barrows
 
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.collision.ObjectType
@@ -20,6 +21,8 @@ import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.content.mechanics.doors.VoidDoors
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.getCombatTarget
+import gg.rsmod.plugins.content.drops.DropBoost
+import gg.rsmod.plugins.content.drops.DropTableFactory
 import java.lang.ref.WeakReference
 
 /**
@@ -671,13 +674,27 @@ object Barrows {
     /** OSRS Wiki Chest (Barrows): one roll, plus one per brother killed, at most seven. */
     fun rollCount(brothersKilled: Int): Int = (1 + brothersKilled.coerceIn(0, 6)).coerceAtMost(7)
 
-    fun reward(player: Player): List<Item> {
+    /**
+     * The chest's reward for [player]. [rate] is his Annihilation drop rate (N100, owner 2026-10-18 VRAGEN 34 b = B: the Barrows
+     * chest gets the boost, "zeldzaam eerst"); 1.0 = the plain OSRS roll. Each roll stays ONE result: the armour roll and the
+     * table are laid out as lines of one distribution and [DropBoost] serves the rarest lines first ([chances]).
+     */
+    fun reward(player: Player, rate: Double = 1.0): List<Item> {
         val world = player.world
         val items = ArrayList<Item>()
         val killed = Brother.values().filter { isKilled(player, it) }
         val kills = killed.size
         val potential = rewardPotential(player.attr[KILL_LEVELS] ?: 0, kills)
+        val boosted = if (rate > 1.0) chances(potential, kills, rate) else null
         repeat(rollCount(kills)) {
+            if (boosted != null) {
+                when (val line = DropBoost.pick(boosted, world.randomDouble())) {
+                    -1 -> Unit
+                    0 -> items.add(Item(REWARD_ARMOUR.getValue(killed.random()).random()))
+                    else -> items.add(TABLE[line - 1].make(world))
+                }
+                return@repeat
+            }
             // Each roll first tries the Barrows equipment: P(N) = 1 / (450 - 58 N) with N brothers killed.
             if (kills > 0 && world.random(450 - 58 * kills - 1) == 0) {
                 val brother = killed.random()
@@ -689,28 +706,49 @@ object Barrows {
         return items
     }
 
+    /** One line of the rune/coin table: the roll values below [upTo] (above the previous line) give the item [make] builds. */
+    class TableLine(val upTo: Int, val make: (World) -> Item)
+
+    private val TABLE: List<TableLine> =
+        listOf(
+            TableLine(380) { w -> Item(Items.COINS_995, 2 + w.random(772)) },
+            TableLine(505) { w -> Item(Items.MIND_RUNE, 253 + w.random(83)) },
+            TableLine(630) { w -> Item(Items.CHAOS_RUNE, 112 + w.random(27)) },
+            TableLine(755) { w -> Item(Items.DEATH_RUNE, 70 + w.random(13)) },
+            TableLine(880) { w -> Item(Items.BLOOD_RUNE, 37 + w.random(6)) },
+            TableLine(1005) { w -> Item(Items.BOLT_RACK, 35 + w.random(5)) },
+            TableLine(1008) { Item(Items.LOOP_HALF_OF_A_KEY) },
+            TableLine(1011) { Item(Items.TOOTH_HALF_OF_A_KEY) },
+            TableLine(1012) { Item(Items.DRAGON_MED_HELM) },
+        )
+
+    /**
+     * The chance of every result of ONE chest roll at [rate]: index 0 = the armour piece (1 / (450 - 58 N) with N brothers killed,
+     * 0 without a brother), then the [TABLE] lines (their share of the 0 until [levels] roll, after the armour miss). The rest is
+     * "nothing" (no kill levels). The roll and the future Drop Viewer read this one function.
+     */
+    fun chances(levels: Int, kills: Int, rate: Double): DoubleArray {
+        val armour = if (kills > 0) 1.0 / (450 - 58 * kills) else 0.0
+        val base = DoubleArray(TABLE.size + 1)
+        base[0] = armour
+        var previous = 0
+        for ((i, line) in TABLE.withIndex()) {
+            val count = (minOf(line.upTo, levels) - previous).coerceAtLeast(0)
+            previous = line.upTo
+            if (levels > 0) base[i + 1] = (1.0 - armour) * count / levels
+        }
+        return DropBoost.chances(base, rate)
+    }
+
     private fun rollTable(player: Player, levels: Int): Item? {
         val world = player.world
-        run {
-            if (levels <= 0) return null
-            val roll = world.random(levels - 1)
-            val entry = when {
-                roll < 380 -> Item(Items.COINS_995, 2 + world.random(772))
-                roll < 505 -> Item(Items.MIND_RUNE, 253 + world.random(83))
-                roll < 630 -> Item(Items.CHAOS_RUNE, 112 + world.random(27))
-                roll < 755 -> Item(Items.DEATH_RUNE, 70 + world.random(13))
-                roll < 880 -> Item(Items.BLOOD_RUNE, 37 + world.random(6))
-                roll < 1005 -> Item(Items.BOLT_RACK, 35 + world.random(5))
-                roll < 1008 -> Item(Items.LOOP_HALF_OF_A_KEY)
-                roll < 1011 -> Item(Items.TOOTH_HALF_OF_A_KEY)
-                else -> Item(Items.DRAGON_MED_HELM)
-            }
-            return entry
-        }
+        if (levels <= 0) return null
+        val roll = world.random(levels - 1)
+        return (TABLE.firstOrNull { roll < it.upTo } ?: TABLE.last()).make(world)
     }
 
     fun loot(player: Player) {
-        val items = reward(player)
+        val items = reward(player, DropTableFactory.killRate(player))
         items.forEach { item ->
             val result = player.inventory.add(item)
             if (!result.hasSucceeded()) {

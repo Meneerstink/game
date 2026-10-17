@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
+import gg.rsmod.plugins.content.drops.DropTableFactory
 import com.google.gson.Gson
 import com.google.gson.JsonObject
 import gg.rsmod.game.fs.def.ItemDef
@@ -995,7 +996,7 @@ object DeadmanBreach {
         ledger.lootEligible().forEach { name ->
             val player = online[name.lowercase()] ?: return@forEach
             looted++
-            BreachLoot.roll(world.random).forEach drops@{ drop ->
+            BreachLoot.roll(world.random, DropTableFactory.killRate(player)).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
                 world.spawn(GroundItem(item, drop.amount, tile, player))

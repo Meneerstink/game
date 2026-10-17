@@ -341,9 +341,13 @@ object GodWars {
     const val KEY_PIECE_ROLL_BOUND = 500
     const val KEY_PIECE_ROLL_HIT = 10
 
-    /** The piece [npc] drops this kill, or null: Darkan's roll of 0..500 inclusive, a hit at 10 or lower. */
-    fun rollFrozenKeyPiece(npc: Npc, roll: Int): Int? {
-        if (npc.def.combatLevel > KEY_PIECE_MAX_COMBAT || roll > KEY_PIECE_ROLL_HIT) return null
+    /**
+     * The piece [npc] drops this kill, or null: Darkan's roll of 0..500 inclusive, a hit at 10 or lower. [rate] is the killer's
+     * Annihilation drop rate (N100, owner 2026-10-18 VRAGEN 34 b = B: the Godwars key pieces get the boost): the chance 11/501
+     * becomes rate x 11/501 (at most 100 %), the same hit window made [rate] times wider; 1.0 = Darkan's roll unchanged.
+     */
+    fun rollFrozenKeyPiece(npc: Npc, roll: Int, rate: Double = 1.0): Int? {
+        if (npc.def.combatLevel > KEY_PIECE_MAX_COMBAT || roll >= (KEY_PIECE_ROLL_HIT + 1) * rate) return null
         return frozenKeyPiece(npc.id)
     }
 

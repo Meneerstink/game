@@ -17,6 +17,7 @@ import gg.rsmod.plugins.api.ext.message
  *   81-95          | 15x       | 10x         | 4x
  *   96-126 (138)   | 20x       | 10x         | 5x
  * "Prayer is counted as a combat skill for the purpose of these multipliers"; "ALL Combat skills (including Hitpoints)";
+ * Summoning (not in OSRS) gains the skilling rate, always 10x (owner 2026-10-18, VRAGEN 33 = B);
  * "it is not possible to move back down a combat bracket". The pattern - one multiplier function every gain reads - is the
  * Void donor's (Donors/void/game/src/main/kotlin/content/entity/player/stat/BonusExperience.kt:67); no donor has the table.
  *
@@ -51,12 +52,11 @@ enum class AnnihilationTier(
             return if (reached.ordinal > byLevel.ordinal) reached else byLevel
         }
 
-        /** Whether [skill] gains the combat rate: the combat skills incl. Prayer and Hitpoints; Summoning per the config. */
-        fun isCombatSkill(skill: Int): Boolean =
-            when (skill) {
-                Skills.SUMMONING -> AnnihilationConfig.SUMMONING_IS_COMBAT
-                else -> Skills.isCombat(skill)
-            }
+        /**
+         * Whether [skill] gains the combat rate: the combat skills incl. Prayer and Hitpoints. Summoning counts for the combat level
+         * but gains the SKILLING rate, always 10x (owner 2026-10-18, VRAGEN 33 = B; OSRS has no Summoning).
+         */
+        fun isCombatSkill(skill: Int): Boolean = skill != Skills.SUMMONING && Skills.isCombat(skill)
 
         /** The factor [player] gains [skill] experience at (the one rate; Player.addXp reads it through XpRates). */
         fun xpRate(
@@ -107,12 +107,9 @@ enum class AnnihilationTier(
 
 /**
  * The Annihilation values the owner has not approved yet (DMM-PAKKET 0: "never block the build on a number"), in ONE place.
- * PROVISIONAL until N110 batch f / VRAGEN 33 are answered.
+ * PROVISIONAL until N110 batch f is answered (Summoning = skilling rate is decided: VRAGEN 33 = B, [AnnihilationTier.isCombatSkill]).
  */
 object AnnihilationConfig {
-    /** VRAGEN 33 (open): Summoning gains the combat rate (team default A) - it counts for the combat level like Prayer. */
-    const val SUMMONING_IS_COMBAT = true
-
     /** N110 f (open): OSRS caps every skill but Slayer at 3x in instanced areas; null = no cap until the owner says yes. */
     val INSTANCE_XP_CAP: Double? = null
 

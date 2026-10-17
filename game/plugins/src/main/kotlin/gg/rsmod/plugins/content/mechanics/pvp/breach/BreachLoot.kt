@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.drops.DropBoost
 import java.util.Random
 
 /**
@@ -164,17 +165,47 @@ object BreachLoot {
 
     private fun Line.drop(random: Random) = Drop(item, min + random.nextInt(max - min + 1), noted)
 
-    /** One eligible player's loot for one kill. */
-    fun roll(random: Random): List<Drop> {
+    private val regularChanceCache = java.util.concurrent.ConcurrentHashMap<Double, DoubleArray>()
+
+    /**
+     * The chance of each [REGULAR] line for one regular roll at [rate] (N100, owner 2026-10-18 VRAGEN 34 b = C: breach monsters get the
+     * drop-rate boost, "zeldzaam eerst"): the rarest lines x rate, the common ones give way a little, still ONE line per roll
+     * ([DropBoost]). At 1.0 it is the plain weight share. The roll and the future Drop Viewer read this.
+     */
+    fun regularChances(rate: Double): DoubleArray =
+        regularChanceCache.getOrPut(rate) {
+            val total = REGULAR.sumOf { it.weight }.toDouble()
+            DropBoost.chances(DoubleArray(REGULAR.size) { REGULAR[it].weight / total }, rate)
+        }
+
+    private fun pickRegular(
+        random: Random,
+        rate: Double,
+    ): Line {
+        if (rate <= 1.0) return pick(REGULAR, random)
+        val at = DropBoost.pick(regularChances(rate), random.nextDouble())
+        return REGULAR[if (at < 0) REGULAR.lastIndex else at]
+    }
+
+    /**
+     * One eligible player's loot for one kill. [rate] is the killer's Annihilation drop rate (N100, owner 2026-10-18): every
+     * "unique" chance of the roll - the rare trigger, the mega-rare chance inside it - is [rate] times as likely (at most 100 %),
+     * the regular lines are served rarest first ([regularChances]); the table entered through the boosted trigger is rolled at 1x
+     * inside (the factor reaches each item once). 1.0 = the OSRS roll unchanged.
+     */
+    fun roll(
+        random: Random,
+        rate: Double = 1.0,
+    ): List<Drop> {
         val out = ArrayList<Drop>()
-        if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER) {
-            if (random.nextInt(MEGA_RARE_CHANCE) == 0) {
+        if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
+            if (random.nextInt(MEGA_RARE_CHANCE) < rate) {
                 out += Drop(MEGA_RARE[random.nextInt(MEGA_RARE.size)], 1)
             } else {
                 out += pick(RARE, random).drop(random)
             }
         }
-        val regular = MutableList(REGULAR_ROLLS) { pick(REGULAR, random).drop(random) }
+        val regular = MutableList(REGULAR_ROLLS) { pickRegular(random, rate).drop(random) }
         // Owner 2026-09-29: no chitin (its only use, the blighted overload, is removed) - both regular drops stay.
         out += regular
         return out
