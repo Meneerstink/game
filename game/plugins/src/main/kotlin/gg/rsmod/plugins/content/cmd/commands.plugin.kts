@@ -411,42 +411,8 @@ on_command("damage", Privilege.ADMIN_POWER) {
     }
 }
 
-on_command("bonusxp", Privilege.ADMIN_POWER) {
-    val args = player.getCommandArgs()
-    tryWithUsage(
-        player,
-        args,
-        "Invalid format! Example of proper command <col=42C66C>::bonusxp list or add|remove playerName</col>",
-    ) { values ->
-        val action = values[0].lowercase()
-
-        when (action) {
-            "add" -> {
-                val targetName =
-                    values.getOrNull(1)?.lowercase()
-                        ?: return@tryWithUsage
-                world.playersWithBonusXP.add(targetName)
-                player.message("$targetName has been granted bonus XP access.")
-            }
-            "remove" -> {
-                val targetName =
-                    values.getOrNull(1)?.lowercase()
-                        ?: return@tryWithUsage
-                world.playersWithBonusXP.remove(targetName)
-                player.message("$targetName's bonus XP access has been revoked.")
-            }
-            "list" -> {
-                if (world.playersWithBonusXP.isEmpty()) {
-                    player.message("No players have been granted bonus XP access.")
-                } else {
-                    val playersList = world.playersWithBonusXP.joinToString(", ")
-                    player.message("Players with bonus XP access: $playersList")
-                }
-            }
-            else -> return@tryWithUsage
-        }
-    }
-}
+// N92 (owner 2026-10-17 "VERVANGEN"): the time-played bonus XP is gone, so the staff command ::bonusxp (grant/revoke/list "bonus XP
+// access") that only fed it is removed too (Keurmeester round 3: it promised something that no longer does anything).
 
 // Owner 2026-10-10 (staff tools): moderators go to and fetch players for reports.
 on_command("teleto", Privilege.MOD_POWER) {
@@ -511,7 +477,7 @@ on_command("rate") {
             var name = values[0].lowercase()
             when (name) {
                 "con" -> name = "construction"
-                "cons" -> name = "constitution"
+                "cons", "hp", "hitpoints" -> name = "constitution" // 667 calls Hitpoints "Constitution"
                 "craft" -> name = "crafting"
                 "hunt" -> name = "hunter"
                 "slay" -> name = "slayer"
@@ -521,16 +487,27 @@ on_command("rate") {
                 "herb" -> name = "herblore"
                 "rc" -> name = "runecrafting"
                 "fm" -> name = "firemaking"
+                "att" -> name = "attack"
+                "str" -> name = "strength"
+                "def" -> name = "defence"
+                "wc" -> name = "woodcutting"
+                "fletch" -> name = "fletching"
+                "smith" -> name = "smithing"
+                "mine" -> name = "mining"
+                "agil" -> name = "agility"
+                "thiev" -> name = "thieving"
+                "farm" -> name = "farming"
+                "summon" -> name = "summoning"
             }
             skill = Skills.getSkillForName(world, player.skills.maxSkills, name)
         }
-        if (skill != -1) {
-            val rate = player.interpolate(1.0, 5.0, player.skills.getMaxLevel(skill))
+        if (skill in 0 until player.skills.maxSkills) {
+            // N92: the rate shown is the rate Player.addXp gains at - the ONE factor (Annihilation tier through XpRates), never a
+            // second formula (the 2011 level curve x1 -> x5 that used to sit here was a leftover copy, Keurmeester round 3).
+            val rate = player.xpMultiplier(skill)
             player.message(
-                "Your experience rate for ${Skills.getSkillName(
-                    world,
-                    skill,
-                ).lowercase()} is ${String.format("%.2f", rate)}x",
+                "Your experience rate for ${Skills.getSkillName(world, skill).lowercase()} is " +
+                    "${gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.format(rate)}x",
                 type = ChatMessageType.CONSOLE,
             )
         } else {

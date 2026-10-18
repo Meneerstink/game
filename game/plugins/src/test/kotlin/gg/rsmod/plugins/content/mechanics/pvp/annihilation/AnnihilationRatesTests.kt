@@ -232,6 +232,136 @@ class AnnihilationRatesTests {
         assertEquals("the bonus-XP-gained counter (varp $BONUS_GAINED_VARP) does not grow", bonusBefore, p.getVarp(BONUS_GAINED_VARP))
     }
 
+    // ------------------------------------------------------------------------------------------------------------- N92 ::rate
+
+    /**
+     * Keurmeester round 3 (2026-10-18): the player command `::rate` (commands.yml rank player, "Show your current XP rate") still
+     * printed the 2011 curve - 5.04x for Attack and Summoning at combat 138 (real: 20x / 10x), 1.00x on a new account (real 10x) -
+     * because commands.plugin.kts:528 kept its own copy `player.interpolate(1.0, 5.0, level)` of the factor (ROOT_CAUSES 4). The test
+     * runs the REAL command through the plugin repository, like a player typing it in the console.
+     */
+    @Test
+    fun `N92 rate command - the real rate command prints the rate the player really gains, every skill by name and by number in every bracket`() {
+        val failures = mutableListOf<String>()
+        for (target in listOf(3, 60, 61, 80, 81, 95, 96, 126, 138)) {
+            val p = player("n92r$target", OWNER_TILE)
+            setCombat(p, target)
+            val tier = WIKI.single { target in it.levels }
+            for (skill in 0 until SKILL_COUNT) {
+                val expected = if (skill in COMBAT_SKILLS) tier.combatXp else tier.skillingXp
+                val name = Skills.getSkillName(world, skill).lowercase()
+                // The command first, then the gain: both read the same tier (a gain can level the player up and move the tier).
+                val answers = listOf(name, skill.toString()).filter { it.isNotBlank() }.map { it to rate(p, it).singleOrNull() }
+                val real = gain(p, skill, 10.0) / 10.0
+                if (abs(real - expected) > 1e-9) failures += "combat $target $name: the engine gains ${real}x, the wiki says ${expected}x"
+                for ((argument, line) in answers) {
+                    val match = line?.let { RATE_LINE.matchEntire(it) }
+                    if (match == null) {
+                        failures += "combat $target 'rate $argument': no rate line, got $line"
+                    } else {
+                        if (match.groupValues[1] != name) failures += "combat $target 'rate $argument': names the skill '${match.groupValues[1]}', not '$name'"
+                        val shown = match.groupValues[2].toDouble()
+                        if (abs(shown - real) > 1e-9) failures += "combat $target 'rate $argument': shows ${shown}x but the player gains ${real}x ($line)"
+                    }
+                }
+            }
+        }
+        assertTrue(failures.take(40).joinToString("\n") + (if (failures.size > 40) "\n... ${failures.size} in total" else ""), failures.isEmpty())
+    }
+
+    @Test
+    fun `N92 rate command - the owner's 138 account, a new account and the tier rise (never down)`() {
+        val owner = player("n92rowner", OWNER_TILE)
+        for (skill in 0 until SKILL_COUNT) owner.skills.setBaseXp(skill, OWNER_XP)
+        owner.calculateAndSetCombatLevel()
+        assertEquals(138, owner.combatLevel)
+        // Keurmeester round 3, VPS teamtest1 (combat 138, console, key `): 'rate attack' showed 5.04x, 'rate summoning' 5.04x.
+        assertEquals("rate attack at 138", "Your experience rate for attack is 20x", rate(owner, "attack").single())
+        assertEquals("rate summoning at 138 (VRAGEN 33 = B: skilling rate)", "Your experience rate for summoning is 10x", rate(owner, "summoning").single())
+        assertEquals("rate prayer at 138 (Prayer = combat)", "Your experience rate for prayer is 20x", rate(owner, "prayer").single())
+        assertEquals("rate woodcutting at 138", "Your experience rate for woodcutting is 10x", rate(owner, "woodcutting").single())
+        assertEquals("rate 0 at 138", "Your experience rate for attack is 20x", rate(owner, "0").single())
+
+        // New account (VPS vpsfresh9331, combat 3): 'rate attack' showed 1.00x.
+        val fresh = player("n92rfresh", OWNER_TILE)
+        setCombat(fresh, 3)
+        assertEquals("rate attack at combat 3", "Your experience rate for attack is 10x", rate(fresh, "attack").single())
+        assertEquals("rate woodcutting at combat 3", "Your experience rate for woodcutting is 10x", rate(fresh, "woodcutting").single())
+
+        // The command follows the tier the red line announces: 15x from combat 61, and a lowered level never lowers it.
+        val climber = player("n92rclimb", OWNER_TILE)
+        val (others, attack) = crossing(61)
+        setLevels(climber, others, attack)
+        login(climber)
+        assertEquals("rate attack at combat 60", "Your experience rate for attack is 10x", rate(climber, "attack").single())
+        levelUp(climber, Skills.ATTACK, WIKI.first())
+        assertEquals(61, climber.combatLevel)
+        assertEquals("rate attack at combat 61", "Your experience rate for attack is 15x", rate(climber, "attack").single())
+        assertEquals("rate woodcutting at combat 61", "Your experience rate for woodcutting is 10x", rate(climber, "woodcutting").single())
+        login(climber)
+        assertEquals("rate attack after a relog", "Your experience rate for attack is 15x", rate(climber, "attack").single())
+        climber.skills.setBaseLevel(Skills.ATTACK, 1)
+        climber.calculateAndSetCombatLevel()
+        assertTrue("precondition: combat lowered to ${climber.combatLevel}", climber.combatLevel < 61)
+        assertEquals("rate attack after a lowered level (never down)", "Your experience rate for attack is 15x", rate(climber, "attack").single())
+    }
+
+    @Test
+    fun `N92 rate command - skill aliases, unknown names and numbers outside the skill list never print a made-up rate`() {
+        val p = player("n92ralias", OWNER_TILE)
+        setCombat(p, 96)
+        val aliases =
+            mapOf(
+                "hp" to Skills.CONSTITUTION, "hitpoints" to Skills.CONSTITUTION, "cons" to Skills.CONSTITUTION, "att" to Skills.ATTACK,
+                "str" to Skills.STRENGTH, "def" to Skills.DEFENCE, "mage" to Skills.MAGIC, "pray" to Skills.PRAYER, "con" to Skills.CONSTRUCTION,
+                "craft" to Skills.CRAFTING, "hunt" to Skills.HUNTER, "slay" to Skills.SLAYER, "fish" to Skills.FISHING, "herb" to Skills.HERBLORE,
+                "rc" to Skills.RUNECRAFTING, "fm" to Skills.FIREMAKING, "wc" to Skills.WOODCUTTING, "fletch" to Skills.FLETCHING,
+                "smith" to Skills.SMITHING, "mine" to Skills.MINING, "agil" to Skills.AGILITY, "thiev" to Skills.THIEVING, "farm" to Skills.FARMING,
+                "summon" to Skills.SUMMONING,
+            )
+        val failures = mutableListOf<String>()
+        aliases.forEach { (alias, skill) ->
+            val expected = "Your experience rate for ${Skills.getSkillName(world, skill).lowercase()} is ${fmt(p.xpMultiplier(skill))}x"
+            val got = rate(p, alias).singleOrNull()
+            if (got != expected) failures += "'rate $alias': expected '$expected', got '$got'"
+        }
+        assertTrue(failures.joinToString("\n"), failures.isEmpty())
+        assertEquals("rate HITPOINTS (capitals) is the combat rate", "Your experience rate for ${Skills.getSkillName(world, Skills.CONSTITUTION).lowercase()} is 20x", rate(p, "HITPOINTS").single())
+
+        for (bad in listOf("25", "99", "-2", "-1", "2147483648", "attackk", "xp", "0x1")) {
+            val lines = rate(p, bad)
+            assertEquals("'rate $bad' answers with one line: $lines", 1, lines.size)
+            assertEquals("'rate $bad' says the skill is unknown, no rate", "Could not find skill with identifier: $bad", lines.single())
+        }
+        // No argument: the usage line (the command needs a skill).
+        val usage = rate(p)
+        assertEquals("'rate' without a skill: $usage", 1, usage.size)
+        assertTrue("usage line: $usage", usage.single().startsWith("Invalid format! Example of proper command"))
+    }
+
+    @Test
+    fun `N92 class - no command or engine copy of the 2011 level curve call is left`() {
+        // The generic Player.interpolate helper stays (brawling gloves charges use it); what must be gone is the x1 -> x5 XP curve call.
+        val curve = Regex("""interpolate\(\s*1\.0\s*,\s*5\.0""")
+        val hits =
+            listOf(File("src/main/kotlin"), File("../src/main/kotlin")).flatMap { root ->
+                root.walkTopDown()
+                    .filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) }
+                    .flatMap { f -> f.readLines().mapIndexedNotNull { i, line -> if (curve.containsMatchIn(line)) "${f.name}:${i + 1}: ${line.trim()}" else null } }
+                    .toList()
+            }
+        assertTrue("the 2011 level curve (x1 -> x5) is still computed somewhere - the one factor is player.xpMultiplier:\n${hits.joinToString("\n")}", hits.isEmpty())
+    }
+
+    @Test
+    fun `N92 bonus XP command - the staff command that granted a bonus XP access which no longer does anything is gone`() {
+        // Keurmeester round 3 (minor): ::bonusxp granted a 'bonus XP access' that no longer does anything (owner "VERVANGEN": the time-played
+        // bonus XP is gone) - the command is removed, in the plugins and in the staff command list.
+        assertTrue("::bonusxp must not be bound any more", "bonusxp" !in world.plugins.allCommands().keys)
+        val yml = File("../../data/cfg/commands.yml").readText()
+        assertTrue("data/cfg/commands.yml still lists bonusxp", !Regex("""(?m)^- name:\s*bonusxp\s*$""").containsMatchIn(yml))
+    }
+
     // ------------------------------------------------------------------------------------------------------------- N100 drops
 
     @Test
@@ -566,6 +696,16 @@ class AnnihilationRatesTests {
 
     private fun rateLines(p: Client) = messages(p).filter { "XP rate is now" in it }
 
+    /** Types `::rate <args>` as a player (the real command through the plugin repository); returns the lines it answered with. */
+    private fun rate(
+        p: Client,
+        vararg args: String,
+    ): List<String> {
+        val before = messages(p).size
+        assertTrue("the rate command is bound for every player", world.plugins.executeCommand(p, "rate", args.toList().toTypedArray().takeIf { it.isNotEmpty() }))
+        return messages(p).drop(before)
+    }
+
     private fun messages(p: Client) = written.getValue(p).filterIsInstance<MessageGameMessage>().map { it.message }
 
     private fun fmt(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
@@ -606,6 +746,9 @@ class AnnihilationRatesTests {
         val COMBAT_SKILLS = setOf(Skills.ATTACK, Skills.DEFENCE, Skills.STRENGTH, Skills.CONSTITUTION, Skills.RANGED, Skills.PRAYER, Skills.MAGIC)
 
         const val SKILL_COUNT = 25
+
+        /** The answer of `::rate <skill>`: "Your experience rate for attack is 20x" (the red line writes the same "20x"). */
+        val RATE_LINE = Regex("""Your experience rate for (.*) is ([0-9.]+)x""")
 
         /** bonus_experience.plugin.kts: orb on/off, minutes played, bonus XP gained. */
         const val BONUS_ENABLED_VARBIT = 7232
@@ -651,6 +794,7 @@ class AnnihilationRatesTests {
                 "gg.rsmod.plugins.content.skills.Level_up_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/skills/level_up.plugin.kts",
                 "gg.rsmod.plugins.content.mechanics.pvp.annihilation.Annihilation_tier_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/annihilation/annihilation_tier.plugin.kts",
                 "gg.rsmod.plugins.content.mechanics.bonusexperience.Bonus_experience_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/mechanics/bonusexperience/bonus_experience.plugin.kts",
+                "gg.rsmod.plugins.content.cmd.Commands_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/cmd/commands.plugin.kts",
             )
 
         val world: World by lazy {

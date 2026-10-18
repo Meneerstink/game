@@ -267,11 +267,6 @@ class World(
     var rebootTimer = -1
 
     /**
-     * Players with Bonus XP
-     */
-    val playersWithBonusXP = mutableSetOf<String>()
-
-    /**
      * Message count used for creating unique IDs for private messages.
      * Starts at a random value between 0 and 65535.
      */

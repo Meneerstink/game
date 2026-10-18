@@ -96,11 +96,6 @@
   usage: "::bank"
   description: "Open your bank anywhere."
   example: "::bank"
-- name: bonusxp
-  rank: admin
-  usage: "::bonusxp <list|add|remove> [player]"
-  description: "Grant, revoke or list bonus XP access for players."
-  example: "::bonusxp add anudd"
 - name: breach
   rank: admin
   usage: "::breach [local|region|<number>|<name>]"
