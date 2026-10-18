@@ -319,26 +319,13 @@ object StoreCatalogue {
             Items.RING_OF_SUFFERING_R to Items.RING_OF_SUFFERING_RI)
             .forEach { (base, imbued) -> list += upgradeEntry(m, base, imbued, 600, "Imbue services") }
         list += itemEntry(m, Items.RUNE_POUCH, 500, "Utility")
-        // Owner 2026-09-30: the OSRS Deadman Trinket of fairies (remote fairy ring / spirit tree travel, trinket_of_fairies.plugin.kts).
-        // PROVISIONAL price: OSRS only drops it in breaches, so there is no source price.
-        list += itemEntry(m, Items.TRINKET_OF_FAIRIES, 500, "Utility")
+        // Owner 2026-10-17 (N101): the Trinket of fairies left the shop too (chest and breach loot only).
         // The Divine rune pouch is made by the player: Rune pouch + Thread of Elidinis + needle (rune_pouch.plugin.kts).
         list += itemEntry(m, Items.THREAD_OF_ELIDINIS, 500, "Utility")
         list += upgradeEntry(m, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_T, 400, "Defenders")
         list += upgradeEntry(m, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_T, 250, "Defenders")
-        // PvP gear (owner page 2026-09-29): the revision-667 PvP armour and weapons with their normal degrade/death rules.
-        listOf(Items.VESTAS_CHAINBODY, Items.VESTAS_PLATESKIRT, Items.VESTAS_LONGSWORD, Items.VESTAS_SPEAR,
-            Items.STATIUSS_FULL_HELM, Items.STATIUSS_PLATEBODY, Items.STATIUSS_PLATELEGS, Items.STATIUSS_WARHAMMER,
-            Items.MORRIGANS_COIF, Items.MORRIGANS_LEATHER_BODY, Items.MORRIGANS_LEATHER_CHAPS, Items.MORRIGANS_JAVELIN, Items.MORRIGANS_THROWING_AXE,
-            Items.ZURIELS_HOOD, Items.ZURIELS_ROBE_TOP, Items.ZURIELS_ROBE_BOTTOM, Items.ZURIELS_STAFF)
-            // "PvP gear", not "PvP armour": the list holds the weapons too (owner 2026-10-10 store check: the javelin read "PvP armour").
-            .forEach { list += itemEntry(m, it, 1_500, "PvP gear") }
-        listOf(Items.ELDER_CHAOS_HOOD, Items.ELDER_CHAOS_TOP, Items.ELDER_CHAOS_ROBE)
-            .forEach { list += itemEntry(m, it, 300, "PvP equipment") }
-        list += itemEntry(m, Items.HEAVY_BALLISTA, 1_000, "PvP equipment")
-        // The Voidwaker is assembled by the player from the three parts (voidwaker_assembly.plugin.kts).
-        listOf(Items.VOIDWAKER_BLADE, Items.VOIDWAKER_GEM, Items.VOIDWAKER_HILT)
-            .forEach { list += itemEntry(m, it, 2_500, "Voidwaker parts") }
+        // Owner 2026-10-17 (N101): the 17 Ancient Warriors pieces, Elder chaos, Heavy ballista and the Voidwaker parts left the shop - they
+        // come only from the Deadman's chest and breach monsters (pvp/chest/DeadmanChestLoot.kt).
 
         // ---- Loyalty Shop: high-end rewards, prestige cosmetics, pets (plus the former Xuan "Loyalty Rewards" stock) ----
         listOf(Items.WARD_UPGRADE_KIT to 40_000, Items.MENAPHITE_ORNAMENT_KIT to 40_000, Items.MASORI_CRAFTING_KIT to 60_000,

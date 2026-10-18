@@ -25,8 +25,10 @@ class StorePreviewTests {
 
     @Test
     fun `every store pet except the pet rock and the quest-only baby icefiend has an npc to show`() {
-        val osrsPets = StorePets.entries(File("../../" + Pets.TABLE_PATH.removePrefix("./")), File("../../" + Pets.TIERS_PATH.removePrefix("./")))
-        val shownAsPets = StoreCatalogue.ENTRIES.filter { it.category == "Pets" }.map { it.purchaseItem } + osrsPets.map { it.purchaseItem }
+        // N101: the OSRS pets are Deadman chest rewards now (no shop entry); the preview still needs an npc for each of them.
+        Pets.load(File("../../" + Pets.TABLE_PATH.removePrefix("./")), File("../../" + Pets.TIERS_PATH.removePrefix("./")))
+        val osrsPets = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets().map { it.second }
+        val shownAsPets = StoreCatalogue.ENTRIES.filter { it.category == "Pets" }.map { it.purchaseItem } + osrsPets
         assertTrue(osrsPets.isNotEmpty(), "OSRS pet stock")
         val withoutNpc = shownAsPets.filter { it !in rs667 && it !in osrs && it != Items.PET_ROCK && it != Items.BABY_ICEFIEND }
         assertEquals(emptyList(), withoutNpc, "store pets without an npc preview")

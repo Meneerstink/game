@@ -176,6 +176,11 @@
   usage: "::changeobj <objectId> <x> <z> <rotation> [newRotation] [newX] [newZ] [newObjectId]"
   description: "Dev tool: change an object's rotation, position or id."
   example: "::changeobj 1530 3093 3488 0 1"
+- name: chest
+  rank: admin
+  usage: "::chest [spawn <spot>|here|list|close]"
+  description: "Deadman's chest: spawn the timed chest at a random or chosen spot (or on your tile), list the spots, or remove every chest."
+  example: "::chest here"
 - name: clear
   rank: admin
   usage: "::clear <slots>"

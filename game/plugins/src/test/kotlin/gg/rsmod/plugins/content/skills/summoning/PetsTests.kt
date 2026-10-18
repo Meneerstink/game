@@ -100,7 +100,7 @@ class PetsTests {
     }
 
     @Test
-    fun `tier 1 is sold for Donator, tier 2 for Deadman, tier 3 for Loyalty Points, boss-drop pets never`() {
+    fun `N101 - the sold pets (tier 1 Donator, tier 2 Deadman, tier 3 Loyalty) moved into the Deadman chest, boss-drop pets never`() {
         val stock = StorePets.stock(Pets.variants, Pets.infos.values.toList())
         val dropOnly = Pets.infos.values.filter { it.dropOnly }.map { it.pet }.toSet()
         assertTrue(stock.none { it.first in dropOnly })
@@ -109,13 +109,8 @@ class PetsTests {
             assertEquals(Pets.baseItem(pet), item, pet)
         }
         assertEquals(Pets.infos.size - dropOnly.size, stock.size)
-        val entries = StorePets.entries(TABLE, TIERS)
-        assertEquals(stock.size, entries.size)
-        val dropOnlyItems = StorePets.dropOnlyItems(TABLE, TIERS)
-        assertTrue(entries.none { it.purchaseItem in dropOnlyItems })
-        assertTrue(entries.all { it.price > 0 && it.category == StorePets.CATEGORY })
-        // Not sold elsewhere already.
-        val others = StoreCatalogue.ENTRIES.filter { it.category != StorePets.CATEGORY }.map { it.purchaseItem }.toSet()
-        assertTrue(entries.none { it.purchaseItem in others })
+        // Owner 2026-10-17: every one of them is a Deadman chest reward and no shop sells it any more.
+        assertEquals(stock.map { it.first to it.third }, gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets())
+        assertEquals(emptyList(), StorePets.entries(TABLE, TIERS))
     }
 }

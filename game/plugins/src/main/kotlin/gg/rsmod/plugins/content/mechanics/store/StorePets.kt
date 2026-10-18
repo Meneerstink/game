@@ -45,16 +45,13 @@ object StorePets {
         return Pets.parseTable(tableFile.readLines()).filter { it.pet in dropOnly }.map { it.item }.toSet()
     }
 
+    /**
+     * Owner 2026-10-17 (N101): every sold OSRS pet moved into the Deadman's chest (DeadmanChestLoot.pets, derived from [stock]) and
+     * leaves EVERY shop. The stores sell no OSRS pet any more; players keep the pets they own.
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun entries(
         tableFile: File = File(Pets.TABLE_PATH),
         tiersFile: File = File(Pets.TIERS_PATH),
-    ): List<StoreCatalogue.Entry> {
-        if (!tableFile.exists() || !tiersFile.exists()) return emptyList()
-        return stock(Pets.parseTable(tableFile.readLines()), Pets.parseTiers(tiersFile.readLines())).map { (_, shop, item) ->
-            StoreCatalogue.itemEntry(
-                shop, item, PRICES.getValue(shop), CATEGORY,
-                tier = if (shop == StoreCatalogue.Shop.DONATOR) StoreCatalogue.Tier.PRESTIGE else StoreCatalogue.Tier.NONE,
-            )
-        }
-    }
+    ): List<StoreCatalogue.Entry> = emptyList()
 }

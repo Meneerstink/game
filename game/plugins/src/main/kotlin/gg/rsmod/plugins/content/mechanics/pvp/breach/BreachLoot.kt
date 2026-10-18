@@ -2,6 +2,8 @@ package gg.rsmod.plugins.content.mechanics.pvp.breach
 
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.drops.DropBoost
+import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestConfig
+import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot
 import java.util.Random
 
 /**
@@ -67,9 +69,12 @@ object BreachLoot {
             Line(Items.VESTAS_LONGSWORD, 1, 1, 3),
         )
 
-    /** The trinket items imported earlier; they must never drop (owner exclusion). */
+    /**
+     * The trinket items imported earlier; they must never drop (owner exclusion 2026-09-19). Owner 2026-10-17 (N101) lifted it for the
+     * Trinket of fairies only: it is part of the chest list, which breach monsters roll on top of their own table ([roll]).
+     */
     val EXCLUDED_TRINKETS =
-        setOf(ItemIds.TRINKET_OF_FAIRIES, ItemIds.TRINKET_OF_AVARICE, ItemIds.TRINKET_OF_UNDEAD, ItemIds.TRINKET_OF_FORTUITY_INACTIVE)
+        setOf(ItemIds.TRINKET_OF_AVARICE, ItemIds.TRINKET_OF_UNDEAD, ItemIds.TRINKET_OF_FORTUITY_INACTIVE)
 
     /** Equal 1/145728 each. OSRS d'hide bodies are the rev-667 "Armadyl body" / "Saradomin body" / "Zamorak body". */
     val MEGA_RARE: List<Int> =
@@ -189,15 +194,23 @@ object BreachLoot {
 
     /**
      * One eligible player's loot for one kill. [rate] is the killer's Annihilation drop rate (N100, owner 2026-10-18): every
-     * "unique" chance of the roll - the rare trigger (the mega-rare gate inside it is rolled at 1x) - is [rate] times as likely (at most 100 %),
-     * the regular lines are served rarest first ([regularChances]); the table entered through the boosted trigger is rolled at 1x
-     * inside (the factor reaches each item once). 1.0 = the OSRS roll unchanged.
+     * "unique" chance of the roll - the chest-list extra and the rare trigger (the equipment inside it is rolled at 1x) - is [rate] times
+     * as likely (at most 100 %), the regular lines are served rarest first ([regularChances]); a table entered through its boosted
+     * trigger is rolled at 1x inside (the factor reaches each item once). 1.0 = the OSRS roll unchanged.
      */
     fun roll(
         random: Random,
         rate: Double = 1.0,
     ): List<Drop> {
         val out = ArrayList<Drop>()
+        // Owner 2026-10-17: breach monsters roll the Deadman's chest list ON TOP of their own table (rare, provisional chance).
+        // A pet comes as its base item (the breach drop code puts it on the ground for the player).
+        if (random.nextInt(DeadmanChestConfig.BREACH_EXTRA_CHANCE) < rate) {
+            when (val reward = DeadmanChestLoot.roll(random)) {
+                is DeadmanChestLoot.Reward.Item -> out += Drop(reward.item, reward.amount)
+                is DeadmanChestLoot.Reward.Pet -> out += Drop(reward.item, 1)
+            }
+        }
         if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
             // The mega-rare gate is rolled at 1x: the boosted trigger above already carries the factor, so the equipment (and every
             // other rare line) is rate x as likely per kill - not rate x rate.

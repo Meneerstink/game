@@ -165,7 +165,9 @@ class DeadmanBreachTests {
         // Owner 2026-09-19: no trinkets - their slots are gone, the six weapons (10/10/3/3/3/3) fill the rare table.
         assertEquals(32, BreachLoot.RARE_TOTAL)
         val trinkets = BreachLoot.EXCLUDED_TRINKETS
-        assertEquals(4, trinkets.size)
+        // Owner 2026-10-17 (N101): the Trinket of fairies is part of the Deadman chest list that breach monsters roll on top; avarice / undead / fortuity stay out.
+        assertEquals(3, trinkets.size)
+        assertTrue(ItemIds.TRINKET_OF_FAIRIES !in trinkets)
         assertTrue(BreachLoot.RARE.none { it.item in trinkets } && BreachLoot.REGULAR.none { it.item in trinkets } && BreachLoot.MEGA_RARE.none { it in trinkets })
         val trinketRandom = Random(11)
         repeat(200_000) { assertTrue(BreachLoot.roll(trinketRandom).none { it.item in trinkets }, "a trinket dropped") }
