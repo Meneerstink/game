@@ -15,8 +15,8 @@ object DeadmanChestConfig {
     const val OPEN_TICKS_SINGLES = 100
     const val OPEN_TICKS_MULTI = 50
 
-    /** OSRS: "at least 30 Hitpoints". Our combat defs hold lifepoints = OSRS HP x10 (Man lvl 2 = 70, Guard lvl 37 = 400). */
-    const val MIN_LIFEPOINTS = 300
+    /** OSRS: at least 30 HP. NpcCombatDsl.stats divides raw lifepoints by ten; Npc.combatDef uses ENGINE HP, not raw JSON units. */
+    const val MIN_LIFEPOINTS = 30
 
     /** Owner 2026-10-17: the minimum risked value (OSRS permanent world 250k, owner 100k). */
     const val MIN_RISK = 100_000L

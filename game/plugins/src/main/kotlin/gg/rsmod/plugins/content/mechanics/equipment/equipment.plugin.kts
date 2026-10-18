@@ -93,6 +93,7 @@ fun bind_unequip(
 ) {
     on_button(interfaceId = 387, component = child) {
         val opt = player.getInteractingOpcode()
+        if (player.equipment[equipment.id] != null) player.recordAction()
         /*
          * Unequipping mid-trade puts an item into the real inventory that the trade's snapshot
          * inventory does not know about; completing the trade would then overwrite it. The old

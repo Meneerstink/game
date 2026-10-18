@@ -201,6 +201,9 @@ object BossAreas {
 
     fun bootRegionCount(): Int = bootRegions.size
 
+    /** Fixed lairs captured at startup, unlike an ordinary field which temporarily holds a breach boss. */
+    fun wasBossAreaAtBoot(tile: Tile): Boolean = tile.regionId in bootRegions
+
     fun isBossArea(
         world: World,
         tile: Tile,

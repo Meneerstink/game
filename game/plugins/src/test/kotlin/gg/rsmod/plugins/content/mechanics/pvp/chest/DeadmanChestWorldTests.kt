@@ -57,11 +57,14 @@ class DeadmanChestWorldTests {
     fun setUp() {
         DeadmanChestIds.closedLoc = BreachIds.BREACH_LOC
         DeadmanChestIds.openLoc = BreachIds.BOSS_SPAWN_LOC
-        DeadmanChestIds.guardianNpc = 0
+        DeadmanChestIds.guardianNpc = gg.rsmod.plugins.api.cfg.Npcs.ZEMOUREGAL
+        DeadmanChestIds.spawnLoc = 0
+        DeadmanChestIds.spawnTicks = 0
         DeadmanChestWorld.reset()
         DeadmanChestWorld.cycleOverride = cycle
         // The skull value needs the GE guide prices (not loaded in this engine); one coin = one coin of risk, below is exact.
         DeadmanChest.riskOf = { p -> p.inventory.getItemCount(Items.COINS_995).toLong() }
+        gg.rsmod.plugins.content.mechanics.pvp.BossAreas.init(world)
     }
 
     @After
@@ -267,6 +270,7 @@ class DeadmanChestWorldTests {
         val safe = DeadmanBreach.spawnMonster(world, plainId, SAFE_TILE, 8).also { npcs += it }
         assertNull("kill in a guarded city", DeadmanChestWorld.onNpcKilled(world, killer, safe) { 0 })
         val man = npcAt(gg.rsmod.plugins.api.cfg.Npcs.MOUNTAIN_TROLL_1108, tile)
+        man.combatDef = man.combatDef.copy(lifepoints = 29)
         assertNull("a weak npc", DeadmanChestWorld.onNpcKilled(world, killer, man) { 0 })
         assertNull("the roll must hit", DeadmanChestWorld.onNpcKilled(world, killer, boss) { 1 })
         assertTrue(DeadmanChestWorld.chests.isEmpty())
@@ -304,6 +308,274 @@ class DeadmanChestWorldTests {
     }
 
     // ------------------------------------------------------------------------------------------------------- helpers
+
+    @Test
+    fun `guardian has the real chest combat definition and the Zemouregal attack row`() {
+        val tile = freeTile(true)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("combat", tile))!!
+        val guardian = chest.guardian!!
+        assertEquals("DSL 5000 lifepoints becomes 500 engine HP", 500, guardian.combatDef.lifepoints)
+        assertEquals(7, guardian.combatDef.attackSpeed)
+        assertFalse(guardian.respawns)
+        assertEquals("breach_zemouregal", NpcAttacks.rowFor(guardian.id)!!.combatDef)
+        assertFalse(DeadmanBreach.isBreachNpc(guardian))
+    }
+
+    @Test
+    fun `the real 4 by 4 footprint refuses all inner tiles and accepts its entire perimeter, bodies move outside it`() {
+        val def = world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, BreachIds.BREACH_LOC)
+        val oldWidth = def.width
+        val oldLength = def.length
+        def.width = 4
+        def.length = 4
+        var chest: DeadmanChestWorld.Chest? = null
+        try {
+            val tile = freeTile(false)
+            val p = player("footprint", Tile(tile.x + 3, tile.z + 3, tile.height))
+            giveRisk(p)
+            chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("4x4", tile))!!
+            assertFalse("a body anywhere inside is moved outside before placement", DeadmanChestWorld.inside(world, tile, p.tile))
+            for (dx in -1..4) for (dz in -1..4) {
+                p.tile = Tile(tile.x + dx, tile.z + dz, tile.height)
+                val refusal = DeadmanChest.refusal(DeadmanChest.factsOf(p, tile))
+                if (dx in 0..3 && dz in 0..3) assertEquals("inside $dx,$dz", DeadmanChest.MSG_ON_CHEST, refusal)
+                else assertNull("perimeter $dx,$dz is adjacent", refusal)
+            }
+        } finally {
+            chest?.let { DeadmanChestWorld.remove(world, it, "footprint test") }
+            def.width = oldWidth
+            def.length = oldLength
+        }
+    }
+
+    @Test
+    fun `appearance animation finishes before Loot is offered, then the clicked action can start a fresh channel`() {
+        DeadmanChestIds.spawnLoc = BreachIds.BOSS_SPAWN_LOC
+        DeadmanChestIds.spawnTicks = 3
+        val tile = freeTile(false)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("appearing", tile))!!
+        val p = player("appearance", beside(tile))
+        giveRisk(p)
+        DeadmanChestWorld.beginOpen(p, tile)
+        assertNull(DeadmanChestWorld.channelElapsed(p))
+        repeat(3) { tickChest() }
+        assertEquals(DeadmanChestIds.closedLoc, chest.obj.id)
+        DeadmanChestWorld.beginOpen(p, tile)
+        repeat(3) { tickChest() }
+        p.fullInterruption(interactions = true, queue = true)
+        DeadmanChestWorld.beginOpen(p, tile)
+        tickChest()
+        assertEquals("the second Loot click starts a new attempt", 1, DeadmanChestWorld.channelElapsed(p))
+    }
+
+    @Test
+    fun `each missing cache component disables the whole chest feature`() {
+        val spot = DeadmanChestWorld.Spot("partial cache", freeTile(false))
+        for (missing in listOf("closed", "open", "guardian")) {
+            DeadmanChestIds.closedLoc = if (missing == "closed") 0 else BreachIds.BREACH_LOC
+            DeadmanChestIds.openLoc = if (missing == "open") 0 else BreachIds.BOSS_SPAWN_LOC
+            DeadmanChestIds.guardianNpc = if (missing == "guardian") 0 else 14466
+            assertNull("missing $missing must not spawn a partial chest", DeadmanChestWorld.spawnTimed(world, spot))
+        }
+        DeadmanChestIds.guardianNpc = Int.MAX_VALUE
+        assertFalse("a configured but absent NPC definition is also incomplete", DeadmanChestWorld.enabled(world))
+    }
+
+    @Test
+    fun `real engine NPC health uses the 29 and 30 HP boundary after the DSL unit conversion`() {
+        val tile = freeTile(false)
+        val killer = player("hpboundary", beside(tile))
+        val npc = npcAt(gg.rsmod.plugins.api.cfg.Npcs.MOUNTAIN_TROLL_1108, tile)
+        npc.combatDef = npc.combatDef.copy(lifepoints = 29)
+        assertFalse(DeadmanChest.killCounts(DeadmanChest.killFactsOf(killer, npc)))
+        npc.combatDef = npc.combatDef.copy(lifepoints = 30)
+        assertTrue("30 engine HP is eligible; it must not require 300 HP", DeadmanChest.killCounts(DeadmanChest.killFactsOf(killer, npc)))
+    }
+
+    @Test
+    fun `a real incoming swing interrupts even when the combat timer was already at 17 and auto retaliation is off`() {
+        val tile = freeTile(false)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("repeated combat", tile))!!
+        val p = player("repeatedhit", beside(tile))
+        giveRisk(p)
+        p.timers[ACTIVE_COMBAT_TIMER] = 17
+        DeadmanChestWorld.beginOpen(p, tile)
+        repeat(3) { tickChest() }
+        assertEquals(3, DeadmanChestWorld.channelElapsed(p))
+        gg.rsmod.plugins.content.combat.Combat.postAttack(chest.guardian!!, p)
+        assertEquals("the timer value alone cannot identify this new swing", 17, p.timers[ACTIVE_COMBAT_TIMER])
+        tickChest()
+        assertNull("a new combat action resets progress even without a timer increase", DeadmanChestWorld.channelElapsed(p))
+    }
+
+    @Test
+    fun `real inventory Check-charge and Rub then cancel interrupt without changing any item`() {
+        val tile = freeTile(false)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("actions", tile))!!
+        val p = player("itemactions", beside(tile))
+        giveRisk(p)
+        p.inventory.add(Items.CAMULET)
+        p.inventory.add(Items.RING_OF_DUELLING_8)
+        p.interfaces.open(548, 197, 679)
+        val handler = gg.rsmod.game.message.handler.IfButton1Handler()
+        for ((item, label) in listOf(Items.CAMULET to "Check-charge", Items.RING_OF_DUELLING_8 to "Rub")) {
+            val option = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item).inventoryMenu.indexOfFirst { it.equals(label, true) }
+            assertTrue("cache option $label for $item", option >= 0)
+            val opcodes = listOf(61, 64, 4, 18, 10)
+            DeadmanChestWorld.beginOpen(p, tile)
+            repeat(3) { tickChest() }
+            val before = snapshotOf(p)
+            handler.handle(p, world, gg.rsmod.game.message.impl.IfButtonMessage(679 shl 16, option, p.inventory.getItemIndex(item, skipAttrItems = false), item, opcodes[option]))
+            assertEquals("$label did not mutate an item", before, snapshotOf(p))
+            tickChest()
+            assertNull("$label action must reset the channel", DeadmanChestWorld.channelElapsed(p))
+            if (label == "Check-charge") {
+                assertTrue("real charge handler ran", messages(p).any { it.contains("Your Camulet has") })
+            } else {
+                // Drive the real Rub dialogue and choose Nowhere, without changing an item or teleporting.
+                val queues = gg.rsmod.game.model.entity.Pawn::class.java.getDeclaredField("queues").apply { isAccessible = true }.get(p) as gg.rsmod.game.model.queue.QueueTaskSet
+                queues.cycle()
+                assertTrue("real Rub dialogue opened", p.interfaces.optionsOpen)
+                queues.submitReturnValue(gg.rsmod.game.message.impl.ResumePauseButtonMessage(interfaceId = 234, component = 6, button = 6))
+                queues.cycle()
+                assertEquals("cancel Rub did not consume a charge", before, snapshotOf(p))
+            }
+        }
+        assertFalse(chest.state.looted)
+    }
+
+    @Test
+    fun `guardian summons belong only to their creator and late summons are removed after loot and guardian death`() {
+        DeadmanChestIds.guardianNpc = 14466
+        for (looted in listOf(false, true)) {
+            val tile = freeTile(true)
+            val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("summons", tile))!!
+            val guardian = chest.guardian!!
+            val target = player("target$looted", beside(tile))
+            giveRisk(target)
+            val unrelated = DeadmanBreach.spawnMonster(world, 14471, target.tile, 8).also { npcs += it }
+            val otherGuardian = npcAt(14466, Tile(guardian.tile.x + 1, guardian.tile.z, guardian.tile.height))
+            repeat(5) { assertTrue(NpcAttacks.attackWith(otherGuardian, target, "magic")) }
+            val others = DeadmanBreach.live.filter { it !== unrelated }.toSet()
+            assertTrue("real other-guardian swing created a summon", others.isNotEmpty())
+            tickChest() // old distance-based code incorrectly claims both unrelated summons
+            if (looted) {
+                DeadmanChestWorld.beginOpen(target, tile)
+                repeat(50) { tickChest() }
+                assertTrue(chest.state.looted)
+            }
+            val before = DeadmanBreach.live.toSet()
+            repeat(5) { assertTrue(NpcAttacks.attackWith(guardian, target, "magic")) }
+            val own = DeadmanBreach.live.filter { it !in before }
+            assertTrue("real guardian swing created a late summon", own.isNotEmpty())
+            guardian.setCurrentLifepoints(0)
+            world.remove(guardian) // removal must still find his ownership after death, without another tracking tick
+            DeadmanChestWorld.remove(world, chest, "test ownership")
+            assertTrue("unrelated breach summon survives", world.npcs.contains(unrelated))
+            others.forEach { assertTrue("another guardian's summon survives", world.npcs.contains(it)) }
+            own.forEach { assertFalse("own late summon removed after loot=$looted and death", world.npcs.contains(it)) }
+            (others + own).forEach { world.remove(it); DeadmanBreach.live.remove(it) }
+            world.remove(otherGuardian)
+            world.remove(unrelated)
+            DeadmanBreach.live.remove(unrelated)
+            world.unregister(target)
+            clients.remove(target)
+        }
+    }
+
+    @Test
+    fun `kill spawn fallback must be reachable by the killer`() {
+        val tile = freeTile(false)
+        val killer = player("unreachable", Tile(tile.x + 100, tile.z, tile.height))
+        assertNull("a walkable death tile across a wall or disconnected from the killer is not enough", DeadmanChestWorld.killSpot(world, killer, tile))
+    }
+
+    @Test
+    fun `world breach boss kills can spawn a chest without treating an ordinary field as a boss cave`() {
+        val tile = freeTile(false)
+        val killer = player("breachbosskill", beside(tile))
+        val id = BreachMonsters.BY_ID.values.first { it.name.equals("General Graardor", true) }.id
+        val boss = DeadmanBreach.spawnMonster(world, id, tile, 8).also { npcs += it }
+        assertTrue(gg.rsmod.plugins.content.mechanics.pvp.BossNpcs.isBoss(boss))
+        assertTrue("the generic teleport classifier includes dynamically spawned bosses", gg.rsmod.plugins.content.mechanics.pvp.BossAreas.isBossArea(world, tile))
+        assertNotNull("an ordinary breach battlefield is not a fixed boss lair", DeadmanChestWorld.onNpcKilled(world, killer, boss) { 0 })
+    }
+
+    @Test
+    fun `delayed damage landing interrupts a channel started after the projectile was launched`() {
+        val tile = freeTile(false)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("pending hit", tile))!!
+        val p = player("delayedhit", beside(tile))
+        giveRisk(p)
+        val hit = gg.rsmod.game.model.Hit.Builder().addHit(damage = 1, type = 0).setDamageDelay(1).build()
+        hit.source = chest.guardian
+        p.addHit(hit)
+        DeadmanChestWorld.beginOpen(p, tile)
+        p.hitsCycle()
+        tickChest()
+        assertEquals("a queued hit has not landed yet", 1, DeadmanChestWorld.channelElapsed(p))
+        p.hitsCycle()
+        assertEquals(98, p.getCurrentLifepoints())
+        tickChest()
+        assertNull("landing damage resets the new channel", DeadmanChestWorld.channelElapsed(p))
+    }
+
+    @Test
+    fun `deep boss regions use their explicit reachable exit rather than an unrelated nearby timed spot`() {
+        val root = com.google.gson.Gson().fromJson(File("../../data/cfg/deadman/chest_spots.json").readText(), com.google.gson.JsonObject::class.java)
+        val def = world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, BreachIds.BREACH_LOC)
+        val oldWidth = def.width
+        val oldLength = def.length
+        def.width = 4
+        def.length = 4
+        try {
+        for (entry in root["boss_exits"].asJsonArray) {
+            val config = entry.asJsonObject
+            val a = config["tile"].asJsonArray
+            val entrance = Tile(a[0].asInt, a[1].asInt, a[2].asInt)
+            for (region in config["regions"].asJsonArray.map { it.asInt }) {
+                // A synthetic deep kill anywhere in the mapped region; the real map still validates the EXIT and its path.
+                val death = Tile((region shr 8) * 64 + 32, (region and 255) * 64 + 32, 0)
+                val boss = npcAt(gg.rsmod.plugins.api.cfg.Npcs.GENERAL_GRAARDOR, death)
+                val killer = player("exit$region", death)
+                val tile = DeadmanChestWorld.killSpot(world, killer, death)
+                assertNotNull("${config["name"]}: region $region must map to an exit", tile)
+                assertEquals(entrance.height, tile!!.height)
+                assertTrue("the real 4x4 chest fits outside the lair near its source exit: $tile vs $entrance", tile.getDistance(entrance) <= 16)
+                assertTrue("exit ground is usable and dangerous", DeadmanChestWorld.fits(world, tile))
+                assertTrue("exit is connected to the source arrival tile", tile == entrance || tile in DeadmanChestWorld.reachable(world, entrance, 16))
+                world.remove(boss)
+                world.unregister(killer)
+                clients.remove(killer)
+            }
+        }
+        } finally {
+            def.width = oldWidth
+            def.length = oldLength
+        }
+    }
+
+    @Test
+    fun `timed and kill chests enforce spacing in either spawn order`() {
+        val tile = freeTile(false)
+        val killer = player("spacing", beside(tile))
+        val id = BreachMonsters.BY_ID.filterValues { !it.summon }.keys.first { id ->
+            val probe = DeadmanBreach.spawnMonster(world, id, tile, 8)
+            val plain = !gg.rsmod.plugins.content.mechanics.pvp.BossNpcs.isBoss(probe) && probe.combatDef.lifepoints >= 300
+            world.remove(probe)
+            DeadmanBreach.live.remove(probe)
+            plain
+        }
+        val npc = DeadmanBreach.spawnMonster(world, id, tile, 8).also { npcs += it }
+        val timed = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("first", tile))!!
+        npc.tile = beside(tile)
+        assertNull("kill spawn within 15 of timed chest", DeadmanChestWorld.onNpcKilled(world, killer, npc) { 0 })
+        DeadmanChestWorld.remove(world, timed, "test")
+        npc.tile = tile
+        val kill = DeadmanChestWorld.onNpcKilled(world, killer, npc) { 0 }!!
+        assertNull("timed spawn overlapping active kill chest", DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("second", tile)))
+        assertEquals(listOf(kill), DeadmanChestWorld.chests.toList())
+    }
 
     private fun tickChest() {
         cycle++
@@ -404,9 +676,15 @@ class DeadmanChestWorldTests {
                 }
             }
             bindScript(world, "gg.rsmod.plugins.content.mechanics.pvp.breach.Deadman_breach_plugin")
-            // The stand-in loc has no options in the cache; the real OSRS chest (60246) has "Loot" (dossier N101), so give it that.
+            // The stand-in has no options; the real clickable OSRS variant 60248 has Loot.
             world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, BreachIds.BREACH_LOC).options[0] = "Loot"
+            // Legacy timing/rules cases use a one-tile stand-in; the separate real-size test covers ALL 4x4 tiles/perimeter.
+            world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, BreachIds.BREACH_LOC).width = 1
+            world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, BreachIds.BREACH_LOC).length = 1
+            DeadmanChestIds.guardianNpc = gg.rsmod.plugins.api.cfg.Npcs.ZEMOUREGAL
             bindScript(world, "gg.rsmod.plugins.content.mechanics.pvp.chest.Deadman_chest_plugin")
+            bindScript(world, "gg.rsmod.plugins.content.items.Teleport_items_plugin")
+            bindScript(world, "gg.rsmod.plugins.content.items.jewellery.Ring_of_dueling_plugin")
             world
         }
 

@@ -824,3 +824,11 @@ task runKeylessMapLocRepairTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.KeylessMapLocRepairTool'
     workingDir = rootProject.projectDir
 }
+
+task runDeadmanChestImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N101: one dual-cache transaction for the Deadman chest scenery, baked animations and guardian. Usage: probe|plan|apply'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.DeadmanChestImportTool'
+    workingDir = rootProject.projectDir
+}

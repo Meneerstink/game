@@ -1,15 +1,153 @@
 {
   "source": "OSRS Wiki Deadman's chest (scenery) Annihilation spots (team/prep/chest_spots.txt, fetched 2026-10-17). Filtered at boot by DeadmanBreach.usable + AreaState.isDangerous; the dropped ones are logged. The north-west Al Kharid mine spot has no coordinate on the wiki.",
   "spots": [
-    {"name": "east of the Wilderness Bandit Camp", "tile": [3052, 3671, 0]},
-    {"name": "outside the Al Kharid bank", "tile": [3273, 3160, 0]},
-    {"name": "east of the Rimmington mine", "tile": [2994, 3240, 0]},
-    {"name": "west of Draynor Manor", "tile": [3068, 3342, 0]},
-    {"name": "Catherby beach", "tile": [2848, 3431, 0]},
-    {"name": "north-east of the Sorcerer's Tower", "tile": [2729, 3436, 0]},
-    {"name": "east of the Heroes' Guild", "tile": [2912, 3503, 0]},
-    {"name": "south-west of the Lumber Yard", "tile": [3294, 3471, 0]},
-    {"name": "north of the Edgeville Monastery", "tile": [3045, 3512, 0]},
-    {"name": "west of Port Khazard", "tile": [2621, 3161, 0]}
+    {
+      "name": "east of the Wilderness Bandit Camp",
+      "tile": [
+        3052,
+        3671,
+        0
+      ]
+    },
+    {
+      "name": "outside the Al Kharid bank",
+      "tile": [
+        3273,
+        3160,
+        0
+      ]
+    },
+    {
+      "name": "east of the Rimmington mine",
+      "tile": [
+        2994,
+        3240,
+        0
+      ]
+    },
+    {
+      "name": "west of Draynor Manor",
+      "tile": [
+        3068,
+        3342,
+        0
+      ]
+    },
+    {
+      "name": "Catherby beach",
+      "tile": [
+        2848,
+        3431,
+        0
+      ]
+    },
+    {
+      "name": "north-east of the Sorcerer's Tower",
+      "tile": [
+        2729,
+        3436,
+        0
+      ]
+    },
+    {
+      "name": "east of the Heroes' Guild",
+      "tile": [
+        2912,
+        3503,
+        0
+      ]
+    },
+    {
+      "name": "south-west of the Lumber Yard",
+      "tile": [
+        3294,
+        3471,
+        0
+      ]
+    },
+    {
+      "name": "north of the Edgeville Monastery",
+      "tile": [
+        3045,
+        3512,
+        0
+      ]
+    },
+    {
+      "name": "west of Port Khazard",
+      "tile": [
+        2621,
+        3161,
+        0
+      ]
+    }
+  ],
+  "boss_exits": [
+    {
+      "name": "Dagannoth Kings ladder exit",
+      "regions": [
+        11589
+      ],
+      "tile": [
+        1910,
+        4367,
+        0
+      ],
+      "source": "Darkan DagannothCaves.java:21-25; Void waterbirth_island.teles.toml dks_ladder_up (object-teleports.json): 2899,4449 -> 1910,4367; includes 667 plane-1 copy batch-12.json"
+    },
+    {
+      "name": "Corporeal Beast cave exterior",
+      "regions": [
+        11844,
+        11588
+      ],
+      "tile": [
+        3214,
+        3782,
+        0
+      ],
+      "source": "Void corporeal_beasts_lair.areas.toml + npc-spawns.toml and teles.toml corporeal_beast_lair_exit (object-teleports.json)"
+    },
+    {
+      "name": "Kalphite Queen upper rope landing",
+      "regions": [
+        13972
+      ],
+      "tile": [
+        3509,
+        9496,
+        2
+      ],
+      "source": "Void kalphite_hive.teles.toml kalphite_lair_exit_rope (object-teleports.json): 3508,9494,0 -> 3509,9496,2"
+    },
+    {
+      "name": "King Black Dragon surface ladder exterior",
+      "regions": [
+        9033
+      ],
+      "tile": [
+        3017,
+        3850,
+        0
+      ],
+      "source": "Existing approved objs/levers/levers.plugin.kts: lair lever -> basement 3067,10254. Its east ladder exits to 3017,3850 in areas/draynor/wizards_tower_basement.plugin.kts (cache-proven route, KingBlackDragonLadderRouteTests). The basement has no 4x4 chest ground, so use its actual surface exit."
+    },
+    {
+      "name": "God Wars Dungeon surface rope exit",
+      "regions": [
+        11345,
+        11346,
+        11347,
+        11601,
+        11602,
+        11603
+      ],
+      "tile": [
+        2916,
+        3746,
+        0
+      ],
+      "source": "Darkan GodwarsController.kt:60, ported godwars_dungeon.plugin.kts ROPE_26293; GodWars.DUNGEON_X/Z includes Zaros/Nex approach"
+    }
   ]
 }

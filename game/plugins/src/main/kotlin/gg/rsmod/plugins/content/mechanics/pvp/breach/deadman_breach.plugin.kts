@@ -314,7 +314,7 @@ NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
 val ZEMOUREGAL_SUMMON_EVERY = 5
 val ZEMOUREGAL_MAX_SUMMONS = 3
 val summonCount = gg.rsmod.game.model.attr.AttributeKey<Int>()
-val summonsOf = gg.rsmod.game.model.attr.AttributeKey<MutableList<Npc>>()
+val summonsOf = DeadmanBreach.SUMMONS_OF
 
 /*
  * OSRS Wiki "Zemouregal (Deadman)": "He will also not stay focused on a single target, instead occasionally switching targets if other

@@ -185,6 +185,14 @@ abstract class Pawn(
      */
     val timers = TimerMap()
 
+    /** Monotonic action marker for interruptible content, including actions which do not change any items. */
+    var actionRevision: Long = 0
+        private set
+
+    fun recordAction() {
+        actionRevision++
+    }
+
     internal val queues: QueueTaskSet =
         PawnQueueTaskSet().also { set ->
             if (this is Player) {
@@ -483,6 +491,10 @@ abstract class Pawn(
             if (hit.damageDelay-- == 0) {
                 if (!hit.cancelCondition()) {
                     hitModifier?.invoke(hit)
+                    if (hit.hitmarks.any { it.damage >= 0 }) {
+                        recordAction()
+                        hit.source?.recordAction()
+                    }
                     blockBuffer.hits.add(hit)
                     addBlock(UpdateBlockType.HITMARK)
 
@@ -1071,6 +1083,7 @@ abstract class Pawn(
         queue: Boolean = false,
         preserveCombat: Boolean = false,
     ) {
+        recordAction()
         if (this is Player) {
             if (isResting()) {
                 varps.setState(173, attr[LAST_KNOWN_RUN_STATE]!!.toInt())

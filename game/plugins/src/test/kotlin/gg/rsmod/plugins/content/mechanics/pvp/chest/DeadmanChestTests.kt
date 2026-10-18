@@ -46,7 +46,7 @@ class DeadmanChestTests {
     ) = DeadmanChest.Facts(inInstance, risk, beginner, grace, onChest, adjacent)
 
     private fun kill(
-        lifepoints: Int = 300,
+        lifepoints: Int = 30,
         summonOrTest: Boolean = false,
         guardian: Boolean = false,
         pet: Boolean = false,
@@ -173,9 +173,9 @@ class DeadmanChestTests {
     // ------------------------------------------------------------------------------------------------ kill chests
 
     @Test
-    fun `a kill counts only with 30 Hitpoints (300 lifepoints) and none of the exclusions`() {
-        assertFalse(DeadmanChest.killCounts(kill(lifepoints = 299)))
-        assertTrue(DeadmanChest.killCounts(kill(lifepoints = 300)))
+    fun `a kill counts only with 30 engine Hitpoints and none of the exclusions`() {
+        assertFalse(DeadmanChest.killCounts(kill(lifepoints = 29)))
+        assertTrue(DeadmanChest.killCounts(kill(lifepoints = 30)))
         assertFalse(DeadmanChest.killCounts(kill(summonOrTest = true)), "Zemouregal summons / breachtest npcs")
         assertFalse(DeadmanChest.killCounts(kill(guardian = true)), "the chest's own Zemouregal")
         assertFalse(DeadmanChest.killCounts(kill(pet = true)), "pets and familiars")

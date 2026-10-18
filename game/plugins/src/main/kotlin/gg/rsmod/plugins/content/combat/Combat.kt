@@ -168,6 +168,9 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
     ) {
+        // Interruptible actions observe the actual swing, even when a re-armed combat timer stays at the same value.
+        pawn.recordAction()
+        target.recordAction()
         val attackDelay = CombatConfigs.getAttackDelay(pawn)
         pawn.attr.remove(SPELL_OF_THIS_ATTACK)
         pawn.timers[ATTACK_DELAY] = attackDelay

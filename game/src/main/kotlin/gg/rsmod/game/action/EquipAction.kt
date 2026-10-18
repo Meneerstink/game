@@ -86,6 +86,7 @@ object EquipAction {
         item: Item,
         inventorySlot: Int = -1,
     ): Result {
+        p.recordAction()
         val result = equipInner(p, item, inventorySlot)
         traceResult(p, "equip", item.id, result)
         return result
@@ -307,6 +308,7 @@ object EquipAction {
         p: Player,
         equipmentSlot: Int,
     ): Result {
+        p.recordAction()
         val itemId = p.equipment[equipmentSlot]?.id ?: -1
         val result = unequipInner(p, equipmentSlot)
         traceResult(p, "unequip", itemId, result)

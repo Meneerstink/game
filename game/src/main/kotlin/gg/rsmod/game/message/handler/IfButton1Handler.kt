@@ -187,6 +187,8 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             client.attr[INTERACTING_ITEM_ID] = item.id
             client.attr[INTERACTING_ITEM_SLOT] = slot
 
+            // Accepted inventory actions count even when they only check charges, examine, or fail to equip.
+            client.recordAction()
             if (option == 2) {
                 val result = EquipAction.equip(client, item, slot)
                 if (result == EquipAction.Result.UNHANDLED) {

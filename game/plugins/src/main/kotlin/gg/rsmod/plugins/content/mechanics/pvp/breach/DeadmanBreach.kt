@@ -49,6 +49,8 @@ import kotlin.random.Random
  * the broadcast and Perdu wording. The Breach and Boss Spawn animations and the breach spawn/despawn graphics are OSRS skeletal\n * animations baked into classic frames (SkeletalBakeTool, 2026-09-27).
  */
 object DeadmanBreach {
+    /** The actual children of a Zemouregal, shared with chest cleanup; proximity never establishes ownership. */
+    val SUMMONS_OF = gg.rsmod.game.model.attr.AttributeKey<MutableList<gg.rsmod.game.model.entity.Npc>>()
     const val RUBY_BOLT_CAP = 30
     const val LOCAL_SPAWN_RADIUS = 9
     const val LOCALISED_MAX_NPCS = 6

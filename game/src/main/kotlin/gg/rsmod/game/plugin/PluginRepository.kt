@@ -1200,6 +1200,7 @@ class PluginRepository(
         interfaceId: Int,
         component: Int,
     ): Boolean {
+        if (interfaceId == 679) p.recordAction()
         val hash = (interfaceId shl 16) or component
         val plugin = componentItemSwapPlugins[hash] ?: return false
         p.executePlugin(plugin)
@@ -1226,6 +1227,7 @@ class PluginRepository(
         dstInterfaceId: Int,
         dstComponent: Int,
     ): Boolean {
+        if (srcInterfaceId == 679 || dstInterfaceId == 679) p.recordAction()
         val srcHash = (srcInterfaceId shl 16) or srcComponent
         val dstHash = (dstInterfaceId shl 16) or dstComponent
         val combinedHash = ((srcHash shl 32) or dstHash).toLong()
@@ -1453,6 +1455,7 @@ class PluginRepository(
         item: Int,
         option: Int,
     ): Boolean {
+        p.recordAction()
         val hash = (item shl 16) or option
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "worn-option ${p.username} item=$item option=$option handled=${equipmentOptionPlugins.containsKey(hash)}" }
         val plugin = equipmentOptionPlugins[hash] ?: return false
@@ -1776,6 +1779,7 @@ class PluginRepository(
         id: Int,
         opt: Int,
     ): Boolean {
+        p.recordAction() // legacy OpHeld handlers also reach this path, including options which change no items
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "item-option ${p.username} item=$id option=$opt handled=${itemPlugins[id]?.containsKey(opt) == true}" }
         val optMap = itemPlugins[id] ?: return false
         val logic = optMap[opt] ?: return false
@@ -1989,6 +1993,7 @@ class PluginRepository(
         p: Player,
         fromComponentHash: Int,
     ): Boolean {
+        p.recordAction()
         val hash: Long = (fromComponentHash.toLong() shl 32)
         val plugin = spellOnItemPlugins[hash] ?: return false
         p.executePlugin(plugin)

@@ -4,6 +4,8 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
+import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters
+import gg.rsmod.plugins.content.combat.attack.NpcAttacks
 
 /**
  * The Deadman's chest (owner 2026-10-17, dossier N101; OSRS wiki "Deadman's chest (scenery)"): a timed chest every 30 minutes at a
@@ -11,6 +13,48 @@ import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
  * (multi) without combat or inventory actions; the first opener gets ONE reward ([DeadmanChestLoot]). Rules: [DeadmanChest],
  * world handling: [DeadmanChestWorld]. Nothing is bound while the cache step is missing ([DeadmanChestIds]).
  */
+
+DeadmanChestIds.load()
+
+// OSRS chest variant 15564: same combat as breach 15237, but 500 HP (5000 lifepoints), combat level 322 in the imported cache.
+if (DeadmanChestIds.guardianNpc > 0 && DeadmanChestIds.guardianNpc !in BreachMonsters.BY_ID) {
+    val m = BreachMonsters.BY_ID.getValue(14466)
+    set_combat_def(DeadmanChestIds.guardianNpc) {
+        configs {
+            attackSpeed = m.speed
+            attackStyle = m.style
+            respawnDelay = 0
+            poisonImmune = m.id in BreachMonsters.POISON_IMMUNE
+            venomImmune = m.id in BreachMonsters.VENOM_IMMUNE
+        }
+        aggro { radius = 8; searchDelay = 1; alwaysAggro() }
+        stats {
+            hitpoints = 5000
+            attack = m.stats.att
+            strength = m.stats.str
+            defence = m.stats.def
+            magic = m.stats.mage
+            ranged = m.stats.range
+        }
+        bonuses {
+            attackBonus = m.stats.attbns
+            strengthBonus = m.stats.strbns
+            attackMagic = m.stats.amagic
+            magicDamageBonus = m.stats.mbns
+            attackRanged = m.stats.arange
+            rangedStrengthBonus = m.stats.rngbns
+            defenceStab = m.stats.dstab
+            defenceSlash = m.stats.dslash
+            defenceCrush = m.stats.dcrush
+            defenceMagic = m.stats.dmagic
+            defenceRanged = m.stats.dranged
+        }
+        anims { attack = m.attackAnim; block = m.blockAnim; death = m.deathAnim }
+    }
+    val row = BreachMonsters.attackRows().first { it.id == m.id }
+    NpcAttacks.register(NpcAttacks.Row(DeadmanChestIds.guardianNpc, "Zemouregal", row.voidKey, row.combatDef, row.height, row.attackRange, row.attacks))
+    gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.alias(DeadmanChestIds.guardianNpc, m.id)
+}
 
 on_world_init { DeadmanChestWorld.start(world) }
 

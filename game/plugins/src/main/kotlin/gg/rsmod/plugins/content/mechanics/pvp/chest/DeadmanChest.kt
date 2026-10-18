@@ -50,7 +50,7 @@ object DeadmanChest {
         }
 
     /**
-     * Facts of [player] for a chest on [chestTile] (size 1 footprint): the risk is [RiskSkull.calculateRiskedValue] (the value the
+     * Facts of [player] for the cache-sized chest on [chestTile]: risk is [RiskSkull.calculateRiskedValue] (the value the
      * skull shows = DeathRules.pvpLoss), protection is BeginnerProtection + KillGrace (our 1-minute post-kill immunity).
      */
     fun factsOf(
@@ -62,8 +62,8 @@ object DeadmanChest {
             risk = riskOf(player),
             beginnerProtected = BeginnerProtection.isProtected(player),
             killGrace = KillGrace.isProtected(player),
-            onChestTile = player.tile.x == chestTile.x && player.tile.z == chestTile.z && player.tile.height == chestTile.height,
-            adjacent = player.tile.height == chestTile.height && maxOf(kotlin.math.abs(player.tile.x - chestTile.x), kotlin.math.abs(player.tile.z - chestTile.z)) <= 1,
+            onChestTile = DeadmanChestWorld.inside(player.world, chestTile, player.tile),
+            adjacent = DeadmanChestWorld.adjacent(player.world, chestTile, player.tile),
         )
 
     /** The value the skull shows ([RiskSkull.calculateRiskedValue]); a seam so the engine tests can run without the GE guide prices. */
