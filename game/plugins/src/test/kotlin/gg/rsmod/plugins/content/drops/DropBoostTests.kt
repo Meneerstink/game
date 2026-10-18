@@ -13,6 +13,7 @@ import kotlin.test.assertTrue
  * per kill"):
  *  1. a roll is still ONE pick: the boosted chances never add up to more than 100 %;
  *  2. no line gets more than rate x its chance (max 100 %) and no line gets less than half of its own chance (never unreachable);
+ *     the structure is Void's DropTable.kt:34-66 (shortened roll range, rarest first, the commons as a nested table);
  *  3. rarer lines never get a smaller boost factor than commoner lines (rarest first);
  *  4. when everything fits in 100 % every line gets exactly rate x (the "nothing" share is the first thing that shrinks);
  *  5. lines with the same chance always get the same boosted chance; rate 1 changes nothing.
@@ -43,10 +44,21 @@ class DropBoostTests {
         assertEquals(0.95, full[1], eps)
         assertEquals(1.0, full.sum(), eps)
 
-        // Commons give way, but only to half of their own chance: 40% rare + 60% common at 5x.
+        // A 40 % line is no rare line: the rare tier may use at most half of the shortened roll range (0.1 at 5x), so nothing is
+        // boosted and the table stays as it was.
         val heavy = DropBoost.chances(doubleArrayOf(0.4, 0.6), 5.0)
-        assertEquals(0.7, heavy[0], eps) // budget 1 - 0.5 x 0.6
-        assertEquals(0.3, heavy[1], eps) // exactly half of 0.6: the floor
+        assertEquals(0.4, heavy[0], eps)
+        assertEquals(0.6, heavy[1], eps)
+
+        // Void's structure (DropTable.kt:34-66), hand-derived: lines 30 %, 5 %, 55 %, 10 % at 4x. Shortened range 0.25, tier limit
+        // 0.125: the 5 % line fits (-> 0.05 / 0.25 = 0.2), the next 10 % line would make 0.15 and does not. What is left is the nested
+        // table of commons over its own range with share 1 - 0.05 / 0.25 = 0.8: line chance = 0.8 x its chance / 0.95.
+        val tiered = DropBoost.chances(doubleArrayOf(0.30, 0.05, 0.55, 0.10), 4.0)
+        assertEquals(0.8 * 0.30 / 0.95, tiered[0], eps)
+        assertEquals(0.2, tiered[1], eps)
+        assertEquals(0.8 * 0.55 / 0.95, tiered[2], eps)
+        assertEquals(0.8 * 0.10 / 0.95, tiered[3], eps)
+        assertEquals(1.0, tiered.sum(), eps)
     }
 
     @Test

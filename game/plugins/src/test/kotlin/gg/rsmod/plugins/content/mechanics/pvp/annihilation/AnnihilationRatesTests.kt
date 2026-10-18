@@ -402,7 +402,7 @@ class AnnihilationRatesTests {
             }
             // Exact, not statistical: a scripted Random answers the rare trigger (bound 9576) and the mega-rare chance (bound 92) with
             // the value under test, every other roll with its highest value. The trigger window is 133 values at 1x -> 133 x rate;
-            // inside it 1 of 92 values is a mega rare at 1x -> rate of them.
+            // inside it exactly 1 of the 92 values is a mega rare at every rate (the factor sits on the trigger only).
             fun scripted(trigger: Int, mega: Int) =
                 object : java.util.Random(0) {
                     override fun nextInt(bound: Int): Int =
@@ -417,8 +417,14 @@ class AnnihilationRatesTests {
             val plain = BreachLoot.roll(scripted(BreachLoot.RARE_DENOMINATOR - 1, 0), rate).size
             val triggers = (0 until BreachLoot.RARE_DENOMINATOR).count { BreachLoot.roll(scripted(it, BreachLoot.MEGA_RARE_CHANCE - 1), rate).size == plain + 1 }
             assertEquals("rare trigger values at ${rate}x (133 x rate of 9576)", (BreachLoot.RARE_TRIGGER * rate).toInt(), triggers)
-            val megas = (0 until BreachLoot.MEGA_RARE_CHANCE).count { m -> BreachLoot.roll(scripted(0, m), rate).any { it.item in megaRare } }
-            assertEquals("mega-rare values of the 92 at ${rate}x", rate.toInt(), megas)
+            // The mega-rare equipment is ONE final item: its unconditional per-kill chance is the 1x chance times the rate, once
+            // (reviewer: 9x / 16x / 25x when the factor also sat on the inner gate). Enumerated over every (trigger value, mega value)
+            // pair: 133 of 880,992 at 1x -> 133 x rate.
+            var megaPairs = 0
+            for (t in 0 until BreachLoot.RARE_DENOMINATOR) for (m in 0 until BreachLoot.MEGA_RARE_CHANCE) {
+                if (BreachLoot.roll(scripted(t, m), rate).any { it.item in megaRare }) megaPairs++
+            }
+            assertEquals("mega-rare (trigger, mega) pairs of ${BreachLoot.RARE_DENOMINATOR * BreachLoot.MEGA_RARE_CHANCE} at ${rate}x: the factor once", (BreachLoot.RARE_TRIGGER * rate).toInt(), megaPairs)
         }
     }
 

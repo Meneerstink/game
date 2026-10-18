@@ -189,7 +189,7 @@ object BreachLoot {
 
     /**
      * One eligible player's loot for one kill. [rate] is the killer's Annihilation drop rate (N100, owner 2026-10-18): every
-     * "unique" chance of the roll - the rare trigger, the mega-rare chance inside it - is [rate] times as likely (at most 100 %),
+     * "unique" chance of the roll - the rare trigger (the mega-rare gate inside it is rolled at 1x) - is [rate] times as likely (at most 100 %),
      * the regular lines are served rarest first ([regularChances]); the table entered through the boosted trigger is rolled at 1x
      * inside (the factor reaches each item once). 1.0 = the OSRS roll unchanged.
      */
@@ -199,7 +199,9 @@ object BreachLoot {
     ): List<Drop> {
         val out = ArrayList<Drop>()
         if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
-            if (random.nextInt(MEGA_RARE_CHANCE) < rate) {
+            // The mega-rare gate is rolled at 1x: the boosted trigger above already carries the factor, so the equipment (and every
+            // other rare line) is rate x as likely per kill - not rate x rate.
+            if (random.nextInt(MEGA_RARE_CHANCE) == 0) {
                 out += Drop(MEGA_RARE[random.nextInt(MEGA_RARE.size)], 1)
             } else {
                 out += pick(RARE, random).drop(random)
