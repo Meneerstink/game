@@ -104,9 +104,6 @@ object PointBalance {
     /** Saved on the account once the repair ran, so it never runs a second time. */
     val REPAIR_MARKER = AttributeKey<Int>(persistenceKey = "point_balance_repair")
 
-    /** A balance below this can only come from a wrap at the top (2,147,483,647 + n): it was a maximum balance. */
-    const val WRAPPED_BELOW: Int = -2_000_000_000
-
     /** One repaired balance: the persistence key with the old and the new value (logged by the save loader). */
     data class Repair(
         val key: String,
@@ -115,10 +112,12 @@ object PointBalance {
     )
 
     /**
-     * Owner decision 2026-10-18 (VRAGEN 32 = A): a balance that already wrapped negative before N106 is repaired ONCE at login.
-     * Below [WRAPPED_BELOW] it was a wrap past the maximum -> [MAX]; any other negative -> 0 (small negatives get no gift). Runs
-     * once per account ([REPAIR_MARKER]), so it is idempotent. Returns what was changed (empty when the marker is set or nothing
-     * is negative).
+     * Owner decision 2026-10-18 (VRAGEN 32 = A): a balance that already wrapped negative before N106 is repaired ONCE at login to
+     * [MAX]. EVERY negative balance is repaired, whatever its size: a wrap from the maximum by an add of up to 2^31-1 can land on
+     * any negative value (MAX + 147,483,650 = -1,999,999,999; MAX + 2,147,483,643 = -6), so the size does not tell whether it
+     * wrapped. No old take path could push a balance below 0 without a wrap (every slayer / store / shop / imbue take checked the
+     * balance first). Runs once per account ([REPAIR_MARKER]), so it is idempotent. Returns what was changed (empty when the
+     * marker is set or nothing is negative).
      */
     fun repairWrapped(attrs: AttributeMap): List<Repair> {
         if (attrs.has(REPAIR_MARKER)) return emptyList()
@@ -127,9 +126,8 @@ object PointBalance {
             val key = AttributeKey<Int>(persistenceKey = name)
             val old = (attrs.getOrNull(key) as? Number)?.toInt() ?: return@forEach
             if (old >= 0) return@forEach
-            val repaired = if (old < WRAPPED_BELOW) MAX else 0
-            attrs[key] = repaired
-            repairs += Repair(name, old, repaired)
+            attrs[key] = MAX
+            repairs += Repair(name, old, MAX)
         }
         attrs[REPAIR_MARKER] = 1
         return repairs

@@ -218,15 +218,15 @@ class PointBalanceEdgeTests {
     // ------------------------------------------------------------------------------- one-time repair of wrapped saves at login
 
     @Test
-    fun `login repair - a save whose balance wrapped before N106 (sous, -2,147,483,549) becomes 2,147,483,647 once, small negatives become 0`() {
+    fun `login repair - a save whose balance wrapped before N106 (sous, -2,147,483,549) becomes 2,147,483,647 once, and so does every other negative`() {
         withSerializer { serializer, dir ->
             val before = player("n106wrapped")
             before.currentXteaKeys = intArrayOf(1, 2, 3, 4)
             before.passwordHash = "x"
             before.attr[LOYALTY] = -2_147_483_549 // the laptop save "sous": MAX + 100 wrapped
-            before.attr[DEADMAN] = -2_000_000_001 // just below the wrap threshold: still a wrapped maximum
-            before.attr[StoreCatalogue.Currency.DONATOR.attr] = -1_999_999_999 // negative, but not a wrap: no gift
-            before.attr[SLAYER_POINTS] = -5
+            before.attr[DEADMAN] = -2_000_000_001
+            before.attr[StoreCatalogue.Currency.DONATOR.attr] = -1_999_999_999 // old build: maxpoints then addloyalty 147483650
+            before.attr[SLAYER_POINTS] = -5 // old build: MAX + 2147483643
             before.attr[PK_POINTS_ATTR] = Int.MIN_VALUE
             before.attr[BreachPoints.BALANCE] = 100 // healthy: untouched
             assertTrue("saved", serializer.saveClientData(before))
@@ -238,8 +238,8 @@ class PointBalanceEdgeTests {
             val after = load(serializer, "n106wrapped")
             assertEquals("Loyalty wrapped -> maximum", MAX, after.attr[LOYALTY])
             assertEquals("Deadman wrapped -> maximum", MAX, after.attr[DEADMAN])
-            assertEquals("Donator small negative -> 0", 0, after.attr[StoreCatalogue.Currency.DONATOR.attr])
-            assertEquals("Slayer small negative -> 0", 0, after.attr[SLAYER_POINTS])
+            assertEquals("Donator -1,999,999,999 (a wrap by an admin add) -> maximum", MAX, after.attr[StoreCatalogue.Currency.DONATOR.attr])
+            assertEquals("Slayer -5 (a wrap by MAX + 2147483643) -> maximum", MAX, after.attr[SLAYER_POINTS])
             assertEquals("PK Int.MIN_VALUE -> maximum", MAX, after.attr[PK_POINTS_ATTR])
             assertEquals("a healthy Breach balance is untouched", 100, after.attr[BreachPoints.BALANCE])
             assertEquals("a currency the account never had stays absent", null, after.attr[PEST_POINTS])
@@ -286,13 +286,26 @@ class PointBalanceEdgeTests {
     }
 
     @Test
-    fun `login repair - the threshold - exactly -2,000,000,000 is a small negative, one below it is a wrapped maximum`() {
+    fun `login repair - every negative size is repaired, there is no threshold (a wrap lands on any negative value)`() {
         val attrs = gg.rsmod.game.model.attr.AttributeMap()
-        attrs[LOYALTY] = PointBalance.WRAPPED_BELOW
-        attrs[DEADMAN] = PointBalance.WRAPPED_BELOW - 1
+        attrs[LOYALTY] = -1
+        attrs[DEADMAN] = -1_999_999_999
+        attrs[SLAYER_POINTS] = -2_000_000_000
+        attrs[PK_POINTS_ATTR] = Int.MIN_VALUE
         val repairs = PointBalance.repairWrapped(attrs).associate { it.key to it.new }
-        assertEquals(0, repairs["loyalty_points"])
-        assertEquals(MAX, repairs["deadman_points"])
+        assertEquals(setOf("loyalty_points", "deadman_points", "slayer_points", "pk_points"), repairs.keys)
+        repairs.values.forEach { assertEquals(MAX, it) }
+        assertEquals(MAX, attrs[LOYALTY])
+        assertEquals(MAX, attrs[DEADMAN])
+    }
+
+    @Test
+    fun `login repair - the admin wrap from the dossier maxpoints then addloyalty 147483650 (-1,999,999,999) is restored to the maximum`() {
+        val attrs = gg.rsmod.game.model.attr.AttributeMap()
+        attrs[LOYALTY] = (MAX.toLong() + 147_483_650L).toInt() // what the old build stored
+        assertEquals(-1_999_999_999, attrs[LOYALTY])
+        PointBalance.repairWrapped(attrs)
+        assertEquals(MAX, attrs[LOYALTY])
     }
 
     @Test
