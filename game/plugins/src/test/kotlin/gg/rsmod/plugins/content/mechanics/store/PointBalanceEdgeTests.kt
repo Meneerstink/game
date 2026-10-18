@@ -10,6 +10,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.LOYALTY_POINTS
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.attr.SLAYER_POINTS
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Npc
@@ -28,6 +29,7 @@ import gg.rsmod.game.task.sequential.SequentialNpcCycleTask
 import gg.rsmod.game.task.sequential.SequentialPlayerCycleTask
 import gg.rsmod.game.task.sequential.SequentialPlayerPostCycleTask
 import gg.rsmod.game.task.sequential.SequentialSynchronizationTask
+import gg.rsmod.plugins.content.activity.pest_control.PEST_POINTS
 import gg.rsmod.plugins.content.daily.DailyObjectives
 import gg.rsmod.plugins.content.mechanics.pvp.BEST_KILLSTREAK_ATTR
 import gg.rsmod.plugins.content.mechanics.pvp.Killstreaks
@@ -95,7 +97,7 @@ class PointBalanceEdgeTests {
         player.attr[LOYALTY] = NEAR
         player.timers[LOYALTY_PLAYTIME_TIMER] = 1
         tick(3)
-        assertTrue("the play-time timer fired: ${messages(player)}", messages(player).any { it.contains("for your time online") })
+        assertTrue("the play-time timer fired: ${messages(player)}", messages(player).any { it.contains("for your time online") || it.contains("at the maximum") })
         assertEquals("Loyalty after +50 at MAX-7", MAX, player.attr[LOYALTY])
         // And again at the maximum: it stays there.
         player.timers[LOYALTY_PLAYTIME_TIMER] = 1
@@ -206,11 +208,102 @@ class PointBalanceEdgeTests {
         assertEquals("Slayer 30 - 400 is refused", 30, player.attr[SLAYER_POINTS])
         player.subtractSlayerPoints(30)
         assertEquals("Slayer 30 - 30", 0, player.attr[SLAYER_POINTS])
-        // A balance that already wrapped before N106 (laptop save "sous": -2,147,483,549): no add leaves it negative, no take
-        // succeeds on it. (Repairing such saves is an owner decision - separate BUGLIJST item.)
+        // A balance that is negative in memory (it can only come from a save that wrapped before N106; the login repair below
+        // fixes those saves): no take succeeds on it and no add leaves it negative.
         player.attr[LOYALTY] = -2_147_483_549
         assertTrue("a wrapped balance cannot pay", !player.subtractLoyalty(1))
-        assertEquals("a wrapped balance + 50 is never negative", 50, player.addLoyalty(50))
+        assertEquals("a negative balance + 50 is never negative", 50, player.addLoyalty(50))
+    }
+
+    // ------------------------------------------------------------------------------- one-time repair of wrapped saves at login
+
+    @Test
+    fun `login repair - a save whose balance wrapped before N106 (sous, -2,147,483,549) becomes 2,147,483,647 once, small negatives become 0`() {
+        withSerializer { serializer, dir ->
+            val before = player("n106wrapped")
+            before.currentXteaKeys = intArrayOf(1, 2, 3, 4)
+            before.passwordHash = "x"
+            before.attr[LOYALTY] = -2_147_483_549 // the laptop save "sous": MAX + 100 wrapped
+            before.attr[DEADMAN] = -2_000_000_001 // just below the wrap threshold: still a wrapped maximum
+            before.attr[StoreCatalogue.Currency.DONATOR.attr] = -1_999_999_999 // negative, but not a wrap: no gift
+            before.attr[SLAYER_POINTS] = -5
+            before.attr[PK_POINTS_ATTR] = Int.MIN_VALUE
+            before.attr[BreachPoints.BALANCE] = 100 // healthy: untouched
+            assertTrue("saved", serializer.saveClientData(before))
+            val json = dir.resolve("n106wrapped").toFile().readText()
+            assertTrue("the wrapped value is really in the save: $json", json.contains("\"loyalty_points\": -2147483549"))
+            world.unregister(before)
+            players.remove(before)
+
+            val after = load(serializer, "n106wrapped")
+            assertEquals("Loyalty wrapped -> maximum", MAX, after.attr[LOYALTY])
+            assertEquals("Deadman wrapped -> maximum", MAX, after.attr[DEADMAN])
+            assertEquals("Donator small negative -> 0", 0, after.attr[StoreCatalogue.Currency.DONATOR.attr])
+            assertEquals("Slayer small negative -> 0", 0, after.attr[SLAYER_POINTS])
+            assertEquals("PK Int.MIN_VALUE -> maximum", MAX, after.attr[PK_POINTS_ATTR])
+            assertEquals("a healthy Breach balance is untouched", 100, after.attr[BreachPoints.BALANCE])
+            assertEquals("a currency the account never had stays absent", null, after.attr[PEST_POINTS])
+            assertEquals("the first +50 play-time reward after the repair stops at the maximum", MAX, after.addLoyalty(50))
+            assertEquals("the repair marker is saved on the account", 1, after.attr[PointBalance.REPAIR_MARKER])
+
+            // Second login: the marker is in the save, nothing is repaired again and a real balance is kept.
+            after.attr[LOYALTY] = 123
+            assertTrue("saved again", serializer.saveClientData(after))
+            world.unregister(after)
+            players.remove(after)
+            val again = load(serializer, "n106wrapped")
+            assertEquals("a repaired account keeps its balance on the next login", 123, again.attr[LOYALTY])
+            assertEquals("the repair is idempotent", emptyList<PointBalance.Repair>(), PointBalance.repairWrapped(again.attr))
+        }
+    }
+
+    @Test
+    fun `login repair - the repair runs before any login hook, so the first reward after login on a wrapped save is the maximum`() {
+        withSerializer { serializer, _ ->
+            val before = player("n106hook")
+            before.currentXteaKeys = intArrayOf(1, 2, 3, 4)
+            before.passwordHash = "x"
+            before.attr[LOYALTY] = -2_147_483_549
+            assertTrue("saved", serializer.saveClientData(before))
+            world.unregister(before)
+            players.remove(before)
+            val after = load(serializer, "n106hook")
+            // The daily reward (+500) is the first thing that touches the balance when the day rolls over at login.
+            after.timers[DAILY_TIMER] = 1
+            tick(2)
+            assertEquals("daily +500 on a repaired wrapped save", MAX, after.attr[LOYALTY])
+            assertTrue("the chat line reads the real balance: ${messages(after)}", messages(after).any { it.contains("total of 2,147,483,647 loyalty points") })
+        }
+    }
+
+    @Test
+    fun `login repair - every balance key used in the sources is in the repair list`() {
+        val keys =
+            StoreCatalogue.Currency.values().map { it.attr } +
+                listOf(LOYALTY, SLAYER_POINTS, PK_POINTS_ATTR, BreachPoints.BALANCE, PEST_POINTS, gg.rsmod.plugins.content.activity.penguin_hide_and_seek.PenguinPoints)
+        keys.forEach { assertTrue("${it.persistenceKey} is repaired at login", it.persistenceKey in PointBalance.PERSISTENCE_KEYS) }
+        assertEquals("no stray key in the list", keys.map { it.persistenceKey }.toSet(), PointBalance.PERSISTENCE_KEYS.toSet())
+    }
+
+    @Test
+    fun `login repair - the threshold - exactly -2,000,000,000 is a small negative, one below it is a wrapped maximum`() {
+        val attrs = gg.rsmod.game.model.attr.AttributeMap()
+        attrs[LOYALTY] = PointBalance.WRAPPED_BELOW
+        attrs[DEADMAN] = PointBalance.WRAPPED_BELOW - 1
+        val repairs = PointBalance.repairWrapped(attrs).associate { it.key to it.new }
+        assertEquals(0, repairs["loyalty_points"])
+        assertEquals(MAX, repairs["deadman_points"])
+    }
+
+    @Test
+    fun `a capped play-time reward says the Loyalty Points are at the maximum instead of the full amount`() {
+        val player = player("n106cap")
+        player.attr[LOYALTY] = MAX
+        player.timers[LOYALTY_PLAYTIME_TIMER] = 1
+        tick(2)
+        assertEquals(MAX, player.attr[LOYALTY])
+        assertTrue("at the maximum: ${messages(player)}", messages(player).any { it.contains("at the maximum") })
+        assertTrue("not 'awarded 50': ${messages(player)}", messages(player).none { it.contains("awarded 50 Loyalty") })
     }
 
     @Test
@@ -309,6 +402,39 @@ class PointBalanceEdgeTests {
         every { system.write(any()) } answers { out += firstArg<Message>() }
         client.gameSystem = system
         written[client] = out
+        assertTrue("registered $name", world.register(client))
+        players += client
+        return client
+    }
+
+    private fun withSerializer(block: (gg.rsmod.game.service.serializer.json.JsonPlayerSerializer, java.nio.file.Path) -> Unit) {
+        val dir = java.nio.file.Files.createTempDirectory("n106-saves")
+        try {
+            val serializer = gg.rsmod.game.service.serializer.json.JsonPlayerSerializer()
+            serializer.initSerializer(mockk(relaxed = true), world, ServerProperties().loadMap(mapOf("path" to dir.toString())))
+            block(serializer, dir)
+        } finally {
+            dir.toFile().deleteRecursively()
+        }
+    }
+
+    private fun load(
+        serializer: gg.rsmod.game.service.serializer.json.JsonPlayerSerializer,
+        name: String,
+    ): Client {
+        val client = Client(EmbeddedChannel(), world)
+        client.loginUsername = name
+        val request =
+            gg.rsmod.net.codec.login.LoginRequest(
+                mockk(relaxed = true), name, "", 667, intArrayOf(1, 2, 3, 4), false, 0, "", 765, 503, reconnecting = true,
+            )
+        assertEquals(gg.rsmod.game.service.serializer.PlayerLoadResult.LOAD_ACCOUNT, serializer.loadClientData(client, request))
+        client.currentXteaKeys = intArrayOf(1, 2, 3, 4)
+        val out = mutableListOf<Message>()
+        written[client] = out
+        val system = mockk<GameSystem>(relaxed = true)
+        every { system.write(any()) } answers { out += firstArg<Message>() }
+        client.gameSystem = system
         assertTrue("registered $name", world.register(client))
         players += client
         return client

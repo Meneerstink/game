@@ -12,7 +12,8 @@ val time = 120000
 on_timer(DAILY_TIMER) {
 
     // Add daily loyalty points
-    player.addLoyalty(amount = 500)
+    val loyaltyBefore = player.attr[LOYALTY_POINTS] ?: 0
+    val loyaltyAfter = player.addLoyalty(amount = 500)
 
     // R14.28/29: reset the three daily objectives alongside the daily loyalty grant
     DailyObjectives.reset(player)
@@ -21,6 +22,10 @@ on_timer(DAILY_TIMER) {
     player.timers[DAILY_TIMER] = time
 
     // Send the message
-    player.message("Your daily timer has been reset, and you have been awarded 500 loyalty points.")
+    if (loyaltyAfter - loyaltyBefore < 500) {
+        player.message("Your daily timer has been reset. Your loyalty points are at the maximum.")
+    } else {
+        player.message("Your daily timer has been reset, and you have been awarded 500 loyalty points.")
+    }
     player.message("You now have a total of ${player.attr[LOYALTY_POINTS]!!.format()} loyalty points.")
 }

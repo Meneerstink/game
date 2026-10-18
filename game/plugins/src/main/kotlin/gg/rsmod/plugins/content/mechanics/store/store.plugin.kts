@@ -88,8 +88,13 @@ on_login {
 
 on_timer(LOYALTY_PLAYTIME_TIMER) {
     // N106: stops at 2,147,483,647, never wraps (the owner's maxpoints account crossed it after ~263 h online).
-    PointBalance.add(player.attr, Currency.LOYALTY.attr, LOYALTY_PLAYTIME_POINTS)
+    val before = PointBalance.of(player.attr, Currency.LOYALTY.attr)
+    val after = PointBalance.add(player.attr, Currency.LOYALTY.attr, LOYALTY_PLAYTIME_POINTS)
     // A reward is not a filterable effect line (lint #msg): it must reach the player with the Game filter on too.
-    player.message("You have been awarded $LOYALTY_PLAYTIME_POINTS Loyalty Points for your time online.")
+    if (after - before < LOYALTY_PLAYTIME_POINTS) {
+        player.message("Your Loyalty Points are at the maximum, ${PointBalance.MAX.format()}.")
+    } else {
+        player.message("You have been awarded $LOYALTY_PLAYTIME_POINTS Loyalty Points for your time online.")
+    }
     player.timers[LOYALTY_PLAYTIME_TIMER] = LOYALTY_PLAYTIME_CYCLES
 }

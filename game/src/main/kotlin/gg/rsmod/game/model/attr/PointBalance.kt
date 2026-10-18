@@ -81,4 +81,57 @@ object PointBalance {
         attrs[key] = total
         return total
     }
+
+    // ------------------------------------------------------------------------------------------ one-time login repair
+
+    /**
+     * Persistence keys of every point balance (the keys of the 78 Store currencies, Slayer, PK, Breach, Pest Control, Penguin).
+     * The save loader repairs by key name, before any login hook runs; PointBalanceEdgeTests checks that every balance key used in
+     * the sources is listed here.
+     */
+    val PERSISTENCE_KEYS: List<String> =
+        listOf(
+            "donator_points",
+            "deadman_points",
+            "loyalty_points",
+            "slayer_points",
+            "pk_points",
+            "breach_points",
+            "pest_points",
+            "penguin_points",
+        )
+
+    /** Saved on the account once the repair ran, so it never runs a second time. */
+    val REPAIR_MARKER = AttributeKey<Int>(persistenceKey = "point_balance_repair")
+
+    /** A balance below this can only come from a wrap at the top (2,147,483,647 + n): it was a maximum balance. */
+    const val WRAPPED_BELOW: Int = -2_000_000_000
+
+    /** One repaired balance: the persistence key with the old and the new value (logged by the save loader). */
+    data class Repair(
+        val key: String,
+        val old: Int,
+        val new: Int,
+    )
+
+    /**
+     * Owner decision 2026-10-18 (VRAGEN 32 = A): a balance that already wrapped negative before N106 is repaired ONCE at login.
+     * Below [WRAPPED_BELOW] it was a wrap past the maximum -> [MAX]; any other negative -> 0 (small negatives get no gift). Runs
+     * once per account ([REPAIR_MARKER]), so it is idempotent. Returns what was changed (empty when the marker is set or nothing
+     * is negative).
+     */
+    fun repairWrapped(attrs: AttributeMap): List<Repair> {
+        if (attrs.has(REPAIR_MARKER)) return emptyList()
+        val repairs = mutableListOf<Repair>()
+        PERSISTENCE_KEYS.forEach { name ->
+            val key = AttributeKey<Int>(persistenceKey = name)
+            val old = (attrs.getOrNull(key) as? Number)?.toInt() ?: return@forEach
+            if (old >= 0) return@forEach
+            val repaired = if (old < WRAPPED_BELOW) MAX else 0
+            attrs[key] = repaired
+            repairs += Repair(name, old, repaired)
+        }
+        attrs[REPAIR_MARKER] = 1
+        return repairs
+    }
 }

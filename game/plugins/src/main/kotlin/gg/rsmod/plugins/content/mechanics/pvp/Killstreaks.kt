@@ -97,12 +97,21 @@ object Killstreaks {
         val streakBonus = (newStreak / 5).coerceAtMost(10)
         val points = POINTS_PER_KILL + streakBonus
         // N106: both balances stop at 2,147,483,647 (PointBalance.add), never wrap.
-        PointBalance.add(killer.attr, PK_POINTS_ATTR, points)
-        killer.message("You have been awarded $points PK points.")
+        val pkBefore = PointBalance.of(killer.attr, PK_POINTS_ATTR)
+        if (PointBalance.add(killer.attr, PK_POINTS_ATTR, points) - pkBefore < points) {
+            killer.message("Your PK points are at the maximum.")
+        } else {
+            killer.message("You have been awarded $points PK points.")
+        }
         // Deadman Points (store currency, earned only through Deadman/PvP kills). PROVISIONAL amount.
         val deadmanPoints = DEADMAN_POINTS_PER_KILL + streakBonus
-        PointBalance.add(killer.attr, gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr, deadmanPoints)
-        killer.message("You have been awarded $deadmanPoints Deadman Points.")
+        val deadmanKey = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Currency.DEADMAN.attr
+        val deadmanBefore = PointBalance.of(killer.attr, deadmanKey)
+        if (PointBalance.add(killer.attr, deadmanKey, deadmanPoints) - deadmanBefore < deadmanPoints) {
+            killer.message("Your Deadman Points are at the maximum.")
+        } else {
+            killer.message("You have been awarded $deadmanPoints Deadman Points.")
+        }
     }
 
     const val DEADMAN_POINTS_PER_KILL = 10

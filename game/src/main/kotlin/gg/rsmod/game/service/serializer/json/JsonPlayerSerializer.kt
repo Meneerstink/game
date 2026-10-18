@@ -9,6 +9,7 @@ import gg.rsmod.game.model.*
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.DOUBLE_ATTRIBUTES
 import gg.rsmod.game.model.attr.LONG_ATTRIBUTES
+import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.attr.SKULL_ICON_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Client
@@ -175,6 +176,18 @@ class JsonPlayerSerializer : PlayerSerializerService() {
             doubleAttributes?.forEach { (key, value) ->
                 val attribute = AttributeKey<Double>(key)
                 client.attr[attribute] = value
+            }
+
+            // N106 (owner 2026-10-18, VRAGEN 32 = A): a point balance that wrapped negative before the saturating adds is
+            // repaired once per account, here - before any login hook can add to it.
+            PointBalance.repairWrapped(client.attr).forEach { fix ->
+                val line = "${java.time.LocalDateTime.now()}	${data.username}	${fix.key}	old=${fix.old}	new=${fix.new}"
+                logger.warn { "Point balance repaired: $line" }
+                runCatching {
+                    val file = java.io.File("data/logs/point_balance_repairs.log")
+                    file.parentFile?.mkdirs()
+                    file.appendText(line + System.lineSeparator())
+                }.onFailure { logger.error(it) { "Could not log point balance repair: $line" } }
             }
 
             data.timers.forEach { timer ->
