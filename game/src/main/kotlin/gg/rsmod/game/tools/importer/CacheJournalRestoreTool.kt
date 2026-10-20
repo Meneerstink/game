@@ -1,14 +1,14 @@
 package gg.rsmod.game.tools.importer
 
+import com.displee.cache.CacheLibrary
 import java.io.File
+import java.util.UUID
 
 /**
- * Writes files back from a [CacheTransaction] journal (`<target slug>__idx<i>_grp<g>_file<f>.orig`) through a new transaction
- * (preflight, journal, verify; refuses while the servers run). Only journal entries whose name matches [filter] and that the
- * journaled transaction REPLACED (an `.orig` without an `.absent`) are restored. The current content's SHA-1, read just before,
- * is the expected value, so a write in between still conflicts.
- *
- * Usage: `<journalDir> <regex over "idx<i>_grp<g>_file<f>"> [--apply]`
+ * Restores REPLACED entries from a persisted [CacheTransaction] journal in a fresh transaction (preflight, backup,
+ * active-consumer guard, apply, verify). Supports decoded .orig and raw .stored + .ref backups, without decoding ciphertext.
+ * Both targets must have identical backups and current content. CREATE entries (.absent) are deliberately excluded.
+ * Usage: `<journalDir> <regex over "idx<i>_grp<g>_file<f>"> [--apply]`. Default is read-only.
  */
 object CacheJournalRestoreTool {
     private val LOCATION = Regex("""idx(\d+)_grp(\d+)_file(\d+)""")
@@ -20,28 +20,61 @@ object CacheJournalRestoreTool {
         val apply = "--apply" in args
         val targets = OsrsItemImportTool.TARGETS
         val slugs = targets.associateBy { it.replace(Regex("[^A-Za-z0-9]+"), "_").trim('_') }
-        val names = journal.listFiles()!!.map { it.name }.toSet()
-        val mutationsByTarget = mutableMapOf<String, MutableList<CacheMutation>>()
-        names.filter { it.endsWith(".orig") && it.removeSuffix(".orig") + ".absent" !in names }.sorted().forEach { name ->
-            val (slug, location) = name.removeSuffix(".orig").split("__", limit = 2)
-            val target = slugs[slug] ?: error("unknown target slug $slug")
+        val names = (journal.listFiles() ?: error("not a journal directory: $journal")).map { it.name }.toSet()
+        val backups = mutableMapOf<String, MutableMap<String, CacheMutation>>()
+        val currentPins = mutableMapOf<String, MutableMap<String, String?>>()
+        val recordedPins = File(journal, "plan.txt").takeIf { it.isFile }?.readLines().orEmpty()
+            .filter { it.startsWith("plan\t") }.associate { line ->
+                val fields = line.split('\t').drop(1).associate { it.substringBefore('=') to it.substringAfter('=') }
+                val slug = fields.getValue("target").replace(Regex("[^A-Za-z0-9]+"), "_").trim('_')
+                "${slug}__${fields.getValue("location")}" to fields.getValue("current_sha1")
+            }
+        names.filter { it.endsWith(".orig") || it.endsWith(".stored") }.sorted().forEach { name ->
+            val base = name.substringBeforeLast('.')
+            if ("$base.absent" in names) return@forEach
+            val parts = base.split("__", limit = 2)
+            check(parts.size == 2) { "invalid journal filename $name" }
+            val (slug, location) = parts
             if (!filter.containsMatchIn(location)) return@forEach
-            val (index, group, file) = LOCATION.matchEntire(location)!!.destructured
-            val library = com.displee.cache.CacheLibrary(target)
-            val current = try { library.data(index.toInt(), group.toInt(), file.toInt()) } finally { library.close() }
-            mutationsByTarget.getOrPut(target) { mutableListOf() } +=
-                CacheMutation(
-                    index.toInt(), group.toInt(), file.toInt(), File(journal, name).readBytes(), "restore $location from ${journal.name}",
-                    expectedCurrentSha1 = current?.let { CacheItemProbeTool.sha1(it) },
-                )
+            val target = slugs[slug] ?: error("unknown target slug $slug")
+            val (index, group, file) = (LOCATION.matchEntire(location) ?: error("invalid location $location")).destructured
+            val bytes = File(journal, name).readBytes()
+            val reference = if (name.endsWith(".stored")) StoredCacheReference.read(File(journal, "$base.ref")) else null
+            if (reference != null) {
+                check(CacheItemProbeTool.sha1(bytes) == recordedPins[base]) { "stored backup SHA1 differs from original plan: $name" }
+            }
+            val current = CacheLibrary(target).let { library ->
+                try {
+                    if (reference != null) library.index(index.toInt()).readArchiveSector(group.toInt())?.data
+                    else library.data(index.toInt(), group.toInt(), file.toInt())
+                } finally {
+                    library.close()
+                }
+            }
+            val pin = current?.let { CacheItemProbeTool.sha1(it) }
+            val mutation = CacheMutation(index.toInt(), group.toInt(), file.toInt(), bytes,
+                "restore $location from ${journal.name}", expectedCurrentSha1 = pin, storedReference = reference)
+            check(backups.getOrPut(target) { linkedMapOf() }.put(location, mutation) == null) { "duplicate backup: $base" }
+            currentPins.getOrPut(target) { linkedMapOf() }[location] = pin
         }
-        // Both caches must receive the same restore (they are kept byte-identical).
-        val perTarget = mutationsByTarget.values.map { list -> list.map { "${it.indexId}/${it.groupId}/${it.fileId}" }.toSet() }.distinct()
-        check(perTarget.size == 1 && mutationsByTarget.keys.size == targets.size) { "the targets' journals differ: $mutationsByTarget" }
-        val mutations = mutationsByTarget.getValue(targets[0])
+        val locations = backups.values.map { it.keys.toSet() }.distinct()
+        check(locations.size == 1 && backups.keys.size == targets.size) { "the targets' journals differ or no backups matched" }
+        val mutations = backups.getValue(targets[0]).values.toList()
+        mutations.forEach { first ->
+            val location = first.describeLocation()
+            targets.drop(1).forEach { target ->
+                val other = backups.getValue(target).getValue(location)
+                check(first.newBytes!!.contentEquals(other.newBytes!!) && first.storedReference == other.storedReference) {
+                    "the targets' backup bytes/reference differ at $location"
+                }
+                check(currentPins.getValue(targets[0])[location] == currentPins.getValue(target)[location]) {
+                    "the targets' current content differs at $location"
+                }
+            }
+        }
         println("RESTORE ${mutations.size} files per cache from ${journal.name}")
-        // The expected SHA-1 must hold in every target: the caches are identical, so the first target's value applies to both.
-        val transaction = CacheTransaction(targets = targets, mutations = mutations)
+        // Unique even for two CLI invocations within a second; never overwrite the source journal or an earlier undo.
+        val transaction = CacheTransaction(targets, mutations, id = "restore-${CacheTransaction.newTransactionId()}-${UUID.randomUUID()}")
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")

@@ -92,6 +92,19 @@ class CacheTransaction(
         targets.flatMap { target ->
             withLibrary(target) { library ->
                 mutations.map { mutation ->
+                    if (mutation.storedReference != null) {
+                        val current = storedGroup(library, mutation)
+                        val archive = library.index(mutation.indexId).archive(mutation.groupId, null, true)
+                        // Raw restore preserves the existing single-file table and name; never apply it to another shape.
+                        val compatible = archive != null && archive.files.keys == setOf(0)
+                        val outcome = when {
+                            !compatible || current == null -> MutationOutcome.CONFLICT
+                            current.contentEquals(mutation.newBytes!!) && referenceOf(library, mutation) == mutation.storedReference -> MutationOutcome.NO_OP
+                            CacheItemProbeTool.sha1(current) == mutation.expectedCurrentSha1 -> MutationOutcome.REPLACE
+                            else -> MutationOutcome.CONFLICT
+                        }
+                        return@map PreflightEntry(target, mutation, current?.let { CacheItemProbeTool.sha1(it) }, current?.size, outcome)
+                    }
                     pinnedUndecodable(library, mutation)?.let { stored ->
                         return@map PreflightEntry(target, mutation, CacheItemProbeTool.sha1(stored), stored.size, MutationOutcome.REPLACE)
                     }
@@ -193,7 +206,7 @@ class CacheTransaction(
         // Journal first, for every target, before a single byte is written anywhere.
         changing.forEach { entry ->
             withLibrary(entry.target) { library ->
-                pinnedUndecodable(library, entry.mutation)?.let { stored ->
+                (if (entry.mutation.storedReference != null) storedGroup(library, entry.mutation) else pinnedUndecodable(library, entry.mutation))?.let { stored ->
                     // N10: the old group cannot be decoded (no key), so the journal keeps it as stored plus its reference entry.
                     storedJournal(entry.target, entry.mutation).writeBytes(stored)
                     val archive = library.index(entry.mutation.indexId).archive(entry.mutation.groupId, null, true)!!
@@ -226,6 +239,8 @@ class CacheTransaction(
                         val mutation = entry.mutation
                         if (mutation.newBytes == null) {
                             library.remove(mutation.indexId, mutation.groupId, mutation.fileId)
+                        } else if (mutation.storedReference != null) {
+                            writeStored(library, mutation, mutation.newBytes, mutation.storedReference)
                         } else {
                             if (storedJournal(target, mutation).isFile) {
                                 // The pinned undecodable group is replaced whole without decoding it first (displee would
@@ -340,7 +355,8 @@ class CacheTransaction(
         targets.forEach { target ->
             withLibrary(target) { library ->
                 mutations.forEach { mutation ->
-                    val actual = library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
+                    val actual = if (mutation.storedReference != null) storedGroup(library, mutation)
+                        else library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
                     val actualSha = actual?.let { CacheItemProbeTool.sha1(it) }
                     val intendedSha = mutation.newBytes?.let { CacheItemProbeTool.sha1(it) }
                     if (actualSha != intendedSha) {
@@ -349,6 +365,9 @@ class CacheTransaction(
                                 "expected sha1=${intendedSha ?: "ABSENT"}, actual sha1=${actualSha ?: "ABSENT"}"
                     }
                     perLocation.getOrPut(mutation.describeLocation()) { mutableMapOf() }[target] = actualSha
+                    if (mutation.storedReference != null && referenceOf(library, mutation) != mutation.storedReference) {
+                        problems += "REFERENCE_MISMATCH at $target ${mutation.describeLocation()}: crc/revision/whirlpool differ"
+                    }
                     if (mutation.groupName != null && mutation.newBytes != null) {
                         val named = library.index(mutation.indexId).archive(mutation.groupName)?.id
                         if (named != mutation.groupId) {
@@ -478,17 +497,25 @@ class CacheTransaction(
         target: String,
         mutation: CacheMutation,
     ) {
+        writeStored(library, mutation, storedJournal(target, mutation).readBytes(), StoredCacheReference.read(referenceJournal(target, mutation)))
+    }
+
+    private fun referenceOf(library: CacheLibrary, mutation: CacheMutation): StoredCacheReference {
+        val archive = library.index(mutation.indexId).archive(mutation.groupId, null, true)!!
+        return StoredCacheReference(archive.crc, archive.revision, archive.whirlpool?.joinToString("") { "%02x".format(it) } ?: "")
+    }
+
+    /** Same raw-sector mechanism for in-process rollback and a later process restoring the persisted journal. */
+    private fun writeStored(library: CacheLibrary, mutation: CacheMutation, bytes: ByteArray, reference: StoredCacheReference) {
         val index = library.index(mutation.indexId)
-        check(index.writeArchiveSector(mutation.groupId, storedJournal(target, mutation).readBytes())) {
-            "could not restore the stored group ${mutation.describeLocation()} on $target"
+        check(index.writeArchiveSector(mutation.groupId, bytes)) {
+            "could not restore the stored group ${mutation.describeLocation()}"
         }
-        val reference =
-            referenceJournal(target, mutation).readLines().filter { '=' in it }.associate { it.substringBefore('=') to it.substringAfter('=') }
         val archive = index.archive(mutation.groupId, null, true)!!
-        archive.crc = reference.getValue("crc").toInt()
-        archive.revision = reference.getValue("revision").toInt()
-        reference["whirlpool"]?.takeIf { it.isNotEmpty() }?.let { hex ->
-            archive.whirlpool = ByteArray(hex.length / 2) { hex.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
+        archive.crc = reference.crc
+        archive.revision = reference.revision
+        archive.whirlpool = reference.whirlpool.takeIf { it.isNotEmpty() }?.let { hex ->
+            ByteArray(hex.length / 2) { hex.substring(it * 2, it * 2 + 2).toInt(16).toByte() }
         }
         // The file table stays (the write kept the same file ids, here file 0): only the content and the reference entry go back.
         archive.read = false
@@ -574,9 +601,13 @@ class CacheMutation(
      * container back. After the write the group decodes normally, so a re-run is a NO_OP.
      */
     val undecodableCurrentSha1: String? = null,
+    /** Journal restore only: [newBytes] is a complete stored single-file group; its current RAW SHA1 is [expectedCurrentSha1]. */
+    val storedReference: StoredCacheReference? = null,
 ) {
     init {
         require(undecodableCurrentSha1 == null || newBytes != null) { "an undecodable group can only be replaced, not removed" }
+        require(storedReference == null || (newBytes != null && fileId == 0 && xtea == null && undecodableCurrentSha1 == null &&
+            groupName == null && groupNameHash == null && fileName == null)) { "raw restore requires an existing single-file group" }
     }
 
     fun describeLocation(): String = "idx${indexId}_grp${groupId}_file$fileId"
@@ -597,6 +628,20 @@ class CacheMutation(
                 label = label,
                 expectedCurrentSha1 = expectedCurrentSha1,
             )
+    }
+}
+
+/** Reference metadata paired with a .stored backup; parse it before any write can start. */
+data class StoredCacheReference(val crc: Int, val revision: Int, val whirlpool: String) {
+    init {
+        require(whirlpool.isEmpty() || whirlpool.matches(Regex("[0-9a-f]{128}"))) { "invalid journal whirlpool" }
+    }
+
+    companion object {
+        fun read(file: File): StoredCacheReference {
+            val fields = file.readLines().filter { '=' in it }.associate { it.substringBefore('=') to it.substringAfter('=') }
+            return StoredCacheReference(fields.getValue("crc").toInt(), fields.getValue("revision").toInt(), fields.getValue("whirlpool"))
+        }
     }
 }
 
