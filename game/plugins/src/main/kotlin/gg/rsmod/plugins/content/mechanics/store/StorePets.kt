@@ -46,8 +46,8 @@ object StorePets {
     }
 
     /**
-     * Owner 2026-10-17 (N101): every sold OSRS pet moved into the Deadman's chest (DeadmanChestLoot.pets, derived from [stock]) and
-     * leaves EVERY shop. The stores sell no OSRS pet any more; players keep the pets they own.
+     * Owner 2026-10-17 (N101): OSRS pets leave EVERY shop; players keep the pets they own. Council Opus+Sol 2026-10-20:
+     * DeadmanChestLoot.pets includes ALL tier-roster species, independently of this former shop's boss-drop filter.
      */
     @Suppress("UNUSED_PARAMETER")
     fun entries(

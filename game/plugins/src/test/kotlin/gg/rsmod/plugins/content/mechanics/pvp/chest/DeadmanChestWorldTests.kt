@@ -23,6 +23,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters
 import gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach
+import gg.rsmod.plugins.content.skills.summoning.Pets
 import gg.rsmod.util.ServerProperties
 import io.mockk.every
 import io.mockk.mockk
@@ -85,6 +86,78 @@ class DeadmanChestWorldTests {
     }
 
     // ------------------------------------------------------------------------------------------------------- opening
+
+    @Test
+    fun `all 71 roster pets reach their owner through follower, backpack, bank and private ground on the real map`() {
+        val dir = File("../../data/cfg/pets")
+        Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
+        val expected = Pets.parseTiers(File(dir, "pet_tiers.tsv").readLines())
+        assertEquals(71, expected.size)
+        val at = freeTile(false)
+        for ((index, info) in expected.withIndex()) {
+            val base = Pets.parseTable(File(dir, "pets.tsv").readLines()).first { it.pet == info.pet }.item
+            for (destination in listOf("follower", "backpack", "bank", "ground")) {
+                val p = player("pet${index}${destination.take(1)}", at)
+                var ground: GroundItem? = null
+                try {
+                    if (destination != "follower") {
+                        val other = expected.first { it.pet != info.pet }.pet
+                        Pets.award(p, other)
+                        assertNotNull("precondition: other pet follows", Pets.current(p))
+                    }
+                    if (destination == "bank" || destination == "ground") {
+                        for (slot in 0 until p.inventory.capacity) p.inventory[slot] = gg.rsmod.game.model.item.Item(Items.SHARK)
+                    }
+                    if (destination == "ground") {
+                        for (slot in 0 until p.bank.capacity) p.bank[slot] = gg.rsmod.game.model.item.Item(Items.SHARK)
+                    }
+                    val available = DeadmanChestLoot.pets().filterNot { Pets.owns(p, it.first) }
+                    val petIndex = available.indexOfFirst { it.first == info.pet }
+                    assertTrue("${info.pet} must be reachable ($destination)", petIndex >= 0)
+                    val draw = DeadmanChestLoot.FIXED.sumOf { it.weight } + petIndex * DeadmanChestLoot.PET_WEIGHT
+                    val reward = DeadmanChest.giveReward(p, object : java.util.Random() {
+                        override fun nextInt(bound: Int): Int {
+                            assertTrue(draw in 0 until bound)
+                            return draw
+                        }
+                    })
+                    assertTrue(reward is DeadmanChestLoot.Reward.Pet)
+                    assertEquals(info.pet, (reward as DeadmanChestLoot.Reward.Pet).pet)
+                    assertEquals(base, reward.item)
+                    when (destination) {
+                        "follower" -> {
+                            assertEquals(base, Pets.itemOf(p))
+                            assertNotNull(Pets.current(p))
+                            // Real follower lifecycle: disconnect/restore and recovery after a teleport retain the reward.
+                            Pets.disconnect(p)
+                            assertNull(Pets.current(p))
+                            Pets.restoreOnLogin(p)
+                            assertEquals(base, Pets.itemOf(p))
+                            p.tile = beside(at)
+                            assertTrue(Pets.call(p))
+                            assertTrue(Pets.owns(p, info.pet))
+                        }
+                        "backpack" -> assertEquals(1, p.inventory.getItemCount(base))
+                        "bank" -> assertEquals(1, p.bank.getItemCount(base))
+                        "ground" -> {
+                            ground = world.getGroundItem { it.item == base && it.isOwnedBy(p) }
+                            assertNotNull("${info.pet}: private ground fallback", ground)
+                            assertEquals(1, ground!!.amount)
+                            assertFalse(ground!!.isPublic())
+                            assertEquals(0, p.inventory.getItemCount(base) + p.bank.getItemCount(base))
+                        }
+                    }
+                    for (npc in info.dropNpcs) assertEquals(info, Pets.dropFor(npc))
+                } finally {
+                    ground?.let { world.remove(it) }
+                    Pets.disconnect(p)
+                    world.unregister(p)
+                    clients.remove(p)
+                    written.remove(p)
+                }
+            }
+        }
+    }
 
     @Test
     fun `the chest opens after exactly 100 ticks in singles and 50 in multi, the first opener gets one reward and the chest is gone after the open state`() {

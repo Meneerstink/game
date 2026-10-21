@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
 
 /**
  * N101 (owner 2026-10-17): the Deadman's chest. CLASS = "one owner list, many consumers": the chest list [DeadmanChestLoot] is the ONLY
- * source of the 17 Ancient Warriors pieces, the Trinket of fairies, Elder chaos, Heavy ballista, the Voidwaker parts and every sold OSRS
+ * source of the 17 Ancient Warriors pieces, the Trinket of fairies, Elder chaos, Heavy ballista, the Voidwaker parts and every OSRS
  * pet - no shop, no Grand Exchange house quote, no store-pet entry may sell what the chest gives. Plus every rule of the chest (dossier
  * gaps 1-6): requirements, the 100 / 50 tick channel and every interrupt, first opener, kill predicate, anti-farm limiter, loot variants.
  */
@@ -66,15 +66,24 @@ class DeadmanChestTests {
     }
 
     @Test
-    fun `class - every OSRS pet of the chest leaves every shop (StorePets sells none), the stock function still lists them for the chest`() {
+    fun `class - all 71 owner roster species enter the chest, no pet is sold and existing boss drops stay`() {
         assertTrue(Pets.load(TABLE, TIERS) > 0)
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS).map { it.purchaseItem }, "pets still sold")
+        val expected = Pets.parseTiers(TIERS.readLines())
+        assertEquals(71, expected.size, "Council Opus+Sol 2026-10-20 19:37: all pet_tiers species")
+        assertEquals(mapOf(1 to 24, 2 to 25, 3 to 22), expected.groupingBy { it.tier }.eachCount())
         val pets = DeadmanChestLoot.pets()
-        assertTrue(pets.size >= 40, "the chest pet list ${pets.size}")
-        assertEquals(StorePets.stock(Pets.variants, Pets.infos.values.toList()).size, pets.size, "one list: the former shop stock")
-        val dropOnly = Pets.infos.values.filter { it.dropOnly }.map { it.pet }.toSet()
-        assertEquals(emptyList(), pets.filter { it.first in dropOnly }, "drop-only pets keep their boss drop and are not in the chest")
-        assertEquals(emptyList(), StoreCatalogue.ENTRIES.filter { e -> pets.any { it.second == e.purchaseItem } }.map { it.purchaseItem })
+        assertEquals(expected.map { it.pet }.toSet(), pets.map { it.first }.toSet(), "complete independent owner roster")
+        assertEquals(71, pets.size, "exactly one base item per species, including multi-variant pets")
+        for (info in expected) {
+            val base = Pets.parseTable(TABLE.readLines()).first { it.pet == info.pet }.item
+            assertEquals(base, pets.single { it.first == info.pet }.second, info.pet)
+            for (npc in info.dropNpcs) assertEquals(info, Pets.dropFor(npc), "existing boss drop npc=$npc")
+        }
+        val variantItems = Pets.variants.map { it.item }.toSet()
+        assertEquals(emptyList(), StoreCatalogue.ENTRIES.filter { e ->
+            e.purchaseItem in variantItems || e.resultItems.any { it in variantItems }
+        }.map { it.purchaseItem }, "no base or metamorphosis variant sold")
     }
 
     @Test
@@ -121,12 +130,50 @@ class DeadmanChestTests {
         }
         assertEquals(DeadmanChestLoot.FIXED_IDS, seenItems)
         assertEquals(pets.map { it.first }.toSet(), seenPets)
-        val owned = pets.first().first
-        val availableTotal = DeadmanChestLoot.FIXED.sumOf { it.weight } + (pets.size - 1) * DeadmanChestLoot.PET_WEIGHT
-        for (r in 0 until availableTotal) {
-            val reward = DeadmanChestLoot.roll(fixed(r), pets, ownsPet = { it == owned })
-            if (reward is DeadmanChestLoot.Reward.Pet) assertTrue(reward.pet != owned, "an owned pet was picked")
+        for (owned in pets.map { it.first }) {
+            val availableTotal = DeadmanChestLoot.FIXED.sumOf { it.weight } + (pets.size - 1) * DeadmanChestLoot.PET_WEIGHT
+            for (r in 0 until availableTotal) {
+                val reward = DeadmanChestLoot.roll(fixed(r), pets, ownsPet = { it == owned })
+                if (reward is DeadmanChestLoot.Reward.Pet) assertTrue(reward.pet != owned, "an owned pet was picked: $owned")
+            }
         }
+        repeat(DeadmanChestLoot.FIXED.sumOf { it.weight }) { r ->
+            assertTrue(DeadmanChestLoot.roll(fixed(r), pets, ownsPet = { true }) is DeadmanChestLoot.Reward.Item)
+        }
+    }
+
+    @Test
+    fun `every owner roster species is reachable through the breach extra roll at every bracket rate`() {
+        Pets.load(TABLE, TIERS)
+        val expected = Pets.parseTiers(TIERS.readLines()).map { it.pet }.toSet()
+        val total = DeadmanChestLoot.FIXED.sumOf { it.weight } + expected.size * DeadmanChestLoot.PET_WEIGHT
+        for (rate in listOf(1.0, 3.0, 4.0, 5.0)) {
+            val seen = mutableSetOf<String>()
+            for (draw in 0 until total) {
+                val random = object : Random() {
+                    override fun nextInt(bound: Int): Int = if (bound == total) draw else 0
+                    override fun nextDouble(): Double = 0.0
+                }
+                BreachLoot.roll(random, rate).forEach { drop ->
+                    Pets.variantOfItem(drop.item)?.let { variant ->
+                        assertEquals(1, drop.amount)
+                        assertEquals(Pets.baseItem(variant.pet), drop.item)
+                        seen += variant.pet
+                    }
+                }
+            }
+            assertEquals(expected, seen, "breach rate=$rate must reach the independent whole roster")
+        }
+    }
+
+    @Test
+    fun `chest eligibility follows tiers while base selection follows first variant, independently of boss eligibility`() {
+        val table = listOf(
+            Pets.Variant("boss", "base", 1, 11), Pets.Variant("boss", "morph", 2, 12),
+            Pets.Variant("other", "base", 3, 13), Pets.Variant("not in tiers", "base", 4, 14),
+        )
+        val tiers = listOf(Pets.PetInfo("other", 3, emptySet(), 0), Pets.PetInfo("boss", 1, setOf(100), 5000))
+        assertEquals(listOf("other" to 3, "boss" to 1), DeadmanChestLoot.pets(table, tiers))
     }
 
     // ------------------------------------------------------------------------------------------------ requirements (start AND completion)

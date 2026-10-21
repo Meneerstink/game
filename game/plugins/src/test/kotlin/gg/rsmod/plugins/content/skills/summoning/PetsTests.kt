@@ -100,7 +100,7 @@ class PetsTests {
     }
 
     @Test
-    fun `N101 - the sold pets (tier 1 Donator, tier 2 Deadman, tier 3 Loyalty) moved into the Deadman chest, boss-drop pets never`() {
+    fun `N101 - all tier species enter the chest, former shop filtering and existing boss drops stay independent`() {
         val stock = StorePets.stock(Pets.variants, Pets.infos.values.toList())
         val dropOnly = Pets.infos.values.filter { it.dropOnly }.map { it.pet }.toSet()
         assertTrue(stock.none { it.first in dropOnly })
@@ -109,8 +109,12 @@ class PetsTests {
             assertEquals(Pets.baseItem(pet), item, pet)
         }
         assertEquals(Pets.infos.size - dropOnly.size, stock.size)
-        // Owner 2026-10-17: every one of them is a Deadman chest reward and no shop sells it any more.
-        assertEquals(stock.map { it.first to it.third }, gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets())
+        // Council Opus+Sol 2026-10-20: all71, including the16 former drop-only species. Own boss drops stay.
+        val expected = Pets.parseTiers(TIERS.readLines())
+        val chest = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets()
+        assertEquals(71, chest.size)
+        assertEquals(expected.map { it.pet }.toSet(), chest.map { it.first }.toSet())
+        expected.forEach { info -> info.dropNpcs.forEach { assertEquals(info, Pets.dropFor(it)) } }
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS))
     }
 }

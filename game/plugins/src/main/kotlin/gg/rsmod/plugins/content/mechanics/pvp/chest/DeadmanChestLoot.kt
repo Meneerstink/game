@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.pvp.chest
 
 import gg.rsmod.plugins.api.cfg.Items
-import gg.rsmod.plugins.content.mechanics.store.StorePets
 import gg.rsmod.plugins.content.skills.summoning.Pets
 import java.util.Random
 
@@ -79,7 +78,7 @@ object DeadmanChestLoot {
             Entry(Items.VOIDWAKER_BLADE, 1, 2), Entry(Items.VOIDWAKER_GEM, 1, 2), Entry(Items.VOIDWAKER_HILT, 1, 2),
         )
 
-    /** Weight of one pet: PROVISIONAL, every sold pet equal. */
+    /** Weight of one pet: PROVISIONAL, every tier-roster species equal, including those with boss drops. */
     const val PET_WEIGHT = 5
 
     /** Pets are untradeable and read from [pets] at load; the fixed items are what the shop filter and the GE house exclude. */
@@ -94,11 +93,19 @@ object DeadmanChestLoot {
             Items.MORRIGANS_THROWING_AXE, Items.ZURIELS_HOOD, Items.ZURIELS_ROBE_TOP, Items.ZURIELS_ROBE_BOTTOM, Items.ZURIELS_STAFF,
         )
 
-    /** A pet reward: (pet name, base item). Derived from the SAME function that used to fill the shop ([StorePets.stock]). */
+    /**
+     * A pet reward: (pet name, first/base variant item), using the former shop's base-variant selection.
+     * Council Opus+Sol 2026-10-20: ALL pet_tiers species enter the chest, independently of their existing boss drops.
+     * The shop-only dropOnly filter must not restrict this roster. BreachLoot shares it and delivers plain pet items
+     * through its existing private ground-loot path (including duplicates); the chest uses Pets.award and excludes owned pets.
+     */
     fun pets(
         table: List<Pets.Variant> = Pets.variants,
         tiers: List<Pets.PetInfo> = Pets.infos.values.toList(),
-    ): List<Pair<String, Int>> = StorePets.stock(table, tiers).map { it.first to it.third }
+    ): List<Pair<String, Int>> {
+        val base = table.groupBy { it.pet }.mapValues { it.value.first().item }
+        return tiers.mapNotNull { info -> base[info.pet]?.let { info.pet to it } }
+    }
 
     sealed class Reward {
         class Item(val item: Int, val amount: Int) : Reward()
