@@ -23,6 +23,7 @@ import gg.rsmod.plugins.content.areas.portsarim.Destinations
 import gg.rsmod.plugins.content.areas.portsarim.Ports
 import gg.rsmod.plugins.content.mechanics.canoes.CanoeUtils
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.skills.agility.isUsableLanding
 import gg.rsmod.util.ServerProperties
 import io.mockk.every
@@ -30,6 +31,7 @@ import io.mockk.mockk
 import io.netty.channel.embedded.EmbeddedChannel
 import org.junit.After
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Assert.fail
 import org.junit.Test
@@ -54,8 +56,13 @@ class TravelLandingTests {
 
     @After
     fun cleanUp() {
-        players.forEach { world.unregister(it) }
+        players.forEach {
+            SevenSecondAction.cancel(it)
+            queues(it).terminateTasks()
+            world.unregister(it)
+        }
         players.clear()
+        written.clear()
     }
 
     @Test
@@ -64,6 +71,7 @@ class TravelLandingTests {
         val problems =
             landings().mapNotNull { (name, tile) ->
                 val pocket = Landing.pocket(world.collision, tile, limit = 16).size
+                println("N51 fixed travel landing: $name $tile pocket=$pocket")
                 when {
                     !isUsableLanding(world, tile) -> "$name $tile: walk pocket of $pocket tile(s) - the player cannot walk away"
                     spawns.any { it.second == tile } -> "$name $tile: the standing post of ${spawns.filter { it.second == tile }.joinToString { it.first }}"
@@ -105,9 +113,138 @@ class TravelLandingTests {
         assertTrue("not on squire 3801's own tile", landed != squire)
         val besideSquire = Direction.NESW.map { squire.step(it) }.filter { it in pocket && world.collision.canStep(it, dirTo(it, squire)) }
         assertTrue("squire 3801 can be reached from $landed (pocket=$pocket)", besideSquire.isNotEmpty())
+        assertTrue("return landing is not any npc's spawn tile", pluginNpcSpawns(stationaryOnly = false).none { it.second == landed })
+    }
+
+    @Test
+    fun `squire boat spawn roster matches Darkan and leaves both arrival tiles unoccupied`() {
+        // Darkan real_rs_spawns_unorganized.json: 3790 belongs at the outpost, 3800/3801 are the two boat agents.
+        // Void port_sarim.npc-spawns.toml:50 independently has only squire_port_sarim at 3041,3202.
+        val expected = mapOf(
+            "Npcs.SQUIRE_3790" to Tile(2651, 2664, 0),
+            "Npcs.SQUIRE_3800" to Tile(2658, 2676, 0),
+            "Npcs.SQUIRE_3801" to Tile(3041, 3202, 0),
+        )
+        val spawns = pluginNpcSpawns(stationaryOnly = false).filter { it.first.substringBefore(" (") in expected }
+        val actual = spawns.groupBy({ it.first.substringBefore(" (") }, { it.second })
+        println("N51 runtime-source squire spawns: $actual")
+        assertEquals("one squire per donor post, including wanderers", expected.mapValues { listOf(it.value) }, actual)
+        landings().filter { it.first.startsWith("void_outpost_boat ") }.forEach { (name, tile) ->
+            assertTrue("$name $tile must not overlap any squire spawn", spawns.none { it.second == tile })
+        }
+    }
+
+    @Test
+    fun `both squires support repeated concurrent round trips and ordinary walking into town`() {
+        val travellers = listOf(player("n51fresh", Tile(2659, 2678, 0)), player("n51skull", Tile(2659, 2677, 0)))
+        PvpSkull.applyTestSkull(travellers.last())
+        repeat(3) { round ->
+            travellers.forEach { startTrip(it, Npcs.SQUIRE_3800) }
+            travellers.forEach { finishCountdown(it) }
+            tick(25)
+            travellers.forEach { p ->
+                assertEquals("return $round for ${p.username}", Tile(3041, 3203, 0), p.tile)
+                assertEquals(LockState.NONE, p.lock)
+                // Actual collision-aware engine movement, not just a check of the destination constant.
+                listOf(Tile(3040, 3203, 0), Tile(3042, 3203, 0)).forEach { destination ->
+                    p.walkTo(destination)
+                    tick(4)
+                    assertEquals("walk along the pier after return $round", destination, p.tile)
+                }
+                val reachable = reachableTown(p.tile)
+                listOf(Tile(3027, 3218, 0), Tile(3030, 3236, 0), Tile(3046, 3236, 0)).forEach {
+                    assertTrue("town $it reachable from ${p.tile}", it in reachable)
+                }
+            }
+            travellers.forEach { startTrip(it, Npcs.SQUIRE_3801) }
+            travellers.forEach { finishCountdown(it) }
+            tick(25)
+            travellers.forEach {
+                assertEquals("forward $round", Tile(2663, 2676, 1), it.tile)
+                assertEquals(LockState.NONE, it.lock)
+                assertTrue("accepted outpost deck stays usable", isUsableLanding(world, it.tile))
+            }
+        }
+    }
+
+    @Test
+    fun `moving away cancels either squire countdown and cannot fire its old destination later`() {
+        listOf(Npcs.SQUIRE_3800 to Tile(2659, 2678, 0), Npcs.SQUIRE_3801 to Tile(3041, 3203, 0)).forEach { (npc, at) ->
+            val p = player("n51move$npc", at)
+            startTrip(p, npc)
+            val moved = at.step(Direction.WEST)
+            p.moveTo(moved)
+            SevenSecondAction.onZoneCheck(p)
+            assertFalse("movement clears countdown", SevenSecondAction.isActive(p))
+            finishCountdown(p) // A stale expiry must not retain the trip callback.
+            tick(25)
+            assertEquals("cancelled trip cannot move the player", moved, p.tile)
+            assertEquals(LockState.NONE, p.lock)
+        }
+    }
+
+    @Test
+    fun `logout relog and death clear pending trips in both directions and allow a fresh trip`() {
+        listOf(Npcs.SQUIRE_3800 to Tile(2659, 2678, 0), Npcs.SQUIRE_3801 to Tile(3041, 3203, 0)).forEach { (npc, at) ->
+            for (death in listOf(false, true)) {
+                val p = player("n51life${npc}$death", at)
+                startTrip(p, npc)
+                if (death) {
+                    p.timers.remove(SevenSecondAction.COUNTDOWN_TIMER) // TimerKey.resetOnDeath, before pre-death hooks.
+                    repo.executePlayerPreDeath(p)
+                } else {
+                    repo.executeLogout(p)
+                }
+                tick(1)
+                assertFalse("lifecycle clears countdown", SevenSecondAction.isActive(p))
+                finishCountdown(p)
+                tick(25)
+                assertEquals("no delayed trip after lifecycle", at, p.tile)
+                val next = if (death) p else {
+                    world.unregister(p)
+                    players.remove(p)
+                    queues(p).terminateTasks()
+                    player(p.username, at) // New Client/attributes, no disk saves or owner account.
+                }
+                startTrip(next, npc)
+                finishCountdown(next)
+                tick(25)
+                assertEquals(if (npc == Npcs.SQUIRE_3800) Tile(3041, 3203, 0) else Tile(2663, 2676, 1), next.tile)
+                assertEquals(LockState.NONE, next.lock)
+            }
+        }
     }
 
     // ---------------------------------------------------------------------------------------------------------------- helpers
+
+    private fun startTrip(p: Client, npc: Int) {
+        println("N51 Travel npc=$npc player=${p.username} from=${p.tile}")
+        val def = world.definitions.get(NpcDef::class.java, npc)
+        val option = def.options.indexOfFirst { it?.equals("travel", ignoreCase = true) == true } + 1
+        assertTrue("cache Travel on $npc", option > 0)
+        assertTrue("compiled Travel binding on $npc", repo.executeNpc(p, npc, option))
+        tick(1)
+        assertTrue("transport waits for its countdown", SevenSecondAction.isActive(p))
+    }
+
+    private fun finishCountdown(p: Client) {
+        assertTrue("compiled countdown expiry is bound", repo.executeTimer(p, SevenSecondAction.COUNTDOWN_TIMER))
+    }
+
+    private fun reachableTown(start: Tile): Set<Tile> {
+        val seen = hashSetOf(start)
+        val queue = ArrayDeque(listOf(start))
+        while (queue.isNotEmpty()) {
+            val tile = queue.removeFirst()
+            Direction.NESW.forEach { dir ->
+                val next = tile.step(dir)
+                if (kotlin.math.abs(next.x - start.x) <= 40 && kotlin.math.abs(next.z - start.z) <= 40 &&
+                    world.collision.canStep(tile, dir) && seen.add(next)
+                ) queue.addLast(next)
+            }
+        }
+        return seen
+    }
 
     private fun dirTo(from: Tile, to: Tile): Direction = Direction.NESW.first { from.step(it) == to }
 
@@ -136,7 +273,7 @@ class TravelLandingTests {
      * source. A wandering npc (walkRadius > 0, e.g. the Brimhaven trader crewmember 4656 on the Darkan charter tile 2760,3238) leaves
      * its spawn tile; a post does not (ROOT_CAUSES 174: squire 3801 stands on 3041,3202 for good).
      */
-    private fun pluginNpcSpawns(): List<Pair<String, Tile>> {
+    private fun pluginNpcSpawns(stationaryOnly: Boolean = true): List<Pair<String, Tile>> {
         val spawn = Regex("""spawn_npc\((.*?)\)""", RegexOption.DOT_MATCHES_ALL)
         fun field(body: String, key: String) = Regex("""(?<![A-Za-z])$key\s*=\s*([\w.]+)""").find(body)?.groupValues?.get(1)
         return File("src/main/kotlin/gg/rsmod/plugins").walkTopDown().filter { it.isFile && it.name.endsWith(".plugin.kts") }.flatMap { file ->
@@ -144,7 +281,7 @@ class TravelLandingTests {
                 val body = m.groupValues[1]
                 val x = field(body, "x")?.toIntOrNull() ?: return@mapNotNull null
                 val z = field(body, "z")?.toIntOrNull() ?: return@mapNotNull null
-                if ((field(body, "walkRadius")?.toIntOrNull() ?: 0) > 0) return@mapNotNull null
+                if (stationaryOnly && (field(body, "walkRadius")?.toIntOrNull() ?: 0) > 0) return@mapNotNull null
                 "${field(body, "npc")} (${file.name})" to Tile(x, z, field(body, "height")?.toIntOrNull() ?: 0)
             }
         }.toList()
@@ -222,9 +359,14 @@ class TravelLandingTests {
             }
             val repo = world.plugins
             val loader = URLClassLoader(arrayOf(classes.toURI().toURL()), TravelLandingTests::class.java.classLoader)
-            loader.loadClass(SCRIPT)
-                .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
-                .newInstance(repo, world, mockk<Server>(relaxed = true))
+            listOf(
+                SCRIPT,
+                "gg.rsmod.plugins.content.mechanics.pvp.Seven_second_action_plugin",
+            ).forEach { script ->
+                loader.loadClass(script)
+                    .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
+                    .newInstance(repo, world, mockk<Server>(relaxed = true))
+            }
             repo
         }
     }

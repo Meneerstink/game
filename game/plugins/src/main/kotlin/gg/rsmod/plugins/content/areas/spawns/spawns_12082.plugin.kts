@@ -43,7 +43,8 @@ spawn_npc(npc = Npcs.MONK_OF_ENTRANA_2729, x = 3047, z = 3234, walkRadius = 5, d
 spawn_npc(npc = Npcs.BELLEMORDE, x = 3017, z = 3234, walkRadius = 5, direction = Direction.SOUTH_EAST)
 spawn_npc(npc = Npcs.THE_FACE, x = 3020, z = 3229, walkRadius = 5, direction = Direction.SOUTH_EAST)
 spawn_npc(npc = Npcs.TOOL_LEPRECHAUN, x = 3065, z = 3255, walkRadius = 5, direction = Direction.NORTH_WEST)
-spawn_npc(npc = Npcs.SQUIRE_3790, x = 3041, z = 3203, walkRadius = 5, direction = Direction.SOUTH)
+// N51: Darkan real_rs_spawns_unorganized.json:123022-123055 puts 3790 at the outpost (already in spawns_10537).
+// Port Sarim has only travel squire 3801 at 3041,3202 (void_outpost_boat); 3041,3203 is the player's landing.
 spawn_npc(npc = Npcs.FRIZZY_SKERNIP, x = 3062, z = 3260, walkRadius = 5, direction = Direction.SOUTH)
 spawn_npc(npc = Npcs.CROW_4571, x = 3056, z = 3248, walkRadius = 5, direction = Direction.NORTH_WEST)
 spawn_npc(npc = Npcs.CABIN_BOY_JENKINS, x = 3046, z = 3207, height = 1, direction = Direction.NORTH_EAST)

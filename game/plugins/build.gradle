@@ -33,6 +33,8 @@ test {
     dependsOn ':game:plugins:scripts:compileKotlin'
     // ...and a changed script must re-run the tests instead of reusing a cached result.
     inputs.files(fileTree("$projectDir/scripts/build/classes/kotlin/main")).withPropertyName('pluginScriptClasses').withPathSensitivity(PathSensitivity.RELATIVE)
+    // N51: region spawns are runtime source data excluded from script compilation; landing/roster guards read them too.
+    inputs.files(fileTree("$projectDir/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns")).withPropertyName('regionSpawnSources').withPathSensitivity(PathSensitivity.RELATIVE)
     // A fresh test JVM every 25 classes: cache-backed test classes keep full DefinitionSets in companion objects, and the single
     // worker of a full `:game:plugins:test` run reached its 4 GB cap and stalled (2026-09-14 regression: HandCannonTests stuck in
     // GC, TravelNetworkCacheTests / TrouverTests class setup failed; all pass alone).
