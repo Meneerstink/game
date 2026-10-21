@@ -159,7 +159,7 @@ object LootKeyChest {
             val held = player.inventory.contains(LootKeys.KEY_IDS[tab])
             player.setComponentSprite(INTERFACE_ID, base, if (tab == index) SPRITE_TAB_SELECTED else SPRITE_TAB_UNSELECTED)
             player.setComponentItem(INTERFACE_ID, base + 1, if (held) LootKeys.KEY_IDS[tab] else -1, 1)
-            val value = if (held) LootKeys.value(definitions, LootKeys.slotItems(player, tab)) else 0L
+            val value = if (held) LootKeys.value(player.world, LootKeys.slotItems(player, tab)) else 0L
             player.setComponentText(INTERFACE_ID, base + 2, if (held) valueText(value) else "")
         }
 
@@ -260,7 +260,7 @@ object LootKeyChest {
             player.message("You can't use the bank while skulled in a guarded zone.")
             return
         }
-        if (BankSecurity.blocksDeposit(player, LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index)))) {
+        if (BankSecurity.blocksDeposit(player, LootKeys.value(player.world, LootKeys.slotItems(player, index)))) {
             player.message("You can't deposit items worth 20,000 coins or more so soon after combat.")
             return
         }
@@ -321,7 +321,7 @@ object LootKeyChest {
     fun promptDestroy(player: Player) {
         val index = heldViewedIndex(player) ?: return
         if (LootKeys.slotItems(player, index).isEmpty()) return
-        val value = LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index))
+        val value = LootKeys.value(player.world, LootKeys.slotItems(player, index))
         if (!LootKeys.canDestroyHere(value, AreaState.isDangerous(player.zoneTile()))) {
             player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
             return
@@ -336,7 +336,7 @@ object LootKeyChest {
     fun confirmDestroy(player: Player) {
         val index = heldViewedIndex(player) ?: return
         player.setComponentHidden(INTERFACE_ID, CONFIRM_LAYER, hidden = true)
-        val worth = LootKeys.value(player.world.definitions, LootKeys.slotItems(player, index))
+        val worth = LootKeys.value(player.world, LootKeys.slotItems(player, index))
         if (!LootKeys.canDestroyHere(worth, AreaState.isDangerous(player.zoneTile()))) {
             player.message(LootKeys.DESTROY_TOO_VALUABLE_MESSAGE)
             return

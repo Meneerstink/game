@@ -10,7 +10,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
-import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
+import gg.rsmod.plugins.content.mechanics.exchange.GePrice
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 
 /**
@@ -262,16 +262,7 @@ object PriceChecker {
         if (item == null) {
             return 0
         }
-        val definitions = player.world.definitions
-        val unnoted = Item(item).toUnnoted(definitions)
-        val definition = definitions.get(ItemDef::class.java, unnoted.id)
-        val seed = OsrsGuidePrices.seed(definition)
-        val guide =
-            player.world
-                .getService(GrandExchangeService::class.java)
-                ?.guidePrice(unnoted.id, seed)
-                ?: seed
-        return clamp(guide.toLong() * item.amount)
+        return clamp(GePrice.stack(player.world, item))
     }
 
     /** The live player-facing total, using the same market source for every checked stack. */

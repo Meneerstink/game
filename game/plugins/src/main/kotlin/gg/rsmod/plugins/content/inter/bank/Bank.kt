@@ -200,7 +200,7 @@ class Bank {
                 return DepositResult(0, success = false, bankFull = false)
             }
             val amount = from.getItemCount(item.id).coerceAtMost(amt)
-            val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(player.world.definitions, listOf(Item(item.id, amount)))
+            val value = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(player.world, listOf(Item(item.id, amount)))
             if (gg.rsmod.plugins.content.mechanics.pvp.BankSecurity.blocksDeposit(player, value)) {
                 player.filterableMessage("You can't deposit items worth 20,000 coins or more so soon after combat.")
                 return DepositResult(0, success = false, bankFull = false)

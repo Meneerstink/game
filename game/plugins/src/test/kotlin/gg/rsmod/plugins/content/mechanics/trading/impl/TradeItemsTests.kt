@@ -83,10 +83,14 @@ class TradeItemsTests {
     @Test
     fun `trade value is summed in Long and shown clamped instead of wrapped`() {
         val offer = inventory().also { it.add(GEM, 5_000) }
-        assertEquals(5_000_000_000L, TradeItems.value(definitions, offer))
-        assertEquals(Int.MAX_VALUE, TradeItems.displayValue(TradeItems.value(definitions, offer)))
+        // A15: the price comes from the one GE price function; a fixed price stands in for it here.
+        val price = { _: Int -> 1_000_000 }
+        assertEquals(5_000_000_000L, TradeItems.value(offer, price))
+        assertEquals(Int.MAX_VALUE, TradeItems.displayValue(TradeItems.value(offer, price)))
         assertEquals(0, TradeItems.displayValue(-5L))
-        assertEquals(1_000_000, TradeItems.displayValue(TradeItems.value(definitions, inventory().also { it.add(GEM, 1) })))
+        assertEquals(1_000_000, TradeItems.displayValue(TradeItems.value(inventory().also { it.add(GEM, 1) }, price)))
+        assertEquals("Dragonstone: market price is 1,234,567 coins.", TradeItems.valueMessage("Dragonstone", 1_234_567))
+        assertEquals(setOf(18, 91), TradeItems.VALUE_OPCODES, "the sixth option of an item grid")
     }
 
     companion object {

@@ -208,7 +208,6 @@ class GrandExchangeEconomyAuditTests {
 
     @Test
     fun `every exchangeable item's house price obeys the alchemy floor`() {
-        val table = OsrsGuidePrices.load(Paths.get("..", "..", "data", "cfg", "ge", "osrs-ge-guide-prices.json").toFile())
         val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
         try {
             val definitions = DefinitionSet()
@@ -217,7 +216,7 @@ class GrandExchangeEconomyAuditTests {
             definitions.getAllKeys(ItemDef::class.java).forEach { id ->
                 val def = definitions.get(ItemDef::class.java, id)
                 if (def.noted || def.id == Items.COINS_995) return@forEach
-                val seed = OsrsGuidePrices.seed(def, table)
+                val seed = OsrsGuidePrices.seed(def)
                 val quote = GeHousePricing.quote(seed, def.cost)
                 assertTrue(quote.ask >= ItemCurrency.highAlchValue(def.cost), "${def.id} ${def.name}: ask ${quote.ask} < high alch")
                 assertTrue(quote.bid in 0..quote.ask, "${def.id} ${def.name}: bid ${quote.bid} ask ${quote.ask}")

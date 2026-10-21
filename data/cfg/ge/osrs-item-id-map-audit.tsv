@@ -1,0 +1,3298 @@
+local_id	our_name	osrs_id	osrs_name	rule
+2	Cannonball	2	Steel cannonball	same-id-model
+6	Cannon base	6	Cannon base	same-id-name
+8	Cannon stand	8	Cannon stand	same-id-name
+10	Cannon barrels	10	Cannon barrels	same-id-name
+12	Cannon furnace	12	Cannon furnace	same-id-name
+28	Insect repellent	28	Insect repellent	same-id-name
+30	Bucket of wax	30	Bucket of wax	same-id-name
+36	Candle	36	Candle	same-id-name
+39	Bronze arrowtips	39	Bronze arrowtips	same-id-name
+40	Iron arrowtips	40	Iron arrowtips	same-id-name
+41	Steel arrowtips	41	Steel arrowtips	same-id-name
+42	Mithril arrowtips	42	Mithril arrowtips	same-id-name
+43	Adamant arrowtips	43	Adamant arrowtips	same-id-name
+44	Rune arrowtips	44	Rune arrowtips	same-id-name
+45	Opal bolt tips	45	Opal bolt tips	same-id-name
+46	Pearl bolt tips	46	Pearl bolt tips	same-id-name
+47	Barb bolttips	47	Barb bolttips	same-id-name
+48	Longbow (u)	48	Longbow (u)	same-id-name
+50	Shortbow (u)	50	Shortbow (u)	same-id-name
+52	Arrow shaft	52	Arrow shaft	same-id-name
+53	Headless arrow	53	Headless arrow	same-id-name
+54	Oak shortbow (u)	54	Oak shortbow (u)	same-id-name
+56	Oak longbow (u)	56	Oak longbow (u)	same-id-name
+58	Willow longbow (u)	58	Willow longbow (u)	same-id-name
+60	Willow shortbow (u)	60	Willow shortbow (u)	same-id-name
+62	Maple longbow (u)	62	Maple longbow (u)	same-id-name
+64	Maple shortbow (u)	64	Maple shortbow (u)	same-id-name
+66	Yew longbow (u)	66	Yew longbow (u)	same-id-name
+68	Yew shortbow (u)	68	Yew shortbow (u)	same-id-name
+70	Magic longbow (u)	70	Magic longbow (u)	same-id-name
+72	Magic shortbow (u)	72	Magic shortbow (u)	same-id-name
+91	Guam potion (unf)	91	Guam potion (unf)	same-id-name
+93	Marrentill potion (unf)	93	Marrentill potion (unf)	same-id-name
+95	Tarromin potion (unf)	95	Tarromin potion (unf)	same-id-name
+97	Harralander potion (unf)	97	Harralander potion (unf)	same-id-name
+99	Ranarr potion (unf)	99	Ranarr potion (unf)	same-id-name
+101	Irit potion (unf)	101	Irit potion (unf)	same-id-name
+103	Avantoe potion (unf)	103	Avantoe potion (unf)	same-id-name
+105	Kwuarm potion (unf)	105	Kwuarm potion (unf)	same-id-name
+107	Cadantine potion (unf)	107	Cadantine potion (unf)	same-id-name
+109	Dwarf weed potion (unf)	109	Dwarf weed potion (unf)	same-id-name
+111	Torstol potion (unf)	111	Torstol potion (unf)	same-id-name
+113	Strength potion (4)	113	Strength potion(4)	same-id-name
+115	Strength potion (3)	115	Strength potion(3)	same-id-name
+117	Strength potion (2)	117	Strength potion(2)	same-id-name
+119	Strength potion (1)	119	Strength potion(1)	same-id-name
+121	Attack potion (3)	121	Attack potion(3)	same-id-name
+123	Attack potion (2)	123	Attack potion(2)	same-id-name
+125	Attack potion (1)	125	Attack potion(1)	same-id-name
+127	Restore potion (3)	127	Restore potion(3)	same-id-name
+129	Restore potion (2)	129	Restore potion(2)	same-id-name
+131	Restore potion (1)	131	Restore potion(1)	same-id-name
+133	Defence potion (3)	133	Defence potion(3)	same-id-name
+135	Defence potion (2)	135	Defence potion(2)	same-id-name
+137	Defence potion (1)	137	Defence potion(1)	same-id-name
+139	Prayer potion (3)	139	Prayer potion(3)	same-id-name
+141	Prayer potion (2)	141	Prayer potion(2)	same-id-name
+143	Prayer potion (1)	143	Prayer potion(1)	same-id-name
+145	Super attack (3)	145	Super attack(3)	same-id-name
+147	Super attack (2)	147	Super attack(2)	same-id-name
+149	Super attack (1)	149	Super attack(1)	same-id-name
+151	Fishing potion (3)	151	Fishing potion(3)	same-id-name
+153	Fishing potion (2)	153	Fishing potion(2)	same-id-name
+155	Fishing potion (1)	155	Fishing potion(1)	same-id-name
+157	Super strength (3)	157	Super strength(3)	same-id-name
+159	Super strength (2)	159	Super strength(2)	same-id-name
+161	Super strength (1)	161	Super strength(1)	same-id-name
+163	Super defence (3)	163	Super defence(3)	same-id-name
+165	Super defence (2)	165	Super defence(2)	same-id-name
+167	Super defence (1)	167	Super defence(1)	same-id-name
+169	Ranging potion (3)	169	Ranging potion(3)	same-id-name
+171	Ranging potion (2)	171	Ranging potion(2)	same-id-name
+173	Ranging potion (1)	173	Ranging potion(1)	same-id-name
+175	Antipoison (3)	175	Antipoison(3)	same-id-name
+177	Antipoison (2)	177	Antipoison(2)	same-id-name
+179	Antipoison (1)	179	Antipoison(1)	same-id-name
+181	Super antipoison (3)	181	Superantipoison(3)	same-id-model
+183	Super antipoison (2)	183	Superantipoison(2)	same-id-model
+185	Super antipoison (1)	185	Superantipoison(1)	same-id-model
+187	Weapon poison	187	Weapon poison	same-id-name
+189	Zamorak brew (3)	189	Zamorak brew(3)	same-id-name
+191	Zamorak brew (2)	191	Zamorak brew(2)	same-id-name
+193	Zamorak brew (1)	193	Zamorak brew(1)	same-id-name
+197	Poison chalice	197	Poison chalice	same-id-name
+201	Grimy marrentill	201	Grimy marrentill	same-id-name
+203	Grimy tarromin	203	Grimy tarromin	same-id-name
+205	Grimy harralander	205	Grimy harralander	same-id-name
+211	Grimy avantoe	211	Grimy avantoe	same-id-name
+213	Grimy kwuarm	213	Grimy kwuarm	same-id-name
+215	Grimy cadantine	215	Grimy cadantine	same-id-name
+217	Grimy dwarf weed	217	Grimy dwarf weed	same-id-name
+219	Grimy torstol	219	Grimy torstol	same-id-name
+221	Eye of newt	221	Eye of newt	same-id-name
+223	Red spiders' eggs	223	Red spiders' eggs	same-id-name
+225	Limpwurt root	225	Limpwurt root	same-id-name
+227	Vial of water	227	Vial of water	same-id-name
+229	Vial	229	Vial	same-id-name
+231	Snape grass	231	Snape grass	same-id-name
+233	Pestle and mortar	233	Pestle and mortar	same-id-name
+235	Unicorn horn dust	235	Unicorn horn dust	same-id-name
+237	Unicorn horn	237	Unicorn horn	same-id-name
+239	White berries	239	White berries	same-id-name
+241	Dragon scale dust	241	Dragon scale dust	same-id-name
+243	Blue dragon scale	243	Blue dragon scale	same-id-name
+245	Wine of zamorak	245	Wine of Zamorak	same-id-name
+247	Jangerberries	247	Jangerberries	same-id-name
+249	Clean guam	249	Guam leaf	same-id-model
+251	Clean marrentill	251	Marrentill	same-id-model
+253	Clean tarromin	253	Tarromin	same-id-model
+255	Clean harralander	255	Harralander	same-id-model
+257	Clean ranarr	257	Ranarr weed	same-id-model
+259	Clean irit	259	Irit leaf	same-id-model
+261	Clean avantoe	261	Avantoe	same-id-model
+263	Clean kwuarm	263	Kwuarm	same-id-model
+265	Clean cadantine	265	Cadantine	same-id-model
+267	Clean dwarf weed	267	Dwarf weed	same-id-model
+269	Clean torstol	269	Torstol	same-id-model
+272	Fish food	272	Fish food	same-id-name
+273	Poison	273	Poison (item)	same-id-model
+288	Goblin mail	288	Goblin mail	same-id-name
+299	Mithril seeds	299	Mithril seeds	same-id-name
+301	Lobster pot	301	Lobster pot	same-id-name
+303	Small fishing net	303	Small fishing net	same-id-name
+305	Big fishing net	305	Big fishing net	same-id-name
+307	Fishing rod	307	Fishing rod	same-id-name
+309	Fly fishing rod	309	Fly fishing rod	same-id-name
+311	Harpoon	311	Harpoon	same-id-name
+313	Fishing bait	313	Fishing bait	same-id-name
+314	Feather	314	Feather	same-id-name
+315	Shrimps	315	Shrimps	same-id-name
+317	Raw shrimps	317	Raw shrimps	same-id-name
+319	Anchovies	319	Anchovies	same-id-name
+321	Raw anchovies	321	Raw anchovies	same-id-name
+325	Sardine	325	Sardine	same-id-name
+327	Raw sardine	327	Raw sardine	same-id-name
+329	Salmon	329	Salmon	same-id-name
+331	Raw salmon	331	Raw salmon	same-id-name
+333	Trout	333	Trout	same-id-name
+335	Raw trout	335	Raw trout	same-id-name
+339	Cod	339	Cod	same-id-name
+341	Raw cod	341	Raw cod	same-id-name
+345	Raw herring	345	Raw herring	same-id-name
+347	Herring	347	Herring	same-id-name
+349	Raw pike	349	Raw pike	same-id-name
+351	Pike	351	Pike	same-id-name
+353	Raw mackerel	353	Raw mackerel	same-id-name
+355	Mackerel	355	Mackerel	same-id-name
+359	Raw tuna	359	Raw tuna	same-id-name
+361	Tuna	361	Tuna	same-id-name
+363	Raw bass	363	Raw bass	same-id-name
+365	Bass	365	Bass	same-id-name
+371	Raw swordfish	371	Raw swordfish	same-id-name
+373	Swordfish	373	Swordfish	same-id-name
+377	Raw lobster	377	Raw lobster	same-id-name
+379	Lobster	379	Lobster	same-id-name
+383	Raw shark	383	Raw shark	same-id-name
+385	Shark	385	Shark	same-id-name
+389	Raw manta ray	389	Raw manta ray	same-id-name
+391	Manta ray	391	Manta ray	same-id-name
+395	Raw sea turtle	395	Raw sea turtle	same-id-name
+397	Sea turtle	397	Sea turtle	same-id-name
+401	Seaweed	401	Seaweed	same-id-name
+403	Edible seaweed	403	Edible seaweed	same-id-name
+405	Casket	405	Casket	same-id-name
+407	Oyster	407	Oyster	same-id-name
+411	Oyster pearl	411	Oyster pearl	same-id-name
+413	Oyster pearls	413	Oyster pearls	same-id-name
+426	Priest gown	426	Priest gown (top)	same-id-model
+428	Priest gown	428	Priest gown (bottom)	same-id-model
+434	Clay	434	Clay	same-id-name
+436	Copper ore	436	Copper ore	same-id-name
+438	Tin ore	438	Tin ore	same-id-name
+440	Iron ore	440	Iron ore	same-id-name
+442	Silver ore	442	Silver ore	same-id-name
+444	Gold ore	444	Gold ore	same-id-name
+447	Mithril ore	447	Mithril ore	same-id-name
+449	Adamantite ore	449	Adamantite ore	same-id-name
+451	Runite ore	451	Runite ore	same-id-name
+453	Coal	453	Coal	same-id-name
+464	Strange fruit	464	Strange fruit	same-id-name
+526	Bones	526	Bones	same-id-name
+528	Burnt bones	528	Burnt bones	same-id-name
+530	Bat bones	530	Bat bones	same-id-name
+532	Big bones	532	Big bones	same-id-name
+534	Babydragon bones	534	Babydragon bones	same-id-name
+536	Dragon bones	536	Dragon bones	same-id-name
+538	Druid's robe	538	Druid's robe	same-id-name
+540	Druid's robe	540	Druid's robe top	same-id-model
+542	Monk's robe	542	Monk's robe	same-id-name
+546	Shade robe	546	Shade robe top	same-id-model
+548	Shade robe	548	Shade robe	same-id-name
+554	Fire rune	554	Fire rune	same-id-name
+555	Water rune	555	Water rune	same-id-name
+556	Air rune	556	Air rune	same-id-name
+557	Earth rune	557	Earth rune	same-id-name
+558	Mind rune	558	Mind rune	same-id-name
+559	Body rune	559	Body rune	same-id-name
+560	Death rune	560	Death rune	same-id-name
+561	Nature rune	561	Nature rune	same-id-name
+562	Chaos rune	562	Chaos rune	same-id-name
+563	Law rune	563	Law rune	same-id-name
+564	Cosmic rune	564	Cosmic rune	same-id-name
+565	Blood rune	565	Blood rune	same-id-name
+566	Soul rune	566	Soul rune	same-id-name
+567	Unpowered orb	567	Unpowered orb	same-id-name
+569	Fire orb	569	Fire orb	same-id-name
+571	Water orb	571	Water orb	same-id-name
+573	Air orb	573	Air orb	same-id-name
+575	Earth orb	575	Earth orb	same-id-name
+577	Wizard robe	577	Blue wizard robe	same-id-model
+579	Wizard hat	579	Blue wizard hat	same-id-model
+581	Black robe	581	Black robe	same-id-name
+590	Tinderbox	590	Tinderbox	same-id-name
+592	Ashes	592	Ashes	same-id-name
+596	Unlit torch	596	Unlit torch	same-id-name
+621	Ship ticket	621	Ship ticket	same-id-name
+626	Pink boots	626	Pink boots	same-id-name
+628	Green boots	628	Green boots	same-id-name
+630	Blue boots	630	Blue boots	same-id-name
+632	Cream boots	632	Cream boots	same-id-name
+634	Turquoise boots	634	Turquoise boots	same-id-name
+636	Pink robe top	636	Pink robe top	same-id-name
+638	Green robe top	638	Green robe top	same-id-name
+640	Blue robe top	640	Blue robe top	same-id-name
+642	Cream robe top	642	Cream robe top	same-id-name
+644	Turquoise robe top	644	Turquoise robe top	same-id-name
+646	Pink robe bottoms	646	Pink robe bottoms	same-id-name
+648	Green robe bottoms	648	Green robe bottoms	same-id-name
+650	Blue robe bottoms	650	Blue robe bottoms	same-id-name
+652	Cream robe bottoms	652	Cream robe bottoms	same-id-name
+654	Turquoise robe bottoms	654	Turquoise robe bottoms	same-id-name
+656	Pink hat	656	Pink hat	same-id-name
+658	Green hat	658	Green hat	same-id-name
+660	Blue hat	660	Blue hat	same-id-name
+662	Cream hat	662	Cream hat	same-id-name
+664	Turquoise hat	664	Turquoise hat	same-id-name
+751	Gnomeball	751	Gnomeball	same-id-name
+753	Cadava berries	753	Cadava berries	same-id-name
+800	Bronze thrownaxe	800	Bronze thrownaxe	same-id-name
+801	Iron thrownaxe	801	Iron thrownaxe	same-id-name
+802	Steel thrownaxe	802	Steel thrownaxe	same-id-name
+803	Mithril thrownaxe	803	Mithril thrownaxe	same-id-name
+804	Adamant thrownaxe	804	Adamant thrownaxe	same-id-name
+805	Rune thrownaxe	805	Rune thrownaxe	same-id-name
+806	Bronze dart	806	Bronze dart	same-id-name
+807	Iron dart	807	Iron dart	same-id-name
+808	Steel dart	808	Steel dart	same-id-name
+809	Mithril dart	809	Mithril dart	same-id-name
+810	Adamant dart	810	Adamant dart	same-id-name
+811	Rune dart	811	Rune dart	same-id-name
+812	Bronze dart (p)	812	Bronze dart(p)	same-id-name
+813	Iron dart (p)	813	Iron dart (p)	same-id-name
+814	Steel dart (p)	814	Steel dart(p)	same-id-name
+815	Mithril dart (p)	815	Mithril dart(p)	same-id-name
+816	Adamant dart (p)	816	Adamant dart(p)	same-id-name
+817	Rune dart (p)	817	Rune dart(p)	same-id-name
+819	Bronze dart tip	819	Bronze dart tip	same-id-name
+820	Iron dart tip	820	Iron dart tip	same-id-name
+821	Steel dart tip	821	Steel dart tip	same-id-name
+822	Mithril dart tip	822	Mithril dart tip	same-id-name
+823	Adamant dart tip	823	Adamant dart tip	same-id-name
+824	Rune dart tip	824	Rune dart tip	same-id-name
+825	Bronze javelin	825	Bronze javelin	same-id-name
+826	Iron javelin	826	Iron javelin	same-id-name
+827	Steel javelin	827	Steel javelin	same-id-name
+828	Mithril javelin	828	Mithril javelin	same-id-name
+829	Adamant javelin	829	Adamant javelin	same-id-name
+830	Rune javelin	830	Rune javelin	same-id-name
+831	Bronze javelin (p)	831	Bronze javelin(p)	same-id-name
+832	Iron javelin (p)	832	Iron javelin(p)	same-id-name
+833	Steel javelin (p)	833	Steel javelin(p)	same-id-name
+834	Mithril javelin (p)	834	Mithril javelin(p)	same-id-name
+835	Adamant javelin (p)	835	Adamant javelin(p)	same-id-name
+836	Rune javelin (p)	836	Rune javelin(p)	same-id-name
+837	Crossbow	837	Crossbow	same-id-name
+839	Longbow	839	Longbow	same-id-name
+841	Shortbow	841	Shortbow	same-id-name
+843	Oak shortbow	843	Oak shortbow	same-id-name
+845	Oak longbow	845	Oak longbow	same-id-name
+847	Willow longbow	847	Willow longbow	same-id-name
+849	Willow shortbow	849	Willow shortbow	same-id-name
+851	Maple longbow	851	Maple longbow	same-id-name
+853	Maple shortbow	853	Maple shortbow	same-id-name
+855	Yew longbow	855	Yew longbow	same-id-name
+857	Yew shortbow	857	Yew shortbow	same-id-name
+859	Magic longbow	859	Magic longbow	same-id-name
+861	Magic shortbow	861	Magic shortbow	same-id-name
+863	Iron knife	863	Iron knife	same-id-name
+864	Bronze knife	864	Bronze knife	same-id-name
+865	Steel knife	865	Steel knife	same-id-name
+866	Mithril knife	866	Mithril knife	same-id-name
+867	Adamant knife	867	Adamant knife	same-id-name
+868	Rune knife	868	Rune knife	same-id-name
+869	Black knife	869	Black knife	same-id-name
+870	Bronze knife (p)	870	Bronze knife(p)	same-id-name
+871	Iron knife (p)	871	Iron knife(p)	same-id-name
+872	Steel knife (p)	872	Steel knife(p)	same-id-name
+873	Mithril knife (p)	873	Mithril knife(p)	same-id-name
+874	Black knife (p)	874	Black knife(p)	same-id-name
+875	Adamant knife (p)	875	Adamant knife(p)	same-id-name
+876	Rune knife (p)	876	Rune knife(p)	same-id-name
+877	Bronze bolts	877	Bronze bolts	same-id-name
+878	Bronze bolts (p)	878	Bronze bolts (p)	same-id-name
+879	Opal bolts	879	Opal bolts	same-id-name
+880	Pearl bolts	880	Pearl bolts	same-id-name
+881	Barbed bolts	881	Barbed bolts	same-id-name
+882	Bronze arrow	882	Bronze arrow	same-id-name
+883	Bronze arrow (p)	883	Bronze arrow(p)	same-id-name
+884	Iron arrow	884	Iron arrow	same-id-name
+885	Iron arrow (p)	885	Iron arrow(p)	same-id-name
+886	Steel arrow	886	Steel arrow	same-id-name
+887	Steel arrow (p)	887	Steel arrow(p)	same-id-name
+888	Mithril arrow	888	Mithril arrow	same-id-name
+889	Mithril arrow (p)	889	Mithril arrow(p)	same-id-name
+890	Adamant arrow	890	Adamant arrow	same-id-name
+891	Adamant arrow (p)	891	Adamant arrow(p)	same-id-name
+892	Rune arrow	892	Rune arrow	same-id-name
+893	Rune arrow (p)	893	Rune arrow(p)	same-id-name
+946	Knife	946	Knife	same-id-name
+948	Bear fur	948	Bear fur	same-id-name
+950	Silk	950	Silk	same-id-name
+952	Spade	952	Spade	same-id-name
+954	Rope	954	Rope	same-id-name
+958	Grey wolf fur	958	Grey wolf fur	same-id-name
+960	Plank	960	Plank	same-id-name
+962	Christmas cracker	962	Christmas cracker	same-id-name
+970	Papyrus	970	Papyrus	same-id-name
+973	Charcoal	973	Charcoal	same-id-name
+975	Machete	975	Machete	same-id-name
+981	Disk of returning	981	Disk of Returning	same-id-name
+983	Brass key	983	Brass key	same-id-name
+985	Tooth half of a key	985	Tooth half of key	same-id-model
+987	Loop half of a key	987	Loop half of key	same-id-model
+989	Crystal key	989	Crystal key	same-id-name
+991	Muddy key	991	Muddy key	same-id-name
+993	Sinister key	993	Sinister key	same-id-name
+1005	White apron	1005	White apron	same-id-name
+1007	Cape	1007	Red cape	same-id-model
+1009	Brass necklace	1009	Brass necklace	same-id-name
+1011	Blue skirt	1011	Blue skirt	same-id-name
+1013	Pink skirt	1013	Pink skirt	same-id-name
+1015	Black skirt	1015	Black skirt	same-id-name
+1017	Wizard hat	1017	Wizard hat	same-id-name
+1019	Cape	1019	Black cape	same-id-model
+1021	Cape	1021	Blue cape	same-id-model
+1023	Cape	1023	Yellow cape	same-id-model
+1025	Eye patch	1025	Right eye patch	same-id-model
+1027	Cape	1027	Green cape	same-id-model
+1029	Cape	1029	Purple cape	same-id-model
+1031	Cape	1031	Orange cape	same-id-model
+1033	Zamorak robe	1033	Zamorak monk bottom	same-id-model
+1035	Zamorak robe	1035	Zamorak monk top	same-id-model
+1038	Red partyhat	1038	Red partyhat	same-id-name
+1040	Yellow partyhat	1040	Yellow partyhat	same-id-name
+1042	Blue partyhat	1042	Blue partyhat	same-id-name
+1044	Green partyhat	1044	Green partyhat	same-id-name
+1046	Purple partyhat	1046	Purple partyhat	same-id-name
+1048	White partyhat	1048	White partyhat	same-id-name
+1050	Santa hat	1050	Santa hat	same-id-name
+1053	Green h'ween mask	1053	Green halloween mask	same-id-model
+1055	Blue h'ween mask	1055	Blue halloween mask	same-id-model
+1057	Red h'ween mask	1057	Red halloween mask	same-id-model
+1059	Leather gloves	1059	Leather gloves	same-id-name
+1061	Leather boots	1061	Leather boots	same-id-name
+1063	Leather vambraces	1063	Leather vambraces	same-id-name
+1065	Green d'hide vambraces	1065	Green d'hide vambraces	same-id-name
+1067	Iron platelegs	1067	Iron platelegs	same-id-name
+1069	Steel platelegs	1069	Steel platelegs	same-id-name
+1071	Mithril platelegs	1071	Mithril platelegs	same-id-name
+1073	Adamant platelegs	1073	Adamant platelegs	same-id-name
+1075	Bronze platelegs	1075	Bronze platelegs	same-id-name
+1077	Black platelegs	1077	Black platelegs	same-id-name
+1079	Rune platelegs	1079	Rune platelegs	same-id-name
+1081	Iron plateskirt	1081	Iron plateskirt	same-id-name
+1083	Steel plateskirt	1083	Steel plateskirt	same-id-name
+1085	Mithril plateskirt	1085	Mithril plateskirt	same-id-name
+1087	Bronze plateskirt	1087	Bronze plateskirt	same-id-name
+1089	Black plateskirt	1089	Black plateskirt	same-id-name
+1091	Adamant plateskirt	1091	Adamant plateskirt	same-id-name
+1093	Rune plateskirt	1093	Rune plateskirt	same-id-name
+1095	Leather chaps	1095	Leather chaps	same-id-name
+1097	Studded chaps	1097	Studded chaps	same-id-name
+1099	Green d'hide chaps	1099	Green d'hide chaps	same-id-name
+1101	Iron chainbody	1101	Iron chainbody	same-id-name
+1103	Bronze chainbody	1103	Bronze chainbody	same-id-name
+1105	Steel chainbody	1105	Steel chainbody	same-id-name
+1107	Black chainbody	1107	Black chainbody	same-id-name
+1109	Mithril chainbody	1109	Mithril chainbody	same-id-name
+1111	Adamant chainbody	1111	Adamant chainbody	same-id-name
+1113	Rune chainbody	1113	Rune chainbody	same-id-name
+1115	Iron platebody	1115	Iron platebody	same-id-name
+1117	Bronze platebody	1117	Bronze platebody	same-id-name
+1119	Steel platebody	1119	Steel platebody	same-id-name
+1121	Mithril platebody	1121	Mithril platebody	same-id-name
+1123	Adamant platebody	1123	Adamant platebody	same-id-name
+1125	Black platebody	1125	Black platebody	same-id-name
+1127	Rune platebody	1127	Rune platebody	same-id-name
+1129	Leather body	1129	Leather body	same-id-name
+1131	Hardleather body	1131	Hardleather body	same-id-name
+1133	Studded body	1133	Studded body	same-id-name
+1135	Green d'hide body	1135	Green d'hide body	same-id-name
+1137	Iron med helm	1137	Iron med helm	same-id-name
+1139	Bronze med helm	1139	Bronze med helm	same-id-name
+1141	Steel med helm	1141	Steel med helm	same-id-name
+1143	Mithril med helm	1143	Mithril med helm	same-id-name
+1145	Adamant med helm	1145	Adamant med helm	same-id-name
+1147	Rune med helm	1147	Rune med helm	same-id-name
+1149	Dragon med helm	1149	Dragon med helm	same-id-name
+1151	Black med helm	1151	Black med helm	same-id-name
+1153	Iron full helm	1153	Iron full helm	same-id-name
+1155	Bronze full helm	1155	Bronze full helm	same-id-name
+1157	Steel full helm	1157	Steel full helm	same-id-name
+1159	Mithril full helm	1159	Mithril full helm	same-id-name
+1161	Adamant full helm	1161	Adamant full helm	same-id-name
+1163	Rune full helm	1163	Rune full helm	same-id-name
+1165	Black full helm	1165	Black full helm	same-id-name
+1167	Leather cowl	1167	Leather cowl	same-id-name
+1169	Coif	1169	Coif	same-id-name
+1171	Wooden shield	1171	Wooden shield	same-id-name
+1173	Bronze sq shield	1173	Bronze sq shield	same-id-name
+1175	Iron sq shield	1175	Iron sq shield	same-id-name
+1177	Steel sq shield	1177	Steel sq shield	same-id-name
+1179	Black sq shield	1179	Black sq shield	same-id-name
+1181	Mithril sq shield	1181	Mithril sq shield	same-id-name
+1183	Adamant sq shield	1183	Adamant sq shield	same-id-name
+1185	Rune sq shield	1185	Rune sq shield	same-id-name
+1187	Dragon sq shield	1187	Dragon sq shield	same-id-name
+1189	Bronze kiteshield	1189	Bronze kiteshield	same-id-name
+1191	Iron kiteshield	1191	Iron kiteshield	same-id-name
+1193	Steel kiteshield	1193	Steel kiteshield	same-id-name
+1195	Black kiteshield	1195	Black kiteshield	same-id-name
+1197	Mithril kiteshield	1197	Mithril kiteshield	same-id-name
+1199	Adamant kiteshield	1199	Adamant kiteshield	same-id-name
+1201	Rune kiteshield	1201	Rune kiteshield	same-id-name
+1203	Iron dagger	1203	Iron dagger	same-id-name
+1205	Bronze dagger	1205	Bronze dagger	same-id-name
+1207	Steel dagger	1207	Steel dagger	same-id-name
+1209	Mithril dagger	1209	Mithril dagger	same-id-name
+1211	Adamant dagger	1211	Adamant dagger	same-id-name
+1213	Rune dagger	1213	Rune dagger	same-id-name
+1215	Dragon dagger	1215	Dragon dagger	same-id-name
+1217	Black dagger	1217	Black dagger	same-id-name
+1219	Iron dagger (p)	1219	Iron dagger(p)	same-id-name
+1221	Bronze dagger (p)	1221	Bronze dagger(p)	same-id-name
+1223	Steel dagger (p)	1223	Steel dagger(p)	same-id-name
+1225	Mithril dagger (p)	1225	Mithril dagger(p)	same-id-name
+1227	Adamant dagger (p)	1227	Adamant dagger(p)	same-id-name
+1229	Rune dagger (p)	1229	Rune dagger(p)	same-id-name
+1231	Dragon dagger (p)	1231	Dragon dagger(p)	same-id-name
+1233	Black dagger (p)	1233	Black dagger(p)	same-id-name
+1237	Bronze spear	1237	Bronze spear	same-id-name
+1239	Iron spear	1239	Iron spear	same-id-name
+1241	Steel spear	1241	Steel spear	same-id-name
+1243	Mithril spear	1243	Mithril spear	same-id-name
+1245	Adamant spear	1245	Adamant spear	same-id-name
+1247	Rune spear	1247	Rune spear	same-id-name
+1249	Dragon spear	1249	Dragon spear	same-id-name
+1251	Bronze spear (p)	1251	Bronze spear(p)	same-id-name
+1253	Iron spear (p)	1253	Iron spear(p)	same-id-name
+1255	Steel spear (p)	1255	Steel spear(p)	same-id-name
+1257	Mithril spear (p)	1257	Mithril spear(p)	same-id-name
+1259	Adamant spear (p)	1259	Adamant spear(p)	same-id-name
+1261	Rune spear (p)	1261	Rune spear(p)	same-id-name
+1263	Dragon spear (p)	1263	Dragon spear(p)	same-id-name
+1265	Bronze pickaxe	1265	Bronze pickaxe	same-id-name
+1267	Iron pickaxe	1267	Iron pickaxe	same-id-name
+1269	Steel pickaxe	1269	Steel pickaxe	same-id-name
+1271	Adamant pickaxe	1271	Adamant pickaxe	same-id-name
+1273	Mithril pickaxe	1273	Mithril pickaxe	same-id-name
+1275	Rune pickaxe	1275	Rune pickaxe	same-id-name
+1277	Bronze sword	1277	Bronze sword	same-id-name
+1279	Iron sword	1279	Iron sword	same-id-name
+1281	Steel sword	1281	Steel sword	same-id-name
+1283	Black sword	1283	Black sword	same-id-name
+1285	Mithril sword	1285	Mithril sword	same-id-name
+1287	Adamant sword	1287	Adamant sword	same-id-name
+1289	Rune sword	1289	Rune sword	same-id-name
+1291	Bronze longsword	1291	Bronze longsword	same-id-name
+1293	Iron longsword	1293	Iron longsword	same-id-name
+1295	Steel longsword	1295	Steel longsword	same-id-name
+1297	Black longsword	1297	Black longsword	same-id-name
+1299	Mithril longsword	1299	Mithril longsword	same-id-name
+1301	Adamant longsword	1301	Adamant longsword	same-id-name
+1303	Rune longsword	1303	Rune longsword	same-id-name
+1305	Dragon longsword	1305	Dragon longsword	same-id-name
+1307	Bronze 2h sword	1307	Bronze 2h sword	same-id-name
+1309	Iron 2h sword	1309	Iron 2h sword	same-id-name
+1311	Steel 2h sword	1311	Steel 2h sword	same-id-name
+1313	Black 2h sword	1313	Black 2h sword	same-id-name
+1315	Mithril 2h sword	1315	Mithril 2h sword	same-id-name
+1317	Adamant 2h sword	1317	Adamant 2h sword	same-id-name
+1319	Rune 2h sword	1319	Rune 2h sword	same-id-name
+1321	Bronze scimitar	1321	Bronze scimitar	same-id-name
+1323	Iron scimitar	1323	Iron scimitar	same-id-name
+1325	Steel scimitar	1325	Steel scimitar	same-id-name
+1327	Black scimitar	1327	Black scimitar	same-id-name
+1329	Mithril scimitar	1329	Mithril scimitar	same-id-name
+1331	Adamant scimitar	1331	Adamant scimitar	same-id-name
+1333	Rune scimitar	1333	Rune scimitar	same-id-name
+1335	Iron warhammer	1335	Iron warhammer	same-id-name
+1337	Bronze warhammer	1337	Bronze warhammer	same-id-name
+1339	Steel warhammer	1339	Steel warhammer	same-id-name
+1341	Black warhammer	1341	Black warhammer	same-id-name
+1343	Mithril warhammer	1343	Mithril warhammer	same-id-name
+1345	Adamant warhammer	1345	Adamant warhammer	same-id-name
+1347	Rune warhammer	1347	Rune warhammer	same-id-name
+1349	Iron hatchet	1349	Iron axe	same-id-model
+1351	Bronze hatchet	1351	Bronze axe	same-id-model
+1353	Steel hatchet	1353	Steel axe	same-id-model
+1355	Mithril hatchet	1355	Mithril axe	same-id-model
+1357	Adamant hatchet	1357	Adamant axe	same-id-model
+1359	Rune hatchet	1359	Rune axe	same-id-model
+1361	Black hatchet	1361	Black axe	same-id-model
+1363	Iron battleaxe	1363	Iron battleaxe	same-id-name
+1365	Steel battleaxe	1365	Steel battleaxe	same-id-name
+1367	Black battleaxe	1367	Black battleaxe	same-id-name
+1369	Mithril battleaxe	1369	Mithril battleaxe	same-id-name
+1371	Adamant battleaxe	1371	Adamant battleaxe	same-id-name
+1373	Rune battleaxe	1373	Rune battleaxe	same-id-name
+1375	Bronze battleaxe	1375	Bronze battleaxe	same-id-name
+1377	Dragon battleaxe	1377	Dragon battleaxe	same-id-name
+1379	Staff	1379	Staff	same-id-name
+1381	Staff of air	1381	Staff of air	same-id-name
+1383	Staff of water	1383	Staff of water	same-id-name
+1385	Staff of earth	1385	Staff of earth	same-id-name
+1387	Staff of fire	1387	Staff of fire	same-id-name
+1389	Magic staff	1389	Magic staff	same-id-name
+1391	Battlestaff	1391	Battlestaff	same-id-name
+1393	Fire battlestaff	1393	Fire battlestaff	same-id-name
+1395	Water battlestaff	1395	Water battlestaff	same-id-name
+1397	Air battlestaff	1397	Air battlestaff	same-id-name
+1399	Earth battlestaff	1399	Earth battlestaff	same-id-name
+1401	Mystic fire staff	1401	Mystic fire staff	same-id-name
+1403	Mystic water staff	1403	Mystic water staff	same-id-name
+1405	Mystic air staff	1405	Mystic air staff	same-id-name
+1407	Mystic earth staff	1407	Mystic earth staff	same-id-name
+1420	Iron mace	1420	Iron mace	same-id-name
+1422	Bronze mace	1422	Bronze mace	same-id-name
+1424	Steel mace	1424	Steel mace	same-id-name
+1426	Black mace	1426	Black mace	same-id-name
+1428	Mithril mace	1428	Mithril mace	same-id-name
+1430	Adamant mace	1430	Adamant mace	same-id-name
+1432	Rune mace	1432	Rune mace	same-id-name
+1434	Dragon mace	1434	Dragon mace	same-id-name
+1436	Rune essence	1436	Rune essence	same-id-name
+1438	Air talisman	1438	Air talisman	same-id-name
+1440	Earth talisman	1440	Earth talisman	same-id-name
+1442	Fire talisman	1442	Fire talisman	same-id-name
+1444	Water talisman	1444	Water talisman	same-id-name
+1446	Body talisman	1446	Body talisman	same-id-name
+1448	Mind talisman	1448	Mind talisman	same-id-name
+1450	Blood talisman	1450	Blood talisman	same-id-name
+1452	Chaos talisman	1452	Chaos talisman	same-id-name
+1454	Cosmic talisman	1454	Cosmic talisman	same-id-name
+1456	Death talisman	1456	Death talisman	same-id-name
+1462	Nature talisman	1462	Nature talisman	same-id-name
+1464	Archery ticket	1464	Archery ticket	same-id-name
+1470	Red bead	1470	Red bead	same-id-name
+1472	Yellow bead	1472	Yellow bead	same-id-name
+1474	Black bead	1474	Black bead	same-id-name
+1476	White bead	1476	White bead	same-id-name
+1478	Amulet of accuracy	1478	Amulet of accuracy	same-id-name
+1511	Logs	1511	Logs	same-id-name
+1513	Magic logs	1513	Magic logs	same-id-name
+1515	Yew logs	1515	Yew logs	same-id-name
+1517	Maple logs	1517	Maple logs	same-id-name
+1519	Willow logs	1519	Willow logs	same-id-name
+1521	Oak logs	1521	Oak logs	same-id-name
+1523	Lockpick	1523	Lockpick	same-id-name
+1539	Steel nails	1539	Steel nails	same-id-name
+1540	Anti-dragon shield	1540	Anti-dragon shield	same-id-name
+1550	Garlic	1550	Garlic	same-id-name
+1573	Doogle leaves	1573	Doogle leaves	same-id-name
+1592	Ring mould	1592	Ring mould	same-id-name
+1595	Amulet mould	1595	Amulet mould	same-id-name
+1597	Necklace mould	1597	Necklace mould	same-id-name
+1599	Holy mould	1599	Holy mould	same-id-name
+1601	Diamond	1601	Diamond	same-id-name
+1603	Ruby	1603	Ruby	same-id-name
+1605	Emerald	1605	Emerald	same-id-name
+1607	Sapphire	1607	Sapphire	same-id-name
+1609	Opal	1609	Opal	same-id-name
+1611	Jade	1611	Jade	same-id-name
+1613	Red topaz	1613	Red topaz	same-id-name
+1615	Dragonstone	1615	Dragonstone	same-id-name
+1617	Uncut diamond	1617	Uncut diamond	same-id-name
+1619	Uncut ruby	1619	Uncut ruby	same-id-name
+1621	Uncut emerald	1621	Uncut emerald	same-id-name
+1623	Uncut sapphire	1623	Uncut sapphire	same-id-name
+1625	Uncut opal	1625	Uncut opal	same-id-name
+1627	Uncut jade	1627	Uncut jade	same-id-name
+1629	Uncut red topaz	1629	Uncut red topaz	same-id-name
+1631	Uncut dragonstone	1631	Uncut dragonstone	same-id-name
+1635	Gold ring	1635	Gold ring	same-id-name
+1637	Sapphire ring	1637	Sapphire ring	same-id-name
+1639	Emerald ring	1639	Emerald ring	same-id-name
+1641	Ruby ring	1641	Ruby ring	same-id-name
+1643	Diamond ring	1643	Diamond ring	same-id-name
+1645	Dragonstone ring	1645	Dragonstone ring	same-id-name
+1654	Gold necklace	1654	Gold necklace	same-id-name
+1656	Sapphire necklace	1656	Sapphire necklace	same-id-name
+1658	Emerald necklace	1658	Emerald necklace	same-id-name
+1660	Ruby necklace	1660	Ruby necklace	same-id-name
+1662	Diamond necklace	1662	Diamond necklace	same-id-name
+1664	Dragon necklace	1664	Dragon necklace	same-id-name
+1673	Gold amulet	1673	Gold amulet (u)	same-id-model
+1675	Sapphire amulet	1675	Sapphire amulet (u)	same-id-model
+1677	Emerald amulet	1677	Emerald amulet (u)	same-id-model
+1679	Ruby amulet	1679	Ruby amulet (u)	same-id-model
+1681	Diamond amulet	1681	Diamond amulet (u)	same-id-model
+1683	Dragonstone ammy	1683	Dragonstone amulet (u)	same-id-model
+1692	Gold amulet	1692	Gold amulet	same-id-name
+1694	Sapphire amulet	1694	Sapphire amulet	same-id-name
+1696	Emerald amulet	1696	Emerald amulet	same-id-name
+1698	Ruby amulet	1698	Ruby amulet	same-id-name
+1700	Diamond amulet	1700	Diamond amulet	same-id-name
+1702	Dragonstone ammy	1702	Dragonstone amulet	same-id-model
+1704	Amulet of glory	1704	Amulet of glory	same-id-name
+1712	Amulet of glory (4)	1712	Amulet of glory(4)	same-id-name
+1714	Unstrung symbol	1714	Unstrung symbol	same-id-name
+1716	Unblessed symbol	1716	Unblessed symbol	same-id-name
+1718	Holy symbol	1718	Holy symbol	same-id-name
+1720	Unstrung emblem	1720	Unstrung emblem	same-id-name
+1722	Unpowered symbol	1722	Unpowered symbol	same-id-name
+1724	Unholy symbol	1724	Unholy symbol	same-id-name
+1725	Amulet of strength	1725	Amulet of strength	same-id-name
+1727	Amulet of magic	1727	Amulet of magic	same-id-name
+1729	Amulet of defence	1729	Amulet of defence	same-id-name
+1731	Amulet of power	1731	Amulet of power	same-id-name
+1733	Needle	1733	Needle	same-id-name
+1734	Thread	1734	Thread	same-id-name
+1735	Shears	1735	Shears	same-id-name
+1737	Wool	1737	Wool	same-id-name
+1739	Cowhide	1739	Cowhide	same-id-name
+1741	Leather	1741	Leather	same-id-name
+1743	Hard leather	1743	Hard leather	same-id-name
+1745	Green dragon leather	1745	Green dragon leather	same-id-name
+1747	Black dragonhide	1747	Black dragonhide	same-id-name
+1749	Red dragonhide	1749	Red dragonhide	same-id-name
+1751	Blue dragonhide	1751	Blue dragonhide	same-id-name
+1753	Green dragonhide	1753	Green dragonhide	same-id-name
+1755	Chisel	1755	Chisel	same-id-name
+1757	Brown apron	1757	Brown apron	same-id-name
+1759	Ball of wool	1759	Ball of wool	same-id-name
+1761	Soft clay	1761	Soft clay	same-id-name
+1763	Red dye	1763	Red dye	same-id-name
+1765	Yellow dye	1765	Yellow dye	same-id-name
+1767	Blue dye	1767	Blue dye	same-id-name
+1769	Orange dye	1769	Orange dye	same-id-name
+1771	Green dye	1771	Green dye	same-id-name
+1773	Purple dye	1773	Purple dye	same-id-name
+1775	Molten glass	1775	Molten glass	same-id-name
+1777	Bow string	1777	Bow string	same-id-name
+1779	Flax	1779	Flax	same-id-name
+1781	Soda ash	1781	Soda ash	same-id-name
+1783	Bucket of sand	1783	Bucket of sand	same-id-name
+1785	Glassblowing pipe	1785	Glassblowing pipe	same-id-name
+1787	Pot (unfired)	1787	Unfired pot	same-id-model
+1789	Pie dish (unfired)	1789	Unfired pie dish	same-id-model
+1791	Bowl (unfired)	1791	Unfired bowl	same-id-model
+1793	Woad leaf	1793	Woad leaf	same-id-name
+1794	Bronze wire	1794	Bronze wire	same-id-name
+1823	Waterskin (4)	1823	Waterskin(4)	same-id-name
+1831	Waterskin (0)	1831	Waterskin(0)	same-id-name
+1833	Desert shirt	1833	Desert shirt	same-id-name
+1835	Desert robe	1835	Desert robe	same-id-name
+1837	Desert boots	1837	Desert boots	same-id-name
+1854	Shantay pass	1854	Shantay pass (item)	same-id-model
+1859	Raw ugthanki meat	1859	Raw ugthanki meat	same-id-name
+1861	Ugthanki meat	1861	Ugthanki meat	same-id-name
+1865	Pitta bread	1865	Pitta bread	same-id-name
+1869	Chopped tomato	1869	Chopped tomato	same-id-name
+1871	Chopped onion	1871	Chopped onion	same-id-name
+1873	Chopped ugthanki	1873	Chopped ugthanki	same-id-name
+1875	Onion & tomato	1875	Onion & tomato	same-id-name
+1877	Ugthanki & onion	1877	Ugthanki & onion	same-id-name
+1879	Ugthanki & tomato	1879	Ugthanki & tomato	same-id-name
+1881	Kebab mix	1881	Kebab mix	same-id-name
+1885	Ugthanki kebab	1885	Ugthanki kebab	same-id-name
+1887	Cake tin	1887	Cake tin	same-id-name
+1891	Cake	1891	Cake	same-id-name
+1897	Chocolate cake	1897	Chocolate cake	same-id-name
+1905	Asgarnian ale	1905	Asgarnian ale	same-id-name
+1907	Wizard's mind bomb	1907	Wizard's mind bomb	same-id-name
+1909	Greenman's ale	1909	Greenman's ale	same-id-name
+1911	Dragon bitter	1911	Dragon bitter	same-id-name
+1913	Dwarven stout	1913	Dwarven stout	same-id-name
+1915	Grog	1915	Grog	same-id-name
+1917	Beer	1917	Beer	same-id-name
+1919	Beer glass	1919	Beer glass	same-id-name
+1921	Bowl of water	1921	Bowl of water	same-id-name
+1923	Bowl	1923	Bowl	same-id-name
+1925	Bucket	1925	Bucket	same-id-name
+1927	Bucket of milk	1927	Bucket of milk	same-id-name
+1929	Bucket of water	1929	Bucket of water	same-id-name
+1931	Empty pot	1931	Pot	same-id-model
+1933	Pot of flour	1933	Pot of flour	same-id-name
+1935	Jug	1935	Jug	same-id-name
+1937	Jug of water	1937	Jug of water	same-id-name
+1939	Swamp tar	1939	Swamp tar	same-id-name
+1941	Swamp paste	1941	Swamp paste	same-id-name
+1942	Potato	1942	Potato	same-id-name
+1944	Egg	1944	Egg	same-id-name
+1947	Grain	1947	Grain	same-id-name
+1949	Chef's hat	1949	Chef's hat	same-id-name
+1951	Redberries	1951	Redberries	same-id-name
+1953	Pastry dough	1953	Pastry dough	same-id-name
+1955	Cooking apple	1955	Cooking apple	same-id-name
+1957	Onion	1957	Onion	same-id-name
+1959	Pumpkin	1959	Pumpkin	same-id-name
+1961	Easter egg	1961	Easter egg	same-id-name
+1963	Banana	1963	Banana	same-id-name
+1965	Cabbage	1965	Cabbage	same-id-name
+1969	Spinach roll	1969	Spinach roll	same-id-name
+1971	Kebab	1971	Kebab	same-id-name
+1973	Chocolate bar	1973	Chocolate bar	same-id-name
+1975	Chocolate dust	1975	Chocolate dust	same-id-name
+1978	Cup of tea	1978	Cup of tea	same-id-name
+1980	Empty cup	1980	Empty cup	same-id-name
+1982	Tomato	1982	Tomato	same-id-name
+1985	Cheese	1985	Cheese	same-id-name
+1987	Grapes	1987	Grapes	same-id-name
+1989	Half full wine jug	1989	Half full wine jug	same-id-name
+1993	Jug of wine	1993	Jug of wine	same-id-name
+2003	Stew	2003	Stew	same-id-name
+2007	Spice	2007	Spice	same-id-name
+2011	Curry	2011	Curry	same-id-name
+2015	Vodka	2015	Vodka	same-id-name
+2017	Whisky	2017	Whisky	same-id-name
+2019	Gin	2019	Gin	same-id-name
+2021	Brandy	2021	Brandy	same-id-name
+2023	Cocktail guide	2023	Cocktail guide	same-id-name
+2025	Cocktail shaker	2025	Cocktail shaker	same-id-name
+2026	Cocktail glass	2026	Cocktail glass	same-id-name
+2028	Premade blurb' sp.	2028	Premade blurb' sp.	same-id-name
+2030	Premade choc s'dy	2030	Premade choc s'dy	same-id-name
+2032	Premade dr' dragon	2032	Premade dr' dragon	same-id-name
+2034	Premade fr' blast	2034	Premade fr' blast	same-id-name
+2036	Premade p' punch	2036	Premade p' punch	same-id-name
+2038	Premade sgg	2038	Premade sgg	same-id-name
+2040	Premade wiz blz'd	2040	Premade wiz blz'd	same-id-name
+2048	Pineapple punch	2048	Pineapple punch	same-id-name
+2054	Wizard blizzard	2054	Wizard blizzard	same-id-name
+2064	Blurberry special	2064	Blurberry special	same-id-name
+2074	Choc saturday	2074	Choc saturday	same-id-name
+2080	Short green guy	2080	Short green guy	same-id-name
+2084	Fruit blast	2084	Fruit blast	same-id-name
+2092	Drunk dragon	2092	Drunk dragon	same-id-name
+2102	Lemon	2102	Lemon	same-id-name
+2104	Lemon chunks	2104	Lemon chunks	same-id-name
+2106	Lemon slices	2106	Lemon slices	same-id-name
+2108	Orange	2108	Orange	same-id-name
+2110	Orange chunks	2110	Orange chunks	same-id-name
+2112	Orange slices	2112	Orange slices	same-id-name
+2114	Pineapple	2114	Pineapple	same-id-name
+2116	Pineapple chunks	2116	Pineapple chunks	same-id-name
+2118	Pineapple ring	2118	Pineapple ring	same-id-name
+2120	Lime	2120	Lime	same-id-name
+2122	Lime chunks	2122	Lime chunks	same-id-name
+2124	Lime slices	2124	Lime slices	same-id-name
+2126	Dwellberries	2126	Dwellberries	same-id-name
+2128	Equa leaves	2128	Equa leaves	same-id-name
+2130	Pot of cream	2130	Pot of cream	same-id-name
+2132	Raw beef	2132	Raw beef	same-id-name
+2134	Raw rat meat	2134	Raw rat meat	same-id-name
+2136	Raw bear meat	2136	Raw bear meat	same-id-name
+2138	Raw chicken	2138	Raw chicken	same-id-name
+2140	Cooked chicken	2140	Cooked chicken	same-id-name
+2142	Cooked meat	2142	Cooked meat	same-id-name
+2150	Swamp toad	2150	Swamp toad (item)	same-id-model
+2152	Toad's legs	2152	Toad's legs	same-id-name
+2162	King worm	2162	King worm	same-id-name
+2164	Batta tin	2164	Batta tin	same-id-name
+2165	Crunchy tray	2165	Crunchy tray	same-id-name
+2166	Gnomebowl mould	2166	Gnomebowl mould	same-id-name
+2167	Gianne's cook book	2167	Gianne's cook book	same-id-name
+2169	Gnome spice	2169	Gnome spice	same-id-name
+2171	Gianne dough	2171	Gianne dough	same-id-name
+2185	Chocolate bomb	2185	Chocolate bomb	same-id-name
+2187	Tangled toads' legs	2187	Tangled toad's legs	same-id-model
+2191	Worm hole	2191	Worm hole	same-id-name
+2195	Veg ball	2195	Veg ball	same-id-name
+2205	Worm crunchies	2205	Worm crunchies	same-id-name
+2209	Chocchip crunchies	2209	Chocchip crunchies	same-id-name
+2213	Spicy crunchies	2213	Spicy crunchies	same-id-name
+2217	Toad crunchies	2217	Toad crunchies	same-id-name
+2219	Premade w'm batta	2219	Premade w'm batta	same-id-name
+2221	Premade t'd batta	2221	Premade t'd batta	same-id-name
+2223	Premade c+t batta	2223	Premade c+t batta	same-id-name
+2225	Premade fr't batta	2225	Premade fr't batta	same-id-name
+2227	Premade veg batta	2227	Premade veg batta	same-id-name
+2229	Premade choc bomb	2229	Premade choc bomb	same-id-name
+2231	Premade ttl	2231	Premade ttl	same-id-name
+2233	Premade worm hole	2233	Premade worm hole	same-id-name
+2235	Premade veg ball	2235	Premade veg ball	same-id-name
+2237	Premade w'm crun'	2237	Premade w'm crun'	same-id-name
+2239	Premade ch' crunch	2239	Premade ch' crunch	same-id-name
+2241	Premade s'y crunch	2241	Premade s'y crunch	same-id-name
+2243	Premade t'd crunch	2243	Premade t'd crunch	same-id-name
+2253	Worm batta	2253	Worm batta	same-id-name
+2255	Toad batta	2255	Toad batta	same-id-name
+2259	Cheese+tom batta	2259	Cheese+tom batta	same-id-name
+2277	Fruit batta	2277	Fruit batta	same-id-name
+2281	Vegetable batta	2281	Vegetable batta	same-id-name
+2283	Pizza base	2283	Pizza base	same-id-name
+2289	Plain pizza	2289	Plain pizza	same-id-name
+2293	Meat pizza	2293	Meat pizza	same-id-name
+2297	Anchovy pizza	2297	Anchovy pizza	same-id-name
+2301	Pineapple pizza	2301	Pineapple pizza	same-id-name
+2307	Bread dough	2307	Bread dough	same-id-name
+2309	Bread	2309	Bread	same-id-name
+2313	Pie dish	2313	Pie dish	same-id-name
+2315	Pie shell	2315	Pie shell	same-id-name
+2317	Uncooked apple pie	2317	Uncooked apple pie	same-id-name
+2319	Uncooked meat pie	2319	Uncooked meat pie	same-id-name
+2321	Uncooked berry pie	2321	Uncooked berry pie	same-id-name
+2323	Apple pie	2323	Apple pie	same-id-name
+2325	Redberry pie	2325	Redberry pie	same-id-name
+2327	Meat pie	2327	Meat pie	same-id-name
+2337	Raw oomlie	2337	Raw oomlie	same-id-name
+2341	Wrapped oomlie	2341	Wrapped oomlie	same-id-name
+2343	Cooked oomlie wrap	2343	Cooked oomlie wrap	same-id-name
+2347	Hammer	2347	Hammer	same-id-name
+2349	Bronze bar	2349	Bronze bar	same-id-name
+2351	Iron bar	2351	Iron bar	same-id-name
+2353	Steel bar	2353	Steel bar	same-id-name
+2355	Silver bar	2355	Silver bar	same-id-name
+2357	Gold bar	2357	Gold bar	same-id-name
+2359	Mithril bar	2359	Mithril bar	same-id-name
+2361	Adamant bar	2361	Adamantite bar	same-id-model
+2363	Rune bar	2363	Runite bar	same-id-model
+2366	Shield left half	2366	Shield left half	same-id-name
+2368	Shield right half	2368	Shield right half	same-id-name
+2370	Steel studs	2370	Steel studs	same-id-name
+2428	Attack potion (4)	2428	Attack potion(4)	same-id-name
+2430	Restore potion (4)	2430	Restore potion(4)	same-id-name
+2432	Defence potion (4)	2432	Defence potion(4)	same-id-name
+2434	Prayer potion (4)	2434	Prayer potion(4)	same-id-name
+2436	Super attack (4)	2436	Super attack(4)	same-id-name
+2438	Fishing potion (4)	2438	Fishing potion(4)	same-id-name
+2440	Super strength (4)	2440	Super strength(4)	same-id-name
+2442	Super defence (4)	2442	Super defence(4)	same-id-name
+2444	Ranging potion (4)	2444	Ranging potion(4)	same-id-name
+2446	Antipoison (4)	2446	Antipoison(4)	same-id-name
+2448	Super antipoison (4)	2448	Superantipoison(4)	same-id-model
+2450	Zamorak brew (4)	2450	Zamorak brew(4)	same-id-name
+2452	Antifire (4)	2452	Antifire potion(4)	same-id-model
+2454	Antifire (3)	2454	Antifire potion(3)	same-id-model
+2456	Antifire (2)	2456	Antifire potion(2)	same-id-model
+2458	Antifire (1)	2458	Antifire potion(1)	same-id-model
+2460	Flowers	2460	Assorted flowers	same-id-model
+2462	Red flowers	2462	Red flowers	same-id-name
+2464	Blue flowers	2464	Blue flowers	same-id-name
+2466	Yellow flowers	2466	Yellow flowers	same-id-name
+2468	Purple flowers	2468	Purple flowers	same-id-name
+2470	Orange flowers	2470	Orange flowers	same-id-name
+2472	Flowers	2472	Mixed flowers	same-id-model
+2474	White flowers	2474	White flowers	same-id-name
+2476	Black flowers	2476	Black flowers	same-id-name
+2481	Clean lantadyme	2481	Lantadyme	same-id-model
+2483	Lantadyme potion (unf)	2483	Lantadyme potion (unf)	same-id-name
+2485	Grimy lantadyme	2485	Grimy lantadyme	same-id-name
+2487	Blue d'hide vambraces	2487	Blue d'hide vambraces	same-id-name
+2489	Red d'hide vambraces	2489	Red d'hide vambraces	same-id-name
+2491	Black d'hide vambraces	2491	Black d'hide vambraces	same-id-name
+2493	Blue d'hide chaps	2493	Blue d'hide chaps	same-id-name
+2495	Red d'hide chaps	2495	Red d'hide chaps	same-id-name
+2497	Black d'hide chaps	2497	Black d'hide chaps	same-id-name
+2499	Blue d'hide body	2499	Blue d'hide body	same-id-name
+2501	Red d'hide body	2501	Red d'hide body	same-id-name
+2503	Black d'hide body	2503	Black d'hide body	same-id-name
+2505	Blue dragon leather	2505	Blue dragon leather	same-id-name
+2507	Red dragon leather	2507	Red dragon leather	same-id-name
+2509	Black dragon leather	2509	Black dragon leather	same-id-name
+2520	Toy horsey	2520	Brown toy horsey	same-id-model
+2522	Toy horsey	2522	White toy horsey	same-id-model
+2524	Toy horsey	2524	Black toy horsey	same-id-model
+2526	Toy horsey	2526	Grey toy horsey	same-id-model
+2550	Ring of recoil	2550	Ring of recoil	same-id-name
+2568	Ring of forging	2568	Ring of forging	same-id-name
+2570	Ring of life	2570	Ring of life	same-id-name
+2572	Ring of wealth	2572	Ring of wealth	same-id-name
+2577	Ranger boots	2577	Ranger boots	same-id-name
+2579	Wizard boots	2579	Wizard boots	same-id-name
+2581	Robin hood hat	2581	Robin Hood hat	same-id-name
+2583	Black platebody (t)	2583	Black platebody (t)	same-id-name
+2585	Black platelegs (t)	2585	Black platelegs (t)	same-id-name
+2587	Black full helm (t)	2587	Black full helm (t)	same-id-name
+2589	Black kiteshield (t)	2589	Black kiteshield (t)	same-id-name
+2591	Black platebody (g)	2591	Black platebody (g)	same-id-name
+2593	Black platelegs (g)	2593	Black platelegs (g)	same-id-name
+2595	Black full helm (g)	2595	Black full helm (g)	same-id-name
+2597	Black kiteshield (g)	2597	Black kiteshield (g)	same-id-name
+2599	Adamant platebody (t)	2599	Adamant platebody (t)	same-id-name
+2601	Adamant platelegs (t)	2601	Adamant platelegs (t)	same-id-name
+2603	Adamant kiteshield (t)	2603	Adamant kiteshield (t)	same-id-name
+2605	Adamant full helm (t)	2605	Adamant full helm (t)	same-id-name
+2607	Adamant platebody (g)	2607	Adamant platebody (g)	same-id-name
+2609	Adamant platelegs (g)	2609	Adamant platelegs (g)	same-id-name
+2611	Adamant kiteshield (g)	2611	Adamant kiteshield (g)	same-id-name
+2613	Adamant full helm (g)	2613	Adamant full helm (g)	same-id-name
+2615	Rune platebody (g)	2615	Rune platebody (g)	same-id-name
+2617	Rune platelegs (g)	2617	Rune platelegs (g)	same-id-name
+2619	Rune full helm (g)	2619	Rune full helm (g)	same-id-name
+2621	Rune kiteshield (g)	2621	Rune kiteshield (g)	same-id-name
+2623	Rune platebody (t)	2623	Rune platebody (t)	same-id-name
+2625	Rune platelegs (t)	2625	Rune platelegs (t)	same-id-name
+2627	Rune full helm (t)	2627	Rune full helm (t)	same-id-name
+2629	Rune kiteshield (t)	2629	Rune kiteshield (t)	same-id-name
+2631	Highwayman mask	2631	Highwayman mask	same-id-name
+2633	Blue beret	2633	Blue beret	same-id-name
+2635	Black beret	2635	Black beret	same-id-name
+2637	White beret	2637	White beret	same-id-name
+2639	Tan cavalier	2639	Tan cavalier	same-id-name
+2641	Dark cavalier	2641	Dark cavalier	same-id-name
+2643	Black cavalier	2643	Black cavalier	same-id-name
+2645	Red headband	2645	Red headband	same-id-name
+2647	Black headband	2647	Black headband	same-id-name
+2649	Brown headband	2649	Brown headband	same-id-name
+2651	Pirate's hat	2651	Pirate's hat	same-id-name
+2653	Zamorak platebody	2653	Zamorak platebody	same-id-name
+2655	Zamorak platelegs	2655	Zamorak platelegs	same-id-name
+2657	Zamorak full helm	2657	Zamorak full helm	same-id-name
+2659	Zamorak kiteshield	2659	Zamorak kiteshield	same-id-name
+2661	Saradomin platebody	2661	Saradomin platebody	same-id-name
+2663	Saradomin platelegs	2663	Saradomin platelegs	same-id-name
+2665	Saradomin full helm	2665	Saradomin full helm	same-id-name
+2667	Saradomin kiteshield	2667	Saradomin kiteshield	same-id-name
+2669	Guthix platebody	2669	Guthix platebody	same-id-name
+2671	Guthix platelegs	2671	Guthix platelegs	same-id-name
+2673	Guthix full helm	2673	Guthix full helm	same-id-name
+2675	Guthix kiteshield	2675	Guthix kiteshield	same-id-name
+2859	Wolf bones	2859	Wolf bones	same-id-name
+2861	Wolfbone arrowtips	2861	Wolfbone arrowtips	same-id-name
+2862	Achey tree logs	2862	Achey tree logs	same-id-name
+2864	Ogre arrow shaft	2864	Ogre arrow shaft	same-id-name
+2865	Flighted ogre arrow	2865	Flighted ogre arrow	same-id-name
+2866	Ogre arrow	2866	Ogre arrow	same-id-name
+2876	Raw chompy	2876	Raw chompy	same-id-name
+2878	Cooked chompy	2878	Cooked chompy	same-id-name
+2890	Elemental shield	2890	Elemental shield	same-id-name
+2894	Boots	2894	Grey boots	same-id-model
+2896	Robe top	2896	Grey robe top	same-id-model
+2898	Robe bottoms	2898	Grey robe bottoms	same-id-model
+2900	Hat	2900	Grey hat	same-id-model
+2902	Gloves	2902	Grey gloves	same-id-model
+2904	Boots	2904	Red boots	same-id-model
+2906	Robe top	2906	Red robe top	same-id-model
+2908	Robe bottoms	2908	Red robe bottoms	same-id-model
+2910	Hat	2910	Red hat	same-id-model
+2912	Gloves	2912	Red gloves	same-id-model
+2914	Boots	2914	Yellow boots	same-id-model
+2916	Robe top	2916	Yellow robe top	same-id-model
+2918	Robe bottoms	2918	Yellow robe bottoms	same-id-model
+2920	Hat	2920	Yellow hat	same-id-model
+2922	Gloves	2922	Yellow gloves	same-id-model
+2924	Boots	2924	Teal boots	same-id-model
+2926	Robe top	2926	Teal robe top	same-id-model
+2928	Robe bottoms	2928	Teal robe bottoms	same-id-model
+2930	Hat	2930	Teal hat	same-id-model
+2932	Gloves	2932	Teal gloves	same-id-model
+2934	Boots	2934	Purple boots	same-id-model
+2936	Robe top	2936	Purple robe top	same-id-model
+2938	Robe bottoms	2938	Purple robe bottoms	same-id-model
+2940	Hat	2940	Purple hat	same-id-model
+2942	Gloves	2942	Purple gloves	same-id-model
+2955	Moonlight mead	2955	Moonlight mead	same-id-name
+2961	Silver sickle	2961	Silver sickle	same-id-name
+2970	Mort myre fungus	2970	Mort myre fungus	same-id-name
+2972	Mort myre stem	2972	Mort myre stem	same-id-name
+2974	Mort myre pear	2974	Mort myre pear	same-id-name
+2976	Sickle mould	2976	Sickle mould	same-id-name
+2997	Pirate's hook	2997	Pirate's hook	same-id-name
+2998	Clean toadflax	2998	Toadflax	same-id-model
+3000	Clean snapdragon	3000	Snapdragon	same-id-model
+3002	Toadflax potion (unf)	3002	Toadflax potion (unf)	same-id-name
+3004	Snapdragon potion (unf)	3004	Snapdragon potion (unf)	same-id-name
+3008	Energy potion (4)	3008	Energy potion(4)	same-id-name
+3010	Energy potion (3)	3010	Energy potion(3)	same-id-name
+3012	Energy potion (2)	3012	Energy potion(2)	same-id-name
+3014	Energy potion (1)	3014	Energy potion(1)	same-id-name
+3016	Super energy (4)	3016	Super energy(4)	same-id-name
+3018	Super energy (3)	3018	Super energy(3)	same-id-name
+3020	Super energy (2)	3020	Super energy(2)	same-id-name
+3022	Super energy (1)	3022	Super energy(1)	same-id-name
+3024	Super restore (4)	3024	Super restore(4)	same-id-name
+3026	Super restore (3)	3026	Super restore(3)	same-id-name
+3028	Super restore (2)	3028	Super restore(2)	same-id-name
+3030	Super restore (1)	3030	Super restore(1)	same-id-name
+3032	Agility potion (4)	3032	Agility potion(4)	same-id-name
+3034	Agility potion (3)	3034	Agility potion(3)	same-id-name
+3036	Agility potion (2)	3036	Agility potion(2)	same-id-name
+3038	Agility potion (1)	3038	Agility potion(1)	same-id-name
+3040	Magic potion (4)	3040	Magic potion(4)	same-id-name
+3042	Magic potion (3)	3042	Magic potion(3)	same-id-name
+3044	Magic potion (2)	3044	Magic potion(2)	same-id-name
+3046	Magic potion (1)	3046	Magic potion(1)	same-id-name
+3049	Grimy toadflax	3049	Grimy toadflax	same-id-name
+3051	Grimy snapdragon	3051	Grimy snapdragon	same-id-name
+3053	Lava battlestaff	3053	Lava battlestaff	same-id-name
+3054	Mystic lava staff	3054	Mystic lava staff	same-id-name
+3093	Black dart	3093	Black dart	same-id-name
+3094	Black dart (p)	3094	Black dart(p)	same-id-name
+3095	Bronze claws	3095	Bronze claws	same-id-name
+3096	Iron claws	3096	Iron claws	same-id-name
+3097	Steel claws	3097	Steel claws	same-id-name
+3098	Black claws	3098	Black claws	same-id-name
+3099	Mithril claws	3099	Mithril claws	same-id-name
+3100	Adamant claws	3100	Adamant claws	same-id-name
+3101	Rune claws	3101	Rune claws	same-id-name
+3105	Rock climbing boots	3105	Climbing boots	same-id-model
+3107	Spiked boots	3107	Spiked boots	same-id-name
+3122	Granite shield	3122	Granite shield	same-id-name
+3123	Shaikahan bones	3123	Shaikahan bones	same-id-name
+3125	Jogre bones	3125	Jogre bones	same-id-name
+3138	Potato cactus	3138	Potato cactus	same-id-name
+3140	Dragon chainbody	3140	Dragon chainbody	same-id-name
+3142	Raw karambwan	3142	Raw karambwan	same-id-name
+3144	Cooked karambwan	3144	Cooked karambwan	same-id-name
+3157	Karambwan vessel	3157	Karambwan vessel	same-id-name
+3159	Karambwan vessel	3159	Karambwan vessel (baited)	same-id-model
+3162	Sliced banana	3162	Sliced banana	same-id-name
+3183	Monkey bones	3183	Monkey bones	same-id-name
+3188	Cleaning cloth	3188	Cleaning cloth	same-id-name
+3190	Bronze halberd	3190	Bronze halberd	same-id-name
+3192	Iron halberd	3192	Iron halberd	same-id-name
+3194	Steel halberd	3194	Steel halberd	same-id-name
+3196	Black halberd	3196	Black halberd	same-id-name
+3198	Mithril halberd	3198	Mithril halberd	same-id-name
+3200	Adamant halberd	3200	Adamant halberd	same-id-name
+3202	Rune halberd	3202	Rune halberd	same-id-name
+3204	Dragon halberd	3204	Dragon halberd	same-id-name
+3211	Limestone	3211	Limestone	same-id-name
+3216	Barrel	3216	Barrel	same-id-name
+3226	Raw rabbit	3226	Raw rabbit	same-id-name
+3228	Cooked rabbit	3228	Cooked rabbit	same-id-name
+3239	Bark	3239	Bark	same-id-name
+3325	Vampyre dust	3325	Vampyre dust	same-id-name
+3327	Myre snelm	3327	Myre snelm	same-id-name
+3329	Blood'n'tar snelm	3329	Blood'n'tar snelm	same-id-name
+3331	Ochre snelm	3331	Ochre snelm	same-id-name
+3333	Bruise blue snelm	3333	Bruise blue snelm	same-id-name
+3335	Broken bark snelm	3335	Broken bark snelm	same-id-name
+3345	Blamish myre shell	3345	Blamish myre shell (round)	same-id-model
+3347	Blamish red shell	3347	Blamish red shell (round)	same-id-model
+3349	Blamish ochre shell	3349	Blamish ochre shell (round)	same-id-model
+3351	Blamish blue shell	3351	Blamish blue shell (round)	same-id-model
+3353	Blamish bark shell	3353	Blamish bark shell	same-id-name
+3355	Blamish myre shell	3355	Blamish myre shell (pointed)	same-id-model
+3357	Blamish red shell	3357	Blamish red shell (pointed)	same-id-model
+3359	Blamish ochre shell	3359	Blamish ochre shell (pointed)	same-id-model
+3361	Blamish blue shell	3361	Blamish blue shell (pointed)	same-id-model
+3363	Thin snail	3363	Thin snail	same-id-name
+3365	Lean snail	3365	Lean snail	same-id-name
+3367	Fat snail	3367	Fat snail	same-id-name
+3369	Thin snail meat	3369	Thin snail meat	same-id-name
+3371	Lean snail meat	3371	Lean snail meat	same-id-name
+3373	Fat snail meat	3373	Fat snail meat	same-id-name
+3379	Slimy eel	3379	Raw slimy eel	same-id-model
+3381	Cooked slimy eel	3381	Cooked slimy eel	same-id-name
+3385	Splitbark helm	3385	Splitbark helm	same-id-name
+3387	Splitbark body	3387	Splitbark body	same-id-name
+3389	Splitbark legs	3389	Splitbark legs	same-id-name
+3391	Splitbark gauntlets	3391	Splitbark gauntlets	same-id-name
+3393	Splitbark boots	3393	Splitbark boots	same-id-name
+3396	Loar remains	3396	Loar remains	same-id-name
+3398	Phrin remains	3398	Phrin remains	same-id-name
+3400	Riyl remains	3400	Riyl remains	same-id-name
+3402	Asyn remains	3402	Asyn remains	same-id-name
+3404	Fiyr remains	3404	Fiyr remains	same-id-name
+3406	Ash potion (unf)	3406	Unfinished potion	same-id-model
+3408	Serum 207 (4)	3408	Serum 207 (4)	same-id-name
+3410	Serum 207 (3)	3410	Serum 207 (3)	same-id-name
+3412	Serum 207 (2)	3412	Serum 207 (2)	same-id-name
+3414	Serum 207 (1)	3414	Serum 207 (1)	same-id-name
+3420	Limestone brick	3420	Limestone brick	same-id-name
+3422	Olive oil (4)	3422	Olive oil(4)	same-id-name
+3424	Olive oil (3)	3424	Olive oil(3)	same-id-name
+3426	Olive oil (2)	3426	Olive oil(2)	same-id-name
+3428	Olive oil (1)	3428	Olive oil(1)	same-id-name
+3430	Sacred oil (4)	3430	Sacred oil(4)	same-id-name
+3432	Sacred oil (3)	3432	Sacred oil(3)	same-id-name
+3434	Sacred oil (2)	3434	Sacred oil(2)	same-id-name
+3436	Sacred oil (1)	3436	Sacred oil(1)	same-id-name
+3438	Pyre logs	3438	Pyre logs	same-id-name
+3440	Oak pyre logs	3440	Oak pyre logs	same-id-name
+3442	Willow pyre logs	3442	Willow pyre logs	same-id-name
+3444	Maple pyre logs	3444	Maple pyre logs	same-id-name
+3446	Yew pyre logs	3446	Yew pyre logs	same-id-name
+3448	Magic pyre logs	3448	Magic pyre logs	same-id-name
+3470	Fine cloth	3470	Fine cloth	same-id-name
+3472	Black plateskirt (t)	3472	Black plateskirt (t)	same-id-name
+3473	Black plateskirt (g)	3473	Black plateskirt (g)	same-id-name
+3474	Adamant plateskirt (t)	3474	Adamant plateskirt (t)	same-id-name
+3475	Adamant plateskirt (g)	3475	Adamant plateskirt (g)	same-id-name
+3476	Rune plateskirt (g)	3476	Rune plateskirt (g)	same-id-name
+3477	Rune plateskirt (t)	3477	Rune plateskirt (t)	same-id-name
+3478	Zamorak plateskirt	3478	Zamorak plateskirt	same-id-name
+3479	Saradomin plateskirt	3479	Saradomin plateskirt	same-id-name
+3480	Guthix plateskirt	3480	Guthix plateskirt	same-id-name
+3481	Gilded platebody	3481	Gilded platebody	same-id-name
+3483	Gilded platelegs	3483	Gilded platelegs	same-id-name
+3485	Gilded plateskirt	3485	Gilded plateskirt	same-id-name
+3486	Gilded full helm	3486	Gilded full helm	same-id-name
+3488	Gilded kiteshield	3488	Gilded kiteshield	same-id-name
+3678	Flamtaer hammer	3678	Flamtaer hammer	same-id-name
+3749	Archer helm	3749	Archer helm	same-id-name
+3751	Berserker helm	3751	Berserker helm	same-id-name
+3753	Warrior helm	3753	Warrior helm	same-id-name
+3755	Farseer helm	3755	Farseer helm	same-id-name
+3759	Fremennik cloak	3759	Fremennik cyan cloak	same-id-model
+3761	Fremennik cloak	3761	Fremennik brown cloak	same-id-model
+3763	Fremennik cloak	3763	Fremennik blue cloak	same-id-model
+3765	Fremennik cloak	3765	Fremennik green cloak	same-id-model
+3767	Fremennik shirt	3767	Fremennik brown shirt	same-id-model
+3769	Fremennik shirt	3769	Fremennik grey shirt	same-id-model
+3771	Fremennik shirt	3771	Fremennik beige shirt	same-id-model
+3773	Fremennik shirt	3773	Fremennik red shirt	same-id-model
+3775	Fremennik shirt	3775	Fremennik blue shirt	same-id-model
+3777	Fremennik cloak	3777	Fremennik red cloak	same-id-model
+3779	Fremennik cloak	3779	Fremennik grey cloak	same-id-model
+3781	Fremennik cloak	3781	Fremennik yellow cloak	same-id-model
+3783	Fremennik cloak	3783	Fremennik teal cloak	same-id-model
+3785	Fremennik cloak	3785	Fremennik purple cloak	same-id-model
+3787	Fremennik cloak	3787	Fremennik pink cloak	same-id-model
+3789	Fremennik cloak	3789	Fremennik black cloak	same-id-model
+3791	Fremennik boots	3791	Fremennik boots	same-id-name
+3793	Fremennik robe	3793	Fremennik robe	same-id-name
+3795	Fremennik skirt	3795	Fremennik skirt	same-id-name
+3797	Fremennik hat	3797	Fremennik hat	same-id-name
+3799	Gloves	3799	Fremennik gloves	same-id-model
+3801	Keg of beer	3801	Keg of beer	same-id-name
+3803	Beer	3803	Beer tankard	same-id-model
+3827	Saradomin page 1	3827	Saradomin page 1	same-id-name
+3828	Saradomin page 2	3828	Saradomin page 2	same-id-name
+3829	Saradomin page 3	3829	Saradomin page 3	same-id-name
+3830	Saradomin page 4	3830	Saradomin page 4	same-id-name
+3831	Zamorak page 1	3831	Zamorak page 1	same-id-name
+3832	Zamorak page 2	3832	Zamorak page 2	same-id-name
+3833	Zamorak page 3	3833	Zamorak page 3	same-id-name
+3834	Zamorak page 4	3834	Zamorak page 4	same-id-name
+3835	Guthix page 1	3835	Guthix page 1	same-id-name
+3836	Guthix page 2	3836	Guthix page 2	same-id-name
+3837	Guthix page 3	3837	Guthix page 3	same-id-name
+3838	Guthix page 4	3838	Guthix page 4	same-id-name
+3853	Games necklace (8)	3853	Games necklace(8)	same-id-name
+4012	Monkey nuts	4012	Monkey nuts	same-id-name
+4014	Monkey bar	4014	Monkey bar	same-id-name
+4016	Banana stew	4016	Banana stew	same-id-name
+4087	Dragon platelegs	4087	Dragon platelegs	same-id-name
+4089	Mystic hat	4089	Mystic hat	same-id-name
+4091	Mystic robe top	4091	Mystic robe top	same-id-name
+4093	Mystic robe bottom	4093	Mystic robe bottom	same-id-name
+4095	Mystic gloves	4095	Mystic gloves	same-id-name
+4097	Mystic boots	4097	Mystic boots	same-id-name
+4099	Mystic hat	4099	Mystic hat (dark)	same-id-model
+4101	Mystic robe top	4101	Mystic robe top (dark)	same-id-model
+4103	Mystic robe bottom	4103	Mystic robe bottom (dark)	same-id-model
+4105	Mystic gloves	4105	Mystic gloves (dark)	same-id-model
+4107	Mystic boots	4107	Mystic boots (dark)	same-id-model
+4109	Mystic hat	4109	Mystic hat (light)	same-id-model
+4111	Mystic robe top	4111	Mystic robe top (light)	same-id-model
+4113	Mystic robe bottom	4113	Mystic robe bottom (light)	same-id-model
+4115	Mystic gloves	4115	Mystic gloves (light)	same-id-model
+4117	Mystic boots	4117	Mystic boots (light)	same-id-model
+4119	Bronze boots	4119	Bronze boots	same-id-name
+4121	Iron boots	4121	Iron boots	same-id-name
+4123	Steel boots	4123	Steel boots	same-id-name
+4125	Black boots	4125	Black boots	same-id-name
+4127	Mithril boots	4127	Mithril boots	same-id-name
+4129	Adamant boots	4129	Adamant boots	same-id-name
+4131	Rune boots	4131	Rune boots	same-id-name
+4151	Abyssal whip	4151	Abyssal whip	same-id-name
+4153	Granite maul	4153	Granite maul	same-id-name
+4156	Mirror shield	4156	Mirror shield	same-id-name
+4161	Bag of salt	4161	Bag of salt	same-id-name
+4162	Rock hammer	4162	Rock hammer	same-id-name
+4164	Face mask	4164	Facemask	same-id-model
+4166	Earmuffs	4166	Earmuffs	same-id-name
+4168	Nose peg	4168	Nose peg	same-id-name
+4170	Slayer's staff	4170	Slayer's staff	same-id-name
+4298	H.a.m. shirt	4298	Ham shirt	same-id-model
+4300	H.a.m. robe	4300	Ham robe	same-id-model
+4302	H.a.m. hood	4302	Ham hood	same-id-model
+4304	H.a.m. cloak	4304	Ham cloak	same-id-model
+4306	H.a.m. logo	4306	Ham logo	same-id-model
+4308	H.a.m. gloves	4308	Ham gloves	same-id-model
+4310	H.a.m. boots	4310	Ham boots	same-id-model
+4315	Team-1 cape	4315	Team-1 cape	same-id-name
+4317	Team-2 cape	4317	Team-2 cape	same-id-name
+4319	Team-3 cape	4319	Team-3 cape	same-id-name
+4321	Team-4 cape	4321	Team-4 cape	same-id-name
+4323	Team-5 cape	4323	Team-5 cape	same-id-name
+4325	Team-6 cape	4325	Team-6 cape	same-id-name
+4327	Team-7 cape	4327	Team-7 cape	same-id-name
+4329	Team-8 cape	4329	Team-8 cape	same-id-name
+4331	Team-9 cape	4331	Team-9 cape	same-id-name
+4333	Team-10 cape	4333	Team-10 cape	same-id-name
+4335	Team-11 cape	4335	Team-11 cape	same-id-name
+4337	Team-12 cape	4337	Team-12 cape	same-id-name
+4339	Team-13 cape	4339	Team-13 cape	same-id-name
+4341	Team-14 cape	4341	Team-14 cape	same-id-name
+4343	Team-15 cape	4343	Team-15 cape	same-id-name
+4345	Team-16 cape	4345	Team-16 cape	same-id-name
+4347	Team-17 cape	4347	Team-17 cape	same-id-name
+4349	Team-18 cape	4349	Team-18 cape	same-id-name
+4351	Team-19 cape	4351	Team-19 cape	same-id-name
+4353	Team-20 cape	4353	Team-20 cape	same-id-name
+4355	Team-21 cape	4355	Team-21 cape	same-id-name
+4357	Team-22 cape	4357	Team-22 cape	same-id-name
+4359	Team-23 cape	4359	Team-23 cape	same-id-name
+4361	Team-24 cape	4361	Team-24 cape	same-id-name
+4363	Team-25 cape	4363	Team-25 cape	same-id-name
+4365	Team-26 cape	4365	Team-26 cape	same-id-name
+4367	Team-27 cape	4367	Team-27 cape	same-id-name
+4369	Team-28 cape	4369	Team-28 cape	same-id-name
+4371	Team-29 cape	4371	Team-29 cape	same-id-name
+4373	Team-30 cape	4373	Team-30 cape	same-id-name
+4375	Team-31 cape	4375	Team-31 cape	same-id-name
+4377	Team-32 cape	4377	Team-32 cape	same-id-name
+4379	Team-33 cape	4379	Team-33 cape	same-id-name
+4381	Team-34 cape	4381	Team-34 cape	same-id-name
+4383	Team-35 cape	4383	Team-35 cape	same-id-name
+4385	Team-36 cape	4385	Team-36 cape	same-id-name
+4387	Team-37 cape	4387	Team-37 cape	same-id-name
+4389	Team-38 cape	4389	Team-38 cape	same-id-name
+4391	Team-39 cape	4391	Team-39 cape	same-id-name
+4393	Team-40 cape	4393	Team-40 cape	same-id-name
+4395	Team-41 cape	4395	Team-41 cape	same-id-name
+4397	Team-42 cape	4397	Team-42 cape	same-id-name
+4399	Team-43 cape	4399	Team-43 cape	same-id-name
+4401	Team-44 cape	4401	Team-44 cape	same-id-name
+4403	Team-45 cape	4403	Team-45 cape	same-id-name
+4405	Team-46 cape	4405	Team-46 cape	same-id-name
+4407	Team-47 cape	4407	Team-47 cape	same-id-name
+4409	Team-48 cape	4409	Team-48 cape	same-id-name
+4411	Team-49 cape	4411	Team-49 cape	same-id-name
+4413	Team-50 cape	4413	Team-50 cape	same-id-name
+4417	Guthix rest (4)	4417	Guthix rest(4)	same-id-name
+4419	Guthix rest (3)	4419	Guthix rest(3)	same-id-name
+4421	Guthix rest (2)	4421	Guthix rest(2)	same-id-name
+4423	Guthix rest (1)	4423	Guthix rest(1)	same-id-name
+4436	Airtight pot	4436	Airtight pot	same-id-name
+4438	Unfired pot lid	4438	Unfired pot lid	same-id-name
+4440	Pot lid	4440	Pot lid	same-id-name
+4456	Bowl of hot water	4456	Bowl of hot water	same-id-name
+4458	Cup of water	4458	Cup of water	same-id-name
+4460	Cup of hot water	4460	Cup of hot water	same-id-name
+4517	Giant frog legs	4517	Giant frog legs	same-id-name
+4522	Oil lamp	4522	Oil lamp	same-id-name
+4525	Oil lamp	4525	Empty oil lamp	same-id-model
+4527	Candle lantern	4527	Empty candle lantern	same-id-model
+4529	Candle lantern	4529	Candle lantern (white)	same-id-model
+4532	Candle lantern	4532	Candle lantern (black)	same-id-model
+4535	Oil lantern	4535	Empty oil lantern	same-id-model
+4537	Oil lantern	4537	Oil lantern	same-id-name
+4540	Oil lantern frame	4540	Oil lantern frame	same-id-name
+4542	Lantern lens	4542	Lantern lens	same-id-name
+4544	Bullseye lantern	4544	Bullseye lantern (unf)	same-id-model
+4546	Bullseye lantern	4546	Bullseye lantern (empty)	same-id-model
+4548	Bullseye lantern	4548	Bullseye lantern	same-id-name
+4551	Spiny helmet	4551	Spiny helmet	same-id-name
+4580	Black spear	4580	Black spear	same-id-name
+4582	Black spear (p)	4582	Black spear(p)	same-id-name
+4585	Dragon plateskirt	4585	Dragon plateskirt	same-id-name
+4587	Dragon scimitar	4587	Dragon scimitar	same-id-name
+4591	Karidian headpiece	4591	Kharidian headpiece	same-id-model
+4593	Fake beard	4593	Fake beard	same-id-name
+4595	Karidian disguise	4595	Karidian disguise	same-id-name
+4600	Willow-blackjack	4600	Willow blackjack	same-id-model
+4608	Super kebab	4608	Super kebab	same-id-name
+4627	Bandit's brew	4627	Bandit's brew	same-id-name
+4668	Garlic powder	4668	Garlic powder	same-id-name
+4675	Ancient staff	4675	Ancient staff	same-id-name
+4684	Linen	4684	Linen (Icthlarin's Little Helper)	same-id-model
+4687	Bucket of sap	4687	Bucket of sap	same-id-name
+4689	Pile of salt	4689	Pile of salt	same-id-name
+4694	Steam rune	4694	Steam rune	same-id-name
+4695	Mist rune	4695	Mist rune	same-id-name
+4696	Dust rune	4696	Dust rune	same-id-name
+4697	Smoke rune	4697	Smoke rune	same-id-name
+4698	Mud rune	4698	Mud rune	same-id-name
+4699	Lava rune	4699	Lava rune	same-id-name
+4708	Ahrim's hood	4708	Ahrim's hood	same-id-name
+4710	Ahrim's staff	4710	Ahrim's staff	same-id-name
+4712	Ahrim's robe top	4712	Ahrim's robetop	same-id-model
+4714	Ahrim's robe skirt	4714	Ahrim's robeskirt	same-id-model
+4716	Dharok's helm	4716	Dharok's helm	same-id-name
+4718	Dharok's greataxe	4718	Dharok's greataxe	same-id-name
+4720	Dharok's platebody	4720	Dharok's platebody	same-id-name
+4722	Dharok's platelegs	4722	Dharok's platelegs	same-id-name
+4724	Guthan's helm	4724	Guthan's helm	same-id-name
+4726	Guthan's warspear	4726	Guthan's warspear	same-id-name
+4728	Guthan's platebody	4728	Guthan's platebody	same-id-name
+4730	Guthan's chainskirt	4730	Guthan's chainskirt	same-id-name
+4732	Karil's coif	4732	Karil's coif	same-id-name
+4734	Karil's crossbow	4734	Karil's crossbow	same-id-name
+4736	Karil's top	4736	Karil's leathertop	same-id-model
+4738	Karil's skirt	4738	Karil's leatherskirt	same-id-model
+4740	Bolt rack	4740	Bolt rack	same-id-name
+4745	Torag's helm	4745	Torag's helm	same-id-name
+4747	Torag's hammers	4747	Torag's hammers	same-id-name
+4749	Torag's platebody	4749	Torag's platebody	same-id-name
+4751	Torag's platelegs	4751	Torag's platelegs	same-id-name
+4753	Verac's helm	4753	Verac's helm	same-id-name
+4755	Verac's flail	4755	Verac's flail	same-id-name
+4757	Verac's brassard	4757	Verac's brassard	same-id-name
+4759	Verac's plateskirt	4759	Verac's plateskirt	same-id-name
+4773	Bronze brutal	4773	Bronze brutal	same-id-name
+4778	Iron brutal	4778	Iron brutal	same-id-name
+4783	Steel brutal	4783	Steel brutal	same-id-name
+4788	Black brutal	4788	Black brutal	same-id-name
+4793	Mithril brutal	4793	Mithril brutal	same-id-name
+4798	Adamant brutal	4798	Adamant brutal	same-id-name
+4803	Rune brutal	4803	Rune brutal	same-id-name
+4812	Zogre bones	4812	Zogre bones	same-id-name
+4819	Bronze nails	4819	Bronze nails	same-id-name
+4820	Iron nails	4820	Iron nails	same-id-name
+4821	Black nails	4821	Black nails	same-id-name
+4822	Mithril nails	4822	Mithril nails	same-id-name
+4823	Adamantite nails	4823	Adamantite nails	same-id-name
+4824	Rune nails	4824	Rune nails	same-id-name
+4825	Unstrung comp bow	4825	Unstrung comp bow	same-id-name
+4827	Comp ogre bow	4827	Comp ogre bow	same-id-name
+4830	Fayrg bones	4830	Fayrg bones	same-id-name
+4832	Raurg bones	4832	Raurg bones	same-id-name
+4834	Ourg bones	4834	Ourg bones	same-id-name
+4842	Relicym's balm (4)	4842	Relicym's balm(4)	same-id-name
+4844	Relicym's balm (3)	4844	Relicym's balm(3)	same-id-name
+4846	Relicym's balm (2)	4846	Relicym's balm(2)	same-id-name
+4848	Relicym's balm (1)	4848	Relicym's balm(1)	same-id-name
+4850	Ogre coffin key	4850	Ogre coffin key	same-id-name
+4856	Ahrim's hood 100	4708	Ahrim's hood	degraded-base
+4857	Ahrim's hood 75	4708	Ahrim's hood	degraded-base
+4858	Ahrim's hood 50	4708	Ahrim's hood	degraded-base
+4859	Ahrim's hood 25	4708	Ahrim's hood	degraded-base
+4860	Ahrim's hood 0	4860	Ahrim's hood 0	same-id-name
+4862	Ahrim's staff 100	4710	Ahrim's staff	degraded-base
+4863	Ahrim's staff 75	4710	Ahrim's staff	degraded-base
+4864	Ahrim's staff 50	4710	Ahrim's staff	degraded-base
+4865	Ahrim's staff 25	4710	Ahrim's staff	degraded-base
+4866	Ahrim's staff 0	4866	Ahrim's staff 0	same-id-name
+4868	Ahrim's robe top 100	4712	Ahrim's robetop	degraded-base
+4869	Ahrim's robe top 75	4712	Ahrim's robetop	degraded-base
+4870	Ahrim's robe top 50	4712	Ahrim's robetop	degraded-base
+4871	Ahrim's robe top 25	4712	Ahrim's robetop	degraded-base
+4872	Ahrim's robe top 0	4872	Ahrim's robetop 0	same-id-model
+4874	Ahrim's robe skirt 100	4714	Ahrim's robeskirt	degraded-base
+4875	Ahrim's robe skirt 75	4714	Ahrim's robeskirt	degraded-base
+4876	Ahrim's robe skirt 50	4714	Ahrim's robeskirt	degraded-base
+4877	Ahrim's robe skirt 25	4714	Ahrim's robeskirt	degraded-base
+4878	Ahrim's robe skirt 0	4878	Ahrim's robeskirt 0	same-id-model
+4880	Dharok's helm 100	4716	Dharok's helm	degraded-base
+4881	Dharok's helm 75	4716	Dharok's helm	degraded-base
+4882	Dharok's helm 50	4716	Dharok's helm	degraded-base
+4883	Dharok's helm 25	4716	Dharok's helm	degraded-base
+4884	Dharok's helm 0	4884	Dharok's helm 0	same-id-name
+4886	Dharok's greataxe 100	4718	Dharok's greataxe	degraded-base
+4887	Dharok's greataxe 75	4718	Dharok's greataxe	degraded-base
+4888	Dharok's greataxe 50	4718	Dharok's greataxe	degraded-base
+4889	Dharok's greataxe 25	4718	Dharok's greataxe	degraded-base
+4890	Dharok's greataxe 0	4890	Dharok's greataxe 0	same-id-name
+4892	Dharok's platebody 100	4720	Dharok's platebody	degraded-base
+4893	Dharok's platebody 75	4720	Dharok's platebody	degraded-base
+4894	Dharok's platebody 50	4720	Dharok's platebody	degraded-base
+4895	Dharok's platebody 25	4720	Dharok's platebody	degraded-base
+4896	Dharok's platebody 0	4896	Dharok's platebody 0	same-id-name
+4898	Dharok's platelegs 100	4722	Dharok's platelegs	degraded-base
+4899	Dharok's platelegs 75	4722	Dharok's platelegs	degraded-base
+4900	Dharok's platelegs 50	4722	Dharok's platelegs	degraded-base
+4901	Dharok's platelegs 25	4722	Dharok's platelegs	degraded-base
+4902	Dharok's platelegs 0	4902	Dharok's platelegs 0	same-id-name
+4904	Guthan's helm 100	4724	Guthan's helm	degraded-base
+4905	Guthan's helm 75	4724	Guthan's helm	degraded-base
+4906	Guthan's helm 50	4724	Guthan's helm	degraded-base
+4907	Guthan's helm 25	4724	Guthan's helm	degraded-base
+4908	Guthan's helm 0	4908	Guthan's helm 0	same-id-name
+4910	Guthan's warspear 100	4726	Guthan's warspear	degraded-base
+4911	Guthan's warspear 75	4726	Guthan's warspear	degraded-base
+4912	Guthan's warspear 50	4726	Guthan's warspear	degraded-base
+4913	Guthan's warspear 25	4726	Guthan's warspear	degraded-base
+4914	Guthan's warspear 0	4914	Guthan's warspear 0	same-id-name
+4916	Guthan's platebody 100	4728	Guthan's platebody	degraded-base
+4917	Guthan's platebody 75	4728	Guthan's platebody	degraded-base
+4918	Guthan's platebody 50	4728	Guthan's platebody	degraded-base
+4919	Guthan's platebody 25	4728	Guthan's platebody	degraded-base
+4920	Guthan's platebody 0	4920	Guthan's platebody 0	same-id-name
+4922	Guthan's chainskirt 100	4730	Guthan's chainskirt	degraded-base
+4923	Guthan's chainskirt 75	4730	Guthan's chainskirt	degraded-base
+4924	Guthan's chainskirt 50	4730	Guthan's chainskirt	degraded-base
+4925	Guthan's chainskirt 25	4730	Guthan's chainskirt	degraded-base
+4926	Guthan's chainskirt 0	4926	Guthan's chainskirt 0	same-id-name
+4928	Karil's coif 100	4732	Karil's coif	degraded-base
+4929	Karil's coif 75	4732	Karil's coif	degraded-base
+4930	Karil's coif 50	4732	Karil's coif	degraded-base
+4931	Karil's coif 25	4732	Karil's coif	degraded-base
+4932	Karil's coif 0	4932	Karil's coif 0	same-id-name
+4934	Karil's crossbow 100	4734	Karil's crossbow	degraded-base
+4935	Karil's crossbow 75	4734	Karil's crossbow	degraded-base
+4936	Karil's crossbow 50	4734	Karil's crossbow	degraded-base
+4937	Karil's crossbow 25	4734	Karil's crossbow	degraded-base
+4938	Karil's crossbow 0	4938	Karil's crossbow 0	same-id-name
+4940	Karil's top 100	4736	Karil's leathertop	degraded-base
+4941	Karil's top 75	4736	Karil's leathertop	degraded-base
+4942	Karil's top 50	4736	Karil's leathertop	degraded-base
+4943	Karil's top 25	4736	Karil's leathertop	degraded-base
+4944	Karil's top 0	4944	Karil's leathertop 0	same-id-model
+4946	Karil's skirt 100	4738	Karil's leatherskirt	degraded-base
+4947	Karil's skirt 75	4738	Karil's leatherskirt	degraded-base
+4948	Karil's skirt 50	4738	Karil's leatherskirt	degraded-base
+4949	Karil's skirt 25	4738	Karil's leatherskirt	degraded-base
+4950	Karil's skirt 0	4950	Karil's leatherskirt 0	same-id-model
+4952	Torag's helm 100	4745	Torag's helm	degraded-base
+4953	Torag's helm 75	4745	Torag's helm	degraded-base
+4954	Torag's helm 50	4745	Torag's helm	degraded-base
+4955	Torag's helm 25	4745	Torag's helm	degraded-base
+4956	Torag's helm 0	4956	Torag's helm 0	same-id-name
+4958	Torag's hammers 100	4747	Torag's hammers	degraded-base
+4959	Torag's hammers 75	4747	Torag's hammers	degraded-base
+4960	Torag's hammers 50	4747	Torag's hammers	degraded-base
+4961	Torag's hammers 25	4747	Torag's hammers	degraded-base
+4962	Torag's hammers 0	4962	Torag's hammers 0	same-id-name
+4964	Torag's platebody 100	4749	Torag's platebody	degraded-base
+4965	Torag's platebody 75	4749	Torag's platebody	degraded-base
+4966	Torag's platebody 50	4749	Torag's platebody	degraded-base
+4967	Torag's platebody 25	4749	Torag's platebody	degraded-base
+4968	Torag's platebody 0	4968	Torag's platebody 0	same-id-name
+4970	Torag's platelegs 100	4751	Torag's platelegs	degraded-base
+4971	Torag's platelegs 75	4751	Torag's platelegs	degraded-base
+4972	Torag's platelegs 50	4751	Torag's platelegs	degraded-base
+4973	Torag's platelegs 25	4751	Torag's platelegs	degraded-base
+4974	Torag's platelegs 0	4974	Torag's platelegs 0	same-id-name
+4976	Verac's helm 100	4753	Verac's helm	degraded-base
+4977	Verac's helm 75	4753	Verac's helm	degraded-base
+4978	Verac's helm 50	4753	Verac's helm	degraded-base
+4979	Verac's helm 25	4753	Verac's helm	degraded-base
+4980	Verac's helm 0	4980	Verac's helm 0	same-id-name
+4982	Verac's flail 100	4755	Verac's flail	degraded-base
+4983	Verac's flail 75	4755	Verac's flail	degraded-base
+4984	Verac's flail 50	4755	Verac's flail	degraded-base
+4985	Verac's flail 25	4755	Verac's flail	degraded-base
+4986	Verac's flail 0	4986	Verac's flail 0	same-id-name
+4988	Verac's brassard 100	4757	Verac's brassard	degraded-base
+4989	Verac's brassard 75	4757	Verac's brassard	degraded-base
+4990	Verac's brassard 50	4757	Verac's brassard	degraded-base
+4991	Verac's brassard 25	4757	Verac's brassard	degraded-base
+4992	Verac's brassard 0	4992	Verac's brassard 0	same-id-name
+4994	Verac's plateskirt 100	4759	Verac's plateskirt	degraded-base
+4995	Verac's plateskirt 75	4759	Verac's plateskirt	degraded-base
+4996	Verac's plateskirt 50	4759	Verac's plateskirt	degraded-base
+4997	Verac's plateskirt 25	4759	Verac's plateskirt	degraded-base
+4998	Verac's plateskirt 0	4998	Verac's plateskirt 0	same-id-name
+5001	Raw cave eel	5001	Raw cave eel	same-id-name
+5003	Cave eel	5003	Cave eel	same-id-name
+5014	Mining helmet	5014	Mining helmet	same-id-name
+5016	Bone spear	5016	Bone spear	same-id-name
+5018	Bone club	5018	Bone club	same-id-name
+5024	Woven top	5024	Woven top (brown)	same-id-model
+5026	Woven top	5026	Woven top (yellow)	same-id-model
+5028	Woven top	5028	Woven top (blue)	same-id-model
+5030	Shirt	5030	Shirt (brown)	same-id-model
+5032	Shirt	5032	Shirt (yellow)	same-id-model
+5034	Shirt	5034	Shirt (lilac)	same-id-model
+5036	Trousers	5036	Trousers (brown)	same-id-model
+5038	Trousers	5038	Trousers (lilac)	same-id-model
+5040	Trousers	5040	Trousers (blue)	same-id-model
+5042	Shorts	5042	Shorts (brown)	same-id-model
+5044	Shorts	5044	Shorts (yellow)	same-id-model
+5046	Shorts	5046	Shorts (blue)	same-id-model
+5048	Skirt	5048	Skirt (brown)	same-id-model
+5050	Skirt	5050	Skirt (lilac)	same-id-model
+5052	Skirt	5052	Skirt (blue)	same-id-model
+5075	Bird's nest	5075	Bird nest (empty)	same-id-model
+5096	Marigold seed	5096	Marigold seed	same-id-name
+5097	Rosemary seed	5097	Rosemary seed	same-id-name
+5098	Nasturtium seed	5098	Nasturtium seed	same-id-name
+5099	Woad seed	5099	Woad seed	same-id-name
+5100	Limpwurt seed	5100	Limpwurt seed	same-id-name
+5101	Redberry seed	5101	Redberry seed	same-id-name
+5102	Cadavaberry seed	5102	Cadavaberry seed	same-id-name
+5103	Dwellberry seed	5103	Dwellberry seed	same-id-name
+5104	Jangerberry seed	5104	Jangerberry seed	same-id-name
+5105	Whiteberry seed	5105	Whiteberry seed	same-id-name
+5106	Poison ivy seed	5106	Poison ivy seed	same-id-name
+5280	Cactus seed	5280	Cactus seed	same-id-name
+5281	Belladonna seed	5281	Belladonna seed	same-id-name
+5282	Bittercap mushroom spore	5282	Mushroom spore	same-id-model
+5283	Apple tree seed	5283	Apple tree seed	same-id-name
+5284	Banana tree seed	5284	Banana tree seed	same-id-name
+5285	Orange tree seed	5285	Orange tree seed	same-id-name
+5286	Curry tree seed	5286	Curry tree seed	same-id-name
+5287	Pineapple seed	5287	Pineapple seed	same-id-name
+5288	Papaya tree seed	5288	Papaya tree seed	same-id-name
+5289	Palm tree seed	5289	Palm tree seed	same-id-name
+5290	Calquat tree seed	5290	Calquat tree seed	same-id-name
+5291	Guam seed	5291	Guam seed	same-id-name
+5292	Marrentill seed	5292	Marrentill seed	same-id-name
+5293	Tarromin seed	5293	Tarromin seed	same-id-name
+5294	Harralander seed	5294	Harralander seed	same-id-name
+5295	Ranarr seed	5295	Ranarr seed	same-id-name
+5296	Toadflax seed	5296	Toadflax seed	same-id-name
+5297	Irit seed	5297	Irit seed	same-id-name
+5298	Avantoe seed	5298	Avantoe seed	same-id-name
+5299	Kwuarm seed	5299	Kwuarm seed	same-id-name
+5300	Snapdragon seed	5300	Snapdragon seed	same-id-name
+5301	Cadantine seed	5301	Cadantine seed	same-id-name
+5302	Lantadyme seed	5302	Lantadyme seed	same-id-name
+5303	Dwarf weed seed	5303	Dwarf weed seed	same-id-name
+5304	Torstol seed	5304	Torstol seed	same-id-name
+5305	Barley seed	5305	Barley seed	same-id-name
+5306	Jute seed	5306	Jute seed	same-id-name
+5307	Hammerstone seed	5307	Hammerstone seed	same-id-name
+5308	Asgarnian seed	5308	Asgarnian seed	same-id-name
+5309	Yanillian seed	5309	Yanillian seed	same-id-name
+5310	Krandorian seed	5310	Krandorian seed	same-id-name
+5311	Wildblood seed	5311	Wildblood seed	same-id-name
+5312	Acorn	5312	Acorn	same-id-name
+5313	Willow seed	5313	Willow seed	same-id-name
+5314	Maple seed	5314	Maple seed	same-id-name
+5315	Yew seed	5315	Yew seed	same-id-name
+5316	Magic seed	5316	Magic seed	same-id-name
+5318	Potato seed	5318	Potato seed	same-id-name
+5319	Onion seed	5319	Onion seed	same-id-name
+5320	Sweetcorn seed	5320	Sweetcorn seed	same-id-name
+5321	Watermelon seed	5321	Watermelon seed	same-id-name
+5322	Tomato seed	5322	Tomato seed	same-id-name
+5323	Strawberry seed	5323	Strawberry seed	same-id-name
+5324	Cabbage seed	5324	Cabbage seed	same-id-name
+5325	Gardening trowel	5325	Gardening trowel	same-id-name
+5329	Secateurs	5329	Secateurs	same-id-name
+5331	Watering can	5331	Watering can	same-id-name
+5341	Rake	5341	Rake	same-id-name
+5343	Seed dibber	5343	Seed dibber	same-id-name
+5345	Gardening boots	5345	Gardening boots	same-id-name
+5350	Plant pot	5350	Empty plant pot	same-id-model
+5352	Unfired plant pot	5352	Unfired plant pot	same-id-name
+5354	Plant pot	5354	Filled plant pot	same-id-model
+5370	Oak sapling	5370	Oak sapling	same-id-name
+5371	Willow sapling	5371	Willow sapling	same-id-name
+5372	Maple sapling	5372	Maple sapling	same-id-name
+5373	Yew sapling	5373	Yew sapling	same-id-name
+5374	Magic sapling	5374	Magic sapling	same-id-name
+5376	Basket	5376	Basket	same-id-name
+5386	Apples (5)	5386	Apples(5)	same-id-name
+5396	Oranges (5)	5396	Oranges(5)	same-id-name
+5406	Strawberries (5)	5406	Strawberries(5)	same-id-name
+5416	Bananas (5)	5416	Bananas(5)	same-id-name
+5418	Empty sack	5418	Empty sack	same-id-name
+5438	Potatoes (10)	5438	Potatoes(10)	same-id-name
+5458	Onions (10)	5458	Onions(10)	same-id-name
+5478	Cabbages (10)	5478	Cabbages(10)	same-id-name
+5496	Apple sapling	5496	Apple sapling	same-id-name
+5497	Banana sapling	5497	Banana sapling	same-id-name
+5498	Orange sapling	5498	Orange sapling	same-id-name
+5499	Curry sapling	5499	Curry sapling	same-id-name
+5500	Pineapple sapling	5500	Pineapple sapling	same-id-name
+5501	Papaya sapling	5501	Papaya sapling	same-id-name
+5502	Palm sapling	5502	Palm sapling	same-id-name
+5503	Calquat sapling	5503	Calquat sapling	same-id-name
+5504	Strawberry	5504	Strawberry	same-id-name
+5516	Elemental talisman	5516	Elemental talisman	same-id-name
+5521	Binding necklace	5521	Binding necklace	same-id-name
+5523	Tiara mould	5523	Tiara mould	same-id-name
+5525	Tiara	5525	Tiara	same-id-name
+5527	Air tiara	5527	Air tiara	same-id-name
+5529	Mind tiara	5529	Mind tiara	same-id-name
+5531	Water tiara	5531	Water tiara	same-id-name
+5533	Body tiara	5533	Body tiara	same-id-name
+5535	Earth tiara	5535	Earth tiara	same-id-name
+5537	Fire tiara	5537	Fire tiara	same-id-name
+5539	Cosmic tiara	5539	Cosmic tiara	same-id-name
+5541	Nature tiara	5541	Nature tiara	same-id-name
+5543	Chaos tiara	5543	Chaos tiara	same-id-name
+5547	Death tiara	5547	Death tiara	same-id-name
+5549	Blood tiara	5549	Blood tiara	same-id-name
+5574	Initiate sallet	5574	Initiate sallet	same-id-name
+5575	Initiate hauberk	5575	Initiate hauberk	same-id-name
+5576	Initiate cuisse	5576	Initiate cuisse	same-id-name
+5616	Bronze arrow (p+)	5616	Bronze arrow(p+)	same-id-name
+5617	Iron arrow (p+)	5617	Iron arrow(p+)	same-id-name
+5618	Steel arrow (p+)	5618	Steel arrow(p+)	same-id-name
+5619	Mithril arrow (p+)	5619	Mithril arrow(p+)	same-id-name
+5620	Adamant arrow (p+)	5620	Adamant arrow(p+)	same-id-name
+5621	Rune arrow (p+)	5621	Rune arrow(p+)	same-id-name
+5622	Bronze arrow (p++)	5622	Bronze arrow(p++)	same-id-name
+5623	Iron arrow (p++)	5623	Iron arrow(p++)	same-id-name
+5624	Steel arrow (p++)	5624	Steel arrow(p++)	same-id-name
+5625	Mithril arrow (p++)	5625	Mithril arrow(p++)	same-id-name
+5626	Adamant arrow (p++)	5626	Adamant arrow(p++)	same-id-name
+5627	Rune arrow (p++)	5627	Rune arrow(p++)	same-id-name
+5628	Bronze dart (p+)	5628	Bronze dart(p+)	same-id-name
+5629	Iron dart (p+)	5629	Iron dart(p+)	same-id-name
+5630	Steel dart (p+)	5630	Steel dart(p+)	same-id-name
+5631	Black dart (p+)	5631	Black dart(p+)	same-id-name
+5632	Mithril dart (p+)	5632	Mithril dart(p+)	same-id-name
+5633	Adamant dart (p+)	5633	Adamant dart(p+)	same-id-name
+5634	Rune dart (p+)	5634	Rune dart(p+)	same-id-name
+5635	Bronze dart (p++)	5635	Bronze dart(p++)	same-id-name
+5636	Iron dart (p++)	5636	Iron dart(p++)	same-id-name
+5637	Steel dart (p++)	5637	Steel dart(p++)	same-id-name
+5638	Black dart (p++)	5638	Black dart(p++)	same-id-name
+5639	Mithril dart (p++)	5639	Mithril dart(p++)	same-id-name
+5640	Adamant dart (p++)	5640	Adamant dart(p++)	same-id-name
+5641	Rune dart (p++)	5641	Rune dart(p++)	same-id-name
+5642	Bronze javelin (p+)	5642	Bronze javelin(p+)	same-id-name
+5643	Iron javelin (p+)	5643	Iron javelin(p+)	same-id-name
+5644	Steel javelin (p+)	5644	Steel javelin(p+)	same-id-name
+5645	Mithril javelin (p+)	5645	Mithril javelin(p+)	same-id-name
+5646	Adamant javelin (p+)	5646	Adamant javelin(p+)	same-id-name
+5647	Rune javelin (p+)	5647	Rune javelin(p+)	same-id-name
+5648	Bronze jav'n (p++)	5648	Bronze javelin(p++)	same-id-model
+5649	Iron javelin (p++)	5649	Iron javelin(p++)	same-id-name
+5650	Steel javelin (p++)	5650	Steel javelin(p++)	same-id-name
+5651	Mithril javelin (p++)	5651	Mithril javelin(p++)	same-id-name
+5652	Adamant javelin (p++)	5652	Adamant javelin(p++)	same-id-name
+5653	Rune javelin (p++)	5653	Rune javelin(p++)	same-id-name
+5654	Bronze knife (p+)	5654	Bronze knife(p+)	same-id-name
+5655	Iron knife (p+)	5655	Iron knife(p+)	same-id-name
+5656	Steel knife (p+)	5656	Steel knife(p+)	same-id-name
+5657	Mithril knife (p+)	5657	Mithril knife(p+)	same-id-name
+5658	Black knife (p+)	5658	Black knife(p+)	same-id-name
+5659	Adamant knife (p+)	5659	Adamant knife(p+)	same-id-name
+5660	Rune knife (p+)	5660	Rune knife(p+)	same-id-name
+5661	Bronze knife (p++)	5661	Bronze knife(p++)	same-id-name
+5662	Iron knife (p++)	5662	Iron knife(p++)	same-id-name
+5663	Steel knife (p++)	5663	Steel knife(p++)	same-id-name
+5664	Mithril knife (p++)	5664	Mithril knife(p++)	same-id-name
+5665	Black knife (p++)	5665	Black knife(p++)	same-id-name
+5666	Adamant knife (p++)	5666	Adamant knife(p++)	same-id-name
+5667	Rune knife (p++)	5667	Rune knife(p++)	same-id-name
+5668	Iron dagger (p+)	5668	Iron dagger(p+)	same-id-name
+5670	Bronze dagger (p+)	5670	Bronze dagger(p+)	same-id-name
+5672	Steel dagger (p+)	5672	Steel dagger(p+)	same-id-name
+5674	Mithril dagger (p+)	5674	Mithril dagger(p+)	same-id-name
+5676	Adamant dagger (p+)	5676	Adamant dagger(p+)	same-id-name
+5678	Rune dagger (p+)	5678	Rune dagger(p+)	same-id-name
+5680	Dragon dagger (p+)	5680	Dragon dagger(p+)	same-id-name
+5682	Black dagger (p+)	5682	Black dagger(p+)	same-id-name
+5686	Iron dagger (p++)	5686	Iron dagger(p++)	same-id-name
+5688	Bronze dagger (p++)	5688	Bronze dagger(p++)	same-id-name
+5690	Steel dagger (p++)	5690	Steel dagger(p++)	same-id-name
+5692	Mithril dagger (p++)	5692	Mithril dagger(p++)	same-id-name
+5694	Adamant dagger (p++)	5694	Adamant dagger(p++)	same-id-name
+5696	Rune dagger (p++)	5696	Rune dagger(p++)	same-id-name
+5698	Dragon dagger (p++)	5698	Dragon dagger(p++)	same-id-name
+5700	Black dagger (p++)	5700	Black dagger(p++)	same-id-name
+5704	Bronze spear (p+)	5704	Bronze spear(p+)	same-id-name
+5706	Iron spear (p+)	5706	Iron spear(p+)	same-id-name
+5708	Steel spear (p+)	5708	Steel spear(p+)	same-id-name
+5710	Mithril spear (p+)	5710	Mithril spear(p+)	same-id-name
+5712	Adamant spear (p+)	5712	Adamant spear(p+)	same-id-name
+5714	Rune spear (p+)	5714	Rune spear(p+)	same-id-name
+5716	Dragon spear (p+)	5716	Dragon spear(p+)	same-id-name
+5718	Bronze spear (p++)	5718	Bronze spear(p++)	same-id-name
+5720	Iron spear (p++)	5720	Iron spear(p++)	same-id-name
+5722	Steel spear (p++)	5722	Steel spear(p++)	same-id-name
+5724	Mithril spear (p++)	5724	Mithril spear(p++)	same-id-name
+5726	Adamant spear (p++)	5726	Adamant spear(p++)	same-id-name
+5728	Rune spear (p++)	5728	Rune spear(p++)	same-id-name
+5730	Dragon spear (p++)	5730	Dragon spear(p++)	same-id-name
+5734	Black spear (p+)	5734	Black spear(p+)	same-id-name
+5736	Black spear (p++)	5736	Black spear(p++)	same-id-name
+5739	Asgarnian ale (m)	5739	Asgarnian ale(m)	same-id-name
+5741	Mature wmb	5741	Mature wmb	same-id-name
+5743	Greenman's ale (m)	5743	Greenman's ale(m)	same-id-name
+5745	Dragon bitter (m)	5745	Dragon bitter(m)	same-id-name
+5747	Dwarven stout (m)	5747	Dwarven stout(m)	same-id-name
+5749	Moonlight mead (m)	5749	Moonlight mead(m)	same-id-name
+5751	Axeman's folly	5751	Axeman's folly	same-id-name
+5753	Axeman's folly (m)	5753	Axeman's folly(m)	same-id-name
+5755	Chef's delight	5755	Chef's delight	same-id-name
+5757	Chef's delight (m)	5757	Chef's delight(m)	same-id-name
+5759	Slayer's respite	5759	Slayer's respite	same-id-name
+5761	Slayer's respite (m)	5761	Slayer's respite(m)	same-id-name
+5763	Cider	5763	Cider	same-id-name
+5765	Mature cider	5765	Mature cider	same-id-name
+5767	Ale yeast	5767	Ale yeast	same-id-name
+5769	Calquat keg	5769	Calquat keg	same-id-name
+5777	Dwarven stout (4)	5777	Dwarven stout(4)	same-id-name
+5785	Asgarnian ale (4)	5785	Asgarnian ale(4)	same-id-name
+5793	Greenman's ale (4)	5793	Greenmans ale(4)	same-id-model
+5801	Mind bomb (4)	5801	Mind bomb(4)	same-id-name
+5809	Dragon bitter (4)	5809	Dragon bitter(4)	same-id-name
+5817	Moonlight mead (4)	5817	Moonlight mead(4)	same-id-name
+5825	Axeman's folly (4)	5825	Axeman's folly(4)	same-id-name
+5833	Chef's delight (4)	5833	Chef's delight(4)	same-id-name
+5841	Slayer's respite (4)	5841	Slayer's respite(4)	same-id-name
+5849	Cider (4)	5849	Cider(4)	same-id-name
+5857	Dwarven stout (m4)	5857	Dwarven stout(m4)	same-id-name
+5865	Asgarnian ale (m4)	5865	Asgarnian ale(m4)	same-id-name
+5873	Greenman's ale (m4)	5873	Greenmans ale(m4)	same-id-model
+5881	Mind bomb (m4)	5881	Mind bomb(m4)	same-id-name
+5889	Dragon bitter (m4)	5889	Dragon bitter(m4)	same-id-name
+5897	M'light mead (m4)	5897	Moonlight mead(m4)	same-id-model
+5905	Axeman's folly (m4)	5905	Axeman's folly(m4)	same-id-name
+5913	Chef's delight (m4)	5913	Chef's delight(m4)	same-id-name
+5921	Slayer respite (m4)	5921	Slayer's respite(m4)	same-id-model
+5929	Cider (m4)	5929	Cider(m4)	same-id-name
+5931	Jute fibre	5931	Jute fibre	same-id-name
+5933	Willow branch	5933	Willow branch	same-id-name
+5935	Coconut milk	5935	Coconut milk	same-id-name
+5937	Weapon poison+	5937	Weapon poison(+)	same-id-model
+5940	Weapon poison++	5940	Weapon poison(++)	same-id-model
+5943	Antipoison+ (4)	5943	Antidote+(4)	same-id-model
+5945	Antipoison+ (3)	5945	Antidote+(3)	same-id-model
+5947	Antipoison+ (2)	5947	Antidote+(2)	same-id-model
+5949	Antipoison+ (1)	5949	Antidote+(1)	same-id-model
+5952	Antipoison++ (4)	5952	Antidote++(4)	same-id-model
+5954	Antipoison++ (3)	5954	Antidote++(3)	same-id-model
+5956	Antipoison++ (2)	5956	Antidote++(2)	same-id-model
+5958	Antipoison++ (1)	5958	Antidote++(1)	same-id-model
+5968	Tomatoes (5)	5968	Tomatoes(5)	same-id-name
+5970	Curry leaf	5970	Curry leaf	same-id-name
+5972	Papaya fruit	5972	Papaya fruit	same-id-name
+5974	Coconut	5974	Coconut	same-id-name
+5980	Calquat fruit	5980	Calquat fruit	same-id-name
+5982	Watermelon	5982	Watermelon	same-id-name
+5984	Watermelon slice	5984	Watermelon slice	same-id-name
+5986	Sweetcorn	5986	Sweetcorn	same-id-name
+5988	Cooked sweetcorn	5988	Cooked sweetcorn	same-id-name
+5992	Apple mush	5992	Apple mush	same-id-name
+5994	Hammerstone hops	5994	Hammerstone hops	same-id-name
+5996	Asgarnian hops	5996	Asgarnian hops	same-id-name
+5998	Yanillian hops	5998	Yanillian hops	same-id-name
+6000	Krandorian hops	6000	Krandorian hops	same-id-name
+6002	Wildblood hops	6002	Wildblood hops	same-id-name
+6004	Bittercap mushroom	6004	Mushroom	same-id-model
+6006	Barley	6006	Barley	same-id-name
+6008	Barley malt	6008	Barley malt	same-id-name
+6010	Marigolds	6010	Marigolds	same-id-name
+6012	Nasturtiums	6012	Nasturtiums	same-id-name
+6014	Rosemary	6014	Rosemary	same-id-name
+6016	Cactus spine	6016	Cactus spine	same-id-name
+6018	Poison ivy berries	6018	Poison ivy berries	same-id-name
+6020	Leaves	6020	Leaves	same-id-name
+6032	Compost	6032	Compost	same-id-name
+6034	Supercompost	6034	Supercompost	same-id-name
+6036	Plant cure	6036	Plant cure	same-id-name
+6038	Magic string	6038	Magic string	same-id-name
+6043	Oak roots	6043	Oak roots	same-id-name
+6045	Willow roots	6045	Willow roots	same-id-name
+6047	Maple roots	6047	Maple roots	same-id-name
+6049	Yew roots	6049	Yew roots	same-id-name
+6051	Magic roots	6051	Magic roots	same-id-name
+6055	Weeds	6055	Weeds	same-id-name
+6061	Bronze bolts (p+)	6061	Bronze bolts (p+)	same-id-name
+6062	Bronze bolts (p++)	6062	Bronze bolts (p++)	same-id-name
+6128	Rock-shell helm	6128	Rock-shell helm	same-id-name
+6129	Rock-shell plate	6129	Rock-shell plate	same-id-name
+6130	Rock-shell legs	6130	Rock-shell legs	same-id-name
+6131	Spined helm	6131	Spined helm	same-id-name
+6133	Spined body	6133	Spined body	same-id-name
+6135	Spined chaps	6135	Spined chaps	same-id-name
+6137	Skeletal helm	6137	Skeletal helm	same-id-name
+6139	Skeletal top	6139	Skeletal top	same-id-name
+6141	Skeletal bottoms	6141	Skeletal bottoms	same-id-name
+6143	Spined boots	6143	Spined boots	same-id-name
+6145	Rock-shell boots	6145	Rock-shell boots	same-id-name
+6147	Skeletal boots	6147	Skeletal boots	same-id-name
+6149	Spined gloves	6149	Spined gloves	same-id-name
+6151	Rock-shell gloves	6151	Rock-shell gloves	same-id-name
+6153	Skeletal gloves	6153	Skeletal gloves	same-id-name
+6155	Dagannoth hide	6155	Dagannoth hide	same-id-name
+6157	Rock-shell chunk	6157	Rock-shell chunk	same-id-name
+6159	Rock-shell shard	6159	Rock-shell shard	same-id-name
+6161	Rock-shell splinter	6161	Rock-shell splinter	same-id-name
+6163	Skull piece	6163	Skull piece	same-id-name
+6165	Ribcage piece	6165	Ribcage piece	same-id-name
+6167	Fibula piece	6167	Fibula piece	same-id-name
+6169	Circular hide	6169	Circular hide	same-id-name
+6171	Flattened hide	6171	Flattened hide	same-id-name
+6173	Stretched hide	6173	Stretched hide	same-id-name
+6211	Teak pyre logs	6211	Teak pyre logs	same-id-name
+6213	Mahogany pyre logs	6213	Mahogany pyre logs	same-id-name
+6215	Broodoo shield (10)	6215	Broodoo shield (10) (poison)	same-id-model
+6235	Broodoo shield	6235	Broodoo shield (poison)	same-id-model
+6237	Broodoo shield (10)	6237	Broodoo shield (10) (disease)	same-id-model
+6257	Broodoo shield	6257	Broodoo shield (disease)	same-id-model
+6259	Broodoo shield (10)	6259	Broodoo shield (10) (combat)	same-id-model
+6279	Broodoo shield	6279	Broodoo shield (combat)	same-id-model
+6281	Thatch spar light	6281	Thatch spar light	same-id-name
+6283	Thatch spar med	6283	Thatch spar med	same-id-name
+6285	Thatch spar dense	6285	Thatch spar dense	same-id-name
+6287	Snake hide	6287	Snake hide	same-id-name
+6289	Snakeskin	6289	Snakeskin	same-id-name
+6291	Spider carcass	6291	Spider carcass	same-id-name
+6297	Spider on stick	6297	Spider on stick	same-id-name
+6299	Spider on shaft	6299	Spider on shaft	same-id-name
+6305	Skewer stick	6305	Skewer stick	same-id-name
+6306	Trading sticks	6306	Trading sticks	same-id-name
+6311	Gout tuber	6311	Gout tuber	same-id-name
+6313	Opal machete	6313	Opal machete	same-id-name
+6315	Jade machete	6315	Jade machete	same-id-name
+6317	Red topaz machete	6317	Red topaz machete	same-id-name
+6319	Proboscis	6319	Proboscis	same-id-name
+6322	Snakeskin body	6322	Snakeskin body	same-id-name
+6324	Snakeskin chaps	6324	Snakeskin chaps	same-id-name
+6326	Snakeskin bandana	6326	Snakeskin bandana	same-id-name
+6328	Snakeskin boots	6328	Snakeskin boots	same-id-name
+6330	Snakeskin vambraces	6330	Snakeskin vambraces	same-id-name
+6332	Mahogany logs	6332	Mahogany logs	same-id-name
+6333	Teak logs	6333	Teak logs	same-id-name
+6335	Tribal mask	6335	Tribal mask (poison)	same-id-model
+6337	Tribal mask	6337	Tribal mask (disease)	same-id-model
+6339	Tribal mask	6339	Tribal mask (combat)	same-id-model
+6341	Tribal top	6341	Tribal top (brown)	same-id-model
+6343	Villager robe	6343	Villager robe (brown)	same-id-model
+6345	Villager hat	6345	Villager hat (brown)	same-id-model
+6347	Villager armband	6347	Villager armband (brown)	same-id-model
+6349	Villager sandals	6349	Villager sandals (brown)	same-id-model
+6351	Tribal top	6351	Tribal top (blue)	same-id-model
+6353	Villager robe	6353	Villager robe (blue)	same-id-model
+6355	Villager hat	6355	Villager hat (blue)	same-id-model
+6357	Villager sandals	6357	Villager sandals (blue)	same-id-model
+6359	Villager armband	6359	Villager armband (blue)	same-id-model
+6361	Tribal top	6361	Tribal top (yellow)	same-id-model
+6363	Villager robe	6363	Villager robe (yellow)	same-id-model
+6365	Villager hat	6365	Villager hat (yellow)	same-id-model
+6367	Villager sandals	6367	Villager sandals (yellow)	same-id-model
+6369	Villager armband	6369	Villager armband (yellow)	same-id-model
+6371	Tribal top	6371	Tribal top (pink)	same-id-model
+6373	Villager robe	6373	Villager robe (pink)	same-id-model
+6375	Villager hat	6375	Villager hat (pink)	same-id-model
+6377	Villager sandals	6377	Villager sandals (pink)	same-id-model
+6379	Villager armband	6379	Villager armband (pink)	same-id-model
+6382	Fez	6382	Fez	same-id-name
+6384	Desert top	6384	Desert top	same-id-name
+6386	Desert robes	6386	Desert robes	same-id-name
+6388	Desert top	6388	Desert top (overcoat)	same-id-model
+6390	Desert legs	6390	Desert legs	same-id-name
+6392	Menap headgear	6392	Menaphite purple hat	same-id-model
+6394	Menaphite top	6394	Menaphite purple top	same-id-model
+6396	Menaphite robe	6396	Menaphite purple robe	same-id-model
+6398	Menap action kilt	6398	Menaphite purple kilt	same-id-model
+6400	Menap headgear	6400	Menaphite red hat	same-id-model
+6402	Menaphite top	6402	Menaphite red top	same-id-model
+6404	Menaphite robe	6404	Menaphite red robe	same-id-model
+6406	Menap action kilt	6406	Menaphite red kilt	same-id-model
+6408	Oak blackjack (o)	6408	Oak blackjack(o)	same-id-name
+6410	Oak blackjack (d)	6410	Oak blackjack(d)	same-id-name
+6412	Willow blackjack (o)	6412	Willow blackjack(o)	same-id-name
+6414	Willow blackjack (d)	6414	Willow blackjack(d)	same-id-name
+6416	Maple blackjack	6416	Maple blackjack	same-id-name
+6418	Maple blackjack (o)	6418	Maple blackjack(o)	same-id-name
+6420	Maple blackjack (d)	6420	Maple blackjack(d)	same-id-name
+6470	Compost potion (4)	6470	Compost potion(4)	same-id-name
+6472	Compost potion (3)	6472	Compost potion(3)	same-id-name
+6474	Compost potion (2)	6474	Compost potion(2)	same-id-name
+6476	Compost potion (1)	6476	Compost potion(1)	same-id-name
+6522	Toktz-xil-ul	6522	Toktz-xil-ul	same-id-name
+6523	Toktz-xil-ak	6523	Toktz-xil-ak	same-id-name
+6524	Toktz-ket-xil	6524	Toktz-ket-xil	same-id-name
+6525	Toktz-xil-ek	6525	Toktz-xil-ek	same-id-name
+6526	Toktz-mej-tal	6526	Toktz-mej-tal	same-id-name
+6527	Tzhaar-ket-em	6527	Tzhaar-ket-em	same-id-name
+6528	Tzhaar-ket-om	6528	Tzhaar-ket-om	same-id-name
+6562	Mud battlestaff	6562	Mud battlestaff	same-id-name
+6563	Mystic mud staff	6563	Mystic mud staff	same-id-name
+6568	Obsidian cape	6568	Obsidian cape	same-id-name
+6571	Uncut onyx	6571	Uncut onyx	same-id-name
+6573	Onyx	6573	Onyx	same-id-name
+6575	Onyx ring	6575	Onyx ring	same-id-name
+6577	Onyx necklace	6577	Onyx necklace	same-id-name
+6579	Onyx amulet	6579	Onyx amulet (u)	same-id-model
+6581	Onyx amulet	6581	Onyx amulet	same-id-name
+6583	Ring of stone	6583	Ring of stone	same-id-name
+6585	Amulet of fury	6585	Amulet of fury	same-id-name
+6587	White claws	6587	White claws	same-id-name
+6589	White battleaxe	6589	White battleaxe	same-id-name
+6591	White dagger	6591	White dagger	same-id-name
+6593	White dagger (p)	6593	White dagger(p)	same-id-name
+6595	White dagger (p+)	6595	White dagger(p+)	same-id-name
+6597	White dagger (p++)	6597	White dagger(p++)	same-id-name
+6599	White halberd	6599	White halberd	same-id-name
+6601	White mace	6601	White mace	same-id-name
+6603	White magic staff	6603	White magic staff	same-id-name
+6605	White sword	6605	White sword	same-id-name
+6607	White longsword	6607	White longsword	same-id-name
+6609	White 2h sword	6609	White 2h sword	same-id-name
+6611	White scimitar	6611	White scimitar	same-id-name
+6613	White warhammer	6613	White warhammer	same-id-name
+6615	White chainbody	6615	White chainbody	same-id-name
+6617	White platebody	6617	White platebody	same-id-name
+6619	White boots	6619	White boots	same-id-name
+6621	White med helm	6621	White med helm	same-id-name
+6623	White full helm	6623	White full helm	same-id-name
+6625	White platelegs	6625	White platelegs	same-id-name
+6627	White plateskirt	6627	White plateskirt	same-id-name
+6629	White gloves	6629	White gloves	same-id-name
+6631	White sq shield	6631	White sq shield	same-id-name
+6633	White kiteshield	6633	White kiteshield	same-id-name
+6667	Fishbowl	6667	Empty fishbowl	same-id-model
+6681	Ground guam	6681	Ground guam	same-id-name
+6685	Saradomin brew (4)	6685	Saradomin brew(4)	same-id-name
+6687	Saradomin brew (3)	6687	Saradomin brew(3)	same-id-name
+6689	Saradomin brew (2)	6689	Saradomin brew(2)	same-id-name
+6691	Saradomin brew (1)	6691	Saradomin brew(1)	same-id-name
+6693	Crushed nest	6693	Crushed nest	same-id-name
+6697	Pat of butter	6697	Pat of butter	same-id-name
+6701	Baked potato	6701	Baked potato	same-id-name
+6703	Potato with butter	6703	Potato with butter	same-id-name
+6705	Potato with cheese	6705	Potato with cheese	same-id-name
+6724	Seercull	6724	Seercull	same-id-name
+6729	Dagannoth bones	6729	Dagannoth bones	same-id-name
+6731	Seers' ring	6731	Seers ring	same-id-model
+6733	Archers' ring	6733	Archers ring	same-id-model
+6735	Warrior ring	6735	Warrior ring	same-id-name
+6737	Berserker ring	6737	Berserker ring	same-id-name
+6739	Dragon hatchet	6739	Dragon axe	same-id-model
+6750	Black desert shirt	6750	Black desert shirt	same-id-name
+6752	Black desert robe	6752	Black desert robe	same-id-name
+6760	Guthix mjolnir	6760	Guthix mjolnir	same-id-name
+6762	Saradomin mjolnir	6762	Saradomin mjolnir	same-id-name
+6764	Zamorak mjolnir	6764	Zamorak mjolnir	same-id-name
+6794	Choc-ice	6794	Choc-ice	same-id-name
+6809	Granite legs	6809	Granite legs	same-id-name
+6812	Wyvern bones	6812	Wyvern bones	same-id-name
+6814	Fur	6814	Fur	same-id-name
+6889	Mages' book	6889	Mage's book	same-id-model
+6891	Arena book	6891	Arena book	same-id-name
+6908	Beginner wand	6908	Beginner wand	same-id-name
+6910	Apprentice wand	6910	Apprentice wand	same-id-name
+6912	Teacher wand	6912	Teacher wand	same-id-name
+6914	Master wand	6914	Master wand	same-id-name
+6916	Infinity top	6916	Infinity top	same-id-name
+6918	Infinity hat	6918	Infinity hat	same-id-name
+6920	Infinity boots	6920	Infinity boots	same-id-name
+6922	Infinity gloves	6922	Infinity gloves	same-id-name
+6924	Infinity bottoms	6924	Infinity bottoms	same-id-name
+6959	Cape	6959	Pink cape	same-id-model
+6962	Triangle sandwich	6962	Triangle sandwich	same-id-name
+6971	Sandstone (1kg)	6971	Sandstone (1kg)	same-id-name
+6973	Sandstone (2kg)	6973	Sandstone (2kg)	same-id-name
+6975	Sandstone (5kg)	6975	Sandstone (5kg)	same-id-name
+6977	Sandstone (10kg)	6977	Sandstone (10kg)	same-id-name
+6979	Granite (500g)	6979	Granite (500g)	same-id-name
+6981	Granite (2kg)	6981	Granite (2kg)	same-id-name
+6983	Granite (5kg)	6983	Granite (5kg)	same-id-name
+7051	Unlit bug lantern	7051	Unlit bug lantern	same-id-name
+7054	Chilli potato	7054	Chilli potato	same-id-name
+7056	Egg potato	7056	Egg potato	same-id-name
+7058	Mushroom potato	7058	Mushroom potato	same-id-name
+7060	Tuna potato	7060	Tuna potato	same-id-name
+7062	Chilli con carne	7062	Chilli con carne	same-id-name
+7064	Egg and tomato	7064	Egg and tomato	same-id-name
+7066	Mushroom & onion	7066	Mushroom & onion	same-id-name
+7068	Tuna and corn	7068	Tuna and corn	same-id-name
+7070	Minced meat	7070	Minced meat	same-id-name
+7072	Spicy sauce	7072	Spicy sauce	same-id-name
+7074	Chopped garlic	7074	Chopped garlic	same-id-name
+7076	Uncooked egg	7076	Uncooked egg	same-id-name
+7078	Scrambled egg	7078	Scrambled egg	same-id-name
+7080	Sliced mushrooms	7080	Sliced mushrooms	same-id-name
+7082	Fried mushrooms	7082	Fried mushrooms	same-id-name
+7084	Fried onions	7084	Fried onions	same-id-name
+7086	Chopped tuna	7086	Chopped tuna	same-id-name
+7088	Sweetcorn	7088	Sweetcorn (bowl)	same-id-model
+7110	Stripy pirate shirt	7110	Stripy pirate shirt (beige)	same-id-model
+7112	Pirate bandana	7112	Pirate bandana (white)	same-id-model
+7114	Pirate boots	7114	Pirate boots	same-id-name
+7116	Pirate leggings	7116	Pirate leggings (beige)	same-id-model
+7122	Stripy pirate shirt	7122	Stripy pirate shirt (red)	same-id-model
+7124	Pirate bandana	7124	Pirate bandana (red)	same-id-model
+7126	Pirate leggings	7126	Pirate leggings (red)	same-id-model
+7128	Stripy pirate shirt	7128	Stripy pirate shirt (blue)	same-id-model
+7130	Pirate bandana	7130	Pirate bandana (blue)	same-id-model
+7132	Pirate leggings	7132	Pirate leggings (blue)	same-id-model
+7134	Stripy pirate shirt	7134	Stripy pirate shirt (brown)	same-id-model
+7136	Pirate bandana	7136	Pirate bandana (brown)	same-id-model
+7138	Pirate leggings	7138	Pirate leggings (brown)	same-id-model
+7158	Dragon 2h sword	7158	Dragon 2h sword	same-id-name
+7159	Insulated boots	7159	Insulated boots	same-id-name
+7162	Pie recipe book	7162	Pie recipe book	same-id-name
+7168	Raw mud pie	7168	Raw mud pie	same-id-name
+7170	Mud pie	7170	Mud pie	same-id-name
+7176	Raw garden pie	7176	Raw garden pie	same-id-name
+7178	Garden pie	7178	Garden pie	same-id-name
+7186	Raw fish pie	7186	Raw fish pie	same-id-name
+7188	Fish pie	7188	Fish pie	same-id-name
+7196	Raw admiral pie	7196	Raw admiral pie	same-id-name
+7198	Admiral pie	7198	Admiral pie	same-id-name
+7206	Raw wild pie	7206	Raw wild pie	same-id-name
+7208	Wild pie	7208	Wild pie	same-id-name
+7216	Raw summer pie	7216	Raw summer pie	same-id-name
+7218	Summer pie	7218	Summer pie	same-id-name
+7223	Roast rabbit	7223	Roast rabbit	same-id-name
+7225	Iron spit	7225	Iron spit	same-id-name
+7228	Cooked chompy	7228	Cooked chompy (roasted)	same-id-model
+7319	Red boater	7319	Red boater	same-id-name
+7321	Orange boater	7321	Orange boater	same-id-name
+7323	Green boater	7323	Green boater	same-id-name
+7325	Blue boater	7325	Blue boater	same-id-name
+7327	Black boater	7327	Black boater	same-id-name
+7329	Red firelighter	7329	Red firelighter	same-id-name
+7330	Green firelighter	7330	Green firelighter	same-id-name
+7331	Blue firelighter	7331	Blue firelighter	same-id-name
+7332	Black shield (h1)	7332	Black shield (h1)	same-id-name
+7334	Adamant shield (h1)	7334	Adamant shield (h1)	same-id-name
+7336	Rune shield (h1)	7336	Rune shield (h1)	same-id-name
+7338	Black shield (h2)	7338	Black shield (h2)	same-id-name
+7340	Adamant shield (h2)	7340	Adamant shield (h2)	same-id-name
+7342	Rune shield (h2)	7342	Rune shield (h2)	same-id-name
+7344	Black shield (h3)	7344	Black shield (h3)	same-id-name
+7346	Adamant shield (h3)	7346	Adamant shield (h3)	same-id-name
+7348	Rune shield (h3)	7348	Rune shield (h3)	same-id-name
+7350	Black shield (h4)	7350	Black shield (h4)	same-id-name
+7352	Adamant shield (h4)	7352	Adamant shield (h4)	same-id-name
+7354	Rune shield (h4)	7354	Rune shield (h4)	same-id-name
+7356	Black shield (h5)	7356	Black shield (h5)	same-id-name
+7358	Adamant shield (h5)	7358	Adamant shield (h5)	same-id-name
+7360	Rune shield (h5)	7360	Rune shield (h5)	same-id-name
+7362	Studded body (g)	7362	Studded body (g)	same-id-name
+7364	Studded body (t)	7364	Studded body (t)	same-id-name
+7366	Studded chaps (g)	7366	Studded chaps (g)	same-id-name
+7368	Studded chaps (t)	7368	Studded chaps (t)	same-id-name
+7370	Dragonhide body (g)	7370	Green d'hide body (g)	same-id-model
+7372	Dragonhide body (t)	7372	Green d'hide body (t)	same-id-model
+7374	Dragonhide body (g)	7374	Blue d'hide body (g)	same-id-model
+7376	Dragonhide body (t)	7376	Blue d'hide body (t)	same-id-model
+7378	Dragonhide chaps (g)	7378	Green d'hide chaps (g)	same-id-model
+7380	Dragonhide chaps (t)	7380	Green d'hide chaps (t)	same-id-model
+7382	Dragonhide chaps (g)	7382	Blue d'hide chaps (g)	same-id-model
+7384	Dragonhide chaps (t)	7384	Blue d'hide chaps (t)	same-id-model
+7386	Blue skirt (g)	7386	Blue skirt (g)	same-id-name
+7388	Blue skirt (t)	7388	Blue skirt (t)	same-id-name
+7390	Wizard robe (g)	7390	Blue wizard robe (g)	same-id-model
+7392	Wizard robe (t)	7392	Blue wizard robe (t)	same-id-model
+7394	Wizard hat (g)	7394	Blue wizard hat (g)	same-id-model
+7396	Wizard hat (t)	7396	Blue wizard hat (t)	same-id-model
+7398	Enchanted robe	7398	Enchanted robe	same-id-name
+7399	Enchanted top	7399	Enchanted top	same-id-name
+7400	Enchanted hat	7400	Enchanted hat	same-id-name
+7416	Mole claw	7416	Mole claw	same-id-name
+7418	Mole skin	7418	Mole skin	same-id-name
+7433	Wooden spoon	7433	Wooden spoon	same-id-name
+7435	Egg whisk	7435	Egg whisk	same-id-name
+7437	Spork	7437	Spork	same-id-name
+7439	Spatula	7439	Spatula	same-id-name
+7441	Frying pan	7441	Frying pan	same-id-name
+7443	Skewer	7443	Skewer	same-id-name
+7445	Rolling pin	7445	Rolling pin	same-id-name
+7447	Kitchen knife	7447	Kitchen knife	same-id-name
+7449	Meat tenderiser	7449	Meat tenderiser	same-id-name
+7451	Cleaver	7451	Cleaver	same-id-name
+7466	Cornflour	7466	Cornflour	same-id-name
+7468	Pot of cornflour	7468	Pot of cornflour	same-id-name
+7521	Cooked crab meat	7521	Cooked giant crab meat	same-id-model
+7566	Raw jubbly	7566	Raw jubbly	same-id-name
+7568	Cooked jubbly	7568	Cooked jubbly	same-id-name
+7650	Silver dust	7650	Silver dust	same-id-name
+7660	Guthix balance (4)	7660	Guthix balance(4)	same-id-name
+7662	Guthix balance (3)	7662	Guthix balance(3)	same-id-name
+7664	Guthix balance (2)	7664	Guthix balance(2)	same-id-name
+7666	Guthix balance (1)	7666	Guthix balance(1)	same-id-name
+7668	Gadderhammer	7668	Gadderhammer	same-id-name
+7759	Toy soldier	7759	Toy soldier	same-id-name
+7761	Toy soldier (wound)	7761	Toy soldier (wound)	same-id-name
+7763	Toy doll	7763	Toy doll	same-id-name
+7765	Toy doll (wound)	7765	Toy doll (wound)	same-id-name
+7767	Toy mouse	7767	Toy mouse	same-id-name
+7769	Toy mouse (wound)	7769	Toy mouse (wound)	same-id-name
+7801	Snake hide	7801	Snake hide (swamp)	same-id-model
+7919	Bottle of wine	7919	Bottle of wine	same-id-name
+7936	Pure essence	7936	Pure essence	same-id-name
+7939	Tortoise shell	7939	Tortoise shell	same-id-name
+7944	Raw monkfish	7944	Raw monkfish	same-id-name
+7946	Monkfish	7946	Monkfish	same-id-name
+8008	Lumbridge teleport	8008	Lumbridge teleport (tablet)	same-id-model
+8009	Falador teleport	8009	Falador teleport (tablet)	same-id-model
+8011	Ardougne teleport	8011	Ardougne teleport (tablet)	same-id-model
+8014	Bones to bananas	8014	Bones to bananas (tablet)	same-id-model
+8015	Bones to peaches	8015	Bones to peaches (tablet)	same-id-model
+8016	Enchant sapphire	8016	Enchant sapphire or opal	same-id-model
+8017	Enchant emerald	8017	Enchant emerald or jade	same-id-model
+8018	Enchant ruby	8018	Enchant ruby or topaz	same-id-model
+8019	Enchant diamond	8019	Enchant diamond	same-id-name
+8020	Enchant dragonstn.	8020	Enchant dragonstone	same-id-model
+8021	Enchant onyx	8021	Enchant onyx	same-id-name
+8417	Bagged dead tree	8417	Bagged dead tree	same-id-name
+8419	Bagged nice tree	8419	Bagged nice tree	same-id-name
+8421	Bagged oak tree	8421	Bagged oak tree	same-id-name
+8423	Bagged willow tree	8423	Bagged willow tree	same-id-name
+8425	Bagged maple tree	8425	Bagged maple tree	same-id-name
+8427	Bagged yew tree	8427	Bagged yew tree	same-id-name
+8429	Bagged magic tree	8429	Bagged magic tree	same-id-name
+8431	Bagged plant 1	8431	Bagged plant 1	same-id-name
+8433	Bagged plant 2	8433	Bagged plant 2	same-id-name
+8435	Bagged plant 3	8435	Bagged plant 3	same-id-name
+8437	Thorny hedge	8437	Thorny hedge (bagged)	same-id-model
+8439	Nice hedge	8439	Nice hedge (bagged)	same-id-model
+8441	Small box hedge	8441	Small box hedge (bagged)	same-id-model
+8443	Topiary hedge	8443	Topiary hedge (bagged)	same-id-model
+8445	Fancy hedge	8445	Fancy hedge (bagged)	same-id-model
+8447	Tall fancy hedge	8447	Tall fancy hedge (bagged)	same-id-model
+8449	Tall box hedge	8449	Tall box hedge (bagged)	same-id-model
+8451	Bagged rosemary	8451	Bagged flower	same-id-model
+8453	Bagged daffodils	8453	Bagged daffodils	same-id-name
+8455	Bagged bluebells	8455	Bagged bluebells	same-id-name
+8457	Bagged sunflower	8457	Bagged sunflower	same-id-name
+8459	Bagged marigolds	8459	Bagged marigolds	same-id-name
+8461	Bagged roses	8461	Bagged roses	same-id-name
+8496	Crude wooden chair	8496	Crude chair (flatpack)	same-id-model
+8498	Wooden chair	8498	Wooden chair (flatpack)	same-id-model
+8500	Rocking chair	8500	Rocking chair (flatpack)	same-id-model
+8502	Oak chair	8502	Oak chair (flatpack)	same-id-model
+8504	Oak armchair	8504	Oak armchair (flatpack)	same-id-model
+8506	Teak armchair	8506	Teak armchair (flatpack)	same-id-model
+8508	Mahogany armchair	8508	Mahogany armchair (flatpack)	same-id-model
+8510	Wooden bookcase	8510	Bookcase (flatpack)	same-id-model
+8512	Oak bookcase	8512	Oak bookcase (flatpack)	same-id-model
+8514	Mahogany b'kcase	8514	Mahogany bookcase (flatpack)	same-id-model
+8516	Beer barrel	8516	Beer barrel (flatpack)	same-id-model
+8518	Cider barrel	8518	Cider barrel (flatpack)	same-id-model
+8520	Asgarnian ale	8520	Asgarnian ale (flatpack)	same-id-model
+8522	Greenman's ale	8522	Greenman's ale (flatpack)	same-id-model
+8524	Dragon bitter	8524	Dragon bitter (flatpack)	same-id-model
+8526	Chef's delight	8526	Chef's delight (flatpack)	same-id-model
+8528	Wood kitchen table	8528	Kitchen table (flatpack)	same-id-model
+8530	Oak kitchen table	8530	Oak kitchen table (flatpack)	same-id-model
+8532	Teak kitchen table	8532	Teak kitchen table (flatpack)	same-id-model
+8548	Wood dining table	8548	Wood dining table (flatpack)	same-id-model
+8550	Oak dining table	8550	Oak dining table (flatpack)	same-id-model
+8552	Carved oak table	8552	Carved oak table (flatpack)	same-id-model
+8554	Teak table	8554	Teak table (flatpack)	same-id-model
+8556	Carved teak table	8556	Carved teak table (flatpack)	same-id-model
+8558	Mahogany table	8558	Mahogany table (flatpack)	same-id-model
+8560	Opulent table	8560	Opulent table (flatpack)	same-id-model
+8562	Wooden bench	8562	Wooden bench (flatpack)	same-id-model
+8564	Oak bench	8564	Oak bench (flatpack)	same-id-model
+8566	Carved oak bench	8566	Carved oak bench (flatpack)	same-id-model
+8568	Teak dining bench	8568	Teak dining bench (flatpack)	same-id-model
+8570	Carved teak bench	8570	Carved teak bench (flatpack)	same-id-model
+8572	Mahogany bench	8572	Mahogany bench (flatpack)	same-id-model
+8574	Gilded bench	8574	Gilded bench (flatpack)	same-id-model
+8576	Wooden bed	8576	Wooden bed (flatpack)	same-id-model
+8578	Oak bed	8578	Oak bed (flatpack)	same-id-model
+8580	Large oak bed	8580	Large oak bed (flatpack)	same-id-model
+8582	Teak bed	8582	Teak bed (flatpack)	same-id-model
+8584	Large teak bed	8584	Large teak bed (flatpack)	same-id-model
+8586	4-poster	8586	Four-poster bed (flatpack)	same-id-model
+8588	Gilded 4-poster	8588	Gilded four-poster (flatpack)	same-id-model
+8590	Oak clock	8590	Oak clock (flatpack)	same-id-model
+8592	Teak clock	8592	Teak clock (flatpack)	same-id-model
+8594	Gilded clock	8594	Gilded clock (flatpack)	same-id-model
+8596	Shaving stand	8596	Shaving stand (flatpack)	same-id-model
+8598	Oak shaving stand	8598	Oak shaving stand (flatpack)	same-id-model
+8600	Oak dresser	8600	Oak dresser (flatpack)	same-id-model
+8602	Teak dresser	8602	Teak dresser (flatpack)	same-id-model
+8604	Fancy teak dresser	8604	Fancy teak dresser (flatpack)	same-id-model
+8606	Mahogany dresser	8606	Mahogany dresser (flatpack)	same-id-model
+8608	Gilded dresser	8608	Gilded dresser (flatpack)	same-id-model
+8610	Shoe box	8610	Shoe box (flatpack)	same-id-model
+8612	Oak drawers	8612	Oak drawers (flatpack)	same-id-model
+8614	Oak wardrobe	8614	Oak wardrobe (flatpack)	same-id-model
+8616	Teak drawers	8616	Teak drawers (flatpack)	same-id-model
+8618	Teak wardrobe	8618	Teak wardrobe (flatpack)	same-id-model
+8620	Mahogany 'drobe	8620	Mahogany wardrobe (flatpack)	same-id-model
+8622	Gilded wardrobe	8622	Gilded wardrobe (flatpack)	same-id-model
+8624	Crystal ball	8624	Crystal ball (flatpack)	same-id-model
+8626	Elemental sphere	8626	Elemental sphere (flatpack)	same-id-model
+8628	Crystal of power	8628	Crystal of power (flatpack)	same-id-model
+8778	Oak plank	8778	Oak plank	same-id-name
+8780	Teak plank	8780	Teak plank	same-id-name
+8782	Mahogany plank	8782	Mahogany plank	same-id-name
+8784	Gold leaf	8784	Gold leaf	same-id-name
+8786	Marble block	8786	Marble block	same-id-name
+8788	Magic stone	8788	Magic stone	same-id-name
+8790	Bolt of cloth	8790	Bolt of cloth	same-id-name
+8792	Clockwork	8792	Clockwork	same-id-name
+8794	Saw	8794	Saw	same-id-name
+8837	Timber beam	8837	Timber beam	same-id-name
+8872	Bone dagger	8872	Bone dagger	same-id-name
+8874	Bone dagger (p)	8874	Bone dagger (p)	same-id-name
+8876	Bone dagger (p+)	8876	Bone dagger (p+)	same-id-name
+8878	Bone dagger (p++)	8878	Bone dagger (p++)	same-id-name
+8880	Dorgeshuun c'bow	8880	Dorgeshuun crossbow	same-id-model
+8882	Bone bolts	8882	Bone bolts	same-id-name
+8901	Black mask (10)	8901	Black mask (10)	same-id-name
+8921	Black mask	8921	Black mask	same-id-name
+8924	Bandana and eyepatch	8924	Bandana eyepatch (white)	same-id-model
+8925	Bandana and eyepatch	8925	Bandana eyepatch (red)	same-id-model
+8926	Bandana and eyepatch	8926	Bandana eyepatch (blue)	same-id-model
+8927	Bandana and eyepatch	8927	Bandana eyepatch (brown)	same-id-model
+8928	Hat and eyepatch	8928	Hat eyepatch	same-id-model
+8940	Rum	8940	Rum (red)	same-id-model
+8941	Rum	8941	Rum (blue)	same-id-model
+9003	Security book	9003	Security book	same-id-name
+9004	Stronghold notes	9004	Stronghold notes	same-id-name
+9026	Ivory comb	9026	Ivory comb	same-id-name
+9028	Golden scarab	9028	Golden scarab	same-id-name
+9030	Stone scarab	9030	Stone scarab	same-id-name
+9032	Pottery scarab	9032	Pottery scarab	same-id-name
+9034	Golden statuette	9034	Golden statuette	same-id-name
+9036	Pottery statuette	9036	Pottery statuette	same-id-name
+9038	Stone statuette	9038	Stone statuette	same-id-name
+9040	Gold seal	9040	Gold seal	same-id-name
+9042	Stone seal	9042	Stone seal	same-id-name
+9052	Locust meat	9052	Locust meat	same-id-name
+9075	Astral rune	9075	Astral rune	same-id-name
+9140	Iron bolts	9140	Iron bolts	same-id-name
+9141	Steel bolts	9141	Steel bolts	same-id-name
+9142	Mithril bolts	9142	Mithril bolts	same-id-name
+9143	Adamant bolts	9143	Adamant bolts	same-id-name
+9144	Runite bolts	9144	Runite bolts	same-id-name
+9145	Silver bolts	9145	Silver bolts	same-id-name
+9174	Bronze crossbow	9174	Bronze crossbow	same-id-name
+9177	Iron crossbow	9177	Iron crossbow	same-id-name
+9179	Steel crossbow	9179	Steel crossbow	same-id-name
+9181	Mith crossbow	9181	Mithril crossbow	same-id-model
+9183	Adamant crossbow	9183	Adamant crossbow	same-id-name
+9185	Rune crossbow	9185	Rune crossbow	same-id-name
+9187	Jade bolt tips	9187	Jade bolt tips	same-id-name
+9188	Topaz bolt tips	9188	Topaz bolt tips	same-id-name
+9189	Sapphire bolt tips	9189	Sapphire bolt tips	same-id-name
+9190	Emerald bolt tips	9190	Emerald bolt tips	same-id-name
+9191	Ruby bolt tips	9191	Ruby bolt tips	same-id-name
+9192	Diamond bolt tips	9192	Diamond bolt tips	same-id-name
+9193	Dragon bolt tips	9193	Dragonstone bolt tips	same-id-model
+9194	Onyx bolt tips	9194	Onyx bolt tips	same-id-name
+9236	Opal bolts (e)	9236	Opal bolts (e)	same-id-name
+9238	Pearl bolts (e)	9238	Pearl bolts (e)	same-id-name
+9239	Topaz bolts (e)	9239	Topaz bolts (e)	same-id-name
+9240	Sapphire bolts (e)	9240	Sapphire bolts (e)	same-id-name
+9241	Emerald bolts (e)	9241	Emerald bolts (e)	same-id-name
+9242	Ruby bolts (e)	9242	Ruby bolts (e)	same-id-name
+9243	Diamond bolts (e)	9243	Diamond bolts (e)	same-id-name
+9244	Dragon bolts (e)	9244	Dragonstone bolts (e)	same-id-model
+9245	Onyx bolts (e)	9245	Onyx bolts (e)	same-id-name
+9287	Iron bolts (p)	9287	Iron bolts (p)	same-id-name
+9288	Steel bolts (p)	9288	Steel bolts (p)	same-id-name
+9289	Mithril bolts (p)	9289	Mithril bolts (p)	same-id-name
+9290	Adamant bolts (p)	9290	Adamant bolts (p)	same-id-name
+9291	Runite bolts (p)	9291	Runite bolts (p)	same-id-name
+9292	Silver bolts (p)	9292	Silver bolts (p)	same-id-name
+9294	Iron bolts (p+)	9294	Iron bolts (p+)	same-id-name
+9295	Steel bolts (p+)	9295	Steel bolts (p+)	same-id-name
+9296	Mithril bolts (p+)	9296	Mithril bolts (p+)	same-id-name
+9297	Adamant bolts (p+)	9297	Adamant bolts (p+)	same-id-name
+9298	Runite bolts (p+)	9298	Runite bolts (p+)	same-id-name
+9299	Silver bolts (p+)	9299	Silver bolts (p+)	same-id-name
+9301	Iron bolts (p++)	9301	Iron bolts (p++)	same-id-name
+9302	Steel bolts (p++)	9302	Steel bolts (p++)	same-id-name
+9303	Mithril bolts (p++)	9303	Mithril bolts (p++)	same-id-name
+9304	Adamant bolts (p++)	9304	Adamant bolts (p++)	same-id-name
+9305	Runite bolts (p++)	9305	Runite bolts (p++)	same-id-name
+9306	Silver bolts (p++)	9306	Silver bolts (p++)	same-id-name
+9336	Topaz bolts	9336	Topaz bolts	same-id-name
+9337	Sapphire bolts	9337	Sapphire bolts	same-id-name
+9338	Emerald bolts	9338	Emerald bolts	same-id-name
+9339	Ruby bolts	9339	Ruby bolts	same-id-name
+9340	Diamond bolts	9340	Diamond bolts	same-id-name
+9341	Dragon bolts	9341	Dragonstone bolts	same-id-model
+9342	Onyx bolts	9342	Onyx bolts	same-id-name
+9375	Bronze bolts (unf)	9375	Bronze bolts (unf)	same-id-name
+9377	Iron bolts (unf)	9377	Iron bolts (unf)	same-id-name
+9378	Steel bolts (unf)	9378	Steel bolts (unf)	same-id-name
+9379	Mithril bolts (unf)	9379	Mithril bolts (unf)	same-id-name
+9380	Adamant bolts (unf)	9380	Adamant bolts(unf)	same-id-name
+9381	Runite bolts (unf)	9381	Runite bolts (unf)	same-id-name
+9382	Silver bolts (unf)	9382	Silver bolts (unf)	same-id-name
+9416	Mith grapple tip	9416	Mith grapple tip	same-id-name
+9418	Mith grapple	9418	Mith grapple (unf)	same-id-model
+9419	Mith grapple	9419	Mith grapple	same-id-name
+9420	Bronze limbs	9420	Bronze limbs	same-id-name
+9423	Iron limbs	9423	Iron limbs	same-id-name
+9425	Steel limbs	9425	Steel limbs	same-id-name
+9427	Mithril limbs	9427	Mithril limbs	same-id-name
+9429	Adamantite limbs	9429	Adamantite limbs	same-id-name
+9431	Runite limbs	9431	Runite limbs	same-id-name
+9434	Bolt mould	9434	Bolt mould	same-id-name
+9436	Sinew	9436	Sinew	same-id-name
+9438	Crossbow string	9438	Crossbow string	same-id-name
+9440	Wooden stock	9440	Wooden stock	same-id-name
+9442	Oak stock	9442	Oak stock	same-id-name
+9444	Willow stock	9444	Willow stock	same-id-name
+9446	Teak stock	9446	Teak stock	same-id-name
+9448	Maple stock	9448	Maple stock	same-id-name
+9450	Mahogany stock	9450	Mahogany stock	same-id-name
+9452	Yew stock	9452	Yew stock	same-id-name
+9454	Bronze c'bow (u)	9454	Bronze crossbow (u)	same-id-model
+9457	Iron c'bow (u)	9457	Iron crossbow (u)	same-id-model
+9459	Steel c'bow (u)	9459	Steel crossbow (u)	same-id-model
+9461	Mithril c'bow (u)	9461	Mithril crossbow (u)	same-id-model
+9463	Adamant c'bow (u)	9463	Adamant crossbow (u)	same-id-model
+9465	Runite c'bow (u)	9465	Runite crossbow (u)	same-id-model
+9469	Grand seed pod	9469	Grand seed pod	same-id-name
+9470	Gnome scarf	9470	Gnome scarf	same-id-name
+9472	Gnome goggles	9472	Gnome goggles	same-id-name
+9475	Mint cake	9475	Mint cake	same-id-name
+9629	Tyras helm	9629	Tyras helm	same-id-name
+9634	Vyrewatch top	9634	Vyrewatch top	same-id-name
+9636	Vyrewatch legs	9636	Vyrewatch legs	same-id-name
+9638	Vyrewatch shoes	9638	Vyrewatch shoes	same-id-name
+9640	Citizen top	9640	Citizen top	same-id-name
+9642	Citizen trousers	9642	Citizen trousers	same-id-name
+9644	Citizen shoes	9644	Citizen shoes	same-id-name
+9666	Pros'yte harness m	9666	Proselyte harness m	same-id-model
+9668	Initiate harness m	9668	Initiate harness m	same-id-name
+9670	Pros'yte harness f	9670	Proselyte harness f	same-id-model
+9672	Proselyte sallet	9672	Proselyte sallet	same-id-name
+9674	Proselyte hauberk	9674	Proselyte hauberk	same-id-name
+9676	Proselyte cuisse	9676	Proselyte cuisse	same-id-name
+9678	Proselyte tasset	9678	Proselyte tasset	same-id-name
+9729	Elemental helmet	9729	Elemental helmet	same-id-name
+9731	Mind shield	9731	Mind shield	same-id-name
+9733	Mind helmet	9733	Mind helmet	same-id-name
+9735	Desert goat horn	9735	Goat horn	same-id-model
+9736	Goat horn dust	9736	Goat horn dust	same-id-name
+9739	Combat potion (4)	9739	Combat potion(4)	same-id-name
+9741	Combat potion (3)	9741	Combat potion(3)	same-id-name
+9743	Combat potion (2)	9743	Combat potion(2)	same-id-name
+9745	Combat potion (1)	9745	Combat potion(1)	same-id-name
+9843	Oak cape rack	9843	Oak cape rack (flatpack)	same-id-model
+9844	Teak cape rack	9844	Teak cape rack (flatpack)	same-id-model
+9845	M'gany cape rack	9845	Mahogany cape rack (flatpack)	same-id-model
+9846	Gilded cape rack	9846	Gilded cape rack (flatpack)	same-id-model
+9847	Marble cape rack	9847	Marble cape rack (flatpack)	same-id-model
+9848	Magical cape rack	9848	Magic cape rack (flatpack)	same-id-model
+9849	Oak toy box	9849	Oak toy box (flatpack)	same-id-model
+9850	Teak toy box	9850	Teak toy box (flatpack)	same-id-model
+9851	Mahogany toy box	9851	Mahogany toy box (flatpack)	same-id-model
+9852	Oak magic wardrobe	9852	Oak magic wardrobe (flatpack)	same-id-model
+9853	Carved oak magic wardrobe	9853	Carved oak magic wardrobe (flatpack)	same-id-model
+9854	Teak magic wardrobe	9854	Teak magic wardrobe (flatpack)	same-id-model
+9855	Carved teak magic wardrobe	9855	Carved teak magic wardrobe (flatpack)	same-id-model
+9856	Mahogany magic wardrobe	9856	Mahogany magic wardrobe (flatpack)	same-id-model
+9857	Gilded magic wardrobe	9857	Gilded magic wardrobe (flatpack)	same-id-model
+9858	Marble magic wardrobe	9858	Marble magic wardrobe (flatpack)	same-id-model
+9859	Oak armour case	9859	Oak armour case (flatpack)	same-id-model
+9860	Teak armour case	9860	Teak armour case (flatpack)	same-id-model
+9861	M'gany arm'r case	9861	Mahogany armour case (flatpack)	same-id-model
+9862	Oak treasure chest	9862	Oak treasure chest (flatpack)	same-id-model
+9863	Teak treas' chest	9863	Teak treasure chest (flatpack)	same-id-model
+9864	M'gany treas' chest	9864	M. treasure chest (flatpack)	same-id-model
+9865	Oak costume box	9865	Oak fancy dress box (flatpack)	same-id-model
+9866	Teak costume box	9866	Teak fancy dress box (flatpack)	same-id-model
+9867	Mahogany cos box	9867	Mahogany fancy dress box (flatpack)	same-id-model
+9978	Raw bird meat	9978	Raw bird meat	same-id-name
+9980	Roast bird meat	9980	Roast bird meat	same-id-name
+9986	Raw beast meat	9986	Raw beast meat	same-id-name
+9988	Roast beast meat	9988	Roast beast meat	same-id-name
+9994	Spicy tomato	9994	Spicy tomato	same-id-name
+9996	Spicy minced meat	9996	Spicy minced meat	same-id-name
+9998	Hunter potion (4)	9998	Hunter potion(4)	same-id-name
+10000	Hunter potion (3)	10000	Hunter potion(3)	same-id-name
+10002	Hunter potion (2)	10002	Hunter potion(2)	same-id-name
+10004	Hunter potion (1)	10004	Hunter potion(1)	same-id-name
+10006	Bird snare	10006	Bird snare	same-id-name
+10008	Box trap	10008	Box trap	same-id-name
+10010	Butterfly net	10010	Butterfly net	same-id-name
+10012	Butterfly jar	10012	Butterfly jar	same-id-name
+10014	Black warlock	10014	Black warlock (item)	same-id-model
+10016	Snowy knight	10016	Snowy knight (item)	same-id-model
+10018	Sapphire glacialis	10018	Sapphire glacialis (item)	same-id-model
+10020	Ruby harvest	10020	Ruby harvest (item)	same-id-model
+10025	Magic box	10025	Magic box	same-id-name
+10029	Teasing stick	10029	Teasing stick	same-id-name
+10031	Rabbit snare	10031	Rabbit snare	same-id-name
+10033	Chinchompa	10033	Chinchompa	same-id-name
+10034	Red chinchompa	10034	Red chinchompa	same-id-name
+10035	Kyatt legs	10035	Kyatt legs	same-id-name
+10037	Kyatt top	10037	Kyatt top	same-id-name
+10039	Kyatt hat	10039	Kyatt hat	same-id-name
+10041	Larupia legs	10041	Larupia legs	same-id-name
+10043	Larupia top	10043	Larupia top	same-id-name
+10045	Larupia hat	10045	Larupia hat	same-id-name
+10047	Graahk legs	10047	Graahk legs	same-id-name
+10049	Graahk top	10049	Graahk top	same-id-name
+10051	Graahk headdress	10051	Graahk headdress	same-id-name
+10053	Wood camo top	10053	Wood camo top	same-id-name
+10055	Wood camo legs	10055	Wood camo legs	same-id-name
+10057	Jungle camo top	10057	Jungle camo top	same-id-name
+10059	Jungle camo legs	10059	Jungle camo legs	same-id-name
+10061	Desert camo top	10061	Desert camo top	same-id-name
+10063	Desert camo legs	10063	Desert camo legs	same-id-name
+10065	Polar camo top	10065	Polar camo top	same-id-name
+10067	Polar camo legs	10067	Polar camo legs	same-id-name
+10069	Spotted cape	10069	Spotted cape	same-id-name
+10071	Spottier cape	10071	Spottier cape	same-id-name
+10075	Gloves of silence	10075	Gloves of silence	same-id-name
+10077	Spiky vambraces	10077	Spiky vambraces	same-id-name
+10079	Green spiky vambraces	10079	Green spiky vambraces	same-id-name
+10081	Blue spiky vambraces	10081	Blue spiky vambraces	same-id-name
+10083	Red spiky vambraces	10083	Red spiky vambraces	same-id-name
+10085	Black spiky vambraces	10085	Black spiky vambraces	same-id-name
+10087	Stripy feather	10087	Stripy feather	same-id-name
+10088	Red feather	10088	Red feather	same-id-name
+10089	Blue feather	10089	Blue feather	same-id-name
+10090	Yellow feather	10090	Yellow feather	same-id-name
+10091	Orange feather	10091	Orange feather	same-id-name
+10093	Tatty larupia fur	10093	Tatty larupia fur	same-id-name
+10095	Larupia fur	10095	Larupia fur	same-id-name
+10097	Tatty graahk fur	10097	Tatty graahk fur	same-id-name
+10099	Graahk fur	10099	Graahk fur	same-id-name
+10101	Tatty kyatt fur	10101	Tatty kyatt fur	same-id-name
+10103	Kyatt fur	10103	Kyatt fur	same-id-name
+10105	Kebbit spike	10105	Kebbit spike	same-id-name
+10107	Long kebbit spike	10107	Long kebbit spike	same-id-name
+10109	Kebbit teeth	10109	Kebbit teeth	same-id-name
+10111	Kebbit teeth dust	10111	Kebbit teeth dust	same-id-name
+10113	Kebbit claws	10113	Kebbit claws	same-id-name
+10115	Dark kebbit fur	10115	Dark kebbit fur	same-id-name
+10117	Polar kebbit fur	10117	Polar kebbit fur	same-id-name
+10119	Feldip weasel fur	10119	Feldip weasel fur	same-id-name
+10121	Common kebbit fur	10121	Common kebbit fur	same-id-name
+10123	Desert devil fur	10123	Desert devil fur	same-id-name
+10125	Spotted kebbit fur	10125	Spotted kebbit fur	same-id-name
+10127	Dashing kebbit fur	10127	Dashing kebbit fur	same-id-name
+10129	Barb-tail harpoon	10129	Barb-tail harpoon	same-id-name
+10132	Strung rabbit foot	10132	Strung rabbit foot	same-id-name
+10134	Rabbit foot	10134	Rabbit foot	same-id-name
+10136	Rainbow fish	10136	Rainbow fish	same-id-name
+10138	Raw rainbow fish	10138	Raw rainbow fish	same-id-name
+10142	Guam tar	10142	Guam tar	same-id-name
+10143	Marrentill tar	10143	Marrentill tar	same-id-name
+10144	Tarromin tar	10144	Tarromin tar	same-id-name
+10145	Harralander tar	10145	Harralander tar	same-id-name
+10146	Orange salamander	10146	Orange salamander	same-id-name
+10147	Red salamander	10147	Red salamander	same-id-name
+10148	Black salamander	10148	Black salamander	same-id-name
+10149	Swamp lizard	10149	Swamp lizard	same-id-name
+10150	Noose wand	10150	Noose wand	same-id-name
+10156	Hunters' crossbow	10156	Hunters' crossbow	same-id-name
+10158	Kebbit bolts	10158	Kebbit bolts	same-id-name
+10159	Long kebbit bolts	10159	Long kebbit bolts	same-id-name
+10280	Willow composite bow	10280	Willow comp bow	same-id-model
+10282	Yew composite bow	10282	Yew comp bow	same-id-model
+10284	Magic composite bow	10284	Magic comp bow	same-id-model
+10286	Rune helm (h1)	10286	Rune helm (h1)	same-id-name
+10288	Rune helm (h2)	10288	Rune helm (h2)	same-id-name
+10290	Rune helm (h3)	10290	Rune helm (h3)	same-id-name
+10292	Rune helm (h4)	10292	Rune helm (h4)	same-id-name
+10294	Rune helm (h5)	10294	Rune helm (h5)	same-id-name
+10296	Adamant helm (h1)	10296	Adamant helm (h1)	same-id-name
+10298	Adamant helm (h2)	10298	Adamant helm (h2)	same-id-name
+10300	Adamant helm (h3)	10300	Adamant helm (h3)	same-id-name
+10302	Adamant helm (h4)	10302	Adamant helm (h4)	same-id-name
+10304	Adamant helm (h5)	10304	Adamant helm (h5)	same-id-name
+10306	Black helm (h1)	10306	Black helm (h1)	same-id-name
+10308	Black helm (h2)	10308	Black helm (h2)	same-id-name
+10310	Black helm (h3)	10310	Black helm (h3)	same-id-name
+10312	Black helm (h4)	10312	Black helm (h4)	same-id-name
+10314	Black helm (h5)	10314	Black helm (h5)	same-id-name
+10316	Bob shirt	10316	Bob's red shirt	same-id-model
+10318	Bob shirt	10318	Bob's blue shirt	same-id-model
+10320	Bob shirt	10320	Bob's green shirt	same-id-model
+10322	Bob shirt	10322	Bob's black shirt	same-id-model
+10324	Bob shirt	10324	Bob's purple shirt	same-id-model
+10326	Purple firelighter	10326	Purple firelighter	same-id-name
+10327	White firelighter	10327	White firelighter	same-id-name
+10330	Third-age range top	10330	3rd Age range top	same-id-model
+10332	Third-age range legs	10332	3rd Age range legs	same-id-model
+10334	Third-age range coif	10334	3rd Age range coif	same-id-model
+10336	Third-age vambraces	10336	3rd Age vambraces	same-id-model
+10338	Third-age robe top	10338	3rd Age robe top	same-id-model
+10340	Third-age robe	10340	3rd Age robe	same-id-model
+10342	Third-age mage hat	10342	3rd Age mage hat	same-id-model
+10344	Third-age amulet	10344	3rd Age amulet	same-id-model
+10346	Third-age platelegs	10346	3rd Age platelegs	same-id-model
+10348	Third-age platebody	10348	3rd Age platebody	same-id-model
+10350	Third-age full helmet	10350	3rd Age full helmet	same-id-model
+10352	Third-age kiteshield	10352	3rd Age kiteshield	same-id-model
+10354	Amulet of glory (t4)	10354	Amulet of glory (t4)	same-id-name
+10362	Amulet of glory (t)	10362	Amulet of glory (t)	same-id-name
+10364	Strength amulet (t)	10364	Strength amulet (t)	same-id-name
+10366	Amulet of magic (t)	10366	Amulet of magic (t)	same-id-name
+10368	Zamorak vambraces	10368	Zamorak bracers	same-id-model
+10370	Zamorak body	10370	Zamorak d'hide body	same-id-model
+10372	Zamorak chaps	10372	Zamorak chaps	same-id-name
+10374	Zamorak coif	10374	Zamorak coif	same-id-name
+10376	Guthix vambraces	10376	Guthix bracers	same-id-model
+10378	Guthix body	10378	Guthix d'hide body	same-id-model
+10380	Guthix chaps	10380	Guthix chaps	same-id-name
+10382	Guthix coif	10382	Guthix coif	same-id-name
+10384	Saradomin vambraces	10384	Saradomin bracers	same-id-model
+10386	Saradomin body	10386	Saradomin d'hide body	same-id-model
+10388	Saradomin chaps	10388	Saradomin chaps	same-id-name
+10390	Saradomin coif	10390	Saradomin coif	same-id-name
+10392	A powdered wig	10392	A powdered wig	same-id-name
+10394	Flared trousers	10394	Flared trousers	same-id-name
+10396	Pantaloons	10396	Pantaloons	same-id-name
+10398	Sleeping cap	10398	Sleeping cap	same-id-name
+10400	Black elegant shirt	10400	Black elegant shirt	same-id-name
+10402	Black elegant legs	10402	Black elegant legs	same-id-name
+10404	Red elegant shirt	10404	Red elegant shirt	same-id-name
+10406	Red elegant legs	10406	Red elegant legs	same-id-name
+10408	Blue elegant shirt	10408	Blue elegant shirt	same-id-name
+10410	Blue elegant legs	10410	Blue elegant legs	same-id-name
+10412	Green elegant shirt	10412	Green elegant shirt	same-id-name
+10414	Green elegant legs	10414	Green elegant legs	same-id-name
+10416	Purple elegant shirt	10416	Purple elegant shirt	same-id-name
+10418	Purple elegant legs	10418	Purple elegant legs	same-id-name
+10420	White elegant blouse	10420	White elegant blouse	same-id-name
+10422	White elegant skirt	10422	White elegant skirt	same-id-name
+10424	Red elegant blouse	10424	Red elegant blouse	same-id-name
+10426	Red elegant skirt	10426	Red elegant skirt	same-id-name
+10428	Blue elegant blouse	10428	Blue elegant blouse	same-id-name
+10430	Blue elegant skirt	10430	Blue elegant skirt	same-id-name
+10432	Green elegant blouse	10432	Green elegant blouse	same-id-name
+10434	Green elegant skirt	10434	Green elegant skirt	same-id-name
+10436	Purple elegant blouse	10436	Purple elegant blouse	same-id-name
+10438	Purple elegant skirt	10438	Purple elegant skirt	same-id-name
+10440	Saradomin crozier	10440	Saradomin crozier	same-id-name
+10442	Guthix crozier	10442	Guthix crozier	same-id-name
+10444	Zamorak crozier	10444	Zamorak crozier	same-id-name
+10446	Saradomin cloak	10446	Saradomin cloak	same-id-name
+10448	Guthix cloak	10448	Guthix cloak	same-id-name
+10450	Zamorak cloak	10450	Zamorak cloak	same-id-name
+10452	Saradomin mitre	10452	Saradomin mitre	same-id-name
+10454	Guthix mitre	10454	Guthix mitre	same-id-name
+10456	Zamorak mitre	10456	Zamorak mitre	same-id-name
+10458	Saradomin robe top	10458	Saradomin robe top	same-id-name
+10460	Zamorak robe top	10460	Zamorak robe top	same-id-name
+10462	Guthix robe top	10462	Guthix robe top	same-id-name
+10464	Saradomin robe legs	10464	Saradomin robe legs	same-id-name
+10466	Guthix robe legs	10466	Guthix robe legs	same-id-name
+10468	Zamorak robe legs	10468	Zamorak robe legs	same-id-name
+10470	Saradomin stole	10470	Saradomin stole	same-id-name
+10472	Guthix stole	10472	Guthix stole	same-id-name
+10474	Zamorak stole	10474	Zamorak stole	same-id-name
+10476	Purple sweets	10476	Purple sweets	same-id-name
+10496	Polished buttons	10496	Polished buttons	same-id-name
+10564	Granite body	10564	Granite body	same-id-name
+10589	Granite helm	10589	Granite helm	same-id-name
+10808	Arctic pyre logs	10808	Arctic pyre logs	same-id-name
+10810	Arctic pine logs	10810	Arctic pine logs	same-id-name
+10812	Split log	10812	Split log	same-id-name
+10814	Hair	10814	Hair	same-id-name
+10816	Raw yak meat	10816	Raw yak meat	same-id-name
+10818	Yak-hide	10818	Yak-hide	same-id-name
+10820	Cured yak-hide	10820	Cured yak-hide	same-id-name
+10822	Yak-hide armour	10822	Yak-hide armour (top)	same-id-model
+10824	Yak-hide armour	10824	Yak-hide armour (legs)	same-id-model
+10826	Fremennik round shield	10826	Neitiznot shield	same-id-model
+10828	Helm of neitiznot	10828	Helm of Neitiznot	same-id-name
+10891	Wooden cat	10891	Wooden cat	same-id-name
+10925	Sanfew serum (4)	10925	Sanfew serum(4)	same-id-name
+10927	Sanfew serum (3)	10927	Sanfew serum(3)	same-id-name
+10929	Sanfew serum (2)	10929	Sanfew serum(2)	same-id-name
+10931	Sanfew serum (1)	10931	Sanfew serum(1)	same-id-name
+10937	Nail beast nails	10937	Nail beast nails	same-id-name
+10952	Slayer bell	10952	Slayer bell	same-id-name
+10954	Frog-leather body	10954	Frog-leather body	same-id-name
+10956	Frog-leather chaps	10956	Frog-leather chaps	same-id-name
+10958	Frog-leather boots	10958	Frog-leather boots	same-id-name
+10973	Light orb	10973	Light orb	same-id-name
+10978	Swamp weed	10978	Swamp weed	same-id-name
+10981	Cave goblin wire	10981	Cave goblin wire	same-id-name
+10999	Goblin book	10999	Goblin book	same-id-name
+11037	Brine sabre	11037	Brine sabre	same-id-name
+11061	Ancient mace	11061	Ancient mace	same-id-name
+11065	Bracelet mould	11065	Bracelet mould	same-id-name
+11069	Gold bracelet	11069	Gold bracelet	same-id-name
+11072	Sapphire bracelet	11072	Sapphire bracelet	same-id-name
+11074	Bracelet of clay	11074	Bracelet of clay	same-id-name
+11076	Emerald bracelet	11076	Emerald bracelet	same-id-name
+11079	Castle wars brace (3)	11079	Castle wars bracelet(3)	same-id-model
+11085	Ruby bracelet	11085	Ruby bracelet	same-id-name
+11088	Inoculation brace	11088	Inoculation bracelet	same-id-model
+11090	Phoenix necklace	11090	Phoenix necklace	same-id-name
+11092	Diamond bracelet	11092	Diamond bracelet	same-id-name
+11095	Forinthry brace (5)	11095	Abyssal bracelet(5)	same-id-model
+11105	Skills necklace (4)	11105	Skills necklace(4)	same-id-name
+11113	Skills necklace	11113	Skills necklace	same-id-name
+11115	Dragon bracelet	11115	Dragonstone bracelet	same-id-model
+11118	Combat bracelet (4)	11118	Combat bracelet(4)	same-id-name
+11126	Combat bracelet	11126	Combat bracelet	same-id-name
+11128	Berserker necklace	11128	Berserker necklace	same-id-name
+11130	Onyx bracelet	11130	Onyx bracelet	same-id-name
+11133	Regen bracelet	11133	Regen bracelet	same-id-name
+11200	Dwarven helmet	11200	Dwarven helmet	same-id-name
+11205	Shrunk ogleroot	11205	Shrunk ogleroot	same-id-name
+11212	Dragon arrow	11212	Dragon arrow	same-id-name
+11227	Dragon arrow (p)	11227	Dragon arrow(p)	same-id-name
+11228	Dragon arrow (p+)	11228	Dragon arrow(p+)	same-id-name
+11229	Dragon arrow (p++)	11229	Dragon arrow(p++)	same-id-name
+11230	Dragon dart	11230	Dragon dart	same-id-name
+11231	Dragon dart (p)	11231	Dragon dart(p)	same-id-name
+11232	Dragon dart tip	11232	Dragon dart tip	same-id-name
+11233	Dragon dart (p+)	11233	Dragon dart(p+)	same-id-name
+11234	Dragon dart (p++)	11234	Dragon dart(p++)	same-id-name
+11235	Dark bow	11235	Dark bow	same-id-name
+11237	Dragon arrowtips	11237	Dragon arrowtips	same-id-name
+11238	Baby impling jar	11238	Baby impling jar	same-id-name
+11240	Young impling jar	11240	Young impling jar	same-id-name
+11242	Gourm' impling jar	11242	Gourmet impling jar	same-id-model
+11244	Earth impling jar	11244	Earth impling jar	same-id-name
+11246	Ess' impling jar	11246	Essence impling jar	same-id-model
+11248	Eclectic impling jar	11248	Eclectic impling jar	same-id-name
+11250	Nature impling jar	11250	Nature impling jar	same-id-name
+11252	Magpie impling jar	11252	Magpie impling jar	same-id-name
+11254	Ninja impling jar	11254	Ninja impling jar	same-id-name
+11256	Dragon impling jar	11256	Dragon impling jar	same-id-name
+11260	Impling jar	11260	Impling jar	same-id-name
+11280	Cavalier and mask	11280	Cavalier mask	same-id-model
+11284	Dragonfire shield	11284	Dragonfire shield	same-id-name
+11286	Draconic visage	11286	Draconic visage	same-id-name
+11324	Roe	11324	Roe	same-id-name
+11326	Caviar	11326	Caviar	same-id-name
+11328	Leaping trout	11328	Leaping trout	same-id-name
+11330	Leaping salmon	11330	Leaping salmon	same-id-name
+11332	Leaping sturgeon	11332	Leaping sturgeon	same-id-name
+11334	Fish offcuts	11334	Fish offcuts	same-id-name
+11335	Dragon full helm	11335	Dragon full helm	same-id-name
+11367	Bronze hasta	11367	Bronze hasta	same-id-name
+11369	Iron hasta	11369	Iron hasta	same-id-name
+11371	Steel hasta	11371	Steel hasta	same-id-name
+11373	Mithril hasta	11373	Mithril hasta	same-id-name
+11375	Adamant hasta	11375	Adamant hasta	same-id-name
+11377	Rune hasta	11377	Rune hasta	same-id-name
+11379	Bronze hasta (p)	11379	Bronze hasta(p)	same-id-name
+11382	Bronze hasta (p+)	11382	Bronze hasta(p+)	same-id-name
+11384	Bronze hasta (p++)	11384	Bronze hasta(p++)	same-id-name
+11386	Iron hasta (p)	11386	Iron hasta(p)	same-id-name
+11389	Iron hasta (p+)	11389	Iron hasta(p+)	same-id-name
+11391	Iron hasta (p++)	11391	Iron hasta(p++)	same-id-name
+11393	Steel hasta (p)	11393	Steel hasta(p)	same-id-name
+11396	Steel hasta (p+)	11396	Steel hasta(p+)	same-id-name
+11398	Steel hasta (p++)	11398	Steel hasta(p++)	same-id-name
+11400	Mithril hasta (p)	11400	Mithril hasta(p)	same-id-name
+11403	Mithril hasta (p+)	11403	Mithril hasta(p+)	same-id-name
+11405	Mithril hasta (p++)	11405	Mithril hasta(p++)	same-id-name
+11407	Adamant hasta (p)	11407	Adamant hasta(p)	same-id-name
+11410	Adamant hasta (p+)	11410	Adamant hasta(p+)	same-id-name
+11412	Adamant hasta (p++)	11412	Adamant hasta(p++)	same-id-name
+11414	Rune hasta (p)	11414	Rune hasta(p)	same-id-name
+11417	Rune hasta (p+)	11417	Rune hasta(p+)	same-id-name
+11419	Rune hasta (p++)	11419	Rune hasta(p++)	same-id-name
+11429	Attack mix (2)	11429	Attack mix(2)	same-id-name
+11431	Attack mix (1)	11431	Attack mix(1)	same-id-name
+11433	Antipoison mix (2)	11433	Antipoison mix(2)	same-id-name
+11435	Antipoison mix (1)	11435	Antipoison mix(1)	same-id-name
+11437	Relicym's mix (2)	11437	Relicym's mix(2)	same-id-name
+11439	Relicym's mix (1)	11439	Relicym's mix(1)	same-id-name
+11441	Strength mix (1)	11441	Strength mix(1)	same-id-name
+11443	Strength mix (2)	11443	Strength mix(2)	same-id-name
+11445	Combat mix (2)	11445	Combat mix(2)	same-id-name
+11447	Combat mix (1)	11447	Combat mix(1)	same-id-name
+11449	Restore mix (2)	11449	Restore mix(2)	same-id-name
+11451	Restore mix (1)	11451	Restore mix(1)	same-id-name
+11453	Energy mix (2)	11453	Energy mix(2)	same-id-name
+11455	Energy mix (1)	11455	Energy mix(1)	same-id-name
+11457	Defence mix (2)	11457	Defence mix(2)	same-id-name
+11459	Defence mix (1)	11459	Defence mix(1)	same-id-name
+11461	Agility mix (2)	11461	Agility mix(2)	same-id-name
+11463	Agility mix (1)	11463	Agility mix(1)	same-id-name
+11465	Prayer mix (2)	11465	Prayer mix(2)	same-id-name
+11467	Prayer mix (1)	11467	Prayer mix(1)	same-id-name
+11469	Super attack mix (2)	11469	Superattack mix(2)	same-id-model
+11471	Super attack mix (1)	11471	Superattack mix(1)	same-id-model
+11473	Anti-p supermix (2)	11473	Anti-poison supermix(2)	same-id-model
+11475	Anti-p supermix (1)	11475	Anti-poison supermix(1)	same-id-model
+11477	Fishing mix (2)	11477	Fishing mix(2)	same-id-name
+11479	Fishing mix (1)	11479	Fishing mix(1)	same-id-name
+11481	Super energy mix (2)	11481	Super energy mix(2)	same-id-name
+11483	Super energy mix (1)	11483	Super energy mix(1)	same-id-name
+11485	Super strength mix (2)	11485	Super str. mix(2)	same-id-model
+11487	Super strength mix (1)	11487	Super str. mix(1)	same-id-model
+11489	Magic essence mix (2)	11489	Magic essence mix(2)	same-id-name
+11491	Magic essence mix (1)	11491	Magic essence mix(1)	same-id-name
+11493	Super restore mix (2)	11493	Super restore mix(2)	same-id-name
+11495	Super restore mix (1)	11495	Super restore mix(1)	same-id-name
+11497	Super defence mix (2)	11497	Super def. mix(2)	same-id-model
+11499	Super defence mix (1)	11499	Super def. mix(1)	same-id-model
+11501	Antidote+ mix (2)	11501	Antidote+ mix(2)	same-id-name
+11503	Antidote+ mix (1)	11503	Antidote+ mix(1)	same-id-name
+11505	Antifire mix (2)	11505	Antifire mix(2)	same-id-name
+11507	Antifire mix (1)	11507	Antifire mix(1)	same-id-name
+11509	Ranging mix (2)	11509	Ranging mix(2)	same-id-name
+11511	Ranging mix (1)	11511	Ranging mix(1)	same-id-name
+11513	Magic mix (2)	11513	Magic mix(2)	same-id-name
+11515	Magic mix (1)	11515	Magic mix(1)	same-id-name
+11517	Hunting mix (2)	11517	Hunting mix(2)	same-id-name
+11519	Hunting mix (1)	11519	Hunting mix(1)	same-id-name
+11521	Zamorak mix (2)	11521	Zamorak mix(2)	same-id-name
+11523	Zamorak mix (1)	11523	Zamorak mix(1)	same-id-name
+22326	Twisted bow	20997	Twisted bow	roster
+22328	Occult necklace	12002	Occult necklace	roster
+22331	Occult ornament kit	20065	Occult ornament kit	roster
+22333	Avernic defender hilt	22477	Avernic defender hilt	roster
+22337	Belle's folly	31248	Belle's folly	roster
+22339	Belle's folly (tarnished)	31245	Belle's folly (tarnished)	roster
+22341	Necklace of anguish	19547	Necklace of anguish	roster
+22343	Anguish ornament kit	22246	Anguish ornament kit	roster
+22346	Amulet of torture	19553	Amulet of torture	roster
+22348	Torture ornament kit	20062	Torture ornament kit	roster
+22351	Tormented bracelet	19544	Tormented bracelet	roster
+22353	Tormented ornament kit	23348	Tormented ornament kit	roster
+22356	Amulet of rancour	29801	Amulet of rancour	roster
+22359	Etched araxyte fang	33534	Etched araxyte fang	roster
+22362	Hydra leather	22983	Hydra leather	roster
+22364	Zaryte vambraces	26235	Zaryte vambraces	roster
+22366	Zenyte shard	19529	Zenyte shard	roster
+22368	Uncut zenyte	19496	Uncut zenyte	roster
+22370	Zenyte	19493	Zenyte	roster
+22372	Masori mask	27226	Masori mask	roster
+22374	Masori body	27229	Masori body	roster
+22376	Masori chaps	27232	Masori chaps	roster
+22378	Masori mask (f)	27235	Masori mask (f)	roster
+22380	Masori body (f)	27238	Masori body (f)	roster
+22382	Masori chaps (f)	27241	Masori chaps (f)	roster
+22384	Armadylean plate	27269	Armadylean plate	roster
+22395	Ring of the gods	12601	Ring of the gods	roster
+22397	Tyrannical ring	12603	Tyrannical ring	roster
+22399	Treasonous ring	12605	Treasonous ring	roster
+22404	Ring of suffering	19550	Ring of suffering	roster
+22409	Lightbearer	25975	Lightbearer	roster
+22411	Armadyl crossbow	11785	Armadyl crossbow	roster
+22413	Zaryte crossbow	26374	Zaryte crossbow	roster
+22415	Dragon crossbow	21902	Dragon crossbow	roster
+22417	Dragon crossbow (u)	21921	Dragon crossbow (u)	roster
+22419	Dragon limbs	21918	Dragon limbs	roster
+22421	Magic stock	21952	Magic stock	roster
+22423	Nihil horn	26372	Nihil horn	roster
+22425	Nihil shard	26231	Nihil shard	roster
+22430	Dragon bolts	21905	Dragon bolts	roster
+22435	Dragon bolts (unf)	21930	Dragon bolts (unf)	roster
+22440	Opal dragon bolts	21955	Opal dragon bolts	roster
+22445	Jade dragon bolts	21957	Jade dragon bolts	roster
+22450	Pearl dragon bolts	21959	Pearl dragon bolts	roster
+22455	Topaz dragon bolts	21961	Topaz dragon bolts	roster
+22460	Sapphire dragon bolts	21963	Sapphire dragon bolts	roster
+22465	Emerald dragon bolts	21965	Emerald dragon bolts	roster
+22470	Ruby dragon bolts	21967	Ruby dragon bolts	roster
+22475	Diamond dragon bolts	21969	Diamond dragon bolts	roster
+22480	Dragonstone dragon bolts	21971	Dragonstone dragon bolts	roster
+22485	Onyx dragon bolts	21973	Onyx dragon bolts	roster
+22490	Opal dragon bolts (e)	21932	Opal dragon bolts (e)	roster
+22495	Jade dragon bolts (e)	21934	Jade dragon bolts (e)	roster
+22500	Pearl dragon bolts (e)	21936	Pearl dragon bolts (e)	roster
+22505	Topaz dragon bolts (e)	21938	Topaz dragon bolts (e)	roster
+22510	Sapphire dragon bolts (e)	21940	Sapphire dragon bolts (e)	roster
+22515	Emerald dragon bolts (e)	21942	Emerald dragon bolts (e)	roster
+22520	Ruby dragon bolts (e)	21944	Ruby dragon bolts (e)	roster
+22525	Diamond dragon bolts (e)	21946	Diamond dragon bolts (e)	roster
+22530	Dragonstone dragon bolts (e)	21948	Dragonstone dragon bolts (e)	roster
+22535	Onyx dragon bolts (e)	21950	Onyx dragon bolts (e)	roster
+22536	Heavy ballista	19481	Heavy ballista	roster
+22538	Heavy frame	19589	Heavy frame	roster
+22540	Ballista limbs	19592	Ballista limbs	roster
+22542	Ballista spring	19601	Ballista spring	roster
+22544	Monkey tail	19610	Monkey tail	roster
+22550	Javelin shaft	19584	Javelin shaft	roster
+22555	Bronze javelin tips	19570	Bronze javelin tips	roster
+22560	Iron javelin tips	19572	Iron javelin tips	roster
+22565	Steel javelin tips	19574	Steel javelin tips	roster
+22570	Mithril javelin tips	19576	Mithril javelin tips	roster
+22575	Adamant javelin tips	19578	Adamant javelin tips	roster
+22580	Rune javelin tips	19580	Rune javelin tips	roster
+22585	Dragon javelin tips	19582	Dragon javelin tips	roster
+22590	Amethyst javelin tips	21352	Amethyst javelin tips	roster
+22591	Bronze javelin	825	Bronze javelin	roster
+22592	Bronze javelin(p)	831	Bronze javelin(p)	roster
+22593	Bronze javelin(p+)	5642	Bronze javelin(p+)	roster
+22594	Bronze javelin(p++)	5648	Bronze javelin(p++)	roster
+22595	Iron javelin	826	Iron javelin	roster
+22596	Iron javelin(p)	832	Iron javelin(p)	roster
+22597	Iron javelin(p+)	5643	Iron javelin(p+)	roster
+22598	Iron javelin(p++)	5649	Iron javelin(p++)	roster
+22599	Steel javelin	827	Steel javelin	roster
+22600	Steel javelin(p)	833	Steel javelin(p)	roster
+22601	Steel javelin(p+)	5644	Steel javelin(p+)	roster
+22602	Steel javelin(p++)	5650	Steel javelin(p++)	roster
+22603	Mithril javelin	828	Mithril javelin	roster
+22604	Mithril javelin(p)	834	Mithril javelin(p)	roster
+22605	Mithril javelin(p+)	5645	Mithril javelin(p+)	roster
+22606	Mithril javelin(p++)	5651	Mithril javelin(p++)	roster
+22607	Adamant javelin	829	Adamant javelin	roster
+22608	Adamant javelin(p)	835	Adamant javelin(p)	roster
+22609	Adamant javelin(p+)	5646	Adamant javelin(p+)	roster
+22610	Adamant javelin(p++)	5652	Adamant javelin(p++)	roster
+22611	Rune javelin	830	Rune javelin	roster
+22612	Rune javelin(p)	836	Rune javelin(p)	roster
+22613	Rune javelin(p+)	5647	Rune javelin(p+)	roster
+22614	Rune javelin(p++)	5653	Rune javelin(p++)	roster
+22615	Amethyst javelin	21318	Amethyst javelin	roster
+22616	Amethyst javelin(p)	21320	Amethyst javelin(p)	roster
+22617	Amethyst javelin(p+)	21322	Amethyst javelin(p+)	roster
+22618	Amethyst javelin(p++)	21324	Amethyst javelin(p++)	roster
+22619	Dragon javelin	19484	Dragon javelin	roster
+22620	Dragon javelin(p)	19486	Dragon javelin(p)	roster
+22621	Dragon javelin(p+)	19488	Dragon javelin(p+)	roster
+22622	Dragon javelin(p++)	19490	Dragon javelin(p++)	roster
+22624	Toxic blowpipe (empty)	12924	Toxic blowpipe (empty)	roster
+22626	Tanzanite fang	12922	Tanzanite fang	roster
+22632	Zulrah's scales	12934	Zulrah's scales	roster
+22633	Amethyst dart	25849	Amethyst dart	roster
+22634	Dragon hunter crossbow	21012	Dragon hunter crossbow	roster
+22636	Dragon hunter lance	22978	Dragon hunter lance	roster
+22638	Dragon warhammer	13576	Dragon warhammer	roster
+22640	Hunters' sunlight crossbow	28869	Hunters' sunlight crossbow	roster
+22646	Sunlight antler bolts	28872	Sunlight antler bolts	roster
+22651	Moonlight antler bolts	28878	Moonlight antler bolts	roster
+22669	Sunfire splinters	28924	Sunfire splinters	roster
+22670	Osmumten's fang	26219	Osmumten's fang	roster
+22672	Voidwaker	27690	Voidwaker	roster
+22674	Voidwaker hilt	27681	Voidwaker hilt	roster
+22676	Voidwaker blade	27684	Voidwaker blade	roster
+22678	Voidwaker gem	27687	Voidwaker gem	roster
+22680	Noxious halberd	29796	Noxious halberd	roster
+22685	Ancient godsword	26233	Ancient godsword	roster
+22687	Ancient hilt	26370	Ancient hilt	roster
+22689	Abyssal dagger	13265	Abyssal dagger	roster
+22691	Abyssal dagger (p)	13267	Abyssal dagger (p)	roster
+22693	Abyssal dagger (p+)	13269	Abyssal dagger (p+)	roster
+22695	Abyssal dagger (p++)	13271	Abyssal dagger (p++)	roster
+22698	Trident of the Seas (full)	11905	Trident of the Seas (full)	roster
+22700	Uncharged trident	11908	Uncharged trident	roster
+22703	Uncharged toxic trident	12900	Uncharged toxic trident	roster
+22705	Magic fang	12932	Magic fang	roster
+22708	Uncharged trident (e)	22290	Uncharged trident (e)	roster
+22711	Uncharged toxic trident (e)	22294	Uncharged toxic trident (e)	roster
+22714	Sanguinesti staff (uncharged)	22481	Sanguinesti staff (uncharged)	roster
+22716	Blighted ancient ice sack	24607	Blighted ancient ice sack	roster
+22717	Blighted entangle sack	24613	Blighted entangle sack	roster
+22718	Blighted teleport spell sack	24615	Blighted teleport spell sack	roster
+22719	Blighted vengeance sack	24621	Blighted vengeance sack	roster
+22721	Ornate maul handle	24229	Ornate maul handle	roster
+22724	Tome of Fire (empty)	20716	Tome of Fire (empty)	roster
+22726	Burnt page	20718	Burnt page	roster
+22728	Tome of Water (empty)	25576	Tome of Water (empty)	roster
+22730	Soaked page	25578	Soaked page	roster
+22731	Mystic smoke staff	12000	Mystic smoke staff	roster
+22734	Bow of Faerdhinen (inactive)	25862	Bow of Faerdhinen (inactive)	roster
+22743	Crystal armour seed	23956	Crystal armour seed	roster
+22751	Enhanced crystal weapon seed	25859	Enhanced crystal weapon seed	roster
+22754	Magic shortbow scroll	12786	Magic shortbow scroll	roster
+22757	Blood shard	24777	Blood shard	roster
+22759	Staff of the Dead	11791	Staff of the Dead	roster
+22761	Toxic staff (uncharged)	12902	Toxic staff (uncharged)	roster
+22768	Amethyst broad bolts	21316	Amethyst broad bolts	roster
+22773	Amethyst arrow	21326	Amethyst arrow	roster
+22788	Amethyst arrow(p)	21332	Amethyst arrow(p)	roster
+22789	Amethyst arrow(p+)	21334	Amethyst arrow(p+)	roster
+22790	Amethyst arrow(p++)	21336	Amethyst arrow(p++)	roster
+22795	Dragon bolts (p)	21924	Dragon bolts (p)	roster
+22796	Dragon bolts (p+)	21926	Dragon bolts (p+)	roster
+22797	Dragon bolts (p++)	21928	Dragon bolts (p++)	roster
+22798	Dragon knife	22804	Dragon knife	roster
+22799	Dragon knife(p)	22806	Dragon knife(p)	roster
+22800	Dragon knife(p+)	22808	Dragon knife(p+)	roster
+22801	Dragon knife(p++)	22810	Dragon knife(p++)	roster
+22802	Dragon thrownaxe	20849	Dragon thrownaxe	roster
+22803	Black chinchompa	11959	Black chinchompa	roster
+22804	Amethyst dart(p)	25851	Amethyst dart(p)	roster
+22805	Amethyst dart(p+)	25855	Amethyst dart(p+)	roster
+22806	Amethyst dart(p++)	25857	Amethyst dart(p++)	roster
+22811	Seeking bronze arrow	33553	Seeking bronze arrow	roster
+22816	Seeking iron arrow	33559	Seeking iron arrow	roster
+22821	Seeking steel arrow	33565	Seeking steel arrow	roster
+22826	Seeking mithril arrow	33571	Seeking mithril arrow	roster
+22831	Seeking adamant arrow	33577	Seeking adamant arrow	roster
+22836	Seeking rune arrow	33583	Seeking rune arrow	roster
+22841	Seeking amethyst arrow	33589	Seeking amethyst arrow	roster
+22846	Seeking dragon arrow	33595	Seeking dragon arrow	roster
+22858	Light infinity colour kit	12530	Light infinity colour kit	roster
+22860	Dark infinity colour kit	12528	Dark infinity colour kit	roster
+22862	Elder chaos top	20517	Elder chaos top	roster
+22864	Elder chaos robe	20520	Elder chaos robe	roster
+22866	Elder chaos hood	20595	Elder chaos hood	roster
+22876	Ancestral hat	21018	Ancestral hat	roster
+22878	Ancestral robe top	21021	Ancestral robe top	roster
+22880	Ancestral robe bottom	21024	Ancestral robe bottom	roster
+22886	Malediction ward	11924	Malediction ward	roster
+22888	Odium ward	11926	Odium ward	roster
+22890	Odium shard 1	11928	Odium shard 1	roster
+22892	Odium shard 2	11929	Odium shard 2	roster
+22894	Odium shard 3	11930	Odium shard 3	roster
+22896	Malediction shard 1	11931	Malediction shard 1	roster
+22898	Malediction shard 2	11932	Malediction shard 2	roster
+22900	Malediction shard 3	11933	Malediction shard 3	roster
+22902	Ward upgrade kit	12802	Ward upgrade kit	roster
+22905	Eternal crystal	13227	Eternal crystal	roster
+22907	Pegasian crystal	13229	Pegasian crystal	roster
+22909	Primordial crystal	13231	Primordial crystal	roster
+22911	Eternal boots	13235	Eternal boots	roster
+22913	Pegasian boots	13237	Pegasian boots	roster
+22915	Primordial boots	13239	Primordial boots	roster
+22917	Avernic treads	31088	Avernic treads	roster
+22926	Demon tear	31111	Demon tear	roster
+22927	Kodai insignia	21043	Kodai insignia	roster
+22929	Kodai wand	21006	Kodai wand	roster
+22931	Twisted buckler	21000	Twisted buckler	roster
+22933	Elidinis' ward	25985	Elidinis' ward	roster
+22938	Chromium ingot	28276	Chromium ingot	roster
+22942	Seers icon	28304	Seers icon	roster
+22943	Archer icon	28298	Archer icon	roster
+22946	Magus ring	28313	Magus ring	roster
+22948	Venator ring	28310	Venator ring	roster
+22950	Staff of Balance	24144	Staff of Balance	roster
+22953	Ancient wyvern shield	21634	Ancient wyvern shield	roster
+22955	Dragonfire ward	22003	Dragonfire ward	roster
+22956	Antler guard	31081	Antler guard	roster
+22958	Necklace of fangs	34401	Necklace of Fangs	roster
+22960	Etched elder venator fang	33636	Etched elder venator fang	roster
+22962	Necklace of rupture	33639	Necklace of rupture	roster
+22964	Aquanite tendon	32876	Aquanite tendon	roster
+22966	Aquanite hopper	32879	Aquanite hopper	roster
+22969	Confliction gauntlets	31106	Confliction gauntlets	roster
+23000	Dragon hunter wand	30070	Dragon hunter wand	roster
+23005	Craw's bow (u)	22547	Craw's bow (u)	roster
+23008	Webweaver bow (u)	27652	Webweaver bow (u)	roster
+23011	Fangs of Venenatis	27670	Fangs of Venenatis	roster
+23017	Revenant ether	21820	Revenant ether	roster
+23019	Venator bow (uncharged)	27612	Venator bow (uncharged)	roster
+23021	Venator shard	27614	Venator shard	roster
+23026	Ancient essence	27616	Ancient essence	roster
+23028	Tormented synapse	29580	Tormented synapse	roster
+23030	Tonalztics of Ralos (uncharged)	28919	Tonalztics of Ralos (uncharged)	roster
+23037	Trailblazer reloaded blowpipe ornament kit	28690	Trailblazer reloaded blowpipe ornament kit	roster
+23040	Camphor blowpipe (empty)	31577	Camphor blowpipe (empty)	roster
+23043	Ironwood blowpipe (empty)	31581	Ironwood blowpipe (empty)	roster
+23046	Rosewood blowpipe (empty)	31585	Rosewood blowpipe (empty)	roster
+23081	Nightmare staff	24422	Nightmare staff	roster
+23086	Harmonised orb	24511	Harmonised orb	roster
+23088	Volatile orb	24514	Volatile orb	roster
+23090	Eldritch orb	24517	Eldritch orb	roster
+23092	Eclipse moon helm	29010	Eclipse Moon helm	roster
+23093	Eclipse moon chestplate	29004	Eclipse Moon chestplate	roster
+23094	Eclipse moon tassets	29007	Eclipse Moon tassets	roster
+23095	Blue moon helm	29019	Blue Moon helm	roster
+23096	Blue moon chestplate	29013	Blue Moon chestplate	roster
+23097	Blue moon tassets	29016	Blue Moon tassets	roster
+23098	Blood moon helm	29028	Blood Moon helm	roster
+23099	Blood moon chestplate	29022	Blood Moon chestplate	roster
+23100	Blood moon tassets	29025	Blood Moon tassets	roster
+23110	Eclipse moon helm (broken)	29055	Eclipse Moon helm (broken)	roster
+23112	Eclipse moon chestplate (broken)	29049	Eclipse Moon chestplate (broken)	roster
+23114	Eclipse moon tassets (broken)	29052	Eclipse Moon tassets (broken)	roster
+23116	Blue moon helm (broken)	29064	Blue Moon helm (broken)	roster
+23118	Blue moon chestplate (broken)	29058	Blue Moon chestplate (broken)	roster
+23120	Blue moon tassets (broken)	29061	Blue Moon tassets (broken)	roster
+23122	Blood moon helm (broken)	29073	Blood Moon helm (broken)	roster
+23124	Blood moon chestplate (broken)	29067	Blood Moon chestplate (broken)	roster
+23126	Blood moon tassets (broken)	29070	Blood Moon tassets (broken)	roster
+23128	Eclipse atlatl	29000	Eclipse atlatl	roster
+23134	Atlatl dart	28991	Atlatl dart	roster
+23135	Dual macuahuitl	28997	Dual macuahuitl	roster
+23137	Blue moon spear	28988	Blue Moon spear	roster
+23139	Swampbark helm	25398	Swampbark helm	roster
+23141	Swampbark body	25389	Swampbark body	roster
+23143	Swampbark legs	25401	Swampbark legs	roster
+23145	Swampbark gauntlets	25392	Swampbark gauntlets	roster
+23147	Swampbark boots	25395	Swampbark boots	roster
+23149	Bloodbark helm	25413	Bloodbark helm	roster
+23151	Bloodbark body	25404	Bloodbark body	roster
+23153	Bloodbark legs	25416	Bloodbark legs	roster
+23155	Bloodbark gauntlets	25407	Bloodbark gauntlets	roster
+23157	Bloodbark boots	25410	Bloodbark boots	roster
+23159	Super combat potion(4)	12695	Super combat potion(4)	roster
+23161	Super combat potion(3)	12697	Super combat potion(3)	roster
+23163	Super combat potion(2)	12699	Super combat potion(2)	roster
+23165	Super combat potion(1)	12701	Super combat potion(1)	roster
+23167	Divine super combat potion(4)	23685	Divine super combat potion(4)	roster
+23169	Divine super combat potion(3)	23688	Divine super combat potion(3)	roster
+23171	Divine super combat potion(2)	23691	Divine super combat potion(2)	roster
+23173	Divine super combat potion(1)	23694	Divine super combat potion(1)	roster
+23175	Divine super attack potion(4)	23697	Divine super attack potion(4)	roster
+23177	Divine super attack potion(3)	23700	Divine super attack potion(3)	roster
+23179	Divine super attack potion(2)	23703	Divine super attack potion(2)	roster
+23181	Divine super attack potion(1)	23706	Divine super attack potion(1)	roster
+23183	Divine super strength potion(4)	23709	Divine super strength potion(4)	roster
+23185	Divine super strength potion(3)	23712	Divine super strength potion(3)	roster
+23187	Divine super strength potion(2)	23715	Divine super strength potion(2)	roster
+23189	Divine super strength potion(1)	23718	Divine super strength potion(1)	roster
+23191	Divine super defence potion(4)	23721	Divine super defence potion(4)	roster
+23193	Divine super defence potion(3)	23724	Divine super defence potion(3)	roster
+23195	Divine super defence potion(2)	23727	Divine super defence potion(2)	roster
+23197	Divine super defence potion(1)	23730	Divine super defence potion(1)	roster
+23199	Divine ranging potion(4)	23733	Divine ranging potion(4)	roster
+23201	Divine ranging potion(3)	23736	Divine ranging potion(3)	roster
+23203	Divine ranging potion(2)	23739	Divine ranging potion(2)	roster
+23205	Divine ranging potion(1)	23742	Divine ranging potion(1)	roster
+23207	Divine magic potion(4)	23745	Divine magic potion(4)	roster
+23209	Divine magic potion(3)	23748	Divine magic potion(3)	roster
+23211	Divine magic potion(2)	23751	Divine magic potion(2)	roster
+23213	Divine magic potion(1)	23754	Divine magic potion(1)	roster
+23215	Battlemage potion(4)	22449	Battlemage potion(4)	roster
+23217	Battlemage potion(3)	22452	Battlemage potion(3)	roster
+23219	Battlemage potion(2)	22455	Battlemage potion(2)	roster
+23221	Battlemage potion(1)	22458	Battlemage potion(1)	roster
+23223	Bastion potion(4)	22461	Bastion potion(4)	roster
+23225	Bastion potion(3)	22464	Bastion potion(3)	roster
+23227	Bastion potion(2)	22467	Bastion potion(2)	roster
+23229	Bastion potion(1)	22470	Bastion potion(1)	roster
+23231	Divine battlemage potion(4)	24623	Divine battlemage potion(4)	roster
+23233	Divine battlemage potion(3)	24626	Divine battlemage potion(3)	roster
+23235	Divine battlemage potion(2)	24629	Divine battlemage potion(2)	roster
+23237	Divine battlemage potion(1)	24632	Divine battlemage potion(1)	roster
+23239	Divine bastion potion(4)	24635	Divine bastion potion(4)	roster
+23241	Divine bastion potion(3)	24638	Divine bastion potion(3)	roster
+23243	Divine bastion potion(2)	24641	Divine bastion potion(2)	roster
+23245	Divine bastion potion(1)	24644	Divine bastion potion(1)	roster
+23247	Anti-venom(4)	12905	Anti-venom(4)	roster
+23249	Anti-venom(3)	12907	Anti-venom(3)	roster
+23251	Anti-venom(2)	12909	Anti-venom(2)	roster
+23253	Anti-venom(1)	12911	Anti-venom(1)	roster
+23255	Anti-venom+(4)	12913	Anti-venom+(4)	roster
+23257	Anti-venom+(3)	12915	Anti-venom+(3)	roster
+23259	Anti-venom+(2)	12917	Anti-venom+(2)	roster
+23261	Anti-venom+(1)	12919	Anti-venom+(1)	roster
+23263	Extended anti-venom+(4)	29824	Extended anti-venom+(4)	roster
+23265	Extended anti-venom+(3)	29827	Extended anti-venom+(3)	roster
+23267	Extended anti-venom+(2)	29830	Extended anti-venom+(2)	roster
+23269	Extended anti-venom+(1)	29833	Extended anti-venom+(1)	roster
+23271	Stamina potion(4)	12625	Stamina potion(4)	roster
+23273	Stamina potion(3)	12627	Stamina potion(3)	roster
+23275	Stamina potion(2)	12629	Stamina potion(2)	roster
+23277	Stamina potion(1)	12631	Stamina potion(1)	roster
+23279	Stamina mix(2)	12633	Stamina mix(2)	roster
+23281	Stamina mix(1)	12635	Stamina mix(1)	roster
+23283	Extended stamina potion(4)	31638	Extended stamina potion(4)	roster
+23285	Extended stamina potion(3)	31641	Extended stamina potion(3)	roster
+23287	Extended stamina potion(2)	31644	Extended stamina potion(2)	roster
+23289	Extended stamina potion(1)	31647	Extended stamina potion(1)	roster
+23291	Extreme energy potion(4)	31614	Extreme energy potion(4)	roster
+23293	Extreme energy potion(3)	31617	Extreme energy potion(3)	roster
+23295	Extreme energy potion(2)	31620	Extreme energy potion(2)	roster
+23297	Extreme energy potion(1)	31623	Extreme energy potion(1)	roster
+23303	Amylase crystal	12640	Amylase crystal	roster
+23304	Ancient brew(4)	26340	Ancient brew(4)	roster
+23306	Ancient brew(3)	26342	Ancient brew(3)	roster
+23308	Ancient brew(2)	26344	Ancient brew(2)	roster
+23310	Ancient brew(1)	26346	Ancient brew(1)	roster
+23312	Ancient mix(2)	26350	Ancient mix(2)	roster
+23314	Ancient mix(1)	26353	Ancient mix(1)	roster
+23316	Forgotten brew(4)	27629	Forgotten brew(4)	roster
+23318	Forgotten brew(3)	27632	Forgotten brew(3)	roster
+23320	Forgotten brew(2)	27635	Forgotten brew(2)	roster
+23322	Forgotten brew(1)	27638	Forgotten brew(1)	roster
+23324	Armadyl brew(4)	31650	Armadyl brew(4)	roster
+23326	Armadyl brew(3)	31653	Armadyl brew(3)	roster
+23328	Armadyl brew(2)	31656	Armadyl brew(2)	roster
+23330	Armadyl brew(1)	31659	Armadyl brew(1)	roster
+23332	Menaphite remedy(4)	27202	Menaphite remedy(4)	roster
+23334	Menaphite remedy(3)	27205	Menaphite remedy(3)	roster
+23336	Menaphite remedy(2)	27208	Menaphite remedy(2)	roster
+23338	Menaphite remedy(1)	27211	Menaphite remedy(1)	roster
+23340	Prayer regeneration potion(4)	30125	Prayer regeneration potion(4)	roster
+23342	Prayer regeneration potion(3)	30128	Prayer regeneration potion(3)	roster
+23344	Prayer regeneration potion(2)	30131	Prayer regeneration potion(2)	roster
+23346	Prayer regeneration potion(1)	30134	Prayer regeneration potion(1)	roster
+23356	Goading potion(4)	30137	Goading potion(4)	roster
+23358	Goading potion(3)	30140	Goading potion(3)	roster
+23360	Goading potion(2)	30143	Goading potion(2)	roster
+23362	Goading potion(1)	30146	Goading potion(1)	roster
+23364	Super fishing potion(4)	31602	Super fishing potion(4)	roster
+23366	Super fishing potion(3)	31605	Super fishing potion(3)	roster
+23368	Super fishing potion(2)	31608	Super fishing potion(2)	roster
+23370	Super fishing potion(1)	31611	Super fishing potion(1)	roster
+23372	Super hunter potion(4)	31626	Super hunter potion(4)	roster
+23374	Super hunter potion(3)	31629	Super hunter potion(3)	roster
+23376	Super hunter potion(2)	31632	Super hunter potion(2)	roster
+23378	Super hunter potion(1)	31635	Super hunter potion(1)	roster
+23380	Haemostatic dressing (4)	31590	Haemostatic dressing (4)	roster
+23382	Haemostatic dressing (3)	31593	Haemostatic dressing (3)	roster
+23384	Haemostatic dressing (2)	31596	Haemostatic dressing (2)	roster
+23386	Haemostatic dressing (1)	31599	Haemostatic dressing (1)	roster
+23388	Haemostatic poultice	31587	Haemostatic poultice	roster
+23390	Sapphire glacialis mix (2)	29180	Sapphire glacialis mix (2)	roster
+23392	Sapphire glacialis mix (1)	29198	Sapphire glacialis mix (1)	roster
+23394	Snowy knight mix (2)	29183	Snowy knight mix (2)	roster
+23396	Snowy knight mix (1)	29201	Snowy knight mix (1)	roster
+23398	Ruby harvest mix (2)	29186	Ruby harvest mix (2)	roster
+23400	Ruby harvest mix (1)	29204	Ruby harvest mix (1)	roster
+23402	Black warlock mix (2)	29189	Black warlock mix (2)	roster
+23404	Black warlock mix (1)	29207	Black warlock mix (1)	roster
+23406	Sunlight moth mix (2)	29192	Sunlight moth mix (2)	roster
+23408	Sunlight moth mix (1)	29210	Sunlight moth mix (1)	roster
+23410	Moonlight moth mix (2)	29195	Moonlight moth mix (2)	roster
+23412	Moonlight moth mix (1)	29213	Moonlight moth mix (1)	roster
+23414	Sunlight moth	28890	Sunlight moth (item)	roster
+23416	Moonlight moth	28893	Moonlight moth (item)	roster
+23418	Bottled dragonbreath (unpowered)	22999	Bottled dragonbreath (unpowered)	roster
+23420	Bottled dragonbreath	23002	Bottled dragonbreath	roster
+23422	3rd Age cloak	12437	3rd Age cloak	roster
+23424	3rd Age druidic robe bottoms	23339	3rd Age druidic robe bottoms	roster
+23426	3rd Age plateskirt	23242	3rd Age plateskirt	roster
+23428	Adamant dragon mask	23270	Adamant dragon mask	roster
+23430	Afro	12430	Afro	roster
+23432	Ankou gloves	20101	Ankou gloves	roster
+23434	Ankou mask	20095	Ankou mask	roster
+23436	Ankou socks	20107	Ankou socks	roster
+23438	Ankou top	20098	Ankou top	roster
+23440	Ankou's leggings	20104	Ankou's leggings	roster
+23442	Arceuus hood	20113	Arceuus hood	roster
+23444	Arceuus scarf	19943	Arceuus scarf	roster
+23446	Big pirate hat	12355	Big pirate hat	roster
+23448	Black demon mask	20026	Black demon mask	roster
+23450	Black d'hide body (g)	12381	Black d'hide body (g)	roster
+23452	Black d'hide body (t)	12385	Black d'hide body (t)	roster
+23454	Black d'hide chaps (g)	12383	Black d'hide chaps (g)	roster
+23456	Black d'hide chaps (t)	12387	Black d'hide chaps (t)	roster
+23458	Blacksmith's helm	19988	Blacksmith's helm	roster
+23460	Boots of darkness	20140	Boots of darkness	roster
+23462	Bowl wig	20110	Bowl wig	roster
+23464	Bucket helm	19991	Bucket helm	roster
+23466	Bucket helm (g)	20059	Bucket helm (g)	roster
+23468	Dark bow tie	19970	Dark bow tie	roster
+23470	Dark trousers	19964	Dark trousers	roster
+23472	Dark tuxedo cuffs	19961	Dark tuxedo cuffs	roster
+23474	Dark tuxedo jacket	19958	Dark tuxedo jacket	roster
+23476	Dark tuxedo shoes	19967	Dark tuxedo shoes	roster
+23478	Deerstalker	12540	Deerstalker	roster
+23480	Fancy tiara	20008	Fancy tiara	roster
+23482	Fremennik kilt	23246	Fremennik kilt	roster
+23484	Giant boot	23252	Giant boot	roster
+23486	Gilded boots	12391	Gilded boots	roster
+23488	Gilded chainbody	20149	Gilded chainbody	roster
+23490	Gilded coif	23258	Gilded coif	roster
+23492	Gilded d'hide body	23264	Gilded d'hide body	roster
+23494	Gilded d'hide chaps	23267	Gilded d'hide chaps	roster
+23496	Gilded d'hide vambraces	23261	Gilded d'hide vambraces	roster
+23498	Gilded med helm	20146	Gilded med helm	roster
+23500	Gilded sq shield	20152	Gilded sq shield	roster
+23502	Gloves of darkness	20134	Gloves of darkness	roster
+23504	Greater demon mask	20023	Greater demon mask	roster
+23506	Half moon spectacles	20053	Half moon spectacles	roster
+23508	Holy wraps	19997	Holy wraps	roster
+23510	Hood of darkness	20128	Hood of darkness	roster
+23512	Hosidius hood	20116	Hosidius hood	roster
+23514	Hosidius scarf	19946	Hosidius scarf	roster
+23516	Jungle demon mask	20032	Jungle demon mask	roster
+23518	Lava dragon mask	12371	Lava dragon mask	roster
+23520	Left eye patch	19724	Left eye patch	roster
+23522	Lesser demon mask	20020	Lesser demon mask	roster
+23524	Light bow tie	19985	Light bow tie	roster
+23526	Light trousers	19979	Light trousers	roster
+23528	Light tuxedo cuffs	19976	Light tuxedo cuffs	roster
+23530	Light tuxedo jacket	19973	Light tuxedo jacket	roster
+23532	Light tuxedo shoes	19982	Light tuxedo shoes	roster
+23534	Lovakengj hood	20119	Lovakengj hood	roster
+23536	Lovakengj scarf	19949	Lovakengj scarf	roster
+23538	Monocle	12353	Monocle	roster
+23540	Mummy's body	20083	Mummy's body	roster
+23542	Mummy's feet	20092	Mummy's feet	roster
+23544	Mummy's hands	20086	Mummy's hands	roster
+23546	Mummy's head	20080	Mummy's head	roster
+23548	Mummy's legs	20089	Mummy's legs	roster
+23550	Musketeer hat	12351	Musketeer hat	roster
+23552	Musketeer pants	12443	Musketeer pants	roster
+23554	Musketeer tabard	12441	Musketeer tabard	roster
+23556	Obsidian cape (r)	20050	Obsidian cape (r)	roster
+23558	Old demon mask	20029	Old demon mask	roster
+23560	Piscarilius hood	20122	Piscarilius hood	roster
+23562	Piscarilius scarf	19952	Piscarilius scarf	roster
+23564	Ranger gloves	19994	Ranger gloves	roster
+23566	Rangers' tights	23249	Rangers' tights	roster
+23568	Rangers' tunic	12596	Rangers' tunic	roster
+23570	Ring of 3rd Age	23185	Ring of 3rd Age	roster
+23572	Robe bottom of darkness	20137	Robe bottom of darkness	roster
+23574	Robe top of darkness	20131	Robe top of darkness	roster
+23576	Royal gown bottom	12395	Royal gown bottom	roster
+23578	Royal gown top	12393	Royal gown top	roster
+23580	Rune dragon mask	23273	Rune dragon mask	roster
+23582	Sagacious spectacles	12337	Sagacious spectacles	roster
+23584	Samurai boots	20047	Samurai boots	roster
+23586	Samurai gloves	20041	Samurai gloves	roster
+23588	Samurai greaves	20044	Samurai greaves	roster
+23590	Samurai kasa	20035	Samurai kasa	roster
+23592	Samurai shirt	20038	Samurai shirt	roster
+23594	Shayzien hood	20125	Shayzien hood	roster
+23596	Shayzien scarf	19955	Shayzien scarf	roster
+23598	Uri's hat	23255	Uri's hat	roster
+23600	Holy blessing	20220	Holy blessing	roster
+23602	Unholy blessing	20223	Unholy blessing	roster
+23604	Peaceful blessing	20226	Peaceful blessing	roster
+23606	Honourable blessing	20229	Honourable blessing	roster
+23608	War blessing	20232	War blessing	roster
+23610	Ancient blessing	20235	Ancient blessing	roster
+23612	3rd Age bow	12424	3rd Age bow	roster
+23614	3rd Age longsword	12426	3rd Age longsword	roster
+23616	3rd Age wand	12422	3rd Age wand	roster
+23618	3rd Age axe	20011	3rd Age axe	roster
+23620	3rd Age pickaxe	20014	3rd Age pickaxe	roster
+23622	Gilded scimitar	12389	Gilded scimitar	roster
+23624	Gilded 2h sword	20155	Gilded 2h sword	roster
+23626	Gilded spear	20158	Gilded spear	roster
+23628	Gilded hasta	20161	Gilded hasta	roster
+23630	Gilded axe	23279	Gilded axe	roster
+23632	Gilded pickaxe	23276	Gilded pickaxe	roster
+23634	Gilded spade	23282	Gilded spade	roster
+23636	Katana	12357	Katana	roster
+23638	Dragon cane	12373	Dragon cane	roster
+23640	Briefcase	12335	Briefcase	roster
+23642	Armadyl godsword ornament kit	20068	Armadyl godsword ornament kit	roster
+23644	Bandos godsword ornament kit	20071	Bandos godsword ornament kit	roster
+23646	Saradomin godsword ornament kit	20074	Saradomin godsword ornament kit	roster
+23648	Zamorak godsword ornament kit	20077	Zamorak godsword ornament kit	roster
+23650	Dragon chainbody ornament kit	12534	Dragon chainbody ornament kit	roster
+23652	Dragon legs/skirt ornament kit	12536	Dragon legs/skirt ornament kit	roster
+23654	Dragon full helm ornament kit	12538	Dragon full helm ornament kit	roster
+23656	Dragon sq shield ornament kit	12532	Dragon sq shield ornament kit	roster
+23658	Dragon kiteshield ornament kit	22239	Dragon kiteshield ornament kit	roster
+23660	Dragon platebody ornament kit	22236	Dragon platebody ornament kit	roster
+23662	Dragon defender ornament kit	20143	Dragon defender ornament kit	roster
+23664	Dragon scimitar ornament kit	20002	Dragon scimitar ornament kit	roster
+23677	Dragon kiteshield	21895	Dragon kiteshield	roster
+23681	Digsite teleport	12403	Digsite teleport	roster
+23682	Feldip hills teleport	12404	Feldip hills teleport	roster
+23683	Lunar isle teleport	12405	Lunar isle teleport	roster
+23684	Mort'ton teleport	12406	Mort'ton teleport	roster
+23685	Pest control teleport	12407	Pest control teleport	roster
+23686	Piscatoris teleport	12408	Piscatoris teleport	roster
+23687	Iorwerth camp teleport	12410	Iorwerth camp teleport	roster
+23688	Mos le'harmless teleport	12411	Mos le'harmless teleport	roster
+23689	Lumberyard teleport	12642	Lumberyard teleport	roster
+23690	Ale of the gods	20056	Ale of the gods	roster
+23692	Ring of coins	20017	Ring of coins	roster
+23694	Ring of nature	20005	Ring of nature	roster
+23701	Extended antifire(4)	11951	Extended antifire(4)	roster
+23703	Extended antifire(3)	11953	Extended antifire(3)	roster
+23705	Extended antifire(2)	11955	Extended antifire(2)	roster
+23707	Extended antifire(1)	11957	Extended antifire(1)	roster
+23709	Extended antifire mix(2)	11960	Extended antifire mix(2)	roster
+23711	Extended antifire mix(1)	11962	Extended antifire mix(1)	roster
+23713	Super antifire mix(2)	21994	Super antifire mix(2)	roster
+23715	Super antifire mix(1)	21997	Super antifire mix(1)	roster
+23717	Extended super antifire(4)	22209	Extended super antifire(4)	roster
+23719	Extended super antifire(3)	22212	Extended super antifire(3)	roster
+23721	Extended super antifire(2)	22215	Extended super antifire(2)	roster
+23723	Extended super antifire(1)	22218	Extended super antifire(1)	roster
+23725	Extended super antifire mix(2)	22221	Extended super antifire mix(2)	roster
+23727	Extended super antifire mix(1)	22224	Extended super antifire mix(1)	roster
+23730	Trouver parchment	24187	Trouver parchment	roster
+23731	Incomplete heavy ballista	19598	Incomplete heavy ballista	roster
+23733	Unstrung heavy ballista	19607	Unstrung heavy ballista	roster
+23739	Burning claws	29577	Burning claws	roster
+23741	Burning claw	29574	Burning claw	roster
+23743	Wrath rune	21880	Wrath rune	roster
+23744	Aether rune	30843	Aether rune	roster
+23745	Aether catalyst	30771	Aether catalyst	roster
+23749	Smoke battlestaff	11998	Smoke battlestaff	roster
+23751	Mist battlestaff	20730	Mist battlestaff	roster
+23753	Mystic mist staff	20733	Mystic mist staff	roster
+23755	Dust battlestaff	20736	Dust battlestaff	roster
+23757	Mystic dust staff	20739	Mystic dust staff	roster
+23759	Dragon boots ornament kit	22231	Dragon boots ornament kit	roster
+23762	Berserker necklace ornament kit	23237	Berserker necklace ornament kit	roster
+23765	Rune defender ornament kit	23227	Rune defender ornament kit	roster
+23768	Tzhaar-ket-om ornament kit	23232	Tzhaar-ket-om ornament kit	roster
+23771	Rune scimitar ornament kit (Guthix)	23321	Rune scimitar ornament kit (Guthix)	roster
+23773	Rune scimitar ornament kit (Saradomin)	23324	Rune scimitar ornament kit (Saradomin)	roster
+23775	Rune scimitar ornament kit (Zamorak)	23327	Rune scimitar ornament kit (Zamorak)	roster
+23780	Frozen whip mix	12769	Frozen whip mix	roster
+23782	Volcanic whip mix	12771	Volcanic whip mix	roster
+23786	Lava staff upgrade kit	21202	Lava staff upgrade kit	roster
+23789	Steam staff upgrade kit	12798	Steam staff upgrade kit	roster
+23793	Blue dark bow paint	12757	Blue dark bow paint	roster
+23795	Green dark bow paint	12759	Green dark bow paint	roster
+23797	Yellow dark bow paint	12761	Yellow dark bow paint	roster
+23799	White dark bow paint	12763	White dark bow paint	roster
+23805	Dragon pickaxe upgrade kit	12800	Dragon pickaxe upgrade kit	roster
+23808	Zalcano shard	23908	Zalcano shard	roster
+23820	Chitin	29643	Chitin	roster
+23822	Trinket of fairies	28564	Trinket of fairies	roster
+23823	Trinket of avarice	33044	Trinket of avarice	roster
+23824	Trinket of undead	28570	Trinket of undead	roster
+23825	Trinket of fortuity (inactive)	33047	Trinket of fortuity (inactive)	roster
+23826	Anglerfish	13441	Anglerfish	roster
+23830	Blighted overload (4)	29631	Blighted overload (4)	roster
+23832	Blighted overload (3)	29634	Blighted overload (3)	roster
+23834	Blighted overload (2)	29637	Blighted overload (2)	roster
+23836	Blighted overload (1)	29640	Blighted overload (1)	roster
+23838	Mixed hide top	29280	Mixed hide top	roster
+23840	Mixed hide legs	29283	Mixed hide legs	roster
+23842	Mixed hide boots	29286	Mixed hide boots	roster
+23844	Mixed hide cape	29289	Mixed hide cape	roster
+23849	Burning amulet(5)	21166	Burning amulet(5)	roster
+23854	Spiked manacles	23389	Spiked manacles	roster
+23857	Archaic emblem (tier 5)	12751	Archaic emblem (tier 5)	roster
+23863	Adamant seeds	29458	Adamant seeds	roster
+23882	Dark crab	11936	Dark crab	roster
+23884	Marlin	32352	Marlin	roster
+23886	Bluefin	32344	Bluefin	roster
+23888	Halibut	32336	Halibut	roster
+23890	Ultor ring	28307	Ultor ring	roster
+23892	Bellator ring	28316	Bellator ring	roster
+23893	Brimstone ring	22975	Brimstone ring	roster
+23896	Serpentine helm (uncharged)	12929	Serpentine helm (uncharged)	roster
+23899	Amulet of the Damned (full)	12851	Amulet of the Damned (full)	roster
+23902	Blighted manta ray	24589	Blighted manta ray	roster
+23904	Blighted anglerfish	24592	Blighted anglerfish	roster
+23906	Blighted karambwan	24595	Blighted karambwan	roster
+23908	Blighted super restore(4)	24598	Blighted super restore(4)	roster
+23916	Viggora's chainmace (u)	22542	Viggora's chainmace (u)	roster
+23919	Ursine chainmace (u)	27657	Ursine chainmace (u)	roster
+23922	Thammaron's sceptre (u)	22552	Thammaron's sceptre (u)	roster
+23925	Thammaron's sceptre (au)	27785	Thammaron's sceptre (au)	roster
+23927	Accursed sceptre (u)	27662	Accursed sceptre (u)	roster
+23930	Accursed sceptre (au)	27676	Accursed sceptre (au)	roster
+23932	Claws of Callisto	27667	Claws of Callisto	roster
+23934	Skull of Vet'ion	27673	Skull of Vet'ion	roster
+23936	Serpentine visage	12927	Serpentine visage	roster
+23938	Basilisk jaw	24268	Basilisk jaw	roster
+24120	Kraken tentacle	12004	Kraken tentacle	roster
+24122	Amulet of glory(6)	11978	Amulet of glory(6)	roster

@@ -40,7 +40,8 @@ class PriceCheckerTests {
 
     @Test
     fun `an OSRS-matched item uses the guide-price seed instead of the cache cost`() {
-        assertEquals(809253, PriceChecker.value(definitions, Item(WHIP, 1)))
+        // A14: the OSRS hourly average of the whip (OSRS id 4151), not the 13 September guide snapshot (809253) and not the cache cost.
+        assertEquals(gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices.book.hourly[WHIP], PriceChecker.value(definitions, Item(WHIP, 1)))
     }
 
     @Test
@@ -94,7 +95,8 @@ class PriceCheckerTests {
 
         assertTrue("value(player, container[slot])" in source)
         assertTrue("total(player, container)" in source)
-        assertTrue("GrandExchangeService::class.java" in source)
+        // A14/A15: the live valuation is the server's one price function (GePrice: GE guide price, OSRS hourly average by item id).
+        assertTrue("GePrice.stack(player.world, item)" in source)
         assertTrue("OsrsGuidePrices.seed" in source)
     }
 

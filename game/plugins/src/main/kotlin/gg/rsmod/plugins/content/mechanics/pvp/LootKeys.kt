@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.items.food.Food
 import gg.rsmod.plugins.content.items.potion.Potion
+import gg.rsmod.plugins.content.mechanics.exchange.GePrice
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 
 /**
@@ -204,6 +205,12 @@ object LootKeys {
     fun receivesKeys(player: Player): Boolean = player.attr[ENABLED] != false
 
     // ---- value ----
+
+    /** The worth of [items]: the one GE price of every item ([GePrice], A14), the same number the price checker and the trade window show. */
+    fun value(
+        world: World,
+        items: List<Item>,
+    ): Long = items.sumOf { GePrice.stack(world, it) }
 
     fun value(
         definitions: DefinitionSet,

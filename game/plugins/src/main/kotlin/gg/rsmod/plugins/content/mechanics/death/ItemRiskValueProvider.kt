@@ -39,13 +39,5 @@ class ItemDefCostValueProvider(private val definitions: DefinitionSet) : ItemRis
  * its cache value (OsrsGuidePrices.seed's SOURCE_GAP fallback).
  */
 class GuidePriceValueProvider(private val world: gg.rsmod.game.model.World) : ItemRiskValueProvider {
-    private val definitions get() = world.definitions
-    private val exchange by lazy { world.getService(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService::class.java) }
-
-    override fun getValue(itemId: Int): Long {
-        val unnoted = gg.rsmod.game.model.item.Item(itemId, 1).toUnnoted(definitions).id
-        val def = definitions.getNullable(ItemDef::class.java, unnoted) ?: return 0L
-        val seed = gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices.seed(def)
-        return (exchange?.guidePrice(unnoted, seed) ?: seed).toLong()
-    }
+    override fun getValue(itemId: Int): Long = gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(world, itemId).toLong()
 }

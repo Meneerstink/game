@@ -1,7 +1,5 @@
 package gg.rsmod.plugins.content.mechanics.trading.impl
 
-import gg.rsmod.game.fs.DefinitionSet
-import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
@@ -50,21 +48,33 @@ object TradeItems {
         offer: ItemContainer,
     ): Boolean = totals(snapshot, offer) == totals(real)
 
-    /** Cache value of [item] (its unnoted form) times its amount, in Long. */
+    /**
+     * The Grand Exchange value of [item] times its amount, in Long (A15, owner 2026-10-11 "trade screen doesnt show the correct grand
+     * exchange value"; donors Darkan Trade.refreshTradeWealth / Novite Trade.getTradeWealth: wealth = market price * amount). [unitPrice] is
+     * the server's one price function ([gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit]); a note is valued as its unnoted item there.
+     */
     fun value(
-        definitions: DefinitionSet,
         item: Item?,
+        unitPrice: (Int) -> Int,
     ): Long {
         if (item == null) return 0L
-        val cost = definitions.get(ItemDef::class.java, item.toUnnoted(definitions).id).cost
-        return cost.toLong().coerceAtLeast(0L) * item.amount.toLong().coerceAtLeast(0L)
+        return unitPrice(item.id).toLong().coerceAtLeast(0L) * item.amount.toLong().coerceAtLeast(0L)
     }
 
-    /** Audit E-11: the total is summed in Long; `cost * amount` in Int wrapped negative on a large stack. */
+    /** Audit E-11: the total is summed in Long; `price * amount` in Int wrapped negative on a large stack. */
     fun value(
-        definitions: DefinitionSet,
         container: ItemContainer,
-    ): Long = container.rawItems.sumOf { value(definitions, it) }
+        unitPrice: (Int) -> Int,
+    ): Long = container.rawItems.sumOf { value(it, unitPrice) }
+
+    /** The chat line of the trade window's "Value" option (donors Novite Trade.sendValue / Darkan Trade.sendValue). */
+    fun valueMessage(
+        name: String,
+        price: Int,
+    ): String = "$name: market price is ${String.format(java.util.Locale.US, "%,d", price)} coins."
+
+    /** The 667 menu opcodes of the sixth option of an item grid (Offer, Offer-5, Offer-10, Offer-All, Offer-X, **Value**). */
+    val VALUE_OPCODES = setOf(18, 91)
 
     /** The wealth varc is an Int: a value above Int.MAX_VALUE shows as Int.MAX_VALUE, never as a wrapped number. */
     fun displayValue(value: Long): Int = value.coerceIn(0L, Int.MAX_VALUE.toLong()).toInt()

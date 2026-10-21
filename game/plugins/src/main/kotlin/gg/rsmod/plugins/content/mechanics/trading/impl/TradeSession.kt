@@ -8,6 +8,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.mechanics.exchange.GePrice
 import gg.rsmod.plugins.content.mechanics.trading.TRADE_ACCEPTED_ATTR
 import gg.rsmod.plugins.content.mechanics.trading.getTradeSession
 import gg.rsmod.plugins.content.mechanics.trading.hasAcceptedTrade
@@ -45,7 +46,25 @@ class TradeSession(
      * The summed value of an [ItemContainer]. Audit E-11: computed in Long ([TradeItems.value]); `cost * amount` in Int
      * wrapped to a wrong or negative value on a large stack, which the partner saw as the offer's worth.
      */
-    private fun ItemContainer.getValue(): Long = TradeItems.value(player.world.definitions, this)
+    private fun ItemContainer.getValue(): Long = TradeItems.value(this) { GePrice.unit(player.world, it) }
+
+    /**
+     * The "Value" option of the trade window (A15; donors Novite Trade.sendValue, Darkan Trade.sendValue): tells the player the Grand Exchange
+     * market price of [item] and moves nothing. An untradeable item has no market price.
+     */
+    fun value(item: Item?) {
+        if (item == null) return
+        val definitions = player.world.definitions
+        val def = definitions.get(ItemDef::class.java, item.toUnnoted(definitions).id)
+        if (!def.tradeable) {
+            player.message("That item isn't tradeable.")
+            return
+        }
+        player.message(TradeItems.valueMessage(definitions.get(ItemDef::class.java, item.id).name, GePrice.unit(player.world, item.id)))
+    }
+
+    /** "Value" on slot [slot] of the partner's offer. */
+    fun valuePartner(slot: Int) = value(partner.getTradeSession()?.container?.get(slot))
 
     /**
      * Opens the trade session, and configures the interfaces
@@ -125,7 +144,7 @@ class TradeSession(
             interfaceId = OVERLAY_INTERFACE,
             component = 0,
             range = 0..container.capacity,
-            setting = 1086,
+            setting = 1278,
         )
         player.setInterfaceEvents(
             interfaceId = TRADE_INTERFACE,
@@ -147,6 +166,7 @@ class TradeSession(
             "Offer-10",
             "Offer-All",
             "Offer-X",
+            "Value<col=FF9040>",
         )
         player.runClientScript(
             INTERFACE_INV_INIT_BIG,
@@ -161,6 +181,7 @@ class TradeSession(
             "Remove-10",
             "Remove-All",
             "Remove-X",
+            "Value<col=FF9040>",
         )
         player.runClientScript(
             695,
@@ -170,7 +191,7 @@ class TradeSession(
             7,
             0,
             -1,
-            "",
+            "Value<col=FF9040>",
             "",
             "",
             "",
@@ -470,7 +491,7 @@ class TradeSession(
         /**
          * The child id of the partner's trade offer
          */
-        private const val PARTNER_TRADE_CHILD = 32
+        const val PARTNER_TRADE_CHILD = 32
 
         /**
          * The progress trade interface

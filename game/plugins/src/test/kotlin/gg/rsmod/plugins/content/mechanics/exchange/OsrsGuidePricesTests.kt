@@ -12,10 +12,16 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * RCV-012 decision "GE guide price seeds = OSRS values": every exchangeable 667 item starts at the OSRS Wiki GEPrices snapshot price of
- * the same-named item, and only items OSRS does not have keep the cache value. The whole exchangeable roster is checked.
+ * RCV-012 decision "GE guide price seeds = OSRS values" (the Jagex guide by name stays the second-last source) and A14: every
+ * exchangeable 667 item is worth the OSRS hourly average of its OSRS item id ([OsrsPriceBook]); only items OSRS does not have keep the
+ * cache value. The whole exchangeable roster is checked.
  */
 class OsrsGuidePricesTests {
+    companion object {
+        /** Lower bound of items priced from OSRS (id or name); the 13 September name-only rule priced 3,414. */
+        const val OSRS_PRICED_MIN = 3_500
+    }
+
     private val table = OsrsGuidePrices.load(Paths.get("..", "..", "data", "cfg", "ge", "osrs-ge-guide-prices.json").toFile())
     private var library: CacheLibrary? = null
 
@@ -41,7 +47,10 @@ class OsrsGuidePricesTests {
     }
 
     @Test
-    fun `every exchangeable item is seeded from the OSRS price of its name, otherwise the cache value`() {
+    fun `every exchangeable item is priced by its OSRS item id, otherwise the cache value`() {
+        // A14 / T11: the old assertions pinned how many items match the 13 September snapshot BY NAME (3,414 of 12,652; the other 9,000
+        // fell back to the cache value, Karil's top among them). The price is now the OSRS hourly average of the item's OSRS id: a live
+        // price can never be asserted, so this checks the rule for the whole exchangeable roster against the checked-in fallback data.
         val lib = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()).also { library = it }
         val definitions = DefinitionSet()
         definitions.load(lib, ItemDef::class.java)
@@ -54,67 +63,33 @@ class OsrsGuidePricesTests {
                     definitions.getNullable(ItemDef::class.java, id)?.tradeable = line.removePrefix("  tradeable: ").trim() == "true"
             }
         }
+        val book = OsrsPriceBook.checkedIn()
         @Suppress("UNCHECKED_CAST")
         val items = (definitions.getAll(ItemDef::class.java) as Map<Int, ItemDef>).values.filter { GrandExchangeInterface.exchangeable(it) }
-        val unmatched = mutableListOf<String>()
-        var matched = 0
+        val cacheValue = mutableListOf<String>()
+        var osrs = 0
         items.sortedBy { it.id }.forEach { def ->
-            val osrs = table.price(def.name) ?: OsrsGuidePrices.RENAMED_IN_OSRS[def.id]?.let { table.price(it) }
-            assertEquals(osrs ?: def.cost, OsrsGuidePrices.seed(def, table), "${def.id} ${def.name}")
-            if (osrs != null) matched++ else unmatched += "${def.id}\t${def.name}\t${def.cost}"
+            val price = book.price(def)
+            assertEquals(price ?: def.cost, OsrsGuidePrices.seed(def, book), "${def.id} ${def.name}")
+            if (price != null) osrs++ else cacheValue += listOf(def.id, def.name, def.cost).joinToString("\t")
         }
         File("build").mkdirs()
-        File("build/osrs-guide-price-unmatched.txt").writeText(unmatched.joinToString("\n"))
-        println("OSRS_GUIDE_PRICES exchangeable=${items.size} matched=$matched unmatched=${unmatched.size}")
+        File("build/osrs-guide-price-unmatched.txt").writeText(cacheValue.joinToString(System.lineSeparator()))
+        println("OSRS_GUIDE_PRICES exchangeable=${items.size} osrsPriced=$osrs cacheValue=${cacheValue.size}")
+        assertTrue(items.size > 12_000, "exchangeable items (tradeable, unnoted, not coins): ${items.size}")
+        assertTrue(osrs > OSRS_PRICED_MIN, "items priced from OSRS by id or name ($osrs); the rest use the cache value, see build/osrs-guide-price-unmatched.txt")
         val whip = items.first { it.id == Items.ABYSSAL_WHIP }
-        assertEquals(809253, OsrsGuidePrices.seed(whip, table))
-        // 2026-09-14 batch potions-antifire added 14 tradeable doses (Extended antifire, the mixes, Extended super antifire), all named as
-        // in the OSRS snapshot: exchangeable 12192 -> 12206, seeded 3272 -> 3286, unmatched unchanged at 8920.
-        // 2026-09-16 OSRS item parity batch added three tradeable unnoted items, all named as in the OSRS snapshot:
-        // Trouver parchment (23730), Incomplete heavy ballista (23731), Unstrung heavy ballista (23733):
-        // exchangeable 12206 -> 12209, seeded 3286 -> 3289, unmatched unchanged at 8920.
-        // 2026-09-17 OSRS import run added 21 tradeable unnoted items (batch demonbane: Burning claws, Burning claw; batch runes: Wrath rune,
-        // Aether rune, Aether catalyst, Smoke/Mist/Dust battlestaff, Mystic mist/dust staff; batch kits: 7 ornament kits, 2 whip mixes,
-        // 2 staff upgrade kits), all named as in the OSRS snapshot: exchangeable 12209 -> 12230, seeded 3289 -> 3310, unmatched unchanged at 8920.
-        // 2026-09-17 batch kits2 added 6 more (4 dark bow paints, Dragon pickaxe upgrade kit, Zalcano shard), all in the OSRS snapshot: 12230 -> 12236, seeded 3310 -> 3316.
-        // 2026-09-19 batch deadman-breach added 5 (Chitin, Trinkets of fairies / avarice / undead / fortuity (inactive)), all in the OSRS
-        // snapshot: 12236 -> 12241, seeded 3316 -> 3321. Rocktail removal then removed three unnoted tradeable definitions
-        // from the legacy cache route; the Anglerfish import adds one back: 12238 -> 12239 and 3321 -> 3322.
-        // 2026-09-19 batch blighted-overload added the 4 doses (23830/23832/23834/23836), all in the OSRS snapshot: 12239 -> 12243,
-        // seeded 3322 -> 3326.
-        // 2026-09-19 batch owner0919 added 10 tradeable unnoted items (mixed hide set, Spiked manacles, the 5 burning amulet
-        // charges): 12243 -> 12253; the OSRS snapshot names 6 of them (the amulet only at (5)): 3326 -> 3332.
-        // 2026-09-23 batch emblems added Archaic emblem (tier 5) (23857, tradeable, in the OSRS snapshot): 12253 -> 12254, seeded 3332 -> 3333.
-        // 2026-09-24 owner removals: Armadyl rune, Aether rune and Aether catalyst leave the exchange (RemovedItems; the aether pair was
-        // seeded), and the Adamant seeds import (23863, in the snapshot) joins it: 12254 -> 12252, seeded 3333 -> 3332.
-        // 2026-09-29 / 09-30 imports (owner0929 food, revenant weapons, Amulet of the damned, rings, Serpentine helm, boss parts,
-        // blighted food / super restores, Moons broken pieces, Eclipse atlatl + darts) added 26 tradeable unnoted items:
-        // 12252 -> 12278; 23 of them are named in the OSRS snapshot: seeded 3332 -> 3355 (unmatched 8920 -> 8923).
-        // 2026-10-03 owner bug (Steel titan pouch not on the GE): 453 items the 2011 base data marked untradeable that Void (rev 634)
-        // sells on the GE (a buy limit, no tradeable = false) - every summoning pouch and scroll among them: 12278 -> 12731.
-        // 2026-10-04: + the imported Kraken tentacle (OSRS 12004, tradeable; Abyssal tentacle degradation) -> 12732.
-        // 2026-10-04 21:37 (owner: Perdu exactly OSRS, flags untradeable): 27 items.yml flags -> untradeable (Dragon defender,
-        // Max cape/hood, Elite void, Full slayer helmets, god books, Drakan's medallion, diary items) -> 12705.
-        // 2026-10-06 owner: "remove pernix and virtus completely" - the 18 unnoted Pernix/Virtus ids (intact, used, broken; all
-        // tradeable in items.yml) leave the exchange (RemovedItems.UNOBTAINABLE_IDS): 12705 -> 12687.
-        // Night run 2026-10-12: + Amulet of glory(6) / (5) (24122 / 24124, OSRS import, tradeable) -> 12689; owner A13: the 37
-        // tradeable unnoted Deadman (deg) / corrupt / Torva used-broken ids are unobtainable (DeadmanGear.CONVERT, converted at
-        // login) and leave the exchange -> 12652.
-        assertEquals(12652, items.size, "exchangeable items (tradeable, unnoted, not coins)")
-        // 2026-10-02 OsrsGuidePrices.RENAMED_IN_OSRS (OSRS Wiki item ids): 8013 "Teleport to house" = "Teleport to house (tablet)",
-        // 9244 "Dragon bolts (e)" = "Dragonstone bolts (e)": seeded 3355 -> 3357 (unmatched 8923 -> 8921).
-        // 2026-10-03: 62 of those 453 are named in the OSRS snapshot: seeded 3357 -> 3419.
-        // 2026-10-04: the Kraken tentacle is in the snapshot too: seeded 3419 -> 3420.
-        // 2026-10-06: of the removed Pernix/Virtus ids the snapshot names "Virtus mask" and "Virtus robe top" (intact + used id each;
-        // "Virtus robe legs" is OSRS "Virtus robe bottom", Pernix is not in OSRS): seeded 3420 -> 3416.
-        // 2026-10-12: the snapshot names glory(6) (not glory(5)): 3416 -> 3417; the used Torva pieces (20137/20141/20145, named as
-        // Torva) were seeded and are unobtainable now (A13): 3417 -> 3414.
-        assertEquals(3414, matched, "items seeded from the 13 September 2026 OSRS snapshot; the unmatched list is build/osrs-guide-price-unmatched.txt")
+        assertEquals(book.hourly[Items.ABYSSAL_WHIP], OsrsGuidePrices.seed(whip, book), "the whip is its OSRS hourly average")
+        // An OSRS price is never 0, and the OSRS rule never turns a cache value into 0. (Cache dummies that are tradeable with cost 0 and no
+        // OSRS price exist today - 22029 Pharaoh shendyt, 8972 Bowl of red water ...; that is a data gap outside A14, see team\findings.)
+        val zeroWithOsrsPrice = items.filter { book.price(it) == null && it.cost > 0 && OsrsGuidePrices.seed(it, book) <= 0 } +
+            items.filter { book.price(it) != null && OsrsGuidePrices.seed(it, book) <= 0 }
+        assertTrue(zeroWithOsrsPrice.isEmpty(), "items priced 0 although OSRS or the cache has a value: ${zeroWithOsrsPrice.take(10).map { "${it.id} ${it.name}" }}")
     }
 
     @Test
     fun `the Grand Exchange selection uses the OSRS seed before any trade`() {
         val source = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/GrandExchangeInterface.kt").readText()
-        assertTrue("service.guidePrice(real.id, OsrsGuidePrices.seed(real))" in source)
+        assertTrue("service.guidePrice(def.id, OsrsGuidePrices.seed(def))" in source)
     }
 }

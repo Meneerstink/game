@@ -69,6 +69,9 @@ class GrandExchangeService(
     /** The world, for the NPC shop bounds of the house price ([GeHousePricing]). */
     private var world: World? = null
 
+    /** A14: fetch the daily OSRS prices in the running server (service property `osrs-price-sync`, off in unit tests that never call postLoad). */
+    private var osrsPriceSync = true
+
     override fun init(
         server: Server,
         world: World,
@@ -81,6 +84,7 @@ class GrandExchangeService(
         load()
         // Audit T-11: in the running server the book is written off the game thread (see save()).
         asyncWrites = serviceProperties.getOrDefault("async-writes", true)
+        osrsPriceSync = serviceProperties.getOrDefault("osrs-price-sync", true)
     }
 
     /**
@@ -116,6 +120,17 @@ class GrandExchangeService(
     /** What the house sells [itemId] for (its ask), or null when it does not deal in it. */
     fun housePrice(itemId: Int): Int? = houseQuote(itemId)?.ask
 
+    /** Unit tests: item definitions without booting a server. */
+    internal fun useDefinitions(definitions: gg.rsmod.game.fs.DefinitionSet) {
+        this.definitions = definitions
+    }
+
+    /** True when OSRS has [itemId] (its price is the OSRS hourly average, not a player-trade median). False without item definitions. */
+    private fun osrsPriced(itemId: Int): Boolean {
+        val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return false
+        return OsrsGuidePrices.osrsPrice(def) != null
+    }
+
     /** The OSRS seed of [itemId] ([OsrsGuidePrices.seed]), or null without item definitions (unit tests). */
     private fun seedOf(itemId: Int): Int? {
         val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return null
@@ -135,6 +150,8 @@ class GrandExchangeService(
         server: Server,
         world: World,
     ) {
+        // A14: the daily OSRS price update (data/ge/osrs-prices.json; isolated for test servers like every runtime file).
+        if (osrsPriceSync) OsrsPriceSync.start(gg.rsmod.util.io.SharedDataFiles.of(OsrsPriceSync.STORED))
     }
 
     override fun bindNet(
@@ -549,6 +566,9 @@ class GrandExchangeService(
         itemId: Int,
         fallback: Int,
     ): Int {
+        // A14 (owner: "exactly osrs grand exchange prices"): an item OSRS has is worth its OSRS price; player trades only steer the
+        // price of a 667-only item, which has no OSRS price.
+        if (osrsPriced(itemId)) return fallback.coerceAtLeast(1)
         lock.lock()
         try {
             return GeGuidePrice.guide(guides[itemId], fallback)

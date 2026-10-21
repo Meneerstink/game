@@ -10,18 +10,19 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession
 import io.mockk.every
 import io.mockk.mockk
-import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
-import kotlin.test.assertTrue
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
+import kotlin.test.assertTrue
+import org.junit.BeforeClass
 
 /**
  * The trade works on a snapshot of each inventory and writes it back on completion. These tests
@@ -180,6 +181,8 @@ class TradeSessionIntegrityTests {
     private fun pair(): Pair<Player, Player> {
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS
+        // A15: the trade value reads the Grand Exchange price (GePrice); this fixture has no exchange service, so the OSRS/cache seed is used.
+        every { world.getService(GrandExchangeService::class.java, any()) } returns null
         val a = newPlayer(world, "a")
         val b = newPlayer(world, "b")
         return a to b

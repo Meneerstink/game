@@ -232,12 +232,12 @@ LootKeys.KEY_IDS.forEachIndexed { index, key ->
 
     // Owner 2026-09-17: "Check" on a key must say where to open it (was "unhandled item").
     on_item_option(item = key, option = "check") {
-        val worth = LootKeys.value(world.definitions, LootKeys.slotItems(player, index))
+        val worth = LootKeys.value(world, LootKeys.slotItems(player, index))
         player.message("Take this loot key to Skully to open it. It holds loot worth about ${"%,d".format(worth)} coins.")
     }
 
     on_item_option(item = key, option = 10) {
-        val value = LootKeys.value(world.definitions, LootKeys.slotItems(player, index))
+        val value = LootKeys.value(world, LootKeys.slotItems(player, index))
         // Loot-key destruction is a location rule, unlike death loot/recovery which is now
         // cause-based. Keep the wilderness-only Skully restriction explicit rather than asking
         // DeathResolver to infer a missing killer from geography.

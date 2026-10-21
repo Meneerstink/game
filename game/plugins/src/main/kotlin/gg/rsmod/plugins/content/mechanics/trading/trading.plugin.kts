@@ -1,9 +1,11 @@
 package gg.rsmod.plugins.content.mechanics.trading
 
 import gg.rsmod.plugins.content.inter.pricecheck.PriceChecker
+import gg.rsmod.plugins.content.mechanics.trading.impl.TradeItems
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.ACCEPT_INTERFACE
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.OVERLAY_INTERFACE
+import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.PARTNER_TRADE_CHILD
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.PLAYER_TRADE_CHILD
 import gg.rsmod.plugins.content.mechanics.trading.impl.TradeSession.Companion.TRADE_INTERFACE
 import gg.rsmod.util.Misc
@@ -136,6 +138,12 @@ on_button(OVERLAY_INTERFACE, 0) {
         // The item being traded
         val item = inventory[slot] ?: return@on_button
 
+        // A15: "Value" tells the Grand Exchange price and moves nothing.
+        if (opt in TradeItems.VALUE_OPCODES) {
+            trade.value(item)
+            return@on_button
+        }
+
         // Queue the action, as we might need to access queued dialogue
         player.queue(TaskPriority.WEAK) {
 
@@ -147,7 +155,7 @@ on_button(OVERLAY_INTERFACE, 0) {
                     4 -> 10
                     52 -> inventory.getItemCount(item.id)
                     81 -> inputInt("Enter amount:")
-                    else -> 1
+                    else -> return@queue
                 }
 
             // Offer the amount to the trade
@@ -168,7 +176,14 @@ on_button(TRADE_INTERFACE, PLAYER_TRADE_CHILD) {
         val opt = player.getInteractingOpcode()
 
         // The item being traded
+        if (slot !in 0 until container.capacity) return@on_button
         val item = container[slot] ?: return@on_button
+
+        // A15: "Value" tells the Grand Exchange price and moves nothing.
+        if (opt in TradeItems.VALUE_OPCODES) {
+            trade.value(item)
+            return@on_button
+        }
 
         // Queue the action, as we might need to access queued dialogue
         player.queue(TaskPriority.WEAK) {
@@ -181,13 +196,22 @@ on_button(TRADE_INTERFACE, PLAYER_TRADE_CHILD) {
                     4 -> 10
                     52 -> container.getItemCount(item.id)
                     81 -> inputInt("Enter amount:")
-                    else -> 1
+                    else -> return@queue
                 }
 
             // Offer the amount to the trade
             trade.remove(slot, amount)
         }
     }
+}
+
+// A15: the partner's offer only has "Value" (first option; donors Novite/Darkan Trade.sendOptions).
+on_button(TRADE_INTERFACE, PARTNER_TRADE_CHILD) {
+    val trade = player.getTradeSession() ?: return@on_button
+    if (player.getInteractingOpcode() != 61) return@on_button
+    val slot = player.getInteractingSlot()
+    if (slot !in 0 until player.inventory.capacity) return@on_button
+    trade.valuePartner(slot)
 }
 
 // Accept buttons
