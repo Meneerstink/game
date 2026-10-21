@@ -60,6 +60,7 @@ class InstancedMapAllocator {
                 }
 
                 val map = allocate(x, z, chunks, configs)
+                clearCollision(world, map)
                 applyCollision(world, map, configs.bypassObjectChunkBounds)
                 maps.add(map)
                 addNpcs(configs.npcs, map)
@@ -185,12 +186,47 @@ class InstancedMapAllocator {
      */
     fun getMap(tile: Tile): InstancedMap? = maps.find { it.area.contains(tile) }
 
+    /**
+     * Before a copy, the collision of every chunk already present in the new map's own area is reset, as Darkan
+     * (InstanceBuilder.copyChunk: `chunk.clearCollisionData()` before `loadMap`) and Void (DynamicZones.copy: `Collisions.clear(to)`
+     * before `loadZone`) do: a chunk recreated after an earlier map's release (a ground item removed through getOrCreate, a late
+     * write) must not add its flags to the new copy. A separate pass, so a large loc copied into one chunk keeps the flags it
+     * sets in its neighbour.
+     */
+    private fun clearCollision(
+        world: World,
+        map: InstancedMap,
+    ) {
+        forEachAreaChunk(map) { coords ->
+            world.chunks.get(coords, createIfNeeded = false)?.let { chunk ->
+                for (height in 0 until chunk.heights) chunk.getMatrix(height).reset()
+            }
+        }
+    }
+
+    private fun forEachAreaChunk(
+        map: InstancedMap,
+        action: (ChunkCoords) -> Unit,
+    ) {
+        val bottomLeftChunk = map.area.bottomLeft.chunkCoords
+        val topRightChunk = map.area.topRight.chunkCoords
+        for (x in bottomLeftChunk.x until topRightChunk.x) {
+            for (z in bottomLeftChunk.z until topRightChunk.z) {
+                action(ChunkCoords(x, z))
+            }
+        }
+    }
+
     private fun applyCollision(
         world: World,
         map: InstancedMap,
         bypassObjectChunkBounds: Boolean,
     ) {
-        val bounds = Chunk.CHUNKS_PER_REGION * map.chunks.regionSize
+        // The map's own chunks: 8 per 64-tile region (Void DynamicZones: "all sixty four zones of one" region; Darkan copies
+        // width x height chunks). Chunk.CHUNKS_PER_REGION is 13 - the client's 104-tile view - and blocked a band of chunks
+        // OUTSIDE this map's area that its release never removed: a released player house left the next intro's actors on
+        // solid tiles in slot 6400,0 (N122).
+        val bounds = CHUNKS_PER_MAP_REGION * map.chunks.regionSize
         val heights = Tile.TOTAL_HEIGHT_LEVELS
 
         val chunks = map.chunks.values
@@ -285,16 +321,7 @@ class InstancedMapAllocator {
         world: World,
         map: InstancedMap,
     ) {
-        val chunks = world.chunks
-
-        val bottomLeftChunk = map.area.bottomLeft.chunkCoords
-        val topRightChunk = map.area.topRight.chunkCoords
-
-        for (x in bottomLeftChunk.x until topRightChunk.x) {
-            for (z in bottomLeftChunk.z until topRightChunk.z) {
-                chunks.remove(ChunkCoords(x, z))
-            }
-        }
+        forEachAreaChunk(map) { coords -> world.chunks.remove(coords) }
     }
 
     companion object {
@@ -312,6 +339,9 @@ class InstancedMapAllocator {
          * assuming every map is 64x64 in size, which isn't always the case.
          */
         private val VALID_AREA = Area(bottomLeftX = 6400, bottomLeftZ = 0, topRightX = 9600, topRightZ = 6400)
+
+        /** Chunks along one side of a 64-tile region (64 / 8) - not [Chunk.CHUNKS_PER_REGION], the client's 13-chunk view. */
+        internal const val CHUNKS_PER_MAP_REGION = Chunk.REGION_SIZE / Chunk.CHUNK_SIZE
 
         /**
          * The amount of game cycles that must go by before scanning the active
