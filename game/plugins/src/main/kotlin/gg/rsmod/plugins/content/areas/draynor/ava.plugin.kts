@@ -4,6 +4,8 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Requirement
 import gg.rsmod.plugins.api.cfg.SkillRequirement
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
+import gg.rsmod.plugins.content.mechanics.exchange.CrystalShardPrice
+import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.plugins.content.unlocks.UnlockNpcRewards
 
@@ -35,6 +37,8 @@ create_shop(
     items[2] = ShopItem(Items.STEEL_ARROW, 10)
     items[3] = ShopItem(Items.IRON_ARROWTIPS, 30)
     items[4] = ShopItem(Items.STEEL_ARROWTIPS, 20)
+    // N35 (owner VRAGEN 9 B): the only coin source of Crystal shards, at the OSRS Wiki value (Enhanced crystal teleport seed / 150).
+    items[5] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)
 }
 
 /**
