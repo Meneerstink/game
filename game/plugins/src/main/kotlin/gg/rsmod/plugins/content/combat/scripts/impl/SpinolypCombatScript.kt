@@ -37,7 +37,7 @@ object SpinolypCombatScript : CombatScript() {
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = RANGE, projectile = true)) {
                 shoot(npc, target)

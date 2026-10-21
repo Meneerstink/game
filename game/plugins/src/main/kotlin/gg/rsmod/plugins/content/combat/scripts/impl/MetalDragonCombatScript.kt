@@ -41,7 +41,7 @@ object MetalDragonCombatScript : CombatScript() {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
             if (distance <= 1 && world.random(1) == 0) {
@@ -90,7 +90,7 @@ object FrostDragonCombatScript : CombatScript() {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
             when (world.random(3)) {
@@ -168,7 +168,7 @@ object SkeletalWyvernCombatScript : CombatScript() {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
             when (if (distance <= 1) world.random(2) else world.random(1)) {

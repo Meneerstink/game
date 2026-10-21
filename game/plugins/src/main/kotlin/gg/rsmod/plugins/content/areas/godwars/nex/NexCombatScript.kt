@@ -565,7 +565,7 @@ object NexMinionCombatScript : CombatScript() {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady() && NexEncounter.fightActive) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target) && NexEncounter.fightActive) {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) {
                 npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)

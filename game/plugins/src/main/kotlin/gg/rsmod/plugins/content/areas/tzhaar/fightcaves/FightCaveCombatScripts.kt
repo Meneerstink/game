@@ -52,7 +52,7 @@ object FightCaveCombatScripts {
         override suspend fun handleSpecialCombat(it: QueueTask) {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
                     val victim = target
@@ -78,7 +78,7 @@ object FightCaveCombatScripts {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
             val world = npc.world
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
                 if (distance <= 1 && world.random(1) == 0) {
@@ -108,7 +108,7 @@ object FightCaveCombatScripts {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
             val world = npc.world
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 val weakened = nearbyWeakened(npc)
                 if (weakened != null) {
@@ -143,7 +143,7 @@ object FightCaveCombatScripts {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
             val world = npc.world
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
                 if (distance <= 1 && world.random(1) == 0) {
@@ -177,7 +177,7 @@ object FightCaveCombatScripts {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
             val world = npc.world
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 FightCaves.sessionFor(npc)?.let { FightCaves.checkJadHealers(it) }
                 val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
@@ -251,7 +251,7 @@ object FightCaveCombatScripts {
         override suspend fun handleSpecialCombat(it: QueueTask) {
             val npc = it.npc
             var target = npc.getCombatTarget() ?: return
-            while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
                     melee(npc, target, 14.0)

@@ -36,7 +36,7 @@ object ChaosElementalCombatScript : CombatScript() {
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
 
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) {
                 when (world.random(4)) {

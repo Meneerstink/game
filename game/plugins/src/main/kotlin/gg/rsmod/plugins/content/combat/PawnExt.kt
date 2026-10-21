@@ -115,6 +115,25 @@ fun Pawn.canAttack(
 
 fun Pawn.isAttackDelayReady(): Boolean = Combat.isAttackDelayReady(this)
 
+/**
+ * N84: a looping npc combat script waits here for its next attack instead of ending the fight. `wait(attackSpeed)` wakes one
+ * tick before ATTACK_DELAY runs out (breach trace N24: delayReady=false delay=1), and a loop on `isAttackDelayReady()` then
+ * dropped its target after every attack. Darkan NPCCombat.java:48-61 (process): every tick the delay counts down and the npc
+ * attacks when it reaches 0; only a lost target ends the fight. False when the target is gone, the pawn died or the delay
+ * never ends ([limit] ticks: a stuck timer must not hold the queue forever).
+ */
+suspend fun QueueTask.awaitAttackDelay(
+    pawn: Pawn,
+    limit: Int = 32,
+): Boolean {
+    var waited = 0
+    while (!pawn.isAttackDelayReady()) {
+        if (waited++ >= limit || pawn.isDead() || pawn.getCombatTarget() == null) return false
+        wait(1)
+    }
+    return pawn.getCombatTarget() != null
+}
+
 fun Pawn.combatRaycast(
     target: Pawn,
     distance: Int,

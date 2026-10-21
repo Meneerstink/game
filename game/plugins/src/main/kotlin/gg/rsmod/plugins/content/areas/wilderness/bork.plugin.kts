@@ -306,7 +306,7 @@ on_npc_combat(npc = Npcs.BORK_7134) {
     npc.queue {
         val bork = npc
         var target = bork.getCombatTarget() ?: return@queue
-        while (bork.canEngageCombat(target) && bork.isAttackDelayReady()) {
+        while (awaitAttackDelay(bork) && bork.canEngageCombat(target)) {
             bork.facePawn(target)
             if (bork.getCurrentLifepoints() <= bork.getMaximumLifepoints() * 0.6 && bork.attr[BORK_LEGION_SUMMONED] != true) {
                 bork.attr[BORK_LEGION_SUMMONED] = true
@@ -359,7 +359,7 @@ on_npc_combat(npc = Npcs.ORK_LEGION) {
         val legion = npc
         var target = legion.getCombatTarget() ?: return@queue
         var cry = 0
-        while (legion.canEngageCombat(target) && legion.isAttackDelayReady()) {
+        while (awaitAttackDelay(legion) && legion.canEngageCombat(target)) {
             legion.facePawn(target)
             if (++cry % 6 == 0) {
                 legion.forceChat(listOf("We are the collective!", "Form a triangle!!", "Steady lads!", "Hup! 2... 3... 4!!", "To the attack!", "Resistance is futile!").random())
@@ -394,7 +394,7 @@ on_npc_combat(npc = DAGONHAI_ELITE) {
     npc.queue {
         val elite = npc
         var target = elite.getCombatTarget() ?: return@queue
-        while (elite.canEngageCombat(target) && elite.isAttackDelayReady()) {
+        while (awaitAttackDelay(elite) && elite.canEngageCombat(target)) {
             elite.facePawn(target)
             elite.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             elite.animate(ANIM_ELITE_CAST)

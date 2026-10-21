@@ -51,7 +51,7 @@ object KingBlackDragonCombatScript : CombatScript() {
         var target = npc.getCombatTarget() ?: return
         val world = it.npc.world
 
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val distance = npc.getFrontFacingTile(target).getDistance(target.tile)
             // If the target is within 4 tiles, attempt to move into melee range

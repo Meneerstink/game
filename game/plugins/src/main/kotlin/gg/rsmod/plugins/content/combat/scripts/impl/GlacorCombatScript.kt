@@ -68,7 +68,7 @@ object GlacorCombatScript : CombatScript() {
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
         installHitModifier(npc)
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             checkGlacytes(npc, target)
             if (npc.attr[GLACYTES]?.any { it.isSpawned() && !it.isDead() } == true) {
@@ -242,7 +242,7 @@ object GlacyteCombatScript : CombatScript() {
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
                 npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.AGGRESSIVE)

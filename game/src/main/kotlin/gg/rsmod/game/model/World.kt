@@ -570,9 +570,12 @@ class World(
         time: Int,
         oldObj: GameObject? = null,
     ) {
-        val temporaryObject = TemporaryGameObject(obj, time, oldObj)
-        temporaryObjects.add(temporaryObject)
-        spawn(DynamicObject(obj))
+        // N87: remember the loc that is really spawned. The old code kept [obj] but spawned a copy, so the timer removed an object
+        // the chunk never held and the copy (and its collision) stayed for good. Darkan World.spawnObjectTemporary / Void
+        // GameObjects.add(ticks) remove exactly the loc they spawned.
+        val spawned = DynamicObject(obj)
+        temporaryObjects.add(TemporaryGameObject(spawned, time, oldObj))
+        spawn(spawned)
     }
 
     fun spawn(item: GroundItem) {

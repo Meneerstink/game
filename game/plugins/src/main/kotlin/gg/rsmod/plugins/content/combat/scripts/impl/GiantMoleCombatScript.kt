@@ -39,7 +39,7 @@ object GiantMoleCombatScript : CombatScript() {
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
 
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val hurt = npc.getCurrentLifepoints() < npc.getMaximumLifepoints()
             val low = npc.getCurrentLifepoints() < npc.getMaximumLifepoints() / 2

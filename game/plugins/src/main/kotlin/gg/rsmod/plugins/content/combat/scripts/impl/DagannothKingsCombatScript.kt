@@ -37,7 +37,7 @@ object DagannothKingsCombatScript : CombatScript() {
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             when (npc.id) {
                 Npcs.DAGANNOTH_SUPREME -> if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) ranged(npc, target)

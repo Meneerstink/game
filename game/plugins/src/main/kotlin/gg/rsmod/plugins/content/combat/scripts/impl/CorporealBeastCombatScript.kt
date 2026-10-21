@@ -164,7 +164,7 @@ object CorporealBeastCombatScript : CombatScript() {
         var target = npc.getCombatTarget() ?: return
         val world = npc.world
 
-        while (npc.canEngageCombat(target) && npc.isAttackDelayReady()) {
+        while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             val nearby = nearbyPlayers(npc)
             if (npc.getCurrentLifepoints() < CORE_ATTACK_SPAWN_BELOW_LIFEPOINTS) {
