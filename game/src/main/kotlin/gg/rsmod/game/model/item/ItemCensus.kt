@@ -2,7 +2,6 @@ package gg.rsmod.game.model.item
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.World
-import java.io.File
 
 /**
  * Server-side audit of every cached inventory and worn-item menu option.
@@ -79,7 +78,7 @@ object ItemCensus {
                 csv(row.engineEquipmentOptions.joinToString("|")),
             ).joinToString(",")
         }
-        File(path).writeText(lines.joinToString("\n"))
+        gg.rsmod.util.io.SharedDataFiles.of(path).writeText(lines.joinToString("\n"))
 
         val inventoryGaps = rows.count { row ->
             row.inventoryOptions.indices.any { index ->

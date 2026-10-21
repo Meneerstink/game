@@ -39,7 +39,10 @@ class RsaService : Service {
         world: World,
         serviceProperties: ServerProperties,
     ) {
-        keyPath = Paths.get(serviceProperties.getOrDefault("path", "./data/rsa/key.pem"))
+        keyPath = gg.rsmod.util.io.SharedDataFiles.of(
+            serviceProperties.getOrDefault("path", "./data/rsa/key.pem"),
+            createIfMissing = false,
+        ).toPath()
         radix = serviceProperties.getOrDefault("radix", 16)
 
         if (!Files.exists(keyPath)) {

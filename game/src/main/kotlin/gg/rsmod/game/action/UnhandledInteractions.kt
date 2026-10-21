@@ -1,6 +1,6 @@
 package gg.rsmod.game.action
 
-import java.io.File
+import gg.rsmod.util.io.SharedDataFiles
 import java.util.concurrent.ConcurrentHashMap
 
 /**
@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap
  */
 object UnhandledInteractions {
     const val MAX_ROWS = 5000
-    val FILE = File("./logs/unhandled-object-actions.tsv")
+    val FILE get() = SharedDataFiles.of("./logs/unhandled-object-actions.tsv", createIfMissing = false)
 
     data class Key(val id: Int, val transform: Int, val option: Int, val x: Int, val z: Int, val height: Int)
 
@@ -31,9 +31,10 @@ object UnhandledInteractions {
         if (counts.size >= MAX_ROWS) return false
         counts[key] = 1
         try {
-            FILE.parentFile?.mkdirs()
-            val header = !FILE.exists()
-            FILE.appendText(
+            val file = FILE
+            file.parentFile?.mkdirs()
+            val header = !file.exists() || file.length() == 0L
+            file.appendText(
                 (if (header) "kind\tid\ttransform\tname\topt\toption\ttype\trot\tx\tz\theight\n" else "") +
                     "$kind\t${key.id}\t${key.transform}\t$name\t${key.option}\t${optionText ?: ""}\t$type\t$rot\t${key.x}\t${key.z}\t${key.height}\n",
             )
@@ -60,9 +61,10 @@ object UnhandledInteractions {
         if (size() >= MAX_ROWS) return false
         genericCounts[key] = 1
         try {
-            FILE.parentFile?.mkdirs()
-            val header = !FILE.exists()
-            FILE.appendText(
+            val file = FILE
+            file.parentFile?.mkdirs()
+            val header = !file.exists() || file.length() == 0L
+            file.appendText(
                 (if (header) "kind\tid\ttransform\tname\topt\toption\ttype\trot\tx\tz\theight\n" else "") +
                     "$kind\t$id\t$id\t$name\t$option\t$context\t0\t0\t0\t0\t0\n",
             )

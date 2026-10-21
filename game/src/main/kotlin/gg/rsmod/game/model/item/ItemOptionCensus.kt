@@ -2,7 +2,6 @@ package gg.rsmod.game.model.item
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.World
-import java.io.File
 
 /**
  * Item counterpart of [gg.rsmod.game.model.npc.NpcCensus] (2026-09-22): every unnoted item definition whose cache
@@ -38,7 +37,7 @@ object ItemOptionCensus {
             }
             if (lines.size > before) items++
         }
-        File(path).writeText(lines.joinToString("\n"))
+        gg.rsmod.util.io.SharedDataFiles.of(path).writeText(lines.joinToString("\n"))
         return "item_option_census.csv written: $items item types with at least one unbound option (${lines.size - 1} options)."
     }
 }

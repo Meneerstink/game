@@ -184,7 +184,7 @@ class JsonPlayerSerializer : PlayerSerializerService() {
                 val line = "${java.time.LocalDateTime.now()}	${data.username}	${fix.key}	old=${fix.old}	new=${fix.new}"
                 logger.warn { "Point balance repaired: $line" }
                 runCatching {
-                    val file = java.io.File("data/logs/point_balance_repairs.log")
+                    val file = gg.rsmod.util.io.SharedDataFiles.of("data/logs/point_balance_repairs.log", createIfMissing = false)
                     file.parentFile?.mkdirs()
                     file.appendText(line + System.lineSeparator())
                 }.onFailure { logger.error(it) { "Could not log point balance repair: $line" } }

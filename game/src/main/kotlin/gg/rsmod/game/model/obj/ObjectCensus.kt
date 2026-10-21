@@ -2,7 +2,6 @@ package gg.rsmod.game.model.obj
 
 import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.World
-import java.io.File
 
 /**
  * Server-side audit of cached object definitions and registered interaction routes.
@@ -59,7 +58,7 @@ object ObjectCensus {
                 csv(row.transforms.joinToString("|")),
             ).joinToString(",")
         }
-        File(path).writeText(lines.joinToString("\n"))
+        gg.rsmod.util.io.SharedDataFiles.of(path).writeText(lines.joinToString("\n"))
 
         val interactive = rows.count { it.interactive }
         val deadOptions = rows.count { row ->

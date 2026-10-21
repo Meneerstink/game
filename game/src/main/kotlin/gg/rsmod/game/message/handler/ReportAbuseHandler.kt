@@ -5,8 +5,8 @@ import gg.rsmod.game.message.impl.ReportAbuseMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Client
+import gg.rsmod.util.io.SharedDataFiles
 import mu.KLogging
-import java.io.File
 import java.time.LocalDateTime
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -45,7 +45,7 @@ class ReportAbuseHandler : MessageHandler<ReportAbuseMessage> {
         logger.info { "Abuse report: $line" }
         writer.execute {
             runCatching {
-                val file = File("data/logs/abuse_reports.log")
+                val file = SharedDataFiles.of("data/logs/abuse_reports.log", createIfMissing = false)
                 file.parentFile?.mkdirs()
                 file.appendText(line + System.lineSeparator())
             }.onFailure { logger.error(it) { "Could not store abuse report: $line" } }

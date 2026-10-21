@@ -22,7 +22,9 @@ import java.io.File
  * removed or replaced originals put back), then applies the file again, so the file is always the single truth.
  */
 object WorldEdits {
-    val FILE = File(gg.rsmod.game.RspsPaths.data("world_edits.json"))
+    val FILE = gg.rsmod.util.io.SharedDataFiles.of(
+        gg.rsmod.game.RspsPaths.data("world_edits.json"), createIfMissing = false,
+    )
 
     /**
      * One edit. [op] is "remove" (take loc [id] off the tile) or "spawn" (put loc [id] there with [type]/[rot]); for

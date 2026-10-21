@@ -83,7 +83,7 @@ object WorldScan {
         runCatching { census += "items: " + gg.rsmod.game.model.item.ItemCensus.writeCsv(world) }
         runCatching { census += "objects: " + gg.rsmod.game.model.obj.ObjectCensus.writeCsv(world) }
         runCatching {
-            File("./item_option_census.csv").readLines().drop(1).forEach { add("census", "item option without handler: $it") }
+            gg.rsmod.util.io.SharedDataFiles.of("./item_option_census.csv", createIfMissing = false).readLines().drop(1).forEach { add("census", "item option without handler: $it") }
         }
 
         // ---- spawned npcs

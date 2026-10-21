@@ -2,7 +2,6 @@ package gg.rsmod.game.model.npc
 
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.World
-import java.io.File
 
 /**
  * Server-side NPC census (R04.2): every NPC definition loaded from the cache at startup
@@ -94,7 +93,7 @@ object NpcCensus {
                 r.liveCount.toString(),
             ).joinToString(",")
         }
-        File(path).writeText(lines.joinToString("\n"))
+        gg.rsmod.util.io.SharedDataFiles.of(path).writeText(lines.joinToString("\n"))
 
         val attackable = rows.count { it.cacheAttackable }
         val missingCombatDef = rows.count { it.cacheAttackable && !it.hasCombatDef }

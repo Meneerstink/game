@@ -25,7 +25,7 @@ class MultiService : Service {
         try {
             // Retrieve the file path from a trusted source
             val filePathString = serviceProperties.get("areas") ?: "./data/cfg/areas/multi.yml"
-            val file = Paths.get(filePathString)
+            val file = gg.rsmod.util.io.SharedDataFiles.of(filePathString, createIfMissing = false).toPath()
 
             // Check if file exists and is accessible
             if (!Files.exists(file) || !Files.isReadable(file)) {
@@ -88,7 +88,7 @@ class MultiService : Service {
         val filePath = "./data/cfg/areas/multi.yml"
 
         try {
-            val file = Paths.get(filePath)
+            val file = gg.rsmod.util.io.SharedDataFiles.of(filePath, createIfMissing = false).toPath()
             val lines = Files.readAllLines(file).toMutableList()
             val chunkStartIndex = lines.indexOfFirst { it.trim().startsWith("chunks:") }
 
@@ -149,7 +149,7 @@ class MultiService : Service {
         val filePath = "./data/cfg/areas/multi.yml"
 
         try {
-            val file = Paths.get(filePath)
+            val file = gg.rsmod.util.io.SharedDataFiles.of(filePath, createIfMissing = false).toPath()
             val lines = Files.readAllLines(file).toMutableList()
             val regionStartIndex = lines.indexOfFirst { it.trim().startsWith("regions:") }
 

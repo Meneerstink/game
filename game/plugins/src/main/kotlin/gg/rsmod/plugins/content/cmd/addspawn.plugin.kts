@@ -75,8 +75,9 @@ fun addItem(
         "spawn_item(item = $itemId, amount = $amount, x = ${player.tile.x}, z = ${player.tile.z}, height = ${player.tile.height})"
     try {
         val file =
-            File(
+            gg.rsmod.util.io.SharedDataFiles.of(
                 "./game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_${player.tile.regionId}.plugin.kts",
+                createIfMissing = false,
             )
         if (!file.exists()) {
             createSpawnFile(file)
@@ -126,8 +127,9 @@ fun addNpc(
         }}, x = ${player.tile.x}, z = ${player.tile.z}, walkRadius = 5, direction = Direction.${player.faceDirection})"
     try {
         val file =
-            File(
+            gg.rsmod.util.io.SharedDataFiles.of(
                 "./game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_${player.tile.regionId}.plugin.kts",
+                createIfMissing = false,
             )
         if (!file.exists()) {
             createSpawnFile(file)
@@ -152,6 +154,7 @@ fun addNpc(
 }
 
 fun createSpawnFile(file: File) {
+    file.parentFile?.mkdirs()
     val write = file.printWriter()
     write.println("package gg.rsmod.plugins.content.areas.spawns")
     write.println("")

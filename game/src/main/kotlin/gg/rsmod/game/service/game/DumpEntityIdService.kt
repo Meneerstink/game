@@ -33,10 +33,10 @@ class DumpEntityIdService : Service {
             cachePath = Paths.get(serviceProperties.get<String>("cache-path")!!)
             outputPath = Paths.get(serviceProperties.getOrDefault("output-path", "./ids"))
 
-            if (!Files.exists(outputPath)) {
+            if (!gg.rsmod.util.io.SharedDataFiles.testServer() && !Files.exists(outputPath)) {
                 Files.createDirectory(outputPath)
                 logger.info("Output path does not exist. Creating directory: $outputPath")
-            } else if (!Files.isDirectory(outputPath)) {
+            } else if (Files.exists(outputPath) && !Files.isDirectory(outputPath)) {
                 logger.error("Output path specified is a file - it must be a directory!")
             }
         }
@@ -164,7 +164,11 @@ class DumpEntityIdService : Service {
     }
 
     private fun generateWriter(file: String): PrintWriter {
-        val writer = PrintWriter(outputPath!!.resolve(file).toFile())
+        val selected = gg.rsmod.util.io.SharedDataFiles.of(
+            outputPath!!.resolve(file).toString(), createIfMissing = false,
+        )
+        selected.parentFile?.mkdirs()
+        val writer = PrintWriter(selected)
         writer.println("/* Auto-generated file using ${this::class.java} */")
         writer.println("package gg.rsmod.plugins.api.cfg")
         writer.println("")

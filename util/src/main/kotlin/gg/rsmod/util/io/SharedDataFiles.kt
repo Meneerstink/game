@@ -1,6 +1,8 @@
 package gg.rsmod.util.io
 
 import java.io.File
+import java.security.MessageDigest
+import java.util.Locale
 
 /**
  * World-wide registries that live next to the player saves (friends chat settings, clans). A headless conformance server
@@ -23,15 +25,41 @@ object SharedDataFiles {
 
     fun testServer(): Boolean = TEST_SERVER_PROPERTIES.any { !System.getProperty(it).isNullOrBlank() }
 
-    private fun scratchRoot() = File(System.getProperty("java.io.tmpdir"), "rsps-conformance-data")
+    private val originParents = mutableMapOf<String, File>()
+    private val scratchParents = mutableMapOf<Pair<String, String>, File>()
 
-    fun of(path: String): File {
+    private fun scratchRoot(): File {
+        val temporary = File(System.getProperty("java.io.tmpdir")).canonicalFile
+        val root = File(temporary, "rsps-conformance-data").canonicalFile
+        check(root != temporary && root.startsWith(temporary)) { "PROBLEM test scratch root escapes temporary directory" }
+        return root
+    }
+
+    /** Preserve the existing JVM signature for already compiled callers. */
+    fun of(path: String): File = of(path, createIfMissing = true)
+
+    /** A missing diagnostic/config file may need its normal writer, rather than an empty placeholder. */
+    @Synchronized
+    fun of(path: String, createIfMissing: Boolean): File {
         val real = File(path)
         if (!testServer()) return real
-        val scratch = File(scratchRoot(), real.path.replace(File.separatorChar, '/'))
+        val origin = real.canonicalFile
+        val parent = checkNotNull(origin.parentFile) { "PROBLEM test output has no parent" }
+        val identity = if (File.separatorChar == '\\') parent.path.lowercase(Locale.ROOT) else parent.path
+        val root = scratchRoot()
+        val privateParent = scratchParents.getOrPut(root.path to identity) {
+            val digest = MessageDigest.getInstance("SHA-256").digest(identity.toByteArray(Charsets.UTF_8))
+                .joinToString("") { (it.toInt() and 0xff).toString(16).padStart(2, '0') }
+            File(root, digest)
+        }
+        val scratch = File(privateParent, origin.name).canonicalFile
+        check(scratch != root && scratch.startsWith(root)) { "PROBLEM test output escapes scratch directory" }
+        originParents[checkNotNull(scratch.parentFile).path] = parent
         if (!scratch.exists()) {
-            scratch.parentFile?.mkdirs()
-            if (real.isFile) real.copyTo(scratch, overwrite = true) else scratch.writeText("")
+            if (origin.isFile || createIfMissing) {
+                scratch.parentFile?.mkdirs()
+                if (origin.isFile) origin.copyTo(scratch, overwrite = false) else scratch.writeText("")
+            }
         }
         return scratch
     }
@@ -41,16 +69,24 @@ object SharedDataFiles {
      * server [file] is a scratch copy, so the sibling is seeded from the real file beside the real original the first time
      * (2026-10-02: a test server's GE started without prices and history). Live, it is simply the file next to [file].
      */
+    @Synchronized
     fun sibling(file: File, name: String): File {
         val sibling = File(file.parentFile ?: File("."), name)
-        if (!testServer() || sibling.exists()) return sibling
-        val root = scratchRoot().absoluteFile
-        if (!sibling.absoluteFile.startsWith(root)) return sibling
-        val real = File(sibling.absoluteFile.relativeTo(root).path)
+        if (!testServer()) return sibling
+        val root = scratchRoot()
+        val parent = (file.parentFile ?: File(".")).absoluteFile.normalize()
+        // Injected non-scratch files retain their existing behaviour in test fixtures.
+        if (!parent.startsWith(root)) return sibling
+        check(name == File(name).name && name != "." && name != "..") { "PROBLEM scratch sibling must be a filename" }
+        val resolved = sibling.canonicalFile
+        check(resolved != root && resolved.startsWith(root)) { "PROBLEM test sibling escapes scratch directory" }
+        if (resolved.exists()) return resolved
+        val origin = originParents[parent.canonicalPath] ?: return resolved
+        val real = File(origin, name)
         if (real.isFile) {
-            sibling.parentFile?.mkdirs()
-            real.copyTo(sibling, overwrite = false)
+            resolved.parentFile?.mkdirs()
+            real.copyTo(resolved, overwrite = false)
         }
-        return sibling
+        return resolved
     }
 }

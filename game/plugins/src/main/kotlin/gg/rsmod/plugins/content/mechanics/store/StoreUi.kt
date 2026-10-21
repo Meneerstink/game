@@ -611,7 +611,7 @@ object StoreUi : KLogging() {
         val line = "${LocalDateTime.now()}\t${player.username}\t${entry.shop}\t${entry.purchaseItem}\t$cost\t${entry.currency}" +
             "\tbalance=${player.attr[entry.currency.attr] ?: 0}\tamount=$amount"
         runCatching {
-            val file = File("data/logs/store_purchases.log")
+            val file = gg.rsmod.util.io.SharedDataFiles.of("data/logs/store_purchases.log", createIfMissing = false)
             file.parentFile?.mkdirs()
             file.appendText(line + System.lineSeparator())
         }.onFailure { logger.error(it) { "Could not log store purchase: $line" } }

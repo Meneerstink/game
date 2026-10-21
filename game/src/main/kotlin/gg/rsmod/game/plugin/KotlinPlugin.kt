@@ -60,7 +60,10 @@ abstract class KotlinPlugin(
     fun load_metadata(metadata: PluginMetadata) {
         checkNotNull(metadata.propertyFileName) { "Property file name must be set in order to load metadata." }
 
-        val file = METADATA_PATH.resolve("${metadata.propertyFileName}.json")
+        val file = gg.rsmod.util.io.SharedDataFiles.of(
+            METADATA_PATH.resolve("${metadata.propertyFileName}.json").toString(),
+            createIfMissing = false,
+        ).toPath()
         val gson =
             GsonBuilder()
                 .setPrettyPrinting()
@@ -68,7 +71,7 @@ abstract class KotlinPlugin(
                 .create()
 
         if (!Files.exists(file)) {
-            Files.createDirectories(METADATA_PATH)
+            Files.createDirectories(file.parent)
             Files.newBufferedWriter(file).use { writer ->
                 gson.toJson(metadata, PluginMetadata::class.java, writer)
             }
