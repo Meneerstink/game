@@ -129,6 +129,37 @@ object SystemsSuite : Conformance.Suite {
             kept == 1 && said.contains(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.MSG_HOLDS_STATE), "kept=$kept msgs: $said",
         )
         g.inventory.removeAll()
+
+        // A14/A15: real definitions + running service, every value surface uses OSRS-or-cache, including notes.
+        val defs = run.world.definitions
+        val exchange = run.world.getService(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService::class.java)
+        run.expectTrue(e, "A14 exchange service is running", exchange != null, "service=$exchange")
+        val pouch = defs.getAllKeys(gg.rsmod.game.fs.def.ItemDef::class.java)
+            .map { defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, it) }
+            .firstOrNull { it.name == "Steel titan pouch" && !it.noted }
+        run.expectTrue(e, "A14 667-only max-level pouch exists", pouch != null, "pouch=${pouch?.id}")
+        val examples = listOf(4736, 4712, 22326) + listOfNotNull(pouch?.id)
+        val risk = gg.rsmod.plugins.content.mechanics.death.GuidePriceValueProvider(run.world)
+        for (id in examples) {
+            val def = defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, id)
+            val osrs = gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices.osrsPrice(def)
+            if (id == pouch?.id) run.expectTrue(e, "A14 pouch has no OSRS price", osrs == null, "osrs=$osrs cache=${def.cost}")
+            val expected = osrs ?: def.cost
+            val forms = listOf(id) + if (def.noteLinkId > 0 && !def.noted) listOf(def.noteLinkId) else emptyList()
+            for (form in forms) {
+                val item = Item(form, 2)
+                val unit = gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(run.world, form)
+                val stack = expected.toLong() * 2
+                run.check(e, "A14 $form GE unit", unit, "OSRS hourly or cache" to expected)
+                run.check(e, "A14 $form death/risk", risk.getValue(form), "same unit" to expected.toLong())
+                run.check(e, "A14 $form price checker", gg.rsmod.plugins.content.inter.pricecheck.PriceChecker.value(g, item),
+                    "same stack capped to varc" to stack.coerceAtMost(Int.MAX_VALUE.toLong()).toInt())
+                run.check(e, "A14 $form loot key", gg.rsmod.plugins.content.mechanics.pvp.LootKeys.value(run.world, listOf(item)), "same stack" to stack)
+                run.check(e, "A15 $form trade", gg.rsmod.plugins.content.mechanics.trading.impl.TradeItems.value(item) {
+                    gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(run.world, it)
+                }, "same stack" to stack)
+            }
+        }
     }
 
     /** Hitsplats of [type] per cycle on [who] since [from]: cycle -> damages. */

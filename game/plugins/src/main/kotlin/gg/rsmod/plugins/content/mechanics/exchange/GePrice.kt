@@ -11,7 +11,7 @@ import gg.rsmod.game.model.item.Item
  * offer box, the price checker, the trade window (total and "Value"), the items kept on death and the risk skull, loot keys.
  *
  * The price of one item is [GrandExchangeService.guidePrice] of its unnoted form: the OSRS hourly average ([OsrsGuidePrices]) for an
- * item OSRS has, for a 667-only item the median of player trades, else its cache value. A note is worth its unnoted item.
+ * item with an OSRS price, otherwise its exact cache value. Player trades never change either. A note is worth its unnoted item.
  */
 object GePrice {
     /** The price of one [itemId] (a note is valued as its unnoted item); 0 for an id without a definition. */

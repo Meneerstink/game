@@ -251,9 +251,8 @@ object PriceChecker {
     ): Int = clamp(container.rawItems.sumOf { value(definitions, it).toLong() })
 
     /**
-     * The live player-facing valuation. Once the GE has executed trades for this item, its
-     * rolling trade average wins; before that, [OsrsGuidePrices.seed] supplies the chosen OSRS
-     * starting value and the cache cost remains the explicit fallback for 667-only items.
+     * The live player-facing valuation: [OsrsGuidePrices.seed] supplies the OSRS hourly price,
+     * otherwise the exact cache cost. Executed player trades cannot override either source.
      */
     fun value(
         player: Player,

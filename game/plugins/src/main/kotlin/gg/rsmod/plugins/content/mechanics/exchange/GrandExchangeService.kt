@@ -125,12 +125,6 @@ class GrandExchangeService(
         this.definitions = definitions
     }
 
-    /** True when OSRS has [itemId] (its price is the OSRS hourly average, not a player-trade median). False without item definitions. */
-    private fun osrsPriced(itemId: Int): Boolean {
-        val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return false
-        return OsrsGuidePrices.osrsPrice(def) != null
-    }
-
     /** The OSRS seed of [itemId] ([OsrsGuidePrices.seed]), or null without item definitions (unit tests). */
     private fun seedOf(itemId: Int): Int? {
         val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return null
@@ -559,27 +553,19 @@ class GrandExchangeService(
     }
 
     /**
-     * The guide price of [itemId] ([GeGuidePrice]): the median of recent trades between different accounts, moving at
-     * most 5 % per hour, or [fallback] (the OSRS seed / cache item value) until enough such trades happened.
+     * The authoritative value of [itemId]: [fallback] is the current OSRS hourly price or, without an OSRS price,
+     * the exact cache value supplied by [OsrsGuidePrices.seed]. Owner rule A14 / AGENTS section 9 applies to both.
+     * Persisted and migrated player-trade indices remain history, but must never override either price source.
      */
+    @Suppress("UNUSED_PARAMETER")
     fun guidePrice(
         itemId: Int,
         fallback: Int,
-    ): Int {
-        // A14 (owner: "exactly osrs grand exchange prices"): an item OSRS has is worth its OSRS price; player trades only steer the
-        // price of a 667-only item, which has no OSRS price.
-        if (osrsPriced(itemId)) return fallback.coerceAtLeast(1)
-        lock.lock()
-        try {
-            return GeGuidePrice.guide(guides[itemId], fallback)
-        } finally {
-            lock.unlock()
-        }
-    }
+    ): Int = fallback
 
     /**
-     * Offer prices are free (OSRS), but the guide price must not be steerable by two accounts trading at 1 gp or at
-     * absurd prices - the house deals at the guide price. A trade therefore moves the guide by at most 5 % per trade.
+     * Bounds one recorded trade sample against its history anchor. This compatibility index is retained on disk;
+     * [guidePrice] and house quotes use the owner's OSRS-or-cache rule independently of player trades.
      */
     fun guidedTradePrice(
         guide: Int?,

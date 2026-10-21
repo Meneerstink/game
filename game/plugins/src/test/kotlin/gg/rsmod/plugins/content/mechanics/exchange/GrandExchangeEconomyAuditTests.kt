@@ -154,13 +154,13 @@ class GrandExchangeEconomyAuditTests {
         File(dir, "guide_prices.json").writeText("{\"4151\": [900, 1000, 1100]}")
         val service = GrandExchangeService(File(dir, "offers.json")) { 0L }
         service.load()
-        assertEquals(1000, service.guidePrice(Items.ABYSSAL_WHIP, 5))
+        assertEquals(5, service.guidePrice(Items.ABYSSAL_WHIP, 5), "legacy history cannot override the supplied price")
         // Saved in the new format and still in the old one.
         service.submit("carol", OfferType.BUY, Items.LOBSTER, 1, 1)
         assertTrue(File(dir, "guide_index.json").isFile)
         assertTrue(File(dir, "guide_prices.json").readText().contains("4151"))
         val restarted = GrandExchangeService(File(dir, "offers.json")) { 0L }.also { it.load() }
-        assertEquals(1000, restarted.guidePrice(Items.ABYSSAL_WHIP, 5))
+        assertEquals(5, restarted.guidePrice(Items.ABYSSAL_WHIP, 5), "persisted index cannot override the supplied price")
     }
 
     @Test

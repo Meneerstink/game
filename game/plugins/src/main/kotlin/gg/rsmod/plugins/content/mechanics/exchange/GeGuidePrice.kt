@@ -41,8 +41,9 @@ data class GeGuideIndex(
  *  - moved at most ±5 % ([GrandExchangeInterface.priceRange]) per [WINDOW_MS] of wall-clock time (the same clock as the
  *    buy-limit window).
  *
- * The house no longer trades at the guide at all ([GeHousePricing]), so the guide only drives the offer screen's
- * suggestion, the price checker and risk values.
+ * A14 owner rule supersedes this historical valuation policy: this index is retained for disk compatibility only.
+ * [GrandExchangeService.guidePrice] uses the OSRS hourly price or exact cache value on every valuation surface;
+ * neither this index nor its migration can change the offer suggestion, price checker, trade or risk values.
  */
 object GeGuidePrice {
     const val SAMPLES = 20

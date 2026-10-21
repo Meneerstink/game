@@ -283,7 +283,7 @@ object GrandExchangeInterface {
 
     /**
      * The price a new offer starts at (owner 2026-10-09 182114: "all items should be buyable for medium price from grand exchange").
-     * The guide price moves with player trades, but the house always deals at its fixed OSRS seed ([GeHousePricing]); a guide
+     * The guide is the OSRS hourly price or cache value, while house quotes also enforce shop/alchemy bounds ([GeHousePricing]); a guide
      * below the house's ask (Crystal armour seed: guide 5 295 412, ask 5 574 117) left a buy at the guide price unfilled forever.
      * A buy therefore starts at least at the house's ask and a sell at most at its bid, so the offered "medium price" always fills.
      */

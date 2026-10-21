@@ -136,7 +136,7 @@ class OsrsPriceSyncTests {
     }
 
     @Test
-    fun `player trades no longer move the price of an item OSRS has, but still steer a 667-only item`() {
+    fun `player trades cannot move either the OSRS price or the cache fallback`() {
         OsrsGuidePrices.book =
             OsrsPriceBook(
                 hourly = mapOf(100 to 1000),
@@ -156,6 +156,6 @@ class OsrsPriceSyncTests {
             }
         }
         assertEquals(1000, service.guidePrice(4736, 1000), "OSRS price: trades do not move it")
-        assertEquals(1040, service.guidePrice(77777, 1000), "667-only item: the trade median steers it")
+        assertEquals(1000, service.guidePrice(77777, 1000), "no OSRS price: exact cache value even after independent trades")
     }
 }

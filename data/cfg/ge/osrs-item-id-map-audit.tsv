@@ -1331,125 +1331,29 @@ local_id	our_name	osrs_id	osrs_name	rule
 4846	Relicym's balm (2)	4846	Relicym's balm(2)	same-id-name
 4848	Relicym's balm (1)	4848	Relicym's balm(1)	same-id-name
 4850	Ogre coffin key	4850	Ogre coffin key	same-id-name
-4856	Ahrim's hood 100	4708	Ahrim's hood	degraded-base
-4857	Ahrim's hood 75	4708	Ahrim's hood	degraded-base
-4858	Ahrim's hood 50	4708	Ahrim's hood	degraded-base
-4859	Ahrim's hood 25	4708	Ahrim's hood	degraded-base
 4860	Ahrim's hood 0	4860	Ahrim's hood 0	same-id-name
-4862	Ahrim's staff 100	4710	Ahrim's staff	degraded-base
-4863	Ahrim's staff 75	4710	Ahrim's staff	degraded-base
-4864	Ahrim's staff 50	4710	Ahrim's staff	degraded-base
-4865	Ahrim's staff 25	4710	Ahrim's staff	degraded-base
 4866	Ahrim's staff 0	4866	Ahrim's staff 0	same-id-name
-4868	Ahrim's robe top 100	4712	Ahrim's robetop	degraded-base
-4869	Ahrim's robe top 75	4712	Ahrim's robetop	degraded-base
-4870	Ahrim's robe top 50	4712	Ahrim's robetop	degraded-base
-4871	Ahrim's robe top 25	4712	Ahrim's robetop	degraded-base
 4872	Ahrim's robe top 0	4872	Ahrim's robetop 0	same-id-model
-4874	Ahrim's robe skirt 100	4714	Ahrim's robeskirt	degraded-base
-4875	Ahrim's robe skirt 75	4714	Ahrim's robeskirt	degraded-base
-4876	Ahrim's robe skirt 50	4714	Ahrim's robeskirt	degraded-base
-4877	Ahrim's robe skirt 25	4714	Ahrim's robeskirt	degraded-base
 4878	Ahrim's robe skirt 0	4878	Ahrim's robeskirt 0	same-id-model
-4880	Dharok's helm 100	4716	Dharok's helm	degraded-base
-4881	Dharok's helm 75	4716	Dharok's helm	degraded-base
-4882	Dharok's helm 50	4716	Dharok's helm	degraded-base
-4883	Dharok's helm 25	4716	Dharok's helm	degraded-base
 4884	Dharok's helm 0	4884	Dharok's helm 0	same-id-name
-4886	Dharok's greataxe 100	4718	Dharok's greataxe	degraded-base
-4887	Dharok's greataxe 75	4718	Dharok's greataxe	degraded-base
-4888	Dharok's greataxe 50	4718	Dharok's greataxe	degraded-base
-4889	Dharok's greataxe 25	4718	Dharok's greataxe	degraded-base
 4890	Dharok's greataxe 0	4890	Dharok's greataxe 0	same-id-name
-4892	Dharok's platebody 100	4720	Dharok's platebody	degraded-base
-4893	Dharok's platebody 75	4720	Dharok's platebody	degraded-base
-4894	Dharok's platebody 50	4720	Dharok's platebody	degraded-base
-4895	Dharok's platebody 25	4720	Dharok's platebody	degraded-base
 4896	Dharok's platebody 0	4896	Dharok's platebody 0	same-id-name
-4898	Dharok's platelegs 100	4722	Dharok's platelegs	degraded-base
-4899	Dharok's platelegs 75	4722	Dharok's platelegs	degraded-base
-4900	Dharok's platelegs 50	4722	Dharok's platelegs	degraded-base
-4901	Dharok's platelegs 25	4722	Dharok's platelegs	degraded-base
 4902	Dharok's platelegs 0	4902	Dharok's platelegs 0	same-id-name
-4904	Guthan's helm 100	4724	Guthan's helm	degraded-base
-4905	Guthan's helm 75	4724	Guthan's helm	degraded-base
-4906	Guthan's helm 50	4724	Guthan's helm	degraded-base
-4907	Guthan's helm 25	4724	Guthan's helm	degraded-base
 4908	Guthan's helm 0	4908	Guthan's helm 0	same-id-name
-4910	Guthan's warspear 100	4726	Guthan's warspear	degraded-base
-4911	Guthan's warspear 75	4726	Guthan's warspear	degraded-base
-4912	Guthan's warspear 50	4726	Guthan's warspear	degraded-base
-4913	Guthan's warspear 25	4726	Guthan's warspear	degraded-base
 4914	Guthan's warspear 0	4914	Guthan's warspear 0	same-id-name
-4916	Guthan's platebody 100	4728	Guthan's platebody	degraded-base
-4917	Guthan's platebody 75	4728	Guthan's platebody	degraded-base
-4918	Guthan's platebody 50	4728	Guthan's platebody	degraded-base
-4919	Guthan's platebody 25	4728	Guthan's platebody	degraded-base
 4920	Guthan's platebody 0	4920	Guthan's platebody 0	same-id-name
-4922	Guthan's chainskirt 100	4730	Guthan's chainskirt	degraded-base
-4923	Guthan's chainskirt 75	4730	Guthan's chainskirt	degraded-base
-4924	Guthan's chainskirt 50	4730	Guthan's chainskirt	degraded-base
-4925	Guthan's chainskirt 25	4730	Guthan's chainskirt	degraded-base
 4926	Guthan's chainskirt 0	4926	Guthan's chainskirt 0	same-id-name
-4928	Karil's coif 100	4732	Karil's coif	degraded-base
-4929	Karil's coif 75	4732	Karil's coif	degraded-base
-4930	Karil's coif 50	4732	Karil's coif	degraded-base
-4931	Karil's coif 25	4732	Karil's coif	degraded-base
 4932	Karil's coif 0	4932	Karil's coif 0	same-id-name
-4934	Karil's crossbow 100	4734	Karil's crossbow	degraded-base
-4935	Karil's crossbow 75	4734	Karil's crossbow	degraded-base
-4936	Karil's crossbow 50	4734	Karil's crossbow	degraded-base
-4937	Karil's crossbow 25	4734	Karil's crossbow	degraded-base
 4938	Karil's crossbow 0	4938	Karil's crossbow 0	same-id-name
-4940	Karil's top 100	4736	Karil's leathertop	degraded-base
-4941	Karil's top 75	4736	Karil's leathertop	degraded-base
-4942	Karil's top 50	4736	Karil's leathertop	degraded-base
-4943	Karil's top 25	4736	Karil's leathertop	degraded-base
 4944	Karil's top 0	4944	Karil's leathertop 0	same-id-model
-4946	Karil's skirt 100	4738	Karil's leatherskirt	degraded-base
-4947	Karil's skirt 75	4738	Karil's leatherskirt	degraded-base
-4948	Karil's skirt 50	4738	Karil's leatherskirt	degraded-base
-4949	Karil's skirt 25	4738	Karil's leatherskirt	degraded-base
 4950	Karil's skirt 0	4950	Karil's leatherskirt 0	same-id-model
-4952	Torag's helm 100	4745	Torag's helm	degraded-base
-4953	Torag's helm 75	4745	Torag's helm	degraded-base
-4954	Torag's helm 50	4745	Torag's helm	degraded-base
-4955	Torag's helm 25	4745	Torag's helm	degraded-base
 4956	Torag's helm 0	4956	Torag's helm 0	same-id-name
-4958	Torag's hammers 100	4747	Torag's hammers	degraded-base
-4959	Torag's hammers 75	4747	Torag's hammers	degraded-base
-4960	Torag's hammers 50	4747	Torag's hammers	degraded-base
-4961	Torag's hammers 25	4747	Torag's hammers	degraded-base
 4962	Torag's hammers 0	4962	Torag's hammers 0	same-id-name
-4964	Torag's platebody 100	4749	Torag's platebody	degraded-base
-4965	Torag's platebody 75	4749	Torag's platebody	degraded-base
-4966	Torag's platebody 50	4749	Torag's platebody	degraded-base
-4967	Torag's platebody 25	4749	Torag's platebody	degraded-base
 4968	Torag's platebody 0	4968	Torag's platebody 0	same-id-name
-4970	Torag's platelegs 100	4751	Torag's platelegs	degraded-base
-4971	Torag's platelegs 75	4751	Torag's platelegs	degraded-base
-4972	Torag's platelegs 50	4751	Torag's platelegs	degraded-base
-4973	Torag's platelegs 25	4751	Torag's platelegs	degraded-base
 4974	Torag's platelegs 0	4974	Torag's platelegs 0	same-id-name
-4976	Verac's helm 100	4753	Verac's helm	degraded-base
-4977	Verac's helm 75	4753	Verac's helm	degraded-base
-4978	Verac's helm 50	4753	Verac's helm	degraded-base
-4979	Verac's helm 25	4753	Verac's helm	degraded-base
 4980	Verac's helm 0	4980	Verac's helm 0	same-id-name
-4982	Verac's flail 100	4755	Verac's flail	degraded-base
-4983	Verac's flail 75	4755	Verac's flail	degraded-base
-4984	Verac's flail 50	4755	Verac's flail	degraded-base
-4985	Verac's flail 25	4755	Verac's flail	degraded-base
 4986	Verac's flail 0	4986	Verac's flail 0	same-id-name
-4988	Verac's brassard 100	4757	Verac's brassard	degraded-base
-4989	Verac's brassard 75	4757	Verac's brassard	degraded-base
-4990	Verac's brassard 50	4757	Verac's brassard	degraded-base
-4991	Verac's brassard 25	4757	Verac's brassard	degraded-base
 4992	Verac's brassard 0	4992	Verac's brassard 0	same-id-name
-4994	Verac's plateskirt 100	4759	Verac's plateskirt	degraded-base
-4995	Verac's plateskirt 75	4759	Verac's plateskirt	degraded-base
-4996	Verac's plateskirt 50	4759	Verac's plateskirt	degraded-base
-4997	Verac's plateskirt 25	4759	Verac's plateskirt	degraded-base
 4998	Verac's plateskirt 0	4998	Verac's plateskirt 0	same-id-name
 5001	Raw cave eel	5001	Raw cave eel	same-id-name
 5003	Cave eel	5003	Cave eel	same-id-name

@@ -178,16 +178,16 @@ class GrandExchangeInterfaceTests {
     }
 
     @Test
-    fun `guide price comes from executed trades, otherwise the cache value`() {
+    fun `executed trades cannot override the authoritative guide fallback`() {
         val service = newService()
         val whip = DEFINITIONS.get(ItemDef::class.java, Items.ABYSSAL_WHIP)
-        assertEquals(whip.cost.coerceAtLeast(1), service.guidePrice(whip.id, whip.cost))
-        // Audit E-01: trades between GeGuidePrice.MIN_PAIRS different pairs of accounts establish the guide.
+        assertEquals(whip.cost, service.guidePrice(whip.id, whip.cost))
+        // Even enough independent trades to establish an index cannot replace the owner's OSRS-or-cache price.
         (1..GeGuidePrice.MIN_PAIRS).forEach { i ->
             service.submit("s$i", OfferType.SELL, whip.id, 1000, 1)
             service.submit("b$i", OfferType.BUY, whip.id, 1200, 1)
         }
-        assertEquals(1000, service.guidePrice(whip.id, whip.cost))
+        assertEquals(whip.cost, service.guidePrice(whip.id, whip.cost))
     }
 
     @Test
