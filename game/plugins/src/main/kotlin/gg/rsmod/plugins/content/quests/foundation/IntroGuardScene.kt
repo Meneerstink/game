@@ -26,6 +26,7 @@ import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.Spellbook
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.cameraLookAt
+import gg.rsmod.plugins.api.ext.closeComponent
 import gg.rsmod.plugins.api.ext.closeFullscreenInterface
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.moveCameraTo
@@ -368,6 +369,9 @@ object IntroGuardScene {
             task.wait(1)
             // Owner: the Tutor's line over black, then the picture opens on the chase already running.
             TutorIntro.say(task, arrayOf("Welcome to 78. Here, nothing is safe - not your", "items, not your loot, not even a city if you bring", "a skull into it. Watch."))
+            // N154: the clicked line's box ("Please wait...") stayed open over the chase in fixed mode (resizable did not draw it) -
+            // the scene shows only the picture, the Deadman box and the Tutor's next lines.
+            if (player.interfaces.isOccupied(752, 13)) player.closeComponent(parent = 752, child = 13)
             // The curses go on after the line, not before: the line waits for the watcher's click, and the 19:13 run drained
             // both actors' prayer to 0 while it waited (the escaper never deflected again).
             PKER_CURSES.forEach { Bots.button(pker, PRAYER_BOOK, PRAYER_COMPONENT, 1, it) }

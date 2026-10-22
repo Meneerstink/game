@@ -96,7 +96,16 @@ object DeadmanHud {
      * The full component-381:2 payload: label, separator, bracket and - only in a multicombat area -
      * a third field [MULTI_FLAG]. OSRS has no single-way icon, so a single-way area sends two fields.
      */
-    fun zoneText(player: Player): String = zoneText(zoneLabel(player), player.combatLevel, player.zoneTile().isMulti(player.world))
+    fun zoneText(player: Player): String = zoneText(zoneLabel(player), hudCombatLevel(player), player.zoneTile().isMulti(player.world))
+
+    /**
+     * Owner 2026-10-22: the intro's chase showed the new player's own "3-17" under the zone; during the introduction the box shows
+     * the bracket of the fight on screen - combat [INTRO_SCENE_COMBAT] (74-102).
+     */
+    const val INTRO_SCENE_COMBAT = 88
+
+    fun hudCombatLevel(player: Player): Int =
+        if (gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(player)) INTRO_SCENE_COMBAT else player.combatLevel
 
     fun zoneText(
         label: String,
