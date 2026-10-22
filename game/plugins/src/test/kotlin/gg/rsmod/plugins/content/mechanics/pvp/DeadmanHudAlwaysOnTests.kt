@@ -11,7 +11,7 @@ import kotlin.test.assertTrue
  * could delete (research-2026-10-03-dmm-hud.md R1/R2). Guards for the whole class, over every source file:
  *  - nothing mounts interface 381 (the HUD is drawn by the client from the `dmmz|` / `dmmt|` side channel);
  *  - DeadmanHud is driven from the end-of-cycle ClientHud.tick hook, never from a timer;
- *  - the client draws it after the whole interface tree (InterfaceManager.method3833 -> DeadmanSkullHud.drawOverlay).
+ *  - the client draws it in the game view under the windows (N105: Static294 scene pass -> DeadmanSkullHud.drawInScene).
  */
 class DeadmanHudAlwaysOnTests {
     private val plugins = File("src/main/kotlin")
@@ -39,13 +39,18 @@ class DeadmanHudAlwaysOnTests {
         assertEquals(emptyList(), timers)
     }
 
+    /**
+     * N105 (owner 2026-10-17, reverses the "also over bank / GE / world map" part of E16): the HUD is drawn in the scene pass, so
+     * every open window covers it, and it is never left out of a frame the game view is drawn in.
+     */
     @Test
-    fun `the client draws the HUD after the whole interface tree from the side channel`() {
+    fun `the client draws the HUD in the game view under the windows, from the side channel`() {
         if (!client.exists()) return
         val im = File(client, "InterfaceManager.java").readText()
-        val top = im.indexOf("draw(topLevelInterface, x1, y1")
-        val overlay = im.indexOf("DeadmanSkullHud.drawOverlay(x1, y1)")
-        assertTrue(top >= 0 && overlay > top, "drawOverlay must follow the top-level draw in method3833")
+        assertTrue(!im.contains("DeadmanSkullHud.drawOverlay("), "no HUD draw after the interface tree any more")
+        assertTrue(im.indexOf("DeadmanSkullHud.frameOriginX = x1") in 0 until im.indexOf("draw(topLevelInterface, x1, y1"), "origin set before the tree")
+        val scene = File(client, "Static294.java").readText()
+        assertTrue(scene.indexOf("DeadmanSkullHud.drawInScene(") > scene.indexOf("RspsHud.render("), "HUD drawn in the scene pass after RspsHud")
         val hud = File(client, "RspsHud.java").readText()
         assertTrue(hud.contains("\"dmmz\"") && hud.contains("DeadmanSkullHud.update"), "RspsHud must route dmmz/dmmt to DeadmanSkullHud")
         assertTrue(!File(client, "DeadmanSkullHud.java").readText().contains("InterfaceList.getComponent((INTERFACE_ID"), "HUD text must not come from interface 381")

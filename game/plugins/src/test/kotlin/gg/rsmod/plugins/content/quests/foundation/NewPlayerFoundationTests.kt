@@ -238,7 +238,13 @@ class NewPlayerFoundationTests {
         val root = File("src/main/kotlin/gg/rsmod/plugins")
         // QuestsSuite.kt (conform quests) resets its own never-saved headless bots to a fresh account before playing; the intro's
         // pk scene (IntroGuardScene.kt) arms its two never-saved actor bots with the curses and Ancient Magicks they fight with.
-        val allowed = setOf("FoundationQuests.kt", "QuestChoices.kt", "FoundationRewards.kt", "ShortQuest.kt", "QuestsSuite.kt", "IntroGuardScene.kt")
+        // SystemsSuite.kt (conform systems) arms its own never-saved bots the same way; TeamAccountPresets.kt only runs for the
+        // fixed team test accounts on the test server (TeamTestAccounts.isTeamAccount needs -Drsps.testServer=true, never saved).
+        val allowed =
+            setOf(
+                "FoundationQuests.kt", "QuestChoices.kt", "FoundationRewards.kt", "ShortQuest.kt", "QuestsSuite.kt", "IntroGuardScene.kt",
+                "SystemsSuite.kt", "TeamAccountPresets.kt",
+            )
         val forbidden =
             listOf(
                 "ANCIENT_MAGIC_UNLOCKED] = true", "LUNAR_MAGIC_UNLOCKED] = true", "UNLOCKED_ATTR] = true",

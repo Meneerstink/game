@@ -40,7 +40,10 @@ class ShopPageInterfaceImportToolTests {
         ).forEach { (ours, theirs) ->
             val a = built.getValue(ours)
             val b = store.getValue(theirs)
-            assertEquals(b.text, a.text, "text of $ours")
+            // Owner 2026-10-11: the 78 Store paints "Prev"/"Next" into its button art (StoreInterfaceImportTool PAGE_*_GRAPHIC) and
+            // left its click areas without text; the 620 row has no such art, so its buttons keep the words.
+            val expectedText = mapOf(Tool.PAGE_PREVIOUS to "Prev page", Tool.PAGE_NEXT to "Next page")[ours] ?: b.text
+            assertEquals(expectedText, a.text, "text of $ours")
             assertEquals(b.ops, a.ops, "ops of $ours")
             assertEquals(b.colour, a.colour, "colour of $ours")
             assertEquals(b.font, a.font, "font of $ours")

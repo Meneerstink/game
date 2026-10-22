@@ -294,8 +294,9 @@ class OwnerBuglist20261003CombatTests {
             }
             assertEquals(28, maxHit(ODIUM_WARD, rigour = true, leech = false))
             assertEquals(29, maxHit(DRAGONFIRE_WARD, rigour = true, leech = false))
-            assertEquals(27, maxHit(ODIUM_WARD, rigour = false, leech = true))
-            assertEquals(28, maxHit(DRAGONFIRE_WARD, rigour = false, leech = true))
+            // Leech Ranged x1.13 since the owner's 2026-10-09 decision (AncientCurses.LEECH_RANGED_DAMAGE); 27 / 28 were the x1.18 values.
+            assertEquals(26, maxHit(ODIUM_WARD, rigour = false, leech = true))
+            assertEquals(27, maxHit(DRAGONFIRE_WARD, rigour = false, leech = true))
         } finally {
             unmockkObject(CombatConfigs, Prayers, AncientCurses)
         }

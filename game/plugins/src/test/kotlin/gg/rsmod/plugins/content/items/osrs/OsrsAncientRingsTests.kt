@@ -29,7 +29,8 @@ class OsrsAncientRingsTests {
     @Test
     fun `no plugin gates wearing either ring on a boss kill`() {
         val offenders =
-            File("src/main/kotlin").walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name != "Items.kt" && it.name != "OsrsQuestRequirements.kt" }
+            // GearPresets.kt only hands the rings out in the staff/team ::gear presets, it gates nothing.
+            File("src/main/kotlin").walkTopDown().filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name !in setOf("Items.kt", "OsrsQuestRequirements.kt", "GearPresets.kt") }
                 .filter { f -> f.readText().let { "MAGUS_RING" in it || "VENATOR_RING" in it || "slips off your finger" in it } }
                 .map { it.name }.toList()
         assertEquals(emptyList(), offenders)

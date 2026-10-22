@@ -20,6 +20,7 @@ class MixedLifepointUnitTests {
     private val allowed = mapOf(
         "home_pool.plugin.kts" to "heal(9999) is a heal-to-full sentinel, capped at the maximum",
         "FightCaveCombatScripts.kt" to "PARKED minigame (Fight Caves): Yt-HurKot +100 heal recorded, not in scope",
+        "hitsplat_test.plugin.kts" to "admin ::hitsplats check: keeps its locked test npc far above any hit on purpose, never a player path",
     )
 
     private val mutation = Regex("""(setCurrentLifepoints\(|alterLifepoints\(|\.heal\(|\bhit\(damage\s*=|maxHit\s*=)""")

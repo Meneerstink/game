@@ -241,14 +241,16 @@ class CityGuardsTests {
     }
 
     @Test
-    fun `Audit D-10 - a loot-key carrier without a skull timer is a skulled intruder`() {
+    fun `A6 - a loot-key carrier without a running skull timer is never attacked by the guards`() {
+        // Owner 10-11 + 10-13 (A6, AF): guards only engage a player whose skull timer runs; the loot key alone
+        // (Audit D-10's older reading) no longer counts.
         val carrier = newPlayer(tile = grandExchange)
         val inventory = gg.rsmod.game.model.container.ItemContainer(gg.rsmod.game.fs.DefinitionSet(), gg.rsmod.game.model.container.key.INVENTORY_KEY)
         every { carrier.inventory } returns inventory
         assertFalse(CityGuards.isSkulledIntruder(carrier))
         inventory[0] = gg.rsmod.game.model.item.Item(gg.rsmod.plugins.api.cfg.Items.LOOT_KEY, 1)
-        assertTrue(CityGuards.isSkulledIntruder(carrier))
-        assertTrue(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange), carrier))
+        assertFalse(CityGuards.isSkulledIntruder(carrier))
+        assertFalse(CityGuards.mayAttack(npc(CityGuards.MELEE_GUARD_ID, tile = grandExchange), carrier))
     }
 
     @Test
