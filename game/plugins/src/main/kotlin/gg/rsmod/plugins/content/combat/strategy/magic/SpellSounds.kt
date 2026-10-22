@@ -66,7 +66,7 @@ object SpellSounds {
             CombatSpell.ICE_RUSH to Sounds(171, 173),
             CombatSpell.ICE_BURST to Sounds(171, 170),
             CombatSpell.ICE_BLITZ to Sounds(171, 169),
-            CombatSpell.ICE_BARRAGE to Sounds(171, 169),
+            CombatSpell.ICE_BARRAGE to Sounds(171, 168), // N135: 168 = ice_barrage_impact (Darkan, 2009scape, Novite); 169 is Blitz
             // N66 (owner 10-16: "Miasmic barrage geeft geen cast-geluid"): Darkan CombatSpell.kt:426-465 castSound / landSound and
             // 2009scape MiasmicSpells.java:116-119 - the same eight ids, same pairing.
             CombatSpell.MIASMIC_RUSH to Sounds(5368, 5365),

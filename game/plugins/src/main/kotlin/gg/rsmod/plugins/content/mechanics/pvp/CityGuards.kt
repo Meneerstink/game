@@ -140,7 +140,7 @@ object CityGuards {
     /** OSRS Wiki (Wizguard): "freezing them for 3 seconds (5 ticks)". */
     const val WIZGUARD_FREEZE_CYCLES = 5
     const val WIZGUARD_CAST_SOUND = 171
-    const val WIZGUARD_IMPACT_SOUND = 169
+    const val WIZGUARD_IMPACT_SOUND = 168
 
     /** OSRS Wiki (Wizguard): "will appear again after 6 seconds (10 ticks)". */
     const val WIZGUARD_REAPPEAR_CYCLES = 10
@@ -804,7 +804,7 @@ object CityGuards {
         wizguard.facePawn(player)
         wizguard.animate(ICE_BARRAGE_CAST_ANIM)
         player.graphic(Graphic(ICE_BARRAGE_IMPACT_GFX, 0))
-        // Ice Barrage cast / impact sounds, the same ids the player's spell plays (SpellSounds: 171, 169).
+        // Ice Barrage cast / impact sounds, the same ids the player's spell plays (SpellSounds: 171, 168).
         player.playSound(WIZGUARD_CAST_SOUND)
         player.playSound(WIZGUARD_IMPACT_SOUND, delay = 1)
         player.freeze(WIZGUARD_FREEZE_CYCLES) {

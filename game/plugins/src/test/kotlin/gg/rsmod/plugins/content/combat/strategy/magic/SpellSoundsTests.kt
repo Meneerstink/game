@@ -29,6 +29,13 @@ class SpellSoundsTests {
     }
 
     @Test
+    fun `N135 - Ice Barrage lands with its own impact sound, not Ice Blitz's`() {
+        assertEquals(SpellSounds.Sounds(171, 168), SpellSounds.of(CombatSpell.ICE_BARRAGE))
+        assertEquals(SpellSounds.Sounds(171, 169), SpellSounds.of(CombatSpell.ICE_BLITZ))
+        assertEquals(168, gg.rsmod.plugins.content.mechanics.pvp.CityGuards.WIZGUARD_IMPACT_SOUND, "the Wizguard's barrage sounds the same")
+    }
+
+    @Test
     fun `a missed spell plays the splash sound`() {
         assertEquals(227, SpellSounds.SPLASH)
     }
