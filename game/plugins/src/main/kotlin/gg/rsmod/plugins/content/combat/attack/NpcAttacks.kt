@@ -747,12 +747,14 @@ object NpcAttacks {
      * A stat-drain spell (Confuse/Weaken/Curse) succeeds on accuracy, not on damage: Void Magic.castSpell drains on damage != -1,
      * and OSRS Wiki Ahrim "his stat reduction spells can still work" through Protect from Magic ([accurate] ignores prayer). With
      * damage > 0 Weaken (max 1) almost never drained, so it stayed castable and Ahrim kept choosing it (owner 154222).
+     * Only a drain that always happens counts on accuracy alone: a damage attack with a chance drain (Ahrim's Fire Wave, Blighted
+     * aura "chance 3" Strength -5, Darkan AhrimCombat) still needs a landed hit - a 0 Fire Wave is a miss (T14).
      */
     fun drainSucceeds(
         attack: Attack,
         landed: Boolean,
         accurate: Boolean,
-    ): Boolean = landed || (attack.drains.isNotEmpty() && accurate)
+    ): Boolean = landed || (accurate && attack.drains.isNotEmpty() && attack.drains.all { it.chance <= 1 })
 
     // ---- hits (Void Attack.kt target hits + Damage.roll) -------------------------------------------------
 
