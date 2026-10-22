@@ -240,7 +240,10 @@ open class ItemCurrency(
         if (base <= 0 || currencyItem != gg.rsmod.plugins.api.cfg.Items.COINS_995) return base
         val def = world.definitions.getNullable(ItemDef::class.java, Item(shopItem.item).toUnnoted(world.definitions).id) ?: return base
         if (!def.tradeable) return base
-        return maxOf(base.toLong(), highAlchValue(def.cost)).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+        // N191: high alchemy pays at most the GE price (Alchemy.coins), so the floor is that capped value.
+        val ge = gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(world, def.id)
+        val floor = if (ge > 0) minOf(highAlchValue(def.cost), ge.toLong()) else highAlchValue(def.cost)
+        return maxOf(base.toLong(), floor).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
     /**

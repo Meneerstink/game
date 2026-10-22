@@ -123,9 +123,10 @@ class GrandExchangeEconomyAuditTests {
 
     @Test
     fun `the house price respects high alchemy and the NPC shops`() {
-        // Rune arrow style: OSRS 42 gp, a far higher cache value.
+        // Rune arrow style: OSRS 42 gp, a far higher cache value. N191 (owner 2026-10-22): high alchemy pays at most the GE price,
+        // so the house sells at the OSRS price itself - alching what it bought can never pay.
         val arrow = GeHousePricing.quote(seed = 42, cost = 400)
-        assertEquals(240, arrow.ask, "never sells below ceil(0.6 * cost)")
+        assertEquals(42, arrow.ask, "the OSRS price; high alchemy pays at most that")
         assertTrue(arrow.bid <= arrow.ask)
         // Battlestaff style: a shop sells it below the OSRS price, another buys it back high.
         val staff = GeHousePricing.quote(seed = 7834, cost = 7000, shops = GeShopBounds(lowestSell = 7000, highestBuy = 8000))
@@ -218,7 +219,9 @@ class GrandExchangeEconomyAuditTests {
                 if (def.noted || def.id == Items.COINS_995) return@forEach
                 val seed = OsrsGuidePrices.seed(def)
                 val quote = GeHousePricing.quote(seed, def.cost)
-                assertTrue(quote.ask >= ItemCurrency.highAlchValue(def.cost), "${def.id} ${def.name}: ask ${quote.ask} < high alch")
+                // N191: what high alchemy really pays is capped at the GE price - the house never sells below that.
+                val alch = gg.rsmod.plugins.content.magic.alchemy.Alchemy.coins(def, true, seed)
+                assertTrue(quote.ask >= alch, "${def.id} ${def.name}: ask ${quote.ask} < high alch $alch")
                 assertTrue(quote.bid in 0..quote.ask, "${def.id} ${def.name}: bid ${quote.bid} ask ${quote.ask}")
                 if (quote.ask > seed) raised++
             }

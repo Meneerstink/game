@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.areas.home
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
-import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
 import gg.rsmod.game.model.shop.PurchasePolicy
 
 /**
@@ -62,7 +61,8 @@ fun createSupplyShop(
     val rows = QuartermasterSupplies.rows(world.definitions, stock, noted)
     create_shop(
         title,
-        CoinCurrency(),
+        // N191 (owner 2026-10-22): the Grand Exchange price of the moment, like the GE itself.
+        gg.rsmod.plugins.content.mechanics.shops.GeCoinCurrency(),
         stockSize = gg.rsmod.game.model.shop.Shop.CLIENT_VISIBLE_SLOTS,
         containsSamples = false,
         purchasePolicy = PurchasePolicy.BUY_NONE,
@@ -79,6 +79,8 @@ fun createSupplyShop(
 }
 
 createSupplyShop(QuartermasterSupplies.SHOP, QuartermasterSupplies.stock, noted = true)
+createSupplyShop(QuartermasterSupplies.GEAR_SHOP, QuartermasterSupplies.gear, noted = false)
+gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.register(QuartermasterSupplies.PAGES)
 
 on_npc_option(QUARTERMASTER, "trade") {
     player.openShop(QuartermasterSupplies.SHOP)
@@ -103,9 +105,10 @@ on_npc_option(QUARTERMASTER, "talk-to") {
                     facialExpression = FacialExpression.CALM_TALK,
                 )
                 chatNpc(
-                    "Combination runes, blighted sacks, rune and dragon",
-                    "arrows, ruby dragon bolts, rune pouches, glories, house",
-                    "tabs, burning amulets and seeds. Have a look.",
+                    "Combination runes, blighted sacks, dragon arrows,",
+                    "ruby and opal dragon bolts, rune pouches, glories, house",
+                    "tabs, burning amulets and seeds - and on the next page",
+                    "gloves, god capes and Ava's devices. Have a look.",
                     facialExpression = FacialExpression.HAPPY,
                 )
                 player.openShop(QuartermasterSupplies.SHOP)

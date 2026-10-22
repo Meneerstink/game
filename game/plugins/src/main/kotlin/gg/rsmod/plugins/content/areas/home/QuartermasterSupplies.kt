@@ -33,19 +33,40 @@ object QuartermasterSupplies {
      */
     const val SHOP = "Home PK Supplies"
 
+    /** Page 2 of the Quartermaster (owner 2026-10-22): the gear rows that did not fit the 40-row window of page 1. */
+    const val GEAR_SHOP = "Home PK Gear"
+
+    /** N62 (owner 2026-10-22): 10,000 of every row. */
+    const val ROW_STOCK = 10_000
+
+    /**
+     * Page 2 rows (owner 2026-10-22): N185 the Recipe for Disaster gloves Barrows / Adamant / Mithril (667 ids 7462 / 7459 / 7458,
+     * all named "Gloves" in this cache), N186 the god capes (the imbued ones stay the Mage Arena II reward), N200 Ava's accumulator
+     * and attractor. Untradeable in OSRS, so they cost their cache value (GeCoinCurrency falls back to it).
+     */
+    val gear: List<Pair<Int, Int>> =
+        listOf(
+            Items.GLOVES_7462 to ROW_STOCK, Items.GLOVES_7459 to ROW_STOCK, Items.GLOVES_7458 to ROW_STOCK,
+            Items.SARADOMIN_CAPE to ROW_STOCK, Items.GUTHIX_CAPE to ROW_STOCK, Items.ZAMORAK_CAPE to ROW_STOCK,
+            Items.AVAS_ACCUMULATOR to ROW_STOCK, Items.AVAS_ATTRACTOR to ROW_STOCK,
+        )
+
+    /** Trade opens page 1; Prev/Next page switch between the two (ShopPageGroups). */
+    val PAGES = gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.Group("Quartermaster", listOf(SHOP, GEAR_SHOP), listOf("Supplies", "Gear"))
+
     /** Food and potions (4 doses): every one of these has a banknote in this cache, so the noted shop sells only notes of them. */
     val foodAndPotions: List<Pair<Int, Int>> =
         listOf(
             // High-tier and combo food (owner 2026-09-30: no shark, summer pie or tuna potato).
-            Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000, Items.DARK_CRAB to 1_000,
+            Items.MANTA_RAY to ROW_STOCK, Items.SEA_TURTLE to ROW_STOCK, Items.ANGLERFISH to ROW_STOCK, Items.DARK_CRAB to ROW_STOCK,
             // Halibut is back (owner 2026-10-11, bug 030542); the Stamina potion made way for it in the 40-row window.
-            Items.HALIBUT to 1_000, Items.MARLIN to 1_000, Items.COOKED_KARAMBWAN to 2_000,
+            Items.HALIBUT to ROW_STOCK, Items.MARLIN to ROW_STOCK, Items.COOKED_KARAMBWAN to ROW_STOCK,
             // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion. Owner 10-16 (N68): no Super attack / strength / defence.
-            Items.SARADOMIN_BREW_4 to 1_000, Items.SUPER_RESTORE_4 to 1_000, Items.SUPER_COMBAT_POTION_4 to 500,
-            Items.RANGING_POTION_4 to 500, Items.MAGIC_POTION_4 to 500,
-            Items.BASTION_POTION_4 to 300, Items.BATTLEMAGE_POTION_4 to 300,
-            Items.SANFEW_SERUM_4 to 300, Items.GUTHIX_REST_4 to 300,
-            Items.EXTENDED_ANTIFIRE_4 to 300, Items.ANTI_VENOM_PLUS_4 to 300,
+            Items.SARADOMIN_BREW_4 to ROW_STOCK, Items.SUPER_RESTORE_4 to ROW_STOCK, Items.SUPER_COMBAT_POTION_4 to ROW_STOCK,
+            Items.RANGING_POTION_4 to ROW_STOCK, Items.MAGIC_POTION_4 to ROW_STOCK,
+            Items.BASTION_POTION_4 to ROW_STOCK, Items.BATTLEMAGE_POTION_4 to ROW_STOCK,
+            Items.SANFEW_SERUM_4 to ROW_STOCK, Items.GUTHIX_REST_4 to ROW_STOCK,
+            Items.EXTENDED_ANTIFIRE_4 to ROW_STOCK, Items.ANTI_VENOM_PLUS_4 to ROW_STOCK,
         )
 
     /**
@@ -57,8 +78,8 @@ object QuartermasterSupplies {
      */
     val utility: List<Pair<Int, Int>> =
         listOf(
-            Items.TELEPORT_TO_HOUSE to 1_000, Items.BURNING_AMULET_5 to 200, Items.AMULET_OF_GLORY_6 to 200,
-            Items.RUNE_POUCH to 50, Items.MITHRIL_SEEDS to 1_000, Items.ADAMANT_SEEDS to 1_000,
+            Items.TELEPORT_TO_HOUSE to ROW_STOCK, Items.BURNING_AMULET_5 to ROW_STOCK, Items.AMULET_OF_GLORY_6 to ROW_STOCK,
+            Items.RUNE_POUCH to ROW_STOCK, Items.MITHRIL_SEEDS to ROW_STOCK, Items.ADAMANT_SEEDS to ROW_STOCK,
         )
 
     /** Food, potions, teleports and utility - the rows that are sold both unnoted and noted. */
@@ -68,17 +89,17 @@ object QuartermasterSupplies {
     val ammunition: List<Pair<Int, Int>> =
         listOf(
             // Combination runes only (owner 2026-09-30: no plain runes); the Wilderness spells come from the blighted sacks.
-            Items.MIST_RUNE to 5_000, Items.DUST_RUNE to 5_000, Items.MUD_RUNE to 5_000, Items.SMOKE_RUNE to 5_000,
-            Items.STEAM_RUNE to 5_000, Items.LAVA_RUNE to 5_000,
+            Items.MIST_RUNE to ROW_STOCK, Items.DUST_RUNE to ROW_STOCK, Items.MUD_RUNE to ROW_STOCK, Items.SMOKE_RUNE to ROW_STOCK,
+            Items.STEAM_RUNE to ROW_STOCK, Items.LAVA_RUNE to ROW_STOCK,
             // Owner 10-16 (N63): Blood, Wrath and Soul runes too (they took the window rows of the three super potions, N68).
-            Items.BLOOD_RUNE to 5_000, Items.WRATH_RUNE to 5_000, Items.SOUL_RUNE to 5_000,
+            Items.BLOOD_RUNE to ROW_STOCK, Items.WRATH_RUNE to ROW_STOCK, Items.SOUL_RUNE to ROW_STOCK,
             // Blighted spell sacks.
-            Items.BLIGHTED_ANCIENT_ICE_SACK to 5_000, Items.BLIGHTED_ENTANGLE_SACK to 5_000,
-            Items.BLIGHTED_TELEPORT_SPELL_SACK to 2_000, Items.BLIGHTED_VENGEANCE_SACK to 5_000,
-            // Arrows (owner 2026-09-30: rune and dragon only).
-            Items.RUNE_ARROW to 2_000, Items.DRAGON_ARROW to 1_000,
-            // Crossbow ammunition: the one bolt row that fits the window (owner 2026-10-04: "one shop, noted + top 40").
-            Items.RUBY_DRAGON_BOLTS_E to 500,
+            Items.BLIGHTED_ANCIENT_ICE_SACK to ROW_STOCK, Items.BLIGHTED_ENTANGLE_SACK to ROW_STOCK,
+            Items.BLIGHTED_TELEPORT_SPELL_SACK to ROW_STOCK, Items.BLIGHTED_VENGEANCE_SACK to ROW_STOCK,
+            // Arrows: dragon only (owner 2026-10-22, N192: "remove rune arrow").
+            Items.DRAGON_ARROW to ROW_STOCK,
+            // Crossbow ammunition (owner 2026-10-04: "one shop, noted + top 40"; N192 2026-10-22: Opal dragon bolts (e) too).
+            Items.RUBY_DRAGON_BOLTS_E to ROW_STOCK, Items.OPAL_DRAGON_BOLTS_E to ROW_STOCK,
         ).distinctBy { it.first }
 
     /**
@@ -91,7 +112,7 @@ object QuartermasterSupplies {
             Items.STAMINA_POTION_4,
             Items.AMULET_OF_GLORY_4,
             Items.RUNITE_BOLTS, Items.DIAMOND_BOLTS_E, Items.RUBY_BOLTS_E, Items.DRAGON_BOLTS_E, Items.ONYX_BOLTS_E,
-            Items.DRAGON_BOLTS, Items.OPAL_DRAGON_BOLTS_E, Items.DIAMOND_DRAGON_BOLTS_E, Items.DRAGONSTONE_DRAGON_BOLTS_E,
+            Items.DRAGON_BOLTS, Items.DIAMOND_DRAGON_BOLTS_E, Items.DRAGONSTONE_DRAGON_BOLTS_E,
             Items.MOONLIGHT_ANTLER_BOLTS,
         )
 

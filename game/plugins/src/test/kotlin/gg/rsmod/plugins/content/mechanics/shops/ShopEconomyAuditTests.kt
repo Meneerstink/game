@@ -82,7 +82,9 @@ class ShopEconomyAuditTests {
     @Test
     fun `a coin shop never sells below the high alchemy value`() {
         val coins = ItemCurrency(COINS, "coin", "coins")
-        assertEquals(510, coins.sellPriceOf(world, ShopItem(BODY, amount = 1, sellPrice = 100)), "ceil(0.6 * 850)")
+        // N191 (owner 2026-10-22): high alchemy pays at most the GE price, so the floor is ceil(0.6 * cost) capped at that price.
+        val ge = gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(world, BODY)
+        assertEquals(maxOf(100, minOf(510, ge)), coins.sellPriceOf(world, ShopItem(BODY, amount = 1, sellPrice = 100)), "min(ceil(0.6 * 850), GE $ge)")
         assertEquals(900, coins.sellPriceOf(world, ShopItem(BODY, amount = 1, sellPrice = 900)))
         assertEquals(0, coins.sellPriceOf(world, ShopItem(BODY, amount = 1, sellPrice = 0)), "an unavailable item stays unavailable")
         assertEquals(100, ItemCurrency(TICKETS, "ticket", "tickets").sellPriceOf(world, ShopItem(BODY, amount = 1, sellPrice = 100)), "coins only")

@@ -145,6 +145,36 @@ class QuartermasterSuppliesTests {
         assertEquals(50 * price, inventory.getItemCount(Items.COINS_995))
     }
 
+    @Test
+    fun `N192 and N62 - no rune arrows, opal dragon bolts (e) stocked, 10,000 of every row`() {
+        assertTrue(shop.none { it.unnoted == Items.RUNE_ARROW }, "rune arrows are gone")
+        assertTrue(shop.any { it.unnoted == Items.OPAL_DRAGON_BOLTS_E }, "opal dragon bolts (e) are sold")
+        (QuartermasterSupplies.stock + QuartermasterSupplies.gear).forEach { (id, amount) -> assertEquals(QuartermasterSupplies.ROW_STOCK, amount, "${def(id).name}") }
+    }
+
+    @Test
+    fun `N185 N186 N200 - page 2 sells the RFD gloves, the god capes and Ava's devices, priced, in one window`() {
+        val gear = QuartermasterSupplies.rows(DEFINITIONS, QuartermasterSupplies.gear, noted = false)
+        assertEquals(QuartermasterSupplies.gear.size, gear.size, "a gear row is missing from this cache")
+        assertTrue(gear.size <= Shop.CLIENT_VISIBLE_SLOTS)
+        gear.forEach { assertTrue(it.price > 0, "${def(it.unnoted).name} has no price") }
+        val ids = gear.map { it.unnoted }.toSet()
+        listOf(7462, 7459, 7458, Items.SARADOMIN_CAPE, Items.GUTHIX_CAPE, Items.ZAMORAK_CAPE, Items.AVAS_ACCUMULATOR, Items.AVAS_ATTRACTOR)
+            .forEach { assertTrue(it in ids, "row $it") }
+        assertEquals(listOf(QuartermasterSupplies.SHOP, QuartermasterSupplies.GEAR_SHOP), QuartermasterSupplies.PAGES.pages)
+    }
+
+    @Test
+    fun `N191 - the Quartermaster charges the GE price and high alchemy never pays more than it`() {
+        val halibut = def(Items.HALIBUT)
+        val ge = gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices.seed(halibut)
+        val currency = gg.rsmod.plugins.content.mechanics.shops.GeCoinCurrency()
+        assertEquals(ge, currency.sellPriceOf(world, ShopItem(Items.HALIBUT, 1)), "the GE price, not the alchemy floor")
+        val highAlch = gg.rsmod.plugins.content.magic.alchemy.Alchemy.coins(halibut, true, ge)
+        assertTrue(highAlch <= ge, "high alchemy $highAlch <= GE price $ge")
+        assertEquals((halibut.cost * 0.6).toInt(), gg.rsmod.plugins.content.magic.alchemy.Alchemy.coins(halibut, true), "without a GE price: the cache rule")
+    }
+
     private val world: World = mockk<World>(relaxed = true).also { every { it.definitions } returns DEFINITIONS }
 
     private fun player(inventory: ItemContainer): Player {

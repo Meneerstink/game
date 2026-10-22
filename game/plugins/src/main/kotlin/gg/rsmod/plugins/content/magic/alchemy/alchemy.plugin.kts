@@ -117,7 +117,7 @@ fun calculateCoinAmount(
     item: Item,
     highAlchemy: Boolean,
 ): Int {
-    return Alchemy.coins(world.definitions.get(ItemDef::class.java, item.id), highAlchemy)
+    return Alchemy.coins(world.definitions.get(ItemDef::class.java, item.id), highAlchemy, gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(world, item.id))
 }
 
 /**

@@ -55,7 +55,8 @@ object GeHousePricing {
     ): GeHouseQuote {
         val base = seed.toLong().coerceAtLeast(1L)
         val ask =
-            maxOf(base, ItemCurrency.highAlchValue(cost), (shops.highestBuy ?: 0).toLong())
+            // N191: high alchemy pays at most the GE price (Alchemy.coins), so its floor is the capped value - the OSRS price itself.
+            maxOf(base, minOf(ItemCurrency.highAlchValue(cost), base), (shops.highestBuy ?: 0).toLong())
                 .coerceIn(1L, Int.MAX_VALUE.toLong())
         var bid = base
         shops.lowestSell?.let { bid = minOf(bid, it.toLong()) }

@@ -16,7 +16,7 @@ import gg.rsmod.plugins.content.magic.alchemy.Alchemy
 on_world_init {
     ClientHud.itemValue = { player, id -> PriceChecker.value(player, Item(id, 1)) }
     // "HA" price: what the high alchemy spell really pays here.
-    ClientHud.itemAlch = { id -> Alchemy.coins(world.definitions.get(ItemDef::class.java, id), true) }
+    ClientHud.itemAlch = { id -> Alchemy.coins(world.definitions.get(ItemDef::class.java, id), true, gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(world, id)) }
     // End of every cycle (Player.postCycle), so a death, hit or npc heal of this cycle is in this cycle's update.
     // The Deadman HUD (E16) rides the same end-of-cycle hook in its own try/catch: nothing can stop it the way an exception
     // removed the old self-re-arming timer, and an overlay failure cannot take the HUD with it.
