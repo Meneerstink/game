@@ -98,11 +98,8 @@ on_magic_spell_button("Charge") { metadata ->
         player.message("You already have a charged spell active.")
         return@on_magic_spell_button
     }
-    val capes = listOf(Items.SARADOMIN_CAPE, Items.GUTHIX_CAPE, Items.ZAMORAK_CAPE)
-    if (player.getEquipment(EquipmentType.CAPE)?.id !in capes) {
-        player.message("You need to be wearing a god cape to cast this spell.")
-        return@on_magic_spell_button
-    }
+    // N69: no cape is needed to CAST Charge (OSRS Wiki Charge; Darkan / Void); the matching cape only matters for the hit
+    // (MagicCombatFormula.CHARGE_CAPES).
     if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes, spellId = metadata.sprite)) return@on_magic_spell_button
     MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
     player.animate(811)

@@ -20,6 +20,26 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
  */
 object MagicCombatFormula : CombatFormula {
 
+    /**
+     * N69: the capes that let Charge power each god spell - OSRS Wiki DPS calculator (weirdgloop osrs-dps-calc BaseCalc
+     * isChargeSpellApplicable: god cape, imbued god cape, (imbued) god max cape), plus the locked (l) variants we imported.
+     * The cape belongs to the effect only; casting Charge needs no cape (OSRS Wiki Charge, Darkan Magic.java:237-248, Void Charge.kt).
+     */
+    val CHARGE_CAPES: Map<CombatSpell, Set<Int>> =
+        mapOf(
+            CombatSpell.SARADOMIN_STRIKE to
+                setOf(Items.SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_L, Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE_L),
+            CombatSpell.CLAWS_OF_GUTHIX to
+                setOf(Items.GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_L, Items.IMBUED_GUTHIX_MAX_CAPE, Items.IMBUED_GUTHIX_MAX_CAPE_L),
+            CombatSpell.FLAMES_OF_ZAMORAK to
+                setOf(Items.ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_L, Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE_L),
+        )
+
+    fun chargeApplies(
+        spell: CombatSpell,
+        capeId: Int?,
+    ): Boolean = capeId != null && CHARGE_CAPES[spell]?.contains(capeId) == true
+
     private val BOLT_SPELLS =
         enumSetOf(CombatSpell.WIND_BOLT, CombatSpell.WATER_BOLT, CombatSpell.EARTH_BOLT, CombatSpell.FIRE_BOLT)
 
@@ -120,12 +140,7 @@ object MagicCombatFormula : CombatFormula {
 
             // Charge spell: god spells hit up to 30 while charged and wearing the matching cape.
             if (spell != null && pawn.attr[gg.rsmod.game.model.attr.GOD_SPELL_CHARGE_ATTR] == true) {
-                val cape = pawn.getEquipment(EquipmentType.CAPE)?.id
-                val charged =
-                    (spell == CombatSpell.SARADOMIN_STRIKE && cape == Items.SARADOMIN_CAPE) ||
-                        (spell == CombatSpell.CLAWS_OF_GUTHIX && cape == Items.GUTHIX_CAPE) ||
-                        (spell == CombatSpell.FLAMES_OF_ZAMORAK && cape == Items.ZAMORAK_CAPE)
-                if (charged) {
+                if (chargeApplies(spell, pawn.getEquipment(EquipmentType.CAPE)?.id)) {
                     hit += 10
                 }
             }
