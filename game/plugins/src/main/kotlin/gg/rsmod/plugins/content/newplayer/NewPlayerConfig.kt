@@ -63,7 +63,13 @@ data class NewPlayerConfig(
                 choiceNpcFacing = Direction.SOUTH,
                 // OSRS item 22330 "Deadman starter pack", imported as 23881 (OsrsItemImportTool batch starter-pack).
                 starterChestItem = 23881,
-                starterChestContents = listOf(Items.TUNA to 12, Items.DRAMEN_STAFF to 1, Items.DEADMANS_SKULL to 1),
+                // Owner 2026-10-22 (N173/N179): the pack holds the 1m starter cash, 100 house tablets and the Deadman's skull.
+                starterChestContents =
+                    listOf(
+                        Items.COINS_995 to gg.rsmod.plugins.content.starter.NewPlayerStart.STARTER_CASH,
+                        Items.TELEPORT_TO_HOUSE to 100,
+                        Items.DEADMANS_SKULL to 1,
+                    ),
             )
 
         /** The live values: the config file when the server runs from its root, else [DEFAULTS] (unit tests). */

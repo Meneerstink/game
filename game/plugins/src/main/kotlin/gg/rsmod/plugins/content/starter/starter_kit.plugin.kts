@@ -37,7 +37,6 @@ on_login {
         bank.forEach { slotItem ->
             player.bank.add(item = slotItem.item, beginSlot = slotItem.slot)
         }
-        check(NewPlayerStart.grantStarterCash(player)) { "Unable to grant new-player starter cash." }
         BeginnerProtection.grantOnFirstLogin(player)
 
         // 1:1 prayer points (runetek5.plugin.kts): a full bar at his Prayer level. The old 10 here was the 667 x10 unit and
@@ -47,7 +46,7 @@ on_login {
         player.attr[CREATION_DATE] = System.currentTimeMillis()
 
         // Owner 2026-10-07: the old three-line welcome is replaced by the Quest Tutor's camera tour (TutorIntro) - after the
-        // starter kit, cash and beginner protection above. It opens the Dangerous-area warning's intro window
+        // starter kit and beginner protection above (the 1m cash is in the starter pack, N179). It opens the Dangerous-area warning's intro window
         // (DangerWarning.startIntro, owner 2026-09-23) and closes it when the tour ends, is skipped or is interrupted.
         gg.rsmod.plugins.content.quests.foundation.TutorIntro.start(player)
 

@@ -41,13 +41,12 @@ choice_npc:
   facing: s
 
 starter_chest:
-  # The Deadman Mode starter chest the intro will hand out (not handed out yet). item 23881 = OSRS item 22330 "Deadman
+  # The Deadman Mode starter chest the intro hands out (NewPlayerStart.grantStarterPack). item 23881 = OSRS item 22330 "Deadman
   # starter pack" (OSRS Wiki), imported by OsrsItemImportTool batch starter-pack (tx-20260926-161950).
-  # contents: item id and amount per row - the OSRS pack's contents that exist on this server. OWNER: the OSRS pack also
-  # holds a starter sword, starter bow, starter staff, starter cape, a chronicle (10 charges) and Deadman's chest and
-  # legs; they are not imported yet - add their ids here once they are.
+  # contents: item id and amount per row (the owner's own pack, not the OSRS one).
   item: 23881
   contents:
-    - { item: 361, amount: 12 }   # Tuna
-    - { item: 772, amount: 1 }    # Dramen staff
+    # Owner 2026-10-22 (N173/N179): 1m coins, 100 house tablets and the Deadman's skull, all into the inventory.
+    - { item: 995, amount: 1000000 }  # Coins (the 1m starter cash, no longer put in the bank)
+    - { item: 8013, amount: 100 }     # Teleport to house
     - { item: 23856, amount: 1 }  # Deadman's skull

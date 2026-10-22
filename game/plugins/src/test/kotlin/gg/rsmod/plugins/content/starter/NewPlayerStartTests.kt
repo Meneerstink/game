@@ -17,47 +17,10 @@ import org.junit.BeforeClass
 import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
-import kotlin.test.assertFalse
 import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 class NewPlayerStartTests {
-    @Test
-    fun `new account receives exactly the starter cash once`() {
-        val player = newPlayer(isNew = true)
-
-        assertTrue(NewPlayerStart.grantStarterCash(player))
-        assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
-        assertFalse(NewPlayerStart.grantStarterCash(player))
-        assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
-    }
- @Test
- fun `legacy starter coins are included in the exact starter cash total`() {
- val player = newPlayer(isNew = true)
- player.bank.add(Items.COINS_995, 25)
-
- assertTrue(NewPlayerStart.grantStarterCash(player))
- assertEquals(NewPlayerStart.STARTER_CASH, player.bank.getItemCount(Items.COINS_995))
- }
-
- @Test
- fun `existing account cannot trigger starter cash`() {
-        val player = newPlayer(isNew = false)
-
-        assertFalse(NewPlayerStart.grantStarterCash(player))
-        assertEquals(0, player.bank.getItemCount(Items.COINS_995))
-    }
-
-    @Test
-    fun `reconnected account without transient new-account flag receives nothing`() {
-        val firstSession = newPlayer(isNew = true)
-        assertTrue(NewPlayerStart.grantStarterCash(firstSession))
-
-        val reconnected = newPlayer(isNew = false)
-        assertFalse(NewPlayerStart.grantStarterCash(reconnected))
-        assertEquals(0, reconnected.bank.getItemCount(Items.COINS_995))
-    }
-
     @Test
     fun `the Deadman starter pack is handed out once and opens into its contents`() {
         val config = NewPlayerConfig.DEFAULTS
@@ -71,6 +34,20 @@ class NewPlayerStartTests {
         NewPlayerStart.openStarterPack(player)
         assertEquals(0, player.inventory.getItemCount(config.starterChestItem))
         config.starterChestContents.forEach { (item, amount) -> assertEquals(amount, player.inventory.getItemCount(item)) }
+    }
+
+    @Test
+    fun `the Deadman starter pack opens into 1m coins, 100 house tablets and the skull, nothing in the bank`() {
+        // Owner 2026-10-22 (N173/N179): no tuna or Dramen staff; the 1m starter cash comes out of the pack into the inventory.
+        val player = newPlayer(isNew = true)
+
+        NewPlayerStart.grantStarterPack(player)
+        NewPlayerStart.openStarterPack(player)
+        assertEquals(NewPlayerStart.STARTER_CASH, player.inventory.getItemCount(Items.COINS_995))
+        assertEquals(100, player.inventory.getItemCount(Items.TELEPORT_TO_HOUSE))
+        assertEquals(1, player.inventory.getItemCount(Items.DEADMANS_SKULL))
+        assertEquals(3, player.inventory.occupiedSlotCount)
+        assertEquals(0, player.bank.occupiedSlotCount)
     }
 
     @Test
