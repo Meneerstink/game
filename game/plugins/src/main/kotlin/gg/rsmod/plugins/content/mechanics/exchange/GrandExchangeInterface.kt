@@ -169,6 +169,9 @@ object GrandExchangeInterface {
     const val MSG_NO_SPACE = "Not enough space in your inventory."
     const val MSG_ITEMS_WAITING = "You have items waiting in your Grand Exchange collection box!"
     const val MSG_NOT_ENOUGH_COINS = "You don't have enough coins."
+
+    /** N71: the chat line after a buy offer took [fromBank] coins from the bank (OSRS pays from the inventory only; owner's wish). */
+    fun bankCoinsMessage(fromBank: Int): String = "${"%,d".format(java.util.Locale.ENGLISH, fromBank)} coins were taken from your bank to pay for this offer."
     const val MSG_PRACTICE_GEAR = "You can't use the Grand Exchange while wearing free Practice PvP gear."
 
     fun service(player: Player): GrandExchangeService? = player.world.getService(GrandExchangeService::class.java)
@@ -710,6 +713,8 @@ object GrandExchangeInterface {
                     service.submit(username, OfferType.BUY, selection.itemId, selection.price, selection.quantity, selection.slot, token)
                 } ?: return false
             fills = submitted.second
+            // N71 (owner 10-16): say so when the offer was paid (partly) with banked coins.
+            if (fromBank > 0) player.message(bankCoinsMessage(fromBank))
         } else {
             if (ownedCount(player, selection.itemId) < selection.quantity) {
                 player.message("You do not have enough of this item in your inventory to cover the offer.")
