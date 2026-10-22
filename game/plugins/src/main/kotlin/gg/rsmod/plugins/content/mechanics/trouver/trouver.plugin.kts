@@ -74,3 +74,12 @@ on_command("trouverunlock") {
         Trouver.UnlockResult.InventoryFull -> {} // Trouver.unlock already messaged the player
     }
 }
+
+/*
+ * N60 (owner 2026-10-22, VRAGEN 55: "trouver parchments stapelen nu als feathers - dat hoort niet; niet stapelbaar, max 28 in een
+ * inventory"): the cache item lost its stackable flag. A stack carried from before keeps one parchment in its slot; the rest goes to
+ * the bank (which stacks everything), so nothing is lost and no slot holds an impossible stack.
+ */
+on_login {
+    Trouver.splitCarriedStack(player)
+}

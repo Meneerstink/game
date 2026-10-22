@@ -5,6 +5,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * Generic Trouver-parchment item-locking engine (`RSPS_DECISIONS.md` 2026-09-02 "STANDING OWNER
@@ -137,5 +138,21 @@ object Trouver {
         player.inventory.addPreservingAttr(Item(lockedItem, amount), assureFullInsertion = true)
         player.filterableMessage("You don't have enough inventory space to unlock that item.")
         return UnlockResult.InventoryFull
+    }
+
+    /** N60: a carried stack of the (now unstackable) parchment keeps 1 in its slot, the rest moves to the bank; returns how many moved. */
+    fun splitCarriedStack(player: Player): Int {
+        var moved = 0
+        for (slot in 0 until player.inventory.capacity) {
+            val item = player.inventory[slot] ?: continue
+            if (item.id != Items.TROUVER_PARCHMENT || item.amount <= 1) continue
+            val extra = item.amount - 1
+            val banked = player.bank.add(Items.TROUVER_PARCHMENT, extra).completed
+            if (banked <= 0) continue
+            player.inventory[slot] = Item(Items.TROUVER_PARCHMENT, item.amount - banked)
+            moved += banked
+        }
+        if (moved > 0) player.message("Trouver parchments no longer stack: $moved were moved to your bank.")
+        return moved
     }
 }
