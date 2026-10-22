@@ -144,7 +144,7 @@ object Woodcutting {
         val nestChance =
             (1.0 / 256) * if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.WOODCUTTING)) 1.1 else 1.0
         if (player.world.randomDouble() < nestChance) {
-            val nest = DropTableFactory.getDrop(player, 10_000) ?: return false
+            val nest = DropTableFactory.getDrop(player, 10_000, gg.rsmod.plugins.content.drops.DropTableType.NEST) ?: return false
             nest.forEach {
                 val groundItem = GroundItem(it, player.findWesternTile(), player)
                 groundItem.currentCycle = 150

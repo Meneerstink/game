@@ -33,7 +33,8 @@ val woodcuttingTable =
         }
     }
 
-DropTableFactory.register(woodcuttingTable, BIRDS_NEST_DROP_ID)
+// N113: the nest tables were KILL tables under npc ids 10000-10002 (Astea Frostweb in the drop viewer, boosted like a kill).
+DropTableFactory.register(woodcuttingTable, BIRDS_NEST_DROP_ID, type = gg.rsmod.plugins.content.drops.DropTableType.NEST)
 
 val seedNestTable =
     DropTableFactory.build {
@@ -59,7 +60,7 @@ val seedNestTable =
         }
     }
 
-DropTableFactory.register(seedNestTable, 10001)
+DropTableFactory.register(seedNestTable, 10001, type = gg.rsmod.plugins.content.drops.DropTableType.NEST)
 
 on_item_option(item = Items.BIRDS_NEST_5073, option = "Search") {
     if (player.inventory.isFull) {
@@ -74,7 +75,7 @@ on_item_option(item = Items.BIRDS_NEST_5073, option = "Search") {
                 beginSlot = player.getInteractingItemSlot(),
             ).hasSucceeded()
     ) {
-        DropTableFactory.createDropInventory(player, 10001)
+        DropTableFactory.createDropInventory(player, 10001, gg.rsmod.plugins.content.drops.DropTableType.NEST)
     }
 }
 
@@ -93,7 +94,7 @@ val ringNestTable =
         }
     }
 
-DropTableFactory.register(ringNestTable, 10002)
+DropTableFactory.register(ringNestTable, 10002, type = gg.rsmod.plugins.content.drops.DropTableType.NEST)
 
 on_item_option(item = Items.BIRDS_NEST_5074, option = "Search") {
     if (player.inventory.isFull) {
@@ -108,7 +109,7 @@ on_item_option(item = Items.BIRDS_NEST_5074, option = "Search") {
                 beginSlot = player.getInteractingItemSlot(),
             ).hasSucceeded()
     ) {
-        DropTableFactory.createDropInventory(player, 10002)
+        DropTableFactory.createDropInventory(player, 10002, gg.rsmod.plugins.content.drops.DropTableType.NEST)
     }
 }
 
