@@ -100,6 +100,8 @@ object PestControlHandler {
         player.openInterface(PC_LANDER_INTERFACE, InterfaceDestination.PVP_OVERLAY)
         player.setComponentText(PC_LANDER_INTERFACE, 3, tier.displayName)
         player.setComponentText(PC_LANDER_INTERFACE, 16, "Pest Points: ${player.attr[PEST_POINTS] ?: 0}")
+        // N204: the cache line reads "(Need 5 to 25 players)"; a lander departs with PC_MIN_TEAM_SIZE (1) now.
+        player.setComponentText(PC_LANDER_INTERFACE, 15, "(Need $PC_MIN_TEAM_SIZE to $PC_MAX_TEAM_SIZE players)")
         sendDeparture(lobby, player)
         sendPlayerCount(lobby)
     }
