@@ -77,6 +77,12 @@ on_npc_option(npc = DeathsOfficeArea.DEATH, option = "talk-to", lineOfSightDista
 
 on_npc_option(npc = DeathsOfficeArea.DEATH, option = "collect", lineOfSightDistance = 4) {
     watchTalker(player.getInteractingNpc(), player)
+    // N202 (owner 2026-10-22: a new player's first death - "Collect" showed none of his lost items): while they are still in his
+    // gravestone Death holds nothing, so he says where they are and how to take them back instead of an empty window.
+    if (DeathDialogue.itemsOnlyInGravestone(player)) {
+        player.queue { with(DeathDialogue) { itemsInGravestone(timeLeft(player)) } }
+        return@on_npc_option
+    }
     OfficeInterface.open(player)
 }
 

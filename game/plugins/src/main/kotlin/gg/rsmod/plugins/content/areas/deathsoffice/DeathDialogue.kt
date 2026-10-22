@@ -109,7 +109,11 @@ object DeathDialogue {
     }
 
     private suspend fun QueueTask.explainGravestones() {
-        itemMessageBox("A gravestone appears on the ground ${red}near where you died$END. You can go there and retrieve your items by clicking on it.", GRAVE_PICTURE)
+        // N202: name the option - a new player looked for his items under Death's "Collect".
+        itemMessageBox(
+            "A gravestone appears on the ground ${red}near where you died$END. Go there, ${red}right-click$END it and choose ${red}Loot$END to take your items back.",
+            GRAVE_PICTURE,
+        )
         itemMessageBox("Your gravestone would be marked with an arrow to help to spot it. A grave icon appears on the ${red}world map$END too, if your grave is in a mapped area.", GRAVE_PICTURE)
         // Owner 2026-09-26: the gravestone is free; others can bless or repair it (RS 2009).
         itemMessageBox(
@@ -122,6 +126,19 @@ object DeathDialogue {
             "I will look after such items, ${red}without a time limit$END. However, I do charge more for my services. " +
                 "It would be cheaper to retrieve them from the gravestone directly, if you can reach it in time.",
         )
+    }
+
+    /** N202: Death holds nothing yet - everything the player lost is still in his standing gravestone. */
+    fun itemsOnlyInGravestone(player: Player): Boolean =
+        player.deathRecovery.isEmpty && gg.rsmod.plugins.content.mechanics.death.Gravestone.exists(player) && !player.gravestone.isEmpty
+
+    /** The line Death says on "Collect" while the items are in the gravestone ([timeLeft] = m:ss until it collapses). */
+    fun gravestoneHint(timeLeft: String): String =
+        "Your items are not with me - they are in your ${red}gravestone$END near where you died. Right-click it and choose " +
+            "${red}Loot$END to take them back, free of charge. It collapses in ${red}$timeLeft$END; then they come to me."
+
+    suspend fun QueueTask.itemsInGravestone(timeLeft: String) {
+        itemMessageBox(gravestoneHint(timeLeft), GRAVE_PICTURE)
     }
 
     private fun topic(label: String, done: Boolean): String = if (done) "<str>$label</str>" else label
