@@ -48,6 +48,9 @@ private val CRASH_ISLAND = Tile(2894, 2726, 0)
 
 // Desert Treasure: the four warriors' posts (2009scape DiamondOf*Listeners spawns; OSRS Wiki quick guide locations).
 private val DESSOUS_GRAVE = Tile(3570, 3405, 0)
+
+/** N211: the Vampyre tomb Dessous sleeps in (cache placement 6437 at 3568,3401). */
+const val DESSOUS_TOMB = 6437
 private val KAMIL_PATH = Tile(2857, 3754, 0)
 private val DAMIS_LAIR = Tile(2739, 5088, 0)
 private val FAREED_PIT = Tile(3315, 9376, 0)
@@ -167,9 +170,15 @@ object DesertTreasure : ShortQuest(
                 location = DESSOUS_GRAVE,
                 gives = listOf(Items.BLOOD_DIAMOND to 1),
                 tip = "He hisses magic and ranged when you pray against melee. Bring food.",
-                fight = QuestFight(Npcs.DESSOUS, "Dessous", 139, DESSOUS_GRAVE, "Who dares disturb my rest?"),
+                // N211 (owner 2026-10-22): Dessous rises only when the blessed pot (blood, garlic and spices; 4665) is used on his
+                // tomb (object 6437, 3568,3401) - OSRS Desert Treasure. The pot is in the player's inventory for this step.
+                fight =
+                    QuestFight(
+                        Npcs.DESSOUS, "Dessous", 139, DESSOUS_GRAVE, "Who dares disturb my rest?",
+                        trigger = FightTrigger(Items.BLESSED_POT_4665, DESSOUS_TOMB, "Use the blessed pot on the Vampyre tomb to wake Dessous."),
+                    ),
                 talk = {
-                    chatNpc("Dessous waits in his grave. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
+                    chatNpc("Pour the blessed pot onto the Vampyre tomb and Dessous", "will rise. Protect yourself well.", facialExpression = FacialExpression.WORRIED)
                     true
                 },
             ),
@@ -1652,7 +1661,10 @@ object FoundationQuests {
             }
             if (!step.talk(task) || quest.stage(player) != stage) return
             val fight = step.fight
-            if (player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+            QuestFights.handTriggerItem(player, fight)
+            if (fight.trigger != null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+                player.message(fight.trigger.hint)
+            } else if (fight.trigger == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
                 QuestFights.start(player, quest, stage)
             } else if (step.location != null && step.place != null) {
                 with(quest) { task.offerTravel(step.place, step.location) }
@@ -1705,7 +1717,9 @@ object FoundationQuests {
         player.message("Your quest journal has been updated: <col=5861e9>${quest.name}")
         QuestHelper.start(player)
         val next = quest.steps[stage]
-        if (next.fight != null && next.npc == step.npc && player.tile.height == next.fight.tile.height &&
+        // N211: the next step's summoning item is in the inventory before any trip to it.
+        next.fight?.let { QuestFights.handTriggerItem(player, it) }
+        if (next.fight != null && next.fight.trigger == null && next.npc == step.npc && player.tile.height == next.fight.tile.height &&
             player.tile.isWithinRadius(next.fight.tile, QuestFights.REACH)
         ) {
             QuestFights.start(player, quest, stage + 1)

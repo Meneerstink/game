@@ -130,4 +130,34 @@ object QuestFights {
 
     private fun questNpcName(quest: ShortQuest, stage: Int): String =
         FoundationQuests.NPC_NAMES[quest.steps[stage - 1].npc] ?: "the quest's contact"
+
+    /** N211: puts [fight]'s summoning item in the inventory (bank as a fallback) when the player has none of it. */
+    fun handTriggerItem(
+        player: Player,
+        fight: QuestFight,
+    ) {
+        val item = fight.trigger?.item ?: return
+        if (player.inventory.contains(item) || player.bank.contains(item)) return
+        if (!player.inventory.add(item, 1).hasSucceeded()) player.bank.add(item, 1)
+    }
+
+    /**
+     * N211: [item] used on [obj] - when it is the trigger of the player's current fight step and he is at the fight, the foe
+     * appears. Returns false when this use is not a summoning (the caller says "Nothing interesting happens").
+     */
+    fun trigger(
+        player: Player,
+        item: Int,
+        obj: Int,
+    ): Boolean {
+        FoundationQuests.SHORT.forEach { quest ->
+            val stage = quest.stage(player)
+            val fight = quest.steps.getOrNull(stage - 1)?.fight ?: return@forEach
+            val trigger = fight.trigger ?: return@forEach
+            if (trigger.item != item || trigger.obj != obj) return@forEach
+            if (active(player) != null) return true
+            return start(player, quest, stage)
+        }
+        return false
+    }
 }

@@ -41,6 +41,9 @@ class QuestStep(
  * the player alone (an owned npc, invisible to everybody else) on [tile], a floor tile the tests check on the real map.
  * [shout] is its overhead line when it appears; [level] is its combat level, shown in the journal so players can prepare.
  */
+/** N211: the use-item-on-object that summons a fight step's foe, and the line that tells the player to do it. */
+class FightTrigger(val item: Int, val obj: Int, val hint: String)
+
 class QuestFight(
     val npc: Int,
     val name: String,
@@ -54,6 +57,11 @@ class QuestFight(
     val chain: List<Pair<Int, String>> = emptyList(),
     /** Waves appear on the fight tile; a second form where the first one fell. */
     val chainAtTile: Boolean = false,
+    /**
+     * N211 (owner 2026-10-22): a foe that only appears when the player uses [FightTrigger.item] on [FightTrigger.obj] (Dessous: the
+     * blessed pot on the Vampyre tomb) - never by just arriving or talking. The step hands the item out ([FightTrigger.item]).
+     */
+    val trigger: FightTrigger? = null,
 ) {
     /** The foe after [npc] in the fight, or null when [npc] is the last one. */
     fun next(npc: Int): Pair<Int, String>? {

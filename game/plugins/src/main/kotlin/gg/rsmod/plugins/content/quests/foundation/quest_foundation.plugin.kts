@@ -432,3 +432,7 @@ can_equip_any_item { p, _ ->
         true
     }
 }
+// N211 (owner 2026-10-22): quest foes that rise from an item used on an object (Dessous: the blessed pot on the Vampyre tomb).
+on_item_on_obj(obj = DESSOUS_TOMB, item = Items.BLESSED_POT_4665) {
+    if (!QuestFights.trigger(player, Items.BLESSED_POT_4665, DESSOUS_TOMB)) player.message("Nothing interesting happens.")
+}

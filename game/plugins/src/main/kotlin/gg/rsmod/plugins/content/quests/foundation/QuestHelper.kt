@@ -185,7 +185,8 @@ object QuestHelper {
             val stage = quest.stage(player)
             val step = quest.steps.getOrNull(stage - 1) ?: return@forEach
             val fight = step.fight ?: return@forEach
-            if (QuestFights.active(player) == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
+            // N211: a triggered foe (Dessous) waits for its item-on-object, never for the player's arrival.
+            if (fight.trigger == null && QuestFights.active(player) == null && player.tile.height == fight.tile.height && player.tile.isWithinRadius(fight.tile, QuestFights.REACH)) {
                 QuestFights.start(player, quest, stage)
             }
         }
