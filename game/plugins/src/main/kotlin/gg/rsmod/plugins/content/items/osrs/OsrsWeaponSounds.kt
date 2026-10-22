@@ -72,6 +72,14 @@ object OsrsWeaponSounds {
         // OSRS Wiki "Blunt" category (xrsps generated header "Blunt" -> warhammer_crush).
         register(BLUNT, Items.GILDED_SPADE, Items.DRAGON_CANE)
         register(CLAW, Items.BURNING_CLAWS)
+        // N21 (LC07 trace 10-15 "silent swing" weapon=14484 anim=393): the 667 claws play the claws sequence 393, which has no
+        // frame sounds in this cache, and none of them has an attack_audio - every normal claw hit was silent. Same OSRS Wiki
+        // "Claw" category as the Burning claws (xrsps claws -> hacksword stab/slash); Void/Novite/Darkan send no swing cue at all.
+        register(
+            CLAW,
+            Items.BRONZE_CLAWS, Items.IRON_CLAWS, Items.STEEL_CLAWS, Items.BLACK_CLAWS, Items.MITHRIL_CLAWS, Items.ADAMANT_CLAWS,
+            Items.RUNE_CLAWS, Items.WHITE_CLAWS, Items.DRAGON_CLAWS, 14486, // 14486 = Dragon claws (lent)
+        )
     }
 
     /** Every weapon this table gives a swing sound (guard: `OsrsWeaponSoundsTests`). */

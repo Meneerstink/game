@@ -78,6 +78,17 @@ class OsrsWeaponSoundsTests {
         assertEquals(gg.rsmod.plugins.api.cfg.Sfx.WARHAMMER_CRUSH, OsrsWeaponSounds.melee(g.DRAGON_CANE, gg.rsmod.game.model.combat.StyleType.CRUSH))
     }
 
+    @Test
+    fun `N21 - a normal claw hit is heard - the claws sequence 393 is silent, so the claw category sound plays`() {
+        val i = gg.rsmod.plugins.api.cfg.Items
+        assertEquals(false, DEFINITIONS.getNullable(AnimDef::class.java, 393)?.hasFrameSounds == true, "393 carries no frame sound")
+        val claws = listOf(i.BRONZE_CLAWS, i.IRON_CLAWS, i.STEEL_CLAWS, i.BLACK_CLAWS, i.MITHRIL_CLAWS, i.ADAMANT_CLAWS, i.RUNE_CLAWS, i.WHITE_CLAWS, i.DRAGON_CLAWS, 14486)
+        claws.forEach {
+            assertEquals(gg.rsmod.plugins.api.cfg.Sfx.HACKSWORD_SLASH, OsrsWeaponSounds.melee(it, gg.rsmod.game.model.combat.StyleType.SLASH), "claws $it slash")
+            assertEquals(gg.rsmod.plugins.api.cfg.Sfx.HACKSWORD_STAB, OsrsWeaponSounds.melee(it, gg.rsmod.game.model.combat.StyleType.STAB), "claws $it stab")
+        }
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
         private lateinit var LIBRARY: CacheLibrary
