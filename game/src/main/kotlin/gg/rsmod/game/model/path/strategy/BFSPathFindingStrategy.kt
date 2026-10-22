@@ -153,21 +153,8 @@ class BFSPathFindingStrategy(
             return false
         }
 
-        for (x in 0 until width) {
-            for (z in 0 until length) {
-                val transform = node.transform(x, z)
-                if (clipNode && !collision.canTraverse(transform, direction, projectile = false, water = false)) {
-                    return true
-                }
-                if (clipLink &&
-                    !collision.canTraverse(transform.step(direction), direction.getOpposite(), projectile = false, water = false)
-                ) {
-                    return true
-                }
-            }
-        }
-
-        return false
+        // N169: one shared rule with MovementQueue, so a diagonal planned here is not refused on the step itself.
+        return !collision.canBodyStep(node, width, length, direction, water = false, clipNode = clipNode, clipLink = clipLink)
     }
 
     /**

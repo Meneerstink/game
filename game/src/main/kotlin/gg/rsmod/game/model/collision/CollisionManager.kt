@@ -65,6 +65,63 @@ class CollisionManager(
             canTraverse(tile.step(direction), direction.getOpposite(), projectile = false, water = false)
 
     /**
+     * Whether a [width] x [length] body with its south-west corner on [tile] may take one step in [direction]. [clipNode] asks
+     * each tile being left, [clipLink] the tile being entered (solid scenery flags only its own tiles).
+     *
+     * N169 (2026-10-22): a DIAGONAL step of a body larger than 1x1 follows the client RouteFinder (and Darkan
+     * World.checkWalkStep): the leading corner takes the diagonal step, the rest of the leading x edge one orthogonal x step and
+     * the rest of the leading z edge one orthogonal z step. Testing the diagonal for EVERY footprint tile also tested the far
+     * corners' side tiles - one tile outside the moved body - so Nex beside a pillar was refused a diagonal she fits through.
+     * The route finder and the walking code must share this rule, or a planned diagonal is refused on the step itself.
+     */
+    fun canBodyStep(
+        tile: Tile,
+        width: Int,
+        length: Int,
+        direction: Direction,
+        water: Boolean,
+        clipNode: Boolean = true,
+        clipLink: Boolean = true,
+    ): Boolean {
+        fun blocked(
+            from: Tile,
+            dir: Direction,
+        ): Boolean =
+            (clipNode && !canTraverse(from, dir, projectile = false, water = water)) ||
+                (clipLink && !canTraverse(from.step(dir), dir.getOpposite(), projectile = false, water = water))
+
+        if (direction.isDiagonal() && (width > 1 || length > 1)) {
+            val dx = direction.getDeltaX()
+            val dz = direction.getDeltaZ()
+            val cornerX = if (dx < 0) 0 else width - 1
+            val cornerZ = if (dz < 0) 0 else length - 1
+            val stepX = if (dx < 0) Direction.WEST else Direction.EAST
+            val stepZ = if (dz < 0) Direction.SOUTH else Direction.NORTH
+            if (blocked(tile.transform(cornerX, cornerZ), direction)) return false
+            // The x edge, every row but the one that trails the z step.
+            val trailingZ = if (dz < 0) length - 1 else 0
+            for (z in 0 until length) {
+                if (length > 1 && z == trailingZ) continue
+                if (blocked(tile.transform(cornerX, z), stepX)) return false
+            }
+            // The z edge, every column but the one that trails the x step.
+            val trailingX = if (dx < 0) width - 1 else 0
+            for (x in 0 until width) {
+                if (width > 1 && x == trailingX) continue
+                if (blocked(tile.transform(x, cornerZ), stepZ)) return false
+            }
+            return true
+        }
+
+        for (x in 0 until width) {
+            for (z in 0 until length) {
+                if (blocked(tile.transform(x, z), direction)) return false
+            }
+        }
+        return true
+    }
+
+    /**
      * Casts a line using Bresenham's Line Algorithm with point A [start] and
      * point B [target] being its two points and makes sure that there's no
      * collision flag that can block movement from and to both points.

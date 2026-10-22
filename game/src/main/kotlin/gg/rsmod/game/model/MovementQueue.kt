@@ -216,20 +216,10 @@ class MovementQueue(
         val collision = pawn.world.collision
         val water = (pawn.walkMask and 0x4) != 0
         val size = pawn.getSize().coerceAtLeast(1)
-        for (x in 0 until size) {
-            for (z in 0 until size) {
-                val part = from.transform(x, z)
-                if (!collision.canTraverse(part, direction, projectile = false, water = water)) {
-                    return false
-                }
-                // The entered tile too (isStepBlocked's clipLink): solid scenery flags only its own tiles, so testing the tile
-                // being left alone let npcs walk into trees, rocks and tables (owner 2026-09-27, breach monsters noclipping).
-                if (!collision.canTraverse(part.step(direction), direction.getOpposite(), projectile = false, water = water)) {
-                    return false
-                }
-            }
-        }
-        return true
+        // Leaving tiles and the entered tile (clipLink) both: solid scenery flags only its own tiles, so testing the tile being
+        // left alone let npcs walk into trees, rocks and tables (owner 2026-09-27, breach monsters noclipping). N169: the same
+        // body rule as BFSPathFindingStrategy, so a large npc's planned diagonal past a pillar is not refused here.
+        return collision.canBodyStep(from, size, size, direction, water = water)
     }
 
     /**

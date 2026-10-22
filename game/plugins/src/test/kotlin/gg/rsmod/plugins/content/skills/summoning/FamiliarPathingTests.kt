@@ -252,6 +252,33 @@ class FamiliarPathingTests {
         assertEquals(origin, route.tail)
     }
 
+    /**
+     * N169: a 2x2 body stepping south-west must only be checked on the tiles it moves into. A wall under its south-EAST tile is
+     * outside the moved body, so the diagonal is free; the old every-footprint-tile check refused it (Nex beside a pillar).
+     */
+    @Test
+    fun `a large body steps diagonally past a wall that its moved body does not touch`() {
+        val world = newWorld()
+        val origin = Tile(3200, 3200, 0)
+        block(world, Tile(3201, 3200, 0), Direction.SOUTH)
+        block(world, Tile(3201, 3199, 0), Direction.NORTH)
+        val route = BFSPathFindingStrategy(world.collision).calculateRoute(requestFor(origin, size = 2, target = origin.transform(-6, -6)))
+        assertTrue(route.success)
+        assertEquals(origin.transform(-1, -1), route.path.peek(), "first step should be the free diagonal, path ${route.path}")
+    }
+
+    @Test
+    fun `a large body is still refused a diagonal whose moved body crosses a wall`() {
+        val world = newWorld()
+        val origin = Tile(3200, 3200, 0)
+        // Wall under the south-WEST body tile: the moved body's south edge crosses it.
+        block(world, Tile(3200, 3200, 0), Direction.SOUTH)
+        block(world, Tile(3200, 3199, 0), Direction.NORTH)
+        val route = BFSPathFindingStrategy(world.collision).calculateRoute(requestFor(origin, size = 2, target = origin.transform(-6, -6)))
+        assertTrue(route.success)
+        assertTrue(route.path.peek() != origin.transform(-1, -1), "the diagonal through the wall was taken: ${route.path}")
+    }
+
     /** Builds the exact [PathRequest] shape [Familiar.follow] uses, for a direct BFS assertion. */
     /**
      * Owner 2026-09-30: with walls or scenery around the owner a familiar teleported again and again (blue GFX and teleport

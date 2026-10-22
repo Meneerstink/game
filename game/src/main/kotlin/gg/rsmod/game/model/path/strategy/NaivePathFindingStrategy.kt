@@ -131,17 +131,9 @@ class NaivePathFindingStrategy(
         direction: Direction,
     ): Boolean {
         val water = (pawn.walkMask and 0x4) != 0
-        for (x in 0 until size) {
-            for (z in 0 until size) {
-                val from = tile.transform(x, z)
-                if (!collision.canTraverse(from, direction, projectile = false, water = water)) return false
-                // Owner 2026-09-27 "breachmonsters kunnen allemaal noclippen": solid scenery (trees, rocks, tables, clipped floor)
-                // flags only its own tiles, so the tile being left never says it is blocked - the tile being entered must be
-                // asked too, as SimplePathFindingStrategy and BFSPathFindingStrategy.isStepBlocked (clipLink) always did.
-                if (!collision.canTraverse(from.step(direction), direction.getOpposite(), projectile = false, water = water)) return false
-            }
-        }
-        return true
+        // Owner 2026-09-27 "breachmonsters kunnen allemaal noclippen": the entered tile is asked too (clipLink). N169: the same
+        // body rule as BFSPathFindingStrategy and MovementQueue.
+        return collision.canBodyStep(tile, size, size, direction, water = water)
     }
 
     private fun direction(
