@@ -96,6 +96,14 @@ object MagicCombatStrategy : CombatStrategy {
                     return failCast(pawn)
                 }
             }
+            // N74 (owner 10-16): a bind on a target that is still held, or in its immunity after a freeze, is refused before the
+            // cast - no animation, no runes, no XP.
+            if (spell in BIND_SPELLS) {
+                bindRefusal(target)?.let {
+                    pawn.message(it)
+                    return failCast(pawn)
+                }
+            }
             // OSRS Wiki Confuse/Weaken/Curse/Enfeeble: "The spell can only be cast if the opponent's stats haven't already been
             // lowered". Without this a drain curse recast every 5 ticks on a drained target (runes used, no effect). Message: Void
             // DrainSpells ("lowered" for Confuse and Weaken, "weakened" for the rest).
@@ -113,6 +121,63 @@ object MagicCombatStrategy : CombatStrategy {
         }
         return true
     }
+
+    /** The standard-book binds (Ancient ice spells still deal damage on a frozen target, so they are cast). */
+    val BIND_SPELLS = setOf(CombatSpell.BIND, CombatSpell.SNARE, CombatSpell.ENTANGLE)
+
+    /** OSRS Wiki Snare: the refusal text for a bind on [target], or null when the bind can land. */
+    fun bindRefusal(target: Pawn): String? =
+        when {
+            target.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) -> "Your target is already held by a magical force."
+            target.timers.has(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER) -> "The target is currently immune to that spell."
+            else -> null
+        }
+
+    /**
+     * N39: our world is always Deadman, and OSRS Deadman halves Tele Block since Autumn 2018 - "Teleblock will now last for
+     * 150 seconds, or for 75 seconds with Protect from Magic active" (Update:Deadman Autumn Finals and Winter Season; RuneLite
+     * TimersPlugin DEADMAN_HALF_TELEBLOCK). Main game 500 / 250 ticks (Darkan CombatSpell.kt:326-332).
+     */
+    const val DEADMAN_TELEBLOCK_TICKS = 250
+
+    fun teleblockTicks(protectedFromMagic: Boolean): Int = if (protectedFromMagic) DEADMAN_TELEBLOCK_TICKS / 2 else DEADMAN_TELEBLOCK_TICKS
+
+    /**
+     * N96: the OSRS game message on the target (RuneLite TimersPlugin TELEBLOCK_PATTERN, from the live game text, colour 4f006f):
+     * "A Tele Block spell has been cast on you by <name>. It will expire in 2 minutes, 30 seconds."
+     */
+    fun teleblockMessage(
+        caster: String,
+        ticks: Int,
+    ): String {
+        val seconds = ticks * 3 / 5
+        val minutes = seconds / 60
+        val rest = seconds % 60
+        val parts = mutableListOf<String>()
+        if (minutes > 0) parts += "$minutes minute${if (minutes == 1) "" else "s"}"
+        if (rest > 0 || minutes == 0) parts += "$rest second${if (rest == 1) "" else "s"}"
+        return "<col=4f006f>A Tele Block spell has been cast on you by $caster. It will expire in ${parts.joinToString(", ")}.</col>"
+    }
+
+    /** Splash spotanim shown when a spell misses. */
+    const val SPLASH_GFX = 85
+
+    /**
+     * N27 / N55 / N73 / N75: the single graphic a cast shows on its target when it arrives - the spell's own impact on a hit, only
+     * the splash on a miss. The impact used to go out with the projectile before the accuracy roll, so a landed effect spell
+     * (Tele Block, binds) showed it twice and every miss showed impact AND splash (OSRS: one impact, or just the splash).
+     */
+    internal fun arrivalGraphic(
+        spell: CombatSpell,
+        landHit: Boolean,
+        delay: Int,
+        rotation: Int,
+    ): Graphic? =
+        when {
+            landHit -> spell.impactGfx?.let { Graphic(it.id, it.height, delay, rotation) }
+            spell.impactGfx != null || !spell.damaging -> Graphic(SPLASH_GFX, 96, delay)
+            else -> null
+        }
 
     /** A cast that cannot fire: a pending manual cast is dropped; an autocast spell is re-resolved by the combat loop next time. */
     private fun failCast(pawn: Player): Boolean {
@@ -279,7 +344,11 @@ object MagicCombatStrategy : CombatStrategy {
         val impactDirection: Int = combinedDirection(attackDirection, targetDirection)
         val impactGfxRotation: Int = convertToRotation(impactDirection)
 
-        val hitDelay: Int
+        // PvP run 2026-10-03 (conform combat "hit delay"): the spells without a projectile (Blood/Shadow/Smoke bursts and barrages,
+        // Ice Blitz, Miasmic) had a fixed delay of 2 at every distance; OSRS Wiki "Hit delay": every spell, barrages included, uses
+        // 1 + floor((1 + Distance) / 3).
+        val hitDelay = getHitDelay(pawn, target)
+        val arrivalDelay: Int
         if (spell.projectile > -1) {
             val projectile = pawn.createProjectile(target, gfx = spell.projectile, type = ProjectileType.MAGIC)
             world.spawn(projectile)
@@ -289,18 +358,9 @@ object MagicCombatStrategy : CombatStrategy {
             if (spell.thirdProjectile > -1) {
                 world.spawn(pawn.createProjectile(target, gfx = spell.thirdProjectile, type = ProjectileType.MAGIC))
             }
-            hitDelay = getHitDelay(pawn, target)
-            spell.impactGfx?.let { gfx ->
-                target.graphic(Graphic(gfx.id, gfx.height, projectile.lifespan, impactGfxRotation))
-            }
+            arrivalDelay = projectile.lifespan
         } else {
-            // PvP run 2026-10-03 (conform combat "hit delay"): the spells without a projectile (Blood/Shadow/Smoke bursts and barrages,
-            // Ice Blitz, Miasmic) had a fixed delay of 2 at every distance; OSRS Wiki "Hit delay": every spell, barrages included, uses
-            // 1 + floor((1 + Distance) / 3).
-            hitDelay = getHitDelay(pawn, target)
-            spell.impactGfx?.let { gfx ->
-                target.graphic(Graphic(gfx.id, gfx.height, hitDelay * 30, impactGfxRotation))
-            }
+            arrivalDelay = hitDelay * 30
         }
 
         val formula = MagicCombatFormula
@@ -320,6 +380,8 @@ object MagicCombatStrategy : CombatStrategy {
                 accuracy >= world.randomDouble()
             }
 
+        arrivalGraphic(spell, landHit, arrivalDelay, impactGfxRotation)?.let { target.graphic(it) }
+
         // Impact (or splash) sound when the spell arrives, heard by the caster and a player target.
         val impactSound = if (landHit) gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.of(spell)?.impact else gg.rsmod.plugins.content.combat.strategy.magic.SpellSounds.SPLASH
         if (impactSound != null && impactSound > 0) {
@@ -336,14 +398,12 @@ object MagicCombatStrategy : CombatStrategy {
                 gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.onEffectSpellCast(pawn, target)
             }
             if (landHit) {
-                target.graphic(Graphic(spell.impactGfx?.id ?: 85, spell.impactGfx?.height ?: 96, hitDelay * 30))
                 world.queue {
                     wait(hitDelay)
                     if (target.isDead() || (target is Player && !target.isOnline) || (pawn is Player && !pawn.isOnline)) return@queue
                     applyEffect(pawn, target, spell, 0)
                 }
             } else {
-                target.graphic(Graphic(85, 96, hitDelay * 30))
                 if (pawn is Player) pawn.message("The spell has no effect.")
             }
             // OSRS: a splashed spell still gives its base experience (splash training), so the cast XP does not depend on landHit.
@@ -379,8 +439,6 @@ object MagicCombatStrategy : CombatStrategy {
                 // Serpentine helm: a chance to envenom on every successful hit, whatever the style (SerpentineHelm).
                 pawnHit.hit.addAction { gg.rsmod.plugins.content.items.osrs.SerpentineHelm.rollVenom(pawn, target) }
             }
-        } else {
-            spell.impactGfx?.let { target.graphic(Graphic(85, 96, hitDelay * 30)) }
         }
 
         if (damage >= 0 && pawn.entityType.isPlayer) {
@@ -458,8 +516,10 @@ object MagicCombatStrategy : CombatStrategy {
                     val protectedFromMagic =
                         Prayers.isActive(target, Prayer.PROTECT_FROM_MAGIC) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MAGIC)
                     // With the OSRS 30-second warning (owner A7, TimerExpiry).
-                    gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, if (protectedFromMagic) 250 else 500)
-                    target.message("You have been teleblocked!")
+                    val ticks = teleblockTicks(protectedFromMagic)
+                    gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, ticks)
+                    val caster = if (pawn is Player) pawn.username else (pawn as? Npc)?.def?.name ?: ""
+                    target.message(teleblockMessage(caster, ticks))
                     if (pawn is Player) pawn.message("You have teleblocked ${target.username}.")
                 }
             }

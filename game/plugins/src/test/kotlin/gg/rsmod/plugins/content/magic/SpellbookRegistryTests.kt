@@ -54,7 +54,11 @@ class SpellbookRegistryTests {
         val seen = mutableMapOf<Int, CombatSpell>()
         for (spell in CombatSpell.values) {
             if (spell.autoCastId == -1) {
-                assertTrue("${spell.name} has no autocast id but deals damage", !spell.damaging || spell.componentId == -1)
+                // N86: Snare and Entangle deal damage (OSRS Wiki) but, like every bind, can never be autocast.
+                assertTrue(
+                    "${spell.name} has no autocast id but deals damage",
+                    !spell.damaging || spell.componentId == -1 || spell in gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy.BIND_SPELLS,
+                )
                 continue
             }
             if (spell.componentId == -1) continue

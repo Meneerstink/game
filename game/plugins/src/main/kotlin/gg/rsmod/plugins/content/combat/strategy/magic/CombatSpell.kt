@@ -402,7 +402,7 @@ enum class CombatSpell(
     SNARE(
         uniqueId = 320,
         componentId = 55,
-        maxHit = 0,
+        maxHit = 2, // N86: OSRS Wiki Snare "Base max hit 2" (Darkan CombatSpell.kt:311-325 also damages)
         castGfx = Graphic(3146 /* OSRS 177 */, 96),
         castAnimation = arrayOf(15757, 15758), // OSRS 710 HUMAN_CASTENTANGLE / 1161 HUMAN_CASTENTANGLE_STAFF (imported, batch standardspellseq)
         projectile = 3147 /* OSRS 178 */,
@@ -410,12 +410,12 @@ enum class CombatSpell(
         autoCastId = -1,
         experience = 60.0,
         effect = SpellEffect.Freeze(16),
-        damaging = false,
+        damaging = true,
     ),
     ENTANGLE(
         uniqueId = 321,
         componentId = 81,
-        maxHit = 0,
+        maxHit = 5, // N86: OSRS Wiki Entangle "can deal up to 5 damage"
         castGfx = Graphic(3146 /* OSRS 177 */, 96),
         castAnimation = arrayOf(15757, 15758), // OSRS 710 HUMAN_CASTENTANGLE / 1161 HUMAN_CASTENTANGLE_STAFF (imported, batch standardspellseq)
         projectile = 3147 /* OSRS 178 */,
@@ -423,7 +423,7 @@ enum class CombatSpell(
         autoCastId = -1,
         experience = 89.0,
         effect = SpellEffect.Freeze(24),
-        damaging = false,
+        damaging = true,
     ),
     VULNERABILITY(
         uniqueId = 56,

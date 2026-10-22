@@ -1526,7 +1526,7 @@ object DeadmanSuite : Conformance.Suite {
 
         prepare(protectMagic = false)
         val full = castUntilBlocked()
-        run.expectTrue(e, "Tele Block lasts 5:00 (500 ticks)", full != null && full in 495..500, "timer=$full", "OSRS Wiki Tele Block: 5 minutes")
+        run.expectTrue(e, "Tele Block lasts 2:30 in Deadman (250 ticks)", full != null && full in 245..250, "timer=$full", "OSRS Deadman Autumn 2018: 150 seconds (N39)")
         // A second Tele Block on a blocked player does not refresh it.
         val before = b.timers[tb]
         if (full != null) {
@@ -1539,7 +1539,7 @@ object DeadmanSuite : Conformance.Suite {
 
         prepare(protectMagic = true)
         val halved = castUntilBlocked()
-        run.expectTrue(e, "Tele Block with Protect from Magic lasts 2:30 (250 ticks)", halved != null && halved in 245..250, "timer=$halved", "OSRS Wiki Tele Block: halved")
+        run.expectTrue(e, "Tele Block with Protect from Magic lasts 1:15 in Deadman (125 ticks)", halved != null && halved in 120..125, "timer=$halved", "OSRS Deadman Autumn 2018: 75 seconds (N39)")
         b.timers.remove(tb)
         gg.rsmod.plugins.content.mechanics.prayer.Prayers.deactivateAll(b)
     }
