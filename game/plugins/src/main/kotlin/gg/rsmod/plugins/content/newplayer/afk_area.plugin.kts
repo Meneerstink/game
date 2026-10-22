@@ -144,7 +144,8 @@ fun startTraining(player: Player, station: AfkArea.Station, target: Tile) {
     val session = AfkArea.newSession(player)
     val startTile = player.tile
     val items = itemsFingerprint(player)
-    player.message("You start training $name. Move or do something else to stop.")
+    // N181 (owner 2026-10-22): once per skilling object, not on every (spam) click.
+    if (AfkArea.firstClickOn(player, station.loc, target)) player.message("You start training $name. Move or do something else to stop.")
     // Movement, another click on a loc, npc, player or the map, a teleport and logging out all end the queue;
     // mayTrain and the checks below end it too when the player does anything else (an item, an interface, a lock).
     player.queue {
@@ -156,6 +157,11 @@ fun startTraining(player: Player, station: AfkArea.Station, target: Tile) {
                 break
             }
             if (tick % station.animationTicks == 0) player.animate(station.animation)
+            // N180: the skill's sound every animation cycle (at most every 4 ticks: the balance walk loops each tick), unless the
+            // animation plays an audible sound of its own.
+            if (tick % maxOf(station.animationTicks, 4) == 0 && station.sound > 0 && !AfkArea.animationAudible(player, station.animation)) {
+                player.playSound(station.sound)
+            }
             if (!AfkArea.train(player, station.skill, config)) {
                 AfkArea.endSession(player)
                 player.animate(-1)

@@ -389,6 +389,16 @@ class SkillingBasementTests {
     }
 
     @Test
+    fun `N181 - the start-training line shows once per skilling object, not on every click`() {
+        val account = Account()
+        val rock = gg.rsmod.game.model.Tile(3100, 9900, 0)
+        assertTrue(AfkArea.firstClickOn(account.player, 1, rock))
+        assertFalse(AfkArea.firstClickOn(account.player, 1, rock), "a spam click on the same object")
+        assertTrue(AfkArea.firstClickOn(account.player, 2, gg.rsmod.game.model.Tile(3101, 9900, 0)), "another object")
+        assertTrue(AfkArea.firstClickOn(account.player, 1, rock), "back to the first one")
+    }
+
+    @Test
     fun `new_player yml holds the basement rates`() {
         val text = File("../../data/cfg/new_player.yml").readText()
         assertTrue("OWNER" in text.substringAfter("afk_area:").substringBefore("summoning_kit:"), "the owner marker on the XP rate")

@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.newplayer
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.tools.importer.AfkBasementMapTool
@@ -51,7 +52,11 @@ object AfkArea {
      * A station: the loc copy the tool placed (or the fishing spot npc), its skill, its menu option and the animation
      * played while training, repeated every [animationTicks] ticks so it keeps running.
      */
-    class Station(val loc: Int, val skill: Int, val option: String, val animation: Int, val animationTicks: Int = 4, val npc: Boolean = false)
+    /**
+     * [sound] (N180, owner 2026-10-22: "geen geluid bij het trainen van elke skill"): the skill's own sound, played with each
+     * animation cycle when the animation carries no audible frame sound of its own (the same Sfx the real skill code plays).
+     */
+    class Station(val loc: Int, val skill: Int, val option: String, val animation: Int, val animationTicks: Int = 4, val npc: Boolean = false, val sound: Int = -1)
 
     /** Box trap laying (Novite `Hunter.java`: BOX 19187 new Animation(5208)). */
     const val LAY_BOX_TRAP = 5208
@@ -64,28 +69,28 @@ object AfkArea {
     /** [AfkBasementMapTool.STATIONS] order (loc copies 62870..), then the fishing spot's two options. */
     val STATIONS: List<Station> =
         listOf(
-            Station(loc(0), Skills.WOODCUTTING, "Chop down", Anims.CHOP_BRONZE_HATCHET),
-            Station(loc(1), Skills.MINING, "Mine", Anims.MINE_BRONZE_PICKAXE),
-            Station(loc(2), Skills.MINING, "Mine", Anims.MINE_BRONZE_PICKAXE),
-            Station(loc(3), Skills.FARMING, "Rake", Anims.RAKE_PATCH),
-            Station(loc(4), Skills.HUNTER, "Check", LAY_BOX_TRAP),
-            Station(loc(5), Skills.COOKING, "Cook", Anims.COOK_RANGE),
-            Station(loc(6), Skills.FIREMAKING, "Tend", Anims.LIGHT_FIRE),
-            Station(loc(7), Skills.SMITHING, "Smelt", Anims.SMELT_FURNACE),
-            Station(loc(8), Skills.SMITHING, "Smith", Anims.SMITH_ANVIL),
-            Station(loc(9), Skills.CRAFTING, "Spin", Anims.SPIN_SPINNING_WHEEL),
+            Station(loc(0), Skills.WOODCUTTING, "Chop down", Anims.CHOP_BRONZE_HATCHET, sound = Sfx.CHOPPING),
+            Station(loc(1), Skills.MINING, "Mine", Anims.MINE_BRONZE_PICKAXE, sound = Sfx.MINE_ORE),
+            Station(loc(2), Skills.MINING, "Mine", Anims.MINE_BRONZE_PICKAXE, sound = Sfx.MINE_ORE),
+            Station(loc(3), Skills.FARMING, "Rake", Anims.RAKE_PATCH, sound = Sfx.FARMING_SCOOP),
+            Station(loc(4), Skills.HUNTER, "Check", LAY_BOX_TRAP, sound = Sfx.FARMING_PUTIN),
+            Station(loc(5), Skills.COOKING, "Cook", Anims.COOK_RANGE, sound = Sfx.FRY),
+            Station(loc(6), Skills.FIREMAKING, "Tend", Anims.LIGHT_FIRE, sound = Sfx.FIRE_LIT),
+            Station(loc(7), Skills.SMITHING, "Smelt", Anims.SMELT_FURNACE, sound = Sfx.FURNACE),
+            Station(loc(8), Skills.SMITHING, "Smith", Anims.SMITH_ANVIL, sound = Sfx.ANVIL),
+            Station(loc(9), Skills.CRAFTING, "Spin", Anims.SPIN_SPINNING_WHEEL, sound = Sfx.SPINNING),
             // the server's own potter's wheel forming (FormPotteryAction) plays COOK_RANGE
-            Station(loc(10), Skills.CRAFTING, "Form", Anims.COOK_RANGE),
-            Station(loc(11), Skills.FLETCHING, "Fletch", Anims.FLETCH_SHORTBOW),
-            Station(loc(12), Skills.HERBLORE, "Mix", Anims.MIX_POTION),
-            Station(loc(13), Skills.CONSTRUCTION, "Build", Anims.HAMMER_FIX_SHIELD),
-            Station(loc(14), Skills.RUNECRAFTING, "Craft-rune", Anims.CRAFT_RUNES),
-            Station(loc(15), Skills.AGILITY, "Balance", BALANCE_WALK, animationTicks = 1),
-            Station(loc(16), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB),
-            Station(loc(17), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB),
-            Station(loc(18), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB),
-            Station(FISHING_SPOT, Skills.FISHING, "Net", Anims.FISH_SMALL_FISHING_NET, npc = true),
-            Station(FISHING_SPOT, Skills.FISHING, "Bait", Anims.FISH_FISHING_ROD, npc = true),
+            Station(loc(10), Skills.CRAFTING, "Form", Anims.COOK_RANGE, sound = Sfx.POTTERY),
+            Station(loc(11), Skills.FLETCHING, "Fletch", Anims.FLETCH_SHORTBOW, sound = Sfx.FLETCH),
+            Station(loc(12), Skills.HERBLORE, "Mix", Anims.MIX_POTION, sound = Sfx.GRIND),
+            Station(loc(13), Skills.CONSTRUCTION, "Build", Anims.HAMMER_FIX_SHIELD, sound = Sfx.HAMMER_AND_BUILD),
+            Station(loc(14), Skills.RUNECRAFTING, "Craft-rune", Anims.CRAFT_RUNES, sound = Sfx.BIND_RUNES),
+            Station(loc(15), Skills.AGILITY, "Balance", BALANCE_WALK, animationTicks = 1, sound = Sfx.LOG_BALANCE),
+            Station(loc(16), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB, sound = Sfx.PICK2),
+            Station(loc(17), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB, sound = Sfx.PICK2),
+            Station(loc(18), Skills.THIEVING, "Steal-from", Anims.REACH_OUT_GRAB, sound = Sfx.PICK2),
+            Station(FISHING_SPOT, Skills.FISHING, "Net", Anims.FISH_SMALL_FISHING_NET, npc = true, sound = Sfx.NET),
+            Station(FISHING_SPOT, Skills.FISHING, "Bait", Anims.FISH_FISHING_ROD, npc = true, sound = Sfx.FISHING_CAST),
         )
 
     /** Exactly the 15 skills of the owner's brief. */
@@ -97,6 +102,13 @@ object AfkArea {
         )
 
     fun station(loc: Int): Station? = STATIONS.firstOrNull { !it.npc && it.loc == loc }
+
+    /** True when [anim] carries a frame sound the client plays by itself (then the station's own [Station.sound] stays off). */
+    fun animationAudible(
+        player: Player,
+        anim: Int,
+    ): Boolean =
+        runCatching { player.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, anim)?.hasAudibleFrameSounds == true }.getOrDefault(false)
 
     fun capXp(config: NewPlayerConfig = NewPlayerConfig.current): Double = SkillSet.getXpForLevel(config.afkLevelCap)
 
@@ -128,6 +140,21 @@ object AfkArea {
      * number is no longer its own - so a player trains on one station at a time and never gets two XP ticks at once.
      */
     val SESSION = AttributeKey<Int>()
+
+    /** N181: the object (loc id and tile hash) whose "You start training" line was shown last - not repeated on every click. */
+    val LAST_TRAINING_LINE = AttributeKey<Long>()
+
+    /** True the first time a player trains at [loc] on [tile] in a row; another object resets it. */
+    fun firstClickOn(
+        player: gg.rsmod.game.model.entity.Player,
+        loc: Int,
+        tile: gg.rsmod.game.model.Tile,
+    ): Boolean {
+        val key = (loc.toLong() shl 32) or (tile.as30BitInteger.toLong() and 0xFFFFFFFFL)
+        if (player.attr[LAST_TRAINING_LINE] == key) return false
+        player.attr[LAST_TRAINING_LINE] = key
+        return true
+    }
 
     /** Per tick, whether a session may give XP: same session, still online, still in the basement, not logging out. */
     fun mayTrain(player: Player, session: Int): Boolean =
