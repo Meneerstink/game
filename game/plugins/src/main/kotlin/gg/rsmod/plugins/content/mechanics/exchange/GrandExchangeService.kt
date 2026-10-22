@@ -145,7 +145,13 @@ class GrandExchangeService(
         world: World,
     ) {
         // A14: the daily OSRS price update (data/ge/osrs-prices.json; isolated for test servers like every runtime file).
-        if (osrsPriceSync) OsrsPriceSync.start(gg.rsmod.util.io.SharedDataFiles.of(OsrsPriceSync.STORED))
+        // The fetch runs on the sync thread; the new price list is put in place on the game thread (Audit T-03 hand-off).
+        val game = world.getService(gg.rsmod.game.service.GameService::class.java)
+        if (osrsPriceSync) {
+            OsrsPriceSync.start(gg.rsmod.util.io.SharedDataFiles.of(OsrsPriceSync.STORED)) { job ->
+                if (game != null) game.submitGameThreadJob(job) else job()
+            }
+        }
     }
 
     override fun bindNet(

@@ -18,7 +18,7 @@ class GameThreadOnlyPluginTests {
      * Files that start their own threads on purpose and hand the result back through
      * `GameService.submitGameThreadJob`. Adding a file here needs that same hand-off.
      */
-    private val allowed = setOf("PasswordChange.kt", "WorldScan.kt")
+    private val allowed = setOf("PasswordChange.kt", "WorldScan.kt", "OsrsPriceSync.kt")
 
     private val forbidden =
         listOf(

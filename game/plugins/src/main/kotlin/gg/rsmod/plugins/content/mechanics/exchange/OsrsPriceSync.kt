@@ -157,6 +157,7 @@ object OsrsPriceSync : KLogging() {
         now: Long = System.currentTimeMillis(),
         force: Boolean = false,
         get: (String) -> String = ::httpGet,
+        onGameThread: (() -> Unit) -> Unit = { it() },
     ): Boolean {
         val stored = readStoredPrices(file)
         if (!force && stored != null && now - stored.fetchedAtMs in 0 until INTERVAL_MS) return false
@@ -169,8 +170,10 @@ object OsrsPriceSync : KLogging() {
             check(fresh >= MIN_ITEMS) { "answer holds only $fresh hourly prices" }
             val timestamp = hour.long("timestamp")
             writeStored(file, prices, timestamp, now)
-            OsrsGuidePrices.book = OsrsGuidePrices.book.withHourly(prices, "daily $timestamp")
-            logger.info { "[ge-prices] ${prices.size} OSRS prices applied (hourly average, timestamp $timestamp)" }
+            onGameThread {
+                OsrsGuidePrices.book = OsrsGuidePrices.book.withHourly(prices, "daily $timestamp")
+                logger.info { "[ge-prices] ${prices.size} OSRS prices applied (hourly average, timestamp $timestamp)" }
+            }
             true
         } catch (e: Exception) {
             logger.warn { "PROBLEM ge-prices fetch failed, keeping the previous prices: ${e.message}" }
@@ -180,14 +183,20 @@ object OsrsPriceSync : KLogging() {
 
     private var started = false
 
-    /** Loads the stored prices and checks hourly whether the daily update is due. Runs on its own daemon thread. */
+    /**
+     * Loads the stored prices and checks hourly whether the daily update is due. The download runs on its own daemon thread; the
+     * fresh list is handed to [onGameThread] (GameService.submitGameThreadJob) so the world reads it only on the game thread.
+     */
     @Synchronized
-    fun start(file: File) {
+    fun start(
+        file: File,
+        onGameThread: (() -> Unit) -> Unit,
+    ) {
         if (started) return
         started = true
         OsrsGuidePrices.book = OsrsPriceBook.checkedIn(file)
         logger.info { "[ge-prices] using ${OsrsGuidePrices.book.label}" }
         val executor = Executors.newSingleThreadScheduledExecutor { r -> Thread(r, "ge-price-sync").apply { isDaemon = true } }
-        executor.scheduleWithFixedDelay({ refresh(file) }, 30, 3600, TimeUnit.SECONDS)
+        executor.scheduleWithFixedDelay({ refresh(file, onGameThread = onGameThread) }, 30, 3600, TimeUnit.SECONDS)
     }
 }

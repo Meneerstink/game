@@ -29,7 +29,10 @@ object GePrice {
     fun unit(
         world: World,
         itemId: Int,
-    ): Int = unit(world.definitions, world.getService(GrandExchangeService::class.java), itemId)
+    ): Int = unit(world.definitions, exchange(world), itemId)
+
+    /** The world's Grand Exchange; null when it has none (a bare world, or a stand-in service in tests) - the seed price applies. */
+    private fun exchange(world: World): GrandExchangeService? = world.getService<gg.rsmod.game.service.Service>(GrandExchangeService::class.java) as? GrandExchangeService
 
     /** What the whole stack [item] is worth, in Long (a big stack times its price does not fit an Int). */
     fun stack(
