@@ -66,8 +66,7 @@ on_button(interfaceId = 1139, component = 2) {
     }
     if (player.inventory.remove(lamp).hasSucceeded()) {
         player.attr.remove(LampInterfaceState.RUBBED_LAMP)
-        val gained = (experience * player.xpMultiplier(skill)).toLong() // N92: the lamp gets the Annihilation rate
-        player.addXp(skill = skill, xp = experience.toDouble())
+        val gained = ExperienceLamps.grant(player, skill, experience.toDouble()) // N92 rate; N38: the line names the real gain
         player.playSound(2655)
         player.queue {
             messageBox(

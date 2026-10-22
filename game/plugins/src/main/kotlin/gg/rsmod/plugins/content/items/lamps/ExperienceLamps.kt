@@ -102,6 +102,21 @@ object ExperienceLamps {
                     (gg.rsmod.game.model.skill.SkillSet.getXpForLevel(level + 1) - xp).toInt().coerceAtLeast(0)
                 }
         }
+
+    /**
+     * Grants a lamp's [experience] in [skill] (with the Annihilation rate, N92) and returns the experience really gained - the number
+     * the "You have been awarded N ..." line names. N38: the line named the base 1,000 while the skill went up 3,020; measuring the
+     * gain also covers the 200M cap and an XP redirect.
+     */
+    fun grant(
+        player: gg.rsmod.game.model.entity.Player,
+        skill: Int,
+        experience: Double,
+    ): Long {
+        val before = player.skills.getCurrentXp(skill)
+        player.addXp(skill = skill, xp = experience)
+        return Math.round(player.skills.getCurrentXp(skill) - before)
+    }
 }
 
 /** Which lamp the open interface 1139 belongs to. */

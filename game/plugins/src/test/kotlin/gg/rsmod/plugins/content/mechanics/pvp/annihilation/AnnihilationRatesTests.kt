@@ -141,6 +141,19 @@ class AnnihilationRatesTests {
     }
 
     @Test
+    fun `N38 a lamp names the experience really gained, also at the 200M cap`() {
+        val p = player("n38lamp", OWNER_TILE)
+        setCombat(p, 3)
+        val before = p.skills.getCurrentXp(Skills.STRENGTH)
+        val gained = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.STRENGTH, 1_000.0)
+        assertEquals("1,000 lamp XP at combat 3 = 10x", 10_000L, gained)
+        assertEquals(before + gained, p.skills.getCurrentXp(Skills.STRENGTH), 1e-6)
+
+        p.skills.setBaseXp(Skills.STRENGTH, SkillSet.MAX_XP - 2_500.0)
+        assertEquals("capped: only what fits under 200M", 2_500L, gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.STRENGTH, 1_000.0))
+    }
+
+    @Test
     fun `N184 quest XP is exact, the Wolf Whistle reward and the Summoning kit follow the rate`() {
         val p = player("n92quest", OWNER_TILE)
         setCombat(p, 3)

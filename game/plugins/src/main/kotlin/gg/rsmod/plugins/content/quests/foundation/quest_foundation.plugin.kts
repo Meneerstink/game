@@ -312,9 +312,8 @@ suspend fun QueueTask.claimLamps() {
                 if (!current.remove(lamp)) return
                 FoundationRewards.setPendingLamps(player, current)
                 // N92: lamps get the Annihilation rate (owner 10-17, OSRS); the line names the real gain.
-                val gained = lamp.xp * player.xpMultiplier(skill)
-                player.addXp(skill, lamp.xp.toDouble())
-                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained.toLong())} ${Skills.getSkillName(world, skill)} experience.")
+                val gained = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(player, skill, lamp.xp.toDouble())
+                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained)} ${Skills.getSkillName(world, skill)} experience.")
                 return
             }
         }
