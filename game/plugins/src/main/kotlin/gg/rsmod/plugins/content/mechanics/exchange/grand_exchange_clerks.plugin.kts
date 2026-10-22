@@ -11,6 +11,13 @@ import gg.rsmod.game.model.queue.QueueTask
  */
 val CLERKS = listOf(Npcs.GRAND_EXCHANGE_CLERK, Npcs.GRAND_EXCHANGE_CLERK_2240, Npcs.GRAND_EXCHANGE_CLERK_2241, Npcs.GRAND_EXCHANGE_CLERK_2593)
 
+// N190: a Rune pouch note becomes a rune pouch at a Grand Exchange clerk too (owner: "use it on a banker or grand exchange clerk").
+CLERKS.forEach { clerk ->
+    on_item_on_npc(item = Items.RUNE_POUCH_NOTE, npc = clerk) {
+        gg.rsmod.plugins.content.items.RunePouchNote.exchange(player)
+    }
+}
+
 CLERKS.forEach { clerk ->
     if (if_npc_has_option(clerk, "Exchange")) {
         on_npc_option(npc = clerk, option = "Exchange", lineOfSightDistance = 2) { GrandExchangeInterface.openMain(player) }

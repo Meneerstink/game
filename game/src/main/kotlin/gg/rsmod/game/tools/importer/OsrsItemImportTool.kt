@@ -930,6 +930,9 @@ object OsrsItemImportTool {
             // Owner 2026-09-23 ("We need the from Deadman's skull it needs to have the option Breach check"): OSRS Wiki "Deadman's
             // skull" id 33065 - options Shop, Unlocks, Swap, Breach Check, Destroy; untradeable, not bankable.
             "deadman-skull" to listOf(Spec(33065)),
+            // N190 (owner 2026-10-22): the Quartermaster sells a "Rune pouch note" at its OSRS GE price (OSRS Wiki "Rune pouch note",
+            // id 24587: tradeable, "Use it on a banker to receive a rune pouch") instead of a 10,000-coin rune pouch.
+            "rune-pouch-note" to listOf(Spec(24587)),
             // Owner 2026-09-26 (death rework): the rune pouch becomes Trouver-lockable - OSRS Wiki "Rune pouch (l)" 24416 and "Divine rune
             // pouch (l)" 27509 (untradeable; a locked pouch keeps the empty pouch on a PvP death, its runes go to the killer).
             "rune-pouch-locked" to listOf(Spec(24416), Spec(27509)),

@@ -20372,4 +20372,5 @@ object Items {
     const val AMULET_OF_GLORY_6_NOTED = 24123
     const val AMULET_OF_GLORY_5 = 24124
     const val AMULET_OF_GLORY_5_NOTED = 24125
+    const val RUNE_POUCH_NOTE = 24126
 }

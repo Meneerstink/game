@@ -48,6 +48,9 @@ bankers.forEach {
     on_npc_option(it, option = "talk-to", lineOfSightDistance = 2) {
         player.queue { BankerDialogue.chat(this) }
     }
+    on_item_on_npc(item = Items.RUNE_POUCH_NOTE, npc = it) {
+        gg.rsmod.plugins.content.items.RunePouchNote.exchange(player)
+    }
 }
 
 /*

@@ -79,7 +79,8 @@ object QuartermasterSupplies {
     val utility: List<Pair<Int, Int>> =
         listOf(
             Items.TELEPORT_TO_HOUSE to ROW_STOCK, Items.BURNING_AMULET_5 to ROW_STOCK, Items.AMULET_OF_GLORY_6 to ROW_STOCK,
-            Items.RUNE_POUCH to ROW_STOCK, Items.MITHRIL_SEEDS to ROW_STOCK, Items.ADAMANT_SEEDS to ROW_STOCK,
+            // N190 (owner 2026-10-22): a Rune pouch note at its OSRS GE price; a banker or GE clerk turns it into a rune pouch.
+            Items.RUNE_POUCH_NOTE to ROW_STOCK, Items.MITHRIL_SEEDS to ROW_STOCK, Items.ADAMANT_SEEDS to ROW_STOCK,
         )
 
     /** Food, potions, teleports and utility - the rows that are sold both unnoted and noted. */
