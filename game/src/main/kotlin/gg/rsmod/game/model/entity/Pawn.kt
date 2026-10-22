@@ -1050,7 +1050,9 @@ abstract class Pawn(
         // set the lockstate
         lock = lockState
 
-        if (this is Player && priority == TaskPriority.STRONG) {
+        // N165: a STANDARD task waits while a modal is open (PawnQueueTaskSet.isPaused), but the lock above is set now - and a
+        // locked player cannot close that modal, so Bury with the skill guide open froze him until logout. The action closes it.
+        if (this is Player && closesModalOnLock(priority, lockState) { world.plugins.isMenuOpened(this) }) {
             this.closeInterfaceModal()
         }
         queues.queue(this, world.coroutineDispatcher, priority, logic, lock = true)
@@ -1226,6 +1228,10 @@ abstract class Pawn(
 
     companion object {
         private val EMPTY_TILE_DEQUE = ArrayDeque<Tile>()
+
+        /** N165: whether [lockingQueue] closes the open modal - a STRONG task always, a locking one when a modal is open. */
+        internal fun closesModalOnLock(priority: TaskPriority, lockState: LockState, modalOpen: () -> Boolean): Boolean =
+            priority == TaskPriority.STRONG || (lockState != LockState.NONE && modalOpen())
 
         /**
          * One timer pass for [timers] (see [timerCycle]): ticks every timer first and only then runs the
