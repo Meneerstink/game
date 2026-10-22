@@ -87,7 +87,7 @@ object DoricsQuest : Quest(
         player.inventory.remove(Items.COPPER_ORE, 4)
         player.inventory.remove(Items.IRON_ORE, 2)
         player.inventory.add(Items.COINS_995, 180)
-        player.addXp(Skills.MINING, 1300.0)
+        player.addXp(Skills.MINING, 1300.0, modifiers = false) // N184: quest XP is exact
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,

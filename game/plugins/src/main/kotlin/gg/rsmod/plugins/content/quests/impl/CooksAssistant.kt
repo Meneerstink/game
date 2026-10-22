@@ -79,7 +79,7 @@ object CooksAssistant : Quest(
         player.inventory.remove(Items.EXTRA_FINE_FLOUR)
         player.inventory.add(Items.COINS_995, 500)
         player.inventory.add(Items.SARDINE_NOTED, 20)
-        player.addXp(Skills.COOKING, 300.0)
+        player.addXp(Skills.COOKING, 300.0, modifiers = false) // N184: quest XP is exact
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,

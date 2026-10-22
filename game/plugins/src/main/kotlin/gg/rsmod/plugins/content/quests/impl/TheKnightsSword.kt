@@ -158,7 +158,7 @@ object TheKnightsSword : Quest(
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this)
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
-        player.addXp(skill = Skills.SMITHING, xp = 12725.0)
+        player.addXp(skill = Skills.SMITHING, xp = 12725.0, modifiers = false) // N184: quest XP is exact
         player.inventory.remove(Items.BLURITE_SWORD)
         player.buildQuestFinish(
             this,

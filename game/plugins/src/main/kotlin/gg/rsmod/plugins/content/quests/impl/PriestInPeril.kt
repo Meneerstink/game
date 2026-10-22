@@ -216,7 +216,7 @@ object PriestInPeril : Quest(
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this, 53)
         player.inventory.add(Items.WOLFBANE)
-        player.addXp(Skills.PRAYER, 1406.0)
+        player.addXp(Skills.PRAYER, 1406.0, modifiers = false) // N184: quest XP is exact
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,

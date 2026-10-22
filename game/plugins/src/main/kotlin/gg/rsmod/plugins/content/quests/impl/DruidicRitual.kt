@@ -80,7 +80,7 @@ object DruidicRitual : Quest( // sets up the quest info.
     override fun finishQuest(player: Player) { // what happens when you finish the quest
         player.advanceToNextStage(this)
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
-        player.addXp(Skills.HERBLORE, 250.0) // adds xp for herblore
+        player.addXp(Skills.HERBLORE, 250.0, modifiers = false) // adds xp for herblore (N184: exact, no rate)
         player.buildQuestFinish(
             this,
             item = Items.CLEAN_GUAM,

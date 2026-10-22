@@ -126,7 +126,7 @@ object VampyreSlayer : Quest(
 
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this)
-        player.addXp(Skills.ATTACK, 4825.0)
+        player.addXp(Skills.ATTACK, 4825.0, modifiers = false) // N184: quest XP is exact
         gg.rsmod.plugins.content.quests.QuestStatus.sync(player) // Quest Points = the completed quests of the list
         player.buildQuestFinish(
             this,

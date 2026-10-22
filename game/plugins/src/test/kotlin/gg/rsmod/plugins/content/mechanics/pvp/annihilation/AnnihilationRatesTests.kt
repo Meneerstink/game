@@ -129,7 +129,9 @@ class AnnihilationRatesTests {
     fun `N92 class - no experience route outside the AFK area and test bots bypasses the rate`() {
         // Owner 10-17: lamps and quest XP get the bracket rate too (OSRS: "The experience multipliers are also applied to
         // experience rewards obtained through lamps"). The AFK area keeps its own fixed numbers (new_player.yml, N110 open).
-        val allowed = setOf("AfkArea.kt", "SummoningSuite.kt")
+        // Owner 2026-10-22 (N184): quest XP is exact, so the quest reward routes may skip the rate.
+        val quests = setOf("FoundationRewards.kt", "CooksAssistant.kt", "DoricsQuest.kt", "DruidicRitual.kt", "ImpCatcher.kt", "PriestInPeril.kt", "TheKnightsSword.kt", "TheRestlessGhost.kt", "VampyreSlayer.kt")
+        val allowed = setOf("AfkArea.kt", "SummoningSuite.kt") + quests
         val bypasses =
             File("src/main/kotlin").walkTopDown()
                 .filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name !in allowed }
@@ -139,14 +141,14 @@ class AnnihilationRatesTests {
     }
 
     @Test
-    fun `N92 quest XP, the Wolf Whistle reward and the Summoning kit follow the rate`() {
+    fun `N184 quest XP is exact, the Wolf Whistle reward and the Summoning kit follow the rate`() {
         val p = player("n92quest", OWNER_TILE)
         setCombat(p, 3)
         val quest = FoundationQuests.SHORT.first { it.reward.xp.isNotEmpty() }
         val before = quest.reward.xp.associate { (skill, _) -> skill to p.skills.getCurrentXp(skill) }
         FoundationRewards.complete(p, quest)
         quest.reward.xp.forEach { (skill, amount) ->
-            assertEquals("${quest::class.simpleName} quest XP in skill $skill at combat 3 = ${amount}x10", amount * 10, p.skills.getCurrentXp(skill) - before.getValue(skill), 1e-6)
+            assertEquals("${quest::class.simpleName} quest XP in skill $skill at combat 3 = exactly $amount (N184)", amount, p.skills.getCurrentXp(skill) - before.getValue(skill), 1e-6)
         }
 
         val s = player("n92kit", OWNER_TILE)

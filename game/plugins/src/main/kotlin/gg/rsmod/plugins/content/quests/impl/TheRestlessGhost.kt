@@ -117,7 +117,7 @@ object TheRestlessGhost : Quest( // Adds Quest Info
 
     override fun finishQuest(player: Player) {
         player.advanceToNextStage(this)
-        player.addXp(Skills.PRAYER, 125.0)
+        player.addXp(Skills.PRAYER, 125.0, modifiers = false) // N184: quest XP is exact
         if (player.inventory.freeSlotCount >= 5) {
             player.inventory.add(Items.ANCIENT_BONES, 5)
         }
