@@ -43,6 +43,12 @@ on_timer(POISON_TIMER) {
     pawn.timers[POISON_TIMER] = poisonTickDelay
 }
 
+// Owner 2026-10-17 (VRAGEN 28 = A): poison and venom survive a relog, the clock to the next hit starts again (30 ticks, Void/2009scape).
+// Teleporting changes nothing, so only login restarts it. Venom is handled in the same call (they share the HP orb and exclude each other).
+on_login {
+    Poison.restartCountdownAtLogin(player)
+}
+
 // Reset the players poison varp on death
 on_player_death {
     Poison.cure(player)

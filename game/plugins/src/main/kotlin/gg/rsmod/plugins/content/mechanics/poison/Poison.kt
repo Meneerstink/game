@@ -7,6 +7,7 @@ import gg.rsmod.game.model.entity.Pawn
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.POISON_IMMUNITY
 import gg.rsmod.game.model.timer.POISON_TIMER
+import gg.rsmod.game.model.timer.VENOM_TIMER
 import gg.rsmod.plugins.content.items.potion.Potion
 import gg.rsmod.plugins.content.items.potion.PotionType
 import gg.rsmod.plugins.content.items.potion.Potions
@@ -112,6 +113,42 @@ object Poison {
             }
         }
         return true
+    }
+
+    /**
+     * Login (owner 2026-10-17, VRAGEN 28 = A): poison and venom stay across a relog, but the clock to the next hit starts again.
+     * Donors: Void Poison.kt:66-69 (playerSpawn `timers.restart("poison")`, the 30-tick countdown restarts from 30) and 2009scape
+     * Poison.kt (the timer is saved without its ticks, so the next hit comes a full 30 ticks after login). Ours saves the remaining
+     * part of the countdown (POISON_TIMER / VENOM_TIMER, tickOffline = false), so without this the first hit after a relog came
+     * early (the saved remainder). The severity (poison) and the damage step (venom) are kept as saved; the HP orb is set again.
+     * Teleporting changes nothing (owner: as OSRS), so only the login path calls this.
+     *
+     * @return true if the player was poisoned or envenomed (the countdown was restarted).
+     */
+    fun restartCountdownAtLogin(player: Player): Boolean {
+        if (player.attr.has(VENOM_TICKS_ELAPSED_ATTR)) {
+            // Venom is the stronger state; a save never holds both, but if it did the poison must not tick beside it.
+            player.attr.remove(POISON_TICKS_LEFT_ATTR)
+            player.timers.remove(POISON_TIMER)
+            player.timers[VENOM_TIMER] = Venom.VENOM_TICK_DELAY
+            setPoisonVarp(player, OrbState.VENOM)
+            return true
+        }
+        val severityLeft = player.attr[POISON_TICKS_LEFT_ATTR]
+        if (severityLeft != null) {
+            if (severityLeft < 0) {
+                // Severity already zero when saved: worn off, nothing to restart.
+                cure(player)
+                return false
+            }
+            player.timers[POISON_TIMER] = POISON_TICK_DELAY
+            setPoisonVarp(player, OrbState.POISON)
+            return true
+        }
+        // No poison state saved: a stray timer must not start damage out of nothing.
+        player.timers.remove(POISON_TIMER)
+        player.timers.remove(VENOM_TIMER)
+        return false
     }
 
     /** Handles the cache HP-orb "Use Cure" action without relying on an item click slot. */
