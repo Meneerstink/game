@@ -371,6 +371,8 @@ object TutorIntro {
         DangerWarning.endIntro(player)
         // Owner 2026-10-08: the Deadman starter pack is a new player's only item, handed out once the introduction is over.
         if (firstTime) gg.rsmod.plugins.content.starter.NewPlayerStart.grantStarterPack(player)
+        // N212: the beginner protection's 60 minutes start now, not at account creation (hidden and paused during the intro).
+        if (firstTime) gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection.grantAfterIntro(player)
         if (interrupted) player.message("<col=0b6fb8>Talk to the Quest Tutor any time to watch the introduction again.</col>")
     }
 }

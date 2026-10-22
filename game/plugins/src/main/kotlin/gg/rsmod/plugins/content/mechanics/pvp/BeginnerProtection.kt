@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.LAST_ACTIVE_CYCLE_ATTR
-import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.attr.PROTECTION_FORFEITED_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER
@@ -44,11 +43,13 @@ object BeginnerProtection {
     fun isProtected(player: Player): Boolean =
         player.timers.has(NEW_PLAYER_PROTECTION_TIMER) && player.attr[PROTECTION_FORFEITED_ATTR] != true
 
-    /** Call once, at true first login only (see `starter_kit.plugin.kts`'s NEW_ACCOUNT_ATTR gate). */
-    fun grantOnFirstLogin(player: Player) {
-        if (player.attr[NEW_ACCOUNT_ATTR] == true) {
-            player.timers[NEW_PLAYER_PROTECTION_TIMER] = PROTECTION_CYCLES
-        }
+    /**
+     * N212 (owner 2026-10-22: hide and pause it during the intro): the 60 minutes start when a new player's introduction is over -
+     * finished, skipped or interrupted ([gg.rsmod.plugins.content.quests.foundation.TutorIntro.finish], first time only) - so the
+     * intro neither shows a "Protected" row nor uses up protection time.
+     */
+    fun grantAfterIntro(player: Player) {
+        player.timers[NEW_PLAYER_PROTECTION_TIMER] = PROTECTION_CYCLES
     }
 
     /**

@@ -4,7 +4,6 @@ import gg.rsmod.game.model.attr.CREATION_DATE
 import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.plugins.content.inter.bank.Bank
-import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.newplayer.NewPlayerConfig
 import gg.rsmod.util.Misc
 
@@ -37,7 +36,6 @@ on_login {
         bank.forEach { slotItem ->
             player.bank.add(item = slotItem.item, beginSlot = slotItem.slot)
         }
-        BeginnerProtection.grantOnFirstLogin(player)
 
         // 1:1 prayer points (runetek5.plugin.kts): a full bar at his Prayer level. The old 10 here was the 667 x10 unit and
         // gave every new account 10 points at Prayer 1 (owner 2026-10-10: "wrm heeft onze character 10 prayer").
@@ -46,7 +44,7 @@ on_login {
         player.attr[CREATION_DATE] = System.currentTimeMillis()
 
         // Owner 2026-10-07: the old three-line welcome is replaced by the Quest Tutor's camera tour (TutorIntro) - after the
-        // starter kit and beginner protection above (the 1m cash is in the starter pack, N179). It opens the Dangerous-area warning's intro window
+        // starter kit above (the 1m cash is in the starter pack, N179; beginner protection starts after the intro, N212). It opens the Dangerous-area warning's intro window
         // (DangerWarning.startIntro, owner 2026-09-23) and closes it when the tour ends, is skipped or is interrupted.
         gg.rsmod.plugins.content.quests.foundation.TutorIntro.start(player)
 

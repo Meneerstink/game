@@ -7,7 +7,6 @@ import gg.rsmod.game.Server
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
-import gg.rsmod.game.model.attr.NEW_ACCOUNT_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
@@ -225,8 +224,7 @@ class DeadmanChestWorldTests {
 
         val newbie = player("newbie", beside(tile))
         giveRisk(newbie)
-        newbie.attr[NEW_ACCOUNT_ATTR] = true
-        BeginnerProtection.grantOnFirstLogin(newbie)
+        BeginnerProtection.grantAfterIntro(newbie)
         assertTrue("precondition: protected", BeginnerProtection.isProtected(newbie))
         DeadmanChestWorld.beginOpen(newbie, chest.tile)
         assertEquals(DeadmanChest.MSG_PROTECTED, messages(newbie).last())
