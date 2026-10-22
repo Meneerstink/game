@@ -117,8 +117,15 @@ object DeadmanHud {
      * rounded up to the second, or null without a grace. Sent as a second field of 381:5 so the skull row is unchanged.
      */
     fun graceText(player: Player): String? {
-        if (!KillGrace.isProtected(player)) return null
-        val secondsLeft = Math.ceil(KillGrace.cyclesLeft(player) * 0.6).toInt().coerceAtLeast(0)
+        val cyclesLeft =
+            when {
+                KillGrace.isProtected(player) -> KillGrace.cyclesLeft(player)
+                // N171 (owner 10-22: "a new player sees no protection timer - BIG ISSUE"): the beginner protection (60 minutes of
+                // active play, BeginnerProtection) shows in the same "Protected m:ss" row.
+                BeginnerProtection.isProtected(player) -> player.timers[gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER]
+                else -> return null
+            }
+        val secondsLeft = Math.ceil(cyclesLeft * 0.6).toInt().coerceAtLeast(0)
         return "%d:%02d".format(secondsLeft / 60, secondsLeft % 60)
     }
 

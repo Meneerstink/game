@@ -100,6 +100,21 @@ class KillGraceTests {
     }
 
     @Test
+    fun `N171 - a new player's beginner protection shows in the HUD Protected row until it is used up or forfeited`() {
+        val player = newPlayer()
+        kotlin.test.assertNull(DeadmanHud.graceText(player))
+        player.timers[gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER] = BeginnerProtection.PROTECTION_CYCLES
+        kotlin.test.assertEquals("60:00", DeadmanHud.graceText(player), "60 minutes at login")
+        player.timers[gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER] = 99
+        kotlin.test.assertEquals("1:00", DeadmanHud.graceText(player))
+        KillGrace.grant(player)
+        kotlin.test.assertEquals("1:00", DeadmanHud.graceText(player), "a kill grace shows its own time first")
+        KillGrace.endEarly(player)
+        BeginnerProtection.forfeit(player)
+        kotlin.test.assertNull(DeadmanHud.graceText(player), "forfeited: no protection row")
+    }
+
+    @Test
     fun `the HUD grace field shows 1-00 on a kill and clears after 100 ticks, on an attack and on death`() {
         val killer = newPlayer()
         KillGrace.grant(killer)
