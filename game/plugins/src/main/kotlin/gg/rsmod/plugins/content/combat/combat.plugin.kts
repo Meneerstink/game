@@ -4,7 +4,6 @@ import gg.rsmod.game.action.PawnPathAction
 import gg.rsmod.game.model.attr.AGGRESSOR
 import gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR
 import gg.rsmod.game.model.attr.FACING_PAWN_ATTR
-import gg.rsmod.game.model.attr.INTERACTING_PLAYER_ATTR
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.game.model.timer.STUN_TIMER
@@ -49,34 +48,40 @@ fun dropQueuedManualSpell(player: gg.rsmod.game.model.entity.Player) {
         player.attr.remove(gg.rsmod.plugins.content.combat.magic.Autocast.MANUAL_TARGET)
     }
 }
-gg.rsmod.game.message.handler.OpPlayer2Handler.beforeAttack = { dropQueuedManualSpell(it) }
-
-on_player_option("Attack") {
-    val target = pawn.attr[INTERACTING_PLAYER_ATTR]?.get() ?: return@on_player_option
+gg.rsmod.game.message.handler.OpPlayer2Handler.beforeAttack = { player, target ->
     dropQueuedManualSpell(player)
-
-    // R14.25: initiating PvP while protected needs explicit confirmation that permanently
-    // forfeits protection - only for a real, explicit click here, never for auto-retaliation
-    // (auto-retaliation never routes through this option handler at all, so it can't
-    // accidentally forfeit protection - matching R14.25's "never through ... auto-retaliation").
-    if (BeginnerProtection.isProtected(player)) {
-        player.queue {
-            val choice =
-                options(
-                    "Yes - attack (this permanently ends your beginner protection).",
-                    "No, cancel.",
-                )
-            if (choice == 1) {
-                BeginnerProtection.forfeit(player)
-                player.attack(target)
-            } else {
-                player.message("You decide not to attack.")
-            }
-        }
-        return@on_player_option
+    // N23: the engine handles the Attack click itself (OpPlayer2Handler), so the old Attack-option consent handler of this plugin
+    // was never reached and a protected player only got "You can't attack players here.".
+    if (BeginnerProtection.needsForfeitConfirmation(player, target)) {
+        confirmForfeitAttack(player, target)
+        false
+    } else {
+        true
     }
+}
 
-    player.attack(target)
+/**
+ * R14.25 / N23 (VRAGEN 19 = A, owner 2026-10-17): a protected player's explicit Attack click asks whether he gives up his beginner
+ * protection for good - only when the attack would otherwise be allowed, never for auto-retaliation (which does not click).
+ */
+fun confirmForfeitAttack(
+    player: gg.rsmod.game.model.entity.Player,
+    target: gg.rsmod.game.model.entity.Player,
+) {
+    player.queue {
+        val choice =
+            options(
+                "Yes - attack (this permanently ends your beginner protection).",
+                "No, cancel.",
+                title = "Give up your beginner protection?",
+            )
+        if (choice == 1) {
+            BeginnerProtection.forfeit(player)
+            player.attack(target)
+        } else {
+            player.message("You decide not to attack.")
+        }
+    }
 }
 
 on_timer(ACTIVE_COMBAT_TIMER) {

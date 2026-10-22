@@ -307,11 +307,21 @@ object AreaState {
     fun canPlayersFight(
         attacker: gg.rsmod.game.model.entity.Player,
         target: gg.rsmod.game.model.entity.Player,
-    ): Boolean {
+    ): Boolean =
         // R14.23: covers targeting in BOTH directions - a protected player can neither attack
         // nor be attacked. The only way out is BeginnerProtection.forfeit (R14.25's explicit
         // consent flow in combat.plugin.kts), which runs before this is next evaluated.
-        if (BeginnerProtection.isProtected(attacker) || BeginnerProtection.isProtected(target)) {
+        !BeginnerProtection.isProtected(attacker) && canFightIgnoringOwnProtection(attacker, target)
+
+    /**
+     * [canPlayersFight] as if [attacker] had no beginner protection (the target's still counts). N23 (VRAGEN 19 = A, owner
+     * 2026-10-17): a protected player's Attack click asks to forfeit the protection only when the attack would otherwise be allowed.
+     */
+    fun canFightIgnoringOwnProtection(
+        attacker: gg.rsmod.game.model.entity.Player,
+        target: gg.rsmod.game.model.entity.Player,
+    ): Boolean {
+        if (BeginnerProtection.isProtected(target)) {
             return false
         }
         // Owner 2026-10-10 (staff tools): a jailed player sits out his punishment - nobody fights him and he fights nobody.

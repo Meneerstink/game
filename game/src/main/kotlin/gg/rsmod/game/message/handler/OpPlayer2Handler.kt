@@ -6,6 +6,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR
 import gg.rsmod.game.model.attr.INTERACTING_PLAYER_ATTR
 import gg.rsmod.game.model.entity.Client
+import gg.rsmod.game.model.entity.Player
 import java.lang.ref.WeakReference
 
 /**
@@ -40,15 +41,16 @@ class OpPlayer2Handler : MessageHandler<OpPlayer2Message> {
 
         client.attr[INTERACTING_PLAYER_ATTR] = WeakReference(other)
         client.attr[INTERACTING_OPT_ATTR] = option
-        beforeAttack?.invoke(client)
+        if (beforeAttack?.invoke(client, other) == false) return
         client.attack(other)
     }
 
     companion object {
         /**
          * Runs before a player's Attack click on another player (set by the combat plugin): a manual spell still queued is
-         * dropped, so the click attacks with the weapon instead of firing that spell (intro scene 2026-10-08).
+         * dropped, so the click attacks with the weapon instead of firing that spell (intro scene 2026-10-08). False = the plugin
+         * took the click over (N23: a protected player is asked first whether he gives up his beginner protection).
          */
-        var beforeAttack: ((Client) -> Unit)? = null
+        var beforeAttack: ((Client, Player) -> Boolean)? = null
     }
 }

@@ -51,6 +51,16 @@ object BeginnerProtection {
         }
     }
 
+    /**
+     * N23 (VRAGEN 19 = A): an Attack click by a protected [attacker] asks him to forfeit his protection when the attack would
+     * otherwise be allowed ([wouldFight] = the PvP rules without his own protection); otherwise the click is refused as usual.
+     */
+    fun needsForfeitConfirmation(
+        attacker: Player,
+        target: Player,
+        wouldFight: (Player, Player) -> Boolean = AreaState::canFightIgnoringOwnProtection,
+    ): Boolean = isProtected(attacker) && wouldFight(attacker, target)
+
     /** R14.25: permanently ends protection once the player has explicitly confirmed an attack. */
     fun forfeit(player: Player) {
         player.attr[PROTECTION_FORFEITED_ATTR] = true
