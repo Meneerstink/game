@@ -9,4 +9,7 @@ for (emote in Emote.values) {
 // The Skill Cape emote is unlocked exactly while a skillcape or a max cape is worn (SkillcapeEmotes).
 on_equip_to_slot(EquipmentType.CAPE.id) { SkillcapeEmotes.sync(player) }
 on_unequip_from_slot(EquipmentType.CAPE.id) { SkillcapeEmotes.sync(player) }
-on_login { SkillcapeEmotes.sync(player) }
+on_login {
+    SkillcapeEmotes.sync(player)
+    EmotesTab.unlockAll(player)
+}

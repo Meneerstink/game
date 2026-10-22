@@ -143,7 +143,7 @@ on_login {
     player.setVarbit(Varbits.INCUBATOR_UNLOCK, 0) // unlock incubator
     player.setVarbit(Varbits.KILLERWATT_PORTAL, 1) // unlock killerwatt portal
     player.setVarbit(Varbits.FORGIVENESS_OF_A_CHAOS_DWARF_PROGRESS, 45) // chaos dwarf area
-    player.setVarbit(Varbits.THE_LOST_TRIBE_PROGRESS, 4) // lumbridge underground
+    player.setVarbit(Varbits.THE_LOST_TRIBE_PROGRESS, 7) // lumbridge underground (>= 4) + goblin emotes (7, EMO: Novite/Darkan/Void)
     player.setVarbit(Varbits.BALLOON_CASTLE_WARS, 1) // balloon (castle wars)
     player.setVarbit(Varbits.BALLOON_CRAFTING_GUILD, 1) // balloon (crafting guild)
     player.setVarbit(Varbits.BALLOON_GRAND_TREE, 1) // balloon (grand tree)
