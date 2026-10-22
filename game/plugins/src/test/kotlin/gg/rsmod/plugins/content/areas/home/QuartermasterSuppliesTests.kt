@@ -107,6 +107,15 @@ class QuartermasterSuppliesTests {
     }
 
     @Test
+    fun `N63 and N68 - Blood, Wrath and Soul runes are sold, the three super potions are gone`() {
+        val sold = shop.map { it.unnoted }.toSet()
+        listOf(Items.BLOOD_RUNE, Items.WRATH_RUNE, Items.SOUL_RUNE).forEach { assertTrue(it in sold, "${def(it).name} is sold") }
+        listOf(Items.SUPER_ATTACK_4, Items.SUPER_STRENGTH_4, Items.SUPER_DEFENCE_4).forEach { assertTrue(it !in sold, "${def(it).name} is not sold") }
+        assertEquals("Wrath rune", def(Items.WRATH_RUNE).name)
+        assertTrue(Items.SUPER_COMBAT_POTION_4 in sold, "Super combat stays")
+    }
+
+    @Test
     fun `the runes, sacks, arrows and bolts stack by themselves`() {
         val ammunitionIds = QuartermasterSupplies.ammunition.map { it.first }.toSet()
         shop.filter { it.unnoted in ammunitionIds }.forEach { assertTrue(def(it.item).stackable, "${def(it.item).name} does not stack") }

@@ -40,9 +40,8 @@ object QuartermasterSupplies {
             Items.MANTA_RAY to 1_000, Items.SEA_TURTLE to 1_000, Items.ANGLERFISH to 1_000, Items.DARK_CRAB to 1_000,
             // Halibut is back (owner 2026-10-11, bug 030542); the Stamina potion made way for it in the 40-row window.
             Items.HALIBUT to 1_000, Items.MARLIN to 1_000, Items.COOKED_KARAMBWAN to 2_000,
-            // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion.
+            // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion. Owner 10-16 (N68): no Super attack / strength / defence.
             Items.SARADOMIN_BREW_4 to 1_000, Items.SUPER_RESTORE_4 to 1_000, Items.SUPER_COMBAT_POTION_4 to 500,
-            Items.SUPER_ATTACK_4 to 500, Items.SUPER_STRENGTH_4 to 500, Items.SUPER_DEFENCE_4 to 500,
             Items.RANGING_POTION_4 to 500, Items.MAGIC_POTION_4 to 500,
             Items.BASTION_POTION_4 to 300, Items.BATTLEMAGE_POTION_4 to 300,
             Items.SANFEW_SERUM_4 to 300, Items.GUTHIX_REST_4 to 300,
@@ -71,6 +70,8 @@ object QuartermasterSupplies {
             // Combination runes only (owner 2026-09-30: no plain runes); the Wilderness spells come from the blighted sacks.
             Items.MIST_RUNE to 5_000, Items.DUST_RUNE to 5_000, Items.MUD_RUNE to 5_000, Items.SMOKE_RUNE to 5_000,
             Items.STEAM_RUNE to 5_000, Items.LAVA_RUNE to 5_000,
+            // Owner 10-16 (N63): Blood, Wrath and Soul runes too (they took the window rows of the three super potions, N68).
+            Items.BLOOD_RUNE to 5_000, Items.WRATH_RUNE to 5_000, Items.SOUL_RUNE to 5_000,
             // Blighted spell sacks.
             Items.BLIGHTED_ANCIENT_ICE_SACK to 5_000, Items.BLIGHTED_ENTANGLE_SACK to 5_000,
             Items.BLIGHTED_TELEPORT_SPELL_SACK to 2_000, Items.BLIGHTED_VENGEANCE_SACK to 5_000,
