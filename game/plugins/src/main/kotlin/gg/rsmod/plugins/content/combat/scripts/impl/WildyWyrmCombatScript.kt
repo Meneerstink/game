@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.combat.scripts.impl
 
-import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.CombatScript
 import gg.rsmod.game.model.combat.StyleType
@@ -65,17 +64,20 @@ object WildyWyrmCombatScript : CombatScript() {
         npc.removeCombatTarget()
     }
 
+    /**
+     * Every player within [TARGET_RADIUS] of the wyrm's body. N160 (2026-10-22): read from the world's player list - the old scan of
+     * 31x31 chunk tiles found nobody before the chunk task had registered the player (the wyrm then left its loop at once and
+     * never attacked in the real-map harness).
+     */
     private fun playersNear(npc: Npc): List<Player> {
-        val world = npc.world
+        val size = npc.getSize()
         val result = mutableListOf<Player>()
-        for (x in -TARGET_RADIUS..TARGET_RADIUS + npc.getSize()) {
-            for (z in -TARGET_RADIUS..TARGET_RADIUS + npc.getSize()) {
-                val tile = npc.tile.transform(x, z)
-                val chunk = world.chunks.get(tile, createIfNeeded = false) ?: continue
-                chunk.getEntities<Player>(tile, EntityType.PLAYER, EntityType.CLIENT).forEach { p ->
-                    if (p.isOnline && !p.isDead() && p !in result && p.lock.canBeAttacked()) result.add(p)
-                }
-            }
+        npc.world.players.forEach { p ->
+            if (p.tile.height != npc.tile.height) return@forEach
+            val dx = p.tile.x - npc.tile.x
+            val dz = p.tile.z - npc.tile.z
+            if (dx < -TARGET_RADIUS || dx > TARGET_RADIUS + size || dz < -TARGET_RADIUS || dz > TARGET_RADIUS + size) return@forEach
+            if (p.isOnline && !p.isDead() && p.lock.canBeAttacked()) result.add(p)
         }
         return result
     }

@@ -160,6 +160,8 @@ class NpcCombatLoopTests {
                 "Ket-Zek" to FightCaveCombatScripts.KetZek.ids.first(),
                 "TzTok-Jad" to FightCaveCombatScripts.TzTokJad.ids.first(),
                 "Yt-HurKot" to FightCaveCombatScripts.YtHurKot.ids.first(),
+                // N160 (2026-10-22): the WildyWyrm never attacked here - its victims came from a chunk scan.
+                "WildyWyrm" to gg.rsmod.plugins.content.combat.scripts.impl.WildyWyrmCombatScript.ids.first(),
             )
 
         private val SCRIPTS =
