@@ -170,6 +170,8 @@ object PestControlHandler {
         if ((lobby.ticks < 450 && lobby.ticks % 100 == 0) || lobby.ticks % 50 == 0 || lobby.ticks == 495) {
             lobby.waiting.forEach { sendDeparture(lobby, it) }
         }
+        // N204: 50 ticks (30 seconds) before departure, a red line in the chat of everyone on the lander.
+        if (lobby.ticks == PC_LOBBY_DEPARTURE_TICKS - 50) lobby.waiting.forEach { it.message(PC_START_SOON_MESSAGE) }
         if (lobby.ticks >= PC_LOBBY_DEPARTURE_TICKS) {
             if (lobby.waiting.size >= PC_MIN_TEAM_SIZE) {
                 start(world, lobby)

@@ -109,10 +109,13 @@ fun pestMonsterOf(id: Int): PestMonster? =
     }
 
 /**
- * Real durations, ported verbatim from 2009scape PestControlActivityPlugin/PestControlSession. Minimum team: owner 2026-10-04 "2 players"
- * (RS/Darkan Lander need 5, which no solo-ish server ever fills; Darkan's debug minimum is 2).
+ * Real durations, ported verbatim from 2009scape PestControlActivityPlugin/PestControlSession. Minimum team: owner 2026-10-22 (N204,
+ * "elke boot mag starten met 1 speler") - was 2 (owner 2026-10-04); RS/Darkan Landers need 5, which no solo-ish server ever fills.
  */
-const val PC_MIN_TEAM_SIZE = 2
+const val PC_MIN_TEAM_SIZE = 1
+
+/** N204 (owner 2026-10-22): the red chat line on the lander 30 seconds before departure. */
+const val PC_START_SOON_MESSAGE = "<col=ff0000>Pest Control will start in 30 seconds.</col>"
 const val PC_MAX_TEAM_SIZE = 25
 
 /** Darkan PestControl.createPestNPC: the Void Knight is spawn index 4 - a shifter every 15 ticks, at most 4 alive. */
