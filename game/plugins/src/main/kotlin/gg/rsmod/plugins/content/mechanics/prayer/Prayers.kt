@@ -321,7 +321,10 @@ object Prayers {
         p: Player,
         prayer: Prayer,
     ): Boolean {
-        if (p.lock.delaysPrayer() || p.skills.getMaxLevel(Skills.PRAYER) < prayer.level || knightWavesRefusal(p, prayer) != null) {
+        // N98: a missing prayer scroll / Defence level goes through the queued path, which shows the refusal box.
+        if (p.lock.delaysPrayer() || p.skills.getMaxLevel(Skills.PRAYER) < prayer.level || knightWavesRefusal(p, prayer) != null ||
+            PrayerScrolls.refusal(p, prayer) != null
+        ) {
             return false
         }
         if (p.isDead() || !p.lock.canUsePrayer()) {
@@ -629,8 +632,13 @@ object Prayers {
             return false
         }
 
-        // Chivalry/Piety are enforced by knightWavesRefusal above (owner 2026-09-26, King's Ransom is playable now);
-        // Rigour/Augury stay unenforced as before.
+        // N98 (owner VRAGEN 29 = C): Rigour and Augury need 70 Defence and their prayer scroll, read once (PrayerScrolls).
+        PrayerScrolls.refusal(p, prayer)?.let { refusal ->
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            it.messageBox(refusal)
+            return false
+        }
+        // Chivalry/Piety are enforced by knightWavesRefusal above (owner 2026-09-26, King's Ransom is playable now).
         /**
          if (prayer == Prayer.CHIVALRY && p.getVarbit(KING_RANSOMS_QUEST_VARBIT) < 8) {
          p.syncVarp(ACTIVE_PRAYERS_VARP)

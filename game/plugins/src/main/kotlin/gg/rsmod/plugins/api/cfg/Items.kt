@@ -20373,4 +20373,6 @@ object Items {
     const val AMULET_OF_GLORY_5 = 24124
     const val AMULET_OF_GLORY_5_NOTED = 24125
     const val RUNE_POUCH_NOTE = 24126
+    const val DEXTEROUS_PRAYER_SCROLL = 24127
+    const val ARCANE_PRAYER_SCROLL = 24128
 }

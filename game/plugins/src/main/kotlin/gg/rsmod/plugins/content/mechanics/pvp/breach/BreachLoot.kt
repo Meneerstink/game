@@ -220,6 +220,8 @@ object BreachLoot {
                 out += pick(RARE, random).drop(random)
             }
         }
+        // N98 (owner 2026-10-22): 1 in 200 a Dexterous or Arcane prayer scroll (Rigour / Augury).
+        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(random, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.BREACH_CHANCE)?.let { out += Drop(it, 1) }
         val regular = MutableList(REGULAR_ROLLS) { pickRegular(random, rate).drop(random) }
         // Owner 2026-09-29: no chitin (its only use, the blighted overload, is removed) - both regular drops stay.
         out += regular

@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.isMulti
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
@@ -233,6 +234,11 @@ object DeadmanChest {
                 val outcome = Pets.awardOutcome(Pets.owns(player, reward.pet), Pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
                 if (outcome == Pets.Award.LOST) addOrDrop(player, reward.item, 1) else Pets.award(player, reward.pet, reward.item)
             }
+        }
+        // N98 (owner 2026-10-22): 1 in 10 chests add a Dexterous or Arcane prayer scroll.
+        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(random, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.CHEST_CHANCE)?.let {
+            addOrDrop(player, it, 1)
+            player.message("<col=ef1020>The chest also holds a prayer scroll!</col>")
         }
         return reward
     }

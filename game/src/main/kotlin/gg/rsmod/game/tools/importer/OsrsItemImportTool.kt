@@ -933,6 +933,9 @@ object OsrsItemImportTool {
             // N190 (owner 2026-10-22): the Quartermaster sells a "Rune pouch note" at its OSRS GE price (OSRS Wiki "Rune pouch note",
             // id 24587: tradeable, "Use it on a banker to receive a rune pouch") instead of a 10,000-coin rune pouch.
             "rune-pouch-note" to listOf(Spec(24587)),
+            // N98 (owner VRAGEN 29 = C, 2026-10-17): Rigour needs a Dexterous prayer scroll, Augury an Arcane prayer scroll (OSRS Wiki:
+            // ids 21034 / 21079, "Read" once to unlock); drops of breach monsters (1/200) and the Deadman's chest (1/10), owner 10-22.
+            "prayer-scrolls" to listOf(Spec(21034), Spec(21079)),
             // Owner 2026-09-26 (death rework): the rune pouch becomes Trouver-lockable - OSRS Wiki "Rune pouch (l)" 24416 and "Divine rune
             // pouch (l)" 27509 (untradeable; a locked pouch keeps the empty pouch on a PvP death, its runes go to the killer).
             "rune-pouch-locked" to listOf(Spec(24416), Spec(27509)),
