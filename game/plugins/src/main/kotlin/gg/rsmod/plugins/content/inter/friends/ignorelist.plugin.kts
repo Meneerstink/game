@@ -6,7 +6,7 @@ on_login {
 
 on_add_ignore {
     val ignoredUsername = Misc.formatForDisplay(player.getAddedIgnore())
-    val playerExists = world.characterExists(ignoredUsername)
+    val playerExists = world.getPlayerForName(ignoredUsername) != null || world.characterExists(ignoredUsername) // N206: online counts too
 
     if (!playerExists) {
         player.message("Unable to add name - unknown player.")

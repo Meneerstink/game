@@ -38,7 +38,9 @@ on_login {
 on_add_friend {
     val newFriend = Misc.formatForDisplay(player.getAddedFriend())
     // A blank name resolved to the saves directory itself in characterExists and was added as an empty friend.
-    val playerExists = newFriend.isNotBlank() && world.characterExists(newFriend)
+    // N206 (2026-10-22): an online player counts too - a new account has no save file until his first save, and "unknown player"
+    // blocked adding (and so messaging) him.
+    val playerExists = newFriend.isNotBlank() && (world.getPlayerForName(newFriend) != null || world.characterExists(newFriend))
 
     if (!playerExists) {
         player.message("Unable to add friend - unknown player.")
