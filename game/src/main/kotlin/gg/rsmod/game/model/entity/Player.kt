@@ -660,7 +660,9 @@ abstract class Player(
              * passes since their channel disconnected.
              */
             if (setDisconnectionTimer) {
-                timers[FORCE_DISCONNECTION_TIMER] = 250 // 2 mins 30 secs
+                // N29 (owner VRAGEN 20 = A, 2026-10-17, OSRS): an X-logged body stays while it is being hit, but at most 60 seconds -
+                // at a boss and in PvP alike (was 250 ticks = 2.5 minutes).
+                timers[FORCE_DISCONNECTION_TIMER] = X_LOG_MAX_TICKS
                 setDisconnectionTimer = false
             }
 
@@ -1394,6 +1396,9 @@ abstract class Player(
             .toString()
 
     companion object {
+        /** N29: the longest an X-logged (disconnected) player stays in the world: 100 ticks = 60 seconds (OSRS). */
+        const val X_LOG_MAX_TICKS = 100
+
         /**
          * Runs whenever the inventory is sent to the client, just before it (plugins: the rune pouch's runes as client inventory
          * 30001 for the spellbook's rune counter, owner bug 2026-10-04 024552).
