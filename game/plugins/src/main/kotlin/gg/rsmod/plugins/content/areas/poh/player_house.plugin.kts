@@ -112,11 +112,9 @@ PlayerHouse.Location.values().forEach { location ->
     }
 }
 
-// Exit portal.
+// Exit portal: leaving the house is instant (A29, owner 10-10 "Leave house direct, geen timer"; same as House Options > Leave house).
 on_obj_option(obj = PlayerHouse.PORTAL, option = "enter") {
-    DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
-        player.moveTo(PlayerHouse.locationOf(player).exit)
-    }
+    player.moveTo(PlayerHouse.locationOf(player).exit)
 }
 
 // Rejuvenation pool (OSRS Wiki "Ornate rejuvenation pool"): restores hitpoints, prayer, run energy and special
