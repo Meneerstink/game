@@ -155,7 +155,8 @@ public class RuntimeFileIsolationTests {
         check(!registry.recordInteraction("button", 999002, 3, "N151 fixture", "fixture"), "generic duplicate");
         File selected = registry.getFILE();
         List<String> lines = Files.readAllLines(selected.toPath());
-        check(lines.size() == 3 && lines.get(0).equals(header.trim()), "header/rows changed: " + state);
+        // N9: the registry now writes a count column and rewrites its file (header + one row per distinct click).
+        check(lines.size() == 3 && lines.get(0).equals(header.trim() + "	count"), "header/rows changed: " + state);
         check(Arrays.equals(before, Files.exists(origin) ? Files.readAllBytes(origin) : null), "diagnostic source changed");
         check(registry.size() == 2 && registry.count(key) == 2, "diagnostic counts changed");
     }
