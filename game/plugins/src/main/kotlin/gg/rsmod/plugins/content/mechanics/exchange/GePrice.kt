@@ -22,8 +22,18 @@ object GePrice {
     ): Int {
         val unnoted = Item(itemId, 1).toUnnoted(definitions).id
         val def = definitions.getNullable(ItemDef::class.java, unnoted) ?: return 0
+        // N182 (owner 2026-10-22, "Mystic robe set 20 gp"): no GE item set has an OSRS price under its 667 id, so a set fell back to
+        // its tiny cache value; a set without an OSRS price is worth the sum of its components (what exchanging it gives you).
+        if (OsrsGuidePrices.osrsPrice(def) == null) {
+            SET_COMPONENTS[unnoted]?.let { parts -> return parts.sumOf { unit(definitions, exchange, it).toLong() }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt() }
+        }
         val seed = OsrsGuidePrices.seed(def)
         return exchange?.guidePrice(unnoted, seed) ?: seed
+    }
+
+    /** Every Grand Exchange item set and its components ([gg.rsmod.plugins.content.inter.ge.GeItemSet]). */
+    private val SET_COMPONENTS: Map<Int, IntArray> by lazy {
+        gg.rsmod.plugins.content.inter.ge.GeItemSet.values().associate { it.id to it.items }
     }
 
     fun unit(

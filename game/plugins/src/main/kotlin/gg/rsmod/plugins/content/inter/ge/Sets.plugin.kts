@@ -82,7 +82,14 @@ fun handleButton(player: Player, interfaceId: Int) {
         61 -> setComponents(player, set)
         64 -> {
             when (interfaceId) {
-                GE_SETS_INTERFACE -> packSet(player, set)
+                // N183 (owner 2026-10-22: "uitpakken lukt niet - you don't have the parts"): Exchange on a set in the sets window
+                // packs the parts; holding the set without its parts, it unpacks the set instead of refusing.
+                GE_SETS_INTERFACE ->
+                    if (set != null && set.items.any { !player.inventory.contains(it) } && player.inventory.contains(set.id)) {
+                        unpackSet(player, set)
+                    } else {
+                        packSet(player, set)
+                    }
                 GE_SETS_SIDE_INTERFACE -> unpackSet(player, set)
             }
         }
