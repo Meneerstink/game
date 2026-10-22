@@ -5,7 +5,9 @@ import gg.rsmod.game.message.impl.MusicEffectMessage
 import gg.rsmod.game.model.attr.DEATH_FLAG
 import gg.rsmod.game.model.attr.KILLER_ATTR
 import gg.rsmod.game.model.attr.RESPAWN_TILE_ATTR
+import gg.rsmod.game.model.Gender
 import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.entity.AreaSound
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.model.queue.TaskPriority
@@ -20,6 +22,23 @@ import mu.KLogging
  */
 object PlayerDeathAction : KLogging() {
     private const val DEATH_ANIMATION = 836
+
+    /**
+     * N170/N177 (owner 2026-10-22: "als een speler doodgaat hoor je geen death-geluid"): only the dying player heard anything (the
+     * death jingle), the killer and everyone around him heard nothing. His death cry now plays as an area sound with the death
+     * animation. Rev-667 sound ids of plugins `Sfx.HUMAN_DEATH` / `Sfx.FEMALE_DEATH` (the game module cannot depend on plugins).
+     */
+    const val MALE_DEATH_SOUND = 512
+    const val FEMALE_DEATH_SOUND = 505
+    const val DEATH_SOUND_RADIUS = 10
+
+    fun deathSound(player: Player): AreaSound =
+        AreaSound(
+            tile = player.tile,
+            id = if (player.appearance.gender == Gender.FEMALE) FEMALE_DEATH_SOUND else MALE_DEATH_SOUND,
+            radius = DEATH_SOUND_RADIUS,
+            volume = 1,
+        )
 
     /**
      * How recently a pawn must have hit the player to be eligible as its killer.
@@ -80,6 +99,7 @@ object PlayerDeathAction : KLogging() {
         player.resetFacePawn()
         wait(2)
         player.animate(deathAnim.id)
+        world.spawn(deathSound(player))
         wait(deathAnim.cycleLength + 1)
         // Void PlayerDeath: the death animation plays out first, then the death jingle and the items (owner 2026-10-04 030147:
         // "the character loses the inventory first, then the death animation; no sound"). The pre-death hook resolves the items
