@@ -285,7 +285,10 @@ object DeadmanChestWorld {
         if (bossArea) {
             bossEntrance(world, death)?.let { return it }
         }
-        val avoidBossArea = !breachKill || BossAreas.wasBossAreaAtBoot(death)
+        // N130 (2026-10-22): only a real lair (a region with a boss_exits mapping) keeps the chest out. A boss that roams an open
+        // Wilderness region (Chaos Elemental, Bork's surface, Barrelchest, Giant Mole's field) made the WHOLE 64x64 region refuse
+        // every chest; OSRS only moves it out of the boss room itself.
+        val avoidBossArea = (!breachKill || BossAreas.wasBossAreaAtBoot(death)) && death.regionId in lairRegions()
         if (killer.tile.height != death.height || killer.tile.getDistance(death) > 32) return null
         // Start at the KILLER, not at the victim: walkable islands separated by walls are not reachable.
         val reachable = (listOf(Tile(killer.tile)) + reachable(world, killer.tile, killer.tile.getDistance(death) * 2 + 16)).toSet()
@@ -301,6 +304,17 @@ object DeadmanChestWorld {
     }
 
     /** Explicit lair-to-exit mappings, including stairs to another map/plane; never a nearby unrelated timed spot. */
+    /** N130: the regions [bossEntrance] maps to a lair exit (boss_exits in the spot file) - the only true boss rooms. */
+    @Volatile
+    private var lairRegionCache: Set<Int>? = null
+
+    fun lairRegions(): Set<Int> =
+        lairRegionCache ?: run {
+            val root = File(SPOTS_PATH).takeIf { it.exists() }?.reader()?.use { Gson().fromJson(it, JsonObject::class.java) }
+            val regions = root?.getAsJsonArray("boss_exits")?.flatMap { e -> e.asJsonObject["regions"].asJsonArray.map { it.asInt } }?.toSet() ?: emptySet()
+            regions.also { lairRegionCache = it }
+        }
+
     private fun bossEntrance(world: World, death: Tile): Tile? {
         val root = File(SPOTS_PATH).takeIf { it.exists() }?.reader()?.use { Gson().fromJson(it, JsonObject::class.java) } ?: return null
         val exits = root.getAsJsonArray("boss_exits") ?: return null

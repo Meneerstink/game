@@ -226,6 +226,7 @@ object DeadmanChest {
     fun giveReward(
         player: Player,
         random: Random = Random(),
+        scrollRandom: Random = Random(),
     ): DeadmanChestLoot.Reward {
         val reward = DeadmanChestLoot.roll(random, ownsPet = { Pets.owns(player, it) })
         when (reward) {
@@ -236,7 +237,8 @@ object DeadmanChest {
             }
         }
         // N98 (owner 2026-10-22): 1 in 10 chests add a Dexterous or Arcane prayer scroll.
-        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(random, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.CHEST_CHANCE)?.let {
+        // Its own roll ([scrollRandom]): the loot roll above stays exactly the table's.
+        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(scrollRandom, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.CHEST_CHANCE)?.let {
             addOrDrop(player, it, 1)
             player.message("<col=ef1020>The chest also holds a prayer scroll!</col>")
         }

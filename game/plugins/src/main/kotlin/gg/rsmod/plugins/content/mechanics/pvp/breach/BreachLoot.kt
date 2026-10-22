@@ -201,6 +201,7 @@ object BreachLoot {
     fun roll(
         random: Random,
         rate: Double = 1.0,
+        scrollRandom: Random = Random(),
     ): List<Drop> {
         val out = ArrayList<Drop>()
         // Owner 2026-10-17: breach monsters roll the Deadman's chest list ON TOP of their own table (rare, provisional chance).
@@ -221,7 +222,8 @@ object BreachLoot {
             }
         }
         // N98 (owner 2026-10-22): 1 in 200 a Dexterous or Arcane prayer scroll (Rigour / Augury).
-        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(random, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.BREACH_CHANCE)?.let { out += Drop(it, 1) }
+        // Its own roll ([scrollRandom]): the breach table's own sequence of draws stays unchanged.
+        gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(scrollRandom, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.BREACH_CHANCE)?.let { out += Drop(it, 1) }
         val regular = MutableList(REGULAR_ROLLS) { pickRegular(random, rate).drop(random) }
         // Owner 2026-09-29: no chitin (its only use, the blighted overload, is removed) - both regular drops stay.
         out += regular

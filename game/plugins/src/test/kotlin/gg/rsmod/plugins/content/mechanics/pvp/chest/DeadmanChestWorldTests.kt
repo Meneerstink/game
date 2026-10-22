@@ -627,6 +627,23 @@ class DeadmanChestWorldTests {
     }
 
     @Test
+    fun `N130 - a boss roaming an open Wilderness region does not block chests in the whole region`() {
+        // Chaos Elemental's open region 12861 (3258,3923) has no boss_exits lair: a kill elsewhere in it may place a chest there.
+        assertFalse("no lair mapping for the Chaos Elemental field", 12861 in DeadmanChestWorld.lairRegions())
+        val death = Tile(3240, 3910, 0)
+        val boss = npcAt(gg.rsmod.plugins.api.cfg.Npcs.CHAOS_ELEMENTAL, Tile(3258, 3923, 0))
+        val killer = player("n130", death)
+        try {
+            val tile = DeadmanChestWorld.killSpot(world, killer, death)
+            assertNotNull("an open-field kill near a roaming boss gets a chest spot", tile)
+        } finally {
+            world.remove(boss)
+            world.unregister(killer)
+            clients.remove(killer)
+        }
+    }
+
+    @Test
     fun `timed and kill chests enforce spacing in either spawn order`() {
         val tile = freeTile(false)
         val killer = player("spacing", beside(tile))
