@@ -16,7 +16,6 @@ import gg.rsmod.plugins.content.mechanics.prayer.Prayers
 import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
 import gg.rsmod.plugins.content.mechanics.pvp.SevenSecondAction
 import gg.rsmod.plugins.content.mechanics.pvp.DeadmanTimerGate
-import gg.rsmod.plugins.content.magic.Spellbooks
 import gg.rsmod.plugins.content.magic.teleports.TeleportSpell
 
 /** Player-owned house - see [PlayerHouse]. */
@@ -147,24 +146,18 @@ fun drinkFromPool(player: Player) {
     Venom.cure(player, immunityTicks = 0, announce = false)
 }
 
-// Prayer altar (POH gilded altar 13199, option "Pray"); bone offering stays in prayer_altar.plugin.kts. After the
-// recharge it offers the same prayer book / spellbook choice as the Ferox Enclave altar (prayer_altar.plugin.kts).
+// Prayer altar (POH gilded altar 13199, option "Pray"); bone offering stays in prayer_altar.plugin.kts. After the recharge it offers
+// the prayer book choice. N210 (owner 2026-10-22): no spellbook swap here - in a house that is the Altar of the Occult's job.
 on_obj_option(obj = PlayerHouse.ALTAR, option = "pray") {
     player.queue {
         player.animate(Anims.ALTAR_PRAY)
         player.filterableMessage("You recharge your Prayer points.")
         player.playSound(Sfx.PRAYER_RECHARGE)
         Prayers.rechargePrayerPoints(player)
-        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Change my spellbook.", "Keep my books.")) {
+        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Keep my prayer book.")) {
             1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
-            2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
             // Owner 2026-09-26: no paid curse unlock - The Temple at Senntisten is the only route.
-             3 ->
-                when (options("Standard spellbook.", "Ancient Magicks.", "Lunar spellbook.")) {
-                    1 -> Spellbooks.select(player, Spellbook.STANDARD)
-                    2 -> Spellbooks.select(player, Spellbook.ANCIENT)
-                    3 -> Spellbooks.select(player, Spellbook.LUNAR)
-                }
+            2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         }
     }
 }
