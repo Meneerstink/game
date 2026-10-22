@@ -51,6 +51,14 @@ class NewPlayerStartTests {
     }
 
     @Test
+    fun `the Deadman's skull has no Swap option`() {
+        // Owner 2026-10-22 (N172/N175): no prayer book / spellbook swap on the skull.
+        val options = DEFINITIONS.get(ItemDef::class.java, Items.DEADMANS_SKULL).inventoryMenu
+        assertTrue(options.none { it?.lowercase() == "swap" }, "options=${options.toList()}")
+        assertTrue(options.any { it?.lowercase() == "breach check" }, "options=${options.toList()}")
+    }
+
+    @Test
     fun `the Deadman starter pack has the Open option the handler binds`() {
         val options = DEFINITIONS.get(ItemDef::class.java, NewPlayerConfig.DEFAULTS.starterChestItem).inventoryMenu
         assertTrue(options.any { it?.lowercase() == "open" }, "options=${options.toList()}")
