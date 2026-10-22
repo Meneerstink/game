@@ -68,7 +68,8 @@ on_item_option(item = Items.ANCIENT_HYMNAL, option = "read") {
             if (AncientCurses.getBook(player) != AncientCurses.PrayerBook.ANCIENT) {
                 AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
                 player.message("<col=ef1020>The words of the hymnal fill your mind: your prayer book is now the Ancient Curses.</col>")
-                player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
+                // N198 (owner 2026-10-22: "verkeerd geluid", choice: Trailblazer unlock power) - not the key-in-a-lock UNLOCK.
+                player.playSound(gg.rsmod.plugins.api.cfg.Sfx.TRAILBLAZER_UNLOCK_POWER)
             }
             // Owner 2026-10-07: once read, the hymnal is gone (the curses stay; Azzanadra switches books from then on).
             if (player.inventory.remove(Items.ANCIENT_HYMNAL, beginSlot = slot).hasSucceeded()) {
@@ -154,11 +155,10 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
                 if (questLamp != null) {
                     gg.rsmod.plugins.content.quests.foundation.FoundationRewards.takeLamp(player, item)
                 }
-                // N92: every lamp gets the Annihilation rate (owner 10-17, OSRS); the line names the real gain.
-                val gained = xp * player.xpMultiplier(selected.second)
-                player.addXp(selected.second, xp)
+                // N92: every lamp gets the Annihilation rate (owner 10-17, OSRS); N38: the line names the gain really made.
+                val gained = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(player, selected.second, xp)
                 player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
-                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained.toLong())} ${selected.first} experience.")
+                player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained)} ${selected.first} experience.")
                 return
             }
         }
