@@ -192,29 +192,12 @@ class AncientCurses2011Tests {
     }
 
     @Test
-    fun `a Sap and a Leech conflict only when they drain the same type`() {
-        val offenders = mutableListOf<String>()
-        fun expect(a: AncientCurse, b: AncientCurse, conflict: Boolean) {
-            if (a.conflictsWith(b) != conflict || b.conflictsWith(a) != conflict) offenders += "$a vs $b expected conflict=$conflict"
-        }
-        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_RANGED, true)
-        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_DEFENCE, true)
-        expect(AncientCurse.SAP_RANGER, AncientCurse.LEECH_ATTACK, false)
-        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_ATTACK, true)
-        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_STRENGTH, true)
-        expect(AncientCurse.SAP_WARRIOR, AncientCurse.LEECH_MAGIC, false)
-        expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_MAGIC, true)
-        expect(AncientCurse.SAP_MAGE, AncientCurse.LEECH_RANGED, false)
-        // Owner 2026-10-09 (Darkan): Sap Spirit and Leech Energy close each other; Sap Spirit closes Leech Special Attack, which
-        // closes nothing (`conflictsWith` is asked of the curse going on).
-        expect(AncientCurse.SAP_SPIRIT, AncientCurse.LEECH_ENERGY, true)
-        assertTrue(AncientCurse.SAP_SPIRIT.conflictsWith(AncientCurse.LEECH_SPECIAL_ATTACK))
-        assertFalse(AncientCurse.LEECH_SPECIAL_ATTACK.conflictsWith(AncientCurse.SAP_SPIRIT))
-        listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE).forEach { expect(it, AncientCurse.LEECH_ENERGY, false) }
-        listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { a ->
-            listOf(AncientCurse.SAP_WARRIOR, AncientCurse.SAP_RANGER, AncientCurse.SAP_MAGE, AncientCurse.SAP_SPIRIT).forEach { b -> if (a != b) expect(a, b, a in AncientCurse.STYLE_SAPS && b in AncientCurse.STYLE_SAPS) }
-        }
-        assertEquals(emptyList<String>(), offenders)
+    fun `N47 - a Sap and a Leech are never on together (owner VRAGEN 11 = A, like Darkan)`() {
+        val saps = AncientCurse.values().filter { it.category == AncientCurse.Category.SAP }
+        val leeches = AncientCurse.values().filter { it.category == AncientCurse.Category.LEECH }
+        val offenders = saps.flatMap { s -> leeches.filter { l -> !s.conflictsWith(l) || !l.conflictsWith(s) }.map { "$s vs $it" } }
+        assertTrue(offenders.joinToString(), offenders.isEmpty())
+        assertTrue(saps.isNotEmpty() && leeches.isNotEmpty())
     }
 
     @Test

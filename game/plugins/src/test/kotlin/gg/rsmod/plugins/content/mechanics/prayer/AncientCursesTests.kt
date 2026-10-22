@@ -126,31 +126,27 @@ class AncientCursesTests {
     // ---- mutual exclusion ----
 
     @Test
-    fun `style Saps are exclusive and a Leech only deactivates the Sap of the same type`() {
-        // Owner-supplied 2011 KB: "you cannot have a Sap and Leech curse of the same type active at
-        // the same time (e.g. Sap Ranger and Leech Ranged)"; other Saps stay on. Owner 2026-09-18:
-        // Sap Warrior, Sap Ranger and Sap Mage are mutually exclusive (same rule as the style leeches).
+    fun `style Saps are exclusive and any Leech switches every Sap off (N47)`() {
+        // Owner 2026-09-18: Sap Warrior, Sap Ranger and Sap Mage are mutually exclusive. N47 (owner VRAGEN 11 = A, 2026-10-16,
+        // like Darkan): a Sap and a Leech are never on together - switching one on switches the other kind off.
         val player = newPlayer()
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_MAGE)
         assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_MAGE))
-        AncientCurses.toggleCurse(player, AncientCurse.SAP_MAGE)
-        AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
         AncientCurses.toggleCurse(player, AncientCurse.SAP_SPIRIT)
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT))
-        AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
-        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
-        AncientCurses.toggleCurse(player, AncientCurse.SAP_RANGER)
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT), "Saps stack with Saps")
         AncientCurses.toggleCurse(player, AncientCurse.LEECH_RANGED)
-        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_RANGER))
-        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_MAGE), "a Leech of another style switches the Sap off too")
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.SAP_SPIRIT))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_RANGED))
+        AncientCurses.toggleCurse(player, AncientCurse.LEECH_ATTACK)
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK), "Leeches stack with Leeches")
+        AncientCurses.toggleCurse(player, AncientCurse.SAP_WARRIOR)
+        assertTrue(AncientCurses.isCurseActive(player, AncientCurse.SAP_WARRIOR))
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.LEECH_ATTACK))
+        assertFalse(AncientCurses.isCurseActive(player, AncientCurse.LEECH_RANGED))
     }
 
     @Test
