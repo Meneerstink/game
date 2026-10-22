@@ -12,7 +12,8 @@ class OpPlayerExtraDecoder : MessageDecoder<OpPlayerExtraMessage>() {
         OpPlayerExtraMessage(OPTIONS[opcodeIndex], values["index"]!!.toInt())
 
     companion object {
-        /** Slots for opcodes 14, 50, 82, 49, 62, 43, 19 (ClientProt OPPLAYER1, 5, 6, 7, 8, 9, 10). */
-        val OPTIONS = intArrayOf(1, 5, 6, 7, 8, 9, 10)
+        /** Slots for opcodes 14, 50, 82, 49, 62, 19 (ClientProt OPPLAYER1, 5, 6, 7, 8, 10). OPPLAYER9 (43) has its own
+         * OpPlayer9Message (clan-invite chat line) - it always won the decoder slot; PKT removed the dead duplicate here. */
+        val OPTIONS = intArrayOf(1, 5, 6, 7, 8, 10)
     }
 }

@@ -374,10 +374,6 @@ out-packets:
       - name: text
         type: BYTES
 
-  - message: gg.rsmod.game.message.impl.LogoutFullMessage
-    type: FIXED
-    opcode: 51
-
   - message: gg.rsmod.game.message.impl.IfCloseSubMessage
     type: FIXED
     opcode: 73
@@ -997,12 +993,6 @@ in-packets:
     type: VARIABLE_BYTE
     opcode: 79
 
-
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
-    type: FIXED
-    opcode: 87
-    length: 6
-    ignore: true
 
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: FIXED
@@ -1626,35 +1616,6 @@ in-packets:
         trans: ADD
 
 
-  - message: gg.rsmod.game.message.impl.OpLocUMessage
-    type: FIXED
-    opcode: 42
-    length: 15
-    structure:
-      - name: movement_type
-        type: BYTE
-        trans: NEGATE
-      - name: pos_z
-        type: SHORT
-        order: LITTLE
-      - name: slot
-        type: SHORT
-        order: LITTLE
-      - name: unknown
-        type: INT
-        order: LITTLE
-      - name: item
-        type: SHORT
-        order: LITTLE
-        trans: ADD
-      - name: pos_x
-        type: SHORT
-        order: LITTLE
-      - name: obj
-        type: SHORT
-        trans: ADD
-        sign: UNSIGNED
-
   - message: gg.rsmod.game.message.impl.OpPlayer2Message
     type: FIXED
     opcode: 53
@@ -1695,10 +1656,11 @@ in-packets:
       - name: index
         type: SHORT
 
-  # ClientProt OPPLAYER1/5/6/7/8/9/10 (3 bytes each, same layout); order = OpPlayerExtraDecoder.OPTIONS.
+  # ClientProt OPPLAYER1/5/6/7/8/10 (3 bytes each, same layout); order = OpPlayerExtraDecoder.OPTIONS.
+  # OPPLAYER9 (43) is OpPlayer9Message only (clan-invite chat line; PKT: one owner per client opcode).
   - message: gg.rsmod.game.message.impl.OpPlayerExtraMessage
     type: FIXED
-    opcodes: "14,50,82,49,62,43,19"
+    opcodes: "14,50,82,49,62,19"
     length: 3
     structure:
       - name: unknown

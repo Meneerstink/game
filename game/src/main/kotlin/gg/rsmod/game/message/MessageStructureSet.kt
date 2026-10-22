@@ -40,6 +40,24 @@ class MessageStructureSet {
         return this
     }
 
+    /** Message class that owns each client opcode, so a second packets.yml entry for it is caught at load. */
+    private val opcodeOwners = arrayOfNulls<String>(256)
+
+    /**
+     * Item PKT: a client opcode has exactly one entry. A second one used to overwrite the first in silence - OPLOCT (42) was
+     * listed as OpLocTMessage and OpLocUMessage, and the later one made every spell / familiar special on an object do nothing.
+     */
+    private fun storeOpcode(
+        opcode: Int,
+        className: String,
+        structure: MessageStructure,
+    ) {
+        val owner = opcodeOwners[opcode]
+        check(owner == null) { "packets.yml: client opcode $opcode is registered twice ($owner and $className) - one entry per in-packet opcode" }
+        opcodeOwners[opcode] = className
+        structureOpcodes[opcode] = structure
+    }
+
     private fun load(
         properties: ServerProperties,
         storeOpcodes: Boolean,
@@ -122,7 +140,7 @@ class MessageStructureSet {
                     )
                 structureClasses[clazz] = messageStructure
                 if (storeOpcodes) {
-                    packetOpcodes.forEach { opcode -> structureOpcodes[opcode] = messageStructure }
+                    packetOpcodes.forEach { opcode -> storeOpcode(opcode, className, messageStructure) }
                 }
             } else {
                 val messageStructure =
@@ -135,7 +153,7 @@ class MessageStructureSet {
                     )
                 structureClasses[clazz] = messageStructure
                 if (storeOpcodes) {
-                    packetOpcodes.forEach { opcode -> structureOpcodes[opcode] = messageStructure }
+                    packetOpcodes.forEach { opcode -> storeOpcode(opcode, className, messageStructure) }
                 }
             }
         }

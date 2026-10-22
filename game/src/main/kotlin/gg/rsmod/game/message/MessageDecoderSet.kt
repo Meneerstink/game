@@ -47,6 +47,7 @@ class MessageDecoderSet {
         put(OpLoc2Message::class.java, OpLoc2Decoder(), OpLoc2Handler(), structures)
         put(OpLoc3Message::class.java, OpLoc3Decoder(), OpLoc3Handler(), structures)
         put(OpLoc4Message::class.java, OpLoc4Decoder(), OpLoc4Handler(), structures)
+        // ClientProt OPLOCT (42): item on object AND spell / familiar special on object (PKT: one owner per opcode).
         put(OpLocTMessage::class.java, OpLocTDecoder(), OpLocTHandler(), structures)
         put(OpPlayerExtraMessage::class.java, OpPlayerExtraDecoder(), OpPlayerExtraHandler(), structures)
         put(OpLoc5Message::class.java, OpLoc5Decoder(), OpLoc5Handler(), structures)
@@ -65,7 +66,6 @@ class MessageDecoderSet {
 
         put(OpHeldUMessage::class.java, OpHeldUDecoder(), OpHeldUHandler(), structures)
         put(OpObjUMessage::class.java, OpObjUDecoder(), OpObjUHandler(), structures)
-        put(OpLocUMessage::class.java, OpLocUDecoder(), OpLocUHandler(), structures)
         put(OpNpcTMessage::class.java, OpNpcTDecoder(), OpNpcTHandler(), structures)
 
         put(OpPlayer2Message::class.java, OpPlayer2Decoder(), OpPlayer2Handler(), structures)

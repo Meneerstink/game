@@ -1933,7 +1933,8 @@ object ClassicQuests {
                         obj == null -> "object ${act.ids} not found within ${act.radius} tiles of ${act.near.x},${act.near.z},${act.near.height}"
                         slot < 0 -> "item ${act.item} not in the inventory"
                         else -> {
-                            Bots.inject(bot, gg.rsmod.game.message.impl.OpLocUMessage(obj.id, obj.tile.x, obj.tile.z, slot, act.item, 0))
+                            // ClientProt OPLOCT (42) as the client sends "Use item -> object": source = inventory 679, child = the slot (PKT).
+                            Bots.inject(bot, gg.rsmod.game.message.impl.OpLocTMessage(679 shl 16, slot, act.item, obj.tile.x, obj.tile.z, obj.id, 0))
                             val conv = converse(run, bot, entry, where, answers(act.answers), maxTicks = 40)
                             log += "item ${act.item} on ${obj.id}@${obj.tile.x},${obj.tile.z}: ${conv.brief()}"
                             null
