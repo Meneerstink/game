@@ -26,7 +26,8 @@ dependencies {
 test {
     // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.
     maxHeapSize = '4g'
-    maxParallelForks = 1
+    // 2026-10-22: -PtestForks=2 runs two test JVMs (only when the laptop has ~9 GB free); default stays 1.
+    maxParallelForks = (project.findProperty('testForks') ?: '1') as int
     // N28/N6 (2026-10-17): WildernessObeliskPlatformTests drives the compiled wilderness_obelisk.plugin.kts from
     // scripts/build/classes. Kotlin compiles in a worker, so a sibling task on the same command line could start before
     // those classes exist; a real dependency makes every run (targeted or the full suite) use the current scripts.
