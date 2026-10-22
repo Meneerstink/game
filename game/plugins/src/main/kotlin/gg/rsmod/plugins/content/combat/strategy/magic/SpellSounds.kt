@@ -5,7 +5,7 @@ package gg.rsmod.plugins.content.combat.strategy.magic
  * `tools/cache667/js5.py`), so like RuneScape the server sends a cast sound to the caster and an impact (or
  * [SPLASH]) sound when the spell lands. Ids: Void donor `data/skill/magic/magic.sounds.toml` (Jagex config names,
  * pre-2007 synth ids shared by the 667 cache). Void itself reuses the Wave sounds for the Surge spells ("Surge
- * sounds are unknown"); spells absent from that table (Storm of Armadyl, Miasmic, npc-only spells) stay silent
+ * sounds are unknown"); spells absent from that table (Storm of Armadyl, npc-only spells) stay silent
  * rather than guessed.
  */
 object SpellSounds {
@@ -67,6 +67,12 @@ object SpellSounds {
             CombatSpell.ICE_BURST to Sounds(171, 170),
             CombatSpell.ICE_BLITZ to Sounds(171, 169),
             CombatSpell.ICE_BARRAGE to Sounds(171, 169),
+            // N66 (owner 10-16: "Miasmic barrage geeft geen cast-geluid"): Darkan CombatSpell.kt:426-465 castSound / landSound and
+            // 2009scape MiasmicSpells.java:116-119 - the same eight ids, same pairing.
+            CombatSpell.MIASMIC_RUSH to Sounds(5368, 5365),
+            CombatSpell.MIASMIC_BURST to Sounds(5366, 5372),
+            CombatSpell.MIASMIC_BLITZ to Sounds(5370, 5367),
+            CombatSpell.MIASMIC_BARRAGE to Sounds(5371, 5369),
         )
 
     fun of(spell: CombatSpell): Sounds? = table[spell]
