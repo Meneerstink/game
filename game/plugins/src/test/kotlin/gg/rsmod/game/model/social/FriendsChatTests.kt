@@ -125,4 +125,24 @@ class FriendsChatTests {
         assertNull(FriendsChat.validPrefix("thirteen char"))
         assertNull(FriendsChat.validPrefix("bad!"))
     }
+
+    @Test
+    fun `N80 and N152 - one member whose write throws does not stop the members after him`() {
+        val owner = player("Owner")
+        chat.setPrefix(owner, "Hangout")
+        val broken = player("Broken")
+        val after = player("After")
+        assertTrue(chat.join(broken, "Owner"))
+        assertTrue(chat.join(after, "Owner"))
+        every { broken.write(any()) } throws IllegalStateException("broken session")
+        val reached = ArrayList<String>()
+        chat.eachMember(chat.channelOwnedBy("Owner")!!.members(), "test") { member ->
+            member.write(gg.rsmod.game.message.impl.UpdateFriendChatChannelFullMessage(chat.channelOwnedBy("Owner")!!))
+            reached += member.username
+        }
+        assertTrue("After" in reached, "the member after the broken one still got his update: $reached")
+        assertFalse("Broken" in reached)
+        // The real broadcast (talk) goes through the same guard.
+        assertTrue(chat.talk(world, after, "hello"))
+    }
 }

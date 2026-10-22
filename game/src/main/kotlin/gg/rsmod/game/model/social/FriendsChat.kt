@@ -101,6 +101,24 @@ class FriendsChatChannel(
  * [SETTINGS_FILE] on every change.
  */
 class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFiles.of(SETTINGS_FILE)) {
+    /**
+     * N80/N152 (2026-10-22): every per-member send of a channel loop goes through here - a write that throws for one member (a
+     * broken session, an encoder or trace failure) is logged and the members after him still get theirs.
+     */
+    fun eachMember(
+        members: Iterable<Player>,
+        what: String,
+        action: (Player) -> Unit,
+    ) {
+        members.forEach { member ->
+            try {
+                action(member)
+            } catch (e: Exception) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "friends chat $what to ${member.username} failed: $e" }
+            }
+        }
+    }
+
     private val channels = ConcurrentHashMap<String, FriendsChatChannel>()
     private val settings = ConcurrentHashMap<String, FriendsChatSettings>()
     private val bans = ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>()
@@ -256,7 +274,7 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
             return
         }
         bans.getOrPut(key(channel.owner)) { ConcurrentHashMap() }[key(target.username)] = System.currentTimeMillis() + KICK_BAN_MILLIS
-        channel.members().forEach { it.writeMessage("Attempting to kick/ban ${Misc.formatForDisplay(target.username)} from this friends chat channel...") }
+        eachMember(channel.members(), "kick notice") { it.writeMessage("Attempting to kick/ban ${Misc.formatForDisplay(target.username)} from this friends chat channel...") }
         leave(target)
         target.writeMessage("You have been kicked from the channel.")
     }
@@ -269,7 +287,7 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
         save()
         val channel = channels[key(owner.username)] ?: return
         if (prefix == null) {
-            channel.members().forEach { member ->
+            eachMember(channel.members(), "channel removal") { member ->
                 leave(member)
                 if (member !== owner) member.writeMessage("You have been removed from this channel.")
             }
@@ -305,7 +323,7 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
     }
 
     fun broadcastChannelState(channel: FriendsChatChannel) {
-        channel.members().forEach { it.write(UpdateFriendChatChannelFullMessage(channel)) }
+        eachMember(channel.members(), "channel state") { it.write(UpdateFriendChatChannelFullMessage(channel)) }
     }
 
     fun talk(
@@ -317,7 +335,7 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
         if (!mayTalk(channel, sender)) return true
         val id = nextMessageId()
         val name = Misc.formatForDisplay(sender.username)
-        channel.members().filterNot { ignores(it, sender) }.forEach { member ->
+        eachMember(channel.members().filterNot { ignores(it, sender) }, "message") { member ->
             member.write(MessageFriendChannelMessage(world = world, sender = name, channel = channel.name, rank = crownOf(sender), id = id, text = text))
         }
         return true
@@ -356,7 +374,7 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
                 put(gg.rsmod.net.packet.DataType.BYTE, crownOf(sender))
                 putBytes(payload)
             }
-        channel.members().filterNot { ignores(it, sender) }.forEach { it.write(gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage(body)) }
+        eachMember(channel.members().filterNot { ignores(it, sender) }, "quick chat") { it.write(gg.rsmod.game.message.impl.QuickChatFriendChannelOutMessage(body)) }
         return true
     }
 

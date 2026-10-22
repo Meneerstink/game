@@ -115,7 +115,8 @@ object LootShare {
         owner.world.queue {
             wait(COIN_SHARE_TICKS)
             val channel = chat.channelOwnedBy(owner.username) ?: return@queue
-            channel.members().forEach { member ->
+            // N152: one member whose send throws no longer stops the members after him.
+            chat.eachMember(channel.members(), "CoinShare toggle") { member ->
                 member.setVarbit(COIN_SHARE_VARBIT, if (on) 1 else 0)
                 member.message("CoinShare has been switched ${if (on) "on" else "off"}.")
             }
