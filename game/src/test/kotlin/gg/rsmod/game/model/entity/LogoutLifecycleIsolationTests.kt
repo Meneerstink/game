@@ -316,12 +316,24 @@ class LogoutLifecycleIsolationTests {
     }
 
     @Test
+    fun `N81 - a player moved just before logout leaves the chunk he was registered in`() {
+        val client = inChunk(online("n81"))
+        client.lastChunkTile = gg.rsmod.game.model.Tile(client.tile)
+        val instanceTile = gg.rsmod.game.model.Tile(client.tile)
+        // InstancedMapAllocator.logout: moveTo(exitTile) right before the unregister - the chunk task has not run.
+        client.tile = gg.rsmod.game.model.Tile(client.tile.x + 200, client.tile.z, client.tile.height)
+        world.unregister(client)
+        val stillThere = world.chunks.get(instanceTile)?.getEntities<Client>(instanceTile, EntityType.CLIENT)?.any { it === client } == true
+        assertFalse(stillThere, "no body left in the instance chunk")
+    }
+
+    @Test
     fun `World unregister removes the player first and nets every later step (source guard)`() {
         val worldSource = File("src/main/kotlin/gg/rsmod/game/model/World.kt").readText()
         val body = functionBody(worldSource, "unregister")
         val statements = body.lines().drop(1).map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("/*") && !it.startsWith("*") && !it.startsWith("//") }
         assertEquals("players.remove(p)", statements.first(), "players.remove must be the first statement of World.unregister")
-        assertTrue(Regex("""unregisterStep\(p, "[^"]+"\) \{ chunks\.get\(p\.tile\)\?\.removeEntity""").containsMatchIn(body), "the chunk removal sits in its own net")
+        assertTrue(Regex("""unregisterStep\(p, "chunk removal"\) \{[\s\S]*?removeEntity\(this, p, registered\)""").containsMatchIn(body), "the chunk removal (registered chunk first, N81) sits in its own net")
         assertTrue(Regex("""unregisterStep\(p, "[^"]+"\) \{ friendsChat\.leave\(""").containsMatchIn(body), "the friends-chat leave sits in its own net")
         val net = functionBody(worldSource, "unregisterStep")
         assertTrue(net.contains("catch (e: Throwable)") && net.contains("rethrowIfFatal()"), "unregisterStep is a non-fatal Throwable net")

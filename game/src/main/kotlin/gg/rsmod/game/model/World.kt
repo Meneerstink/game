@@ -483,7 +483,14 @@ class World(
      */
     fun unregister(p: Player) {
         players.remove(p)
-        unregisterStep(p, "chunk removal") { chunks.get(p.tile)?.removeEntity(this, p, p.tile) }
+        // N81 (2026-10-22): remove the player from the chunk he is REGISTERED in (lastChunkTile). A move just before the unregister
+        // (InstancedMapAllocator.logout: moveTo(exitTile)) left him in the instance chunk - the chunk task had not run yet.
+        unregisterStep(p, "chunk removal") {
+            val registered = p.lastChunkTile
+            if (registered != null) chunks.get(registered)?.removeEntity(this, p, registered)
+            if (registered == null || !registered.sameAs(p.tile)) chunks.get(p.tile)?.removeEntity(this, p, p.tile)
+            p.lastChunkTile = null
+        }
         /*
          * Friends-chat membership holds a strong reference to the player, and the remaining members
          * are shown a list that would otherwise still name someone who has logged out.
@@ -521,6 +528,8 @@ class World(
 
     fun remove(npc: Npc) {
         npcs.remove(npc)
+        // N81: same rule for an npc - the chunk it is registered in, then its current tile's chunk.
+        npc.lastChunkTile?.let { registered -> if (!registered.sameAs(npc.tile)) chunks.get(registered)?.removeEntity(this, npc, registered) }
         chunks.get(npc.tile)?.removeEntity(this, npc, npc.tile)
     }
 
