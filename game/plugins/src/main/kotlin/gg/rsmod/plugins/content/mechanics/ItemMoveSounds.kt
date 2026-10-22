@@ -17,9 +17,14 @@ object ItemMoveSounds {
     const val PUT_IN = 2739
     const val TAKE_OUT = 2582
 
+    /** N65 (owner 2026-10-22: "het verkeerde geluid (drop)", choice: Bank drawer): depositing into the bank or a deposit box. */
+    const val BANK_DEPOSIT = gg.rsmod.plugins.api.cfg.Sfx.BANK_DRAWER
+
     private val LAST_SOUND = AttributeKey<Long>()
 
     fun putIn(player: Player) = play(player, PUT_IN)
+
+    fun bankDeposit(player: Player) = play(player, BANK_DEPOSIT)
 
     fun takeOut(player: Player) = play(player, TAKE_OUT)
 

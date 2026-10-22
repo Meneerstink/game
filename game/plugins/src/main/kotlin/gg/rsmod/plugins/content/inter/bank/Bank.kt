@@ -251,7 +251,7 @@ class Bank {
             }
             if (deposited > 0) {
                 refreshSpaceCounts(player)
-                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
+                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.bankDeposit(player)
             }
 
             return DepositResult(deposited, success = !transferFailed && !bankFull, bankFull = bankFull)

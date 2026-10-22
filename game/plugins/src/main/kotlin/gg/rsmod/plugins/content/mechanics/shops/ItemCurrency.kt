@@ -346,7 +346,7 @@ open class ItemCurrency(
         var amount = Math.min(Math.floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)
 
         if (amount <= 0) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 
@@ -378,7 +378,7 @@ open class ItemCurrency(
         }
 
         if (p.inventory.getItemCount(itemId = currencyItem) < totalCost) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 

@@ -53,6 +53,7 @@ fun deposit(
     }
     player.inventory.remove(runeId, added)
     player.inventory[pouchSlot] = RunePouch.deposit(pouch, runeId, added)
+    gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N64: storing runes makes a sound
 }
 
 RunePouch.POUCHES.forEach { pouchId ->
@@ -76,6 +77,7 @@ RunePouch.POUCHES.forEach { pouchId ->
     on_item_option(item = pouchId, option = "Empty") {
         val slot = player.getInteractingItemSlot()
         var pouch = player.inventory[slot]?.takeIf { it.id == pouchId } ?: return@on_item_option
+        if (RunePouch.contents(pouch).isNotEmpty()) gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player) // N64
         for (rune in RunePouch.contents(pouch)) {
             val added = player.inventory.add(rune.id, rune.amount).completed
             if (added > 0) pouch = RunePouch.withdraw(pouch, rune.id, added)

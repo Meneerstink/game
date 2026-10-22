@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.store
 
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.plugins.content.mechanics.shops.notEnough
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
@@ -525,7 +526,7 @@ object StoreUi : KLogging() {
         val currency = entry.currency
         val balance = player.attr[currency.attr] ?: 0
         if (balance < entry.price) {
-            player.message("You need ${entry.price.format()} ${currency.plural} to buy that; you have ${balance.format()}.")
+            player.notEnough("You need ${entry.price.format()} ${currency.plural} to buy that; you have ${balance.format()}.") // N89: + sound
             if (currency == StoreCatalogue.Currency.DONATOR) player.message("Donator Points are available at 78legacy.com.")
             return
         }

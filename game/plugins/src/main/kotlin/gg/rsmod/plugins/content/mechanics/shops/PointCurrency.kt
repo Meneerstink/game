@@ -95,14 +95,14 @@ open class PointCurrency(
         val currencyCount = p.attr[balanceAttr] ?: 0
 
         if (amt <= 0 || currencyCount <= 0) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 
         var amount = min(floor(currencyCount.toDouble() / currencyCost.toDouble()).toInt(), amt)
 
         if (amount <= 0) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 
@@ -125,7 +125,7 @@ open class PointCurrency(
         }
 
         if (currencyCount < totalCost) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 
@@ -133,7 +133,7 @@ open class PointCurrency(
         // inventory must not consume points, and a negative client amount must never credit them.
         // N106: through the one balance helper (never below 0; the check above guarantees the points are there).
         if (!PointBalance.take(p.attr, balanceAttr, totalCost.toInt())) {
-            p.message("You don't have enough $pluralCurrency.")
+            p.notEnough("You don't have enough $pluralCurrency.")
             return
         }
 

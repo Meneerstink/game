@@ -180,6 +180,8 @@ object RunePouchInterface {
             return
         }
         player.inventory[slot] = RunePouch.withdraw(pouch, runeId, added)
+        // N64 (owner 2026-10-22): taking runes out makes the item take-out sound.
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
         refresh(player)
     }
 
@@ -219,6 +221,8 @@ object RunePouchInterface {
         }
         player.inventory.remove(runeId, added)
         player.inventory[slot] = RunePouch.deposit(player.inventory[slot] ?: pouch, runeId, added)
+        // N64: storing runes makes the item put-in sound.
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
         refresh(player)
     }
 
