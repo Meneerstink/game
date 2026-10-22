@@ -67,9 +67,35 @@ object EquipSounds {
             1171, 3385, 3387, 3389, 3391, 3393, 7433, 7675, 12662, 12663,
         ).toHashSet()
 
-    fun soundFor(item: Int, name: String, slot: EquipmentType): Int {
+    /**
+     * N33 (C2 10-16: Colossal blade played the cloth sound): the Void material lists only know 667 ids, so an imported OSRS
+     * item without a name rule fell to cloth. An item outside all three lists takes its material from the armour name
+     * (the 667 piece it was cloned from carries the same word), and a weapon from its combat type - the same Void sound
+     * its 667 kind gets from the name rules above.
+     */
+    private val METAL_NAMES =
+        listOf(
+            "platebody", "platelegs", "plateskirt", "chainbody", "full helm", "med helm", "sq shield", "kiteshield", "defender",
+            "chestplate", "tassets", "moon helm", "faceguard", "bucket helm", "dragon boots", "gilded boots",
+        )
+    private val LEATHER_NAMES = listOf("d'hide", "mixed hide")
+
+    private fun weaponTypeSound(weaponType: Int): Int? =
+        when (weaponType) {
+            1, 3, 14, 15, 26 -> 2247 // staff, sceptre, spear, halberd, bladed staff: Void "spear/staff/halberd"
+            2, 4 -> 2232 // axe, pickaxe: Void "axe"
+            5, 6, 7, 9, 22 -> 2248 // dagger, sword, 2h, claws, scythe: Void metal weapon "equip_sword"
+            8, 23 -> 2246 // mace, flail
+            10, 12 -> 2243 // hammer
+            11 -> 2249 // whip
+            16, 17, 18, 19, 24 -> 2244 // bow, crossbow, thrown, chinchompa, sling: Void "equip_range"
+            else -> null
+        }
+
+    fun soundFor(item: Int, name: String, slot: EquipmentType, weaponType: Int = -1): Int {
         val n = name.lowercase()
-        val metal = item in METAL
+        val listed = item in METAL || item in LEATHER || item in WOOD
+        val metal = item in METAL || (!listed && METAL_NAMES.any { n.contains(it) })
         var sound =
             when (slot) {
                 EquipmentType.WEAPON ->
@@ -89,7 +115,8 @@ object EquipSounds {
                         n == "sled" -> 1864
                         n == "dark bow" -> 3738
                         n == "silverlight" -> 2990
-                        else -> if (metal) 2248 else CLOTHES
+                        n == "colossal blade" -> 2233 // OSRS Wiki Colossal blade: wielding sound equip_blunt (C2 dossier)
+                        else -> if (metal) 2248 else if (!listed) weaponTypeSound(weaponType) ?: CLOTHES else CLOTHES
                     }
                 EquipmentType.HEAD -> if (n == "jack lantern mask") 3227 else if (metal) 2240 else CLOTHES
                 EquipmentType.CHEST -> if (metal) 2239 else CLOTHES
@@ -102,7 +129,7 @@ object EquipSounds {
                 else -> CLOTHES
             }
         if (n.contains("jester")) sound = 3395
-        if (item in LEATHER) sound = 2241
+        if (item in LEATHER || (!listed && LEATHER_NAMES.any { n.contains(it) })) sound = 2241
         if (item in WOOD) sound = 2250
         return sound
     }
@@ -110,7 +137,7 @@ object EquipSounds {
     private const val CLOTHES = Sfx.EQUIP_FUN
 
     fun play(player: Player, item: Int, slot: EquipmentType) {
-        val name = player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item).name
-        player.playSound(soundFor(item, name, slot))
+        val def = player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item)
+        player.playSound(soundFor(item, def.name, slot, def.weaponType))
     }
 }
