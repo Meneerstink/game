@@ -116,6 +116,8 @@ fun Player.openShop(
 
         shopDirty = true
         setVarc(199, -1)
+        // N199: the window's load script reads the container varps above - they must reach the client before IF_OPENSUB.
+        flushVarpsNow()
 
         // Open the shop interfaces
         openInterface(interfaceId = 621, dest = InterfaceDestination.TAB_AREA)

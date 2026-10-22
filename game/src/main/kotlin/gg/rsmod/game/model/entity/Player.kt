@@ -836,6 +836,13 @@ abstract class Player(
     }
 
     /**
+     * Sends the changed varps now instead of at the end of the cycle. N199: an interface whose load script reads varps (the shop
+     * window 620 reads its stock container ids) must get them BEFORE it opens - the end-of-cycle flush came after IF_OPENSUB, so a
+     * new player's first shop drew container 0 (empty grid, sample headings) until the next opening.
+     */
+    fun flushVarpsNow() = updateVarps()
+
+    /**
      * Updates the player's varps (variables that are saved on the server and can be synced with the client).
      */
     private fun updateVarps() {
