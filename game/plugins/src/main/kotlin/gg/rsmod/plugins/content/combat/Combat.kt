@@ -54,8 +54,9 @@ object Combat {
      * also have the same 4.8-second PJ timer applied towards them when hit by a player"; the longer PvP-only 20-tick timer is
      * "NOT applied in the Bounty Hunter or Deadman Mode worlds". Before 2026-10-01 single-way read ACTIVE_COMBAT_TIMER (17 ticks,
      * the 2023 rsmod default), which kept a PJ'd player locked to his first attacker more than twice as long.
+     * N97 (owner VRAGEN 54 = B, 2026-10-21): back to his choice of 2026-09-25 - 17 ticks (10.2 s) for everyone, players and monsters.
      */
-    const val PJ_TICKS = 8
+    const val PJ_TICKS = 17
     val PJ_TIMER = gg.rsmod.game.model.timer.TimerKey(tickOffline = false, resetOnDeath = true)
 
     /**

@@ -24,6 +24,7 @@ fun confirmReplace(
     title: String,
     result: Int,
     done: String,
+    afterReplace: (Player) -> Unit = {},
 ) {
     val slot = player.getInteractingItemSlot()
     if (player.inventory[slot]?.id != itemId) return
@@ -33,15 +34,16 @@ fun confirmReplace(
         if (player.inventory[slot]?.id != itemId) return@queue
         player.inventory[slot] = Item(result)
         player.message(done)
+        afterReplace(player)
     }
 }
 
 /*
  * Imbued rings "Uncharge" (OSRS Wiki "Ring of the gods (i)" / "Ring of suffering (i)": options "Wear, Uncharge, ..."; "Manually
  * uncharging the Ring ... (i) will refund 100% of the points/zeal", "When uncharged, the scroll of imbuing is returned"; ring of
- * suffering: "If a player uncharged the ring, the recoil rings stored will not be returned"). ADAPTED: this server has no imbue
- * currency (no Nightmare Zone, Soul Wars or Emir's Arena) and imbued rings only exist as spawned items, so there is nothing to refund;
- * the ring returns to its base item.
+ * suffering: "If a player uncharged the ring, the recoil rings stored will not be returned"). N94 (owner 2026-10-22: "100% van de
+ * imbue-punten terug bij uncharge (OSRS)"): the imbue's price in the 78 Store / Perdu route (Deadman or Loyalty Points, the same
+ * refund as an unprotected PvP death - PvpDeathBreakables.imbueRefund) comes back in full; the ring returns to its base item.
  */
 listOf(
     Items.RING_OF_THE_GODS_I to Items.RING_OF_THE_GODS,
@@ -65,7 +67,7 @@ listOf(
                 if (recoils) "Remove the imbue? The stored recoil charges are lost." else "Remove the imbue from this ring?",
                 base,
                 "You remove the imbue from the ring.",
-            )
+            ) { p -> refundImbuePoints(p, imbued) }
         }
     }
 }
@@ -160,4 +162,14 @@ on_world_init_late {
             }
         }
     }
+}
+
+/** N94: the full imbue price back, in the imbue route's own currency (none for a ring without a route). */
+fun refundImbuePoints(
+    player: Player,
+    imbued: Int,
+) {
+    val refund = gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.imbueRefund(imbued) ?: return
+    gg.rsmod.game.model.attr.PointBalance.adjust(player.attr, refund.currency.attr, refund.points.toLong())
+    player.message("You have been refunded ${"%,d".format(refund.points)} ${if (refund.points == 1) refund.currency.singular else refund.currency.plural}.")
 }

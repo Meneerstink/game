@@ -100,7 +100,7 @@ fun Pawn.liveLastHitBy(): Pawn? =
         }
     }
 
-/** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 8 ticks) this pawn is being fought by someone that still exists, other than [other]. */
+/** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 17 ticks) this pawn is being fought by someone that still exists, other than [other]. */
 // Owner and his familiar are one attacker for the single-way rules (Combat.sameSide, owner A9 2026-10-11).
 fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean = timers.has(Combat.PJ_TIMER) && liveLastHitBy().let { it != null && !Combat.sameSide(it, other) }
 
