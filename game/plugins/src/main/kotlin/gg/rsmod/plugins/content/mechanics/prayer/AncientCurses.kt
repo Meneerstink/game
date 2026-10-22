@@ -434,10 +434,12 @@ object AncientCurses {
                 Skills.DEFENCE -> 15
                 else -> return 1.0
             }
-        // [establishTurmoilBonus] already stores percentage points (opponent level, capped at 99,
-        // times 15/10/15 %), so both terms are percentages here.
+        // N44: [establishTurmoilBonus] stores LEVELS (15/10/15 % of the opponent's level, capped at 99); like Darkan
+        // (Turmoil.java + PrayerManager) and the curse tab / tooltip (cs2 1710/1714: bonus * 100 / own level) they count as a
+        // percentage of the player's own level - equal to the old sum at 99 vs 99, more for a lower own level (75 vs 99: 33%).
         val opponentBonus = player.attr[TURMOIL_BONUS_ATTR]?.get(skill) ?: 0
-        return 1.0 + (base + opponentBonus) / 100.0
+        val ownLevel = player.skills.getMaxLevel(skill).coerceAtLeast(1)
+        return 1.0 + (base + opponentBonus * 100 / ownLevel) / 100.0
     }
 
     // ---- book -----------------------------------------------------------------------------

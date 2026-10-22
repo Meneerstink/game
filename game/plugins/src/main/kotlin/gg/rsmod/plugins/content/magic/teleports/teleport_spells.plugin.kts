@@ -48,6 +48,19 @@ fun Player.teleport(
  if (!MagicSpells.canCast(this, data.lvl, itemRequirements)) {
         return
     }
+    // N43 (LC16 2026-10-16): a spell from a Safe zone to a Dangerous spot opens the Dangerous-area warning first, like walking out
+    // of the GE gate - before any rune is used (cancel = nothing lost); "Enter" casts the spell for real.
+    val warning = gg.rsmod.plugins.content.mechanics.pvp.DangerWarning
+    if (!isInterfaceVisible(warning.INTERFACE_ID) && warning.needsWarning(this, tile, endTile)) {
+        val self = this
+        queue(gg.rsmod.game.model.queue.TaskPriority.STRONG) {
+            if (warning.confirm?.invoke(this, warning.BODY_TEXT, endTile) == true) {
+                warning.allowNextCrossing(self)
+                self.teleport(type, endTile, xp, data)
+            }
+        }
+        return
+    }
 
     // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled
     // player's 7-second countdown complete this whole action automatically, instead of needing

@@ -135,7 +135,7 @@ class AncientCurses2011Tests {
 
     @Test
     fun `Turmoil starts at its base boost and snapshots the opponent level after a melee proc`() {
-        val player = newPlayer()
+        val player = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 99, Skills.DEFENCE to 99))
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleTurmoil(player)
         assertEquals(1.15, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, null), 1e-9)
@@ -147,6 +147,18 @@ class AncientCurses2011Tests {
         assertEquals(1.0, AncientCurses.turmoilMultiplier(player, Skills.RANGED, opponent), 1e-9)
         val inactive = newPlayer()
         assertEquals(1.0, AncientCurses.turmoilMultiplier(inactive, Skills.ATTACK, opponent), 1e-9)
+    }
+
+    @Test
+    fun `N44 - Turmoil's opponent share is a percentage of the player's own level, like the curse tab`() {
+        // Own Defence 75 against a 99 Defence opponent: 15% + (14 levels * 100 / 75 = 18%) = 33% (tab 33%, the old sum gave 29%).
+        val player = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 99, Skills.DEFENCE to 75))
+        AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+        AncientCurses.toggleTurmoil(player)
+        val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 99, Skills.DEFENCE to 99))
+        AncientCurses.onDamageDealt(player, opponent, damage = 1)
+        assertEquals(1.33, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
+        assertEquals(1.29, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
     }
 
     private fun procAfterCooldown(attacker: Player, target: Player, style: CombatClass = CombatClass.MELEE) {
