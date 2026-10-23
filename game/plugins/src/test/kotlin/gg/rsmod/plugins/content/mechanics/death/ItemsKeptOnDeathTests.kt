@@ -30,6 +30,34 @@ import kotlin.test.assertTrue
  * to the gravestone on a PvM death, untradeables broken (<= 20) or destroyed (> 20) with the killer's coins on a PvP death.
  */
 class ItemsKeptOnDeathTests {
+    @Test
+    fun `N241 - Check prints the line of the item in that slot, slots run section by section`() {
+        val item = { id: Int -> gg.rsmod.game.model.item.Item(id) }
+        val entries =
+            listOf(
+                ItemsKeptOnDeath.Entry(ItemsKeptOnDeath.Section.LOST, item(1), "lost 1"),
+                ItemsKeptOnDeath.Entry(ItemsKeptOnDeath.Section.KEPT, item(2), "kept 2"),
+                ItemsKeptOnDeath.Entry(ItemsKeptOnDeath.Section.DELETED, item(3), "deleted 3"),
+                ItemsKeptOnDeath.Entry(ItemsKeptOnDeath.Section.KEPT, item(4), "kept 4"),
+                ItemsKeptOnDeath.Entry(ItemsKeptOnDeath.Section.GRAVESTONE, item(5), "grave 5"),
+            )
+        assertEquals(listOf("kept 2", "kept 4", "grave 5", "lost 1", "deleted 3"), ItemsKeptOnDeath.slotOrder(entries).map { it.message })
+        val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/ItemsKeptOnDeath.kt").readText()
+        assertTrue("val shown = slotOrder(preview.entries)" in source, "the slots and Check read the same order")
+    }
+
+    @Test
+    fun `N241 - Wilderness beyond level 20 only exists for a player kill, so the two toggles move together`() {
+        val off = ItemsKeptOnDeath.Toggles(protectItem = false, skulled = true, killedByPlayer = false, deepWilderness = false)
+        val deep = ItemsKeptOnDeath.toggled(off, 3)
+        assertTrue(deep.deepWilderness && deep.killedByPlayer, "ticking level 20 ticks Killed by a player")
+        val pvm = ItemsKeptOnDeath.toggled(deep, 2)
+        assertTrue(!pvm.killedByPlayer && !pvm.deepWilderness, "unticking Killed by a player unticks level 20")
+        val shallow = ItemsKeptOnDeath.toggled(deep, 3)
+        assertTrue(shallow.killedByPlayer && !shallow.deepWilderness, "level 20 off keeps the player kill")
+        assertEquals(off.copy(protectItem = true), ItemsKeptOnDeath.toggled(off, 0))
+    }
+
     private val value = ItemRiskValueProvider { if (it == Items.AVERNIC_DEFENDER) 600_000L else 1L }
 
     @Test

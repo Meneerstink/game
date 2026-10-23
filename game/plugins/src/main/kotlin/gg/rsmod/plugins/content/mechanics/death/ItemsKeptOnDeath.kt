@@ -224,15 +224,32 @@ object ItemsKeptOnDeath {
         index: Int,
     ) {
         val t = player.attr[TOGGLES] ?: return
-        player.attr[TOGGLES] =
-            when (index) {
-                0 -> t.copy(protectItem = !t.protectItem)
-                2 -> t.copy(killedByPlayer = !t.killedByPlayer)
-                3 -> t.copy(deepWilderness = !t.deepWilderness)
-                else -> t
-            }
+        player.attr[TOGGLES] = toggled(t, index)
         refresh(player)
     }
+
+    /**
+     * N241 (owner 2026-10-23: "Wilderness beyond level 20 lijkt niets te doen"): on this server only a death a player causes takes
+     * items (a monster kill is always safe, [DeathResolver]), so the level-20 rule exists only for a player kill - ticking "Wilderness
+     * beyond level 20" also ticks "Killed by a player", and unticking "Killed by a player" unticks it, so the screen never shows a
+     * combination whose answer cannot differ.
+     */
+    fun toggled(
+        t: Toggles,
+        index: Int,
+    ): Toggles =
+        when (index) {
+            0 -> t.copy(protectItem = !t.protectItem)
+            2 -> if (t.killedByPlayer) t.copy(killedByPlayer = false, deepWilderness = false) else t.copy(killedByPlayer = true)
+            3 -> if (t.deepWilderness) t.copy(deepWilderness = false) else t.copy(deepWilderness = true, killedByPlayer = true)
+            else -> t
+        }
+
+    /**
+     * The entries in the order [refresh] puts them in the item slots: section by section (KEPT, GRAVESTONE, LOST, DELETED). N241:
+     * "Check" read the unsorted list, so a click on one item printed another item's line.
+     */
+    fun slotOrder(entries: List<Entry>): List<Entry> = Section.values().flatMap { section -> entries.filter { it.section == section } }
 
     /** "Check" on a listed item: its OSRS line in the chatbox (deathkeep_opitem). */
     fun check(
@@ -245,7 +262,7 @@ object ItemsKeptOnDeath {
     fun refresh(player: Player) {
         val toggles = player.attr[TOGGLES] ?: return
         val preview = preview(player, toggles)
-        val shown = preview.entries.take(Layout.SLOTS)
+        val shown = slotOrder(preview.entries).take(Layout.SLOTS)
         player.attr[SHOWN] = shown
         // deathkeep_left_setsection: header 3 px from the section top, items from 17 px, 7 per row 45 px apart, rows 41 px;
         // an 8 px gap, the 2-line divider, and another 8 px between sections.
