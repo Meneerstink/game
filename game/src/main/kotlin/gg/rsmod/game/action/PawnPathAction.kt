@@ -181,9 +181,11 @@ object PawnPathAction {
             }
             /*
              * If the npc has moved from the time this queue was added to
-             * when it was actually invoked, we need to walk towards it again.
+             * when it was actually invoked, we need to walk towards it again - unless it is in reach anyway. N214 (owner 2026-10-23:
+             * Pick-up pet / Trade npc: "blijven allebei naar elkaar toe lopen"): a follower (or a wandering npc) moves every tick, so
+             * "it moved" alone re-walked forever while the two stood next to each other.
              */
-            if (!other.tile.sameAs(initialTile)) {
+            if (!other.tile.sameAs(initialTile) && !reachedMovingTarget(pawn, other, lineOfSightRange ?: 1, lineOfSightRange != null)) {
                 logInteraction(pawn, other, opt, "target moved (was $initialTile, now ${other.tile}) - re-walking")
                 walk(it, pawn, other, opt, lineOfSightRange)
                 return
@@ -383,6 +385,12 @@ object PawnPathAction {
         var stalled = 0
         while (!pawn.tile.sameAs(route.tail)) {
             if (!targetTile.sameAs(target.tile)) {
+                // N214: a moving target that came into reach is reached - routing again to its new tile chased a follower that
+                // was already beside the player (pet and owner walking towards each other).
+                if (reachedMovingTarget(pawn, target, reach?.invoke() ?: interactionRange, lineOfSight || projectile)) {
+                    pawn.stopMovement()
+                    return true
+                }
                 return walkTo(it, pawn, target, reach?.invoke() ?: interactionRange, lineOfSight, reach = reach)
             }
             it.wait(1)
@@ -454,6 +462,26 @@ object PawnPathAction {
         if (gap < 1 || gap > range) return false
         if (range == 1 && !projectile) return bordering(source, sourceSize, target, targetSize)
         return pawn.world.collision.raycast(source, target, projectile)
+    }
+
+    /**
+     * N214: whether [pawn] already reaches [target] where both stand now - a melee interaction (range 1, no line of sight) needs a
+     * shared edge without a wall between (MeleeReach, what the route aims for and what a follower stops at), anything longer the
+     * usual reach.
+     */
+    fun reachedMovingTarget(
+        pawn: Pawn,
+        target: Pawn,
+        range: Int,
+        lineOfSight: Boolean,
+    ): Boolean {
+        if (overlap(pawn.tile, pawn.getSize(), target.tile, target.getSize())) return false
+        if (range <= 1 && !lineOfSight) {
+            return gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+                pawn.world.collision, pawn.tile, pawn.getSize(), pawn.getSize(), target.tile, target.getSize(), target.getSize(),
+            )
+        }
+        return inReachWithoutMoving(pawn, pawn.tile, pawn.getSize(), target.tile, target.getSize(), range, lineOfSight)
     }
 
     private fun overlap(
