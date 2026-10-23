@@ -561,7 +561,7 @@ object StoreUi : KLogging() {
                     if (!unlocked) player.message("You have already unlocked that look.")
                     if (unlocked) 1 else 0
                 }
-                Kind.KIT, Kind.ITEM -> {
+                Kind.KIT, Kind.ITEM -> if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(entry.purchaseItem)) buyPets(player, entry, amount) else {
                     val stackable = player.world.definitions.getNullable(ItemDef::class.java, entry.purchaseItem)?.stackable == true
                     val fits = if (stackable) amount else minOf(amount, player.inventory.freeSlotCount)
                     val added = fits > 0 && player.inventory.add(entry.purchaseItem, fits, assureFullInsertion = true).hasSucceeded()
@@ -607,6 +607,26 @@ object StoreUi : KLogging() {
             else -> player.message("You buy ${name(player, entry.purchaseItem)} for ${cost.format()} ${currency.plural}.")
         }
         renderPreview(player)
+    }
+
+    /**
+     * N216/N243 (owner 2026-10-23): a bought pet comes as a pet - the follower when none is out, else the backpack, else the bank - with
+     * the OSRS message and the "Getting pet" sound ([gg.rsmod.plugins.content.skills.summoning.Pets.award]); never lost, so the
+     * purchase stops when neither backpack nor bank has room. Returns how many were delivered.
+     */
+    private fun buyPets(
+        player: Player,
+        entry: Entry,
+        amount: Int,
+    ): Int {
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        var delivered = 0
+        while (delivered < amount && pets.awardOutcome(false, pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace) != gg.rsmod.plugins.content.skills.summoning.Pets.Award.LOST) {
+            pets.awardItem(player, entry.purchaseItem, purchased = true)
+            delivered++
+        }
+        if (delivered == 0) player.message("You don't have enough inventory or bank space.")
+        return delivered
     }
 
     /** One line in `data/logs/store_purchases.log` (also Perdu's imbue, which sells the same catalogue entry). */

@@ -1,0 +1,203 @@
+# 667 (classic) pets - N216 (owner 2026-10-23: store pets must follow). item -> follower npc of every 667 pet item
+# (kittens/cats, dogs, baby dragons, Summoning pets ...): Darkan Pets.java + 2009scape Pets.java (donors), each pair checked
+# against this cache (the npc has Pick-up; one wrong Darkan id dropped). No growth or hunger: they follow like the OSRS pets.
+# name	item	npc
+Pet kitten	1555	761
+Pet kitten	1556	762
+Pet kitten	1557	763
+Pet kitten	1558	764
+Pet kitten	1559	765
+Pet kitten	1560	766
+Pet cat	1561	768
+Pet cat	1562	769
+Pet cat	1563	770
+Pet cat	1564	771
+Pet cat	1565	772
+Pet cat	1566	773
+Overgrown cat	1567	774
+Overgrown cat	1568	775
+Overgrown cat	1569	776
+Overgrown cat	1570	777
+Overgrown cat	1571	778
+Overgrown cat	1572	779
+Overgrown hellcat	7581	3503
+Hellcat	7582	3504
+Hell-kitten	7583	3505
+Clockwork cat	7771	3598
+Hatchling dragon	12469	6900
+Baby dragon	12470	6901
+Hatchling dragon	12471	6902
+Baby dragon	12472	6903
+Hatchling dragon	12473	6904
+Baby dragon	12474	6905
+Hatchling dragon	12475	6906
+Baby dragon	12476	6907
+Baby penguin	12481	6908
+Penguin	12482	6909
+Raven chick	12484	6911
+Raven	12485	6912
+Baby raccoon	12486	6913
+Raccoon	12487	6914
+Baby gecko	12488	6915
+Gecko	12489	6916
+Baby squirrel	12490	6919
+Squirrel	12491	6920
+Baby chameleon	12492	6922
+Chameleon	12493	6923
+Baby monkey	12496	6942
+Monkey	12497	6943
+Vulture chick	12498	6945
+Vulture	12499	6946
+Baby giant crab	12500	6947
+Giant crab	12501	6948
+Saradomin chick	12503	6949
+Saradomin bird	12504	6950
+Saradomin owl	12505	6951
+Zamorak chick	12506	6952
+Zamorak bird	12507	6953
+Zamorak hawk	12508	6954
+Guthix chick	12509	6955
+Guthix bird	12510	6956
+Guthix raptor	12511	6957
+Terrier puppy	12512	6958
+Terrier	12513	6959
+Greyhound puppy	12514	6960
+Greyhound	12515	6961
+Labrador puppy	12516	6962
+Labrador	12517	6963
+Dalmatian puppy	12518	6964
+Dalmatian	12519	6965
+Sheepdog puppy	12520	6966
+Sheepdog	12521	6967
+Bulldog puppy	12522	6969
+Bulldog	12523	6968
+Platypus	12548	7015
+Platypus	12549	7016
+Platypus	12550	7017
+Baby platypus	12551	7018
+Baby platypus	12552	7019
+Baby platypus	12553	7020
+Baby monkey	12682	7210
+Monkey	12683	7211
+Baby monkey	12684	7212
+Monkey	12685	7213
+Baby monkey	12686	7214
+Monkey	12687	7215
+Baby monkey	12688	7216
+Monkey	12689	7217
+Baby monkey	12690	7218
+Monkey	12691	7219
+Baby monkey	12692	7220
+Monkey	12693	7221
+Baby monkey	12694	7222
+Monkey	12695	7223
+Baby monkey	12696	7224
+Monkey	12697	7225
+Baby monkey	12698	7226
+Monkey	12699	7227
+Terrier puppy	12700	7237
+Terrier	12701	7238
+Terrier puppy	12702	7239
+Terrier	12703	7240
+Greyhound puppy	12704	7241
+Greyhound	12705	7242
+Greyhound puppy	12706	7243
+Greyhound	12707	7244
+Labrador puppy	12708	7245
+Labrador	12709	7246
+Labrador puppy	12710	7247
+Labrador	12711	7248
+Dalmatian puppy	12712	7249
+Dalmatian	12713	7250
+Dalmatian puppy	12714	7251
+Dalmatian	12715	7252
+Sheepdog puppy	12716	7253
+Sheepdog	12717	7254
+Sheepdog puppy	12718	7255
+Sheepdog	12719	7256
+Bulldog puppy	12720	7259
+Bulldog	12721	7257
+Bulldog puppy	12722	7260
+Bulldog	12723	7258
+Raven chick	12724	7261
+Raven	12725	7262
+Raven chick	12726	7263
+Raven	12727	7264
+Raven chick	12728	7265
+Raven	12729	7266
+Raven chick	12730	7267
+Raven	12731	7268
+Raven chick	12732	7269
+Raven	12733	7270
+Baby raccoon	12734	7271
+Raccoon	12735	7272
+Baby raccoon	12736	7273
+Raccoon	12737	7274
+Baby gecko	12738	7277
+Baby gecko	12739	7278
+Baby gecko	12740	7279
+Baby gecko	12741	7280
+Gecko	12742	7281
+Gecko	12743	7282
+Gecko	12744	7283
+Gecko	12745	7284
+Baby giant crab	12746	7293
+Giant crab	12747	7294
+Baby giant crab	12748	7295
+Giant crab	12749	7296
+Baby giant crab	12750	7297
+Giant crab	12751	7298
+Baby giant crab	12752	7299
+Giant crab	12753	7300
+Baby squirrel	12754	7301
+Squirrel	12755	7302
+Baby squirrel	12756	7303
+Squirrel	12757	7304
+Baby squirrel	12758	7305
+Squirrel	12759	7306
+Baby squirrel	12760	7307
+Squirrel	12761	7308
+Penguin	12762	7314
+Baby penguin	12763	7313
+Penguin	12764	7317
+Baby penguin	12765	7316
+Vulture chick	12766	7319
+Vulture	12767	7320
+Vulture chick	12768	7321
+Vulture	12769	7322
+Vulture chick	12770	7323
+Vulture	12771	7324
+Vulture chick	12772	7325
+Vulture	12773	7326
+Vulture chick	12774	7327
+Vulture	12775	7328
+Ex-ex-parrot	13335	7844
+Pet kitten	14089	8217
+Pet cat	14090	8214
+Broav	14533	8491
+Phoenix eggling	14626	8577
+Phoenix eggling	14627	8578
+Abyssal minion	14651	8624
+Creeping hand	14652	8619
+Minitrice	14653	8620
+Baby basilisk	14654	8621
+Baby kurask	14655	8622
+Rune guardian	15626	9656
+Rune guardian	15627	9657
+Rune guardian	15628	9658
+Rune guardian	15629	9659
+Rune guardian	15630	9660
+Rune guardian	15631	9661
+Rune guardian	15632	9662
+Rune guardian	15633	9663
+Rune guardian	15634	9664
+Rune guardian	15635	9665
+Rune guardian	15636	9666
+Rune guardian	15637	9667
+Rune guardian	15638	9668
+Rune guardian	15639	9669
+Tooth creature (healthy)	18669	11413
+Milk tooth creature	18671	11411
+Sneakerpeeper spawn	19894	13089
+Sneakerpeeper	19895	13090
+Tzrek-jad	21512	3604

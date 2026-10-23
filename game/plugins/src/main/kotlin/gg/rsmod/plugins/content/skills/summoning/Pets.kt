@@ -35,6 +35,13 @@ object Pets {
     const val TABLE_PATH = "./data/cfg/pets/pets.tsv"
     const val TIERS_PATH = "./data/cfg/pets/pet_tiers.tsv"
 
+    /**
+     * N216 (owner 2026-10-23: a baby dragon or terrier from the store dropped on the floor instead of following): the 667 pets - the
+     * cats, dogs, baby dragons and every other Summoning-era pet item - follow like the OSRS pets. One pet per item (no growth or
+     * hunger); item -> follower npc from the donors' pet tables, each pair checked against this cache ([parseClassicTable]).
+     */
+    const val CLASSIC_TABLE_PATH = "./data/cfg/pets/pets_667.tsv"
+
     /** Novite rev-667 `PetManager.spawnPet` / `NPCHandler` pet pick-up. */
     const val DROP_ANIMATION = 827
 
@@ -78,6 +85,8 @@ object Pets {
         val npc: Int,
         /** The OSRS item id of the variant ([PetMorphs] keys its unlock rules on it); -1 in hand-built tables. */
         val osrsItem: Int = -1,
+        /** A 667 pet ([CLASSIC_TABLE_PATH]): no tier, no OSRS item. */
+        val classic: Boolean = false,
     )
 
     data class PetInfo(
@@ -122,6 +131,15 @@ object Pets {
             Variant(c[0], c[1], c[2].trim().toInt(), c[3].trim().toInt(), c.getOrNull(4)?.trim()?.toIntOrNull() ?: -1)
         }
 
+    /** `name<TAB>item<TAB>npc` rows of [CLASSIC_TABLE_PATH]: each item is its own pet, named "name (item)". */
+    fun parseClassicTable(lines: List<String>): List<Variant> =
+        lines.filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
+            val c = line.split('\t')
+            require(c.size >= 3) { "bad 667 pet line '$line'" }
+            val item = c[1].trim().toInt()
+            Variant("${c[0]} ($item)", c[0], item, c[2].trim().toInt(), classic = true)
+        }
+
     fun parseTiers(lines: List<String>): List<PetInfo> =
         lines.filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
             val c = line.split('\t')
@@ -145,13 +163,19 @@ object Pets {
         dropsByNpc = tiers.flatMap { info -> info.dropNpcs.map { it to info } }.toMap()
     }
 
-    /** Loads both files; returns the variant count (0 when the table has not been generated yet). */
+    /** Loads the OSRS table, its tiers and the 667 pets; returns the variant count (0 when the OSRS table has not been generated yet). */
     fun load(
         table: File = File(TABLE_PATH),
         tiers: File = File(TIERS_PATH),
+        classic: File = File(CLASSIC_TABLE_PATH),
     ): Int {
         if (!table.exists()) return 0
-        install(parseTable(table.readLines()), if (tiers.exists()) parseTiers(tiers.readLines()) else emptyList())
+        val osrs = parseTable(table.readLines())
+        val osrsItems = osrs.map { it.item }.toSet()
+        val osrsNpcs = osrs.map { it.npc }.toSet()
+        // An item or npc both tables name stays the OSRS pet's.
+        val old = if (classic.exists()) parseClassicTable(classic.readLines()).filter { it.item !in osrsItems && it.npc !in osrsNpcs } else emptyList()
+        install(osrs + old, if (tiers.exists()) parseTiers(tiers.readLines()) else emptyList())
         return variants.size
     }
 
@@ -358,15 +382,20 @@ object Pets {
             else -> Award.LOST
         }
 
-    /** A pet reward (boss roll): OSRS's follower / backpack / duplicate rules. */
+    /**
+     * A pet reward - a boss roll, a skilling pet, the Deadman's chest, a breach monster, a store purchase (N243, owner 2026-10-23: every
+     * way a pet arrives gives the OSRS message and the "Getting pet" sound): OSRS's follower / backpack / duplicate rules. A
+     * [purchased] pet is never a duplicate (the player paid for this one); returns where it went.
+     */
     fun award(
         player: Player,
         pet: String,
         item: Int = baseItem(pet) ?: -1,
-    ) {
-        if (item < 0 || byItem[item]?.pet != pet) return
+        purchased: Boolean = false,
+    ): Award? {
+        if (item < 0 || byItem[item]?.pet != pet) return null
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
-        val outcome = awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
+        val outcome = awardOutcome(!purchased && owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
         if (outcome != Award.DUPLICATE && outcome != Award.LOST) {
             PetMorphs.unlock(player, byItem.getValue(item))
@@ -390,7 +419,15 @@ object Pets {
             }
             Award.LOST -> gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet $pet for ${player.username}: inventory and bank full, pet lost" }
         }
+        return outcome
     }
+
+    /** [award] for whichever pet [item] is (a dropped or bought pet item); null when [item] is no pet. */
+    fun awardItem(
+        player: Player,
+        item: Int,
+        purchased: Boolean = false,
+    ): Award? = byItem[item]?.let { award(player, it.pet, item, purchased) }
 
     /** The kill roll of `on_npc_killed`: 1 / [PetInfo.dropRate] per kill of one of the pet's boss npcs. */
     fun roll(

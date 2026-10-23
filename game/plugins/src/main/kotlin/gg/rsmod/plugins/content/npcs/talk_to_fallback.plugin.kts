@@ -65,6 +65,8 @@ on_world_init {
             on_npc_option(npc = id, option = "talk-to") {
                 val bound = service != null && (service.index + 1) in world.plugins.boundNpcOptions(id)
                 player.queue {
+                    // N88 part 3: a pet answers Talk-to with its own voice first (silent for every other npc).
+                    gg.rsmod.plugins.content.skills.summoning.PetVoices.play(player, player.getInteractingNpc())
                     if (ServiceDialogues.play(this, player.getInteractingNpc())) return@queue
                     // Every bank npc without its own dialogue holds the full banker conversation - also a "Banker" whose cache entry
                     // only offers Talk-to (e.g. the Tutorial Island banker 953). It runs before the wiki transcripts: those record the

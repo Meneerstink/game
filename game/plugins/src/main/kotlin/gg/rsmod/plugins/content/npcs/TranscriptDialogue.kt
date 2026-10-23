@@ -52,7 +52,13 @@ object TranscriptDialogue {
     fun lineSound(
         npcId: Int,
         text: String,
-    ): Int? = if (npcId == BLOODHOUND && BARK_LINE.containsMatchIn(text)) Sfx.PET_DOG_BARK else null
+    ): Int? =
+        if (npcId == BLOODHOUND && BARK_LINE.containsMatchIn(text)) {
+            Sfx.PET_DOG_BARK
+        } else {
+            // N88 part 3: a pet's own line sound (Huberte screeches on "*screeches*", OSRS Wiki Huberte trivia).
+            gg.rsmod.plugins.content.skills.summoning.PetVoices.lineSound(npcId, text)
+        }
 
     /** A line that opens with its bark: "*Woof woof bark!*", "*Bark! Woof bark bark.*", "*Bark bark woof!*" (OSRS transcript). */
     private val BARK_LINE = Regex("""^\s*\*(woof|bark)""", RegexOption.IGNORE_CASE)

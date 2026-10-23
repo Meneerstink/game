@@ -1000,6 +1000,16 @@ object DeadmanBreach {
             looted++
             BreachLoot.roll(world.random, DropTableFactory.killRate(player)).forEach drops@{ drop ->
                 val def = world.definitions.getNullable(ItemDef::class.java, drop.item) ?: return@drops
+                // N243 (owner 2026-10-23): a breach pet arrives like every pet (Pets.award: follower / backpack / bank, the OSRS message,
+                // the "Getting pet" sound); only one nobody has room for lands on the ground, like the Deadman's chest.
+                if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(drop.item)) {
+                    val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+                    val pet = pets.variantOfItem(drop.item)!!.pet
+                    if (pets.awardOutcome(pets.owns(player, pet), pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace) != gg.rsmod.plugins.content.skills.summoning.Pets.Award.LOST) {
+                        pets.award(player, pet, drop.item)
+                        return@drops
+                    }
+                }
                 val item = if (drop.noted && def.noteLinkId > 0) def.noteLinkId else drop.item
                 world.spawn(GroundItem(item, drop.amount, tile, player))
             }

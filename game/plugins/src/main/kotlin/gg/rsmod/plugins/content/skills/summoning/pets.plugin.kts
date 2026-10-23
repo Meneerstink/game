@@ -28,6 +28,7 @@ import gg.rsmod.plugins.api.ext.setComponentText
 
 val loadedPets = Pets.load()
 val loadedEmotes = PetEmotes.load()
+val loadedVoices = PetVoices.load()
 
 Pets.variants.forEach { variant ->
     // The engine's Drop (OpHeld5Handler) asks this first; the follower comes out instead of the item landing on the floor.
@@ -112,7 +113,7 @@ on_world_init {
         if (world.definitions.getNullable(ItemDef::class.java, v.item) == null) problems += "pet item ${v.item} (${v.name}) missing from the cache"
         if (world.definitions.getNullable(NpcDef::class.java, v.npc) == null) problems += "pet npc ${v.npc} (${v.name}) missing from the cache"
     }
-    val pets = Pets.variants.map { it.pet }.toSet()
+    val pets = Pets.variants.filterNot { it.classic }.map { it.pet }.toSet()
     pets.filter { it !in Pets.infos }.forEach { problems += "pet '$it' has no tier in pet_tiers.tsv" }
     Pets.infos.values.flatMap { i -> i.dropNpcs.map { i.pet to it } }.forEach { (pet, npc) ->
         if (world.definitions.getNullable(NpcDef::class.java, npc) == null) problems += "pet '$pet' drops from npc $npc which is not in the cache"
@@ -121,9 +122,9 @@ on_world_init {
         if (Pets.variantOfNpc(npc) == null) problems += "pet emote npc $npc is no pet follower"
         list.flatMap { it.seqs }.filter { world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, it) == null }.forEach { problems += "pet emote seq $it (npc $npc) missing from the cache" }
     }
-    Pets.variants.filter { it.osrsItem < 0 }.forEach { problems += "pet ${it.name} (${it.item}) has no OSRS item id in pets.tsv" }
+    Pets.variants.filter { it.osrsItem < 0 && !it.classic }.forEach { problems += "pet ${it.name} (${it.item}) has no OSRS item id in pets.tsv" }
     problems.forEach { p -> gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pets: $p" } }
-    println("OSRS pets: $loadedPets variants of ${pets.size} pets, ${Pets.infos.values.count { it.dropOnly }} boss-drop pets, $loadedEmotes emotes, ${problems.size} problems.")
+    println("OSRS pets: $loadedPets variants (${Pets.variants.count { it.classic }} of them 667 pets) of ${pets.size} OSRS pets, ${Pets.infos.values.count { it.dropOnly }} boss-drop pets, $loadedEmotes emotes, $loadedVoices voiced followers, ${problems.size} problems.")
 }
 
 /**

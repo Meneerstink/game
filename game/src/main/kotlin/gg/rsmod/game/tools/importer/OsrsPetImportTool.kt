@@ -227,7 +227,6 @@ object OsrsPetImportTool {
      */
     val LENT_SOUNDS: Map<Int, Int> =
         linkedMapOf(
-            6631 to 6643, // Pet Kree'arra <- Kree'arra Jr. (twin): stand + walk 3882
             8492 to 8517, 8493 to 8518, 8494 to 8519, 8495 to 8520, // Ikkle Hydra x4 <- their twins (same colour order)
             8202 to 8197, // Tektiny <- Tektiny (twin)
             9513 to 7543, // Enraged Tektiny <- Tekton (enraged)
@@ -236,8 +235,6 @@ object OsrsPetImportTool {
             11987 to 5536, 11988 to 5536, // Vet'ion Jr. (classic) <- Vet'ion Jr. (twin)
             11986 to 6609, 5558 to 6609, // Callisto cub <- Callisto
             5557 to 6610, 11985 to 6610, // Venenatis spiderling <- Venenatis
-            318 to 320, // Pet dark core <- Dark energy core
-            8010 to 319, // Pet Corporeal Critter <- Corporeal Beast
             11277 to 11278, // Nexling <- Nex (walk 24 frames each)
             7616 to 7221, // Scurry <- Scurrius
             8739 to 9049, // Smolcano <- Zalcano (walk 14 frames each)
@@ -254,7 +251,124 @@ object OsrsPetImportTool {
             12858 to 12886, // Quetzin <- Quetzal (walk 12 frames each)
             14204 to 14176, // Yami <- Yama
             15740 to 15742, // Maggot marquess <- Maggot King
+            // N88 part 3 (owner 2026-10-23 decision 1 "+ rock golems"): the 19 rock golems walk with the Golem guard's rock footsteps
+            // (coa_rock_footstep_01 / _02 on its walk 10775), their family's own walk sound.
+            7451 to 14125, 7452 to 14125, 7453 to 14125, 7454 to 14125, 7455 to 14125, 7642 to 14125, 7643 to 14125, 7644 to 14125,
+            7645 to 14125, 7646 to 14125, 7647 to 14125, 7648 to 14125, 7711 to 14125, 7739 to 14125, 7740 to 14125, 7741 to 14125,
+            14923 to 14125, 14924 to 14125, 14925 to 14125,
         )
+
+    /**
+     * N88 part 3, owner decision 3 (2026-10-23): Jagex took the movement sounds off these pets on purpose (Pet Kree'arra 25-02-2016
+     * "very loud sound effect", Pet dark core 08-03-2018 "no longer has sounds attached to its animations"), so their walk / stand
+     * sequences stay silent like OSRS; they got the twin/parent sounds in part 2 (tx-20261023-132119, restored).
+     */
+    val JAGEX_SILENCED: Set<Int> = setOf(6631, 318, 8010)
+
+    /**
+     * One Talk-to voice of a pet ([variant] "*" = every variant of [pet]): OSRS synth [osrsSynth] (imported by [sounds]), or the 667
+     * cache's own [local667] synth. [line]: played on that transcript line instead of at the start of Talk-to (Huberte's screech).
+     */
+    data class Voice(val pet: String, val variant: String, val osrsSynth: Int, val name: String, val source: String, val local667: Int = -1, val line: String = "")
+
+    /**
+     * N88 part 3 (owner 2026-10-23: "elke osrs pet moet geluid hebben"; research and decisions team\prep\N88\research\OVERZICHT.md):
+     * OSRS pets have no voice, so Talk-to plays once Jagex's own sound of that creature or its boss (decision 1), of its family where
+     * the creature has none (decision 4), and nothing for the 8 pets nothing can be sourced for (decision 2: Jal-Nib-Rek, Mr McGroot,
+     * Pet Kraken, Phoenix, Soup, Tangleroot, Youngllef, the Olm forms). Ids and names: wiki "List of sound IDs"; an id without a name
+     * is the first frame sound of the named OSRS sequence (cache 2686).
+     */
+    val VOICES: List<Voice> =
+        listOf(
+            Voice("Abyssal orphan", "*", 276, "abyssal_attack", "family: abyssal demon"),
+            Voice("Abyssal protector", "*", 5470, "gotr_small_rift_guardian_attack_04", "family: GotR guardian"),
+            Voice("Aggy", "*", 4059, "hespori_spawn", "Hespori"),
+            Voice("Baby Mole", "*", 1642, "mole_attack", "Giant Mole"),
+            Voice("Baby chinchompa", "*", 4705, "lore_chinchompa", "chinchompa"),
+            Voice("Baron", "*", 7177, "dt2_duke_melee_roar_04", "Duke Sucellus"),
+            Voice("Beaver", "*", 4662, "lore_beaver", "beaver"),
+            Voice("Beef", "*", 1170, "pet_cow", "Jagex pet_cow"),
+            Voice("Bran", "Bran", 10163, "-", "Branda the Fire Queen spawn seq 11966"),
+            Voice("Bran", "Ric", 10122, "-", "Eldric the Ice King spawn seq 11963"),
+            Voice("Butch", "*", 7158, "dt2_vardorvis_head_scream_tentacle_spawn_01", "Vardorvis"),
+            Voice("Callisto cub", "*", 6873, "wbr_callisto_attack_melee_roar_01", "Callisto"),
+            Voice("Chompy chick", "*", 1453, "chompy_bird_squak", "chompy bird"),
+            Voice("Dom", "*", 10337, "-", "Doom of Mokhaiotl seq 12414"),
+            Voice("Giant Squirrel", "*", 4724, "lore_squirrel", "squirrel"),
+            Voice("Gull (pet)", "*", 10789, "-", "gryphon melee seq 12551"),
+            Voice("Hellpuppy", "*", 6904, "wbr_vention_hellhound_attack_bark_01", "family: hellhound"),
+            Voice("Herbi", "*", 7254, "strangled_boar_attack", "family: boar"),
+            Voice("Heron", "*", 306, "bird_attack", "family: bird"),
+            Voice("Huberte", "*", 9574, "huey_awaken_reset_roar_02", "Hueycoatl"),
+            // OSRS Wiki Huberte trivia: called a "cute little thing", it screeches with the Armadyl crossbow special's sound.
+            Voice("Huberte", "*", 3892, "godwars_armadyl_avatar_attack", "Huberte trivia (Armadyl crossbow special)", line = "*screeches*"),
+            Voice("Ikkle Hydra", "*", 4067, "hydra_boss_stage_4_spawn", "Alchemical Hydra"),
+            Voice("Kalphite Princess", "*", 4485, "lore_kalphite", "Kalphite Queen"),
+            Voice("Lil' Creator", "Lil' Creator", 1402, "avatar_warrior_attack", "Avatar of Creation"),
+            Voice("Lil' Creator", "Lil' Destructor", 1403, "avatar_mage_attack", "Avatar of Destruction"),
+            Voice("Lil' Zik", "Lil' Zik", 3948, "tob_verzik_bat_cry", "Verzik Vitur"),
+            Voice("Lil' Zik", "Lil' Maiden", 3942, "tob_maiden_death", "Maiden of Sugadinti"),
+            Voice("Lil' Zik", "Lil' Bloat", 3545, "tob_bloat_shout", "Pestilent Bloat"),
+            Voice("Lil' Zik", "Lil' Nylo", 3294, "tob_nylocas_deathdetonate_shriek", "Nylocas"),
+            Voice("Lil' Zik", "Lil' Sot", 3972, "tob_sotetseg_walk_1", "Sotetseg"),
+            Voice("Lil' Zik", "Lil' Xarp", 3549, "tob_xarpus_death_screech", "Xarpus"),
+            Voice("Lil'viathan", "*", 7029, "dt2_levboss_melee_01", "the Leviathan"),
+            Voice("Little Nightmare", "*", 4224, "noa_magic_screech_1", "the Nightmare"),
+            Voice("Maggot marquess", "*", 11839, "-", "Maggot King seq 13922"),
+            Voice("Moxi", "*", 9728, "amoxliatl_spawn_01", "Amoxliatl"),
+            Voice("Muphin", "*", 6699, "sotn_muspah_attack_summon_signal_08", "Phantom Muspah"),
+            Voice("Nexling", "*", 5205, "nex2021_turmoil_intro_scream", "Nex"),
+            Voice("Nid", "*", 9406, "araxxor_acid_cannon_scream_01", "Araxxor"),
+            Voice("Noon", "Noon", 9938, "l5_gg_dawn_spawn_scream_02", "Dawn"),
+            Voice("Noon", "Midnight", 9973, "l5_gg_dusk_spawn_scream_02", "Dusk"),
+            Voice("Olmlet", "Tektiny", 3836, "godwars_avatar_clang", "Tekton"),
+            Voice("Olmlet", "Enraged Tektiny", 3836, "godwars_avatar_clang", "Tekton"),
+            Voice("Olmlet", "Vespina", 551, "kalphite_flyingqueen_attack", "Vespula"),
+            Voice("Olmlet", "Flying Vespina", 551, "kalphite_flyingqueen_attack", "Vespula"),
+            Voice("Pet Dagannoth Prime", "*", 1623, "dagganoth_spines", "Dagannoth Kings"),
+            Voice("Pet Dagannoth Rex", "*", 1623, "dagganoth_spines", "Dagannoth Kings"),
+            Voice("Pet Dagannoth Supreme", "*", 1623, "dagganoth_spines", "Dagannoth Kings"),
+            Voice("Pet General Graardor", "*", 3871, "godwars_bandos_avatar_attack", "General Graardor"),
+            Voice("Pet K'ril Tsutsaroth", "*", 3866, "godwars_zamorak_avatar_attack", "K'ril Tsutsaroth"),
+            Voice("Pet Kree'arra", "*", 3892, "godwars_armadyl_avatar_attack", "Kree'arra"),
+            Voice("Pet Penance Queen", "*", 675, "penance_queen_attack", "Penance Queen"),
+            Voice("Pet Smoke Devil", "*", 4488, "lore_dust_devil", "smoke devil"),
+            Voice("Pet Snakeling", "*", 799, "snake_hiss", "snake"),
+            Voice("Pet Zilyana", "*", 3886, "godwars_saradomin_avatar_shield", "Commander Zilyana"),
+            Voice("Pet chaos elemental", "*", 345, "chaos_elemental_attack", "Chaos Elemental"),
+            Voice("Pet dark core", "Pet dark core", 3895, "Sum2_corp_spirit_beast_mid_proj1", "Corporeal Beast dark core shot (seq 1679)"),
+            Voice("Pet dark core", "Pet Corporeal Critter", 3894, "Sum1_spirit_beast_stamp_attack", "Corporeal Beast stomp (seq 1682)"),
+            Voice("Prince Black Dragon", "*", 408, "dragon_attack", "King Black Dragon"),
+            Voice("Quetzin", "*", 8581, "varl_quetzel_01", "quetzal"),
+            Voice("Rift guardian", "*", 5470, "gotr_small_rift_guardian_attack_04", "family: GotR guardian"),
+            Voice("Rock golem", "*", 9841, "coa_rock_golem_attack_01", "family: rock golem"),
+            Voice("Rocky", "*", 4661, "lore_raccoon", "raccoon"),
+            Voice("Scorpia's offspring", "*", 4525, "lore_scorpion", "scorpion"),
+            Voice("Scurry", "*", 7708, "rat_boss_feeding_idle_08", "Scurrius"),
+            Voice("Skotos", "*", 400, "demon_attack", "family: demon (Skotizo)"),
+            Voice("Smol Heredit", "*", 8085, "varl_colossi_boss_hiss_02", "Sol Heredit"),
+            Voice("Smolcano", "*", 4148, "sote_zalcano_stand_up_1", "Zalcano"),
+            Voice("Sraracha", "*", 3605, "big_spider_attack", "family: spider"),
+            Voice("Tiny tempor", "*", 4953, "fishboss_torrent_lightning", "Tempoross"),
+            Voice("Tumeken's guardian", "Tumeken's guardian", 6205, "toa_wardens_wake_up_power_01", "Tumeken's Warden (seq 9663)"),
+            Voice("Tumeken's guardian", "Tumeken's damaged guardian", 6205, "toa_wardens_wake_up_power_01", "Tumeken's Warden"),
+            Voice("Tumeken's guardian", "Elidinis' guardian", 6205, "toa_wardens_wake_up_power_01", "Elidinis' Warden"),
+            Voice("Tumeken's guardian", "Elidinis' damaged guardian", 6205, "toa_wardens_wake_up_power_01", "Elidinis' Warden"),
+            Voice("Tumeken's guardian", "Akkhito", 5650, "toa_akka_spawn_01", "Akkha (seq 9790)"),
+            Voice("Tumeken's guardian", "Babi", 5943, "toa_baba_spawn_boss_roar_01", "Ba-Ba"),
+            Voice("Tumeken's guardian", "Kephriti", 6420, "toa_kephri_special_attack_fly_up_01", "Kephri"),
+            Voice("Tumeken's guardian", "Zebo", 5818, "toa_zebak_ranged_enranged_roar_01", "Zebak"),
+            // OSRS sends TzTok-Jad's sounds from the server (no named id); the 667 Jad's own defend sound (npc combat audio table).
+            Voice("TzRek-Jad", "*", -1, "TzTok-Jad defend (667)", "TzTok-Jad", local667 = 410),
+            Voice("Venenatis spiderling", "*", 6921, "wbr_venenatis_attack_screech_01", "Venenatis"),
+            Voice("Vet'ion Jr.", "*", 6853, "wbr_vetion_spawn_01", "Vet'ion"),
+            Voice("Vorki", "*", 1521, "vorkath_attack", "Vorkath"),
+            Voice("Wisp", "*", 7432, "dt2_whisperer_spawn_screech_01", "the Whisperer"),
+            Voice("Yami", "*", 10251, "Yama snap sound", "Yama (seq 12144)"),
+        )
+
+    /** Server table of [VOICES] with the local synth ids, written by `table`. */
+    val VOICE_TABLE = RspsPaths.data("cfg/pets/pet_voices.tsv")
 
     /** The frame durations of a rev-667 sequence, whether it already has frame sounds (opcode 13), and the offset of its end byte. */
     class Seq667(val durations: IntArray, val hasSounds: Boolean, val end: Int)
@@ -437,6 +551,17 @@ object OsrsPetImportTool {
                     plans += "PLAN ${row.variant} ($targetNpc) $move local seq $localSeq <- ${source.name} ($sourceNpc) seq $sourceSeq: ${mapped.joinToString(", ")}"
                 }
             }
+            // N88 part 3: every OSRS voice synth, imported once (its own bytes, also where the 667 cache has the same id).
+            for (voice in VOICES.filter { it.osrsSynth >= 0 }.distinctBy { it.osrsSynth }) {
+                val localSynth =
+                    local("synth", voice.osrsSynth) { nextSynth++ }.also { id ->
+                        if (library.data(OsrsFxImportTool.INDEX_SYNTH, id, 0) == null) {
+                            val data = reader.file(OsrsFxImportTool.INDEX_SYNTH, voice.osrsSynth, 0) ?: error("OSRS synth ${voice.osrsSynth} missing")
+                            mutations += CacheMutation(OsrsFxImportTool.INDEX_SYNTH, id, 0, data, "N88 voice ${voice.pet}: osrs synth ${voice.osrsSynth} ${voice.name}")
+                        }
+                    }
+                plans += "VOICE ${voice.pet} osrs ${voice.osrsSynth} ${voice.name} -> local synth $localSynth"
+            }
         } finally {
             library.close()
             reader.close()
@@ -514,6 +639,16 @@ object OsrsPetImportTool {
         }
         File(EMOTE_TABLE).writeText(emotes.toString())
         println("TABLE_WRITTEN $EMOTE_TABLE rows=$emoteRows")
+
+        val voices = StringBuilder()
+        voices.append("# Generated by OsrsPetImportTool table from OSRS_IMPORT_MASTER.yml - do not edit; the source is OsrsPetImportTool.VOICES.\n")
+        voices.append("# pet\tvariant\tosrs_synth\tlocal_synth\tname\tline\tsource\n")
+        VOICES.forEach { v ->
+            val local = if (v.osrsSynth >= 0) fx["synth:${v.osrsSynth}"] ?: error("voice ${v.pet}: synth ${v.osrsSynth} not imported") else v.local667
+            voices.append("${v.pet}\t${v.variant}\t${v.osrsSynth}\t$local\t${v.name}\t${v.line}\t${v.source}\n")
+        }
+        File(VOICE_TABLE).writeText(voices.toString())
+        println("TABLE_WRITTEN $VOICE_TABLE rows=${VOICES.size}")
     }
 
     @JvmStatic
