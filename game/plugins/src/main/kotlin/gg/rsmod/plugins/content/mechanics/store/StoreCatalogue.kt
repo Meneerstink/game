@@ -245,6 +245,23 @@ object StoreCatalogue {
 
     val ENTRIES: List<Entry> by lazy { build() }
 
+    /** Donator categories that are PvM gear too (owner 2026-09-29 list: Torture, Anguish, Ancestral, Masori, DHCB, Fang, Blowpipe...). */
+    val DONATOR_PVM_GEAR = setOf("Jewellery", "Boots", "Armour", "Weapons")
+
+    /**
+     * N115 (VRAGEN 53 = A, owner): what the 78 Store sells - and what its kits make - is never sold or bought back by the Grand
+     * Exchange house (players still trade it with each other), like the Deadman's chest list; only the Donator gear that also
+     * comes from PvM ([DONATOR_PVM_GEAR]) stays in the house. Before, 5,000 Loyalty Points bought an Ankou top the house paid
+     * ~14M coins for, and a Berserker ring (i) cost ~10,000 coins there.
+     */
+    val HOUSE_EXCLUDED: Set<Int> by lazy {
+        ENTRIES.filterNot { it.shop == Shop.DONATOR && it.category in DONATOR_PVM_GEAR }
+            .flatMap { listOf(it.purchaseItem) + it.resultItems }
+            .filter { it > 0 }
+            .toSet() -
+            ENTRIES.filter { it.shop == Shop.DONATOR && it.category in DONATOR_PVM_GEAR }.map { it.purchaseItem }.toSet()
+    }
+
     /**
      * A shop's entries in display order (owner 2026-09-29: "higher tier op pagina 1 en 2, lower tier rommel als laatst"):
      * highest tier first, then the most expensive first, categories kept together at equal prices. The build list below stays

@@ -94,6 +94,17 @@ class DeadmanChestTests {
         assertNotNull(service.houseQuote(Items.STEEL_TITAN_POUCH), "owner 09-20 'every item buyable' must hold for everything else")
     }
 
+    @Test
+    fun `N115 - the house neither sells nor buys what the 78 Store sells, except the Donator gear that also drops in PvM`() {
+        val service = geService()
+        val storeOnly = StoreCatalogue.ENTRIES.filter { it.shop != StoreCatalogue.Shop.DEADMAN && !(it.shop == StoreCatalogue.Shop.DONATOR && it.category in StoreCatalogue.DONATOR_PVM_GEAR) }
+        val failures = storeOnly.flatMap { listOf(it.purchaseItem) + it.resultItems }.filter { it > 0 && service.houseQuote(it) != null }
+        assertEquals(emptyList(), failures, "the house still deals in these store items")
+        assertNull(service.houseQuote(Items.BERSERKER_RING_I), "VRAGEN 53: ~10,000 coins in the house")
+        assertNotNull(service.houseQuote(Items.AMULET_OF_TORTURE), "Donator gear that also drops in PvM stays in the house")
+        assertNotNull(service.houseQuote(Items.MASORI_BODY))
+    }
+
     // ------------------------------------------------------------------------------------------------ the list itself
 
     @Test

@@ -101,6 +101,7 @@ class GrandExchangeService(
     fun houseQuote(itemId: Int): GeHouseQuote? {
         // Owner 2026-10-17 (N101): the Deadman's chest list "komt alleen nog uit de chest en breaches" - the house neither sells nor buys it.
         if (itemId in gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.FIXED_IDS) return null
+        if (itemId in gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.HOUSE_EXCLUDED) return null
         if (!GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE) {
             return GeSystemLiquidity.quote(itemId)
         }
