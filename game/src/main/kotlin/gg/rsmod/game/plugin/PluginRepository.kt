@@ -1653,7 +1653,9 @@ class PluginRepository(
         p: Player,
         regionId: Int,
     ) {
-        val handlers = enterRegionPlugins[regionId]
+        // N15: an instance region (a copied map: the player's house, the Pest Control island) is entered like the region its
+        // chunks were copied from, so it plays that region's music; the allocator's dynamic region ids have no handlers of their own.
+        val handlers = enterRegionPlugins[regionId]?.takeIf { it.isNotEmpty() } ?: instanceSourceRegion(p)?.let { enterRegionPlugins[it] }
         // Debug toolkit: region changes; a region nothing handles has no region music (region_songs binds every musical region).
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERACT) { "enter region $regionId ${p.username} at ${p.tile.x},${p.tile.z} handlers=${handlers?.size ?: 0}" }
         // A region whose music comes from a polygon area (Varrock centre: "Garden") has no region handler but does play -
@@ -1662,6 +1664,15 @@ class PluginRepository(
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.INTERACT) { "region $regionId (entered by ${p.username} at ${p.tile.x},${p.tile.z}) has no enter handler - no region music plays here" }
         }
         handlers?.forEach { logic -> p.executePlugin(logic) }
+    }
+
+    /** The real region the instance chunk under [p] was copied from, or null outside an instance (or over an empty chunk). */
+    private fun instanceSourceRegion(p: Player): Int? {
+        val map = p.world.instanceAllocator.getMap(p.tile) ?: return null
+        val cx = (p.tile.x - map.area.bottomLeftX) shr 3
+        val cz = (p.tile.z - map.area.bottomLeftZ) shr 3
+        val chunk = map.chunks.values[gg.rsmod.game.model.instance.InstancedChunkSet.getCoordinates(cx, cz, p.tile.height)] ?: return null
+        return gg.rsmod.game.model.Tile.fromRotatedHash(chunk.packed).regionId
     }
 
     fun bindRegionExit(

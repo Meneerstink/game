@@ -1685,6 +1685,8 @@ home_sweet_home:
   index: 385
   areas:
     - region: 7257
+    # N15: the house template region our house instances are copied from (PlayerHouse.build: 1856,5056).
+    - region: 7503
 joy_of_the_hunt:
   index: 386
   areas:
