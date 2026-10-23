@@ -129,6 +129,14 @@ object CityGuards {
     const val DEFENCE_LEVEL = 300
     const val MAGIC_LEVEL = 1
     const val RANGED_LEVEL = 1
+
+    /**
+     * N252 (owner 2026-10-23: "de ranger guard lijkt alleen 0 te hitten"): the wiki's one infobox (Attack 800 / +60, Ranged 1) is the
+     * melee guard's; the ranged guard attacks with Ranged, and with [RANGED_LEVEL] 1 its attack roll (9 x 124) lost to almost any
+     * defence - about 8 % against an unarmoured 99 Defence player, against the melee guard's 96 %. It gets the melee guard's attack
+     * level in Ranged (with the same +60 as its ranged attack bonus), so both guard kinds land alike (ADAPTED: no separate OSRS stats).
+     */
+    const val RANGED_GUARD_RANGED_LEVEL = ATTACK_LEVEL
     const val ATTACK_BONUS = 60
     const val STRENGTH_BONUS = 7
     const val DEFENCE_STAB_BONUS = 8

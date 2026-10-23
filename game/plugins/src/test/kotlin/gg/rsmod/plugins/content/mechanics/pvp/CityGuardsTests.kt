@@ -254,6 +254,25 @@ class CityGuardsTests {
     }
 
     @Test
+    fun `N252 - the ranged guard lands its arrows like the melee guard lands its blows`() {
+        // Owner 2026-10-23: "de ranger guard lijkt alleen 0 te hitten". OSRS accuracy (Combat formula): attack roll (level + 8) x
+        // (bonus + 64) against an unarmoured 99 Defence player's (99 + 9) x 64.
+        val defence = (99 + 9) * 64
+        fun accuracy(level: Int, bonus: Int): Double {
+            val attack = (level + 8) * (bonus + 64)
+            return if (attack > defence) 1.0 - (defence + 2.0) / (2.0 * (attack + 1)) else attack / (2.0 * (defence + 1))
+        }
+        val melee = accuracy(CityGuards.ATTACK_LEVEL, CityGuards.ATTACK_BONUS)
+        val ranged = accuracy(CityGuards.RANGED_GUARD_RANGED_LEVEL, CityGuards.ATTACK_BONUS)
+        assertTrue(accuracy(CityGuards.RANGED_LEVEL, CityGuards.ATTACK_BONUS) < 0.1, "the old Ranged 1 missed nine shots in ten")
+        assertEquals(melee, ranged)
+        assertTrue(ranged > 0.9)
+        val plugin = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/city_guards.plugin.kts").readText()
+        val rangedDef = plugin.substringAfter("fun KotlinPlugin.rangedGuard(").substringBefore("\nfun ")
+        assertTrue("ranged = CityGuards.RANGED_GUARD_RANGED_LEVEL" in rangedDef && "attackRanged = CityGuards.ATTACK_BONUS" in rangedDef)
+    }
+
+    @Test
     fun `sourced guard constants`() {
         assertEquals(1337, CityGuards.DISPLAYED_COMBAT_LEVEL)
         assertEquals(2, CityGuards.ATTACK_SPEED_CYCLES)

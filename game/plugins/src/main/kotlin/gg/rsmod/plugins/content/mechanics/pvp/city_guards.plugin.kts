@@ -93,7 +93,7 @@ fun KotlinPlugin.rangedGuard(id: Int) =
             strength = CityGuards.STRENGTH_LEVEL
             defence = CityGuards.DEFENCE_LEVEL
             magic = CityGuards.MAGIC_LEVEL
-            ranged = CityGuards.RANGED_LEVEL
+            ranged = CityGuards.RANGED_GUARD_RANGED_LEVEL
         }
         bonuses {
             attackRanged = CityGuards.ATTACK_BONUS
