@@ -178,11 +178,32 @@ class GeHomeHallCollisionTests {
             mapOf(
                 0 to listOf(Tile(3164, 3488, 0), Tile(3160, 3495, 0), Tile(3169, 3495, 0)) + GeHomeHall.STAIRS.map { it.floor },
                 1 to listOf(Tile(3164, 3488, 1), Tile(3164, 3483, 1), Tile(3164, 3500, 1), Tile(3155, 3491, 1), Tile(3174, 3491, 1)),
-                2 to listOf(Tile(3164, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3164, 3499, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
+                // 3165,3488: the aisle between the south card tables since the owner moved them (10-09/10-10, N19; 3164 is under one).
+                2 to listOf(Tile(3165, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3164, 3499, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
             )
         wanted.forEach { (level, tiles) ->
             val (reached, _) = walk(level)
             tiles.forEach { assertTrue(it in reached, "storey $level: $it cannot be reached from ${entrances(level)}") }
+        }
+    }
+
+    @Test
+    fun `N19 - every casino dealer and hall npc upstairs can be walked up to for Talk-to`() {
+        val posts = ArrayList<Pair<Int, Tile>>()
+        edits.forEach { e ->
+            val tile = Tile(e["x"].asInt(), e["z"].asInt(), e["level"].asInt())
+            if (!inBox(tile) || tile.height == 0) return@forEach
+            when (e["op"].asText()) {
+                "npc_spawn" -> posts += e["id"].asInt() to tile
+                "npc_remove" -> posts.removeIf { it.first == e["id"].asInt() && it.second == tile }
+            }
+        }
+        val reached = (1..2).associateWith { walk(it).first }
+        val dealers = GeHomeHall.CASINO_DEALERS
+        assertTrue(posts.count { it.first in dealers } == dealers.size, "posts $posts")
+        posts.forEach { (id, tile) ->
+            val from = Direction.NESW.filter { d -> tile.step(d) in reached.getValue(tile.height) && world.collision.canStep(tile.step(d), d.getOpposite()) }
+            assertTrue(from.isNotEmpty(), "npc $id at $tile: no free tile beside it to talk from (Talk-to = 'I can't reach that!')")
         }
     }
 

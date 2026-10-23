@@ -82,15 +82,18 @@ class GeHomeHallTests {
             val d = if (rot and 1 == 1) def.width else def.length
             tiles += footprint(tile, w, d)
         }
+        // N19: the owner's "remove" edits take baked map locs away too (WorldEdits removes whatever loc of that id stands there),
+        // so the map's own locs join the decor placements before the edits are replayed.
+        val mapLocs = ArrayList<Triple<Int, Tile, Pair<Int, Int>>>()
         val library = CacheLibrary(CACHE_PATH)
         try {
             val keys = ModernRegionProbeTool.loadKeys(File("../../data/xteas/xteas.json"))
             val archive = library.index(5).archive("l49_54", keys[(49 shl 8) or 54])!!
-            Rev667LocCodec.decode(archive.file(0)!!.data!!).forEach { add(it.id, Tile(49 * 64 + it.localX, 54 * 64 + it.localZ, it.plane), it.type, it.rotation) }
+            Rev667LocCodec.decode(archive.file(0)!!.data!!).forEach { mapLocs += Triple(it.id, Tile(49 * 64 + it.localX, 54 * 64 + it.localZ, it.plane), it.type to it.rotation) }
         } finally {
             library.close()
         }
-        val placements = HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements.map { Triple(it.id, it.tile, it.type to it.rot) }.toMutableList()
+        val placements = (mapLocs + HomeDecorFile.load(Paths.get("..", "..", "data", "cfg", "home_decor.txt")).placements.map { Triple(it.id, it.tile, it.type to it.rot) }).toMutableList()
         worldEdits().forEach { e ->
             val tile = Tile(e["x"].asInt(), e["z"].asInt(), e["level"].asInt())
             when (e["op"].asText()) {
@@ -98,7 +101,8 @@ class GeHomeHallTests {
                 "spawn" -> placements += Triple(e["id"].asInt(), tile, e["type"].asInt() to e["rot"].asInt())
             }
         }
-        placements.filter { nearHall(it.second.x, it.second.z) }.forEach { (id, tile, tr) -> add(id, tile, tr.first, tr.second) }
+        val baked = mapLocs.toHashSet()
+        placements.filter { it in baked || nearHall(it.second.x, it.second.z) }.forEach { (id, tile, tr) -> add(id, tile, tr.first, tr.second) }
         return tiles
     }
 
@@ -181,17 +185,16 @@ class GeHomeHallTests {
         }
         val tables = placed.filter { it.id == 12975 }
         assertEquals(4, tables.size)
-        // Owner 2026-09-27: the casino moved up to the big middle room of the second upper floor (x 3162-3167), the card
-        // tables (3 x 2) turned lengthwise so the aisle from the north to the south doorway (x 3164-3165) stays free.
-        val room = 3162..3167
+        // Owner 2026-09-27: the casino moved up to the middle room of the second upper floor; on 10-09/10-10 he placed the card
+        // tables (3 x 2) himself in developer mode, across the old x 3164-3165 aisle (N19: that layout is his, the guard follows it).
         val aisle = 3164..3165
         fun cover(p: HomeDecorFile.Placement) = if (p.rot and 1 == 1) footprint(p.tile, 2, 3) else footprint(p.tile, 3, 2)
-        assertTrue(tables.all { t -> t.tile.height == 2 && cover(t).all { it.x in room && it.x !in aisle && it.z in floorZ } }, "tables $tables")
+        assertTrue(tables.all { t -> t.tile.height == 2 && cover(t).all { it.x in floorX && it.z in floorZ } }, "tables $tables")
         val quarters = tables.map { (it.tile.x < aisle.first) to (it.tile.z < GeHomeHall.Z + GeHomeHall.DEPTH / 2) }.toSet()
         assertEquals(4, quarters.size, "one table per quarter")
         val dealers = hallPosts().filter { it.id in GeHomeHall.CASINO_DEALERS }
         assertEquals(4, dealers.size)
-        assertTrue(dealers.all { it.tile.height == 2 && it.tile.x in room && it.tile.x !in aisle }, "dealers $dealers")
+        assertTrue(dealers.all { it.tile.height == 2 && it.tile.x in floorX && it.tile.z in floorZ }, "dealers $dealers")
         tables.forEach { table ->
             val covered = cover(table).map { it.x to it.z }
             fun near(t: Tile) = covered.any { (x, z) -> maxOf(kotlin.math.abs(x - t.x), kotlin.math.abs(z - t.z)) in 1..2 }

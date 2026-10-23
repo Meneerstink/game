@@ -8907,6 +8907,69 @@
       "rot": 6,
       "note": "Archaeologist out from under the upper storey (owner 2026-10-10: visible from every camera angle)",
       "group": 755
+    },
+    {
+      "op": "npc_remove",
+      "id": 3002,
+      "x": 3163,
+      "z": 3497,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "group": 756
+    },
+    {
+      "op": "npc_spawn",
+      "id": 3002,
+      "x": 3161,
+      "z": 3497,
+      "level": 2,
+      "type": 10,
+      "rot": 4,
+      "note": "Blackjack Gambler N19: off the enclosed tile beside the table so Talk-to reaches it (2026-10-23)",
+      "group": 756
+    },
+    {
+      "op": "npc_remove",
+      "id": 2998,
+      "x": 3166,
+      "z": 3497,
+      "level": 2,
+      "type": 10,
+      "rot": 0,
+      "group": 757
+    },
+    {
+      "op": "npc_spawn",
+      "id": 2998,
+      "x": 3168,
+      "z": 3497,
+      "level": 2,
+      "type": 10,
+      "rot": 4,
+      "note": "Dice Gambler N19: off the enclosed tile beside the table so Talk-to reaches it (2026-10-23)",
+      "group": 757
+    },
+    {
+      "op": "npc_remove",
+      "id": 5110,
+      "x": 3162,
+      "z": 3497,
+      "level": 1,
+      "type": 10,
+      "rot": 0,
+      "group": 758
+    },
+    {
+      "op": "npc_spawn",
+      "id": 5110,
+      "x": 3163,
+      "z": 3497,
+      "level": 1,
+      "type": 10,
+      "rot": 4,
+      "note": "Aleck one tile off the Standard he stood in (N19, like King Narnode 2026-10-10)",
+      "group": 758
     }
   ]
 }
