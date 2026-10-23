@@ -5,6 +5,31 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 class StoreInterfaceImportToolTests {
+    /*
+     * A35 (owner 2026-10-11: "in de preview zit een holder voor t item geelachtig die wil ik weg"): no pedestal under the preview.
+     * The old pedestal was a dark ellipse with a gold rim at the bottom of the stage; its top edge (stage centre, 20 px above the
+     * stage bottom) stood out sharply from the halo just above it. Without it the stage is one smooth gradient there.
+     */
+    @Test
+    fun `no gold pedestal under the store preview in any theme`() {
+        val cx = StoreArtTool.SHOW_X + StoreArtTool.SHOW_WIDTH / 2
+        val rim = StoreArtTool.SHOW_Y + StoreArtTool.SHOW_HEIGHT - 20
+        for (i in StoreArtTool.THEMES.indices) {
+            val image = StoreArtTool.background(i)
+            fun rgb(x: Int, y: Int) = image.getRGB(x, y).let { Triple(it shr 16 and 0xFF, it shr 8 and 0xFF, it and 0xFF) }
+            for (dx in listOf(-60, -30, 0, 30, 60)) {
+                for (y in rim - 1..rim + 13) {
+                    val (r, g, b) = rgb(cx + dx, y)
+                    assertTrue(!(r > 150 && g > 110 && r - b > 70), "theme $i: gold pixel ($r,$g,$b) at ${cx + dx},$y")
+                }
+                val (r0, g0, b0) = rgb(cx + dx, rim - 4)
+                val (r1, g1, b1) = rgb(cx + dx, rim + 4)
+                val step = Math.abs(r0 - r1) + Math.abs(g0 - g1) + Math.abs(b0 - b1)
+                assertTrue(step < 60, "theme $i: edge of $step at x=${cx + dx} - a pedestal is drawn")
+            }
+        }
+    }
+
     private val fonts = LootKeyInterfaceImportTool.Fonts(p11 = 1, p12 = 2, b12 = 3, q8 = 4)
 
     @Test

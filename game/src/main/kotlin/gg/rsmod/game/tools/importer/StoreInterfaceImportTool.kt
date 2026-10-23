@@ -157,7 +157,7 @@ object StoreInterfaceImportTool {
     const val CREAM = 0xEDE3C6
     const val GREEN = 0x5CE05C
 
-    /** The preview model's box: above the painted pedestal, clear of the carousel arrows. */
+    /** The preview model's box: clear of the carousel arrows (A35: no pedestal under it any more). */
     // Owner 2026-10-11 bank-size window: the model may use the whole stage between the carousel arrows and stand on the pedestal
     // (tested in game: a 204x68 box drew the amulets tiny).
     const val PREVIEW_X = Art.SHOW_X + Art.ARROW_WIDTH + 6

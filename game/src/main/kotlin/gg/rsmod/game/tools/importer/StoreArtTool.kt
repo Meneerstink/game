@@ -559,20 +559,7 @@ object StoreArtTool {
             arrayOf(alpha(t.glow, 0.26), alpha(t.glow, 0.08), alpha(t.glow, 0.0)),
         )
         g.fill(shape)
-        // pedestal
-        val pedestal = Ellipse2D.Double(x + w / 2 - 70, y + h - 20, 140.0, 13.0)
-        g.paint = RadialGradientPaint(
-            Point2D.Double(x + w / 2, y + h - 13),
-            76f,
-            floatArrayOf(0f, 1f),
-            arrayOf(alpha(t.glow, 0.55), alpha(t.glow, 0.0)),
-        )
-        g.fill(Ellipse2D.Double(x + w / 2 - 90, y + h - 28, 180.0, 30.0))
-        g.paint = vertical(y + h - 20, y + h - 7, 0f to alpha(t.bgTop.brighter(), 0.95), 1f to alpha(Color.BLACK, 0.95))
-        g.fill(pedestal)
-        g.paint = goldVertical(y + h - 20, y + h - 7)
-        g.stroke = BasicStroke(1.4f)
-        g.draw(pedestal)
+        // A35 (owner 2026-10-11 "een holder voor t item geelachtig die wil ik weg"): no pedestal under the item, only the halo.
         g.clip = old
         g.color = alpha(GOLD, 0.7)
         g.stroke = BasicStroke(1.2f)
