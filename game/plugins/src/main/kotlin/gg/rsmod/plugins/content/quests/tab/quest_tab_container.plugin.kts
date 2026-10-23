@@ -4,7 +4,7 @@ import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool as L
 import gg.rsmod.plugins.api.ext.PaneMountHooks
-import gg.rsmod.plugins.content.quests.tab.DeadmanTabValues.Block
+import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
 
 /*
  * The quest tab container (QuestTab): the tab row, the Deadman Info buttons, the Info window and the live refresh. Every
@@ -21,9 +21,14 @@ QuestTab.Tab.values().forEach { tab ->
     }
 }
 
-Block.values().forEachIndexed { i, block ->
-    on_button(interfaceId = L.DEADMAN, component = L.blockBase(i) + L.BLOCK_INFO) {
-        QuestTab.openInfo(player, block)
+// N102: the one Info button, and the subject list of the Info window.
+on_button(interfaceId = L.DEADMAN, component = L.INFO_BUTTON) {
+    QuestTab.openInfo(player)
+}
+
+Subject.values().forEachIndexed { i, subject ->
+    on_button(interfaceId = QuestTab.INFO, component = L.subjectBase(i)) {
+        QuestTab.showSubject(player, subject)
     }
 }
 
@@ -110,10 +115,10 @@ on_command("questtabshots", Privilege.ADMIN_POWER) {
         }
         QuestTab.select(player, QuestTab.Tab.DEADMAN)
         wait(1)
-        Block.values().forEach { block ->
-            QuestTab.openInfo(player, block)
+        Subject.values().forEach { subject ->
+            QuestTab.openInfo(player, subject)
             wait(2)
-            player.message("${SHOT_PREFIX}questtab_${mode}_info_${block.name.lowercase()}", type = ChatMessageType.CONSOLE)
+            player.message("${SHOT_PREFIX}questtab_${mode}_info_${subject.name.lowercase()}", type = ChatMessageType.CONSOLE)
             wait(1)
             // The player may have closed it during the wait already (closing twice logged a warning).
             if (player.interfaces.isVisible(QuestTab.INFO)) player.closeInterface(QuestTab.INFO)

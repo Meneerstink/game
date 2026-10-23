@@ -222,9 +222,9 @@ object QuestTabInterfaceImportTool {
     const val CONTENT_HEIGHT = 204
 
     /** Title, the 715 border and the content layer (7, 3, 170 x 204 inside the border): ids 0..5. */
-    private fun panel(b: Builder, title: String) {
+    private fun panel(b: Builder, title: String, titleWidth: Int = PANEL_WIDTH - 6) {
         b.add(Comp(P_ROOT, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
-        b.text(P_TITLE, 3, 0, PANEL_WIDTH - 6, 20, P_ROOT, b.fonts.b12, title, colour = ORANGE)
+        b.text(P_TITLE, 3, 0, titleWidth, 20, P_ROOT, b.fonts.b12, title, colour = ORANGE)
         b.layer(P_BORDER, 0, 20, PANEL_WIDTH, PANEL_HEIGHT - 22, P_ROOT)
         b.rect(P_OUTER, 0, 0, PANEL_WIDTH, PANEL_HEIGHT - 22, P_BORDER, BORDER_OUTER)
         b.rect(P_INNER, 1, 1, PANEL_WIDTH - 2, PANEL_HEIGHT - 24, P_BORDER, BORDER_INNER)
@@ -271,43 +271,61 @@ object QuestTabInterfaceImportTool {
 
     // ------------------------------------------------------------------ Deadman panel
 
-    const val BLOCKS = 5
-    const val BLOCK_FIRST = 6
-    const val BLOCK_HEIGHT = 38
-    const val BLOCK_PITCH = 41
-    const val BLOCK_BOX = 1 // +1..+10
-    const val BLOCK_TITLE = BLOCK_BOX + BOX_PIECES // 11
-    const val BLOCK_INFO = BLOCK_TITLE + 1 // 12: button layer
-    const val BLOCK_INFO_TEXT = BLOCK_INFO + 1 + BUTTON_PIECES // 22
-    const val BLOCK_VALUE = BLOCK_INFO_TEXT + 1 // 23
-    const val BLOCK_STRIDE = BLOCK_VALUE + 1 // 24
-    const val DROPS_BUTTON = BLOCK_FIRST + BLOCKS * BLOCK_STRIDE // 126: button layer, +1..+9 pieces
-    const val DROPS_BUTTON_TEXT = DROPS_BUTTON + 1 + BUTTON_PIECES // 136
+    /*
+     * N102 (owner 2026-10-18, VRAGEN 40 = A "losse regels, strak lijstje zonder vakjes"): title row with [Info] and [Drops], then
+     * one plain line per value - the title on the left (orange), the value on the right (white) - and the Deadman's chest on two
+     * value lines (where / when). No boxes, no scroll layer, no scrollbar. Was five boxed blocks with an Info button each.
+     * p11, full content width: in p12 "Next Breach" + "23 hours 59 minutes" is 186 px, in p11 170 (QuestTabTests measures it).
+     */
+    const val ROWS = 6
+    const val DEADMAN_TITLE = "Deadman 78"
+    const val INFO_BUTTON = 6 // button layer, +1..+9 stone pieces
+    const val INFO_BUTTON_TEXT = INFO_BUTTON + 1 + BUTTON_PIECES // 16
+    const val DROPS_BUTTON = INFO_BUTTON_TEXT + 1 // 17: button layer, +1..+9 pieces
+    const val DROPS_BUTTON_TEXT = DROPS_BUTTON + 1 + BUTTON_PIECES // 27
+    const val ROW_FIRST = DROPS_BUTTON_TEXT + 1 // 28
+    const val ROW_LAYER = 0
+    const val ROW_TITLE = 1
+    const val ROW_VALUE = 2
+    const val ROW_STRIDE = 3
+    const val DEADMAN_COUNT = ROW_FIRST + ROWS * ROW_STRIDE // 46
     const val DROPS_BUTTON_WIDTH = 44
-    const val DEADMAN_COUNT = DROPS_BUTTON_TEXT + 1
     const val INFO_BUTTON_WIDTH = 40
     const val INFO_BUTTON_HEIGHT = 18
+    const val INFO_BUTTON_X = PANEL_WIDTH - 4 - DROPS_BUTTON_WIDTH - 4 - INFO_BUTTON_WIDTH
 
-    fun blockBase(block: Int) = BLOCK_FIRST + block * BLOCK_STRIDE
+    /** The title box ends 3 px before [Info]. */
+    const val DEADMAN_TITLE_WIDTH = INFO_BUTTON_X - 6
+
+    /** One value line; the last row (the chest) has three: "Active" / "in 12 minutes" on the title line, then its spot (long ones wrap). */
+    const val ROW_HEIGHT = 16
+    const val ROW_PITCH = 22
+    const val VALUE_LINE_HEIGHT = 14
+    const val CHEST_HEIGHT = 3 * VALUE_LINE_HEIGHT + 2
+    const val ROW_TITLE_WIDTH = 92
+
+    fun rowBase(row: Int) = ROW_FIRST + row * ROW_STRIDE
+
+    fun rowHeight(row: Int) = if (row == ROWS - 1) CHEST_HEIGHT else ROW_HEIGHT
 
     fun deadman(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
-        panel(b, "Deadman 78")
-        for (i in 0 until BLOCKS) {
-            val base = blockBase(i)
-            b.layer(base, 0, i * BLOCK_PITCH, CONTENT_WIDTH, BLOCK_HEIGHT, P_CONTENT)
-            box(b, base + BLOCK_BOX, base, CONTENT_WIDTH, BLOCK_HEIGHT)
-            b.text(base + BLOCK_TITLE, 7, 3, CONTENT_WIDTH - 14 - INFO_BUTTON_WIDTH, 18, base, fonts.p12, "", colour = ORANGE, alignX = 0)
-            val info = base + BLOCK_INFO
-            b.layer(info, CONTENT_WIDTH - 6 - INFO_BUTTON_WIDTH, 3, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, base, ops = listOf("Info"))
-            button(b, info + 1, info, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT)
-            b.text(base + BLOCK_INFO_TEXT, 0, 0, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, info, fonts.p11, "Info", colour = BUTTON_TEXT)
-            b.text(base + BLOCK_VALUE, 4, 20, CONTENT_WIDTH - 8, 15, base, fonts.b12, "", colour = WHITE)
-        }
-        // Drop Viewer button (owner 2026-09-30), on the title line at the right: the five blocks fill the content height.
-        b.layer(DROPS_BUTTON, PANEL_WIDTH - 4 - DROPS_BUTTON_WIDTH, 1, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, P_ROOT, ops = listOf("Drop Viewer"))
+        // Title row, right: [Info] [Drops] (Drop Viewer, owner 2026-09-30); the title centred in the space left of them.
+        val dropsX = PANEL_WIDTH - 4 - DROPS_BUTTON_WIDTH
+        panel(b, DEADMAN_TITLE, titleWidth = DEADMAN_TITLE_WIDTH)
+        b.layer(INFO_BUTTON, INFO_BUTTON_X, 1, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, P_ROOT, ops = listOf("Info"))
+        button(b, INFO_BUTTON + 1, INFO_BUTTON, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT)
+        b.text(INFO_BUTTON_TEXT, 0, 0, INFO_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, INFO_BUTTON, fonts.p11, "Info", colour = BUTTON_TEXT)
+        b.layer(DROPS_BUTTON, dropsX, 1, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, P_ROOT, ops = listOf("Drop Viewer"))
         button(b, DROPS_BUTTON + 1, DROPS_BUTTON, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT)
         b.text(DROPS_BUTTON_TEXT, 0, 0, DROPS_BUTTON_WIDTH, INFO_BUTTON_HEIGHT, DROPS_BUTTON, fonts.p11, "Drops", colour = BUTTON_TEXT)
+        for (i in 0 until ROWS) {
+            val base = rowBase(i)
+            val h = rowHeight(i)
+            b.layer(base + ROW_LAYER, 0, 4 + i * ROW_PITCH, CONTENT_WIDTH, h, P_CONTENT)
+            b.text(base + ROW_TITLE, 0, 0, ROW_TITLE_WIDTH, ROW_HEIGHT, base + ROW_LAYER, fonts.p11, "", colour = ORANGE, alignX = 0)
+            b.text(base + ROW_VALUE, 0, 0, CONTENT_WIDTH, h, base + ROW_LAYER, fonts.p11, "", colour = WHITE, alignX = 2, alignY = 0, lineHeight = VALUE_LINE_HEIGHT)
+        }
         return b.done(DEADMAN_COUNT)
     }
 
@@ -376,24 +394,56 @@ object QuestTabInterfaceImportTool {
 
     // ------------------------------------------------------------------ Info window
 
-    /** Fits the fixed-mode main screen (512 x 334); room for the longest text (emblem rules) at 14 px per line. */
-    const val INFO_WIDTH = 440
-    const val INFO_HEIGHT = 300
+    /*
+     * N102 (VRAGEN 40 = A): one window for every Deadman subject - the subjects on the LEFT (click one; the selected one is white,
+     * the others orange), its explanation on the RIGHT. Fits the fixed-mode main screen (512 x 334); QuestTabTests measures every
+     * subject text with the real p12 metrics, so none overflows the text box.
+     */
+    const val INFO_WIDTH = 500
+    const val INFO_HEIGHT = 314
     const val I_CLOSE = DeathsOfficeInterfaceImportTool.CLOSE // 13
     const val I_TITLE = DeathsOfficeInterfaceImportTool.TITLE // 3
     const val I_BODY = 14
     const val I_BODY_OUTER = 15
     const val I_BODY_INNER = 16
     const val I_TEXT = 17
-    const val INFO_COUNT = 18
+    const val I_LIST = 18
+    const val I_LIST_OUTER = 19
+    const val I_LIST_INNER = 20
+    const val I_SUBJECT_FIRST = 21 // per subject: a layer carrying "Select", +1 its text
+    const val I_SUBJECT_STRIDE = 2
+    const val INFO_SUBJECTS = 10
+    const val INFO_COUNT = I_SUBJECT_FIRST + INFO_SUBJECTS * I_SUBJECT_STRIDE // 41
+    const val I_LIST_WIDTH = 132
+    const val I_SUBJECT_PITCH = 24
+    const val I_TOP = 42
+    const val I_GAP = 6
+    val I_BODY_X = 12 + I_LIST_WIDTH + I_GAP
+    val I_BODY_WIDTH = INFO_WIDTH - I_BODY_X - 12
+    val I_INNER_HEIGHT = INFO_HEIGHT - I_TOP - 12
+
+    /** The text box inside the body: 8 px in from the left and the top. */
+    val I_TEXT_WIDTH = I_BODY_WIDTH - 16
+    val I_TEXT_HEIGHT = I_INNER_HEIGHT - 12
+    const val I_LINE_HEIGHT = 14
+
+    fun subjectBase(i: Int) = I_SUBJECT_FIRST + i * I_SUBJECT_STRIDE
 
     fun info(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
         b.frame(INFO_WIDTH, INFO_HEIGHT, "")
-        b.layer(I_BODY, 12, 42, INFO_WIDTH - 24, INFO_HEIGHT - 54, DeathsOfficeInterfaceImportTool.WINDOW)
-        b.rect(I_BODY_OUTER, 0, 0, INFO_WIDTH - 24, INFO_HEIGHT - 54, I_BODY, BORDER_OUTER)
-        b.rect(I_BODY_INNER, 1, 1, INFO_WIDTH - 26, INFO_HEIGHT - 56, I_BODY, BORDER_INNER)
-        b.text(I_TEXT, 8, 6, INFO_WIDTH - 40, INFO_HEIGHT - 66, I_BODY, fonts.p12, "", colour = WHITE, alignX = 0, alignY = 0, lineHeight = 14)
+        b.layer(I_BODY, I_BODY_X, I_TOP, I_BODY_WIDTH, I_INNER_HEIGHT, DeathsOfficeInterfaceImportTool.WINDOW)
+        b.rect(I_BODY_OUTER, 0, 0, I_BODY_WIDTH, I_INNER_HEIGHT, I_BODY, BORDER_OUTER)
+        b.rect(I_BODY_INNER, 1, 1, I_BODY_WIDTH - 2, I_INNER_HEIGHT - 2, I_BODY, BORDER_INNER)
+        b.text(I_TEXT, 8, 6, I_TEXT_WIDTH, I_TEXT_HEIGHT, I_BODY, fonts.p12, "", colour = WHITE, alignX = 0, alignY = 0, lineHeight = I_LINE_HEIGHT)
+        b.layer(I_LIST, 12, I_TOP, I_LIST_WIDTH, I_INNER_HEIGHT, DeathsOfficeInterfaceImportTool.WINDOW)
+        b.rect(I_LIST_OUTER, 0, 0, I_LIST_WIDTH, I_INNER_HEIGHT, I_LIST, BORDER_OUTER)
+        b.rect(I_LIST_INNER, 1, 1, I_LIST_WIDTH - 2, I_INNER_HEIGHT - 2, I_LIST, BORDER_INNER)
+        for (i in 0 until INFO_SUBJECTS) {
+            val base = subjectBase(i)
+            b.layer(base, 4, 6 + i * I_SUBJECT_PITCH, I_LIST_WIDTH - 8, I_SUBJECT_PITCH - 4, I_LIST, ops = listOf("Select"))
+            b.text(base + 1, 4, 0, I_LIST_WIDTH - 16, I_SUBJECT_PITCH - 4, base, fonts.p12, "", colour = ORANGE, alignX = 0)
+        }
         return b.done(INFO_COUNT)
     }
 

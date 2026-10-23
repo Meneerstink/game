@@ -117,6 +117,12 @@ object DeadmanChestWorld {
     private var spotList: List<Spot>? = null
     private var warned = false
 
+    /** N102: ticks until the next timed chest (the quest tab's Deadman panel); -1 while the timed spawner is not running. */
+    @Volatile var ticksUntilTimed = -1
+
+    /** N102: the timed chest players can still loot, null when there is none. */
+    fun activeTimed(): Chest? = chests.firstOrNull { it.timed && !it.state.looted }
+
     /** Test hook: where the clock of the chest rules stands. */
     var cycleOverride: Int? = null
 
@@ -145,6 +151,7 @@ object DeadmanChestWorld {
         channels.clear()
         spotList = null
         warned = false
+        ticksUntilTimed = -1
     }
 
     // ------------------------------------------------------------------------------------------------------------------ spots
@@ -602,6 +609,7 @@ object DeadmanChestWorld {
         enabled(world)
         world.queue {
             var sinceTimed = 0
+            ticksUntilTimed = DeadmanChestConfig.TIMED_INTERVAL_TICKS
             while (true) {
                 wait(1)
                 sinceTimed++
@@ -609,6 +617,7 @@ object DeadmanChestWorld {
                     sinceTimed = 0
                     spawnTimed(world)
                 }
+                ticksUntilTimed = DeadmanChestConfig.TIMED_INTERVAL_TICKS - sinceTimed
                 tick(world)
             }
         }

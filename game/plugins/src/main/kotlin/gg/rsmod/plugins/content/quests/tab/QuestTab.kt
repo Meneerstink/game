@@ -14,7 +14,8 @@ import gg.rsmod.plugins.api.ext.setComponentPosition
 import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
-import gg.rsmod.plugins.content.quests.tab.DeadmanTabValues.Block
+import gg.rsmod.plugins.content.quests.tab.DeadmanTabValues.Row
+import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
 
 /**
  * The quest tab (owner mission 2026-09-26, part 1): the container [L.CONTAINER] takes the quest tab slot, a row of four
@@ -97,11 +98,9 @@ object QuestTab {
             player.openInterface(CONTAINER, L.BOX, tab.panel, type = 1)
             when (tab) {
                 Tab.DEADMAN -> {
-                    Block.values().forEachIndexed { i, block ->
-                        player.setComponentText(L.DEADMAN, L.blockBase(i) + L.BLOCK_TITLE, block.title)
-                        player.setInterfaceEvents(L.DEADMAN, L.blockBase(i) + L.BLOCK_INFO, -1..-1, EVENTS_OP1)
-                    }
-                    // Drop Viewer (owner 2026-09-30).
+                    Row.values().forEachIndexed { i, row -> player.setComponentText(L.DEADMAN, L.rowBase(i) + L.ROW_TITLE, row.title) }
+                    // N102: one Info button for every subject; Drop Viewer (owner 2026-09-30).
+                    player.setInterfaceEvents(L.DEADMAN, L.INFO_BUTTON, -1..-1, EVENTS_OP1)
                     player.setInterfaceEvents(L.DEADMAN, L.DROPS_BUTTON, -1..-1, EVENTS_OP1)
                 }
                 else -> Unit
@@ -129,9 +128,9 @@ object QuestTab {
         when (selected(player)) {
             Tab.DEADMAN -> {
                 if (!player.interfaces.isVisible(L.DEADMAN)) return true
-                Block.values().forEachIndexed { i, block ->
-                    val component = L.blockBase(i) + L.BLOCK_VALUE
-                    val text = DeadmanTabValues.value(player, block)
+                Row.values().forEachIndexed { i, row ->
+                    val component = L.rowBase(i) + L.ROW_VALUE
+                    val text = DeadmanTabValues.value(player, row)
                     if (sent[component] != text) {
                         sent[component] = text
                         player.setComponentText(L.DEADMAN, component, text)
@@ -239,15 +238,30 @@ object QuestTab {
 
     const val INFO = L.INFO
 
-    /** Opens the Info window for [block]; ignored unless the Deadman panel is the one showing. */
+    /** The selected subject is white, the others keep the component's orange. */
+    fun subjectLabel(subject: Subject, selected: Subject): String =
+        if (subject == selected) "<col=ffffff>${QuestTabInfo.title(subject)}</col>" else QuestTabInfo.title(subject)
+
+    /** Opens the Info window on [subject]; ignored unless the Deadman panel is the one showing. */
     fun openInfo(
         player: Player,
-        block: Block,
+        subject: Subject = Subject.LOYALTY,
     ) {
         if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(L.DEADMAN)) return
         player.openInterface(INFO, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INFO, L.I_CLOSE, -1..-1, EVENTS_OP1)
-        player.setComponentText(INFO, L.I_TITLE, QuestTabInfo.title(block))
-        player.setComponentText(INFO, L.I_TEXT, QuestTabInfo.text(block))
+        player.setComponentText(INFO, L.I_TITLE, "Deadman Info")
+        Subject.values().forEachIndexed { i, _ -> player.setInterfaceEvents(INFO, L.subjectBase(i), -1..-1, EVENTS_OP1) }
+        showSubject(player, subject)
+    }
+
+    /** A click in the subject list: the text on the right and the white label follow it. */
+    fun showSubject(
+        player: Player,
+        subject: Subject,
+    ) {
+        if (!player.interfaces.isVisible(INFO)) return
+        Subject.values().forEachIndexed { i, s -> player.setComponentText(INFO, L.subjectBase(i) + 1, subjectLabel(s, subject)) }
+        player.setComponentText(INFO, L.I_TEXT, QuestTabInfo.text(subject))
     }
 }

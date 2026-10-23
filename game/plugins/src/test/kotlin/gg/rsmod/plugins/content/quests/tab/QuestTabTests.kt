@@ -33,7 +33,8 @@ import gg.rsmod.plugins.content.quests.foundation.QuestChoices
 import gg.rsmod.plugins.content.quests.foundation.QuestGuideUi
 import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 import gg.rsmod.plugins.content.quests.tab.DeadmanGroupsView.State
-import gg.rsmod.plugins.content.quests.tab.DeadmanTabValues.Block
+import gg.rsmod.plugins.content.quests.tab.DeadmanTabValues.Row
+import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.BeforeClass
@@ -79,31 +80,31 @@ class QuestTabTests {
     // ------------------------------------------------------------------ Deadman values
 
     @Test
-    fun `point blocks read exactly the balances the three stores spend`() {
+    fun `point lines read exactly the balances the three stores spend`() {
         val account = Account()
         account.player.attr[Currency.LOYALTY.attr] = 12_003
         account.player.attr[Currency.DONATOR.attr] = 450
         account.player.attr[Currency.DEADMAN.attr] = 1_234_567
-        assertEquals("12,003", DeadmanTabValues.value(account.player, Block.LOYALTY))
-        assertEquals("450", DeadmanTabValues.value(account.player, Block.DONATOR))
-        assertEquals("1,234,567", DeadmanTabValues.value(account.player, Block.DEADMAN))
+        assertEquals("12,003", DeadmanTabValues.value(account.player, Row.LOYALTY))
+        assertEquals("450", DeadmanTabValues.value(account.player, Row.DONATOR))
+        assertEquals("1,234,567", DeadmanTabValues.value(account.player, Row.DEADMAN))
         // Loyalty is the very attribute every loyalty grant writes (Player.addLoyalty): no copy in between.
         account.player.attr[LOYALTY_POINTS] = 99
-        assertEquals("99", DeadmanTabValues.value(account.player, Block.LOYALTY))
-        assertEquals("0", DeadmanTabValues.value(Account().player, Block.DONATOR))
+        assertEquals("99", DeadmanTabValues.value(account.player, Row.LOYALTY))
+        assertEquals("0", DeadmanTabValues.value(Account().player, Row.DONATOR))
     }
 
     @Test
-    fun `emblem block shows None or the owned tier with its points`() {
+    fun `emblem line shows None or the owned tier with its points`() {
         val account = Account()
-        assertEquals("None", DeadmanTabValues.value(account.player, Block.EMBLEM))
+        assertEquals("None", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.bank[0] = Item(DeadmanEmblem.emblemId(4), 1)
-        assertEquals("Tier 4 - 360 pts", DeadmanTabValues.value(account.player, Block.EMBLEM))
+        assertEquals("Tier 4 - 360 pts", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.bank[0] = null
         account.inventory[5] = Item(DeadmanEmblem.emblemId(6), 1)
-        assertEquals("Tier 6 - 1,150 pts", DeadmanTabValues.value(account.player, Block.EMBLEM))
+        assertEquals("Tier 6 - 1,150 pts", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.inventory[5] = null
-        assertEquals("None", DeadmanTabValues.value(account.player, Block.EMBLEM))
+        assertEquals("None", DeadmanTabValues.value(account.player, Row.EMBLEM))
         (1..DeadmanEmblem.MAX_TIER).forEach { tier ->
             assertEquals("Tier $tier - ${DeadmanTabValues.number(DeadmanEmblem.points(tier))} pts", DeadmanTabValues.emblemText(tier))
         }
@@ -210,24 +211,115 @@ class QuestTabTests {
     }
 
     @Test
-    fun `five Deadman blocks fit the fixed-mode panel without scrolling`() {
-        assertEquals(Block.values().size, L.BLOCKS)
-        assertTrue((L.BLOCKS - 1) * L.BLOCK_PITCH + L.BLOCK_HEIGHT <= L.CONTENT_HEIGHT)
-        assertEquals(listOf("Loyalty Points", "Donator Points", "Deadman Points", "Archaic Emblem", "Next Breach"), Block.values().map { it.title })
+    fun `six Deadman lines fit the fixed-mode panel without scrolling`() {
+        assertEquals(Row.values().size, L.ROWS)
+        assertTrue((L.ROWS - 1) * L.ROW_PITCH + L.rowHeight(L.ROWS - 1) + 4 <= L.CONTENT_HEIGHT)
+        assertEquals(
+            listOf("Loyalty Points", "Donator Points", "Deadman Points", "Archaic Emblem", "Next Breach", "Deadman's Chest"),
+            Row.values().map { it.title },
+        )
     }
 
     @Test
-    fun `Info window fits the fixed-mode main screen`() {
+    fun `chest line - Active over its spot, else the time until the next one`() {
+        assertEquals("Active<br>East of the Wilderness Bandit Camp", DeadmanTabValues.chestText(true, "east of the Wilderness Bandit Camp", 10))
+        assertEquals("in 30 minutes<br>Random spot", DeadmanTabValues.chestText(true, null, 3000))
+        assertEquals("in 12 minutes<br>Random spot", DeadmanTabValues.chestText(true, null, 1200))
+        assertEquals("in 1 minute<br>Random spot", DeadmanTabValues.chestText(true, null, 1))
+        assertEquals("Unavailable", DeadmanTabValues.chestText(true, null, -1))
+        assertEquals("Unavailable", DeadmanTabValues.chestText(false, "Catherby beach", 10))
+    }
+
+    /*
+     * N102: measured with the real advance widths (font metrics, cache index 13; p11 lines, p12 Info window) and the client's word wrap at spaces, so a
+     * title never runs into its value and no Info text runs out of its box.
+     */
+    private fun advances(pick: (LootKeyInterfaceImportTool.Fonts) -> Int): IntArray {
+        val library = CacheLibrary(CACHE_PATH)
+        val id = pick(LootKeyInterfaceImportTool.fonts(library))
+        val data = library.data(13, id, 0) ?: error("no metrics for font $id")
+        library.close()
+        assertEquals(0, data[0].toInt(), "metrics format")
+        return IntArray(256) { data[2 + it].toInt() and 0xFF }
+    }
+
+    private fun width(widths: IntArray, text: String): Int = Regex("<[^>]*>").replace(text, "").sumOf { widths[it.code and 0xFF] }
+
+    private fun lines(widths: IntArray, text: String, boxWidth: Int): Int =
+        text.split("<br>").sumOf { paragraph ->
+            var count = 1
+            var line = ""
+            for (word in paragraph.split(' ')) {
+                val next = if (line.isEmpty()) word else "$line $word"
+                if (line.isNotEmpty() && width(widths, next) > boxWidth) {
+                    count++
+                    line = word
+                } else {
+                    line = next
+                }
+            }
+            count
+        }
+
+    @Test
+    fun `every Deadman line fits next to its title, the chest spot within three lines`() {
+        val widths = advances { it.p11 }
+        assertTrue(width(advances { it.b12 }, L.DEADMAN_TITLE) <= L.DEADMAN_TITLE_WIDTH, "title runs under [Info]")
+        val box = L.CONTENT_WIDTH
+        val samples = mapOf(
+            Row.LOYALTY to listOf(DeadmanTabValues.number(Int.MAX_VALUE)),
+            Row.DONATOR to listOf(DeadmanTabValues.number(Int.MAX_VALUE)),
+            Row.DEADMAN to listOf(DeadmanTabValues.number(Int.MAX_VALUE)),
+            Row.EMBLEM to (1..DeadmanEmblem.MAX_TIER).map { DeadmanTabValues.emblemText(it) },
+            Row.BREACH to listOf("13 days 23 hours", "23 hours 59 minutes", "Active"),
+        )
+        for ((row, values) in samples) {
+            assertTrue(width(widths, row.title) <= L.ROW_TITLE_WIDTH, row.title)
+            for (v in values) assertTrue(width(widths, row.title) + 6 + width(widths, v) <= box, "${row.title}: $v")
+        }
+        val spotsFile = Paths.get("..", "..", "data", "cfg", "deadman", "chest_spots.json").toFile()
+        val spots = Regex("\"name\": *\"([^\"]+)\"").findAll(spotsFile.readText()).map { it.groupValues[1] }.toList()
+        assertTrue(spots.isNotEmpty())
+        for (spot in spots) {
+            val text = DeadmanTabValues.chestText(true, spot, 0)
+            assertTrue(width(widths, Row.CHEST.title) + 6 + width(widths, text.substringBefore("<br>")) <= box)
+            assertTrue(lines(widths, text, box) <= 3, spot)
+        }
+        assertTrue(width(widths, Row.CHEST.title) + 6 + width(widths, "in 30 minutes") <= box)
+    }
+
+    @Test
+    fun `Info window fits the fixed-mode main screen and every subject fits its boxes`() {
         assertTrue(L.INFO_WIDTH <= 512 && L.INFO_HEIGHT <= 334)
+        assertEquals(Subject.values().size, L.INFO_SUBJECTS)
+        assertTrue(6 + L.INFO_SUBJECTS * L.I_SUBJECT_PITCH <= L.I_INNER_HEIGHT)
+        val widths = advances { it.p12 }
+        val maxLines = L.I_TEXT_HEIGHT / L.I_LINE_HEIGHT
+        for (subject in Subject.values()) {
+            assertTrue(width(widths, subject.title) <= L.I_LIST_WIDTH - 16, subject.title)
+            val n = lines(widths, QuestTabInfo.text(subject), L.I_TEXT_WIDTH)
+            assertTrue(n <= maxLines, "${subject.title}: $n lines, room for $maxLines")
+        }
     }
 
     @Test
     fun `every Info text names where the points are spent`() {
-        assertTrue("Loyalty Store" in QuestTabInfo.text(Block.LOYALTY) && "Xuan" in QuestTabInfo.text(Block.LOYALTY))
-        assertTrue("Donator Store" in QuestTabInfo.text(Block.DONATOR))
-        assertTrue("Deadman Store" in QuestTabInfo.text(Block.DEADMAN))
-        assertTrue("Deadman Store" in QuestTabInfo.text(Block.EMBLEM) && "1,150" in QuestTabInfo.text(Block.EMBLEM))
-        assertTrue("(UTC)" in QuestTabInfo.text(Block.BREACH))
+        assertTrue("Loyalty Store" in QuestTabInfo.text(Subject.LOYALTY) && "Xuan" in QuestTabInfo.text(Subject.LOYALTY))
+        assertTrue("Donator Store" in QuestTabInfo.text(Subject.DONATOR))
+        assertTrue("Deadman Store" in QuestTabInfo.text(Subject.DEADMAN))
+        assertTrue("Deadman Store" in QuestTabInfo.text(Subject.EMBLEM) && "1,150" in QuestTabInfo.text(Subject.EMBLEM))
+        assertTrue("(UTC)" in QuestTabInfo.text(Subject.BREACH))
+    }
+
+    @Test
+    fun `Info texts carry the numbers of the rules they explain`() {
+        assertTrue("30 minutes" in QuestTabInfo.text(Subject.CHEST) && "100,000" in QuestTabInfo.text(Subject.CHEST))
+        assertTrue("60 minutes" in QuestTabInfo.text(Subject.PROTECTION))
+        assertTrue("5 minutes" in QuestTabInfo.text(Subject.SKULL) && "7 second" in QuestTabInfo.text(Subject.SKULL))
+        assertTrue("Level 96+: combat 20x, skills 10x, drops 5x" in QuestTabInfo.text(Subject.BRACKETS) && "14" in QuestTabInfo.text(Subject.BRACKETS))
+        assertTrue("7 second" in QuestTabInfo.text(Subject.TELEPORTS))
+        assertEquals("<col=ffffff>Skull</col>", QuestTab.subjectLabel(Subject.SKULL, Subject.SKULL))
+        assertEquals("Skull", QuestTab.subjectLabel(Subject.SKULL, Subject.LOYALTY))
     }
 
     // ------------------------------------------------------------------ bug-test round 2026-09-26
