@@ -308,6 +308,8 @@ object DeathsOfficeInterfaceImportTool {
         val hflip: Boolean = false,
         /** Graphic drawn upside down (OSRS flipV: the keybinding dropdown's down arrow is its up arrow, sprite 316, flipped). */
         val vflip: Boolean = false,
+        /** Text drawn with the black drop shadow (every steelborder screen); off for text on parchment (A28). */
+        val textShadow: Boolean = true,
     )
 
     /**
@@ -384,7 +386,7 @@ object DeathsOfficeInterfaceImportTool {
                 o.p1(c.lineHeight)
                 o.p1(c.alignX)
                 o.p1(c.alignY)
-                o.p1(1) // shadow: every text on these screens has one
+                o.p1(if (c.textShadow) 1 else 0)
                 o.p4(c.colour)
                 o.p1(c.transparency)
             }
