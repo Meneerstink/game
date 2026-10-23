@@ -3,6 +3,7 @@ package gg.rsmod.game.message.handler
 import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.OpHeld5Message
+import gg.rsmod.game.message.impl.SynthSoundMessage
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.INTERACTING_ITEM
 import gg.rsmod.game.model.attr.INTERACTING_ITEM_ID
@@ -42,12 +43,14 @@ class OpHeld5Handler : MessageHandler<OpHeld5Message> {
         ) {
             if (client.inventory[slot]?.id != item.id) return
             val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
+            gg.rsmod.game.model.AvTrace.log { "drop item=${item.id} removed=${remove.completed}" }
             if (remove.completed > 0) {
                 val droppedAs = dropAs?.invoke(item.id)
                 val floor = GroundItem(droppedAs ?: item.id, remove.completed, client.tile, client)
                 remove.firstOrNull()?.takeIf { droppedAs == null }?.let { removed ->
                     floor.copyAttr(removed.item.attr)
                 }
+                client.write(SynthSoundMessage(2739, 1, 0))
                 world.spawn(floor)
                 world
                     .getService(

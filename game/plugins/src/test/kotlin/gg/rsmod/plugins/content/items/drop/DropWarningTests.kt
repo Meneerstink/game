@@ -35,6 +35,18 @@ class DropWarningTests {
         assertTrue("if (!world.plugins.hasDropHandler(item.id) && confirm?.invoke(client, item, slot) == true) return" in handler)
         val drop = handler.substringAfter("fun drop(").substringBefore("override fun handle")
         assertTrue("if (client.inventory[slot]?.id != item.id) return" in drop, "a confirmed drop only takes the item that is still in the slot")
+        assertTrue("dropAs?.invoke(item.id)" in drop && "SynthSoundMessage(2739" in drop, "Barrows degrade and the drop sound live in the one floor drop")
+    }
+
+    @Test
+    fun `the 667 inventory Drop (IfButton option 5) asks the same hook and drops through the same code`() {
+        val handler = File("../src/main/kotlin/gg/rsmod/game/message/handler/IfButton1Handler.kt").readText()
+        val drop = handler.substringAfter("private fun handleDropItem(")
+        val ask = drop.indexOf("if (!world.plugins.hasDropHandler(item.id) && OpHeld5Handler.confirm?.invoke(client, item, slot) == true) return")
+        assertTrue(ask > 0, "the real client's Drop must show the warning (testclient 2026-10-23: it dropped through IfButton1Handler)")
+        assertTrue(ask < drop.indexOf("world.plugins.canDropItem(client, item.id)"), "ask before a plugin's drop (pets) runs")
+        assertTrue("OpHeld5Handler.drop(client, world, item, slot)" in drop, "one floor-drop implementation")
+        assertTrue("GroundItem(" !in drop, "no second floor drop that skips dropAs")
     }
 
     companion object {

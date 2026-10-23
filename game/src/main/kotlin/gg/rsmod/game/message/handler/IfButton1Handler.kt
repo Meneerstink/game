@@ -5,17 +5,13 @@ import gg.rsmod.game.action.UnhandledInteractions
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.message.MessageHandler
 import gg.rsmod.game.message.impl.IfButtonMessage
-import gg.rsmod.game.message.impl.SynthSoundMessage
 import gg.rsmod.game.model.ExamineEntityType
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.*
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.Entity
-import gg.rsmod.game.model.entity.GroundItem
-import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.queue.QueueTaskSet
 import gg.rsmod.game.model.queue.impl.PawnQueueTaskSet
-import gg.rsmod.game.service.log.LoggerService
 import java.lang.ref.WeakReference
 
 /**
@@ -279,22 +275,13 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
 
             client.fullInterruption(interactions = true, queue = true)
 
+            // The 667 inventory drops through this button, not OpHeld5: the drop warning (N215) and the floor drop itself
+            // (Barrows degrade, OpHeld5Handler.dropAs) are the same code on both paths.
+            if (!world.plugins.hasDropHandler(item.id) && OpHeld5Handler.confirm?.invoke(client, item, slot) == true) return
             if (!world.plugins.canDropItem(client, item.id)) {
                 gg.rsmod.game.model.AvTrace.log { "drop refused gate=can_drop_item plugin item=${item.id}" }
             } else {
-                val remove = client.inventory.remove(item, assureFullRemoval = false, beginSlot = slot)
-                gg.rsmod.game.model.AvTrace.log { "drop item=${item.id} removed=${remove.completed} combat=${client.attr.has(COMBAT_TARGET_FOCUS_ATTR)}" }
-                if (remove.completed > 0) {
-                    val floor = GroundItem(item.id, remove.completed, client.tile, client)
-                    remove.firstOrNull()?.let { removed ->
-                        floor.copyAttr(removed.item.attr)
-                    }
-                    client.write(SynthSoundMessage(2739, 1, 0))
-                    world.spawn(floor)
-                    world
-                        .getService(LoggerService::class.java, searchSubclasses = true)
-                        ?.logItemDrop(client, Item(item.id, remove.completed), slot)
-                }
+                OpHeld5Handler.drop(client, world, item, slot)
             }
         }
     }
