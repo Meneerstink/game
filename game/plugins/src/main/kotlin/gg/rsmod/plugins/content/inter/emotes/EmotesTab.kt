@@ -65,6 +65,21 @@ object EmotesTab {
         emote: Emote,
     ): Boolean = if (emote.varbit == GOBLIN_EMOTES_VARBIT) value >= emote.requiredVarbitValue else value == emote.requiredVarbitValue
 
+    /** The cycle the running emote ends, and the tile it started on (N223). */
+    private val EMOTE_UNTIL = gg.rsmod.game.model.attr.AttributeKey<Int>()
+    private val EMOTE_TILE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+    /**
+     * N223 (owner 2026-10-23: "emotes kunnen gespamd worden - moet als OSRS"): an emote plays to its end - a click on another emote
+     * while one runs does nothing, unless the player has moved since (walking ends the emote, as in OSRS).
+     */
+    fun busy(
+        currentCycle: Int,
+        until: Int?,
+        startTile: Int?,
+        tile: Int,
+    ): Boolean = until != null && currentCycle < until && startTile == tile
+
     /** One step of a transformation emote: the animation, an optional spot animation, the npc to look like (-1: yourself again). */
     class Step(val wait: Int, val anim: Int, val gfx: Int = -1, val transmog: Int? = null)
 
@@ -103,6 +118,7 @@ object EmotesTab {
         p: Player,
         emote: Emote,
     ) {
+        if (busy(p.world.currentCycle, p.attr[EMOTE_UNTIL], p.attr[EMOTE_TILE], p.tile.as30BitInteger)) return
         if (emote == Emote.SKILLCAPE) {
             if (SkillcapeEmotes.perform(p)) ClueScrollManager.tryEmote(p, emote.component)
             return
@@ -115,6 +131,7 @@ object EmotesTab {
         }
 
         if (emote == Emote.GIVE_THANKS || emote == Emote.SEAL_OF_APPROVAL) {
+            markRunning(p, transformSteps(emote).sumOf { it.wait } + 2)
             transformEmote(p, emote)
             ClueScrollManager.tryEmote(p, emote.component)
             return
@@ -122,6 +139,7 @@ object EmotesTab {
 
         if (emote.anim != -1) {
             p.animate(emote.anim)
+            markRunning(p, p.world.definitions.getNullable(gg.rsmod.game.fs.def.AnimDef::class.java, emote.anim)?.cycleLength ?: 0)
         }
 
         if (emote.gfx != -1) {
@@ -129,5 +147,14 @@ object EmotesTab {
         }
 
         ClueScrollManager.tryEmote(p, emote.component)
+    }
+
+    private fun markRunning(
+        p: Player,
+        ticks: Int,
+    ) {
+        if (ticks <= 0) return
+        p.attr[EMOTE_UNTIL] = p.world.currentCycle + ticks
+        p.attr[EMOTE_TILE] = p.tile.as30BitInteger
     }
 }

@@ -50,6 +50,14 @@ class EmotesUnlockTests {
     }
 
     @Test
+    fun `N223 - an emote plays to its end, unless the player walked away`() {
+        assertTrue(EmotesTab.busy(currentCycle = 105, until = 110, startTile = 7, tile = 7), "a second click during the emote does nothing")
+        assertTrue(!EmotesTab.busy(currentCycle = 110, until = 110, startTile = 7, tile = 7), "free once it ended")
+        assertTrue(!EmotesTab.busy(currentCycle = 105, until = 110, startTile = 7, tile = 8), "walking ended it")
+        assertTrue(!EmotesTab.busy(currentCycle = 105, until = null, startTile = null, tile = 7), "no emote yet")
+    }
+
+    @Test
     fun `emotes that share a varbit agree on its value and the login sets the goblin value`() {
         gated.groupBy { it.varbit }.forEach { (varbit, emotes) ->
             assertEquals(1, emotes.map { it.requiredVarbitValue }.distinct().size, "varbit $varbit: ${emotes.map { "$it=${it.requiredVarbitValue}" }}")
