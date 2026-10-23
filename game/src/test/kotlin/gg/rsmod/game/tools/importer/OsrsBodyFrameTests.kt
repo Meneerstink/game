@@ -152,10 +152,8 @@ class OsrsBodyFrameTests {
                 assertTrue("only ${targets.size} legs meshes", targets.size >= 62)
                 // T5: a legs mesh whose emblem/detail faces lay behind the cloth also got the owner's A5 decal lift on 2026-10-11
                 // (OsrsDecalLiftTool, tx-20261011-073852: Black d'hide chaps (g), Rangers' tights) - shin fit first, lift on top.
-                fun lifted(fitted: ByteArray): ByteArray? {
-                    val model = Rev667ModelDecoder.decode(fitted)
-                    return OsrsDecalLiftTool.lift(model)?.let { Rev667ModelEncoder.encode(model) }
-                }
+                // N32: the lift frees vertices a detail face shares with the cloth (OsrsItemImportTool.decalLifted = the importer's step).
+                fun lifted(fitted: ByteArray): ByteArray? = OsrsItemImportTool.decalLifted(fitted).takeIf { !it.contentEquals(fitted) }
                 val stale =
                     targets.filterNot { t ->
                         val current = library.data(7, t.local, 0)!!

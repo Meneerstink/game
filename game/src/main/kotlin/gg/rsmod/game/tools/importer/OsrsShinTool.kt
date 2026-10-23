@@ -55,17 +55,22 @@ object OsrsShinTool {
                 val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsBodyFrame.LEGS_SLOT, t.female)
                 // The end state of a mesh that needs the A5 decal lift is the importer's (N12): shin fit, then the lift.
                 val fitted = OsrsItemImportTool.decalLifted(plain)
-                if (current.contentEquals(plain) || current.contentEquals(fitted)) {
+                if (current.contentEquals(fitted)) {
                     done++
                     return@forEach
                 }
+                // N32: the fit without the lift (the 10-12 refit dropped the 10-11 lift) or with the 10-11 lift that left detail faces
+                // sharing a vertex with the cloth hidden.
+                val legacy = Rev667ModelDecoder.decode(plain).let { m -> OsrsDecalLiftTool.lift(m)?.let { Rev667ModelEncoder.encode(m) } }
+                val refit = current.contentEquals(plain) || (legacy != null && current.contentEquals(legacy)) ||
+                    OsrsItemImportTool.decalLifted(current).contentEquals(fitted) // a part of today's lift
                 val unfitted =
                     Rev667ModelEncoder.encode(
                         OsrsBodyFrame.shiftToRev667(Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, t.upstream, dropped)), OsrsBodyFrame.LEGS_SLOT),
                     )
                 // T5: --replace=<local,...> names meshes whose decal lift (OsrsDecalLiftTool, 2026-10-11) sits on the shin fit of before the
                 // A3 change of 2026-10-12, so they match no conversion of today; they get today's fit with the lift.
-                if (!current.contentEquals(unfitted) && t.local !in forced) {
+                if (!refit && !current.contentEquals(unfitted) && t.local !in forced) {
                     foreign += "model ${t.local} (${t.item}, upstream ${t.upstream}) holds neither the old nor the fitted conversion"
                     return@forEach
                 }

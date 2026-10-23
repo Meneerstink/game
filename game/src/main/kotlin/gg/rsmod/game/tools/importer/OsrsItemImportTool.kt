@@ -27,7 +27,7 @@ object OsrsItemImportTool {
     fun decalLifted(converted: ByteArray): ByteArray {
         val model = runCatching { Rev667ModelDecoder.decode(converted) }.getOrNull() ?: return converted
         if (!Rev667ModelEncoder.encode(model).contentEquals(converted)) return converted
-        return if (OsrsDecalLiftTool.lift(model) != null) Rev667ModelEncoder.encode(model) else converted
+        return OsrsDecalLiftTool.liftAll(model)?.let { Rev667ModelEncoder.encode(it.first) } ?: converted
     }
 
     val SOURCE_CACHE = RspsPaths.root("import-source/openrs2-2686/cache")
