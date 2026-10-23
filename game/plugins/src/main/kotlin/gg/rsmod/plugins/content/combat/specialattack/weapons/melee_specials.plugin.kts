@@ -250,6 +250,7 @@ SpecialAttacks.register(50, Items.BARRELCHEST_ANCHOR) {
     val victim = target
     player.animate(5870)
     player.graphic(1027)
+    player.playSound(Sfx.ANCHOR_SUNDER) // N3: Jagex anchor_sunder 3481 (Darkan SpecialAttacks.kt:558, Void sunder_special)
     meleeHit(player, victim, damage = 1.1) { dealt ->
         val amount = dealt / 10
         listOf(Skills.DEFENCE, Skills.ATTACK, Skills.RANGED, Skills.MAGIC).forEach { drain(victim, it, amount) }
@@ -275,11 +276,15 @@ SpecialAttacks.register(25, Items.RUNE_CLAWS) {
     meleeHit(player, victim, accuracy = 1.1, damage = 1.1)
 }
 
+/** Korasi's Disrupt sound: the 667 cache names it nothing; Darkan plays 3853 (Void calls it godwars_saradomin_magic_impact). */
+val KORASI_DISRUPT_SOUND = 3853
+
 /* Korasi's sword - Disrupt: 60%; a magic-based hit of 50%-150% of the melee max, hits adjacent enemies in multi. */
 SpecialAttacks.register(60, Items.KORASIS_SWORD_19780, Items.KORASIS_SWORD_19784) {
     val victim = target
     player.animate(14788)
     player.graphic(1729)
+    player.playSound(KORASI_DISRUPT_SOUND) // N3: Darkan SpecialAttacks.kt:491 soundEffect(target, 3853)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim)
     val accuracy = MagicCombatFormula.getAccuracy(player, victim)
     val landHit = accuracy >= world.randomDouble()
@@ -295,6 +300,7 @@ SpecialAttacks.register(75, Items.BRINE_SABRE) {
     val victim = target
     player.animate(6118)
     player.graphic(1048)
+    player.playSound(Sfx.BRAIN_SPECIAL_BRINE_SABER) // N3: Jagex brain_special_brine_saber 3473 (Void liquify_special)
     meleeHit(player, victim, accuracy = 1.25, damage = 1.25) { dealt ->
         val boost = dealt / 4
         if (boost > 0) {
