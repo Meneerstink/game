@@ -4,6 +4,7 @@ import gg.rsmod.game.message.impl.MessageGameMessage
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.getVarp
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
@@ -332,11 +333,22 @@ object BankOptions {
         player.runClientScript(SCRIPT_REBUILD_SIDE_INVENTORY, Bank.INV_INTERFACE_ID shl 16)
     }
 
+    /**
+     * N137: the OSRS bank scripts click (interface_select1) on their buttons - bankmain_quantity_op (2225) only when the quantity
+     * really changes, bankmain_toggleplaceholders_op (1269) on every toggle, bankmain_itemnote_op (291) / bankmain_swapinsert_op
+     * (288) on every switch, bankmain_switchtab (504) when the tab really changes, bankmain_viewbuttons (3275). The 667 bank
+     * scripts (762/763) have no sound op, so the server sends it.
+     */
+    const val CLICK_SOUND = gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1
+
+    fun click(player: Player) = player.playSound(CLICK_SOUND)
+
     fun setQuantityMode(
         player: Player,
         mode: Int,
     ) {
         if (mode !in MODE_ONE..MODE_ALL) return
+        if (quantityMode(player) != mode) click(player)
         player.attr[QUANTITY_MODE_ATTR] = mode
         refresh(player)
     }
@@ -345,6 +357,7 @@ object BankOptions {
         player: Player,
         on: Boolean,
     ) {
+        click(player)
         player.attr[ALWAYS_PLACEHOLDER_ATTR] = if (on) 1 else 0
         refresh(player)
     }

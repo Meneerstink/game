@@ -28,6 +28,8 @@ class BankTabs {
             tab: Int,
         ) {
             if (isTabUnlocked(player, tab)) {
+                // N137: OSRS bankmain_switchtab clicks only when the tab really changes.
+                if (player.getVarbit(SELECTED_TAB_VARBIT) != tab + 1) BankOptions.click(player)
                 player.setVarbit(SELECTED_TAB_VARBIT, tab + 1)
             }
         }

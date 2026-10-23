@@ -98,12 +98,14 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = Bank.SEARCH_COMPONEN
  */
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = Bank.EQUIPMENT_STATS_COMPONENT) {
     if (player.getInteractingOpcode() == 61) {
+        BankOptions.click(player) // N137: OSRS bankmain_viewbuttons
         Bank.showEquipmentStats(player)
     }
 }
 
 on_button(interfaceId = Bank.EQUIPMENT_BONUS_INTERFACE_ID, component = Bank.SHOW_BANK_COMPONENT) {
     if (player.getInteractingOpcode() == 61) {
+        BankOptions.click(player) // N137: OSRS bankmain_viewbuttons
         Bank.showBank(player)
     }
 }
@@ -237,10 +239,12 @@ on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 0) p@{
 }
 
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 15) {
+    BankOptions.click(player) // N137: OSRS bankmain_swapinsert_op
     player.toggleVarp(Bank.REARRANGE_MODE_VARP)
 }
 
 on_button(interfaceId = Bank.BANK_INTERFACE_ID, component = 19) {
+    BankOptions.click(player) // N137: OSRS bankmain_itemnote_op
     player.toggleVarp(Bank.WITHDRAW_AS_VARB)
 }
 
