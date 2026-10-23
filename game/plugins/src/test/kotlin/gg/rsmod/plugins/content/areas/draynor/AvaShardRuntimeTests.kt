@@ -37,7 +37,8 @@ import kotlin.test.fail
  * back from the world (`world.getShop`, what Player.openShop opens). Nothing in this class builds the shard row itself.
  */
 class AvaShardRuntimeTests {
-    private val shop get() = world.getShop("Ava's Odds and Ends") ?: fail("Ava_plugin did not register 'Ava's Odds and Ends'")
+    /** N224: the shards moved to "Buy devices" (Ava's Devices) - slot [SHARD_SLOT], after the attractor, accumulator and assembler. */
+    private val shop get() = world.getShop("Ava's Devices") ?: fail("Ava_plugin did not register 'Ava's Devices'")
 
     private fun player(inventory: ItemContainer): Player {
         val player = mockk<Player>(relaxed = true)
@@ -60,14 +61,11 @@ class AvaShardRuntimeTests {
     }
 
     @Test
-    fun `the loaded script registers Ava's Odds and Ends with the five arrow rows and the shard row in slot 6`() {
+    fun `N224 - Buy devices sells the three devices and the shard row, the odds and ends no shards`() {
         val s = shop
-        val expected = listOf(Items.FEATHER to 1000, Items.IRON_ARROW to 40, Items.STEEL_ARROW to 10, Items.IRON_ARROWTIPS to 30, Items.STEEL_ARROWTIPS to 20)
-        expected.forEachIndexed { i, (item, amount) ->
-            assertEquals(item, s.items[i]!!.item, "row ${i + 1}")
-            assertEquals(amount, s.items[i]!!.amount, "row ${i + 1} stock")
-        }
-        val row = s.items[5] ?: fail("row 6 (slot 5) is empty in the loaded shop")
+        assertEquals(listOf(Items.AVAS_ATTRACTOR, Items.AVAS_ACCUMULATOR, Items.AVAS_ASSEMBLER), (0..2).map { s.items[it]!!.item })
+        assertTrue(world.getShop("Ava's Odds and Ends")!!.items.none { it?.item == Items.CRYSTAL_SHARD }, "shards moved out of the odds and ends")
+        val row = s.items[SHARD_SLOT] ?: fail("shard slot $SHARD_SLOT is empty in the loaded shop")
         val price = CrystalShardPrice.of(OsrsGuidePrices.book)
         println("N35-RUNTIME row6 item=${row.item} sellPrice=${row.sellPrice} buyPrice=${row.buyPrice} amount=${row.amount} seedPrice/150=$price")
         assertEquals(Items.CRYSTAL_SHARD, row.item)
@@ -76,7 +74,7 @@ class AvaShardRuntimeTests {
         assertEquals(0, row.buyPrice)
         assertEquals(CrystalShardPrice.STOCK, row.amount)
         assertEquals(QuartermasterSupplies.resupplyAmount(CrystalShardPrice.STOCK), row.resupplyAmount)
-        assertEquals((6..39).toList().filter { s.items[it] != null }, emptyList(), "no stray rows past the sixth")
+        assertEquals(((SHARD_SLOT + 1) until s.items.size).toList().filter { s.items[it] != null }, emptyList(), "no stray rows after the shards")
     }
 
     @Test
@@ -84,10 +82,10 @@ class AvaShardRuntimeTests {
         val s = shop
         val price = CrystalShardPrice.of(OsrsGuidePrices.book)!!
         val inv = inventory(coins = 600 * price)
-        listOf(1, 5, 10).forEach { n -> s.currency.sellToPlayer(player(inv), s, slot = 5, amt = n) }
+        listOf(1, 5, 10).forEach { n -> s.currency.sellToPlayer(player(inv), s, slot = SHARD_SLOT, amt = n) }
         assertEquals(16, inv.getItemCount(Items.CRYSTAL_SHARD))
         assertEquals(600 * price - 16 * price, inv.getItemCount(Items.COINS_995))
-        assertEquals(CrystalShardPrice.STOCK - 16, s.items[5]!!.currentAmount)
+        assertEquals(CrystalShardPrice.STOCK - 16, s.items[SHARD_SLOT]!!.currentAmount)
 
         val sellInv = ItemContainer(world.definitions, INVENTORY_KEY).also { it[0] = Item(Items.CRYSTAL_SHARD, 100) }
         s.currency.buyFromPlayer(player(sellInv), s, slot = 0, amt = 100)
@@ -96,14 +94,40 @@ class AvaShardRuntimeTests {
     }
 
     @Test
-    fun `Ava's Trade option is bound by the loaded script`() {
-        val trade = world.definitions.get(NpcDef::class.java, Npcs.AVA).options.indexOfFirst { it.equals("trade", ignoreCase = true) } + 1
-        assertTrue(trade > 0, "Ava has a Trade option in the cache")
-        assertTrue(trade in world.plugins.boundNpcOptions(Npcs.AVA), "Ava's Trade option $trade has a handler (requirement check then openShop)")
+    fun `N224 - Ava has no Trade option, Buy device is bound`() {
+        val options = world.definitions.get(NpcDef::class.java, Npcs.AVA).options
+        assertTrue(options.none { it.equals("trade", ignoreCase = true) }, "Ava's Trade option is gone from the cache: ${options.toList()}")
+        val buy = options.indexOfFirst { it.equals("buy device", ignoreCase = true) } + 1
+        assertTrue(buy > 0 && buy in world.plugins.boundNpcOptions(Npcs.AVA), "Buy device has a handler")
+    }
+
+    @Test
+    fun `N224 - the assembler is Ava's own route - Dragon Slayer II, Vorkath's head, 75 mithril arrows and its coins`() {
+        val s = shop
+        val inv = inventory(coins = 1_000_000)
+        inv.add(Items.VORKATHS_HEAD, 1)
+        inv.add(Items.MITHRIL_ARROW, 75)
+        val p = player(inv)
+        val said = mutableListOf<String>()
+        every { p.write(*anyVararg<gg.rsmod.game.message.Message>()) } answers {
+            said.addAll((args[0] as Array<*>).filterIsInstance<gg.rsmod.game.message.impl.MessageGameMessage>().map { it.message })
+        }
+        val skills = mockk<gg.rsmod.game.model.skill.SkillSet>(relaxed = true)
+        every { skills.getCurrentLevel(any()) } returns 99
+        every { p.skills } returns skills
+        s.currency.sellToPlayer(p, s, slot = 2, amt = 1)
+        assertEquals(0, inv.getItemCount(Items.AVAS_ASSEMBLER), "no Dragon Slayer II: no assembler")
+        p.attr[gg.rsmod.plugins.content.unlocks.UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] = true
+        s.currency.sellToPlayer(p, s, slot = 2, amt = 5)
+        assertEquals(1, inv.getItemCount(Items.AVAS_ASSEMBLER), "one at a time; said: $said")
+        assertEquals(0, inv.getItemCount(Items.VORKATHS_HEAD))
+        assertEquals(0, inv.getItemCount(Items.MITHRIL_ARROW))
+        assertEquals(1_000_000 - s.items[2]!!.sellPrice!!, inv.getItemCount(Items.COINS_995))
     }
 
     companion object {
         const val SCRIPT = "gg.rsmod.plugins.content.areas.draynor.Ava_plugin"
+        const val SHARD_SLOT = 3
         const val SOURCE = "src/main/kotlin/gg/rsmod/plugins/content/areas/draynor/ava.plugin.kts"
         val CLASSES = File("scripts/build/classes/kotlin/main")
 

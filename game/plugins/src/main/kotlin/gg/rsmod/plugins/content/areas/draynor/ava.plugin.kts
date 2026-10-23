@@ -37,15 +37,20 @@ create_shop(
     items[2] = ShopItem(Items.STEEL_ARROW, 10)
     items[3] = ShopItem(Items.IRON_ARROWTIPS, 30)
     items[4] = ShopItem(Items.STEEL_ARROWTIPS, 20)
-    // N35 (owner VRAGEN 9 B): the only coin source of Crystal shards, at the OSRS Wiki value (Enhanced crystal teleport seed / 150).
-    items[5] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)
 }
 
 /**
  * Ava's devices (Devices / "Buy device"). OSRS Wiki "Ava": a replacement device costs 999 coins; the accumulator also
  * takes 75 steel arrows and needs 50 Ranged. Sold through a real shop interface instead of the old chat purchase.
+ * N224 (owner 2026-10-23: "verwijder de trade option van Ava, zet de crystal shards in de buy devices optie en laat Ava ook de
+ * assembler verkopen bij buy devices"): her Trade option is gone (NpcOptionsTool), the Crystal shards (N35: the only coin source,
+ * at the OSRS Wiki value) and Ava's assembler are sold here. The assembler keeps Ava's own route (Dragon Slayer II, 70 Ranged,
+ * Vorkath's head and 75 mithril arrows, the 4,999 coins of the route without an accumulator), one at a time.
  */
 val AVAS_DEVICES = "Ava's Devices"
+
+/** The coins of Ava's assembler route without an accumulator (see the Vorkath's head route below); declared before the shop uses it. */
+val ASSEMBLER_COINS = 4_999
 
 create_shop(
     AVAS_DEVICES,
@@ -59,6 +64,18 @@ create_shop(
                         },
                         materials = listOf(Items.STEEL_ARROW to 75),
                     ),
+                Items.AVAS_ASSEMBLER to
+                    gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+                        check = { p ->
+                            when {
+                                p.attr[UnlockNpcRewards.AVAS_ASSEMBLER_UNLOCKED] != true -> "You must complete Dragon Slayer II before Ava can create an assembler for you."
+                                p.skills.getCurrentLevel(Skills.RANGED) < 70 -> "You need at least 70 Ranged to use Ava's assembler."
+                                else -> null
+                            }
+                        },
+                        materials = listOf(Items.VORKATHS_HEAD to 1, Items.MITHRIL_ARROW to 75),
+                        maxPerPurchase = 1,
+                    ),
             ),
         ),
     purchasePolicy = PurchasePolicy.BUY_NONE,
@@ -66,13 +83,8 @@ create_shop(
 ) {
     items[0] = ShopItem(Items.AVAS_ATTRACTOR, 10, sellPrice = 999)
     items[1] = ShopItem(Items.AVAS_ACCUMULATOR, 10, sellPrice = 999)
-}
-
-on_npc_option(npc = Npcs.AVA, option = "trade") {
-    if (!checkRequirements(player)) {
-        return@on_npc_option
-    }
-    player.openShop("Ava's Odds and Ends")
+    items[2] = ShopItem(Items.AVAS_ASSEMBLER, 10, sellPrice = ASSEMBLER_COINS)
+    items[3] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)
 }
 
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
@@ -118,14 +130,14 @@ on_item_on_npc(item = Items.VORKATHS_HEAD, npc = Npcs.AVA) {
         return@on_item_on_npc
     }
     val hasAccumulator = player.inventory.contains(Items.AVAS_ACCUMULATOR)
-    val hasCoins = player.inventory.getItemCount(Items.COINS_995) >= 4_999
+    val hasCoins = player.inventory.getItemCount(Items.COINS_995) >= ASSEMBLER_COINS
     if (player.inventory.getItemCount(Items.MITHRIL_ARROW) < 75 || (!hasAccumulator && !hasCoins)) {
         player.message("You need Vorkath's head, 75 mithril arrows and an Ava's accumulator or 4,999 coins.")
         return@on_item_on_npc
     }
     player.inventory.remove(Items.VORKATHS_HEAD)
     player.inventory.remove(Items.MITHRIL_ARROW, 75)
-    if (hasAccumulator) player.inventory.remove(Items.AVAS_ACCUMULATOR) else player.inventory.remove(Items.COINS_995, 4_999)
+    if (hasAccumulator) player.inventory.remove(Items.AVAS_ACCUMULATOR) else player.inventory.remove(Items.COINS_995, ASSEMBLER_COINS)
     player.inventory.add(Items.AVAS_ASSEMBLER)
     player.message("Ava upgrades your device into an Ava's assembler.")
 }

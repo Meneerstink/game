@@ -184,11 +184,11 @@ class AvaShardShopTests {
     }
 
     @Test
-    fun `ava_plugin adds the shard row as the sixth row through CrystalShardPrice shopItem`() {
+    fun `ava_plugin adds the shard row to Buy devices (N224) through CrystalShardPrice shopItem`() {
         val root = listOf(File("src/main/kotlin"), File("plugins/src/main/kotlin")).first { it.isDirectory }
         val source = root.resolve("gg/rsmod/plugins/content/areas/draynor/ava.plugin.kts").readText()
-        val shop = source.substringAfter("create_shop(\n    \"Ava's Odds and Ends\"").substringBefore("\n}\n")
-        assertTrue("items[5] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)" in shop, "Ava's Odds and Ends must stock the shard row in slot 5")
+        val shop = source.substringAfter("    AVAS_DEVICES,").substringBefore("on_npc_option")
+        assertTrue("items[3] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)" in shop, "Ava's Devices must stock the shard row in slot 3")
         assertNull(Regex("""items\[\d+]\s*=\s*ShopItem\(Items\.CRYSTAL_SHARD""").find(source), "the row must come from CrystalShardPrice (explicit price, buyPrice 0)")
     }
 
