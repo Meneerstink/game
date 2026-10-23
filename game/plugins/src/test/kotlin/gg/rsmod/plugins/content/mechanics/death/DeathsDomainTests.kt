@@ -380,4 +380,14 @@ class DeathsDomainTests {
             assertTrue(File(Paths.get("..", "..", "data", "cfg").toFile(), "deaths_domain.yml").isFile)
         }
     }
+    @Test
+    fun `N230 - a standing gravestone and items at Death's Office are named in red at login`() {
+        assertEquals(emptyList(), DeathsOffice.loginNotices(null, false))
+        val both = DeathsOffice.loginNotices(1_500, true)
+        assertEquals(2, both.size)
+        assertTrue(both.all { it.startsWith("<col=ef1020>") }, "red")
+        assertTrue("collapses in 15 minutes" in both[0], both[0])
+        assertTrue("1 minute." in DeathsOffice.loginNotices(10, false).single(), "never 0 minutes")
+        assertTrue("Death's Office" in DeathsOffice.loginNotices(null, true).single())
+    }
 }

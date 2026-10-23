@@ -271,6 +271,7 @@ on_login {
         GravestoneWorld.respawn(player)
         startGraveTimer(player)
     }
+    DeathsOffice.loginNotices(if (Gravestone.exists(player)) Gravestone.ticksLeft(player) else null, !DeathsOffice.isEmpty(player)).forEach { player.message(it) }
 }
 
 on_logout {

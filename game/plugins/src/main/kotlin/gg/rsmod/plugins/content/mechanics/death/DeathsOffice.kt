@@ -27,6 +27,23 @@ sealed class OfficeRetrieveOutcome {
 object DeathsOffice {
     fun isEmpty(player: Player): Boolean = player.deathRecovery.isEmpty
 
+    /**
+     * N230 (owner 2026-10-23: "rood bericht bij inloggen als je nog items in de Death's coffer of een actieve gravestone hebt"): the
+     * red login lines for a gravestone with [graveTicksLeft] game ticks to go (null: none standing) and items waiting at Death's Office.
+     */
+    fun loginNotices(
+        graveTicksLeft: Int?,
+        itemsAtOffice: Boolean,
+    ): List<String> {
+        val lines = mutableListOf<String>()
+        if (graveTicksLeft != null) {
+            val minutes = maxOf(1, (graveTicksLeft * 600 + 59_999) / 60_000)
+            lines += "<col=ef1020>Your gravestone is still standing with your items. It collapses in $minutes minute${if (minutes == 1) "" else "s"}.</col>"
+        }
+        if (itemsAtOffice) lines += "<col=ef1020>Death is keeping some of your items. Reclaim them at Death's Office.</col>"
+        return lines
+    }
+
     fun usedSlots(player: Player): Int = player.deathRecovery.capacity - player.deathRecovery.freeSlotCount
 
     /**
