@@ -442,6 +442,9 @@ object Clans {
     }
 
     /** "Join Clan Channel" as a guest of another clan (the listened channel). */
+    /** 1110's guest-view bootstrap (cache script 4453 -> timer 4454 -> 4444), see [listen]. */
+    const val GUEST_VIEW_SCRIPT = 4453
+
     fun listen(player: Player, clanName: String) {
         load()
         val clan = clans.values.firstOrNull { it.name.equals(clanName.trim(), ignoreCase = true) }
@@ -454,6 +457,10 @@ object Clans {
                 player.filterableMessage("You have been banned from this channel.")
             else -> {
                 stopListening(player)
+                // N48: Novite ClansManager:1011-1014 runs 4453 before the guest connects - it arms 4454 on 1110:52, which waits for
+                // the listened channel and then builds the 'Visited Clan Chat' rows (4444) and their refresh hooks. Without it the
+                // tab stayed 'You are not currently a guest' although the channel packets arrived.
+                player.runClientScript(GUEST_VIEW_SCRIPT)
                 guestOf[player] = clan.name
                 channelUsers.getOrPut(clan.name) { ConcurrentHashMap.newKeySet() }.add(player)
                 player.write(ClanSettingsFullMessage(settingsBody(clan, affined = false)))
