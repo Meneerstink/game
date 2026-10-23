@@ -16,30 +16,6 @@ import kotlin.test.assertTrue
  * OSRS gauntlet covers the lower forearm that OSRS bodies leave to the hands slot).
  */
 class OsrsLookToolTests {
-    @Test
-    fun `N242 - every potion dose wears the OSRS corked vial in both caches, no 667 open vial is left`() {
-        val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
-        try {
-            val itemFiles = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_ITEM)
-            val imported = OsrsFxImportTool.importedItems(File(OsrsItemImportTool.ASSET_MAP)).values.toSet()
-            for (cache in OsrsItemImportTool.TARGETS) {
-                val library = CacheLibrary(cache)
-                try {
-                    val open = OsrsLookTool.potionLooks(library, itemFiles, imported).map { "${it.local} ${it.localName}" }
-                    assertTrue(open.isEmpty(), "potions still on the 667 open vial in $cache: $open")
-                    // Ranging potion 2444/169/171/173 = the owner's report: the four OSRS vial meshes.
-                    val vials = listOf(2444, 169, 171, 173).map { OsrsLookTool.inventoryModel(CacheItemProbeTool.itemData(library, it)!!) }
-                    assertEquals(4, vials.distinct().size, "one vial mesh per dose: $vials")
-                    assertTrue(vials.none { it in OsrsLookTool.VIAL_MODELS_667 }, "$vials")
-                } finally {
-                    library.close()
-                }
-            }
-        } finally {
-            reader.close()
-        }
-    }
-
     private fun gameCache() = CacheLibrary(Paths.get("..", "data", "cache").toFile().toString())
 
     /** A rev-667 item stream shaped like the 667 Max cape 20767 (models, camera, recolour + retexture, options, params). */

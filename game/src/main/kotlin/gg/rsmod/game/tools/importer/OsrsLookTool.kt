@@ -57,36 +57,11 @@ object OsrsLookTool {
             // 2026-10-06 "Original 667 look": their 667 item definitions are restored (CacheJournalRestoreTool, tx-20261003-235150).
         )
 
-    /** The four 667 potion vials (4, 3, 2 and 1 doses): open glass necks, where every OSRS potion vial is corked. */
-    val VIAL_MODELS_667 = setOf(2789, 2697, 2384, 2621)
-
-    private val DOSE = Regex("""^(.+) \(([1-4])\)$""")
-
-    /**
-     * N242 (owner 2026-10-23: "na 1 slok toont het icoon een raar ander icoon, alsof het flesje open is"): the 667 potions draw the
-     * 2011 vials - no cork, the glass neck open - next to the OSRS-imported potions (Super combat, Bastion ...) with OSRS corked
-     * vials. Every 667 item on a 667 potion vial whose OSRS item under the same id is the same potion and dose ("Ranging potion (3)"
-     * = OSRS "Ranging potion(3)") gets the OSRS look, so a whole inventory of potions looks like OSRS.
+    /*
+     * N242 gave the 116 classic potion doses the OSRS corked vial here (potionLooks); the owner reversed it the same evening (N254,
+     * "waarom hebben alle potions een kurk nu ineens": every potion on the 2011 open vial). The journal restored those items and
+     * PotionVialTool put the imported potions on the 2011 vial too, so this tool no longer relooks potions.
      */
-    fun potionLooks(
-        library: CacheLibrary,
-        itemFiles: Map<Int, ByteArray>,
-        imported: Set<Int>,
-    ): List<Look> {
-        val out = mutableListOf<Look>()
-        val maxId = (library.index(INDEX_ITEM).archiveIds().maxOrNull() ?: 0) * 256 + 255
-        for (id in 0..maxId) {
-            if (id in imported) continue
-            val bytes = CacheItemProbeTool.itemData(library, id) ?: continue
-            val name = ItemDefCodec.readName(bytes) ?: continue
-            val dose = DOSE.matchEntire(name) ?: continue
-            if (inventoryModel(bytes) !in VIAL_MODELS_667) continue
-            val upstream = itemFiles[id]?.let { ModernItemDefDecoder.decode(id, it) } ?: continue
-            if (upstream.name != "${dose.groupValues[1]}(${dose.groupValues[2]})") continue
-            out += Look(id, name, id, upstream.name, "N242: OSRS corked potion vial", inventoryOnly = true)
-        }
-        return out
-    }
 
     /** The inventory model (opcode 1) of a raw 667 item definition, or null. */
     fun inventoryModel(bytes: ByteArray): Int? = ItemDefCodec.describeOpcodes(bytes).firstOrNull { it.startsWith("1=") }?.substringAfter('=')?.toIntOrNull()
@@ -266,8 +241,7 @@ object OsrsLookTool {
             }
             val reserved = HashSet<Int>()
 
-            val looks = LOOKS + potionLooks(library, itemFiles, imported)
-            println("POTIONS ${looks.size - LOOKS.size} 667 potion doses get the OSRS vial")
+            val looks = LOOKS
             looks.forEach { look ->
                 check(look.local !in imported) { "${look.localName} ${look.local} is an imported OSRS item; the importer owns its look" }
                 val def = ModernItemDefDecoder.decode(look.upstream, itemFiles[look.upstream] ?: error("upstream item ${look.upstream} missing"))
