@@ -558,6 +558,8 @@ object OsrsFxImportTool {
          * player's own animation - a sound on an npc or on another player's animation was never heard by anyone.
          */
         val soundRadius: MutableMap<Int, Int> = sortedMapOf(),
+        /** Every OSRS frame sound as [frame, synth, loops, radius], in cache order (two on one frame both kept). */
+        val soundList: MutableList<IntArray> = mutableListOf(),
         val dropped: MutableList<String> = mutableListOf(),
     )
 
@@ -617,6 +619,7 @@ object OsrsFxImportTool {
                         if (id >= 1 && loops >= 1) {
                             seq.sounds[frame] = id to loops
                             seq.soundRadius[frame] = location
+                            seq.soundList += intArrayOf(frame, id, loops, location)
                         }
                     }
                     seq.dropped += "frame sound retain/weight (no 667 fields)"
