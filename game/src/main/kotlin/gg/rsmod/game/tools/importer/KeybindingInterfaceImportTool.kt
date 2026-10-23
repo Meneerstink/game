@@ -38,6 +38,7 @@ object KeybindingInterfaceImportTool {
             908, 909, 904, 910, // 10-13 settings, emotes, chat-channel (clan), music
             316, // 14 dropdown arrow
             8378, 8379, // 15-16 checkbox off / on
+            1161, // 17 OSRS Settings "Key Bindings" icon (the F1 key; RuneLite SpriteID.OptionsIcons.KEYBINDINGS)
         )
 
     fun sprite(osrsId: Int): Int {
@@ -182,16 +183,26 @@ object KeybindingInterfaceImportTool {
 
     // ---- the "Keybinding" button appended to the 667 Settings tab (261) ----
 
-    /** 261 had components 0..22; the button is appended after them (a layer with the op and its label). */
+    /** 261 had components 0..22; the button is appended after them (a layer with the op, its stone and its icon). */
     const val SETTINGS_INTERFACE = 261
     const val SETTINGS_BUTTON = 23
     const val SETTINGS_LABEL = 24
+    const val SETTINGS_ICON = 25
 
-    /** On 261's middle band (sprite 851 at y 90, 190x27) between its two rows of buttons. */
-    fun settingsButton(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> =
+    /** The 667 Settings tab's empty button stone (40x40, the one under every icon of 261). */
+    const val SETTINGS_STONE = 761
+
+    /**
+     * N208 (owner 2026-10-23: "ALLEEN het icoon - de tekstknop 'Keybinding' wordt een knop met het OSRS-toetsicoon (F1)"): a 40x40
+     * button like every other one of the tab - the 667 stone with the OSRS F1 key icon (OSRS sprite 1161) - in the middle of the
+     * band between the two rows (x 75 = the middle column, y 86..126 between the rows ending at 81 and starting at 133). The op keeps
+     * its "Keybinding" name for the right-click menu and the hover text.
+     */
+    fun settingsButton(@Suppress("UNUSED_PARAMETER") fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> =
         listOf(
-            Comp(SETTINGS_BUTTON, 0, 20, 92, 150, 23, 0, ops = listOf("Keybinding")),
-            Comp(SETTINGS_LABEL, TYPE_TEXT, 0, 0, 150, 23, SETTINGS_BUTTON, font = fonts.p12, text = "Keybinding", colour = ORANGE, alignX = 1, alignY = 1),
+            Comp(SETTINGS_BUTTON, 0, 75, 86, 40, 40, 0, ops = listOf("Keybinding")),
+            Comp(SETTINGS_LABEL, TYPE_GRAPHIC, 0, 0, 40, 40, SETTINGS_BUTTON, graphic = SETTINGS_STONE),
+            Comp(SETTINGS_ICON, TYPE_GRAPHIC, 4, 4, 32, 32, SETTINGS_BUTTON, graphic = sprite(1161)),
         )
 
     @JvmStatic
@@ -208,13 +219,13 @@ object KeybindingInterfaceImportTool {
             }
             settingsFiles = library.index(INDEX_INTERFACES).archive(SETTINGS_INTERFACE)?.fileIds()?.toList() ?: emptyList()
             require(settingsFiles.isNotEmpty()) { "interface $SETTINGS_INTERFACE missing" }
-            require(settingsFiles.max() < SETTINGS_BUTTON || settingsFiles.max() == SETTINGS_LABEL) { "interface 261 grew: re-check the button ids" }
+            require(settingsFiles.max() < SETTINGS_BUTTON || settingsFiles.max() in SETTINGS_LABEL..SETTINGS_ICON) { "interface 261 grew: re-check the button ids" }
             // This tool owns these files: pin what is there so a re-run replaces its own earlier writes.
             val mine = mutableMapOf<String, String?>()
             library.index(INDEX_INTERFACES).archive(INTERFACE_ID)?.fileIds()?.forEach { f ->
                 mine["i$INTERFACE_ID:$f"] = library.data(INDEX_INTERFACES, INTERFACE_ID, f)?.let(CacheItemProbeTool::sha1)
             }
-            listOf(SETTINGS_BUTTON, SETTINGS_LABEL).forEach { f ->
+            listOf(SETTINGS_BUTTON, SETTINGS_LABEL, SETTINGS_ICON).forEach { f ->
                 mine["i$SETTINGS_INTERFACE:$f"] = library.data(INDEX_INTERFACES, SETTINGS_INTERFACE, f)?.let(CacheItemProbeTool::sha1)
             }
             OSRS_SPRITES.indices.forEach { i -> mine["s${SPRITE_BASE + i}"] = library.data(INDEX_SPRITES, SPRITE_BASE + i, 0)?.let(CacheItemProbeTool::sha1) }

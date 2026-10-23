@@ -27,4 +27,25 @@ class KeybindingInterfaceImportToolTests {
         assertEquals(listOf(20, 180, 340), tool.ROWS.indices.map { tool.rowX(it) }.distinct())
         assertTrue(tool.LIST_H <= tool.CONTENT_H, "the dropdown list fits the window")
     }
+    @Test
+    fun `N208 - the Settings tab button is the OSRS F1 key icon on a 667 stone, in both caches`() {
+        val tool = KeybindingInterfaceImportTool
+        for (cache in OsrsItemImportTool.TARGETS) {
+            val library = com.displee.cache.CacheLibrary(cache)
+            try {
+                val button = library.data(3, tool.SETTINGS_INTERFACE, tool.SETTINGS_BUTTON)!!
+                assertEquals(listOf(75, 86, 40, 40), listOf(GeHistoryInterfaceImportTool.x(button), GeHistoryInterfaceImportTool.y(button), GeHistoryInterfaceImportTool.width(button), GeHistoryInterfaceImportTool.height(button)), cache)
+                val stone = library.data(3, tool.SETTINGS_INTERFACE, tool.SETTINGS_LABEL)!!
+                val icon = library.data(3, tool.SETTINGS_INTERFACE, tool.SETTINGS_ICON)!!
+                assertEquals(5, GeHistoryInterfaceImportTool.typeOf(stone), "$cache: no text label any more")
+                assertEquals(5, GeHistoryInterfaceImportTool.typeOf(icon))
+                val graphic = { b: ByteArray -> java.nio.ByteBuffer.wrap(b, 19, 4).int }
+                assertEquals(tool.SETTINGS_STONE, graphic(stone))
+                assertEquals(tool.sprite(1161), graphic(icon))
+                assertTrue(library.data(8, tool.sprite(1161), 0) != null, "$cache: F1 key sprite imported")
+            } finally {
+                library.close()
+            }
+        }
+    }
 }
