@@ -50,8 +50,8 @@ enum class Emote(
     ZOMBIE_DANCE(component = 35, anim = Anims.EMOTE_ZOMBIE_DANCE, varbit = EmotesTab.ZOMBIE_DANCE_EMOTE_VARBIT),
     SCARED(component = 37, anim = Anims.EMOTE_SCARED, varbit = EmotesTab.SCARED_EMOTE_VARBIT),
     RABBIT_HOP(component = 38, anim = Anims.EMOTE_RABBIT_HOP, varbit = EmotesTab.RABBIT_HOP_EMOTE_VARBIT),
-    ZOMBIE_HAND(component = 36, anim = Anims.EMOTE_ZOMBIE_HAND, gfx = Gfx.EMOTE_ZOMBIE_HAND, varbit = EmotesTab
-        .ZOMBIE_HAND_EMOTE_VARBIT),
+    // N233: the emote tab script 1750 draws Zombie Hand unlocked only while varbit 4075 == 12 (every other emote: == 1).
+    ZOMBIE_HAND(component = 36, anim = Anims.EMOTE_ZOMBIE_HAND, gfx = Gfx.EMOTE_ZOMBIE_HAND, varbit = EmotesTab.ZOMBIE_HAND_EMOTE_VARBIT, requiredVarbitValue = 12),
     SKILLCAPE(component = 39, anim = Anims.RESET, varbit = EmotesTab.SKILLCAPE_EMOTE_VARBIT),
     SNOWMAN_DANCE(component = 40, anim = Anims.EMOTE_SNOWMAN_DANCE, varbit = EmotesTab.SNOWMAN_EMOTE_VARBIT),
     AIR_GUITAR(component = 41, anim = Anims.EMOTE_AIR_GUITAR, gfx = Gfx.EMOTE_AIR_GUITAR, varbit = EmotesTab.AIR_GUITAR_EMOTE_VARBIT),

@@ -52,9 +52,18 @@ object EmotesTab {
      */
     fun unlockAll(p: Player) {
         Emote.values.filter { it.varbit != -1 && it != Emote.SKILLCAPE }.forEach { emote ->
-            if (p.getVarbit(emote.varbit) < emote.requiredVarbitValue) p.setVarbit(emote.varbit, emote.requiredVarbitValue)
+            if (!isUnlocked(p.getVarbit(emote.varbit), emote)) p.setVarbit(emote.varbit, emote.requiredVarbitValue)
         }
     }
+
+    /**
+     * Whether varbit value [value] shows [emote] unlocked, exactly as the tab script 1750 tests it (N233): the goblin emotes from Lost
+     * Tribe progress 7 up, every other emote only at its exact value (1, Zombie Hand 12, Around the World 85, ...).
+     */
+    fun isUnlocked(
+        value: Int,
+        emote: Emote,
+    ): Boolean = if (emote.varbit == GOBLIN_EMOTES_VARBIT) value >= emote.requiredVarbitValue else value == emote.requiredVarbitValue
 
     /** One step of a transformation emote: the animation, an optional spot animation, the npc to look like (-1: yourself again). */
     class Step(val wait: Int, val anim: Int, val gfx: Int = -1, val transmog: Int? = null)
@@ -99,7 +108,7 @@ object EmotesTab {
             return
         }
         // At least the unlock value: the goblin emotes share the Lost Tribe progress varbit (Void Emotes.kt: questStage >= 7).
-        if (emote.varbit != -1 && p.getVarbit(emote.varbit) < emote.requiredVarbitValue) {
+        if (emote.varbit != -1 && !isUnlocked(p.getVarbit(emote.varbit), emote)) {
             val description = emote.unlockDescription ?: "You have not unlocked this emote yet."
             p.queue { messageBox(description) }
             return

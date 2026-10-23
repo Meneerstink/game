@@ -35,6 +35,21 @@ class EmotesUnlockTests {
     }
 
     @Test
+    fun `N233 - every emote is drawn unlocked by the tab script's own test, Zombie Hand at 12`() {
+        val player = mockk<Player>(relaxed = true)
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns DEFINITIONS
+        every { player.world } returns world
+        every { player.varps } returns VarpSet(VARP_IDS)
+        EmotesTab.unlockAll(player)
+        // Clientscript 1750 (emote tab): Zombie Hand needs varbit 4075 == 12, Around the World 6014 == 85, Puppet Master 8300 == 20,
+        // Task Master 8601 == 428, Invoke Spring 9198 == 60, the goblin emotes Lost Tribe >= 7, every other emote == 1.
+        assertEquals(12, player.getVarbit(Emote.ZOMBIE_HAND.varbit))
+        gated.forEach { assertTrue(EmotesTab.isUnlocked(player.getVarbit(it.varbit), it), "$it varbit ${it.varbit} = ${player.getVarbit(it.varbit)}") }
+        assertTrue(!EmotesTab.isUnlocked(1, Emote.ZOMBIE_HAND), "1 is the locked Zombie Hand the owner saw")
+    }
+
+    @Test
     fun `emotes that share a varbit agree on its value and the login sets the goblin value`() {
         gated.groupBy { it.varbit }.forEach { (varbit, emotes) ->
             assertEquals(1, emotes.map { it.requiredVarbitValue }.distinct().size, "varbit $varbit: ${emotes.map { "$it=${it.requiredVarbitValue}" }}")
