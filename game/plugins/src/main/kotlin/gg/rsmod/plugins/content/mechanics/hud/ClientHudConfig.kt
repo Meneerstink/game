@@ -81,6 +81,10 @@ object ClientHudConfig {
             // Owner 2026-10-01: the resizable/fullscreen chatbox background (client RspsChatbox); 667 default transparent.
             bool("chatbox.enabled", true),
             bool("chatbox.transparent", true),
+            // A33 (owner 2026-10-11): friend login/logout lines (667 client behaviour = on), chat timestamps and RuneLite's notifyOnPM.
+            bool("chatbox.friendLogin", true),
+            bool("chatbox.timestamps", false), // RuneLite Timestamp plugin: off by default
+            bool("chatbox.notifyOnPM", false),
             // Owner 2026-10-07 ("questhelper needs a plugin just like the others"): the Quest Helper (quests/foundation/QuestHelper)
             // as a plugin. Keys and names from the RuneLite Quest Helper plugin's QuestHelperConfig (autoStartQuests,
             // showOverlayPanel, showMiniMapArrow); showStepMessages is this server's chat line of the helper.

@@ -65,6 +65,7 @@ object InterfaceHookProbeTool {
                 "compref" -> probeRefs(library, listOf((args[2].toInt() shl 16) or args[3].toInt()))
                 "search" -> probeSearch(library, args.drop(2).joinToString(" "))
                 "strsearch" -> probeScriptStrings(library, args.drop(2).joinToString(" "))
+                "opsearch" -> probeScriptOpcode(library, args[2].toInt())
                 else -> error(
                     "Unknown mode '$mode', expected 'interface', 'layout', 'script', 'disasm', 'search', " +
                         "'strsearch', 'refs' or 'compref'",
@@ -248,6 +249,20 @@ object InterfaceHookProbeTool {
             }
         }
         println("SCANNED=$scanned DECODE_FAILED=$failed")
+    }
+
+    /** Every client script that uses [opcode] (A33: which scripts read the chat history). */
+    private fun probeScriptOpcode(
+        library: CacheLibrary,
+        opcode: Int,
+    ) {
+        val index = library.index(ARCHIVE_CLIENTSCRIPTS)
+        for (scriptId in index.archiveIds()) {
+            val bytes = library.data(ARCHIVE_CLIENTSCRIPTS, scriptId, 0) ?: continue
+            val script = runCatching { decodeScript(bytes) }.getOrNull() ?: continue
+            val count = script.opcodes.count { it == opcode }
+            if (count > 0) println("SCRIPT_$scriptId uses=$count")
+        }
     }
 
     private fun probeRefs(
