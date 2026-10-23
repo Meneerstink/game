@@ -112,6 +112,31 @@ object CurseTooltipCacheTool {
             ),
             // wrathMaxDamage: up to 30 % of the Prayer level, to every target within two tiles (multi) or the killer (single).
             Tooltip(905, listOf("Inflicts damage to nearby<br>targets if you die"), "Inflicts up to 30% of your Prayer level as damage<br>to nearby targets if you die"),
+            // N45 (owner 10-09 Q1 "ALL curse and prayer tooltips"): the normal prayers Augury (struct 1006) and Rigour (1029) state
+            // what Prayers/MagicCombatFormula/RangedCombatFormula do - Augury magic accuracy x1.25, magic damage +4 %, Defence
+            // +25 %; Rigour Ranged accuracy +20 %, Ranged damage +23 %, Defence +25 % - and their unlock is N98's scroll + 70
+            // Defence, not Daemonheim (DGN: Dungeoneering is removed).
+            Tooltip(
+                1006,
+                // The prayer tooltip wraps by itself: no <br> (it broke the line after "by 25%," - checked in the client).
+                listOf("Increases magical accuracy by 20% and Defence by 25%.", "Increases magical accuracy by 25%,<br>magic damage by 4% and Defence by 25%."),
+                "Increases magical accuracy by 25%, magic damage by 4% and Defence by 25%.",
+            ),
+            Tooltip(
+                1006,
+                listOf("You can buy this prayer from Daemonheim. You also need a Prayer level of 77."),
+                "Read an Arcane prayer scroll first. You also need Prayer 77 and Defence 70.",
+            ),
+            Tooltip(
+                1029,
+                listOf("Increases your Ranged by 20% and Defence by 25%.", "Increases Ranged accuracy by 20%,<br>Ranged damage by 23% and Defence by 25%."),
+                "Increases Ranged accuracy by 20%, Ranged damage by 23% and Defence by 25%.",
+            ),
+            Tooltip(
+                1029,
+                listOf("You can buy this prayer from Daemonheim. You also need a Prayer level of 74."),
+                "Read a Dexterous prayer scroll first. You also need Prayer 74 and Defence 70.",
+            ),
         )
 
     @JvmStatic
@@ -138,11 +163,14 @@ object CurseTooltipCacheTool {
     fun plan(cache: String): List<CacheMutation> {
         val library = CacheLibrary(cache)
         try {
-            return TOOLTIPS.mapNotNull { tooltip ->
-                val current = requireNotNull(library.data(CONFIG_INDEX, STRUCT_GROUP, tooltip.struct)) { "struct ${tooltip.struct} missing" }
-                val patched = replaceText(current, tooltip.olds, tooltip.new) ?: return@mapNotNull null
+            // N45: a struct may carry two texts (Augury / Rigour: effect and unlock) - every replacement of one struct goes into ONE
+            // mutation, folded over the same bytes.
+            return TOOLTIPS.groupBy { it.struct }.mapNotNull { (struct, tooltips) ->
+                val current = requireNotNull(library.data(CONFIG_INDEX, STRUCT_GROUP, struct)) { "struct $struct missing" }
+                val patched = tooltips.fold(current) { data, tooltip -> replaceText(data, tooltip.olds, tooltip.new) ?: data }
+                if (patched.contentEquals(current)) return@mapNotNull null
                 CacheMutation(
-                    CONFIG_INDEX, STRUCT_GROUP, tooltip.struct, patched, "struct ${tooltip.struct}: curse tooltip",
+                    CONFIG_INDEX, STRUCT_GROUP, struct, patched, "struct $struct: prayer tooltip",
                     expectedCurrentSha1 = CacheItemProbeTool.sha1(current),
                 )
             }
