@@ -46,8 +46,12 @@ object QuestMapIconTool {
     /** The first free MapElementType id in both caches (the last 667 element is 1115). */
     const val HALL_QUEST_ELEMENT = 1116
 
-    /** Archaeologist, Oneiromancer, Azzanadra - the short quests' start npcs (FoundationQuests.startNpc). */
-    val QUEST_NPCS = listOf(1918, 4511, 1971)
+    /**
+     * Every short quest's start npc (FoundationQuests.SHORT startNpc; FoundationQuestIconTests keeps the two lists equal): Archaeologist,
+     * Oneiromancer, Azzanadra, and since N255 (owner 2026-10-23: "Aleck ... moet toch ook een quest icoon hebben net als King Narnode")
+     * Gossip, Aleck, Edmond and King Narnode Shareen.
+     */
+    val QUEST_NPCS = listOf(1918, 4511, 1971, 813, 5110, 714, 670)
 
     /** One opcode of a MapElementType stream: where it starts and where its payload starts. */
     class Op(val code: Int, val at: Int, val payload: Int, val end: Int)
