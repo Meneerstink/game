@@ -54,6 +54,8 @@ set_level_up_logic {
     val skill = player.attr[LEVEL_UP_SKILL_ID]!!
     val increment = player.attr[LEVEL_UP_INCREMENT]!!
     val skillName = Skills.getSkillName(player.world, skill)
+    // D5: a new 99 trims every untrimmed skillcape the player owns once he has two (OSRS Wiki "Cape of Accomplishment").
+    if (player.skills.getMaxLevel(skill) >= 99) SkillcapeTrim.trimAll(player)
     // Skilling Basement (owner 2026-09-26): only a chat line - no window, jingle, fireworks or flashing icon - and the
     // training queue is not interrupted.
     if (gg.rsmod.plugins.content.newplayer.AfkArea.quietLevelUp(player, skill, skillName)) return@set_level_up_logic
@@ -154,4 +156,9 @@ set_level_up_logic {
     player.queue(TaskPriority.WEAK) {
         levelUpMessageBox(skill, increment)
     }
+}
+
+// D5: capes bought, banked or picked up before the second 99 (or before this rule) are trimmed at login too.
+on_login {
+    SkillcapeTrim.trimAll(player)
 }

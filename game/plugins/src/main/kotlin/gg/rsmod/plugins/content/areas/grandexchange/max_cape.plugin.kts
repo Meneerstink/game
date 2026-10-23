@@ -32,6 +32,26 @@ fun missingSkills(player: gg.rsmod.game.model.entity.Player): List<String> =
     maxCapeSkills(player).filter { player.skills.getMaxLevel(it) < 99 }.map { Skills.getSkillName(player.world, it) }
 
 /**
+ * D5 (owner 10-11): Max also sells every 667 Cape of Accomplishment except Dungeoneering (DGN). OSRS Wiki "Cape of
+ * Accomplishment" + Darkan Skillcapes.kt: 99,000 coins with the matching hood, only with a real (unboosted) 99 in the skill;
+ * the cape is trimmed when the player has two or more 99s ([gg.rsmod.plugins.content.skills.SkillcapeTrim]).
+ */
+val SKILLCAPE_PRICE = 99_000
+
+val SOLD_SKILLCAPES = gg.rsmod.plugins.content.skills.Skillcapes.values().filter { it != gg.rsmod.plugins.content.skills.Skillcapes.DUNGEONEERING }
+
+fun skillcapeRule(cape: gg.rsmod.plugins.content.skills.Skillcapes) =
+    gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+        check = { p ->
+            if (p.skills.getMaxLevel(cape.ordinal) >= 99) null
+            else "You need level 99 ${Skills.getSkillName(p.world, cape.ordinal)} to buy this cape."
+        },
+        bonusItems = listOf(cape.hood),
+        maxPerPurchase = 1,
+        afterPurchase = { p -> gg.rsmod.plugins.content.skills.SkillcapeTrim.trimAll(p) },
+    )
+
+/**
  * Max's shop (Trade). OSRS Mac sells the Max cape through his "Max cape" shop; here the cape and hood are one purchase at
  * the owner's price, only for players with max stats.
  */
@@ -51,12 +71,15 @@ create_shop(
                         bonusItems = listOf(MaxCapes.MAX_HOOD),
                         maxPerPurchase = 1,
                     ),
-            ),
+            ) + SOLD_SKILLCAPES.associate { it.untrimmedCape to skillcapeRule(it) },
         ),
     purchasePolicy = gg.rsmod.game.model.shop.PurchasePolicy.BUY_NONE,
     containsSamples = false,
 ) {
     items[0] = gg.rsmod.game.model.shop.ShopItem(MaxCapes.MAX_CAPE, 10, sellPrice = MAX_CAPE_PRICE)
+    SOLD_SKILLCAPES.forEachIndexed { i, cape ->
+        items[i + 1] = gg.rsmod.game.model.shop.ShopItem(cape.untrimmedCape, 10, sellPrice = SKILLCAPE_PRICE)
+    }
 }
 
 suspend fun QueueTask.sellMaxCape() {

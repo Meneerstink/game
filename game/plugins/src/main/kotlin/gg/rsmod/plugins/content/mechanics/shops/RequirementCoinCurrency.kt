@@ -18,6 +18,7 @@ data class PurchaseRule(
     val materials: List<Pair<Int, Int>> = emptyList(),
     val bonusItems: List<Int> = emptyList(),
     val maxPerPurchase: Int = Int.MAX_VALUE,
+    val afterPurchase: (Player) -> Unit = {},
 )
 
 /**
@@ -61,5 +62,6 @@ class RequirementCoinCurrency(
         if (bought <= 0) return
         rule.materials.forEach { (item, perUnit) -> p.inventory.remove(item, perUnit * bought, assureFullRemoval = true) }
         rule.bonusItems.forEach { bonus -> p.inventory.add(bonus, bought) }
+        rule.afterPurchase(p)
     }
 }
