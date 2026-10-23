@@ -1862,6 +1862,9 @@ class PluginRepository(
         canDropItemPlugins[item] = plugin
     }
 
+    /** Whether a plugin decides what dropping [item] does (a pet comes out, ...): such a drop is never a plain floor drop. */
+    fun hasDropHandler(item: Int): Boolean = canDropItemPlugins.containsKey(item)
+
     fun canDropItem(
         p: Player,
         item: Int,
