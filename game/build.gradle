@@ -380,6 +380,14 @@ task runQuestMapIconTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.QuestMapIconTool'
 }
 
+task runObeliskMapIconTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N231: the Grand Exchange summoning obelisk (loc 50205) gets the Summoning obelisk map element 561. ' +
+        'Usage: ./gradlew :game:runObeliskMapIconTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ObeliskMapIconTool'
+}
+
 task runStoreMapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +

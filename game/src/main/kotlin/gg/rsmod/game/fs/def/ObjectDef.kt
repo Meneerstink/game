@@ -68,6 +68,9 @@ class ObjectDef(
 
     var depleted: Int = -1
 
+    /** The MapElementType drawn at this loc on the minimap and world map (opcode 107), -1 for none. */
+    var mapElement = -1
+
     fun getRotatedWidth(obj: GameObject): Int =
         when {
             (obj.rot and 0x1) == 1 -> length
@@ -226,7 +229,7 @@ class ObjectDef(
                     buf.readUnsignedByte()
                 }
             }
-            107 -> buf.readUnsignedShort()
+            107 -> mapElement = buf.readUnsignedShort()
             in 150 until 155 -> {
                 options[opcode - 150] = buf.readString()
                 if (options[opcode - 150]?.lowercase() == "null") {

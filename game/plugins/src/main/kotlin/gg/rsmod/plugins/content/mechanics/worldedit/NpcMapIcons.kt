@@ -1,6 +1,10 @@
 package gg.rsmod.plugins.content.mechanics.worldedit
 
+import gg.rsmod.game.fs.def.ObjectDef
+import gg.rsmod.game.model.EntityType
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.hud.ClientHud
 
@@ -28,10 +32,37 @@ object NpcMapIcons {
                 .sortedWith(compareBy({ it.id }, { it.spawnTile.x }, { it.spawnTile.z }, { it.spawnTile.height }))
                 .joinToString(";") { "${it.id},${it.spawnTile.x},${it.spawnTile.z},${it.spawnTile.height}" }
 
-    fun send(player: Player) = ClientHud.send(player, payload(player.world))
+    /**
+     * N231 (owner 2026-10-23: the GE summoning obelisk needs its minimap / world-map icon, "meebewegen als ik hem verplaats"):
+     * the same for spawned locs whose LocType carries a map element (opcode 107) - `locicons|element,x,z,level;...`. The
+     * minimap draws a scene loc's element by itself; the world map, again, only knows its prebuilt data, which never holds a
+     * loc spawned or moved by a world edit.
+     */
+    fun locPayload(world: World): String {
+        val posts = ArrayList<GameObject>()
+        for (x in MIN_X..MAX_X step 8) {
+            for (z in MIN_Z..MAX_Z step 8) {
+                world.chunks.get(Tile(x, z), createIfNeeded = false)?.getEntities<GameObject>(EntityType.DYNAMIC_OBJECT)?.let { posts.addAll(it) }
+            }
+        }
+        return "locicons|" +
+            posts
+                .mapNotNull { obj -> world.definitions.getNullable(ObjectDef::class.java, obj.id)?.mapElement?.takeIf { it != -1 }?.let { it to obj.tile } }
+                .sortedWith(compareBy({ it.first }, { it.second.x }, { it.second.z }, { it.second.height }))
+                .joinToString(";") { (element, tile) -> "$element,${tile.x},${tile.z},${tile.height}" }
+    }
+
+    fun send(player: Player) {
+        ClientHud.send(player, payload(player.world))
+        ClientHud.send(player, locPayload(player.world))
+    }
 
     fun broadcast(world: World) {
         val payload = payload(world)
-        world.players.forEach { ClientHud.send(it, payload) }
+        val locs = locPayload(world)
+        world.players.forEach {
+            ClientHud.send(it, payload)
+            ClientHud.send(it, locs)
+        }
     }
 }

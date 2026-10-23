@@ -19,8 +19,9 @@ import java.io.ByteArrayOutputStream
  * on the Royal Hall's first upper floor. The 667 quest sprite (1692) is a world-map sized starburst, far too big for the
  * minimap (seen in the test client), so the OSRS minimap quest-start icon is imported as it is: OSRS sprite [OSRS_QUEST_SPRITE]
  * (the sprite of 185 of the 2686 cache's AreaTypes, category 1056 - every OSRS quest start) as 667 sprite [QUEST_SPRITE]. A new
- * element [HALL_QUEST_ELEMENT] carries it with op 7 flags 3 (enabled, drawn on the minimap) and op 16 (not on the world map),
- * and the three NPCTypes get it as their `mapElement`
+ * element [HALL_QUEST_ELEMENT] carries it with op 7 flags 2: drawn on the minimap (`Minimap.drawMapElement` asks only that flag)
+ * and not enabled, which keeps it off the world map (`WorldMap.isEnabled` - the world map also gets npc icons through
+ * NpcMapIcons / NpcWorldMapIcons, and op 16 alone is not asked there). The three NPCTypes get it as their `mapElement`
  * (op 142, appended as [CasinoMinimapIconTool] does). The minimap draws an npc's element only for npcs on the player's own
  * floor (`Minimap`: `npc.level == PlayerEntity.self.level`), so the icons show upstairs only and move with the npcs when the
  * owner moves them. The same npcs elsewhere (Bandit Camp, the Jaldraocht pyramid, Lunar Isle) start the same quests and carry
@@ -121,14 +122,17 @@ object QuestMapIconTool {
     /** True when [b] is a quest element this tool has hidden (or that was never visible). */
     fun isHidden(b: ByteArray): Boolean = varRange(b)?.let { (start, end) -> start > end } ?: false
 
-    /** The hall quest icon: quest sprite, enabled + minimap (op 7 flags 3), not on the world map (op 16). */
-    fun hallElement(sprite: Int = QUEST_SPRITE): ByteArray =
+    /** The hall quest icon: quest sprite, minimap only (op 7 flags 2: shown on the minimap, not enabled on the world map; op 16). */
+    fun hallElement(
+        sprite: Int = QUEST_SPRITE,
+        flags: Int = 2,
+    ): ByteArray =
         ByteArrayOutputStream().use { out ->
             out.write(1)
             out.write(sprite ushr 8)
             out.write(sprite and 0xFF)
             out.write(7)
-            out.write(3)
+            out.write(flags)
             out.write(16)
             out.write(0)
             out.toByteArray()
@@ -164,7 +168,7 @@ object QuestMapIconTool {
             val first = library.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, HALL_QUEST_ELEMENT)
             libraries.forEach { lib ->
                 val existing = lib.data(CONFIG_INDEX, MAP_ELEMENT_GROUP, HALL_QUEST_ELEMENT)
-                check(existing == null || existing.contentEquals(hallElement()) || existing.contentEquals(hallElement(WORLD_MAP_QUEST_SPRITE))) { "element $HALL_QUEST_ELEMENT is taken in a cache" }
+                check(existing == null || listOf(hallElement(), hallElement(QUEST_SPRITE, 3), hallElement(WORLD_MAP_QUEST_SPRITE, 3)).any { existing.contentEquals(it) }) { "element $HALL_QUEST_ELEMENT is taken in a cache" }
                 val sprite = lib.data(SPRITE_INDEX, QUEST_SPRITE, 0)
                 check(sprite == null || sprite.contentEquals(osrsSprite)) { "sprite $QUEST_SPRITE is taken in a cache" }
             }
