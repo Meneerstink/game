@@ -12,7 +12,7 @@ import java.io.File
  * [OsrsBodyFrame.shiftToRev667]); one that already holds the fitted mesh is done, and any other content is reported and left
  * alone. One transaction on both caches; a second run finds nothing to change.
  *
- * Usage: `[--apply]` - without it only plan + preflight run.
+ * Usage: `[--apply] [--replace=<local model,...>]` - without --apply only plan + preflight run.
  */
 object OsrsShinTool {
     private const val INDEX_MODEL = 7
@@ -40,6 +40,7 @@ object OsrsShinTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
+        val forced = args.firstOrNull { it.startsWith("--replace=") }?.substringAfter('=')?.split(',')?.map { it.trim().toInt() }?.toSet().orEmpty()
         val dropped = mutableListOf<String>()
         val mutations = ArrayList<CacheMutation>()
         val foreign = ArrayList<String>()
@@ -51,8 +52,10 @@ object OsrsShinTool {
             println("LEGS MESHES ${targets.size}")
             targets.forEach { t ->
                 val current = library.data(INDEX_MODEL, t.local, 0) ?: error("model ${t.local} missing")
-                val fitted = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsBodyFrame.LEGS_SLOT, t.female)
-                if (current.contentEquals(fitted)) {
+                val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsBodyFrame.LEGS_SLOT, t.female)
+                // The end state of a mesh that needs the A5 decal lift is the importer's (N12): shin fit, then the lift.
+                val fitted = OsrsItemImportTool.decalLifted(plain)
+                if (current.contentEquals(plain) || current.contentEquals(fitted)) {
                     done++
                     return@forEach
                 }
@@ -60,7 +63,9 @@ object OsrsShinTool {
                     Rev667ModelEncoder.encode(
                         OsrsBodyFrame.shiftToRev667(Rev667ModelDecoder.decode(OsrsModelConversion.convert(reader, t.upstream, dropped)), OsrsBodyFrame.LEGS_SLOT),
                     )
-                if (!current.contentEquals(unfitted)) {
+                // T5: --replace=<local,...> names meshes whose decal lift (OsrsDecalLiftTool, 2026-10-11) sits on the shin fit of before the
+                // A3 change of 2026-10-12, so they match no conversion of today; they get today's fit with the lift.
+                if (!current.contentEquals(unfitted) && t.local !in forced) {
                     foreign += "model ${t.local} (${t.item}, upstream ${t.upstream}) holds neither the old nor the fitted conversion"
                     return@forEach
                 }
