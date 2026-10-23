@@ -99,7 +99,7 @@ object StoreUi : KLogging() {
     }
 
     /** Header tagline per shop (tab order). */
-    private val TAGLINES =
+    val TAGLINES =
         mapOf(
             // Owner 2026-10-11 bank-size window: one line of at most ~270 px beside the balance.
             Shop.DONATOR to "Kits, gear and looks - 78legacy.com",

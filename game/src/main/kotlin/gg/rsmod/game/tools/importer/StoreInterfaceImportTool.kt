@@ -47,6 +47,15 @@ object StoreInterfaceImportTool {
     const val BALANCE_ICON = 13
     const val BALANCE = 14
 
+    /*
+     * N129: the balance must fit at 10 digits - "2,147,483,647 Deadman Points" is 200 px in b12 (was a 170 px box: it ran past the
+     * strip from 7 digits on). The tagline keeps room for its longest line (201 px in p12). StoreUiLayoutTests measures both.
+     */
+    const val BALANCE_WIDTH = 204
+    const val BALANCE_X = Art.STRIP_X + Art.STRIP_WIDTH - 6 - BALANCE_WIDTH
+    const val BALANCE_ICON_X = BALANCE_X - 4 - Art.ICON_SIZE
+    const val TAGLINE_WIDTH = BALANCE_ICON_X - 6 - (Art.STRIP_X + 8)
+
     /**
      * Owner 2026-10-11 (bank-size window, [StoreArtTool.WIDTH]): 6x5 = 30 a page. Before: 7x7 in the 660x470 window, which overlapped
      * the chat, tabs and minimap in fixed mode and in small resizable views.
@@ -279,9 +288,9 @@ object StoreInterfaceImportTool {
         }
 
         // Info strip: tagline left, currency icon and balance right.
-        text(TAGLINE, Art.STRIP_X + 8, Art.STRIP_Y, Art.STRIP_WIDTH - 208, Art.STRIP_HEIGHT, WINDOW, fonts.p12, "", CREAM, alignX = 0)
-        graphic(BALANCE_ICON, Art.STRIP_X + Art.STRIP_WIDTH - 196, Art.STRIP_Y + 1, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
-        text(BALANCE, Art.STRIP_X + Art.STRIP_WIDTH - 176, Art.STRIP_Y, 170, Art.STRIP_HEIGHT, WINDOW, fonts.b12, "", WHITE, alignX = 0)
+        text(TAGLINE, Art.STRIP_X + 8, Art.STRIP_Y, TAGLINE_WIDTH, Art.STRIP_HEIGHT, WINDOW, fonts.p12, "", CREAM, alignX = 0)
+        graphic(BALANCE_ICON, BALANCE_ICON_X, Art.STRIP_Y + 1, Art.ICON_SIZE, Art.ICON_SIZE, WINDOW, Art.ICON_FIRST)
+        text(BALANCE, BALANCE_X, Art.STRIP_Y, BALANCE_WIDTH, Art.STRIP_HEIGHT, WINDOW, fonts.b12, "", WHITE, alignX = 0)
 
         // Item grid: glass slot, gold glow under the selected item, the item, gold ring over it.
         val slotOps = listOf("Select", "", "", "", "", "", "", "", "", "Examine")

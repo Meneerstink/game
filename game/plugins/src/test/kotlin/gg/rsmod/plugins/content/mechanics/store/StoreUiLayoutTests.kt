@@ -12,6 +12,28 @@ import kotlin.test.assertTrue
  * render code addresses grid and later components only through the live layout.
  */
 class StoreUiLayoutTests {
+    /**
+     * N129: the header balance fits its box at the largest balance (10 digits) for every currency, and the tagline fits beside it -
+     * measured with the real font advance widths (cache index 13: b12 for the balance, p12 for the tagline).
+     */
+    @Test
+    fun `header balance and tagline fit the info strip at 10 digits`() {
+        val library = com.displee.cache.CacheLibrary(java.nio.file.Paths.get("..", "..", "data", "cache").toFile().toString())
+        val fonts = gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.fonts(library)
+        fun advances(id: Int) = library.data(13, id, 0)!!.let { d -> IntArray(256) { d[2 + it].toInt() and 0xFF } }
+        val b12 = advances(fonts.b12)
+        val p12 = advances(fonts.p12)
+        library.close()
+        fun width(w: IntArray, text: String) = Regex("<[^>]*>").replace(text, "").sumOf { w[it.code and 0xFF] }
+        for (currency in StoreCatalogue.Currency.values()) {
+            val text = "${String.format(java.util.Locale.US, "%,d", Int.MAX_VALUE)} ${currency.plural}"
+            assertTrue(width(b12, text) <= StoreInterfaceImportTool.BALANCE_WIDTH, "$text: ${width(b12, text)} px")
+        }
+        for ((shop, tagline) in StoreUi.TAGLINES) {
+            assertTrue(width(p12, tagline) <= StoreInterfaceImportTool.TAGLINE_WIDTH, "$shop tagline: ${width(p12, tagline)} px")
+        }
+    }
+
     private val layouts = listOf(StoreInterfaceImportTool.CURRENT, StoreInterfaceImportTool.WIDE_7X7, StoreInterfaceImportTool.SECTIONS_7X6, StoreInterfaceImportTool.PREVIOUS, StoreInterfaceImportTool.LEGACY)
 
     @Test
