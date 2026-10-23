@@ -14,7 +14,7 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.cfg.Objs
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.setVarp
+import gg.rsmod.plugins.api.ext.setVarc
 
 
 /**
@@ -71,9 +71,11 @@ object NexEncounter {
     const val ANIM_SIPHON = 6948
     const val ANIM_NO_ESCAPE = 6321
     const val ANIM_DEATH = 6951
-    const val GFX_START = 3353
-    const val GFX_MAGIC_CAST = 3375
-    const val GFX_ZAROS = 3376
+    /** C4: Darkan NexArena.java:163-164 "AT LAST!" anim 6355 + spotanim 1217 (3353 = a Matrix 718 id, not in the 667 cache). */
+    const val GFX_START = 1217
+    /** C4: Darkan Nex.java:230-231 "NOW, THE POWER OF ZAROS!" anim 6326 + spotanim 1204 (3376 is not in the 667 cache). */
+    const val GFX_ZAROS = 1204
+    const val ANIM_ZAROS = 6326
     const val GFX_WRATH = 2259
     const val GFX_DARKNESS = 1217
     const val GFX_ICE_PRISON = 1215
@@ -87,16 +89,19 @@ object NexEncounter {
     const val PROJ_MAGIC = 362
     const val PROJ_SHADOW = 380
     const val PROJ_BLOOD = 374
-    const val PROJ_SMOKE_VIRUS = 471
+    /** C4: Darkan NexCombat.java:96/131 - smoke and Zaros magic fly as projectile 306 (471 is the impact, not the projectile). */
+    const val PROJ_SMOKE_ZAROS = 306
+    /** C4: Darkan NexCombat.java:96/107/131 - impact spotanim on the target when a smoke / shadow / Zaros attack arrives. */
+    const val GFX_MAGIC_IMPACT = 471
     const val PROJ_MINION_POWER = 2244
     const val PROJ_WRATH = 2261
     const val PROJ_WRATH_CENTRE = 2260
-    const val DARKNESS_VARP = 1435
+    /** C4: CS2 1170 reads VARC 1435 for overlay 601:1's transparency (Darkan sendVarc); no client script reads varp 1435. */
+    const val DARKNESS_VARC = 1435
 
     const val DEATH_DELAY = 6
     const val RESTART_DELAY = 100
 
-    val INFECTED = AttributeKey<Int>()
     val SACRIFICE_TARGET = AttributeKey<Boolean>()
 
     enum class Phase(val minionName: String, val callout: String, val startSound: Int, val transitionSound: Int) {
@@ -142,15 +147,14 @@ object NexEncounter {
 
     /** Called from the arena plugin when a player enters; starts a fight if none is running. */
     fun playerEntered(player: Player) {
-        if (darkness) player.setVarp(DARKNESS_VARP, 100)
+        if (darkness) nex?.let { player.setVarc(DARKNESS_VARC, darknessFor(player, it)) }
         if (!fightActive) {
             start()
         }
     }
 
     fun playerLeft(player: Player) {
-        player.setVarp(DARKNESS_VARP, 255)
-        player.attr.remove(INFECTED)
+        player.setVarc(DARKNESS_VARC, 255)
         player.attr.remove(SACRIFICE_TARGET)
         if (players().isEmpty()) {
             end()
@@ -174,22 +178,11 @@ object NexEncounter {
         if (!awaitingMinion && !intro && boss.isAlive()) {
             checkPhaseThreshold(boss)
         }
-        if (phase == Phase.ZAROS && boss.isAlive()) {
-            tickZarosForm(boss)
-        }
-        cycleInfection()
+        cycleDarkness(boss)
     }
 
-    /** Remaining ticks of the current Zaros-phase form ([NexZarosForms]); 0 transforms on the next tick. */
-    var zarosFormTicks = 0
-        private set
-
-    private fun tickZarosForm(boss: Npc) {
-        val current = NexZarosForms.formOf(boss)
-        val (form, ticks) = NexZarosForms.step(current, zarosFormTicks)
-        if (form != current) NexZarosForms.apply(boss, form)
-        zarosFormTicks = ticks
-    }
+    // C4: the Zaros prayer form switches on Nex's attack counter (Darkan NexCombat.java:138-139, NexCombatScript.autoAttack),
+    // no longer on Novite's 36-tick timer.
 
     fun start() {
         if (fightActive) return
@@ -206,6 +199,9 @@ object NexEncounter {
         val boss = Npc(Npcs.NEX, Tile(NEX_SPAWN), world)
         boss.respawns = false
         boss.walkRadius = 0
+        // C4: Darkan NexCombat.autoAttack follows for melee with calcFollow(target, true) = the intelligent route finder
+        // (Entity.java:607-616), not the straight-line npc walk that stops at the first blocked step.
+        boss.smartPathfinding = true
         boss.hitModifier = { hit -> modifyHit(boss, hit) }
         world.spawn(boss)
         nex = boss
@@ -264,7 +260,7 @@ object NexEncounter {
 
     /**
      * Nex cannot be damaged below the next phase threshold until the corresponding minion is
-     * dead, and every hit is capped at 500 (2011 damage cap) outside the Zaros phase.
+     * dead, and every hit (also a hit that heals her during Siphon) is capped at 50 in every phase (Darkan setCapDamage(500), x10).
      */
     private fun modifyHit(boss: Npc, hit: gg.rsmod.game.model.Hit) {
         val damage = hit.hitmarks.sumOf { it.damage }
@@ -276,8 +272,10 @@ object NexEncounter {
             return
         }
         if (siphoning) {
+            // C4: Darkan Nex.java handlePreHit makes a siphon hit a heal hit, then NPC.handlePreHit:339 caps it at 500 (x10): a
+            // hit during Siphon heals Nex by at most 50 (was the whole hit, uncapped).
             var total = 0
-            hit.hitmarks.forEach { total += it.damage; it.damage = 0 }
+            hit.hitmarks.forEach { total += it.damage.coerceAtMost(NexDarkanRules.HIT_CAP); it.damage = 0 }
             if (total > 0) {
                 heal(boss, total)
             }
@@ -285,7 +283,9 @@ object NexEncounter {
         }
         val floor = phaseFloor(phase)
         hit.hitmarks.forEach { mark ->
-            if (phase != Phase.ZAROS && mark.damage > 500) mark.damage = 500
+            // C4: Darkan Nex.java:31/210-228 setCapDamage(500) (x10) = 50 per hit in EVERY phase (was `> 500` outside Zaros only:
+            // an x10 leftover in this 1:1 fight that never capped - ROOT_CAUSES #72).
+            if (mark.damage > NexDarkanRules.HIT_CAP) mark.damage = NexDarkanRules.HIT_CAP
             if (awaitingMinion) {
                 mark.damage = 0
             } else {
@@ -318,7 +318,6 @@ object NexEncounter {
         if (index != phase.ordinal) return
         awaitingMinion = false
         when (phase) {
-            Phase.SMOKE -> players().forEach { it.attr.remove(INFECTED) }
             Phase.SHADOW -> applyDarkness(false)
             Phase.BLOOD -> clearReavers()
             else -> {}
@@ -327,13 +326,14 @@ object NexEncounter {
         firstStageAttack = true
         boss.forceChat(phase.callout)
         playSound(boss, phase.transitionSound)
-        boss.animate(ANIM_MAGIC)
-        boss.graphic(GFX_MAGIC_CAST)
+        // C4: Darkan Nex.nextPhase (Nex.java:208-236) - the new phase's minion sends its power (projectile 2244) to Nex; only the
+        // Zaros phase has its own animation + graphic. (Was anim 6986 + spotanim 3375 on every change: 3375 is not in the 667 cache.)
+        minions.getOrNull(phase.ordinal)?.takeIf { it.isSpawned() }?.let { world.spawn(it.createProjectile(boss, PROJ_MINION_POWER, ProjectileType.MAGIC)) }
         if (phase == Phase.ZAROS) {
+            boss.animate(ANIM_ZAROS)
             boss.graphic(GFX_ZAROS)
             heal(boss, ZAROS_HEAL)
-            // Novite's prayer counter starts at 0: the first Zaros tick turns Nex into her Soul Split form.
-            zarosFormTicks = 0
+            // C4: Darkan - the Zaros counter starts at 0, so her first Zaros attack turns her into the Soul Split form.
         }
         world.queue {
             wait(2)
@@ -378,8 +378,12 @@ object NexEncounter {
                 world.spawn(boss.createProjectile(centre.transform(dx * 2, dz * 2), PROJ_WRATH, ProjectileType.MAGIC))
             }
         }
-        players().filter { it.tile.isWithinRadius(centre, 10) }.forEach { player ->
-            player.hit(world.random(60), HitType.REGULAR_HIT, 1)
+        // C4: Darkan Nex.sendDeath (:126-150): the wrath lands 5 ticks after the shout, 0-600 (x10) to players within 5 tiles.
+        world.queue {
+            wait(NexDarkanRules.WRATH_DELAY)
+            players().filter { it.tile.isWithinRadius(centre, NexDarkanRules.WRATH_RADIUS) }.forEach { player ->
+                player.hit(world.random(NexDarkanRules.WRATH_DAMAGE.first..NexDarkanRules.WRATH_DAMAGE.last), HitType.REGULAR_HIT)
+            }
         }
         minions.forEachIndexed { i, m -> m?.let { if (it.isSpawned()) world.remove(it) }; minions[i] = null }
         clearReavers()
@@ -393,34 +397,29 @@ object NexEncounter {
 
     /* ----------------------------- smoke phase: virus ----------------------------- */
 
-    fun infect(player: Player) {
-        player.attr[INFECTED] = 20
-    }
-
-    private fun cycleInfection() {
-        if (phase != Phase.SMOKE) return
-        for (player in players()) {
-            val remaining = player.attr[INFECTED] ?: continue
-            if (remaining <= 0) {
-                player.attr.remove(INFECTED)
-                continue
-            }
-            player.attr[INFECTED] = remaining - 1
-            if (remaining % 4 == 0) {
-                player.forceChat("*Cough*")
-                player.hit(world.random(1..3), HitType.REGULAR_HIT)
-                players().filter { it !== player && it.tile.isWithinRadius(player.tile, 1) && it.attr[INFECTED] == null }
-                    .forEach { infect(it) }
-            }
-        }
-    }
-
     /* ----------------------------- shadow phase: darkness ----------------------------- */
 
+    /**
+     * C4: Darkan EmbraceDarkness.java:38-57 - from "Embrace darkness!" until the shadow phase ends, every tick with a 1 in 3 chance
+     * each arena player's darkness follows his distance to Nex; off (255) when the phase or the fight ends. (Was varp 1435 = 100 for
+     * 50 ticks: the client never reads that varp, so nobody saw any darkness.)
+     */
     fun applyDarkness(enabled: Boolean) {
         darkness = enabled
-        world.players.forEach { if (inArena(it.tile)) it.setVarp(DARKNESS_VARP, if (enabled) 100 else 255) }
+        if (!enabled) world.players.forEach { if (inArena(it.tile)) it.setVarc(DARKNESS_VARC, 255) }
     }
+
+    private fun cycleDarkness(boss: Npc) {
+        if (!darkness) return
+        if (phase != Phase.SHADOW || !boss.isAlive()) {
+            applyDarkness(false)
+            return
+        }
+        if (world.random(NexDarkanRules.DARKNESS_REFRESH_BOUND) != 0) return
+        players().forEach { it.setVarc(DARKNESS_VARC, darknessFor(it, boss)) }
+    }
+
+    private fun darknessFor(player: Player, boss: Npc): Int = NexDarkanRules.darknessLevel(player.tile.x - boss.tile.x, player.tile.z - boss.tile.z)
 
     /* ----------------------------- blood phase: reavers ----------------------------- */
 
@@ -449,7 +448,7 @@ object NexEncounter {
     fun icePrison(boss: Npc) {
         val base = boss.getCentreTile()
         world.queue {
-            wait(5)
+            wait(NexDarkanRules.CONTAIN_DELAY) // Darkan ContainThis.java: the spikes come 6 ticks after the shout
             if (!fightActive) return@queue
             for (dz in -2..2) {
                 for (dx in -2..2) {
@@ -458,11 +457,11 @@ object NexEncounter {
                     if (world.collision.isClipped(tile)) continue
                     players().filter { it.tile == tile }.forEach { player ->
                         player.animate(1113)
-                        player.hit(world.random(35), HitType.REGULAR_HIT)
+                        player.hit(world.random(NexDarkanRules.CONTAIN_DAMAGE.first..NexDarkanRules.CONTAIN_DAMAGE.last), HitType.REGULAR_HIT)
                         player.message("The icicle spikes you to the spot!")
                         player.message("You've been injured and can't use protection prayers!")
                         player.stopMovement()
-                        NexPrayer.disableProtection(player, 12)
+                        NexPrayer.disableProtection(player, NexDarkanRules.PROTECTION_BLOCK_TICKS)
                     }
                     world.spawnTemporaryObject(DynamicObject(Objs.STALAGMITE_57263, 10, 0, tile), 12)
                 }

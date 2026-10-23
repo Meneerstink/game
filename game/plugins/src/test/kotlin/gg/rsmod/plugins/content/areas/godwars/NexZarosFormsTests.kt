@@ -31,22 +31,19 @@ class NexZarosFormsTests {
     }
 
     @Test
-    fun `forms cycle like Novite, 36 ticks each, soul split first`() {
+    fun `forms cycle on every third Zaros attack like Darkan, soul split first`() {
+        // C4: Darkan NexCombat.java:138-139 + Nex.switchPrayers (13447 -> 13448 -> 13449 -> 13447) on attack counts 0, 3, 6, ...
+        // (was Novite's 36-tick timer).
         var form = Npcs.NEX
-        var ticks = 0
         val seen = ArrayList<Int>()
-        repeat(36 * 6 + 1) {
-            val (next, left) = NexZarosForms.step(form, ticks)
-            form = next
-            ticks = left
+        for (count in 0 until 10) {
+            if (gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.zarosSwitch(count)) form = NexZarosForms.next(form)
             seen += form
         }
-        assertEquals(Npcs.NEX_13448, seen[0], "the phase's first tick turns Nex into her Soul Split form")
-        val changes = seen.indices.filter { it == 0 || seen[it] != seen[it - 1] }
-        assertEquals(listOf(0, 36, 72, 108, 144, 180, 216), changes)
+        assertEquals(Npcs.NEX_13448, seen[0], "the first Zaros attack turns Nex into her Soul Split form")
         assertEquals(
-            listOf(Npcs.NEX_13448, Npcs.NEX_13449, Npcs.NEX, Npcs.NEX_13448, Npcs.NEX_13449, Npcs.NEX, Npcs.NEX_13448),
-            changes.map { seen[it] },
+            listOf(Npcs.NEX_13448, Npcs.NEX_13448, Npcs.NEX_13448, Npcs.NEX_13449, Npcs.NEX_13449, Npcs.NEX_13449, Npcs.NEX, Npcs.NEX, Npcs.NEX, Npcs.NEX_13448),
+            seen,
         )
         assertTrue(NexZarosForms.soulSplitActive(Npcs.NEX_13448))
         assertFalse(NexZarosForms.soulSplitActive(Npcs.NEX))
@@ -73,7 +70,8 @@ class NexZarosFormsTests {
         assertFalse(script.contains("PrayerIcon.SOUL_SPLIT.id else -1"), "no static Soul Split overhead")
         assertTrue(script.contains("NexZarosForms.soulSplitActive("))
         val encounter = File(nex, "NexEncounter.kt").readText()
-        assertTrue(encounter.contains("tickZarosForm(") && encounter.contains("NexZarosForms.DEATH_FORM"))
+        assertTrue(encounter.contains("NexZarosForms.DEATH_FORM"))
+        assertTrue(script.contains("NexDarkanRules.zarosSwitch(attackCount)"), "C4: the form switches on the attack counter")
         val response = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/combatresponse/DamageResponse.kt").readText()
         assertTrue(response.contains("NpcDeflect.onIncomingHit("))
     }

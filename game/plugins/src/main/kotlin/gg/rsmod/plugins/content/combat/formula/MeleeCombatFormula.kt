@@ -62,17 +62,27 @@ object MeleeCombatFormula : CombatFormula {
         defenceStyle: StyleType? = null,
     ): Double = accuracy(pawn, target, specialAttackMultiplier = 1.0, defenceStyle = defenceStyle, defenceMultiplier = defenceMultiplier)
 
+    /**
+     * Accuracy roll without the protection-prayer short circuit, for npcs whose melee is only partially blocked by Protect from
+     * Melee (C4 Nex: Darkan Nex.getMeleePrayerMultiplier = 0.6). Every other npc keeps the 100% block of [getAccuracy].
+     */
+    fun getUnprotectedAccuracy(
+        pawn: Pawn,
+        target: Pawn,
+    ): Double = accuracy(pawn, target, specialAttackMultiplier = 1.0, defenceStyle = null, ignoreProtection = true)
+
     private fun accuracy(
         pawn: Pawn,
         target: Pawn,
         specialAttackMultiplier: Double,
         defenceStyle: StyleType?,
         defenceMultiplier: Double = 1.0,
+        ignoreProtection: Boolean = false,
     ): Double {
         // Check if the target has the prayer protection and the attacker is not a player. Level-
         // 1337 city guards (Deadman PvP guards plan, 2026-09-16) are exempt: their damage ignores
         // protection prayers entirely, per gg.rsmod.plugins.content.mechanics.pvp.CityGuards.
-        if ((target.isProtectedFrom(CombatClass.MELEE) &&
+        if (!ignoreProtection && (target.isProtectedFrom(CombatClass.MELEE) &&
                 !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.deflects(target, CombatClass.MELEE)) &&
             pawn !is Player &&
             !gg.rsmod.plugins.content.mechanics.pvp.CityGuards.bypassesProtectionPrayer(pawn)) {

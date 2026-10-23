@@ -32,12 +32,32 @@ class NexEncounterTests {
     }
 
     @Test
-    fun `ice and Zaros rotations use the sourced inclusive local bounds`() {
-        assertEquals(1, NexCombatScript.nextIceAttackIndex(0))
-        assertEquals(10, NexCombatScript.nextIceAttackIndex(9))
-        assertEquals(0, NexCombatScript.nextIceAttackIndex(10))
-        assertEquals(2, NexCombatScript.zarosAttackRoll(false, 2))
-        assertEquals(13, NexCombatScript.zarosAttackRoll(true, 10))
+    fun `C4 the schedule and numbers are Darkan's, divided by ten`() {
+        // Darkan NexCombat.java:42-76 (was: Novite's random ice/Zaros rolls, replaced in C4).
+        val r = gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.ICE_PRISON, r.special(Phase.ICE, 4, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.CONTAIN_THIS, r.special(Phase.ICE, 8, false))
+        assertEquals(null, r.special(Phase.ICE, 5, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.SIPHON, r.special(Phase.BLOOD, 0, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.BLOOD_SACRIFICE, r.special(Phase.BLOOD, 12, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.EMBRACE_DARKNESS, r.special(Phase.SHADOW, 0, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.SHADOW_TRAPS, r.special(Phase.SHADOW, 10, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.DRAG, r.special(Phase.SMOKE, 12, true))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.NO_ESCAPE, r.special(Phase.SMOKE, 24, false))
+        assertEquals(gg.rsmod.plugins.content.areas.godwars.nex.NexDarkanRules.Special.VIRUS, r.special(Phase.SMOKE, 6, false))
+        assertEquals(null, r.special(Phase.ZAROS, 0, false))
+        assertEquals(80.0, r.shadowMax(0))
+        assertEquals(146L, Math.round(r.shadowMax(9)!! * 10)) // integer maths: 800 - 9*800/11 = 800 - 654 = 146 (x10)
+        assertEquals(null, r.shadowMax(11))
+        assertEquals(25.0, r.magicMax(Phase.ICE))
+        assertEquals(35.0, r.magicMax(Phase.ZAROS))
+        assertEquals(50, r.HIT_CAP)
+        assertEquals(3, r.bloodHeal(Phase.BLOOD, 25))
+        assertEquals(0, r.bloodHeal(Phase.ICE, 25))
+        assertEquals(0, r.bloodHeal(Phase.BLOOD, 1))
+        assertEquals(30, r.iceFreezeTicks(false))
+        assertEquals(5, r.iceFreezeTicks(true))
+        assertEquals(9, r.sacrificeDamage(99))
     }
 
     @Test

@@ -65,13 +65,15 @@ set_combat_def(npc = NEX) {
         attackStyle = StyleType.MAGIC
         respawnDelay = 200
     }
+    // C4: Darkan data/npcs/combatdefs/uncategorized/nex.json combatLevels (ATTACK 315, STRENGTH 260, DEFENSE 260, MAGE 350,
+    // RANGE 350); the defence bonuses below are not in that file and stay as they were.
     stats {
         hitpoints = 30000
-        attack = 400
-        strength = 400
-        defence = 320
-        magic = 400
-        ranged = 400
+        attack = 315
+        strength = 260
+        defence = 260
+        magic = 350
+        ranged = 350
     }
     bonuses {
         defenceStab = 120

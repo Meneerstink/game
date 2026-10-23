@@ -119,20 +119,26 @@ fun Pawn.isAttackDelayReady(): Boolean = Combat.isAttackDelayReady(this)
  * N84: a looping npc combat script waits here for its next attack instead of ending the fight. `wait(attackSpeed)` wakes one
  * tick before ATTACK_DELAY runs out (breach trace N24: delayReady=false delay=1), and a loop on `isAttackDelayReady()` then
  * dropped its target after every attack. Darkan NPCCombat.java:48-61 (process): every tick the delay counts down and the npc
- * attacks when it reaches 0; only a lost target ends the fight. False when the target is gone, the pawn died or the delay
- * never ends ([limit] ticks: a stuck timer must not hold the queue forever).
+ * attacks when it reaches 0; only a lost target (or the npc's own death / removal) ends the fight - there is no tick limit, as in
+ * Darkan (C4 review 2026-10-21: the earlier 32-tick limit had no donor). A wait longer than [PROBLEM_WAIT_TICKS] is traced as a
+ * PROBLEM line (a timer that is not counting down) but does not end the fight.
  */
-suspend fun QueueTask.awaitAttackDelay(
-    pawn: Pawn,
-    limit: Int = 32,
-): Boolean {
+suspend fun QueueTask.awaitAttackDelay(pawn: Pawn): Boolean {
     var waited = 0
     while (!pawn.isAttackDelayReady()) {
-        if (waited++ >= limit || pawn.isDead() || pawn.getCombatTarget() == null) return false
+        if (pawn.isDead() || pawn.getCombatTarget() == null || (pawn is Npc && !pawn.isSpawned())) return false
+        if (++waited == PROBLEM_WAIT_TICKS) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+                "awaitAttackDelay: $pawn still waits for its attack delay after $waited ticks (target ${pawn.getCombatTarget()})"
+            }
+        }
         wait(1)
     }
     return pawn.getCombatTarget() != null
 }
+
+/** [awaitAttackDelay]: the longest real attack pause is a few attack speeds; this long a wait is traced as a PROBLEM. */
+const val PROBLEM_WAIT_TICKS = 100
 
 fun Pawn.combatRaycast(
     target: Pawn,

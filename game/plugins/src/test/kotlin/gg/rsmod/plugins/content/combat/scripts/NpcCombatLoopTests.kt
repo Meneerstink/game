@@ -98,6 +98,60 @@ class NpcCombatLoopTests {
         if (failures.isNotEmpty()) fail("npc combat scripts that stop after an attack:\n" + failures.joinToString("\n"))
     }
 
+    /**
+     * C4 review (Codex 2026-10-21): awaitAttackDelay keeps Darkan's semantics - a long attack delay (longer than the old, unsourced
+     * 32-tick limit) does not end the fight; a lost target and the npc's death do; a new attack after that starts a new fight.
+     */
+    @Test
+    fun `a long attack delay, a lost target, death and a new fight`() {
+        val id = GiantMoleCombatScript.ids.first()
+        val npc = Npc(id, ARENA, world)
+        world.collision.isClipped(ARENA)
+        assertTrue("mole spawned", world.spawn(npc))
+        npcs += npc
+        val player = player("longdelay", ARENA.transform(-(2 + npc.getSize()), 0))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        npc.attack(player)
+        tick(3)
+        npc.timers[ATTACK_DELAY] = 45 // longer than the old 32-tick limit
+        repeat(44) {
+            tick(1)
+            player.setCurrentLifepoints(player.getMaximumLifepoints())
+        }
+        assertTrue("after a 45-tick delay the mole attacks again (old: the 32-tick limit ended its fight)", attacksIn(npc, player, 15) >= 1)
+        // A lost target ends the fight: the player leaves.
+        world.unregister(player)
+        players.remove(player)
+        tick(npc.combatDef.attackSpeed + 3)
+        assertTrue("a lost target ends the mole's fight", npc.attr[gg.rsmod.game.model.attr.COMBAT_TARGET_FOCUS_ATTR]?.get() == null)
+        // A new fight starts with a new attack.
+        val second = player("newfight", ARENA.transform(-(2 + npc.getSize()), 0))
+        second.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        npc.attack(second)
+        assertTrue("a new fight after the lost target attacks again", attacksIn(npc, second, 30) >= 2)
+        // Death ends the fight: no more attacks.
+        npc.setCurrentLifepoints(0)
+        tick(2)
+        assertTrue("a dead mole attacks no more", attacksIn(npc, second, 20) == 0 || npc.isDead() || !npc.isSpawned())
+    }
+
+    private fun attacksIn(
+        npc: Npc,
+        player: Client,
+        ticks: Int,
+    ): Int {
+        var attacks = 0
+        var delayed = npc.timers.has(ATTACK_DELAY)
+        repeat(ticks) {
+            tick(1)
+            player.setCurrentLifepoints(player.getMaximumLifepoints())
+            val now = npc.timers.has(ATTACK_DELAY)
+            if (now && !delayed) attacks++
+            delayed = now
+        }
+        return attacks
+    }
+
     @Test
     fun `no combat script loops on the attack delay any more`() {
         val loop = Regex("""while\s*\(.*&&.*isAttackDelayReady\(\)""")

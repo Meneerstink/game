@@ -27,6 +27,7 @@ import gg.rsmod.game.task.sequential.SequentialPlayerPostCycleTask
 import gg.rsmod.game.task.sequential.SequentialSynchronizationTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.areas.godwars.nex.NexCombatScript
 import gg.rsmod.plugins.content.areas.godwars.nex.NexEncounter
@@ -77,6 +78,7 @@ class NexPullFightTests {
 
     @After
     fun cleanUp() {
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, false)
         players.forEach { world.unregister(it) }
         players.clear()
         NexEncounter.end()
@@ -93,10 +95,12 @@ class NexPullFightTests {
     @Test
     fun `Nex keeps attacking a passive player through every phase of her rotation`() {
         // The player never fights back: only Nex's own combat loop can make her attack again (N84 / class 191 loop pattern).
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, true)
         val player = enter("passive", Tile(2918, 5202))
         player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
         val nex = awaitFight(player)
         for (phase in NexEncounter.Phase.values()) {
+            val tracedFrom = traced.size
             assertEquals("phase", phase, NexEncounter.phase)
             val ticks = if (phase == NexEncounter.Phase.SMOKE) 400 else 150
             val from = messages(player).size
@@ -110,9 +114,12 @@ class NexPullFightTests {
             )
             assertTrue("$phase: never a gap of more than $MAX_GAP ticks between two Nex attacks, longest $maxGap (ticks $attacks)${log(player, nex)}", maxGap <= MAX_GAP)
             if (phase == NexEncounter.Phase.SMOKE) {
-                // The LC10 stall: every pull. The seeded smoke rotation pulls the (only, so farthest) player more than once.
+                // The LC10 stall: every pull. C4: Darkan's smoke schedule rushes on every 12th attack (Drag 1 in 4, else No Escape), so
+                // 400 ticks hold several rushes; every Drag in them reached the player (the pull message) and the gap check above held.
+                val rushes = traced.drop(tracedFrom).mapNotNull { NEX_ATTACK.find(it) }.map { it.groupValues[3] }.filter { it == "DRAG" || it == "NO_ESCAPE" }
+                assertTrue("smoke: >= 2 rushes (Drag / No Escape) in $ticks ticks, saw $rushes", rushes.size >= 2)
                 val pulls = messages(player).drop(from).count { it == PULL_MESSAGE }
-                assertTrue("smoke: the rotation pulled the player at least twice in $ticks ticks, saw $pulls: ${messages(player).drop(from)}", pulls >= 2)
+                assertEquals("smoke: every Drag pulled the player: $rushes, messages ${messages(player).drop(from)}", rushes.count { it == "DRAG" }, pulls)
             }
             if (phase != NexEncounter.Phase.ZAROS) nextPhase()
         }
@@ -122,6 +129,9 @@ class NexPullFightTests {
     fun `a pulled player keeps his own fight and Nex keeps hers - no new Attack click`() {
         // The owner's case: the player attacks Nex, gets pulled, and both must fight on by themselves (LC10: 0 hits for 3 minutes).
         // Melee beside her body (LC10: teamtest1 with a melee weapon next to Nex); the pull moves him back onto her ring.
+        // swung() reads SwingAudit's COMBAT trace line: switch it on here (it only passed before because an earlier test left COMBAT
+        // tracing on - cleanUp now switches it off after every test).
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, true)
         val player = enter("puller", Tile(2923, 5203))
         val nex = awaitFight(player)
         player.fullInterruption(movement = true, interactions = true, queue = true)
@@ -200,7 +210,11 @@ class NexPullFightTests {
     fun `No Escape interrupted by a retaliation switch - Nex attacks on`() {
         // The audit's case: two players (multi, like live multi.yml 11601); Nex's target dies mid-rush and the other player hits her.
         val a = enter("rushA", Tile(2923, 5203))
-        val b = enter("rushB", Tile(2921, 5199))
+        // C4 round 2: rushB stood on 2921,5199 - a terrain-BLOCKED tile (m45_81 setting 1, one of the four minion platforms; decode
+        // team\tmp-C4\c4_terrain.py) that no player can walk onto and no 3x3 body can border. With Darkan's melee walk-in
+        // (NexCombat.autoAttack calcFollow, give up after shouldStopMeleeing 20 ticks) Nex then paused 20 ticks: the test's geometry,
+        // not the fight. 2925,5198 is the south corridor (walkable, reachable for her 3x3 body), as a real player would stand.
+        val b = enter("rushB", Tile(2925, 5198))
         val nex = awaitFight(a)
         a.attack(nex)
         b.attack(nex)
@@ -244,6 +258,201 @@ class NexPullFightTests {
         assertTrue("new fight: not busy (busy=${busy()})", !busy())
         assertTrue("new fight: Nex attacks the new player >= 8 times in 60 ticks, saw $attacks${log(c, nex2)}", attacks.size >= 8)
     }
+
+    /*
+     * C4 (BUGLIJST "Nex: aanvallen/fases tegen RS"): the whole fight against the first donor, Darkan rev 727 (the RS fight the owner
+     * chose). The class is every attack of every phase: the special comes from the attack counter (NexCombat.java:42-76; counter 1 at
+     * spawn, 0 at each phase change), the auto attacks hit at Darkan's max (melee 36, smoke/blood/ice magic 25, Zaros magic 35,
+     * shadow 80 - d*80/11), a protection prayer cuts her hits to 60% instead of blocking them (Nex.java:305-320) and no hit on Nex is
+     * above 50 in any phase (Nex.java:31 setCapDamage(500), x10). The numbers are Darkan's, written out here on purpose.
+     */
+
+    @Test
+    fun `C4 Nex follows Darkan's attack-counter schedule in every phase`() {
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, true)
+        val player = enter("schedule", Tile(2918, 5202))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(player)
+        // The slice of a phase starts BEFORE nextPhase(): its 3 ticks already hold the phase's first attack (SHADOW count 0, Embrace).
+        var from = 0
+        for (phase in NexEncounter.Phase.values()) {
+            fight(player, nex, 160)
+            val attacks = traced.drop(from).mapNotNull { NEX_ATTACK.find(it) }.filter { it.groupValues[1] == phase.name }
+                .map { it.groupValues[2].toInt() to it.groupValues[3] }
+            assertTrue("$phase: Nex's attacks carry her attack counter (trace 'nex attack ... count=') - saw ${attacks.size}${log(player, nex)}", attacks.size >= 8)
+            val start = if (phase == NexEncounter.Phase.SMOKE) 1 else 0
+            assertEquals("$phase: the counter starts at $start: $attacks", start, attacks.first().first)
+            assertEquals("$phase: one count per attack, no gaps: $attacks", (start until start + attacks.size).toList(), attacks.map { it.first })
+            attacks.forEach { (count, special) ->
+                assertTrue("$phase count $count: Darkan does ${darkanSpecial(phase, count)}, Nex did $special ($attacks)", special in darkanSpecial(phase, count))
+            }
+            from = traced.size
+            if (phase != NexEncounter.Phase.ZAROS) nextPhase()
+        }
+    }
+
+    @Test
+    fun `C4 every Nex auto attack hits at Darkan's max in every phase`() {
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, true)
+        val player = enter("maxhits", Tile(2920, 5202))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(player)
+        for (phase in NexEncounter.Phase.values()) {
+            val from = traced.size
+            fight(player, nex, 120)
+            val hits = nexHits(nex, player, traced.drop(from))
+            assertTrue("$phase: Nex hit the player${log(player, nex)}", hits.isNotEmpty())
+            hits.forEach { (type, max, _) ->
+                val ok =
+                    when (type) {
+                        "MELEE" -> max == 36.0
+                        "MAGIC" -> max == (if (phase == NexEncounter.Phase.ZAROS) 35.0 else 25.0)
+                        "RANGE" -> max <= 80.0
+                        else -> false
+                    }
+                assertTrue("$phase $type: max hit $max - Darkan melee 36, magic 25 (Zaros 35), shadow <= 80 ($hits)", ok)
+            }
+            if (phase != NexEncounter.Phase.ZAROS) nextPhase()
+        }
+    }
+
+    @Test
+    fun `C4 a protection prayer cuts Nex's hits to 60 percent, it does not block them`() {
+        gg.rsmod.game.model.Trace.set(gg.rsmod.game.model.Trace.Cat.COMBAT, true)
+        val player = enter("protect", Tile(2918, 5202))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(player)
+        repeat(3) { nextPhase() } // ICE: barrages at every player, the cleanest magic phase
+        val from = traced.size
+        repeat(200) {
+            player.prayerIcon = gg.rsmod.plugins.api.PrayerIcon.PROTECT_FROM_MAGIC.id
+            tick(1)
+            keepAlive(player, nex)
+        }
+        val magic = nexHits(nex, player, traced.drop(from)).filter { it.first == "MAGIC" }
+        assertTrue("ice: Nex cast magic at the praying player${log(player, nex)}", magic.size >= 5)
+        assertTrue("ice: Protect from Magic cuts the 25 max to 15 (Darkan x0.6): $magic", magic.all { it.second <= 15.0 + 1e-9 })
+        assertTrue("ice: Protect from Magic does not block Nex - some barrages still hit: $magic", magic.any { it.third > 0 })
+    }
+
+    @Test
+    fun `C4 no hit on Nex is above 50 in any phase`() {
+        val player = enter("capper", Tile(2918, 5202))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(player)
+        for (phase in NexEncounter.Phase.values()) {
+            // Darkan caps every incoming hit (NPC.handlePreHit:339) after Nex.handlePreHit made a siphon hit a heal hit: an ordinary
+            // hit takes at most 50 and, while she siphons (BLOOD), a hit heals her by at most 50. Both cases set explicitly.
+            if (phase == NexEncounter.Phase.BLOOD) {
+                // BLOOD opens with Siphon (count 0 % 8): let it run out first, so the ordinary hit below is not turned into a heal.
+                repeat(30) { if (NexEncounter.siphoning || it < 10) { tick(1); keepAlive(player, nex) } }
+                assertTrue("BLOOD: the opening Siphon ended", !NexEncounter.siphoning)
+            }
+            for (siphon in if (phase == NexEncounter.Phase.BLOOD) listOf(false, true) else listOf(false)) {
+                // Half a phase above the floor: room for the damage and for the heal (a heal stops at her maximum).
+                nex.setCurrentLifepoints(NexEncounter.phaseFloor(NexEncounter.phase) + NexEncounter.PHASE_LIFEPOINTS / 2)
+                NexEncounter.siphoning = siphon
+                // Measure exactly what THIS hit does inside Nex's own hit modifier: her BLOOD auto attacks heal her too (15% of
+                // a hit above 1.5, Nex.java:325-327), so the plain lifepoint delta of the next ticks can hold another heal (try4: 53).
+                val modifier = nex.hitModifier
+                var effect: Int? = null
+                nex.hitModifier = { hit ->
+                    val lp = nex.getCurrentLifepoints()
+                    modifier?.invoke(hit)
+                    if (effect == null && hit.hitmarks.isNotEmpty()) effect = nex.getCurrentLifepoints() - lp - hit.hitmarks.sumOf { it.damage }
+                }
+                val before = nex.getCurrentLifepoints()
+                nex.hit(200, gg.rsmod.plugins.api.HitType.REGULAR_HIT)
+                tick(2)
+                nex.hitModifier = modifier
+                val taken = before - nex.getCurrentLifepoints()
+                NexEncounter.siphoning = false
+                if (siphon) {
+                    // effect = heal applied by the modifier minus the damage still left on the hit (0 while siphoning).
+                    val healed = effect ?: 0
+                    assertTrue("$phase siphoning: a 200 hit heals Nex by at most 50 (Darkan heal hit, same cap), healed $healed (lifepoint delta ${-taken})", healed in 1..50)
+                } else {
+                    assertTrue("$phase: a 200 hit on Nex takes at most 50 (Darkan setCapDamage(500), x10), took $taken", taken in 1..50)
+                }
+            }
+            if (phase != NexEncounter.Phase.ZAROS) nextPhase()
+        }
+    }
+
+    @Test
+    fun `C4 the virus infects Nex's target and the players straight beside him, once, with Darkan's stat drain`() {
+        // Darkan Virus.java:34-58: the infected = Nex's target; every arena player at Utils.getDistance <= 1 of him (sqrt: not the
+        // diagonals) coughs, takes 0-10 and loses (int) (level * 0.05) Magic/Ranged/Attack/Strength/Defence - once, no lingering
+        // infection. The old Novite virus picked the FARTHEST player, hit everyone within 2 of him and drained nothing.
+        val target = enter("virusT", Tile(2918, 5203))
+        val beside = enter("virusB", Tile(2918, 5204))
+        val diagonal = enter("virusD", Tile(2919, 5202))
+        val far = enter("virusF", Tile(2916, 5203))
+        listOf(target, beside, diagonal, far).forEach { it.setVarp(AUTO_RETALIATE_OFF_VARP, 1) }
+        val nex = awaitFight(target)
+        val stats = listOf(Skills.MAGIC, Skills.RANGED, Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE)
+        val all = listOf(target, beside, diagonal, far)
+        all.forEach { p -> stats.forEach { p.skills.setCurrentLevel(it, 99) } }
+        val method = NexCombatScript::class.java.declaredMethods.first { it.name == "virusAttack" }.apply { isAccessible = true }
+        if (method.parameterCount == 2) method.invoke(NexCombatScript, nex, target) else method.invoke(NexCombatScript, nex)
+        tick(1)
+        for (p in listOf(target, beside)) {
+            stats.forEach { assertEquals("${p.username} infected: skill $it drops 99 -> 95 (Darkan lowerStat 0.05)", 95, p.skills.getCurrentLevel(it)) }
+        }
+        for (p in listOf(diagonal, far)) {
+            stats.forEach { assertEquals("${p.username} is not straight beside the target: skill $it stays 99", 99, p.skills.getCurrentLevel(it)) }
+        }
+    }
+
+    @Test
+    fun `C4 embrace darkness darkens the screen through VARC 1435 for the whole shadow phase`() {
+        // The 667 client reads VARC 1435 (CS2 1170: transparency of overlay 601:1); no client script reads varp 1435
+        // (team\tmp-C4\c4_cs2_1435.py). Darkan EmbraceDarkness.java:38-57 sends varc 1435 = distance (max 30) * 255 / 30 on 1 in 3
+        // ticks until the shadow phase ends, then 255. The old code set VARP 1435 = 100 for 50 ticks: nobody saw any darkness.
+        val player = enter("darkness", Tile(2918, 5202))
+        player.setVarp(AUTO_RETALIATE_OFF_VARP, 1)
+        val nex = awaitFight(player)
+        nextPhase() // SHADOW: count 0 = Embrace darkness at her first shadow attack
+        val from = written.getValue(player).size
+        repeat(30) { tick(1); keepAlive(player, nex) }
+        fun darkness(after: Int) =
+            written.getValue(player).drop(after).mapNotNull {
+                when (it) {
+                    is gg.rsmod.game.message.impl.VarcSmallMessage -> if (it.id == 1435) it.value else null
+                    is gg.rsmod.game.message.impl.VarcLargeMessage -> if (it.id == 1435) it.value else null
+                    else -> null
+                }
+            }
+        val shadow = darkness(from)
+        assertTrue("shadow phase: Embrace darkness sends VARC 1435 below 255 (darker near Nex), saw $shadow", shadow.any { it < 255 })
+        assertEquals("no varp 1435 (no client script reads it)", 0, player.varps.getState(1435))
+        val blood = written.getValue(player).size
+        nextPhase() // BLOOD: the darkness ends
+        tick(2)
+        assertEquals("the shadow phase ended: darkness off (255), saw ${darkness(blood)}", 255, darkness(blood).lastOrNull())
+    }
+
+    /** Darkan NexCombat.java:42-76 written out per phase (smoke 12th: Drag 1 in 4 or No Escape). */
+    private fun darkanSpecial(
+        phase: NexEncounter.Phase,
+        c: Int,
+    ): Set<String> =
+        when (phase) {
+            NexEncounter.Phase.SMOKE -> if (c % 12 == 0) setOf("DRAG", "NO_ESCAPE") else if (c % 6 == 0) setOf("VIRUS") else setOf("AUTO")
+            NexEncounter.Phase.SHADOW -> if (c == 0) setOf("EMBRACE_DARKNESS") else if (c % 5 == 0) setOf("SHADOW_TRAPS") else setOf("AUTO")
+            NexEncounter.Phase.BLOOD -> if (c % 8 == 0) setOf("SIPHON") else if (c % 4 == 0) setOf("BLOOD_SACRIFICE") else setOf("AUTO")
+            NexEncounter.Phase.ICE -> if (c % 8 == 0) setOf("CONTAIN_THIS") else if (c % 4 == 0) setOf("ICE_PRISON") else setOf("AUTO")
+            NexEncounter.Phase.ZAROS -> setOf("AUTO")
+        }
+
+    /** (type, maxHit, damage) of every hit Nex dealt [player] in [lines] (PawnExt.dealHit combat trace). */
+    private fun nexHits(
+        nex: Npc,
+        player: Client,
+        lines: List<String>,
+    ): List<Triple<String, Double, Int>> =
+        lines.mapNotNull { Regex("hit npc \\d+#${nex.index} -> ${player.username} type=(\\w+) maxHit=([0-9.]+) landed=\\w+ damage=(\\d+)").find(it) }
+            .map { Triple(it.groupValues[1], it.groupValues[2].toDouble(), it.groupValues[3].toInt()) }
 
     // ---------------------------------------------------------------------------------------------------------------- helpers
 
@@ -304,10 +513,29 @@ class NexPullFightTests {
             if (now != null && now != last) attacks += t
             last = now
         }
-        val centre = Tile(NexEncounter.CENTRE.x - 1, NexEncounter.CENTRE.z - 1, 0)
+        val centre = Tile(NexEncounter.CENTRE) // Darkan NoEscape tele(center) 2924,5202 = her spawn tile
+        // Diagnostic for a failed route: collision around Nex and where every player stands (# = clipped, N = Nex, P = player).
+        fun map(): String {
+            val sb = StringBuilder("\nmap z 5207..5193, x 2917..2931 (Nex ${nex.tile}, players ${alive.map { it.tile }}):\n")
+            for (z in 5207 downTo 5193) {
+                for (x in 2917..2931) {
+                    val t = Tile(x, z, 0)
+                    sb.append(
+                        when {
+                            alive.any { it.tile.sameAs(t) } -> 'P'
+                            x in nex.tile.x until nex.tile.x + nex.getSize() && z in nex.tile.z until nex.tile.z + nex.getSize() -> 'N'
+                            world.collision.isClipped(t) -> '#'
+                            else -> '.'
+                        },
+                    )
+                }
+                sb.append('\n')
+            }
+            return sb.toString()
+        }
         assertTrue("$what: the rush ends within 5 ticks (busy cleared at tick $clearedAt, busy=${busy()})${log(alive.first(), nex)}", clearedAt in 1..5)
         assertEquals("$what: Nex is back on her centre tile when the rush ends", centre, clearedTile)
-        assertTrue("$what: Nex attacks again within ${speed + 4} ticks, attack ticks $attacks${log(alive.first(), nex)}", attacks.isNotEmpty() && attacks.first() <= speed + 4)
+        assertTrue("$what: Nex attacks again within ${speed + 4} ticks, attack ticks $attacks${map()}${log(alive.first(), nex)}", attacks.isNotEmpty() && attacks.first() <= speed + 4)
         assertTrue("$what: Nex keeps attacking (>= 8 attacks in 60 ticks), saw $attacks${log(alive.first(), nex)}", attacks.size >= 8)
     }
 
@@ -418,8 +646,14 @@ class NexPullFightTests {
     companion object {
         const val PULL_MESSAGE = "You've been injured and you cannot use protective prayers!"
 
-        /** Longest pause between two Nex attacks: attack speed 5 plus No Escape's 4-tick rush (Novite NexCombat). */
-        const val MAX_GAP = 10
+        /** C4: NexCombatScript's per-attack trace line (phase, Darkan attack counter, special or AUTO). */
+        val NEX_ATTACK = Regex("nex attack npc \\d+#\\d+ phase=(\\w+) count=(\\d+) special=(\\w+)")
+
+        /**
+         * Longest pause between two Nex attacks: C4 Darkan - Blood sacrifice / Contain this / Ice prison return attackSpeed * 2 (10),
+         * plus a few ticks of walking in for melee (followTarget) or No Escape's rush.
+         */
+        const val MAX_GAP = 14
 
         val AUTO_RETALIATE_OFF_VARP = gg.rsmod.plugins.content.inter.attack.AttackTab.DISABLE_AUTO_RETALIATE_VARP
 

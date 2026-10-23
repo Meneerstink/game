@@ -15,13 +15,13 @@ import gg.rsmod.plugins.api.cfg.Npcs
  * lasts 36 ticks and the first transform happens on the phase's first tick), `NexCombat.sendSoulSplit` heals only in
  * 13448, `Nex.handleIngoingHit` deflects melee in 13449, and `Nex.sendDeath` turns her into 13450.
  *
+ * C4 (2026-10-21): WHEN the form switches is Darkan's rule now - every third Zaros attack (NexCombat.java:138-139, see
+ * NexCombatScript.autoAttack); Novite's 36-tick timer is gone.
+ *
  * SOURCE_BLOCKED (not ported): Novite's random 15776 ranged-deflect form (15776 is not a 667 npc) and its x1.23 damage
  * factor in the Zaros phase (no second source).
  */
 object NexZarosForms {
-    /** Novite `resetPrayerTicks` for 13447..13449. */
-    const val FORM_TICKS = 35
-
     val CYCLE = intArrayOf(Npcs.NEX, Npcs.NEX_13448, Npcs.NEX_13449)
     const val DEATH_FORM = Npcs.NEX_13450
 
@@ -29,12 +29,6 @@ object NexZarosForms {
         val index = CYCLE.indexOf(form)
         return if (index < 0) CYCLE[1] else CYCLE[(index + 1) % CYCLE.size]
     }
-
-    /** Novite tick: count down, or transform and reset the counter. Returns the form and the remaining ticks. */
-    fun step(
-        form: Int,
-        ticks: Int,
-    ): Pair<Int, Int> = if (ticks > 0) form to ticks - 1 else next(form) to FORM_TICKS
 
     /** The overhead of [form], equal to its 667 cache headIcon; drives the server-side protection checks. */
     fun prayerIcon(form: Int): Int =
