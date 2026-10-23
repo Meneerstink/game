@@ -372,6 +372,14 @@ task runCasinoMinimapIconTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.CasinoMinimapIconTool'
 }
 
+task runQuestMapIconTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N227/N226: hides the 179 standard quest-start map elements on the world map and minimap and gives the ' +
+        'hall quest npcs a minimap quest icon. Usage: ./gradlew :game:runQuestMapIconTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.QuestMapIconTool'
+}
+
 task runStoreMapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +
