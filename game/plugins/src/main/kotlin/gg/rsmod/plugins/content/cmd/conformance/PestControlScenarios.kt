@@ -168,6 +168,30 @@ object PestControlScenarios {
         }
     }
 
+    /**
+     * `conform systems pestsolo` (N232): one player boards the novice lander and stands idle at the landing; the tick the Void Knight
+     * dies is the measure of how much time a solo player has. 5 idle bots lost the knight by tick ~85 (N112); solo it takes a third
+     * of the pests' damage (PestControlHandler.knightDamage).
+     */
+    suspend fun QueueTask.pestSolo(run: Run) {
+        val bot = run.bot(OUTPOST, "PS1")
+        repeat(3) { wait(1) }
+        boardAll(run, listOf(bot))
+        PestControlHandler.forceStart(run.world, PestControlTier.NOVICE)
+        repeat(3) { wait(1) }
+        val game = PestControlHandler.gameOf(bot)
+        if (game == null) {
+            run.expectTrue(E, "solo departure: a game", false, "no game for PS1 at ${bot.tile}")
+            return
+        }
+        bot.moveTo(game.landingTile())
+        while (game.active && game.knight.isSpawned() && !game.knight.isDead() && game.ticks < 700) wait(1)
+        val died = game.ticks
+        val lp = game.knight.getCurrentLifepoints()
+        run.expectTrue(E, "solo idle: the Void Knight lives 200+ ticks (before N232: 101; 5 idle bots: ~85)", died >= 200, "knight died at tick $died (lp $lp, active ${game.active})")
+        if (game.active) game.end(success = false, silent = true)
+    }
+
     suspend fun QueueTask.pestControl(run: Run) {
         val bots = (1..5).map { run.bot(OUTPOST, "PC$it") }
         repeat(3) { wait(1) }

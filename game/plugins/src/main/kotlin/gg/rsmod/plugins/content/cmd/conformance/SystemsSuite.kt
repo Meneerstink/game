@@ -103,6 +103,7 @@ object SystemsSuite : Conformance.Suite {
         scenario("exchange") { exchangeState(run) }
         scenario("pestcontrol") { with(PestControlScenarios) { pestControl(run) } }
         scenario("pestdeparture") { with(PestControlScenarios) { pestDeparture(run) } }
+        scenario("pestsolo") { with(PestControlScenarios) { pestSolo(run) } }
     }
 
     /**

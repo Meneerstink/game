@@ -274,6 +274,36 @@ object PestControlHandler {
         addZeal(source, dealt)
     }
 
+    /**
+     * N232 (owner 2026-10-23: "pest control is nu veel te moeilijk als solo speler omdat de void knight te snel doodgaat... dit moet
+     * iets makkelijker"): the waves are built for a full team, which keeps most pests busy away from the knight. The damage the
+     * Void Knight takes scales with the team: 5 or more players (the RS lander minimum) take all of it, fewer a share of
+     * [players] / 5, a solo player a third. Rounded at random ([roll] in 0..1) so the expected damage is exact, also for 1-hits.
+     */
+    fun knightDamage(
+        players: Int,
+        damage: Int,
+        roll: Double = Random.nextDouble(),
+    ): Int {
+        if (damage <= 0) return damage
+        val share = (players / KNIGHT_FULL_DAMAGE_TEAM.toDouble()).coerceIn(KNIGHT_SOLO_DAMAGE_SHARE, 1.0) * damage
+        val whole = share.toInt()
+        return whole + if (roll < share - whole) 1 else 0
+    }
+
+    /** N232: at most one shifter beside the knight per player, never more than Darkan's 4 (solo: one at a time). */
+    fun knightShifterCap(players: Int): Int = players.coerceIn(1, KNIGHT_MAX_SHIFTERS)
+
+    /** PawnExt.dealHit: a hit on the Void Knight of a running game, scaled by [knightDamage]. */
+    fun modifyIncomingDamage(
+        target: Npc,
+        damage: Int,
+    ): Int {
+        if (target.id !in PC_KNIGHT_IDS || damage <= 0) return damage
+        val game = gameOf(target)?.takeIf { it.knight === target } ?: return damage
+        return knightDamage(game.players.size, damage)
+    }
+
     /** [zeal] whole zeal: damage dealt, or 5 for a repair. */
     fun addZeal(
         player: Player,
@@ -538,7 +568,7 @@ class PestControlGame(
      */
     private fun spawnKnightShifter(): Boolean {
         knightShifters.removeIf { !it.isSpawned() || it.isDead() }
-        if (knightShifters.size >= KNIGHT_MAX_SHIFTERS || !knight.isSpawned() || knight.isDead()) return false
+        if (knightShifters.size >= PestControlHandler.knightShifterCap(players.size) || !knight.isSpawned() || knight.isDead()) return false
         val ids = PC_SHIFTERS[tier.difficulty]
         val tile =
             (0 until 10).map { knight.tile.transform(Random.nextInt(-5, 6), Random.nextInt(-5, 6), 0) }
