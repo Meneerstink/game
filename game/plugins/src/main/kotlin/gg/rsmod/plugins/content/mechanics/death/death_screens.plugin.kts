@@ -65,6 +65,9 @@ on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = OfficeInterfac
     player.closeInterface(OfficeInterface.INTERFACE_ID)
 }
 
+/** N136: OSRS deathkeep_opitem (3452) / deathkeep_right_opbutton (3455) click (synth 2266) on an item and on a right-hand button. */
+fun officeClick(player: gg.rsmod.game.model.entity.Player) = player.playSound(gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1)
+
 for (i in 0 until Office.SLOTS) {
     on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.SLOT_FIRST + i) {
         val slot = OfficeInterface.slotAt(player, i) ?: return@on_button
@@ -72,6 +75,7 @@ for (i in 0 until Office.SLOTS) {
         if (player.getInteractingOpcode() == OP10) {
             examine(player, item.id)
         } else {
+            officeClick(player)
             OfficeInterface.select(player, slot)
         }
     }
@@ -82,16 +86,17 @@ on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.SELECTE
     if (player.getInteractingOpcode() == OP10) examine(player, player.deathRecovery[slot]!!.id)
 }
 
-on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_1) { OfficeInterface.take(player, 1) }
-on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_5) { OfficeInterface.take(player, 5) }
-on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_ALL) { OfficeInterface.take(player, Int.MAX_VALUE) }
+on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_1) { officeClick(player); OfficeInterface.take(player, 1) }
+on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_5) { officeClick(player); OfficeInterface.take(player, 5) }
+on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_ALL) { officeClick(player); OfficeInterface.take(player, Int.MAX_VALUE) }
 on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_X) {
+    officeClick(player)
     player.queue(TaskPriority.WEAK) {
         val amount = inputInt("Enter amount:")
         if (amount > 0 && OfficeInterface.isOpen(player)) OfficeInterface.take(player, amount)
     }
 }
-on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_TAKE_ALL) { OfficeInterface.takeAll(player) }
+on_button(interfaceId = OfficeInterface.INTERFACE_ID, component = Office.BUTTON_TAKE_ALL) { officeClick(player); OfficeInterface.takeAll(player) }
 
 on_interface_close(interfaceId = OfficeInterface.INTERFACE_ID) {
     OfficeInterface.close(player)

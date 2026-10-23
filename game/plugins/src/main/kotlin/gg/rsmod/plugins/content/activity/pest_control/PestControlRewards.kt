@@ -10,6 +10,7 @@ import gg.rsmod.plugins.api.ext.addXp
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.setComponentText
 import kotlin.random.Random
 import gg.rsmod.game.tools.importer.PestControlRewardsInterfaceImportTool as Tool
@@ -216,24 +217,36 @@ object PestControlRewards {
         return (points * perPoint * bonus).toInt()
     }
 
+    /**
+     * N136: the OSRS Void Knight reward scripts click (synth 2266 interface_select1) on a choice and on Confirm, and play 2277
+     * (pillory_wrong) with the refusal message; the rebuilt 267 window had no sound at all.
+     */
+    private fun click(player: Player) = player.playSound(gg.rsmod.plugins.api.cfg.Sfx.INTERFACE_SELECT1)
+
+    private fun refused(player: Player) = player.playSound(gg.rsmod.plugins.api.cfg.Sfx.PILLORY_WRONG)
+
     fun select(
         player: Player,
         button: Int,
     ) {
         if (points(player) == 0) {
+            refused(player)
             player.message("You don't have enough points.")
             return
         }
         val (reward, option) = Reward.forButton(button) ?: return
         if (reward !in shown(player)) return
         if (points(player) < reward.cost(option)) {
+            refused(player)
             player.message("You don't have enough points.")
             return
         }
         if (reward.isSkill && player.skills.getMaxLevel(reward.skill) < 25) {
+            refused(player)
             player.message("You need a ${reward.title} level of 25 to purchase this.")
             return
         }
+        click(player)
         refresh(player)
         player.attr[SELECTED] = reward to option
         text(player, 104, "${WHITE}${reward.title}")
@@ -244,16 +257,19 @@ object PestControlRewards {
     fun confirm(player: Player) {
         val (reward, option) =
             player.attr[SELECTED] ?: run {
+                refused(player)
                 player.message("Please choose a reward.")
                 return
             }
         // An elite upgrade swaps the normal piece, so it needs no free slot.
         if (!reward.isSkill && reward.upgradeFrom.isEmpty() && player.inventory.freeSlotCount == 0) {
+            refused(player)
             player.message("You don't have enough inventory space.")
             return
         }
         val cost = reward.cost(option)
         if (points(player) < cost) {
+            refused(player)
             player.message("You don't have enough points.")
             return
         }
@@ -267,6 +283,7 @@ object PestControlRewards {
             }
             if (!player.inventory.remove(piece).hasSucceeded()) return
         }
+        click(player)
         player.closeInterface(PC_REWARD_INTERFACE)
         player.attr.remove(SELECTED)
         gg.rsmod.game.model.attr.PointBalance.take(player.attr, PEST_POINTS, cost) // N106: one balance helper, never below 0
