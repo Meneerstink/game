@@ -272,10 +272,14 @@ object PlayerHouse {
     const val THEME_SPACE = 62931
     const val OTHERWORLDLY_THEME = 62944
 
-    /** Whether the Otherworldly theme is built (persisted). */
+    /**
+     * Whether the Otherworldly theme is built (persisted). A23 (owner 2026-10-11: "iedereen krijgt het thema (bestaande + nieuwe
+     * accounts, zoals vroeger)"): every house has it until its owner removes it in building mode (false); nothing is written to an
+     * account that never touched it.
+     */
     val GARDEN_THEME_ATTR = AttributeKey<Boolean>(persistenceKey = "poh_garden_theme")
 
-    fun hasGardenTheme(player: Player): Boolean = player.attr[GARDEN_THEME_ATTR] == true
+    fun hasGardenTheme(player: Player): Boolean = player.attr[GARDEN_THEME_ATTR] != false
 
     /** One theme-edging space of the OSRS Superior Garden (OSRS 2499 region 7534 chunk 5,0, plane 0), in garden-local coordinates. */
     data class ThemeEdge(val space: Int, val x: Int, val z: Int, val rot: Int)
@@ -302,12 +306,15 @@ object PlayerHouse {
         }
 
     /**
-     * Edging space -> the Otherworldly garden piece built on it. OSRS's three inner-ring spaces 29126-29128 share one model
-     * (32133) and the five-piece themes (Zen, Otherworldly) have one piece for them, the seven-piece Volcanic theme one each;
-     * the other four spaces map in order.
+     * Edging space -> the Otherworldly garden piece built on it. A23 (owner "de eternal garden theme ziet er raar uit"): matched by
+     * GEOMETRY, not id order - each OSRS space model and its piece have the same vertex / face count and footprint (OSRS cache
+     * 2686, 10-23): outer corner 29123 (32130, 63v) = 29252 (32137), inner corner 29124 (32146, 150v) = 29251 (32141), grass
+     * straight 29125 (32145, 72v) = 29250 (32144), the three path straights 29126-29128 (32133, 46v) = 29248 (32134) and the
+     * path corner 29129 (32136, 56v) = 29249 (32128). The order-based guess put dirt squares on the inner grass corners and grass
+     * on the path ring.
      */
     val OTHERWORLDLY_EDGES: Map<Int, Int> =
-        mapOf(62932 to 62939, 62933 to 62940, 62934 to 62941, 62935 to 62942, 62936 to 62942, 62937 to 62942, 62938 to 62943)
+        mapOf(62932 to 62943, 62933 to 62942, 62934 to 62941, 62935 to 62939, 62936 to 62939, 62937 to 62939, 62938 to 62940)
 
     /** Where in the house the player logged out (x shl 8 or z from the house's corner): the next login rebuilds it there. */
     val LOGOUT_OFFSET_ATTR = AttributeKey<Int>(persistenceKey = "poh_logout_offset")

@@ -125,7 +125,8 @@ object PohBuild {
         if (!requireBuildMode(player) || !confirmRemove(task)) return
         val garden = PlayerHouse.gardenFrame(player) ?: return
         remove(player) {
-            player.attr.remove(PlayerHouse.GARDEN_THEME_ATTR)
+            // A23: the theme is there by default, so a removal is remembered as false.
+            player.attr[PlayerHouse.GARDEN_THEME_ATTR] = false
             PlayerHouse.spawnTheme(player, garden)
         }
     }
