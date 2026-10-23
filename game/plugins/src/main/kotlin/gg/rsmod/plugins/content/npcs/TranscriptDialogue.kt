@@ -52,7 +52,10 @@ object TranscriptDialogue {
     fun lineSound(
         npcId: Int,
         text: String,
-    ): Int? = if (npcId == BLOODHOUND && "*woof" in text.lowercase()) Sfx.PET_DOG_BARK else null
+    ): Int? = if (npcId == BLOODHOUND && BARK_LINE.containsMatchIn(text)) Sfx.PET_DOG_BARK else null
+
+    /** A line that opens with its bark: "*Woof woof bark!*", "*Bark! Woof bark bark.*", "*Bark bark woof!*" (OSRS transcript). */
+    private val BARK_LINE = Regex("""^\s*\*(woof|bark)""", RegexOption.IGNORE_CASE)
 
     fun load(file: File = File(PATH)): Int {
         if (!file.exists()) return 0

@@ -26,6 +26,10 @@ class PetSoundsTests {
     fun `the Bloodhound barks once on each line that says it barks, and nowhere else`() {
         assertEquals(Sfx.PET_DOG_BARK, TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "*Woof woof bark!* Elementary, it's due to the influence of the -SQUIRREL-!"))
         assertNull(TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "Walkies!"))
+        // Every barking line of the OSRS transcript barks, also the ones that open with "*Bark" (were silent).
+        listOf("*Woof! Bark yip woof!* Sure!", "*Bark! Woof bark bark.* Whatever is left", "*Bark bark woof!* You aren't funny.").forEach {
+            assertEquals(Sfx.PET_DOG_BARK, TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, it), it)
+        }
         assertNull(TranscriptDialogue.lineSound(1, "*Woof woof bark!*"), "no bark lent to other npcs")
         val rows = com.google.gson.JsonParser().parse(File("../../data/cfg/npcs/transcript-dialogue.json").readText()).asJsonObject
         val bloodhound = rows[TranscriptDialogue.BLOODHOUND.toString()].asJsonObject
