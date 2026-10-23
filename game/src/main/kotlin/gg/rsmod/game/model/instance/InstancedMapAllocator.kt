@@ -53,9 +53,9 @@ class InstancedMapAllocator {
         for (x in area.bottomLeftX until area.topRightX step step) {
             for (z in area.bottomLeftZ until area.topRightZ step step) {
                 /*
-                 * If a map is already allocated in [x,z], we move on.
+                 * If a map (or its empty border) is already in the way, we move on.
                  */
-                if (maps.any { it.area.contains(x, z) || it.area.contains(x + totalTiles - 1, z + totalTiles - 1) }) {
+                if (!isFree(x, z, totalTiles)) {
                     continue
                 }
 
@@ -80,10 +80,30 @@ class InstancedMapAllocator {
         val totalTiles = regionSize * Chunk.REGION_SIZE
         for (x in area.bottomLeftX until area.topRightX step 64) {
             for (z in area.bottomLeftZ until area.topRightZ step 64) {
-                if (maps.none { it.area.contains(x, z) || it.area.contains(x + totalTiles - 1, z + totalTiles - 1) }) return true
+                if (isFree(x, z, totalTiles)) return true
             }
         }
         return false
+    }
+
+    /**
+     * N159: the new map's square [x, x + [totalTiles]) x [z, z + [totalTiles]) plus a one-region empty border overlaps no
+     * allocated map (Darkan InstanceBuilder.findEmptyChunkBound checks every region with an empty border). Only the two corners
+     * were checked before, so a smaller map lying inside a bigger candidate without touching its corners was missed and a 2-3
+     * region map (intro, minigame) could be put over an active one-region instance. The border also keeps a wall on a map's
+     * edge tile - collision writes both sides of a wall - from flagging the edge row of an active neighbour.
+     */
+    internal fun isFree(
+        x: Int,
+        z: Int,
+        totalTiles: Int,
+    ): Boolean {
+        val border = Chunk.REGION_SIZE
+        val x0 = x - border
+        val z0 = z - border
+        val x1 = x + totalTiles - 1 + border
+        val z1 = z + totalTiles - 1 + border
+        return maps.none { m -> m.area.bottomLeftX <= x1 && m.area.topRightX >= x0 && m.area.bottomLeftZ <= z1 && m.area.topRightZ >= z0 }
     }
 
     private fun allocate(
