@@ -105,6 +105,20 @@ class DeadmanChestTests {
         assertNotNull(service.houseQuote(Items.MASORI_BODY))
     }
 
+    @Test
+    fun `N161 - an exchangeable item without any price is not in the house and its guide is at least 1 gp`() {
+        val service = geService()
+        val zero = listOf(22029, 8972, 15955).map { DEFINITIONS.get(gg.rsmod.game.fs.def.ItemDef::class.java, it) }
+            .filter { gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.exchangeable(it) && gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices.seed(it) <= 0 }
+        assertTrue(zero.isNotEmpty(), "the bug's examples still have no price")
+        zero.forEach { def ->
+            assertNull(service.houseQuote(def.id), "${def.id} ${def.name}: the house deals at 0 coins")
+            for (type in gg.rsmod.plugins.content.mechanics.exchange.OfferType.values()) {
+                assertTrue(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.offerGuide(service, def, type) >= 1, "${def.id} $type guide")
+            }
+        }
+    }
+
     // ------------------------------------------------------------------------------------------------ the list itself
 
     @Test

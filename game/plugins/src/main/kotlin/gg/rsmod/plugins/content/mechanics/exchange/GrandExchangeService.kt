@@ -115,6 +115,8 @@ class GrandExchangeService(
         if (!GrandExchangeInterface.exchangeable(def)) {
             return null
         }
+        // N161 (owner 2026-10-22): an item with no OSRS price and cache value 0 is not in the house; players still trade it.
+        if (OsrsGuidePrices.seed(def) <= 0) return null
         return GeHousePricing.quote(def, world)
     }
 
