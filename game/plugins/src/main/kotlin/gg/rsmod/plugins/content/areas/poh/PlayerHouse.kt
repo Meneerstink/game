@@ -491,17 +491,19 @@ object PlayerHouse {
             15407 to FALADOR_PORTAL,
             15408 to CAMELOT_PORTAL,
             15409 to NEXUS,
-            // Superior Garden. The centrepiece spot (the room's centre) is OSRS's teleport space (3,3), where the spiritual
-            // fairy tree stands (owner 2026-10-10: the 667 spirit tree's canopy spilled over the walls). The tree and plant
-            // spots stay empty (owner 2026-09-29: "2 spirit trees", "layout klopt niet").
-            15361 to SPIRITUAL_FAIRY_TREE,
+            // Superior Garden. A25 (owner 2026-10-11: "the poh exit portal needs to be in the middle of the poh now the spiritual
+            // fairy tree is there"): the centrepiece spot (the room's centre, 3,3) holds the exit portal, as the 667 house's own
+            // centrepiece hotspot (Darkan HouseBuilds.CENTREPIECE: EXIT_PORTAL first; the default house is a garden with it). The
+            // spiritual fairy tree moves to the north-west corner ([furnishGarden]). The tree and plant spots stay empty (owner
+            // 2026-09-29: "2 spirit trees", "layout klopt niet").
+            15361 to PORTAL,
             // The costume room's storage spots (18810-18815) stay empty: owner 2026-10-10 removed the storage.
             48662 to 13282,
         )
 
     /** Every loc a house places (hotspot replacements and the hand-placed pieces) - the guard test checks each option has a route. */
     val PLACED_OBJECTS: Set<Int>
-        get() = SPOT_REPLACEMENTS.values.toSet() + setOf(ARMOUR_STAND, JEWELLERY_BOX, GLORY, OBELISK, PORTAL, POOL, OCCULT_ALTAR) +
+        get() = SPOT_REPLACEMENTS.values.toSet() + setOf(ARMOUR_STAND, JEWELLERY_BOX, GLORY, OBELISK, PORTAL, SPIRITUAL_FAIRY_TREE, POOL, OCCULT_ALTAR) +
             Style.values().flatMap { listOf(it.wall, it.stainedGlass) } +
             setOf(TABLE_SPACE, BELL_PULL, THEME_SPACE, OTHERWORLDLY_THEME) + PohBuild.DINING_TABLES.map { it.obj } +
             THEME_EDGES.map { it.space } + OTHERWORLDLY_EDGES.values
@@ -770,14 +772,14 @@ object PlayerHouse {
     }
 
     /**
-     * The Superior Garden, as OSRS lays it out (owner 2026-10-10): the spiritual fairy tree on the centrepiece spot - OSRS's
-     * teleport space (3,3) - and the pool in the south-east corner - OSRS's pool space (6,0). The north-east corner is OSRS's
-     * theme space (6,6, [THEME_SPACE]), so the exit portal stands in the north-west corner (OSRS's topiary space, unused here):
+     * The Superior Garden (owner 2026-10-10, A25 2026-10-11): the exit portal on the centrepiece spot in the middle (3,3, from
+     * [SPOT_REPLACEMENTS]), the spiritual fairy tree in the north-west corner (OSRS's topiary space, unused here), the pool in
+     * the south-east corner - OSRS's pool space (6,0) - and OSRS's theme space in the north-east corner (6,6, [THEME_SPACE]):
      *
      * ```
-     *   exit portal  .  N door  .  theme
-     *   W door       .   tree   .  E door
-     *   obelisk      .  S door  .  pool
+     *   tree     .  N door  .  theme
+     *   W door   .  portal  .  E door
+     *   obelisk  .  S door  .  pool
      * ```
      *
      * The exit portal stands in the garden rather than in a room, so that leaving is one step from wherever the
@@ -790,12 +792,12 @@ object PlayerHouse {
     ) {
         room.spawn(POOL, 10, 0, 6, 0)
         room.spawn(OBELISK, 10, 0, 1, 1)
-        room.spawn(PORTAL, 10, 0, 0, 6)
+        room.spawn(SPIRITUAL_FAIRY_TREE, 10, 0, 0, 6)
         // Minimap icons: the transport arrow on the tree's and the obelisk's tile (the ground-decoration layer under a
         // scenery loc) and the purple portal on the exit portal's.
-        room.spawn(TRANSPORT_MARKER, 22, 0, 3, 3)
+        room.spawn(TRANSPORT_MARKER, 22, 0, 0, 6)
         room.spawn(TRANSPORT_MARKER, 22, 0, 1, 1)
-        room.spawn(PORTAL_MARKER, 22, 0, 0, 6)
+        room.spawn(PORTAL_MARKER, 22, 0, 3, 3)
         if (hasGardenTheme(player) || buildMode) spawnTheme(player, room)
     }
 
@@ -817,7 +819,7 @@ object PlayerHouse {
         }
     }
 
-    /** Garden tiles holding a minimap marker (tree 3,3, obelisk 1,1, exit portal 0,6). */
+    /** Garden tiles holding a minimap marker (exit portal 3,3, obelisk 1,1, tree 0,6). */
     private val MARKER_TILES = setOf(3 to 3, 1 to 1, 0 to 6)
 
     /** Spawns the house combat dummy once the owner is inside the house it was built for. */
