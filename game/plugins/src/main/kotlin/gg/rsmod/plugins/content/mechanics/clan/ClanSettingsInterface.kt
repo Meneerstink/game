@@ -64,6 +64,56 @@ object ClanSettingsInterface {
     private const val VARC_SELECTED_RANK = 1569
     private const val PROBATION_MILLIS = 7L * 24 * 60 * 60 * 1000
 
+    /*
+     * A44 / N54 (owner 10-13: "Clan Settings 1096 knoppen 118 + 413 volledig werkend, 667-gedrag"). Darkan ClansManager.java
+     * :657-680 switches the pages server side; the ids are OUR 1096 (decoded, dossier A44 - Darkan's 727 ids differ): tab hit
+     * layers 111 Clanmates / 118 Clan Settings / 413 Permissions over pages 81 / 82 / 83. Script 4298 shows 81 and hides 82,
+     * 4296 the other way round; neither touches 83, so the server hides or shows it. The permission categories Admin / Chat /
+     * Events / Citadel / Skills (tabs 510-515 / 519-524 / 527-532 / 535-540 / 543-548) show category page 14..18 instead of 24
+     * "Select a category above." and script 5136(category) moves the tab highlight. "Show details" opens the details panel
+     * with script 4314 once its varcs are sent (Darkan viewClanmateDetails runs the open script after the varcs).
+     */
+    const val TAB_CLANMATES = 111
+    const val TAB_SETTINGS = 118
+    const val TAB_PERMISSIONS = 413
+    private const val PAGE_CLANMATES = 81
+    private const val PAGE_SETTINGS = 82
+    private const val PAGE_PERMISSIONS = 83
+    private const val SCRIPT_SHOW_CLANMATES = 4298
+    private const val SCRIPT_SHOW_SETTINGS = 4296
+    private const val SCRIPT_CATEGORY_HIGHLIGHT = 5136
+    private const val SCRIPT_SHOW_DETAILS = 4314
+    private const val PAGE_NO_CATEGORY = 24
+
+    /** Permission category (1 Admin .. 5 Skills) -> the children of its tab; the page of category c is 13 + c. */
+    val CATEGORY_TABS: Map<Int, IntRange> = mapOf(1 to 510..515, 2 to 519..524, 3 to 527..532, 4 to 535..540, 5 to 543..548)
+
+    fun showClanmates(player: Player) {
+        player.setComponentHidden(INTERFACE, PAGE_PERMISSIONS, true)
+        player.runClientScript(SCRIPT_SHOW_CLANMATES)
+    }
+
+    fun showSettings(player: Player) {
+        player.setComponentHidden(INTERFACE, PAGE_PERMISSIONS, true)
+        player.runClientScript(SCRIPT_SHOW_SETTINGS)
+    }
+
+    fun showPermissions(player: Player) {
+        player.setComponentHidden(INTERFACE, PAGE_CLANMATES, true)
+        player.setComponentHidden(INTERFACE, PAGE_SETTINGS, true)
+        player.setComponentHidden(INTERFACE, PAGE_PERMISSIONS, false)
+    }
+
+    fun selectCategory(
+        player: Player,
+        category: Int,
+    ) {
+        if (category !in CATEGORY_TABS) return
+        player.runClientScript(SCRIPT_CATEGORY_HIGHLIGHT, category)
+        player.setComponentHidden(INTERFACE, PAGE_NO_CATEGORY, true)
+        for (c in CATEGORY_TABS.keys) player.setComponentHidden(INTERFACE, 13 + c, c != category)
+    }
+
     private val EDITING = AttributeKey<String>()
     private val PENDING_RANK = AttributeKey<Int>()
     private val PENDING_JOB = AttributeKey<Int>()
@@ -83,6 +133,9 @@ object ClanSettingsInterface {
         player.setInterfaceEvents(INTERFACE, RANK_OPTIONS, 0..127, OP1)
         player.setInterfaceEvents(INTERFACE, WORLD_OPTIONS, 0..200, OP1)
         selectRank(player, RANK_TABS.values.first())
+        // Darkan openSettings: the Clanmates page and the first permission category.
+        showClanmates(player)
+        selectCategory(player, 1)
     }
 
     fun clearEditing(player: Player) {
@@ -114,6 +167,8 @@ object ClanSettingsInterface {
         player.setVarc(VARC_PROBATION, if (joined > 0 && System.currentTimeMillis() - joined < PROBATION_MILLIS) 1 else 0)
         // The rank varc last: its transmit re-runs the details script (4294 -> 4311), which then sees every value.
         player.setVarc(VARC_RANK, rank)
+        // A44: the details panel slides open (4314 -> 4319(0,0)); nothing in the cache runs it.
+        player.runClientScript(SCRIPT_SHOW_DETAILS)
     }
 
     fun chooseRank(player: Player, rank: Int) {

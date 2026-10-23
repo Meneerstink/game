@@ -114,6 +114,12 @@ on_button(interfaceId = CLAN_TAB, component = 80) {
 /* Clan Settings (1096) - see [ClanSettingsInterface]. */
 val SETTINGS = ClanSettingsInterface.INTERFACE
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.MEMBER_ROWS) { ClanSettingsInterface.showMember(player, player.getInteractingSlot()) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.TAB_CLANMATES) { ClanSettingsInterface.showClanmates(player) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.TAB_SETTINGS) { ClanSettingsInterface.showSettings(player) }
+on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.TAB_PERMISSIONS) { ClanSettingsInterface.showPermissions(player) }
+ClanSettingsInterface.CATEGORY_TABS.forEach { (category, children) ->
+    children.forEach { child -> on_button(interfaceId = SETTINGS, component = child) { ClanSettingsInterface.selectCategory(player, category) } }
+}
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.RANK_OPTIONS) { ClanSettingsInterface.chooseRank(player, player.getInteractingSlot()) }
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.JOB_OPTIONS) { ClanSettingsInterface.chooseJob(player, player.getInteractingSlot()) }
 on_button(interfaceId = SETTINGS, component = ClanSettingsInterface.SAVE) { ClanSettingsInterface.save(player) }
