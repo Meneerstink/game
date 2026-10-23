@@ -20,6 +20,16 @@ import kotlin.math.roundToInt
  * Usage: `<batch> [--apply] [--yml-out=<file>]`. Without `--apply` only plan + preflight run.
  */
 object OsrsItemImportTool {
+    /**
+     * N12: [converted] (a 667 mesh) with OsrsDecalLiftTool's lift applied, or unchanged when no detail face is hidden. A mesh the 667
+     * codec does not round-trip exactly is left as it is (the lift tool skips those as well).
+     */
+    fun decalLifted(converted: ByteArray): ByteArray {
+        val model = runCatching { Rev667ModelDecoder.decode(converted) }.getOrNull() ?: return converted
+        if (!Rev667ModelEncoder.encode(model).contentEquals(converted)) return converted
+        return if (OsrsDecalLiftTool.lift(model) != null) Rev667ModelEncoder.encode(model) else converted
+    }
+
     val SOURCE_CACHE = RspsPaths.root("import-source/openrs2-2686/cache")
     val TARGETS = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
     val ASSET_MAP = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
@@ -1258,8 +1268,10 @@ object OsrsItemImportTool {
                 female: Boolean? = null,
             ): ByteArray =
                 // One conversion for every importer (OsrsModelConversion): texture colour, imported textures, decode-compare, and
-                // for a worn mesh the move onto the 667 body (OsrsBodyFrame).
-                convertedModels.getOrPut(Triple(modelId, wornSlot, female)) { OsrsModelConversion.convert(reader, modelId, dropped, wornSlot, female) }
+                // for a worn mesh the move onto the 667 body (OsrsBodyFrame). N12: then the A5 decal lift (OsrsDecalLiftTool) - a
+                // detail face OSRS paints over a cloth face by priority is lifted in front of it, so a new import never brings back
+                // hidden emblems (before, only a separate run of that tool did this).
+                convertedModels.getOrPut(Triple(modelId, wornSlot, female)) { decalLifted(OsrsModelConversion.convert(reader, modelId, dropped, wornSlot, female)) }
             val forearmPieces by lazy {
                 CacheLibrary(TARGETS[0]).let { library ->
                     try {
