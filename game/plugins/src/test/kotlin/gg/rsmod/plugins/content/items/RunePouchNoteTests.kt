@@ -55,6 +55,21 @@ class RunePouchNoteTests {
         assertEquals(2, inventory.getItemCount(Items.RUNE_POUCH))
     }
 
+    @Test
+    fun `N218 - a successful exchange stamps (bank_stamp sound) with the OSRS line, a refused one is silent`() {
+        val inventory = ItemContainer(DEFINITIONS, INVENTORY_KEY)
+        val player = player(inventory)
+        val sent = mutableListOf<Any>()
+        every { player.write(*anyVararg<gg.rsmod.game.message.Message>()) } answers { sent.addAll((args[0] as Array<*>).filterNotNull()) }
+        RunePouchNote.exchange(player)
+        assertTrue(sent.none { it is gg.rsmod.game.message.impl.SynthSoundMessage }, "no note: no sound")
+        inventory.add(Items.RUNE_POUCH_NOTE, 1)
+        assertTrue(RunePouchNote.exchange(player))
+        val sound = sent.filterIsInstance<gg.rsmod.game.message.impl.SynthSoundMessage>().single()
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.BANK_STAMP, sound.sound)
+        assertTrue(sent.filterIsInstance<gg.rsmod.game.message.impl.MessageGameMessage>().any { it.message == "You exchange the promissory note." })
+    }
+
     private fun player(inventory: ItemContainer): Player {
         val p = mockk<Player>(relaxed = true)
         every { p.inventory } returns inventory
