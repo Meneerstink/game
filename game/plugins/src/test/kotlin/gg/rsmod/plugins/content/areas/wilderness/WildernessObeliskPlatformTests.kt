@@ -197,6 +197,32 @@ class WildernessObeliskPlatformTests {
         assertEquals("obelisks drawn in 60 activations of the level-13 obelisk: $seen", centres.toSet(), seen)
     }
 
+    @Test
+    fun `A22 Teleport to Destination moves the riders to the destination the activator set`() {
+        val c = centres[1]
+        val activator = player("destact", ring(c))
+        val rider = player("destride", c.transform(1, -1))
+        // "Set Destination" -> row 2 = "3: Level 27 Wilderness" (Obelisk.LEVEL_27), kept as the account attribute.
+        activator.attr[gg.rsmod.game.model.attr.AttributeKey<Int>("obelisk_destination")] = 2
+        activate(activator, c, option = "teleport to destination")
+        tick(TICKS_TO_ARRIVE)
+        val expected = centres[2].transform(1, -1)
+        assertTrue("rider landed on the Level 27 platform: ${rider.tile}", rider.tile == expected || Landing.resolve(world.collision, expected) == rider.tile)
+        remove(activator, rider)
+    }
+
+    @Test
+    fun `A22 Teleport to Destination without a destination says so and starts nothing`() {
+        val c = centres[1]
+        val activator = player("nodest", ring(c))
+        val rider = player("nodestride", c)
+        activate(activator, c, option = "teleport to destination")
+        tick(TICKS_TO_ARRIVE)
+        assertTrue("told: ${messages(activator)}", "You need to set a destination first." in messages(activator))
+        assertEquals("nobody moved", c, rider.tile)
+        remove(activator, rider)
+    }
+
     // ---------------------------------------------------------------------------------------------------------------- helpers
 
     /** Pillars at the four corners of the 5x5 (centre +-2), ids with an "Activate" option. */
@@ -223,12 +249,13 @@ class WildernessObeliskPlatformTests {
     private fun activate(
         p: Client,
         c: Tile,
+        option: String = "activate",
     ) {
         val pillar = pillarsOf(c).first { it.tile == c.transform(-2, 2) }
         val def = world.definitions.get(ObjectDef::class.java, pillar.id)
-        val opt = def.options.indexOfFirst { it?.lowercase() == "activate" } + 1
+        val opt = def.options.indexOfFirst { it?.lowercase() == option } + 1
         p.attr[INTERACTING_OBJ_ATTR] = WeakReference(pillar)
-        assertTrue("obelisk ${pillar.id} 'Activate' is bound by wilderness_obelisk.plugin.kts", repo.executeObject(p, pillar.id, opt))
+        assertTrue("obelisk ${pillar.id} '$option' is bound by wilderness_obelisk.plugin.kts", opt > 0 && repo.executeObject(p, pillar.id, opt))
     }
 
     private fun player(

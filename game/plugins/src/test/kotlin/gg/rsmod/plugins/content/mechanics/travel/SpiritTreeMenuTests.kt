@@ -29,8 +29,9 @@ class SpiritTreeMenuTests {
 
     @Test
     fun `the OSRS title and rows exist in 864 of both caches, centred and hidden until filled`() {
-        assertEquals(SpiritTrees.FIRST_ROW, SpiritTreeInterfaceTool.FIRST_ROW)
-        assertEquals(SpiritTrees.ROWS, SpiritTreeInterfaceTool.ROWS)
+        assertEquals(ScrollMenu.TITLE, SpiritTreeInterfaceTool.TITLE)
+        assertEquals(ScrollMenu.FIRST_ROW, SpiritTreeInterfaceTool.FIRST_ROW)
+        assertEquals(ScrollMenu.ROWS, SpiritTreeInterfaceTool.ROWS)
         for (cache in listOf("../../data/cache", "../../../../file-server/cache").filter { File(it).isDirectory }) {
             val library = CacheLibrary(cache)
             try {

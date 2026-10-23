@@ -6,6 +6,7 @@ import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.teleport
 import gg.rsmod.plugins.content.magic.teleportRefusal
+import gg.rsmod.plugins.content.mechanics.travel.ScrollMenu
 
 // A list of obelisk object IDs that can be activated.
 val ObeliskIDs =
@@ -28,6 +29,41 @@ ObeliskIDs.forEach { obeliskID ->
             activateObelisk(player, obj)
         }
     }
+    // A22: OSRS "Teleport to Destination" / "Set Destination" (ObeliskOptionTool, loc options 2 and 3).
+    if (if_obj_has_option(obeliskID, option = "teleport to destination")) {
+        on_obj_option(obeliskID, option = "teleport to destination") {
+            val obj = player.getInteractingGameObj()
+            val destination = player.attr[OBELISK_DESTINATION]?.let { Obelisk.values().getOrNull(it) }
+            if (destination == null) {
+                player.message("You need to set a destination first.")
+                return@on_obj_option
+            }
+            activateObelisk(player, obj, destination)
+        }
+    }
+    if (if_obj_has_option(obeliskID, option = "set destination")) {
+        on_obj_option(obeliskID, option = "set destination") {
+            openObeliskDestinations(player)
+        }
+    }
+}
+
+/**
+ * A22: the obelisk destination the player picked with "Set Destination" (index into [Obelisk]); kept with the account like OSRS.
+ * OSRS asks for the hard Wilderness Diary first - this server has no diaries, so everyone may set one (ADAPTED).
+ */
+val OBELISK_DESTINATION = gg.rsmod.game.model.attr.AttributeKey<Int>("obelisk_destination")
+
+/** OSRS "Select Obelisk destination" (OSRS Wiki "Wilderness Obelisk interface.png"): "1: Level 13 Wilderness" .. "6: Level 50 Wilderness". */
+fun obeliskDestinationLines(): List<String> = ScrollMenu.keyed(Obelisk.values().map { "Level ${it.name.removePrefix("LEVEL_")} Wilderness" })
+
+fun openObeliskDestinations(player: Player) {
+    ScrollMenu.open(player, "Select Obelisk destination", obeliskDestinationLines()) { p, row ->
+        val choice = Obelisk.values().getOrNull(row) ?: return@open
+        ScrollMenu.close(p)
+        p.attr[OBELISK_DESTINATION] = row
+        p.message("Your obelisk destination is now the Level ${choice.name.removePrefix("LEVEL_")} Wilderness obelisk.")
+    }
 }
 
 /**
@@ -46,10 +82,12 @@ val ARRIVAL_MESSAGE = "Ancient magic teleports you somewhere in the Wilderness!"
 /** N28: obelisks between activation and firing - Darkan WildernessObelisk.java:34 IS_ACTIVE. One script instance per world. */
 val activeObelisks = mutableSetOf<Obelisk>()
 
-// Activates an obelisk and teleports the players on its centre 3x3 to a random obelisk (the same one included).
+// Activates an obelisk and teleports the players on its centre 3x3 to a random obelisk (the same one included), or to [fixed]
+// ("Teleport to Destination": OSRS - everyone on the platform follows the rules of the player who activated it).
 fun activateObelisk(
     player: Player,
     obj: GameObject,
+    fixed: Obelisk? = null,
 ) {
     // The rest of this function handles the teleportation logic.
     val obeliskTile = obj.tile
@@ -63,7 +101,7 @@ fun activateObelisk(
         if (!gg.rsmod.plugins.content.areas.poh.PlayerHouse.isSafeTile(obeliskTile)) {
             return
         }
-        houseObelisk(player)
+        houseObelisk(player, fixed)
         return
     }
     val world: World = player.world
@@ -79,7 +117,7 @@ fun activateObelisk(
         return
     }
     try {
-        startObelisk(player, obj, stationObelisk, world)
+        startObelisk(player, obj, stationObelisk, world, fixed)
     } catch (t: Throwable) {
         activeObelisks.remove(stationObelisk) // a failed start must not leave the obelisk "already active" for good
         throw t
@@ -91,6 +129,7 @@ fun startObelisk(
     obj: GameObject,
     stationObelisk: Obelisk,
     world: World,
+    fixed: Obelisk? = null,
 ) {
     // Define the corners relative to the obelisk location for animation purposes.
     val corners = arrayOf(Tile(2, 2, 0), Tile(-2, 2, 0), Tile(-2, -2, 0), Tile(2, -2, 0))
@@ -106,7 +145,7 @@ fun startObelisk(
     // Handle the actual teleportation after a short delay.
     val activator = player.username
     world.queue {
-        val newObelisk = randomObelisk()
+        val newObelisk = fixed ?: randomObelisk()
         val destination = newObelisk.location
         val filteredPlayers = mutableListOf<Player>()
         val tile = stationObelisk.location
@@ -196,22 +235,23 @@ enum class Obelisk(
     }
 }
 
-/** The Superior Garden obelisk: pick one of the six Wilderness obelisks and travel there. */
-fun houseObelisk(p: Player) {
+/**
+ * The house obelisk (OSRS Wiki "Obelisk (Construction)"): like the Wilderness ones it sends you to a random Wilderness obelisk, or to
+ * the destination you set ("Teleport to Destination"); unlike them it teleports at once and only you. OSRS asks first with a warning
+ * window; here the same question as a choice (ADAPTED).
+ */
+fun houseObelisk(
+    p: Player,
+    fixed: Obelisk? = null,
+) {
     p.queue {
-        val destinations = gg.rsmod.plugins.content.areas.poh.PohGarden.OBELISKS
-        val labels = destinations.map { it.label } + "Cancel"
-        val pick = options(*labels.toTypedArray(), title = "Travel to which obelisk?")
-        if (pick < 1 || pick > destinations.size) {
+        if (options("Teleport into the Wilderness.", "Stay here.", title = "Warning: this teleports you into the Wilderness.") != 1) {
             return@queue
         }
-        val choice = destinations[pick - 1]
-        p.message("This will take you into the Wilderness.")
-        if (options("Travel to the ${choice.label.lowercase()}.", "Stay here.") != 1) {
-            return@queue
-        }
+        val destination = fixed ?: randomObelisk()
         p.canTeleport(TeleportType.WILDERNESS_OBELISK) {
-            p.teleport(choice.tile, TeleportType.WILDERNESS_OBELISK)
+            p.teleport(destination.location, TeleportType.WILDERNESS_OBELISK)
+            p.message(ARRIVAL_MESSAGE)
         }
     }
 }

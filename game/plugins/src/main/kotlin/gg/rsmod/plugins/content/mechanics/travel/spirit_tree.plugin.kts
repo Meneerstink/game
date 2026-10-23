@@ -71,10 +71,3 @@ suspend fun travel(
 on_button(interfaceId = SpiritTrees.INTERFACE, component = SpiritTrees.LIST) {
     SpiritTrees.select(player, player.getInteractingSlot())
 }
-
-// A28: the OSRS menu lines 864:10-25 (SpiritTreeInterfaceTool) - SpiritTrees.selectRow.
-for (row in 0 until SpiritTrees.ROWS) {
-    on_button(interfaceId = SpiritTrees.INTERFACE, component = SpiritTrees.FIRST_ROW + row) {
-        SpiritTrees.selectRow(player, row)
-    }
-}

@@ -8,8 +8,6 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.runClientScript
-import gg.rsmod.plugins.api.ext.setComponentHidden
-import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.magic.TeleportType
@@ -38,21 +36,12 @@ object SpiritTrees {
             Station("Mobilising Armies", Tile(2416, 2851, 0)),
         )
 
-    /** The OSRS menu's line keys (enum 1401: 1-9, then A-Z). */
-    private val KEYS = (1..9).map { it.toString() } + ('A'..'Z').map { it.toString() }
-
     /**
-     * A28: the OSRS rows SpiritTreeInterfaceTool appended to 864 (title 864:9, rows 864:10-25); 864's own title, subtitle, rule,
-     * list and scrollbar (3, 4, 5, 7, 8) are hidden.
+     * A28: the menu lines ([ScrollMenu], OSRS "Spirit Tree Locations"): the stations, then Cancel; a station the player stands at is
+     * greyed (OSRS greys what cannot be picked).
      */
-    const val FIRST_ROW = 10
-    const val ROWS = 16
-    private val OLD_PARTS = intArrayOf(3, 4, 5, 7, 8)
-    private const val GREY = "<col=5f5f5f>"
-
-    /** The menu lines: the stations, then Cancel; a station the player stands at is greyed (OSRS greys what cannot be picked). */
     fun lines(origin: Station?): List<String> =
-        STATIONS.mapIndexed { i, s -> (if (s == origin) GREY else "") + "${KEYS[i]}: ${s.label}" } + "${KEYS[STATIONS.size]}: Cancel"
+        ScrollMenu.keyed(STATIONS.map { it.label } + "Cancel").mapIndexed { i, line -> if (i < STATIONS.size && STATIONS[i] == origin) ScrollMenu.GREY + line else line }
 
     private const val NEAREST_STATION_RADIUS = 30
 
@@ -88,17 +77,7 @@ object SpiritTrees {
         val origin = if (atTree) STATIONS.minByOrNull { it.tile.getDistance(player.tile) }?.takeIf { it.tile.getDistance(player.tile) <= NEAREST_STATION_RADIUS } else null
         player.attr[TYPE] = type
         player.attr[ORIGIN] = origin?.let { STATIONS.indexOf(it) } ?: -1
-        // -1 makes script 2141 build no 667 list at all (its first test): the OSRS rows below replace it.
-        player.setVarp(CURRENT_TREE_VARP, -1)
-        player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
-        OLD_PARTS.forEach { player.setComponentHidden(INTERFACE, it, true) }
-        val lines = lines(origin)
-        for (r in 0 until ROWS) {
-            val line = lines.getOrNull(r)
-            if (line != null) player.setComponentText(INTERFACE, FIRST_ROW + r, line)
-            player.setComponentHidden(INTERFACE, FIRST_ROW + r, line == null)
-            if (line != null) player.setInterfaceEvents(INTERFACE, FIRST_ROW + r, -1..-1, 2)
-        }
+        ScrollMenu.open(player, "Spirit Tree Locations", lines(origin)) { p, row -> selectRow(p, row) }
     }
 
     /** Line [row] of the OSRS menu was clicked: a station, or Cancel. */
@@ -107,13 +86,13 @@ object SpiritTrees {
         row: Int,
     ) {
         if (row == STATIONS.size) {
-            player.closeInterface(INTERFACE)
+            ScrollMenu.close(player)
             return
         }
         if (row == player.attr[ORIGIN]) return
         val dest = STATIONS.getOrNull(row) ?: return
         val type = player.attr[TYPE] ?: TeleportType.SPIRIT_TREE
-        player.closeInterface(INTERFACE)
+        ScrollMenu.close(player)
         player.canTeleport(type) {
             player.teleport(dest.tile, type)
         }
