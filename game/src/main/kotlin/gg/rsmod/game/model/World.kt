@@ -266,12 +266,6 @@ class World(
      */
     var rebootTimer = -1
 
-    /**
-     * Message count used for creating unique IDs for private messages.
-     * Starts at a random value between 0 and 65535.
-     */
-    var messageCount = random(0..0xFFFF)
-
     internal fun init() {
         getService(GameService::class.java)?.let { service ->
             coroutineDispatcher = service.dispatcher
@@ -865,13 +859,6 @@ class World(
         }
 
         return jsonPlayerSerializer!!.characterExists(username.lowercase())
-    }
-
-    fun getNextMessageCount(): Int {
-        val currCount = messageCount
-        messageCount += 1 % 0xFFFF
-
-        return currCount
     }
 
     /**

@@ -85,14 +85,14 @@ class MessageQuickChatPrivateHandler : MessageHandler<MessageQuickChatPrivateMes
             fromPlayer.updateOthersFriendLists()
         }
 
-        val id = world.getNextMessageCount()
+        val id = gg.rsmod.game.model.social.ChatMessageIds.next()
         toPlayer.write(
             QuickChatPrivateOutMessage(
                 packetBody {
                     put(DataType.BYTE, 0)
                     putString(senderName)
-                    put(DataType.SHORT, id and 0xFFFF)
-                    put(DataType.TRI_BYTE, PRIVATE_ID_LOW)
+                    put(DataType.SHORT, gg.rsmod.game.model.social.ChatMessageIds.high(id))
+                    put(DataType.TRI_BYTE, gg.rsmod.game.model.social.ChatMessageIds.low(id))
                     put(DataType.BYTE, min(fromPlayer.privilege.id, 2))
                     putBytes(message.payload)
                 },
@@ -106,10 +106,5 @@ class MessageQuickChatPrivateHandler : MessageHandler<MessageQuickChatPrivateMes
                 },
             ),
         )
-    }
-
-    private companion object {
-        /** Same low id word typed private messages use (Player.receivePrivateMessage), so ids never collide with 0. */
-        const val PRIVATE_ID_LOW = 15
     }
 }

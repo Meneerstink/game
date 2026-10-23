@@ -1374,10 +1374,9 @@ abstract class Player(
             MessagePrivateReceivedMessage(
                 username = username,
                 privilege = privilege,
-                messageId = world.getNextMessageCount(),
-                15,
-                message,
-                world,
+                messageId = gg.rsmod.game.model.social.ChatMessageIds.next(),
+                message = message,
+                world = world,
             ),
         )
     }

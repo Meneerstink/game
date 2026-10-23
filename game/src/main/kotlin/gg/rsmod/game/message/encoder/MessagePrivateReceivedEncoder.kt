@@ -2,6 +2,7 @@ package gg.rsmod.game.message.encoder
 
 import gg.rsmod.game.message.MessageEncoder
 import gg.rsmod.game.message.impl.MessagePrivateReceivedMessage
+import gg.rsmod.game.model.social.ChatMessageIds
 import gg.rsmod.net.packet.GamePacketBuilder
 import gg.rsmod.util.Misc
 import kotlin.math.min
@@ -13,8 +14,8 @@ class MessagePrivateReceivedEncoder : MessageEncoder<MessagePrivateReceivedMessa
     ): Number =
         when (key) {
             "filtered" -> 1
-            "id_hi" -> message.messageId
-            "id_lo" -> message.worldId
+            "id_hi" -> ChatMessageIds.high(message.messageId)
+            "id_lo" -> ChatMessageIds.low(message.messageId)
             "player_rank" -> min(message.privilege.id, 2)
             else -> throw Exception("Unhandled value key.")
         }

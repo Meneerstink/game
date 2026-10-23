@@ -10,7 +10,6 @@ import gg.rsmod.util.Misc
 import gg.rsmod.util.io.AtomicFiles
 import java.io.File
 import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicLong
 
 /**
  * Friends-chat ranks exactly as the 667 client uses them: the channel member list (UPDATE_FRIENDCHAT_CHANNEL_FULL `g1b rank`), the
@@ -122,7 +121,6 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
     private val channels = ConcurrentHashMap<String, FriendsChatChannel>()
     private val settings = ConcurrentHashMap<String, FriendsChatSettings>()
     private val bans = ConcurrentHashMap<String, ConcurrentHashMap<String, Long>>()
-    private val messageIds = AtomicLong()
     private val gson = GsonBuilder().setPrettyPrinting().create()
 
     init {
@@ -378,15 +376,14 @@ class FriendsChat(private val settingsFile: File = gg.rsmod.util.io.SharedDataFi
         return true
     }
 
-    /** Ids run from 1 (the client's de-duplication ring starts full of zeroes) and wrap at the 40 bits the packet carries. */
-    fun nextMessageId(): Long = 1L + (messageIds.getAndIncrement() % MAX_MESSAGE_ID)
+    /** N264 / N265: one server-wide id source with the private and clan chat lines - see [ChatMessageIds]. */
+    fun nextMessageId(): Long = ChatMessageIds.next()
 
     companion object {
         const val SETTINGS_FILE = "data/friends_chat.json"
         const val KICK_BAN_MILLIS = 60 * 60 * 1000L
         /** The client allocates `FriendChatUser[100]` and reads 255 as "discard this packet". */
         const val MAX_MEMBERS = 100
-        private const val MAX_MESSAGE_ID = 0xFF_FFFF_FFFFL
 
         /** Owner of the channel the player was in at logout (rejoined at login, [rejoinOnLogin]). */
         val LAST_CHANNEL = gg.rsmod.game.model.attr.AttributeKey<String>(persistenceKey = "friends_chat_channel")

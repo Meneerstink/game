@@ -167,7 +167,6 @@ object Clans {
     private val channelUsers = ConcurrentHashMap<String, MutableSet<Player>>()
     private val guestOf = ConcurrentHashMap<Player, String>()
     private val updateNum = AtomicLong(1)
-    private val messageIds = AtomicLong()
 
     @Volatile private var loaded = false
 
@@ -500,7 +499,7 @@ object Clans {
     fun talk(sender: Player, text: String, guest: Boolean): Boolean {
         val clan = talkChannel(sender, guest) ?: return false
         if (!mayTalk(clan, sender)) return true
-        val id = 1L + (messageIds.getAndIncrement() % 0xFF_FFFF_FFFFL)
+        val id = gg.rsmod.game.model.social.ChatMessageIds.next()
         val name = Misc.formatForDisplay(sender.username)
         val compressed = ByteArray(256)
         val length = sender.world.huffman.compress(text, compressed)
@@ -527,7 +526,7 @@ object Clans {
     fun talkQuickChat(sender: Player, payload: ByteArray, guest: Boolean = false): Boolean {
         val clan = talkChannel(sender, guest) ?: return false
         if (!mayTalk(clan, sender)) return true
-        val id = 1L + (messageIds.getAndIncrement() % 0xFF_FFFF_FFFFL)
+        val id = gg.rsmod.game.model.social.ChatMessageIds.next()
         val name = Misc.formatForDisplay(sender.username)
         listeners(clan, sender).forEach { member ->
             member.write(
