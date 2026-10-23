@@ -40,7 +40,8 @@ object OsrsLookTool {
     /** Asset-map role of a converted upstream mesh - the importer's own role, so both share one mapping per mesh. */
     const val MODEL_ROLE = "model"
 
-    data class Look(val local: Int, val localName: String, val upstream: Int, val upstreamName: String, val why: String)
+    /** [inventoryOnly]: only the inventory icon (mesh, camera, colours, lighting) changes - worn meshes and hide flags stay 667. */
+    data class Look(val local: Int, val localName: String, val upstream: Int, val upstreamName: String, val why: String, val inventoryOnly: Boolean = false)
 
     /**
      * The 667 items that get their OSRS look. Hands items: the high-level 667-native hands items that exist in OSRS under the
@@ -55,6 +56,40 @@ object OsrsLookTool {
             // hand sat inside the 667 forearm (owner 2026-10-06: "when unequiping barrows gloves my hands are visible"). Owner choice
             // 2026-10-06 "Original 667 look": their 667 item definitions are restored (CacheJournalRestoreTool, tx-20261003-235150).
         )
+
+    /** The four 667 potion vials (4, 3, 2 and 1 doses): open glass necks, where every OSRS potion vial is corked. */
+    val VIAL_MODELS_667 = setOf(2789, 2697, 2384, 2621)
+
+    private val DOSE = Regex("""^(.+) \(([1-4])\)$""")
+
+    /**
+     * N242 (owner 2026-10-23: "na 1 slok toont het icoon een raar ander icoon, alsof het flesje open is"): the 667 potions draw the
+     * 2011 vials - no cork, the glass neck open - next to the OSRS-imported potions (Super combat, Bastion ...) with OSRS corked
+     * vials. Every 667 item on a 667 potion vial whose OSRS item under the same id is the same potion and dose ("Ranging potion (3)"
+     * = OSRS "Ranging potion(3)") gets the OSRS look, so a whole inventory of potions looks like OSRS.
+     */
+    fun potionLooks(
+        library: CacheLibrary,
+        itemFiles: Map<Int, ByteArray>,
+        imported: Set<Int>,
+    ): List<Look> {
+        val out = mutableListOf<Look>()
+        val maxId = (library.index(INDEX_ITEM).archiveIds().maxOrNull() ?: 0) * 256 + 255
+        for (id in 0..maxId) {
+            if (id in imported) continue
+            val bytes = CacheItemProbeTool.itemData(library, id) ?: continue
+            val name = ItemDefCodec.readName(bytes) ?: continue
+            val dose = DOSE.matchEntire(name) ?: continue
+            if (inventoryModel(bytes) !in VIAL_MODELS_667) continue
+            val upstream = itemFiles[id]?.let { ModernItemDefDecoder.decode(id, it) } ?: continue
+            if (upstream.name != "${dose.groupValues[1]}(${dose.groupValues[2]})") continue
+            out += Look(id, name, id, upstream.name, "N242: OSRS corked potion vial", inventoryOnly = true)
+        }
+        return out
+    }
+
+    /** The inventory model (opcode 1) of a raw 667 item definition, or null. */
+    fun inventoryModel(bytes: ByteArray): Int? = ItemDefCodec.describeOpcodes(bytes).firstOrNull { it.startsWith("1=") }?.substringAfter('=')?.toIntOrNull()
 
     /** Rev-667 ObjType model opcodes: inventory, worn male/female 0-2, chathead male/female 0-1. */
     val MODEL_OPCODES = setOf(1, 23, 24, 25, 26, 78, 79, 90, 91, 92, 93)
@@ -110,21 +145,25 @@ object OsrsLookTool {
     fun relook(
         current: ByteArray,
         upstream: ModernItemDef,
+        inventoryOnly: Boolean = false,
         localModel: (Int) -> Int,
     ): ByteArray {
         val present = payloads(current)
         val name = upstream.name
         val shorts = LinkedHashMap<Int, Int>()
-        lookModels(upstream).forEach { (code, model) -> shorts[code] = localModel(model) }
+        lookModels(upstream).filterKeys { !inventoryOnly || it == 1 }.forEach { (code, model) -> shorts[code] = localModel(model) }
         shorts += camera(upstream)
         val removed = HashSet<Int>()
-        (MODEL_OPCODES + CAMERA_OPCODES).filterTo(removed) { it in present && it !in shorts }
+        (MODEL_OPCODES + CAMERA_OPCODES).filterTo(removed) { it in present && it !in shorts && (!inventoryOnly || it !in MODEL_OPCODES || it == 1) }
 
         val recolour = recolourPayload(upstream)
+        // N242: a recolour table of the same size is rewritten in place (Magic potion: OSRS liquid colour 09dc, 667 9240).
+        var recolourBytes: ByteArray? = null
         if (recolour == null) {
             if (40 in present) removed.add(40)
-        } else {
-            check(present[40] == recolour) { "$name: OSRS recolour table $recolour differs from the 667 one ${present[40]}; not supported" }
+        } else if (present[40] != recolour) {
+            check(present[40]?.length == recolour.length) { "$name: OSRS recolour table $recolour differs in size from the 667 one ${present[40]}; not supported" }
+            recolourBytes = recolour.removePrefix("0x").chunked(2).map { it.toInt(16).toByte() }.toByteArray()
         }
         check(upstream.textureFind.isEmpty()) { "$name: OSRS retexture tables use OSRS texture ids and are not mapped" }
         if (41 in present) removed.add(41)
@@ -134,15 +173,32 @@ object OsrsLookTool {
         listOf(125, 126).filterTo(removed) { it in present }
         val ambient = OsrsItemImportTool.rev667Ambient(upstream.ambient, upstream.contrast, OsrsItemImportTool.ITEM_CONTRAST_BASE)
         val contrast = OsrsItemImportTool.rev667Contrast(upstream.contrast)
+        // N242: a lighting byte the 667 item lacks or has another value is written (one-byte opcodes 113 ambient / 114 contrast).
+        val lighting = LinkedHashMap<Int, Int>()
         for ((code, value) in listOf(113 to ambient, 114 to contrast)) {
             if (value != 0) {
-                check(present[code] == "0x%02x".format(value and 0xFF)) { "$name: OSRS lighting $code=$value cannot be added by this codec" }
+                if (present[code] != "0x%02x".format(value and 0xFF)) lighting[code] = value
             } else if (code in present) {
                 removed.add(code)
             }
         }
 
-        val out = ItemDefCodec.cloneWithOverrides(current, emptyMap(), shortOverrides = shorts, removedOpcodes = removed)
+        var out = ItemDefCodec.cloneWithOverrides(current, emptyMap(), shortOverrides = shorts, removedOpcodes = removed)
+        lighting.forEach { (code, value) ->
+            val at = ItemDefCodec.payloadOffsets(out).singleOrNull { it.first == code }?.second
+            out =
+                if (at != null) {
+                    out.copyOf().also { it[at] = value.toByte() }
+                } else {
+                    out.copyOf(out.size - 1) + byteArrayOf(code.toByte(), value.toByte(), 0)
+                }
+            check(payloads(out)[code] == "0x%02x".format(value and 0xFF)) { "$name: lighting $code rewrite failed" }
+        }
+        recolourBytes?.let { table ->
+            val at = ItemDefCodec.payloadOffsets(out).single { it.first == 40 }.second
+            table.copyInto(out, at)
+            check(payloads(out)[40] == recolour) { "$name: recolour rewrite failed" }
+        }
         check(untouched(out) == untouched(current)) { "$name: the relook changed more than the look opcodes" }
         return out
     }
@@ -210,14 +266,16 @@ object OsrsLookTool {
             }
             val reserved = HashSet<Int>()
 
-            LOOKS.forEach { look ->
+            val looks = LOOKS + potionLooks(library, itemFiles, imported)
+            println("POTIONS ${looks.size - LOOKS.size} 667 potion doses get the OSRS vial")
+            looks.forEach { look ->
                 check(look.local !in imported) { "${look.localName} ${look.local} is an imported OSRS item; the importer owns its look" }
                 val def = ModernItemDefDecoder.decode(look.upstream, itemFiles[look.upstream] ?: error("upstream item ${look.upstream} missing"))
                 check(def.name == look.upstreamName) { "upstream ${look.upstream} is '${def.name}', expected '${look.upstreamName}'" }
                 val current = CacheItemProbeTool.itemData(library, look.local) ?: error("item ${look.local} missing")
                 val currentName = ItemDefCodec.readName(current)
                 check(currentName == look.localName) { "item ${look.local} is '$currentName', expected '${look.localName}'" }
-                wantedFlags[look.local] = hideFlags(def)
+                if (!look.inventoryOnly) wantedFlags[look.local] = hideFlags(def)
 
                 fun localModel(code: Int, upstreamModel: Int): Int {
                     existing.modelLocalIdByMappingKey[ModelIdAllocator.mappingKey("upstream_model:$upstreamModel", MODEL_ROLE)]?.let { mapped ->
@@ -244,8 +302,8 @@ object OsrsLookTool {
 
                 println("LOOK item ${look.local} '${look.localName}' <- OSRS ${look.upstream} '${def.name}' (${look.why})")
                 val byUpstream = LinkedHashMap<Int, Int>()
-                lookModels(def).forEach { (code, model) -> byUpstream.getOrPut(model) { localModel(code, model) } }
-                val relooked = relook(current, def) { upstreamModel -> byUpstream.getValue(upstreamModel) }
+                lookModels(def).filterKeys { !look.inventoryOnly || it == 1 }.forEach { (code, model) -> byUpstream.getOrPut(model) { localModel(code, model) } }
+                val relooked = relook(current, def, look.inventoryOnly) { upstreamModel -> byUpstream.getValue(upstreamModel) }
                 if (relooked.contentEquals(current)) {
                     println("  ALREADY item ${look.local} has the OSRS look")
                     return@forEach
