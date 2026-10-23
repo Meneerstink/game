@@ -443,6 +443,7 @@ object Pets {
         val npc = current(player) ?: return
         Familiar.follow(player, npc, recovered = { p, n -> n.facePawn(p) }, runs = byNpc[npc.id]?.name in FAST_PETS)
         Familiar.updateHud(player)
+        PetVoices.idle(player, npc)
     }
 
     /** Logout: the npc goes, the pet item stays recorded for [restoreOnLogin]. */

@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.skills.summoning
 
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import java.io.File
@@ -66,6 +67,43 @@ object PetVoices {
         npc: Int,
         text: String,
     ): Int? = lines[npc]?.entries?.firstOrNull { text.trim().startsWith(it.key, ignoreCase = true) }?.value
+
+    /**
+     * N256 (owner 2026-10-23: "blood hound pet blaft nu alleen als je met hem interact ... blaft bijvoorbeeld om de 10 minuten; hoe
+     * zit het met de andere osrs pets"): every pet with a voice also makes it now and then by itself while it follows, after a random
+     * 8 to 12 minutes ([IDLE_MIN_CYCLES]..[IDLE_MAX_CYCLES], game cycles of 0.6 s). The silent pets stay silent.
+     */
+    const val IDLE_MIN_CYCLES = 800
+    const val IDLE_MAX_CYCLES = 1200
+
+    private val NEXT_IDLE_CYCLE = AttributeKey<Int>()
+
+    /** Whether the idle voice is due at [cycle], and the cycle the one after it is due ([roll] draws the wait). */
+    fun idleDue(
+        nextAt: Int?,
+        cycle: Int,
+        roll: () -> Int,
+    ): Pair<Boolean, Int> =
+        when {
+            nextAt == null -> false to cycle + roll()
+            cycle >= nextAt -> true to cycle + roll()
+            else -> false to nextAt
+        }
+
+    /** The sound pet [npc] makes by itself: its Talk-to voice, else its transcript voice (the Bloodhound's bark), else none. */
+    fun idleVoiceOf(npc: Int): Int? = talk[npc] ?: gg.rsmod.plugins.content.npcs.TranscriptDialogue.ownVoice(npc)
+
+    /** One follow tick of [player]'s pet [npc]: its idle voice when it is due ([idleDue]). */
+    fun idle(
+        player: Player,
+        npc: Npc,
+    ) {
+        val sound = idleVoiceOf(npc.id) ?: return
+        val world = player.world
+        val (due, next) = idleDue(player.attr[NEXT_IDLE_CYCLE], world.currentCycle) { world.random(IDLE_MIN_CYCLES..IDLE_MAX_CYCLES) }
+        player.attr[NEXT_IDLE_CYCLE] = next
+        if (due) FamiliarAudio.play(player, sound, volume = VOLUME, at = npc.tile)
+    }
 
     /** Talk-to on a pet: its voice once, from the pet, heard by the player and the players around it. */
     fun play(

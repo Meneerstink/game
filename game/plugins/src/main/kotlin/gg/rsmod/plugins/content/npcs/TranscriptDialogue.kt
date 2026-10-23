@@ -46,9 +46,12 @@ object TranscriptDialogue {
 
     /**
      * N70 (owner 10-16 "bloodhound pet no sounds"; Council N88 part 3): OSRS gives the Bloodhound follower no sound at all, so its
-     * transcript lines that bark ("*Woof woof bark!* ...") play Jagex's own pet_dog_bark once, on that line - no idle loop, no
-     * sound lent to other silent pets.
+     * transcript lines that bark ("*Woof woof bark!* ...") play Jagex's own pet_dog_bark once, on that line - no sound lent to other
+     * silent pets. N256 (owner 2026-10-23): it also barks by itself now and then while it follows ([ownVoice], PetVoices.idle).
      */
+    /** The voice a transcript pet makes by itself (N256: the Bloodhound's bark), or null. */
+    fun ownVoice(npcId: Int): Int? = if (npcId == BLOODHOUND) Sfx.PET_DOG_BARK else null
+
     fun lineSound(
         npcId: Int,
         text: String,

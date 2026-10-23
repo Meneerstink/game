@@ -23,6 +23,23 @@ class PetSoundsTests {
     }
 
     @Test
+    fun `N256 - a pet with a voice makes it by itself every 8 to 12 minutes, the Bloodhound barks, a silent pet stays silent`() {
+        // The first tick only plans; the voice comes when the planned cycle is reached, and the next one is planned again.
+        assertEquals(false to 1_900, PetVoices.idleDue(null, 1_000) { 900 })
+        assertEquals(false to 1_900, PetVoices.idleDue(1_900, 1_899) { 900 })
+        assertEquals(true to 2_800, PetVoices.idleDue(1_900, 1_900) { 900 })
+        assertEquals(800, PetVoices.IDLE_MIN_CYCLES, "8 minutes of 0.6 s cycles")
+        assertEquals(1_200, PetVoices.IDLE_MAX_CYCLES, "12 minutes")
+        PetVoices.install(PetVoices.parse(File("../../data/cfg/pets/pet_voices.tsv").readLines()), Pets.variants)
+        assertEquals(Sfx.PET_DOG_BARK, PetVoices.idleVoiceOf(TranscriptDialogue.BLOODHOUND), "the Bloodhound's own bark")
+        val hellpuppy = Pets.variants.first { it.pet == "Hellpuppy" }.npc
+        assertEquals(PetVoices.voiceOf(hellpuppy), PetVoices.idleVoiceOf(hellpuppy), "a pet's idle voice is its Talk-to voice")
+        assertNull(PetVoices.idleVoiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken stays silent")
+        val tick = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/Pets.kt").readText().substringAfter("fun tick(player: Player) {").substringBefore("\n    }")
+        assertTrue("PetVoices.idle(player, npc)" in tick, "every follow tick of a pet")
+    }
+
+    @Test
     fun `the Bloodhound barks once on each line that says it barks, and nowhere else`() {
         assertEquals(Sfx.PET_DOG_BARK, TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "*Woof woof bark!* Elementary, it's due to the influence of the -SQUIRREL-!"))
         assertNull(TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "Walkies!"))
