@@ -458,7 +458,7 @@ class PestControlGame(
         world.spawn(squire)
         if (players.isEmpty()) {
             PestControlTrace.problem("${tier.displayName} game started with no players (all offline); ended at once")
-            end(success = false)
+            end(success = false, reason = "no players at the start")
         }
     }
 
@@ -485,11 +485,11 @@ class PestControlGame(
     fun tick() {
         // The instance is released by the allocator once nobody is inside; the game ends with it.
         if (world.instanceAllocator.getMap(base) !== map) {
-            end(success = false, silent = true)
+            end(success = false, silent = true, reason = "instance released")
             return
         }
         if (knight.isDead() || !knight.isSpawned()) {
-            end(success = false)
+            end(success = false, reason = "knight dead=${knight.isDead()} spawned=${knight.isSpawned()}")
             return
         }
         // Whoever teleported or walked out of the instance has left the game.
@@ -504,7 +504,7 @@ class PestControlGame(
         val shieldStep = PC_SHIELD_DROP_TICKS.indexOf(ticks)
         if (shieldStep >= 0) dropShield(shieldOrder[shieldStep])
         if (ticks >= PC_GAME_DURATION_TICKS) {
-            end(success = true)
+            end(success = true, reason = "time up")
             return
         }
         monsters.removeIf { !it.isSpawned() || it.isDead() }
@@ -631,7 +631,7 @@ class PestControlGame(
         for (p in players) p.message("The ${PC_PORTAL_NAMES[index]} portal has been destroyed!")
         sendAll(13 + index, "<col=FF0000>0")
         if (portals.all { it == null || it.isDead() || !it.isSpawned() }) {
-            end(success = true)
+            end(success = true, reason = "all portals down")
             return
         }
         // 2009scape: the portal's spinners explode and the knight regains 50 hitpoints.
@@ -645,9 +645,11 @@ class PestControlGame(
     fun end(
         success: Boolean,
         silent: Boolean = false,
+        reason: String = "",
     ) {
         if (!active) return
         active = false
+        gg.rsmod.game.model.World.logger.info { "Pest Control ${tier.displayName} game over (${if (success) "won" else "lost"}) at tick $ticks: $reason" }
         for (p in players.toList()) {
             if (!p.isOnline) continue
             if (silent) PestControlHandler.cleanUp(p) else PestControlHandler.pay(p, this, success)

@@ -61,23 +61,34 @@ object PestControlScenarios {
         run: Run,
         game: PestControlGame,
         bots: List<Client>,
+        checked: MutableSet<gg.rsmod.game.model.entity.Npc>,
     ) {
         for (bot in bots) bot.moveTo(game.landingTile())
         wait(2)
+        // N112: only the monsters these checks spawn ([checked]) stay; the caller's task clears the waves.
+        game.knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS)
         // Spinner: heals its damaged portal by 10 % of its lifepoints when within 5 tiles.
         val index = game.portals.indexOfFirst { it != null && it.id in 6142..6145 && !it.isDead() }
         val portal = game.portals[index]!!
         portal.setCurrentLifepoints(portal.getMaximumLifepoints() / 2)
         val half = portal.getCurrentLifepoints()
         val spinner = game.spawnMonster(3747, portal.tile.transform(3, 0, 0), index)
+        checked += spinner
         repeat(30) { wait(1) }
         run.expectTrue(E, "spinner heals its portal", portal.getCurrentLifepoints() > half, "lp $half -> ${portal.getCurrentLifepoints()}")
-        // Portal death: its spinners explode, the knight regains 50 hitpoints.
+        // Portal death: its spinners explode, the knight regains 50 hitpoints. N112: the other pests go first - with hitpoints 1:1
+        // (knight 200) the ~20 pests of the waves killed the half-health knight in these 5 ticks, the game was lost and every later
+        // step (the safe death, the squire, the win) ran outside a game.
         game.knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS / 2)
         portal.hit(portal.getCurrentLifepoints())
         repeat(5) { wait(1) }
-        // The pests keep hitting the knight meanwhile, so +500 is allowed a few small hits.
-        run.expectTrue(E, "portal destroyed: its spinner explodes, knight +500 lifepoints", !spinner.isSpawned() && game.knight.getCurrentLifepoints() in 1400..1500, "spinner=${spinner.isSpawned()} knight 1000 -> ${game.knight.getCurrentLifepoints()}")
+        // The pests keep hitting the knight meanwhile, so the +50 is allowed a few small hits. N112: hitpoints are 1:1 since the HP
+        // unit migration (knight 200, heal 50; the scenario still expected 1000 -> 1400..1500).
+        val healed = PC_KNIGHT_LIFEPOINTS / 2 + gg.rsmod.plugins.content.activity.pest_control.PC_KNIGHT_PORTAL_HEAL
+        run.expectTrue(E, "portal destroyed: its spinner explodes, knight +50 hitpoints", !spinner.isSpawned() && game.knight.getCurrentLifepoints() in (healed - 15)..healed, "spinner=${spinner.isSpawned()} knight ${PC_KNIGHT_LIFEPOINTS / 2} -> ${game.knight.getCurrentLifepoints()}")
+        // N112: the knight back to full, so the pests of the next checks cannot end the game before the death / squire / win steps.
+        game.knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS)
+        run.expectTrue(E, "one portal down: the game goes on", game.active, "active=${game.active} portals=${game.portals.map { "${it?.id}:${it?.isSpawned()}:${it?.isDead()}" }}")
 
         // Ravager: walks to an intact barricade within 5 tiles and smashes it.
         val wall = game.barricades.firstOrNull { it.id == 14224 }
@@ -90,6 +101,7 @@ object PestControlScenarios {
         fun damageAround() = near.sumOf { t -> PestControlBarricades.objectsAt(run.world, t).filter { PestControlBarricades.isBarricadeOrGate(it.id) }.sumOf { it.id } }
         val sumBefore = damageAround()
         val ravager = game.spawnMonster(3742, spawn, 0)
+        checked += ravager
         ravager.aggroCheck = { _, _ -> false }
         repeat(25) { wait(1) }
         // Every hit moves an id up the damage chain, so the id sum of the barricades around it grows.
@@ -104,13 +116,16 @@ object PestControlScenarios {
         }
         val before2 = wall2.id
         val splatter = game.spawnMonster(3727, wall2.tile.transform(0, 1, 0), 0)
+        checked += splatter
         splatter.aggroCheck = { _, _ -> false }
         repeat(6) { wait(1) }
         val atWall2 = PestControlBarricades.objectsAt(run.world, wall2.tile).map { it.id }
         run.expectTrue(E, "splatter explodes on a barricade", !splatter.isSpawned() && before2 !in atWall2 && atWall2.any { it == before2 + 3 }, "spawned=${splatter.isSpawned()} $before2 -> $atWall2")
 
-        // Defiler: with nobody to fight it goes for the Void Knight.
-        val defiler = game.spawnMonster(3762, game.local(33, 46), 0)
+        // Defiler: with nobody to fight it goes for the Void Knight. N112: spawned on the knight's far side (the bots stand on the
+        // landing, z 49-54) - by Darkan's rule a pest picks a player within 10 tiles, and (33, 46) had five of them.
+        val defiler = game.spawnMonster(3762, game.local(33, 38), 0)
+        checked += defiler
         defiler.aggroCheck = { _, _ -> false }
         val knightLp = game.knight.getCurrentLifepoints()
         var targeted = false
@@ -123,6 +138,7 @@ object PestControlScenarios {
 
         // Shifter: teleports next to a target more than 5 tiles away.
         val shifter = game.spawnMonster(3732, game.knight.tile.transform(0, -12, 0), 0)
+        checked += shifter
         shifter.aggroCheck = { _, _ -> false }
         wait(1)
         shifter.attack(game.knight)
@@ -215,6 +231,18 @@ object PestControlScenarios {
         val respawning = game.monsters.filter { it.respawns }
         run.expectTrue(E, "no pest monster respawns", respawning.isEmpty(), respawning.joinToString { "${it.id}" })
 
+        // N112: from here on only the monsters a check spawns itself stay. With hitpoints 1:1 (knight 200) the waves (every 35
+        // ticks per portal) and the knight shifters killed the knight of five idle bots by tick ~85, in the middle of these steps:
+        // the game was lost and the safe death, the squire and the win ran outside a game. A world task clears the rest each tick.
+        val checked = HashSet<gg.rsmod.game.model.entity.Npc>()
+        var clearing = true
+        run.world.queue {
+            while (clearing && game.active) {
+                game.monsters.filter { it !in checked }.forEach { run.world.remove(it) }
+                wait(1)
+            }
+        }
+
         // 4. Zeal from hitting a portal (real Attack).
         val portal = game.portals.first { it != null && it.id in 6142..6145 }!!
         // West of the 3x3 portal, not on its diagonal corner (unarmed melee cannot hit diagonally).
@@ -280,7 +308,9 @@ object PestControlScenarios {
         run.expectTrue(E, "tower ladder (45, 41): over to (44, 41)", b.tile.sameAs(game.local(44, 41)), "at ${b.tile.x - game.base.x},${b.tile.z - game.base.z}")
 
         // 5b. Monster behaviour (2009scape PC*NPC), each spawned on purpose away from the players.
-        monsters(run, game, bots)
+        monsters(run, game, bots, checked)
+        clearing = false
+        run.expectTrue(E, "after the monster checks the game is still on", game.active, "active=${game.active} knight=${game.knight.getCurrentLifepoints()} portals=${game.portals.map { "${it?.id}:${it?.isSpawned()}:${it?.isDead()}" }}")
 
         // 6. A safe death: back at the landing, items kept.
         b.inventory.add(gg.rsmod.plugins.api.cfg.Items.ABYSSAL_WHIP)

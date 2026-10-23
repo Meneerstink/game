@@ -186,7 +186,7 @@ object PestControlMonsters {
         game: PestControlGame,
         m: Npc,
     ) {
-        if (!idle(m)) return
+        // N112: no idle check - tick() gives every idle pest a target first, so a splatter was never idle here and never exploded.
         if (game.barricades.any { it.tile.isWithinRadius(m.tile, 1) }) splatterExplode(game, m)
     }
 
