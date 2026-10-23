@@ -71,6 +71,9 @@ class ObjectDef(
     /** The MapElementType drawn at this loc on the minimap and world map (opcode 107), -1 for none. */
     var mapElement = -1
 
+    /** The map scene (MSI) sprite drawn for this loc on the minimap and world map (opcode 102), -1 for none. */
+    var mapScene = -1
+
     /** The looping sound the client plays near this loc (opcode 78), -1 for none, and its range in tiles. */
     var ambientSound = -1
     var ambientSoundRange = 0
@@ -222,7 +225,7 @@ class ObjectDef(
                 buf.readUnsignedShort()
             }
             101 -> buf.readUnsignedByte()
-            102 -> buf.readUnsignedShort()
+            102 -> mapScene = buf.readUnsignedShort()
             103 -> {}
             104 -> buf.readUnsignedByte()
             105 -> {}

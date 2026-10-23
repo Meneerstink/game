@@ -396,6 +396,14 @@ task runOccultAltarSoundTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OccultAltarSoundTool'
 }
 
+task runFeroxWorldMapTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N228: rebuilds the world-map records of the Ferox squares 48_56 / 49_56 from the current landscape and adds ' +
+        'the Ferox Enclave label. Usage: ./gradlew :game:runFeroxWorldMapTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.FeroxWorldMapTool'
+}
+
 task runStoreMapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +
