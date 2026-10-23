@@ -823,6 +823,16 @@ abstract class Player(
                                 .toTypedArray(),
                     ),
                 )
+                // N42/N114: the price of one item of every stock row, which the window shows under the cell (ShopWindowScriptTool).
+                write(
+                    UpdateInvFullMessage(
+                        containerKey = gg.rsmod.game.model.shop.Shop.PRICE_CONTAINER,
+                        items =
+                            shop.items
+                                .map { if (it != null) Item(it.item, shop.currency.priceOf(world, it).coerceAtLeast(0)) else null }
+                                .toTypedArray(),
+                    ),
+                )
                 write(
                     UpdateInvFullMessage(
                         containerKey = 6,

@@ -24,6 +24,9 @@ package gg.rsmod.game.model.shop
  * @param resupplyCycles
  * The amount of cycles for each "resupply tick".
  *
+ * @param deliverNoted
+ * N220: the window shows [item] itself, a purchase hands out its banknote (the Quartermaster's bulk supplies).
+ *
  * @author Tom <rspsmods@gmail.com>
  */
 data class ShopItem(
@@ -34,6 +37,7 @@ data class ShopItem(
     val buyPrice: Int? = null,
     val resupplyAmount: Int = Shop.DEFAULT_RESUPPLY_AMOUNT,
     val resupplyCycles: Int = Shop.DEFAULT_RESUPPLY_CYCLES,
+    val deliverNoted: Boolean = false,
 ) {
     /**
      * The current amount of the item that is in stock.

@@ -58,11 +58,12 @@ data class Shop(
             }
             if (player.attr[CURRENT_SHOP_ATTR] == this) {
                 player.shopDirty = true
+                // Same events as Player.openShop: every child of every row, ops 1..7 (Buy X, N62) and 10.
                 player.setEvents(
                     interfaceId = 620,
                     component = 25,
-                    to = this.items.filterNotNull().size * 6,
-                    setting = 1150,
+                    to = this.items.size * gg.rsmod.game.tools.importer.ShopWindowScriptTool.CHILDREN_PER_ROW,
+                    setting = STOCK_EVENTS,
                 )
             } else {
                 iterator.remove()
@@ -161,10 +162,20 @@ data class Shop(
         const val DEFAULT_STOCK_SIZE = 40
 
         /**
-         * The most stock rows the client's shop window (interface 620) can draw: it shows inv 4, whose cache size is 40, and its
-         * build script loops `INV_SIZE(4)` with 40 price varcs (946..985). A row at index 40 or later is never visible.
+         * The most stock rows the client's shop window (interface 620) can draw: its build script 2723 loops `INV_SIZE(4)`, and
+         * inventory 4 holds this many slots since N222 (ShopWindowScriptTool; the cache had 40). A row past it is never visible.
          */
-        const val CLIENT_VISIBLE_SLOTS = 40
+        const val CLIENT_VISIBLE_SLOTS = 100
+
+        /**
+         * N42/N114: the client inventory that carries the shop's prices - slot n holds the object of stock row n with the price of
+         * one as its count (0 = not for sale). Clientscript 2720 shows it under each cell (ShopWindowScriptTool). Not a cache
+         * inventory (those end at 619); the client keeps any id it is sent.
+         */
+        const val PRICE_CONTAINER = 30_000
+
+        /** Interface events of a stock cell (620:25): ops 1..7 (Info, Buy 1/5/10/50/500, Buy X) and 10 (Examine); bit n = op n. */
+        const val STOCK_EVENTS = (1 shl 1) or (1 shl 2) or (1 shl 3) or (1 shl 4) or (1 shl 5) or (1 shl 6) or (1 shl 7) or (1 shl 10)
 
         /**
          * The default amount of an item that is resupplied per "resupply tick".

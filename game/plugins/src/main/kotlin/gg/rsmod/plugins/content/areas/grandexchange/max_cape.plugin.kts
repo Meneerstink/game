@@ -12,11 +12,11 @@ import gg.rsmod.plugins.content.items.osrs.MaxCapes
  * he needs to sell the maxcape for 120k gp if players have max stats").
  *
  * NpcDef 3373 already carries Talk-to / Follow / Trade in the cache, so both options only needed a server handler.
- * OSRS sells the Max cape at 2,277,000 gp; 120,000 is an explicit owner price override for this server, so it is
- * written here once rather than guessed per call site. The cape and hood handed over are the wearable 667 pair
+ * OSRS sells the Max cape at 2,277,000 gp; the price here is an explicit owner override for this server, written here once
+ * rather than guessed per call site: 120,000 (2026-09-20), 99,000 since N114 (owner 2026-10-22: "de prijs is 99.000"). The cape and hood handed over are the wearable 667 pair
  * ([MaxCapes.MAX_CAPE] / [MaxCapes.MAX_HOOD]) - 20747/20751 are the unwearable copies.
  */
-val MAX_CAPE_PRICE = 120_000
+val MAX_CAPE_PRICE = 99_000
 
 /**
  * "Max stats" is 99 in every trainable skill except Dungeoneering, which is left out of the requirement entirely
@@ -100,7 +100,7 @@ suspend fun QueueTask.sellMaxCape() {
     }
     chatNpc(
         "Then it's yours, and you've earned every stitch of it.",
-        "120,000 coins for the cape and the hood.",
+        "99,000 coins for the cape and the hood.",
         facialExpression = FacialExpression.HAPPY,
     )
     player.openShop(MAX_CAPE_SHOP)

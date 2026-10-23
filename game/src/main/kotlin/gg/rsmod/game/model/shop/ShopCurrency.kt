@@ -46,6 +46,15 @@ interface ShopCurrency {
     ): Int
 
     /**
+     * N42/N114: what one [shopItem] costs, as the shop window shows it under the cell ([Shop.PRICE_CONTAINER]) - the same price
+     * the purchase charges. 0 or less = not for sale.
+     */
+    fun priceOf(
+        world: World,
+        shopItem: ShopItem,
+    ): Int = shopItem.sellPrice ?: getSellPrice(world, shopItem.item)
+
+    /**
      * Called when a player attempts to buy a [ShopItem].
      */
     fun sellToPlayer(

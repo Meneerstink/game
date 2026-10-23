@@ -246,6 +246,12 @@ open class ItemCurrency(
         return maxOf(base.toLong(), floor).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
 
+    /** N42/N114: the window's price label is exactly what [sellToPlayer] charges. */
+    override fun priceOf(
+        world: World,
+        shopItem: ShopItem,
+    ): Int = sellPriceOf(world, shopItem)
+
     /**
      * What this shop pays for one [unnoted] item while it holds [stock] of it.
      *
@@ -365,7 +371,9 @@ open class ItemCurrency(
 
         // Audit E-09: buy only what fits. The coins used to be taken for the whole amount and the refund for what did
         // not fit was added without checking, so a full inventory destroyed coins.
-        amount = Math.min(amount, room(p, shopItem.item))
+        // N220: a row shown as the item itself can hand out its banknote (the Quartermaster's bulk supplies).
+        val delivered = deliveredId(p.world.definitions, shopItem)
+        amount = Math.min(amount, room(p, delivered))
         if (amount <= 0) {
             p.message("You don't have enough inventory space.")
             return
@@ -387,7 +395,7 @@ open class ItemCurrency(
             return
         }
 
-        val add = p.inventory.add(item = shopItem.item, amount = amount, assureFullInsertion = false)
+        val add = p.inventory.add(item = delivered, amount = amount, assureFullInsertion = false)
         if (add.completed == 0) {
             p.message("You don't have enough inventory space.")
         }
@@ -503,6 +511,29 @@ open class ItemCurrency(
     override val currencyItem = itemCurrency
 
     companion object : mu.KLogging() {
+        /**
+         * N220: what buying [shopItem] hands out - the item itself, or its banknote for a [ShopItem.deliverNoted] row whose item has
+         * one (not for an item that stacks by itself, nor a note link that does not point back).
+         */
+        fun deliveredId(
+            definitions: gg.rsmod.game.fs.DefinitionSet,
+            shopItem: ShopItem,
+        ): Int {
+            if (!shopItem.deliverNoted) return shopItem.item
+            val def = definitions.getNullable(ItemDef::class.java, shopItem.item) ?: return shopItem.item
+            return noteOf(definitions, def)
+        }
+
+        /** The banknote of [def] when it has one and does not stack by itself; otherwise the item itself. */
+        fun noteOf(
+            definitions: gg.rsmod.game.fs.DefinitionSet,
+            def: ItemDef,
+        ): Int {
+            if (def.stacks || def.noteTemplateId != 0 || def.noteLinkId <= 0) return def.id
+            val note = definitions.getNullable(ItemDef::class.java, def.noteLinkId) ?: return def.id
+            return if (note.noted && note.noteLinkId == def.id) note.id else def.id
+        }
+
         /** High-alchemy value of an item with cache value [cost]: `ceil(0.6 * cost)`, in Long. */
         fun highAlchValue(cost: Int): Long = (cost.coerceAtLeast(0).toLong() * 3 + 4) / 5
     }

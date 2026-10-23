@@ -7,16 +7,14 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 
 /**
- * The Quartermaster's stock (home PvP/PvM supplies, npc 11679 in the Grand Exchange home hall), split over shops that each fit
- * the client's shop window.
+ * The Quartermaster's stock (home PvP/PvM supplies, npc 11679 in the Grand Exchange home hall): ONE shop on one page (N222, owner
+ * 2026-10-23: "alles moet op 1 pagina" - the window draws [Shop.CLIENT_VISIBLE_SLOTS] rows since ShopWindowScriptTool; it was 40,
+ * which split the gear onto a second page).
  *
- * Shop window limit: interface 620 draws inv 4, whose cache size is 40 (config 2/5 file 4 = `02 0028`), and its build script
- * 2716/2723 loops `INV_SIZE(4)` with exactly 40 price varcs (946..985). Every stock row past index 39 is never drawn: the old
- * single 52-row shop hid all eleven bolt rows (bug run 2026-10-03). So every shop here holds at most [Shop.CLIENT_VISIBLE_SLOTS].
- *
- * Owner 2026-10-03 (bug 205926, buglist E4/E5): "quartermaster needs to sell noted items" - the consumables are also sold as
- * banknotes ([CONSUMABLES_NOTED]: same rows, same prices, the cache note of every item that has one, so a 500-buy takes one
- * slot) - and the Prayer potion is no longer stocked (owner decision; Super restore stays).
+ * Owner 2026-10-03 (bug 205926, buglist E4/E5): "quartermaster needs to sell noted items" - a purchase of a consumable hands out
+ * its banknote (the cache note of every item that has one, so a 500-buy takes one slot). N220 (owner 2026-10-23: "items worden
+ * noted getoond"): the window shows the item itself, like every OSRS shop ([gg.rsmod.game.model.shop.ShopItem.deliverNoted]).
+ * The Prayer potion is no longer stocked (owner decision; Super restore stays).
  *
  * Rows were checked against this cache when the shop was first built (food in `Food`, potions in `Potion`, combination runes
  * through the spellbooks, blighted sacks in `BlightedSacks`, the house tab in `player_house.plugin.kts`, the burning amulet,
@@ -29,18 +27,15 @@ object QuartermasterSupplies {
     /**
      * Owner 2026-10-04 02:40 (bug 024055: "now there is no shop just a chat interface i did not ask for this"): Trade opens ONE
      * shop directly again - no "which supplies?" dialogue. Owner's choice the same night: the consumables as banknotes plus the
-     * runes, sacks, arrows and one bolt type, exactly the 40 rows the window draws ([droppedForWindow] lists what made way).
+     * runes, sacks, arrows and one bolt type ([droppedForWindow] lists what made way for the old 40-row window), then the gear.
      */
     const val SHOP = "Home PK Supplies"
-
-    /** Page 2 of the Quartermaster (owner 2026-10-22): the gear rows that did not fit the 40-row window of page 1. */
-    const val GEAR_SHOP = "Home PK Gear"
 
     /** N62 (owner 2026-10-22): 10,000 of every row. */
     const val ROW_STOCK = 10_000
 
     /**
-     * Page 2 rows (owner 2026-10-22): N185 the Recipe for Disaster gloves Barrows / Adamant / Mithril (667 ids 7462 / 7459 / 7458,
+     * Gear rows (owner 2026-10-22, a second page until N222 put them on the one page): N185 the Recipe for Disaster gloves Barrows / Adamant / Mithril (667 ids 7462 / 7459 / 7458,
      * all named "Gloves" in this cache), N186 the god capes (the imbued ones stay the Mage Arena II reward), N200 Ava's accumulator
      * and attractor. Untradeable in OSRS, so they cost their cache value (GeCoinCurrency falls back to it).
      */
@@ -50,9 +45,6 @@ object QuartermasterSupplies {
             Items.SARADOMIN_CAPE to ROW_STOCK, Items.GUTHIX_CAPE to ROW_STOCK, Items.ZAMORAK_CAPE to ROW_STOCK,
             Items.AVAS_ACCUMULATOR to ROW_STOCK, Items.AVAS_ATTRACTOR to ROW_STOCK,
         )
-
-    /** Trade opens page 1; Prev/Next page switch between the two (ShopPageGroups). */
-    val PAGES = gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.Group("Quartermaster", listOf(SHOP, GEAR_SHOP), listOf("Supplies", "Gear"))
 
     /** Food and potions (4 doses): every one of these has a banknote in this cache, so the noted shop sells only notes of them. */
     val foodAndPotions: List<Pair<Int, Int>> =
@@ -117,33 +109,34 @@ object QuartermasterSupplies {
             Items.MOONLIGHT_ANTLER_BOLTS,
         )
 
-    /** The single shop's stock, in window order: consumables (sold noted where a note exists), then the stackables. */
-    val stock: List<Pair<Int, Int>> = (consumables + ammunition).distinctBy { it.first }
+    /** The one shop's stock, in window order: consumables (handed out noted where a note exists), the stackables, the gear. */
+    val stock: List<Pair<Int, Int>> = (consumables + ammunition + gear).distinctBy { it.first }
 
-    /** One stocked row: the id the shop hands out, its stock, and the price of one (the unnoted item's price). */
-    data class Row(val item: Int, val amount: Int, val price: Int, val unnoted: Int)
+    /** The rows a purchase hands out as banknotes: the consumables. */
+    val deliveredNoted: Set<Int> = consumables.map { it.first }.toSet()
 
-    /** The rows of [stock] whose item exists unnoted in this cache. [noted]: hand out the cache note where the item has one. */
+    /**
+     * One stocked row: the item the window shows ([item], never a note), its stock, the price of one, and the id a purchase hands
+     * out ([delivered]: the banknote for a consumable that has one, otherwise [item]).
+     */
+    data class Row(val item: Int, val amount: Int, val price: Int, val delivered: Int)
+
+    /** The rows of [stock] whose item exists unnoted in this cache. */
     fun rows(
         definitions: DefinitionSet,
-        stock: List<Pair<Int, Int>>,
-        noted: Boolean,
+        stock: List<Pair<Int, Int>> = this.stock,
     ): List<Row> =
         stock.mapNotNull { (itemId, amount) ->
             val def = definitions.getNullable(ItemDef::class.java, itemId) ?: return@mapNotNull null
             if (def.name.isBlank() || def.noted) return@mapNotNull null
-            Row(if (noted) notedId(definitions, def) else itemId, amount, OsrsGuidePrices.seed(def), itemId)
+            Row(itemId, amount, OsrsGuidePrices.seed(def), if (itemId in deliveredNoted) notedId(definitions, def) else itemId)
         }
 
     /** The banknote of [def] when it has one and does not stack by itself; otherwise the item itself. */
     fun notedId(
         definitions: DefinitionSet,
         def: ItemDef,
-    ): Int {
-        if (def.stacks || def.noteTemplateId != 0 || def.noteLinkId <= 0) return def.id
-        val note = definitions.getNullable(ItemDef::class.java, def.noteLinkId) ?: return def.id
-        return if (note.noted && note.noteLinkId == def.id) note.id else def.id
-    }
+    ): Int = gg.rsmod.plugins.content.mechanics.shops.ItemCurrency.noteOf(definitions, def)
 
     /**
      * Restock per resupply tick (every [Shop.DEFAULT_RESUPPLY_CYCLES] cycles): 1% of the base stock, at least 1, so a bulk buy of

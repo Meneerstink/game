@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.skills.summoning
 
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.model.shop.Shop
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 import gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups
 
@@ -12,8 +11,8 @@ import gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups
  *
  * The stock is every pouch of [SummoningPouchData] and every scroll of [SummoningScrollData] - the familiars this server can
  * actually summon and the special moves it knows - in level order, so a new familiar row is stocked without touching the shop.
- * 78 pouches and 67 scrolls do not fit one shop window (interface 620 draws at most [Shop.CLIENT_VISIBLE_SLOTS] rows), so each
- * list is split into the fewest equal shops that fit ([pages]). Owner 2026-10-06 (bug 204956, OWNER_QUESTIONS Q2 = A): Trade opens
+ * 78 pouches and 67 scrolls did not fit one shop window (interface 620 drew at most 40 rows until N222), so each list is split
+ * into the fewest equal shops of at most [PAGE_ROWS] rows ([pages]). Owner 2026-10-06 (bug 204956, OWNER_QUESTIONS Q2 = A): Trade opens
  * [PAGE_GROUP] directly on page 1 (the supplies shop) and the shop window's Prev page / Next page buttons walk through the supplies,
  * pouch and scroll pages ([gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups]).
  *
@@ -29,6 +28,9 @@ object SummoningShopStock {
 
     /** Pikkupstix's supplies shop (spirit shards, pouches, charms, headdresses): page 1 of [PAGE_GROUP]. */
     const val SUPPLIES_SHOP = "Pikkupstix's Summoning Shop"
+
+    /** Rows per pouch/scroll page: the 40 of the old shop window, kept when N222 enlarged the window (owner asked one page only for the Quartermaster). */
+    const val PAGE_ROWS = 40
 
     /** One shop page: its title, the dialogue line that opens it and its rows (item id to base stock). */
     data class Page(val title: String, val option: String, val stock: List<Pair<Int, Int>>)
@@ -60,8 +62,8 @@ object SummoningShopStock {
     }
 
     /**
-     * [items] (id to summoning level) in the fewest pages of at most [Shop.CLIENT_VISIBLE_SLOTS] rows, as equal as possible, each
-     * named after its level range.
+     * [items] (id to summoning level) in the fewest pages of at most [PAGE_ROWS] rows, as equal as possible, each named after its
+     * level range.
      */
     private fun split(
         label: String,
@@ -70,7 +72,7 @@ object SummoningShopStock {
         stock: Int,
     ): List<Page> {
         if (items.isEmpty()) return emptyList()
-        val count = (items.size + Shop.CLIENT_VISIBLE_SLOTS - 1) / Shop.CLIENT_VISIBLE_SLOTS
+        val count = (items.size + PAGE_ROWS - 1) / PAGE_ROWS
         val size = (items.size + count - 1) / count
         return items.chunked(size).map { chunk ->
             val range = "levels ${chunk.first().second}-${chunk.last().second}"

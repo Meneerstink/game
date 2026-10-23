@@ -25,6 +25,29 @@ fun Player.transaction(action: () -> Unit) {
 }
 val SELL_OPTS = arrayOf(1, 5, 10, 50)
 
+/** Op 7 of a stock cell ("Buy X", ShopWindowScriptTool). */
+val BUY_X_OPCODE = 18
+
+/**
+ * N62: asks how many, then buys exactly like Buy 1..500 (the currency caps it at the stock, the player's coins and inventory room).
+ * Nothing happens when the window was closed or the row changed while the amount was typed.
+ */
+fun buyX(
+    player: Player,
+    shop: gg.rsmod.game.model.shop.Shop,
+    slot: Int,
+    item: Int,
+) {
+    player.queue(gg.rsmod.game.model.queue.TaskPriority.WEAK) {
+        val amount = inputInt("Enter amount:")
+        if (amount <= 0) return@queue
+        if (player.attr[CURRENT_SHOP_ATTR] !== shop || !player.isInterfaceVisible(SHOP_INTERFACE_ID) || shop.items.getOrNull(slot)?.item != item) {
+            return@queue
+        }
+        player.transaction { shop.currency.sellToPlayer(player, shop, slot, amount) }
+    }
+}
+
 on_interface_open(interfaceId = SHOP_INTERFACE_ID) {
     player.attr[CURRENT_SHOP_ATTR]?.let { shop ->
         shop.viewers.add(player.uid)
@@ -65,10 +88,8 @@ on_interface_close(interfaceId = SHOP_INTERFACE_ID) {
 on_button(interfaceId = SHOP_INTERFACE_ID, component = 25) {
     player.attr[CURRENT_SHOP_ATTR]?.let { shop ->
         val opcode = player.getInteractingOpcode()
-        var slot = player.getInteractingSlot()
-        if (slot != 0) {
-            slot = player.getInteractingSlot() / 6
-        }
+        // N221: every stock row is CHILDREN_PER_ROW children of 620:25 (the 7th draws the stock number); the first takes the ops.
+        val slot = player.getInteractingSlot() / gg.rsmod.game.tools.importer.ShopWindowScriptTool.CHILDREN_PER_ROW
         val shopItem = shop.items.getOrNull(slot) ?: return@on_button
 
         when (opcode) {
@@ -77,6 +98,8 @@ on_button(interfaceId = SHOP_INTERFACE_ID, component = 25) {
                 player.attr[LAST_VIEWED_SHOP_ITEM_SLOT] = slot
             }
             25 -> world.sendExamine(player, shopItem.item, ExamineEntityType.ITEM)
+            // N62 (owner 2026-10-23): "Buy X" (op 7) - the player types the amount.
+            BUY_X_OPCODE -> buyX(player, shop, slot, shopItem.item)
             else -> {
                 val amount =
                     when (opcode) {

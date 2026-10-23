@@ -47,18 +47,15 @@ import gg.rsmod.game.model.shop.PurchasePolicy
  * store unbound (bulk_shops found the Trade slot taken). The Quartermaster is npc 11679 (cache "Shop assistant",
  * Talk-to/Trade, spawned nowhere else), renamed in both caches by NpcRenameTool (tx-20260922-141234).
  *
- * Stock, prices and the 40-row window limit: [QuartermasterSupplies]. ONE shop that Trade opens directly (owner 2026-10-04
- * 02:40, bug 024055: the three-shop "which supplies?" dialogue of 2026-10-03 was not wanted): consumables as banknotes where
- * the cache has a note, then runes, sacks, arrows and one bolt type. The amount restocks 1% of it per resupply tick.
+ * Stock and prices: [QuartermasterSupplies]. ONE shop on one page that Trade opens directly (owner 2026-10-04 02:40, bug 024055:
+ * the three-shop "which supplies?" dialogue of 2026-10-03 was not wanted; N222 2026-10-23: no second page): consumables (bought
+ * as banknotes where the cache has a note), then runes, sacks, arrows, one bolt type and the gear. The amount restocks 1% of it
+ * per resupply tick.
  */
 val QUARTERMASTER = gg.rsmod.plugins.content.areas.grandexchange.GeHomeHall.QUARTERMASTER
 
-fun createSupplyShop(
-    title: String,
-    stock: List<Pair<Int, Int>>,
-    noted: Boolean,
-) {
-    val rows = QuartermasterSupplies.rows(world.definitions, stock, noted)
+fun createSupplyShop(title: String) {
+    val rows = QuartermasterSupplies.rows(world.definitions)
     create_shop(
         title,
         // N191 (owner 2026-10-22): the Grand Exchange price of the moment, like the GE itself.
@@ -69,18 +66,24 @@ fun createSupplyShop(
     ) {
         rows.take(gg.rsmod.game.model.shop.Shop.CLIENT_VISIBLE_SLOTS).forEachIndexed { index, row ->
             // A 0 price is refused at purchase ("not currently available") - name it at boot (house tabs, owner session 2026-10-01).
-            if (row.price <= 0) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '$title' item ${row.unnoted} has no price (no OSRS guide price, no cache value)" }
-            if (noted && row.item == row.unnoted && !world.definitions.get(ItemDef::class.java, row.unnoted).stacks) {
-                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '$title' item ${row.unnoted} has no banknote in this cache - sold unnoted" }
+            if (row.price <= 0) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '$title' item ${row.item} has no price (no OSRS guide price, no cache value)" }
+            if (row.item in QuartermasterSupplies.deliveredNoted && row.delivered == row.item && !world.definitions.get(ItemDef::class.java, row.item).stacks) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "shop '$title' item ${row.item} has no banknote in this cache - sold unnoted" }
             }
-            items[index] = ShopItem(row.item, row.amount, sellPrice = row.price, resupplyAmount = QuartermasterSupplies.resupplyAmount(row.amount))
+            // N220: the window shows the item, a purchase hands out its banknote.
+            items[index] =
+                ShopItem(
+                    row.item,
+                    row.amount,
+                    sellPrice = row.price,
+                    resupplyAmount = QuartermasterSupplies.resupplyAmount(row.amount),
+                    deliverNoted = row.delivered != row.item,
+                )
         }
     }
 }
 
-createSupplyShop(QuartermasterSupplies.SHOP, QuartermasterSupplies.stock, noted = true)
-createSupplyShop(QuartermasterSupplies.GEAR_SHOP, QuartermasterSupplies.gear, noted = false)
-gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.register(QuartermasterSupplies.PAGES)
+createSupplyShop(QuartermasterSupplies.SHOP)
 
 on_npc_option(QUARTERMASTER, "trade") {
     player.openShop(QuartermasterSupplies.SHOP)
@@ -107,8 +110,8 @@ on_npc_option(QUARTERMASTER, "talk-to") {
                 chatNpc(
                     "Combination runes, blighted sacks, dragon arrows,",
                     "ruby and opal dragon bolts, rune pouches, glories, house",
-                    "tabs, burning amulets and seeds - and on the next page",
-                    "gloves, god capes and Ava's devices. Have a look.",
+                    "tabs, burning amulets and seeds - and gloves, god",
+                    "capes and Ava's devices. Have a look.",
                     facialExpression = FacialExpression.HAPPY,
                 )
                 player.openShop(QuartermasterSupplies.SHOP)

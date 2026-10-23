@@ -109,10 +109,9 @@ fun Player.openShop(
             setVarp(Varps.SECONDARY_CONTAINER_ID, -1)
         }
 
-        // Set the currency for the shop
-        if (currentShop.currency.currencyItem > -1) {
-            setVarp(Varps.SHOP_CURRENCY, currentShop.currency.currencyItem)
-        }
+        // Set the currency for the shop; -1 (a point shop) hides the coin icon next to the prices (ShopWindowScriptTool) instead of
+        // keeping the previous shop's currency.
+        setVarp(Varps.SHOP_CURRENCY, currentShop.currency.currencyItem)
 
         shopDirty = true
         setVarc(199, -1)
@@ -130,12 +129,13 @@ fun Player.openShop(
             }
         }
 
-        // Enable interface events for main stock items
+        // Enable interface events for main stock items: ops 1..7 (Info, Buy 1/5/10/50/500, Buy X) and 10 (Examine) on every child of
+        // every row (ShopWindowScriptTool.CHILDREN_PER_ROW per row; a sold-out temporary row leaves a gap, so the whole array counts).
         setInterfaceEvents(
             interfaceId = shopInterface,
             component = mainStockComponent,
-            range = 0..currentShop.items.filterNotNull().size * 6,
-            setting = 1150,
+            range = 0..currentShop.items.size * gg.rsmod.game.tools.importer.ShopWindowScriptTool.CHILDREN_PER_ROW,
+            setting = gg.rsmod.game.model.shop.Shop.STOCK_EVENTS,
         )
 
         // Enable interface events for free sample items if any
