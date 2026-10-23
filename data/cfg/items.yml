@@ -289347,3 +289347,21 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 24126
+  name: "Rune pouch note"
+  examine: "A note that may be exchanged at a bank for a Rune Pouch."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24127
+  name: "Dexterous prayer scroll"
+  examine: "Scrawled words that can invoke the power of the gods."
+  tradeable: true
+  weight: 0.015
+  equipment: null
+- id: 24128
+  name: "Arcane prayer scroll"
+  examine: "Scrawled words that can invoke the power of the gods."
+  tradeable: true
+  weight: 0.015
+  equipment: null
