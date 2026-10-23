@@ -292,6 +292,8 @@ object OsrsPetImportTool {
                     }
                 }
                 14, 15, 16, 18 -> Unit
+                19 -> repeat(2) { c.u8() } // frame sound volume (client SeqType)
+                20 -> { c.u8(); c.u16(); c.u16() } // frame sound rate range
                 else -> error("opcode $op is not a 667 sequence opcode")
             }
         }

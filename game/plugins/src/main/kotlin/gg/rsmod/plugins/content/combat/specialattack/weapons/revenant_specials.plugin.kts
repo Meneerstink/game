@@ -44,6 +44,8 @@ SpecialAttacks.register(BEAR_DOWN_ENERGY, Items.URSINE_CHAINMACE) {
     val victim: Pawn = target
     player.animate(OsrsSeq.HUMAN_SPECIAL02_URSINE)
     player.graphic(OsrsGfx.URSINE_SPECIAL02)
+    // N3: special sequence and graphic are silent. ADAPTED: the OSRS "Spiked" category crush (mace_crush, OsrsWeaponSounds.SPIKED).
+    player.playSound(gg.rsmod.plugins.api.cfg.Sfx.MACE_CRUSH)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim)
     val landHit = MeleeCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = 2.0) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)
@@ -82,6 +84,8 @@ listOf(Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_A).forEach { sceptre ->
             return@register
         }
         player.animate(OsrsSeq.HUMAN_SPECIAL_ACCURSED)
+        // N3: special sequence and graphics are silent; the spell it shows is Vet'ion's (SPELLS_VETION01), so Vet'ion's cast sound.
+        player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.VETION_MAGIC_CAST)
         val projectile = player.createProjectile(victim, gfx = OsrsGfx.ACCURSED_TRAVEL02, type = ProjectileType.MAGIC)
         world.spawn(projectile)
         val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), victim.getCentreTile())

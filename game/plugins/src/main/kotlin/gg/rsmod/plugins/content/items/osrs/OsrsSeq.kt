@@ -168,6 +168,7 @@ object OsrsSfx {
     const val GLAIVE_CHARGED_SPECIAL_IMPACT = 10261 // OSRS 7944
     const val GLAIVE_REGULAR_THROW_WHOOSH = 10262 // OSRS 7940 varlamore_glaive_regular_throw_whoosh_01
     const val GLAIVE_PROJECTILE = 10263 // OSRS 7941 varlamore_glaive_projectile_01
+    const val VETION_MAGIC_CAST = 10453 // OSRS 6862 wbr_vetion_attack_magic_first_arm_movement_01 (tx-20261023-134208, N3 Accursed sceptre)
 }
 
 /** Body-animation sets built by `OsrsBasImportTool` (tx-20260917-184006): the 667 default human set with OSRS stand / walk / run. */

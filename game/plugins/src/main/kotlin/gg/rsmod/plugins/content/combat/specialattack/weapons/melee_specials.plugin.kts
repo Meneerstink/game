@@ -187,6 +187,9 @@ SpecialAttacks.register(60, Items.ABYSSAL_VINE_WHIP) {
     val victim = target
     player.animate(11971)
     player.graphic(2108)
+    // N3: sequence 11971 and graphics 2108/2109 are silent; the whip-class special sound (OSRS Wiki: the tentacle's special plays the
+    // Abyssal whip special sound), as the whip and tentacle specials above. ADAPTED: the 667 Vine call sound has no source.
+    player.playSound(Sfx.ENERGYDRAIN)
     vineStrike(attacker, victim)
     victim.graphic(2109)
     attacker.world.queue {

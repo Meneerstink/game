@@ -86,6 +86,9 @@ SpecialAttacks.register(MoonSets.BREAK_SHACKLES_ENERGY, Items.BLUE_MOON_SPEAR) {
     val ticks = if (victim.timers.has(FROZEN_TIMER)) victim.timers[FROZEN_TIMER] else 0
     victim.timers.remove(FROZEN_TIMER)
     player.animate(CombatConfigs.getAttackAnimation(player))
+    // N3: the spear sequences (OSRS 1710-1712) are silent. ADAPTED: the OSRS spear-category stab sound (xrsps weapon table, as
+    // OsrsWeaponSounds.SPEAR); Break Shackles' own sound is undocumented.
+    player.playSound(Sfx.STABSWORD_STAB)
     val maxHit = MeleeCombatFormula.getMaxHit(player, victim, specialAttackMultiplier = MoonSets.shacklesDamage(ticks))
     val landHit = MeleeCombatFormula.getAccuracy(player, victim, MoonSets.shacklesAccuracy(ticks)) >= world.randomDouble()
     player.dealHit(target = victim, maxHit = maxHit, landHit = landHit, delay = 1, hitType = HitType.MELEE)

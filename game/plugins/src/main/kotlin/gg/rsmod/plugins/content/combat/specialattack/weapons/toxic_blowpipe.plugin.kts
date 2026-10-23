@@ -29,6 +29,8 @@ SpecialAttacks.register(Blowpipe.RAPID_BURST_ENERGY, Items.ROSEWOOD_BLOWPIPE) {
             if (index == 0) specialFailed()
             return@register
         }
+        // N3: the special sequence (OSRS 13145) is silent; each dart is shot with the blowpipe's dart sound (as the Toxic blowpipe).
+        player.playSound(Sfx.DART, delay = index * 30)
         val landHit = RangedCombatFormula.getAccuracy(player, victim) >= world.randomDouble()
         // ADAPTED: the second dart lands one tick after the first (spacing unsourced).
         player.dealHit(target = victim, maxHit = RangedCombatFormula.getMaxHit(player, victim), landHit = landHit, delay = delay + index, hitType = HitType.RANGE)

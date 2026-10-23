@@ -25,6 +25,9 @@ val MIN_DAMAGE_MULTIPLIER = 0.30
 val MAX_DAMAGE_MULTIPLIER = 2.00
 val ACCURACY_MULTIPLIER = 1.75
 
+/** N3: the 667 hand cannon firing sound - the frame sound of its own fire sequence 12174 (cache: synth 7182, radius 10). */
+val HAND_CANNON_FIRE_SOUND = 7182
+
 SpecialAttacks.register(ENERGY_REQUIRED, Items.HAND_CANNON) {
     val ammo = player.getEquipment(EquipmentType.AMMO)
     if (ammo == null || ammo.id != Items.HAND_CANNON_SHOT) {
@@ -40,6 +43,7 @@ SpecialAttacks.register(ENERGY_REQUIRED, Items.HAND_CANNON) {
     }
 
     player.animate(CombatConfigs.getAttackAnimation(player))
+    player.playSound(HAND_CANNON_FIRE_SOUND)
     player.equipment.remove(Items.HAND_CANNON_SHOT, amount = 1)
 
     val baseMaxHit = RangedCombatFormula.getMaxHit(player, target, specialAttackMultiplier = 1.0)

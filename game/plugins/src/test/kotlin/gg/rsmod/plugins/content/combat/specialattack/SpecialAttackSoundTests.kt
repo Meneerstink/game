@@ -38,6 +38,12 @@ class SpecialAttackSoundTests {
         /** The animation's own cache frame sound makes the special audible (checked against the production cache). */
         class FrameSound(file: String, marker: String, val animation: Int) : Exemption(file, marker)
 
+        /**
+         * N3 (2026-10-23): the block's graphic plays a sequence with a frame sound (the client plays it with the spotanim), checked in
+         * the production cache for every one of [graphics].
+         */
+        class GraphicSound(file: String, marker: String, vararg val graphics: Int) : Exemption(file, marker)
+
         /** The block delegates to code in [sourceFile] that contains [soundText]. */
         class Delegated(file: String, marker: String, val sourceFile: String, val soundText: String) : Exemption(file, marker)
 
@@ -57,21 +63,13 @@ class SpecialAttackSoundTests {
                 "gg/rsmod/plugins/content/items/osrs/GraniteMaul.kt",
                 "playSound(Sfx.QUICKSMASH)",
             ),
-            Exemption.OpenN3("melee_specials.plugin.kts", "animate(1064"),
-            Exemption.OpenN3("melee_specials.plugin.kts", "Items.ABYSSAL_VINE_WHIP"),
-            Exemption.OpenN3("moon_specials.plugin.kts", "Items.ECLIPSE_ATLATL"),
-            Exemption.OpenN3("moon_specials.plugin.kts", "Items.BLUE_MOON_SPEAR"),
-            Exemption.OpenN3("nightmare_staves.plugin.kts", "Items.ELDRITCH_NIGHTMARE_STAFF"),
-            Exemption.OpenN3("nightmare_staves.plugin.kts", "Items.VOLATILE_NIGHTMARE_STAFF"),
-            Exemption.OpenN3("noxious_halberd.plugin.kts", "Items.NOXIOUS_HALBERD"),
-            Exemption.OpenN3("revenant_specials.plugin.kts", "Items.URSINE_CHAINMACE"),
-            Exemption.OpenN3("revenant_specials.plugin.kts", "CONDEMN_ENERGY"),
-            Exemption.OpenN3("toxic_blowpipe.plugin.kts", "Items.ROSEWOOD_BLOWPIPE"),
-            Exemption.OpenN3("hand_cannon.plugin.kts", "Items.HAND_CANNON"),
-            Exemption.OpenN3("ranged_specials.plugin.kts", "Items.ZANIKS_CROSSBOW"),
-            // Added to N3 by this test (A12, 2026-10-14): sequence 12804 has no frame sound in the production cache and
-            // StaffOfTheDead.activatePowerOfDeath sends none.
-            Exemption.OpenN3("staff_of_the_dead.plugin.kts", "StaffOfTheDead.POWER_OF_DEATH_ENERGY"),
+            // N3 2026-10-23: these were listed silent, but their own cache data plays the sound - Shove: graphic 253's sequence 2039
+            // (synth 5274); Eclipse atlatl / Noxious halberd: the special sequences' OSRS frame sounds; Power of Death: graphic 2319
+            // (Staff of light, vorbis 7237) and the OSRS graphic 2982 (same sound, PowerOfDeathSoundTool tx-20261023-134211).
+            Exemption.GraphicSound("melee_specials.plugin.kts", "animate(1064", 253),
+            Exemption.FrameSound("moon_specials.plugin.kts", "Items.ECLIPSE_ATLATL", 15456),
+            Exemption.FrameSound("noxious_halberd.plugin.kts", "Items.NOXIOUS_HALBERD", 15463),
+            Exemption.GraphicSound("staff_of_the_dead.plugin.kts", "StaffOfTheDead.POWER_OF_DEATH_ENERGY", 2319, 2982),
         )
 
     /** Every registration block in every plugin script, cut at the next registration in the same file. */
@@ -115,6 +113,13 @@ class SpecialAttackSoundTests {
                     data == null || frameSoundIds(data).isEmpty()
                 }
             assertTrue(mute.isEmpty(), "animations without a frame sound: ${mute.map { "${it.file} ${it.animation}" }}")
+            val muteGraphics =
+                exemptions.filterIsInstance<Exemption.GraphicSound>().flatMap { ex -> ex.graphics.map { ex to it } }.filter { (_, graphic) ->
+                    val seq = library.data(21, graphic ushr 8, graphic and 0xFF)?.let { spotSequence(it) } ?: -1
+                    val data = if (seq >= 0) library.data(20, seq ushr 7, seq and 0x7F) else null
+                    data == null || frameSoundIds(data).isEmpty()
+                }
+            assertTrue(muteGraphics.isEmpty(), "graphics without a frame sound: ${muteGraphics.map { "${it.first.file} ${it.second}" }}")
         } finally {
             library.close()
         }
@@ -160,6 +165,19 @@ class SpecialAttackSoundTests {
         assertTrue("player.playSound(Sfx.DARKBOW_SHADOW_IMPACT)" in impact, "shooter hears 3737")
         assertTrue("AreaSound(" in impact && "victim.tile" in impact && "Sfx.DARKBOW_SHADOW_IMPACT" in impact, "victim + bystanders hear 3737")
         assertTrue("excluded = player" in impact, "the shooter must not hear the impact twice")
+    }
+
+    /** The sequence of a 667 spotanim (opcode 2 after the model opcode 1), or -1. */
+    private fun spotSequence(bytes: ByteArray): Int {
+        val buf = ByteBuffer.wrap(bytes)
+        while (buf.hasRemaining()) {
+            when (buf.get().toInt() and 0xFF) {
+                1 -> buf.short
+                2 -> return buf.short.toInt() and 0xFFFF
+                else -> return -1
+            }
+        }
+        return -1
     }
 
     /** Opcode 13 of the 667 sequence definition: per-frame sound effects (same decode as SeqEmbeddedSoundProbeTests). */

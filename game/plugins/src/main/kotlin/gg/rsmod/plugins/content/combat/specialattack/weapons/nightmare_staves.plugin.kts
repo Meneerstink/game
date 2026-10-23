@@ -56,12 +56,17 @@ SpecialAttacks.registerReach(Items.VOLATILE_NIGHTMARE_STAFF, Items.ELDRITCH_NIGH
 /* Volatile Nightmare staff - Immolate: 55 %, accuracy x1.5, spell max hit min(58, trunc((99 + 58 x Magic) / 99)). */
 SpecialAttacks.register(NightmareStaves.SPECIAL_ENERGY, Items.VOLATILE_NIGHTMARE_STAFF) {
     val base = NightmareStaves.immolateBase(player.skills.getCurrentLevel(Skills.MAGIC))
+    // N3: the special sequence (OSRS 8532) and graphics are silent. ADAPTED: Immolate's own sound is undocumented; it casts with the
+    // same staff special sequence as Invocate, so the same cast sound.
+    player.playSound(Sfx.SHADOW_CAST)
     nightmareHit(player, target, base, NightmareStaves.IMMOLATE_ACCURACY, gg.rsmod.plugins.content.items.osrs.OsrsGfx.NIGHTMARE_STAFF_VOLATILE_CAST, gg.rsmod.plugins.content.items.osrs.OsrsGfx.NIGHTMARE_STAFF_VOLATILE_HIT)
 }
 
 /* Eldritch Nightmare staff - Invocate: 55 %, spell max hit min(44, trunc((99 + 44 x Magic) / 99)); Prayer +50 % of the damage, up to 120. */
 SpecialAttacks.register(NightmareStaves.SPECIAL_ENERGY, Items.ELDRITCH_NIGHTMARE_STAFF) {
     val base = NightmareStaves.invocateBase(player.skills.getCurrentLevel(Skills.MAGIC))
+    // N3: OSRS Wiki "List of sound IDs": shadow_cast 178 is "also used for cast sound of Eldritch Nightmare staff".
+    player.playSound(Sfx.SHADOW_CAST)
     nightmareHit(player, target, base, 1.0, gg.rsmod.plugins.content.items.osrs.OsrsGfx.NIGHTMARE_STAFF_ELDRITCH_CAST, gg.rsmod.plugins.content.items.osrs.OsrsGfx.NIGHTMARE_STAFF_ELDRITCH_HIT) { damage ->
         val cap = NightmareStaves.INVOCATE_PRAYER_CAP - player.getMaximumPrayerPoints()
         if (cap > 0) player.restorePrayer(NightmareStaves.invocatePrayer(damage), capValue = cap)

@@ -298,6 +298,10 @@ object OsrsFxImportTool {
             // Owner 2026-09-18 (Zaryte crossbow / Ancient godsword specials): Jagex sound config names from the gameval table
             // (Alter-rework data/cfg/rscm/sound.rscm, 2026-09-19): 5306 zaryte_crossbow_special, 3869 godwars_godsword_special_attack.
             "weaponsfx5" to listOf(5306, 3869),
+            // N3 (Accursed sceptre special silent): its special shows Vet'ion's own spell (SPELLS_VETION01_SPECIAL / _TRAVEL02), so it
+            // casts with Vet'ion's magic-attack sound wbr_vetion_attack_magic_first_arm_movement_01 6862 (OSRS Wiki sound list; ADAPTED:
+            // the weapon's own server-sent special sound is undocumented).
+            "n3sfx" to listOf(6862),
             // Owner 2026-09-19 (Surge spells must sound like OSRS): OSRS Wiki "List of sound IDs" (raw wikitext 2026-09-19)
             // 4025 earthsurge_cast_and_fire, 4026 earthsurge_hit, 4027 windsurge_hit, 4028 windsurge_cast_and_fire,
             // 4029 watersurge_hit, 4030 watersurge_cast_and_fire, 4031 firesurge_hit, 4032 firesurge_cast_and_fire.

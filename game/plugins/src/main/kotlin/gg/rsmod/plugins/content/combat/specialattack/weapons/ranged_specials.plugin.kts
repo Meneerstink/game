@@ -135,6 +135,8 @@ SpecialAttacks.register(50, Items.ZANIKS_CROSSBOW) {
     val victim = target
     player.animate(CombatConfigs.getAttackAnimation(player))
     player.graphic(1714)
+    // N3: the crossbow sequence 4230 and graphic 1714 are silent; the crossbow shot sound of a normal shot (RangedCombatStrategy).
+    player.playSound(Sfx.CROSSBOW)
     val praying = victim is Player && (Prayers.isActive(victim, gg.rsmod.plugins.content.mechanics.prayer.Prayer.PROTECT_FROM_MISSILES) || victim.prayerIcon != -1)
     val bonus = if (praying) 1.5 else 1.0
     rangedShot(player, victim, damage = bonus, minFraction = 0.2, projectileGfx = 2001)
