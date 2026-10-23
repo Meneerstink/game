@@ -30,6 +30,30 @@ class DropWarningTests {
     }
 
     @Test
+    fun `N253 - a drop that turns the item into something else (a used Barrows piece to 0) asks first, whatever it is worth`() {
+        val previous = gg.rsmod.game.message.handler.OpHeld5Handler.dropAs
+        try {
+            // barrows_drop.plugin.kts: the used stages (100..25) land as the 0 form; a fresh piece and the 0 form stay themselves.
+            gg.rsmod.game.message.handler.OpHeld5Handler.dropAs = { id ->
+                val piece = gg.rsmod.plugins.content.items.armor.BarrowsPiece.forId(id)
+                val stage = piece?.stageOf(id) ?: -1
+                if (piece != null && stage in gg.rsmod.plugins.content.items.armor.BarrowsPiece.FULL until gg.rsmod.plugins.content.items.armor.BarrowsPiece.BROKEN) {
+                    piece.idForStage(gg.rsmod.plugins.content.items.armor.BarrowsPiece.BROKEN)
+                } else {
+                    null
+                }
+            }
+            listOf(Items.AHRIMS_HOOD, Items.AHRIMS_HOOD_100, Items.AHRIMS_HOOD_0).forEach { DEFINITIONS.get(gg.rsmod.game.fs.def.ItemDef::class.java, it).tradeable = true }
+            val free = { _: Int -> 0 }
+            assertTrue(DropWarning.needsWarning(world, Item(Items.AHRIMS_HOOD_100), free), "Ahrim's hood 100 becomes Ahrim's hood 0 on the floor")
+            assertFalse(DropWarning.needsWarning(world, Item(Items.AHRIMS_HOOD), free), "a fresh hood stays itself")
+            assertFalse(DropWarning.needsWarning(world, Item(Items.AHRIMS_HOOD_0), free), "the 0 form stays itself")
+        } finally {
+            gg.rsmod.game.message.handler.OpHeld5Handler.dropAs = previous
+        }
+    }
+
+    @Test
     fun `the engine asks the hook before a plain drop, never before a plugin's own drop (pets)`() {
         val handler = File("../src/main/kotlin/gg/rsmod/game/message/handler/OpHeld5Handler.kt").readText()
         assertTrue("if (!world.plugins.hasDropHandler(item.id) && confirm?.invoke(client, item, slot) == true) return" in handler)
