@@ -72,7 +72,7 @@ class WhittleAction(
         if (!inventory.contains(raw)) {
             return false
         }
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, data.levelRequirement)) {
+        if (player.skills.getCurrentLevel(Skills.FLETCHING) < data.levelRequirement) {
             task.doubleItemMessageBox(
                 "You need a Fletching level of at least ${data.levelRequirement} to make a ${data.itemName}.",
                 item1 = raw,

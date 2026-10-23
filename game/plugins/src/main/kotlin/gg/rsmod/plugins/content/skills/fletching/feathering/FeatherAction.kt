@@ -87,7 +87,7 @@ class FeatherAction(
             task.player.message("You don't have enough inventory space to do that.")
             return false
         }
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, feathered.levelRequirement)) {
+        if (player.skills.getCurrentLevel(Skills.FLETCHING) < feathered.levelRequirement) {
             task.doubleItemMessageBox(
                 "You need a ${Skills.getSkillName(
                     player.world,

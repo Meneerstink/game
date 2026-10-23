@@ -18,13 +18,6 @@ enum class LockState {
     DELAY_ACTIONS,
 
     /**
-     * Giving assistance (Assist System, RuneScape Wiki "Assist System": "The assisting player cannot move or act except
-     * chatting"): no walking, items, objects, npcs, players, attacks or teleports; interfaces stay usable so the Assist XP
-     * display (301) can be toggled and closed, which ends the assistance. Logging out is allowed and ends it as well.
-     */
-    ASSISTING,
-
-    /**
      * Similar to [FULL], but can interact with items.
      */
     FULL_WITH_ITEM_INTERACTION,
@@ -49,7 +42,7 @@ enum class LockState {
 
     fun canLogout(): Boolean =
         when (this) {
-            NONE, FULL_WITH_LOGOUT, ASSISTING -> true
+            NONE, FULL_WITH_LOGOUT -> true
             else -> false
         }
 
@@ -103,7 +96,7 @@ enum class LockState {
 
     fun canInterfaceInteract(): Boolean =
         when (this) {
-            NONE, ASSISTING -> true
+            NONE -> true
             else -> false
         }
 

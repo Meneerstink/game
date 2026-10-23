@@ -82,7 +82,7 @@ object SpinningAction {
             return false
         }
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, data.levelRequirement)) {
+        if (player.skills.getCurrentLevel(Skills.CRAFTING) < data.levelRequirement) {
             player.message("You need a crafting level of ${data.levelRequirement} to make this.")
             return false
         }

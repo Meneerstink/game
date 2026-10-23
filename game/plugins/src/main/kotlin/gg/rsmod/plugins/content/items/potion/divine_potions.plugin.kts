@@ -28,7 +28,7 @@ val superFours = listOf(Items.SUPER_ATTACK_4, Items.SUPER_STRENGTH_4, Items.SUPE
 listOf(Items.CLEAN_TORSTOL, Items.TORSTOL_POTION_UNF).forEach { torstol ->
     superFours.forEach { potion ->
         on_item_on_item(item1 = torstol, item2 = potion) {
-            if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 90)) {
+            if (player.skills.getCurrentLevel(Skills.HERBLORE) < 90) {
                 player.message("You need a Herblore level of 90 to make a super combat potion.")
                 return@on_item_on_item
             }

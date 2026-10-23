@@ -1054,7 +1054,6 @@ abstract class Player(
         modifiers: Boolean = true,
         disableBonusExperience: Boolean = false,
     ) {
-        if (xp > 0.0 && gg.rsmod.game.model.skill.XpRedirect.handler?.invoke(this, skill, xp, modifiers, disableBonusExperience) == true) return
         val oldXp = skills.getCurrentXp(skill)
 
         if (oldXp >= SkillSet.MAX_XP) {

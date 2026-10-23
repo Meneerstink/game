@@ -54,7 +54,7 @@ class OsrsPotionsBrewsImportTests {
         }
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/brew_potions.plugin.kts").readText()
         assertTrue("on_timer(BrewPotions.MENAPHITE_TIMER)" in plugin && "on_timer(BrewPotions.PRAYER_REGEN_TIMER)" in plugin && "on_timer(BrewPotions.SURGE_COOLDOWN)" in plugin)
-        assertTrue("val essence = 20 * doses" in plugin && "meets(player, Skills.HERBLORE, 91)" in plugin)
+        assertTrue("val essence = 20 * doses" in plugin && "player.skills.getCurrentLevel(Skills.HERBLORE) < 91" in plugin)
         assertEquals(listOf(6, 100, 4), listOf(BrewPotions.GOADING_INTERVAL, BrewPotions.GOADING_CYCLES, BrewPotions.GOADING_RADIUS), "6-tick cycle, 6 minutes, 9x9")
         assertEquals(600, BrewPotions.GOADING_INTERVAL * BrewPotions.GOADING_CYCLES, "a dose lasts 6 minutes = 600 ticks")
         assertTrue(BrewPotions.SURGE_COOLDOWN.resetOnDeath, "dying removes the surge cooldown")

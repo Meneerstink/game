@@ -10,7 +10,7 @@ package gg.rsmod.plugins.content.skills.cooking
 private val NETTLE_TEA_LEVEL = 20
 
 on_item_on_item(item1 = Items.BOWL_OF_WATER, item2 = Items.NETTLES) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, NETTLE_TEA_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < NETTLE_TEA_LEVEL) {
         player.message("You need a Cooking level of $NETTLE_TEA_LEVEL to make this.")
         return@on_item_on_item
     }

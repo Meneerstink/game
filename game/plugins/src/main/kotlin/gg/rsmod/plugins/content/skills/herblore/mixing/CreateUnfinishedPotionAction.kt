@@ -52,7 +52,7 @@ class CreateUnfinishedPotionAction {
     ): Boolean {
         val player = task.player
         val inventory = player.inventory
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, potion.levelRequirement)) {
+        if (player.skills.getCurrentLevel(Skills.HERBLORE) < potion.levelRequirement) {
             val message = "You need a Herblore level of ${potion.levelRequirement} to make this potion."
             task.doubleItemMessageBox(message, item1 = Items.VIAL_OF_WATER, item2 = potion.clean)
             player.filterableMessage(message)

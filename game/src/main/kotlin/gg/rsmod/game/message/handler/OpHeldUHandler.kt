@@ -64,7 +64,7 @@ class OpHeldUHandler : MessageHandler<OpHeldUMessage> {
                 return
             }
 
-            // A spell on an item is an item action too: an assister (LockState.ASSISTING) keeps his interfaces but may not act.
+            // A spell on an item is an item action too: it needs both interface and item interaction.
             if (!client.lock.canInterfaceInteract() || !client.lock.canItemInteract()) {
                 return
             }

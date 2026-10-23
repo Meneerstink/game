@@ -13,7 +13,7 @@ fun cleanHerb(
     herb: Int,
 ) {
     val def = grimyHerbDefinitions[herb] ?: return
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, def.levelRequirement)) {
+    if (player.skills.getCurrentLevel(Skills.HERBLORE) < def.levelRequirement) {
         player.message(
             "You need level ${def.levelRequirement} Herblore to clean the ${player.world.definitions.get(
                 ItemDef::class.java,

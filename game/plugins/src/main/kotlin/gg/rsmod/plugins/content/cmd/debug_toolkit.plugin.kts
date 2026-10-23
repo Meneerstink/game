@@ -129,10 +129,9 @@ on_world_init {
                     // A lock that outlives any real action (cutscenes, agility, deaths take seconds, not half a minute):
                     // the player can no longer click anything - an action that never unlocked (a thrown plugin, a lost queue).
                     val since = lockSince[p.username]
-                    // ASSISTING is a deliberate lock for as long as the player gives assistance (AssistSystem), never a stuck action;
-                    // so is the Quest Tutor's camera tour (TutorIntro: 3-4 minutes, the hidden player waits at each camera stop).
+                    // The Quest Tutor's camera tour is a deliberate lock, never a stuck action (TutorIntro: 3-4 minutes, the hidden player waits at each camera stop).
                     val touring = gg.rsmod.plugins.content.quests.foundation.TutorIntro.isActive(p)
-                    if (p.lock == gg.rsmod.game.model.LockState.NONE || p.lock == gg.rsmod.game.model.LockState.ASSISTING || touring) {
+                    if (p.lock == gg.rsmod.game.model.LockState.NONE || touring) {
                         lockSince.remove(p.username)
                     } else if (since == null) {
                         lockSince[p.username] = world.currentCycle

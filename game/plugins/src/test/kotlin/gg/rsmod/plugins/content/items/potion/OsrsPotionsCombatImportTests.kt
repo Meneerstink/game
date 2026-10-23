@@ -48,6 +48,6 @@ class OsrsPotionsCombatImportTests {
         val restore = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/restoration/stat_restoration.plugin.kts").readText()
         assertTrue("DivinePotions.protects(player, index)" in restore)
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/items/potion/divine_potions.plugin.kts").readText()
-        assertTrue("DivinePotions.expire(player, skill)" in plugin && "meets(player, Skills.HERBLORE, 90)" in plugin && "addXp(Skills.HERBLORE, 150.0)" in plugin)
+        assertTrue("DivinePotions.expire(player, skill)" in plugin && "player.skills.getCurrentLevel(Skills.HERBLORE) < 90" in plugin && "addXp(Skills.HERBLORE, 150.0)" in plugin)
     }
 }

@@ -31,7 +31,7 @@ fun chargeStaff(
     slot: Int,
 ) {
     val item = player.inventory[slot]?.takeIf { it.id in staff.ids } ?: return
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.MAGIC, staff.requiredMagic)) {
+    if (player.skills.getCurrentLevel(Skills.MAGIC) < staff.requiredMagic) {
         player.message("You need a Magic level of ${staff.requiredMagic} to charge this weapon.")
         return
     }
@@ -108,7 +108,7 @@ PoweredStaves.TOXIC_UPGRADE.forEach { (trident, toxic) ->
             player.message("You need a chisel to do that.")
             return@on_item_on_item
         }
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, PoweredStaves.SWAMP_CRAFTING_LEVEL)) {
+        if (player.skills.getCurrentLevel(Skills.CRAFTING) < PoweredStaves.SWAMP_CRAFTING_LEVEL) {
             player.message("You need a Crafting level of ${PoweredStaves.SWAMP_CRAFTING_LEVEL} to do that.")
             return@on_item_on_item
         }

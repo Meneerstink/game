@@ -44,7 +44,7 @@ class HarvestingHandler(
                 if (canHarvest()) {
                     player.addXp(Skills.FARMING, state.seed!!.harvest.harvestXp)
                     if (state.seed!! == Seed.Limpwurt) {
-                        val extra = (player.world.random(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.FARMING) - 1) - 1) / 10
+                        val extra = (player.world.random(player.skills.getCurrentLevel(Skills.FARMING) - 1) - 1) / 10
                         val transaction =
                             player.inventory.add(
                                 state.seed!!.produce.id,
@@ -118,7 +118,7 @@ class HarvestingHandler(
             return true
         }
 
-        val farmingLevelDifference = gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.FARMING) - state.seed!!.plant.level
+        val farmingLevelDifference = player.skills.getCurrentLevel(Skills.FARMING) - state.seed!!.plant.level
         val baseSlots =
             (state.seed!!.harvest.minLiveSaveBaseSlots + farmingLevelDifference).coerceAtMost(
                 state.seed!!.harvest.maxLiveSaveBaseSlots,

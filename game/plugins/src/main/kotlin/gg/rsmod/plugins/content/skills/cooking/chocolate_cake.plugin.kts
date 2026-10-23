@@ -11,7 +11,7 @@ private val chocolateSources = listOf(Items.CHOCOLATE_DUST, Items.CHOCOLATE_BAR)
 
 for (chocolate in chocolateSources) {
     on_item_on_item(item1 = Items.CAKE, item2 = chocolate) {
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, LEVEL)) {
+        if (player.skills.getCurrentLevel(Skills.COOKING) < LEVEL) {
             player.message("You need a Cooking level of $LEVEL to make this.")
             return@on_item_on_item
         }

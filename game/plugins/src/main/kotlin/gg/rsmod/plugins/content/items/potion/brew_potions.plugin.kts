@@ -64,7 +64,7 @@ val ancientToForgotten =
 ancientToForgotten.forEach { (ancient, product) ->
     val (forgotten, doses) = product
     on_item_on_item(item1 = Items.ANCIENT_ESSENCE, item2 = ancient) {
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 91)) {
+        if (player.skills.getCurrentLevel(Skills.HERBLORE) < 91) {
             player.message("You need a Herblore level of 91 to make a forgotten brew.")
             return@on_item_on_item
         }

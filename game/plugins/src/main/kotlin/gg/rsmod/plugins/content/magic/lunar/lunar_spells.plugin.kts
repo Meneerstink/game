@@ -337,7 +337,7 @@ on_magic_spell_button("Bake Pie") { metadata ->
         while (true) {
             val next = player.inventory.rawItems.filterNotNull().firstOrNull { item -> pies.any { it.raw == item.id } } ?: break
             val data = pies.first { it.raw == next.id }
-            if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, data.levelRequirement)) {
+            if (player.skills.getCurrentLevel(Skills.COOKING) < data.levelRequirement) {
                 player.message("You need a Cooking level of ${data.levelRequirement} to bake that pie.")
                 break
             }

@@ -11,7 +11,7 @@ package gg.rsmod.plugins.content.skills.cooking
  * existing CookingData raw/cooked table.
  */
 on_item_on_item(item1 = Items.CHOPPED_GARLIC, item2 = Items.GNOME_SPICE) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 9)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 9) {
         player.message("You need a Cooking level of 9 to make spicy sauce.")
         return@on_item_on_item
     }
@@ -35,7 +35,7 @@ on_item_on_item(item1 = Items.COOKED_MEAT, item2 = Items.SPICY_SAUCE) {
 }
 
 on_item_on_item(item1 = Items.SCRAMBLED_EGG, item2 = Items.TOMATO) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 23)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 23) {
         player.message("You need a Cooking level of 23 to make this.")
         return@on_item_on_item
     }
@@ -46,7 +46,7 @@ on_item_on_item(item1 = Items.SCRAMBLED_EGG, item2 = Items.TOMATO) {
 }
 
 on_item_on_item(item1 = Items.FRIED_MUSHROOMS, item2 = Items.FRIED_ONIONS) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 57)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 57) {
         player.message("You need a Cooking level of 57 to make this.")
         return@on_item_on_item
     }
@@ -62,7 +62,7 @@ on_item_on_item(item1 = Items.SWEETCORN_7088, item2 = Items.TUNA) {
         player.message("You need a knife to make this.")
         return@on_item_on_item
     }
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 67)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 67) {
         player.message("You need a Cooking level of 67 to make this.")
         return@on_item_on_item
     }
@@ -73,7 +73,7 @@ on_item_on_item(item1 = Items.SWEETCORN_7088, item2 = Items.TUNA) {
 }
 
 on_item_on_item(item1 = Items.CHILLI_CON_CARNE, item2 = Items.POTATO_WITH_BUTTER) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 41)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 41) {
         player.message("You need a Cooking level of 41 to make this.")
         return@on_item_on_item
     }
@@ -86,7 +86,7 @@ on_item_on_item(item1 = Items.CHILLI_CON_CARNE, item2 = Items.POTATO_WITH_BUTTER
 }
 
 on_item_on_item(item1 = Items.EGG_AND_TOMATO, item2 = Items.POTATO_WITH_BUTTER) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 51)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 51) {
         player.message("You need a Cooking level of 51 to make this.")
         return@on_item_on_item
     }
@@ -99,7 +99,7 @@ on_item_on_item(item1 = Items.EGG_AND_TOMATO, item2 = Items.POTATO_WITH_BUTTER) 
 }
 
 on_item_on_item(item1 = Items.MUSHROOM__ONION, item2 = Items.POTATO_WITH_BUTTER) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 64)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 64) {
         player.message("You need a Cooking level of 64 to make this.")
         return@on_item_on_item
     }
@@ -112,7 +112,7 @@ on_item_on_item(item1 = Items.MUSHROOM__ONION, item2 = Items.POTATO_WITH_BUTTER)
 }
 
 on_item_on_item(item1 = Items.TUNA_AND_CORN, item2 = Items.POTATO_WITH_BUTTER) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, 68)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < 68) {
         player.message("You need a Cooking level of 68 to make this.")
         return@on_item_on_item
     }

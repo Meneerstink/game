@@ -71,7 +71,7 @@ if (helmHasOption(Items.SERPENTINE_HELM, "Uncharge", worn = false)) {
 // OSRS Wiki "Serpentine helm": "charged with a chisel on a serpentine visage" - 52 Crafting, "120 Crafting experience" - and the
 // uncharged helm "can be dismantled to receive 20,000 Zulrah's scales".
 on_item_on_item(item1 = Items.CHISEL, item2 = Items.SERPENTINE_VISAGE) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, 52)) {
+    if (player.skills.getCurrentLevel(Skills.CRAFTING) < 52) {
         player.message("You need a Crafting level of 52 to do that.")
         return@on_item_on_item
     }

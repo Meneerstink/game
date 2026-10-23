@@ -18,7 +18,7 @@ private val ANCHOVY_XP = 39.0
 private val PINEAPPLE_XP = 45.0
 
 on_item_on_item(item1 = Items.PIZZA_BASE, item2 = Items.TOMATO) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, ASSEMBLY_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < ASSEMBLY_LEVEL) {
         player.message("You need a Cooking level of $ASSEMBLY_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -29,7 +29,7 @@ on_item_on_item(item1 = Items.PIZZA_BASE, item2 = Items.TOMATO) {
 }
 
 on_item_on_item(item1 = Items.INCOMPLETE_PIZZA, item2 = Items.CHEESE) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, ASSEMBLY_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < ASSEMBLY_LEVEL) {
         player.message("You need a Cooking level of $ASSEMBLY_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -40,7 +40,7 @@ on_item_on_item(item1 = Items.INCOMPLETE_PIZZA, item2 = Items.CHEESE) {
 }
 
 on_item_on_item(itemUsed = Items.PLAIN_PIZZA, itemsList = intArrayOf(Items.COOKED_MEAT, Items.COOKED_CHICKEN)) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, TOPPING_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < TOPPING_LEVEL) {
         player.message("You need a Cooking level of $TOPPING_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -53,7 +53,7 @@ on_item_on_item(itemUsed = Items.PLAIN_PIZZA, itemsList = intArrayOf(Items.COOKE
 }
 
 on_item_on_item(item1 = Items.PLAIN_PIZZA, item2 = Items.ANCHOVIES) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, ANCHOVY_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < ANCHOVY_LEVEL) {
         player.message("You need a Cooking level of $ANCHOVY_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -65,7 +65,7 @@ on_item_on_item(item1 = Items.PLAIN_PIZZA, item2 = Items.ANCHOVIES) {
 }
 
 on_item_on_item(itemUsed = Items.PLAIN_PIZZA, itemsList = intArrayOf(Items.PINEAPPLE_RING, Items.PINEAPPLE_CHUNKS)) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, PINEAPPLE_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < PINEAPPLE_LEVEL) {
         player.message("You need a Cooking level of $PINEAPPLE_LEVEL to make this.")
         return@on_item_on_item
     }

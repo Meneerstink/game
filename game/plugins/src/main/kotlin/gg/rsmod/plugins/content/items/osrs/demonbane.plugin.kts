@@ -106,7 +106,7 @@ fun upgradeableArclight(player: Player): Int? =
         .maxByOrNull { Demonbane.upgradeProgress(player.inventory[it]!!) }
 
 fun makeEmberlight(player: Player) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, Demonbane.EMBERLIGHT_SMITHING_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.SMITHING) < Demonbane.EMBERLIGHT_SMITHING_LEVEL) {
         player.message("You need a Smithing level of ${Demonbane.EMBERLIGHT_SMITHING_LEVEL} to make Emberlight.")
         return
     }
@@ -130,11 +130,11 @@ fun makeEmberlight(player: Player) {
 
 /** Purging staff: tormented synapse, iron bar and battlestaff on an anvil with a hammer; 74 Crafting (boostable), 55 Smithing (not). */
 fun makePurgingStaff(player: Player) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, 74)) {
+    if (player.skills.getCurrentLevel(Skills.CRAFTING) < 74) {
         player.message("You need a Crafting level of 74 to make a purging staff.")
         return
     }
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, 55, boostable = false)) {
+    if (player.skills.getMaxLevel(Skills.SMITHING) < 55) {
         player.message("You need a Smithing level of 55 to make a purging staff.")
         return
     }

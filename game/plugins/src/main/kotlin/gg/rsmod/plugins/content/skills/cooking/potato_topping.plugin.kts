@@ -14,7 +14,7 @@ private val CHEESE_LEVEL = 47
 private val CHEESE_XP = 40.0
 
 on_item_on_item(item1 = Items.BAKED_POTATO, item2 = Items.PAT_OF_BUTTER) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, BUTTER_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < BUTTER_LEVEL) {
         player.message("You need a Cooking level of $BUTTER_LEVEL to make this.")
         return@on_item_on_item
     }
@@ -26,7 +26,7 @@ on_item_on_item(item1 = Items.BAKED_POTATO, item2 = Items.PAT_OF_BUTTER) {
 }
 
 on_item_on_item(item1 = Items.POTATO_WITH_BUTTER, item2 = Items.CHEESE) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, CHEESE_LEVEL)) {
+    if (player.skills.getCurrentLevel(Skills.COOKING) < CHEESE_LEVEL) {
         player.message("You need a Cooking level of $CHEESE_LEVEL to make this.")
         return@on_item_on_item
     }

@@ -71,7 +71,7 @@ object FirePotteryAction {
         if (!inventory.contains(data.unfired)) {
             return false
         }
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, data.levelRequired)) {
+        if (player.skills.getCurrentLevel(Skills.CRAFTING) < data.levelRequired) {
             task.itemMessageBox(
                 "You need a Crafting level of ${data.levelRequired} to<br>make ${Misc.formatWithIndefiniteArticle(
                     resultName,

@@ -173,7 +173,7 @@ BOLT_ENCHANTS.forEach { enchant ->
         player.closeInterface(432)
         player.queue {
             repeat(casts) {
-                if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.MAGIC, enchant.level)) {
+                if (player.skills.getCurrentLevel(Skills.MAGIC) < enchant.level) {
                     player.message("You need a Magic level of ${enchant.level} to enchant those bolts.")
                     return@queue
                 }

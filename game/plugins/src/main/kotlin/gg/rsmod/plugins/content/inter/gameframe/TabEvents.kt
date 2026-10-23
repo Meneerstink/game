@@ -5,6 +5,7 @@ import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.PaneMountHooks
 import gg.rsmod.plugins.api.ext.openChatboxInterface
 import gg.rsmod.plugins.api.ext.sendWeaponComponentInformation
+import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.content.combat.magic.Autocast
 
 /**
@@ -36,7 +37,15 @@ object TabEvents {
         PaneMountHooks.register(InterfaceDestination.CHAT_BOX_PANE.interfaceId) { player ->
             player.openChatboxInterface(interfaceId = 137, child = 9, dest = InterfaceDestination.CHAT_BOX_PANE)
         }
+        // A21 (owner 10-11): the Assist System is removed, so its chat filter tab goes too. 751:12 is the Assist tab layer (button
+        // 751:16 + texts 17/18) and the rightmost tab: the others keep their places; Report Abuse 751:13 is right-aligned.
+        PaneMountHooks.register(InterfaceDestination.CHATBOX_TABS.interfaceId) { player ->
+            player.setComponentHidden(InterfaceDestination.CHATBOX_TABS.interfaceId, ASSIST_TAB, true)
+        }
     }
+
+    /** The Assist tab layer of the chat filter bar 751 (cache decode, dossier A21). */
+    const val ASSIST_TAB = 12
 
     private fun combatTab(player: Player) {
         player.sendWeaponComponentInformation()

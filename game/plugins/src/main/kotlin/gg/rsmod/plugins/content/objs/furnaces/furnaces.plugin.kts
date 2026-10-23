@@ -220,7 +220,7 @@ fun handleCannonballs(
             if (!inventory.contains(Items.STEEL_BAR) || !inventory.contains(Items.AMMO_MOULD)) {
                 return@queue
             }
-            if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, 35)) {
+            if (player.skills.getCurrentLevel(Skills.SMITHING) < 35) {
                 player.filterableMessage("You need a Smithing level of at least 35 to make cannonballs.")
                 return@queue
             }

@@ -10,7 +10,7 @@ import gg.rsmod.plugins.content.skills.runecrafting.Altar
 BarkArmour.INFUSIONS.forEach { infusion ->
     val altar = if (infusion.rune == Items.NATURE_RUNE) Altar.NATURE.altar else Altar.BLOOD.altar
     on_item_on_obj(obj = altar, item = infusion.splitbark) {
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.RUNECRAFTING, infusion.runecraftLevel)) {
+        if (player.skills.getCurrentLevel(Skills.RUNECRAFTING) < infusion.runecraftLevel) {
             player.message("You need a Runecraft level of ${infusion.runecraftLevel} to do that.")
             return@on_item_on_obj
         }

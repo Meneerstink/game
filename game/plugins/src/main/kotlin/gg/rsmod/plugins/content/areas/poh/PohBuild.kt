@@ -168,7 +168,7 @@ object PohBuild {
         piece: Piece,
     ): Boolean {
         val player = task.player
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CONSTRUCTION, piece.level, boostable = true)) {
+        if (player.skills.getCurrentLevel(Skills.CONSTRUCTION) < piece.level) {
             task.messageBox("You need to have a Construction level of ${piece.level} to build that.")
             return false
         }

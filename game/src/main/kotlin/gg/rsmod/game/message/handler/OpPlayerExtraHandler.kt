@@ -10,8 +10,8 @@ import gg.rsmod.game.model.entity.Client
 import java.lang.ref.WeakReference
 
 /**
- * Player menu slots 1 and 5-10 (owner 2026-09-18 P0: the server offers "Challenge" in slot 1 and "Req Assist" in slot 5,
- * but those clicks had no route). Same flow as OpPlayer2-4Handler.
+ * Player menu slots 1 and 5-10 (owner 2026-09-18 P0: the server offers "Challenge" in slot 1, but that click had no route;
+ * "Req Assist" is gone, A21). Same flow as OpPlayer2-4Handler.
  */
 class OpPlayerExtraHandler : MessageHandler<OpPlayerExtraMessage> {
     override fun handle(client: Client, world: World, message: OpPlayerExtraMessage) {

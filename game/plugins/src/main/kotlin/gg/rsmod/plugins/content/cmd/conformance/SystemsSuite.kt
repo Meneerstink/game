@@ -100,7 +100,6 @@ object SystemsSuite : Conformance.Suite {
         scenario("chattabs") { chatTabs(run, arena) }
         scenario("acceptaid") { with(AidScenarios) { acceptAid(run, arena) } }
         scenario("potionshare") { with(AidScenarios) { potionShare(run, arena) } }
-        scenario("assist") { with(AidScenarios) { assist(run, arena) } }
         scenario("exchange") { exchangeState(run) }
         scenario("pestcontrol") { with(PestControlScenarios) { pestControl(run) } }
         scenario("pestdeparture") { with(PestControlScenarios) { pestDeparture(run) } }

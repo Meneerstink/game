@@ -12,7 +12,7 @@ on_item_on_item(item1 = Items.GLASSBLOWING_PIPE, item2 = Items.MOLTEN_GLASS) {
                     player.world.definitions
                         .get(ItemDef::class.java, it.id)
                         .name
-                if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, it.levelRequired)) {
+                if (player.skills.getCurrentLevel(Skills.CRAFTING) < it.levelRequired) {
                     "<col=ff0000>$itemName</col>"
                 } else {
                     itemName
@@ -21,7 +21,7 @@ on_item_on_item(item1 = Items.GLASSBLOWING_PIPE, item2 = Items.MOLTEN_GLASS) {
     val levels =
         glass
             .map {
-                if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, it.levelRequired)) {
+                if (player.skills.getCurrentLevel(Skills.CRAFTING) < it.levelRequired) {
                     "<col=ff0000>Level ${it.levelRequired}</col>"
                 } else {
                     ""

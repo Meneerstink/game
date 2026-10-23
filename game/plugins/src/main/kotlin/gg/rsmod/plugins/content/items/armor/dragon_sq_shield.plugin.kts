@@ -30,7 +30,7 @@ anvils.forEach {
             return@on_any_item_on_obj
         }
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.SMITHING, 60)) {
+        if (player.skills.getCurrentLevel(Skills.SMITHING) < 60) {
             player.message("You need 60 smithing to fix the Dragon square shield.")
             return@on_any_item_on_obj
         }

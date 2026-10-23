@@ -90,22 +90,11 @@ object MagicSpells {
         spellId: Int = -1,
     ): String? {
         // Audit S-02: a spell of another spellbook (sent by a modified client through spell-on-player/npc/item) is refused.
-        // Assist System: "The assisting player cannot move or act except chatting" (RuneScape Wiki); message ADAPTED (no source).
-        if (p.lock == gg.rsmod.game.model.LockState.ASSISTING) return gg.rsmod.plugins.content.mechanics.assist.AssistSystem.BUSY_ASSISTING
         val book = getMetadata(spellId)?.let { spellbookOf(it.interfaceId) }
         if (book != null && !p.hasSpellbook(book)) {
             return WRONG_SPELLBOOK
         }
-        // Assist System: a lent Magic level counts for every spell except a combat spell or one of AssistSystem.NO_LENDING_SPELLS
-        // (Deadman: a borrowed level never fights). Checked here, at the rule, because Combat.canAttack asks this before the attack
-        // ends the assistance (combat.plugin.kts).
-        val meta = getMetadata(spellId)
-        val combatSpell =
-            meta?.spellType == SpellType.COMBAT_SPELL_TYPE || meta?.name in gg.rsmod.plugins.content.mechanics.assist.AssistSystem.NO_LENDING_SPELLS
-        val levelOk =
-            if (combatSpell) p.skills.getCurrentLevel(Skills.MAGIC) >= lvl
-            else gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(p, Skills.MAGIC, lvl)
-        if (!levelOk) {
+        if (p.skills.getCurrentLevel(Skills.MAGIC) < lvl) {
             return "Your Magic level is not high enough for this spell."
         }
         if (p.getVarbit(INF_RUNES_VARBIT) == 0 && !gg.rsmod.plugins.content.items.osrs.BlightedSacks.usable(p, spellId)) {

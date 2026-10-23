@@ -129,7 +129,7 @@ object RunecraftAction {
         val essAmount = inventory.getItemCount(essence)
         val transaction = inventory.remove(item = essence, amount = essAmount)
 
-        val count = rune.getAmount(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.RUNECRAFTING), player, transaction.items.size)
+        val count = rune.getAmount(player.skills.getCurrentLevel(Skills.RUNECRAFTING), player, transaction.items.size)
 
         if (transaction.hasSucceeded()) {
             player.inventory.add(rune.id, count)
@@ -153,7 +153,7 @@ object RunecraftAction {
         val player = it.player
         val def = player.world.definitions.get(ItemDef::class.java, rune.id)
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.RUNECRAFTING, rune.level)) {
+        if (player.skills.getCurrentLevel(Skills.RUNECRAFTING) < rune.level) {
             it.messageBox(
                 "You need a ${Skills.getSkillName(
                     player.world,
@@ -202,7 +202,7 @@ object RunecraftAction {
                 .name
                 .lowercase()
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.RUNECRAFTING, combo.level)) {
+        if (player.skills.getCurrentLevel(Skills.RUNECRAFTING) < combo.level) {
             it.messageBox(
                 "You need a ${Skills.getSkillName(
                     player.world,

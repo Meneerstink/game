@@ -18,7 +18,7 @@ val antidotePlusPlusToAntiVenom =
 antidotePlusPlusToAntiVenom.forEach { (antidote, product) ->
     val (antiVenom, doses) = product
     on_item_on_item(item1 = Items.ZULRAHS_SCALES, item2 = antidote) {
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 87)) {
+        if (player.skills.getCurrentLevel(Skills.HERBLORE) < 87) {
             player.message("You need a Herblore level of 87 to make an anti-venom potion.")
             return@on_item_on_item
         }
@@ -37,7 +37,7 @@ antidotePlusPlusToAntiVenom.forEach { (antidote, product) ->
 
 listOf(Items.CLEAN_TORSTOL, Items.TORSTOL_POTION_UNF).forEach { torstol ->
     on_item_on_item(item1 = torstol, item2 = Items.ANTI_VENOM_4) {
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.HERBLORE, 94)) {
+        if (player.skills.getCurrentLevel(Skills.HERBLORE) < 94) {
             player.message("You need a Herblore level of 94 to make an anti-venom+ potion.")
             return@on_item_on_item
         }

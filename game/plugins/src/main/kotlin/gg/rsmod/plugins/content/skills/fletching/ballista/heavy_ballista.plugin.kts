@@ -15,7 +15,7 @@ import gg.rsmod.plugins.api.ext.grantOrRefund
 val LEVEL_REQUIRED = 72
 
 on_item_on_item(item1 = Items.BALLISTA_LIMBS, item2 = Items.HEAVY_FRAME) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, LEVEL_REQUIRED)) {
+    if (player.skills.getCurrentLevel(Skills.FLETCHING) < LEVEL_REQUIRED) {
         player.message("You need a Fletching level of $LEVEL_REQUIRED to attach the limbs to the frame.")
         return@on_item_on_item
     }
@@ -34,7 +34,7 @@ on_item_on_item(item1 = Items.BALLISTA_LIMBS, item2 = Items.HEAVY_FRAME) {
 }
 
 on_item_on_item(item1 = Items.INCOMPLETE_HEAVY_BALLISTA, item2 = Items.BALLISTA_SPRING) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, LEVEL_REQUIRED)) {
+    if (player.skills.getCurrentLevel(Skills.FLETCHING) < LEVEL_REQUIRED) {
         player.message("You need a Fletching level of $LEVEL_REQUIRED to attach the spring.")
         return@on_item_on_item
     }
@@ -53,7 +53,7 @@ on_item_on_item(item1 = Items.INCOMPLETE_HEAVY_BALLISTA, item2 = Items.BALLISTA_
 }
 
 on_item_on_item(item1 = Items.UNSTRUNG_HEAVY_BALLISTA, item2 = Items.MONKEY_TAIL) {
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.FLETCHING, LEVEL_REQUIRED)) {
+    if (player.skills.getCurrentLevel(Skills.FLETCHING) < LEVEL_REQUIRED) {
         player.message("You need a Fletching level of $LEVEL_REQUIRED to attach the monkey tail.")
         return@on_item_on_item
     }

@@ -188,7 +188,7 @@ suspend fun fillPouch(
     val pureEssenceToAdd = min(maxCapacity - runeEssenceToAdd, player.inventory.getItemCount(Items.PURE_ESSENCE))
     val totalEssenceToAdd = runeEssenceToAdd + pureEssenceToAdd
 
-    if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.RUNECRAFTING, pouch.requiredLevel)) {
+    if (player.skills.getCurrentLevel(Skills.RUNECRAFTING) < pouch.requiredLevel) {
         it.messageBox("You need a Runecrafting level of ${pouch.requiredLevel} to use this pouch.")
         return
     }

@@ -108,7 +108,7 @@ object LeatherAction {
             }
             return false
         }
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.CRAFTING, leatherItem.levelRequired)) {
+        if (player.skills.getCurrentLevel(Skills.CRAFTING) < leatherItem.levelRequired) {
             task.itemMessageBox(
                 "You need a Crafting level of ${leatherItem.levelRequired} to<br>craft ${Misc.formatWithIndefiniteArticle(
                     resultName,

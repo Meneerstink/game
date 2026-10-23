@@ -132,8 +132,7 @@ on_login {
 
     player.sendOption("Follow", 3)
     player.sendOption("Trade with", 4)
-    // Slot 7: the chat op "Give assistance" on an assist request sends OPPLAYER7 (clientscript 86); see AssistSystem.
-    player.sendOption(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.OPTION, gg.rsmod.plugins.content.mechanics.assist.AssistSystem.OPTION_SLOT)
+    // A21 (owner 10-11): the Assist System is removed, so no Req Assist option (Darkan/Novite send only Follow + Trade with).
 
     player.setVarp(Varps.UNSTABLE_FOUNDATIONS_PROGRESS, 1000) // unlocks tutorial settings
     player.setVarp(Varps.VARP_1160, -1) // Unlocks summoning orb

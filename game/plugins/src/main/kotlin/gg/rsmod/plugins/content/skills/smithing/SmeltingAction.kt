@@ -110,7 +110,7 @@ class SmeltingAction(
                 if (wearingRing && bar.product == Items.IRON_BAR) {
                     true
                 } else {
-                    bar.product != Items.IRON_BAR || rollIronBar(gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.SMITHING), player)
+                    bar.product != Items.IRON_BAR || rollIronBar(player.skills.getCurrentLevel(Skills.SMITHING), player)
                 }
 
             if (wearingRing && bar.product == Items.IRON_BAR) {
@@ -168,7 +168,7 @@ class SmeltingAction(
             return false
         }
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(task.player, Skills.SMITHING, bar.levelRequired)) {
+        if (task.player.skills.getCurrentLevel(Skills.SMITHING) < bar.levelRequired) {
             task.messageBox(
                 "You need a ${Skills.getSkillName(
                     player.world,

@@ -47,7 +47,7 @@ object CookingAction {
             // OSRS Wiki "Cooking cape": "When worn, food will never be burned while cooking" (the max cape carries it too).
             val success =
                 gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.COOKING) ||
-                    interpolate(data.lowChance, data.highChance, gg.rsmod.plugins.content.mechanics.assist.AssistSystem.effectiveLevel(player, Skills.COOKING)) > RANDOM.nextInt(255)
+                    interpolate(data.lowChance, data.highChance, player.skills.getCurrentLevel(Skills.COOKING)) > RANDOM.nextInt(255)
 
             if (success) {
                 inventory.add(itemToCook)
@@ -77,7 +77,7 @@ object CookingAction {
             return false
         }
 
-        if (!gg.rsmod.plugins.content.mechanics.assist.AssistSystem.meets(player, Skills.COOKING, data.levelRequirement)) {
+        if (player.skills.getCurrentLevel(Skills.COOKING) < data.levelRequirement) {
             player.queue {
                 val name =
                     player.world.definitions
