@@ -67,7 +67,8 @@ class TravelLandingTests {
 
     @Test
     fun `every fixed travel landing is open walkable ground and not an npc's post`() {
-        val spawns = pluginNpcSpawns()
+        // N162: a wanderer's spawn tile counts too - at world start (and after every respawn) the npc stands right there.
+        val spawns = pluginNpcSpawns(stationaryOnly = false)
         val problems =
             landings().mapNotNull { (name, tile) ->
                 val pocket = Landing.pocket(world.collision, tile, limit = 16).size
