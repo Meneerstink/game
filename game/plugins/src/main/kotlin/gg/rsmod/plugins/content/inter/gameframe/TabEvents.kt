@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.ext.PaneMountHooks
 import gg.rsmod.plugins.api.ext.openChatboxInterface
 import gg.rsmod.plugins.api.ext.sendWeaponComponentInformation
 import gg.rsmod.plugins.api.ext.setComponentHidden
+import gg.rsmod.plugins.api.ext.setComponentPosition
 import gg.rsmod.plugins.content.combat.magic.Autocast
 
 /**
@@ -39,13 +40,21 @@ object TabEvents {
         }
         // A21 (owner 10-11): the Assist System is removed, so its chat filter tab goes too. 751:12 is the Assist tab layer (button
         // 751:16 + texts 17/18) and the rightmost tab: the others keep their places; Report Abuse 751:13 is right-aligned.
+        // N240 (owner 2026-10-23: "lege ruimte tussen de Report-knop en de Trade-knop"): Report Abuse takes the Assist tab's place,
+        // straight after Trade, as in OSRS (an IF_SETPOSITION is absolute: the client drops the right alignment).
         PaneMountHooks.register(InterfaceDestination.CHATBOX_TABS.interfaceId) { player ->
             player.setComponentHidden(InterfaceDestination.CHATBOX_TABS.interfaceId, ASSIST_TAB, true)
+            player.setComponentPosition(InterfaceDestination.CHATBOX_TABS.interfaceId, REPORT_TAB, REPORT_X, REPORT_Y)
         }
     }
 
     /** The Assist tab layer of the chat filter bar 751 (cache decode, dossier A21). */
     const val ASSIST_TAB = 12
+
+    /** Report Abuse (751:13, 54 x 22, right-aligned 4 px from the edge in the cache) and the Assist tab's left edge it moves to. */
+    const val REPORT_TAB = 13
+    const val REPORT_X = 404
+    const val REPORT_Y = 1
 
     private fun combatTab(player: Player) {
         player.sendWeaponComponentInformation()
