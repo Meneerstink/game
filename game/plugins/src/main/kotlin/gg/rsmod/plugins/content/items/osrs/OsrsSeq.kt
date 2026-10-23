@@ -102,6 +102,19 @@ object OsrsSeq {
     const val HUMAN_SWORD_LUNGE = 15786 // OSRS 392
     const val GHRAZI_RAPIER_ATTACK = 15835 // OSRS 8145 (rapierseq, tx-20260929-012048)
     const val WARGUILD_PARRY_DEFEND = 15836 // OSRS 4177, the rapier's block (rapierseq, tx-20260929-012048)
+
+    // N34 (batch n34seq, tx-20261023-135212): the OSRS DEFEND sequences the RuneLite weapon-animation-replacer sets observe, on the
+    // player rig (the same-numbered 667 sequences are not OSRS's), and the Colossal blade's observed attack / defend.
+    const val OSRS_DEFEND_STAFF = 16076 // OSRS 420 (staves, tridents, sceptres)
+    const val OSRS_DEFEND_WAND = 16077 // OSRS 415
+    const val OSRS_DEFEND_BLUNT = 16078 // OSRS 403 (warhammers, maces, cane)
+    const val OSRS_DEFEND_AXE = 16079 // OSRS 397 (axes, pickaxes)
+    const val OSRS_DEFEND_2H = 16080 // OSRS 410
+    const val OSRS_DEFEND_SPEAR = 16081 // OSRS 383
+    const val OSRS_DEFEND_CHINCHOMPA = 16082 // OSRS 3176
+    const val ELDER_MAUL_ATTACK = 16083 // OSRS 7516 (Colossal blade attack)
+    const val ELDER_MAUL_DEFEND = 16084 // OSRS 7517 (Colossal blade defend)
+    const val OSRS_DEFEND_RANGED = 16085 // OSRS 424 (bows, crossbows, thrown weapons)
     const val HUMAN_AXE_CHOP = 15787 // OSRS 393 (staff bash)
     const val HUMAN_STAFF_PUMMEL = 15788 // OSRS 414 (wand melee)
     const val HUMAN_SPEAR_SPIKE = 15789 // OSRS 428

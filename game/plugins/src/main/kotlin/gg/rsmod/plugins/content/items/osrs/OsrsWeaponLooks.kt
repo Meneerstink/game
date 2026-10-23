@@ -82,10 +82,13 @@ object OsrsWeaponLooks {
             Items.DRAGON_HUNTER_LANCE,
         )
         register(Look(all(OsrsSeq.PMOON_MACUAHUITL_CRUSH)), Items.DUAL_MACUAHUITL)
-        register(Look(all(OsrsSeq.HUMAN_DRAGON_KNIFE)), Items.DRAGON_KNIFE)
-        register(Look(all(OsrsSeq.HUMAN_DRAGON_KNIFE_P)), Items.DRAGON_KNIFE_P, Items.DRAGON_KNIFE_P_PLUS, Items.DRAGON_KNIFE_P_PLUS_PLUS)
-        register(Look(all(OsrsSeq.ZCB_ATTACK), attackPvn = all(OsrsSeq.ZCB_ATTACK_PVN)), Items.ZARYTE_CROSSBOW)
-        register(Look(all(OsrsSeq.VENATOR_BOW_SHOOT)), Items.VENATOR_BOW)
+        register(Look(all(OsrsSeq.HUMAN_DRAGON_KNIFE), block = OsrsSeq.OSRS_DEFEND_RANGED), Items.DRAGON_KNIFE)
+        register(
+            Look(all(OsrsSeq.HUMAN_DRAGON_KNIFE_P), block = OsrsSeq.OSRS_DEFEND_RANGED),
+            Items.DRAGON_KNIFE_P, Items.DRAGON_KNIFE_P_PLUS, Items.DRAGON_KNIFE_P_PLUS_PLUS,
+        )
+        register(Look(all(OsrsSeq.ZCB_ATTACK), attackPvn = all(OsrsSeq.ZCB_ATTACK_PVN), block = OsrsSeq.OSRS_DEFEND_RANGED), Items.ZARYTE_CROSSBOW)
+        register(Look(all(OsrsSeq.VENATOR_BOW_SHOOT), block = OsrsSeq.OSRS_DEFEND_RANGED), Items.VENATOR_BOW)
         register(Look(all(OsrsSeq.HUMAN_ATLATL_ATTACK_RANGED_01)), Items.ECLIPSE_ATLATL)
         register(Look(all(OsrsSeq.HUMAN_GLAIVE_RALOS01_CHARGED_THROW)), Items.TONALZTICS_OF_RALOS)
         register(Look(all(OsrsSeq.HUMAN_GLAIVE_RALOS01_UNCHARGED_THROW)), Items.TONALZTICS_OF_RALOS_UNCHARGED)
@@ -99,7 +102,7 @@ object OsrsWeaponLooks {
             ),
             *OSRS_GODSWORDS,
         )
-        register(Look(all(OsrsSeq.HUMAN_NIGHTMARE_STAFF_CRUSH)), *NIGHTMARE_STAVES)
+        register(Look(all(OsrsSeq.HUMAN_NIGHTMARE_STAFF_CRUSH), block = OsrsSeq.OSRS_DEFEND_STAFF), *NIGHTMARE_STAVES)
         // Blue moon spear (combat-logger: HUMAN_ZAMORAKSPEAR_STAB / _SLASH / _LUNGE; "LUNGE" is the spear class's crush): Lunge / Swipe /
         // Pound / Block.
         register(
@@ -152,13 +155,13 @@ object OsrsWeaponLooks {
         // table of the Glabay OSRS server, attack_animations.json: 11791 / 12902 / 12904 -> 440). Block: no source names it (SOURCE_GAP),
         // so the class block stays.
         register(
-            Look(all(HUMAN_SCYTHE_SWEEP)),
+            Look(all(HUMAN_SCYTHE_SWEEP), block = OsrsSeq.OSRS_DEFEND_STAFF),
             Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE,
         )
         // Staves (Bash / Pound / Focus): HUMAN_AXE_CHOP 393 - RuneLite combat-logger, observed in OSRS: "HUMAN_AXE_CHOP, // Staff bash".
         // (The xrsps table says 419 HUMAN_STAFFORB_PUMMEL; the combat-logger is the in-game observation, so it wins.)
         register(
-            Look(all(OsrsSeq.HUMAN_AXE_CHOP)),
+            Look(all(OsrsSeq.HUMAN_AXE_CHOP), block = OsrsSeq.OSRS_DEFEND_STAFF),
             Items.TRIDENT_OF_THE_SEAS, Items.TRIDENT_OF_THE_SEAS_FULL, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SWAMP,
             Items.UNCHARGED_TOXIC_TRIDENT, Items.TRIDENT_OF_THE_SEAS_E, Items.UNCHARGED_TRIDENT_E, Items.TRIDENT_OF_THE_SWAMP_E,
             Items.UNCHARGED_TOXIC_TRIDENT_E, Items.THAMMARONS_SCEPTRE, Items.THAMMARONS_SCEPTRE_U, Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
@@ -169,7 +172,7 @@ object OsrsWeaponLooks {
             Items.DUST_BATTLESTAFF, Items.MYSTIC_DUST_STAFF, Items.LAVA_BATTLESTAFF_OR, Items.STEAM_BATTLESTAFF_OR, Items.MYSTIC_STEAM_STAFF_OR,
         )
         // Wands: HUMAN_STAFF_PUMMEL 414 - combat-logger "Wand melee auto"; the Glabay per-item table agrees (21006 Kodai, 12422 3rd age wand).
-        register(Look(all(OsrsSeq.HUMAN_STAFF_PUMMEL)), Items.KODAI_WAND, Items.THIRDAGE_WAND, Items.DRAGON_HUNTER_WAND)
+        register(Look(all(OsrsSeq.HUMAN_STAFF_PUMMEL), block = OsrsSeq.OSRS_DEFEND_WAND), Items.KODAI_WAND, Items.THIRDAGE_WAND, Items.DRAGON_HUNTER_WAND)
         // Thrown: against players OSRS plays the classic throw (darts II_HUMAN_DART_THROW 6600, thrownaxes HUMAN_STAKE2 929, same ids in
         // 667), against npcs the _PVN versions (combat-logger: "II_HUMAN_DART_THROW_PVN, // Dart throw", "HUMAN_STAKE2_PVN, // Rune knife,
         // thrownaxe").
@@ -177,38 +180,52 @@ object OsrsWeaponLooks {
         // 2 ticks, so a rapid 2-tick throw arriving while the last one was still on its final frame did not restart - the dart flew
         // without a throw (owner 2026-09-25, dragon darts). The OSRS copies (15801 / 15791) carry replay mode 1 and restart.
         register(
-            Look(all(OsrsSeq.II_HUMAN_DART_THROW), attackPvn = all(OsrsSeq.II_HUMAN_DART_THROW_PVN)),
+            Look(all(OsrsSeq.II_HUMAN_DART_THROW), attackPvn = all(OsrsSeq.II_HUMAN_DART_THROW_PVN), block = OsrsSeq.OSRS_DEFEND_RANGED),
             *gg.rsmod.plugins.content.combat.strategy.ranged.ammo.Darts.DARTS.toIntArray(),
         )
-        register(Look(all(OsrsSeq.HUMAN_STAKE2), attackPvn = all(OsrsSeq.HUMAN_STAKE2_PVN)), Items.DRAGON_THROWNAXE)
+        register(Look(all(OsrsSeq.HUMAN_STAKE2), attackPvn = all(OsrsSeq.HUMAN_STAKE2_PVN), block = OsrsSeq.OSRS_DEFEND_RANGED), Items.DRAGON_THROWNAXE)
         // Chinchompas: HUMAN_CHINCHOMPA_ATTACK 2779, against npcs _PVN 7618 (combat-logger "HUMAN_CHINCHOMPA_ATTACK_PVN, // Chinchompa").
-        register(Look(all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK), attackPvn = all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK_PVN)), Items.BLACK_CHINCHOMPA)
+        register(
+            Look(all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK), attackPvn = all(OsrsSeq.HUMAN_CHINCHOMPA_ATTACK_PVN), block = OsrsSeq.OSRS_DEFEND_CHINCHOMPA),
+            Items.BLACK_CHINCHOMPA,
+        )
         // Axes (Chop / Hack slash, Smash crush, Block slash): HUMAN_AXE_HACK 395 "Axe", HUMAN_BLUNT_POUND 401 "Crush" (combat-logger).
         register(
-            Look(intArrayOf(OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_BLUNT_POUND, OsrsSeq.HUMAN_AXE_HACK)),
+            Look(intArrayOf(OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_AXE_HACK, OsrsSeq.HUMAN_BLUNT_POUND, OsrsSeq.HUMAN_AXE_HACK), block = OsrsSeq.OSRS_DEFEND_AXE),
             Items.THIRDAGE_AXE, Items.GILDED_AXE,
         )
         // Pickaxes: HUMAN_BLUNT_SPIKE 400 (combat-logger "Pickaxe smash"; xrsps: pickaxe spike 400).
-        register(Look(all(OsrsSeq.HUMAN_BLUNT_SPIKE)), Items.THIRDAGE_PICKAXE, Items.GILDED_PICKAXE, Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE_OR_UPGRADED)
+        register(
+            Look(all(OsrsSeq.HUMAN_BLUNT_SPIKE), block = OsrsSeq.OSRS_DEFEND_AXE),
+            Items.THIRDAGE_PICKAXE, Items.GILDED_PICKAXE, Items.DRAGON_PICKAXE_OR, Items.DRAGON_PICKAXE_OR_UPGRADED,
+        )
         // Blunt weapons (Pound / Pummel / Block, all crush): HUMAN_BLUNT_POUND 401 (combat-logger "Crush, DWH"; Glabay 13576 -> 401).
-        register(Look(all(OsrsSeq.HUMAN_BLUNT_POUND)), Items.DRAGON_WARHAMMER, Items.GILDED_SPADE, Items.DRAGON_CANE)
+        register(Look(all(OsrsSeq.HUMAN_BLUNT_POUND), block = OsrsSeq.OSRS_DEFEND_BLUNT), Items.DRAGON_WARHAMMER, Items.DRAGON_CANE)
+        // Gilded spade: the RuneLite replacer sets put it with the 2h swords; the combat-logger / Glabay tables with the blunt weapons.
+        // Kept blunt (the two observations disagree, see OsrsWeaponLooksObservedTests).
+        register(Look(all(OsrsSeq.HUMAN_BLUNT_POUND)), Items.GILDED_SPADE)
         // Granite maul: SLAYER_GRANITE_MAUL_ATTACK 1665 (combat-logger "Granite maul").
         register(Look(all(OsrsSeq.SLAYER_GRANITE_MAUL_ATTACK)), Items.GRANITE_MAUL_ORNATE_HANDLE)
         // Spears (Lunge stab / Swipe slash / Pound crush / Block stab): HUMAN_SPEAR_SPIKE 428 "Spear stab", HUMAN_SCYTHE_SWEEP 440
         // "Spear slash", HUMAN_SPEAR_LUNGE 429 "Spear crush" (combat-logger).
         register(
-            Look(intArrayOf(HUMAN_SPEAR_SPIKE, HUMAN_SCYTHE_SWEEP, OsrsSeq.HUMAN_SPEAR_LUNGE, HUMAN_SPEAR_SPIKE)),
+            Look(intArrayOf(HUMAN_SPEAR_SPIKE, HUMAN_SCYTHE_SWEEP, OsrsSeq.HUMAN_SPEAR_LUNGE, HUMAN_SPEAR_SPIKE), block = OsrsSeq.OSRS_DEFEND_SPEAR),
             Items.GILDED_SPEAR, Items.GILDED_HASTA,
         )
         // Two-handed swords (Chop / Slash slash, Smash crush, Block slash): HUMAN_DHSWORD_SLASH 407 "2h slash", HUMAN_DHSWORD_CHOP 406
         // "2h crush" (combat-logger).
         register(
-            Look(intArrayOf(OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_CHOP, OsrsSeq.HUMAN_DHSWORD_SLASH)),
+            Look(
+                intArrayOf(OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_SLASH, OsrsSeq.HUMAN_DHSWORD_CHOP, OsrsSeq.HUMAN_DHSWORD_SLASH),
+                block = OsrsSeq.OSRS_DEFEND_2H,
+            ),
             Items.GILDED_2H_SWORD,
         )
         // Colossal blade: the Barrelchest anchor's player animations - BRAIN_PLAYER_ANCHOR_ATTACK 5865 on every style, _DEFEND 5866
         // (same ids in the 667 cache, the anchor's own attack; see OsrsItemImportTool owner0929).
-        register(Look(all(5865), block = 5866), Items.COLOSSAL_BLADE)
+        // N34: the RuneLite replacer set "Colossal Blade" attacks 7516 / defends 7517 (the elder maul pair, not the anchor's 5865 / 5866);
+        // the DPS-helper plugin counts the blade's attacks by 7516 too.
+        register(Look(all(OsrsSeq.ELDER_MAUL_ATTACK), block = OsrsSeq.ELDER_MAUL_DEFEND), Items.COLOSSAL_BLADE)
         // Claws (Chop / Slash slash, Lunge stab, Block slash): slash HUMAN_AXE_CHOP 393 (combat-logger lists the dragon claws under 393),
         // stab D_CLAWS_PUNCH 1067 ("Claw stab").
         register(
@@ -222,13 +239,13 @@ object OsrsWeaponLooks {
         )
         // Bows and crossbows without their own sequence: HUMAN_BOW 426 "Bow"; crossbows XBOWS_HUMAN_FIRE_AND_RELOAD 4230 (PVN below).
         register(
-            Look(all(OsrsSeq.HUMAN_BOW)),
+            Look(all(OsrsSeq.HUMAN_BOW), block = OsrsSeq.OSRS_DEFEND_RANGED),
             Items.TWISTED_BOW, Items.BOW_OF_FAERDHINEN, Items.BOW_OF_FAERDHINEN_INACTIVE, Items.BOW_OF_FAERDHINEN_C, Items.MAGIC_SHORTBOW_I,
             Items.CRYSTAL_BOW_OSRS, Items.CRYSTAL_BOW_OSRS_INACTIVE, Items.CRAWS_BOW_U, Items.CRAWS_BOW, Items.WEBWEAVER_BOW_U, Items.WEBWEAVER_BOW,
             Items.VENATOR_BOW_UNCHARGED, Items.SCORCHING_BOW, Items.THIRDAGE_BOW, *DARK_BOWS,
         )
         register(
-            Look(all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD), attackPvn = all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN)),
+            Look(all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD), attackPvn = all(OsrsSeq.XBOWS_HUMAN_FIRE_AND_RELOAD_PVN), block = OsrsSeq.OSRS_DEFEND_RANGED),
             Items.ARMADYL_CROSSBOW, Items.DRAGON_CROSSBOW, Items.DRAGON_HUNTER_CROSSBOW, Items.HUNTERS_SUNLIGHT_CROSSBOW,
         )
     }
@@ -251,7 +268,8 @@ object OsrsWeaponLooks {
         return table[styleIndex.coerceIn(0, 3)]
     }
 
-    fun blockAnimation(weaponId: Int): Int? = looks[weaponId]?.block
+    /** The fang's block: RuneLite replacer set "Osmumten's Fang" DEFEND 4177 (N34). */
+    fun blockAnimation(weaponId: Int): Int? = looks[weaponId]?.block ?: OsrsSeq.WARGUILD_PARRY_DEFEND.takeIf { weaponId == Items.OSMUMTENS_FANG }
 
     /**
      * The weapon's own OSRS attack sound (Jagex config names, OSRS Wiki "List of sound IDs"), or null for the item's 667 attack audio.

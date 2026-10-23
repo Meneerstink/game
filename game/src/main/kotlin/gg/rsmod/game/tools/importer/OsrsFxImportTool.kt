@@ -230,6 +230,10 @@ object OsrsFxImportTool {
             // Owner 2026-10-04 153608 ("collosal blade is not wielded like the osrs item"): the blade's own stance, gameval AnimationID
             // HUMAN_WEAPON_GIANT01_RUN 9459 / _READY 9460 / _WALK 9461 / _WALKR 10054 / _WALKL 10055 (it attacks with the anchor's 5865).
             "colossalseq" to listOf(9459, 9460, 9461, 10054, 10055),
+            // N34 (OsrsWeaponLooks against RuneLite weapon-animation-replacer data.json, the in-game observed sets): the OSRS DEFEND of
+            // staves 420, wands 415, blunt 403, axes/pickaxes 397, 2h swords 410, spears 383, chinchompas 3176, and the Colossal blade's
+            // observed attack 7516 / defend 7517 (the elder maul pair; DPS-helper plugin agrees on 7516).
+            "n34seq" to listOf(420, 415, 403, 397, 410, 383, 3176, 7516, 7517, 424), // 424 bows/thrown: only an npc-rig copy existed
             // OSRS max cape emote, player side: MAX_CAPE_PLAYER_ANIM 7121 (the spotanim is in BATCHES under the same name).
             "maxcapeemote" to listOf(7121),
             // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
