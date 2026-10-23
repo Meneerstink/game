@@ -82,6 +82,7 @@ class MessageDecoderSet {
         put(FriendListDeleteMessage::class.java, FriendListDeleteDecoder(), FriendListDeleteHandler(), structures)
         put(MessagePrivateMessage::class.java, MessagePrivateDecoder(), MessagePrivateHandler(), structures)
         put(ChatFilterMessage::class.java, ChatFilterDecoder(), ChatFilterHandler(), structures)
+        put(gg.rsmod.game.message.impl.ChatSetModeMessage::class.java, gg.rsmod.game.message.decoder.ChatSetModeDecoder(), gg.rsmod.game.message.handler.ChatSetModeHandler(), structures)
         put(IgnoreListAddMessage::class.java, IgnoreListAddDecoder(), IgnoreListAddHandler(), structures)
         put(ReportAbuseMessage::class.java, ReportAbuseDecoder(), ReportAbuseHandler(), structures)
         put(IgnoreListDeleteMessage::class.java, IgnoreListDeleteDecoder(), IgnoreListDeleteHandler(), structures)

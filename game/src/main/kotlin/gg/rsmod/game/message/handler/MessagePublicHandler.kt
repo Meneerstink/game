@@ -29,6 +29,17 @@ internal fun routeChannelPrefix(text: String): String {
 }
 
 /**
+ * N239 (owner 2026-10-23: "in een clan chat of friends chat lukt typen niet: tekst gaat naar publieke chat"): the 2011 client strips
+ * the "/", "//" or "///" a player types and announces the channel with CHAT_SETMODE instead (clientscript 4730), so the line came
+ * in without its prefix and went to public chat. A line sent in channel mode 1 / 2 / 3 gets the friends / clan / guest-clan prefix
+ * back, so it takes the one route that channel has; a line that still carries a prefix (an older client) keeps it.
+ */
+internal fun routeChannelMode(
+    text: String,
+    mode: Int,
+): String = if (mode in 1..3 && !text.startsWith("/") && !text.startsWith("::")) "/".repeat(mode) + text else text
+
+/**
  * @author Tom <rspsmods@gmail.com>
  */
 class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
@@ -41,7 +52,7 @@ class MessagePublicHandler : MessageHandler<MessagePublicMessage> {
         val huffman = world.huffman
         huffman.decompress(message.data, decompressed, message.length)
 
-        val unpacked = routeChannelPrefix(String(decompressed, 0, message.length))
+        val unpacked = routeChannelMode(routeChannelPrefix(String(decompressed, 0, message.length)), client.attr[CHAT_MODE_ATTR] ?: 0)
 
         if (unpacked.startsWith("::yell")) {
             client.writeMessage("To talk in the global chat, start your message in public chat with a period (.)")

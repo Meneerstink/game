@@ -1142,11 +1142,14 @@ in-packets:
     length: 6
     ignore: true
 
-  - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
+  # N239: CHAT_SETMODE - the channel of the next public line (0 public, 1 friends chat, 2 clan, 3 guest clan).
+  - message: gg.rsmod.game.message.impl.ChatSetModeMessage
     type: FIXED
     opcode: 23
     length: 1
-    ignore: true
+    structure:
+      - name: mode
+        type: BYTE
 
   - message: gg.rsmod.game.message.impl.IgnoreMessage # No data
     type: VARIABLE_BYTE
