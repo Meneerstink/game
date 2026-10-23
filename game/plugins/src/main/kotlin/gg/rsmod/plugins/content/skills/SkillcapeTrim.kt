@@ -11,9 +11,9 @@ import gg.rsmod.plugins.api.Skills
  * equipment and the bank, at every new 99, at login and right after a cape is bought.
  */
 object SkillcapeTrim {
-    /** Untrimmed -> trimmed, every 667 cape except Dungeoneering (DGN: the skill is removed). */
+    /** Untrimmed -> trimmed, every 667 cape (DGN: Dungeoneering and its cape are removed). */
     val TRIMMED: Map<Int, Int> =
-        Skillcapes.values().filter { it != Skillcapes.DUNGEONEERING }.associate { it.untrimmedCape to it.trimmedCape }
+        Skillcapes.values().associate { it.untrimmedCape to it.trimmedCape }
 
     /** Trims every untrimmed skillcape [player] owns when he has two or more 99s; returns how many stacks changed. */
     fun trimAll(player: Player): Int {

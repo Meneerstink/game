@@ -1054,6 +1054,8 @@ abstract class Player(
         modifiers: Boolean = true,
         disableBonusExperience: Boolean = false,
     ) {
+        // DGN (owner 2026-10-11): a removed skill (Dungeoneering) never gains XP, whatever route asks.
+        if (SkillSet.isRemovedSkill(skill)) return
         val oldXp = skills.getCurrentXp(skill)
 
         if (oldXp >= SkillSet.MAX_XP) {

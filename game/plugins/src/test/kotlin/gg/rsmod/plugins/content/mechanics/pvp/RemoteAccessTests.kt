@@ -127,7 +127,7 @@ class RemoteAccessTests {
 
     @Test
     fun `routes that move a player later, or open a remote service, use the shared gate`() {
-        assertTrue(read("areas/daemonheim/dungeoneering_tutor.plugin.kts").contains("RemoteAccess.travel(player, \"travel to Daemonheim\") { Dungeoneering.join(player) }"))
+        // DGN 2026-10-21: `::dungeon` and the Daemonheim floor loop are removed with Dungeoneering (DungeoneeringRemovedTests).
         read("activity/pest_control/PestControlHandler.kt").let {
             assertTrue(it.contains("RemoteAccess.refuse(player"), "boarding")
             assertTrue(it.contains("RemoteAccess.moveRefusal(p"), "the game start re-checks every boarder")

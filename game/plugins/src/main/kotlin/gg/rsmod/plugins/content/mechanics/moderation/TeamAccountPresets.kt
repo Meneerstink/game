@@ -84,7 +84,7 @@ object TeamAccountPresets {
     /** All skills 99, stats full, the account's prayer book and gear set. */
     fun apply(player: Player) {
         val account = forName(player.username) ?: return
-        for (i in 0 until player.skills.maxSkills) {
+        for (i in gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.activeSkills(player)) {
             player.skills.setBaseLevel(i, 99)
         }
         player.calculateAndSetCombatLevel()

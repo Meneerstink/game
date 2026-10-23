@@ -16,7 +16,8 @@ on_interface_close(LEVELUP_INTERFACE_ID) {
     player.setVarbit(Skills.SLAYER_MASTER_MILESTONE_VARBIT, 0)
 }
 
-SkillGuide.values.forEach { guide ->
+// DGN: a removed skill (Dungeoneering) has no stats-tab guide or target.
+SkillGuide.values.filterNot { SkillSet.isRemovedSkill(it.id) }.forEach { guide ->
     on_button(interfaceId = 320, component = guide.child) {
         if (!player.lock.canInterfaceInteract()) {
             return@on_button

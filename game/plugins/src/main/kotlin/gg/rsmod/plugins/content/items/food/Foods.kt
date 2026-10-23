@@ -166,7 +166,7 @@ object Foods {
             }
             else -> {
                 // Rare: Lowers a random skill (including non-combat skills) by a few levels
-                val randomSkill = (0..24).filter { it != Skills.CONSTITUTION }.random()
+                val randomSkill = gg.rsmod.game.model.skill.SkillSet.activeSkills().filter { it != Skills.CONSTITUTION }.random()
                 player.skills.setCurrentLevel(
                     randomSkill,
                     max(

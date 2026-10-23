@@ -423,7 +423,8 @@ on_command("teleto", Privilege.MOD_POWER) {
         "Invalid format! Example of proper command <col=42C66C>::teleto alycia</col>",
     ) { values ->
         val p = world.getPlayerForName(values[0].replace("_", " ")) ?: return@tryWithUsage
-        player.teleport(p.tile, TeleportType.RING_OF_KINSHIP)
+        // DGN: no Ring of kinship look any more; Darkan PlayerModifiers.java:69-82 `teleto` moves at once (p.tele).
+        player.moveTo(p.tile)
     }
 }
 
@@ -439,7 +440,8 @@ on_command("teletome", Privilege.MOD_POWER) {
             player.message("No such player.")
             return@tryWithUsage
         }
-        p.teleport(player.tile, TeleportType.RING_OF_KINSHIP)
+        // DGN: Darkan PlayerModifiers.java `teletome` moves the target at once (target.tele).
+        p.moveTo(player.tile)
         p.message("You have been teleported to ${player.username}")
     }
 }
@@ -501,7 +503,10 @@ on_command("rate") {
             }
             skill = Skills.getSkillForName(world, player.skills.maxSkills, name)
         }
-        if (skill in 0 until player.skills.maxSkills) {
+        if (skill in 0 until player.skills.maxSkills && gg.rsmod.game.model.skill.SkillSet.isRemovedSkill(skill)) {
+            // DGN: a removed skill gains nothing, so it has no rate to show.
+            player.message("${Skills.getSkillName(world, skill)} has been removed from the game.")
+        } else if (skill in 0 until player.skills.maxSkills) {
             // N92: the rate shown is the rate Player.addXp gains at - the ONE factor (Annihilation tier through XpRates), never a
             // second formula (the 2011 level curve x1 -> x5 that used to sit here was a leftover copy, Keurmeester round 3).
             val rate = player.xpMultiplier(skill)
@@ -1022,7 +1027,7 @@ on_command("removeobj", Privilege.ADMIN_POWER) {
 }
 
 on_command("master", Privilege.ADMIN_POWER) {
-    for (i in 0 until player.skills.maxSkills) {
+    for (i in gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.activeSkills(player)) {
         player.skills.setBaseLevel(i, 99)
     }
     player.calculateAndSetCombatLevel()
@@ -1184,6 +1189,10 @@ on_command("setxp", Privilege.ADMIN_POWER) {
             }
             skill = Skills.getSkillForName(world, player.skills.maxSkills, name)
         }
+        if (gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.isRemoved(skill)) {
+            player.message("Dungeoneering is removed from this server.", type = ChatMessageType.CONSOLE)
+            return@tryWithUsage
+        }
         if (skill != -1) {
             val oldLevel = player.skills.getMaxLevel(skill)
             val oldTotal = player.skills.calculateTotalLevel
@@ -1232,6 +1241,10 @@ on_command("setlvl", Privilege.ADMIN_POWER) {
                 "fm" -> name = "firemaking"
             }
             skill = Skills.getSkillForName(world, player.skills.maxSkills, name)
+        }
+        if (gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.isRemoved(skill)) {
+            player.message("Dungeoneering is removed from this server.", type = ChatMessageType.CONSOLE)
+            return@tryWithUsage
         }
         if (skill != -1) {
             val level = values[1].toInt()
@@ -2093,7 +2106,7 @@ on_command("object_inventory", Privilege.OWNER_POWER) {
  * done, never fabricated ones.
  */
 on_command("maxtest", Privilege.OWNER_POWER) {
-    for (i in 0 until player.skills.maxSkills) {
+    for (i in gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.activeSkills(player)) {
         player.skills.setBaseLevel(i, 99)
     }
     player.calculateAndSetCombatLevel()

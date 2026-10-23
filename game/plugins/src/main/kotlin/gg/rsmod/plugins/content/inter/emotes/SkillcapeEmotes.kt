@@ -30,7 +30,6 @@ object SkillcapeEmotes {
             Skillcapes.HERBLORE to Look(4969, 835), Skillcapes.AGILITY to Look(4977, 830), Skillcapes.THIEVING to Look(4965, 826),
             Skillcapes.SLAYER to Look(4967, 1656), Skillcapes.FARMING to Look(4963, 825), Skillcapes.RUNECRAFTING to Look(4947, 817),
             Skillcapes.HUNTER to Look(5158, 907), Skillcapes.CONSTRUCTION to Look(4953, 820), Skillcapes.SUMMONING to Look(8525, 1515),
-            Skillcapes.DUNGEONEERING to Look(13190, 2442),
         )
 
     val QUEST_POINT = Look(4945, 816)

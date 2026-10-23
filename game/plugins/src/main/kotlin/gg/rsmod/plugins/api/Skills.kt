@@ -323,8 +323,8 @@ object Skills {
 
     fun hasTwo99s(player: Player): Boolean {
         var count = 0 // initiates the "count" variable, which is "amount of skills 99"
-        for (i in 0 until 25) { // loops each skill
-            if (i == DUNGEONEERING) continue // DGN (owner 10-11/10-13): Dungeoneering is removed and never counts for a trim
+        // DGN: a removed skill (Dungeoneering) never counts towards a trimmed cape.
+        for (i in gg.rsmod.game.model.skill.SkillSet.activeSkills(player.skills.maxSkills)) { // loops each skill
             if (player.skills
                     .getMaxLevel(i) >= 99
             ) { // checks each skill for level and if >= 99, add to "count"

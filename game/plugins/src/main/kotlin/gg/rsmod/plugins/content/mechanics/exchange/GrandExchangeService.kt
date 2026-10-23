@@ -549,6 +549,38 @@ class GrandExchangeService(
         }
     }
 
+    /**
+     * DGN 2026-10-21 (login purge of removed items, [gg.rsmod.plugins.content.mechanics.removed.RemovedItems.purge]): ends
+     * every offer of [username] whose item [gone] says may no longer exist. Unsold / bought items are destroyed, unspent
+     * buy coins and coins already earned stay collectable (a sell offer that owes nothing more is released at once).
+     * Returns how many offers were touched.
+     */
+    fun withdrawItems(
+        username: String,
+        gone: (Int) -> Boolean,
+    ): Int {
+        lock.lock()
+        try {
+            var touched = 0
+            for (offer in offers.filter { it.username == username && gone(it.itemId) }) {
+                if (offer.status == OfferStatus.ACTIVE) {
+                    if (offer.type == OfferType.BUY && offer.remaining > 0) {
+                        offer.collectableCoins += offer.remaining.toLong() * offer.pricePerItem
+                    }
+                    offer.status = OfferStatus.CANCELLED
+                }
+                offer.collectableItems = 0
+                touched++
+            }
+            if (touched == 0) return 0
+            offers.removeAll { it.username == username && gone(it.itemId) && it.collectableCoins == 0L && it.collectableItems == 0 }
+            save()
+            return touched
+        } finally {
+            lock.unlock()
+        }
+    }
+
     /** [username]'s finished offers, newest first. */
     fun historyFor(username: String): List<GeHistoryEntry> {
         lock.lock()

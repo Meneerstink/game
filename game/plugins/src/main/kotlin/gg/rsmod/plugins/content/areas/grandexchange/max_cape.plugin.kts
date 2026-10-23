@@ -23,7 +23,7 @@ val MAX_CAPE_PRICE = 120_000
  * (owner 2026-09-22: "Max doesnt sell me a max cape he asks 99 dungeoneering please remove the dungeoering").
  */
 fun maxCapeSkills(player: gg.rsmod.game.model.entity.Player): List<Int> =
-    (0 until player.skills.maxSkills).filter { it != Skills.DUNGEONEERING }
+    gg.rsmod.plugins.content.mechanics.removed.RemovedSkills.activeSkills(player)
 
 fun hasMaxStats(player: gg.rsmod.game.model.entity.Player): Boolean =
     maxCapeSkills(player).all { player.skills.getMaxLevel(it) >= 99 }
@@ -38,7 +38,7 @@ fun missingSkills(player: gg.rsmod.game.model.entity.Player): List<String> =
  */
 val SKILLCAPE_PRICE = 99_000
 
-val SOLD_SKILLCAPES = gg.rsmod.plugins.content.skills.Skillcapes.values().filter { it != gg.rsmod.plugins.content.skills.Skillcapes.DUNGEONEERING }
+val SOLD_SKILLCAPES = gg.rsmod.plugins.content.skills.Skillcapes.values().toList() // DGN: no Dungeoneering cape any more
 
 fun skillcapeRule(cape: gg.rsmod.plugins.content.skills.Skillcapes) =
     gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(

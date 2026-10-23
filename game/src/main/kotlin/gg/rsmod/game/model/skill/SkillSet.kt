@@ -38,9 +38,10 @@ class SkillSet(
     var dirty = BooleanArray(maxSkills) { true }
 
     /**
-     * Sum up the max level for all your skills.
+     * Sum up the max level for all your skills. A removed skill ([REMOVED_SKILLS], owner 2026-10-11: Dungeoneering) does
+     * not count, as in OSRS (24 skills).
      */
-    val calculateTotalLevel: Int get() = skills.sumOf { skill -> getMaxLevel(skill.id) }
+    val calculateTotalLevel: Int get() = skills.filterNot { isRemovedSkill(it.id) }.sumOf { skill -> getMaxLevel(skill.id) }
 
     /**
      * Sum up the experience for all your skills.
@@ -257,6 +258,21 @@ class SkillSet(
          * The default amount of trainable skills by players.
          */
         const val DEFAULT_SKILL_COUNT = 25
+
+        /** Skill id of Dungeoneering; the slot stays in the save format and the stat packets, the skill does not. */
+        const val DUNGEONEERING = 24
+
+        /**
+         * Skills taken out of the game (owner 2026-10-11: "de skill volledig weg; max cape zonder Dungeoneering").
+         * The ONE rule every route asks (DGN 2026-10-21, ROOT_CAUSES 4): no XP is ever added, the total level, max cape,
+         * trimmed capes, lamps, the XP choosers and skill guides leave it out, and the login migration resets old XP.
+         */
+        val REMOVED_SKILLS: Set<Int> = setOf(DUNGEONEERING)
+
+        fun isRemovedSkill(skill: Int): Boolean = skill in REMOVED_SKILLS
+
+        /** Every skill id of a [maxSkills]-skill set except the removed ones. */
+        fun activeSkills(maxSkills: Int = DEFAULT_SKILL_COUNT): List<Int> = (0 until maxSkills).filterNot(::isRemovedSkill)
 
         /**
          * Gets the level correspondent to the [xp] given.

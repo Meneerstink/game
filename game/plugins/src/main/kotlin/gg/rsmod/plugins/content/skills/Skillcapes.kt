@@ -38,10 +38,5 @@ enum class Skillcapes(
     HUNTER(Npcs.HUNTING_EXPERT, Items.HUNTER_CAPE, Items.HUNTER_CAPE_T, Items.HUNTER_HOOD),
     CONSTRUCTION(Npcs.ESTATE_AGENT, Items.CONSTRUCT_CAPE, Items.CONSTRUCT_CAPE_T, Items.CONSTRUCT_HOOD),
     SUMMONING(Npcs.PIKKUPSTIX, Items.SUMMONING_CAPE, Items.SUMMONING_CAPE_T, Items.SUMMONING_HOOD),
-    DUNGEONEERING(
-        Npcs.THOK_MASTER_OF_DUNGEONEERING,
-        Items.DUNGEONEERING_CAPE,
-        Items.DUNGEONEERING_CAPE_T,
-        Items.DUNGEONEERING_HOOD,
-    ),
+    // DGN (owner 2026-10-11): no Dungeoneering cape - the skill is removed and Thok is no longer spawned.
 }

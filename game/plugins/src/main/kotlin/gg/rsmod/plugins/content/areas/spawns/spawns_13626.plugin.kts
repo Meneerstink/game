@@ -10,15 +10,6 @@ spawn_npc(
     static = false,
 ) // Cormorant
 spawn_npc(
-    npc = Npcs.DUNGEONEERING_TUTOR,
-    x = 3452,
-    z = 3720,
-    height = 0,
-    walkRadius = 5,
-    direction = Direction.NORTH,
-    static = false,
-) // Dungeoneering tutor
-spawn_npc(
     npc = Npcs.FREMENNIK_BANKER,
     x = 3448,
     z = 3720,

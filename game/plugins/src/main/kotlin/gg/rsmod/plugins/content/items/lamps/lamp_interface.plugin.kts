@@ -13,7 +13,8 @@ import gg.rsmod.plugins.content.quests.impl.DruidicRitual
 val chosenSkillVarp = 261
 
 // List of skills that are not allowed to be chosen
-val blockedSkills = listOf(Skills.CONSTRUCTION, Skills.DUNGEONEERING, Skills.HUNTER)
+// DGN: removed skills (Dungeoneering) come from the one rule; its lamp entry is gone, so its button picks nothing.
+val blockedSkills = listOf(Skills.CONSTRUCTION, Skills.HUNTER) + gg.rsmod.game.model.skill.SkillSet.REMOVED_SKILLS
 
 /**
  * Handles the button clicks for skill selection buttons (components 30 to 54).
@@ -119,7 +120,6 @@ enum class LampInterface(
     FLETCHING(component = 41, skillId = Skills.FLETCHING, varp = 19),
     CONSTRUCTION(component = 52, skillId = Skills.CONSTRUCTION, varp = 22),
     SUMMONING(component = 53, skillId = Skills.SUMMONING, varp = 24),
-    DUNGEONEERING(component = 54, skillId = Skills.DUNGEONEERING, varp = 25),
     ;
 
     companion object {

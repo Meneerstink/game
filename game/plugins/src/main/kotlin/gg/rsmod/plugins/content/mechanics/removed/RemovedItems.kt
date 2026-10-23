@@ -42,21 +42,52 @@ object RemovedItems {
 
     /** True for anything nothing may offer: a removed item, a no-longer-obtainable item, or the noted form of either. */
     fun isUnobtainable(def: ItemDef): Boolean =
-        isRemoved(def) || def.id in UNOBTAINABLE_IDS || (def.noted && def.noteLinkId in UNOBTAINABLE_IDS)
+        isRemoved(def) || isGone(def.id) || (def.noted && isGone(def.noteLinkId))
+
+    /** Owner 2026-10-11 (DGN): every Dungeoneering item joins the unobtainable items - GE, house and login purge alike. */
+    private fun isGone(itemId: Int): Boolean = itemId in UNOBTAINABLE_IDS || DungeoneeringItems.isDungeoneering(itemId)
 
     fun isRemoved(
         player: Player,
         itemId: Int,
     ): Boolean = itemId in IDS || isRemoved(player.world.definitions.get(ItemDef::class.java, itemId))
 
-    /** Removes every removed or no-longer-obtainable item the player holds; returns how many item stacks were taken. */
+    /**
+     * Removes every removed or no-longer-obtainable item the player holds; returns how many item stacks were taken.
+     * DGN 2026-10-21: EVERY container the player has (inventory, worn, bank, gravestone, Death's Office, random-event gift,
+     * looting bag, every beast-of-burden cargo - the save loads each one into [Player.containers]) and the player's own
+     * Grand Exchange offers ([purgeExchange]); a fixed list of five let the looting bag and BoB cargo keep removed items.
+     */
     fun purge(player: Player): Int {
         var taken = 0
-        // The gravestone and Death's Office too: a removed item must not come back through a death.
-        for (container in listOf(player.inventory, player.equipment, player.bank, player.gravestone, player.deathRecovery)) {
+        val containers =
+            LinkedHashSet<ItemContainer>().apply {
+                add(player.inventory)
+                add(player.equipment)
+                add(player.bank)
+                add(player.gravestone)
+                add(player.deathRecovery)
+                addAll(player.containers.values)
+            }
+        for (container in containers) {
             taken += purge(player, container)
         }
+        taken += purgeExchange(player)
         return taken
+    }
+
+    /**
+     * Ends the player's Grand Exchange offers for unobtainable items: a sell offer loses the unsold items, a buy offer
+     * gets its unspent coins back as collectable and loses the bought items; coins already earned stay collectable.
+     */
+    private fun purgeExchange(player: Player): Int {
+        // Offers are keyed by the login name (GrandExchangeInterface.username); only a real client has one.
+        val username = (player as? gg.rsmod.game.model.entity.Client)?.loginUsername ?: return 0
+        val service =
+            player.world.getService(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService::class.java) ?: return 0
+        return service.withdrawItems(username) { itemId ->
+            isUnobtainable(player.world.definitions.get(ItemDef::class.java, itemId))
+        }
     }
 
     private fun purge(

@@ -128,7 +128,6 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
                 "Hunter" to Skills.HUNTER,
                 "Construction" to Skills.CONSTRUCTION,
                 "Summoning" to Skills.SUMMONING,
-                "Dungeoneering" to Skills.DUNGEONEERING,
             )
         }
     val groups = if (questLamp == null) allGroups else Skills.run { questLamp.skills.map { getSkillName(world, it) to it }.toTypedArray() }

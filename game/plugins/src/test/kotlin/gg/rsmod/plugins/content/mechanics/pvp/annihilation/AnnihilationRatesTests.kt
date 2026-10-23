@@ -114,6 +114,7 @@ class AnnihilationRatesTests {
             setCombat(p, target)
             val tier = WIKI.single { target in it.levels }
             for (skill in 0 until SKILL_COUNT) {
+                if (gg.rsmod.game.model.skill.SkillSet.isRemovedSkill(skill)) continue // DGN: Dungeoneering gains nothing
                 val combatSkill = skill in COMBAT_SKILLS
                 val expected = if (combatSkill) tier.combatXp else tier.skillingXp
                 val shown = p.xpMultiplier(skill)
@@ -263,6 +264,7 @@ class AnnihilationRatesTests {
             setCombat(p, target)
             val tier = WIKI.single { target in it.levels }
             for (skill in 0 until SKILL_COUNT) {
+                if (gg.rsmod.game.model.skill.SkillSet.isRemovedSkill(skill)) continue // DGN: no rate for a removed skill
                 val expected = if (skill in COMBAT_SKILLS) tier.combatXp else tier.skillingXp
                 val name = Skills.getSkillName(world, skill).lowercase()
                 // The command first, then the gain: both read the same tier (a gain can level the player up and move the tier).

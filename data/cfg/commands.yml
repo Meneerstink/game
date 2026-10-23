@@ -988,11 +988,6 @@
   usage: "::duelrule <rule>"
   description: "Toggle a duel rule while setting up a duel."
   example: "::duelrule no_ranged"
-- name: dungeon
-  rank: player
-  usage: "::dungeon"
-  description: "Travel to Daemonheim for Dungeoneering (safe-zone rules apply)."
-  example: "::dungeon"
 - name: fair
   rank: player
   usage: "::fair"

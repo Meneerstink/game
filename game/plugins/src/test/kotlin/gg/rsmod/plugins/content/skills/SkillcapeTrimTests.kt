@@ -74,7 +74,7 @@ class SkillcapeTrimTests {
     fun `Max's shop stocks the 24 capes at 99,000 with hood, 99 rule and trim`() {
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/areas/grandexchange/max_cape.plugin.kts").readText()
         assertTrue("val SKILLCAPE_PRICE = 99_000" in plugin)
-        assertTrue("it != gg.rsmod.plugins.content.skills.Skillcapes.DUNGEONEERING" in plugin)
+        assertTrue(Skillcapes.values().none { it.name == "DUNGEONEERING" }, "DGN: no Dungeoneering cape is sold")
         assertTrue("p.skills.getMaxLevel(cape.ordinal) >= 99" in plugin, "a real 99, not a boosted level")
         assertTrue("bonusItems = listOf(cape.hood)" in plugin && "SkillcapeTrim.trimAll(p)" in plugin)
         assertTrue("items[i + 1] = gg.rsmod.game.model.shop.ShopItem(cape.untrimmedCape, 10, sellPrice = SKILLCAPE_PRICE)" in plugin)

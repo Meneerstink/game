@@ -142,20 +142,7 @@ enum class TeleportType(
         endAnimation = Anims.MONASTERY_TELEPORT_END,
         endGraphic = Graphic(Gfx.MONASTERY_TELEPORT_END, 0),
     ),
-    DUNGEONEERING_GATESTONE(
-        teleportDelay = 6,
-        animation = Anims.DUNG_GATESTONE_TELEPORT_START,
-        graphic = Graphic(Gfx.DUNG_GATESTONE_TELEPORT_START, 0),
-        endAnimation = Anims.DUNG_GATESTONE_TELEPORT_END,
-        endGraphic = Graphic(Gfx.DUNG_GATESTONE_TELEPORT_END, 0),
-    ),
-    RING_OF_KINSHIP(
-        teleportDelay = 11,
-        animation = Anims.KINSHIP_TELEPORT_START,
-        graphic = Graphic(Gfx.KINSHIP_TELEPORT_START, 0),
-        endAnimation = Anims.KINSHIP_TELEPORT_END,
-        endGraphic = Graphic(Gfx.KINSHIP_TELEPORT_END, 0),
-    ),
+    // DGN (owner 2026-10-11): the Dungeoneering gatestone and Ring of kinship teleports are gone with the skill.
     SCROLL(
         teleportDelay = 4,
         animation = Anims.SCROLL_TELEPORT,

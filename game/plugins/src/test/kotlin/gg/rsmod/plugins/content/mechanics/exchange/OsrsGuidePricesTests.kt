@@ -76,7 +76,8 @@ class OsrsGuidePricesTests {
         File("build").mkdirs()
         File("build/osrs-guide-price-unmatched.txt").writeText(cacheValue.joinToString(System.lineSeparator()))
         println("OSRS_GUIDE_PRICES exchangeable=${items.size} osrsPriced=$osrs cacheValue=${cacheValue.size}")
-        assertTrue(items.size > 12_000, "exchangeable items (tradeable, unnoted, not coins): ${items.size}")
+        // DGN (2026-10-23): ~1,700 tradeable Dungeoneering ids are unobtainable now, so the count fell from ~12,600 to ~10,900.
+        assertTrue(items.size > 10_500, "exchangeable items (tradeable, unnoted, not coins): ${items.size}")
         assertTrue(osrs > OSRS_PRICED_MIN, "items priced from OSRS by id or name ($osrs); the rest use the cache value, see build/osrs-guide-price-unmatched.txt")
         val whip = items.first { it.id == Items.ABYSSAL_WHIP }
         assertEquals(book.hourly[Items.ABYSSAL_WHIP], OsrsGuidePrices.seed(whip, book), "the whip is its OSRS hourly average")
