@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import java.io.File
 import java.lang.ref.WeakReference
 
@@ -55,6 +56,9 @@ object Pets {
     private fun sound(player: Player, id: Int, at: gg.rsmod.game.model.Tile? = null) =
         FamiliarAudio.play(player, id, volume = PET_SOUND_VOLUME, at = at)
 
+
+    /** The OSRS "Getting pet" sound (see [award]). */
+    const val GETTING_PET_SOUND = gg.rsmod.plugins.api.cfg.Sfx.TRIFFID_APPEAR
 
     const val MSG_FOLLOWED = "<col=ef1020>You have a funny feeling like you're being followed.</col>"
     const val MSG_BACKPACK = "<col=ef1020>You feel something weird sneaking into your backpack.</col>"
@@ -364,7 +368,12 @@ object Pets {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
         val outcome = awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
-        if (outcome != Award.DUPLICATE && outcome != Award.LOST) PetMorphs.unlock(player, byItem.getValue(item))
+        if (outcome != Award.DUPLICATE && outcome != Award.LOST) {
+            PetMorphs.unlock(player, byItem.getValue(item))
+            // N88 part 1 (Council N88): OSRS plays "Getting pet" on a new pet - Jagex synth 2320 triffid_appear, proven by waveform
+            // match against the wiki's Getting_pet.ogg (dossier N88, correlation 0.997) and byte-identical in OSRS and both 667 caches.
+            player.playSound(GETTING_PET_SOUND)
+        }
         when (outcome) {
             Award.DUPLICATE -> player.message(MSG_DUPLICATE)
             Award.FOLLOWER -> {

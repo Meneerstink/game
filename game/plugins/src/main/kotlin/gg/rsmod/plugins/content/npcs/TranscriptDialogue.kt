@@ -8,11 +8,13 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.cfg.FacialExpression
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.chatNpc
 import gg.rsmod.plugins.api.ext.chatPlayer
 import gg.rsmod.plugins.api.ext.messageBox
 import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.inter.bank.openBank
 import gg.rsmod.util.TextWrapping
 import java.io.File
@@ -38,6 +40,19 @@ object TranscriptDialogue {
 
     @Volatile
     private var rows: Map<Int, JsonObject> = emptyMap()
+
+    /** The imported OSRS Bloodhound pet (OSRS_IMPORT_MASTER). */
+    const val BLOODHOUND = 14631
+
+    /**
+     * N70 (owner 10-16 "bloodhound pet no sounds"; Council N88 part 3): OSRS gives the Bloodhound follower no sound at all, so its
+     * transcript lines that bark ("*Woof woof bark!* ...") play Jagex's own pet_dog_bark once, on that line - no idle loop, no
+     * sound lent to other silent pets.
+     */
+    fun lineSound(
+        npcId: Int,
+        text: String,
+    ): Int? = if (npcId == BLOODHOUND && "*woof" in text.lowercase()) Sfx.PET_DOG_BARK else null
 
     fun load(file: File = File(PATH)): Int {
         if (!file.exists()) return 0
@@ -78,6 +93,7 @@ object TranscriptDialogue {
             val flow =
                 when (n["t"].asString) {
                     "npc" -> {
+                        lineSound(ctx.npc.id, n["x"].asString)?.let { task.player.playSound(it) }
                         task.chatNpc(n["x"].asString, facialExpression = expression(n))
                         Flow.NEXT
                     }
