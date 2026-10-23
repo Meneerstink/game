@@ -85,10 +85,7 @@ object PestControlHandler {
             player.message("You need a combat level of ${tier.combatReq} or higher to board this lander.")
             return
         }
-        if (gg.rsmod.plugins.content.skills.summoning.FAMILIAR_ATTR.let { player.attr[it]?.get() } != null) {
-            player.message("You can't take a follower on the lander.")
-            return
-        }
+        // N205: a familiar boards with its owner; its follow recovery puts it beside him on the island.
         if (lobbyOf(player) != null || gameOf(player) != null) {
             player.message("You are already waiting for a Pest Control game.")
             return

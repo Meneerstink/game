@@ -39,16 +39,10 @@ on_command("pcstart", Privilege.ADMIN_POWER) {
 
 // ---- the game ---------------------------------------------------------------------------------------------------------
 
-// Darkan PestControlGameController: no familiar during a game ("You feel it's best to keep your Familiar away during this game.").
-// Through the shared activity gate, so every summon route asks it. Owner 2026-10-10: teleporting out of a minigame such as Pest
+// N205 (owner 2026-10-22: "summoning familiars moeten kunnen meehelpen", every combat familiar attacks pests and portals): no
+// summoning ban in a game any more (Darkan PestControlGameController refused it). A familiar fights through the player's own
+// canAttack, so a shielded portal stays out of reach for it too. Owner 2026-10-10: teleporting out of a minigame such as Pest
 // Control is allowed and instant (Darkan refused it), see DeadmanTimerGate.inMinigame; the game's tick drops whoever left.
-gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { p, action ->
-    if (PestControlHandler.gameOf(p) == null) return@register null
-    when (action) {
-        gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.SUMMON -> "You feel it's best to keep your Familiar away during this game."
-        else -> null
-    }
-}
 
 world.timers[PC_MASTER_TICK] = 1
 on_timer(PC_MASTER_TICK) {
