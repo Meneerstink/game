@@ -14,6 +14,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.BossAreas
@@ -82,6 +83,20 @@ object DeadmanChestWorld {
 
     /** OSRS broadcast colour of "A Deadman's Chest has spawned at ...!" (team\prep\chest_spots.txt). */
     const val BROADCAST_COLOUR = "a53fff"
+
+    /**
+     * N262 (owner 2026-10-23: "bij t openen van de deadmanchest laat de player geen animate zien ... ook moet er een sound zijn"; the
+     * OSRS Wiki describes neither, owner chose "knielen + zoeken"): while opening, the player kneels and searches - the 667 kneel-and-
+     * reach sequence [OPEN_ANIM] (1.98 s) played again every [OPEN_ANIM_CYCLES] cycles so it never stands up in between - with the
+     * chest-open sound when it starts and the casket-open sound when the chest gives its reward.
+     */
+    const val OPEN_ANIM = 5212
+    const val OPEN_ANIM_CYCLES = 3
+    const val OPEN_START_SOUND = gg.rsmod.plugins.api.cfg.Sfx.CHEST_OPEN
+    const val OPEN_REWARD_SOUND = gg.rsmod.plugins.api.cfg.Sfx.CASKET_OPEN
+
+    /** N263 (owner 2026-10-23: "melding ... voor iedereen in t paars van player anudd has received bla bla"): the loot broadcast. */
+    fun lootBroadcast(name: String, itemName: String): String = "<col=$BROADCAST_COLOUR>$name has received $itemName from a Deadman's Chest!</col>"
 
     class Spot(
         val name: String,
@@ -478,6 +493,9 @@ object DeadmanChestWorld {
         channels[player]?.let { if (it.chest === chest && it.actionRevision == player.actionRevision) return }
         channels[player] = Channelling(chest, DeadmanChest.Channel(DeadmanChest.channelTicks(world, chest.tile)), snapshot(player), combatValue(player), player.actionRevision)
         player.message("You start to open the chest. Stay still and do not fight or use your inventory.")
+        player.faceTile(chest.tile)
+        player.animate(OPEN_ANIM)
+        player.playSound(OPEN_START_SOUND)
     }
 
     private fun combatValue(player: Player): Int = if (player.timers.has(ACTIVE_COMBAT_TIMER)) player.timers[ACTIVE_COMBAT_TIMER] else 0
@@ -532,13 +550,17 @@ object DeadmanChestWorld {
             val facts = if (gone) DeadmanChest.Facts(false, 0, false, false) else DeadmanChest.factsOf(player, chest.tile)
             val result = ch.channel.tick(interrupted, facts)
             when (result) {
-                DeadmanChest.Channel.Result.RUNNING -> Unit
+                DeadmanChest.Channel.Result.RUNNING -> if (ch.channel.elapsed % OPEN_ANIM_CYCLES == 0) player.animate(OPEN_ANIM)
                 DeadmanChest.Channel.Result.STOPPED -> {
                     channels.remove(player)
-                    if (!gone) player.message(DeadmanChest.refusal(facts) ?: DeadmanChest.MSG_INTERRUPTED)
+                    if (!gone) {
+                        player.animate(-1)
+                        player.message(DeadmanChest.refusal(facts) ?: DeadmanChest.MSG_INTERRUPTED)
+                    }
                 }
                 DeadmanChest.Channel.Result.DONE -> {
                     channels.remove(player)
+                    player.animate(-1)
                     complete(world, player, chest)
                 }
             }
@@ -564,6 +586,15 @@ object DeadmanChestWorld {
             },
         )
         player.message("You open the chest and find something inside.")
+        player.playSound(OPEN_REWARD_SOUND)
+        val itemId = when (reward) {
+            is DeadmanChestLoot.Reward.Item -> reward.item
+            is DeadmanChestLoot.Reward.Pet -> reward.item
+        }
+        val itemName = world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)?.name ?: "an item"
+        val amount = (reward as? DeadmanChestLoot.Reward.Item)?.amount ?: 1
+        val broadcast = lootBroadcast(gg.rsmod.util.Misc.formatForDisplay(player.username), if (amount > 1) "${"%,d".format(amount)} x $itemName" else itemName)
+        world.players.forEach { it.message(broadcast) }
         playersWhere(world) { p -> p !== player && channels[p]?.chest === chest }.forEach {
             channels.remove(it)
             it.message(DeadmanChest.MSG_LOOTED)

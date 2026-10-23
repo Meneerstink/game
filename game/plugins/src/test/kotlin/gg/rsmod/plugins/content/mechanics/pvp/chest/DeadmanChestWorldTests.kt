@@ -183,6 +183,32 @@ class DeadmanChestWorldTests {
     }
 
     @Test
+    fun `N262 N263 - opening kneels with the chest sound, the reward plays the casket sound and everyone reads the purple loot broadcast`() {
+        val tile = freeTile(false)
+        val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("test spot", tile))!!
+        val p = player("broadcaster", beside(tile))
+        giveRisk(p)
+        val onlooker = player("onlooker", Tile(3222, 3218, 0))
+        DeadmanChestWorld.beginOpen(p, chest.tile)
+        assertTrue("chest-open sound at the start", DeadmanChestWorld.OPEN_START_SOUND in sounds(p))
+        repeat(100) { tickChest() }
+        assertTrue("opened ${messages(p)}", chest.state.looted)
+        assertTrue("casket sound with the reward", DeadmanChestWorld.OPEN_REWARD_SOUND in sounds(p))
+        for (c in listOf(p, onlooker)) {
+            assertTrue(
+                "${c.username}: ${messages(c)}",
+                messages(c).any { it.startsWith("<col=a53fff>Broadcaster has received ") && it.endsWith(" from a Deadman's Chest!</col>") },
+            )
+        }
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/pvp/chest/DeadmanChestWorld.kt").readText()
+        assertTrue("kneels at the start", "player.animate(OPEN_ANIM)" in source.substringAfter("fun beginOpen(").substringBefore("\n    }"))
+        assertTrue("kneels again every few cycles", "RUNNING -> if (ch.channel.elapsed % OPEN_ANIM_CYCLES == 0) player.animate(OPEN_ANIM)" in source)
+        assertEquals("stands up when stopped and when opened", 2, Regex("""player\.animate\(-1\)""").findAll(source).count())
+    }
+
+    private fun sounds(p: Client) = written.getValue(p).filterIsInstance<gg.rsmod.game.message.impl.SynthSoundMessage>().map { it.sound }
+
+    @Test
     fun `every interrupt resets the opening - eating, equipping, dropping, a hit, an attack, walking away, logging out`() {
         val tile = freeTile(false)
         val chest = DeadmanChestWorld.spawnTimed(world, DeadmanChestWorld.Spot("test spot", tile))!!
