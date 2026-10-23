@@ -145,7 +145,7 @@ object StaffCommandsInterfaceImportTool {
         b.button(SEARCH, SEARCH_X, SEARCH_W, "Search")
         b.button(CLEAR, CLEAR_X, CLEAR_W, "Clear", hidden = true)
         b.text(STATUS, 2, STATUS_Y, CONTENT_W / 2, STATUS_H, CONTENT, fonts.p11, "", colour = WHITE, alignX = 0)
-        b.text(HINT, CONTENT_W / 2, STATUS_Y, CONTENT_W / 2 - 2, STATUS_H, CONTENT, fonts.p11, "Click: run it. Right-click: Info. Search: every command.", colour = LIGHT, alignX = 2)
+        b.text(HINT, CONTENT_W / 2, STATUS_Y, CONTENT_W / 2 - 2, STATUS_H, CONTENT, fonts.p11, "Click: run it. Right-click: Info.", colour = LIGHT, alignX = 2)
         b.text(HEAD_COMMAND, 6, HEAD_Y, NAME_W - 6, HEAD_H, CONTENT, fonts.p11, "Command / rank", colour = HEAD, alignX = 0)
         b.text(HEAD_DESCRIPTION, NAME_W + 1, HEAD_Y, SCROLL_W - NAME_W, HEAD_H, CONTENT, fonts.p11, "What it does", colour = HEAD, alignX = 0)
         b.layer(LIST, 0, LIST_Y, LIST_W, LIST_H, CONTENT)
