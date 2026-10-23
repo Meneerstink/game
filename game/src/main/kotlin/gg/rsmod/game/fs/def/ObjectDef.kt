@@ -71,6 +71,10 @@ class ObjectDef(
     /** The MapElementType drawn at this loc on the minimap and world map (opcode 107), -1 for none. */
     var mapElement = -1
 
+    /** The looping sound the client plays near this loc (opcode 78), -1 for none, and its range in tiles. */
+    var ambientSound = -1
+    var ambientSoundRange = 0
+
     fun getRotatedWidth(obj: GameObject): Int =
         when {
             (obj.rot and 0x1) == 1 -> length
@@ -185,8 +189,8 @@ class ObjectDef(
                 }
             }
             78 -> {
-                buf.readUnsignedShort()
-                buf.readUnsignedByte()
+                ambientSound = buf.readUnsignedShort()
+                ambientSoundRange = buf.readUnsignedByte().toInt()
             }
             79 -> {
                 buf.readUnsignedShort()

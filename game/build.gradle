@@ -388,6 +388,14 @@ task runObeliskMapIconTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ObeliskMapIconTool'
 }
 
+task runOccultAltarSoundTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N234: the POH Altar of the Occult (locs 62921-62924) hums like the Runecrafting altar (sound 3932). ' +
+        'Usage: ./gradlew :game:runOccultAltarSoundTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OccultAltarSoundTool'
+}
+
 task runStoreMapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +
