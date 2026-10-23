@@ -160,6 +160,9 @@ object DeathExecutor {
                 }
             }
         }
+        // N246 (owner 2026-10-23): the kept items close up at the top of the inventory in their old order - the lost stacks left
+        // gaps and a broken worn item landed in the first free slot, so the kept items stood scattered after the respawn.
+        victim.inventory.shift()
         return true
     }
 

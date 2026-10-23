@@ -84,8 +84,9 @@ class DeathExecutorTests {
         // Audit D-06: a no-risk kill (this fixture) is not a valid PK, so it earns no kill grace.
         assertFalse(KillGrace.isProtected(killer), "an invalid (low-risk) kill must not start kill grace")
         assertFalse(DeathExecutor.execute(world, result))
-        assertNull(victim.inventory[0], "lost item's slot must be cleared")
-        assertNotNull(victim.inventory[1], "kept item must remain")
+        // N246: the kept item moves up into the slot the lost stack left.
+        assertEquals(KEPT_ITEM, victim.inventory[0]?.id, "kept item must remain, sorted to the top")
+        assertNull(victim.inventory[1], "lost item's slot must be cleared")
         assertTrue(victim.deathRecovery.isEmpty, "PvP deaths must not use the recovery container")
         // Audit X-12: the ground loot appears exactly once; execute() runs after the death animation (PlayerDeathAction, Void
         // order since 2026-10-04), so it spawns at once instead of waiting another 5 ticks after the victim respawned.
@@ -152,6 +153,30 @@ class DeathExecutorTests {
         assertEquals(graveTile, Gravestone.tile(victim))
         assertEquals(DeathsDomainConfig.OSRS.graveDurationTicks, Gravestone.ticksLeft(victim), "OSRS: 15 minutes")
         assertTrue(spawnedItems.isEmpty())
+    }
+
+    @Test
+    fun `N246 - the kept items close up at the top of the inventory in their old order`() {
+        // Owner 2026-10-23: after a death the kept items stood in their old slots with gaps between them.
+        val victim = newPlayer()
+        val world = mockk<World>(relaxed = true)
+        victim.inventory[2] = Item(LOST_ITEM, 1)
+        victim.inventory[5] = Item(KEPT_ITEM, 7)
+        victim.inventory[9] = Item(LOST_ITEM, 1)
+        victim.inventory[20] = Item(FILLER_ITEM, 1)
+
+        val result =
+            pvmResult(
+                victim,
+                DeathSlotItem(DeathContainerSource.INVENTORY, 2, Item(LOST_ITEM, 1)),
+                DeathSlotItem(DeathContainerSource.INVENTORY, 9, Item(LOST_ITEM, 1)),
+            )
+        assertTrue(DeathExecutor.execute(world, result))
+
+        assertEquals(KEPT_ITEM, victim.inventory[0]?.id)
+        assertEquals(7, victim.inventory[0]?.amount)
+        assertEquals(FILLER_ITEM, victim.inventory[1]?.id)
+        assertTrue((2 until victim.inventory.capacity).all { victim.inventory[it] == null }, "no gaps, nothing below")
     }
 
     @Test
