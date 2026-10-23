@@ -70,7 +70,12 @@ on_command("maxpoints", Privilege.ADMIN_POWER) {
 // cache holds, so these bindings never point at the wrong component whichever cache is live.
 StoreUi.CLICKABLE.forEach { component ->
     on_button(interfaceId = StoreUi.INTERFACE_ID, component = component) {
-        StoreUi.click(player, component, player.getInteractingOpcode())
+        // A16: Pikkupstix's summoning shop uses the same window.
+        if (gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.active(player)) {
+            gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.click(player, component, player.getInteractingOpcode())
+        } else {
+            StoreUi.click(player, component, player.getInteractingOpcode())
+        }
     }
 }
 

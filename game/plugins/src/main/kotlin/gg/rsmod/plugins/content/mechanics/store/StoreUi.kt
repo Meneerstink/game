@@ -168,6 +168,8 @@ object StoreUi : KLogging() {
         // Deadman's skull "Shop" option) and sells real PvP gear, so it was a mid-fight restock anywhere. The shared
         // remote-service rule applies to every route (safe zone, out of combat); the store npcs stand in safe zones.
         if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "use the store")) return
+        // A16: the window may hold Pikkupstix's summoning shop; the store takes it back (tabs, its own backgrounds and icon).
+        gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.leave(player)
         player.attr[SHOP_ATTR] = shop.ordinal
         player.attr[SECTION_ATTR] = 0
         player.attr[PAGE_ATTR] = 0
@@ -266,6 +268,7 @@ object StoreUi : KLogging() {
     ): String = player.world.definitions.getNullable(ItemDef::class.java, item)?.name ?: "item $item"
 
     fun render(player: Player) {
+        if (gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.active(player)) return
         val l = layout(player)
         val shop = shop(player)
         val list = entries(player)
@@ -274,6 +277,9 @@ object StoreUi : KLogging() {
             val selected = s == shop
             // Theme: only the active shop's painted window is shown; its tab is the lit one.
             player.setComponentHidden(INTERFACE_ID, Ui.BACKGROUND_FIRST + i, !selected)
+            // A16: Pikkupstix's shop paints its own background into the first slot and hides the tabs; always put them back.
+            player.setComponentSprite(INTERFACE_ID, Ui.BACKGROUND_FIRST + i, Art.BACKGROUND_FIRST + i)
+            player.setComponentHidden(INTERFACE_ID, TAB_FIRST + i * TAB_STRIDE, false)
             player.setComponentSprite(
                 INTERFACE_ID,
                 TAB_FIRST + i * TAB_STRIDE + Ui.TAB_GRAPHIC_OFFSET,
@@ -294,6 +300,7 @@ object StoreUi : KLogging() {
             }
         }
         player.setComponentText(INTERFACE_ID, Ui.TAGLINE, TAGLINES[shop] ?: "")
+        player.setComponentHidden(INTERFACE_ID, BALANCE_ICON, false)
         player.setComponentSprite(INTERFACE_ID, BALANCE_ICON, Art.ICON_FIRST + shop.ordinal)
         player.setComponentSprite(INTERFACE_ID, l.priceIcon, Art.ICON_FIRST + shop.ordinal)
         for (slot in 0 until l.slotCount) {
@@ -339,6 +346,7 @@ object StoreUi : KLogging() {
     }
 
     fun renderPreview(player: Player) {
+        if (gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.active(player)) return
         val l = layout(player)
         val entry = selected(player)
         val currency = shop(player).currency

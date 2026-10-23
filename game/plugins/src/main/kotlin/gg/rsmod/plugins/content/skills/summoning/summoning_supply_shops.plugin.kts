@@ -56,8 +56,9 @@ SummoningShopStock.pages.forEach { page ->
 // supplies shop directly; the shop window's Prev page / Next page buttons walk through the supplies, pouch and scroll pages.
 gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.register(SummoningShopStock.PAGE_GROUP)
 
+// A16 (owner 2026-10-11 "1 scherm, tabs Pouches / Scrolls / Supplies"): one window with three tabs, the same coin shops behind it.
 on_npc_option(Npcs.PIKKUPSTIX, "trade") {
-    gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.open(player, SummoningShopStock.PAGE_GROUP)
+    gg.rsmod.plugins.content.skills.summoning.SummoningStoreUi.open(player)
 }
 
 on_npc_option(Npcs.BOGROG, "trade") {

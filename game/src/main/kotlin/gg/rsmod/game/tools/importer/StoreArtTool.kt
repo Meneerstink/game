@@ -76,6 +76,15 @@ object StoreArtTool {
      * dimmed, 8070 Next dimmed.
      */
     const val PAGE_BUTTON_FIRST = SLOT_TIER_FIRST + 3 // 8067..8070
+
+    /**
+     * A16 (owner 2026-10-11: "Pikkupstix-shop: 1 scherm, tabs Pouches / Scrolls / Supplies"): Pikkupstix's coin shop in the same
+     * window - its own painted background ("SUMMONING SHOP", a deep green theme) and lit category button, in the free 8071.. ids
+     * (probe 2026-10-23, both caches). It is no fourth tab: the server puts this background into the window when Pikkupstix opens it.
+     */
+    const val SUMMONING_THEME = 3
+    const val SUMMONING_BACKGROUND = PAGE_BUTTON_FIRST + 4 // 8071
+    const val SUMMONING_SECTION_SELECTED = SUMMONING_BACKGROUND + 1 // 8072
     const val PAGE_BUTTON_WIDTH = 70
     const val PAGE_BUTTON_HEIGHT = 18
 
@@ -155,6 +164,11 @@ object StoreArtTool {
             Theme("DEADMAN STORE", "Deadman", Color(0x3A0E12), Color(0x0E0406), Color(0xFF6A6A), Color(0x8A1016), Color(0xFF3B3B)),
             Theme("LOYALTY STORE", "Loyalty", Color(0x0F2A45), Color(0x050E1A), Color(0x7FD6FF), Color(0x1B66A8), Color(0x4CC2FF)),
         )
+
+    /** A16: Pikkupstix's summoning shop ([SUMMONING_THEME]); not one of the three tabbed [THEMES]. */
+    val SUMMONING = Theme("SUMMONING SHOP", "Summoning", Color(0x0F3A24), Color(0x04120A), Color(0x8CF5B4), Color(0x1E8A4C), Color(0x46E08A))
+
+    private fun theme(index: Int): Theme = if (index == SUMMONING_THEME) SUMMONING else THEMES[index]
 
     private val GOLD_HI = Color(0xFFF1B8)
     private val GOLD = Color(0xE9BE58)
@@ -386,7 +400,7 @@ object StoreArtTool {
     }
 
     fun background(themeIndex: Int): BufferedImage {
-        val t = THEMES[themeIndex]
+        val t = theme(themeIndex)
         return canvas(WIDTH, HEIGHT) { g ->
             val w = WIDTH.toDouble()
             val h = HEIGHT.toDouble()
@@ -573,7 +587,7 @@ object StoreArtTool {
         themeIndex: Int,
         selected: Boolean,
     ): BufferedImage {
-        val t = THEMES[themeIndex]
+        val t = theme(themeIndex)
         return canvas(TAB_WIDTH, TAB_HEIGHT) { g ->
             val w = TAB_WIDTH.toDouble()
             val h = TAB_HEIGHT.toDouble()
@@ -621,7 +635,7 @@ object StoreArtTool {
             val h = SECTION_HEIGHT.toDouble()
             val shape = round(1.0, 1.0, w - 2, h - 2, (h - 2) / 2)
             if (themeIndex != null) {
-                val t = THEMES[themeIndex]
+                val t = theme(themeIndex)
                 glow(g, shape, t.glow, 2, 0.35)
                 g.paint = vertical(0.0, h, 0f to t.accentLight, 0.55f to t.accentDark.brighter(), 1f to t.accentDark)
                 g.fill(shape)
@@ -761,7 +775,7 @@ object StoreArtTool {
     fun icon(themeIndex: Int): BufferedImage =
         canvas(ICON_SIZE, ICON_SIZE) { g ->
             val s = ICON_SIZE.toDouble()
-            val t = THEMES[themeIndex]
+            val t = theme(themeIndex)
             if (themeIndex == 0) {
                 // A cut gem for Donator Points.
                 val body = gem(s / 2, s / 2 + 0.5, 6.8)
@@ -853,6 +867,8 @@ object StoreArtTool {
         out[PAGE_BUTTON_FIRST + 1] = pageButton(next = true, enabled = true)
         out[PAGE_BUTTON_FIRST + 2] = pageButton(next = false, enabled = false)
         out[PAGE_BUTTON_FIRST + 3] = pageButton(next = true, enabled = false)
+        out[SUMMONING_BACKGROUND] = background(SUMMONING_THEME)
+        out[SUMMONING_SECTION_SELECTED] = section(SUMMONING_THEME)
         return out
     }
 
