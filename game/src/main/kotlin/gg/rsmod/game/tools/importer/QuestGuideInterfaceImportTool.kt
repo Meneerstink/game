@@ -107,10 +107,12 @@ object QuestGuideInterfaceImportTool {
         b.add(Comp(WINDOW, 0, 0, 0, WIDTH, HEIGHT, ROOT, reposX = 1, reposY = 1))
         b.graphic(BACKGROUND, 0, 0, WIDTH, HEIGHT, WINDOW, Art.BACKGROUND)
         b.graphic(CLOSE, WIDTH - 32, 10, 22, 22, WINDOW, Art.CLOSE, ops = listOf("Close"))
+        // A39 (owner 2026-10-11: "de teksten kunnen beter, iets meer deadman"): Deadman wording, and 4 px lower so the divider's
+        // ruby (y 36..43) no longer sits on the first line.
         b.text(
-            SUBTITLE, 26, 41, WIDTH - 52, 26, WINDOW, fonts.p12,
-            "Pick one unlock in each row - your choice is permanent.<br>The others can still be earned by completing their quests.",
-            colour = CREAM, lineHeight = 13,
+            SUBTITLE, 26, 45, WIDTH - 52, 24, WINDOW, fonts.p12,
+            "Pick one unlock per row - your Deadman path is permanent.<br>The other unlocks can still be earned by completing their quests.",
+            colour = CREAM, lineHeight = 12,
         )
         for (r in 0 until ROWS) {
             val base = rowBase(r)
@@ -142,7 +144,7 @@ object QuestGuideInterfaceImportTool {
         b.add(Comp(DIM, TYPE_RECTANGLE, 0, 0, WIDTH, HEIGHT, WINDOW, hidden = true, colour = 0x000000, filled = true, transparency = 110))
         b.layer(DIALOG, (WIDTH - 260) / 2, (HEIGHT - 118) / 2, 260, 118, WINDOW, hidden = true)
         b.graphic(DIALOG_ART, 0, 0, 260, 118, DIALOG, Art.DIALOG)
-        b.text(DIALOG_TEXT, 12, 32, 236, 36, DIALOG, fonts.b12, "This choice is permanent.<br>Are you sure?", colour = GOLD, lineHeight = 15)
+        b.text(DIALOG_TEXT, 12, 32, 236, 36, DIALOG, fonts.b12, "This Deadman path is permanent.<br>Are you sure?", colour = GOLD, lineHeight = 15)
         listOf(Triple(YES, "Yes", Art.YES), Triple(NO, "No", Art.NO)).forEachIndexed { i, (id, label, sprite) ->
             b.layer(id, 26 + i * 112, 76, 96, 28, DIALOG, ops = listOf(label))
             b.graphic(id + 1, 0, 0, 96, 28, id, sprite)

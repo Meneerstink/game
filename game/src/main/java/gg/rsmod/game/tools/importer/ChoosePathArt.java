@@ -289,7 +289,8 @@ public class ChoosePathArt {
             grain(g, body, 7L, 0.035);
 
             // Header: gold title with an amber glow, laurel branches, skulls over crossed swords.
-            Shape title = text(g, "CHOOSE YOUR PATH", serif(21f), W / 2.0, 30, 0.12f);
+            // A39 (owner 2026-10-11: "maak er bijv van choose your deadman path").
+            Shape title = text(g, "CHOOSE YOUR DEADMAN PATH", serif(15.5f), W / 2.0, 29, 0.12f); // 24 letters: the laurels and skulls must fit beside it
             Rectangle2D tb = title.getBounds2D();
             metal(g, title, goldBand(tb.getMinY(), tb.getMaxY()), new Color(0xFF9A1A), 8);
             for (int side : new int[] {-1, 1}) {
