@@ -9,7 +9,16 @@ import com.fasterxml.jackson.annotation.JsonProperty
  * @author Tom <rspsmods@gmail.com>
  */
 class TimerMap {
-    private var timers: MutableMap<TimerKey, Int> = HashMap(0)
+    /**
+     * N127 (server memory, 1.6 million static objects each with a TimerMap): the timer map and the paused set are made on first
+     * use, so the millions of maps nothing ever arms cost two null fields instead of a HashMap and a HashSet each.
+     */
+    private var stored: HashMap<TimerKey, Int>? = null
+
+    /** Reads see an empty map until the first timer is set. */
+    private val view: Map<TimerKey, Int> get() = stored ?: EMPTY
+
+    private fun writable(): HashMap<TimerKey, Int> = stored ?: HashMap<TimerKey, Int>(4).also { stored = it }
 
     /**
      * Keys that should not tick down on the owning pawn's per-cycle [gg.rsmod.game.model.entity.Pawn.timerCycle]
@@ -20,46 +29,44 @@ class TimerMap {
      * pauses a key. Not persisted - pause state is re-derived from live player state every cycle
      * by whichever plugin owns the paused key, so it does not need to survive logout/reconnect.
      */
-    private val pausedKeys: MutableSet<TimerKey> = HashSet(0)
+    private var pausedKeys: HashSet<TimerKey>? = null
 
     fun pause(key: TimerKey) {
-        pausedKeys.add(key)
+        (pausedKeys ?: HashSet<TimerKey>(2).also { pausedKeys = it }).add(key)
     }
 
     fun resume(key: TimerKey) {
-        pausedKeys.remove(key)
+        pausedKeys?.remove(key)
     }
 
-    fun isPaused(key: TimerKey): Boolean = key in pausedKeys
+    fun isPaused(key: TimerKey): Boolean = pausedKeys?.contains(key) == true
 
-    operator fun get(key: TimerKey): Int = timers[key]!!
+    operator fun get(key: TimerKey): Int = view[key]!!
 
     operator fun set(
         key: TimerKey,
         value: Int,
     ): TimerMap {
-        timers[key] = value
+        writable()[key] = value
         return this
     }
 
-    fun has(key: TimerKey): Boolean = timers.getOrDefault(key, 0) > 0
+    fun has(key: TimerKey): Boolean = view.getOrDefault(key, 0) > 0
 
-    fun exists(key: TimerKey): Boolean = timers.containsKey(key)
+    fun exists(key: TimerKey): Boolean = view.containsKey(key)
 
     fun remove(key: TimerKey) {
-        if (timers.containsKey(key)) {
-            timers.remove(key)
-        }
-        pausedKeys.remove(key)
+        stored?.remove(key)
+        pausedKeys?.remove(key)
     }
 
     fun clear() {
-        timers.clear()
-        pausedKeys.clear()
+        stored?.clear()
+        pausedKeys?.clear()
     }
 
     fun removeIf(predicate: (TimerKey) -> Boolean) {
-        val iterator = timers.iterator()
+        val iterator = (stored ?: return).iterator()
         while (iterator.hasNext()) {
             val attr = iterator.next()
             if (predicate(attr.key)) {
@@ -69,7 +76,7 @@ class TimerMap {
     }
 
     fun toPersistentTimers(): List<PersistentTimer> =
-        timers.filter { it.key.persistenceKey != null }.map {
+        view.filter { it.key.persistenceKey != null }.map {
             PersistentTimer(
                 it.key.persistenceKey,
                 it.key.tickOffline,
@@ -81,10 +88,15 @@ class TimerMap {
             )
         }
 
-    fun getTimers(): MutableMap<TimerKey, Int> = timers
+    /** The live map (callers change entry values in place); made here when it does not exist yet. */
+    fun getTimers(): MutableMap<TimerKey, Int> = writable()
 
     val isNotEmpty: Boolean
-        get() = timers.isNotEmpty()
+        get() = view.isNotEmpty()
+
+    private companion object {
+        val EMPTY: Map<TimerKey, Int> = emptyMap()
+    }
 
     /**
      * Represents a persistent timer that will be saved through player sessions.

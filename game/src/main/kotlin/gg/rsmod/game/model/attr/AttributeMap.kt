@@ -8,7 +8,16 @@ package gg.rsmod.game.model.attr
  * @author Tom <rspsmods@gmail.com>
  */
 class AttributeMap {
-    private var attributes: MutableMap<AttributeKey<*>, Any> = HashMap(0)
+    /**
+     * N127 (server memory, 1.6 million static objects each with an AttributeMap): the map is made on the first write, so the
+     * millions of maps nothing ever writes to cost one null field instead of an empty HashMap each.
+     */
+    private var stored: HashMap<AttributeKey<*>, Any>? = null
+
+    /** Reads see an empty map until the first write. */
+    private val attributes: Map<AttributeKey<*>, Any> get() = stored ?: EMPTY
+
+    private fun writable(): HashMap<AttributeKey<*>, Any> = stored ?: HashMap<AttributeKey<*>, Any>(4).also { stored = it }
 
     @Suppress("UNCHECKED_CAST")
     operator fun <T> get(key: AttributeKey<T>): T? = (attributes[key] as? T)
@@ -24,7 +33,7 @@ class AttributeMap {
         key: AttributeKey<T>,
         value: T,
     ): AttributeMap {
-        attributes[key] = value as Any
+        writable()[key] = value as Any
         return this
     }
 
@@ -36,17 +45,12 @@ class AttributeMap {
     }
 
     fun remove(key: AttributeKey<*>) {
-        if (attributes.containsKey(key)) {
-            attributes.remove(key)
-        }
+        stored?.remove(key)
     }
 
     fun remove(vararg key: AttributeKey<*>) {
-        key.forEach {
-            if (attributes.containsKey(it)) {
-                attributes.remove(it)
-            }
-        }
+        val map = stored ?: return
+        key.forEach { map.remove(it) }
     }
 
     fun has(key: AttributeKey<*>): Boolean = attributes.containsKey(key)
@@ -57,11 +61,11 @@ class AttributeMap {
     }
 
     fun clear() {
-        attributes.clear()
+        stored?.clear()
     }
 
     fun removeIf(predicate: (AttributeKey<*>) -> Boolean) {
-        val iterator = attributes.iterator()
+        val iterator = (stored ?: return).iterator()
         while (iterator.hasNext()) {
             val attr = iterator.next()
             if (predicate(attr.key)) {
@@ -92,5 +96,9 @@ class AttributeMap {
 
     fun getOrNull(key: AttributeKey<*>): Any? {
         return attributes[key]
+    }
+
+    private companion object {
+        val EMPTY: Map<AttributeKey<*>, Any> = emptyMap()
     }
 }
