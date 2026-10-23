@@ -559,8 +559,10 @@ class AnnihilationRatesTests {
 
                     override fun nextDouble(): Double = 0.9999
                 }
-            val plain = BreachLoot.roll(scripted(BreachLoot.RARE_DENOMINATOR - 1, 0), rate).size
-            val triggers = (0 until BreachLoot.RARE_DENOMINATOR).count { BreachLoot.roll(scripted(it, BreachLoot.MEGA_RARE_CHANCE - 1), rate).size == plain + 1 }
+            // N98's prayer-scroll roll has its own random; here it never drops, so only the breach table's own lines are counted.
+            val noScroll = object : java.util.Random(0) { override fun nextInt(bound: Int): Int = bound - 1 }
+            val plain = BreachLoot.roll(scripted(BreachLoot.RARE_DENOMINATOR - 1, 0), rate, noScroll).size
+            val triggers = (0 until BreachLoot.RARE_DENOMINATOR).count { BreachLoot.roll(scripted(it, BreachLoot.MEGA_RARE_CHANCE - 1), rate, noScroll).size == plain + 1 }
             assertEquals("rare trigger values at ${rate}x (133 x rate of 9576)", (BreachLoot.RARE_TRIGGER * rate).toInt(), triggers)
             // The mega-rare equipment is ONE final item: its unconditional per-kill chance is the 1x chance times the rate, once
             // (reviewer: 9x / 16x / 25x when the factor also sat on the inner gate). Enumerated over every (trigger value, mega value)
