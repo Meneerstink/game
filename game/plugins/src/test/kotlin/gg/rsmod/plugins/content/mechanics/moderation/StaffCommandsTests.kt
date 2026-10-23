@@ -69,14 +69,37 @@ class StaffCommandsTests {
         assertEquals(4, StaffCommands.visible(all, StaffCommands.Rank.OWNER, "").size)
         assertEquals(listOf("tele"), StaffCommands.visible(all, StaffCommands.Rank.OWNER, "::tele").map { it.name })
         assertEquals("No description yet.", StaffCommands.entries(mapOf("zzz" to null), emptyMap()).single().description)
-        // Tabs: All, Recent, Gear, Player, Mod, Admin, Owner.
-        assertEquals(StaffCommandsInterfaceImportTool.TAB_LABELS.size, StaffCommands.Tab.values().size)
-        assertEquals(null, StaffCommands.tabRank(0))
-        assertEquals(null, StaffCommands.tabRank(1))
-        assertEquals(null, StaffCommands.tabRank(2))
-        assertEquals(StaffCommands.Rank.MODERATOR, StaffCommands.tabRank(4))
-        assertEquals(listOf("tele"), StaffCommands.visible(all, StaffCommands.Rank.OWNER, "", StaffCommands.tabRank(5)).map { it.name })
-        assertEquals(listOf("players"), StaffCommands.visible(all, StaffCommands.Rank.ADMIN, "", StaffCommands.tabRank(3)).map { it.name })
+        // Tabs (A17): Players, Punish, Teleport, Info - one per category.
+        assertEquals(StaffCommandsInterfaceImportTool.TAB_LABELS, StaffCommands.Tab.values().map { it.category.label })
+        assertEquals(listOf("tele"), StaffCommands.visible(all, StaffCommands.Rank.OWNER, "", StaffCommands.Category.TELEPORT).map { it.name })
+        assertEquals(listOf("players"), StaffCommands.visible(all, StaffCommands.Rank.ADMIN, "", StaffCommands.Category.PLAYERS).map { it.name })
+        assertEquals(listOf("mute"), StaffCommands.visible(all, StaffCommands.Rank.MODERATOR, "", StaffCommands.Category.PUNISH).map { it.name })
+    }
+
+    @Test
+    fun `A17 - a moderator gets four short task tabs with only his own commands`() {
+        val registry = literalBindings()
+        val all = StaffCommands.entries(registry, texts)
+        val mod = StaffCommands.Rank.MODERATOR
+        fun tab(c: StaffCommands.Category) = StaffCommands.visible(all, mod, "", c).map { it.name }.toSet()
+        assertEquals(setOf("kick", "mute", "unmute", "ban", "unban", "jail", "unjail"), tab(StaffCommands.Category.PUNISH))
+        assertEquals(setOf("teleto", "teletome"), tab(StaffCommands.Category.TELEPORT))
+        assertEquals(setOf("players", "locate"), tab(StaffCommands.Category.PLAYERS))
+        assertEquals(setOf("zone", "mypos", "breachinfo", "hotspot"), tab(StaffCommands.Category.INFO))
+        // Every category in commands.yml is one of the four and belongs to a real command.
+        val yml = File(root, "data/cfg/commands.yml").readText()
+        val used = Regex("""\n  category: (\S+)""").findAll(yml).map { it.groupValues[1] }.toSet()
+        assertEquals(emptySet(), used - StaffCommands.Category.values().map { it.key }.toSet())
+        all.filter { it.category != null }.forEach { assertTrue(it.name in registry, it.name) }
+        // Search still reaches a command without a category (dev tools, gear presets).
+        assertTrue(StaffCommands.visible(all, StaffCommands.Rank.OWNER, "maxtest").any { it.name == "maxtest" })
+    }
+
+    @Test
+    fun `A17 - the window keeps its component ids, shows four tabs and Search, hides the rest`() {
+        assertEquals(7, StaffCommandsInterfaceImportTool.TABS.size, "same ids as tx-20261010-195851")
+        assertEquals(15 + 7 * 23, StaffCommandsInterfaceImportTool.SEARCH)
+        assertEquals(listOf("Players", "Punish", "Teleport", "Info"), StaffCommandsInterfaceImportTool.TAB_LABELS)
     }
 
     @Test

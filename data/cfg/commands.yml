@@ -1,5 +1,6 @@
 # Staff command list (::commands). Generated 2026-10-10 from the on_command bindings; one entry per command.
 # rank: player | moderator | admin | owner  (the lowest rank that may use it)
+# category: players | punish | teleport | info  (A17: the tab of the ::mod window; none = only found by Search)
 # Not fully understood (described from what the code visibly does): devdeco (place-mode keys are handled in DecoPlacer); pohdev (many sub-options); hudtour (tour steps not fully read); questpanel (button protocol of the Quest Helper panel).
 - name: clearspawns
   rank: owner
@@ -63,6 +64,7 @@
   example: "::addchunks 3135 3520 3100 3490"
 - name: addloyalty
   rank: admin
+  category: players
   usage: "::addloyalty <player> [amount]"
   description: "Give an online player loyalty points (default 1)."
   example: "::addloyalty anudd 10"
@@ -73,6 +75,7 @@
   example: "::addregions 12342"
 - name: addslayerpoints
   rank: admin
+  category: players
   usage: "::addslayerpoints <player> [amount]"
   description: "Give an online player slayer points (default 1)."
   example: "::addslayerpoints anudd 10"
@@ -108,11 +111,13 @@
   example: "::breachclose"
 - name: breachlist
   rank: admin
+  category: info
   usage: "::breachlist"
   description: "List every Deadman breach location with its number."
   example: "::breachlist"
 - name: breachtele
   rank: admin
+  category: teleport
   usage: "::breachtele [<number>|<name>|site <1|2>]"
   description: "Teleport to a breach location, or to a site of the open breach."
   example: "::breachtele site 2"
@@ -208,6 +213,7 @@
   example: "::crown"
 - name: damage
   rank: admin
+  category: players
   usage: "::damage <player> <amount>"
   description: "Hit an online player for an exact amount of damage."
   example: "::damage anudd 99"
@@ -298,6 +304,7 @@
   example: "::devuntele 3093 3488 0 1530"
 - name: emblem
   rank: admin
+  category: players
   usage: "::emblem <1-6|info> [player]"
   description: "Create a Deadman emblem of a tier for you or a player, or show their emblems (info)."
   example: "::emblem 3 anudd"
@@ -363,16 +370,19 @@
   example: "::give abyssal_whip 1"
 - name: givepoints
   rank: admin
+  category: players
   usage: "::givepoints <player> <donator|deadman|loyalty|breach> <amount>"
   description: "Give an online player points of one store currency."
   example: "::givepoints anudd loyalty 100"
 - name: guardinfo
   rank: admin
+  category: info
   usage: "::guardinfo"
   description: "Show the state of every Deadman guard within 15 tiles (target, facing, patrol)."
   example: "::guardinfo"
 - name: guardpost
   rank: admin
+  category: teleport
   usage: "::guardpost [number]"
   description: "Teleport to a Deadman guard post; without a number lists the posts per city."
   example: "::guardpost 1"
@@ -393,6 +403,7 @@
   example: "::hitsplats npc"
 - name: home
   rank: admin
+  category: teleport
   usage: "::home"
   description: "Teleport yourself to the home location."
   example: "::home"
@@ -443,6 +454,7 @@
   example: "::item 4151 1"
 - name: itemsearch
   rank: admin
+  category: info
   usage: "::itemsearch <name>"
   description: "Search the cache for items by name (first 20 ids with details)."
   example: "::itemsearch korasi"
@@ -493,6 +505,7 @@
   example: "::object_varbit 8151"
 - name: objsearch
   rank: admin
+  category: info
   usage: "::objsearch <name>"
   description: "Search the cache for objects by name (first 20 ids with their options)."
   example: "::objsearch wall"
@@ -668,21 +681,25 @@
   example: "::talknpc 494 1"
 - name: tele
   rank: admin
+  category: teleport
   usage: "::tele <x> <z> [height]"
   description: "Teleport yourself to a coordinate."
   example: "::tele 3222 3218"
 - name: telechunk
   rank: admin
+  category: teleport
   usage: "::telechunk <chunkX> <chunkZ> [height]"
   description: "Teleport to the corner of a map chunk (chunk coordinates, 8 tiles each)."
   example: "::telechunk 400 400"
 - name: teleport
   rank: admin
+  category: teleport
   usage: "::teleport"
   description: "Open the staff crown menu (teleports, dev tools, player management)."
   example: "::teleport"
 - name: teler
   rank: admin
+  category: teleport
   usage: "::teler <regionId>"
   description: "Teleport to the corner of a map region."
   example: "::teler 12850"
@@ -748,6 +765,7 @@
   example: "::visualtour lumbridge"
 - name: ban
   rank: moderator
+  category: punish
   usage: "::ban <player> <hours> <reason>"
   description: "Ban a player from logging in for N hours (0 = permanent)."
   example: "::ban anudd 24 spamming"
@@ -768,41 +786,49 @@
   example: "::mod tele"
 - name: jail
   rank: moderator
+  category: punish
   usage: "::jail <player>"
   description: "Send a player to jail; they cannot teleport or walk out."
   example: "::jail anudd"
 - name: kick
   rank: moderator
+  category: punish
   usage: "::kick <player>"
   description: "Disconnect a player from the server."
   example: "::kick anudd"
 - name: mute
   rank: moderator
+  category: punish
   usage: "::mute <player> <minutes>"
   description: "Mute a player's public chat and yell for N minutes (0 = permanent)."
   example: "::mute anudd 30"
 - name: teleto
   rank: moderator
+  category: teleport
   usage: "::teleto <player>"
   description: "Teleport yourself to an online player."
   example: "::teleto anudd"
 - name: teletome
   rank: moderator
+  category: teleport
   usage: "::teletome <player>"
   description: "Teleport an online player to you."
   example: "::teletome anudd"
 - name: unban
   rank: moderator
+  category: punish
   usage: "::unban <player>"
   description: "Lift a player's ban."
   example: "::unban anudd"
 - name: unjail
   rank: moderator
+  category: punish
   usage: "::unjail <player>"
   description: "Release a player from jail."
   example: "::unjail anudd"
 - name: unmute
   rank: moderator
+  category: punish
   usage: "::unmute <player>"
   description: "Lift a player's mute."
   example: "::unmute anudd"
@@ -823,6 +849,7 @@
   example: "::bosskills"
 - name: breachinfo
   rank: player
+  category: info
   usage: "::breachinfo"
   description: "Show the status of the Deadman breach."
   example: "::breachinfo"
@@ -1018,6 +1045,7 @@
   example: "::ge_sell 4151 1 1500000"
 - name: hotspot
   rank: player
+  category: info
   usage: "::hotspot"
   description: "Show the current Wilderness hotspot (daily objective location)."
   example: "::hotspot"
@@ -1048,6 +1076,7 @@
   example: "::killstreaks"
 - name: locate
   rank: player
+  category: players
   usage: "::locate <player>"
   description: "Show which area an online player is in (_ for spaces in names)."
   example: "::locate anudd"
@@ -1068,6 +1097,7 @@
   example: "::mines"
 - name: mypos
   rank: player
+  category: info
   usage: "::mypos"
   description: "Show your current coordinates and region (and copy them to your clipboard)."
   example: "::mypos"
@@ -1093,6 +1123,7 @@
   example: "::pkpoints"
 - name: players
   rank: player
+  category: players
   usage: "::players"
   description: "Show who is online (list window, or count in chat while busy)."
   example: "::players"
@@ -1178,6 +1209,7 @@
   example: "::yell"
 - name: zone
   rank: player
+  category: info
   usage: "::zone"
   description: "Show whether your tile is a guarded safe zone, Wilderness or dangerous zone."
   example: "::zone"

@@ -33,9 +33,13 @@ import java.io.File
  *
  * Owner 2026-10-10 ("its not working easy ... improve the mod command gui"): a row's "Run" runs the command - straight away when it
  * takes no arguments (after a yes/no for the ones that reset or remove something), otherwise after asking for the arguments with
- * the usage as the question; "Info" prints the usage and the example. Tab Recent holds the commands the viewer ran last
- * ([RECENT_COMMANDS_ATTR], typed or clicked, with their arguments - Run repeats them exactly); tab Gear the owner's
- * [GearPresets].
+ * the usage as the question; "Info" prints the usage and the example.
+ *
+ * A17 (owner 10-11: "the mod command is a little bit overwhelming" -> "fewer buttons, grouped in categories Players / Punish /
+ * Teleport / Info"): four task tabs, each with only the commands of its `category` in commands.yml the viewer may use (Darkan's
+ * mod set falls into them: kick/mute/ban = Punish, teleto/teletome = Teleport). Search finds every command of the viewer's rank,
+ * also the ones without a category (dev tools, gear presets); searching "recent" lists the commands he ran last
+ * ([RECENT_COMMANDS_ATTR], Run repeats them with their arguments) - VRAGEN 17 = A: no Recent / Gear tab.
  */
 object StaffCommands {
     const val INTERFACE_ID = Ui.INTERFACE_ID
@@ -48,31 +52,45 @@ object StaffCommands {
         OWNER("Owner", "ff5050"),
     }
 
+    /** The owner's task categories (A17), `category:` in commands.yml. */
+    enum class Category(val key: String, val label: String) {
+        PLAYERS("players", "Players"),
+        PUNISH("punish", "Punish"),
+        TELEPORT("teleport", "Teleport"),
+        INFO("info", "Info"),
+        ;
+
+        companion object {
+            fun of(key: String?): Category? = values().firstOrNull { it.key == key?.trim()?.lowercase() }
+        }
+    }
+
     class Entry(
         val name: String,
         val rank: Rank,
         val usage: String,
         val description: String,
         val example: String,
-        /** Recent tab: the arguments it was run with, repeated by Run. */
+        /** Recent: the arguments it was run with, repeated by Run. */
         val args: List<String> = emptyList(),
+        val category: Category? = null,
     ) {
-        fun withArgs(args: List<String>) = Entry(name, rank, usage, description, example, args)
+        fun withArgs(args: List<String>) = Entry(name, rank, usage, description, example, args, category)
 
         /** "::name arg1 arg2". */
         val line: String get() = (listOf("::$name") + args).joinToString(" ")
     }
 
-    /** The tabs of [Ui.TAB_LABELS], in that order; [rank] = the rank a rank tab narrows to, [lowest] = the lowest rank that sees it. */
-    enum class Tab(val rank: Rank?, val lowest: Rank) {
-        ALL(null, Rank.MODERATOR),
-        RECENT(null, Rank.MODERATOR),
-        GEAR(null, Rank.OWNER),
-        PLAYER(Rank.PLAYER, Rank.MODERATOR),
-        MODERATOR(Rank.MODERATOR, Rank.MODERATOR),
-        ADMIN(Rank.ADMIN, Rank.ADMIN),
-        OWNER(Rank.OWNER, Rank.OWNER),
+    /** The tabs of [Ui.TAB_LABELS], in that order: one per [Category]. */
+    enum class Tab(val category: Category) {
+        PLAYERS(Category.PLAYERS),
+        PUNISH(Category.PUNISH),
+        TELEPORT(Category.TELEPORT),
+        INFO(Category.INFO),
     }
+
+    /** The search word that lists the viewer's recent commands. */
+    const val RECENT_SEARCH = "recent"
 
     /** The rank a command's power needs: none = player, "mod" = moderator, "admin" = admin, "dev" / "owner" = owner. */
     fun rankOfPower(power: String?): Rank =
@@ -94,7 +112,7 @@ object StaffCommands {
         }
     }
 
-    class Text(val usage: String, val description: String, val example: String)
+    class Text(val usage: String, val description: String, val example: String, val category: String? = null)
 
     /** `data/cfg/commands.yml`, by command name. */
     fun loadTexts(file: File = File(PATH)): Map<String, Text> {
@@ -103,7 +121,8 @@ object StaffCommands {
             @Suppress("UNCHECKED_CAST")
             val rows = ObjectMapper(YAMLFactory()).readValue(file, List::class.java) as List<Map<String, Any?>>
             rows.associate { row ->
-                row["name"].toString().lowercase() to Text(row["usage"]?.toString() ?: "", row["description"]?.toString() ?: "", row["example"]?.toString() ?: "")
+                row["name"].toString().lowercase() to
+                    Text(row["usage"]?.toString() ?: "", row["description"]?.toString() ?: "", row["example"]?.toString() ?: "", row["category"]?.toString())
             }
         }.getOrElse { e ->
             Trace.problem(Trace.Cat.INTERFACE) { "staff command list: $PATH unreadable: ${e.message}" }
@@ -122,18 +141,21 @@ object StaffCommands {
     ): List<Entry> =
         registry.map { (name, power) ->
             val t = texts[name]
-            Entry(name, rankOfPower(power), t?.usage?.ifBlank { null } ?: "::$name", t?.description?.ifBlank { null } ?: "No description yet.", t?.example ?: "")
+            Entry(
+                name, rankOfPower(power), t?.usage?.ifBlank { null } ?: "::$name", t?.description?.ifBlank { null } ?: "No description yet.",
+                t?.example ?: "", category = Category.of(t?.category),
+            )
         }.sortedWith(compareByDescending<Entry> { it.rank }.thenBy { it.name })
 
-    /** What [viewer] may see, narrowed to the rank [tab] (null = all) and [search] (matched in the name, usage and description). */
+    /** What [viewer] may see, narrowed to [category] (null = every command) and [search] (matched in the name, usage and description). */
     fun visible(
         all: List<Entry>,
         viewer: Rank,
         search: String,
-        tab: Rank? = null,
+        category: Category? = null,
     ): List<Entry> {
         val q = search.trim().lowercase().removePrefix("::")
-        return all.filter { it.rank <= viewer && (tab == null || it.rank == tab) }.filter {
+        return all.filter { it.rank <= viewer && (category == null || it.category == category) }.filter {
             q.isEmpty() || it.name.contains(q) || it.usage.lowercase().contains(q) || it.description.lowercase().contains(q)
         }
     }
@@ -150,10 +172,7 @@ object StaffCommands {
     const val OPCODE_RUN = 61
     const val OPCODE_INFO = 64
 
-    fun tab(index: Int): Tab = Tab.values().getOrNull(index) ?: Tab.ALL
-
-    /** The rank a rank tab narrows to; null for All / Recent / Gear. */
-    fun tabRank(index: Int): Rank? = tab(index).rank
+    fun tab(index: Int): Tab = Tab.values().getOrNull(index) ?: Tab.PLAYERS
 
     /** The Recent tab: [lines] ("name arg1 ...", newest first) as entries of commands [viewer] may still use. */
     fun recent(
@@ -167,27 +186,6 @@ object StaffCommands {
             val entry = words.firstOrNull()?.let { byName[it] } ?: return@mapNotNull null
             if (entry.rank > viewer) null else entry.withArgs(words.drop(1))
         }
-    }
-
-    /** The Gear tab: every [GearPresets] command [viewer] may use, the description listing what it wears. */
-    private fun gear(
-        player: Player,
-        all: List<Entry>,
-        viewer: Rank,
-    ): List<Entry> {
-        val byName = all.associateBy { it.name }
-        return GearPresets.ALL.mapNotNull { preset ->
-            val entry = byName[preset.command]?.takeIf { it.rank <= viewer } ?: return@mapNotNull null
-            Entry(entry.name, entry.rank, entry.usage, GearPresets.summary(player, preset), entry.example)
-        }
-    }
-
-    private fun matches(
-        entry: Entry,
-        search: String,
-    ): Boolean {
-        val q = search.trim().lowercase().removePrefix("::")
-        return q.isEmpty() || entry.line.lowercase().contains(q) || entry.usage.lowercase().contains(q) || entry.description.lowercase().contains(q)
     }
 
     /** A tab button: the selected one shows its pressed look. */
@@ -206,18 +204,18 @@ object StaffCommands {
         tab: Int = player.attr[TAB_ATTR] ?: 0,
     ) {
         val viewer = rankOf(player)
-        // A tab above the viewer's own rank does not exist for him.
-        val selected = tab(tab).takeIf { it.lowest <= viewer } ?: Tab.ALL
+        val selected = tab(tab)
         val tabIndex = selected.ordinal
         player.attr[SEARCH_ATTR] = search
         player.attr[TAB_ATTR] = tabIndex
         val all = entries(player.world.plugins.allCommands(), texts())
         val mine = all.count { it.rank <= viewer }
+        val recent = search.trim().equals(RECENT_SEARCH, ignoreCase = true)
         val shown =
-            when (selected) {
-                Tab.RECENT -> recent(all, viewer, player.attr[RECENT_COMMANDS_ATTR].orEmpty().map { it.toString() }).filter { matches(it, search) }
-                Tab.GEAR -> gear(player, all, viewer).filter { matches(it, search) }
-                else -> visible(all, viewer, search, selected.rank)
+            when {
+                recent -> recent(all, viewer, player.attr[RECENT_COMMANDS_ATTR].orEmpty().map { it.toString() })
+                search.isBlank() -> visible(all, viewer, "", selected.category)
+                else -> visible(all, viewer, search)
             }
         if (shown.size > Ui.ROWS) {
             Trace.problem(Trace.Cat.INTERFACE) { "staff command list: ${shown.size} commands but the screen has ${Ui.ROWS} rows - raise ROWS" }
@@ -226,26 +224,21 @@ object StaffCommands {
         player.attr[SHOWN_ATTR] = rows
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, DeathsOfficeInterfaceImportTool.CLOSE, -1..-1, OP1)
-        listOf(Ui.SEARCH, Ui.CLEAR).forEach { player.setInterfaceEvents(INTERFACE_ID, it, -1..-1, OP1) }
+        player.setInterfaceEvents(INTERFACE_ID, Ui.SEARCH, -1..-1, OP1)
         Ui.TABS.forEachIndexed { i, id ->
-            val allowed = tab(i).lowest <= viewer
-            player.setComponentHidden(INTERFACE_ID, id, !allowed)
-            if (!allowed) return@forEachIndexed
-            drawButton(player, id, pressed = i == tabIndex)
+            val used = i < Tab.values().size
+            player.setComponentHidden(INTERFACE_ID, id, !used)
+            if (!used) return@forEachIndexed
+            // A tab shows pressed while its own list is on screen; a search result belongs to no tab.
+            drawButton(player, id, pressed = i == tabIndex && search.isBlank())
             player.setInterfaceEvents(INTERFACE_ID, id, -1..-1, OP1)
         }
-        val scope =
-            when (selected) {
-                Tab.ALL -> "commands"
-                Tab.RECENT -> "recent commands"
-                Tab.GEAR -> "gear presets - click one to wear it"
-                else -> "${selected.rank!!.label} commands"
-            }
+        player.setComponentHidden(INTERFACE_ID, Ui.CLEAR, true)
         val status =
-            if (search.isBlank()) {
-                "${rows.size} $scope"
-            } else {
-                "${rows.size} of $mine - search: <col=ff981f>$search</col>"
+            when {
+                recent -> "${rows.size} recent commands"
+                search.isBlank() -> "${rows.size} ${selected.category.label} commands"
+                else -> "${rows.size} of $mine - search: <col=ff981f>$search</col>"
             }
         player.setComponentText(INTERFACE_ID, Ui.STATUS, status)
         for (r in 0 until Ui.ROWS) {
@@ -265,7 +258,13 @@ object StaffCommands {
             maxOf(rows.size * Ui.ROW_HEIGHT, Ui.SCROLL_H),
         )
         if (rows.isEmpty()) {
-            player.message(if (selected == Tab.RECENT && search.isBlank()) "No recent commands yet." else "No command matches '$search'.")
+            player.message(
+                when {
+                    recent -> "No recent commands yet."
+                    search.isBlank() -> "No ${selected.category.label} commands for your rank."
+                    else -> "No command matches '$search'."
+                },
+            )
         }
     }
 
@@ -319,8 +318,8 @@ object StaffCommands {
             return
         }
         player.world.getService(LoggerService::class.java, searchSubclasses = true)?.logCommand(player, entry.name, *args)
-        // The Recent tab follows at once while the list is still on screen (a command may have opened its own window instead).
-        if (player.isInterfaceVisible(INTERFACE_ID) && tab(player.attr[TAB_ATTR] ?: 0) == Tab.RECENT) open(player)
+        // The recent list follows at once while it is still on screen (a command may have opened its own window instead).
+        if (player.isInterfaceVisible(INTERFACE_ID) && (player.attr[SEARCH_ATTR] ?: "").trim().equals(RECENT_SEARCH, ignoreCase = true)) open(player)
     }
 
     /** "Show" on row [index]: the usage, description and example in the chatbox. */

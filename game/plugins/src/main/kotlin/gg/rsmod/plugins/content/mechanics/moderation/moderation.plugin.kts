@@ -50,7 +50,7 @@ fun kickNow(target: Player) {
 // Owner 2026-10-10: "::mod" opens it ("maak er mod van"); ::commands / ::cmds stay as aliases.
 listOf("mod", "commands", "cmds").forEach { name ->
     on_command(name, Privilege.MOD_POWER) {
-        // A fresh ::commands starts on "All"; "::commands tele" searches at once.
+        // A fresh ::mod starts on Players (A17); "::mod tele" searches every command at once.
         val search = player.getCommandArgs().joinToString(" ")
         StaffCommands.open(player, search, 0)
     }
@@ -69,7 +69,8 @@ on_button(interfaceId = StaffCommands.INTERFACE_ID, component = Ui.CLEAR) {
 
 Ui.TABS.forEachIndexed { index, id ->
     on_button(interfaceId = StaffCommands.INTERFACE_ID, component = id) {
-        StaffCommands.open(player, tab = index)
+        // A17: a tab shows its own category again, so a click also ends a search.
+        StaffCommands.open(player, "", index)
     }
 }
 
@@ -86,7 +87,7 @@ on_button(interfaceId = StaffCommands.INTERFACE_ID, component = gg.rsmod.game.to
     }
 }
 
-// Owner 2026-10-10: the owner's gear presets (GearPresets), one command each, on the list's Gear tab.
+// Owner 2026-10-10: the owner's gear presets (GearPresets), one command each; in the list through Search (A17, VRAGEN 17 = A).
 GearPresets.ALL.forEach { preset ->
     on_command(preset.command, Privilege.OWNER_POWER) {
         GearPresets.apply(player, preset)

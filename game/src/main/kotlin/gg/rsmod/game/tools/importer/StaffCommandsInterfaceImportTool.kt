@@ -11,7 +11,7 @@ import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.Comp
  * (clientscript 30), rows that are layers carrying the op and the white-under-the-mouse highlight
  * ([PohTeleportInterfaceImportTool.COLOUR_SCRIPT], already in both caches) - and above the list:
  *
- *  - [TABS] All / Recent / Gear / Player / Mod / Admin / Owner and the [SEARCH] / [CLEAR] buttons, each an OSRS v2 stone button
+ *  - [TABS] Players / Punish / Teleport / Info (A17; 3 more slots hidden) and the [SEARCH] button ([CLEAR] hidden), each an OSRS v2 stone button
  *    with two looks like the Death's Office coffer buttons ([LOOK_OUT] normal, [LOOK_IN] pressed = the selected tab);
  *  - [STATUS] ("Showing 12 of 160 - search: tele") and [HINT];
  *  - column headers over the list ([HEAD_COMMAND] / [HEAD_DESCRIPTION]).
@@ -44,9 +44,15 @@ object StaffCommandsInterfaceImportTool {
     /** Inside a look: +1..+9 the stone pieces, +10 the label. */
     const val LOOK_LABEL = 10
 
-    val TAB_LABELS = listOf("All", "Recent", "Gear", "Player", "Mod", "Admin", "Owner")
-    val TABS = TAB_LABELS.indices.map { BUTTON_FIRST + it * BUTTON_STRIDE }
-    val SEARCH = BUTTON_FIRST + TAB_LABELS.size * BUTTON_STRIDE
+    /**
+     * A17 (owner 10-11: "fewer buttons, grouped in categories Players / Punish / Teleport / Info"; VRAGEN 17 = A: no Recent or
+     * Gear tab). The window keeps its 7 tab slots so every component id stays where tx-20261010-195851 put it (a shorter
+     * interface would leave the old higher components behind in the archive): the last three slots and Clear are built hidden.
+     */
+    val TAB_LABELS = listOf("Players", "Punish", "Teleport", "Info")
+    const val TAB_SLOTS = 7
+    val TABS = (0 until TAB_SLOTS).map { BUTTON_FIRST + it * BUTTON_STRIDE }
+    val SEARCH = BUTTON_FIRST + TAB_SLOTS * BUTTON_STRIDE
     val CLEAR = SEARCH + BUTTON_STRIDE
 
     val STATUS = CLEAR + BUTTON_STRIDE
@@ -79,10 +85,10 @@ object StaffCommandsInterfaceImportTool {
     const val CONTENT_W = WIDTH - 20
     const val CONTENT_H = HEIGHT - 48
     const val BUTTON_H = 24
-    const val TAB_W = 50
-    const val TAB_STEP = 52
+    const val TAB_W = 80
+    const val TAB_STEP = 82
     val SEARCH_X = TAB_LABELS.size * TAB_STEP + 4
-    const val SEARCH_W = 60
+    const val SEARCH_W = 70
     val CLEAR_X = SEARCH_X + SEARCH_W + 4
     val CLEAR_W = CONTENT_W - CLEAR_X
     const val STATUS_Y = BUTTON_H + 3
@@ -117,8 +123,9 @@ object StaffCommandsInterfaceImportTool {
         x: Int,
         w: Int,
         label: String,
+        hidden: Boolean = false,
     ) {
-        layer(id, x, 0, w, BUTTON_H, CONTENT, ops = listOf(label))
+        layer(id, x, 0, w, BUTTON_H, CONTENT, hidden = hidden, ops = if (hidden) emptyList() else listOf(label))
         listOf(LOOK_OUT to STONE_OUT, LOOK_IN to STONE_IN).forEach { (offset, pieces) ->
             val look = id + offset
             layer(look, 0, 0, w, BUTTON_H, id, hidden = offset == LOOK_IN)
@@ -131,11 +138,14 @@ object StaffCommandsInterfaceImportTool {
         val b = Builder(fonts)
         b.frame(WIDTH, HEIGHT, "Staff Commands")
         b.layer(CONTENT, CONTENT_X, CONTENT_Y, CONTENT_W, CONTENT_H, DeathsOfficeInterfaceImportTool.WINDOW)
-        TAB_LABELS.forEachIndexed { i, label -> b.button(TABS[i], i * TAB_STEP, TAB_W, label) }
+        TABS.forEachIndexed { i, id ->
+            val label = TAB_LABELS.getOrNull(i)
+            b.button(id, if (label != null) i * TAB_STEP else 0, TAB_W, label ?: "", hidden = label == null)
+        }
         b.button(SEARCH, SEARCH_X, SEARCH_W, "Search")
-        b.button(CLEAR, CLEAR_X, CLEAR_W, "Clear")
+        b.button(CLEAR, CLEAR_X, CLEAR_W, "Clear", hidden = true)
         b.text(STATUS, 2, STATUS_Y, CONTENT_W / 2, STATUS_H, CONTENT, fonts.p11, "", colour = WHITE, alignX = 0)
-        b.text(HINT, CONTENT_W / 2, STATUS_Y, CONTENT_W / 2 - 2, STATUS_H, CONTENT, fonts.p11, "Click: run it. Right-click: Info.", colour = LIGHT, alignX = 2)
+        b.text(HINT, CONTENT_W / 2, STATUS_Y, CONTENT_W / 2 - 2, STATUS_H, CONTENT, fonts.p11, "Click: run it. Right-click: Info. Search: every command.", colour = LIGHT, alignX = 2)
         b.text(HEAD_COMMAND, 6, HEAD_Y, NAME_W - 6, HEAD_H, CONTENT, fonts.p11, "Command / rank", colour = HEAD, alignX = 0)
         b.text(HEAD_DESCRIPTION, NAME_W + 1, HEAD_Y, SCROLL_W - NAME_W, HEAD_H, CONTENT, fonts.p11, "What it does", colour = HEAD, alignX = 0)
         b.layer(LIST, 0, LIST_Y, LIST_W, LIST_H, CONTENT)
