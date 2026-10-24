@@ -48,7 +48,7 @@ object MaxCapes {
         VARIANTS.map { it.cape }.toSet() +
             setOf(
                 Items.IMBUED_SARADOMIN_MAX_CAPE_L, Items.IMBUED_ZAMORAK_MAX_CAPE_L, Items.IMBUED_GUTHIX_MAX_CAPE_L,
-                Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE_L, Items.DIZANAS_MAX_CAPE_L,
+                Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE_L, Items.DIZANAS_MAX_CAPE_L, Items.INFERNAL_MAX_CAPE_L,
             )
     }
 

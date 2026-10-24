@@ -289497,3 +289497,793 @@
   tradeable: false
   weight: 0.453
   equipment: null
+- id: 24151
+  name: "Mithril defender (l)"
+  examine: "A defensive weapon, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 1741
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 9
+    attack_crush: 8
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 10
+    defence_slash: 9
+    defence_crush: 8
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 5
+    melee_strength: 3
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 20}, {'skill': 1, 'level': 20}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24152
+  name: "Adamant defender (l)"
+  examine: "A defensive weapon, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 1742
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 13
+    attack_slash: 12
+    attack_crush: 11
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 13
+    defence_slash: 12
+    defence_crush: 11
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 6
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 30}, {'skill': 1, 'level': 30}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24153
+  name: "Rune defender (l)"
+  examine: "A defensive weapon, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 1743
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: 19
+    attack_crush: 18
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 20
+    defence_slash: 19
+    defence_crush: 18
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 8
+    melee_strength: 5
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24154
+  name: "Dragon defender (l)"
+  examine: "A defensive weapon, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    attack_stab: 25
+    attack_slash: 24
+    attack_crush: 23
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 25
+    defence_slash: 24
+    defence_crush: 23
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 10
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    melee_strength: 6
+    ranged_strength: 0
+    prayer: 0
+    magic_damage: 0
+    appearance_id: 5055
+    equip_slot: 5
+    equip_type: -1
+    weapon_type: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+- id: 24155
+  name: "Avernic defender (l)"
+  examine: "A defensive weapon, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6297
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 30
+    attack_slash: 29
+    attack_crush: 28
+    attack_magic: -5
+    attack_ranged: -4
+    defence_stab: 30
+    defence_slash: 29
+    defence_crush: 28
+    defence_magic: -5
+    defence_ranged: -4
+    summoning: 0
+    melee_strength: 8
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 70}, {'skill': 1, 'level': 70}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24156
+  name: "Rune defender (l)(t)"
+  examine: "A defensive weapon trimmed with gold, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6670
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 20
+    attack_slash: 19
+    attack_crush: 18
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 20
+    defence_slash: 19
+    defence_crush: 18
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 0
+    melee_strength: 5
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 40}, {'skill': 1, 'level': 40}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24157
+  name: "Dragon defender (l)(t)"
+  examine: "A defensive weapon trimmed with gold, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 5
+    equip_type: -1
+    appearance_id: 6649
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 25
+    attack_slash: 24
+    attack_crush: 23
+    attack_magic: -3
+    attack_ranged: -2
+    defence_stab: 25
+    defence_slash: 24
+    defence_crush: 23
+    defence_magic: -3
+    defence_ranged: -2
+    summoning: 0
+    melee_strength: 6
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 60}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24158
+  name: "Fighter torso (l)"
+  examine: "A Penance Fighter torso armour, locked with a Trouver parchment."
+  tradeable: false
+  weight: 4.0
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 2180
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: -40
+    attack_ranged: 0
+    defence_stab: 62
+    defence_slash: 85
+    defence_crush: 62
+    defence_magic: -10
+    defence_ranged: 67
+    summoning: 40
+    melee_strength: 4
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    skill_reqs: [{'skill': 1, 'level': 40}]
+    absorb_melee: 3
+    absorb_magic: 0
+    absorb_ranged: 6
+- id: 24159
+  name: "Void knight top (l)"
+  examine: "Torso armour from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 6.8
+  equipment:
+    equip_slot: 4
+    equip_type: -1
+    appearance_id: 1733
+    remove_head: false
+    remove_beard: false
+    remove_arms: true
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 45
+    defence_slash: 45
+    defence_crush: 45
+    defence_magic: 45
+    defence_ranged: 45
+    summoning: 45
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24160
+  name: "Elite void top (l)"
+  examine: "Superior torso armour from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 8.0
+  equipment:
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 45
+    defence_slash: 45
+    defence_crush: 45
+    defence_magic: 45
+    defence_ranged: 45
+    summoning: 45
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    melee_strength: 0
+    ranged_strength: 0
+    prayer: 3
+    magic_damage: 0
+    appearance_id: 5019
+    equip_slot: 4
+    equip_type: -1
+    weapon_type: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24161
+  name: "Void knight robe (l)"
+  examine: "Leg armour of the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 8.0
+  equipment:
+    equip_slot: 7
+    equip_type: -1
+    appearance_id: 1734
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 30
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 30
+    defence_ranged: 30
+    summoning: 15
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24162
+  name: "Elite void robe (l)"
+  examine: "Superior leg armour from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 8.0
+  equipment:
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 30
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 30
+    defence_ranged: 30
+    summoning: 30
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    melee_strength: 0
+    ranged_strength: 0
+    prayer: 3
+    magic_damage: 0
+    appearance_id: 5020
+    equip_slot: 7
+    equip_type: -1
+    weapon_type: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24163
+  name: "Void knight gloves (l)"
+  examine: "Gloves as used by the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.5
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 1736
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 6
+    defence_slash: 6
+    defence_crush: 6
+    defence_magic: 4
+    defence_ranged: 6
+    summoning: 6
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24164
+  name: "Void mage helm (l)"
+  examine: "A mage helm from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 2563
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 6
+    defence_slash: 6
+    defence_crush: 6
+    defence_magic: 6
+    defence_ranged: 6
+    summoning: 6
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24165
+  name: "Void ranger helm (l)"
+  examine: "A ranger helm from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 3.6
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 2564
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 6
+    defence_slash: 6
+    defence_crush: 6
+    defence_magic: 6
+    defence_ranged: 6
+    summoning: 6
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24166
+  name: "Void melee helm (l)"
+  examine: "A melee helm from the order of the Void Knights, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 2565
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 6
+    defence_slash: 6
+    defence_crush: 6
+    defence_magic: 6
+    defence_ranged: 6
+    summoning: 6
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
+- id: 24167
+  name: "Infernal max cape (l)"
+  examine: "The cape worn by only the most experienced players, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.453
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6693
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 4
+    attack_slash: 4
+    attack_crush: 4
+    attack_magic: 1
+    attack_ranged: 1
+    defence_stab: 12
+    defence_slash: 12
+    defence_crush: 12
+    defence_magic: 12
+    defence_ranged: 12
+    summoning: 0
+    melee_strength: 8
+    prayer: 2
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24168
+  name: "Mithril defender (l) (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24169
+  name: "Mithril defender (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24170
+  name: "Adamant defender (l) (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24171
+  name: "Adamant defender (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24172
+  name: "Rune defender (l) (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24173
+  name: "Rune defender (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24174
+  name: "Dragon defender (l) (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24175
+  name: "Dragon defender (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24176
+  name: "Avernic defender (l) (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24177
+  name: "Avernic defender (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24178
+  name: "Rune defender (l)(t) (broken)"
+  examine: "A broken defensive weapon trimmed with gold."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24179
+  name: "Rune defender (l)(t) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24180
+  name: "Dragon defender (l)(t) (broken)"
+  examine: "A broken defensive weapon trimmed with gold."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24181
+  name: "Dragon defender (l)(t) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24182
+  name: "Fighter torso (l) (broken)"
+  examine: "A broken Penance Fighter torso."
+  tradeable: false
+  weight: 4.0
+  equipment: null
+- id: 24183
+  name: "Fighter torso (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 4.0
+  equipment: null
+- id: 24184
+  name: "Void knight top (l) (broken)"
+  examine: "Broken torso armour from the order of the Void Knights."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24185
+  name: "Void knight top (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24186
+  name: "Elite void top (l) (broken)"
+  examine: "Broken superior torso armour from the order of the Void Knights."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24187
+  name: "Elite void top (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24188
+  name: "Void knight robe (l) (broken)"
+  examine: "Broken leg armour from the order of the Void Knights."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24189
+  name: "Void knight robe (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24190
+  name: "Elite void robe (l) (broken)"
+  examine: "Broken superior leg armour from the order of the Void Knights."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24191
+  name: "Elite void robe (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24192
+  name: "Void knight gloves (l) (broken)"
+  examine: "Broken gloves as used by the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24193
+  name: "Void knight gloves (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24194
+  name: "Void mage helm (l) (broken)"
+  examine: "A broken mage helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24195
+  name: "Void mage helm (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24196
+  name: "Void ranger helm (l) (broken)"
+  examine: "A broken ranger helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24197
+  name: "Void ranger helm (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24198
+  name: "Void melee helm (l) (broken)"
+  examine: "A broken melee helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24199
+  name: "Void melee helm (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24200
+  name: "Infernal max cape (l) (broken)"
+  examine: "This cape is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24201
+  name: "Infernal max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24202
+  name: "Infernal cape (l) (broken)"
+  examine: "A broken Infernal cape."
+  tradeable: false
+  weight: 1.814
+  equipment: null
+- id: 24203
+  name: "Infernal cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 1.814
+  equipment: null

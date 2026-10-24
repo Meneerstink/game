@@ -16,15 +16,15 @@ import gg.rsmod.plugins.api.ext.message
  */
 TrouverLockables.registerAll()
 
-TrouverRegistry.all().forEach { lockable ->
-    on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = lockable.baseItemId) {
-        val item = player.inventory.items.filterNotNull().firstOrNull { it.id == lockable.baseItemId } ?: return@on_item_on_item
+TrouverRegistry.lockableIds().forEach { baseId ->
+    on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = baseId) {
+        val item = player.inventory.items.filterNotNull().firstOrNull { it.id == baseId } ?: return@on_item_on_item
         when (Trouver.lock(player, item)) {
             Trouver.LockResult.Success -> {}
             Trouver.LockResult.NotLockable -> {} // unreachable - only registered pairs are ever wired here
             Trouver.LockResult.ItemNotHeld -> player.message("You don't have that item.")
             Trouver.LockResult.MissingParchment -> player.message("You need a Trouver parchment to do that.")
-            Trouver.LockResult.InsufficientFunds -> player.message("You need ${Trouver.LOCK_FEE} coins to do that.")
+            Trouver.LockResult.InsufficientFunds -> player.message("You need ${"%,d".format(java.util.Locale.US, Trouver.LOCK_FEE)} coins to do that.")
         }
     }
 }
@@ -33,18 +33,18 @@ TrouverRegistry.all().forEach { lockable ->
  * N251 (owner 2026-10-24 "precies net als osrs"): OSRS Wiki "Trouver parchment" - "Giving certain untradeable items and a trouver
  * parchment to Perdu will lock the item to the player" (500,000 coins). Using a lockable item on Perdu asks first, then locks it.
  */
-TrouverRegistry.all().forEach { lockable ->
-    on_item_on_npc(item = lockable.baseItemId, npc = Npcs.PERDU) {
+TrouverRegistry.lockableIds().forEach { baseId ->
+    on_item_on_npc(item = baseId, npc = Npcs.PERDU) {
         val slot = player.getInteractingItemSlot()
         player.queue {
-            val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, lockable.baseItemId).name
+            val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, baseId).name
             if (player.inventory.getItemCount(Items.TROUVER_PARCHMENT) < 1) {
                 chatNpc("I can lock your $name so it is never destroyed on death. Bring me a Trouver parchment and ${"%,d".format(Trouver.LOCK_FEE)} coins.", npc = Npcs.PERDU, wrap = true)
                 return@queue
             }
             if (options("Yes, lock it (${"%,d".format(Trouver.LOCK_FEE)} coins + a parchment).", "No, thanks.", title = "Lock your $name?") != 1) return@queue
-            val item = player.inventory[slot]?.takeIf { it.id == lockable.baseItemId }
-                ?: player.inventory.items.filterNotNull().firstOrNull { it.id == lockable.baseItemId }
+            val item = player.inventory[slot]?.takeIf { it.id == baseId }
+                ?: player.inventory.items.filterNotNull().firstOrNull { it.id == baseId }
             if (item == null) {
                 player.message("You don't have that item.")
                 return@queue
@@ -66,7 +66,7 @@ on_item_on_npc(item = Items.TROUVER_PARCHMENT, npc = Npcs.PERDU) {
     val lockable = player.inventory.items.filterNotNull().firstOrNull { TrouverRegistry.lockableFor(it.id) != null }
     player.queue {
         if (lockable == null) {
-            chatNpc("Bring me an untradeable item I can lock - a fire cape, an infernal cape, a rune pouch, a quiver - and use it on me with the parchment and ${"%,d".format(Trouver.LOCK_FEE)} coins.", npc = Npcs.PERDU, wrap = true)
+            chatNpc("You don't have anything I can lock. ${TrouverLockables.LOCKABLE_SUMMARY}", npc = Npcs.PERDU, wrap = true)
             return@queue
         }
         val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, lockable.id).name
@@ -105,6 +105,37 @@ TrouverRegistry.all().forEach { lockable ->
     TrouverRegistry.all().flatMap { listOfNotNull(it.brokenItemId, it.mangledItemId) }).distinct().forEach { damaged ->
     on_item_on_npc(item = damaged, npc = Npcs.PERDU) { player.queue { gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair.repair(this) } }
 }
+/*
+ * N408 (owner 2026-10-24: "trouver parchment op een iron defender: nothing interesting happens - zet t voor elk item goed
+ * melding in chatbox perdu"): any other item used on Perdu, or a Trouver parchment used on any other item, says why it cannot
+ * be locked (TrouverLockables.refusal). Bound late, after every plugin, so an item's own use-on-Perdu or parchment handler wins.
+ */
+fun lockRefusal(itemId: Int): String {
+    val def = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)
+    return TrouverLockables.refusal(itemId, def.name, def.tradeable) ?: TrouverLockables.LOCKABLE_SUMMARY
+}
+
+on_world_init_late {
+    on_any_item_on_npc(npc = Npcs.PERDU) {
+        val item = player.getInteractingItem()
+        // An item an old death marked broken (no OSRS broken form) is still repaired, as any damaged item used on her.
+        if (gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.isDamaged(item)) {
+            player.queue { gg.rsmod.plugins.content.mechanics.death.BrokenItemRepair.repair(this) }
+            return@on_any_item_on_npc
+        }
+        player.queue { chatNpc(lockRefusal(item.id), npc = Npcs.PERDU, wrap = true) }
+    }
+    val count = world.definitions.getCount(gg.rsmod.game.fs.def.ItemDef::class.java)
+    for (itemId in 0 until count) {
+        if (itemId == Items.TROUVER_PARCHMENT || world.plugins.hasItemOnItem(Items.TROUVER_PARCHMENT, itemId)) continue
+        val def = world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: continue
+        if (def.name.isBlank() || def.name.equals("null", ignoreCase = true) || def.noted) continue
+        on_item_on_item(item1 = Items.TROUVER_PARCHMENT, item2 = itemId) {
+            player.message("Perdu at the Grand Exchange locks items with this parchment. He says: \"${lockRefusal(itemId)}\"")
+        }
+    }
+}
+
 on_command("trouverunlock") {
     val args = player.getCommandArgs()
     val itemId = args.getOrNull(0)?.toIntOrNull()

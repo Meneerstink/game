@@ -31,6 +31,9 @@ object TrouverRegistry {
     private val byLockedId = mutableMapOf<Int, TrouverLockable>()
     private val byDamagedId = mutableMapOf<Int, TrouverLockable>()
 
+    /** A second id of a base item (667 duplicates such as Void knight top 10611) -> the registered base id it locks as. */
+    private val aliases = mutableMapOf<Int, Int>()
+
     /** Registers [entry]. Throws if either id is already registered (to a different pair) or the
      * two ids are the same - both indicate a configuration mistake, not a runtime condition to
      * handle gracefully. */
@@ -50,14 +53,28 @@ object TrouverRegistry {
         entry.mangledItemId?.let { byDamagedId[it] = entry }
     }
 
+    /** [aliasId] locks as the registered base item [baseItemId] (unlocking gives back [baseItemId]). */
+    fun registerAlias(
+        aliasId: Int,
+        baseItemId: Int,
+    ) {
+        require(byBaseId[baseItemId] != null) { "Alias $aliasId names $baseItemId, which is not a registered base item." }
+        require(byBaseId[aliasId] == null && aliases[aliasId] == null) { "Item $aliasId is already lockable." }
+        aliases[aliasId] = baseItemId
+    }
+
     /** Clears every registration. Test-only. */
     fun clear() {
         byBaseId.clear()
         byLockedId.clear()
         byDamagedId.clear()
+        aliases.clear()
     }
 
-    fun lockableFor(baseItemId: Int): TrouverLockable? = byBaseId[baseItemId]
+    fun lockableFor(baseItemId: Int): TrouverLockable? = byBaseId[baseItemId] ?: aliases[baseItemId]?.let { byBaseId[it] }
+
+    /** Every item id a Trouver parchment locks: the base items and their aliases. */
+    fun lockableIds(): Set<Int> = byBaseId.keys + aliases.keys
 
     fun entryForLocked(lockedItemId: Int): TrouverLockable? = byLockedId[lockedItemId]
 

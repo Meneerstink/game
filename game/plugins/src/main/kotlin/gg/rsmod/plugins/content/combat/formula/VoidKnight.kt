@@ -8,19 +8,20 @@ import gg.rsmod.plugins.api.ext.hasEquipped
 /**
  * Void Knight set detection shared by the three combat formulas (OSRS Wiki "Void Knight equipment"):
  * one style helmet plus top, robe and gloves. Elite bonuses (ranged damage 12.5 %, magic damage +5 %)
- * need the elite top and elite robe. Elite pieces also count for the normal set effect.
+ * need the elite top and elite robe. Elite pieces also count for the normal set effect. A Trouver-locked "(l)" piece counts as
+ * the piece itself (K01 2026-10-25).
  */
 object VoidKnight {
-    val MELEE_HELMS = intArrayOf(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_11676)
-    val RANGER_HELMS = intArrayOf(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_11675)
-    val MAGE_HELMS = intArrayOf(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_11674)
+    val MELEE_HELMS = intArrayOf(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_11676, Items.VOID_MELEE_HELM_L)
+    val RANGER_HELMS = intArrayOf(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_11675, Items.VOID_RANGER_HELM_L)
+    val MAGE_HELMS = intArrayOf(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_11674, Items.VOID_MAGE_HELM_L)
 
     private val ELITE_TOPS =
-        intArrayOf(Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP_19787, Items.ELITE_VOID_KNIGHT_TOP_19789, Items.ELITE_VOID_KNIGHT_TORSO)
+        intArrayOf(Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP_19787, Items.ELITE_VOID_KNIGHT_TOP_19789, Items.ELITE_VOID_KNIGHT_TORSO, Items.ELITE_VOID_TOP_L)
     private val ELITE_ROBES =
-        intArrayOf(Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_KNIGHT_ROBE_19788, Items.ELITE_VOID_KNIGHT_ROBE_19790, Items.ELITE_VOID_KNIGHT_LEGS)
-    private val TOPS = intArrayOf(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_10611, *ELITE_TOPS)
-    private val ROBES = intArrayOf(Items.VOID_KNIGHT_ROBE, *ELITE_ROBES)
+        intArrayOf(Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_KNIGHT_ROBE_19788, Items.ELITE_VOID_KNIGHT_ROBE_19790, Items.ELITE_VOID_KNIGHT_LEGS, Items.ELITE_VOID_ROBE_L)
+    private val TOPS = intArrayOf(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_TOP_L, *ELITE_TOPS)
+    private val ROBES = intArrayOf(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_L, *ELITE_ROBES)
 
     fun wearing(
         player: Player,
@@ -29,7 +30,7 @@ object VoidKnight {
         player.hasEquipped(EquipmentType.HEAD, *helms) &&
             player.hasEquipped(EquipmentType.CHEST, *TOPS) &&
             player.hasEquipped(EquipmentType.LEGS, *ROBES) &&
-            player.hasEquipped(EquipmentType.GLOVES, Items.VOID_KNIGHT_GLOVES)
+            player.hasEquipped(EquipmentType.GLOVES, Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_GLOVES_L)
 
     fun wearingElite(
         player: Player,

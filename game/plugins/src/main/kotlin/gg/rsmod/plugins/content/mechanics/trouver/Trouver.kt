@@ -5,6 +5,7 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.filterableMessage
+import gg.rsmod.plugins.api.ext.format
 import gg.rsmod.plugins.api.ext.message
 
 /**
@@ -127,7 +128,7 @@ object Trouver {
                 val slot = player.inventory.items.indexOfFirst { it?.id == lockable.baseItemId }
                 if (slot != -1) player.inventory[slot] = Item(lockable.baseItemId, amount).copyAttr(lockedItem)
             }
-            player.filterableMessage("You unlock your item. Your Trouver parchment and $refund coins are returned.")
+            player.filterableMessage("You unlock your item. Your Trouver parchment and ${refund.format()} coins are returned.")
             return UnlockResult.Success
         }
 

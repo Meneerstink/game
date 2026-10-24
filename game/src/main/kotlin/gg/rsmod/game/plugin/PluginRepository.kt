@@ -1941,6 +1941,12 @@ class PluginRepository(
         pluginCount++
     }
 
+    /** Whether [item1] used on [item2] (either way round) has a plugin. */
+    fun hasItemOnItem(
+        item1: Int,
+        item2: Int,
+    ): Boolean = itemOnItemPlugins.containsKey((Math.max(item1, item2) shl 16) or Math.min(item1, item2))
+
     fun executeItemOnItem(
         p: Player,
         item1: Int,

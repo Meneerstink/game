@@ -13,7 +13,8 @@ object TrouverLockables {
             TrouverLockable(baseItemId = Items.FIRE_CAPE, lockedItemId = Items.FIRE_CAPE_LOCKED_22324),
             // OSRS-IMPORT capesrings: Infernal cape page - a Trouver parchment plus 500,000 coins locks the cape into Infernal cape (l).
             // Its "mangled"/"(l) (broken)" variants are not imported yet, so the engine's documented keep-whole fallback applies.
-            TrouverLockable(baseItemId = Items.INFERNAL_CAPE, lockedItemId = Items.INFERNAL_CAPE_L),
+            // K01 2026-10-25: the OSRS "Infernal cape (l) (broken)/(mangled)" forms instead of the hidden broken mark.
+            TrouverLockable(baseItemId = Items.INFERNAL_CAPE, lockedItemId = Items.INFERNAL_CAPE_L, brokenItemId = Items.INFERNAL_CAPE_L_BROKEN, mangledItemId = Items.INFERNAL_CAPE_L_MANGLED),
             // OSRS-IMPORT assembler: the Ava's assembler infobox lists "Ava's assembler (l)" (24222) as its locked variant.
             TrouverLockable(baseItemId = Items.AVAS_ASSEMBLER, lockedItemId = Items.AVAS_ASSEMBLER_L),
             // OSRS-IMPORT sceptres: "pay 500,000 coins plus a Trouver parchment to lock the item at Perdu"; below level 20 a locked sceptre becomes
@@ -47,13 +48,84 @@ object TrouverLockables {
             TrouverLockable(baseItemId = Items.DIVINE_RUNE_POUCH, lockedItemId = Items.DIVINE_RUNE_POUCH_L),
             // OSRS Wiki "(l)" list (owner 2026-10-04 death audit): "Blessed Dizana's quiver (l)" can be locked like the plain quiver.
             TrouverLockable(baseItemId = Items.BLESSED_DIZANAS_QUIVER, lockedItemId = Items.BLESSED_DIZANAS_QUIVER_L),
+            // K01 2026-10-25 (N408, OSRS Wiki "(l)": Void Knight equipment, Fighter torso, Infernal max cape; "Trouver parchment"
+            // 18 May 2022: Rune/Dragon defender (t); owner 2026-10-25: every defender from mithril up, Avernic included). The (l)
+            // items are clones of this cache's own items with the OSRS names (cache tx-20261024-224158), each with its broken
+            // (level 20 and below) and mangled (above level 20) form, repaired by Perdu like every other locked item.
+            locked(Items.MITHRIL_DEFENDER, Items.MITHRIL_DEFENDER_L, Items.MITHRIL_DEFENDER_L_BROKEN, Items.MITHRIL_DEFENDER_L_MANGLED),
+            locked(Items.ADAMANT_DEFENDER, Items.ADAMANT_DEFENDER_L, Items.ADAMANT_DEFENDER_L_BROKEN, Items.ADAMANT_DEFENDER_L_MANGLED),
+            locked(Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_L, Items.RUNE_DEFENDER_L_BROKEN, Items.RUNE_DEFENDER_L_MANGLED),
+            locked(Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_L, Items.DRAGON_DEFENDER_L_BROKEN, Items.DRAGON_DEFENDER_L_MANGLED),
+            locked(Items.AVERNIC_DEFENDER, Items.AVERNIC_DEFENDER_L, Items.AVERNIC_DEFENDER_L_BROKEN, Items.AVERNIC_DEFENDER_L_MANGLED),
+            locked(Items.RUNE_DEFENDER_T, Items.RUNE_DEFENDER_LT, Items.RUNE_DEFENDER_LT_BROKEN, Items.RUNE_DEFENDER_LT_MANGLED),
+            locked(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER_LT, Items.DRAGON_DEFENDER_LT_BROKEN, Items.DRAGON_DEFENDER_LT_MANGLED),
+            locked(Items.FIGHTER_TORSO, Items.FIGHTER_TORSO_L, Items.FIGHTER_TORSO_L_BROKEN, Items.FIGHTER_TORSO_L_MANGLED),
+            locked(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_L, Items.VOID_KNIGHT_TOP_L_BROKEN, Items.VOID_KNIGHT_TOP_L_MANGLED),
+            locked(Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_TOP_L, Items.ELITE_VOID_TOP_L_BROKEN, Items.ELITE_VOID_TOP_L_MANGLED),
+            locked(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_L, Items.VOID_KNIGHT_ROBE_L_BROKEN, Items.VOID_KNIGHT_ROBE_L_MANGLED),
+            locked(Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_ROBE_L, Items.ELITE_VOID_ROBE_L_BROKEN, Items.ELITE_VOID_ROBE_L_MANGLED),
+            locked(Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_GLOVES_L, Items.VOID_KNIGHT_GLOVES_L_BROKEN, Items.VOID_KNIGHT_GLOVES_L_MANGLED),
+            locked(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_L, Items.VOID_MAGE_HELM_L_BROKEN, Items.VOID_MAGE_HELM_L_MANGLED),
+            locked(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_L, Items.VOID_RANGER_HELM_L_BROKEN, Items.VOID_RANGER_HELM_L_MANGLED),
+            locked(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_L, Items.VOID_MELEE_HELM_L_BROKEN, Items.VOID_MELEE_HELM_L_MANGLED),
+            locked(Items.INFERNAL_MAX_CAPE, Items.INFERNAL_MAX_CAPE_L, Items.INFERNAL_MAX_CAPE_L_BROKEN, Items.INFERNAL_MAX_CAPE_L_MANGLED),
         )
 
+    /** The 667 duplicates of a lockable item; each locks as (and unlocks into) the main item. */
+    val ALIASES: Map<Int, Int> =
+        mapOf(
+            Items.VOID_KNIGHT_TOP_10611 to Items.VOID_KNIGHT_TOP,
+            Items.VOID_MAGE_HELM_11674 to Items.VOID_MAGE_HELM,
+            Items.VOID_RANGER_HELM_11675 to Items.VOID_RANGER_HELM,
+            Items.VOID_MELEE_HELM_11676 to Items.VOID_MELEE_HELM,
+            Items.ELITE_VOID_KNIGHT_TOP_19787 to Items.ELITE_VOID_KNIGHT_TOP,
+            Items.ELITE_VOID_KNIGHT_TOP_19789 to Items.ELITE_VOID_KNIGHT_TOP,
+            Items.ELITE_VOID_KNIGHT_ROBE_19788 to Items.ELITE_VOID_KNIGHT_ROBE,
+            Items.ELITE_VOID_KNIGHT_ROBE_19790 to Items.ELITE_VOID_KNIGHT_ROBE,
+        )
+
+    /** Owner 2026-10-25: defenders below mithril are not lockable; Perdu says why. */
+    val LOW_DEFENDERS: Set<Int> = setOf(Items.BRONZE_DEFENDER, Items.IRON_DEFENDER, Items.STEEL_DEFENDER, Items.BLACK_DEFENDER)
+
+    private fun locked(
+        base: Int,
+        locked: Int,
+        broken: Int,
+        mangled: Int,
+    ) = TrouverLockable(baseItemId = base, lockedItemId = locked, brokenItemId = broken, mangledItemId = mangled)
+
     /** Every id that is part of a lockable pair, in any state. */
-    val IDS: Set<Int> = ALL.flatMap { listOfNotNull(it.baseItemId, it.lockedItemId, it.brokenItemId, it.mangledItemId) }.toSet()
+    val IDS: Set<Int> = ALL.flatMap { listOfNotNull(it.baseItemId, it.lockedItemId, it.brokenItemId, it.mangledItemId) }.toSet() + ALIASES.keys
 
     fun registerAll() {
         if (TrouverRegistry.lockableFor(Items.FIRE_CAPE) != null) return
         ALL.forEach(TrouverRegistry::register)
+        ALIASES.forEach { (alias, base) -> TrouverRegistry.registerAlias(alias, base) }
     }
+
+    /**
+     * N408 (owner 2026-10-24: "zet t voor elk item goed melding in chatbox perdu"): Perdu's answer when [itemId] cannot be locked,
+     * or null when it can. [name] is the item's name, [tradeable] its items.yml flag.
+     */
+    fun refusal(
+        itemId: Int,
+        name: String,
+        tradeable: Boolean,
+    ): String? =
+        when {
+            TrouverRegistry.lockableFor(itemId) != null -> null
+            TrouverRegistry.isLocked(itemId) -> "Your $name is already locked. Use it on me if you want it unlocked."
+            TrouverRegistry.isLockedAnyState(itemId) -> "That's damaged - use it on me and I'll repair it first."
+            itemId in LOW_DEFENDERS -> "I only lock defenders from mithril up. ${withArticle(name.lowercase())} isn't worth a Trouver parchment."
+            itemId == Items.TROUVER_PARCHMENT -> "Use the item you want locked on me, with the parchment and ${"%,d".format(Trouver.LOCK_FEE)} coins in your pack."
+            tradeable -> "I can't lock that. Only untradeable items can be locked - you can still trade your ${name.lowercase()}."
+            else -> "I can't lock that. $LOCKABLE_SUMMARY"
+        }
+
+    /** "An iron defender", "A bronze defender". */
+    private fun withArticle(name: String): String = (if (name.isNotEmpty() && name[0].lowercaseChar() in "aeiou") "An " else "A ") + name
+
+    const val LOCKABLE_SUMMARY =
+        "I lock defenders from mithril up, Void Knight equipment, fighter torsos, fire and infernal capes, " +
+            "imbued god capes, max capes, assemblers, Dizana's quivers, ancient sceptres and rune pouches."
 }

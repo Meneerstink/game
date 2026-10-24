@@ -56,6 +56,12 @@ object ItemTransactionTool {
         require(targets.isNotEmpty()) { "--targets resolved to no cache paths." }
         val apply = flags["apply"] == "true"
 
+        if (verb == "clone-batch") {
+            require(positional.size >= 2) { USAGE }
+            runTransaction(targets, cloneBatch(positional[0], File(positional[1])), apply)
+            return
+        }
+
         val (itemId, bytes) =
             when (verb) {
                 "sync" -> {
@@ -118,7 +124,42 @@ object ItemTransactionTool {
                 label = "$verb item $itemId",
                 expectedCurrentSha1 = flags["expect-sha1"],
             )
-        val transaction = CacheTransaction(targets = targets, mutations = listOf(mutation))
+        runTransaction(targets, listOf(mutation), apply)
+    }
+
+    /**
+     * `clone-batch`: one clone per line of [specFile] (`donorId|newId|name|droppedOpcodes`, `#` comments), all in one
+     * transaction - K01 2026-10-25, the Trouver-locked "(l)" items and their broken/mangled forms (53 items) as clones of this
+     * cache's own items, so a locked item looks exactly like the one the player locked.
+     */
+    private fun cloneBatch(
+        sourcePath: String,
+        specFile: File,
+    ): List<CacheMutation> {
+        val library = CacheLibrary(sourcePath)
+        try {
+            return specFile.readLines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }.map { line ->
+                val parts = line.split('|')
+                require(parts.size >= 3) { "clone-batch line needs donorId|newId|name[|drops]: $line" }
+                val donorId = parts[0].trim().toInt()
+                val id = parts[1].trim().toInt()
+                val dropped = parts.getOrNull(3)?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()
+                val donorBytes = CacheItemProbeTool.itemData(library, donorId) ?: error("Source cache has no data for donor item $donorId.")
+                val cloned = ItemDefCodec.cloneWithOverrides(donorBytes, mapOf(2 to parts[2].trim()), removedOpcodes = dropped)
+                println("CLONE item=$id <- $donorId '${ItemDefCodec.readName(donorBytes)}' name=${ItemDefCodec.readName(cloned)} opcodes=${ItemDefCodec.describeOpcodes(cloned).joinToString(" ")}")
+                CacheMutation.item(itemId = id, newBytes = cloned, label = "clone item $id <- $donorId")
+            }
+        } finally {
+            library.close()
+        }
+    }
+
+    private fun runTransaction(
+        targets: List<String>,
+        mutations: List<CacheMutation>,
+        apply: Boolean,
+    ) {
+        val transaction = CacheTransaction(targets = targets, mutations = mutations)
 
         val plan = transaction.preflight()
         println("PREFLIGHT transaction=${transaction.id}")
@@ -180,5 +221,6 @@ object ItemTransactionTool {
             "  sync <sourceCachePath> <itemId> --targets=<a>[;<b>...] [--apply]\n" +
             "  put <itemBytesFile> <itemId> --targets=<a>[;<b>...] [--expect-sha1=<hex>] [--apply]\n" +
             "  remove <itemId> --targets=<a>[;<b>...] [--apply]\n" +
-            "  clone <sourceCachePath> <donorId> <newId> --str-2=<name> [--str-<opcode>=<text>...] [--drop=97,121] --targets=<a>[;<b>...] [--apply]"
+            "  clone <sourceCachePath> <donorId> <newId> --str-2=<name> [--str-<opcode>=<text>...] [--drop=97,121] --targets=<a>[;<b>...] [--apply]\n" +
+            "  clone-batch <sourceCachePath> <specFile> --targets=<a>[;<b>...] [--apply]"
 }

@@ -38,11 +38,24 @@ object WarriorsGuildDefenders {
     fun best(player: Player): Int {
         val held =
             ORDER.indices.lastOrNull { i ->
-                val id = ORDER[i]
-                player.inventory.contains(id) || player.equipment.contains(id) || player.bank.contains(id)
+                forms(ORDER[i]).any { id -> player.inventory.contains(id) || player.equipment.contains(id) || player.bank.contains(id) }
             } ?: -1
         return maxOf(held, player.attr[EARNED] ?: -1)
     }
+
+    /** The trimmed (t) form of a defender, which also proves the defender was earned. */
+    private val TRIMMED = mapOf(Items.RUNE_DEFENDER to Items.RUNE_DEFENDER_T, Items.DRAGON_DEFENDER to Items.DRAGON_DEFENDER_T)
+
+    /**
+     * Every id that stands for [defender]: itself, its (t), and their broken, Trouver-locked and locked broken/mangled forms
+     * (K01 2026-10-25: a locked or broken defender still counts as the defender the player has).
+     */
+    fun forms(defender: Int): List<Int> =
+        listOfNotNull(defender, TRIMMED[defender]).flatMap { base ->
+            listOfNotNull(base, gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.breakableFor(base)?.brokenId) +
+                gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.ALL.filter { it.baseItemId == base }
+                    .flatMap { listOfNotNull(it.lockedItemId, it.brokenItemId, it.mangledItemId) }
+        }
 
     /** The defender a kill of [cyclops] may drop for [player], or null when there is no next one here. */
     fun next(

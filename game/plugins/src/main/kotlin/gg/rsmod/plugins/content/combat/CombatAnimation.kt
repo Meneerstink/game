@@ -227,6 +227,9 @@ enum class CombatAnimation(
                 Items.DRAGON_DEFENDER,
                 Items.DRAGON_DEFENDER_T,
                 Items.AVERNIC_DEFENDER,
+                // K01 2026-10-25: the Trouver-locked defenders block like the defender itself.
+                Items.MITHRIL_DEFENDER_L, Items.ADAMANT_DEFENDER_L, Items.RUNE_DEFENDER_L, Items.RUNE_DEFENDER_LT,
+                Items.DRAGON_DEFENDER_L, Items.DRAGON_DEFENDER_LT, Items.AVERNIC_DEFENDER_L,
             ),
     ),
 
