@@ -175,13 +175,36 @@ object PetVoices {
     private val LAST_PET_TILE = AttributeKey<gg.rsmod.game.model.Tile>()
     private val NEXT_STEP_CYCLE = AttributeKey<Int>()
 
+    /**
+     * N335 N338 N339-N345 (owner 2026-10-24: "geen loopgeluid", "maakt geen enkel geluid"; replaces decision 1 of 2026-10-23 "lopen
+     * alleen het echte loopgeluid" for these pets): OSRS pet -> the 667 walk sound of its boss or family, soft like the others.
+     * Penance Queen and TzTok-Jad / Greater demon: their own walk sequences' frame sounds (5409: 8473, 9273: 4519, 63: 4494).
+     */
+    val OSRS_STEPS: Map<String, Int> =
+        mapOf(
+            "Pet Penance Queen" to 8473, // the Penance Queen's walk (owner: "gebruik die van de Penance Queen")
+            "Baron" to 4494, // Duke Sucellus is a demon: the Greater demon's walk
+            "Jal-Nib-Rek" to 4519, // TzHaar: TzTok-Jad's walk
+            "Lil' Zik" to Sfx.TBCU_SPIDER, // Lil' Nylo and the other ToB pets: many small legs
+            "Little Nightmare" to Sfx.FOOT_TRAMP_1,
+            "Scorpia's offspring" to Sfx.TBCU_SPIDER,
+            "Nid" to Sfx.TBCU_SPIDER, // Araxxor's spiderlings
+            "Soup" to Sfx.FOOT_TRAMP_1,
+            "Youngllef" to Sfx.FOOT_TRAMP_1,
+        )
+
+    /** Variants of [OSRS_STEPS] pets that crawl instead: the Little Parasite. */
+    private val OSRS_STEP_VARIANTS: Map<String, Int> = mapOf("Little Parasite" to Sfx.TBCU_SPIDER)
+
     /** The step sound of [variant]'s species, or null for a pet that walks silently. */
     fun stepSound(variant: Pets.Variant): Int? {
         val species = if (variant.classic) variant.name else variant.pet
         return when {
             species in DOGS || variant.pet in DOGS -> Sfx.FOOT_TRAMP_1
             species == "Hatchling dragon" || species == "Baby dragon" -> Sfx.DRAGONSLAYER_DRAGONWALK
-            species == "Baby giant crab" || species == "Giant crab" -> Sfx.RAT_SCUTTLE
+            // The rats' scuttle (3101) renders at peak 13 of 128 - inaudible at the step volume; a spider's scuttle (1279, peak 109).
+            species == "Baby giant crab" || species == "Giant crab" -> Sfx.TBCU_SPIDER
+            !variant.classic -> OSRS_STEP_VARIANTS[variant.name] ?: OSRS_STEPS[variant.pet]
             else -> null
         }
     }

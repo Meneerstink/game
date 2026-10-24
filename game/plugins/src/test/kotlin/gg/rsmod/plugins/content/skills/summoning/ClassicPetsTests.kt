@@ -32,6 +32,7 @@ class ClassicPetsTests {
         @JvmStatic
         fun load() {
             assertTrue(Pets.load(File(DIR, "pets.tsv"), File(DIR, "pet_tiers.tsv"), File(DIR, "pets_667.tsv")) > 180)
+            PetVoices.load(File(DIR, "pet_voices.tsv"))
         }
 
         @AfterClass
@@ -70,9 +71,9 @@ class ClassicPetsTests {
         val sold = storePets()
         assertTrue(sold.size >= 20, "store pets found: $sold")
         val notPets = sold.filterNot { Pets.isPetItem(it) }.map { "$it ${SummoningTestCache.definitions.get(ItemDef::class.java, it).name}" }
-        // The Pet rock is an item to talk to, not a follower (667 and OSRS). N295 (owner 2026-10-24): the Baby icefiend follows like
+        // N300 (owner 2026-10-24): the Pet rock (an item, not a follower) left the store, so every pet sold follows. N295 (owner 2026-10-24): the Baby icefiend follows like
         // every other pet - npc 7713 got Pick-up and Talk-to, the item Drop (cache), and it is in the 667 pet table.
-        assertEquals(listOf("3695 Pet rock"), notPets)
+        assertEquals(emptyList(), notPets)
     }
 
     @Test
@@ -159,12 +160,28 @@ class ClassicPetsTests {
         fun step(item: Int) = PetVoices.stepSound(Pets.variantOfItem(item)!!)
         assertEquals(sfx.DRAGONSLAYER_DRAGONWALK, step(gg.rsmod.plugins.api.cfg.Items.BABY_DRAGON_12472))
         assertEquals(sfx.FOOT_TRAMP_1, step(gg.rsmod.plugins.api.cfg.Items.TERRIER_PUPPY_12512))
-        assertEquals(sfx.RAT_SCUTTLE, step(gg.rsmod.plugins.api.cfg.Items.BABY_GIANT_CRAB_12500))
+        assertEquals(sfx.TBCU_SPIDER, step(gg.rsmod.plugins.api.cfg.Items.BABY_GIANT_CRAB_12500))
         assertEquals(null, step(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY))
         assertTrue(PetVoices.STEP_VOLUME < 128, "soft")
         // Every puppy of the Loyalty store steps.
         ClassicPetTalk.LOYALTY_PET_ITEMS.map { Pets.variantOfItem(it)!! }.filter { it.name.endsWith(" puppy") }
             .forEach { assertEquals(sfx.FOOT_TRAMP_1, PetVoices.stepSound(it), it.name) }
+    }
+
+    @Test
+    fun `N335 N338 N340-N345 - the reported OSRS pets walk with their boss's or family's step, the voiceless ones got a voice`() {
+        val sfx = gg.rsmod.plugins.api.cfg.Sfx
+        val steps = mapOf("Pet Penance Queen" to 8473, "Baron" to 4494, "TzRek-Zuk" to 4519, "Lil' Nylo" to sfx.TBCU_SPIDER,
+            "Little Nightmare" to sfx.FOOT_TRAMP_1, "Little Parasite" to sfx.TBCU_SPIDER, "Scorpia's offspring" to sfx.TBCU_SPIDER,
+            "Nid" to sfx.TBCU_SPIDER, "Rax" to sfx.TBCU_SPIDER, "Soup" to sfx.FOOT_TRAMP_1, "Youngllef" to sfx.FOOT_TRAMP_1,
+            "Corrupted Youngllef" to sfx.FOOT_TRAMP_1)
+        steps.forEach { (name, sound) ->
+            val v = Pets.variants.first { !it.classic && it.name == name }
+            assertEquals(sound, PetVoices.stepSound(v), name)
+        }
+        val voices = mapOf("Beef" to sfx.COW_ATMOSPHERIC, "Scurry" to sfx.RAT_SQUEAK_1, "TzRek-Zuk" to 410, "Jal-Nib-Rek" to 410,
+            "Soup" to sfx.TOAD2, "Youngllef" to sfx.BEAR_ATTACK, "Corrupted Youngllef" to sfx.BEAR_ATTACK)
+        voices.forEach { (name, sound) -> assertEquals(sound, PetVoices.voiceOf(Pets.variants.first { !it.classic && it.name == name }.npc), name) }
     }
 
     @Test

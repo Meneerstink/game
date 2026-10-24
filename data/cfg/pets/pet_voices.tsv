@@ -7,7 +7,7 @@ Baby Mole	*	1642	10459	mole_attack		Giant Mole
 Baby chinchompa	*	4705	10460	lore_chinchompa		chinchompa
 Baron	*	7177	10461	dt2_duke_melee_roar_04		Duke Sucellus
 Beaver	*	4662	10462	lore_beaver		beaver
-Beef	*	1170	10463	pet_cow		Jagex pet_cow
+Beef	*	-1	3044	cow_atmospheric (667)		cow
 Bran	Bran	10163	10464	-		Branda the Fire Queen spawn seq 11966
 Bran	Ric	10122	10465	-		Eldric the Ice King spawn seq 11963
 Butch	*	7158	10466	dt2_vardorvis_head_scream_tentacle_spawn_01		Vardorvis
@@ -63,7 +63,10 @@ Rift guardian	*	5470	10457	gotr_small_rift_guardian_attack_04		family: GotR guar
 Rock golem	*	9841	10504	coa_rock_golem_attack_01		family: rock golem
 Rocky	*	4661	10505	lore_raccoon		raccoon
 Scorpia's offspring	*	4525	10506	lore_scorpion		scorpion
-Scurry	*	7708	10507	rat_boss_feeding_idle_08		Scurrius
+Scurry	*	-1	3102	rat_squeak_1 (667)		rat
+Jal-Nib-Rek	*	-1	410	TzTok-Jad defend (667)		TzHaar family
+Soup	*	-1	841	toad2 (667)		family: toad
+Youngllef	*	-1	300	bear_attack (667)		family: beast
 Skotos	*	400	10292	demon_attack		family: demon (Skotizo)
 Smol Heredit	*	8085	10508	varl_colossi_boss_hiss_02		Sol Heredit
 Smolcano	*	4148	10509	sote_zalcano_stand_up_1		Zalcano

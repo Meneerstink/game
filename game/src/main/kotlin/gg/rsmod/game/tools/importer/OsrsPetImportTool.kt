@@ -287,7 +287,9 @@ object OsrsPetImportTool {
             Voice("Baby chinchompa", "*", 4705, "lore_chinchompa", "chinchompa"),
             Voice("Baron", "*", 7177, "dt2_duke_melee_roar_04", "Duke Sucellus"),
             Voice("Beaver", "*", 4662, "lore_beaver", "beaver"),
-            Voice("Beef", "*", 1170, "pet_cow", "Jagex pet_cow"),
+            // N336 (owner 2026-10-24 "generieke moo"): Jagex's pet_cow renders nearly silent (peak 30 of 128, rms 9 - measured with the
+            // client's own SynthSound.mix); the 667 field cow's moo (cow_atmospheric) instead.
+            Voice("Beef", "*", -1, "cow_atmospheric (667)", "cow", local667 = 3044),
             Voice("Bran", "Bran", 10163, "-", "Branda the Fire Queen spawn seq 11966"),
             Voice("Bran", "Ric", 10122, "-", "Eldric the Ice King spawn seq 11963"),
             Voice("Butch", "*", 7158, "dt2_vardorvis_head_scream_tentacle_spawn_01", "Vardorvis"),
@@ -344,7 +346,13 @@ object OsrsPetImportTool {
             Voice("Rock golem", "*", 9841, "coa_rock_golem_attack_01", "family: rock golem"),
             Voice("Rocky", "*", 4661, "lore_raccoon", "raccoon"),
             Voice("Scorpia's offspring", "*", 4525, "lore_scorpion", "scorpion"),
-            Voice("Scurry", "*", 7708, "rat_boss_feeding_idle_08", "Scurrius"),
+            // N337 (owner 2026-10-24 "generiek rattengeluid"): the 667 rat squeak instead of Scurrius' feeding idle.
+            Voice("Scurry", "*", -1, "rat_squeak_1 (667)", "rat", local667 = 3102),
+            // N339 N340 N341 (owner 2026-10-24: "maakt geen enkel geluid" - replaces decision 2 of 2026-10-23 "stil laten"): the closest
+            // 667 creature - Zuk is TzHaar like Jad (TzRek-Jad's voice), Soup (Amoxliatl) a toad's croak, the Youngllef a beast's growl.
+            Voice("Jal-Nib-Rek", "*", -1, "TzTok-Jad defend (667)", "TzHaar family", local667 = 410),
+            Voice("Soup", "*", -1, "toad2 (667)", "family: toad", local667 = 841),
+            Voice("Youngllef", "*", -1, "bear_attack (667)", "family: beast", local667 = 300),
             Voice("Skotos", "*", 400, "demon_attack", "family: demon (Skotizo)"),
             Voice("Smol Heredit", "*", 8085, "varl_colossi_boss_hiss_02", "Sol Heredit"),
             Voice("Smolcano", "*", 4148, "sote_zalcano_stand_up_1", "Zalcano"),
