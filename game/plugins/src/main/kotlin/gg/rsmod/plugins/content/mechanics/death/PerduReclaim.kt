@@ -98,7 +98,7 @@ object PerduReclaim {
             val pages = (all.size + PER_PAGE - 1) / PER_PAGE
             page = page.coerceIn(0, pages - 1)
             val shown = all.drop(page * PER_PAGE).take(PER_PAGE)
-            val labels = shown.map { "${name(player, it.itemId)}${if (it.amount > 1) " x ${it.amount}" else ""} (${"%,d".format(it.price)} coins)" }.toMutableList()
+            val labels = shown.map { "${name(player, it.itemId)}${if (it.amount > 1) " x ${it.amount}" else ""} (${priceText(it.price)})" }.toMutableList()
             labels += if (pages > 1) "More..." else "Nothing, thanks."
             val choice = task.options(*labels.toTypedArray(), title = "Lost Property")
             if (choice == labels.size) {
@@ -109,7 +109,8 @@ object PerduReclaim {
                 return
             }
             val offer = shown.getOrNull(choice - 1) ?: return
-            if (task.options("Pay ${"%,d".format(offer.price)} coins.", "No, thanks.", title = "Reclaim ${name(player, offer.itemId)}?") != 1) return
+            val pay = if (offer.price > 0) "Pay ${priceText(offer.price)}." else "Yes, please."
+            if (task.options(pay, "No, thanks.", title = "Reclaim ${name(player, offer.itemId)}?") != 1) return
             claim(task, offer)
             return
         }
@@ -171,6 +172,9 @@ object PerduReclaim {
         }
         task.chatNpc("There you go. Try to hold on to it this time.")
     }
+
+    /** "1,500 coins", or "free" (N414: a lost pet). */
+    fun priceText(price: Long): String = if (price <= 0) "free" else "${"%,d".format(java.util.Locale.US, price)} coins"
 
     private fun name(
         player: Player,

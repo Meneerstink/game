@@ -392,6 +392,8 @@ on_login {
     Familiar.restoreOnLogin(player)
     // An OSRS pet that was following at logout comes back the same way (Pets).
     Pets.restoreOnLogin(player)
+    // N414: every pet the player has (or has in the Collection Log) counts as owned once - Perdu gives a lost one back.
+    Pets.observe(player)
     // Unconditional: varps persist, so an account that logged out with a familiar and then lost it
     // (expiry while offline, a cleared save) would otherwise log back in with varp 448/1174 still
     // naming the old familiar and the tab drawing a follower that does not exist.

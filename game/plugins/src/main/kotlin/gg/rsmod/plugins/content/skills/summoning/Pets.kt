@@ -72,6 +72,9 @@ object Pets {
     const val MSG_DUPLICATE = "<col=ef1020>You have a funny feeling like you would have been followed...</col>"
     const val MSG_BANKED = "<col=ef1020>You have a funny feeling like you're being followed... your pet has been sent to your bank.</col>"
 
+    /** N414: no room in the backpack or the bank - Perdu keeps the pet (OSRS: Probita), free to collect. */
+    const val MSG_TO_PERDU = "<col=ef1020>You have a funny feeling like you're being followed... you had no room, so Perdu at the Grand Exchange is looking after your pet.</col>"
+
     /** OSRS Wiki Pet: "Pets are limited to walking pace, except Nexling, Babi (Tumeken's Guardian), and Dogs, which move faster". */
     val FAST_PETS = setOf("Nexling", "Babi")
 
@@ -357,15 +360,50 @@ object Pets {
         player.inventory[slot] = Item(next.item, 1)
     }
 
-    /** Whether [player] already has [pet] (any variant) following, in the inventory or in the bank - OSRS's duplicate rule. */
+    /**
+     * Whether [player] already has [pet] (any variant) anywhere - following, in any container (inventory, bank, looting bag, a
+     * familiar's pack, gravestone, Death's Office) or on the Grand Exchange: OSRS's duplicate rule (K01 deel 3, the shared
+     * [gg.rsmod.plugins.content.mechanics.ownership.Possessions] check; before, only the follower, inventory and bank counted).
+     */
     fun owns(
         player: Player,
         pet: String,
-    ): Boolean {
-        val items = variantsOf(pet).map { it.item }.toSet()
-        if (itemOf(player) in items && current(player) != null) return true
-        return items.any { player.inventory.contains(it) || player.bank.contains(it) }
+    ): Boolean = gg.rsmod.plugins.content.mechanics.ownership.Possessions.owns(player, variantsOf(pet).map { it.item }.toSet())
+
+    /** The pets [player] has ever had, as their [baseItem]s (N414: Perdu gives a lost pet back for free, one of each pet). */
+    val OWNED_ATTR = AttributeKey<String>(persistenceKey = "pets_owned")
+
+    fun ownedOnce(player: Player): Set<String> =
+        player.attr[OWNED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull()?.let { item -> byItem[item]?.pet } }.toSet()
+
+    private fun recordOwned(
+        player: Player,
+        pets: Collection<String>,
+    ) {
+        val items = player.attr[OWNED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull() }.toMutableSet()
+        val before = items.size
+        pets.mapNotNullTo(items) { baseItem(it) }
+        if (items.size != before) player.attr[OWNED_ATTR] = items.sorted().joinToString(",")
     }
+
+    /**
+     * Records every pet [player] has now - following, in any container - and every pet in their Collection Log as owned once, so
+     * a pet lost before this record existed can be given back too. Run at login and when Perdu is asked.
+     */
+    fun observe(player: Player) {
+        val seen = mutableSetOf<String>()
+        itemOf(player)?.let { byItem[it]?.pet }?.let { seen += it }
+        player.containers.values.forEach { container ->
+            container.rawItems.forEach { item -> item?.let { byItem[it.id]?.pet }?.let { seen += it } }
+        }
+        byItem.forEach { (item, variant) ->
+            if (variant.pet !in seen && runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.has(player, item) }.getOrDefault(false)) seen += variant.pet
+        }
+        recordOwned(player, seen)
+    }
+
+    /** N414: the pets [player] had once and has nowhere now - Perdu gives each back for free. */
+    fun lost(player: Player): List<String> = ownedOnce(player).filter { !owns(player, it) }.sortedBy { baseItem(it) }
 
     enum class Award { DUPLICATE, FOLLOWER, BACKPACK, BANK, LOST }
 
@@ -401,8 +439,11 @@ object Pets {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
         val outcome = awardOutcome(!purchased && owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
+        // N414: a pet with no room anywhere is owned all the same - Perdu gives it back for free (OSRS: it goes to Probita).
+        if (outcome == Award.LOST) recordOwned(player, listOf(pet))
         if (outcome != Award.DUPLICATE && outcome != Award.LOST) {
             PetMorphs.unlock(player, byItem.getValue(item))
+            recordOwned(player, listOf(pet))
             if (!purchased) {
                 runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, listOf(item to 1)) }
                     .onFailure { gg.rsmod.game.model.Trace.crash("collection log pet", it) }
@@ -425,7 +466,10 @@ object Pets {
                 player.bank.add(item, 1, assureFullInsertion = true)
                 player.message(MSG_BANKED)
             }
-            Award.LOST -> gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet $pet for ${player.username}: inventory and bank full, pet lost" }
+            Award.LOST -> {
+                player.message(MSG_TO_PERDU)
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet $pet for ${player.username}: inventory and bank full, kept by Perdu" }
+            }
         }
         return outcome
     }

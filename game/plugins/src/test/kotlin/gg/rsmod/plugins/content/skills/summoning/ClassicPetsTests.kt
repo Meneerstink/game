@@ -88,7 +88,10 @@ class ClassicPetsTests {
         every { player.world } returns world
         every { player.attr } returns AttributeMap()
         every { player.inventory } returns inventory
-        every { player.bank } returns ItemContainer(SummoningTestCache.definitions, 800, gg.rsmod.game.model.container.ContainerStackType.STACK)
+        val bank = ItemContainer(SummoningTestCache.definitions, 800, gg.rsmod.game.model.container.ContainerStackType.STACK)
+        every { player.bank } returns bank
+        // K01 deel 3: the duplicate rule looks in every container the player has (Possessions).
+        every { player.containers } returns hashMapOf(INVENTORY_KEY to inventory, gg.rsmod.game.model.container.key.BANK_KEY to bank)
         every { player.write(*anyVararg<gg.rsmod.game.message.Message>()) } answers { messages += (args[0] as Array<*>).filterIsInstance<gg.rsmod.game.message.Message>() }
         mockkObject(Pets)
         try {

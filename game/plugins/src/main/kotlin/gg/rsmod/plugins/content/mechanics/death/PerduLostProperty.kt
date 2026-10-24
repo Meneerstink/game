@@ -111,28 +111,35 @@ object PerduLostProperty {
             container.rawItems.forEach { item -> item?.let { byVariant[it.toUnnoted(player.world.definitions).id]?.let { e -> seen += e.itemId } } }
         }
         if (seen.size != before) player.attr[UNLOCKED] = seen.sorted().joinToString(",")
+        gg.rsmod.plugins.content.skills.summoning.Pets.observe(player)
     }
 
     /**
      * OSRS: "none of the item on them, in their bank or in the POH". N250 (owner 2026-10-24): the gravestone and Death's Office
-     * hold the player's own items too - an item waiting there is not lost, so Perdu does not sell a second copy of it.
+     * hold the player's own items too; K01 deel 3 (2026-10-25): so do the looting bag, a familiar's pack and the Grand Exchange -
+     * an item waiting anywhere is not lost, so Perdu does not sell a second copy of it.
      */
     fun owns(
         player: Player,
         entry: Entry,
     ): Boolean = whereOwned(player, entry) != null
 
-    /** Where [player] still has [entry] ("your bank", "your gravestone" ...), or null when it is really lost. */
+    /** Where [player] still has [entry] ("your bank", "your looting bag" ...), or null when it is really lost. */
     fun whereOwned(
         player: Player,
         entry: Entry,
-    ): String? =
-        listOf(
-            player.inventory to "your inventory", player.equipment to "your equipment", player.bank to "your bank",
-            player.gravestone to "your gravestone", player.deathRecovery to "Death's Office",
-        ).firstOrNull { (container, _) ->
-            container.rawItems.any { it != null && it.toUnnoted(player.world.definitions).id in entry.variants }
-        }?.second
+    ): String? = gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(player, entry.variants)
+
+    /**
+     * N414 (owner 2026-10-25: "verloren pet gratis terug bij Perdu, een van elke pet", OSRS Probita): every pet the player had
+     * once and has nowhere now, free; one of each, as the pet is owned again the moment it is handed over.
+     */
+    fun lostPets(player: Player): List<Entry> {
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        return pets.lost(player).mapNotNull { pet ->
+            pets.baseItem(pet)?.let { item -> Entry(item, 0L, variants = pets.variantsOf(pet).map { it.item }.toSet()) }
+        }
+    }
 
     /** Earned items Perdu does not offer because the player still has them somewhere (the reason his list is empty). */
     fun stillOwned(player: Player): List<Pair<Entry, String>> {
@@ -143,6 +150,6 @@ object PerduLostProperty {
     /** What Perdu offers [player] now: earned items they do not own (the [Entry.multiple] ones always). */
     fun available(player: Player): List<Entry> {
         val earned = unlocked(player)
-        return ENTRIES.filter { it.itemId in earned && (it.multiple || !owns(player, it)) }
+        return ENTRIES.filter { it.itemId in earned && (it.multiple || !owns(player, it)) } + lostPets(player)
     }
 }

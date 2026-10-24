@@ -96,14 +96,58 @@ class PerduLostPropertyTests {
         assertEquals(250_000L, PerduLostProperty.available(player).single { it.itemId == Items.IMBUED_ZAMORAK_CAPE }.price)
     }
 
-    private fun newPlayer(): Player {
-        val player = mockk<Player>(relaxed = true)
+    @Test
+    fun `K01 deel 3 an item in the looting bag or a familiar's pack is not lost either`() {
+        val player = newPlayer()
+        player.inventory.add(Items.COLOSSAL_BLADE, 1)
+        PerduLostProperty.observe(player)
+        player.inventory.remove(Items.COLOSSAL_BLADE, 1)
+        val bag = ItemContainer(DEFINITIONS, gg.rsmod.plugins.content.mechanics.pvp.LootingBag.KEY)
+        player.containers[gg.rsmod.plugins.content.mechanics.pvp.LootingBag.KEY] = bag
+        bag[0] = Item(Items.COLOSSAL_BLADE)
+        assertEquals("your looting bag", PerduLostProperty.stillOwned(player).single().second)
+        bag[0] = null
+        val pack = ItemContainer(DEFINITIONS, gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.PACK_YAK_KEY)
+        player.containers[gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.PACK_YAK_KEY] = pack
+        pack[3] = Item(Items.COLOSSAL_BLADE)
+        assertEquals("your familiar's pack", PerduLostProperty.stillOwned(player).single().second)
+        pack[3] = null
+        assertTrue(PerduLostProperty.available(player).any { it.itemId == Items.COLOSSAL_BLADE }, "really lost: offered")
+    }
+
+    @Test
+    fun `N414 a pet the player had once and has nowhere is given back for free, one of each`() {
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        val saved = pets.variants
+        try {
+            pets.install(listOf(gg.rsmod.plugins.content.skills.summoning.Pets.Variant("Test pet", "Test pet", PET, 1), gg.rsmod.plugins.content.skills.summoning.Pets.Variant("Test pet", "Test pet morph", PET_MORPH, 2)), emptyList())
+            val player = newPlayer()
+            player.bank.add(PET_MORPH, 1)
+            PerduLostProperty.observe(player)
+            assertTrue(PerduLostProperty.available(player).none { it.itemId == PET }, "a morph in the bank: owned")
+            player.bank.remove(PET_MORPH, 1)
+            val back = PerduLostProperty.available(player).single { it.itemId == PET }
+            assertEquals(0L, back.price, "free")
+            assertEquals("free", PerduReclaim.priceText(back.price))
+            player.inventory.add(PET, 1)
+            assertTrue(PerduLostProperty.available(player).none { it.itemId == PET }, "given back: owned again, never a second one")
+        } finally {
+            pets.install(saved, pets.infos.values.toList())
+        }
+    }
+
+    private fun newPlayer(): Player {        val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
         every { player.gravestone } returns ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.GRAVESTONE_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY)
+        val containers = hashMapOf(
+            INVENTORY_KEY to player.inventory, EQUIPMENT_KEY to player.equipment, BANK_KEY to player.bank,
+            gg.rsmod.game.model.container.key.GRAVESTONE_KEY to player.gravestone, gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY to player.deathRecovery,
+        )
+        every { player.containers } returns containers
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS
         every { player.world } returns world
@@ -112,6 +156,8 @@ class PerduLostPropertyTests {
 
     companion object {
         private val DEFINITIONS = DefinitionSet()
+        private const val PET = Items.ABYSSAL_WHIP
+        private const val PET_MORPH = Items.DRAGON_DAGGER
 
         @BeforeClass
         @JvmStatic
