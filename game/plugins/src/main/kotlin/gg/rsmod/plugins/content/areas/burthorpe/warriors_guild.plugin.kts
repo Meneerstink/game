@@ -17,6 +17,21 @@ on_obj_option(obj = Objs.DOOR_15653, option = "open") {
     }
 }
 
+// N374: the next defender in order (WarriorsGuildDefenders), with a red line when it drops.
+on_npc_killed { killer, npc ->
+    if (npc.id !in WarriorsGuildDefenders.CYCLOPES || !WarriorsGuildDefenders.inGuild(npc.tile)) return@on_npc_killed
+    val defender = WarriorsGuildDefenders.next(killer, npc.id) ?: return@on_npc_killed
+    if (world.random(WarriorsGuildDefenders.chance(defender) - 1) != 0) return@on_npc_killed
+    WarriorsGuildDefenders.earn(killer, defender)
+    val tile = npc.tile
+    world.queue {
+        wait(4)
+        world.spawn(gg.rsmod.game.model.entity.GroundItem(defender, 1, tile, killer))
+        val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, defender).name
+        killer.message("<col=ef1020>The cyclops dropped a $name!")
+    }
+}
+
 fun getCombinedLevels(player: Player): Int {
     val strengthLevel = player.skills.getCurrentLevel(Skills.STRENGTH)
     val attackLevel = player.skills.getCurrentLevel(Skills.ATTACK)
