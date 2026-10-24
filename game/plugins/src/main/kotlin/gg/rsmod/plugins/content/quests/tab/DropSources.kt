@@ -469,7 +469,9 @@ object DropSources {
         warming = true
         player.world.queue {
             val sources = all(player)
-            for (rate in RATES) {
+            // The logged-in player's own rate first: most likely the first search.
+            val own = DropTableFactory.killRate(player)
+            for (rate in listOf(own) + RATES.filter { it != own }) {
                 if (indexes.containsKey(rate)) continue
                 val names = HashMap<Int, String>()
                 val bySource = HashMap<Int, MutableList<Triple<Source, Double, Double>>>()
