@@ -101,6 +101,13 @@ object SummoningUi {
     private const val PET_HUNGER_VARBIT = 4286
     private const val PET_VALUE_NOT_APPLICABLE = 101
 
+    /**
+     * N258 (owner 2026-10-23: "bij elke summoning familiar of pets zie ik NA staan keer 2 onder elkaar - wat betekent dat"): layer 71's
+     * own children - 44 the growth icon, 45/46 its value, 47 the hunger icon, 48 its value (cache 662, decoded 2026-10-24). An OSRS pet
+     * neither grows nor gets hungry (OSRS has no such counters), so they are hidden; the layer stays as script 751 wants it.
+     */
+    val PANEL_PET_COLUMN = intArrayOf(44, 45, 46, 47, 48)
+
     /** The familiar variant of the right-hand column (time remaining / Summoning points). */
     private const val PANEL_FAMILIAR_LAYER = 72
 
@@ -403,6 +410,7 @@ object SummoningUi {
             player.setVarbit(PET_GROWTH_VARBIT, PET_VALUE_NOT_APPLICABLE)
             player.setVarbit(PET_HUNGER_VARBIT, PET_VALUE_NOT_APPLICABLE)
         }
+        PANEL_PET_COLUMN.forEach { player.setComponentHidden(PANEL, it, pet) }
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
         player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
         player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
