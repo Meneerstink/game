@@ -125,6 +125,22 @@ object OsrsItemImportTool {
                 ),
             // Batch 3: Infernal cape, Mage Arena II imbued god capes, Wilderness rings and their (i), Ring of suffering.
             // Canonical ids only (no Deadman/LMS copies carrying params 59/403).
+            // N247 (owner 2026-10-23/24: "bij death raken de items niet broken zoals void"): the OSRS "(broken)" forms of the PvP
+            // breakable untradeables (OSRS Wiki "(broken)" table) - before, a broken Void piece kept its own icon and name.
+            "broken" to
+                listOf(
+                    Spec(20445), // Fire cape (broken)
+                    Spec(20447), // Fire max cape (broken)
+                    Spec(20449), Spec(20451), Spec(20453), Spec(20455), // Bronze / Iron / Steel / Black defender (broken)
+                    Spec(20457), Spec(20459), Spec(20461), Spec(20463), // Mithril / Adamant / Rune / Dragon defender (broken)
+                    Spec(20465), Spec(20467), // Void knight top (broken), Elite void top (broken)
+                    Spec(20469), Spec(20471), // Void knight robe (broken), Elite void robe (broken)
+                    Spec(20475), // Void knight gloves (broken)
+                    Spec(20477), Spec(20479), Spec(20481), // Void mage / ranger / melee helm (broken)
+                    Spec(20513), // Fighter torso (broken)
+                    Spec(21289), // Infernal max cape (broken)
+                    Spec(28826), Spec(28828), // Dizana's quiver (broken), Blessed Dizana's quiver (broken)
+                ),
             "capesrings" to
                 listOf(
                     Spec(21295), // Infernal cape

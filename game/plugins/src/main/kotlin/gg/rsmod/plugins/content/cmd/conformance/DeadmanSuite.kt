@@ -115,6 +115,8 @@ object DeadmanSuite : Conformance.Suite {
         scenario("remote") { remoteRoutes(run) }
         scenario("duel") { stakedDuel(run) }
         scenario("casino") { casinoDeath(run, arena) }
+        // N247 N250 (owner 2026-10-24): every untradeable class through real deaths - PvP <=20, PvP >20, a monster.
+        scenario("untradeables") { with(UntradeableDeathScenario) { untradeableDeaths(run) } }
     }
 
     /** Hitsplat types [who] received since [from], in order. */

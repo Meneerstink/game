@@ -29,6 +29,8 @@ object PvpDeathBreakables {
         val brokenId: Int,
         val killerCoins: Int,
         val repairCost: Int,
+        /** OSRS Wiki "(broken)" table, column "Broken above 20 Wilderness": Yes - it breaks there too instead of being lost. */
+        val breaksAboveTwenty: Boolean = false,
     )
 
     /**
@@ -64,9 +66,52 @@ object PvpDeathBreakables {
             Breakable(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_BROKEN, killerCoins = 0, repairCost = 240_000),
             Breakable(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 240_000),
             Breakable(Items.DIZANAS_MAX_CAPE, Items.DIZANAS_MAX_CAPE_BROKEN, killerCoins = 0, repairCost = 400_000),
-        ).associateBy { it.itemId }
+        ).associateBy { it.itemId } + N247_BREAKABLES.associateBy { it.itemId }
 
-    private val byBrokenId = entries.values.associateBy { it.brokenId }
+    /** A broken id repairs into the first (canonical) item that breaks into it (Void helms and Elite void have 667 copies). */
+    private val byBrokenId = entries.values.groupBy { it.brokenId }.mapValues { it.value.first() }
+
+    /**
+     * N247 (owner 2026-10-23: "bij death raken de items nu niet broken zoals void en meer"): the OSRS "(broken)" items (OSRS Wiki
+     * "(broken)" - PvP breakable items table: repair cost at Perdu, "Broken above 20 Wilderness"), imported in batch "broken"
+     * (tx-20261024-194237). Before, these broke as a hidden attribute and kept their own icon and name. The 667 copies of a piece
+     * (second Void helm set, the Elite void variants) break into the same item.
+     */
+    private val N247_BREAKABLES: List<Breakable>
+        get() =
+            listOf(
+                Breakable(Items.FIRE_CAPE, Items.FIRE_CAPE_BROKEN, 0, 150_000, breaksAboveTwenty = true),
+                Breakable(Items.FIRE_MAX_CAPE, Items.FIRE_MAX_CAPE_BROKEN, 0, 150_000, breaksAboveTwenty = true),
+                Breakable(Items.BRONZE_DEFENDER, Items.BRONZE_DEFENDER_BROKEN, 0, 1_000, breaksAboveTwenty = true),
+                Breakable(Items.IRON_DEFENDER, Items.IRON_DEFENDER_BROKEN, 0, 2_000, breaksAboveTwenty = true),
+                Breakable(Items.STEEL_DEFENDER, Items.STEEL_DEFENDER_BROKEN, 0, 2_500, breaksAboveTwenty = true),
+                Breakable(Items.BLACK_DEFENDER, Items.BLACK_DEFENDER_BROKEN, 0, 5_000, breaksAboveTwenty = true),
+                Breakable(Items.MITHRIL_DEFENDER, Items.MITHRIL_DEFENDER_BROKEN, 0, 15_000, breaksAboveTwenty = true),
+                Breakable(Items.ADAMANT_DEFENDER, Items.ADAMANT_DEFENDER_BROKEN, 0, 25_000, breaksAboveTwenty = true),
+                Breakable(Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_BROKEN, 0, 35_000, breaksAboveTwenty = true),
+                Breakable(Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_BROKEN, 0, 240_000, breaksAboveTwenty = true),
+                Breakable(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
+                Breakable(Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
+                Breakable(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_BROKEN, 0, 180_000),
+                Breakable(Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_GLOVES_BROKEN, 0, 120_000),
+                Breakable(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.VOID_MAGE_HELM_11674, Items.VOID_MAGE_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.VOID_RANGER_HELM_11675, Items.VOID_RANGER_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.VOID_MELEE_HELM_11676, Items.VOID_MELEE_HELM_BROKEN, 0, 160_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_TOP_BROKEN, 0, 250_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_TOP_19787, Items.ELITE_VOID_TOP_BROKEN, 0, 250_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_TOP_19789, Items.ELITE_VOID_TOP_BROKEN, 0, 250_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_ROBE_BROKEN, 0, 250_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_ROBE_19788, Items.ELITE_VOID_ROBE_BROKEN, 0, 250_000),
+                Breakable(Items.ELITE_VOID_KNIGHT_ROBE_19790, Items.ELITE_VOID_ROBE_BROKEN, 0, 250_000),
+                Breakable(Items.FIGHTER_TORSO, Items.FIGHTER_TORSO_BROKEN, 0, 150_000),
+                Breakable(Items.INFERNAL_MAX_CAPE, Items.INFERNAL_MAX_CAPE_BROKEN, 0, 225_000),
+                Breakable(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_BROKEN, 0, 270_000),
+                Breakable(Items.DIZANAS_QUIVER_UNCHARGED, Items.DIZANAS_QUIVER_BROKEN, 0, 270_000),
+                Breakable(Items.BLESSED_DIZANAS_QUIVER, Items.BLESSED_DIZANAS_QUIVER_BROKEN, 0, 400_000),
+            )
 
     val ALL: Collection<Breakable> get() = entries.values
 

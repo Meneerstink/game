@@ -289365,3 +289365,135 @@
   tradeable: true
   weight: 0.015
   equipment: null
+- id: 24129
+  name: "Fire cape (broken)"
+  examine: "A broken cape of fire."
+  tradeable: false
+  weight: 1.814
+  equipment: null
+- id: 24130
+  name: "Fire max cape (broken)"
+  examine: "This cape is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24131
+  name: "Bronze defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24132
+  name: "Iron defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24133
+  name: "Steel defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24134
+  name: "Black defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24135
+  name: "Mithril defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24136
+  name: "Adamant defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24137
+  name: "Rune defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24138
+  name: "Dragon defender (broken)"
+  examine: "A broken defensive weapon."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24139
+  name: "Void knight top (broken)"
+  examine: "Broken torso armour from the order of the Void Knights."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24140
+  name: "Elite void top (broken)"
+  examine: "Broken superior torso armour from the order of the Void Knights."
+  tradeable: false
+  weight: 6.803
+  equipment: null
+- id: 24141
+  name: "Void knight robe (broken)"
+  examine: "Broken leg armour from the order of the Void Knights."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24142
+  name: "Elite void robe (broken)"
+  examine: "Broken superior leg armour from the order of the Void Knights."
+  tradeable: false
+  weight: 8.164
+  equipment: null
+- id: 24143
+  name: "Void knight gloves (broken)"
+  examine: "Broken gloves as used by the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24144
+  name: "Void mage helm (broken)"
+  examine: "A broken mage helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24145
+  name: "Void ranger helm (broken)"
+  examine: "A broken ranger helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24146
+  name: "Void melee helm (broken)"
+  examine: "A broken melee helm from the order of the Void Knights."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24147
+  name: "Fighter torso (broken)"
+  examine: "A broken Penance Fighter torso."
+  tradeable: false
+  weight: 4.0
+  equipment: null
+- id: 24148
+  name: "Infernal max cape (broken)"
+  examine: "This cape is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24149
+  name: "Dizana's quiver (broken)"
+  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24150
+  name: "Blessed Dizana's quiver (broken)"
+  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum. Blessed by Ralos."
+  tradeable: false
+  weight: 0.453
+  equipment: null

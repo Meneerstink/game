@@ -107,6 +107,8 @@ object DeathResolver {
                 // (owner 2026-10-04 "pet kept") for every death, so a pet never goes to the gravestone.
                 alwaysProtected = {
                     alwaysProtected(it) || gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it) ||
+                        // The max capes a PvP death never takes (OSRS "always kept") are kept on a monster death too.
+                        it in UntradeableDeathProtection.ALWAYS_KEPT_PVP ||
                         (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))
                 },
                 // Loot keys, looting bags and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).

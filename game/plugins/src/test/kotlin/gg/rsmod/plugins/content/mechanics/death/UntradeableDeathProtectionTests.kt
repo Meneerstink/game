@@ -134,7 +134,9 @@ class UntradeableDeathProtectionTests {
         assertEquals(UntradeableFate.BROKEN, outcomes.single().fate)
         UntradeableDeathProtection.execute(victim, outcomes)
         val broken = victim.inventory[0]!!
-        assertTrue(UntradeableDeathProtection.isBroken(broken))
+        // N247: the imported OSRS "Dizana's quiver (broken)".
+        assertEquals(Items.DIZANAS_QUIVER_BROKEN, broken.id)
+        assertTrue(UntradeableDeathProtection.isDamaged(broken))
         assertEquals(null, broken.attr[ItemAttribute.ATTACHED_ITEM_ID], "the ammo went to the killer only")
     }
     /** Owner 2026-09-30: a destroyed untradeable leaves a Perdu reclaim at its repair price (Lost Property), nothing else. */

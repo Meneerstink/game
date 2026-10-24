@@ -153,8 +153,10 @@ object UntradeableDeathProtection {
                 UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
             }
         }
+        // N247: OSRS "(broken)" table - fire capes and defenders break above level 20 too ("Broken above 20 Wilderness: Yes").
+        val breaksDeep = !locked && PvpDeathBreakables.breakableFor(item.id)?.breaksAboveTwenty == true
         return when {
-            !deepWilderness -> UntradeableOutcomeFate(UntradeableFate.BROKEN, RepairPrices.repairPrice(definitions, item.id))
+            !deepWilderness || breaksDeep -> UntradeableOutcomeFate(UntradeableFate.BROKEN, RepairPrices.repairPrice(definitions, item.id))
             locked -> UntradeableOutcomeFate(UntradeableFate.MANGLED, RepairPrices.MANGLED_REPAIR)
             else -> UntradeableOutcomeFate(UntradeableFate.DESTROYED, RepairPrices.destroyCoins(definitions, item.id))
         }

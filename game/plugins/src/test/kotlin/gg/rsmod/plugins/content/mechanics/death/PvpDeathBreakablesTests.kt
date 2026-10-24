@@ -100,6 +100,17 @@ class PvpDeathBreakablesTests {
                 Items.IMBUED_SARADOMIN_MAX_CAPE to 99_000, Items.IMBUED_GUTHIX_MAX_CAPE to 99_000, Items.IMBUED_ZAMORAK_MAX_CAPE to 99_000,
                 Items.ASSEMBLER_MAX_CAPE to 240_000, Items.MASORI_ASSEMBLER to 240_000, Items.MASORI_ASSEMBLER_MAX_CAPE to 240_000,
                 Items.DIZANAS_MAX_CAPE to 400_000,
+                // N247: OSRS Wiki "(broken)" PvP breakable table.
+                Items.FIRE_CAPE to 150_000, Items.FIRE_MAX_CAPE to 150_000, Items.BRONZE_DEFENDER to 1_000, Items.IRON_DEFENDER to 2_000,
+                Items.STEEL_DEFENDER to 2_500, Items.BLACK_DEFENDER to 5_000, Items.MITHRIL_DEFENDER to 15_000, Items.ADAMANT_DEFENDER to 25_000,
+                Items.RUNE_DEFENDER to 35_000, Items.DRAGON_DEFENDER to 240_000, Items.VOID_KNIGHT_TOP to 180_000, Items.VOID_KNIGHT_TOP_10611 to 180_000,
+                Items.VOID_KNIGHT_ROBE to 180_000, Items.VOID_KNIGHT_GLOVES to 120_000, Items.VOID_MAGE_HELM to 160_000,
+                Items.VOID_MAGE_HELM_11674 to 160_000, Items.VOID_RANGER_HELM to 160_000, Items.VOID_RANGER_HELM_11675 to 160_000,
+                Items.VOID_MELEE_HELM to 160_000, Items.VOID_MELEE_HELM_11676 to 160_000, Items.ELITE_VOID_KNIGHT_TOP to 250_000,
+                Items.ELITE_VOID_KNIGHT_TOP_19787 to 250_000, Items.ELITE_VOID_KNIGHT_TOP_19789 to 250_000, Items.ELITE_VOID_KNIGHT_ROBE to 250_000,
+                Items.ELITE_VOID_KNIGHT_ROBE_19788 to 250_000, Items.ELITE_VOID_KNIGHT_ROBE_19790 to 250_000, Items.FIGHTER_TORSO to 150_000,
+                Items.INFERNAL_MAX_CAPE to 225_000, Items.DIZANAS_QUIVER to 270_000, Items.DIZANAS_QUIVER_UNCHARGED to 270_000,
+                Items.BLESSED_DIZANAS_QUIVER to 400_000,
             ),
             PvpDeathBreakables.ALL.associate { it.itemId to it.repairCost },
         )
@@ -117,7 +128,8 @@ class PvpDeathBreakablesTests {
             assertEquals(breakable.brokenId, victim.inventory[2]?.id, "${breakable.itemId} breaks in place")
             assertEquals(listOf(Items.COINS_995 to breakable.repairCost), loot.map { it.id to it.amount }, "${breakable.itemId}: killer gets the repair cost")
             assertEquals(breakable.repairCost.toLong(), UntradeableDeathProtection.repairCost(DEFINITIONS, victim.inventory[2]!!))
-            assertEquals(breakable.itemId, UntradeableDeathProtection.repaired(victim.inventory[2]!!).id)
+            // A 667 copy (second Void helm set, Elite void variants) repairs into the canonical piece.
+            assertEquals(PvpDeathBreakables.forBroken(breakable.brokenId)!!.itemId, UntradeableDeathProtection.repaired(victim.inventory[2]!!).id)
         }
     }
     @Test
@@ -203,10 +215,21 @@ class PvpDeathBreakablesTests {
     @Test
     fun `forBroken round-trips every breakable's broken id back to its Breakable, and rejects anything else`() {
         PvpDeathBreakables.ALL.forEach { breakable ->
-            assertEquals(breakable, PvpDeathBreakables.forBroken(breakable.brokenId))
+            val back = PvpDeathBreakables.forBroken(breakable.brokenId)!!
+            assertEquals(breakable.brokenId, back.brokenId)
+            assertEquals(breakable.repairCost, back.repairCost)
         }
+        assertEquals(Items.VOID_MELEE_HELM, PvpDeathBreakables.forBroken(Items.VOID_MELEE_HELM_BROKEN)!!.itemId, "the canonical piece")
         assertNull(PvpDeathBreakables.forBroken(Items.AVERNIC_DEFENDER), "the unbroken item is not itself a broken id")
         assertNull(PvpDeathBreakables.forBroken(Items.COINS_995))
+    }
+
+    @Test
+    fun `N247 above level 20 a fire cape or defender breaks, Void is lost for coins - OSRS broken table`() {
+        assertEquals(UntradeableFate.BROKEN, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.FIRE_CAPE), deepWilderness = true).fate)
+        assertEquals(UntradeableFate.BROKEN, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_DEFENDER), deepWilderness = true).fate)
+        assertEquals(UntradeableFate.DESTROYED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.VOID_KNIGHT_TOP), deepWilderness = true).fate)
+        assertEquals(UntradeableFate.BROKEN, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.VOID_KNIGHT_TOP), deepWilderness = false).fate)
     }
 
     @Test
