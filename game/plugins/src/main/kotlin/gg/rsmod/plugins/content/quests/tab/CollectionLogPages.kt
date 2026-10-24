@@ -121,13 +121,16 @@ object CollectionLogPages {
             pages += Page("dks", Category.BOSSES, "Dagannoth Kings", dks.map { it.key }, seen.toList())
         }
         pages.sortWith(compareBy { it.name.lowercase() })
-        // ---- Deadman: N268 (owner 2026-10-24) weapons and armour first, then the rest, the pets at the bottom; N291 no God Wars pet.
+        // ---- Deadman: N268 (owner 2026-10-24) weapons and armour first, then the rest, the pets at the bottom; N316 the chest has only
+        // the pets without a boss here; N306 the breach page has the breach bosses' own pets, no chest pets.
         val chestPets = DeadmanChestLoot.pets().map { it.second }.distinct()
         fun gearFirst(items: List<Int>) = items.distinct().sortedBy { if (DropGroups.category(world, it) == DropGroups.Group.GEAR) 0 else 1 }
         val chestItems = (gearFirst(DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList()) + chestPets).distinct()
         pages += Page("chest", Category.DEADMAN, "Deadman's Chest", listOf("chest"), chestItems, "Deadman's Chests opened")
-        val breachKeys = sources.filter { it.kind == DropSources.Kind.BREACH }.map { it.key }
-        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList()) + chestPets).distinct()
+        val breaches = sources.filter { it.kind == DropSources.Kind.BREACH }
+        val breachKeys = breaches.map { it.key }
+        val breachPets = breaches.flatMap { it.npcs.toList() }.mapNotNull { Pets.dropFor(it)?.pet }.distinct().mapNotNull { Pets.baseItem(it) }.sortedBy { name(it) }
+        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList()) + breachPets).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
         // ---- Clues: the elite casket's uniques.
         val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()

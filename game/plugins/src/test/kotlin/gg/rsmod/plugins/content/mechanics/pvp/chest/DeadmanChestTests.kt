@@ -66,19 +66,24 @@ class DeadmanChestTests {
     }
 
     @Test
-    fun `class - all owner roster species but the four God Wars pets enter the chest, no pet is sold and existing boss drops stay`() {
+    fun `class N316 - only the pets without a boss on this server enter the chest, no pet is sold and existing boss drops stay`() {
         assertTrue(Pets.load(TABLE, TIERS) > 0)
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS).map { it.purchaseItem }, "pets still sold")
         val expected = Pets.parseTiers(TIERS.readLines())
         assertEquals(71, expected.size, "Council Opus+Sol 2026-10-20 19:37: all pet_tiers species")
         assertEquals(mapOf(1 to 24, 2 to 25, 3 to 22), expected.groupingBy { it.tier }.eachCount())
         val pets = DeadmanChestLoot.pets()
-        // N291 (owner 2026-10-24): Graardor, K'ril, Kree'arra and Zilyana only from their own boss.
-        assertEquals(4, DeadmanChestLoot.OWN_BOSS_ONLY.size)
-        assertTrue(DeadmanChestLoot.OWN_BOSS_ONLY.all { gwd -> expected.any { it.pet == gwd } }, "every excluded name is a roster pet")
-        assertEquals(expected.map { it.pet }.toSet() - DeadmanChestLoot.OWN_BOSS_ONLY, pets.map { it.first }.toSet(), "the roster without the GWD pets")
-        assertEquals(67, pets.size, "exactly one base item per species, including multi-variant pets")
-        for (info in expected.filter { it.pet !in DeadmanChestLoot.OWN_BOSS_ONLY }) {
+        // N316 (owner 2026-10-24): a pet whose boss exists here (drop npcs in pet_tiers) comes only from that boss.
+        val bossPets = expected.filter { it.dropOnly }.map { it.pet }.toSet()
+        assertEquals(expected.map { it.pet }.toSet() - bossPets, pets.map { it.first }.toSet(), "the roster without the boss pets")
+        assertEquals(expected.size - bossPets.size, pets.size, "exactly one base item per species, including multi-variant pets")
+        // The owner's own examples (bug-20261024-152554 / 152934) and N291's God Wars pets.
+        for (pet in listOf("Nexling", "Pet chaos elemental", "Pet Dagannoth Prime", "Pet Dagannoth Rex", "Pet Dagannoth Supreme",
+            "Pet General Graardor", "Pet K'ril Tsutsaroth", "Pet Kree'arra", "Pet Zilyana", "Hellpuppy", "TzRek-Jad")) {
+            assertTrue(pet in bossPets, "$pet has its boss here")
+            assertTrue(pets.none { it.first == pet }, "$pet is not in the chest")
+        }
+        for (info in expected.filterNot { it.dropOnly }) {
             val base = Pets.parseTable(TABLE.readLines()).first { it.pet == info.pet }.item
             assertEquals(base, pets.single { it.first == info.pet }.second, info.pet)
             for (npc in info.dropNpcs) assertEquals(info, Pets.dropFor(npc), "existing boss drop npc=$npc")
@@ -171,37 +176,33 @@ class DeadmanChestTests {
     }
 
     @Test
-    fun `every owner roster species but the God Wars pets is reachable through the breach extra roll at every bracket rate`() {
+    fun `N306 - the breach extra roll reaches every chest item and never a pet, at every bracket rate`() {
         Pets.load(TABLE, TIERS)
-        val expected = Pets.parseTiers(TIERS.readLines()).map { it.pet }.toSet() - DeadmanChestLoot.OWN_BOSS_ONLY
-        val total = DeadmanChestLoot.FIXED.sumOf { it.weight } + expected.size * DeadmanChestLoot.PET_WEIGHT
+        val total = DeadmanChestLoot.FIXED.sumOf { it.weight }
         for (rate in listOf(1.0, 3.0, 4.0, 5.0)) {
-            val seen = mutableSetOf<String>()
+            val seen = mutableSetOf<Int>()
             for (draw in 0 until total) {
                 val random = object : Random() {
                     override fun nextInt(bound: Int): Int = if (bound == total) draw else 0
                     override fun nextDouble(): Double = 0.0
                 }
                 BreachLoot.roll(random, rate).forEach { drop ->
-                    Pets.variantOfItem(drop.item)?.let { variant ->
-                        assertEquals(1, drop.amount)
-                        assertEquals(Pets.baseItem(variant.pet), drop.item)
-                        seen += variant.pet
-                    }
+                    assertTrue(!Pets.isPetItem(drop.item), "breach rate=$rate gave pet item ${drop.item}")
+                    seen += drop.item
                 }
             }
-            assertEquals(expected, seen, "breach rate=$rate must reach the independent whole roster")
+            assertEquals(emptyList(), DeadmanChestLoot.FIXED_IDS.filter { it !in seen }, "breach rate=$rate: chest items never reached")
         }
     }
 
     @Test
-    fun `chest eligibility follows tiers while base selection follows first variant, independently of boss eligibility`() {
+    fun `class N316 - chest eligibility is a pet without drop npcs (any new boss pet stays out), base selection follows the first variant`() {
         val table = listOf(
             Pets.Variant("boss", "base", 1, 11), Pets.Variant("boss", "morph", 2, 12),
             Pets.Variant("other", "base", 3, 13), Pets.Variant("not in tiers", "base", 4, 14),
         )
         val tiers = listOf(Pets.PetInfo("other", 3, emptySet(), 0), Pets.PetInfo("boss", 1, setOf(100), 5000))
-        assertEquals(listOf("other" to 3, "boss" to 1), DeadmanChestLoot.pets(table, tiers))
+        assertEquals(listOf("other" to 3), DeadmanChestLoot.pets(table, tiers))
     }
 
     // ------------------------------------------------------------------------------------------------ requirements (start AND completion)

@@ -87,11 +87,11 @@ class DeadmanChestWorldTests {
     // ------------------------------------------------------------------------------------------------------- opening
 
     @Test
-    fun `every chest roster pet (the 71 but the four God Wars pets, N291) reaches its owner through follower, backpack, bank and private ground on the real map`() {
+    fun `every chest roster pet (the pets without a boss here, N316) reaches its owner through follower, backpack, bank and private ground on the real map`() {
         val dir = File("../../data/cfg/pets")
         Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
-        val expected = Pets.parseTiers(File(dir, "pet_tiers.tsv").readLines()).filter { it.pet !in DeadmanChestLoot.OWN_BOSS_ONLY }
-        assertEquals(67, expected.size)
+        val expected = Pets.parseTiers(File(dir, "pet_tiers.tsv").readLines()).filterNot { it.dropOnly }
+        assertEquals(DeadmanChestLoot.pets().map { it.first }, expected.map { it.pet })
         val at = freeTile(false)
         for ((index, info) in expected.withIndex()) {
             val base = Pets.parseTable(File(dir, "pets.tsv").readLines()).first { it.pet == info.pet }.item

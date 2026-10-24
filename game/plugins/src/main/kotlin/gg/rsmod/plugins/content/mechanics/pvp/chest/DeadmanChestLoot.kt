@@ -78,7 +78,7 @@ object DeadmanChestLoot {
             Entry(Items.VOIDWAKER_BLADE, 1, 2), Entry(Items.VOIDWAKER_GEM, 1, 2), Entry(Items.VOIDWAKER_HILT, 1, 2),
         )
 
-    /** Weight of one pet: PROVISIONAL, every tier-roster species equal, including those with boss drops. */
+    /** Weight of one pet: PROVISIONAL, every chest pet equal. */
     const val PET_WEIGHT = 5
 
     /** Pets are untradeable and read from [pets] at load; the fixed items are what the shop filter and the GE house exclude. */
@@ -95,23 +95,17 @@ object DeadmanChestLoot {
 
     /**
      * A pet reward: (pet name, first/base variant item), using the former shop's base-variant selection.
-     * Council Opus+Sol 2026-10-20: ALL pet_tiers species enter the chest, independently of their existing boss drops.
-     * The shop-only dropOnly filter must not restrict this roster. BreachLoot shares it and delivers plain pet items
-     * through its existing private ground-loot path (including duplicates); the chest uses Pets.award and excludes owned pets.
+     * N316 (owner 2026-10-24, replaces N291's God Wars list): a pet whose boss exists on this server ([Pets.PetInfo.dropOnly], the
+     * drop npcs of pet_tiers.tsv) comes ONLY from that boss - never from the chest. Every pet without a boss here is in the chest.
+     * Breach monsters no longer roll the chest pets (N306, [BreachLoot.roll]); a breach boss gives only its own pet ([Pets.roll]).
      */
     fun pets(
         table: List<Pets.Variant> = Pets.variants,
         tiers: List<Pets.PetInfo> = Pets.infos.values.toList(),
     ): List<Pair<String, Int>> {
         val base = table.groupBy { it.pet }.mapValues { it.value.first().item }
-        return tiers.filter { it.pet !in OWN_BOSS_ONLY }.mapNotNull { info -> base[info.pet]?.let { info.pet to it } }
+        return tiers.filterNot { it.dropOnly }.mapNotNull { info -> base[info.pet]?.let { info.pet to it } }
     }
-
-    /**
-     * N291 (owner 2026-10-24): the God Wars pets come ONLY from their own boss - never from the chest or a breach (whose extra
-     * roll is this list). Every other species stays in.
-     */
-    val OWN_BOSS_ONLY = setOf("Pet General Graardor", "Pet K'ril Tsutsaroth", "Pet Kree'arra", "Pet Zilyana")
 
     sealed class Reward {
         class Item(val item: Int, val amount: Int) : Reward()

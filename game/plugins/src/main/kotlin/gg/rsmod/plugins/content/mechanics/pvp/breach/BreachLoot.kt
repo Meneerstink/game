@@ -194,7 +194,7 @@ object BreachLoot {
 
     /**
      * One eligible player's loot for one kill. [rate] is the killer's Annihilation drop rate (N100, owner 2026-10-18): every
-     * "unique" chance of the roll - the chest-list extra and the rare trigger (the equipment inside it is rolled at 1x) - is [rate] times
+     * "unique" chance of the roll - the chest-list extra (its items, no pets: N306) and the rare trigger (the equipment inside it is rolled at 1x) - is [rate] times
      * as likely (at most 100 %), the regular lines are served rarest first ([regularChances]); a table entered through its boosted
      * trigger is rolled at 1x inside (the factor reaches each item once). 1.0 = the OSRS roll unchanged.
      */
@@ -205,12 +205,9 @@ object BreachLoot {
     ): List<Drop> {
         val out = ArrayList<Drop>()
         // Owner 2026-10-17: breach monsters roll the Deadman's chest list ON TOP of their own table (rare, provisional chance).
-        // A pet comes as its base item (the breach drop code puts it on the ground for the player).
+        // N306 (owner 2026-10-24): without the chest's pets - a breach boss gives only its own pet (Pets.roll, on_npc_killed).
         if (random.nextInt(DeadmanChestConfig.BREACH_EXTRA_CHANCE) < rate) {
-            when (val reward = DeadmanChestLoot.roll(random)) {
-                is DeadmanChestLoot.Reward.Item -> out += Drop(reward.item, reward.amount)
-                is DeadmanChestLoot.Reward.Pet -> out += Drop(reward.item, 1)
-            }
+            (DeadmanChestLoot.roll(random, pets = emptyList()) as? DeadmanChestLoot.Reward.Item)?.let { out += Drop(it.item, it.amount) }
         }
         if (random.nextInt(RARE_DENOMINATOR) < RARE_TRIGGER * rate) {
             // The mega-rare gate is rolled at 1x: the boosted trigger above already carries the factor, so the equipment (and every

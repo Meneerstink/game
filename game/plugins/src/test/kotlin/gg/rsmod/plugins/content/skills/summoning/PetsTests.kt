@@ -100,7 +100,7 @@ class PetsTests {
     }
 
     @Test
-    fun `N101 - all tier species enter the chest, former shop filtering and existing boss drops stay independent`() {
+    fun `N101 N316 - the chest has the pets without a boss here, former shop filtering and existing boss drops stay independent`() {
         val stock = StorePets.stock(Pets.variants, Pets.infos.values.toList())
         val dropOnly = Pets.infos.values.filter { it.dropOnly }.map { it.pet }.toSet()
         assertTrue(stock.none { it.first in dropOnly })
@@ -109,11 +109,11 @@ class PetsTests {
             assertEquals(Pets.baseItem(pet), item, pet)
         }
         assertEquals(Pets.infos.size - dropOnly.size, stock.size)
-        // Council Opus+Sol 2026-10-20: all71, including the16 former drop-only species. Own boss drops stay.
+        // Own boss drops stay.
         val expected = Pets.parseTiers(TIERS.readLines())
         val chest = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets()
-        assertEquals(67, chest.size)
-        assertEquals(expected.map { it.pet }.toSet() - gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.OWN_BOSS_ONLY, chest.map { it.first }.toSet())
+        // N316 (owner 2026-10-24): the chest has exactly the pets without a boss here.
+        assertEquals(expected.filterNot { it.dropOnly }.map { it.pet }.toSet(), chest.map { it.first }.toSet())
         expected.forEach { info -> info.dropNpcs.forEach { assertEquals(info, Pets.dropFor(it)) } }
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS))
     }

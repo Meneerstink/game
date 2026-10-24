@@ -28,9 +28,9 @@ import kotlin.math.pow
  *
  *  - monster tables: [DropTableFactory.tables] + [DropTableFactory.lineChances] (the roll's own chances, the Annihilation rate
  *    included); a shared nested table ("Rare drop table") is one line that folds open to its own lines, rolled at 1x inside;
- *  - the boss pet: [Pets.dropChance] (the `on_npc_killed` roll, no boost);
+ *  - the boss pet: [Pets.dropChance] (the `on_npc_killed` roll, with the bracket boost since N313; a breach boss its own pet);
  *  - the tier 1 Deadman emblem: [DeadmanEmblem.dropChance] (150+ hp, only without an emblem, +10% in the Wilderness);
- *  - breach monsters: [BreachLoot] (the chest-list extra, the rare trigger, the prayer scroll, the two regular rolls) and the
+ *  - breach monsters: [BreachLoot] (the chest-list extra without pets (N306), the rare trigger, the prayer scroll, the two regular rolls) and the
  *    Archaic emblem for 250+ damage;
  *  - the Deadman's chest: [DeadmanChestLoot] (fixed items + pets, owned pets excluded for the opener) and its prayer scroll;
  *  - Zemouregal: the Archaic emblem for the top damage dealer; TzTok-Jad: the Fire cape; the Barrows chest: [Barrows.chances].
@@ -195,11 +195,11 @@ object DropSources {
         val world = player.world
         return when (source.kind) {
             Kind.NPC -> npcView(player, source, rate)
-            Kind.BREACH -> breachView(world, rate)
+            Kind.BREACH -> breachView(world, rate, source.modelNpc)
             Kind.CHEST -> chestView(world, 1.0, emptySet())
             Kind.GUARDIAN -> View(listOfNotNull(archaic(world, "top damage")), emptyList())
             Kind.BARROWS -> barrowsView(world, rate)
-            Kind.JAD -> jadView(world, source)
+            Kind.JAD -> jadView(world, source, rate)
         }
     }
 
@@ -236,14 +236,15 @@ object DropSources {
             }
             walk(world, table, DropTableFactory.lineChances(table, rate), DropTableFactory.lineChances(table, 1.0), 1.0, 1.0, "t:${table.name}", lines)
         }
-        val pet = Pets.dropFor(source.tableNpc)
-        if (pet != null) {
-            Pets.baseItem(pet.pet)?.let { item ->
-                val c = Pets.dropChance(source.tableNpc)
-                lines += Line("pet", item, itemName(world, item), "1", c, c, Tag.PET)
-            }
-        }
+        petLine(world, source.tableNpc, rate)?.let { lines += it }
         return View(mergeAlways(always), sorted(world, merge(lines)))
+    }
+
+    /** N313: the boss pet of [npc] - Normal the OSRS chance, Your chance with the bracket boost (the roll's own [Pets.dropChance]). */
+    private fun petLine(world: World, npc: Int, rate: Double): Line? {
+        val pet = Pets.dropFor(npc) ?: return null
+        val item = Pets.baseItem(pet.pet) ?: return null
+        return Line("pet", item, itemName(world, item), "1", Pets.dropChance(npc, rate), Pets.dropChance(npc), Tag.PET)
     }
 
     /** The tier 1 emblem line of a monster with 150+ hp outside the guards (deadman_emblem.plugin.kts). */
@@ -341,12 +342,14 @@ object DropSources {
         return Line("archaic", item, itemName(world, item), "1", 1.0, 1.0, note = note)
     }
 
-    private fun breachView(world: World, rate: Double): View {
+    private fun breachView(world: World, rate: Double, npc: Int): View {
         val lines = ArrayList<Line>()
-        // The chest-list extra roll (BreachLoot.roll, BREACH_EXTRA_CHANCE), then one pick of the chest list (pets included).
+        // N306: a breach boss gives only its own pet (pet_tiers drop npcs), with the bracket boost (N313).
+        petLine(world, npc, rate)?.let { lines += it }
+        // The chest-list extra roll (BreachLoot.roll, BREACH_EXTRA_CHANCE), then one pick of the chest list's items (no pets, N306).
         val chestY = intChance(rate, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
         val chestN = intChance(1.0, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
-        lines += Line("chest", Items.TRINKET_OF_FAIRIES, "Deadman's Chest roll", "1", chestY, chestN, Tag.TABLE, chestLines(world, chestY, chestN, emptySet()))
+        lines += Line("chest", Items.TRINKET_OF_FAIRIES, "Deadman's Chest roll", "1", chestY, chestN, Tag.TABLE, chestLines(world, chestY, chestN, emptySet(), withPets = false))
         // The rare trigger, then 1/92 the mega-rare equipment (equal), else one RARE line by weight.
         val rareY = intChance(BreachLoot.RARE_TRIGGER * rate, BreachLoot.RARE_DENOMINATOR)
         val rareN = intChance(BreachLoot.RARE_TRIGGER.toDouble(), BreachLoot.RARE_DENOMINATOR)
@@ -380,9 +383,9 @@ object DropSources {
 
     // ---- the Deadman's chest
 
-    private fun chestLines(world: World, yourWeight: Double, normalWeight: Double, owned: Set<String>): List<Line> {
+    private fun chestLines(world: World, yourWeight: Double, normalWeight: Double, owned: Set<String>, withPets: Boolean = true): List<Line> {
         val out = ArrayList<Line>()
-        val pets = DeadmanChestLoot.pets()
+        val pets = if (withPets) DeadmanChestLoot.pets() else emptyList()
         val yourPets = pets.filterNot { it.first in owned }
         val normalTotal = DeadmanChestLoot.FIXED.sumOf { it.weight } + pets.size * DeadmanChestLoot.PET_WEIGHT
         val yourTotal = DeadmanChestLoot.FIXED.sumOf { it.weight } + yourPets.size * DeadmanChestLoot.PET_WEIGHT
@@ -425,14 +428,9 @@ object DropSources {
         return View(emptyList(), sorted(world, merge(lines)))
     }
 
-    private fun jadView(world: World, source: Source): View {
+    private fun jadView(world: World, source: Source, rate: Double): View {
         val lines = ArrayList<Line>()
-        Pets.dropFor(source.modelNpc)?.let { pet ->
-            Pets.baseItem(pet.pet)?.let { item ->
-                val c = Pets.dropChance(source.modelNpc)
-                lines += Line("pet", item, itemName(world, item), "1", c, c, Tag.PET)
-            }
-        }
+        petLine(world, source.modelNpc, rate)?.let { lines += it }
         return View(listOf(Line("cape", Items.FIRE_CAPE, itemName(world, Items.FIRE_CAPE), "1", 1.0, 1.0, note = "Fight Caves")), lines)
     }
 

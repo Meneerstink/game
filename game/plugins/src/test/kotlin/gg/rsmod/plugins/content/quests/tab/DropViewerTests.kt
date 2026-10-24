@@ -265,21 +265,30 @@ class DropViewerTests {
     }
 
     @Test
-    fun `N268 N291 N293 - chest and breach pages weapons and armour first and the pets at the bottom, no God Wars pet, no Zaryte bow, Pest Control on Minigames`() {
+    fun `N268 N316 N306 N293 - chest and breach pages weapons and armour first and the pets at the bottom, no boss pet in the chest, breach only its bosses' pets, no Zaryte bow, Pest Control on Minigames`() {
         val account = Account()
         gg.rsmod.plugins.content.skills.summoning.Pets.load(java.io.File("../../data/cfg/pets/pets.tsv"), java.io.File("../../data/cfg/pets/pet_tiers.tsv"))
         CollectionLogPages.reset()
         DropSources.reset()
         try {
-            val pets = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets().map { it.second }.distinct()
-            assertTrue(pets.isNotEmpty(), "the chest gives pets")
+            val petsApi = gg.rsmod.plugins.content.skills.summoning.Pets
+            val chestPets = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets().map { it.second }.distinct()
+            assertTrue(chestPets.isNotEmpty(), "the chest gives pets")
             val pages = CollectionLogPages.all(account.player)
-            val gwd = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.OWN_BOSS_ONLY.mapNotNull { gg.rsmod.plugins.content.skills.summoning.Pets.baseItem(it) }
-            assertEquals(4, gwd.size)
+            val bossPets = petsApi.infos.values.filter { it.dropOnly }.mapNotNull { petsApi.baseItem(it.pet) }.toSet()
+            val breachPets = DropSources.all(account.player).filter { it.kind == DropSources.Kind.BREACH }
+                .flatMap { it.npcs.toList() }.mapNotNull { petsApi.dropFor(it)?.pet }.mapNotNull { petsApi.baseItem(it) }.toSet()
+            assertTrue(breachPets.isNotEmpty() && breachPets.all { it in bossPets }, "breach bosses give their own pets")
             for (key in listOf("chest", "breach")) {
                 val page = pages.single { it.key == key }
+                val pets = page.items.filter { petsApi.isPetItem(it) }
                 assertEquals(pets, page.items.takeLast(pets.size), "$key: the pets at the bottom")
-                assertTrue(page.items.none { it in gwd }, "$key: no God Wars pet")
+                if (key == "chest") {
+                    assertEquals(chestPets, pets, "chest: exactly the chest's pets")
+                    assertTrue(pets.none { it in bossPets }, "chest: no pet whose boss exists here")
+                } else {
+                    assertEquals(breachPets, pets.toSet(), "breach: only the breach bosses' own pets, no chest pet")
+                }
                 val gear = page.items.map { DropGroups.category(account.world, it) == DropGroups.Group.GEAR }
                 assertTrue(gear.first(), "$key: weapons and armour first")
                 assertEquals(gear.take(gear.indexOfFirst { !it }).size, gear.count { it }, "$key: every weapon and armour piece before the rest")
@@ -295,6 +304,40 @@ class DropViewerTests {
             assertTrue(CollectionLog.has(account.player, Items.VOID_KNIGHT_TOP))
         } finally {
             CollectionLogPages.reset()
+            DropSources.reset()
+        }
+    }
+
+    @Test
+    fun `N313 N306 - a boss pet shows the OSRS chance as Normal and the bracket-boosted chance as Your chance, a breach boss its own pet, no chest pet in a breach`() {
+        val account = Account()
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        pets.load(java.io.File("../../data/cfg/pets/pets.tsv"), java.io.File("../../data/cfg/pets/pet_tiers.tsv"))
+        DropSources.reset()
+        try {
+            // Pet Zilyana (6247): 1/5,000 in OSRS, 1/1,000 at the 96+ bracket (5x) - the roll and the viewer read the same function.
+            assertEquals(1.0 / 5000, pets.dropChance(6247), 1e-12)
+            assertEquals(1.0 / 1000, pets.dropChance(6247, 5.0), 1e-12)
+            assertEquals(1.0, pets.dropChance(6247, 1e9), "never above 1")
+            assertEquals(0.0, pets.dropChance(1, 5.0), "an npc without a pet")
+            val zilyana = DropSources.Source("npc:6247", "Commander Zilyana", 6247, intArrayOf(6247), 596, DropSources.Group.BOSSES, DropSources.Kind.NPC, 6247)
+            val pet = DropSources.view(account.player, zilyana, 5.0).lines.single { it.tag == DropSources.Tag.PET }
+            assertEquals(pets.baseItem("Pet Zilyana"), pet.item)
+            assertEquals(1.0 / 1000, pet.your, 1e-12)
+            assertEquals(1.0 / 5000, pet.normal, 1e-12)
+            // Every breach monster: its own pet only (with the boost), and the chest roll inside shows no pet.
+            val breaches = DropSources.all(account.player).filter { it.kind == DropSources.Kind.BREACH }
+            assertTrue(breaches.isNotEmpty())
+            for (b in breaches) {
+                val view = DropSources.view(account.player, b, 5.0)
+                val own = pets.dropFor(b.modelNpc)
+                val petLines = view.lines.filter { it.tag == DropSources.Tag.PET }
+                assertEquals(listOfNotNull(own?.let { pets.baseItem(it.pet) }), petLines.map { it.item }, "${b.name}: only its own pet")
+                petLines.forEach { assertEquals(pets.dropChance(b.modelNpc, 5.0), it.your, 1e-12, b.name) }
+                val chest = view.lines.single { it.key == "chest" }
+                assertTrue(chest.kids.none { pets.isPetItem(it.item) }, "${b.name}: no chest pet in the breach")
+            }
+        } finally {
             DropSources.reset()
         }
     }

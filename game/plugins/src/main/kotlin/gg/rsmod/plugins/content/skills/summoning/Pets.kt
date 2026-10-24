@@ -26,7 +26,7 @@ import java.lang.ref.WeakReference
  * - The pet survives logout and death ("Pets will now respawn with you on death and will keep on following you", OSRS Wiki Pet).
  * - Metamorphosis turns the pet into the next variant of the same pet (OSRS Wiki Metamorphosis). CUSTOM_SERVER_OVERRIDE: the OSRS
  *   unlock items (metamorphic dust, remnants, ores, ...) do not exist here, so every variant of the pet is in the cycle.
- * - A boss kill rolls its pet at the OSRS rate (OSRS Wiki Pet): "You have a funny feeling like you're being followed." (follower),
+ * - A boss kill rolls its pet at the OSRS rate times the killer's Annihilation drop rate (N313) (OSRS Wiki Pet): "You have a funny feeling like you're being followed." (follower),
  *   "You feel something weird sneaking into your backpack." (a follower is already out), "You have a funny feeling like you would have
  *   been followed..." (already owned). With no room at all OSRS sends the pet to Probita; there is no Probita here, so it goes to the bank
  *   (CUSTOM_SERVER_OVERRIDE).
@@ -438,18 +438,23 @@ object Pets {
     ): Award? = byItem[item]?.let { award(player, it.pet, item, purchased) }
 
     /**
-     * The kill roll's chance per kill of [npcId] (1 / [PetInfo.dropRate], no Annihilation boost), 0 for an npc without a pet;
-     * [roll] and the Drop Viewer (N108) both read it.
+     * The kill roll's chance per kill of [npcId]: the OSRS 1 / [PetInfo.dropRate] times the killer's Annihilation drop rate [rate]
+     * (N313, owner 2026-10-24: "de bracket-boost geldt voor pets" - Pet Zilyana 1/5,000 becomes 1/1,000 at 5x), at most 1; 0 for an
+     * npc without a pet. [roll] and the Drop Viewer (N108: Normal = 1x, Your chance = the player's rate) both read it.
      */
-    fun dropChance(npcId: Int): Double = dropFor(npcId)?.let { 1.0 / it.dropRate } ?: 0.0
+    fun dropChance(
+        npcId: Int,
+        rate: Double = 1.0,
+    ): Double = dropFor(npcId)?.let { (rate.coerceAtLeast(1.0) / it.dropRate).coerceAtMost(1.0) } ?: 0.0
 
-    /** The kill roll of `on_npc_killed`: [dropChance] per kill of one of the pet's boss npcs. */
+    /** The kill roll of `on_npc_killed`: [dropChance] at the killer's kill rate per kill of one of the pet's boss npcs. */
     fun roll(
         player: Player,
         npcId: Int,
     ) {
         val info = dropFor(npcId) ?: return
-        if (player.world.randomDouble() < dropChance(npcId)) award(player, info.pet, source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, npcId)?.key)
+        val rate = gg.rsmod.plugins.content.drops.DropTableFactory.killRate(player)
+        if (player.world.randomDouble() < dropChance(npcId, rate)) award(player, info.pet, source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, npcId)?.key)
     }
 
     /** Farther than this from its owner (or on another plane) the pet was left behind by a teleport, not by running. */
