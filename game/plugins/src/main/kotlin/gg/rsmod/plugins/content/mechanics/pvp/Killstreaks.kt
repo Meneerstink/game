@@ -86,6 +86,14 @@ object Killstreaks {
 
         val newStreak = (killer.attr[CURRENT_KILLSTREAK_ATTR] ?: 0) + 1
         killer.attr[CURRENT_KILLSTREAK_ATTR] = newStreak
+        // N104 Deadman Tasks: only this valid verdict counts a PvP task (alts, multilog and farming were refused above).
+        runCatching {
+            gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onPvpKill(
+                killer,
+                victimSkulled = PvpSkull.isSkulled(victim),
+                multi = runCatching { killer.tile.isMulti(killer.world) }.getOrDefault(false),
+            )
+        }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks pvp", it) }
         val best = killer.attr[BEST_KILLSTREAK_ATTR] ?: 0
         if (newStreak > best) {
             killer.attr[BEST_KILLSTREAK_ATTR] = newStreak

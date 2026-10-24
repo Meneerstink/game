@@ -1,269 +1,538 @@
 package gg.rsmod.plugins.content.quests.tab
 
 import gg.rsmod.game.fs.def.ItemDef
-import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.plugins.api.ext.openInterface
-import gg.rsmod.plugins.api.ext.setComponentHidden
-import gg.rsmod.plugins.api.ext.setComponentItem
-import gg.rsmod.plugins.api.ext.setComponentText
-import gg.rsmod.plugins.api.ext.setInterfaceEvents
+import gg.rsmod.game.tools.importer.N108InterfaceImportTool
+import gg.rsmod.game.tools.importer.N108InterfaceImportTool.V
 import gg.rsmod.plugins.api.InterfaceDestination
-import gg.rsmod.plugins.content.drops.DropEntry
-import gg.rsmod.plugins.content.drops.DropTable
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.content.drops.DropTableFactory
-import gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool as L
+import gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier
+import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestIds
+import gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestWorld
 
 /**
- * Drop Viewer (owner 2026-09-30, reference "dropviewer.png"): opened from the Deadman panel's "Drops" button (quest tab,
- * Deadman). Every row is read from the drop table the game itself rolls ([DropTableFactory], the same builder a kill uses),
- * never from a second list: each table rolls once per kill against `max(declared total, occupied slots)` slots, the
- * guaranteed table always drops, and a nested table multiplies its own chance in - so "Chance" is the real per-kill chance.
+ * The Drop Viewer window (N108 + A37, owner design 2026-10-24 GOEDGEKEURD 01-03): left the search field and the groups
+ * (Favourites, Deadman, Bosses, Monsters A-Z), right the entry's model, name, favourite star, level + kill count, place labels and
+ * "Show on map", the player's own bracket, the Always items and every other line with his chance and the normal chance - rarest
+ * first, nested tables folding open in place. What can drop and how likely: [DropSources] (the reward code's own numbers).
  *
- * Find NPC / Find Drop ask for a name and list the matching sources (10 at a time) on the left; clicking one shows it.
- * Previous / Next Page page through the rows ([L.DV_ROWS] per page).
+ * Typing happens in the window (client RspsUi): every change arrives as `::uisearch <text>` ([search]); a search finds monsters by
+ * name and items by name - the item group, then every entry that can give the chosen item with the player's chance.
  */
 object DropViewer {
-    const val INTERFACE = L.DROPS
+    const val INTERFACE = N108InterfaceImportTool.VIEWER
 
-    class Row(
-        val item: Int,
-        val quantity: String,
-        val chance: Double,
-    )
+    val SELECTED = AttributeKey<String>(persistenceKey = "drop_viewer_selected")
+    val FAVOURITES = AttributeKey<String>(persistenceKey = "drop_viewer_favourites")
+    val RECENT = AttributeKey<String>(persistenceKey = "drop_viewer_recent")
 
-    private val NPC = AttributeKey<Int>()
-    private val PAGE = AttributeKey<Int>()
-    private val RESULTS = AttributeKey<List<Int>>()
+    private val OPEN_GROUPS = AttributeKey<MutableSet<String>>()
+    private val OPEN_LINES = AttributeKey<MutableSet<String>>()
+    private val QUERY = AttributeKey<String>()
+    private val PICKED_ITEM = AttributeKey<Int>()
+    private val LIST = AttributeKey<List<Slot>>()
+    private val ROWS = AttributeKey<List<String>>()
 
     private const val EVENTS_OP1 = 0x2
 
-    /** King Black Dragon, the reference screenshot's source, when it has a table; else the first table. */
-    private const val DEFAULT_NPC = 50
+    /** King Black Dragon first (the design's example), else the first boss. */
+    private const val DEFAULT_KEY = "npc:50"
 
-    /** Rows per npc id and drop rate; the tables are built once (the builder only needs a player for conditional tables). */
-    private val cache = HashMap<Pair<Int, Double>, List<Row>>()
+    private val DEFAULT_OPEN = setOf("FAVOURITES", "BOSSES")
 
-    /** The chance per kill [player] has - [rate] is his Annihilation drop rate (N100), read by the roll too. */
-    fun rows(
-        player: Player,
-        npcId: Int,
-        rate: Double = DropTableFactory.killRate(player),
-    ): List<Row> =
-        cache.getOrPut(npcId to rate) {
-            val built = DropTableFactory.tables(player, npcId) ?: return@getOrPut emptyList()
-            val out = ArrayList<Row>()
-            for (table in built) {
-                if (table.name.equals(gg.rsmod.plugins.content.drops.GUARANTEED_TABLE_NAME, ignoreCase = true)) {
-                    collect(table, 1.0, out, guaranteed = true)
-                } else {
-                    collect(table, 1.0, out, guaranteed = false, rate = rate)
-                }
-            }
-            // Same item and quantity from two tables: one row, chances added (at most "Always").
-            val merged = LinkedHashMap<String, Row>()
-            for (row in out) {
-                val key = "${row.item}|${row.quantity}"
-                val have = merged[key]
-                merged[key] = if (have == null) row else Row(row.item, row.quantity, minOf(1.0, have.chance + row.chance))
-            }
-            merged.values.sortedWith(compareByDescending<Row> { it.chance }.thenBy { it.item })
-        }
+    /** The Deadman group: the chest and its guardian first, then the breach monsters by name. */
+    private val DEADMAN_ORDER = listOf(DropSources.Kind.CHEST, DropSources.Kind.GUARDIAN, DropSources.Kind.BREACH)
 
-    private fun collect(
-        table: DropTable,
-        weight: Double,
-        out: MutableList<Row>,
-        guaranteed: Boolean,
-        rate: Double = 1.0,
-    ) {
-        val entries = table.entries
-        if (entries.isEmpty()) return
-        // The same chances the roll uses (DropTableFactory.lineChances); a nested table is rolled at 1x inside it.
-        val chances = if (guaranteed) null else DropTableFactory.lineChances(table, rate)
-        for ((at, entry) in entries.withIndex()) {
-            val chance = if (guaranteed) weight else weight * chances!![at]
-            when (val drop = entry.drop) {
-                is DropEntry.ItemDrop -> out += Row(drop.item.id, drop.item.amount.toString(), chance)
-                is DropEntry.ItemRangeDrop -> out += Row(drop.item.id, "${drop.quantityRange.first}-${drop.quantityRange.last}", chance)
-                is DropEntry.MultiDrop -> drop.items.forEach { out += Row(it.id, it.amount.toString(), chance) }
-                is DropEntry.TableDrop -> collect(drop.table, chance, out, guaranteed = false)
-                DropEntry.NothingDrop -> Unit
-            }
-        }
-    }
-
-    fun open(
-        player: Player,
-        npcId: Int? = null,
-    ) {
-        val ids = DropTableFactory.tableIds()
-        val npc = npcId ?: player.attr[NPC] ?: (if (DEFAULT_NPC in ids) DEFAULT_NPC else ids.minOrNull() ?: return)
-        player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
-        // The window's X, like the Info window's (QuestTab.openInfo): without events the client never sends the click.
-        player.setInterfaceEvents(INTERFACE, L.I_CLOSE, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(INTERFACE, L.DV_FIND_DROP, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(INTERFACE, L.DV_FIND_NPC, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(INTERFACE, L.DV_PREVIOUS, -1..-1, EVENTS_OP1)
-        player.setInterfaceEvents(INTERFACE, L.DV_NEXT, -1..-1, EVENTS_OP1)
-        for (i in 0 until L.DV_RESULTS) player.setInterfaceEvents(INTERFACE, L.DV_RESULT_FIRST + i, -1..-1, EVENTS_OP1)
-        showResults(player, player.attr[RESULTS] ?: emptyList())
-        show(player, npc, 0)
-    }
+    class Slot(val header: Boolean, val key: String, val text: String, val sub: String?, val icon: String?, val open: Boolean, val gold: Boolean, val model: Int, val item: Int = -1, val selected: Boolean = false)
 
     fun isOpen(player: Player): Boolean = player.interfaces.isVisible(INTERFACE)
 
-    /** Shows [npcId]'s drops from [page]. */
-    fun show(
-        player: Player,
-        npcId: Int,
-        page: Int,
-    ) {
-        player.attr[NPC] = npcId
+    fun favourites(player: Player): List<String> = (player.attr[FAVOURITES] ?: "").split(';').filter { it.isNotBlank() }
+
+    fun recent(player: Player): List<String> = (player.attr[RECENT] ?: "").split(';').filter { it.isNotBlank() }
+
+    private fun openGroups(player: Player): MutableSet<String> = player.attr[OPEN_GROUPS] ?: DEFAULT_OPEN.toMutableSet().also { player.attr[OPEN_GROUPS] = it }
+
+    private fun openLines(player: Player): MutableSet<String> = player.attr[OPEN_LINES] ?: HashSet<String>().also { player.attr[OPEN_LINES] = it }
+
+    fun open(player: Player, key: String? = null) {
+        val sources = DropSources.all(player)
+        val chosen = DropSources.byKey(player, key) ?: DropSources.byKey(player, player.attr[SELECTED]) ?: DropSources.byKey(player, DEFAULT_KEY) ?: sources.firstOrNull() ?: return
+        player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
+        N108Ui.reset(player, INTERFACE)
+        player.setInterfaceEvents(INTERFACE, V.CLOSE, -1..-1, EVENTS_OP1)
+        player.setInterfaceEvents(INTERFACE, V.SEARCH_HIT, -1..-1, EVENTS_OP1)
+        player.setInterfaceEvents(INTERFACE, V.STAR_ON, -1..-1, EVENTS_OP1)
+        player.setInterfaceEvents(INTERFACE, V.STAR_OFF, -1..-1, EVENTS_OP1)
+        player.setInterfaceEvents(INTERFACE, V.MAP, -1..-1, EVENTS_OP1)
+        for (r in 0 until V.ROW_SLOTS) player.setInterfaceEvents(INTERFACE, V.row(r) + V.R_TOGGLE, -1..-1, EVENTS_OP1)
+        for (s in 0 until V.LIST_SLOTS) {
+            player.setInterfaceEvents(INTERFACE, V.slot(s) + V.L_VIEW, -1..-1, EVENTS_OP1)
+            player.setInterfaceEvents(INTERFACE, V.slot(s) + V.L_TOGGLE, -1..-1, EVENTS_OP1)
+        }
+        player.attr.remove(QUERY)
+        player.attr.remove(PICKED_ITEM)
+        N108Ui.op(player, INTERFACE, V.SEARCH_CLEAR, "Clear")
+        player.setInterfaceEvents(INTERFACE, V.SEARCH_CLEAR, -1..-1, EVENTS_OP1)
+        N108Ui.field(player, INTERFACE, V.SEARCH_TEXT, V.SEARCH_HIT, V.SEARCH_ON, V.SEARCH_CLEAR, "Search monster or item", "")
+        show(player, chosen.key)
+    }
+
+    /** Shows [key] on the right and redraws the list (its selection follows). */
+    fun show(player: Player, key: String) {
+        val source = DropSources.byKey(player, key) ?: return
+        if (player.attr[SELECTED] != key) openLines(player).clear()
+        player.attr[SELECTED] = key
+        player.attr[RECENT] = (listOf(key) + recent(player).filter { it != key }).take(3).joinToString(";")
+        drawList(player)
+        drawHead(player, source)
+        drawRows(player, source)
+        QuestTab.refreshDropsPanel(player)
+    }
+
+    // ------------------------------------------------------------------ the list
+
+    private fun groupOf(source: DropSources.Source): String = source.group.name
+
+    fun buildList(player: Player): List<Slot> {
         val world = player.world
-        val def = world.definitions.getNullable(NpcDef::class.java, npcId)
-        val name = def?.name?.takeIf { it.isNotBlank() && it != "null" } ?: "NPC $npcId"
-        player.setComponentText(INTERFACE, L.I_TITLE, name)
-        player.setComponentText(INTERFACE, L.DV_STATS, stats(player, npcId))
-        val rows = rows(player, npcId)
-        val pages = maxOf(1, (rows.size + L.DV_ROWS - 1) / L.DV_ROWS)
-        val shown = page.coerceIn(0, pages - 1)
-        player.attr[PAGE] = shown
-        for (r in 0 until L.DV_ROWS) {
-            val base = L.dvRow(r)
-            val row = rows.getOrNull(shown * L.DV_ROWS + r)
-            if (row == null) {
-                player.setComponentHidden(INTERFACE, base + L.DV_ROW_ITEM, hidden = true)
-                player.setComponentText(INTERFACE, base + L.DV_ROW_NAME, "")
-                player.setComponentText(INTERFACE, base + L.DV_ROW_QUANTITY, "")
-                player.setComponentText(INTERFACE, base + L.DV_ROW_RARITY, "")
+        val query = player.attr[QUERY]?.trim()?.lowercase().orEmpty()
+        val selected = player.attr[SELECTED]
+        val sources = DropSources.all(player)
+        val out = ArrayList<Slot>()
+        fun entry(s: DropSources.Source, sub: String? = null) =
+            Slot(false, s.key, s.name, sub, null, false, false, s.modelNpc, selected = s.key == selected && sub == null)
+        if (query.length >= 2) {
+            val npcs = sources.filter { it.name.lowercase().contains(query) }.sortedBy { it.name.lowercase() }
+            if (npcs.isNotEmpty()) {
+                out += Slot(true, "Q:MONSTERS", "Monsters", null, null, true, true, -1)
+                npcs.take(40).forEach { out += entry(it) }
+            }
+            // Items: every item a source can give whose name holds the text (one row per item).
+            val items = LinkedHashMap<Int, String>()
+            for (s in sources) {
+                for (item in DropSources.itemChances(DropSources.view(player, s)).keys) {
+                    if (item in items) continue
+                    val name = DropSources.itemName(world, item)
+                    if (name.lowercase().contains(query)) items[item] = name
+                }
+            }
+            if (items.isNotEmpty()) {
+                val sorted = items.entries.sortedWith(compareBy({ !it.value.lowercase().startsWith(query) }, { it.value.lowercase() })).take(30)
+                val picked = player.attr[PICKED_ITEM]?.takeIf { it in items } ?: sorted.first().key
+                player.attr[PICKED_ITEM] = picked
+                out += Slot(true, "Q:ITEM", "Item", null, null, true, true, -1)
+                sorted.forEach { (id, name) -> out += Slot(false, "item:$id", name, null, null, false, false, -1, item = id, selected = id == picked) }
+                out += Slot(true, "Q:BY", "Dropped by", null, null, true, false, -1)
+                val by = sources.mapNotNull { s ->
+                    val c = DropSources.itemChances(DropSources.view(player, s))[picked] ?: return@mapNotNull null
+                    Triple(s, c.first, c.second)
+                }.sortedByDescending { it.second }
+                by.take(60).forEach { (s, your, _) ->
+                    val prefix = if (s.kind == DropSources.Kind.BREACH) "<col=ff5a3c>Breach</col><col=9a9083> · </col>" else "<col=9a9083>Your chance </col>"
+                    out += Slot(false, s.key, s.name, prefix + "<col=${N108Ui.rarityColour(your)}>${N108Ui.chance(your)}</col>", null, false, false, s.modelNpc, selected = s.key == selected)
+                }
+            } else {
+                player.attr.remove(PICKED_ITEM)
+            }
+            if (out.isEmpty()) out += Slot(true, "Q:NONE", "Nothing found", null, null, false, false, -1)
+            return out.take(V.LIST_SLOTS)
+        }
+        val open = openGroups(player)
+        fun group(id: String, title: String, icon: String?, gold: Boolean, members: List<DropSources.Source>) {
+            val isOpen = id in open
+            out += Slot(true, "G:$id", title, null, icon, isOpen, gold, -1)
+            if (isOpen) members.forEach { out += entry(it) }
+        }
+        val favs = favourites(player).mapNotNull { k -> sources.firstOrNull { it.key == k } }
+        group("FAVOURITES", "Favourites", "star_gold", true, favs)
+        group("DEADMAN", "Deadman", "skull12", true, sources.filter { it.group == DropSources.Group.DEADMAN }.sortedWith(compareBy({ DEADMAN_ORDER.indexOf(it.kind) }, { it.name.lowercase() })))
+        group("BOSSES", "Bosses", null, false, sources.filter { it.group == DropSources.Group.BOSSES }.sortedBy { it.name.lowercase() })
+        val monsters = sources.filter { it.group == DropSources.Group.MONSTERS }.sortedWith(compareBy({ it.name.lowercase() }, { it.level }))
+        val monstersOpen = "MONSTERS" in open
+        out += Slot(true, "G:MONSTERS", "Monsters", null, null, monstersOpen, false, -1)
+        if (monstersOpen) {
+            monsters.groupBy { it.name.first().uppercaseChar().let { c -> if (c in 'A'..'Z') c.toString() else "#" } }.toSortedMap().forEach { (letter, list) ->
+                val id = "L:$letter"
+                val isOpen = id in open
+                out += Slot(true, "G:$id", "   $letter", null, null, isOpen, false, -1)
+                if (isOpen) list.forEach { s -> out += entry(s).let { e -> if (list.count { it.name == s.name } > 1) Slot(false, e.key, "${s.name} (${s.level})", null, null, false, false, s.modelNpc, selected = e.selected) else e } }
+            }
+        }
+        return out.take(V.LIST_SLOTS)
+    }
+
+    private fun drawList(player: Player) {
+        val slots = buildList(player)
+        player.attr[LIST] = slots
+        val i = INTERFACE
+        var y = 0
+        val models = ArrayList<N108Ui.Model>()
+        val fonts = ArrayList<Pair<Int, String>>()
+        for (s in 0 until V.LIST_SLOTS) {
+            val base = V.slot(s)
+            val slot = slots.getOrNull(s)
+            if (slot == null) {
+                for (c in 0 until V.LIST_STRIDE) N108Ui.hidden(player, i, base + c, true)
                 continue
             }
-            val item = world.definitions.getNullable(ItemDef::class.java, row.item)
-            player.setComponentItem(INTERFACE, base + L.DV_ROW_ITEM, row.item, row.quantity.substringBefore('-').toIntOrNull() ?: 1)
-            player.setComponentHidden(INTERFACE, base + L.DV_ROW_ITEM, hidden = false)
-            player.setComponentText(INTERFACE, base + L.DV_ROW_NAME, item?.name ?: "Item ${row.item}")
-            player.setComponentText(INTERFACE, base + L.DV_ROW_QUANTITY, "<col=ff981f>Amount:</col><br>${row.quantity}")
-            player.setComponentText(INTERFACE, base + L.DV_ROW_RARITY, "<col=ff981f>Chance:</col><br><col=${colour(row.chance)}>${rarity(row.chance)}</col>")
+            if (slot.header) {
+                N108Ui.sprite(player, i, base + V.L_BG, "dv_grp")
+                N108Ui.pos(player, i, base + V.L_BG, 0, y)
+                N108Ui.hidden(player, i, base + V.L_BG, false)
+                val arrow = slot.open
+                N108Ui.sprite(player, i, base + V.L_ARROW, if (arrow) "ar_open" else "ar_shut")
+                N108Ui.pos(player, i, base + V.L_ARROW, if (arrow) 5 else 7, y + if (arrow) 7 else 5)
+                N108Ui.hidden(player, i, base + V.L_ARROW, slot.key.startsWith("Q:"))
+                var textX = if (slot.key.startsWith("Q:")) 6 else 18
+                if (slot.icon != null) {
+                    N108Ui.sprite(player, i, base + V.L_ICON, slot.icon)
+                    N108Ui.pos(player, i, base + V.L_ICON, textX, y + if (slot.icon == "star_gold") 0 else 2)
+                    N108Ui.hidden(player, i, base + V.L_ICON, false)
+                    textX += N108Ui.width(slot.icon) + 3
+                } else {
+                    N108Ui.hidden(player, i, base + V.L_ICON, true)
+                }
+                N108Ui.hidden(player, i, base + V.L_THUMB, true)
+                N108Ui.hidden(player, i, base + V.L_MODEL, true)
+                N108Ui.text(player, i, base + V.L_TEXT, "<col=${if (slot.gold) "ffcf4a" else "ff981f"}>${slot.text}</col>")
+                fonts += (base + V.L_TEXT) to "b12_full"
+                N108Ui.pos(player, i, base + V.L_TEXT, textX, y - 4)
+                N108Ui.hidden(player, i, base + V.L_TEXT, false)
+                N108Ui.hidden(player, i, base + V.L_SUB, true)
+                N108Ui.hidden(player, i, base + V.L_VIEW, true)
+                N108Ui.pos(player, i, base + V.L_TOGGLE, 0, y)
+                N108Ui.hidden(player, i, base + V.L_TOGGLE, slot.key.startsWith("Q:"))
+                y += 17
+                continue
+            }
+            // An entry: 24 high, the thumb and model at the left, one line or name + chance.
+            N108Ui.sprite(player, i, base + V.L_BG, "dv_lisel")
+            N108Ui.pos(player, i, base + V.L_BG, 0, y)
+            N108Ui.hidden(player, i, base + V.L_BG, !slot.selected)
+            N108Ui.hidden(player, i, base + V.L_ARROW, true)
+            N108Ui.hidden(player, i, base + V.L_ICON, true)
+            N108Ui.pos(player, i, base + V.L_THUMB, 4, y + 1)
+            N108Ui.hidden(player, i, base + V.L_THUMB, false)
+            N108Ui.pos(player, i, base + V.L_MODEL, 5, y + 2)
+            if (slot.item >= 0) {
+                N108Ui.item(player, i, base + V.L_MODEL, slot.item, 1)
+                N108Ui.hidden(player, i, base + V.L_MODEL, false)
+            } else if (slot.model >= 0) {
+                models += N108Ui.Model(N108Ui.hash(i, base + V.L_MODEL), slot.model, thumbZoom(player, slot.model), 0, false)
+                N108Ui.hidden(player, i, base + V.L_MODEL, false)
+            } else {
+                N108Ui.hidden(player, i, base + V.L_MODEL, true)
+            }
+            val colour = if (slot.selected) "fff4d8" else "ece2cf"
+            fonts += (base + V.L_TEXT) to "p11_full"
+            if (slot.sub != null) {
+                N108Ui.text(player, i, base + V.L_TEXT, "<col=$colour>${N108Ui.fitP11(player.world, slot.text, 100)}</col>")
+                N108Ui.pos(player, i, base + V.L_SUB, 30, y + 12)
+                N108Ui.text(player, i, base + V.L_SUB, slot.sub)
+                N108Ui.hidden(player, i, base + V.L_SUB, false)
+                // the name on the upper line
+                N108Ui.pos(player, i, base + V.L_TEXT, 30, y - 6)
+            } else {
+                N108Ui.pos(player, i, base + V.L_TEXT, 30, y)
+                N108Ui.text(player, i, base + V.L_TEXT, "<col=${if (slot.item >= 0) "ffe7a8" else colour}>${N108Ui.fitP11(player.world, slot.text, 100)}</col>")
+                N108Ui.hidden(player, i, base + V.L_SUB, true)
+            }
+            N108Ui.hidden(player, i, base + V.L_TEXT, false)
+            N108Ui.pos(player, i, base + V.L_VIEW, 0, y)
+            N108Ui.hidden(player, i, base + V.L_VIEW, false)
+            N108Ui.hidden(player, i, base + V.L_TOGGLE, true)
+            y += 24
         }
-        val empty = rows.isEmpty()
-        player.setComponentHidden(INTERFACE, L.DV_EMPTY, hidden = !empty)
-        if (empty) player.setComponentText(INTERFACE, L.DV_EMPTY, "$name has no drop table.")
-        player.setComponentText(INTERFACE, L.DV_PAGE_TEXT, "Page ${shown + 1} / $pages")
+        if (models.isNotEmpty()) N108Ui.models(player, models)
+        N108Ui.fonts(player, i, fonts)
+        scroll(player, V.LIST, V.LIST_SCROLLBAR, maxOf(y, V.LIST_H))
     }
 
-    fun page(
-        player: Player,
-        delta: Int,
-    ) {
-        val npc = player.attr[NPC] ?: return
-        show(player, npc, (player.attr[PAGE] ?: 0) + delta)
+    /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
+    @Volatile var THUMB_BASE = 1500
+    @Volatile var THUMB_PER = 1100
+    @Volatile var HEAD_BASE = 1500
+    @Volatile var HEAD_PER = 1100
+
+    private fun size(player: Player, npc: Int) = player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npc)?.size ?: 1
+
+    /** Zoom of a full npc model in a 20 x 20 thumb: bigger npcs further away. */
+    fun thumbZoom(player: Player, npc: Int): Int = THUMB_BASE + THUMB_PER * (size(player, npc) - 1)
+
+    fun headZoom(player: Player, npc: Int): Int = HEAD_BASE + HEAD_PER * (size(player, npc) - 1)
+
+    private fun scroll(player: Player, layer: Int, scrollbar: Int, height: Int) = N108Ui.scroll(player, INTERFACE, layer, scrollbar, height)
+
+    /** A click in the list. */
+    fun listClick(player: Player, slotIndex: Int, toggle: Boolean) {
+        val slot = player.attr[LIST]?.getOrNull(slotIndex) ?: return
+        if (toggle || slot.header) {
+            if (!slot.key.startsWith("G:")) return
+            val id = slot.key.removePrefix("G:")
+            val open = openGroups(player)
+            if (!open.remove(id)) {
+                // One letter of the Monsters list open at a time (the list holds [V.LIST_SLOTS] lines).
+                if (id.startsWith("L:")) open.removeIf { it.startsWith("L:") }
+                open += id
+            }
+            drawList(player)
+            return
+        }
+        if (slot.key.startsWith("item:")) {
+            player.attr[PICKED_ITEM] = slot.key.removePrefix("item:").toInt()
+            drawList(player)
+            DropSources.byKey(player, player.attr[SELECTED])?.let { drawRows(player, it) }
+            return
+        }
+        show(player, slot.key)
     }
 
-    /** "Always", or "1 / N" rounded like the wiki's drop tables. */
-    fun rarity(chance: Double): String =
-        when {
-            chance >= 0.9999 -> "Always"
-            chance <= 0.0 -> "Never"
+    // ------------------------------------------------------------------ the head
+
+    private fun drawHead(player: Player, source: DropSources.Source) {
+        val world = player.world
+        val i = INTERFACE
+        // Model: the npc; the chest has none of its own - Zemouregal, who comes with it.
+        val modelNpc = if (source.kind == DropSources.Kind.CHEST) DeadmanChestIds.guardianNpc else source.modelNpc
+        if (modelNpc > 0) {
+            N108Ui.models(player, listOf(N108Ui.Model(N108Ui.hash(i, V.MODEL), modelNpc, headZoom(player, modelNpc), 0, true)))
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else {
+            N108Ui.hidden(player, i, V.MODEL, true)
+        }
+        N108Ui.text(player, i, V.NAME, source.name)
+        val starX = V.NAME_X + N108Ui.b12(world, source.name) + 4
+        val fav = source.key in favourites(player)
+        N108Ui.pos(player, i, V.STAR_ON, starX, 30)
+        N108Ui.pos(player, i, V.STAR_OFF, starX, 30)
+        N108Ui.hidden(player, i, V.STAR_ON, !fav)
+        N108Ui.hidden(player, i, V.STAR_OFF, fav)
+        N108Ui.text(player, i, V.SUB, subLine(player, source))
+        // Labels.
+        val place = DropViewerPlaces.of(world, source)
+        val tags = ArrayList<Triple<String, String, String>>() // sprite, text, colour
+        if (source.kind == DropSources.Kind.BREACH) {
+            tags += Triple("tag_breach", "Breach", "ff5a3c")
+            if (place?.multi != false) tags += Triple("tag_multi", "Multi", "ffdc6a") else tags += Triple("tag_singles", "Singles", "ece2cf")
+            tags += Triple("tag_top16", "Top 16 loot", "ffcf4a")
+        } else if (place != null) {
+            if (place.wilderness > 0) tags += Triple("tag_wild", "Wild ${place.wilderness}", "ff5a3c")
+            tags += if (place.multi) Triple("tag_multi", "Multi", "ffdc6a") else Triple("tag_singles", "Singles", "ece2cf")
+            tags += if (place.safe) Triple("tag_safe", "Safe", "56e156") else Triple("tag_dangerous", "Dangerous", "ff5a3c")
+        }
+        var x = V.NAME_X
+        for (t in 0 until V.TAGS) {
+            val box = V.TAG_FIRST + t * 2
+            val tag = tags.getOrNull(t)
+            N108Ui.hidden(player, i, box, tag == null)
+            N108Ui.hidden(player, i, box + 1, tag == null)
+            if (tag == null) continue
+            val w = N108Ui.width(tag.first)
+            N108Ui.sprite(player, i, box, tag.first)
+            N108Ui.pos(player, i, box, x, V.TAGS_Y)
+            val design = mapOf("tag_wild" to "Wild 44", "tag_multi" to "Multi")[tag.first]
+            val textX = if (design != null) x + w - 5 - N108Ui.p11(world, design) else x + 5
+            N108Ui.pos(player, i, box + 1, textX, V.TAGS_Y)
+            N108Ui.text(player, i, box + 1, "<col=${tag.third}>${tag.second}</col>")
+            x += w + 3
+        }
+        // No place (a breach that is closed, an npc nobody spawned): the button stays, greyed out, without its option.
+        N108Ui.hidden(player, i, V.MAP, place == null)
+        N108Ui.hidden(player, i, V.MAP_TEXT, false)
+        N108Ui.text(player, i, V.MAP_TEXT, if (place == null) "<col=6f6556>Show on map</col>" else "Show on map")
+        // The player's own bracket only (owner).
+        val tier = AnnihilationTier.of(player)
+        val boosted = source.kind in setOf(DropSources.Kind.NPC, DropSources.Kind.BREACH, DropSources.Kind.BARROWS)
+        N108Ui.text(player, i, V.BRK_A, "Your bracket:")
+        val a = N108Ui.p11(world, "Your bracket:")
+        N108Ui.pos(player, i, V.BRK_B, 184 + a + 4, 106)
+        N108Ui.text(player, i, V.BRK_B, tier.label)
+        val b = N108Ui.b12(world, tier.label)
+        N108Ui.pos(player, i, V.BRK_C, 184 + a + 4 + b + 4, 106)
+        N108Ui.size(player, i, V.BRK_C, 230, 20)
+        val rate = tier.dropRate.let { if (it % 1.0 == 0.0) it.toInt().toString() else it.toString() }
+        N108Ui.text(player, i, V.BRK_C, if (boosted) "·  ${rate}x chance on rare drops" else "·  no boost on this loot")
+        N108Ui.text(player, i, V.COMBAT, "Combat ${player.combatLevel}")
+    }
+
+    private fun subLine(player: Player, source: DropSources.Source): String {
+        val kc = KillCounts.get(player, source.key)
+        val dot = " <col=9a9083>·</col> "
+        return when (source.kind) {
+            DropSources.Kind.CHEST -> {
+                val active = DeadmanChestWorld.activeTimed()
+                val where = if (active != null) "Now at <col=ffffff>${active.name}</col>" else if (DeadmanChestWorld.ticksUntilTimed >= 0) "Next in <col=ffffff>${DeadmanTabValues.duration((DeadmanChestWorld.ticksUntilTimed * 6L + 9) / 10)}</col>" else "Every 30 min, random spot"
+                "$where${dot}Opened <col=ffffff>${N108Ui.number(kc)}</col>"
+            }
+            DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
             else -> {
-                val n = 1.0 / chance
-                if (n < 10) "1 / ${"%.1f".format(java.util.Locale.US, n).removeSuffix(".0")}" else "1 / ${Math.round(n)}"
-            }
-        }
-
-    /** The reference's colours: Always blue, common green, uncommon orange, rare red. */
-    fun colour(chance: Double): String =
-        when {
-            chance >= 0.9999 -> "3d7dff"
-            chance >= 1.0 / 25 -> "0dc10d"
-            chance >= 1.0 / 200 -> "ff981f"
-            else -> "ff0000"
-        }
-
-    private fun stats(
-        player: Player,
-        npcId: Int,
-    ): String {
-        val def = player.world.definitions.getNullable(NpcDef::class.java, npcId)
-        val combat = player.world.plugins.allNpcCombatDefs()[npcId]
-        val level = def?.combatLevel ?: -1
-        val parts = ArrayList<String>()
-        if (level > 0) parts += "Combat: <col=ffffff>$level</col>"
-        if (combat != null) {
-            parts += "Hitpoints: <col=ffffff>${combat.lifepoints}</col>"
-            parts += "Attack style: <col=ffffff>${combat.attackStyleType.name.lowercase().replace('_', ' ').replaceFirstChar { it.uppercase() }}</col>"
-            parts += "Aggressive: <col=ffffff>${if (combat.aggressiveRadius > 0) "Yes" else "No"}</col>"
-            if (combat.slayerReq > 1) parts += "Slayer: <col=ffffff>${combat.slayerReq}</col>"
-        }
-        val rows = rows(player, npcId).size
-        return "<col=ff981f>" + parts.joinToString("   ") + "</col><br><col=ff981f>Drops: <col=ffffff>$rows</col></col>"
-    }
-
-    // ---- Find NPC / Find Drop --------------------------------------------------------------------------------------------
-
-    /** Sources with a drop table whose name contains [query]: one per name + level. */
-    fun findNpc(
-        player: Player,
-        query: String,
-    ): List<Int> {
-        val q = query.trim().lowercase()
-        if (q.isEmpty()) return emptyList()
-        return distinct(player, DropTableFactory.tableIds().filter { id -> npcName(player, id).lowercase().contains(q) })
-    }
-
-    /** Sources whose table can drop an item whose name contains [query]. */
-    fun findDrop(
-        player: Player,
-        query: String,
-    ): List<Int> {
-        val q = query.trim().lowercase()
-        if (q.isEmpty()) return emptyList()
-        val defs = player.world.definitions
-        return distinct(
-            player,
-            DropTableFactory.tableIds().filter { id ->
-                rows(player, id).any { row -> defs.getNullable(ItemDef::class.java, row.item)?.name?.lowercase()?.contains(q) == true }
-            },
-        )
-    }
-
-    private fun distinct(
-        player: Player,
-        ids: List<Int>,
-    ): List<Int> {
-        val seen = HashSet<String>()
-        return ids.sorted().filter { id ->
-            val name = npcName(player, id)
-            name.isNotBlank() && seen.add("$name|${player.world.definitions.getNullable(NpcDef::class.java, id)?.combatLevel}")
-        }.sortedBy { npcName(player, it) }
-    }
-
-    fun npcName(
-        player: Player,
-        id: Int,
-    ): String = player.world.definitions.getNullable(NpcDef::class.java, id)?.name?.takeIf { it != "null" } ?: ""
-
-    fun showResults(
-        player: Player,
-        ids: List<Int>,
-    ) {
-        player.attr[RESULTS] = ids
-        for (i in 0 until L.DV_RESULTS) {
-            val id = ids.getOrNull(i)
-            player.setComponentHidden(INTERFACE, L.DV_RESULT_FIRST + i, hidden = id == null)
-            if (id != null) {
-                val level = player.world.definitions.getNullable(NpcDef::class.java, id)?.combatLevel ?: -1
-                player.setComponentText(INTERFACE, L.DV_RESULT_FIRST + i, npcName(player, id) + if (level > 0) " ($level)" else "")
+                val level = if (source.level > 0) "<col=ffff00>Level ${source.level}</col>$dot" else ""
+                "${level}Kill count <col=ffffff>${N108Ui.number(kc)}</col>"
             }
         }
     }
 
-    fun result(
-        player: Player,
-        index: Int,
-    ) {
-        val id = player.attr[RESULTS]?.getOrNull(index) ?: return
-        show(player, id, 0)
+    // ------------------------------------------------------------------ the lines
+
+    class Row(val line: DropSources.Line, val level: Int)
+
+    fun rowsOf(player: Player, view: DropSources.View): List<Row> {
+        val open = openLines(player)
+        val picked = player.attr[PICKED_ITEM]
+        val out = ArrayList<Row>()
+        fun add(line: DropSources.Line, level: Int) {
+            out += Row(line, level)
+            if (line.tag != DropSources.Tag.TABLE) return
+            // A table opens when clicked, or by itself when it holds the item searched for.
+            val holds = picked != null && line.kids.any { it.item == picked || it.kids.any { k -> k.item == picked } }
+            if (line.key in open || holds) line.kids.forEach { add(it, level + 1) }
+        }
+        view.lines.forEach { add(it, 0) }
+        return out
     }
+
+    private fun drawRows(player: Player, source: DropSources.Source) {
+        val world = player.world
+        val i = INTERFACE
+        val view = DropSources.view(player, source)
+        // Always bar.
+        var x = 169 + N108Ui.p11(world, "Always:") + 7
+        for (a in 0 until V.ALWAYS) {
+            val base = V.ALWAYS_FIRST + a * 3
+            val line = view.always.getOrNull(a)
+            N108Ui.hidden(player, i, base, line == null)
+            N108Ui.hidden(player, i, base + 1, line == null && !(a == 0 && view.always.isEmpty()))
+            N108Ui.hidden(player, i, base + 2, true)
+            if (line == null) {
+                if (a == 0 && view.always.isEmpty()) {
+                    N108Ui.pos(player, i, base + 1, x, 126)
+                    N108Ui.text(player, i, base + 1, "<col=7a7064>nothing</col>")
+                }
+                continue
+            }
+            N108Ui.item(player, i, base, DropSources.picture(world, line.item), 1)
+            N108Ui.pos(player, i, base, x, 128)
+            x += 18
+            val text = line.name + (line.note?.let { " <col=9a9083>($it)</col>" } ?: "")
+            N108Ui.pos(player, i, base + 1, x, 126)
+            N108Ui.text(player, i, base + 1, text)
+            x += N108Ui.p11(world, text) + 9
+        }
+        val rows = rowsOf(player, view)
+        player.attr[ROWS] = rows.map { it.line.key }
+        val picked = player.attr[PICKED_ITEM]
+        val have = CollectionLog.entries(player).keys
+        val logItems = runCatching { CollectionLogPages.allItems(player) }.getOrDefault(emptySet())
+        var odd = false
+        for (r in 0 until V.ROW_SLOTS) {
+            val base = V.row(r)
+            val row = rows.getOrNull(r)
+            if (row == null) {
+                for (c in 0 until V.ROW_STRIDE) N108Ui.hidden(player, i, base + c, true)
+                continue
+            }
+            val l = row.line
+            val y = r * V.ROW_H
+            val hl = picked != null && l.item == picked && l.tag != DropSources.Tag.TABLE
+            val bg = when {
+                hl -> "dv_row_hl"
+                row.level >= 2 -> "dv_row_kid2"
+                row.level == 1 -> "dv_row_kid"
+                odd -> "dv_row_odd"
+                else -> "dv_row_even"
+            }
+            if (row.level == 0) odd = !odd
+            N108Ui.sprite(player, i, base + V.R_BG, bg)
+            N108Ui.hidden(player, i, base + V.R_BG, false)
+            val indent = row.level * 12
+            N108Ui.item(player, i, base + V.R_ITEM, DropSources.picture(world, l.item), 1)
+            N108Ui.pos(player, i, base + V.R_ITEM, 4 + indent, y)
+            N108Ui.hidden(player, i, base + V.R_ITEM, l.item < 0)
+            // The name never runs into the Qty column (its right edge 182 minus the quantity), the tag counted in.
+            val tagRoom = when {
+                l.tag == DropSources.Tag.PET -> N108Ui.width("tag_pet") + 4
+                l.tag == DropSources.Tag.TABLE -> 10
+                else -> 14
+            }
+            val room = 182 - N108Ui.p11(world, l.quantity) - 8 - (30 + indent) - tagRoom
+            val name = N108Ui.fitP11(world, l.name + (l.note?.let { " <col=9a9083>($it)</col>" } ?: ""), room)
+            N108Ui.pos(player, i, base + V.R_NAME, 30 + indent, y)
+            N108Ui.text(player, i, base + V.R_NAME, "<col=${if (row.level > 0) "d8ccb4" else "ece2cf"}>$name</col>")
+            N108Ui.hidden(player, i, base + V.R_NAME, false)
+            val tagX = 30 + indent + N108Ui.p11(world, name) + 4
+            val tag =
+                when {
+                    l.tag == DropSources.Tag.PET -> "tag_pet"
+                    l.tag == DropSources.Tag.TABLE -> if (l.key in openLines(player) || (picked != null && l.kids.any { it.item == picked })) "tw_open" else "tw_shut"
+                    l.item in logItems && l.item in have -> "ok"
+                    else -> null
+                }
+            N108Ui.hidden(player, i, base + V.R_TAG, tag == null)
+            if (tag != null) {
+                N108Ui.sprite(player, i, base + V.R_TAG, tag)
+                val ty = when (tag) {
+                    "tw_open" -> y + 7
+                    "tw_shut" -> y + 5
+                    "ok" -> y + 3
+                    else -> y + 3
+                }
+                N108Ui.pos(player, i, base + V.R_TAG, tagX + if (tag.startsWith("tw")) 1 else 0, ty)
+            }
+            N108Ui.text(player, i, base + V.R_QTY, l.quantity)
+            N108Ui.hidden(player, i, base + V.R_QTY, false)
+            N108Ui.text(player, i, base + V.R_YOUR, "<col=${N108Ui.rarityColour(l.your)}>${N108Ui.chance(l.your)}</col>")
+            N108Ui.hidden(player, i, base + V.R_YOUR, false)
+            val same = Math.abs(l.your - l.normal) < 1e-12
+            N108Ui.text(player, i, base + V.R_NORMAL, if (same) "-" else N108Ui.chance(l.normal))
+            N108Ui.hidden(player, i, base + V.R_NORMAL, false)
+            N108Ui.hidden(player, i, base + V.R_TOGGLE, l.tag != DropSources.Tag.TABLE)
+        }
+        N108Ui.hidden(player, i, V.EMPTY, rows.isNotEmpty())
+        if (rows.isEmpty()) N108Ui.text(player, i, V.EMPTY, if (view.always.isEmpty()) "${source.name} drops nothing." else "Only the Always items.")
+        scroll(player, V.ROWS, V.ROWS_SCROLLBAR, maxOf(rows.size * V.ROW_H, V.ROWS_H))
+    }
+
+    fun rowClick(player: Player, index: Int) {
+        val key = player.attr[ROWS]?.getOrNull(index) ?: return
+        val open = openLines(player)
+        if (!open.remove(key)) open += key
+        DropSources.byKey(player, player.attr[SELECTED])?.let { drawRows(player, it) }
+    }
+
+    // ------------------------------------------------------------------ search, favourite, map
+
+    /** `::uisearch <text>` from the window's text field (client RspsUi). */
+    fun search(player: Player, text: String) {
+        if (!isOpen(player)) return
+        val q = text.take(30)
+        if (q == (player.attr[QUERY] ?: "")) return
+        player.attr[QUERY] = q
+        player.attr.remove(PICKED_ITEM)
+        drawList(player)
+        DropSources.byKey(player, player.attr[SELECTED])?.let { drawRows(player, it) }
+    }
+
+    fun toggleFavourite(player: Player) {
+        val key = player.attr[SELECTED] ?: return
+        val favs = favourites(player).toMutableList()
+        if (!favs.remove(key)) favs += key
+        player.attr[FAVOURITES] = favs.joinToString(";")
+        DropSources.byKey(player, key)?.let { drawHead(player, it) }
+        drawList(player)
+    }
+
+    fun showOnMap(player: Player) {
+        val source = DropSources.byKey(player, player.attr[SELECTED]) ?: return
+        val place = DropViewerPlaces.of(player.world, source) ?: return
+        WorldMapPoint.open(player, place.tile)
+    }
+
+    fun itemName(player: Player, id: Int): String = player.world.definitions.getNullable(ItemDef::class.java, id)?.name ?: ""
+
+    /** The kill rate the viewer's "Your chance" uses (the roll's own). */
+    fun rate(player: Player): Double = DropTableFactory.killRate(player)
 }

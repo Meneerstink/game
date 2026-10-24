@@ -127,7 +127,7 @@ object VoidDropTables {
             val ref = drop.table
             if (ref != null) {
                 val nestedRoll = drop.roll ?: doc.tables.getValue(ref).roll
-                builder.table({ main { fill(doc, this, ref, nestedRoll) } }, slots = drop.chance)
+                builder.table({ main { fill(doc, this, ref, nestedRoll) } }, slots = drop.chance, label = DropTableNames.ofVoidRef(ref))
             } else if (drop.min == drop.max) {
                 builder.obj(drop.item, quantity = drop.min, slots = drop.chance)
             } else {

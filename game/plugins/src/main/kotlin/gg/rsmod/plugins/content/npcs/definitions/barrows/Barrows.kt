@@ -707,19 +707,25 @@ object Barrows {
     }
 
     /** One line of the rune/coin table: the roll values below [upTo] (above the previous line) give the item [make] builds. */
-    class TableLine(val upTo: Int, val make: (World) -> Item)
+    class TableLine(val upTo: Int, val item: Int, val min: Int, val max: Int) {
+        /** [min]..[max] inclusive (World.random(n) is 0..n). */
+        fun make(world: World): Item = Item(item, if (max > min) min + world.random(max - min) else min)
 
-    private val TABLE: List<TableLine> =
+        /** The Drop Viewer's quantity text. */
+        val quantity: String get() = if (max > min) "$min-$max" else "$min"
+    }
+
+    val TABLE: List<TableLine> =
         listOf(
-            TableLine(380) { w -> Item(Items.COINS_995, 2 + w.random(772)) },
-            TableLine(505) { w -> Item(Items.MIND_RUNE, 253 + w.random(83)) },
-            TableLine(630) { w -> Item(Items.CHAOS_RUNE, 112 + w.random(27)) },
-            TableLine(755) { w -> Item(Items.DEATH_RUNE, 70 + w.random(13)) },
-            TableLine(880) { w -> Item(Items.BLOOD_RUNE, 37 + w.random(6)) },
-            TableLine(1005) { w -> Item(Items.BOLT_RACK, 35 + w.random(5)) },
-            TableLine(1008) { Item(Items.LOOP_HALF_OF_A_KEY) },
-            TableLine(1011) { Item(Items.TOOTH_HALF_OF_A_KEY) },
-            TableLine(1012) { Item(Items.DRAGON_MED_HELM) },
+            TableLine(380, Items.COINS_995, 2, 774),
+            TableLine(505, Items.MIND_RUNE, 253, 336),
+            TableLine(630, Items.CHAOS_RUNE, 112, 139),
+            TableLine(755, Items.DEATH_RUNE, 70, 83),
+            TableLine(880, Items.BLOOD_RUNE, 37, 43),
+            TableLine(1005, Items.BOLT_RACK, 35, 40),
+            TableLine(1008, Items.LOOP_HALF_OF_A_KEY, 1, 1),
+            TableLine(1011, Items.TOOTH_HALF_OF_A_KEY, 1, 1),
+            TableLine(1012, Items.DRAGON_MED_HELM, 1, 1),
         )
 
     /**
@@ -763,10 +769,11 @@ object Barrows {
         val count = (player.attr[CHEST_COUNT] ?: 0) + 1
         player.attr[CHEST_COUNT] = count
         player.message(chestCountMessage(count))
-        // Owner 2026-10-03 20:3x (F8): no collection-log message for the loot.
-        newCollectionLogItems(player, items).forEach { id ->
-            player.message("New item added to your collection log: ${player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name}")
-        }
+        // N104: the Collection Log (one route for every reward; it sends the OSRS "New item added" line), then the chest's own
+        // record, which the log also reads.
+        runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "barrows", items.map { it.id to it.amount }) }
+        newCollectionLogItems(player, items)
+        runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBarrowsChest(player) }
         // The run's kills stay until the next run starts (ensureRun): while the tunnels collapse every door summons a brother
         // "whom you did not kill on that run" (OSRS Wiki Barrows/Strategies).
         refreshVarbits(player)

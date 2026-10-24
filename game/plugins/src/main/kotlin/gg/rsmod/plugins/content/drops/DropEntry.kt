@@ -23,6 +23,8 @@ sealed class DropEntry {
      */
     class TableDrop(
         val table: DropTable,
+        /** The name the Drop Viewer shows for this nested table ("Rare drop table"); null = its lines show inline. */
+        val label: String? = null,
     ) : DropEntry()
 
     /**

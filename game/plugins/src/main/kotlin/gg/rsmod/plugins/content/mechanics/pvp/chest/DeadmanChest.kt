@@ -229,11 +229,17 @@ object DeadmanChest {
         scrollRandom: Random = Random(),
     ): DeadmanChestLoot.Reward {
         val reward = DeadmanChestLoot.roll(random, ownsPet = { Pets.owns(player, it) })
+        // N104: the chest's count first, so the Collection Log records the item at this chest's number.
+        gg.rsmod.plugins.content.quests.tab.KillCounts.chestOpened(player)
+        runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onChestOpened(player) }
         when (reward) {
-            is DeadmanChestLoot.Reward.Item -> addOrDrop(player, reward.item, reward.amount)
+            is DeadmanChestLoot.Reward.Item -> {
+                addOrDrop(player, reward.item, reward.amount)
+                runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "chest", listOf(reward.item to reward.amount)) }
+            }
             is DeadmanChestLoot.Reward.Pet -> {
                 val outcome = Pets.awardOutcome(Pets.owns(player, reward.pet), Pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
-                if (outcome == Pets.Award.LOST) addOrDrop(player, reward.item, 1) else Pets.award(player, reward.pet, reward.item)
+                if (outcome == Pets.Award.LOST) addOrDrop(player, reward.item, 1) else Pets.award(player, reward.pet, reward.item, source = "chest")
             }
         }
         // N98 (owner 2026-10-22): 1 in 10 chests add a Dexterous or Arcane prayer scroll.
@@ -241,6 +247,7 @@ object DeadmanChest {
         gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(scrollRandom, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.CHEST_CHANCE)?.let {
             addOrDrop(player, it, 1)
             player.message("<col=ef1020>The chest also holds a prayer scroll!</col>")
+            runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "chest", listOf(it to 1)) }
         }
         return reward
     }

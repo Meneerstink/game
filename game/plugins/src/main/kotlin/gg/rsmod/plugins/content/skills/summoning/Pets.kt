@@ -392,6 +392,8 @@ object Pets {
         pet: String,
         item: Int = baseItem(pet) ?: -1,
         purchased: Boolean = false,
+        /** N104: the Drop Viewer entry the pet came from (its kill count goes into the Collection Log); null for skilling. */
+        source: String? = null,
     ): Award? {
         if (item < 0 || byItem[item]?.pet != pet) return null
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
@@ -399,6 +401,10 @@ object Pets {
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
         if (outcome != Award.DUPLICATE && outcome != Award.LOST) {
             PetMorphs.unlock(player, byItem.getValue(item))
+            if (!purchased) {
+                runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, listOf(item to 1)) }
+                    .onFailure { gg.rsmod.game.model.Trace.crash("collection log pet", it) }
+            }
             // N88 part 1 (Council N88): OSRS plays "Getting pet" on a new pet - Jagex synth 2320 triffid_appear, proven by waveform
             // match against the wiki's Getting_pet.ogg (dossier N88, correlation 0.997) and byte-identical in OSRS and both 667 caches.
             player.playSound(GETTING_PET_SOUND)
@@ -429,13 +435,19 @@ object Pets {
         purchased: Boolean = false,
     ): Award? = byItem[item]?.let { award(player, it.pet, item, purchased) }
 
-    /** The kill roll of `on_npc_killed`: 1 / [PetInfo.dropRate] per kill of one of the pet's boss npcs. */
+    /**
+     * The kill roll's chance per kill of [npcId] (1 / [PetInfo.dropRate], no Annihilation boost), 0 for an npc without a pet;
+     * [roll] and the Drop Viewer (N108) both read it.
+     */
+    fun dropChance(npcId: Int): Double = dropFor(npcId)?.let { 1.0 / it.dropRate } ?: 0.0
+
+    /** The kill roll of `on_npc_killed`: [dropChance] per kill of one of the pet's boss npcs. */
     fun roll(
         player: Player,
         npcId: Int,
     ) {
         val info = dropFor(npcId) ?: return
-        if (player.world.random(info.dropRate - 1) == 0) award(player, info.pet)
+        if (player.world.randomDouble() < dropChance(npcId)) award(player, info.pet, source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, npcId)?.key)
     }
 
     /** Once per cycle (familiar tick): follow like a familiar, without a familiar's arrival effect on a recovery teleport. */

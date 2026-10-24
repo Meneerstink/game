@@ -1,39 +1,233 @@
 package gg.rsmod.plugins.content.quests.tab
 
+import com.displee.cache.CacheLibrary
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.plugin.PluginRepository
+import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.content.drops.DropBoost
 import gg.rsmod.plugins.content.drops.DropTableFactory
+import gg.rsmod.plugins.content.drops.global.Rare
+import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
+import io.mockk.every
 import io.mockk.mockk
+import org.junit.BeforeClass
+import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertNotEquals
+import kotlin.test.assertTrue
 
-/** Drop Viewer (owner 2026-09-30): every chance is read from the table the kill rolls, the same way the roll reads it. */
+/**
+ * N108 / N104 night job 2026-10-24 (spec section E): the Drop Viewer's chances are the roll's own (same functions), the order is
+ * rarest first on the normal chance, a named nested table folds open to its own lines, a search finds an item inside a fold, the
+ * Collection Log records only log items with the kill count, the favourites and the new attributes load from old saves (empty),
+ * and a Deadman Task pays exactly once.
+ */
 class DropViewerTests {
-    @Test
-    fun `chances follow the roll - guaranteed, declared total, nested table`() {
-        val id = 999_001
+    private class Account {
+        val attributes = AttributeMap()
+        val world = mockk<World>(relaxed = true)
+        val plugins = mockk<PluginRepository>(relaxed = true)
+        val player = mockk<Player>(relaxed = true)
+
+        init {
+            every { world.definitions } returns DEFINITIONS
+            every { world.plugins } returns plugins
+            every { plugins.allNpcCombatDefs() } returns emptyMap()
+            every { player.world } returns world
+            every { player.attr } returns attributes
+            every { player.username } returns "dropviewer_test"
+            every { player.combatLevel } returns 3
+        }
+    }
+
+    private val id = 999_108
+
+    private fun register() {
         DropTableFactory.register(
             DropTableFactory.build {
-                guaranteed { obj(536) }
+                guaranteed { obj(Items.DRAGON_BONES) }
                 main {
                     total(128)
-                    obj(1149, slots = 1)
-                    obj(995, quantityRange = 100..200, slots = 32)
-                    table(DropTableFactory.build { main { total(2); obj(1305, slots = 1); nothing(1) } }, slots = 4)
+                    obj(Items.RUNE_PLATEBODY, slots = 4)
+                    obj(Items.DRAGON_PICKAXE, slots = 1)
+                    obj(Items.COINS_995, quantityRange = 100..200, slots = 59)
+                    table(Rare.rareTable, slots = 2)
+                    nothing(62)
                 }
             },
             id,
         )
-        val rows = DropViewer.rows(mockk<Player>(relaxed = true), id, rate = 1.0) // the 1x table; the Annihilation rates: AnnihilationRatesTests
-        fun chance(item: Int) = rows.single { it.item == item }.chance
-        assertEquals(1.0, chance(536))
-        assertEquals(1.0 / 128, chance(1149), 1e-12)
-        assertEquals(32.0 / 128, chance(995), 1e-12)
-        assertEquals("100-200", rows.single { it.item == 995 }.quantity)
-        assertEquals(4.0 / 128 * 0.5, chance(1305), 1e-12)
-        assertEquals(listOf(536, 995, 1305, 1149), rows.map { it.item }, "Always first, then most common")
-        assertEquals("Always", DropViewer.rarity(1.0))
-        assertEquals("1 / 128", DropViewer.rarity(1.0 / 128))
-        assertEquals("1 / 4", DropViewer.rarity(0.25))
-        assertEquals("1 / 64", DropViewer.rarity(4.0 / 128 * 0.5))
+        DropSources.reset()
+    }
+
+    private fun source() = DropSources.Source("npc:$id", "Test dragon", -1, intArrayOf(id), 100, DropSources.Group.MONSTERS, DropSources.Kind.NPC, id)
+
+    @Test
+    fun `chances are the roll's own - lineChances at the player's rate and at 1x, a fold rolled at 1x inside`() {
+        register()
+        val account = Account()
+        val view = DropSources.view(account.player, source(), rate = 5.0)
+        val table = DropTableFactory.tables(account.player, id)!!.first { it.name == "main" }
+        val your = DropTableFactory.lineChances(table, 5.0)
+        val normal = DropTableFactory.lineChances(table, 1.0)
+        fun line(item: Int) = view.lines.first { it.item == item && it.tag != DropSources.Tag.TABLE }
+        assertEquals(your[1], line(Items.DRAGON_PICKAXE).your, 1e-12)
+        assertEquals(normal[1], line(Items.DRAGON_PICKAXE).normal, 1e-12)
+        assertEquals(1.0 / 128, line(Items.DRAGON_PICKAXE).normal, 1e-12)
+        assertTrue(line(Items.DRAGON_PICKAXE).your > line(Items.DRAGON_PICKAXE).normal, "the rare line gets the bracket factor")
+        // DropBoost is the one boost: the same function the roll's pick reads.
+        assertEquals(DropBoost.chances(DoubleArray(table.entries.size) { normal[it] }, 5.0)[1], your[1], 1e-12)
+        // The Always bar: the guaranteed item.
+        assertEquals(listOf(Items.DRAGON_BONES), view.always.map { it.item })
+        // The rare drop table: one line, its kids rolled at 1x inside (parent chance x the inner share).
+        val rdt = view.lines.single { it.tag == DropSources.Tag.TABLE }
+        assertEquals("Rare drop table", rdt.name)
+        assertEquals(normal[3], rdt.normal, 1e-12)
+        val inner = DropTableFactory.tables(account.player, id)!!.first { it.name == "main" }.entries[3].drop as gg.rsmod.plugins.content.drops.DropEntry.TableDrop
+        val innerChances = DropTableFactory.lineChances(inner.table, 1.0)
+        val nature = rdt.kids.first { it.item == Items.NATURE_RUNE }
+        assertEquals(rdt.normal * innerChances[0], nature.normal, 1e-12)
+        assertEquals(rdt.your * innerChances[0], nature.your, 1e-12)
+    }
+
+    @Test
+    fun `a guaranteed line with a quantity range drops on every kill and shows in the Always bar`() {
+        val rangeId = 999_109
+        DropTableFactory.register(DropTableFactory.build { guaranteed { obj(Items.BIG_BONES, quantity = 1); obj(Items.COINS_995, quantityRange = 1..6) } }, rangeId)
+        val account = Account()
+        repeat(20) {
+            val items = DropTableFactory.getDrop(account.player, rangeId)!!
+            assertTrue(items.any { it.id == Items.COINS_995 && it.amount in 1..6 }, "the ranged guaranteed line drops: $items")
+            assertTrue(items.any { it.id == Items.BIG_BONES })
+        }
+        val view = DropSources.view(account.player, DropSources.Source("npc:$rangeId", "Range", -1, intArrayOf(rangeId), 1, DropSources.Group.MONSTERS, DropSources.Kind.NPC, rangeId), 1.0)
+        assertEquals(listOf("1", "1-6"), view.always.map { it.quantity })
+    }
+
+    @Test
+    fun `rarest first on the normal chance, so the order of a monster never moves with the bracket`() {
+        register()
+        val account = Account()
+        for (rate in listOf(1.0, 3.0, 5.0)) {
+            val lines = DropSources.view(account.player, source(), rate).lines
+            assertEquals(lines.sortedBy { it.normal }.map { it.key }, lines.map { it.key })
+            assertEquals(Items.DRAGON_PICKAXE, lines.first().item)
+        }
+    }
+
+    @Test
+    fun `a fold opens in place with its lines under it, and a search for an item inside opens it by itself`() {
+        register()
+        val account = Account()
+        val view = DropSources.view(account.player, source(), 1.0)
+        val closed = DropViewer.rowsOf(account.player, view)
+        assertTrue(closed.none { it.level > 0 })
+        // The searched item (a loop half, inside the rare table) opens the fold.
+        val chances = DropSources.itemChances(view)
+        assertTrue(chances.containsKey(Items.LOOP_HALF_OF_A_KEY), "search finds an item inside a fold")
+        assertTrue(chances.getValue(Items.DRAGON_PICKAXE).second > 0.0)
+    }
+
+    @Test
+    fun `chance notation and rarity colours follow the design`() {
+        assertEquals("Always", N108Ui.chance(1.0))
+        assertEquals("1/1,000", N108Ui.chance(1.0 / 1000))
+        assertEquals("1/5,000", N108Ui.chance(1.0 / 5000))
+        assertEquals("1/12.8", N108Ui.chance(1.0 / 12.8))
+        assertEquals("1/25.6", N108Ui.chance(1.0 / 25.6))
+        assertEquals("1/600", N108Ui.chance(1.0 / 600))
+        assertEquals("1/12.3K", N108Ui.chance(1.0 / 12_300))
+        assertEquals("1/146K", N108Ui.chance(1.0 / 145_728))
+        assertEquals("afeeee", N108Ui.rarityColour(1.0))
+        assertEquals("56e156", N108Ui.rarityColour(1.0 / 25))
+        assertEquals("ffed4c", N108Ui.rarityColour(1.0 / 33.4))
+        assertEquals("ff863c", N108Ui.rarityColour(1.0 / 200))
+        assertEquals("ff6262", N108Ui.rarityColour(1.0 / 1000))
+    }
+
+    @Test
+    fun `the collection log records only log items, with the kill count, and says so once`() {
+        val account = Account()
+        CollectionLogPages.install(listOf(CollectionLogPages.Page("kbd", CollectionLogPages.Category.BOSSES, "King Black Dragon", emptyList(), listOf(Items.KBD_HEADS, Items.DRACONIC_VISAGE))))
+        try {
+            val fresh = CollectionLog.record(account.player, null, listOf(Items.KBD_HEADS to 1, Items.DRAGON_BONES to 1))
+            assertEquals(listOf(Items.KBD_HEADS), fresh)
+            assertTrue(CollectionLog.has(account.player, Items.KBD_HEADS))
+            assertFalse(CollectionLog.has(account.player, Items.DRAGON_BONES))
+            assertEquals(emptyList(), CollectionLog.record(account.player, null, listOf(Items.KBD_HEADS to 1)), "the second one is not new")
+            assertEquals(2, CollectionLog.entries(account.player).getValue(Items.KBD_HEADS).count)
+            assertEquals(Items.KBD_HEADS, CollectionLog.recent(account.player).first().item)
+            // Saved as plain text: a new session reads the same log.
+            val saved = account.attributes[CollectionLog.ATTR]!!
+            assertEquals(2, CollectionLog.parse(saved).getValue(Items.KBD_HEADS).count)
+        } finally {
+            CollectionLogPages.reset()
+        }
+    }
+
+    @Test
+    fun `an old save without the new attributes loads as empty - no kills of its own, empty log, no favourites, no tasks`() {
+        val account = Account()
+        assertEquals(0, KillCounts.get(account.player, "chest"))
+        assertTrue(CollectionLog.entries(account.player).isEmpty())
+        assertTrue(CollectionLog.recent(account.player).isEmpty())
+        assertTrue(DropViewer.favourites(account.player).isEmpty())
+        assertTrue(DropViewer.recent(account.player).isEmpty())
+        assertTrue(DeadmanTasks.done(account.player).isEmpty())
+        assertEquals(0, DeadmanTasks.earned(account.player))
+        // The Barrows chest's own log (real records from before) counts as obtained.
+        account.attributes[gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.COLLECTION_LOG] = "${Items.AHRIMS_HOOD}"
+        assertTrue(CollectionLog.has(account.player, Items.AHRIMS_HOOD))
+    }
+
+    @Test
+    fun `favourites and recently viewed are kept on the account`() {
+        val account = Account()
+        assertEquals("drop_viewer_favourites", DropViewer.FAVOURITES.persistenceKey)
+        assertEquals("drop_viewer_recent", DropViewer.RECENT.persistenceKey)
+        account.attributes[DropViewer.FAVOURITES] = "npc:50;breach:14439"
+        assertEquals(listOf("npc:50", "breach:14439"), DropViewer.favourites(account.player))
+        account.attributes[DropViewer.RECENT] = "npc:50;npc:6260;npc:2883"
+        assertEquals(3, DropViewer.recent(account.player).size)
+    }
+
+    @Test
+    fun `a Deadman Task pays once, only the valid PvP judge counts a kill, the points stop at the maximum`() {
+        val account = Account()
+        val dp = StoreCatalogue.Currency.DEADMAN.attr
+        DeadmanTasks.onPvpKill(account.player, victimSkulled = true, multi = false)
+        assertTrue("e_pk1" in DeadmanTasks.done(account.player))
+        val afterFirst = account.attributes[dp] ?: 0
+        assertEquals(DeadmanTasks.DP.getValue(DeadmanTasks.Tier.EASY), afterFirst)
+        // Another kill: First blood is done and pays nothing again; Player hunter counts on.
+        DeadmanTasks.onPvpKill(account.player, victimSkulled = false, multi = false)
+        assertEquals(afterFirst, account.attributes[dp] ?: 0)
+        assertEquals(2, DeadmanTasks.progress(account.player, DeadmanTasks.TASKS.first { it.id == "m_pk5" }))
+        // Saturating: at the maximum it stays there.
+        account.attributes[dp] = Int.MAX_VALUE - 1
+        repeat(3) { DeadmanTasks.onPvpKill(account.player, victimSkulled = false, multi = false) }
+        assertEquals(Int.MAX_VALUE, account.attributes[dp])
+        // Every task id is unique and every tier has tasks.
+        assertEquals(DeadmanTasks.TASKS.size, DeadmanTasks.TASKS.map { it.id }.toSet().size)
+        DeadmanTasks.Tier.values().forEach { assertTrue(DeadmanTasks.tierTasks(it).isNotEmpty()) }
+        assertNotEquals(0, DeadmanTasks.TASKS.size)
+    }
+
+    companion object {
+        private val CACHE_PATH = Paths.get("..", "..", "data", "cache").toFile().toString()
+        private val DEFINITIONS = DefinitionSet()
+
+        @BeforeClass
+        @JvmStatic
+        fun loadCache() {
+            DEFINITIONS.loadAll(CacheLibrary(CACHE_PATH))
+            assertNotEquals(DEFINITIONS.getCount(ItemDef::class.java), 0)
+        }
     }
 }

@@ -410,6 +410,7 @@ on_item_option(item = Items.CASKET_ELITE, option = "open") {
     val rewards = mutableListOf<gg.rsmod.game.model.item.Item>()
     repeat(rolls) { DropTableFactory.createDropInventory(player, Items.CASKET_ELITE, DropTableType.CHEST)?.let { rewards += it } }
     if (rewards.isEmpty()) return@on_item_option
+    runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, null, rewards.map { it.id to it.amount }) }
     val first = rewards.first()
     player.queue {
         val names =

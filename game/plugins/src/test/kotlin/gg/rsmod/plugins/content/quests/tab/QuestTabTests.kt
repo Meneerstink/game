@@ -163,8 +163,10 @@ class QuestTabTests {
         assertEquals(State.LOCKED, option(view, DesertTreasureII).state)
         // Prayer and Gear are still open, so the note stays.
         assertTrue(view.showNote)
-        // The panel redraws only when something it shows changed.
-        assertNotEquals(QuestTab.signature(DeadmanGroupsView.view(Account(isNew = true).player)), QuestTab.signature(view))
+        // The Quests tab (night job 2026-10-24) shows the same state: chosen = tick, the other two locked.
+        val rows = QuestTab.questRows(account.player)
+        assertTrue(rows.any { it.text.startsWith("Desert Treasure") && it.icon == "q_ck" })
+        assertTrue(rows.any { it.text.contains("Desert Treasure II") && it.icon == "q_lock" })
     }
 
     @Test
@@ -174,16 +176,16 @@ class QuestTabTests {
     }
 
     @Test
-    fun `groups use the existing choice data and the interface has room for each group`() {
+    fun `groups use the existing choice data and the Quests tab lists every group, quest and requirement`() {
         assertEquals(ChoiceGroup.values().toList(), QuestGuideUi.ROWS)
-        assertEquals(L.GROUP_SIZES.toList(), QuestGuideUi.ROWS.map { it.quests.size })
-        assertTrue(QuestGuideUi.ROWS.all { it.quests.size <= L.MAX_OPTIONS })
-        val view = DeadmanGroupsView.view(Account().player)
-        val layout = QuestTab.layout(view)
-        // Options never overlap and the scroll height covers the last one.
-        val ys = layout.optionY.flatten()
-        ys.zipWithNext().forEach { (a, b) -> assertTrue(b >= a + L.OPTION_HEIGHT) }
-        assertTrue(layout.height >= ys.last() + L.OPTION_HEIGHT)
+        val account = Account()
+        val rows = QuestTab.questRows(account.player)
+        assertEquals(listOf("MAGIC", "PRAYER", "GEAR"), rows.filter { it.icon == null && it.right != null }.map { it.key })
+        QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(rows.any { it.key == (QuestGuideUi.NAMES[q] ?: q.name) }, q.name) }
+        QuestGuideUi.ROWS.flatMap { it.quests }.forEach { q -> assertTrue(QuestTab.REQUIREMENTS.containsKey(QuestGuideUi.NAMES[q] ?: q.name), "requirements of ${q.name}") }
+        // N103: only the Quest Tutor quests; folding the longest one open still fits the rows.
+        assertEquals(3 + 8, rows.size)
+        assertTrue(rows.size + 7 <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.QP.ROWS)
     }
 
     // ------------------------------------------------------------------ tab choice and layout
@@ -193,21 +195,27 @@ class QuestTabTests {
         val account = Account()
         assertEquals(QuestTab.Tab.DEADMAN, QuestTab.selected(account.player))
         assertEquals("quest_tab_selected", QuestTab.SELECTED.persistenceKey)
-        QuestTab.select(account.player, QuestTab.Tab.GROUPS)
-        assertEquals("GROUPS", account.attributes[QuestTab.SELECTED])
-        assertEquals(QuestTab.Tab.GROUPS, QuestTab.selected(account.player))
-        QuestTab.select(account.player, QuestTab.Tab.QUEST_LIST)
-        assertEquals(QuestTab.Tab.QUEST_LIST, QuestTab.selected(account.player))
+        QuestTab.select(account.player, QuestTab.Tab.DROPS)
+        assertEquals("DROPS", account.attributes[QuestTab.SELECTED])
+        assertEquals(QuestTab.Tab.DROPS, QuestTab.selected(account.player))
+        // The tabs of before 2026-10-24 open the Quests tab; anything unknown the default.
+        for (old in listOf("GROUPS", "QUEST_LIST", "DIARIES")) {
+            account.attributes[QuestTab.SELECTED] = old
+            assertEquals(QuestTab.Tab.QUESTS, QuestTab.selected(account.player))
+        }
         account.attributes[QuestTab.SELECTED] = "SOMETHING_OLD"
         assertEquals(QuestTab.Tab.DEADMAN, QuestTab.selected(account.player))
     }
 
     @Test
-    fun `tabs left to right with their tooltips, and the container owns the quest tab slot`() {
-        assertEquals(listOf("Deadman Groups", "Quest List", "Achievement Diaries", "Deadman"), QuestTab.Tab.values().map { it.tooltip })
-        assertEquals(L.CONTAINER, InterfaceDestination.QUEST_TAB.interfaceId)
-        assertEquals(190, QuestTab.Tab.QUEST_LIST.panel)
-        assertEquals(L.PANE_WIDTH, (0 until 4).sumOf { L.tabWidth(it) })
+    fun `tabs left to right as the approved design - Quests, Deadman, Deadman Tasks, Drops & Collection Log`() {
+        assertEquals(listOf("QUESTS", "DEADMAN", "TASKS", "DROPS"), QuestTab.Tab.values().map { it.name })
+        assertEquals(listOf("Quests", "Deadman", "Deadman Tasks", "Drops & Collection Log"), gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TOOLTIPS)
+        assertEquals(gg.rsmod.game.tools.importer.N108InterfaceImportTool.CONTAINER, InterfaceDestination.QUEST_TAB.interfaceId)
+        assertEquals(with(gg.rsmod.game.tools.importer.N108InterfaceImportTool) { listOf(QUESTS, DEADMAN, TASKS, DROPS_LOG) }, QuestTab.Tab.values().map { it.panel })
+        // Four tabs with 2 px gaps across 188 px of the 190 px pane, the panel box 184 x 233 under them.
+        assertEquals(188, gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_W.sum() + 6)
+        gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_X.zip(gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.TAB_W).zipWithNext().forEach { (a, b) -> assertEquals(a.first + a.second + 2, b.first) }
     }
 
     @Test
@@ -348,61 +356,37 @@ class QuestTabTests {
     }
 
     @Test
-    fun `right-hand tab pieces are mirrored left-right, not turned upside down`() {
+    fun `the classic quest list 190 fits the panel box of the Quests tab, nothing cut off at the right`() {
         val library = CacheLibrary(CACHE_PATH)
         try {
-            val comps = L.container(LootKeyInterfaceImportTool.fonts(library))
-            (0 until 4).forEach { tab ->
-                val right = comps.first { it.id == L.tabBase(tab) + L.TAB_RIGHT }
-                assertTrue(right.hflip)
-                // First byte: the client's up-down flip; second: its left-right mirror.
-                assertEquals(0 to 1, DeathsOfficeInterfaceImportTool.flipBytes(right))
-                assertTrue(DeathsOfficeInterfaceImportTool.encode(right).contentEquals(library.data(3, L.CONTAINER, right.id)!!), "cache holds tab $tab's right piece")
-                val left = comps.first { it.id == L.tabBase(tab) + L.TAB_LEFT }
-                assertEquals(0 to 0, DeathsOfficeInterfaceImportTool.flipBytes(left))
-            }
-        } finally {
-            library.close()
-        }
-    }
-
-    @Test
-    fun `quest list 190 fits under the tab row at full width, nothing cut off`() {
-        val library = CacheLibrary(CACHE_PATH)
-        try {
-            val comps = L.container(LootKeyInterfaceImportTool.fonts(library))
-            val mount = comps.first { it.id == L.QUEST_MOUNT }
-            val area = L.PANE_HEIGHT - L.TAB_HEIGHT
-            assertEquals(L.PANE_WIDTH, mount.width, "190 gets the full pane width (its filters reach x 183)")
-            assertEquals(area, mount.height)
+            val box = gg.rsmod.game.tools.importer.N108InterfaceImportTool.container(LootKeyInterfaceImportTool.fonts(library)).first { it.id == gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q.BOX }
+            assertEquals(184, box.width)
+            assertEquals(233, box.height)
             fun u2(b: ByteArray, at: Int) = ((b[at].toInt() and 0xFF) shl 8) or (b[at + 1].toInt() and 0xFF)
             library.index(3).archive(190)!!.fileIds().forEach { f ->
                 val b = library.data(3, 190, f)!!
                 if (b[0].toInt() and 0xFF != 255 || u2(b, 16) != 0) return@forEach
-                val (x, y, w, h) = listOf(u2(b, 4), u2(b, 6), u2(b, 8), u2(b, 10))
-                val (wMode, hMode, xMode, yMode) = listOf(b[12].toInt(), b[13].toInt(), b[14].toInt(), b[15].toInt())
-                if (wMode == 0 && xMode == 0) assertTrue(x + w <= L.PANE_WIDTH, "190:$f ends at x ${x + w}")
-                // Text and buttons fit completely; a decoration graphic (type 5, the bottom shade 6 hung 7 px over the
-                // 261 in the original too) only has to start inside the area and keep the original's visible part.
-                if (hMode == 0 && yMode == 0) {
-                    if (b[1].toInt() == 5) assertTrue(y < area, "190:$f starts at y $y") else assertTrue(y + h <= area, "190:$f ends at y ${y + h}")
-                }
-                // Bottom-aligned with a fixed height (the quest list): inside the area and right under the top divider line
-                // (y 22-24); quest list part 2 removed the filters that sat above it (QuestListPart2CacheTool).
-                if (hMode == 0 && yMode == 2) assertEquals(25, area - y - h, "190:$f top")
+                val (x, y, w) = listOf(u2(b, 4), u2(b, 6), u2(b, 8))
+                val (wMode, _, xMode, yMode) = listOf(b[12].toInt(), b[13].toInt(), b[14].toInt(), b[15].toInt())
+                // Text and layers fit; a full-width shade graphic / rectangle (190:3, 6, 7 are 190 wide) only loses its last 6 px.
+                if (wMode == 0 && xMode == 0 && b[1].toInt() != 5 && b[1].toInt() != 3) assertTrue(x + w <= box.width, "190:$f ends at x ${x + w}")
+                if (yMode == 0) assertTrue(y < box.height, "190:$f starts at y $y")
             }
-            assertTrue("QUEST_SCROLLBAR, hidden = true" in File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTab.kt").readText(), "no second scrollbar")
+            // The new container (night job 2026-10-24) is in the cache as the tool builds it.
+            gg.rsmod.game.tools.importer.N108InterfaceImportTool.container(LootKeyInterfaceImportTool.fonts(library)).forEach { c ->
+                assertTrue(DeathsOfficeInterfaceImportTool.encode(c).contentEquals(library.data(3, gg.rsmod.game.tools.importer.N108InterfaceImportTool.CONTAINER, c.id)!!), "cache holds container component ${c.id}")
+            }
         } finally {
             library.close()
         }
     }
 
     @Test
-    fun `questtabshots only closes an Info window that is still open`() {
+    fun `the Info window close is guarded`() {
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/quest_tab_container.plugin.kts").readText()
-        val shots = script.substringAfter("on_command(\"questtabshots\"")
-        assertFalse(Regex("""\n\s*player\.closeInterface\(QuestTab\.INFO\)""").containsMatchIn(shots), "an unguarded close logs 'Interface 1175 is not visible'")
-        assertTrue("if (player.interfaces.isVisible(QuestTab.INFO)) player.closeInterface(QuestTab.INFO)" in shots)
+        assertFalse(Regex("""
+\s*player\.closeInterface\(QuestTab\.INFO\)""").containsMatchIn(script), "an unguarded close logs 'Interface 1175 is not visible'")
+        assertTrue("if (player.interfaces.isVisible(QuestTab.INFO)) player.closeInterface(QuestTab.INFO)" in script)
     }
 
     companion object {

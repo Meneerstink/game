@@ -34,7 +34,7 @@ import gg.rsmod.plugins.content.newplayer.SummoningKit
 import gg.rsmod.plugins.content.npcs.bulk.BulkNpcDropTables
 import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 import gg.rsmod.plugins.content.quests.foundation.FoundationRewards
-import gg.rsmod.plugins.content.quests.tab.DropViewer
+import gg.rsmod.plugins.content.quests.tab.DropSources
 import gg.rsmod.plugins.content.skills.summoning.SummoningPouchData
 import gg.rsmod.util.ServerProperties
 import io.mockk.every
@@ -468,7 +468,7 @@ class AnnihilationRatesTests {
                 val id = VIEWER_OFFSET + npc
                 val built = DropTableFactory.tables(viewer, id) ?: continue
                 val expected = expectedRows(built, k, failures)
-                val shown = DropViewer.rows(viewer, id).associate { "${it.item}|${it.quantity}" to it.chance }
+                val shown = DropSources.tableRows(viewer, id).associate { "${it.item}|${it.quantity}" to it.chance }
                 if (shown.keys != expected.keys) {
                     failures += "npc $npc at ${k}x: lines ${shown.keys} != ${expected.keys}"
                     continue

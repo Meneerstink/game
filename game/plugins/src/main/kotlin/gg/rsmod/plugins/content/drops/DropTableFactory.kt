@@ -107,6 +107,13 @@ object DropTableFactory {
             if (type == DropTableType.KILL) {
                 if (received.isEmpty()) received[player] = mutableListOf()
                 received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
+                // N104: the Collection Log, with the kill count of the Drop Viewer entry this npc belongs to.
+                received.forEach { (owner, loot) ->
+                    runCatching {
+                        val source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(owner, npcId)?.key
+                        gg.rsmod.plugins.content.quests.tab.CollectionLog.record(owner, source, loot.map { it.id to it.amount })
+                    }.onFailure { gg.rsmod.game.model.Trace.crash("collection log", it) }
+                }
             }
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)
@@ -183,12 +190,9 @@ object DropTableFactory {
             val guaranteed = tables.firstOrNull { it.name == GUARANTEED_TABLE_NAME }
             val remaining = tables.filterNot { it.name == GUARANTEED_TABLE_NAME }
             if (guaranteed != null) {
-                items.addAll(
-                    guaranteed.entries
-                        .map { it.drop }
-                        .filterIsInstance<DropEntry.ItemDrop>()
-                        .map { it.item },
-                )
+                // N108 (2026-10-24): every guaranteed line drops - also a quantity range ("1-6") and a multi line; before, only
+                // fixed amounts did, so the bulk tables' ranged always-drops (e.g. npc 1831's 1-6) never came.
+                items.addAll(guaranteedItems(guaranteed))
             }
 
             val remainingTables = remaining.map { DropEntry.TableDrop(it) }
@@ -199,6 +203,17 @@ object DropTableFactory {
         }
         return null
     }
+
+    /** What a guaranteed table hands out on every kill (fixed amounts, a rolled amount of a range, every item of a multi line). */
+    fun guaranteedItems(table: DropTable): List<Item> =
+        table.entries.flatMap { entry ->
+            when (val drop = entry.drop) {
+                is DropEntry.ItemDrop -> listOf(drop.item)
+                is DropEntry.ItemRangeDrop -> listOf(drop.getDrop())
+                is DropEntry.MultiDrop -> drop.getDrop()
+                else -> emptyList()
+            }
+        }
 
     /**
      * Gets a drop from a table and adds to the players inventory
@@ -252,10 +267,8 @@ object DropTableFactory {
         if (table.name == GUARANTEED_TABLE_NAME) {
             // For every drop in the guaranteed table, count the items that are not stackable, and the items
             // that are stackable but not yet in the inventory
-            return table.entries
-                .map { it.drop }
-                .filterIsInstance<DropEntry.ItemDrop>()
-                .map { it.item.id }
+            return guaranteedItems(table)
+                .map { it.id }
                 .count(player.inventory::requiresFreeSlotToAdd)
         }
 
@@ -503,6 +516,7 @@ class TableBuilder(
     fun table(
         table: DropTableBuilder.() -> Unit,
         slots: Int = 1,
+        label: String? = DropTableNames.of(table),
     ) {
         val tab =
             DropTableBuilder(player, prng)
@@ -511,7 +525,7 @@ class TableBuilder(
                 .first()
 
         occupiedSlots += slots
-        entries.add(Entry(occupiedSlots, DropEntry.TableDrop(tab)))
+        entries.add(Entry(occupiedSlots, DropEntry.TableDrop(tab, label)))
     }
 
     /**

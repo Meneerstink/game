@@ -619,6 +619,7 @@ object DeadmanChestWorld {
         if (BreachIds.ARCHAIC_EMBLEM_TIER_5 <= 0) return null
         val emblem = GroundItem(BreachIds.ARCHAIC_EMBLEM_TIER_5, 1, Tile(npc.tile), top)
         world.spawn(emblem)
+        runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(top, "guardian", listOf(BreachIds.ARCHAIC_EMBLEM_TIER_5 to 1)) }
         Server.logger.info("[chest] guardian killed by {}: tier 5 Archaic emblem", top.username)
         return emblem
     }

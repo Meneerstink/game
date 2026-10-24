@@ -202,6 +202,15 @@ task runOsrsPetImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsPetImportTool'
 }
 
+task runN108InterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N108/N104/N103/N109 night job 2026-10-24: Drop Viewer, Collection Log, quest tab 4 tabs, Deadman Tasks window. ' +
+        'Usage: ./gradlew :game:runN108InterfaceImportTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.N108InterfaceImportTool'
+    workingDir = rootProject.projectDir
+}
+
 task runOsrsLocImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS loc (scenery) type import batches for runtime-spawned objects (CacheTransaction, both caches). ' +

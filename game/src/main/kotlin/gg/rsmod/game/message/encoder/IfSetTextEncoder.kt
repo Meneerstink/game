@@ -22,11 +22,16 @@ class IfSetTextEncoder : MessageEncoder<IfSetTextMessage>() {
     ): ByteArray =
         when (key) {
             "text" -> {
-                val data = ByteArray(message.text.length + 1)
-                System.arraycopy(message.text.toByteArray(), 0, data, 0, data.size - 1)
+                // N108 (2026-10-24): the client reads interface text as Cp1252 (Packet.gjstr); UTF-8 bytes turned a "·" into "Â·"
+                // and cut the text short by one byte per such character.
+                val bytes = message.text.toByteArray(CP1252)
+                val data = ByteArray(bytes.size + 1)
+                System.arraycopy(bytes, 0, data, 0, bytes.size)
                 data[data.size - 1] = 0
                 data
             }
             else -> throw Exception("Unhandled value key.")
         }
 }
+
+private val CP1252: java.nio.charset.Charset = java.nio.charset.Charset.forName("windows-1252")

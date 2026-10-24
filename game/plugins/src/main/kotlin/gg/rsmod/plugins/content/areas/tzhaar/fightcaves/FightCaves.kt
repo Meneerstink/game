@@ -321,6 +321,7 @@ object FightCaves {
         if (defeatedJad) {
             tokkul += 4000
             addOrDrop(player, Item(Items.FIRE_CAPE))
+            runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, 2745)?.key ?: "jad", listOf(Items.FIRE_CAPE to 1)) }
         }
         if (tokkul > 0) addOrDrop(player, Item(Items.TOKKUL, tokkul))
         world.queue {
