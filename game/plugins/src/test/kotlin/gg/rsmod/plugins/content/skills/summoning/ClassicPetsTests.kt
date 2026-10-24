@@ -154,6 +154,20 @@ class ClassicPetsTests {
     }
 
     @Test
+    fun `walking sounds - baby dragons, dogs and the crab step softly, every other pet walks silently`() {
+        val sfx = gg.rsmod.plugins.api.cfg.Sfx
+        fun step(item: Int) = PetVoices.stepSound(Pets.variantOfItem(item)!!)
+        assertEquals(sfx.DRAGONSLAYER_DRAGONWALK, step(gg.rsmod.plugins.api.cfg.Items.BABY_DRAGON_12472))
+        assertEquals(sfx.FOOT_TRAMP_1, step(gg.rsmod.plugins.api.cfg.Items.TERRIER_PUPPY_12512))
+        assertEquals(sfx.RAT_SCUTTLE, step(gg.rsmod.plugins.api.cfg.Items.BABY_GIANT_CRAB_12500))
+        assertEquals(null, step(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY))
+        assertTrue(PetVoices.STEP_VOLUME < 128, "soft")
+        // Every puppy of the Loyalty store steps.
+        ClassicPetTalk.LOYALTY_PET_ITEMS.map { Pets.variantOfItem(it)!! }.filter { it.name.endsWith(" puppy") }
+            .forEach { assertEquals(sfx.FOOT_TRAMP_1, PetVoices.stepSound(it), it.name) }
+    }
+
+    @Test
     fun `N257 - a 667 pet's chat head and Follower Details head take the cache's creature pose, an OSRS pet keeps its own rig`() {
         val creature = gg.rsmod.plugins.api.ext.CreatureChathead
         val monkey = Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY)!!.npc

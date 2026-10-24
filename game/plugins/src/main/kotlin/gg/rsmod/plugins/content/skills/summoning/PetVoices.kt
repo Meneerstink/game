@@ -163,6 +163,44 @@ object PetVoices {
         if (due) FamiliarAudio.play(player, sound, volume = VOLUME, at = npc.tile)
     }
 
+    /**
+     * Walking sounds (owner 2026-10-24, C: "beste benadering voor alle drie"): the cache has no step sound of a dog or a crab, so the
+     * closest ones - the dragon's step of Dragon Slayer for the baby dragons, the rats' scuttle for the crabs, a soft footstep for
+     * every dog and puppy - soft, only while the pet really walks, at most every [STEP_INTERVAL_CYCLES]. Server-side for the pet
+     * only: the walk animations are shared with the monsters (seq 21 Baby red dragon, 8101 Giant crab), which stay silent.
+     */
+    const val STEP_VOLUME = 70
+    const val STEP_INTERVAL_CYCLES = 2
+
+    private val LAST_PET_TILE = AttributeKey<gg.rsmod.game.model.Tile>()
+    private val NEXT_STEP_CYCLE = AttributeKey<Int>()
+
+    /** The step sound of [variant]'s species, or null for a pet that walks silently. */
+    fun stepSound(variant: Pets.Variant): Int? {
+        val species = if (variant.classic) variant.name else variant.pet
+        return when {
+            species in DOGS || variant.pet in DOGS -> Sfx.FOOT_TRAMP_1
+            species == "Hatchling dragon" || species == "Baby dragon" -> Sfx.DRAGONSLAYER_DRAGONWALK
+            species == "Baby giant crab" || species == "Giant crab" -> Sfx.RAT_SCUTTLE
+            else -> null
+        }
+    }
+
+    /** One follow tick of [player]'s pet [npc]: its soft step sound when it moved since the last tick. */
+    fun step(
+        player: Player,
+        npc: Npc,
+    ) {
+        val sound = Pets.variantOfNpc(npc.id)?.let { stepSound(it) } ?: return
+        val last = player.attr[LAST_PET_TILE]
+        player.attr[LAST_PET_TILE] = npc.tile
+        if (last == null || last == npc.tile) return
+        val cycle = player.world.currentCycle
+        if (cycle < (player.attr[NEXT_STEP_CYCLE] ?: 0)) return
+        player.attr[NEXT_STEP_CYCLE] = cycle + STEP_INTERVAL_CYCLES
+        FamiliarAudio.play(player, sound, volume = STEP_VOLUME, at = npc.tile)
+    }
+
     /** Talk-to on a pet: its voice once, from the pet, heard by the player and the players around it. */
     fun play(
         player: Player,

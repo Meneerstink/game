@@ -472,6 +472,7 @@ object Pets {
         }, runs = byNpc[npc.id]?.name in FAST_PETS)
         Familiar.updateHud(player)
         PetVoices.idle(player, npc)
+        PetVoices.step(player, npc)
     }
 
     /** Logout: the npc goes, the pet item stays recorded for [restoreOnLogin]. */
