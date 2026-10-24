@@ -64,7 +64,7 @@ object SummoningUi {
      * N355 (owner 2026-10-24: "de preview van de follower heeft nog de vierkant keer 3"): the three nested rectangles 662:0 / 2 / 3
      * (8,28 173x111; 14,31 161x105; 23,36 143x95) behind the model box draw as three squares around the preview - always hidden.
      */
-    private val PANEL_BACKDROP_RECTS = listOf(0, 2, 3)
+    private val PANEL_BACKDROP_RECTS = listOf(2, 3)
 
     /** The name line under the model; 751 writes it with `IF_SETTEXT`. */
     private const val PANEL_NAME = 54

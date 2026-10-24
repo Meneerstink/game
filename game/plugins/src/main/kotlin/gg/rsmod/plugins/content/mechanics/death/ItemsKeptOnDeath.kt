@@ -115,7 +115,7 @@ object ItemsKeptOnDeath {
                 UntradeableFate.UNCHANGED ->
                     entries += Entry(Section.KEPT, item, line(item, "You'll keep this item.", "You'll keep these items."))
                 UntradeableFate.LOST_FOR_COINS ->
-                    entries += Entry(Section.LOST, item, line(item, "This untradeable item is lost; the player who kills you receives $coins coins.", "These untradeable items are lost; the player who kills you receives $coins coins."))
+                    entries += Entry(Section.LOST, item, line(item, "This untradeable item is lost; the player who kills you receives $coins coins. Perdu can sell it back.", "These untradeable items are lost; the player who kills you receives $coins coins. Perdu can sell them back."))
                 UntradeableFate.DESTROYED ->
                     entries += Entry(Section.DELETED, item, line(item, "This item will be lost; the player who kills you receives $coins coins.", "These items will be lost; the player who kills you receives $coins coins."))
             }

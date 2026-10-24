@@ -7,7 +7,7 @@ Baby Mole	*	1642	10459	mole_attack		Giant Mole
 Baby chinchompa	*	4705	10460	lore_chinchompa		chinchompa
 Baron	*	7177	10461	dt2_duke_melee_roar_04		Duke Sucellus
 Beaver	*	4662	10462	lore_beaver		beaver
-Beef	*	-1	3044	cow_atmospheric (667)		cow
+Beef	*	-1	369	cow_attack (667)		cow
 Bran	Bran	10163	10464	-		Branda the Fire Queen spawn seq 11966
 Bran	Ric	10122	10465	-		Eldric the Ice King spawn seq 11963
 Butch	*	7158	10466	dt2_vardorvis_head_scream_tentacle_spawn_01		Vardorvis

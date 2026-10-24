@@ -288,8 +288,8 @@ object OsrsPetImportTool {
             Voice("Baron", "*", 7177, "dt2_duke_melee_roar_04", "Duke Sucellus"),
             Voice("Beaver", "*", 4662, "lore_beaver", "beaver"),
             // N336 (owner 2026-10-24 "generieke moo"): Jagex's pet_cow renders nearly silent (peak 30 of 128, rms 9 - measured with the
-            // client's own SynthSound.mix); the 667 field cow's moo (cow_atmospheric) instead.
-            Voice("Beef", "*", -1, "cow_atmospheric (667)", "cow", local667 = 3044),
+            // client's own SynthSound.mix); the 667 cow moo (cow_attack; owner 2026-10-24: cow_atmospheric "klinkt raar").
+            Voice("Beef", "*", -1, "cow_attack (667)", "cow", local667 = 369),
             Voice("Bran", "Bran", 10163, "-", "Branda the Fire Queen spawn seq 11966"),
             Voice("Bran", "Ric", 10122, "-", "Eldric the Ice King spawn seq 11963"),
             Voice("Butch", "*", 7158, "dt2_vardorvis_head_scream_tentacle_spawn_01", "Vardorvis"),

@@ -157,6 +157,25 @@ class UntradeableDeathProtectionTests {
         assertEquals(listOf(PerduReclaim.Reclaim(Items.AVERNIC_DEFENDER, 1, 600_000L)), PerduReclaim.records(victim))
     }
 
+    /** Owner 2026-10-24 (B): any other untradeable lost on a PvP death can be bought back from Perdu for its store value. */
+    @Test
+    fun `a lost untradeable is recorded for Perdu at its store value, a Lost Property item is not`() {
+        val victim = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { victim.inventory } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.INVENTORY_KEY)
+        io.mockk.every { victim.equipment } returns gg.rsmod.game.model.container.ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.EQUIPMENT_KEY)
+        io.mockk.every { victim.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        io.mockk.every { victim.world.definitions } returns DEFINITIONS
+        victim.inventory[0] = Item(Items.GLOVES_7462)
+        victim.inventory[1] = Item(Items.COLOSSAL_BLADE)
+        val lost = (0..1).map { DeathSlotItem(DeathContainerSource.INVENTORY, it, victim.inventory[it]!!) }
+        val resolved = DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost))
+        val (_, outcomes) = UntradeableDeathProtection.splitPvp(DEFINITIONS, resolved, deepWilderness = false)
+        assertEquals(listOf(UntradeableFate.LOST_FOR_COINS, UntradeableFate.LOST_FOR_COINS), outcomes.map { it.fate })
+        UntradeableDeathProtection.execute(victim, outcomes)
+        val price = UntradeableDeathProtection.reclaimPrice(DEFINITIONS, Items.GLOVES_7462)
+        assertEquals(listOf(PerduReclaim.Reclaim(Items.GLOVES_7462, 1, price)), PerduReclaim.records(victim), "the blade comes back through Lost Property")
+    }
+
     companion object {
         private val DEFINITIONS = DefinitionSet()
 

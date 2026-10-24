@@ -7,6 +7,7 @@ import gg.rsmod.plugins.api.ext.chatPlayer
 import gg.rsmod.plugins.api.ext.format
 import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
+import gg.rsmod.plugins.api.ext.playSound
 
 /**
  * Perdu (local npc 14394, Grand Exchange) repairs every item a PvP death damaged: imported broken ids ([PvpDeathBreakables]),
@@ -36,6 +37,8 @@ object BrokenItemRepair {
         }
         if (due > 0 && !player.inventory.remove(Items.COINS_995, due, assureFullRemoval = true).hasSucceeded()) return
         still.forEach { slot -> player.inventory[slot] = UntradeableDeathProtection.repaired(player.inventory[slot]!!) }
+        // Owner 2026-10-24 ("wanneer je een item repairt bij perdu hoor je geen sound"): the anvil strike, as a smith's repair.
+        player.playSound(gg.rsmod.plugins.api.cfg.Sfx.ANVIL)
         task.chatNpc("There you go - good as new!")
     }
 }

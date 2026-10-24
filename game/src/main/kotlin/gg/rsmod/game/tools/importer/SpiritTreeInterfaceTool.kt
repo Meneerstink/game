@@ -20,7 +20,8 @@ object SpiritTreeInterfaceTool {
     const val FIRST_ROW = 10
     const val ROWS = 16
     const val ROW_HEIGHT = 15
-    const val ROW_TOP = 66
+    // Owner 2026-10-24 ("de tekst spirit tree locations staat te hoog, overlapt"): title and rows 7 px lower, off the scroll top.
+    const val ROW_TOP = 73
     const val TEXT = 0x322805
     const val GREY = 0x5F5F5F
     const val HOVER = 0xFFFFFF
@@ -34,7 +35,7 @@ object SpiritTreeInterfaceTool {
 
     fun components(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val out = mutableListOf<Comp>()
-        out += Comp(TITLE, TYPE_TEXT, X, 33, WIDTH, 30, SCROLL_LAYER, font = TITLE_FONT, text = "Spirit Tree Locations", colour = TEXT, textShadow = false)
+        out += Comp(TITLE, TYPE_TEXT, X, 40, WIDTH, 30, SCROLL_LAYER, font = TITLE_FONT, text = "Spirit Tree Locations", colour = TEXT, textShadow = false)
         for (r in 0 until ROWS) {
             val id = FIRST_ROW + r
             val full = (INTERFACE shl 16) or id

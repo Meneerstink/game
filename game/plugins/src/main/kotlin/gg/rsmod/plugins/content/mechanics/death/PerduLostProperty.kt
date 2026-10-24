@@ -96,6 +96,9 @@ object PerduLostProperty {
 
     private val byVariant: Map<Int, Entry> = ENTRIES.flatMap { e -> e.variants.map { it to e } }.toMap()
 
+    /** Whether [itemId] (or a form of it) is on Perdu's own Lost Property list. */
+    fun isLostPropertyItem(itemId: Int): Boolean = itemId in byVariant
+
     private val UNLOCKED = AttributeKey<String>(persistenceKey = "perdu_lost_property")
 
     fun unlocked(player: Player): Set<Int> = (player.attr[UNLOCKED] ?: "").split(',').mapNotNull { it.toIntOrNull() }.toSet()

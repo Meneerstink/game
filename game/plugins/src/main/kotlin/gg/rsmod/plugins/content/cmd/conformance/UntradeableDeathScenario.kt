@@ -133,6 +133,10 @@ object UntradeableDeathScenario {
             listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE).forEach {
                 run.expectTrue(e, "PvP <=20: Perdu sells the ${name(run, it)} back", it in offered, "Perdu offers $offered")
             }
+            // Owner 2026-10-24 (B): every other lost untradeable can be bought back from Perdu too, for its store value.
+            val lowReclaims = PerduReclaim.records(b).map { it.itemId }
+            run.expectTrue(e, "PvP <=20: Perdu sells the Barrows gloves back (any lost untradeable)", Items.GLOVES_7462 in lowReclaims, "reclaims=$lowReclaims")
+            run.expectTrue(e, "PvP <=20: a Lost Property item is not listed twice", Items.COLOSSAL_BLADE !in lowReclaims, "reclaims=$lowReclaims")
             // Perdu repairs every broken item back to the whole one, at its repair price.
             l.filter { UntradeableDeathProtection.isDamaged(it) }.forEach {
                 val back = UntradeableDeathProtection.repaired(it)

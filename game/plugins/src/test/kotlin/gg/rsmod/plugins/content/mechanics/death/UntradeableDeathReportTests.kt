@@ -115,7 +115,7 @@ class UntradeableDeathReportTests {
             val perdu =
                 when {
                     itemId in perduItems -> "yes (Lost Property)"
-                    high == "DESTROYED" -> "yes (reclaim)"
+                    high == "DESTROYED" || high == "LOST (coins to killer)" || low == "LOST (coins to killer)" -> "yes (reclaim)"
                     else -> "no"
                 }
             rows += "$itemId\t$name\t$pvm\t$low\t$high\t$locked\t$perdu\t${defs.get(ItemDef::class.java, itemId).tradeable}\t${shopOf[itemId] ?: "-"}\t${kitItems[itemId] ?: "-"}"

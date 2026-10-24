@@ -35,7 +35,8 @@ enum class UntradeableFate {
     /**
      * Owner 2026-10-04: an untradeable that is not [UntradeableDeathProtection.lockable] (Barrows gloves, quest rewards ...) is
      * always lost; the killer receives its High Alchemy value in coins (OSRS Wiki "Barrows gloves": "When lost in a PvP death,
-     * they turn into 78,000 coins" = 60 % of 130,000). Nothing goes to Perdu.
+     * they turn into 78,000 coins" = 60 % of 130,000). Owner 2026-10-24 (B): the lost item can be bought back from Perdu for its store
+     * value ([PerduReclaim], [reclaimPrice]) - unless it is one of Perdu's own Lost Property items, which he sells back anyway.
      */
     LOST_FOR_COINS,
 }
@@ -162,6 +163,12 @@ object UntradeableDeathProtection {
         }
     }
 
+    /** What Perdu asks to give back a lost non-lockable untradeable (owner 2026-10-24, B): its store value, at least 1 coin. */
+    fun reclaimPrice(
+        definitions: DefinitionSet,
+        itemId: Int,
+    ): Long = maxOf(1L, RepairPrices.itemDef(definitions, itemId)?.cost?.toLong() ?: 1L)
+
     /** The killer's coins for a lost non-lockable untradeable: its High Alchemy value (60 % of its value) per item. */
     fun lostCoins(
         definitions: DefinitionSet,
@@ -238,6 +245,12 @@ object UntradeableDeathProtection {
                 PerduReclaim.record(victim, current, RepairPrices.repairPrice(victim.world.definitions, current.id) * current.amount)
                 destroyed = true
             }
+            // Owner 2026-10-24 (B, "alle 1078 items terugkopen bij perdu, alleen als je ermee dood gaat"): every other lost untradeable
+            // too, at its store value - the Lost Property items (Colossal blade, god books ...) Perdu sells back on his own list.
+            if (outcome.fate == UntradeableFate.LOST_FOR_COINS && !PerduLostProperty.isLostPropertyItem(current.id)) {
+                PerduReclaim.record(victim, current, reclaimPrice(victim.world.definitions, current.id) * current.amount)
+                destroyed = true
+            }
             if (slotItem.source == DeathContainerSource.INVENTORY || replacement == null) {
                 container[slotItem.slot] = replacement
                 if (slotItem.source == DeathContainerSource.EQUIPMENT) equipmentChanged = true
@@ -256,7 +269,7 @@ object UntradeableDeathProtection {
         }
         if (equipmentChanged) victim.refreshBonuses()
         if (damaged) victim.message("Some of your untradeable items were damaged. Perdu at the Grand Exchange can repair them.")
-        if (destroyed) victim.message("Some of your untradeable items were destroyed. Perdu at the Grand Exchange can return them for a price.")
+        if (destroyed) victim.message("Some of your untradeable items were lost. Perdu at the Grand Exchange can return them for a price.")
         return killerLoot(applied)
     }
 

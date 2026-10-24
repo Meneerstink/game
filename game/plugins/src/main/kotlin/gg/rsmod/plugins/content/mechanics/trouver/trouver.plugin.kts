@@ -60,6 +60,25 @@ TrouverRegistry.all().forEach { lockable ->
     }
 }
 
+// N251 (owner 2026-10-24: "als je een trouver parchment op perdu gebruikt: nothing interesting happens"): the parchment on Perdu
+// offers to lock the first lockable item in the inventory, else says which items he can lock.
+on_item_on_npc(item = Items.TROUVER_PARCHMENT, npc = Npcs.PERDU) {
+    val lockable = player.inventory.items.filterNotNull().firstOrNull { TrouverRegistry.lockableFor(it.id) != null }
+    player.queue {
+        if (lockable == null) {
+            chatNpc("Bring me an untradeable item I can lock - a fire cape, an infernal cape, a rune pouch, a quiver - and use it on me with the parchment and ${"%,d".format(Trouver.LOCK_FEE)} coins.", npc = Npcs.PERDU, wrap = true)
+            return@queue
+        }
+        val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, lockable.id).name
+        if (options("Yes, lock my $name (${"%,d".format(Trouver.LOCK_FEE)} coins).", "No, thanks.", title = "Lock your $name?") != 1) return@queue
+        when (Trouver.lock(player, lockable)) {
+            Trouver.LockResult.Success -> chatNpc("There you go - your $name is locked to you now.", npc = Npcs.PERDU, wrap = true)
+            Trouver.LockResult.InsufficientFunds -> chatNpc("That'll be ${"%,d".format(Trouver.LOCK_FEE)} coins - you don't have enough on you.", npc = Npcs.PERDU, wrap = true)
+            else -> player.message("You can't lock that right now.")
+        }
+    }
+}
+
 /*
  * Perdu (Grand Exchange) hosts the Trouver engine: using a locked item on her unlocks it, and using a broken or mangled item
  * on her repairs it (OSRS). Registered here, right after the registry above is filled - a script elsewhere could read the

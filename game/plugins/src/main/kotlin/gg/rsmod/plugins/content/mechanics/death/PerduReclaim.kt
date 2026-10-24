@@ -25,7 +25,7 @@ object PerduReclaim {
     private val SAVED = AttributeKey<String>(persistenceKey = "perdu_reclaims")
 
     /** Kept per account; the oldest record goes when a new one would exceed this. */
-    const val MAX_RECORDS = 50
+    const val MAX_RECORDS = 200
 
     /** Options per dialogue page (the options dialogue takes five; the last is "More" / "Cancel"). */
     private const val PER_PAGE = 4

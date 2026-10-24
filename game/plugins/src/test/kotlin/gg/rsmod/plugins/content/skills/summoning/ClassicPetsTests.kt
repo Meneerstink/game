@@ -179,7 +179,7 @@ class ClassicPetsTests {
             val v = Pets.variants.first { !it.classic && it.name == name }
             assertEquals(sound, PetVoices.stepSound(v), name)
         }
-        val voices = mapOf("Beef" to sfx.COW_ATMOSPHERIC, "Scurry" to sfx.RAT_SQUEAK_1, "TzRek-Zuk" to 410, "Jal-Nib-Rek" to 410,
+        val voices = mapOf("Beef" to sfx.COW_ATTACK, "Scurry" to sfx.RAT_SQUEAK_1, "TzRek-Zuk" to 410, "Jal-Nib-Rek" to 410,
             "Soup" to sfx.TOAD2, "Youngllef" to sfx.BEAR_ATTACK, "Corrupted Youngllef" to sfx.BEAR_ATTACK)
         voices.forEach { (name, sound) -> assertEquals(sound, PetVoices.voiceOf(Pets.variants.first { !it.classic && it.name == name }.npc), name) }
     }
