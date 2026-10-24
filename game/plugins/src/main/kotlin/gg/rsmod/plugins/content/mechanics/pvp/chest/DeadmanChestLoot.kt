@@ -104,8 +104,14 @@ object DeadmanChestLoot {
         tiers: List<Pets.PetInfo> = Pets.infos.values.toList(),
     ): List<Pair<String, Int>> {
         val base = table.groupBy { it.pet }.mapValues { it.value.first().item }
-        return tiers.mapNotNull { info -> base[info.pet]?.let { info.pet to it } }
+        return tiers.filter { it.pet !in OWN_BOSS_ONLY }.mapNotNull { info -> base[info.pet]?.let { info.pet to it } }
     }
+
+    /**
+     * N291 (owner 2026-10-24): the God Wars pets come ONLY from their own boss - never from the chest or a breach (whose extra
+     * roll is this list). Every other species stays in.
+     */
+    val OWN_BOSS_ONLY = setOf("Pet General Graardor", "Pet K'ril Tsutsaroth", "Pet Kree'arra", "Pet Zilyana")
 
     sealed class Reward {
         class Item(val item: Int, val amount: Int) : Reward()

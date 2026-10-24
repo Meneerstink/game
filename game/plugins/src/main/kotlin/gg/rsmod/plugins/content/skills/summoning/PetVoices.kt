@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.skills.summoning
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.cfg.Sfx
 import java.io.File
 
 /**
@@ -39,12 +40,54 @@ object PetVoices {
         variant: Pets.Variant,
     ): Row? = rows.firstOrNull { it.pet == variant.pet && it.variant == variant.name } ?: rows.firstOrNull { it.pet == variant.pet && it.variant == "*" }
 
+    /**
+     * N296 (owner 2026-10-24: "alle honden-pets hetzelfde blafgeluid"): every dog pet barks with the Bloodhound's bark - the 667
+     * dogs and puppies and the Hellpuppy - on Talk-to, by itself now and then and when it appears.
+     */
+    val DOGS = setOf("Bloodhound", "Hellpuppy", "Terrier puppy", "Terrier", "Greyhound puppy", "Greyhound", "Labrador puppy", "Labrador",
+        "Dalmatian puppy", "Dalmatian", "Sheepdog puppy", "Sheepdog", "Bulldog puppy", "Bulldog")
+
+    /**
+     * N257 (owner 2026-10-24: "alle pets in de loyalty store maken geen sounds ... geluiden per soort kiezen uit bestaande geluiden,
+     * bv. baby monkey -> gorilla- of apengeluiden"): the 667 pets (Loyalty store and the other Summoning-era pets) by species, each
+     * with an existing 667 sound of that creature - the Varrock Museum's animal calls where there is one (monkey, lizard, penguin).
+     */
+    val CLASSIC: Map<String, Int> =
+        mapOf(
+            "Pet kitten" to Sfx.KITTENS_MEW, "Hell-kitten" to Sfx.KITTENS_MEW, "Pet cat" to Sfx.PURR, "Overgrown cat" to Sfx.PURR,
+            "Clockwork cat" to Sfx.PURR, "Hellcat" to Sfx.CAT_HISS, "Overgrown hellcat" to Sfx.CAT_HISS,
+            "Hatchling dragon" to Sfx.BABYDRAGON_ATTACK, "Baby dragon" to Sfx.BABYDRAGON_ATTACK,
+            "Baby penguin" to Sfx.VM_PENGUIN, "Penguin" to Sfx.VM_PENGUIN,
+            "Raven chick" to Sfx.BIRD_ATTACK, "Raven" to Sfx.BIRD_ATTACK, "Vulture chick" to Sfx.VULTURE_1, "Vulture" to Sfx.VULTURE_1,
+            "Saradomin chick" to Sfx.BIRD_TWITTER_1, "Zamorak chick" to Sfx.BIRD_TWITTER_1, "Guthix chick" to Sfx.BIRD_TWITTER_1,
+            "Saradomin bird" to Sfx.BIRD_ATTACK, "Zamorak bird" to Sfx.BIRD_ATTACK, "Guthix bird" to Sfx.BIRD_ATTACK,
+            "Saradomin owl" to Sfx.OWL_PART_1, "Zamorak hawk" to Sfx.BIRD_ATTACK, "Guthix raptor" to Sfx.BIRD_ATTACK,
+            "Baby raccoon" to Sfx.RAT_SQUEAK_1, "Raccoon" to Sfx.RAT_SQUEAK_1, "Baby squirrel" to Sfx.RAT_SQUEAK_2, "Squirrel" to Sfx.RAT_SQUEAK_2,
+            "Baby gecko" to Sfx.VM_LIZARD, "Gecko" to Sfx.VM_LIZARD, "Baby chameleon" to Sfx.VM_LIZARD, "Chameleon" to Sfx.VM_LIZARD,
+            "Baby monkey" to Sfx.VM_MONKEY, "Monkey" to Sfx.VM_MONKEY,
+            "Baby giant crab" to Sfx.SMALL_CRAB_ATTACK, "Giant crab" to Sfx.ROCK_CRAB_ATTACK,
+            "Baby platypus" to Sfx.QUACK, "Platypus" to Sfx.QUACK,
+            "Baby icefiend" to Sfx.ICEFIEND_ATTACK,
+        )
+
+    /** The voice of a pet species that the table rows do not give: a dog's bark, a 667 pet's species sound. */
+    fun speciesVoice(variant: Pets.Variant): Int? {
+        val species = if (variant.classic) variant.name else variant.pet
+        return when {
+            species in DOGS || variant.pet in DOGS -> Sfx.PET_DOG_BARK
+            variant.classic -> CLASSIC[species]
+            else -> null
+        }
+    }
+
     fun install(
         rows: List<Row>,
         variants: List<Pets.Variant>,
     ) {
         val start = rows.filter { it.line.isEmpty() }
-        talk = variants.mapNotNull { v -> rowFor(start, v)?.let { v.npc to it.localSynth } }.toMap()
+        // A dog barks whatever its row says; then the table's own voice; then the 667 species sound. A pet whose transcript lines
+        // bark themselves (the Bloodhound) keeps that, so Talk-to does not bark twice; it still barks by itself and on appearing.
+        talk = variants.filter { gg.rsmod.plugins.content.npcs.TranscriptDialogue.ownVoice(it.npc) == null }.mapNotNull { v -> (Sfx.PET_DOG_BARK.takeIf { v.pet in DOGS || (v.classic && v.name in DOGS) } ?: rowFor(start, v)?.localSynth ?: speciesVoice(v))?.let { v.npc to it } }.toMap()
         val onLine = rows.filter { it.line.isNotEmpty() }
         lines =
             variants.mapNotNull { v ->
@@ -92,6 +135,18 @@ object PetVoices {
 
     /** The sound pet [npc] makes by itself: its Talk-to voice, else its transcript voice (the Bloodhound's bark), else none. */
     fun idleVoiceOf(npc: Int): Int? = talk[npc] ?: gg.rsmod.plugins.content.npcs.TranscriptDialogue.ownVoice(npc)
+
+    /**
+     * N298 (owner 2026-10-24: "alle pets sounds bij spawn moeten ze geluid maken als ze die hebben"): a pet with a voice makes it
+     * when it appears - dropped from the inventory, out again after a login, called or brought along after a teleport.
+     */
+    fun appear(
+        player: Player,
+        npc: Npc,
+    ) {
+        val sound = idleVoiceOf(npc.id) ?: return
+        FamiliarAudio.play(player, sound, volume = VOLUME, at = npc.tile)
+    }
 
     /** One follow tick of [player]'s pet [npc]: its idle voice when it is due ([idleDue]). */
     fun idle(

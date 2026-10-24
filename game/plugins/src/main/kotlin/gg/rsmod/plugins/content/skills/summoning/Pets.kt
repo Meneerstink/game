@@ -259,6 +259,7 @@ object Pets {
         player.animate(DROP_ANIMATION)
         val npc = spawn(player, variant)
         sound(player, DROP_SOUND, npc.tile)
+        PetVoices.appear(player, npc)
         return true
     }
 
@@ -311,6 +312,7 @@ object Pets {
         npc.teleportNpc(Familiar.placementTile(player, npc.id))
         Familiar.playFollowerCall(player, npc)
         npc.facePawn(player)
+        PetVoices.appear(player, npc)
         return true
     }
 
@@ -453,7 +455,11 @@ object Pets {
     /** Once per cycle (familiar tick): follow like a familiar, without a familiar's arrival effect on a recovery teleport. */
     fun tick(player: Player) {
         val npc = current(player) ?: return
-        Familiar.follow(player, npc, recovered = { p, n -> n.facePawn(p) }, runs = byNpc[npc.id]?.name in FAST_PETS)
+        // A pet brought along after its owner teleported (or walked out of reach) is heard arriving (N298).
+        Familiar.follow(player, npc, recovered = { p, n ->
+            n.facePawn(p)
+            PetVoices.appear(p, n)
+        }, runs = byNpc[npc.id]?.name in FAST_PETS)
         Familiar.updateHud(player)
         PetVoices.idle(player, npc)
     }
@@ -479,6 +485,6 @@ object Pets {
             if (!player.inventory.add(item, 1, assureFullInsertion = true).hasSucceeded()) player.bank.add(item, 1, assureFullInsertion = true)
             return
         }
-        spawn(player, variant)
+        PetVoices.appear(player, spawn(player, variant))
     }
 }

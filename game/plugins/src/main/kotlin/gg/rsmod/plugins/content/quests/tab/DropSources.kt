@@ -9,7 +9,6 @@ import gg.rsmod.plugins.content.drops.DropEntry
 import gg.rsmod.plugins.content.drops.DropTable
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.GUARANTEED_TABLE_NAME
-import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 import gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot
@@ -319,20 +318,11 @@ object DropSources {
     private fun mergeAlways(lines: List<Line>): List<Line> = lines.distinctBy { "${it.item}|${it.quantity}" }
 
     /**
-     * Owner 2026-10-24 (N272): the pet at the top, then the most valuable line first ([value]), then the rarest on the NORMAL chance
-     * (the order of a monster never moves with the bracket), then by name. The Always bar stays apart, in its own order.
+     * N279 (owner 2026-10-24, replaces the N272 price order): the pet at the top, then the rarest on the NORMAL chance (the order of
+     * a monster never moves with the bracket), the same item together ([DropGroups.RAREST_FIRST]). The viewer then puts the lines
+     * in their groups ([DropGroups]); the Always bar stays apart, in its own order.
      */
-    fun sorted(world: World, lines: List<Line>): List<Line> {
-        val values = lines.associateWith { value(world, it) }
-        return lines.sortedWith(compareBy<Line> { it.tag != Tag.PET }.thenByDescending { values.getValue(it) }.thenBy { it.normal }.thenBy { it.name })
-    }
-
-    /** A line's worth: the Grand Exchange price ([OsrsGuidePrices.seed]) times the average quantity; a folded table its best line. */
-    fun value(world: World, line: Line): Double {
-        if (line.tag == Tag.TABLE) return line.kids.maxOfOrNull { value(world, it) } ?: 0.0
-        val def = world.definitions.getNullable(ItemDef::class.java, picture(world, line.item)) ?: return 0.0
-        return OsrsGuidePrices.seed(def).toDouble() * averageQuantity(line.quantity)
-    }
+    fun sorted(world: World, lines: List<Line>): List<Line> = lines.sortedWith(compareBy<Line> { it.tag != Tag.PET }.then(DropGroups.RAREST_FIRST))
 
     /** "100" -> 100, "20-78" -> 49 (the viewer's quantity text). */
     fun averageQuantity(quantity: String): Double {

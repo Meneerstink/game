@@ -1,37 +1,20 @@
 package gg.rsmod.plugins.content.skills.summoning
 
-import com.displee.cache.CacheLibrary
 import java.io.File
-import java.nio.file.Paths
 import kotlin.test.Test
-import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
-/** N258 (owner 2026-10-23: "NA" twice in Follower Details): the pet layer's growth and hunger counters are hidden for a pet. */
+/**
+ * N258 TERUG (owner 2026-10-24 12:39, bug-20261024-123909: "omdat een vorige agent de NA NA weg heeft gehaald ziet het er nu raar
+ * uit, ik wil het terug"): Follower Details shows the pet column's two rows (662:44-48, growth and hunger, "NA" for an OSRS pet)
+ * again - nothing hides them for a pet.
+ */
 class SummoningPetColumnTests {
-    /** The parent layer of a rev-667 component stream (Component.decode: version, type [+ name], 2+2+2+2+2, 4 mode bytes, layer). */
-    private fun layerOf(b: ByteArray): Int {
-        var p = 1
-        val type = b[p++].toInt() and 0xFF
-        if (type and 0x80 != 0) {
-            while (b[p] != 0.toByte()) p++
-            p++
-        }
-        p += 10 + 4
-        return ((b[p].toInt() and 0xFF) shl 8) or (b[p + 1].toInt() and 0xFF)
-    }
-
     @Test
-    fun `layer 71 holds exactly the growth and hunger icons and values, and a pet hides all of them`() {
-        val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
-        val children =
-            try {
-                library.index(3).archive(662)!!.fileIds().filter { id -> library.data(3, 662, id)?.let { layerOf(it) } == 71 }
-            } finally {
-                library.close()
-            }
-        assertEquals(SummoningUi.PANEL_PET_COLUMN.toList(), children.sorted())
+    fun `the pet column's growth and hunger rows show again for a pet - nothing hides 662 44 to 48`() {
         val source = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/SummoningUi.kt").readText()
-        assertTrue("PANEL_PET_COLUMN.forEach { player.setComponentHidden(PANEL, it, pet) }" in source.substringAfter("private fun refreshPanel("))
+        assertTrue("PANEL_PET_COLUMN" !in source, "the N258 hide is back")
+        // The rows read "NA" through the 2011 varbits, as before N258.
+        assertTrue("PET_VALUE_NOT_APPLICABLE" in source)
     }
 }

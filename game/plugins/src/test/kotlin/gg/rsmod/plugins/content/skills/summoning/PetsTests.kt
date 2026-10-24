@@ -112,8 +112,8 @@ class PetsTests {
         // Council Opus+Sol 2026-10-20: all71, including the16 former drop-only species. Own boss drops stay.
         val expected = Pets.parseTiers(TIERS.readLines())
         val chest = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets()
-        assertEquals(71, chest.size)
-        assertEquals(expected.map { it.pet }.toSet(), chest.map { it.first }.toSet())
+        assertEquals(67, chest.size)
+        assertEquals(expected.map { it.pet }.toSet() - gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.OWN_BOSS_ONLY, chest.map { it.first }.toSet())
         expected.forEach { info -> info.dropNpcs.forEach { assertEquals(info, Pets.dropFor(it)) } }
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS))
     }

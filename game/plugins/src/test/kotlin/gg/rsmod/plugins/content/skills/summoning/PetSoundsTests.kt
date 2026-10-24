@@ -40,6 +40,30 @@ class PetSoundsTests {
     }
 
     @Test
+    fun `N296 N257 N298 - every dog barks the same bark, every Loyalty store pet has its species' sound, a pet is heard when it appears`() {
+        Pets.load(File("../../data/cfg/pets/pets.tsv"), File("../../data/cfg/pets/pet_tiers.tsv"), File("../../data/cfg/pets/pets_667.tsv"))
+        PetVoices.install(PetVoices.parse(File("../../data/cfg/pets/pet_voices.tsv").readLines()), Pets.variants)
+        // Dogs: the 667 dogs and puppies, the Hellpuppy and the Bloodhound - one bark, on Talk-to (the Bloodhound on its lines), idle, appearing.
+        val dogs = Pets.variants.filter { it.pet in PetVoices.DOGS || (it.classic && it.name in PetVoices.DOGS) }
+        assertTrue(dogs.size >= 25, "${dogs.size} dog followers")
+        dogs.forEach { assertEquals(Sfx.PET_DOG_BARK, PetVoices.idleVoiceOf(it.npc), it.name) }
+        assertNull(PetVoices.voiceOf(TranscriptDialogue.BLOODHOUND), "the Bloodhound barks on its own lines, not twice")
+        // Every pet the Loyalty store sells (a follower item) has a voice of its own species.
+        val loyalty = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES
+            .filter { it.shop == gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Shop.LOYALTY && Pets.isPetItem(it.purchaseItem) }
+        assertTrue(loyalty.size >= 20, "${loyalty.size} Loyalty store pets")
+        loyalty.forEach { e -> assertTrue(PetVoices.idleVoiceOf(Pets.variantOfItem(e.purchaseItem)!!.npc) != null, "${Pets.variantOfItem(e.purchaseItem)!!.name} has a sound") }
+        assertEquals(Sfx.VM_MONKEY, PetVoices.voiceOf(Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY)!!.npc), "baby monkey: a monkey")
+        // N295: the Baby icefiend is a follower now.
+        assertEquals(7713, Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_ICEFIEND)?.npc)
+        // N298: every way a pet appears plays its voice.
+        val source = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/Pets.kt").readText()
+        for (fn in listOf("fun drop(", "fun call(", "fun restoreOnLogin(", "fun tick(")) {
+            assertTrue("PetVoices.appear(" in source.substringAfter(fn).substringBefore("\n    }\n"), "$fn plays the voice")
+        }
+    }
+
+    @Test
     fun `the Bloodhound barks once on each line that says it barks, and nowhere else`() {
         assertEquals(Sfx.PET_DOG_BARK, TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "*Woof woof bark!* Elementary, it's due to the influence of the -SQUIRREL-!"))
         assertNull(TranscriptDialogue.lineSound(TranscriptDialogue.BLOODHOUND, "Walkies!"))

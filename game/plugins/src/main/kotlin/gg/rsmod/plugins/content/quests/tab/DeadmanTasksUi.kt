@@ -106,7 +106,7 @@ object DeadmanTasksUi {
             N108Ui.sprite(player, i, base, "tw_row_${task.tier.name.lowercase()}")
             N108Ui.hidden(player, i, base, false)
             N108Ui.hidden(player, i, base + 1, false)
-            N108Ui.item(player, i, base + 2, task.icon, 1)
+            N108Ui.item(player, i, base + 2, task.icon)
             N108Ui.hidden(player, i, base + 2, false)
             N108Ui.text(player, i, base + 3, if (finished) "<col=8f8473>${task.name}</col>" else task.name)
             N108Ui.hidden(player, i, base + 3, false)

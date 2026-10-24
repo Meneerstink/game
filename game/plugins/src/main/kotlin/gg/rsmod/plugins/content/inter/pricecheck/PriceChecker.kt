@@ -90,6 +90,17 @@ object PriceChecker {
 
     val CONTAINER_ATTR = AttributeKey<ItemContainer>()
 
+    const val MSG_UNTRADEABLE = "You can't price check that."
+
+    /** Only a tradeable item (its unnoted form) can be price checked (N290). */
+    fun canCheck(
+        player: Player,
+        itemId: Int,
+    ): Boolean {
+        val unnoted = gg.rsmod.game.model.item.Item(itemId).toUnnoted(player.world.definitions)
+        return player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, unnoted.id)?.tradeable == true
+    }
+
     fun container(player: Player): ItemContainer? = player.attr[CONTAINER_ATTR]
 
     fun isOpen(player: Player): Boolean = player.attr.has(CONTAINER_ATTR)
@@ -137,6 +148,12 @@ object PriceChecker {
     ) {
         val container = container(player) ?: return
         val item = player.inventory[slot] ?: return
+        // N290 (owner 2026-10-24): an untradeable item (a pet, a Deadman reward ...) has no price - it stays in the inventory, the
+        // same rule the trade screen uses (the unnoted item's tradeable flag).
+        if (!canCheck(player, item.id)) {
+            player.message(MSG_UNTRADEABLE)
+            return
+        }
         val count = Math.min(amount, player.inventory.getItemCount(item.id))
         if (count <= 0) {
             return

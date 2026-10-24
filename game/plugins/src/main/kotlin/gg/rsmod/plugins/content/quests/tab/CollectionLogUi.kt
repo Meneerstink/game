@@ -107,7 +107,7 @@ object CollectionLogUi {
                 page == selected && done -> "7cff7c"
                 page == selected -> "ffffff"
                 done -> "0dc10d"
-                else -> "ff981f"
+                else -> "ffb347"
             }
             N108Ui.text(player, i, base + 1, "<col=$colour>${page.name}</col>")
         }
@@ -142,11 +142,11 @@ object CollectionLogUi {
             if (item == null) continue
             val name = DropSources.itemName(player.world, item)
             if (entry != null) {
-                N108Ui.item(player, i, base, item, 1)
+                N108Ui.item(player, i, base, item)
                 N108Ui.text(player, i, base + 2, N108Ui.number(entry.count))
                 tips += N108Ui.hash(i, base) to "$name" + if (entry.kc > 0) "\nObtained at KC ${N108Ui.number(entry.kc)}" else ""
             } else {
-                N108Ui.item(player, i, base + 1, item, 1)
+                N108Ui.item(player, i, base + 1, item)
                 tips += N108Ui.hash(i, base + 1) to name
             }
         }

@@ -27,8 +27,8 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 /**
- * N108 / N104 night job 2026-10-24 (spec section E): the Drop Viewer's chances are the roll's own (same functions), the order is
- * the pet first, then the most valuable line (N272), a named nested table folds open to its own lines, a search finds an item inside a fold, the
+ * N108 / N104 night job 2026-10-24 (spec section E): the Drop Viewer's chances are the roll's own (same functions), the lines
+ * stand in groups, the rarest first (N279), every drop table open under its line, a search finds an item inside a fold, the
  * Collection Log records only log items with the kill count, the favourites and the new attributes load from old saves (empty),
  * and a Deadman Task pays exactly once.
  */
@@ -115,42 +115,77 @@ class DropViewerTests {
     }
 
     @Test
-    fun `the pet on top, then the most valuable line first, the same order in every bracket`() {
+    fun `N279 - groups with headings in the Wiki's order, the rarest first inside a group, the same in every bracket`() {
         register()
         val account = Account()
         val world = account.world
         for (rate in listOf(1.0, 3.0, 5.0)) {
-            val lines = DropSources.view(account.player, source(), rate).lines
-            val values = lines.map { DropSources.value(world, it) }
-            assertEquals(values.sortedDescending(), values, "most valuable first at ${rate}x: ${lines.map { it.name }}")
-            assertTrue(values.first() > values.last())
+            val view = DropSources.view(account.player, source(), rate)
+            val groups = DropGroups.grouped(world, view.lines, emptySet())
+            assertEquals(listOf("Weapons and armour", "Coins and other", "Drop tables"), groups.map { it.first.title }, "at ${rate}x")
+            // Rune platebody 4/128 is commoner than the Dragon pickaxe 1/128: the pickaxe first.
+            assertEquals(listOf(Items.DRAGON_PICKAXE, Items.RUNE_PLATEBODY), groups[0].second.map { it.item })
         }
-        // A folded table counts as its best line; the coins (100-200) as 150 coins.
-        val view = DropSources.view(account.player, source(), 1.0)
-        val rdt = view.lines.single { it.tag == DropSources.Tag.TABLE }
-        assertEquals(rdt.kids.maxOf { DropSources.value(world, it) }, DropSources.value(world, rdt), 1e-9)
-        assertEquals(150.0, DropSources.averageQuantity("100-200"), 1e-9)
-        assertEquals(49.0, DropSources.averageQuantity("20-78"), 1e-9)
-        assertEquals(1.0, DropSources.averageQuantity("1"), 1e-9)
-        // A pet is always first, however little it is worth, then value (rarest first between equal values).
+        // The pet on top of a mixed list; then rarest first; the same chance keeps the same item together.
         val pet = DropSources.Line("pet", Items.BONES, "Pet", "1", 1.0 / 3000, 1.0 / 3000, DropSources.Tag.PET)
-        val cheap = DropSources.Line("a", Items.BONES, "Bones", "1", 0.5, 0.5)
-        val dear = DropSources.Line("b", Items.DRAGON_PICKAXE, "Dragon pickaxe", "1", 1.0 / 128, 1.0 / 128)
-        val rareCheap = DropSources.Line("c", Items.BONES, "Bones", "1", 0.01, 0.01)
-        assertEquals(listOf("pet", "b", "c", "a"), DropSources.sorted(world, listOf(cheap, dear, rareCheap, pet)).map { it.key })
+        val common = DropSources.Line("a", Items.BONES, "Bones", "1", 0.5, 0.5)
+        val rare = DropSources.Line("b", Items.DRAGON_PICKAXE, "Dragon pickaxe", "1", 1.0 / 128, 1.0 / 128)
+        val sameA = DropSources.Line("c", Items.RUNE_ARROW, "Rune arrow", "10", 0.01, 0.01)
+        val other = DropSources.Line("d", Items.ADAMANT_ARROW, "Adamant arrow", "5", 0.01, 0.01)
+        val sameB = DropSources.Line("e", Items.RUNE_ARROW, "Rune arrow", "20", 0.01, 0.01)
+        assertEquals(listOf("pet", "b", "d", "c", "e", "a"), DropSources.sorted(world, listOf(common, sameA, rare, other, sameB, pet)).map { it.key })
+        // The order follows the NORMAL chance: a boosted line does not move.
+        val boosted = DropSources.Line("f", Items.RUNE_ARROW, "Rune arrow", "1", 0.9, 1.0 / 5000)
+        assertEquals("f", DropSources.sorted(world, listOf(common, boosted)).first().key)
+        // Charms keep their fixed order (gold, green, crimson, blue), whatever the chance.
+        val charms = DropGroups.CHARMS.reversed().mapIndexed { i, c -> DropSources.Line("ch$i", c, "c$i", "1", 0.1 * (i + 1), 0.1 * (i + 1)) }
+        assertEquals(DropGroups.CHARMS, DropGroups.sortGroup(DropGroups.Group.CHARMS, charms).map { it.item })
     }
 
     @Test
-    fun `a fold opens in place with its lines under it, and a search for an item inside opens it by itself`() {
+    fun `N279 - an item's group is its own category from the item definition, the doubtful ones from the fixed list`() {
+        val world = Account().world
+        fun g(id: Int) = DropGroups.category(world, id)
+        assertEquals(DropGroups.Group.GEAR, g(Items.RUNE_PLATEBODY))
+        assertEquals(DropGroups.Group.GEAR, g(Items.DRAGON_MED_HELM))
+        assertEquals(DropGroups.Group.RUNES, g(Items.NATURE_RUNE))
+        assertEquals(DropGroups.Group.RUNES, g(Items.RUNE_ARROW))
+        assertEquals(DropGroups.Group.MATERIALS, g(Items.RUNITE_ORE))
+        assertEquals(DropGroups.Group.MATERIALS, g(Items.MAGIC_LOGS))
+        assertEquals(DropGroups.Group.MATERIALS, g(Items.UNCUT_DIAMOND))
+        assertEquals(DropGroups.Group.MATERIALS, g(Items.DRAGON_BONES))
+        assertEquals(DropGroups.Group.MATERIALS, g(Items.BLACK_DRAGONHIDE))
+        assertEquals(DropGroups.Group.HERBS, g(Items.GRIMY_RANARR))
+        assertEquals(DropGroups.Group.HERBS, g(Items.RANARR_SEED))
+        assertEquals(DropGroups.Group.FOOD, g(Items.SHARK))
+        assertEquals(DropGroups.Group.FOOD, g(Items.SUPER_RESTORE_4))
+        assertEquals(DropGroups.Group.OTHER, g(Items.COINS_995))
+        assertEquals(DropGroups.Group.OTHER, g(Items.LOOP_HALF_OF_A_KEY))
+        assertEquals(DropGroups.Group.CHARMS, g(Items.GOLD_CHARM))
+        // A note counts as its item.
+        val noted = (0 until 30000).firstOrNull { id -> world.definitions.getNullable(ItemDef::class.java, id)?.let { it.noted && it.noteLinkId == Items.RUNITE_ORE } == true }
+        if (noted != null) assertEquals(DropGroups.Group.MATERIALS, g(noted))
+        // Every fixed-list name really is an item name, so no entry is dead.
+        val names = (0 until world.definitions.getCount(ItemDef::class.java)).mapNotNull { world.definitions.getNullable(ItemDef::class.java, it)?.name?.lowercase() }.toSet()
+        assertEquals(emptyList(), DropGroups.OVERRIDES.keys.filter { it !in names })
+    }
+
+    @Test
+    fun `N279 - every drop table is open, its lines right under it, a heading over every group`() {
         register()
         val account = Account()
         val view = DropSources.view(account.player, source(), 1.0)
-        val closed = DropViewer.rowsOf(account.player, view)
-        assertTrue(closed.none { it.level > 0 })
-        // The searched item (a loop half, inside the rare table) opens the fold.
-        val chances = DropSources.itemChances(view)
-        assertTrue(chances.containsKey(Items.LOOP_HALF_OF_A_KEY), "search finds an item inside a fold")
-        assertTrue(chances.getValue(Items.DRAGON_PICKAXE).second > 0.0)
+        val rows = DropViewer.rowsOf(account.player, source(), view)
+        assertTrue(rows.first().header != null, "a heading first")
+        val at = rows.indexOfFirst { it.line?.tag == DropSources.Tag.TABLE }
+        val rdt = rows[at].line!!
+        assertEquals("Rare drop table", rdt.name)
+        assertEquals(rdt.kids.size, rows.drop(at + 1).takeWhile { it.level > 0 && it.line != null }.count { it.level == 1 }, "every kid under the table")
+        assertTrue(rows.any { it.line?.item == Items.LOOP_HALF_OF_A_KEY && it.level == 1 }, "the loop half shows without a click")
+        // The kids too: rarest first.
+        val kids = rows.drop(at + 1).takeWhile { it.level > 0 }.filter { it.level == 1 }.map { 1.0 / it.line!!.normal }
+        assertEquals(kids.sortedDescending(), kids, "rarest first")
+        assertTrue(DropViewer.rowsOf(account.player, source(), view).size <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.V.ROW_SLOTS)
     }
 
     @Test
@@ -179,6 +214,17 @@ class DropViewerTests {
         fun parse(t: String) = entry.findAll(t).associate { it.groupValues[1] to (it.groupValues[2] + "x" + it.groupValues[3]) }
         assertEquals(parse(art), parse(server))
         assertTrue(parse(server).containsKey("zi_big_chest"))
+    }
+
+    @Test
+    fun `N282 - no picture in the log, the viewer or the tab gets a count from the client - only the real counter shows`() {
+        // The 667 client draws "1" on a stackable item given amount 1 (Morrigan's javelin looked obtained); -1 = no count.
+        assertEquals(-1, N108Ui.NO_COUNT)
+        val dir = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab")
+        val call = Regex("""N108Ui\.item\(([^\n]*)\)""")
+        val calls = dir.listFiles()!!.filter { it.name.endsWith(".kt") }.flatMap { f -> call.findAll(f.readText()).map { f.name + ": " + it.value }.toList() }
+        assertTrue(calls.isNotEmpty())
+        assertEquals(emptyList(), calls.filter { it.trimEnd(')').endsWith(", 1") }, "a picture with amount 1")
     }
 
     @Test
@@ -219,7 +265,7 @@ class DropViewerTests {
     }
 
     @Test
-    fun `the chest and breach pages list the chest's pets first, Pest Control has its own Minigames page, Nex lists the Zaryte crossbow`() {
+    fun `N268 N291 N293 - chest and breach pages weapons and armour first and the pets at the bottom, no God Wars pet, no Zaryte bow, Pest Control on Minigames`() {
         val account = Account()
         gg.rsmod.plugins.content.skills.summoning.Pets.load(java.io.File("../../data/cfg/pets/pets.tsv"), java.io.File("../../data/cfg/pets/pet_tiers.tsv"))
         CollectionLogPages.reset()
@@ -228,10 +274,17 @@ class DropViewerTests {
             val pets = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets().map { it.second }.distinct()
             assertTrue(pets.isNotEmpty(), "the chest gives pets")
             val pages = CollectionLogPages.all(account.player)
+            val gwd = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.OWN_BOSS_ONLY.mapNotNull { gg.rsmod.plugins.content.skills.summoning.Pets.baseItem(it) }
+            assertEquals(4, gwd.size)
             for (key in listOf("chest", "breach")) {
                 val page = pages.single { it.key == key }
-                assertEquals(pets, page.items.take(pets.size), "$key: the pets first")
+                assertEquals(pets, page.items.takeLast(pets.size), "$key: the pets at the bottom")
+                assertTrue(page.items.none { it in gwd }, "$key: no God Wars pet")
+                val gear = page.items.map { DropGroups.category(account.world, it) == DropGroups.Group.GEAR }
+                assertTrue(gear.first(), "$key: weapons and armour first")
+                assertEquals(gear.take(gear.indexOfFirst { !it }).size, gear.count { it }, "$key: every weapon and armour piece before the rest")
             }
+            assertTrue("Zaryte bow" !in CollectionLogPages.OSRS.getValue("nex"), "N293: no Zaryte bow")
             val pc = pages.single { it.key == CollectionLogPages.PEST_CONTROL }
             assertEquals(CollectionLogPages.Category.MINIGAMES, pc.category)
             assertEquals(CollectionLogPages.PEST_CONTROL_ITEMS, pc.items)

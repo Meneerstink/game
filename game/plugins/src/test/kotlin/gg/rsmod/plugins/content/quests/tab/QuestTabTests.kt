@@ -177,6 +177,19 @@ class QuestTabTests {
     }
 
     @Test
+    fun `N289 - a group whose quests are all yours reads a green Unlocked, a chosen group Chosen, an open group Pick 1`() {
+        // An account from before the choices has every quest: every group Unlocked (it said "All yours").
+        val legacy = QuestTab.questRows(Account(isNew = false).player).filter { it.icon == null && it.right != null }
+        assertEquals(listOf("<col=0dc10d>Unlocked</col>"), legacy.map { it.right }.distinct())
+        val account = Account(isNew = true)
+        assertEquals(QuestChoices.Result.CHOSEN, QuestChoices.choose(account.player, ChoiceGroup.MAGIC, DesertTreasure))
+        val rows = QuestTab.questRows(account.player).filter { it.icon == null && it.right != null }.associate { it.key to it.right }
+        assertEquals("<col=ffcf4a>Chosen</col>", rows["MAGIC"])
+        assertEquals("<col=9a9083>Pick 1</col>", rows["PRAYER"])
+        assertTrue(QuestTab.questRows(account.player).none { "All yours" in (it.right ?: "") })
+    }
+
+    @Test
     fun `groups use the existing choice data and the Quests tab lists every group, quest and requirement`() {
         assertEquals(ChoiceGroup.values().toList(), QuestGuideUi.ROWS)
         val account = Account()

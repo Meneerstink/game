@@ -29,9 +29,8 @@ for (r in 0 until N.QP.ROWS) {
 
 // ---- 2 Deadman
 on_button(interfaceId = N.DEADMAN, component = N.DP.INFO) { QuestTab.openInfo(player) }
-for (c in 0 until N.DP.CELLS) {
-    on_button(interfaceId = N.DEADMAN, component = N.DP.cell(c) + 5) { QuestTab.cellClick(player, c) }
-}
+// N280: the point rows open no store any more (only the npc in a safe zone does); the emblem row opens Info on the emblem.
+on_button(interfaceId = N.DEADMAN, component = N.DP.EMBLEM_HIT) { QuestTab.emblemClick(player) }
 for (e in 0 until 2) {
     on_button(interfaceId = N.DEADMAN, component = N.DP.event(e) + 5) { QuestTab.eventMap(player, e) }
 }
@@ -79,9 +78,6 @@ on_button(interfaceId = DropViewer.INTERFACE, component = N.V.SEARCH_HIT) {
 on_button(interfaceId = DropViewer.INTERFACE, component = N.V.STAR_ON) { DropViewer.toggleFavourite(player) }
 on_button(interfaceId = DropViewer.INTERFACE, component = N.V.STAR_OFF) { DropViewer.toggleFavourite(player) }
 on_button(interfaceId = DropViewer.INTERFACE, component = N.V.MAP) { DropViewer.showOnMap(player) }
-for (r in 0 until N.V.ROW_SLOTS) {
-    on_button(interfaceId = DropViewer.INTERFACE, component = N.V.row(r) + N.V.R_TOGGLE) { DropViewer.rowClick(player, r) }
-}
 for (s in 0 until N.V.LIST_SLOTS) {
     on_button(interfaceId = DropViewer.INTERFACE, component = N.V.slot(s) + N.V.L_VIEW) { DropViewer.listClick(player, s, toggle = false) }
     on_button(interfaceId = DropViewer.INTERFACE, component = N.V.slot(s) + N.V.L_TOGGLE) { DropViewer.listClick(player, s, toggle = true) }
@@ -105,6 +101,21 @@ on_command("dvzoom", Privilege.ADMIN_POWER) {
         DropViewer.HEAD_PER = a[3]
     }
     player.message("Drop Viewer zoom: thumb ${DropViewer.THUMB_BASE}+${DropViewer.THUMB_PER}/tile, head ${DropViewer.HEAD_BASE}+${DropViewer.HEAD_PER}/tile")
+    if (DropViewer.isOpen(player)) DropViewer.open(player)
+}
+/** N279: `::dvaudit` checks every Drop Viewer entry (groups, order, open tables, fits, overlaps) - logs/dropviewer-audit.txt. */
+on_command("dvaudit", Privilege.ADMIN_POWER) {
+    DropViewerAudit.write(player).take(12).forEach { player.message(it) }
+}
+/** `::dvangle <x angle> <y angle> [chest y angle]`: tunes the still models' view live (N283). */
+on_command("dvangle", Privilege.ADMIN_POWER) {
+    val a = player.attr[gg.rsmod.game.model.attr.COMMAND_ARGS_ATTR]?.mapNotNull { it.toIntOrNull() } ?: emptyList()
+    if (a.size >= 2) {
+        DropViewer.MODEL_XAN = a[0]
+        DropViewer.MODEL_YAN = a[1]
+        if (a.size >= 3) DropViewer.CHEST_YAN = a[2]
+    }
+    player.message("Drop Viewer angle: x ${DropViewer.MODEL_XAN}, y ${DropViewer.MODEL_YAN}, chest y ${DropViewer.CHEST_YAN}")
     if (DropViewer.isOpen(player)) DropViewer.open(player)
 }
 on_command("collectionlog") { CollectionLogUi.open(player) }

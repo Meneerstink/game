@@ -83,6 +83,10 @@ object N108InterfaceImportTool {
     private fun Builder.t(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, colour: Int, text: String = "", alignX: Int = 0, alignY: Int = 1, hidden: Boolean = false, lineHeight: Int = 0) =
         text(id, x, y, w, h, parent, font, text, colour = colour, alignX = alignX, alignY = alignY, hidden = hidden, lineHeight = lineHeight)
 
+    /** Text on parchment (the Wiki table, N279): no drop shadow. */
+    private fun Builder.tp(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, colour: Int, text: String = "", alignX: Int = 0, alignY: Int = 1, hidden: Boolean = false) =
+        add(Comp(id, 4, x, y, w, h, parent, hidden = hidden, font = font, text = text, colour = colour, alignX = alignX, alignY = alignY, textShadow = false))
+
     private fun Builder.hit(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, op: String, hidden: Boolean = false) = layer(id, x, y, w, h, parent, hidden = hidden, ops = listOf(op))
 
     /** A scaled item picture (the 667 client draws an object graphic at the component's size). */
@@ -120,7 +124,8 @@ object N108InterfaceImportTool {
         const val BRK_A = MAP + 2
         const val BRK_B = MAP + 3
         const val BRK_C = MAP + 4
-        const val COMBAT = MAP + 5
+        /** N279 / N284: the bracket line's skull (the "Combat 138" text that stood here is gone). */
+        const val BRK_ICON = MAP + 5
         const val ALWAYS_LABEL = MAP + 6
         const val ALWAYS_FIRST = MAP + 7 // per item: picture, name, note
         const val ALWAYS = 3
@@ -132,16 +137,17 @@ object N108InterfaceImportTool {
         const val ROWS_SCROLLBAR = ROWS + 1
         const val EMPTY = ROWS + 2
         const val ROW_FIRST = ROWS + 3 // 47
-        const val ROW_STRIDE = 8 // bg, item, name, tag, qty, your, normal, toggle
+        const val ROW_STRIDE = 8 // bg, chance cell, item, name, tag, qty, your, normal
         const val R_BG = 0
-        const val R_ITEM = 1
-        const val R_NAME = 2
-        const val R_TAG = 3
-        const val R_QTY = 4
-        const val R_YOUR = 5
-        const val R_NORMAL = 6
-        const val R_TOGGLE = 7
-        const val ROW_SLOTS = 90
+        const val R_CELL = 1
+        const val R_ITEM = 2
+        const val R_NAME = 3
+        const val R_TAG = 4
+        const val R_QTY = 5
+        const val R_YOUR = 6
+        const val R_NORMAL = 7
+        /** Group headings and every drop table's lines (always open, N279) included; DropViewerAudit checks every entry fits. */
+        const val ROW_SLOTS = 200
         const val LIST_FIRST = ROW_FIRST + ROW_SLOTS * ROW_STRIDE
         const val LIST_STRIDE = 9 // bg, arrow, icon, thumb, model, text, sub, view, toggle
         const val L_BG = 0
@@ -162,10 +168,12 @@ object N108InterfaceImportTool {
         const val LIST_W = 132
         const val LIST_H = 257
         const val ROWS_X = 163
-        const val ROWS_Y = 160
+        const val ROWS_Y = 140
         const val ROWS_W = 314
-        const val ROWS_H = 154
+        const val ROWS_H = 174
         const val ROW_H = 18
+        /** A group heading's height (design B5 `.ghd`). */
+        const val HEAD_H = 17
         const val NAME_X = 261
         const val TAGS_Y = 66
 
@@ -182,7 +190,7 @@ object N108InterfaceImportTool {
         b.t(V.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Drop Viewer", alignX = 1)
         b.hit(V.CLOSE, 472, 5, 21, 19, 1, "Close")
         b.g(V.SEARCH_ON, 7, 30, 1, "dv_search_on", hidden = true)
-        b.t(V.SEARCH_TEXT, 28, 30, 116, 22, 1, fonts.p11, 0x6F6556, "Search monster or item")
+        b.t(V.SEARCH_TEXT, 28, 30, 116, 22, 1, fonts.p11, 0xC8BBA6, "Search monster or item")
         b.t(V.SEARCH_CLEAR, 144, 30, 12, 22, 1, fonts.p11, 0x8F8473, "x", alignX = 1, hidden = true)
         b.hit(V.SEARCH_HIT, 7, 30, 135, 22, 1, "Search")
         b.layer(V.LIST, V.LIST_X, V.LIST_Y, V.LIST_W, V.LIST_H, 1)
@@ -198,35 +206,38 @@ object N108InterfaceImportTool {
         }
         b.hit(V.MAP, 408, 30, 84, 18, 1, "Show on map", hidden = true)
         b.t(V.MAP_TEXT, 420, 30, 72, 18, 1, fonts.p11, ORANGE, "Show on map", alignX = 1, hidden = true)
-        b.t(V.BRK_A, 184, 106, 90, 20, 1, fonts.p11, 0xFFE08A)
-        b.t(V.BRK_B, 260, 106, 40, 20, 1, fonts.b12, WHITE)
-        b.t(V.BRK_C, 290, 106, 150, 20, 1, fonts.p11, 0xFFE08A)
-        b.t(V.COMBAT, 163, 106, 322, 20, 1, fonts.p11, 0xD9C08A, alignX = 2)
-        b.t(V.ALWAYS_LABEL, 169, 126, 60, 18, 1, fonts.p11, 0xAFEEEE, "Always:")
+        // N279 design B5: the bracket as gold text in the head under the labels (skull, "Your bracket", the bracket in bold, the
+        // boost); no "Combat 138" (N284).
+        b.g(V.BRK_ICON, V.NAME_X, 89, 1, "skull12")
+        b.t(V.BRK_A, V.NAME_X + 16, 86, 90, 17, 1, fonts.p11, 0xFFD75E, "Your bracket")
+        b.t(V.BRK_B, V.NAME_X + 90, 86, 40, 17, 1, fonts.b12, WHITE)
+        b.t(V.BRK_C, V.NAME_X + 120, 86, 150, 17, 1, fonts.p11, 0xFFD75E)
+        // The Wiki table (parchment, no text shadow): the Always bar, the column heads, the rows.
+        b.tp(V.ALWAYS_LABEL, 169, 107, 60, 18, 1, fonts.p11, 0x2A1D0E, "Always:")
         for (i in 0 until V.ALWAYS) {
             val base = V.ALWAYS_FIRST + i * 3
-            b.obj(base, 220, 128, 16, 14, 1)
-            b.t(base + 1, 238, 126, 100, 18, 1, fonts.p11, TXT, hidden = true)
-            b.t(base + 2, 238, 126, 100, 18, 1, fonts.p11, GREY, hidden = true)
+            b.obj(base, 220, 109, 16, 14, 1)
+            b.tp(base + 1, 238, 107, 100, 18, 1, fonts.p12, 0x4A2508, hidden = true)
+            b.tp(base + 2, 238, 107, 100, 18, 1, fonts.p11, 0x5E4E38, hidden = true)
         }
-        b.t(V.HEAD_ITEM, 193, 145, 100, 15, 1, fonts.p11, 0xC7B48E, "Item")
-        b.t(V.HEAD_QTY, 309, 145, 36, 15, 1, fonts.p11, 0xC7B48E, "Qty", alignX = 2)
-        b.t(V.HEAD_YOUR, 341, 145, 72, 15, 1, fonts.p11, 0xFFD75E, "Your chance", alignX = 2)
-        b.t(V.HEAD_NORMAL, 415, 145, 56, 15, 1, fonts.p11, 0x8F8473, "Normal", alignX = 2)
+        b.tp(V.HEAD_ITEM, V.ROWS_X + 31, 125, 100, 15, 1, fonts.p11, 0x000000, "Item")
+        b.tp(V.HEAD_QTY, V.ROWS_X + 170, 125, 36, 15, 1, fonts.p11, 0x000000, "Qty", alignX = 1)
+        b.tp(V.HEAD_YOUR, V.ROWS_X + 206, 125, 56, 15, 1, fonts.p11, 0x000000, "Your chance", alignX = 1)
+        b.tp(V.HEAD_NORMAL, V.ROWS_X + 262, 125, 52, 15, 1, fonts.p11, 0x000000, "Normal", alignX = 1)
         b.layer(V.ROWS, V.ROWS_X, V.ROWS_Y, V.ROWS_W, V.ROWS_H, 1)
         b.scrollbarFor(V.ROWS_SCROLLBAR, V.ROWS_X + V.ROWS_W, V.ROWS_Y, V.ROWS_H, 1, VIEWER, V.ROWS)
-        b.t(V.EMPTY, 0, 0, V.ROWS_W, 60, V.ROWS, fonts.p12, GREY, alignX = 1, hidden = true)
+        b.tp(V.EMPTY, 0, 0, V.ROWS_W, 60, V.ROWS, fonts.p12, 0x3A2C1C, alignX = 1, hidden = true)
         for (r in 0 until V.ROW_SLOTS) {
             val base = V.row(r)
             val y = r * V.ROW_H
             b.g(base + V.R_BG, 0, y, V.ROWS, "dv_row_even", hidden = true)
-            b.obj(base + V.R_ITEM, 4, y, 22, 18, V.ROWS)
-            b.t(base + V.R_NAME, 30, y, 140, V.ROW_H, V.ROWS, fonts.p11, TXT, hidden = true)
-            b.g(base + V.R_TAG, 100, y + 3, V.ROWS, "tag_pet", hidden = true)
-            b.t(base + V.R_QTY, 146, y, 36, V.ROW_H, V.ROWS, fonts.p11, 0xCFC2A8, alignX = 2, hidden = true)
-            b.t(base + V.R_YOUR, 178, y, 72, V.ROW_H, V.ROWS, fonts.p11, WHITE, alignX = 2, hidden = true)
-            b.t(base + V.R_NORMAL, 252, y, 56, V.ROW_H, V.ROWS, fonts.p11, 0x7A7064, alignX = 2, hidden = true)
-            b.hit(base + V.R_TOGGLE, 0, y, V.ROWS_W, V.ROW_H, V.ROWS, "Toggle", hidden = true)
+            b.g(base + V.R_CELL, 208, y + 1, V.ROWS, "zj_c_common", hidden = true)
+            b.obj(base + V.R_ITEM, 2, y, 22, 18, V.ROWS)
+            b.tp(base + V.R_NAME, 31, y, 139, V.ROW_H, V.ROWS, fonts.p12, 0x4A2508, hidden = true)
+            b.g(base + V.R_TAG, 100, y + 4, V.ROWS, "ok", hidden = true)
+            b.tp(base + V.R_QTY, 170, y, 36, V.ROW_H, V.ROWS, fonts.p11, 0x000000, alignX = 1, hidden = true)
+            b.tp(base + V.R_YOUR, 208, y, 53, V.ROW_H, V.ROWS, fonts.b12, 0x000000, alignX = 1, hidden = true)
+            b.tp(base + V.R_NORMAL, 263, y, 51, V.ROW_H, V.ROWS, fonts.p11, 0x3A2C1C, alignX = 1, hidden = true)
         }
         for (s in 0 until V.LIST_SLOTS) {
             val base = V.slot(s)
@@ -275,7 +286,8 @@ object N108InterfaceImportTool {
         const val LIST_Y = 50
         const val LIST_W = 142
         const val LIST_H = 264
-        const val ENTRY_H = 16
+        /** N297 design A: the list in p12, 18 px a row. */
+        const val ENTRY_H = 18
         const val ITEMS_X = 172
         const val ITEMS_Y = 106
         const val ITEMS_W = 304
@@ -290,6 +302,9 @@ object N108InterfaceImportTool {
 
         fun slot(i: Int) = SLOT_FIRST + i * SLOT_STRIDE
     }
+
+    /** 667 transparency (0 opaque .. 255 invisible) of a missing log item: the design's opacity .32. */
+    const val MISSING_TRANSPARENCY = 174
 
     fun log(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
@@ -320,8 +335,8 @@ object N108InterfaceImportTool {
         for (i in 0 until C.ENTRIES) {
             val base = C.entry(i)
             val y = i * C.ENTRY_H
-            b.g(base, 0, y, C.LIST, "cl_sel", hidden = true)
-            b.t(base + 1, 6, y, C.LIST_W - 6, C.ENTRY_H, C.LIST, fonts.p11, ORANGE, hidden = true)
+            b.g(base, 0, y, C.LIST, "zj_cl_sel", hidden = true)
+            b.t(base + 1, 6, y, C.LIST_W - 6, C.ENTRY_H, C.LIST, fonts.p12, 0xFFB347, hidden = true)
             b.hit(base + 2, 0, y, C.LIST_W, C.ENTRY_H, C.LIST, "View", hidden = true)
         }
         for (i in 0 until C.SLOTS) {
@@ -329,7 +344,8 @@ object N108InterfaceImportTool {
             val x = 8 + (i % C.COLUMNS) * C.PITCH_X
             val y = 8 + (i / C.COLUMNS) * C.PITCH_Y
             b.obj(base, x, y, 36, 32, C.ITEMS, ops = listOf("Inspect"))
-            b.obj(base + 1, x, y, 36, 32, C.ITEMS, transparency = 140, ops = listOf("Inspect"))
+            // N297 design A: an item still missing is dimmed to about a third (opacity .32).
+            b.obj(base + 1, x, y, 36, 32, C.ITEMS, transparency = MISSING_TRANSPARENCY, ops = listOf("Inspect"))
             b.t(base + 2, x, y - 3, 36, 12, C.ITEMS, fonts.p11, 0xFFFF00, hidden = true)
         }
         return b.done(C.COUNT)
@@ -346,7 +362,8 @@ object N108InterfaceImportTool {
         val TAB_X = intArrayOf(1, 49, 96, 144)
         val TAB_W = intArrayOf(46, 45, 46, 45)
         val TOOLTIPS = listOf("Quests", "Deadman", "Deadman Tasks", "Drops & Collection Log")
-        val ICONS = listOf("qt_ic_quests", "qt_ic_deadman", "qt_ic_tasks", "qt_ic_log")
+        /** N288 design A3: the Deadman tab carries the DMM skull of the gameframe (OSRS sprite 4815). */
+        val ICONS = listOf("qt_ic_quests", "zj_ic_dmm", "qt_ic_tasks", "qt_ic_log")
 
         fun tab(i: Int) = TAB_FIRST + i * TAB_STRIDE
     }
@@ -427,58 +444,90 @@ object N108InterfaceImportTool {
         const val BADGE = INFO + 4
         const val L1 = INFO + 5
         const val L2 = INFO + 6
-        const val L3 = INFO + 7
-        const val CELL_FIRST = INFO + 8 // 6 cells: bg2, bg3, icon, value, label, hit
-        const val CELL_STRIDE = 6
-        const val CELLS = 6
-        const val EMBLEM_BG = CELL_FIRST + CELLS * CELL_STRIDE
+        const val CELL_FIRST = INFO + 7 // 3 cells (protection while he has it, skull, kill grace): bg2, bg3, icon, value, label
+        const val CELL_STRIDE = 5
+        const val CELLS = 3
+        const val POINT_FIRST = CELL_FIRST + CELLS * CELL_STRIDE // 3 rows (Loyalty, Donator, Deadman): bg, icon, name, value
+        const val POINT_STRIDE = 4
+        const val POINTS = 3
+        const val EMBLEM_BG = POINT_FIRST + POINTS * POINT_STRIDE
         const val EMBLEM_ITEM = EMBLEM_BG + 1
         const val EMBLEM_TEXT = EMBLEM_BG + 2
         const val EMBLEM_VALUE = EMBLEM_BG + 3
-        const val EVENT_FIRST = EMBLEM_BG + 4 // 2 events: bg, icon, a, b, time, map bg (op), map text
+        const val EMBLEM_ARROW = EMBLEM_BG + 4
+        const val EMBLEM_HIT = EMBLEM_BG + 5
+        const val EVENT_FIRST = EMBLEM_BG + 6 // 2 events: bg, icon, a, b, time, map bg (op), map text
         const val EVENT_STRIDE = 7
         const val COUNT = EVENT_FIRST + 2 * EVENT_STRIDE
 
+        /** Design A3 rows (panel y): bracket box, the cells, the three point rows, the emblem row, the two events. */
+        const val BRK_Y = 24
+        const val CELL_Y = 61
+        const val POINT_Y = 96
+        const val EMBLEM_Y = 153
+        const val EVENT_Y = 175
+        const val EVENT_STEP = 29
+        val POINT_ICONS = listOf("zj_dm_ic_loyalty", "zj_dm_ic_donator", "zj_dm_ic_deadman")
+        val POINT_NAMES = listOf("Loyalty", "Donator", "Deadman")
+
         fun cell(i: Int) = CELL_FIRST + i * CELL_STRIDE
+
+        fun point(i: Int) = POINT_FIRST + i * POINT_STRIDE
 
         fun event(i: Int) = EVENT_FIRST + i * EVENT_STRIDE
     }
 
+    /** Labels a shade lighter than [GREY] (design A3, owner: readable on the dark cells). */
+    const val LABEL = 0xB5A891
+
+    /**
+     * The Deadman tab, design A3 (owner 2026-10-24 GOEDGEKEURD, screens/team/INFO/dmtab-v3.png, N288): the bracket box with two lines
+     * (no Fights line), skull and kill grace, the three point balances as rows with the whole number and the 78 Store icons (no
+     * store opens from here, N280), the Archaic Emblem row with an arrow (Info on the emblem), breach and chest. Everything 3 px apart.
+     */
     fun deadman(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
         b.panel("Deadman")
         // N274: a real button - the blue "i" and "Info" (design info-v1), right-aligned on the header's 179 px edge.
         b.g(DP.INFO, 133, 2, 0, "zi_btn_info", ops = listOf("Info"))
         b.t(DP.INFO_TEXT, 152, 2, 24, 18, 0, fonts.p11, ORANGE, "Info", alignX = 0)
-        b.g(DP.BRK, 5, 23, 0, "dm_brk")
-        b.t(DP.BADGE_TOP, 11, 32, 48, 14, 0, fonts.p11, 0xC9A24A, "Bracket", alignX = 1)
-        b.t(DP.BADGE, 11, 45, 48, 16, 0, fonts.b12, WHITE, alignX = 1)
-        b.t(DP.L1, 67, 24, 112, 16, 0, fonts.p11, 0xFFE9A8)
-        b.t(DP.L2, 67, 39, 112, 16, 0, fonts.p11, 0xFFD75E)
-        b.t(DP.L3, 67, 54, 112, 16, 0, fonts.p11, 0xE6D3A6)
+        b.g(DP.BRK, 5, DP.BRK_Y, 0, "zj_dm_brk")
+        b.t(DP.BADGE_TOP, 9, DP.BRK_Y + 5, 46, 11, 0, fonts.p11, 0xC9A24A, "Bracket", alignX = 1)
+        b.t(DP.BADGE, 9, DP.BRK_Y + 15, 46, 16, 0, fonts.b12, WHITE, alignX = 1)
+        b.t(DP.L1, 62, DP.BRK_Y + 1, 114, 16, 0, fonts.p12, 0xFFE9A8)
+        b.t(DP.L2, 62, DP.BRK_Y + 16, 114, 16, 0, fonts.p12, 0xFFE9A8)
         for (i in 0 until DP.CELLS) {
             val base = DP.cell(i)
-            b.g(base, 5, 77, 0, "dm_cell2", hidden = true)
-            b.g(base + 1, 5, 77, 0, "dm_cell3", hidden = true)
-            b.g(base + 2, 5, 78, 0, "dm_skull", hidden = true)
-            b.t(base + 3, 5, 78, 60, 16, 0, fonts.p11, WHITE, hidden = true)
-            b.t(base + 4, 5, 94, 56, 13, 0, fonts.p11, GREY, alignX = 1, hidden = true)
-            b.hit(base + 5, 5, 77, 56, 32, 0, "View", hidden = true)
+            b.g(base, 5, DP.CELL_Y, 0, "dm_cell2", hidden = true)
+            b.g(base + 1, 5, DP.CELL_Y, 0, "dm_cell3", hidden = true)
+            b.g(base + 2, 5, DP.CELL_Y + 1, 0, "dm_skull", hidden = true)
+            b.t(base + 3, 5, DP.CELL_Y + 2, 60, 16, 0, fonts.p11, WHITE, hidden = true)
+            b.t(base + 4, 5, DP.CELL_Y + 16, 56, 15, 0, fonts.p12, LABEL, alignX = 1, hidden = true)
         }
-        b.g(DP.EMBLEM_BG, 5, 149, 0, "dm_ev2")
-        b.obj(DP.EMBLEM_ITEM, 7, 150, 16, 16, 0)
-        b.t(DP.EMBLEM_TEXT, 27, 149, 100, 19, 0, fonts.p11, TXT, "Archaic Emblem")
-        b.t(DP.EMBLEM_VALUE, 100, 149, 77, 19, 0, fonts.p11, WHITE, alignX = 2)
+        for (i in 0 until DP.POINTS) {
+            val base = DP.point(i)
+            val y = DP.POINT_Y + i * 18
+            b.g(base, 5, y, 0, if (i == 1) "zj_dm_row_alt" else "zj_dm_row")
+            b.g(base + 1, 9, y + 1, 0, DP.POINT_ICONS[i])
+            b.t(base + 2, 28, y, 80, 18, 0, fonts.p12, TXT, DP.POINT_NAMES[i])
+            b.t(base + 3, 60, y, 114, 18, 0, fonts.p12, WHITE, alignX = 2)
+        }
+        b.g(DP.EMBLEM_BG, 5, DP.EMBLEM_Y, 0, "zj_dm_row")
+        b.obj(DP.EMBLEM_ITEM, 8, DP.EMBLEM_Y + 1, 16, 16, 0)
+        b.t(DP.EMBLEM_TEXT, 28, DP.EMBLEM_Y, 100, 18, 0, fonts.p12, TXT, "Archaic Emblem")
+        b.t(DP.EMBLEM_VALUE, 100, DP.EMBLEM_Y, 62, 18, 0, fonts.p12, WHITE, alignX = 2)
+        b.g(DP.EMBLEM_ARROW, 168, DP.EMBLEM_Y + 5, 0, "tk_chev")
+        b.hit(DP.EMBLEM_HIT, 5, DP.EMBLEM_Y, 174, 18, 0, "Info")
         for (i in 0 until 2) {
             val base = DP.event(i)
-            val y = 171 + i * 29
+            val y = DP.EVENT_Y + i * DP.EVENT_STEP
             b.g(base, 5, y, 0, "dm_ev4")
             b.g(base + 1, 8, y + 5, 0, if (i == 0) "dm_clock" else "dm_chest")
-            b.t(base + 2, 27, y - 1, 120, 14, 0, fonts.p11, TXT)
-            b.t(base + 3, 27, y + 11, 110, 14, 0, fonts.p11, GREY)
-            b.t(base + 4, 120, y - 1, 54, 14, 0, fonts.p11, WHITE, alignX = 2)
-            b.g(base + 5, 142, y + 11, 0, "dm_mp", hidden = true, ops = listOf("Show on map"))
-            b.t(base + 6, 142, y + 10, 34, 13, 0, fonts.p11, ORANGE, "Map", alignX = 1, hidden = true)
+            b.t(base + 2, 28, y - 1, 120, 14, 0, fonts.p11, TXT)
+            b.t(base + 3, 28, y + 11, 110, 14, 0, fonts.p11, LABEL)
+            b.t(base + 4, 120, y - 1, 53, 14, 0, fonts.p11, WHITE, alignX = 2)
+            b.g(base + 5, 141, y + 1, 0, "dm_mp", hidden = true, ops = listOf("Show on map"))
+            b.t(base + 6, 141, y, 34, 13, 0, fonts.p11, ORANGE, "Map", alignX = 1, hidden = true)
         }
         return b.done(DP.COUNT)
     }
@@ -778,7 +827,7 @@ object N108InterfaceImportTool {
         b.g(I.BG, 0, 0, 1, "zi_bg")
         b.t(I.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Deadman Info", alignX = 1)
         b.hit(I.CLOSE, 472, 5, 21, 19, 1, "Close")
-        for (g in 0 until I.GROUPS) b.t(I.GROUP_FIRST + g, 13, I.groupY(g), 140, I.GROUP_H, 1, fonts.p11, GREY, I.GROUP_NAMES[g], alignY = 2)
+        for (g in 0 until I.GROUPS) b.t(I.GROUP_FIRST + g, 13, I.groupY(g), 140, I.GROUP_H, 1, fonts.p11, LABEL, I.GROUP_NAMES[g], alignY = 2)
         for (s in 0 until I.SUBJECTS) {
             val base = I.subject(s)
             val y = I.subjectY(s)
@@ -789,20 +838,21 @@ object N108InterfaceImportTool {
         }
         b.g(I.BIG, 169, 35, 1, "zi_big_loyalty")
         b.t(I.NAME, 209, 33, 280, 16, 1, fonts.b12, ORANGE)
-        b.t(I.TAG, 209, 50, 280, 15, 1, fonts.p11, GREY)
+        // N285 (owner 2026-10-24: readable in fixed + Stretched): lighter labels, facts in p12.
+        b.t(I.TAG, 209, 50, 280, 15, 1, fonts.p11, LABEL)
         for (r in 0 until I.ROWS) {
             val base = I.row(r)
             val y = I.ROW_Y + r * I.ROW_H
             b.g(base, I.ROW_X, y, 1, "zi_stripe", hidden = true)
-            b.t(base + 1, I.ROW_X + 6, y, 200, I.ROW_H, 1, fonts.p11, GREY, hidden = true)
+            b.t(base + 1, I.ROW_X + 6, y, 200, I.ROW_H, 1, fonts.p12, LABEL, hidden = true)
             b.t(base + 2, I.ROW_X + 100, y, 80, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
             b.t(base + 3, I.ROW_X + 180, y, 80, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
             b.t(base + 4, I.ROW_X + 270, y, 40, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
-            b.t(base + I.R_VALUE, I.ROW_X, y, I.ROW_W - 6, I.ROW_H, 1, fonts.p11, WHITE, alignX = 2, hidden = true)
+            b.t(base + I.R_VALUE, I.ROW_X, y, I.ROW_W - 6, I.ROW_H, 1, fonts.p12, WHITE, alignX = 2, hidden = true)
         }
         b.t(I.TEXT, I.TEXT_X, I.ROW_Y, I.TEXT_W, I.TEXT_BOTTOM - I.ROW_Y, 1, fonts.p11, TXT, alignX = 0, alignY = 0, lineHeight = 15)
         b.g(I.BAR, I.BAR_X, I.BAR_Y, 1, "zi_bar")
-        b.t(I.BAR_TEXT, I.BAR_X + 8, I.BAR_Y, 220, 26, 1, fonts.p11, TXT)
+        b.t(I.BAR_TEXT, I.BAR_X + 8, I.BAR_Y, 220, 26, 1, fonts.p12, TXT)
         b.g(I.MAP, I.MAP_X, I.MAP_Y, 1, "zi_map", hidden = true, ops = listOf("Show on map"))
         b.t(I.MAP_TEXT, I.MAP_X + 22, I.MAP_Y, 64, 18, 1, fonts.p11, ORANGE, "Show on map", hidden = true)
         return b.done(I.COUNT)

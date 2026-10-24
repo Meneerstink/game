@@ -140,22 +140,50 @@ object QuestTabInfo {
             Subject.TELEPORTS -> teleportPage(player)
         }
 
+    /**
+     * N285 / N288 (the Deadman tab's emblem row opens this page): first the player's own emblem - its tier, what it is worth now,
+     * what the next tier is worth and where it is (inventory, bank, gravestone or Death's Office, or waiting to be delivered) -
+     * then the rules. Every value from [DeadmanEmblem].
+     */
     private fun emblemPage(player: Player): Page {
         val values = (1..DeadmanEmblem.MAX_TIER).joinToString(", ") { "$it: ${number(DeadmanEmblem.points(it))}" }
         val tier = runCatching { DeadmanEmblem.ownedTier(player) }.getOrDefault(0)
+        val mine =
+            if (tier > 0) {
+                listOf(
+                    Fact("Your emblem", col(WHITE, "tier $tier of ${DeadmanEmblem.MAX_TIER}")),
+                    Fact("Worth now", col(GOLD, "${number(DeadmanEmblem.points(tier))} Deadman Points")),
+                    Fact("Next tier", if (tier < DeadmanEmblem.MAX_TIER) col(GOLD, "${number(DeadmanEmblem.points(tier + 1))} Deadman Points") else col(WHITE, "highest tier")),
+                    Fact("Where", col(WHITE, emblemPlace(player, tier))),
+                )
+            } else {
+                listOf(Fact("Your emblem", "none yet"))
+            }
         return Page(
             "Grows with every kill you make",
-            listOf(
-                Fact("Drops from", "monsters with 150+ hitpoints (tier 1)"),
-                Fact("Every valid kill", "+1 tier, up to tier ${DeadmanEmblem.MAX_TIER}"),
-                Fact("Killed by a player", col(RED, "your killer gets it")),
-                Fact("You can own", "one at a time"),
-                Fact("Cash it in", "Deadman Store npc"),
-            ),
-            text = "Carry it in your inventory to raise it. A second emblem keeps the higher tier and cashes in the other. " +
-                "Cashed in for Deadman Points or an experience lamp - points per tier $values.",
+            mine +
+                listOf(
+                    Fact("Drops from", "monsters with 150+ hitpoints (tier 1)"),
+                    Fact("Every valid kill", "+1 tier, up to tier ${DeadmanEmblem.MAX_TIER}"),
+                    Fact("Killed by a player", col(RED, "your killer gets it")),
+                ),
+            text = "Carry it in your inventory to raise it; you can own one at a time - a second keeps the higher tier and cashes in " +
+                "the other. Cash it in at the Deadman Store npc for Deadman Points or an experience lamp - points per tier $values.",
             bar = if (tier > 0) "Yours: ${col(WHITE, "tier $tier")} - worth ${col(WHITE, number(DeadmanEmblem.points(tier)))} points" else "You have no emblem",
         )
+    }
+
+    /** Where the player's emblem of [tier] is: inventory, bank, gravestone / Death's Office, or waiting for delivery. */
+    fun emblemPlace(player: Player, tier: Int): String {
+        val held = runCatching { DeadmanEmblem.holdings(player) }.getOrDefault(emptyList()).filter { it.tier == tier }
+        val h = held.firstOrNull { !it.inBank } ?: held.firstOrNull()
+        return when {
+            h == null -> "waiting to be delivered"
+            h.container === player.inventory -> "in your inventory"
+            h.container === player.bank -> "in your bank"
+            h.container === player.gravestone -> "in your gravestone"
+            else -> "at Death's Office"
+        }
     }
 
     private fun breachPage(player: Player): Page {

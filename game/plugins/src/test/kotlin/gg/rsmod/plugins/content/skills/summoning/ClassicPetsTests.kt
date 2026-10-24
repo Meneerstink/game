@@ -70,9 +70,9 @@ class ClassicPetsTests {
         val sold = storePets()
         assertTrue(sold.size >= 20, "store pets found: $sold")
         val notPets = sold.filterNot { Pets.isPetItem(it) }.map { "$it ${SummoningTestCache.definitions.get(ItemDef::class.java, it).name}" }
-        // The Pet rock is an item to talk to, not a follower (667 and OSRS); the Baby icefiend is the 667 item with only "Release" - this
-        // cache has no follower for it (npc 7713 only "Catch", 7736 no option at all). Both stay items (question to the owner, N216).
-        assertEquals(listOf("3695 Pet rock", "13231 Baby icefiend"), notPets)
+        // The Pet rock is an item to talk to, not a follower (667 and OSRS). N295 (owner 2026-10-24): the Baby icefiend follows like
+        // every other pet - npc 7713 got Pick-up and Talk-to, the item Drop (cache), and it is in the 667 pet table.
+        assertEquals(listOf("3695 Pet rock"), notPets)
     }
 
     @Test
@@ -111,7 +111,8 @@ class ClassicPetsTests {
         val midnight = Pets.variants.single { it.name == "Midnight" }
         assertEquals(rows.single { it.variant == "Midnight" }.localSynth, PetVoices.voiceOf(midnight.npc), "a variant row wins over the pet's")
         assertEquals(null, PetVoices.voiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken stays silent")
-        assertEquals(null, PetVoices.voiceOf(Pets.variants.first { it.classic }.npc), "667 pets keep their own Talk-to")
+        // N257: a 667 pet answers Talk-to with its species' sound (it had none).
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.VM_MONKEY, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
         val huberte = Pets.variants.single { it.pet == "Huberte" }
         assertEquals(rows.single { it.line == "*screeches*" }.localSynth, PetVoices.lineSound(huberte.npc, "*screeches*"))
         assertEquals(null, PetVoices.lineSound(huberte.npc, "*bird noises*"))

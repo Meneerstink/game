@@ -77,6 +77,8 @@ Platypus	12550	7017
 Baby platypus	12551	7018
 Baby platypus	12552	7019
 Baby platypus	12553	7020
+# N295 (owner 2026-10-24): the Loyalty store's Baby icefiend follows like the other pets (npc 7713 gets Pick-up and Talk-to, the item Drop).
+Baby icefiend	13231	7713
 Baby monkey	12682	7210
 Monkey	12683	7211
 Baby monkey	12684	7212

@@ -19,8 +19,8 @@ import gg.rsmod.plugins.content.skills.summoning.Pets
  *  - Bosses: per boss of the Drop Viewer's Bosses group, the OSRS Collection log list ([OSRS]) matched by name against what that
  *    boss can drop (Drop Viewer lines, pets included); a boss OSRS has no page for gets its pet and its rare lines (1/100 or rarer,
  *    not from a shared table). Dagannoth Kings are one page like OSRS. Barrows: [Barrows.COLLECTION_LOG_ITEMS].
- *  - Deadman: the Deadman's chest list and the breach uniques + Archaic emblem, each with the pets they can give first (N268: a
- *    breach monster's chest-list roll gives the chest's pets too).
+ *  - Deadman: the Deadman's chest list and the breach uniques + Archaic emblem, weapons and armour first and the pets they can
+ *    give at the bottom (N268, owner 2026-10-24; a breach monster's chest-list roll gives the chest's pets too).
  *  - Clues: the elite casket's uniques (1/1,000 per roll or rarer, [EliteCasketTable.itemProbabilities]).
  *  - Minigames (N276): Pest Control, the Void Knight reward items as OSRS lists them (+ the 2011 deflector this server sells).
  *  - Other: every pet.
@@ -51,7 +51,7 @@ object CollectionLogPages {
             "commander zilyana" to listOf("Pet zilyana", "Armadyl crossbow", "Saradomin hilt", "Saradomin sword", "Saradomin's light", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
             "kree'arra" to listOf("Pet kree'arra", "Armadyl helmet", "Armadyl chestplate", "Armadyl chainskirt", "Armadyl hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
             "k'ril tsutsaroth" to listOf("Pet k'ril tsutsaroth", "Staff of the dead", "Zamorakian spear", "Steam battlestaff", "Zamorak hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
-            "nex" to listOf("Nexling", "Ancient hilt", "Nihil horn", "Zaryte vambraces", "Zaryte crossbow", "Torva full helm", "Torva platebody", "Torva platelegs", "Pernix cowl", "Pernix body", "Pernix chaps", "Virtus mask", "Virtus robe top", "Virtus robe legs", "Zaryte bow", "Nihil shard"),
+            "nex" to listOf("Nexling", "Ancient hilt", "Nihil horn", "Zaryte vambraces", "Zaryte crossbow", "Torva full helm", "Torva platebody", "Torva platelegs", "Pernix cowl", "Pernix body", "Pernix chaps", "Virtus mask", "Virtus robe top", "Virtus robe legs", "Nihil shard"),
             "dagannoth kings" to listOf("Pet dagannoth prime", "Pet dagannoth supreme", "Pet dagannoth rex", "Berserker ring", "Archers ring", "Seers ring", "Warrior ring", "Dragon axe", "Seercull", "Mud battlestaff"),
             "tztok-jad" to listOf("Tzrek-jad", "Fire cape"),
         )
@@ -121,18 +121,20 @@ object CollectionLogPages {
             pages += Page("dks", Category.BOSSES, "Dagannoth Kings", dks.map { it.key }, seen.toList())
         }
         pages.sortWith(compareBy { it.name.lowercase() })
-        // ---- Deadman
+        // ---- Deadman: N268 (owner 2026-10-24) weapons and armour first, then the rest, the pets at the bottom; N291 no God Wars pet.
         val chestPets = DeadmanChestLoot.pets().map { it.second }.distinct()
-        val chestItems = (chestPets + DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList()).distinct()
+        fun gearFirst(items: List<Int>) = items.distinct().sortedBy { if (DropGroups.category(world, it) == DropGroups.Group.GEAR) 0 else 1 }
+        val chestItems = (gearFirst(DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList()) + chestPets).distinct()
         pages += Page("chest", Category.DEADMAN, "Deadman's Chest", listOf("chest"), chestItems, "Deadman's Chests opened")
         val breachKeys = sources.filter { it.kind == DropSources.Kind.BREACH }.map { it.key }
-        val breachItems = (chestPets + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + BreachLoot.RARE.map { it.item } + BreachLoot.MEGA_RARE + PrayerScrolls.SCROLLS.toList()).distinct()
+        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList()) + chestPets).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
         // ---- Clues: the elite casket's uniques.
         val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()
         if (elite != null) {
+            // N292: a note counts as its item - the page shows the plain item (the log records it so, CollectionLog.unnoted).
             val perItem = HashMap<Int, Double>()
-            elite.forEach { (key, p) -> perItem[key.first] = (perItem[key.first] ?: 0.0) + p }
+            elite.forEach { (key, p) -> unnoted(world, key.first).let { id -> perItem[id] = (perItem[id] ?: 0.0) + p } }
             val uniques = perItem.filter { it.value > 0.0 && it.value <= 1.0 / 1000 }.keys.sortedBy { name(it) }
             if (uniques.isNotEmpty()) pages += Page("elite", Category.CLUES, "Elite Treasure Trails", emptyList(), uniques)
         }
@@ -142,6 +144,11 @@ object CollectionLogPages {
         val pets = Pets.infos.keys.mapNotNull { Pets.baseItem(it) }.distinct().sortedBy { name(it) }
         if (pets.isNotEmpty()) pages += Page("pets", Category.OTHER, "All Pets", emptyList(), pets)
         return pages
+    }
+
+    private fun unnoted(world: gg.rsmod.game.model.World, id: Int): Int {
+        val def = world.definitions.getNullable(ItemDef::class.java, id) ?: return id
+        return if (def.noted && def.noteLinkId > 0) def.noteLinkId else id
     }
 
     private fun bossItems(player: Player, boss: DropSources.Source, osrs: List<String>?, name: (Int) -> String): List<Int> {

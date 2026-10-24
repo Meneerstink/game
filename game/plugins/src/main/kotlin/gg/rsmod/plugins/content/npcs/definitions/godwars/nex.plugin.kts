@@ -30,7 +30,8 @@ val drops =
             obj(Items.TORVA_FULL_HELM, slots = 10)
             obj(Items.TORVA_PLATEBODY, slots = 10)
             obj(Items.TORVA_PLATELEGS, slots = 10)
-            obj(Items.ZARYTE_BOW, slots = 10)
+            // Owner 2026-10-24 (N293): the Zaryte bow is gone from the game - no drop, no Drop Viewer line, no log slot.
+            // Its 10 slots joined the unfilled tail, so every other row keeps its rate.
             // Owner 2026-10-24 (N269): the Zaryte crossbow drops whole, at the OSRS Nihil horn's 1/258 (15 / 3,840 = 1/256),
             // taken from the "nothing" tail so every other row keeps its rate.
             obj(Items.ZARYTE_CROSSBOW, slots = 15)

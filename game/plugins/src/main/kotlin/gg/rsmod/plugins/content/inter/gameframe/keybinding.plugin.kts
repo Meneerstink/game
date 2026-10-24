@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.inter.gameframe
 
 import gg.rsmod.game.tools.importer.KeybindingInterfaceImportTool as Ui
+import gg.rsmod.plugins.api.ext.setComponentHidden
 
 /*
  * The OSRS Keybinding window (owner 2026-10-11): Settings tab > Keybinding (261:23, appended by KeybindingInterfaceImportTool)
@@ -9,10 +10,12 @@ import gg.rsmod.game.tools.importer.KeybindingInterfaceImportTool as Ui
 // After the Settings tab is mounted (on_interface_open runs before its IF_OPENSUB, which drops server events in the client).
 gg.rsmod.plugins.api.ext.PaneMountHooks.register(Ui.SETTINGS_INTERFACE) { p ->
     p.setInterfaceEvents(Ui.SETTINGS_INTERFACE, Ui.SETTINGS_BUTTON, -1..-1, 0x2)
+    p.setComponentHidden(Ui.SETTINGS_INTERFACE, KeybindingUi.SETTINGS_DIVIDER, true)
 }
 
 on_login {
     player.setInterfaceEvents(Ui.SETTINGS_INTERFACE, Ui.SETTINGS_BUTTON, -1..-1, 0x2)
+    player.setComponentHidden(Ui.SETTINGS_INTERFACE, KeybindingUi.SETTINGS_DIVIDER, true)
 }
 
 on_button(interfaceId = Ui.SETTINGS_INTERFACE, component = Ui.SETTINGS_BUTTON) {

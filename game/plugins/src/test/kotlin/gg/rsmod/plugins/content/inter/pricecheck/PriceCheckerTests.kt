@@ -26,6 +26,29 @@ import kotlin.test.assertTrue
  */
 class PriceCheckerTests {
     @Test
+    fun `N290 - an untradeable item cannot be price checked, a tradeable one and its note can`() {
+        val world = io.mockk.mockk<gg.rsmod.game.model.World>(relaxed = true)
+        val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { world.definitions } returns definitions
+        io.mockk.every { player.world } returns world
+        val whip = definitions.get(ItemDef::class.java, WHIP)
+        val pet = definitions.get(ItemDef::class.java, PET)
+        val wasWhip = whip.tradeable
+        val wasPet = pet.tradeable
+        try {
+            whip.tradeable = true
+            pet.tradeable = false
+            assertTrue(PriceChecker.canCheck(player, WHIP))
+            assertTrue(PriceChecker.canCheck(player, NOTED_WHIP), "a note counts as its item")
+            kotlin.test.assertFalse(PriceChecker.canCheck(player, PET), "a pet (untradeable) is refused")
+            assertEquals("You can't price check that.", PriceChecker.MSG_UNTRADEABLE)
+        } finally {
+            whip.tradeable = wasWhip
+            pet.tradeable = wasPet
+        }
+    }
+
+    @Test
     fun `an empty slot is worth nothing`() {
         assertEquals(0, PriceChecker.value(definitions, null))
     }
@@ -104,6 +127,9 @@ class PriceCheckerTests {
         /** Abyssal whip and its noted form - the pair the container tests in this module use. */
         private const val WHIP = 4151
         private const val NOTED_WHIP = 4152
+
+        /** The Prince black dragon pet item (OSRS pet import). */
+        private const val PET = 24012
 
         private val definitions = DefinitionSet()
 

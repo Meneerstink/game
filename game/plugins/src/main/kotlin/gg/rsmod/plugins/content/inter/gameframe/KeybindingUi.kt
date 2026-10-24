@@ -24,6 +24,13 @@ object KeybindingUi {
 
     private const val OP1 = 0x2
 
+    /**
+     * N294 (owner 2026-10-24: "de F1-knop heeft een streep erdoor"): 261:20 is the 667 divider band (sprite 851, y 90..117) the
+     * Keybinding button (261:23, y 86..126) sits on - its line ran right through the F1 key. The band is hidden, so the button
+     * stands free between the two rows of buttons.
+     */
+    const val SETTINGS_DIVIDER = 20
+
     fun open(player: Player) {
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.CLOSE, -1..-1, OP1)

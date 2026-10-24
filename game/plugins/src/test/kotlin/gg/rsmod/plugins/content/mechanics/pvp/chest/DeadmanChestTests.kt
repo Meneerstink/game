@@ -66,16 +66,19 @@ class DeadmanChestTests {
     }
 
     @Test
-    fun `class - all 71 owner roster species enter the chest, no pet is sold and existing boss drops stay`() {
+    fun `class - all owner roster species but the four God Wars pets enter the chest, no pet is sold and existing boss drops stay`() {
         assertTrue(Pets.load(TABLE, TIERS) > 0)
         assertEquals(emptyList(), StorePets.entries(TABLE, TIERS).map { it.purchaseItem }, "pets still sold")
         val expected = Pets.parseTiers(TIERS.readLines())
         assertEquals(71, expected.size, "Council Opus+Sol 2026-10-20 19:37: all pet_tiers species")
         assertEquals(mapOf(1 to 24, 2 to 25, 3 to 22), expected.groupingBy { it.tier }.eachCount())
         val pets = DeadmanChestLoot.pets()
-        assertEquals(expected.map { it.pet }.toSet(), pets.map { it.first }.toSet(), "complete independent owner roster")
-        assertEquals(71, pets.size, "exactly one base item per species, including multi-variant pets")
-        for (info in expected) {
+        // N291 (owner 2026-10-24): Graardor, K'ril, Kree'arra and Zilyana only from their own boss.
+        assertEquals(4, DeadmanChestLoot.OWN_BOSS_ONLY.size)
+        assertTrue(DeadmanChestLoot.OWN_BOSS_ONLY.all { gwd -> expected.any { it.pet == gwd } }, "every excluded name is a roster pet")
+        assertEquals(expected.map { it.pet }.toSet() - DeadmanChestLoot.OWN_BOSS_ONLY, pets.map { it.first }.toSet(), "the roster without the GWD pets")
+        assertEquals(67, pets.size, "exactly one base item per species, including multi-variant pets")
+        for (info in expected.filter { it.pet !in DeadmanChestLoot.OWN_BOSS_ONLY }) {
             val base = Pets.parseTable(TABLE.readLines()).first { it.pet == info.pet }.item
             assertEquals(base, pets.single { it.first == info.pet }.second, info.pet)
             for (npc in info.dropNpcs) assertEquals(info, Pets.dropFor(npc), "existing boss drop npc=$npc")
@@ -168,9 +171,9 @@ class DeadmanChestTests {
     }
 
     @Test
-    fun `every owner roster species is reachable through the breach extra roll at every bracket rate`() {
+    fun `every owner roster species but the God Wars pets is reachable through the breach extra roll at every bracket rate`() {
         Pets.load(TABLE, TIERS)
-        val expected = Pets.parseTiers(TIERS.readLines()).map { it.pet }.toSet()
+        val expected = Pets.parseTiers(TIERS.readLines()).map { it.pet }.toSet() - DeadmanChestLoot.OWN_BOSS_ONLY
         val total = DeadmanChestLoot.FIXED.sumOf { it.weight } + expected.size * DeadmanChestLoot.PET_WEIGHT
         for (rate in listOf(1.0, 3.0, 4.0, 5.0)) {
             val seen = mutableSetOf<String>()

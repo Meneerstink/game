@@ -68,6 +68,31 @@ object N108Ui {
 
     fun b12(world: World, text: String) = textWidth(world, "b12_full", text)
 
+    /** How many lines [text] takes in [font] when the client wraps it at [width] px (word wrap, like the 667 text component). */
+    fun lines(world: World, font: String, text: String, width: Int): Int {
+        var lines = 1
+        var line = 0
+        val space = textWidth(world, font, " ")
+        for (word in TAGS.replace(text, "").split(' ')) {
+            val w = textWidth(world, font, word)
+            if (line > 0 && line + space + w > width) {
+                lines++
+                line = w
+            } else {
+                line += (if (line > 0) space else 0) + w
+            }
+        }
+        return lines
+    }
+
+    /** [text] cut with "..." so it is at most [max] px wide in [font] (colour tags kept while it fits, dropped once it is cut). */
+    fun fit(world: World, font: String, text: String, max: Int): String {
+        if (textWidth(world, font, text) <= max) return text
+        var cut = TAGS.replace(text, "")
+        while (cut.isNotEmpty() && textWidth(world, font, "$cut...") > max) cut = cut.dropLast(1)
+        return cut.trimEnd() + "..."
+    }
+
     // ---- chances
 
     /** "Always", "1/1,000", "1/12.3K", "1/33.4" - the design's format (dropviewer.html `fmt`). */
@@ -137,15 +162,18 @@ object N108Ui {
     /** The first right-click option of a static component that has none in the cache (client RspsUi `op`). */
     fun op(player: Player, interfaceId: Int, component: Int, text: String) = send(player, "op|${hash(interfaceId, component)},$text")
 
-    /** Full npc models on model components: (component hash, npc, zoom, x angle, spin). Sent in batches. */
-    class Model(val hash: Int, val npc: Int, val zoom: Int, val xan: Int, val spin: Boolean)
+    /**
+     * Full npc models on model components: (component hash, npc, zoom, x angle, spin, y angle). Sent in batches. [yan] (N283) turns a
+     * still model; a client without it shows the model from the front.
+     */
+    class Model(val hash: Int, val npc: Int, val zoom: Int, val xan: Int, val spin: Boolean, val yan: Int = 0)
 
     fun models(player: Player, models: List<Model>) {
-        sendBatched(player, "npc|", models.map { "${it.hash},${it.npc},${it.zoom},${it.xan},${if (it.spin) 1 else 0}" })
+        sendBatched(player, "npc|", models.map { "${it.hash},${it.npc},${it.zoom},${it.xan},${if (it.spin) 1 else 0},${it.yan}" })
     }
 
     /** N277: a plain model (a loc's own, [locModel]) on a model component, fitted and turning like the npc models. */
-    fun plainModel(player: Player, hash: Int, model: Int, zoom: Int, xan: Int, spin: Boolean) = send(player, "mdl|$hash,$model,$zoom,$xan,${if (spin) 1 else 0}")
+    fun plainModel(player: Player, hash: Int, model: Int, zoom: Int, xan: Int, spin: Boolean, yan: Int = 0) = send(player, "mdl|$hash,$model,$zoom,$xan,${if (spin) 1 else 0},$yan")
 
     private val LOC_MODELS = java.util.concurrent.ConcurrentHashMap<Int, Int>()
 
@@ -250,7 +278,14 @@ object N108Ui {
         send(player, "size|${hash(i, c)},$w,$h")
     }
 
-    fun item(player: Player, i: Int, c: Int, item: Int, amount: Int = 1) {
+    /**
+     * The item count the client draws on a picture: never. With 1 the 667 client still draws "1" on a stackable item
+     * (ObjNumMode SHOWCOUNT_IFNOT1) - N282: Morrigan's javelins and throwing axes showed a yellow 1 in the Collection Log as if
+     * they were obtained; -1 is the client's "no count".
+     */
+    const val NO_COUNT = -1
+
+    fun item(player: Player, i: Int, c: Int, item: Int, amount: Int = NO_COUNT) {
         val k = key(i, c, 4)
         val v = "$item,$amount"
         if (cache(player)[k] == v) return

@@ -15,7 +15,6 @@ import gg.rsmod.game.tools.importer.N108InterfaceImportTool.TP
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
-import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
 import gg.rsmod.plugins.content.mechanics.pvp.KillGrace
 import gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier
@@ -102,7 +101,7 @@ object QuestTab {
                 Tab.QUESTS -> player.setInterfaceEvents(tab.panel, 0, -1..-1, 0)
                 Tab.DEADMAN -> {
                     player.setInterfaceEvents(tab.panel, DP.INFO, -1..-1, EVENTS_OP1)
-                    for (c in 0 until DP.CELLS) player.setInterfaceEvents(tab.panel, DP.cell(c) + 5, -1..-1, EVENTS_OP1)
+                    player.setInterfaceEvents(tab.panel, DP.EMBLEM_HIT, -1..-1, EVENTS_OP1)
                     for (e in 0 until 2) player.setInterfaceEvents(tab.panel, DP.event(e) + 5, -1..-1, EVENTS_OP1)
                 }
                 Tab.TASKS -> for (t in 0 until 4) player.setInterfaceEvents(tab.panel, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
@@ -176,8 +175,10 @@ object QuestTab {
         val out = ArrayList<QuestRow>()
         for (group in QuestGuideUi.ROWS) {
             val chosen = QuestChoices.chosen(player, group)
+            // N289 (owner 2026-10-24, option A): a group whose quests are all yours reads a green "Unlocked" (it said "All yours").
+            val all = group.quests.all { legacy || it == chosen || DeadmanGroupsView.questFinished(player, it) }
             val right = when {
-                legacy -> "<col=0dc10d>All yours</col>"
+                all -> "<col=0dc10d>Unlocked</col>"
                 chosen != null -> "<col=ffcf4a>Chosen</col>"
                 else -> "<col=9a9083>Pick 1</col>"
             }
@@ -279,72 +280,60 @@ object QuestTab {
         return if (h > 0) "$h:${"%02d".format(m)}:${"%02d".format(s)}" else "$m:${"%02d".format(s)}"
     }
 
+    /**
+     * The Deadman tab, design A3 (N288): the bracket box (combat XP and rare drops, no Fights line), protection / skull / kill grace
+     * (the skull time exactly the DMM HUD's, N286), the three balances as rows with the whole number (N287) - no store opens from
+     * here (N280) -, the Archaic Emblem row (a click = Info on the emblem), breach and chest.
+     */
     private fun drawDeadman(player: Player) {
         val p = Tab.DEADMAN.panel
         val world = player.world
         val tier = AnnihilationTier.of(player)
         N108Ui.text(player, p, DP.BADGE, tier.label)
         fun x(v: Double) = if (v % 1.0 == 0.0) v.toInt().toString() else v.toString()
-        N108Ui.text(player, p, DP.L1, "${x(tier.combatXp)}x combat XP")
-        N108Ui.text(player, p, DP.L2, "${x(tier.dropRate)}x rare drops")
-        val range = AreaState.bracketOf(player.combatLevel)
-        N108Ui.text(player, p, DP.L3, "Fights lvl <col=ffffff>${range.first} - ${range.last}</col>")
-        // Row 1: protection (only while he has it), skull, kill grace.
+        N108Ui.text(player, p, DP.L1, "Combat XP <col=ffffff>${x(tier.combatXp)}x</col>")
+        N108Ui.text(player, p, DP.L2, "Rare drops <col=ffffff>${x(tier.dropRate)}x</col>")
+        // The cells: protection (only while he has it), skull, kill grace.
         class Cell(val icon: String, val value: String, val label: String)
-        val row1 = ArrayList<Cell>()
-        if (BeginnerProtection.isProtected(player)) row1 += Cell("dm_shield", "<col=56e156>${clock(player.timers[NEW_PLAYER_PROTECTION_TIMER])}</col>", "Protection")
-        val skull = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.hasSkullTimer(player)
-        val skullTicks = if (skull) runCatching { player.timers[gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER] }.getOrDefault(0) else 0
-        row1 += Cell("dm_skull", if (skull) "<col=ff5252>${clock(skullTicks)}</col>" else "<col=9a9083>-</col>", "Skull")
+        val cells = ArrayList<Cell>()
+        if (BeginnerProtection.isProtected(player)) cells += Cell("dm_shield", "<col=56e156>${clock(player.timers[NEW_PLAYER_PROTECTION_TIMER])}</col>", "Protection")
+        val skull = skullTime(player)
+        cells += Cell("dm_skull", if (skull != null) "<col=ff5252>$skull</col>" else "<col=b5a891>-</col>", "Skull")
         val grace = player.timers.has(KillGrace.GRACE_TIMER)
-        row1 += Cell("dm_clock", if (grace) "<col=ffffff>${clock(player.timers[KillGrace.GRACE_TIMER])}</col>" else "<col=9a9083>-</col>", "Kill grace")
-        val row2 =
-            listOf(
-                Cell("dm_star", DeadmanTabValues.number(DeadmanTabValues.balance(player, StoreCatalogue.Currency.LOYALTY)), "Loyalty"),
-                Cell("dm_coins", DeadmanTabValues.number(DeadmanTabValues.balance(player, StoreCatalogue.Currency.DONATOR)), "Donator"),
-                Cell("dm_redskull14", DeadmanTabValues.number(DeadmanTabValues.balance(player, StoreCatalogue.Currency.DEADMAN)), "Deadman"),
-            )
-        fun drawRow(cells: List<Cell>, first: Int, y: Int) {
-            val w = if (cells.size == 3) 56 else 85
-            val gap = 3
-            cells.forEachIndexed { k, cell ->
-                val base = DP.cell(first + k)
-                val cx = 5 + k * (w + gap) + if (cells.size == 2 && k == 1) 1 else 0
-                N108Ui.hidden(player, p, base, cells.size != 2)
-                N108Ui.hidden(player, p, base + 1, cells.size != 3)
-                N108Ui.pos(player, p, base, cx, y)
-                N108Ui.pos(player, p, base + 1, cx, y)
-                val iconW = N108Ui.width(cell.icon)
-                val valueW = N108Ui.p11(world, cell.value)
-                val start = cx + (w - iconW - 3 - valueW) / 2
-                N108Ui.sprite(player, p, base + 2, cell.icon)
-                N108Ui.pos(player, p, base + 2, start, y + 3)
-                N108Ui.hidden(player, p, base + 2, false)
-                N108Ui.pos(player, p, base + 3, start + iconW + 3, y + 2)
-                N108Ui.text(player, p, base + 3, cell.value)
-                N108Ui.hidden(player, p, base + 3, false)
-                // N278: the label box is as wide as its cell (85 in a row of two), so the label is centred under its value.
-                N108Ui.pos(player, p, base + 4, cx, y + 17)
-                N108Ui.size(player, p, base + 4, w, 13)
-                N108Ui.text(player, p, base + 4, cell.label)
-                N108Ui.hidden(player, p, base + 4, false)
-                N108Ui.pos(player, p, base + 5, cx, y)
-                N108Ui.hidden(player, p, base + 5, first < 3)
-            }
-            for (k in cells.size until 3) for (c in 0 until DP.CELL_STRIDE) N108Ui.hidden(player, p, DP.cell(first + k) + c, true)
+        cells += Cell("dm_clock", if (grace) "<col=ffffff>${clock(player.timers[KillGrace.GRACE_TIMER])}</col>" else "<col=b5a891>-</col>", "Kill grace")
+        val w = if (cells.size == 3) 56 else 85
+        val gap = 3
+        val y = DP.CELL_Y
+        cells.forEachIndexed { k, cell ->
+            val base = DP.cell(k)
+            val cx = 5 + k * (w + gap) + if (cells.size == 2 && k == 1) 1 else 0
+            N108Ui.hidden(player, p, base, cells.size != 2)
+            N108Ui.hidden(player, p, base + 1, cells.size != 3)
+            N108Ui.pos(player, p, base, cx, y)
+            N108Ui.pos(player, p, base + 1, cx, y)
+            val iconW = N108Ui.width(cell.icon)
+            val valueW = N108Ui.p11(world, cell.value)
+            val start = cx + (w - iconW - 3 - valueW) / 2
+            N108Ui.sprite(player, p, base + 2, cell.icon)
+            N108Ui.pos(player, p, base + 2, start, y + 3)
+            N108Ui.hidden(player, p, base + 2, false)
+            N108Ui.pos(player, p, base + 3, start + iconW + 3, y + 2)
+            N108Ui.text(player, p, base + 3, cell.value)
+            N108Ui.hidden(player, p, base + 3, false)
+            // The label box is as wide as its cell, so the label is centred under its value.
+            N108Ui.pos(player, p, base + 4, cx, y + 16)
+            N108Ui.size(player, p, base + 4, w, 15)
+            N108Ui.text(player, p, base + 4, cell.label)
+            N108Ui.hidden(player, p, base + 4, false)
         }
-        drawRow(row1, 0, 77)
-        drawRow(row2, 3, 113)
+        for (k in cells.size until DP.CELLS) for (c in 0 until DP.CELL_STRIDE) N108Ui.hidden(player, p, DP.cell(k) + c, true)
+        // The balances, whole (up to 2,147,483,647 they fit beside the name).
+        POINT_CURRENCIES.forEachIndexed { i, currency -> N108Ui.text(player, p, DP.point(i) + 3, DeadmanTabValues.number(DeadmanTabValues.balance(player, currency))) }
         // Emblem.
         val emblemTier = runCatching { DeadmanEmblem.ownedTier(player) }.getOrDefault(0)
-        if (emblemTier > 0) {
-            N108Ui.item(player, p, DP.EMBLEM_ITEM, DeadmanEmblem.FIRST_EMBLEM + emblemTier - 1, 1)
-            N108Ui.hidden(player, p, DP.EMBLEM_ITEM, false)
-        } else {
-            N108Ui.item(player, p, DP.EMBLEM_ITEM, DeadmanEmblem.FIRST_EMBLEM, 1)
-            N108Ui.hidden(player, p, DP.EMBLEM_ITEM, false)
-        }
-        N108Ui.text(player, p, DP.EMBLEM_VALUE, if (emblemTier > 0) "Tier $emblemTier" else "<col=9a9083>None</col>")
+        N108Ui.item(player, p, DP.EMBLEM_ITEM, DeadmanEmblem.FIRST_EMBLEM + (emblemTier - 1).coerceAtLeast(0))
+        N108Ui.hidden(player, p, DP.EMBLEM_ITEM, false)
+        N108Ui.text(player, p, DP.EMBLEM_VALUE, if (emblemTier > 0) "Tier $emblemTier" else "<col=b5a891>None</col>")
         // Breach.
         val active = DeadmanBreach.active
         if (active != null) {
@@ -364,10 +353,16 @@ object QuestTab {
         }
     }
 
+    /** The point rows' currencies, top to bottom (design A3). */
+    val POINT_CURRENCIES = listOf(StoreCatalogue.Currency.LOYALTY, StoreCatalogue.Currency.DONATOR, StoreCatalogue.Currency.DEADMAN)
+
+    /** N286: the skull time exactly as the DMM HUD shows it ([DeadmanHud.skullText]), null without a skull timer. */
+    fun skullTime(player: Player): String? = gg.rsmod.plugins.content.mechanics.pvp.DeadmanHud.skullText(player)
+
     /** Panel x where an event's text starts, its right edge, and the Map button's x. */
-    private const val EVENT_TEXT_X = 27
-    private const val EVENT_RIGHT = 177
-    private const val EVENT_MAP_X = 142
+    private const val EVENT_TEXT_X = 28
+    private const val EVENT_RIGHT = 173
+    private const val EVENT_MAP_X = 141
 
     /**
      * One event row (N278): the title on the first line; with a place to show, the Map button next to it and the place on the second
@@ -378,15 +373,15 @@ object QuestTab {
         val p = Tab.DEADMAN.panel
         val world = player.world
         val base = DP.event(event)
-        val y = 171 + event * 29
+        val y = DP.EVENT_Y + event * DP.EVENT_STEP
         N108Ui.text(player, p, base + 2, title)
         val timeW = if (time.isEmpty()) 0 else N108Ui.p11(world, time)
         if (map) {
-            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 54, y + 11)
-            N108Ui.pos(player, p, base + 5, EVENT_MAP_X, y)
-            N108Ui.pos(player, p, base + 6, EVENT_MAP_X, y - 1)
+            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 53, y + 11)
+            N108Ui.pos(player, p, base + 5, EVENT_MAP_X, y + 1)
+            N108Ui.pos(player, p, base + 6, EVENT_MAP_X, y)
         } else {
-            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 54, y - 1)
+            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 53, y - 1)
         }
         val room = EVENT_RIGHT - EVENT_TEXT_X - if (map && timeW > 0) timeW + 6 else 0
         N108Ui.size(player, p, base + 3, room, 14)
@@ -414,17 +409,8 @@ object QuestTab {
         return N108Ui.fitP11(world, short, room)
     }
 
-    /** A click on a points cell: where those points are spent. */
-    fun cellClick(player: Player, cell: Int) {
-        val shop =
-            when (cell) {
-                3 -> StoreCatalogue.Shop.LOYALTY
-                4 -> StoreCatalogue.Shop.DONATOR
-                5 -> StoreCatalogue.Shop.DEADMAN
-                else -> return
-            }
-        gg.rsmod.plugins.content.mechanics.store.StoreUi.open(player, shop)
-    }
+    /** The Archaic Emblem row (design A3): the Info window on the emblem - tier, value and more. */
+    fun emblemClick(player: Player) = openInfo(player, Subject.EMBLEM)
 
     fun eventMap(player: Player, event: Int) {
         val tile =
@@ -460,7 +446,7 @@ object QuestTab {
             for (c in 0 until TP.CARD_STRIDE) if (c != 7) N108Ui.hidden(player, p, base + c, task == null)
             if (task == null) continue
             N108Ui.sprite(player, p, base, "tk_card_${task.tier.name.lowercase()}")
-            N108Ui.item(player, p, base + 2, task.icon, 1)
+            N108Ui.item(player, p, base + 2, task.icon)
             N108Ui.text(player, p, base + 3, task.name)
             N108Ui.text(player, p, base + 4, "+${task.dp} <col=8fc78a>DP</col>")
             val have = DeadmanTasks.progress(player, task)
@@ -487,7 +473,7 @@ object QuestTab {
             N108Ui.hidden(player, p, base + 1, entry == null)
             N108Ui.hidden(player, p, base + 2, entry == null)
             if (entry == null) continue
-            N108Ui.item(player, p, base + 1, entry.item, 1)
+            N108Ui.item(player, p, base + 1, entry.item)
             N108Ui.text(player, p, base + 2, "KC ${N108Ui.number(entry.kc)}")
             val source = DropSources.byKey(player, entry.source)?.name
             tips += N108Ui.hash(p, base + 1) to listOfNotNull(DropSources.itemName(player.world, entry.item), source, "KC ${N108Ui.number(entry.kc)}").joinToString(" - ")
@@ -578,17 +564,22 @@ object QuestTab {
                 N108Ui.hidden(player, i, base + I.R_VALUE, false)
             }
         }
-        // The text under the rows, one empty row apart.
+        // The text under the rows, one empty row apart: in p12 when it fits the room left (N285, readability), else p11.
         val textY = I.ROW_Y + rows * I.ROW_H + 6
         N108Ui.pos(player, i, I.TEXT, I.TEXT_X, textY)
         N108Ui.size(player, i, I.TEXT, I.TEXT_W, I.TEXT_BOTTOM - textY)
         N108Ui.text(player, i, I.TEXT, page.text)
+        N108Ui.fonts(player, i, listOf(I.TEXT to infoTextFont(player.world, page.text, I.TEXT_BOTTOM - textY)))
         // The live line and its map button.
         N108Ui.text(player, i, I.BAR_TEXT, page.bar)
         N108Ui.size(player, i, I.BAR_TEXT, if (page.map != null) I.MAP_X - I.BAR_X - 12 else I.ROW_W - 16, 26)
         N108Ui.hidden(player, i, I.MAP, page.map == null)
         N108Ui.hidden(player, i, I.MAP_TEXT, page.map == null)
     }
+
+    /** The Info text's font: p12 when its lines (15 px each) fit [room], else p11. */
+    fun infoTextFont(world: gg.rsmod.game.model.World, text: String, room: Int): String =
+        if (N108Ui.lines(world, "p12_full", text, I.TEXT_W) * 15 <= room) "p12_full" else "p11_full"
 
     /** Column x (from the row's text start) of the Brackets table: Level, Combat XP, Skills XP, Drops. */
     private val TABLE_COLUMNS = intArrayOf(0, 112, 196, 270)
