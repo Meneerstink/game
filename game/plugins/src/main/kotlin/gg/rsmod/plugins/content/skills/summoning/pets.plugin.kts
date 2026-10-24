@@ -213,3 +213,18 @@ on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         player.closeInterface(242)
     }
 }
+
+// Owner 2026-10-24 ("geef me spawn commands om alle pets te spawnen, makkelijk te kopieren"): `::pets <block>` empties the
+// inventory and spawns block <block> (1-based, 28 pet items each) of every pet item - the OSRS pets first, then the 667 pets.
+on_command("pets", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val items = (Pets.variants.filter { !it.classic } + Pets.variants.filter { it.classic }).map { it.item }.distinct()
+    val blocks = (items.size + 27) / 28
+    val block = player.getCommandArgs().getOrNull(0)?.toIntOrNull()
+    if (block == null || block !in 1..blocks) {
+        player.message("Usage: ::pets <1-$blocks> - 28 pets per block (${items.size} pet items; OSRS first, then 667).")
+        return@on_command
+    }
+    player.inventory.removeAll()
+    items.drop((block - 1) * 28).take(28).forEach { player.inventory.add(it, 1) }
+    player.message("Pets block $block of $blocks spawned.")
+}
