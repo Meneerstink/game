@@ -28,9 +28,11 @@ class OwnerDrops20261024Tests {
         val nex = plugin("godwars/nex.plugin.kts")
         assertTrue("obj(Items.ZARYTE_CROSSBOW, slots = 15)" in nex)
         assertEquals(258.0, 3840.0 / 15, 2.5, "about the OSRS Nihil horn's 1/258")
-        listOf("TORVA_FULL_HELM", "TORVA_PLATEBODY", "TORVA_PLATELEGS", "ZARYTE_BOW").forEach {
+        listOf("TORVA_FULL_HELM", "TORVA_PLATEBODY", "TORVA_PLATELEGS").forEach {
             assertTrue("obj(Items.$it, slots = 10)" in nex, "$it keeps 1/384")
         }
+        // N293 (owner 2026-10-24): the Zaryte bow is out of the game - Nex no longer drops it.
+        assertTrue("Items.ZARYTE_BOW" !in nex, "no Zaryte bow")
         val (total, used) = mainSlots(nex)
         assertEquals(3840, total)
         assertTrue(used <= total, "the rows fit the roll ($used of $total)")
