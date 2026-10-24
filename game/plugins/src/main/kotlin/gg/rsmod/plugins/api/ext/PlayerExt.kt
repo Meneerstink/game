@@ -148,8 +148,12 @@ fun Player.openShop(
             )
         }
 
-        // Set the shop name in the interface
+        // Set the shop name in the interface; a point shop shows the player's balance with it (N275) and says it in the chat.
         setComponentText(interfaceId = shopInterface, component = 20, text = currentShop.name)
+        (currentShop.currency as? gg.rsmod.plugins.content.mechanics.shops.PointCurrency)?.let { points ->
+            points.showBalance(this, currentShop)
+            message(points.balanceMessage(this))
+        }
         // Keep the inventory/sell control synchronized with the shop being opened.
         // The previous state leaked from a prior general store into specialist shops.
         val acceptsPlayerItems = currentShop.purchasePolicy != PurchasePolicy.BUY_NONE

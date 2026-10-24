@@ -158,13 +158,29 @@ open class PointCurrency(
             }
 
             shop.refresh(p.world)
-            p.setComponentText(
-                interfaceId = 620,
-                component = 24,
-                text = "You currently have ${(p.attr[balanceAttr] ?: 0).format()} $pluralCurrency.",
-            )
+            showBalance(p, shop)
         }
     }
+
+    /** "Breach Points" - the currency as a title. */
+    val title: String get() = pluralCurrency.split(' ').joinToString(" ") { w -> w.replaceFirstChar { it.titlecase() } }
+
+    fun balance(p: Player): Int = p.attr[balanceAttr] ?: 0
+
+    /**
+     * N275 (owner 2026-10-24, the Breach Trader showed no balance): the balance at the top of the shop window, in the title
+     * ("Breach Trader - Breach Points: 1,234"), and on the window's help line. Set when the shop opens and after every purchase.
+     */
+    fun showBalance(
+        p: Player,
+        shop: Shop,
+    ) {
+        p.setComponentText(interfaceId = 620, component = 20, text = "${shop.name} - $title: <col=ffffff>${balance(p).format()}</col>")
+        p.setComponentText(interfaceId = 620, component = 24, text = "You currently have ${balance(p).format()} $pluralCurrency.")
+    }
+
+    /** The chat line when the shop opens. */
+    fun balanceMessage(p: Player): String = "You have ${balance(p).format()} $title."
 
     /*
      * Audit E-10: these used to throw. Selling an item to a point shop (Breach Trader) reached buyFromPlayer from the
