@@ -3,8 +3,11 @@ package gg.rsmod.plugins.content.quests.tab
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.content.mechanics.pvp.AreaState
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
 import java.io.File
@@ -227,6 +230,13 @@ object DeadmanTasks {
     fun onBarrowsChest(player: Player) = advance(player, Track.BARROWS_CHEST)
 
     fun onSkulledMinute(player: Player) = advance(player, Track.SKULLED_MINUTES)
+
+    /**
+     * A skulled minute counts only while the skull really counts down in a dangerous area: [PvpSkull] pauses the countdown after a
+     * minute on one tile (and in instances), so a skull left standing in a bank never earns the "Stay skulled" tasks.
+     */
+    fun skulledMinuteCounts(player: Player): Boolean =
+        PvpSkull.hasSkullTimer(player) && !player.timers.isPaused(SKULL_ICON_DURATION_TIMER) && AreaState.isDangerous(player.tile)
 
     // ---- views
 

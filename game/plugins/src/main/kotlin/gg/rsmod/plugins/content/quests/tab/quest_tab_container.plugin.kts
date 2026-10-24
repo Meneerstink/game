@@ -145,7 +145,7 @@ on_login {
 on_timer(TASK_MINUTE) {
     player.timers[TASK_MINUTE] = 100
     runCatching {
-        if (gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.hasSkullTimer(player)) DeadmanTasks.onSkulledMinute(player) else DeadmanTasks.check(player)
+        if (DeadmanTasks.skulledMinuteCounts(player)) DeadmanTasks.onSkulledMinute(player) else DeadmanTasks.check(player)
     }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks minute", it) }
 }
 

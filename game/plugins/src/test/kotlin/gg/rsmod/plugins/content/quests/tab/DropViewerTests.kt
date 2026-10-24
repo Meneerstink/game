@@ -3,14 +3,18 @@ package gg.rsmod.plugins.content.quests.tab
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
+import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.drops.DropBoost
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.global.Rare
+import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.plugins.content.mechanics.store.StoreCatalogue
 import io.mockk.every
 import io.mockk.mockk
@@ -217,6 +221,23 @@ class DropViewerTests {
         assertEquals(DeadmanTasks.TASKS.size, DeadmanTasks.TASKS.map { it.id }.toSet().size)
         DeadmanTasks.Tier.values().forEach { assertTrue(DeadmanTasks.tierTasks(it).isNotEmpty()) }
         assertNotEquals(0, DeadmanTasks.TASKS.size)
+    }
+
+    @Test
+    fun `a skulled minute counts only while the skull counts down in a dangerous area - never standing still or in a guarded city`() {
+        val account = Account()
+        val timers = TimerMap()
+        every { account.player.timers } returns timers
+        every { account.player.tile } returns Tile(3100, 3600, 0)
+        assertFalse(DeadmanTasks.skulledMinuteCounts(account.player), "no skull")
+        timers[SKULL_ICON_DURATION_TIMER] = PvpSkull.SKULL_DURATION_CYCLES
+        assertTrue(DeadmanTasks.skulledMinuteCounts(account.player), "skulled and moving in the Wilderness")
+        // PvpSkull pauses the countdown after a minute on one tile: an AFK skull earns nothing.
+        timers.pause(SKULL_ICON_DURATION_TIMER)
+        assertFalse(DeadmanTasks.skulledMinuteCounts(account.player), "AFK")
+        timers.resume(SKULL_ICON_DURATION_TIMER)
+        every { account.player.tile } returns Tile(3212, 3428, 0)
+        assertFalse(DeadmanTasks.skulledMinuteCounts(account.player), "inside Varrock")
     }
 
     companion object {
