@@ -103,7 +103,12 @@ object DeathResolver {
                 valueProvider = valueProvider,
                 // Owner 2026-10-04: killed by a monster, a lockable untradeable (locked or not) is always kept and stays locked
                 // (OSRS Wiki "(l)": "Upon PvM death anywhere ... any locked items will stay with the player").
-                alwaysProtected = { alwaysProtected(it) || (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it)) },
+                // N352 (owner 2026-10-24): a pet is always kept, also in the backpack and also on a monster death - the PvP rule
+                // (owner 2026-10-04 "pet kept") for every death, so a pet never goes to the gravestone.
+                alwaysProtected = {
+                    alwaysProtected(it) || gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it) ||
+                        (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))
+                },
                 // Loot keys, looting bags and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).
                 alwaysLost = DeathRules::alwaysLost,
             )

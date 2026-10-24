@@ -99,9 +99,12 @@ class GrandExchangeService(
      * charged by [GrandExchangeBook.match] through [taxPerItem], on house sales as on player trades.
      */
     fun houseQuote(itemId: Int): GeHouseQuote? {
+        // Owner 2026-10-24 (N367, N368): these are in the house like every item (its normal price, buy and sell) - for them this
+        // replaces the chest-list rule below (2026-10-17) and the store-item rule (N115).
+        val always = itemId in HOUSE_ALWAYS
         // Owner 2026-10-17 (N101): the Deadman's chest list "komt alleen nog uit de chest en breaches" - the house neither sells nor buys it.
-        if (itemId in gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.FIXED_IDS) return null
-        if (itemId in gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.HOUSE_EXCLUDED) return null
+        if (!always && itemId in gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.FIXED_IDS) return null
+        if (!always && itemId in gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.HOUSE_EXCLUDED) return null
         if (!GeSystemLiquidity.ALL_ITEMS_AT_GUIDE_PRICE) {
             return GeSystemLiquidity.quote(itemId)
         }
@@ -641,5 +644,8 @@ class GrandExchangeService(
 
         /** Trades kept per player for the History screen: OSRS keeps 20 (E6; the 667 screen shows the newest five). */
         const val HISTORY_ROWS = GrandExchangeHistory.KEPT
+
+        /** Items the house always deals in, whatever other list names them (owner 2026-10-24, N367 N368). */
+        val HOUSE_ALWAYS: Set<Int> = setOf(gg.rsmod.plugins.api.cfg.Items.HEAVY_BALLISTA, gg.rsmod.plugins.api.cfg.Items.ARMADYL_CROSSBOW)
     }
 }

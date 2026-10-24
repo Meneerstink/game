@@ -8970,6 +8970,28 @@
       "rot": 4,
       "note": "Aleck one tile off the Standard he stood in (N19, like King Narnode 2026-10-10)",
       "group": 758
+    },
+    {
+      "op": "remove",
+      "id": 3550,
+      "x": 3138,
+      "z": 3467,
+      "level": 0,
+      "type": 0,
+      "rot": 1,
+      "note": "N360 invisible wall left where the removed city guards stood (owner 2026-10-24)",
+      "group": 759
+    },
+    {
+      "op": "remove",
+      "id": 3550,
+      "x": 3139,
+      "z": 3467,
+      "level": 0,
+      "type": 0,
+      "rot": 1,
+      "note": "N360 invisible wall left where the removed city guards stood (owner 2026-10-24)",
+      "group": 759
     }
   ]
 }

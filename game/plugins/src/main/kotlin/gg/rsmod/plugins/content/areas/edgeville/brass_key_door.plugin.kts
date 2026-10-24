@@ -15,6 +15,11 @@ on_obj_option(obj = Objs.DOOR_1804, option = "open") {
     handleDoor(player)
 }
 
+// N362 (owner 2026-10-24): using the Brass key on the door opens it too (was "Nothing interesting happens").
+on_item_on_obj(obj = Objs.DOOR_1804, item = Items.BRASS_KEY) {
+    handleDoor(player)
+}
+
 on_obj_option(obj = Objs.LADDER_12389, option = "Climb-Down") {
     player.handleLadder(underground = true)
 }
@@ -46,14 +51,23 @@ fun handleDoor(player: Player) {
     player.playSound(Sfx.DOOR_OPEN)
     world.spawn(door)
 
-    player.queue {
-        val x = 3115
-        val z = if (player.tile.z == 3450) 3449 else 3450
-        doorStep(player, Tile(x = x, z = z))
-        wait(3)
+    // N363 (owner 2026-10-24, "soms blijft die open"): the door closes on the world's clock, so a walk that is interrupted or
+    // cut short (the player's queue cleared) never leaves it open - and the player is never left locked.
+    world.queue {
+        wait(5)
         world.remove(door)
-        player.lock = LockState.NONE
         world.spawn(closedDoor)
         player.playSound(Sfx.DOOR_CLOSE)
+        // A walk queue that was dropped (not resumed) never runs its finally: unlock here too.
+        if (player.lock == LockState.DELAY_ACTIONS) player.lock = LockState.NONE
+    }
+    player.queue {
+        try {
+            val x = 3115
+            val z = if (player.tile.z == 3450) 3449 else 3450
+            doorStep(player, Tile(x = x, z = z))
+        } finally {
+            player.lock = LockState.NONE
+        }
     }
 }

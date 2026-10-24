@@ -295,7 +295,8 @@ object QuestTabInfo {
             "Your combat level sets your rates",
             table = rows,
             highlight = 1 + AnnihilationTier.values().indexOf(mine),
-            text = "Prayer and Hitpoints count as combat skills. Your rates never go down again.<br><br>" +
+            text = "Prayer and Hitpoints count as combat skills. Your rates never go down again. Quests, lamps and other " +
+                "rewards give their exact XP.<br><br>" +
                 "You can only fight players up to ${AreaState.MAX_COMBAT_LEVEL_DIFFERENCE} levels above or below you.",
             bar = "You: combat ${col(WHITE, "${player.combatLevel}")} - you fight ${col(WHITE, "${range.first} - ${range.last}")}",
         )

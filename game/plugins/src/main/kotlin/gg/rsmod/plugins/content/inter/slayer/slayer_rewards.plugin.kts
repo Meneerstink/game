@@ -224,7 +224,7 @@ fun handleBuyInterface(
 
 fun handleSlayerXpPurchase(player: Player) {
     if (player.getSlayerPointsCount() >= 400) {
-        player.addXp(Skills.SLAYER, 10_000.00) // Slayer XP
+        player.addXp(Skills.SLAYER, 10_000.00, modifiers = false) // N376: a bought reward gives exactly 10,000 Slayer XP
         player.subtractSlayerPoints(400)
         refreshPoints(player, BUY_INTERFACE)
     } else {

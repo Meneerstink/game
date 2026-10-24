@@ -19,7 +19,9 @@ import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
  *    item, skulled or not. There are no always-kept items.
  *  - The kept item is the most valuable one: tradeables by Grand Exchange guide price, untradeables by their repair price
  *    ([RepairPrices], [rankValue]).
- *  - Loot keys, looting bags and Deadman emblems are never kept ([alwaysLost]).
+ *  - Loot keys, looting bags and emblems are never kept ([alwaysLost]).
+ *  - Emblems ([isEmblem]; owner 2026-10-24, N354/N359): Protect Item never saves one; a player who kills you takes it, every
+ *    other death (a monster, a guard, a PvP death without a player killer) destroys it - never a gravestone or ground item.
  */
 object DeathRules {
     /** The one keep count: Protect Item keeps this many items. */
@@ -37,7 +39,12 @@ object DeathRules {
 
     fun deepWilderness(tile: Tile): Boolean = deepWilderness(tile.getWildernessLevel())
 
-    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || DeadmanEmblem.isEmblem(itemId)
+    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || isEmblem(itemId)
+
+    /** The Deadman emblems (tier 1-6) and the breach's Archaic emblem (tier 5). */
+    fun isEmblem(itemId: Int): Boolean =
+        DeadmanEmblem.isEmblem(itemId) ||
+            (gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5 > 0 && itemId == gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5)
 
     /** Guide price for tradeables, repair price for untradeables - the keep-1 ranking and the risk value. */
     fun rankValue(world: World): ItemRiskValueProvider = rankValue(world.definitions, GuidePriceValueProvider(world))

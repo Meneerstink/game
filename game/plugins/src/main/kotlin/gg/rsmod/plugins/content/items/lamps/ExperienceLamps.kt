@@ -104,9 +104,9 @@ object ExperienceLamps {
         }
 
     /**
-     * Grants a lamp's [experience] in [skill] (with the Annihilation rate, N92) and returns the experience really gained - the number
-     * the "You have been awarded N ..." line names. N38: the line named the base 1,000 while the skill went up 3,020; measuring the
-     * gain also covers the 200M cap and an XP redirect.
+     * Grants a lamp's [experience] in [skill] and returns the experience really gained - the number the "You have been awarded N ..."
+     * line names (N38; measuring the gain also covers the 200M cap). Owner 2026-10-24 (N376, N349): a lamp is a fixed reward and gives
+     * exactly its experience - the bracket rate is only for training (replaces N92's "also lamps").
      */
     fun grant(
         player: gg.rsmod.game.model.entity.Player,
@@ -114,7 +114,7 @@ object ExperienceLamps {
         experience: Double,
     ): Long {
         val before = player.skills.getCurrentXp(skill)
-        player.addXp(skill = skill, xp = experience)
+        player.addXp(skill = skill, xp = experience, modifiers = false)
         return Math.round(player.skills.getCurrentXp(skill) - before)
     }
 }

@@ -289,10 +289,10 @@ object PestControlRewards {
         gg.rsmod.game.model.attr.PointBalance.take(player.attr, PEST_POINTS, cost) // N106: one balance helper, never below 0
         val message =
             if (reward.isSkill) {
-                // The server's experience rate and bonus experience apply as to all experience; the message names what was gained.
+                // N376 (owner 2026-10-24): a bought XP reward is a fixed reward - no bracket rate; the message names what was gained.
                 val xp = experience(player, reward.skill, cost)
                 val before = player.skills.getCurrentXp(reward.skill)
-                player.addXp(reward.skill, xp.toDouble())
+                player.addXp(reward.skill, xp.toDouble(), modifiers = false)
                 val gained = (player.skills.getCurrentXp(reward.skill) - before).toInt()
                 "The Void Knight has granted you $gained ${reward.title} experience."
             } else {

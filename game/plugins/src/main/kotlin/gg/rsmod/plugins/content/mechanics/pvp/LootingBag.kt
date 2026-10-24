@@ -12,7 +12,6 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.moveEach
-import gg.rsmod.plugins.content.areas.home.BountyHunterHome
 import gg.rsmod.plugins.content.inter.bank.Bank
 import gg.rsmod.plugins.content.items.food.Food
 import gg.rsmod.plugins.content.items.potion.Potion
@@ -37,10 +36,6 @@ object LootingBag {
     fun container(player: Player): ItemContainer =
         player.containers.getOrPut(KEY) { ItemContainer(player.world.definitions, KEY) }
 
-    /** OSRS: the bag is usable in the Wilderness and in Ferox Enclave. */
-    fun usableHere(player: Player): Boolean =
-        player.tile.getWildernessLevel() > 0 || BountyHunterHome.isSafe(player)
-
     fun mode(player: Player): Int = player.attr.getOrDefault(STORE_MODE, STORE_ALL)
 
     fun setMode(player: Player, amount: Int) {
@@ -54,11 +49,8 @@ object LootingBag {
         return def.tradeable && !def.isPlaceholder
     }
 
+    /** Owner 2026-10-24 (N351): the bag fills everywhere - not only in the Wilderness / Ferox Enclave as in OSRS. */
     fun store(player: Player, itemId: Int, requested: Int): Int {
-        if (!usableHere(player)) {
-            player.message("You can only use a looting bag in the Wilderness or Ferox Enclave.")
-            return 0
-        }
         if (!canStore(player, itemId)) {
             player.message("You can only store tradeable items in a looting bag.")
             return 0
@@ -85,10 +77,6 @@ object LootingBag {
     }
 
     fun storeInventory(player: Player): Int {
-        if (!usableHere(player)) {
-            player.message("You can only use a looting bag in the Wilderness or Ferox Enclave.")
-            return 0
-        }
         val snapshot = player.inventory.sequence().map { it.id to it.amount }.toList()
         var moved = 0
         snapshot.forEach { (id, amount) ->
@@ -145,11 +133,12 @@ object LootingBag {
 
     fun destroy(player: Player) {
         val bag = container(player)
-        if (player.tile.getWildernessLevel() > 0) {
-            for (item in bag.sequence().toList()) {
-                if (!destroyOnWilderness(item, player)) {
-                    player.world.spawn(GroundItem(item, player.tile, player))
-                }
+        // N351: the bag fills everywhere now, so its contents drop to the floor wherever it is destroyed (they used to vanish
+        // outside the Wilderness, where the bag could not be filled).
+        val wilderness = player.tile.getWildernessLevel() > 0
+        for (item in bag.sequence().toList()) {
+            if (!wilderness || !destroyOnWilderness(item, player)) {
+                player.world.spawn(GroundItem(item, player.tile, player))
             }
         }
         bag.removeAll()

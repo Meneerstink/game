@@ -150,8 +150,10 @@ class StoreCatalogueTests {
     @Test
     fun `kits, pets, capes and cosmetics land in their own category`() {
         val section = { item: Int -> StoreCatalogue.section(StoreCatalogue.ENTRIES.first { it.purchaseItem == item && it.kind != StoreCatalogue.Kind.UNLOCK }) }
-        assertEquals(StoreCatalogue.Section.KITS, section(Items.ARMADYL_GODSWORD_ORNAMENT_KIT))
-        assertEquals(StoreCatalogue.Section.KITS, section(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT))
+        assertEquals(StoreCatalogue.Section.ORNAMENTS, section(Items.ARMADYL_GODSWORD_ORNAMENT_KIT))
+        assertEquals(StoreCatalogue.Section.ORNAMENTS, section(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT))
+        // N326: the Loyalty upgrade kits (orbs, Ward upgrade kit, Masori crafting kit) are gear, not a look.
+        listOf(Items.WARD_UPGRADE_KIT, Items.MASORI_CRAFTING_KIT, Items.HARMONISED_ORB).forEach { assertEquals(StoreCatalogue.Section.GEAR, section(it), "$it") }
         assertEquals(StoreCatalogue.Section.GEAR, section(Items.ANCESTRAL_HAT))
         assertEquals(StoreCatalogue.Section.GEAR, section(Items.RING_OF_THE_GODS_I))
         assertEquals(StoreCatalogue.Section.PETS, section(Items.HELLKITTEN))

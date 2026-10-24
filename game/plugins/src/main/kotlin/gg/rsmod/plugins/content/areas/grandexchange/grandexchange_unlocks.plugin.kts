@@ -154,7 +154,7 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
                 if (questLamp != null) {
                     gg.rsmod.plugins.content.quests.foundation.FoundationRewards.takeLamp(player, item)
                 }
-                // N92: every lamp gets the Annihilation rate (owner 10-17, OSRS); N38: the line names the gain really made.
+                // N376: a lamp gives its exact experience, no bracket rate; N38: the line names the gain really made.
                 val gained = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(player, selected.second, xp)
                 player.playSound(gg.rsmod.plugins.api.cfg.Sfx.UNLOCK)
                 player.message("The lamp grants you ${String.format(java.util.Locale.US, "%,d", gained)} ${selected.first} experience.")

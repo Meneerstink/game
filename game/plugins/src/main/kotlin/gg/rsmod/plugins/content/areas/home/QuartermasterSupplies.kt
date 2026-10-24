@@ -56,7 +56,8 @@ object QuartermasterSupplies {
             // Potions (4 doses). Owner 2026-10-03 (E5): no Prayer potion. Owner 10-16 (N68): no Super attack / strength / defence.
             Items.SARADOMIN_BREW_4 to ROW_STOCK, Items.SUPER_RESTORE_4 to ROW_STOCK, Items.SUPER_COMBAT_POTION_4 to ROW_STOCK,
             Items.RANGING_POTION_4 to ROW_STOCK, Items.MAGIC_POTION_4 to ROW_STOCK,
-            Items.BASTION_POTION_4 to ROW_STOCK, Items.BATTLEMAGE_POTION_4 to ROW_STOCK,
+            // Owner 2026-10-24 (N302): no Battlemage potion.
+            Items.BASTION_POTION_4 to ROW_STOCK,
             Items.SANFEW_SERUM_4 to ROW_STOCK, Items.GUTHIX_REST_4 to ROW_STOCK,
             Items.EXTENDED_ANTIFIRE_4 to ROW_STOCK, Items.ANTI_VENOM_PLUS_4 to ROW_STOCK,
         )

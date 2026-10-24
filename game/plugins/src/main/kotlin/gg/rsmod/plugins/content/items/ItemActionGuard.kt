@@ -158,7 +158,34 @@ object ItemActionGuard {
             player.attr.remove(STATUS_CAPTURE)
         }
         if (lines.isEmpty()) return
-        val text = lines.joinToString("<br>")
-        player.queue { itemMessageBox(text, item = itemId) }
+        val pages = itemBoxPages(lines)
+        player.queue { pages.forEach { itemMessageBox(it, item = itemId) } }
+    }
+
+    /** Visible characters per line and lines per page that fit the item box (519) next to the item picture. */
+    const val ITEM_BOX_LINE_CHARS = 52
+    const val ITEM_BOX_LINES = 4
+
+    /**
+     * The captured lines word-wrapped to the item box and split into pages of [ITEM_BOX_LINES] (N347, owner 2026-10-24: the
+     * Deadman emblem's Inspect ran over the box and its last line sat under "Click here to continue"). Colour tags do not count.
+     */
+    fun itemBoxPages(lines: List<String>): List<String> {
+        fun visible(s: String) = s.replace(Regex("<[^>]+>"), "").length
+        val wrapped = mutableListOf<String>()
+        lines.forEach { text ->
+            var line = ""
+            text.split(' ').forEach { word ->
+                val candidate = if (line.isEmpty()) word else "$line $word"
+                if (line.isNotEmpty() && visible(candidate) > ITEM_BOX_LINE_CHARS) {
+                    wrapped += line
+                    line = word
+                } else {
+                    line = candidate
+                }
+            }
+            if (line.isNotEmpty()) wrapped += line
+        }
+        return wrapped.chunked(ITEM_BOX_LINES).map { it.joinToString("<br>") }
     }
 }

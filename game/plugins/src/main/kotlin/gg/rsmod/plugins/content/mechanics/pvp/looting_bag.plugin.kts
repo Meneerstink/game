@@ -35,7 +35,7 @@ listOf(Items.LOOTING_BAG, Items.LOOTING_BAG_OPEN).forEach { bagId ->
     }
     on_item_option(bagId, "Destroy") {
         player.queue {
-            if (options("Yes, destroy it.", "No, keep it.", title = "Destroy your looting bag?") == 1) {
+            if (options("Yes, destroy it.", "No, keep it.", title = if (LootingBag.peekContents(player).isEmpty()) "Destroy your looting bag?" else "Destroy it? Its items drop to the floor.") == 1) {
                 LootingBag.destroy(player)
             }
         }

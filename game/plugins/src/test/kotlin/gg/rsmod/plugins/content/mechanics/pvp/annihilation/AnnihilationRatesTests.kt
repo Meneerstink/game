@@ -127,12 +127,13 @@ class AnnihilationRatesTests {
     }
 
     @Test
-    fun `N92 class - no experience route outside the AFK area and test bots bypasses the rate`() {
-        // Owner 10-17: lamps and quest XP get the bracket rate too (OSRS: "The experience multipliers are also applied to
-        // experience rewards obtained through lamps"). The AFK area keeps its own fixed numbers (new_player.yml, N110 open).
-        // Owner 2026-10-22 (N184): quest XP is exact, so the quest reward routes may skip the rate.
+    fun `N92 class - only the fixed rewards, the AFK area and test bots bypass the rate`() {
+        // The AFK area keeps its own fixed numbers (new_player.yml, N110 open). Owner 2026-10-22 (N184): quest XP is exact.
+        // Owner 2026-10-24 (N376, N349): every fixed XP reward is exact - all lamps (quest, antique, genie, Deadman, Dragonkin),
+        // the effigies and the XP bought with Slayer or Pest Control points; only training gets the bracket rate.
         val quests = setOf("FoundationRewards.kt", "CooksAssistant.kt", "DoricsQuest.kt", "DruidicRitual.kt", "ImpCatcher.kt", "PriestInPeril.kt", "TheKnightsSword.kt", "TheRestlessGhost.kt", "VampyreSlayer.kt")
-        val allowed = setOf("AfkArea.kt", "SummoningSuite.kt") + quests
+        val rewards = setOf("ExperienceLamps.kt", "ancient_effigies.plugin.kts", "slayer_rewards.plugin.kts", "PestControlRewards.kt")
+        val allowed = setOf("AfkArea.kt", "SummoningSuite.kt") + quests + rewards
         val bypasses =
             File("src/main/kotlin").walkTopDown()
                 .filter { it.isFile && (it.name.endsWith(".kt") || it.name.endsWith(".kts")) && it.name !in allowed }
@@ -147,11 +148,25 @@ class AnnihilationRatesTests {
         setCombat(p, 3)
         val before = p.skills.getCurrentXp(Skills.STRENGTH)
         val gained = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.STRENGTH, 1_000.0)
-        assertEquals("1,000 lamp XP at combat 3 = 10x", 10_000L, gained)
+        assertEquals("N376: a 1,000 XP lamp gives 1,000, also at a 10x bracket", 1_000L, gained)
         assertEquals(before + gained, p.skills.getCurrentXp(Skills.STRENGTH), 1e-6)
 
         p.skills.setBaseXp(Skills.STRENGTH, SkillSet.MAX_XP - 2_500.0)
-        assertEquals("capped: only what fits under 200M", 2_500L, gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.STRENGTH, 1_000.0))
+        assertEquals("capped: only what fits under 200M", 2_500L, gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.STRENGTH, 3_000.0))
+    }
+
+    @Test
+    fun `N349 every Deadman lamp gives exactly what the Emblem Trader says, at every bracket`() {
+        val emblem = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
+        for (combat in listOf(3, 70, 90, 126)) {
+            val p = player("n349_$combat", OWNER_TILE)
+            setCombat(p, combat)
+            for (tier in 1..emblem.MAX_TIER) {
+                val reward = gg.rsmod.plugins.content.items.lamps.ExperienceLamps.REWARDS[emblem.lampId(tier)] as gg.rsmod.plugins.content.items.lamps.ExperienceLamps.Reward.Fixed
+                p.skills.setBaseXp(Skills.FISHING, 0.0)
+                assertEquals("combat $combat tier $tier", emblem.lampXp(tier).toLong(), gg.rsmod.plugins.content.items.lamps.ExperienceLamps.grant(p, Skills.FISHING, reward.xp.toDouble()))
+            }
+        }
     }
 
     @Test

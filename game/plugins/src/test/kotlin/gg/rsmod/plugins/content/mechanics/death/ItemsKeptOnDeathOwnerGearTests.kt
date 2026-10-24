@@ -78,10 +78,16 @@ class ItemsKeptOnDeathOwnerGearTests {
 
         val deep = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(true, false, true, true), value)
         val kept = deep.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }
-        assertEquals(22878, kept.first().item.id, "Protect Item keeps the most valuable item (Ancestral robe top)")
+        // N352: the pet is always kept, outside the Protect Item count; Protect Item still keeps the most valuable item.
+        assertEquals(23961, kept.first().item.id, "the pet first")
+        assertTrue("always keep your pet" in kept.first().message, kept.first().message)
+        assertEquals(22878, kept[1].item.id, "Protect Item keeps the most valuable item (Ancestral robe top)")
         assertTrue(kept.single { it.item.id == Items.IMBUED_GUTHIX_MAX_CAPE_L }.message.contains("mangled"))
 
         val pvm = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(false, false, false, false), value)
         assertTrue(ids(pvm, ItemsKeptOnDeath.Section.LOST).isEmpty(), "a PvM death gives nothing away")
+        // N352 (owner 2026-10-24): a monster death keeps the pet too - it never goes to the gravestone.
+        assertTrue(23961 in ids(pvm, ItemsKeptOnDeath.Section.KEPT), "${pvm.entries}")
+        assertTrue(23961 !in ids(pvm, ItemsKeptOnDeath.Section.GRAVESTONE))
     }
 }

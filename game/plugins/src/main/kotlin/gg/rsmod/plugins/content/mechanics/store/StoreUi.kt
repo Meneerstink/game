@@ -429,9 +429,6 @@ object StoreUi : KLogging() {
     /** The card's text lines for [entry] at carousel position [index] (colours as text tags). */
     class Card(val subtitle: String, val requirement: String, val owned: String, val tradeable: String, val effect: String)
 
-    /** The Loyalty kits that make a different item (orbs, shards, upgrade kits) rather than a look; see [card]. */
-    private const val UPGRADE_KITS = "High-end rewards"
-
     private const val GREEN = "5ce05c"
     private const val RED = "ff5050"
     private const val AMBER = "ffb040"
@@ -474,7 +471,7 @@ object StoreUi : KLogging() {
         val effect =
             when (entry.kind) {
                 // The Loyalty high-end kits are upgrades, not looks: an orb turns the Nightmare staff into another staff.
-                Kind.KIT -> if (entry.category == UPGRADE_KITS) "Upgrades your item into this one" else "Cosmetic only - stats stay the same"
+                Kind.KIT -> if (entry.category == StoreCatalogue.UPGRADE_KITS) "Upgrades your item into this one" else "Cosmetic only - stats stay the same"
                 Kind.UPGRADE -> "Your item is exchanged for this one"
                 Kind.ITEM -> "Goes straight to your inventory"
                 Kind.UNLOCK ->

@@ -79,7 +79,7 @@ STAGES.keys.forEach { effigyId ->
             }
             player.inventory[slot] = Item(stage.next)
             player.attr[EFFIGY_PAIR_CHOICE]?.remove(effigyId)
-            player.addXp(skill, stage.xp)
+            player.addXp(skill, stage.xp, modifiers = false) // N376: a fixed reward, exactly the XP the message names
             player.message("You have gained ${stage.xp.toInt()} $skillName experience!")
             if (stage.next == Items.DRAGONKIN_LAMP) {
                 player.message("The ancient effigy transforms into a Dragonkin lamp!")
@@ -103,7 +103,7 @@ on_item_option(item = Items.DRAGONKIN_LAMP, option = "Rub") {
         val xp = (level.toDouble() * level * level - 2.0 * level * level + 100.0 * level) / 20.0
         if (player.inventory[slot]?.id != Items.DRAGONKIN_LAMP) return@queue
         player.inventory[slot] = null
-        player.addXp(skill, xp)
+        player.addXp(skill, xp, modifiers = false) // N376: a fixed reward, exactly the XP the message names
         player.message("You have gained ${xp.toInt()} $skillName experience!")
     }
 }

@@ -13,7 +13,6 @@ import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.magic.RunePouch
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
 import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
-import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
 
 /** What an unprotected PvP death does to one lost untradeable stack (owner 2026-09-26, the OSRS level-20 rule). */
@@ -117,7 +116,7 @@ object UntradeableDeathProtection {
         definitions: DefinitionSet,
         itemId: Int,
     ): Boolean {
-        if (LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || DeadmanEmblem.isEmblem(itemId)) return false
+        if (LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || DeathRules.isEmblem(itemId)) return false
         if (PvpDeathBreakables.converts(itemId)) return false
         if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
         if (PvpDeathBreakables.forBroken(itemId) != null) return true

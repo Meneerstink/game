@@ -42,7 +42,8 @@ object ItemsKeptOnDeath {
         KEPT("Items that are <col=ffffff>KEPT</col>:"),
         GRAVESTONE("Items that go to your <col=ffffff>GRAVESTONE</col>:"),
         LOST("Items <col=ff0000>LOST</col> to the player who kills you:"),
-        DELETED("Items that are <col=ff0000>DELETED</col>:"),
+        // Owner 2026-10-24 (N353): "lost", not "deleted" (the OSRS screen says DELETED).
+        DELETED("Items that are <col=ff0000>LOST</col>:"),
     }
 
     data class Entry(val section: Section, val item: Item, val message: String)
@@ -97,7 +98,8 @@ object ItemsKeptOnDeath {
         result.itemRisk.protected.forEach {
             // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
             val always = !pvp && UntradeableDeathProtection.lockable(it.item.id)
-            entries += Entry(Section.KEPT, it.item, if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
+            val pet = gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it.item.id)
+            entries += Entry(Section.KEPT, it.item, if (pet) line(it.item, "You always keep your pet.", "You always keep your pets.") else if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
         }
         // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
         untradeables.forEach { outcome ->
@@ -115,7 +117,7 @@ object ItemsKeptOnDeath {
                 UntradeableFate.LOST_FOR_COINS ->
                     entries += Entry(Section.LOST, item, line(item, "This untradeable item is lost; the player who kills you receives $coins coins.", "These untradeable items are lost; the player who kills you receives $coins coins."))
                 UntradeableFate.DESTROYED ->
-                    entries += Entry(Section.DELETED, item, line(item, "This item will be destroyed; the player who kills you receives $coins coins.", "These items will be destroyed; the player who kills you receives $coins coins."))
+                    entries += Entry(Section.DELETED, item, line(item, "This item will be lost; the player who kills you receives $coins coins.", "These items will be lost; the player who kills you receives $coins coins."))
             }
         }
         val bag = LootingBag.peekContents(player)
@@ -159,12 +161,12 @@ object ItemsKeptOnDeath {
             (result.itemRisk.lost.map { it.item }.filter { LootingBag.isBag(it.id) } + bag.filter { LootingBag.destroyedOnPvpDeath(player, it) }).forEach { deleted(player, entries, it) }
         } else {
             // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
-            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) } + bag + cargo
+            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) || DeathRules.isEmblem(it.id) } + bag + cargo
             toGrave.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))
             }
-            result.itemRisk.lost.map { it.item }.filter { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) }.forEach { deleted(player, entries, it) }
+            result.itemRisk.lost.map { it.item }.filter { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) || DeathRules.isEmblem(it.id) }.forEach { deleted(player, entries, it) }
         }
         return Preview(entries, 0, risk)
     }
@@ -177,9 +179,9 @@ object ItemsKeptOnDeath {
             Entry(
                 Section.DELETED, item,
                 if (item.amount > 1) {
-                    "${spaced(item.amount.toLong())} x ${name(player, item.id)}: These items will be deleted."
+                    "${spaced(item.amount.toLong())} x ${name(player, item.id)}: These items will be lost."
                 } else {
-                    "${name(player, item.id)}: This item will be deleted."
+                    "${name(player, item.id)}: This item will be lost."
                 },
             )
     }

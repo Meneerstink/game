@@ -203,6 +203,50 @@ class DeadmanEmblemTests {
         assertTrue(risk.protected.none { it.item.id == emblem })
     }
 
+    @Test
+    fun `N354 Protect Item never keeps the Archaic emblem either`() {
+        val archaic = gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5
+        val risk =
+            DeathItemRiskCalculator.calculate(
+                inventory = arrayOf(Item(archaic, 1), Item(4151, 1)),
+                equipment = arrayOfNulls(14),
+                itemProtectionActive = true,
+                valueProvider = ItemRiskValueProvider { if (it == archaic) Long.MAX_VALUE else 1L },
+                alwaysLost = gg.rsmod.plugins.content.mechanics.death.DeathRules::alwaysLost,
+            )
+        assertTrue(risk.protected.none { it.item.id == archaic }, "${risk.protected}")
+        assertTrue(risk.lost.any { it.item.id == archaic })
+    }
+
+    @Test
+    fun `N359 a dangerous-zone death without a player killer destroys the emblems - never ground loot`() {
+        val (world, _, victim) = fight("guard_noone", "guard_victim")
+        val archaic = gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5
+        victim.attr[LootKeys.ENABLED] = false
+        victim.inventory[0] = Item(archaic, 1)
+        victim.inventory[1] = Item(DeadmanEmblem.emblemId(3), 1)
+        victim.inventory[2] = Item(COINS, 500)
+        val lost = (0 until 3).map { DeathSlotItem(DeathContainerSource.INVENTORY, it, victim.inventory[it]!!) }
+        assertTrue(DeathExecutor.execute(world, DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, null, DeathItemRiskResult(0, emptyList(), lost))))
+        io.mockk.verify(exactly = 0) { world.spawn(match<gg.rsmod.game.model.entity.GroundItem> { it.item == archaic || DeadmanEmblem.isEmblem(it.item) }) }
+        assertEquals(0, victim.inventory.getItemCount(archaic))
+        assertEquals(0, DeadmanEmblem.ownedTier(victim))
+    }
+
+    @Test
+    fun `N359 a monster death destroys the emblems - nothing in the gravestone`() {
+        val (world, _, victim) = fight("pvm_noone", "pvm_victim")
+        val archaic = gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5
+        victim.inventory[0] = Item(archaic, 1)
+        victim.inventory[1] = Item(DeadmanEmblem.emblemId(2), 1)
+        val lost = (0 until 2).map { DeathSlotItem(DeathContainerSource.INVENTORY, it, victim.inventory[it]!!) }
+        assertTrue(DeathExecutor.execute(world, DeathResolutionResult(DeathContext.PVM_SAFE, victim, null, DeathItemRiskResult(0, emptyList(), lost))))
+        assertEquals(0, victim.gravestone.getItemCount(archaic))
+        assertEquals(0, victim.gravestone.getItemCount(DeadmanEmblem.emblemId(2)))
+        assertEquals(0, victim.inventory.getItemCount(archaic))
+        assertEquals(0, DeadmanEmblem.ownedTier(victim))
+    }
+
     // ---------------------------------------------------------------- PvP death transfer
 
     @Test

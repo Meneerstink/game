@@ -52,6 +52,16 @@ object TextWrapping {
         offset: Int,
         wrapLength: Int,
     ): Int {
+        if (str.length - offset <= wrapLength) {
+            return str.length
+        }
+        // N357 (owner 2026-10-24, the Bloodhound's last words cut off): break at the last space that keeps the line within
+        // wrapLength - the first space after it let a line run ~10 characters past the dialogue box. A single longer word
+        // still breaks at the first space after it.
+        val before = str.lastIndexOf(SPACE, offset + wrapLength)
+        if (before > offset) {
+            return before
+        }
         val spaceToWrapAt = str.indexOf(SPACE, offset + wrapLength)
         if (spaceToWrapAt == -1) {
             return str.length

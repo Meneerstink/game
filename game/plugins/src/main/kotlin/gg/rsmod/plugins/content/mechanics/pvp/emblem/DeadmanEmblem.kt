@@ -344,8 +344,8 @@ object DeadmanEmblem {
         return true
     }
 
-    fun destroyed(player: Player, tier: Int) {
-        EmblemLog.write("DESTROY", player, "tierBefore" to tier, "tierAfter" to 0, "reason" to "destroyed by the player", "area" to area(player))
+    fun destroyed(player: Player, tier: Int, reason: String = "destroyed by the player") {
+        EmblemLog.write("DESTROY", player, "tierBefore" to tier, "tierAfter" to 0, "reason" to reason, "area" to area(player))
     }
 
     /** The admin item-spawn commands route emblems here, so they obey the one-emblem rule and are logged. True = handled. */

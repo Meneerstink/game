@@ -134,8 +134,13 @@ object DeathExecutor {
             // killer already holds the maximum number of keys.
             DeathContext.WILDERNESS_PVP -> {
                 val converted = extraPvpLoot() + bagContents
-                // Deadman emblems never become loot-key or ground loot: DeadmanEmblem hands them to the killer.
-                val loot = toRemove.filterNot { gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) }
+                // Deadman emblems never become loot-key or ground loot: DeadmanEmblem hands them to the killer. Without a player
+                // killer (a guard, a monster in a dangerous zone) the Archaic emblem is destroyed too (N359), never ground loot.
+                if (result.killer == null) destroyEmblems(victim, toRemove.filter { DeathRules.isEmblem(it.item.id) && !gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) })
+                val loot =
+                    toRemove.filterNot {
+                        gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) || (result.killer == null && DeathRules.isEmblem(it.item.id))
+                    }
                 val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
                 // The real value the killer takes (emblem excluded): lost stacks, converted loot, the looting bag's
                 // contents and the loot stored behind the victim's lost keys. Read before the key plan clears them.
@@ -152,7 +157,10 @@ object DeathExecutor {
                 // The bag itself disappears completely; only its detached contents enter the
                 // unprotected death outcome. It must never be recoverable as an item.
                 val lostBags = toRemove.filter { gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(it.item.id) }.toSet()
-                val recoverable = toRemove - lostKeys.toSet() - lostBags
+                // N359 (owner 2026-10-24): an emblem is destroyed on a death that is not a PvP kill - no gravestone.
+                val lostEmblems = toRemove.filter { DeathRules.isEmblem(it.item.id) }.toSet()
+                destroyEmblems(victim, lostEmblems.toList())
+                val recoverable = toRemove - lostKeys.toSet() - lostBags - lostEmblems
                 // Owner 2026-09-26: beast-of-burden cargo (and anything else the caller detaches) joins the same gravestone.
                 val extra = bagContents + extraPvmItems()
                 if (recoverable.isNotEmpty() || extra.isNotEmpty()) {
@@ -164,6 +172,24 @@ object DeathExecutor {
         // gaps and a broken worn item landed in the first free slot, so the kept items stood scattered after the respawn.
         victim.inventory.shift()
         return true
+    }
+
+    /** Emblems taken by a death that is not a PvP kill crumble (N359); a Deadman emblem's end is logged like a destroy. */
+    private fun destroyEmblems(
+        victim: Player,
+        emblems: List<DeathSlotItem>,
+    ) {
+        val deadman = gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
+        emblems.forEach { slot ->
+            val tier = deadman.tierOf(slot.item.id)
+            if (tier > 0) {
+                victim.message("<col=ef1020>Your tier $tier Deadman emblem crumbles to dust.")
+                deadman.destroyed(victim, tier, "lost on a death that was not a PvP kill")
+            } else {
+                val name = victim.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, slot.item.id)?.name ?: "emblem"
+                victim.message("<col=ef1020>Your $name crumbles to dust.")
+            }
+        }
     }
 
     private fun spawnPvpLoot(

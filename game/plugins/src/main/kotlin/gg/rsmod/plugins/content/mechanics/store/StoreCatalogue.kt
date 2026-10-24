@@ -68,12 +68,16 @@ object StoreCatalogue {
      */
     enum class Section(val label: String) {
         ALL("All"),
-        KITS("Kits"),
+        // Owner 2026-10-24 (N326): the tab is "Ornaments"; the upgrade kits (orbs, shards, upgrade kits) are under Gear.
+        ORNAMENTS("Ornaments"),
         GEAR("Gear"),
         PETS("Pets"),
         CAPES("Capes"),
         COSMETICS("Cosmetics"),
     }
+
+    /** The Loyalty kits that make a different item (orbs, shards, upgrade kits) rather than a look. */
+    const val UPGRADE_KITS = "High-end rewards"
 
     private val CAPE_CATEGORIES = setOf("Imbued capes", "Max cape looks")
     private val PET_CATEGORIES = setOf("Pets", StorePets.CATEGORY)
@@ -81,7 +85,8 @@ object StoreCatalogue {
 
     fun section(entry: Entry): Section =
         when {
-            entry.kind == Kind.KIT -> Section.KITS
+            entry.kind == Kind.KIT && entry.category == UPGRADE_KITS -> Section.GEAR
+            entry.kind == Kind.KIT -> Section.ORNAMENTS
             entry.kind == Kind.UNLOCK || entry.category in CAPE_CATEGORIES -> Section.CAPES
             entry.category in PET_CATEGORIES -> Section.PETS
             entry.category in COSMETIC_CATEGORIES -> Section.COSMETICS
@@ -352,11 +357,13 @@ object StoreCatalogue {
         // Owner 2026-10-11 (bug 031129, prices "All 50,000"): the normal Infernal cape, Dizana's quiver and Ava's assembler. The
         // quiver is sold uncharged, the form OSRS gives; it charges with Sunfire splinters (dizanas_quiver.plugin.kts).
         // Belle's folly (owner 2026-10-11: "where is bellys folly" -> Loyalty Shop, 50,000): it was in the game but obtainable nowhere.
-        listOf(Items.INFERNAL_CAPE, Items.DIZANAS_QUIVER_UNCHARGED, Items.AVAS_ASSEMBLER, Items.BELLES_FOLLY)
+        // Owner 2026-10-24 (N320): Ava's assembler left this shop - it comes from Ava (Dragon Slayer II) and the Masori kit route.
+        listOf(Items.INFERNAL_CAPE, Items.DIZANAS_QUIVER_UNCHARGED, Items.BELLES_FOLLY)
             .forEach { list += itemEntry(l, it, 50_000, "High-end rewards") }
         // Owner 2026-09-20: "remove the crown of helious out of the shop" - the Crown of Helios is not sold here.
         listOf(Items.GUTHIX_HALO to 2_500, Items.SARADOMIN_HALO to 2_500, Items.ZAMORAK_HALO to 2_500,
-            Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE to 7_500, Items.TOP_HAT to 5_000, Items.SNOWMAN_TOP_HAT to 5_000,
+            // N321: the wearable Herald cape the Herald of Lumbridge gives (21435); 21434 has no options in this cache.
+            Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE_21435 to 7_500, Items.TOP_HAT to 5_000, Items.SNOWMAN_TOP_HAT to 5_000,
             Items.REINDEER_HAT to 500, Items.BUNNY_EARS to 5_000)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Prestige cosmetics") }
         listOf(Items.SANTA_COSTUME_TOP, Items.SANTA_COSTUME_LEGS, Items.SANTA_COSTUME_GLOVES, Items.SANTA_COSTUME_BOOTS,
@@ -376,7 +383,8 @@ object StoreCatalogue {
             Items.ANGER_SWORD to 500, Items.ANGER_SPEAR to 500, Items.ANGER_MACE to 500, Items.ANGER_BATTLEAXE to 500,
             Items.RUBBER_CHICKEN to 500, Items.CHOCATRICE_CAPE to 500, Items.GRIM_REAPER_HOOD to 500, Items.WEB_CLOAK to 500)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Holiday cosmetics") }
-        listOf(Items.PET_ROCK to 1_000, Items.HELLKITTEN to 10_000, Items.BABY_DRAGON to 15_000, Items.BABY_DRAGON_12472 to 15_000,
+        // Owner 2026-10-24 (N300): no Pet rock.
+        listOf(Items.HELLKITTEN to 10_000, Items.BABY_DRAGON to 15_000, Items.BABY_DRAGON_12472 to 15_000,
             Items.BABY_DRAGON_12474 to 15_000, Items.BABY_DRAGON_12476 to 15_000, Items.BABY_PENGUIN to 7_500, Items.BABY_RACCOON_12486 to 7_500,
             Items.BABY_GECKO to 7_500, Items.BABY_SQUIRREL to 7_500, Items.BABY_CHAMELEON to 7_500, Items.BABY_MONKEY to 7_500,
             Items.BABY_GIANT_CRAB_12500 to 7_500, Items.BABY_ICEFIEND to 10_000, Items.BABY_PLATYPUS to 7_500,
