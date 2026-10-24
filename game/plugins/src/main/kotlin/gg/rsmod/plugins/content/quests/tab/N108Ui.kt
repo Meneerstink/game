@@ -101,6 +101,9 @@ object N108Ui {
         if (p <= 0.0) return "-"
         val d = 1.0 / p
         return when {
+            // N319: a million and more in M ("1/3.86M"), never "1/3859K".
+            d >= 10_000_000 -> "1/${Math.round(d / 1_000_000)}M"
+            d >= 999_500 -> "1/${String.format(Locale.US, "%.2f", d / 1_000_000).trimEnd('0').removeSuffix(".")}M"
             d >= 100_000 -> "1/${Math.round(d / 1000)}K"
             d >= 10_000 -> "1/${String.format(Locale.US, "%.1f", d / 1000).removeSuffix(".0")}K"
             d >= 1000 -> "1/${String.format(Locale.US, "%,d", Math.round(d))}"
@@ -218,6 +221,15 @@ object N108Ui {
         if (cache(player)[k] == height.toString()) return
         cache(player)[k] = height.toString()
         player.runClientScript(gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT, hash(interfaceId, layer), hash(interfaceId, scrollbar), height)
+    }
+
+    /**
+     * Back to the top of [layer] (N319: a new Drop Viewer entry opened half-way down the table of the one before): the scroll script
+     * clamps the position to the height, so the visible height first puts it at 0; the next [scroll] sends the real height.
+     */
+    fun scrollTop(player: Player, interfaceId: Int, layer: Int, scrollbar: Int, visible: Int) {
+        cache(player).remove(key(interfaceId, layer, 5))
+        player.runClientScript(gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.SCROLL_SCRIPT, hash(interfaceId, layer), hash(interfaceId, scrollbar), visible)
     }
 
     // ---- send-only-changes

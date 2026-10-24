@@ -115,7 +115,7 @@ class DropViewerTests {
     }
 
     @Test
-    fun `N279 - groups with headings in the Wiki's order, the rarest first inside a group, the same in every bracket`() {
+    fun `N279 N315 N304 - groups with headings in the Wiki's order, Extra rolls under Pets, the rarest first on Your chance`() {
         register()
         val account = Account()
         val world = account.world
@@ -134,9 +134,17 @@ class DropViewerTests {
         val other = DropSources.Line("d", Items.ADAMANT_ARROW, "Adamant arrow", "5", 0.01, 0.01)
         val sameB = DropSources.Line("e", Items.RUNE_ARROW, "Rune arrow", "20", 0.01, 0.01)
         assertEquals(listOf("pet", "b", "d", "c", "e", "a"), DropSources.sorted(world, listOf(common, sameA, rare, other, sameB, pet)).map { it.key })
-        // The order follows the NORMAL chance: a boosted line does not move.
+        // N315 (owner 2026-10-24): the order follows YOUR chance, the column the player reads - a line the bracket made common
+        // goes down, even when its normal chance is rare.
         val boosted = DropSources.Line("f", Items.RUNE_ARROW, "Rune arrow", "1", 0.9, 1.0 / 5000)
-        assertEquals("f", DropSources.sorted(world, listOf(common, boosted)).first().key)
+        assertEquals(listOf("a", "f"), DropSources.sorted(world, listOf(boosted, common)).map { it.key })
+        // A chest pet the player owns (Your chance 0) sorts on its normal chance, not on top.
+        val owned = DropSources.Line("g", Items.BONES, "Owned", "1", 0.0, 1.0 / 10)
+        assertEquals(listOf("b", "g"), DropSources.sorted(world, listOf(owned, rare)).map { it.key })
+        // N304: Extra rolls right under Pets.
+        val emblem = DropSources.Line("emblem", Items.BONES, "Deadman emblem", "1", 1.0 / 157, 1.0 / 157)
+        assertEquals(listOf(DropGroups.Group.PETS, DropGroups.Group.EXTRA, DropGroups.Group.UNIQUES),
+            DropGroups.grouped(world, listOf(rare, emblem, pet), setOf(Items.DRAGON_PICKAXE)).map { it.first })
         // Charms keep their fixed order (gold, green, crimson, blue), whatever the chance.
         val charms = DropGroups.CHARMS.reversed().mapIndexed { i, c -> DropSources.Line("ch$i", c, "c$i", "1", 0.1 * (i + 1), 0.1 * (i + 1)) }
         assertEquals(DropGroups.CHARMS, DropGroups.sortGroup(DropGroups.Group.CHARMS, charms).map { it.item })
@@ -182,10 +190,67 @@ class DropViewerTests {
         assertEquals("Rare drop table", rdt.name)
         assertEquals(rdt.kids.size, rows.drop(at + 1).takeWhile { it.level > 0 && it.line != null }.count { it.level == 1 }, "every kid under the table")
         assertTrue(rows.any { it.line?.item == Items.LOOP_HALF_OF_A_KEY && it.level == 1 }, "the loop half shows without a click")
-        // The kids too: rarest first.
-        val kids = rows.drop(at + 1).takeWhile { it.level > 0 }.filter { it.level == 1 }.map { 1.0 / it.line!!.normal }
+        // The kids too: rarest first (on Your chance, N315).
+        val kids = rows.drop(at + 1).takeWhile { it.level > 0 }.filter { it.level == 1 }.map { 1.0 / it.line!!.your }
         assertEquals(kids.sortedDescending(), kids, "rarest first")
         assertTrue(DropViewer.rowsOf(account.player, source(), view).size <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.V.ROW_SLOTS)
+    }
+
+    @Test
+    fun `N309 N315 N317 N308 - Qty fits 46 px with thousands as K, (noted) leaves the name, no tick, Normal on a lighter band`() {
+        val account = Account()
+        val world = account.world
+        val lib = CacheLibrary(CACHE_PATH)
+        every { world.filestore } returns lib
+        // The owner's examples (bug 15:1x / dv6): the numbers that ran into Your chance.
+        assertEquals("9K-11K", DropViewer.qtyText(world, "9000-11000"))
+        assertEquals("15K-20K", DropViewer.qtyText(world, "15000-20000"))
+        assertEquals("20.5-21K", DropViewer.qtyText(world, "20500-21000"))
+        assertEquals("150-250", DropViewer.qtyText(world, "150-250"), "a quantity that fits stays whole")
+        assertEquals("1", DropViewer.qtyText(world, "1"))
+        for (q in listOf("9000-11000", "15000-20000", "20500-21000", "19500-20000", "100-507", "150-250")) {
+            assertTrue(N108Ui.p11(world, DropViewer.qtyText(world, q)) <= gg.rsmod.game.tools.importer.N108InterfaceImportTool.V.QTY_W - 1, "$q -> ${DropViewer.qtyText(world, q)} ${N108Ui.p11(world, DropViewer.qtyText(world, q))} px; digits ${(0..9).map { N108Ui.p11(world, "$it") }} dash ${N108Ui.p11(world, "-")} K ${N108Ui.p11(world, "K")} dot ${N108Ui.p11(world, ".")} noted ${N108Ui.p11(world, "(noted)")}")
+        }
+        // "(noted)" moves to the Qty column (OSRS Wiki): the name is the plain item name.
+        assertEquals("Ranging potion (4)", DropViewer.plainName("Ranging potion (4) (noted)"))
+        assertTrue(DropViewer.isNoted("Ranging potion (4) (noted)") && !DropViewer.isNoted("Ranging potion (4)"))
+        // N317: the Drop Viewer has no "already got it" tick (only the Collection Log shows what the player has).
+        val viewer = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropViewer.kt").readText()
+        assertFalse("\"ok\"" in viewer || "logItems" in viewer, "no tick in the rows")
+        // N308: the Normal column has the same Wiki band in its lighter tint.
+        assertEquals("zk_n_vrare", DropViewer.normalCellSprite(1.0 / 5000))
+        assertEquals("zk_n_rare", DropViewer.normalCellSprite(1.0 / 200))
+        assertEquals("zk_n_common", DropViewer.normalCellSprite(1.0 / 4))
+        lib.close()
+    }
+
+    @Test
+    fun `N307 N312 N311 - the breach emblem says once per breach on its own line in the bar, Chest reward explains itself, bodyguards under their general`() {
+        val account = Account()
+        val lib = CacheLibrary(CACHE_PATH)
+        every { account.world.filestore } returns lib
+        DropSources.reset()
+        try {
+            val breach = DropSources.all(account.player).first { it.kind == DropSources.Kind.BREACH }
+            val view = DropSources.view(account.player, breach, 5.0)
+            val archaic = view.always.single()
+            assertEquals("(250+ dmg, 1x per breach)", DropViewer.alwaysNote(archaic))
+            assertTrue(DropViewer.alwaysInBar(account.world, view.always), "the emblem stays in the Always bar")
+            val chest = view.lines.single { it.key == "chest" }
+            assertEquals("Chest reward", chest.name)
+            assertEquals("1 item from the Deadman's Chest", chest.sub)
+            assertTrue(N108Ui.p11(account.world, chest.sub!!) <= DropViewer.nameRoom(0, table = true), "the second line fits")
+            // N311: each God Wars general's three bodyguards (the ones the server spawns with him), with their own entries.
+            val all = DropSources.all(account.player)
+            for (general in listOf("General Graardor", "Commander Zilyana", "Kree'arra", "K'ril Tsutsaroth")) {
+                val boss = all.firstOrNull { it.name == general && it.group == DropSources.Group.BOSSES } ?: continue
+                val minions = DropViewer.minionsOf(all, boss)
+                assertEquals(3, minions.size, "$general: ${minions.map { it.name }}")
+            }
+        } finally {
+            DropSources.reset()
+            lib.close()
+        }
     }
 
     @Test

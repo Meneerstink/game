@@ -70,6 +70,8 @@ object DropSources {
         val kids: List<Line> = emptyList(),
         /** Extra words after the chance ("250+ damage", "Fire cape for the Fight Caves"). */
         val note: String? = null,
+        /** N312: a second, smaller line under the name ("1 item from the Deadman's Chest"). */
+        val sub: String? = null,
     )
 
     class View(val always: List<Line>, val lines: List<Line>)
@@ -311,7 +313,7 @@ object DropSources {
         for (l in lines) {
             val k = if (l.tag == Tag.TABLE) l.key else "${l.item}|${l.quantity}|${l.tag}"
             val have = merged[k]
-            merged[k] = if (have == null) l else Line(have.key, l.item, l.name, l.quantity, minOf(1.0, have.your + l.your), minOf(1.0, have.normal + l.normal), l.tag, l.kids, l.note ?: have.note)
+            merged[k] = if (have == null) l else Line(have.key, l.item, l.name, l.quantity, minOf(1.0, have.your + l.your), minOf(1.0, have.normal + l.normal), l.tag, l.kids, l.note ?: have.note, l.sub ?: have.sub)
         }
         return merged.values.toList()
     }
@@ -349,7 +351,8 @@ object DropSources {
         // The chest-list extra roll (BreachLoot.roll, BREACH_EXTRA_CHANCE), then one pick of the chest list's items (no pets, N306).
         val chestY = intChance(rate, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
         val chestN = intChance(1.0, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
-        lines += Line("chest", Items.TRINKET_OF_FAIRIES, "Deadman's Chest roll", "1", chestY, chestN, Tag.TABLE, chestLines(world, chestY, chestN, emptySet(), withPets = false))
+        // N312 (owner 2026-10-24, A): "Chest reward" with the explanation on its own line, the items under it with their real chance.
+        lines += Line("chest", Items.TRINKET_OF_FAIRIES, "Chest reward", "1", chestY, chestN, Tag.TABLE, chestLines(world, chestY, chestN, emptySet(), withPets = false), sub = "1 item from the Deadman's Chest")
         // The rare trigger, then 1/92 the mega-rare equipment (equal), else one RARE line by weight.
         val rareY = intChance(BreachLoot.RARE_TRIGGER * rate, BreachLoot.RARE_DENOMINATOR)
         val rareN = intChance(BreachLoot.RARE_TRIGGER.toDouble(), BreachLoot.RARE_DENOMINATOR)
@@ -376,7 +379,8 @@ object DropSources {
             fun twice(p: Double) = 1 - (1 - p).pow(BreachLoot.REGULAR_ROLLS)
             lines += Line("reg$i", l.item, itemName(world, l.item) + if (l.noted) " (noted)" else "", qty(l.min, l.max), twice(yourRegular[i]), twice(normalRegular[i]))
         }
-        return View(listOfNotNull(archaic(world, "${BreachLoot.EMBLEM_DAMAGE}+ damage")), sorted(world, merge(lines)))
+        // N307 (owner 2026-10-24, B): the emblem is once per account per breach (DeadmanBreach.claimArchaicEmblem), not every kill.
+        return View(listOfNotNull(archaic(world, "${BreachLoot.EMBLEM_DAMAGE}+ dmg, 1x per breach")), sorted(world, merge(lines)))
     }
 
     private fun qty(min: Int, max: Int) = if (max > min) "$min-$max" else "$min"

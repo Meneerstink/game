@@ -7,8 +7,9 @@ import gg.rsmod.plugins.api.cfg.Items
 /**
  * N279 (owner 2026-10-24, design B5 GOEDGEKEURD): the Drop Viewer's lines in groups with a heading, like the OSRS Wiki drop tables -
  * Pets, Charms, Uniques, Weapons and armour, Runes and ammo, Materials, Herbs and seeds, Food and potions, Coins and other, Extra
- * rolls, Drop tables; empty groups are left out. Inside a group the rarest line comes first (the NORMAL chance, so the order never
- * moves with the bracket), lines with the same chance keep the same item together; the charms keep their fixed order.
+ * rolls (N304: right under Pets), Drop tables; empty groups are left out. Inside a group the rarest line comes first on YOUR chance
+ * (N315, owner 2026-10-24: the column the player reads), lines with the same chance keep the same item together; the charms keep
+ * their fixed order.
  *
  * A line's group is the item's own category, read from its definition: a wield/wear option or an equipment slot = equipment
  * (the ammo slot = ammo), a rune, an Eat/Drink option, a herb or a seed, a material by its name ([MATERIAL_WORDS]); what fits
@@ -19,6 +20,8 @@ object DropGroups {
         /** Only when the Always items do not fit the Always bar (DropViewer.alwaysInBar): then they head the table, like the Wiki. */
         ALWAYS("Always"),
         PETS("Pets"),
+        /** N304 (owner 2026-10-24): the extra rolls right under the pets. */
+        EXTRA("Extra rolls"),
         CHARMS("Charms"),
         UNIQUES("Uniques"),
         GEAR("Weapons and armour"),
@@ -27,7 +30,6 @@ object DropGroups {
         HERBS("Herbs and seeds"),
         FOOD("Food and potions"),
         OTHER("Coins and other"),
-        EXTRA("Extra rolls"),
         TABLES("Drop tables"),
     }
 
@@ -153,9 +155,12 @@ object DropGroups {
     /** A chance rounded so two lines with the same weight compare equal (floating point sums). */
     private fun key(p: Double): Double = if (p <= 0.0) Double.MAX_VALUE else Math.round(1.0 / p * 1e6) / 1e6
 
-    /** Rarest first on the normal chance, the same item together, then the smaller quantity first. */
+    /** The chance a line sorts on: the player's own (N315); a chest pet he already owns (0) sorts on its normal chance. */
+    private fun shown(line: DropSources.Line): Double = if (line.your > 0.0) line.your else line.normal
+
+    /** Rarest first on YOUR chance (N315), the same item together, then the smaller quantity first. */
     val RAREST_FIRST: Comparator<DropSources.Line> =
-        compareByDescending<DropSources.Line> { key(it.normal) }.thenBy { it.name.lowercase() }.thenBy { DropSources.averageQuantity(it.quantity) }.thenBy { it.key }
+        compareByDescending<DropSources.Line> { key(shown(it)) }.thenBy { it.name.lowercase() }.thenBy { DropSources.averageQuantity(it.quantity) }.thenBy { it.key }
 
     fun sortGroup(group: Group, lines: List<DropSources.Line>): List<DropSources.Line> =
         if (group == Group.CHARMS) {

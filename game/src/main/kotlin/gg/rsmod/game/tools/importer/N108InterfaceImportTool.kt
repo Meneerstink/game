@@ -84,8 +84,8 @@ object N108InterfaceImportTool {
         text(id, x, y, w, h, parent, font, text, colour = colour, alignX = alignX, alignY = alignY, hidden = hidden, lineHeight = lineHeight)
 
     /** Text on parchment (the Wiki table, N279): no drop shadow. */
-    private fun Builder.tp(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, colour: Int, text: String = "", alignX: Int = 0, alignY: Int = 1, hidden: Boolean = false) =
-        add(Comp(id, 4, x, y, w, h, parent, hidden = hidden, font = font, text = text, colour = colour, alignX = alignX, alignY = alignY, textShadow = false))
+    private fun Builder.tp(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, font: Int, colour: Int, text: String = "", alignX: Int = 0, alignY: Int = 1, hidden: Boolean = false, lineHeight: Int = 0) =
+        add(Comp(id, 4, x, y, w, h, parent, hidden = hidden, font = font, text = text, colour = colour, alignX = alignX, alignY = alignY, textShadow = false, lineHeight = lineHeight))
 
     private fun Builder.hit(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, op: String, hidden: Boolean = false) = layer(id, x, y, w, h, parent, hidden = hidden, ops = listOf(op))
 
@@ -95,6 +95,12 @@ object N108InterfaceImportTool {
 
     private fun Builder.model(id: Int, x: Int, y: Int, w: Int, h: Int, parent: Int, zoom: Int) =
         add(Comp(id, TYPE_MODEL, x, y, w, h, parent, hidden = true, model = -1, originX = 0, originY = 0, xan = 0, yan = 0, zan = 0, zoom = zoom))
+
+    /**
+     * N314 (owner 2026-10-24): every N108 window's close button is the real OSRS one - OSRS sprite 535 (the stone button with the
+     * dark X every OSRS interface uses, 21 x 21), imported as `zk_close` - instead of the grey box with an X the art had.
+     */
+    private fun closeButton(b: Builder, id: Int) = b.g(id, 472, 4, 1, "zk_close", ops = listOf("Close"))
 
     private fun Builder.root() = add(Comp(0, TYPE_LAYER, 0, 0, 0, 0, -1, resizeX = 1, resizeY = 1))
 
@@ -137,12 +143,14 @@ object N108InterfaceImportTool {
         const val ROWS_SCROLLBAR = ROWS + 1
         const val EMPTY = ROWS + 2
         const val ROW_FIRST = ROWS + 3 // 47
-        const val ROW_STRIDE = 8 // bg, chance cell, item, name, tag, qty, your, normal
+        const val ROW_STRIDE = 8 // bg, your-chance cell, normal cell, name, sub line, qty, your, normal
         const val R_BG = 0
         const val R_CELL = 1
-        const val R_ITEM = 2
+        /** N308: the Normal column's lighter Wiki cell. */
+        const val R_NCELL = 2
         const val R_NAME = 3
-        const val R_TAG = 4
+        /** N312: a second, smaller line under the name ("1 item from the Deadman's Chest"); N317 the tick that stood here is gone. */
+        const val R_SUB = 4
         const val R_QTY = 5
         const val R_YOUR = 6
         const val R_NORMAL = 7
@@ -160,7 +168,13 @@ object N108InterfaceImportTool {
         const val L_VIEW = 7
         const val L_TOGGLE = 8
         const val LIST_SLOTS = 140
-        const val COUNT = LIST_FIRST + LIST_SLOTS * LIST_STRIDE
+        /**
+         * N310 / N319: the item pictures of the rows, one per row, AFTER every other component so the client draws them over all
+         * the rows. The server sizes each to 28 x 25 (DropViewer.PIC_W / PIC_H): the client shrinks the item's 36 x 32 sprite with
+         * an area filter (RspsObjSmooth) instead of dropping pixel rows - the "wazig" pictures of the owner's screenshot.
+         */
+        const val ITEM_FIRST = LIST_FIRST + LIST_SLOTS * LIST_STRIDE
+        const val COUNT = ITEM_FIRST + ROW_SLOTS
 
         // geometry (window pixels)
         const val LIST_X = 8
@@ -168,18 +182,39 @@ object N108InterfaceImportTool {
         const val LIST_W = 132
         const val LIST_H = 257
         const val ROWS_X = 163
-        const val ROWS_Y = 140
+        const val ROWS_Y = 148
         const val ROWS_W = 314
-        const val ROWS_H = 174
-        const val ROW_H = 18
-        /** A group heading's height (design B5 `.ghd`). */
-        const val HEAD_H = 17
+        const val ROWS_H = 166
+        /** N310 (owner 2026-10-24): rows 26 px, the item pictures in their own size. */
+        const val ROW_H = 26
+        /** A group heading's height. */
+        const val HEAD_H = 20
+        /** An item sprite's own size (the client's object sprites). */
+        const val ITEM_W = 36
+        const val ITEM_H = 32
+        /**
+         * Columns inside a row (N309: Qty 46 px between its lines): icon 0-32 | item 32-158 | qty 158-206 | your chance 206-269 |
+         * normal 269-314. N319: Your chance (b12) is 62 wide - "1/2,600" and "1/99.9K" did not fit 55; Normal (p11) needs 44.
+         */
+        const val COL_NAME = 36
+        const val COL_QTY = 159
+        const val QTY_W = 47
+        const val COL_YOUR = 207
+        const val YOUR_W = 62
+        const val COL_NORMAL = 270
+        const val NORMAL_W = 44
+        /** The Always bar (N310: 26 high for the pictures in their own size) and the column heads under it. */
+        const val ALWAYS_Y = 107
+        const val ALWAYS_H = 26
+        const val THEAD_Y = 133
         const val NAME_X = 261
         const val TAGS_Y = 66
 
         fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
 
         fun slot(i: Int) = LIST_FIRST + i * LIST_STRIDE
+
+        fun item(i: Int) = ITEM_FIRST + i
     }
 
     fun viewer(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
@@ -188,7 +223,7 @@ object N108InterfaceImportTool {
         b.window()
         b.g(V.BG, 0, 0, 1, "dv_bg")
         b.t(V.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Drop Viewer", alignX = 1)
-        b.hit(V.CLOSE, 472, 5, 21, 19, 1, "Close")
+        closeButton(b, V.CLOSE)
         b.g(V.SEARCH_ON, 7, 30, 1, "dv_search_on", hidden = true)
         b.t(V.SEARCH_TEXT, 28, 30, 116, 22, 1, fonts.p11, 0xC8BBA6, "Search monster or item")
         b.t(V.SEARCH_CLEAR, 144, 30, 12, 22, 1, fonts.p11, 0x8F8473, "x", alignX = 1, hidden = true)
@@ -204,7 +239,8 @@ object N108InterfaceImportTool {
             b.g(V.TAG_FIRST + i * 2, V.NAME_X, V.TAGS_Y, 1, "tag_multi", hidden = true)
             b.t(V.TAG_FIRST + i * 2 + 1, V.NAME_X, V.TAGS_Y, 60, 16, 1, fonts.p11, WHITE, hidden = true)
         }
-        b.hit(V.MAP, 408, 30, 84, 18, 1, "Show on map", hidden = true)
+        // N314: the button is its own sprite, hidden (not greyed) where the entry has no place.
+        b.g(V.MAP, 408, 30, 1, "zk_mapbtn", hidden = true, ops = listOf("Show on map"))
         b.t(V.MAP_TEXT, 420, 30, 72, 18, 1, fonts.p11, ORANGE, "Show on map", alignX = 1, hidden = true)
         // N279 design B5: the bracket as gold text in the head under the labels (skull, "Your bracket", the bracket in bold, the
         // boost); no "Combat 138" (N284).
@@ -213,17 +249,17 @@ object N108InterfaceImportTool {
         b.t(V.BRK_B, V.NAME_X + 90, 86, 40, 17, 1, fonts.b12, WHITE)
         b.t(V.BRK_C, V.NAME_X + 120, 86, 150, 17, 1, fonts.p11, 0xFFD75E)
         // The Wiki table (parchment, no text shadow): the Always bar, the column heads, the rows.
-        b.tp(V.ALWAYS_LABEL, 169, 107, 60, 18, 1, fonts.p11, 0x2A1D0E, "Always:")
+        b.tp(V.ALWAYS_LABEL, 169, V.ALWAYS_Y, 60, V.ALWAYS_H, 1, fonts.p11, 0x2A1D0E, "Always:")
         for (i in 0 until V.ALWAYS) {
             val base = V.ALWAYS_FIRST + i * 3
-            b.obj(base, 220, 109, 16, 14, 1)
-            b.tp(base + 1, 238, 107, 100, 18, 1, fonts.p12, 0x4A2508, hidden = true)
-            b.tp(base + 2, 238, 107, 100, 18, 1, fonts.p11, 0x5E4E38, hidden = true)
+            b.obj(base, 210, V.ALWAYS_Y + (V.ALWAYS_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, 1)
+            b.tp(base + 1, 246, V.ALWAYS_Y, 120, V.ALWAYS_H, 1, fonts.p12, 0x4A2508, hidden = true)
+            b.tp(base + 2, 246, V.ALWAYS_Y, 140, V.ALWAYS_H, 1, fonts.p11, 0x5E4E38, hidden = true)
         }
-        b.tp(V.HEAD_ITEM, V.ROWS_X + 31, 125, 100, 15, 1, fonts.p11, 0x000000, "Item")
-        b.tp(V.HEAD_QTY, V.ROWS_X + 170, 125, 36, 15, 1, fonts.p11, 0x000000, "Qty", alignX = 1)
-        b.tp(V.HEAD_YOUR, V.ROWS_X + 206, 125, 56, 15, 1, fonts.p11, 0x000000, "Your chance", alignX = 1)
-        b.tp(V.HEAD_NORMAL, V.ROWS_X + 262, 125, 52, 15, 1, fonts.p11, 0x000000, "Normal", alignX = 1)
+        b.tp(V.HEAD_ITEM, V.ROWS_X + V.COL_NAME, V.THEAD_Y, 100, 15, 1, fonts.p11, 0x000000, "Item")
+        b.tp(V.HEAD_QTY, V.ROWS_X + V.COL_QTY, V.THEAD_Y, V.QTY_W, 15, 1, fonts.p11, 0x000000, "Qty", alignX = 1)
+        b.tp(V.HEAD_YOUR, V.ROWS_X + V.COL_YOUR, V.THEAD_Y, V.YOUR_W, 15, 1, fonts.p11, 0x000000, "Your chance", alignX = 1)
+        b.tp(V.HEAD_NORMAL, V.ROWS_X + V.COL_NORMAL, V.THEAD_Y, V.NORMAL_W, 15, 1, fonts.p11, 0x000000, "Normal", alignX = 1)
         b.layer(V.ROWS, V.ROWS_X, V.ROWS_Y, V.ROWS_W, V.ROWS_H, 1)
         b.scrollbarFor(V.ROWS_SCROLLBAR, V.ROWS_X + V.ROWS_W, V.ROWS_Y, V.ROWS_H, 1, VIEWER, V.ROWS)
         b.tp(V.EMPTY, 0, 0, V.ROWS_W, 60, V.ROWS, fonts.p12, 0x3A2C1C, alignX = 1, hidden = true)
@@ -231,13 +267,13 @@ object N108InterfaceImportTool {
             val base = V.row(r)
             val y = r * V.ROW_H
             b.g(base + V.R_BG, 0, y, V.ROWS, "dv_row_even", hidden = true)
-            b.g(base + V.R_CELL, 208, y + 1, V.ROWS, "zj_c_common", hidden = true)
-            b.obj(base + V.R_ITEM, 2, y, 22, 18, V.ROWS)
-            b.tp(base + V.R_NAME, 31, y, 139, V.ROW_H, V.ROWS, fonts.p12, 0x4A2508, hidden = true)
-            b.g(base + V.R_TAG, 100, y + 4, V.ROWS, "ok", hidden = true)
-            b.tp(base + V.R_QTY, 170, y, 36, V.ROW_H, V.ROWS, fonts.p11, 0x000000, alignX = 1, hidden = true)
-            b.tp(base + V.R_YOUR, 208, y, 53, V.ROW_H, V.ROWS, fonts.b12, 0x000000, alignX = 1, hidden = true)
-            b.tp(base + V.R_NORMAL, 263, y, 51, V.ROW_H, V.ROWS, fonts.p11, 0x3A2C1C, alignX = 1, hidden = true)
+            b.g(base + V.R_CELL, V.COL_YOUR, y + 1, V.ROWS, "zj_c_common", hidden = true)
+            b.g(base + V.R_NCELL, V.COL_NORMAL, y + 1, V.ROWS, "zk_n_common", hidden = true)
+            b.tp(base + V.R_NAME, V.COL_NAME, y, 168, V.ROW_H, V.ROWS, fonts.p12, 0x4A2508, hidden = true)
+            b.tp(base + V.R_SUB, V.COL_NAME, y + 13, 168, 12, V.ROWS, fonts.p11, 0x5E4E38, hidden = true)
+            b.tp(base + V.R_QTY, V.COL_QTY, y, V.QTY_W, V.ROW_H, V.ROWS, fonts.p11, 0x000000, alignX = 1, hidden = true, lineHeight = 11)
+            b.tp(base + V.R_YOUR, V.COL_YOUR, y, V.YOUR_W, V.ROW_H, V.ROWS, fonts.b12, 0x000000, alignX = 1, hidden = true)
+            b.tp(base + V.R_NORMAL, V.COL_NORMAL, y, V.NORMAL_W, V.ROW_H, V.ROWS, fonts.p11, 0x3A2C1C, alignX = 1, hidden = true)
         }
         for (s in 0 until V.LIST_SLOTS) {
             val base = V.slot(s)
@@ -251,6 +287,7 @@ object N108InterfaceImportTool {
             b.hit(base + V.L_VIEW, 0, 0, V.LIST_W, 24, V.LIST, "View", hidden = true)
             b.hit(base + V.L_TOGGLE, 0, 0, V.LIST_W, 17, V.LIST, "Toggle", hidden = true)
         }
+        for (r in 0 until V.ROW_SLOTS) b.obj(V.item(r), -2, r * V.ROW_H + (V.ROW_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, V.ROWS)
         return b.done(V.COUNT)
     }
 
@@ -313,7 +350,7 @@ object N108InterfaceImportTool {
         b.g(C.BG, 0, 0, 1, "cl_bg")
         b.t(C.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Collection Log", alignX = 1)
         b.t(C.TOTAL, 300, 6, 164, 16, 1, fonts.p11, 0xD9CCB3, alignX = 2)
-        b.hit(C.CLOSE, 472, 5, 21, 19, 1, "Close")
+        closeButton(b, C.CLOSE)
         val names = listOf("Bosses", "Deadman", "Clues", "Minigames", "Other")
         for (i in 0 until C.CATS) {
             val base = C.cat(i)
@@ -694,7 +731,7 @@ object N108InterfaceImportTool {
         b.window()
         b.g(W.BG, 0, 0, 1, "tw_bg")
         b.t(W.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Deadman Tasks", alignX = 1)
-        b.hit(W.CLOSE, 472, 5, 21, 19, 1, "Close")
+        closeButton(b, W.CLOSE)
         val icons = listOf("tk_all19", "tk_easy19", "tk_medium19", "tk_hard19", "tk_elite19")
         val colours = intArrayOf(ORANGE) + TIER_COLOURS
         val names = listOf("All tasks") + TIER_NAMES
@@ -828,7 +865,7 @@ object N108InterfaceImportTool {
         b.window()
         b.g(I.BG, 0, 0, 1, "zi_bg")
         b.t(I.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Deadman Info", alignX = 1)
-        b.hit(I.CLOSE, 472, 5, 21, 19, 1, "Close")
+        closeButton(b, I.CLOSE)
         for (g in 0 until I.GROUPS) b.t(I.GROUP_FIRST + g, 13, I.groupY(g), 140, I.GROUP_H, 1, fonts.p11, LABEL, I.GROUP_NAMES[g], alignY = 2)
         for (s in 0 until I.SUBJECTS) {
             val base = I.subject(s)
