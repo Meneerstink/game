@@ -138,3 +138,9 @@ fun casinoCoins(victim: Player): List<Item> =
 on_command("reclaim") {
     player.message("Your items are in your gravestone, or with Death in Death's Office if the gravestone has collapsed.")
 }
+
+// Owner 2026-10-24: items that broke before the OSRS "(broken)" items existed (a hidden mark) become those items at login.
+on_login {
+    val changed = BrokenItemMigration.migrate(player)
+    if (changed > 0) player.message("$changed of your broken items now show as broken. Perdu at the Grand Exchange can repair them.")
+}
