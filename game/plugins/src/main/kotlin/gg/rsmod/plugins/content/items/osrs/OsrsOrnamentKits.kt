@@ -89,7 +89,7 @@ object OsrsOrnamentKits {
             Ornament(Items.DRAGON_PLATEBODY_G, Items.DRAGON_PLATEBODY, Items.DRAGON_PLATEBODY_ORNAMENT_KIT),
             Ornament(Items.DRAGON_SCIMITAR_OR, Items.DRAGON_SCIMITAR, Items.DRAGON_SCIMITAR_ORNAMENT_KIT),
             // Dragon defender (t): on a PvP death "it will remain in the player's inventory, but will become broken" (repair at Perdu) -
-            // the defender rule, not the base + kit drop. SOURCE_GAP / ADJACENT: no defender breaks on death here, so default handling.
+            // the defender rule, not the base + kit drop: PvpDeathBreakables breaks it into the Dragon defender (broken), the kit is lost.
             Ornament(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_ORNAMENT_KIT, pvpConvert = false),
             // OSRS import run 2026-09-17, batch "kits" (item pages): tradeable kits; "it can be dismantled anytime, returning the tradeable
             // [base] and ornament kit" (Dragon boots (g), Berserker necklace (or), Tzhaar-ket-om (t), Rune scimitar (guthix/saradomin/zamorak)),

@@ -55,12 +55,21 @@ class UntradeableDeathReportTests {
         val value = DeathRules.rankValue(defs, guide)
 
         val perduItems = PerduLostProperty.ENTRIES.flatMap { it.variants }.toSet()
+        // Owner 2026-10-24 ("je praat met geen woord over de donator items en ornament kits"): every store item and every ornament
+        // kit / kitted item too, tradeable or not.
+        val shopOf = HashMap<Int, String>()
+        gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES.forEach { e ->
+            (listOf(e.purchaseItem) + e.resultItems).filter { it > 0 }.forEach { shopOf.putIfAbsent(it, e.shop.title) }
+        }
+        val kitItems = HashMap<Int, String>()
+        gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.forEach { kitItems[it.ornamented] = "kitted item"; kitItems[it.kit] = "ornament kit" }
+        gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.CONSUMED.forEach { kitItems[it.ornamented] = "kitted item"; kitItems[it.kit] = "upgrade kit" }
         val candidates =
-            wearable.filter { tradeable[it] == false }
+            (wearable.filter { tradeable[it] == false } + shopOf.keys + kitItems.keys).distinct()
                 .filter { defs.getNullable(ItemDef::class.java, it)?.let { d -> !d.name.isNullOrBlank() && d.name != "null" && !d.noted } == true }
                 .filter { !UntradeableDeathProtection.isDamaged(Item(it)) && TrouverRegistry.entryForDamaged(it) == null }
                 .sorted()
-        val rows = mutableListOf("id\tname\tmonster death\tPvP <=20\tPvP >20\tlocked PvP >20\tPerdu Lost Property")
+        val rows = mutableListOf("id\tname\tmonster death\tPvP <=20\tPvP >20\tlocked PvP >20\tPerdu Lost Property\ttradeable\tshop\tkit")
         val vanish = mutableListOf<String>()
         for (itemId in candidates) {
             val name = defs.get(ItemDef::class.java, itemId).name
@@ -72,8 +81,20 @@ class UntradeableDeathReportTests {
                 val p = player(defs)
                 p.inventory[0] = Item(id)
                 val preview = ItemsKeptOnDeath.preview(p, ItemsKeptOnDeath.Toggles(false, false, pvp, deep), value)
-                val e = preview.entries.firstOrNull { it.item.id == id } ?: preview.entries.firstOrNull()
-                    ?: return "VANISHES"
+                if (preview.entries.isEmpty()) return "VANISHES"
+                // A converted item has several lines (the killer gets the base item + kit, the kit to the victim's grave): all of them.
+                if (preview.entries.size > 1 || preview.entries.single().item.id != id) {
+                    return preview.entries.joinToString(" + ") { en ->
+                        val n = defs.get(ItemDef::class.java, en.item.id).name
+                        when (en.section) {
+                            ItemsKeptOnDeath.Section.KEPT -> "kept $n"
+                            ItemsKeptOnDeath.Section.GRAVESTONE -> "$n to grave"
+                            ItemsKeptOnDeath.Section.LOST -> "killer gets $n"
+                            ItemsKeptOnDeath.Section.DELETED -> "$n lost"
+                        }
+                    }
+                }
+                val e = preview.entries.single()
                 val what =
                     when {
                         e.section == ItemsKeptOnDeath.Section.KEPT && "break" in e.message -> "BROKEN in inventory"
@@ -97,9 +118,9 @@ class UntradeableDeathReportTests {
                     high == "DESTROYED" -> "yes (reclaim)"
                     else -> "no"
                 }
-            rows += "$itemId\t$name\t$pvm\t$low\t$high\t$locked\t$perdu"
+            rows += "$itemId\t$name\t$pvm\t$low\t$high\t$locked\t$perdu\t${defs.get(ItemDef::class.java, itemId).tradeable}\t${shopOf[itemId] ?: "-"}\t${kitItems[itemId] ?: "-"}"
             val gone = listOf(low, high).any { it == "LOST (coins to killer)" || it == "DESTROYED" || it == "VANISHES" }
-            if (gone && perdu == "no") vanish += "$itemId $name ($low / $high)"
+            if (gone && perdu == "no" && !defs.get(ItemDef::class.java, itemId).tradeable) vanish += "$itemId $name ($low / $high)"
         }
         File("build").mkdirs()
         File("build/untradeable-death-report.tsv").writeText(rows.joinToString("\n") + "\n")

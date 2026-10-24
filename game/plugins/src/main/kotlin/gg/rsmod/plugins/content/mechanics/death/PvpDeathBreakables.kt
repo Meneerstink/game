@@ -90,6 +90,9 @@ object PvpDeathBreakables {
                 Breakable(Items.ADAMANT_DEFENDER, Items.ADAMANT_DEFENDER_BROKEN, 0, 25_000, breaksAboveTwenty = true),
                 Breakable(Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_BROKEN, 0, 35_000, breaksAboveTwenty = true),
                 Breakable(Items.DRAGON_DEFENDER, Items.DRAGON_DEFENDER_BROKEN, 0, 240_000, breaksAboveTwenty = true),
+                // OSRS Wiki "Dragon defender (t)": it "will become broken" (repair 240,000 at Perdu) and "The ornament kit will be lost";
+                // repaired it is the plain Dragon defender (the canonical owner of the broken id, listed first).
+                Breakable(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER_BROKEN, 0, 240_000, breaksAboveTwenty = true),
                 Breakable(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_BROKEN, 0, 180_000),
