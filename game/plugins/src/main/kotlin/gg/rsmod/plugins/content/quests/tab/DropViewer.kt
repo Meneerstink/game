@@ -45,6 +45,10 @@ object DropViewer {
     /** The Deadman group: the chest and its guardian first, then the breach monsters by name. */
     private val DEADMAN_ORDER = listOf(DropSources.Kind.CHEST, DropSources.Kind.GUARDIAN, DropSources.Kind.BREACH)
 
+    /** A list entry's model area (N319: no box, the whole 24 x 22 left of the name). */
+    const val LIST_PIC_W = 24
+    const val LIST_PIC_H = 22
+
     /** [indent] 1 = a God Wars bodyguard under its general (N311). */
     class Slot(val header: Boolean, val key: String, val text: String, val sub: String?, val icon: String?, val open: Boolean, val gold: Boolean, val model: Int, val item: Int = -1, val selected: Boolean = false, val indent: Int = 0)
 
@@ -85,6 +89,11 @@ object DropViewer {
         player.setInterfaceEvents(INTERFACE, V.SEARCH_CLEAR, -1..-1, EVENTS_OP1)
         N108Ui.field(player, INTERFACE, V.SEARCH_TEXT, V.SEARCH_HIT, V.SEARCH_ON, V.SEARCH_CLEAR, "Search monster or item", "")
         show(player, chosen.key)
+        // N319: the fonts once more two ticks after opening (a first open now and then drew the table in the boxes' own fonts).
+        player.queue {
+            wait(2)
+            if (isOpen(player)) N108Ui.resendFonts(player, INTERFACE)
+        }
     }
 
     /** Shows [key] on the right and redraws the list (its selection follows). */
@@ -115,7 +124,14 @@ object DropViewer {
             val npcs = sources.filter { it.name.lowercase().contains(query) }.sortedBy { it.name.lowercase() }
             if (npcs.isNotEmpty()) {
                 out += Slot(true, "Q:MONSTERS", "Monsters", null, null, true, true, -1)
-                npcs.take(40).forEach { out += entry(it) }
+                // N319: a breach monster has the same name as its normal self (two "King Black Dragon"): it says "Breach" under it.
+                npcs.take(40).forEach { s ->
+                    out += if (s.kind == DropSources.Kind.BREACH) {
+                        Slot(false, s.key, s.name, "<col=ff5a3c>Breach</col>", null, false, false, s.modelNpc, selected = s.key == selected)
+                    } else {
+                        entry(s)
+                    }
+                }
             }
             // Items: every item a source can give whose name holds the text (one row per item), from the item index.
             val index = DropSources.itemIndex(player)
@@ -197,7 +213,7 @@ object DropViewer {
                 var textX = if (slot.key.startsWith("Q:")) 6 else 18
                 if (slot.icon != null) {
                     N108Ui.sprite(player, i, base + V.L_ICON, slot.icon)
-                    N108Ui.pos(player, i, base + V.L_ICON, textX, y + if (slot.icon == "star_gold") 0 else 2)
+                    N108Ui.pos(player, i, base + V.L_ICON, textX, y + (18 - N108Ui.height(slot.icon)) / 2 - if (slot.icon == "skull12") 1 else 0)  // N319: measured centred on the heading text
                     N108Ui.hidden(player, i, base + V.L_ICON, false)
                     textX += N108Ui.width(slot.icon) + 3
                 } else {
@@ -224,17 +240,22 @@ object DropViewer {
             N108Ui.hidden(player, i, base + V.L_BG, !slot.selected)
             N108Ui.hidden(player, i, base + V.L_ARROW, true)
             N108Ui.hidden(player, i, base + V.L_ICON, true)
-            N108Ui.pos(player, i, base + V.L_THUMB, 4 + dx, y + 1)
-            N108Ui.hidden(player, i, base + V.L_THUMB, false)
-            N108Ui.pos(player, i, base + V.L_MODEL, 5 + dx, y + 2)
+            // N319 (owner 2026-10-24: "kan dat vierkantje niet weg"): no box behind the picture; the model gets the room it had
+            // (24 x 22) and is fitted to what it really draws (client InterfaceManager.fitModelToBox).
+            N108Ui.hidden(player, i, base + V.L_THUMB, true)
+            N108Ui.pos(player, i, base + V.L_MODEL, 3 + dx, y - 2)  // N319: the fitted model sat 4 px under the name (measured)
+            N108Ui.size(player, i, base + V.L_MODEL, LIST_PIC_W, LIST_PIC_H)
             if (slot.item >= 0) {
                 N108Ui.item(player, i, base + V.L_MODEL, slot.item)
+                N108Ui.anim(player, i, base + V.L_MODEL, -1)
                 N108Ui.hidden(player, i, base + V.L_MODEL, false)
             } else if (slot.key == "chest" && chestModel(player) >= 0) {
                 N108Ui.plainModel(player, N108Ui.hash(i, base + V.L_MODEL), chestModel(player), CHEST_ZOOM, CHEST_XAN, false, CHEST_YAN)
+                N108Ui.anim(player, i, base + V.L_MODEL, -1)
                 N108Ui.hidden(player, i, base + V.L_MODEL, false)
             } else if (slot.model >= 0) {
                 models += N108Ui.Model(N108Ui.hash(i, base + V.L_MODEL), slot.model, thumbZoom(player, slot.model), MODEL_XAN, false, MODEL_YAN)
+                N108Ui.anim(player, i, base + V.L_MODEL, N108Ui.standAnim(player.world, slot.model))
                 N108Ui.hidden(player, i, base + V.L_MODEL, false)
             } else {
                 N108Ui.hidden(player, i, base + V.L_MODEL, true)
@@ -283,7 +304,11 @@ object DropViewer {
      */
     @Volatile var MODEL_XAN = 64
     @Volatile var MODEL_YAN = 1850
-    @Volatile var CHEST_YAN = 1850
+    /**
+     * N319 (owner 2026-10-24: "de dmm chest wijst een andere richting op"): the chest model faces the camera at ~1338 (its lock
+     * towards the viewer, checked with ::dvangle), the npc models at 0; turned the same 198 units as the npcs (1850 = -198): 1140.
+     */
+    @Volatile var CHEST_YAN = 1140
 
     /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
     @Volatile var THUMB_BASE = 1500
@@ -335,9 +360,11 @@ object DropViewer {
         if (chestModel >= 0) {
             // N283 (owner 2026-10-24): the model stands still.
             N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), chestModel, CHEST_ZOOM, CHEST_XAN, false, CHEST_YAN)
+            N108Ui.anim(player, i, V.MODEL, -1)
             N108Ui.hidden(player, i, V.MODEL, false)
         } else if (modelNpc > 0) {
             N108Ui.models(player, listOf(N108Ui.Model(N108Ui.hash(i, V.MODEL), modelNpc, headZoom(player, modelNpc), MODEL_XAN, false, MODEL_YAN)))
+            N108Ui.anim(player, i, V.MODEL, N108Ui.standAnim(world, modelNpc))
             N108Ui.hidden(player, i, V.MODEL, false)
         } else {
             N108Ui.hidden(player, i, V.MODEL, true)
@@ -349,8 +376,8 @@ object DropViewer {
         N108Ui.tooltips(player, listOf(N108Ui.hash(i, V.NAME) to source.name))
         val starX = starX(world, name)
         val fav = source.key in favourites(player)
-        N108Ui.pos(player, i, V.STAR_ON, starX, 30)
-        N108Ui.pos(player, i, V.STAR_OFF, starX, 30)
+        N108Ui.pos(player, i, V.STAR_ON, starX, 29)
+        N108Ui.pos(player, i, V.STAR_OFF, starX, 29)
         N108Ui.hidden(player, i, V.STAR_ON, !fav)
         N108Ui.hidden(player, i, V.STAR_OFF, fav)
         N108Ui.text(player, i, V.SUB, subLine(player, source))
@@ -388,6 +415,8 @@ object DropViewer {
         N108Ui.text(player, i, V.MAP_TEXT, "Show on map")
         // The player's own bracket only (owner), as gold text in the head (N279 design B5); no "Combat 138" (N284).
         val (a, b, c) = bracketLine(player, source)
+        // N319 (owner 2026-10-24: "de skull naast your bracket staat beetje laag"): measured 2 px under the text - 2 px up.
+        N108Ui.pos(player, i, V.BRK_ICON, V.NAME_X, BRACKET_Y + 1)
         N108Ui.text(player, i, V.BRK_A, a)
         val bx = BRACKET_X + N108Ui.p11(world, a) + 4
         N108Ui.pos(player, i, V.BRK_B, bx, BRACKET_Y)
@@ -400,7 +429,8 @@ object DropViewer {
 
     /** "Show on map" starts at x 408: the star (12 wide) ends 3 px before it, 3 px after the name. */
     private const val MAP_X = 408
-    private const val STAR_W = 12
+    /** The OSRS favourite star (sprites 1130 / 1131, 16 x 16 - N319: the drawn text star was "low quality"). */
+    const val STAR_W = 16
 
     fun starX(world: gg.rsmod.game.model.World, shownName: String): Int = V.NAME_X + N108Ui.b12(world, shownName) + 3
 
@@ -411,15 +441,24 @@ object DropViewer {
     const val ALWAYS_X = 169 + 37 + 5
 
     /**
-     * N310 / N319 (owner 2026-10-24, A: rows 26 px, "scherpe plaatjes ~30x26"): an item picture is 28 x 25 - the item's 36 x 32
-     * sprite shrunk by the client's area filter (RspsObjSmooth: every source pixel averaged in, no dropped rows), so it fills the
-     * row under its 1 px line without reaching into the next one. Older clients draw the same box the 667 way.
+     * N310 / N319 (owner 2026-10-24 17:5x, A "inventory-grootte"): an item picture is the item's own 36 x 32 sprite, unscaled - as
+     * sharp as the inventory; the rows are 32 px for it.
      */
-    const val PIC_W = 28
-    const val PIC_H = 25
+    const val PIC_W = V.ITEM_W
+    const val PIC_H = V.ITEM_H
 
     /** An Always item's picture and the gap after it. */
-    const val ALWAYS_PIC = PIC_W + 3
+    const val ALWAYS_PIC = PIC_W + 2
+
+    /** N319 (owner: "centreer alles goed"): a row's texts sat 1 px above the middle of their 31 px cell (measured) - 1 px down. */
+    const val TEXT_DY = 1
+
+    /** A row name's text box: wider than any name the server lets through, so the client never breaks a line itself. */
+    const val NAME_BOX_W = 260
+
+    /** Two lines in a 32 px row or bar: the name 7 px up (its centre at 9), the smaller second line from 17 (its centre at 23). */
+    const val TWO_LINE_SHIFT = 7
+    const val SUB_Y = 17
 
     /** The gap after an Always item's text. */
     const val ALWAYS_GAP = 10
@@ -547,10 +586,21 @@ object DropViewer {
      */
     fun listName(world: gg.rsmod.game.model.World, name: String, room: Int): String = wrapTwo(world, "p11_full", name, room).first
 
-    /** [text] in [font] on one line, else two lines broken between words; the flag says whether it had to be cut. */
+    /**
+     * [text] in [font] on one line, else two lines broken between words - at the break that makes the two lines most even
+     * ("Deadman emblem" over "(tier 1)", not "Deadman emblem (tier" over "1)"); the flag says whether it had to be cut.
+     */
     fun wrapTwo(world: gg.rsmod.game.model.World, font: String, text: String, room: Int): Pair<String, Boolean> {
         if (N108Ui.textWidth(world, font, text) <= room) return text to false
         val words = text.split(' ')
+        val even = (1 until words.size).mapNotNull { k ->
+            val a = words.take(k).joinToString(" ")
+            val b = words.drop(k).joinToString(" ")
+            val wa = N108Ui.textWidth(world, font, a)
+            val wb = N108Ui.textWidth(world, font, b)
+            if (wa <= room && wb <= room) Triple(a, b, maxOf(wa, wb)) else null
+        }.minByOrNull { it.third }
+        if (even != null) return "${even.first}<br>${even.second}" to false
         var first = ""
         var at = 0
         while (at < words.size) {
@@ -650,14 +700,14 @@ object DropViewer {
             }
             N108Ui.item(player, i, base, DropSources.picture(world, line.item))
             N108Ui.size(player, i, base, PIC_W, PIC_H)
-            N108Ui.pos(player, i, base, x, barY + 1)
+            N108Ui.pos(player, i, base, x, barY + (V.ALWAYS_H - PIC_H) / 2)
             // The text boxes take the measured width (the cache boxes are narrower than "Archaic emblem (tier 5)"), so nothing wraps.
-            N108Ui.pos(player, i, base + 1, x + ALWAYS_PIC, if (note != null) barY - 6 else barY)
+            N108Ui.pos(player, i, base + 1, x + ALWAYS_PIC, if (note != null) barY - TWO_LINE_SHIFT else barY)
             N108Ui.size(player, i, base + 1, N108Ui.textWidth(world, "p12_full", line.name) + 4, V.ALWAYS_H)
             N108Ui.text(player, i, base + 1, line.name)
             if (note != null) {
-                N108Ui.pos(player, i, base + 2, x + ALWAYS_PIC, barY + 7)
-                N108Ui.size(player, i, base + 2, N108Ui.p11(world, note) + 4, V.ALWAYS_H)
+                N108Ui.pos(player, i, base + 2, x + ALWAYS_PIC, barY + SUB_Y)
+                N108Ui.size(player, i, base + 2, N108Ui.p11(world, note) + 4, 12)
                 N108Ui.text(player, i, base + 2, note)
             }
             x += alwaysWidth(world, line) + ALWAYS_GAP
@@ -705,7 +755,7 @@ object DropViewer {
             // N310 / N319: the item's own 36 x 32 sprite, unscaled, centred on the row (drawn over every row, V.ITEM_FIRST).
             N108Ui.item(player, i, pic, DropSources.picture(world, l.item))
             N108Ui.size(player, i, pic, PIC_W, PIC_H)
-            N108Ui.pos(player, i, pic, 2, y + 1)
+            N108Ui.pos(player, i, pic, 0, y + (V.ROW_H - PIC_H) / 2)
             N108Ui.hidden(player, i, pic, l.item < 0)
             // The name (p12) never runs into the Qty column; "(noted)" goes to the Qty column like the OSRS Wiki (N315); N317 no tick.
             val table = l.tag == DropSources.Tag.TABLE
@@ -713,15 +763,17 @@ object DropViewer {
             val room = nameRoom(row.level, table)
             val sub = l.sub?.let { N108Ui.fit(world, "p11_full", it, room) }
             val shown = rowName(world, l, room, sub != null)
-            N108Ui.pos(player, i, base + V.R_NAME, x0, if (sub != null) y - 6 else y)
-            N108Ui.size(player, i, base + V.R_NAME, room + 3, V.ROW_H)
+            N108Ui.pos(player, i, base + V.R_NAME, x0, (if (sub != null) y - TWO_LINE_SHIFT else y) + TEXT_DY)
+            // The client breaks a line by the box's ORIGINAL font (p12 in the cache), also when it draws another one (p11 via the font
+            // hook): a box as wide as the room broke "Deadman emblem (tier 1)" again. The server breaks the lines (<br>); the box never.
+            N108Ui.size(player, i, base + V.R_NAME, NAME_BOX_W, V.ROW_H)
             N108Ui.text(player, i, base + V.R_NAME, "<col=4a2508>${shown.text}</col>")
             fonts += (base + V.R_NAME) to shown.font
             N108Ui.hidden(player, i, base + V.R_NAME, false)
             // N312: a drop table's explanation on a smaller second line.
             N108Ui.hidden(player, i, base + V.R_SUB, sub == null)
             if (sub != null) {
-                N108Ui.pos(player, i, base + V.R_SUB, x0, y + 13)
+                N108Ui.pos(player, i, base + V.R_SUB, x0, y + SUB_Y + TEXT_DY)
                 N108Ui.text(player, i, base + V.R_SUB, sub)
                 fonts += (base + V.R_SUB) to "p11_full"
             }
@@ -729,7 +781,7 @@ object DropViewer {
             // table's own row has none (it is one pick of the table).
             N108Ui.hidden(player, i, base + V.R_QTY, table)
             if (!table) {
-                N108Ui.pos(player, i, base + V.R_QTY, V.COL_QTY, y)
+                N108Ui.pos(player, i, base + V.R_QTY, V.COL_QTY, y + TEXT_DY)
                 N108Ui.text(player, i, base + V.R_QTY, qtyCell(world, l))
             }
             val cell = cellSprite(l.your)
@@ -738,7 +790,7 @@ object DropViewer {
                 N108Ui.sprite(player, i, base + V.R_CELL, cell)
                 N108Ui.pos(player, i, base + V.R_CELL, V.COL_YOUR, y + 1)
             }
-            N108Ui.pos(player, i, base + V.R_YOUR, V.COL_YOUR, y)
+            N108Ui.pos(player, i, base + V.R_YOUR, V.COL_YOUR, y + TEXT_DY)
             N108Ui.text(player, i, base + V.R_YOUR, if (cell == null) "<col=5e4e38>${N108Ui.chance(l.your)}</col>" else N108Ui.chance(l.your))
             N108Ui.hidden(player, i, base + V.R_YOUR, false)
             // Normal always filled in, on the same Wiki band in a lighter tint (N308).
@@ -748,7 +800,7 @@ object DropViewer {
                 N108Ui.sprite(player, i, base + V.R_NCELL, ncell)
                 N108Ui.pos(player, i, base + V.R_NCELL, V.COL_NORMAL, y + 1)
             }
-            N108Ui.pos(player, i, base + V.R_NORMAL, V.COL_NORMAL, y)
+            N108Ui.pos(player, i, base + V.R_NORMAL, V.COL_NORMAL, y + TEXT_DY)
             N108Ui.text(player, i, base + V.R_NORMAL, "<col=3a2c1c>${N108Ui.chance(l.normal)}</col>")
             N108Ui.hidden(player, i, base + V.R_NORMAL, false)
             y += V.ROW_H

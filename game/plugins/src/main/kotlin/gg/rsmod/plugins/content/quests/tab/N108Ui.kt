@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ChatMessageType
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.runClientScript
+import gg.rsmod.plugins.api.ext.setComponentAnim
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentItem
 import gg.rsmod.plugins.api.ext.setComponentPosition
@@ -35,6 +36,8 @@ object N108Ui {
     fun sprite(name: String): Int = names.indexOf(name).let { if (it < 0) -1 else SPRITE_BASE + it }
 
     fun width(name: String): Int = sizes[name]?.get(0) ?: 0
+
+    fun height(name: String): Int = sizes[name]?.get(1) ?: 0
 
     // ---- fonts
 
@@ -175,6 +178,22 @@ object N108Ui {
         sendBatched(player, "npc|", models.map { "${it.hash},${it.npc},${it.zoom},${it.xan},${if (it.spin) 1 else 0},${it.yan}" })
     }
 
+    /**
+     * N319 (owner 2026-10-24: npc pictures "alsof ze tegelijk een special doen"): without an animation the client draws an npc model
+     * in its raw base pose (arms out, weapon askew). [anim] gives a model component the npc's own standing animation - the BAS
+     * "ready" sequence the 78 Store's pet showcase uses ([gg.rsmod.plugins.content.mechanics.store.StorePreview.idleAnimation]); -1 for
+     * none (an item, the chest).
+     */
+    fun anim(player: Player, i: Int, c: Int, anim: Int) {
+        val k = key(i, c, 9)
+        if (cache(player)[k] == anim.toString()) return
+        cache(player)[k] = anim.toString()
+        player.setComponentAnim(i, c, anim)
+    }
+
+    /** The standing animation of [npc] (its BAS "ready" sequence), -1 without one. */
+    fun standAnim(world: World, npc: Int): Int = gg.rsmod.plugins.content.mechanics.store.StorePreview.idleAnimation(world, npc)
+
     /** N277: a plain model (a loc's own, [locModel]) on a model component, fitted and turning like the npc models. */
     fun plainModel(player: Player, hash: Int, model: Int, zoom: Int, xan: Int, spin: Boolean, yan: Int = 0) = send(player, "mdl|$hash,$model,$zoom,$xan,${if (spin) 1 else 0},$yan")
 
@@ -208,6 +227,15 @@ object N108Ui {
         if (changed.isEmpty()) return
         changed.forEach { (c, font) -> cache(player)[key(interfaceId, c, 6)] = font }
         sendBatched(player, "font|", changed.map { "${hash(interfaceId, it.first)},${fontId(player.world, it.second)}" })
+    }
+
+    /**
+     * N319 (2026-10-24: right after the Drop Viewer opened, now and then its table showed in the box's own font - headings not bold, a
+     * small name broken by the big font): every font of [interfaceId] sent so far, once more. The client keeps whichever arrives last.
+     */
+    fun resendFonts(player: Player, interfaceId: Int) {
+        val fonts = cache(player).entries.filter { (it.key ushr 32).toInt() == interfaceId && (it.key and 0xF) == 6L }
+        sendBatched(player, "font|", fonts.map { "${hash(interfaceId, ((it.key ushr 4) and 0xFFFFFFF).toInt())},${fontId(player.world, it.value)}" })
     }
 
     /** Tooltips (component hash -> text, '\n' = new line) shown by the client while the mouse is on the component. */

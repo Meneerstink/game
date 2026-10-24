@@ -170,8 +170,7 @@ object N108InterfaceImportTool {
         const val LIST_SLOTS = 140
         /**
          * N310 / N319: the item pictures of the rows, one per row, AFTER every other component so the client draws them over all
-         * the rows. The server sizes each to 28 x 25 (DropViewer.PIC_W / PIC_H): the client shrinks the item's 36 x 32 sprite with
-         * an area filter (RspsObjSmooth) instead of dropping pixel rows - the "wazig" pictures of the owner's screenshot.
+         * the rows: the item's own 36 x 32 sprite in its 32 px row, unscaled (owner 17:5x, A).
          */
         const val ITEM_FIRST = LIST_FIRST + LIST_SLOTS * LIST_STRIDE
         const val COUNT = ITEM_FIRST + ROW_SLOTS
@@ -182,31 +181,34 @@ object N108InterfaceImportTool {
         const val LIST_W = 132
         const val LIST_H = 257
         const val ROWS_X = 163
-        const val ROWS_Y = 148
+        const val ROWS_Y = 155
         const val ROWS_W = 314
-        const val ROWS_H = 166
-        /** N310 (owner 2026-10-24): rows 26 px, the item pictures in their own size. */
-        const val ROW_H = 26
+        const val ROWS_H = 159
+        /**
+         * N310 / N319 (owner 2026-10-24 17:5x, A: "inventory-grootte"): rows 32 px, so every item picture is the item's own 36 x 32
+         * sprite, unscaled - as sharp as the inventory (a smaller picture lost detail, more so in Stretched mode).
+         */
+        const val ROW_H = 32
         /** A group heading's height. */
         const val HEAD_H = 20
         /** An item sprite's own size (the client's object sprites). */
         const val ITEM_W = 36
         const val ITEM_H = 32
         /**
-         * Columns inside a row (N309: Qty 46 px between its lines): icon 0-32 | item 32-158 | qty 158-206 | your chance 206-269 |
+         * Columns inside a row (N309: Qty 46 px between its lines): icon 0-36 | item 36-158 | qty 158-206 | your chance 206-269 |
          * normal 269-314. N319: Your chance (b12) is 62 wide - "1/2,600" and "1/99.9K" did not fit 55; Normal (p11) needs 44.
          */
-        const val COL_NAME = 36
+        const val COL_NAME = 40
         const val COL_QTY = 159
         const val QTY_W = 47
         const val COL_YOUR = 207
         const val YOUR_W = 62
         const val COL_NORMAL = 270
         const val NORMAL_W = 44
-        /** The Always bar (N310: 26 high for the pictures in their own size) and the column heads under it. */
+        /** The Always bar (32 high for the pictures in their own size) and the column heads under it. */
         const val ALWAYS_Y = 107
-        const val ALWAYS_H = 26
-        const val THEAD_Y = 133
+        const val ALWAYS_H = 32
+        const val THEAD_Y = 139
         const val NAME_X = 261
         const val TAGS_Y = 66
 
@@ -252,7 +254,7 @@ object N108InterfaceImportTool {
         b.tp(V.ALWAYS_LABEL, 169, V.ALWAYS_Y, 60, V.ALWAYS_H, 1, fonts.p11, 0x2A1D0E, "Always:")
         for (i in 0 until V.ALWAYS) {
             val base = V.ALWAYS_FIRST + i * 3
-            b.obj(base, 210, V.ALWAYS_Y + (V.ALWAYS_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, 1)
+            b.obj(base, 211, V.ALWAYS_Y + (V.ALWAYS_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, 1)
             b.tp(base + 1, 246, V.ALWAYS_Y, 120, V.ALWAYS_H, 1, fonts.p12, 0x4A2508, hidden = true)
             b.tp(base + 2, 246, V.ALWAYS_Y, 140, V.ALWAYS_H, 1, fonts.p11, 0x5E4E38, hidden = true)
         }
@@ -270,7 +272,7 @@ object N108InterfaceImportTool {
             b.g(base + V.R_CELL, V.COL_YOUR, y + 1, V.ROWS, "zj_c_common", hidden = true)
             b.g(base + V.R_NCELL, V.COL_NORMAL, y + 1, V.ROWS, "zk_n_common", hidden = true)
             b.tp(base + V.R_NAME, V.COL_NAME, y, 168, V.ROW_H, V.ROWS, fonts.p12, 0x4A2508, hidden = true)
-            b.tp(base + V.R_SUB, V.COL_NAME, y + 13, 168, 12, V.ROWS, fonts.p11, 0x5E4E38, hidden = true)
+            b.tp(base + V.R_SUB, V.COL_NAME, y + 17, 168, 12, V.ROWS, fonts.p11, 0x5E4E38, hidden = true)
             b.tp(base + V.R_QTY, V.COL_QTY, y, V.QTY_W, V.ROW_H, V.ROWS, fonts.p11, 0x000000, alignX = 1, hidden = true, lineHeight = 11)
             b.tp(base + V.R_YOUR, V.COL_YOUR, y, V.YOUR_W, V.ROW_H, V.ROWS, fonts.b12, 0x000000, alignX = 1, hidden = true)
             b.tp(base + V.R_NORMAL, V.COL_NORMAL, y, V.NORMAL_W, V.ROW_H, V.ROWS, fonts.p11, 0x3A2C1C, alignX = 1, hidden = true)
@@ -287,7 +289,7 @@ object N108InterfaceImportTool {
             b.hit(base + V.L_VIEW, 0, 0, V.LIST_W, 24, V.LIST, "View", hidden = true)
             b.hit(base + V.L_TOGGLE, 0, 0, V.LIST_W, 17, V.LIST, "Toggle", hidden = true)
         }
-        for (r in 0 until V.ROW_SLOTS) b.obj(V.item(r), -2, r * V.ROW_H + (V.ROW_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, V.ROWS)
+        for (r in 0 until V.ROW_SLOTS) b.obj(V.item(r), 0, r * V.ROW_H + (V.ROW_H - V.ITEM_H) / 2, V.ITEM_W, V.ITEM_H, V.ROWS)
         return b.done(V.COUNT)
     }
 

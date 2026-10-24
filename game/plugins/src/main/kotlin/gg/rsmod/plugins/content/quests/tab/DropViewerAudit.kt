@@ -25,8 +25,8 @@ import gg.rsmod.plugins.content.skills.summoning.Pets
 object DropViewerAudit {
     const val REPORT = "logs/dropviewer-audit.txt"
 
-    /** "Show on map" starts at x 408; the star (12 wide) + 3 px must end before it. */
-    private const val STAR_LIMIT = 408 - 3 - 12
+    /** "Show on map" starts at x 408; the star (DropViewer.STAR_W wide) + 3 px must end before it. */
+    private const val STAR_LIMIT = 408 - 3 - DropViewer.STAR_W
 
     /** The room a text has inside its cell: the cell minus 1 px each side. */
     private const val PAD = 2
