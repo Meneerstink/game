@@ -171,6 +171,21 @@ class QuestTabTests {
     }
 
     @Test
+    fun `a point row opens Info on those points and never a store, the emblem row Info on the emblem`() {
+        assertEquals(QuestTab.POINT_CURRENCIES.size, QuestTab.POINT_SUBJECTS.size)
+        assertEquals(listOf("Loyalty Points", "Donator Points", "Deadman Points"), QuestTab.POINT_SUBJECTS.map { it.title })
+        val deadman = gg.rsmod.game.tools.importer.N108InterfaceImportTool.deadman(gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool.Fonts(0, 0, 0, 0))
+        val dp = gg.rsmod.game.tools.importer.N108InterfaceImportTool.DP
+        for (r in 0 until dp.POINTS) {
+            val hit = deadman.single { it.id == dp.point(r) + 4 }
+            assertEquals(listOf("Info"), hit.ops)
+            assertEquals(dp.POINT_Y + r * 18, hit.y)
+        }
+        val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/QuestTab.kt").readText()
+        assertTrue("StoreUi" !in source, "the tab opens no store (N280)")
+    }
+
+    @Test
     fun `accounts from before the choices get no note`() {
         val view = DeadmanGroupsView.view(Account(isNew = false).player)
         assertFalse(view.showNote)

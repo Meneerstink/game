@@ -102,6 +102,7 @@ object QuestTab {
                 Tab.DEADMAN -> {
                     player.setInterfaceEvents(tab.panel, DP.INFO, -1..-1, EVENTS_OP1)
                     player.setInterfaceEvents(tab.panel, DP.EMBLEM_HIT, -1..-1, EVENTS_OP1)
+                    for (r in 0 until DP.POINTS) player.setInterfaceEvents(tab.panel, DP.point(r) + 4, -1..-1, EVENTS_OP1)
                     for (e in 0 until 2) player.setInterfaceEvents(tab.panel, DP.event(e) + 5, -1..-1, EVENTS_OP1)
                 }
                 Tab.TASKS -> for (t in 0 until 4) player.setInterfaceEvents(tab.panel, TP.tier(t) + 7, -1..-1, EVENTS_OP1)
@@ -411,6 +412,14 @@ object QuestTab {
 
     /** The Archaic Emblem row (design A3): the Info window on the emblem - tier, value and more. */
     fun emblemClick(player: Player) = openInfo(player, Subject.EMBLEM)
+
+    /** The Info subjects of the point rows, top to bottom ([POINT_CURRENCIES]). */
+    val POINT_SUBJECTS = listOf(Subject.LOYALTY, Subject.DONATOR, Subject.DEADMAN)
+
+    /** A point row (owner 2026-10-24: "ja"): the Info window on those points - what they are for and how you earn them. */
+    fun pointClick(player: Player, row: Int) {
+        openInfo(player, POINT_SUBJECTS.getOrNull(row) ?: return)
+    }
 
     fun eventMap(player: Player, event: Int) {
         val tile =

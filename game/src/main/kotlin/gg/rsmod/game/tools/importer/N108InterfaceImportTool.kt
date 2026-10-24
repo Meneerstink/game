@@ -447,8 +447,8 @@ object N108InterfaceImportTool {
         const val CELL_FIRST = INFO + 7 // 3 cells (protection while he has it, skull, kill grace): bg2, bg3, icon, value, label
         const val CELL_STRIDE = 5
         const val CELLS = 3
-        const val POINT_FIRST = CELL_FIRST + CELLS * CELL_STRIDE // 3 rows (Loyalty, Donator, Deadman): bg, icon, name, value
-        const val POINT_STRIDE = 4
+        const val POINT_FIRST = CELL_FIRST + CELLS * CELL_STRIDE // 3 rows (Loyalty, Donator, Deadman): bg, icon, name, value, hit
+        const val POINT_STRIDE = 5
         const val POINTS = 3
         const val EMBLEM_BG = POINT_FIRST + POINTS * POINT_STRIDE
         const val EMBLEM_ITEM = EMBLEM_BG + 1
@@ -511,6 +511,8 @@ object N108InterfaceImportTool {
             b.g(base + 1, 9, y + 1, 0, DP.POINT_ICONS[i])
             b.t(base + 2, 28, y, 80, 18, 0, fonts.p12, TXT, DP.POINT_NAMES[i])
             b.t(base + 3, 60, y, 114, 18, 0, fonts.p12, WHITE, alignX = 2)
+            // Owner 2026-10-24 (advice taken): a click on a balance opens the Info window on those points - never the store (N280).
+            b.hit(base + 4, 5, y, 174, 18, 0, "Info")
         }
         b.g(DP.EMBLEM_BG, 5, DP.EMBLEM_Y, 0, "zj_dm_row")
         b.obj(DP.EMBLEM_ITEM, 8, DP.EMBLEM_Y + 1, 16, 16, 0)

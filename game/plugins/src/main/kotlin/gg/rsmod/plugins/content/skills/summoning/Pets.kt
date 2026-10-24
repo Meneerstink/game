@@ -452,13 +452,18 @@ object Pets {
         if (player.world.randomDouble() < dropChance(npcId)) award(player, info.pet, source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(player, npcId)?.key)
     }
 
+    /** Farther than this from its owner (or on another plane) the pet was left behind by a teleport, not by running. */
+    const val TELEPORT_DISTANCE = 30
+
     /** Once per cycle (familiar tick): follow like a familiar, without a familiar's arrival effect on a recovery teleport. */
     fun tick(player: Player) {
         val npc = current(player) ?: return
-        // A pet brought along after its owner teleported (or walked out of reach) is heard arriving (N298).
+        // A pet brought along after its owner TELEPORTED is heard arriving (N298) - not on the catch-up a walking pet gets every
+        // dozen tiles behind a running owner, which would make it sound every few seconds.
+        val teleported = npc.tile.height != player.tile.height || !npc.tile.isWithinRadius(player.tile, TELEPORT_DISTANCE)
         Familiar.follow(player, npc, recovered = { p, n ->
             n.facePawn(p)
-            PetVoices.appear(p, n)
+            if (teleported) PetVoices.appear(p, n)
         }, runs = byNpc[npc.id]?.name in FAST_PETS)
         Familiar.updateHud(player)
         PetVoices.idle(player, npc)

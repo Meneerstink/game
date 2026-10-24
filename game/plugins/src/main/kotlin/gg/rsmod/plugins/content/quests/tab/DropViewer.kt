@@ -322,7 +322,8 @@ object DropViewer {
         // N279: a long name is cut so the star stays clear of "Show on map" (the whole name in the tooltip).
         val name = headName(world, source.name)
         N108Ui.text(player, i, V.NAME, name)
-        if (name != source.name) N108Ui.tooltips(player, listOf(N108Ui.hash(i, V.NAME) to source.name))
+        // Always sent: the client keeps a tooltip until it is replaced, so a short name must overwrite a long one's.
+        N108Ui.tooltips(player, listOf(N108Ui.hash(i, V.NAME) to source.name))
         val starX = starX(world, name)
         val fav = source.key in favourites(player)
         N108Ui.pos(player, i, V.STAR_ON, starX, 30)

@@ -31,6 +31,9 @@ for (r in 0 until N.QP.ROWS) {
 on_button(interfaceId = N.DEADMAN, component = N.DP.INFO) { QuestTab.openInfo(player) }
 // N280: the point rows open no store any more (only the npc in a safe zone does); the emblem row opens Info on the emblem.
 on_button(interfaceId = N.DEADMAN, component = N.DP.EMBLEM_HIT) { QuestTab.emblemClick(player) }
+for (r in 0 until N.DP.POINTS) {
+    on_button(interfaceId = N.DEADMAN, component = N.DP.point(r) + 4) { QuestTab.pointClick(player, r) }
+}
 for (e in 0 until 2) {
     on_button(interfaceId = N.DEADMAN, component = N.DP.event(e) + 5) { QuestTab.eventMap(player, e) }
 }

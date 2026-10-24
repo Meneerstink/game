@@ -61,6 +61,10 @@ class PetSoundsTests {
         for (fn in listOf("fun drop(", "fun call(", "fun restoreOnLogin(", "fun tick(")) {
             assertTrue("PetVoices.appear(" in source.substringAfter(fn).substringBefore("\n    }\n"), "$fn plays the voice")
         }
+        // ... but a walking pet caught up behind a running owner (every dozen tiles) stays quiet: only after a teleport.
+        val tick = source.substringAfter("fun tick(player: Player) {").substringBefore("\n    }\n")
+        assertTrue("if (teleported) PetVoices.appear(p, n)" in tick)
+        assertTrue(Pets.TELEPORT_DISTANCE > Familiar.FOLLOW_RECOVERY_DISTANCE)
     }
 
     @Test
