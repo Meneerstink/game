@@ -555,7 +555,7 @@ object N108InterfaceImportTool {
         }
         b.g(DP.EMBLEM_BG, 5, DP.EMBLEM_Y, 0, "zj_dm_row")
         b.obj(DP.EMBLEM_ITEM, 8, DP.EMBLEM_Y + 1, 16, 16, 0)
-        b.t(DP.EMBLEM_TEXT, 28, DP.EMBLEM_Y, 100, 18, 0, fonts.p12, TXT, "Archaic Emblem")
+        b.t(DP.EMBLEM_TEXT, 28, DP.EMBLEM_Y, 100, 18, 0, fonts.p12, TXT, "Deadman Emblem")
         b.t(DP.EMBLEM_VALUE, 100, DP.EMBLEM_Y, 62, 18, 0, fonts.p12, WHITE, alignX = 2)
         b.g(DP.EMBLEM_ARROW, 168, DP.EMBLEM_Y + 5, 0, "tk_chev")
         b.hit(DP.EMBLEM_HIT, 5, DP.EMBLEM_Y, 174, 18, 0, "Info")
@@ -877,7 +877,8 @@ object N108InterfaceImportTool {
             b.t(base + 2, 36, y, 118, I.SUBJECT_H, 1, fonts.p11, ORANGE)
             b.hit(base + 3, I.LIST_X, y, 148, I.SUBJECT_H, 1, "View")
         }
-        b.g(I.BIG, 169, 35, 1, "zi_big_loyalty")
+        // N319 (owner 2026-10-24 "centreer alles goed"): measured 2 px above the middle of its title + tag line - 2 px down.
+        b.g(I.BIG, 169, 37, 1, "zi_big_loyalty")
         b.t(I.NAME, 209, 33, 280, 16, 1, fonts.b12, ORANGE)
         // N285 (owner 2026-10-24: readable in fixed + Stretched): lighter labels, facts in p12.
         b.t(I.TAG, 209, 50, 280, 15, 1, fonts.p11, LABEL)

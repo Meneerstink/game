@@ -334,6 +334,8 @@ object QuestTab {
         val emblemTier = runCatching { DeadmanEmblem.ownedTier(player) }.getOrDefault(0)
         N108Ui.item(player, p, DP.EMBLEM_ITEM, DeadmanEmblem.FIRST_EMBLEM + (emblemTier - 1).coerceAtLeast(0))
         N108Ui.hidden(player, p, DP.EMBLEM_ITEM, false)
+        // Owner 2026-10-24 (A): the row is named like the item, "Deadman Emblem" (the cache text said "Archaic Emblem").
+        N108Ui.text(player, p, DP.EMBLEM_TEXT, DeadmanTabValues.Row.EMBLEM.title)
         N108Ui.text(player, p, DP.EMBLEM_VALUE, if (emblemTier > 0) "Tier $emblemTier" else "<col=b5a891>None</col>")
         // Breach.
         val active = DeadmanBreach.active
@@ -410,7 +412,7 @@ object QuestTab {
         return N108Ui.fitP11(world, short, room)
     }
 
-    /** The Archaic Emblem row (design A3): the Info window on the emblem - tier, value and more. */
+    /** The Deadman Emblem row (design A3; named like the item since the owner chose A 2026-10-24 - it read "Archaic Emblem"): the Info window on the emblem - tier, value and more. */
     fun emblemClick(player: Player) = openInfo(player, Subject.EMBLEM)
 
     /** The Info subjects of the point rows, top to bottom ([POINT_CURRENCIES]). */

@@ -22,7 +22,7 @@ object DeadmanTabValues {
         LOYALTY("Loyalty Points"),
         DONATOR("Donator Points"),
         DEADMAN("Deadman Points"),
-        EMBLEM("Archaic Emblem"),
+        EMBLEM("Deadman Emblem"),
         BREACH("Next Breach"),
         CHEST("Deadman's Chest"),
     }
@@ -31,8 +31,8 @@ object DeadmanTabValues {
 
     fun balance(player: Player, currency: StoreCatalogue.Currency): Int = player.attr[currency.attr] ?: 0
 
-    /** "Tier X - N pts" (N = the emblem's Deadman Points value), "None" without an emblem. */
-    fun emblemText(tier: Int): String = if (tier in 1..DeadmanEmblem.MAX_TIER) "Tier $tier - ${number(DeadmanEmblem.points(tier))} pts" else "None"
+    /** "Tier X - N" (N = the emblem's Deadman Points value; "pts" left out like the point rows above it, so it fits beside "Deadman Emblem"), "None" without an emblem. */
+    fun emblemText(tier: Int): String = if (tier in 1..DeadmanEmblem.MAX_TIER) "Tier $tier - ${number(DeadmanEmblem.points(tier))}" else "None"
 
     /**
      * "11 days 22 hours", "5 hours 12 minutes", "12 minutes" (singular for one). Rounded up to the minute, so the last minute before

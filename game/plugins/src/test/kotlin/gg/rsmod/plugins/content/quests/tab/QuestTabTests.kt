@@ -100,14 +100,14 @@ class QuestTabTests {
         val account = Account()
         assertEquals("None", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.bank[0] = Item(DeadmanEmblem.emblemId(4), 1)
-        assertEquals("Tier 4 - 360 pts", DeadmanTabValues.value(account.player, Row.EMBLEM))
+        assertEquals("Tier 4 - 360", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.bank[0] = null
         account.inventory[5] = Item(DeadmanEmblem.emblemId(6), 1)
-        assertEquals("Tier 6 - 1,150 pts", DeadmanTabValues.value(account.player, Row.EMBLEM))
+        assertEquals("Tier 6 - 1,150", DeadmanTabValues.value(account.player, Row.EMBLEM))
         account.inventory[5] = null
         assertEquals("None", DeadmanTabValues.value(account.player, Row.EMBLEM))
         (1..DeadmanEmblem.MAX_TIER).forEach { tier ->
-            assertEquals("Tier $tier - ${DeadmanTabValues.number(DeadmanEmblem.points(tier))} pts", DeadmanTabValues.emblemText(tier))
+            assertEquals("Tier $tier - ${DeadmanTabValues.number(DeadmanEmblem.points(tier))}", DeadmanTabValues.emblemText(tier))
         }
     }
 
@@ -252,7 +252,7 @@ class QuestTabTests {
         assertEquals(Row.values().size, L.ROWS)
         assertTrue((L.ROWS - 1) * L.ROW_PITCH + L.rowHeight(L.ROWS - 1) + 4 <= L.CONTENT_HEIGHT)
         assertEquals(
-            listOf("Loyalty Points", "Donator Points", "Deadman Points", "Archaic Emblem", "Next Breach", "Deadman's Chest"),
+            listOf("Loyalty Points", "Donator Points", "Deadman Points", "Deadman Emblem", "Next Breach", "Deadman's Chest"),
             Row.values().map { it.title },
         )
     }

@@ -37,7 +37,7 @@ object QuestTabInfo {
         LOYALTY("Loyalty Points"),
         DONATOR("Donator Points"),
         DEADMAN("Deadman Points"),
-        EMBLEM("Archaic Emblem"),
+        EMBLEM("Deadman Emblem"),
         BREACH("Breaches"),
         CHEST("Deadman's Chest"),
         PROTECTION("PvP protection"),
@@ -257,9 +257,10 @@ object QuestTabInfo {
                 Fact("Counts down", "only while you actively play"),
                 Fact("Other players", col(GREEN, "cannot attack you")),
                 Fact("You", "cannot attack players or breach monsters"),
-                Fact("Attacking a player", col(RED, "ends it for good") + " (you confirm first)"),
+                Fact("Attacking a player", col(RED, "ends it for good")),
             ),
-            text = "The time does not run while you are logged out or standing idle.",
+            // N319: "(you confirm first)" left the fact row, where it touched its label; it is said here.
+            text = "The time does not run while you are logged out or standing idle. Before your first attack on a player you are asked to confirm.",
             bar = if (protectedNow) "Your protection: ${col(GREEN, QuestTab.clock(left))} left" else "You have no PvP protection",
         )
     }
