@@ -42,6 +42,22 @@ class PerduLostPropertyTests {
     }
 
     @Test
+    fun `N250 an item waiting in the gravestone or Death's Office is not lost - Perdu says where it is`() {
+        val player = newPlayer()
+        player.inventory.add(Items.COLOSSAL_BLADE, 1)
+        PerduLostProperty.observe(player)
+        player.inventory.remove(Items.COLOSSAL_BLADE, 1)
+        player.gravestone[0] = Item(Items.COLOSSAL_BLADE)
+        assertTrue(PerduLostProperty.available(player).none { it.itemId == Items.COLOSSAL_BLADE })
+        assertEquals("your gravestone", PerduLostProperty.stillOwned(player).single().second)
+        player.gravestone[0] = null
+        player.deathRecovery[0] = Item(Items.COLOSSAL_BLADE)
+        assertEquals("Death's Office", PerduLostProperty.stillOwned(player).single().second)
+        player.deathRecovery[0] = null
+        assertTrue(PerduLostProperty.available(player).any { it.itemId == Items.COLOSSAL_BLADE }, "really lost: offered")
+    }
+
+    @Test
     fun `the wiki's exceptions can be bought while the player owns one`() {
         val player = newPlayer()
         player.inventory[0] = Item(Items.AVAS_ACCUMULATOR)
@@ -86,6 +102,8 @@ class PerduLostPropertyTests {
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
+        every { player.gravestone } returns ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.GRAVESTONE_KEY)
+        every { player.deathRecovery } returns ItemContainer(DEFINITIONS, gg.rsmod.game.model.container.key.DEATH_RECOVERY_KEY)
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns DEFINITIONS
         every { player.world } returns world

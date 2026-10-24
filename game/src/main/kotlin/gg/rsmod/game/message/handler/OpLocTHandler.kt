@@ -9,6 +9,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.INTERACTING_COMPONENT_CHILD
 import gg.rsmod.game.model.attr.INTERACTING_COMPONENT_PARENT
 import gg.rsmod.game.model.attr.INTERACTING_ITEM
+import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
 import gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GameObject
@@ -71,6 +72,7 @@ class OpLocTHandler : MessageHandler<OpLocTMessage> {
         client.closeInterfaceModal()
         client.fullInterruption(movement = true, interactions = true, animations = true, queue = true)
         client.attr[INTERACTING_ITEM] = WeakReference(item)
+        client.attr[INTERACTING_ITEM_SLOT] = slot // N251: plugins read the slot (getInteractingItemSlot)
         client.attr[INTERACTING_OBJ_ATTR] = WeakReference(obj)
         client.executePlugin(ObjectPathAction.itemOnObjectPlugin)
     }

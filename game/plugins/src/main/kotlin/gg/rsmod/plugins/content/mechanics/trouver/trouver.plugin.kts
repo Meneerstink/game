@@ -30,6 +30,37 @@ TrouverRegistry.all().forEach { lockable ->
 }
 
 /*
+ * N251 (owner 2026-10-24 "precies net als osrs"): OSRS Wiki "Trouver parchment" - "Giving certain untradeable items and a trouver
+ * parchment to Perdu will lock the item to the player" (500,000 coins). Using a lockable item on Perdu asks first, then locks it.
+ */
+TrouverRegistry.all().forEach { lockable ->
+    on_item_on_npc(item = lockable.baseItemId, npc = Npcs.PERDU) {
+        val slot = player.getInteractingItemSlot()
+        player.queue {
+            val name = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, lockable.baseItemId).name
+            if (player.inventory.getItemCount(Items.TROUVER_PARCHMENT) < 1) {
+                chatNpc("I can lock your $name so it is never destroyed on death. Bring me a Trouver parchment and ${"%,d".format(Trouver.LOCK_FEE)} coins.", npc = Npcs.PERDU, wrap = true)
+                return@queue
+            }
+            if (options("Yes, lock it (${"%,d".format(Trouver.LOCK_FEE)} coins + a parchment).", "No, thanks.", title = "Lock your $name?") != 1) return@queue
+            val item = player.inventory[slot]?.takeIf { it.id == lockable.baseItemId }
+                ?: player.inventory.items.filterNotNull().firstOrNull { it.id == lockable.baseItemId }
+            if (item == null) {
+                player.message("You don't have that item.")
+                return@queue
+            }
+            when (Trouver.lock(player, item)) {
+                Trouver.LockResult.Success -> chatNpc("There you go - your $name is locked to you now.", npc = Npcs.PERDU, wrap = true)
+                Trouver.LockResult.NotLockable -> {}
+                Trouver.LockResult.ItemNotHeld -> player.message("You don't have that item.")
+                Trouver.LockResult.MissingParchment -> player.message("You need a Trouver parchment to do that.")
+                Trouver.LockResult.InsufficientFunds -> chatNpc("That'll be ${"%,d".format(Trouver.LOCK_FEE)} coins - you don't have enough on you.", npc = Npcs.PERDU, wrap = true)
+            }
+        }
+    }
+}
+
+/*
  * Perdu (Grand Exchange) hosts the Trouver engine: using a locked item on her unlocks it, and using a broken or mangled item
  * on her repairs it (OSRS). Registered here, right after the registry above is filled - a script elsewhere could read the
  * registry before this one has run.

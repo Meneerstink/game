@@ -86,7 +86,13 @@ object PerduReclaim {
         while (true) {
             val all = offers(player)
             if (all.isEmpty()) {
-                task.chatNpc("I don't have anything of yours at the moment. If you lose something valuable, come and see me.", wrap = true)
+                // N250 (owner 2026-10-24: "trade zegt dat je niks hebt"): say why - OSRS sells an item back only when it is lost.
+                val kept = PerduLostProperty.stillOwned(player).firstOrNull()
+                if (kept != null) {
+                    task.chatNpc("Your ${name(player, kept.first.itemId).replaceFirstChar { it.lowercase() }} isn't lost - it's in ${kept.second}. I only return things you've really lost.", wrap = true)
+                } else {
+                    task.chatNpc("I don't have anything of yours at the moment. If you lose something valuable, come and see me.", wrap = true)
+                }
                 return
             }
             val pages = (all.size + PER_PAGE - 1) / PER_PAGE

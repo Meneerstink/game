@@ -64,6 +64,8 @@ class OpNpcTHandler : MessageHandler<OpNpcTMessage> {
         if (parent == 679) {
             val item = client.inventory[message.componentSlot] ?: return
             client.attr[INTERACTING_ITEM] = WeakReference(item)
+            // N251: the slot too - plugins read it (getInteractingItemSlot); without it an item-on-npc/player crashed or used a stale slot.
+            client.attr[INTERACTING_ITEM_SLOT] = message.componentSlot
             client.executePlugin(PawnPathAction.itemUsePlugin)
             return
         }

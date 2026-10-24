@@ -60,6 +60,12 @@ object SummoningUi {
     /** The familiar model itself, driven by clientscript 751 off varp 1174. */
     private const val PANEL_MODEL = 1
 
+    /**
+     * N355 (owner 2026-10-24: "de preview van de follower heeft nog de vierkant keer 3"): the three nested rectangles 662:0 / 2 / 3
+     * (8,28 173x111; 14,31 161x105; 23,36 143x95) behind the model box draw as three squares around the preview - always hidden.
+     */
+    private val PANEL_BACKDROP_RECTS = listOf(0, 2, 3)
+
     /** The name line under the model; 751 writes it with `IF_SETTEXT`. */
     private const val PANEL_NAME = 54
 
@@ -407,6 +413,7 @@ object SummoningUi {
             player.setVarbit(PET_HUNGER_VARBIT, PET_VALUE_NOT_APPLICABLE)
         }
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
+        PANEL_BACKDROP_RECTS.forEach { player.setComponentHidden(PANEL, it, true) }
         player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
         player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
         PANEL_CALL.forEach { player.setComponentHidden(PANEL, it, !active) }

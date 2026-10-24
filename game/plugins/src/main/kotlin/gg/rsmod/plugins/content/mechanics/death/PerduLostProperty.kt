@@ -110,14 +110,32 @@ object PerduLostProperty {
         if (seen.size != before) player.attr[UNLOCKED] = seen.sorted().joinToString(",")
     }
 
-    /** OSRS: "none of the item on them, in their bank or in the POH". */
+    /**
+     * OSRS: "none of the item on them, in their bank or in the POH". N250 (owner 2026-10-24): the gravestone and Death's Office
+     * hold the player's own items too - an item waiting there is not lost, so Perdu does not sell a second copy of it.
+     */
     fun owns(
         player: Player,
         entry: Entry,
-    ): Boolean =
-        sequenceOf(player.inventory, player.equipment, player.bank).any { container ->
+    ): Boolean = whereOwned(player, entry) != null
+
+    /** Where [player] still has [entry] ("your bank", "your gravestone" ...), or null when it is really lost. */
+    fun whereOwned(
+        player: Player,
+        entry: Entry,
+    ): String? =
+        listOf(
+            player.inventory to "your inventory", player.equipment to "your equipment", player.bank to "your bank",
+            player.gravestone to "your gravestone", player.deathRecovery to "Death's Office",
+        ).firstOrNull { (container, _) ->
             container.rawItems.any { it != null && it.toUnnoted(player.world.definitions).id in entry.variants }
-        }
+        }?.second
+
+    /** Earned items Perdu does not offer because the player still has them somewhere (the reason his list is empty). */
+    fun stillOwned(player: Player): List<Pair<Entry, String>> {
+        val earned = unlocked(player)
+        return ENTRIES.filter { it.itemId in earned && !it.multiple }.mapNotNull { e -> whereOwned(player, e)?.let { e to it } }
+    }
 
     /** What Perdu offers [player] now: earned items they do not own (the [Entry.multiple] ones always). */
     fun available(player: Player): List<Entry> {
