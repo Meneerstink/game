@@ -303,6 +303,8 @@ object PestControlRewards {
                         else -> listOf(Item(reward.items[0]))
                     }
                 items.forEach { give(player, it) }
+                // N276: the Collection Log's Pest Control page (OSRS logs a reward when it is bought).
+                gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.PEST_CONTROL, items.map { it.id to it.amount })
                 "The Void Knight has given you a ${reward.title}."
             }
         player.message(message)

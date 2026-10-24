@@ -3,55 +3,31 @@ package gg.rsmod.plugins.content.npcs.definitions.other
 import gg.rsmod.plugins.content.drops.DropTableFactory
 
 /**
- * WildyWyrm's drop table. Combat already exists (`WildyWyrmCombatScript.kt`, spawned in
- * `areas/wilderness/wildywyrm.plugin.kts`) but had no drop table anywhere - real gap recorded
- * under Q-042, closed here.
+ * WildyWyrm's drop table. Combat: `WildyWyrmCombatScript.kt`, spawned in `areas/wilderness/wildywyrm.plugin.kts`.
  *
- * Source: Novite `data/json/drops.json`, entry `"name": "WildyWyrm"` (line ~71386) - the only
- * donor with any WildyWyrm loot data at all (Void has none; grepped case-insensitive for
- * "wildywyrm"/"wilderness.*wyrm" across the whole Void tree, no hits). Eight items, each an
- * independent `CUSTOM_RARE` roll. `CUSTOM_RARE`'s exact figure comes from Novite's own
- * `utility/game/npc/drops/Drop.java` `Chance` enum: `CUSTOM_RARE(0.75)` - a flat 0.75% per item,
- * not a shared weighted table. Modelled here as eight independently-named tables inside one
- * registration (this codebase's `getDrop` sums every non-guaranteed table registered for an npc
- * id - the same "roll every named table" technique `chaos_elemental_drops.plugin.kts` already
- * uses for its secondary/minor/elite_clue split - so N independent named tables reproduce N
- * independent rolls; a table registration is one-per-npc-id, so all eight must live in a single
- * `DropTableFactory.build` block, not eight separate `register` calls). Each table is
- * `total(10000)`/`slots=75` - exactly 0.75% (75 in 10,000), not an invented approximation.
- *
- * All eight item ids verified present and correctly named in this project's own generated
- * `Items.kt` (Statius's and Corrupt Statius's full 4-piece sets: platebody, platelegs, full helm,
- * warhammer) - the classic "Ancient Warriors' equipment" drop mechanic, native to this cache.
+ * Owner 2026-10-24 (N270): no Statius's equipment from the WildyWyrm any more (the Novite donor's eight 0.75 % rolls; the Ancient
+ * Warriors' gear comes only from the Deadman's chest and the breaches) - it drops ordinary boss loot like the Glacor instead: big
+ * bones every kill, then charms, coins, runes, ore, logs, a dragonstone and the Rare drop table (the Glacor's commons, glacor.plugin.kts).
  */
 val WILDYWYRM = Npcs.WILDYWYRM
 
-val CUSTOM_RARE_SLOTS = 75
-val CUSTOM_RARE_TOTAL = 10000
-
 val wildyWyrmDrops =
     DropTableFactory.build {
-        // Owner 2026-10-11 (OSRS Deadman Mode: no corrupt versions): the four corrupt Statius's tables are gone; the normal
-        // pieces keep their own independent 0.75 % rolls.
-        table("statiuss_platebody") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.STATIUSS_PLATEBODY, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("statiuss_platelegs") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.STATIUSS_PLATELEGS, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("statiuss_full_helm") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.STATIUSS_FULL_HELM, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
-        }
-        table("statiuss_warhammer") {
-            total(CUSTOM_RARE_TOTAL)
-            obj(Items.STATIUSS_WARHAMMER, slots = CUSTOM_RARE_SLOTS)
-            nothing(CUSTOM_RARE_TOTAL - CUSTOM_RARE_SLOTS)
+        guaranteed { obj(Items.BIG_BONES) }
+        main {
+            total(512)
+            obj(Items.CRIMSON_CHARM, quantityRange = 1..3, slots = 60)
+            obj(Items.BLUE_CHARM, quantityRange = 1..2, slots = 30)
+            obj(Items.GREEN_CHARM, quantityRange = 1..3, slots = 40)
+            obj(Items.COINS_995, quantityRange = 2000..10000, slots = 80)
+            obj(Items.BLOOD_RUNE, quantityRange = 30..60, slots = 30)
+            obj(Items.SOUL_RUNE, quantityRange = 20..40, slots = 30)
+            obj(Items.LAW_RUNE, quantityRange = 30..60, slots = 30)
+            obj(Items.RUNITE_ORE, quantityRange = 1..3, slots = 25)
+            obj(Items.MAGIC_LOGS, quantityRange = 20..40, slots = 25)
+            obj(Items.UNCUT_DRAGONSTONE, slots = 10)
+            table(gg.rsmod.plugins.content.drops.global.Rare.rareTable, slots = 20)
+            nothing(132)
         }
     }
 

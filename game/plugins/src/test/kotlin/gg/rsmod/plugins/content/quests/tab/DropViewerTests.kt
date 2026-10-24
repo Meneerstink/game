@@ -28,7 +28,7 @@ import kotlin.test.assertTrue
 
 /**
  * N108 / N104 night job 2026-10-24 (spec section E): the Drop Viewer's chances are the roll's own (same functions), the order is
- * rarest first on the normal chance, a named nested table folds open to its own lines, a search finds an item inside a fold, the
+ * the pet first, then the most valuable line (N272), a named nested table folds open to its own lines, a search finds an item inside a fold, the
  * Collection Log records only log items with the kill count, the favourites and the new attributes load from old saves (empty),
  * and a Deadman Task pays exactly once.
  */
@@ -115,14 +115,29 @@ class DropViewerTests {
     }
 
     @Test
-    fun `rarest first on the normal chance, so the order of a monster never moves with the bracket`() {
+    fun `the pet on top, then the most valuable line first, the same order in every bracket`() {
         register()
         val account = Account()
+        val world = account.world
         for (rate in listOf(1.0, 3.0, 5.0)) {
             val lines = DropSources.view(account.player, source(), rate).lines
-            assertEquals(lines.sortedBy { it.normal }.map { it.key }, lines.map { it.key })
-            assertEquals(Items.DRAGON_PICKAXE, lines.first().item)
+            val values = lines.map { DropSources.value(world, it) }
+            assertEquals(values.sortedDescending(), values, "most valuable first at ${rate}x: ${lines.map { it.name }}")
+            assertTrue(values.first() > values.last())
         }
+        // A folded table counts as its best line; the coins (100-200) as 150 coins.
+        val view = DropSources.view(account.player, source(), 1.0)
+        val rdt = view.lines.single { it.tag == DropSources.Tag.TABLE }
+        assertEquals(rdt.kids.maxOf { DropSources.value(world, it) }, DropSources.value(world, rdt), 1e-9)
+        assertEquals(150.0, DropSources.averageQuantity("100-200"), 1e-9)
+        assertEquals(49.0, DropSources.averageQuantity("20-78"), 1e-9)
+        assertEquals(1.0, DropSources.averageQuantity("1"), 1e-9)
+        // A pet is always first, however little it is worth, then value (rarest first between equal values).
+        val pet = DropSources.Line("pet", Items.BONES, "Pet", "1", 1.0 / 3000, 1.0 / 3000, DropSources.Tag.PET)
+        val cheap = DropSources.Line("a", Items.BONES, "Bones", "1", 0.5, 0.5)
+        val dear = DropSources.Line("b", Items.DRAGON_PICKAXE, "Dragon pickaxe", "1", 1.0 / 128, 1.0 / 128)
+        val rareCheap = DropSources.Line("c", Items.BONES, "Bones", "1", 0.01, 0.01)
+        assertEquals(listOf("pet", "b", "c", "a"), DropSources.sorted(world, listOf(cheap, dear, rareCheap, pet)).map { it.key })
     }
 
     @Test
@@ -172,6 +187,34 @@ class DropViewerTests {
             assertEquals(2, CollectionLog.parse(saved).getValue(Items.KBD_HEADS).count)
         } finally {
             CollectionLogPages.reset()
+        }
+    }
+
+    @Test
+    fun `the chest and breach pages list the chest's pets first, Pest Control has its own Minigames page, Nex lists the Zaryte crossbow`() {
+        val account = Account()
+        gg.rsmod.plugins.content.skills.summoning.Pets.load(java.io.File("../../data/cfg/pets/pets.tsv"), java.io.File("../../data/cfg/pets/pet_tiers.tsv"))
+        CollectionLogPages.reset()
+        DropSources.reset()
+        try {
+            val pets = gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.pets().map { it.second }.distinct()
+            assertTrue(pets.isNotEmpty(), "the chest gives pets")
+            val pages = CollectionLogPages.all(account.player)
+            for (key in listOf("chest", "breach")) {
+                val page = pages.single { it.key == key }
+                assertEquals(pets, page.items.take(pets.size), "$key: the pets first")
+            }
+            val pc = pages.single { it.key == CollectionLogPages.PEST_CONTROL }
+            assertEquals(CollectionLogPages.Category.MINIGAMES, pc.category)
+            assertEquals(CollectionLogPages.PEST_CONTROL_ITEMS, pc.items)
+            assertTrue(Items.ELITE_VOID_KNIGHT_TOP in pc.items && Items.VOID_SEAL_8 in pc.items)
+            assertTrue("Zaryte crossbow" in CollectionLogPages.OSRS.getValue("nex"))
+            // A reward the Void Knight hands over is logged, once.
+            assertEquals(listOf(Items.VOID_KNIGHT_TOP), CollectionLog.record(account.player, CollectionLogPages.PEST_CONTROL, listOf(Items.VOID_KNIGHT_TOP to 1)))
+            assertTrue(CollectionLog.has(account.player, Items.VOID_KNIGHT_TOP))
+        } finally {
+            CollectionLogPages.reset()
+            DropSources.reset()
         }
     }
 

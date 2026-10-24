@@ -19,8 +19,10 @@ import gg.rsmod.plugins.content.skills.summoning.Pets
  *  - Bosses: per boss of the Drop Viewer's Bosses group, the OSRS Collection log list ([OSRS]) matched by name against what that
  *    boss can drop (Drop Viewer lines, pets included); a boss OSRS has no page for gets its pet and its rare lines (1/100 or rarer,
  *    not from a shared table). Dagannoth Kings are one page like OSRS. Barrows: [Barrows.COLLECTION_LOG_ITEMS].
- *  - Deadman: the Deadman's chest list, the breach uniques + Archaic emblem.
+ *  - Deadman: the Deadman's chest list and the breach uniques + Archaic emblem, each with the pets they can give first (N268: a
+ *    breach monster's chest-list roll gives the chest's pets too).
  *  - Clues: the elite casket's uniques (1/1,000 per roll or rarer, [EliteCasketTable.itemProbabilities]).
+ *  - Minigames (N276): Pest Control, the Void Knight reward items as OSRS lists them (+ the 2011 deflector this server sells).
  *  - Other: every pet.
  */
 object CollectionLogPages {
@@ -49,9 +51,20 @@ object CollectionLogPages {
             "commander zilyana" to listOf("Pet zilyana", "Armadyl crossbow", "Saradomin hilt", "Saradomin sword", "Saradomin's light", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
             "kree'arra" to listOf("Pet kree'arra", "Armadyl helmet", "Armadyl chestplate", "Armadyl chainskirt", "Armadyl hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
             "k'ril tsutsaroth" to listOf("Pet k'ril tsutsaroth", "Staff of the dead", "Zamorakian spear", "Steam battlestaff", "Zamorak hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),
-            "nex" to listOf("Nexling", "Ancient hilt", "Nihil horn", "Zaryte vambraces", "Torva full helm", "Torva platebody", "Torva platelegs", "Pernix cowl", "Pernix body", "Pernix chaps", "Virtus mask", "Virtus robe top", "Virtus robe legs", "Zaryte bow", "Nihil shard"),
+            "nex" to listOf("Nexling", "Ancient hilt", "Nihil horn", "Zaryte vambraces", "Zaryte crossbow", "Torva full helm", "Torva platebody", "Torva platelegs", "Pernix cowl", "Pernix body", "Pernix chaps", "Virtus mask", "Virtus robe top", "Virtus robe legs", "Zaryte bow", "Nihil shard"),
             "dagannoth kings" to listOf("Pet dagannoth prime", "Pet dagannoth supreme", "Pet dagannoth rex", "Berserker ring", "Archers ring", "Seers ring", "Warrior ring", "Dragon axe", "Seercull", "Mud battlestaff"),
             "tztok-jad" to listOf("Tzrek-jad", "Fire cape"),
+        )
+
+    /** The Pest Control page's key: the source key [PestControlRewards] records its rewards with. */
+    const val PEST_CONTROL = "pest_control"
+
+    /** OSRS Collection log "Pest Control" order: Void knight top, robe, gloves, mace, elite top, elite robe, the three helms, the seal. */
+    val PEST_CONTROL_ITEMS =
+        listOf(
+            Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_MACE, Items.ELITE_VOID_KNIGHT_TOP,
+            Items.ELITE_VOID_KNIGHT_ROBE, Items.VOID_MAGE_HELM, Items.VOID_RANGER_HELM, Items.VOID_MELEE_HELM, Items.VOID_SEAL_8,
+            Items.VOID_KNIGHT_DEFLECTOR,
         )
 
     private val DK = setOf("dagannoth rex", "dagannoth prime", "dagannoth supreme")
@@ -109,10 +122,11 @@ object CollectionLogPages {
         }
         pages.sortWith(compareBy { it.name.lowercase() })
         // ---- Deadman
-        val chestItems = DeadmanChestLoot.FIXED.map { it.item }.distinct() + PrayerScrolls.SCROLLS.toList()
+        val chestPets = DeadmanChestLoot.pets().map { it.second }.distinct()
+        val chestItems = (chestPets + DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList()).distinct()
         pages += Page("chest", Category.DEADMAN, "Deadman's Chest", listOf("chest"), chestItems, "Deadman's Chests opened")
         val breachKeys = sources.filter { it.kind == DropSources.Kind.BREACH }.map { it.key }
-        val breachItems = (listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + BreachLoot.RARE.map { it.item } + BreachLoot.MEGA_RARE + PrayerScrolls.SCROLLS.toList()).distinct()
+        val breachItems = (chestPets + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + BreachLoot.RARE.map { it.item } + BreachLoot.MEGA_RARE + PrayerScrolls.SCROLLS.toList()).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
         // ---- Clues: the elite casket's uniques.
         val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()
@@ -122,6 +136,8 @@ object CollectionLogPages {
             val uniques = perItem.filter { it.value > 0.0 && it.value <= 1.0 / 1000 }.keys.sortedBy { name(it) }
             if (uniques.isNotEmpty()) pages += Page("elite", Category.CLUES, "Elite Treasure Trails", emptyList(), uniques)
         }
+        // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
+        pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
         // ---- Other: every pet.
         val pets = Pets.infos.keys.mapNotNull { Pets.baseItem(it) }.distinct().sortedBy { name(it) }
         if (pets.isNotEmpty()) pages += Page("pets", Category.OTHER, "All Pets", emptyList(), pets)

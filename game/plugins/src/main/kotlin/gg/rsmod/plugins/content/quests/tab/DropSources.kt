@@ -9,6 +9,7 @@ import gg.rsmod.plugins.content.drops.DropEntry
 import gg.rsmod.plugins.content.drops.DropTable
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.GUARANTEED_TABLE_NAME
+import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 import gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot
@@ -181,7 +182,7 @@ object DropSources {
                 val emblem = emblemLine(world, source) ?: return base
                 val owns = runCatching { DeadmanEmblem.ownedTier(player) > 0 }.getOrDefault(false)
                 val line = if (owns) Line(emblem.key, emblem.item, emblem.name, emblem.quantity, 0.0, emblem.normal, note = "You have one") else emblem
-                View(base.always, sorted(base.lines + line))
+                View(base.always, sorted(world, base.lines + line))
             }
             Kind.CHEST -> {
                 val owned = Pets.infos.keys.filter { runCatching { Pets.owns(player, it) }.getOrDefault(false) }.toSet()
@@ -243,7 +244,7 @@ object DropSources {
                 lines += Line("pet", item, itemName(world, item), "1", c, c, Tag.PET)
             }
         }
-        return View(mergeAlways(always), sorted(merge(lines)))
+        return View(mergeAlways(always), sorted(world, merge(lines)))
     }
 
     /** The tier 1 emblem line of a monster with 150+ hp outside the guards (deadman_emblem.plugin.kts). */
@@ -285,7 +286,7 @@ object DropSources {
                     } else {
                         val kids = ArrayList<Line>()
                         walk(world, drop.table, inner, inner, y, n, "$path/$at", kids)
-                        val sortedKids = sorted(merge(kids))
+                        val sortedKids = sorted(world, merge(kids))
                         val icon = TABLE_ICONS[drop.label] ?: sortedKids.firstOrNull()?.item ?: -1
                         out += Line("$path/$at", icon, drop.label, "1", y, n, Tag.TABLE, sortedKids)
                     }
@@ -317,8 +318,27 @@ object DropSources {
 
     private fun mergeAlways(lines: List<Line>): List<Line> = lines.distinctBy { "${it.item}|${it.quantity}" }
 
-    /** Owner: rarest at the top, on the NORMAL chance, so the order of a monster never moves; then by name. */
-    fun sorted(lines: List<Line>): List<Line> = lines.sortedWith(compareBy<Line> { it.normal }.thenBy { it.name })
+    /**
+     * Owner 2026-10-24 (N272): the pet at the top, then the most valuable line first ([value]), then the rarest on the NORMAL chance
+     * (the order of a monster never moves with the bracket), then by name. The Always bar stays apart, in its own order.
+     */
+    fun sorted(world: World, lines: List<Line>): List<Line> {
+        val values = lines.associateWith { value(world, it) }
+        return lines.sortedWith(compareBy<Line> { it.tag != Tag.PET }.thenByDescending { values.getValue(it) }.thenBy { it.normal }.thenBy { it.name })
+    }
+
+    /** A line's worth: the Grand Exchange price ([OsrsGuidePrices.seed]) times the average quantity; a folded table its best line. */
+    fun value(world: World, line: Line): Double {
+        if (line.tag == Tag.TABLE) return line.kids.maxOfOrNull { value(world, it) } ?: 0.0
+        val def = world.definitions.getNullable(ItemDef::class.java, picture(world, line.item)) ?: return 0.0
+        return OsrsGuidePrices.seed(def).toDouble() * averageQuantity(line.quantity)
+    }
+
+    /** "100" -> 100, "20-78" -> 49 (the viewer's quantity text). */
+    fun averageQuantity(quantity: String): Double {
+        val parts = quantity.replace(",", "").split('-').mapNotNull { it.trim().toIntOrNull() }
+        return if (parts.isEmpty()) 1.0 else parts.average()
+    }
 
     // ---- breach monsters
 
@@ -350,7 +370,7 @@ object DropSources {
             val c = (1 - mega) * l.weight / BreachLoot.RARE_TOTAL
             rareKids += Line("rare/r$i", l.item, itemName(world, l.item), qty(l.min, l.max), rareY * c, rareN * c)
         }
-        lines += Line("rare", Items.VESTAS_LONGSWORD, "Rare table", "1", rareY, rareN, Tag.TABLE, sorted(merge(rareKids)))
+        lines += Line("rare", Items.VESTAS_LONGSWORD, "Rare table", "1", rareY, rareN, Tag.TABLE, sorted(world, merge(rareKids)))
         // N98: 1 in 200 one of the two prayer scrolls (not boosted).
         PrayerScrolls.SCROLLS.forEachIndexed { i, item ->
             val c = 1.0 / PrayerScrolls.BREACH_CHANCE / PrayerScrolls.SCROLLS.size
@@ -363,7 +383,7 @@ object DropSources {
             fun twice(p: Double) = 1 - (1 - p).pow(BreachLoot.REGULAR_ROLLS)
             lines += Line("reg$i", l.item, itemName(world, l.item) + if (l.noted) " (noted)" else "", qty(l.min, l.max), twice(yourRegular[i]), twice(normalRegular[i]))
         }
-        return View(listOfNotNull(archaic(world, "${BreachLoot.EMBLEM_DAMAGE}+ damage")), sorted(merge(lines)))
+        return View(listOfNotNull(archaic(world, "${BreachLoot.EMBLEM_DAMAGE}+ damage")), sorted(world, merge(lines)))
     }
 
     private fun qty(min: Int, max: Int) = if (max > min) "$min-$max" else "$min"
@@ -383,7 +403,7 @@ object DropSources {
             val mine = pet !in owned
             out += Line("chest/p$i", item, itemName(world, item), "1", if (mine) yourWeight * DeadmanChestLoot.PET_WEIGHT / yourTotal else 0.0, normalWeight * DeadmanChestLoot.PET_WEIGHT / normalTotal, Tag.PET, note = if (mine) null else "You have it")
         }
-        return sorted(out)
+        return sorted(world, out)
     }
 
     private fun chestView(world: World, rate: Double, owned: Set<String>): View {
@@ -392,7 +412,7 @@ object DropSources {
             val c = 1.0 / PrayerScrolls.CHEST_CHANCE / PrayerScrolls.SCROLLS.size
             lines += Line("scroll$i", item, itemName(world, item), "1", c, c)
         }
-        return View(emptyList(), sorted(lines))
+        return View(emptyList(), sorted(world, lines))
     }
 
     // ---- Barrows chest: all six brothers, the highest reward potential (1012), seven rolls
@@ -412,7 +432,7 @@ object DropSources {
         Barrows.TABLE.forEachIndexed { i, l ->
             lines += Line("tab$i", l.item, itemName(world, l.item), l.quantity, perChest(your[i + 1]), perChest(normal[i + 1]))
         }
-        return View(emptyList(), sorted(merge(lines)))
+        return View(emptyList(), sorted(world, merge(lines)))
     }
 
     private fun jadView(world: World, source: Source): View {

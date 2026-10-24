@@ -31,6 +31,9 @@ val drops =
             obj(Items.TORVA_PLATEBODY, slots = 10)
             obj(Items.TORVA_PLATELEGS, slots = 10)
             obj(Items.ZARYTE_BOW, slots = 10)
+            // Owner 2026-10-24 (N269): the Zaryte crossbow drops whole, at the OSRS Nihil horn's 1/258 (15 / 3,840 = 1/256),
+            // taken from the "nothing" tail so every other row keeps its rate.
+            obj(Items.ZARYTE_CROSSBOW, slots = 15)
             obj(Items.ANCIENT_CEREMONIAL_MASK, slots = 40)
             obj(Items.ANCIENT_CEREMONIAL_TOP, slots = 40)
             obj(Items.ANCIENT_CEREMONIAL_LEGS, slots = 40)
@@ -49,7 +52,7 @@ val drops =
             obj(Items.AIR_BATTLESTAFF, quantityRange = 5..10, slots = 100)
             obj(Items.WATER_BATTLESTAFF, quantityRange = 5..10, slots = 100)
             table(Rare.rareTable, slots = 200)
-            nothing(500)
+            nothing(485)
         }
     }
 

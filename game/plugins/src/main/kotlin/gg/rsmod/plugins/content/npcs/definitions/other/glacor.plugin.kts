@@ -9,7 +9,7 @@ import gg.rsmod.plugins.content.drops.global.Rare
 /**
  * Glacor and glacytes (Glacor Cave, Nov 2011). Stats/anims: Matrix 718 via the Novite donor
  * (5,000 life points, 6-tick attacks, anims 9955/9962/9961). Drops: 2011 wiki table
- * (Ragefire/Steadfast/Glaiven boots, shard of Armadyl, charms and runes).
+ * (shard of Armadyl, charms and runes; the Ragefire/Steadfast/Glaiven boots removed by the owner 2026-10-24).
  */
 val GLACOR = Npcs.GLACOR
 val table = DropTableFactory
@@ -18,9 +18,7 @@ val glacorDrops = table.build {
     guaranteed { obj(Items.BIG_BONES) }
     main {
         total(512)
-        obj(Items.RAGEFIRE_BOOTS, slots = 1)
-        obj(Items.STEADFAST_BOOTS, slots = 1)
-        obj(Items.GLAIVEN_BOOTS, slots = 1)
+        // Owner 2026-10-24 (N271): no 2011 Ragefire / Steadfast / Glaiven boots (not in OSRS) - their 3 slots joined "nothing".
         obj(Items.SHARDS_OF_ARMADYL, slots = 2)
         obj(Items.CRIMSON_CHARM, quantityRange = 1..3, slots = 60)
         obj(Items.BLUE_CHARM, quantityRange = 1..2, slots = 30)
@@ -34,7 +32,7 @@ val glacorDrops = table.build {
         obj(Items.UNCUT_DRAGONSTONE, slots = 10)
         obj(Items.WHITE_BERRIES, quantityRange = 5..10, slots = 20)
         table(Rare.rareTable, slots = 20)
-        nothing(67)
+        nothing(70)
     }
 }
 table.register(glacorDrops, GLACOR)
