@@ -163,7 +163,7 @@ object ItemActionGuard {
     }
 
     /** Visible characters per line and lines per page that fit the item box (519) next to the item picture. */
-    const val ITEM_BOX_LINE_CHARS = 52
+    const val ITEM_BOX_LINE_CHARS = 44 // measured: the client re-wraps a 50-character line of this font
     const val ITEM_BOX_LINES = 4
 
     /**
