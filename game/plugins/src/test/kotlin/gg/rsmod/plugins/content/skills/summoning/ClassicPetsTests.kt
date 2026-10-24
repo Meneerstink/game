@@ -103,6 +103,75 @@ class ClassicPetsTests {
     }
 
     @Test
+    fun `N301 - every Loyalty store pet has 2-3 conversations of player and pet, its sound only on a line with an animal noise`() {
+        val loyalty = ClassicPetTalk.LOYALTY_PET_ITEMS
+        assertTrue(loyalty.size >= 20, "${loyalty.size} Loyalty pets")
+        for (item in loyalty) {
+            val v = Pets.variantOfItem(item)!!
+            val chats = ClassicPetTalk.chatsFor(v.npc)
+            assertTrue(chats != null && chats.size in 2..3, "${v.name} ($item): ${chats?.size} conversations")
+            for (chat in chats!!) {
+                assertTrue(chat.size in 2..4, "${v.name}: ${chat.size} lines")
+                assertTrue(chat.any { it.pet } && chat.any { !it.pet }, "${v.name}: player and pet both speak")
+                chat.forEach { line -> assertTrue(line.text.length <= 70, "${v.name}: line too long for one dialogue box: ${line.text}") }
+            }
+            // A pet with a noise line has a sound to make it with.
+            if (chats.flatten().any { it.sound }) assertTrue(PetVoices.speciesVoice(v) != null, "${v.name} has no voice")
+        }
+        // The sound follows the line: only a pet line that opens with a noise in asterisks.
+        assertTrue(LoyaltyPetChats.Line(true, "*Ook ook!* It is MY banana.").sound)
+        assertTrue(!LoyaltyPetChats.Line(true, "It is MY banana.").sound)
+        assertTrue(!LoyaltyPetChats.Line(false, "*Woof!*").sound, "the player does not bark")
+        // Only the store pets: a grown 667 monkey keeps its own transcript line.
+        val monkey = Pets.variants.firstOrNull { it.classic && it.name == "Monkey" }
+        if (monkey != null) assertEquals(null, ClassicPetTalk.chatsFor(monkey.npc))
+        // Every species written down is used by a store pet (no dead conversations).
+        val used = loyalty.mapNotNull { LoyaltyPetChats.speciesOf(Pets.variantOfItem(it)!!.name) }.toSet()
+        assertEquals(LoyaltyPetChats.CHATS.keys, used)
+    }
+
+    @Test
+    fun `N299 - no 667 pet uses a Varrock Museum display sound, monkey, lizards and penguin have their own calls`() {
+        val museum = setOf(gg.rsmod.plugins.api.cfg.Sfx.VM_MONKEY, gg.rsmod.plugins.api.cfg.Sfx.VM_LIZARD, gg.rsmod.plugins.api.cfg.Sfx.VM_PENGUIN)
+        assertEquals(emptyMap(), PetVoices.CLASSIC.filterValues { it in museum })
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.JUNGLE_MONKEY_1, PetVoices.CLASSIC["Baby monkey"])
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.LIZARD_ATTACK, PetVoices.CLASSIC["Baby gecko"])
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.LIZARD_ATTACK, PetVoices.CLASSIC["Baby chameleon"])
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.PENG_PENGUIN_CALL, PetVoices.CLASSIC["Baby penguin"])
+    }
+
+    @Test
+    fun `N303 - every 667 pet option in the cache has a handler - Interact-with on the cats included`() {
+        val defs = SummoningTestCache.definitions
+        val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/pets.plugin.kts").readText()
+        val handled = setOf("pick-up", "talk-to", "interact-with")
+        val missing = Pets.variants.filter { it.classic }.flatMap { v ->
+            defs.get(NpcDef::class.java, v.npc).options.filterNotNull().filter { it.isNotBlank() }.map { it.lowercase() }.filter { it !in handled }.map { "${v.name} (${v.npc}): $it" }
+        }.distinct()
+        // The Clockwork cat's "Shoo" has no donor behaviour (reported to the owner, not invented).
+        assertEquals(emptyList(), missing.filterNot { it.startsWith("Clockwork cat") && it.endsWith("shoo") })
+        assertTrue("option = \"interact-with\"" in plugin && "option = \"talk-to\"" in plugin)
+    }
+
+    @Test
+    fun `N257 - a 667 pet's chat head and Follower Details head take the cache's creature pose, an OSRS pet keeps its own rig`() {
+        val creature = gg.rsmod.plugins.api.ext.CreatureChathead
+        val monkey = Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY)!!.npc
+        assertTrue(creature.isCreaturePet(monkey))
+        assertEquals(8373, creature.animation(gg.rsmod.plugins.api.cfg.FacialExpression.HAPPY_TALKING))
+        assertEquals(8374, creature.animation(gg.rsmod.plugins.api.cfg.FacialExpression.SAD))
+        // Every Loyalty store pet is a 667 creature pet (the poses were checked in the client for each species).
+        val loyalty = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES
+            .filter { it.shop == gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Shop.LOYALTY && Pets.isPetItem(it.purchaseItem) }
+        assertTrue(loyalty.isNotEmpty())
+        loyalty.forEach { assertTrue(creature.isCreaturePet(Pets.variantOfItem(it.purchaseItem)!!.npc), "${it.purchaseItem}") }
+        // An OSRS pet is not one: it keeps the OSRS chathead rig.
+        assertTrue(!creature.isCreaturePet(Pets.variants.first { it.pet == "Nexling" }.npc))
+        val ui = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/SummoningUi.kt").readText()
+        assertTrue("CreatureChathead.TALK.takeIf { gg.rsmod.plugins.api.ext.CreatureChathead.isCreaturePet(npcId) }" in ui, "Follower Details")
+    }
+
+    @Test
     fun `N88 part 3 - the voice table serves every voiced follower and Huberte's screech line`() {
         val rows = PetVoices.parse(File(DIR, "pet_voices.tsv").readLines())
         PetVoices.install(rows, Pets.variants)
@@ -112,7 +181,7 @@ class ClassicPetsTests {
         assertEquals(rows.single { it.variant == "Midnight" }.localSynth, PetVoices.voiceOf(midnight.npc), "a variant row wins over the pet's")
         assertEquals(null, PetVoices.voiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken stays silent")
         // N257: a 667 pet answers Talk-to with its species' sound (it had none).
-        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.VM_MONKEY, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.JUNGLE_MONKEY_1, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
         val huberte = Pets.variants.single { it.pet == "Huberte" }
         assertEquals(rows.single { it.line == "*screeches*" }.localSynth, PetVoices.lineSound(huberte.npc, "*screeches*"))
         assertEquals(null, PetVoices.lineSound(huberte.npc, "*bird noises*"))

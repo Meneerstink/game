@@ -370,7 +370,10 @@ object SummoningUi {
     fun resolveChatheadAnimation(
         player: Player,
         npcId: Int,
-    ): Int? = SummoningChatheadAnimations.resolve(player, npcId)
+    ): Int? =
+        SummoningChatheadAnimations.resolve(player, npcId)
+            // N257: a 667 pet's creature head with the cache's creature pose (it was left unposed or deformed).
+            ?: gg.rsmod.plugins.api.ext.CreatureChathead.TALK.takeIf { gg.rsmod.plugins.api.ext.CreatureChathead.isCreaturePet(npcId) }
 
     private fun refreshPanelAnimation(
         player: Player,

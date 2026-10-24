@@ -50,21 +50,24 @@ object PetVoices {
     /**
      * N257 (owner 2026-10-24: "alle pets in de loyalty store maken geen sounds ... geluiden per soort kiezen uit bestaande geluiden,
      * bv. baby monkey -> gorilla- of apengeluiden"): the 667 pets (Loyalty store and the other Summoning-era pets) by species, each
-     * with an existing 667 sound of that creature - the Varrock Museum's animal calls where there is one (monkey, lizard, penguin).
+     * with an existing 667 sound of that creature. N299 (owner 2026-10-24: after the monkey call "een soort treingeluid"): the
+     * Varrock Museum calls (VM_*) are display loops - VM_MONKEY lays its calls over a 2.5 s looping drone, VM_LIZARD repeats four
+     * times over 3.4 s - so the creatures' own calls instead (lengths decoded from the cache, synth_duration_probe): the jungle
+     * monkey's four short calls (1.2 s, no drone), the lizard's hiss (0.4 s), the penguin call of Cold War (1.6 s).
      */
     val CLASSIC: Map<String, Int> =
         mapOf(
             "Pet kitten" to Sfx.KITTENS_MEW, "Hell-kitten" to Sfx.KITTENS_MEW, "Pet cat" to Sfx.PURR, "Overgrown cat" to Sfx.PURR,
             "Clockwork cat" to Sfx.PURR, "Hellcat" to Sfx.CAT_HISS, "Overgrown hellcat" to Sfx.CAT_HISS,
             "Hatchling dragon" to Sfx.BABYDRAGON_ATTACK, "Baby dragon" to Sfx.BABYDRAGON_ATTACK,
-            "Baby penguin" to Sfx.VM_PENGUIN, "Penguin" to Sfx.VM_PENGUIN,
+            "Baby penguin" to Sfx.PENG_PENGUIN_CALL, "Penguin" to Sfx.PENG_PENGUIN_CALL,
             "Raven chick" to Sfx.BIRD_ATTACK, "Raven" to Sfx.BIRD_ATTACK, "Vulture chick" to Sfx.VULTURE_1, "Vulture" to Sfx.VULTURE_1,
             "Saradomin chick" to Sfx.BIRD_TWITTER_1, "Zamorak chick" to Sfx.BIRD_TWITTER_1, "Guthix chick" to Sfx.BIRD_TWITTER_1,
             "Saradomin bird" to Sfx.BIRD_ATTACK, "Zamorak bird" to Sfx.BIRD_ATTACK, "Guthix bird" to Sfx.BIRD_ATTACK,
             "Saradomin owl" to Sfx.OWL_PART_1, "Zamorak hawk" to Sfx.BIRD_ATTACK, "Guthix raptor" to Sfx.BIRD_ATTACK,
             "Baby raccoon" to Sfx.RAT_SQUEAK_1, "Raccoon" to Sfx.RAT_SQUEAK_1, "Baby squirrel" to Sfx.RAT_SQUEAK_2, "Squirrel" to Sfx.RAT_SQUEAK_2,
-            "Baby gecko" to Sfx.VM_LIZARD, "Gecko" to Sfx.VM_LIZARD, "Baby chameleon" to Sfx.VM_LIZARD, "Chameleon" to Sfx.VM_LIZARD,
-            "Baby monkey" to Sfx.VM_MONKEY, "Monkey" to Sfx.VM_MONKEY,
+            "Baby gecko" to Sfx.LIZARD_ATTACK, "Gecko" to Sfx.LIZARD_ATTACK, "Baby chameleon" to Sfx.LIZARD_ATTACK, "Chameleon" to Sfx.LIZARD_ATTACK,
+            "Baby monkey" to Sfx.JUNGLE_MONKEY_1, "Monkey" to Sfx.JUNGLE_MONKEY_1,
             "Baby giant crab" to Sfx.SMALL_CRAB_ATTACK, "Giant crab" to Sfx.ROCK_CRAB_ATTACK,
             "Baby platypus" to Sfx.QUACK, "Platypus" to Sfx.QUACK,
             "Baby icefiend" to Sfx.ICEFIEND_ATTACK,

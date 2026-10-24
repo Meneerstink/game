@@ -36,8 +36,37 @@ object ChatheadRig {
         }
 }
 
+/**
+ * N257 (owner 2026-10-24: the Loyalty store pets' chat heads were "te klein" and their animations "kloppen niet"): the 667 pets
+ * (kittens, puppies, baby dragons, the baby monkey ...) have creature heads, neither the human HD head nor the OSRS one. The human
+ * poses deformed them and without a pose they stay tiny. The cache's own creature chathead sequence - enum 1276 / 1275's default,
+ * the Follower Details route of every familiar (SummoningChatheadAnimations) - frames and animates every one of them (checked in
+ * the client for the 25 species, screens\N257\anim). Sad poses take the sad one.
+ */
+object CreatureChathead {
+    const val TALK = 8373
+    const val SAD_TALK = 8374
+
+    private val SAD =
+        setOf(
+            FacialExpression.SAD, FacialExpression.SAD_2, FacialExpression.DISTRESSED, FacialExpression.NEARLY_CRYING, FacialExpression.TEARY,
+            FacialExpression.UPSET, FacialExpression.CRYING, FacialExpression.WAILING, FacialExpression.AFRAID, FacialExpression.SCARED,
+            FacialExpression.REALLY_SAD, FacialExpression.DEPRESSED, FacialExpression.WORRIED, FacialExpression.CHILD_SAD,
+        )
+
+    /** A 667 pet follower ([gg.rsmod.plugins.content.skills.summoning.Pets] classic table). */
+    fun isCreaturePet(npcId: Int): Boolean = gg.rsmod.plugins.content.skills.summoning.Pets.variantOfNpc(npcId)?.classic == true
+
+    fun animation(expression: FacialExpression): Int = if (expression in SAD) SAD_TALK else TALK
+}
+
 /** The pose [expression] plays on [npcId]'s own head rig. */
 fun FacialExpression.chatheadAnimation(
     world: World,
     npcId: Int,
-): Int = if (ChatheadRig.isClassic(world, npcId)) classic else hd
+): Int =
+    when {
+        CreatureChathead.isCreaturePet(npcId) -> CreatureChathead.animation(this)
+        ChatheadRig.isClassic(world, npcId) -> classic
+        else -> hd
+    }

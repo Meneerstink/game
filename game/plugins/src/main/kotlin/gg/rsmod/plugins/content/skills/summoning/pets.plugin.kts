@@ -103,6 +103,25 @@ Pets.variants.forEach { variant ->
     }
 }
 
+// N301 / N303 (owner 2026-10-24): a Loyalty store pet's Talk-to is a conversation of its own; a 667 cat's Interact-with works. Bound
+// here, so the generic Talk-to fallback (talk_to_fallback.plugin.kts) leaves these npcs alone - no second voice on Talk-to.
+Pets.variants.filter { it.classic }.forEach { variant ->
+    val npcOptions = world.definitions.get(NpcDef::class.java, variant.npc).options
+    val chats = ClassicPetTalk.chatsFor(variant.npc)
+    if (chats != null && npcOptions.any { it.equals("talk-to", ignoreCase = true) }) {
+        on_npc_option(npc = variant.npc, option = "talk-to") {
+            val npc = player.getInteractingNpc()
+            player.queue { with(ClassicPetTalk) { talk(npc, chats) } }
+        }
+    }
+    if (npcOptions.any { it.equals("interact-with", ignoreCase = true) }) {
+        on_npc_option(npc = variant.npc, option = "interact-with") {
+            val npc = player.getInteractingNpc()
+            player.queue { with(ClassicPetTalk) { interact(npc) } }
+        }
+    }
+}
+
 on_npc_killed { killer, npc ->
     Pets.roll(killer, npc.id)
 }
@@ -133,6 +152,22 @@ on_world_init {
  */
 on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
+    // `petheads anim <npc> <anim> [anim ...]`: one npc's chat head with each given animation (-1 = none), 6 ticks each (N257).
+    if (args.getOrNull(0) == "anim") {
+        val id = args.getOrNull(1)?.toIntOrNull() ?: return@on_command
+        player.queue {
+            args.drop(2).mapNotNull { it.toIntOrNull() }.forEach { anim ->
+                player.openInterface(interfaceId = 242, parent = 752, child = 13)
+                player.setComponentNpcHead(interfaceId = 242, component = 2, npc = id)
+                player.setComponentAnim(interfaceId = 242, component = 2, anim = anim)
+                player.setComponentText(interfaceId = 242, component = 3, text = "npc $id anim $anim")
+                player.setComponentText(interfaceId = 242, component = 4, text = "")
+                player.setComponentText(interfaceId = 242, component = 5, text = "")
+                wait(6)
+            }
+        }
+        return@on_command
+    }
     // `petheads npc <id> ...`: any npc's chat head, 12 ticks each (the native 667 heads the pets are compared with).
     if (args.getOrNull(0) == "npc") {
         player.queue {

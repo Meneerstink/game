@@ -53,7 +53,8 @@ class PetSoundsTests {
             .filter { it.shop == gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.Shop.LOYALTY && Pets.isPetItem(it.purchaseItem) }
         assertTrue(loyalty.size >= 20, "${loyalty.size} Loyalty store pets")
         loyalty.forEach { e -> assertTrue(PetVoices.idleVoiceOf(Pets.variantOfItem(e.purchaseItem)!!.npc) != null, "${Pets.variantOfItem(e.purchaseItem)!!.name} has a sound") }
-        assertEquals(Sfx.VM_MONKEY, PetVoices.voiceOf(Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY)!!.npc), "baby monkey: a monkey")
+        // N299 (owner 2026-10-24): the jungle monkey's own calls, not the Varrock Museum display loop (its drone sounded like a train).
+        assertEquals(Sfx.JUNGLE_MONKEY_1, PetVoices.voiceOf(Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_MONKEY)!!.npc), "baby monkey: a monkey")
         // N295: the Baby icefiend is a follower now.
         assertEquals(7713, Pets.variantOfItem(gg.rsmod.plugins.api.cfg.Items.BABY_ICEFIEND)?.npc)
         // N298: every way a pet appears plays its voice.
