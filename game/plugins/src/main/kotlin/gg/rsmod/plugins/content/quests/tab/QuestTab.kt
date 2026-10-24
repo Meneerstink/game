@@ -164,7 +164,7 @@ object QuestTab {
             "Monkey Madness II" to listOf("Monkey Madness I", "Enlightened Journey", "The Eyes of Glouphrie", "Recipe for Disaster", "Troll Stronghold", "Watchtower"),
         )
 
-    class QuestRow(val kind: Int, val key: String, val icon: String?, val text: String, val right: String?, val arrow: String?)
+    class QuestRow(val kind: Int, val key: String, val icon: String?, val text: String, val right: String?, val arrow: String?, val star: Boolean = false)
 
     private const val KIND_GROUP = 0
     private const val KIND_QUEST = 1
@@ -189,14 +189,14 @@ object QuestTab {
                 val locked = !legacy && chosen != null && quest != chosen && !done
                 val (icon, text) =
                     when {
-                        quest == chosen -> "q_ck" to "$name <col=ffcf4a>*</col>"
+                        quest == chosen -> "q_ck" to name
                         done -> "q_ck" to name
                         locked -> "q_lock" to "<col=8a8070>$name</col>"
                         else -> "q_dot" to name
                     }
                 val reqs = REQUIREMENTS[name].orEmpty()
                 val isOpen = name in open
-                out += QuestRow(KIND_QUEST, name, icon, text, null, if (reqs.isEmpty()) null else if (isOpen) "q_two" else "q_tw")
+                out += QuestRow(KIND_QUEST, name, icon, text, null, if (reqs.isEmpty()) null else if (isOpen) "q_two" else "q_tw", star = quest == chosen)
                 if (isOpen) reqs.forEach { r -> out += QuestRow(KIND_SUB, name, if (done) "q_ck7" else "q_dot5", "<col=b3a78f>$r</col>", null, null) }
             }
         }
@@ -248,6 +248,9 @@ object QuestTab {
             }
             N108Ui.pos(player, p, base + 4, 0, y)
             N108Ui.hidden(player, p, base + 4, row.kind != KIND_QUEST && row.kind != KIND_LINK)
+            // The chosen quest: the gold star right after its name (design 05).
+            N108Ui.hidden(player, p, base + 5, !row.star)
+            if (row.star) N108Ui.pos(player, p, base + 5, textX + N108Ui.p11(player.world, row.text) + 3, y - 2)
             y += h
         }
         N108Ui.fonts(player, p, fonts)

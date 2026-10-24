@@ -384,8 +384,8 @@ object N108InterfaceImportTool {
         const val LIST = P_FIRST // scroll layer
         const val SCROLLBAR = P_FIRST + 1
         const val NOTE = P_FIRST + 2
-        const val ROW_FIRST = P_FIRST + 3 // per row: icon, text, right, arrow, hit
-        const val ROW_STRIDE = 5
+        const val ROW_FIRST = P_FIRST + 3 // per row: icon, text, right, arrow, hit, star (the chosen quest)
+        const val ROW_STRIDE = 6
         const val ROWS = 30
         const val COUNT = ROW_FIRST + ROWS * ROW_STRIDE
         const val LIST_X = 5
@@ -409,6 +409,7 @@ object N108InterfaceImportTool {
             b.t(base + 2, 0, 0, 158, 15, QP.LIST, fonts.p11, GREY, alignX = 2, hidden = true)
             b.g(base + 3, 152, 4, QP.LIST, "q_tw", hidden = true)
             b.hit(base + 4, 0, 0, 160, 14, QP.LIST, "Toggle", hidden = true)
+            b.g(base + 5, 0, 0, QP.LIST, "q_star", hidden = true)
         }
         return b.done(QP.COUNT)
     }
