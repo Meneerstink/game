@@ -19,6 +19,7 @@ import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
 import gg.rsmod.game.tools.importer.LootKeyInterfaceImportTool
 import gg.rsmod.game.tools.importer.ProductionTabClientScriptPatchTool
 import gg.rsmod.game.tools.importer.QuestTabIconScriptPatchTool
+import gg.rsmod.game.tools.importer.N108InterfaceImportTool as N
 import gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool as L
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.setVarbit
@@ -297,37 +298,91 @@ class QuestTabTests {
     }
 
     @Test
-    fun `Info window fits the fixed-mode main screen and every subject fits its boxes`() {
-        assertTrue(L.INFO_WIDTH <= 512 && L.INFO_HEIGHT <= 334)
-        assertEquals(Subject.values().size, L.INFO_SUBJECTS)
-        assertTrue(6 + L.INFO_SUBJECTS * L.I_SUBJECT_PITCH <= L.I_INNER_HEIGHT)
-        val widths = advances { it.p12 }
-        val maxLines = L.I_TEXT_HEIGHT / L.I_LINE_HEIGHT
+    fun `Info window fits the fixed-mode main screen, the list fits its well, every page fits its boxes`() {
+        // N274 (owner design 2026-10-24, screens\team\INFO\info-v1.png): 500 x 322 like every window of the night job.
+        val comps = N.info(LootKeyInterfaceImportTool.Fonts(0, 0, 0, 0))
+        assertEquals(N.I.COUNT, comps.size)
+        assertTrue(comps.first { it.id == 1 }.width <= 512 && comps.first { it.id == 1 }.height <= 334)
+        assertEquals(Subject.values().size, N.I.SUBJECTS)
+        assertEquals(Subject.values().size, N.I.GROUP_SIZES.sum())
+        assertTrue(N.I.subjectY(N.I.SUBJECTS - 1) + N.I.SUBJECT_H <= 29 + 286 - 1, "the last subject stays inside the list well")
+        val p11 = advances { it.p11 }
+        val b12 = advances { it.b12 }
+        val account = Account()
         for (subject in Subject.values()) {
-            assertTrue(width(widths, subject.title) <= L.I_LIST_WIDTH - 16, subject.title)
-            val n = lines(widths, QuestTabInfo.text(subject), L.I_TEXT_WIDTH)
-            assertTrue(n <= maxLines, "${subject.title}: $n lines, room for $maxLines")
+            assertTrue(width(p11, subject.title) <= 118, subject.title)
+            assertTrue(width(b12, subject.title) <= 280, subject.title)
+            val page = QuestTabInfo.page(account.player, subject)
+            assertTrue(width(p11, page.tag) <= 280, "${subject.title} tag line")
+            val rows = page.table?.size ?: page.facts.size
+            assertTrue(rows in 1..N.I.ROWS, "${subject.title}: $rows rows")
+            page.facts.forEach { f ->
+                assertTrue(width(p11, f.label) + 10 + width(p11, f.value) <= N.I.ROW_W - 12, "${subject.title}: '${f.label}' + '${f.value}' overlap")
+            }
+            page.table?.forEach { row -> assertEquals(4, row.size) }
+            val textY = N.I.ROW_Y + rows * N.I.ROW_H + 6
+            val n = lines(p11, page.text, N.I.TEXT_W)
+            assertTrue(n * 15 <= N.I.TEXT_BOTTOM - textY, "${subject.title}: $n text lines below $rows rows")
+            val barRoom = if (page.map != null) N.I.MAP_X - N.I.BAR_X - 12 else N.I.ROW_W - 16
+            assertTrue(width(p11, page.bar) <= barRoom, "${subject.title} live line '${page.bar}'")
         }
+        // The Brackets table: every column fits before the next one.
+        val table = QuestTabInfo.page(account.player, Subject.BRACKETS).table!!
+        val columns = intArrayOf(0, 112, 196, 270, N.I.ROW_W - 6)
+        table.forEach { row -> row.forEachIndexed { c, cell -> assertTrue(width(p11, cell) <= columns[c + 1] - columns[c] - 4, cell) } }
     }
 
     @Test
-    fun `every Info text names where the points are spent`() {
-        assertTrue("Loyalty Store" in QuestTabInfo.text(Subject.LOYALTY) && "Xuan" in QuestTabInfo.text(Subject.LOYALTY))
-        assertTrue("Donator Store" in QuestTabInfo.text(Subject.DONATOR))
-        assertTrue("Deadman Store" in QuestTabInfo.text(Subject.DEADMAN))
-        assertTrue("Deadman Store" in QuestTabInfo.text(Subject.EMBLEM) && "1,150" in QuestTabInfo.text(Subject.EMBLEM))
-        assertTrue("(UTC)" in QuestTabInfo.text(Subject.BREACH))
+    fun `every points page names where the points are spent`() {
+        val account = Account()
+        fun all(s: Subject) = QuestTabInfo.page(account.player, s).let { p -> p.facts.joinToString(" ") { "${it.label} ${it.value}" } + " " + p.text }
+        assertTrue("Loyalty Store" in all(Subject.LOYALTY) && "Xuan" in all(Subject.LOYALTY))
+        assertTrue("Donator Store" in all(Subject.DONATOR))
+        assertTrue("Deadman Store" in all(Subject.DEADMAN))
+        assertTrue("Deadman Store" in all(Subject.EMBLEM) && "1,150" in all(Subject.EMBLEM))
+        assertTrue("(UTC)" in all(Subject.BREACH))
+        assertTrue("Your balance" in QuestTabInfo.page(account.player, Subject.LOYALTY).bar)
     }
 
     @Test
-    fun `Info texts carry the numbers of the rules they explain`() {
-        assertTrue("30 minutes" in QuestTabInfo.text(Subject.CHEST) && "100,000" in QuestTabInfo.text(Subject.CHEST))
-        assertTrue("60 minutes" in QuestTabInfo.text(Subject.PROTECTION))
-        assertTrue("5 minutes" in QuestTabInfo.text(Subject.SKULL) && "7 second" in QuestTabInfo.text(Subject.SKULL))
-        assertTrue("Level 96+: combat 20x, skills 10x, drops 5x" in QuestTabInfo.text(Subject.BRACKETS) && "14" in QuestTabInfo.text(Subject.BRACKETS))
-        assertTrue("7 second" in QuestTabInfo.text(Subject.TELEPORTS))
+    fun `Info pages carry the numbers of the rules they explain`() {
+        val account = Account()
+        fun all(s: Subject) = QuestTabInfo.page(account.player, s).let { p -> p.facts.joinToString(" ") { "${it.label} ${it.value}" } + " " + p.text }
+        assertTrue("30 minutes" in all(Subject.CHEST) && "100,000" in all(Subject.CHEST) && "60 s" in all(Subject.CHEST))
+        assertTrue("60 minutes" in all(Subject.PROTECTION))
+        assertTrue("5 minutes" in all(Subject.SKULL) && "7 s" in all(Subject.SKULL))
+        val table = QuestTabInfo.page(account.player, Subject.BRACKETS).table!!
+        assertEquals(listOf("Level", "Combat XP", "Skills XP", "Drops"), table.first())
+        assertTrue(table.any { it[0].startsWith("96+") && it.drop(1) == listOf("20x", "10x", "5x") })
+        assertTrue("14 levels" in QuestTabInfo.page(account.player, Subject.BRACKETS).text)
+        assertTrue("7 s" in all(Subject.TELEPORTS))
+        assertTrue("5 / 10 / 15 / 25" in all(Subject.DEADMAN), "the Deadman Tasks points per tier")
         assertEquals("<col=ffffff>Skull</col>", QuestTab.subjectLabel(Subject.SKULL, Subject.SKULL))
         assertEquals("Skull", QuestTab.subjectLabel(Subject.SKULL, Subject.LOYALTY))
+    }
+
+    @Test
+    fun `a long place reads in full, as its short form or cut - never past its room`() {
+        val account = Account()
+        val world = account.world
+        val p11 = advances { it.p11 }
+        every { world.filestore } returns CacheLibrary(CACHE_PATH)
+        assertEquals("Catherby beach", QuestTab.placeLabel(world, "Catherby beach", 150))
+        assertEquals("Rimmington mine (E)", QuestTab.placeLabel(world, "East of the Rimmington mine", 111))
+        assertEquals("Al Kharid bank", QuestTab.placeLabel(world, "Outside the Al Kharid bank", 100))
+        assertEquals("Sorcerer's Tower (NE)", QuestTab.placeLabel(world, "North-east of the Sorcerer's Tower", 150))
+        val spots = com.google.gson.Gson().fromJson(File("../../data/cfg/deadman/chest_spots.json").readText(), com.google.gson.JsonObject::class.java)["spots"].asJsonArray
+        for (s in spots) {
+            val name = s.asJsonObject["name"].asString.replaceFirstChar { it.titlecase() }
+            assertTrue(width(p11, QuestTab.placeLabel(world, name, 150)) <= 150, name)
+            assertFalse(QuestTab.placeLabel(world, name, 150).endsWith("..."), "$name fits as itself or its short form")
+            // The Info window's live line beside "Show on map" holds every spot in full.
+            assertTrue(width(p11, "Now: $name") <= N.I.MAP_X - N.I.BAR_X - 12, "Info live line: $name")
+            // The Drop Viewer's line under "Deadman's Chest" (228 px): "Now at <place> · Opened 9,999".
+            val tail = " · Opened 9,999"
+            val room = 228 - width(p11, "Now at ") - width(p11, tail)
+            assertTrue(width(p11, "Now at " + QuestTab.placeLabel(world, s.asJsonObject["name"].asString, room) + tail) <= 228, "Drop Viewer: $name")
+        }
     }
 
     // ------------------------------------------------------------------ bug-test round 2026-09-26

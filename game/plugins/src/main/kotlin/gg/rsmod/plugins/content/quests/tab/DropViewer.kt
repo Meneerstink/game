@@ -27,6 +27,7 @@ object DropViewer {
 
     val SELECTED = AttributeKey<String>(persistenceKey = "drop_viewer_selected")
     val FAVOURITES = AttributeKey<String>(persistenceKey = "drop_viewer_favourites")
+    /** N267 (owner 2026-10-24): "Recently viewed" is gone - nothing writes it any more; the key stays so older saves load as before. */
     val RECENT = AttributeKey<String>(persistenceKey = "drop_viewer_recent")
 
     private val OPEN_GROUPS = AttributeKey<MutableSet<String>>()
@@ -86,7 +87,6 @@ object DropViewer {
         val source = DropSources.byKey(player, key) ?: return
         if (player.attr[SELECTED] != key) openLines(player).clear()
         player.attr[SELECTED] = key
-        player.attr[RECENT] = (listOf(key) + recent(player).filter { it != key }).take(3).joinToString(";")
         drawList(player)
         drawHead(player, source)
         drawRows(player, source)
@@ -212,6 +212,9 @@ object DropViewer {
             if (slot.item >= 0) {
                 N108Ui.item(player, i, base + V.L_MODEL, slot.item, 1)
                 N108Ui.hidden(player, i, base + V.L_MODEL, false)
+            } else if (slot.key == "chest" && chestModel(player) >= 0) {
+                N108Ui.plainModel(player, N108Ui.hash(i, base + V.L_MODEL), chestModel(player), CHEST_ZOOM, CHEST_XAN, false)
+                N108Ui.hidden(player, i, base + V.L_MODEL, false)
             } else if (slot.model >= 0) {
                 models += N108Ui.Model(N108Ui.hash(i, base + V.L_MODEL), slot.model, thumbZoom(player, slot.model), 0, false)
                 N108Ui.hidden(player, i, base + V.L_MODEL, false)
@@ -242,6 +245,19 @@ object DropViewer {
         N108Ui.fonts(player, i, fonts)
         scroll(player, V.LIST, V.LIST_SCROLLBAR, maxOf(y, V.LIST_H))
     }
+
+    /**
+     * The chest's picture: the OPEN chest's model (loc 62947 -> 4970). The closed chest's (4969) carries the tall light beam over
+     * it - fitted to the box, the chest itself came out a few pixels small at the bottom.
+     */
+    fun chestModel(player: Player): Int = N108Ui.locModel(player.world, DeadmanChestIds.openLoc)
+
+    /** The sub line under the name: from [V.NAME_X] to 4 px before the window's right edge (V.SUB is 232 wide). */
+    private const val SUB_WIDTH = 228
+
+    /** The chest's camera: a 4 x 4 loc seen from a little above (the client fits it to the box). */
+    private const val CHEST_ZOOM = 2600
+    private const val CHEST_XAN = 160
 
     /** Model camera distance (client zoom2d: bigger = further away): base + per extra tile of npc size. `::dvzoom` tunes it live. */
     @Volatile var THUMB_BASE = 1500
@@ -287,9 +303,13 @@ object DropViewer {
     private fun drawHead(player: Player, source: DropSources.Source) {
         val world = player.world
         val i = INTERFACE
-        // Model: the npc; the chest has none of its own - Zemouregal, who comes with it.
-        val modelNpc = if (source.kind == DropSources.Kind.CHEST) DeadmanChestIds.guardianNpc else source.modelNpc
-        if (modelNpc > 0) {
+        // Model: the npc; the Deadman's Chest its own loc model (N277, owner 2026-10-24 - it showed Zemouregal before).
+        val chestModel = if (source.kind == DropSources.Kind.CHEST) chestModel(player) else -1
+        val modelNpc = if (source.kind == DropSources.Kind.CHEST && chestModel < 0) DeadmanChestIds.guardianNpc else source.modelNpc
+        if (chestModel >= 0) {
+            N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), chestModel, CHEST_ZOOM, CHEST_XAN, true)
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else if (modelNpc > 0) {
             N108Ui.models(player, listOf(N108Ui.Model(N108Ui.hash(i, V.MODEL), modelNpc, headZoom(player, modelNpc), 0, true)))
             N108Ui.hidden(player, i, V.MODEL, false)
         } else {
@@ -356,8 +376,11 @@ object DropViewer {
         return when (source.kind) {
             DropSources.Kind.CHEST -> {
                 val active = DeadmanChestWorld.activeTimed()
-                val where = if (active != null) "Now at <col=ffffff>${active.name}</col>" else if (DeadmanChestWorld.ticksUntilTimed >= 0) "Next in <col=ffffff>${DeadmanTabValues.duration((DeadmanChestWorld.ticksUntilTimed * 6L + 9) / 10)}</col>" else "Every 30 min, random spot"
-                "$where${dot}Opened <col=ffffff>${N108Ui.number(kc)}</col>"
+                val opened = "${dot}Opened <col=ffffff>${N108Ui.number(kc)}</col>"
+                // N278: the place fits the line with "Opened N" (it ran out of the window): in full, its short form, or cut.
+                val room = SUB_WIDTH - N108Ui.p11(player.world, "Now at ") - N108Ui.p11(player.world, opened)
+                val where = if (active != null) "Now at <col=ffffff>${QuestTab.placeLabel(player.world, active.name, room)}</col>" else if (DeadmanChestWorld.ticksUntilTimed >= 0) "Next in <col=ffffff>${DeadmanTabValues.duration((DeadmanChestWorld.ticksUntilTimed * 6L + 9) / 10)}</col>" else "Every 30 min, random spot"
+                "$where$opened"
             }
             DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
             else -> {

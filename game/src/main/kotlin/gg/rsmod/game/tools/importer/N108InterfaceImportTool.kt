@@ -21,7 +21,10 @@ import javax.imageio.ImageIO
  * Interfaces (the server fills and moves everything):
  *  - [CONTAINER] 1171 the tab row and the panel box; [QUESTS] 1173, [DEADMAN] 1172, [TASKS] 1174, [DROPS_LOG] 1182 the four panels;
  *  - [VIEWER] 1176 the Drop Viewer, [LOG] 1183 the Collection Log, [TASK_WINDOW] 1184 the Deadman Tasks window.
- * The Info window 1175 stays as [QuestTabInterfaceImportTool] built it.
+ *  - [INFO] 1175 the Deadman Info window (N274, owner design 2026-10-24 GOEDGEKEURD screens\team\INFO\info-v1.png): subjects
+ *    with icons in three groups on the left, per subject a page with its big icon, name, tag line, fact rows (or a table), a few
+ *    lines of text and what is live now at the bottom (with "Show on map"). It replaces the text-only window
+ *    [QuestTabInterfaceImportTool] built.
  *
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.N108InterfaceImportTool [--apply]` - both caches, one transaction.
  */
@@ -444,8 +447,9 @@ object N108InterfaceImportTool {
     fun deadman(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
         val b = Builder(fonts)
         b.panel("Deadman")
-        b.g(DP.INFO, 143, 3, 0, "dm_btn", ops = listOf("Info"))
-        b.t(DP.INFO_TEXT, 143, 3, 36, 17, 0, fonts.p11, ORANGE, "Info", alignX = 1)
+        // N274: a real button - the blue "i" and "Info" (design info-v1), right-aligned on the header's 179 px edge.
+        b.g(DP.INFO, 133, 2, 0, "zi_btn_info", ops = listOf("Info"))
+        b.t(DP.INFO_TEXT, 152, 2, 24, 18, 0, fonts.p11, ORANGE, "Info", alignX = 0)
         b.g(DP.BRK, 5, 23, 0, "dm_brk")
         b.t(DP.BADGE_TOP, 11, 32, 48, 14, 0, fonts.p11, 0xC9A24A, "Bracket", alignX = 1)
         b.t(DP.BADGE, 11, 45, 48, 16, 0, fonts.b12, WHITE, alignX = 1)
@@ -497,6 +501,9 @@ object N108InterfaceImportTool {
         fun card(i: Int) = CARD_FIRST + i * CARD_STRIDE
     }
 
+    /** Inner width of a tier's progress bar (tk_bar 54 px minus its border). */
+    const val TIER_FILL = 52
+
     val TIER_ICONS = listOf("tk_easy", "tk_medium", "tk_hard", "tk_elite")
     val TIER_COLOURS = intArrayOf(0xC98A4B, 0x7F9FE0, 0x4FD0D6, 0xFF6262)
     val TIER_NAMES = listOf("Easy", "Medium", "Hard", "Elite")
@@ -510,9 +517,10 @@ object N108InterfaceImportTool {
             val y = 25 + i * 17
             b.g(base, 8, y + 1, 0, TIER_ICONS[i])
             b.t(base + 1, 27, y, 50, 17, 0, fonts.b12, TIER_COLOURS[i], TIER_NAMES[i])
-            b.g(base + 2, 77, y + 6, 0, "tk_bar")
-            b.layer(base + 3, 78, y + 7, 58, 4, 0)
-            b.rect(base + 4, -58, 0, 58, 4, base + 3, TIER_COLOURS[i], filled = true)
+            // N278: the bar starts 7 px after the widest name ("Medium", b12 49 px from x 27) - it touched it before.
+            b.g(base + 2, 83, y + 6, 0, "tk_bar")
+            b.layer(base + 3, 84, y + 7, TIER_FILL, 4, 0)
+            b.rect(base + 4, -TIER_FILL, 0, TIER_FILL, 4, base + 3, TIER_COLOURS[i], filled = true)
             b.t(base + 5, 120, y, 47, 17, 0, fonts.p11, WHITE, alignX = 2)
             b.g(base + 6, 172, y + 5, 0, "tk_chev")
             b.hit(base + 7, 5, y, 174, 17, 0, "View")
@@ -549,17 +557,15 @@ object N108InterfaceImportTool {
         const val LOG_CLIP = CARD1 + 7
         const val LOG_FILL = CARD1 + 8
         const val LOG_HIT = CARD1 + 9
-        const val RECENT_TITLE = CARD1 + 10
-        const val RECENT_FIRST = CARD1 + 11 // 3 rows: bg, model, name, kc, hit
-        const val RECENT_STRIDE = 5
-        const val NEW_TITLE = RECENT_FIRST + 3 * RECENT_STRIDE
+
+        // N267 (owner 2026-10-24): "Recently viewed" is gone; "New in your log" moved up into its place.
+        const val NEW_TITLE = CARD1 + 10
         const val SLOT_FIRST = NEW_TITLE + 1 // 5 slots: bg, item, kc
         const val SLOT_STRIDE = 3
         const val COUNT = SLOT_FIRST + 5 * SLOT_STRIDE
         val SLOT_X = intArrayOf(5, 40, 75, 111, 146)
         val SLOT_W = intArrayOf(33, 33, 34, 33, 33)
-
-        fun recent(i: Int) = RECENT_FIRST + i * RECENT_STRIDE
+        const val NEW_Y = 111
 
         fun slot(i: Int) = SLOT_FIRST + i * SLOT_STRIDE
     }
@@ -577,23 +583,14 @@ object N108InterfaceImportTool {
         b.layer(LP.LOG_CLIP, 47, 101, 120, 4, 0)
         b.g(LP.LOG_FILL, -120, 0, LP.LOG_CLIP, "grn_fill")
         b.hit(LP.LOG_HIT, 5, 66, 174, 44, 0, "Open")
-        b.t(LP.RECENT_TITLE, 6, 111, 170, 17, 0, fonts.b12, ORANGE, "Recently viewed")
-        for (i in 0 until 3) {
-            val base = LP.recent(i)
-            val y = 128 + i * 18
-            b.g(base, 5, y, 0, "dl_rv", hidden = true)
-            b.model(base + 1, 8, y + 1, 16, 15, 0, 2600)
-            b.t(base + 2, 29, y, 110, 17, 0, fonts.p11, TXT, hidden = true)
-            b.t(base + 3, 120, y, 53, 17, 0, fonts.p11, GREY, alignX = 2, hidden = true)
-            b.hit(base + 4, 5, y, 174, 17, 0, "View", hidden = true)
-        }
-        b.t(LP.NEW_TITLE, 6, 182, 170, 17, 0, fonts.b12, ORANGE, "New in your log")
+        b.t(LP.NEW_TITLE, 6, LP.NEW_Y, 170, 17, 0, fonts.b12, ORANGE, "New in your log")
         for (i in 0 until 5) {
             val base = LP.slot(i)
             val w = LP.SLOT_W[i]
-            b.g(base, LP.SLOT_X[i], 199, 0, "dl_slot$w")
-            b.obj(base + 1, LP.SLOT_X[i] + (w - 30) / 2, 200, 30, 21, 0, ops = listOf("Inspect"))
-            b.t(base + 2, LP.SLOT_X[i], 219, w, 12, 0, fonts.p11, 0x7CE36B, alignX = 1, hidden = true)
+            val y = LP.NEW_Y + 17
+            b.g(base, LP.SLOT_X[i], y, 0, "dl_slot$w")
+            b.obj(base + 1, LP.SLOT_X[i] + (w - 30) / 2, y + 1, 30, 21, 0, ops = listOf("Inspect"))
+            b.t(base + 2, LP.SLOT_X[i], y + 20, w, 12, 0, fonts.p11, 0x7CE36B, alignX = 1, hidden = true)
         }
         return b.done(LP.COUNT)
     }
@@ -702,6 +699,115 @@ object N108InterfaceImportTool {
         return b.done(W.COUNT)
     }
 
+    // ================================================================== Deadman Info window (screens\team\INFO\info-v1.html)
+
+    object I {
+        const val BG = 2
+        const val TITLE = 3
+        const val CLOSE = 4
+        const val GROUP_FIRST = 5 // 3 group headers
+        const val GROUPS = 3
+        const val SUBJECT_FIRST = GROUP_FIRST + GROUPS // per subject: selected bg, icon, name, hit
+        const val SUBJECT_STRIDE = 4
+        const val SUBJECTS = 10
+        const val BIG = SUBJECT_FIRST + SUBJECTS * SUBJECT_STRIDE
+        const val NAME = BIG + 1
+        const val TAG = BIG + 2
+        const val ROW_FIRST = BIG + 3 // per row: stripe, four table columns (left-aligned), the fact value (right-aligned)
+        const val ROW_STRIDE = 6
+        const val R_VALUE = 5
+        const val ROWS = 8
+        const val TEXT = ROW_FIRST + ROWS * ROW_STRIDE
+        const val BAR = TEXT + 1
+        const val BAR_TEXT = TEXT + 2
+        const val MAP = TEXT + 3
+        const val MAP_TEXT = TEXT + 4
+        const val COUNT = TEXT + 5
+
+        /** The list: a group header is 14 px, a subject 24 px (3 x 14 + 10 x 24 = 282 of the 284 inside the well). */
+        const val LIST_X = 8
+        const val LIST_Y = 31
+        const val GROUP_H = 14
+        const val SUBJECT_H = 24
+
+        /** Subjects per group (QuestTabInfo.Subject order): Points 3, Deadman 3, Rules 4. */
+        val GROUP_SIZES = intArrayOf(3, 3, 4)
+        val GROUP_NAMES = listOf("Points", "Deadman", "Rules")
+
+        /** The page (window pixels): fact rows from [ROW_Y], 18 px each, 318 wide from [ROW_X]; the live bar at the bottom. */
+        const val ROW_X = 167
+        const val ROW_Y = 81
+        const val ROW_H = 18
+        const val ROW_W = 318
+        const val TEXT_X = 169
+        const val TEXT_W = 314
+        const val TEXT_BOTTOM = 279
+        const val BAR_X = 167
+        const val BAR_Y = 283
+        const val MAP_X = 393
+        const val MAP_Y = 287
+
+        fun subject(i: Int) = SUBJECT_FIRST + i * SUBJECT_STRIDE
+
+        fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
+
+        /** Window y of subject [i]'s row. */
+        fun subjectY(i: Int): Int {
+            var y = LIST_Y
+            var left = i
+            for (g in GROUP_SIZES.indices) {
+                y += GROUP_H
+                if (left < GROUP_SIZES[g]) return y + left * SUBJECT_H
+                y += GROUP_SIZES[g] * SUBJECT_H
+                left -= GROUP_SIZES[g]
+            }
+            error("subject $i")
+        }
+
+        /** Window y of group [g]'s header (just above its first subject). */
+        fun groupY(g: Int): Int = subjectY(GROUP_SIZES.take(g).sum()) - GROUP_H
+    }
+
+    /** The subjects' icon names (zi_ic_* in the list, zi_big_* on the page), QuestTabInfo.Subject order. */
+    val INFO_ICONS = listOf("loyalty", "donator", "deadman", "emblem", "breach", "chest", "protection", "skull", "brackets", "teleports")
+
+    fun info(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {
+        val b = Builder(fonts)
+        b.root()
+        b.window()
+        b.g(I.BG, 0, 0, 1, "zi_bg")
+        b.t(I.TITLE, 0, 4, 500, 18, 1, fonts.b12, ORANGE, "Deadman Info", alignX = 1)
+        b.hit(I.CLOSE, 472, 5, 21, 19, 1, "Close")
+        for (g in 0 until I.GROUPS) b.t(I.GROUP_FIRST + g, 13, I.groupY(g), 140, I.GROUP_H, 1, fonts.p11, GREY, I.GROUP_NAMES[g], alignY = 2)
+        for (s in 0 until I.SUBJECTS) {
+            val base = I.subject(s)
+            val y = I.subjectY(s)
+            b.g(base, I.LIST_X, y, 1, "zi_sel", hidden = true)
+            b.g(base + 1, 13, y + 4, 1, "zi_ic_${INFO_ICONS[s]}")
+            b.t(base + 2, 36, y, 118, I.SUBJECT_H, 1, fonts.p11, ORANGE)
+            b.hit(base + 3, I.LIST_X, y, 148, I.SUBJECT_H, 1, "View")
+        }
+        b.g(I.BIG, 169, 35, 1, "zi_big_loyalty")
+        b.t(I.NAME, 209, 33, 280, 16, 1, fonts.b12, ORANGE)
+        b.t(I.TAG, 209, 50, 280, 15, 1, fonts.p11, GREY)
+        for (r in 0 until I.ROWS) {
+            val base = I.row(r)
+            val y = I.ROW_Y + r * I.ROW_H
+            b.g(base, I.ROW_X, y, 1, "zi_stripe", hidden = true)
+            b.t(base + 1, I.ROW_X + 6, y, 200, I.ROW_H, 1, fonts.p11, GREY, hidden = true)
+            b.t(base + 2, I.ROW_X + 100, y, 80, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
+            b.t(base + 3, I.ROW_X + 180, y, 80, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
+            b.t(base + 4, I.ROW_X + 270, y, 40, I.ROW_H, 1, fonts.p11, WHITE, hidden = true)
+            b.t(base + I.R_VALUE, I.ROW_X, y, I.ROW_W - 6, I.ROW_H, 1, fonts.p11, WHITE, alignX = 2, hidden = true)
+        }
+        b.t(I.TEXT, I.TEXT_X, I.ROW_Y, I.TEXT_W, I.TEXT_BOTTOM - I.ROW_Y, 1, fonts.p11, TXT, alignX = 0, alignY = 0, lineHeight = 15)
+        b.g(I.BAR, I.BAR_X, I.BAR_Y, 1, "zi_bar")
+        b.t(I.BAR_TEXT, I.BAR_X + 8, I.BAR_Y, 220, 26, 1, fonts.p11, TXT)
+        b.g(I.MAP, I.MAP_X, I.MAP_Y, 1, "zi_map", hidden = true, ops = listOf("Show on map"))
+        b.t(I.MAP_TEXT, I.MAP_X + 22, I.MAP_Y, 64, 18, 1, fonts.p11, ORANGE, "Show on map", hidden = true)
+        return b.done(I.COUNT)
+    }
+
     // ================================================================== import
 
     @JvmStatic
@@ -713,7 +819,7 @@ object N108InterfaceImportTool {
         val fonts: LootKeyInterfaceImportTool.Fonts
         val current = HashMap<Int, Map<Int, String>>()
         val currentSprites = HashMap<Int, String>()
-        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, VIEWER, DROPS_LOG, LOG, TASK_WINDOW)
+        val ids = listOf(CONTAINER, DEADMAN, QUESTS, TASKS, INFO, VIEWER, DROPS_LOG, LOG, TASK_WINDOW)
         try {
             fonts = LootKeyInterfaceImportTool.fonts(library)
             ids.forEach { id ->
@@ -738,6 +844,7 @@ object N108InterfaceImportTool {
                 DEADMAN to deadman(fonts),
                 QUESTS to quests(fonts),
                 TASKS to tasks(fonts),
+                INFO to info(fonts),
                 VIEWER to viewer(fonts),
                 DROPS_LOG to dropsLog(fonts),
                 LOG to log(fonts),

@@ -4,7 +4,6 @@ import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.game.model.interf.DisplayMode
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool as N
-import gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool as L
 import gg.rsmod.plugins.api.ext.PaneMountHooks
 import gg.rsmod.plugins.content.quests.tab.QuestTabInfo.Subject
 
@@ -37,11 +36,12 @@ for (e in 0 until 2) {
     on_button(interfaceId = N.DEADMAN, component = N.DP.event(e) + 5) { QuestTab.eventMap(player, e) }
 }
 Subject.values().forEachIndexed { i, subject ->
-    on_button(interfaceId = QuestTab.INFO, component = L.subjectBase(i)) { QuestTab.showSubject(player, subject) }
+    on_button(interfaceId = QuestTab.INFO, component = N.I.subject(i) + 3) { QuestTab.showSubject(player, subject) }
 }
-on_button(interfaceId = QuestTab.INFO, component = L.I_CLOSE) {
+on_button(interfaceId = QuestTab.INFO, component = N.I.CLOSE) {
     if (player.interfaces.isVisible(QuestTab.INFO)) player.closeInterface(QuestTab.INFO)
 }
+on_button(interfaceId = QuestTab.INFO, component = N.I.MAP) { QuestTab.infoMap(player) }
 
 // ---- 3 Deadman Tasks
 for (t in 0 until 4) {
@@ -61,9 +61,6 @@ on_button(interfaceId = DeadmanTasksUi.INTERFACE, component = N.W.TYPE_HIT) { De
 // ---- 4 Drops & Collection Log
 on_button(interfaceId = N.DROPS_LOG, component = N.LP.VIEWER_HIT) { DropViewer.open(player) }
 on_button(interfaceId = N.DROPS_LOG, component = N.LP.LOG_HIT) { CollectionLogUi.open(player) }
-for (r in 0 until 3) {
-    on_button(interfaceId = N.DROPS_LOG, component = N.LP.recent(r) + 4) { QuestTab.recentClick(player, r) }
-}
 for (s in 0 until 5) {
     on_button(interfaceId = N.DROPS_LOG, component = N.LP.slot(s) + 1) {
         val entry = CollectionLog.recent(player).getOrNull(s) ?: return@on_button

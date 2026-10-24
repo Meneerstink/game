@@ -26,6 +26,11 @@ on_world_init {
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("deadman hud for ${player.username}", e)
         }
+        try {
+            gg.rsmod.plugins.content.mechanics.pvp.chest.ChestMapMarker.sync(player)
+        } catch (e: Exception) {
+            gg.rsmod.game.model.Trace.crash("chest map marker for ${player.username}", e)
+        }
         ClientHudSync.tick(player)
     }
 }
@@ -37,6 +42,7 @@ gg.rsmod.game.model.hud.ClientHud.escClosesInterface = { p ->
 
 on_login {
     ClientHudSync.reset(player)
+    gg.rsmod.plugins.content.mechanics.pvp.chest.ChestMapMarker.reset(player)
     // Owner-ordered one-time setting changes (A42) are applied here, before the push, so the client starts with them.
     ClientHudConfig.login(player)
     LootTracker.push(player)

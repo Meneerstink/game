@@ -154,6 +154,34 @@ class DropViewerTests {
     }
 
     @Test
+    fun `the Deadman's Chest shows its own loc model - the closed chest's first model from the loc config`() {
+        val account = Account()
+        val lib = CacheLibrary(CACHE_PATH)
+        try {
+            every { account.world.filestore } returns lib
+            // tools/cache667/locs.py 62946: one shape (10) with model 4969; the open chest 62947 has 4970.
+            assertEquals(4969, N108Ui.locModel(account.world, 62946))
+            assertEquals(4970, N108Ui.locModel(account.world, 62947))
+        } finally {
+            lib.close()
+        }
+        val viewer = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/quests/tab/DropViewer.kt").readText()
+        assertTrue("N108Ui.locModel(player.world, DeadmanChestIds.openLoc)" in viewer && "N108Ui.plainModel(" in viewer)
+    }
+
+    @Test
+    fun `the server reads the same sprite list the cache import wrote - same names, same sizes, so every id matches`() {
+        // N274: data/cfg/n108_sprites.json (what N108Ui reads) fell behind data/art/n108/manifest.json (what the import wrote): new
+        // sprites came out blank in the game.
+        val art = java.io.File("../../data/art/n108/manifest.json").readText()
+        val server = java.io.File("../../data/cfg/n108_sprites.json").readText()
+        val entry = Regex("\"([a-z0-9_]+)\":\\s*\\[\\s*(\\d+)\\s*,\\s*(\\d+)\\s*\\]")
+        fun parse(t: String) = entry.findAll(t).associate { it.groupValues[1] to (it.groupValues[2] + "x" + it.groupValues[3]) }
+        assertEquals(parse(art), parse(server))
+        assertTrue(parse(server).containsKey("zi_big_chest"))
+    }
+
+    @Test
     fun `chance notation and rarity colours follow the design`() {
         assertEquals("Always", N108Ui.chance(1.0))
         assertEquals("1/1,000", N108Ui.chance(1.0 / 1000))

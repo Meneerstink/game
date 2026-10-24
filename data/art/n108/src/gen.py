@@ -198,7 +198,7 @@ sp("dm_ev4", 174, 26, """<div class="ev4" style="left:0;top:0;width:174px;height
 sp("dm_chest", 16, 16, """<img src="icons/Deadmans_chest_(scenery).png" style="left:0;top:0;width:16px;height:16px;object-fit:contain;filter:brightness(1.8)">""")
 sp("dm_mp", 34, 13, """<div class="mp" style="left:0;top:0"></div>""")
 # Tasks panel
-sp("tk_bar", 60, 6, """<div class="bar6" style="left:0;top:0;width:60px"></div>""")
+sp("tk_bar", 54, 6, """<div class="bar6" style="left:0;top:0;width:54px"></div>""")
 sp("tk_chev", 5, 8, """<div class="chev" style="left:0;top:0"></div>""")
 for name, src in (("tk_easy", "Bronze_scimitar"), ("tk_medium", "Mithril_scimitar"), ("tk_hard", "Rune_scimitar"), ("tk_elite", "Dragon_scimitar"), ("tk_all", "Combat_icon")):
     sp(name, 17, 15, f"""<img src="icons/{src}.png" style="left:0;top:0;height:15px">""")
@@ -235,6 +235,42 @@ sp("tw_fb_type", 96, 20, """<div class="fb" style="left:0;top:0;width:96px"></di
 sp("tw_tag_pvp", 25, 13, """<div class="ttag pvp t" style="left:0;top:0">PvP</div>""")
 sp("tw_tag_dng", 40, 13, """<div class="ttag dng t" style="left:0;top:0">Danger</div>""")
 sp("tw_pb56", 56, 6, """<div class="bar6" style="left:0;top:0;width:56px"></div>""")
+
+# ---------------------------------------------------------------- Deadman Info window (N274, owner GOEDGEKEURD 2026-10-24:
+# screens	eam\INFO\info-v1.png, bron info-v1.html). Names start with "zi_" so they sort after every older sprite: the ids of the
+# sprites above stay what they were (SPRITE_BASE + sorted index).
+sp("zi_bg", 500, 322, """
+<div class="win"></div>
+<div class="close t" style="left:472px;top:5px">X</div>
+<div style="left:7px;top:29px;width:150px;height:286px;background:#211b15;border:1px solid #000"></div>
+<div style="left:161px;top:29px;width:332px;height:286px;background:#28221a;border:1px solid #000"><div style="position:absolute;left:0;top:0;width:330px;height:44px;border-bottom:2px solid #0e0b08;box-shadow:0 1px 0 #4a3f31"></div></div>
+""")
+sp("zi_sel", 148, 24, """<div style="left:0;top:0;width:148px;height:24px;background:#5a4630;box-shadow:inset 3px 0 0 #ff981f"></div>""")
+sp("zi_stripe", 318, 18, """<div style="left:0;top:0;width:318px;height:18px;background:#211b15"></div>""")
+sp("zi_th", 318, 18, """<div style="left:0;top:0;width:318px;height:18px;background:#1a1510;border-bottom:1px solid #000"></div>""")
+sp("zi_me", 318, 18, """<div style="left:0;top:0;width:318px;height:18px;background:#4a3a22"></div>""")
+sp("zi_bar", 318, 26, """<div style="left:0;top:0;width:318px;height:26px;background:#1f1a14;border:1px solid #000;box-shadow:inset 0 0 0 1px #3a3126"></div>""")
+sp("zi_map", 88, 18, """<div style="left:0;top:0;width:88px;height:18px;background:linear-gradient(#5e503e,#43382b);border:1px solid #000;box-shadow:inset 1px 1px 0 #8a7a60,inset -1px -1px 0 #261f18"><img src="icons/World_map_icon.png" style="position:absolute;left:4px;top:2px;height:13px"></div>""")
+sp("zi_btn_info", 46, 18, """<div style="left:0;top:0;width:46px;height:18px;background:linear-gradient(#5e503e,#43382b);border:1px solid #000;box-shadow:inset 1px 1px 0 #8a7a60,inset -1px -1px 0 #261f18"><span style="position:absolute;left:3px;top:2px;width:12px;height:12px;border-radius:50%;background:radial-gradient(circle at 40% 35%,#6aa8ff,#1d4fa8 70%);box-shadow:0 0 0 1px #000,inset 0 0 0 1px #9cc6ff;color:#fff;font-family:rsb;font-size:11px;line-height:12px;text-align:center">i</span></div>""")
+# Subject icons: 16 px in the list, 32 px on the page (the mock's own pictures).
+INFO_ICONS = (
+    ("loyalty", None, "star"), ("donator", "Coins_250", ""), ("deadman", "Skull", "redsk"), ("emblem", "Archaic_emblem_(tier_1)", ""),
+    ("breach", None, "clock"), ("chest", "Deadmans_chest_(scenery)", "chest"), ("protection", "Protect_Item", ""),
+    ("skull", "Skull_(status)_icon", ""), ("brackets", "Combat_icon", ""), ("teleports", "Law_rune", ""),
+)
+for key, src, kind in INFO_ICONS:
+    for size, prefix in ((16, "zi_ic_"), (32, "zi_big_")):
+        if kind == "star":
+            inner = f"""<div class="t" style="left:0;top:{-2 if size == 16 else -6}px;width:{size}px;text-align:center;color:#ffcf4a;font-family:rss;font-size:{16 if size == 16 else 36}px;line-height:{size + 4}px">&#9733;</div>"""
+        elif kind == "clock":
+            b = 2 if size == 16 else 3
+            d = size - 4 if size == 16 else size - 6
+            inner = f"""<div style="left:2px;top:2px;width:{d}px;height:{d}px;border-radius:50%;border:{b}px solid #c9b48a;box-shadow:0 0 0 1px #000"><div style="position:absolute;left:{d // 2 - b}px;top:{1}px;width:{b}px;height:{d // 2 - 1}px;background:#c9b48a"></div><div style="position:absolute;left:{d // 2 - b}px;top:{d // 2 - b}px;width:{d // 3}px;height:{b}px;background:#c9b48a"></div></div>"""
+        else:
+            cls = ' class="redsk"' if kind == "redsk" else ""
+            flt = "filter:brightness(1.8) drop-shadow(1px 1px 0 #000);" if kind == "chest" else ("" if kind == "redsk" else "filter:drop-shadow(1px 1px 0 #000);")
+            inner = f"""<img{cls} src="icons/{src}.png" style="left:0;top:0;width:{size}px;height:{size}px;object-fit:contain;{flt}">"""
+        sp(prefix + key, size, size, inner)
 
 # ---------------------------------------------------------------- layout
 x = y = 0

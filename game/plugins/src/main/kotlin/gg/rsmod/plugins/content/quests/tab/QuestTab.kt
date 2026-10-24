@@ -7,14 +7,13 @@ import gg.rsmod.game.model.timer.NEW_PLAYER_PROTECTION_TIMER
 import gg.rsmod.game.model.timer.TimerKey
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.DP
+import gg.rsmod.game.tools.importer.N108InterfaceImportTool.I
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.LP
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.Q
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.QP
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.TP
-import gg.rsmod.game.tools.importer.QuestTabInterfaceImportTool as L
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.openInterface
-import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.content.mechanics.pvp.AreaState
 import gg.rsmod.plugins.content.mechanics.pvp.BeginnerProtection
@@ -110,7 +109,6 @@ object QuestTab {
                 Tab.DROPS -> {
                     player.setInterfaceEvents(tab.panel, LP.VIEWER_HIT, -1..-1, EVENTS_OP1)
                     player.setInterfaceEvents(tab.panel, LP.LOG_HIT, -1..-1, EVENTS_OP1)
-                    for (r in 0 until 3) player.setInterfaceEvents(tab.panel, LP.recent(r) + 4, -1..-1, EVENTS_OP1)
                     for (s in 0 until 5) player.setInterfaceEvents(tab.panel, LP.slot(s) + 1, -1..-1, EVENTS_OP1)
                 }
             }
@@ -132,6 +130,7 @@ object QuestTab {
     fun refresh(player: Player): Boolean {
         if (!isMounted(player)) return false
         val tab = selected(player)
+        if (player.interfaces.isVisible(INFO)) drawInfo(player)
         if (!player.interfaces.isVisible(tab.panel)) return true
         when (tab) {
             Tab.QUESTS -> drawQuests(player)
@@ -324,7 +323,9 @@ object QuestTab {
                 N108Ui.pos(player, p, base + 3, start + iconW + 3, y + 2)
                 N108Ui.text(player, p, base + 3, cell.value)
                 N108Ui.hidden(player, p, base + 3, false)
+                // N278: the label box is as wide as its cell (85 in a row of two), so the label is centred under its value.
                 N108Ui.pos(player, p, base + 4, cx, y + 17)
+                N108Ui.size(player, p, base + 4, w, 13)
                 N108Ui.text(player, p, base + 4, cell.label)
                 N108Ui.hidden(player, p, base + 4, false)
                 N108Ui.pos(player, p, base + 5, cx, y)
@@ -345,45 +346,72 @@ object QuestTab {
         }
         N108Ui.text(player, p, DP.EMBLEM_VALUE, if (emblemTier > 0) "Tier $emblemTier" else "<col=9a9083>None</col>")
         // Breach.
-        val b = DP.event(0)
         val active = DeadmanBreach.active
         if (active != null) {
             val left = active.openedAtCycle + DeadmanBreach.SPAWN_WINDOW_TICKS - world.currentCycle
-            N108Ui.text(player, p, b + 2, "Breach <col=ff5252>active</col>")
-            N108Ui.text(player, p, b + 3, active.sites.joinToString(", ") { it.name })
-            N108Ui.text(player, p, b + 4, if (left > 0) clock(left) else "")
+            drawEvent(player, 0, "Breach <col=ff5252>active</col>", active.sites.joinToString(", ") { it.name }, if (left > 0) clock(left) else "", map = true)
         } else {
             val seconds = Duration.between(ZonedDateTime.now(ZoneOffset.UTC), DeadmanBreach.nextOpening).seconds
-            N108Ui.text(player, p, b + 2, "Next breach")
-            N108Ui.text(player, p, b + 3, "Random location")
-            N108Ui.text(player, p, b + 4, clock((seconds * 10 / 6).toInt().coerceAtLeast(0)))
+            drawEvent(player, 0, "Next breach", "Random location", clock((seconds * 10 / 6).toInt().coerceAtLeast(0)), map = false)
         }
-        N108Ui.hidden(player, p, b + 5, active == null)
-        N108Ui.hidden(player, p, b + 6, active == null)
-        // Deadman's Chest.
-        val c = DP.event(1)
+        // Deadman's Chest: while one stands, the Map button shows where (and the world map's blue arrow, N273).
         val chest = DeadmanChestWorld.activeTimed()
-        N108Ui.text(player, p, c + 2, "Deadman's Chest")
         when {
-            DeadmanChestIds.closedLoc <= 0 -> {
-                N108Ui.text(player, p, c + 3, "Unavailable")
-                N108Ui.text(player, p, c + 4, "")
-            }
-            chest != null -> {
-                N108Ui.text(player, p, c + 3, chest.name.replaceFirstChar { it.titlecase() })
-                N108Ui.text(player, p, c + 4, "<col=56e156>Active</col>")
-            }
-            DeadmanChestWorld.ticksUntilTimed >= 0 -> {
-                N108Ui.text(player, p, c + 3, "Random spot")
-                N108Ui.text(player, p, c + 4, clock(DeadmanChestWorld.ticksUntilTimed))
-            }
-            else -> {
-                N108Ui.text(player, p, c + 3, "Unavailable")
-                N108Ui.text(player, p, c + 4, "")
-            }
+            DeadmanChestIds.closedLoc <= 0 -> drawEvent(player, 1, "Deadman's Chest", "Unavailable", "", map = false)
+            chest != null -> drawEvent(player, 1, "Deadman's Chest", chest.name.replaceFirstChar { it.titlecase() }, "", map = true)
+            DeadmanChestWorld.ticksUntilTimed >= 0 -> drawEvent(player, 1, "Deadman's Chest", "Random spot", clock(DeadmanChestWorld.ticksUntilTimed), map = false)
+            else -> drawEvent(player, 1, "Deadman's Chest", "Unavailable", "", map = false)
         }
-        N108Ui.hidden(player, p, c + 5, chest == null)
-        N108Ui.hidden(player, p, c + 6, chest == null)
+    }
+
+    /** Panel x where an event's text starts, its right edge, and the Map button's x. */
+    private const val EVENT_TEXT_X = 27
+    private const val EVENT_RIGHT = 177
+    private const val EVENT_MAP_X = 142
+
+    /**
+     * One event row (N278): the title on the first line; with a place to show, the Map button next to it and the place on the second
+     * line with the whole width (a long place reads as its short form, else is cut with "..."; the button's tooltip has it in
+     * full) and the time at its right; without one, the time at the right of the first line.
+     */
+    private fun drawEvent(player: Player, event: Int, title: String, place: String, time: String, map: Boolean) {
+        val p = Tab.DEADMAN.panel
+        val world = player.world
+        val base = DP.event(event)
+        val y = 171 + event * 29
+        N108Ui.text(player, p, base + 2, title)
+        val timeW = if (time.isEmpty()) 0 else N108Ui.p11(world, time)
+        if (map) {
+            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 54, y + 11)
+            N108Ui.pos(player, p, base + 5, EVENT_MAP_X, y)
+            N108Ui.pos(player, p, base + 6, EVENT_MAP_X, y - 1)
+        } else {
+            N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 54, y - 1)
+        }
+        val room = EVENT_RIGHT - EVENT_TEXT_X - if (map && timeW > 0) timeW + 6 else 0
+        N108Ui.size(player, p, base + 3, room, 14)
+        N108Ui.text(player, p, base + 3, placeLabel(world, place, room))
+        N108Ui.text(player, p, base + 4, time)
+        N108Ui.hidden(player, p, base + 5, !map)
+        N108Ui.hidden(player, p, base + 6, !map)
+        if (map) N108Ui.tooltips(player, listOf(N108Ui.hash(p, base + 5) to "Show on map: $place"))
+    }
+
+    private val DIRECTIONS = mapOf("north" to "N", "south" to "S", "east" to "E", "west" to "W", "north-east" to "NE", "north-west" to "NW", "south-east" to "SE", "south-west" to "SW")
+    private val DIRECTION_PLACE = Regex("(?i)^(north-east|north-west|south-east|south-west|north|south|east|west) of (the )?(.+)$")
+    private val OUTSIDE_PLACE = Regex("(?i)^outside (the )?(.+)$")
+
+    /**
+     * [place] as it fits [room] px of p11: as it is; else its short form ("East of the Rimmington mine" -> "Rimmington mine (E)",
+     * "Outside the Al Kharid bank" -> "Al Kharid bank"); else cut with "...".
+     */
+    fun placeLabel(world: gg.rsmod.game.model.World, place: String, room: Int): String {
+        if (N108Ui.p11(world, place) <= room) return place
+        val short =
+            DIRECTION_PLACE.find(place)?.let { m -> "${m.groupValues[3].replaceFirstChar { it.titlecase() }} (${DIRECTIONS.getValue(m.groupValues[1].lowercase())})" }
+                ?: OUTSIDE_PLACE.find(place)?.let { m -> m.groupValues[2].replaceFirstChar { it.titlecase() } }
+                ?: place
+        return N108Ui.fitP11(world, short, room)
     }
 
     /** A click on a points cell: where those points are spent. */
@@ -422,8 +450,8 @@ object QuestTab {
             val total = DeadmanTasks.tierTasks(tier).size
             val done = DeadmanTasks.tierDone(player, tier)
             N108Ui.text(player, p, base + 5, "$done/$total")
-            val fill = if (total == 0) 0 else 58 * done / total
-            N108Ui.pos(player, p, base + 4, fill - 58, 0)
+            val fill = if (total == 0) 0 else N108InterfaceImportTool.TIER_FILL * done / total
+            N108Ui.pos(player, p, base + 4, fill - N108InterfaceImportTool.TIER_FILL, 0)
         }
         val closest = DeadmanTasks.closest(player)
         for (k in 0 until 4) {
@@ -451,18 +479,6 @@ object QuestTab {
         val got = runCatching { CollectionLog.totalObtained(player) }.getOrDefault(0)
         N108Ui.text(player, p, LP.LOG_SUB, "Obtained <col=ffffff>$got</col> / $total")
         N108Ui.pos(player, p, LP.LOG_FILL, if (total == 0) -120 else 120 * got / total - 120, 0)
-        val recent = DropViewer.recent(player).mapNotNull { DropSources.byKey(player, it) }
-        val models = ArrayList<N108Ui.Model>()
-        for (r in 0 until 3) {
-            val base = LP.recent(r)
-            val s = recent.getOrNull(r)
-            for (c in 0 until LP.RECENT_STRIDE) N108Ui.hidden(player, p, base + c, s == null)
-            if (s == null) continue
-            N108Ui.text(player, p, base + 2, s.name)
-            N108Ui.text(player, p, base + 3, "KC ${N108Ui.number(KillCounts.get(player, s.key))}")
-            if (s.modelNpc >= 0) models += N108Ui.Model(N108Ui.hash(p, base + 1), s.modelNpc, DropViewer.thumbZoom(player, s.modelNpc), 0, false) else N108Ui.hidden(player, p, base + 1, true)
-        }
-        if (models.isNotEmpty()) N108Ui.models(player, models)
         val fresh = CollectionLog.recent(player)
         val tips = ArrayList<Pair<Int, String>>()
         for (k in 0 until 5) {
@@ -479,14 +495,11 @@ object QuestTab {
         if (tips.isNotEmpty()) N108Ui.tooltips(player, tips)
     }
 
-    fun recentClick(player: Player, row: Int) {
-        val key = DropViewer.recent(player).getOrNull(row) ?: return
-        DropViewer.open(player, key)
-    }
+    // ------------------------------------------------------------------ Deadman Info window (N274, 1175)
 
-    // ------------------------------------------------------------------ Info window (unchanged, 1175)
+    const val INFO = N108InterfaceImportTool.INFO
 
-    const val INFO = L.INFO
+    private val INFO_SUBJECT = AttributeKey<Subject>()
 
     fun subjectLabel(subject: Subject, selected: Subject): String =
         if (subject == selected) "<col=ffffff>${QuestTabInfo.title(subject)}</col>" else QuestTabInfo.title(subject)
@@ -494,16 +507,98 @@ object QuestTab {
     fun openInfo(player: Player, subject: Subject = Subject.LOYALTY) {
         if (selected(player) != Tab.DEADMAN || !player.interfaces.isVisible(Tab.DEADMAN.panel)) return
         player.openInterface(INFO, InterfaceDestination.MAIN_SCREEN)
-        player.setInterfaceEvents(INFO, L.I_CLOSE, -1..-1, EVENTS_OP1)
-        player.setComponentText(INFO, L.I_TITLE, "Deadman Info")
-        Subject.values().forEachIndexed { i, _ -> player.setInterfaceEvents(INFO, L.subjectBase(i), -1..-1, EVENTS_OP1) }
+        N108Ui.reset(player, INFO)
+        player.setInterfaceEvents(INFO, I.CLOSE, -1..-1, EVENTS_OP1)
+        player.setInterfaceEvents(INFO, I.MAP, -1..-1, EVENTS_OP1)
+        Subject.values().forEachIndexed { i, _ -> player.setInterfaceEvents(INFO, I.subject(i) + 3, -1..-1, EVENTS_OP1) }
         showSubject(player, subject)
     }
 
     fun showSubject(player: Player, subject: Subject) {
         if (!player.interfaces.isVisible(INFO)) return
-        Subject.values().forEachIndexed { i, s -> player.setComponentText(INFO, L.subjectBase(i) + 1, subjectLabel(s, subject)) }
-        player.setComponentText(INFO, L.I_TEXT, QuestTabInfo.text(subject))
+        player.attr[INFO_SUBJECT] = subject
+        drawInfo(player)
+    }
+
+    /** The open Info window: the list with the chosen subject lit, and its page (redrawn every tick: only changes are sent). */
+    fun drawInfo(player: Player) {
+        val subject = player.attr[INFO_SUBJECT] ?: Subject.LOYALTY
+        val i = INFO
+        Subject.values().forEachIndexed { k, s ->
+            N108Ui.hidden(player, i, I.subject(k), s != subject)
+            N108Ui.text(player, i, I.subject(k) + 2, subjectLabel(s, subject))
+        }
+        val page = QuestTabInfo.page(player, subject)
+        N108Ui.sprite(player, i, I.BIG, "zi_big_${N108InterfaceImportTool.INFO_ICONS[subject.ordinal]}")
+        N108Ui.text(player, i, I.NAME, subject.title)
+        N108Ui.text(player, i, I.TAG, page.tag)
+        // Fact rows (label left, value right) or the table (four columns, the player's own row lit); stripes on every other row.
+        val table = page.table
+        val rows = table?.size ?: page.facts.size
+        for (r in 0 until I.ROWS) {
+            val base = I.row(r)
+            val y = I.ROW_Y + r * I.ROW_H
+            if (r >= rows) {
+                for (c in 0 until I.ROW_STRIDE) N108Ui.hidden(player, i, base + c, true)
+                continue
+            }
+            val stripe = when {
+                table != null && r == 0 -> "zi_th"
+                table != null && r == page.highlight -> "zi_me"
+                r % 2 == 0 -> "zi_stripe"
+                else -> null
+            }
+            N108Ui.hidden(player, i, base, stripe == null)
+            if (stripe != null) N108Ui.sprite(player, i, base, stripe)
+            if (table != null) {
+                val cells = table[r]
+                val colour = when {
+                    r == 0 -> "ff981f"
+                    r == page.highlight -> "ffcf4a"
+                    else -> "ffffff"
+                }
+                for (c in 0 until 4) {
+                    val x = I.ROW_X + 6 + TABLE_COLUMNS[c]
+                    N108Ui.pos(player, i, base + 1 + c, x, y)
+                    N108Ui.size(player, i, base + 1 + c, (if (c < 3) TABLE_COLUMNS[c + 1] else I.ROW_W - 6) - TABLE_COLUMNS[c], I.ROW_H)
+                    N108Ui.text(player, i, base + 1 + c, "<col=$colour>${cells.getOrElse(c) { "" }}</col>")
+                    N108Ui.hidden(player, i, base + 1 + c, false)
+                }
+                N108Ui.hidden(player, i, base + I.R_VALUE, true)
+            } else {
+                val fact = page.facts[r]
+                N108Ui.pos(player, i, base + 1, I.ROW_X + 6, y)
+                N108Ui.size(player, i, base + 1, 200, I.ROW_H)
+                N108Ui.text(player, i, base + 1, fact.label)
+                N108Ui.hidden(player, i, base + 1, false)
+                N108Ui.hidden(player, i, base + 2, true)
+                N108Ui.hidden(player, i, base + 3, true)
+                N108Ui.hidden(player, i, base + 4, true)
+                N108Ui.text(player, i, base + I.R_VALUE, fact.value)
+                N108Ui.hidden(player, i, base + I.R_VALUE, false)
+            }
+        }
+        // The text under the rows, one empty row apart.
+        val textY = I.ROW_Y + rows * I.ROW_H + 6
+        N108Ui.pos(player, i, I.TEXT, I.TEXT_X, textY)
+        N108Ui.size(player, i, I.TEXT, I.TEXT_W, I.TEXT_BOTTOM - textY)
+        N108Ui.text(player, i, I.TEXT, page.text)
+        // The live line and its map button.
+        N108Ui.text(player, i, I.BAR_TEXT, page.bar)
+        N108Ui.size(player, i, I.BAR_TEXT, if (page.map != null) I.MAP_X - I.BAR_X - 12 else I.ROW_W - 16, 26)
+        N108Ui.hidden(player, i, I.MAP, page.map == null)
+        N108Ui.hidden(player, i, I.MAP_TEXT, page.map == null)
+    }
+
+    /** Column x (from the row's text start) of the Brackets table: Level, Combat XP, Skills XP, Drops. */
+    private val TABLE_COLUMNS = intArrayOf(0, 112, 196, 270)
+
+    /** "Show on map" in the Info window: the live place of the subject shown. */
+    fun infoMap(player: Player) {
+        if (!player.interfaces.isVisible(INFO)) return
+        val subject = player.attr[INFO_SUBJECT] ?: return
+        val tile = QuestTabInfo.page(player, subject).map ?: return
+        WorldMapPoint.open(player, tile)
     }
 
     @Suppress("unused")

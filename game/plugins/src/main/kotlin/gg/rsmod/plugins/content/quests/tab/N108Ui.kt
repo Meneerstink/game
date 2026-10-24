@@ -144,6 +144,28 @@ object N108Ui {
         sendBatched(player, "npc|", models.map { "${it.hash},${it.npc},${it.zoom},${it.xan},${if (it.spin) 1 else 0}" })
     }
 
+    /** N277: a plain model (a loc's own, [locModel]) on a model component, fitted and turning like the npc models. */
+    fun plainModel(player: Player, hash: Int, model: Int, zoom: Int, xan: Int, spin: Boolean) = send(player, "mdl|$hash,$model,$zoom,$xan,${if (spin) 1 else 0}")
+
+    private val LOC_MODELS = java.util.concurrent.ConcurrentHashMap<Int, Int>()
+
+    /**
+     * The first model of loc [id] (667 loc config: index 16, group id >> 8, file id & 0xFF; opcode 1 or 5 = per shape a model list),
+     * -1 when its config does not start with one. The server's ObjectDef keeps no models, so this reads the config itself.
+     */
+    fun locModel(world: World, id: Int): Int =
+        LOC_MODELS.getOrPut(id) {
+            runCatching {
+                val data = world.filestore.data(16, id ushr 8, id and 0xFF) ?: return@runCatching -1
+                val op = data[0].toInt() and 0xFF
+                if ((op == 1 || op == 5) && (data[1].toInt() and 0xFF) > 0 && (data[3].toInt() and 0xFF) > 0) {
+                    ((data[4].toInt() and 0xFF) shl 8) or (data[5].toInt() and 0xFF)
+                } else {
+                    -1
+                }
+            }.getOrDefault(-1)
+        }
+
     private val FONT_IDS = java.util.concurrent.ConcurrentHashMap<String, Int>()
 
     fun fontId(world: World, font: String): Int =
