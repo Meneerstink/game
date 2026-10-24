@@ -62,7 +62,8 @@ object NpcOptionsTool {
                 40, 41 -> skip(u8() * 4)
                 42 -> skip(u8())
                 60, 160 -> skip(u8() * 2)
-                93, 99, 107, 158, 159, 162 -> {}
+                // 109 crawl off, 111 no shadow, 141 follower, 143 flag (667 client NPCType.decode): no payload. N332: the pets carry 141.
+                93, 99, 107, 109, 111, 141, 143, 158, 159, 162 -> {}
                 95, 103 -> skip(2)
                 97, 98, 102, 122, 123, 137, 138, 139, 142, 127 -> skip(2)
                 100, 101, 125, 128, 140, 163, 165, 168, 119 -> skip(1)
