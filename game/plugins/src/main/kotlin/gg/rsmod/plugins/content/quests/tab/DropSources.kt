@@ -88,12 +88,22 @@ object DropSources {
     @Volatile private var built: List<Source>? = null
 
     /** Every entry; built once from the registered tables ([player] only builds the tables, see [DropTableFactory.tables]). */
-    fun all(player: Player): List<Source> = built ?: build(player).also { built = it }
+    fun all(player: Player): List<Source> =
+        built ?: synchronized(this) {
+            built ?: run {
+                val start = System.nanoTime()
+                build(player).also {
+                    built = it
+                    gg.rsmod.game.Server.logger.info("Drop Viewer: {} entries built in {} ms.", it.size, (System.nanoTime() - start) / 1_000_000)
+                }
+            }
+        }
 
     /** Test hook: rebuilds from the registered tables. */
     fun reset() {
         built = null
         viewCache.clear()
+        indexes.clear()
     }
 
     fun byKey(player: Player, key: String?): Source? = key?.let { k -> all(player).firstOrNull { it.key == k } }
@@ -115,11 +125,23 @@ object DropSources {
             if (name.isBlank()) continue
             byName.getOrPut("${name.lowercase()}|${npcLevel(world, id)}") { ArrayList() } += id
         }
-        for ((_, ids) in byName) {
+        // Every npc id with the same name and level counts for the entry's kill count, also a copy without a table of its own
+        // (the farm's chickens are several ids).
+        val sameName = HashMap<String, MutableList<Int>>()
+        val count = runCatching { world.definitions.getCount(NpcDef::class.java) }.getOrDefault(0)
+        for (id in 0 until count) {
+            if (id in breachIds || id == guardian) continue
+            val name = npcName(world, id)
+            if (name.isBlank()) continue
+            val key = "${name.lowercase()}|${npcLevel(world, id)}"
+            if (key in byName) sameName.getOrPut(key) { ArrayList() } += id
+        }
+        for ((key, ids) in byName) {
             val table = ids.maxByOrNull { id -> DropTableFactory.tables(player, id)?.sumOf { it.entries.size } ?: 0 } ?: continue
             val name = npcName(world, table)
             val boss = name.lowercase() in BOSS_NAMES
-            out += Source("npc:$table", name, table, ids.toIntArray(), npcLevel(world, table), if (boss) Group.BOSSES else Group.MONSTERS, Kind.NPC, table)
+            val all = (ids + sameName[key].orEmpty()).distinct().sorted().toIntArray()
+            out += Source("npc:$table", name, table, all, npcLevel(world, table), if (boss) Group.BOSSES else Group.MONSTERS, Kind.NPC, table)
         }
         // TzTok-Jad: no table, the Fire cape comes from the Fight Caves.
         world.definitions.getNullable(NpcDef::class.java, Jad.ID)?.let {
@@ -430,6 +452,63 @@ object DropSources {
     }
 
     // ------------------------------------------------------------------ search
+
+    /** Per item: every entry that can give it, with the chance per kill (your, normal), at one drop rate. */
+    class ItemIndex(val names: Map<Int, String>, val sources: Map<Int, List<Triple<Source, Double, Double>>>)
+
+    private val indexes = java.util.concurrent.ConcurrentHashMap<Double, ItemIndex>()
+
+    @Volatile private var warming = false
+
+    /**
+     * Builds the item index of every bracket rate on the game thread, a few dozen entries per tick (first login after a start), so
+     * no player's first search waits ~1 s in one tick. A search before it is done builds what it needs itself.
+     */
+    fun warmUp(player: Player) {
+        if (warming || indexes.size >= RATES.size) return
+        warming = true
+        player.world.queue {
+            val sources = all(player)
+            for (rate in RATES) {
+                if (indexes.containsKey(rate)) continue
+                val names = HashMap<Int, String>()
+                val bySource = HashMap<Int, MutableList<Triple<Source, Double, Double>>>()
+                sources.forEachIndexed { i, s ->
+                    for ((item, c) in itemChances(view(player, s, rate))) {
+                        names.getOrPut(item) { itemName(player.world, item) }
+                        bySource.getOrPut(item) { ArrayList() } += Triple(s, c.first, c.second)
+                    }
+                    if (i % WARM_UP_PER_TICK == WARM_UP_PER_TICK - 1) wait(1)
+                }
+                indexes.putIfAbsent(rate, ItemIndex(names, bySource))
+            }
+        }
+    }
+
+    private const val WARM_UP_PER_TICK = 40
+
+    private val RATES: List<Double> by lazy { gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationTier.values().map { it.dropRate }.distinct() }
+
+    /** Built once per drop rate (the first search at that rate), then a search is a lookup. */
+    fun itemIndex(player: Player, rate: Double = DropTableFactory.killRate(player)): ItemIndex =
+        indexes[rate] ?: synchronized(indexes) {
+            indexes[rate] ?: run {
+                val start = System.nanoTime()
+                val names = HashMap<Int, String>()
+                val bySource = HashMap<Int, MutableList<Triple<Source, Double, Double>>>()
+                for (s in all(player)) {
+                    for ((item, c) in itemChances(view(player, s, rate))) {
+                        names.getOrPut(item) { itemName(player.world, item) }
+                        bySource.getOrPut(item) { ArrayList() } += Triple(s, c.first, c.second)
+                    }
+                }
+                ItemIndex(names, bySource).also {
+                    indexes[rate] = it
+                    gg.rsmod.game.Server.logger.info("Drop Viewer: item index at {}x ({} items) built in {} ms.", rate, names.size, (System.nanoTime() - start) / 1_000_000)
+                }
+            }
+        }
+
 
     /** Every item of a view with its chance per kill (folded tables included, the same item added up). */
     fun itemChances(view: View): Map<Int, Pair<Double, Double>> {

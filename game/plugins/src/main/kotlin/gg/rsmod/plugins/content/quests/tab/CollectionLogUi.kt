@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool
 import gg.rsmod.game.tools.importer.N108InterfaceImportTool.C
 import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
@@ -32,6 +33,11 @@ object CollectionLogUi {
         player.setInterfaceEvents(INTERFACE, C.CLOSE, -1..-1, EVENTS_OP1)
         for (c in 0 until C.CATS) player.setInterfaceEvents(INTERFACE, C.cat(c) + 4, -1..-1, EVENTS_OP1)
         for (e in 0 until C.ENTRIES) player.setInterfaceEvents(INTERFACE, C.entry(e) + 2, -1..-1, EVENTS_OP1)
+        // The items: "Inspect" (and with it the tooltip of the hovered item).
+        for (s in 0 until C.SLOTS) {
+            player.setInterfaceEvents(INTERFACE, C.slot(s), -1..-1, EVENTS_OP1)
+            player.setInterfaceEvents(INTERFACE, C.slot(s) + 1, -1..-1, EVENTS_OP1)
+        }
         player.attr[CATEGORY] = page?.category?.ordinal ?: 0
         player.attr[PAGE] = page?.key ?: ""
         draw(player)
@@ -48,6 +54,21 @@ object CollectionLogUi {
         val key = player.attr[SHOWN]?.getOrNull(index) ?: return
         player.attr[PAGE] = key
         draw(player)
+    }
+
+    /** "Inspect" on an item: what it is and how many the player has collected. */
+    fun inspect(player: Player, slot: Int) {
+        val page = CollectionLogPages.byKey(player, player.attr[PAGE]) ?: return
+        val item = page.items.getOrNull(slot) ?: return
+        val entry = CollectionLog.entries(player)[item]
+        val name = DropSources.itemName(player.world, item)
+        player.message(
+            if (entry == null) {
+                "$name: not in your collection log yet."
+            } else {
+                "$name: obtained ${N108Ui.number(entry.count)}" + if (entry.kc > 0) ", the first at kill count ${N108Ui.number(entry.kc)}." else "."
+            },
+        )
     }
 
     private fun colourOf(have: Int, of: Int) = when {

@@ -539,6 +539,9 @@ object QuestTabInterfaceImportTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        // 2026-10-24: interfaces 1171-1174 and 1176 are N108InterfaceImportTool's now (the four-tab quest tab, the new Drop
+        // Viewer); a run of this tool would put the old layout back. Only the Info window (1175) and the patches stay here.
+        require("--legacy-layout" in args) { "superseded by N108InterfaceImportTool (2026-10-24); pass --legacy-layout only to restore the old quest tab" }
         val apply = "--apply" in args
         val index = DeathsOfficeInterfaceImportTool.INDEX_INTERFACES
         val sprites = DeathsOfficeInterfaceImportTool.INDEX_SPRITES

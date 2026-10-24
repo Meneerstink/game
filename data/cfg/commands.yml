@@ -953,6 +953,26 @@
   usage: "::donatorstore"
   description: "Open the Donator store."
   example: "::donatorstore"
+- name: collectionlog
+  rank: player
+  usage: "::collectionlog"
+  description: "Open your Collection Log."
+  example: "::collectionlog"
+- name: deadmantasks
+  rank: player
+  usage: "::deadmantasks"
+  description: "Open the Deadman Tasks window."
+  example: "::deadmantasks"
+- name: dvzoom
+  rank: admin
+  usage: "::dvzoom <thumb base> <thumb per tile> <head base> <head per tile>"
+  description: "Tune the camera distance of the Drop Viewer's npc models (the client fits them to their box)."
+  example: "::dvzoom 1500 1100 1500 1100"
+- name: uisearch
+  rank: player
+  usage: "::uisearch <text>"
+  description: "Internal: what is typed in the Drop Viewer's search field (sent by the client, never typed by hand)."
+  example: "::uisearch dragon pickaxe"
 - name: drops
   rank: player
   usage: "::drops"
@@ -1263,3 +1283,23 @@
   usage: "::vote"
   description: "Show the toplists to vote on: 1,000,000 coins per site every 12 hours, straight into your bank."
   example: "::vote"
+- name: bots
+  rank: moderator
+  usage: "::bots on|off|status"
+  description: "PK bots master switch (off = every bot disappears at once). Moderators: on/off/status. Admins also: max, loot, colour, gap, botfights, ignorestaff, idle, pvpzone, world, skillerlevel, xp. Always OFF after a restart."
+  example: "::bots on"
+- name: bot
+  rank: moderator
+  usage: "::bot spawn [1-5] | list | despawn <name|all> | tpto <name>"
+  description: "PK bots. Moderators: spawn a bot that fights you (difficulty 1-5, stand on a PvP tile), list, despawn, teleport to a bot. Admins also: arena, roam, do/profile/order (bots everywhere), gearme, curses, log."
+  example: "::bot spawn 3"
+- name: botduel
+  rank: moderator
+  usage: "::botduel [1-5] | stop"
+  description: "Level-matched practice fight against a PK bot; nobody loses items and it never gives XP or PK points."
+  example: "::botduel 3"
+- name: petheads
+  rank: admin
+  usage: "::petheads [from] [count] [ticks] | ::petheads npc <id> ..."
+  description: "Test tool (A4): shows every pet variant in turn as follower and in a chat dialogue, so the chat heads can be checked in the client."
+  example: "::petheads 0 20 4"

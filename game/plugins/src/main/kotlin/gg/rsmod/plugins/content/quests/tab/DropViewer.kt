@@ -111,26 +111,17 @@ object DropViewer {
                 out += Slot(true, "Q:MONSTERS", "Monsters", null, null, true, true, -1)
                 npcs.take(40).forEach { out += entry(it) }
             }
-            // Items: every item a source can give whose name holds the text (one row per item).
-            val items = LinkedHashMap<Int, String>()
-            for (s in sources) {
-                for (item in DropSources.itemChances(DropSources.view(player, s)).keys) {
-                    if (item in items) continue
-                    val name = DropSources.itemName(world, item)
-                    if (name.lowercase().contains(query)) items[item] = name
-                }
-            }
+            // Items: every item a source can give whose name holds the text (one row per item), from the item index.
+            val index = DropSources.itemIndex(player)
+            val items = index.names.filter { it.value.lowercase().contains(query) }
             if (items.isNotEmpty()) {
                 val sorted = items.entries.sortedWith(compareBy({ !it.value.lowercase().startsWith(query) }, { it.value.lowercase() })).take(30)
                 val picked = player.attr[PICKED_ITEM]?.takeIf { it in items } ?: sorted.first().key
                 player.attr[PICKED_ITEM] = picked
                 out += Slot(true, "Q:ITEM", "Item", null, null, true, true, -1)
-                sorted.forEach { (id, name) -> out += Slot(false, "item:$id", name, null, null, false, false, -1, item = id, selected = id == picked) }
+                sorted.forEach { (id, name) -> out += Slot(false, "item:$id", name, null, null, false, false, -1, item = DropSources.picture(world, id), selected = id == picked) }
                 out += Slot(true, "Q:BY", "Dropped by", null, null, true, false, -1)
-                val by = sources.mapNotNull { s ->
-                    val c = DropSources.itemChances(DropSources.view(player, s))[picked] ?: return@mapNotNull null
-                    Triple(s, c.first, c.second)
-                }.sortedByDescending { it.second }
+                val by = index.sources[picked].orEmpty().sortedByDescending { it.second }
                 by.take(60).forEach { (s, your, _) ->
                     val prefix = if (s.kind == DropSources.Kind.BREACH) "<col=ff5a3c>Breach</col><col=9a9083> · </col>" else "<col=9a9083>Your chance </col>"
                     out += Slot(false, s.key, s.name, prefix + "<col=${N108Ui.rarityColour(your)}>${N108Ui.chance(your)}</col>", null, false, false, s.modelNpc, selected = s.key == selected)
@@ -512,7 +503,10 @@ object DropViewer {
         if (q == (player.attr[QUERY] ?: "")) return
         player.attr[QUERY] = q
         player.attr.remove(PICKED_ITEM)
+        val start = System.nanoTime()
         drawList(player)
+        val ms = (System.nanoTime() - start) / 1_000_000
+        if (ms > 50) gg.rsmod.game.Server.logger.info("Drop Viewer search '{}' took {} ms.", q, ms)
         DropSources.byKey(player, player.attr[SELECTED])?.let { drawRows(player, it) }
     }
 

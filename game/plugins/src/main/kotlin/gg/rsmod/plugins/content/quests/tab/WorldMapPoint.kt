@@ -7,15 +7,16 @@ import gg.rsmod.plugins.api.ext.setVarc
 
 /**
  * "Show on map" (Drop Viewer, the Deadman panel's breach and chest): the world map opened on [tile], the way the gameframe's map
- * button opens it on the player (world_map.plugin.kts: varcs 622 / 674 = the packed tile the map centres on).
+ * button opens it on the player (world_map.plugin.kts: varc 622 = the packed tile the map centres on, 674 = the player's own marker).
  */
 object WorldMapPoint {
     const val WORLD_MAP = 755
 
     fun open(player: Player, tile: Tile) {
         player.openFullscreenInterface(interfaceId = WORLD_MAP)
-        val packed = (tile.z and 0x3fff) + ((tile.x and 0x3fff) shl 14) + ((tile.height and 0x3) shl 28)
-        player.setVarc(622, packed)
-        player.setVarc(674, packed)
+        fun pack(t: Tile) = (t.z and 0x3fff) + ((t.x and 0x3fff) shl 14) + ((t.height and 0x3) shl 28)
+        // 622 = where the map looks, 674 = the "You are here" marker: that one stays on the player.
+        player.setVarc(622, pack(tile))
+        player.setVarc(674, pack(player.tile))
     }
 }

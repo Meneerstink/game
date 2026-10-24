@@ -123,6 +123,10 @@ for (c in 0 until N.C.CATS) {
 for (e in 0 until N.C.ENTRIES) {
     on_button(interfaceId = CollectionLogUi.INTERFACE, component = N.C.entry(e) + 2) { CollectionLogUi.entry(player, e) }
 }
+for (s in 0 until N.C.SLOTS) {
+    on_button(interfaceId = CollectionLogUi.INTERFACE, component = N.C.slot(s)) { CollectionLogUi.inspect(player, s) }
+    on_button(interfaceId = CollectionLogUi.INTERFACE, component = N.C.slot(s) + 1) { CollectionLogUi.inspect(player, s) }
+}
 
 // ---- live refresh and the tasks' own counters
 on_timer(QuestTab.REFRESH_TIMER) {
@@ -133,6 +137,7 @@ val TASK_MINUTE = TimerKey()
 
 on_login {
     player.timers[TASK_MINUTE] = 100
+    DropSources.warmUp(player)
     // Level and emblem tasks that are already reached complete at once.
     runCatching { DeadmanTasks.check(player) }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks login", it) }
 }

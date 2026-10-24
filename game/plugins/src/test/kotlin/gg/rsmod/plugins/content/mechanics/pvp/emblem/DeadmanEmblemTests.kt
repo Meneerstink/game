@@ -390,6 +390,11 @@ class DeadmanEmblemTests {
         every { player.bank } returns ItemContainer(DEFINITIONS, BANK_KEY)
         every { player.deathRecovery } returns ItemContainer(DEFINITIONS, DEATH_RECOVERY_KEY)
         every { player.gravestone } returns ItemContainer(DEFINITIONS, GRAVESTONE_KEY)
+        // N104: a valid kill also counts for the Deadman Tasks, which pay Deadman Points of their own; these tests measure the kill
+        // and emblem rewards alone, so every task (and tier bonus) of the test accounts is already done.
+        val tasks = gg.rsmod.plugins.content.quests.tab.DeadmanTasks
+        player.attr[tasks.DONE] = tasks.TASKS.joinToString(";") { it.id }
+        player.attr[tasks.BONUSES] = gg.rsmod.plugins.content.quests.tab.DeadmanTasks.Tier.values().joinToString(";") { it.name }
         return player
     }
 
