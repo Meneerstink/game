@@ -54,6 +54,28 @@ object ShopPageGroups {
 
     fun groupOf(shop: String): Group? = byShop[shop]
 
+    /**
+     * K01 deel 4 (N382): a shop built per player whose pages are built per player too (Perdu's Lost Property). [label] is the
+     * page row text for [player] (null = one page, row hidden); [turn] shows the page [delta] away.
+     */
+    interface DynamicPages {
+        fun label(player: Player): String?
+
+        fun turn(
+            player: Player,
+            delta: Int,
+        )
+    }
+
+    private val dynamic = ConcurrentHashMap<String, DynamicPages>()
+
+    fun registerDynamic(
+        shop: String,
+        pages: DynamicPages,
+    ) {
+        dynamic[shop] = pages
+    }
+
     private const val OP1 = 0x2
 
     @Volatile
@@ -110,6 +132,10 @@ object ShopPageGroups {
         delta: Int,
     ) {
         val shop = player.attr[CURRENT_SHOP_ATTR]
+        shop?.let { dynamic[it.name] }?.let {
+            it.turn(player, delta)
+            return
+        }
         val group = shop?.let { groupOf(it.name) }
         if (shop == null || group == null) {
             Trace.problem(Trace.Cat.INTERFACE) { "${player.username} clicked shop page ${if (delta < 0) "Prev" else "Next"} while the open shop '${shop?.name}' is not in a page group" }
@@ -129,6 +155,15 @@ object ShopPageGroups {
         val group = groupOf(shop.name)
         // IF_SETHIDE / IF_SETTEXT on a component the cache does not have is never sent (the 667 client dereferences it).
         if (!navAvailable(player.world)) return
+        dynamic[shop.name]?.let { pages ->
+            val label = pages.label(player)
+            player.setComponentHidden(Ui.INTERFACE_ID, Ui.NAV, label == null)
+            if (label == null) return
+            player.setInterfaceEvents(Ui.INTERFACE_ID, Ui.PAGE_PREVIOUS, -1..-1, OP1)
+            player.setInterfaceEvents(Ui.INTERFACE_ID, Ui.PAGE_NEXT, -1..-1, OP1)
+            player.setComponentText(Ui.INTERFACE_ID, Ui.PAGE_TEXT, label)
+            return
+        }
         player.setComponentHidden(Ui.INTERFACE_ID, Ui.NAV, group == null)
         if (group == null) return
         player.setInterfaceEvents(Ui.INTERFACE_ID, Ui.PAGE_PREVIOUS, -1..-1, OP1)

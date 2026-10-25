@@ -70,25 +70,22 @@ fun openCharacterCustomizing(player: Player) {
 }
 
 /**
- * Opens a shop interface for the player.
- *
- * @param shop The name of the shop to open.
- * @param points If true, the shop is a points shop and will not display item prices.
+ * Opens [currentShop] in the shop window. K01 deel 4 (N382): a shop built for one player (Perdu's Lost Property, the player's own
+ * lost items) is opened directly; [openShop] by name looks a world shop up and comes here.
  */
 fun Player.openShop(
-    shop: String,
+    currentShop: gg.rsmod.game.model.shop.Shop,
     points: Boolean = false,
 ) {
     if (gg.rsmod.plugins.content.mechanics.practicepvp.PracticePvp.isHoldingTempGear(this)) {
         message("You can't access shops while in a Practice PvP match.")
         return
     }
-    val currentShop = world.getShop(shop)
     val shopInterface = 620
     val mainStockComponent = 25
     val freeStockComponent = 26
 
-    if (currentShop != null) {
+    run {
         // A shop opened over an open shop (a page turn of ShopPageGroups, a second Trade): close the old window first, with the old
         // shop still current so its close handler runs for it. Re-sending IF_OPENSUB for the same interface would keep the client's
         // old 620 state (InterfaceManager.closeSubInterface discards only when the id changes: shown sample headings, the samples
@@ -160,10 +157,26 @@ fun Player.openShop(
         setComponentHidden(interfaceId = shopInterface, component = 19, hidden = !acceptsPlayerItems)
         // Prev page / Page n / m / Next page row: shown only for a shop that is a page of a ShopPageGroups group.
         gg.rsmod.plugins.content.mechanics.shops.ShopPageGroups.render(this, currentShop)
-    } else {
+    }
+}
+
+/**
+ * Opens a shop interface for the player.
+ *
+ * @param shop The name of the shop to open.
+ * @param points If true, the shop is a points shop and will not display item prices.
+ */
+fun Player.openShop(
+    shop: String,
+    points: Boolean = false,
+) {
+    val found = world.getShop(shop)
+    if (found == null) {
         // Log a warning message if the shop does not exist
         World.logger.warn { "Player \"$username\" is unable to open shop \"$shop\" as it does not exist." }
+        return
     }
+    openShop(found, points)
 }
 
 fun Player.transformObject(

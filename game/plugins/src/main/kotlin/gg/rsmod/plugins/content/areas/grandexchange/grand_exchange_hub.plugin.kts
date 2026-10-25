@@ -47,13 +47,23 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
             return@queue
         }
         if (hasBroken) BrokenItemRepair.repair(this)
-        if (hasLost) gg.rsmod.plugins.content.mechanics.death.PerduReclaim.trade(this)
+        if (!hasLost) return@queue
+        // N414: lost pets come back free, in the dialogue; N382: everything with a price is in his Lost Property window.
+        gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this)
+        if (gg.rsmod.plugins.content.mechanics.death.PerduReclaim.paidOffers(player).isNotEmpty()) {
+            chatNpc("I've also got some of your things. Have a look.", wrap = true)
+            gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player)
+        }
     }
 }
 
-// OSRS "Lost Property" (Perdu's Trade): untradeables a deep-Wilderness death destroyed, handed back for their repair price.
+// N382 (owner 2026-10-24): Perdu's Trade is the OSRS Lost Property shop window - the player's own lost items at their price.
 on_npc_option(npc = Npcs.PERDU, option = "trade") {
-    player.queue { gg.rsmod.plugins.content.mechanics.death.PerduReclaim.trade(this) }
+    if (gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player)) return@on_npc_option
+    player.queue {
+        // Nothing with a price: the free pets, else why there is nothing.
+        if (!gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this)) gg.rsmod.plugins.content.mechanics.death.PerduReclaim.nothingToReturn(this)
+    }
 }
 
 // Perdu's Trouver unlock and her use-item repair are registered in mechanics/trouver/trouver.plugin.kts, after the registry is filled.
