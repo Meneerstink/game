@@ -136,7 +136,37 @@ class PerduLostPropertyTests {
         }
     }
 
-    private fun newPlayer(): Player {        val player = mockk<Player>(relaxed = true)
+    @Test
+    fun `N382 buying a lost item pays the carried coins first, then the bank, and the row is gone`() {
+        val player = newPlayer()
+        PerduReclaim.record(player, Item(Items.GLOVES_7462), 3_000)
+        player.inventory.add(Items.COINS_995, 1_000)
+        player.bank.add(Items.COINS_995, 5_000)
+        val offer = PerduReclaim.paidOffers(player).single { it.itemId == Items.GLOVES_7462 }
+        assertEquals(null, PerduReclaim.claim(player, offer))
+        assertEquals(0, player.inventory.getItemCount(Items.COINS_995))
+        assertEquals(3_000, player.bank.getItemCount(Items.COINS_995))
+        assertEquals(1, player.inventory.getItemCount(Items.GLOVES_7462))
+        assertTrue(PerduReclaim.paidOffers(player).none { it.itemId == Items.GLOVES_7462 }, "bought: no longer listed")
+        assertEquals("I don't have that any more.", PerduReclaim.claim(player, offer), "a second click buys nothing")
+    }
+
+    @Test
+    fun `N382 not enough coins or no space buys nothing and keeps the row`() {
+        val player = newPlayer()
+        PerduReclaim.record(player, Item(Items.GLOVES_7462), 3_000)
+        player.bank.add(Items.COINS_995, 2_999)
+        val offer = PerduReclaim.paidOffers(player).single()
+        assertEquals("That will be 3,000 coins, which you don't have.", PerduReclaim.claim(player, offer))
+        assertEquals(2_999, player.bank.getItemCount(Items.COINS_995))
+        player.bank.add(Items.COINS_995, 1)
+        repeat(28) { player.inventory.add(Items.LOBSTER, 1) }
+        assertEquals("You'll need a free inventory space for that.", PerduReclaim.claim(player, offer))
+        assertEquals(3_000, player.bank.getItemCount(Items.COINS_995), "nothing paid")
+        assertEquals(1, PerduReclaim.paidOffers(player).size)
+    }
+    private fun newPlayer(): Player {
+        val player = mockk<Player>(relaxed = true)
         every { player.attr } returns AttributeMap()
         every { player.inventory } returns ItemContainer(DEFINITIONS, INVENTORY_KEY)
         every { player.equipment } returns ItemContainer(DEFINITIONS, EQUIPMENT_KEY)
