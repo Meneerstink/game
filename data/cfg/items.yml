@@ -290287,3 +290287,171 @@
   tradeable: false
   weight: 1.814
   equipment: null
+- id: 24204
+  name: "Fire cape (l) (broken)"
+  examine: "A broken cape of fire."
+  tradeable: false
+  weight: 1.814
+  equipment: null
+- id: 24205
+  name: "Fire cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 1.814
+  equipment: null
+- id: 24206
+  name: "Ava's assembler (l) (broken)"
+  examine: "A broken Ava's Assembler."
+  tradeable: false
+  weight: 5.896
+  equipment: null
+- id: 24207
+  name: "Ava's assembler (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 5.896
+  equipment: null
+- id: 24208
+  name: "Imbued Saradomin cape (l) (broken)"
+  examine: "A broken cape from the almighty god Saradomin, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24209
+  name: "Imbued Saradomin cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24210
+  name: "Imbued Guthix cape (l) (broken)"
+  examine: "A broken cape from the almighty god Guthix, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24211
+  name: "Imbued Guthix cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24212
+  name: "Imbued Zamorak cape (l) (broken)"
+  examine: "A broken cape from the almighty god Zamorak, imbued with great power."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24213
+  name: "Imbued Zamorak cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24214
+  name: "Imbued Saradomin max cape (l) (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24215
+  name: "Imbued Saradomin max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24216
+  name: "Imbued Guthix max cape (l) (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24217
+  name: "Imbued Guthix max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24218
+  name: "Imbued Zamorak max cape (l) (broken)"
+  examine: "The cape worn by only the most experienced players. This one is broken."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24219
+  name: "Imbued Zamorak max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24220
+  name: "Assembler max cape (l) (broken)"
+  examine: "A broken Assembler Max Cape."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24221
+  name: "Assembler max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24222
+  name: "Masori assembler (l) (broken)"
+  examine: "A broken Masori Assembler."
+  tradeable: false
+  weight: 5.896
+  equipment: null
+- id: 24223
+  name: "Masori assembler (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 5.896
+  equipment: null
+- id: 24224
+  name: "Masori assembler max cape (l) (broken)"
+  examine: "A broken Masori Assembler Max Cape."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24225
+  name: "Masori assembler max cape (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24226
+  name: "Dizana's quiver (l) (broken)"
+  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24227
+  name: "Dizana's quiver (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24228
+  name: "Dizana's quiver (l) (uncharged) (broken)"
+  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24229
+  name: "Dizana's quiver (l) (uncharged) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24230
+  name: "Blessed Dizana's quiver (l) (broken)"
+  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum. Blessed by Ralos."
+  tradeable: false
+  weight: 0.453
+  equipment: null
+- id: 24231
+  name: "Blessed Dizana's quiver (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.453
+  equipment: null

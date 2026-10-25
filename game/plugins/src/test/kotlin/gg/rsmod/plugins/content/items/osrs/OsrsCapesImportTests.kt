@@ -48,8 +48,9 @@ class OsrsCapesImportTests {
             Items.DIZANAS_MAX_CAPE to Items.DIZANAS_MAX_CAPE_BROKEN,
         ).forEach { (item, broken) -> assertEquals(broken, PvpDeathBreakables.breakableFor(item)?.brokenId, "$item breaks on a PvP death") }
         val trouver = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/trouver/TrouverLockables.kt").readText()
-        listOf("IMBUED_ZAMORAK_CAPE_L", "IMBUED_GUTHIX_MAX_CAPE_L", "ASSEMBLER_MAX_CAPE_L", "MASORI_ASSEMBLER_L", "MASORI_ASSEMBLER_MAX_CAPE_L", "DIZANAS_MAX_CAPE_L")
-            .forEach { assertTrue("lockedItemId = Items.$it" in trouver, it) }
+        // N416: the lock list names every pair through locked(...) or TrouverLockable(...) - check the registered pairs themselves.
+        listOf(Items.IMBUED_ZAMORAK_CAPE_L, Items.IMBUED_GUTHIX_MAX_CAPE_L, Items.ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_L, Items.MASORI_ASSEMBLER_MAX_CAPE_L, Items.DIZANAS_MAX_CAPE_L)
+            .forEach { id -> assertTrue(gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.ALL.any { it.lockedItemId == id }, "$id") }
         assertTrue("brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN" in trouver)
     }
 }

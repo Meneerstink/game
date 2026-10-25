@@ -87,9 +87,9 @@ object PerduLostProperty {
             Entry(Items.AVAS_ATTRACTOR, 7_000, multiple = true),
             Entry(Items.AVAS_ACCUMULATOR, 7_000, multiple = true),
             Entry(Items.AVAS_ASSEMBLER, 7_000, multiple = true, consumes = Items.VORKATHS_HEAD),
-            Entry(Items.IMBUED_GUTHIX_CAPE, 250_000, variants = setOf(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, Items.IMBUED_GUTHIX_CAPE_L)),
-            Entry(Items.IMBUED_ZAMORAK_CAPE, 250_000, variants = setOf(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, Items.IMBUED_ZAMORAK_CAPE_L)),
-            Entry(Items.IMBUED_SARADOMIN_CAPE, 250_000, variants = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L)),
+            Entry(Items.IMBUED_GUTHIX_CAPE, 250_000, variants = setOf(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_BROKEN, Items.IMBUED_GUTHIX_CAPE_L, Items.IMBUED_GUTHIX_CAPE_L_BROKEN, Items.IMBUED_GUTHIX_CAPE_L_MANGLED)),
+            Entry(Items.IMBUED_ZAMORAK_CAPE, 250_000, variants = setOf(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_BROKEN, Items.IMBUED_ZAMORAK_CAPE_L, Items.IMBUED_ZAMORAK_CAPE_L_BROKEN, Items.IMBUED_ZAMORAK_CAPE_L_MANGLED)),
+            Entry(Items.IMBUED_SARADOMIN_CAPE, 250_000, variants = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L, Items.IMBUED_SARADOMIN_CAPE_L_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L_MANGLED)),
             Entry(Items.DRAKANS_MEDALLION, 30_000, multiple = true),
             Entry(Items.THREAD_OF_ELIDINIS, 350_000),
         ) + DIARY_ITEMS.map { Entry(it, DIARY_PRICE, multiple = true) }

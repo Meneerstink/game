@@ -7,16 +7,18 @@ import gg.rsmod.plugins.api.cfg.Items
  * death-item audit all see the exact list the live server registers). [registerAll] is idempotent.
  */
 object TrouverLockables {
-    /** Every lockable pair (base, locked and the imported broken/mangled ids). */
+    /**
+     * Every lockable pair (base, locked and the broken/mangled ids). N416 (2026-10-25): every locked item but the rune pouches has its own
+     * visible "(l) (broken)" / "(l) (mangled)" item (cache tx-20261025-004727) - before, the older ones broke as a hidden mark.
+     */
     val ALL: List<TrouverLockable> =
         listOf(
-            TrouverLockable(baseItemId = Items.FIRE_CAPE, lockedItemId = Items.FIRE_CAPE_LOCKED_22324),
+            locked(Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324, Items.FIRE_CAPE_L_BROKEN, Items.FIRE_CAPE_L_MANGLED),
             // OSRS-IMPORT capesrings: Infernal cape page - a Trouver parchment plus 500,000 coins locks the cape into Infernal cape (l).
-            // Its "mangled"/"(l) (broken)" variants are not imported yet, so the engine's documented keep-whole fallback applies.
             // K01 2026-10-25: the OSRS "Infernal cape (l) (broken)/(mangled)" forms instead of the hidden broken mark.
             TrouverLockable(baseItemId = Items.INFERNAL_CAPE, lockedItemId = Items.INFERNAL_CAPE_L, brokenItemId = Items.INFERNAL_CAPE_L_BROKEN, mangledItemId = Items.INFERNAL_CAPE_L_MANGLED),
             // OSRS-IMPORT assembler: the Ava's assembler infobox lists "Ava's assembler (l)" (24222) as its locked variant.
-            TrouverLockable(baseItemId = Items.AVAS_ASSEMBLER, lockedItemId = Items.AVAS_ASSEMBLER_L),
+            locked(Items.AVAS_ASSEMBLER, Items.AVAS_ASSEMBLER_L, Items.AVAS_ASSEMBLER_L_BROKEN, Items.AVAS_ASSEMBLER_L_MANGLED),
             // OSRS-IMPORT sceptres: "pay 500,000 coins plus a Trouver parchment to lock the item at Perdu"; below level 20 a locked sceptre becomes
             // its broken form (OSRS Wiki "Ancient sceptre"), above level 20 its mangled form (500,000 coins to the PKer).
             TrouverLockable(baseItemId = Items.ANCIENT_SCEPTRE, lockedItemId = Items.ANCIENT_SCEPTRE_L, brokenItemId = Items.ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.ANCIENT_SCEPTRE_L_MANGLED),
@@ -26,28 +28,28 @@ object TrouverLockables {
             TrouverLockable(baseItemId = Items.SHADOW_ANCIENT_SCEPTRE, lockedItemId = Items.SHADOW_ANCIENT_SCEPTRE_L, brokenItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_BROKEN, mangledItemId = Items.SHADOW_ANCIENT_SCEPTRE_L_MANGLED),
             // OSRS-IMPORT capes: each infobox lists a Trouver-locked "(l)" version (imbued god capes and max capes, assembler max capes, Masori
             // assembler); Dizana's max cape (l) also has "(l) (broken)" ("Locked Dizana's max cape now breaks on death below level 20").
-            TrouverLockable(baseItemId = Items.IMBUED_SARADOMIN_CAPE, lockedItemId = Items.IMBUED_SARADOMIN_CAPE_L),
-            TrouverLockable(baseItemId = Items.IMBUED_GUTHIX_CAPE, lockedItemId = Items.IMBUED_GUTHIX_CAPE_L),
-            TrouverLockable(baseItemId = Items.IMBUED_ZAMORAK_CAPE, lockedItemId = Items.IMBUED_ZAMORAK_CAPE_L),
-            TrouverLockable(baseItemId = Items.IMBUED_SARADOMIN_MAX_CAPE, lockedItemId = Items.IMBUED_SARADOMIN_MAX_CAPE_L),
-            TrouverLockable(baseItemId = Items.IMBUED_GUTHIX_MAX_CAPE, lockedItemId = Items.IMBUED_GUTHIX_MAX_CAPE_L),
-            TrouverLockable(baseItemId = Items.IMBUED_ZAMORAK_MAX_CAPE, lockedItemId = Items.IMBUED_ZAMORAK_MAX_CAPE_L),
-            TrouverLockable(baseItemId = Items.ASSEMBLER_MAX_CAPE, lockedItemId = Items.ASSEMBLER_MAX_CAPE_L),
-            TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER, lockedItemId = Items.MASORI_ASSEMBLER_L),
-            TrouverLockable(baseItemId = Items.MASORI_ASSEMBLER_MAX_CAPE, lockedItemId = Items.MASORI_ASSEMBLER_MAX_CAPE_L),
+            locked(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_L, Items.IMBUED_SARADOMIN_CAPE_L_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L_MANGLED),
+            locked(Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_GUTHIX_CAPE_L, Items.IMBUED_GUTHIX_CAPE_L_BROKEN, Items.IMBUED_GUTHIX_CAPE_L_MANGLED),
+            locked(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_CAPE_L, Items.IMBUED_ZAMORAK_CAPE_L_BROKEN, Items.IMBUED_ZAMORAK_CAPE_L_MANGLED),
+            locked(Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE_L, Items.IMBUED_SARADOMIN_MAX_CAPE_L_BROKEN, Items.IMBUED_SARADOMIN_MAX_CAPE_L_MANGLED),
+            locked(Items.IMBUED_GUTHIX_MAX_CAPE, Items.IMBUED_GUTHIX_MAX_CAPE_L, Items.IMBUED_GUTHIX_MAX_CAPE_L_BROKEN, Items.IMBUED_GUTHIX_MAX_CAPE_L_MANGLED),
+            locked(Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE_L, Items.IMBUED_ZAMORAK_MAX_CAPE_L_BROKEN, Items.IMBUED_ZAMORAK_MAX_CAPE_L_MANGLED),
+            locked(Items.ASSEMBLER_MAX_CAPE, Items.ASSEMBLER_MAX_CAPE_L, Items.ASSEMBLER_MAX_CAPE_L_BROKEN, Items.ASSEMBLER_MAX_CAPE_L_MANGLED),
+            locked(Items.MASORI_ASSEMBLER, Items.MASORI_ASSEMBLER_L, Items.MASORI_ASSEMBLER_L_BROKEN, Items.MASORI_ASSEMBLER_L_MANGLED),
+            locked(Items.MASORI_ASSEMBLER_MAX_CAPE, Items.MASORI_ASSEMBLER_MAX_CAPE_L, Items.MASORI_ASSEMBLER_MAX_CAPE_L_BROKEN, Items.MASORI_ASSEMBLER_MAX_CAPE_L_MANGLED),
             TrouverLockable(baseItemId = Items.DIZANAS_MAX_CAPE, lockedItemId = Items.DIZANAS_MAX_CAPE_L, brokenItemId = Items.DIZANAS_MAX_CAPE_L_BROKEN, mangledItemId = Items.DIZANAS_MAX_CAPE_L_MANGLED),
             // OSRS-IMPORT quiver (item page "Dizana's quiver", fetched 2026-09-16): "can be locked by bringing it, along with a
             // Trouver parchment and 500,000 coins, to Perdu." Charges and any stored ammo survive locking (Trouver.lock/unlock
-            // now copy item attributes) exactly like relogging or banking the same item would. No broken/mangled quiver variant
-            // is imported (SOURCE_GAP, see QuiverDeathRules), so only the keep-whole fallback applies here.
-            TrouverLockable(baseItemId = Items.DIZANAS_QUIVER, lockedItemId = Items.DIZANAS_QUIVER_L),
-            TrouverLockable(baseItemId = Items.DIZANAS_QUIVER_UNCHARGED, lockedItemId = Items.DIZANAS_QUIVER_L_UNCHARGED),
+            // now copy item attributes) exactly like relogging or banking the same item would. N416: its broken/mangled forms are
+            // clones of the Dizana's quiver (broken) with the (l) name.
+            locked(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_L, Items.DIZANAS_QUIVER_L_BROKEN, Items.DIZANAS_QUIVER_L_MANGLED),
+            locked(Items.DIZANAS_QUIVER_UNCHARGED, Items.DIZANAS_QUIVER_L_UNCHARGED, Items.DIZANAS_QUIVER_L_UNCHARGED_BROKEN, Items.DIZANAS_QUIVER_L_UNCHARGED_MANGLED),
             // Owner 2026-09-26 (death rework): the rune pouch is lockable (OSRS "Rune pouch (l)" 24416 / "Divine rune pouch (l)" 27509, cache tx-20260926-042642).
             // A locked pouch keeps the empty pouch on a PvP death; its runes always go to the killer (UntradeableDeathProtection).
             TrouverLockable(baseItemId = Items.RUNE_POUCH, lockedItemId = Items.RUNE_POUCH_L),
             TrouverLockable(baseItemId = Items.DIVINE_RUNE_POUCH, lockedItemId = Items.DIVINE_RUNE_POUCH_L),
             // OSRS Wiki "(l)" list (owner 2026-10-04 death audit): "Blessed Dizana's quiver (l)" can be locked like the plain quiver.
-            TrouverLockable(baseItemId = Items.BLESSED_DIZANAS_QUIVER, lockedItemId = Items.BLESSED_DIZANAS_QUIVER_L),
+            locked(Items.BLESSED_DIZANAS_QUIVER, Items.BLESSED_DIZANAS_QUIVER_L, Items.BLESSED_DIZANAS_QUIVER_L_BROKEN, Items.BLESSED_DIZANAS_QUIVER_L_MANGLED),
             // K01 2026-10-25 (N408, OSRS Wiki "(l)": Void Knight equipment, Fighter torso, Infernal max cape; "Trouver parchment"
             // 18 May 2022: Rune/Dragon defender (t); owner 2026-10-25: every defender from mithril up, Avernic included). The (l)
             // items are clones of this cache's own items with the OSRS names (cache tx-20261024-224158), each with its broken

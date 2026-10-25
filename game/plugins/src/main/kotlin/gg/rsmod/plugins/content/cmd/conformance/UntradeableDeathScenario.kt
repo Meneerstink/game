@@ -126,14 +126,15 @@ object UntradeableDeathScenario {
             ).forEach { (item, broken) ->
                 run.expectTrue(e, "PvP <=20: ${name(run, item)} is in the inventory as ${name(run, broken)}", has(l, broken) && !has(l, item), "held=${l.map { it.id }}")
             }
-            val lockedCape = l.firstOrNull { it.id == Items.FIRE_CAPE_LOCKED_22324 }
+            // N416: the locked fire cape breaks into the visible Fire cape (l) (broken), no longer a hidden mark on the whole cape.
+            val lockedCape = l.firstOrNull { it.id == Items.FIRE_CAPE_L_BROKEN }
             // K01 deel 5: the kits go to the victim's gravestone - the AGS (or)'s kit and the carried Fury ornament kit; never to the killer.
             val lowGrave = b.gravestone.toList().filterNotNull().map { it.id }
             listOf(Items.ARMADYL_GODSWORD_ORNAMENT_KIT, Items.FURY_ORNAMENT_KIT).forEach {
                 run.expectTrue(e, "PvP <=20: ${name(run, it)} waits in the victim's gravestone", it in lowGrave && !has(l, it), "gravestone=$lowGrave")
             }
             run.expectTrue(e, "PvP <=20: the AGS (or) is gone from the victim", !has(l, Items.ARMADYL_GODSWORD_OR), "held=${l.map { it.id }}")
-            run.expectTrue(e, "PvP <=20: Fire cape (l) stays, broken and still locked", lockedCape != null && UntradeableDeathProtection.isDamaged(lockedCape), "held=$lockedCape")
+            run.expectTrue(e, "PvP <=20: Fire cape (l) stays as Fire cape (l) (broken), still locked", lockedCape != null && UntradeableDeathProtection.isDamaged(lockedCape) && !has(l, Items.FIRE_CAPE_LOCKED_22324), "held=${l.map { it.id }}")
             listOf(Items.VOID_KNIGHT_TOP_L to Items.VOID_KNIGHT_TOP_L_BROKEN, Items.DRAGON_DEFENDER_L to Items.DRAGON_DEFENDER_L_BROKEN).forEach { (item, broken) ->
                 run.expectTrue(e, "PvP <=20: ${name(run, item)} stays as ${name(run, broken)}", has(l, broken) && !has(l, item), "held=${l.map { it.id }}")
             }

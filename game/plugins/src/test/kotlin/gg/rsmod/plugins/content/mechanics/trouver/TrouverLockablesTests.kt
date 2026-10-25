@@ -47,8 +47,9 @@ class TrouverLockablesTests {
     }
 
     @Test
-    fun `every new locked item has its own broken and mangled form that repairs back to the locked item`() {
-        TrouverLockables.ALL.filter { it.lockedItemId >= Items.MITHRIL_DEFENDER_L || it.baseItemId == Items.INFERNAL_CAPE }.forEach { pair ->
+    fun `every locked item but the rune pouches has its own broken and mangled form that repairs back to the locked item`() {
+        // N416: the older locked items too (Fire cape (l), assemblers, imbued capes, quivers) - no hidden broken mark any more.
+        TrouverLockables.ALL.filter { it.baseItemId != Items.RUNE_POUCH && it.baseItemId != Items.DIVINE_RUNE_POUCH }.forEach { pair ->
             val broken = assertNotNull(pair.brokenItemId, "${pair.lockedItemId} broken")
             val mangled = assertNotNull(pair.mangledItemId, "${pair.lockedItemId} mangled")
             assertEquals(pair.lockedItemId, UntradeableDeathProtection.repaired(Item(broken)).id)
