@@ -93,6 +93,9 @@ object PvpDeathBreakables {
                 // OSRS Wiki "Dragon defender (t)": it "will become broken" (repair 240,000 at Perdu) and "The ornament kit will be lost";
                 // repaired it is the plain Dragon defender (the canonical owner of the broken id, listed first).
                 Breakable(Items.DRAGON_DEFENDER_T, Items.DRAGON_DEFENDER_BROKEN, 0, 240_000, breaksAboveTwenty = true),
+                // K01 deel 5: OSRS Wiki "Rune defender (t)" the same - "it will remain in the player's inventory, but will become broken"
+                // (35,000 at Perdu), "The ornament kit will be lost". Before, the killer got the (untradeable) Rune defender and the kit.
+                Breakable(Items.RUNE_DEFENDER_T, Items.RUNE_DEFENDER_BROKEN, 0, 35_000, breaksAboveTwenty = true),
                 Breakable(Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_BROKEN, 0, 180_000),
@@ -230,7 +233,17 @@ object PvpDeathBreakables {
             Items.FULL_SLAYER_HELMET to fullHelmetImbue,
             Items.FULL_SLAYER_HELMET_E to fullHelmetImbue,
             Items.FULL_SLAYER_HELMET_CHARGED to fullHelmetImbue,
-        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.kit) }
+        ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.kit) } +
+            // K01 deel 5 (owner 2026-10-25: every kit untradeable, never lost): every kitted item's kit, the Blazing blowpipe's kit
+            // and a carried kit itself go to the victim's gravestone (OrnamentKitRules).
+            kitToGrave.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.kit) } +
+            mapOf(Items.BLAZING_BLOWPIPE to listOf(Items.BLOWPIPE_ORNAMENT_KIT)) +
+            gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KITS.associateWith { listOf(it) }
+    }
+
+    /** Kitted items whose plain item goes to the killer and whose kit to the victim's gravestone (the rows without another rule). */
+    private val kitToGrave: Set<Int> by lazy {
+        gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KIT_TO_GRAVE - BOUNTY_HUNTER_KITTED - Items.ELIDINIS_WARD_OR - entries.keys
     }
 
     /**
@@ -271,7 +284,8 @@ object PvpDeathBreakables {
 
     fun converts(itemId: Int): Boolean =
         itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
-            OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId == Items.TOXIC_BLOWPIPE ||
+            OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId in kitToGrave ||
+            gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(itemId) || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
             itemId == Items.BOW_OF_FAERDHINEN || itemId == Items.AMULET_OF_BLOOD_FURY || itemId == Items.TOXIC_STAFF_OF_THE_DEAD ||
             itemId in gg.rsmod.plugins.content.items.osrs.AvernicTreads.UPGRADED || itemId == Items.ANCIENT_SCEPTRE ||
@@ -405,10 +419,9 @@ object PvpDeathBreakables {
         }
         if (id == Items.TOXIC_BLOWPIPE || id == Items.BLAZING_BLOWPIPE) {
             // OSRS Wiki "Toxic blowpipe": unprotected, "all scale and dart charges will appear on the floor alongside
-            // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer. Blazing blowpipe: the
-            // tradeable ornament kit rule ("Items Kept on Death") also applies - the Toxic blowpipe plus the kit.
+            // the blowpipe" - the empty blowpipe, its darts and its scales drop for the killer. Blazing blowpipe: the Toxic
+            // blowpipe as well; its kit (untradeable, K01 deel 5) goes to the victim's gravestone ([VICTIM_GRAVE]).
             val loot = mutableListOf(Item(Items.TOXIC_BLOWPIPE_EMPTY, 1))
-            if (id == Items.BLAZING_BLOWPIPE) loot += Item(Items.BLOWPIPE_ORNAMENT_KIT, 1)
             Blowpipe.dart(item)?.let { loot += Item(it.itemId, Blowpipe.darts(item)) }
             Blowpipe.scales(item).takeIf { it > 0 }?.let { loot += Item(Items.ZULRAHS_SCALES, it) }
             return loot
@@ -470,7 +483,11 @@ object PvpDeathBreakables {
             val scales = StaffOfTheDead.scales(item)
             return listOfNotNull(Item(Items.TOXIC_STAFF_UNCHARGED, 1), scales.takeIf { it > 0 }?.let { Item(Items.ZULRAHS_SCALES, it) })
         }
-        // "Items Kept on Death": dropped to the PKer as the non-ornamented item plus the ornament kit.
+        // K01 deel 5: a carried kit is never lost - it goes to the victim's gravestone ([VICTIM_GRAVE]), nothing for the killer.
+        if (gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(id)) return emptyList()
+        // "Items Kept on Death": dropped to the PKer as the non-ornamented item; its kit goes to the victim's gravestone (every kit is
+        // untradeable since K01 deel 5 - before, the PKer got the tradeable kit as well).
+        if (id in kitToGrave) return listOf(Item(OsrsOrnamentKits.forOrnamented(id)!!.base, item.amount))
         OsrsOrnamentKits.forPvpConversion(id)?.let { return listOf(Item(it.base, item.amount), Item(it.kit, item.amount)) }
         return null
     }

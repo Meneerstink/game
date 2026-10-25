@@ -143,6 +143,11 @@ object ItemsKeptOnDeath {
                         val total = it.points.toLong() * slot.item.amount
                         " Your imbue is refunded: ${spaced(total)} ${if (total == 1L) it.currency.singular else it.currency.plural}."
                     } ?: ""
+                // K01 deel 5: a carried ornament kit is never lost - it goes to the victim's gravestone, nothing for the killer.
+                if (gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(slot.item.id)) {
+                    entries += Entry(Section.GRAVESTONE, slot.item, line(slot.item, "You never lose an ornament kit: it goes to your gravestone.", "You never lose an ornament kit: they go to your gravestone."))
+                    return@forEach
+                }
                 when {
                     loot == null -> entries += Entry(Section.KEPT, slot.item, line(slot.item, "You'll keep this item.", "You'll keep these items."))
                     loot.isEmpty() -> deleted(player, entries, slot.item)

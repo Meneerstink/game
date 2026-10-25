@@ -36,7 +36,8 @@ class OsrsKitsImportTests {
         pairs.forEach { (ornamented, base, kit) ->
             assertEquals(combat(base), combat(ornamented), "ornamented $ornamented vs base $base")
             assertFalse(yml.getValue(ornamented).path("tradeable").asBoolean(), "$ornamented untradeable")
-            assertTrue(yml.getValue(kit).path("tradeable").asBoolean(), "kit $kit tradeable")
+            // K01 deel 5 (owner 2026-10-25 V2): every ornament kit is untradeable (was: tradeable as in OSRS).
+            assertEquals(kit in gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.NOT_KITS, yml.getValue(kit).path("tradeable").asBoolean(), "kit $kit: untradeable unless it is no kit (Zalcano shard)")
             val combo = CombinationData.values().single { it.resultItem == ornamented }
             assertEquals(setOf(base, kit), combo.items.toSet(), "combine $ornamented")
         }

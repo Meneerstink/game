@@ -72,7 +72,10 @@ class ItemsKeptOnDeathOwnerGearTests {
         val lost = ids(pvp, ItemsKeptOnDeath.Section.LOST)
         // Tradeable OSRS gear as itself; Moon armour broken (23110/23112/23114); Harmonised staff = staff + orb; (or) = base + kit.
         assertTrue(lost.containsAll(listOf(22878, 22880, 22876, 22946, 22372, 22911, 22724, 23128, 23134)), "$lost")
-        assertTrue(lost.containsAll(listOf(23110, 23112, 23114, 23081, 23086, 22351, 22353, 22328, 22331)), "$lost")
+        // K01 deel 5: an (or) item's kit is untradeable and never lost - it waits in the victim's gravestone, not with the killer.
+        assertTrue(lost.containsAll(listOf(23110, 23112, 23114, 23081, 23086, 22351, 22328)), "$lost")
+        assertTrue(lost.none { it in listOf(22353, 22331) }, "kits never go to the killer: $lost")
+        assertTrue(ids(pvp, ItemsKeptOnDeath.Section.GRAVESTONE).containsAll(listOf(22353, 22331)), "the kits wait in the gravestone")
         assertTrue(lost.none { it in listOf(23101, 23102, 23103, 23083, 22330, 22355) }, "converting items never show as themselves: $lost")
         assertTrue(pvp.entries.single { it.item.id == Items.IMBUED_GUTHIX_MAX_CAPE_L }.message.contains("break"))
 

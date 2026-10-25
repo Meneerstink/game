@@ -62,8 +62,12 @@ object EliteCasketTable {
         Node(
             "elite uniques",
             51,
+            // K01 deel 5 (owner 2026-10-25 V12: every ornament kit comes from the three stores only): the dragon full helm, chainbody,
+            // legs/skirt, sq shield and scimitar ornament kits, the fury ornament kit and the light/dark infinity colour kits keep their
+            // 8 slots as nothing, so every other unique keeps its OSRS rate.
+            listOf(Entry.Nothing(8, "Ornament kits: only from the Loyalty, Donator and Deadman stores (owner 2026-10-25)")) +
             objs(
-                23654, 23650, 23652, 23656, 23664, 19333, 22858, 22860, 15509, 23578, 23576, 15507, 23550, 23554, 23552, 23450, 23452, 23454,
+                15509, 23578, 23576, 15507, 23550, 23554, 23552, 23450, 23452, 23454,
                 23456, 23568, 23564, 23508, 19296, 19299, 19302, 19305, 23428, 23580, 23444, 23514, 23536, 23562, 23596, 23636, 23638, 23464,
                 23458, 23478, 23430, 23446, 13101, 23538, 23640, 23582, 23566, 23598, 23484, 23482,
             ) + listOf(Entry.Table(TUXEDO, 1), Entry.Table(MEGA_RARE, 2)),

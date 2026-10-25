@@ -126,8 +126,8 @@ object StoreCatalogue {
 
     enum class TradeablePolicy(val label: String) {
         /**
-         * The bought item keeps its own item-definition tradeability (OSRS kits are tradeable). Owner decision 2026-09-19: Donator
-         * kits stay tradeable (donors may sell them for gold); Deadman kits are the untradeable OSRS Bounty Hunter kits.
+         * The bought item keeps its own item-definition tradeability (items.yml). Owner 2026-10-25 (K01 deel 5, replaces the
+         * 2026-09-19 choice): every ornament kit and every item with a kit on it is untradeable ([OrnamentKitRules]).
          */
         ITEM_DEFINITION("tradeable as in OSRS"),
         UNTRADEABLE("untradeable"),

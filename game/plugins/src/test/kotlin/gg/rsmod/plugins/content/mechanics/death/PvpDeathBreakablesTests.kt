@@ -103,7 +103,7 @@ class PvpDeathBreakablesTests {
                 // N247: OSRS Wiki "(broken)" PvP breakable table.
                 Items.FIRE_CAPE to 150_000, Items.FIRE_MAX_CAPE to 150_000, Items.BRONZE_DEFENDER to 1_000, Items.IRON_DEFENDER to 2_000,
                 Items.STEEL_DEFENDER to 2_500, Items.BLACK_DEFENDER to 5_000, Items.MITHRIL_DEFENDER to 15_000, Items.ADAMANT_DEFENDER to 25_000,
-                Items.RUNE_DEFENDER to 35_000, Items.DRAGON_DEFENDER to 240_000, Items.DRAGON_DEFENDER_T to 240_000, Items.VOID_KNIGHT_TOP to 180_000, Items.VOID_KNIGHT_TOP_10611 to 180_000,
+                Items.RUNE_DEFENDER to 35_000, Items.DRAGON_DEFENDER to 240_000, Items.DRAGON_DEFENDER_T to 240_000, Items.RUNE_DEFENDER_T to 35_000, Items.VOID_KNIGHT_TOP to 180_000, Items.VOID_KNIGHT_TOP_10611 to 180_000,
                 Items.VOID_KNIGHT_ROBE to 180_000, Items.VOID_KNIGHT_GLOVES to 120_000, Items.VOID_MAGE_HELM to 160_000,
                 Items.VOID_MAGE_HELM_11674 to 160_000, Items.VOID_RANGER_HELM to 160_000, Items.VOID_RANGER_HELM_11675 to 160_000,
                 Items.VOID_MELEE_HELM to 160_000, Items.VOID_MELEE_HELM_11676 to 160_000, Items.ELITE_VOID_KNIGHT_TOP to 250_000,
@@ -133,9 +133,11 @@ class PvpDeathBreakablesTests {
         }
     }
     @Test
-    fun `every item with a tradeable ornament or colour kit is dropped as base item plus kit on a wilderness death`() {
-        // "Items Kept on Death": tradeable ornament kits -> "Dropped to the PKer as the tradeable, non-ornamented item. Also drops
-        // the tradeable ornament kit to the PKer." Rows with an untradeable kit are covered by the next test.
+    fun `every kitted item drops its plain item to the killer and sends its kit to the victim's gravestone`() {
+        // K01 deel 5 (owner 2026-10-25: every kit untradeable and never lost): "Items Kept on Death" drops the non-ornamented item to the
+        // PKer; the kit goes to the victim's gravestone (the OSRS Bounty Hunter kit rule, now for every kit). The Nightmare staff
+        // orbs are no kits: the PKer gets the staff and the orb.
+        val kits = gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KITS
         gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filter { it.pvpConvert }.forEach { ornament ->
             val victim = newPlayer()
             val killer = newPlayer()
@@ -144,13 +146,37 @@ class PvpDeathBreakablesTests {
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, killer, DeathItemRiskResult(0, emptyList(), lost)))
             assertTrue(result.itemRisk.lost.isEmpty(), "${ornament.ornamented} must not drop as the ornamented item")
+            val grave = mutableListOf<Item>()
 
-            PvpDeathBreakables.execute(world, result, converting)
+            PvpDeathBreakables.execute(world, result, converting, toGrave = { grave += it })
 
             assertNull(victim.inventory[0])
             verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.base && it.amount == 1 }) }
-            verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.kit && it.amount == 1 }) }
             verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == ornament.ornamented }) }
+            if (ornament.kit in kits) {
+                verify(exactly = 0) { world.spawn(match<GroundItem> { it.item == ornament.kit }) }
+                assertEquals(listOf(ornament.kit), grave.map { it.id }, "${ornament.ornamented}: the kit goes to the victim's gravestone")
+            } else {
+                verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == ornament.kit && it.amount == 1 }) }
+            }
+        }
+    }
+
+    @Test
+    fun `a carried kit is never lost on a wilderness death - it goes to the victim's gravestone`() {
+        gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KITS.forEach { kit ->
+            val victim = newPlayer()
+            val world = mockk<World>(relaxed = true)
+            victim.inventory[0] = Item(kit, 1)
+            val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(kit, 1)))
+            val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, victim, newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
+            assertTrue(result.itemRisk.lost.isEmpty(), "kit $kit is not dropped for the killer")
+            val grave = mutableListOf<Item>()
+            PvpDeathBreakables.execute(world, result, converting, toGrave = { grave += it })
+            assertNull(victim.inventory[0])
+            verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+            assertEquals(listOf(kit), grave.map { it.id }, "kit $kit goes to the gravestone")
+            assertTrue(!UntradeableDeathProtection.handles(DEFINITIONS, kit), "kit $kit is not lost for coins")
         }
     }
 
@@ -170,6 +196,8 @@ class PvpDeathBreakablesTests {
                 // Dragon defender (t): tradeable kit, but OSRS Wiki "Dragon defender (t)" - on a PvP death "it will remain in the player's
                 // inventory, but will become broken" (the defender rule, not the base + kit drop); no defender breaks here yet.
                 Items.DRAGON_DEFENDER_T,
+                // K01 deel 5: Rune defender (t) - OSRS Wiki "Rune defender (t)", the same broken rule.
+                Items.RUNE_DEFENDER_T,
             ),
             kept.map { it.ornamented }.toSet(),
         )

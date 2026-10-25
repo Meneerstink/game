@@ -68,7 +68,8 @@ class OsrsBlowpipesImportTests {
         assertEquals(Items.BLOWPIPE_ORNAMENT_KIT, kit?.kit)
         assertNull(OsrsOrnamentKits.forPvpConversion(Items.BLAZING_BLOWPIPE), "the charged blazing blowpipe has its own PvP branch")
         val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/PvpDeathBreakables.kt").readText()
-        assertTrue("Item(Items.BLOWPIPE_ORNAMENT_KIT, 1)" in death)
+        // K01 deel 5: the (untradeable) kit of a charged Blazing blowpipe goes to the victim's gravestone, not to the killer.
+        assertTrue("mapOf(Items.BLAZING_BLOWPIPE to listOf(Items.BLOWPIPE_ORNAMENT_KIT))" in death)
         val specials = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/toxic_blowpipe.plugin.kts").readText()
         assertTrue("Items.TOXIC_BLOWPIPE, Items.BLAZING_BLOWPIPE" in specials && "Blowpipe.RAPID_BURST_ENERGY, Items.ROSEWOOD_BLOWPIPE" in specials)
         assertTrue("Blowpipe.isBlowpipe(weapon.id)" in File("src/main/kotlin/gg/rsmod/plugins/content/combat/CombatConfigs.kt").readText())

@@ -5,8 +5,9 @@ import gg.rsmod.plugins.api.cfg.Items
 /**
  * Cosmetic OSRS ornament and colour kits imported by OSRS-IMPORT. One table drives the combine
  * (`CombinationData`), the "Dismantle" action (returns base item + kit, OSRS Wiki item pages) and the
- * PvP death conversion ("Items Kept on Death": an ornamented tradeable item is dropped to the PKer as
- * the non-ornamented item together with its tradeable ornament kit).
+ * PvP death conversion ("Items Kept on Death": an ornamented item is dropped to the PKer as the
+ * non-ornamented item; since K01 deel 5 (owner 2026-10-25) every kit is untradeable and goes to the
+ * victim's gravestone - [OrnamentKitRules]).
  *
  * [Ornament.pvpConvert] is false for kits that are not tradeable (the Bounty Hunter heavy ballista, elder chaos and Dagon'hai kits):
  * their own kit pages give the PvP rule "the item will be lost to the killer but the kit will be sent to the gravestone", built in
@@ -96,7 +97,8 @@ object OsrsOrnamentKits {
             // "The trimmed defender can be dismantled anytime, returning the defender and the tradeable ornament kit" (Rune defender (t)).
             Ornament(Items.DRAGON_BOOTS_G, Items.DRAGON_BOOTS, Items.DRAGON_BOOTS_ORNAMENT_KIT),
             Ornament(Items.BERSERKER_NECKLACE_OR, Items.BERSERKER_NECKLACE, Items.BERSERKER_NECKLACE_ORNAMENT_KIT),
-            Ornament(Items.RUNE_DEFENDER_T, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_ORNAMENT_KIT),
+            // Rune defender (t): like the Dragon defender (t), a PvP death breaks it (PvpDeathBreakables, K01 deel 5).
+            Ornament(Items.RUNE_DEFENDER_T, Items.RUNE_DEFENDER, Items.RUNE_DEFENDER_ORNAMENT_KIT, pvpConvert = false),
             Ornament(Items.TZHAAR_KET_OM_T, Items.TZHAARKETOM, Items.TZHAAR_KET_OM_ORNAMENT_KIT),
             Ornament(Items.RUNE_SCIMITAR_GUTHIX, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_GUTHIX),
             Ornament(Items.RUNE_SCIMITAR_SARADOMIN, Items.RUNE_SCIMITAR, Items.RUNE_SCIMITAR_ORNAMENT_KIT_SARADOMIN),

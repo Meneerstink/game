@@ -235363,7 +235363,7 @@
 - id: 19333
   name: "Fury ornament kit"
   examine: "Use on an amulet of fury to make it look fancier."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 19334
@@ -235375,7 +235375,7 @@
 - id: 19335
   name: "Amulet of fury (or)"
   examine: "A very powerful and pretty onyx amulet."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 10
@@ -235407,7 +235407,7 @@
 - id: 19336
   name: "Dragon full helm (or)"
   examine: "Dragon full helm with an ornate decoration."
-  tradeable: true
+  tradeable: false
   weight: 2.0
   equipment:
     attack_stab: 0
@@ -235440,7 +235440,7 @@
 - id: 19337
   name: "Dragon platebody (or)"
   examine: "Dragon platebody with an ornate decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235473,7 +235473,7 @@
 - id: 19338
   name: "Dragon platelegs (or)"
   examine: "Dragon platelegs with ornate decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235506,7 +235506,7 @@
 - id: 19339
   name: "Dragon plateskirt (or)"
   examine: "Dragon plateskirt with an ornate decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235539,7 +235539,7 @@
 - id: 19340
   name: "Dragon square shield (or)"
   examine: "Dragon square shield with an ornate decoration."
-  tradeable: true
+  tradeable: false
   weight: 3.0
   equipment:
     attack_stab: 0
@@ -235572,7 +235572,7 @@
 - id: 19341
   name: "Dragon full helm (sp)"
   examine: "Dragon full helm with a spiky decoration."
-  tradeable: true
+  tradeable: false
   weight: 2.0
   equipment:
     attack_stab: 0
@@ -235605,7 +235605,7 @@
 - id: 19342
   name: "Dragon platebody (sp)"
   examine: "Dragon platebody with a spiky decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235638,7 +235638,7 @@
 - id: 19343
   name: "Dragon platelegs (sp)"
   examine: "Dragon platelegs with a spiky decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235671,7 +235671,7 @@
 - id: 19344
   name: "Dragon plateskirt (sp)"
   examine: "Dragon plateskirt with a spiky decoration."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment:
     attack_stab: 0
@@ -235704,7 +235704,7 @@
 - id: 19345
   name: "Dragon sq shield (sp)"
   examine: "Dragon square shield with a spiky decoration."
-  tradeable: true
+  tradeable: false
   weight: 3.0
   equipment:
     attack_stab: 0
@@ -235737,7 +235737,7 @@
 - id: 19346
   name: "Dragon full helm ornament kit (or)"
   examine: "Use on a dragon full helm to make it look fancier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19347
@@ -235749,7 +235749,7 @@
 - id: 19348
   name: "Dragon platelegs/skirt ornament kit (or)"
   examine: "Use on dragon platelegs or a dragon plateskirt to make them look fancier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19349
@@ -235761,7 +235761,7 @@
 - id: 19350
   name: "Dragon platebody ornament kit (or)"
   examine: "Use on a dragon platebody to make it look fancier."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment: null
 - id: 19351
@@ -235773,7 +235773,7 @@
 - id: 19352
   name: "Dragon sq shield ornament kit (or)"
   examine: "Use on a dragon square shield to make it look fancier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19353
@@ -235785,7 +235785,7 @@
 - id: 19354
   name: "Dragon full helm ornament kit (sp)"
   examine: "Use on a dragon full helm to make it look spikier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19355
@@ -235797,7 +235797,7 @@
 - id: 19356
   name: "Dragon platelegs/skirt ornament kit (sp)"
   examine: "Use on dragon platelegs or a dragon plateskirt to make them look spikier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19357
@@ -235809,7 +235809,7 @@
 - id: 19358
   name: "Dragon platebody ornament kit (sp)"
   examine: "Use on a dragon platebody to make it look spikier."
-  tradeable: true
+  tradeable: false
   weight: 9.0
   equipment: null
 - id: 19359
@@ -235821,7 +235821,7 @@
 - id: 19360
   name: "Dragon sq shield ornament kit (sp)"
   examine: "Used on a dragon sq shield to make it look spikier."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 19361
@@ -265431,13 +265431,13 @@
 - id: 22331
   name: "Occult ornament kit"
   examine: "Use on an occult necklace to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22332
   name: "Occult ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22333
@@ -265587,13 +265587,13 @@
 - id: 22343
   name: "Anguish ornament kit"
   examine: "Use on a necklace of anguish to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22344
   name: "Anguish ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22345
@@ -265673,13 +265673,13 @@
 - id: 22348
   name: "Torture ornament kit"
   examine: "Use on an amulet of torture to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22349
   name: "Torture ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22350
@@ -265759,13 +265759,13 @@
 - id: 22353
   name: "Tormented ornament kit"
   examine: "Use on a tormented bracelet to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22354
   name: "Tormented ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22355
@@ -272347,25 +272347,25 @@
 - id: 22858
   name: "Light infinity colour kit"
   examine: "Use on infinity pieces to recolour them!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22859
   name: "Light infinity colour kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22860
   name: "Dark infinity colour kit"
   examine: "Use on infinity pieces to recolour them!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22861
   name: "Dark infinity colour kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 22862
@@ -273087,7 +273087,7 @@
 - id: 22902
   name: "Ward upgrade kit"
   examine: "Makes a malediction or odium ward more beautiful."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 22903
@@ -275386,13 +275386,13 @@
 - id: 23037
   name: "Trailblazer reloaded blowpipe ornament kit"
   examine: "Used on an uncharged Toxic Blowpipe to give it the a theme from Leagues IV: Trailblazer Reloaded."
-  tradeable: true
+  tradeable: false
   weight: 0.1
   equipment: null
 - id: 23038
   name: "Trailblazer reloaded blowpipe ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23039
@@ -283912,145 +283912,145 @@
 - id: 23642
   name: "Armadyl godsword ornament kit"
   examine: "Use on an Armadyl godsword to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23643
   name: "Armadyl godsword ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23644
   name: "Bandos godsword ornament kit"
   examine: "Use on a Bandos godsword to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23645
   name: "Bandos godsword ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23646
   name: "Saradomin godsword ornament kit"
   examine: "Use on a Saradomin godsword to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23647
   name: "Saradomin godsword ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23648
   name: "Zamorak godsword ornament kit"
   examine: "Use on a Zamorak godsword to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23649
   name: "Zamorak godsword ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23650
   name: "Dragon chainbody ornament kit"
   examine: "Use on a dragon chainbody to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23651
   name: "Dragon chainbody ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23652
   name: "Dragon legs/skirt ornament kit"
   examine: "Use on dragon platelegs or plateskirt to make them look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23653
   name: "Dragon legs/skirt ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23654
   name: "Dragon full helm ornament kit"
   examine: "Use on a dragon full helm to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23655
   name: "Dragon full helm ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23656
   name: "Dragon sq shield ornament kit"
   examine: "Use on a dragon square shield to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23657
   name: "Dragon sq shield ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23658
   name: "Dragon kiteshield ornament kit"
   examine: "Use on a dragon kiteshield to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23659
   name: "Dragon kiteshield ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23660
   name: "Dragon platebody ornament kit"
   examine: "Use on a dragon platebody to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23661
   name: "Dragon platebody ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23662
   name: "Dragon defender ornament kit"
   examine: "Use on the dragon defender to trim it with gold."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23663
   name: "Dragon defender ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23664
   name: "Dragon scimitar ornament kit"
   examine: "Use on the dragon scimitar to trim it with gold."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23665
   name: "Dragon scimitar ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23666
@@ -285339,13 +285339,13 @@
 - id: 23759
   name: "Dragon boots ornament kit"
   examine: "Use on some dragon boots to make them look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23760
   name: "Dragon boots ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23761
@@ -285385,13 +285385,13 @@
 - id: 23762
   name: "Berserker necklace ornament kit"
   examine: "Use on the Berserker necklace to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23763
   name: "Berserker necklace ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23764
@@ -285430,13 +285430,13 @@
 - id: 23765
   name: "Rune defender ornament kit"
   examine: "Use on the rune defender to trim it with gold."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23766
   name: "Rune defender ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23767
@@ -285476,13 +285476,13 @@
 - id: 23768
   name: "Tzhaar-ket-om ornament kit"
   examine: "Use on the TzHaar-ket-om to trim and spike it."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23769
   name: "Tzhaar-ket-om ornament kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23770
@@ -285522,37 +285522,37 @@
 - id: 23771
   name: "Rune scimitar ornament kit (Guthix)"
   examine: "Use on a rune scimitar to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23772
   name: "Rune scimitar ornament kit (Guthix)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23773
   name: "Rune scimitar ornament kit (Saradomin)"
   examine: "Use on a rune scimitar to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23774
   name: "Rune scimitar ornament kit (Saradomin)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23775
   name: "Rune scimitar ornament kit (Zamorak)"
   examine: "Use on a rune scimitar to make it look fancier!"
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23776
   name: "Rune scimitar ornament kit (Zamorak)"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23777
@@ -285660,25 +285660,25 @@
 - id: 23780
   name: "Frozen whip mix"
   examine: "Cold to the touch."
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23781
   name: "Frozen whip mix"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23782
   name: "Volcanic whip mix"
   examine: "How has lava been stored like this...?"
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23783
   name: "Volcanic whip mix"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23784
@@ -285752,13 +285752,13 @@
 - id: 23786
   name: "Lava staff upgrade kit"
   examine: "Makes a lava battlestaff or mystic lava staff more beautiful."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23787
   name: "Lava staff upgrade kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23788
@@ -285798,13 +285798,13 @@
 - id: 23789
   name: "Steam staff upgrade kit"
   examine: "Makes a steam battlestaff or mystic steam staff more beautiful."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23790
   name: "Steam staff upgrade kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23791
@@ -285878,49 +285878,49 @@
 - id: 23793
   name: "Blue dark bow paint"
   examine: "Paints things blue!"
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23794
   name: "Blue dark bow paint"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23795
   name: "Green dark bow paint"
   examine: "Paints things green!"
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23796
   name: "Green dark bow paint"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23797
   name: "Yellow dark bow paint"
   examine: "Paints things yellow!"
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23798
   name: "Yellow dark bow paint"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23799
   name: "White dark bow paint"
   examine: "Paints things white!"
-  tradeable: true
+  tradeable: false
   weight: 0.001
   equipment: null
 - id: 23800
   name: "White dark bow paint"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23801
@@ -286062,13 +286062,13 @@
 - id: 23805
   name: "Dragon pickaxe upgrade kit"
   examine: "Makes a dragon pickaxe more beautiful."
-  tradeable: true
+  tradeable: false
   weight: 0.5
   equipment: null
 - id: 23806
   name: "Dragon pickaxe upgrade kit"
   examine: "Swamp this note at any bank for the equivalent item"
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment: null
 - id: 23807

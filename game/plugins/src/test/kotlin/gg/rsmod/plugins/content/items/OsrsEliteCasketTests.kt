@@ -199,8 +199,12 @@ class OsrsEliteCasketTests {
     fun `every wiki row has exactly its per-roll rarity and nothing else can be rolled`() {
         val model = EliteCasketTable.itemProbabilities()
         val expected = HashMap<Pair<Int, IntRange>, Double>()
-        wiki.forEach { (id, amount, chance) -> expected.merge(id to amount, chance, Double::plus) }
+        // K01 deel 5 (owner 2026-10-25 V12): the 8 ornament kit rows of the wiki are store-only here - their slots roll nothing.
+        wiki.filter { it.first !in gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KITS }.forEach { (id, amount, chance) ->
+            expected.merge(id to amount, chance, Double::plus)
+        }
         assertEquals(180, wiki.size)
+        assertEquals(8, wiki.count { it.first in gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.KITS }, "the 8 kit rows")
         val offenders = (expected.keys + model.keys).filter { abs((expected[it] ?: 0.0) - (model[it] ?: 0.0)) > 1e-12 }
             .map { "$it wiki=${expected[it]} model=${model[it]}" }
         assertEquals(emptyList(), offenders)
