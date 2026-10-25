@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.setVarbit
 
 /**
  * N98 (owner VRAGEN 29 = C, 2026-10-17): "Rigour 74 Prayer + 70 Def + Dexterous prayer scroll, Augury 77 Prayer + 70 Def + Arcane prayer
@@ -53,6 +54,18 @@ object PrayerScrolls {
         if (player.inventory.remove(scroll, 1).hasFailed()) return false
         player.attr[key] = true
         return true
+    }
+
+    /**
+     * N358 (owner 2026-10-24: "rigour en augury staat bij mij gekleurd maar heb de scrolls nog niet gebruikt"): the prayer book draws a
+     * prayer in colour once the Prayer level is reached (clientscript 52); the client also keeps Rigour and Augury grey while their
+     * unlock varbit (5451 / 5452, `Prayers.RIGOUR_UNLOCK_VARBIT`) is 0 (client PrayerScrollUnlocks). Sent at login and when a
+     * scroll is read; the Prayer stat is marked dirty so the client redraws both cells at once.
+     */
+    fun syncUnlocks(player: Player) {
+        player.setVarbit(Prayers.RIGOUR_UNLOCK_VARBIT, if (player.attr[RIGOUR_UNLOCKED] == true) 1 else 0)
+        player.setVarbit(Prayers.AUGURY_UNLOCK_VARBIT, if (player.attr[AUGURY_UNLOCKED] == true) 1 else 0)
+        player.skills.dirty[Skills.PRAYER] = true
     }
 
     /** One of the two scrolls, or null - [chance] is the 1-in-N roll (breach monster or chest). */

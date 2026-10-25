@@ -59,7 +59,9 @@ enum class InterfaceDestination(
     SUMMONING_ORB(interfaceId = 747, fixedChildId = 188, resizeChildId = 180),
     SPLIT_PM(interfaceId = 754, fixedChildId = 17, resizeChildId = 72),
 
-    MULTI_ICON(interfaceId = 745, fixedChildId = 15, resizeChildId = 15),
+    // N361 (owner 2026-10-24: "in onze dmm hud hebben we al multi combat icoon, nu hebben we er 2"): the 667 crossed-swords
+    // interface 745 is no longer opened - the Deadman HUD shows multicombat (DeadmanSkullHud). Varc 616 is still sent.
+    MULTI_ICON(interfaceId = -1, fixedChildId = 15, resizeChildId = 15),
 
     MAIN_SCREEN(
         interfaceId = -1,
