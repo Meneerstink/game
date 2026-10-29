@@ -966,6 +966,16 @@ object Familiar {
          *    owner cannot be reached (moveNear), which the search's partial route is.
          */
         npc.attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] = true
+        // N245 (owner 2026-10-23: Talk-to / Pick-up on a pet - "blijven naar elkaar toe lopen"): while the owner walks to interact
+        // with this follower, the follower waits. Both aimed for a shared edge with the other in the same tick, so from a diagonal
+        // they stepped round each other (and again, every tick). PawnPathAction.walk faces the target first, so the owner's face
+        // target plus a walk in progress is "coming to me".
+        val ownerFacing = (player.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR] as? java.lang.ref.WeakReference<*>)?.get()
+        if (ownerFacing === npc && player.hasMoveDestination()) {
+            npc.movementQueue.clear()
+            npc.facePawn(player)
+            return
+        }
         val target = player.tile
         if (gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
                 npc.world.collision, npc.tile, npc.getSize(), npc.getSize(), target, player.getSize(), player.getSize(),
