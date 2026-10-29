@@ -32,13 +32,27 @@ object SkillcapeBoost {
         cape: Skillcapes,
     ): Boolean {
         val skill = SkillcapeSeller.skill(cape)
-        val level = boosted(player.skills.getMaxLevel(skill), player.skills.getCurrentLevel(skill)) ?: return false
+        // Hitpoints and Prayer live in their own varbits (lifepoints / prayer points); every other skill is its current level.
+        val current =
+            when (skill) {
+                Skills.CONSTITUTION -> player.getCurrentLifepoints()
+                Skills.PRAYER -> player.getCurrentPrayerPoints()
+                else -> player.skills.getCurrentLevel(skill)
+            }
+        val level = boosted(player.skills.getMaxLevel(skill), current) ?: return false
         if (hasCooldown(skill)) {
             val last = player.attr[LAST_USE]
             if (last != null && player.world.currentCycle - last < COOLDOWN_TICKS) return false
             player.attr[LAST_USE] = player.world.currentCycle
         }
-        player.skills.setCurrentLevel(skill, level)
+        when (skill) {
+            Skills.CONSTITUTION -> player.setCurrentLifepoints(level)
+            Skills.PRAYER -> {
+                player.setCurrentPrayerPoints(level)
+                player.skills.setCurrentLevel(skill, level)
+            }
+            else -> player.skills.setCurrentLevel(skill, level)
+        }
         return true
     }
 }

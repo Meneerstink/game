@@ -182,23 +182,35 @@ object CastleWarsHandler {
         val npc = Npc(Npcs.BARRICADE, player.tile, world)
         world.spawn(npc)
         CastleWarsRound.barricades.add(npc)
+        CastleWarsRound.barricadeTeam[npc] = team
     }
+
+    /**
+     * K07: where a barricade may not go (Novite `CastleWarsPlaying` - the tiles in front of the castle doors/ladders) or where one
+     * already stands.
+     */
+    val NO_BARRICADE_TILES =
+        setOf(
+            gg.rsmod.game.model.Tile(2422, 3076), gg.rsmod.game.model.Tile(2426, 3080), gg.rsmod.game.model.Tile(2423, 3076),
+            gg.rsmod.game.model.Tile(2426, 3081), gg.rsmod.game.model.Tile(2373, 3127), gg.rsmod.game.model.Tile(2373, 3126),
+            gg.rsmod.game.model.Tile(2376, 3131), gg.rsmod.game.model.Tile(2377, 3131),
+        )
+
+    fun canPlaceBarricade(tile: gg.rsmod.game.model.Tile): Boolean =
+        NO_BARRICADE_TILES.none { it.x == tile.x && it.z == tile.z } &&
+            CastleWarsRound.barricades.none { it.tile.sameAs(tile) }
 
     fun destroyBarricade(
         world: World,
         npc: Npc,
+        /** False when the barricade died in combat: the death handling removes the npc itself. */
+        removeNpc: Boolean = true,
     ) {
-        world.remove(npc)
+        if (removeNpc) world.remove(npc)
         CastleWarsRound.barricades.remove(npc)
-        // Team attribution isn't tracked per-barricade (Novite's private `team` field on the NPC
-        // subclass has no equivalent here without a custom Npc subclass); the shared 10-per-team
-        // cap is approximated as a single shared cap across both teams - disclosed simplification.
-        for (team in CastleWarsTeam.values()) {
-            if (CastleWarsRound.barricadeCount[team]!! > 0) {
-                CastleWarsRound.barricadeCount[team] = CastleWarsRound.barricadeCount[team]!! - 1
-                break
-            }
-        }
+        // K07: the team that set it up gets its slot back (Novite `removeBarricade(team, npc)`).
+        val team = CastleWarsRound.barricadeTeam.remove(npc) ?: return
+        CastleWarsRound.barricadeCount[team] = (CastleWarsRound.barricadeCount[team]!! - 1).coerceAtLeast(0)
     }
 
     /**

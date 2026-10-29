@@ -100,6 +100,9 @@ object CastleWarsRound {
     val barricadeCount = mutableMapOf(CastleWarsTeam.SARADOMIN to 0, CastleWarsTeam.ZAMORAK to 0)
     val spawnedFlagObjects = mutableMapOf<CastleWarsTeam, GameObject>()
     val barricades = mutableListOf<Npc>()
+
+    /** The team that set up each barricade (K07: the 10-per-team cap counts each team's own). */
+    val barricadeTeam = mutableMapOf<Npc, CastleWarsTeam>()
     val seasonWins = mutableMapOf(CastleWarsTeam.SARADOMIN to 0, CastleWarsTeam.ZAMORAK to 0)
 
     fun reset() {
@@ -111,6 +114,8 @@ object CastleWarsRound {
         flagStatus[CastleWarsTeam.ZAMORAK] = FlagStatus.SAFE
         barricadeCount[CastleWarsTeam.SARADOMIN] = 0
         barricadeCount[CastleWarsTeam.ZAMORAK] = 0
+        barricades.clear()
+        barricadeTeam.clear()
     }
 }
 

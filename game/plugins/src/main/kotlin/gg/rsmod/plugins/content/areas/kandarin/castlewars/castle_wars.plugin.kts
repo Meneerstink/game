@@ -145,6 +145,37 @@ on_item_on_npc(item = Items.EXPLOSIVE_POTION, npc = Npcs.BARRICADE) {
     player.inventory.remove(Items.EXPLOSIVE_POTION, amount = 1)
     CastleWarsHandler.destroyBarricade(world, player.getInteractingNpc())
 }
+// A barricade attacked down ("Barricades ... can be destroyed by attacking", OSRS Wiki) frees its team's slot too.
+on_npc_death(Npcs.BARRICADE) {
+    if (npc in CastleWarsRound.barricades) CastleWarsHandler.destroyBarricade(world, npc, removeNpc = false)
+}
+
+// K07 N412 part 1: barricade "Set-up" and bandage "Heal" (this cache's item options for 4053 / 4049). OSRS Wiki "Barricade": "places
+// the barricade on the ground beneath you", 10 per team (Novite: not on the tiles in front of the castle doors/ladders, not on another
+// barricade). OSRS Wiki "Bandages": "Restore 10% of hitpoints, rounded down", "Restore 30%" run energy, "Castle Wars bracelet:
+// Increases the healing amount by 50%".
+on_item_option(item = Items.BARRICADE, option = "Set-up") {
+    val team = player.attr[CW_TEAM]
+    if (team == null || player.attr[CW_PLAYING] != true) {
+        player.message("You can only set up a barricade during a game of Castle Wars.")
+        return@on_item_option
+    }
+    if (!CastleWarsHandler.canPlaceBarricade(player.tile)) {
+        player.message("You cannot place a barricade here!")
+        return@on_item_option
+    }
+    CastleWarsHandler.addBarricade(world, player, team)
+}
+
+val CASTLE_WARS_BRACES = setOf(Items.CASTLE_WARS_BRACE_1, Items.CASTLE_WARS_BRACE_2, Items.CASTLE_WARS_BRACE_3)
+
+on_item_option(item = Items.BANDAGES, option = "Heal") {
+    if (!player.inventory.remove(Items.BANDAGES, amount = 1).hasSucceeded()) return@on_item_option
+    val brace = player.equipment[EquipmentType.GLOVES.id]?.id in CASTLE_WARS_BRACES
+    player.heal(kotlin.math.floor(player.getMaximumLifepoints() * 0.10 * (if (brace) 1.5 else 1.0)).toInt())
+    player.runEnergy = (player.runEnergy + 30.0).coerceAtMost(100.0)
+    player.sendRunEnergy(player.runEnergy.toInt())
+}
 
 // Castle traversal - ladders, steps, trapdoors, energy barriers, stepping stone, and the
 // multi-branch "Staircase"/generic ladder objects that map to different destinations depending on

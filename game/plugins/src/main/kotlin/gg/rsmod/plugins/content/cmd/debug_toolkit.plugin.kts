@@ -300,6 +300,30 @@ gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
         "loc $id near ${p.tile.x},${p.tile.z}: ${found.joinToString("; ").ifEmpty { "none" }}"
     }
 }
+// `cwplay <name> <sara|zam>`: puts the agent's test character straight into a Castle Wars round on that team (K07: a real round needs
+// two players a team; one test account cannot start one). Team cape/hood and the play flag as joinPortal + startMatch set them.
+gg.rsmod.game.CommandServerCommands.handlers["cwplay"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val team =
+        when (a.getOrNull(1)) {
+            "sara" -> gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.SARADOMIN
+            "zam" -> gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.ZAMORAK
+            else -> null
+        }
+    if (p == null || team == null) {
+        "usage: cwplay <name> <sara|zam>"
+    } else {
+        w.queue {
+            p.equipment[EquipmentType.CAPE.id] = gg.rsmod.game.model.item.Item(team.capeId)
+            p.equipment[EquipmentType.HEAD.id] = gg.rsmod.game.model.item.Item(team.hoodId)
+            p.attr[gg.rsmod.plugins.content.areas.kandarin.castlewars.CW_TEAM] = team
+            p.attr[gg.rsmod.plugins.content.areas.kandarin.castlewars.CW_PLAYING] = true
+            gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsRound.playing[team]!!.add(p)
+            p.moveTo(team.baseTile)
+        }
+        "${p.username} plays Castle Wars for $team at ${team.baseTile}"
+    }
+}
 // `opnpc <name> <slot 1-5> <npc id>`: an npc option (Attack, Talk-to...) on the nearest npc with that id, through the real handler
 // path (Barrows facing E21 checked in the agent's own client).
 gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->
