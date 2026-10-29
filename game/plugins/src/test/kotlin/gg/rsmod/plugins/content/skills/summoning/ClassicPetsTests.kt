@@ -174,7 +174,7 @@ class ClassicPetsTests {
     @Test
     fun `N335 N338 N340-N345 - the reported OSRS pets walk with their boss's or family's step, the voiceless ones got a voice`() {
         val sfx = gg.rsmod.plugins.api.cfg.Sfx
-        val steps = mapOf("Pet Penance Queen" to 8473, "Baron" to 4494, "TzRek-Zuk" to 4519, "Lil' Nylo" to sfx.TBCU_SPIDER,
+        val steps = mapOf("Pet Penance Queen" to 8473, "Baron" to 4494, "TzRek-Zuk" to 4519, "TzRek-Jad" to 4519, "Lil' Nylo" to sfx.TBCU_SPIDER,
             "Little Nightmare" to sfx.FOOT_TRAMP_1, "Little Parasite" to sfx.TBCU_SPIDER, "Scorpia's offspring" to sfx.TBCU_SPIDER,
             "Nid" to sfx.TBCU_SPIDER, "Rax" to sfx.TBCU_SPIDER, "Soup" to sfx.FOOT_TRAMP_1, "Youngllef" to sfx.FOOT_TRAMP_1,
             "Corrupted Youngllef" to sfx.FOOT_TRAMP_1)
@@ -182,7 +182,7 @@ class ClassicPetsTests {
             val v = Pets.variants.first { !it.classic && it.name == name }
             assertEquals(sound, PetVoices.stepSound(v), name)
         }
-        val voices = mapOf("Beef" to sfx.COW_ATTACK, "Scurry" to sfx.RAT_SQUEAK_1, "TzRek-Zuk" to 410, "Jal-Nib-Rek" to 410,
+        val voices = mapOf("Beef" to sfx.COW_ATTACK, "Scurry" to sfx.RAT_SQUEAK_1, "TzRek-Zuk" to 410, "Jal-Nib-Rek" to 410, "TzRek-Jad" to 3858,
             "Soup" to sfx.TOAD2, "Youngllef" to sfx.BEAR_ATTACK, "Corrupted Youngllef" to sfx.BEAR_ATTACK)
         voices.forEach { (name, sound) -> assertEquals(sound, PetVoices.voiceOf(Pets.variants.first { !it.classic && it.name == name }.npc), name) }
     }

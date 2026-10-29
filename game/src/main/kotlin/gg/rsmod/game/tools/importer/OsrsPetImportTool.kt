@@ -472,8 +472,9 @@ object OsrsPetImportTool {
             Voice("Tumeken's guardian", "Babi", 5943, "toa_baba_spawn_boss_roar_01", "Ba-Ba"),
             Voice("Tumeken's guardian", "Kephriti", 6420, "toa_kephri_special_attack_fly_up_01", "Kephri"),
             Voice("Tumeken's guardian", "Zebo", 5818, "toa_zebak_ranged_enranged_roar_01", "Zebak"),
-            // OSRS sends TzTok-Jad's sounds from the server (no named id); the 667 Jad's own defend sound (npc combat audio table).
-            Voice("TzRek-Jad", "*", -1, "TzTok-Jad defend (667)", "TzTok-Jad", local667 = 410),
+            // OSRS sends TzTok-Jad's sounds from the server (no named id). N400 (owner 2026-10-29: "ander Jad-geluid"; 410 is the
+            // dragons' shared defend sound): the frame sound of the 667 TzTok-Jad's own melee attack, seq 9277.
+            Voice("TzRek-Jad", "*", -1, "TzTok-Jad melee attack (667 seq 9277)", "TzTok-Jad", local667 = 3858),
             Voice("Venenatis spiderling", "*", 6921, "wbr_venenatis_attack_screech_01", "Venenatis"),
             Voice("Vet'ion Jr.", "*", 6853, "wbr_vetion_spawn_01", "Vet'ion"),
             Voice("Vorki", "*", 1521, "vorkath_attack", "Vorkath"),
@@ -787,6 +788,14 @@ object OsrsPetImportTool {
             "sounds" -> sounds("--apply" in args)
             "table" -> table()
             "chatprobe" -> chatProbe(rows, args.drop(1).mapNotNull { it.toIntOrNull() })
+            // The OSRS sounds of sequences, to choose a pet's voice from its boss: seqsounds <osrs seq> ...
+            "seqsounds" -> {
+                val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
+                args.drop(1).mapNotNull { it.toIntOrNull() }.forEach { seq ->
+                    val (events, length) = osrsSeqSounds(reader, seq)
+                    println("SEQ $seq length=$length sounds=${events.joinToString { "t${it[0]}:synth${it[1]}/loops${it[2]}/radius${it[3]}" }}")
+                }
+            }
             "probe" ->
                 ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
                     val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
@@ -818,7 +827,7 @@ object OsrsPetImportTool {
                     }
                     println("SUMMARY rows=${rows.size} refused=$refused skeletal_rows=$skeletalRows")
                 }
-            else -> error("Usage: probe | skeletal [--apply] | sounds [--apply] | table")
+            else -> error("Usage: probe | skeletal [--apply] | sounds [--apply] | table | seqsounds <seq>...")
         }
     }
 }

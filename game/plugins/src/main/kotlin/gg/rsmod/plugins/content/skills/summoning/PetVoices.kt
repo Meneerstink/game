@@ -185,6 +185,7 @@ object PetVoices {
             "Pet Penance Queen" to 8473, // the Penance Queen's walk (owner: "gebruik die van de Penance Queen")
             "Baron" to 4494, // Duke Sucellus is a demon: the Greater demon's walk
             "Jal-Nib-Rek" to 4519, // TzHaar: TzTok-Jad's walk
+            "TzRek-Jad" to 4519, // N400 (owner 2026-10-29): TzTok-Jad's own walk, soft
             "Lil' Zik" to Sfx.TBCU_SPIDER, // Lil' Nylo and the other ToB pets: many small legs
             "Little Nightmare" to Sfx.FOOT_TRAMP_1,
             "Scorpia's offspring" to Sfx.TBCU_SPIDER,
