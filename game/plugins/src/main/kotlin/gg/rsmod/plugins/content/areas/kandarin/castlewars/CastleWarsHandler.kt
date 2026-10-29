@@ -180,9 +180,24 @@ object CastleWarsHandler {
         if (!player.inventory.remove(Items.BARRICADE, amount = 1).hasSucceeded()) return
         CastleWarsRound.barricadeCount[team] = CastleWarsRound.barricadeCount[team]!! + 1
         val npc = Npc(Npcs.BARRICADE, player.tile, world)
+        // A barricade does not come back once destroyed (respawnOverride is read by World.spawn's npc defaults).
+        npc.respawnOverride = false
         world.spawn(npc)
         CastleWarsRound.barricades.add(npc)
         CastleWarsRound.barricadeTeam[npc] = team
+        // OSRS Wiki "Barricade": "players cannot walk through them" - the tile is flagged like a solid 1x1 object while it stands.
+        setBarricadeCollision(world, npc.tile, solid = true)
+    }
+
+    private fun setBarricadeCollision(
+        world: World,
+        tile: Tile,
+        solid: Boolean,
+    ) {
+        val update = gg.rsmod.game.model.collision.CollisionUpdate.Builder()
+        update.setType(if (solid) gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD else gg.rsmod.game.model.collision.CollisionUpdate.Type.REMOVE)
+        update.putTile(tile, false, *gg.rsmod.game.model.Direction.NESW)
+        world.collision.applyUpdate(update.build())
     }
 
     /**
@@ -215,7 +230,7 @@ object CastleWarsHandler {
         removeNpc: Boolean = true,
     ) {
         if (removeNpc) world.remove(npc)
-        CastleWarsRound.barricades.remove(npc)
+        if (CastleWarsRound.barricades.remove(npc)) setBarricadeCollision(world, npc.tile, solid = false)
         // K07: the team that set it up gets its slot back (Novite `removeBarricade(team, npc)`).
         val team = CastleWarsRound.barricadeTeam.remove(npc) ?: return
         CastleWarsRound.barricadeCount[team] = (CastleWarsRound.barricadeCount[team]!! - 1).coerceAtLeast(0)

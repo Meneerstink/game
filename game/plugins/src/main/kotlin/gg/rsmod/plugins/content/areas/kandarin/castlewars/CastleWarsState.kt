@@ -114,6 +114,8 @@ object CastleWarsRound {
         flagStatus[CastleWarsTeam.ZAMORAK] = FlagStatus.SAFE
         barricadeCount[CastleWarsTeam.SARADOMIN] = 0
         barricadeCount[CastleWarsTeam.ZAMORAK] = 0
+        // The round's barricades go with it (npc and its solid tile), whichever route ends the round.
+        barricades.toList().forEach { CastleWarsHandler.destroyBarricade(it.world, it) }
         barricades.clear()
         barricadeTeam.clear()
     }

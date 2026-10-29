@@ -145,6 +145,9 @@ on_item_on_npc(item = Items.EXPLOSIVE_POTION, npc = Npcs.BARRICADE) {
     player.inventory.remove(Items.EXPLOSIVE_POTION, amount = 1)
     CastleWarsHandler.destroyBarricade(world, player.getInteractingNpc())
 }
+// A barricade never attacks back (OSRS: an object with hitpoints); players may still attack it.
+can_attack { attacker, _ -> !(attacker is gg.rsmod.game.model.entity.Npc && attacker.id == Npcs.BARRICADE) }
+
 // A barricade attacked down ("Barricades ... can be destroyed by attacking", OSRS Wiki) frees its team's slot too.
 on_npc_death(Npcs.BARRICADE) {
     if (npc in CastleWarsRound.barricades) CastleWarsHandler.destroyBarricade(world, npc, removeNpc = false)
