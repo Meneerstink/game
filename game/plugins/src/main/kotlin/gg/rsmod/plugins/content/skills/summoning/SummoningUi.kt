@@ -62,7 +62,9 @@ object SummoningUi {
 
     /**
      * N355 (owner 2026-10-24: "de preview van de follower heeft nog de vierkant keer 3"): the three nested rectangles 662:0 / 2 / 3
-     * (8,28 173x111; 14,31 161x105; 23,36 143x95) behind the model box draw as three squares around the preview - always hidden.
+     * (8,28 173x111; 14,31 161x105; 23,36 143x95) behind the model box draw as three squares around the preview - they were always hidden.
+     * Owner 2026-10-29 (photo of his Spirit wolf's Follower Details): with a familiar the client shows 2 and 3 again - a dark inner
+     * square - while a pet kept the flat lighter box; "zoals familiar": shown for every active follower, hidden only when empty.
      */
     private val PANEL_BACKDROP_RECTS = listOf(2, 3)
 
@@ -432,7 +434,7 @@ object SummoningUi {
             player.setVarbit(PET_HUNGER_VARBIT, PET_VALUE_NOT_APPLICABLE)
         }
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
-        PANEL_BACKDROP_RECTS.forEach { player.setComponentHidden(PANEL, it, true) }
+        PANEL_BACKDROP_RECTS.forEach { player.setComponentHidden(PANEL, it, !active) }
         player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
         player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
         PANEL_CALL.forEach { player.setComponentHidden(PANEL, it, !active) }

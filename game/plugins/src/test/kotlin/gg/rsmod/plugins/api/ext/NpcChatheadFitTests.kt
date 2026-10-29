@@ -11,10 +11,17 @@ class NpcChatheadFitTests {
 
     @Test
     fun `a head that fits its frame keeps the cache camera`() {
-        val half = (roomV * 0.7 / 2).toInt() - 2
+        val half = (roomV * 0.8 / 2).toInt() - 2
         val fit = NpcChatheadFit.fit(surface, NpcChatheadFit.Extents(half, half, 10, 10))
         assertEquals(surface.zoom, fit.zoom)
         assertEquals(false, fit.moved)
+    }
+
+    @Test
+    fun `a wide but low head that fills under three quarters of its frame is zoomed in`() {
+        // N397 10-29: Yami (23/23/30/40) filled 62% of the dialogue's width and kept the cache camera - it looked tiny.
+        val fit = NpcChatheadFit.fit(surface, NpcChatheadFit.Extents(23, 23, 30, 40))
+        assertTrue(fit.zoom < surface.zoom, "zoom ${fit.zoom}")
     }
 
     @Test

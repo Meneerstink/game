@@ -63,8 +63,12 @@ object NpcChatheadFit {
     /** Projection is not exactly linear in the zoom (the near half of a head shrinks a little less): keep 4% spare. */
     private const val MARGIN = 1.04
 
-    /** A head that covers less than this share of its frame (on its fuller axis) is drawn too small: it is zoomed in. */
-    const val SMALL = 0.6
+    /**
+     * A head that covers less than this share of its frame (on its fuller axis) is drawn too small: it is zoomed in. N397 sweep
+     * 10-29: at 0.6 a head that is wide but low (Yami's horns, Little Nightmare's wings, Bran/Ric's flames) stayed at the cache
+     * camera and looked tiny next to the heads brought in to [FILL].
+     */
+    const val SMALL = 0.75
 
     /** The share of the frame a zoomed-in head fills on its fuller axis. */
     const val FILL = 0.85
