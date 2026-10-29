@@ -66,6 +66,8 @@ object ClassicPetTalk {
                 cat.facePawn(player)
                 player.animate(PLAYER_STROKE)
                 cat.animate(CAT_STROKE)
+                // N403 (owner 2026-10-24: "Stroke geen geluid"): the cat purrs - the 667 cache's own purr.
+                FamiliarAudio.play(player, gg.rsmod.plugins.api.cfg.Sfx.PURR, volume = 255, at = cat.tile)
                 cat.forceChat("Purr...purr...")
                 chatPlayer("That cat sure loves to be stroked.")
             }
@@ -79,7 +81,9 @@ object ClassicPetTalk {
                     return
                 }
                 cat.facePawn(rat)
+                Pets.variantOfNpc(cat.id)?.let { PetVoices.speciesVoice(it) }?.let { FamiliarAudio.play(player, it, volume = 255, at = cat.tile) }
                 cat.forceChat("Meeeoooooowwww!")
+                FamiliarAudio.play(player, gg.rsmod.plugins.api.cfg.Sfx.RAT_SQUEAK_1, volume = 255, at = rat.tile)
                 rat.forceChat("Eeek!")
                 wait(5)
                 cat.facePawn(player)
