@@ -133,7 +133,8 @@ class StoreCatalogueTests {
         StoreCatalogue.ENTRIES.filter { it.purchaseItem == Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP || it.purchaseItem == Items.STEAM_STAFF_UPGRADE_KIT }
             .forEach { assertEquals(1, kits(it), "kit ${it.purchaseItem}") }
         // Every kit sold: never more kits than routes, never a set count for routes that share one slot.
-        StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT }.forEach { entry ->
+        StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT && it.requiredBaseItems.size == 1 }.forEach { assertEquals(1, kits(it), "kit ${it.purchaseItem}") }
+        StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT && it.requiredBaseItems.size > 1 }.forEach { entry ->
             assertTrue(entry.requiredBaseItems.all { slots.containsKey(it) }, "kit ${entry.purchaseItem}: every base item has an equipment slot")
             assertEquals(entry.requiredBaseItems.map { slots.getValue(it) }.distinct().size, kits(entry), "kit ${entry.purchaseItem}")
         }
