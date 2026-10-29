@@ -105718,7 +105718,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -118642,7 +118642,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -135523,7 +135523,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
@@ -138116,7 +138116,7 @@
     defence_ranged: 9
     summoning: 9
     melee_strength: 0
-    prayer: 4
+    prayer: 0
     ranged_strength: 0
     magic_damage: 0
     attack_audio: -1
