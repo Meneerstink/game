@@ -61,6 +61,72 @@ object OsrsPetImportTool {
     fun bakedSeqs(n: OsrsNpcProbeTool.OsrsNpc): List<Int> =
         (OsrsNpcProbeTool.movementSeqs(n).values.filter { it >= 0 } + EMOTES[n.id].orEmpty().flatMap { it.osrsSeqs }).distinct()
 
+    /** The pet chathead sequences named in RuneLite AnimationID (SNAKEBOSS_PET_CHATHEAD_TALK, OLM_PET_CHATHEAD_IDLE, ...). */
+    private val PET_CHATHEAD_CANDIDATES =
+        setOf(2415, 7130, 7179, 7182, 7399, 7400, 7804, 7805, 7958, 7979, 8135, 8265, 8427, 8446, 8635, 8636, 8858, 8907)
+
+    /**
+     * K02 (N397): which OSRS chathead sequence fits each pet head. Per variant: the follower's chathead models' vertex labels
+     * against the label groups of each candidate sequence's base (every RuneLite AnimationID name with CHAT, plus [extra]);
+     * prints the best matches by label overlap (Jaccard over the labels, vertex-weighted coverage), the human CHATNEU1 588 for
+     * comparison. Read-only.
+     */
+    private fun chatProbe(
+        rows: List<OsrsPetRoster.Row>,
+        extra: List<Int>,
+    ) {
+        val names =
+            File(RspsPaths.root("reference/runelite/gameval/AnimationID.java")).readLines()
+                .mapNotNull { Regex("""int (\w*CHAT\w*) = (\d+);""").find(it)?.destructured?.let { (n, id) -> id.toInt() to n } }
+                .toMap()
+        ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
+            val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
+            val seqFiles = reader.files(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE)
+            val baseGroups = HashMap<Int, Set<Int>>()
+            fun groupsOf(seqId: Int): Pair<Int, Set<Int>>? {
+                val bytes = seqFiles[seqId] ?: return null
+                val seq = runCatching { OsrsFxImportTool.decodeOsrsSeq(bytes) }.getOrNull() ?: return null
+                val fs = seq.frames.firstOrNull()?.ushr(16) ?: return null
+                val frame = reader.files(OsrsFxImportTool.INDEX_FRAMES, fs).values.firstOrNull() ?: return null
+                val base = ((frame[0].toInt() and 0xFF) shl 8) or (frame[1].toInt() and 0xFF)
+                return base to baseGroups.getOrPut(base) {
+                    val b = reader.file(OsrsFxImportTool.INDEX_BASES, base, 0) ?: return null
+                    val c = OsrsFxImportTool.Cursor(b)
+                    val count = c.u8()
+                    val types = IntArray(count) { c.u8() }
+                    val sizes = IntArray(count) { c.u8() }
+                    val out = HashSet<Int>()
+                    sizes.forEachIndexed { g, size -> repeat(size) { val l = c.u8(); if (types[g] in 1..3) out += l } }
+                    out
+                }
+            }
+            val candidates = (names.keys + extra).distinct().mapNotNull { s -> groupsOf(s)?.let { s to it } }
+            for (row in rows) {
+                val npc = followerNpc(row, npcFiles) ?: continue
+                val labels =
+                    npc.chatheads.flatMap { m ->
+                        val raw = reader.file(7, m, 0)?.let { runCatching { ModernModelDecoder.decode(it, flattenTextures = true) }.getOrNull() }
+                        raw?.vertexLabel?.toList().orEmpty()
+                    }.filter { it != 255 }
+                val h = labels.toSet()
+                fun score(g: Set<Int>): Pair<Double, Double> {
+                    val jac = if (h.isEmpty()) 0.0 else (h intersect g).size.toDouble() / (h union g).size
+                    val cov = if (labels.isEmpty()) 0.0 else labels.count { it in g }.toDouble() / labels.size
+                    return jac to cov
+                }
+                val ranked = candidates.map { (s, bg) -> Triple(s, bg.first, score(bg.second)) }.sortedByDescending { it.third.first }
+                val human = candidates.firstOrNull { it.first == 588 }?.let { score(it.second.second) }
+                println(
+                    "PET ${row.pet} / ${row.variant} npc=${npc.id} heads=${npc.chatheads.toList()} labels=${h.minOrNull()}..${h.maxOrNull()} (${h.size}) " +
+                        "human588=${"%.2f/%.2f".format(human?.first ?: 0.0, human?.second ?: 0.0)} best=" +
+                        ranked.take(4).joinToString(" ") { (s, b, sc) -> "$s:${names[s] ?: "?"}@b$b=${"%.2f/%.2f".format(sc.first, sc.second)}" } +
+                        " known=" + ranked.filter { it.first in PET_CHATHEAD_CANDIDATES && it.third.second > 0.0 }
+                            .joinToString(" ") { (s, b, sc) -> "$s@b$b=${"%.2f/%.2f".format(sc.first, sc.second)}" },
+                )
+            }
+        }
+    }
+
     /** The follower npc of a roster row: the one of its infobox npc ids whose OSRS definition carries the follower flag (opcode 122). */
     fun followerNpc(
         row: OsrsPetRoster.Row,
@@ -666,6 +732,7 @@ object OsrsPetImportTool {
             "skeletal" -> skeletal("--apply" in args)
             "sounds" -> sounds("--apply" in args)
             "table" -> table()
+            "chatprobe" -> chatProbe(rows, args.drop(1).mapNotNull { it.toIntOrNull() })
             "probe" ->
                 ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->
                     val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
