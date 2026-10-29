@@ -610,6 +610,11 @@ val SLAYER_ASSIGNMENT = AttributeKey<String>(persistenceKey = "slayer_assignment
 val SLAYER_AMOUNT = AttributeKey<Int>(persistenceKey = "slayer_amount")
 
 /**
+ * The last task a Slayer Master gave (K03 N410: the Slayer cape may offer it again).
+ */
+val SLAYER_PREVIOUS_TASK = AttributeKey<String>(persistenceKey = "slayer_previous_task")
+
+/**
  * The amount of Slayer monsters left to kill
  */
 val CONSECUTIVE_SLAYER_TASKS = AttributeKey<Int>(persistenceKey = "consecutive_slayer_tasks")

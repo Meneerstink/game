@@ -144,8 +144,10 @@ suspend fun giveTask(
         return
     }
 
+    // K03 N410: the Slayer cape "Allows bypassing combat level requirements for new tasks" (OSRS Wiki "Cape of Accomplishment").
+    val slayerCape = gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.SLAYER)
     if (player.skills.getMaxLevel(Skills.SLAYER) < slayerMaster.reqSlayerLevel ||
-        player.combatLevel < slayerMaster.requiredCombatLevel
+        player.combatLevel < slayerMaster.requiredCombatLevel && !slayerCape
     ) {
         it.chatNpc(
             "You are not yet experienced enough to receive my tasks. Come back when you're stronger.",
@@ -165,13 +167,22 @@ suspend fun giveTask(
         }
 
     if (validAssignments.isNotEmpty()) {
-        val totalWeight = validAssignments.sumOf { it.weight }
-        var weightSum = 0.0
-        val randomWeight = Math.random() * totalWeight
+        // K03 N410: the Slayer cape gives a "10% chance to be offered the option to pick the previous task" (OSRS Wiki). CUSTOM wording.
+        val previous = player.attr[SLAYER_PREVIOUS_TASK]?.let { last -> validAssignments.firstOrNull { it.assignment.identifier == last } }
+        val repeat =
+            previous != null && slayerCape && world.randomDouble() < 0.1 &&
+                it.options("Yes, ${previous.assignment.identifier.lowercase()} again.", "No, a new task.", title = "Repeat your previous task?") == 1
         val selectedAssignment =
-            validAssignments.first { assignment ->
-                weightSum += assignment.weight
-                weightSum >= randomWeight
+            if (repeat) {
+                previous!!
+            } else {
+                val totalWeight = validAssignments.sumOf { it.weight }
+                var weightSum = 0.0
+                val randomWeight = Math.random() * totalWeight
+                validAssignments.first { assignment ->
+                    weightSum += assignment.weight
+                    weightSum >= randomWeight
+                }
             }
 
         val amount =
@@ -182,6 +193,7 @@ suspend fun giveTask(
             }
 
         player.attr[SLAYER_ASSIGNMENT] = selectedAssignment.assignment.identifier
+        player.attr[SLAYER_PREVIOUS_TASK] = selectedAssignment.assignment.identifier
         player.attr[SLAYER_AMOUNT] = world.random(amount)
         player.attr[SLAYER_MASTER] = slayerMaster.id
 

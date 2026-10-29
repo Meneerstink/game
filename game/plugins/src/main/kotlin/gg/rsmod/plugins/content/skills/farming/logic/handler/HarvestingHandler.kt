@@ -123,8 +123,18 @@ class HarvestingHandler(
             (state.seed!!.harvest.minLiveSaveBaseSlots + farmingLevelDifference).coerceAtMost(
                 state.seed!!.harvest.maxLiveSaveBaseSlots,
             )
-        val magicSecateursFactor = if (player.hasEquipped(EquipmentType.WEAPON, Items.MAGIC_SECATEURS)) 1.1 else 1.0
-        val slots = ceil(baseSlots * magicSecateursFactor).toInt()
+        // OSRS Wiki "Farming" (harvest lives): the item bonuses add up - magic secateurs +10%, and (K03 N410) the Farming cape +5% on
+        // herb patches ("Herb patches get a 5% higher base chance to save harvest lives").
+        val secateurs = if (player.hasEquipped(EquipmentType.WEAPON, Items.MAGIC_SECATEURS)) 0.1 else 0.0
+        val farmingCape =
+            if (state.seed!!.seedType == gg.rsmod.plugins.content.skills.farming.data.SeedType.Herb &&
+                gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.FARMING)
+            ) {
+                0.05
+            } else {
+                0.0
+            }
+        val slots = ceil(baseSlots * (1.0 + secateurs + farmingCape)).toInt()
         return !player.world.chance(slots, 256)
     }
 

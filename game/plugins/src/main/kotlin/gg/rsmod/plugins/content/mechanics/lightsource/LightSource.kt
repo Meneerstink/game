@@ -88,6 +88,11 @@ enum class LightSource(
 
     companion object {
         fun getActiveLightSource(player: Player): LightSource? {
+            // K03 N410: the Firemaking cape (and the max cape) "Acts as an inextinguishable light source" (OSRS Wiki "Cape of
+            // Accomplishment"); it lights the way like a lit torch (same overlay).
+            if (gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.FIREMAKING)) {
+                return UNLIT_TORCH
+            }
             for (source in values()) {
                 if (player.inventory.contains(source.product)) {
                     return source
