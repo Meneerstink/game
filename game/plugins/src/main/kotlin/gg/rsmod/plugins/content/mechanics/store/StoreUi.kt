@@ -401,8 +401,14 @@ object StoreUi : KLogging() {
         val several = shown.size > 1
         player.setComponentHidden(INTERFACE_ID, l.carouselPrevious, !several)
         player.setComponentHidden(INTERFACE_ID, l.carouselNext, !several)
-        player.setComponentText(INTERFACE_ID, l.resultName, name(player, preview) + if (several) "  <col=c0c0c0>${index + 1} of ${shown.size}</col>" else "")
-        val card = card(player, entry, resultIndex(entry, index))
+        // The "n of m" counter only where it fits beside the name (a long kit name would push it out of the card; the arrows stay).
+        val counter = "  ${index + 1} of ${shown.size}"
+        val title = name(player, preview)
+        player.setComponentText(INTERFACE_ID, l.resultName, title + if (several && title.length + counter.length <= TITLE_MAX) "<col=c0c0c0>$counter</col>" else "")
+        val card = card(player, entry, resultIndex(entry, index)).let {
+            // N322: on the kit itself the title already names it; the subtitle says where the kit on the item is.
+            if (entry.kind == Kind.KIT && index == 0 && several) Card(tierLabel(entry) + "Next: the kit on the item", it.requirement, it.owned, it.tradeable, it.effect) else it
+        }
         if (l.sections) {
             player.setComponentText(INTERFACE_ID, l.kitName, card.subtitle)
             player.setComponentText(INTERFACE_ID, l.requirement, card.requirement)
@@ -455,12 +461,17 @@ object StoreUi : KLogging() {
     private const val RED = "ff5050"
     private const val AMBER = "ffb040"
 
+    /** Characters of the card title (name + "  n of m") that fit the preview card (Elder chaos robes ornament kit = 30 + 8 did not). */
+    private const val TITLE_MAX = 34
+
+    private fun tierLabel(entry: Entry): String = TIER_COLOURS[entry.tier]?.let { "<col=$it>${entry.tier.label}</col> - " } ?: ""
+
     fun card(
         player: Player,
         entry: Entry,
         index: Int,
     ): Card {
-        val tier = TIER_COLOURS[entry.tier]?.let { "<col=$it>${entry.tier.label}</col> - " } ?: ""
+        val tier = tierLabel(entry)
         val subtitle =
             when {
                 entry.kind == Kind.KIT -> tier + name(player, entry.purchaseItem)
@@ -541,7 +552,8 @@ object StoreUi : KLogging() {
     /** N324: only kits that come back when dismantled carry the permanence promise; consumed upgrade kits must not. */
     fun kitPermanenceLines(entry: Entry): Pair<String, String>? =
         if (entry.kind == Kind.KIT && entry.dismantlePolicy == StoreCatalogue.DismantlePolicy.RETURNS_KIT) {
-            "You never lose an ornament kit -" to "it's permanent."
+            // The owner's line, shortened to fit one card line ("You never lose an ornament kit - it's permanent." ran off the card).
+            "You never lose the kit -" to "it's permanent."
         } else {
             null
         }

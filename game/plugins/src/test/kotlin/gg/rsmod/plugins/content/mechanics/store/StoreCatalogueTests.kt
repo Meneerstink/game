@@ -175,7 +175,7 @@ class StoreCatalogueTests {
         assertTrue(consumed.isNotEmpty())
         returnable.forEach {
             val lines = StoreUi.kitPermanenceLines(it)
-            assertEquals("You never lose an ornament kit - it's permanent.", lines?.toList()?.joinToString(" "), "${it.purchaseItem}")
+            assertEquals("You never lose the kit - it's permanent.", lines?.toList()?.joinToString(" "), "${it.purchaseItem}")
         }
         consumed.forEach { assertEquals(null, StoreUi.kitPermanenceLines(it), "${it.purchaseItem} consumes its kit") }
     }
