@@ -85,7 +85,16 @@ object DungeoneeringItems {
             19700..19703,
             19846..19879,
             19886..19896,
-        ).flatMapTo(HashSet()) { it.toList() } + CAPES
+        ).flatMapTo(HashSet()) { it.toList() } + CAPES + DAEMONHEIM_QUESTS
+
+    /**
+     * N260 (owner 2026-10-23 "zoek uit of alle dungeoneering ... compleet verwijderd"; 10-29 cache scan by name): the Daemonheim
+     * quest items Void's list lacks - Thok's sword ... Katagon full helm (Thok it to 'em, Vengeance, Three's company: Fractite /
+     * Marmaros / Gorgonite / Katagon gear, Novite / Bathus / Zephyrium ore, Heim crab, Gatestone, the four rings of kinship) and
+     * the Hexhunter bow with Eva's kiteshield / longsword and the blood-stained glass.
+     */
+    val DAEMONHEIM_QUESTS: Set<Int>
+        get() = (20820..20877).toSet() + (21332..21336)
 
     fun isDungeoneering(itemId: Int): Boolean = itemId in IDS
 }

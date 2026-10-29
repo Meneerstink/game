@@ -74,7 +74,7 @@ class DungeoneeringRemovedTests {
             val ids = Regex("""(?m)^id = (\d+)""").findAll(donor.readText()).map { it.groupValues[1].toInt() }.toSet()
             assertTrue(ids.size > 2500, "donor list read (${ids.size})")
             assertEquals(ids - DungeoneeringItems.IDS, emptySet(), "donor ids missing from DungeoneeringItems")
-            assertEquals(DungeoneeringItems.IDS - ids - DungeoneeringItems.CAPES, emptySet(), "ids not in the donor list")
+            assertEquals(DungeoneeringItems.IDS - ids - DungeoneeringItems.CAPES - DungeoneeringItems.DAEMONHEIM_QUESTS, emptySet(), "ids not in the donor list")
         }
         (samples + DungeoneeringItems.IDS).forEach { id ->
             val d = def(id)
