@@ -59,7 +59,7 @@ object MaxCapes {
      * item dialogue, built only on what the pages state - the hood converts with the cape, and "the max cape and [item] can be
      * separated by using a knife on the cape". Sound: ItemAttachSounds (attach on combine, detach on the knife split).
      */
-    const val COMBINE_DETAIL = "Your max hood will change with it. A knife on the cape separates them again."
+    const val COMBINE_DETAIL = "Your max hood changes with it; a knife splits them again." // fits one line of 94:7
 
     /** "Infernal cape" -> "infernal cape", "Imbued Saradomin cape" -> "imbued Saradomin cape" (proper nouns keep their capital). */
     fun lower(name: String): String = name.replaceFirstChar { it.lowercaseChar() }
