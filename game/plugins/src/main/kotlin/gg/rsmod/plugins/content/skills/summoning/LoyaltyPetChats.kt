@@ -5,7 +5,7 @@ package gg.rsmod.plugins.content.skills.summoning
  * approved design GOEDGEKEURDE-ONTWERPEN punt 7): every pet species the Loyalty store sells has 2-3 short conversations of its own,
  * player and pet taking turns, one picked at random on Talk-to. The pet makes its species sound ([PetVoices.speciesVoice]) only on
  * a line where it makes an animal noise (a line that starts with `*...!*`, such as "*Woof!*" or "*Ook ook!*") - never on the others.
- * Only the Loyalty store pets: the grown-up 667 variants (Monkey, Terrier ...) are not sold and keep their transcript line.
+ * The grown-up 667 variants (Monkey, Terrier ...) and the other 667 pets have their own in [ClassicPetChats] (owner 2026-10-29).
  */
 object LoyaltyPetChats {
     /** One line: the pet's ([pet] = true) or the player's. */

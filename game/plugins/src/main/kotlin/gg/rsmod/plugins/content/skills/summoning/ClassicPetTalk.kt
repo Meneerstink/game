@@ -25,11 +25,15 @@ object ClassicPetTalk {
         StoreCatalogue.ENTRIES.filter { it.shop == StoreCatalogue.Shop.LOYALTY && Pets.isPetItem(it.purchaseItem) }.map { it.purchaseItem }.toSet()
     }
 
-    /** The conversations of follower [npc]: a Loyalty store pet's species chats, else null (it keeps its transcript line). */
+    /**
+     * The conversations of 667 follower [npc]: its species' Loyalty store chats ([LoyaltyPetChats]), else the other 667 pets' own
+     * ([ClassicPetChats], owner 2026-10-29), else null (it keeps its transcript line).
+     */
     fun chatsFor(npc: Int): List<List<LoyaltyPetChats.Line>>? {
         val variant = Pets.variantOfNpc(npc) ?: return null
-        if (!variant.classic || variant.item !in LOYALTY_PET_ITEMS) return null
-        return LoyaltyPetChats.speciesOf(variant.name)?.let { LoyaltyPetChats.CHATS[it] }
+        if (!variant.classic) return null
+        LoyaltyPetChats.speciesOf(variant.name)?.let { return LoyaltyPetChats.CHATS[it] }
+        return ClassicPetChats.speciesOf(variant.name)?.let { ClassicPetChats.CHATS[it] }
     }
 
     /** One random conversation of [npc]; its noise lines sound with the species' own voice ([PetVoices.speciesVoice]). */

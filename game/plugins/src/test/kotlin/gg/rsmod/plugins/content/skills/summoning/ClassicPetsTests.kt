@@ -126,12 +126,30 @@ class ClassicPetsTests {
         assertTrue(LoyaltyPetChats.Line(true, "*Ook ook!* It is MY banana.").sound)
         assertTrue(!LoyaltyPetChats.Line(true, "It is MY banana.").sound)
         assertTrue(!LoyaltyPetChats.Line(false, "*Woof!*").sound, "the player does not bark")
-        // Only the store pets: a grown 667 monkey keeps its own transcript line.
-        val monkey = Pets.variants.firstOrNull { it.classic && it.name == "Monkey" }
-        if (monkey != null) assertEquals(null, ClassicPetTalk.chatsFor(monkey.npc))
         // Every species written down is used by a store pet (no dead conversations).
         val used = loyalty.mapNotNull { LoyaltyPetChats.speciesOf(Pets.variantOfItem(it)!!.name) }.toSet()
         assertEquals(LoyaltyPetChats.CHATS.keys, used)
+    }
+
+    @Test
+    fun `every other 667 pet has 2-3 conversations of its own (owner 2026-10-29), sound only where it has a voice`() {
+        val classic = Pets.variants.filter { it.classic }
+        assertTrue(classic.size >= 150, "${classic.size} 667 pets")
+        for (v in classic) {
+            val chats = ClassicPetTalk.chatsFor(v.npc)
+            assertTrue(chats != null && chats.size in 2..3, "${v.name}: ${chats?.size} conversations")
+            for (chat in chats!!) {
+                assertTrue(chat.size in 2..4, "${v.name}: ${chat.size} lines")
+                assertTrue(chat.any { it.pet } && chat.any { !it.pet }, "${v.name}: player and pet both speak")
+                chat.forEach { line -> assertTrue(line.text.length <= 70, "${v.name}: line too long for one dialogue box: ${line.text}") }
+            }
+            if (chats.flatten().any { it.sound }) assertTrue(PetVoices.speciesVoice(v) != null, "${v.name} has no voice")
+        }
+        // A grown 667 monkey talks like a monkey now, not with the baby's Loyalty lines.
+        val monkey = classic.first { it.name == "Monkey" }
+        assertEquals(ClassicPetChats.CHATS.getValue("Monkey"), ClassicPetTalk.chatsFor(monkey.npc))
+        // Every species written down is used by a 667 pet (no dead conversations).
+        assertEquals(ClassicPetChats.CHATS.keys, classic.mapNotNull { ClassicPetChats.speciesOf(it.name) }.toSet())
     }
 
     @Test
