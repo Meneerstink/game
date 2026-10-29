@@ -38,8 +38,14 @@ GAMES_NECKLACE.forEach { item ->
     }
 }
 
+/**
+ * N422: the 667 necklace's sixth worn option "Burgh De Rott" (cache param 1211, shown by the worn slot but never read by the server
+ * until then, so the click did nothing). Burgh de Rott's teleport spot as Drakan's medallion uses it (teleport_items).
+ */
+private val WORN_ONLY = mapOf("Burgh De Rott" to Tile(3496, 3202, 0))
+
 GAMES_NECKLACE.forEach { item ->
-    LOCATIONS.forEach { (location, endTile) ->
+    (LOCATIONS + WORN_ONLY).forEach { (location, endTile) ->
         on_equipment_option(item, option = location) {
             player.queue(TaskPriority.STRONG) {
                 player.teleport(endTile, isEquipped = true)

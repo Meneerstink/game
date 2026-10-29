@@ -202,6 +202,14 @@ task runOsrsPetImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsPetImportTool'
 }
 
+task runWearMenuTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N422: Wear on inventory op 2 and a fifth worn option in param 1211 (Ring of shadows, Ring of 3rd Age). Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WearMenuTool'
+    workingDir = rootProject.projectDir
+}
+
 task runMaxCapeMenuTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS menus of the max cape and the Magic cape (t) (CacheTransaction, both caches). ' +

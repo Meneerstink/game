@@ -205,11 +205,16 @@ class ItemDef(
                     val option = params.get(paramId) as? String ?: continue
                     equipmentMenu[i] = option
                 }
+                // N422: the worn slot (clientscript 1612) shows params 528-531 as ops 2-5 and param 1211 as op 6, the slot of 532.
+                if (equipmentMenu[4] == null) (params.get(WORN_OP6_PARAM) as? String)?.let { equipmentMenu[4] = it }
             }
         }
     }
 
     companion object {
+        /** The worn menu's sixth op: the equipment slot script reads it from this param, not from 532. */
+        const val WORN_OP6_PARAM = 1211
+
         fun getSlotText(slot: Int): String {
             return when (slot) {
                 0 -> "on head"
