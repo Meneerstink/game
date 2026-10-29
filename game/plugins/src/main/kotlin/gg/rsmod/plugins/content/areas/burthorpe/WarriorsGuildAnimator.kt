@@ -107,6 +107,49 @@ object WarriorsGuildAnimator {
             else -> false
         }
 
+    // ---- K06 N372 part 4: shot put (OSRS Wiki "Calculator:Shot put": X = Strength + run energy + style - shot weight) ----
+
+    const val SHOT_18LB = 15664
+    const val SHOT_22LB = 15665
+
+    /** The three throws, their bonus S and the player's throw animation (Novite ShotputD). */
+    enum class Throw(val label: String, val bonus: Int, val anim: Int) {
+        STANDING("Standing throw.", 30, 15079),
+        STEP("Step and throw.", 20, 15080),
+        SPIN("Spin and throw.", 10, 15078),
+    }
+
+    fun shotWeight(obj: Int): Int = if (obj == SHOT_22LB) 22 else 18
+
+    fun shotX(
+        strength: Int,
+        runEnergy: Int,
+        style: Throw,
+        weight: Int,
+    ): Int = strength + runEnergy + style.bonus - weight
+
+    /** The distance table of the calculator (X < 58 -> 1 yard ... X >= 216 -> 14 yards). */
+    private val DISTANCE_STEPS = intArrayOf(58, 71, 84, 97, 110, 124, 137, 150, 163, 176, 190, 203, 216)
+
+    fun shotDistance(x: Int): Int = DISTANCE_STEPS.indexOfFirst { x < it }.let { if (it < 0) 14 else it + 1 }
+
+    /** Success chance X / 250. */
+    fun shotSuccess(x: Int): Double = (x / 250.0).coerceIn(0.0, 1.0)
+
+    fun shotXp(x: Int): Double = x * 0.7
+
+    fun shotEnergy(x: Int): Double = x * 0.1
+
+    /** Tokens: 1 + distance (18lb) or 3 + distance (22lb). */
+    fun shotTokens(
+        weight: Int,
+        distance: Int,
+    ): Int = (if (weight == 22) 3 else 1) + distance
+
+    const val MSG_SHOT_HANDS = "You must have both your hands free in order to throw a shotput."
+    const val MSG_SHOT_BREATH = "You take a deep breath and prepare yourself."
+    const val MSG_SHOT_FUMBLE = "You fumble and drop the shot onto your toe. Ow!"
+
     /** The pieces a kill gives back: the whole set, or - 1 in [BREAK_ONE_IN] - all but one ([roll] picks; -1 = nothing breaks). */
     fun returned(set: Set, roll: Int): List<Int> = if (roll < 0) set.pieces else set.pieces.filterIndexed { i, _ -> i != roll }
 }

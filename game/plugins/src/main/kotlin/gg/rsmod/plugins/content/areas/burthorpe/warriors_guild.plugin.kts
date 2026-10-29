@@ -250,3 +250,39 @@ WarriorsGuildAnimator.DUMMIES.forEach { id ->
         player.message(WarriorsGuildAnimator.MSG_DUMMY_HIT)
     }
 }
+
+// ---- K06 N372 part 4: shot put (WarriorsGuildAnimator.shotX ... OSRS Wiki "Calculator:Shot put") ----
+listOf(WarriorsGuildAnimator.SHOT_18LB, WarriorsGuildAnimator.SHOT_22LB).forEach { shot ->
+    on_obj_option(obj = shot, option = "throw") {
+        if (player.getEquipment(EquipmentType.WEAPON) != null || player.getEquipment(EquipmentType.SHIELD) != null) {
+            player.message(WarriorsGuildAnimator.MSG_SHOT_HANDS)
+            return@on_obj_option
+        }
+        val weight = WarriorsGuildAnimator.shotWeight(shot)
+        player.queue {
+            player.animate(WarriorsGuildAnimator.PUT_ANIM)
+            val choice = options(*WarriorsGuildAnimator.Throw.values().map { it.label }.toTypedArray(), title = "Select a throw")
+            val style = WarriorsGuildAnimator.Throw.values().getOrNull(choice - 1) ?: return@queue
+            player.lock = LockState.DELAY_ACTIONS
+            player.message(WarriorsGuildAnimator.MSG_SHOT_BREATH)
+            player.animate(style.anim)
+            val x = WarriorsGuildAnimator.shotX(player.skills.getCurrentLevel(Skills.STRENGTH), player.runEnergy.toInt(), style, weight)
+            player.runEnergy = (player.runEnergy - WarriorsGuildAnimator.shotEnergy(x)).coerceAtLeast(0.0)
+            player.sendRunEnergy(player.runEnergy.toInt())
+            wait(3)
+            if (world.randomDouble() >= WarriorsGuildAnimator.shotSuccess(x)) {
+                player.message(WarriorsGuildAnimator.MSG_SHOT_FUMBLE)
+                player.hit(1)
+                player.lock = LockState.NONE
+                return@queue
+            }
+            val distance = WarriorsGuildAnimator.shotDistance(x)
+            wait(distance / 2 + 1)
+            player.addXp(Skills.STRENGTH, WarriorsGuildAnimator.shotXp(x))
+            val tokens = WarriorsGuildAnimator.shotTokens(weight, distance)
+            player.inventory.add(Items.WARRIOR_GUILD_TOKEN, tokens)
+            player.message("You throw the shot $distance yard${if (distance == 1) "" else "s"} and earn $tokens token${if (tokens == 1) "" else "s"}.")
+            player.lock = LockState.NONE
+        }
+    }
+}

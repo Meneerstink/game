@@ -42,6 +42,23 @@ class WarriorsGuildAnimatorTests {
     }
 
     @Test
+    fun `shot put follows the OSRS Wiki calculator`() {
+        val w = WarriorsGuildAnimator
+        // 99 Strength, 100% run, standing throw, 22lb: X = 207 -> 13 yards, 16 tokens, 144.9 XP, 20.7 energy, 82.8% success.
+        val x = w.shotX(99, 100, WarriorsGuildAnimator.Throw.STANDING, 22)
+        assertEquals(207, x)
+        assertEquals(13, w.shotDistance(x))
+        assertEquals(16, w.shotTokens(22, w.shotDistance(x)))
+        assertEquals(144.9, w.shotXp(x), 0.001)
+        assertEquals(20.7, w.shotEnergy(x), 0.001)
+        assertEquals(0.828, w.shotSuccess(x), 0.001)
+        assertEquals(1, w.shotDistance(57))
+        assertEquals(2, w.shotDistance(58))
+        assertEquals(14, w.shotDistance(216))
+        assertEquals(1 + 5, w.shotTokens(18, 5))
+    }
+
+    @Test
     fun `a kill gives the whole set back, or all but one piece`() {
         val rune = WarriorsGuildAnimator.Set.RUNE
         assertEquals(rune.pieces, WarriorsGuildAnimator.returned(rune, -1))
