@@ -122,6 +122,7 @@ object CastleWarsHandler {
         player.equipment[EquipmentType.HEAD.id] = null
         player.attr.remove(CW_TEAM)
         player.attr.remove(CW_PLAYING)
+        player.write(gg.rsmod.game.message.impl.HintArrowMessage(slot = CARRIER_ARROW_SLOT, type = gg.rsmod.game.message.impl.HintArrowMessage.TYPE_CLEAR))
         player.inventory.remove(Items.BANDAGES, amount = Int.MAX_VALUE)
         player.inventory.remove(Items.BARRICADE, amount = Int.MAX_VALUE)
         player.moveTo(CastleWarsRound.LOBBY)
@@ -281,6 +282,26 @@ object CastleWarsHandler {
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.TAKEN
         player.equipment[EquipmentType.WEAPON.id] = Item(flagTeam.flagWeaponId)
         player.filterableMessage("You take the ${flagTeam.name.lowercase().replaceFirstChar { it.uppercase() }} flag!")
+        markFlagCarrier(flagTeam, player)
+    }
+
+    /** K07 (Novite `addHintIcon`): the team whose flag was stolen sees a hint arrow over the player carrying it. */
+    const val CARRIER_ARROW_SLOT = 1
+
+    private fun markFlagCarrier(
+        flagTeam: CastleWarsTeam,
+        carrier: Player,
+    ) {
+        CastleWarsRound.playing[flagTeam]!!.forEach {
+            it.write(gg.rsmod.game.message.impl.HintArrowMessage(slot = CARRIER_ARROW_SLOT, type = gg.rsmod.game.message.impl.HintArrowMessage.TYPE_PLAYER, target = carrier.index))
+        }
+    }
+
+    /** Novite `removeHintIcon`: the flag is home or on the floor again. */
+    private fun clearFlagCarrier(flagTeam: CastleWarsTeam) {
+        CastleWarsRound.playing[flagTeam]!!.forEach {
+            it.write(gg.rsmod.game.message.impl.HintArrowMessage(slot = CARRIER_ARROW_SLOT, type = gg.rsmod.game.message.impl.HintArrowMessage.TYPE_CLEAR))
+        }
     }
 
     fun takeDroppedFlag(
@@ -299,6 +320,7 @@ object CastleWarsHandler {
         }
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.TAKEN
         player.equipment[EquipmentType.WEAPON.id] = Item(flagTeam.flagWeaponId)
+        markFlagCarrier(flagTeam, player)
     }
 
     fun dropFlag(
@@ -310,6 +332,7 @@ object CastleWarsHandler {
         world.spawn(obj)
         CastleWarsRound.spawnedFlagObjects[flagTeam] = obj
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.DROPPED
+        clearFlagCarrier(flagTeam)
     }
 
     fun scoreFlag(
@@ -324,6 +347,7 @@ object CastleWarsHandler {
         CastleWarsRound.spawnedFlagObjects[flagTeam]?.let { player.world.remove(it) }
         CastleWarsRound.spawnedFlagObjects.remove(flagTeam)
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.SAFE
+        clearFlagCarrier(flagTeam)
     }
 
     /**
