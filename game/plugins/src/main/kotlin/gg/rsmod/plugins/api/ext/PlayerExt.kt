@@ -73,6 +73,9 @@ fun openCharacterCustomizing(player: Player) {
  * Opens [currentShop] in the shop window. K01 deel 4 (N382): a shop built for one player (Perdu's Lost Property, the player's own
  * lost items) is opened directly; [openShop] by name looks a world shop up and comes here.
  */
+/** The currencies cache enum 200 has a price icon for (coins 2181, trading sticks 2182, tokkul 2183, pieces of eight 2184). */
+val SHOP_CURRENCY_ICONS = setOf(995, 6306, 6529, 8951)
+
 fun Player.openShop(
     currentShop: gg.rsmod.game.model.shop.Shop,
     points: Boolean = false,
@@ -107,8 +110,11 @@ fun Player.openShop(
         }
 
         // Set the currency for the shop; -1 (a point shop) hides the coin icon next to the prices (ShopWindowScriptTool) instead of
-        // keeping the previous shop's currency.
-        setVarp(Varps.SHOP_CURRENCY, currentShop.currency.currencyItem)
+        // keeping the previous shop's currency. N420: the window draws the icon from cache enum 200, which only knows coins, trading
+        // sticks, tokkul and pieces of eight - any other currency (Castle Wars tickets, Agility Arena tickets, tokens) fell back to the
+        // coin, so those shops send -1 as well: no icon rather than a wrong one.
+        val shownCurrency = currentShop.currency.currencyItem.takeIf { it in SHOP_CURRENCY_ICONS } ?: -1
+        setVarp(Varps.SHOP_CURRENCY, shownCurrency)
 
         shopDirty = true
         setVarc(199, -1)
