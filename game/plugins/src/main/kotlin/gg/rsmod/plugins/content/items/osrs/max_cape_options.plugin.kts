@@ -12,17 +12,18 @@ import gg.rsmod.plugins.content.skills.SkillcapePerks.DailyUse
 /**
  * The OSRS max cape menus (owner 2026-09-24: "zorg dat elke Maxcape goed functioneert en elke optie kan die hij moet ... precies t
  * zelfde als de osrs max cape"). OSRS Wiki "Max cape": inventory "Wear, Teleports, Spellbook, Features, Drop"; worn "Home, Crafting
- * Guild, Guild Teleports, Skilling Areas, POH Portals, Spellbook, Features" (the cache menu is set by MaxCapeMenuTool). The perks
+ * Guild, Guild Teleports, Skilling Areas, POH Portals, Spellbook, Features" (the cache menu is set by MaxCapeMenuTool; worn it is
+ * Home, Teleports, Spellbook, Features - the client shows four worn options). The perks
  * behind them are the skillcapes' own (OSRS Wiki "Cape of Accomplishment"):
  * - teleports: Strength (Warriors' Guild), Fishing (Fishing Guild, Otto's Grotto), Crafting (Crafting Guild), Hunter ("Five teleports
  *   per day to the black or carnivorous chinchompa Hunter areas"), Construction (own house and every house portal) - [MaxCapeTeleports];
- * - NOT offered: the OSRS "Spellbook" option (Magic cape spellbook swap). Owner 2026-10-03 (buglist E2): it does not belong on
- *   the normal max cape - MaxCapeMenuTool drops it from both cache menus and no handler is bound;
+ * - "Spellbook": the Magic cape's five spellbook changes a day, in both menus ([gg.rsmod.plugins.content.skills.SkillcapeSpellbook],
+ *   bound in skillcape_spellbook.plugin.kts). Left out from buglist E2 (owner 2026-10-03) until the owner asked for it on 2026-10-29;
  * - Features: Agility cape ("Once per day ... restore 100% run energy and provide the effect of a stamina potion for one minute"),
  *   Fletching cape ("searched for a mithril grapple and bronze crossbow up to three times each day"), Herblore cape ("Can be searched
  *   for a pestle and mortar"), and the owner's look chooser ([MaxCapeLooks]).
  * ADAPTED: the Features menu lists the operable perks (the wiki names the option but not its lines). The 667 inventory menu holds five
- * options with the wear option second, so the order is Teleports, Wear, Features, Drop. Defence cape's ring of life is not
+ * options with the wear option second, so the order is Teleports, Wear, Spellbook, Features, Drop. Defence cape's ring of life is not
  * offered: OSRS Wiki "Ring of life" - it does not work in Deadman Mode, which this server is.
  */
 
@@ -135,12 +136,6 @@ on_item_option(item = CAPE, option = "Teleports") { openTeleports(player) }
 on_item_option(item = CAPE, option = "Features") { openFeatures(player) }
 
 on_equipment_option(item = CAPE, option = "Home") { teleportHome(player) }
-on_equipment_option(item = CAPE, option = "Crafting Guild") { capeTeleport(player, MaxCapeTeleports.CRAFTING_GUILD) }
-on_equipment_option(item = CAPE, option = "Guild Teleports") {
-    player.queue { chooseDestination("Guild Teleports", MaxCapeTeleports.GUILDS)?.let { capeTeleport(player, it) } }
-}
-on_equipment_option(item = CAPE, option = "Skilling Areas") {
-    player.queue { chooseDestination("Skilling Areas", MaxCapeTeleports.SKILLING_AREAS)?.let { capeTeleport(player, it) } }
-}
-on_equipment_option(item = CAPE, option = "POH Portals") { player.queue { openPohPortals(player, this) } }
+// Worn: four options fit (MaxCapeMenuTool.WORN), so the guild, skilling and portal teleports sit behind "Teleports" as in the inventory.
+on_equipment_option(item = CAPE, option = "Teleports") { openTeleports(player) }
 on_equipment_option(item = CAPE, option = "Features") { openFeatures(player) }

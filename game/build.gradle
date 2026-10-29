@@ -202,6 +202,15 @@ task runOsrsPetImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsPetImportTool'
 }
 
+task runMaxCapeMenuTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS menus of the max cape and the Magic cape (t) (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runMaxCapeMenuTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.MaxCapeMenuTool'
+    workingDir = rootProject.projectDir
+}
+
 task runPetHeadRecolourTool(type: JavaExec) {
     group = 'tools'
     description = 'N398: the Baby icefiend gets an ice-blue copy of the red Imp chathead (CacheTransaction, both caches). ' +
