@@ -3,7 +3,7 @@ import gg.rsmod.plugins.content.skills.Skillcapes
 
 on_npc_option(npc = Npcs.DWARF_3295, option = "talk-to") {
     player.queue {
-        if (player.skills.getCurrentLevel(Skills.MINING) >= 99) {
+        if (player.skills.getMaxLevel(Skills.MINING) >= 99) {
             mainChatWith99(this)
         } else {
             mainChat(this)

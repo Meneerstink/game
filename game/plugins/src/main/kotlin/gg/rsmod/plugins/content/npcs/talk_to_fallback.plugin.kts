@@ -67,6 +67,8 @@ on_world_init {
                 player.queue {
                     // N88 part 3: a pet answers Talk-to with its own voice first (silent for every other npc).
                     gg.rsmod.plugins.content.skills.summoning.PetVoices.play(player, player.getInteractingNpc())
+                    // K03 N410: a Cape of Accomplishment seller without its own dialogue offers the cape to a real 99 first.
+                    if (gg.rsmod.plugins.content.skills.SkillcapeSeller.offer(this, id)) return@queue
                     if (ServiceDialogues.play(this, player.getInteractingNpc())) return@queue
                     // Every bank npc without its own dialogue holds the full banker conversation - also a "Banker" whose cache entry
                     // only offers Talk-to (e.g. the Tutorial Island banker 953). It runs before the wiki transcripts: those record the

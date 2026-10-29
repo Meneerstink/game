@@ -12,7 +12,7 @@ on_item_on_npc(1716, Npcs.BROTHER_JERED) {
 
 on_npc_option(npc = Npcs.BROTHER_JERED, option = "talk-to") {
     player.queue {
-        if (player.skills.getCurrentLevel(Skills.PRAYER) >= 99) {
+        if (player.skills.getMaxLevel(Skills.PRAYER) >= 99) {
             mainChatWith99(this)
         } else {
             mainChat(this)

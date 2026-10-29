@@ -37,6 +37,8 @@ on_npc_option(npc = Npcs.AUBURY, option = "teleport") {
 
 on_npc_option(npc = Npcs.AUBURY, option = "talk-to") {
     player.queue {
+        // K03 N410: Aubury sells the Runecraft cape (OSRS Wiki "Cape of Accomplishment").
+        if (gg.rsmod.plugins.content.skills.SkillcapeSeller.offer(this, Npcs.AUBURY)) return@queue
         chatNpc("Do you want to buy some runes?")
         when (player.getCurrentStage(RuneMysteries)) {
             4 -> packageDelivered(this)

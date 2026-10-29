@@ -166,6 +166,8 @@ suspend fun QueueTask.useGeLamp(item: Int, fixedXp: Double, combatOnly: Boolean)
 
 on_npc_option(npc = Npcs.PIKKUPSTIX, option = "talk-to") {
     player.queue {
+        // K03 N410: Pikkupstix sells the Summoning cape.
+        if (gg.rsmod.plugins.content.skills.SkillcapeSeller.offer(this, Npcs.PIKKUPSTIX)) return@queue
         // Owner 2026-09-27: the Summoning start (Wolf Whistle + supplies) comes only from the Quest Tutor now.
         chatNpc("Hello! I can explain how to use your familiars.")
         when (options("How does Summoning work?", "Goodbye.")) {

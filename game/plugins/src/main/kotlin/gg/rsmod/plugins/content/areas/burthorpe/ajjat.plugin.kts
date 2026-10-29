@@ -9,7 +9,7 @@ on_npc_option(npc = Npcs.AJJAT, option = "talk-to") {
             "Knight and now training officer here in the Warriors'",
             "Guild.",
         )
-        if (player.skills.getCurrentLevel(Skills.ATTACK) >= 99) {
+        if (player.skills.getMaxLevel(Skills.ATTACK) >= 99) {
             chatNpc(
                 "Ah, but I can see you are already a master in the fine art",
                 "of attacking, perhaps you have come to me to purchase a",
