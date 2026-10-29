@@ -236,6 +236,11 @@ object StoreUi : KLogging() {
         if (slot !in 0 until slotCount(player)) return
         val index = (player.attr[PAGE_ATTR] ?: 0) * slotCount(player) + slot
         if (index !in entries(player).indices) return
+        // N322: a second click on the selected kit shows the kit on the item (the next preview), like the carousel arrow.
+        if (player.attr[SELECTED_ATTR] == index && showcase(entries(player)[index]).size > 1) {
+            turnCarousel(player, 1)
+            return
+        }
         player.attr[SELECTED_ATTR] = index
         player.attr[CAROUSEL_ATTR] = 0
         player.attr.remove(CONFIRM_ATTR)
@@ -253,7 +258,7 @@ object StoreUi : KLogging() {
         delta: Int,
     ) {
         val entry = selected(player) ?: return
-        val size = entry.previewItems.size
+        val size = showcase(entry).size
         if (size <= 1) return
         player.attr[CAROUSEL_ATTR] = Math.floorMod((player.attr[CAROUSEL_ATTR] ?: 0) + delta, size)
         player.attr.remove(CONFIRM_ATTR)
@@ -311,7 +316,8 @@ object StoreUi : KLogging() {
             if (entry == null) continue
             // Owner 2026-10-10: the grid shows what the player ends up with (Amulet of fury (or)), not a row of identical kit
             // scrolls; the card still names the kit that is bought. The slot frame carries the tier colour.
-            player.setComponentItem(INTERFACE_ID, l.slotFirst + slot, entry.previewItems.first(), 1)
+            // The catalogue card shows what a purchase produces; the list itself shows the thing being bought.
+            player.setComponentItem(INTERFACE_ID, l.slotFirst + slot, slotIcon(entry), 1)
             if (l.sections) player.setComponentSprite(INTERFACE_ID, l.slotBackgroundFirst + slot, slotSprite(entry))
         }
         player.setComponentText(INTERFACE_ID, l.pageText, "Page ${page + 1} / ${pages(player)}")
@@ -332,6 +338,21 @@ object StoreUi : KLogging() {
             StoreCatalogue.Tier.PRESTIGE -> Art.SLOT_TIER_FIRST + 2
             else -> Art.SLOT
         }
+
+    /** N322 (owner 2026-10-24): the grid shows the kit itself, not the ornamented item. */
+    fun slotIcon(entry: Entry): Int = if (entry.kind == Kind.KIT) entry.purchaseItem else entry.previewItems.first()
+
+    /**
+     * What the big preview pages through: a kit shows the kit itself first, then the kit on each item it fits (N322: "eerst de
+     * kit zelf, daarna zie je de kit op het item"); everything else shows its result items.
+     */
+    fun showcase(entry: Entry): List<Int> = if (entry.kind == Kind.KIT) listOf(entry.purchaseItem) + entry.previewItems else entry.previewItems
+
+    /** The result index (into previewItems / requiredBaseItems) a showcase position stands for; the kit itself counts as the first. */
+    fun resultIndex(
+        entry: Entry,
+        position: Int,
+    ): Int = if (entry.kind == Kind.KIT) (position - 1).coerceAtLeast(0) else position
 
     /** Gold glow + outline on the selected slot when it is on the visible page. */
     fun renderSelection(player: Player) {
@@ -362,8 +383,9 @@ object StoreUi : KLogging() {
             player.setComponentHidden(INTERFACE_ID, l.carouselNext, true)
             return
         }
-        val index = (player.attr[CAROUSEL_ATTR] ?: 0).coerceIn(0, entry.previewItems.size - 1)
-        val preview = entry.previewItems[index]
+        val shown = showcase(entry)
+        val index = (player.attr[CAROUSEL_ATTR] ?: 0).coerceIn(0, shown.size - 1)
+        val preview = shown[index]
         // The preview is the real ornamented/result item id; it is only drawn, never given.
         // The npc preview script ships with the current window (StoreInterfaceImportTool), so an older cache keeps item models.
         val npc = if (l === Ui.CURRENT) StorePreview.npcFor(preview) else null
@@ -376,11 +398,11 @@ object StoreUi : KLogging() {
             // An item after a pet: drop the pet's idle animation, which would otherwise play on the item model.
             if (l.sections) player.setComponentAnim(INTERFACE_ID, l.previewModel, -1)
         }
-        val several = entry.previewItems.size > 1
+        val several = shown.size > 1
         player.setComponentHidden(INTERFACE_ID, l.carouselPrevious, !several)
         player.setComponentHidden(INTERFACE_ID, l.carouselNext, !several)
-        player.setComponentText(INTERFACE_ID, l.resultName, name(player, preview) + if (several) "  <col=c0c0c0>${index + 1} of ${entry.previewItems.size}</col>" else "")
-        val card = card(player, entry, index)
+        player.setComponentText(INTERFACE_ID, l.resultName, name(player, preview) + if (several) "  <col=c0c0c0>${index + 1} of ${shown.size}</col>" else "")
+        val card = card(player, entry, resultIndex(entry, index))
         if (l.sections) {
             player.setComponentText(INTERFACE_ID, l.kitName, card.subtitle)
             player.setComponentText(INTERFACE_ID, l.requirement, card.requirement)
@@ -449,6 +471,7 @@ object StoreUi : KLogging() {
         val base = entry.requiredBaseItems.getOrNull(index)
         val requirement =
             when {
+                kitSetDescription(kitsPerPurchase(player.world, entry)) != null -> kitSetDescription(kitsPerPurchase(player.world, entry))!!
                 base == null -> "No base item needed"
                 entry.kind == Kind.UPGRADE -> "Trade in: ${name(player, base)}"
                 else -> "Needs: ${name(player, base)}"
@@ -471,7 +494,11 @@ object StoreUi : KLogging() {
         val effect =
             when (entry.kind) {
                 // The Loyalty high-end kits are upgrades, not looks: an orb turns the Nightmare staff into another staff.
-                Kind.KIT -> if (entry.category == StoreCatalogue.UPGRADE_KITS) "Upgrades your item into this one" else "Cosmetic only - stats stay the same"
+                Kind.KIT -> when {
+                    kitPermanenceLines(entry) != null -> kitPermanenceLines(entry)!!.let { (a, b) -> "$a $b" }
+                    entry.category == StoreCatalogue.UPGRADE_KITS -> "Upgrades your item into this one"
+                    else -> "Cosmetic only - stats stay the same"
+                }
                 Kind.UPGRADE -> "Your item is exchanged for this one"
                 Kind.ITEM -> "Goes straight to your inventory"
                 Kind.UNLOCK ->
@@ -491,6 +518,36 @@ object StoreUi : KLogging() {
 
     /** Entries several of which can be bought at once: items and kits (look unlocks and upgrades are one per purchase). */
     fun multiple(entry: Entry): Boolean = entry.kind == Kind.ITEM || entry.kind == Kind.KIT
+
+    /** How many kits one purchase of [entry] gives (N323: one per piece of the set), from the live equipment slots. */
+    fun kitsPerPurchase(
+        world: World,
+        entry: Entry,
+    ): Int = entry.kitsPerPurchase { world.definitions.getNullable(ItemDef::class.java, it)?.equipSlot ?: -1 }
+
+    /** Caps whole purchases by free slots so a set of [kits] is never delivered partially. */
+    fun fittingPurchases(
+        kits: Int,
+        wanted: Int,
+        freeSlots: Int,
+        stackable: Boolean,
+    ): Int = if (stackable) wanted.coerceAtLeast(0) else minOf(wanted.coerceAtLeast(0), freeSlots.coerceAtLeast(0) / kits.coerceAtLeast(1))
+
+    fun itemCountForPurchases(
+        kits: Int,
+        purchases: Int,
+    ): Int = purchases.coerceAtLeast(0) * kits.coerceAtLeast(1)
+
+    /** N324: only kits that come back when dismantled carry the permanence promise; consumed upgrade kits must not. */
+    fun kitPermanenceLines(entry: Entry): Pair<String, String>? =
+        if (entry.kind == Kind.KIT && entry.dismantlePolicy == StoreCatalogue.DismantlePolicy.RETURNS_KIT) {
+            "You never lose an ornament kit -" to "it's permanent."
+        } else {
+            null
+        }
+
+    /** N323: a set kit says how many kits one purchase gives, at the price of one. */
+    fun kitSetDescription(kits: Int): String? = if (kits > 1) "$kits kits - full set" else null
 
     /**
      * A click on Buy. Owner 2026-10-10 ("je kunt telkens maar 1 morrigans javelin kopen ... x en dan aantal invullen"): every item
@@ -560,8 +617,10 @@ object StoreUi : KLogging() {
                 }
                 Kind.KIT, Kind.ITEM -> if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(entry.purchaseItem)) buyPets(player, entry, amount) else {
                     val stackable = player.world.definitions.getNullable(ItemDef::class.java, entry.purchaseItem)?.stackable == true
-                    val fits = if (stackable) amount else minOf(amount, player.inventory.freeSlotCount)
-                    val added = fits > 0 && player.inventory.add(entry.purchaseItem, fits, assureFullInsertion = true).hasSucceeded()
+                    val kits = kitsPerPurchase(player.world, entry)
+                    val fits = fittingPurchases(kits, amount, player.inventory.freeSlotCount, stackable)
+                    val itemCount = itemCountForPurchases(kits, fits)
+                    val added = fits > 0 && player.inventory.add(entry.purchaseItem, itemCount, assureFullInsertion = true).hasSucceeded()
                     if (!added) {
                         player.message("You don't have enough inventory space.")
                         0
@@ -600,6 +659,11 @@ object StoreUi : KLogging() {
         when {
             entry.kind == Kind.UNLOCK ->
                 player.message("You unlock the ${name(player, entry.purchaseItem).lowercase()} look for ${cost.format()} ${currency.plural}. Use Customise on your max cape.")
+            entry.kind == Kind.KIT && kitsPerPurchase(player.world, entry) > 1 ->
+                player.message(
+                    "You buy ${itemCountForPurchases(kitsPerPurchase(player.world, entry), bought).format()} x ${name(player, entry.purchaseItem)} " +
+                        "(${if (bought == 1) "a full set" else "${bought.format()} full sets"}) for ${cost.format()} ${currency.plural}.",
+                )
             bought > 1 -> player.message("You buy ${bought.format()} x ${name(player, entry.purchaseItem)} for ${cost.format()} ${currency.plural}.")
             else -> player.message("You buy ${name(player, entry.purchaseItem)} for ${cost.format()} ${currency.plural}.")
         }

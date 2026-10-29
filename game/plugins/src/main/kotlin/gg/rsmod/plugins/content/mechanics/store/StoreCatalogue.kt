@@ -68,9 +68,10 @@ object StoreCatalogue {
      */
     enum class Section(val label: String) {
         ALL("All"),
-        // Owner 2026-10-24 (N326): the tab is "Ornaments"; the upgrade kits (orbs, shards, upgrade kits) are under Gear.
-        ORNAMENTS("Ornaments"),
+        // Owner 2026-10-25 (N325): All starts with gear, then ornaments, pets, capes and cosmetics.
         GEAR("Gear"),
+        // Owner 2026-10-24 (N326): upgrade kits (orbs, shards, upgrade kits) are under Gear.
+        ORNAMENTS("Ornaments"),
         PETS("Pets"),
         CAPES("Capes"),
         COSMETICS("Cosmetics"),
@@ -96,13 +97,13 @@ object StoreCatalogue {
     /** The buttons a shop shows: All, then every category it has stock in, in [Section] order. */
     fun sections(shop: Shop): List<Section> = listOf(Section.ALL) + Section.values().filter { s -> s != Section.ALL && entries(shop).any { section(it) == s } }
 
-    /** A shop's entries in one category; [Section.ALL] lists every category one after another, each in the [entries] order. */
+    /** A shop's entries in one category; [Section.ALL] puts the best and most expensive category first. */
     fun entries(
         shop: Shop,
         section: Section,
     ): List<Entry> =
         if (section == Section.ALL) {
-            entries(shop).sortedBy { section(it).ordinal }
+            entries(shop).sortedWith(compareBy<Entry> { section(it).ordinal }.thenByDescending { it.price }.thenBy { it.category })
         } else {
             entries(shop).filter { section(it) == section }
         }
@@ -164,6 +165,13 @@ object StoreCatalogue {
     ) {
         val currency: Currency get() = shop.currency
         val cosmeticOnly: Boolean get() = kind == Kind.KIT
+        /**
+         * N323 (owner 2026-10-24): a set kit gives one kit per piece of the set, counted from its attach routes as the distinct
+         * equipment slots of the items it fits (Infinity hat / top / bottoms = 3; Dragon platelegs or plateskirt = 1, a steam
+         * staff or the mystic one = 1). [slotOf] is the item's equipment slot, -1 when it has none.
+         */
+        fun kitsPerPurchase(slotOf: (Int) -> Int): Int =
+            if (kind != Kind.KIT) 1 else requiredBaseItems.map { base -> slotOf(base).takeIf { it >= 0 } ?: (-1 - base) }.distinct().size
     }
 
     const val UNLIMITED = Int.MAX_VALUE
@@ -268,18 +276,15 @@ object StoreCatalogue {
     }
 
     /**
-     * A shop's entries in display order (owner 2026-09-29: "higher tier op pagina 1 en 2, lower tier rommel als laatst"):
-     * highest tier first, then the most expensive first, categories kept together at equal prices. The build list below stays
-     * grouped by category for reading; this order is what the window pages through.
+     * A shop's entries in display order (owner 2026-10-24, N325): most expensive first, including within each category tab.
+     * The All tab applies its explicit Gear/Ornaments/Pets/Capes/Cosmetics order, then sorts each group by price.
      */
     fun entries(shop: Shop): List<Entry> = ORDERED.getValue(shop)
-
-    private fun tierRank(tier: Tier): Int = if (tier == Tier.NONE) -1 else tier.ordinal
 
     private val ORDERED: Map<Shop, List<Entry>> by lazy {
         Shop.values().associateWith { shop ->
             ENTRIES.filter { it.shop == shop }
-                .sortedWith(compareByDescending<Entry> { tierRank(it.tier) }.thenByDescending { it.price }.thenBy { it.category })
+                .sortedWith(compareByDescending<Entry> { it.price }.thenBy { it.category })
         }
     }
 
@@ -363,7 +368,7 @@ object StoreCatalogue {
         // Owner 2026-09-20: "remove the crown of helious out of the shop" - the Crown of Helios is not sold here.
         listOf(Items.GUTHIX_HALO to 2_500, Items.SARADOMIN_HALO to 2_500, Items.ZAMORAK_HALO to 2_500,
             // N321: the wearable Herald cape the Herald of Lumbridge gives (21435); 21434 has no options in this cache.
-            Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE_21435 to 7_500, Items.TOP_HAT to 5_000, Items.SNOWMAN_TOP_HAT to 5_000,
+            Items.ROYAL_CROWN to 15_000, Items.HERALD_CAPE_21435 to 7_500, Items.TOP_HAT to 5_000,
             Items.REINDEER_HAT to 500, Items.BUNNY_EARS to 5_000)
             .forEach { (item, price) -> list += itemEntry(l, item, price, "Prestige cosmetics") }
         listOf(Items.SANTA_COSTUME_TOP, Items.SANTA_COSTUME_LEGS, Items.SANTA_COSTUME_GLOVES, Items.SANTA_COSTUME_BOOTS,

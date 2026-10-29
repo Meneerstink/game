@@ -36,18 +36,28 @@ class StoreCatalogueTests {
     }
 
     @Test
-    fun `every shop pages the highest tier and price first and the cheap items last`() {
+    fun `every shop puts the highest price first and the cheapest last`() {
         Shop.values().forEach { shop ->
             val ordered = StoreCatalogue.entries(shop)
             assertEquals(StoreCatalogue.ENTRIES.filter { it.shop == shop }.toSet(), ordered.toSet(), "$shop lists every entry once")
-            val ranks = ordered.map { (if (it.tier == StoreCatalogue.Tier.NONE) -1 else it.tier.ordinal) to it.price }
-            ranks.zipWithNext().forEach { (a, b) ->
-                assertTrue(a.first > b.first || (a.first == b.first && a.second >= b.second), "$shop: $a before $b")
+            ordered.zipWithNext().forEach { (a, b) ->
+                assertTrue(a.price >= b.price, "$shop: ${a.purchaseItem} (${a.price}) must be before ${b.purchaseItem} (${b.price})")
             }
         }
-        assertEquals(StoreCatalogue.Tier.PRESTIGE, StoreCatalogue.entries(Shop.DONATOR).first().tier)
-        assertEquals(StoreCatalogue.Tier.BASIC, StoreCatalogue.entries(Shop.DONATOR).last().tier)
-        assertEquals(Items.DRAGON_WARHAMMER, StoreCatalogue.entries(Shop.LOYALTY).first().purchaseItem)
+        StoreCatalogue.Shop.values().forEach { shop ->
+            val all = StoreCatalogue.entries(shop, StoreCatalogue.Section.ALL)
+            assertEquals(
+                all.map { StoreCatalogue.section(it).ordinal }.sorted(),
+                all.map { StoreCatalogue.section(it).ordinal },
+                "$shop All tab category order",
+            )
+            StoreCatalogue.Section.values().filter { it != StoreCatalogue.Section.ALL }.forEach { section ->
+                StoreCatalogue.entries(shop, section).zipWithNext().forEach { (a, b) ->
+                    assertTrue(a.price >= b.price, "$shop $section: ${a.purchaseItem} must precede ${b.purchaseItem}")
+                }
+            }
+        }
+        assertEquals(StoreCatalogue.Section.GEAR, StoreCatalogue.Section.values()[1])
         assertEquals(500, StoreCatalogue.entries(Shop.LOYALTY).last().price)
     }
 
@@ -94,6 +104,84 @@ class StoreCatalogueTests {
         assertEquals(3, previews(Items.DAGONHAI_ROBES_ORNAMENT_KIT))
         assertEquals(3, previews(Items.TWISTED_ANCESTRAL_COLOUR_KIT))
         assertEquals(2, previews(Items.WARD_UPGRADE_KIT))
+    }
+
+    /** Equipment slot per item id from data/cfg/items.yml (what ItemMetadataService puts on ItemDef.equipSlot at boot). */
+    private val slots: Map<Int, Int> by lazy {
+        val file = listOf(java.io.File("../../data/cfg/items.yml"), java.io.File("../data/cfg/items.yml")).first { it.exists() }
+        val map = HashMap<Int, Int>()
+        var id = -1
+        file.forEachLine { line ->
+            if (line.startsWith("- id: ")) id = line.substring(6).trim().toInt()
+            else if (line.trimStart().startsWith("equip_slot: ") && id >= 0) map[id] = line.substringAfter("equip_slot: ").trim().toInt()
+        }
+        map
+    }
+
+    private fun kits(entry: StoreCatalogue.Entry) = entry.kitsPerPurchase { slots[it] ?: -1 }
+
+    @Test
+    fun `a set kit purchase grants one kit for every piece of the set`() {
+        // N323: hat + top + bottoms (3 slots) -> 3 kits for the price of one.
+        listOf(Items.LIGHT_INFINITY_COLOUR_KIT, Items.DARK_INFINITY_COLOUR_KIT, Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT,
+            Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.TWISTED_ANCESTRAL_COLOUR_KIT).forEach { kit ->
+            val entry = StoreCatalogue.ENTRIES.first { it.purchaseItem == kit }
+            assertEquals(3, kits(entry), "kit $kit")
+            assertEquals("3 kits - full set", StoreUi.kitSetDescription(kits(entry)), "visible purchase description for $kit")
+        }
+        // A kit that fits one of several items worn in the same slot is one kit: platelegs OR plateskirt, a steam staff OR the mystic one.
+        StoreCatalogue.ENTRIES.filter { it.purchaseItem == Items.DRAGON_PLATELEGSSKIRT_ORNAMENT_KIT_SP || it.purchaseItem == Items.STEAM_STAFF_UPGRADE_KIT }
+            .forEach { assertEquals(1, kits(it), "kit ${it.purchaseItem}") }
+        // Every kit sold: never more kits than routes, never a set count for routes that share one slot.
+        StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT }.forEach { entry ->
+            assertTrue(entry.requiredBaseItems.all { slots.containsKey(it) }, "kit ${entry.purchaseItem}: every base item has an equipment slot")
+            assertEquals(entry.requiredBaseItems.map { slots.getValue(it) }.distinct().size, kits(entry), "kit ${entry.purchaseItem}")
+        }
+    }
+
+    @Test
+    fun `set kit purchases fit only whole sets in the remaining inventory slots`() {
+        assertEquals(0, StoreUi.fittingPurchases(kits = 3, wanted = 1, freeSlots = 2, stackable = false), "two slots cannot fit a set of three")
+        assertEquals(1, StoreUi.fittingPurchases(kits = 3, wanted = 1, freeSlots = 3, stackable = false))
+        assertEquals(2, StoreUi.fittingPurchases(kits = 3, wanted = 2, freeSlots = 7, stackable = false))
+        assertEquals(6, StoreUi.itemCountForPurchases(kits = 3, purchases = 2))
+        assertEquals(3, StoreUi.fittingPurchases(kits = 3, wanted = 3, freeSlots = 0, stackable = true), "stackable kits need no additional slot")
+    }
+
+    @Test
+    fun `a kit's preview shows the kit itself first, then the kit on each item`() {
+        StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT }.forEach { entry ->
+            assertEquals(listOf(entry.purchaseItem) + entry.previewItems, StoreUi.showcase(entry), "kit ${entry.purchaseItem}")
+            assertEquals(0, StoreUi.resultIndex(entry, 0))
+            assertEquals(entry.previewItems.size - 1, StoreUi.resultIndex(entry, entry.previewItems.size))
+        }
+        StoreCatalogue.ENTRIES.filter { it.kind != Kind.KIT }.forEach { assertEquals(it.previewItems, StoreUi.showcase(it)) }
+    }
+
+    @Test
+    fun `kit list icons show the kit being bought and other entries show their result`() {
+        StoreCatalogue.ENTRIES.forEach { entry ->
+            val expected = if (entry.kind == Kind.KIT) entry.purchaseItem else entry.previewItems.first()
+            assertEquals(expected, StoreUi.slotIcon(entry), "${entry.shop} item ${entry.purchaseItem}")
+        }
+    }
+
+    @Test
+    fun `only kits returned on dismantle show the permanent kit promise`() {
+        val returnable = StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT && it.dismantlePolicy == StoreCatalogue.DismantlePolicy.RETURNS_KIT }
+        val consumed = StoreCatalogue.ENTRIES.filter { it.kind == Kind.KIT && it.dismantlePolicy == StoreCatalogue.DismantlePolicy.KIT_CONSUMED }
+        assertTrue(returnable.isNotEmpty())
+        assertTrue(consumed.isNotEmpty())
+        returnable.forEach {
+            val lines = StoreUi.kitPermanenceLines(it)
+            assertEquals("You never lose an ornament kit - it's permanent.", lines?.toList()?.joinToString(" "), "${it.purchaseItem}")
+        }
+        consumed.forEach { assertEquals(null, StoreUi.kitPermanenceLines(it), "${it.purchaseItem} consumes its kit") }
+    }
+
+    @Test
+    fun `Snowman top hat is not sold in the Loyalty shop`() {
+        assertTrue(StoreCatalogue.ENTRIES.none { it.shop == Shop.LOYALTY && it.purchaseItem == Items.SNOWMAN_TOP_HAT })
     }
 
     /**
