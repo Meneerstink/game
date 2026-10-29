@@ -22,6 +22,9 @@ object MaxCapeTeleports {
     val FELDIP_HUNTER = Destination("Feldip Hunter area", Tile(2556, 2916, 0), dailyHunterLimit = true) // Hunter cape
     val WILDERNESS_HUNTER = Destination("Wilderness Hunter area", Tile(3144, 3772, 0), dailyHunterLimit = true) // Hunter cape
 
+    /** Quest point cape ("Unlimited teleports to the Legends' Guild gates"); not a max cape destination. */
+    val LEGENDS_GUILD = Destination("Legends' Guild", Tile(2729, 3348, 0))
+
     /** "Guild Teleports" (worn option). */
     val GUILDS = listOf(WARRIORS_GUILD, FISHING_GUILD, CRAFTING_GUILD)
 
