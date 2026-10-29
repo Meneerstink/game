@@ -196,6 +196,14 @@ object CastleWarsHandler {
             gg.rsmod.game.model.Tile(2376, 3131), gg.rsmod.game.model.Tile(2377, 3131),
         )
 
+    /** OSRS Wiki "Bandages": "Restore 10% of hitpoints, rounded down"; "Castle Wars bracelet: Increases the healing amount by 50%". */
+    fun bandageHeal(
+        maxHitpoints: Int,
+        brace: Boolean,
+    ): Int = kotlin.math.floor(maxHitpoints * 0.10 * (if (brace) 1.5 else 1.0)).toInt()
+
+    const val BANDAGE_RUN_ENERGY = 30.0
+
     fun canPlaceBarricade(tile: gg.rsmod.game.model.Tile): Boolean =
         NO_BARRICADE_TILES.none { it.x == tile.x && it.z == tile.z } &&
             CastleWarsRound.barricades.none { it.tile.sameAs(tile) }

@@ -169,12 +169,29 @@ on_item_option(item = Items.BARRICADE, option = "Set-up") {
 
 val CASTLE_WARS_BRACES = setOf(Items.CASTLE_WARS_BRACE_1, Items.CASTLE_WARS_BRACE_2, Items.CASTLE_WARS_BRACE_3)
 
-on_item_option(item = Items.BANDAGES, option = "Heal") {
-    if (!player.inventory.remove(Items.BANDAGES, amount = 1).hasSucceeded()) return@on_item_option
-    val brace = player.equipment[EquipmentType.GLOVES.id]?.id in CASTLE_WARS_BRACES
-    player.heal(kotlin.math.floor(player.getMaximumLifepoints() * 0.10 * (if (brace) 1.5 else 1.0)).toInt())
-    player.runEnergy = (player.runEnergy + 30.0).coerceAtMost(100.0)
-    player.sendRunEnergy(player.runEnergy.toInt())
+/** One bandage on [target]: 10% of its hitpoints (x1.5 with a Castle wars brace on the one who heals) and 30% run energy. */
+fun bandage(
+    healer: Player,
+    target: Player,
+) {
+    if (!healer.inventory.remove(Items.BANDAGES, amount = 1).hasSucceeded()) return
+    val brace = healer.equipment[EquipmentType.GLOVES.id]?.id in CASTLE_WARS_BRACES
+    target.heal(CastleWarsHandler.bandageHeal(target.getMaximumLifepoints(), brace))
+    target.runEnergy = (target.runEnergy + CastleWarsHandler.BANDAGE_RUN_ENERGY).coerceAtMost(100.0)
+    target.sendRunEnergy(target.runEnergy.toInt())
+}
+
+on_item_option(item = Items.BANDAGES, option = "Heal") { bandage(player, player) }
+
+// OSRS Wiki "Bandages": "You can use bandages on other players to heal them" - a team mate in the same round.
+on_item_on_player(item = Items.BANDAGES) {
+    val target = player.getInteractingPlayer()
+    val team = player.attr[CW_TEAM]
+    if (team == null || player.attr[CW_PLAYING] != true || target.attr[CW_TEAM] != team || target.attr[CW_PLAYING] != true) {
+        player.message("You can only bandage a team mate during a game of Castle Wars.")
+        return@on_item_on_player
+    }
+    bandage(player, target)
 }
 
 // Castle traversal - ladders, steps, trapdoors, energy barriers, stepping stone, and the
