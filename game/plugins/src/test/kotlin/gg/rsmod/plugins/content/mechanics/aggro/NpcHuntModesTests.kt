@@ -61,4 +61,15 @@ class NpcHuntModesTests {
         assertTrue("NpcHuntModes.allows(" in plugin)
         assertTrue("if (npc.combatDef.aggressiveRadius <= 0) 0 else NpcHuntModes.table.range(npc.id) ?: npc.combatDef.aggressiveRadius" in plugin)
     }
+
+    /** N364 (owner 2026-10-25): Hill giants (level 28) attack a level-138 player too - the owner rule, not the OSRS level cap. */
+    @Test
+    fun `Hill giants hunt every combat level`() {
+        listOf(117, 4689, 4690, 4691, 4692, 4693).forEach { id ->
+            val mode = table.mode(id)
+            assertEquals("aggressive", table.modeName(id), "hill giant $id")
+            assertTrue(NpcHuntModes.allows(mode!!, playerCombatLevel = 138, npcCombatLevel = 28, playerUnderAttack = false, playerInMulti = false, playerMenuOpen = false, visible = true))
+            assertFalse(NpcHuntModes.allows(mode, playerCombatLevel = 138, npcCombatLevel = 28, playerUnderAttack = false, playerInMulti = false, playerMenuOpen = false, visible = false), "needs line of sight")
+        }
+    }
 }

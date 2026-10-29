@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.mechanics.aggro
 
 import com.google.gson.Gson
+import gg.rsmod.plugins.api.cfg.Npcs
 import java.io.File
 import java.io.FileReader
 
@@ -36,10 +37,18 @@ object NpcHuntModes {
 
     data class NpcEntry(val id: Int = -1, val mode: String = "", val range: Int = DEFAULT_RANGE)
 
+    /**
+     * Owner rules on top of the generated Void table. N364 (owner 2026-10-25, "Hill giants ALTIJD agressief", not OSRS): the
+     * level-28 Hill giants hunt every combat level ("aggressive" mode: no level cap, line of sight; the 10-minute tolerance stays).
+     */
+    val OWNER_MODES: Map<Int, String> =
+        listOf(Npcs.HILL_GIANT, Npcs.HILL_GIANT_4689, Npcs.HILL_GIANT_4690, Npcs.HILL_GIANT_4691, Npcs.HILL_GIANT_4692, Npcs.HILL_GIANT_4693)
+            .associateWith { "aggressive" }
+
     class Table(val modes: Map<String, Mode> = emptyMap(), val npcs: List<NpcEntry> = emptyList()) {
         private val byId by lazy { npcs.associateBy { it.id } }
 
-        fun modeName(npcId: Int): String? = byId[npcId]?.mode
+        fun modeName(npcId: Int): String? = OWNER_MODES[npcId] ?: byId[npcId]?.mode
 
         fun mode(npcId: Int): Mode? = modeName(npcId)?.let { modes[it] }
 
