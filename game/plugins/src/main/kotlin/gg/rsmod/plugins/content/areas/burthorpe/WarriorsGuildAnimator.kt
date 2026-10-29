@@ -70,6 +70,43 @@ object WarriorsGuildAnimator {
     /** The top-floor cyclops room: the door's own tile and east of it (the door is on the tile's west face; the lobby is west). */
     fun inCyclopsRoom(tile: gg.rsmod.game.model.Tile): Boolean = tile.height == 2 && tile.x in 2847..2877 && tile.z in 3528..3557
 
+    // ---- K06 N372 part 3: the dummy room (Ajjat). Novite WarriorTimer: every 14 ticks a dummy (15624-15630) pops up on one of 8
+    // posts for 10 ticks; OSRS Wiki: "Each dummy correctly hit will reward players with 15 Attack experience and 2 warrior guild tokens."
+
+    val DUMMY_POSTS: List<Pair<gg.rsmod.game.model.Tile, Int>> =
+        listOf(
+            gg.rsmod.game.model.Tile(2860, 3549, 0) to 1, gg.rsmod.game.model.Tile(2860, 3547, 0) to 1, gg.rsmod.game.model.Tile(2859, 3545, 0) to 2,
+            gg.rsmod.game.model.Tile(2857, 3545, 0) to 2, gg.rsmod.game.model.Tile(2855, 3546, 0) to 3, gg.rsmod.game.model.Tile(2855, 3548, 0) to 3,
+            gg.rsmod.game.model.Tile(2856, 3550, 0) to 0, gg.rsmod.game.model.Tile(2858, 3550, 0) to 0,
+        )
+    val DUMMIES = 15624..15630
+    const val DUMMY_EVERY = 14
+    const val DUMMY_UP_TICKS = 10
+    const val DUMMY_XP = 15.0
+    const val DUMMY_TOKENS = 2
+    const val MSG_DUMMY_HIT = "You whack the dummy successfully!"
+    const val MSG_DUMMY_WRONG = "You whack the dummy using the wrong attack style."
+    const val MSG_DUMMY_AGAIN = "You have already hit this dummy."
+
+    fun inDummyRoom(tile: gg.rsmod.game.model.Tile): Boolean = tile.height == 0 && tile.x in 2852..2863 && tile.z in 3542..3553
+
+    /** Novite `isProperHit`: what each dummy wants (an xp style or an attack type). */
+    fun rightStyle(
+        dummy: Int,
+        xp: gg.rsmod.game.model.combat.XpMode,
+        type: gg.rsmod.game.model.combat.StyleType,
+    ): Boolean =
+        when (dummy) {
+            15624 -> xp == gg.rsmod.game.model.combat.XpMode.ATTACK_XP
+            15625 -> type == gg.rsmod.game.model.combat.StyleType.SLASH
+            15626 -> xp == gg.rsmod.game.model.combat.XpMode.STRENGTH_XP
+            15627 -> xp == gg.rsmod.game.model.combat.XpMode.SHARED_XP
+            15628 -> type == gg.rsmod.game.model.combat.StyleType.CRUSH
+            15629 -> type == gg.rsmod.game.model.combat.StyleType.STAB
+            15630 -> xp == gg.rsmod.game.model.combat.XpMode.DEFENCE_XP
+            else -> false
+        }
+
     /** The pieces a kill gives back: the whole set, or - 1 in [BREAK_ONE_IN] - all but one ([roll] picks; -1 = nothing breaks). */
     fun returned(set: Set, roll: Int): List<Int> = if (roll < 0) set.pieces else set.pieces.filterIndexed { i, _ -> i != roll }
 }

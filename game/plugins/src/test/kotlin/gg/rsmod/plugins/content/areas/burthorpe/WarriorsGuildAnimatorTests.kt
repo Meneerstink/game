@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.areas.burthorpe
 
+import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.game.model.combat.XpMode
 import gg.rsmod.plugins.api.cfg.Items
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -25,6 +27,18 @@ class WarriorsGuildAnimatorTests {
         assertEquals(false, WarriorsGuildAnimator.inCyclopsRoom(gg.rsmod.game.model.Tile(2848, 3536, 0)))
         assertEquals(100, WarriorsGuildAnimator.TOKENS_TO_ENTER)
         assertEquals(10, WarriorsGuildAnimator.TOKENS_PER_MINUTE)
+    }
+
+    @Test
+    fun `each dummy wants its own attack style`() {
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15624, XpMode.ATTACK_XP, StyleType.SLASH))
+        assertEquals(false, WarriorsGuildAnimator.rightStyle(15624, XpMode.STRENGTH_XP, StyleType.SLASH))
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15625, XpMode.STRENGTH_XP, StyleType.SLASH))
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15628, XpMode.ATTACK_XP, StyleType.CRUSH))
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15629, XpMode.DEFENCE_XP, StyleType.STAB))
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15630, XpMode.DEFENCE_XP, StyleType.CRUSH))
+        assertEquals(true, WarriorsGuildAnimator.rightStyle(15627, XpMode.SHARED_XP, StyleType.STAB))
+        assertEquals(8, WarriorsGuildAnimator.DUMMY_POSTS.size)
     }
 
     @Test

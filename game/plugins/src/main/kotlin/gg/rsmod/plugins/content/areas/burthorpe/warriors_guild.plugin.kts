@@ -28,9 +28,11 @@ val GUILD_DOORS = intArrayOf(Objs.DOOR_15641, Objs.DOOR_15644, Objs.DOOR_15647, 
 GUILD_DOORS.forEach { id ->
     on_obj_option(obj = id, option = "open") {
         val obj = player.getInteractingGameObj()
-        // N372 part 2: into the cyclops room only with 100 tokens (OSRS Wiki "Warriors' Guild").
+        // N372 part 2: into the cyclops room only with 100 tokens (OSRS Wiki "Warriors' Guild"); an Attack cape (or the max cape,
+        // all perks) needs none.
         val intoCyclops = obj.tile.sameAs(WarriorsGuildAnimator.CYCLOPS_DOOR) && !WarriorsGuildAnimator.inCyclopsRoom(player.tile)
-        if (intoCyclops && player.inventory.getItemCount(Items.WARRIOR_GUILD_TOKEN) < WarriorsGuildAnimator.TOKENS_TO_ENTER) {
+        val free = freeCyclopsEntry(player)
+        if (intoCyclops && !free && player.inventory.getItemCount(Items.WARRIOR_GUILD_TOKEN) < WarriorsGuildAnimator.TOKENS_TO_ENTER) {
             player.message(WarriorsGuildAnimator.MSG_NOT_ENOUGH)
             return@on_obj_option
         }
@@ -48,23 +50,34 @@ GUILD_DOORS.forEach { id ->
                     }
                 },
             )
-            if (crossed && intoCyclops) player.timers[CYCLOPS_TOKEN_TIMER] = WarriorsGuildAnimator.MINUTE_TICKS
+            if (crossed && intoCyclops && !free) {
+                // "Ten tokens are spent upon entering the room, and another ten every minute inside."
+                player.inventory.remove(Items.WARRIOR_GUILD_TOKEN, WarriorsGuildAnimator.TOKENS_PER_MINUTE)
+                player.timers[CYCLOPS_TOKEN_TIMER] = WarriorsGuildAnimator.MINUTE_TICKS
+            }
         }
     }
 }
 
-/** N372 part 2: 10 tokens a minute in the cyclops room; out of tokens - back to the lobby. Leaving the room ends it. */
+fun freeCyclopsEntry(player: Player): Boolean =
+    gg.rsmod.plugins.content.skills.SkillcapePerks.wornCape(player).let { it == Items.ATTACK_CAPE || it == Items.ATTACK_CAPE_T } ||
+        gg.rsmod.plugins.content.skills.SkillcapePerks.wearingMaxCape(player)
+
+/**
+ * N372 part 2: 10 tokens a minute in the cyclops room; with none left the player gets one more minute, then goes back to the lobby
+ * (OSRS Wiki: "You get one minute before being teleported out"). Leaving the room ends it.
+ */
 val CYCLOPS_TOKEN_TIMER = gg.rsmod.game.model.timer.TimerKey()
 
 on_timer(CYCLOPS_TOKEN_TIMER) {
     if (!WarriorsGuildAnimator.inCyclopsRoom(player.tile)) return@on_timer
     val held = player.inventory.getItemCount(Items.WARRIOR_GUILD_TOKEN)
-    player.inventory.remove(Items.WARRIOR_GUILD_TOKEN, minOf(held, WarriorsGuildAnimator.TOKENS_PER_MINUTE))
-    if (held <= WarriorsGuildAnimator.TOKENS_PER_MINUTE) {
+    if (held <= 0) {
         player.moveTo(WarriorsGuildAnimator.OUTSIDE_CYCLOPS)
         player.message(WarriorsGuildAnimator.MSG_RUN_OUT)
         return@on_timer
     }
+    player.inventory.remove(Items.WARRIOR_GUILD_TOKEN, minOf(held, WarriorsGuildAnimator.TOKENS_PER_MINUTE))
     player.timers[CYCLOPS_TOKEN_TIMER] = WarriorsGuildAnimator.MINUTE_TICKS
 }
 
@@ -186,5 +199,54 @@ fun handleMainDoor(player: Player) {
         player.lock = LockState.NONE
         world.spawn(closedDoor)
         player.playSound(Sfx.DOOR_CLOSE)
+    }
+}
+
+// ---- K06 N372 part 3: the dummy room (WarriorsGuildAnimator.DUMMY_POSTS) ----
+/** The dummy up now (one at a time, as Novite's guild timer) and the players who already hit it. */
+var dummyUp: gg.rsmod.game.model.entity.DynamicObject? = null
+val dummyHitBy = HashSet<String>()
+
+on_world_init {
+    world.queue {
+        while (true) {
+            wait(WarriorsGuildAnimator.DUMMY_EVERY)
+            if (world.players.none { WarriorsGuildAnimator.inDummyRoom(it.tile) }) continue
+            val (tile, rot) = WarriorsGuildAnimator.DUMMY_POSTS[world.random(WarriorsGuildAnimator.DUMMY_POSTS.size - 1)]
+            val dummy = DynamicObject(id = WarriorsGuildAnimator.DUMMIES.random(), type = 10, rot = rot, tile = tile)
+            dummyHitBy.clear()
+            dummyUp = dummy
+            world.spawn(dummy)
+            wait(WarriorsGuildAnimator.DUMMY_UP_TICKS)
+            world.remove(dummy)
+            if (dummyUp === dummy) dummyUp = null
+        }
+    }
+}
+
+WarriorsGuildAnimator.DUMMIES.forEach { id ->
+    on_obj_option(obj = id, option = "hit") {
+        val obj = player.getInteractingGameObj()
+        if (dummyUp == null || !obj.tile.sameAs(dummyUp!!.tile)) return@on_obj_option
+        if (player.username in dummyHitBy) {
+            player.message(WarriorsGuildAnimator.MSG_DUMMY_AGAIN)
+            return@on_obj_option
+        }
+        player.faceTile(obj.tile)
+        player.animate(gg.rsmod.plugins.content.combat.CombatConfigs.getAttackAnimation(player))
+        val right =
+            WarriorsGuildAnimator.rightStyle(
+                obj.id,
+                gg.rsmod.plugins.content.combat.CombatConfigs.getXpMode(player),
+                gg.rsmod.plugins.content.combat.CombatConfigs.getCombatStyle(player),
+            )
+        if (!right) {
+            player.message(WarriorsGuildAnimator.MSG_DUMMY_WRONG)
+            return@on_obj_option
+        }
+        dummyHitBy += player.username
+        player.addXp(Skills.ATTACK, WarriorsGuildAnimator.DUMMY_XP)
+        player.inventory.add(Items.WARRIOR_GUILD_TOKEN, WarriorsGuildAnimator.DUMMY_TOKENS)
+        player.message(WarriorsGuildAnimator.MSG_DUMMY_HIT)
     }
 }
