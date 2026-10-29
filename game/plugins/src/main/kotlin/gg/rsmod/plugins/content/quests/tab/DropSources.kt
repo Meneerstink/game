@@ -213,6 +213,20 @@ object DropSources {
     }
 
     /** The picture to show for [id]: a note shows its item (the Wiki does the same). */
+    /**
+     * The amount the picture is drawn for: the largest number of the Qty ("20500-21000" -> 21000), so coins, arrows and runes show
+     * their stack picture like the OSRS Wiki drop tables. The viewer never draws the count itself (client RspsUi.OWN_COUNT_INTERFACES).
+     */
+    fun pictureAmount(quantity: String): Int {
+        val numbers =
+            Regex("([0-9][0-9,.]*)\\s*([KkMm]?)").findAll(quantity).mapNotNull { m ->
+                val n = m.groupValues[1].replace(",", "").toDoubleOrNull() ?: return@mapNotNull null
+                val mult = when (m.groupValues[2].lowercase()) { "k" -> 1_000.0; "m" -> 1_000_000.0; else -> 1.0 }
+                (n * mult).toLong().coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            }
+        return numbers.maxOrNull()?.coerceAtLeast(1) ?: 1
+    }
+
     fun picture(world: World, id: Int): Int {
         val def = world.definitions.getNullable(ItemDef::class.java, id) ?: return id
         return if (def.noted && def.noteLinkId > 0) def.noteLinkId else id

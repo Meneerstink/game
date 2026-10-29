@@ -688,7 +688,7 @@ object DropViewer {
                 }
                 continue
             }
-            N108Ui.item(player, i, base, DropSources.picture(world, line.item))
+            N108Ui.item(player, i, base, DropSources.picture(world, line.item), DropSources.pictureAmount(line.quantity))
             N108Ui.size(player, i, base, PIC_W, PIC_H)
             N108Ui.pos(player, i, base, x, barY + (V.ALWAYS_H - PIC_H) / 2)
             // The text boxes take the measured width (the cache boxes are narrower than "Archaic emblem (tier 5)"), so nothing wraps.
@@ -743,7 +743,7 @@ object DropViewer {
             N108Ui.pos(player, i, base + V.R_BG, 0, y)
             N108Ui.hidden(player, i, base + V.R_BG, false)
             // N310 / N319: the item's own 36 x 32 sprite, unscaled, centred on the row (drawn over every row, V.ITEM_FIRST).
-            N108Ui.item(player, i, pic, DropSources.picture(world, l.item))
+            N108Ui.item(player, i, pic, DropSources.picture(world, l.item), DropSources.pictureAmount(l.quantity))
             N108Ui.size(player, i, pic, PIC_W, PIC_H)
             N108Ui.pos(player, i, pic, 0, y + (V.ROW_H - PIC_H) / 2)
             N108Ui.hidden(player, i, pic, l.item < 0)

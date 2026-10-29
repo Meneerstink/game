@@ -73,6 +73,15 @@ class DropViewerTests {
     private fun source() = DropSources.Source("npc:$id", "Test dragon", -1, intArrayOf(id), 100, DropSources.Group.MONSTERS, DropSources.Kind.NPC, id)
 
     @Test
+    fun `the item picture is drawn for the largest quantity so stacks show their stack picture`() {
+        assertEquals(21000, DropSources.pictureAmount("20500-21000"))
+        assertEquals(21000, DropSources.pictureAmount("20.5-21K"))
+        assertEquals(1, DropSources.pictureAmount("1"))
+        assertEquals(200, DropSources.pictureAmount("100-200 (noted)"))
+        assertEquals(1, DropSources.pictureAmount(""))
+    }
+
+    @Test
     fun `chances are the roll's own - lineChances at the player's rate and at 1x, a fold rolled at 1x inside`() {
         register()
         val account = Account()
