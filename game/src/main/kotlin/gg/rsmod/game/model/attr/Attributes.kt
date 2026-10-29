@@ -73,6 +73,13 @@ val NO_CLIP_ATTR = AttributeKey<Boolean>()
  */
 val NPC_RUNS_ATTR = AttributeKey<Boolean>()
 
+/**
+ * N417: route searches in a row in which an npc found no route to its target (reset by a route that arrives). The aggro check
+ * drops a target the npc keeps failing to reach, so it no longer holds a player it can never attack (blocking the single-way
+ * "someone else is fighting him" rule for every other npc).
+ */
+val NPC_ROUTE_FAILS = AttributeKey<Int>()
+
 /** Session-local admin ID inspector switch used by the Crown of Helios diagnostics. */
 val ID_INSPECTOR_ATTR = AttributeKey<Boolean>()
 

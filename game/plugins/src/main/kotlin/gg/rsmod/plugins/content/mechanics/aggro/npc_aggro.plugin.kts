@@ -11,6 +11,15 @@ import kotlin.math.abs
 
 val AGGRO_CHECK_TIMER = TimerKey()
 
+/** N417: failed route searches in a row after which an npc gives up a target it cannot hit from where it stands. */
+val UNREACHABLE_FAILS = 8
+
+/** N417: how long (ticks) an npc leaves a player alone after giving him up as unreachable. */
+val UNREACHABLE_TICKS = 50
+
+/** N417: the player an npc gave up as unreachable, and the cycle until which it leaves him alone. */
+val UNREACHABLE_ATTR = AttributeKey<Pair<String, Int>>()
+
 /** Above this aggro radius [checkRadius] walks the player list instead of every tile of the square. */
 val PLAYER_LIST_SCAN_RADIUS = 16
 
@@ -114,10 +123,35 @@ on_timer(AGGRO_CHECK_TIMER) {
     // npc's facing for a tick each time. The acquisition rules pick a NEW target; the combat cycle alone ends a fight
     // (canEngage / NpcLeash.mayPursue) and walks the npc home.
     val currentTarget = npc.getCombatTarget()
+    val attackRange = gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1
+    // N417 (Hill giant 117 at 3111,9841: 89 failed routes to the player, never one hit, every other giant refused him as "picked by
+    // another"): a target the npc keeps failing to reach and cannot hit from where it stands is dropped, and that player is left
+    // alone by this npc for [UNREACHABLE_TICKS] so the next search does not pick him straight back.
+    val unreachable =
+        currentTarget != null && (npc.attr[gg.rsmod.game.model.attr.NPC_ROUTE_FAILS] ?: 0) >= UNREACHABLE_FAILS &&
+            !npc.hasLineOfSightTo(currentTarget, projectile = attackRange > 1, maximumDistance = attackRange)
+    if (unreachable) {
+        val player = currentTarget as? Player
+        if (player != null) {
+            npc.attr[UNREACHABLE_ATTR] = player.username to (world.currentCycle + UNREACHABLE_TICKS)
+            if (player.getAggressor() === npc) player.attr.remove(AGGRESSOR)
+        }
+        npc.attr.remove(gg.rsmod.game.model.attr.NPC_ROUTE_FAILS)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            "aggro npc ${npc.id}#${npc.index} drops unreachable ${(currentTarget as? Player)?.username ?: currentTarget}"
+        }
+    }
     val pursuing =
-        currentTarget != null && !currentTarget.isDead() && Combat.canEngage(npc, currentTarget) &&
-            NpcLeash.mayPursue(npc, currentTarget, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackRange(npc) ?: 1)
-    if (pursuing) {
+        !unreachable && currentTarget != null && !currentTarget.isDead() && Combat.canEngage(npc, currentTarget) &&
+            NpcLeash.mayPursue(npc, currentTarget, attackRange)
+    if (unreachable) {
+        // N417: give the unreachable target up the way a lost target is dropped below, whatever the combat timers say.
+        npc.stopMovement()
+        npc.resetInteractions()
+        npc.resetFacePawn()
+        npc.interruptQueues()
+        NpcLeash.returnHome(npc)
+    } else if (pursuing) {
         // keep fighting. The combat cycle faces its target every cycle; a target with no face means the fight loop was ended by
         // something else (an interrupted queue) while the target stayed set - start it again instead of standing idle.
         if (npc.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR]?.get() !== currentTarget) npc.attack(currentTarget!!)
@@ -233,6 +267,8 @@ fun refusal(
     range: Int,
 ): String? {
     if (!canAttack(npc, target)) return "aggro-rule"
+    // N417: the player this npc just gave up on as unreachable.
+    npc.attr[UNREACHABLE_ATTR]?.let { (name, until) -> if (name == target.username && world.currentCycle < until) return "unreachable" }
     if (!npc.canEngageCombat(target)) return "cannot-engage"
     if (!world.plugins.canAttack(npc, target)) return "can_attack-plugin"
     if (!Combat.canEngage(npc, target)) return "combat-canEngage"

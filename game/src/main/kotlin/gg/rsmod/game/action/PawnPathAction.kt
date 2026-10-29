@@ -358,6 +358,14 @@ object PawnPathAction {
                     "success=${route.success} steps=${route.path.size} tail=${route.tail.x},${route.tail.z} frozen=$frozen"
             }
         }
+        // N417: count an npc's failed route searches in a row (npc_aggro.plugin.kts drops a target it keeps failing to reach).
+        if (pawn is gg.rsmod.game.model.entity.Npc && !frozen) {
+            if (route.success) {
+                pawn.attr.remove(gg.rsmod.game.model.attr.NPC_ROUTE_FAILS)
+            } else {
+                pawn.attr[gg.rsmod.game.model.attr.NPC_ROUTE_FAILS] = (pawn.attr[gg.rsmod.game.model.attr.NPC_ROUTE_FAILS] ?: 0) + 1
+            }
+        }
         // Debug toolkit: any npc or player whose route to its target fails (stuck behind scenery, target unreachable).
         if (!route.success && !frozen) {
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.NPCPATH) {
