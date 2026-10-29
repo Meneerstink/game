@@ -324,6 +324,25 @@ gg.rsmod.game.CommandServerCommands.handlers["cwplay"] = { w, a ->
         "${p.username} plays Castle Wars for $team at ${team.baseTile}"
     }
 }
+// `cwend <sara score> <zam score>`: ends the running Castle Wars round now with that score (K07: tickets per result), through the
+// round's own last-minute tick.
+gg.rsmod.game.CommandServerCommands.handlers["cwend"] = { w, a ->
+    val sara = a.getOrNull(0)?.toIntOrNull()
+    val zam = a.getOrNull(1)?.toIntOrNull()
+    if (sara == null || zam == null) {
+        "usage: cwend <sara score> <zam score>"
+    } else {
+        w.queue {
+            val round = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsRound
+            round.score[gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.SARADOMIN] = sara
+            round.score[gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.ZAMORAK] = zam
+            round.active = true
+            round.minutesLeft = 1
+            gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.tickMinute(w)
+        }
+        "Castle Wars round ended at $sara-$zam"
+    }
+}
 // `opnpc <name> <slot 1-5> <npc id>`: an npc option (Attack, Talk-to...) on the nearest npc with that id, through the real handler
 // path (Barrows facing E21 checked in the agent's own client).
 gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->

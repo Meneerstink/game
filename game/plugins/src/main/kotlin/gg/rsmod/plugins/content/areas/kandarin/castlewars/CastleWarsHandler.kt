@@ -152,22 +152,36 @@ object CastleWarsHandler {
         if (winner != null) CastleWarsRound.seasonWins[winner] = CastleWarsRound.seasonWins[winner]!! + 1
         for (team in CastleWarsTeam.values()) {
             for (player in CastleWarsRound.playing[team]!!.toList()) {
-                when {
-                    winner == null -> {
-                        player.message("You draw.")
-                        player.inventory.add(Items.CASTLE_WARS_TICKET, 1)
-                    }
-                    winner == team -> {
-                        player.message("You won.")
-                        player.inventory.add(Items.CASTLE_WARS_TICKET, 2)
-                    }
-                    else -> player.message("You lost.")
-                }
+                player.message(
+                    when (winner) {
+                        null -> "You draw."
+                        team -> "You won."
+                        else -> "You lost."
+                    },
+                )
+                val own = CastleWarsRound.score[team]!!
+                val other = CastleWarsRound.score[team.other()]!!
+                player.inventory.add(Items.CASTLE_WARS_TICKET, tickets(own, other))
                 removePlayingPlayer(player)
             }
         }
         CastleWarsRound.reset()
     }
+
+    /**
+     * K07 N412: the tickets for one game (OSRS Wiki "Castle wars ticket", non-Castle Wars worlds): a win 3 when the other team did
+     * not score, else 2; a 0-0 draw 1, any other draw 2; a loss 1. The wiki's "at least 15 minutes in the game" always holds here:
+     * players only join when a 20-minute game starts.
+     */
+    fun tickets(
+        ownScore: Int,
+        otherScore: Int,
+    ): Int =
+        when {
+            ownScore > otherScore -> if (otherScore == 0) 3 else 2
+            ownScore == otherScore -> if (ownScore == 0) 1 else 2
+            else -> 1
+        }
 
     fun addBarricade(
         world: World,

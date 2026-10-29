@@ -15,6 +15,15 @@ class CastleWarsBandageTests {
     }
 
     @Test
+    fun `tickets follow the OSRS table for non Castle Wars worlds`() {
+        assertEquals(3, CastleWarsHandler.tickets(2, 0))
+        assertEquals(2, CastleWarsHandler.tickets(3, 1))
+        assertEquals(1, CastleWarsHandler.tickets(0, 0))
+        assertEquals(2, CastleWarsHandler.tickets(1, 1))
+        assertEquals(1, CastleWarsHandler.tickets(0, 2))
+    }
+
+    @Test
     fun `no barricade on the tiles in front of the castle doors`() {
         assertEquals(false, CastleWarsHandler.canPlaceBarricade(Tile(2422, 3076, 1)))
         assertEquals(false, CastleWarsHandler.canPlaceBarricade(Tile(2377, 3131, 1)))
