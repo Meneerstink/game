@@ -136,14 +136,29 @@ on_obj_option(obj = Objs.CAVE_WALL, option = "Collapse") {
 
 // Barricade destruction (item-on-npc: no cache option-text validation needed, unlike
 // on_item_option, so this is safe to wire without a dedicated probe tool).
+// OSRS Wiki "Barricade": "Burning barricades take time to collapse and cannot be destroyed with an explosive potion while burning"
+// (Novite: the burning barricade 1533 collapses by chance). It burns BARRICADE_BURN_TICKS (CUSTOM length, the wiki gives none).
+val BARRICADE_BURN_TICKS = 20
+val BURNING = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
 on_item_on_npc(item = Items.TINDERBOX_590, npc = Npcs.BARRICADE) {
     val npc = player.getInteractingNpc()
+    if (npc.attr[BURNING] == true) return@on_item_on_npc
+    npc.attr[BURNING] = true
     npc.setTransmogId(Npcs.BARRICADE_1533)
-    CastleWarsHandler.destroyBarricade(world, npc)
+    world.queue {
+        wait(BARRICADE_BURN_TICKS)
+        if (npc in CastleWarsRound.barricades) CastleWarsHandler.destroyBarricade(world, npc)
+    }
 }
 on_item_on_npc(item = Items.EXPLOSIVE_POTION, npc = Npcs.BARRICADE) {
+    val npc = player.getInteractingNpc()
+    if (npc.attr[BURNING] == true) {
+        player.message("The barricade is already burning.")
+        return@on_item_on_npc
+    }
     player.inventory.remove(Items.EXPLOSIVE_POTION, amount = 1)
-    CastleWarsHandler.destroyBarricade(world, player.getInteractingNpc())
+    CastleWarsHandler.destroyBarricade(world, npc)
 }
 // A barricade never attacks back (OSRS: an object with hitpoints); players may still attack it.
 can_attack { attacker, _ -> !(attacker is gg.rsmod.game.model.entity.Npc && attacker.id == Npcs.BARRICADE) }
