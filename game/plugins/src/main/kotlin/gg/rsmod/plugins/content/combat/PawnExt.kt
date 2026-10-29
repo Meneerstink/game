@@ -177,7 +177,8 @@ fun Pawn.dealHit(
     },
 ): PawnHit {
     val accuracy = formula.getAccuracy(this, target)
-    val maxHit = formula.getMaxHit(this, target)
+    // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
+    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, formula.getMaxHit(this, target))
     val landHit = accuracy >= world.randomDouble()
     return dealHit(target, minHit, maxHit, landHit, delay, onHit, HitType.REGULAR_HIT)
 }
@@ -195,7 +196,8 @@ fun Pawn.dealHit(
     onHit: (PawnHit) -> Unit = {},
 ): PawnHit {
     val accuracy = formula.getAccuracy(this, target)
-    val maxHit = formula.getMaxHit(this, target)
+    // K07: a Castle wars bracelet charged this game adds 20% against a flag carrier.
+    val maxHit = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.braceMaxHit(this, target, formula.getMaxHit(this, target))
     val landHit = accuracy >= world.randomDouble()
     return dealHit(target, minHit, maxHit, landHit, delay, onHit, type)
 }

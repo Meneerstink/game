@@ -24,6 +24,13 @@ class CastleWarsBandageTests {
     }
 
     @Test
+    fun `the bracelet loses one charge a game and is gone after the third`() {
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.CASTLE_WARS_BRACE_2, CastleWarsHandler.nextBrace(gg.rsmod.plugins.api.cfg.Items.CASTLE_WARS_BRACE_3))
+        assertEquals(gg.rsmod.plugins.api.cfg.Items.CASTLE_WARS_BRACE_1, CastleWarsHandler.nextBrace(gg.rsmod.plugins.api.cfg.Items.CASTLE_WARS_BRACE_2))
+        assertEquals(null, CastleWarsHandler.nextBrace(gg.rsmod.plugins.api.cfg.Items.CASTLE_WARS_BRACE_1))
+    }
+
+    @Test
     fun `no barricade on the tiles in front of the castle doors`() {
         assertEquals(false, CastleWarsHandler.canPlaceBarricade(Tile(2422, 3076, 1)))
         assertEquals(false, CastleWarsHandler.canPlaceBarricade(Tile(2377, 3131, 1)))

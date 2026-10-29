@@ -107,6 +107,7 @@ object CastleWarsHandler {
         CastleWarsRound.waiting[team]!!.remove(player)
         CastleWarsRound.playing[team]!!.add(player)
         player.attr[CW_PLAYING] = true
+        chargeBrace(player)
         player.moveTo(team.baseTile)
     }
 
@@ -122,6 +123,7 @@ object CastleWarsHandler {
         player.equipment[EquipmentType.HEAD.id] = null
         player.attr.remove(CW_TEAM)
         player.attr.remove(CW_PLAYING)
+        player.attr.remove(CW_BRACE)
         player.write(gg.rsmod.game.message.impl.HintArrowMessage(slot = CARRIER_ARROW_SLOT, type = gg.rsmod.game.message.impl.HintArrowMessage.TYPE_CLEAR))
         player.inventory.remove(Items.BANDAGES, amount = Int.MAX_VALUE)
         player.inventory.remove(Items.BARRICADE, amount = Int.MAX_VALUE)
@@ -167,6 +169,34 @@ object CastleWarsHandler {
         }
         CastleWarsRound.reset()
     }
+
+    /**
+     * K07 N412: the Castle wars bracelet (OSRS Wiki "Castle wars bracelet"): worn as the game starts it spends one of its 3 charges
+     * ((3) -> (2) -> (1) -> gone) and for that game gives 20% more damage against a player carrying a flag and 50% more healing from
+     * bandages. CUSTOM message when the last charge is used (the wiki quotes none).
+     */
+    val BRACES = listOf(Items.CASTLE_WARS_BRACE_3, Items.CASTLE_WARS_BRACE_2, Items.CASTLE_WARS_BRACE_1)
+
+    fun nextBrace(brace: Int): Int? = BRACES.indexOf(brace).takeIf { it >= 0 }?.let { BRACES.getOrNull(it + 1) }
+
+    fun chargeBrace(player: Player) {
+        val worn = player.equipment[EquipmentType.GLOVES.id]?.id ?: return
+        if (worn !in BRACES) return
+        player.attr[CW_BRACE] = true
+        val next = nextBrace(worn)
+        player.equipment[EquipmentType.GLOVES.id] = next?.let { Item(it) }
+        if (next == null) player.message("Your Castle wars bracelet has used its last charge and crumbles to dust.")
+    }
+
+    fun carriesFlag(pawn: gg.rsmod.game.model.entity.Pawn): Boolean =
+        pawn is Player && pawn.equipment[EquipmentType.WEAPON.id]?.id.let { it == Items.SARADOMIN_FLAG || it == Items.ZAMORAK_FLAG }
+
+    /** The max hit with the bracelet's +20% against a flag carrier. */
+    fun braceMaxHit(
+        attacker: gg.rsmod.game.model.entity.Pawn,
+        target: gg.rsmod.game.model.entity.Pawn,
+        maxHit: Double,
+    ): Double = if (attacker is Player && attacker.attr[CW_BRACE] == true && carriesFlag(target)) kotlin.math.floor(maxHit * 1.2) else maxHit
 
     /**
      * K07 N412: the tickets for one game (OSRS Wiki "Castle wars ticket", non-Castle Wars worlds): a win 3 when the other team did

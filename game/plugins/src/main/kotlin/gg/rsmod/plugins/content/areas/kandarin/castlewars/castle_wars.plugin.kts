@@ -182,15 +182,14 @@ listOf(EquipmentType.CAPE, EquipmentType.HEAD).forEach { slot ->
     }
 }
 
-val CASTLE_WARS_BRACES = setOf(Items.CASTLE_WARS_BRACE_1, Items.CASTLE_WARS_BRACE_2, Items.CASTLE_WARS_BRACE_3)
-
 /** One bandage on [target]: 10% of its hitpoints (x1.5 with a Castle wars brace on the one who heals) and 30% run energy. */
 fun bandage(
     healer: Player,
     target: Player,
 ) {
     if (!healer.inventory.remove(Items.BANDAGES, amount = 1).hasSucceeded()) return
-    val brace = healer.equipment[EquipmentType.GLOVES.id]?.id in CASTLE_WARS_BRACES
+    // The bracelet's bonus is charged as the game starts (CastleWarsHandler.chargeBrace), not by what is worn now.
+    val brace = healer.attr[CW_BRACE] == true
     target.heal(CastleWarsHandler.bandageHeal(target.getMaximumLifepoints(), brace))
     target.runEnergy = (target.runEnergy + CastleWarsHandler.BANDAGE_RUN_ENERGY).coerceAtMost(100.0)
     target.sendRunEnergy(target.runEnergy.toInt())

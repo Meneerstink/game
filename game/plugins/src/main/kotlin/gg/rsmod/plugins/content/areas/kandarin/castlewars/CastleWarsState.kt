@@ -123,3 +123,6 @@ object CastleWarsRound {
 
 val CW_TEAM = AttributeKey<CastleWarsTeam>()
 val CW_PLAYING = AttributeKey<Boolean>()
+
+/** K07: a Castle wars bracelet was worn when this game began (one charge spent) - its bonuses hold for the whole game. */
+val CW_BRACE = AttributeKey<Boolean>()

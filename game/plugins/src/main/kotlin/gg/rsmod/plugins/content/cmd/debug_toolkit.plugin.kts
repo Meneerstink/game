@@ -319,6 +319,7 @@ gg.rsmod.game.CommandServerCommands.handlers["cwplay"] = { w, a ->
             p.attr[gg.rsmod.plugins.content.areas.kandarin.castlewars.CW_TEAM] = team
             p.attr[gg.rsmod.plugins.content.areas.kandarin.castlewars.CW_PLAYING] = true
             gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsRound.playing[team]!!.add(p)
+            gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.chargeBrace(p)
             p.moveTo(team.baseTile)
         }
         "${p.username} plays Castle Wars for $team at ${team.baseTile}"
