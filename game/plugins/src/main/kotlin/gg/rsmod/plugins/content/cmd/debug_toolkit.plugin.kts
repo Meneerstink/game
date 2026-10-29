@@ -265,6 +265,41 @@ gg.rsmod.game.CommandServerCommands.handlers["oploc"] = { w, a ->
         if (p.gameSystem.inject(msg)) "clicked option $slot of $id at $x,$z for ${p.username} (at ${p.tile.x},${p.tile.z},${p.tile.height})" else "no handler"
     }
 }
+// `oplocitem <name> <inventory slot> <loc id> <x> <z>`: uses the item in that inventory slot on a loc through the real
+// OpLocT handler path (2026-10-29: the Warriors' Guild animator checked in the agent's own client).
+gg.rsmod.game.CommandServerCommands.handlers["oplocitem"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val slot = a.getOrNull(1)?.toIntOrNull()
+    val id = a.getOrNull(2)?.toIntOrNull()
+    val x = a.getOrNull(3)?.toIntOrNull()
+    val z = a.getOrNull(4)?.toIntOrNull()
+    val item = slot?.let { p?.inventory?.get(it)?.id }
+    if (p == null || slot == null || id == null || x == null || z == null || item == null) {
+        "usage: oplocitem <name> <inventory slot with an item> <loc id> <x> <z>"
+    } else {
+        // The 667 inventory is interface 679 (component 0), as the client sends it.
+        val msg = gg.rsmod.game.message.impl.OpLocTMessage((679 shl 16), slot, item, x, z, id, 0)
+        if (p.gameSystem.inject(msg)) "used item $item (slot $slot) on $id at $x,$z for ${p.username}" else "no handler"
+    }
+}
+// `findloc <name> <loc id> [radius]`: where the locs with that id stand around the player (agent client checks).
+gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val id = a.getOrNull(1)?.toIntOrNull()
+    val r = a.getOrNull(2)?.toIntOrNull() ?: 15
+    if (p == null || id == null) {
+        "usage: findloc <name> <loc id> [radius]"
+    } else {
+        val found = ArrayList<String>()
+        for (dx in -r..r) for (dz in -r..r) {
+            val t = p.tile.transform(dx, dz)
+            w.chunks.get(t, createIfNeeded = false)
+                ?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                ?.filter { it.id == id }?.forEach { found += "${it.tile.x},${it.tile.z},${it.tile.height} type=${it.type} rot=${it.rot}" }
+        }
+        "loc $id near ${p.tile.x},${p.tile.z}: ${found.joinToString("; ").ifEmpty { "none" }}"
+    }
+}
 // `opnpc <name> <slot 1-5> <npc id>`: an npc option (Attack, Talk-to...) on the nearest npc with that id, through the real handler
 // path (Barrows facing E21 checked in the agent's own client).
 gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->

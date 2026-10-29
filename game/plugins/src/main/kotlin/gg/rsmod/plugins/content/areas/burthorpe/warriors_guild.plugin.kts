@@ -46,6 +46,86 @@ GUILD_DOORS.forEach { id ->
     }
 }
 
+// ---- K06 N372 part 1: the Magical animator (WarriorsGuildAnimator) ----
+WarriorsGuildAnimator.Set.values().flatMap { it.pieces }.forEach { piece ->
+    on_item_on_obj(obj = WarriorsGuildAnimator.ANIMATOR, item = piece) {
+        animate(player)
+    }
+}
+
+fun animate(player: Player) {
+    if (WarriorsGuildAnimator.active(player) != null) {
+        player.message(WarriorsGuildAnimator.MSG_BUSY)
+        return
+    }
+    val used = player.attr[gg.rsmod.game.model.attr.INTERACTING_ITEM]?.get()?.id
+    val set = used?.let { WarriorsGuildAnimator.setOf(it) }
+    if (set == null || set.pieces.any { !player.inventory.contains(it) }) {
+        player.message(WarriorsGuildAnimator.MSG_INCOMPLETE)
+        return
+    }
+    val animator = player.getInteractingGameObj()
+    set.pieces.forEach { player.inventory.remove(it, 1) }
+    player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
+        player.faceTile(animator.tile)
+        player.animate(WarriorsGuildAnimator.PUT_ANIM)
+        player.message(WarriorsGuildAnimator.MSG_HUMS)
+        wait(2)
+        player.message(WarriorsGuildAnimator.MSG_STAND_BACK)
+        wait(2)
+        // On the tile in front of the animator (the room side): the animator itself is solid, an npc on it found no route out.
+        val armour = Npc(player, set.npc, animator.tile.transform(0, 1), world)
+        armour.respawns = false
+        world.spawn(armour)
+        player.attr[WarriorsGuildAnimator.ANIMATION] = java.lang.ref.WeakReference(armour)
+        armour.animate(WarriorsGuildAnimator.RISE_ANIM)
+        armour.forceChat("I'm ALIVE!")
+        armour.attack(player)
+        watch(player, armour, set)
+    }
+}
+
+/** Novite `AnimatedArmor.finish`: the fight ends without a kill (the owner left, logged out or died) - the armour comes back. */
+fun watch(player: Player, armour: Npc, set: WarriorsGuildAnimator.Set) {
+    world.queue {
+        while (world.npcs.contains(armour) && !armour.isDead()) {
+            wait(5)
+            val gone = !player.isOnline || player.isDead() || player.tile.height != armour.tile.height || !player.tile.isWithinRadius(armour.tile, 16)
+            if (gone && world.npcs.contains(armour) && !armour.isDead()) {
+                world.remove(armour)
+                player.attr.remove(WarriorsGuildAnimator.ANIMATION)
+                set.pieces.forEach { piece ->
+                    if (!player.inventory.add(piece, 1).hasSucceeded()) player.bank.add(piece, 1)
+                }
+                return@queue
+            }
+        }
+    }
+}
+
+WarriorsGuildAnimator.Set.values().forEach { set ->
+    // The set's own table (the Drop Viewer reads it, and the bulk table - 5 tokens and one random piece - no longer rolls here);
+    // the drop itself is below, 1 in 16 without one piece.
+    gg.rsmod.plugins.content.drops.DropTableFactory.register(
+        gg.rsmod.plugins.content.drops.DropTableFactory.build {
+            guaranteed {
+                obj(Items.WARRIOR_GUILD_TOKEN, quantity = set.tokens)
+                set.pieces.forEach { obj(it) }
+            }
+        },
+        set.npc,
+    )
+    on_npc_death(set.npc) {
+        val owner = npc.owner ?: return@on_npc_death
+        owner.attr.remove(WarriorsGuildAnimator.ANIMATION)
+        val roll = if (world.random(WarriorsGuildAnimator.BREAK_ONE_IN - 1) == 0) world.random(2) else -1
+        WarriorsGuildAnimator.returned(set, roll).forEach { piece ->
+            world.spawn(gg.rsmod.game.model.entity.GroundItem(piece, 1, npc.tile, owner))
+        }
+        world.spawn(gg.rsmod.game.model.entity.GroundItem(Items.WARRIOR_GUILD_TOKEN, set.tokens, npc.tile, owner))
+    }
+}
+
 // N374: the next defender in order (WarriorsGuildDefenders), with a red line when it drops.
 on_npc_killed { killer, npc ->
     if (npc.id !in WarriorsGuildDefenders.CYCLOPES || !WarriorsGuildDefenders.inGuild(npc.tile)) return@on_npc_killed
