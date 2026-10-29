@@ -54,6 +54,22 @@ object WarriorsGuildAnimator {
 
     fun active(player: Player): Npc? = player.attr[ANIMATION]?.get()?.takeIf { player.world.npcs.contains(it) && !it.isDead() }
 
+    // ---- K06 N372 part 2: the cyclops room (OSRS Wiki "Warriors' Guild": at least 100 tokens to enter, 10 tokens a minute) ----
+
+    /** The cyclops room door on the top floor (Novite CYCLOPS_LOBBY 2843,3535,2 / OUTSIDE_CYCLOPS 2844,3536,2: the lobby is west). */
+    val CYCLOPS_DOOR = gg.rsmod.game.model.Tile(2847, 3536, 2)
+    val OUTSIDE_CYCLOPS = gg.rsmod.game.model.Tile(2844, 3536, 2)
+    const val TOKENS_TO_ENTER = 100
+    const val TOKENS_PER_MINUTE = 10
+    const val MINUTE_TICKS = 100
+
+    /** CUSTOM wording (no OSRS transcript line found for these two). */
+    const val MSG_NOT_ENOUGH = "You need at least 100 Warrior guild tokens to enter the cyclops room."
+    const val MSG_RUN_OUT = "You have run out of Warrior guild tokens and are ushered out of the cyclops room."
+
+    /** The top-floor cyclops room: the door's own tile and east of it (the door is on the tile's west face; the lobby is west). */
+    fun inCyclopsRoom(tile: gg.rsmod.game.model.Tile): Boolean = tile.height == 2 && tile.x in 2847..2877 && tile.z in 3528..3557
+
     /** The pieces a kill gives back: the whole set, or - 1 in [BREAK_ONE_IN] - all but one ([roll] picks; -1 = nothing breaks). */
     fun returned(set: Set, roll: Int): List<Int> = if (roll < 0) set.pieces else set.pieces.filterIndexed { i, _ -> i != roll }
 }

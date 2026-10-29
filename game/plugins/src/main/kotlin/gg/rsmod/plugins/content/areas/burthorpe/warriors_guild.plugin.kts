@@ -28,8 +28,14 @@ val GUILD_DOORS = intArrayOf(Objs.DOOR_15641, Objs.DOOR_15644, Objs.DOOR_15647, 
 GUILD_DOORS.forEach { id ->
     on_obj_option(obj = id, option = "open") {
         val obj = player.getInteractingGameObj()
+        // N372 part 2: into the cyclops room only with 100 tokens (OSRS Wiki "Warriors' Guild").
+        val intoCyclops = obj.tile.sameAs(WarriorsGuildAnimator.CYCLOPS_DOOR) && !WarriorsGuildAnimator.inCyclopsRoom(player.tile)
+        if (intoCyclops && player.inventory.getItemCount(Items.WARRIOR_GUILD_TOKEN) < WarriorsGuildAnimator.TOKENS_TO_ENTER) {
+            player.message(WarriorsGuildAnimator.MSG_NOT_ENOUGH)
+            return@on_obj_option
+        }
         player.lockingQueue(lockState = LockState.FULL) {
-            gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+            val crossed = gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
                 this, player, obj,
                 open = {
                     val opened = world.openDoor(obj, opened = obj.id)
@@ -42,8 +48,24 @@ GUILD_DOORS.forEach { id ->
                     }
                 },
             )
+            if (crossed && intoCyclops) player.timers[CYCLOPS_TOKEN_TIMER] = WarriorsGuildAnimator.MINUTE_TICKS
         }
     }
+}
+
+/** N372 part 2: 10 tokens a minute in the cyclops room; out of tokens - back to the lobby. Leaving the room ends it. */
+val CYCLOPS_TOKEN_TIMER = gg.rsmod.game.model.timer.TimerKey()
+
+on_timer(CYCLOPS_TOKEN_TIMER) {
+    if (!WarriorsGuildAnimator.inCyclopsRoom(player.tile)) return@on_timer
+    val held = player.inventory.getItemCount(Items.WARRIOR_GUILD_TOKEN)
+    player.inventory.remove(Items.WARRIOR_GUILD_TOKEN, minOf(held, WarriorsGuildAnimator.TOKENS_PER_MINUTE))
+    if (held <= WarriorsGuildAnimator.TOKENS_PER_MINUTE) {
+        player.moveTo(WarriorsGuildAnimator.OUTSIDE_CYCLOPS)
+        player.message(WarriorsGuildAnimator.MSG_RUN_OUT)
+        return@on_timer
+    }
+    player.timers[CYCLOPS_TOKEN_TIMER] = WarriorsGuildAnimator.MINUTE_TICKS
 }
 
 // ---- K06 N372 part 1: the Magical animator (WarriorsGuildAnimator) ----

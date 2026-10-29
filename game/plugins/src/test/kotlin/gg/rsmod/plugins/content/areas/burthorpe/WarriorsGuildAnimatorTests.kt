@@ -17,6 +17,17 @@ class WarriorsGuildAnimatorTests {
     }
 
     @Test
+    fun `the cyclops room is east of its door on the top floor, the lobby is not`() {
+        assertEquals(false, WarriorsGuildAnimator.inCyclopsRoom(WarriorsGuildAnimator.OUTSIDE_CYCLOPS))
+        assertEquals(true, WarriorsGuildAnimator.inCyclopsRoom(WarriorsGuildAnimator.CYCLOPS_DOOR))
+        assertEquals(false, WarriorsGuildAnimator.inCyclopsRoom(gg.rsmod.game.model.Tile(2846, 3536, 2)))
+        assertEquals(true, WarriorsGuildAnimator.inCyclopsRoom(gg.rsmod.game.model.Tile(2848, 3536, 2)))
+        assertEquals(false, WarriorsGuildAnimator.inCyclopsRoom(gg.rsmod.game.model.Tile(2848, 3536, 0)))
+        assertEquals(100, WarriorsGuildAnimator.TOKENS_TO_ENTER)
+        assertEquals(10, WarriorsGuildAnimator.TOKENS_PER_MINUTE)
+    }
+
+    @Test
     fun `a kill gives the whole set back, or all but one piece`() {
         val rune = WarriorsGuildAnimator.Set.RUNE
         assertEquals(rune.pieces, WarriorsGuildAnimator.returned(rune, -1))
