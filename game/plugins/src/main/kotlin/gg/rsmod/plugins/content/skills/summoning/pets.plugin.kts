@@ -217,8 +217,11 @@ on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
 
 // Owner 2026-10-24 ("geef me spawn commands om alle pets te spawnen, makkelijk te kopieren"): `::pets <block>` empties the
 // inventory and spawns block <block> (1-based, 28 pet items each) of every pet item - the OSRS pets first, then the 667 pets.
+// N404 (owner 2026-10-24: "je kunt 2 van dezelfde pet hebben"): one item per pet - its first form, the one a boss drops or a shop
+// sells - so a test inventory never holds two forms of one OSRS pet; the other forms come from Metamorphosis, as in OSRS. The 667
+// pets have no Metamorphosis: every colour stays its own item.
 on_command("pets", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
-    val items = (Pets.variants.filter { !it.classic } + Pets.variants.filter { it.classic }).map { it.item }.distinct()
+    val items = (Pets.variants.filter { !it.classic }.distinctBy { it.pet } + Pets.variants.filter { it.classic }).map { it.item }.distinct()
     val blocks = (items.size + 27) / 28
     val block = player.getCommandArgs().getOrNull(0)?.toIntOrNull()
     if (block == null || block !in 1..blocks) {

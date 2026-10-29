@@ -99,10 +99,16 @@ object PetMorphs {
     private fun unlockedSet(player: Player): MutableSet<Int> =
         player.attr[UNLOCKED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull() }.toMutableSet()
 
+    /**
+     * Owner decision 2026-10-25 (HOOFDLIJST K02 BESLUITEN, N401 "rift guardian kleur veranderen lukt niet"): Metamorphosis offers every
+     * form of the pet - also the ones OSRS unlocks with an item or a skill here (rift guardian colours, Gulliver, ores, logs, seeds,
+     * berries, firelighters); those items still change the pet directly. Only forms of the same pet, never another pet.
+     */
+    @Suppress("UNUSED_PARAMETER")
     fun isUnlocked(
         player: Player,
         variant: Pets.Variant,
-    ): Boolean = variant.osrsItem !in gated || variant.osrsItem in unlockedSet(player)
+    ): Boolean = true
 
     /** Unlocks [variant]; true when it was new. */
     fun unlock(
