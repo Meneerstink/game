@@ -363,3 +363,200 @@
 14662	panel	53	49	53	57	Wisp
 14663	dialogue	23	23	30	40	Yami
 14663	panel	64	67	78	95	Yami
+761	dialogue	27	49	47	44	Pet kitten
+762	dialogue	28	49	47	44	Pet kitten
+763	dialogue	27	49	47	44	Pet kitten
+764	dialogue	28	49	47	44	Pet kitten
+765	dialogue	27	49	47	44	Pet kitten
+766	dialogue	28	49	47	44	Pet kitten
+768	dialogue	37	37	46	44	Pet cat
+769	dialogue	37	37	46	44	Pet cat
+770	dialogue	37	37	46	44	Pet cat
+771	dialogue	37	37	46	44	Pet cat
+772	dialogue	37	37	46	44	Pet cat
+773	dialogue	37	37	46	44	Pet cat
+774	dialogue	37	39	46	45	Overgrown cat
+775	dialogue	37	39	46	45	Overgrown cat
+776	dialogue	36	39	46	45	Overgrown cat
+777	dialogue	37	39	46	45	Overgrown cat
+778	dialogue	37	39	46	45	Overgrown cat
+779	dialogue	36	39	46	45	Overgrown cat
+3503	dialogue	37	39	46	45	Overgrown hellcat
+3504	dialogue	37	37	46	44	Hellcat
+3505	dialogue	29	49	47	44	Hell-kitten
+3598	dialogue	37	31	41	44	Clockwork cat
+3604	dialogue	44	42	43	42	Tzrek-jad
+6900	dialogue	31	25	41	38	Hatchling dragon
+6901	dialogue	36	25	41	38	Baby dragon
+6902	dialogue	31	25	41	38	Hatchling dragon
+6903	dialogue	36	25	41	38	Baby dragon
+6904	dialogue	31	25	41	38	Hatchling dragon
+6905	dialogue	36	25	41	38	Baby dragon
+6906	dialogue	31	25	41	38	Hatchling dragon
+6907	dialogue	36	25	41	38	Baby dragon
+6908	dialogue	41	44	51	49	Baby penguin
+6909	dialogue	55	50	51	60	Penguin
+6911	dialogue	30	40	34	29	Raven chick
+6912	dialogue	27	60	52	45	Raven
+6913	dialogue	21	19	27	33	Baby raccoon
+6914	dialogue	28	29	41	44	Raccoon
+6915	dialogue	21	22	27	31	Baby gecko
+6916	dialogue	32	38	43	46	Gecko
+6919	dialogue	26	9	21	17	Baby squirrel
+6920	dialogue	35	20	33	26	Squirrel
+6922	dialogue	24	29	28	32	Baby chameleon
+6923	dialogue	32	35	33	38	Chameleon
+6942	dialogue	34	44	53	46	Baby monkey
+6943	dialogue	38	58	59	50	Monkey
+6945	dialogue	33	29	27	20	Vulture chick
+6946	dialogue	45	50	40	35	Vulture
+6947	dialogue	25	35	35	52	Baby giant crab
+6948	dialogue	41	52	58	74	Giant crab
+6949	dialogue	29	41	34	29	Saradomin chick
+6950	dialogue	30	53	40	35	Saradomin bird
+6951	dialogue	50	38	47	34	Saradomin owl
+6952	dialogue	29	41	34	29	Zamorak chick
+6953	dialogue	30	53	40	35	Zamorak bird
+6954	dialogue	33	54	45	42	Zamorak hawk
+6955	dialogue	29	41	34	29	Guthix chick
+6956	dialogue	30	53	40	35	Guthix bird
+6957	dialogue	32	52	45	37	Guthix raptor
+6958	dialogue	25	18	30	27	Terrier puppy
+6959	dialogue	34	31	44	40	Terrier
+6960	dialogue	25	25	30	30	Greyhound puppy
+6961	dialogue	32	37	34	51	Greyhound
+6962	dialogue	21	17	34	28	Labrador puppy
+6963	dialogue	31	29	52	44	Labrador
+6964	dialogue	25	12	32	26	Dalmatian puppy
+6965	dialogue	32	25	47	40	Dalmatian
+6966	dialogue	23	20	29	25	Sheepdog puppy
+6967	dialogue	32	34	44	39	Sheepdog
+6968	dialogue	31	27	40	31	Bulldog
+6969	dialogue	24	16	28	20	Bulldog puppy
+7015	dialogue	41	6	38	37	Platypus
+7016	dialogue	41	6	38	37	Platypus
+7017	dialogue	41	6	38	37	Platypus
+7210	dialogue	35	43	54	46	Baby monkey
+7211	dialogue	38	47	59	50	Monkey
+7212	dialogue	34	43	54	49	Baby monkey
+7213	dialogue	38	47	62	55	Monkey
+7214	dialogue	35	51	56	49	Baby monkey
+7215	dialogue	38	68	59	50	Monkey
+7216	dialogue	32	51	54	51	Baby monkey
+7217	dialogue	34	56	67	60	Monkey
+7218	dialogue	34	44	58	50	Baby monkey
+7219	dialogue	38	51	76	65	Monkey
+7220	dialogue	41	54	54	48	Baby monkey
+7221	dialogue	58	72	76	73	Monkey
+7222	dialogue	34	44	53	46	Baby monkey
+7223	dialogue	38	58	59	50	Monkey
+7224	dialogue	35	51	56	49	Baby monkey
+7225	dialogue	38	68	59	50	Monkey
+7226	dialogue	34	44	58	50	Baby monkey
+7227	dialogue	38	51	76	65	Monkey
+7237	dialogue	25	18	30	27	Terrier puppy
+7238	dialogue	34	31	44	40	Terrier
+7239	dialogue	25	18	30	27	Terrier puppy
+7240	dialogue	34	31	44	40	Terrier
+7241	dialogue	25	25	30	30	Greyhound puppy
+7242	dialogue	32	37	34	51	Greyhound
+7243	dialogue	25	25	30	30	Greyhound puppy
+7244	dialogue	32	37	34	51	Greyhound
+7245	dialogue	21	17	34	28	Labrador puppy
+7246	dialogue	31	29	52	44	Labrador
+7247	dialogue	21	17	34	28	Labrador puppy
+7248	dialogue	31	29	52	44	Labrador
+7249	dialogue	25	12	32	26	Dalmatian puppy
+7250	dialogue	32	25	47	40	Dalmatian
+7251	dialogue	25	12	32	26	Dalmatian puppy
+7252	dialogue	32	25	47	40	Dalmatian
+7253	dialogue	23	20	29	25	Sheepdog puppy
+7254	dialogue	32	34	44	39	Sheepdog
+7255	dialogue	23	20	29	25	Sheepdog puppy
+7256	dialogue	32	34	44	39	Sheepdog
+7257	dialogue	31	27	40	31	Bulldog
+7258	dialogue	31	27	40	31	Bulldog
+7259	dialogue	24	16	28	20	Bulldog puppy
+7260	dialogue	24	16	28	20	Bulldog puppy
+7261	dialogue	29	41	34	29	Raven chick
+7262	dialogue	41	60	52	45	Raven
+7263	dialogue	29	41	34	29	Raven chick
+7264	dialogue	27	60	52	45	Raven
+7265	dialogue	29	41	34	29	Raven chick
+7266	dialogue	41	60	52	45	Raven
+7267	dialogue	29	41	34	29	Raven chick
+7268	dialogue	27	60	52	45	Raven
+7269	dialogue	29	41	34	29	Raven chick
+7270	dialogue	41	60	52	45	Raven
+7271	dialogue	21	19	27	33	Baby raccoon
+7272	dialogue	28	29	41	44	Raccoon
+7273	dialogue	21	19	27	33	Baby raccoon
+7274	dialogue	28	29	41	44	Raccoon
+7277	dialogue	21	22	27	31	Baby gecko
+7278	dialogue	21	22	27	31	Baby gecko
+7279	dialogue	21	22	27	31	Baby gecko
+7280	dialogue	21	22	27	31	Baby gecko
+7281	dialogue	32	38	43	46	Gecko
+7282	dialogue	32	38	43	46	Gecko
+7283	dialogue	32	38	43	46	Gecko
+7284	dialogue	32	38	43	46	Gecko
+7293	dialogue	25	35	35	52	Baby giant crab
+7294	dialogue	41	52	58	74	Giant crab
+7295	dialogue	25	35	35	52	Baby giant crab
+7296	dialogue	41	52	58	74	Giant crab
+7297	dialogue	25	35	35	52	Baby giant crab
+7298	dialogue	41	52	58	74	Giant crab
+7299	dialogue	25	35	35	52	Baby giant crab
+7300	dialogue	41	52	58	74	Giant crab
+7301	dialogue	26	9	21	17	Baby squirrel
+7302	dialogue	35	20	33	26	Squirrel
+7303	dialogue	26	9	21	17	Baby squirrel
+7304	dialogue	35	20	33	26	Squirrel
+7305	dialogue	26	9	21	17	Baby squirrel
+7306	dialogue	35	20	33	26	Squirrel
+7307	dialogue	26	9	21	17	Baby squirrel
+7308	dialogue	35	20	33	26	Squirrel
+7313	dialogue	40	48	51	49	Baby penguin
+7314	dialogue	55	51	52	60	Penguin
+7316	dialogue	40	48	51	49	Baby penguin
+7317	dialogue	56	48	51	60	Penguin
+7319	dialogue	33	29	27	20	Vulture chick
+7320	dialogue	45	51	40	36	Vulture
+7321	dialogue	33	29	27	20	Vulture chick
+7322	dialogue	45	50	40	35	Vulture
+7323	dialogue	33	29	27	20	Vulture chick
+7324	dialogue	45	51	40	36	Vulture
+7325	dialogue	33	29	27	20	Vulture chick
+7326	dialogue	45	50	40	35	Vulture
+7327	dialogue	33	29	27	20	Vulture chick
+7328	dialogue	45	51	40	36	Vulture
+7713	dialogue	37	40	57	54	Baby icefiend
+7844	dialogue	21	30	24	20	Ex-ex-parrot
+8214	dialogue	37	37	46	44	Pet cat
+8217	dialogue	28	49	47	44	Pet kitten
+8491	dialogue	42	33	46	36	Broav
+8577	dialogue	60	40	56	42	Phoenix eggling
+8578	dialogue	53	36	46	42	Phoenix eggling
+8619	dialogue	36	13	30	39	Creeping hand
+8620	dialogue	36	25	21	14	Minitrice
+8621	dialogue	25	49	40	57	Baby basilisk
+8622	dialogue	27	41	42	34	Baby kurask
+8624	dialogue	44	27	30	37	Abyssal minion
+9656	dialogue	85	40	34	40	Rune guardian
+9657	dialogue	85	40	34	40	Rune guardian
+9658	dialogue	85	40	34	40	Rune guardian
+9659	dialogue	85	40	34	40	Rune guardian
+9660	dialogue	85	40	34	40	Rune guardian
+9661	dialogue	85	40	34	40	Rune guardian
+9662	dialogue	85	40	34	40	Rune guardian
+9663	dialogue	85	40	34	40	Rune guardian
+9664	dialogue	85	40	34	40	Rune guardian
+9665	dialogue	85	40	34	40	Rune guardian
+9666	dialogue	85	40	34	40	Rune guardian
+9667	dialogue	85	40	34	40	Rune guardian
+9668	dialogue	85	40	34	40	Rune guardian
+9669	dialogue	85	40	34	40	Rune guardian
+11411	dialogue	38	31	23	42	Milk tooth creature
+11413	dialogue	69	31	37	50	Tooth creature (healthy)
+13089	dialogue	138	111	117	121	Sneakerpeeper spawn
+13090	dialogue	163	122	130	118	Sneakerpeeper
