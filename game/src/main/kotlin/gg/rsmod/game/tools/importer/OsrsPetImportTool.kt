@@ -404,8 +404,10 @@ object OsrsPetImportTool {
             Voice("Kalphite Princess", "*", 4485, "lore_kalphite", "Kalphite Queen"),
             Voice("Lil' Creator", "Lil' Creator", 1402, "avatar_warrior_attack", "Avatar of Creation"),
             Voice("Lil' Creator", "Lil' Destructor", 1403, "avatar_mage_attack", "Avatar of Destruction"),
-            Voice("Lil' Zik", "Lil' Zik", 3948, "tob_verzik_bat_cry", "Verzik Vitur"),
-            Voice("Lil' Zik", "Lil' Maiden", 3942, "tob_maiden_death", "Maiden of Sugadinti"),
+            // N405 (owner: the spawn sound is wrong for about half the pets; measured 2026-10-29): the bat cry ran 8 s, the maiden's death
+            // 3.5 s at peak 57 - each pet now speaks with a short, clear sound of its own boss.
+            Voice("Lil' Zik", "Lil' Zik", 3957, "tob_verzik_spider_attack_melee_cry", "Verzik Vitur"),
+            Voice("Lil' Zik", "Lil' Maiden", 3981, "tob_maiden_blood_attack", "Maiden of Sugadinti"),
             Voice("Lil' Zik", "Lil' Bloat", 3545, "tob_bloat_shout", "Pestilent Bloat"),
             Voice("Lil' Zik", "Lil' Nylo", 3294, "tob_nylocas_deathdetonate_shriek", "Nylocas"),
             Voice("Lil' Zik", "Lil' Sot", 3972, "tob_sotetseg_walk_1", "Sotetseg"),
@@ -432,12 +434,14 @@ object OsrsPetImportTool {
             Voice("Pet Penance Queen", "*", 675, "penance_queen_attack", "Penance Queen"),
             Voice("Pet Smoke Devil", "*", 4488, "lore_dust_devil", "smoke devil"),
             Voice("Pet Snakeling", "*", 799, "snake_hiss", "snake"),
-            Voice("Pet Zilyana", "*", 3886, "godwars_saradomin_avatar_shield", "Commander Zilyana"),
+            // N405: the shield sound renders at peak 5 of 128 - inaudible; Zilyana's special instead.
+            Voice("Pet Zilyana", "*", 3876, "godwars_saradomin_special", "Commander Zilyana"),
             Voice("Pet chaos elemental", "*", 345, "chaos_elemental_attack", "Chaos Elemental"),
             Voice("Pet dark core", "Pet dark core", 3895, "Sum2_corp_spirit_beast_mid_proj1", "Corporeal Beast dark core shot (seq 1679)"),
             Voice("Pet dark core", "Pet Corporeal Critter", 3894, "Sum1_spirit_beast_stamp_attack", "Corporeal Beast stomp (seq 1682)"),
             Voice("Prince Black Dragon", "*", 408, "dragon_attack", "King Black Dragon"),
-            Voice("Quetzin", "*", 8581, "varl_quetzel_01", "quetzal"),
+            // N405: varl_quetzel_01 renders at peak 8 - inaudible; the quetzal's own cry from its flying attack (seq 10948).
+            Voice("Quetzin", "*", 8567, "quetzal flying attack cry (seq 10948)", "quetzal"),
             Voice("Rift guardian", "*", 5470, "gotr_small_rift_guardian_attack_04", "family: GotR guardian"),
             Voice("Rock golem", "*", 9841, "coa_rock_golem_attack_01", "family: rock golem"),
             Voice("Rocky", "*", 4661, "lore_raccoon", "raccoon"),

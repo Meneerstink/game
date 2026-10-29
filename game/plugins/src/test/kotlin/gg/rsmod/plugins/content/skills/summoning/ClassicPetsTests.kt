@@ -153,10 +153,20 @@ class ClassicPetsTests {
     }
 
     @Test
+    fun `N405 - every 667 pet form has a voice, and the all-but-inaudible ones were replaced`() {
+        val silent = Pets.variants.filter { it.classic && PetVoices.idleVoiceOf(it.npc) == null }.map { it.name }.distinct()
+        assertEquals(emptyList(), silent, "667 pets without a sound")
+        val sfx = gg.rsmod.plugins.api.cfg.Sfx
+        // Rendered with the client's SynthSound: peak 18 (kitten mew), 16 (jungle monkey), 31 (vulture) of 128.
+        val quiet = setOf(sfx.KITTENS_MEW, sfx.JUNGLE_MONKEY_1, sfx.VULTURE_1)
+        assertEquals(emptyMap(), PetVoices.CLASSIC.filterValues { it in quiet })
+    }
+
+    @Test
     fun `N299 - no 667 pet uses a Varrock Museum display sound, monkey, lizards and penguin have their own calls`() {
         val museum = setOf(gg.rsmod.plugins.api.cfg.Sfx.VM_MONKEY, gg.rsmod.plugins.api.cfg.Sfx.VM_LIZARD, gg.rsmod.plugins.api.cfg.Sfx.VM_PENGUIN)
         assertEquals(emptyMap(), PetVoices.CLASSIC.filterValues { it in museum })
-        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.JUNGLE_MONKEY_1, PetVoices.CLASSIC["Baby monkey"])
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.BREW_MONKEY_TALK, PetVoices.CLASSIC["Baby monkey"])
         assertEquals(gg.rsmod.plugins.api.cfg.Sfx.LIZARD_ATTACK, PetVoices.CLASSIC["Baby gecko"])
         assertEquals(gg.rsmod.plugins.api.cfg.Sfx.LIZARD_ATTACK, PetVoices.CLASSIC["Baby chameleon"])
         assertEquals(gg.rsmod.plugins.api.cfg.Sfx.PENG_PENGUIN_CALL, PetVoices.CLASSIC["Baby penguin"])
@@ -235,7 +245,7 @@ class ClassicPetsTests {
         val kraken = Pets.variants.first { it.pet == "Pet Kraken" }
         assertEquals(rows.first { it.pet == "Pet Kraken" }.localSynth, PetVoices.voiceOf(kraken.npc), "Pet Kraken has its voice")
         // N257: a 667 pet answers Talk-to with its species' sound (it had none).
-        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.JUNGLE_MONKEY_1, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
+        assertEquals(gg.rsmod.plugins.api.cfg.Sfx.BREW_MONKEY_TALK, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
         val huberte = Pets.variants.single { it.pet == "Huberte" }
         assertEquals(rows.single { it.line == "*screeches*" }.localSynth, PetVoices.lineSound(huberte.npc, "*screeches*"))
         assertEquals(null, PetVoices.lineSound(huberte.npc, "*bird noises*"))

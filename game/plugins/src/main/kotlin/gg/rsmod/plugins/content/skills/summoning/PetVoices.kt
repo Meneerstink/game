@@ -47,6 +47,12 @@ object PetVoices {
     val DOGS = setOf("Bloodhound", "Hellpuppy", "Terrier puppy", "Terrier", "Greyhound puppy", "Greyhound", "Labrador puppy", "Labrador",
         "Dalmatian puppy", "Dalmatian", "Sheepdog puppy", "Sheepdog", "Bulldog puppy", "Bulldog")
 
+    /** The Runecraft guardians' voice: the OSRS GotR guardian sound the Rift guardian speaks with (pet_voices.tsv, local synth). */
+    const val RIFT_GUARDIAN_VOICE = 10457
+
+    /** TzTok-Jad's own 667 melee frame sound (seq 9277), as the OSRS TzRek-Jad (pet_voices.tsv). */
+    const val TZTOK_JAD_VOICE = 3858
+
     /**
      * N257 (owner 2026-10-24: "alle pets in de loyalty store maken geen sounds ... geluiden per soort kiezen uit bestaande geluiden,
      * bv. baby monkey -> gorilla- of apengeluiden"): the 667 pets (Loyalty store and the other Summoning-era pets) by species, each
@@ -54,23 +60,33 @@ object PetVoices {
      * Varrock Museum calls (VM_*) are display loops - VM_MONKEY lays its calls over a 2.5 s looping drone, VM_LIZARD repeats four
      * times over 3.4 s - so the creatures' own calls instead (lengths decoded from the cache, synth_duration_probe): the jungle
      * monkey's four short calls (1.2 s, no drone), the lizard's hiss (0.4 s), the penguin call of Cold War (1.6 s).
+     * N405 (owner: the spawn sound is wrong for about half the pets; every voice rendered with the client's SynthSound 2026-10-29):
+     * the kitten's mew (peak 18 of 128), the jungle monkey (16) and the vulture (31) were all but inaudible - the kitten's meow,
+     * the Trouble Brewing monkeys' chatter and the vulture's cry instead; the 28 silent 667 forms got their creature's own sound
+     * (abyssal demon, cockatrice, basilisk, kurask, crawling hand, parrot, imp for the tooth creatures, spider for the
+     * sneakerpeeper, the Runecraft guardians' voice, TzTok-Jad's melee frame sound).
      */
     val CLASSIC: Map<String, Int> =
         mapOf(
-            "Pet kitten" to Sfx.KITTENS_MEW, "Hell-kitten" to Sfx.KITTENS_MEW, "Pet cat" to Sfx.PURR, "Overgrown cat" to Sfx.PURR,
+            "Pet kitten" to Sfx.KITTEN_ATTACK, "Hell-kitten" to Sfx.KITTEN_ATTACK, "Pet cat" to Sfx.PURR, "Overgrown cat" to Sfx.PURR,
             "Clockwork cat" to Sfx.PURR, "Hellcat" to Sfx.CAT_HISS, "Overgrown hellcat" to Sfx.CAT_HISS,
             "Hatchling dragon" to Sfx.BABYDRAGON_ATTACK, "Baby dragon" to Sfx.BABYDRAGON_ATTACK,
             "Baby penguin" to Sfx.PENG_PENGUIN_CALL, "Penguin" to Sfx.PENG_PENGUIN_CALL,
-            "Raven chick" to Sfx.BIRD_ATTACK, "Raven" to Sfx.BIRD_ATTACK, "Vulture chick" to Sfx.VULTURE_1, "Vulture" to Sfx.VULTURE_1,
+            "Raven chick" to Sfx.BIRD_ATTACK, "Raven" to Sfx.BIRD_ATTACK, "Vulture chick" to Sfx.VULTURE_ATTACK, "Vulture" to Sfx.VULTURE_ATTACK,
             "Saradomin chick" to Sfx.BIRD_TWITTER_1, "Zamorak chick" to Sfx.BIRD_TWITTER_1, "Guthix chick" to Sfx.BIRD_TWITTER_1,
             "Saradomin bird" to Sfx.BIRD_ATTACK, "Zamorak bird" to Sfx.BIRD_ATTACK, "Guthix bird" to Sfx.BIRD_ATTACK,
             "Saradomin owl" to Sfx.OWL_PART_1, "Zamorak hawk" to Sfx.BIRD_ATTACK, "Guthix raptor" to Sfx.BIRD_ATTACK,
             "Baby raccoon" to Sfx.RAT_SQUEAK_1, "Raccoon" to Sfx.RAT_SQUEAK_1, "Baby squirrel" to Sfx.RAT_SQUEAK_2, "Squirrel" to Sfx.RAT_SQUEAK_2,
             "Baby gecko" to Sfx.LIZARD_ATTACK, "Gecko" to Sfx.LIZARD_ATTACK, "Baby chameleon" to Sfx.LIZARD_ATTACK, "Chameleon" to Sfx.LIZARD_ATTACK,
-            "Baby monkey" to Sfx.JUNGLE_MONKEY_1, "Monkey" to Sfx.JUNGLE_MONKEY_1,
+            "Baby monkey" to Sfx.BREW_MONKEY_TALK, "Monkey" to Sfx.BREW_MONKEY_TALK,
             "Baby giant crab" to Sfx.SMALL_CRAB_ATTACK, "Giant crab" to Sfx.ROCK_CRAB_ATTACK,
             "Baby platypus" to Sfx.QUACK, "Platypus" to Sfx.QUACK,
             "Baby icefiend" to Sfx.ICEFIEND_ATTACK,
+            "Ex-ex-parrot" to Sfx.PARROT1, "Broav" to Sfx.RAT_SQUEAK_2, "Phoenix eggling" to Sfx.BIRD_ATTACK,
+            "Abyssal minion" to Sfx.ABYSSAL_ATTACK, "Creeping hand" to Sfx.HAND_ATTACK, "Minitrice" to Sfx.COCKATRICE_ATTACK,
+            "Baby basilisk" to Sfx.BASILISK_ATTACK, "Baby kurask" to Sfx.KURASK_ATTACK, "Rune guardian" to RIFT_GUARDIAN_VOICE,
+            "Tooth creature (healthy)" to Sfx.IMP_ATTACK, "Milk tooth creature" to Sfx.IMP_ATTACK,
+            "Sneakerpeeper spawn" to Sfx.SMALL_SPIDER_ATTACK, "Sneakerpeeper" to Sfx.SMALL_SPIDER_ATTACK, "Tzrek-jad" to TZTOK_JAD_VOICE,
         )
 
     /** The voice of a pet species that the table rows do not give: a dog's bark, a 667 pet's species sound. */

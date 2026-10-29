@@ -337,6 +337,19 @@ gg.rsmod.game.CommandServerCommands.handlers["petops"] = { w, _ ->
     }
     if (dead.isEmpty()) "petops: every pet option is bound" else "petops: " + dead.entries.joinToString("; ") { "${it.key} ${it.value.take(4)}" }
 }
+// `petvoices <file>`: every pet form with the voice it makes on appearing, Talk-to and now and then (PetVoices.idleVoiceOf) and its
+// step sound, as a TSV for the N405 sound audit (synth id -1 = silent).
+gg.rsmod.game.CommandServerCommands.handlers["petvoices"] = { _, a ->
+    val file = java.io.File(a.getOrNull(0) ?: "petvoices.tsv")
+    val v = gg.rsmod.plugins.content.skills.summoning.PetVoices
+    file.writeText(
+        "pet\tvariant\tnpc\tclassic\tvoice\tstep\n" +
+            gg.rsmod.plugins.content.skills.summoning.Pets.variants.joinToString("") {
+                "${it.pet}\t${it.name}\t${it.npc}\t${it.classic}\t${v.idleVoiceOf(it.npc) ?: -1}\t${v.stepSound(it) ?: -1}\n"
+            },
+    )
+    "petvoices: ${gg.rsmod.plugins.content.skills.summoning.Pets.variants.size} forms -> ${file.absolutePath}"
+}
 // `cwend <sara score> <zam score>`: ends the running Castle Wars round now with that score (K07: tickets per result), through the
 // round's own last-minute tick.
 gg.rsmod.game.CommandServerCommands.handlers["cwend"] = { w, a ->

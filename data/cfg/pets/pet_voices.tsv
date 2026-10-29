@@ -25,8 +25,8 @@ Ikkle Hydra	*	4067	10475	hydra_boss_stage_4_spawn		Alchemical Hydra
 Kalphite Princess	*	4485	10476	lore_kalphite		Kalphite Queen
 Lil' Creator	Lil' Creator	1402	10477	avatar_warrior_attack		Avatar of Creation
 Lil' Creator	Lil' Destructor	1403	10478	avatar_mage_attack		Avatar of Destruction
-Lil' Zik	Lil' Zik	3948	10479	tob_verzik_bat_cry		Verzik Vitur
-Lil' Zik	Lil' Maiden	3942	10480	tob_maiden_death		Maiden of Sugadinti
+Lil' Zik	Lil' Zik	3957	10521	tob_verzik_spider_attack_melee_cry		Verzik Vitur
+Lil' Zik	Lil' Maiden	3981	10522	tob_maiden_blood_attack		Maiden of Sugadinti
 Lil' Zik	Lil' Bloat	3545	10481	tob_bloat_shout		Pestilent Bloat
 Lil' Zik	Lil' Nylo	3294	10482	tob_nylocas_deathdetonate_shriek		Nylocas
 Lil' Zik	Lil' Sot	3972	10401	tob_sotetseg_walk_1		Sotetseg
@@ -53,12 +53,12 @@ Pet Kree'arra	*	3892	10474	godwars_armadyl_avatar_attack		Kree'arra
 Pet Penance Queen	*	675	10496	penance_queen_attack		Penance Queen
 Pet Smoke Devil	*	4488	10497	lore_dust_devil		smoke devil
 Pet Snakeling	*	799	10498	snake_hiss		snake
-Pet Zilyana	*	3886	10280	godwars_saradomin_avatar_shield		Commander Zilyana
+Pet Zilyana	*	3876	10523	godwars_saradomin_special		Commander Zilyana
 Pet chaos elemental	*	345	10499	chaos_elemental_attack		Chaos Elemental
 Pet dark core	Pet dark core	3895	10500	Sum2_corp_spirit_beast_mid_proj1		Corporeal Beast dark core shot (seq 1679)
 Pet dark core	Pet Corporeal Critter	3894	10501	Sum1_spirit_beast_stamp_attack		Corporeal Beast stomp (seq 1682)
 Prince Black Dragon	*	408	10502	dragon_attack		King Black Dragon
-Quetzin	*	8581	10503	varl_quetzel_01		quetzal
+Quetzin	*	8567	10524	quetzal flying attack cry (seq 10948)		quetzal
 Rift guardian	*	5470	10457	gotr_small_rift_guardian_attack_04		family: GotR guardian
 Rock golem	*	9841	10504	coa_rock_golem_attack_01		family: rock golem
 Rocky	*	4661	10505	lore_raccoon		raccoon
