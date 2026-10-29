@@ -150,6 +150,47 @@ object WarriorsGuildAnimator {
     const val MSG_SHOT_BREATH = "You take a deep breath and prepare yourself."
     const val MSG_SHOT_FUMBLE = "You fumble and drop the shot onto your toe. Ow!"
 
+    // ---- K06 N372 part 5: keg balance (Jimmy's challenge). OSRS Wiki "Keg": head, hands, weapon and shield slots empty, up to
+    // five kegs, Strength xp and tokens while they stay on your head, run energy pays for it, a fall deals up to 4 damage and the
+    // keg goes back. Donors Novite/Darkan: kegs 15669-15673 (keg 15668 while the player's varbit is 0), "One barrel".."Five
+    // barrels" 8860-8864 in the head slot, walk anim 2671, pick-up anim 4180, fall gfx 689 - kegs. The wiki gives no rates, so the
+    // drain, fall chance, xp and tokens below are CUSTOM (Darkan's xp; tokens kept under the catapult's 750 an hour).
+
+    const val KEG = 15668
+
+    /** Keg loc -> the player's varbit that hides it once picked up (cache loc defs, opcode 77). */
+    val KEG_VARBITS = mapOf(15669 to 2253, 15670 to 2254, 15671 to 2255, 15672 to 2256, 15673 to 2252)
+    const val MAX_KEGS = 5
+    const val FIRST_BARREL = 8860
+    val BARRELS = FIRST_BARREL until FIRST_BARREL + MAX_KEGS
+    const val KEG_RENDER = 2671
+    const val KEG_PICK_ANIM = 4180
+    const val KEG_FALL_GFX = 689
+    const val KEG_PICK_ENERGY = 5.0
+    const val KEG_REWARD_EVERY = 10
+    const val KEG_MAX_HIT = 4
+
+    const val MSG_KEG_FREE = "You must have both your hands and head free to balance kegs."
+    const val MSG_KEG_MAX = "You can't balance any more kegs."
+    const val MSG_KEG_FALL = "You lose balance and the kegs fall onto your head."
+    const val MSG_KEG_RUN = "You can't run while balancing kegs."
+
+    fun barrel(kegs: Int): Int = FIRST_BARREL + kegs - 1
+
+    /** The keg room on the first floor (south of the shot put pit). */
+    fun inKegRoom(tile: gg.rsmod.game.model.Tile): Boolean = tile.height == 1 && tile.x in 2862..2878 && tile.z in 3529..3541
+
+    /** Run energy per tick: 0.2% a keg (five kegs = 1% a tick, Darkan's drain). */
+    fun kegDrain(kegs: Int): Double = 0.2 * kegs
+
+    /** Fall chance per tick: none above 25% run energy, then rising to 10% a tick at 0. */
+    fun kegFallChance(runEnergy: Double): Double = ((25.0 - runEnergy) / 250.0).coerceIn(0.0, 0.1)
+
+    /** Every [KEG_REWARD_EVERY] ticks: Strength xp kegs + 1 (Darkan), token progress + kegs (a token per 5). */
+    fun kegXp(kegs: Int): Double = (kegs + 1).toDouble()
+
+    const val KEG_TOKEN_PROGRESS = 5
+
     /** The pieces a kill gives back: the whole set, or - 1 in [BREAK_ONE_IN] - all but one ([roll] picks; -1 = nothing breaks). */
     fun returned(set: Set, roll: Int): List<Int> = if (roll < 0) set.pieces else set.pieces.filterIndexed { i, _ -> i != roll }
 }

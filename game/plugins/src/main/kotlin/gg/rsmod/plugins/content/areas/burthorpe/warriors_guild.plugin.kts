@@ -286,3 +286,108 @@ listOf(WarriorsGuildAnimator.SHOT_18LB, WarriorsGuildAnimator.SHOT_22LB).forEach
         }
     }
 }
+
+// ---- K06 N372 part 5: keg balance (WarriorsGuildAnimator.KEG_VARBITS ... OSRS Wiki "Keg") ----
+val KEGS_ON_HEAD = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val KEG_TICKS = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val KEG_TOKEN_PROGRESS = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val KEG_TIMER = gg.rsmod.game.model.timer.TimerKey()
+
+/** Takes every keg off the player (head slot or, after an unequip, the inventory) and puts the kegs back on the table. */
+fun resetKegs(player: Player) {
+    val head = player.equipment[EquipmentType.HEAD.id]
+    if (head != null && head.id in WarriorsGuildAnimator.BARRELS) player.equipment[EquipmentType.HEAD.id] = null
+    WarriorsGuildAnimator.BARRELS.forEach { barrel ->
+        val held = player.inventory.getItemCount(barrel)
+        if (held > 0) player.inventory.remove(barrel, held)
+    }
+    if ((player.attr[KEGS_ON_HEAD] ?: 0) > 0) player.resetRenderAnimation()
+    WarriorsGuildAnimator.KEG_VARBITS.values.forEach { player.setVarbit(it, 0) }
+    player.attr.remove(KEGS_ON_HEAD)
+    player.attr.remove(KEG_TICKS)
+    player.attr.remove(KEG_TOKEN_PROGRESS)
+    player.timers.remove(KEG_TIMER)
+}
+
+fun dropKegs(player: Player) {
+    val kegs = player.attr[KEGS_ON_HEAD] ?: 0
+    resetKegs(player)
+    player.graphic(WarriorsGuildAnimator.KEG_FALL_GFX - kegs)
+    player.message(WarriorsGuildAnimator.MSG_KEG_FALL)
+    player.forceChat("Ouch!")
+    player.hit(1 + world.random(WarriorsGuildAnimator.KEG_MAX_HIT - 1))
+}
+
+on_obj_option(obj = WarriorsGuildAnimator.KEG, option = "pick-up") {
+    val obj = player.getInteractingGameObj()
+    val varbit = WarriorsGuildAnimator.KEG_VARBITS[obj.id] ?: return@on_obj_option
+    if (player.getVarbit(varbit) != 0) return@on_obj_option
+    val kegs = player.attr[KEGS_ON_HEAD] ?: 0
+    if (kegs >= WarriorsGuildAnimator.MAX_KEGS) {
+        player.message(WarriorsGuildAnimator.MSG_KEG_MAX)
+        return@on_obj_option
+    }
+    val head = player.equipment[EquipmentType.HEAD.id]
+    val headFree = if (kegs == 0) head == null else head?.id in WarriorsGuildAnimator.BARRELS
+    if (!headFree || listOf(EquipmentType.WEAPON, EquipmentType.SHIELD, EquipmentType.GLOVES).any { player.equipment[it.id] != null }) {
+        player.message(WarriorsGuildAnimator.MSG_KEG_FREE)
+        return@on_obj_option
+    }
+    player.queue {
+        player.lock = LockState.DELAY_ACTIONS
+        player.faceTile(obj.tile)
+        player.animate(WarriorsGuildAnimator.KEG_PICK_ANIM)
+        wait(2)
+        player.lock = LockState.NONE
+        if ((player.attr[KEGS_ON_HEAD] ?: 0) != kegs || player.getVarbit(varbit) != 0) return@queue
+        val now = kegs + 1
+        player.setVarbit(varbit, 1)
+        player.attr[KEGS_ON_HEAD] = now
+        player.equipment[EquipmentType.HEAD.id] = gg.rsmod.game.model.item.Item(WarriorsGuildAnimator.barrel(now))
+        player.setRenderAnimation(WarriorsGuildAnimator.KEG_RENDER)
+        player.runEnergy = (player.runEnergy - WarriorsGuildAnimator.KEG_PICK_ENERGY).coerceAtLeast(0.0)
+        player.sendRunEnergy(player.runEnergy.toInt())
+        if (kegs == 0) player.timers[KEG_TIMER] = 1
+    }
+}
+
+on_timer(KEG_TIMER) {
+    val kegs = player.attr[KEGS_ON_HEAD] ?: 0
+    if (kegs == 0) return@on_timer
+    if (!WarriorsGuildAnimator.inKegRoom(player.tile) || player.equipment[EquipmentType.HEAD.id]?.id != WarriorsGuildAnimator.barrel(kegs)) {
+        resetKegs(player)
+        return@on_timer
+    }
+    if (player.isRunning() && player.hasMoveDestination()) {
+        player.message(WarriorsGuildAnimator.MSG_KEG_RUN)
+        dropKegs(player)
+        return@on_timer
+    }
+    player.runEnergy = (player.runEnergy - WarriorsGuildAnimator.kegDrain(kegs)).coerceAtLeast(0.0)
+    player.sendRunEnergy(player.runEnergy.toInt())
+    if (world.randomDouble() < WarriorsGuildAnimator.kegFallChance(player.runEnergy)) {
+        dropKegs(player)
+        return@on_timer
+    }
+    val ticks = (player.attr[KEG_TICKS] ?: 0) + 1
+    player.attr[KEG_TICKS] = ticks
+    if (ticks % WarriorsGuildAnimator.KEG_REWARD_EVERY == 0) {
+        player.addXp(Skills.STRENGTH, WarriorsGuildAnimator.kegXp(kegs))
+        val progress = (player.attr[KEG_TOKEN_PROGRESS] ?: 0) + kegs
+        player.attr[KEG_TOKEN_PROGRESS] = progress % WarriorsGuildAnimator.KEG_TOKEN_PROGRESS
+        val tokens = progress / WarriorsGuildAnimator.KEG_TOKEN_PROGRESS
+        if (tokens > 0) player.inventory.add(Items.WARRIOR_GUILD_TOKEN, tokens)
+    }
+    player.timers[KEG_TIMER] = 1
+}
+
+WarriorsGuildAnimator.BARRELS.forEach { barrel ->
+    on_item_unequip(item = barrel) { resetKegs(player) }
+}
+
+on_logout { resetKegs(player) }
+
+on_login {
+    val head = player.equipment[EquipmentType.HEAD.id]
+    if (head?.id in WarriorsGuildAnimator.BARRELS || WarriorsGuildAnimator.BARRELS.any { player.inventory.getItemCount(it) > 0 }) resetKegs(player)
+}

@@ -59,6 +59,24 @@ class WarriorsGuildAnimatorTests {
     }
 
     @Test
+    fun `keg balance - five kegs on their own varbits, barrels per keg, falls only when tired`() {
+        val w = WarriorsGuildAnimator
+        assertEquals((15669..15673).toSet(), w.KEG_VARBITS.keys)
+        assertEquals((2252..2256).toSet(), w.KEG_VARBITS.values.toSet())
+        assertEquals(8860, w.barrel(1))
+        assertEquals(8864, w.barrel(w.MAX_KEGS))
+        assertEquals(0.0, w.kegFallChance(100.0), 0.0)
+        assertEquals(0.0, w.kegFallChance(25.0), 0.0)
+        assertEquals(0.1, w.kegFallChance(0.0), 0.0001)
+        assertEquals(1.0, w.kegDrain(5), 0.0001)
+        assertEquals(6.0, w.kegXp(5), 0.0)
+        assertEquals(true, w.inKegRoom(gg.rsmod.game.model.Tile(2870, 3538, 1)))
+        assertEquals(false, w.inKegRoom(gg.rsmod.game.model.Tile(2861, 3544, 1)))
+        // Tokens an hour at five kegs stay under the catapult's 750 (OSRS Wiki).
+        assertEquals(true, 6000 / w.KEG_REWARD_EVERY * 5 / w.KEG_TOKEN_PROGRESS < 750)
+    }
+
+    @Test
     fun `a kill gives the whole set back, or all but one piece`() {
         val rune = WarriorsGuildAnimator.Set.RUNE
         assertEquals(rune.pieces, WarriorsGuildAnimator.returned(rune, -1))
