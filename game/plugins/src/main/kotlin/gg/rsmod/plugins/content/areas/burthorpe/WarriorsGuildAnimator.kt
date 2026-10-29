@@ -191,6 +191,37 @@ object WarriorsGuildAnimator {
 
     const val KEG_TOKEN_PROGRESS = 5
 
+    // ---- K06 N372 part 6: the catapult room (Gamfred). OSRS Wiki "Warriors' Guild" / "Defensive shield": Claim-Shield, the shield
+    // only on the target, the defence interface instead of the tabs, the catapult fires every 8 ticks, the right defence = 10 Defence
+    // xp + 1 token. Donors Novite/Darkan: catapult 15616 at 2840,3548,1 (anim 4164), shot from 2842,3550 to the target 2842,3541,
+    // gfx 679 + type, interface 411 buttons 0-3 (stab, blunt, slash, magic), block anims 4169/4168/4171/4170. A miss hurts (Darkan
+    // 10-50 of 990 life points; here 1-5, CUSTOM scale).
+
+    const val CATAPULT = 15616
+    val CATAPULT_TILE = gg.rsmod.game.model.Tile(2840, 3548, 1)
+    val CATAPULT_FROM = gg.rsmod.game.model.Tile(2842, 3550, 1)
+    val CATAPULT_TARGET = gg.rsmod.game.model.Tile(2842, 3541, 1)
+    const val CATAPULT_ANIM = 4164
+    const val CATAPULT_EVERY = 8
+    const val CATAPULT_GFX = 679
+    val BLOCK_ANIMS = intArrayOf(4169, 4168, 4171, 4170)
+    const val CATAPULT_XP = 10.0
+    const val CATAPULT_TOKENS = 1
+    const val CATAPULT_MAX_HIT = 5
+    const val DEFENCE_INTERFACE = 411
+    val DEFENCE_BUTTONS = 0..3
+
+    const val MSG_SHIELD_GIVE = "Gamfred hands you a shield."
+    const val MSG_SHIELD_HAVE = "You already have a defensive shield."
+    const val MSG_SHIELD_TARGET = "You need to be standing on the target before you can wield the shield."
+    const val MSG_DEFLECT = "You deflect the incoming attack."
+    const val MSG_DEFLECT_FAIL = "You fail to deflect the incoming attack."
+
+    fun inCatapultRoom(tile: gg.rsmod.game.model.Tile): Boolean = tile.height == 1 && tile.x in 2837..2847 && tile.z in 3538..3552
+
+    /** The defence a shot needs: shot type 0-3 (gfx 679 + type) = button 0-3 on interface 411. */
+    fun blocks(style: Int, shot: Int): Boolean = style == shot
+
     /** The pieces a kill gives back: the whole set, or - 1 in [BREAK_ONE_IN] - all but one ([roll] picks; -1 = nothing breaks). */
     fun returned(set: Set, roll: Int): List<Int> = if (roll < 0) set.pieces else set.pieces.filterIndexed { i, _ -> i != roll }
 }

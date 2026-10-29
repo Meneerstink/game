@@ -77,6 +77,21 @@ class WarriorsGuildAnimatorTests {
     }
 
     @Test
+    fun `catapult - four shots, four defences, OSRS reward, target inside the room`() {
+        val w = WarriorsGuildAnimator
+        assertEquals(4, w.BLOCK_ANIMS.size)
+        assertEquals(w.BLOCK_ANIMS.size, w.DEFENCE_BUTTONS.count())
+        assertEquals(true, w.blocks(2, 2))
+        assertEquals(false, w.blocks(1, 2))
+        assertEquals(10.0, w.CATAPULT_XP, 0.0)
+        assertEquals(1, w.CATAPULT_TOKENS)
+        assertEquals(8, w.CATAPULT_EVERY)
+        assertEquals(true, w.inCatapultRoom(w.CATAPULT_TARGET))
+        assertEquals(true, w.inCatapultRoom(w.CATAPULT_FROM))
+        assertEquals(false, w.inKegRoom(w.CATAPULT_TARGET))
+    }
+
+    @Test
     fun `a kill gives the whole set back, or all but one piece`() {
         val rune = WarriorsGuildAnimator.Set.RUNE
         assertEquals(rune.pieces, WarriorsGuildAnimator.returned(rune, -1))

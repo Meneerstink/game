@@ -391,3 +391,96 @@ on_login {
     val head = player.equipment[EquipmentType.HEAD.id]
     if (head?.id in WarriorsGuildAnimator.BARRELS || WarriorsGuildAnimator.BARRELS.any { player.inventory.getItemCount(it) > 0 }) resetKegs(player)
 }
+
+// ---- K06 N372 part 6: the catapult room (WarriorsGuildAnimator.CATAPULT ... OSRS Wiki "Defensive shield") ----
+val CATAPULT_STYLE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+val SHIELD_TIMER = gg.rsmod.game.model.timer.TimerKey()
+
+fun shieldOn(player: Player): Boolean = player.equipment[EquipmentType.SHIELD.id]?.id == Items.DEFENSIVE_SHIELD
+
+/** Off the target: the shield goes back to the inventory (or the floor) and the equipment tab returns. */
+fun takeShieldOff(player: Player) {
+    if (shieldOn(player)) {
+        player.equipment[EquipmentType.SHIELD.id] = null
+        if (!player.inventory.add(Items.DEFENSIVE_SHIELD).hasSucceeded()) {
+            world.spawn(gg.rsmod.game.model.entity.GroundItem(Items.DEFENSIVE_SHIELD, 1, player.tile, player))
+        }
+    }
+    player.openInterface(InterfaceDestination.EQUIPMENT_TAB)
+    player.equipment.dirty = true
+    player.attr.remove(CATAPULT_STYLE)
+    player.timers.remove(SHIELD_TIMER)
+}
+
+on_npc_option(Npcs.GAMFRED, option = "claim-shield") {
+    val shield = Items.DEFENSIVE_SHIELD
+    if (player.inventory.contains(shield) || shieldOn(player) || player.bank.contains(shield)) {
+        player.message(WarriorsGuildAnimator.MSG_SHIELD_HAVE)
+        return@on_npc_option
+    }
+    if (player.inventory.add(shield).hasSucceeded()) player.message(WarriorsGuildAnimator.MSG_SHIELD_GIVE)
+    else player.message("You don't have enough inventory space.")
+}
+
+can_equip_item(Items.DEFENSIVE_SHIELD) {
+    if (player.tile.sameAs(WarriorsGuildAnimator.CATAPULT_TARGET)) return@can_equip_item true
+    player.message(WarriorsGuildAnimator.MSG_SHIELD_TARGET)
+    false
+}
+
+on_item_equip(Items.DEFENSIVE_SHIELD) {
+    player.openInterface(WarriorsGuildAnimator.DEFENCE_INTERFACE, InterfaceDestination.EQUIPMENT_TAB)
+    player.focusTab(5) // the equipment tab, where 411 now sits (Novite openGameTab(5))
+    player.attr[CATAPULT_STYLE] = 0
+    player.timers[SHIELD_TIMER] = 1
+}
+
+on_timer(SHIELD_TIMER) {
+    if (!shieldOn(player) || !player.tile.sameAs(WarriorsGuildAnimator.CATAPULT_TARGET)) {
+        takeShieldOff(player)
+        return@on_timer
+    }
+    player.timers[SHIELD_TIMER] = 1
+}
+
+WarriorsGuildAnimator.DEFENCE_BUTTONS.forEach { button ->
+    on_button(WarriorsGuildAnimator.DEFENCE_INTERFACE, button) { player.attr[CATAPULT_STYLE] = button }
+}
+
+on_login { if (shieldOn(player)) takeShieldOff(player) }
+
+on_world_init {
+    world.queue {
+        while (true) {
+            // A shot every CATAPULT_EVERY ticks: the 3-tick flight below counts towards it.
+            wait(WarriorsGuildAnimator.CATAPULT_EVERY - 3)
+            if (world.players.none { WarriorsGuildAnimator.inCatapultRoom(it.tile) }) continue
+            val shot = world.random(WarriorsGuildAnimator.BLOCK_ANIMS.size - 1)
+            world.getObject(WarriorsGuildAnimator.CATAPULT_TILE, gg.rsmod.game.model.collision.ObjectType.INTERACTABLE)?.let { catapult ->
+                world.players.forEach { p ->
+                    if (WarriorsGuildAnimator.inCatapultRoom(p.tile)) p.write(gg.rsmod.game.message.impl.LocAnimMessage(catapult, WarriorsGuildAnimator.CATAPULT_ANIM))
+                }
+            }
+            world.spawn(
+                gg.rsmod.game.model.entity.Projectile.Builder()
+                    .setTiles(start = WarriorsGuildAnimator.CATAPULT_FROM, target = WarriorsGuildAnimator.CATAPULT_TARGET)
+                    .setGfx(WarriorsGuildAnimator.CATAPULT_GFX + shot)
+                    .setHeights(startHeight = 85, endHeight = 15).setSlope(angle = 15, steepness = 10).setTimes(delay = 30, lifespan = 90).build(),
+            )
+            wait(3)
+            world.players.forEach { p ->
+                if (!p.tile.sameAs(WarriorsGuildAnimator.CATAPULT_TARGET) || !shieldOn(p)) return@forEach
+                val style = p.attr[CATAPULT_STYLE] ?: 0
+                if (WarriorsGuildAnimator.blocks(style, shot)) {
+                    p.animate(WarriorsGuildAnimator.BLOCK_ANIMS[shot])
+                    p.addXp(Skills.DEFENCE, WarriorsGuildAnimator.CATAPULT_XP)
+                    p.inventory.add(Items.WARRIOR_GUILD_TOKEN, WarriorsGuildAnimator.CATAPULT_TOKENS)
+                    p.message(WarriorsGuildAnimator.MSG_DEFLECT)
+                } else {
+                    p.message(WarriorsGuildAnimator.MSG_DEFLECT_FAIL)
+                    p.hit(1 + world.random(WarriorsGuildAnimator.CATAPULT_MAX_HIT - 1))
+                }
+            }
+        }
+    }
+}
