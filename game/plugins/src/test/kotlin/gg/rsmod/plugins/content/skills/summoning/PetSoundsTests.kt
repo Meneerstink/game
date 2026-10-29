@@ -34,7 +34,8 @@ class PetSoundsTests {
         assertEquals(Sfx.PET_DOG_BARK, PetVoices.idleVoiceOf(TranscriptDialogue.BLOODHOUND), "the Bloodhound's own bark")
         val hellpuppy = Pets.variants.first { it.pet == "Hellpuppy" }.npc
         assertEquals(PetVoices.voiceOf(hellpuppy), PetVoices.idleVoiceOf(hellpuppy), "a pet's idle voice is its Talk-to voice")
-        assertNull(PetVoices.idleVoiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken stays silent")
+        // K02 2026-10-29 (owner: "elke osrs pet moet geluid hebben"): no OSRS pet is silent any more; the Kraken has the sea snake.
+        assertEquals(Sfx.SEASNAKE_ATTACK, PetVoices.idleVoiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken")
         val tick = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/Pets.kt").readText().substringAfter("fun tick(player: Player) {").substringBefore("\n    }")
         assertTrue("PetVoices.idle(player, npc)" in tick, "every follow tick of a pet")
     }
@@ -81,5 +82,13 @@ class PetSoundsTests {
         val bloodhound = rows[TranscriptDialogue.BLOODHOUND.toString()].asJsonObject
         assertEquals("Bloodhound", bloodhound["name"].asString)
         assertTrue("*Woof woof bark!*" in bloodhound["nodes"].toString(), "the transcript still has a barking line")
+    }
+
+    /** K02 N88 N405 (owner 2026-10-17/10-29: every OSRS pet makes a sound): every OSRS pet form has a voice. */
+    @Test
+    fun `every OSRS pet form has a voice`() {
+        PetVoices.install(PetVoices.parse(File("../../data/cfg/pets/pet_voices.tsv").readLines()), Pets.variants)
+        val silent = Pets.variants.filter { !it.classic && PetVoices.idleVoiceOf(it.npc) == null }.map { "${it.pet}/${it.name}" }
+        assertTrue(silent.isEmpty(), "silent pets: $silent")
     }
 }

@@ -67,6 +67,14 @@ Scurry	*	-1	3102	rat_squeak_1 (667)		rat
 Jal-Nib-Rek	*	-1	410	TzTok-Jad defend (667)		TzHaar family
 Soup	*	-1	841	toad2 (667)		family: toad
 Youngllef	*	-1	300	bear_attack (667)		family: beast
+Tangleroot	*	-1	825	tanglewood_small_attack (667)		family: tree creature
+Mr McGroot	*	-1	651	nasty_tree_attack (667)		family: tree creature
+Pet Kraken	*	-1	794	seasnake_attack (667)		family: sea creature
+Phoenix	*	-1	306	bird_attack (667)		family: bird
+Olmlet	Olmlet	-1	605	lizard_attack (667)		family: lizard (the Great Olm)
+Olmlet	Puppadile	-1	386	crocodile_attack (667)		family: crocodile (Muttadile)
+Olmlet	Vanguard	-1	474	golem_attack (667)		family: golem (Vanguard)
+Olmlet	Vasa Minirio	-1	474	golem_attack (667)		family: golem (Vasa Nistirio)
 Skotos	*	400	10292	demon_attack		family: demon (Skotizo)
 Smol Heredit	*	8085	10508	varl_colossi_boss_hiss_02		Sol Heredit
 Smolcano	*	4148	10509	sote_zalcano_stand_up_1		Zalcano

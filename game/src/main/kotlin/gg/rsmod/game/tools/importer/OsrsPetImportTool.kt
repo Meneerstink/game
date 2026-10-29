@@ -449,6 +449,16 @@ object OsrsPetImportTool {
             Voice("Jal-Nib-Rek", "*", -1, "TzTok-Jad defend (667)", "TzHaar family", local667 = 410),
             Voice("Soup", "*", -1, "toad2 (667)", "family: toad", local667 = 841),
             Voice("Youngllef", "*", -1, "bear_attack (667)", "family: beast", local667 = 300),
+            // K02 N88 N405 2026-10-29 (owner: "elke osrs pet moet geluid hebben"): the last pets without a voice get their family's 667
+            // sound, as Soup and Youngllef did (decision 4).
+            Voice("Tangleroot", "*", -1, "tanglewood_small_attack (667)", "family: tree creature", local667 = 825),
+            Voice("Mr McGroot", "*", -1, "nasty_tree_attack (667)", "family: tree creature", local667 = 651),
+            Voice("Pet Kraken", "*", -1, "seasnake_attack (667)", "family: sea creature", local667 = 794),
+            Voice("Phoenix", "*", -1, "bird_attack (667)", "family: bird", local667 = 306),
+            Voice("Olmlet", "Olmlet", -1, "lizard_attack (667)", "family: lizard (the Great Olm)", local667 = 605),
+            Voice("Olmlet", "Puppadile", -1, "crocodile_attack (667)", "family: crocodile (Muttadile)", local667 = 386),
+            Voice("Olmlet", "Vanguard", -1, "golem_attack (667)", "family: golem (Vanguard)", local667 = 474),
+            Voice("Olmlet", "Vasa Minirio", -1, "golem_attack (667)", "family: golem (Vasa Nistirio)", local667 = 474),
             Voice("Skotos", "*", 400, "demon_attack", "family: demon (Skotizo)"),
             Voice("Smol Heredit", "*", 8085, "varl_colossi_boss_hiss_02", "Sol Heredit"),
             Voice("Smolcano", "*", 4148, "sote_zalcano_stand_up_1", "Zalcano"),
