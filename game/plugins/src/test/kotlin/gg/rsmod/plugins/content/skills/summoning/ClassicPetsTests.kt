@@ -213,7 +213,9 @@ class ClassicPetsTests {
         assertEquals(rows.single { it.pet == "Nexling" }.localSynth, PetVoices.voiceOf(nexling.npc))
         val midnight = Pets.variants.single { it.name == "Midnight" }
         assertEquals(rows.single { it.variant == "Midnight" }.localSynth, PetVoices.voiceOf(midnight.npc), "a variant row wins over the pet's")
-        assertEquals(null, PetVoices.voiceOf(Pets.variants.first { it.pet == "Pet Kraken" }.npc), "Pet Kraken stays silent")
+        // N88 (owner: every OSRS pet has a sound): the Pet Kraken speaks with its family voice since 2026-10-29 (pet_voices.tsv).
+        val kraken = Pets.variants.first { it.pet == "Pet Kraken" }
+        assertEquals(rows.first { it.pet == "Pet Kraken" }.localSynth, PetVoices.voiceOf(kraken.npc), "Pet Kraken has its voice")
         // N257: a 667 pet answers Talk-to with its species' sound (it had none).
         assertEquals(gg.rsmod.plugins.api.cfg.Sfx.JUNGLE_MONKEY_1, PetVoices.voiceOf(Pets.variants.first { it.classic && it.name == "Baby monkey" }.npc))
         val huberte = Pets.variants.single { it.pet == "Huberte" }
