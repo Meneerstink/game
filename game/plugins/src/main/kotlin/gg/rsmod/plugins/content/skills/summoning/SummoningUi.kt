@@ -69,6 +69,9 @@ object SummoningUi {
     /** The name line under the model; 751 writes it with `IF_SETTEXT`. */
     private const val PANEL_NAME = 54
 
+    /** Room for the follower's name on its bar (662:54) in the bold font; a wider name is drawn in p11 (N384). */
+    private const val NAME_BAR_WIDTH = 160
+
     /** The scroll counter under the special-move button (`onInvTransmit` script 769, inv 93). */
     private const val PANEL_SCROLL_COUNT = 66
 
@@ -437,6 +440,16 @@ object SummoningUi {
 
         player.setComponentHidden(PANEL, PANEL_MODEL, false)
         player.setComponentHidden(PANEL, PANEL_SPECIAL_INFO, pet)
+        // N384 (owner 2026-10-24: "Tumeken's damaged guardian" ran off the name bar): script 751 writes the name in the bar's bold
+        // font; a name wider than the bar is drawn in the small font instead (the client's RspsUi font hook).
+        val name =
+            (if (pet) Pets.itemOf(player)?.let { player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it)?.name } else null)
+                ?: player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
+        gg.rsmod.plugins.content.quests.tab.N108Ui.fonts(
+            player,
+            PANEL,
+            listOf(PANEL_NAME to if (gg.rsmod.plugins.content.quests.tab.N108Ui.b12(player.world, name) > NAME_BAR_WIDTH) "p11_full" else "b12_full"),
+        )
         // The same capability record the orb reads, so the two surfaces cannot disagree.
         val capabilities = FamiliarCapabilityTable.forNpc(npcId!!)
         val carries = capabilities?.supports(FamiliarAction.TAKE_BOB) == true
