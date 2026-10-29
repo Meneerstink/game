@@ -11,8 +11,29 @@ import gg.rsmod.game.model.World
  * the CSV distinguishes a deliberate engine route from a dead menu entry.
  */
 object ItemCensus {
-    private val engineInventoryOptions = setOf("wear", "wield", "equip", "drop", "use", "examine")
     private val engineEquipmentOptions = setOf("remove", "examine")
+
+    /**
+     * N11: the routes the inventory really takes (IfButton1Handler / OpHeld*): Wear/Wield/Equip equip only on op 2 (EquipAction),
+     * Drop only on op 5, Use and Examine anywhere; a fifth-slot "Destroy" runs the item's option-10 plugin (destroy_item). A Wear on
+     * another slot is a dead option - the Ring of shadows could not be worn (N422).
+     */
+    fun engineRoute(
+        slot: Int,
+        option: String,
+    ): Boolean =
+        when (option.lowercase()) {
+            "wear", "wield", "equip" -> slot == 2
+            "drop" -> slot == 5
+            "use", "examine" -> true
+            else -> false
+        }
+
+    /** The plugin option index a click on inventory [slot] runs: a fifth-slot Destroy is option 10. */
+    fun pluginOption(
+        slot: Int,
+        option: String,
+    ): Int = if (slot == 5 && option.equals("destroy", ignoreCase = true)) 10 else slot
 
     data class Row(
         val id: Int,
@@ -40,11 +61,11 @@ object ItemCensus {
                 name = def.name,
                 noted = def.noted,
                 inventoryOptions = def.inventoryMenu.map { it.orEmpty() },
-                boundInventoryOptions = inventory.mapNotNull { (slot, _) ->
-                    slot.takeIf { world.plugins.hasItemOption(id, it) }
+                boundInventoryOptions = inventory.mapNotNull { (slot, option) ->
+                    slot.takeIf { world.plugins.hasItemOption(id, pluginOption(it, option)) }
                 },
                 engineInventoryOptions = inventory.mapNotNull { (slot, option) ->
-                    slot.takeIf { option.lowercase() in engineInventoryOptions }
+                    slot.takeIf { engineRoute(it, option) }
                 },
                 equipmentOptions = def.equipmentMenu.map { it.orEmpty() },
                 boundEquipmentOptions = equipment.mapNotNull { (slot, _) ->
