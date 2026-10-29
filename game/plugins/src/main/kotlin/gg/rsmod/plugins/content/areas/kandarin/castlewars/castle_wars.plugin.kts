@@ -167,6 +167,18 @@ on_item_option(item = Items.BARRICADE, option = "Set-up") {
     CastleWarsHandler.addBarricade(world, player, team)
 }
 
+// K07 N412 part 4: the team colours stay on (Novite CastleWarsPlaying/Waiting: "You can't remove your team's colours."; OSRS the same).
+// can_unequip_from_slot is a multimap now (every registration is checked), so this sits next to Practice PvP's guard.
+listOf(EquipmentType.CAPE, EquipmentType.HEAD).forEach { slot ->
+    can_unequip_from_slot(slot.id) {
+        if (player.attr[CW_TEAM] != null) {
+            player.message("You can't remove your team's colours.")
+            return@can_unequip_from_slot false
+        }
+        true
+    }
+}
+
 val CASTLE_WARS_BRACES = setOf(Items.CASTLE_WARS_BRACE_1, Items.CASTLE_WARS_BRACE_2, Items.CASTLE_WARS_BRACE_3)
 
 /** One bandage on [target]: 10% of its hitpoints (x1.5 with a Castle wars brace on the one who heals) and 30% run energy. */
