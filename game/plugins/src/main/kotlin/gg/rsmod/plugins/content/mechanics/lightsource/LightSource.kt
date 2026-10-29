@@ -28,8 +28,9 @@ enum class LightSource(
         enclosed = false,
         interfaceId = 98,
     ),
+    // N419: the raw source is the filled, unlit item - 4527 is the empty lantern from glassblowing, 4535 the unfuelled oil lantern.
     CANDLE_LANTERN(
-        raw = Items.CANDLE_LANTERN,
+        raw = Items.CANDLE_LANTERN_4529,
         product = Items.CANDLE_LANTERN_4531,
         levelRequired = 4,
         enclosed = false,
@@ -50,7 +51,7 @@ enum class LightSource(
         interfaceId = 98,
     ),
     OIL_LANTERN(
-        raw = Items.OIL_LANTERN,
+        raw = Items.OIL_LANTERN_4537,
         product = Items.OIL_LANTERN_4539,
         levelRequired = 26,
         enclosed = false,
@@ -94,7 +95,8 @@ enum class LightSource(
                 return UNLIT_TORCH
             }
             for (source in values()) {
-                if (player.inventory.contains(source.product)) {
+                // N419: a worn light (the lit mining helmet) lights the way as well as a carried one.
+                if (player.inventory.contains(source.product) || player.equipment.contains(source.product)) {
                     return source
                 }
             }

@@ -174,7 +174,8 @@ on_obj_option(obj = Objs.CLIMBING_ROPE_5946, option = "climb") {
 regionIds.forEach {
 
     on_enter_region(regionId = it) {
-        checkForLightSource(player)
+        // N419: with a light the check keeps running too (DARK_ZONE_TIMER), so taking a worn light off brings the dark back.
+        if (checkForLightSource(player)) player.timers[DARK_ZONE_TIMER] = 10
     }
 
     on_exit_region(regionId = it) {
@@ -205,6 +206,8 @@ on_login {
 on_timer(DARK_ZONE_TIMER) {
     if (checkForLightSource(player)) {
         player.attr.remove(lightSourceDelayAttr)
+        // N419: keep checking - a worn light (mining helmet, Firemaking cape) can be taken off, and then the cave goes dark again.
+        player.timers[DARK_ZONE_TIMER] = 10
         return@on_timer
     }
     if (player.attr[lightSourceDelayAttr] == null) {
