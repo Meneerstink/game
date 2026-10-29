@@ -43,6 +43,29 @@ class SummoningInterfaceScriptToolTests {
     }
 
     /**
+     * N425: clientscript 751 posed a pet's Follower Details head with enum 1275[127 - 50] and rewrote varbit 4282. The guard in
+     * front of the selector read jumps past both poses for the pet value 127; the branch that used to land on the read lands on
+     * the guard, and everything else in the script is unchanged.
+     */
+    @Test
+    fun `clientscript 751 leaves a pet's head animation to the server`() {
+        val panel = script(SummoningInterfaceScriptTool.PANEL_SCRIPT)
+        val code = ClientScriptEditor.decode(panel).code
+        val guard = code.indices.single { code[it].opcode == 25 && code[it].int == 4282 && code[it + 1].opcode == 0 && code[it + 1].int == 127 }
+        assertEquals(8, code[guard + 2].opcode, "BRANCH_EQUALS")
+        val resume = code[guard + 2].target!!
+        val resumeAt = code.indexOf(resume)
+        // Between the guard and its target: the selector read, both enum lookups, the varbit write and both IF_SETMODELANIM(662:1).
+        val skipped = code.subList(guard + 3, resumeAt)
+        assertEquals(2, skipped.count { it.opcode == 2110 })
+        assertEquals(listOf(1275, 1276), skipped.filter { it.opcode == 0 && (it.int == 1275 || it.int == 1276) }.map { it.int })
+        assertEquals(1, skipped.count { it.opcode == 27 && it.int == 4282 })
+        assertTrue(code.none { it.target === code[guard + 3] }, "a branch still jumps past the guard straight to the selector read")
+        assertTrue(code.subList(resumeAt, code.size).none { it.opcode == 2110 }, "751 sets 662:1's animation after the guard's target")
+        assertContentEquals(panel, SummoningInterfaceScriptTool.patchPanelScript(panel))
+    }
+
+    /**
      * Owner 2026-10-02 ("Summoning tab disappears"): 1364 hides a tab whose own container (script 8) is empty, and 662 lives
      * on slot 95. Every script that names tab 8's container must name slot 95's instead, in both panes, so the tab is shown
      * whenever the panel is mounted - and no script may still select or test 746:98 / 548:212 as tab 8's page.

@@ -44,6 +44,15 @@ class ClientScriptEditor private constructor(
         code.addAll(index, added)
     }
 
+    /** Every branch and switch case that lands on [from] lands on [to] instead (to put a new check in front of a jump target). */
+    fun retarget(
+        from: Ins,
+        to: Ins,
+    ) {
+        code.forEach { if (it.target === from) it.target = to }
+        switches.forEach { cases -> cases.replaceAll { (key, target) -> key to if (target === from) to else target } }
+    }
+
     /** Indices where [pattern] (opcode, operand or null for any) starts. */
     fun find(vararg pattern: Pair<Int, Any?>): List<Int> =
         (0..code.size - pattern.size).filter { start ->

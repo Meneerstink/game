@@ -38,6 +38,15 @@ import java.io.ByteArrayOutputStream
  *    Constant swaps only (PUSH_CONSTANT_INT operand), so no branch offset moves. 1308/1311 (hide every container) and
  *    1364's "all hidden" check keep naming 746:98 / 548:212, which simply stays empty and hidden.
  *
+ * 4. N425 (owner 2026-10-29: a pet's Follower Details head lay flat or huge after a familiar pouch's "You can only have one
+ *    follower at a time"): clientscript 751, run by the client on every transmit of the follower varps, poses 662:1 from enum
+ *    1275/1276 by the selector varbit 4282. A pet has no selector; the server sends -1, which the 7-bit varbit holds as 127.
+ *    751 took that as "> 50": it WROTE 4282 = 127 - 50 (instruction 67) and posed the head with enum 1275[77] - a creature
+ *    pose (8374/8444) that won over the server's own animation whenever 751 ran again without a fresh server resend. In front
+ *    of the selector read (instruction 60) the script now skips both poses when the varbit is [PET_SELECTOR]:
+ *      PUSH_VARBIT(4282), PUSH_CONSTANT_INT(127), BRANCH_EQUALS -> the instruction after the second IF_SETMODELANIM (87)
+ *    so a pet's head keeps exactly what the server sent, and the varbit is never rewritten. Familiars are untouched.
+ *
  * Usage: `[--apply]`.
  */
 object SummoningInterfaceScriptTool {
@@ -62,6 +71,41 @@ object SummoningInterfaceScriptTool {
             ((746 shl 16) or 98) to ((746 shl 16) or 107),
             ((548 shl 16) or 212) to ((548 shl 16) or 221),
         )
+
+    const val PANEL_SCRIPT = 751
+    const val SELECTOR_VARBIT = 4282
+
+    /** The selector the server sends for a follower with no enum 1275/1276 pose (every pet): -1 in 7 bits. */
+    const val PET_SELECTOR = 127
+
+    private const val PUSH_VARBIT = 25
+    private const val BRANCH_GREATER_THAN = 10
+    private const val BRANCH_EQUALS = 8
+    private const val IF_SETMODELANIM = 2110
+    private const val PANEL_HEAD = (662 shl 16) or 1
+
+    /** Point 4: 751 leaves the head's animation alone for [PET_SELECTOR]. Idempotent; refuses any other shape of the script. */
+    fun patchPanelScript(current: ByteArray): ByteArray {
+        val script = ClientScriptEditor.decode(current)
+        val reads = script.find(PUSH_VARBIT to SELECTOR_VARBIT, PUSH_CONSTANT_INT to 50, BRANCH_GREATER_THAN to null)
+        check(reads.size == 1) { "clientscript $PANEL_SCRIPT: selector check found ${reads.size} times - refusing to guess" }
+        val at = reads[0]
+        val guard = script.find(PUSH_VARBIT to SELECTOR_VARBIT, PUSH_CONSTANT_INT to PET_SELECTOR, BRANCH_EQUALS to null)
+        if (guard.isNotEmpty()) {
+            check(guard == listOf(at - 3)) { "clientscript $PANEL_SCRIPT: pet guard at $guard, expected ${at - 3}" }
+            return current
+        }
+        // The two poses (enum 1275 / 1276) each end in IF_SETMODELANIM on 662:1; the guard jumps past the second.
+        val poses = (at until script.code.size).filter { script.code[it].opcode == IF_SETMODELANIM }.take(2)
+        check(poses.size == 2 && poses.all { script.code[it - 1].opcode == PUSH_CONSTANT_INT && script.code[it - 1].int == PANEL_HEAD }) {
+            "clientscript $PANEL_SCRIPT: the two IF_SETMODELANIM(662:1) after the selector check were not found ($poses)"
+        }
+        val resume = script.code[poses[1] + 1]
+        val first = ClientScriptEditor.Ins(PUSH_VARBIT, SELECTOR_VARBIT)
+        script.retarget(script.code[at], first)
+        script.insert(at, listOf(first, ClientScriptEditor.Ins(PUSH_CONSTANT_INT, PET_SELECTOR), ClientScriptEditor.Ins(BRANCH_EQUALS, target = resume)))
+        return script.encode()
+    }
 
     /** Point 3: swaps tab 8's container constants for slot 95's. Idempotent; refuses anything but exactly one hit per constant. */
     fun remapTab8Container(current: ByteArray): ByteArray {
@@ -183,6 +227,11 @@ object SummoningInterfaceScriptTool {
                 if (!remapped.contentEquals(current)) {
                     mutations += CacheMutation(CLIENTSCRIPT_INDEX, id, 0, remapped, "clientscript $id: tab 8 opens the Follower Details slot", expectedCurrentSha1 = CacheItemProbeTool.sha1(current))
                 }
+            }
+            val panel = requireNotNull(library.data(CLIENTSCRIPT_INDEX, PANEL_SCRIPT, 0)) { "clientscript $PANEL_SCRIPT missing" }
+            val guarded = patchPanelScript(panel)
+            if (!guarded.contentEquals(panel)) {
+                mutations += CacheMutation(CLIENTSCRIPT_INDEX, PANEL_SCRIPT, 0, guarded, "clientscript $PANEL_SCRIPT: no enum pose on a pet's Follower Details head (N425)", expectedCurrentSha1 = CacheItemProbeTool.sha1(panel))
             }
             val existing = library.data(CLIENTSCRIPT_INDEX, LABEL_SCRIPT, 0)
             val label = labelScript()

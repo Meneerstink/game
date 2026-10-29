@@ -18,6 +18,9 @@ import gg.rsmod.game.model.entity.Player
  */
 object SummoningChatheadAnimations {
     internal const val SELECTOR_VARBIT = 4282
+
+    /** No enum pose (every pet, an unmapped familiar): -1 in the 7-bit varbit; clientscript 751 skips its pose for it (N425). */
+    internal const val NO_SELECTOR = 127
     internal const val NORMAL_ENUM = 1276
     internal const val SAD_ENUM = 1275
 
