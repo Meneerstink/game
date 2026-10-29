@@ -17,6 +17,35 @@ on_obj_option(obj = Objs.DOOR_15653, option = "open") {
     }
 }
 
+/*
+ * N375 (owner 2026-10-24: "deuren bovenste verdieping, vermoedelijk ook andere, blijven open") and N373 (the cyclops hit a player
+ * standing outside the top-floor door): the guild's inner doors were single-id wall doors the general door script swings open and
+ * leaves open. Novite WarriorsGuild (15641 / 15644 / 15647 doors, 15658 / 15660 heavy doors) opens them for one crossing only:
+ * the player walks through and the door shuts behind him - so the cyclops room is closed again and nothing sees through it.
+ */
+val GUILD_DOORS = intArrayOf(Objs.DOOR_15641, Objs.DOOR_15644, Objs.DOOR_15647, Objs.HEAVY_DOOR, Objs.HEAVY_DOOR_15660)
+
+GUILD_DOORS.forEach { id ->
+    on_obj_option(obj = id, option = "open") {
+        val obj = player.getInteractingGameObj()
+        player.lockingQueue(lockState = LockState.FULL) {
+            gg.rsmod.plugins.content.mechanics.doors.DoorCrossing.enter(
+                this, player, obj,
+                open = {
+                    val opened = world.openDoor(obj, opened = obj.id)
+                    player.playSound(Sfx.DOOR_OPEN)
+                    world.queue {
+                        wait(3)
+                        world.remove(opened)
+                        world.spawn(DynamicObject(obj))
+                        world.spawn(gg.rsmod.game.model.entity.AreaSound(tile = Tile(obj.tile), id = Sfx.DOOR_CLOSE, radius = 5, volume = 1))
+                    }
+                },
+            )
+        }
+    }
+}
+
 // N374: the next defender in order (WarriorsGuildDefenders), with a red line when it drops.
 on_npc_killed { killer, npc ->
     if (npc.id !in WarriorsGuildDefenders.CYCLOPES || !WarriorsGuildDefenders.inGuild(npc.tile)) return@on_npc_killed
