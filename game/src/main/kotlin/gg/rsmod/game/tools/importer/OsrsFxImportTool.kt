@@ -239,6 +239,13 @@ object OsrsFxImportTool {
             // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
             // COWBOSS_PET_EMOTE_CHARGE 13803 (5.16 s, the length of the whirlwind's own sequence 13802). RuneLite gameval AnimationID.
             "pet-beef" to listOf(13801, 13803),
+            // K02 N397 (owner 2026-10-24: the OSRS pets' chat heads moved with the human poses and looked wrong): the pets' own OSRS
+            // chathead sequences, RuneLite gameval AnimationID - SNAKEBOSS_PET_CHATHEAD_TALK 2415, ABYSSAL_SCION_CHATHEAD_TALK 7130,
+            // ROCK_GOLEM_CHATHEAD_IDLE 7179, CHINCHOMPA_CHATHEAD_IDLE 7182, OLM_PET_CHATHEAD_IDLE 7399, GG_PET_CHATHEAD_TALK_BASIC
+            // 7805 / _LAUGH 7804, DS2_VORKATH_CHATHEAD_TALK 7958, ZUKREK_CHATHEAD_TALK 7979, VERZIK_PET_CHATHEAD_TALK 8135,
+            // HYDRA_CHATHEAD_TALK 8265, HUNLLEF_PET_CHAT_TALK 8427, ZALCANO_CHAT_TALK 8446, NIGHTMARE_PET_CHAT_TALK 8636 / _IDLE
+            // 8635, JALTOKJAD_CHATHEAD_PET 8858, FSB_PET_CHATHEAD 8907.
+            "pet-chatheads" to listOf(2415, 7130, 7179, 7182, 7399, 7804, 7805, 7958, 7979, 8135, 8265, 8427, 8446, 8635, 8636, 8858, 8907),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren"): the water animation of OSRS loc 29241
             // "Ornate pool of Rejuvenation" (OsrsLocImportTool batch of the same name keeps it once this is imported).
             "poh-pool" to listOf(7304),

@@ -378,6 +378,8 @@ object SummoningUi {
         npcId: Int,
     ): Int? =
         SummoningChatheadAnimations.resolve(player, npcId)
+            // K02: an OSRS pet's head moves in Follower Details exactly as in its chat (PetChatheads), or stays still.
+            ?: PetChatheads.panelAnimation(npcId)
             // N257: a 667 pet's creature head with the cache's creature pose (it was left unposed or deformed).
             ?: gg.rsmod.plugins.api.ext.CreatureChathead.TALK.takeIf { gg.rsmod.plugins.api.ext.CreatureChathead.isCreaturePet(npcId) }
 

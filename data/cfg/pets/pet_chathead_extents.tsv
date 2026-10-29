@@ -3,363 +3,363 @@
 # Largest box each pet head covers over its talking animation at the cache camera, in pixels from the
 # head anchor. dialogue = 241-244:2 (zoom 2150, xan 40, yan 1882); panel = Follower Details 662:1 (zoom 2168).
 # npc	surface	up	down	left	right	name
-14484	dialogue	40	55	40	60	Abyssal orphan
-14484	panel	46	59	42	61	Abyssal orphan
-14485	dialogue	53	58	59	60	Aggy
-14485	panel	63	55	66	66	Aggy
-14486	dialogue	29	39	50	51	Baby Mole
-14486	panel	44	27	57	54	Baby Mole
-14487	dialogue	29	39	50	51	Baby Mole-rat
-14487	panel	44	27	57	54	Baby Mole-rat
-14488	dialogue	40	28	40	57	Baron
-14488	panel	45	27	44	56	Baron
-14489	dialogue	127	50	50	37	Bran
-14489	panel	144	48	36	53	Bran
-14490	dialogue	78	93	45	42	Ric
-14490	panel	87	97	40	41	Ric
-14491	dialogue	47	58	77	79	Beef
-14491	panel	58	44	68	74	Beef
-14492	dialogue	49	63	41	86	Callisto cub
-14492	panel	51	51	51	86	Callisto cub
-14493	dialogue	45	67	59	56	Hellpuppy
-14493	panel	63	47	54	74	Hellpuppy
-14494	dialogue	74	54	60	229	Ikkle Hydra
-14494	panel	114	138	99	256	Ikkle Hydra
-14495	dialogue	123	54	60	232	Ikkle Hydra
-14495	panel	118	139	99	257	Ikkle Hydra
-14496	dialogue	79	54	60	230	Ikkle Hydra
-14496	panel	127	139	101	257	Ikkle Hydra
-14497	dialogue	80	54	60	229	Ikkle Hydra
-14497	panel	123	139	99	259	Ikkle Hydra
-14498	dialogue	38	52	62	75	Jal-Nib-Rek
-14498	panel	59	30	71	81	Jal-Nib-Rek
-14499	dialogue	49	73	61	71	TzRek-Zuk
-14499	panel	61	75	64	67	TzRek-Zuk
-14500	dialogue	50	17	47	38	Kalphite Princess
-14500	panel	78	26	43	45	Kalphite Princess
-14501	dialogue	47	44	22	43	Kalphite Princess
-14501	panel	60	52	25	51	Kalphite Princess
-14502	dialogue	103	72	59	72	Lil' Zik
-14502	panel	104	78	62	69	Lil' Zik
-14503	dialogue	59	48	59	47	Lil' Maiden
-14503	panel	72	39	60	51	Lil' Maiden
-14504	dialogue	49	41	58	56	Lil' Bloat
-14504	panel	60	45	63	58	Lil' Bloat
-14505	dialogue	46	26	53	49	Lil' Nylo
-14505	panel	62	29	65	57	Lil' Nylo
-14506	dialogue	56	51	55	70	Lil' Sot
-14506	panel	80	51	60	79	Lil' Sot
-14507	dialogue	80	41	54	46	Lil' Xarp
-14507	panel	97	39	50	51	Lil' Xarp
-14508	dialogue	84	33	117	94	Little Nightmare
+14484	dialogue	17	20	16	22	Abyssal orphan
+14484	panel	42	59	41	55	Abyssal orphan
+14485	dialogue	22	22	24	23	Aggy
+14485	panel	60	49	65	57	Aggy
+14486	dialogue	12	14	20	20	Baby Mole
+14486	panel	39	23	53	54	Baby Mole
+14487	dialogue	12	14	20	20	Baby Mole-rat
+14487	panel	39	23	53	54	Baby Mole-rat
+14488	dialogue	16	9	16	21	Baron
+14488	panel	41	22	43	54	Baron
+14489	dialogue	49	19	16	14	Bran
+14489	panel	138	44	34	49	Bran
+14490	dialogue	32	36	16	15	Ric
+14490	panel	84	93	40	37	Ric
+14491	dialogue	19	20	28	31	Beef
+14491	panel	47	39	64	74	Beef
+14492	dialogue	19	22	16	32	Callisto cub
+14492	panel	50	44	45	84	Callisto cub
+14493	dialogue	19	23	24	21	Hellpuppy
+14493	panel	52	40	54	69	Hellpuppy
+14494	dialogue	16	33	26	28	Ikkle Hydra
+14494	panel	97	84	46	255	Ikkle Hydra
+14495	dialogue	22	33	27	25	Ikkle Hydra
+14495	panel	104	84	46	256	Ikkle Hydra
+14496	dialogue	15	36	25	30	Ikkle Hydra
+14496	panel	112	85	47	257	Ikkle Hydra
+14497	dialogue	15	37	25	29	Ikkle Hydra
+14497	panel	106	85	47	258	Ikkle Hydra
+14498	dialogue	16	17	24	29	Jal-Nib-Rek
+14498	panel	49	30	60	81	Jal-Nib-Rek
+14499	dialogue	23	28	25	24	TzRek-Zuk
+14499	panel	55	70	62	67	TzRek-Zuk
+14500	dialogue	21	6	17	14	Kalphite Princess
+14500	panel	68	21	42	44	Kalphite Princess
+14501	dialogue	19	17	8	16	Kalphite Princess
+14501	panel	55	47	15	51	Kalphite Princess
+14502	dialogue	39	27	23	25	Lil' Zik
+14502	panel	103	73	59	60	Lil' Zik
+14503	dialogue	25	17	22	18	Lil' Maiden
+14503	panel	68	34	57	47	Lil' Maiden
+14504	dialogue	20	16	23	20	Lil' Bloat
+14504	panel	56	41	63	53	Lil' Bloat
+14505	dialogue	20	10	22	19	Lil' Nylo
+14505	panel	55	24	64	47	Lil' Nylo
+14506	dialogue	23	19	22	27	Lil' Sot
+14506	panel	73	46	57	74	Lil' Sot
+14507	dialogue	32	15	19	18	Lil' Xarp
+14507	panel	93	34	49	46	Lil' Xarp
+14508	dialogue	24	18	45	38	Little Nightmare
 14508	panel	89	16	113	86	Little Nightmare
-14509	dialogue	98	25	149	120	Little Parasite
+14509	dialogue	26	16	52	48	Little Parasite
 14509	panel	106	7	131	109	Little Parasite
-14510	dialogue	45	43	60	56	Nexling
-14510	panel	51	37	69	58	Nexling
-14511	dialogue	41	57	53	68	Nid
-14511	panel	57	60	64	75	Nid
-14512	dialogue	43	39	50	59	Rax
-14512	panel	62	48	57	57	Rax
-14513	dialogue	44	39	34	42	Noon
-14513	panel	60	32	32	38	Noon
-14514	dialogue	45	44	55	65	Midnight
-14514	panel	60	41	60	65	Midnight
-14515	dialogue	55	62	31	76	Olmlet
-14515	panel	75	60	44	79	Olmlet
-14516	dialogue	41	38	39	46	Puppadile
-14516	panel	51	41	48	56	Puppadile
-14517	dialogue	108	51	68	38	Tektiny
-14517	panel	117	34	89	54	Tektiny
-14518	dialogue	108	51	68	38	Enraged Tektiny
-14518	panel	117	34	89	54	Enraged Tektiny
-14519	dialogue	38	41	36	61	Vanguard
-14519	panel	46	27	46	68	Vanguard
-14520	dialogue	53	22	33	41	Vasa Minirio
-14520	panel	65	27	30	43	Vasa Minirio
-14521	dialogue	53	63	56	67	Vespina
-14521	panel	61	64	65	66	Vespina
-14522	dialogue	53	63	56	67	Flying Vespina
-14522	panel	61	64	65	66	Flying Vespina
-14523	dialogue	42	15	32	27	Pet chaos elemental
-14523	panel	43	16	34	32	Pet chaos elemental
-14524	dialogue	46	27	33	38	Pet Dagannoth Prime
-14524	panel	37	29	38	48	Pet Dagannoth Prime
-14525	dialogue	36	22	34	45	Pet Dagannoth Rex
-14525	panel	42	24	41	50	Pet Dagannoth Rex
-14526	dialogue	73	27	47	38	Pet Dagannoth Supreme
-14526	panel	80	29	50	43	Pet Dagannoth Supreme
-14527	dialogue	79	7	34	34	Pet dark core
-14527	panel	84	9	39	59	Pet dark core
-14528	dialogue	41	27	46	60	Pet Corporeal Critter
-14528	panel	49	30	51	67	Pet Corporeal Critter
-14529	dialogue	45	44	50	48	Pet General Graardor
-14529	panel	44	38	51	51	Pet General Graardor
-14530	dialogue	49	31	52	51	Pet K'ril Tsutsaroth
-14530	panel	63	32	48	52	Pet K'ril Tsutsaroth
-14531	dialogue	42	29	44	40	Pet Kraken
-14531	panel	47	31	47	48	Pet Kraken
-14532	dialogue	43	36	33	54	Pet Kree'arra
-14532	panel	43	32	36	59	Pet Kree'arra
-14533	dialogue	54	52	51	59	Pet Smoke Devil
-14533	panel	69	41	48	72	Pet Smoke Devil
-14534	dialogue	42	39	51	48	Pet Smoke Devil
-14534	panel	50	33	46	49	Pet Smoke Devil
-14535	dialogue	42	53	53	54	Pet Snakeling
-14535	panel	49	38	57	57	Pet Snakeling
-14536	dialogue	42	54	53	56	Pet Snakeling
-14536	panel	49	38	57	57	Pet Snakeling
-14537	dialogue	54	54	53	56	Pet Snakeling
-14537	panel	50	38	57	62	Pet Snakeling
-14538	dialogue	41	35	45	41	Pet Zilyana
-14538	panel	48	32	50	50	Pet Zilyana
-14539	dialogue	37	44	36	48	Phoenix
-14539	panel	42	41	39	56	Phoenix
-14540	dialogue	37	44	36	48	Phoenix
-14540	panel	42	41	39	56	Phoenix
-14541	dialogue	37	44	36	48	Phoenix
-14541	panel	42	41	39	56	Phoenix
-14542	dialogue	37	44	36	48	Phoenix
-14542	panel	42	41	39	56	Phoenix
-14543	dialogue	37	44	36	48	Phoenix
-14543	panel	42	41	39	56	Phoenix
-14544	dialogue	62	50	68	77	Prince Black Dragon
-14544	panel	70	44	78	76	Prince Black Dragon
-14545	dialogue	53	59	45	64	Scorpia's offspring
-14545	panel	61	59	46	63	Scorpia's offspring
-14546	dialogue	151	54	92	69	Skotos
-14546	panel	173	53	63	73	Skotos
-14547	dialogue	62	72	59	89	Smolcano
-14547	panel	76	60	69	92	Smolcano
-14548	dialogue	55	45	54	63	Sraracha
-14548	panel	72	51	53	70	Sraracha
-14549	dialogue	55	45	54	63	Sraracha
-14549	panel	72	51	53	70	Sraracha
-14550	dialogue	55	45	54	63	Sraracha
-14550	panel	72	51	53	70	Sraracha
-14551	dialogue	48	73	48	84	Tiny tempor
-14551	panel	57	78	49	85	Tiny tempor
-14552	dialogue	33	76	50	76	Zebo
-14552	panel	40	56	65	87	Zebo
-14553	dialogue	40	41	51	55	TzRek-Jad
-14553	panel	64	33	55	58	TzRek-Jad
-14554	dialogue	42	42	46	42	JalRek-Jad
+14510	dialogue	19	16	24	22	Nexling
+14510	panel	48	32	69	50	Nexling
+14511	dialogue	17	21	21	25	Nid
+14511	panel	49	54	50	74	Nid
+14512	dialogue	18	15	20	21	Rax
+14512	panel	54	42	51	57	Rax
+14513	dialogue	19	14	14	13	Noon
+14513	panel	54	32	31	35	Noon
+14514	dialogue	20	15	22	24	Midnight
+14514	panel	56	36	57	64	Midnight
+14515	dialogue	19	20	11	25	Olmlet
+14515	panel	69	55	35	79	Olmlet
+14516	dialogue	17	14	15	18	Puppadile
+14516	panel	42	37	46	49	Puppadile
+14517	dialogue	43	16	28	14	Tektiny
+14517	panel	111	30	88	29	Tektiny
+14518	dialogue	43	16	28	14	Enraged Tektiny
+14518	panel	111	30	88	29	Enraged Tektiny
+14519	dialogue	15	14	14	23	Vanguard
+14519	panel	43	23	45	62	Vanguard
+14520	dialogue	21	8	12	16	Vasa Minirio
+14520	panel	59	22	30	40	Vasa Minirio
+14521	dialogue	22	23	22	25	Vespina
+14521	panel	57	60	64	55	Vespina
+14522	dialogue	22	23	22	25	Flying Vespina
+14522	panel	57	60	64	55	Flying Vespina
+14523	dialogue	17	5	13	10	Pet chaos elemental
+14523	panel	39	12	33	28	Pet chaos elemental
+14524	dialogue	17	10	13	14	Pet Dagannoth Prime
+14524	panel	33	25	38	46	Pet Dagannoth Prime
+14525	dialogue	15	8	14	16	Pet Dagannoth Rex
+14525	panel	38	20	40	45	Pet Dagannoth Rex
+14526	dialogue	30	10	19	14	Pet Dagannoth Supreme
+14526	panel	78	25	49	42	Pet Dagannoth Supreme
+14527	dialogue	30	1	13	12	Pet dark core
+14527	panel	80	5	35	54	Pet dark core
+14528	dialogue	17	10	19	23	Pet Corporeal Critter
+14528	panel	44	26	47	67	Pet Corporeal Critter
+14529	dialogue	18	15	18	19	Pet General Graardor
+14529	panel	42	33	45	48	Pet General Graardor
+14530	dialogue	20	11	20	20	Pet K'ril Tsutsaroth
+14530	panel	57	27	48	48	Pet K'ril Tsutsaroth
+14531	dialogue	18	11	18	16	Pet Kraken
+14531	panel	44	26	46	44	Pet Kraken
+14532	dialogue	18	13	13	20	Pet Kree'arra
+14532	panel	41	27	36	55	Pet Kree'arra
+14533	dialogue	21	18	20	21	Pet Smoke Devil
+14533	panel	64	41	45	66	Pet Smoke Devil
+14534	dialogue	18	14	19	19	Pet Smoke Devil
+14534	panel	46	29	43	47	Pet Smoke Devil
+14535	dialogue	16	18	21	21	Pet Snakeling
+14535	panel	42	32	56	56	Pet Snakeling
+14536	dialogue	16	18	21	21	Pet Snakeling
+14536	panel	40	34	56	56	Pet Snakeling
+14537	dialogue	21	18	21	21	Pet Snakeling
+14537	panel	47	34	56	62	Pet Snakeling
+14538	dialogue	41	35	45	42	Pet Zilyana
+14538	panel	43	34	51	49	Pet Zilyana
+14539	dialogue	14	15	14	18	Phoenix
+14539	panel	38	34	38	56	Phoenix
+14540	dialogue	14	15	14	18	Phoenix
+14540	panel	38	34	38	56	Phoenix
+14541	dialogue	14	15	14	18	Phoenix
+14541	panel	38	34	38	56	Phoenix
+14542	dialogue	14	15	14	18	Phoenix
+14542	panel	38	34	38	56	Phoenix
+14543	dialogue	14	15	14	18	Phoenix
+14543	panel	38	34	38	56	Phoenix
+14544	dialogue	25	17	27	30	Prince Black Dragon
+14544	panel	68	39	74	76	Prince Black Dragon
+14545	dialogue	22	20	16	25	Scorpia's offspring
+14545	panel	57	53	40	63	Scorpia's offspring
+14546	dialogue	56	19	30	27	Skotos
+14546	panel	168	49	60	68	Skotos
+14547	dialogue	28	25	23	34	Smolcano
+14547	panel	72	58	53	92	Smolcano
+14548	dialogue	23	16	20	23	Sraracha
+14548	panel	65	45	48	69	Sraracha
+14549	dialogue	23	16	20	23	Sraracha
+14549	panel	65	45	48	69	Sraracha
+14550	dialogue	23	16	20	23	Sraracha
+14550	panel	67	44	48	69	Sraracha
+14551	dialogue	19	26	19	32	Tiny tempor
+14551	panel	44	67	44	81	Tiny tempor
+14552	dialogue	13	26	20	28	Zebo
+14552	panel	34	50	65	74	Zebo
+14553	dialogue	17	15	21	20	TzRek-Jad
+14553	panel	54	28	55	56	TzRek-Jad
+14554	dialogue	18	13	18	16	JalRek-Jad
 14554	panel	45	28	47	43	JalRek-Jad
-14555	dialogue	46	49	62	67	Venenatis spiderling
-14555	panel	59	47	64	69	Venenatis spiderling
-14556	dialogue	45	46	60	65	Venenatis spiderling
-14556	panel	61	44	58	65	Venenatis spiderling
-14557	dialogue	59	62	45	75	Vet'ion Jr.
-14557	panel	47	59	55	86	Vet'ion Jr.
-14558	dialogue	59	63	47	76	Vet'ion Jr.
-14558	panel	47	60	55	86	Vet'ion Jr.
-14559	dialogue	67	45	74	64	Vorki
+14555	dialogue	19	17	23	26	Venenatis spiderling
+14555	panel	53	41	64	64	Venenatis spiderling
+14556	dialogue	19	16	22	25	Venenatis spiderling
+14556	panel	54	39	57	64	Venenatis spiderling
+14557	dialogue	22	21	18	28	Vet'ion Jr.
+14557	panel	46	51	48	84	Vet'ion Jr.
+14558	dialogue	22	21	19	28	Vet'ion Jr.
+14558	panel	46	51	48	84	Vet'ion Jr.
+14559	dialogue	28	13	28	25	Vorki
 14559	panel	77	23	74	64	Vorki
-14560	dialogue	130	106	125	119	Youngllef
+14560	dialogue	39	44	44	48	Youngllef
 14560	panel	143	80	126	110	Youngllef
-14561	dialogue	130	106	125	119	Corrupted Youngllef
+14561	dialogue	39	44	44	48	Corrupted Youngllef
 14561	panel	143	80	126	110	Corrupted Youngllef
-14562	dialogue	52	58	56	68	Baby chinchompa
-14562	panel	77	38	82	67	Baby chinchompa
-14563	dialogue	52	58	56	68	Baby chinchompa
-14563	panel	77	38	82	67	Baby chinchompa
-14564	dialogue	52	58	56	68	Baby chinchompa
-14564	panel	77	38	82	67	Baby chinchompa
-14565	dialogue	89	61	58	71	Baby chinchompa
-14565	panel	105	39	88	92	Baby chinchompa
-14566	dialogue	35	34	54	51	Beaver
-14566	panel	42	22	64	59	Beaver
-14567	dialogue	35	34	54	51	Beaver
-14567	panel	42	22	64	59	Beaver
-14568	dialogue	35	34	54	51	Beaver
-14568	panel	42	22	64	59	Beaver
-14569	dialogue	35	34	54	51	Beaver
-14569	panel	42	22	64	59	Beaver
-14570	dialogue	35	34	54	51	Beaver
-14570	panel	42	22	64	59	Beaver
-14571	dialogue	35	34	54	51	Beaver
-14571	panel	42	22	64	59	Beaver
-14572	dialogue	35	34	54	51	Beaver
-14572	panel	42	22	64	59	Beaver
-14573	dialogue	35	34	54	51	Beaver
-14573	panel	42	22	64	59	Beaver
-14574	dialogue	35	34	54	51	Beaver
-14574	panel	42	22	64	59	Beaver
-14575	dialogue	35	34	54	51	Beaver
-14575	panel	42	22	64	59	Beaver
-14576	dialogue	35	34	54	51	Beaver
-14576	panel	42	22	64	59	Beaver
-14577	dialogue	35	34	54	51	Beaver
-14577	panel	42	22	64	59	Beaver
-14578	dialogue	35	34	54	51	Beaver
-14578	panel	42	22	64	59	Beaver
-14579	dialogue	35	34	54	51	Beaver
-14579	panel	42	22	64	59	Beaver
-14580	dialogue	38	51	56	65	Giant Squirrel
-14580	panel	59	33	70	68	Giant Squirrel
-14581	dialogue	38	51	56	65	Dark Squirrel
-14581	panel	59	33	70	68	Dark Squirrel
-14582	dialogue	30	59	63	67	Bone Squirrel
-14582	panel	47	38	68	58	Bone Squirrel
-14583	dialogue	22	57	26	53	Heron
-14583	panel	39	40	45	72	Heron
-14584	dialogue	19	57	26	53	Great blue heron
-14584	panel	25	40	45	72	Great blue heron
-14585	dialogue	60	58	61	66	Rift guardian
-14585	panel	71	43	83	62	Rift guardian
-14586	dialogue	60	58	61	66	Rift guardian
-14586	panel	71	43	83	62	Rift guardian
-14587	dialogue	60	58	61	66	Rift guardian
-14587	panel	71	43	83	62	Rift guardian
-14588	dialogue	60	58	61	66	Rift guardian
-14588	panel	71	43	83	62	Rift guardian
-14589	dialogue	60	58	61	66	Rift guardian
-14589	panel	71	43	83	62	Rift guardian
-14590	dialogue	60	58	61	66	Rift guardian
-14590	panel	71	43	83	62	Rift guardian
-14591	dialogue	60	58	61	66	Rift guardian
-14591	panel	71	43	83	62	Rift guardian
-14592	dialogue	60	58	61	66	Rift guardian
-14592	panel	71	43	83	62	Rift guardian
-14593	dialogue	60	58	61	66	Rift guardian
-14593	panel	71	43	83	62	Rift guardian
-14594	dialogue	60	58	61	66	Rift guardian
-14594	panel	71	43	83	62	Rift guardian
-14595	dialogue	60	58	61	66	Rift guardian
-14595	panel	71	43	83	62	Rift guardian
-14596	dialogue	60	58	61	66	Rift guardian
-14596	panel	71	43	83	62	Rift guardian
-14597	dialogue	60	58	61	66	Rift guardian
-14597	panel	71	43	83	62	Rift guardian
-14598	dialogue	60	58	61	66	Rift guardian
-14598	panel	71	43	83	62	Rift guardian
-14599	dialogue	60	58	61	66	Rift guardian
-14599	panel	71	43	83	62	Rift guardian
-14600	dialogue	51	135	56	67	Greatish guardian
-14600	panel	67	142	61	75	Greatish guardian
-14601	dialogue	53	77	61	64	Rock golem
-14601	panel	56	75	80	67	Rock golem
-14602	dialogue	53	77	61	64	Rock golem
-14602	panel	56	75	80	67	Rock golem
-14603	dialogue	53	77	61	64	Rock golem
-14603	panel	56	75	80	67	Rock golem
-14604	dialogue	53	77	61	64	Rock golem
-14604	panel	56	75	80	67	Rock golem
-14605	dialogue	53	77	61	64	Rock golem
-14605	panel	56	75	80	67	Rock golem
-14606	dialogue	53	77	61	64	Rock golem
-14606	panel	56	75	80	67	Rock golem
-14607	dialogue	53	77	61	64	Rock golem
-14607	panel	56	75	80	67	Rock golem
-14608	dialogue	53	77	61	64	Rock golem
-14608	panel	56	75	80	67	Rock golem
-14609	dialogue	53	77	61	64	Rock golem
-14609	panel	56	75	80	67	Rock golem
-14610	dialogue	53	77	61	64	Rock golem
-14610	panel	56	75	80	67	Rock golem
-14611	dialogue	53	77	61	64	Rock golem
-14611	panel	56	75	80	67	Rock golem
-14612	dialogue	53	77	61	64	Rock golem
-14612	panel	56	75	80	67	Rock golem
-14613	dialogue	53	77	61	64	Rock golem
-14613	panel	56	75	80	67	Rock golem
-14614	dialogue	53	77	61	64	Rock golem
-14614	panel	56	75	80	67	Rock golem
-14615	dialogue	53	77	61	64	Rock golem
-14615	panel	56	75	80	67	Rock golem
-14616	dialogue	53	77	61	64	Rock golem
-14616	panel	56	75	80	67	Rock golem
-14617	dialogue	53	77	61	64	Rock golem
-14617	panel	56	75	80	67	Rock golem
-14618	dialogue	53	77	61	64	Rock golem
-14618	panel	56	75	80	67	Rock golem
-14619	dialogue	53	77	61	64	Rock golem
-14619	panel	56	75	80	67	Rock golem
-14620	dialogue	44	43	56	59	Rocky
-14620	panel	63	35	67	59	Rocky
-14621	dialogue	44	43	56	59	Ziggy
-14621	panel	63	35	69	61	Ziggy
-14622	dialogue	44	43	56	59	Red
-14622	panel	63	35	67	59	Red
-14623	dialogue	32	17	30	35	Soup
-14623	panel	35	16	36	43	Soup
-14624	dialogue	78	65	51	34	Tangleroot
-14624	panel	98	65	48	39	Tangleroot
-14625	dialogue	78	65	51	34	Tangleroot
-14625	panel	98	65	48	39	Tangleroot
-14626	dialogue	78	65	51	34	Tangleroot
-14626	panel	98	65	48	39	Tangleroot
-14627	dialogue	78	65	51	34	Tangleroot
-14627	panel	98	65	48	39	Tangleroot
-14628	dialogue	78	65	51	34	Tangleroot
-14628	panel	98	65	48	39	Tangleroot
-14629	dialogue	78	65	51	34	Tangleroot
-14629	panel	98	65	48	39	Tangleroot
-14630	dialogue	46	52	44	48	Abyssal protector
-14630	panel	51	53	50	45	Abyssal protector
-14631	dialogue	48	57	39	54	Bloodhound
+14562	dialogue	21	20	22	24	Baby chinchompa
+14562	panel	68	32	81	60	Baby chinchompa
+14563	dialogue	21	20	22	24	Baby chinchompa
+14563	panel	68	32	81	60	Baby chinchompa
+14564	dialogue	21	20	22	24	Baby chinchompa
+14564	panel	68	32	81	60	Baby chinchompa
+14565	dialogue	34	21	23	25	Baby chinchompa
+14565	panel	104	33	87	90	Baby chinchompa
+14566	dialogue	15	10	21	19	Beaver
+14566	panel	37	19	60	59	Beaver
+14567	dialogue	15	10	21	19	Beaver
+14567	panel	37	19	60	59	Beaver
+14568	dialogue	15	10	21	19	Beaver
+14568	panel	37	19	60	59	Beaver
+14569	dialogue	15	10	21	19	Beaver
+14569	panel	37	19	60	59	Beaver
+14570	dialogue	15	10	21	19	Beaver
+14570	panel	37	19	60	59	Beaver
+14571	dialogue	15	10	21	19	Beaver
+14571	panel	37	19	60	59	Beaver
+14572	dialogue	15	10	21	19	Beaver
+14572	panel	37	19	60	59	Beaver
+14573	dialogue	15	10	21	19	Beaver
+14573	panel	37	19	60	59	Beaver
+14574	dialogue	15	10	21	19	Beaver
+14574	panel	37	19	60	59	Beaver
+14575	dialogue	15	10	21	19	Beaver
+14575	panel	37	19	60	59	Beaver
+14576	dialogue	15	10	21	19	Beaver
+14576	panel	37	19	60	59	Beaver
+14577	dialogue	15	10	21	19	Beaver
+14577	panel	37	19	60	59	Beaver
+14578	dialogue	15	10	21	19	Beaver
+14578	panel	37	19	60	59	Beaver
+14579	dialogue	15	10	21	19	Beaver
+14579	panel	37	19	60	59	Beaver
+14580	dialogue	14	17	23	24	Giant Squirrel
+14580	panel	49	29	70	53	Giant Squirrel
+14581	dialogue	14	17	23	24	Dark Squirrel
+14581	panel	49	29	70	53	Dark Squirrel
+14582	dialogue	13	18	26	23	Bone Squirrel
+14582	panel	36	36	68	58	Bone Squirrel
+14583	dialogue	8	18	11	18	Heron
+14583	panel	30	35	41	72	Heron
+14584	dialogue	7	18	11	18	Great blue heron
+14584	panel	19	35	41	72	Great blue heron
+14585	dialogue	26	18	25	25	Rift guardian
+14585	panel	68	39	82	53	Rift guardian
+14586	dialogue	26	18	25	25	Rift guardian
+14586	panel	68	39	82	53	Rift guardian
+14587	dialogue	26	18	25	25	Rift guardian
+14587	panel	68	39	82	53	Rift guardian
+14588	dialogue	26	18	25	25	Rift guardian
+14588	panel	68	39	82	53	Rift guardian
+14589	dialogue	26	18	25	25	Rift guardian
+14589	panel	68	39	82	53	Rift guardian
+14590	dialogue	26	18	25	25	Rift guardian
+14590	panel	68	39	82	53	Rift guardian
+14591	dialogue	26	18	25	25	Rift guardian
+14591	panel	68	39	82	53	Rift guardian
+14592	dialogue	26	18	25	25	Rift guardian
+14592	panel	68	39	82	53	Rift guardian
+14593	dialogue	26	18	25	25	Rift guardian
+14593	panel	68	39	82	53	Rift guardian
+14594	dialogue	26	18	25	25	Rift guardian
+14594	panel	68	39	82	53	Rift guardian
+14595	dialogue	26	18	25	25	Rift guardian
+14595	panel	68	39	82	53	Rift guardian
+14596	dialogue	26	18	25	25	Rift guardian
+14596	panel	68	39	82	53	Rift guardian
+14597	dialogue	26	18	25	25	Rift guardian
+14597	panel	68	39	82	53	Rift guardian
+14598	dialogue	26	18	25	25	Rift guardian
+14598	panel	68	39	82	53	Rift guardian
+14599	dialogue	26	18	25	25	Rift guardian
+14599	panel	68	39	82	53	Rift guardian
+14600	dialogue	21	51	20	26	Greatish guardian
+14600	panel	61	135	57	74	Greatish guardian
+14601	dialogue	23	25	25	23	Rock golem
+14601	panel	51	71	78	67	Rock golem
+14602	dialogue	23	25	25	23	Rock golem
+14602	panel	51	71	78	67	Rock golem
+14603	dialogue	23	25	25	23	Rock golem
+14603	panel	51	71	78	67	Rock golem
+14604	dialogue	23	25	25	23	Rock golem
+14604	panel	51	71	78	67	Rock golem
+14605	dialogue	23	25	25	23	Rock golem
+14605	panel	51	71	78	67	Rock golem
+14606	dialogue	23	25	25	23	Rock golem
+14606	panel	51	71	78	67	Rock golem
+14607	dialogue	23	25	25	23	Rock golem
+14607	panel	51	71	78	67	Rock golem
+14608	dialogue	23	25	25	23	Rock golem
+14608	panel	51	71	78	67	Rock golem
+14609	dialogue	23	25	25	23	Rock golem
+14609	panel	51	71	78	67	Rock golem
+14610	dialogue	23	25	25	23	Rock golem
+14610	panel	51	71	78	67	Rock golem
+14611	dialogue	23	25	25	23	Rock golem
+14611	panel	51	71	78	67	Rock golem
+14612	dialogue	23	25	25	23	Rock golem
+14612	panel	51	71	78	67	Rock golem
+14613	dialogue	23	25	25	23	Rock golem
+14613	panel	51	71	78	67	Rock golem
+14614	dialogue	23	25	25	23	Rock golem
+14614	panel	51	71	78	67	Rock golem
+14615	dialogue	23	25	25	23	Rock golem
+14615	panel	51	71	78	67	Rock golem
+14616	dialogue	23	25	25	23	Rock golem
+14616	panel	51	71	78	67	Rock golem
+14617	dialogue	23	25	25	23	Rock golem
+14617	panel	51	71	78	67	Rock golem
+14618	dialogue	23	25	25	23	Rock golem
+14618	panel	51	71	78	67	Rock golem
+14619	dialogue	23	25	25	23	Rock golem
+14619	panel	51	71	78	67	Rock golem
+14620	dialogue	17	16	22	22	Rocky
+14620	panel	53	30	66	53	Rocky
+14621	dialogue	17	16	22	22	Ziggy
+14621	panel	54	30	68	53	Ziggy
+14622	dialogue	17	16	22	22	Red
+14622	panel	53	30	66	53	Red
+14623	dialogue	12	4	11	14	Soup
+14623	panel	26	12	34	43	Soup
+14624	dialogue	32	25	17	13	Tangleroot
+14624	panel	92	61	48	32	Tangleroot
+14625	dialogue	32	25	17	13	Tangleroot
+14625	panel	92	61	48	32	Tangleroot
+14626	dialogue	32	25	17	13	Tangleroot
+14626	panel	92	61	48	32	Tangleroot
+14627	dialogue	32	25	17	13	Tangleroot
+14627	panel	92	61	48	32	Tangleroot
+14628	dialogue	32	25	17	13	Tangleroot
+14628	panel	92	61	48	32	Tangleroot
+14629	dialogue	32	25	17	13	Tangleroot
+14629	panel	92	61	48	32	Tangleroot
+14630	dialogue	19	20	18	17	Abyssal protector
+14630	panel	48	48	43	44	Abyssal protector
+14631	dialogue	48	57	39	58	Bloodhound
 14631	panel	55	51	44	54	Bloodhound
-14632	dialogue	34	33	31	35	Chompy chick
-14632	panel	34	27	33	38	Chompy chick
-14633	dialogue	84	44	95	75	Herbi
-14633	panel	115	44	103	82	Herbi
-14634	dialogue	68	54	74	69	Lil' Creator
+14632	dialogue	14	11	12	14	Chompy chick
+14632	panel	34	23	33	38	Chompy chick
+14633	dialogue	34	16	37	30	Herbi
+14633	panel	109	40	102	61	Herbi
+14634	dialogue	29	20	28	28	Lil' Creator
 14634	panel	70	45	75	63	Lil' Creator
-14635	dialogue	70	57	73	77	Lil' Destructor
+14635	dialogue	31	22	31	29	Lil' Destructor
 14635	panel	75	51	83	67	Lil' Destructor
-14636	dialogue	49	30	11	28	Pet Penance Queen
-14636	panel	46	32	18	41	Pet Penance Queen
-14637	dialogue	54	62	45	54	Quetzin
-14637	panel	64	57	54	55	Quetzin
-14638	dialogue	53	52	48	58	Mr McGroot
-14638	panel	62	51	48	57	Mr McGroot
-14639	dialogue	9	35	28	23	Butch
-14639	panel	14	36	35	22	Butch
-14640	dialogue	44	62	52	91	Callisto cub
-14640	panel	58	57	58	94	Callisto cub
-14641	dialogue	53	50	36	57	Dom
-14641	panel	67	54	45	66	Dom
-14642	dialogue	38	44	36	70	Gull
-14642	panel	43	48	41	79	Gull
-14643	dialogue	54	70	57	90	Gulliver
-14643	panel	81	61	58	90	Gulliver
-14644	dialogue	54	49	49	73	Huberte
-14644	panel	63	43	47	77	Huberte
-14645	dialogue	57	51	42	72	Lil'viathan
-14645	panel	66	46	51	80	Lil'viathan
-14646	dialogue	41	58	39	43	Maggot marquess
-14646	panel	49	57	51	48	Maggot marquess
-14647	dialogue	125	43	66	46	Moxi
-14647	panel	143	40	43	46	Moxi
-14648	dialogue	54	49	64	60	Muphin
-14648	panel	70	46	66	65	Muphin
-14649	dialogue	60	50	68	62	Muphin
-14649	panel	73	46	69	66	Muphin
-14650	dialogue	55	57	69	63	Muphin
-14650	panel	73	54	73	67	Muphin
-14651	dialogue	63	86	170	155	Scurry
-14651	panel	180	61	174	164	Scurry
-14652	dialogue	132	60	76	71	Smol Heredit
-14652	panel	134	58	76	81	Smol Heredit
-14653	dialogue	38	53	49	55	Tumeken's guardian
-14653	panel	48	57	49	50	Tumeken's guardian
-14654	dialogue	40	53	50	56	Tumeken's damaged guardian
-14654	panel	50	57	50	51	Tumeken's damaged guardian
-14655	dialogue	62	59	41	43	Elidinis' guardian
-14655	panel	57	63	35	59	Elidinis' guardian
-14656	dialogue	50	60	37	40	Elidinis' damaged guardian
-14656	panel	46	64	36	53	Elidinis' damaged guardian
-14657	dialogue	62	51	41	46	Akkhito
-14657	panel	69	44	51	62	Akkhito
-14658	dialogue	56	94	66	80	Babi
-14658	panel	71	81	71	77	Babi
-14659	dialogue	52	74	71	83	Kephriti
-14659	panel	67	72	69	94	Kephriti
-14660	dialogue	57	50	50	62	Vet'ion Jr.
-14660	panel	54	48	57	69	Vet'ion Jr.
-14661	dialogue	57	50	50	62	Vet'ion Jr.
-14661	panel	54	48	56	69	Vet'ion Jr.
-14662	dialogue	49	50	47	61	Wisp
-14662	panel	58	55	53	60	Wisp
-14663	dialogue	56	70	75	114	Yami
-14663	panel	67	76	78	98	Yami
+14636	dialogue	19	11	4	11	Pet Penance Queen
+14636	panel	45	27	15	37	Pet Penance Queen
+14637	dialogue	23	22	18	19	Quetzin
+14637	panel	58	53	54	44	Quetzin
+14638	dialogue	21	19	17	22	Mr McGroot
+14638	panel	59	46	47	52	Mr McGroot
+14639	dialogue	4	13	11	8	Butch
+14639	panel	8	32	34	16	Butch
+14640	dialogue	18	21	18	34	Callisto cub
+14640	panel	54	47	39	94	Callisto cub
+14641	dialogue	22	19	13	21	Dom
+14641	panel	61	49	36	66	Dom
+14642	dialogue	15	14	12	26	Gull
+14642	panel	40	40	28	79	Gull
+14643	dialogue	23	25	22	33	Gulliver
+14643	panel	75	56	58	84	Gulliver
+14644	dialogue	23	17	19	28	Huberte
+14644	panel	61	37	46	73	Huberte
+14645	dialogue	22	16	17	27	Lil'viathan
+14645	panel	63	41	50	79	Lil'viathan
+14646	dialogue	16	21	16	16	Maggot marquess
+14646	panel	45	53	48	41	Maggot marquess
+14647	dialogue	48	16	20	18	Moxi
+14647	panel	138	36	42	42	Moxi
+14648	dialogue	23	18	24	23	Muphin
+14648	panel	64	42	65	55	Muphin
+14649	dialogue	26	19	27	24	Muphin
+14649	panel	67	42	68	56	Muphin
+14650	dialogue	24	21	27	24	Muphin
+14650	panel	67	50	73	58	Muphin
+14651	dialogue	24	29	66	62	Scurry
+14651	panel	175	55	165	163	Scurry
+14652	dialogue	49	22	27	27	Smol Heredit
+14652	panel	132	53	64	73	Smol Heredit
+14653	dialogue	16	20	19	21	Tumeken's guardian
+14653	panel	43	52	49	47	Tumeken's guardian
+14654	dialogue	17	20	20	22	Tumeken's damaged guardian
+14654	panel	46	52	50	49	Tumeken's damaged guardian
+14655	dialogue	25	22	13	17	Elidinis' guardian
+14655	panel	56	58	30	54	Elidinis' guardian
+14656	dialogue	20	23	12	16	Elidinis' damaged guardian
+14656	panel	45	59	32	49	Elidinis' damaged guardian
+14657	dialogue	25	17	17	18	Akkhito
+14657	panel	67	39	46	61	Akkhito
+14658	dialogue	24	32	26	31	Babi
+14658	panel	67	76	70	72	Babi
+14659	dialogue	20	27	27	32	Kephriti
+14659	panel	56	67	61	90	Kephriti
+14660	dialogue	23	18	20	23	Vet'ion Jr.
+14660	panel	53	45	56	65	Vet'ion Jr.
+14661	dialogue	23	18	20	23	Vet'ion Jr.
+14661	panel	53	45	56	65	Vet'ion Jr.
+14662	dialogue	20	19	19	23	Wisp
+14662	panel	53	49	53	57	Wisp
+14663	dialogue	23	23	30	40	Yami
+14663	panel	64	67	78	95	Yami

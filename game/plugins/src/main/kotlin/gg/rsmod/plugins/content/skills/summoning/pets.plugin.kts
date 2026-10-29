@@ -29,6 +29,7 @@ import gg.rsmod.plugins.api.ext.setComponentText
 val loadedPets = Pets.load()
 val loadedEmotes = PetEmotes.load()
 val loadedVoices = PetVoices.load()
+val loadedChatheads = PetChatheads.load()
 
 Pets.variants.forEach { variant ->
     // The engine's Drop (OpHeld5Handler) asks this first; the follower comes out instead of the item landing on the floor.

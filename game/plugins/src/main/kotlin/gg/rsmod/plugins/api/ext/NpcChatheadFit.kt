@@ -63,6 +63,12 @@ object NpcChatheadFit {
     /** Projection is not exactly linear in the zoom (the near half of a head shrinks a little less): keep 4% spare. */
     private const val MARGIN = 1.04
 
+    /** A head that covers less than this share of its frame (on its fuller axis) is drawn too small: it is zoomed in. */
+    const val SMALL = 0.6
+
+    /** The share of the frame a zoomed-in head fills on its fuller axis. */
+    const val FILL = 0.85
+
     /** A sweep samples the talking animation, it can miss its widest frame by a pixel or two: every side counts 2 px more. */
     private const val PAD = 2
 
@@ -102,13 +108,16 @@ object NpcChatheadFit {
         val roomDown = surface.frameY2 - surface.anchorY
         val roomLeft = surface.anchorX - surface.frameX1
         val roomRight = surface.frameX2 - surface.anchorX
-        if (extents.up <= roomUp && extents.down <= roomDown && extents.left <= roomLeft && extents.right <= roomRight) return cache
         val needed =
             max(
                 (extents.up + extents.down).toDouble() / (roomUp + roomDown),
                 (extents.left + extents.right).toDouble() / (roomLeft + roomRight),
             )
-        val scale = if (needed > 1.0) needed * MARGIN else 1.0
+        val fits = extents.up <= roomUp && extents.down <= roomDown && extents.left <= roomLeft && extents.right <= roomRight
+        if (fits && needed >= SMALL) return cache
+        // K02 N397: an OSRS pet head that no longer plays the human poses (which scaled it up) is drawn far too small at the cache
+        // camera - it is brought in until it fills [FILL] of the frame, the way the human-posed heads did.
+        val scale = if (needed > 1.0) needed * MARGIN else if (needed < SMALL) needed / FILL else 1.0
         val zoom = ceil(surface.zoom * scale).toInt()
         val shrink = surface.zoom.toDouble() / zoom
         val anchorY = centre(surface.anchorY, extents.up * shrink, extents.down * shrink, surface.frameY1, surface.frameY2)

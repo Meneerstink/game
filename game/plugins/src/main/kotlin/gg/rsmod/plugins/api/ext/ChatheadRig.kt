@@ -67,6 +67,8 @@ fun FacialExpression.chatheadAnimation(
 ): Int =
     when {
         CreatureChathead.isCreaturePet(npcId) -> CreatureChathead.animation(this)
+        // K02: an OSRS pet plays its own OSRS chathead sequence or stays still - the human poses only for PetChatheads.HUMAN_POSE.
+        gg.rsmod.plugins.content.skills.summoning.PetChatheads.animation(npcId) != null -> gg.rsmod.plugins.content.skills.summoning.PetChatheads.animation(npcId)!!
         ChatheadRig.isClassic(world, npcId) -> classic
         else -> hd
     }
