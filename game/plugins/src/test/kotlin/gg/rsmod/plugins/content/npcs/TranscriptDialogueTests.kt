@@ -53,4 +53,38 @@ class TranscriptDialogueTests {
         root.entrySet().forEach { (id, row) -> walk(id, row.asJsonObject.getAsJsonArray("nodes")) }
         assertTrue(problems.take(20).joinToString("\n"), problems.isEmpty())
     }
+
+    /** K02 2026-10-29: Lil' Sot said Lil' Zik's lines, the Penance pet showed another npc's head, Greatish guardian had dead options. */
+    @Test
+    fun `every pet form talks with its own head and every option of a pet leads somewhere`() {
+        val pets = listOf(File("../../data/cfg/pets/pets.tsv"), File("../data/cfg/pets/pets.tsv"), File("data/cfg/pets/pets.tsv")).first { it.exists() }
+        val forms = pets.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.split('\t') }.associate { it[3] to it[1] }
+        val problems = ArrayList<String>()
+        fun walk(form: String, nodes: JsonArray) {
+            nodes.forEach { el ->
+                val n = el.asJsonObject
+                when (n["t"].asString) {
+                    "other" -> if (n["s"].asString !in PET_SIDE_SPEAKERS) problems += "$form speaks as another npc: ${n["s"].asString}"
+                    "go" -> if (n["to"].asString == "above") problems += "$form has an unresolved 'same as above'"
+                    "opt" -> n.getAsJsonArray("o").forEach { c ->
+                        val body = c.asJsonArray[1].asJsonArray
+                        if (body.size() == 0) problems += "$form option '${c.asJsonArray[0].asString}' does nothing"
+                        walk(form, body)
+                    }
+                    "rnd" -> n.getAsJsonArray("o").forEach { walk(form, it.asJsonArray) }
+                    "cond" -> n.getAsJsonArray("b").forEach { walk(form, it.asJsonArray[2].asJsonArray) }
+                }
+            }
+        }
+        forms.forEach { (npc, form) ->
+            val row = root[npc]?.asJsonObject
+            if (row == null) problems += "$form ($npc) has no conversation" else walk(form, row.getAsJsonArray("nodes"))
+        }
+        assertTrue(problems.take(30).joinToString("\n"), problems.isEmpty())
+    }
+
+    private companion object {
+        /** Real second speakers on the OSRS Wiki pet pages: Ikkle Hydra's four heads, Scurry's rats, the voice in Butch's talk. */
+        val PET_SIDE_SPEAKERS = setOf("Right-most head", "Left-most head", "2nd head from the left", "Central head", "Chewy", "Nibbles", "Mysterious Voice")
+    }
 }

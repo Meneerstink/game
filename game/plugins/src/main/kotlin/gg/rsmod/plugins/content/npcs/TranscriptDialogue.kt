@@ -16,6 +16,7 @@ import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.content.inter.bank.openBank
+import gg.rsmod.plugins.content.skills.summoning.PetMorphs
 import gg.rsmod.util.TextWrapping
 import java.io.File
 import java.io.FileReader
@@ -212,6 +213,11 @@ object TranscriptDialogue {
         list.firstOrNull { kind(it) == "space_ok" || kind(it) == "space_no" }?.let {
             val hasSpace = player.inventory.freeSlotCount > 0
             list.firstOrNull { b -> kind(b) == if (hasSpace) "space_ok" else "space_no" }?.let { return body(it) }
+        }
+        // Rift guardian "About your colour-changing...": the line that matches its real Locking state.
+        if (list.any { kind(it) == "rift_free" || kind(it) == "rift_locked" }) {
+            val locked = (player.attr[PetMorphs.RIFT_LOCK_ATTR] ?: 0) == 1
+            list.firstOrNull { kind(it) == if (locked) "rift_locked" else "rift_free" }?.let { return body(it) }
         }
         val random = list.filter { kind(it) == "random" }
         if (random.isNotEmpty()) return body(random[ctx.npc.world.random(random.size - 1)])
