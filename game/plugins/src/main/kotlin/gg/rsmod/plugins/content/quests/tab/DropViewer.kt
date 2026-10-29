@@ -49,6 +49,10 @@ object DropViewer {
     const val LIST_PIC_W = 24
     const val LIST_PIC_H = 22
 
+    /** N411: the list names start where the picture was and get its room (30 - 8 = 22 px more). */
+    const val LIST_TEXT_X = 8
+    const val LIST_NAME_W = 122
+
     /** [indent] 1 = a God Wars bodyguard under its general (N311). */
     class Slot(val header: Boolean, val key: String, val text: String, val sub: String?, val icon: String?, val open: Boolean, val gold: Boolean, val model: Int, val item: Int = -1, val selected: Boolean = false, val indent: Int = 0)
 
@@ -233,45 +237,31 @@ object DropViewer {
                 y += 18
                 continue
             }
-            // An entry: 24 high, the thumb and model at the left, one line or name + chance; a bodyguard 10 px in (N311).
+            // An entry: 24 high, one line or name + chance; a bodyguard 10 px in (N311).
             val dx = slot.indent * 10
             N108Ui.sprite(player, i, base + V.L_BG, "dv_lisel")
             N108Ui.pos(player, i, base + V.L_BG, 0, y)
             N108Ui.hidden(player, i, base + V.L_BG, !slot.selected)
             N108Ui.hidden(player, i, base + V.L_ARROW, true)
             N108Ui.hidden(player, i, base + V.L_ICON, true)
-            // N319 (owner 2026-10-24: "kan dat vierkantje niet weg"): no box behind the picture; the model gets the room it had
-            // (24 x 22) and is fitted to what it really draws (client InterfaceManager.fitModelToBox).
+            // N411 (owner 2026-10-24/25: "ik wil gewoon namen in de linker scrol lijst en de fotos blijven"): no picture in the list -
+            // the npc / chest / item picture stays only in the big box at the top; the name takes the room the picture had.
             N108Ui.hidden(player, i, base + V.L_THUMB, true)
-            N108Ui.pos(player, i, base + V.L_MODEL, 3 + dx, y - 2)  // N319: the fitted model sat 4 px under the name (measured)
-            N108Ui.size(player, i, base + V.L_MODEL, LIST_PIC_W, LIST_PIC_H)
-            if (slot.item >= 0) {
-                N108Ui.item(player, i, base + V.L_MODEL, slot.item)
-                N108Ui.anim(player, i, base + V.L_MODEL, -1)
-                N108Ui.hidden(player, i, base + V.L_MODEL, false)
-            } else if (slot.key == "chest" && chestModel(player) >= 0) {
-                N108Ui.plainModel(player, N108Ui.hash(i, base + V.L_MODEL), chestModel(player), CHEST_ZOOM, CHEST_XAN, false, CHEST_YAN)
-                N108Ui.anim(player, i, base + V.L_MODEL, -1)
-                N108Ui.hidden(player, i, base + V.L_MODEL, false)
-            } else if (slot.model >= 0) {
-                models += N108Ui.Model(N108Ui.hash(i, base + V.L_MODEL), slot.model, thumbZoom(player, slot.model), MODEL_XAN, false, MODEL_YAN)
-                N108Ui.anim(player, i, base + V.L_MODEL, N108Ui.standAnim(player.world, slot.model))
-                N108Ui.hidden(player, i, base + V.L_MODEL, false)
-            } else {
-                N108Ui.hidden(player, i, base + V.L_MODEL, true)
-            }
+            N108Ui.hidden(player, i, base + V.L_MODEL, true)
+            N108Ui.size(player, i, base + V.L_TEXT, LIST_NAME_W + 2 - dx, 24)
+            N108Ui.size(player, i, base + V.L_SUB, LIST_NAME_W + 2 - dx, 12)
             val colour = if (slot.selected) "fff4d8" else "f3ead6"
             fonts += (base + V.L_TEXT) to "p11_full"
             if (slot.sub != null) {
-                N108Ui.text(player, i, base + V.L_TEXT, "<col=$colour>${N108Ui.fitP11(player.world, slot.text, 100 - dx)}</col>")
-                N108Ui.pos(player, i, base + V.L_SUB, 30 + dx, y + 12)
+                N108Ui.text(player, i, base + V.L_TEXT, "<col=$colour>${N108Ui.fitP11(player.world, slot.text, LIST_NAME_W - dx)}</col>")
+                N108Ui.pos(player, i, base + V.L_SUB, LIST_TEXT_X + dx, y + 12)
                 N108Ui.text(player, i, base + V.L_SUB, slot.sub)
                 N108Ui.hidden(player, i, base + V.L_SUB, false)
                 // the name on the upper line
-                N108Ui.pos(player, i, base + V.L_TEXT, 30 + dx, y - 6)
+                N108Ui.pos(player, i, base + V.L_TEXT, LIST_TEXT_X + dx, y - 6)
             } else {
-                N108Ui.pos(player, i, base + V.L_TEXT, 30 + dx, y)
-                N108Ui.text(player, i, base + V.L_TEXT, "<col=${if (slot.item >= 0) "ffe7a8" else colour}>${listName(player.world, slot.text, 100 - dx)}</col>")
+                N108Ui.pos(player, i, base + V.L_TEXT, LIST_TEXT_X + dx, y)
+                N108Ui.text(player, i, base + V.L_TEXT, "<col=${if (slot.item >= 0) "ffe7a8" else colour}>${listName(player.world, slot.text, LIST_NAME_W - dx)}</col>")
                 N108Ui.hidden(player, i, base + V.L_SUB, true)
             }
             N108Ui.hidden(player, i, base + V.L_TEXT, false)
