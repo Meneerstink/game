@@ -325,6 +325,18 @@ gg.rsmod.game.CommandServerCommands.handlers["cwplay"] = { w, a ->
         "${p.username} plays Castle Wars for $team at ${team.baseTile}"
     }
 }
+// `petops`: every pet follower npc option (cache) with no handler bound - a dead option says "Nothing interesting happens" (N407).
+gg.rsmod.game.CommandServerCommands.handlers["petops"] = { w, _ ->
+    val dead = sortedMapOf<String, MutableList<Int>>()
+    gg.rsmod.plugins.content.skills.summoning.Pets.variants.forEach { v ->
+        val def = w.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, v.npc) ?: return@forEach
+        val bound = w.plugins.boundNpcOptions(v.npc)
+        def.options.forEachIndexed { i, o ->
+            if (o != null && o.isNotBlank() && (i + 1) !in bound) dead.getOrPut("$o (${v.name})") { mutableListOf() } += v.npc
+        }
+    }
+    if (dead.isEmpty()) "petops: every pet option is bound" else "petops: " + dead.entries.joinToString("; ") { "${it.key} ${it.value.take(4)}" }
+}
 // `cwend <sara score> <zam score>`: ends the running Castle Wars round now with that score (K07: tickets per result), through the
 // round's own last-minute tick.
 gg.rsmod.game.CommandServerCommands.handlers["cwend"] = { w, a ->
