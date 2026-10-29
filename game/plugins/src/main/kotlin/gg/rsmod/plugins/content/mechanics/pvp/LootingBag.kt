@@ -67,6 +67,7 @@ object LootingBag {
             return 0
         }
         refresh(player)
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: storing in an item sounds (once per tick)
         if (removed > 0) player.message("You store $removed item${if (removed == 1) "" else "s"} in your looting bag.")
         return removed
     }

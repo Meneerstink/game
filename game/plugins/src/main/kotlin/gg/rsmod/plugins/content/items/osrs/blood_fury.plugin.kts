@@ -22,6 +22,7 @@ listOf(Items.AMULET_OF_FURY, Items.AMULET_OF_BLOOD_FURY).forEach { amuletId ->
         player.inventory.remove(Items.BLOOD_SHARD, shards)
         val charged = BloodFury.withCharges(amulet, BloodFury.charges(amulet) + shards * BloodFury.CHARGES_PER_SHARD)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         // Creating the amulet of blood fury attaches the shard (ItemAttachSounds); topping up charges stays silent.
         if (amuletId == Items.AMULET_OF_FURY) gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.BLOOD_SHARD, amuletId)
         player.message("Your amulet of blood fury has ${BloodFury.charges(charged)} charges.")

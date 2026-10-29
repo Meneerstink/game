@@ -40,6 +40,7 @@ listOf(Items.SERPENTINE_HELM_UNCHARGED, Items.SERPENTINE_HELM).forEach { helm ->
         }
         player.inventory.remove(Items.ZULRAHS_SCALES, added)
         player.inventory[slot] = SerpentineHelm.withScales(item, current + added)
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message(helmStatus(current + added))
     }
 }

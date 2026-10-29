@@ -216,6 +216,7 @@ suspend fun fillPouch(
 
     player.setVarp(pouchVarpId(pouch), currentAmount + totalEssenceToAdd)
     if (totalEssenceToAdd != 0) {
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: storing in an item sounds
         player.message("You fill your ${pouch.name.lowercase().replace("_", " ")} with $totalEssenceToAdd essence.")
     }
 }
@@ -240,6 +241,7 @@ suspend fun emptyPouch(
     }
 
     player.inventory.add(Items.PURE_ESSENCE, essenceToAdd)
+    gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
     player.setPouchAmount(pouch, currentAmount - essenceToAdd)
     player.message(
         "You empty $essenceToAdd essence from your ${pouch.name.lowercase().replace("_", " ")} to your inventory.",

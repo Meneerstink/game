@@ -38,4 +38,16 @@ class ItemSoundsN64N65N89Tests {
         assertTrue("player.notEnough(\"You need \${entry.price.format()}" in src("mechanics/store/StoreUi.kt"))
         assertTrue("playSound(Sfx.ERRORSOUND)" in src("mechanics/shops/NotEnough.kt"))
     }
+
+    /** N366 (owner 2026-10-24: Zulrah's scales or darts into a blowpipe made no sound - "ook bij andere items"). */
+    @Test
+    fun `N366 - loading or charging an item and filling a bag makes the put-in sound`() {
+        listOf(
+            "items/osrs/blowpipe.plugin.kts", "items/osrs/blood_fury.plugin.kts", "items/osrs/crystal.plugin.kts", "items/osrs/demonbane.plugin.kts",
+            "items/osrs/dizanas_quiver.plugin.kts", "items/osrs/osrs_bows.plugin.kts", "items/osrs/powered_staves.plugin.kts",
+            "items/osrs/revenant_weapons.plugin.kts", "items/osrs/ring_of_suffering.plugin.kts", "items/osrs/serpentine_helm.plugin.kts",
+            "items/osrs/staff_of_the_dead.plugin.kts", "items/osrs/tomes.plugin.kts", "mechanics/pvp/LootingBag.kt", "skills/runecrafting/pouches.plugin.kts",
+        ).forEach { assertTrue("ItemMoveSounds.putIn(player)" in src(it), it) }
+        assertTrue("ItemMoveSounds.takeOut(player)" in src("items/osrs/blowpipe.plugin.kts"))
+    }
 }

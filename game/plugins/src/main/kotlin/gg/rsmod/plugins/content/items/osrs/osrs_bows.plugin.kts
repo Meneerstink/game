@@ -64,6 +64,7 @@ RevenantBows.ALL.forEach { bow ->
         player.inventory.remove(Items.REVENANT_ETHER, taken)
         val charged = RevenantBows.charge(item, taken)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message("Revenant ether: ${RevenantBows.ether(charged)}")
     }
 }
@@ -123,6 +124,7 @@ listOf(Items.VENATOR_BOW, Items.VENATOR_BOW_UNCHARGED).forEach { bow ->
         player.inventory.remove(Items.ANCIENT_ESSENCE, added)
         val charged = VenatorBow.withEssence(item, VenatorBow.essence(item) + added)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message("Ancient essence: ${VenatorBow.essence(charged)}")
     }
 }
@@ -152,6 +154,7 @@ Tonalztics.ALL.forEach { weapon ->
         player.inventory.remove(Items.SUNFIRE_SPLINTERS, added)
         val charged = Tonalztics.withCharges(item, Tonalztics.charges(item) + added)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message("Charges: ${Tonalztics.charges(charged)}")
     }
 }

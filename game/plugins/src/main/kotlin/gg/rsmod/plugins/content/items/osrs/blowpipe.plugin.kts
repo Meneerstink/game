@@ -63,6 +63,7 @@ Blowpipe.Pipe.values().forEach { type ->
                 return@on_item_option
             }
             player.inventory[slot] = Blowpipe.unloadDarts(pipe)
+            gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player) // N366: taking something out of an item sounds
         }
     }
 
@@ -85,6 +86,7 @@ Blowpipe.Pipe.values().forEach { type ->
                     return@queue
                 }
                 player.inventory[slot] = Blowpipe.uncharge(pipe)
+                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.takeOut(player)
             }
         }
     }
@@ -100,6 +102,8 @@ Blowpipe.Pipe.values().forEach { type ->
                     Blowpipe.LoadOutcome.LOADED -> {
                         player.inventory.remove(stack.id, load.added)
                         player.inventory[pipeSlot] = load.result
+                        // N366 (owner 2026-10-24: "geen geluid" loading darts or scales): putting something into an item sounds like storing it.
+                        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
                         player.checkBlowpipe(load.result)
                     }
                     Blowpipe.LoadOutcome.DIFFERENT_DART -> player.message(Blowpipe.DIFFERENT_DART_MESSAGE)
@@ -121,6 +125,7 @@ Blowpipe.Pipe.values().forEach { type ->
                 }
                 player.inventory.remove(Items.ZULRAHS_SCALES, load.added)
                 player.inventory[pipeSlot] = load.result
+                gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player)
                 player.checkBlowpipe(load.result)
             }
         }

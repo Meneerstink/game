@@ -44,6 +44,7 @@ fun chargeStaff(
     staff.chargeCost.forEach { cost -> player.inventory.remove(cost.id, cost.amount * added) }
     val charged = PoweredStaves.withCharges(item, current + added)
     player.inventory[slot] = charged
+    gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
     player.message(chargesMessage(charged))
 }
 

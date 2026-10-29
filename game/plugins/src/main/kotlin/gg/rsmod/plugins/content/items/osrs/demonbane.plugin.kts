@@ -81,6 +81,7 @@ listOf(Items.ARCLIGHT, Items.ARCLIGHT_INACTIVE).forEach { swordId ->
         player.inventory.remove(Items.ANCIENT_SHARD, shards)
         val charged = Demonbane.addShards(sword, shards)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message(Demonbane.checkMessage(charged))
     }
 

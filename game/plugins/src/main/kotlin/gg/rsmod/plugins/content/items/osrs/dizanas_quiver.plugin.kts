@@ -24,6 +24,7 @@ chargeableQuivers.forEach { quiverId ->
         }
         player.inventory.remove(Items.SUNFIRE_SPLINTERS, charge.added)
         player.inventory[quiverSlot] = charge.result
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.attr[DizanasQuiver.SPLINTERS_CHARGED] = (player.attr[DizanasQuiver.SPLINTERS_CHARGED] ?: 0) + charge.added
         player.message("Your quiver now has ${DizanasQuiver.charges(charge.result)} charges.")
     }
@@ -114,6 +115,7 @@ fun storeIntoOpenQuiver(
         }
         player.inventory.remove(item.id, charge.added)
         player.inventory[quiverSlot] = charge.result
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.attr[DizanasQuiver.SPLINTERS_CHARGED] = (player.attr[DizanasQuiver.SPLINTERS_CHARGED] ?: 0) + charge.added
         player.message("Your quiver now has ${DizanasQuiver.charges(charge.result)} charges.")
         refreshQuiver(player)

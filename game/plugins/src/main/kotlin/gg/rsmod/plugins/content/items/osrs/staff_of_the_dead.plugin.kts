@@ -34,6 +34,7 @@ listOf(Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD).forEach { sta
         player.inventory.remove(Items.ZULRAHS_SCALES, added)
         val charged = StaffOfTheDead.withScales(staff, StaffOfTheDead.scales(staff) + added)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message("Scales: ${StaffOfTheDead.scales(charged)}")
     }
 }

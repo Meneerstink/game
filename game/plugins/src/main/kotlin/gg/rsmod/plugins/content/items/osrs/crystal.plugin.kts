@@ -71,6 +71,7 @@ fun crystalCheck(
         player.inventory.remove(Items.CRYSTAL_SHARD, shards)
         val charged = CrystalEquipment.withCharges(item, CrystalEquipment.charges(item) + shards * CrystalEquipment.CHARGES_PER_SHARD)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         // OSRS `eyeglo_crystal_axe_recharge` (synth 6, wiki "List of sound IDs"; byte-identical in the 667 cache): crystal recharged
         // with shards (owner 153708: "no sound adding shards").
         player.playSound(CRYSTAL_RECHARGE_SOUND)

@@ -53,6 +53,7 @@ RevenantWeapons.ALL.forEach { weapon ->
         player.inventory.remove(Items.REVENANT_ETHER, taken)
         val charged = RevenantWeapons.charge(item, taken)
         player.inventory[slot] = charged
+        gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
         player.message(etherStatus(charged))
     }
 }

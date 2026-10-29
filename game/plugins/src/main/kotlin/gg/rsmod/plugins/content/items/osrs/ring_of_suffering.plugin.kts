@@ -29,6 +29,7 @@ RingOfSuffering.ALL.forEach { ringId ->
             player.inventory.remove(recoilId, rings)
             val charged = RingOfSuffering.withCharges(ring, RingOfSuffering.charges(ring) + rings * RingOfSuffering.CHARGES_PER_RECOIL)
             player.inventory[slot] = charged
+            gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
             // Owner 2026-09-29: charging was silent; 2888 lunar_embue_runes ("Magic Imbue"), ADAPTED by name (no OSRS source).
             player.playSound(Sfx.LUNAR_EMBUE_RUNES)
             player.message(player.sufferingStatus(charged))

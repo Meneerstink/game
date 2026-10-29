@@ -38,6 +38,7 @@ Tomes.Tome.values().forEach { tome ->
             player.inventory.remove(tome.page, pages)
             val charged = Tomes.withCharges(item, Tomes.charges(item) + pages * Tomes.CHARGES_PER_PAGE)
             player.inventory[slot] = charged
+            gg.rsmod.plugins.content.mechanics.ItemMoveSounds.putIn(player) // N366: charging an item sounds like storing in it
             player.message(tomeStatus(charged))
         }
         listOf("Check", "Pages").forEach { option ->
