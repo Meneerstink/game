@@ -25,7 +25,7 @@ object PestControlTrace {
  * - Shifter: teleports next to its target when more than 10 tiles away, and 1 tick in 15 at random (Darkan Shifter.processNPC).
  * - Ravager: walks to the nearest barricade or gate within 5 tiles and smashes it (one step every 5 ticks); otherwise wanders
  *   towards the knight, or back to its portal once inside the camp.
- * - Spinner: heals its own portal by 10 % when within 5 tiles of it; explodes (5 poison damage) when that portal falls.
+ * - Spinner: heals its own portal by 10 % when within 5 tiles, scaled by team size below five players (N456); explodes when it falls.
  * - Splatter: explodes on a barricade next to it, and on death, hurting everything next to it and damaging the barricade.
  * - Brawler: melee only, the shared combat.
  */
@@ -146,11 +146,16 @@ object PestControlMonsters {
         m: Npc,
     ) = obj.tile.transform(Integer.signum(m.tile.x - obj.tile.x), Integer.signum(m.tile.z - obj.tile.z), 0)
 
-    private fun spinner(
+    /** N456 owner rule: below the RS minimum team of five, heal only the team's share; five or more keeps the old heal. */
+    internal fun spinnerHeal(maximumLifepoints: Int, players: Int): Int =
+        maximumLifepoints / 10 * players.coerceIn(0, 5) / 5
+
+    internal fun spinner(
         game: PestControlGame,
         m: Npc,
+        roll: Int = Random.nextInt(10),
     ) {
-        if (Random.nextInt(10) >= 2) return
+        if (roll >= 2) return
         val index = game.spinnerPortal[m] ?: return
         val portal = game.portals[index] ?: return
         if (portal.isDead() || !portal.isSpawned()) return
@@ -159,7 +164,7 @@ object PestControlMonsters {
             m.facePawn(portal)
             m.animate(PC_SPINNER_HEAL_ANIM)
             m.graphic(PC_SPINNER_HEAL_GFX)
-            portal.setCurrentLifepoints(minOf(portal.getMaximumLifepoints(), portal.getCurrentLifepoints() + portal.getMaximumLifepoints() / 10))
+            portal.setCurrentLifepoints(minOf(portal.getMaximumLifepoints(), portal.getCurrentLifepoints() + spinnerHeal(portal.getMaximumLifepoints(), game.players.size)))
             game.portalHit(portal)
         } else {
             m.walkTo(portal.tile)
