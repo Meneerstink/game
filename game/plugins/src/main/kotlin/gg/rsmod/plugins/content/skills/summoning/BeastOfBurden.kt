@@ -221,8 +221,9 @@ object BeastOfBurden {
             player.message("Your $who can't carry a Deadman emblem.")
             return 0
         }
-        // N423: a burden trinket never goes into a pack (it is what makes the pet carry).
-        if (BurdenTrinkets.isTrinket(item.id)) {
+        // N423: a burden trinket never goes into a pack (it is what makes the pet carry). N433 (owner 2026-10-30: "je kunt nu pets
+        // storen in een beast of burden dit hoort niet"): nor does a pet, in any familiar's or upgraded pet's pack.
+        if (BurdenTrinkets.isTrinket(item.id) || Pets.isPetItem(item.id)) {
             player.message("Your $who can't carry that item.")
             return 0
         }

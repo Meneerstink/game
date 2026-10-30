@@ -14,7 +14,11 @@ import gg.rsmod.plugins.api.ext.playSound
  * One sound per kind per tick: a Deposit-all moves up to 28 stacks in one tick and must sound once, not 28 times.
  */
 object ItemMoveSounds {
-    const val PUT_IN = 2739
+    /**
+     * N433 (owner 2026-10-30: storing in an Upgraded pet "hoor je het drop-geluid"; choice "Alles 'bank drawer'"): every put-in -
+     * a beast of burden, the rune pouch, essence pouches, charging an item - sounds like the bank deposit, no longer like a drop.
+     */
+    const val PUT_IN = gg.rsmod.plugins.api.cfg.Sfx.BANK_DRAWER
     const val TAKE_OUT = 2582
 
     /** N65 (owner 2026-10-22: "het verkeerde geluid (drop)", choice: Bank drawer): depositing into the bank or a deposit box. */

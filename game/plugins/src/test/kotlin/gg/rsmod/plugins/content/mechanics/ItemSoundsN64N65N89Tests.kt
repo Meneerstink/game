@@ -21,6 +21,12 @@ class ItemSoundsN64N65N89Tests {
     }
 
     @Test
+    fun `N433 - every put-in sounds like the bank deposit, never like a drop`() {
+        assertEquals(Sfx.BANK_DRAWER, ItemMoveSounds.PUT_IN)
+        assertTrue("Pets.isPetItem(item.id)" in src("skills/summoning/BeastOfBurden.kt"), "a pet never goes into a pack")
+    }
+
+    @Test
     fun `N64 - every rune pouch store and take-out path makes a sound`() {
         val window = src("magic/RunePouchInterface.kt")
         assertTrue("ItemMoveSounds.takeOut(player)" in window && "ItemMoveSounds.putIn(player)" in window)

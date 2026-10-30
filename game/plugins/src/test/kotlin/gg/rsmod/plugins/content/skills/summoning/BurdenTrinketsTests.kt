@@ -16,6 +16,7 @@ import java.nio.file.Paths
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
+import kotlin.test.assertNotNull
 import kotlin.test.assertTrue
 
 /**
@@ -182,6 +183,15 @@ class BurdenTrinketsTests {
             setOf(FamiliarAction.CALL, FamiliarAction.DISMISS, FamiliarAction.TAKE_BOB, FamiliarAction.FOLLOWER_DETAILS),
             Pets.UPGRADED_ORB_ACTIONS,
         )
+    }
+
+    @Test
+    fun `every trinket glows in its own colour and the glow is in the cache`() {
+        // N435: 6 grey, 9 green (1517), 12 blue, 18 purple, 30 gold - five different spotanims.
+        val glows = BurdenTrinkets.Tier.values().map { it.glow }
+        assertEquals(5, glows.distinct().size)
+        assertEquals(BurdenTrinkets.BIND_GRAPHIC, BurdenTrinkets.Tier.BULL_ANT.glow)
+        glows.forEach { assertNotNull(SummoningTestCache.definitions.getNullable(gg.rsmod.game.fs.def.SpotAnimDef::class.java, it), "spotanim $it") }
     }
 
     private fun newPlayer(): Player {

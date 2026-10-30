@@ -27,12 +27,17 @@ object BurdenTrinkets {
         val familiar: String,
         /** Examine: "The spirit of a <spirit>, sealed in stone." */
         val spirit: String,
+        /**
+         * N435 (owner 2026-10-30, "oplopend zeldzaam"): the bind / unbind glow in the trinket's own colour - 6 grey, 9 green (the
+         * original 1517), 12 blue, 18 purple, 30 gold (TrinketGlowTool, cache tx-20261030-104152).
+         */
+        val glow: Int,
     ) {
-        KALPHITE(24232, "Kalphite burden trinket", 6, "Spirit kalphite", "kalphite"),
-        BULL_ANT(24233, "Bull ant burden trinket", 9, "Bull ant", "bull ant"),
-        TERRORBIRD(24234, "Terrorbird burden trinket", 12, "Spirit terrorbird", "terrorbird"),
-        TORTOISE(24235, "Tortoise burden trinket", 18, "War tortoise", "war tortoise"),
-        PACK_YAK(24236, "Pack yak burden trinket", 30, "Pack yak", "pack yak"),
+        KALPHITE(24232, "Kalphite burden trinket", 6, "Spirit kalphite", "kalphite", 3185),
+        BULL_ANT(24233, "Bull ant burden trinket", 9, "Bull ant", "bull ant", 1517),
+        TERRORBIRD(24234, "Terrorbird burden trinket", 12, "Spirit terrorbird", "terrorbird", 3186),
+        TORTOISE(24235, "Tortoise burden trinket", 18, "War tortoise", "war tortoise", 3187),
+        PACK_YAK(24236, "Pack yak burden trinket", 30, "Pack yak", "pack yak", 3188),
     }
 
     private val byItem = Tier.values().associateBy { it.item }
@@ -47,8 +52,14 @@ object BurdenTrinkets {
     /** The Summoning obelisk's renew chime (Void renewSummoningPoints, synth 4214): the bind's "premium" sound. */
     const val BIND_SOUND = 4214
 
-    /** A short glow on the pet when the trinket binds. */
+    /** A short glow on the pet when the trinket binds (the Bull ant's green; every tier has its own [Tier.glow]). */
     const val BIND_GRAPHIC = 1517
+
+    /**
+     * N434 (owner 2026-10-30: "unbind trinket maakt geen geluid en effect net zoals bind"; choice: the same glow, another sound):
+     * the summoning puff's sound (188), the one a familiar leaving makes - the pet lets its burden go.
+     */
+    const val UNBIND_SOUND = 188
 
     /** pet -> trinket item, "pet=item;pet=item" (pet names hold neither ';' nor '='). */
     val BOUND_ATTR = AttributeKey<String>(persistenceKey = "burden_trinkets")
@@ -211,7 +222,7 @@ object BurdenTrinkets {
         recordOwned(player)
         // The follower becomes its Upgraded copy first, so the glow plays on the pet the player now sees.
         Pets.refreshUpgrade(player)
-        Pets.current(player)?.graphic(BIND_GRAPHIC)
+        Pets.current(player)?.graphic(tier.glow)
         player.playSound(BIND_SOUND)
         ok.replaces?.let { player.message("Your ${it.trinketName} is no longer bound; it stays yours.") }
         player.message("You bind the ${tier.trinketName} to your ${ok.name}.")
@@ -259,7 +270,10 @@ object BurdenTrinkets {
         if (following) {
             FamiliarInventory.close(player)
             Pets.refreshUpgrade(player)
+            // The plain pet the player now sees glows once more in the trinket's colour as it lets go.
+            Pets.current(player)?.graphic(tier.glow)
         }
+        player.playSound(UNBIND_SOUND)
         return true
     }
 

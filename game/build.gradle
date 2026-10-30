@@ -227,6 +227,14 @@ task runPetHeadRecolourTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.PetHeadRecolourTool'
 }
 
+task runTrinketGlowTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N435: four recoloured copies of the burden trinket bind glow 1517 (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runTrinketGlowTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.TrinketGlowTool'
+}
+
 task runSummoningInterfaceScriptTool(type: JavaExec) {
     group = 'tools'
     description = 'Summoning clientscripts: Follower Details tab (1766, 8/1387/1314), dismiss labels (5378), N425 no enum pose on a ' +
