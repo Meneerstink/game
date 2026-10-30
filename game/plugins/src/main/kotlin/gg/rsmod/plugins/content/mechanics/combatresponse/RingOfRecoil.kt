@@ -69,6 +69,13 @@ object RingOfRecoil {
         }
     }
 
+    /**
+     * K12 N11 (the worn "Check" was a dead option, census 2026-10-30): the damage the ring can still reflect before it shatters.
+     * Wording from Void's RingOfRecoil (worn Check); the OSRS Wiki only says the worn Check shows the remaining damage.
+     */
+    fun checkMessage(player: Player): String =
+        "You can inflict ${CHARGE_LIMIT - (player.attr[RING_OF_RECOIL_CHARGE_ATTR] ?: 0)} more points of damage before a ring will shatter."
+
     private fun shatter(target: Player) {
         val ringId = target.getEquipment(EquipmentType.RING)?.id ?: return
         if (ringId !in RECOIL_RING_IDS) return

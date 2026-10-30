@@ -329,3 +329,10 @@ on_world_init {
         }
     }
 }
+
+// K12 N11: the bracelet's worn "Check" was a dead option (census 2026-10-30).
+CastleWarsHandler.BRACES.forEach { brace ->
+    on_equipment_option(item = brace, option = "Check") {
+        player.message(CastleWarsHandler.braceCheckMessage(brace))
+    }
+}

@@ -188,6 +188,15 @@ object CastleWarsHandler {
         if (next == null) player.message("Your Castle wars bracelet has used its last charge and crumbles to dust.")
     }
 
+    /**
+     * K12 N11: the worn "Check" was a dead option (census 2026-10-30). The charges are the bracelet's own (3) / (2) / (1); the OSRS
+     * Wiki quotes no Check message, so the wording is CUSTOM.
+     */
+    fun braceCheckMessage(brace: Int): String {
+        val charges = BRACES.size - BRACES.indexOf(brace)
+        return "Your Castle wars bracelet has $charges ${if (charges == 1) "charge" else "charges"} left."
+    }
+
     fun carriesFlag(pawn: gg.rsmod.game.model.entity.Pawn): Boolean =
         pawn is Player && pawn.equipment[EquipmentType.WEAPON.id]?.id.let { it == Items.SARADOMIN_FLAG || it == Items.ZAMORAK_FLAG }
 

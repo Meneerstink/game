@@ -49,3 +49,12 @@ DragonfireShield.FAMILIES.forEach { family ->
         }
     }
 }
+
+// K12 N11: the worn shield's "Activate" was a dead option (census 2026-10-30) - the dragonfire blast ([DragonfireBlast]).
+DragonfireBlast.SHIELDS.forEach { id ->
+    if (shieldHasOption(id, "Activate", worn = true)) {
+        on_equipment_option(item = id, option = "Activate") {
+            DragonfireBlast.activate(player)
+        }
+    }
+}
