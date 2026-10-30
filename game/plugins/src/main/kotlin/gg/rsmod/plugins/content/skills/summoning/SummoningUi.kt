@@ -112,6 +112,9 @@ object SummoningUi {
     private const val PET_HUNGER_VARBIT = 4286
     private const val PET_VALUE_NOT_APPLICABLE = 101
 
+    /** The text fields script 753 writes "NA" / "<n>%" into (IF_SETTEXT 662:45, 662:46, 662:48); the icons are other components. */
+    private val PET_VALUE_TEXTS = listOf(45, 46, 48)
+
     /** The familiar variant of the right-hand column (time remaining / Summoning points). */
     private const val PANEL_FAMILIAR_LAYER = 72
 
@@ -394,9 +397,10 @@ object SummoningUi {
     ) {
         val pouch = SummoningPouchData.values.firstOrNull { it.npc == npcId }
         val selector = pouch?.let { SummoningChatheadAnimations.selector(it) }
-        // Void's map variable sends -1 for an unmapped familiar (Phoenix); do the same so a prior
-        // familiar's selector cannot survive in client state even though the component is cleared.
-        player.setVarbit(SummoningChatheadAnimations.SELECTOR_VARBIT, selector ?: -1)
+        // Void's map variable sends -1 for an unmapped familiar (Phoenix) and for every pet, which the 7-bit varbit holds as 127;
+        // a prior familiar's selector cannot survive in client state. N425: clientscript 751 (patched, cache) leaves the head's
+        // animation alone for exactly this value, so the server's animation below is the only one a pet's head gets.
+        player.setVarbit(SummoningChatheadAnimations.SELECTOR_VARBIT, selector ?: SummoningChatheadAnimations.NO_SELECTOR)
         val anim = resolveChatheadAnimation(player, npcId) ?: -1
         player.setComponentAnim(PANEL, PANEL_MODEL, anim)
         // N397: clientscript 751 (run by the client on the var transmits above, after this tick's packets) sets 662:1's animation
@@ -433,6 +437,9 @@ object SummoningUi {
             player.setVarbit(PET_GROWTH_VARBIT, PET_VALUE_NOT_APPLICABLE)
             player.setVarbit(PET_HUNGER_VARBIT, PET_VALUE_NOT_APPLICABLE)
         }
+        // N428 (owner 2026-10-30: "alleen die tekst 2 keer NA weg, niet de iconen"): script 753's text fields hidden for a pet, the
+        // growth and hunger icons stay.
+        PET_VALUE_TEXTS.forEach { player.setComponentHidden(PANEL, it, pet) }
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
         PANEL_BACKDROP_RECTS.forEach { player.setComponentHidden(PANEL, it, !active) }
         player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
@@ -458,9 +465,9 @@ object SummoningUi {
         player.setComponentHidden(PANEL, PANEL_SPECIAL_INFO, pet)
         // N384 (owner 2026-10-24: "Tumeken's damaged guardian" ran off the name bar): script 751 writes the name in the bar's bold
         // font; a name wider than the bar is drawn in the small font instead (the client's RspsUi font hook).
-        val name =
-            (if (pet) Pets.itemOf(player)?.let { player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it)?.name } else null)
-                ?: player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
+        // N427 (owner 2026-10-30: "waarom staat er overal Pet voor?"): the follower's own name, as OSRS names the creature at your
+        // side - "Zilyana Jr.", "Kraken", "Kitten" - not its item ("Pet Zilyana", "Pet kitten").
+        val name = player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
         gg.rsmod.plugins.content.quests.tab.N108Ui.fonts(
             player,
             PANEL,
