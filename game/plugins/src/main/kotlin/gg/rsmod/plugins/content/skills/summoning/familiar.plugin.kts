@@ -435,11 +435,11 @@ on_login {
         FollowerDetailsTab.install(player)
     }
     // CUSTOM_SERVER_OVERRIDE (see BeastOfBurden.release): a familiar's cargo is rescued into
-    // Death's Domain instead of being lost or floored, so the player is reminded on every login
+    // Death's Office instead of being lost or floored, so the player is reminded on every login
     // for as long as anything is still waiting there.
     val waiting = BeastOfBurden.deathsDomainCount(player)
     if (waiting > 0) {
-        player.message("<col=ff0000>You have items stored at Death's Domain.")
+        player.message("<col=ff0000>You have items stored at Death's Office.")
     }
 }
 
@@ -473,7 +473,7 @@ on_logout {
 // lost. Familiar.ownerDeath implements this revision's behaviour and documents the switch back.
 // Audit X-01: the owner-death despawn is called by mechanics/death/death.plugin.kts, AFTER a PvP
 // death has handed the cargo to the killer. A separate pre-death hook here had no defined order
-// relative to the death plugin, so the cargo could be rescued to Death's Domain first.
+// relative to the death plugin, so the cargo could be rescued to Death's Office first.
 // A familiar can also be killed independently of its owner. Release BoB cargo
 // at the familiar's death tile and clear the owner's live familiar state.
 on_npc_pre_death(*familiarNpcIds) {

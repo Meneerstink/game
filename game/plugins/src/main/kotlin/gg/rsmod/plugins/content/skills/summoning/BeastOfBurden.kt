@@ -10,7 +10,7 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 
 /** Inline red, the only red this revision's chatbox has - see [BeastOfBurden.release]. */
-private const val DEATHS_DOMAIN_RED = "<col=ff0000>"
+private const val RECOVERY_RED = "<col=ff0000>"
 
 /**
  * Familiar item storage: the nine beasts of burden and the twenty-two foragers.
@@ -29,7 +29,7 @@ private const val DEATHS_DOMAIN_RED = "<col=ff0000>"
  * No graphical deposit/withdraw interface is built here: real RS's BoB interface component
  * layout is a specific 667-era cache interface this session has not located or verified an ID
  * for, and the work order explicitly forbids guessing interface/component IDs. Deposit is
- * instead exposed the same real, non-graphical way the old Death's Domain recovery was
+ * instead exposed the same real, non-graphical way the old Death's Office recovery was
  * exposes death-recovery: using an inventory item on the familiar deposits it (matching real
  * RS's own "drag item onto your pack animal" mechanic - wired in `familiar.plugin.kts`), and
  * the familiar's existing Renew/Dismiss/Cancel interact menu gains a "Withdraw-all" option.
@@ -150,7 +150,7 @@ object BeastOfBurden {
         PET_KEYS.values.filter { it != carrying }.forEach { key ->
             val held = player.containers[key] ?: return@forEach
             if (held.rawItems.none { it != null }) return@forEach
-            moveToDeathsDomain(player, key)
+            moveToDeathsOffice(player, key)
         }
     }
     /** True if [npcId] is a beast of burden - a familiar the player can hand items to. */
@@ -355,7 +355,7 @@ object BeastOfBurden {
      * on the floor" rule is the 22 August 2016 ninja strike, and dropping it here would in any
      * case put it on the ground for anyone to take). The owner's standing design decision for
      * this server is that the cargo is never lost and never floored: it moves into the player's
-     * own Death's Domain recovery storage instead, and the player is told so in red.
+     * own Death's Office recovery storage instead, and the player is told so in red.
      *
      * Safety properties, in order of importance:
      *
@@ -374,7 +374,7 @@ object BeastOfBurden {
      * the same familiar and the same items come back on login.
      */
     fun release(player: Player) {
-        moveToDeathsDomain(player)
+        moveToDeathsOffice(player)
     }
 
     /**
@@ -385,7 +385,7 @@ object BeastOfBurden {
         player: Player,
         free: Boolean = false,
     ) {
-        moveToDeathsDomain(player, free)
+        moveToDeathsOffice(player, free)
     }
 
     /**
@@ -406,19 +406,19 @@ object BeastOfBurden {
         return cargo
     }
 
-    /** How many items are currently waiting in Death's Domain. */
+    /** How many items are currently waiting in Death's Office. */
     fun deathsDomainCount(player: Player): Int =
         (0 until player.deathRecovery.capacity).count { player.deathRecovery[it] != null }
 
     /** @param free a safe death (safe minigame) costs nothing: the cargo is stored fee-free. */
-    private fun moveToDeathsDomain(
+    private fun moveToDeathsOffice(
         player: Player,
         free: Boolean = false,
     ) {
-        moveToDeathsDomain(player, activeKey(player) ?: return, free)
+        moveToDeathsOffice(player, activeKey(player) ?: return, free)
     }
 
-    private fun moveToDeathsDomain(
+    private fun moveToDeathsOffice(
         player: Player,
         key: ContainerKey,
         free: Boolean = false,
@@ -449,10 +449,10 @@ object BeastOfBurden {
         // red line in this codebase is an inline colour tag on an ordinary game message.
         // N423: an upgraded pet's pack goes the same way, named as the pet's.
         val whose = if (key in PET_KEYS.values) "pet" else "familiar"
-        player.message("$DEATHS_DOMAIN_RED Your $whose's items have been moved to Death's Domain.")
+        player.message("$RECOVERY_RED Your $whose's items have been moved to Death's Office.")
         if (stranded > 0) {
             player.message(
-                "$DEATHS_DOMAIN_RED Death's Domain is full - $stranded of your $whose's items could not be stored.",
+                "$RECOVERY_RED Death's Office is full - $stranded of your $whose's items could not be stored.",
             )
         }
         synchronise(player)

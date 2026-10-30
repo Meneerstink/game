@@ -322,7 +322,7 @@ object SummoningSuite : Conformance.Suite {
         }
         run.recording.untrack(fam)
 
-        // 9. Death of the familiar (summoned again): death animation, gone, varps cleared, BoB cargo to Death's Domain.
+        // 9. Death of the familiar (summoned again): death animation, gone, varps cleared, BoB cargo to Death's Office.
         death(run, bot, arena, data, v, capacity, e)
     }
 
@@ -388,7 +388,7 @@ object SummoningSuite : Conformance.Suite {
         }
         val said = gameMessages(run, "Conf1", c)
         run.expectTrue(e, "owner told the familiar died", said.isNotEmpty(), said.joinToString(" / ").ifEmpty { "(no message)" }, "a message")
-        if (cargo) run.check(e, "BoB cargo rescued into Death's Domain (owner rule)", BeastOfBurden.deathsDomainCount(bot) - office0, "owner" to 1)
+        if (cargo) run.check(e, "BoB cargo rescued into Death's Office (owner rule)", BeastOfBurden.deathsDomainCount(bot) - office0, "owner" to 1)
         run.recording.untrack(fam)
     }
 

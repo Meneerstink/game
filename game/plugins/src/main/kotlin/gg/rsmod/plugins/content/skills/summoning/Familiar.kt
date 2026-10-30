@@ -765,7 +765,7 @@ object Familiar {
         player.world.remove(npc)
         clearState(player)
         // The cargo is no longer lost here - CUSTOM_SERVER_OVERRIDE, see BeastOfBurden.release,
-        // which posts its own red Death's Domain line. This one only reports the familiar.
+        // which posts its own red Death's Office line. This one only reports the familiar.
         player.message("Your familiar vanishes.")
         updateHud(player)
     }
