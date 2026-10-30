@@ -4,6 +4,7 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Requirement
 import gg.rsmod.plugins.api.cfg.SkillRequirement
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
+import gg.rsmod.plugins.content.items.osrs.LocatorOrb
 import gg.rsmod.plugins.content.mechanics.exchange.CrystalShardPrice
 import gg.rsmod.plugins.content.mechanics.exchange.OsrsGuidePrices
 import gg.rsmod.plugins.content.mechanics.shops.CoinCurrency
@@ -88,10 +89,16 @@ create_shop(
 }
 
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
-    if (!checkRequirements(player)) {
-        return@on_npc_option
-    }
     player.queue {
+        // N446 / V13: the orb is available without a quest or Ava's device-shop skill requirements.
+        when (options("I'd like a locator orb.", "I'd like to discuss your devices.", "Never mind.")) {
+            FIRST_OPTION -> {
+                if (player.inventory.contains(LocatorOrb.INERT)) LocatorOrb.activate(player) else LocatorOrb.replace(player)
+                return@queue
+            }
+            SECOND_OPTION -> if (!checkRequirements(player)) return@queue
+            else -> return@queue
+        }
         chatNpc(
             *"Hello there and welcome to my humble abode. It's sadly rather more humble than I'd like, to be honest, although perhaps you can help with that?"
                 .splitForDialogue(),
@@ -109,6 +116,10 @@ on_npc_option(npc = Npcs.AVA, option = "talk-to") {
             SECOND_OPTION -> player.openShop("Ava's Odds and Ends")
         }
     }
+}
+
+on_item_on_npc(item = LocatorOrb.INERT, npc = Npcs.AVA) {
+    LocatorOrb.activate(player)
 }
 
 on_npc_option(npc = Npcs.AVA, option = "buy device") {

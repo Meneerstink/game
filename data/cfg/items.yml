@@ -290605,3 +290605,15 @@
   tradeable: false
   weight: 1.0
   equipment: null
+- id: 24617
+  name: "Inert locator orb"
+  examine: "A glass orb with a dragonstone in the centre."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 24618
+  name: "Locator orb"
+  examine: "A glass orb with a dragonstone in the centre."
+  tradeable: false
+  weight: 0.01
+  equipment: null
