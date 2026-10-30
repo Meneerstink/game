@@ -60,7 +60,7 @@ object LocatorOrb : KLogging() {
         if (!inv.remove(Items.MOLTEN_GLASS, 2, assureFullRemoval = true).hasSucceeded()) return false
         inv[slot] = Item(INERT)
         player.animate(Anims.GLASSBLOW)
-        player.message("You make an inert locator orb. Take it to Ava on the top floor of Draynor Manor.")
+        player.message("You make an inert locator orb. Take it to Ava in Draynor Manor.")
         return true
     }
 

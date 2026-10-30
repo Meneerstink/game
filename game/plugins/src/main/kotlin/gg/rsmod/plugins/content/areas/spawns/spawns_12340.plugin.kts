@@ -37,5 +37,4 @@ spawn_npc(npc = Npcs.GHOST_5349, x = 3099, z = 3354, height = 1, walkRadius = 5,
 spawn_npc(npc = Npcs.GHOST_5350, x = 3116, z = 3367, height = 1, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.GHOST_5351, x = 3110, z = 3358, height = 1, walkRadius = 5, direction = Direction.NORTH)
 spawn_npc(npc = Npcs.GHOST_5352, x = 3121, z = 3359, height = 1, walkRadius = 5, direction = Direction.EAST)
-// N461 owner: Ava in the upper laboratory (plane 2), beside Oddenstein. This is a custom location, not OSRS Ava's ground-floor room.
-spawn_npc(npc = Npcs.AVA, x = 3109, z = 3367, height = 2, direction = Direction.EAST)
+spawn_npc(npc = Npcs.AVA, x = 3099, z = 3355, walkRadius = 2, direction = Direction.EAST)

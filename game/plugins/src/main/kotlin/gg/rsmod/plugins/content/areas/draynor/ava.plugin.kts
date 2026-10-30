@@ -53,6 +53,12 @@ val AVAS_DEVICES = "Ava's Devices"
 /** The coins of Ava's assembler route without an accumulator (see the Vorkath's head route below); declared before the shop uses it. */
 val ASSEMBLER_COINS = 4_999
 
+/** N446: a replacement Locator orb, the price of Ava's other replacement devices. */
+val LOCATOR_ORB_COINS = 999
+
+/** N461: OSRS Wiki "Sunfire splinters" GE guide price, consulted 2026-10-30. */
+val SUNFIRE_SPLINTER_COINS = 379
+
 create_shop(
     AVAS_DEVICES,
     currency =
@@ -64,6 +70,11 @@ create_shop(
                             if (p.skills.getCurrentLevel(Skills.RANGED) < 50) "You need a Ranged level of 50 to use the accumulator." else null
                         },
                         materials = listOf(Items.STEEL_ARROW to 75),
+                    ),
+                LocatorOrb.ACTIVE to
+                    gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
+                        check = { p -> gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(p, LocatorOrb.IDS)?.let { "You already have a locator orb in $it." } },
+                        maxPerPurchase = 1,
                     ),
                 Items.AVAS_ASSEMBLER to
                     gg.rsmod.plugins.content.mechanics.shops.PurchaseRule(
@@ -86,36 +97,17 @@ create_shop(
     items[1] = ShopItem(Items.AVAS_ACCUMULATOR, 10, sellPrice = 999)
     items[2] = ShopItem(Items.AVAS_ASSEMBLER, 10, sellPrice = ASSEMBLER_COINS)
     items[3] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)
-}
-
-// N461: a separate coin shop keeps splinters quest/skill-free without changing device requirements.
-// OSRS Wiki Sunfire splinters, consulted 2026-10-30: GE guide 379 coins (OSRS 28924 -> local 22669).
-val AVAS_SUNFIRE_SPLINTERS = "Ava's Sunfire Splinters"
-create_shop(
-    AVAS_SUNFIRE_SPLINTERS,
-    currency = CoinCurrency(),
-    stockType = StockType.INFINITE,
-    purchasePolicy = PurchasePolicy.BUY_NONE,
-    containsSamples = false,
-) {
-    items[0] = ShopItem(Items.SUNFIRE_SPLINTERS, Int.MAX_VALUE, sellPrice = 379, buyPrice = 0)
+    // N446 + N461 (owner 2026-10-30: "zorg dat ze de orb en splinters verkoopt heel simpel in haar huidige shop", her shop since N224
+    // is Buy device): the Locator orb (one per player, rule above) and Sunfire splinters at the OSRS Wiki GE guide 379 (2026-10-30).
+    items[4] = ShopItem(LocatorOrb.ACTIVE, 10, sellPrice = LOCATOR_ORB_COINS)
+    items[5] = ShopItem(Items.SUNFIRE_SPLINTERS, 1_000_000, sellPrice = SUNFIRE_SPLINTER_COINS)
 }
 
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
+    if (!checkRequirements(player)) {
+        return@on_npc_option
+    }
     player.queue {
-        // N446 / V13: the orb is available without a quest or Ava's device-shop skill requirements.
-        when (options("I'd like a locator orb.", "I'd like to discuss your devices.", "I'd like to buy sunfire splinters.", "Never mind.")) {
-            FIRST_OPTION -> {
-                if (player.inventory.contains(LocatorOrb.INERT)) LocatorOrb.activate(player) else LocatorOrb.replace(player)
-                return@queue
-            }
-            THIRD_OPTION -> {
-                player.openShop(AVAS_SUNFIRE_SPLINTERS)
-                return@queue
-            }
-            SECOND_OPTION -> if (!checkRequirements(player)) return@queue
-            else -> return@queue
-        }
         chatNpc(
             *"Hello there and welcome to my humble abode. It's sadly rather more humble than I'd like, to be honest, although perhaps you can help with that?"
                 .splitForDialogue(),

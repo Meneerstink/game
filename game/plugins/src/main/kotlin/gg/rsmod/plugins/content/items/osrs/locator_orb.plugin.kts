@@ -13,7 +13,10 @@ if (LocatorOrb.available(world.definitions)) {
             LocatorOrb.feel(player)
         } else {
             player.queue {
-                if (options("Yes, feel the orb.", "No.", title = "The orb will hurt you, reducing your Hitpoints by up to 10. Continue?") != 1) return@queue
+                // Owner 2026-10-30: the long warning did not fit the options title (it ran over the swords) - explanation in an
+                // item box first, then a short question.
+                itemMessageBox("The orb will hurt you, reducing your Hitpoints by up to 10. It can never take you below 1.", item = LocatorOrb.ACTIVE)
+                if (options("Yes, feel the orb.", "No.", title = "Feel the locator orb?") != 1) return@queue
                 if (!player.inventory.contains(LocatorOrb.ACTIVE) || player.isDead()) return@queue
                 player.attr[LocatorOrb.WARNING_ACCEPTED] = true
                 LocatorOrb.feel(player)

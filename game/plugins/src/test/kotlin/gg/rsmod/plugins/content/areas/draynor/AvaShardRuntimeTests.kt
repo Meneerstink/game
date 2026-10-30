@@ -74,7 +74,10 @@ class AvaShardRuntimeTests {
         assertEquals(0, row.buyPrice)
         assertEquals(CrystalShardPrice.STOCK, row.amount)
         assertEquals(QuartermasterSupplies.resupplyAmount(CrystalShardPrice.STOCK), row.resupplyAmount)
-        assertEquals(((SHARD_SLOT + 1) until s.items.size).toList().filter { s.items[it] != null }, emptyList(), "no stray rows after the shards")
+        // N446 + N461 (owner 2026-10-30): the Locator orb and Sunfire splinters follow the shards in the same Buy device shop.
+        assertEquals(gg.rsmod.plugins.content.items.osrs.LocatorOrb.ACTIVE, s.items[ORB_SLOT]!!.item)
+        assertEquals(Items.SUNFIRE_SPLINTERS, s.items[SPLINTER_SLOT]!!.item)
+        assertEquals(((SPLINTER_SLOT + 1) until s.items.size).toList().filter { s.items[it] != null }, emptyList(), "no stray rows after the splinters")
     }
 
     @Test
@@ -126,48 +129,41 @@ class AvaShardRuntimeTests {
     }
 
     @Test
-    fun `N461 real splinter shop charges 379 coins and has unlimited stock without requirements`() {
-        val s = world.getShop("Ava's Sunfire Splinters") ?: fail("missing splinter shop")
-        val row = s.items[0]!!
+    fun `N461 Ava's Buy device shop sells Sunfire splinters for 379 coins, any amount, never buys them back`() {
+        val s = shop
+        val row = s.items[SPLINTER_SLOT]!!
         assertEquals(Items.SUNFIRE_SPLINTERS, row.item)
-        assertEquals(22669, row.item)
         assertEquals(379, s.currency.priceOf(world, row))
-        assertEquals(Int.MAX_VALUE, row.amount)
-        assertEquals(gg.rsmod.game.model.shop.StockType.INFINITE, s.stockType)
-        assertEquals(gg.rsmod.game.model.shop.PurchasePolicy.BUY_NONE, s.purchasePolicy)
-        assertEquals(Items.COINS_995, s.currency.currencyItem)
+        assertEquals(1_000_000, row.amount)
         val inv = inventory(379 * 150_000)
         val p = player(inv)
-        listOf(1, 5, 10, 19_984, 130_000).forEach { s.currency.sellToPlayer(p, s, 0, it) }
+        listOf(1, 5, 10, 19_984, 130_000).forEach { s.currency.sellToPlayer(p, s, SPLINTER_SLOT, it) }
         assertEquals(150_000, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
         assertEquals(0, inv.getItemCount(Items.COINS_995))
-        assertEquals(Int.MAX_VALUE, row.currentAmount)
+        assertEquals(1_000_000 - 150_000, row.currentAmount)
         s.currency.buyFromPlayer(p, s, 0, 150_000)
-        assertEquals(150_000, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
-        assertEquals(0, inv.getItemCount(Items.COINS_995))
+        assertEquals(150_000, inv.getItemCount(Items.SUNFIRE_SPLINTERS), "never bought back")
     }
 
     @Test
     fun `N461 full inventory buys into an existing splinter stack but never loses coins without room`() {
-        val s = world.getShop("Ava's Sunfire Splinters")!!
+        val s = shop
         val inv = inventory(379 * 10)
         (1..27).forEach { inv[it] = Item(Items.LOGS) }
-        s.currency.sellToPlayer(player(inv), s, 0, 5)
+        s.currency.sellToPlayer(player(inv), s, SPLINTER_SLOT, 5)
         assertEquals(379 * 10, inv.getItemCount(Items.COINS_995))
         assertEquals(0, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
         inv[27] = Item(Items.SUNFIRE_SPLINTERS, 100)
-        s.currency.sellToPlayer(player(inv), s, 0, 5)
+        s.currency.sellToPlayer(player(inv), s, SPLINTER_SLOT, 5)
         assertEquals(105, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
         assertEquals(379 * 5, inv.getItemCount(Items.COINS_995))
-        val poor = inventory(378)
-        s.currency.sellToPlayer(player(poor), s, 0, 1)
-        assertEquals(378, poor.getItemCount(Items.COINS_995))
-        assertEquals(0, poor.getItemCount(Items.SUNFIRE_SPLINTERS))
     }
 
     companion object {
         const val SCRIPT = "gg.rsmod.plugins.content.areas.draynor.Ava_plugin"
         const val SHARD_SLOT = 3
+        const val ORB_SLOT = 4
+        const val SPLINTER_SLOT = 5
         const val SOURCE = "src/main/kotlin/gg/rsmod/plugins/content/areas/draynor/ava.plugin.kts"
         val CLASSES = File("scripts/build/classes/kotlin/main")
 

@@ -125,31 +125,35 @@ class LocatorOrbTests {
     }
 
     @Test
-    fun `compiled Feel confirmation cancels safely, confirms once, and Ava Talk-to bypasses device requirements`() {
+    fun `compiled Feel warning - item box then a short question - cancels safely and confirms once`() {
         val f = Fixture()
         val repo = scripts(f)
         f.level = 1
         f.inventory[0] = Item(LocatorOrb.INERT)
-        assertTrue(repo.executeNpc(f.player, Npcs.AVA, 1))
-        f.queues.cycle()
-        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 232, component = 2, button = 2))
-        f.queues.cycle()
+        // Owner 2026-10-30 (N461): Ava's orb route is the item on Ava (and her Buy device shop); Talk-to is her plain dialogue again.
+        assertTrue(repo.executeItemOnNpc(f.player, Npcs.AVA, LocatorOrb.INERT))
         assertEquals(LocatorOrb.ACTIVE, f.inventory[0]?.id)
         assertTrue(f.attrs[LocatorOrb.ATTUNED] == true)
         verify(exactly = 0) { f.skills.getCurrentLevel(any()) }
-        // Closing and No both leave HP and saved confirmation untouched.
+        // Closing the warning box leaves HP and the saved confirmation untouched.
         assertTrue(repo.executeItem(f.player, LocatorOrb.ACTIVE, 1))
         f.queues.cycle()
         f.queues.terminateTasks()
         assertTrue(f.pending.isEmpty())
         assertFalse(f.attrs[LocatorOrb.WARNING_ACCEPTED] == true)
+        // Warning box -> "No".
         assertTrue(repo.executeItem(f.player, LocatorOrb.ACTIVE, 1))
+        f.queues.cycle()
+        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 519, component = 2, button = -1))
         f.queues.cycle()
         f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 228, component = 3, button = 3))
         f.queues.cycle()
         assertTrue(f.pending.isEmpty())
         assertFalse(f.attrs[LocatorOrb.WARNING_ACCEPTED] == true)
+        // Warning box -> "Yes": one hit, then later uses skip the warning.
         assertTrue(repo.executeItem(f.player, LocatorOrb.ACTIVE, 1))
+        f.queues.cycle()
+        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 519, component = 2, button = -1))
         f.queues.cycle()
         f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 228, component = 2, button = 2))
         f.queues.cycle()
@@ -161,21 +165,6 @@ class LocatorOrbTests {
         assertEquals(0, f.queues.size, "saved confirmation skips the dialog")
         f.resolve()
         assertEquals(79, f.hp)
-    }
-
-    @Test
-    fun `N461 compiled Ava splinter option opens without device requirements`() {
-        val f = Fixture()
-        val repo = scripts(f)
-        f.level = 1
-        val shop = mockk<gg.rsmod.game.model.shop.Shop>(relaxed = true)
-        every { f.world.getShop("Ava's Sunfire Splinters") } returns shop
-        assertTrue(repo.executeNpc(f.player, Npcs.AVA, 1))
-        f.queues.cycle()
-        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 232, component = 4, button = 4))
-        f.queues.cycle()
-        assertEquals(shop, f.attrs[gg.rsmod.game.model.attr.CURRENT_SHOP_ATTR])
-        verify(exactly = 0) { f.skills.getCurrentLevel(any()) }
     }
 
     @Test
