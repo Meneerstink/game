@@ -91,8 +91,12 @@ object PestControlRewards {
             extended = true,
         ),
 
-        /** RuneScape Wiki "Void Knight deflector": 150 commendation points. */
-        VOID_DEFLECTOR("Void Knight Deflector", intArrayOf(Tool.DEFLECTOR_TITLE, Tool.DEFLECTOR_BUTTON), points = 150, items = intArrayOf(19711), void = true, extended = true),
+        /**
+         * RuneScape Wiki "Void Knight deflector": 150 commendation points. N471 (2026-10-30): the 667 cache has two deflectors - 19711
+         * without any inventory option or worn model, and 19712 with "Wear" (worn models 59986/59987). The reward was 19711, a shield
+         * nobody could wear; it is 19712 now and [VoidDeflectorMigration] turns held 19711s into it at login.
+         */
+        VOID_DEFLECTOR("Void Knight Deflector", intArrayOf(Tool.DEFLECTOR_TITLE, Tool.DEFLECTOR_BUTTON), points = 150, items = intArrayOf(VoidDeflectorMigration.WEARABLE), void = true, extended = true),
         SPINNER_CHARM("Spinner Charm", intArrayOf(71, 75, 76, 77), items = intArrayOf(12166), charm = true),
         RAVAGER_CHARM("Ravager Charm", intArrayOf(72, 81, 82, 83), items = intArrayOf(12164), charm = true),
         TORCHER_CHARM("Torcher Charm", intArrayOf(74, 78, 79, 80), items = intArrayOf(12167), charm = true),

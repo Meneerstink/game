@@ -86,6 +86,9 @@ object Combat {
             // Barrows puzzle (25): a crypt rat's hit closed it in the cycle it opened - the door "did nothing" (owner 03-2049,
             // reproduced 2026-10-05 in the agent's client: IfOpenSub 25 then IfCloseSub after the same OpLoc1).
             gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.PUZZLE_INTERFACE,
+            // N470 (2026-10-30): the Barrows chest reward window (364) - looting starts the collapse and the first falling rocks hit
+            // in the same cycle, so it closed before the player saw it (IfOpenSub 364 then IfCloseSub after the same OpLoc1).
+            gg.rsmod.plugins.content.npcs.definitions.barrows.Barrows.REWARD_INTERFACE,
         )
 
     /** A hit leaves this player's open window alone (and does not make him auto-retaliate, which would walk away from it). */

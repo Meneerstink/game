@@ -26,5 +26,7 @@ class CombatPersistentModalTests {
     @Test
     fun `the Barrows puzzle stays open when hit`() {
         assertTrue(Combat.staysOpenWhenHit(Barrows.PUZZLE_INTERFACE))
+        // N470: the chest reward window survives the falling rocks of the collapse that looting starts.
+        assertTrue(Combat.staysOpenWhenHit(Barrows.REWARD_INTERFACE))
     }
 }

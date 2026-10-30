@@ -21,6 +21,9 @@ for (tier in PestControlTier.values()) {
     }
 }
 
+// N471: a deflector bought before 2026-10-30 was the unwearable 19711 - it becomes the wearable 19712 at login.
+on_login { VoidDeflectorMigration.migrate(player) }
+
 // Bug search 2026-10-02 (BS3): the commands stay a remote route (PestControlHandler.boardRemote).
 on_command("pestcontrolnovice") { PestControlHandler.boardRemote(player, PestControlTier.NOVICE) }
 on_command("pestcontrolintermediate") { PestControlHandler.boardRemote(player, PestControlTier.INTERMEDIATE) }

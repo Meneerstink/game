@@ -54,6 +54,11 @@ object CollectionLog {
 
     fun has(player: Player, item: Int): Boolean = item in entries(player)
 
+    /** Drops the parsed copy so the next read uses [ATTR] again (after a login conversion rewrote it, N471). */
+    fun reload(player: Player) {
+        player.attr.remove(PARSED)
+    }
+
     fun recent(player: Player): List<Recent> =
         (player.attr[RECENT] ?: "").split(';').mapNotNull { part ->
             val f = part.split(':')

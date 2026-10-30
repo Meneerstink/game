@@ -86,7 +86,7 @@ class PestControlRewardsTests {
     }
 
     @Test
-    fun `deflector refuses 149 points and buys for exactly 150`() {
+    fun `deflector refuses 149 points and buys the wearable 19712 for exactly 150`() {
         for (balance in listOf(149, 150)) {
             val (player, sent) = player(balance)
             val inventory = player.inventory
@@ -94,11 +94,11 @@ class PestControlRewardsTests {
             PestControlRewards.confirm(player)
             if (balance == 149) {
                 assertEquals(149, player.attr[PEST_POINTS])
-                verify(exactly = 0) { inventory.add(19711, 1) }
+                verify(exactly = 0) { inventory.add(19712, 1) }
                 assertTrue(sent.filterIsInstance<MessageGameMessage>().any { it.message == "You don't have enough points." })
             } else {
                 assertEquals(0, player.attr[PEST_POINTS])
-                verify(exactly = 1) { inventory.add(19711, 1) }
+                verify(exactly = 1) { inventory.add(19712, 1) }
             }
         }
     }

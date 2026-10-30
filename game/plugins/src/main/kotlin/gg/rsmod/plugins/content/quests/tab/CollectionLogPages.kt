@@ -64,7 +64,8 @@ object CollectionLogPages {
         listOf(
             Items.VOID_KNIGHT_TOP, Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_MACE, Items.ELITE_VOID_KNIGHT_TOP,
             Items.ELITE_VOID_KNIGHT_ROBE, Items.VOID_MAGE_HELM, Items.VOID_RANGER_HELM, Items.VOID_MELEE_HELM, Items.VOID_SEAL_8,
-            Items.VOID_KNIGHT_DEFLECTOR,
+            // N471: the wearable deflector the Void Knights sell (VoidDeflectorMigration moves old 19711 entries here).
+            Items.VOID_KNIGHT_DEFLECTOR_19712,
         )
 
     private val DK = setOf("dagannoth rex", "dagannoth prime", "dagannoth supreme")
