@@ -22,9 +22,9 @@ import com.displee.cache.CacheLibrary
  * they are.
  *
  * Escape (OSRS closes the box; break test 10-30: Escape did nothing and the text was sent with the next Enter): the key
- * handler 112's Escape case (key 13) calls 1548 with 0, which only closes the box when VARC 5 is already 0. In front of it:
+ * handler 112's Escape case (key 13) only closes the box for VARC 5 = 12 (and 14 goes to 3683); the rest did nothing. In front of it:
  * when VARC 5 is 2..6 - the client-side boxes add/delete friend (103/104), add/delete ignore (105/1419) and the message box
- * (107) - call 1548 with 1 (close) and return. 1 ("Click here to continue") and the boxes the SERVER waits for (VARC 5 >= 7:
+ * (107) - call 1548 with 0 and return (1548 x: x = 0 closes whatever box is open, x > 0 only box x - BRANCH_IF_FALSE). 1 ("Click here to continue") and the boxes the SERVER waits for (VARC 5 >= 7:
  * amount, name, ...) keep their 667 behaviour, so the server is never left waiting for an answer that cannot come.
  *
  * Applied transactionally to both caches; `--apply` writes, without it only the preflight.
@@ -116,8 +116,18 @@ object FriendMessagePromptScriptTool {
     /** [data] (script 112) with Escape closing the boxes of [ESCAPE_CLOSES]; unchanged when it already does. */
     fun patchEscape(data: ByteArray): ByteArray {
         val script = ClientScriptEditor.decode(data)
-        val marker = script.find(PUSH_INT to 1, GOSUB to CLOSE_SCRIPT, RETURN to null)
-        if (marker.isNotEmpty()) return data
+        val block =
+            script.find(
+                GET_VARC to ESCAPE_VARC, PUSH_INT to ESCAPE_CLOSES.first, BRANCH_LESS_THAN to null,
+                GET_VARC to ESCAPE_VARC, PUSH_INT to ESCAPE_CLOSES.last, BRANCH_GREATER_THAN to null, PUSH_INT to null, GOSUB to CLOSE_SCRIPT,
+            )
+        if (block.isNotEmpty()) {
+            // tx-20261030-175131 wrote 1548 with 1 (closes only box 1): correct it to 0
+            val arg = script.code[block.single() + 6]
+            if (arg.int == 0) return data
+            arg.int = 0
+            return script.encode()
+        }
         val escape = requireNotNull(script.switchTarget(0, ESCAPE_KEY)) { "clientscript $KEY_SCRIPT: no Escape case" }
         val added =
             listOf(
@@ -127,7 +137,7 @@ object FriendMessagePromptScriptTool {
                 ClientScriptEditor.Ins(GET_VARC, ESCAPE_VARC),
                 ClientScriptEditor.Ins(PUSH_INT, ESCAPE_CLOSES.last),
                 ClientScriptEditor.Ins(BRANCH_GREATER_THAN, target = escape),
-                ClientScriptEditor.Ins(PUSH_INT, 1),
+                ClientScriptEditor.Ins(PUSH_INT, 0),
                 ClientScriptEditor.Ins(GOSUB, CLOSE_SCRIPT),
                 ClientScriptEditor.Ins(RETURN, 0),
             )

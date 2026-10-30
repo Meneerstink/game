@@ -34,13 +34,12 @@ class FriendMessagePromptScriptToolTests {
                 val script = ClientScriptEditor.decode(escaped)
                 val first = script.indexOf(script.switchTarget(0, FriendMessagePromptScriptTool.ESCAPE_KEY)!!)
                 assertEquals(
-                    listOf(42 to 5, 0 to 2, 9 to 0, 42 to 5, 0 to 6, 10 to 0, 0 to 1, 40 to 1548, 21 to 0),
+                    listOf(42 to 5, 0 to 2, 9 to 0, 42 to 5, 0 to 6, 10 to 0, 0 to 0, 40 to 1548, 21 to 0),
                     (first until first + 9).map { i -> script.code[i].let { it.opcode to if (it.opcode == 9 || it.opcode == 10) 0 else it.int } },
                 )
-                val original = ClientScriptEditor.decode(keys)
-                val oldEscape = original.indexOf(original.switchTarget(0, FriendMessagePromptScriptTool.ESCAPE_KEY)!!)
-                assertEquals(original.code[oldEscape].toString(), script.code[first + 9].toString(), "the 667 Escape code follows")
-                assertEquals(original.code.size + 9, script.code.size)
+                // then the 667 Escape code: VARC 5 = 12 -> 1806 + close, 14 -> 3683
+                assertEquals(listOf(42 to 5, 0 to 12), (first + 9..first + 10).map { script.code[it].opcode to script.code[it].int }, "the 667 Escape code follows")
+                assertEquals(1, script.code.count { it.opcode == 40 && it.int == 1548 && script.code[script.indexOf(it) - 1].let { a -> a.opcode == 0 && a.int == 0 } && script.code[script.indexOf(it) + 1].opcode == 21 }, "one inserted close")
                 assertEquals(escaped.toList(), FriendMessagePromptScriptTool.patchEscape(escaped).toList(), "$cache 112: idempotent")
             } finally {
                 library.close()
