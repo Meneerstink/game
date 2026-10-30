@@ -44,7 +44,7 @@ object PetChatheads {
     fun humanPose(npcId: Int): Boolean = Pets.variantOfNpc(npcId)?.let { !it.classic && it.name in HUMAN_POSE } == true
 
     /** The head animation of OSRS pet [npcId]: its own OSRS chathead sequence, else [STILL]; null for any other npc and the [HUMAN_POSE] pets. */
-    fun animation(npcId: Int): Int? = if (isOsrsPet(npcId) && !humanPose(npcId)) talk[npcId] ?: STILL else null
+    fun animation(npcId: Int): Int? = if (isOsrsPet(npcId) && !humanPose(npcId)) talk[Pets.baseNpc(npcId)] ?: STILL else null
 
     /** Follower Details: the same head movement as in the chat ([HUMAN_POSE] pets the plain talking pose); null = still. */
     fun panelAnimation(npcId: Int): Int? =

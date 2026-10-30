@@ -51,13 +51,13 @@ object TranscriptDialogue {
      * silent pets. N256 (owner 2026-10-23): it also barks by itself now and then while it follows ([ownVoice], PetVoices.idle).
      */
     /** The voice a transcript pet makes by itself (N256: the Bloodhound's bark), or null. */
-    fun ownVoice(npcId: Int): Int? = if (npcId == BLOODHOUND) Sfx.PET_DOG_BARK else null
+    fun ownVoice(npcId: Int): Int? = if (gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npcId) == BLOODHOUND) Sfx.PET_DOG_BARK else null
 
     fun lineSound(
         npcId: Int,
         text: String,
     ): Int? =
-        if (npcId == BLOODHOUND && BARK_LINE.containsMatchIn(text)) {
+        if (gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npcId) == BLOODHOUND && BARK_LINE.containsMatchIn(text)) {
             Sfx.PET_DOG_BARK
         } else {
             // N88 part 3: a pet's own line sound (Huberte screeches on "*screeches*", OSRS Wiki Huberte trivia).
@@ -74,9 +74,9 @@ object TranscriptDialogue {
         return rows.size
     }
 
-    fun has(npcId: Int): Boolean = npcId in rows
+    fun has(npcId: Int): Boolean = gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npcId) in rows
 
-    fun source(npcId: Int): String? = rows[npcId]?.get("src")?.asString
+    fun source(npcId: Int): String? = rows[gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npcId)]?.get("src")?.asString
 
     private enum class Flow { NEXT, END, RESTART, BACK }
 
@@ -89,7 +89,8 @@ object TranscriptDialogue {
         task: QueueTask,
         npc: Npc,
     ): Boolean {
-        val row = rows[npc.id] ?: return false
+        // N423: an Upgraded pet talks as its pet.
+        val row = rows[gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npc.id)] ?: return false
         val ctx = Ctx(npc, row.getAsJsonArray("nodes"))
         var flow = run(task, ctx, ctx.top)
         while (flow == Flow.RESTART && ctx.jumps++ < MAX_JUMPS) flow = run(task, ctx, ctx.top)

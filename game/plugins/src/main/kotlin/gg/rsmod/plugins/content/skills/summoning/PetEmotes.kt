@@ -62,10 +62,10 @@ object PetEmotes {
         return byNpc.values.sumOf { it.size }
     }
 
-    fun hasEmotes(npc: Int): Boolean = npc in byNpc
+    fun hasEmotes(npc: Int): Boolean = Pets.baseNpc(npc) in byNpc
 
     /** The emotes clicked through in order (Beef's rare whirlwind is not one of them). */
-    fun cycle(npc: Int): List<Emote> = byNpc[npc].orEmpty().filter { it.name != RARE }
+    fun cycle(npc: Int): List<Emote> = byNpc[Pets.baseNpc(npc)].orEmpty().filter { it.name != RARE }
 
     private fun ownerCheck(
         player: Player,
@@ -102,7 +102,7 @@ object PetEmotes {
         npc: Npc,
     ) {
         if (!ownerCheck(player, npc)) return
-        val all = byNpc[npc.id].orEmpty()
+        val all = byNpc[Pets.baseNpc(npc.id)].orEmpty()
         val rare = all.firstOrNull { it.name == RARE }
         val emote = if (rare != null && player.world.random(WHIRLWIND_ONE_IN - 1) == 0) rare else all.firstOrNull { it.name != RARE } ?: return
         play(player, npc, emote)

@@ -290575,3 +290575,33 @@
   tradeable: false
   weight: 0.453
   equipment: null
+- id: 24232
+  name: "Kalphite burden trinket"
+  examine: "The spirit of a kalphite, sealed in stone."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24233
+  name: "Bull ant burden trinket"
+  examine: "The spirit of a bull ant, sealed in stone."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24234
+  name: "Terrorbird burden trinket"
+  examine: "The spirit of a terrorbird, sealed in stone."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24235
+  name: "Tortoise burden trinket"
+  examine: "The spirit of a war tortoise, sealed in stone."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24236
+  name: "Pack yak burden trinket"
+  examine: "The spirit of a pack yak, sealed in stone."
+  tradeable: false
+  weight: 1.0
+  equipment: null

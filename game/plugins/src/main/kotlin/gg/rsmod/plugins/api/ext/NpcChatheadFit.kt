@@ -101,7 +101,8 @@ object NpcChatheadFit {
             (file?.let { parse(it.readLines()) } ?: emptyMap()).also { table = it }
         }
 
-    fun extents(surface: Surface, npc: Int): Extents? = table()[surface.name]?.get(npc)
+    fun extents(surface: Surface, npc: Int): Extents? =
+        table()[surface.name]?.let { it[npc] ?: it[gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npc)] } // N423: an Upgraded pet has its pet's head
 
     /** The camera and position that keep [extents] inside [surface]'s frame; the cache values when it already fits. */
     fun fit(surface: Surface, measured: Extents?): Fit {

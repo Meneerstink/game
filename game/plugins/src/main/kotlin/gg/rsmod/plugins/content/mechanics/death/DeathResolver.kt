@@ -107,6 +107,8 @@ object DeathResolver {
                 // (owner 2026-10-04 "pet kept") for every death, so a pet never goes to the gravestone.
                 alwaysProtected = {
                     alwaysProtected(it) || gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it) ||
+                        // N423: a beast of burden trinket is kept on every death, like the pet it upgrades.
+                        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(it) ||
                         // The max capes a PvP death never takes (OSRS "always kept") are kept on a monster death too.
                         it in UntradeableDeathProtection.ALWAYS_KEPT_PVP ||
                         (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))

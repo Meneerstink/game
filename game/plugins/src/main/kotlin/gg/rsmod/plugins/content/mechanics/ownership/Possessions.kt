@@ -59,6 +59,17 @@ object Possessions {
         ids: Set<Int>,
     ): Boolean = whereOwned(player, ids) != null
 
+    /** How many of [id] (noted forms count) [player] has in all their containers together (N423: one trinket per bound pet). */
+    fun count(
+        player: Player,
+        id: Int,
+    ): Int {
+        val definitions = player.world.definitions
+        return player.containers.values.sumOf { container ->
+            container.rawItems.sumOf { if (it != null && it.toUnnoted(definitions).id == id) it.amount else 0 }
+        }
+    }
+
     /** A sell offer still holding one of [ids], or one of [ids] bought or returned and not collected yet. */
     private fun onGrandExchange(
         player: Player,

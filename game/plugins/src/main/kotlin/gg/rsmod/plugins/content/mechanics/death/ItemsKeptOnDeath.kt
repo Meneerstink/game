@@ -99,7 +99,8 @@ object ItemsKeptOnDeath {
             // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
             val always = !pvp && UntradeableDeathProtection.lockable(it.item.id)
             val pet = gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it.item.id)
-            entries += Entry(Section.KEPT, it.item, if (pet) line(it.item, "You always keep your pet.", "You always keep your pets.") else if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
+            val trinket = gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(it.item.id)
+            entries += Entry(Section.KEPT, it.item, if (pet) line(it.item, "You always keep your pet.", "You always keep your pets.") else if (trinket) line(it.item, "You always keep your burden trinket.", "You always keep your burden trinkets.") else if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
         }
         // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
         untradeables.forEach { outcome ->

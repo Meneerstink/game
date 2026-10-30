@@ -5,6 +5,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.playSound
 import java.io.File
 import java.lang.ref.WeakReference
@@ -41,6 +42,13 @@ object Pets {
      * hunger); item -> follower npc from the donors' pet tables, each pair checked against this cache ([parseClassicTable]).
      */
     const val CLASSIC_TABLE_PATH = "./data/cfg/pets/pets_667.tsv"
+
+    /**
+     * N423: base follower npc -> its "Upgraded <name>" copy (BurdenTrinketTool npcs): same models, head, animations and size, a
+     * Store op. A pet with a bound burden trinket follows as the copy; everything that knows a pet by npc id sees the copy as
+     * the same pet ([variantOfNpc], [baseNpc]).
+     */
+    const val UPGRADES_TABLE_PATH = "./data/cfg/pets/pet_upgrades.tsv"
 
     /** Novite rev-667 `PetManager.spawnPet` / `NPCHandler` pet pick-up. */
     const val DROP_ANIMATION = 827
@@ -121,6 +129,41 @@ object Pets {
     @Volatile
     private var dropsByNpc: Map<Int, PetInfo> = emptyMap()
 
+    @Volatile
+    private var upgradedOf: Map<Int, Int> = emptyMap()
+
+    @Volatile
+    private var baseOf: Map<Int, Int> = emptyMap()
+
+    /** `base<TAB>upgraded[<TAB>name]` rows of [UPGRADES_TABLE_PATH]. */
+    fun parseUpgrades(lines: List<String>): Map<Int, Int> =
+        lines.filter { it.isNotBlank() && !it.startsWith("#") }.associate { line ->
+            val c = line.split('\t')
+            c[0].trim().toInt() to c[1].trim().toInt()
+        }
+
+    fun installUpgrades(table: Map<Int, Int>) {
+        upgradedOf = table
+        baseOf = table.entries.associate { it.value to it.key }
+    }
+
+    /** The plain follower npc behind [npc] (itself for a plain pet or any other npc). */
+    fun baseNpc(npc: Int): Int = baseOf[npc] ?: npc
+
+    /** The "Upgraded" copy of follower [npc], or null when the table has none. */
+    fun upgradedNpc(npc: Int): Int? = upgradedOf[npc]
+
+    fun isUpgradedNpc(npc: Int): Boolean = npc in baseOf
+
+    /** Every Upgraded copy (option bindings). */
+    val upgradedNpcs: Collection<Int> get() = baseOf.keys
+
+    /** The npc [variant] follows [player] as: its Upgraded copy while a burden trinket is bound to the pet. */
+    fun followerNpc(
+        player: Player,
+        variant: Variant,
+    ): Int = if (BurdenTrinkets.upgradeOf(player, variant.pet) != null) upgradedOf[variant.npc] ?: variant.npc else variant.npc
+
     /** The live follower npc; transient like [FAMILIAR_ATTR]. */
     val PET_ATTR = AttributeKey<WeakReference<Npc>>()
 
@@ -179,16 +222,18 @@ object Pets {
         // An item or npc both tables name stays the OSRS pet's.
         val old = if (classic.exists()) parseClassicTable(classic.readLines()).filter { it.item !in osrsItems && it.npc !in osrsNpcs } else emptyList()
         install(osrs + old, if (tiers.exists()) parseTiers(tiers.readLines()) else emptyList())
+        val upgrades = File(table.parentFile, File(UPGRADES_TABLE_PATH).name)
+        installUpgrades(if (upgrades.exists()) parseUpgrades(upgrades.readLines()) else emptyMap())
         return variants.size
     }
 
     fun isPetItem(item: Int): Boolean = item in byItem
 
-    fun isPetNpc(npc: Int): Boolean = npc in byNpc
+    fun isPetNpc(npc: Int): Boolean = npc in byNpc || npc in baseOf
 
     fun variantOfItem(item: Int): Variant? = byItem[item]
 
-    fun variantOfNpc(npc: Int): Variant? = byNpc[npc]
+    fun variantOfNpc(npc: Int): Variant? = byNpc[npc] ?: baseOf[npc]?.let { byNpc[it] }
 
     fun variantsOf(pet: String): List<Variant> = byPet[pet] ?: emptyList()
 
@@ -222,7 +267,7 @@ object Pets {
         variant: Variant,
         tile: gg.rsmod.game.model.Tile = Familiar.placementTile(player, variant.npc),
     ): Npc {
-        val npc = Npc(player, variant.npc, tile, player.world)
+        val npc = Npc(player, followerNpc(player, variant), tile, player.world)
         npc.publicOwner = true
         // Followers walk in their owner's footsteps; other creatures must not stop them dead (same as a familiar).
         npc.ignoresEntityCollision = true
@@ -232,7 +277,7 @@ object Pets {
         player.attr[PET_ATTR] = WeakReference(npc)
         player.attr[PET_ITEM_ATTR] = variant.item
         Familiar.updateHud(player)
-        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet ${variant.name} npc ${variant.npc}#${npc.index} out for ${player.username}" }
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet ${variant.name} npc ${npc.id}#${npc.index} out for ${player.username}" }
         return npc
     }
 
@@ -266,10 +311,28 @@ object Pets {
         return true
     }
 
+    /**
+     * N423: an upgraded pet carrying items is picked up like a beast of burden is dismissed - asked first, then its pack goes to
+     * Death's Office (normal fee). Returns true when the caller may go on now (nothing carried); false when a question was asked
+     * and [then] runs on "Yes".
+     */
+    private fun confirmCargo(
+        player: Player,
+        then: () -> Unit,
+    ): Boolean {
+        if (!BeastOfBurden.isUpgradedPetOut(player) || BeastOfBurden.storedCount(player) == 0) return true
+        player.queue {
+            val name = current(player)?.let { player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, it.id)?.name } ?: "pet"
+            if (options("Yes, pick it up.", "No.", title = "Your $name is carrying items - they go to Death's Office.") == 1) then()
+        }
+        return false
+    }
+
     /** Pick-up on the follower: back into the inventory. */
     fun pickUp(
         player: Player,
         npc: Npc,
+        confirmed: Boolean = false,
     ) {
         if (current(player) !== npc) {
             player.message("This isn't your pet.")
@@ -280,6 +343,8 @@ object Pets {
             player.message("You don't have enough inventory space to do that.")
             return
         }
+        if (!confirmed && !confirmCargo(player) { pickUp(player, npc, confirmed = true) }) return
+        BeastOfBurden.release(player)
         player.animate(DROP_ANIMATION)
         val at = npc.tile
         clear(player)
@@ -288,9 +353,14 @@ object Pets {
     }
 
     /** Dismiss from the Summoning tab / orb: the pet goes to the inventory, else the bank; it is never lost. */
-    fun dismiss(player: Player) {
+    fun dismiss(
+        player: Player,
+        confirmed: Boolean = false,
+    ) {
         current(player) ?: return
         val item = itemOf(player) ?: return
+        if (!confirmed && !confirmCargo(player) { dismiss(player, confirmed = true) }) return
+        if (player.inventory.hasSpace || player.bank.hasSpace) BeastOfBurden.release(player)
         when {
             player.inventory.hasSpace -> {
                 val at = current(player)?.tile
@@ -329,7 +399,7 @@ object Pets {
             return
         }
         val next = PetMorphs.nextUnlocked(player, itemOf(player) ?: return) ?: return
-        if (next.npc == npc.id) return
+        if (next.npc == baseNpc(npc.id)) return
         morphFollower(player, next)
     }
 
@@ -339,12 +409,22 @@ object Pets {
         variant: Variant,
     ) {
         val npc = current(player) ?: return
-        if (npc.id == variant.npc) return
+        if (npc.id == followerNpc(player, variant)) return
         val tile = npc.tile
         player.world.remove(npc)
         spawn(player, variant, tile)
         // No sound: OSRS documents none for Metamorphosis (wiki "Metamorphosis", re-checked 2026-10-05). The summoning-arrival cue
         // that played here was invented (owner 032316: "a lot of pets still do have sounds").
+    }
+
+    /**
+     * N423: after a burden trinket is bound or unbound, the follower turns into its Upgraded copy or back where it stands - the
+     * same respawn as [morphFollower]; the item, the variant and the pack stay.
+     */
+    fun refreshUpgrade(player: Player) {
+        val item = itemOf(player) ?: return
+        val variant = byItem[item] ?: return
+        morphFollower(player, variant)
     }
 
     /** Metamorphosis on the pet item (the OSRS items that carry it as an inventory option). */
@@ -513,7 +593,7 @@ object Pets {
         Familiar.follow(player, npc, recovered = { p, n ->
             n.facePawn(p)
             if (teleported) PetVoices.appear(p, n)
-        }, runs = byNpc[npc.id]?.name in FAST_PETS)
+        }, runs = variantOfNpc(npc.id)?.name in FAST_PETS)
         Familiar.updateHud(player)
         PetVoices.idle(player, npc)
         PetVoices.step(player, npc)

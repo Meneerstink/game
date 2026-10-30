@@ -235,6 +235,15 @@ task runSummoningInterfaceScriptTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.SummoningInterfaceScriptTool'
 }
 
+task runBurdenTrinketTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N423 Beast of burden trinkets: models + items (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runBurdenTrinketTool --args="dump <outFile> | build <meshFile> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.BurdenTrinketTool'
+    workingDir = rootProject.projectDir
+}
+
 task runN108InterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'N108/N104/N103/N109 night job 2026-10-24: Drop Viewer, Collection Log, quest tab 4 tabs, Deadman Tasks window. ' +

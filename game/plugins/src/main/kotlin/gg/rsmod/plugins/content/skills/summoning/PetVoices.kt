@@ -122,13 +122,13 @@ object PetVoices {
     }
 
     /** The Talk-to voice of follower npc [npc], or null for a silent pet / no pet. */
-    fun voiceOf(npc: Int): Int? = talk[npc]
+    fun voiceOf(npc: Int): Int? = talk[Pets.baseNpc(npc)]
 
     /** The sound pet [npc] makes on transcript line [text] (Huberte's "*screeches*"), or null. */
     fun lineSound(
         npc: Int,
         text: String,
-    ): Int? = lines[npc]?.entries?.firstOrNull { text.trim().startsWith(it.key, ignoreCase = true) }?.value
+    ): Int? = lines[Pets.baseNpc(npc)]?.entries?.firstOrNull { text.trim().startsWith(it.key, ignoreCase = true) }?.value
 
     /**
      * N256 (owner 2026-10-23: "blood hound pet blaft nu alleen als je met hem interact ... blaft bijvoorbeeld om de 10 minuten; hoe
@@ -153,7 +153,7 @@ object PetVoices {
         }
 
     /** The sound pet [npc] makes by itself: its Talk-to voice, else its transcript voice (the Bloodhound's bark), else none. */
-    fun idleVoiceOf(npc: Int): Int? = talk[npc] ?: gg.rsmod.plugins.content.npcs.TranscriptDialogue.ownVoice(npc)
+    fun idleVoiceOf(npc: Int): Int? = talk[Pets.baseNpc(npc)] ?: gg.rsmod.plugins.content.npcs.TranscriptDialogue.ownVoice(Pets.baseNpc(npc))
 
     /**
      * N298 (owner 2026-10-24: "alle pets sounds bij spawn moeten ze geluid maken als ze die hebben"): a pet with a voice makes it
@@ -246,7 +246,7 @@ object PetVoices {
         player: Player,
         npc: Npc,
     ) {
-        val sound = talk[npc.id] ?: return
+        val sound = talk[Pets.baseNpc(npc.id)] ?: return
         FamiliarAudio.play(player, sound, volume = VOLUME, at = npc.tile)
     }
 }

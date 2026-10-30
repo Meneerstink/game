@@ -43,54 +43,57 @@ Pets.variants.forEach { variant ->
             Pets.metamorphItem(player, variant.item, player.getInteractingItemSlot())
         }
     }
-    val npcOptions = world.definitions.get(NpcDef::class.java, variant.npc).options
-    if (npcOptions.any { it.equals("pick-up", ignoreCase = true) }) {
-        on_npc_option(npc = variant.npc, option = "pick-up") {
-            Pets.pickUp(player, player.getInteractingNpc())
-        }
-    }
-    // OSRS names the op "Metamorphosis" on most pets and "Metamorph" on a few (Gull, Beef).
-    npcOptions.filterNotNull().filter { it.equals("metamorphosis", ignoreCase = true) || it.equals("metamorph", ignoreCase = true) }.forEach { op ->
-        on_npc_option(npc = variant.npc, option = op.lowercase()) {
-            Pets.metamorph(player, player.getInteractingNpc())
-        }
-    }
-    if (PetEmotes.hasEmotes(variant.npc)) {
-        if (npcOptions.any { it.equals("emote", ignoreCase = true) }) {
-            on_npc_option(npc = variant.npc, option = "emote") {
-                PetEmotes.emote(player, player.getInteractingNpc())
+    // N423: the Upgraded copy of the follower (a bound burden trinket) answers every op of its pet.
+    listOfNotNull(variant.npc, Pets.upgradedNpc(variant.npc)).forEach { npcId ->
+        val npcOptions = world.definitions.get(NpcDef::class.java, npcId).options
+        if (npcOptions.any { it.equals("pick-up", ignoreCase = true) }) {
+            on_npc_option(npc = npcId, option = "pick-up") {
+                Pets.pickUp(player, player.getInteractingNpc())
             }
         }
-        // Beef: Interact -> "Moo." or the emote (Transcript:Beef "selecting the "Moo." option"; OSRS Wiki Beef "Emotes").
-        if (npcOptions.any { it.equals("interact", ignoreCase = true) }) {
-            on_npc_option(npc = variant.npc, option = "interact") {
-                val npc = player.getInteractingNpc()
-                player.queue {
-                    when (options("Moo.", "Emote.")) {
-                        1 -> PetEmotes.moo(player, npc)
-                        2 -> PetEmotes.beefEmote(player, npc)
+        // OSRS names the op "Metamorphosis" on most pets and "Metamorph" on a few (Gull, Beef).
+        npcOptions.filterNotNull().filter { it.equals("metamorphosis", ignoreCase = true) || it.equals("metamorph", ignoreCase = true) }.forEach { op ->
+            on_npc_option(npc = npcId, option = op.lowercase()) {
+                Pets.metamorph(player, player.getInteractingNpc())
+            }
+        }
+        if (PetEmotes.hasEmotes(npcId)) {
+            if (npcOptions.any { it.equals("emote", ignoreCase = true) }) {
+                on_npc_option(npc = npcId, option = "emote") {
+                    PetEmotes.emote(player, player.getInteractingNpc())
+                }
+            }
+            // Beef: Interact -> "Moo." or the emote (Transcript:Beef "selecting the "Moo." option"; OSRS Wiki Beef "Emotes").
+            if (npcOptions.any { it.equals("interact", ignoreCase = true) }) {
+                on_npc_option(npc = npcId, option = "interact") {
+                    val npc = player.getInteractingNpc()
+                    player.queue {
+                        when (options("Moo.", "Emote.")) {
+                            1 -> PetEmotes.moo(player, npc)
+                            2 -> PetEmotes.beefEmote(player, npc)
+                        }
                     }
                 }
             }
         }
-    }
-    if (variant.pet == PetMorphs.RIFT_GUARDIAN && npcOptions.any { it.equals("locking", ignoreCase = true) }) {
-        on_npc_option(npc = variant.npc, option = "locking") {
-            if (Pets.current(player) !== player.getInteractingNpc()) {
-                player.message("This isn't your pet.")
-            } else {
-                PetMorphs.toggleRiftLock(player)
+        if (variant.pet == PetMorphs.RIFT_GUARDIAN && npcOptions.any { it.equals("locking", ignoreCase = true) }) {
+            on_npc_option(npc = npcId, option = "locking") {
+                if (Pets.current(player) !== player.getInteractingNpc()) {
+                    player.message("This isn't your pet.")
+                } else {
+                    PetMorphs.toggleRiftLock(player)
+                }
             }
         }
-    }
-    // The items that change a pet (PetMorphs.USES, Gull's fish), used on the follower.
-    if (variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)") {
-        on_any_item_on_npc(npc = variant.npc) {
-            val npc = player.getInteractingNpc()
-            if (Pets.current(player) !== npc) {
-                player.message("This isn't your pet.")
-            } else if (!PetMorphs.useItem(player, Pets.itemOf(player) ?: variant.item, player.getInteractingItem().id, onFollower = true)) {
-                player.message("Nothing interesting happens.")
+        // The items that change a pet (PetMorphs.USES, Gull's fish), used on the follower.
+        if (variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)") {
+            on_any_item_on_npc(npc = npcId) {
+                val npc = player.getInteractingNpc()
+                if (Pets.current(player) !== npc) {
+                    player.message("This isn't your pet.")
+                } else if (!PetMorphs.useItem(player, Pets.itemOf(player) ?: variant.item, player.getInteractingItem().id, onFollower = true)) {
+                    player.message("Nothing interesting happens.")
+                }
             }
         }
     }
@@ -107,18 +110,20 @@ Pets.variants.forEach { variant ->
 // N301 / N303 (owner 2026-10-24): a Loyalty store pet's Talk-to is a conversation of its own; a 667 cat's Interact-with works. Bound
 // here, so the generic Talk-to fallback (talk_to_fallback.plugin.kts) leaves these npcs alone - no second voice on Talk-to.
 Pets.variants.filter { it.classic }.forEach { variant ->
-    val npcOptions = world.definitions.get(NpcDef::class.java, variant.npc).options
-    val chats = ClassicPetTalk.chatsFor(variant.npc)
-    if (chats != null && npcOptions.any { it.equals("talk-to", ignoreCase = true) }) {
-        on_npc_option(npc = variant.npc, option = "talk-to") {
-            val npc = player.getInteractingNpc()
-            player.queue { with(ClassicPetTalk) { talk(npc, chats) } }
+    listOfNotNull(variant.npc, Pets.upgradedNpc(variant.npc)).forEach { npcId ->
+        val npcOptions = world.definitions.get(NpcDef::class.java, npcId).options
+        val chats = ClassicPetTalk.chatsFor(npcId)
+        if (chats != null && npcOptions.any { it.equals("talk-to", ignoreCase = true) }) {
+            on_npc_option(npc = npcId, option = "talk-to") {
+                val npc = player.getInteractingNpc()
+                player.queue { with(ClassicPetTalk) { talk(npc, chats) } }
+            }
         }
-    }
-    if (npcOptions.any { it.equals("interact-with", ignoreCase = true) }) {
-        on_npc_option(npc = variant.npc, option = "interact-with") {
-            val npc = player.getInteractingNpc()
-            player.queue { with(ClassicPetTalk) { interact(npc) } }
+        if (npcOptions.any { it.equals("interact-with", ignoreCase = true) }) {
+            on_npc_option(npc = npcId, option = "interact-with") {
+                val npc = player.getInteractingNpc()
+                player.queue { with(ClassicPetTalk) { interact(npc) } }
+            }
         }
     }
 }

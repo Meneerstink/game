@@ -93,15 +93,65 @@ object BeastOfBurden {
 
     private val storageByPouch = beastOfBurdenStorage + foragerStorage
 
-    val allKeys = storageByPouch.values.map { it.key }
+    /**
+     * N423: the pack of a pet with a bound burden trinket, one per trinket size (6/9/12/18/30, the familiar it is named after).
+     * Only the pet that is out carries anything; a bigger trinket moves the pack along ([moveUpgradedCargo]).
+     */
+    val PET_KEYS: Map<BurdenTrinkets.Tier, ContainerKey> =
+        BurdenTrinkets.Tier.values().associateWith { ContainerKey("bob_pet_${it.slots}", capacity = it.slots, stackType = ContainerStackType.NORMAL) }
+
+    val allKeys = storageByPouch.values.map { it.key } + PET_KEYS.values
 
     /** The carrying contract for [pouch], for [SummoningLedger] to check against the ledger. */
     fun storageFor(pouch: SummoningPouchData): Storage? = storageByPouch[pouch]
 
     private fun storage(player: Player): Storage? {
-        val npc = Familiar.current(player) ?: return null
+        val npc = Familiar.current(player) ?: return petStorage(player)
         val pouch = SummoningPouchData.values.firstOrNull { it.npc == npc.id } ?: return null
         return storageByPouch[pouch]
+    }
+
+    /** N423: the upgraded pet that is out carries like the beast of burden its trinket is named after. */
+    private fun petStorage(player: Player): Storage? {
+        if (Pets.current(player) == null) return null
+        val tier = BurdenTrinkets.followerTier(player) ?: return null
+        return Storage(PET_KEYS.getValue(tier))
+    }
+
+    /** True while an upgraded pet (a bound burden trinket) is following - it carries like a beast of burden. */
+    fun isUpgradedPetOut(player: Player): Boolean = Familiar.current(player) == null && petStorage(player) != null
+
+    /**
+     * N423: a bigger trinket bound to the pet that is out - the pack moves into the bigger pack (it always fits). Called by
+     * [BurdenTrinkets.bind] before the binding changes.
+     */
+    fun moveUpgradedCargo(
+        player: Player,
+        from: BurdenTrinkets.Tier,
+        to: BurdenTrinkets.Tier,
+    ) {
+        if (from == to) return
+        val old = container(player, PET_KEYS.getValue(from))
+        val new = container(player, PET_KEYS.getValue(to))
+        for (slot in 0 until old.capacity) {
+            val item = old[slot] ?: continue
+            val added = new.addPreservingAttr(item, assureFullInsertion = false).completed
+            old[slot] = if (added >= item.amount) null else Item(item, item.amount - added)
+        }
+        synchronise(player)
+    }
+
+    /**
+     * A pet pack left behind with no upgraded pet to carry it (the trinket or the pet gone while logged out): moved to
+     * Death's Office like a dismissed familiar's cargo, so nothing is ever stranded. Run at login.
+     */
+    fun rescueStrandedPetCargo(player: Player) {
+        val carrying = petStorage(player)?.key
+        PET_KEYS.values.filter { it != carrying }.forEach { key ->
+            val held = player.containers[key] ?: return@forEach
+            if (held.rawItems.none { it != null }) return@forEach
+            moveToDeathsDomain(player, key)
+        }
     }
     /** True if [npcId] is a beast of burden - a familiar the player can hand items to. */
     fun isBobNpc(npcId: Int): Boolean = beastOfBurdenStorage.keys.any { it.npc == npcId }
@@ -167,6 +217,11 @@ object BeastOfBurden {
         if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(item.id)) {
             // One emblem per player, held in the inventory or bank only (owner 2026-09-25).
             player.message("Your familiar can't carry a Deadman emblem.")
+            return 0
+        }
+        // N423: a burden trinket never goes into a pack (it is what makes the pet carry).
+        if (BurdenTrinkets.isTrinket(item.id)) {
+            player.message("Your familiar can't carry that item.")
             return 0
         }
         // Audit X-01: loot keys and the looting bag are PvP risk by design; they may never be parked in a familiar.
@@ -359,7 +414,14 @@ object BeastOfBurden {
         player: Player,
         free: Boolean = false,
     ) {
-        val key = activeKey(player) ?: return
+        moveToDeathsDomain(player, activeKey(player) ?: return, free)
+    }
+
+    private fun moveToDeathsDomain(
+        player: Player,
+        key: ContainerKey,
+        free: Boolean = false,
+    ) {
         val held = container(player, key)
         var moved = 0
         var stranded = 0
@@ -384,10 +446,12 @@ object BeastOfBurden {
         }
         // Red, per the owner's specification. This revision has no red chat *type*; every other
         // red line in this codebase is an inline colour tag on an ordinary game message.
-        player.message("$DEATHS_DOMAIN_RED Your familiar's items have been moved to Death's Domain.")
+        // N423: an upgraded pet's pack goes the same way, named as the pet's.
+        val whose = if (key in PET_KEYS.values) "pet" else "familiar"
+        player.message("$DEATHS_DOMAIN_RED Your $whose's items have been moved to Death's Domain.")
         if (stranded > 0) {
             player.message(
-                "$DEATHS_DOMAIN_RED Death's Domain is full - $stranded of your familiar's items could not be stored.",
+                "$DEATHS_DOMAIN_RED Death's Domain is full - $stranded of your $whose's items could not be stored.",
             )
         }
         synchronise(player)

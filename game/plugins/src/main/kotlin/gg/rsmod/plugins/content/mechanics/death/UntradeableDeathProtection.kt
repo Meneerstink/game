@@ -143,6 +143,8 @@ object UntradeableDeathProtection {
         if (item.id in ALWAYS_KEPT_PVP) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         // A pet stays with its owner (owner confirmed 2026-10-04: "pet kept" on a PvP death; OSRS 2026: pets respawn with you).
         if (gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        // N423: a beast of burden trinket is never lost (design v6: kept on every death).
+        if (gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(item.id)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
         // A damaged item already paid its killer once (a broken item left over from the old rules): lost, but for nothing.
         if (!lockable(item.id)) return UntradeableOutcomeFate(UntradeableFate.LOST_FOR_COINS, if (isDamaged(item)) 0L else lostCoins(definitions, item))
         val locked = gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.ALL.any { item.id == it.lockedItemId || item.id == it.brokenItemId || item.id == it.mangledItemId }

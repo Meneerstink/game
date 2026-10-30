@@ -112,6 +112,7 @@ object PerduLostProperty {
         }
         if (seen.size != before) player.attr[UNLOCKED] = seen.sorted().joinToString(",")
         gg.rsmod.plugins.content.skills.summoning.Pets.observe(player)
+        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.recordOwned(player)
     }
 
     /**
@@ -141,6 +142,10 @@ object PerduLostProperty {
         }
     }
 
+    /** N423 (design v6: a burden trinket is never lost): every trinket kind the player had once and has nowhere now, free. */
+    fun lostTrinkets(player: Player): List<Entry> =
+        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.lost(player).map { Entry(it.item, 0L) }
+
     /** Earned items Perdu does not offer because the player still has them somewhere (the reason his list is empty). */
     fun stillOwned(player: Player): List<Pair<Entry, String>> {
         val earned = unlocked(player)
@@ -150,6 +155,6 @@ object PerduLostProperty {
     /** What Perdu offers [player] now: earned items they do not own (the [Entry.multiple] ones always). */
     fun available(player: Player): List<Entry> {
         val earned = unlocked(player)
-        return ENTRIES.filter { it.itemId in earned && (it.multiple || !owns(player, it)) } + lostPets(player)
+        return ENTRIES.filter { it.itemId in earned && (it.multiple || !owns(player, it)) } + lostPets(player) + lostTrinkets(player)
     }
 }

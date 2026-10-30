@@ -97,12 +97,18 @@ object PerduReclaim {
         }
     }
 
-    /** Talk-to: Perdu hands back the player's lost pets, [PER_PAGE] per page; returns whether he had any. */
+    /** Talk-to: Perdu hands back the player's lost pets and burden trinkets (free), [PER_PAGE] per page; returns whether he had any. */
     suspend fun returnPets(task: QueueTask): Boolean {
         val player = task.player
         PerduLostProperty.observe(player)
-        if (freeOffers(player).isEmpty()) return false
-        task.chatNpc("I've been looking after some of your pets. You can have them back, free of charge.", wrap = true)
+        val free = freeOffers(player)
+        if (free.isEmpty()) return false
+        // N423: a lost burden trinket comes back free too (never lost) - the words fit what he holds, not only pets.
+        val onlyPets = free.all { gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it.itemId) }
+        task.chatNpc(
+            if (onlyPets) "I've been looking after some of your pets. You can have them back, free of charge." else "I've been looking after some of your things. You can have them back, free of charge.",
+            wrap = true,
+        )
         var page = 0
         while (true) {
             val all = freeOffers(player)
@@ -112,7 +118,7 @@ object PerduReclaim {
             val shown = all.drop(page * PER_PAGE).take(PER_PAGE)
             val labels = shown.map { name(player, it.itemId) }.toMutableList()
             labels += if (pages > 1) "More..." else "Nothing, thanks."
-            val choice = task.options(*labels.toTypedArray(), title = "Which pet would you like back?")
+            val choice = task.options(*labels.toTypedArray(), title = if (onlyPets) "Which pet would you like back?" else "What would you like back?")
             if (choice == labels.size) {
                 if (pages > 1) {
                     page = (page + 1) % pages

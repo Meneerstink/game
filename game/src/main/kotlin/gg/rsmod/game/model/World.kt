@@ -802,6 +802,10 @@ class World(
         logic(plugin)
     }
 
+    /** A second examine line for [npc], set by a plugin (N423: "This pet has been upgraded with a ..." - for every player), or null. */
+    @Volatile
+    var npcExamineExtra: ((npc: gg.rsmod.game.model.entity.Npc) -> String?)? = null
+
     fun sendExamine(
         p: Player,
         id: Int,

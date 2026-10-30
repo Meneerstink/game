@@ -49,9 +49,11 @@ class BeastOfBurdenTests {
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_PARASITE))
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_LURKER))
         assertTrue(BeastOfBurden.isBobNpc(Npcs.ABYSSAL_TITAN))
-        // Nine beasts of burden plus the twenty-two foragers, each with its own store.
-        assertEquals(31, BeastOfBurden.allKeys.size)
-        assertEquals(31, BeastOfBurden.allKeys.map { it.name }.distinct().size)
+        // Nine beasts of burden plus the twenty-two foragers, each with its own store, plus (N423) the five packs of an upgraded
+        // pet, one per burden trinket size.
+        assertEquals(31 + BurdenTrinkets.Tier.values().size, BeastOfBurden.allKeys.size)
+        assertEquals(BeastOfBurden.allKeys.size, BeastOfBurden.allKeys.map { it.name }.distinct().size)
+        assertEquals(listOf(6, 9, 12, 18, 30), BeastOfBurden.PET_KEYS.values.map { it.capacity })
         assertFalse(BeastOfBurden.isBobNpc(Npcs.SPIRIT_WOLF))
     }
 

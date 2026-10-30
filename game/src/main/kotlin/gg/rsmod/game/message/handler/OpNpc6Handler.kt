@@ -24,5 +24,6 @@ class OpNpc6Handler : MessageHandler<OpNpc6Message> {
         log(client, "Npc option 6: index=%d, npc=%s", message.index, npc)
 
         world.sendExamine(client, npc.id, ExamineEntityType.NPC)
+        world.npcExamineExtra?.invoke(npc)?.let { client.writeMessage(it) }
     }
 }
