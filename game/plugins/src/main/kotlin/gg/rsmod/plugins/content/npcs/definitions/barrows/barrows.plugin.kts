@@ -98,8 +98,8 @@ on_obj_option(obj = Objs.ROPE_6708, option = "climb-up") {
  * one tile further on. The crossing is the shared bounded [DoorCrossing.enter]; from anywhere it cannot cross, nothing moves.
  */
 suspend fun QueueTask.passDoor(door: GameObject) {
-    // Void: sound("barrows_door_close") (41) on operating the door.
-    player.playSound(Sfx.BARROWS_DOOR_OPEN)
+    // N467 (owner 2026-10-30: the close sound played twice): Void's extra sound("barrows_door_close") (41) on operating is gone. The
+    // door now sounds like every other door: open (62) when it swings open, close (41) to everyone nearby when it shuts (swingOpen).
     val near = DoorCrossing.nearSide(player.tile, door) ?: return
     val far = DoorCrossing.destination(near, door) ?: return
     if (!DoorCrossing.enter(this, player, door, open = { Barrows.swingOpen(player, door) })) return

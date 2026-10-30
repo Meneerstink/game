@@ -53,14 +53,17 @@ class BarrowsOwnerFixesTests {
     }
 
     @Test
-    fun `Ahrim casts Fire Wave on every attack with Darkan's cast gfx, projectile and a one in three Strength drain`() {
+    fun `Ahrim casts Fire Wave on every attack with the OSRS cast anim, gfx, projectile and a one in three Strength drain`() {
         val ahrim = ObjectMapper().readTree(File("../../data/cfg/npcs/npc-attacks.json")).first { it["id"].asInt() == 2025 }
         val selectable = ahrim["attacks"].filter { it["chance"].asInt() > 0 }
         assertEquals(listOf("magic"), selectable.map { it["id"].asText() }, "only Fire Wave can be picked")
         val magic = selectable.single()
-        assertEquals(14223, magic["anim"].asInt())
-        assertEquals(listOf(2741), magic["gfx"].map { it["id"].asInt() })
-        assertEquals(listOf(2735), magic["projectiles"].map { it["id"].asInt() })
+        // N468 (owner 2026-10-30): the OSRS Fire Wave of Ahrim (Kronos OSRS Ahrim.java), not the 667 14223 / 2741 / 2735 / 2740.
+        assertEquals(1167, magic["anim"].asInt())
+        assertEquals(listOf(155), magic["gfx"].map { it["id"].asInt() })
+        assertEquals(listOf(156), magic["projectiles"].map { it["id"].asInt() })
+        assertEquals(listOf(157), magic["impact_gfx"].map { it["id"].asInt() })
+        assertEquals(listOf(162), magic["target_sounds"].map { it["id"].asInt() })
         val drain = magic["drains"].single()
         assertEquals("strength", drain["skill"].asText())
         assertEquals(5, drain["min"].asInt())

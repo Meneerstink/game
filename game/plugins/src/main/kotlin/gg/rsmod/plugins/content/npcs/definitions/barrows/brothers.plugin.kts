@@ -30,7 +30,11 @@ data class BrotherConfig(
     val dcrush: Int,
     val dmagic: Int,
     val dranged: Int,
-    /** Attack / block / death sequence ids (Matrix 718 NPCCombatDefinitions, each verified present in the 667 cache AnimDefs). */
+    /**
+     * Attack / block / death sequence ids (Matrix 718 NPCCombatDefinitions, each verified present in the 667 cache AnimDefs). N468
+     * (owner 2026-10-30): Ahrim's 667 Fire Wave cast 14223 became the OSRS HUMAN_CASTWAVE_STAFF 1167 (Kronos OSRS Ahrim.java: anim 1167,
+     * cast gfx 155, projectile 156, sound 162), matching his npc-attacks.json magic attack.
+     */
     val attackAnim: Int,
     val blockAnim: Int,
     val deathAnim: Int,
@@ -41,7 +45,7 @@ val BROTHER_HITPOINTS = 100
 
 val brotherConfigs =
     listOf(
-        BrotherConfig(Npcs.AHRIM_THE_BLIGHTED, StyleType.MAGIC, speed = 6, atk = 1, str = 1, def = 100, mag = 100, rng = 1, attbns = 0, strbns = 68, amagic = 73, mbns = 0, arange = -19, rngbns = 0, dstab = 103, dslash = 85, dcrush = 117, dmagic = 73, dranged = 0, attackAnim = 14223, blockAnim = 2079, deathAnim = 7197),
+        BrotherConfig(Npcs.AHRIM_THE_BLIGHTED, StyleType.MAGIC, speed = 6, atk = 1, str = 1, def = 100, mag = 100, rng = 1, attbns = 0, strbns = 68, amagic = 73, mbns = 0, arange = -19, rngbns = 0, dstab = 103, dslash = 85, dcrush = 117, dmagic = 73, dranged = 0, attackAnim = 1167, blockAnim = 2079, deathAnim = 7197),
         BrotherConfig(Npcs.DHAROK_THE_WRETCHED, StyleType.SLASH, speed = 7, atk = 100, str = 100, def = 100, mag = 1, rng = 1, attbns = 0, strbns = 105, amagic = -58, mbns = 0, arange = -18, rngbns = 0, dstab = 252, dslash = 250, dcrush = 244, dmagic = -11, dranged = 249, attackAnim = 2067, blockAnim = 2063, deathAnim = 7197),
         BrotherConfig(Npcs.GUTHAN_THE_INFESTED, StyleType.CRUSH, speed = 5, atk = 100, str = 100, def = 100, mag = 1, rng = 1, attbns = 0, strbns = 75, amagic = -50, mbns = 0, arange = -19, rngbns = 0, dstab = 259, dslash = 257, dcrush = 241, dmagic = -11, dranged = 250, attackAnim = 2080, blockAnim = 2063, deathAnim = 7197),
         BrotherConfig(Npcs.KARIL_THE_TAINTED, StyleType.RANGED, speed = 4, atk = 1, str = 1, def = 100, mag = 1, rng = 100, attbns = 0, strbns = 0, amagic = -26, mbns = 0, arange = 134, rngbns = 55, dstab = 79, dslash = 71, dcrush = 90, dmagic = 106, dranged = 100, attackAnim = 2075, blockAnim = 424, deathAnim = 7197),

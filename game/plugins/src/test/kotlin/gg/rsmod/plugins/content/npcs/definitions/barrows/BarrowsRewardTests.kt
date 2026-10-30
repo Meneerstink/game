@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.npcs.definitions.barrows
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import io.mockk.every
 import io.mockk.mockk
@@ -38,6 +39,8 @@ class BarrowsRewardTests {
 
         assertEquals(2, items.size)
         items.forEach { assertTrue(it.id in Barrows.REWARD_ARMOUR.getValue(Barrows.Brother.AHRIM)) }
+        // N469: "once chosen it will not be chosen again on future rolls".
+        assertEquals(2, items.map { it.id }.toSet().size, "two different pieces")
     }
 
     @Test
@@ -52,8 +55,8 @@ class BarrowsRewardTests {
 
         val items = Barrows.reward(player)
 
-        assertEquals(2, items.size)
-        items.forEach { assertEquals(Items.COINS_995, it.id) }
+        // N469: the two coin rolls are one reward of 2 + 2 coins, not two lines.
+        assertEquals(listOf(Items.COINS_995 to 4), items.map { it.id to it.amount })
     }
 
     @Test
@@ -69,6 +72,7 @@ class BarrowsRewardTests {
 
         assertEquals(7, items.size)
         items.forEach { item -> assertTrue(Barrows.REWARD_ARMOUR.values.any { item.id in it }) }
+        assertEquals(7, items.map { it.id }.toSet().size, "seven different pieces")
     }
 
     @Test
@@ -124,9 +128,24 @@ class BarrowsRewardTests {
 
             val items = Barrows.reward(player)
 
-            assertEquals(7, items.size, "roll $roll")
-            items.forEach { assertEquals(expected, it.id, "roll $roll") }
+            // N469: seven rolls on the same line are one reward.
+            assertEquals(listOf(expected), items.map { it.id }, "roll $roll")
         }
+    }
+
+    @Test
+    fun `the same table item rolled twice is one reward in the order first rolled`() {
+        val combined =
+            Barrows.combineSameItems(
+                listOf(
+                    Item(Items.DEATH_RUNE, 70),
+                    Item(Items.MIND_RUNE, 253),
+                    Item(Items.DEATH_RUNE, 83),
+                    Item(Items.MIND_RUNE, 300),
+                    Item(Items.COINS_995, 5),
+                ),
+            )
+        assertEquals(listOf(Items.DEATH_RUNE to 153, Items.MIND_RUNE to 553, Items.COINS_995 to 5), combined.map { it.id to it.amount })
     }
 
     private fun newPlayer(world: World): Player {

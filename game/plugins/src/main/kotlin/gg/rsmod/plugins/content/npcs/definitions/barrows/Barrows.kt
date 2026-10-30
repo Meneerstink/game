@@ -686,25 +686,36 @@ object Barrows {
         val kills = killed.size
         val potential = rewardPotential(player.attr[KILL_LEVELS] ?: 0, kills)
         val boosted = if (rate > 1.0) chances(potential, kills, rate) else null
+        // N469 (owner 2026-10-30: "2x death rune, 2x mind rune" as separate rewards). OSRS Wiki Chest (Barrows): "one of the available
+        // Barrows items is chosen at random - each part has equal chance, but once chosen it will not be chosen again on future rolls";
+        // Notes: "it is not possible to receive multiple copies of the same item". So an equipment piece is drawn from the killed
+        // brothers' pieces not chosen yet, and a table item rolled twice is one reward (amounts added), never two lines.
+        val available = killed.flatMap { REWARD_ARMOUR.getValue(it).toList() }.toMutableList()
+        fun armourPiece(): Item? = available.takeIf { it.isNotEmpty() }?.random()?.let { id -> available.remove(id); Item(id) }
         repeat(rollCount(kills)) {
             if (boosted != null) {
                 when (val line = DropBoost.pick(boosted, world.randomDouble())) {
                     -1 -> Unit
-                    0 -> items.add(Item(REWARD_ARMOUR.getValue(killed.random()).random()))
+                    0 -> armourPiece()?.let { items.add(it) }
                     else -> items.add(TABLE[line - 1].make(world))
                 }
                 return@repeat
             }
             // Each roll first tries the Barrows equipment: P(N) = 1 / (450 - 58 N) with N brothers killed.
             if (kills > 0 && world.random(450 - 58 * kills - 1) == 0) {
-                val brother = killed.random()
-                items.add(Item(REWARD_ARMOUR.getValue(brother).random()))
-                return@repeat
+                armourPiece()?.let {
+                    items.add(it)
+                    return@repeat
+                }
             }
             rollTable(player, potential)?.let { items.add(it) }
         }
-        return items
+        return combineSameItems(items)
     }
+
+    /** One reward per item id, in the order first rolled, with the amounts of every roll of it added together (N469). */
+    fun combineSameItems(items: List<Item>): List<Item> =
+        items.groupBy { it.id }.map { (id, rolls) -> Item(id, rolls.sumOf { it.amount }) }
 
     /** One line of the rune/coin table: the roll values below [upTo] (above the previous line) give the item [make] builds. */
     class TableLine(val upTo: Int, val item: Int, val min: Int, val max: Int) {
