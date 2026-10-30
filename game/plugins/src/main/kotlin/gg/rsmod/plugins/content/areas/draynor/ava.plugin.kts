@@ -88,12 +88,29 @@ create_shop(
     items[3] = CrystalShardPrice.shopItem(OsrsGuidePrices.book)
 }
 
+// N461: a separate coin shop keeps splinters quest/skill-free without changing device requirements.
+// OSRS Wiki Sunfire splinters, consulted 2026-10-30: GE guide 379 coins (OSRS 28924 -> local 22669).
+val AVAS_SUNFIRE_SPLINTERS = "Ava's Sunfire Splinters"
+create_shop(
+    AVAS_SUNFIRE_SPLINTERS,
+    currency = CoinCurrency(),
+    stockType = StockType.INFINITE,
+    purchasePolicy = PurchasePolicy.BUY_NONE,
+    containsSamples = false,
+) {
+    items[0] = ShopItem(Items.SUNFIRE_SPLINTERS, Int.MAX_VALUE, sellPrice = 379, buyPrice = 0)
+}
+
 on_npc_option(npc = Npcs.AVA, option = "talk-to") {
     player.queue {
         // N446 / V13: the orb is available without a quest or Ava's device-shop skill requirements.
-        when (options("I'd like a locator orb.", "I'd like to discuss your devices.", "Never mind.")) {
+        when (options("I'd like a locator orb.", "I'd like to discuss your devices.", "I'd like to buy sunfire splinters.", "Never mind.")) {
             FIRST_OPTION -> {
                 if (player.inventory.contains(LocatorOrb.INERT)) LocatorOrb.activate(player) else LocatorOrb.replace(player)
+                return@queue
+            }
+            THIRD_OPTION -> {
+                player.openShop(AVAS_SUNFIRE_SPLINTERS)
                 return@queue
             }
             SECOND_OPTION -> if (!checkRequirements(player)) return@queue
