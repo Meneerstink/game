@@ -36,10 +36,19 @@ class SimplePathFindingStrategy(
         var searchLimit = 2
         while (searchLimit-- > 0) {
             var tail = if (path.isNotEmpty()) path.peekLast() else start
-            if (areBordering(tail, sourceWidth, end, targetWidth) &&
-                !areDiagonal(tail, sourceWidth, end, targetWidth) &&
-                collision.raycast(tail, end, projectile)
-            ) {
+            // N448 (owner 2026-10-30, Pest Control "creert een lus"): a melee approach (touch radius 1, no projectile) has arrived
+            // on a shared edge without a wall (MeleeReach, Darkan checkMeleeStep - the rule of Combat.moveToAttackRange since N447).
+            // The raycast stepped INTO the target's own tile, so an npc already beside a target on a blocked tile (the Void Knight)
+            // got "no route" every tick and the N417 aggro rule then dropped a target it was standing next to.
+            val arrived =
+                if (!projectile && request.touchRadius == 1 && targetWidth >= 1 && targetLength >= 1) {
+                    gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(collision, tail, sourceWidth, sourceLength, end, targetWidth, targetLength)
+                } else {
+                    areBordering(tail, sourceWidth, end, targetWidth) &&
+                        !areDiagonal(tail, sourceWidth, end, targetWidth) &&
+                        collision.raycast(tail, end, projectile)
+                }
+            if (arrived) {
                 success = true
                 break
             }

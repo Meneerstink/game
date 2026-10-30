@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
+import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.io.File
 import java.time.LocalDateTime
 
@@ -298,6 +299,29 @@ gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
                 ?.filter { it.id == id }?.forEach { found += "${it.tile.x},${it.tile.z},${it.tile.height} type=${it.type} rot=${it.rot}" }
         }
         "loc $id near ${p.tile.x},${p.tile.z}: ${found.joinToString("; ").ifEmpty { "none" }}"
+    }
+}
+// `nearnpcs <name> [radius]` (N448 pathing loops): the player's tile and combat target, then every npc within the radius - id#index,
+// tile, hitpoints, combat target - one line, so a tick-by-tick poll shows who steps where.
+gg.rsmod.game.CommandServerCommands.handlers["nearnpcs"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val r = a.getOrNull(1)?.toIntOrNull() ?: 8
+    if (p == null) {
+        "usage: nearnpcs <name> [radius]"
+    } else {
+        fun who(t: gg.rsmod.game.model.entity.Pawn?) = when (t) {
+            null -> "-"
+            is gg.rsmod.game.model.entity.Player -> t.username
+            is gg.rsmod.game.model.entity.Npc -> "${t.id}#${t.index}"
+            else -> "?"
+        }
+        val near = ArrayList<String>()
+        w.npcs.forEach { n ->
+            if (n.tile.height == p.tile.height && n.tile.isWithinRadius(p.tile, r) && !n.isDead()) {
+                near += "${n.id}#${n.index}@${n.tile.x},${n.tile.z} hp=${n.getCurrentLifepoints()} t=${who(n.getCombatTarget())}"
+            }
+        }
+        "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} t=${who(p.getCombatTarget())} | ${near.joinToString(" | ")}"
     }
 }
 // `cwplay <name> <sara|zam>`: puts the agent's test character straight into a Castle Wars round on that team (K07: a real round needs

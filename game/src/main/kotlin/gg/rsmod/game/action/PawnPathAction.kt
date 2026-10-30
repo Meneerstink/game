@@ -322,6 +322,11 @@ object PawnPathAction {
             return false
         }
 
+        if (holdsForApproachingPlayer(pawn, target)) {
+            pawn.stopMovement()
+            return reachedMovingTarget(pawn, target, interactionRange, lineOfSight || projectile)
+        }
+
         if (frozen) {
             // A frozen pawn cannot walk, so it attacks only when the target is in reach from where it stands. Conformance
             // run 2026-09-29 (equipment reach): the melee branch passed the attack range as the TARGET SIZE to bordering()
@@ -392,6 +397,10 @@ object PawnPathAction {
         var lastTile = pawn.tile
         var stalled = 0
         while (!pawn.tile.sameAs(route.tail)) {
+            if (holdsForApproachingPlayer(pawn, target)) {
+                pawn.stopMovement()
+                return reachedMovingTarget(pawn, target, reach?.invoke() ?: interactionRange, lineOfSight || projectile)
+            }
             if (!targetTile.sameAs(target.tile)) {
                 // N214: a moving target that came into reach is reached - routing again to its new tile chased a follower that
                 // was already beside the player (pet and owner walking towards each other).
@@ -490,6 +499,28 @@ object PawnPathAction {
             )
         }
         return inReachWithoutMoving(pawn, pawn.tile, pawn.getSize(), target.tile, target.getSize(), range, lineOfSight)
+    }
+
+    /**
+     * N448 (owner 2026-10-30, Pest Control: "pathing issues met t attacken van npcs creert een lus"): every queue of a tick runs
+     * before anyone moves (QueueHandlerTask, then the player and npc cycles), so an npc and the player attacking it both step
+     * towards the other's OLD tile - from a diagonal they land diagonal again or on one tile, tick after tick (the diagonal dance;
+     * N245 had the same with a follower). OSRS processes the npc first and the player re-routes to its new tile. Here the npc holds
+     * while the player who is attacking or interacting with it (facing it) is already walking in within two tiles; the player then
+     * arrives beside it and the npc fights from where it stands. A player running away or standing still is chased as before.
+     */
+    fun holdsForApproachingPlayer(
+        pawn: Pawn,
+        target: Pawn,
+    ): Boolean {
+        if (pawn !is gg.rsmod.game.model.entity.Npc || target !is Player) return false
+        if (target.attr[FACING_PAWN_ATTR]?.get() != pawn || !target.hasMoveDestination()) return false
+        if (pawn.tile.height != target.tile.height) return false
+        val s = pawn.tile
+        val t = target.tile
+        val dx = maxOf(0, t.x - (s.x + pawn.getSize() - 1), s.x - (t.x + target.getSize() - 1))
+        val dz = maxOf(0, t.z - (s.z + pawn.getSize() - 1), s.z - (t.z + target.getSize() - 1))
+        return maxOf(dx, dz) <= 2
     }
 
     private fun overlap(
