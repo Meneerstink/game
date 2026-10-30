@@ -88,7 +88,7 @@ fun Player.migrateRemovedDefault() {
  * choice is a persistent preference and configuring it without a familiar is legitimate.
  */
 fun Player.selectableActions(): List<FamiliarAction> {
-    if (FamiliarCapabilityTable.active(this) == null && Pets.current(this) != null) return FamiliarAction.ORDERED.filter { it in Pets.ORB_ACTIONS }
+    if (FamiliarCapabilityTable.active(this) == null && Pets.current(this) != null) return Pets.orbActions(this).let { actions -> FamiliarAction.ORDERED.filter { it in actions } }
     val capabilities = FamiliarCapabilityTable.active(this) ?: return FamiliarAction.ORDERED
     return FamiliarAction.ORDERED.filter { capabilities.supports(it) }
 }
@@ -118,8 +118,8 @@ fun Player.setLeftClickAction(action: FamiliarAction) {
  */
 fun Player.resetStaleLeftClickAction() {
     if (FamiliarCapabilityTable.active(this) == null && Pets.current(this) != null) {
-        // A pet answers Call and Dismiss only (DEFAULT_ACTION is Call).
-        if (leftClickAction() !in Pets.ORB_ACTIONS) setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
+        // A pet answers Call and Dismiss only, an upgraded pet Take BoB and Follower Details too (DEFAULT_ACTION is Call).
+        if (leftClickAction() !in Pets.orbActions(this)) setVarbit(ACTIVE_ACTION_VARBIT, DEFAULT_ACTION.leftClickValue)
         return
     }
     val capabilities = FamiliarCapabilityTable.active(this) ?: return

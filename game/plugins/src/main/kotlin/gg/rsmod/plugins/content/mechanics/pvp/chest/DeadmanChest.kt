@@ -242,6 +242,10 @@ object DeadmanChest {
                 if (outcome == Pets.Award.LOST) addOrDrop(player, reward.item, 1) else Pets.award(player, reward.pet, reward.item, source = "chest")
             }
         }
+        // N423 deel 5: 1 in 100 / 200 / 400 chests also hold a Kalphite / Bull ant / Terrorbird burden trinket - its own roll.
+        gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.roll(Random(), gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.Source.CHEST)?.let {
+            gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.award(player, it, player.tile, "chest", "a Deadman's Chest")
+        }
         // N98 (owner 2026-10-22): 1 in 10 chests add a Dexterous or Arcane prayer scroll.
         // Its own roll ([scrollRandom]): the loot roll above stays exactly the table's.
         gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.roll(scrollRandom, gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls.CHEST_CHANCE)?.let {

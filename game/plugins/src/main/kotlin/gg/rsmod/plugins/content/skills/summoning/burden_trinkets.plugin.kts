@@ -69,6 +69,12 @@ on_login {
     BurdenTrinkets.recordOwned(player)
 }
 
+// N423 deel 5: a boss kill rolls the three smaller trinkets (BurdenTrinketDrops); a breach npc rolls per contributor in DeadmanBreach.
+on_npc_killed { killer, npc ->
+    if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return@on_npc_killed
+    BurdenTrinketDrops.onKill(killer, npc.id, npc.tile)
+}
+
 on_world_init {
     // An Upgraded copy examines as its pet (its own def has no examine text) ...
     Pets.upgradedNpcs.forEach { upgraded ->

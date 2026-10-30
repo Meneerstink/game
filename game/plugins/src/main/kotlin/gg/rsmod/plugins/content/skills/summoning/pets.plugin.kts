@@ -85,8 +85,30 @@ Pets.variants.forEach { variant ->
                 }
             }
         }
-        // The items that change a pet (PetMorphs.USES, Gull's fish), used on the follower.
-        if (variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)") {
+        // N423: an Upgraded copy carries like a beast of burden - Store opens the Familiar Inventory, an item used on it is stored
+        // (the items that change the pet still change it; a burden trinket has its own binding, burden_trinkets.plugin.kts).
+        if (Pets.isUpgradedNpc(npcId)) {
+            if (npcOptions.any { it.equals("store", ignoreCase = true) }) {
+                on_npc_option(npc = npcId, option = "store") {
+                    if (Pets.current(player) !== player.getInteractingNpc()) {
+                        player.message("This isn't your pet.")
+                    } else {
+                        FamiliarInventory.open(player)
+                    }
+                }
+            }
+            on_any_item_on_npc(npc = npcId) {
+                val npc = player.getInteractingNpc()
+                val used = player.getInteractingItem()
+                val morphs = variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)"
+                when {
+                    Pets.current(player) !== npc -> player.message("This isn't your pet.")
+                    morphs && PetMorphs.useItem(player, Pets.itemOf(player) ?: variant.item, used.id, onFollower = true) -> {}
+                    else -> BeastOfBurden.deposit(player, used)
+                }
+            }
+        } else if (variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)") {
+            // The items that change a pet (PetMorphs.USES, Gull's fish), used on the follower.
             on_any_item_on_npc(npc = npcId) {
                 val npc = player.getInteractingNpc()
                 if (Pets.current(player) !== npc) {
@@ -193,10 +215,15 @@ on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val from = args.getOrNull(0)?.toIntOrNull() ?: 0
     val count = args.getOrNull(1)?.toIntOrNull() ?: Pets.variants.size
     val ticks = (args.getOrNull(2)?.toIntOrNull() ?: 4).coerceIn(1, 100)
+    // N423 test sweep: `petheads <from> <count> <ticks> up` shows every form as its Upgraded copy (a Pack yak burden trinket bound
+    // to each pet on the spot - the test account only, no dialogue).
+    val upgraded = args.getOrNull(3) == "up"
     val list = Pets.variants.drop(from).take(count)
+    if (upgraded && player.inventory.getItemCount(BurdenTrinkets.Tier.PACK_YAK.item) < 1) player.inventory.add(BurdenTrinkets.Tier.PACK_YAK.item, 1)
     player.queue {
         var previous = -1
         list.forEachIndexed { i, variant ->
+            if (upgraded) player.attr[BurdenTrinkets.BOUND_ATTR] = BurdenTrinkets.encode(mapOf(variant.pet to BurdenTrinkets.Tier.PACK_YAK.item))
             // Dismiss puts the pet item back in the pack; take it out again so a long run never fills the inventory.
             if (Pets.current(player) != null) Pets.dismiss(player)
             if (previous != -1) player.inventory.remove(previous, 1)
@@ -207,9 +234,10 @@ on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
             }
             player.message("petheads ${from + i}: ${variant.name} (npc ${variant.npc})", type = gg.rsmod.plugins.api.ChatMessageType.CONSOLE)
             player.openInterface(interfaceId = 242, parent = 752, child = 13)
-            player.setComponentNpcHead(interfaceId = 242, component = 2, npc = variant.npc)
-            player.setComponentAnim(interfaceId = 242, component = 2, anim = gg.rsmod.plugins.api.cfg.FacialExpression.HAPPY_TALKING.chatheadAnimation(player.world, variant.npc))
-            player.setComponentText(interfaceId = 242, component = 3, text = variant.name)
+            val shown = Pets.current(player)?.id ?: variant.npc
+            player.setComponentNpcHead(interfaceId = 242, component = 2, npc = shown)
+            player.setComponentAnim(interfaceId = 242, component = 2, anim = gg.rsmod.plugins.api.cfg.FacialExpression.HAPPY_TALKING.chatheadAnimation(player.world, shown))
+            player.setComponentText(interfaceId = 242, component = 3, text = player.world.definitions.getNullable(NpcDef::class.java, shown)?.name ?: variant.name)
             player.setComponentText(interfaceId = 242, component = 4, text = "petheads ${from + i}")
             player.setComponentText(interfaceId = 242, component = 5, text = "")
             wait(ticks)

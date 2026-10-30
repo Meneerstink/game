@@ -214,27 +214,29 @@ object BeastOfBurden {
             player.message("You can only withdraw items from this familiar.")
             return 0
         }
+        // N423: an upgraded pet is named as one.
+        val who = if (Familiar.current(player) == null) "pet" else "familiar"
         if (gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(item.id)) {
             // One emblem per player, held in the inventory or bank only (owner 2026-09-25).
-            player.message("Your familiar can't carry a Deadman emblem.")
+            player.message("Your $who can't carry a Deadman emblem.")
             return 0
         }
         // N423: a burden trinket never goes into a pack (it is what makes the pet carry).
         if (BurdenTrinkets.isTrinket(item.id)) {
-            player.message("Your familiar can't carry that item.")
+            player.message("Your $who can't carry that item.")
             return 0
         }
         // Audit X-01: loot keys and the looting bag are PvP risk by design; they may never be parked in a familiar.
         if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id) ||
             gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(item.id)
         ) {
-            player.message("Your familiar can't carry that item.")
+            player.message("Your $who can't carry that item.")
             return 0
         }
         val key = storage.key
         val essence = item.id == Items.RUNE_ESSENCE || item.id == Items.PURE_ESSENCE
         if (storage.essenceOnly != essence) {
-            player.message("Your familiar can't carry that item.")
+            player.message("Your $who can't carry that item.")
             return 0
         }
         // Item-on-familiar actions can retain an item reference while queued. Recheck

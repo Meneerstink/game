@@ -89,6 +89,15 @@ object Pets {
     /** The two orb / panel actions a pet answers. */
     val ORB_ACTIONS = setOf(FamiliarAction.CALL, FamiliarAction.DISMISS)
 
+    /**
+     * N423 (design v6): an upgraded pet's orb is a beast of burden's - Call Follower, Take BoB, Pick-up, Follower Details (the
+     * client lists them in its own order); a plain pet keeps Call and Pick-up.
+     */
+    val UPGRADED_ORB_ACTIONS = ORB_ACTIONS + setOf(FamiliarAction.TAKE_BOB, FamiliarAction.FOLLOWER_DETAILS)
+
+    /** The orb / left-click actions [player]'s pet answers right now. */
+    fun orbActions(player: Player): Set<FamiliarAction> = if (BeastOfBurden.isUpgradedPetOut(player)) UPGRADED_ORB_ACTIONS else ORB_ACTIONS
+
     data class Variant(
         val pet: String,
         val name: String,
@@ -282,6 +291,8 @@ object Pets {
     }
 
     private fun clear(player: Player) {
+        // N423: an upgraded pet's Store window goes with the pet (as a familiar's does on dismiss).
+        FamiliarInventory.close(player)
         current(player)?.let { player.world.remove(it) }
         player.attr.remove(PET_ATTR)
         player.attr.remove(PET_ITEM_ATTR)
@@ -322,8 +333,8 @@ object Pets {
     ): Boolean {
         if (!BeastOfBurden.isUpgradedPetOut(player) || BeastOfBurden.storedCount(player) == 0) return true
         player.queue {
-            val name = current(player)?.let { player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, it.id)?.name } ?: "pet"
-            if (options("Yes, pick it up.", "No.", title = "Your $name is carrying items - they go to Death's Office.") == 1) then()
+            // The title line holds about 40 characters between its two swords; the consequence goes into the answer.
+            if (options("Yes - its items go to Death's Office.", "No.", title = "Your pet is carrying items. Pick it up?") == 1) then()
         }
         return false
     }

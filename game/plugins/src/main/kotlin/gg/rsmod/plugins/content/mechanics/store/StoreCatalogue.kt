@@ -81,7 +81,10 @@ object StoreCatalogue {
     const val UPGRADE_KITS = "High-end rewards"
 
     private val CAPE_CATEGORIES = setOf("Imbued capes", "Max cape looks")
-    private val PET_CATEGORIES = setOf("Pets", StorePets.CATEGORY)
+    /** N423: the Donator store's Beast of burden trinkets - under Pets (they upgrade a pet). */
+    const val BURDEN_TRINKETS = "Burden trinkets"
+
+    private val PET_CATEGORIES = setOf("Pets", StorePets.CATEGORY, BURDEN_TRINKETS)
     private val COSMETIC_CATEGORIES = setOf("Prestige cosmetics", "Costumes", "Masks", "Holiday cosmetics", "Clue cosmetics")
 
     fun section(entry: Entry): Section =
@@ -426,6 +429,10 @@ object StoreCatalogue {
         }
         // OSRS pets (owner 2026-09-30): tier 1 Donator, tier 2 Deadman, tier 3 Loyalty; boss-drop pets are never sold (StorePets).
         list += StorePets.entries()
+        // N423 (owner 2026-10-29 23:5x): the two big Beast of burden trinkets come from the Donator store for now (the three small
+        // ones drop). Untradeable; PROVISIONAL prices on the tier scale (Elite 500 / Prestige 1,000) - the owner decides later.
+        list += itemEntry(d, gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.TORTOISE.item, TIER_PRICE.getValue(Tier.ELITE), BURDEN_TRINKETS, TradeablePolicy.UNTRADEABLE, Tier.ELITE)
+        list += itemEntry(d, gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.PACK_YAK.item, TIER_PRICE.getValue(Tier.PRESTIGE), BURDEN_TRINKETS, TradeablePolicy.UNTRADEABLE, Tier.PRESTIGE)
         return list
     }
 

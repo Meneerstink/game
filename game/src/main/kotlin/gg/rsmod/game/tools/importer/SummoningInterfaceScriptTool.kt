@@ -55,12 +55,25 @@ import java.io.ByteArrayOutputStream
  *    so for every pet (and any unmapped familiar) the name bar keeps what the server wrote: the follower npc's own name
  *    ("Kraken", "Zilyana Jr.", "Kitten" - OSRS names the creature, not the item). Known familiars keep their enum name.
  *
+ * 6. N423 (design v6, owner 2026-10-29): an upgraded pet's Follower Details has Take BoB and Store on the top row, Store in the
+ *    place of Renew. 662:69's op and its hover tooltip are baked ("Renew Familiar" / onMouseRepeat 779 "Renew familiar"); a new
+ *    clientscript [STORE_LABEL_SCRIPT] `(string op, string tooltip)` sets both:
+ *      IF_SETOP(1, op, 662:69); IF_SETONMOUSEREPEAT(779, event_com, 662:73, 662:73, 1, tooltip) on 662:69
+ *    - the same script and arguments the cache bakes, only the text differs. The server runs it with "Store" / "Store items"
+ *    for an upgraded pet and with the baked words for a familiar (the icon 662:70 is a server IF_SETGRAPHIC).
+ *
  * Usage: `[--apply]`.
  */
 object SummoningInterfaceScriptTool {
     const val CLIENTSCRIPT_INDEX = 12
     const val TAB_SCRIPT = 1766
     const val LABEL_SCRIPT = 5378
+    const val STORE_LABEL_SCRIPT = 5396
+    private const val IF_SETONMOUSEREPEAT = 2412
+    private const val TOOLTIP_SCRIPT = 779
+    private const val EVENT_COM = -2147483645
+    private const val PANEL_TOOLTIP = (662 shl 16) or 73
+    private const val PANEL_RENEW = (662 shl 16) or 69
 
     private const val PUSH_CONSTANT_INT = 0
     private const val PUSH_STRING_LOCAL = 35
@@ -249,6 +262,66 @@ object SummoningInterfaceScriptTool {
         return out.toByteArray()
     }
 
+    /** Point 6: `(string op, string tooltip)` on 662:69, 14 instructions, no switch tables. */
+    fun storeLabelScript(): ByteArray {
+        val out = ByteArrayOutputStream()
+        fun u16(v: Int) {
+            out.write(v ushr 8 and 0xFF)
+            out.write(v and 0xFF)
+        }
+        fun i32(v: Int) {
+            out.write(v ushr 24 and 0xFF)
+            out.write(v ushr 16 and 0xFF)
+            out.write(v ushr 8 and 0xFF)
+            out.write(v and 0xFF)
+        }
+        var count = 0
+        fun int(op: Int, v: Int) {
+            u16(op)
+            i32(v)
+            count++
+        }
+        fun small(op: Int, v: Int) {
+            u16(op)
+            out.write(v)
+            count++
+        }
+        fun str(v: String) {
+            u16(PUSH_CONSTANT_STRING)
+            out.write(v.toByteArray(Charsets.ISO_8859_1))
+            out.write(0)
+            count++
+        }
+        out.write(0) // no name
+        // IF_SETOP(1, op, 662:69)
+        int(PUSH_CONSTANT_INT, 1)
+        int(PUSH_STRING_LOCAL, 0)
+        int(PUSH_CONSTANT_INT, PANEL_RENEW)
+        small(IF_SETOP, 0)
+        // IF_SETONMOUSEREPEAT(779, event_com, 662:73, 662:73, 1, tooltip) on 662:69 - the client pops the component, the type
+        // string, then the arguments back to front and the script id last (ScriptRunner, ops 2400-2499).
+        int(PUSH_CONSTANT_INT, TOOLTIP_SCRIPT)
+        int(PUSH_CONSTANT_INT, EVENT_COM)
+        int(PUSH_CONSTANT_INT, PANEL_TOOLTIP)
+        int(PUSH_CONSTANT_INT, PANEL_TOOLTIP)
+        int(PUSH_CONSTANT_INT, 1)
+        int(PUSH_STRING_LOCAL, 1)
+        str("IIIis")
+        int(PUSH_CONSTANT_INT, PANEL_RENEW)
+        small(IF_SETONMOUSEREPEAT, 0)
+        small(RETURN, 0)
+        i32(count)
+        u16(0) // int locals
+        u16(2) // string locals (the arguments)
+        u16(0) // long locals
+        u16(0) // int args
+        u16(2) // string args
+        u16(0) // long args
+        out.write(0) // switch tables
+        u16(1) // footer length: the switch-table count byte
+        return out.toByteArray()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
@@ -281,6 +354,16 @@ object SummoningInterfaceScriptTool {
                 mutations += CacheMutation(CLIENTSCRIPT_INDEX, LABEL_SCRIPT, 0, label, "clientscript $LABEL_SCRIPT: follower dismiss / pick-up labels")
             } else {
                 check(existing.contentEquals(label)) { "clientscript $LABEL_SCRIPT exists with other bytes - refusing to overwrite" }
+            }
+            val storeExisting = library.data(CLIENTSCRIPT_INDEX, STORE_LABEL_SCRIPT, 0)
+            val store = storeLabelScript()
+            val storeDecoded = ProductionTabClientScriptPatchTool.decode(store)
+            check(storeDecoded.size == 14 && storeDecoded.last().opcode == RETURN) { "store label script encodes to $storeDecoded" }
+            if (storeExisting == null) {
+                check(library.index(CLIENTSCRIPT_INDEX).archiveIds().maxOrNull() == STORE_LABEL_SCRIPT - 1) { "clientscript $STORE_LABEL_SCRIPT is not the next free id" }
+                mutations += CacheMutation(CLIENTSCRIPT_INDEX, STORE_LABEL_SCRIPT, 0, store, "clientscript $STORE_LABEL_SCRIPT: Follower Details Store / Renew label and tooltip (N423)")
+            } else {
+                check(storeExisting.contentEquals(store)) { "clientscript $STORE_LABEL_SCRIPT exists with other bytes - refusing to overwrite" }
             }
         } finally {
             library.close()

@@ -139,6 +139,51 @@ class BurdenTrinketsTests {
         }
     }
 
+    /**
+     * Deel 3: every pet follower has its "Upgraded <name>" copy in the cache - same models, head, size and animations, ops Talk-to,
+     * Store, Pick-up and then the pet's own - and the server maps the copy back to its pet everywhere it looks a pet up by npc id.
+     */
+    @Test
+    fun `every pet form has its Upgraded copy and the copy is the same pet`() {
+        Pets.installUpgrades(Pets.parseUpgrades(File(DIR, "pet_upgrades.tsv").readLines()))
+        val defs = SummoningTestCache.definitions
+        val npcs = Pets.variants.map { it.npc }.distinct()
+        assertEquals(380, npcs.size)
+        npcs.forEach { base ->
+            val up = requireNotNull(Pets.upgradedNpc(base)) { "pet npc $base has no Upgraded copy" }
+            val b = defs.get(gg.rsmod.game.fs.def.NpcDef::class.java, base)
+            val u = defs.get(gg.rsmod.game.fs.def.NpcDef::class.java, up)
+            assertEquals("Upgraded ${b.name}", u.name, "npc $up")
+            assertEquals(b.chatheadModels?.toList(), u.chatheadModels?.toList(), "npc $up head")
+            assertEquals(b.size, u.size, "npc $up size")
+            assertEquals(b.basId, u.basId, "npc $up animations")
+            val ops = u.options.toList().take(5).filterNotNull().filter { it.isNotBlank() }
+            // Talk-to (when the pet has it), then Store, then Pick-up and the pet's own ops.
+            assertEquals("Store", ops[if (ops.first() == "Talk-to") 1 else 0], "npc $up ops $ops")
+            assertTrue(ops.size <= 5 && "Pick-up" in ops, "npc $up ops $ops")
+            assertEquals(base, Pets.baseNpc(up))
+            assertEquals(Pets.variantOfNpc(base), Pets.variantOfNpc(up))
+            assertTrue(Pets.isPetNpc(up) && Pets.isUpgradedNpc(up))
+        }
+    }
+
+    /** Deel 4: one pack per trinket size, all saved (registered keys), labelled as the pet's for Perdu. */
+    @Test
+    fun `the pet packs are registered, sized per trinket and named as the pet's`() {
+        BurdenTrinkets.Tier.values().forEach { t ->
+            val key = BeastOfBurden.PET_KEYS.getValue(t)
+            assertEquals(t.slots, key.capacity)
+            assertTrue(key in BeastOfBurden.allKeys, "${key.name} is not registered (it would not be saved)")
+            assertEquals("your pet's pack", gg.rsmod.plugins.content.mechanics.ownership.Possessions.label(key))
+        }
+        assertEquals("your familiar's pack", gg.rsmod.plugins.content.mechanics.ownership.Possessions.label(BeastOfBurden.PACK_YAK_KEY))
+        // The orb of an upgraded pet is a beast of burden's (design v6): Call, Take BoB, Pick-up, Follower Details.
+        assertEquals(
+            setOf(FamiliarAction.CALL, FamiliarAction.DISMISS, FamiliarAction.TAKE_BOB, FamiliarAction.FOLLOWER_DETAILS),
+            Pets.UPGRADED_ORB_ACTIONS,
+        )
+    }
+
     private fun newPlayer(): Player {
         val defs = SummoningTestCache.definitions
         val player = mockk<Player>(relaxed = true)

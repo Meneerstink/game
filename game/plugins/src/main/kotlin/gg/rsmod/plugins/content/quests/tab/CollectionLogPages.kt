@@ -23,7 +23,7 @@ import gg.rsmod.plugins.content.skills.summoning.Pets
  *    give at the bottom (N268, owner 2026-10-24; a breach monster's chest-list roll gives the chest's pets too).
  *  - Clues: the elite casket's uniques (1/1,000 per roll or rarer, [EliteCasketTable.itemProbabilities]).
  *  - Minigames (N276): Pest Control, the Void Knight reward items as OSRS lists them (+ the 2011 deflector this server sells).
- *  - Other: every pet.
+ *  - Other: the five Beast of burden trinkets (N423), every pet.
  */
 object CollectionLogPages {
     enum class Category(val title: String) { BOSSES("Bosses"), DEADMAN("Deadman"), CLUES("Clues"), MINIGAMES("Minigames"), OTHER("Other") }
@@ -143,6 +143,8 @@ object CollectionLogPages {
         }
         // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
+        // ---- Other: N423 (owner 2026-10-29 23:4x: "alle 5 in de Collection Log") the five burden trinkets - three drop, two are sold.
+        pages += Page("burden_trinkets", Category.OTHER, "Burden Trinkets", emptyList(), gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.values().map { it.item })
         // ---- Other: every pet.
         val pets = Pets.infos.keys.mapNotNull { Pets.baseItem(it) }.distinct().sortedBy { name(it) }
         if (pets.isNotEmpty()) pages += Page("pets", Category.OTHER, "All Pets", emptyList(), pets)
@@ -163,7 +165,9 @@ object CollectionLogPages {
         // No OSRS page: the pet and the rare lines of the boss's own table (1/100 or rarer), never a shared table's lines.
         val out = ArrayList<Int>()
         view.lines.filter { it.tag == DropSources.Tag.PET }.forEach { out += it.item }
-        view.lines.filter { it.tag == DropSources.Tag.NONE && it.normal > 0.0 && it.normal <= 1.0 / 100 && !name(it.item).startsWith("clue scroll") }
+        // N423: the burden trinkets have their own page (they drop from every boss, not this one's).
+        view.lines.filter { it.tag == DropSources.Tag.NONE && it.normal > 0.0 && it.normal <= 1.0 / 100 && !name(it.item).startsWith("clue scroll") &&
+            !gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(it.item) }
             .sortedBy { it.normal }.forEach { out += it.item }
         return out.distinct()
     }

@@ -65,6 +65,19 @@ class SummoningInterfaceScriptToolTests {
         assertContentEquals(panel, SummoningInterfaceScriptTool.patchPanelScript(panel))
     }
 
+    /** N423: clientscript 5396 relabels 662:69 (op 1 and its onMouseRepeat 779 tooltip) - Store for an upgraded pet. */
+    @Test
+    fun `the store label script is in the cache exactly as the tool encodes it`() {
+        val store = script(SummoningInterfaceScriptTool.STORE_LABEL_SCRIPT)
+        assertContentEquals(SummoningInterfaceScriptTool.storeLabelScript(), store)
+        val code = ProductionTabClientScriptPatchTool.decode(store)
+        assertEquals(listOf(2300, 2412), code.filter { it.opcode >= 2000 }.map { it.opcode })
+        assertEquals(2, code.count { it.opcode == 0 && it.intOperand == (662 shl 16 or 69) })
+        assertEquals("IIIis", code.single { it.opcode == 3 }.stringOperand)
+        // The tooltip hook keeps the cache's own script and arguments (662:69 onMouseRepeat=[779, event_com, 662:73, 662:73, 1, ...]).
+        assertEquals(listOf(779, -2147483645, 662 shl 16 or 73, 662 shl 16 or 73, 1), code.subList(4, 9).map { it.intOperand })
+    }
+
     /**
      * N427: for a follower enum 1279 does not know ("Animal": every pet) 751 wrote OC_NAME(varp 448) - the item's "Pet Kraken" -
      * into 662:54. That branch now lands after both name writes, so only a known familiar's enum name is still written by 751.

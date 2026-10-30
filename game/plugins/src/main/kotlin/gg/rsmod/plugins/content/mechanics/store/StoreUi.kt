@@ -472,10 +472,13 @@ object StoreUi : KLogging() {
         index: Int,
     ): Card {
         val tier = tierLabel(entry)
+        val trinket = gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.tier(entry.purchaseItem)
         val subtitle =
             when {
                 entry.kind == Kind.KIT -> tier + name(player, entry.purchaseItem)
                 entry.kind == Kind.UNLOCK -> tier + "Max cape look"
+                // N423: a burden trinket upgrades a pet - it does not follow you itself.
+                trinket != null -> tier + "Your pet carries ${trinket.slots} items"
                 StoreCatalogue.section(entry) == Section.PETS -> tier + "Pet - follows you around"
                 else -> tier + entry.category
             }
@@ -678,6 +681,12 @@ object StoreUi : KLogging() {
                 )
             bought > 1 -> player.message("You buy ${bought.format()} x ${name(player, entry.purchaseItem)} for ${cost.format()} ${currency.plural}.")
             else -> player.message("You buy ${name(player, entry.purchaseItem)} for ${cost.format()} ${currency.plural}.")
+        }
+        // N423 (owner: "alle 5 in de Collection Log"): a bought burden trinket fills its Collection Log slot too and is remembered
+        // for Perdu (never lost).
+        if (gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(entry.purchaseItem)) {
+            gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.recordOwned(player)
+            runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "store", listOf(entry.purchaseItem to bought)) }
         }
         renderPreview(player)
     }

@@ -25,6 +25,7 @@ object Possessions {
             key.name == "gravestone" -> "your gravestone"
             key.name == "death_recovery" -> "Death's Office"
             key.name == "looting_bag" -> "your looting bag"
+            key.name.startsWith("bob_pet_") -> "your pet's pack"
             key.name.startsWith("bob_") -> "your familiar's pack"
             key.name == "random_event_gift" -> "your random event gift"
             else -> "your ${key.name.replace('_', ' ')}"

@@ -199,7 +199,7 @@ object DropSources {
             Kind.NPC -> npcView(player, source, rate)
             Kind.BREACH -> breachView(world, rate, source.modelNpc)
             Kind.CHEST -> chestView(world, 1.0, emptySet())
-            Kind.GUARDIAN -> View(listOfNotNull(archaic(world, "top damage")), emptyList())
+            Kind.GUARDIAN -> View(listOfNotNull(archaic(world, "top damage")), sorted(world, trinketLines(world, source.modelNpc)))
             Kind.BARROWS -> barrowsView(world, rate)
             Kind.JAD -> jadView(world, source, rate)
         }
@@ -253,7 +253,26 @@ object DropSources {
             walk(world, table, DropTableFactory.lineChances(table, rate), DropTableFactory.lineChances(table, 1.0), 1.0, 1.0, "t:${table.name}", lines)
         }
         petLine(world, source.tableNpc, rate)?.let { lines += it }
+        lines += trinketLines(world, source.tableNpc)
         return View(mergeAlways(always), sorted(world, merge(lines)))
+    }
+
+    /**
+     * N423 deel 5: the burden trinkets a kill of [npc] can give - the same chance for everyone (no bracket boost), so Your = Normal
+     * ([gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops]).
+     */
+    private fun trinketLines(world: World, npc: Int): List<Line> {
+        val drops = gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops
+        val kind = drops.sourceOf(world, npc) ?: return emptyList()
+        return trinketLines(world, kind)
+    }
+
+    private fun trinketLines(world: World, kind: gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.Source): List<Line> {
+        val drops = gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops
+        return drops.DROPPED.map { t ->
+            val c = drops.chance(kind, t)
+            Line("trinket:${t.item}", t.item, itemName(world, t.item), "1", c, c)
+        }
     }
 
     /** N313: the boss pet of [npc] - Normal the OSRS chance, Your chance with the bracket boost (the roll's own [Pets.dropChance]). */
@@ -362,6 +381,7 @@ object DropSources {
         val lines = ArrayList<Line>()
         // N306: a breach boss gives only its own pet (pet_tiers drop npcs), with the bracket boost (N313).
         petLine(world, npc, rate)?.let { lines += it }
+        lines += trinketLines(world, npc)
         // The chest-list extra roll (BreachLoot.roll, BREACH_EXTRA_CHANCE), then one pick of the chest list's items (no pets, N306).
         val chestY = intChance(rate, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
         val chestN = intChance(1.0, DeadmanChestConfig.BREACH_EXTRA_CHANCE)
@@ -423,6 +443,7 @@ object DropSources {
             val c = 1.0 / PrayerScrolls.CHEST_CHANCE / PrayerScrolls.SCROLLS.size
             lines += Line("scroll$i", item, itemName(world, item), "1", c, c)
         }
+        lines += trinketLines(world, gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops.Source.CHEST)
         return View(emptyList(), sorted(world, lines))
     }
 
@@ -449,6 +470,7 @@ object DropSources {
     private fun jadView(world: World, source: Source, rate: Double): View {
         val lines = ArrayList<Line>()
         petLine(world, source.modelNpc, rate)?.let { lines += it }
+        lines += trinketLines(world, source.modelNpc)
         return View(listOf(Line("cape", Items.FIRE_CAPE, itemName(world, Items.FIRE_CAPE), "1", 1.0, 1.0, note = "Fight Caves")), lines)
     }
 

@@ -148,21 +148,24 @@ suspend fun QueueTask.confirmDismiss(player: Player) {
  *    silent, which is indistinguishable from a broken button. It now says so.
  */
 fun takeBeastOfBurdenItems(player: Player) {
-    if (!FamiliarCapabilityTable.activeSupports(player, FamiliarAction.TAKE_BOB)) {
+    // N423: an upgraded pet carries like a beast of burden; the words name it a pet.
+    val pet = BeastOfBurden.isUpgradedPetOut(player)
+    val who = if (pet) "pet" else "familiar"
+    if (!pet && !FamiliarCapabilityTable.activeSupports(player, FamiliarAction.TAKE_BOB)) {
         player.message("Your familiar cannot carry items for you.")
         return
     }
     val stored = BeastOfBurden.storedCount(player)
     if (stored == 0) {
-        player.message("Your familiar isn't carrying anything.")
+        player.message("Your $who isn't carrying anything.")
         return
     }
     val withdrawn = BeastOfBurden.withdrawAll(player)
     when {
         withdrawn == 0 -> player.message("You don't have enough inventory space to take those items.")
         withdrawn < stored ->
-            player.message("You take $withdrawn item(s) from your familiar; you have no room for the rest.")
-        else -> player.message("You withdraw $withdrawn item(s) from your familiar.")
+            player.message("You take $withdrawn item(s) from your $who; you have no room for the rest.")
+        else -> player.message("You withdraw $withdrawn item(s) from your $who.")
     }
 }
 
@@ -392,6 +395,9 @@ on_login {
     Familiar.restoreOnLogin(player)
     // An OSRS pet that was following at logout comes back the same way (Pets).
     Pets.restoreOnLogin(player)
+    // N423: an upgraded pet's pack with no upgraded pet out to carry it (the trinket or the pet gone meanwhile) goes to Death's
+    // Office, as a dismissed familiar's cargo would - never stranded.
+    BeastOfBurden.rescueStrandedPetCargo(player)
     // N414: every pet the player has (or has in the Collection Log) counts as owned once - Perdu gives a lost one back.
     Pets.observe(player)
     // Unconditional: varps persist, so an account that logged out with a familiar and then lost it
@@ -502,7 +508,11 @@ on_button(662, 51) {
     }
 }
 
-on_button(662, 69) { // "Renew Familiar"
+on_button(662, 69) { // "Renew Familiar" - N423: "Store" for an upgraded pet (SummoningUi, clientscript 5396)
+    if (Familiar.current(player) == null && BeastOfBurden.isUpgradedPetOut(player)) {
+        FamiliarInventory.open(player)
+        return@on_button
+    }
     player.queue { confirmRenew(player) }
 }
 
@@ -584,7 +594,9 @@ on_button(747, arrayOf(14, 23)) { // "Attack" - see R07.3b note on 662's Attack 
 }
 
 on_button(747, arrayOf(9, 18)) { // "Follower Details" - orb and skill-tab share one panel state.
-    if (FamiliarCapabilityTable.active(player)?.supports(FamiliarAction.FOLLOWER_DETAILS) == true) {
+    if (FamiliarCapabilityTable.active(player)?.supports(FamiliarAction.FOLLOWER_DETAILS) == true ||
+        (Familiar.current(player) == null && FamiliarAction.FOLLOWER_DETAILS in Pets.orbActions(player))
+    ) {
         FollowerDetailsTab.open(player)
     }
 }

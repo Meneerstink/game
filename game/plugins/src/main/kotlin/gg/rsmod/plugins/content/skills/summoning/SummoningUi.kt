@@ -74,6 +74,9 @@ object SummoningUi {
     /** Room for the follower's name on its bar (662:54) in the bold font; a wider name is drawn in p11 (N384). */
     private const val NAME_BAR_WIDTH = 160
 
+    /** The name text box itself (662:54 is 165 px wide): wider than this in p11 the client wraps the name under the bar. */
+    private const val NAME_TEXT_WIDTH = 165
+
     /** The scroll counter under the special-move button (`onInvTransmit` script 769, inv 93). */
     private const val PANEL_SCROLL_COUNT = 66
 
@@ -93,6 +96,23 @@ object SummoningUi {
 
     /** "Renew Familiar", and its icon. */
     private val PANEL_RENEW = intArrayOf(69, 70)
+
+    /** The icon of [PANEL_RENEW] (662:70): the cache's renew pouch, or (N423) the backpack for an upgraded pet's Store. */
+    private const val PANEL_RENEW_ICON = 70
+    private const val RENEW_SPRITE = 1747
+
+    /** The gameframe's inventory-tab backpack (clientscript 1766 sets it on 548:142 / 746:27): an upgraded pet's Store. */
+    private const val STORE_SPRITE = 1821
+
+    /** Clientscript 5396 (SummoningInterfaceScriptTool point 6): `(op, tooltip)` of 662:69. */
+    private const val STORE_LABEL_SCRIPT = 5396
+
+    /**
+     * The familiar-only parts of the familiar column 72 (N423: shown again for an upgraded pet for its Take BoB / Store row): the
+     * special-move bar 17, Summoning points 18/41, time left 42/43 and the scroll graphics 55-59. The pet column 71 keeps its own
+     * growth / hunger icons in the same place.
+     */
+    private val FAMILIAR_ONLY_IN_72 = listOf(17, 18, 41, 42, 43, 55, 56, 57, 58, 59)
 
     /** "Call Follower", and its icon. */
     private val PANEL_CALL = intArrayOf(49, 50)
@@ -440,13 +460,23 @@ object SummoningUi {
         // N428 (owner 2026-10-30: "alleen die tekst 2 keer NA weg, niet de iconen"): script 753's text fields hidden for a pet, the
         // growth and hunger icons stay.
         PET_VALUE_TEXTS.forEach { player.setComponentHidden(PANEL, it, pet) }
+        // N423: an upgraded pet carries like a beast of burden - the familiar column comes back for its Take BoB / Store row only.
+        val upgraded = pet && BeastOfBurden.isUpgradedPetOut(player)
         player.setComponentHidden(PANEL, PANEL_MODEL_LAYER, !active)
         PANEL_BACKDROP_RECTS.forEach { player.setComponentHidden(PANEL, it, !active) }
-        player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || pet)
+        player.setComponentHidden(PANEL, PANEL_FAMILIAR_LAYER, !active || (pet && !upgraded))
+        FAMILIAR_ONLY_IN_72.forEach { player.setComponentHidden(PANEL, it, upgraded) }
         player.setComponentHidden(PANEL, PANEL_SCROLL_COUNT, !active || pet)
         PANEL_CALL.forEach { player.setComponentHidden(PANEL, it, !active) }
         PANEL_DISMISS.forEach { player.setComponentHidden(PANEL, it, !active) }
-        PANEL_RENEW.forEach { player.setComponentHidden(PANEL, it, !active || pet) }
+        PANEL_RENEW.forEach { player.setComponentHidden(PANEL, it, !active || (pet && !upgraded)) }
+        if (upgraded) {
+            player.setComponentSprite(PANEL, PANEL_RENEW_ICON, STORE_SPRITE)
+            player.runClientScript(STORE_LABEL_SCRIPT, STORE_OP, STORE_TOOLTIP)
+        } else if (active) {
+            player.setComponentSprite(PANEL, PANEL_RENEW_ICON, RENEW_SPRITE)
+            player.runClientScript(STORE_LABEL_SCRIPT, FamiliarAction.RENEW.label, RENEW_TOOLTIP)
+        }
 
         if (!active) {
             // Script 751 leaves the last familiar's model and name in place, so clear both by
@@ -467,7 +497,11 @@ object SummoningUi {
         // font; a name wider than the bar is drawn in the small font instead (the client's RspsUi font hook).
         // N427 (owner 2026-10-30: "waarom staat er overal Pet voor?"): the follower's own name, as OSRS names the creature at your
         // side - "Zilyana Jr.", "Kraken", "Kitten" - not its item ("Pet Zilyana", "Pet kitten").
+        val ui = gg.rsmod.plugins.content.quests.tab.N108Ui
+        // N423: "Upgraded Tumeken's Damaged Guardian" is wider than the bar's text box (662:54, 165 px) even in the small font and
+        // wrapped onto a second line under the bar; a name that fits neither font ends in "..." (the UI's overflow rule, fitP11).
         val name = player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
+            .let { if (ui.p11(player.world, it) > NAME_TEXT_WIDTH) ui.fitP11(player.world, it, NAME_TEXT_WIDTH) else it }
         // Clientscript 751 (patched, cache - SummoningInterfaceScriptTool point 5) writes a known familiar's enum name over this and
         // leaves every other follower's bar to the server: before, it wrote the pet ITEM's name here on every transmit.
         player.setComponentText(PANEL, PANEL_NAME, name)
@@ -478,7 +512,7 @@ object SummoningUi {
         )
         // The same capability record the orb reads, so the two surfaces cannot disagree.
         val capabilities = FamiliarCapabilityTable.forNpc(npcId!!)
-        val carries = capabilities?.supports(FamiliarAction.TAKE_BOB) == true
+        val carries = capabilities?.supports(FamiliarAction.TAKE_BOB) == true || upgraded
         PANEL_TAKE_BOB.forEach { player.setComponentHidden(PANEL, it, !carries) }
         player.setComponentHidden(PANEL, PANEL_ATTACK_LAYER, capabilities?.supports(FamiliarAction.ATTACK) != true)
         player.setComponentHidden(PANEL, PANEL_SPECIAL, capabilities?.supports(FamiliarAction.SPECIAL_MOVE) != true)
@@ -505,7 +539,7 @@ object SummoningUi {
         val supports: ((FamiliarAction) -> Boolean)? =
             when {
                 capabilities != null -> { action -> capabilities.supports(action) }
-                npcId != null && Pets.isPetNpc(npcId) -> { action -> action in Pets.ORB_ACTIONS }
+                npcId != null && Pets.isPetNpc(npcId) -> Pets.orbActions(player).let { actions -> { action -> action in actions } }
                 else -> null
             }
         if (supports == null) {
@@ -551,6 +585,11 @@ object SummoningUi {
      */
     private const val DISMISS_LABEL_SCRIPT = 5378
     const val PET_PICK_UP = "Pick-up"
+
+    /** N423: 662:69 for an upgraded pet (clientscript 5396), and the cache's own words for a familiar. */
+    const val STORE_OP = "Store"
+    private const val STORE_TOOLTIP = "Store items"
+    private const val RENEW_TOOLTIP = "Renew familiar"
 
     private fun refreshDismissLabels(
         player: Player,

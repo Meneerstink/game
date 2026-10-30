@@ -256,7 +256,10 @@ object BurdenTrinkets {
         store(player, bound)
         player.message("You unbind the ${tier.trinketName} from your ${upgradedName(name)}. It is a plain $name again; the trinket stays yours.")
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "burden trinket ${tier.trinketName} unbound from $pet for ${player.username}" }
-        if (following) Pets.refreshUpgrade(player)
+        if (following) {
+            FamiliarInventory.close(player)
+            Pets.refreshUpgrade(player)
+        }
         return true
     }
 

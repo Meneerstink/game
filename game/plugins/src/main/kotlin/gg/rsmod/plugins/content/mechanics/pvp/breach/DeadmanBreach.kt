@@ -1026,6 +1026,11 @@ object DeadmanBreach {
                 logged += BreachIds.ARCHAIC_EMBLEM_TIER_5 to 1
             }
             runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, logged) }
+            // N423 deel 5: the burden trinkets - a breach boss at the boss chances, a breach monster at its own (no bracket boost).
+            val trinkets = gg.rsmod.plugins.content.skills.summoning.BurdenTrinketDrops
+            trinkets.sourceOf(world, npc.id)?.let { kind -> trinkets.roll(world.random, kind) }?.let { tier ->
+                trinkets.award(player, tier, tile, source, npc.name)
+            }
             runCatching { gg.rsmod.plugins.content.quests.tab.DeadmanTasks.onBreachLoot(player, ledger.damageOf(name)) }
         }
         var paid = 0

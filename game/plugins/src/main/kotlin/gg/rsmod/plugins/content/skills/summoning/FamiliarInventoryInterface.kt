@@ -79,11 +79,13 @@ object FamiliarInventory {
      */
     fun open(player: Player) {
         val npc = Familiar.current(player)
-        if (npc == null || !BeastOfBurden.isCarrierNpc(npc.id)) {
+        // N423: an upgraded pet (a bound burden trinket) opens the same window as a beast of burden.
+        val upgradedPet = npc == null && BeastOfBurden.isUpgradedPetOut(player)
+        if (!upgradedPet && (npc == null || !BeastOfBurden.isCarrierNpc(npc.id))) {
             player.message("You don't have a familiar that can carry items.")
             return
         }
-        val withdrawOnly = BeastOfBurden.isWithdrawOnlyNpc(npc.id)
+        val withdrawOnly = npc != null && BeastOfBurden.isWithdrawOnlyNpc(npc.id)
         player.attr[OPEN_ATTR] = true
         player.openInterface(WINDOW_INTERFACE, InterfaceDestination.MAIN_SCREEN)
         player.openInterface(SIDE_INTERFACE, InterfaceDestination.TAB_AREA)
