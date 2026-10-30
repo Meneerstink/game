@@ -37,7 +37,8 @@ class PernixVirtusRemovedTests {
     fun `every Pernix and Virtus id is unobtainable and taken by the login purge`() {
         // Owner A13 (night run 2026-10-12): the Deadman (deg) / corrupt / Torva used-broken ids are unobtainable too - converted to
         // the normal item at login (DeadmanGear.migrate) before this purge runs; every other unobtainable id is Pernix / Virtus.
-        assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS - gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys)
+        // N424: the two looting bag ids are unobtainable too (LootingBagRemovedTests).
+        assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS - gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys - gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS)
         // Owner 2026-10-06 "Delete on login": the login purge takes them through isUnobtainable; IDS stays the removed runes.
         assertTrue(RemovedItems.UNOBTAINABLE_IDS.none { it in RemovedItems.IDS })
         removed.forEach { id ->
@@ -63,9 +64,12 @@ class PernixVirtusRemovedTests {
         assertFalse(Regex("Items\\.(PERNIX|VIRTUS)_").containsMatchIn(nex), "Nex must not drop Pernix or Virtus")
         // Darkan data/npcs/drops/nex.json: each unique its own 1/384 roll = 10 of the declared 3840 slots.
         assertTrue("total(3840)" in nex, "the roll denominator stays 3840, so no other rate moves")
-        listOf("TORVA_FULL_HELM", "TORVA_PLATEBODY", "TORVA_PLATELEGS", "ZARYTE_BOW").forEach {
+        listOf("TORVA_FULL_HELM", "TORVA_PLATEBODY", "TORVA_PLATELEGS").forEach {
             assertTrue("obj(Items.$it, slots = 10)" in nex, "$it keeps 1/384")
         }
+        // N272 (owner 2026-10-24): Nex drops the OSRS Zaryte crossbow at 15/3840 = 1/256 instead of the 2011 Zaryte bow.
+        assertTrue("obj(Items.ZARYTE_CROSSBOW, slots = 15)" in nex, "the Zaryte crossbow drops at 1/256")
+        assertFalse("Items.ZARYTE_BOW" in nex, "the Zaryte bow is no longer a Nex drop")
     }
 
     @Test
