@@ -77,6 +77,9 @@ MaxCapes.VARIANTS.forEach { variant ->
 }
 
 // Masori assembler: Ava's assembler + Masori crafting kit, with a needle.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.MASORI_CRAFTING_KIT, Items.AVAS_ASSEMBLER, Items.MASORI_ASSEMBLER) {
+    it.inventory.contains(Items.NEEDLE)
+}
 on_item_on_item(item1 = Items.MASORI_CRAFTING_KIT, item2 = Items.AVAS_ASSEMBLER) {
     val inventory = player.inventory
     if (!inventory.contains(Items.NEEDLE)) {

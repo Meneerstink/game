@@ -8,6 +8,8 @@ import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
  * Revert option is not bound (its result is not stated on the page read).
  */
 
+// Making it (not topping up an amulet of blood fury) asks first: the amulet can be reverted (AttachConfirm, N444).
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.BLOOD_SHARD, Items.AMULET_OF_FURY, Items.AMULET_OF_BLOOD_FURY)
 listOf(Items.AMULET_OF_FURY, Items.AMULET_OF_BLOOD_FURY).forEach { amuletId ->
     on_item_on_item(item1 = Items.BLOOD_SHARD, item2 = amuletId) {
         val first = player.attr[INTERACTING_ITEM_SLOT] ?: return@on_item_on_item

@@ -21,14 +21,16 @@ import gg.rsmod.plugins.api.ext.playSound
  * - [ATTACH_ORB]: an orb on a staff (Nightmare staff orbs, Orb of Armadyl). ADAPTED by Jagex name: `attach_orb` 2585
  *   (OSRS Wiki "List of sound IDs"; same id and bytes in OSRS and 667). No OSRS page names the Nightmare staff's own sound.
  * - [ATTACH]: every other attach (ornament / colour kits, upgrade kits, max cape variants, boot crystals, ...). ADAPTED: no
- *   OSRS source names a sound for these; owner decision 2026-10-03 that every attach makes a sound. `attach_handle` 2287
- *   (same id and bytes in OSRS and 667).
+ *   OSRS source names a sound for these; owner decision 2026-10-03 that every attach makes a sound. Was `attach_handle` 2287 -
+ *   N444 (owner 2026-10-30, basilisk jaw on a helm: "maakt geen geluid"): rendered with the client's SynthSound it is 250 ms at
+ *   peak 13 of 128, all but silent. Now `cf_attach_cannon` 1422 (Dwarf Cannon, fixing a part on): 449 ms at peak 65, as loud as
+ *   the Dismantle sound 2632 (peak 60) that takes the same items apart again.
  * - [DETACH]: the item-on-item detach routes reuse ItemActionGuard's Dismantle sound (`hunting_dismantle` 2632).
  */
 object ItemAttachSounds {
     const val GODSWORD_FIX = 3889
     const val ATTACH_ORB = Sfx.ATTACH_ORB
-    const val ATTACH = Sfx.ATTACH_HANDLE
+    const val ATTACH = Sfx.CF_ATTACH_CANNON
     const val DETACH = Sfx.HUNTING_DISMANTLE
 
     val GODSWORD_HILTS =

@@ -99,6 +99,9 @@ if (bowHasOption(Items.CRAWS_BOW_U, "Dismantle", worn = false)) {
 }
 
 // Webweaver bow (u): Craw's bow (u) + Fangs of Venenatis, 85 Fletching (boostable), 0 experience.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.FANGS_OF_VENENATIS, Items.CRAWS_BOW_U, Items.WEBWEAVER_BOW_U) {
+    it.skills.getCurrentLevel(Skills.FLETCHING) >= RevenantBows.WEBWEAVER_FLETCHING
+}
 on_item_on_item(item1 = Items.FANGS_OF_VENENATIS, item2 = Items.CRAWS_BOW_U) {
     if (player.skills.getCurrentLevel(Skills.FLETCHING) < RevenantBows.WEBWEAVER_FLETCHING) {
         player.message("You need a Fletching level of ${RevenantBows.WEBWEAVER_FLETCHING} to do that.")
@@ -174,6 +177,10 @@ if (bowHasOption(Items.TONALZTICS_OF_RALOS, "Uncharge", worn = false)) {
 // Scorching bow: tormented synapse on a magic longbow (u), 74 Fletching (boostable), 730 experience for the account's first bow, 73 after.
 val SCORCHING_BOW_CREATED = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "osrs_scorching_bow_created")
 
+// A Fletching level too low fails and hurts (below) - asked only when the bow can really be made.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.TORMENTED_SYNAPSE, Items.MAGIC_LONGBOW_U, Items.SCORCHING_BOW) {
+    it.skills.getCurrentLevel(Skills.FLETCHING) >= ScorchingBow.FLETCHING_LEVEL
+}
 on_item_on_item(item1 = Items.TORMENTED_SYNAPSE, item2 = Items.MAGIC_LONGBOW_U) {
     if (player.skills.getCurrentLevel(Skills.FLETCHING) < ScorchingBow.FLETCHING_LEVEL) {
         if (player.getCurrentLifepoints() < ScorchingBow.FAIL_MIN_HITPOINTS) {

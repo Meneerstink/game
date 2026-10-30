@@ -301,6 +301,21 @@ gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
         "loc $id near ${p.tile.x},${p.tile.z}: ${found.joinToString("; ").ifEmpty { "none" }}"
     }
 }
+// `specbars` (N443, owner 2026-10-30: Craw's bow shows a special attack bar and "de spec werkt niet"): the client draws the bar for
+// every weapon whose cache param 687 is set; lists the weapons that show a bar without a special the server knows, and the reverse.
+gg.rsmod.game.CommandServerCommands.handlers["specbars"] = { w, _ ->
+    val barNoSpecial = ArrayList<String>()
+    val specialNoBar = ArrayList<String>()
+    for (id in 0 until w.definitions.getCount(gg.rsmod.game.fs.def.ItemDef::class.java)) {
+        val def = runCatching { w.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, id) }.getOrNull() ?: continue
+        if (def.equipSlot != 3 || def.noted || def.isPlaceholder || def.name.isBlank() || def.name == "null") continue
+        val bar = (def.params.get(687) as? Int ?: 0) != 0
+        val special = gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks.hasSpecialAttack(id)
+        if (bar && !special) barNoSpecial += "$id ${def.name}"
+        if (special && !bar) specialNoBar += "$id ${def.name}"
+    }
+    "bar without special (${barNoSpecial.size}): ${barNoSpecial.joinToString("; ")} || special without bar (${specialNoBar.size}): ${specialNoBar.joinToString("; ")}"
+}
 // `nearnpcs <name> [radius]` (N448 pathing loops): the player's tile and combat target, then every npc within the radius - id#index,
 // tile, hitpoints, combat target - one line, so a tick-by-tick poll shows who steps where.
 gg.rsmod.game.CommandServerCommands.handlers["nearnpcs"] = { w, a ->

@@ -62,6 +62,9 @@ on_item_option(item = Items.TOXIC_STAFF_OF_THE_DEAD, option = "Uncharge") {
 }
 
 // Wiki: Magic fang on a Staff of the dead, 59 Crafting (no experience); reversible while uncharged (Dismantle).
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.MAGIC_FANG, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED) {
+    it.skills.getCurrentLevel(Skills.CRAFTING) >= StaffOfTheDead.FANG_CRAFTING_LEVEL
+}
 on_item_on_item(item1 = Items.MAGIC_FANG, item2 = Items.STAFF_OF_THE_DEAD) {
     if (player.skills.getCurrentLevel(Skills.CRAFTING) < StaffOfTheDead.FANG_CRAFTING_LEVEL) {
         player.message("You need a Crafting level of ${StaffOfTheDead.FANG_CRAFTING_LEVEL} to do that.")

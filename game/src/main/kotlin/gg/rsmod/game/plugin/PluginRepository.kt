@@ -1957,9 +1957,18 @@ class PluginRepository(
 
         val hash = (max shl 16) or min
         val plugin = itemOnItemPlugins[hash] ?: return false
-        p.executePlugin(plugin)
+        val proceed = { p.executePlugin(plugin) }
+        if (itemOnItemInterceptor?.invoke(p, item1, item2, proceed) == true) return true
+        proceed()
         return true
     }
+
+    /**
+     * N444 (owner 2026-10-30, basilisk jaw on a helm of neitiznot: "geeft ook geen melding van are you sure"): runs in front of every
+     * bound item-on-item route, like [itemOptionInterceptor] for item options. Returns true when it took the route over (it asks
+     * first and runs [proceed] itself on Yes).
+     */
+    var itemOnItemInterceptor: ((p: Player, item1: Int, item2: Int, proceed: () -> Unit) -> Boolean)? = null
 
     fun bindItemOnGroundItem(
         invItem: Int,

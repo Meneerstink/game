@@ -44,6 +44,10 @@ listOf(
 AvernicTreads.Boots.values().forEach { boots ->
     AvernicTreads.ALL.forEach { treads ->
         if (AvernicTreads.upgraded(treads, boots) == null) return@forEach
+        gg.rsmod.plugins.content.items.combine.AttachConfirm.route(boots.item, treads, AvernicTreads.upgraded(treads, boots)!!) {
+            it.has(Skills.MAGIC, AvernicTreads.MAGIC_LEVEL, boostable = true) && it.has(Skills.RUNECRAFTING, AvernicTreads.RUNECRAFT_LEVEL, boostable = true) &&
+                it.inventory.getItemCount(Items.DEMON_TEAR) >= AvernicTreads.TEARS_PER_PAIR
+        }
         on_item_on_item(item1 = boots.item, item2 = treads) {
             if (!player.has(Skills.MAGIC, AvernicTreads.MAGIC_LEVEL, boostable = true) || !player.has(Skills.RUNECRAFTING, AvernicTreads.RUNECRAFT_LEVEL, boostable = true)) {
                 player.message("You need level ${AvernicTreads.MAGIC_LEVEL} Magic and ${AvernicTreads.RUNECRAFT_LEVEL} Runecraft to do that.")
@@ -86,6 +90,9 @@ listOf(Items.MALEDICTION_WARD_OR to Items.MALEDICTION_WARD, Items.ODIUM_WARD_OR 
 }
 
 // Elidinis' ward (f) and its Dismantle.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.ARCANE_SIGIL, Items.ELIDINIS_WARD, Items.ELIDINIS_WARD_F) {
+    it.has(Skills.PRAYER, 90, boostable = true) && it.has(Skills.SMITHING, 90, boostable = true) && it.inventory.getItemCount(Items.SOUL_RUNE) >= 10_000
+}
 on_item_on_item(item1 = Items.ARCANE_SIGIL, item2 = Items.ELIDINIS_WARD) {
     if (!player.has(Skills.PRAYER, 90, boostable = true) || !player.has(Skills.SMITHING, 90, boostable = true)) {
         player.message("You need level 90 Prayer and Smithing to do that.")

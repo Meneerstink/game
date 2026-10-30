@@ -50,7 +50,8 @@ class ItemAttachSoundsTests {
         val orKit = CombinationData.values.single { it.resultItem == Items.ARMADYL_GODSWORD_OR }
         assertEquals(ItemAttachSounds.ATTACH, ItemAttachSounds.forAttach(orKit.items.toList()))
         assertEquals(2585, ItemAttachSounds.ATTACH_ORB)
-        assertEquals(2287, ItemAttachSounds.ATTACH)
+        // N444: attach_handle 2287 rendered at peak 13 of 128 (inaudible); cf_attach_cannon 1422 peaks at 65.
+        assertEquals(1422, ItemAttachSounds.ATTACH)
         assertEquals(Sfx.HUNTING_DISMANTLE, ItemAttachSounds.DETACH)
     }
 

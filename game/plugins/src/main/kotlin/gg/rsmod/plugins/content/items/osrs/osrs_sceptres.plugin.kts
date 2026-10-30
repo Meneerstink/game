@@ -6,6 +6,7 @@ package gg.rsmod.plugins.content.items.osrs
  * OSRS requirements of the choice quests (OsrsQuestRequirements). BLOCKED: the Ancient sceptre itself is made by Eblis in OSRS.
  */
 AncientSceptres.QUARTZ_UPGRADES.forEach { (quartz, sceptre) ->
+    gg.rsmod.plugins.content.items.combine.AttachConfirm.route(quartz, Items.ANCIENT_SCEPTRE, sceptre) { OsrsQuestRequirements.canUpgradeSceptre(it) }
     on_item_on_item(item1 = quartz, item2 = Items.ANCIENT_SCEPTRE) {
         if (!OsrsQuestRequirements.canUpgradeSceptre(player)) {
             player.message("You need to complete Desert Treasure II to empower the sceptre.")

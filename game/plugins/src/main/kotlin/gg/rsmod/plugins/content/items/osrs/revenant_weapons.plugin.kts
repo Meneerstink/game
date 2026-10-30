@@ -129,6 +129,7 @@ val REV_UPGRADES =
 val REV_UPGRADE_LEVEL = 85
 
 REV_UPGRADES.forEach { upgrade ->
+    gg.rsmod.plugins.content.items.combine.AttachConfirm.route(upgrade.part, upgrade.base, upgrade.result) { it.skills.getCurrentLevel(upgrade.skill) >= REV_UPGRADE_LEVEL }
     on_item_on_item(item1 = upgrade.part, item2 = upgrade.base) {
         if (player.skills.getCurrentLevel(upgrade.skill) < REV_UPGRADE_LEVEL) {
             player.message("You need a ${upgrade.skillName} level of $REV_UPGRADE_LEVEL to do that.")

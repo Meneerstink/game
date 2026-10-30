@@ -97,6 +97,7 @@ if (helmHasOption(Items.SERPENTINE_HELM_UNCHARGED, "Dismantle", worn = false)) {
 
 // Neitiznot faceguard: OSRS makes it with Olaf the Bard ("Talk to Olaf the Bard with a basilisk jaw"); ADAPTED here as the basilisk jaw
 // used on a helm of neitiznot. Dismantle gives both parts back.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT, Items.NEITIZNOT_FACEGUARD)
 on_item_on_item(item1 = Items.BASILISK_JAW, item2 = Items.HELM_OF_NEITIZNOT) {
     if (!player.inventory.contains(Items.BASILISK_JAW) || !player.inventory.contains(Items.HELM_OF_NEITIZNOT)) return@on_item_on_item
     player.inventory.remove(Items.BASILISK_JAW, 1)

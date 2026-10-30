@@ -6,6 +6,9 @@ package gg.rsmod.plugins.content.items
  */
 ItemActionGuard.install(world.plugins)
 
+// N444: the same "Are you sure" before attaching a part whose result can be taken apart again (AttachConfirm).
+gg.rsmod.plugins.content.items.combine.AttachConfirm.install(world.plugins)
+
 // A charged weapon created without charges (spawn, shop, Grand Exchange, reward) is its uncharged OSRS item (ChargedItems).
 gg.rsmod.game.model.container.ItemContainer.creationRedirect = { id -> gg.rsmod.plugins.content.items.osrs.ChargedItems.unchargedFor(id) }
 

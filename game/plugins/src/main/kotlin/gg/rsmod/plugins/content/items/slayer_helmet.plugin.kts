@@ -76,11 +76,20 @@ val helmetComponents = HELMET_PARTS + BLACK_MASKS
 helmetComponents.forEachIndexed { i, first ->
     helmetComponents.drop(i + 1).forEach { second ->
         if (first in BLACK_MASKS && second in BLACK_MASKS) return@forEach
+        // N444: asked first (Disassemble takes it apart again), only once every part and the level are there.
+        gg.rsmod.plugins.content.items.combine.AttachConfirm.route(first, second, Items.SLAYER_HELMET) { p ->
+            BLACK_MASKS.any { p.inventory.contains(it) } && HELMET_PARTS.all { p.inventory.contains(it) } && p.skills.getCurrentLevel(Skills.CRAFTING) >= CRAFTING_LEVEL
+        }
         on_item_on_item(item1 = first, item2 = second) { assembleHelmet(player) }
     }
 }
 FULL_HELMET_PARTS.forEachIndexed { i, first ->
-    FULL_HELMET_PARTS.drop(i + 1).forEach { second -> on_item_on_item(item1 = first, item2 = second) { assembleFullHelmet(player) } }
+    FULL_HELMET_PARTS.drop(i + 1).forEach { second ->
+        gg.rsmod.plugins.content.items.combine.AttachConfirm.route(first, second, Items.FULL_SLAYER_HELMET) { p ->
+            FULL_HELMET_PARTS.all { p.inventory.contains(it) } && p.skills.getCurrentLevel(Skills.CRAFTING) >= CRAFTING_LEVEL
+        }
+        on_item_on_item(item1 = first, item2 = second) { assembleFullHelmet(player) }
+    }
 }
 
 /*
