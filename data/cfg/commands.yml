@@ -524,6 +524,11 @@
   usage: "::packettrace"
   description: "Dev tool: toggle logging of every outgoing packet in the server log."
   example: "::packettrace"
+- name: pcpoints
+  rank: admin
+  usage: "::pcpoints <amount>"
+  description: "Set your own Pest Control commendation points (testing the Void Knight rewards)."
+  example: "::pcpoints 300"
 - name: pcstart
   rank: admin
   usage: "::pcstart [novice|intermediate|veteran]"

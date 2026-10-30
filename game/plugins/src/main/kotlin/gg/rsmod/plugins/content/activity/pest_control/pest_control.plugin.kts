@@ -37,6 +37,17 @@ on_command("pcstart", Privilege.ADMIN_POWER) {
     if (!PestControlHandler.forceStart(world, tier)) player.message("Nobody is waiting on the ${tier.displayName.lowercase()} lander.")
 }
 
+// Admin: set your own commendation points (pcpoints <amount>) - testing the Void Knight rewards on a quiet server (N449).
+on_command("pcpoints", Privilege.ADMIN_POWER) {
+    val amount = player.getCommandArgs().firstOrNull()?.toIntOrNull()?.coerceIn(0, 4000)
+    if (amount == null) {
+        player.message("Usage: pcpoints <amount>")
+        return@on_command
+    }
+    player.attr[PEST_POINTS] = amount
+    player.message("Void Knight Commendation Points: $amount")
+}
+
 // ---- the game ---------------------------------------------------------------------------------------------------------
 
 // N205 (owner 2026-10-22: "summoning familiars moeten kunnen meehelpen", every combat familiar attacks pests and portals): no
