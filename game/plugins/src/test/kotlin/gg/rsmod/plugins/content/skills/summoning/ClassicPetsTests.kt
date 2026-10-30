@@ -78,7 +78,8 @@ class ClassicPetsTests {
 
     @Test
     fun `N243 N437 - a new bought pet goes to the backpack with the OSRS message, a second one of a pet the player has is never given`() {
-        val dragons = Pets.variants.filter { it.classic && it.pet == Pets.variants.first { v -> v.classic && v.name == "Baby dragon" }.pet }
+        // a 667 pet: each colour is its own Variant.pet, but all colours of one name are the same pet (Pets.sameAnimal)
+        val dragons = Pets.variants.filter { it.classic && it.name == "Baby dragon" }
         assertTrue(dragons.size >= 2, "baby dragon colours: $dragons")
         val item = dragons[0].item
         val inventory = ItemContainer(SummoningTestCache.definitions, INVENTORY_KEY)
@@ -107,6 +108,7 @@ class ClassicPetsTests {
             assertEquals(Pets.Award.DUPLICATE, Pets.awardItem(player, dragons[1].item, purchased = true), "another colour too")
             assertEquals(1, dragons.sumOf { inventory.getItemCount(it.item) }, "still one baby dragon")
             assertEquals("your inventory", Pets.whereOwned(player, dragons[0].pet))
+            assertEquals("your inventory", Pets.whereOwned(player, dragons[1].pet), "another colour counts as the same pet")
             // The store: one per purchase (no Buy 5 / 10 / X for a pet).
             val storePet = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES.first { Pets.isPetItem(it.purchaseItem) }
             assertTrue(!gg.rsmod.plugins.content.mechanics.store.StoreUi.multiple(storePet), "a pet is bought one at a time")

@@ -517,8 +517,19 @@ object Pets {
     ): String? =
         gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(
             player,
-            variantsOf(pet).flatMap { listOfNotNull(it.item, upgradedItemOf[it.item]) }.toSet(),
+            sameAnimal(pet).flatMap { listOfNotNull(it.item, upgradedItemOf[it.item]) }.toSet(),
         )
+
+    /**
+     * Every variant that counts as the same pet for "one of each pet" (N437, owner 2026-10-30 "altijd maar 1 pet"): the pet's own
+     * variants, and for a 667 pet - each colour is its own [Variant.pet] - every colour with the same name (OSRS: a recolour or
+     * form of a pet is that pet). A second Baby dragon in another colour is a duplicate.
+     */
+    fun sameAnimal(pet: String): List<Variant> {
+        val own = variantsOf(pet)
+        val classic = own.firstOrNull()?.takeIf { it.classic } ?: return own
+        return variants.filter { it.classic && it.name == classic.name }
+    }
 
     /** The pets [player] has ever had, as their [baseItem]s (N414: Perdu gives a lost pet back for free, one of each pet). */
     val OWNED_ATTR = AttributeKey<String>(persistenceKey = "pets_owned")
