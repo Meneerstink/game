@@ -123,6 +123,8 @@ class LootingBagRemovedTests {
                 putAll(extra)
             }
         every { player.attr } returns AttributeMap()
+        // Bank.deposit reads the selected bank tab (a varc).
+        every { player.varcs } returns MutableList(2000) { 0 }
         return player
     }
 
