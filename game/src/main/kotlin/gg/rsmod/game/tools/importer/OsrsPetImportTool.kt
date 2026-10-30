@@ -434,8 +434,8 @@ object OsrsPetImportTool {
             Voice("Pet Penance Queen", "*", 675, "penance_queen_attack", "Penance Queen"),
             Voice("Pet Smoke Devil", "*", 4488, "lore_dust_devil", "smoke devil"),
             Voice("Pet Snakeling", "*", 799, "snake_hiss", "snake"),
-            // N405: the shield sound renders at peak 5 of 128 - inaudible; Zilyana's special instead.
-            Voice("Pet Zilyana", "*", 3876, "godwars_saradomin_special", "Commander Zilyana"),
+            // N439 / V12: her single shield reaction (seq 6969 f12, 1500 ms), instead of the layered special attack.
+            Voice("Pet Zilyana", "*", 3886, "godwars_saradomin_avatar_shield", "Commander Zilyana defend seq 6969 frame 12"),
             Voice("Pet chaos elemental", "*", 345, "chaos_elemental_attack", "Chaos Elemental"),
             Voice("Pet dark core", "Pet dark core", 3895, "Sum2_corp_spirit_beast_mid_proj1", "Corporeal Beast dark core shot (seq 1679)"),
             Voice("Pet dark core", "Pet Corporeal Critter", 3894, "Sum1_spirit_beast_stamp_attack", "Corporeal Beast stomp (seq 1682)"),

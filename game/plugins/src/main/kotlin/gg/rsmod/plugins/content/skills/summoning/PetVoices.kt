@@ -16,7 +16,10 @@ import java.io.File
 object PetVoices {
     const val PATH = "./data/cfg/pets/pet_voices.tsv"
 
-    /** Full volume, like every other pet cue ([Pets]). */
+    /**
+     * Full volume, like every other pet cue ([Pets]). N439: Zilyana's table voice is her soft 1500 ms shield reaction,
+     * shared by appear, Talk-to and the infrequent idle call; it needs no extra attenuation.
+     */
     private const val VOLUME = 255
 
     data class Row(val pet: String, val variant: String, val localSynth: Int, val name: String, val line: String)
