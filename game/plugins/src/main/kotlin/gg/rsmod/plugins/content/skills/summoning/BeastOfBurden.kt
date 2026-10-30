@@ -50,9 +50,9 @@ object BeastOfBurden {
     val BULL_ANT_KEY = ContainerKey("bob_bull_ant", capacity = 9, stackType = ContainerStackType.NORMAL)
     val SPIRIT_TERRORBIRD_KEY = ContainerKey("bob_spirit_terrorbird", capacity = 12, stackType = ContainerStackType.NORMAL)
     val ABYSSAL_PARASITE_KEY = ContainerKey("bob_abyssal_parasite", capacity = 7, stackType = ContainerStackType.NORMAL)
-    val ABYSSAL_LURKER_KEY = ContainerKey("bob_abyssal_lurker", capacity = 7, stackType = ContainerStackType.NORMAL)
+    val ABYSSAL_LURKER_KEY = ContainerKey("bob_abyssal_lurker", capacity = 12, stackType = ContainerStackType.NORMAL)
     val WAR_TORTOISE_KEY = ContainerKey("bob_war_tortoise", capacity = 18, stackType = ContainerStackType.NORMAL)
-    val ABYSSAL_TITAN_KEY = ContainerKey("bob_abyssal_titan", capacity = 7, stackType = ContainerStackType.NORMAL)
+    val ABYSSAL_TITAN_KEY = ContainerKey("bob_abyssal_titan", capacity = 20, stackType = ContainerStackType.NORMAL)
     val PACK_YAK_KEY = ContainerKey("bob_pack_yak", capacity = 30, stackType = ContainerStackType.NORMAL)
 
     private val beastOfBurdenStorage = mapOf(

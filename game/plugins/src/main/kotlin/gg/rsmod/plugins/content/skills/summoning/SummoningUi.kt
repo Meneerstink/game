@@ -497,11 +497,10 @@ object SummoningUi {
         // font; a name wider than the bar is drawn in the small font instead (the client's RspsUi font hook).
         // N427 (owner 2026-10-30: "waarom staat er overal Pet voor?"): the follower's own name, as OSRS names the creature at your
         // side - "Zilyana Jr.", "Kraken", "Kitten" - not its item ("Pet Zilyana", "Pet kitten").
-        val ui = gg.rsmod.plugins.content.quests.tab.N108Ui
         // N423: "Upgraded Tumeken's Damaged Guardian" is wider than the bar's text box (662:54, 165 px) even in the small font and
-        // wrapped onto a second line under the bar; a name that fits neither font ends in "..." (the UI's overflow rule, fitP11).
-        val name = player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
-            .let { if (ui.p11(player.world, it) > NAME_TEXT_WIDTH) ui.fitP11(player.world, it, NAME_TEXT_WIDTH) else it }
+        // wrapped onto a second line under the bar. Owner 2026-10-30 (V3): such a name says "Upgr. <name>" here - only the bar, the
+        // npc's own name (overhead, menu, examine) stays whole; a name that still does not fit ends in "..." (fitP11).
+        val name = barName(player.world, player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty())
         // Clientscript 751 (patched, cache - SummoningInterfaceScriptTool point 5) writes a known familiar's enum name over this and
         // leaves every other follower's bar to the server: before, it wrote the pet ITEM's name here on every transmit.
         player.setComponentText(PANEL, PANEL_NAME, name)
@@ -603,6 +602,23 @@ object SummoningUi {
     }
 
     private fun isPetFollower(npcId: Int): Boolean = FamiliarCapabilityTable.forNpc(npcId) == null && Pets.isPetNpc(npcId)
+
+    /**
+     * The follower's name as the Follower Details bar shows it: whole when it fits the small font, else "Upgraded " shortens to
+     * "Upgr. " (owner 2026-10-30, V3 - only the names too wide for the bar), else it ends in "...".
+     */
+    internal fun barName(
+        world: gg.rsmod.game.model.World,
+        name: String,
+    ): String {
+        val ui = gg.rsmod.plugins.content.quests.tab.N108Ui
+        if (ui.p11(world, name) <= NAME_TEXT_WIDTH) return name
+        val short = if (name.startsWith(UPGRADED_PREFIX)) UPGRADED_SHORT + name.removePrefix(UPGRADED_PREFIX) else name
+        return if (ui.p11(world, short) > NAME_TEXT_WIDTH) ui.fitP11(world, short, NAME_TEXT_WIDTH) else short
+    }
+
+    private const val UPGRADED_PREFIX = "Upgraded "
+    private const val UPGRADED_SHORT = "Upgr. "
 
     /** The word an orb action shows for the current follower (the left-click chooser uses the same words as the menu). */
     fun labelOf(

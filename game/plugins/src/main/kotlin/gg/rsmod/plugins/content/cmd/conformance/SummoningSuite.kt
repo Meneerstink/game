@@ -69,9 +69,10 @@ object SummoningSuite : Conformance.Suite {
      * update history: "They used to have a summon duration of 32 minutes and could only hold 7 essence." and (September 2014)
      * "Abyssal titan storage increased from 7 to 20. Abyssal titan duration increased from 32 minutes to 42 minutes." Void's
      * summoning.npcs.toml has `summoning_time_minutes = 93` (the summon level) and capacity 20 (post-2014); Novite (667) has
-     * 32 minutes (1920000 ms) and 7. pouch -> field -> value.
+     * 32 minutes (1920000 ms) and 7. pouch -> field -> value. Storage is NOT era here: owner 2026-10-30 (N426) chose 7 / 12 / 20
+     * essence for parasite / lurker / titan, Void's values.
      */
-    private val ERA = mapOf(12796 to mapOf("time_minutes" to 32, "bob_capacity" to 7))
+    private val ERA = mapOf(12796 to mapOf("time_minutes" to 32))
     private const val ERA_SOURCE = "rs wiki 667 era"
 
     /**

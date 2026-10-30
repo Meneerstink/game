@@ -52,7 +52,7 @@ class SummoningCatalogueTests {
 
     /**
      * The nine beasts of burden and their exact sourced capacities. The three abyssal familiars
-     * carry 7 essence each in this revision - the larger modern numbers date from 2014.
+     * carry 7 / 12 / 20 essence (owner 2026-10-30, N426: RuneScape/Void, not Novite's 2011 7 / 7 / 7).
      */
     @Test
     fun `beasts of burden carry their sourced capacities`() {
@@ -63,9 +63,9 @@ class SummoningCatalogueTests {
                 SummoningPouchData.BULL_ANT to (9 to false),
                 SummoningPouchData.SPIRIT_TERRORBIRD to (12 to false),
                 SummoningPouchData.ABYSSAL_PARASITE to (7 to true),
-                SummoningPouchData.ABYSSAL_LURKER to (7 to true),
+                SummoningPouchData.ABYSSAL_LURKER to (12 to true),
                 SummoningPouchData.WAR_TORTOISE to (18 to false),
-                SummoningPouchData.ABYSSAL_TITAN to (7 to true),
+                SummoningPouchData.ABYSSAL_TITAN to (20 to true),
                 SummoningPouchData.PACK_YAK to (30 to false),
             )
         val actual =

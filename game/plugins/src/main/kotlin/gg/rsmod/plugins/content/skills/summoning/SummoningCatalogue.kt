@@ -38,9 +38,9 @@ enum class FamiliarInventoryKind { NONE, BEAST_OF_BURDEN, FORAGER }
  * that "A forager will find certain items from time to time, and can carry up to 30. You are only
  * able to 'Withdraw' items from these familiars."
  *
- * The three abyssal familiars are 7 essence slots each in this revision. Later sources give the
- * lurker 12 and the titan 20, but the wiki dates the titan's increase to the 15 September 2014
- * update, well after this revision, so the knowledge base value is the correct one here.
+ * The three abyssal familiars carry 7 / 12 / 20 essence (parasite / lurker / titan) - owner 2026-10-30 (N426, V4): the values
+ * RuneScape and Void use, although this revision (Novite 667) had 7 for all three and the titan only got 20 with the
+ * 15 September 2014 update.
  */
 data class FamiliarInventorySpec(
     val kind: FamiliarInventoryKind,
@@ -423,7 +423,7 @@ object SummoningCatalogue {
             FamiliarSkillFocus.CONTROLLED,
             combatLevel = 93,
             categories = setOf(FamiliarCategory.COMBAT, FamiliarCategory.BEAST_OF_BURDEN),
-            inventory = FamiliarInventorySpec(FamiliarInventoryKind.BEAST_OF_BURDEN, 7, essenceOnly = true),
+            inventory = FamiliarInventorySpec(FamiliarInventoryKind.BEAST_OF_BURDEN, 12, essenceOnly = true),
         ),
         entry(
             SummoningPouchData.SPIRIT_COBRA,
@@ -619,7 +619,7 @@ object SummoningCatalogue {
             FamiliarSkillFocus.ATTACK,
             combatLevel = 215,
             categories = setOf(FamiliarCategory.COMBAT, FamiliarCategory.BEAST_OF_BURDEN),
-            inventory = FamiliarInventorySpec(FamiliarInventoryKind.BEAST_OF_BURDEN, 7, essenceOnly = true),
+            inventory = FamiliarInventorySpec(FamiliarInventoryKind.BEAST_OF_BURDEN, 20, essenceOnly = true),
         ),
         entry(
             SummoningPouchData.IRON_TITAN,
