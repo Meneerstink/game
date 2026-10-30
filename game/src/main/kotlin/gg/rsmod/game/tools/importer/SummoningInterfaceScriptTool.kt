@@ -47,6 +47,14 @@ import java.io.ByteArrayOutputStream
  *      PUSH_VARBIT(4282), PUSH_CONSTANT_INT(127), BRANCH_EQUALS -> the instruction after the second IF_SETMODELANIM (87)
  *    so a pet's head keeps exactly what the server sent, and the varbit is never rewritten. Familiars are untouched.
  *
+ * 5. N427 (owner 2026-10-30: "elke pet heet in Follower Details Pet ... waarom staat er overal Pet voor?"): 751 writes the name
+ *    bar 662:54 from enum 1279 (follower npc -> name); a follower it does not know gets the enum's default "Animal" and 751
+ *    then writes OC_NAME(varp 448) - the ITEM's name ("Pet Kraken", "Pet kitten") - over the server's text on every transmit.
+ *    The "Animal" branch now jumps past both IF_SETTEXTs:
+ *      PUSH_CONSTANT_STRING("Animal"), COMPARE, BRANCH_IF_FALSE -> the instruction after the second IF_SETTEXT(662:54)
+ *    so for every pet (and any unmapped familiar) the name bar keeps what the server wrote: the follower npc's own name
+ *    ("Kraken", "Zilyana Jr.", "Kitten" - OSRS names the creature, not the item). Known familiars keep their enum name.
+ *
  * Usage: `[--apply]`.
  */
 object SummoningInterfaceScriptTool {
@@ -83,6 +91,37 @@ object SummoningInterfaceScriptTool {
     private const val BRANCH_EQUALS = 8
     private const val IF_SETMODELANIM = 2110
     private const val PANEL_HEAD = (662 shl 16) or 1
+    private const val PANEL_NAME = (662 shl 16) or 54
+    private const val PUSH_CONSTANT_STRING = 3
+    private const val COMPARE = 4107
+    private const val BRANCH_IF_FALSE = 87
+    private const val BRANCH = 6
+    private const val IF_SETTEXT = 2112
+    const val UNKNOWN_FOLLOWER_NAME = "Animal"
+
+    /**
+     * Point 5: 751's "Animal" branch (OC_NAME of the item into 662:54) jumps past both name writes, so the server's follower name
+     * stays. Idempotent; refuses any other shape of the script.
+     */
+    fun patchPanelName(current: ByteArray): ByteArray {
+        val script = ClientScriptEditor.decode(current)
+        val hits = script.find(PUSH_CONSTANT_STRING to UNKNOWN_FOLLOWER_NAME, COMPARE to null, BRANCH_IF_FALSE to null, BRANCH to null)
+        check(hits.size == 1) { "clientscript $PANEL_SCRIPT: the 'Animal' name check found ${hits.size} times - refusing to guess" }
+        val at = hits[0]
+        val onAnimal = script.code[at + 2]
+        val onKnown = script.code[at + 3]
+        val known = script.indexOf(onKnown.target!!)
+        // The known-name write: PUSH_STRING_LOCAL, PUSH 662:54, IF_SETTEXT; the instruction after it is where both paths meet.
+        check(script.code[known + 1].opcode == PUSH_CONSTANT_INT && script.code[known + 1].int == PANEL_NAME && script.code[known + 2].opcode == IF_SETTEXT) {
+            "clientscript $PANEL_SCRIPT: the known-name IF_SETTEXT(662:54) is not where the branch lands"
+        }
+        val after = script.code[known + 3]
+        if (onAnimal.target === after) return current
+        val item = script.indexOf(onAnimal.target!!)
+        check(script.code.subList(item, known).count { it.opcode == IF_SETTEXT } == 1) { "clientscript $PANEL_SCRIPT: the 'Animal' path is not one IF_SETTEXT" }
+        onAnimal.target = after
+        return script.encode()
+    }
 
     /** Point 4: 751 leaves the head's animation alone for [PET_SELECTOR]. Idempotent; refuses any other shape of the script. */
     fun patchPanelScript(current: ByteArray): ByteArray {
@@ -229,9 +268,9 @@ object SummoningInterfaceScriptTool {
                 }
             }
             val panel = requireNotNull(library.data(CLIENTSCRIPT_INDEX, PANEL_SCRIPT, 0)) { "clientscript $PANEL_SCRIPT missing" }
-            val guarded = patchPanelScript(panel)
+            val guarded = patchPanelName(patchPanelScript(panel))
             if (!guarded.contentEquals(panel)) {
-                mutations += CacheMutation(CLIENTSCRIPT_INDEX, PANEL_SCRIPT, 0, guarded, "clientscript $PANEL_SCRIPT: no enum pose on a pet's Follower Details head (N425)", expectedCurrentSha1 = CacheItemProbeTool.sha1(panel))
+                mutations += CacheMutation(CLIENTSCRIPT_INDEX, PANEL_SCRIPT, 0, guarded, "clientscript $PANEL_SCRIPT: no enum pose on a pet's Follower Details head (N425), no item name over a pet's name bar (N427)", expectedCurrentSha1 = CacheItemProbeTool.sha1(panel))
             }
             val existing = library.data(CLIENTSCRIPT_INDEX, LABEL_SCRIPT, 0)
             val label = labelScript()

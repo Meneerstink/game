@@ -227,6 +227,14 @@ task runPetHeadRecolourTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.PetHeadRecolourTool'
 }
 
+task runSummoningInterfaceScriptTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Summoning clientscripts: Follower Details tab (1766, 8/1387/1314), dismiss labels (5378), N425 no enum pose on a ' +
+        'pet\'s head (751). CacheTransaction, both caches. Usage: ./gradlew :game:runSummoningInterfaceScriptTool --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SummoningInterfaceScriptTool'
+}
+
 task runN108InterfaceImportTool(type: JavaExec) {
     group = 'tools'
     description = 'N108/N104/N103/N109 night job 2026-10-24: Drop Viewer, Collection Log, quest tab 4 tabs, Deadman Tasks window. ' +

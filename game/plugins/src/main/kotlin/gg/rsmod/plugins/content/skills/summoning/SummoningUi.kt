@@ -468,6 +468,9 @@ object SummoningUi {
         // N427 (owner 2026-10-30: "waarom staat er overal Pet voor?"): the follower's own name, as OSRS names the creature at your
         // side - "Zilyana Jr.", "Kraken", "Kitten" - not its item ("Pet Zilyana", "Pet kitten").
         val name = player.world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npcId!!)?.name.orEmpty()
+        // Clientscript 751 (patched, cache - SummoningInterfaceScriptTool point 5) writes a known familiar's enum name over this and
+        // leaves every other follower's bar to the server: before, it wrote the pet ITEM's name here on every transmit.
+        player.setComponentText(PANEL, PANEL_NAME, name)
         gg.rsmod.plugins.content.quests.tab.N108Ui.fonts(
             player,
             PANEL,

@@ -66,6 +66,26 @@ class SummoningInterfaceScriptToolTests {
     }
 
     /**
+     * N427: for a follower enum 1279 does not know ("Animal": every pet) 751 wrote OC_NAME(varp 448) - the item's "Pet Kraken" -
+     * into 662:54. That branch now lands after both name writes, so only a known familiar's enum name is still written by 751.
+     */
+    @Test
+    fun `clientscript 751 writes no item name over a pet's name bar`() {
+        val panel = script(SummoningInterfaceScriptTool.PANEL_SCRIPT)
+        val code = ClientScriptEditor.decode(panel).code
+        val at = code.indices.single { code[it].opcode == 3 && code[it].string == SummoningInterfaceScriptTool.UNKNOWN_FOLLOWER_NAME }
+        assertEquals(87, code[at + 2].opcode, "BRANCH_IF_FALSE on the compare")
+        val landing = code.indexOf(code[at + 2].target!!)
+        // The landing is past both IF_SETTEXT(662:54); the reachable path from the compare to it holds only the known-name write.
+        val writes = code.indices.filter { code[it].opcode == 2112 && code[it - 1].int == (662 shl 16 or 54) }
+        assertEquals(2, writes.size)
+        assertTrue(writes.all { it < landing }, "the 'Animal' branch lands before a name write: $writes vs $landing")
+        assertEquals(writes[1] + 1, landing, "it lands right after the known-name write")
+        assertContentEquals(panel, SummoningInterfaceScriptTool.patchPanelName(panel))
+        assertContentEquals(panel, SummoningInterfaceScriptTool.patchPanelScript(panel), "the N425 guard is kept")
+    }
+
+    /**
      * Owner 2026-10-02 ("Summoning tab disappears"): 1364 hides a tab whose own container (script 8) is empty, and 662 lives
      * on slot 95. Every script that names tab 8's container must name slot 95's instead, in both panes, so the tab is shown
      * whenever the panel is mounted - and no script may still select or test 746:98 / 548:212 as tab 8's page.
