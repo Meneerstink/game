@@ -24,3 +24,8 @@ depletedRockSet.forEach { depletedRock ->
         player.filterableMessage("There is currently no ore available in this rock.")
     }
 }
+
+// K12 N430: the worn Bracelet of clay's "Check" (dead before, census 2026-10-30).
+on_equipment_option(item = Items.BRACELET_OF_CLAY, option = "Check") {
+    player.message(BraceletOfClay.checkMessage(player))
+}

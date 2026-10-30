@@ -177,6 +177,9 @@ object Mining {
                     .getCurrentLevel(Skills.MINING) >= 30
             ) {
                 Items.PURE_ESSENCE
+            } else if (rock == RockType.CLAY) {
+                // K12 N430: a worn Bracelet of clay turns the clay into soft clay (BraceletOfClay).
+                BraceletOfClay.reward(player)
             } else {
                 product?.item ?: rock.reward
             }
