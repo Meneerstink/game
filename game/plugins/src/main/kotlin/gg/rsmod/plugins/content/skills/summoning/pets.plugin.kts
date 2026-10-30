@@ -40,6 +40,13 @@ Pets.variants.forEach { variant ->
             Pets.drop(player, petItem, player.attr[INTERACTING_ITEM_SLOT] ?: -1)
             false
         }
+        // N437 (owner 2026-10-30: "altijd maar 1 pet"): a pet item on the floor (the Deadman's chest with backpack and bank full) stays
+        // there while the player has that pet anywhere else - one of each pet per account.
+        set_ground_item_condition(item = petItem) {
+            val owned = Pets.owns(player, variant.pet)
+            if (owned) player.message("You already have this pet. You can only have one of each pet.")
+            !owned
+        }
         val itemOptions = world.definitions.get(ItemDef::class.java, petItem).inventoryMenu
         if (itemOptions.any { it.equals("metamorphosis", ignoreCase = true) }) {
             on_item_option(item = petItem, option = "metamorphosis") {

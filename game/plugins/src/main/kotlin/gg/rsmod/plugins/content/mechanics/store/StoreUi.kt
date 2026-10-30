@@ -530,8 +530,12 @@ object StoreUi : KLogging() {
     private val BUY_AMOUNTS = listOf(1, 5, 10)
     private const val BUY_X = 3
 
-    /** Entries several of which can be bought at once: items and kits (look unlocks and upgrades are one per purchase). */
-    fun multiple(entry: Entry): Boolean = entry.kind == Kind.ITEM || entry.kind == Kind.KIT
+    /**
+     * Entries several of which can be bought at once: items and kits (look unlocks and upgrades are one per purchase). N437: never a
+     * pet - one of each pet per account.
+     */
+    fun multiple(entry: Entry): Boolean =
+        (entry.kind == Kind.ITEM || entry.kind == Kind.KIT) && !gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(entry.purchaseItem)
 
     /** How many kits one purchase of [entry] gives (N323: one per piece of the set), from the live equipment slots. */
     fun kitsPerPurchase(
@@ -695,20 +699,35 @@ object StoreUi : KLogging() {
      * N216/N243 (owner 2026-10-23): a bought pet comes as a pet - the follower when none is out, else the backpack, else the bank - with
      * the OSRS message and the "Getting pet" sound ([gg.rsmod.plugins.content.skills.summoning.Pets.award]); never lost, so the
      * purchase stops when neither backpack nor bank has room. Returns how many were delivered.
+     *
+     * N437 (owner 2026-10-30: "altijd maar 1 pet"): one of each pet per account, a bought one too - a pet the player already has
+     * anywhere (any form or colour, following, bank, Death's Office, the Grand Exchange ...) is refused before anything is paid, and
+     * one purchase is one pet whatever amount was asked ([multiple]).
      */
     private fun buyPets(
         player: Player,
         entry: Entry,
-        amount: Int,
+        @Suppress("UNUSED_PARAMETER") amount: Int,
     ): Int {
         val pets = gg.rsmod.plugins.content.skills.summoning.Pets
-        var delivered = 0
-        while (delivered < amount && pets.awardOutcome(false, pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace) != gg.rsmod.plugins.content.skills.summoning.Pets.Award.LOST) {
-            pets.awardItem(player, entry.purchaseItem, purchased = true)
-            delivered++
+        val pet = pets.variantOfItem(entry.purchaseItem)?.pet ?: return 0
+        pets.whereOwned(player, pet)?.let { where ->
+            val place =
+                when (where) {
+                    "following you" -> "it's following you"
+                    "the Grand Exchange" -> "it's on the Grand Exchange"
+                    else -> "it's in $where"
+                }
+            player.message("You already have this pet - $place. You can only have one of each pet.")
+            return 0
         }
-        if (delivered == 0) player.message("You don't have enough inventory or bank space.")
-        return delivered
+        if (pets.awardOutcome(false, pets.hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace) == gg.rsmod.plugins.content.skills.summoning.Pets.Award.LOST) {
+            player.message("You don't have enough inventory or bank space.")
+            return 0
+        }
+        // Paid only for a pet that really arrived (follower, backpack or bank).
+        val outcome = pets.awardItem(player, entry.purchaseItem, purchased = true)
+        return if (outcome == null || outcome == gg.rsmod.plugins.content.skills.summoning.Pets.Award.DUPLICATE || outcome == gg.rsmod.plugins.content.skills.summoning.Pets.Award.LOST) 0 else 1
     }
 
     /** One line in `data/logs/store_purchases.log` (also Perdu's imbue, which sells the same catalogue entry). */

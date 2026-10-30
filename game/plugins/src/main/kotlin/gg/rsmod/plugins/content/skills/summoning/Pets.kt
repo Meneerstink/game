@@ -508,8 +508,14 @@ object Pets {
     fun owns(
         player: Player,
         pet: String,
-    ): Boolean =
-        gg.rsmod.plugins.content.mechanics.ownership.Possessions.owns(
+    ): Boolean = whereOwned(player, pet) != null
+
+    /** Where [player] has [pet] (any variant), as [gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned] says it; null = nowhere. */
+    fun whereOwned(
+        player: Player,
+        pet: String,
+    ): String? =
+        gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(
             player,
             variantsOf(pet).flatMap { listOfNotNull(it.item, upgradedItemOf[it.item]) }.toSet(),
         )
@@ -568,8 +574,9 @@ object Pets {
 
     /**
      * A pet reward - a boss roll, a skilling pet, the Deadman's chest, a breach monster, a store purchase (N243, owner 2026-10-23: every
-     * way a pet arrives gives the OSRS message and the "Getting pet" sound): OSRS's follower / backpack / duplicate rules. A
-     * [purchased] pet is never a duplicate (the player paid for this one); returns where it went.
+     * way a pet arrives gives the OSRS message and the "Getting pet" sound): OSRS's follower / backpack / duplicate rules; returns where
+     * it went. N437 (owner 2026-10-30: "altijd maar 1 pet"): a [purchased] pet is a duplicate too - the store refuses an owned pet
+     * before it takes the payment (StoreUi.buyPets), so this only guards; [purchased] keeps it out of the Collection Log.
      */
     fun award(
         player: Player,
@@ -581,7 +588,7 @@ object Pets {
     ): Award? {
         if (item < 0 || variantOfItem(item)?.pet != pet) return null
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
-        val outcome = awardOutcome(!purchased && owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
+        val outcome = awardOutcome(owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
         // N414: a pet with no room anywhere is owned all the same - Perdu gives it back for free (OSRS: it goes to Probita).
         if (outcome == Award.LOST) recordOwned(player, listOf(pet))

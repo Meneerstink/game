@@ -77,10 +77,11 @@ class ClassicPetsTests {
     }
 
     @Test
-    fun `N243 - a bought pet the player already owns is not a duplicate, it goes to the backpack with the OSRS message`() {
-        val item = Pets.variants.first { it.classic && it.name == "Baby dragon" }.item
+    fun `N243 N437 - a new bought pet goes to the backpack with the OSRS message, a second one of a pet the player has is never given`() {
+        val dragons = Pets.variants.filter { it.classic && it.pet == Pets.variants.first { v -> v.classic && v.name == "Baby dragon" }.pet }
+        assertTrue(dragons.size >= 2, "baby dragon colours: $dragons")
+        val item = dragons[0].item
         val inventory = ItemContainer(SummoningTestCache.definitions, INVENTORY_KEY)
-        inventory.add(item, 1)
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns SummoningTestCache.definitions
         val player = mockk<Player>(relaxed = true)
@@ -96,11 +97,19 @@ class ClassicPetsTests {
         mockkObject(Pets)
         try {
             every { Pets.hasFollower(player) } returns true
-            assertEquals(Pets.Award.DUPLICATE, Pets.awardItem(player, item), "a drop of an owned pet stays the OSRS duplicate")
             assertEquals(Pets.Award.BACKPACK, Pets.awardItem(player, item, purchased = true))
-            assertEquals(2, inventory.getItemCount(item), "the bought one is in the backpack")
+            assertEquals(1, inventory.getItemCount(item), "the bought one is in the backpack")
             val texts = messages.filterIsInstance<gg.rsmod.game.message.impl.MessageGameMessage>().map { it.message }
             assertTrue(texts.any { "sneaking into your backpack" in it }, "OSRS backpack message: $texts")
+            // N437 (owner 2026-10-30 "altijd maar 1 pet"): a drop, a purchase, another colour - never a second one.
+            assertEquals(Pets.Award.DUPLICATE, Pets.awardItem(player, item), "a drop of an owned pet stays the OSRS duplicate")
+            assertEquals(Pets.Award.DUPLICATE, Pets.awardItem(player, item, purchased = true), "a bought one too")
+            assertEquals(Pets.Award.DUPLICATE, Pets.awardItem(player, dragons[1].item, purchased = true), "another colour too")
+            assertEquals(1, dragons.sumOf { inventory.getItemCount(it.item) }, "still one baby dragon")
+            assertEquals("your inventory", Pets.whereOwned(player, dragons[0].pet))
+            // The store: one per purchase (no Buy 5 / 10 / X for a pet).
+            val storePet = gg.rsmod.plugins.content.mechanics.store.StoreCatalogue.ENTRIES.first { Pets.isPetItem(it.purchaseItem) }
+            assertTrue(!gg.rsmod.plugins.content.mechanics.store.StoreUi.multiple(storePet), "a pet is bought one at a time")
         } finally {
             unmockkObject(Pets)
         }
