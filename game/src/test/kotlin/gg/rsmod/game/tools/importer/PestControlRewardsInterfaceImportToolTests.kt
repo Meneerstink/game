@@ -60,4 +60,27 @@ class PestControlRewardsInterfaceImportToolTests {
         assertTrue((0 until 72).filter { it !in 22..25 }.all { deflector[it] == before[it] }, "nothing but the origin changes")
         assertTrue(Tool.repairOrigins(current + fixed).isEmpty(), "a repaired cache needs nothing")
     }
+
+    /** N473: the 667 charm rows looked at their charm models from straight above (512 / 0) - three showed an empty disc. */
+    @Test
+    fun `the charm models turn to their item's look and nothing else changes`() {
+        val current = HashMap<Int, ByteArray>()
+        current[18] = model(Tool.VOID_TOP.model, 0, -1)
+        for (c in Tool.CHARMS) current[c.component] = model(c.look.model, 0, 0, xan = 512, yan = 0, zoom = 500)
+
+        val fixed = Tool.repairCharmLooks(current)
+
+        assertEquals(setOf(89, 90, 91, 92), fixed.keys)
+        val spinner = fixed.getValue(89)
+        // 267:18 shows the Void top (item 459 / 0) at 375 / 3: Spinner charm item 377 / 1791 -> 293 / 1794.
+        assertEquals(293, s2(spinner, 26))
+        assertEquals(1794, s2(spinner, 28))
+        assertEquals(500, s2(spinner, 32), "the zoom stays")
+        val ravager = fixed.getValue(91)
+        assertEquals(333, s2(ravager, 26))
+        assertEquals(784, s2(ravager, 28))
+        val before = current.getValue(89)
+        assertTrue((0 until 72).filter { it !in 26..29 }.all { spinner[it] == before[it] }, "nothing but the rotation changes")
+        assertTrue(Tool.repairCharmLooks(current + fixed).isEmpty(), "a repaired cache needs nothing")
+    }
 }

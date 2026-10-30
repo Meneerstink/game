@@ -151,6 +151,43 @@ object PestControlRewardsInterfaceImportTool {
         return out
     }
 
+    /** One 667 charm model component (267:89..92) and the inventory look of the charm item it shows (667 item defs, op 1/4/5/6). */
+    class Charm(val component: Int, val item: Int, val look: Look)
+
+    /**
+     * N473 (2026-10-31): the 667 charm rows show their charm models at xan 512 / yan 0 - from straight above, where the Spinner,
+     * Ravager and Torcher charms are an empty grey disc (only the Shifter's picture stands out). The same models in the inventory
+     * (item look) show the creature. Each charm gets its item's rotation with the 667 screen's own relation to the inventory angle
+     * (267:18 shows the Void top at 375 / 3 for its item 459 / 0, see [withLook]); its box, origin and zoom stay.
+     */
+    val CHARMS =
+        listOf(
+            Charm(89, 12166, Look(31523, 550, 377, 1791, 0, 0)), // Spinner charm
+            Charm(90, 12167, Look(31552, 550, 404, 1791, 1, 0)), // Torcher charm
+            Charm(91, 12164, Look(31536, 550, 417, 781, 0, 0)), // Ravager charm
+            Charm(92, 12165, Look(31547, 550, 377, 1791, 0, 0)), // Shifter charm
+        )
+
+    /** The charm components ([CHARMS]) of [components] whose rotation is not their item's look yet, with only xan / yan set. */
+    fun repairCharmLooks(components: Map<Int, ByteArray>): Map<Int, ByteArray> {
+        val template = components[18] ?: error("$INTERFACE_ID:18 missing")
+        require(u2(template, OFFSET_MODEL) == VOID_TOP.model) { "$INTERFACE_ID:18 model ${u2(template, OFFSET_MODEL)} != ${VOID_TOP.model}" }
+        val out = sortedMapOf<Int, ByteArray>()
+        for (c in CHARMS) {
+            val bytes = components[c.component] ?: error("$INTERFACE_ID:${c.component} missing")
+            require(u2(bytes, OFFSET_MODEL) == c.look.model) { "$INTERFACE_ID:${c.component} model ${u2(bytes, OFFSET_MODEL)} != ${c.look.model}" }
+            require((bytes[OFFSET_MODEL_FLAGS].toInt() and 0x1) == 1) { "$INTERFACE_ID:${c.component} is not an ortho-2d model component" }
+            val xan = Math.floorMod(u2(template, OFFSET_XAN) - VOID_TOP.xan + c.look.xan, 2048)
+            val yan = Math.floorMod(u2(template, OFFSET_YAN) - VOID_TOP.yan + c.look.yan, 2048)
+            if (u2(bytes, OFFSET_XAN) == xan && u2(bytes, OFFSET_YAN) == yan) continue
+            val fixed = bytes.copyOf()
+            put2(fixed, OFFSET_XAN, xan)
+            put2(fixed, OFFSET_YAN, yan)
+            out[c.component] = fixed
+        }
+        return out
+    }
+
     /** [bytes] with its one zero-terminated string [old] replaced by [new] (the op label of a button copy). */
     fun replaceString(
         bytes: ByteArray,
@@ -240,21 +277,28 @@ object PestControlRewardsInterfaceImportTool {
                     "xan=${u2(b, OFFSET_XAN)} yan=${u2(b, OFFSET_YAN)} zoom=${u2(b, OFFSET_ZOOM)}",
             )
         }
-        val built: Map<Int, ByteArray>
+        val built = sortedMapOf<Int, ByteArray>()
         if (current.size == COMPONENT_COUNT) {
-            built = repairOrigins(current)
+            built += repairOrigins(current)
+            built += repairCharmLooks(current)
             if (built.isEmpty()) {
-                println("NO_OP: interface $INTERFACE_ID already has $COMPONENT_COUNT components with the template origins")
+                println("NO_OP: interface $INTERFACE_ID already has $COMPONENT_COUNT components with the template origins and charm looks")
                 return
             }
             built.keys.forEach { id ->
                 val b = current.getValue(id)
-                println("REPAIR 267:$id origin ${s2(b, OFFSET_ORIGIN_X)},${s2(b, OFFSET_ORIGIN_Y)} -> ${s2(built.getValue(id), OFFSET_ORIGIN_X)},${s2(built.getValue(id), OFFSET_ORIGIN_Y)}")
+                val n = built.getValue(id)
+                println(
+                    "REPAIR 267:$id origin ${s2(b, OFFSET_ORIGIN_X)},${s2(b, OFFSET_ORIGIN_Y)} -> ${s2(n, OFFSET_ORIGIN_X)},${s2(n, OFFSET_ORIGIN_Y)}" +
+                        " xan/yan ${u2(b, OFFSET_XAN)}/${u2(b, OFFSET_YAN)} -> ${u2(n, OFFSET_XAN)}/${u2(n, OFFSET_YAN)}",
+                )
             }
         } else {
             val layer = current.getValue(SCROLL_LAYER)
             println("TEMPLATES scrollHeight=${u2(layer, OFFSET_SCROLL_HEIGHT)} -> ${u2(layer, OFFSET_SCROLL_HEIGHT) + SHIFT}")
-            built = build(current)
+            built += build(current)
+            // N473: the moved charm models get their item's rotation too.
+            built += repairCharmLooks(current + built)
         }
         val mutations =
             built.map { (id, bytes) ->
