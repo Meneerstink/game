@@ -78,7 +78,7 @@ object CrownOfHelios {
                     Items.ARMADYL_HELMET,
                     Items.ARMADYL_CHESTPLATE,
                     Items.ARMADYL_CHAINSKIRT,
-                    Items.ZARYTE_BOW,
+                    Items.ZARYTE_CROSSBOW, // N464: the Zaryte bow is removed
                     Items.FIRE_CAPE,
                     Items.AMULET_OF_FURY,
                     Items.RANGER_BOOTS,

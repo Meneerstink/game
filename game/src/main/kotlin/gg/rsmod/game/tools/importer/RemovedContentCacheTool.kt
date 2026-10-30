@@ -29,6 +29,16 @@ object RemovedContentCacheTool {
     private const val GE_FLAG_OPCODE = 65
 
     val REMOVED_ITEMS = listOf(21773, 23744, 23745)
+
+    /**
+     * N464 (owner 2026-10-30: the Zaryte bow "staat nog in de grand exc"; Pernix, Virtus, the Dungeoneering items ... still showed in
+     * the GE search too): every removed or unobtainable item of the server's RemovedItems.geHiddenIds, written to this table by
+     * GeHiddenTableTests, loses the GE flag as well.
+     */
+    private val GE_HIDDEN_TABLE = java.io.File(RspsPaths.data("cfg/removed/ge_hidden.txt"))
+
+    fun geHiddenItems(): List<Int> =
+        (REMOVED_ITEMS + GE_HIDDEN_TABLE.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.trim().toInt() }).distinct().sorted()
     const val SPELLBOOK = 192
     val REMOVED_SPELL_COMPONENTS = listOf(98, 99)
     val SPELL_ENUMS = listOf(727, 729, 2191, 2192)
@@ -114,7 +124,7 @@ object RemovedContentCacheTool {
         val mutations = ArrayList<CacheMutation>()
         val library = CacheLibrary(GAME_CACHE)
         try {
-            for (item in REMOVED_ITEMS) {
+            for (item in geHiddenItems()) {
                 val bytes = library.data(INDEX_ITEMS, item ushr 8, item and 0xFF) ?: error("item $item missing")
                 val edited = ItemDefCodec.cloneWithOverrides(bytes, emptyMap(), removedOpcodes = setOf(GE_FLAG_OPCODE))
                 println("ITEM $item ${ItemDefCodec.readName(bytes)} geFlag=${!edited.contentEquals(bytes)}")

@@ -194,6 +194,14 @@ task runOsrsNpcImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsNpcImportTool'
 }
 
+task runRemovedContentCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Removed items/spells in both caches: no GE flag for data/cfg/removed/ge_hidden.txt (N464), removed spells hidden. ' +
+        'Usage: ./gradlew :game:runRemovedContentCacheTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.RemovedContentCacheTool'
+}
+
 task runOsrsPetImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS pet roster (data/cfg/pets/osrs_pets.tsv): probe, import the skeletal followers (baked), or write the server pet table. ' +

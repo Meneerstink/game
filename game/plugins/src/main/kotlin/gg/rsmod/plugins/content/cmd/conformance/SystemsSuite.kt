@@ -108,8 +108,8 @@ object SystemsSuite : Conformance.Suite {
 
     /**
      * exchange (bug search 2026-10-02, ROOT_CAUSES 133): the Grand Exchange book holds bare ids, so a used, partly degraded
-     * item offered on it reached its buyer fully charged ("absent = full"). `ge_sell` on a used Zaryte bow is refused and
-     * the bow keeps its charges (DGN 2026-10-21: was a Chaotic rapier, which is removed with Dungeoneering and refused for that). Only the refusal is exercised - no offer is written to the book.
+     * item offered on it reached its buyer fully charged ("absent = full"). `ge_sell` on an Abyssal whip carrying charges is refused and
+     * the whip keeps its charges (DGN 2026-10-21: was a Chaotic rapier, N464 2026-10-30: was a Zaryte bow - both removed and refused for that). Only the refusal is exercised - no offer is written to the book.
      */
     private suspend fun QueueTask.exchangeState(run: Conformance.Run) {
         val e = "exchange"
@@ -117,15 +117,15 @@ object SystemsSuite : Conformance.Suite {
         val g = run.bot(hall, "GX")
         repeat(14) { wait(1) }
         g.inventory.removeAll()
-        g.inventory.addPreservingAttr(Item(Items.ZARYTE_BOW).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 12 })
+        g.inventory.addPreservingAttr(Item(Items.ABYSSAL_WHIP).apply { attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = 12 })
         wait(1)
         val c = run.world.currentCycle
-        Bots.inject(g, gg.rsmod.game.message.impl.ClientCheatMessage(0, "ge_sell ${Items.ZARYTE_BOW} 1 1000"))
+        Bots.inject(g, gg.rsmod.game.message.impl.ClientCheatMessage(0, "ge_sell ${Items.ABYSSAL_WHIP} 1 1000"))
         repeat(3) { wait(1) }
         val said = run.recording.of("GX", "msg").filter { it.cycle >= c }.joinToString(" / ") { it.text.substringAfter("message=").take(100) }
-        val kept = g.inventory.rawItems.count { it?.id == Items.ZARYTE_BOW && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == 12 }
+        val kept = g.inventory.rawItems.count { it?.id == Items.ABYSSAL_WHIP && it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] == 12 }
         run.expectTrue(
-            e, "ge_sell of a used Zaryte bow: refused, the bow keeps its charges",
+            e, "ge_sell of a whip carrying charges: refused, the whip keeps them",
             kept == 1 && said.contains(gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.MSG_HOLDS_STATE), "kept=$kept msgs: $said",
         )
         g.inventory.removeAll()

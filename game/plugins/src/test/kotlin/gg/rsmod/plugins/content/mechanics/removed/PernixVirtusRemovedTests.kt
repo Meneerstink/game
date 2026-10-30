@@ -24,6 +24,9 @@ class PernixVirtusRemovedTests {
             Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN,
         )
 
+    /** N464 (owner 2026-10-30): "zaryte bow moet volledig verwijderd worden", held copies "Weg bij inloggen". */
+    private val zaryteBow = setOf(Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN)
+
     private fun tradeable(id: Int) = ItemDef(id).apply { tradeable = true }
 
     private fun notedOf(id: Int) =
@@ -38,7 +41,7 @@ class PernixVirtusRemovedTests {
         // Owner A13 (night run 2026-10-12): the Deadman (deg) / corrupt / Torva used-broken ids are unobtainable too - converted to
         // the normal item at login (DeadmanGear.migrate) before this purge runs; every other unobtainable id is Pernix / Virtus.
         // N424: the two looting bag ids are unobtainable too (LootingBagRemovedTests).
-        assertEquals(removed, RemovedItems.UNOBTAINABLE_IDS - gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys - gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS)
+        assertEquals(removed + zaryteBow, RemovedItems.UNOBTAINABLE_IDS - gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys - gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS)
         // Owner 2026-10-06 "Delete on login": the login purge takes them through isUnobtainable; IDS stays the removed runes.
         assertTrue(RemovedItems.UNOBTAINABLE_IDS.none { it in RemovedItems.IDS })
         removed.forEach { id ->
@@ -51,7 +54,12 @@ class PernixVirtusRemovedTests {
     @Test
     fun `the Grand Exchange and its house refuse Pernix and Virtus, Torva stays exchangeable`() {
         removed.forEach { id -> assertFalse(GrandExchangeInterface.exchangeable(tradeable(id)), "$id still exchangeable") }
-        listOf(Items.TORVA_FULL_HELM, Items.TORVA_PLATEBODY, Items.TORVA_PLATELEGS, Items.ZARYTE_BOW).forEach { id ->
+        // N464 (owner 2026-10-30): the Zaryte bow is gone from the Grand Exchange too; the Zaryte crossbow stays.
+        zaryteBow.forEach { id ->
+            assertFalse(GrandExchangeInterface.exchangeable(tradeable(id)), "$id still exchangeable")
+            assertTrue(RemovedItems.isUnobtainable(notedOf(id)), "noted $id")
+        }
+        listOf(Items.TORVA_FULL_HELM, Items.TORVA_PLATEBODY, Items.TORVA_PLATELEGS, Items.ZARYTE_CROSSBOW).forEach { id ->
             assertTrue(GrandExchangeInterface.exchangeable(tradeable(id)), "$id must stay exchangeable")
         }
         val commands = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/grand_exchange.plugin.kts").readText()

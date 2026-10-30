@@ -32,12 +32,26 @@ object RemovedItems {
             Items.VIRTUS_MASK, Items.VIRTUS_MASK_20161, Items.VIRTUS_MASK_BROKEN,
             Items.VIRTUS_ROBE_TOP, Items.VIRTUS_ROBE_TOP_20165, Items.VIRTUS_ROBE_TOP_BROKEN,
             Items.VIRTUS_ROBE_LEGS, Items.VIRTUS_ROBE_LEGS_20169, Items.VIRTUS_ROBE_LEGS_BROKEN,
+            // N464 (owner 2026-10-30: "zaryte bow moet volledig verwijderd worden dus ook uit de grand exc"; held copies: "Weg bij
+            // inloggen", like Pernix/Virtus). Nex no longer drops it (N293); the Zaryte crossbow stays.
+            Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN,
         ) +
             // Owner 2026-10-11 (OSRS Deadman Mode): every degraded, corrupt, used and broken Deadman gear / Torva id. A held copy
             // becomes the normal item at login first (DeadmanGear.migrate runs before [purge]); nothing may offer these again.
             gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys +
             // N424 (owner 2026-10-29): the looting bag is out of the game; its old contents go to the bank first (LootingBag.retire).
             gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS
+
+    /**
+     * N464 (owner 2026-10-30: the Zaryte bow "staat nog in de grand exc"): the client's Grand Exchange item search lists every item
+     * with the cache's GE flag (opcode 65), so the removed and unobtainable items still showed there (Pernix too) although the GE
+     * refused them. These ids lose that flag in both caches (RemovedContentCacheTool reads [GE_HIDDEN_TABLE]; a test keeps the table
+     * equal to this set).
+     */
+    val geHiddenIds: java.util.SortedSet<Int>
+        get() = (IDS + UNOBTAINABLE_IDS + DungeoneeringItems.IDS).toSortedSet()
+
+    const val GE_HIDDEN_TABLE = "./data/cfg/removed/ge_hidden.txt"
 
     /** True for a removed item or its noted form. */
     fun isRemoved(def: ItemDef): Boolean = def.id in IDS || (def.noted && def.noteLinkId in IDS)
