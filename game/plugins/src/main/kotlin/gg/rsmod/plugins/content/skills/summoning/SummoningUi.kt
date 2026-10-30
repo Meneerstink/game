@@ -614,11 +614,16 @@ object SummoningUi {
         val ui = gg.rsmod.plugins.content.quests.tab.N108Ui
         if (ui.p11(world, name) <= NAME_TEXT_WIDTH) return name
         val short = if (name.startsWith(UPGRADED_PREFIX)) UPGRADED_SHORT + name.removePrefix(UPGRADED_PREFIX) else name
-        return if (ui.p11(world, short) > NAME_TEXT_WIDTH) ui.fitP11(world, short, NAME_TEXT_WIDTH) else short
+        if (ui.p11(world, short) <= NAME_TEXT_WIDTH) return short
+        // Owner 2026-10-30 (V5): "Upgr. Tumeken's Damaged Guardian" (176 px) reads "Upgr. Tumeken's Dmg. Guardian" - whole, not "...".
+        val abbreviated = short.replace(DAMAGED, DAMAGED_SHORT, ignoreCase = true)
+        return if (ui.p11(world, abbreviated) > NAME_TEXT_WIDTH) ui.fitP11(world, abbreviated, NAME_TEXT_WIDTH) else abbreviated
     }
 
     private const val UPGRADED_PREFIX = "Upgraded "
     private const val UPGRADED_SHORT = "Upgr. "
+    private const val DAMAGED = "Damaged "
+    private const val DAMAGED_SHORT = "Dmg. "
 
     /** The word an orb action shows for the current follower (the left-click chooser uses the same words as the menu). */
     fun labelOf(

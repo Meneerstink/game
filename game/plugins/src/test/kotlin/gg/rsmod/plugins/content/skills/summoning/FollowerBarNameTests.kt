@@ -45,10 +45,10 @@ class FollowerBarNameTests {
         for (n in long) {
             val bar = SummoningUi.barName(world, n)
             assertTrue(N108Ui.p11(world, bar) <= 165, "$bar is ${N108Ui.p11(world, bar)} px")
-            // "Upgr. Tumeken's Damaged Guardian" is still 176 px - wider than the bar graphic itself - so it alone keeps the "..."
-            // rule (owner question V5); the other three fit whole.
+            // "Upgr. Tumeken's Damaged Guardian" is still 176 px - wider than the bar graphic itself; owner 2026-10-30 (V5): it reads
+            // "Upgr. Tumeken's Dmg. Guardian", whole. The other three fit with "Upgr." alone.
             if (n == "Upgraded Tumeken's Damaged Guardian") {
-                assertEquals("Upgr. Tumeken's Damaged Guar...", bar)
+                assertEquals("Upgr. Tumeken's Dmg. Guardian", bar)
             } else {
                 assertEquals("Upgr. " + n.removePrefix("Upgraded "), bar)
             }
