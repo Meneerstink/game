@@ -21,6 +21,7 @@ import gg.rsmod.plugins.content.activity.pest_control.PEST_POINTS
 import gg.rsmod.plugins.content.activity.pest_control.PestControlBarricades
 import gg.rsmod.plugins.content.activity.pest_control.PestControlGame
 import gg.rsmod.plugins.content.activity.pest_control.PestControlHandler
+import gg.rsmod.plugins.content.activity.pest_control.PestControlMonsters
 import gg.rsmod.plugins.content.activity.pest_control.PestControlRewards
 import gg.rsmod.plugins.content.activity.pest_control.PestControlTier
 import gg.rsmod.plugins.content.activity.pest_control.pestMonsterOf
@@ -68,13 +69,16 @@ object PestControlScenarios {
         wait(2)
         // N112: only the monsters these checks spawn ([checked]) stay; the caller's task clears the waves.
         game.knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS)
-        // Spinner: heals its damaged portal by 10 % of its lifepoints when within 5 tiles.
+        // N456: force one successful heal roll to measure the exact team-scaled amount before the normal ticking check.
         val index = game.portals.indexOfFirst { it != null && it.id in 6142..6145 && !it.isDead() }
         val portal = game.portals[index]!!
         portal.setCurrentLifepoints(portal.getMaximumLifepoints() / 2)
         val half = portal.getCurrentLifepoints()
         val spinner = game.spawnMonster(3747, portal.tile.transform(3, 0, 0), index)
         checked += spinner
+        val expectedHeal = portal.getMaximumLifepoints() / 10 * minOf(game.players.size, 5) / 5
+        PestControlMonsters.spinner(game, spinner, roll = 0)
+        run.check(E, "spinner heal for ${game.players.size} players", portal.getCurrentLifepoints() - half, "owner N456" to expectedHeal)
         repeat(30) { wait(1) }
         run.expectTrue(E, "spinner heals its portal", portal.getCurrentLifepoints() > half, "lp $half -> ${portal.getCurrentLifepoints()}")
         // Portal death: its spinners explode, the knight regains 50 hitpoints. N112: the other pests go first - with hitpoints 1:1

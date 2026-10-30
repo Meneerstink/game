@@ -11,6 +11,7 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.playSound
+import gg.rsmod.plugins.api.ext.prefixAn
 import gg.rsmod.plugins.api.ext.setComponentText
 import kotlin.random.Random
 import gg.rsmod.game.tools.importer.PestControlRewardsInterfaceImportTool as Tool
@@ -109,12 +110,8 @@ object PestControlRewards {
                 else -> points
             }
 
-        fun optionText(option: Int): String =
-            if (charm) {
-                arrayOf("(2 Pts)", "(28 Pts)", "(56 Pts)")[option - 1]
-            } else {
-                arrayOf("(1 Pt)", "(10 Pts)", "(100 Pts)")[option - 1]
-            }
+        /** The server owns every price label, including rows copied from a differently priced cache template. */
+        fun optionText(option: Int): String = cost(option).let { "($it ${if (it == 1) "Pt" else "Pts"})" }
 
         companion object {
             fun forButton(button: Int): Pair<Reward, Int>? {
@@ -174,9 +171,7 @@ object PestControlRewards {
                         },
                     )
             }
-            if (r.isSkill || r.charm) {
-                for (option in 1 until r.children.size) text(player, r.children[option], "$UNSELECTED${r.optionText(option)}")
-            }
+            for (option in 1 until r.children.size) text(player, r.children[option], "$UNSELECTED${r.optionText(option)}")
         }
     }
 
@@ -249,14 +244,14 @@ object PestControlRewards {
         }
         if (reward.isSkill && player.skills.getMaxLevel(reward.skill) < 25) {
             refused(player)
-            player.message("You need a ${reward.title} level of 25 to purchase this.")
+            player.message("You need ${reward.title.prefixAn()} level of 25 to purchase this.")
             return
         }
         click(player)
         refresh(player)
         player.attr[SELECTED] = reward to option
         text(player, 104, "${WHITE}${reward.title}")
-        if (reward.isSkill || reward.charm) text(player, reward.children[option], "$WHITE${reward.optionText(option)}")
+        text(player, reward.children[option], "$WHITE${reward.optionText(option)}")
         text(player, reward.header, if (reward.isSkill) "$WHITE${reward.title} - ${experience(player, reward.skill, 1)} xp" else "$WHITE${reward.title}")
     }
 
@@ -312,7 +307,7 @@ object PestControlRewards {
                 items.forEach { give(player, it) }
                 // N276: the Collection Log's Pest Control page (OSRS logs a reward when it is bought).
                 gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.PEST_CONTROL, items.map { it.id to it.amount })
-                "The Void Knight has given you a ${reward.title}."
+                "The Void Knight has given you ${reward.title.prefixAn()}."
             }
         bought(player)
         player.message(message)
