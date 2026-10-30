@@ -216,10 +216,7 @@ object LootKeys {
         definitions: DefinitionSet,
         items: List<Item>,
     ): Long =
-        items.sumOf { item ->
-            val unnoted = Item(item).toUnnoted(definitions)
-            OsrsGuidePrices.seed(definitions.get(ItemDef::class.java, unnoted.id)).toLong() * item.amount
-        }
+        items.sumOf { item -> GePrice.unit(definitions, null, item.id).toLong() * item.amount }
 
     // ---- death ----
 

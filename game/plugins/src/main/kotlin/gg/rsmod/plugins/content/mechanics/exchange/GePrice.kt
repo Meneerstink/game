@@ -22,13 +22,28 @@ object GePrice {
     ): Int {
         val unnoted = Item(itemId, 1).toUnnoted(definitions).id
         val def = definitions.getNullable(ItemDef::class.java, unnoted) ?: return 0
-        // N182 (owner 2026-10-22, "Mystic robe set 20 gp"): no GE item set has an OSRS price under its 667 id, so a set fell back to
-        // its tiny cache value; a set without an OSRS price is worth the sum of its components (what exchanging it gives you).
-        if (OsrsGuidePrices.osrsPrice(def) == null) {
-            SET_COMPONENTS[unnoted]?.let { parts -> return parts.sumOf { unit(definitions, exchange, it).toLong() }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt() }
-        }
-        val seed = OsrsGuidePrices.seed(def)
+        val seed = seed(definitions, def)
         return exchange?.guidePrice(unnoted, seed) ?: seed
+    }
+
+    /**
+     * The fixed price of [def] that every price surface starts from: [OsrsGuidePrices.seed], except for a Grand Exchange item set.
+     * N182 (owner 2026-10-22, "Mystic robe set 20 gp"): no GE item set has an OSRS price under its 667 id, so a set fell back to
+     * its tiny cache value; a set without an OSRS price is worth the sum of its components (what exchanging it gives you).
+     * N445 (owner 2026-10-30, "Barrows sets 20 gp"): the GE offer box and the house quote read [OsrsGuidePrices.seed] directly and
+     * still showed the cache value - they now ask this function too.
+     */
+    fun seed(
+        definitions: DefinitionSet,
+        def: ItemDef,
+    ): Int {
+        if (OsrsGuidePrices.osrsPrice(def) == null) {
+            SET_COMPONENTS[def.id]?.let { parts ->
+                return parts.sumOf { part -> definitions.getNullable(ItemDef::class.java, part)?.let { seed(definitions, it).toLong() } ?: 0L }
+                    .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+            }
+        }
+        return OsrsGuidePrices.seed(def)
     }
 
     /** Every Grand Exchange item set and its components ([gg.rsmod.plugins.content.inter.ge.GeItemSet]). */

@@ -255,9 +255,7 @@ object PriceChecker {
         if (item == null) {
             return 0
         }
-        val unnoted = Item(item).toUnnoted(definitions)
-        val definition = definitions.get(ItemDef::class.java, unnoted.id)
-        val guide = OsrsGuidePrices.seed(definition)
+        val guide = gg.rsmod.plugins.content.mechanics.exchange.GePrice.unit(definitions, null, item.id)
         return clamp(guide.toLong() * item.amount)
     }
 

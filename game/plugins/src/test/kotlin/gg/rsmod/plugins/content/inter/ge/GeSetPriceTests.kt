@@ -28,6 +28,32 @@ class GeSetPriceTests {
         }
     }
 
+    /**
+     * N445 (owner 2026-10-30, "Barrows armour sets kosten 20 gp op de GE"): the GE offer box and the house quote read the raw seed
+     * (cache value 20 gp) instead of [GePrice]; every set's buy/sell start price is now at least / at most the sum of its parts.
+     */
+    @Test
+    fun `the GE offer box and the house price a set at the sum of its components`() {
+        val dir = kotlin.io.path.createTempDirectory("n445").toFile()
+        val exchange = gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService(File(dir, "offers.json")).also { it.useDefinitions(DEFINITIONS); it.load() }
+        val itemDef = gg.rsmod.game.fs.def.ItemDef::class.java
+        val guthan = GeItemSet.values().first { it == GeItemSet.GUTHAN }
+        val barrowsParts = guthan.items.sumOf { GePrice.unit(DEFINITIONS, null, it) }
+        assertTrue(barrowsParts > 100_000, "Guthan's armour set parts are worth more than 100k: $barrowsParts")
+        GeItemSet.values().forEach { s ->
+            val def = DEFINITIONS.get(itemDef, s.id)
+            val worth = GePrice.unit(DEFINITIONS, null, s.id)
+            val buy = gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.offerGuide(exchange, def, gg.rsmod.plugins.content.mechanics.exchange.OfferType.BUY)
+            assertTrue(buy >= worth, "${s.name}: buy offer starts at $buy, the set is worth $worth")
+            exchange.houseQuote(s.id)?.let { q ->
+                assertTrue(q.ask >= worth, "${s.name}: house ask ${q.ask} < worth $worth")
+                assertEquals(minOf(worth, q.bid), q.bid, "${s.name}: house bid ${q.bid} above worth $worth")
+                assertTrue(q.bid > def.cost || worth <= def.cost, "${s.name}: house bid ${q.bid} is still the cache value ${def.cost}")
+            }
+        }
+        dir.deleteRecursively()
+    }
+
     @Test
     fun `Exchange in the sets window unpacks a held set without its parts`() {
         val source = File("src/main/kotlin/gg/rsmod/plugins/content/inter/ge/Sets.plugin.kts").readText()

@@ -119,8 +119,9 @@ class GrandExchangeService(
             return null
         }
         // N161 (owner 2026-10-22): an item with no OSRS price and cache value 0 is not in the house; players still trade it.
-        if (OsrsGuidePrices.seed(def) <= 0) return null
-        return GeHousePricing.quote(def, world)
+        val seed = GePrice.seed(defs, def)
+        if (seed <= 0) return null
+        return GeHousePricing.quote(seed, def.cost, world?.let { GeHousePricing.shopBounds(it, def.id) } ?: GeShopBounds.NONE)
     }
 
     /** What the house sells [itemId] for (its ask), or null when it does not deal in it. */
@@ -131,11 +132,15 @@ class GrandExchangeService(
         this.definitions = definitions
     }
 
-    /** The OSRS seed of [itemId] ([OsrsGuidePrices.seed]), or null without item definitions (unit tests). */
+    /** The seed price of [itemId] ([GePrice.seed]), or null without item definitions (unit tests). */
     private fun seedOf(itemId: Int): Int? {
-        val def = definitions?.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return null
-        return OsrsGuidePrices.seed(def)
+        val defs = definitions ?: return null
+        val def = defs.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId) ?: return null
+        return GePrice.seed(defs, def)
     }
+
+    /** The seed price of [def] ([GePrice.seed]; a set = its components); [OsrsGuidePrices.seed] without item definitions (unit tests). */
+    fun seedPrice(def: gg.rsmod.game.fs.def.ItemDef): Int = definitions?.let { GePrice.seed(it, def) } ?: OsrsGuidePrices.seed(def)
 
     /** The OSRS convenience fee ([GeTax]) on one [itemId] sold at [unitPrice]; 0 for an exempt item. */
     fun taxPerItem(

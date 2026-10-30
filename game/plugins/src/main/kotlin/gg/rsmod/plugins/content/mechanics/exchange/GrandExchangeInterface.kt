@@ -296,7 +296,8 @@ object GrandExchangeInterface {
         type: OfferType,
     ): Int {
         // N161 (owner 2026-10-22): the guide price is at least 1 gp (cache value 0 and no OSRS price gave offers of 0 coins).
-        val guide = service.guidePrice(def.id, OsrsGuidePrices.seed(def)).coerceAtLeast(1)
+        // N445: the seed of an item set is the sum of its components ([GePrice.seed]), not its 20 gp cache value.
+        val guide = service.guidePrice(def.id, service.seedPrice(def)).coerceAtLeast(1)
         val quote = service.houseQuote(def.id) ?: return guide
         return if (type == OfferType.BUY) maxOf(guide, quote.ask) else minOf(guide, quote.bid).coerceAtLeast(1)
     }

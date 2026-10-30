@@ -91,6 +91,7 @@ class OsrsGuidePricesTests {
     @Test
     fun `the Grand Exchange selection uses the OSRS seed before any trade`() {
         val source = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/GrandExchangeInterface.kt").readText()
-        assertTrue("service.guidePrice(def.id, OsrsGuidePrices.seed(def))" in source)
+        // N445: the seed comes from GePrice.seed through the service (OsrsGuidePrices.seed, except a set = its components).
+        assertTrue("service.guidePrice(def.id, service.seedPrice(def))" in source)
     }
 }
