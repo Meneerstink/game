@@ -1091,6 +1091,13 @@ object OsrsItemImportTool {
                 ),
             // Owner 2026-09-30 ("import all osrs pets"): every pet item of the 71 OSRS pets, one per variant (OsrsPetRoster).
             "pets" to OsrsPetRoster.load().map { Spec(it.osrsItem) },
+            // N446 (owner V13 2026-10-30: Locator orb at Ava without the quest). Untradeable, unnoted; the server side (LocatorOrb)
+            // expects 24617 / 24618 (docs/bugs/N446-locator-orb.md).
+            "locator_orb" to
+                listOf(
+                    Spec(22079), // Inert locator orb
+                    Spec(22081), // Locator orb
+                ),
         )
     }
 
