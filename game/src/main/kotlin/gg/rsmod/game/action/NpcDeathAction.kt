@@ -63,13 +63,19 @@ object NpcDeathAction : KLogging() {
 
         runDeathHook(npc, "slayer") { world.plugins.executeSlayerLogic(npc) }
 
+        // N451 (owner 2026-10-30, Warriors' Guild: "als ze doodgaan verschijnen ze nog 1 seconde levend"): a short death animation
+        // waited its length rounded UP to whole ticks and then the death delay, and once the animation had ended the client drew
+        // the npc standing again until it was removed (Animated armour: 4167 runs 1.9 s, removed after 3.0 s). It now waits the
+        // whole ticks the animation really plays and is hidden for the death delay, so it vanishes as its death animation ends
+        // (OSRS); the drop and the respawn keep their time.
         deathAnimation.filter { it >= 0 }.forEach { anim ->
             val def = npc.world.definitions.get(AnimDef::class.java, anim)
             npc.animate(def.id)
-            val timer = if (def.cycleLength >= 6) def.cycleLength - 4 else def.cycleLength
+            val timer = if (def.cycleLength >= 6) def.cycleLength - 4 else deathAnimationTicks(def)
             wait(timer)
         }
         if (deathDelay > 0) {
+            if (deathAnimation.any { it >= 0 }) npc.invisible = true
             wait(deathDelay)
         }
         runDeathHook(npc, "npc-death") { world.plugins.executeNpcDeath(npc) }
@@ -84,6 +90,9 @@ object NpcDeathAction : KLogging() {
             world.remove(npc)
         }
     }
+
+    /** N451: the whole game ticks a short death animation really plays (client frame lengths are 20 ms, a tick 600 ms), at least 1. */
+    fun deathAnimationTicks(def: AnimDef): Int = (if (def.frameLength > 0) def.frameLength / 30 else def.cycleLength).coerceAtLeast(1)
 
     /**
      * Death cleanup must not depend on an optional plugin hook being perfect. The queue runner
