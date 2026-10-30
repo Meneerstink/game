@@ -104,8 +104,11 @@ object NpcChatheadFit {
     fun extents(surface: Surface, npc: Int): Extents? =
         table()[surface.name]?.let { it[npc] ?: it[gg.rsmod.plugins.content.skills.summoning.Pets.baseNpc(npc)] } // N423: an Upgraded pet has its pet's head
 
-    /** The camera and position that keep [extents] inside [surface]'s frame; the cache values when it already fits. */
-    fun fit(surface: Surface, measured: Extents?): Fit {
+    /**
+     * The camera and position that keep [extents] inside [surface]'s frame; the cache values when it already fits. [zoomIn] false:
+     * a head is only ever brought back inside the frame, never zoomed in (N429: a 667 pet's creature head in Follower Details).
+     */
+    fun fit(surface: Surface, measured: Extents?, zoomIn: Boolean = true): Fit {
         val cache = Fit(surface.zoom, surface.boxX, surface.boxY, false)
         if (measured == null) return cache
         val extents = Extents(measured.up + PAD, measured.down + PAD, measured.left + PAD, measured.right + PAD)
@@ -119,10 +122,10 @@ object NpcChatheadFit {
                 (extents.left + extents.right).toDouble() / (roomLeft + roomRight),
             )
         val fits = extents.up <= roomUp && extents.down <= roomDown && extents.left <= roomLeft && extents.right <= roomRight
-        if (fits && needed >= SMALL) return cache
+        if (fits && (needed >= SMALL || !zoomIn)) return cache
         // K02 N397: an OSRS pet head that no longer plays the human poses (which scaled it up) is drawn far too small at the cache
         // camera - it is brought in until it fills [FILL] of the frame, the way the human-posed heads did.
-        val scale = if (needed > 1.0) needed * MARGIN else if (needed < SMALL) needed / FILL else 1.0
+        val scale = if (needed > 1.0) needed * MARGIN else if (needed < SMALL && zoomIn) needed / FILL else 1.0
         val zoom = ceil(surface.zoom * scale).toInt()
         val shrink = surface.zoom.toDouble() / zoom
         val anchorY = centre(surface.anchorY, extents.up * shrink, extents.down * shrink, surface.frameY1, surface.frameY2)
@@ -141,7 +144,14 @@ object NpcChatheadFit {
 
     fun dialogue(npc: Int): Fit = fit(DIALOGUE, extents(DIALOGUE, npc))
 
-    fun panel(npc: Int): Fit = fit(PANEL, extents(PANEL, npc))
+    fun panel(npc: Int): Fit = fit(PANEL, extents(PANEL, npc), zoomIn(PANEL, npc))
+
+    /**
+     * N429 (2026-10-30, Sneakerpeeper filled the whole Follower Details box): a 667 pet's head is measured in Follower Details too,
+     * but only zoomed OUT when it overflows - zooming one in twisted its creature pose (K02 2026-10-29), so a head that fits keeps
+     * the cache camera as before.
+     */
+    fun zoomIn(surface: Surface, npc: Int): Boolean = surface != PANEL || !CreatureChathead.isCreaturePet(npc)
 
     /** Sends [surface]'s camera for [npc] on [interfaceId]:[component] (always, like 2009scape) and the position when moved. */
     fun send(
@@ -152,7 +162,7 @@ object NpcChatheadFit {
         npc: Int,
         resetPosition: Boolean,
     ) {
-        val fit = fit(surface, extents(surface, npc))
+        val fit = fit(surface, extents(surface, npc), zoomIn(surface, npc))
         val hash = (interfaceId shl 16) or component
         player.write(IfSetAngleMessage(hash = hash, zoom = fit.zoom, xan = surface.xan, yan = surface.yan))
         if (fit.moved || resetPosition) {

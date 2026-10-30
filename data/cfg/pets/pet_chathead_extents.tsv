@@ -4,205 +4,405 @@
 # head anchor. dialogue = 241-244:2 (zoom 2150, xan 40, yan 1882); panel = Follower Details 662:1 (zoom 2168).
 # npc	surface	up	down	left	right	name
 761	dialogue	27	49	47	44	Pet kitten
+761	panel	35	45	50	44	Pet kitten
 762	dialogue	28	49	47	44	Pet kitten
+762	panel	35	45	49	44	Pet kitten
 763	dialogue	27	49	47	44	Pet kitten
+763	panel	33	45	48	44	Pet kitten
 764	dialogue	28	49	47	44	Pet kitten
+764	panel	35	43	50	44	Pet kitten
 765	dialogue	27	49	47	44	Pet kitten
+765	panel	35	43	49	44	Pet kitten
 766	dialogue	28	49	47	44	Pet kitten
+766	panel	36	45	49	45	Pet kitten
 768	dialogue	37	37	46	44	Pet cat
+768	panel	46	33	48	45	Pet cat
 769	dialogue	37	37	46	44	Pet cat
+769	panel	46	33	48	45	Pet cat
 770	dialogue	37	37	46	44	Pet cat
+770	panel	44	33	47	44	Pet cat
 771	dialogue	37	37	46	44	Pet cat
+771	panel	43	31	48	45	Pet cat
 772	dialogue	37	37	46	44	Pet cat
+772	panel	43	29	48	45	Pet cat
 773	dialogue	37	37	46	44	Pet cat
+773	panel	46	33	47	44	Pet cat
 774	dialogue	37	39	46	45	Overgrown cat
+774	panel	45	35	48	46	Overgrown cat
 775	dialogue	37	39	46	45	Overgrown cat
+775	panel	45	31	48	46	Overgrown cat
 776	dialogue	36	39	46	45	Overgrown cat
+776	panel	44	35	48	45	Overgrown cat
 777	dialogue	37	39	46	45	Overgrown cat
+777	panel	45	33	48	46	Overgrown cat
 778	dialogue	37	39	46	45	Overgrown cat
+778	panel	43	33	48	46	Overgrown cat
 779	dialogue	36	39	46	45	Overgrown cat
+779	panel	45	35	48	45	Overgrown cat
 3503	dialogue	37	39	46	45	Overgrown hellcat
+3503	panel	47	34	49	46	Overgrown hellcat
 3504	dialogue	37	37	46	44	Hellcat
+3504	panel	47	33	48	45	Hellcat
 3505	dialogue	29	49	47	44	Hell-kitten
+3505	panel	36	45	48	44	Hell-kitten
 3598	dialogue	37	31	41	44	Clockwork cat
+3598	panel	47	24	41	44	Clockwork cat
 3604	dialogue	44	42	43	42	Tzrek-jad
+3604	panel	49	33	47	45	Tzrek-jad
 6900	dialogue	31	25	41	38	Hatchling dragon
+6900	panel	35	24	45	40	Hatchling dragon
 6901	dialogue	36	25	41	38	Baby dragon
+6901	panel	38	24	45	40	Baby dragon
 6902	dialogue	31	25	41	38	Hatchling dragon
+6902	panel	35	21	45	40	Hatchling dragon
 6903	dialogue	36	25	41	38	Baby dragon
+6903	panel	38	24	44	40	Baby dragon
 6904	dialogue	31	25	41	38	Hatchling dragon
+6904	panel	35	24	45	40	Hatchling dragon
 6905	dialogue	36	25	41	38	Baby dragon
+6905	panel	38	24	44	40	Baby dragon
 6906	dialogue	31	25	41	38	Hatchling dragon
+6906	panel	35	24	45	40	Hatchling dragon
 6907	dialogue	36	25	41	38	Baby dragon
+6907	panel	39	23	45	40	Baby dragon
 6908	dialogue	40	48	51	49	Baby penguin
+6908	panel	45	37	56	51	Baby penguin
 6909	dialogue	55	51	52	60	Penguin
+6909	panel	61	41	55	63	Penguin
 6911	dialogue	29	41	34	29	Raven chick
+6911	panel	31	39	38	31	Raven chick
 6912	dialogue	27	60	52	45	Raven
+6912	panel	28	54	58	46	Raven
 6913	dialogue	21	19	27	33	Baby raccoon
+6913	panel	25	14	27	34	Baby raccoon
 6914	dialogue	28	29	41	44	Raccoon
+6914	panel	34	21	44	45	Raccoon
 6915	dialogue	21	22	27	31	Baby gecko
+6915	panel	24	19	28	33	Baby gecko
 6916	dialogue	32	38	43	46	Gecko
+6916	panel	36	29	46	49	Gecko
 6919	dialogue	26	9	21	17	Baby squirrel
+6919	panel	27	10	24	18	Baby squirrel
 6920	dialogue	35	20	33	26	Squirrel
+6920	panel	41	17	37	28	Squirrel
 6922	dialogue	24	29	28	32	Baby chameleon
+6922	panel	26	26	30	34	Baby chameleon
 6923	dialogue	32	35	33	38	Chameleon
+6923	panel	35	31	37	42	Chameleon
 6942	dialogue	34	44	53	46	Baby monkey
+6942	panel	34	41	56	49	Baby monkey
 6943	dialogue	38	58	59	50	Monkey
+6943	panel	44	53	63	55	Monkey
 6945	dialogue	33	29	27	20	Vulture chick
+6945	panel	31	29	30	21	Vulture chick
 6946	dialogue	45	50	40	35	Vulture
+6946	panel	50	51	46	37	Vulture
 6947	dialogue	25	35	35	52	Baby giant crab
+6947	panel	28	28	35	51	Baby giant crab
 6948	dialogue	41	52	58	74	Giant crab
+6948	panel	46	45	58	72	Giant crab
 6949	dialogue	29	41	34	29	Saradomin chick
+6949	panel	31	38	38	31	Saradomin chick
 6950	dialogue	30	53	40	35	Saradomin bird
+6950	panel	29	49	44	36	Saradomin bird
 6951	dialogue	50	38	47	34	Saradomin owl
+6951	panel	55	34	52	34	Saradomin owl
 6952	dialogue	29	41	34	29	Zamorak chick
+6952	panel	31	39	38	31	Zamorak chick
 6953	dialogue	30	53	40	35	Zamorak bird
+6953	panel	31	49	44	36	Zamorak bird
 6954	dialogue	33	54	45	42	Zamorak hawk
+6954	panel	36	49	49	43	Zamorak hawk
 6955	dialogue	29	41	34	29	Guthix chick
+6955	panel	31	39	38	31	Guthix chick
 6956	dialogue	30	53	40	35	Guthix bird
+6956	panel	32	49	44	36	Guthix bird
 6957	dialogue	32	52	45	37	Guthix raptor
+6957	panel	34	48	49	37	Guthix raptor
 6958	dialogue	25	18	30	27	Terrier puppy
+6958	panel	30	12	31	26	Terrier puppy
 6959	dialogue	34	31	44	40	Terrier
+6959	panel	39	26	46	40	Terrier
 6960	dialogue	25	25	30	30	Greyhound puppy
+6960	panel	29	21	33	32	Greyhound puppy
 6961	dialogue	32	37	34	51	Greyhound
+6961	panel	34	34	38	50	Greyhound
 6962	dialogue	21	17	34	28	Labrador puppy
+6962	panel	24	14	37	28	Labrador puppy
 6963	dialogue	31	29	52	44	Labrador
+6963	panel	35	22	57	44	Labrador
 6964	dialogue	27	10	33	26	Dalmatian puppy
+6964	panel	25	13	35	26	Dalmatian puppy
 6965	dialogue	32	25	47	40	Dalmatian
+6965	panel	36	21	50	40	Dalmatian
 6966	dialogue	23	20	29	25	Sheepdog puppy
+6966	panel	26	20	31	25	Sheepdog puppy
 6967	dialogue	32	34	44	39	Sheepdog
+6967	panel	37	30	46	38	Sheepdog
 6968	dialogue	31	27	40	31	Bulldog
+6968	panel	35	24	42	31	Bulldog
 6969	dialogue	24	16	28	20	Bulldog puppy
+6969	panel	26	15	30	20	Bulldog puppy
 7015	dialogue	41	6	38	37	Platypus
+7015	panel	45	3	42	39	Platypus
 7016	dialogue	41	6	38	37	Platypus
+7016	panel	44	3	43	39	Platypus
 7017	dialogue	41	6	38	37	Platypus
+7017	panel	45	3	42	39	Platypus
 7018	dialogue	42	-6	32	33	Baby platypus
+7018	panel	44	-5	36	33	Baby platypus
 7019	dialogue	42	-6	32	33	Baby platypus
+7019	panel	46	-6	36	34	Baby platypus
 7020	dialogue	42	-6	32	33	Baby platypus
+7020	panel	46	-4	36	34	Baby platypus
 7210	dialogue	35	43	54	46	Baby monkey
+7210	panel	38	42	57	50	Baby monkey
 7211	dialogue	38	47	59	50	Monkey
+7211	panel	43	39	63	52	Monkey
 7212	dialogue	34	43	54	49	Baby monkey
+7212	panel	36	41	57	51	Baby monkey
 7213	dialogue	38	47	62	55	Monkey
+7213	panel	44	45	66	58	Monkey
 7214	dialogue	35	51	56	49	Baby monkey
+7214	panel	34	45	59	46	Baby monkey
 7215	dialogue	38	68	59	50	Monkey
+7215	panel	44	63	63	55	Monkey
 7216	dialogue	32	51	54	51	Baby monkey
+7216	panel	37	46	58	51	Baby monkey
 7217	dialogue	34	56	67	60	Monkey
+7217	panel	39	49	71	60	Monkey
 7218	dialogue	34	44	58	50	Baby monkey
+7218	panel	39	42	61	53	Baby monkey
 7219	dialogue	38	51	76	65	Monkey
+7219	panel	46	45	80	69	Monkey
 7220	dialogue	41	54	54	48	Baby monkey
+7220	panel	46	48	57	49	Baby monkey
 7221	dialogue	58	72	76	73	Monkey
+7221	panel	72	65	79	74	Monkey
 7222	dialogue	34	44	53	46	Baby monkey
+7222	panel	35	41	56	49	Baby monkey
 7223	dialogue	38	58	59	50	Monkey
+7223	panel	44	53	63	55	Monkey
 7224	dialogue	35	51	56	49	Baby monkey
+7224	panel	34	46	59	50	Baby monkey
 7225	dialogue	38	68	59	50	Monkey
+7225	panel	44	62	63	55	Monkey
 7226	dialogue	34	44	58	50	Baby monkey
+7226	panel	40	42	61	53	Baby monkey
 7227	dialogue	38	51	76	65	Monkey
+7227	panel	46	45	80	69	Monkey
 7237	dialogue	25	18	30	27	Terrier puppy
+7237	panel	30	16	31	27	Terrier puppy
 7238	dialogue	34	31	44	40	Terrier
+7238	panel	41	26	46	40	Terrier
 7239	dialogue	25	18	30	27	Terrier puppy
+7239	panel	28	16	31	27	Terrier puppy
 7240	dialogue	34	31	44	40	Terrier
+7240	panel	40	26	46	40	Terrier
 7241	dialogue	25	25	30	30	Greyhound puppy
+7241	panel	27	21	33	32	Greyhound puppy
 7242	dialogue	32	37	34	51	Greyhound
+7242	panel	35	32	39	51	Greyhound
 7243	dialogue	25	25	30	30	Greyhound puppy
+7243	panel	29	21	33	32	Greyhound puppy
 7244	dialogue	32	37	34	51	Greyhound
+7244	panel	35	34	39	51	Greyhound
 7245	dialogue	21	17	34	28	Labrador puppy
+7245	panel	24	14	37	28	Labrador puppy
 7246	dialogue	31	29	52	44	Labrador
+7246	panel	34	22	57	44	Labrador
 7247	dialogue	21	17	34	28	Labrador puppy
+7247	panel	21	14	37	28	Labrador puppy
 7248	dialogue	31	29	52	44	Labrador
+7248	panel	34	22	57	43	Labrador
 7249	dialogue	25	12	32	26	Dalmatian puppy
+7249	panel	28	12	35	26	Dalmatian puppy
 7250	dialogue	32	25	47	40	Dalmatian
+7250	panel	36	21	50	40	Dalmatian
 7251	dialogue	25	12	32	26	Dalmatian puppy
+7251	panel	28	11	35	26	Dalmatian puppy
 7252	dialogue	32	25	47	40	Dalmatian
+7252	panel	35	21	51	41	Dalmatian
 7253	dialogue	23	20	29	25	Sheepdog puppy
+7253	panel	26	18	30	25	Sheepdog puppy
 7254	dialogue	32	34	44	39	Sheepdog
+7254	panel	35	31	46	39	Sheepdog
 7255	dialogue	23	20	29	25	Sheepdog puppy
+7255	panel	26	17	30	25	Sheepdog puppy
 7256	dialogue	32	34	44	39	Sheepdog
+7256	panel	33	31	46	39	Sheepdog
 7257	dialogue	31	27	40	31	Bulldog
+7257	panel	31	26	42	31	Bulldog
 7258	dialogue	31	27	40	31	Bulldog
+7258	panel	35	26	42	31	Bulldog
 7259	dialogue	24	16	28	20	Bulldog puppy
+7259	panel	26	16	30	20	Bulldog puppy
 7260	dialogue	24	16	28	20	Bulldog puppy
+7260	panel	26	15	30	20	Bulldog puppy
 7261	dialogue	29	41	34	29	Raven chick
+7261	panel	31	38	38	31	Raven chick
 7262	dialogue	41	60	52	45	Raven
+7262	panel	36	54	57	46	Raven
 7263	dialogue	29	41	34	29	Raven chick
+7263	panel	31	36	38	31	Raven chick
 7264	dialogue	27	60	52	45	Raven
+7264	panel	28	54	58	46	Raven
 7265	dialogue	29	41	34	29	Raven chick
+7265	panel	31	37	38	31	Raven chick
 7266	dialogue	41	60	52	45	Raven
+7266	panel	46	54	58	46	Raven
 7267	dialogue	29	41	34	29	Raven chick
+7267	panel	31	39	38	31	Raven chick
 7268	dialogue	27	60	52	45	Raven
+7268	panel	26	54	58	46	Raven
 7269	dialogue	29	41	34	29	Raven chick
+7269	panel	31	39	38	31	Raven chick
 7270	dialogue	41	60	52	45	Raven
+7270	panel	40	54	57	46	Raven
 7271	dialogue	21	19	27	33	Baby raccoon
+7271	panel	25	17	27	34	Baby raccoon
 7272	dialogue	28	29	41	44	Raccoon
+7272	panel	34	22	44	46	Raccoon
 7273	dialogue	21	19	27	33	Baby raccoon
+7273	panel	25	15	27	33	Baby raccoon
 7274	dialogue	28	29	41	44	Raccoon
+7274	panel	34	21	44	46	Raccoon
 7277	dialogue	21	22	27	31	Baby gecko
+7277	panel	22	18	28	33	Baby gecko
 7278	dialogue	21	22	27	31	Baby gecko
+7278	panel	24	18	28	33	Baby gecko
 7279	dialogue	21	22	27	31	Baby gecko
+7279	panel	22	19	28	33	Baby gecko
 7280	dialogue	21	22	27	31	Baby gecko
+7280	panel	24	18	28	33	Baby gecko
 7281	dialogue	32	38	43	46	Gecko
+7281	panel	34	31	46	49	Gecko
 7282	dialogue	32	38	43	46	Gecko
+7282	panel	36	29	45	48	Gecko
 7283	dialogue	32	38	43	46	Gecko
+7283	panel	32	31	46	49	Gecko
 7284	dialogue	32	38	43	46	Gecko
+7284	panel	36	30	46	49	Gecko
 7293	dialogue	25	35	35	52	Baby giant crab
+7293	panel	27	31	35	51	Baby giant crab
 7294	dialogue	41	52	58	74	Giant crab
+7294	panel	46	42	58	72	Giant crab
 7295	dialogue	25	35	35	52	Baby giant crab
+7295	panel	27	31	35	51	Baby giant crab
 7296	dialogue	41	52	58	74	Giant crab
+7296	panel	46	45	58	72	Giant crab
 7297	dialogue	25	35	35	52	Baby giant crab
+7297	panel	27	31	35	50	Baby giant crab
 7298	dialogue	41	52	58	74	Giant crab
+7298	panel	46	42	58	72	Giant crab
 7299	dialogue	25	35	35	52	Baby giant crab
+7299	panel	27	30	35	50	Baby giant crab
 7300	dialogue	41	52	58	74	Giant crab
+7300	panel	46	42	58	72	Giant crab
 7301	dialogue	26	9	21	17	Baby squirrel
+7301	panel	30	10	24	18	Baby squirrel
 7302	dialogue	35	20	33	26	Squirrel
+7302	panel	41	16	37	28	Squirrel
 7303	dialogue	26	9	21	17	Baby squirrel
+7303	panel	30	10	24	18	Baby squirrel
 7304	dialogue	35	20	33	26	Squirrel
+7304	panel	41	16	37	27	Squirrel
 7305	dialogue	26	9	21	17	Baby squirrel
+7305	panel	29	9	24	17	Baby squirrel
 7306	dialogue	35	20	33	26	Squirrel
+7306	panel	41	16	37	27	Squirrel
 7307	dialogue	26	9	21	17	Baby squirrel
+7307	panel	29	10	24	18	Baby squirrel
 7308	dialogue	35	20	33	26	Squirrel
+7308	panel	39	16	37	28	Squirrel
 7313	dialogue	40	48	51	49	Baby penguin
+7313	panel	44	41	56	51	Baby penguin
 7314	dialogue	55	51	52	60	Penguin
+7314	panel	64	41	56	63	Penguin
 7316	dialogue	40	48	51	49	Baby penguin
+7316	panel	45	40	56	51	Baby penguin
 7317	dialogue	55	51	52	60	Penguin
+7317	panel	64	41	55	63	Penguin
 7319	dialogue	33	29	27	20	Vulture chick
+7319	panel	34	29	31	22	Vulture chick
 7320	dialogue	45	51	40	36	Vulture
+7320	panel	50	47	46	39	Vulture
 7321	dialogue	33	29	27	20	Vulture chick
+7321	panel	32	29	31	22	Vulture chick
 7322	dialogue	45	50	40	35	Vulture
+7322	panel	50	45	46	37	Vulture
 7323	dialogue	33	29	27	20	Vulture chick
+7323	panel	31	29	31	22	Vulture chick
 7324	dialogue	45	51	40	36	Vulture
+7324	panel	50	51	46	39	Vulture
 7325	dialogue	33	29	27	20	Vulture chick
+7325	panel	31	29	30	21	Vulture chick
 7326	dialogue	45	50	40	35	Vulture
+7326	panel	50	51	46	37	Vulture
 7327	dialogue	33	29	27	20	Vulture chick
+7327	panel	35	29	31	22	Vulture chick
 7328	dialogue	45	51	40	36	Vulture
+7328	panel	50	51	45	38	Vulture
 7713	dialogue	37	40	57	54	Baby icefiend
+7713	panel	44	32	58	52	Baby icefiend
 7844	dialogue	21	30	24	20	Ex-ex-parrot
+7844	panel	22	29	27	21	Ex-ex-parrot
 8214	dialogue	37	37	46	44	Pet cat
+8214	panel	44	33	48	44	Pet cat
 8217	dialogue	28	49	47	44	Pet kitten
+8217	panel	36	40	50	45	Pet kitten
 8491	dialogue	42	33	46	36	Broav
+8491	panel	47	29	50	36	Broav
 8577	dialogue	60	40	56	42	Phoenix eggling
+8577	panel	61	34	63	42	Phoenix eggling
 8578	dialogue	53	36	46	42	Phoenix eggling
+8578	panel	60	29	50	42	Phoenix eggling
 8619	dialogue	36	13	30	39	Creeping hand
+8619	panel	42	8	32	43	Creeping hand
 8620	dialogue	36	25	21	14	Minitrice
+8620	panel	38	25	24	15	Minitrice
 8621	dialogue	25	49	40	57	Baby basilisk
+8621	panel	27	42	43	57	Baby basilisk
 8622	dialogue	27	41	42	34	Baby kurask
+8622	panel	28	38	44	33	Baby kurask
 8624	dialogue	44	27	30	37	Abyssal minion
+8624	panel	45	20	32	40	Abyssal minion
 9656	dialogue	85	40	34	40	Rune guardian
+9656	panel	92	34	36	42	Rune guardian
 9657	dialogue	85	40	34	40	Rune guardian
+9657	panel	90	34	36	42	Rune guardian
 9658	dialogue	85	40	34	40	Rune guardian
+9658	panel	92	33	36	42	Rune guardian
 9659	dialogue	85	40	34	40	Rune guardian
+9659	panel	87	34	36	42	Rune guardian
 9660	dialogue	85	40	34	40	Rune guardian
+9660	panel	92	31	36	42	Rune guardian
 9661	dialogue	85	40	34	40	Rune guardian
+9661	panel	92	34	36	42	Rune guardian
 9662	dialogue	85	40	34	40	Rune guardian
+9662	panel	88	33	35	42	Rune guardian
 9663	dialogue	85	40	34	40	Rune guardian
+9663	panel	92	34	35	42	Rune guardian
 9664	dialogue	85	40	34	40	Rune guardian
+9664	panel	91	34	36	42	Rune guardian
 9665	dialogue	85	40	34	40	Rune guardian
+9665	panel	91	33	35	42	Rune guardian
 9666	dialogue	85	40	34	40	Rune guardian
+9666	panel	90	34	36	42	Rune guardian
 9667	dialogue	85	40	34	40	Rune guardian
+9667	panel	92	32	36	42	Rune guardian
 9668	dialogue	85	40	34	40	Rune guardian
+9668	panel	92	33	36	42	Rune guardian
 9669	dialogue	85	40	34	40	Rune guardian
+9669	panel	92	34	36	42	Rune guardian
 11411	dialogue	38	31	23	42	Milk tooth creature
+11411	panel	41	25	23	44	Milk tooth creature
 11413	dialogue	69	31	37	50	Tooth creature (healthy)
+11413	panel	77	23	42	51	Tooth creature (healthy)
 13089	dialogue	138	111	117	121	Sneakerpeeper spawn
+13089	panel	154	91	128	114	Sneakerpeeper spawn
 13090	dialogue	163	122	130	118	Sneakerpeeper
+13090	panel	178	110	143	111	Sneakerpeeper
 14484	dialogue	17	20	16	22	Abyssal orphan
 14484	panel	17	17	16	24	Abyssal orphan
 14485	dialogue	22	22	24	23	Aggy
