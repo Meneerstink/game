@@ -225,6 +225,12 @@ object PestControlRewards {
 
     private fun refused(player: Player) = player.playSound(gg.rsmod.plugins.api.cfg.Sfx.PILLORY_WRONG)
 
+    /**
+     * N449 (owner 2026-10-30, "Pest Control punten inwisselen: geen geluid"): the Confirm click alone was too faint to hear; a
+     * reward that is really given now also plays the shops' transaction sound (ShopSounds.TRANSACTION, the same as every store).
+     */
+    private fun bought(player: Player) = player.playSound(gg.rsmod.plugins.content.mechanics.shops.ShopSounds.TRANSACTION)
+
     fun select(
         player: Player,
         button: Int,
@@ -278,6 +284,7 @@ object PestControlRewards {
             // Elite void (owner 2026-10-10, same rule as Commodore Tyr): the normal piece is swapped for the elite one.
             val piece = reward.upgradeFrom.firstOrNull { player.inventory.contains(it) }
             if (piece == null) {
+                refused(player)
                 player.message("You need a ${reward.title.removePrefix("Elite Void ").lowercase().let { "void knight $it" }} in your inventory to upgrade.")
                 return
             }
@@ -307,6 +314,7 @@ object PestControlRewards {
                 gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.PEST_CONTROL, items.map { it.id to it.amount })
                 "The Void Knight has given you a ${reward.title}."
             }
+        bought(player)
         player.message(message)
         player.message("<col=571D07>Remaining Void Knight Commendation Points: ${points(player)}")
     }

@@ -381,7 +381,17 @@ object Combat {
             } else {
                 areBordering(start.x, start.z, srcSize, srcSize, end.x, end.z, dstSize, dstSize)
             }
-        val withinRange = touching && world.collision.raycast(start, end, projectile = projectile)
+        // N447 (owner 2026-10-30, "Summoning familiars kunnen in Pest Control de portals niet aanvallen"): a melee reach is a shared
+        // edge without a wall (MeleeReach, Darkan checkMeleeStep - what the player's own melee and every follower use). The raycast
+        // from south-west tile to south-west tile stepped INTO the target's own tile; a portal or other big npc standing on blocked
+        // scenery tiles was then never "in range", and the route search beside it failed every tick ("no route" in the npcpath trace).
+        val withinRange =
+            touching &&
+                if (distance == 1 && !projectile) {
+                    gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(world.collision, start, srcSize, srcSize, end, target.getSize(), target.getSize())
+                } else {
+                    world.collision.raycast(start, end, projectile = projectile)
+                }
         return withinRange || PawnPathAction.walkTo(it, pawn, target, interactionRange = distance, lineOfSight = false)
     }
 

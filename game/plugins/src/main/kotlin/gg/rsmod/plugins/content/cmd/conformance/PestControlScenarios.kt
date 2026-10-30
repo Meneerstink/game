@@ -10,6 +10,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
+import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.activity.pest_control.PC_GAME_INTERFACE
 import gg.rsmod.plugins.content.activity.pest_control.PC_HAMMER
 import gg.rsmod.plugins.content.activity.pest_control.PC_KNIGHT_LIFEPOINTS
@@ -284,6 +285,43 @@ object PestControlScenarios {
         // Wave spinners may heal the portal meanwhile, so the damage is read from the portal's damage record.
         val dealt = portal.damageMap.getDamageFrom(a)
         run.expectTrue(E, "attacking the portal: damage and zeal (1 damage = 1 zeal)", dealt > 0 && zealA >= dealt, "dealt=$dealt lp $before -> ${portal.getCurrentLifepoints()} zeal=$zealA")
+
+        // 4b. N447 (owner 2026-10-30: "Summoning familiars kunnen in Pest Control de portals niet aanvallen"): a combat familiar
+        // ordered at the open portal damages it; at a shielded portal the order is refused.
+        run.recording.track(portal, "PCPORTAL")
+        val pouch = gg.rsmod.plugins.content.skills.summoning.SummoningPouchData.SPIRIT_WOLF.pouch
+        b.inventory.add(pouch, 1)
+        Bots.itemOption(b, b.inventory.getItemIndex(pouch, false), "Summon")
+        repeat(3) { wait(1) }
+        val wolf = gg.rsmod.plugins.content.skills.summoning.Familiar.current(b)
+        if (wolf == null) {
+            run.expectTrue(E, "N447: a spirit wolf is summoned in the game", false, "no familiar for ${b.username} at ${b.tile}")
+        } else {
+            // Four tiles west of the portal: the familiar walks in and fights (N447 + N448: the route beside a portal).
+            wolf.moveTo(portal.tile.transform(-5, 0, 0))
+            wait(1)
+            // A familiar's damage is credited to its owner (DAMAGE_CREDIT_ATTR); b itself does not attack the portal here.
+            val ownerBefore = portal.damageMap.getDamageFrom(b)
+            fun wolfDamage() = portal.damageMap.getDamageFrom(wolf) + portal.damageMap.getDamageFrom(b) - ownerBefore
+            val ordered = gg.rsmod.plugins.content.skills.summoning.FamiliarCombat.commandAttack(b, portal)
+            var w = 0
+            while (w++ < 25 && wolfDamage() == 0) {
+                wait(1)
+                if (w % 6 == 0 && wolf.getCombatTarget() !== portal) gg.rsmod.plugins.content.skills.summoning.FamiliarCombat.commandAttack(b, portal, silent = true)
+            }
+            run.expectTrue(
+                E, "N447: the familiar ordered at the open portal damages it",
+                wolfDamage() > 0,
+                "ordered=$ordered target=${wolf.getCombatTarget()} wolf=${wolf.tile} portal=${portal.tile} lock=${portal.lock} dmg=${wolfDamage()}",
+            )
+            val shielded = game.portals.firstOrNull { it != null && it.id in 6146..6149 }
+            if (shielded != null) {
+                wolf.resetInteractions(); gg.rsmod.plugins.content.combat.Combat.reset(wolf)
+                val refused = !gg.rsmod.plugins.content.skills.summoning.FamiliarCombat.commandAttack(b, shielded, silent = true)
+                run.expectTrue(E, "N447: a shielded portal cannot be attacked by the familiar", refused, "commandAttack on ${shielded.id} was accepted")
+            }
+            wolf.resetInteractions(); gg.rsmod.plugins.content.combat.Combat.reset(wolf)
+        }
 
         // 5. Repair a damaged barricade (hammer + logs).
         val target = game.barricades.firstOrNull { it.id == 14227 || it.id == 14228 || it.id == 14229 }

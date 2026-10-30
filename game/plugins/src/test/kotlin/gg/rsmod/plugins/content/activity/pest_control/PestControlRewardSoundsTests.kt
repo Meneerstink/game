@@ -32,8 +32,11 @@ class PestControlRewardSoundsTests {
         val select = source.substringAfter("    fun select(").substringBefore("    fun confirm(")
         val confirm = source.substringAfter("    fun confirm(").substringBefore("    private fun meetsItemRequirement(")
         assertEquals(3, Regex("refused\\(player\\)").findAll(select).count())
-        assertEquals(3, Regex("refused\\(player\\)").findAll(confirm).count())
+        // N449: the elite upgrade without the normal piece refuses with the sound too (4); a given reward plays the shops' sound.
+        assertEquals(4, Regex("refused\\(player\\)").findAll(confirm).count())
         assertTrue("click(player)" in select && "click(player)" in confirm)
+        assertEquals(1, Regex("bought\\(player\\)").findAll(confirm).count(), "N449: a bought reward plays the transaction sound")
+        assertTrue("ShopSounds.TRANSACTION" in source)
         val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/death_screens.plugin.kts").readText()
         assertEquals(6, Regex("officeClick\\(player\\)").findAll(death).count(), "item pick + Take 1 / 5 / All / X / Take all")
     }
