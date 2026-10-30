@@ -329,10 +329,13 @@ gg.rsmod.game.CommandServerCommands.handlers["cwplay"] = { w, a ->
 gg.rsmod.game.CommandServerCommands.handlers["petops"] = { w, _ ->
     val dead = sortedMapOf<String, MutableList<Int>>()
     gg.rsmod.plugins.content.skills.summoning.Pets.variants.forEach { v ->
-        val def = w.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, v.npc) ?: return@forEach
-        val bound = w.plugins.boundNpcOptions(v.npc)
-        def.options.forEachIndexed { i, o ->
-            if (o != null && o.isNotBlank() && (i + 1) !in bound) dead.getOrPut("$o (${v.name})") { mutableListOf() } += v.npc
+        // N423: the Upgraded copy of every form too (its Store and the pet's own ops).
+        listOfNotNull(v.npc, gg.rsmod.plugins.content.skills.summoning.Pets.upgradedNpc(v.npc)).forEach { npc ->
+            val def = w.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, npc) ?: return@forEach
+            val bound = w.plugins.boundNpcOptions(npc)
+            def.options.forEachIndexed { i, o ->
+                if (o != null && o.isNotBlank() && (i + 1) !in bound) dead.getOrPut("$o (${def.name})") { mutableListOf() } += npc
+            }
         }
     }
     if (dead.isEmpty()) "petops: every pet option is bound" else "petops: " + dead.entries.joinToString("; ") { "${it.key} ${it.value.take(4)}" }
