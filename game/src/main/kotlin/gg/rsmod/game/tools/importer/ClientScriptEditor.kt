@@ -53,6 +53,12 @@ class ClientScriptEditor private constructor(
         switches.forEach { cases -> cases.replaceAll { (key, target) -> key to if (target === from) to else target } }
     }
 
+    /** Where case [key] of switch table [table] lands; null when the table or the case does not exist. */
+    fun switchTarget(
+        table: Int,
+        key: Int,
+    ): Ins? = switches.getOrNull(table)?.firstOrNull { it.first == key }?.second
+
     /** Indices where [pattern] (opcode, operand or null for any) starts. */
     fun find(vararg pattern: Pair<Int, Any?>): List<Int> =
         (0..code.size - pattern.size).filter { start ->
