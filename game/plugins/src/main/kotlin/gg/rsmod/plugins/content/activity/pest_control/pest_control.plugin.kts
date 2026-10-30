@@ -44,7 +44,7 @@ on_command("pcpoints", Privilege.ADMIN_POWER) {
         player.message("Usage: pcpoints <amount>")
         return@on_command
     }
-    player.attr[PEST_POINTS] = amount
+    gg.rsmod.game.model.attr.PointBalance.set(player.attr, PEST_POINTS, amount.toLong()) // N106: one balance helper
     player.message("Void Knight Commendation Points: $amount")
 }
 
