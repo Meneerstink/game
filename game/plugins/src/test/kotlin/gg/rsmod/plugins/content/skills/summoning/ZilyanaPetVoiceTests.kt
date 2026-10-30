@@ -20,6 +20,7 @@ class ZilyanaPetVoiceTests {
         PetVoices.install(rows.map { if (it.pet == "Pet Zilyana") it.copy(localSynth = 10523) else it }, Pets.variants)
         val previous = Pets.variants.associate { it.npc to PetVoices.idleVoiceOf(it.npc) }
         PetVoices.install(rows, Pets.variants)
+        PetVoices.installAppear(PetVoices.parse(File("../../data/cfg/pets/pet_appear.tsv").readLines()), Pets.variants)
         Pets.variants.filter { it.pet != "Pet Zilyana" }.forEach {
             assertEquals(previous[it.npc], PetVoices.idleVoiceOf(it.npc), it.name)
         }
@@ -49,9 +50,9 @@ class ZilyanaPetVoiceTests {
             verify(exactly = 3) { FamiliarAudio.play(player, 10280, 0, 256, 1, 255, tile) }
             val other = Pets.variants.first { it.pet == "Pet General Graardor" }
             every { npc.id } returns other.npc
-            PetVoices.appear(player, npc)
+            PetVoices.appear(player, npc) // N465: Graardor's boss has no spawn sound - silent
             PetVoices.play(player, npc)
-            verify(exactly = 2) { FamiliarAudio.play(player, previous.getValue(other.npc)!!, 0, 256, 1, 255, tile) }
+            verify(exactly = 1) { FamiliarAudio.play(player, previous.getValue(other.npc)!!, 0, 256, 1, 255, tile) }
             verify(exactly = 0) { FamiliarAudio.play(player, 10523, any(), any(), any(), any(), any()) }
         } finally {
             unmockkObject(FamiliarAudio)

@@ -118,10 +118,39 @@ object PetVoices {
             }.toMap()
     }
 
-    fun load(file: File = File(PATH)): Int {
+    /** N465: the spawn sounds of the OSRS pets, written by OsrsPetImportTool `table` from its APPEARS (same columns as [PATH]). */
+    const val APPEAR_PATH = "./data/cfg/pets/pet_appear.tsv"
+
+    @Volatile
+    private var appears: Map<Int, Int> = emptyMap()
+
+    /**
+     * N465 (owner 2026-10-30: "veel osrs pets gebruik je de verkeerde spawn sounds ... sommige hebben geen spawn sounds dat is
+     * correct"): an OSRS pet appears with its boss's own spawn sound from [rows] (a dog barks, N296); without one it appears silently
+     * and keeps its voice for Talk-to and now and then while it follows.
+     */
+    fun installAppear(
+        rows: List<Row>,
+        variants: List<Pets.Variant>,
+    ) {
+        appears = variants.filter { !it.classic }.mapNotNull { v -> (Sfx.PET_DOG_BARK.takeIf { v.pet in DOGS } ?: rowFor(rows, v)?.localSynth)?.let { v.npc to it } }.toMap()
+    }
+
+    fun load(
+        file: File = File(PATH),
+        appearFile: File = File(APPEAR_PATH),
+    ): Int {
         if (!file.exists()) return 0
         install(parse(file.readLines()), Pets.variants)
+        installAppear(if (appearFile.exists()) parse(appearFile.readLines()) else emptyList(), Pets.variants)
         return talk.size
+    }
+
+    /** The sound pet [npc] makes when it appears: an OSRS pet's spawn sound ([installAppear]), a 667 pet's own voice; else none. */
+    fun appearVoiceOf(npc: Int): Int? {
+        val base = Pets.baseNpc(npc)
+        val variant = Pets.variantOfNpc(base) ?: return null
+        return if (variant.classic) idleVoiceOf(base) else appears[base]
     }
 
     /** The Talk-to voice of follower npc [npc], or null for a silent pet / no pet. */
@@ -161,12 +190,13 @@ object PetVoices {
     /**
      * N298 (owner 2026-10-24: "alle pets sounds bij spawn moeten ze geluid maken als ze die hebben"): a pet with a voice makes it
      * when it appears - dropped from the inventory, out again after a login, called or brought along after a teleport.
+     * N465: an OSRS pet with its boss's spawn sound only ([appearVoiceOf]).
      */
     fun appear(
         player: Player,
         npc: Npc,
     ) {
-        val sound = idleVoiceOf(npc.id) ?: return
+        val sound = appearVoiceOf(npc.id) ?: return
         FamiliarAudio.play(player, sound, volume = VOLUME, at = npc.tile)
     }
 

@@ -489,6 +489,61 @@ object OsrsPetImportTool {
     /** Server table of [VOICES] with the local synth ids, written by `table`. */
     val VOICE_TABLE = RspsPaths.data("cfg/pets/pet_voices.tsv")
 
+    /**
+     * N465 (owner 2026-10-30: "veel osrs pets gebruik je de verkeerde spawn sounds ... sommige hebben geen spawn sounds dat is correct";
+     * chat: a pet without one keeps its voice now and then while it follows): the sound an OSRS pet makes when it appears is its boss's
+     * own spawn / wake-up sound - the first voiced frame sound of the boss's spawn sequence (cache 2686, RuneLite AnimationID name in
+     * the source) or a synth Jagex named for that boss's spawn. A pet whose boss has none (TzRek-Jad, the God Wars pets, the skilling
+     * pets ...) appears silently, apart from its own stand animation's sounds; so does Lil' Nylo (the Nylocas spawn sound renders at
+     * peak 21 of 128 - inaudible). Pet Zilyana keeps her voice (owner V12 2026-10-30);
+     * the Hellpuppy barks like every dog (N296, server side).
+     */
+    val APPEARS: List<Voice> =
+        listOf(
+            Voice("Aggy", "*", 4059, "hespori_spawn", "Hespori"),
+            Voice("Baron", "*", 7201, "dt2_duke_wakeup_raor_02", "Duke Sucellus NPC_DUKE_SUCELLUS01_WAKE_UP_01 seq 10179"),
+            Voice("Bran", "Bran", 10163, "-", "Branda FIRE_GIANT_BRANDA_QUEEN_SPAWN01 seq 11966"),
+            Voice("Bran", "Ric", 10122, "-", "Eldric ICE_GIANT_ELDRIC_KING_SPAWN01 seq 11963"),
+            Voice("Butch", "*", 7134, "dt2_vardorvis_entagle_spawn_jump_02", "Vardorvis NPC_VARDORVIS_01_SPAWN_01 seq 10345"),
+            Voice("Callisto cub", "*", 6982, "wbr_callisto_attack_enraged_roar_02", "Callisto NPC_CALLISTO_SPAWN01 seq 10016"),
+            Voice("Dom", "*", 10358, "-", "Doom of Mokhaiotl DOM_BURROWED_EMERGE seq 12418"),
+            Voice("Huberte", "*", 9574, "huey_awaken_reset_roar_02", "Hueycoatl HUEY_AWAKEN_RESET seq 11682"),
+            Voice("Ikkle Hydra", "*", 4067, "hydra_boss_stage_4_spawn", "Alchemical Hydra HYDRA_STAGE_4_SPAWN seq 8252"),
+            Voice("Lil' Zik", "Lil' Zik", 3950, "tob_verzik_spider_spawn", "Verzik VERZIK_PHASE3_SPAWN seq 8119"),
+            Voice("Lil' Zik", "Lil' Maiden", 11863, "-", "Maiden MAIDEN_SPAWN seq 14399"),
+            Voice("Lil'viathan", "*", 7024, "dt2_levboss_spawn_01", "the Leviathan"),
+            Voice("Little Nightmare", "Little Nightmare", 4262, "noa_respawn", "the Nightmare"),
+            Voice("Little Nightmare", "Little Parasite", 4265, "noa_parasite_spawn", "the Nightmare's parasite"),
+            Voice("Moxi", "*", 9728, "amoxliatl_spawn_01", "Amoxliatl AMOXLIATL_SPAWN seq 11527"),
+            Voice("Muphin", "*", 6698, "sotn_muspah_spawn_01", "Phantom Muspah"),
+            Voice("Nexling", "*", 5205, "nex2021_turmoil_intro_scream", "Nex"),
+            Voice("Nid", "*", 9388, "araxxor_spawn_scream_01", "Araxxor NPC_ARAXXOR_01_SPAWN_01 seq 11482"),
+            Voice("Noon", "Noon", 9938, "l5_gg_dawn_spawn_scream_02", "Dawn GG_DAWN_SPAWN seq 7766"),
+            Voice("Noon", "Midnight", 9973, "l5_gg_dusk_spawn_scream_02", "Dusk GG_DUSK_SPAWN seq 7778"),
+            Voice("Olmlet", "Tektiny", 3836, "godwars_avatar_clang", "Tekton TEKTON_SPAWN seq 7473"),
+            Voice("Olmlet", "Enraged Tektiny", 3836, "godwars_avatar_clang", "Tekton TEKTON_SPAWN seq 7473"),
+            Voice("Pet Smoke Devil", "*", 10072, "l5_thermy_spawn_01", "Thermonuclear smoke devil"),
+            Voice("Pet Zilyana", "*", 3886, "godwars_saradomin_avatar_shield", "owner V12 2026-10-30: her voice"),
+            Voice("Scurry", "*", 7624, "rat_boss_spawn_03", "Scurrius NPC_RAT_BOSS_SPAWN_01 seq 10686"),
+            Voice("Smolcano", "*", 4148, "sote_zalcano_stand_up_1", "Zalcano ZALCANO_STAND_UP seq 8439"),
+            Voice("Tiny tempor", "*", 4947, "fishboss_boss_surface", "Tempoross FSB_SPAWN seq 8897"),
+            Voice("Tumeken's guardian", "Tumeken's guardian", 6205, "toa_wardens_wake_up_power_01", "Tumeken's Warden NPC_WARDENS_WAKE01 seq 9663"),
+            Voice("Tumeken's guardian", "Tumeken's damaged guardian", 6205, "toa_wardens_wake_up_power_01", "Tumeken's Warden NPC_WARDENS_WAKE01 seq 9663"),
+            Voice("Tumeken's guardian", "Elidinis' guardian", 6205, "toa_wardens_wake_up_power_01", "Elidinis' Warden NPC_WARDENS_WAKE01 seq 9663"),
+            Voice("Tumeken's guardian", "Elidinis' damaged guardian", 6205, "toa_wardens_wake_up_power_01", "Elidinis' Warden NPC_WARDENS_WAKE01 seq 9663"),
+            // Rendered with the client's SynthSound: toa_akka_spawn_01 peaks at 27 of 128; the seq's second sound (frame 35) at 51.
+            Voice("Tumeken's guardian", "Akkhito", 5638, "toa_akka_weapon_spawn_02", "Akkha NPC_AKKHA_SPAWN_SPEAR seq 9790 frame 35"),
+            Voice("Tumeken's guardian", "Babi", 5943, "toa_baba_spawn_boss_roar_01", "Ba-Ba NPC_MANDRILL_SPAWN01 seq 9752"),
+            Voice("Venenatis spiderling", "*", 6907, "wbr_venenatis_spawn_web_01", "Venenatis NPC_VENENATIS_SPAWN_01 seq 9993"),
+            Voice("Vet'ion Jr.", "*", 6853, "wbr_vetion_spawn_01", "Vet'ion NPC_VETION_SPAWN_01 seq 9977"),
+            Voice("Vorki", "*", 1522, "vorkath_spawn", "Vorkath"),
+            Voice("Wisp", "*", 7432, "dt2_whisperer_spawn_screech_01", "the Whisperer NPC_WHISPERER_01_SPAWN_01 seq 10227"),
+            Voice("Yami", "*", 10235, "-", "Yama NPC_YAMA_NONCOMBAT_SPAWN01 seq 12163"),
+        )
+
+    /** Server table of [APPEARS] with the local synth ids (same columns as [VOICE_TABLE]), written by `table`. */
+    val APPEAR_TABLE = RspsPaths.data("cfg/pets/pet_appear.tsv")
+
     /** The frame durations of a rev-667 sequence, whether it already has frame sounds (opcode 13), and the offset of its end byte. */
     class Seq667(val durations: IntArray, val hasSounds: Boolean, val end: Int)
 
@@ -671,7 +726,7 @@ object OsrsPetImportTool {
                 }
             }
             // N88 part 3: every OSRS voice synth, imported once (its own bytes, also where the 667 cache has the same id).
-            for (voice in VOICES.filter { it.osrsSynth >= 0 }.distinctBy { it.osrsSynth }) {
+            for (voice in (VOICES + APPEARS).filter { it.osrsSynth >= 0 }.distinctBy { it.osrsSynth }) {
                 val localSynth =
                     local("synth", voice.osrsSynth) { nextSynth++ }.also { id ->
                         if (library.data(OsrsFxImportTool.INDEX_SYNTH, id, 0) == null) {
@@ -782,6 +837,16 @@ object OsrsPetImportTool {
         }
         File(VOICE_TABLE).writeText(voices.toString())
         println("TABLE_WRITTEN $VOICE_TABLE rows=${VOICES.size}")
+
+        val appears = StringBuilder()
+        appears.append("# Generated by OsrsPetImportTool table from OSRS_IMPORT_MASTER.yml - do not edit; the source is OsrsPetImportTool.APPEARS.\n")
+        appears.append("# pet\tvariant\tosrs_synth\tlocal_synth\tname\tline\tsource\n")
+        APPEARS.forEach { v ->
+            val local = fx["synth:${v.osrsSynth}"] ?: error("appear ${v.pet}: synth ${v.osrsSynth} not imported")
+            appears.append("${v.pet}\t${v.variant}\t${v.osrsSynth}\t$local\t${v.name}\t\t${v.source}\n")
+        }
+        File(APPEAR_TABLE).writeText(appears.toString())
+        println("TABLE_WRITTEN $APPEAR_TABLE rows=${APPEARS.size}")
     }
 
     @JvmStatic

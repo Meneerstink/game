@@ -92,4 +92,36 @@ class PetSoundsTests {
         val silent = Pets.variants.filter { !it.classic && PetVoices.idleVoiceOf(it.npc) == null }.map { "${it.pet}/${it.name}" }
         assertTrue(silent.isEmpty(), "silent pets: $silent")
     }
+
+    /**
+     * N465 (owner 2026-10-30: wrong spawn sounds, some pets have none): an OSRS pet appears with its boss's spawn sound or silently,
+     * never with its Talk-to voice; the voice stays for Talk-to and now and then; the 667 pets and the dogs are unchanged.
+     */
+    @Test
+    fun `N465 - an OSRS pet appears with its boss's spawn sound or silently, its voice stays`() {
+        Pets.load(File("../../data/cfg/pets/pets.tsv"), File("../../data/cfg/pets/pet_tiers.tsv"), File("../../data/cfg/pets/pets_667.tsv"))
+        PetVoices.load(File("../../data/cfg/pets/pet_voices.tsv"), File("../../data/cfg/pets/pet_appear.tsv"))
+        val appear = PetVoices.parse(File("../../data/cfg/pets/pet_appear.tsv").readLines())
+        fun form(pet: String, name: String = pet) = Pets.variants.first { it.pet == pet && (it.name == name || name == pet) }
+        // Silent on appearing, voice kept: the ones the owner named and the bosses without a spawn sound.
+        listOf("TzRek-Jad", "Jal-Nib-Rek", "Pet General Graardor", "Pet Kree'arra", "Baby chinchompa", "Rock golem", "Pet Kraken", "Youngllef").forEach {
+            assertNull(PetVoices.appearVoiceOf(form(it).npc), "$it appears silently")
+            assertTrue(PetVoices.voiceOf(form(it).npc) != null, "$it keeps its Talk-to voice")
+            assertTrue(PetVoices.idleVoiceOf(form(it).npc) != null, "$it keeps its voice now and then")
+        }
+        // A spawn sound is the boss's own, per form; the table names its source.
+        val vorki = appear.single { it.pet == "Vorki" }
+        assertEquals("vorkath_spawn", vorki.name)
+        assertEquals(vorki.localSynth, PetVoices.appearVoiceOf(form("Vorki").npc))
+        assertEquals(appear.single { it.variant == "Little Parasite" }.localSynth, PetVoices.appearVoiceOf(form("Little Nightmare", "Little Parasite").npc))
+        assertNull(PetVoices.appearVoiceOf(form("Lil' Zik", "Lil' Bloat").npc), "Bloat has no spawn sound")
+        assertEquals(10280, PetVoices.appearVoiceOf(form("Pet Zilyana").npc), "owner V12: Zilyana's own voice")
+        // Upgraded copies (burden trinket) appear like their pet.
+        Pets.variants.filter { !it.classic }.forEach { v -> Pets.upgradedNpc(v.npc)?.let { assertEquals(PetVoices.appearVoiceOf(v.npc), PetVoices.appearVoiceOf(it), "Upgraded ${v.name}") } }
+        // Dogs bark (N296), 667 pets keep their voice on appearing.
+        assertEquals(Sfx.PET_DOG_BARK, PetVoices.appearVoiceOf(form("Hellpuppy").npc))
+        Pets.variants.filter { it.classic }.forEach { assertEquals(PetVoices.idleVoiceOf(it.npc), PetVoices.appearVoiceOf(it.npc), it.name) }
+        // Every appear row is a real roster form.
+        appear.forEach { r -> assertTrue(Pets.variants.any { it.pet == r.pet && (r.variant == "*" || it.name == r.variant) }, "${r.pet}/${r.variant}") }
+    }
 }
