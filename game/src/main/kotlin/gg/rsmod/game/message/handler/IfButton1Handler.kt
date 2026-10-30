@@ -215,9 +215,12 @@ class IfButton1Handler : MessageHandler<IfButtonMessage> {
             // OSRS (owner decision 2026-09-12): eating and drinking do not stop combat - food only
             // delays the next attack (OSRS Wiki Food; Void Eating.consume). Other inventory
             // options still end it.
-            val menuOption = world.definitions.get(ItemDef::class.java, item.id).inventoryMenu.getOrNull(option - 1)?.lowercase()
+            val itemDef = world.definitions.get(ItemDef::class.java, item.id)
+            val menuOption = itemDef.inventoryMenu.getOrNull(option - 1)?.lowercase()
             val consumes = menuOption == "eat" || menuOption == "drink"
-            client.fullInterruption(movement = false, interactions = true, animations = false, queue = true, preserveCombat = consumes)
+            // N446: feeling the locator orb is self-damage used during combat, like eating; keep its target and combat queue.
+            val feelsLocatorOrb = menuOption == "feel" && itemDef.name == "Locator orb"
+            client.fullInterruption(movement = false, interactions = true, animations = false, queue = true, preserveCombat = consumes || feelsLocatorOrb)
 
             val handled = world.plugins.executeItem(client, item.id, option)
 
