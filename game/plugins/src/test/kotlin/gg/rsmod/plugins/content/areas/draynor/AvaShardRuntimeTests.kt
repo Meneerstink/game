@@ -125,6 +125,46 @@ class AvaShardRuntimeTests {
         assertEquals(1_000_000 - s.items[2]!!.sellPrice!!, inv.getItemCount(Items.COINS_995))
     }
 
+    @Test
+    fun `N461 real splinter shop charges 379 coins and has unlimited stock without requirements`() {
+        val s = world.getShop("Ava's Sunfire Splinters") ?: fail("missing splinter shop")
+        val row = s.items[0]!!
+        assertEquals(Items.SUNFIRE_SPLINTERS, row.item)
+        assertEquals(22669, row.item)
+        assertEquals(379, s.currency.priceOf(world, row))
+        assertEquals(Int.MAX_VALUE, row.amount)
+        assertEquals(gg.rsmod.game.model.shop.StockType.INFINITE, s.stockType)
+        assertEquals(gg.rsmod.game.model.shop.PurchasePolicy.BUY_NONE, s.purchasePolicy)
+        assertEquals(Items.COINS_995, s.currency.currencyItem)
+        val inv = inventory(379 * 150_000)
+        val p = player(inv)
+        listOf(1, 5, 10, 19_984, 130_000).forEach { s.currency.sellToPlayer(p, s, 0, it) }
+        assertEquals(150_000, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
+        assertEquals(0, inv.getItemCount(Items.COINS_995))
+        assertEquals(Int.MAX_VALUE, row.currentAmount)
+        s.currency.buyFromPlayer(p, s, 0, 150_000)
+        assertEquals(150_000, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
+        assertEquals(0, inv.getItemCount(Items.COINS_995))
+    }
+
+    @Test
+    fun `N461 full inventory buys into an existing splinter stack but never loses coins without room`() {
+        val s = world.getShop("Ava's Sunfire Splinters")!!
+        val inv = inventory(379 * 10)
+        (1..27).forEach { inv[it] = Item(Items.LOGS) }
+        s.currency.sellToPlayer(player(inv), s, 0, 5)
+        assertEquals(379 * 10, inv.getItemCount(Items.COINS_995))
+        assertEquals(0, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
+        inv[27] = Item(Items.SUNFIRE_SPLINTERS, 100)
+        s.currency.sellToPlayer(player(inv), s, 0, 5)
+        assertEquals(105, inv.getItemCount(Items.SUNFIRE_SPLINTERS))
+        assertEquals(379 * 5, inv.getItemCount(Items.COINS_995))
+        val poor = inventory(378)
+        s.currency.sellToPlayer(player(poor), s, 0, 1)
+        assertEquals(378, poor.getItemCount(Items.COINS_995))
+        assertEquals(0, poor.getItemCount(Items.SUNFIRE_SPLINTERS))
+    }
+
     companion object {
         const val SCRIPT = "gg.rsmod.plugins.content.areas.draynor.Ava_plugin"
         const val SHARD_SLOT = 3
@@ -137,7 +177,7 @@ class AvaShardRuntimeTests {
             every { ctx.skillCount } returns 25
             every { ctx.npcStatCount } returns Npc.Stats.DEFAULT_NPC_STAT_COUNT
             val world = World(ctx, mockk<DevContext>(relaxed = true))
-            world.definitions.loadAll(CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()))
+            world.definitions.loadAll(CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString()))
             val compiled = File(CLASSES, SCRIPT.replace('.', '/') + ".class")
             if (!compiled.exists() || compiled.lastModified() < File(SOURCE).lastModified()) {
                 fail("${compiled.path} is missing or older than $SOURCE: the scripts compile did not run first")

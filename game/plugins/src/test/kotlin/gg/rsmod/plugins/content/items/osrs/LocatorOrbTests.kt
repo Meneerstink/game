@@ -132,7 +132,7 @@ class LocatorOrbTests {
         f.inventory[0] = Item(LocatorOrb.INERT)
         assertTrue(repo.executeNpc(f.player, Npcs.AVA, 1))
         f.queues.cycle()
-        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 230, component = 2, button = 2))
+        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 232, component = 2, button = 2))
         f.queues.cycle()
         assertEquals(LocatorOrb.ACTIVE, f.inventory[0]?.id)
         assertTrue(f.attrs[LocatorOrb.ATTUNED] == true)
@@ -161,6 +161,21 @@ class LocatorOrbTests {
         assertEquals(0, f.queues.size, "saved confirmation skips the dialog")
         f.resolve()
         assertEquals(79, f.hp)
+    }
+
+    @Test
+    fun `N461 compiled Ava splinter option opens without device requirements`() {
+        val f = Fixture()
+        val repo = scripts(f)
+        f.level = 1
+        val shop = mockk<gg.rsmod.game.model.shop.Shop>(relaxed = true)
+        every { f.world.getShop("Ava's Sunfire Splinters") } returns shop
+        assertTrue(repo.executeNpc(f.player, Npcs.AVA, 1))
+        f.queues.cycle()
+        f.queues.submitReturnValue(ResumePauseButtonMessage(interfaceId = 232, component = 4, button = 4))
+        f.queues.cycle()
+        assertEquals(shop, f.attrs[gg.rsmod.game.model.attr.CURRENT_SHOP_ATTR])
+        verify(exactly = 0) { f.skills.getCurrentLevel(any()) }
     }
 
     @Test

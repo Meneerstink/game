@@ -198,7 +198,7 @@ class AvaShardShopTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            DEFINITIONS.loadAll(CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()))
+            DEFINITIONS.loadAll(CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString()))
         }
     }
 }
