@@ -139,8 +139,12 @@ object PestControlRewardsInterfaceImportTool {
         require(u2(template, OFFSET_MODEL) == templateLook.model) { "template model ${u2(template, OFFSET_MODEL)} != ${templateLook.model}" }
         val out = template.copyOf()
         put2(out, OFFSET_MODEL, look.model)
-        put2(out, OFFSET_ORIGIN_X, s2(template, OFFSET_ORIGIN_X) - templateLook.offsetX + look.offsetX)
-        put2(out, OFFSET_ORIGIN_Y, s2(template, OFFSET_ORIGIN_Y) - templateLook.offsetY + look.offsetY)
+        // N459 (2026-10-30): the origin is the component's 2D projection centre in pixels (client Component.decode: modelOriginX/Y,
+        // InterfaceManager adds it to the box centre), NOT the item's 3D inventory offset (xof2d/yof2d). Adding the deflector's
+        // offsets (-12, 72) drew the shield 68 px lower and 12 px left - at the left edge of the Spinner charm row, its own
+        // box empty. Every copy keeps the template's centre.
+        put2(out, OFFSET_ORIGIN_X, s2(template, OFFSET_ORIGIN_X))
+        put2(out, OFFSET_ORIGIN_Y, s2(template, OFFSET_ORIGIN_Y))
         put2(out, OFFSET_XAN, Math.floorMod(u2(template, OFFSET_XAN) - templateLook.xan + look.xan, 2048))
         put2(out, OFFSET_YAN, Math.floorMod(u2(template, OFFSET_YAN) - templateLook.yan + look.yan, 2048))
         put2(out, OFFSET_ZOOM, u2(template, OFFSET_ZOOM) * look.zoom / templateLook.zoom)
@@ -195,6 +199,29 @@ object PestControlRewardsInterfaceImportTool {
         return out
     }
 
+    /**
+     * N459: a cache built before the origin fix has the new model slots' projection centre moved by the item offsets (the deflector
+     * 267:127 at -12,68 - drawn outside its box). Returns the slots whose origin differs from their template's, with only the
+     * origin set back; empty when the cache is right.
+     */
+    fun repairOrigins(current: Map<Int, ByteArray>): Map<Int, ByteArray> {
+        require(current.size == COMPONENT_COUNT) { "interface $INTERFACE_ID has ${current.size} components, not $COMPONENT_COUNT" }
+        val out = sortedMapOf<Int, ByteArray>()
+        for (s in SLOTS) {
+            val template = current[s.modelTemplate] ?: error("$INTERFACE_ID:${s.modelTemplate} missing")
+            val bytes = current[s.model] ?: error("$INTERFACE_ID:${s.model} missing")
+            require(u2(bytes, OFFSET_MODEL) == s.look.model) { "$INTERFACE_ID:${s.model} model ${u2(bytes, OFFSET_MODEL)} != ${s.look.model}" }
+            val x = s2(template, OFFSET_ORIGIN_X)
+            val y = s2(template, OFFSET_ORIGIN_Y)
+            if (s2(bytes, OFFSET_ORIGIN_X) == x && s2(bytes, OFFSET_ORIGIN_Y) == y) continue
+            val fixed = bytes.copyOf()
+            put2(fixed, OFFSET_ORIGIN_X, x)
+            put2(fixed, OFFSET_ORIGIN_Y, y)
+            out[s.model] = fixed
+        }
+        return out
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
@@ -206,12 +233,6 @@ object PestControlRewardsInterfaceImportTool {
         } finally {
             library.close()
         }
-        if (current.size == COMPONENT_COUNT) {
-            println("NO_OP: interface $INTERFACE_ID already has $COMPONENT_COUNT components")
-            return
-        }
-        val layer = current.getValue(SCROLL_LAYER)
-        println("TEMPLATES scrollHeight=${u2(layer, OFFSET_SCROLL_HEIGHT)} -> ${u2(layer, OFFSET_SCROLL_HEIGHT) + SHIFT}")
         listOf(18, 19).forEach { id ->
             val b = current.getValue(id)
             println(
@@ -219,7 +240,22 @@ object PestControlRewardsInterfaceImportTool {
                     "xan=${u2(b, OFFSET_XAN)} yan=${u2(b, OFFSET_YAN)} zoom=${u2(b, OFFSET_ZOOM)}",
             )
         }
-        val built = build(current)
+        val built: Map<Int, ByteArray>
+        if (current.size == COMPONENT_COUNT) {
+            built = repairOrigins(current)
+            if (built.isEmpty()) {
+                println("NO_OP: interface $INTERFACE_ID already has $COMPONENT_COUNT components with the template origins")
+                return
+            }
+            built.keys.forEach { id ->
+                val b = current.getValue(id)
+                println("REPAIR 267:$id origin ${s2(b, OFFSET_ORIGIN_X)},${s2(b, OFFSET_ORIGIN_Y)} -> ${s2(built.getValue(id), OFFSET_ORIGIN_X)},${s2(built.getValue(id), OFFSET_ORIGIN_Y)}")
+            }
+        } else {
+            val layer = current.getValue(SCROLL_LAYER)
+            println("TEMPLATES scrollHeight=${u2(layer, OFFSET_SCROLL_HEIGHT)} -> ${u2(layer, OFFSET_SCROLL_HEIGHT) + SHIFT}")
+            built = build(current)
+        }
         val mutations =
             built.map { (id, bytes) ->
                 CacheMutation(
