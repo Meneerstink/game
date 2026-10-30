@@ -173,6 +173,52 @@ object Pets {
         variant: Variant,
     ): Int = if (BurdenTrinkets.upgradeOf(player, variant.pet) != null) upgradedOf[variant.npc] ?: variant.npc else variant.npc
 
+    @Volatile
+    private var upgradedItemOf: Map<Int, Int> = emptyMap()
+
+    @Volatile
+    private var baseItemOf: Map<Int, Int> = emptyMap()
+
+    /** N436: base pet item -> its "Upgraded" item copy (data/cfg/pets/pet_item_upgrades.tsv, same row shape as the npc table). */
+    const val ITEM_UPGRADES_TABLE_PATH = "./data/cfg/pets/pet_item_upgrades.tsv"
+
+    fun installItemUpgrades(table: Map<Int, Int>) {
+        upgradedItemOf = table
+        baseItemOf = table.entries.associate { it.value to it.key }
+    }
+
+    /** The plain pet item behind [item] (itself for a plain pet item or any other item). */
+    fun baseItemOf(item: Int): Int = baseItemOf[item] ?: item
+
+    fun isUpgradedItem(item: Int): Boolean = item in baseItemOf
+
+    /** Every Upgraded item copy (option bindings). */
+    val upgradedItems: Collection<Int> get() = baseItemOf.keys
+
+    /**
+     * N436 (owner 2026-10-30: an upgraded pet "moet dat ook zo laten zien in de inventory"): the item [variant] is held as - its
+     * "Upgraded" copy while a burden trinket is bound to the pet, else the plain item.
+     */
+    fun shownItem(
+        player: Player,
+        variant: Variant,
+    ): Int = if (BurdenTrinkets.upgradeOf(player, variant.pet) != null) upgradedItemOf[variant.item] ?: variant.item else variant.item
+
+    /**
+     * N436: every pet item in the inventory and the bank turned into the version its binding asks for (after a Bind or Unbind - the
+     * pet may be in the bank - and at login). The swap keeps the slot; nothing is added or lost.
+     */
+    fun reconcileItems(player: Player) {
+        listOf(player.inventory, player.bank).forEach { container ->
+            for (slot in 0 until container.capacity) {
+                val item = container[slot] ?: continue
+                val variant = variantOfItem(item.id) ?: continue
+                val want = shownItem(player, variant)
+                if (want != item.id) container[slot] = Item(want, item.amount)
+            }
+        }
+    }
+
     /** The live follower npc; transient like [FAMILIAR_ATTR]. */
     val PET_ATTR = AttributeKey<WeakReference<Npc>>()
 
@@ -233,14 +279,16 @@ object Pets {
         install(osrs + old, if (tiers.exists()) parseTiers(tiers.readLines()) else emptyList())
         val upgrades = File(table.parentFile, File(UPGRADES_TABLE_PATH).name)
         installUpgrades(if (upgrades.exists()) parseUpgrades(upgrades.readLines()) else emptyMap())
+        val itemUpgrades = File(table.parentFile, File(ITEM_UPGRADES_TABLE_PATH).name)
+        installItemUpgrades(if (itemUpgrades.exists()) parseUpgrades(itemUpgrades.readLines()) else emptyMap())
         return variants.size
     }
 
-    fun isPetItem(item: Int): Boolean = item in byItem
+    fun isPetItem(item: Int): Boolean = item in byItem || item in baseItemOf
 
     fun isPetNpc(npc: Int): Boolean = npc in byNpc || npc in baseOf
 
-    fun variantOfItem(item: Int): Variant? = byItem[item]
+    fun variantOfItem(item: Int): Variant? = byItem[item] ?: baseItemOf[item]?.let { byItem[it] }
 
     fun variantOfNpc(npc: Int): Variant? = byNpc[npc] ?: baseOf[npc]?.let { byNpc[it] }
 
@@ -253,7 +301,7 @@ object Pets {
 
     /** The variant after [item] in its pet's variant cycle (itself for a single-variant pet). */
     fun nextVariant(item: Int): Variant? {
-        val v = byItem[item] ?: return null
+        val v = variantOfItem(item) ?: return null
         val all = byPet.getValue(v.pet)
         return all[(all.indexOf(v) + 1) % all.size]
     }
@@ -305,7 +353,7 @@ object Pets {
         item: Int,
         slot: Int,
     ): Boolean {
-        val variant = byItem[item] ?: return false
+        val variant = variantOfItem(item) ?: return false
         if (hasFollower(player)) {
             player.message("You already have a follower.")
             return true
@@ -349,7 +397,8 @@ object Pets {
             player.message("This isn't your pet.")
             return
         }
-        val item = itemOf(player) ?: variantOfNpc(npc.id)?.item ?: return
+        // N436: back into the backpack as the version its binding asks for ("Upgraded <name>" while a trinket is bound).
+        val item = (itemOf(player) ?: variantOfNpc(npc.id)?.item)?.let { i -> variantOfItem(i)?.let { shownItem(player, it) } ?: i } ?: return
         if (!player.inventory.hasSpace) {
             player.message("You don't have enough inventory space to do that.")
             return
@@ -369,7 +418,7 @@ object Pets {
         confirmed: Boolean = false,
     ) {
         current(player) ?: return
-        val item = itemOf(player) ?: return
+        val item = itemOf(player)?.let { i -> variantOfItem(i)?.let { shownItem(player, it) } ?: i } ?: return
         if (!confirmed && !confirmCargo(player) { dismiss(player, confirmed = true) }) return
         if (player.inventory.hasSpace || player.bank.hasSpace) BeastOfBurden.release(player)
         when {
@@ -434,7 +483,7 @@ object Pets {
      */
     fun refreshUpgrade(player: Player) {
         val item = itemOf(player) ?: return
-        val variant = byItem[item] ?: return
+        val variant = variantOfItem(item) ?: return
         morphFollower(player, variant)
     }
 
@@ -448,7 +497,7 @@ object Pets {
         if (next.item == item) return
         val current = player.inventory[slot]
         if (current?.id != item) return
-        player.inventory[slot] = Item(next.item, 1)
+        player.inventory[slot] = Item(shownItem(player, next), 1)
     }
 
     /**
@@ -459,13 +508,17 @@ object Pets {
     fun owns(
         player: Player,
         pet: String,
-    ): Boolean = gg.rsmod.plugins.content.mechanics.ownership.Possessions.owns(player, variantsOf(pet).map { it.item }.toSet())
+    ): Boolean =
+        gg.rsmod.plugins.content.mechanics.ownership.Possessions.owns(
+            player,
+            variantsOf(pet).flatMap { listOfNotNull(it.item, upgradedItemOf[it.item]) }.toSet(),
+        )
 
     /** The pets [player] has ever had, as their [baseItem]s (N414: Perdu gives a lost pet back for free, one of each pet). */
     val OWNED_ATTR = AttributeKey<String>(persistenceKey = "pets_owned")
 
     fun ownedOnce(player: Player): Set<String> =
-        player.attr[OWNED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull()?.let { item -> byItem[item]?.pet } }.toSet()
+        player.attr[OWNED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull()?.let { item -> variantOfItem(item)?.pet } }.toSet()
 
     private fun recordOwned(
         player: Player,
@@ -483,9 +536,9 @@ object Pets {
      */
     fun observe(player: Player) {
         val seen = mutableSetOf<String>()
-        itemOf(player)?.let { byItem[it]?.pet }?.let { seen += it }
+        itemOf(player)?.let { variantOfItem(it)?.pet }?.let { seen += it }
         player.containers.values.forEach { container ->
-            container.rawItems.forEach { item -> item?.let { byItem[it.id]?.pet }?.let { seen += it } }
+            container.rawItems.forEach { item -> item?.let { variantOfItem(it.id)?.pet }?.let { seen += it } }
         }
         byItem.forEach { (item, variant) ->
             if (variant.pet !in seen && runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.has(player, item) }.getOrDefault(false)) seen += variant.pet
@@ -526,7 +579,7 @@ object Pets {
         /** N104: the Drop Viewer entry the pet came from (its kill count goes into the Collection Log); null for skilling. */
         source: String? = null,
     ): Award? {
-        if (item < 0 || byItem[item]?.pet != pet) return null
+        if (item < 0 || variantOfItem(item)?.pet != pet) return null
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pet roll hit: $pet for ${player.username}" }
         val outcome = awardOutcome(!purchased && owns(player, pet), hasFollower(player), player.inventory.hasSpace, player.bank.hasSpace)
         // The variant received counts as unlocked (a rift guardian in its altar's colour); a duplicate gives nothing (OSRS Wiki Pet).
@@ -570,7 +623,7 @@ object Pets {
         player: Player,
         item: Int,
         purchased: Boolean = false,
-    ): Award? = byItem[item]?.let { award(player, it.pet, item, purchased) }
+    ): Award? = variantOfItem(item)?.let { award(player, it.pet, item, purchased) }
 
     /**
      * The kill roll's chance per kill of [npcId]: the OSRS 1 / [PetInfo.dropRate] times the killer's Annihilation drop rate [rate]
@@ -618,7 +671,7 @@ object Pets {
 
     fun restoreOnLogin(player: Player) {
         val item = itemOf(player) ?: return
-        val variant = byItem[item]
+        val variant = variantOfItem(item)
         if (variant == null) {
             // A pet the table no longer knows: give the item back rather than lose it.
             player.attr.remove(PET_ITEM_ATTR)

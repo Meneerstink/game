@@ -806,6 +806,9 @@ class World(
     @Volatile
     var npcExamineExtra: ((npc: gg.rsmod.game.model.entity.Npc) -> String?)? = null
 
+    /** N436: a second examine line for an item, per player (the bound burden trinket of an "Upgraded" pet item); null = none. */
+    var itemExamineExtra: ((player: Player, item: Int) -> String?)? = null
+
     fun sendExamine(
         p: Player,
         id: Int,
@@ -832,6 +835,7 @@ class World(
             if (examine != null) {
                 val extension = if (devContext.debugExamines) " ($id)" else ""
                 p.writeMessage(examine + extension)
+                if (type == ExamineEntityType.ITEM) itemExamineExtra?.invoke(p, id)?.let { p.writeMessage(it) }
                 p.writeConsoleMessage(
                     "Object Definition id: $id, type: $type, interactive: $interactive, solid: $solid",
                 )

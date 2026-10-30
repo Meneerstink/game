@@ -168,7 +168,8 @@ object PetMorphs {
         if (onFollower) {
             Pets.morphFollower(player, target)
         } else if (slot >= 0 && player.inventory[slot]?.id == petItem) {
-            player.inventory[slot] = Item(target.item, 1)
+            // N436: the new form keeps the pet's "Upgraded" item while a trinket is bound.
+            player.inventory[slot] = Item(Pets.shownItem(player, target), 1)
         }
         return true
     }

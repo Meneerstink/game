@@ -32,15 +32,19 @@ val loadedVoices = PetVoices.load()
 val loadedChatheads = PetChatheads.load()
 
 Pets.variants.forEach { variant ->
-    // The engine's Drop (OpHeld5Handler) asks this first; the follower comes out instead of the item landing on the floor.
-    can_drop_item(item = variant.item) {
-        Pets.drop(player, variant.item, player.attr[INTERACTING_ITEM_SLOT] ?: -1)
-        false
-    }
-    val itemOptions = world.definitions.get(ItemDef::class.java, variant.item).inventoryMenu
-    if (itemOptions.any { it.equals("metamorphosis", ignoreCase = true) }) {
-        on_item_option(item = variant.item, option = "metamorphosis") {
-            Pets.metamorphItem(player, variant.item, player.getInteractingItemSlot())
+    // N436: the pet's "Upgraded" item copy (a bound burden trinket) does everything the plain item does.
+    val petItems = listOfNotNull(variant.item, Pets.upgradedItems.firstOrNull { Pets.baseItemOf(it) == variant.item })
+    petItems.forEach { petItem ->
+        // The engine's Drop (OpHeld5Handler) asks this first; the follower comes out instead of the item landing on the floor.
+        can_drop_item(item = petItem) {
+            Pets.drop(player, petItem, player.attr[INTERACTING_ITEM_SLOT] ?: -1)
+            false
+        }
+        val itemOptions = world.definitions.get(ItemDef::class.java, petItem).inventoryMenu
+        if (itemOptions.any { it.equals("metamorphosis", ignoreCase = true) }) {
+            on_item_option(item = petItem, option = "metamorphosis") {
+                Pets.metamorphItem(player, petItem, player.getInteractingItemSlot())
+            }
         }
     }
     // N423: the Upgraded copy of the follower (a bound burden trinket) answers every op of its pet.
@@ -121,10 +125,12 @@ Pets.variants.forEach { variant ->
     }
     // ... and on the pet item in the inventory where OSRS allows it (Rock golem: "while it is in the inventory or following").
     PetMorphs.USES[variant.pet].orEmpty().map { it.item }.distinct().forEach { useItem ->
-        on_item_on_item(item1 = useItem, item2 = variant.item) {
-            val petSlot = if (player.getInteractingItemId() == variant.item) player.getInteractingItemSlot() else player.getInteractingOtherItemSlot()
-            val used = if (player.getInteractingItemId() == variant.item) player.getInteractingOtherItemId() else player.getInteractingItemId()
-            PetMorphs.useItem(player, variant.item, used, onFollower = false, slot = petSlot)
+        petItems.forEach { petItem ->
+            on_item_on_item(item1 = useItem, item2 = petItem) {
+                val petSlot = if (player.getInteractingItemId() == petItem) player.getInteractingItemSlot() else player.getInteractingOtherItemSlot()
+                val used = if (player.getInteractingItemId() == petItem) player.getInteractingOtherItemId() else player.getInteractingItemId()
+                PetMorphs.useItem(player, petItem, used, onFollower = false, slot = petSlot)
+            }
         }
     }
 }

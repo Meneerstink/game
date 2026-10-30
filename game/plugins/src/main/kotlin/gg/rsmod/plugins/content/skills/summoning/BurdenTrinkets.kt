@@ -220,6 +220,8 @@ object BurdenTrinkets {
         bound[ok.pet] = tier.item
         store(player, bound)
         recordOwned(player)
+        // N436: a copy of this pet in the backpack or bank shows "Upgraded" too.
+        Pets.reconcileItems(player)
         // The follower becomes its Upgraded copy first, so the glow plays on the pet the player now sees.
         Pets.refreshUpgrade(player)
         Pets.current(player)?.graphic(tier.glow)
@@ -265,6 +267,7 @@ object BurdenTrinkets {
         val name = petName(player, pet)
         bound.remove(pet)
         store(player, bound)
+        Pets.reconcileItems(player)
         player.message("You unbind the ${tier.trinketName} from your ${upgradedName(name)}. It is a plain $name again; the trinket stays yours.")
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "burden trinket ${tier.trinketName} unbound from $pet for ${player.username}" }
         if (following) {

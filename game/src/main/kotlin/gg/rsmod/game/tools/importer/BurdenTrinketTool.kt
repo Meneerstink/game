@@ -52,6 +52,7 @@ object BurdenTrinketTool {
             }
             "build" -> build(File(requireNotNull(args.getOrNull(1)) { "build <meshFile> [--apply]" }), "--apply" in args)
             "npcs" -> upgradedNpcs("--apply" in args)
+            "items" -> upgradedItems("--apply" in args)
             "remodel" -> remodel(File(requireNotNull(args.getOrNull(1)) { "remodel <meshFile> [--apply]" }), "--apply" in args)
             else -> error("Usage: dump <outFile> | build <meshFile> [--apply] | npcs [--apply]")
         }
@@ -253,6 +254,84 @@ object BurdenTrinketTool {
         u8(39); str("")
         u8(0)
         return out.toByteArray()
+    }
+
+    /** base pet item -> its "Upgraded" copy, written by `items --apply` and read by the server (Pets). */
+    const val ITEM_UPGRADES_TABLE = "data/cfg/pets/pet_item_upgrades.tsv"
+
+    /** The first item id the copies may use (the five trinkets end at 24236; checked free before writing). */
+    const val FIRST_UPGRADED_ITEM = 24237
+
+    private const val INDEX_ITEM = 19
+
+    /** Every pet item in the server's own order (Pets.load: the OSRS table, then the 667 table without the items it already has). */
+    fun petItems(root: File = File(".")): List<Int> {
+        fun rows(path: String) = File(root, path).readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.split('\t') }
+        val osrs = rows(PETS_TABLE).map { it[2].trim().toInt() }
+        val classic = rows(CLASSIC_PETS_TABLE).map { it[1].trim().toInt() }.filter { it !in osrs }
+        return (osrs + classic).distinct()
+    }
+
+    /**
+     * N436 part 1 (owner 2026-10-30: an upgraded pet "moet dat ook zo laten zien in de inventory"; choice: the name first, the
+     * emblem later): a copy of every pet item named "Upgraded <name>" - same model, icon camera, options and flags; its note / lend
+     * links are dropped (a pet has none to share). Ids from [FIRST_UPGRADED_ITEM] in [petItems] order; [ITEM_UPGRADES_TABLE] is
+     * written after the cache transaction verified.
+     */
+    private fun upgradedItems(apply: Boolean) {
+        val bases = petItems()
+        val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
+        val mutations = ArrayList<CacheMutation>()
+        val rows = ArrayList<String>()
+        try {
+            val existingTable = File(ITEM_UPGRADES_TABLE).takeIf { it.exists() }?.readLines()?.filter { it.isNotBlank() && !it.startsWith("#") }
+            bases.forEachIndexed { i, base ->
+                val id = FIRST_UPGRADED_ITEM + i
+                val bytes = requireNotNull(library.data(INDEX_ITEM, base ushr 8, base and 0xFF)) { "pet item $base missing" }
+                val baseName = requireNotNull(ItemDefCodec.readName(bytes)) { "pet item $base has no name" }
+                val name = "Upgraded $baseName"
+                val copy = ItemDefCodec.cloneWithOverrides(bytes, mapOf(2 to name), removedOpcodes = setOf(97, 98, 121, 122))
+                check(ItemDefCodec.readName(copy) == name) { "item $base -> $id: name did not take" }
+                val current = library.data(INDEX_ITEM, id ushr 8, id and 0xFF)
+                if (current == null) {
+                    mutations += CacheMutation(INDEX_ITEM, id ushr 8, id and 0xFF, copy, "N436 item $id = $name (copy of $base)")
+                } else {
+                    check(current.contentEquals(copy)) { "item $id is taken by other content - refusing to overwrite" }
+                }
+                rows += "$base\t$id\t$name"
+                if (i < 3 || i == bases.size - 1) println("PLAN item $base '$baseName' -> $id '$name'")
+            }
+            val after = FIRST_UPGRADED_ITEM + bases.size
+            check(library.data(INDEX_ITEM, after ushr 8, after and 0xFF) == null) { "the item after the copies is taken - the id range is not free" }
+            if (existingTable != null) check(existingTable == rows) { "$ITEM_UPGRADES_TABLE differs from the plan - refusing to renumber" }
+        } finally {
+            library.close()
+        }
+        println("ITEMS ${bases.size} copies $FIRST_UPGRADED_ITEM..${FIRST_UPGRADED_ITEM + bases.size - 1}, ${mutations.size} to write")
+        val header = "# N436: base pet item -> its Upgraded copy (BurdenTrinketTool items). base\tupgraded\tname"
+        if (mutations.isEmpty()) {
+            if (!File(ITEM_UPGRADES_TABLE).exists()) File(ITEM_UPGRADES_TABLE).writeText((listOf(header) + rows).joinToString("\n", postfix = "\n"))
+            println("NOTHING_TO_DO")
+            return
+        }
+        val transaction = CacheTransaction(targets = OsrsItemImportTool.TARGETS, mutations = mutations)
+        val plan = transaction.preflight()
+        val errors = transaction.blockingErrors(plan)
+        errors.forEach { println("  BLOCKING: $it") }
+        check(errors.isEmpty()) { "preflight blocked; nothing written" }
+        if (!apply) {
+            println("DRY_RUN transaction=${transaction.id}")
+            return
+        }
+        val applied = transaction.apply(plan)
+        val problems = transaction.verify()
+        if (problems.isNotEmpty()) {
+            problems.forEach { println("  VERIFY_FAILURE: $it") }
+            println("ROLLED_BACK ${transaction.rollback()}")
+            error("transaction ${transaction.id} failed verification and was rolled back")
+        }
+        File(ITEM_UPGRADES_TABLE).writeText((listOf(header) + rows).joinToString("\n", postfix = "\n"))
+        println("APPLIED transaction=${applied.transactionId} writes=${applied.applied} VERIFY_OK, wrote $ITEM_UPGRADES_TABLE")
     }
 
     /** The five trinket items, in [TRINKETS] order (items.yml 24232-24236). */

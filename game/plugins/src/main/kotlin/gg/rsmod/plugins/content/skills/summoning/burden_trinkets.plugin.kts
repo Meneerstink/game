@@ -67,6 +67,8 @@ BurdenTrinkets.Tier.values().forEach { tier ->
 
 on_login {
     BurdenTrinkets.recordOwned(player)
+    // N436: pet items carried over from before the Upgraded item copies (or a binding that no longer counts) show the right name.
+    Pets.reconcileItems(player)
 }
 
 // N423 deel 5: a boss kill rolls the three smaller trinkets (BurdenTrinketDrops); a breach npc rolls per contributor in DeadmanBreach.
@@ -82,6 +84,16 @@ on_world_init {
         world.definitions.getNullable(gg.rsmod.game.fs.def.NpcDef::class.java, upgraded)?.let { it.examine = it.examine ?: base?.examine }
     }
     // ... plus the purple line, for every player who examines it (design v6: no slot count).
+    // N436: the "Upgraded" pet item examines as its pet, plus the purple line naming the trinket the player has bound to it.
+    Pets.upgradedItems.forEach { upgraded ->
+        val base = world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, Pets.baseItemOf(upgraded))
+        world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, upgraded)?.let { it.examine = it.examine ?: base?.examine }
+    }
+    world.itemExamineExtra = { player, item ->
+        val variant = if (Pets.isUpgradedItem(item)) Pets.variantOfItem(item) else null
+        val tier = variant?.let { BurdenTrinkets.upgradeOf(player, it.pet) }
+        tier?.let { "<col=${BurdenTrinkets.PURPLE}>This pet has been upgraded with a ${it.trinketName}.</col>" }
+    }
     world.npcExamineExtra = { npc ->
         val owner = npc.owner
         val tier = if (Pets.isUpgradedNpc(npc.id) && owner != null && Pets.current(owner) === npc) BurdenTrinkets.followerTier(owner) else null
