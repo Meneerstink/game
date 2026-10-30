@@ -45,7 +45,7 @@ class EnchantedBoltsTests {
                 Items.SAPPHIRE_DRAGON_BOLTS_E to Row(0.25, 0.05, true, 751, 2912),
                 Items.EMERALD_DRAGON_BOLTS_E to Row(0.55, 0.54, true, 752, 2919),
                 Items.RUBY_DRAGON_BOLTS_E to Row(0.06, 0.11, false, 754, 2911),
-                Items.DIAMOND_DRAGON_BOLTS_E to Row(0.10, 0.05, false, 758, 2910),
+                Items.DIAMOND_DRAGON_BOLTS_E to Row(0.10, 0.05, false, 758, 2913),
                 Items.DRAGONSTONE_DRAGON_BOLTS_E to Row(0.06, 0.06, true, 756, 2915),
                 Items.ONYX_DRAGON_BOLTS_E to Row(0.11, 0.10, true, 753, 2917),
             )

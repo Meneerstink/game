@@ -28,8 +28,9 @@ import kotlin.math.floor
 
 /**
  * Enchanted dragon bolt and gem bolt (e) special effects (audit I-02), one shared model for the whole roster (OSRS Wiki item pages of the ten
- * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_MASTER.yml`). Gfx 749-758 and sounds 2910-2920
- * are the 667 cache ids (Void donor `bolts.gfx.toml` / `bolt_special.sounds.toml`, cache-verified). The Kandarin hard
+ * "<gem> dragon bolts (e)", fetched 2026-09-13; see `C:\RSPS\OSRS_IMPORT_MASTER.yml`). Gfx 749-758 are the 667 cache ids (Void
+ * donor `bolts.gfx.toml`). Sounds 2911-2920 are the OSRS Wiki sound files of each "<gem> bolts (e)" page (N466, 2026-10-30):
+ * Diamond is 2913 `crossbow_diamond` - Void's 2910 was wrong, the other nine match. All ten exist in the 667 cache. The Kandarin hard
  * diary does not exist here, so base chances apply. The Armadyl crossbow special doubles the base chance; the Zaryte
  * crossbow special guarantees the effect on a successful hit and raises the ruby, diamond, onyx and dragonstone values.
  *
@@ -50,7 +51,7 @@ object EnchantedBolts {
         EARTHS_FURY(755, 2916),
         DRAGONS_BREATH(756, 2915),
         DOWN_TO_EARTH(757, 2914),
-        ARMOUR_PIERCING(758, 2910),
+        ARMOUR_PIERCING(758, 2913),
     }
 
     /**
