@@ -64,7 +64,7 @@ class DeathItemAuditTests {
             val pvm: String
             var coins = ""
             when {
-                DeathRules.alwaysLost(itemId) -> { group = "never kept (key/bag/emblem)"; low = "lost"; high = "lost"; pvm = "lost" }
+                DeathRules.alwaysLost(itemId) -> { group = "never kept (key/emblem)"; low = "lost"; high = "lost"; pvm = "lost" }
                 PvpDeathBreakables.converts(itemId) -> {
                     group = "converts"
                     val loot = PvpDeathBreakables.killerItems(item)

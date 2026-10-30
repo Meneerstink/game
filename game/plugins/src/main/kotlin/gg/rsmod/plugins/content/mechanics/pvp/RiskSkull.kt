@@ -46,7 +46,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
     /**
      * The value [player] would give away if a player killed them right now: [DeathRules.pvpLoss] - the very rules the real
      * death runs (keep 1 with Protect Item, conversions, untradeable repair coins at the level-20 rule of the player's
-     * current tile, looting bag contents and the loot behind carried keys), valued like the keep-1 ranking
+     * current tile and the loot behind carried keys), valued like the keep-1 ranking
      * ([DeathRules.rankValue]: guide price, coins at face value).
      */
     fun calculateRiskedValue(

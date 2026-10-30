@@ -46,7 +46,7 @@ class ItemSoundsN64N65N89Tests {
             "items/osrs/blowpipe.plugin.kts", "items/osrs/blood_fury.plugin.kts", "items/osrs/crystal.plugin.kts", "items/osrs/demonbane.plugin.kts",
             "items/osrs/dizanas_quiver.plugin.kts", "items/osrs/osrs_bows.plugin.kts", "items/osrs/powered_staves.plugin.kts",
             "items/osrs/revenant_weapons.plugin.kts", "items/osrs/ring_of_suffering.plugin.kts", "items/osrs/serpentine_helm.plugin.kts",
-            "items/osrs/staff_of_the_dead.plugin.kts", "items/osrs/tomes.plugin.kts", "mechanics/pvp/LootingBag.kt", "skills/runecrafting/pouches.plugin.kts",
+            "items/osrs/staff_of_the_dead.plugin.kts", "items/osrs/tomes.plugin.kts", "skills/runecrafting/pouches.plugin.kts",
         ).forEach { assertTrue("ItemMoveSounds.putIn(player)" in src(it), it) }
         assertTrue("ItemMoveSounds.takeOut(player)" in src("items/osrs/blowpipe.plugin.kts"))
     }

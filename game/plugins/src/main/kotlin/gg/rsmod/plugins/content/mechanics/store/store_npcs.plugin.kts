@@ -26,24 +26,13 @@ on_npc_option(npc = StoreNpcs.DEADMAN_STORE, option = "talk-to") {
         chatNpc("Deadman Points buy Deadman rewards here. Earn them the hard way.", wrap = true)
         // Deadman emblems (owner 2026-09-25) are cashed in here, through the same Deadman Points currency.
         val emblemOption = if (DeadmanEmblem.holdings(player).isEmpty()) "" else "I'd like to cash in my emblem."
-        // Owner layout page 2026-09-29: the Looting bag is a free PvP tool ("geen betaalmuur"), one per player, replaced when lost.
-        val hasBag =
-            listOf(Items.LOOTING_BAG, Items.LOOTING_BAG_OPEN).any { player.inventory.contains(it) || player.bank.contains(it) }
-        val bagOption = if (hasBag) "" else "I'd like a looting bag."
+        // N424 (owner 2026-10-29): no looting bag here any more - the bag is out of the game.
         // options() drops blank entries, so the answer is matched by its text, not its position.
         // Owner 2026-10-24 (N348): no "I'd like a Deadman's skull" here (new players get the skull in their starter kit).
-        val shown = listOf("Show me the Deadman Store.", bagOption, emblemOption, "Never mind.").filter { it.isNotEmpty() }
+        val shown = listOf("Show me the Deadman Store.", emblemOption, "Never mind.").filter { it.isNotEmpty() }
         when (shown.getOrNull(options(*shown.toTypedArray()) - 1)) {
             emblemOption -> cashOut(StoreNpcs.DEADMAN_STORE)
             shown[0] -> StoreUi.open(player, StoreCatalogue.Shop.DEADMAN)
-            bagOption ->
-                if (!hasBag) {
-                    if (player.inventory.add(Items.LOOTING_BAG).hasSucceeded()) {
-                        itemMessageBox("The Emblem Trader hands you a looting bag.", Items.LOOTING_BAG)
-                    } else {
-                        chatNpc("You'll need a free space in your backpack for it.")
-                    }
-                }
         }
     }
 }

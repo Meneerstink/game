@@ -17,7 +17,6 @@ import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.inter.bank.Bank
 import gg.rsmod.plugins.content.inter.pricecheck.PriceChecker
 import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeService
-import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.BeforeClass
@@ -28,7 +27,7 @@ import kotlin.test.assertTrue
 
 /**
  * Bug search 2026-10-02 (ROOT_CAUSES class 52/6): every screen or bag that holds a player's items moves them with their
- * own attributes. The price checker, the looting bag and the duel stake (DuelArenaInterfacesTests) rebuilt items as
+ * own attributes. The price checker and the duel stake (DuelArenaInterfacesTests) rebuilt items as
  * `add(item.id, count)`: a degraded Chaotic/Nex piece came back fully charged ("absent = full") and a trident lost its
  * charges ("absent = 0"). Real cache definitions, so stacking and the creation redirect behave as in production.
  */
@@ -83,19 +82,6 @@ class HoldingRouteAttributeTests {
         PriceChecker.check(p, p.inventory.rawItems.indexOfFirst { it != null }, 2)
         PriceChecker.close(p)
         assertEquals(listOf<Int?>(5, 1234), chargesOf(p.inventory), "closing the screen keeps the charges")
-    }
-
-    @Test
-    fun `the looting bag stores and empties items with their attributes`() {
-        val p = player(Tile(3100, 3600, 0)) // Wilderness: the bag is usable here
-        assertTrue(DEFINITIONS.get(ItemDef::class.java, Items.ABYSSAL_WHIP).tradeable, "items.yml marks the whip tradeable")
-        p.inventory[2] = charged(77)
-        assertEquals(1, LootingBag.store(p, Items.ABYSSAL_WHIP, 1))
-        assertEquals(listOf<Int?>(77), chargesOf(LootingBag.container(p)))
-
-        every { p.interfaces.isVisible(Bank.BANK_INTERFACE_ID) } returns true
-        assertEquals(1, LootingBag.withdrawAtBank(p))
-        assertEquals(listOf<Int?>(77), chargesOf(p.inventory))
     }
 
     /**

@@ -452,7 +452,7 @@ object Pets {
     }
 
     /**
-     * Whether [player] already has [pet] (any variant) anywhere - following, in any container (inventory, bank, looting bag, a
+     * Whether [player] already has [pet] (any variant) anywhere - following, in any container (inventory, bank, a
      * familiar's pack, gravestone, Death's Office) or on the Grand Exchange: OSRS's duplicate rule (K01 deel 3, the shared
      * [gg.rsmod.plugins.content.mechanics.ownership.Possessions] check; before, only the follower, inventory and bank counted).
      */

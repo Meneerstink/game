@@ -11,7 +11,7 @@ import gg.rsmod.game.model.entity.Player
  * inventory, equipment, bank, gravestone and Death's Office and the pets in the follower, inventory and bank only: an item in the
  * looting bag, a familiar's Beast of Burden or a Grand Exchange offer counted as lost, so it could be bought back twice.
  *
- * Every container the player has ([Player.containers]: inventory, equipment, bank, gravestone, Death's Office, the looting bag,
+ * Every container the player has ([Player.containers]: inventory, equipment, bank, gravestone, Death's Office,
  * every Beast of Burden pack, the random event gift), the follower, and the Grand Exchange (an item a sell offer still holds or
  * one waiting to be collected). A trade in progress keeps the items in the real inventory until it completes, so it is covered.
  */
@@ -24,7 +24,6 @@ object Possessions {
             key.name == "bank" -> "your bank"
             key.name == "gravestone" -> "your gravestone"
             key.name == "death_recovery" -> "Death's Office"
-            key.name == "looting_bag" -> "your looting bag"
             key.name.startsWith("bob_pet_") -> "your pet's pack"
             key.name.startsWith("bob_") -> "your familiar's pack"
             key.name == "random_event_gift" -> "your random event gift"
@@ -33,7 +32,7 @@ object Possessions {
 
     /** The containers searched, in the order Perdu names them. */
     private fun containers(player: Player): List<Pair<ContainerKey, ItemContainer>> {
-        val order = listOf("inventory", "equipment", "bank", "looting_bag", "gravestone", "death_recovery")
+        val order = listOf("inventory", "equipment", "bank", "gravestone", "death_recovery")
         return player.containers.entries.map { it.key to it.value }
             .sortedBy { (key, _) -> order.indexOf(key.name).let { if (it < 0) order.size else it } }
     }

@@ -16,7 +16,6 @@ import gg.rsmod.plugins.api.ext.setComponentPosition
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
-import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
 import gg.rsmod.plugins.content.mechanics.pvp.PvpSkull
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.Kept as Layout
 import gg.rsmod.game.model.entity.zoneTile
@@ -25,7 +24,7 @@ import gg.rsmod.game.model.entity.zoneTile
  * The OSRS "Items Kept on Death" screen (OSRS interface 4, built as 667 interface [INTERFACE_ID] by
  * `DeathsOfficeInterfaceImportTool`; owner 2026-09-26: "OSRS-scherm bouwen"). The server fills it from [preview], which runs
  * the very same rules as a real death ([DeathResolver] with [DeathRules] keep 1, [UntradeableDeathProtection],
- * [PvpDeathBreakables], [QuiverDeathRules], loot keys and the looting bag), so the screen cannot disagree with a death.
+ * [PvpDeathBreakables], [QuiverDeathRules] and loot keys), so the screen cannot disagree with a death.
  *
  * Sections and texts are OSRS clientscript `deathkeep_left_redraw` (974): "Items that are KEPT:", "Items that go to your
  * GRAVESTONE: (Fee: ...)", "Items LOST to the player who kills you:", "Items that are DELETED:"; every item has "Check"
@@ -121,14 +120,12 @@ object ItemsKeptOnDeath {
                     entries += Entry(Section.DELETED, item, line(item, "This item will be lost; the player who kills you receives $coins coins.", "These items will be lost; the player who kills you receives $coins coins."))
             }
         }
-        val bag = LootingBag.peekContents(player)
         // Beast-of-burden cargo follows the death like everything else: to the killer (PvP) or into the gravestone (PvM).
         val cargo = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull()?.map { Item(it) } ?: emptyList()
         var risk = 0L
         if (pvp) {
             val lost =
-                result.itemRisk.lost.map { it.item }.filterNot { LootingBag.isBag(it.id) } +
-                    bag.filterNot { LootingBag.destroyedOnPvpDeath(player, it) } + lostAmmo + cargo
+                result.itemRisk.lost.map { it.item } + lostAmmo + cargo
             lost.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.LOST, item, line(item, "This item will be lost to the player who kills you.", "These items will be lost to the player who kills you."))
@@ -164,15 +161,14 @@ object ItemsKeptOnDeath {
                 }
             }
             UntradeableDeathProtection.killerLoot(untradeables).forEach { risk += value.getValue(it.id) * it.amount }
-            (result.itemRisk.lost.map { it.item }.filter { LootingBag.isBag(it.id) } + bag.filter { LootingBag.destroyedOnPvpDeath(player, it) }).forEach { deleted(player, entries, it) }
         } else {
             // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
-            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) || DeathRules.isEmblem(it.id) } + bag + cargo
+            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || DeathRules.isEmblem(it.id) } + cargo
             toGrave.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))
             }
-            result.itemRisk.lost.map { it.item }.filter { LootKeys.isKey(it.id) || LootingBag.isBag(it.id) || DeathRules.isEmblem(it.id) }.forEach { deleted(player, entries, it) }
+            result.itemRisk.lost.map { it.item }.filter { LootKeys.isKey(it.id) || DeathRules.isEmblem(it.id) }.forEach { deleted(player, entries, it) }
         }
         return Preview(entries, 0, risk)
     }

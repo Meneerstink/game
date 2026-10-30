@@ -35,7 +35,9 @@ object RemovedItems {
         ) +
             // Owner 2026-10-11 (OSRS Deadman Mode): every degraded, corrupt, used and broken Deadman gear / Torva id. A held copy
             // becomes the normal item at login first (DeadmanGear.migrate runs before [purge]); nothing may offer these again.
-            gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys
+            gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys +
+            // N424 (owner 2026-10-29): the looting bag is out of the game; its old contents go to the bank first (LootingBag.retire).
+            gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS
 
     /** True for a removed item or its noted form. */
     fun isRemoved(def: ItemDef): Boolean = def.id in IDS || (def.noted && def.noteLinkId in IDS)
@@ -55,7 +57,7 @@ object RemovedItems {
     /**
      * Removes every removed or no-longer-obtainable item the player holds; returns how many item stacks were taken.
      * DGN 2026-10-21: EVERY container the player has (inventory, worn, bank, gravestone, Death's Office, random-event gift,
-     * looting bag, every beast-of-burden cargo - the save loads each one into [Player.containers]) and the player's own
+     * the retired looting bag, every beast-of-burden cargo - the save loads each one into [Player.containers]) and the player's own
      * Grand Exchange offers ([purgeExchange]); a fixed list of five let the looting bag and BoB cargo keep removed items.
      */
     fun purge(player: Player): Int {

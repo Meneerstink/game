@@ -12,7 +12,6 @@ import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.magic.RunePouch
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
-import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
 import gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry
 
 /** What an unprotected PvP death does to one lost untradeable stack (owner 2026-09-26, the OSRS level-20 rule). */
@@ -57,8 +56,8 @@ data class UntradeableOutcome(
  *  - rune pouch: the runes are always lost to the killer; the victim keeps the empty pouch when it is locked or the death is
  *    at or below level 20, above level 20 an unlocked pouch is destroyed like any other untradeable.
  *
- * The item-specific conversions ([PvpDeathBreakables.converts]: blowpipes, powered staves, ornament kits ...), loot keys,
- * looting bags and Deadman emblems keep their own rules and never come here. On a PvM death nothing breaks: every lost item,
+ * The item-specific conversions ([PvpDeathBreakables.converts]: blowpipes, powered staves, ornament kits ...), loot keys
+ * and Deadman emblems keep their own rules and never come here. On a PvM death nothing breaks: every lost item,
  * untradeables included, goes to the gravestone. The death tile decides the Wilderness level ([DeathRules.deepWilderness]),
  * the same for the death, the Items Kept on Death screen and the risk skull.
  */
@@ -117,7 +116,7 @@ object UntradeableDeathProtection {
         definitions: DefinitionSet,
         itemId: Int,
     ): Boolean {
-        if (LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || DeathRules.isEmblem(itemId)) return false
+        if (LootKeys.isKey(itemId) || DeathRules.isEmblem(itemId)) return false
         if (PvpDeathBreakables.converts(itemId)) return false
         if (RunePouch.isPouch(itemId) || TrouverRegistry.isLockedAnyState(itemId) || PvpDeathBreakables.breakableFor(itemId) != null) return true
         if (PvpDeathBreakables.forBroken(itemId) != null) return true

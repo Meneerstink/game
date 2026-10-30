@@ -7,7 +7,6 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.mechanics.pvp.LootKeys
-import gg.rsmod.plugins.content.mechanics.pvp.LootingBag
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
 
 /**
@@ -19,7 +18,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
  *    item, skulled or not. There are no always-kept items.
  *  - The kept item is the most valuable one: tradeables by Grand Exchange guide price, untradeables by their repair price
  *    ([RepairPrices], [rankValue]).
- *  - Loot keys, looting bags and emblems are never kept ([alwaysLost]).
+ *  - Loot keys and emblems are never kept ([alwaysLost]). (N424: the looting bag is out of the game.)
  *  - Emblems ([isEmblem]; owner 2026-10-24, N354/N359): Protect Item never saves one; a player who kills you takes it, every
  *    other death (a monster, a guard, a PvP death without a player killer) destroys it - never a gravestone or ground item.
  */
@@ -39,7 +38,7 @@ object DeathRules {
 
     fun deepWilderness(tile: Tile): Boolean = deepWilderness(tile.getWildernessLevel())
 
-    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || LootingBag.isBag(itemId) || isEmblem(itemId)
+    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId)
 
     /** The Deadman emblems (tier 1-6) and the breach's Archaic emblem (tier 5). */
     fun isEmblem(itemId: Int): Boolean =
@@ -64,7 +63,7 @@ object DeathRules {
 
     /**
      * Everything an unprotected PvP death at [deepWilderness] would hand the killer, as items: the plain lost stacks, the
-     * converted items, the untradeables' coins and runes, a looting bag's contents and the loot behind carried loot keys.
+     * converted items, the untradeables' coins and runes and the loot behind carried loot keys.
      * Used by the risk skull so its colour is the value the real death gives away.
      */
     fun pvpLoss(
@@ -90,14 +89,13 @@ object DeathRules {
             val id = slot.item.id
             when {
                 LootKeys.isKey(id) -> LootKeys.slotItems(player, LootKeys.keyIndex(id)).forEach { loss += it }
-                LootingBag.isBag(id) || DeadmanEmblem.isEmblem(id) -> {}
+                DeadmanEmblem.isEmblem(id) -> {}
                 else -> loss += slot.item
             }
         }
         loss += converting.flatMap { PvpDeathBreakables.killerItems(it.item, value, player) ?: emptyList() }
         loss += lostAmmo
         loss += UntradeableDeathProtection.killerLoot(untradeables)
-        loss += LootingBag.peekContents(player).filterNot { LootingBag.destroyedOnPvpDeath(player, it) }
         // A beast of burden's cargo is unprotected PvP loot too (death.plugin.kts, BeastOfBurden.takeAllCargo).
         loss += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull() ?: emptyList()
         // A live casino round is settled into the killer's loot too (death.plugin.kts casinoCoins, bug search 2026-10-02).

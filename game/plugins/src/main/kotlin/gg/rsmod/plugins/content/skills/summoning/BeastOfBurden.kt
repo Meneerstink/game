@@ -226,10 +226,8 @@ object BeastOfBurden {
             player.message("Your $who can't carry that item.")
             return 0
         }
-        // Audit X-01: loot keys and the looting bag are PvP risk by design; they may never be parked in a familiar.
-        if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id) ||
-            gg.rsmod.plugins.content.mechanics.pvp.LootingBag.isBag(item.id)
-        ) {
+        // Audit X-01: loot keys are PvP risk by design; they may never be parked in a familiar.
+        if (gg.rsmod.plugins.content.mechanics.pvp.LootKeys.isKey(item.id)) {
             player.message("Your $who can't carry that item.")
             return 0
         }

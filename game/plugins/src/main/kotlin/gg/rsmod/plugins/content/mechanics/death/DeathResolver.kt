@@ -113,7 +113,7 @@ object DeathResolver {
                         it in UntradeableDeathProtection.ALWAYS_KEPT_PVP ||
                         (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))
                 },
-                // Loot keys, looting bags and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).
+                // Loot keys and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).
                 alwaysLost = DeathRules::alwaysLost,
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)

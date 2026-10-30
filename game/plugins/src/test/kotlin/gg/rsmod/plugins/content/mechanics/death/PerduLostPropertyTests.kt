@@ -97,16 +97,11 @@ class PerduLostPropertyTests {
     }
 
     @Test
-    fun `K01 deel 3 an item in the looting bag or a familiar's pack is not lost either`() {
+    fun `K01 deel 3 an item in a familiar's pack is not lost either`() {
         val player = newPlayer()
         player.inventory.add(Items.COLOSSAL_BLADE, 1)
         PerduLostProperty.observe(player)
         player.inventory.remove(Items.COLOSSAL_BLADE, 1)
-        val bag = ItemContainer(DEFINITIONS, gg.rsmod.plugins.content.mechanics.pvp.LootingBag.KEY)
-        player.containers[gg.rsmod.plugins.content.mechanics.pvp.LootingBag.KEY] = bag
-        bag[0] = Item(Items.COLOSSAL_BLADE)
-        assertEquals("your looting bag", PerduLostProperty.stillOwned(player).single().second)
-        bag[0] = null
         val pack = ItemContainer(DEFINITIONS, gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.PACK_YAK_KEY)
         player.containers[gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.PACK_YAK_KEY] = pack
         pack[3] = Item(Items.COLOSSAL_BLADE)

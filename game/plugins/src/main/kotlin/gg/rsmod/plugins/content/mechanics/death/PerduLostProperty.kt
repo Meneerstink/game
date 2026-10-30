@@ -117,7 +117,7 @@ object PerduLostProperty {
 
     /**
      * OSRS: "none of the item on them, in their bank or in the POH". N250 (owner 2026-10-24): the gravestone and Death's Office
-     * hold the player's own items too; K01 deel 3 (2026-10-25): so do the looting bag, a familiar's pack and the Grand Exchange -
+     * hold the player's own items too; K01 deel 3 (2026-10-25): so do a familiar's pack and the Grand Exchange -
      * an item waiting anywhere is not lost, so Perdu does not sell a second copy of it.
      */
     fun owns(
@@ -125,7 +125,7 @@ object PerduLostProperty {
         entry: Entry,
     ): Boolean = whereOwned(player, entry) != null
 
-    /** Where [player] still has [entry] ("your bank", "your looting bag" ...), or null when it is really lost. */
+    /** Where [player] still has [entry] ("your bank", "your familiar's pack" ...), or null when it is really lost. */
     fun whereOwned(
         player: Player,
         entry: Entry,
