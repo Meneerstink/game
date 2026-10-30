@@ -52,6 +52,7 @@ object BurdenTrinketTool {
             }
             "build" -> build(File(requireNotNull(args.getOrNull(1)) { "build <meshFile> [--apply]" }), "--apply" in args)
             "npcs" -> upgradedNpcs("--apply" in args)
+            "remodel" -> remodel(File(requireNotNull(args.getOrNull(1)) { "remodel <meshFile> [--apply]" }), "--apply" in args)
             else -> error("Usage: dump <outFile> | build <meshFile> [--apply] | npcs [--apply]")
         }
     }
@@ -252,6 +253,55 @@ object BurdenTrinketTool {
         u8(39); str("")
         u8(0)
         return out.toByteArray()
+    }
+
+    /** The five trinket items, in [TRINKETS] order (items.yml 24232-24236). */
+    val TRINKET_ITEMS = intArrayOf(24232, 24233, 24234, 24235, 24236)
+
+    /**
+     * N438 (owner 2026-10-30: the emblem looks "te low quality"; choice "scherper en groter"): a new [meshFile] (compose.py) is
+     * written over the model each trinket item already uses (its item op 1) - no new ids, the items stay as they are.
+     */
+    private fun remodel(
+        meshFile: File,
+        apply: Boolean,
+    ) {
+        val meshes = readMeshes(meshFile)
+        val mutations = ArrayList<CacheMutation>()
+        val library = CacheLibrary(OsrsItemImportTool.TARGETS[0])
+        try {
+            TRINKETS.forEachIndexed { i, t ->
+                val item = TRINKET_ITEMS[i]
+                val def = requireNotNull(library.data(19, item ushr 8, item and 0xFF)) { "item $item missing" }
+                check(def[0].toInt() == 1) { "item $item does not start with its model (op 1)" }
+                val model = ((def[1].toInt() and 0xFF) shl 8) or (def[2].toInt() and 0xFF)
+                val mesh = requireNotNull(meshes[t.pouchModel]) { "no mesh for pouch ${t.pouchModel} in $meshFile" }
+                val bytes = Rev667ModelEncoder.encode(mesh)
+                check(ModelConvertTool.compare(mesh, Rev667ModelDecoder.decode(bytes)).isEmpty()) { "${t.name}: the mesh does not decode back" }
+                val old = requireNotNull(library.data(MODEL_INDEX, model, 0)) { "model $model missing" }
+                println("PLAN item $item '${t.name}' model $model: ${old.size} -> ${bytes.size} bytes, faces ${mesh.faceCount}")
+                mutations += CacheMutation(MODEL_INDEX, model, 0, bytes, "N438 ${t.name} sharper, bigger emblem", CacheItemProbeTool.sha1(old))
+            }
+        } finally {
+            library.close()
+        }
+        val transaction = CacheTransaction(targets = OsrsItemImportTool.TARGETS, mutations = mutations)
+        val plan = transaction.preflight()
+        val errors = transaction.blockingErrors(plan)
+        errors.forEach { println("  BLOCKING: $it") }
+        check(errors.isEmpty()) { "preflight blocked; nothing written" }
+        if (!apply) {
+            println("DRY_RUN transaction=${transaction.id} mutations=${mutations.size}")
+            return
+        }
+        val applied = transaction.apply(plan)
+        val problems = transaction.verify()
+        if (problems.isNotEmpty()) {
+            problems.forEach { println("  VERIFY_FAILURE: $it") }
+            println("ROLLED_BACK ${transaction.rollback()}")
+            error("transaction ${transaction.id} failed verification and was rolled back")
+        }
+        println("APPLIED transaction=${applied.transactionId} writes=${applied.applied} skipped=${applied.skipped} VERIFY_OK")
     }
 
     private fun build(
