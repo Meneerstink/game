@@ -53,6 +53,32 @@ on_timer(CW_ROUND_TIMER) {
     world.timers[CW_ROUND_TIMER] = CastleWarsRound.TICKS_PER_MINUTE
 }
 
+// K07 N441: every tick, whoever left Castle Wars by any route while in a team leaves it properly (CastleWarsHandler.sweep).
+val CW_SWEEP_TIMER = TimerKey()
+
+on_world_init {
+    world.timers[CW_SWEEP_TIMER] = 1
+}
+
+on_timer(CW_SWEEP_TIMER) {
+    CastleWarsHandler.sweep()
+    world.timers[CW_SWEEP_TIMER] = 1
+}
+
+// K07 N441: no teleport out of the waiting room or the game (Novite CastleWarsWaiting/Playing processMagic/Item/ObjectTeleport).
+gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { p, action ->
+    if (action == gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT && p.attr[CW_TEAM] != null) {
+        CastleWarsHandler.CANNOT_LEAVE
+    } else {
+        null
+    }
+}
+
+// K07 N441: team colours left on outside a game (a restart in the middle of one) come off at login.
+on_login {
+    if (CastleWarsHandler.stripTeamGear(player)) player.message("Your Castle Wars team colours are returned.")
+}
+
 // Teammates can't attack each other.
 can_attack { attacker, target ->
     if (attacker is Player && target is Player) {

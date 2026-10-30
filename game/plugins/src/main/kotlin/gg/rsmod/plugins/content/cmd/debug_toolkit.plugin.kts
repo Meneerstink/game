@@ -366,11 +366,19 @@ gg.rsmod.game.CommandServerCommands.handlers["cwend"] = { w, a ->
             round.score[gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.SARADOMIN] = sara
             round.score[gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsTeam.ZAMORAK] = zam
             round.active = true
+            round.matchRunning = true
             round.minutesLeft = 1
             gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.tickMinute(w)
         }
         "Castle Wars round ended at $sara-$zam"
     }
+}
+// `cwtick [n]`: n Castle Wars round minutes pass now (K07 N442: the lobby countdown and the game timer without waiting).
+gg.rsmod.game.CommandServerCommands.handlers["cwtick"] = { w, a ->
+    val n = a.getOrNull(0)?.toIntOrNull() ?: 1
+    w.queue { repeat(n) { gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsHandler.tickMinute(w) } }
+    val round = gg.rsmod.plugins.content.areas.kandarin.castlewars.CastleWarsRound
+    "cwtick $n: before - active=${round.active} match=${round.matchRunning} minutesLeft=${round.minutesLeft}"
 }
 // `opnpc <name> <slot 1-5> <npc id>`: an npc option (Attack, Talk-to...) on the nearest npc with that id, through the real handler
 // path (Barrows facing E21 checked in the agent's own client).

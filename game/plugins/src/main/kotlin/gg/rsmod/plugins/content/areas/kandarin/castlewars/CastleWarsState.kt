@@ -60,6 +60,8 @@ enum class CastleWarsTeam(
 
     fun other() = if (this == SARADOMIN) ZAMORAK else SARADOMIN
 
+    val displayName: String get() = name.lowercase().replaceFirstChar { it.uppercase() }
+
     companion object {
         fun forFlagWeapon(itemId: Int) = values().firstOrNull { it.flagWeaponId == itemId }
 
@@ -86,12 +88,24 @@ object CastleWarsRound {
      * actual play before the round ends and scores reset. */
     const val LOBBY_MINUTES = 5
     const val MATCH_MINUTES = 20
-    const val PLAYERS_NEEDED_TO_START = 2
+
+    /** K07 N442 (owner 2026-10-30, "moet starten bij 1 tegen 1"): the countdown runs while each team has this many waiting. */
+    const val PLAYERS_NEEDED_PER_TEAM = 1
+
+    /** Novite `PlayingGame.run` (minutesLeft > 6 of 25): a waiting player joins a running game while more than this is left. */
+    const val JOIN_RUNNING_MIN_MINUTES = 1
 
     val ROUND_TIMER = TimerKey()
     const val TICKS_PER_MINUTE = 100 // 100 x 600ms = 1 minute, matching Novite's 60000ms cadence
 
+    /** Castle Wars itself: the arena with both castles (region 9520) and the waiting rooms and tunnels below it (region 9620). */
+    val REGIONS = setOf(9520, 9620)
+
+    /** True while the lobby counts down (both teams have a player waiting) or a game runs ([matchRunning]). */
     var active = false
+
+    /** True from the start of a game until it ends; [minutesLeft] then counts the game's minutes. */
+    var matchRunning = false
     var minutesLeft = 0
     val waiting = mutableMapOf(CastleWarsTeam.SARADOMIN to mutableListOf<Player>(), CastleWarsTeam.ZAMORAK to mutableListOf())
     val playing = mutableMapOf(CastleWarsTeam.SARADOMIN to mutableListOf<Player>(), CastleWarsTeam.ZAMORAK to mutableListOf())
@@ -107,6 +121,7 @@ object CastleWarsRound {
 
     fun reset() {
         active = false
+        matchRunning = false
         minutesLeft = LOBBY_MINUTES
         score[CastleWarsTeam.SARADOMIN] = 0
         score[CastleWarsTeam.ZAMORAK] = 0

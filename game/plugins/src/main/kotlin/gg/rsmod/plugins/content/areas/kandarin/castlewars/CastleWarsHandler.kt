@@ -9,6 +9,11 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.InterfaceDestination
+import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setVarbit
+import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.cfg.Objs
@@ -69,30 +74,110 @@ object CastleWarsHandler {
         player.attr[CW_TEAM] = team
         player.attr[CW_PLAYING] = false
         player.moveTo(team.waitingTile)
-        if (!CastleWarsRound.active && CastleWarsRound.waiting[team]!!.size >= CastleWarsRound.PLAYERS_NEEDED_TO_START) {
-            startLobbyCountdown()
-        }
+        player.openInterface(WAITING_OVERLAY, InterfaceDestination.PVP_OVERLAY)
+        refreshLobby()
     }
 
-    fun removeWaitingPlayer(player: Player) {
+    /**
+     * K07 N442 (owner 2026-10-30: "castlewars volledig speelbaar net als pest control, de gui wanneer die start, mag starten als
+     * 1 tegen 1 dan een countdown"). Novite started the countdown only when ONE team had 2 waiting, so a 1-against-1 never began.
+     * Now the lobby counts down [CastleWarsRound.LOBBY_MINUTES] while each team has a player waiting, stops when a team empties,
+     * and every waiting player sees the minutes left in the waiting-room overlay (Novite CastleWarsWaiting overlay 57, var 380).
+     */
+    fun refreshLobby() {
+        if (!CastleWarsRound.matchRunning) {
+            val ready = CastleWarsTeam.values().all { CastleWarsRound.waiting[it]!!.size >= CastleWarsRound.PLAYERS_NEEDED_PER_TEAM }
+            if (ready && !CastleWarsRound.active) {
+                CastleWarsRound.active = true
+                CastleWarsRound.minutesLeft = CastleWarsRound.LOBBY_MINUTES
+                forEachWaiting { it.message("Both teams have a player - the game starts in ${CastleWarsRound.LOBBY_MINUTES} minutes.") }
+            } else if (!ready && CastleWarsRound.active) {
+                CastleWarsRound.active = false
+                CastleWarsRound.minutesLeft = CastleWarsRound.LOBBY_MINUTES
+                forEachWaiting { it.message("The countdown stops: each team needs a player.") }
+            }
+        }
+        forEachWaiting { sendTimeLeft(it) }
+    }
+
+    private fun forEachWaiting(action: (Player) -> Unit) = CastleWarsTeam.values().forEach { CastleWarsRound.waiting[it]!!.toList().forEach(action) }
+
+    private fun forEachPlaying(action: (Player) -> Unit) = CastleWarsTeam.values().forEach { CastleWarsRound.playing[it]!!.toList().forEach(action) }
+
+    /** Novite `refreshTimeLeft`: var 380 is the minutes left - of the lobby countdown in the waiting room, of the game in play; 0 = no countdown. */
+    fun sendTimeLeft(player: Player) {
+        val minutes =
+            when {
+                player.attr[CW_PLAYING] == true -> CastleWarsRound.minutesLeft
+                CastleWarsRound.matchRunning -> 0
+                CastleWarsRound.active -> CastleWarsRound.minutesLeft
+                else -> 0
+            }
+        player.setVarp(VARP_TIME_LEFT, minutes.coerceAtLeast(0))
+    }
+
+    /** Novite `PlayingGame.refresh`: each team's flag state (0 safe, 1 taken, 2 dropped) and score in the game overlay, and the time. */
+    fun refreshPlaying(player: Player) {
+        // Each overlay shows its own castle door's health (clientscripts 1367 / 1368: 0 = a red "Health: 0%"); the doors here cannot
+        // be broken, so they stay whole.
+        player.setVarbit(VARBIT_SARA_DOOR_HEALTH, DOOR_FULL_HEALTH)
+        player.setVarbit(VARBIT_ZAM_DOOR_HEALTH, DOOR_FULL_HEALTH)
+        player.setVarbit(VARBIT_SARA_FLAG, CastleWarsRound.flagStatus[CastleWarsTeam.SARADOMIN]!!.ordinal)
+        player.setVarbit(VARBIT_SARA_SCORE, CastleWarsRound.score[CastleWarsTeam.SARADOMIN]!!)
+        player.setVarbit(VARBIT_ZAM_FLAG, CastleWarsRound.flagStatus[CastleWarsTeam.ZAMORAK]!!.ordinal)
+        player.setVarbit(VARBIT_ZAM_SCORE, CastleWarsRound.score[CastleWarsTeam.ZAMORAK]!!)
+        sendTimeLeft(player)
+    }
+
+    fun refreshAllPlaying() = forEachPlaying { refreshPlaying(it) }
+
+    /**
+     * Overlays: 57 in the waiting room; in the game 58 for a Saradomin player and 59 for a Zamorak player (cache clientscripts 1367
+     * and 1368 fill them - each shows its own castle; Novite opened 58 for both teams). Var 380 and the varbits below drive the texts.
+     */
+    const val WAITING_OVERLAY = 57
+    const val SARA_PLAYING_OVERLAY = 58
+    const val ZAM_PLAYING_OVERLAY = 59
+
+    fun playingOverlay(team: CastleWarsTeam) = if (team == CastleWarsTeam.SARADOMIN) SARA_PLAYING_OVERLAY else ZAM_PLAYING_OVERLAY
+
+    const val VARBIT_SARA_DOOR_HEALTH = 136
+    const val VARBIT_ZAM_DOOR_HEALTH = 146
+    const val DOOR_FULL_HEALTH = 100
+    const val VARP_TIME_LEFT = 380
+    const val VARBIT_SARA_FLAG = 143
+    const val VARBIT_SARA_SCORE = 145
+    const val VARBIT_ZAM_FLAG = 153
+    const val VARBIT_ZAM_SCORE = 155
+
+    /** N441: "You can't leave just like that!" (Novite CastleWarsWaiting/Playing processMagic/Item/ObjectTeleport) for anyone in a team. */
+    const val CANNOT_LEAVE = "You can't leave just like that!"
+
+    /**
+     * Leaves the waiting room: the team colours come off, the overlay closes, and the countdown re-checks. [move] is false when
+     * the player is already elsewhere (N441 sweep: teleported or walked out by any route) - they are not pulled back to the lobby.
+     */
+    fun removeWaitingPlayer(
+        player: Player,
+        move: Boolean = true,
+    ) {
         val team = player.attr[CW_TEAM] ?: return
         CastleWarsRound.waiting[team]!!.remove(player)
         player.equipment[EquipmentType.CAPE.id] = null
         player.equipment[EquipmentType.HEAD.id] = null
         player.attr.remove(CW_TEAM)
-        player.moveTo(CastleWarsRound.LOBBY)
-        if (CastleWarsRound.active && CastleWarsRound.waiting[team]!!.isEmpty() && CastleWarsRound.playing[team]!!.isEmpty()) {
-            CastleWarsRound.reset()
-        }
-    }
-
-    private fun startLobbyCountdown() {
-        CastleWarsRound.active = true
-        CastleWarsRound.minutesLeft = CastleWarsRound.LOBBY_MINUTES
+        player.attr.remove(CW_PLAYING)
+        player.closeInterface(InterfaceDestination.PVP_OVERLAY)
+        player.setVarp(VARP_TIME_LEFT, 0)
+        if (move) player.moveTo(CastleWarsRound.LOBBY)
+        refreshLobby()
     }
 
     /** Moves every waiting player of both teams into play. Called when the lobby countdown ends. */
     fun startMatch(world: World) {
+        CastleWarsRound.active = true
+        CastleWarsRound.matchRunning = true
+        CastleWarsRound.minutesLeft = CastleWarsRound.MATCH_MINUTES
         for (team in CastleWarsTeam.values()) {
             for (player in CastleWarsRound.waiting[team]!!.toList()) {
                 joinPlayingGame(player, team)
@@ -109,9 +194,19 @@ object CastleWarsHandler {
         player.attr[CW_PLAYING] = true
         chargeBrace(player)
         player.moveTo(team.baseTile)
+        player.openInterface(playingOverlay(team), InterfaceDestination.PVP_OVERLAY)
+        refreshPlaying(player)
     }
 
-    fun removePlayingPlayer(player: Player) {
+    /**
+     * Leaves the game (exit portal, logout, the end of the game, or the N441 sweep with [move] false): a carried flag drops, the
+     * colours, bandages and barricades go. A game whose team has nobody left ends at once, without tickets (a lone player would
+     * otherwise farm tickets against an alt that walks out).
+     */
+    fun removePlayingPlayer(
+        player: Player,
+        move: Boolean = true,
+    ) {
         val team = player.attr[CW_TEAM] ?: return
         CastleWarsRound.playing[team]!!.remove(player)
         val weaponId = player.equipment[EquipmentType.WEAPON.id]?.id
@@ -127,23 +222,54 @@ object CastleWarsHandler {
         player.write(gg.rsmod.game.message.impl.HintArrowMessage(slot = CARRIER_ARROW_SLOT, type = gg.rsmod.game.message.impl.HintArrowMessage.TYPE_CLEAR))
         player.inventory.remove(Items.BANDAGES, amount = Int.MAX_VALUE)
         player.inventory.remove(Items.BARRICADE, amount = Int.MAX_VALUE)
-        player.moveTo(CastleWarsRound.LOBBY)
-        if (CastleWarsRound.waiting[team]!!.isEmpty() && CastleWarsRound.playing[team]!!.isEmpty()) {
-            CastleWarsRound.reset()
+        player.closeInterface(InterfaceDestination.PVP_OVERLAY)
+        player.setVarp(VARP_TIME_LEFT, 0)
+        if (move) player.moveTo(CastleWarsRound.LOBBY)
+        if (CastleWarsRound.matchRunning && !ending && CastleWarsRound.waiting[team]!!.isEmpty() && CastleWarsRound.playing[team]!!.isEmpty()) {
+            abortMatch(team)
         }
+    }
+
+    /** True while [endMatch] / [abortMatch] empty the game, so the players they remove do not end it a second time. */
+    private var ending = false
+
+    /** The [emptied] team has nobody left: the game is over for the other team, without tickets. */
+    private fun abortMatch(emptied: CastleWarsTeam) {
+        ending = true
+        try {
+            CastleWarsRound.playing[emptied.other()]!!.toList().forEach {
+                it.message("The ${emptied.displayName} team has left - the game is over. No tickets are given.")
+                removePlayingPlayer(it)
+            }
+        } finally {
+            ending = false
+        }
+        CastleWarsRound.reset()
+        refreshLobby()
     }
 
     /** One tick of the round timer = one in-game minute (see [CastleWarsRound.TICKS_PER_MINUTE]). */
     fun tickMinute(world: World) {
+        if (CastleWarsRound.matchRunning) {
+            CastleWarsRound.minutesLeft--
+            if (CastleWarsRound.minutesLeft <= 0) {
+                endMatch()
+                return
+            }
+            // Novite PlayingGame.run: whoever waits joins the running game while it has time left.
+            if (CastleWarsRound.minutesLeft > CastleWarsRound.JOIN_RUNNING_MIN_MINUTES) {
+                CastleWarsTeam.values().forEach { team -> CastleWarsRound.waiting[team]!!.toList().forEach { joinPlayingGame(it, team) } }
+            }
+            refreshAllPlaying()
+            forEachWaiting { sendTimeLeft(it) }
+            return
+        }
         if (!CastleWarsRound.active) return
         CastleWarsRound.minutesLeft--
-        if (CastleWarsRound.minutesLeft <= 0 && CastleWarsRound.playing[CastleWarsTeam.SARADOMIN]!!.isEmpty() &&
-            CastleWarsRound.playing[CastleWarsTeam.ZAMORAK]!!.isEmpty()
-        ) {
+        if (CastleWarsRound.minutesLeft <= 0) {
             startMatch(world)
-            CastleWarsRound.minutesLeft = CastleWarsRound.MATCH_MINUTES
-        } else if (CastleWarsRound.minutesLeft <= 0) {
-            endMatch()
+        } else {
+            forEachWaiting { sendTimeLeft(it) }
         }
     }
 
@@ -152,22 +278,54 @@ object CastleWarsHandler {
         val zamoScore = CastleWarsRound.score[CastleWarsTeam.ZAMORAK]!!
         val winner = if (saraScore == zamoScore) null else if (saraScore > zamoScore) CastleWarsTeam.SARADOMIN else CastleWarsTeam.ZAMORAK
         if (winner != null) CastleWarsRound.seasonWins[winner] = CastleWarsRound.seasonWins[winner]!! + 1
-        for (team in CastleWarsTeam.values()) {
-            for (player in CastleWarsRound.playing[team]!!.toList()) {
-                player.message(
-                    when (winner) {
-                        null -> "You draw."
-                        team -> "You won."
-                        else -> "You lost."
-                    },
-                )
-                val own = CastleWarsRound.score[team]!!
-                val other = CastleWarsRound.score[team.other()]!!
-                player.inventory.add(Items.CASTLE_WARS_TICKET, tickets(own, other))
-                removePlayingPlayer(player)
+        ending = true
+        try {
+            for (team in CastleWarsTeam.values()) {
+                for (player in CastleWarsRound.playing[team]!!.toList()) {
+                    player.message(
+                        when (winner) {
+                            null -> "You draw."
+                            team -> "You won."
+                            else -> "You lost."
+                        },
+                    )
+                    val own = CastleWarsRound.score[team]!!
+                    val other = CastleWarsRound.score[team.other()]!!
+                    player.inventory.add(Items.CASTLE_WARS_TICKET, tickets(own, other))
+                    removePlayingPlayer(player)
+                }
             }
+        } finally {
+            ending = false
         }
         CastleWarsRound.reset()
+        // Players who joined in the last minute were left waiting: the next countdown starts for them.
+        refreshLobby()
+    }
+
+    /**
+     * K07 N441 (owner 2026-10-30: "na portal in + teleport of uitloggen houdt de speler de teamkleur en de Castle Wars hood/cape"):
+     * every game tick, whoever is in a team but no longer in Castle Wars (any teleport route, a logout the hook missed) leaves it
+     * properly - colours off, overlay closed, the countdown or game re-checked. Pest Control does the same for its lander deck.
+     */
+    fun sweep() {
+        forEachWaiting { p -> if (!p.isOnline || p.tile.regionId !in CastleWarsRound.REGIONS) removeWaitingPlayer(p, move = false) }
+        forEachPlaying { p -> if (!p.isOnline || p.tile.regionId !in CastleWarsRound.REGIONS) removePlayingPlayer(p, move = false) }
+    }
+
+    /** K07 N441: team colours worn outside a game (a server restart in the middle of one, an old save) come off at login. */
+    val TEAM_GEAR = CastleWarsTeam.values().flatMap { listOf(it.capeId, it.hoodId) }.toSet()
+
+    fun stripTeamGear(player: Player): Boolean {
+        if (player.attr[CW_TEAM] != null) return false
+        var stripped = false
+        for (slot in listOf(EquipmentType.CAPE, EquipmentType.HEAD)) {
+            if (player.equipment[slot.id]?.id in TEAM_GEAR) {
+                player.equipment[slot.id] = null
+                stripped = true
+            }
+        }
+        return stripped
     }
 
     /**
@@ -336,6 +494,7 @@ object CastleWarsHandler {
         player.equipment[EquipmentType.WEAPON.id] = Item(flagTeam.flagWeaponId)
         player.filterableMessage("You take the ${flagTeam.name.lowercase().replaceFirstChar { it.uppercase() }} flag!")
         markFlagCarrier(flagTeam, player)
+        refreshAllPlaying()
     }
 
     /** K07 (Novite `addHintIcon`): the team whose flag was stolen sees a hint arrow over the player carrying it. */
@@ -369,11 +528,13 @@ object CastleWarsHandler {
         val playerTeam = player.attr[CW_TEAM]
         if (playerTeam == flagTeam) {
             CastleWarsRound.flagStatus[flagTeam] = FlagStatus.SAFE
+            refreshAllPlaying()
             return
         }
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.TAKEN
         player.equipment[EquipmentType.WEAPON.id] = Item(flagTeam.flagWeaponId)
         markFlagCarrier(flagTeam, player)
+        refreshAllPlaying()
     }
 
     fun dropFlag(
@@ -386,6 +547,7 @@ object CastleWarsHandler {
         CastleWarsRound.spawnedFlagObjects[flagTeam] = obj
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.DROPPED
         clearFlagCarrier(flagTeam)
+        refreshAllPlaying()
     }
 
     fun scoreFlag(
@@ -401,6 +563,7 @@ object CastleWarsHandler {
         CastleWarsRound.spawnedFlagObjects.remove(flagTeam)
         CastleWarsRound.flagStatus[flagTeam] = FlagStatus.SAFE
         clearFlagCarrier(flagTeam)
+        refreshAllPlaying()
     }
 
     /**
