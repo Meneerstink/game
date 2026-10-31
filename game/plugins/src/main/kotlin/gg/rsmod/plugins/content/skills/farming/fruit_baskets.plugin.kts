@@ -49,5 +49,21 @@ FRUIT_BASKETS.forEach { basket ->
             player.inventory.add(basket.fruit)
             player.message("You take ${basket.description} out of the ${basket.name} basket.")
         }
+        // N11 (2026-10-31): "Empty" on Apples (2)..(5) etc. was bound by the potion dose rule and gave an empty vial. Void Baskets.kt:
+        // as much fruit as fits comes out, the basket keeps the rest (or becomes an empty basket); no room at all -> inventory full.
+        if (world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).inventoryMenu.any { it.equals("Empty", ignoreCase = true) }) {
+            on_item_option(item = id, option = "empty") {
+                val slot = player.getInteractingSlot()
+                if (player.inventory[slot]?.id != id) return@on_item_option
+                val added = minOf(count, player.inventory.freeSlotCount)
+                if (added == 0) {
+                    player.message("You don't have enough inventory space.")
+                    return@on_item_option
+                }
+                player.inventory.remove(id, 1, beginSlot = slot)
+                player.inventory.add(if (added == count) Items.BASKET else basket.id(count - added), 1, beginSlot = slot)
+                player.inventory.add(basket.fruit, added)
+            }
+        }
     }
 }

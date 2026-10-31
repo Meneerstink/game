@@ -26,6 +26,16 @@ object PotionDecanting {
     // OSRS potion without its Empty option and out of the decanting families (option census 2026-09-17c: 125 potions).
     private val doseSuffix = Regex("""^(.*?) ?\(([1-4])\)$""")
 
+    /**
+     * N11 (2026-10-31): a fruit basket "Apples (3)", a sack "Potatoes (2)" and a "Seaweed net (4)" carry the same "(n)" suffix and an
+     * Empty option - the dose rule bound them as potions, so Empty turned a sack of potatoes into an empty vial (and clashed with the
+     * produce containers' own Empty at boot). These families are containers of produce, never doses.
+     */
+    private val PRODUCE_CONTAINERS = setOf("apples", "oranges", "strawberries", "bananas", "tomatoes", "potatoes", "onions", "cabbages", "seaweed net")
+
+    /** True when [name] reads like a dose ("Super attack (3)", "Anti-venom(2)") and is not a produce container (see [PRODUCE_CONTAINERS]). */
+    fun isDoseName(name: String): Boolean = doseSuffix.matchEntire(name)?.groupValues?.get(1)?.lowercase()?.let { it !in PRODUCE_CONTAINERS } ?: false
+
     /** Each family's item ids ordered 4, 3, 2, 1 doses. */
     val families: List<IntArray> by lazy {
         val replacements = Potion.values().map { it.replacement }.toSet()
@@ -83,7 +93,7 @@ object PotionDecanting {
             .filter { def ->
                 !def.noted &&
                     def.id !in RemovedPotions.itemIds &&
-                    doseSuffix.matches(def.name) &&
+                    isDoseName(def.name) &&
                     def.inventoryMenu.any { it.equals("Empty", ignoreCase = true) }
             }
             .map { it.id }
