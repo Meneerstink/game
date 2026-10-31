@@ -463,6 +463,23 @@ object RuinousPowersCacheTool {
         }
     }
 
+    /**
+     * Undo of [scrollMutations] (owner 2026-10-31 20:4x: the fix let the fifth Ruinous column sit under the scrollbar - not live; N492 /
+     * N498 are done together later): clientscript 1704 back to the bytes the transaction journal [journal] kept.
+     */
+    fun scrollUndoMutations(journal: String): List<CacheMutation> {
+        val original = File(journal, "C_RSPS_game_game_data_cache__idx12_grp${STAT_SCROLL_SCRIPT}_file0.orig").readBytes()
+        val library = CacheLibrary(TARGETS[0])
+        try {
+            val current = requireNotNull(library.data(SCRIPT_INDEX, STAT_SCROLL_SCRIPT, 0)) { "clientscript $STAT_SCROLL_SCRIPT missing" }
+            return listOf(
+                CacheMutation(SCRIPT_INDEX, STAT_SCROLL_SCRIPT, 0, original, "clientscript $STAT_SCROLL_SCRIPT: back to the curse-layout scroll (undo N492 scroll)", expectedCurrentSha1 = CacheItemProbeTool.sha1(current)),
+            )
+        } finally {
+            library.close()
+        }
+    }
+
     /** The prayer tab's grid size / scrollbar when the stat adjustments open or close (called by 1698). */
     const val STAT_SCROLL_SCRIPT = 1704
 
@@ -523,7 +540,7 @@ object RuinousPowersCacheTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        val transaction = CacheTransaction(targets = TARGETS, mutations = if ("scroll" in args) scrollMutations() else if ("stats" in args) statMutations() else mutations())
+        val transaction = CacheTransaction(targets = TARGETS, mutations = if (args.any { it.startsWith("scroll-undo=") }) scrollUndoMutations(args.first { it.startsWith("scroll-undo=") }.substringAfter("=")) else if ("scroll" in args) scrollMutations() else if ("stats" in args) statMutations() else mutations())
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} mutations=${transaction.mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
