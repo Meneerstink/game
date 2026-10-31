@@ -130,17 +130,28 @@ fun Player.buildQuestOverview(quest: Quest) {
  * @param quest The quest to build the stages for.
  */
 fun Player.buildQuestStages(quest: Quest) {
+    // N475 (2026-10-31, live log): the journal of a quest not started yet (stage 0) - or a stage a quest has no page for - ran into
+    // `else -> TODO()` in six quests (Cook's Assistant, Doric's Quest, Druidic Ritual, Imp Catcher, Priest in Peril, The Restless
+    // Ghost) and the click did nothing. Such a journal shows the quest's start page instead, as an unstarted quest does in game.
+    val stageObjective =
+        try {
+            quest.getObjective(this, getCurrentStage(quest))
+        } catch (e: NotImplementedError) {
+            null
+        }
+    if (stageObjective == null) {
+        buildQuestOverview(quest)
+        return
+    }
     setComponentHidden(interfaceId = 275, component = 14, hidden = true)
     setComponentText(interfaceId = 275, component = 2, "<col=8A0808>${quest.name}")
     for (i in 16..315) {
         setComponentText(interfaceId = 275, component = i, "")
     }
 
-    val stage = getCurrentStage(quest)
-
     setComponentText(interfaceId = 275, component = 16, text = "<br>")
 
-    val objectives = quest.getObjective(this, stage).objectives
+    val objectives = stageObjective.objectives
     objectives.forEachIndexed { index, string ->
         runClientScript(4265, 275 shl 16 or 17 + index, 0x000080)
         setComponentText(interfaceId = 275, component = 17 + index, text = string)
