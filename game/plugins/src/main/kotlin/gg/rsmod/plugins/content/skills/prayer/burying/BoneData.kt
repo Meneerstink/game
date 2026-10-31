@@ -18,6 +18,9 @@ enum class BoneData(
     MONKEY_BONES_7(bone = Items.MONKEY_BONES_3186, experience = 5.0),
     BAT_BONES(bone = Items.BAT_BONES, experience = 5.3),
     BIG_BONES(bone = Items.BIG_BONES, experience = 15.0),
+    // OSRS Wiki Long bone / Curved bone: burying only; Barlak's Construction trade is separate.
+    LONG_BONE(bone = Items.LONG_BONE, experience = 15.1),
+    CURVED_BONE(bone = Items.CURVED_BONE, experience = 15.1),
     JOGRE_BONES(bone = Items.JOGRE_BONES, experience = 15.0),
     ZOGRE_BONES(bone = Items.ZOGRE_BONES, experience = 12.5),
     SHAIKAHAN_BONES(bone = Items.SHAIKAHAN_BONES, experience = 25.0),

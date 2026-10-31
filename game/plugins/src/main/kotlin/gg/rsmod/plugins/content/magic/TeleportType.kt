@@ -81,6 +81,12 @@ enum class TeleportType(
         animation = Anims.JEWELLERY_TELEPORT,
         graphic = Graphic(Gfx.GFX_1684, 0),
         wildLvlRestriction = 30),
+    /** RS Wiki Ferocious ring: unlike glory jewellery, usable only through level 20 Wilderness. */
+    FEROCIOUS_RING(
+        teleportDelay = 5,
+        animation = Anims.JEWELLERY_TELEPORT,
+        graphic = Graphic(Gfx.GFX_1684, 0),
+        wildLvlRestriction = 20),
     SPIRIT_TREE(
         teleportDelay = 6,
         animation = Anims.SPIRIT_TREE_TELEPORT_START,
@@ -189,7 +195,7 @@ enum class TeleportType(
     val startSound: Int?
         get() =
             when (this) {
-                MODERN, JEWELRY, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_ALL
+                MODERN, JEWELRY, FEROCIOUS_RING, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_ALL
                 TAB -> Sfx.POH_TABLET_BREAK_TELEPORT
                 FAIRY, TRINKET_FAIRY -> Sfx.FT_FAIRY_TELEPORT
                 else -> null
@@ -198,7 +204,7 @@ enum class TeleportType(
     val landSound: Int?
         get() =
             when (this) {
-                MODERN, JEWELRY, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_REVERSE
+                MODERN, JEWELRY, FEROCIOUS_RING, ECTOPHIAL, SKULL_SCEPTRE, WILDERNESS_OBELISK, OBELISK -> Sfx.TELEPORT_REVERSE
                 else -> null
             }
 }

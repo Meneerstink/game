@@ -36,6 +36,9 @@ object Foods {
     fun anglerfishHeal(hitpointsLevel: Int): Int =
         (hitpointsLevel / 10) + (2 * (hitpointsLevel / 25)) + (5 * (hitpointsLevel / 93)) + 2
 
+    /** OSRS Wiki Sweetcorn (bowl): 1 + 10% base Hitpoints, rounded down. */
+    fun sweetcornHeal(hitpointsLevel: Int): Int = 1 + hitpointsLevel / 10
+
     fun canEat(
         p: Player,
         food: Food,
@@ -58,6 +61,7 @@ object Foods {
         val heal =
             when {
                 food == Food.KEBAB -> (kebabEffect?.first ?: 0) / Food.LEDGER_UNITS_PER_HITPOINT
+                food == Food.SWEETCORN_BOWL || food == Food.COOKED_SWEETCORN -> sweetcornHeal(p.skills.getMaxLevel(Skills.CONSTITUTION))
                 food == Food.ANGLERFISH || food == Food.BLIGHTED_ANGLERFISH -> anglerfishHeal(p.skills.getMaxLevel(Skills.CONSTITUTION))
                 else -> food.hitpoints
             }

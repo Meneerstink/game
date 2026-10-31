@@ -7,6 +7,9 @@ val bones = boneData.map { it.bone }.toTypedArray()
 
 bones.forEach { bone ->
     on_item_option(bone, option = "bury") {
+        val slot = player.getInteractingItemSlot()
+        val held = player.inventory[slot] ?: return@on_item_option
+        if (held.id != bone) return@on_item_option
         player.lockingQueue(lockState = LockState.DELAY_ACTIONS) {
 
             // send the message, animate and play the sound
@@ -18,7 +21,7 @@ bones.forEach { bone ->
             wait(2)
 
             // remove the bones, and add experience
-            if (player.inventory.remove(item = bone, beginSlot = player.getInteractingItemSlot()).hasSucceeded()) {
+            if (player.inventory[slot] === held && player.inventory.remove(item = bone, beginSlot = slot).hasSucceeded()) {
                 player.filterableMessage("You bury the bones.")
                 player.addXp(Skills.PRAYER, definitions[bone]!!.experience, checkBrawlingGloves = true)
             }

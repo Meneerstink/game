@@ -13,11 +13,18 @@ Food.values.forEach { food ->
         }
 
         val inventorySlot = player.getInteractingItemSlot()
+        if (player.inventory[inventorySlot]?.id != food.item) return@on_item_option
         if (player.inventory.remove(item = food.item, beginSlot = inventorySlot).hasSucceeded()) {
             Foods.eat(player, food)
             if (food.replacement != -1) {
                 player.inventory.add(item = food.replacement, beginSlot = inventorySlot)
             }
         }
+    }
+}
+
+InedibleFoods.refusals.forEach { (id, message) ->
+    on_item_option(id, "Eat") {
+        if (player.inventory[player.getInteractingItemSlot()]?.id == id) player.message(message)
     }
 }
