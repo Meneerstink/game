@@ -1,5 +1,6 @@
 # Generated from RemovedItems.geHiddenIds (GeHiddenTableTests) - do not edit. Read by RemovedContentCacheTool:
 # these items lose the cache's Grand Exchange flag (opcode 65), so the client's GE search no longer lists them.
+2513
 13860
 13863
 13866
@@ -2658,6 +2659,7 @@
 19703
 19709
 19710
+19711
 19846
 19847
 19848

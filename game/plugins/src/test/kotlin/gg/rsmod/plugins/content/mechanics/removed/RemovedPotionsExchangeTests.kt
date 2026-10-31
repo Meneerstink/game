@@ -37,6 +37,19 @@ class RemovedPotionsExchangeTests {
         }
     }
 
+    /** The ids a login migration turns into the real item are not sold by the GE house either (N471 deflector, N11 chainbody). */
+    @Test
+    fun `migrated-away ids are off the GE and their real items stay on it`() {
+        listOf(Items.VOID_KNIGHT_DEFLECTOR, Items.DRAGON_CHAINBODY).forEach { id ->
+            assertFalse(GrandExchangeInterface.exchangeable(tradeable(id)), "$id still exchangeable")
+            assertTrue(id in RemovedItems.geHiddenIds, "$id still in the GE search")
+            assertFalse(RemovedItems.isUnobtainable(tradeable(id)), "$id must be converted at login, never purged")
+        }
+        assertTrue(GrandExchangeInterface.exchangeable(tradeable(Items.DRAGON_CHAINBODY_3140)), "the wearable chainbody stays")
+        val kit = gg.rsmod.plugins.content.items.combine.CombinationData.DRAGON_CHAINBODY_G.items.toList()
+        assertTrue(Items.DRAGON_CHAINBODY_3140 in kit && Items.DRAGON_CHAINBODY !in kit, "the (g) kit combines with the chainbody players own")
+    }
+
     @Test
     fun `held copies are kept and normal items stay on the GE`() {
         (RemovedPotions.itemIds + BreachLoot.EXCLUDED_TRINKETS).forEach { id ->

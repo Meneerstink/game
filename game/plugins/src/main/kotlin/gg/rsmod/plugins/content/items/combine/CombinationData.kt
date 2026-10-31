@@ -284,7 +284,7 @@ enum class CombinationData(
     BANDOS_GODSWORD_OR(items = intArrayOf(Items.BANDOS_GODSWORD_ORNAMENT_KIT, Items.BANDOS_GODSWORD), resultItem = Items.BANDOS_GODSWORD_OR, experience = 0.0),
     SARADOMIN_GODSWORD_OR(items = intArrayOf(Items.SARADOMIN_GODSWORD_ORNAMENT_KIT, Items.SARADOMIN_GODSWORD), resultItem = Items.SARADOMIN_GODSWORD_OR, experience = 0.0),
     ZAMORAK_GODSWORD_OR(items = intArrayOf(Items.ZAMORAK_GODSWORD_ORNAMENT_KIT, Items.ZAMORAK_GODSWORD), resultItem = Items.ZAMORAK_GODSWORD_OR, experience = 0.0),
-    DRAGON_CHAINBODY_G(items = intArrayOf(Items.DRAGON_CHAINBODY_ORNAMENT_KIT, Items.DRAGON_CHAINBODY), resultItem = Items.DRAGON_CHAINBODY_G, experience = 0.0),
+    DRAGON_CHAINBODY_G(items = intArrayOf(Items.DRAGON_CHAINBODY_ORNAMENT_KIT, Items.DRAGON_CHAINBODY_3140), resultItem = Items.DRAGON_CHAINBODY_G, experience = 0.0),
     DRAGON_PLATELEGS_G(items = intArrayOf(Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT, Items.DRAGON_PLATELEGS), resultItem = Items.DRAGON_PLATELEGS_G, experience = 0.0),
     DRAGON_PLATESKIRT_G(items = intArrayOf(Items.DRAGON_LEGS_SKIRT_ORNAMENT_KIT, Items.DRAGON_PLATESKIRT), resultItem = Items.DRAGON_PLATESKIRT_G, experience = 0.0),
     DRAGON_FULL_HELM_G(items = intArrayOf(Items.DRAGON_FULL_HELM_ORNAMENT_KIT, Items.DRAGON_FULL_HELM), resultItem = Items.DRAGON_FULL_HELM_G, experience = 0.0),

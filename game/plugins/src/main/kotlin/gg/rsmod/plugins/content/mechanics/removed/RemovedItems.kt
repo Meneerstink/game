@@ -94,10 +94,14 @@ object RemovedItems {
      * players KEEP, so they stay out of [UNOBTAINABLE_IDS] and the login [purge] - only the Grand Exchange refuses them
      * ([isExchangeBlocked]) and its search no longer lists them ([geHiddenIds]). The removed potions (owner 2026-09-15 / 09-29:
      * "copies players already own stay where they are but cannot be drunk, mixed or decanted") and the excluded trinkets (owner
-     * 2026-09-19 "we dont want trinkets in our rsps please"; only the Trinket of fairies came back, N101).
+     * 2026-09-19 "we dont want trinkets in our rsps please"; only the Trinket of fairies came back, N101). Also the ids a login
+     * migration turns into the real item (N471 deflector 19711 -> 19712, N11 quest chainbody 2513 -> 3140): the GE house would
+     * otherwise keep selling the copy nobody can wear.
      */
     val NOT_EXCHANGEABLE_IDS: Set<Int> by lazy {
-        gg.rsmod.plugins.content.items.potion.RemovedPotions.itemIds + gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot.EXCLUDED_TRINKETS
+        gg.rsmod.plugins.content.items.potion.RemovedPotions.itemIds + gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot.EXCLUDED_TRINKETS +
+            gg.rsmod.plugins.content.activity.pest_control.VoidDeflectorMigration.UNWEARABLE +
+            gg.rsmod.plugins.content.items.armor.DragonChainbodyMigration.UNWEARABLE
     }
 
     /** True for anything the Grand Exchange (player offers, the house, ::ge_buy / ::ge_sell) must refuse, noted forms included. */
