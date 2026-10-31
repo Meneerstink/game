@@ -71,10 +71,26 @@ internal class N11Fixture : AutoCloseable {
     fun def(id: Int): ItemDef = defs.getOrPut(id) { ItemDef(id).apply { name = "item $id" } }
     fun menu(id: Int, vararg options: String) { options.forEachIndexed { i, name -> def(id).inventoryMenu[i] = name } }
     fun select(slot: Int) { attrs[INTERACTING_ITEM_SLOT] = slot; attrs[INTERACTING_SLOT_ATTR] = slot }
-    fun load(name: String) {
+    fun load(name: String): Any =
         loader.loadClass("gg.rsmod.plugins.content.$name")
             .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
             .newInstance(repo, world, mockk<Server>(relaxed = true))
+
+    fun loadConsumables() {
+        val rows = gg.rsmod.plugins.content.items.food.ConsumableTable.read(File("../../data/cfg/consumables.tsv"))
+        rows.forEach { row ->
+            // Respect the census menu positions for ids already present in the fixture.
+            if (def(row.id).inventoryMenu.none { it == if (row.drink) "Drink" else "Eat" }) {
+                menu(row.id, if (row.drink) "Drink" else "Eat")
+            }
+        }
+        val script = load("items.food.Consumables_plugin")
+        // The server resolves its data directory at process cwd; tests inject the same parser's checked-in table.
+        script.javaClass.getDeclaredField("CONSUMABLES").apply { isAccessible = true }.set(script, rows)
+        every { world.executePlugin(any(), any()) } answers {
+            secondArg<Plugin.() -> Unit>().invoke(Plugin(firstArg()))
+        }
+        repo.executeWorldInit(world)
     }
     override fun close() { queues.terminateTasks(); loader.close() }
 }

@@ -7,6 +7,9 @@ enum class BoneData(
     val experience: Double,
 ) {
     BONES(bone = Items.BONES, experience = 4.5),
+    BONES_2530(bone = Items.BONES_2530, experience = 4.5),
+    BONES_3187(bone = Items.BONES_3187, experience = 4.5),
+    BONES_14693(bone = Items.BONES_14693, experience = 4.5),
     WOLF_BONES(bone = Items.WOLF_BONES, experience = 4.5),
     BURNT_BONES(bone = Items.BURNT_BONES, experience = 4.5),
     MONKEY_BONES(bone = Items.MONKEY_BONES, experience = 5.0),
@@ -31,6 +34,7 @@ enum class BoneData(
     RAURG_BONES(bone = Items.RAURG_BONES, experience = 96.0),
     DAGANNOTH(bone = Items.DAGANNOTH_BONES, experience = 125.0),
     OURG_BONES(bone = Items.OURG_BONES, experience = 140.0),
+    OURG_BONES_14793(bone = Items.OURG_BONES_14793, experience = 140.0),
     FROST_DRAGON_BONES(bone = Items.FROST_DRAGON_BONES, experience = 180.0),
     ANCIENT_BONES(bone = Items.ANCIENT_BONES, experience = 200.00),
     ;

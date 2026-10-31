@@ -10,6 +10,7 @@ enum class Food(
     val tickDelay: Int = 3,
     val comboFood: Boolean = false,
     val message: String = "",
+    val attackDelay: Int = tickDelay,
 ) {
     /**
      * Sea food.
@@ -194,6 +195,22 @@ enum class Food(
     PEACH(item = Items.PEACH, heal = 80),
 
     /** Gnome & Crunchies & Battas & Gnomebowls*/
+    // N11 G-register aliases in the 667 cache; use the same food route and OSRS healing as the ordinary dish.
+    FRUIT_BATTA_9527(item = Items.FRUIT_BATTA_9527, heal = 110, comboFood = true, attackDelay = 2),
+    TOAD_BATTA_9529(item = Items.TOAD_BATTA_9529, heal = 110, comboFood = true, attackDelay = 2),
+    WORM_BATTA_9531(item = Items.WORM_BATTA_9531, heal = 110, comboFood = true, attackDelay = 2),
+    VEGETABLE_BATTA_9533(item = Items.VEGETABLE_BATTA_9533, heal = 110, comboFood = true, attackDelay = 2),
+    CHEESETOM_BATTA_9535(item = Items.CHEESETOM_BATTA_9535, heal = 110, comboFood = true, attackDelay = 2),
+    TOAD_CRUNCHIES_9538(item = Items.TOAD_CRUNCHIES_9538, heal = 80, comboFood = true, attackDelay = 2),
+    SPICY_CRUNCHIES_9540(item = Items.SPICY_CRUNCHIES_9540, heal = 70, comboFood = true, attackDelay = 2),
+    WORM_CRUNCHIES_9542(item = Items.WORM_CRUNCHIES_9542, heal = 80, comboFood = true, attackDelay = 2),
+    CHOCCHIP_CRUNCHIES_9544(item = Items.CHOCCHIP_CRUNCHIES_9544, heal = 70, comboFood = true, attackDelay = 2),
+    WORM_HOLE_9547(item = Items.WORM_HOLE_9547, heal = 120, comboFood = true, attackDelay = 2),
+    VEG_BALL_9549(item = Items.VEG_BALL_9549, heal = 120, comboFood = true, attackDelay = 2),
+    CHOCOLATE_BOMB_9553(item = Items.CHOCOLATE_BOMB_9553, heal = 150, comboFood = true, attackDelay = 2),
+    COOKED_CHOMPY_7228(item = Items.COOKED_CHOMPY_7228, heal = 100),
+    GOUT_TUBER(item = Items.GOUT_TUBER, heal = 120,
+        message = "You eat the tuber. Hmmm, peculiar taste! It heals some run energy. It heals some health anyway."),
     SPICY_CRUNCHIES(item = Items.SPICY_CRUNCHIES, heal = 70),
     PREMADE_SY_CRUNCH(item = Items.PREMADE_SY_CRUNCH, heal = 70),
     CHOCCHIP_CRUNCHIES(item = Items.CHOCCHIP_CRUNCHIES, heal = 70),

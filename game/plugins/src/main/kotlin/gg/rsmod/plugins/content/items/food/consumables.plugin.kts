@@ -19,34 +19,7 @@ import kotlin.math.ceil
  * ticks to the attack delay, drinking does not; default message "You eat/drink the <name>.". Drink effects from Void's Ale.kt,
  * MatureAle.kt, Cocktails.kt, Bottled.kt and Tea.kt ([effect]).
  */
-data class Consumable(
-    val id: Int,
-    val drink: Boolean,
-    val healMin: Int,
-    val healMax: Int,
-    val leftover: Int,
-    val ticks: Int,
-    val combo: Boolean,
-    val message: String,
-)
-
-val CONSUMABLES: List<Consumable> =
-    File("./data/cfg/consumables.tsv").takeIf { it.exists() }?.readLines().orEmpty()
-        .filter { it.isNotBlank() && !it.startsWith("#") }
-        .map { line ->
-            val c = line.split('\t')
-            val drink = c[1] == "drink"
-            Consumable(
-                id = c[0].toInt(),
-                drink = drink,
-                healMin = c[2].toInt(),
-                healMax = c[3].toInt(),
-                leftover = c[4].toInt(),
-                ticks = c[5].toIntOrNull() ?: if (c[6] == "1") 1 else if (drink) 2 else 3,
-                combo = c[6] == "1",
-                message = c[7],
-            )
-        }
+val CONSUMABLES: List<Consumable> = ConsumableTable.read(File("./data/cfg/consumables.tsv"))
 
 // https://runescape.wiki/w/Blamish_oil — refusal only: no animation, dose loss, vial or drink delay.
 on_item_option(Items.BLAMISH_OIL, option = "Drink") {
@@ -60,7 +33,7 @@ on_world_init_late {
         val def = world.definitions.getNullable(ItemDef::class.java, food.id) ?: return@forEach
         val verb = if (food.drink) "Drink" else "Eat"
         val index = def.inventoryMenu.indexOfFirst { it.equals(verb, ignoreCase = true) }
-        if (index < 0 || world.plugins.hasItemOption(food.id, index + 1)) return@forEach
+        if (def.noted || index < 0 || world.plugins.hasItemOption(food.id, index + 1)) return@forEach
         on_item_option(item = food.id, option = verb) {
             consume(player, food, def.name)
         }
@@ -73,7 +46,7 @@ fun consume(player: Player, food: Consumable, name: String) {
     val restriction = if (food.drink) gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.DRINK else gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.EAT
     if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, restriction)) return
     val slot = player.getInteractingSlot()
-    if (player.inventory[slot]?.id != food.id) return
+    if (player.inventory[slot]?.id != food.id || world.definitions.get(ItemDef::class.java, food.id).noted) return
     if (!player.inventory.remove(food.id, 1, beginSlot = slot).hasSucceeded()) return
     if (food.leftover != -1) player.inventory.add(food.leftover, 1, beginSlot = slot)
     player.timers[clock] = food.ticks
@@ -83,9 +56,10 @@ fun consume(player: Player, food: Consumable, name: String) {
     player.animate(Anims.EAT_FOOD)
     player.playSound(if (food.drink) Sfx.DRINK else Sfx.EAT)
     player.filterableMessage(food.message.ifEmpty { "You ${if (food.drink) "drink" else "eat"} the ${name.lowercase()}." })
+    val wasInjured = player.getCurrentLifepoints() < player.skills.getMaxLevel(Skills.CONSTITUTION)
     val heal = (if (food.healMax > food.healMin) world.random(food.healMin..food.healMax) else food.healMin) / Food.LEDGER_UNITS_PER_HITPOINT
     if (heal > 0) player.heal(heal)
-    effect(player, name)
+    if (!GeDrinks.apply(player, food.id, wasInjured)) effect(player, name)
 }
 
 /** Void Levels.boost: +amount + max*multiplier, never above max + that boost, never lowering a higher level. */
