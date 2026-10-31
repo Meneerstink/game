@@ -18,6 +18,44 @@ object RemovedItems {
     val IDS: Set<Int> = setOf(Items.ARMADYL_RUNE, Items.AETHER_RUNE, Items.AETHER_CATALYST, Items.CROWN_OF_HELIOS)
 
     /**
+     * N457, owner 2026-10-30: all native 667 corrupt weapons AND armour, including (deg), are removed completely.
+     * Login deletes held copies without replacement; never convert these through DeadmanGear. Poisoned Morrigan javelins
+     * are included. Noted forms follow through [isUnobtainable]. OSRS corrupted Gauntlet / crystal items are outside this set.
+     */
+    val CORRUPT_IDS: Set<Int> =
+        setOf(
+            Items.CORRUPT_VESTAS_LONGSWORD, Items.C_VESTAS_LONGSWORD_DEG,
+            Items.CORRUPT_VESTAS_SPEAR, Items.CORRUPT_VESTAS_SPEAR_DEG,
+            Items.CORRUPT_VESTAS_CHAINBODY, Items.CORRUPT_VESTAS_CHAINBODY_DEG,
+            Items.CORRUPT_VESTAS_PLATESKIRT, Items.CORRUPT_VESTAS_PLATESKIRT_DEG,
+            Items.CORRUPT_STATIUSS_WARHAMMER, Items.C_STATIUSS_WARHAMMER_DEG,
+            Items.CORRUPT_STATIUSS_FULL_HELM, Items.CORRUPT_STATIUS_FULL_HELM_DEG,
+            Items.CORRUPT_STATIUSS_PLATEBODY, Items.CORRUPT_STATIUSS_PLATEBODY_DEG,
+            Items.CORRUPT_STATIUSS_PLATELEGS, Items.CORRUPT_STATIUSS_PLATELEGS_DEG,
+            Items.CORRUPT_ZURIELS_STAFF, Items.CORRUPT_ZURIELS_STAFF_DEG,
+            Items.CORRUPT_ZURIELS_HOOD, Items.CORRUPT_ZURIELS_HOOD_DEG,
+            Items.CORRUPT_ZURIELS_ROBE_TOP, Items.CORRUPT_ZURIELS_ROBE_TOP_DEG,
+            Items.CORRUPT_ZURIELS_ROBE_BOTTOM, Items.CORRUPT_ZURIELS_ROBE_BOTTOM_DEG,
+            Items.CORRUPT_MORRIGANS_COIF, Items.CORRUPT_MORRIGANS_COIF_DEG,
+            Items.CORRUPT_MORRIGANS_LEATHER_BODY, Items.CORRUPT_MORRIGANS_LEATHER_BODY_DEG,
+            Items.CORRUPT_MORRIGANS_LEATHER_CHAPS, Items.CORRUPT_MORRIGANS_LEATHER_CHAPS_DEG,
+            Items.CORRUPT_MORRIGANS_JAVELIN, Items.C_MORRIGANS_JAVELIN_P,
+            Items.C_MORRIGANS_JAVELIN_P_13955, Items.C_MORRIGANS_JAVELIN_P_13956,
+            Items.C_MORRIGANS_THROWING_AXE, Items.CORRUPT_DRAGON_CHAINBODY,
+            Items.CORRUPT_DRAGON_CHAINBODY_DEG, Items.CORRUPT_DRAGON_MED_HELM,
+            Items.CORRUPT_DRAGON_MED_HELM_DEG, Items.CORRUPT_DRAGON_SQ_SHIELD,
+            Items.CORRUPT_DRAGON_SQ_SHIELD_DEG, Items.CORRUPT_DRAGON_PLATESKIRT,
+            Items.CORRUPT_DRAGON_PLATESKIRT_DEG, Items.CORRUPT_DRAGON_PLATELEGS,
+            Items.CORRUPT_DRAGON_PLATELEGS_DEG, Items.CORRUPT_DRAGON_BATTLEAXE,
+            Items.C_DRAGON_BATTLEAXE_DEG, Items.CORRUPT_DRAGON_DAGGER,
+            Items.C_DRAGON_DAGGER_DEG, Items.CORRUPT_DRAGON_SCIMITAR,
+            Items.C_DRAGON_SCIMITAR_DEG, Items.CORRUPT_DRAGON_LONGSWORD,
+            Items.C_DRAGON_LONGSWORD_DEG, Items.CORRUPT_DRAGON_MACE,
+            Items.CORRUPT_DRAGON_MACE_DEG, Items.CORRUPT_DRAGON_SPEAR,
+            Items.CORRUPT_DRAGON_SPEAR_DEG,
+        )
+
+    /**
      * Owner 2026-10-06: "remove pernix and virtus completely from our rsps the rest needs to be degraded". Nothing may
      * offer them any more: Nex no longer drops them and the Grand Exchange (player offers and the house, which sells every
      * exchangeable item) refuses them through [isUnobtainable]. Copies already held are taken by the login [purge] too
@@ -36,9 +74,9 @@ object RemovedItems {
             // inloggen", like Pernix/Virtus). Nex no longer drops it (N293); the Zaryte crossbow stays.
             Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN,
         ) +
-            // Owner 2026-10-11 (OSRS Deadman Mode): every degraded, corrupt, used and broken Deadman gear / Torva id. A held copy
+            // Owner 2026-10-11 (OSRS Deadman Mode): every non-corrupt degraded, used and broken Deadman gear / Torva id. A held copy
             // becomes the normal item at login first (DeadmanGear.migrate runs before [purge]); nothing may offer these again.
-            gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys +
+            gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys + CORRUPT_IDS +
             // N424 (owner 2026-10-29): the looting bag is out of the game; its old contents go to the bank first (LootingBag.retire).
             gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS
 

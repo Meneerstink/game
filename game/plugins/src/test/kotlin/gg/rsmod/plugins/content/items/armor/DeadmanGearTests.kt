@@ -29,17 +29,26 @@ import kotlin.test.assertTrue
 
 /**
  * Owner 2026-10-11 (dossier 4a-1, OSRS Wiki): Deadman gear and Torva never degrade, corrupt versions do not exist - every held
- * degraded / corrupt / used / broken copy becomes the normal item at login, in every container, and nothing offers them again.
+ * non-corrupt degraded / used / broken copy becomes the normal item at login, in every container, and nothing offers them again.
  */
 class DeadmanGearTests {
     @Test
-    fun `every degraded, corrupt, used and broken id converts to the cache's own normal piece`() {
+    fun `every non-corrupt degraded, used and broken id converts to the cache's own normal piece`() {
         val expectedSources =
-            CorruptArmor.values().flatMap { listOf(it.degradedId) + if (it.name.startsWith("CORRUPT_")) listOf(it.newId) else emptyList() } +
-                NexArmour.TORVA.flatMap { listOf(it.usedId, it.brokenId) } +
-                listOf(Items.CORRUPT_MORRIGANS_JAVELIN, Items.C_MORRIGANS_THROWING_AXE)
+            listOf(
+                Items.VESTAS_LONGSWORD_DEG, Items.VESTAS_SPEAR_DEG, Items.VESTAS_CHAINBODY_DEG, Items.VESTAS_PLATESKIRT_DEG,
+                Items.STATIUS_WARHAMMER_DEG, Items.STATIUS_FULL_HELM_DEG, Items.STATIUSS_PLATEBODY_DEG, Items.STATIUSS_PLATELEGS_DEG,
+                Items.ZURIELS_STAFF_DEG, Items.ZURIELS_HOOD_DEG, Items.ZURIELS_ROBE_TOP_DEG, Items.ZURIELS_ROBE_BOTTOM_DEG,
+                Items.MORRIGANS_COIF_DEG, Items.MORRIGANS_LEATHER_BODY_DEG, Items.MORRIGANS_LEATHER_CHAPS_DEG,
+            ) + NexArmour.TORVA.flatMap { listOf(it.usedId, it.brokenId) }
         val missing = expectedSources.filter { it !in DeadmanGear.CONVERT }
         assertTrue(missing.isEmpty(), "not converted: $missing")
+        assertEquals(expectedSources.toSet(), DeadmanGear.CONVERT.keys)
+        RemovedItems.CORRUPT_IDS.forEach { id ->
+            assertNull(DeadmanGear.target(id, DEFINITIONS), "corrupt $id must reach the purge unchanged")
+            val def = DEFINITIONS.get(ItemDef::class.java, id)
+            if (def.noteLinkId > 0) assertNull(DeadmanGear.target(def.noteLinkId, DEFINITIONS), "noted corrupt $id")
+        }
         fun base(name: String) =
             name.lowercase().replace("corrupt ", "").replace("c. ", "").replace(" (deg)", "").replace(" (broken)", "").replace("statius' ", "statius's ").trim()
         val wrong =
@@ -81,11 +90,11 @@ class DeadmanGearTests {
         val changed = DeadmanGear.migrate(player)
 
         assertEquals(Items.VESTAS_LONGSWORD, player.inventory[0]?.id)
-        assertEquals(Items.STATIUSS_PLATEBODY, player.inventory[1]?.id)
-        assertNull(player.inventory[2], "the converted noted stack joined the existing noted stack")
-        assertEquals(Item(Items.DRAGON_MED_HELM_NOTED, 5).let { it.id to it.amount }, player.inventory[3]!!.let { it.id to it.amount })
+        assertEquals(Items.CORRUPT_STATIUSS_PLATEBODY, player.inventory[1]?.id)
+        assertEquals(Items.CORRUPT_DRAGON_MED_HELM_NOTED to 3, player.inventory[2]!!.let { it.id to it.amount })
+        assertEquals(Item(Items.DRAGON_MED_HELM_NOTED, 2).let { it.id to it.amount }, player.inventory[3]!!.let { it.id to it.amount })
         assertEquals(Items.ABYSSAL_WHIP, player.inventory[4]?.id)
-        assertEquals(Items.MORRIGANS_THROWING_AXE to 40, player.inventory[5]!!.let { it.id to it.amount })
+        assertEquals(Items.C_MORRIGANS_THROWING_AXE to 40, player.inventory[5]!!.let { it.id to it.amount })
         assertEquals(Items.TORVA_PLATEBODY, player.equipment[4]?.id)
         assertEquals(Items.VESTAS_SPEAR, player.equipment[3]?.id)
         assertTrue(player.equipment[3]!!.attr.isEmpty(), "stale charges removed")
@@ -93,14 +102,18 @@ class DeadmanGearTests {
         assertEquals(listOf(Items.ZURIELS_ROBE_TOP to 2, Items.MORRIGANS_COIF to 1, Items.TORVA_FULL_HELM to 1),
             (0 until 3).map { player.bank[it]!!.let { i -> i.id to i.amount } })
         assertNull(player.bank[3])
-        assertEquals(Items.ZURIELS_STAFF, player.gravestone[0]?.id)
+        assertEquals(Items.CORRUPT_ZURIELS_STAFF_DEG, player.gravestone[0]?.id)
         assertEquals(Items.STATIUSS_WARHAMMER, player.deathRecovery[0]?.id)
-        assertEquals(11, changed)
+        assertEquals(7, changed)
         // Running it again changes nothing.
         assertEquals(0, DeadmanGear.migrate(player))
-        // The purge that follows at login keeps every converted (normal) item.
-        assertEquals(0, RemovedItems.purge(player))
-        assertEquals(Items.STATIUSS_PLATEBODY, player.inventory[1]?.id)
+        // N457: only the four corrupt stacks disappear, without joining any normal stack.
+        assertEquals(4, RemovedItems.purge(player))
+        assertNull(player.inventory[1])
+        assertNull(player.inventory[2])
+        assertNull(player.inventory[5])
+        assertNull(player.gravestone[0])
+        assertEquals(2, player.inventory[3]?.amount)
     }
 
     @Test
@@ -159,7 +172,7 @@ class DeadmanGearTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            LIBRARY = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            LIBRARY = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString())
             DEFINITIONS.loadAll(LIBRARY)
         }
 

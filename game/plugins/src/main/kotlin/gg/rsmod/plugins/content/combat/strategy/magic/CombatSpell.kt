@@ -6,7 +6,7 @@ import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 
-private val ZURIELS_STAVES = intArrayOf(Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG, Items.CORRUPT_ZURIELS_STAFF, Items.CORRUPT_ZURIELS_STAFF_DEG)
+private val ZURIELS_STAVES = intArrayOf(Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG)
 private const val ZURIELS_MESSAGE = "You need to be wielding Zuriel's staff to cast this spell."
 
 /**

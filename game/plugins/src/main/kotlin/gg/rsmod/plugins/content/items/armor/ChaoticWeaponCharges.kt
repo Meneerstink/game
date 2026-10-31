@@ -11,10 +11,10 @@ import gg.rsmod.plugins.api.cfg.Items
  * guessed. Neither donor's own generic degrade engine exposed the exact per-hit/per-tick
  * decrement granularity for its "deplete" system in a form this session could locate (2 targeted
  * codegraph searches, R9 cap), so this reuses the identical decrement cadence already shipped and
- * working for PvP armour in [CorruptArmorCharges] (1 charge per combat timer tick while attacking
+ * working in [EquipmentDegradation] (1 charge per combat timer tick while attacking
  * or being attacked) rather than inventing a different rate.
  *
- * Unlike corrupt/PvP armour, a broken chaotic weapon is terminal here (it does not itself further
+ * A broken chaotic weapon is terminal here (it does not itself further
  * deplete into dust) - per the toml, `_broken` items carry no `charges`/`degrade` fields of their
  * own. Repairing a broken chaotic weapon (Dungeoneering token cost) is out of scope for this
  * batch; see Q-020 (assembly/dismantling/repair).

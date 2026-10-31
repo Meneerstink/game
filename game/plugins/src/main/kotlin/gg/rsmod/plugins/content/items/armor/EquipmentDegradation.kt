@@ -16,7 +16,7 @@ import gg.rsmod.plugins.content.combat.isAttacking
 import gg.rsmod.plugins.content.combat.isBeingAttacked
 
 /**
- * RCV-011 Q-019 root cause: combat degradation was three copies of the same timer (Barrows, PvP/corrupt, chaotics),
+ * RCV-011 Q-019 root cause: combat degradation was three copies of the same timer (Barrows, PvP armour, chaotics),
  * each with its own loop and id handling, and every family nobody had copied it for (the Nex sets) never degraded.
  * This is the one table-driven model for every combat-degrading worn item, the same shape as Void's `Degradation`
  * (`charges` + `degrade` per item, depleted per combat tick) and Novite's `ChargesManager.process` (every tick).
@@ -28,8 +28,8 @@ import gg.rsmod.plugins.content.combat.isBeingAttacked
  * Values per family (sources and conflicts):
  * - Barrows/Akrisae: pristine → 100 on the first combat tick, then 22,500 ticks per stage to 0 (Void rows + 2011 wiki
  *   15 hours). SOURCE_CONFLICT: Novite uses 1,000 ticks per stage; Void only charges the 100 stage.
- * - Vesta/Statius/Zuriel/Morrigan, corrupt PvP and corrupt dragon: NO LONGER DEGRADE (owner 2026-10-11, OSRS Deadman Mode:
- *   "released with their degradation mechanic removed", no corrupt versions) - see [DeadmanGear].
+ * - Vesta/Statius/Zuriel/Morrigan: NO LONGER DEGRADE (owner 2026-10-11, OSRS Deadman Mode:
+ *   "released with their degradation mechanic removed") - see [DeadmanGear].
  * - Chaotics: 30,000 combat ticks then broken (Void).
  * - Torva: NO LONGER DEGRADES (owner 2026-10-11, OSRS Torva). Pernix/Virtus/Zaryte bow: pristine → used (id + 2) on the first combat tick (Novite
  *   `getDegradeItemWhenCombating`, Void), used → broken (id + 1) after 60,000 combat ticks (Void; the broken ids exist in
@@ -63,8 +63,8 @@ object DegradeTable {
     val rows: List<DegradeRow> =
         buildList {
             // Barrows, Moon armour and the Amulet of the damned degrade by OSRS points instead (CombatPoints).
-            // Owner 2026-10-11 (OSRS Deadman Mode, DeadmanGear): Vesta's / Statius's / Zuriel's / Morrigan's and every corrupt
-            // piece never degrade (no CorruptArmor rows any more), and neither does Torva (no Torva rows below).
+            // Owner 2026-10-11 (OSRS Deadman Mode, DeadmanGear): Vesta's / Statius's / Zuriel's / Morrigan's
+            // never degrade, and neither does Torva. N457: corrupt gear has been removed completely.
             ChaoticWeapon.values().forEach { weapon ->
                 add(DegradeRow(weapon.chargedId, weapon.brokenId, ChaoticWeaponCharges.MAX_CHARGES) { name -> "<col=ff0000>Your $name has degraded and broken." })
             }

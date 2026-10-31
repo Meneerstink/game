@@ -110,7 +110,6 @@ object DeadmanSuite : Conformance.Suite {
         scenario("aoe") { areaAttacks(run, arena) }
         scenario("familiar") { familiarRules(run, arena) }
         scenario("corp") { corpCave(run) }
-        scenario("corrupt") { corruptSpecials(run, arena) }
         scenario("vine") { vineCall(run, arena) }
         scenario("remote") { remoteRoutes(run) }
         scenario("duel") { stakedDuel(run) }
@@ -1846,42 +1845,6 @@ object DeadmanSuite : Conformance.Suite {
             a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
             if (normalDelay < 0) run.notTested(e, "next attack 1 tick faster", "no normal throw seen")
             else run.check(e, "a landed Hamstring makes the next attack 1 tick faster", specialDelay, "OSRS Wiki 12 March 2025 update (normal throw $normalDelay)" to normalDelay - 1)
-        }
-    }
-
-    // ---- corrupt: Morrigan's javelin and throwing axe carry their special (owner 2026-10-01, Novite). Owner 2026-10-11 (OSRS
-    // Deadman Mode, no corrupt versions): the corrupt copies became the normal items (DeadmanGear), so the normal ones are measured.
-
-    private suspend fun QueueTask.corruptSpecials(
-        run: Conformance.Run,
-        arena: Tile,
-    ) {
-        val e = "corrupt"
-        val a = run.bot(arena.transform(-3, -6), "KA")
-        val b = run.bot(arena.transform(0, -6), "KB")
-        wait(2)
-        for ((weapon, cost) in listOf(Items.MORRIGANS_THROWING_AXE to 25, Items.MORRIGANS_JAVELIN to 50)) {
-            reset(a, arena.transform(-3, -6))
-            reset(b, arena.transform(0, -6))
-            wield(a, Item(weapon, 100))
-            var spent = 0
-            for (attempt in 0 until 4) {
-                AttackTab.setEnergy(a, 100)
-                a.setVarp(AttackTab.SPECIAL_ATTACK_VARP, 1)
-                a.attack(b)
-                for (t in 0 until 8) {
-                    b.setCurrentLifepoints(b.getMaximumLifepoints())
-                    wait(1)
-                    if (AttackTab.getEnergy(a) < 100) { spent = 100 - AttackTab.getEnergy(a); break }
-                }
-                a.resetInteractions(); Combat.reset(a); b.resetInteractions(); Combat.reset(b)
-                if (spent > 0) break
-                wait(4)
-            }
-            run.check(e, "item $weapon performs its special", spent, "Novite PlayerCombat: Morrigan's thrown weapons' special" to cost)
-            b.attr.remove(gg.rsmod.game.model.attr.HAMSTRING)
-            b.attr.remove(gg.rsmod.game.model.attr.PHANTOM_STRIKE_BLEED)
-            wait(12)
         }
     }
 

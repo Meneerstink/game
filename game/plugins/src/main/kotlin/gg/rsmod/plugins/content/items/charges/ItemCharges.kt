@@ -17,7 +17,7 @@ import gg.rsmod.plugins.api.ext.message
  * with `OpHeld3Handler`'s `Unhandled item action` fallback.
  *
  * Charges are read from [ItemAttribute.CHARGES], the single generic charge store this server
- * already uses (brawling gloves in `PlayerExt`, corrupt/PvP armour in `CorruptArmorCharges`). None
+ * already uses (brawling gloves in `PlayerExt`). None
  * of the 46 items above consume charges yet, so in practice they all still carry no attribute and
  * report as fully charged - which is exactly what they are. The read-out starts reporting real
  * numbers the moment any of those degradation models is implemented, without touching this file.

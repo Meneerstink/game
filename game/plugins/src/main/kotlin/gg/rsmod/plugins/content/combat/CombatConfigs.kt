@@ -80,8 +80,6 @@ object CombatConfigs {
             Items.DRAGON_DAGGER_P,
             Items.DRAGON_DAGGER_P_5680,
             Items.DRAGON_DAGGER_P_5698,
-            Items.C_DRAGON_DAGGER_DEG,
-            Items.CORRUPT_DRAGON_DAGGER,
         )
 
     fun getCombatStrategy(pawn: Pawn): CombatStrategy =

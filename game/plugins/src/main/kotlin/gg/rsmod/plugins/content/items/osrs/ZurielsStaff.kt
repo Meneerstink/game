@@ -9,14 +9,14 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
 import kotlin.math.floor
 
 /**
- * Audit I-08: the OSRS passives of Zuriel's staff (all four item ids: normal, degraded and the corrupt versions) on Ancient Magicks:
+ * Audit I-08: the OSRS passives of Zuriel's staff (normal and degraded item ids) on Ancient Magicks:
  * blood spells heal 50 % more, ice spells get +10 % accuracy and a longer freeze.
  *
  * Not implemented: the audit's "Ancient Magicks cast speed 4" - that value could not be confirmed, so the 5-tick spell speed stays.
  */
 object ZurielsStaff {
     val STAVES: Set<Int> =
-        setOf(Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG, Items.CORRUPT_ZURIELS_STAFF, Items.CORRUPT_ZURIELS_STAFF_DEG)
+        setOf(Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG)
 
     /** Blood spells heal 50 % more (OSRS Wiki "Zuriel's staff"). */
     const val BLOOD_HEAL_MULTIPLIER = 1.5

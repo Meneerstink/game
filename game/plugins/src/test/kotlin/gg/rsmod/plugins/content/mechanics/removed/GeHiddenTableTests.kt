@@ -28,9 +28,9 @@ class GeHiddenTableTests {
         }
         val table = file.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.trim().toInt() }.toSortedSet()
         assertEquals(ids, table, "ge_hidden.txt is out of date: regenerate it (see the class comment)")
-        listOf(Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN, Items.PERNIX_BODY, Items.VIRTUS_MASK, Items.ARMADYL_RUNE).forEach {
+        listOf(Items.ZARYTE_BOW, Items.ZARYTE_BOW_20173, Items.ZARYTE_BOW_BROKEN, Items.PERNIX_BODY, Items.VIRTUS_MASK, Items.ARMADYL_RUNE, Items.CORRUPT_DRAGON_DAGGER, Items.C_DRAGON_DAGGER_DEG, Items.CORRUPT_VESTAS_CHAINBODY_DEG).forEach {
             assertTrue(it in table, "$it hidden")
         }
-        listOf(Items.ZARYTE_CROSSBOW, Items.TORVA_PLATEBODY, Items.ABYSSAL_WHIP).forEach { assertFalse(it in table, "$it stays on the GE") }
+        listOf(Items.ZARYTE_CROSSBOW, Items.TORVA_PLATEBODY, Items.ABYSSAL_WHIP, Items.VESTAS_LONGSWORD, Items.DRAGON_DAGGER).forEach { assertFalse(it in table, "$it stays on the GE") }
     }
 }
