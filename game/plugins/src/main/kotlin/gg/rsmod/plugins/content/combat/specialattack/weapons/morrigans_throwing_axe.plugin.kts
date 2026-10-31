@@ -15,7 +15,7 @@ on_timer(HAMSTRING_TIMER) {
 }
 
 /**
- * Hamstring, Deadman Mode variant (owner 2026-10-01: adopt it, also on the corrupt axe). OSRS Wiki "Morrigan's throwing axe (Deadman
+ * Hamstring, Deadman Mode variant (owner 2026-10-01: adopt it). OSRS Wiki "Morrigan's throwing axe (Deadman
  * Mode)": "consumes 25% of the player's special attack energy", "deals between 20% and 120% of the user's max hit", a landed special
  * makes the attacker's next attack 1 tick faster (12 March 2025 update: "Successfully landing the attack now reduces the player's attack
  * delay by 1 tick for the next attack"), against players "For the next minute, your run energy will drain 6x faster".
@@ -24,7 +24,7 @@ val HAMSTRING_ENERGY = 25
 val HAMSTRING_MIN = 0.2
 val HAMSTRING_MAX = 1.2
 
-SpecialAttacks.register(HAMSTRING_ENERGY, Items.MORRIGANS_THROWING_AXE, Items.C_MORRIGANS_THROWING_AXE) {
+SpecialAttacks.register(HAMSTRING_ENERGY, Items.MORRIGANS_THROWING_AXE) {
     player.animate(Anims.MORRIGANS_THROWING_AXE_SPECIAL)
     player.graphic(Gfx.MORRIGANS_THROWING_AXE_SPECIAL, 0, 0)
     val proj = player.createProjectile(

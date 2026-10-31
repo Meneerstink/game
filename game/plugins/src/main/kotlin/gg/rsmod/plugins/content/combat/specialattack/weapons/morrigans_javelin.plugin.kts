@@ -43,9 +43,8 @@ on_timer(PHANTOM_STRIKE_TIMER) {
 }
 
 
-// Owner 2026-10-01: the corrupt javelins carry the same special (Novite gives both).
 SpecialAttacks.register(
-    50, *(RangedProjectile.MORRIGANS_JAVELIN.items + RangedProjectile.CORRUPT_MORRIGANS_JAVELIN.items).toIntArray(),
+    50, *RangedProjectile.MORRIGANS_JAVELIN.items.toIntArray(),
 ) {
     player.animate(Anims.MORRIGANS_JAVELIN_SPECIAL)
     val proj = player.createProjectile(player.tile, target.tile, RangedProjectile.MORRIGANS_JAVELIN.gfx, ProjectileType

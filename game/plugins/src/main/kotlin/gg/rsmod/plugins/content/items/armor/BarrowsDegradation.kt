@@ -9,7 +9,7 @@ import gg.rsmod.plugins.api.cfg.Items
  * degrades, in four visible steps (100 -> 75 -> 50 -> 25 -> 0). Only time spent attacking or
  * being attacked counts, so every stage is 3 hours 45 minutes of combat = 22,500 game cycles.
  * The pristine item (no suffix) becomes the "100" item on its first combat cycle, exactly like
- * the existing corrupt/PvP armour model in [CorruptArmorCharges]; the remaining cycles of the
+ * the shared combat timer in [EquipmentDegradation]; the remaining cycles of the
  * current stage live in [ItemAttribute.CHARGES] on the item, so they survive banking, death
  * and logout with the item.
  *

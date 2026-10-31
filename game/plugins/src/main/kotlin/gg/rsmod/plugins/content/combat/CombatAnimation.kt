@@ -191,8 +191,8 @@ enum class CombatAnimation(
     ),
 
     // Morrigan's javelins and throwing axes throw with their own sequences, not the generic thrown 929 (owner 2026-10-08, intro
-    // scene: "i saw the hit but not the weapon"): Darkan items config.json attackAnims 13879-13882 / 13953-13956 -> 10501,
-    // 13883 / 13957 -> 10504; Novite 667 PlayerCombat.getWeaponAttackEmote "javelin" 10501, "morrigan's throwing axe" 10504.
+    // scene: "i saw the hit but not the weapon"): Darkan items config.json attackAnims 13879-13882 -> 10501,
+    // 13883 -> 10504; Novite 667 PlayerCombat.getWeaponAttackEmote "javelin" 10501, "morrigan's throwing axe" 10504.
     MORRIGANS_JAVELIN(
         style(CombatStyle.FIRST, Animation(10501)),
         style(CombatStyle.SECOND, Animation(10501)),
@@ -201,7 +201,6 @@ enum class CombatAnimation(
         itemIds =
             listOf(
                 Items.MORRIGANS_JAVELIN, Items.MORRIGANS_JAVELIN_P, Items.MORRIGANS_JAVELIN_P_13881, Items.MORRIGANS_JAVELIN_P_13882,
-                Items.CORRUPT_MORRIGANS_JAVELIN, Items.C_MORRIGANS_JAVELIN_P, Items.C_MORRIGANS_JAVELIN_P_13955, Items.C_MORRIGANS_JAVELIN_P_13956,
             ),
     ),
     MORRIGANS_THROWING_AXE(
@@ -209,7 +208,7 @@ enum class CombatAnimation(
         style(CombatStyle.SECOND, Animation(10504)),
         style(CombatStyle.THIRD, Animation(10504)),
         weaponType = WeaponType.THROWN,
-        itemIds = listOf(Items.MORRIGANS_THROWING_AXE, Items.C_MORRIGANS_THROWING_AXE),
+        itemIds = listOf(Items.MORRIGANS_THROWING_AXE),
     ),
 
     DEFENDERS(
@@ -233,7 +232,7 @@ enum class CombatAnimation(
             ),
     ),
 
-    // Owner 2026-09-29 (D5) "vesta longsword verdwijnt ook als je ermee attackt": Vesta's longsword (and its deg / corrupt ids) plays
+    // Owner 2026-09-29 (D5) "vesta longsword verdwijnt ook als je ermee attackt": Vesta's longsword (and its deg id) plays
     // its own sequences - Void 667 weapon_animations.toml [vestas_longsword]: default 12311, lunge 12310, defend 388
     // (melee.anims.toml); Novite 667 PlayerCombat.getWeaponAttackEmote "longsword": style 2 (Lunge) 12310, else 12311. The
     // cache style set is 6 (Chop / Slash / Lunge / Block, item param 686), so the third box is the lunge.
@@ -245,7 +244,7 @@ enum class CombatAnimation(
         blockAnimation = Animation(388),
         weaponType = WeaponType.LONG_SWORD,
         equipType = EquipmentType.WEAPON,
-        itemIds = listOf(Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG, Items.CORRUPT_VESTAS_LONGSWORD, Items.C_VESTAS_LONGSWORD_DEG),
+        itemIds = listOf(Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG),
     ),
     // (Declared last on purpose: getItemAnimation's weapon-type fallback takes the FIRST entry of a type, which must stay LONGSWORD.)
     ;

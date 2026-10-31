@@ -12,8 +12,6 @@ SpecialAttacks.register(
     Items.DRAGON_DAGGER_P,
     Items.DRAGON_DAGGER_P_5680,
     Items.DRAGON_DAGGER_P_5698,
-    Items.CORRUPT_DRAGON_DAGGER,
-    Items.C_DRAGON_DAGGER_DEG,
 ) {
     player.animate(Anims.DRAGON_DAGGER_SPECIAL)
     player.graphic(Gfx.DRAGON_DAGGER_SPECIAL, height = 92)

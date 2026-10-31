@@ -60,18 +60,17 @@ class OwnerBuglist20261003CombatTests {
     /**
      * The client draws the combat tab from the cache's item param 686; the server picked styles and animations from items.yml
      * `weapon_type`. Vesta's longsword was 5 (dagger: Stab/Lunge/Slash/Block) in items.yml but 6 (Chop/Slash/Lunge/Block) in the
-     * cache, so the server played the dagger lunge on Chop/Slash. Every PvP weapon (and its corrupt / deg ids) must agree.
+     * cache, so the server played the dagger lunge on Chop/Slash. Every PvP weapon (and its deg ids) must agree.
      */
     @Test
     fun `every PvP weapon's server style set is the cache style set the client shows`() {
         val pvpWeapons =
             listOf(
-                Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG, Items.CORRUPT_VESTAS_LONGSWORD, Items.C_VESTAS_LONGSWORD_DEG,
-                Items.VESTAS_SPEAR, Items.VESTAS_SPEAR_DEG, Items.CORRUPT_VESTAS_SPEAR, Items.CORRUPT_VESTAS_SPEAR_DEG,
-                Items.STATIUSS_WARHAMMER, Items.STATIUS_WARHAMMER_DEG, Items.CORRUPT_STATIUSS_WARHAMMER, Items.C_STATIUSS_WARHAMMER_DEG,
-                Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG, Items.CORRUPT_ZURIELS_STAFF, Items.CORRUPT_ZURIELS_STAFF_DEG,
+                Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG,
+                Items.VESTAS_SPEAR, Items.VESTAS_SPEAR_DEG,
+                Items.STATIUSS_WARHAMMER, Items.STATIUS_WARHAMMER_DEG,
+                Items.ZURIELS_STAFF, Items.ZURIELS_STAFF_DEG,
                 Items.MORRIGANS_JAVELIN, Items.MORRIGANS_THROWING_AXE,
-                Items.CORRUPT_DRAGON_LONGSWORD, Items.C_DRAGON_LONGSWORD_DEG,
             )
         val wrong =
             pvpWeapons.mapNotNull { id ->
@@ -86,7 +85,7 @@ class OwnerBuglist20261003CombatTests {
     /** Void 667 [vestas_longsword] default 12311 / lunge 12310 / defend 388; Novite: Lunge box 12310, the rest 12311. */
     @Test
     fun `every Vesta's longsword id swings its own sourced sequences in every style box`() {
-        val ids = listOf(Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG, Items.CORRUPT_VESTAS_LONGSWORD, Items.C_VESTAS_LONGSWORD_DEG)
+        val ids = listOf(Items.VESTAS_LONGSWORD, Items.VESTAS_LONGSWORD_DEG)
         ids.forEach { id ->
             val player = meleePlayer(id)
             val swings = (0..3).map { box -> player.setStyle(box); CombatConfigs.getAttackAnimation(player) }
@@ -123,7 +122,6 @@ class OwnerBuglist20261003CombatTests {
         val pairs =
             listOf(
                 Items.VESTAS_LONGSWORD to Items.VESTAS_LONGSWORD_DEG,
-                Items.CORRUPT_VESTAS_LONGSWORD to Items.C_VESTAS_LONGSWORD_DEG,
                 Items.VESTAS_SPEAR to Items.VESTAS_SPEAR_DEG,
                 Items.STATIUSS_WARHAMMER to Items.STATIUS_WARHAMMER_DEG,
                 Items.ZURIELS_STAFF to Items.ZURIELS_STAFF_DEG,
@@ -337,7 +335,7 @@ class OwnerBuglist20261003CombatTests {
         listOf(889, 890, 891).forEach { assertTrue(texts.getValue(it).endsWith("by 10%, increasing to 20% over time."), texts.getValue(it)) }
         assertTrue(texts.getValue(904).contains("${AncientCurses.LEECH_SPECIAL_PCT}%"), texts.getValue(904))
         assertTrue(texts.getValue(897).contains("${AncientCurses.DEFLECT_REFLECT_CHANCE_PCT.toInt()}% chance"), texts.getValue(897))
-        assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "data", "cache").toFile().toString()).isEmpty(), "tooltips applied to the game cache")
+        assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString()).isEmpty(), "tooltips applied to the game cache")
         assertTrue(gg.rsmod.game.tools.importer.CurseTooltipCacheTool.plan(Paths.get("..", "..", "..", "..", "file-server", "cache").toFile().toString()).isEmpty(), "tooltips applied to the file-server cache")
     }
 
@@ -369,7 +367,7 @@ class OwnerBuglist20261003CombatTests {
         @BeforeClass
         @JvmStatic
         fun load() {
-            STORE = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            STORE = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString())
             DEFINITIONS.load(STORE, ItemDef::class.java)
             val root = ObjectMapper(YAMLFactory()).readTree(Paths.get("..", "..", "data", "cfg", "items.yml").toFile())
             YML = root.associateBy { it.path("id").asInt() }
