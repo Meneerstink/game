@@ -143,3 +143,9 @@ Altar.values.forEach { altar ->
         }
     }
 }
+
+// N11 (2026-10-31, item-option census): the Elemental talisman's Locate did nothing. It belongs to no single altar - 667 Void donor
+// Talismans.kt answers with this message instead of a direction.
+on_item_option(item = Items.ELEMENTAL_TALISMAN, option = "locate") {
+    player.message("You cannot tell which direction the talisman is pulling...")
+}
