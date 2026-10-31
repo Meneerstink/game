@@ -35,6 +35,8 @@ object Potions {
         potion: Potion,
         slot: Int,
     ) {
+        // A stale click must not remove the same id from another slot (ItemContainer.remove scans forward).
+        if (player.inventory[slot]?.id != potion.item) return
         if (!canDrink(player) ||
             gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(
                 player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.DRINK,

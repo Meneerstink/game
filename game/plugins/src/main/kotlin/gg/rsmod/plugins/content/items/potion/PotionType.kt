@@ -22,6 +22,12 @@ enum class PotionType(
     val alterStrategy: Array<String> = emptyArray(),
     val message: String = "",
 ) {
+    // https://oldschool.runescape.wiki/w/Relicym%27s_balm
+    // N11: no player disease state exists here. Consume normally; never cure poison or restore drained skills.
+    RELICYMS_BALM {
+        override fun apply(p: Player) = Unit
+    },
+
     STRENGTH(alteredSkills = intArrayOf(Skills.STRENGTH), alterStrategy = arrayOf("r")) {
         override fun apply(p: Player) {
             applyBoost(p, alteredSkills, alterStrategy)
