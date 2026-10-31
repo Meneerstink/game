@@ -15,7 +15,23 @@ enum class CombinationData(
     val levelRequired: Int = 1,
     val experience: Double,
     val message: String? = null,
+    /** Quantities for a stack recipe; ordinary attachment rows retain their existing one-of-each route. */
+    val quantities: Map<Int, Int> = emptyMap(),
+    val inventoryOption: String? = null,
+    val missingMessage: String? = null,
 ) {
+    // Source: https://runescape.wiki/w/Shards_of_Armadyl (Products: 77 Crafting, 150 XP).
+    // Darkan InventoryOptionsHandler:301 supplies the two messages, but omits the Wiki skill/XP requirements.
+    ARMADYL_ORB(
+        items = intArrayOf(Items.SHARDS_OF_ARMADYL),
+        resultItem = Items.ORB_OF_ARMADYL,
+        levelRequired = 77,
+        experience = 150.0,
+        quantities = mapOf(Items.SHARDS_OF_ARMADYL to 100),
+        inventoryOption = "Combine",
+        message = "You combine the shards into an orb.",
+        missingMessage = "You need 100 shards to create an orb.",
+    ),
     STRANGE_SKULL(
         items = intArrayOf(Items.LEFT_SKULL_HALF, Items.RIGHT_SKULL_HALF),
         resultItem = Items.STRANGE_SKULL,
