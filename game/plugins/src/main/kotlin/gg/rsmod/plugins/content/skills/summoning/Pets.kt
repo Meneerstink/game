@@ -317,7 +317,7 @@ object Pets {
 
     fun itemOf(player: Player): Int? = player.attr[PET_ITEM_ATTR]
 
-    fun hasFollower(player: Player): Boolean = Familiar.current(player) != null || current(player) != null
+    fun hasFollower(player: Player): Boolean = Familiar.current(player) != null || current(player) != null || isHidden(player)
 
     private fun spawn(
         player: Player,
@@ -354,6 +354,10 @@ object Pets {
         slot: Int,
     ): Boolean {
         val variant = variantOfItem(item) ?: return false
+        PetPlaces.dropRefusal(player)?.let {
+            player.message(it)
+            return true
+        }
         if (hasFollower(player)) {
             player.message("You already have a follower.")
             return true
@@ -437,6 +441,22 @@ object Pets {
             }
             else -> player.message("You don't have enough inventory or bank space to do that.")
         }
+    }
+
+    /**
+     * A place the pet can't follow puts it in the backpack, quietly (N407 point 15: the Ape Atoll Agility Course, [PetPlaces]).
+     * False - nothing moved - when the backpack is full or an Upgraded pet is carrying items (those would go to Death's Office).
+     */
+    fun stow(player: Player): Boolean {
+        val npc = current(player) ?: return false
+        val item = itemOf(player)?.let { i -> variantOfItem(i)?.let { shownItem(player, it) } ?: i } ?: return false
+        if (!player.inventory.hasSpace) return false
+        if (BeastOfBurden.isUpgradedPetOut(player) && BeastOfBurden.storedCount(player) > 0) return false
+        val at = npc.tile
+        clear(player)
+        player.inventory.add(item, 1, assureFullInsertion = true)
+        sound(player, PICK_UP_SOUND, at)
+        return true
     }
 
     /** "Call Follower": the pet is placed beside its owner. */
@@ -668,7 +688,17 @@ object Pets {
 
     /** Once per cycle (familiar tick): follow like a familiar, without a familiar's arrival effect on a recovery teleport. */
     fun tick(player: Player) {
+        // N407 point 15: a minigame hides the pet ([PetPlaces]); it is out again beside its owner once they leave.
+        if (isHidden(player)) {
+            if (PetPlaces.hiddenArea(player) == null) unhide(player)
+            return
+        }
         val npc = current(player) ?: return
+        if (PetPlaces.hiddenArea(player) != null) {
+            hide(player)
+            player.message(PetPlaces.MSG_HIDDEN)
+            return
+        }
         // A pet brought along after its owner TELEPORTED is heard arriving (N298) - not on the catch-up a walking pet gets every
         // dozen tiles behind a running owner, which would make it sound every few seconds.
         val teleported = npc.tile.height != player.tile.height || !npc.tile.isWithinRadius(player.tile, TELEPORT_DISTANCE)
@@ -685,10 +715,36 @@ object Pets {
     fun disconnect(player: Player) {
         current(player)?.let { player.world.remove(it) }
         player.attr.remove(PET_ATTR)
+        player.attr.remove(HIDDEN_ATTR)
+    }
+
+    /** Set while a minigame hides the pet ([PetPlaces.HiddenArea]): no npc out, [PET_ITEM_ATTR] still names it. Not saved. */
+    private val HIDDEN_ATTR = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+    fun isHidden(player: Player): Boolean = player.attr[HIDDEN_ATTR] == true
+
+    private fun hide(player: Player) {
+        FamiliarInventory.close(player)
+        current(player)?.let { player.world.remove(it) }
+        player.attr.remove(PET_ATTR)
+        player.attr[HIDDEN_ATTR] = true
+        Familiar.updateHud(player)
+    }
+
+    /** Out of the minigame: the pet follows again - or, with a familiar summoned meanwhile, goes to the backpack ([restoreOnLogin]). */
+    private fun unhide(player: Player) {
+        player.attr.remove(HIDDEN_ATTR)
+        restoreOnLogin(player)
     }
 
     fun restoreOnLogin(player: Player) {
         val item = itemOf(player) ?: return
+        if (current(player) != null) return
+        if (PetPlaces.hiddenArea(player) != null) {
+            // Logged in inside a minigame that hides pets: it stays hidden until they leave.
+            player.attr[HIDDEN_ATTR] = true
+            return
+        }
         val variant = variantOfItem(item)
         if (variant == null) {
             // A pet the table no longer knows: give the item back rather than lose it.

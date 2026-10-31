@@ -23,6 +23,14 @@ on_timer(NEX_CYCLE_TIMER) {
 on_obj_option(obj = Objs.LANDSLIDE, option = "Climb-over") { enterNexArena(player) }
 
 fun enterNexArena(player: Player) {
+    // N407 point 15 (OSRS Wiki "Pet", Restrictions): no pet into Nex's prison, following or in the backpack.
+    val pets = gg.rsmod.plugins.content.skills.summoning.PetPlaces
+    val refused = {
+        val pet = gg.rsmod.plugins.content.skills.summoning.Pets.current(player) != null || pets.carriesPet(player)
+        if (pet) player.message(pets.MSG_NEX)
+        pet
+    }
+    if (refused()) return
     player.queue {
         messageBox(
             "The room beyond this point is a prison!",
@@ -31,7 +39,7 @@ fun enterNexArena(player: Player) {
         )
         val fighting = NexEncounter.players().size
         val option = options("Climb down.", "Stay here.", title = "Join $fighting ${if (fighting == 1) "person" else "people"} fighting?")
-        if (option == 1) {
+        if (option == 1 && !refused()) {
             player.moveTo(NexEncounter.ENTRY_TILE)
             trackArena(player)
         }

@@ -102,8 +102,7 @@ PlayerHouse.Location.values().forEach { location ->
             when (val choice = options("Go to your house.", "Go to your house (building mode).", "Go to a friend's house.", "Never mind.")) {
                 1, 2 ->
                     DeadmanTimerGate.requestRoute(player, SevenSecondAction.Kind.PORTAL) {
-                        PohBuild.setBuildMode(player, choice == 2)
-                        enterHouse(player)
+                        if (PohBuild.setBuildMode(player, choice == 2)) enterHouse(player)
                     }
                 3 -> messageBox("Only a house's owner can enter it in this world.")
             }

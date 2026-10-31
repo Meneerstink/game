@@ -291,17 +291,26 @@ object PohBuild {
         }
     }
 
-    /** Building mode on or off (House Options, the house portal): saved, shown on the House Options panel, and the house reloads. */
+    /**
+     * Building mode on or off (House Options, the house portal): saved, shown on the House Options panel, and the house reloads.
+     * False when refused: a following pet must be picked up first (N407 point 15, OSRS Wiki "Pet", Restrictions).
+     */
     fun setBuildMode(
         player: Player,
         on: Boolean,
-    ) {
+    ): Boolean {
+        if (on && !PlayerHouse.isBuildMode(player) && gg.rsmod.plugins.content.skills.summoning.Pets.current(player) != null) {
+            player.message(gg.rsmod.plugins.content.skills.summoning.PetPlaces.MSG_BUILD_MODE)
+            player.setVarbit(PlayerHouse.BUILD_MODE_VARBIT, 0)
+            return false
+        }
         val changed = PlayerHouse.isBuildMode(player) != on
         player.attr[PlayerHouse.BUILD_MODE_ATTR] = on
         player.setVarbit(PlayerHouse.BUILD_MODE_VARBIT, if (on) 1 else 0)
         if (changed && PlayerHouse.ownsHouseAt(player)) {
             PlayerHouse.rebuild(player)
         }
+        return true
     }
 
 }

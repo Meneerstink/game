@@ -107,6 +107,8 @@ on_world_init {
             wait(1)
             if (!player.hasAgility(48, "You need to have an Agility level of 48.")) return@obstacle
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             player.message("The rock is covered in slime and you slip into the water...")
             player.animate(ANIM_STEPPING_STONE_JUMP)
             player.playSound(SFX_JUMP)
@@ -134,6 +136,8 @@ on_world_init {
             player.faceTile(target.tile)
             wait(1)
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             player.message("You reach for the tree trunk and lose your footing...")
             player.animate(ANIM_CLIMB_UP)
             player.playSound(SFX_LAND_FLATTER, delay = 20)
@@ -157,6 +161,8 @@ on_world_init {
             face(player, Direction.WEST)
             wait(1)
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             player.animate(ANIM_JUMP_ONTO_MONKEY_BARS)
             player.setRenderAnimation(Render.MONKEY_BARS)
             player.playSound(SFX_MONKEYBARS_ON)
@@ -183,6 +189,8 @@ on_world_init {
             player.faceTile(target.tile)
             wait(1)
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             player.setRenderAnimation(Render.CLIMBING)
             player.playSound(SFX_CLIMB_WALL, loops = 2)
             walkOverTile(player, Tile(2745, 2741), Render.CLIMBING)
@@ -207,6 +215,8 @@ on_world_init {
             walkToTile(player, Tile(2751, 2731))
             face(player, Direction.EAST)
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             player.message("You lose your grip on the vine!")
             player.animate(ANIM_FAIL_ROPE_SWING)
             animateLoc(world, target, LOC_ANIM_ROPE_SWING)
@@ -234,6 +244,8 @@ on_world_init {
             walkToTile(player, Tile(2758, 2734))
             // Void refuses after its first slide; here before it, so a refused player is never left on the clipped vine tile.
             if (player.wrongGreegree()) return@obstacle
+            // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet goes into the backpack.
+            if (!gg.rsmod.plugins.content.skills.summoning.PetPlaces.beforeApeAtollObstacle(player)) return@obstacle
             exactMove(player, Tile(2758, 2735), delay = 25, direction = Direction.NORTH_EAST)
             wait(1)
             player.message("You jump up to seize the vine...")

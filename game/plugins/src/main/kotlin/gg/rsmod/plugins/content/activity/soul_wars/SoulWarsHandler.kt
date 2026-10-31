@@ -31,6 +31,11 @@ object SoulWarsHandler {
             player.message("You cannot enter the lobby with a cape.")
             return false
         }
+        // N407 point 15 (OSRS Wiki "Pet", Restrictions): a pet in the backpack stays outside; a following one is hidden (PetPlaces).
+        if (gg.rsmod.plugins.content.skills.summoning.PetPlaces.carriesPet(player)) {
+            player.message(gg.rsmod.plugins.content.skills.summoning.PetPlaces.MSG_SOUL_WARS)
+            return false
+        }
         return true
     }
 

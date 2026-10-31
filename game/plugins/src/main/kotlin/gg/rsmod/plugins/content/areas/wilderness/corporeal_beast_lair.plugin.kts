@@ -90,6 +90,11 @@ on_obj_option(obj = Objs.ENTRANCE_37749, option = "go-through") {
         player.message("A magical force has stopped you from teleporting.")
         return@on_obj_option
     }
+    // N407 point 15 (OSRS Wiki "Pet", Restrictions): a following pet stays out; one in the backpack may come.
+    if (gg.rsmod.plugins.content.skills.summoning.Pets.current(player) != null) {
+        player.message(gg.rsmod.plugins.content.skills.summoning.PetPlaces.MSG_CORP_ENTER)
+        return@on_obj_option
+    }
     player.goThroughPassage(CORP_CAVE_ARRIVAL)
 }
 
