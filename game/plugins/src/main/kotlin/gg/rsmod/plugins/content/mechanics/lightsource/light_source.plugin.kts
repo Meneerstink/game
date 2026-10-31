@@ -91,3 +91,18 @@ fun getName(itemId: Int): String {
         "lantern"
     }
 }
+
+// N11 (2026-10-31, item-option census): item 595 "Torch" is a second lit torch id (not a LightSource row - adding it would bind
+// lighting the unlit torch twice). Its Extinguish did nothing; it goes out like the lit torch 594, to the unlit torch.
+on_item_option(item = Items.TORCH, option = "extinguish") {
+    if (player.tile.regionId == lumbridgeSwampCavesRegionId) {
+        player.message("Extinguishing the torch would leave you without a light source.")
+        return@on_item_option
+    }
+    val slot = player.getInteractingItemSlot()
+    if (player.inventory[slot]?.id != Items.TORCH) return@on_item_option
+    if (player.inventory.remove(Items.TORCH, beginSlot = slot).hasSucceeded()) {
+        player.inventory.add(Items.UNLIT_TORCH, beginSlot = slot)
+        player.filterableMessage("You extinguish the torch.")
+    }
+}

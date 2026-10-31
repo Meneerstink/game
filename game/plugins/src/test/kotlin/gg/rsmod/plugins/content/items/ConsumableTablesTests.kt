@@ -23,7 +23,8 @@ class ConsumableTablesTests {
 
     @Test
     fun `every Empty row is a cache item that offers Empty and empties into a real item`() {
-        val bad = rows("item_empty.tsv").filter { r -> !offers(r[0].toInt(), "Empty") || def(r[1].toInt()) == null }
+        // N11: burnt bowls/pies offer "Empty Bowl" / "Empty Dish" (empty_containers.plugin.kts EMPTY_OPTIONS).
+        val bad = rows("item_empty.tsv").filter { r -> listOf("Empty", "Empty Bowl", "Empty Dish").none { offers(r[0].toInt(), it) } || def(r[1].toInt()) == null }
         assertTrue(rows("item_empty.tsv").size > 250)
         assertTrue(bad.isEmpty(), "bad rows: ${bad.take(10)}")
     }

@@ -12,6 +12,9 @@ import java.io.File
  */
 val EMPTY_TABLE_PATH = "./data/cfg/item_empty.tsv"
 
+// N11 (2026-10-31): burnt bowls and pies name the option "Empty Bowl" / "Empty Dish" (Burnt stew, curry, gnomebowl, pie).
+val EMPTY_OPTIONS = listOf("Empty", "Empty Bowl", "Empty Dish")
+
 val EMPTIED: Map<Int, Int> =
     File(EMPTY_TABLE_PATH).takeIf { it.exists() }?.readLines().orEmpty()
         .filter { it.isNotBlank() && !it.startsWith("#") }
@@ -20,9 +23,9 @@ val EMPTIED: Map<Int, Int> =
 on_world_init_late {
     EMPTIED.forEach { (full, empty) ->
         val def = world.definitions.getNullable(ItemDef::class.java, full) ?: return@forEach
-        val index = def.inventoryMenu.indexOfFirst { it.equals("Empty", ignoreCase = true) }
+        val index = def.inventoryMenu.indexOfFirst { option -> EMPTY_OPTIONS.any { it.equals(option, ignoreCase = true) } }
         if (index < 0 || world.plugins.hasItemOption(full, index + 1)) return@forEach
-        on_item_option(item = full, option = "Empty") {
+        on_item_option(item = full, option = def.inventoryMenu[index]!!) {
             val slot = player.getInteractingSlot()
             if (player.inventory[slot]?.id != full) return@on_item_option
             player.inventory.remove(full, 1, beginSlot = slot)

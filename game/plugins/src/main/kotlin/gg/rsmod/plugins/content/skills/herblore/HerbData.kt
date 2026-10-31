@@ -260,8 +260,12 @@ enum class HerbData(
     ),
     ;
 
+    /** What cleaning one grimy herb needs and gives (the rows above and the quest herbs without a potion, clean_herb.plugin.kts). */
+    data class Cleaning(val grimy: Int, val clean: Int, val levelRequirement: Int, val experience: Double)
+
     companion object {
         val grimyHerbDefinitions = values().associateBy { it.grimy }
         val unfinishedPotionDefinitions = values().associateBy { it.unf }
+
     }
 }

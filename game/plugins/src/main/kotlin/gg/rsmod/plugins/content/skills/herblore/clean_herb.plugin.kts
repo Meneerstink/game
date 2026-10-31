@@ -8,11 +8,27 @@ grimyHerbDefinitions.values.forEach { unf ->
     }
 }
 
+/**
+ * N11 (2026-10-31, item-option census): two quest herbs a player can get here had a dead "Clean". They make no unfinished potion, so they
+ * stay out of [HerbData] (its unf table); OSRS Wiki Grimy snake weed / Grimy rogue's purse: Herblore 3, 2.5 XP.
+ */
+val QUEST_HERBS =
+    listOf(
+        HerbData.Cleaning(Items.GRIMY_SNAKE_WEED, Items.CLEAN_SNAKE_WEED, 3, 2.5),
+        HerbData.Cleaning(Items.GRIMY_ROGUES_PURSE, Items.CLEAN_ROGUES_PURSE, 3, 2.5),
+    ).associateBy { it.grimy }
+
+QUEST_HERBS.keys.forEach { grimy ->
+    on_item_option(item = grimy, option = "Clean") {
+        cleanHerb(player, grimy)
+    }
+}
+
 fun cleanHerb(
     player: Player,
     herb: Int,
 ) {
-    val def = grimyHerbDefinitions[herb] ?: return
+    val def = grimyHerbDefinitions[herb]?.let { HerbData.Cleaning(it.grimy, it.clean, it.levelRequirement, it.experience) } ?: QUEST_HERBS[herb] ?: return
     if (player.skills.getCurrentLevel(Skills.HERBLORE) < def.levelRequirement) {
         player.message(
             "You need level ${def.levelRequirement} Herblore to clean the ${player.world.definitions.get(
