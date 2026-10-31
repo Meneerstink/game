@@ -38,7 +38,7 @@ if (tentacleHas("Dissolve")) {
         val slot = player.getInteractingItemSlot()
         if (!AbyssalTentacle.isTentacle(player.inventory[slot]?.id)) return@on_item_option
         player.queue {
-            if (options("Yes, dissolve the whip.", "No.", title = "This will dissolve your whip immediately. The whip will be permanently lost.") != 1) {
+            if (options("Yes, dissolve the whip.", "No.", title = "Dissolve your whip? It will be permanently lost.") != 1) {
                 return@queue
             }
             if (!AbyssalTentacle.isTentacle(player.inventory[slot]?.id)) return@queue

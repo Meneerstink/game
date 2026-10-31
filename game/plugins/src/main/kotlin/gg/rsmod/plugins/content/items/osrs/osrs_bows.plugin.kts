@@ -257,7 +257,7 @@ if (bowHasOption(Items.BOW_OF_FAERDHINEN_C, "Uncharge", worn = false)) {
         if (player.inventory[slot]?.id != Items.BOW_OF_FAERDHINEN_C) return@on_item_option
         player.queue {
             val choice =
-                options("Yes, uncharge it.", "No, cancel.", title = "Revert the bow to its uncharged state? The crystal shards used are lost.")
+                options("Yes - the crystal shards used are lost.", "No, cancel.", title = "Revert the bow to its uncharged state?")
             if (choice != 1) return@queue
             if (player.inventory[slot]?.id != Items.BOW_OF_FAERDHINEN_C) return@queue
             player.inventory[slot] = Item(Items.BOW_OF_FAERDHINEN_INACTIVE)

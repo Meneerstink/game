@@ -115,6 +115,7 @@ suspend fun QueueTask.options(
         player.setComponentText(interfaceId = interfaceId, component = i + 2, text = optionsFiltered[i])
     }
     player.setComponentText(interfaceId = interfaceId, component = 1, text = title)
+    OptionTitleSwords.apply(player, interfaceId, title) // N499: never a title over its swords
     player.interfaces.optionsOpen = true
 
     terminateAction = closeDialog

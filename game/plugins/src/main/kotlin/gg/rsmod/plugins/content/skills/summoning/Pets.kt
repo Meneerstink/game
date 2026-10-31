@@ -385,8 +385,9 @@ object Pets {
     ): Boolean {
         if (!BeastOfBurden.isUpgradedPetOut(player) || BeastOfBurden.storedCount(player) == 0) return true
         player.queue {
-            // The title line holds about 40 characters between its two swords; the consequence goes into the answer.
-            if (options("Yes - its items go to Death's Office.", "No.", title = "Your pet is carrying items. Pick it up?") == 1) then()
+            // N499 (owner 2026-10-31 20:5x: "warning you have items stored in your bob ofzo"): the warning as the title (it takes the
+            // wide sword pair, OptionTitleSwords), the consequence in the answer.
+            if (options("Yes - its items go to Death's Office.", "No.", title = "Warning: items stored in your pet!") == 1) then()
         }
         return false
     }
