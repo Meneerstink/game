@@ -113,7 +113,9 @@ class ShopPriceLabelTests {
         assertTrue("containerKey = gg.rsmod.game.model.shop.Shop.PRICE_CONTAINER" in update && "shop.currency.priceOf(world, it)" in update, "updateShop sends the prices")
         val ext = File("src/main/kotlin/gg/rsmod/plugins/api/ext/PlayerExt.kt").readText()
         val open = ext.substringAfter("fun Player.openShop(").substringBefore("\nfun ")
-        assertTrue("setVarp(Varps.SHOP_CURRENCY, currentShop.currency.currencyItem)\n" in open, "the currency varp is always set, -1 included")
+        // N420: the varp carries the currency only when cache enum 200 has its icon, else -1 (a coin next to a ticket price was wrong).
+        assertTrue("currentShop.currency.currencyItem.takeIf { it in SHOP_CURRENCY_ICONS } ?: -1" in open, "the shown currency falls back to -1")
+        assertTrue("setVarp(Varps.SHOP_CURRENCY, shownCurrency)" in open, "the currency varp is always set, -1 included")
         assertTrue("items.size * gg.rsmod.game.tools.importer.ShopWindowScriptTool.CHILDREN_PER_ROW" in open)
         assertTrue("setting = gg.rsmod.game.model.shop.Shop.STOCK_EVENTS" in open, "openShop enables Buy X")
         val shopModel = File("../src/main/kotlin/gg/rsmod/game/model/shop/Shop.kt").readText()

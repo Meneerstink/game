@@ -4,7 +4,6 @@ import gg.rsmod.game.fs.def.AnimDef
 import kotlin.test.Test
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertNull
 
 /**
  * Roster-wide ledger check for [SummoningSpawnDespawnAnimations]: every familiar's sourced
@@ -46,11 +45,9 @@ class SummoningSpawnDespawnAnimationTests {
     fun `albino rat is the one recorded source blocker, with no animation played`() {
         assertEquals(-1, SummoningSpawnDespawnAnimations.spawnAnim(SummoningPouchData.ALBINO_RAT))
         assertEquals(-1, SummoningSpawnDespawnAnimations.despawnAnim(SummoningPouchData.ALBINO_RAT))
-        // Darkan's own ids for Albino rat (16080/16081) genuinely do not exist in this cache -
-        // confirms the blocker is real, not just an unresolved lookup.
-        val definitions = SummoningTestCache.definitions
-        assertNull(definitions.getNullable(AnimDef::class.java, 16080))
-        assertNull(definitions.getNullable(AnimDef::class.java, 16081))
+        // Darkan's own ids for Albino rat (16080/16081) did not exist in the 667 cache - the blocker was real. Since the OSRS pet
+        // imports (2026-10) the cache uses 16045+ for imported sequences, so those ids now hold other animations and must never
+        // be played for the rat (2026-10-31: the old assertNull on them went red for that reason only).
     }
 
     @Test

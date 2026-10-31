@@ -1308,3 +1308,18 @@
   usage: "::petheads [from] [count] [ticks] | ::petheads npc <id> ..."
   description: "Test tool (A4): shows every pet variant in turn as follower and in a chat dialogue, so the chat heads can be checked in the client."
   example: "::petheads 0 20 4"
+- name: dvaudit
+  rank: admin
+  usage: "::dvaudit"
+  description: "Dev tool: check every Drop Viewer entry (groups, order, open tables, fits, overlaps); writes logs/dropviewer-audit.txt and shows the first lines."
+  example: "::dvaudit"
+- name: dvangle
+  rank: admin
+  usage: "::dvangle <x angle> <y angle> [chest y angle]"
+  description: "Dev tool: tune the Drop Viewer still-model view angles live (session only); no arguments shows the current angles."
+  example: "::dvangle 400 1900"
+- name: pets
+  rank: admin
+  usage: "::pets <block>"
+  description: "Test tool: empty your inventory and spawn one block of 28 pet items (every pet once, OSRS pets first, then the 667 pets)."
+  example: "::pets 1"

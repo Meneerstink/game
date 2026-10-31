@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.quests.tab
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.attr.PointBalance
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.model.timer.SKULL_ICON_DURATION_TIMER
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
@@ -233,10 +234,11 @@ object DeadmanTasks {
 
     /**
      * A skulled minute counts only while the skull really counts down in a dangerous area: [PvpSkull] pauses the countdown after a
-     * minute on one tile (and in instances), so a skull left standing in a bank never earns the "Stay skulled" tasks.
+     * minute on one tile (and in instances), so a skull left standing in a bank never earns the "Stay skulled" tasks. The
+     * area is the tile the client shows ([zoneTile], 09-24 transit rule), not the far end of an agility shortcut.
      */
     fun skulledMinuteCounts(player: Player): Boolean =
-        PvpSkull.hasSkullTimer(player) && !player.timers.isPaused(SKULL_ICON_DURATION_TIMER) && AreaState.isDangerous(player.tile)
+        PvpSkull.hasSkullTimer(player) && !player.timers.isPaused(SKULL_ICON_DURATION_TIMER) && AreaState.isDangerous(player.zoneTile())
 
     // ---- views
 
