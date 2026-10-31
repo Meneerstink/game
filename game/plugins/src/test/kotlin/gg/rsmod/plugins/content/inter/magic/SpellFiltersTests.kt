@@ -84,18 +84,18 @@ class SpellFiltersTests {
     }
 
     @Test
-    fun `N72 class - every OSRS filter menu action works on every book and the 667 layout bits follow only while filtering is on`() {
+    fun `N72 class - every OSRS filter menu action works on every book and the 667 layout bits follow the choice whether filtering is on or off`() {
         val problems = mutableListOf<String>()
         for ((book, spellbook) in BOOKS) {
             val player = h.player("n72m$book")
             h.open(player, spellbook)
             val layer = MENU_LAYER.getValue(book)
             fun state() = player.varps.getState(VARP)
-            // Filtering off: hiding Combat is remembered but nothing is hidden in the 667 layout.
+            // N494 (owner 20:5x): the filters work with filtering disabled too - hiding Combat hides it in every book's 667 layout.
             click(player, book, layer, slot = 1)
             if (state() and (1 shl 19) == 0) problems += "$book: 'Show Combat spells' not stored (0x%08x)".format(state())
-            if (state() and ALL_CATEGORY_BITS != 0) problems += "$book: filtering off but category bits set (0x%08x)".format(state())
-            // Enable spell filtering: the remembered choice applies to every book's 667 bits.
+            if (state() and COMBAT_BITS != COMBAT_BITS) problems += "$book: filtering off and combat hidden but 667 combat bits 0x%08x".format(state())
+            // Enable spell filtering (= the editing mode, N495): the choice still applies.
             click(player, book, layer, slot = 0)
             if (state() and (1 shl ENABLED) == 0) problems += "$book: 'Enable spell filtering' not stored (0x%08x)".format(state())
             if (state() and COMBAT_BITS != COMBAT_BITS) problems += "$book: combat hidden + enabled but 667 combat bits 0x%08x".format(state())
@@ -111,12 +111,14 @@ class SpellFiltersTests {
                 click(player, book, layer, slot = slot)
                 if (state() and (1 shl bit) != 0) problems += "$book: menu action $slot did not clear bit $bit again (0x%08x)".format(state())
             }
-            // Disable spell filtering: every spell shows again, the choices are kept for the next enable.
+            // Disable spell filtering (= done editing, N495): the filter choices keep working.
             click(player, book, layer, slot = 0)
-            if (state() and ALL_CATEGORY_BITS != 0) problems += "$book: filtering disabled but category bits 0x%08x".format(state())
+            if (state() and (1 shl ENABLED) != 0) problems += "$book: 'Disable spell filtering' not stored (0x%08x)".format(state())
+            if (state() and ALL_CATEGORY_BITS != ALL_CATEGORY_BITS) problems += "$book: filtering disabled dropped the category filters 0x%08x".format(state())
             if (state() and (7 shl 19) != (7 shl 19)) problems += "$book: disabling forgot the menu choices (0x%08x)".format(state())
-            click(player, book, layer, slot = 0)
-            if (state() and ALL_CATEGORY_BITS != ALL_CATEGORY_BITS) problems += "$book: re-enabled but categories not hidden again (0x%08x)".format(state())
+            // Ticking the three categories again shows every spell, with filtering disabled.
+            listOf(1, 2, 3).forEach { click(player, book, layer, slot = it) }
+            if (state() and ALL_CATEGORY_BITS != 0) problems += "$book: every category shown again but category bits 0x%08x".format(state())
         }
         if (problems.isNotEmpty()) fail("${problems.size} OSRS filter menu problems:\n" + problems.joinToString("\n"))
     }

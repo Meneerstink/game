@@ -17,7 +17,7 @@ import gg.rsmod.plugins.api.ext.setVarp
  * Novite CombatDefinitions.refreshSpellBook, Darkan CombatDefinitions.kt:232-275):
  *  - bits 0-8: the 667 sort order per book (varbits 5822/5823/5824, one shared value as in Novite);
  *  - bits 9-17: the 667 category hide bits the cache layout script 2059 reads (6459-6467). They are a PROJECTION: the OSRS
- *    Combat/Teleport/Utility "hide" choice while filtering is enabled, 0 while it is disabled;
+ *    Combat/Teleport/Utility "hide" choice, enabled or not (N494: "Enable spell filtering" is only the editing mode, N495);
  *  - bits 18-25 (the removed Dungeoneering book's varbits 7347-7351 + unused bits): the OSRS filter state the client
  *    (RspsSpellFilters) reads - 18 enabled, 19 hide combat, 20 hide teleport, 21 hide utility, 22 hide lacks-level,
  *    23 hide lacks-runes, 24 hide lacks-requirements, 25 icon resizing off. 0 = the OSRS default (all shown, resizing on).
@@ -85,15 +85,17 @@ object SpellFilters {
         action: Action,
     ): Boolean = value and (1 shl action.bit) != 0
 
-    /** The full varp 1376 for a stored OSRS state + sort: the 667 category bits follow the OSRS choice only while enabled. */
+    /**
+     * The full varp 1376 for a stored OSRS state + sort: the 667 category bits follow the OSRS Combat / Teleport / Utility choice
+     * ALWAYS (N494, owner 2026-10-31 20:5x: the Filters button and its ticks work whether filtering is enabled or not; "Enable spell
+     * filtering" is only the editing mode for Hide / Unhide and moving, N495).
+     */
     fun project(value: Int): Int {
         val osrs = value and (OSRS_MASK or PRAYER_MASK)
         val sort = (value and 0x7).coerceIn(0, 2)
         var out = osrs or sort or (sort shl 3) or (sort shl 6)
-        if (isSet(osrs, Action.TOGGLE_FILTERING)) {
-            CATEGORY_BITS.forEach { (category, bits) ->
-                if (isSet(osrs, CATEGORY_ACTION.getValue(category))) bits.forEach { out = out or (1 shl it) }
-            }
+        CATEGORY_BITS.forEach { (category, bits) ->
+            if (isSet(osrs, CATEGORY_ACTION.getValue(category))) bits.forEach { out = out or (1 shl it) }
         }
         return out
     }
