@@ -20481,4 +20481,10 @@ object Items {
     const val DIZANAS_QUIVER_L_UNCHARGED_MANGLED = 24229
     const val BLESSED_DIZANAS_QUIVER_L_BROKEN = 24230
     const val BLESSED_DIZANAS_QUIVER_L_MANGLED = 24231
+
+    // N472 (owner 2026-10-31: the Void Knight Deflector like the rest of Void) - clones of 19712, cache tx-20261031-102734.
+    const val VOID_KNIGHT_DEFLECTOR_BROKEN = 24619
+    const val VOID_KNIGHT_DEFLECTOR_L = 24620
+    const val VOID_KNIGHT_DEFLECTOR_L_BROKEN = 24621
+    const val VOID_KNIGHT_DEFLECTOR_L_MANGLED = 24622
 }

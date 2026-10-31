@@ -90,6 +90,8 @@ object UntradeableDeathProtection {
             // Elite void (OSRS (l) list; untradeable since the 2026-10-04 audit, items.yml).
             Items.ELITE_VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_KNIGHT_TOP_19787, Items.ELITE_VOID_KNIGHT_ROBE_19788,
             Items.ELITE_VOID_KNIGHT_TOP_19789, Items.ELITE_VOID_KNIGHT_ROBE_19790,
+            // N472 (owner 2026-10-31): the Void Knight Deflector like the rest of Void.
+            Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR,
         )
 
     /**

@@ -416,6 +416,37 @@ object Pets {
         sound(player, PICK_UP_SOUND, at)
     }
 
+    /**
+     * "Shoo" on the Clockwork cat (Void ClockworkCat.kt; owner 2026-10-31, N407 vraag 2: "zoals RS"): after "Are you sure you want to
+     * release your pet?" the cat winds down and is gone - not into the backpack. It stays owned once, so Perdu gives it back for free
+     * (N414). An Upgraded cat's cargo goes to Death's Office, as on Pick-up, and the Yes answer says so.
+     */
+    fun shoo(
+        player: Player,
+        npc: Npc,
+    ) {
+        if (current(player) !== npc) {
+            player.message("This isn't your pet.")
+            return
+        }
+        val carrying = BeastOfBurden.isUpgradedPetOut(player) && BeastOfBurden.storedCount(player) > 0
+        player.queue {
+            // Void's "Are you sure you want to release your pet?" runs into the title's swords (about 40 characters fit; seen in the
+            // test client 2026-10-31), so the title is the short form of the same question.
+            val yes = if (carrying) "Yes - its items go to Death's Office." else "Yes."
+            if (options(yes, "No.", title = "Release your clockwork cat?") != 1) {
+                player.message("You choose not to shoo away the clockwork cat.")
+                return@queue
+            }
+            if (current(player) !== npc) return@queue
+            itemOf(player)?.let { variantOfItem(it)?.pet }?.let { recordOwned(player, listOf(it)) }
+            BeastOfBurden.release(player)
+            clear(player)
+            player.message("The clockwork cat winds down and stops.")
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet shoo: ${npc.id} released by ${player.username}" }
+        }
+    }
+
     /** Dismiss from the Summoning tab / orb: the pet goes to the inventory, else the bank; it is never lost. */
     fun dismiss(
         player: Player,
@@ -634,6 +665,11 @@ object Pets {
             // match against the wiki's Getting_pet.ogg (dossier N88, correlation 0.997) and byte-identical in OSRS and both 667 caches.
             player.playSound(GETTING_PET_SOUND)
         }
+        if (petBroadcast(outcome, purchased, source)) {
+            val name = player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, item)?.name ?: byItem.getValue(item).name
+            val line = broadcast(gg.rsmod.util.Misc.formatForDisplay(player.username), name)
+            player.world.players.forEach { it.message(line) }
+        }
         when (outcome) {
             Award.DUPLICATE -> player.message(MSG_DUPLICATE)
             Award.FOLLOWER -> {
@@ -655,6 +691,21 @@ object Pets {
         }
         return outcome
     }
+
+    /**
+     * N407 (owner 2026-10-31: "paarse wereldmelding bij een pet-drop: ja"): everyone online reads it, in the purple of the trinket and
+     * Deadman's Chest broadcasts. Not for a duplicate (nothing received), a bought pet, or a chest pet (the chest broadcasts its reward).
+     */
+    fun petBroadcast(
+        outcome: Award,
+        purchased: Boolean,
+        source: String?,
+    ): Boolean = outcome != Award.DUPLICATE && !purchased && source != "chest"
+
+    fun broadcast(
+        name: String,
+        petName: String,
+    ): String = "<col=${gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestWorld.BROADCAST_COLOUR}>$name has received a pet: $petName!</col>"
 
     /** [award] for whichever pet [item] is (a dropped or bought pet item); null when [item] is no pet. */
     fun awardItem(

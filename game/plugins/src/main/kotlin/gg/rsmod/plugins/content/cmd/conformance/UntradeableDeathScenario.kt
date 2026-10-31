@@ -35,6 +35,8 @@ object UntradeableDeathScenario {
             Items.VOID_KNIGHT_TOP_L, Items.DRAGON_DEFENDER_L,
             // K01 deel 5: every kit untradeable and never lost - a kitted item and a loose kit.
             Items.ARMADYL_GODSWORD_OR, Items.FURY_ORNAMENT_KIT,
+            // N472 (owner 2026-10-31): the Void Knight Deflector like the rest of Void, plain and locked.
+            Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_L,
         )
 
     /** A tile with open ground around it whose Wilderness level is in [levels]. */
@@ -122,7 +124,7 @@ object UntradeableDeathScenario {
                 Items.VOID_KNIGHT_TOP to Items.VOID_KNIGHT_TOP_BROKEN, Items.ELITE_VOID_KNIGHT_TOP to Items.ELITE_VOID_TOP_BROKEN,
                 Items.FIGHTER_TORSO to Items.FIGHTER_TORSO_BROKEN, Items.FIRE_CAPE to Items.FIRE_CAPE_BROKEN,
                 Items.RUNE_DEFENDER to Items.RUNE_DEFENDER_BROKEN, Items.DRAGON_DEFENDER to Items.DRAGON_DEFENDER_BROKEN,
-                Items.INFERNAL_CAPE to Items.INFERNAL_CAPE_BROKEN,
+                Items.INFERNAL_CAPE to Items.INFERNAL_CAPE_BROKEN, Items.VOID_KNIGHT_DEFLECTOR_19712 to Items.VOID_KNIGHT_DEFLECTOR_BROKEN,
             ).forEach { (item, broken) ->
                 run.expectTrue(e, "PvP <=20: ${name(run, item)} is in the inventory as ${name(run, broken)}", has(l, broken) && !has(l, item), "held=${l.map { it.id }}")
             }
@@ -135,7 +137,10 @@ object UntradeableDeathScenario {
             }
             run.expectTrue(e, "PvP <=20: the AGS (or) is gone from the victim", !has(l, Items.ARMADYL_GODSWORD_OR), "held=${l.map { it.id }}")
             run.expectTrue(e, "PvP <=20: Fire cape (l) stays as Fire cape (l) (broken), still locked", lockedCape != null && UntradeableDeathProtection.isDamaged(lockedCape) && !has(l, Items.FIRE_CAPE_LOCKED_22324), "held=${l.map { it.id }}")
-            listOf(Items.VOID_KNIGHT_TOP_L to Items.VOID_KNIGHT_TOP_L_BROKEN, Items.DRAGON_DEFENDER_L to Items.DRAGON_DEFENDER_L_BROKEN).forEach { (item, broken) ->
+            listOf(
+                Items.VOID_KNIGHT_TOP_L to Items.VOID_KNIGHT_TOP_L_BROKEN, Items.DRAGON_DEFENDER_L to Items.DRAGON_DEFENDER_L_BROKEN,
+                Items.VOID_KNIGHT_DEFLECTOR_L to Items.VOID_KNIGHT_DEFLECTOR_L_BROKEN,
+            ).forEach { (item, broken) ->
                 run.expectTrue(e, "PvP <=20: ${name(run, item)} stays as ${name(run, broken)}", has(l, broken) && !has(l, item), "held=${l.map { it.id }}")
             }
             run.expectTrue(e, "PvP <=20: the max cape is kept whole", has(l, Items.MAX_CAPE), "held=${l.map { it.id }}")
@@ -166,11 +171,14 @@ object UntradeableDeathScenario {
                 .forEach { (item, broken) -> run.expectTrue(e, "PvP >20: ${name(run, item)} breaks there too (OSRS broken table)", has(d, broken), "held=${d.map { it.id }}") }
             val lockedCape = d.firstOrNull { TrouverDamaged.isMangledFireCape(it) }
             run.expectTrue(e, "PvP >20: Fire cape (l) stays, mangled and locked", lockedCape != null, "held=${d.map { "${it.id}" }}")
-            listOf(Items.VOID_KNIGHT_TOP_L to Items.VOID_KNIGHT_TOP_L_MANGLED, Items.DRAGON_DEFENDER_L to Items.DRAGON_DEFENDER_L_MANGLED).forEach { (item, mangled) ->
+            listOf(
+                Items.VOID_KNIGHT_TOP_L to Items.VOID_KNIGHT_TOP_L_MANGLED, Items.DRAGON_DEFENDER_L to Items.DRAGON_DEFENDER_L_MANGLED,
+                Items.VOID_KNIGHT_DEFLECTOR_L to Items.VOID_KNIGHT_DEFLECTOR_L_MANGLED,
+            ).forEach { (item, mangled) ->
                 run.expectTrue(e, "PvP >20: ${name(run, item)} stays as ${name(run, mangled)}", has(d, mangled) && !has(d, item), "held=${d.map { it.id }}")
             }
             val reclaims = PerduReclaim.records(b).map { it.itemId }
-            listOf(Items.VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP, Items.FIGHTER_TORSO, Items.INFERNAL_CAPE).forEach {
+            listOf(Items.VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP, Items.FIGHTER_TORSO, Items.INFERNAL_CAPE, Items.VOID_KNIGHT_DEFLECTOR_19712).forEach {
                 run.expectTrue(e, "PvP >20: ${name(run, it)} is destroyed and Perdu gives it back", !has(d, it) && it in reclaims, "reclaims=$reclaims")
             }
             run.expectTrue(e, "PvP >20: the max cape is kept whole", has(d, Items.MAX_CAPE), "held=${d.map { it.id }}")
@@ -212,7 +220,8 @@ object UntradeableDeathScenario {
         val held = (b.inventory.toList() + b.equipment.toList()).filterNotNull()
         val grave = b.gravestone.toList().filterNotNull().map { it.id }
         listOf(Items.VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP, Items.FIGHTER_TORSO, Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324, Items.RUNE_DEFENDER,
-            Items.DRAGON_DEFENDER, Items.INFERNAL_CAPE, Items.RUNE_POUCH, Items.MAX_CAPE, Items.VOID_KNIGHT_TOP_L, Items.DRAGON_DEFENDER_L).forEach {
+            Items.DRAGON_DEFENDER, Items.INFERNAL_CAPE, Items.RUNE_POUCH, Items.MAX_CAPE, Items.VOID_KNIGHT_TOP_L, Items.DRAGON_DEFENDER_L,
+            Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_L).forEach {
             run.expectTrue(e, "monster: ${name(run, it)} is kept whole", held.any { h -> h.id == it && !UntradeableDeathProtection.isDamaged(h) }, "held=${held.map { h -> h.id }}")
         }
         listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE, Items.GLOVES_7462).forEach {

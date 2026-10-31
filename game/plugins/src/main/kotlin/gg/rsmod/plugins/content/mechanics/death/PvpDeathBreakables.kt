@@ -100,6 +100,10 @@ object PvpDeathBreakables {
                 Breakable(Items.VOID_KNIGHT_TOP_10611, Items.VOID_KNIGHT_TOP_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_BROKEN, 0, 180_000),
                 Breakable(Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_GLOVES_BROKEN, 0, 120_000),
+                // N472 (owner 2026-10-31: "net als Void"): the deflector costs the same 150 points as the gloves, so the same repair
+                // price; its broken form is a clone of 19712 (cache tx-20261031-102734). The old unwearable 19711 breaks the same way.
+                Breakable(Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_BROKEN, 0, 120_000),
+                Breakable(Items.VOID_KNIGHT_DEFLECTOR, Items.VOID_KNIGHT_DEFLECTOR_BROKEN, 0, 120_000),
                 Breakable(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_BROKEN, 0, 160_000),
                 Breakable(Items.VOID_MAGE_HELM_11674, Items.VOID_MAGE_HELM_BROKEN, 0, 160_000),
                 Breakable(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_BROKEN, 0, 160_000),

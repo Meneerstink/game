@@ -31,13 +31,13 @@ class PetFeaturesTests {
     }
 
     @Test
-    fun `every follower with an OSRS Emote or Interact op has its emotes, in the cache - Maggot marquess is SOURCE_BLOCKED`() {
+    fun `every follower with an OSRS Emote or Interact op has its emotes, in the cache - Maggot marquess screeches (owner 2026-10-31)`() {
         val defs = SummoningTestCache.definitions
         val wrong = mutableListOf<String>()
         Pets.variants.forEach { v ->
             val ops = defs.get(NpcDef::class.java, v.npc).options.filterNotNull().map { it.lowercase() }
             val wants = "emote" in ops || "interact" in ops
-            if (wants && !PetEmotes.hasEmotes(v.npc) && v.pet != "Maggot marquess") wrong += "${v.name} (${v.npc}) has ${ops} but no emotes"
+            if (wants && !PetEmotes.hasEmotes(v.npc)) wrong += "${v.name} (${v.npc}) has ${ops} but no emotes"
             if (!wants && PetEmotes.hasEmotes(v.npc)) wrong += "${v.name} (${v.npc}) has emotes but no Emote/Interact op"
         }
         PetEmotes.byNpc.forEach { (npc, list) ->
@@ -47,9 +47,9 @@ class PetFeaturesTests {
             }
         }
         assertEquals(emptyList(), wrong)
-        // The wiki orders: Butch 5, Wisp 4, Yami 5, Gull 1, Gulliver 1; Beef 1 plus the rare whirlwind outside the cycle.
+        // The wiki orders: Butch 5, Wisp 4, Yami 5, Gull 1, Gulliver 1; Beef 1 plus the rare whirlwind outside the cycle; Maggot marquess 1 (N407).
         val counts = PetEmotes.byNpc.map { (npc, _) -> Pets.variantOfNpc(npc)!!.name to PetEmotes.cycle(npc).size }.toMap()
-        assertEquals(mapOf("Butch" to 5, "Wisp" to 4, "Yami" to 5, "Gull" to 1, "Gulliver" to 1, "Beef" to 1), counts)
+        assertEquals(mapOf("Butch" to 5, "Wisp" to 4, "Yami" to 5, "Gull" to 1, "Gulliver" to 1, "Beef" to 1, "Maggot marquess" to 1), counts)
     }
 
     @Test

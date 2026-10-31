@@ -59,7 +59,7 @@ object OsrsPetImportTool {
      * The emotes of the followers with an OSRS "Emote" / "Interact" op, per OSRS follower npc in the OSRS order (OSRS Wiki pet pages,
      * section "Emotes"; ids by RuneLite gameval AnimationID name; where the wiki has an animated webp its length matches the sequence).
      * Skeletal followers bake them with their movement ([skeletal], one shared base); Beef's are classic (OsrsFxImportTool "pet-beef").
-     * Not here: Maggot marquess (the wiki names no emote and has no image of it: SOURCE_BLOCKED).
+     * Maggot marquess: the wiki names no emote and has no image of it; the owner chose the boss screech (2026-10-31).
      */
     val EMOTES: Map<Int, List<Emote>> =
         mapOf(
@@ -85,6 +85,9 @@ object OsrsPetImportTool {
             14932 to listOf(Emote("emote", listOf(12551))),
             // Beef (Interact -> Emote): the sniff COWBOSS_PET_EMOTE; rarely the whirlwind COWBOSS_PET_EMOTE_CHARGE + VFX_BEEF_TORNADO 3587.
             15631 to listOf(Emote("emote", listOf(13801)), Emote("whirlwind", listOf(13803), osrsSpot = 3587)),
+            // Maggot marquess: the wiki names no emote; owner 2026-10-31 (N407 vraag 2): the Maggot King's screech MAGGOT_KING_SCREECH
+            // 13922 (the same model; its voice already comes from this sequence's sounds).
+            15740 to listOf(Emote("screech", listOf(13922))),
         )
 
     /** Every sequence [skeletal] bakes for follower [n]: its movement, then its emotes' sequences (packed index = position here). */
@@ -182,8 +185,12 @@ object OsrsPetImportTool {
         return osrsNpc * 16 + index
     }
 
-    private fun skeletal(apply: Boolean) {
-        val rows = OsrsPetRoster.load().filter { it.skeletal }
+    private fun skeletal(
+        apply: Boolean,
+        only: Int? = null,
+    ) {
+        val rows = OsrsPetRoster.load().filter { it.skeletal && (only == null || it.osrsFollower == only) }
+        check(rows.isNotEmpty()) { "no skeletal roster follower ${only ?: ""}" }
         val assetMap = File(OsrsItemImportTool.ASSET_MAP)
         val targets = OsrsItemImportTool.TARGETS
         val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
@@ -282,13 +289,22 @@ object OsrsPetImportTool {
         }
         plans.forEach { println(it) }
         dropped.distinct().forEach { println("DROPPED $it") }
-        val unique = mutations.distinctBy { it.describeLocation() }
+        var unique = mutations.distinctBy { it.describeLocation() }
+        if (only != null) {
+            // N407 2026-10-31 (--only): a new emote re-bakes the pet's frames and model, but its existing sequences and chathead models
+            // keep their current bytes - later fixes (sounds, chathead lifts) changed them after the first bake and must not be undone.
+            val (keep, change) = unique.partition { it.expectedCurrentSha1 != null && (it.label.contains("baked osrs seq") || it.label.startsWith("osrs npc model")) }
+            keep.forEach { println("  KEPT_AS_IS ${it.label}") }
+            unique = change
+        }
         val transaction = CacheTransaction(targets = targets, mutations = unique)
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} mutations=${unique.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
         errors.forEach { println("  BLOCKING: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
+        // N407 2026-10-31: show what a run would overwrite, so a re-bake never silently undoes a later fix.
+        plan.filter { "${it.outcome}" == "REPLACE" }.forEach { println("  REPLACE $it") }
         if (!apply) {
             println("DRY_RUN records=${records.size}")
             return
@@ -748,6 +764,8 @@ object OsrsPetImportTool {
         println("PREFLIGHT transaction=${transaction.id} mutations=${unique.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
         errors.forEach { println("  BLOCKING: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
+        // N407 2026-10-31: show what a run would overwrite, so a re-bake never silently undoes a later fix.
+        plan.filter { "${it.outcome}" == "REPLACE" }.forEach { println("  REPLACE $it") }
         if (!apply) {
             println("DRY_RUN records=${records.size}")
             return
@@ -853,7 +871,7 @@ object OsrsPetImportTool {
     fun main(args: Array<String>) {
         val rows = OsrsPetRoster.load()
         when (args.firstOrNull()) {
-            "skeletal" -> skeletal("--apply" in args)
+            "skeletal" -> skeletal("--apply" in args, args.firstOrNull { it.startsWith("--only=") }?.removePrefix("--only=")?.toInt())
             "sounds" -> sounds("--apply" in args)
             "table" -> table()
             "chatprobe" -> chatProbe(rows, args.drop(1).mapNotNull { it.toIntOrNull() })

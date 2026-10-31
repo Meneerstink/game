@@ -239839,13 +239839,13 @@
 - id: 19711
   name: "Void knight deflector"
   examine: "A deft void knight shield."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment: null
 - id: 19712
   name: "Void knight deflector"
   examine: "A deft void knight shield."
-  tradeable: true
+  tradeable: false
   weight: 0.4
   equipment:
     attack_stab: 0
@@ -290616,4 +290616,55 @@
   examine: "A glass orb with a dragonstone in the centre."
   tradeable: false
   weight: 0.01
+  equipment: null
+- id: 24619
+  name: "Void knight deflector (broken)"
+  examine: "A broken void knight shield."
+  tradeable: false
+  weight: 0.4
+  equipment: null
+- id: 24620
+  name: "Void knight deflector (l)"
+  examine: "A deft void knight shield, locked with a Trouver parchment."
+  tradeable: false
+  weight: 0.4
+  equipment:
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 30
+    defence_slash: 30
+    defence_crush: 30
+    defence_magic: 10
+    defence_ranged: 30
+    summoning: 30
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+    melee_strength: 0
+    ranged_strength: 0
+    prayer: 0
+    magic_damage: 0
+    appearance_id: 4981
+    equip_slot: 5
+    equip_type: -1
+    weapon_type: -1
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}]
+- id: 24621
+  name: "Void knight deflector (l) (broken)"
+  examine: "A broken void knight shield."
+  tradeable: false
+  weight: 0.4
+  equipment: null
+- id: 24622
+  name: "Void knight deflector (l) (mangled)"
+  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  tradeable: false
+  weight: 0.4
   equipment: null

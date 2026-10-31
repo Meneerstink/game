@@ -187,12 +187,13 @@ class ClassicPetsTests {
     fun `N303 - every 667 pet option in the cache has a handler - Interact-with on the cats included`() {
         val defs = SummoningTestCache.definitions
         val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/skills/summoning/pets.plugin.kts").readText()
-        val handled = setOf("pick-up", "talk-to", "interact-with")
+        val handled = setOf("pick-up", "talk-to", "interact-with", "shoo")
         val missing = Pets.variants.filter { it.classic }.flatMap { v ->
             defs.get(NpcDef::class.java, v.npc).options.filterNotNull().filter { it.isNotBlank() }.map { it.lowercase() }.filter { it !in handled }.map { "${v.name} (${v.npc}): $it" }
         }.distinct()
-        // The Clockwork cat's "Shoo" has no donor behaviour (reported to the owner, not invented).
-        assertEquals(emptyList(), missing.filterNot { it.startsWith("Clockwork cat") && it.endsWith("shoo") })
+        // N407 (owner 2026-10-31): the Clockwork cat's "Shoo" releases it like RS (Void ClockworkCat.kt).
+        assertEquals(emptyList(), missing)
+        assertTrue("option = \"shoo\"" in plugin)
         assertTrue("option = \"interact-with\"" in plugin && "option = \"talk-to\"" in plugin)
     }
 

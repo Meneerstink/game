@@ -62,6 +62,12 @@ Pets.variants.forEach { variant ->
                 Pets.pickUp(player, player.getInteractingNpc())
             }
         }
+        // N407 (owner 2026-10-31): the Clockwork cat's "Shoo" releases it like RS (Void ClockworkCat.kt); Perdu gives it back.
+        if (npcOptions.any { it.equals("shoo", ignoreCase = true) }) {
+            on_npc_option(npc = npcId, option = "shoo") {
+                Pets.shoo(player, player.getInteractingNpc())
+            }
+        }
         // OSRS names the op "Metamorphosis" on most pets and "Metamorph" on a few (Gull, Beef).
         npcOptions.filterNotNull().filter { it.equals("metamorphosis", ignoreCase = true) || it.equals("metamorph", ignoreCase = true) }.forEach { op ->
             on_npc_option(npc = npcId, option = op.lowercase()) {
@@ -266,6 +272,18 @@ on_command("petheads", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
 // N404 (owner 2026-10-24: "je kunt 2 van dezelfde pet hebben"): one item per pet - its first form, the one a boss drops or a shop
 // sells - so a test inventory never holds two forms of one OSRS pet; the other forms come from Metamorphosis, as in OSRS. The 667
 // pets have no Metamorphosis: every colour stays its own item.
+// N407 (2026-10-31): a real pet reward as from a boss kill (Pets.award: follower / backpack / bank, "Getting pet", the purple
+// world broadcast, the Collection Log) - to test what a player and everyone online sees. Admin only.
+on_command("petdrop", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    val item = player.getCommandArgs().getOrNull(0)?.toIntOrNull()
+    val variant = item?.let { Pets.variantOfItem(it) }
+    if (item == null || variant == null) {
+        player.message("Usage: ::petdrop <pet item id> - a pet reward as from a boss kill.")
+        return@on_command
+    }
+    player.message("Pet reward: ${Pets.award(player, variant.pet, item, source = "test")}")
+}
+
 on_command("pets", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val items = (Pets.variants.filter { !it.classic }.distinctBy { it.pet } + Pets.variants.filter { it.classic }).map { it.item }.distinct()
     val blocks = (items.size + 27) / 28

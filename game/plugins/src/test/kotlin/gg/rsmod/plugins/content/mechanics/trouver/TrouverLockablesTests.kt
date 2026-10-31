@@ -60,6 +60,40 @@ class TrouverLockablesTests {
     }
 
     @Test
+    fun `the void knight deflector is untradeable, locks, breaks and repairs like the rest of void`() {
+        // N472 (owner 2026-10-31: "net als Void").
+        val tradeable = mutableMapOf<Int, Boolean>()
+        var id = -1
+        java.io.File(java.nio.file.Paths.get("..", "..", "data", "cfg", "items.yml").toFile().path).forEachLine { line ->
+            when {
+                line.startsWith("- id: ") -> id = line.removePrefix("- id: ").trim().toInt()
+                line.startsWith("  tradeable: ") -> tradeable[id] = line.removePrefix("  tradeable: ").trim() == "true"
+            }
+        }
+        val forms =
+            listOf(
+                Items.VOID_KNIGHT_DEFLECTOR, Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_BROKEN,
+                Items.VOID_KNIGHT_DEFLECTOR_L, Items.VOID_KNIGHT_DEFLECTOR_L_BROKEN, Items.VOID_KNIGHT_DEFLECTOR_L_MANGLED,
+            )
+        forms.forEach { assertEquals(false, tradeable[it], "items.yml tradeable of $it") }
+        // the same as Void knight gloves: a lock pair with its own broken and mangled forms, and a broken form when unlocked
+        assertEquals(Items.VOID_KNIGHT_DEFLECTOR_L, TrouverRegistry.lockableFor(Items.VOID_KNIGHT_DEFLECTOR_19712)?.lockedItemId)
+        assertEquals(Items.VOID_KNIGHT_DEFLECTOR_L, TrouverRegistry.lockableFor(Items.VOID_KNIGHT_DEFLECTOR)?.lockedItemId, "old 19711 locks as 19712")
+        assertEquals(Items.VOID_KNIGHT_DEFLECTOR_19712, TrouverRegistry.lockableFor(Items.VOID_KNIGHT_DEFLECTOR)?.baseItemId)
+        val glovesBreak = gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.breakableFor(Items.VOID_KNIGHT_GLOVES)!!
+        listOf(Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR).forEach {
+            val b = assertNotNull(gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.breakableFor(it), "breakable $it")
+            assertEquals(Items.VOID_KNIGHT_DEFLECTOR_BROKEN, b.brokenId)
+            assertEquals(glovesBreak.breaksAboveTwenty, b.breaksAboveTwenty)
+            assertTrue(UntradeableDeathProtection.lockable(it))
+            assertTrue(it in UntradeableDeathProtection.OSRS_LOCKABLE)
+        }
+        assertEquals(Items.VOID_KNIGHT_DEFLECTOR_19712, UntradeableDeathProtection.repaired(Item(Items.VOID_KNIGHT_DEFLECTOR_BROKEN)).id, "repairs into the wearable one")
+        assertEquals(Items.VOID_KNIGHT_DEFLECTOR_L, UntradeableDeathProtection.repaired(Item(Items.VOID_KNIGHT_DEFLECTOR_L_MANGLED)).id)
+        assertTrue(TrouverLockables.refusal(Items.VOID_KNIGHT_DEFLECTOR_L, "Void knight deflector (l)", tradeable = false)!!.contains("already locked"))
+    }
+
+    @Test
     fun `Perdu says why an item cannot be locked`() {
         assertNull(TrouverLockables.refusal(Items.MITHRIL_DEFENDER, "Mithril defender", tradeable = false))
         assertEquals(

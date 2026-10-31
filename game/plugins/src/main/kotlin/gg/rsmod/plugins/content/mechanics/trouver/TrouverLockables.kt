@@ -67,6 +67,8 @@ object TrouverLockables {
             locked(Items.VOID_KNIGHT_ROBE, Items.VOID_KNIGHT_ROBE_L, Items.VOID_KNIGHT_ROBE_L_BROKEN, Items.VOID_KNIGHT_ROBE_L_MANGLED),
             locked(Items.ELITE_VOID_KNIGHT_ROBE, Items.ELITE_VOID_ROBE_L, Items.ELITE_VOID_ROBE_L_BROKEN, Items.ELITE_VOID_ROBE_L_MANGLED),
             locked(Items.VOID_KNIGHT_GLOVES, Items.VOID_KNIGHT_GLOVES_L, Items.VOID_KNIGHT_GLOVES_L_BROKEN, Items.VOID_KNIGHT_GLOVES_L_MANGLED),
+            // N472 (owner 2026-10-31): the Void Knight Deflector locks like the rest of Void (clones of 19712, cache tx-20261031-102734).
+            locked(Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_L, Items.VOID_KNIGHT_DEFLECTOR_L_BROKEN, Items.VOID_KNIGHT_DEFLECTOR_L_MANGLED),
             locked(Items.VOID_MAGE_HELM, Items.VOID_MAGE_HELM_L, Items.VOID_MAGE_HELM_L_BROKEN, Items.VOID_MAGE_HELM_L_MANGLED),
             locked(Items.VOID_RANGER_HELM, Items.VOID_RANGER_HELM_L, Items.VOID_RANGER_HELM_L_BROKEN, Items.VOID_RANGER_HELM_L_MANGLED),
             locked(Items.VOID_MELEE_HELM, Items.VOID_MELEE_HELM_L, Items.VOID_MELEE_HELM_L_BROKEN, Items.VOID_MELEE_HELM_L_MANGLED),
@@ -84,6 +86,8 @@ object TrouverLockables {
             Items.ELITE_VOID_KNIGHT_TOP_19789 to Items.ELITE_VOID_KNIGHT_TOP,
             Items.ELITE_VOID_KNIGHT_ROBE_19788 to Items.ELITE_VOID_KNIGHT_ROBE,
             Items.ELITE_VOID_KNIGHT_ROBE_19790 to Items.ELITE_VOID_KNIGHT_ROBE,
+            // N471/N472: the old unwearable deflector (converted at login) locks as the wearable one.
+            Items.VOID_KNIGHT_DEFLECTOR to Items.VOID_KNIGHT_DEFLECTOR_19712,
         )
 
     /** Owner 2026-10-25: defenders below mithril are not lockable; Perdu says why. */
