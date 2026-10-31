@@ -9,6 +9,12 @@ enum class Potion(
     /** Barbarian mix: Hitpoints healed on top of the base potion's effect ([BarbarianMixes]); 0 = not a 667 barbarian mix. */
     val mixHeal: Int = 0,
 ) {
+    // https://oldschool.runescape.wiki/w/Relicym%27s_balm — disease remedy, four doses to an empty vial.
+    RELICYMS_BALM4(Items.RELICYMS_BALM_4, Items.RELICYMS_BALM_3, PotionType.RELICYMS_BALM),
+    RELICYMS_BALM3(Items.RELICYMS_BALM_3, Items.RELICYMS_BALM_2, PotionType.RELICYMS_BALM),
+    RELICYMS_BALM2(Items.RELICYMS_BALM_2, Items.RELICYMS_BALM_1, PotionType.RELICYMS_BALM),
+    RELICYMS_BALM1(Items.RELICYMS_BALM_1, Items.VIAL, PotionType.RELICYMS_BALM),
+
     STRENGTH_POTION4(
         item = Items.STRENGTH_POTION_4,
         replacement = Items.STRENGTH_POTION_3,

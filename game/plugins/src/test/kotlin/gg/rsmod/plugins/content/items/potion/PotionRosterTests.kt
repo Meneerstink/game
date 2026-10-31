@@ -78,7 +78,6 @@ class PotionRosterTests {
         Blocked("SEPARATE BATCH A3-b: Barbarian Herblore two-dose mixes (potion effect + roe/caviar heal)") { it.name.matches(Regex(""".* mix \([12]\)""", RegexOption.IGNORE_CASE)) || it.name.startsWith("Anti-p supermix", true) },
         Blocked("SEPARATE BATCH A3-c: brewed keg/mature ales (food/drink table, Void MatureAle)", named("Asgarnian ale", "Mind bomb", "Dwarven stout", "Greenman's ale", "Dragon bitter", "Moonlight mead", "Axeman's folly", "Chef's delight", "Slayer's respite", "Cider")),
         Blocked("SOURCE_BLOCKED: Herblore Habitat juju/scentless/god potions have no donor effect", named("Juju", "Scentless potion", "Saradomin's blessing", "Guthix's gift", "Zamorak's favour")),
-        Blocked("BLOCKED: Relicym's balm cures disease; the disease mechanic does not exist server-side", named("Relicym's balm")),
         Blocked("SOURCE_CONFLICT: Guthix rest empty container (Void data: empty = vial, excess = empty_cup)", named("Guthix rest")),
         Blocked("OWNER_REMOVED: extreme 125-stat/ranged, overload, prayer renewal, recover special, divine potions and blighted overload") { it.id in RemovedPotions.itemIds },
     )
@@ -232,7 +231,7 @@ class PotionRosterTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            val store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            val store = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString())
             DEFINITIONS.loadAll(store)
         }
     }

@@ -48,6 +48,13 @@ val CONSUMABLES: List<Consumable> =
             )
         }
 
+// https://runescape.wiki/w/Blamish_oil — refusal only: no animation, dose loss, vial or drink delay.
+on_item_option(Items.BLAMISH_OIL, option = "Drink") {
+    if (player.inventory[player.getInteractingItemSlot()]?.id == Items.BLAMISH_OIL) {
+        player.queue { chatPlayer("You know, I'd really rather not.") }
+    }
+}
+
 on_world_init_late {
     CONSUMABLES.forEach { food ->
         val def = world.definitions.getNullable(ItemDef::class.java, food.id) ?: return@forEach

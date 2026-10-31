@@ -3,103 +3,89 @@ package gg.rsmod.plugins.content.items.books
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.plugin.KotlinPlugin
-import gg.rsmod.plugins.api.*
+import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
 
-val CURR_BOOK = AttributeKey<Book>("currBook")
+val CURR_BOOK = AttributeKey<BookSession>("currBook")
 
-data class Book(
-    val title: String,
-    val pages: List<BookPage>,
-) {
-    private val INTERFACE = 960
-    private val LEFT_COMPONENTS = intArrayOf(49, 56, 61, 62, 54, 63, 55, 51, 60, 58, 53, 50, 57, 59, 52)
-    private val RIGHT_COMPONENTS = intArrayOf(33, 39, 36, 44, 37, 46, 40, 42, 34, 35, 38, 43, 47, 45, 41)
-
-    private var player: Player? = null
-    private var page = 0
+/** Immutable content; page position and player references must never live in a shared book definition. */
+data class Book(val title: String, val pages: List<BookPage>) {
+    init {
+        require(pages.isNotEmpty())
+        require(pages.all { it.leftLines.size <= 15 && it.rightLines.size <= 15 })
+    }
 
     fun open(player: Player) {
-        this.player = player
-        player.attr.put(CURR_BOOK, this)
-        player.closeInterface(INTERFACE)
-        player.attr.remove(CURR_BOOK)
-        player.setComponentText(INTERFACE, 69, title)
-        page = 0
-        update()
+        // Mount first: replacing an interface fires its close hook and clears the old session.
+        player.openInterface(INTERFACE, dest = InterfaceDestination.MAIN_SCREEN)
+        val session = BookSession(this)
+        player.attr[CURR_BOOK] = session
+        session.update(player)
     }
 
-    fun update() {
-        player?.openInterface(INTERFACE, dest = InterfaceDestination.MAIN_SCREEN)
-        if (page == 0) {
-            player?.setComponentHidden(INTERFACE, 72, true)
-            player?.setComponentText(INTERFACE, 70, "")
-        } else {
-            player?.setComponentHidden(INTERFACE, 72, false)
-            player?.setComponentText(INTERFACE, 70, "Prev")
-        }
-        if (page >= pages.size - 1) {
-            player?.setComponentHidden(INTERFACE, 73, true)
-            player?.setComponentText(INTERFACE, 71, "")
-        } else {
-            player?.setComponentHidden(INTERFACE, 73, false)
-            player?.setComponentText(INTERFACE, 71, "Next")
-        }
-        for (line in LEFT_COMPONENTS.indices) {
-            player?.setComponentText(INTERFACE, LEFT_COMPONENTS[line], pages[page].getLeftLine(line))
-            player?.setComponentText(INTERFACE, RIGHT_COMPONENTS[line], pages[page].getRightLine(line))
-        }
-    }
+    companion object {
+        const val INTERFACE = 960
+        internal val LEFT_COMPONENTS = intArrayOf(49, 56, 61, 62, 54, 63, 55, 51, 60, 58, 53, 50, 57, 59, 52)
+        internal val RIGHT_COMPONENTS = intArrayOf(33, 39, 36, 44, 37, 46, 40, 42, 34, 35, 38, 43, 47, 45, 41)
 
-    fun nextPage() {
-        if (page >= pages.size - 1) return
-        page++
-        update()
-    }
+        /** All text is retained, including the final partial page; 15 lines on each leaf of interface 960. */
+        fun fromText(title: String, text: String): Book {
+            require(text.isNotBlank())
+            val lines = text.trim().lines().flatMap { paragraph ->
+                if (paragraph.isBlank()) listOf("") else wrap(paragraph.trim())
+            }
+            return Book(title, lines.chunked(30).map { BookPage(it.take(15), it.drop(15)) })
+        }
 
-    fun prevPage() {
-        if (page <= 0) return
-        page--
-        update()
+        private fun wrap(text: String): List<String> {
+            val lines = mutableListOf<String>()
+            var rest = text
+            // Conservative width for the existing book leaves; split overlong words without losing letters.
+            while (rest.length > 28) {
+                val split = rest.lastIndexOf(' ', 28).takeIf { it > 0 } ?: 28
+                lines += rest.take(split)
+                rest = rest.drop(split).trimStart()
+            }
+            if (rest.isNotEmpty()) lines += rest
+            return lines
+        }
     }
 }
 
-data class BookPage(
-    val leftLines: List<String>,
-    val rightLines: List<String>,
-) {
-    fun getLeftLine(line: Int): String {
-        return if (line < leftLines.size) leftLines[line] else ""
+class BookSession(val book: Book) {
+    var page = 0
+        private set
+
+    fun turn(player: Player, delta: Int) {
+        if (player.interfaces.currentModal != Book.INTERFACE) return
+        page = (page + delta).coerceIn(0, book.pages.lastIndex)
+        update(player)
     }
 
-    fun getRightLine(line: Int): String {
-        return if (line < rightLines.size) rightLines[line] else ""
+    fun update(player: Player) {
+        player.setComponentText(Book.INTERFACE, 69, book.title)
+        player.setComponentHidden(Book.INTERFACE, 72, page == 0)
+        player.setComponentText(Book.INTERFACE, 70, if (page == 0) "" else "Prev")
+        player.setComponentHidden(Book.INTERFACE, 73, page == book.pages.lastIndex)
+        player.setComponentText(Book.INTERFACE, 71, if (page == book.pages.lastIndex) "" else "Next")
+        Book.LEFT_COMPONENTS.indices.forEach { line ->
+            player.setComponentText(Book.INTERFACE, Book.LEFT_COMPONENTS[line], book.pages[page].getLeftLine(line))
+            player.setComponentText(Book.INTERFACE, Book.RIGHT_COMPONENTS[line], book.pages[page].getRightLine(line))
+        }
     }
 }
 
-fun Player.openBook(book: Book) {
-    book.open(this)
+data class BookPage(val leftLines: List<String>, val rightLines: List<String>) {
+    fun getLeftLine(line: Int): String = leftLines.getOrElse(line) { "" }
+    fun getRightLine(line: Int): String = rightLines.getOrElse(line) { "" }
 }
 
-class BookInterface(
-    val plugin: KotlinPlugin,
-) {
+fun Player.openBook(book: Book) = book.open(this)
+
+class BookInterface(val plugin: KotlinPlugin) {
     fun registerBookInterface() {
-        val INTERFACE = 960
-        plugin.on_interface_open(INTERFACE) {
-            player.attr.get<Book>(CURR_BOOK)?.update()
-        }
-
-        plugin.on_interface_close(INTERFACE) {
-            player.attr.remove(CURR_BOOK)
-        }
-
-        plugin.on_button(INTERFACE, 72) {
-            player.attr.get<Book>(CURR_BOOK)?.prevPage()
-        }
-
-        plugin.on_button(INTERFACE, 73) {
-            player.attr.get<Book>(CURR_BOOK)?.nextPage()
-        }
+        plugin.on_interface_close(Book.INTERFACE) { player.attr.remove(CURR_BOOK) }
+        plugin.on_button(Book.INTERFACE, 72) { player.attr[CURR_BOOK]?.turn(player, -1) }
+        plugin.on_button(Book.INTERFACE, 73) { player.attr[CURR_BOOK]?.turn(player, 1) }
     }
 }
