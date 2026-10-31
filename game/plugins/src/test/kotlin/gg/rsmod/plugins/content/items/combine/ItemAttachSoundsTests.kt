@@ -65,6 +65,7 @@ class ItemAttachSoundsTests {
             "items/gut_fish.plugin.kts" to "food preparation",
             "items/osrs/crystal.plugin.kts" to "crystal shards charge crystal equipment",
             "items/osrs/demonbane.plugin.kts" to "ancient shards charge Arclight (creation is at an altar)",
+            "items/osrs/locator_orb.plugin.kts" to "crafting: a glassblowing pipe blows the inert orb out of a dragonstone (N446), nothing is attached",
             "items/osrs/magic_shortbow_scroll.plugin.kts" to "an imbue, not an attach: the scroll is read onto the bow with an enchant sound (N197, in game)",
             "items/osrs/dizanas_quiver.plugin.kts" to "splinters charge / ammunition is stored",
             "items/osrs/ring_of_shadows.plugin.kts" to "runes charge the ring",
