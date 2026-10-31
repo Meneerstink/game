@@ -55,6 +55,7 @@ on_world_init {
 
 on_timer(SW_TICK_TIMER) {
     SoulWarsHandler.tick(world)
+    SoulWarsHandler.pruneLobby()
     if (SoulWarsMatch.lobbyPlayers.isNotEmpty()) {
         SoulWarsMatch.lobbyTicks++
         if (SoulWarsMatch.lobbyTicks % SoulWarsData.TICKS_BETWEEN_GAME_ATTEMPTS == 0) {
@@ -96,7 +97,7 @@ fun lobbyBarrier(plugin: Plugin) {
 on_obj_option(Objs.BLUE_BARRIER_42029, "Pass") { lobbyBarrier(this) }
 on_obj_option(Objs.RED_BARRIER_42030, "Pass") { lobbyBarrier(this) }
 on_obj_option(Objs.BALANCE_PORTAL, "Join-team") {
-    SoulWarsHandler.joinLobby(player)
+    SoulWarsHandler.joinByBalancePortal(player)
 }
 on_obj_option(Objs.SOUL_WARS_PORTAL, "Enter") {
     player.moveTo(SoulWarsData.LOBBY_ENTRY_TILE)

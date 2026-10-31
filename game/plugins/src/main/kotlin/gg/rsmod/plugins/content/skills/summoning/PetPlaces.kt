@@ -50,12 +50,6 @@ object PetPlaces {
         CORP_CAVE(MSG_CORP_DROP),
     }
 
-    /**
-     * The Soul Wars lobby (Balance portal 1889,3161, barriers 1879/1900,3162): a player on the lobby list counts only here - the
-     * Balance portal lists a player without moving them and walking off does not unlist them.
-     */
-    const val SOUL_WARS_LOBBY_REGION = 7473
-
     /** The Sorceress's Garden (all four seasons and the house between them, under Al Kharid). */
     const val SORCERESS_GARDEN_REGION = 11605
 
@@ -67,10 +61,12 @@ object PetPlaces {
     fun hiddenArea(player: Player): HiddenArea? {
         val pestControl = gg.rsmod.plugins.content.activity.pest_control.PestControlHandler
         val soulWars = gg.rsmod.plugins.content.activity.soul_wars.SoulWarsMatch
+        // A listed player counts only in the lobby (N477: the list drops whoever leaves it, once per tick).
+        val soulWarsLobby = gg.rsmod.plugins.content.activity.soul_wars.SoulWarsHandler.LOBBY_REGION
         return when {
             pestControl.lobbyOf(player) != null || player.attr[pestControl.GAME_ATTR]?.active == true -> HiddenArea.PEST_CONTROL
             player.attr[gg.rsmod.plugins.content.activity.soul_wars.SW_TEAM] != null ||
-                (player in soulWars.lobbyPlayers && player.tile.regionId == SOUL_WARS_LOBBY_REGION) -> HiddenArea.SOUL_WARS
+                (player in soulWars.lobbyPlayers && player.tile.regionId == soulWarsLobby) -> HiddenArea.SOUL_WARS
             player.tile.regionId == SORCERESS_GARDEN_REGION -> HiddenArea.SORCERESS_GARDEN
             player.tile.height == CORP_CAVE_HEIGHT && player.tile.regionId in CORP_CAVE_REGIONS -> HiddenArea.CORP_CAVE
             else -> null

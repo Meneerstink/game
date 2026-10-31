@@ -50,6 +50,33 @@ object SoulWarsHandler {
         SoulWarsMatch.lobbyPlayers.remove(player)
     }
 
+    /** N477: the waiting rooms' doorway tiles - the barriers' own tiles, where [lobbyBarrier]'s step lands (blue west, red east). */
+    val BLUE_ROOM_DOOR = Tile(1879, 3162, 0)
+    val RED_ROOM_DOOR = Tile(1900, 3162, 0)
+
+    /** The lobby and both waiting rooms. */
+    const val LOBBY_REGION = 7473
+
+    /**
+     * N477: the Balance portal ("Join-team", auto-balance) puts the player in the waiting room with fewer players - before, it only
+     * listed them and they stayed outside.
+     */
+    fun joinByBalancePortal(player: Player) {
+        if (!mayJoinLobby(player)) return
+        val blue = SoulWarsMatch.lobbyPlayers.count { it.tile.x <= BLUE_ROOM_DOOR.x }
+        val red = SoulWarsMatch.lobbyPlayers.count { it.tile.x >= RED_ROOM_DOOR.x }
+        player.moveTo(if (blue <= red) BLUE_ROOM_DOOR else RED_ROOM_DOOR)
+        joinLobby(player)
+    }
+
+    /**
+     * N477: whoever logged out or left the lobby (a teleport, a death) is no longer waiting - as Pest Control's landers. Before, a
+     * game started with every listed player and pulled them in from wherever they were.
+     */
+    fun pruneLobby() {
+        SoulWarsMatch.lobbyPlayers.removeIf { !it.isOnline || it.tile.regionId != LOBBY_REGION || it.tile.height != 0 }
+    }
+
     fun updateLobbyVars(player: Player) {
         player.setVarc(SoulWarsData.GAME_ACTIVE_VARC, if (SoulWarsMatch.active) 1 else 0)
         val needed = (SoulWarsData.PLAYER_MINIMUM - SoulWarsMatch.lobbyPlayers.size).coerceAtLeast(0)
