@@ -514,7 +514,8 @@ object StoreUi : KLogging() {
                     else -> "Cosmetic only - stats stay the same"
                 }
                 Kind.UPGRADE -> "Your item is exchanged for this one"
-                Kind.ITEM -> "Goes straight to your inventory"
+                // N407 point 20: a bought pet comes out at once when no follower is out (Pets.award), else the backpack/bank.
+                Kind.ITEM -> if (StoreCatalogue.section(entry) == Section.PETS) "Follows you, or into your backpack" else "Goes straight to your inventory"
                 Kind.UNLOCK ->
                     if (entry.purchaseItem in gg.rsmod.plugins.content.items.osrs.MaxCapeLooks.unlocked(player)) {
                         "Unlocked - use Customise on your max cape"
