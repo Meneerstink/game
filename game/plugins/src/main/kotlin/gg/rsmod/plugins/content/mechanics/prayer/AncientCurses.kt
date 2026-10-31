@@ -62,7 +62,14 @@ object AncientCurses {
     const val SAP_BASE_PCT = 10
     const val SAP_CAP_PCT = 20
     const val LEECH_DRAIN_BASE_PCT = 10
-    const val LEECH_DRAIN_CAP_PCT = 25
+
+    /**
+     * Owner 2026-10-31 (balance plan three prayer books, step 3, "laten we al je advies doen"): a Leech drains the target at most
+     * 15 % (was the 2011 25 %), the same ceiling as Ruinous Umbra's Vow. At the old cap a maxed Leech set won ~1.45 : 1 against
+     * every other book (dossier PRAYER-BOEKEN-OVERZICHT, model team\dossiers\prayer-balans); the caster's own boost and +5
+     * levels are unchanged. The Saps keep their 20 % (drain is their whole point).
+     */
+    const val LEECH_DRAIN_CAP_PCT = 15
     /**
      * The +5 % cs2 1713 itself adds to the curse tab for an active Leech (varbits 6830..6834); the server writes only what lies
      * above it ([syncStatVarbits]). Since the owner's 2026-10-11 curse table this is no longer any Leech's own boost.
@@ -374,12 +381,13 @@ object AncientCurses {
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < TURMOIL_LEVEL) {
             refused(player, "Turmoil", "prayer level ${player.skills.getMaxLevel(Skills.PRAYER)} < $TURMOIL_LEVEL")
+            Prayers.refuseSound(player)
             player.message(Prayers.requirementText(player, curse = true, slot = AncientCurse.TURMOIL_SLOT) ?: "You need a Prayer level of at least $TURMOIL_LEVEL to use Turmoil.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
             refused(player, "Turmoil", "no prayer points")
-            player.filterableMessage("You don't have enough Prayer points left.")
+            Prayers.refuseNoPoints(player)
             return
         }
         // Turmoil never runs together with a Sap or Leech.
@@ -748,12 +756,13 @@ object AncientCurses {
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < curse.level) {
             refused(player, curse.curseName, "prayer level ${player.skills.getMaxLevel(Skills.PRAYER)} < ${curse.level}")
+            Prayers.refuseSound(player)
             player.message(Prayers.requirementText(player, curse = true, slot = curse.slot) ?: "You need a Prayer level of at least ${curse.level} to use ${curse.curseName}.")
             return
         }
         if (player.getCurrentPrayerPoints() <= 0) {
             refused(player, curse.curseName, "no prayer points")
-            player.filterableMessage("You don't have enough Prayer points left.")
+            Prayers.refuseNoPoints(player)
             return
         }
         // Dragon scimitar Sever (and every other overhead-disabling effect) blocks the curse book's Deflects too; before,
@@ -1533,33 +1542,58 @@ object AncientCurses {
     /** Exposed for deterministic testing of the sourced 300% multiplier without mocking world dispatch. */
     internal fun wrathMaxDamage(player: Player): Int = player.skills.getMaxLevel(Skills.PRAYER) * 3 / 10
 
+    /**
+     * What a Wrath death explosion looks like: [launch] runs on the death tick, [blast] one world tick later with the hit.
+     * N486 (owner 2026-10-31): Ruinous Powers Wrath shows OSRS's white clouds ([RuinousPowers.WRATH_VISUALS]); the curse Wrath keeps
+     * the 667 purple blast ([CURSE_WRATH_VISUALS]).
+     */
+    interface WrathVisuals {
+        fun launch(player: Player, origin: Tile)
+
+        fun blast(player: Player, origin: Tile)
+    }
+
+    val CURSE_WRATH_VISUALS =
+        object : WrathVisuals {
+            override fun launch(player: Player, origin: Tile) {
+                // Novite sends the outer ring as eight map projectiles immediately on death. The first
+                // diagonal uses start height 24; the remaining seven use 41.
+                WRATH_OUTER_OFFSETS.forEachIndexed { index, (dx, dz) ->
+                    val destination = origin.transform(dx, dz)
+                    val startHeight = if (index == 0) WRATH_PROJECTILE_DIAGONAL_START_HEIGHT else WRATH_PROJECTILE_START_HEIGHT
+                    player.world.spawn(
+                        player.createProjectile(
+                            destination,
+                            WRATH_RING_GFX,
+                            startHeight,
+                            WRATH_PROJECTILE_END_HEIGHT,
+                            WRATH_PROJECTILE_ANGLE,
+                            0,
+                            WRATH_PROJECTILE_DELAY,
+                            WRATH_PROJECTILE_LIFESPAN,
+                        ),
+                    )
+                }
+            }
+
+            override fun blast(player: Player, origin: Tile) {
+                player.graphic(WRATH_CENTRE_GFX)
+                (WRATH_OUTER_OFFSETS + WRATH_INNER_OFFSETS).forEach { (dx, dz) ->
+                    player.world.spawn(TileGraphic(origin.transform(dx, dz), id = WRATH_RING_GFX, height = 0))
+                }
+            }
+        }
+
     fun wrathExplosion(
         player: Player,
         maxDamage: Int = wrathMaxDamage(player),
+        visuals: WrathVisuals = CURSE_WRATH_VISUALS,
     ) {
         val damage = maxDamage
         if (damage <= 0) return
         val world = player.world
         val origin = Tile(player.tile)
-
-        // Novite sends the outer ring as eight map projectiles immediately on death. The first
-        // diagonal uses start height 24; the remaining seven use 41.
-        WRATH_OUTER_OFFSETS.forEachIndexed { index, (dx, dz) ->
-            val destination = origin.transform(dx, dz)
-            val startHeight = if (index == 0) WRATH_PROJECTILE_DIAGONAL_START_HEIGHT else WRATH_PROJECTILE_START_HEIGHT
-            world.spawn(
-                player.createProjectile(
-                    destination,
-                    WRATH_RING_GFX,
-                    startHeight,
-                    WRATH_PROJECTILE_END_HEIGHT,
-                    WRATH_PROJECTILE_ANGLE,
-                    0,
-                    WRATH_PROJECTILE_DELAY,
-                    WRATH_PROJECTILE_LIFESPAN,
-                ),
-            )
-        }
+        visuals.launch(player, origin)
 
         // Novite schedules the actual blast one world tick later. This timing matters: the centre
         // graphic, hit and twelve impact tiles are all part of the delayed explosion, not the
@@ -1572,7 +1606,7 @@ object AncientCurses {
         val killer = player.attr[gg.rsmod.game.model.attr.KILLER_ATTR]?.get() as? Player
         world.queue {
             wait(1)
-            player.graphic(WRATH_CENTRE_GFX)
+            visuals.blast(player, origin)
 
             if (multi) {
                 world.npcs.forEach {
@@ -1597,10 +1631,6 @@ object AncientCurses {
                 gg.rsmod.plugins.content.mechanics.pvp.AreaState.canDeathEffectHit(player, killer)
             ) {
                 killer.hit(damage = world.random(damage), source = player)
-            }
-
-            (WRATH_OUTER_OFFSETS + WRATH_INNER_OFFSETS).forEach { (dx, dz) ->
-                world.spawn(TileGraphic(origin.transform(dx, dz), id = WRATH_RING_GFX, height = 0))
             }
         }
     }

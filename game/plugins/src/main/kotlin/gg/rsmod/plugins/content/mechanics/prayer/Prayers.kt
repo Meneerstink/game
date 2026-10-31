@@ -47,6 +47,23 @@ object Prayers {
     const val PRAYER_SOUND_VOLUME = 230
 
     /**
+     * N488 (owner 2026-10-31: "0 praypoints ... geen sound van lege prayer"): OSRS `[clientscript,prayer_op]` (osrs-dumps script 462)
+     * refuses a prayer click with `sound_synth(synth_2673)` - after "You need to recharge your Prayer at an altar." when the Prayer
+     * points are 0, on its own when a requirement is missing. All three books use these, so none of them is silent.
+     */
+    const val REFUSE_SOUND = Sfx.PRAYER_OFF
+    const val NO_POINTS_MESSAGE = "You need to recharge your Prayer at an altar."
+
+    fun refuseSound(p: Player) {
+        p.playSound(REFUSE_SOUND, volume = PRAYER_SOUND_VOLUME)
+    }
+
+    fun refuseNoPoints(p: Player) {
+        refuseSound(p)
+        p.message(NO_POINTS_MESSAGE)
+    }
+
+    /**
      * Whether this player currently has the prayer book in quick-prayer *selection* mode. This used
      * to be a single `var` on this object, i.e. one flag shared by every player on the server.
      */
@@ -297,6 +314,7 @@ object Prayers {
             p.message("You cannot use overhead prayers right now.")
             return
         } else if (p.getVarp(PRAYER_POINTS_VARP) == 0) {
+            refuseNoPoints(p)
             return
         }
         it.terminateAction = { p.syncVarp(ACTIVE_PRAYERS_VARP) }
@@ -353,7 +371,10 @@ object Prayers {
             p.message("You cannot use overhead prayers right now.")
             return true
         }
-        if (p.getVarp(PRAYER_POINTS_VARP) == 0) return true
+        if (p.getVarp(PRAYER_POINTS_VARP) == 0) {
+            refuseNoPoints(p)
+            return true
+        }
         flip(p, prayer)
         return true
     }
@@ -467,6 +488,9 @@ object Prayers {
         if (p.getVarp(PRAYER_POINTS_VARP) == 0) {
             deactivateAll(p)
             AncientCurses.deactivateAllCurses(p)
+            // N488: the "empty prayer" sound when the points run out (LostCity prayer.rs2 `sound_synth(prayer_drain)` with this
+            // message; RuneLite SoundEffectID PRAYER_DEPLETE_TWINKLE 2672 = Sfx.PRAYER_DRAIN). Every book drains through here.
+            p.playSound(Sfx.PRAYER_DRAIN, volume = PRAYER_SOUND_VOLUME)
             p.message("You have run out of prayer points, you can recharge at an altar.")
         }
     }
@@ -636,12 +660,14 @@ object Prayers {
 
         if (p.skills.getMaxLevel(Skills.PRAYER) < prayer.level) {
             p.syncVarp(ACTIVE_PRAYERS_VARP)
+            refuseSound(p)
             p.message(requirementText(p, curse = false, slot = prayer.slot) ?: "You need a Prayer level of at least ${prayer.level} to use ${prayer.named}.")
             return false
         }
 
         knightWavesRefusal(p, prayer)?.let { refusal ->
             p.syncVarp(ACTIVE_PRAYERS_VARP)
+            refuseSound(p)
             it.messageBox(refusal)
             return false
         }
@@ -649,6 +675,7 @@ object Prayers {
         // N98 (owner VRAGEN 29 = C): Rigour and Augury need 70 Defence and their prayer scroll, read once (PrayerScrolls).
         PrayerScrolls.refusal(p, prayer)?.let { refusal ->
             p.syncVarp(ACTIVE_PRAYERS_VARP)
+            refuseSound(p)
             it.messageBox(refusal)
             return false
         }

@@ -255,7 +255,7 @@ object MagicCombatFormula : CombatFormula {
         effectiveLvl = Math.floor(effectiveLvl)
 
         var magicLvl = target.skills.getCurrentLevel(Skills.MAGIC).toDouble()
-        magicLvl *= getPrayerAttackMultiplier(target) * AncientCurses.drainMultiplier(target, Skills.MAGIC)
+        magicLvl *= getPrayerMagicDefenceMultiplier(target) * AncientCurses.drainMultiplier(target, Skills.MAGIC)
         magicLvl = Math.floor(magicLvl)
 
         magicLvl *= 0.7
@@ -379,6 +379,18 @@ object MagicCombatFormula : CombatFormula {
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 1.15
             Prayers.isActive(player, Prayer.AUGURY) -> 1.25
             else -> 1.0
+        }
+
+    /**
+     * N487: the prayer multiplier on the Magic level of a DEFENDING player. The Normal Mystic prayers and Augury and the curses
+     * keep counting (OSRS Augury: "magical attack and defence"); the Ruinous offence prayers do not - OSRS Wiki Ancient Will,
+     * Trinitas, Vaporise and Intensify list "Magic defence 0%", they only raise accuracy.
+     */
+    internal fun getPrayerMagicDefenceMultiplier(player: Player): Double =
+        if (gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS) {
+            1.0
+        } else {
+            getPrayerAttackMultiplier(player)
         }
 
     private fun getPrayerDefenceMultiplier(player: Player): Double =

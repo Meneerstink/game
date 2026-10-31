@@ -145,6 +145,10 @@ object OsrsFxImportTool {
             // OSRS pet Beef's rare "Emote": the whirlwind that spins it round (RuneLite gameval SpotanimID VFX_BEEF_TORNADO 3587;
             // OSRS Wiki Beef "Emotes"). Beef's own sequences are in SEQ_BATCHES under the same name.
             "pet-beef" to listOf(3587),
+            // N486 (owner 2026-10-31, balance plan step 4): Ruinous Powers Wrath on death shows OSRS's white clouds, not the purple
+            // 667 curse Wrath (OSRS Wiki File:Wrath.gif). RuneLite gameval SpotanimID NEX_MUSHROOM_CLOUD_PROJANIM 2012,
+            // NEX_MUSHROOM_CLOUD_SPOTANIM 2013, NEX_MUSHROOM_CLOUD_SPOTANIM_SMALL 2014 (Nex's own Wrath, the same effect).
+            "ruinouswrath" to listOf(2012, 2013, 2014),
         )
 
     /**

@@ -15,6 +15,7 @@ import gg.rsmod.plugins.api.PrayerIcon
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.combat.createProjectile
 
 /**
  * N463 Ruinous Powers, the third prayer book (owner 2026-10-31: "ruinous prayers volledig werkend alles correct"; decisions: the
@@ -29,7 +30,7 @@ import gg.rsmod.plugins.api.ext.*
  *   x0.6 of a player's ("100% protection ... (40% in PvP)").
  * - Purge: "1/3 of damage dealt is also removed from both yours and your opponent's Prayer points."
  * - Rebuke: "Increases recoil damage by 10%" ([rebuke], every recoil effect +10% rounded down); Vindication: like Redemption (below 10% HP: heal 25% of the Prayer
- *   level, Prayer points to 0); Wrath: on death up to 25% of the base Prayer level to opponents in a 5x5 area (the curse Wrath blast).
+ *   level, Prayer points to 0); Wrath: on death up to 25% of the base Prayer level to opponents in a 5x5 area (the curse Wrath hit rules, OSRS clouds - N486).
  * - Rejuvenation: Hitpoints regenerate 3x faster; Berserker: boosted combat stats last 50% longer; Ruinous Grace: running drains no
  *   run energy (the prayer's own drain is the cost, OSRS Wiki: stamina potions do not count); Metabolise: 25 ticks after activation
  *   food delays the next attack 1 tick less.
@@ -132,10 +133,15 @@ object RuinousPowers {
             deactivate(player, prayer)
         } else {
             refusal(player, prayer)?.let {
+                // N488: the OSRS refusal sound with the message (prayer_op synth 2673).
+                if (player.skills.getMaxLevel(Skills.PRAYER) < prayer.level) Prayers.refuseSound(player)
                 player.message(it)
                 return
             }
-            if (player.getCurrentPrayerPoints() <= 0) return
+            if (player.getCurrentPrayerPoints() <= 0) {
+                Prayers.refuseNoPoints(player)
+                return
+            }
             activate(player, prayer)
         }
         player.setVarc(Prayers.QUICK_PRAYERS_ACTIVE_VARC, 0)
@@ -457,15 +463,59 @@ object RuinousPowers {
         Prayers.deactivateAll(target)
         AncientCurses.deactivateAllCurses(target)
         target.heal(target.skills.getMaxLevel(Skills.PRAYER) / 4)
+        // N485: Vindication "functions exactly like Redemption" - the same graphic and heal sound.
+        Redemption.playHealEffect(target)
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous vindication ${target.username} at $current hitpoints: +${target.skills.getMaxLevel(Skills.PRAYER) / 4}, prayer 0" }
     }
 
-    /** Wrath (death start): the curse Wrath blast with "up to 25% of your Prayer level" (base level, OSRS Wiki). */
+    /**
+     * Wrath (death start): "up to 25% of your Prayer level" (base level, OSRS Wiki) to opponents in a 5x5 area - the curse Wrath's hit
+     * rules - with OSRS's own look ([WRATH_VISUALS]).
+     */
     fun onDeathStart(player: Player) {
         if (!on(player, RuinousPrayer.WRATH)) return
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous wrath ${player.username} max ${player.skills.getMaxLevel(Skills.PRAYER) / 4}" }
-        AncientCurses.wrathExplosion(player, maxDamage = player.skills.getMaxLevel(Skills.PRAYER) / 4)
+        AncientCurses.wrathExplosion(player, maxDamage = player.skills.getMaxLevel(Skills.PRAYER) / 4, visuals = WRATH_VISUALS)
     }
+
+    /**
+     * N486 (owner 2026-10-31): OSRS Wrath's white clouds (OSRS Wiki File:Wrath.gif), imported by OsrsFxImportTool batch
+     * `ruinouswrath`: RuneLite gameval NEX_MUSHROOM_CLOUD_PROJANIM 2012 -> [WRATH_STREAK_GFX], NEX_MUSHROOM_CLOUD_SPOTANIM 2013 ->
+     * [WRATH_CLOUD_GFX], NEX_MUSHROOM_CLOUD_SPOTANIM_SMALL 2014 -> [WRATH_SMALL_CLOUD_GFX]. The gif: on death a cloud rises on the
+     * player and white streaks fly out; a moment later small clouds stand scattered round the player, about four tiles out (the
+     * damage stays 5x5, the Wiki's area). [WRATH_STREAK_TARGETS] / [WRATH_SMALL_CLOUD_TILES] copy that scatter.
+     */
+    const val WRATH_STREAK_GFX = 3189
+    const val WRATH_CLOUD_GFX = 3190
+    const val WRATH_SMALL_CLOUD_GFX = 3191
+
+    private val WRATH_STREAK_TARGETS = listOf(4 to 1, 1 to 4, -3 to 3, -4 to -1, -1 to -4, 3 to -3, 3 to 3, -3 to -3)
+    private val WRATH_SMALL_CLOUD_TILES = WRATH_STREAK_TARGETS + listOf(2 to -1, -2 to 1, 1 to 2, -1 to -2)
+
+    private const val WRATH_STREAK_HEIGHT = 40
+    private const val WRATH_STREAK_DELAY = 0
+    private const val WRATH_STREAK_LIFESPAN = 30
+
+    val WRATH_VISUALS =
+        object : AncientCurses.WrathVisuals {
+            override fun launch(player: Player, origin: gg.rsmod.game.model.Tile) {
+                player.graphic(WRATH_CLOUD_GFX)
+                WRATH_STREAK_TARGETS.forEach { (dx, dz) ->
+                    player.world.spawn(
+                        player.createProjectile(
+                            origin.transform(dx, dz), WRATH_STREAK_GFX, startHeight = WRATH_STREAK_HEIGHT, endHeight = 0, angle = 0,
+                            steepness = 0, delay = WRATH_STREAK_DELAY, lifespan = WRATH_STREAK_LIFESPAN,
+                        ),
+                    )
+                }
+            }
+
+            override fun blast(player: Player, origin: gg.rsmod.game.model.Tile) {
+                WRATH_SMALL_CLOUD_TILES.forEach { (dx, dz) ->
+                    player.world.spawn(gg.rsmod.game.model.TileGraphic(origin.transform(dx, dz), id = WRATH_SMALL_CLOUD_GFX, height = 0))
+                }
+            }
+        }
 
     /** True while the player fights (the altars' book switch refuses then). */
     fun inCombat(player: Player): Boolean = player.timers.has(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)

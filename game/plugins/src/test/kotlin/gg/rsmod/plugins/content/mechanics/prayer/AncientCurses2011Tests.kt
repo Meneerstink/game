@@ -223,14 +223,14 @@ class AncientCurses2011Tests {
     }
 
     @Test
-    fun `Leech Attack escalates the drain to 25 percent and the self boost to 10 percent`() {
+    fun `Leech Attack escalates the drain to 15 percent and the self boost to 10 percent`() {
         val attacker = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.switchBook(attacker, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
         val target = newPlayer(mapOf(Skills.ATTACK to 99))
         AncientCurses.onDamageDealt(attacker, target, damage = 10)
         // KB: base 10 % drain / 5 % boost are modifiers while the Leech is active; procs are real +-1 % level steps (drain to
-        // 25 %, boost to 10 %) that regenerate as usual. Owner 2026-09-19: the FIRST proc is a real step as well (it used to
+        // 15 % since the owner's balance plan 2026-10-31 - 2011: 25 % - boost to 10 %) that regenerate as usual. Owner 2026-09-19: the FIRST proc is a real step as well (it used to
         // register only the invisible modifier, so the owner saw "the message but no drain").
         assertEquals(98, target.skills.getCurrentLevel(Skills.ATTACK))
         assertEquals(0.9, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
@@ -239,13 +239,21 @@ class AncientCurses2011Tests {
         assertEquals(1.15, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         // Owner 2026-09-18: one proc per 45-second cooldown; the cap itself is unchanged.
         repeat(30) { procAfterCooldown(attacker, target) }
-        assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 14 (extra 15 % of 99)
+        assertEquals(95, target.skills.getCurrentLevel(Skills.ATTACK)) // 99 - 4 (extra 5 % of 99; cap 15 %, owner 2026-10-31)
         assertEquals(104, attacker.skills.getCurrentLevel(Skills.ATTACK)) // 99 + 5 (owner 2026-10-09: at most +5 levels per Leech run)
         AncientCurses.toggleCurse(attacker, AncientCurse.LEECH_ATTACK)
         assertEquals(1.0, AncientCurses.leechMultiplier(attacker, Skills.ATTACK), 1e-9)
         assertEquals(1.0, AncientCurses.drainMultiplier(target, Skills.ATTACK), 1e-9)
         assertEquals(104, attacker.skills.getCurrentLevel(Skills.ATTACK))
-        assertEquals(85, target.skills.getCurrentLevel(Skills.ATTACK))
+        assertEquals(95, target.skills.getCurrentLevel(Skills.ATTACK))
+    }
+
+    /** Owner balance plan 2026-10-31 (steps 2 and 3): Turmoil costs what Piety costs; a Leech drains the enemy at most 15 %. */
+    @Test
+    fun `balance plan 2026-10-31 - Turmoil drains like Piety and the Leech ceiling is 15 percent`() {
+        assertEquals(Prayer.PIETY.drainEffect, AncientCurse.TURMOIL_DRAIN_EFFECT)
+        assertEquals(15, AncientCurses.LEECH_DRAIN_CAP_PCT)
+        assertEquals(20, AncientCurses.SAP_CAP_PCT)
     }
 
     @Test
@@ -325,7 +333,7 @@ class AncientCurses2011Tests {
     /**
      * One test for the whole Leech set (owner 2026-10-06, bug 031309, OWNER_QUESTIONS Q5 answer A). Leech Attack, Strength,
      * Defence and Magic share one path: the base 5 % modifier while active plus a visible +1 level per proc up to +5 % of the
-     * base level, and the target's drain (one level per proc, 10 % base modifier, 25 % cap). Leech Defence and Magic used to
+     * base level, and the target's drain (one level per proc, 10 % base modifier, 15 % cap since 2026-10-31). Leech Defence and Magic used to
      * carry a hidden +15 % / Augury modifier with no visible level (owner 2026-09-29) - that is gone. Leech Ranged keeps its
      * 2026-09-29 Rigour-style modifier (+20 % accuracy / +18 % damage, no levels). Leech Energy / Special Attack move 10 run
      * energy / 5 % special energy. Every Leech rolls Darkan's 20 % (LEECH_PROC_CHANCE_PERCENT).
@@ -375,9 +383,9 @@ class AncientCurses2011Tests {
             assertEquals(curse.name, 100, attacker.skills.getCurrentLevel(skill))
             assertEquals(curse.name, accuracy, AncientCurses.leechMultiplier(attacker, skill), 1e-9)
             assertEquals(curse.name, damage, AncientCurses.leechMultiplier(attacker, skill, damage = true), 1e-9)
-            // One proc per cooldown (owner 2026-09-18, 15 s since 2026-10-09); the caps: drain 25 % (99 - 14), boost +5 levels.
+            // One proc per cooldown (owner 2026-09-18, 15 s since 2026-10-09); the caps: drain 15 % (99 - 4, owner 2026-10-31), boost +5 levels.
             repeat(30) { procAfterCooldown(attacker, target, style) }
-            assertEquals(curse.name, 85, target.skills.getCurrentLevel(skill))
+            assertEquals(curse.name, 95, target.skills.getCurrentLevel(skill))
             assertEquals(curse.name, 104, attacker.skills.getCurrentLevel(skill))
             AncientCurses.toggleCurse(attacker, curse)
             assertEquals(curse.name, 1.0, AncientCurses.leechMultiplier(attacker, skill), 1e-9)

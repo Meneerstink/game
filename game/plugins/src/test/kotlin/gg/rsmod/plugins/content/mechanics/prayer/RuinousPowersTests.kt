@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.mechanics.prayer
 import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.EnumDef
+import gg.rsmod.game.fs.def.SpotAnimDef
 import gg.rsmod.game.fs.def.StructDef
 import gg.rsmod.game.fs.def.VarbitDef
 import gg.rsmod.game.model.World
@@ -36,6 +37,7 @@ class RuinousPowersTests {
                 load(store, VarbitDef::class.java)
                 load(store, EnumDef::class.java)
                 load(store, StructDef::class.java)
+                load(store, SpotAnimDef::class.java)
             }
         }
     }
@@ -211,6 +213,58 @@ class RuinousPowersTests {
         assertEquals(1.0, RuinousPowers.rangedStrength(p))
     }
 
+    /**
+     * N487 (balance plan 2026-10-31): the Ruinous offence prayers raise accuracy only. OSRS Wiki Ancient Will, Trinitas, Vaporise and
+     * Intensify: "Magic defence 0%". Before, the magic defence roll reused the attack multiplier, so Intensify made a player 50 %
+     * harder to hit with magic as well.
+     */
+    /**
+     * N488 (owner 2026-10-31: "0 praypoints ... geen sound van lege prayer"): OSRS `[clientscript,prayer_op]` refuses with
+     * synth 2673 and "You need to recharge your Prayer at an altar."; a level that is too low gets the same sound.
+     */
+    @Test
+    fun `a click with no Prayer points plays the refusal sound and says to recharge`() {
+        val p = player(points = 0)
+        val sent = written(p)
+        RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.DECIMATE))
+        assertTrue(sent.any { it is gg.rsmod.game.message.impl.SynthSoundMessage && it.sound == Prayers.REFUSE_SOUND })
+        assertTrue(sent.any { it is gg.rsmod.game.message.impl.MessageGameMessage && it.message == Prayers.NO_POINTS_MESSAGE })
+        val low = player(prayerLevel = 70)
+        val lowSent = written(low)
+        RuinousPowers.click(low, RuinousPrayer.DECIMATE.slot)
+        assertFalse(RuinousPowers.isActive(low, RuinousPrayer.DECIMATE))
+        assertTrue(lowSent.any { it is gg.rsmod.game.message.impl.SynthSoundMessage && it.sound == Prayers.REFUSE_SOUND })
+    }
+
+    /** Every message [player] is sent from now on. */
+    private fun written(player: Player): MutableList<Any> {
+        val sent = mutableListOf<Any>()
+        every { player.write(*anyVararg<gg.rsmod.game.message.Message>()) } answers { sent.addAll(firstArg<Array<gg.rsmod.game.message.Message>>()); Unit }
+        return sent
+    }
+
+    /** N486: Ruinous Wrath's OSRS clouds (OsrsFxImportTool batch ruinouswrath) are in the cache; the curse Wrath keeps 2259/2260. */
+    @Test
+    fun `Wrath uses the imported OSRS clouds`() {
+        listOf(RuinousPowers.WRATH_STREAK_GFX, RuinousPowers.WRATH_CLOUD_GFX, RuinousPowers.WRATH_SMALL_CLOUD_GFX).forEach { id ->
+            val def = definitions.getNullable(SpotAnimDef::class.java, id)
+            assertTrue(def != null, "spotanim $id missing")
+        }
+        assertTrue(RuinousPowers.WRATH_VISUALS !== AncientCurses.CURSE_WRATH_VISUALS)
+    }
+
+    @Test
+    fun `the Ruinous offence prayers give no magic defence`() {
+        val p = player()
+        assertEquals(1.0, gg.rsmod.plugins.content.combat.formula.MagicCombatFormula.getPrayerMagicDefenceMultiplier(p))
+        listOf(RuinousPrayer.ANCIENT_WILL, RuinousPrayer.TRINITAS, RuinousPrayer.VAPORISE, RuinousPrayer.INTENSIFY).forEach { prayer ->
+            RuinousPowers.click(p, prayer.slot)
+            assertTrue(RuinousPowers.magicAttack(p) > 1.0, prayer.name)
+            assertEquals(1.0, gg.rsmod.plugins.content.combat.formula.MagicCombatFormula.getPrayerMagicDefenceMultiplier(p), prayer.name)
+        }
+    }
+
     @Test
     fun `Metabolise takes a tick off the food delay only after 25 ticks`() {
         val p = player()
@@ -300,6 +354,8 @@ class RuinousPowersTests {
         RuinousPowers.onDamageDealt(attacker, p, 20)
         io.mockk.verify { p.setCurrentPrayerPoints(0) }
         assertTrue(RuinousPowers.active(p).isEmpty())
+        // N485: the heal shows Redemption's graphic (and plays its heal sound, Redemption.playHealEffect).
+        io.mockk.verify { p.graphic(Redemption.HEAL_GRAPHIC) }
         // Not below 10 %: nothing happens.
         val q = player()
         every { q.getMaximumLifepoints() } returns 99
@@ -307,5 +363,6 @@ class RuinousPowersTests {
         RuinousPowers.click(q, RuinousPrayer.VINDICATION.slot)
         RuinousPowers.onDamageDealt(attacker, q, 20)
         assertTrue(RuinousPowers.isActive(q, RuinousPrayer.VINDICATION))
+        io.mockk.verify(exactly = 0) { q.graphic(Redemption.HEAL_GRAPHIC) }
     }
 }

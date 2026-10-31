@@ -5,8 +5,10 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.hasEquipped
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.playSound
 
 /**
  * Redemption's real effect (auto-heal + deactivate when the caster's health drops below 10% of
@@ -33,9 +35,9 @@ import gg.rsmod.plugins.api.ext.heal
  *   `AncientCurses.deactivateAllCurses` pair `Prayers.drainPrayer` already uses when prayer points
  *   hit zero naturally.
  *
- * No graphic ported this batch (Void's `gfx("redemption")` references a donor-specific graphic ID
- * not yet cross-checked against this cache) - visual polish deferred, the heal/deactivate effect is
- * the actual mechanic.
+ * N485 (owner 2026-10-31, balance plan step 4): the heal shows Redemption's graphic and plays its heal sound - Void
+ * `prayer.gfx.toml` [redemption] id 436 (present in this cache), synth 2681 REDEMPTION_HEAL ([Sfx]). Ruinous Vindication, which
+ * "functions exactly like Redemption" (Jagex, Ruinous Powers Beta v2), uses the same [playHealEffect].
  */
 object Redemption {
     // OSRS Wiki "Redemption": heals 25 % of the Prayer level. The donor's 2.5 was on its x10 life points; this server is 1:1.
@@ -65,5 +67,14 @@ object Redemption {
 
         val heal = (target.skills.getMaxLevel(Skills.PRAYER) * HEAL_MULTIPLIER).toInt()
         target.heal(heal)
+        playHealEffect(target)
+    }
+
+    const val HEAL_GRAPHIC = 436
+
+    /** The graphic and sound of a Redemption (or Ruinous Vindication) heal. */
+    fun playHealEffect(player: Player) {
+        player.graphic(HEAL_GRAPHIC)
+        player.playSound(Sfx.REDEMPTION_HEAL, volume = Prayers.PRAYER_SOUND_VOLUME)
     }
 }

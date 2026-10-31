@@ -257,10 +257,11 @@ enum class AncientCurse(
 
         /**
          * Turmoil is implemented separately in [AncientCurses] rather than as an entry above, but
-         * it drains through the same shared counter. Same units; 2 seconds per Prayer point at
-         * zero prayer bonus, matching Soul Split.
+         * it drains through the same shared counter. Same units. Owner 2026-10-31 (balance plan step 2): 240 = Piety's 1.5 s
+         * per Prayer point at zero prayer bonus (40 a minute). The 2011 value 180 made the strongest melee prayer of the three
+         * books also the cheapest; its strength is unchanged.
          */
-        const val TURMOIL_DRAIN_EFFECT = 180
+        const val TURMOIL_DRAIN_EFFECT = 240
 
         /** Non-skill drain targets for [drains] (file-level values; enum entries cannot read the companion). */
         const val DRAIN_SPECIAL = CURSE_DRAIN_SPECIAL

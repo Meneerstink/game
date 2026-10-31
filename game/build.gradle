@@ -293,6 +293,14 @@ task runOsrsFxImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsFxImportTool'
 }
 
+task runCurseTooltipCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Prayer-tab hover texts of the curses and Augury/Rigour (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runCurseTooltipCacheTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.CurseTooltipCacheTool'
+}
+
 task runOsrsBasImportTool(type: JavaExec) {
     group = 'tools'
     description = 'Body-animation sets (stand/walk/run) for imported OSRS weapons (CacheTransaction, both caches). ' +

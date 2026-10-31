@@ -10,6 +10,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.hit
 import gg.rsmod.plugins.api.ext.isMulti
+import gg.rsmod.plugins.content.combat.createProjectile
 
 /**
  * Retribution's real effect (an explosion on the caster's own death) had no death-processing hook
@@ -29,13 +30,18 @@ import gg.rsmod.plugins.api.ext.isMulti
  *   single combat, only the caster's killer is hit, and only if the killer is standing adjacent at
  *   the moment of death.
  *
- * No graphic/projectile is ported this batch (Void's `gfx`/`shoot` calls reference donor-specific
- * animation IDs not yet cross-checked against this cache) - visual polish is deferred as a
- * separate follow-up; the damage effect itself is Retribution's actual gameplay mechanic.
+ * N485 (owner 2026-10-31, balance plan step 4): the blast is visible - Void `retribution()` plays gfx [GRAPHIC] 437 on the
+ * caster and shoots [SPLASH] 438 at each of the eight adjacent tiles (Void `prayer.gfx.toml`: retribution_splash delay 10,
+ * time_offset 10, heights 30/30). Both ids exist in this cache.
  */
 object Retribution {
     // OSRS Wiki "Retribution": up to 25 % of the Prayer level. The donor's 2.5 was on its x10 life points; this server is 1:1.
     private const val MAX_HIT_MULTIPLIER = 0.25
+    const val GRAPHIC = 437
+    const val SPLASH = 438
+    private const val SPLASH_HEIGHT = 30
+    private const val SPLASH_DELAY = 10
+    private const val SPLASH_FLIGHT = 10
 
     fun onPlayerDeath(player: Player) {
         if (!Prayers.isActive(player, Prayer.RETRIBUTION)) return
@@ -48,11 +54,18 @@ object Retribution {
 
         val killer = player.attr[KILLER_ATTR]?.get()
         val multi = player.tile.isMulti(world)
+        player.graphic(GRAPHIC)
 
         for (dx in -1..1) {
             for (dz in -1..1) {
                 if (dx == 0 && dz == 0) continue
                 val tile = player.tile.transform(dx, dz)
+                world.spawn(
+                    player.createProjectile(
+                        tile, SPLASH, startHeight = SPLASH_HEIGHT, endHeight = SPLASH_HEIGHT, angle = 0, steepness = 0,
+                        delay = SPLASH_DELAY, lifespan = SPLASH_DELAY + SPLASH_FLIGHT,
+                    ),
+                )
                 if (multi) {
                     hitAllAt(world, tile, player, damage)
                 } else if (killer != null && killer.tile == tile) {

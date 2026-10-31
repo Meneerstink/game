@@ -44,9 +44,17 @@ on_npc_option(npc = Npcs.AZZANADRA, option = "talk-to") {
                 "mortal. Zaros is not so easily forgotten.",
                 facialExpression = FacialExpression.CALM_TALK,
             )
-            when (options("Switch me to the Ancient Curses.", "Switch me to the normal prayers.", "I'll leave you to your rest.")) {
+            // N489 (owner 2026-10-31 'wisselen bij de altaren waar Curses ook kan'): the Ruinous Powers - Zarosian prayers too - are
+            // chosen here as well; AncientCurses.switchBook keeps every rule (not in combat, curses only when learned).
+            when (
+                options(
+                    "Switch me to the Ancient Curses.", "Switch me to the Ruinous Powers.", "Switch me to the normal prayers.",
+                    "I'll leave you to your rest.",
+                )
+            ) {
                 1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
-                2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
+                2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
+                3 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
             }
         } else {
             chatNpc(
@@ -55,6 +63,11 @@ on_npc_option(npc = Npcs.AZZANADRA, option = "talk-to") {
                 "not given away to passers-by.",
                 facialExpression = FacialExpression.CALM_TALK,
             )
+            // N489: the Ruinous Powers need only the Prayer level (owner 2026-10-31), so he switches those books for everyone.
+            when (options("Switch me to the Ruinous Powers.", "Switch me to the normal prayers.", "I'll leave you to your rest.")) {
+                1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
+                2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
+            }
         }
     }
 }

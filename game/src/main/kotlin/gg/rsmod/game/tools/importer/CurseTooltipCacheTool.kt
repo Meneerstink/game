@@ -25,10 +25,17 @@ object CurseTooltipCacheTool {
     // Owner A8 2026-10-11 (night run): "the curse tooltips are wrong" - every one of the 20 was compared with what
     // AncientCurses really does; these 13 said something else and now state the real effect in the 2011 wording. The other 7
     // (Protect Item, the three Saps, Berserker, Soul Split, Turmoil) already matched and stay.
-    private const val LEECH_DRAIN = "while draining enemy %s by 10%%, increasing to 25%% over time."
+    // Owner 2026-10-31 (balance plan step 3): a Leech drains the enemy at most 15 % (AncientCurses.LEECH_DRAIN_CAP_PCT, was 25).
+    private const val LEECH_DRAIN = "while draining enemy %s by 10%%, increasing to 15%% over time."
+
+    /** The A8 / 2026-10-11 wording with the old 25 % ceiling, now in the caches until this tool runs. */
+    private const val LEECH_DRAIN_25 = "while draining enemy %s by 10%%, increasing to 25%% over time."
 
     private fun leech(skill: String, pct: Int) =
         "Boosts $skill by $pct% and raises it up to 5 levels over time, " + LEECH_DRAIN.format(skill)
+
+    private fun leech25(skill: String, pct: Int) =
+        "Boosts $skill by $pct% and raises it up to 5 levels over time, " + LEECH_DRAIN_25.format(skill)
 
     /** The 667 Sap sentence (only the drain). */
     private fun sapOriginal(drained: String) = "Drains 10% of enemy $drained, increasing to 20% over time."
@@ -69,7 +76,7 @@ object CurseTooltipCacheTool {
             Tooltip(897, listOf("Protects against melee attacks and can deflect some of the damage back to the attacker."), deflect("melee attacks")),
             // leechMultiplier while active (owner 2026-10-11: LEECH_ATTACK_BOOST_PCT 15, was 5) + escalateBoost +1 level per proc,
             // at most LEECH_LEVEL_CAP 5. The A8 wording with 5 % is the one now in the cache.
-            Tooltip(898, listOf(original("Attack"), leech("Attack", 5)), leech("Attack", 15)),
+            Tooltip(898, listOf(original("Attack"), leech25("Attack", 5), leech25("Attack", 15)), leech("Attack", 15)),
             // Earlier wordings first (667 original, 2026-09-29 Rigour, 2026-09-29 second round); now x1.20 accuracy, x1.13 damage.
             Tooltip(
                 899,
@@ -77,6 +84,8 @@ object CurseTooltipCacheTool {
                     original("Ranged"),
                     "Boosts Ranged accuracy by 20% and Ranged damage by 23%, while draining enemy Ranged by 10%, increasing to 25% over time.",
                     "Boosts Ranged accuracy by 20% and Ranged damage by 18%, while draining enemy Ranged by 10%, increasing to 25% over time.",
+                    "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
+                        LEECH_DRAIN_25.format("Ranged"),
                 ),
                 "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
                     LEECH_DRAIN.format("Ranged"),
@@ -88,6 +97,8 @@ object CurseTooltipCacheTool {
                     original("Magic"),
                     "Boosts Magic accuracy by 25% and Magic damage by 4%, while draining enemy Magic by 10%, increasing to 25% over time.",
                     "Boosts Magic accuracy by 25%, while draining enemy Magic by 10%, increasing to 25% over time.",
+                    "Boosts Magic accuracy by 25% and Magic damage by 4%, and raises Magic up to 5 levels over time, " +
+                        LEECH_DRAIN_25.format("Magic"),
                 ),
                 "Boosts Magic accuracy by 25% and Magic damage by 4%, and raises Magic up to 5 levels over time, " +
                     LEECH_DRAIN.format("Magic"),
@@ -98,11 +109,12 @@ object CurseTooltipCacheTool {
                 listOf(
                     original("Defence"),
                     "Boosts Defence by 15%, while draining enemy Defence by 10%, increasing to 25% over time.",
-                    leech("Defence", 5),
+                    leech25("Defence", 5),
+                    leech25("Defence", 10),
                 ),
                 leech("Defence", 10),
             ),
-            Tooltip(902, listOf(original("Strength"), leech("Strength", 5)), leech("Strength", 18)),
+            Tooltip(902, listOf(original("Strength"), leech25("Strength", 5), leech25("Strength", 18)), leech("Strength", 18)),
             // LEECH_ENERGY: +10 / -10 run energy; LEECH_SPECIAL_ATTACK: LEECH_SPECIAL_PCT 5.
             Tooltip(903, listOf("Drains enemy run energy, while increasing your own"), "Drains 10% of enemy run energy and gives it to you."),
             Tooltip(
