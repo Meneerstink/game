@@ -11,6 +11,7 @@ enum class AshData(
     IMPIOUS_ASHES(ash = Items.IMPIOUS_ASHES, gfx = Gfx.SCATTER_IMPIOUS_ASHES, experience = 4.0),
     ACCURSED_ASHES(ash = Items.ACCURSED_ASHES, gfx = Gfx.SCATTER_ACCURSED_ASHES, experience = 12.5),
     INFERNAL_ASHES(ash = Items.INFERNAL_ASHES, gfx = Gfx.SCATTER_INFERNAL_ASHES, experience = 62.5),
+    OSRS_INFERNAL_ASHES(ash = Items.INFERNAL_ASHES_22312, gfx = Gfx.SCATTER_INFERNAL_ASHES, experience = 110.0),
     ;
 
     companion object {

@@ -18,7 +18,8 @@ import gg.rsmod.plugins.api.ext.getEquipment
  * - Ancient wyvern shield: charged with fossils or numulites ("Recharge"), not by breath - [gainChargeFromDragonfire] skips it.
  *
  * The ward and the wyvern shield are two cache items each (charged / uncharged): the charged id exists only while charges > 0.
- * The 667 Dragonfire shield keeps its single modelled id. Charges live in [ItemAttribute.CHARGES].
+ * Both native 667 Dragonfire shield forms retain their current id when their charge counter changes.
+ * Charges live in [ItemAttribute.CHARGES]; neither native form assumes a full counter by id alone.
  *
  * SOURCE_GAP / not built yet (recorded in OSRS_IMPORT_MASTER.yml): the +1 melee/ranged defence per charge, the Operate breath attack
  * of the ward and the wyvern shield, the wyvern shield's fossil / numulite Recharge, the trade lock while charged.
@@ -32,6 +33,7 @@ object DragonfireShield {
         val noun: String,
         val emptyMessage: String,
         val breathCharged: Boolean,
+        val changesForm: Boolean = true,
     ) {
         val ids: Set<Int> = setOf(charged, uncharged)
     }
@@ -40,10 +42,11 @@ object DragonfireShield {
         listOf(
             Family(
                 Items.DRAGONFIRE_SHIELD,
-                Items.DRAGONFIRE_SHIELD,
+                Items.DRAGONFIRE_SHIELD_11284,
                 "shield",
                 "You empty the shield of its remaining charges, releasing them in a harmless burst.",
                 breathCharged = true,
+                changesForm = false,
             ),
             Family(
                 Items.DRAGONFIRE_WARD,
@@ -71,7 +74,7 @@ object DragonfireShield {
     fun charges(item: Item): Int {
         item.attr[ItemAttribute.CHARGES]?.let { return it }
         val family = familyOf(item.id) ?: return 0
-        return if (family.charged != family.uncharged && item.id == family.charged) MAX_CHARGES else 0
+        return if (family.changesForm && item.id == family.charged) MAX_CHARGES else 0
     }
 
     /** [item] holding [charges] (0-50): the family's charged id while it holds any, its uncharged id at 0. */
@@ -81,7 +84,7 @@ object DragonfireShield {
     ): Item {
         val clamped = charges.coerceIn(0, MAX_CHARGES)
         val family = familyOf(item.id)
-        val id = if (family == null) item.id else if (clamped > 0) family.charged else family.uncharged
+        val id = if (family == null || !family.changesForm) item.id else if (clamped > 0) family.charged else family.uncharged
         return Item(id, item.amount).copyAttr(item).also {
             if (clamped > 0) it.attr[ItemAttribute.CHARGES] = clamped else it.attr.remove(ItemAttribute.CHARGES)
         }

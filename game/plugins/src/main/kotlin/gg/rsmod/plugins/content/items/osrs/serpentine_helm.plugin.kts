@@ -83,14 +83,19 @@ on_item_on_item(item1 = Items.CHISEL, item2 = Items.SERPENTINE_VISAGE) {
     player.message("You carve the serpentine visage into a helm.")
 }
 
-if (helmHasOption(Items.SERPENTINE_HELM_UNCHARGED, "Dismantle", worn = false)) {
-    on_item_option(item = Items.SERPENTINE_HELM_UNCHARGED, option = "Dismantle") {
-        val slot = player.getInteractingItemSlot()
-        if (player.inventory[slot]?.id != Items.SERPENTINE_HELM_UNCHARGED) return@on_item_option
-        player.inventory[slot] = null
-        if (!player.inventory.add(Items.ZULRAHS_SCALES, 20_000, assureFullInsertion = true).hasSucceeded()) {
-            player.inventory[slot] = gg.rsmod.game.model.item.Item(Items.SERPENTINE_HELM_UNCHARGED)
-            player.message("You don't have enough inventory space to do that.")
+// OSRS Wiki Serpentine visage: the raw visage and uncharged helm both return 20,000 scales.
+listOf(Items.SERPENTINE_HELM_UNCHARGED, Items.SERPENTINE_VISAGE).forEach { dismantled ->
+    val option = world.definitions.get(ItemDef::class.java, dismantled).inventoryMenu
+        .indexOfFirst { it.equals("Dismantle", ignoreCase = true) } + 1
+    if (option > 0 && !world.plugins.hasItemOption(dismantled, option)) {
+        on_item_option(item = dismantled, option = "Dismantle") {
+            val slot = player.getInteractingItemSlot()
+            val held = player.inventory[slot]?.takeIf { it.id == dismantled } ?: return@on_item_option
+            player.inventory[slot] = null
+            if (!player.inventory.add(Items.ZULRAHS_SCALES, 20_000, assureFullInsertion = true).hasSucceeded()) {
+                player.inventory[slot] = held
+                player.message("You don't have enough inventory space to do that.")
+            }
         }
     }
 }

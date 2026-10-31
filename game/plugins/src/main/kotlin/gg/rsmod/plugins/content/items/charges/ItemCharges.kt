@@ -4,6 +4,7 @@ import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 
 /**
@@ -28,6 +29,21 @@ import gg.rsmod.plugins.api.ext.message
  */
 object ItemCharges {
     const val OPTION = "Check-charges"
+
+    /** Native charged GE forms. OSRS Wiki Black mask and the three Broodoo shield pages. */
+    val removable = mapOf(
+        Items.BROODOO_SHIELD_10 to Items.BROODOO_SHIELD,
+        Items.BROODOO_SHIELD_10_6237 to Items.BROODOO_SHIELD_6257,
+        Items.BROODOO_SHIELD_10_6259 to Items.BROODOO_SHIELD_6279,
+        Items.BLACK_MASK_10 to Items.BLACK_MASK,
+    )
+
+    fun removeCharges(player: Player, slot: Int) {
+        val held = player.inventory[slot] ?: return
+        val empty = removable[held.id] ?: return
+        // Charge state belongs to the id for these items; never carry CHARGES into the empty form.
+        player.inventory[slot] = Item(empty)
+    }
 
     fun check(
         player: Player,

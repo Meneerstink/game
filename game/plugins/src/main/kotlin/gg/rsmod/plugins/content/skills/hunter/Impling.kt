@@ -3,11 +3,14 @@ package gg.rsmod.plugins.content.skills.hunter
 import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.quests.foundation.MonkeyMadnessII
 
 /**
  * Classic Puro-Puro impling capture, ported from the donor's flat per-tier reward tables
@@ -26,6 +29,18 @@ data class ImplingTier(
 )
 
 object ImplingData {
+    // OSRS Wiki Dragon impling jar. The nineteenth row is gated by the existing MMII quest
+    // status; unfinished accounts reroll over these 18 equal slots (Mod Ash, 2020-05-20).
+    val dragonJar = ImplingTier(
+        npcId = Npcs.DRAGON_IMPLING, jarItem = Items.DRAGON_IMPLING_JAR, level = 83, xp = 300.0,
+        common = listOf(
+            9193 to 10..30, 9193 to 36..36, 4093 to 1..1, 1705 to 3..3, 1703 to 2..2,
+            11212 to 100..250, 9341 to 10..40, 1305 to 1..1, 5699 to 3..3,
+            11230 to 100..250, 1616 to 3..3, 11232 to 100..350, 11237 to 100..350,
+            535 to 100..300, 537 to 50..100, 5316 to 1..1, 5300 to 6..6, 7219 to 15..15,
+        ),
+        rare = emptyList(),
+    )
     val TIERS =
         listOf(
             ImplingTier(
@@ -120,7 +135,14 @@ object ImplingData {
 
     fun byNpc(npc: Int): ImplingTier? = TIERS.firstOrNull { it.npcId == npc }
 
-    fun byJar(item: Int): ImplingTier? = TIERS.firstOrNull { it.jarItem == item }
+    val JAR_TIERS = TIERS + dragonJar
+
+    fun mainLoot(player: Player, tier: ImplingTier): List<Pair<Int, IntRange>> =
+        if (tier === dragonJar && MonkeyMadnessII.isFinished(player)) {
+            tier.common + (Items.DRAGON_JAVELIN_TIPS to 25..35)
+        } else tier.common
+
+    fun byJar(item: Int): ImplingTier? = JAR_TIERS.firstOrNull { it.jarItem == item }
 }
 
 object Impling {
@@ -176,16 +198,37 @@ object Impling {
         jarItem: Int,
     ) {
         val tier = ImplingData.byJar(jarItem) ?: return
-        if (player.inventory.isFull) {
-            player.filterableMessage("You'll need to clear some space in your pack before opening this.")
+        val slot = player.getInteractingItemSlot()
+        val held = player.inventory[slot]?.takeIf { it.id == jarItem } ?: return
+        // Void Impling.kt requires two free spaces before rolling, including a possible clue.
+        if (player.inventory.freeSlotCount < 2) {
+            player.filterableMessage("You'll need to clear some space in your pack before looting the jar.")
             return
         }
-        player.inventory.remove(jarItem, 1)
-        if (RANDOM.nextInt(5) == 0) {
-            player.filterableMessage("You press too hard on the jar and the glass shatters in your hands.")
+        val rare = tier.rare.isNotEmpty() && player.world.random(0..99) < 30
+        val table = if (rare) tier.rare else ImplingData.mainLoot(player, tier)
+        val (item, amounts) = table[player.world.random(table.indices)]
+        val amount = player.world.random(amounts)
+        val broken = player.world.random(0..9) == 0
+        val rewards = mutableListOf(Item(item, amount))
+        if (!broken) rewards += Item(Items.IMPLING_JAR)
+        if (tier === ImplingData.dragonJar && player.world.random(0..49) == 0 &&
+            !player.inventory.contains(Items.CLUE_SCROLL_ELITE) && !player.bank.contains(Items.CLUE_SCROLL_ELITE)
+        ) rewards += Item(Items.CLUE_SCROLL_ELITE)
+        val staged = ItemContainer(player.inventory)
+        staged[slot] = null
+        if (rewards.any { !staged.add(it, assureFullInsertion = true).hasSucceeded() }) {
+            player.filterableMessage("You'll need to clear some space in your pack before looting the jar.")
             return
         }
-        rollLoot(player, tier)
+        if (player.inventory[slot] !== held) return
+        for (i in 0 until staged.capacity) {
+            val old = player.inventory[i]
+            val next = staged[i]
+            // Keep unrelated item identities intact (other pending actions may hold their reference).
+            if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next
+        }
+        if (broken) player.filterableMessage("You break the jar as you try to open it. You throw the shattered remains away.")
     }
 
     private fun rollLoot(
