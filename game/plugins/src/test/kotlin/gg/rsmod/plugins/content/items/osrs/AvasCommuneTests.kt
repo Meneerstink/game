@@ -64,7 +64,7 @@ class AvasCommuneTests {
         @BeforeClass
         @JvmStatic
         fun load() {
-            STORE = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            STORE = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString())
             DEFINITIONS.loadAll(STORE)
         }
 

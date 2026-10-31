@@ -57,6 +57,21 @@ object AvasAssembler {
     /** True once the player communed to stop the gathering; persisted per account. */
     val GATHERING_STOPPED = AttributeKey<Boolean>(persistenceKey = "avas_assembler_gathering_stopped")
 
+    // OSRS Wiki Ava's attractor / accumulator, checked 2026-10-31. Keep the existing
+    // persistence key: all device menus control the same account preference.
+    val LEGACY_DEVICES = setOf(Items.AVAS_ATTRACTOR, Items.AVAS_ACCUMULATOR)
+    val GATHERING_DEVICES: Set<Int> get() = gg.rsmod.plugins.content.combat.strategy.ranged.AvasDevices.ASSEMBLERS + LEGACY_DEVICES
+    val ATTRACTOR_TABLE = listOf(
+        Items.IRON_ARROW to 1975, Items.IRON_DART to 5, Items.IRON_KNIFE to 5,
+        Items.IRON_ORE to 5, Items.IRON_NAILS to 5, Items.STEEL_ARROW to 1,
+        Items.BROKEN_ARROW to 1, Items.IRON_ARROWTIPS to 1, Items.IRON_MED_HELM to 1, Items.IRON_BAR to 1,
+    )
+    val ACCUMULATOR_TABLE = listOf(
+        Items.STEEL_ARROW to 1975, Items.STEEL_DART to 5, Items.STEEL_KNIFE to 5,
+        Items.IRON_ORE to 5, Items.STEEL_NAILS to 5, Items.TOY_MOUSE to 1,
+        Items.BROKEN_ARROW to 1, Items.STEEL_ARROWTIPS to 1, Items.STEEL_MED_HELM to 1, Items.STEEL_BAR to 1,
+    )
+
     /** Item id to weight, out of [TOTAL_WEIGHT]. */
     val ATTRACTION: List<Pair<Int, Int>> =
         listOf(
@@ -75,9 +90,15 @@ object AvasAssembler {
     val TOTAL_WEIGHT: Int = ATTRACTION.sumOf { it.second }
 
     /** The attracted item for [roll] in `0 until TOTAL_WEIGHT`. */
-    fun attracted(roll: Int): Int {
+    fun attracted(roll: Int, device: Int = Items.AVAS_ASSEMBLER): Int {
+        require(roll in 0 until TOTAL_WEIGHT)
+        val table = when (device) {
+            Items.AVAS_ATTRACTOR -> ATTRACTOR_TABLE
+            Items.AVAS_ACCUMULATOR -> ACCUMULATOR_TABLE
+            else -> ATTRACTION
+        }
         var left = roll
-        for ((item, weight) in ATTRACTION) {
+        for ((item, weight) in table) {
             if (left < weight) return item
             left -= weight
         }
