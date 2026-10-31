@@ -49,7 +49,9 @@ class ConsumableTablesTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            DEFINITIONS.loadAll(CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()))
+            // Isolated worktrees have no cache payload. A read-only reference cache can be supplied by the test runner.
+            val cache = System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString()
+            DEFINITIONS.loadAll(CacheLibrary(cache))
         }
     }
 }

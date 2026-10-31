@@ -110,7 +110,7 @@ val drops =
             total(10000)
             obj(Items.CLUE_SCROLL_ELITE, slots = 100) // 1/100
             obj(Items.KQ_HEAD, slots = 78) // 1/128
-            obj(Items.DRAGON_CHAINBODY, slots = 78) // 1/128
+            obj(Items.DRAGON_CHAINBODY_3140, slots = 78) // 1/128
             obj(Items.DRAGON_2H_SWORD, slots = 39) // 1/256
             obj(Items.DRAGON_PICKAXE, slots = 25) // 1/400
             nothing(9680)

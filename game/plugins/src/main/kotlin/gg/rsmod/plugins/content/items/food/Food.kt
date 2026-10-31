@@ -97,6 +97,10 @@ enum class Food(
      */
     SPINACH_ROLL(item = Items.SPINACH_ROLL, heal = 20),
     CAKE(item = Items.CAKE, replacement = Items._23_CAKE, heal = 40),
+    // RS-only 2011 celebration cake: 200 legacy life points = 20 on our hitpoint scale.
+    CELEBRATION_CAKE(item = Items.CELEBRATION_CAKE, heal = 200),
+    CELEBRATION_CAKE_UNLIT(item = Items.CELEBRATION_CAKE_20181, heal = 200),
+    CELEBRATION_CAKE_LIT(item = Items.CELEBRATION_CAKE_20182, heal = 200),
     CAKE_23(item = Items._23_CAKE, replacement = Items.SLICE_OF_CAKE, heal = 40),
     SLICE_OF_CAKE(item = Items.SLICE_OF_CAKE, heal = 40),
     BREAD(item = Items.BREAD, heal = 50),
@@ -153,6 +157,8 @@ enum class Food(
     EGG_POTATO(item = Items.EGG_POTATO, heal = 110),
     MUSHROOM__ONION(item = Items.MUSHROOM__ONION, heal = 110),
     TUNA_AND_CORN(item = Items.TUNA_AND_CORN, heal = 130),
+    SWEETCORN_BOWL(item = Items.SWEETCORN_7088, replacement = Items.BOWL),
+    COOKED_SWEETCORN(item = Items.COOKED_SWEETCORN),
     CHILLI_POTATO(item = Items.CHILLI_POTATO, heal = 140),
     MUSHROOM_POTATO(item = Items.MUSHROOM_POTATO, heal = 200),
     TUNA_POTATO(item = Items.TUNA_POTATO, heal = 220),

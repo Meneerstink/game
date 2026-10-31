@@ -82,6 +82,14 @@ fun bindChain(
     }
 }
 
+// 667 ferocious ring: Kuradal only (RS Wiki; Void kuradals_teleport), five charges then disappears.
+FerociousRing.ids.forEach { id ->
+    val next = FerociousRing.next(id)!!
+    val destination = listOf(Dest("Kuradal", FerociousRing.destination))
+    bindTeleport(id, "Rub", null, next, destination, TeleportType.FEROCIOUS_RING)
+    bindTeleport(id, "Kuradal", EquipmentType.RING, next, destination, TeleportType.FEROCIOUS_RING)
+}
+
 // Digsite pendant (5) -> (1), then gone.
 bindChain(
     intArrayOf(Items.DIGSITE_PENDANT_5, Items.DIGSITE_PENDANT_4, Items.DIGSITE_PENDANT_3, Items.DIGSITE_PENDANT_2, Items.DIGSITE_PENDANT_1),

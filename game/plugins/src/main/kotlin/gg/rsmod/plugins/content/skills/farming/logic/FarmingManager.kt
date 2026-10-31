@@ -48,6 +48,8 @@ class FarmingManager(
         item: Int,
     ) {
         when (item) {
+            in gg.rsmod.plugins.content.skills.farming.FarmingAmulet.ids ->
+                gg.rsmod.plugins.content.skills.farming.FarmingAmulet.bind(player, patch)
             Items.RAKE -> rake(patch)
             Items.SEED_DIBBER -> player.message("I should plant a seed, not the seed dibber.")
             Items.PLANT_CURE -> cure(patch, CureType.Potion)

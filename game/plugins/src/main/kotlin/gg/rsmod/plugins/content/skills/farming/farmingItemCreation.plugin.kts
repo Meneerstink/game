@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.skills.farming
 
 import gg.rsmod.plugins.content.skills.farming.data.itemCreation.BasketItemCreation
-import gg.rsmod.plugins.content.skills.farming.data.itemCreation.SackItemCreation
 
 BasketItemCreation.values().forEach { basketCreation ->
     on_item_on_item(basketCreation.basket, basketCreation.produce) {
@@ -36,38 +35,7 @@ on_item_option(Items.BASKET, "fill") {
     }
 }
 
-SackItemCreation.values().forEach { sackCreation ->
-    on_item_on_item(sackCreation.sack, sackCreation.produce) {
-        if (player.inventory.getItemCount(sackCreation.produce) < sackCreation.amount) {
-            player.message(sackCreation.message)
-        } else {
-            player.queue {
-                wait(1)
-                if (player.inventory.remove(sackCreation.sack).hasSucceeded() &&
-                    player.inventory.remove(sackCreation.produce, amount = sackCreation.amount).hasSucceeded()
-                ) {
-                    player.inventory.add(sackCreation.product)
-                }
-            }
-        }
-    }
-}
-
-on_item_option(Items.EMPTY_SACK, "fill") {
-    val item = SackItemCreation.values().firstOrNull { player.inventory.getItemCount(it.produce) >= it.amount }
-    if (item == null) {
-        player.message("You cannot fill this sack with any crops.")
-    } else {
-        player.queue {
-            wait(1)
-            if (player.inventory.remove(item.sack).hasSucceeded() &&
-                player.inventory.remove(item.produce, amount = item.amount).hasSucceeded()
-            ) {
-                player.inventory.add(item.product)
-            }
-        }
-    }
-}
+// Sacks use ProduceContainers for every empty/partial/full state.
 
 on_item_on_item(Items.HAY_SACK, intArrayOf(Items.BRONZE_SPEAR, Items.WATERMELON)) {
     val items = listOf(Items.HAY_SACK, Items.BRONZE_SPEAR, Items.WATERMELON)

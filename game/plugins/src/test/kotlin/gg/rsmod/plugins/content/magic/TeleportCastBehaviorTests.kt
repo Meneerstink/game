@@ -314,7 +314,8 @@ class TeleportCastBehaviorTests {
         @BeforeClass
         @JvmStatic
         fun loadCache() {
-            store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            val cache = System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString()
+            store = CacheLibrary(cache)
             DEFINITIONS.loadAll(store)
             assertNotEquals(DEFINITIONS.getCount(ItemDef::class.java), 0)
 
