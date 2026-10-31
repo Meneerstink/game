@@ -114,9 +114,10 @@ class AncientCurses2011Tests {
         AncientCurses.toggleTurmoil(player)
         val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 80, Skills.DEFENCE to 40))
         AncientCurses.onDamageDealt(player, opponent, damage = 1)
-        assertEquals(14, varps.getBit(1584, 5, 9))
-        assertEquals(8, varps.getBit(1584, 10, 14))
-        assertEquals(6, varps.getBit(1584, 15, 19))
+        // N496 (owner 2026-10-31): 10 / 4 / 10 % of the opponent's levels (2011: 15 / 10 / 15 %).
+        assertEquals(9, varps.getBit(1584, 5, 9))
+        assertEquals(3, varps.getBit(1584, 10, 14))
+        assertEquals(4, varps.getBit(1584, 15, 19))
         AncientCurses.toggleTurmoil(player)
         assertFalse(AncientCurses.isTurmoilActive(player))
         assertEquals(0, varps.getBit(1584, 5, 19))
@@ -142,9 +143,10 @@ class AncientCurses2011Tests {
         assertEquals(1.15, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, null), 1e-9)
         val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 80, Skills.DEFENCE to 40))
         AncientCurses.onDamageDealt(player, opponent, damage = 1)
-        assertEquals(1.0 + (15.0 + 14) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
-        assertEquals(1.0 + (23.0 + 8) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent), 1e-9)
-        assertEquals(1.0 + (15.0 + 6) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
+        // N496 (owner 2026-10-31): 10 / 4 / 10 % of the opponent (2011: 15 / 10 / 15 % = 14 / 8 / 6).
+        assertEquals(1.0 + (15.0 + 9) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
+        assertEquals(1.0 + (23.0 + 3) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.STRENGTH, opponent), 1e-9)
+        assertEquals(1.0 + (15.0 + 4) / 100.0, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
         assertEquals(1.0, AncientCurses.turmoilMultiplier(player, Skills.RANGED, opponent), 1e-9)
         val inactive = newPlayer()
         assertEquals(1.0, AncientCurses.turmoilMultiplier(inactive, Skills.ATTACK, opponent), 1e-9)
@@ -152,14 +154,15 @@ class AncientCurses2011Tests {
 
     @Test
     fun `N44 - Turmoil's opponent share is a percentage of the player's own level, like the curse tab`() {
-        // Own Defence 75 against a 99 Defence opponent: 15% + (14 levels * 100 / 75 = 18%) = 33% (tab 33%, the old sum gave 29%).
+        // Own Defence 75 against a 99 Defence opponent: 15% + (9 levels * 100 / 75 = 12%) = 27% (N496: 10 % of the opponent = 9 levels;
+        // 2011 15 % gave 14 levels = 33%).
         val player = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 99, Skills.DEFENCE to 75))
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.toggleTurmoil(player)
         val opponent = newPlayer(mapOf(Skills.ATTACK to 99, Skills.STRENGTH to 99, Skills.DEFENCE to 99))
         AncientCurses.onDamageDealt(player, opponent, damage = 1)
-        assertEquals(1.33, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
-        assertEquals(1.29, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
+        assertEquals(1.27, AncientCurses.turmoilMultiplier(player, Skills.DEFENCE, opponent), 1e-9)
+        assertEquals(1.24, AncientCurses.turmoilMultiplier(player, Skills.ATTACK, opponent), 1e-9)
     }
 
     private fun procAfterCooldown(attacker: Player, target: Player, style: CombatClass = CombatClass.MELEE) {
@@ -456,8 +459,8 @@ class AncientCurses2011Tests {
         assertEquals(listOf(1, 1, 1, 0, 0), flags(victim, 6847))
         assertEquals(listOf(0, 0, 0, 0, 0), flags(victim, 6852))
         assertEquals(listOf(-1, -1, -1, 0, 0), tab(victim))
-        // The caster: +10 % Attack and Strength (10 levels of 99), no Defence; never "sapped" itself.
-        assertEquals(listOf(10, 10, 0, 0, 0), tab(caster))
+        // The caster: +15 % Attack and Strength (N496; 15 levels of 99), no Defence; never "sapped" itself.
+        assertEquals(listOf(15, 15, 0, 0, 0), tab(caster))
         assertEquals(listOf(0, 0, 0, 0, 0), flags(caster, 6847))
         // The caster switches the Sap off: the initial 10 % is released at once, the drained levels regenerate as usual.
         AncientCurses.toggleCurse(caster, AncientCurse.SAP_WARRIOR)
@@ -490,18 +493,18 @@ class AncientCurses2011Tests {
         data class Row(val curse: AncientCurse, val skill: Int, val accuracy: Double, val damage: Double, val tab: Int)
         val rows = listOf(
             // Changed.
-            Row(AncientCurse.SAP_WARRIOR, Skills.ATTACK, 1.10, 1.10, 10),
-            Row(AncientCurse.SAP_WARRIOR, Skills.STRENGTH, 1.10, 1.10, 10),
+            Row(AncientCurse.SAP_WARRIOR, Skills.ATTACK, 1.15, 1.15, 15),
+            Row(AncientCurse.SAP_WARRIOR, Skills.STRENGTH, 1.15, 1.15, 15),
             Row(AncientCurse.SAP_WARRIOR, Skills.DEFENCE, 1.0, 1.0, 0),
-            Row(AncientCurse.SAP_RANGER, Skills.RANGED, 1.10, 1.10, 10),
+            Row(AncientCurse.SAP_RANGER, Skills.RANGED, 1.15, 1.15, 15),
             Row(AncientCurse.SAP_RANGER, Skills.DEFENCE, 1.0, 1.0, 0),
-            Row(AncientCurse.SAP_MAGE, Skills.MAGIC, 1.10, 1.0, 10),
+            Row(AncientCurse.SAP_MAGE, Skills.MAGIC, 1.15, 1.0, 15),
             Row(AncientCurse.SAP_MAGE, Skills.DEFENCE, 1.0, 1.0, 0),
             Row(AncientCurse.LEECH_ATTACK, Skills.ATTACK, 1.15, 1.15, 10),
             Row(AncientCurse.LEECH_STRENGTH, Skills.STRENGTH, 1.18, 1.18, 13),
             Row(AncientCurse.LEECH_DEFENCE, Skills.DEFENCE, 1.10, 1.10, 5),
             // Unchanged (regression targets).
-            Row(AncientCurse.LEECH_RANGED, Skills.RANGED, 1.20, 1.13, 15),
+            Row(AncientCurse.LEECH_RANGED, Skills.RANGED, 1.20, 1.23, 15),
             Row(AncientCurse.LEECH_MAGIC, Skills.MAGIC, 1.25, 1.0, 20),
             Row(AncientCurse.SAP_SPIRIT, Skills.ATTACK, 1.0, 1.0, 0),
         )
@@ -521,7 +524,7 @@ class AncientCurses2011Tests {
         assertEquals(15, AncientCurses.LEECH_ATTACK_BOOST_PCT)
         assertEquals(18, AncientCurses.LEECH_STRENGTH_BOOST_PCT)
         assertEquals(10, AncientCurses.LEECH_DEFENCE_BOOST_PCT)
-        assertEquals(10, AncientCurses.SAP_SELF_BOOST_PCT)
+        assertEquals(15, AncientCurses.SAP_SELF_BOOST_PCT)
     }
 
     @Test

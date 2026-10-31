@@ -323,7 +323,7 @@ object MagicCombatFormula : CombatFormula {
     /** "Maximum magic hit": Mystic Lore +1 %, Mystic Might +2 %, Augury +4 % magic damage. */
     private fun getPrayerMagicDamage(player: Player): Double =
         when {
-            // N463 Ruinous Powers: Ancient Will +3 %, Trinitas +2 %, Vaporise +4 % magic damage.
+            // N463 Ruinous Powers: Ancient Will +3 %, Trinitas +2 %, Vaporise +8 % (N496) magic damage.
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.magicDamage(player)
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
@@ -332,6 +332,10 @@ object MagicCombatFormula : CombatFormula {
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT &&
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isCurseActive(player, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.LEECH_MAGIC) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.LEECH_MAGIC_DAMAGE
+            // N496 (owner 2026-10-31): Sap Mage = Mystic Might (+2 % magic damage); Sap and Leech Magic never run together.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT &&
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isCurseActive(player, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.SAP_MAGE) ->
+                gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.SAP_MAGE_MAGIC_DAMAGE
             else -> 0.0
         }
 
@@ -370,7 +374,7 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
-            // N463 Ruinous Powers: Ancient Will 20 %, Trinitas 15 %, Vaporise 30 %, Intensify 50 %.
+            // N463 Ruinous Powers: Ancient Will 20 %, Trinitas 15 %, Vaporise 35 %, Intensify 40 % (N496).
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.magicAttack(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.MAGIC)

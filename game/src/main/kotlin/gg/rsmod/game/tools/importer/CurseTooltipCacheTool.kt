@@ -52,13 +52,22 @@ object CurseTooltipCacheTool {
         listOf(
             // Owner curse table 2026-10-11 (FINAL, dossier 4a-2): a Sap boosts its caster while on (AncientCurses.sapMultiplier,
             // SAP_SELF_BOOST_PCT 10) - Sap Warrior Attack + Strength, Sap Ranger ranged accuracy + damage, Sap Mage magic accuracy.
+            // N496 (owner 2026-10-31 22:4x): SAP_SELF_BOOST_PCT 15, Sap Mage also +2 % magic damage (SAP_MAGE_MAGIC_DAMAGE).
             Tooltip(
                 889,
-                listOf(sapOriginal("Attack, Strength and Defence")),
-                "Boosts Attack and Strength by 10%, " + SAP_DRAIN.format("Attack, Strength and Defence"),
+                listOf(sapOriginal("Attack, Strength and Defence"), "Boosts Attack and Strength by 10%, " + SAP_DRAIN.format("Attack, Strength and Defence")),
+                "Boosts Attack and Strength by 15%, " + SAP_DRAIN.format("Attack, Strength and Defence"),
             ),
-            Tooltip(890, listOf(sapOriginal("Ranged and Defence")), "Boosts Ranged accuracy and damage by 10%, " + SAP_DRAIN.format("Ranged and Defence")),
-            Tooltip(891, listOf(sapOriginal("Magic and Defence")), "Boosts Magic accuracy by 10%, " + SAP_DRAIN.format("Magic and Defence")),
+            Tooltip(
+                890,
+                listOf(sapOriginal("Ranged and Defence"), "Boosts Ranged accuracy and damage by 10%, " + SAP_DRAIN.format("Ranged and Defence")),
+                "Boosts Ranged accuracy and damage by 15%, " + SAP_DRAIN.format("Ranged and Defence"),
+            ),
+            Tooltip(
+                891,
+                listOf(sapOriginal("Magic and Defence"), "Boosts Magic accuracy by 10%, " + SAP_DRAIN.format("Magic and Defence")),
+                "Boosts Magic accuracy by 15% and Magic damage by 2%, " + SAP_DRAIN.format("Magic and Defence"),
+            ),
             // AncientCurses SAP_SPIRIT: AttackTab energy - 10.
             Tooltip(892, listOf("Drains enemy special attack energy."), "Drains 10% of enemy special attack energy."),
             // FamiliarCombat.blockedBySummoningProtection: a familiar's attacks and special moves do not land; nothing is reflected.
@@ -86,8 +95,11 @@ object CurseTooltipCacheTool {
                     "Boosts Ranged accuracy by 20% and Ranged damage by 18%, while draining enemy Ranged by 10%, increasing to 25% over time.",
                     "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
                         LEECH_DRAIN_25.format("Ranged"),
+                    "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
+                        LEECH_DRAIN.format("Ranged"),
                 ),
-                "Boosts Ranged accuracy by 20% and Ranged damage by 13%, and raises Ranged up to 5 levels over time, " +
+                // N496 (owner 2026-10-31 22:4x): LEECH_RANGED_DAMAGE 1.23 (= Rigour).
+                "Boosts Ranged accuracy by 20% and Ranged damage by 23%, and raises Ranged up to 5 levels over time, " +
                     LEECH_DRAIN.format("Ranged"),
             ),
             // Owner 2026-10-09 (final): x1.25 magic accuracy, +4 % magic damage, +1 Magic level per proc.
@@ -122,6 +134,23 @@ object CurseTooltipCacheTool {
                 listOf("Drains enemy special attack energy, while increasing your own"),
                 "Drains 5% of enemy special attack energy and gives it to you.",
             ),
+            // N496 (owner 2026-10-31 22:4x): Turmoil adds 10 / 4 / 10 % of the enemy's level (AncientCurses.TURMOIL_TARGET_*_PCT).
+            Tooltip(
+                907,
+                listOf("Increases Attack and Defence by 15%, plus 15% of enemy's level, and Strength by 23%, plus 10% of enemy's level."),
+                "Increases Attack and Defence by 15%, plus 10% of enemy's level, and Strength by 23%, plus 4% of enemy's level.",
+            ),
+            // N496 Ruinous Powers (structs RuinousPowersCacheTool.STRUCT_BASE 2762 + slot; RuinousPowers multipliers): Decimate 2777,
+            // Annihilate 2778, Vaporise 2779, Wrath 2784, Intensify 2785. The OSRS wording, the new numbers.
+            Tooltip(2777, listOf("Increases your Attack by 30% and Strength by 27%."), "Increases your Attack by 30% and Strength by 28%."),
+            Tooltip(2778, listOf("Increases your Ranged Attack by 30% and Ranged Strength by 27%."), "Increases your Ranged Attack by 30% and Ranged Strength by 31%."),
+            Tooltip(2779, listOf("Increases your Magic Attack by 30% and Magic Damage by 4%."), "Increases your Magic Attack by 35% and Magic Damage by 8%."),
+            Tooltip(
+                2784,
+                listOf("On death, deal up to 25% of your Prayer level in damage to nearby opponents."),
+                "On death, deal up to 33% of your Prayer level in damage to nearby opponents.",
+            ),
+            Tooltip(2785, listOf("Increases your accuracy with all styles by 50%."), "Increases your accuracy with all styles by 40%."),
             // wrathMaxDamage: up to 30 % of the Prayer level, to every target within two tiles (multi) or the killer (single).
             Tooltip(905, listOf("Inflicts damage to nearby<br>targets if you die"), "Inflicts up to 30% of your Prayer level as damage<br>to nearby targets if you die"),
             // N45 (owner 10-09 Q1 "ALL curse and prayer tooltips"): the normal prayers Augury (struct 1006) and Rigour (1029) state

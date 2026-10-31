@@ -58,15 +58,15 @@ object RuinousPowersCacheTool {
             RuinousCell("Metabolise", 77, 4853, 4877, "The delay before you can attack after eating food is reduced."),
             RuinousCell("Rebuke", 78, 4857, 4881, "Increases recoil damage by 10%."),
             RuinousCell("Vindication", 80, 4863, 4887, "Heals you by 25% of your Prayer level if your health falls below 10%."),
-            RuinousCell("Decimate", 82, 4854, 4878, "Increases your Attack by 30% and Strength by 27%."),
-            RuinousCell("Annihilate", 84, 4855, 4879, "Increases your Ranged Attack by 30% and Ranged Strength by 27%."),
-            RuinousCell("Vaporise", 86, 4856, 4880, "Increases your Magic Attack by 30% and Magic Damage by 4%."),
+            RuinousCell("Decimate", 82, 4854, 4878, "Increases your Attack by 30% and Strength by 28%."),
+            RuinousCell("Annihilate", 84, 4855, 4879, "Increases your Ranged Attack by 30% and Ranged Strength by 31%."),
+            RuinousCell("Vaporise", 86, 4856, 4880, "Increases your Magic Attack by 35% and Magic Damage by 8%."),
             RuinousCell("Fumus' Vow", 87, 4858, 4882, "Attacks that inflict poison cause poison to trigger damage immediately."),
             RuinousCell("Umbra's Vow", 88, 4859, 4883, "Attacks reduce your opponent's Defence by 5% of the damage dealt, up to 15%."),
             RuinousCell("Cruor's Vow", 89, 4860, 4884, "While activated, defeating a foe will drain 3 prayer points and heal 3 hitpoints."),
             RuinousCell("Glacies' Vow", 90, 4861, 4885, "Attacks reduce a monster's Magic by 5% of damage dealt, up to 15%."),
-            RuinousCell("Wrath", 91, 4862, 4886, "On death, deal up to 25% of your Prayer level in damage to nearby opponents."),
-            RuinousCell("Intensify", 92, 4864, 4888, "Increases your accuracy with all styles by 50%."),
+            RuinousCell("Wrath", 91, 4862, 4886, "On death, deal up to 33% of your Prayer level in damage to nearby opponents."),
+            RuinousCell("Intensify", 92, 4864, 4888, "Increases your accuracy with all styles by 40%."),
         )
 
     // ---- ids (all free in the 667 cache on 2026-10-31: sprites <= 8758, structs <= 2761, enums <= 5201, varbits <= 9929,
@@ -362,10 +362,11 @@ object RuinousPowersCacheTool {
      */
     val STAT_TABLE: List<Pair<Int, List<Pair<Int, Int>>>> =
         listOf(
-            0 to listOf(23 to 50, 15 to 30, 1 to 20, 9 to 15),
-            2 to listOf(15 to 27, 1 to 20, 9 to 15),
-            4 to listOf(23 to 50, 16 to 30, 2 to 20, 9 to 15),
-            6 to listOf(23 to 50, 17 to 30, 3 to 20, 9 to 15),
+            // N496 (owner 2026-10-31 22:4x): Intensify 40, Decimate Strength 28, Vaporise 35 (was 50 / 27 / 30) - "stats-update".
+            0 to listOf(23 to 40, 15 to 30, 1 to 20, 9 to 15),
+            2 to listOf(15 to 28, 1 to 20, 9 to 15),
+            4 to listOf(23 to 40, 16 to 30, 2 to 20, 9 to 15),
+            6 to listOf(23 to 40, 17 to 35, 3 to 20, 9 to 15),
         )
 
     fun statScript(): ByteArray {
@@ -438,6 +439,24 @@ object RuinousPowersCacheTool {
             library.close()
         }
         return mutations
+    }
+
+    /**
+     * N496 (owner 2026-10-31 22:4x): [STAT_SCRIPT] is already in the caches; "stats-update" rewrites only it from [STAT_TABLE] (the
+     * new Intensify / Decimate / Vaporise percentages). Running it again is a no-op.
+     */
+    fun statUpdateMutations(): List<CacheMutation> {
+        val library = CacheLibrary(TARGETS[0])
+        try {
+            val current = requireNotNull(library.data(SCRIPT_INDEX, STAT_SCRIPT, 0)) { "clientscript $STAT_SCRIPT missing - run \"stats\" first" }
+            val wanted = statScript()
+            if (wanted.contentEquals(current)) return emptyList()
+            return listOf(
+                CacheMutation(SCRIPT_INDEX, STAT_SCRIPT, 0, wanted, "clientscript $STAT_SCRIPT: Ruinous stat adjustments (N496 values)", expectedCurrentSha1 = CacheItemProbeTool.sha1(current)),
+            )
+        } finally {
+            library.close()
+        }
     }
 
     /**
@@ -540,7 +559,7 @@ object RuinousPowersCacheTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        val transaction = CacheTransaction(targets = TARGETS, mutations = if (args.any { it.startsWith("scroll-undo=") }) scrollUndoMutations(args.first { it.startsWith("scroll-undo=") }.substringAfter("=")) else if ("scroll" in args) scrollMutations() else if ("stats" in args) statMutations() else mutations())
+        val transaction = CacheTransaction(targets = TARGETS, mutations = if (args.any { it.startsWith("scroll-undo=") }) scrollUndoMutations(args.first { it.startsWith("scroll-undo=") }.substringAfter("=")) else if ("scroll" in args) scrollMutations() else if ("stats-update" in args) statUpdateMutations() else if ("stats" in args) statMutations() else mutations())
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} mutations=${transaction.mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")

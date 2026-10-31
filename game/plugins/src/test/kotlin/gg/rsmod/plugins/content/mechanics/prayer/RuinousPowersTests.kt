@@ -194,23 +194,65 @@ class RuinousPowersTests {
     }
 
     @Test
-    fun `combat multipliers follow the OSRS texts`() {
+    fun `combat multipliers follow the N496 balance (owner 2026-10-31 - Ruinous above Curses above Normal)`() {
         val p = player()
         RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
         assertEquals(1.30, RuinousPowers.meleeAttack(p))
-        assertEquals(1.27, RuinousPowers.meleeStrength(p))
+        assertEquals(1.28, RuinousPowers.meleeStrength(p))
         assertEquals(1.0, RuinousPowers.rangedAttack(p))
+        RuinousPowers.click(p, RuinousPrayer.ANNIHILATE.slot)
+        assertEquals(1.30, RuinousPowers.rangedAttack(p))
+        assertEquals(1.31, RuinousPowers.rangedStrength(p))
         RuinousPowers.click(p, RuinousPrayer.VAPORISE.slot)
-        assertEquals(1.30, RuinousPowers.magicAttack(p))
-        assertEquals(0.04, RuinousPowers.magicDamage(p))
+        assertEquals(1.35, RuinousPowers.magicAttack(p))
+        assertEquals(0.08, RuinousPowers.magicDamage(p))
         assertEquals(1.0, RuinousPowers.meleeStrength(p))
         RuinousPowers.click(p, RuinousPrayer.TRINITAS.slot)
         assertEquals(1.15, RuinousPowers.meleeAttack(p))
         assertEquals(1.15, RuinousPowers.rangedStrength(p))
         assertEquals(0.02, RuinousPowers.magicDamage(p))
         RuinousPowers.click(p, RuinousPrayer.INTENSIFY.slot)
-        assertEquals(1.50, RuinousPowers.rangedAttack(p))
+        assertEquals(1.40, RuinousPowers.rangedAttack(p))
+        assertEquals(1.40, RuinousPowers.meleeAttack(p))
+        assertEquals(1.40, RuinousPowers.magicAttack(p))
         assertEquals(1.0, RuinousPowers.rangedStrength(p))
+    }
+
+    /** N496: the hover texts (CurseTooltipCacheTool) and the book's own cells name the numbers the formulas use. */
+    @Test
+    fun `N496 tooltips say the new values`() {
+        val texts = gg.rsmod.game.tools.importer.CurseTooltipCacheTool.TOOLTIPS.associate { it.struct to it.new }
+        val p = player()
+        RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
+        assertEquals("Increases your Attack by ${pct(RuinousPowers.meleeAttack(p))}% and Strength by ${pct(RuinousPowers.meleeStrength(p))}%.", texts.getValue(2777))
+        RuinousPowers.click(p, RuinousPrayer.ANNIHILATE.slot)
+        assertEquals(
+            "Increases your Ranged Attack by ${pct(RuinousPowers.rangedAttack(p))}% and Ranged Strength by ${pct(RuinousPowers.rangedStrength(p))}%.",
+            texts.getValue(2778),
+        )
+        RuinousPowers.click(p, RuinousPrayer.VAPORISE.slot)
+        assertEquals(
+            "Increases your Magic Attack by ${pct(RuinousPowers.magicAttack(p))}% and Magic Damage by ${Math.round(RuinousPowers.magicDamage(p) * 100)}%.",
+            texts.getValue(2779),
+        )
+        assertEquals("Increases your accuracy with all styles by ${pct(RuinousPowers.INTENSIFY_ACCURACY)}%.", texts.getValue(2785))
+        assertTrue(texts.getValue(2784).contains("up to ${RuinousPowers.WRATH_PRAYER_PCT}%"))
+        assertTrue(
+            texts.getValue(907).contains("plus ${AncientCurses.TURMOIL_TARGET_ATTACK_PCT}% of enemy's level, and Strength by 23%, plus ${AncientCurses.TURMOIL_TARGET_STRENGTH_PCT}%"),
+        )
+        // The struct writer of the book (RuinousPowersCacheTool.CELLS) carries the same sentences.
+        listOf(2777, 2778, 2779, 2784, 2785).forEach { struct ->
+            assertTrue(gg.rsmod.game.tools.importer.RuinousPowersCacheTool.CELLS.any { it.text == texts.getValue(struct) }, "cell text of struct $struct")
+        }
+    }
+
+    private fun pct(multiplier: Double) = Math.round((multiplier - 1) * 100)
+
+    /** N496: Ruinous Wrath up to 33 % of the base Prayer level (curse Wrath 30 %, Retribution 25 %). */
+    @Test
+    fun `Wrath hits up to a third of the Prayer level`() {
+        assertEquals(32, RuinousPowers.wrathMaxDamage(player(prayerLevel = 99)))
+        assertEquals(30, RuinousPowers.wrathMaxDamage(player(prayerLevel = 91)))
     }
 
     /**
@@ -337,6 +379,16 @@ class RuinousPowersTests {
         assertEquals(97, target.skills.getCurrentLevel(Skills.DEFENCE))
         repeat(20) { RuinousPowers.onDamageDealt(attacker, target, 60) }
         assertEquals(99 - 99 * 15 / 100, target.skills.getCurrentLevel(Skills.DEFENCE))
+        // N496: a potted target (118) loses at most 15 % of that level (to 101), not the 33 levels down to 85 % of the base.
+        val potted = player()
+        potted.skills.setBaseLevel(Skills.DEFENCE, 99)
+        potted.skills.setCurrentLevel(Skills.DEFENCE, 118)
+        repeat(30) { RuinousPowers.onDamageDealt(attacker, potted, 60) }
+        assertEquals(118 - 118 * 15 / 100, potted.skills.getCurrentLevel(Skills.DEFENCE))
+        // A new potion above the start level starts a new run from there.
+        potted.skills.setCurrentLevel(Skills.DEFENCE, 120)
+        repeat(30) { RuinousPowers.onDamageDealt(attacker, potted, 60) }
+        assertEquals(120 - 120 * 15 / 100, potted.skills.getCurrentLevel(Skills.DEFENCE))
         // Glacies' Vow drains monsters only - a player keeps his Magic.
         RuinousPowers.click(attacker, RuinousPrayer.GLACIES_VOW.slot)
         target.skills.setBaseLevel(Skills.MAGIC, 99)

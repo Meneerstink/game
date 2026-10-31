@@ -67,10 +67,10 @@ class CurseCombatFormulaTests {
     @Test
     fun `dark bow with dragon arrows - Sap Ranger and Leech Ranged max hits`() {
         assertEquals(21, ranged(99), "no curse")
-        assertEquals(22, ranged(99, AncientCurse.SAP_RANGER), "Sap Ranger +10 % ranged damage")
-        assertEquals(23, ranged(99, AncientCurse.LEECH_RANGED), "Leech Ranged unchanged x1.13")
-        assertEquals(25, ranged(112, AncientCurse.SAP_RANGER), "Sap Ranger with a ranging potion (112)")
-        assertEquals(26, ranged(112, AncientCurse.LEECH_RANGED), "Leech Ranged with a ranging potion (112), unchanged")
+        assertEquals(23, ranged(99, AncientCurse.SAP_RANGER), "Sap Ranger +15 % ranged damage (N496)")
+        assertEquals(25, ranged(99, AncientCurse.LEECH_RANGED), "Leech Ranged x1.23 = Rigour (N496)")
+        assertEquals(26, ranged(112, AncientCurse.SAP_RANGER), "Sap Ranger with a ranging potion (112)")
+        assertEquals(28, ranged(112, AncientCurse.LEECH_RANGED), "Leech Ranged with a ranging potion (112)")
         // Sap Warrior / Sap Mage do nothing for ranged.
         assertEquals(21, ranged(99, AncientCurse.SAP_WARRIOR))
         assertEquals(21, ranged(99, AncientCurse.SAP_MAGE))
@@ -79,7 +79,7 @@ class CurseCombatFormulaTests {
     @Test
     fun `whip on aggressive - Sap Warrior and Leech Strength max hits, nothing stacks with Turmoil`() {
         assertEquals(25, melee(99), "no curse")
-        assertEquals(27, melee(99, AncientCurse.SAP_WARRIOR), "Sap Warrior +10 % Strength")
+        assertEquals(28, melee(99, AncientCurse.SAP_WARRIOR), "Sap Warrior +15 % Strength (N496)")
         assertEquals(29, melee(99, AncientCurse.LEECH_STRENGTH), "Leech Strength +18 % (was +5 % = 26)")
         assertEquals(34, melee(118, AncientCurse.LEECH_STRENGTH), "Leech Strength with a super strength (118)")
         assertEquals(25, melee(99, AncientCurse.LEECH_ATTACK), "Leech Attack does not touch the max hit")

@@ -30,7 +30,7 @@ import gg.rsmod.plugins.content.combat.createProjectile
  *   x0.6 of a player's ("100% protection ... (40% in PvP)").
  * - Purge: "1/3 of damage dealt is also removed from both yours and your opponent's Prayer points."
  * - Rebuke: "Increases recoil damage by 10%" ([rebuke], every recoil effect +10% rounded down); Vindication: like Redemption (below 10% HP: heal 25% of the Prayer
- *   level, Prayer points to 0); Wrath: on death up to 25% of the base Prayer level to opponents in a 5x5 area (the curse Wrath hit rules, OSRS clouds - N486).
+ *   level, Prayer points to 0); Wrath: on death up to 33% (N496; OSRS 25%) of the base Prayer level to opponents in a 5x5 area (the curse Wrath hit rules, OSRS clouds - N486).
  * - Rejuvenation: Hitpoints regenerate 3x faster; Berserker: boosted combat stats last 50% longer; Ruinous Grace: running drains no
  *   run energy (the prayer's own drain is the cost, OSRS Wiki: stamina potions do not count); Metabolise: 25 ticks after activation
  *   food delays the next attack 1 tick less.
@@ -285,6 +285,20 @@ object RuinousPowers {
 
     // ---- combat multipliers ----------------------------------------------------------------
 
+    /*
+     * N496 (owner 2026-10-31 22:4x "alle 11 bouwen"): every prayer ranks Ruinous > Curses > Normal; melee and ranged Ruinous = Normal +2
+     * max hits and Curses +1, magic Ruinous +1 over both (dossier N496, team/dossiers/N496-TOTAALOVERZICHT.html, model
+     * team/dossiers/prayer-balans/model-2026-10-31.py; 99 + potions, PvP). Was (OSRS texts): Decimate / Annihilate strength 1.27,
+     * Vaporise 1.30 and +4 %, Intensify 1.50. Now Decimate 1.30 / 1.28 (BiS: Piety 52 -> Turmoil 53 -> Decimate 54), Annihilate
+     * 1.30 / 1.31 (Rigour 42 -> Annihilate 44, never under a full Leech Ranged), Vaporise 1.35 and +8 % (Augury 37 -> 38 at every gear
+     * level), Intensify 1.40 (still the most accurate prayer, no longer more damage per attack than Vaporise). Ancient Strength / Sight /
+     * Will and Trinitas stay.
+     */
+    const val INTENSIFY_ACCURACY = 1.40
+
+    /** N496: Wrath "up to 33% of your Prayer level" (was 25 %; the curse Wrath does 30 %, Retribution 25 %). */
+    const val WRATH_PRAYER_PCT = 33
+
     private fun on(
         player: Player,
         prayer: RuinousPrayer,
@@ -292,7 +306,7 @@ object RuinousPowers {
 
     fun meleeAttack(player: Player): Double =
         when {
-            on(player, RuinousPrayer.INTENSIFY) -> 1.50
+            on(player, RuinousPrayer.INTENSIFY) -> INTENSIFY_ACCURACY
             on(player, RuinousPrayer.DECIMATE) -> 1.30
             on(player, RuinousPrayer.ANCIENT_STRENGTH) -> 1.20
             on(player, RuinousPrayer.TRINITAS) -> 1.15
@@ -301,7 +315,7 @@ object RuinousPowers {
 
     fun meleeStrength(player: Player): Double =
         when {
-            on(player, RuinousPrayer.DECIMATE) -> 1.27
+            on(player, RuinousPrayer.DECIMATE) -> 1.28
             on(player, RuinousPrayer.ANCIENT_STRENGTH) -> 1.20
             on(player, RuinousPrayer.TRINITAS) -> 1.15
             else -> 1.0
@@ -309,7 +323,7 @@ object RuinousPowers {
 
     fun rangedAttack(player: Player): Double =
         when {
-            on(player, RuinousPrayer.INTENSIFY) -> 1.50
+            on(player, RuinousPrayer.INTENSIFY) -> INTENSIFY_ACCURACY
             on(player, RuinousPrayer.ANNIHILATE) -> 1.30
             on(player, RuinousPrayer.ANCIENT_SIGHT) -> 1.20
             on(player, RuinousPrayer.TRINITAS) -> 1.15
@@ -318,7 +332,7 @@ object RuinousPowers {
 
     fun rangedStrength(player: Player): Double =
         when {
-            on(player, RuinousPrayer.ANNIHILATE) -> 1.27
+            on(player, RuinousPrayer.ANNIHILATE) -> 1.31
             on(player, RuinousPrayer.ANCIENT_SIGHT) -> 1.20
             on(player, RuinousPrayer.TRINITAS) -> 1.15
             else -> 1.0
@@ -326,8 +340,8 @@ object RuinousPowers {
 
     fun magicAttack(player: Player): Double =
         when {
-            on(player, RuinousPrayer.INTENSIFY) -> 1.50
-            on(player, RuinousPrayer.VAPORISE) -> 1.30
+            on(player, RuinousPrayer.INTENSIFY) -> INTENSIFY_ACCURACY
+            on(player, RuinousPrayer.VAPORISE) -> 1.35
             on(player, RuinousPrayer.ANCIENT_WILL) -> 1.20
             on(player, RuinousPrayer.TRINITAS) -> 1.15
             else -> 1.0
@@ -336,7 +350,7 @@ object RuinousPowers {
     /** Extra magic damage, added to the magic damage bonus like Augury's 0.04. */
     fun magicDamage(player: Player): Double =
         when {
-            on(player, RuinousPrayer.VAPORISE) -> 0.04
+            on(player, RuinousPrayer.VAPORISE) -> 0.08
             on(player, RuinousPrayer.ANCIENT_WILL) -> 0.03
             on(player, RuinousPrayer.TRINITAS) -> 0.02
             else -> 0.0
@@ -431,7 +445,31 @@ object RuinousPowers {
         }
     }
 
-    /** 5% of [damage] off [skill], never below 85% of the base level ("up to 15%"). */
+    /**
+     * Per target: skill -> (the level the vow drain started from, the cycle of the last vow drain). N496 (owner 2026-10-31): "up to 15%"
+     * counted only from the BASE level, so a potted player (118 Defence) could be drained 33 levels (to 85). Now the drain also stops
+     * at 85 % of the level the target had when the vows started on it - 118 -> 101. A higher level later (a new potion) or
+     * [VOW_RESET_TICKS] without a vow drain starts a new run from the level of that moment.
+     */
+    private val VOW_START = AttributeKey<MutableMap<Int, Pair<Int, Int>>>()
+    const val VOW_RESET_TICKS = 50
+
+    /** The lowest level the vows may drain [skill] of [target] to now ([current] its level before this hit). */
+    internal fun vowFloor(
+        target: Pawn,
+        skill: Int,
+        base: Int,
+        current: Int,
+    ): Int {
+        val cycle = target.world.currentCycle
+        val state = target.attr[VOW_START] ?: mutableMapOf<Int, Pair<Int, Int>>().also { target.attr[VOW_START] = it }
+        val previous = state[skill]
+        val start = if (previous == null || cycle - previous.second > VOW_RESET_TICKS || current > previous.first) current else previous.first
+        state[skill] = start to cycle
+        return maxOf(base - base * VOW_DRAIN_CAP_PCT / 100, start - start * VOW_DRAIN_CAP_PCT / 100)
+    }
+
+    /** 5% of [damage] off [skill], never more than 15% below the base level nor below the level the drain started from. */
     private fun vowDrain(
         target: Pawn,
         skill: Int,
@@ -441,14 +479,14 @@ object RuinousPowers {
         if (drain <= 0) return
         if (target is Npc) {
             val base = target.stats.getMaxLevel(skill)
-            val floor = base - base * VOW_DRAIN_CAP_PCT / 100
             val current = target.stats.getCurrentLevel(skill)
+            val floor = vowFloor(target, skill, base, current)
             if (current > floor) target.stats.setCurrentLevel(skill, (current - drain).coerceAtLeast(floor))
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous vow npc ${target.id} skill $skill $current -> ${target.stats.getCurrentLevel(skill)} (hit $damage, floor $floor)" }
         } else if (target is Player) {
             val base = target.skills.getMaxLevel(skill)
-            val floor = base - base * VOW_DRAIN_CAP_PCT / 100
             val current = target.skills.getCurrentLevel(skill)
+            val floor = vowFloor(target, skill, base, current)
             if (current > floor) target.skills.setCurrentLevel(skill, (current - drain).coerceAtLeast(floor))
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous vow ${target.username} skill $skill $current -> ${target.skills.getCurrentLevel(skill)} (hit $damage, floor $floor)" }
         }
@@ -468,14 +506,16 @@ object RuinousPowers {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous vindication ${target.username} at $current hitpoints: +${target.skills.getMaxLevel(Skills.PRAYER) / 4}, prayer 0" }
     }
 
+    fun wrathMaxDamage(player: Player): Int = player.skills.getMaxLevel(Skills.PRAYER) * WRATH_PRAYER_PCT / 100
+
     /**
-     * Wrath (death start): "up to 25% of your Prayer level" (base level, OSRS Wiki) to opponents in a 5x5 area - the curse Wrath's hit
+     * Wrath (death start): "up to 33% of your Prayer level" (N496; OSRS 25 %, base level) to opponents in a 5x5 area - the curse Wrath's hit
      * rules - with OSRS's own look ([WRATH_VISUALS]).
      */
     fun onDeathStart(player: Player) {
         if (!on(player, RuinousPrayer.WRATH)) return
-        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous wrath ${player.username} max ${player.skills.getMaxLevel(Skills.PRAYER) / 4}" }
-        AncientCurses.wrathExplosion(player, maxDamage = player.skills.getMaxLevel(Skills.PRAYER) / 4, visuals = WRATH_VISUALS)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous wrath ${player.username} max ${wrathMaxDamage(player)}" }
+        AncientCurses.wrathExplosion(player, maxDamage = wrathMaxDamage(player), visuals = WRATH_VISUALS)
     }
 
     /**

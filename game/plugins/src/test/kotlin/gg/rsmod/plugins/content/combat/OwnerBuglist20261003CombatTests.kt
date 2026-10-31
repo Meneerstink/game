@@ -257,7 +257,7 @@ class OwnerBuglist20261003CombatTests {
      * OSRS Wiki infoboxes: Odium ward ranged strength +4, Dragonfire ward (charged and uncharged) +8, Sunlight antler bolts +55. The
      * shield counts in the max hit like every other slot; the 4-point gap is worth Effective Ranged x 4 / 640 = at most one hit,
      * so with some gear sets the two wards round to the same max hit (OSRS too) - e.g. 99 Ranged, ranging potion (112), Rigour,
-     * rapid, Hunters' sunlight crossbow + sunlight antler bolts: Odium 28, Dragonfire 29; with Leech Ranged (+18 %) 27 vs 28.
+     * rapid, Hunters' sunlight crossbow + sunlight antler bolts: Odium 28, Dragonfire 29; with Leech Ranged (+23 %, N496) the same 28 vs 29.
      */
     @Test
     fun `Dragonfire ward carries its own ranged strength into the max hit`() {
@@ -292,9 +292,10 @@ class OwnerBuglist20261003CombatTests {
             }
             assertEquals(28, maxHit(ODIUM_WARD, rigour = true, leech = false))
             assertEquals(29, maxHit(DRAGONFIRE_WARD, rigour = true, leech = false))
-            // Leech Ranged x1.13 since the owner's 2026-10-09 decision (AncientCurses.LEECH_RANGED_DAMAGE); 27 / 28 were the x1.18 values.
-            assertEquals(26, maxHit(ODIUM_WARD, rigour = false, leech = true))
-            assertEquals(27, maxHit(DRAGONFIRE_WARD, rigour = false, leech = true))
+            // N496 (owner 2026-10-31): Leech Ranged x1.23 = Rigour (AncientCurses.LEECH_RANGED_DAMAGE; was x1.13 -> 26 / 27), so
+            // without leeched levels it hits exactly what Rigour hits.
+            assertEquals(28, maxHit(ODIUM_WARD, rigour = false, leech = true))
+            assertEquals(29, maxHit(DRAGONFIRE_WARD, rigour = false, leech = true))
         } finally {
             unmockkObject(CombatConfigs, Prayers, AncientCurses)
         }
@@ -311,8 +312,8 @@ class OwnerBuglist20261003CombatTests {
     @Test
     fun `the owner's Leech balance and its tooltips are in place`() {
         assertEquals(1.20, AncientCurses.LEECH_RANGED_ACCURACY, 1e-9)
-        // Owner 2026-10-09: x1.13 (one hit under Rigour even at +5 levels). Owner A8 2026-10-11: every tooltip states the real effect.
-        assertEquals(1.13, AncientCurses.LEECH_RANGED_DAMAGE, 1e-9)
+        // N496 (owner 2026-10-31): x1.23 = Rigour (was x1.13). Owner A8 2026-10-11: every tooltip states the real effect.
+        assertEquals(1.23, AncientCurses.LEECH_RANGED_DAMAGE, 1e-9)
         assertTrue(Skills.MAGIC in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST && Skills.DEFENCE in AncientCurses.STAT_LEECHES_WITH_LEVEL_BOOST)
         val texts =
             gg.rsmod.game.tools.importer.CurseTooltipCacheTool.TOOLTIPS.associate { it.struct to it.new }
@@ -331,7 +332,10 @@ class OwnerBuglist20261003CombatTests {
         val sap = AncientCurses.SAP_SELF_BOOST_PCT
         assertTrue(texts.getValue(889).startsWith("Boosts Attack and Strength by $sap%"), texts.getValue(889))
         assertTrue(texts.getValue(890).startsWith("Boosts Ranged accuracy and damage by $sap%"), texts.getValue(890))
-        assertTrue(texts.getValue(891).startsWith("Boosts Magic accuracy by $sap%,"), texts.getValue(891))
+        assertTrue(
+            texts.getValue(891).startsWith("Boosts Magic accuracy by $sap% and Magic damage by ${Math.round(AncientCurses.SAP_MAGE_MAGIC_DAMAGE * 100)}%,"),
+            texts.getValue(891),
+        )
         listOf(889, 890, 891).forEach { assertTrue(texts.getValue(it).endsWith("by 10%, increasing to 20% over time."), texts.getValue(it)) }
         assertTrue(texts.getValue(904).contains("${AncientCurses.LEECH_SPECIAL_PCT}%"), texts.getValue(904))
         assertTrue(texts.getValue(897).contains("${AncientCurses.DEFLECT_REFLECT_CHANCE_PCT.toInt()}% chance"), texts.getValue(897))

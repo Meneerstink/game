@@ -32,9 +32,9 @@ import gg.rsmod.plugins.content.inter.attack.AttackTab
  *    percentage point until the cap ([AncientCurse.activationChancePercent] per curse - PROVEN
  *    from Novite's rev-667 `Player.java` `handleIngoingHit`, replacing this file's former single
  *    shared 25% guess; see that field's KDoc).
- *  * Turmoil: Attack +15% + 15% of the target's Attack level, Defence +15% + 15% of the target's
- *    Defence, Strength +23% + 10% of the target's Strength (target level contribution capped at
- *    [TURMOIL_TARGET_LEVEL_CAP], a provisional balance guard for very high NPC levels).
+ *  * Turmoil: Attack +15% + 10% of the target's Attack level, Defence +15% + 10% of the target's
+ *    Defence, Strength +23% + 4% of the target's Strength (N496 owner balance 2026-10-31; 2011 was
+ *    15 / 10 / 15 %; target level contribution capped at [TURMOIL_TARGET_LEVEL_CAP]).
  *  * Soul Split heals 20% of the hit and drains a player target's prayer by 20% of the hit;
  *    Wrath deals up to 300% of the Prayer level in a 5x5 area on the wearer's death (PROVEN from
  *    the same Novite source - `Utils.getRandom(level * 3)` - this file previously had 250%, which
@@ -90,9 +90,22 @@ object AncientCurses {
      * Owner curse table 2026-10-11 (FINAL): a Sap now boosts its caster while it is on (before: none) - Sap Warrior +10 % Attack
      * and +10 % Strength (no Defence), Sap Ranger +10 % ranged accuracy and +10 % ranged damage (Hawk Eye), Sap Mage +10 %
      * magic accuracy and no damage (Mystic Lore without its Defence). Sap Spirit and every Sap's drain on the target unchanged.
+     * N496 (owner 2026-10-31 22:4x "alle 11 bouwen", ranking Ruinous > Curses > Normal for every prayer): 10 -> 15 %, level with
+     * the Normal prayers of that tier (Ultimate Strength + Incredible Reflexes, Eagle Eye, Mystic Might); the drain on the target
+     * is what puts Curses above them. Sap Mage also gets Mystic Might's +2 % magic damage ([SAP_MAGE_MAGIC_DAMAGE]).
      */
-    const val SAP_SELF_BOOST_PCT = 10
+    const val SAP_SELF_BOOST_PCT = 15
+    const val SAP_MAGE_MAGIC_DAMAGE = 0.02
     const val TURMOIL_TARGET_LEVEL_CAP = 99
+
+    /**
+     * N496 (owner 2026-10-31 22:4x): the share of the opponent's level Turmoil adds (2011: 15 / 10 / 15 %). Against a 99 opponent
+     * Turmoil was Attack +29 %, Strength +32 %, Defence +29 % = 4 max hits above Piety and more Defence than Piety. Now 10 / 4 / 10 %:
+     * Attack +24 %, Strength +26 % (Piety +1 max hit, Ruinous Decimate +2), Defence +24 % (never above Piety's 25 %).
+     */
+    const val TURMOIL_TARGET_ATTACK_PCT = 10
+    const val TURMOIL_TARGET_STRENGTH_PCT = 4
+    const val TURMOIL_TARGET_DEFENCE_PCT = 10
 
     /** Source-proven rev-667 curse-book activation visuals from Novite's Prayer.java. */
     const val PROTECT_ITEM_ACTIVATION_ANIMATION = 12567
@@ -898,9 +911,9 @@ object AncientCurses {
         val attack = maxLevel(target, Skills.ATTACK, NpcSkills.ATTACK).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
         val strength = maxLevel(target, Skills.STRENGTH, NpcSkills.STRENGTH).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
         val defence = maxLevel(target, Skills.DEFENCE, NpcSkills.DEFENCE).coerceAtMost(TURMOIL_TARGET_LEVEL_CAP)
-        bonuses[Skills.ATTACK] = attack * 15 / 100
-        bonuses[Skills.STRENGTH] = strength * 10 / 100
-        bonuses[Skills.DEFENCE] = defence * 15 / 100
+        bonuses[Skills.ATTACK] = attack * TURMOIL_TARGET_ATTACK_PCT / 100
+        bonuses[Skills.STRENGTH] = strength * TURMOIL_TARGET_STRENGTH_PCT / 100
+        bonuses[Skills.DEFENCE] = defence * TURMOIL_TARGET_DEFENCE_PCT / 100
         syncTurmoilVarbits(player)
     }
 
@@ -1011,8 +1024,10 @@ object AncientCurses {
     /**
      * Owner 2026-10-09 (on advice): x1.13, so even at the +5 Leech maximum it stays one hit under Rigour's x1.23 (122 x 1.13 = 138 vs
      * 117 x 1.23 = 144), the 2026-09-29 rule "one hit lower" (1.18 equalled Rigour once the +1 levels came in).
+     * N496 (owner 2026-10-31 22:4x, Curses ranged = Normal +1): x1.23 = Rigour, so Leech Ranged starts level with Rigour and the up
+     * to 5 leeched levels give the +1 (+2 at most, never above Ruinous Annihilate x1.31). Was 2-3 max hits under Rigour.
      */
-    const val LEECH_RANGED_DAMAGE = 1.13
+    const val LEECH_RANGED_DAMAGE = 1.23
 
     /**
      * Owner 2026-10-09: the 10-06 question Q5 offered "visible +1 per proc" OR "keep the hidden modifier", never both, so the
