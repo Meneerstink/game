@@ -36,4 +36,16 @@ class SpellRuneArgsToolTests {
         assertEquals(listOf(1963 to 1), ape.filter { it.first !in SpellRuneArgsTool.RUNES })
         assertTrue(9075 in SpellRuneArgsTool.RUNES, "astral runes are runes")
     }
+
+    @Test
+    fun `N72 every self teleport gets runes back and fits the four rune pairs`() {
+        val books = mapOf(192 to SpellRuneArgsTool.STANDARD_FREE_TELEPORT_NAMES, 193 to SpellRuneArgsTool.ANCIENT_FREE_TELEPORT_NAMES, 430 to SpellRuneArgsTool.LUNAR_FREE_TELEPORT_NAMES)
+        for ((book, names) in books) {
+            for (name in names) {
+                val pairs = SpellRuneArgsTool.RESTORED_TELEPORTS[book to name] ?: error("$book $name has no runes to put back")
+                assertTrue(pairs.size in 1..4 && pairs.any { it.first in SpellRuneArgsTool.RUNES }, "$book $name: $pairs")
+            }
+        }
+        assertEquals(listOf(554 to 2, 555 to 2, 563 to 2, 1963 to 1), SpellRuneArgsTool.RESTORED_TELEPORTS[192 to "Teleport to Ape Atoll"], "Ape Atoll: runes and its banana")
+    }
 }

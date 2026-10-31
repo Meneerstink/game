@@ -440,6 +440,32 @@ object RuinousPowersCacheTool {
         return mutations
     }
 
+    /**
+     * N492 (Claude 2026-10-31, owner 20:0x "ja nu fixen"): with "Show stat adjustments" open the curse layout's grid keeps its full
+     * height and no scrollbar (script 1704's GET_VARBIT 6840 branch: the 20 curses fit in 4 rows above the panel), but the 24 Ruinous
+     * prayers need 5 rows, so the fifth sat half under the panel. 1704 asks "is it the real curse book" ([IS_CURSES_SCRIPT]) instead:
+     * Ruinous takes the Normal route - the grid shrinks above the panel and the cache's scrollbar (script 31) appears, as for the 30
+     * Normal prayers.
+     */
+    fun scrollMutations(): List<CacheMutation> {
+        val library = CacheLibrary(TARGETS[0])
+        try {
+            val current = requireNotNull(library.data(SCRIPT_INDEX, STAT_SCROLL_SCRIPT, 0)) { "clientscript $STAT_SCROLL_SCRIPT missing" }
+            val editor = ClientScriptEditor.decode(current)
+            check(editor.encode().contentEquals(current)) { "clientscript $STAT_SCROLL_SCRIPT does not round-trip" }
+            val changed = curseTest(editor)
+            check(changed == 1) { "clientscript $STAT_SCROLL_SCRIPT: $changed curse tests, expected 1" }
+            return listOf(
+                CacheMutation(SCRIPT_INDEX, STAT_SCROLL_SCRIPT, 0, editor.encode(), "clientscript $STAT_SCROLL_SCRIPT: Ruinous scrolls under the stat adjustments (N492)", expectedCurrentSha1 = CacheItemProbeTool.sha1(current)),
+            )
+        } finally {
+            library.close()
+        }
+    }
+
+    /** The prayer tab's grid size / scrollbar when the stat adjustments open or close (called by 1698). */
+    const val STAT_SCROLL_SCRIPT = 1704
+
     // ---- main ----
 
     fun mutations(): List<CacheMutation> {
@@ -497,7 +523,7 @@ object RuinousPowersCacheTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val apply = "--apply" in args
-        val transaction = CacheTransaction(targets = TARGETS, mutations = if ("stats" in args) statMutations() else mutations())
+        val transaction = CacheTransaction(targets = TARGETS, mutations = if ("scroll" in args) scrollMutations() else if ("stats" in args) statMutations() else mutations())
         val plan = transaction.preflight()
         val errors = transaction.blockingErrors(plan)
         println("PREFLIGHT transaction=${transaction.id} mutations=${transaction.mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")

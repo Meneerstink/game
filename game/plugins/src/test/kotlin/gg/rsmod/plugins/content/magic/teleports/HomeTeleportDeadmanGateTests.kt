@@ -100,7 +100,7 @@ class HomeTeleportDeadmanGateTests {
         runAway(player)
 
         press(player, "Lunar Home Teleport")
-        val landed = landedAfter(player, OWNER_TILE, 10)
+        val landed = landedAfter(player, OWNER_TILE, HOME_CAST_TICKS)
 
         assertNoLegacyLine(player)
         assertNotNull("Lunar Home Teleport while running, 8 s after the last troll hit, must teleport home: ${messages(player)}", landed)
@@ -127,6 +127,66 @@ class HomeTeleportDeadmanGateTests {
         )
     }
 
+    // ------------------------------------------------------------------------------------------------- N72 the OSRS home cast
+
+    @Test
+    fun `N72 home teleport is free, not instant, plays the staged cast and then waits 30 minutes`() {
+        for (route in ROUTES.filter { it.key.startsWith("h") }) {
+            val player = player("n72c${route.key}", OWNER_TILE)
+            player.inventory.removeAll()
+            player.switchSpellbook(route.book)
+            tick(1)
+            route.press(this, player)
+            tick(6)
+            assertTrue("${route.name}: still casting after 6 ticks (not instant), at ${player.tile}", player.tile.getDistance(OWNER_TILE) <= 1)
+            assertNotNull("${route.name}: lands home without any rune: ${messages(player)}", landedAfter(player, OWNER_TILE, HOME_CAST_TICKS))
+            assertTrue("${route.name}: landed home ${player.tile}", player.tile.getDistance(HOME) <= 3)
+            written.getValue(player).clear()
+            player.moveTo(OWNER_TILE)
+            tick(1)
+            route.press(this, player)
+            assertEquals("${route.name}: a second cast within 30 minutes", null, landedAfter(player, OWNER_TILE, HOME_CAST_TICKS))
+            assertTrue("${route.name}: the OSRS cooldown line: ${messages(player)}", messages(player).any { it.startsWith("You need to wait another ") && it.endsWith(" to cast this spell.") })
+            cleanUp()
+        }
+    }
+
+    @Test
+    fun `N72 walking away or a hit during the home cast stops it and keeps the spell ready`() {
+        val walker = player("n72walk", OWNER_TILE)
+        walker.switchSpellbook(Spellbook.STANDARD)
+        tick(1)
+        pressSpell(walker, "Home Teleport")
+        tick(5)
+        // What a click on the map does (ClickMapHandler): everything stops, then the walk.
+        walker.fullInterruption(movement = true, interactions = true, animations = true, queue = true)
+        walker.walkTo(Tile(walker.tile.x + 4, walker.tile.z, walker.tile.height))
+        assertEquals("a click elsewhere stops the cast", null, landedAfter(walker, OWNER_TILE, HOME_CAST_TICKS))
+        walker.moveTo(OWNER_TILE)
+        tick(1)
+        written.getValue(walker).clear()
+        pressSpell(walker, "Home Teleport")
+        assertNotNull("not used up: the next cast lands home: ${messages(walker)}", landedAfter(walker, OWNER_TILE, HOME_CAST_TICKS))
+        cleanUp()
+
+        val fighter = player("n72hit", OWNER_TILE)
+        fighter.switchSpellbook(Spellbook.STANDARD)
+        val troll = troll()
+        pressSpell(fighter, "Home Teleport")
+        tick(3)
+        troll.attack(fighter)
+        var landed: Int? = null
+        for (i in 1..HOME_CAST_TICKS) {
+            tick(1)
+            fighter.setCurrentLifepoints(99)
+            if (fighter.tile.getDistance(OWNER_TILE) > 20) {
+                landed = i
+                break
+            }
+        }
+        assertEquals("a troll hit during the cast stops it (OSRS: interrupted by combat)", null, landed)
+    }
+
     // ------------------------------------------------------------------------------------------------------------- the class
 
     @Test
@@ -134,6 +194,8 @@ class HomeTeleportDeadmanGateTests {
         val failures = mutableListOf<String>()
         for (route in ROUTES) {
             for (state in State.values()) {
+                // A troll fighting back during the 11-second home cast stops it (OSRS) - its own test below.
+                if (route.key.startsWith("h") && state == State.ATTACKING_NPC) continue
                 val player = player("c${route.key}${state.ordinal}", if (state == State.DEEP_WILDERNESS) DEEP_WILDERNESS else OWNER_TILE)
                 val start = player.tile
                 player.switchSpellbook(route.book)
@@ -143,7 +205,9 @@ class HomeTeleportDeadmanGateTests {
                 state.prepare(this, player, troll)
                 route.press(this, player)
                 state.afterPress(this, player, troll)
-                val landed = landedAfter(player, start, if (state.name.startsWith("SKULLED")) SevenSecondAction.DURATION_CYCLES + 10 else 10)
+                // N72 (owner 2026-10-31): the home teleports are the OSRS staged cast - the gate decides first, the teleport ~20 ticks later.
+                val cast = if (route.key.startsWith("h")) HOME_CAST_TICKS else 10
+                val landed = landedAfter(player, start, if (state.name.startsWith("SKULLED")) SevenSecondAction.DURATION_CYCLES + cast else cast)
                 val got =
                     when {
                         landed != null -> Outcome.TELEPORTED
@@ -360,6 +424,8 @@ class HomeTeleportDeadmanGateTests {
         client.tile = at
         listOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.CONSTITUTION, Skills.MAGIC).forEach { client.skills.setBaseLevel(it, 99) }
         client.setCurrentLifepoints(99)
+        // N72: Varrock / Paddewwa Teleport cost runes again; the home teleports stay free.
+        listOf(563, 556, 554).forEach { client.inventory.add(it, 50) }
         val out = mutableListOf<Message>()
         val system = mockk<GameSystem>(relaxed = true)
         every { system.write(any()) } answers { out += firstArg<Message>() }
@@ -387,6 +453,9 @@ class HomeTeleportDeadmanGateTests {
 
         /** game.yml home-x/home-z (gameContext.home). */
         val HOME = Tile(3164, 3495, 0)
+
+        /** The OSRS home cast: 2 ticks, 17 stages of a tick, then the move (+ slack). */
+        const val HOME_CAST_TICKS = 2 + 17 + 6
 
         const val HOME_SOURCE = "src/main/kotlin/gg/rsmod/plugins/content/magic/teleports/home_teleport_spells.plugin.kts"
 

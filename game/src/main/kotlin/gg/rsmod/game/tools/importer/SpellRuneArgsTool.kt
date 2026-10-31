@@ -10,8 +10,8 @@ import java.io.ByteArrayOutputStream
  * Every 667 spell component carries its requirements as the last eight int arguments of its onLoad hook (CS2 6: rune id / amount
  * pairs; CS2 21 greys the icon and CS2 19 counts the runes from exactly these). The server's own spell data differs in two places:
  *  - the four Surge spells use the OSRS runes (air + wrath, OSRS Wiki), the cache still listed 667 blood + death;
- *  - every self-teleport is rune-free on this server (RuneFreeTeleportRequirements), the cache still listed runes, so the client
- *    showed teleports greyed out and required runes in the tooltip.
+ *  - 2026-09-19 every self-teleport was made rune-free (the runes taken out here); N72 (2026-10-31) puts them back
+ *    ([RESTORED_TELEPORTS]): teleports cost runes again.
  * The rewrite is length-preserving (int for int) and addressed by value: the old eight-int sequence must occur exactly once in the
  * component, otherwise nothing is written. Non-rune ingredients (Ape Atoll's banana) stay.
  *
@@ -33,7 +33,45 @@ object SpellRuneArgsTool {
             (192 to 91) to listOf(554 to 10, 556 to 7, WRATH_RUNE to 1),
         )
 
-    /** Rune-free self teleports (TeleportSpell + the POH Teleport to House), addressed by the spell name in their onLoad args. */
+    /**
+     * N72 (owner 2026-10-31 18:4x "alle teleports moeten nu gewoon runes kosten"): the runes the 2026-09-19 rewrite took out of every
+     * self teleport go back in, the server's SpellbookData runes per (book, spell name) - the client greys a teleport without them and
+     * the tooltip lists them again. The three Home Teleports stay free (owner 2026-10-31 20:0x).
+     */
+    val RESTORED_TELEPORTS: Map<Pair<Int, String>, List<Pair<Int, Int>>> =
+        mapOf(
+            (192 to "Mobilising Armies Teleport") to listOf(555 to 1, 556 to 3, 563 to 1),
+            (192 to "Varrock Teleport") to listOf(554 to 1, 556 to 3, 563 to 1),
+            (192 to "Lumbridge Teleport") to listOf(557 to 1, 556 to 3, 563 to 1),
+            (192 to "Falador Teleport") to listOf(555 to 1, 556 to 3, 563 to 1),
+            (192 to "Camelot Teleport") to listOf(556 to 5, 563 to 1),
+            (192 to "Ardougne Teleport") to listOf(555 to 2, 563 to 2),
+            (192 to "Watchtower Teleport") to listOf(557 to 2, 563 to 2),
+            (192 to "Trollheim Teleport") to listOf(554 to 2, 563 to 2),
+            (192 to "Teleport to Ape Atoll") to listOf(554 to 2, 555 to 2, 563 to 2, 1963 to 1),
+            (192 to "Teleport to House") to listOf(563 to 1, 556 to 1, 557 to 1),
+            (193 to "Paddewwa Teleport") to listOf(563 to 2, 554 to 1, 556 to 1),
+            (193 to "Senntisten Teleport") to listOf(563 to 2, 566 to 1),
+            (193 to "Kharyrll Teleport") to listOf(563 to 2, 565 to 1),
+            (193 to "Lassar Teleport") to listOf(563 to 2, 555 to 4),
+            (193 to "Dareeyak Teleport") to listOf(563 to 2, 554 to 3, 556 to 2),
+            (193 to "Carrallangar Teleport") to listOf(563 to 2, 566 to 2),
+            (193 to "Annakarl Teleport") to listOf(563 to 2, 565 to 2),
+            (193 to "Ghorrock Teleport") to listOf(563 to 2, 555 to 8),
+            (430 to "Barbarian Teleport") to listOf(9075 to 2, 563 to 2, 554 to 3),
+            (430 to "Fishing Guild Teleport") to listOf(9075 to 3, 563 to 3, 555 to 8),
+            (430 to "Khazard Teleport") to listOf(9075 to 2, 563 to 2, 555 to 4),
+            (430 to "Moonclan Teleport") to listOf(9075 to 2, 563 to 1, 557 to 2),
+            (430 to "Catherby Teleport") to listOf(9075 to 3, 563 to 3, 555 to 10),
+            (430 to "Waterbirth Teleport") to listOf(9075 to 2, 563 to 1, 555 to 1),
+            (430 to "Ice Plateau Teleport") to listOf(9075 to 3, 563 to 3, 555 to 8),
+            (430 to "Ourania Teleport") to listOf(9075 to 2, 563 to 1, 557 to 6),
+            (430 to "South Falador Teleport") to listOf(9075 to 2, 563 to 1, 556 to 2),
+            (430 to "North Ardougne Teleport") to listOf(9075 to 2, 563 to 1, 555 to 5),
+            (430 to "Trollheim Teleport") to listOf(9075 to 3, 563 to 3, 555 to 10),
+        )
+
+    /** The self teleports of 2026-09-19 (TeleportSpell + the POH Teleport to House), addressed by the spell name in their onLoad args. */
     val LUNAR_FREE_TELEPORT_NAMES =
         setOf(
             "Barbarian Teleport", "Fishing Guild Teleport", "Khazard Teleport", "Moonclan Teleport", "Catherby Teleport",
@@ -148,7 +186,7 @@ object SpellRuneArgsTool {
                     val spell = spellArgs(library, interfaceId, component) ?: continue
                     if (spell.name !in wanted) continue
                     seen += spell.name
-                    plan(interfaceId, component) { pairs -> pairs.filter { it.first !in RUNES } }
+                    plan(interfaceId, component) { RESTORED_TELEPORTS.getValue(interfaceId to spell.name) }
                 }
                 require(seen == wanted) { "interface $interfaceId: teleports not found: ${wanted - seen}" }
             }

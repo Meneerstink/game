@@ -44,7 +44,8 @@ fun Player.teleport(
     xp: Double,
     data: SpellMetadata,
 ) {
-    val itemRequirements = RuneFreeTeleportRequirements.nonRuneRequirements(data.runes)
+    // N72 (owner 2026-10-31 18:4x "alle teleports moeten nu gewoon runes kosten"): the spell's own runes and ingredients.
+    val itemRequirements = data.runes
  if (!MagicSpells.canCast(this, data.lvl, itemRequirements)) {
         return
     }
@@ -67,7 +68,7 @@ fun Player.teleport(
     // one extra click (the one-arg overload's fallback behaviour).
     canTeleport(type) {
         // The countdown can outlive an inventory/equipment change. Re-check the complete
-        // non-rune requirement set at execution time so a delayed callback cannot consume an
+        // requirement set at execution time so a delayed callback cannot consume a rune or
         // ingredient that is no longer present.
         if (!MagicSpells.canCast(this, data.lvl, itemRequirements, data.sprite)) {
             return@canTeleport

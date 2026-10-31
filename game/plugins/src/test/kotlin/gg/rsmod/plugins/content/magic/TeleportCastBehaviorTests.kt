@@ -21,7 +21,6 @@ import gg.rsmod.game.model.varp.VarpSet
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.combat.Combat
-import gg.rsmod.plugins.content.magic.teleports.RuneFreeTeleportRequirements
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.BeforeClass
@@ -34,20 +33,22 @@ import kotlin.test.assertNotEquals
 import kotlin.test.assertTrue
 
 /**
- * Closes the Package-2 "prove it at actual cast-behavior level" gap: unlike
- * [gg.rsmod.plugins.content.magic.teleports.RuneFreeTeleportRequirementsTests]
- * (which only exercises the filtering function in isolation), these tests
+ * N72 (owner 2026-10-31 18:4x "alle teleports moeten nu gewoon runes kosten"): teleports pay their runes again (the 2026-09
+ * rune-free teleports are gone). These tests
  * drive the real [MagicSpells.canCast]/[MagicSpells.removeRunes] entry points
  * that `teleport_spells.plugin.kts` itself calls, against real
  * [SpellbookData] fixtures and real [ItemContainer]/[SkillSet] state.
  */
 class TeleportCastBehaviorTests {
     @Test
-    fun `representative teleport succeeds and consumes nothing with sufficient level and empty inventory`() {
+    fun `representative teleport is refused without its runes and consumes them when cast`() {
         val player = newPlayer(magicLevel = 30)
-        val requirements = RuneFreeTeleportRequirements.nonRuneRequirements(SpellbookData.VARROCK_TELEPORT.runes)
+        val requirements = SpellbookData.VARROCK_TELEPORT.runes
 
-        assertTrue(requirements.isEmpty(), "Varrock Teleport's runes are all real runes and must be filtered to none")
+        assertFalse(MagicSpells.canCast(player, SpellbookData.VARROCK_TELEPORT.level, requirements), "no runes: no Varrock Teleport")
+        player.inventory.add(Items.FIRE_RUNE, 1)
+        player.inventory.add(Items.AIR_RUNE, 3)
+        player.inventory.add(Items.LAW_RUNE, 1)
         assertTrue(MagicSpells.canCast(player, SpellbookData.VARROCK_TELEPORT.level, requirements))
 
         MagicSpells.removeRunes(player, requirements, SpellbookData.VARROCK_TELEPORT.uniqueId)
@@ -67,7 +68,7 @@ class TeleportCastBehaviorTests {
 
         MagicSpells.removeRunes(player, SpellbookData.WIND_STRIKE.runes, SpellbookData.WIND_STRIKE.uniqueId)
 
-        assertEquals(0, player.inventory.getItemCount(Items.AIR_RUNE), "combat spells were never made rune-free")
+        assertEquals(0, player.inventory.getItemCount(Items.AIR_RUNE), "combat spells use their runes")
         assertEquals(0, player.inventory.getItemCount(Items.MIND_RUNE))
     }
 
@@ -81,21 +82,22 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `teleport cast is still blocked below the spell's magic level despite having zero rune requirements`() {
+    fun `teleport cast is still blocked below the spell's magic level with its runes in hand`() {
         val player = newPlayer(magicLevel = SpellbookData.VARROCK_TELEPORT.level - 1)
-        val requirements = RuneFreeTeleportRequirements.nonRuneRequirements(SpellbookData.VARROCK_TELEPORT.runes)
+        player.inventory.add(Items.FIRE_RUNE, 1)
+        player.inventory.add(Items.AIR_RUNE, 3)
+        player.inventory.add(Items.LAW_RUNE, 1)
 
-        assertFalse(
-            MagicSpells.canCast(player, SpellbookData.VARROCK_TELEPORT.level, requirements),
-            "the rune-free mechanism must not have loosened the Magic-level gate",
-        )
+        assertFalse(MagicSpells.canCast(player, SpellbookData.VARROCK_TELEPORT.level, SpellbookData.VARROCK_TELEPORT.runes), "Magic-level gate")
     }
 
     @Test
-    fun `ape atoll teleport still requires and consumes its banana while staying rune-free`() {
+    fun `ape atoll teleport requires and consumes its runes and its banana`() {
         val player = newPlayer(magicLevel = SpellbookData.APE_ATOLL_TELEPORT.level)
-        val requirements = RuneFreeTeleportRequirements.nonRuneRequirements(SpellbookData.APE_ATOLL_TELEPORT.runes)
-        assertEquals(listOf(Items.BANANA), requirements.map { it.id })
+        val requirements = SpellbookData.APE_ATOLL_TELEPORT.runes
+        player.inventory.add(Items.FIRE_RUNE, 2)
+        player.inventory.add(Items.WATER_RUNE, 2)
+        player.inventory.add(Items.LAW_RUNE, 2)
 
         // Without the banana, the cast must still fail.
         assertFalse(MagicSpells.canCast(player, SpellbookData.APE_ATOLL_TELEPORT.level, requirements))
@@ -112,13 +114,13 @@ class TeleportCastBehaviorTests {
     }
 
     @Test
-    fun `wilderness teleport restriction still blocks a deep-wilderness teleport regardless of the rune-free mechanism`() {
+    fun `wilderness teleport restriction still blocks a deep-wilderness teleport regardless of the runes`() {
         val player = newPlayer(magicLevel = 99)
         every { player.lock } returns LockState.NONE
         // Region 12092 (x=47, z=60 in region coordinates) is deep wilderness;
         // wilderness level (3900 - 3520) / 8 + 1 = 48, far past MODERN's
         // default wildLvlRestriction of 20. canTeleport() never sees the
-        // rune-free item list at all - it is called independently of it.
+        // rune list at all - it is called independently of it.
         every { player.tile } returns Tile(3040, 3900)
 
         assertFalse(player.canTeleport(TeleportType.MODERN))

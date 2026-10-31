@@ -5,7 +5,6 @@ import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.content.inter.attack.AttackTab
 import gg.rsmod.plugins.content.magic.MagicSpells
 import gg.rsmod.plugins.content.magic.MagicSpells.on_magic_spell_button
-import gg.rsmod.plugins.content.magic.teleports.RuneFreeTeleportRequirements
 import gg.rsmod.plugins.content.magic.TeleportType
 import gg.rsmod.plugins.content.magic.canTeleport
 import gg.rsmod.plugins.content.magic.prepareForTeleport
@@ -48,10 +47,10 @@ on_item_option(item = Items.TELEPORT_TO_HOUSE, option = "break") {
 }
 
 // Standard spellbook "Teleport to House" (level 40, 30 Magic XP - OSRS Wiki "Teleport to House"), cast like the other
-// teleport spells (teleport_spells.plugin.kts: rune-free requirements, MODERN animation/graphics); the house is
+// teleport spells (teleport_spells.plugin.kts: its runes, MODERN animation/graphics); the house is
 // allocated on arrival.
 on_magic_spell_button("Teleport to House") { metadata ->
-    val requirements = RuneFreeTeleportRequirements.nonRuneRequirements(metadata.runes)
+    val requirements = metadata.runes // N72: 1 law, 1 air, 1 earth again (OSRS Wiki "Teleport to House")
     if (!MagicSpells.canCast(player, metadata.lvl, requirements)) {
         return@on_magic_spell_button
     }
