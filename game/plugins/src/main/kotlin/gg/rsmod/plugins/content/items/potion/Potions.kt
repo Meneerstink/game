@@ -99,7 +99,8 @@ object Potions {
                 player.filterableMessage("You have finished your potion.")
             } else {
                 val num = potionName.substringAfter("(").substringBefore(")").toInt() - 1
-                val dosesLeftMessage = "You have $num doses of potion left."
+                // OSRS: "You have 1 dose of potion left." / "You have 2 doses of potion left." (it said "1 doses").
+                val dosesLeftMessage = if (num == 1) "You have 1 dose of potion left." else "You have $num doses of potion left."
                 player.filterableMessage(dosesLeftMessage)
             }
         }

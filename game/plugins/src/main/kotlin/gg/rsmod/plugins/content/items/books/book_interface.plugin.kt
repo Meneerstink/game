@@ -18,6 +18,9 @@ data class Book(val title: String, val pages: List<BookPage>) {
     fun open(player: Player) {
         // Mount first: replacing an interface fires its close hook and clears the old session.
         player.openInterface(INTERFACE, dest = InterfaceDestination.MAIN_SCREEN)
+        // Prev (op "Back") is an ordinary button: the client sends its click only with op1 enabled (testclient 2026-10-31: no
+        // packet at all before); Next is a pause button and needs no events.
+        player.setInterfaceEvents(INTERFACE, 72, -1..-1, 2)
         val session = BookSession(this)
         player.attr[CURR_BOOK] = session
         session.update(player)

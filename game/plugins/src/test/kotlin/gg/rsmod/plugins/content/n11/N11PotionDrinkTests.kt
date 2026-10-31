@@ -29,7 +29,7 @@ class N11PotionDrinkTests {
                 assertTrue(f.repo.executeItem(f.player, id, 1))
                 assertEquals(next, f.inventory[0]?.id)
                 assertTrue(messages.contains("You drink some of your relicym's balm."))
-                assertTrue(messages.contains(if (next == Items.VIAL) "You have finished your potion." else "You have ${3 - index} doses of potion left."))
+                assertTrue(messages.contains(if (next == Items.VIAL) "You have finished your potion." else if (index == 2) "You have 1 dose of potion left." else "You have ${3 - index} doses of potion left."))
                 assertTrue(f.timers.has(POTION_DELAY))
                 f.timers.remove(POTION_DELAY)
             }
