@@ -772,3 +772,11 @@ on_obj_option(obj = Objs.BIG_DOOR_57258, option = "open") {
         )
     }
 }
+
+// N11 (2026-10-31, item-option census): the Frozen key's 'Check-uses' did nothing. RuneScape Wiki 'Frozen key' lists the option but
+// not its text (ADAPTED, like the key's other texts in [FrozenKey]): it reports the charges left of FrozenKey.MAX_CHARGES.
+on_item_option(item = Items.FROZEN_KEY_20120, option = "check-uses") {
+    val key = player.inventory[player.getInteractingItemSlot()]?.takeIf { it.id == Items.FROZEN_KEY_20120 } ?: return@on_item_option
+    val left = FrozenKey.charges(key)
+    player.message(if (left == 1) "Your frozen key has 1 use left." else "Your frozen key has $left uses left.")
+}
