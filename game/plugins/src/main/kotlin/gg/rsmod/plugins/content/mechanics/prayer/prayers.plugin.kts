@@ -61,6 +61,11 @@ on_button(interfaceId = 749, component = 1) {
  */
 on_button(interfaceId = 271, component = 8) {
     val clickedSlot = player.getInteractingSlot()
+    // N463: the Ruinous Powers grid (24 cells, RuinousPrayer order).
+    if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.RUINOUS) {
+        RuinousPowers.click(player, clickedSlot)
+        return@on_button
+    }
     // PvP run 2026-10-03: handled on the click's own tick, every click of a tick applies (1-tick flicking) and nothing else is
     // interrupted; only a click that needs a dialogue or waits out a lock still goes through the queue (Prayers.toggleNow).
     if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) {
@@ -91,6 +96,10 @@ on_button(interfaceId = 271, component = 42) {
     val slot = player.getInteractingSlot()
     if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) {
         AncientCurses.selectQuickCurse(player, slot)
+        return@on_button
+    }
+    if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.RUINOUS) {
+        RuinousPowers.selectQuick(player, slot)
         return@on_button
     }
     val prayer = Prayer.values.firstOrNull { prayer -> prayer.slot == slot } ?: return@on_button

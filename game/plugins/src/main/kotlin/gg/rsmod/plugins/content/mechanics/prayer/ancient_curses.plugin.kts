@@ -15,7 +15,8 @@ on_command("curse") {
             when (args.getOrNull(1)?.lowercase()) {
                 "normal" -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
                 "ancient" -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
-                else -> player.filterableMessage("Usage: curse book normal | curse book ancient")
+                "ruinous" -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
+                else -> player.filterableMessage("Usage: curse book normal | curse book ancient | curse book ruinous")
             }
         }
         else -> {
@@ -24,7 +25,7 @@ on_command("curse") {
                 AncientCurses.toggleCurse(player, curse)
             } else {
                 player.filterableMessage(
-                    "Usage: curse unlock | curse book <normal|ancient> | curse turmoil | curse <curse name>",
+                    "Usage: curse unlock | curse book <normal|ancient|ruinous> | curse turmoil | curse <curse name>",
                 )
             }
         }
@@ -45,6 +46,8 @@ on_player_death_start {
     if (AncientCurses.isCurseActive(player, AncientCurse.WRATH)) {
         AncientCurses.wrathExplosion(player)
     }
+    // N463: the Ruinous Powers Wrath, the same blast with up to 25% of the Prayer level.
+    RuinousPowers.onDeathStart(player)
 }
 
 on_player_death {

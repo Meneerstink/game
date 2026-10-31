@@ -495,6 +495,8 @@ fun Pawn.dealHit(
             // Prayer subsystem batch 39: Redemption's auto-heal effect (see Redemption.kt for
             // sourcing) - target-side, triggers on the victim rather than the attacker.
             Redemption.onDamageDealt(target, totalDamage)
+            // N463 Ruinous Powers: Purge, Umbra's / Glacies' / Cruor's Vow (attacker side), Vindication (target side).
+            gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.onDamageDealt(pawn, target, totalDamage)
         }
     }
 

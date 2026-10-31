@@ -338,6 +338,8 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getPrayerRangedMultiplier(player: Player): Double =
         when {
+            // N463 Ruinous Powers: Ancient Sight 20 %, Trinitas 15 %, Annihilate 27 %.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rangedStrength(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.RANGED, damage = true)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05
@@ -349,6 +351,8 @@ object RangedCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
+            // N463 Ruinous Powers: Ancient Sight 20 %, Trinitas 15 %, Annihilate 30 %, Intensify 50 %.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rangedAttack(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.RANGED)
             Prayers.isActive(player, Prayer.SHARP_EYE) -> 1.05

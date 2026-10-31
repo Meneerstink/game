@@ -1,0 +1,304 @@
+package gg.rsmod.plugins.content.mechanics.prayer
+
+import com.displee.cache.CacheLibrary
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.EnumDef
+import gg.rsmod.game.fs.def.StructDef
+import gg.rsmod.game.fs.def.VarbitDef
+import gg.rsmod.game.model.World
+import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.skill.SkillSet
+import gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER
+import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.game.model.varp.VarpSet
+import gg.rsmod.game.tools.importer.RuinousPowersCacheTool
+import gg.rsmod.plugins.api.PrayerIcon
+import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.ext.getVarbit
+import gg.rsmod.plugins.api.ext.setVarbit
+import io.mockk.every
+import io.mockk.mockk
+import java.nio.file.Paths
+import kotlin.test.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFalse
+import kotlin.test.assertTrue
+
+/** N463 Ruinous Powers: the cache rows the tab draws and the server rules behind every click (owner 2026-10-31). */
+class RuinousPowersTests {
+    companion object {
+        private val definitions: DefinitionSet by lazy {
+            val store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+            DefinitionSet().apply {
+                load(store, VarbitDef::class.java)
+                load(store, EnumDef::class.java)
+                load(store, StructDef::class.java)
+            }
+        }
+    }
+
+    private fun player(
+        prayerLevel: Int = 99,
+        points: Int = 99,
+    ): Player {
+        val player = mockk<Player>(relaxed = true)
+        val world = mockk<World>(relaxed = true)
+        every { world.definitions } returns definitions
+        every { world.currentCycle } returns 100
+        lastWorld = world
+        every { player.world } returns world
+        every { player.attr } returns AttributeMap()
+        every { player.timers } returns TimerMap()
+        every { player.varps } returns VarpSet((0..9000).toSet())
+        every { player.varcs } returns MutableList(2000) { 0 }
+        every { player.skills } returns SkillSet(25).apply { setBaseLevel(Skills.PRAYER, prayerLevel) }
+        every { player.isDead() } returns false
+        every { player.lock.canUsePrayer() } returns true
+        every { player.lock.delaysPrayer() } returns false
+        every { player.getCurrentPrayerPoints() } returns points
+        var icon = -1
+        every { player.prayerIcon } answers { icon }
+        every { player.prayerIcon = any() } answers { icon = firstArg() }
+        AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
+        return player
+    }
+
+    /** The world of the last [player]; stubbed directly (re-stubbing through `p.world` would replace its definitions). */
+    private lateinit var lastWorld: World
+
+    @Test
+    fun `the cache draws the 24 prayers in the OSRS order with their own level, name and varbits`() {
+        assertEquals(RuinousPowersCacheTool.CELLS.size, RuinousPrayer.values.size)
+        val enum = definitions.get(EnumDef::class.java, RuinousPowersCacheTool.ENUM_ID)
+        RuinousPrayer.values.forEachIndexed { slot, prayer ->
+            val cell = RuinousPowersCacheTool.CELLS[slot]
+            assertEquals(cell.name, prayer.named)
+            assertEquals(cell.level, prayer.level)
+            val struct = definitions.get(StructDef::class.java, enum.getInt(slot))
+            assertEquals(RuinousPowersCacheTool.STRUCT_BASE + slot, struct.id)
+            assertEquals(prayer.level, struct.getInt(737))
+            assertEquals("Level ${prayer.level}<br>${prayer.named}<br>${cell.text}", struct.getString(734))
+            val active = definitions.get(VarbitDef::class.java, prayer.varbit)
+            assertEquals(RuinousPowersCacheTool.ACTIVE_VARP, active.varp)
+            assertEquals(slot, active.startBit)
+            val quick = definitions.get(VarbitDef::class.java, prayer.quickVarbit)
+            assertEquals(RuinousPowersCacheTool.QUICK_VARP, quick.varp)
+            assertEquals(slot, quick.startBit)
+        }
+        // Levels rise through the grid, as in the OSRS book (60 Rejuvenation ... 92 Intensify).
+        assertEquals(RuinousPrayer.values.map { it.level }.sorted(), RuinousPrayer.values.map { it.level })
+    }
+
+    @Test
+    fun `switching to the Ruinous book sets the curse layout and the Ruinous flag`() {
+        val p = player()
+        assertEquals(AncientCurses.PrayerBook.RUINOUS, AncientCurses.getBook(p))
+        assertEquals(1, p.getVarbit(AncientCurse.BOOK_VARBIT))
+        assertEquals(1, p.getVarbit(RuinousPowersCacheTool.BOOK_FLAG_VARBIT))
+        AncientCurses.switchBook(p, AncientCurses.PrayerBook.NORMAL)
+        assertEquals(0, p.getVarbit(AncientCurse.BOOK_VARBIT))
+        assertEquals(0, p.getVarbit(RuinousPowersCacheTool.BOOK_FLAG_VARBIT))
+    }
+
+    @Test
+    fun `offensive prayers, overheads and vows each allow one at a time - the rest stack`() {
+        val p = player()
+        RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
+        RuinousPowers.click(p, RuinousPrayer.REJUVENATION.slot)
+        RuinousPowers.click(p, RuinousPrayer.INTENSIFY.slot)
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.DECIMATE))
+        assertTrue(RuinousPowers.isActive(p, RuinousPrayer.INTENSIFY))
+        assertTrue(RuinousPowers.isActive(p, RuinousPrayer.REJUVENATION))
+
+        RuinousPowers.click(p, RuinousPrayer.FUMUS_VOW.slot)
+        RuinousPowers.click(p, RuinousPrayer.CRUOR_VOW.slot)
+        assertEquals(listOf(RuinousPrayer.CRUOR_VOW), RuinousPowers.active(p).filter { it.group == RuinousPrayer.Group.VOW })
+
+        RuinousPowers.click(p, RuinousPrayer.DAMPEN_MELEE.slot)
+        RuinousPowers.click(p, RuinousPrayer.PURGE.slot)
+        assertEquals(listOf(RuinousPrayer.PURGE), RuinousPowers.active(p).filter { it.group == RuinousPrayer.Group.OVERHEAD })
+        assertEquals(PrayerIcon.RUINOUS_PURGE.id, p.prayerIcon)
+
+        // A second click switches it off again.
+        RuinousPowers.click(p, RuinousPrayer.PURGE.slot)
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.PURGE))
+        assertEquals(-1, p.prayerIcon)
+    }
+
+    @Test
+    fun `a prayer above the player's Prayer level stays off`() {
+        val p = player(prayerLevel = 81)
+        RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.DECIMATE))
+        RuinousPowers.click(p, RuinousPrayer.VINDICATION.slot)
+        assertTrue(RuinousPowers.isActive(p, RuinousPrayer.VINDICATION))
+    }
+
+    @Test
+    fun `Dampen shows its OSRS overhead and protects like a Protect prayer`() {
+        val p = player()
+        RuinousPowers.click(p, RuinousPrayer.DAMPEN_MELEE.slot)
+        assertEquals(PrayerIcon.RUINOUS_DAMPEN_MELEE.id, p.prayerIcon)
+        assertTrue(PrayerIcon.protectsAgainst(p.prayerIcon, CombatClass.MELEE))
+        RuinousPowers.click(p, RuinousPrayer.DAMPEN_MAGIC.slot)
+        assertTrue(PrayerIcon.protectsAgainst(p.prayerIcon, CombatClass.MAGIC))
+        assertFalse(PrayerIcon.protectsAgainst(p.prayerIcon, CombatClass.MELEE))
+        RuinousPowers.deactivateProtection(p)
+        assertEquals(-1, p.prayerIcon)
+    }
+
+    @Test
+    fun `the drain is the sum of the OSRS drain effects and every shutdown clears the book`() {
+        val p = player()
+        every { lastWorld.currentCycle } returns 200
+        RuinousPowers.click(p, RuinousPrayer.TRINITAS.slot)
+        RuinousPowers.click(p, RuinousPrayer.DAMPEN_RANGED.slot)
+        every { lastWorld.currentCycle } returns 201
+        assertEquals(220 + 140, RuinousPowers.drainEffect(p))
+        Prayers.deactivateAll(p)
+        assertTrue(RuinousPowers.active(p).isEmpty())
+        assertEquals(-1, p.prayerIcon)
+    }
+
+    @Test
+    fun `quick prayers keep the same exclusions and turn the set on and off`() {
+        val p = player()
+        RuinousPowers.selectQuick(p, RuinousPrayer.ANCIENT_STRENGTH.slot)
+        RuinousPowers.selectQuick(p, RuinousPrayer.DECIMATE.slot)
+        RuinousPowers.selectQuick(p, RuinousPrayer.DAMPEN_MELEE.slot)
+        assertEquals(listOf(RuinousPrayer.DAMPEN_MELEE, RuinousPrayer.DECIMATE), RuinousPowers.selectedQuick(p))
+        RuinousPowers.toggleQuick(p)
+        assertEquals(setOf(RuinousPrayer.DAMPEN_MELEE, RuinousPrayer.DECIMATE), RuinousPowers.active(p).toSet())
+        RuinousPowers.toggleQuick(p)
+        assertTrue(RuinousPowers.active(p).isEmpty())
+        // Too low a level cannot be selected.
+        val low = player(prayerLevel = 70)
+        RuinousPowers.selectQuick(low, RuinousPrayer.DAMPEN_MELEE.slot)
+        assertTrue(RuinousPowers.selectedQuick(low).isEmpty())
+    }
+
+    @Test
+    fun `Ruinous Protect Item keeps an item on a PvM death only`() {
+        val p = player()
+        RuinousPowers.click(p, RuinousPrayer.PROTECT_ITEM.slot)
+        assertEquals(true, p.attr[PROTECT_ITEM_ATTR])
+        assertTrue(RuinousPowers.protectItemCounts(p, pvpDeath = false))
+        assertFalse(RuinousPowers.protectItemCounts(p, pvpDeath = true))
+        RuinousPowers.click(p, RuinousPrayer.PROTECT_ITEM.slot)
+        assertEquals(false, p.attr[PROTECT_ITEM_ATTR])
+    }
+
+    @Test
+    fun `combat multipliers follow the OSRS texts`() {
+        val p = player()
+        RuinousPowers.click(p, RuinousPrayer.DECIMATE.slot)
+        assertEquals(1.30, RuinousPowers.meleeAttack(p))
+        assertEquals(1.27, RuinousPowers.meleeStrength(p))
+        assertEquals(1.0, RuinousPowers.rangedAttack(p))
+        RuinousPowers.click(p, RuinousPrayer.VAPORISE.slot)
+        assertEquals(1.30, RuinousPowers.magicAttack(p))
+        assertEquals(0.04, RuinousPowers.magicDamage(p))
+        assertEquals(1.0, RuinousPowers.meleeStrength(p))
+        RuinousPowers.click(p, RuinousPrayer.TRINITAS.slot)
+        assertEquals(1.15, RuinousPowers.meleeAttack(p))
+        assertEquals(1.15, RuinousPowers.rangedStrength(p))
+        assertEquals(0.02, RuinousPowers.magicDamage(p))
+        RuinousPowers.click(p, RuinousPrayer.INTENSIFY.slot)
+        assertEquals(1.50, RuinousPowers.rangedAttack(p))
+        assertEquals(1.0, RuinousPowers.rangedStrength(p))
+    }
+
+    @Test
+    fun `Metabolise takes a tick off the food delay only after 25 ticks`() {
+        val p = player()
+        every { lastWorld.currentCycle } returns 1000
+        RuinousPowers.click(p, RuinousPrayer.METABOLISE.slot)
+        every { lastWorld.currentCycle } returns 1024
+        assertEquals(3, RuinousPowers.foodAttackDelay(p, 3))
+        every { lastWorld.currentCycle } returns 1025
+        assertEquals(2, RuinousPowers.foodAttackDelay(p, 3))
+    }
+
+    @Test
+    fun `Rebuke adds 10 percent to the recoil`() {
+        val p = player()
+        assertEquals(5, RuinousPowers.rebukeRecoil(p, 40, 5))
+        RuinousPowers.click(p, RuinousPrayer.REBUKE.slot)
+        assertEquals(40 * 11 / 100 + 1, RuinousPowers.rebukeRecoil(p, 40, 5))
+        assertEquals(PrayerIcon.RUINOUS_REBUKE.id, p.prayerIcon)
+    }
+
+    @Test
+    fun `the book is not changed during combat`() {
+        val p = player()
+        p.timers[ACTIVE_COMBAT_TIMER] = 10
+        AncientCurses.switchBook(p, AncientCurses.PrayerBook.NORMAL)
+        assertEquals(AncientCurses.PrayerBook.RUINOUS, AncientCurses.getBook(p))
+    }
+    @Test
+    fun `Grace, Rejuvenation and Berserker are on only with their prayer and Prayer points`() {
+        val p = player()
+        assertFalse(RuinousPowers.graceKeepsRunEnergy(p))
+        RuinousPowers.click(p, RuinousPrayer.RUINOUS_GRACE.slot)
+        RuinousPowers.click(p, RuinousPrayer.REJUVENATION.slot)
+        RuinousPowers.click(p, RuinousPrayer.BERSERKER.slot)
+        assertTrue(RuinousPowers.graceKeepsRunEnergy(p))
+        assertTrue(RuinousPowers.rejuvenation(p))
+        assertTrue(RuinousPowers.berserker(p))
+        val empty = player(points = 0)
+        empty.setVarbit(RuinousPrayer.RUINOUS_GRACE.varbit, 1)
+        assertFalse(RuinousPowers.graceKeepsRunEnergy(empty))
+        // On another book the bits mean nothing.
+        AncientCurses.switchBook(p, AncientCurses.PrayerBook.NORMAL)
+        assertFalse(RuinousPowers.rejuvenation(p))
+    }
+
+    @Test
+    fun `Purge takes a third of the damage from both players' Prayer points`() {
+        val attacker = player()
+        val target = player()
+        RuinousPowers.click(attacker, RuinousPrayer.PURGE.slot)
+        RuinousPowers.onDamageDealt(attacker, target, 31)
+        io.mockk.verify { attacker.decreasePrayerPoints(10) }
+        io.mockk.verify { target.decreasePrayerPoints(10) }
+    }
+
+    @Test
+    fun `Umbra's Vow drains 5 percent of the damage from Defence, never below 85 percent of the base level`() {
+        val attacker = player()
+        val target = player()
+        target.skills.setBaseLevel(Skills.DEFENCE, 99)
+        RuinousPowers.click(attacker, RuinousPrayer.UMBRA_VOW.slot)
+        RuinousPowers.onDamageDealt(attacker, target, 40)
+        assertEquals(97, target.skills.getCurrentLevel(Skills.DEFENCE))
+        repeat(20) { RuinousPowers.onDamageDealt(attacker, target, 60) }
+        assertEquals(99 - 99 * 15 / 100, target.skills.getCurrentLevel(Skills.DEFENCE))
+        // Glacies' Vow drains monsters only - a player keeps his Magic.
+        RuinousPowers.click(attacker, RuinousPrayer.GLACIES_VOW.slot)
+        target.skills.setBaseLevel(Skills.MAGIC, 99)
+        RuinousPowers.onDamageDealt(attacker, target, 60)
+        assertEquals(99, target.skills.getCurrentLevel(Skills.MAGIC))
+    }
+
+    @Test
+    fun `Vindication below 10 percent Hitpoints heals a quarter of the Prayer level and empties the Prayer points`() {
+        val p = player()
+        every { p.getMaximumLifepoints() } returns 99
+        every { p.getCurrentLifepoints() } returns 9
+        RuinousPowers.click(p, RuinousPrayer.VINDICATION.slot)
+        val attacker = player()
+        RuinousPowers.onDamageDealt(attacker, p, 20)
+        io.mockk.verify { p.setCurrentPrayerPoints(0) }
+        assertTrue(RuinousPowers.active(p).isEmpty())
+        // Not below 10 %: nothing happens.
+        val q = player()
+        every { q.getMaximumLifepoints() } returns 99
+        every { q.getCurrentLifepoints() } returns 10
+        RuinousPowers.click(q, RuinousPrayer.VINDICATION.slot)
+        RuinousPowers.onDamageDealt(attacker, q, 20)
+        assertTrue(RuinousPowers.isActive(q, RuinousPrayer.VINDICATION))
+    }
+}

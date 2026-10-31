@@ -153,10 +153,12 @@ on_obj_option(obj = PlayerHouse.ALTAR, option = "pray") {
         player.filterableMessage("You recharge your Prayer points.")
         player.playSound(Sfx.PRAYER_RECHARGE)
         Prayers.rechargePrayerPoints(player)
-        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Keep my prayer book.")) {
+        when (options("Use Normal Prayers.", "Use Ancient Curses.", "Use Ruinous Powers.", "Keep my prayer book.")) {
             1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
             // Owner 2026-09-26: no paid curse unlock - The Temple at Senntisten is the only route.
             2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+            // N463 (owner 2026-10-31): the third book, unlocked by Prayer level alone.
+            3 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
         }
     }
 }

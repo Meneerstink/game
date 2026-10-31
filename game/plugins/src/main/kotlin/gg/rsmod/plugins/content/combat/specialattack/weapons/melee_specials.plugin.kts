@@ -46,6 +46,7 @@ SpecialAttacks.register(55, Items.DRAGON_SCIMITAR, Items.DRAGON_SCIMITAR_OR) {
             AncientCurses.deactivateCurse(victim, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.DEFLECT_MAGIC)
             AncientCurses.deactivateCurse(victim, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.DEFLECT_MISSILES)
             AncientCurses.deactivateCurse(victim, gg.rsmod.plugins.content.mechanics.prayer.AncientCurse.DEFLECT_MELEE)
+            gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.deactivateProtection(victim)
             Prayers.disableOverheads(victim, 8)
             victim.message("You have been injured!")
         }
@@ -129,8 +130,10 @@ SpecialAttacks.register(50, Items.ABYSSAL_TENTACLE) {
     if (world.random(gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.TENTACLE_SPECIAL_CHANCE - 1) == 0) {
         world.queue {
             wait(1)
-            if (!victim.isDead()) {
+            if (!victim.isDead() &&
                 gg.rsmod.plugins.content.mechanics.poison.Poison.poisonSeverity(victim, gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.WEAPON_POISON)
+            ) {
+                gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.afterPoisonInflicted(player, victim, gg.rsmod.plugins.content.mechanics.poison.WeaponPoison.WEAPON_POISON)
             }
         }
     }

@@ -323,6 +323,8 @@ object MagicCombatFormula : CombatFormula {
     /** "Maximum magic hit": Mystic Lore +1 %, Mystic Might +2 %, Augury +4 % magic damage. */
     private fun getPrayerMagicDamage(player: Player): Double =
         when {
+            // N463 Ruinous Powers: Ancient Will +3 %, Trinitas +2 %, Vaporise +4 % magic damage.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.magicDamage(player)
             Prayers.isActive(player, Prayer.MYSTIC_LORE) -> 0.01
             Prayers.isActive(player, Prayer.MYSTIC_MIGHT) -> 0.02
             Prayers.isActive(player, Prayer.AUGURY) -> 0.04
@@ -368,6 +370,8 @@ object MagicCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player): Double =
         when {
+            // N463 Ruinous Powers: Ancient Will 20 %, Trinitas 15 %, Vaporise 30 %, Intensify 50 %.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.magicAttack(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.MAGIC)
             Prayers.isActive(player, Prayer.MYSTIC_WILL) -> 1.05

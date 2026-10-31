@@ -249,7 +249,8 @@ object EnchantedBolts {
         when (bolt.effect) {
             // "heal the attacker's Hitpoints by 25% of the total damage dealt".
             Effect.LIFE_LEECH -> if (damageDealt >= 4) attacker.heal(damageDealt / 4)
-            Effect.MAGICAL_POISON -> Poison.poison(target, 5)
+            // N463 Fumus' Vow: a poison the attack inflicts deals its damage at once (poison 5 = severity 25).
+            Effect.MAGICAL_POISON -> if (Poison.poison(target, 5)) gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.afterPoisonInflicted(attacker, target, 25)
             Effect.EARTHS_FURY -> target.freeze(8, attacker)
             Effect.DOWN_TO_EARTH -> (target as? Player)?.skills?.decrementCurrentLevel(Skills.MAGIC, 1, capped = false)
             Effect.CLEAR_MIND ->

@@ -19,6 +19,7 @@ import gg.rsmod.plugins.api.cfg.Gfx
 import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.getBonus
+import gg.rsmod.plugins.api.ext.isProtectedFrom
 import gg.rsmod.plugins.api.ext.npc
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.prepareAttack
@@ -118,7 +119,8 @@ class Revenants(r: PluginRepository, world: World, server: Server) : KotlinPlugi
                 if (target is Player) {
                     val player = target
                     var attack = "magic"
-                    if (Prayers.isActive(player, Prayer.PROTECT_FROM_MAGIC)) {
+                    // Any book's magic protection (Protect from Magic, Deflect Magic, N463 Dampen Magic) - the overhead decides.
+                    if (player.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.MAGIC)) {
                         var meleeDef = player.getBonus(BonusSlot.DEFENCE_STAB)
                         var rangedDef = player.getBonus(BonusSlot.DEFENCE_RANGED)
                         if (meleeDef <= rangedDef) {

@@ -91,7 +91,8 @@ object Foods {
         // left; out of combat it adds no attack delay (OSRS Wiki Food; Void Eating.consume + tests).
         // It used to overwrite the timer, which shortened a longer remaining attack delay.
         if (p.timers.has(ATTACK_DELAY)) {
-            p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + food.attackDelay
+            // N463 Metabolise: 25 ticks after it went on, food delays the next attack one tick less.
+            p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.foodAttackDelay(p, food.attackDelay)
         }
 
         if (food == Food.BLUEFIN) p.restorePrayer(BLUEFIN_PRAYER)

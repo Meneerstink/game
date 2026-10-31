@@ -389,6 +389,8 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerStrengthMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
+            // N463 Ruinous Powers: Ancient Strength 20 %, Trinitas 15 %, Decimate 27 %.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.meleeStrength(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.STRENGTH)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
@@ -403,6 +405,8 @@ object MeleeCombatFormula : CombatFormula {
 
     private fun getPrayerAttackMultiplier(player: Player, opponent: Pawn? = null): Double =
         when {
+            // N463 Ruinous Powers: Ancient Strength 20 %, Trinitas 15 %, Decimate 30 %, Intensify 50 %.
+            gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS -> gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.meleeAttack(player)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.getBook(player) == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT && !gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->
                 gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.curseBoostMultiplier(player, Skills.ATTACK)
             gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.isTurmoilActive(player) ->

@@ -42,7 +42,10 @@ object RunEnergy {
             if (p.movementQueue.peekLastStep()?.type == MovementQueue.StepType.FORCED_WALK) {
                 return
             }
-            if (!p.hasStorageBit(INFINITE_VARS_STORAGE, InfiniteVarsType.RUN)) {
+            // N463 Ruinous Grace: "When running, Prayer points are drained instead of run energy" - the prayer's own drain is the cost.
+            if (!p.hasStorageBit(INFINITE_VARS_STORAGE, InfiniteVarsType.RUN) &&
+                !gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.graceKeepsRunEnergy(p)
+            ) {
                 val agilityDrainDelta = p.skills.getCurrentLevel(Skills.AGILITY) * DRAIN_DELTA_PER_AGILITY_LVL
                 val weightDrainFactor = 0.92.pow(p.weight.coerceAtLeast(0.0) / 10)
                 var decrement = (BASE_DRAIN - agilityDrainDelta) / weightDrainFactor

@@ -444,7 +444,8 @@ object AncientCurses {
 
     // ---- book -----------------------------------------------------------------------------
 
-    enum class PrayerBook { NORMAL, ANCIENT }
+    /** N463 (owner 2026-10-31): RUINOUS = the OSRS Ruinous Powers book (RuinousPowers), the third book. */
+    enum class PrayerBook { NORMAL, ANCIENT, RUINOUS }
 
     /**
      * Persisted as the enum *name*: the JSON player serializer hands persisted attribute values
@@ -463,7 +464,15 @@ object AncientCurses {
 
     /** Pushes the persisted book choice to the client (login) so the prayer tab renders the right grid. */
     fun syncBookVarbit(player: Player) {
-        player.setVarbit(AncientCurse.BOOK_VARBIT, if (getBook(player) == PrayerBook.ANCIENT) 1 else 0)
+        // The Ruinous book rides the curse layout of interface 271 (varbit 6840 = 1) with its own flag varbit; the cache scripts
+        // then read the Ruinous enum, 24 cells and the Ruinous varps (RuinousPowersCacheTool).
+        val book = getBook(player)
+        // The flag is the only bit of its varp (RuinousPowersCacheTool.BOOK_VARP, varbit BOOK_FLAG_VARBIT = bit 0).
+        val flag = if (book == PrayerBook.RUINOUS) 1 else 0
+        if (player.getVarp(gg.rsmod.game.tools.importer.RuinousPowersCacheTool.BOOK_VARP) != flag) {
+            player.setVarp(gg.rsmod.game.tools.importer.RuinousPowersCacheTool.BOOK_VARP, flag)
+        }
+        player.setVarbit(AncientCurse.BOOK_VARBIT, if (book == PrayerBook.NORMAL) 0 else 1)
     }
 
     /**
@@ -507,10 +516,15 @@ object AncientCurses {
             return
         }
         if (getBook(player) == book) {
-            player.message("You are already using the ${book.name.lowercase()} prayer book.")
+            player.message("You are already using the ${bookName(book)} prayer book.")
             return
         }
-        // The two books' overhead icon and drain loops are not designed to run at once.
+        // N463 (owner 2026-10-31): the book is changed at the altars, not during combat.
+        if (RuinousPowers.inCombat(player)) {
+            player.message("You can't do that during combat.")
+            return
+        }
+        // The books' overhead icon and drain loops are not designed to run at once (Prayers.deactivateAll also clears Ruinous).
         Prayers.deactivateAll(player)
         deactivateAllCurses(player)
         player.attr[CURRENT_BOOK_ATTR] = book.name
@@ -522,8 +536,11 @@ object AncientCurses {
         player.openInterface(gg.rsmod.plugins.api.InterfaceDestination.PRAYER_TAB)
         player.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayers.confirmQuickPrayerSelection(player)
-        player.filterableMessage("You switch to the ${book.name.lowercase()} prayer book.")
+        player.filterableMessage("You switch to the ${bookName(book)} prayer book.")
     }
+
+    /** "normal", "ancient" (the existing messages) and "Ruinous Powers". */
+    fun bookName(book: PrayerBook): String = if (book == PrayerBook.RUINOUS) "Ruinous Powers" else book.name.lowercase()
 
     /**
      * A click on the prayer grid (interface 271 component 8) while the curse book is shown.
@@ -1516,8 +1533,11 @@ object AncientCurses {
     /** Exposed for deterministic testing of the sourced 300% multiplier without mocking world dispatch. */
     internal fun wrathMaxDamage(player: Player): Int = player.skills.getMaxLevel(Skills.PRAYER) * 3 / 10
 
-    fun wrathExplosion(player: Player) {
-        val damage = wrathMaxDamage(player)
+    fun wrathExplosion(
+        player: Player,
+        maxDamage: Int = wrathMaxDamage(player),
+    ) {
+        val damage = maxDamage
         if (damage <= 0) return
         val world = player.world
         val origin = Tile(player.tile)

@@ -14,7 +14,13 @@ object BoostedCombatStats {
     private val ELAPSED = AttributeKey<Int>()
     val skills = setOf(Skills.ATTACK, Skills.STRENGTH, Skills.DEFENCE, Skills.RANGED, Skills.MAGIC)
 
-    private fun interval(player: Player): Int = if (AncientCurses.isCurseActive(player, AncientCurse.BERSERKER)) 115 else 100
+    private fun interval(player: Player): Int =
+        when {
+            AncientCurses.isCurseActive(player, AncientCurse.BERSERKER) -> 115
+            // N463 Ruinous Berserker: "Boosted combat stats last 50% longer."
+            gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.berserker(player) -> 150
+            else -> 100
+        }
 
     /** Ticks until the next boosted combat stat drops one level (Boosts Information overlay); at least 1. */
     fun ticksUntilDecay(player: Player): Int = maxOf(1, interval(player) - (player.attr[ELAPSED] ?: 0))

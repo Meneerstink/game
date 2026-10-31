@@ -36,6 +36,8 @@ class PrayerProtectionIconTests {
             PrayerIcon.PROTECT_FROM_SUMMONING_AND_MELEE,
             PrayerIcon.DEFLECT_MELEE,
             PrayerIcon.DEFLECT_SUMMONING_AND_MELEE,
+            // N463 Ruinous Powers: a Dampen protects like a Protect prayer.
+            PrayerIcon.RUINOUS_DAMPEN_MELEE,
         )
 
     private val ranged =
@@ -45,6 +47,8 @@ class PrayerProtectionIconTests {
             PrayerIcon.PROTECT_FROM_SUMMONING_AND_MISSILES,
             PrayerIcon.DEFLECT_MISSILES,
             PrayerIcon.DEFLECT_SUMMONING_AND_MISSILES,
+            // N463 Ruinous Powers: a Dampen protects like a Protect prayer.
+            PrayerIcon.RUINOUS_DAMPEN_RANGED,
         )
 
     private val magic =
@@ -54,6 +58,8 @@ class PrayerProtectionIconTests {
             PrayerIcon.PROTECT_FROM_SUMMONING_AND_MAGIC,
             PrayerIcon.DEFLECT_MAGIC,
             PrayerIcon.DEFLECT_SUMMONING_AND_MAGIC,
+            // N463 Ruinous Powers: a Dampen protects like a Protect prayer.
+            PrayerIcon.RUINOUS_DAMPEN_MAGIC,
         )
 
     /** Both Summoning protections and every combined frame either one appears in. */
@@ -84,13 +90,13 @@ class PrayerProtectionIconTests {
     }
 
     @Test
-    fun `exactly the four melee overheads protect against melee`() = assertExactly(melee, CombatClass.MELEE)
+    fun `exactly the five melee overheads protect against melee`() = assertExactly(melee, CombatClass.MELEE)
 
     @Test
-    fun `exactly the five missile overheads protect against ranged`() = assertExactly(ranged, CombatClass.RANGED)
+    fun `exactly the six missile overheads protect against ranged`() = assertExactly(ranged, CombatClass.RANGED)
 
     @Test
-    fun `exactly the five magic overheads protect against magic`() = assertExactly(magic, CombatClass.MAGIC)
+    fun `exactly the six magic overheads protect against magic`() = assertExactly(magic, CombatClass.MAGIC)
 
     @Test
     fun `exactly the eight summoning overheads protect against familiars`() {

@@ -29,11 +29,13 @@ ALTARS_PRAY_AT.forEach { altar ->
             player.playSound(Sfx.PRAYER_RECHARGE)
             Prayers.rechargePrayerPoints(player)
             if (altar == FeroxObjects.ALTAR) {
-                when (options("Use Normal Prayers.", "Use Ancient Curses.", "Change my spellbook.", "Keep my books.")) {
+                // N463 (owner 2026-10-31): the Ruinous Powers are the third book, chosen here like the other two.
+                when (options("Use Normal Prayers.", "Use Ancient Curses.", "Use Ruinous Powers.", "Change my spellbook.", "Keep my books.")) {
                     1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)
                     2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.ANCIENT)
+                    3 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
                     // Owner 2026-09-26: no paid curse unlock - The Temple at Senntisten is the only route.
-                     3 ->
+                     4 ->
                         when (options("Standard spellbook.", "Ancient Magicks.", "Lunar spellbook.")) {
                             1 -> Spellbooks.select(player, Spellbook.STANDARD)
                             2 -> Spellbooks.select(player, Spellbook.ANCIENT)

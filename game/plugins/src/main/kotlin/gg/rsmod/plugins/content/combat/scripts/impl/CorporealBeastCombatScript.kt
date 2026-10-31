@@ -326,7 +326,8 @@ object CorporealBeastCombatScript : CombatScript() {
 
     private fun magicProtected(target: Pawn): Boolean =
         target is Player &&
-            (Prayers.isActive(target, Prayer.PROTECT_FROM_MAGIC) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MAGIC))
+            // Protect from Magic, Deflect Magic or (N463) Dampen Magic: the overhead's protection.
+            target.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.MAGIC)
 
     /**
      * The beast's magic ignores the prayer short circuit in the formula; OSRS Wiki: "Protect from Magic will block 1/3 of the damage

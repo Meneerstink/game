@@ -35,6 +35,8 @@ object RestorationRates {
     fun lifePointRate(player: Player): Int =
         when {
             Prayers.isActive(player, Prayer.RAPID_RENEWAL) -> 5
+            // N463 Rejuvenation: "Hitpoints regenerate 3x faster."
+            gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rejuvenation(player) -> 3
             Prayers.isActive(player, Prayer.RAPID_HEAL) -> 2
             gg.rsmod.plugins.content.skills.SkillcapePerks.worn(player, gg.rsmod.plugins.content.skills.Skillcapes.CONSTITUTION) -> 2
             else -> 1

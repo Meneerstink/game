@@ -96,6 +96,19 @@ enum class PrayerIcon(
     DEFLECT_SUMMONING_AND_MAGIC(id = 18, protects = setOf(CombatClass.MAGIC), protectsSummoning = true),
     WRATH(id = 19),
     SOUL_SPLIT(id = 20),
+
+    /*
+     * N463 Ruinous Powers (owner 2026-10-31): the OSRS overheads, appended to this sheet by RuinousPowersCacheTool as frames 27-33
+     * (OSRS headicons_prayer frames 12, 13, 14, 10, 19, 20, 21, matched pixel for pixel against the Wiki's overhead files). A Dampen
+     * protects exactly like a Protect prayer (OSRS Wiki: "100% protection from melee attacks (40% in PvP)" - the formulas' 0.6).
+     */
+    RUINOUS_DAMPEN_MELEE(id = 27, protects = setOf(CombatClass.MELEE)),
+    RUINOUS_DAMPEN_RANGED(id = 28, protects = setOf(CombatClass.RANGED)),
+    RUINOUS_DAMPEN_MAGIC(id = 29, protects = setOf(CombatClass.MAGIC)),
+    RUINOUS_WRATH(id = 30),
+    RUINOUS_REBUKE(id = 31),
+    RUINOUS_PURGE(id = 32),
+    RUINOUS_VINDICATION(id = 33),
     ;
 
     companion object {

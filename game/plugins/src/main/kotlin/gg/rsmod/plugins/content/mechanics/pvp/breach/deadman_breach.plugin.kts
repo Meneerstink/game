@@ -252,6 +252,7 @@ NpcAttacks.onLandedImpact("breach_dscim", "sever") { _, target ->
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MAGIC)
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MISSILES)
         AncientCurses.deactivateCurse(target, AncientCurse.DEFLECT_MELEE)
+        gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.deactivateProtection(target)
         Prayers.disableOverheads(target, 8)
         gg.rsmod.game.model.BreachTrace.log("mech.sever") { "player=${target.username} overheadsDisabled=${Prayers.overheadsDisabled(target)}" }
         breachMessage(target, "You have been injured!")
@@ -304,7 +305,8 @@ NpcAttacks.onAttack("breach_greater_abyssal_demon", "melee") { npc, target ->
             npc.teleportNpc(dest)
             npc.facePawn(target)
             npc.animate(BreachMonsters.BY_ID.getValue(npc.id).attackAnim)
-            val protected = Prayers.isActive(target, Prayer.PROTECT_FROM_MELEE) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MELEE)
+            // Protect from Melee, Deflect Melee or (N463) Dampen Melee: the overhead's protection.
+            val protected = target.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.MELEE)
             target.hit(if (protected) 0 else world.random(ABYSSAL_SPECIAL_MIN..ABYSSAL_SPECIAL_MAX), if (protected) HitType.BLOCK else HitType.MELEE, delay = 1)
         }
     }
@@ -602,8 +604,8 @@ on_world_init {
                                     p.graphic(BreachMonsters.GFX_BLOAT_FLIES)
                                     p.playSound(BreachMonsters.SFX_BLOAT_FLIES)
                                     // Deflect Missiles is the curse book's Protect from Missiles (the only kept non-OSRS extra).
-                                    val protected = Prayers.isActive(p, Prayer.PROTECT_FROM_MISSILES) ||
-                                        AncientCurses.isCurseActive(p, AncientCurse.DEFLECT_MISSILES)
+                                    // N463: any book's ranged protection, Dampen Ranged included (the overhead decides).
+                                    val protected = p.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.RANGED)
                                     p.hit(if (protected) 0 else world.random(20), delay = 1)
                                     breachMessage(p, "Flies leave the body of the bloat and swarm you.")
                                 }

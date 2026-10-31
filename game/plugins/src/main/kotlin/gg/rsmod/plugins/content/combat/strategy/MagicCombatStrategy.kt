@@ -478,7 +478,9 @@ object MagicCombatStrategy : CombatStrategy {
                 if (damage > 0 && pawn.world.random(SMOKE_POISON_CHANCE - 1) == 0) {
                     // Smoke spells poison at OSRS severity 10 / 20 (22 / 11 with an ancient sceptre) - AncientSceptres, Poison.
                     val sceptres = gg.rsmod.plugins.content.items.osrs.AncientSceptres
-                    Poison.poisonSeverity(target, sceptres.smokeSeverity(effect.damage, sceptres.boosted(pawn)))
+                    val smoke = sceptres.smokeSeverity(effect.damage, sceptres.boosted(pawn))
+                    // N463 Fumus' Vow: a poison the attack inflicts deals its damage at once.
+                    if (Poison.poisonSeverity(target, smoke)) gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.afterPoisonInflicted(pawn, target, smoke)
                     // Smoke quartz: 20 % less healing for 6 seconds on a poisoned target.
                     if (sceptres.quartz(pawn) == gg.rsmod.plugins.content.items.osrs.AncientSceptres.Quartz.SMOKE && Poison.isPoisoned(target)) {
                         target.timers[gg.rsmod.game.model.timer.SMOKE_SCEPTRE_HEAL_REDUCTION_TIMER] = sceptres.SMOKE_HEAL_REDUCTION_TICKS
@@ -514,7 +516,8 @@ object MagicCombatStrategy : CombatStrategy {
             is SpellEffect.Teleblock -> {
                 if (target is Player && !target.timers.has(TELEBLOCK_TIMER)) {
                     val protectedFromMagic =
-                        Prayers.isActive(target, Prayer.PROTECT_FROM_MAGIC) || AncientCurses.isCurseActive(target, AncientCurse.DEFLECT_MAGIC)
+                        // Protect from Magic, Deflect Magic or (N463) Dampen Magic: the overhead's protection.
+                        target.isProtectedFrom(gg.rsmod.game.model.combat.CombatClass.MAGIC)
                     // With the OSRS 30-second warning (owner A7, TimerExpiry).
                     val ticks = teleblockTicks(protectedFromMagic)
                     gg.rsmod.plugins.content.mechanics.hud.TimerExpiry.teleblock(target, ticks)

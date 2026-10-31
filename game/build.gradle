@@ -171,6 +171,14 @@ task runOsrsItemImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsItemImportTool'
 }
 
+task runRuinousPowersCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N463 Ruinous Powers as the third prayer book (sprites, structs, enum, varps/varbits, clientscripts, head icons; ' +
+        'CacheTransaction, both caches). Usage: ./gradlew :game:runRuinousPowersCacheTool [--args="--apply"]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.RuinousPowersCacheTool'
+}
+
 task runOsrsLookTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS look (meshes, icon camera, recolours, hide flags) on existing 667 items: max cape/hood, Barrows/Void ' +

@@ -91,6 +91,10 @@ object DeathResolver {
         contextOverride: DeathContext? = null,
     ): DeathResolutionResult {
         val context = contextOverride ?: resolveContext(victim, killer)
+        // N463 (owner 2026-10-31): the Ruinous Powers Protect Item keeps its extra item on a PvM death only, never on a PvP death.
+        val protectItem =
+            itemProtectionActive &&
+                gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.protectItemCounts(victim, pvpDeath = context == DeathContext.WILDERNESS_PVP)
         // Snapshot the container backing arrays before any mutation happens.
         // ItemContainer.rawItems is a live alias to the same array the
         // container mutates in place, not a defensive copy, so calculation
@@ -99,7 +103,7 @@ object DeathResolver {
             DeathItemRiskCalculator.calculate(
                 inventory = victim.inventory.items.copyOf(),
                 equipment = victim.equipment.items.copyOf(),
-                itemProtectionActive = itemProtectionActive,
+                itemProtectionActive = protectItem,
                 valueProvider = valueProvider,
                 // Owner 2026-10-04: killed by a monster, a lockable untradeable (locked or not) is always kept and stays locked
                 // (OSRS Wiki "(l)": "Upon PvM death anywhere ... any locked items will stay with the player").

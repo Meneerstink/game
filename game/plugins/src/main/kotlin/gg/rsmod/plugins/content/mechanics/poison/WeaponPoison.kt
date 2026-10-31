@@ -108,7 +108,10 @@ object WeaponPoison {
         if (attacker.world.random(chanceDenominator(ranged, tentacleSpecial) - 1) != 0) return
         val applied = appliedSeverity(severity, ranged)
         pawnHit.hit.addAction {
-            if (pawnHit.hit.hitmarks.sumOf { it.damage } > 0 && !Poison.isImmune(target)) Poison.poisonSeverity(target, applied)
+            // N463 Fumus' Vow: a poison the attack inflicts deals its damage at once.
+            if (pawnHit.hit.hitmarks.sumOf { it.damage } > 0 && !Poison.isImmune(target) && Poison.poisonSeverity(target, applied)) {
+                gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.afterPoisonInflicted(attacker, target, applied)
+            }
         }
     }
 }

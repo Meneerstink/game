@@ -95,7 +95,8 @@ class AncientCurses2011Tests {
     @Test
     fun `Turmoil shows the opponent bonus in the curse tab varbits and clears them`() {
         val player = newPlayer()
-        val varps = gg.rsmod.game.model.varp.VarpSet((0 until 2000).toSet())
+        // The real cache has varps up to 2406 (N463 Ruinous Powers: 2404-2406); the set covers them like the other fixtures.
+        val varps = gg.rsmod.game.model.varp.VarpSet((0 until 8000).toSet())
         every { player.varps } returns varps
         val layout = mapOf(6844 to 5, 6845 to 10, 6846 to 15)
         val definitions = player.world.definitions

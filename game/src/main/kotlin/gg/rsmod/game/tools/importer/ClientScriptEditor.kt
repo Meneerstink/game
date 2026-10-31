@@ -59,6 +59,9 @@ class ClientScriptEditor private constructor(
         key: Int,
     ): Ins? = switches.getOrNull(table)?.firstOrNull { it.first == key }?.second
 
+    /** The switch tables (key -> landing instruction), editable: an added case is encoded with its offset (N463 Ruinous book). */
+    fun switchTables(): List<MutableList<Pair<Int, Ins>>> = switches
+
     /** Indices where [pattern] (opcode, operand or null for any) starts. */
     fun find(vararg pattern: Pair<Int, Any?>): List<Int> =
         (0..code.size - pattern.size).filter { start ->

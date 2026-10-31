@@ -115,7 +115,10 @@ object Prayers {
         player.syncVarp(AncientCurse.ACTIVE_VARP)
         // restoreActiveState() publishes the curse overhead when the ancient book is active; the
         // normal-book setter only knows the normal prayer icon table and would otherwise wipe it.
-        if (AncientCurses.getBook(player) != AncientCurses.PrayerBook.ANCIENT) {
+        // N463: the Ruinous book publishes its own overhead (and clears stale Ruinous bits on the other books).
+        player.syncVarp(gg.rsmod.game.tools.importer.RuinousPowersCacheTool.ACTIVE_VARP)
+        RuinousPowers.restore(player)
+        if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.NORMAL) {
             setOverhead(player)
         }
     }
@@ -153,7 +156,12 @@ object Prayers {
             interfaceId = PRAYER_BOOK_INTERFACE,
             component = component,
             from = 0,
-            to = if (AncientCurses.getBook(player) == AncientCurses.PrayerBook.ANCIENT) AncientCurse.TURMOIL_SLOT else Prayer.values.size - 1,
+            to =
+                when (AncientCurses.getBook(player)) {
+                    AncientCurses.PrayerBook.ANCIENT -> AncientCurse.TURMOIL_SLOT
+                    AncientCurses.PrayerBook.RUINOUS -> RuinousPrayer.values.size - 1
+                    else -> Prayer.values.size - 1
+                },
             setting = if (enabled) OP1_ONLY else 0,
         )
     }
@@ -249,6 +257,8 @@ object Prayers {
     fun overheadsDisabled(p: Player): Boolean = p.timers.has(DISABLE_OVERHEADS)
 
     fun deactivateAll(p: Player) {
+        // N463: every shutdown of the prayer book (death, 0 points, book switch, Redemption, Nex) covers the Ruinous book too.
+        RuinousPowers.deactivateAll(p)
         p.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayer.values.forEach { prayer ->
             if (isActive(p, prayer)) {
@@ -520,6 +530,10 @@ object Prayers {
                 AncientCurses.toggleQuickCurses(p)
                 return
             }
+            if (AncientCurses.getBook(p) == AncientCurses.PrayerBook.RUINOUS) {
+                RuinousPowers.toggleQuick(p)
+                return
+            }
             val quickPrayers = selectedQuickPrayers(p)
             val active = Prayer.values.filter { isActive(p, it) }
             when {
@@ -712,6 +726,7 @@ object Prayers {
         // A prayer switched on this tick does not drain this tick (OSRS Wiki "Prayer flicking").
         var rate = Prayer.values.filter { isActive(p, it) && !activatedThisTick(p, it) }.sumOf { it.drainEffect }
         rate += AncientCurses.activeCurseDrainEffect(p)
+        rate += RuinousPowers.drainEffect(p)
         return rate
     }
 }
