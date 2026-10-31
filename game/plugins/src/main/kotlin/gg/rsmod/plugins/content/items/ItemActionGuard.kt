@@ -73,7 +73,8 @@ object ItemActionGuard {
             else -> "This will take this item apart."
         }
 
-    fun question(option: String): String = "Are you sure you want to $option this item?"
+    fun question(option: String): String =
+        if (option == "remove-charge") "Are you sure you want to remove the charges?" else "Are you sure you want to $option this item?"
 
     fun install(repository: PluginRepository) {
         repository.itemOptionInterceptor = interceptor@{ player, itemId, option, worn, proceed ->

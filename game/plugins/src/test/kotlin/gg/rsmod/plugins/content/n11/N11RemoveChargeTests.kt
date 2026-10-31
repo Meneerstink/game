@@ -7,6 +7,12 @@ import gg.rsmod.plugins.content.items.charges.ItemCharges
 import kotlin.test.*
 
 class N11RemoveChargeTests {
+    // Testclient 2026-10-31: the question read "Are you sure you want to remove-charge this item?".
+    @Test fun `the confirmation asks in plain words`() {
+        assertEquals("Are you sure you want to remove the charges?", ItemActionGuard.question("remove-charge"))
+        assertEquals("Are you sure you want to dismantle this item?", ItemActionGuard.question("dismantle"))
+    }
+
     private fun load(f: N11Fixture) {
         ItemActionGuard.install(f.repo)
         f.load("items.charges.Remove_charges_plugin")
