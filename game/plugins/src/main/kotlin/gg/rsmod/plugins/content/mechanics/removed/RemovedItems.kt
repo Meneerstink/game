@@ -87,7 +87,22 @@ object RemovedItems {
      * equal to this set).
      */
     val geHiddenIds: java.util.SortedSet<Int>
-        get() = (IDS + UNOBTAINABLE_IDS + DungeoneeringItems.IDS).toSortedSet()
+        get() = (IDS + UNOBTAINABLE_IDS + DungeoneeringItems.IDS + NOT_EXCHANGEABLE_IDS).toSortedSet()
+
+    /**
+     * N474 (2026-10-31: the GE house still sold Overload (4) and Blighted overload (4)): items the owner took out of play whose copies
+     * players KEEP, so they stay out of [UNOBTAINABLE_IDS] and the login [purge] - only the Grand Exchange refuses them
+     * ([isExchangeBlocked]) and its search no longer lists them ([geHiddenIds]). The removed potions (owner 2026-09-15 / 09-29:
+     * "copies players already own stay where they are but cannot be drunk, mixed or decanted") and the excluded trinkets (owner
+     * 2026-09-19 "we dont want trinkets in our rsps please"; only the Trinket of fairies came back, N101).
+     */
+    val NOT_EXCHANGEABLE_IDS: Set<Int> by lazy {
+        gg.rsmod.plugins.content.items.potion.RemovedPotions.itemIds + gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot.EXCLUDED_TRINKETS
+    }
+
+    /** True for anything the Grand Exchange (player offers, the house, ::ge_buy / ::ge_sell) must refuse, noted forms included. */
+    fun isExchangeBlocked(def: ItemDef): Boolean =
+        isUnobtainable(def) || def.id in NOT_EXCHANGEABLE_IDS || (def.noted && def.noteLinkId in NOT_EXCHANGEABLE_IDS)
 
     const val GE_HIDDEN_TABLE = "./data/cfg/removed/ge_hidden.txt"
 

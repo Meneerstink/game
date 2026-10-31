@@ -70,7 +70,7 @@ on_command("ge_sell") {
     }
     // Removed / no-longer-obtainable items (Pernix/Virtus, owner 2026-10-06) are refused here as on the GE screen.
     val geDef = player.world.definitions.get(ItemDef::class.java, itemId)
-    if (!geDef.tradeable || gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(geDef)) {
+    if (!geDef.tradeable || gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isExchangeBlocked(geDef)) {
         geMsg(player, "$name can't be sold on the Grand Exchange.")
         return@on_command
     }
@@ -125,7 +125,7 @@ on_command("ge_buy") {
     }
     // Removed / no-longer-obtainable items (Pernix/Virtus, owner 2026-10-06) are refused here as on the GE screen.
     val geDef = player.world.definitions.get(ItemDef::class.java, itemId)
-    if (!geDef.tradeable || gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isUnobtainable(geDef)) {
+    if (!geDef.tradeable || gg.rsmod.plugins.content.mechanics.removed.RemovedItems.isExchangeBlocked(geDef)) {
         geMsg(player, "$name can't be bought on the Grand Exchange.")
         return@on_command
     }

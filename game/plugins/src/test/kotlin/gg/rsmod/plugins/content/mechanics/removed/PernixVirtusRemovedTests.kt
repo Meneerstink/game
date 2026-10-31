@@ -64,7 +64,7 @@ class PernixVirtusRemovedTests {
             assertTrue(GrandExchangeInterface.exchangeable(tradeable(id)), "$id must stay exchangeable")
         }
         val commands = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/exchange/grand_exchange.plugin.kts").readText()
-        assertEquals(2, Regex("RemovedItems\\.isUnobtainable\\(geDef\\)").findAll(commands).count(), "::ge_buy and ::ge_sell refuse them too")
+        assertEquals(2, Regex("RemovedItems\\.isExchangeBlocked\\(geDef\\)").findAll(commands).count(), "::ge_buy and ::ge_sell refuse them too")
     }
 
     @Test
