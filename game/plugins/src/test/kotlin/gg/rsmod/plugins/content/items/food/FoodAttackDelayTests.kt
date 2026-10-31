@@ -61,4 +61,17 @@ class FoodAttackDelayTests {
         Foods.eat(p, Food.KARAMBWAN)
         assertEquals(6, p.timers[ATTACK_DELAY])
     }
+
+    // N478, OSRS Wiki "Fast foods": every fast food delays the attack by 2 but the next fast food by 3 ticks (it was 2 for both).
+    @Test
+    fun `a fast food delays the attack by 2 and the next fast food by 3 ticks`() {
+        Food.values.filter { it.comboFood }.forEach { food ->
+            val p = player()
+            p.timers[ATTACK_DELAY] = 1
+            Foods.eat(p, food)
+            assertEquals(3, p.timers[ATTACK_DELAY], food.name)
+            assertEquals(3, p.timers[gg.rsmod.game.model.timer.COMBO_FOOD_DELAY], food.name)
+            assertFalse(Foods.canEat(p, food), "${food.name}: a second one at once")
+        }
+    }
 }

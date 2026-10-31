@@ -40,7 +40,7 @@ enum class Food(
     BASS(item = Items.BASS, heal = 130),
     SWORDFISH(item = Items.SWORDFISH, heal = 140),
     MONKFISH(item = Items.MONKFISH, heal = 160),
-    KARAMBWAN(item = Items.COOKED_KARAMBWAN, heal = 180, tickDelay = 2, comboFood = true),
+    KARAMBWAN(item = Items.COOKED_KARAMBWAN, heal = 180, comboFood = true, attackDelay = 2),
     SHARK(item = Items.SHARK, heal = 200),
     SEA_TURTLE(item = Items.SEA_TURTLE, heal = 210),
     MANTA_RAY(item = Items.MANTA_RAY, heal = 220),
@@ -55,10 +55,10 @@ enum class Food(
     // OSRS Wiki "Bluefin": "restores 22 Hitpoints and 5 prayer points when eaten" (the prayer part in Foods.eat).
     BLUEFIN(item = Items.BLUEFIN, heal = 220),
     // OSRS Wiki "Halibut": "Like cooked karambwan, halibut can be used as a fast food" (2-tick delay, combo after other food).
-    HALIBUT(item = Items.HALIBUT, heal = 200, tickDelay = 2, comboFood = true),
+    HALIBUT(item = Items.HALIBUT, heal = 200, comboFood = true, attackDelay = 2),
     BLIGHTED_MANTA_RAY(item = Items.BLIGHTED_MANTA_RAY, heal = 220),
     BLIGHTED_ANGLERFISH(item = Items.BLIGHTED_ANGLERFISH, overheal = true),
-    BLIGHTED_KARAMBWAN(item = Items.BLIGHTED_KARAMBWAN, heal = 180, tickDelay = 2, comboFood = true),
+    BLIGHTED_KARAMBWAN(item = Items.BLIGHTED_KARAMBWAN, heal = 180, comboFood = true, attackDelay = 2),
 
     /**
      * OSRS Wiki "Strange fruit" (owner 2026-09-19 venom rules): "No Hitpoints are restored", restores 30% run energy, "cure poison,
