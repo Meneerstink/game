@@ -35,7 +35,7 @@ class FoodAttackDelayTests {
 
             Foods.eat(p, food)
 
-            assertEquals(2 + food.tickDelay, p.timers[ATTACK_DELAY], "${food.name} mid-attack")
+            assertEquals(2 + food.attackDelay, p.timers[ATTACK_DELAY], "${food.name} mid-attack")
         }
     }
 

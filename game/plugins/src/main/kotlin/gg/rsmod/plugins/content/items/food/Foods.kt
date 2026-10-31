@@ -91,13 +91,14 @@ object Foods {
         // left; out of combat it adds no attack delay (OSRS Wiki Food; Void Eating.consume + tests).
         // It used to overwrite the timer, which shortened a longer remaining attack delay.
         if (p.timers.has(ATTACK_DELAY)) {
-            p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + food.tickDelay
+            p.timers[ATTACK_DELAY] = p.timers[ATTACK_DELAY] + food.attackDelay
         }
 
         if (food == Food.BLUEFIN) p.restorePrayer(BLUEFIN_PRAYER)
+        if (food == Food.GOUT_TUBER) gg.rsmod.plugins.content.mechanics.run.RunEnergy.renew(p, 50.0)
 
         // Fast food (cooked karambwan, blighted karambwan, halibut): the OSRS combo order food -> potion -> fast food.
-        if (food == Food.KARAMBWAN || food == Food.BLIGHTED_KARAMBWAN || food == Food.HALIBUT) {
+        if (food.comboFood) {
             // Eating Karambwans also blocks drinking potions.
             p.timers[POTION_DELAY] = 3
             // Audit C-14: and normal food, so the OSRS combo order is food -> potion -> karambwan (karambwan -> shark is refused).

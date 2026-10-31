@@ -7,6 +7,28 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11BuryTests {
+    @Test fun `GE bones aliases award the ordinary forms XP once and reject notes`() {
+        mapOf(2530 to 4.5, 3187 to 4.5, 14693 to 4.5, 14793 to 140.0).forEach { (id, xp) ->
+            N11Fixture().use { f ->
+                BoneData.values.forEach { f.menu(it.bone, "Bury") }
+                f.load("skills.prayer.burying.Bone_burying_plugin")
+                f.inventory[0] = Item(id)
+                assertTrue(f.repo.executeItem(f.player, id, 1))
+                f.repo.executeItem(f.player, id, 1)
+                repeat(5) { f.queues.cycle() }
+                assertNull(f.inventory[0])
+                verify(exactly = 1) { f.player.addXp(Skills.PRAYER, xp, any(), any()) }
+                assertFalse(f.repo.hasItemOption(id + 1, 1))
+                f.inventory[0] = Item(id + 1)
+                f.inventory[1] = Item(id)
+                f.repo.executeItem(f.player, id, 1)
+                repeat(5) { f.queues.cycle() }
+                assertEquals(id, f.inventory[1]?.id)
+                verify(exactly = 1) { f.player.addXp(Skills.PRAYER, xp, any(), any()) }
+            }
+        }
+    }
+
     @Test fun `both rare bones give precisely 15 point 1 base XP through the compiled bury route`() {
         listOf(10976, 10977).forEach { id ->
             N11Fixture().use { f ->
