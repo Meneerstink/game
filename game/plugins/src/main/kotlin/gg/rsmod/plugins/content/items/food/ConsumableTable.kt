@@ -15,6 +15,10 @@ data class Consumable(
 
 /** Shared production parser, also used by cache-free route tests. Healing uses the legacy x10 ledger. */
 object ConsumableTable {
+    /** "You drink the dwarven stout." - without the serving count a keg's name carries ("Dwarven stout (4)", "(m3)"). */
+    fun defaultMessage(drink: Boolean, name: String): String =
+        "You ${if (drink) "drink" else "eat"} the ${name.replace(Regex("""\s*\(m?\d\)$"""), "").lowercase()}."
+
     fun read(file: File): List<Consumable> = file.takeIf { it.exists() }?.readLines().orEmpty()
         .filter { it.isNotBlank() && !it.startsWith("#") }
         .map { line ->

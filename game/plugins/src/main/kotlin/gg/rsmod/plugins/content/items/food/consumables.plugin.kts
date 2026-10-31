@@ -55,7 +55,7 @@ fun consume(player: Player, food: Consumable, name: String) {
     }
     player.animate(Anims.EAT_FOOD)
     player.playSound(if (food.drink) Sfx.DRINK else Sfx.EAT)
-    player.filterableMessage(food.message.ifEmpty { "You ${if (food.drink) "drink" else "eat"} the ${name.lowercase()}." })
+    player.filterableMessage(food.message.ifEmpty { ConsumableTable.defaultMessage(food.drink, name) })
     val wasInjured = player.getCurrentLifepoints() < player.skills.getMaxLevel(Skills.CONSTITUTION)
     val heal = (if (food.healMax > food.healMin) world.random(food.healMin..food.healMax) else food.healMin) / Food.LEDGER_UNITS_PER_HITPOINT
     if (heal > 0) player.heal(heal)
