@@ -113,3 +113,11 @@ on_button(interfaceId = 271, component = 43) {
     Prayers.confirmQuickPrayerSelection(player)
     player.openInterface(InterfaceDestination.PRAYER_TAB)
 }
+
+/**
+ * N482: the OSRS prayer filters - the client's tab-stone op, Filters menu lines (RspsPrayerFilters) arrive as IF_BUTTON1 on the
+ * prayer tab's root 271:4 with the action as slot (PrayerFilters).
+ */
+on_button(interfaceId = PrayerFilters.INTERFACE, component = PrayerFilters.ROOT) {
+    PrayerFilters.click(player, player.getInteractingSlot())
+}

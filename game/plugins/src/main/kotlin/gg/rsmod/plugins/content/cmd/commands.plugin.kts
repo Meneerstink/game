@@ -655,6 +655,20 @@ on_command("close_inter", Privilege.ADMIN_POWER) {
     player.closeFullscreenInterface()
 }
 
+/** N482 test: ::prayerbook normal|curses|ruinous - switches the prayer book (the Curses are unlocked for the test). */
+on_command("prayerbook", Privilege.ADMIN_POWER) {
+    val book =
+        when (player.getCommandArgs().firstOrNull()?.lowercase()) {
+            "curses", "ancient" -> gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT
+            "ruinous" -> gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.RUINOUS
+            else -> gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.NORMAL
+        }
+    if (book == gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.PrayerBook.ANCIENT) {
+        player.attr[gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.UNLOCKED_ATTR] = true
+    }
+    gg.rsmod.plugins.content.mechanics.prayer.AncientCurses.switchBook(player, book)
+}
+
 on_command("tele", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     var x: Int

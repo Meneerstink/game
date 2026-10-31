@@ -269,6 +269,8 @@ class SpellTargetMaskTests {
                 "gg.rsmod.plugins.content.magic.lunar.Lunar_spells_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/magic/lunar/lunar_spells.plugin.kts",
                 "gg.rsmod.plugins.content.magic.standard.Standard_utility_spells_plugin" to
                     "src/main/kotlin/gg/rsmod/plugins/content/magic/standard/standard_utility_spells.plugin.kts",
+                // N482: the prayer filters share varp 1376 (PrayerFiltersTests uses this world too).
+                "gg.rsmod.plugins.content.mechanics.prayer.Prayers_plugin" to "src/main/kotlin/gg/rsmod/plugins/content/mechanics/prayer/prayers.plugin.kts",
             )
 
         private val LIBRARY by lazy { CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString()) }

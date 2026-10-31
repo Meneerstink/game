@@ -21,6 +21,7 @@ import gg.rsmod.plugins.api.ext.setVarp
  *  - bits 18-25 (the removed Dungeoneering book's varbits 7347-7351 + unused bits): the OSRS filter state the client
  *    (RspsSpellFilters) reads - 18 enabled, 19 hide combat, 20 hide teleport, 21 hide utility, 22 hide lacks-level,
  *    23 hide lacks-runes, 24 hide lacks-requirements, 25 icon resizing off. 0 = the OSRS default (all shown, resizing on).
+ *  - bits 26-31: the prayer filters (N482, [gg.rsmod.plugins.content.mechanics.prayer.PrayerFilters]), kept as they are.
  *
  * The client sends the OSRS actions as IF_BUTTON1 on the book's full-size layer ([Book.menuLayer], the cache layer the layout
  * script clears, where the client draws the Filters button and menu) with the action as the slot ([Action]).
@@ -65,6 +66,9 @@ object SpellFilters {
     private const val SORT_MASK = 0x1FF
     private const val OSRS_MASK = 0xFF shl 18
 
+    /** Bits 26-31 are the prayer filters (N482, PrayerFilters) - this varp only carries them, the projection keeps them. */
+    const val PRAYER_MASK = 0x3F shl 26
+
     /** 667 hide bits per OSRS category on every book (Standard 9-12, Lunar 13-15, Ancient 16-17). */
     private val CATEGORY_BITS =
         mapOf(
@@ -83,7 +87,7 @@ object SpellFilters {
 
     /** The full varp 1376 for a stored OSRS state + sort: the 667 category bits follow the OSRS choice only while enabled. */
     fun project(value: Int): Int {
-        val osrs = value and OSRS_MASK
+        val osrs = value and (OSRS_MASK or PRAYER_MASK)
         val sort = (value and 0x7).coerceIn(0, 2)
         var out = osrs or sort or (sort shl 3) or (sort shl 6)
         if (isSet(osrs, Action.TOGGLE_FILTERING)) {
