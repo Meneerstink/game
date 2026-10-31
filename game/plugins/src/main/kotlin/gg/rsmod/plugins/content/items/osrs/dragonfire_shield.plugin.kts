@@ -18,11 +18,16 @@ fun shieldHasOption(
 
 DragonfireShield.FAMILIES.forEach { family ->
     family.ids.forEach { id ->
-        if (shieldHasOption(id, "Inspect", worn = false)) {
+        val inspectOption = world.definitions.get(ItemDef::class.java, id).inventoryMenu
+            .indexOfFirst { it.equals("Inspect", ignoreCase = true) } + 1
+        if (inspectOption > 0 && !world.plugins.hasItemOption(id, inspectOption)) {
             on_item_option(item = id, option = "Inspect") {
-                val item = player.inventory[player.getInteractingItemSlot()] ?: return@on_item_option
+                val slot = player.getInteractingItemSlot()
+                val item = player.inventory[slot]?.takeIf { it.id == id } ?: return@on_item_option
                 // Owner 2026-09-18: Inspect opens the chatbox item dialogue (item sprite + text), not a bare game message.
-                player.queue { itemMessageBox(DragonfireShield.inspectMessage(item), item = item.id) }
+                player.queue {
+                    if (player.inventory[slot] === item) itemMessageBox(DragonfireShield.inspectMessage(item), item = item.id)
+                }
             }
         }
         if (shieldHasOption(id, "Check", worn = true)) {

@@ -28,7 +28,7 @@ import gg.rsmod.plugins.api.cfg.Sfx
  *   item dialogue (interface 519, item picture + text) exactly like the Dragonfire ward Inspect.
  */
 object ItemActionGuard {
-    val CONFIRM_OPTIONS = setOf("uncharge", "dismantle", "disassemble", "revert")
+    val CONFIRM_OPTIONS = setOf("uncharge", "remove-charge", "dismantle", "disassemble", "revert")
     val STATUS_OPTIONS = setOf("check", "check-charges", "check charges", "inspect")
 
     /** Chat lines collected while a status option runs (read by `Player.message`). */
@@ -68,7 +68,7 @@ object ItemActionGuard {
     /** Detail line of the confirmation GUI: what the option does, never a mechanic the item does not have. */
     fun detail(option: String): String =
         when (option) {
-            "uncharge" -> "This will remove the charges from this item."
+            "uncharge", "remove-charge" -> "This will remove the charges from this item."
             "revert" -> "This will revert this item to its original form."
             else -> "This will take this item apart."
         }
@@ -101,7 +101,7 @@ object ItemActionGuard {
      */
     const val WATCH_TICKS = 100
 
-    fun sound(option: String): Int = if (option == "uncharge") Sfx.CHARGE_GONE else Sfx.HUNTING_DISMANTLE
+    fun sound(option: String): Int = if (option == "uncharge" || option == "remove-charge") Sfx.CHARGE_GONE else Sfx.HUNTING_DISMANTLE
 
     private fun watchResult(
         player: Player,
@@ -132,13 +132,15 @@ object ItemActionGuard {
         proceed: () -> Unit,
     ) {
         val slot = player.attr[INTERACTING_ITEM_SLOT]
+        val held = if (worn) player.equipment.firstOrNull { it?.id == itemId } else slot?.let { player.inventory[it] }
+        if (held?.id != itemId) return
         player.queue {
             if (!confirmItemAction(itemId, question(option), detail(option))) return@queue
             // The item must still be where it was clicked (it may have been moved while the GUI was open).
             if (worn) {
-                if (player.equipment.getItemCount(itemId) <= 0) return@queue
+                if (player.equipment.none { it === held }) return@queue
             } else {
-                if (slot == null || player.inventory[slot]?.id != itemId) return@queue
+                if (slot == null || player.inventory[slot] !== held) return@queue
                 player.attr[INTERACTING_ITEM_SLOT] = slot
             }
             proceed()

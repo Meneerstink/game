@@ -10,6 +10,47 @@ import io.mockk.verify
 import kotlin.test.*
 
 class N11HunterReleaseTests {
+    @Test fun `remaining G butterflies use shared jar visuals boosts and three tick click delay`() {
+        mapOf(10016 to Skills.CONSTITUTION, 10018 to Skills.DEFENCE, 10020 to Skills.ATTACK).forEach { (id, skill) ->
+            N11Fixture().use { f ->
+                load(f)
+                repeat(28) { f.inventory[it] = Item(100000 + it) }
+                f.inventory[0] = Item(id)
+                f.inventory[1] = Item(id)
+                f.repo.executeItem(f.player, id, 4)
+                assertEquals(Items.BUTTERFLY_JAR, f.inventory[0]?.id)
+                f.select(1)
+                f.repo.executeItem(f.player, id, 4)
+                assertEquals(id, f.inventory[1]?.id)
+                assertEquals(3, f.timers[HunterRelease.BUTTERFLY_DELAY])
+                if (skill == Skills.CONSTITUTION) {
+                    verify { f.player.alterLifepoints(15, 0) }
+                } else verify { f.skills.alterCurrentLevel(skill, 18, 18) }
+            }
+        }
+    }
+
+    @Test fun `G chinchompa stack shares confirmation and salamanders disappear once without affecting equipment`() {
+        N11Fixture().use { f ->
+            load(f)
+            f.def(10033).stacks = true
+            f.inventory[0] = Item(10033, 5)
+            f.repo.executeItem(f.player, 10033, 5)
+            answer(f, false)
+            assertEquals(5, f.inventory[0]?.amount)
+            f.repo.executeItem(f.player, 10033, 5)
+            answer(f, true)
+            assertNull(f.inventory[0])
+            (10146..10149).forEach { id ->
+                f.inventory[0] = Item(id)
+                f.equipment[3] = Item(id)
+                f.repo.executeItem(f.player, id, 5)
+                f.repo.executeItem(f.player, id, 5)
+                assertNull(f.inventory[0])
+                assertEquals(id, f.equipment[3]?.id)
+            }
+        }
+    }
     private fun load(f: N11Fixture) = f.load("skills.hunter.Hunter_release_plugin")
     private fun answer(f: N11Fixture, yes: Boolean) {
         f.queues.cycle()

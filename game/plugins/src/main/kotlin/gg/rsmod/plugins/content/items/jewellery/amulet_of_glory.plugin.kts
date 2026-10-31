@@ -33,16 +33,21 @@ val EMPTY_GLORY =
     intArrayOf(
         Items.AMULET_OF_GLORY,
         Items.AMULET_OF_GLORY_T,
+        Items.AMULET_OF_GLORY_T_10719,
     )
 
 EMPTY_GLORY.forEach { item ->
-    on_equipment_option(item = item, option = "Rub") {
+    val def = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item)
+    val wornOption = def.equipmentMenu.indexOfFirst { it.equals("Rub", true) } + 1
+    if (wornOption > 0 && !world.plugins.hasEquipmentOption(item, wornOption)) on_equipment_option(item = item, option = "Rub") {
         player.message(
             "You will need to recharge your amulet of glory before you can use it again.",
             type = ChatMessageType.GAME_MESSAGE,
         )
     }
-    on_item_option(item = item, option = "Rub") {
+    val heldOption = def.inventoryMenu.indexOfFirst { it.equals("Rub", true) } + 1
+    if (heldOption > 0 && !world.plugins.hasItemOption(item, heldOption)) on_item_option(item = item, option = "Rub") {
+        if (player.inventory[player.getInteractingItemSlot()]?.id != item) return@on_item_option
         player.message("The amulet has lost its charge.", type = ChatMessageType.GAME_MESSAGE)
         player.message("It will need to be recharged before you can use it again.", type = ChatMessageType.GAME_MESSAGE)
     }
