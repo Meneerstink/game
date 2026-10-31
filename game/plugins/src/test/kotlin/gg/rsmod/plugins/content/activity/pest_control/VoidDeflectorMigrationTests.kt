@@ -21,6 +21,23 @@ class VoidDeflectorMigrationTests {
         assertEquals(Items.VOID_KNIGHT_DEFLECTOR_19712, VoidDeflectorMigration.WEARABLE)
     }
 
+    /** 2026-10-31: every container the save loads, not only the five fixed ones (a familiar's cargo kept its 19711). */
+    @Test
+    fun `a 19711 in a beast of burden's cargo becomes 19712 too`() {
+        val cargo = mockk<ItemContainer>(relaxed = true)
+        every { cargo.capacity } returns 1
+        every { cargo[0] } returns Item(19711, 1)
+        val placed = slot<Item>()
+        every { cargo[0] = capture(placed) } returns Unit
+        val player = mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { player.containers } returns hashMapOf(gg.rsmod.game.model.container.key.ContainerKey("bob", 30, gg.rsmod.game.model.container.ContainerStackType.NORMAL) to cargo)
+
+        VoidDeflectorMigration.migrate(player)
+
+        assertEquals(19712, placed.captured.id)
+    }
+
     @Test
     fun `a held 19711 becomes 19712 and nothing else changes`() {
         val container = mockk<ItemContainer>(relaxed = true)

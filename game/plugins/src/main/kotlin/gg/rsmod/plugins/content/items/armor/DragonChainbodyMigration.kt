@@ -14,7 +14,15 @@ object DragonChainbodyMigration {
     /** Converts [player]'s chainbodies in place; returns how many stacks changed (the Collection Log entry not counted). */
     fun migrate(player: Player): Int {
         var changed = 0
-        listOf(player.inventory, player.bank, player.equipment, player.gravestone, player.deathRecovery).forEach { changed += migrate(it) }
+        // Every container the save loads (beast-of-burden cargo, gift, ... - Player.containers), as RemovedItems.purge walks them.
+        LinkedHashSet<ItemContainer>().apply {
+            add(player.inventory)
+            add(player.bank)
+            add(player.equipment)
+            add(player.gravestone)
+            add(player.deathRecovery)
+            addAll(player.containers.values)
+        }.forEach { changed += migrate(it) }
         migrateLog(player)
         return changed
     }
