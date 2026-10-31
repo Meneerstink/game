@@ -8,7 +8,22 @@ import gg.rsmod.util.Misc
  * a duplicate item-on-item binding.
  */
 CombinationData.values.forEach { def ->
-    if (def.tool != CombinationTool.NONE) {
+    val inventoryOption = def.inventoryOption
+    if (inventoryOption != null) {
+        val id = def.items.single()
+        val option = world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, id)
+            .inventoryMenu.indexOfFirst { it.equals(inventoryOption, true) } + 1
+        if (option > 0 && !world.plugins.hasItemOption(id, option)) {
+            on_item_option(id, inventoryOption) {
+                val slot = player.getInteractingItemSlot()
+                if (player.inventory[slot]?.id != id || !player.lock.canItemInteract()) return@on_item_option
+                player.queue(TaskPriority.WEAK) {
+                    // Recheck after queue dispatch: never spend a matching stack in a different slot after a stale click.
+                    if (player.inventory[slot]?.id == id && player.lock.canItemInteract()) CombinationAction.combine(this, def)
+                }
+            }
+        }
+    } else if (def.tool != CombinationTool.NONE) {
         on_item_on_item(item1 = def.items[0], item2 = def.tool.item) {
             player.queue(TaskPriority.WEAK) {
                 CombinationAction.combine(this, def)

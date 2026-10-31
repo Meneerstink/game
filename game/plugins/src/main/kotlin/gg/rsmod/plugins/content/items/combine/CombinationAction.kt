@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.items.combine
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.confirmItemAction
@@ -21,6 +22,21 @@ object CombinationAction {
         val inventory = player.inventory
 
         if (!canCombine(task, data)) {
+            return
+        }
+
+        if (data.quantities.isNotEmpty()) {
+            // Stack reconstruction is the same recipe route, but must stage output space before spending any shards.
+            // No inferred attach animation/sound: neither the Wiki nor the donor gives one for reconstruction.
+            if (!combineStack(inventory, data)) {
+                gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                    "combine ${data.name}: count recipe cannot fit; inventory unchanged"
+                }
+                player.message(gg.rsmod.plugins.content.items.ItemContents.NO_SPACE)
+                return
+            }
+            player.addXp(data.skill, data.experience)
+            data.message?.let { player.filterableMessage(it) }
             return
         }
 
@@ -115,6 +131,11 @@ object CombinationAction {
             return false
         }
 
+        if (data.quantities.isNotEmpty() && data.items.any { inventory.getItemCount(it) < (data.quantities[it] ?: 1) }) {
+            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "combine ${data.name}: missing recipe quantity" }
+            data.missingMessage?.let { player.message(it) }
+            return false
+        }
         if (!inventory.hasItems(data.items)) {
             return false
         }
@@ -130,6 +151,22 @@ object CombinationAction {
                 item = data.resultItem,
             )
             return false
+        }
+        return true
+    }
+
+    /** Atomic count-based recipe transaction, also safe when the result needs a slot beside a remaining input stack. */
+    internal fun combineStack(inventory: ItemContainer, data: CombinationData): Boolean {
+        if (data.quantities.isEmpty()) return false
+        val staged = ItemContainer(inventory)
+        for (id in data.items) {
+            if (!staged.remove(id, data.quantities[id] ?: 1, assureFullRemoval = true).hasSucceeded()) return false
+        }
+        if (!staged.add(data.resultItem, 1, assureFullInsertion = true).hasSucceeded()) return false
+        for (slot in 0 until inventory.capacity) {
+            val before = inventory[slot]
+            val after = staged[slot]
+            if (before?.id != after?.id || before?.amount != after?.amount || before?.attr != after?.attr) inventory[slot] = after
         }
         return true
     }
