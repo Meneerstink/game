@@ -78,7 +78,8 @@ object Vengeance {
         if (attacker is gg.rsmod.game.model.entity.Npc && attacker.id in RingOfRecoil.RECOIL_IMMUNE_NPCS) return
         target.attr.remove(VENGEANCE_ACTIVE_ATTR)
 
-        val reflected = max(1, (damage * REFLECT_PERCENT).toInt())
+        // N463 Rebuke: "increases the amount of damage recoil effects deal (such as Vengeance) by 10%, rounded down".
+        val reflected = gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rebuke(target, max(1, (damage * REFLECT_PERCENT).toInt()))
         attacker.hit(damage = reflected, type = HitType.REFLECTED)
         attacker.damageMap.add(target, reflected)
         gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.recordDamage(attacker, target, reflected)

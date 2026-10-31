@@ -59,6 +59,11 @@ object RestorationRates {
 
     fun lifeDue(player: Player): Int = advance(player, LIFE_PROGRESS, lifePointRate(player))
 
+    /** N463 Rejuvenation (OSRS Wiki): switching it on or off restarts the Hitpoints timer from zero at the new rate. */
+    fun restartLifeTimer(player: Player) {
+        player.attr[LIFE_PROGRESS] = 0
+    }
+
     /**
      * Ticks until the next lowered stat comes back one level, read from the running [STAT_RESTORE] timer and the lowered
      * channel's progress at the current rate (Boosts Information overlay). -1 when the timer is not running.

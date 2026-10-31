@@ -28,7 +28,7 @@ import gg.rsmod.plugins.api.ext.*
  * - Dampen Magic / Ranged / Melee: the overheads 27-29 protect like a Protect prayer ([PrayerIcon.protects]): all of an npc's hit,
  *   x0.6 of a player's ("100% protection ... (40% in PvP)").
  * - Purge: "1/3 of damage dealt is also removed from both yours and your opponent's Prayer points."
- * - Rebuke: "Increases recoil damage by 10%" ([rebukeRecoil]); Vindication: like Redemption (below 10% HP: heal 25% of the Prayer
+ * - Rebuke: "Increases recoil damage by 10%" ([rebuke], every recoil effect +10% rounded down); Vindication: like Redemption (below 10% HP: heal 25% of the Prayer
  *   level, Prayer points to 0); Wrath: on death up to 25% of the base Prayer level to opponents in a 5x5 area (the curse Wrath blast).
  * - Rejuvenation: Hitpoints regenerate 3x faster; Berserker: boosted combat stats last 50% longer; Ruinous Grace: running drains no
  *   run energy (the prayer's own drain is the cost, OSRS Wiki: stamina potions do not count); Metabolise: 25 ticks after activation
@@ -39,8 +39,12 @@ import gg.rsmod.plugins.api.ext.*
  * - Protect Item: one extra item kept on a PvM death; a PvP death ignores it (owner: "niet in PvP").
  */
 object RuinousPowers {
-    /** The cycle Metabolise was switched on (its effect starts 25 ticks later). */
+    /**
+     * The cycle Metabolise / Berserker were switched on: both work only after 15 seconds (25 ticks) of being active (OSRS Wiki
+     * "Metabolise": "must be active for at least 15 seconds in order to take effect"; "Berserker": the same).
+     */
     private val METABOLISE_SINCE = AttributeKey<Int>()
+    private val BERSERKER_SINCE = AttributeKey<Int>()
 
     /** The cycle a Cruor's Vow kill was last credited on this target (one credit per death, also with several hits landing). */
     private val CRUOR_CREDITED = AttributeKey<Int>()
@@ -76,6 +80,7 @@ object RuinousPowers {
             return
         }
         if (isActive(player, RuinousPrayer.METABOLISE)) player.attr[METABOLISE_SINCE] = player.world.currentCycle
+        if (isActive(player, RuinousPrayer.BERSERKER)) player.attr[BERSERKER_SINCE] = player.world.currentCycle
         if (isActive(player, RuinousPrayer.PROTECT_ITEM)) player.attr[PROTECT_ITEM_ATTR] = true
         setOverhead(player)
     }
@@ -146,7 +151,10 @@ object RuinousPowers {
         player.setVarbit(prayer.varbit, 1)
         Prayers.markActivated(player, prayer)
         if (prayer == RuinousPrayer.METABOLISE) player.attr[METABOLISE_SINCE] = player.world.currentCycle
+        if (prayer == RuinousPrayer.BERSERKER) player.attr[BERSERKER_SINCE] = player.world.currentCycle
         if (prayer == RuinousPrayer.PROTECT_ITEM) player.attr[PROTECT_ITEM_ATTR] = true
+        // OSRS Wiki "Rejuvenation": switching it on restarts the Hitpoints regeneration timer (the next point in 20 seconds).
+        if (prayer == RuinousPrayer.REJUVENATION) gg.rsmod.plugins.content.mechanics.restoration.RestorationRates.restartLifeTimer(player)
         if (playSound) player.playSound(prayer.sound, volume = Prayers.PRAYER_SOUND_VOLUME)
         setOverhead(player)
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
@@ -161,8 +169,7 @@ object RuinousPowers {
     ) {
         if (!isActive(player, prayer)) return
         player.setVarbit(prayer.varbit, 0)
-        if (prayer == RuinousPrayer.METABOLISE) player.attr.remove(METABOLISE_SINCE)
-        if (prayer == RuinousPrayer.PROTECT_ITEM) player.attr[PROTECT_ITEM_ATTR] = false
+        afterOff(player, prayer)
         if (playSound) player.playSound(Sfx.CANCEL_PRAYER, volume = Prayers.PRAYER_SOUND_VOLUME)
         setOverhead(player)
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous off ${player.username} ${prayer.name}" }
@@ -171,11 +178,35 @@ object RuinousPowers {
     /** Every Ruinous prayer off at once, silently (death, no Prayer points left, book switch, Nex, quick prayers). */
     fun deactivateAll(player: Player) {
         if (!anyActive(player)) return
-        val hadProtectItem = isActive(player, RuinousPrayer.PROTECT_ITEM)
+        val wereOn = active(player)
         player.setVarp(RuinousPowersCacheTool.ACTIVE_VARP, 0)
-        player.attr.remove(METABOLISE_SINCE)
-        if (hadProtectItem) player.attr[PROTECT_ITEM_ATTR] = false
+        wereOn.forEach { afterOff(player, it) }
         setOverhead(player)
+    }
+
+    /** The runtime side of [prayer] going off (one prayer or all at once). */
+    private fun afterOff(
+        player: Player,
+        prayer: RuinousPrayer,
+    ) {
+        when (prayer) {
+            RuinousPrayer.PROTECT_ITEM -> player.attr[PROTECT_ITEM_ATTR] = false
+            RuinousPrayer.BERSERKER -> player.attr.remove(BERSERKER_SINCE)
+            // OSRS Wiki "Rejuvenation": switching it off restarts the timer too (the next point at the normal 60 seconds).
+            RuinousPrayer.REJUVENATION -> gg.rsmod.plugins.content.mechanics.restoration.RestorationRates.restartLifeTimer(player)
+            RuinousPrayer.METABOLISE -> {
+                // OSRS Wiki "Metabolise": "If deactivated, the player's action delay is reset to their weapon's attack speed or left
+                // unchanged, whichever is higher" - no flicking it off and on for a shorter eat-and-attack.
+                if (player.attr.has(METABOLISE_SINCE)) {
+                    val speed = gg.rsmod.plugins.content.combat.CombatConfigs.getAttackDelay(player)
+                    val delay = gg.rsmod.game.model.timer.ATTACK_DELAY
+                    val left = if (player.timers.has(delay)) player.timers[delay] else 0
+                    if (speed > left) player.timers[delay] = speed
+                }
+                player.attr.remove(METABOLISE_SINCE)
+            }
+            else -> {}
+        }
     }
 
     /** Sever / Breach / Nex: the Dampen prayers drop like the Protect prayers and Deflect curses. */
@@ -309,7 +340,12 @@ object RuinousPowers {
 
     fun rejuvenation(player: Player): Boolean = on(player, RuinousPrayer.REJUVENATION)
 
-    fun berserker(player: Player): Boolean = on(player, RuinousPrayer.BERSERKER)
+    /** Berserker: boosted combat stats last 50% longer, once the prayer has been on for 15 seconds (OSRS Wiki). */
+    fun berserker(player: Player): Boolean {
+        if (!on(player, RuinousPrayer.BERSERKER)) return false
+        val since = player.attr[BERSERKER_SINCE] ?: return false
+        return player.world.currentCycle - since >= METABOLISE_DELAY_TICKS
+    }
 
     /** Ruinous Grace: run energy is not drained while it runs (with Prayer points left - at 0 every prayer is already off). */
     fun graceKeepsRunEnergy(player: Player): Boolean = on(player, RuinousPrayer.RUINOUS_GRACE) && player.getCurrentPrayerPoints() > 0
@@ -326,15 +362,17 @@ object RuinousPowers {
         return (delay - 1).coerceAtLeast(0)
     }
 
-    /** Rebuke: "Increases recoil damage by 10%" - the recoil's 10% of the hit becomes 11% (OSRS recoil: floor(10%) + 1). */
-    fun rebukeRecoil(
-        target: Player,
-        damage: Int,
+    /**
+     * Rebuke: OSRS Wiki "Rebuke" - "increases the amount of damage recoil effects deal (such as Vengeance) by 10%, rounded down":
+     * the ring of recoil / suffering, Vengeance and the Dharok-damned reflect of the player praying it.
+     */
+    fun rebuke(
+        target: Pawn,
         recoil: Int,
     ): Int {
-        if (!on(target, RuinousPrayer.REBUKE)) return recoil
-        val rebuked = (damage * 11 / 100) + 1
-        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous rebuke ${target.username} recoil $recoil -> $rebuked (hit $damage)" }
+        if (target !is Player || recoil <= 0 || !on(target, RuinousPrayer.REBUKE)) return recoil
+        val rebuked = recoil * 11 / 10
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous rebuke ${target.username} recoil $recoil -> $rebuked" }
         return rebuked
     }
 

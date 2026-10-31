@@ -225,9 +225,13 @@ class RuinousPowersTests {
     @Test
     fun `Rebuke adds 10 percent to the recoil`() {
         val p = player()
-        assertEquals(5, RuinousPowers.rebukeRecoil(p, 40, 5))
+        assertEquals(5, RuinousPowers.rebuke(p, 5))
         RuinousPowers.click(p, RuinousPrayer.REBUKE.slot)
-        assertEquals(40 * 11 / 100 + 1, RuinousPowers.rebukeRecoil(p, 40, 5))
+        // OSRS Wiki: every recoil effect (ring, Vengeance) deals 10 % more, rounded down.
+        assertEquals(5, RuinousPowers.rebuke(p, 5))
+        assertEquals(11, RuinousPowers.rebuke(p, 10))
+        assertEquals(41, RuinousPowers.rebuke(p, 38))
+        assertEquals(0, RuinousPowers.rebuke(p, 0))
         assertEquals(PrayerIcon.RUINOUS_REBUKE.id, p.prayerIcon)
     }
 
@@ -247,6 +251,9 @@ class RuinousPowersTests {
         RuinousPowers.click(p, RuinousPrayer.BERSERKER.slot)
         assertTrue(RuinousPowers.graceKeepsRunEnergy(p))
         assertTrue(RuinousPowers.rejuvenation(p))
+        // Berserker works after 15 seconds (25 ticks) of being on (OSRS Wiki).
+        assertFalse(RuinousPowers.berserker(p))
+        every { lastWorld.currentCycle } returns 100 + RuinousPowers.METABOLISE_DELAY_TICKS
         assertTrue(RuinousPowers.berserker(p))
         val empty = player(points = 0)
         empty.setVarbit(RuinousPrayer.RUINOUS_GRACE.varbit, 1)

@@ -16,7 +16,8 @@ object DharokDamnedReflect {
         target: Pawn,
         damage: Int,
     ) {
-        val reflect = AmuletOfTheDamned.dharokRecoil(target, damage)
+        // N463 Rebuke: every recoil effect deals 10 % more, rounded down.
+        val reflect = gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.rebuke(target, AmuletOfTheDamned.dharokRecoil(target, damage))
         if (reflect <= 0) return
         attacker.hit(damage = reflect, type = HitType.REFLECTED)
         attacker.damageMap.add(target, reflect)
