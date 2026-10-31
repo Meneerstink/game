@@ -83,9 +83,25 @@ data class BookPage(val leftLines: List<String>, val rightLines: List<String>) {
 fun Player.openBook(book: Book) = book.open(this)
 
 class BookInterface(val plugin: KotlinPlugin) {
+    private companion object {
+        const val PREV = 72
+        const val NEXT = 73
+    }
+
     fun registerBookInterface() {
         plugin.on_interface_close(Book.INTERFACE) { player.attr.remove(CURR_BOOK) }
         plugin.on_button(Book.INTERFACE, 72) { player.attr[CURR_BOOK]?.turn(player, -1) }
         plugin.on_button(Book.INTERFACE, 73) { player.attr[CURR_BOOK]?.turn(player, 1) }
+        // The 667 client sends Prev/Next as a pause button (testclient 2026-10-31: ResumePauseButtonMessage 960:73); on_button
+        // never saw them, so no book ever turned a page.
+        gg.rsmod.game.message.handler.ResumePauseButtonHandler.hooks += { p, interfaceId, component ->
+            val session = if (interfaceId == Book.INTERFACE) p.attr[CURR_BOOK] else null
+            when {
+                session == null -> false
+                component == PREV -> { session.turn(p, -1); true }
+                component == NEXT -> { session.turn(p, 1); true }
+                else -> false
+            }
+        }
     }
 }

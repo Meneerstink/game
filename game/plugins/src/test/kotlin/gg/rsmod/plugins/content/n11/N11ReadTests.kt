@@ -57,6 +57,27 @@ class N11ReadTests {
         }
     }
 
+    // Testclient 2026-10-31: the 667 client sends Prev/Next as a pause button (ResumePauseButtonMessage 960:73), not a button click.
+    @Test fun `Prev and Next sent as pause buttons turn the page and leave other pause buttons alone`() {
+        N11Fixture().use { f ->
+            val interfaces = InterfaceSet(mockk(relaxed = true))
+            every { f.player.interfaces } returns interfaces
+            f.load("items.books.Documents_plugin")
+            val document = ReadableDocuments.entries.getValue(4707)
+            f.inventory[0] = Item(document.item)
+            assertTrue(f.repo.executeItem(f.player, document.item, 1))
+            val session = assertNotNull(f.attrs[CURR_BOOK])
+            val hooks = gg.rsmod.game.message.handler.ResumePauseButtonHandler.hooks
+            assertTrue(hooks.any { it(f.player, 960, 73) })
+            assertEquals(1, session.page)
+            assertTrue(hooks.any { it(f.player, 960, 72) })
+            assertEquals(0, session.page)
+            assertFalse(hooks.any { it(f.player, 960, 69) }, "the title is no page button")
+            f.repo.executeInterfaceClose(f.player, 960)
+            assertFalse(hooks.any { it(f.player, 960, 73) }, "no book open: the pause button goes on to the dialogue queue")
+        }
+    }
+
     @Test fun `combat another modal noted item and stale slot cannot open a document`() {
         N11Fixture().use { f ->
             val interfaces = InterfaceSet(mockk(relaxed = true))
