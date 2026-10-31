@@ -98,9 +98,13 @@ object SpellFilters {
         return out
     }
 
-    /** Re-sends the projection (login: saves from before N72 may hold old 667 filter bits without filtering enabled). */
+    /**
+     * Re-sends the projection (login: saves from before N72 may hold old 667 filter bits without filtering enabled). The sort goes back
+     * to 0 = level order: OSRS sorts every book by level (script 2611 / 2621) and the 667 Sort buttons are gone (VRAGEN 27 A), so an
+     * old "combat first" / "teleports first" save would otherwise keep an order no button can change (N72 research 5a).
+     */
     fun refresh(player: Player) {
-        val current = player.getVarp(VARP)
+        val current = player.getVarp(VARP) and SORT_MASK.inv()
         val projected = project(current)
         player.setVarp(VARP, projected)
     }

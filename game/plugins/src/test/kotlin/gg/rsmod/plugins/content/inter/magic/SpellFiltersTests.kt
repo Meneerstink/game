@@ -142,7 +142,8 @@ class SpellFiltersTests {
         h.cleanUp()
         val old = h.player("n72o", varps = mapOf(VARP to ((1 shl 9) or 1)))
         h.open(old, Spellbook.STANDARD)
-        assertEquals("old 667 category bits are cleared at login (filtering is off), sort kept", 1 or (1 shl 3) or (1 shl 6), old.varps.getState(VARP))
+        // N72 (2026-10-31): the 667 Sort buttons are gone, so an old "combat first" sort goes back to the OSRS level order at login.
+        assertEquals("old 667 category bits and sort are cleared at login (filtering is off, OSRS level order)", 0, old.varps.getState(VARP))
     }
 
     private fun click(
