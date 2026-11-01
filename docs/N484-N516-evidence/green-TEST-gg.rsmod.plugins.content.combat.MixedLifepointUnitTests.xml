@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.combat.MixedLifepointUnitTests" tests="3" skipped="0" failures="0" errors="0" timestamp="2026-11-01T10:11:52" hostname="LAPTOP-KLOL515N" time="1.35">
+  <properties/>
+  <testcase name="the ledger conversion is exact for whole life points" classname="gg.rsmod.plugins.content.combat.MixedLifepointUnitTests" time="0.05"/>
+  <testcase name="no raw x10 literal flows into a lifepoint change or hit" classname="gg.rsmod.plugins.content.combat.MixedLifepointUnitTests" time="1.282"/>
+  <testcase name="percentage divisors do not hide raw HP amounts elsewhere in the expression" classname="gg.rsmod.plugins.content.combat.MixedLifepointUnitTests" time="0.011"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

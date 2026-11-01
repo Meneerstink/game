@@ -25,6 +25,9 @@ class MixedLifepointUnitTests {
 
     private val mutation = Regex("""(setCurrentLifepoints\(|alterLifepoints\(|\.heal\(|\bhit\(damage\s*=|maxHit\s*=)""")
     private val bigLiteral = Regex("""(?<![\w.])\d{3,}(?![\w.])""")
+    // N484: a percentage denominator is dimensionless, not an x10 HP amount (e.g. GeDrinks' base HP * 15 / 100).
+    // Only this divisor is ignored; +100, *100, /1000 and other large arguments must still fail the guard.
+    private val percentDivisor = Regex("""/\s*100(?![\w.])""")
 
     private val callOpen = Regex("""(setCurrentLifepoints\(|alterLifepoints\(|\.heal\()""")
     private val assigned = Regex("""\b(?:hit\(damage|maxHit)\s*=\s*(\d{3,})(?![\w.])""")
@@ -42,8 +45,25 @@ class MixedLifepointUnitTests {
                 }
                 end++
             }
-            bigLiteral.containsMatchIn(code.substring(match.range.last + 1, (end - 1).coerceAtLeast(match.range.last + 1)))
+            val argument = code.substring(match.range.last + 1, (end - 1).coerceAtLeast(match.range.last + 1))
+            bigLiteral.containsMatchIn(percentDivisor.replace(argument, "/ percent"))
         }
+    }
+
+    @Test
+    fun `percentage divisors do not hide raw HP amounts elsewhere in the expression`() {
+        listOf("p.heal(hp * 15 / 100)", "p.alterLifepoints(-(hp * 5 / 100))").forEach {
+            assertTrue(!rawFigures(it), it)
+        }
+        listOf(
+            "p.heal(hp * 15 / 100 + 250)",
+            "p.heal(minOf(250, hp * 15 / 100))",
+            "p.heal(hp * 100 / 100)",
+            "p.heal(hp / 1000)",
+            "p.heal(hp * 15 / 100, 100)",
+            "p.setCurrentLifepoints(250)",
+            "hit(damage = 130)",
+        ).forEach { assertTrue(rawFigures(it), it) }
     }
 
     @Test

@@ -28,8 +28,11 @@ class PohObjectRouteTests {
             13523 to mapOf("rub" to "player_house.plugin.kts"),
             PlayerHouse.NEXUS to mapOf("teleport" to "poh_furniture.plugin.kts", "teleport menu" to "poh_furniture.plugin.kts"),
             13715 to mapOf("repair" to "poh_furniture.plugin.kts"),
-            PlayerHouse.JEWELLERY_BOX to mapOf("teleport menu" to "poh_furniture.plugin.kts"),
-            14826 to mapOf("activate" to "wilderness_obelisk.plugin.kts"),
+            PlayerHouse.JEWELLERY_BOX to listOf("teleport menu", JewelleryBoxRecent.OPTION.lowercase())
+                .associateWith { "poh_furniture.plugin.kts" },
+            // A22: the cache gained these options together with the Wilderness/house handlers.
+            14826 to listOf("activate", "teleport to destination", "set destination")
+                .associateWith { "wilderness_obelisk.plugin.kts" },
             PlayerHouse.SPIRITUAL_FAIRY_TREE to
                 mapOf(
                     "tree" to "poh_furniture.plugin.kts",
@@ -68,6 +71,10 @@ class PohObjectRouteTests {
         val files = root.walkTopDown().filter { it.isFile }.associateBy { it.name }
         routes.values.flatMap { it.values }.toSet().forEach { name -> assertTrue(files.containsKey(name), "$name missing") }
         val furniture = files.getValue("poh_furniture.plugin.kts").readText()
+        val obelisk = files.getValue("wilderness_obelisk.plugin.kts").readText()
+        routes.getValue(14826).keys.forEach { option ->
+            assertTrue("on_obj_option(obeliskID, option = \"$option\")" in obelisk, "house obelisk: $option")
+        }
         listOf("tree", "ring-configure", "ring-zanaris", "ring-last-destination").forEach {
             assertTrue("on_obj_option(obj = PlayerHouse.SPIRITUAL_FAIRY_TREE, option = \"$it\")" in furniture, it)
         }

@@ -23,6 +23,17 @@ import kotlin.test.assertTrue
  * and callers must pass a deliberate, bounded allowance so HP cannot go far above the maximum.
  */
 class FoodAndDrinkLifepointUnitTests {
+    @Test
+    fun `chalice percentages use real base HP and round down without a ledger conversion`() {
+        for (base in listOf(10, 50, 99)) {
+            for ((roll, percent) in listOf(0 to 15, 24 to 5, 31 to 30)) {
+                val p = player(base)
+                GeDrinks.chalice(p, roll)
+                verify(exactly = 1) { p.alterLifepoints(base * percent / 100, 0) }
+            }
+        }
+    }
+
     private fun player(maxLevel: Int = 99): Player {
         val player = mockk<Player>(relaxed = true)
         val world = mockk<World>(relaxed = true)

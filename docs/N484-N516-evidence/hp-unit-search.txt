@@ -1,0 +1,39 @@
+﻿game/plugins/src/main/kotlin/gg/rsmod/plugins\content\skills\summoning\SummoningSpecialMoves.kt:1288:        // 1:1 real HP, so the ledger value is missing * 10 / 4 (a full-health phoenix can only splat 0).
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\runetek5.plugin.kts:176:                player.setVarbit(player.skills.LIFEPOINTS_VARBIT, (storedLifepoints / 10).coerceAtMost(maxLifepoints))
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\other\Strykewyrms.kt:26:    /** The emerge hit of the burrow attack, in hitpoints (Novite 300 life points / 10). */
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\bulk\BulkNpcCombatDefs.kt:134:                "combat-defs.json row ${row.id} (${row.name}): source lifepoints must be real HP * 10, was ${row.lifepoints}"
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\bulk\BulkNpcCombatDefs.kt:140:            builder.setHitpoints((row.lifepoints / 10).coerceAtLeast(1))
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:34:        hitpoints = 200 // 20 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:62:        hitpoints = 570 // 57 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:90:        hitpoints = 820 // 82 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:118:        hitpoints = 520 // 52 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:146:        hitpoints = 220 // 22 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\humanoids\ardougne_watchmen_lvl_24_69.plugin.kts:172:        hitpoints = 500 // 50 real HP (wiki), *10 for this codebase's internal lifepoints scale
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\combat\strategy\ranged\ammo\EnchantedBolts.kt:273:    fun bloodForfeitCost(attacker: Player): Int = attacker.getCurrentLifepoints() / 10
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\combat\strategy\PoweredStaffCombatStrategy.kt:159:        // Audit C-02: damage is 1:1, so the OSRS 2 Magic / 1.33 Hitpoints apply unscaled (the old "/ 10.0" was the x10 unit).
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\traversal\batch9\ape_atoll.plugin.kts:82:/** Void ApeAtoll.damage(): (constitution / 100) * 10 life points = a tenth of the current hitpoints. */
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\traversal\batch9\ape_atoll.plugin.kts:84:    hit(skills.getCurrentLevel(Skills.CONSTITUTION) / 10)
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\barrows\brothers.plugin.kts:43:/** Real hitpoints from the wiki; the DSL takes real HP * 10. */
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\barrows\brothers.plugin.kts:69:            // Was cfg.hp (1000) * 10 = 1,000 real hitpoints per brother; the wiki gives 100.
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\npcs\definitions\barrows\brothers.plugin.kts:70:            hitpoints = BROTHER_HITPOINTS * 10
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\cmd\conformance\SummoningSuite.kt:448:            val voidLevel = ((max(att + str, max(rng * 3 / 2, mag * 3 / 2)) * 13 / 10) + def + hp + pray / 2 + summ / 2) / 4
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\cmd\conformance\PvpWeaponsSuite.kt:195:            p.setCurrentLifepoints(p.getMaximumLifepoints() * 10)
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\cmd\conformance\PestControlScenarios.kt:79:        val expectedHeal = portal.getMaximumLifepoints() / 10 * minOf(game.players.size, 5) / 5
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\cmd\conformance\CursesSuite.kt:361:                    if (p.getCurrentLifepoints() > p.getMaximumLifepoints() * 8 / 10) p.setCurrentLifepoints(p.getMaximumLifepoints() / 5)
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\pvp\emblem\DeadmanEmblem.kt:50:     * "/ 10"), so only NPCs with 1,500+ real HP could drop one, at a tenth of the planned chance.
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\pvp\breach\deadman_breach.plugin.kts:50:            hitpoints = m.stats.hp * 10
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\pvp\breach\BreachConformance.kt:573:                npc.setCurrentLifepoints((npc.getMaximumLifepoints() / 10).coerceAtLeast(1))
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\mechanics\prayer\Redemption.kt:27: * - Triggers only when `0 < currentLifepoints < maxLifepoints / 10` (donor's own `to <= 0 || to >=
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\areas\wilderness\bork.plugin.kts:190:    // are 25.4 / 8.2 / 10..25 here) - 2 hitpoints, not 20.
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\magic\lunar\lunar_spells.plugin.kts:278:    val cost = player.getMaximumLifepoints() / 10
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\potion\PotionEffects.kt:69:    /** Void `PotionEffects` zamorak brew: (health / 100) * 10 + 20 on x10 = health / 10 + 2 real. */
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\potion\PotionEffects.kt:70:    fun zamorakBrewDamage(p: Player): Int = p.getCurrentLifepoints() / 10 + 2
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\potion\BrewPotions.kt:18: * - Armadyl brew: Attack, Strength, Defence and Magic lowered by floor(current / 10) + 2; Hitpoints floor(base / 10) + 2 "does allow for
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\potion\BrewPotions.kt:19: *   overhealing above the player's maximum Hitpoints" by that amount; Ranged floor(base / 10) + 4.
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\potion\BrewPotions.kt:75:    fun armadylHeal(baseHitpoints: Int): Int = baseHitpoints / 10 + 2
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\activity\pest_control\PestControlMonsters.kt:151:        maximumLifepoints / 10 * players.coerceIn(0, 5) / 5
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\food\Foods.kt:37:        (hitpointsLevel / 10) + (2 * (hitpointsLevel / 25)) + (5 * (hitpointsLevel / 93)) + 2
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\food\Foods.kt:40:    fun sweetcornHeal(hitpointsLevel: Int): Int = 1 + hitpointsLevel / 10
+game/plugins/src/main/kotlin/gg/rsmod/plugins\content\items\food\Foods.kt:156:                // Common: Heals 10% of total health (x10 ledger: 10% of max*10 = the max level)
+game/plugins/src/main/kotlin/gg/rsmod/plugins\api\dsl\NpcCombatDsl.kt:77:                    "definitions record real HP * 10); was ${builder.hitpoints}."
+game/plugins/src/main/kotlin/gg/rsmod/plugins\api\dsl\NpcCombatDsl.kt:79:            combatBuilder.setHitpoints((builder.hitpoints / 10).coerceAtLeast(1))

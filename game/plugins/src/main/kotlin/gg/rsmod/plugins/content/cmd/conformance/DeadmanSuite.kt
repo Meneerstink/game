@@ -55,8 +55,8 @@ import gg.rsmod.plugins.content.combat.getCombatTarget
  * - teleblock: a real Tele Block cast - 500 ticks, 250 with Protect from Magic, a second cast does not refresh it.
  * - phantom: Morrigan's javelin Phantom Strike on a player - the bleed is 10 a tick until 75% of the special's damage (OSRS Wiki).
  * - remote: the shared remote-route gate (RemoteAccess, bug search 2026-10-02) on the real command packet - from a death zone
- *   `dungeon`, `deadmanstore`, `mines` and `pestcontrolnovice` are refused and nothing moves or opens; Tele Blocked in a safe
- *   zone `dungeon` is refused; from a safe zone `dungeon` travels and `deadmanstore` opens (the routes still work).
+ *   `deadmanstore`, `mines` and `pestcontrolnovice` are refused and nothing moves or opens; Tele Blocked in a safe
+ *   zone `pestcontrolnovice` is refused; from a safe zone `pestcontrolnovice` travels and `deadmanstore` opens (the routes still work).
  * - duel: a staked duel through the native screens on real packets (Challenge option, 640, 631 accept, 626 accept) - the
  *   fight starts with the match and both stakes intact (bug search 2026-10-02: closing the confirmation screen declined the
  *   match first), a forfeit pays the winner both stakes with their attributes; a skulled challenger never enters the arena
@@ -1214,6 +1214,7 @@ object DeadmanSuite : Conformance.Suite {
         }
 
         suspend fun place(tile: Tile) {
+            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.leaveLander(r, move = false)
             r.closeInterface(gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
             reset(r, tile)
             r.timers.remove(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)
@@ -1224,8 +1225,6 @@ object DeadmanSuite : Conformance.Suite {
 
         // 1. In a death zone every remote route refuses; nothing moves, nothing opens.
         place(danger)
-        val dungeon = type("dungeon")
-        run.expectTrue(e, "dungeon from a death zone: refused, not moved", r.tile.sameAs(danger) && dungeon.contains("from a safe zone"), "tile=${r.tile} msgs: $dungeon")
         val store = type("deadmanstore")
         run.expectTrue(e, "deadmanstore from a death zone: refused", !gg.rsmod.plugins.content.mechanics.store.StoreUi.isOpen(r) && store.contains("from a safe zone"), "msgs: $store")
         val mines = type("mines")
@@ -1239,17 +1238,19 @@ object DeadmanSuite : Conformance.Suite {
         // 2. A safe zone does not lift Tele Block.
         place(square)
         r.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 100
-        val blocked = type("dungeon")
-        run.expectTrue(e, "dungeon while Tele Blocked: refused, not moved", r.tile.sameAs(square) && blocked.contains("magical force"), "tile=${r.tile} msgs: $blocked")
+        val blocked = type("pestcontrolnovice")
+        run.expectTrue(e, "pestcontrolnovice while Tele Blocked: refused, not moved", r.tile.sameAs(square) && blocked.contains("magical force"), "tile=${r.tile} msgs: $blocked")
 
         // 3. The routes still work from where they are allowed.
         place(square)
         val opened = type("deadmanstore")
         run.expectTrue(e, "deadmanstore from a safe zone: opens", gg.rsmod.plugins.content.mechanics.store.StoreUi.isOpen(r), "msgs: $opened")
         place(square)
-        type("dungeon")
+        type("pestcontrolnovice")
         repeat(4) { wait(1) }
-        run.expectTrue(e, "dungeon from a safe zone: travels", !r.tile.isWithinRadius(square, 64), "tile=${r.tile}")
+        run.expectTrue(e, "pestcontrolnovice from a safe zone: travels", r.tile.sameAs(gg.rsmod.plugins.content.activity.pest_control.PestControlTier.NOVICE.boardTile) &&
+                gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.lobbyOf(r) == gg.rsmod.plugins.content.activity.pest_control.PestControlTier.NOVICE, "tile=${r.tile}")
+        gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.leaveLander(r, move = false)
         reset(r, square)
     }
 
@@ -2076,21 +2077,32 @@ object DeadmanSuite : Conformance.Suite {
         val guard = run.npc(gg.rsmod.plugins.content.mechanics.pvp.CityGuards.MELEE_GUARD_ID, at.transform(0, 3), "FG")
         wait(2)
 
-        /** Orders the familiar at [t]; true when it fights [t] or any hitsplat lands on [label] within 8 ticks. */
+        // Stop the previous control fight, including retaliation/assist and already queued hits. Otherwise an ATTACK_DELAY
+        // from the man is counted as an attack on the next (refused) guard/player. A refusal must happen before targeting.
+        suspend fun stopFights() {
+            listOf(a, c, familiar, man, guard).forEach {
+                it.resetInteractions(); Combat.reset(it); it.interruptQueues(); it.clearHits()
+                it.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
+                it.timers.remove(gg.rsmod.game.model.timer.ACTIVE_COMBAT_TIMER)
+                it.attr.remove(gg.rsmod.game.model.attr.LAST_HIT_BY_ATTR)
+            }
+            wait(1)
+        }
+
+        /** Orders the familiar at [t]; counts only this target, including the immediate command result. */
         suspend fun order(t: gg.rsmod.game.model.entity.Pawn, label: String): Pair<Boolean, Boolean> {
+            stopFights()
             val from = run.world.currentCycle
-            familiar.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY)
-            fc.commandAttack(a, t)
-            var fought = false
+            val accepted = fc.commandAttack(a, t)
+            var fought = accepted || familiar.getCombatTarget() === t
             repeat(8) {
-                if (familiar.getCombatTarget() === t || familiar.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) fought = true
+                if (familiar.getCombatTarget() === t) fought = true
                 (t as? gg.rsmod.game.model.entity.Npc)?.let { n -> n.setCurrentLifepoints(n.getMaximumLifepoints()) }
                 (t as? Client)?.let { p -> p.setCurrentLifepoints(p.getMaximumLifepoints()) }
                 wait(1)
             }
             val hit = hitTypes(run, label, from).isNotEmpty()
-            familiar.resetInteractions(); Combat.reset(familiar)
-            wait(2)
+            stopFights()
             return fought to hit
         }
         val (manFought, _) = order(man, "FM")
@@ -2098,6 +2110,7 @@ object DeadmanSuite : Conformance.Suite {
         val (guardFought, guardHit) = order(guard, "FG")
         run.expectTrue(e, "an unskulled owner cannot send his familiar at a guard", !guardFought && !guardHit, "fought=$guardFought hit=$guardHit",
             "OSRS Wiki Guard (Deadman Mode): only attackable inside the guarded area while skulled")
+        stopFights()
         // A scroll special cast straight at a target (Spirit wolf Howl) goes through the same rules.
         familiar.resetInteractions(); Combat.reset(familiar)
         a.inventory.add(gg.rsmod.plugins.content.skills.summoning.SummoningScrollData.HOWL_SCROLL.scroll, 5)

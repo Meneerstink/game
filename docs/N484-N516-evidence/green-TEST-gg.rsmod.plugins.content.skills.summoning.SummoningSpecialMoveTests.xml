@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" tests="11" skipped="0" failures="0" errors="0" timestamp="2026-11-01T10:12:48" hostname="LAPTOP-KLOL515N" time="10.718">
+  <properties/>
+  <testcase name="wrong familiar cannot consume testudo scroll or energy" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="6.065"/>
+  <testcase name="ophidian incubation transforms a verified egg but rejects an unmapped item" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="1.128"/>
+  <testcase name="testudo boosts defence and consumes exactly one scroll and twenty points" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.07"/>
+  <testcase name="winter storage banks one selected item and consumes resources only on success" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.498"/>
+  <testcase name="immense heat opens the jewellery crafting interface only with a gold bar and consumes one scroll and six points" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.3"/>
+  <testcase name="blood drain deals flat self-damage, cures poison and requires six lifepoints" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.1"/>
+  <testcase name="N516 Howl refuses a guard without spending resources and still works on a man or woman" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="1.613"/>
+  <testcase name="herbcall spawns a grimy herb and consumes exactly one scroll and twelve points" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.1"/>
+  <testcase name="steel of legends queues four ranged strikes and consumes once" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.788"/>
+  <testcase name="dispatcher resolves the right binding by active familiar, not a component id" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.017"/>
+  <testcase name="swallow whole heals for the cooked fish's value and consumes exactly one scroll and three points" classname="gg.rsmod.plugins.content.skills.summoning.SummoningSpecialMoveTests" time="0.034"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 01, 2026 11:12:48 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

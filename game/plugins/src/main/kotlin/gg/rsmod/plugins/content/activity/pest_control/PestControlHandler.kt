@@ -111,8 +111,11 @@ object PestControlHandler {
         player: Player,
         tier: PestControlTier,
     ) {
-        if (gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.refuse(player, "board a Pest Control lander")) return
-        board(player, tier)
+        // N516: the command moves the player to the outpost immediately, before departure. Apply the full remote-travel
+        // gate here too, for all three tiers; a Tele Block must not allow that first move across the world.
+        gg.rsmod.plugins.content.mechanics.pvp.RemoteAccess.travel(player, "board a Pest Control lander") {
+            board(player, tier)
+        }
     }
 
     /** Ladder on the lander, logout, or walking/teleporting off the deck. */

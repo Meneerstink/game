@@ -39,6 +39,43 @@ import kotlin.test.assertTrue
 
 class SummoningSpecialMoveTests {
     @Test
+    fun `N516 Howl refuses a guard without spending resources and still works on a man or woman`() {
+        for (id in listOf(1, 4)) {
+            val player = newPlayer(SummoningPouchData.SPIRIT_WOLF.npc)
+            val familiar = Familiar.current(player)!!
+            val world = player.world
+            every { player.timers } returns gg.rsmod.game.model.timer.TimerMap()
+            familiar.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR] = WeakReference(player)
+            every { familiar.isDead() } returns false
+            every { familiar.isSpawned() } returns true
+            every { familiar.invisible } returns false
+            every { world.getMultiCombatRegions() } returns setOf(player.tile.regionId)
+            val plugins = world.plugins
+            every { plugins.canAttack(player, any()) } returns true
+            fun target(npcId: Int): Npc = mockk<Npc>(relaxed = true).also {
+                every { it.id } returns npcId
+                every { it.owner } returns null
+                every { it.world } returns world
+                every { it.tile } returns player.tile.transform(1, 0)
+                every { it.isAlive() } returns true
+                every { it.isSpawned() } returns true
+                every { it.isDead() } returns false
+                every { it.invisible } returns false
+                every { it.def } returns DEFINITIONS.get(gg.rsmod.game.fs.def.NpcDef::class.java, npcId)
+                every { it.combatDef } returns gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT
+            }
+            val scroll = SummoningScrollData.HOWL_SCROLL
+            player.inventory[0] = Item(scroll.scroll, 2)
+            assertFalse(SummoningSpecialMoves.castOnNpc(player, target(gg.rsmod.plugins.content.mechanics.pvp.CityGuards.MELEE_GUARD_ID)))
+            assertEquals(2, player.inventory.getItemCount(scroll.scroll))
+            assertEquals(60, Familiar.currentSpecialPoints(player))
+            assertTrue(SummoningSpecialMoves.castOnNpc(player, target(id)), "Howl on npc $id")
+            assertEquals(1, player.inventory.getItemCount(scroll.scroll))
+            assertEquals(60 - scroll.specialPoints, Familiar.currentSpecialPoints(player))
+        }
+    }
+
+    @Test
     fun `steel of legends queues four ranged strikes and consumes once`() {
         val player = newPlayer(SummoningPouchData.STEEL_TITAN.npc)
         val familiar = Familiar.current(player)!!

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" tests="19" skipped="0" failures="0" errors="0" timestamp="2026-11-01T10:12:13" hostname="LAPTOP-KLOL515N" time="18.659">
+  <properties/>
+  <testcase name="N100 Drop Viewer shows the killer's real chance for every bulk npc table at every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="10.405"/>
+  <testcase name="N92 class - only the fixed rewards, the AFK area and test bots bypass the rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.62"/>
+  <testcase name="N100 breach monsters - the unique chances get the rate, the regular lines are served rarest first, one line per roll" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="2.063"/>
+  <testcase name="N92 rate command - the real rate command prints the rate the player really gains, every skill by name and by number in every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.462"/>
+  <testcase name="N92 bonus XP is gone - with bonus-experience on, a login shows no bonus orb and no gain gets the time-played bonus" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.015"/>
+  <testcase name="N92 class - every skill gains exactly its bracket rate in every bracket and xpMultiplier tells the real gain" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.089"/>
+  <testcase name="N100 Godwars Frozen key pieces - the hit window is rate times wider, capped, nothing above combat 134" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.028"/>
+  <testcase name="N184 quest XP is exact, the Wolf Whistle reward and the Summoning kit follow the rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.155"/>
+  <testcase name="N100 rolls that are not a monster kill stay 1x - boxes, chests, pickpockets, stalls and the bird-nest route" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.682"/>
+  <testcase name="N92 red line - exactly once per rate change at 61, 81 and 96, never at relog, never for an existing account" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.102"/>
+  <testcase name="N100 kill drops - rarest first, one pick per table, guaranteed and quantities stay, nested once" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="2.398"/>
+  <testcase name="N92 class - no command or engine copy of the 2011 level curve call is left" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.714"/>
+  <testcase name="N100 Barrows chest - merged rewards keep the rare bracket chances per roll" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.844"/>
+  <testcase name="N92 owner case - combat 138 with every skill 99 gains combat XP at 20x and skilling XP at 10x" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.002"/>
+  <testcase name="N92 bonus XP command - the staff command that granted a bonus XP access which no longer does anything is gone" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.003"/>
+  <testcase name="N92 rate command - skill aliases, unknown names and numbers outside the skill list never print a made-up rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.012"/>
+  <testcase name="N349 every Deadman lamp gives exactly what the Emblem Trader says, at every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.044"/>
+  <testcase name="N38 a lamp names the experience really gained, also at the 200M cap" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.003"/>
+  <testcase name="N92 rate command - the owner's 138 account, a new account and the tier rise (never down)" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 01, 2026 11:12:16 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

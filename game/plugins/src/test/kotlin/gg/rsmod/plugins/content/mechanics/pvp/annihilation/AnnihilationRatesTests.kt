@@ -497,7 +497,7 @@ class AnnihilationRatesTests {
     }
 
     @Test
-    fun `N100 Barrows chest - every roll stays one result, the rare lines get the bracket factor, the commons give way`() {
+    fun `N100 Barrows chest - merged rewards keep the rare bracket chances per roll`() {
         val armour = Barrows.REWARD_ARMOUR.values.flatMap { it.toList() }.toSet()
         val loopTooth = setOf(gg.rsmod.plugins.api.cfg.Items.LOOP_HALF_OF_A_KEY, gg.rsmod.plugins.api.cfg.Items.TOOTH_HALF_OF_A_KEY)
         val helm = gg.rsmod.plugins.api.cfg.Items.DRAGON_MED_HELM
@@ -514,16 +514,18 @@ class AnnihilationRatesTests {
             var armourN = 0
             var keysN = 0
             var helmN = 0
-            var total = 0
+            // N469 (owner 2026-10-30, 540d8ba42): equal rune/coin rewards are merged, armour is drawn without replacement.
+            // The statistical denominator is the number of rolls, not the number of visible rows after combining.
+            val total = kills * rolls
             repeat(kills) {
                 val items = Barrows.reward(player, rate)
-                assertEquals("seven rolls, ONE result each at ${rate}x", rolls, items.size)
-                total += items.size
+                assertTrue("seven rolls give 1..7 merged rows at ${rate}x", items.size in 1..rolls)
+                assertEquals("N469: no duplicate reward rows", items.size, items.map { it.id }.distinct().size)
                 items.forEach {
                     when (it.id) {
                         in armour -> armourN++
-                        in loopTooth -> keysN++
-                        helm -> helmN++
+                        in loopTooth -> keysN += it.amount
+                        helm -> helmN += it.amount
                     }
                 }
             }
