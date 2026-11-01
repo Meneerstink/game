@@ -97,21 +97,18 @@ class OsrsPetLentSoundsTests {
     }
 
     @Test
-    fun `N88 part 3 - every pet has its voice except the eight nothing can be sourced for, every voice in both caches`() {
-        val silent = setOf("Jal-Nib-Rek", "Mr McGroot", "Pet Kraken", "Phoenix", "Soup", "Tangleroot", "Youngllef", "Bloodhound")
-        val olmSilent = setOf("Olmlet", "Puppadile", "Vanguard", "Vasa Minirio")
+    fun `N88 part 3 - every pet has its voice, every voice in both caches`() {
+        // N480: the owner's later decision (rsps 'every OSRS pet needs sound', sourced per pet) replaced decision 2's eight silent
+        // pets (Jal-Nib-Rek, Mr McGroot, Pet Kraken, Phoenix, Soup, Tangleroot, Youngllef, Bloodhound) and the silent Olmlet forms.
         val voices = OsrsPetImportTool.VOICES.filter { it.line.isEmpty() }
         val missing = mutableListOf<String>()
         OsrsPetRoster.load().forEach { row ->
             val voice = voices.firstOrNull { it.pet == row.pet && it.variant == row.variant } ?: voices.firstOrNull { it.pet == row.pet && it.variant == "*" }
-            val shouldBeSilent = row.pet in silent || (row.pet == "Olmlet" && row.variant in olmSilent)
-            if (shouldBeSilent) {
-                assertTrue(voice == null, "${row.variant} must stay silent (owner decision 2)")
-            } else if (voice == null) {
-                missing += "${row.pet} / ${row.variant}"
-            }
+            if (voice == null) missing += "${row.pet} / ${row.variant}"
         }
-        assertTrue(missing.isEmpty(), "pets without a voice: $missing")
+        // The Bloodhound barks with the 667 dog bark like every dog pet (N296, plugins PetVoices.DOGS / Sfx.PET_DOG_BARK), not through
+        // this OSRS import table; any other pet without a voice fails here.
+        assertEquals(listOf("Bloodhound / Bloodhound"), missing, "pets without a voice")
         val fx = OsrsFxImportTool.existingFx(File(OsrsItemImportTool.ASSET_MAP))
         val table = File(OsrsPetImportTool.VOICE_TABLE).readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { it.split('	') }
         assertEquals(OsrsPetImportTool.VOICES.size, table.size, "pet_voices.tsv is the generated table of VOICES")
