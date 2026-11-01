@@ -56,6 +56,15 @@ class AncientGodswordTests {
     }
 
     @Test
+    fun `only the imported OSRS swing sound plays even when sacrifice hits a player`() {
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/ancient_godsword.plugin.kts").readText()
+        assertEquals(1, Regex("\\.playSound\\(").findAll(script).count(), "one swing cue, no extra cue for attacker or player victim")
+        assertTrue("player.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.GODWARS_GODSWORD_SPECIAL_ATTACK)" in script)
+        assertTrue(script.indexOf(".playSound(") < script.indexOf("if (!landHit)"), "a miss still plays the special cue")
+        assertTrue(".playSound(" !in script.substringAfter("wait(AncientGodsword.MARK_TICKS)"), "the delayed damage and heal stay silent")
+    }
+
+    @Test
     fun `delayed Blood Sacrifice rejects offline victim and attacker`() {
         val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/specialattack/weapons/ancient_godsword.plugin.kts").readText()
         assertTrue("victim is Player && !victim.isOnline" in script)

@@ -1,0 +1,221 @@
+From 0b2593b5891573f06c9705f5ade16a96ccd6e7b4 Mon Sep 17 00:00:00 2001
+From: Meneerstink <utrecht93834@outlook.com>
+Date: Sun, 1 Nov 2026 06:45:22 +0100
+Subject: [PATCH] N519: route quick-prayer icon clicks through their original
+ selection cells
+
+Cache script 1237 gives the 30px quick icons no operations, while 1388 gives
+only their 15px checkboxes Select/Deselect. The icon centre misses that box.
+Use the corresponding 271:42 child as the menu target, retaining its onOp
+hook and server events, and deduplicate the overlapping checkbox/icon hits.
+
+Extend the prayer filter regression with actual component hit testing for
+all books, 0/99 points, filtering, fixed/resizable and normal-mode return.
+Validation: :runescape:prayerFiltersRegression, 4192 assertions.
+---
+ runescape/src/main/java/InterfaceManager.java |  14 ++
+ .../src/main/java/RspsPrayerFilters.java      |  18 +++
+ .../java/RspsPrayerFiltersRegressionTest.java | 133 ++++++++++++++++++
+ 3 files changed, 165 insertions(+)
+
+diff --git a/runescape/src/main/java/InterfaceManager.java b/runescape/src/main/java/InterfaceManager.java
+index 42fb7dfd..d1039fc5 100644
+--- a/runescape/src/main/java/InterfaceManager.java
++++ b/runescape/src/main/java/InterfaceManager.java
+@@ -3231,6 +3231,20 @@ public final class InterfaceManager {
+
+     @OriginalMember(owner = "client!nea", name = "a", descriptor = "(ILclient!hda;II)V")
+     public static void addMiniMenuOptions(@OriginalArg(1) Component component, @OriginalArg(2) int arg1, @OriginalArg(3) int arg2) {
++        // N519: script 1237's quick-mode icons have no ops. Select through the matching 1388 checkbox instead.
++        component = RspsPrayerFilters.quickMenuComponent(component);
++        if (component == null) {
++            return;
++        }
++        if (RspsPrayerFilters.quickSelect() && component.slot == RspsPrayerFilters.QUICK && component.id >= 0) {
++            // The 15px checkbox overlaps its 30px icon: both hit tests can reach this same operation in one frame.
++            for (MiniMenuEntryInner entry = (MiniMenuEntryInner) MiniMenu.innerEntryQueue.first(); entry != null;
++                 entry = (MiniMenuEntryInner) MiniMenu.innerEntryQueue.next()) {
++                if (entry.v3 == component.slot && entry.v2 == component.id) {
++                    return;
++                }
++            }
++        }
+         // Diagnostic logging for gear switcher - log component data when menu opens
+         RspsGearSwitcher.observeMenuComponent(component);
+         // 78Legacy v4: right-click setup "Add Wear / Prayer ... to Script N" (RspsScriptMenu; client only).
+diff --git a/runescape/src/main/java/RspsPrayerFilters.java b/runescape/src/main/java/RspsPrayerFilters.java
+index 7741f373..2f189a50 100644
+--- a/runescape/src/main/java/RspsPrayerFilters.java
++++ b/runescape/src/main/java/RspsPrayerFilters.java
+@@ -737,6 +737,24 @@ public final class RspsPrayerFilters {
+         return c != null && c.id != -1 && c.slot == ICONS;
+     }
+
++    /**
++     * N519: cache script 1388 gives only the 15x15 checkboxes on 271:42 Select/Deselect + onOp 2290. Script 1237
++     * draws separate 30x30 icons on 271:8 and deliberately gives them no ops in quick mode. The icon's centre lies
++     * outside its checkbox, so clicking the prayer yielded only Cancel, also before N482. Use the original checkbox
++     * as the menu target: its own label, hook, child index and server events remain authoritative.
++     */
++    static Component quickMenuComponent(Component c) {
++        if (!quickSelect() || !isPrayer(c)) {
++            return c;
++        }
++        Component quick = InterfaceList.list(QUICK);
++        if (quick == null || quick.hidden || quick.staticComponents == null || c.id >= quick.staticComponents.length) {
++            return null;
++        }
++        Component cell = quick.staticComponents[c.id];
++        return cell == null || cell.hidden ? null : cell;
++    }
++
+     /** InterfaceManager.addMiniMenuOptions: the tab-stone ops, the Filters button, the menu rows, Hide / Unhide. */
+     static boolean addOptions(Component component) {
+         if (component == null) {
+diff --git a/runescape/src/test/java/RspsPrayerFiltersRegressionTest.java b/runescape/src/test/java/RspsPrayerFiltersRegressionTest.java
+index faaaced7..5f7cf15e 100644
+--- a/runescape/src/test/java/RspsPrayerFiltersRegressionTest.java
++++ b/runescape/src/test/java/RspsPrayerFiltersRegressionTest.java
+@@ -104,9 +104,142 @@ public final class RspsPrayerFiltersRegressionTest {
+         RspsPrayerFilters.hiddenSlots.putAll(savedHidden);
+         RspsPrayerFilters.save();
+
++        quickSelectionHitTests();
++
+         System.out.println("RspsPrayerFiltersRegressionTest: " + assertions + " assertions OK");
+     }
+
++    /** N519: real InterfaceManager hit testing, using the geometry emitted by cache scripts 1237 / 1388. */
++    static void quickSelectionHitTests() {
++        InterfaceList.interfaces = new Component[800][];
++        InterfaceList.cache = new Component[800][];
++        InterfaceList.loaded = new boolean[800];
++        Static511.varcs = new int[1100];
++        Mouse mouse = new Mouse();
++        rs2.client.event.mouse.MouseMonitor.instance = mouse;
++        for (int book = 0; book < 3; book++) {
++            RspsPrayerFilters.forcedVarbits.put(RspsPrayerFilters.BOOK_VARBIT, book == 0 ? 0 : 1);
++            RspsPrayerFilters.forcedVarbits.put(RspsPrayerFilters.RUINOUS_VARBIT, book == 2 ? 1 : 0);
++            for (int points : new int[] {0, 99}) {
++                Static581.statLevels[RspsPrayerFilters.PRAYER] = points;
++                for (boolean filtering : new boolean[] {false, true}) {
++                    for (boolean resizable : new boolean[] {false, true}) {
++                        InterfaceManager.resizableScreen = resizable;
++                        RspsPrayerFilters.forcedVarp = (filtering ? 1 << RspsPrayerFilters.BIT_ENABLED : 0)
++                            | 1 << RspsPrayerFilters.BIT_BLOCK_HEALING | 1 << RspsPrayerFilters.BIT_BLOCK_LEVEL;
++                        RspsPrayerFilters.order.put(book, list(RspsPrayerFilters.LEVELS[book].length - 1, 0));
++                        RspsPrayerFilters.hiddenSlots.put(book, new java.util.LinkedHashSet<>(shown(book)));
++                        RspsPrayerFilters.panelOpen = true;
++                        Static511.varcs[RspsPrayerFilters.QUICK_VARC] = 1;
++                        Component[] components = quickFixture(book);
++                        RspsPrayerFilters.layout();
++                        Component[] icons = InterfaceList.list(RspsPrayerFilters.ICONS).staticComponents;
++                        Component[] cells = InterfaceList.list(RspsPrayerFilters.QUICK).staticComponents;
++                        for (int slot = 0; slot < cells.length; slot++) {
++                            Component icon = icons[slot];
++                            check(InterfaceManager.getOp(icon, 0) == null, "1237 quick icon has no native op");
++                            mouse.x = cells[slot].x + 8;
++                            mouse.y = cells[slot].y + 8;
++                            hit(components, mouse);
++                            check(selectionEntries(slot) == 1, "the native checkbox remains selectable");
++                            // The icon centre lies outside the native 15px checkbox: the old hit test produced only Cancel.
++                            mouse.x = icon.x + 15;
++                            mouse.y = icon.y + 2 + 15;
++                            hit(components, mouse);
++                            check(selectionEntries(slot) == 1, "icon centre selects 271:42 slot " + slot + " book=" + book
++                                + " points=" + points + " filters=" + filtering + " resize=" + resizable);
++                            cells[slot].ops[0] = "Deselect";
++                            mouse.x = cells[slot].x + 8;
++                            mouse.y = cells[slot].y + 8;
++                            hit(components, mouse);
++                            check(selectionEntries(slot) == 1, "checkbox/icon overlap has exactly one Deselect entry");
++                            check(RspsPrayerFilters.quickMenuComponent(icon) == cells[slot], "dispatch uses the original checkbox hook and server events");
++                            check(InterfaceManager.serverActiveProperties(cells[slot]).isOpEnabled(0), "server OP1 retained");
++                        }
++                        Static511.varcs[RspsPrayerFilters.QUICK_VARC] = 0; // Confirm returned to the ordinary book.
++                        for (Component icon : icons) {
++                            check(RspsPrayerFilters.quickMenuComponent(icon) == icon, "Confirm restores ordinary menu dispatch");
++                        }
++                        Static511.varcs[RspsPrayerFilters.QUICK_VARC] = 1;
++                        InterfaceList.list(RspsPrayerFilters.QUICK).hidden = true;
++                        check(RspsPrayerFilters.quickMenuComponent(icons[0]) == null, "a hidden quick grid cannot be clicked");
++                    }
++                }
++            }
++        }
++    }
++
++    static Component[] quickFixture(int book) {
++        Component[] all = new Component[50];
++        InterfaceList.interfaces[271] = all;
++        InterfaceList.loaded[271] = true;
++        for (int part : new int[] {4, 5, 7, 8, 42}) {
++            Component layer = new Component();
++            layer.type = Component.TYPE_LAYER;
++            layer.slot = 271 << 16 | part;
++            layer.layer = part == 4 ? -1 : 271 << 16 | (part == 7 || part == 8 ? 5 : 4);
++            layer.originalWidth = layer.width = layer.scrollWidth = 190;
++            layer.originalHeight = layer.height = layer.scrollHeight = 261;
++            if (part == 5) layer.originalY = layer.y = 2;
++            all[part] = layer;
++        }
++        Component icons = all[8], cells = all[42];
++        icons.staticComponents = icons.dynamicComponents = new Component[RspsPrayerFilters.LEVELS[book].length];
++        cells.staticComponents = cells.dynamicComponents = new Component[icons.staticComponents.length];
++        for (int slot = 0; slot < cells.staticComponents.length; slot++) {
++            Component icon = new Component(), cell = new Component();
++            for (Component c : new Component[] {icon, cell}) {
++                c.type = Component.TYPE_GRAPHIC;
++                c.id = slot;
++                c.hasHook = true;
++                c.clickMask = false; // opaque icon centre; no renderer or sprite archive needed
++            }
++            icon.slot = icon.layer = icons.slot;
++            icon.originalX = icon.x = 8 + slot % 5 * 37;
++            icon.originalY = icon.y = 30 + slot / 5 * 35;
++            icon.originalWidth = icon.width = icon.originalHeight = icon.height = 30;
++            cell.slot = cell.layer = cells.slot;
++            cell.originalX = cell.x = 6 + slot % 5 * 37;
++            cell.originalY = cell.y = 28 + slot / 5 * 35;
++            cell.originalWidth = cell.width = cell.originalHeight = cell.height = 15;
++            cell.ops = new String[] {"Select"};
++            cell.onOp = new Object[] {2290, cells.slot, slot};
++            InterfaceManager.serverActiveProperties.put(((long) cell.slot << 32) + slot,
++                new com.jagex.game.runetek6.config.iftype.ServerActiveProperties(2, -1));
++            icons.staticComponents[slot] = icon;
++            cells.staticComponents[slot] = cell;
++        }
++        return all;
++    }
++
++    static void hit(Component[] components, Mouse mouse) {
++        MiniMenu.open = false;
++        MiniMenu.reset();
++        InterfaceManager.logicComponentList(components, -1, 0, 0, 190, 261, 0, 0, mouse.x, mouse.y, mouse.x, mouse.y);
++    }
++
++    static int selectionEntries(int slot) {
++        int count = 0;
++        for (MiniMenuEntryInner e = (MiniMenuEntryInner) MiniMenu.innerEntryQueue.first(); e != null;
++             e = (MiniMenuEntryInner) MiniMenu.innerEntryQueue.next()) {
++            if (e.v3 == RspsPrayerFilters.QUICK && e.v2 == slot && e.v1 == 1
++                && (e.op.equals("Select") || e.op.equals("Deselect"))) count++;
++        }
++        return count;
++    }
++
++    static final class Mouse extends rs2.client.event.mouse.MouseMonitor {
++        int x, y;
++        public void record() { }
++        public boolean isLeftDown() { return false; }
++        public boolean isRightDown() { return false; }
++        public boolean isMiddleDown() { return false; }
++        public void remove() { }
++        public rs2.client.event.mouse.MouseLog removeFirstLog() { return null; }
++        public int getRecordedX() { return x; }
++        public int getRecordedY() { return y; }
++    }
++
+     static void levels(int prayer, int defence) {
+         Static498.statBaseLevels[RspsPrayerFilters.PRAYER] = prayer;
+         Static498.statBaseLevels[RspsPrayerFilters.DEFENCE] = defence;
