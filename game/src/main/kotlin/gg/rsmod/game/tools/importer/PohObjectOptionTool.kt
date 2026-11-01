@@ -79,6 +79,9 @@ object PohObjectOptionTool {
             Edit(13246, listOf(34 to "Remove"), emptyList(), null, listOf(null, null, null, null, null)),
             Edit(13219, listOf(34 to "Remove"), emptyList(), null, listOf(null, null, null, null, null)),
             Edit(13264, listOf(34 to "Remove"), emptyList(), null, listOf(null, null, null, null, null)),
+            // N506 (bug 20261101-000426, OSRS jewellery box): the Ornate Jewellery Box repeats the last destination from its menu
+            // (JewelleryBoxRecent, bound in poh_furniture.plugin.kts only while the cache has this option).
+            Edit(62926, emptyList(), listOf(32 to "Last-destination"), null, listOf(null, "Teleport Menu", "Last-destination", null, null)),
         )
 
     fun isApplied(edit: Edit, def: Rev667LocType): Boolean =
