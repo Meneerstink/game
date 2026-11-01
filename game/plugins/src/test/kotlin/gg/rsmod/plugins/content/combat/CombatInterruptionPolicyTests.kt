@@ -96,7 +96,8 @@ class CombatInterruptionPolicyTests {
     @Test
     fun `teleports still end combat through their own hard reset`() {
         val ext = File(pluginsMain, "content/magic/PawnExt.kt").readText()
-        val prepare = ext.substringAfter("fun Pawn.prepareForTeleport()").substringBefore("}")
+        // The body ends at the first closing brace in column 0 (a lambda inside it, N511 KillGrace, has its own braces).
+        val prepare = ext.substringAfter("fun Pawn.prepareForTeleport()").substringBefore("\n}")
         assertTrue("resetInteractions()" in prepare, "teleport must clear the combat target")
         val combat = File(pluginsMain, "content/combat/combat.plugin.kts").readText()
         assertTrue("if (!pawn.lock.canAttack())" in combat, "a teleport lock must end the combat loop")
