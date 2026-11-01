@@ -887,6 +887,23 @@ object QuestsSuite : Conformance.Suite {
                 "bot at ${bot.tile.x},${bot.tile.z},${bot.tile.height}, fight at ${fight.tile.x},${fight.tile.z},${fight.tile.height}; ${describeScreen(run, bot)}",
             )
         }
+        // N211 (owner 2026-10-22): a triggered foe (Dessous) rises only when its item is used on its object - the bot does exactly that,
+        // through the client's item-on-loc packet, instead of waiting for an arrival spawn that never comes.
+        fight.trigger?.let { trigger ->
+            val slot = (0 until bot.inventory.capacity).firstOrNull { bot.inventory[it]?.id == trigger.item }
+            var obj: gg.rsmod.game.model.entity.GameObject? = null
+            for (dx in -QuestFights.REACH..QuestFights.REACH) for (dz in -QuestFights.REACH..QuestFights.REACH) {
+                if (obj != null) break
+                val t = fight.tile.transform(dx, dz)
+                obj = run.world.chunks.get(t, createIfNeeded = false)
+                    ?.getEntities<gg.rsmod.game.model.entity.GameObject>(t, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                    ?.firstOrNull { it.id == trigger.obj }
+            }
+            run.expectTrue(entry, "$where: the trigger item is in the pack and its object stands at the fight", slot != null && obj != null, "slot=$slot obj=${obj?.tile}")
+            if (slot != null && obj != null) {
+                bot.gameSystem.inject(gg.rsmod.game.message.impl.OpLocTMessage((679 shl 16), slot, trigger.item, obj.tile.x, obj.tile.z, trigger.obj, 0))
+            }
+        }
         var n = 0
         while (n++ < 12 && QuestFights.active(bot) == null && quest.stage(bot) == stage) wait(1)
         val first = QuestFights.active(bot)
