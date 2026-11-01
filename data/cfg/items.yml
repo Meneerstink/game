@@ -290674,3 +290674,9 @@
   tradeable: false
   weight: 4.0
   equipment: null
+- id: 24624
+  name: "Ruinous powers"
+  examine: "A powerful tome filled with the knowledge of dangerous prayers."
+  tradeable: false
+  weight: 0.014
+  equipment: null

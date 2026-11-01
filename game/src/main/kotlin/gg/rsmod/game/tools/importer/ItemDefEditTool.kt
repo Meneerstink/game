@@ -18,7 +18,7 @@ import java.io.File
  *
  * ```
  * edit <cachePath> <itemId> <outFile>
- *      [--name=<text>] [--short=<opcode>:<value>[,...]] [--int=<opcode>:<value>[,...]]
+ *      [--name=<text>] [--str=<opcode>:<text>[;...]] [--short=<opcode>:<value>[,...]] [--int=<opcode>:<value>[,...]]
  *      [--remove=<opcode>[,...]] [--remove-param=<paramId>[,...]] [--int-param=<paramId>:<value>[,...]]
  * ```
  *
@@ -55,7 +55,10 @@ object ItemDefEditTool {
                 library.close()
             }
 
-        val stringOverrides = flags["name"]?.let { mapOf(2 to it) } ?: emptyMap()
+        // N490: --str=<opcode>:<text>[;<opcode>:<text>] sets option texts (35-39 inventory, 30-34 ground); --name is opcode 2.
+        val stringOverrides =
+            (flags["name"]?.let { mapOf(2 to it) } ?: emptyMap()) +
+                (flags["str"]?.split(';')?.filter { it.isNotBlank() }?.associate { pair -> pair.substringBefore(':').trim().toInt() to pair.substringAfter(':') } ?: emptyMap())
         val shortOverrides = parsePairs(flags["short"])
         val intOverrides = parsePairs(flags["int"])
         val removedOpcodes = flags["remove"]?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()

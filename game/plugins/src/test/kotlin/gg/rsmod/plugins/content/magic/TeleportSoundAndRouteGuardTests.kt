@@ -64,16 +64,12 @@ class TeleportSoundAndRouteGuardTests {
                         i = text.indexOf('\n', i).let { if (it < 0) text.length else it }
                         continue
                     }
-                    depth == 0 && text.startsWith("\"\"\"", i) -> {
-                        val end = text.indexOf("\"\"\"", i + 3)
-                        line += text.substring(i, end).count { it == '\n' }
-                        i = end + 3
-                        continue
-                    }
                     depth == 0 && text[i] == '"' -> {
-                        var j = i + 1
-                        while (j < text.length && !(text[j] == '"' && text[j - 1] != '\\')) j++
-                        i = j + 1
+                        // N493: a real string lexer - escapes, raw strings and dollar-brace templates with strings inside them
+                        // (ConsumableTable: a raw-string Regex inside a template of an ordinary string).
+                        val end = skipString(text, i)
+                        line += text.substring(i, end).count { it == '\n' }
+                        i = end
                         continue
                     }
                     text.startsWith("/*", i) -> {
@@ -95,5 +91,53 @@ class TeleportSoundAndRouteGuardTests {
             }
         }
         assertTrue(offenders.isEmpty(), "nested block comment left open across lines (code may be commented out): ${offenders.distinct().take(10)}")
+    }
+
+    /** Index just after the string literal that starts at [start] (one quote or three); the end of [text] when it never closes. */
+    private fun skipString(
+        text: String,
+        start: Int,
+    ): Int {
+        val raw = text.startsWith(TRIPLE, start)
+        var j = start + if (raw) 3 else 1
+        while (j < text.length) {
+            when {
+                raw && text.startsWith(TRIPLE, j) -> {
+                    j += 3
+                    while (j < text.length && text[j] == '"') j++ // a raw string may end on more than three quotes
+                    return j
+                }
+                !raw && text[j] == '\\' -> j += 2
+                !raw && text[j] == '"' -> return j + 1
+                text[j] == '$' && j + 1 < text.length && text[j + 1] == '{' -> j = skipTemplate(text, j + 2)
+                else -> j++
+            }
+        }
+        return text.length
+    }
+
+    /** Index just after the brace that closes a template whose body starts at [start] (strings inside it are skipped whole). */
+    private fun skipTemplate(
+        text: String,
+        start: Int,
+    ): Int {
+        var depth = 1
+        var k = start
+        while (k < text.length) {
+            when (text[k]) {
+                '"' -> {
+                    k = skipString(text, k)
+                    continue
+                }
+                '{' -> depth++
+                '}' -> if (--depth == 0) return k + 1
+            }
+            k++
+        }
+        return text.length
+    }
+
+    private companion object {
+        const val TRIPLE = "\"\"\""
     }
 }

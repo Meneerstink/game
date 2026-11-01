@@ -20490,4 +20490,8 @@ object Items {
 
     // N517 / N503 D9 (owner 2026-11-01): the Deadman chest a PvP death victim receives - clone of 23881 (Deadman starter pack).
     const val DEADMAN_CHEST = 24623
+
+    // N490 (owner 2026-10-31 plan): OSRS item 28775 "Ruinous powers" (OsrsItemImportTool batch ruinous-book, tx-20261101-055020;
+    // options Read / Destroy, tx-20261101-055141) - read once to unlock the Ruinous Powers after Desert Treasure II.
+    const val RUINOUS_POWERS = 24624
 }

@@ -1098,6 +1098,12 @@ object OsrsItemImportTool {
                     Spec(22079), // Inert locator orb
                     Spec(22081), // Locator orb
                 ),
+            // N490 (owner 2026-10-31 17:3x plan): OSRS item 28775 "Ruinous powers" - read once to unlock the Ruinous Powers book
+            // (after Desert Treasure II); untradeable, a drop only.
+            "ruinous-book" to
+                listOf(
+                    Spec(28775), // Ruinous powers
+                ),
         )
     }
 
