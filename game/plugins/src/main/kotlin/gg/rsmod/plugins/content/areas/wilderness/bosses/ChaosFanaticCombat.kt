@@ -34,8 +34,8 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
  * Ids (no Jagex documentation): Kronos-184 data/npcs/combat/Chaos_Fanatic.json (attack ZAROS_VERTICAL_CASTING 1979, defend 425,
  * death 2304) and bosses/ChaosFanatic.java (red projectile 554 + hit spotanim 305, ground projectile 551, explosion 552 on the target
  * tile and 157 on the others, disarm hit 0-5); RuneLite aoewarnings CHAOS_FANATIC_AOE = 551. OSRS spotanims imported with
- * OsrsFxImportTool batch wildy-bosses-1 (tx-20261101-134855): 551 -> 3192, 554 -> 3194, 157 -> 3127, 305 -> 3195; 552 is identical in
- * both caches. Shouts: OSRS Wiki "Transcript:Chaos Fanatic", one on every attack (Kronos, tarnish, Elderscape).
+ * OsrsFxImportTool batch wildy-bosses-1 (tx-20261101-134855): 551 -> 3192, 554 -> 3194, 157 -> 3127, 305 -> 3195 (OSRS 305 is 157
+ * recoloured green), 552 -> 3198 (tx-20261101-192108; the 667 copy of 552 uses seq 3152, which shows nothing). Shouts: OSRS Wiki "Transcript:Chaos Fanatic", one on every attack (Kronos, tarnish, Elderscape).
  * Sounds ADAPTED (OSRS Wiki lists no Chaos Fanatic sound): his red and green projectiles are the Chaos Elemental's confusion and
  * madness projectiles, so their cast / impact synths (OSRS ids 344/346 and 352/353, shared by the 667 cache) are used; the ground
  * explosion plays the OSRS "explosion" synth 1487.
@@ -50,7 +50,7 @@ object ChaosFanaticCombat : CombatScript() {
     const val GFX_RED_PROJECTILE = 3194 // OSRS 554
     const val GFX_RED_HIT = 3195 // OSRS 305
     const val GFX_GREEN_PROJECTILE = 3192 // OSRS 551
-    const val GFX_EXPLOSION_CENTRE = 552 // identical in both caches
+    const val GFX_EXPLOSION_CENTRE = 3198 // OSRS 552 (667 552 uses seq 3152 that shows nothing)
     const val GFX_EXPLOSION = 3127 // OSRS 157
 
     const val MAX_RED = 21

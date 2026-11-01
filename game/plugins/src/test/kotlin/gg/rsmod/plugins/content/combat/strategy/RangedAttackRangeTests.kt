@@ -33,6 +33,8 @@ class RangedAttackRangeTests {
             Items.ADAMANT_THROWNAXE to 4,
             Items.RUNE_THROWNAXE to 4,
             Items.PHOENIX_CROSSBOW to 5,
+            Items.PHOENIX_CROSSBOW_11165 to 5,
+            Items.PHOENIX_CROSSBOW_11167 to 5,
             Items.CROSSBOW to 10,
             Items.TOXIC_BLOWPIPE to 5,
             Items.BLAZING_BLOWPIPE to 5,
