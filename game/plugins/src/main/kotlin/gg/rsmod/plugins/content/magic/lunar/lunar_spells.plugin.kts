@@ -25,6 +25,10 @@ import gg.rsmod.plugins.content.mechanics.poison.Venom
 import gg.rsmod.plugins.content.skills.cooking.CookingData
 import gg.rsmod.plugins.content.skills.summoning.Familiar
 import gg.rsmod.plugins.content.skills.summoning.SummoningPouchData
+import gg.rsmod.plugins.content.skills.farming.LunarFarming
+import gg.rsmod.plugins.content.skills.farming.data.CompostBin
+import gg.rsmod.plugins.content.skills.farming.data.Patch
+import gg.rsmod.game.model.TileGraphic
 
 /**
  * Lunar spellbook (interface 430).
@@ -35,8 +39,8 @@ import gg.rsmod.plugins.content.skills.summoning.SummoningPouchData
  * RuneScape Wiki for experience values.
  *
  * Out of scope / not implemented here: NPC Contact (needs per-NPC dialogue routing), Borrowed
- * Power, Tune Bane Ore, Repair Rune Pouch, Fertile Soil/Cure Plant/Remote Farm
- * (farming). Those buttons currently do nothing.
+ * Power, Tune Bane Ore, Repair Rune Pouch, Remote Farm (farming). Those buttons currently do nothing.
+ * Fertile Soil and Cure Plant (cast on a patch) are at the bottom (N72 deel C, LunarFarming).
  */
 
 /** Group teleports (Tele Group X) ask each nearby player before moving them. */
@@ -668,8 +672,49 @@ on_spell_on_item(fromInterface = 430, fromComponent = SpellbookData.BOOST_POTION
 }
 
 // Spells with no implementation yet (see file header) - bind so the click is at least acknowledged.
-listOf("NPC Contact", "Fertile Soil", "Cure Plant", "Remote Farm").forEach { name ->
+listOf("NPC Contact", "Remote Farm").forEach { name ->
     on_magic_spell_button(name) {
         player.message("This spell is not available yet.")
+    }
+}
+
+/*
+ * N72 deel C: Cure Plant (430:55) and Fertile Soil (430:24) are cast ON a farming patch (spell-on-object); the rules per patch
+ * state live in LunarFarming (OSRS Wiki values and messages). Runes are only paid when the spell does something.
+ */
+fun lunarPatch(player: Player): Pair<LunarFarming.View?, Boolean> {
+    val obj = player.getInteractingGameObj()
+    val patch = Patch.byPatchId(obj.id) ?: return null to (CompostBin.byCompostBinId(obj.id) != null)
+    return LunarFarming.View.of(player.farmingManager().getPatchManager(patch).state) to false
+}
+
+on_spell_on_obj(parent = 430, child = SpellbookData.CURE_PLANT.component) {
+    val (view, bin) = lunarPatch(player)
+    LunarFarming.cureRefusal(view, bin)?.let {
+        player.message(it)
+        return@on_spell_on_obj
+    }
+    val state = player.farmingManager().getPatchManager(Patch.byPatchId(player.getInteractingGameObj().id)!!).state
+    if (player.castLunar(spell(SpellbookData.CURE_PLANT), xp = LunarFarming.CURE_PLANT_MAGIC_XP, animation = LunarFarming.CURE_ANIM,
+            graphic = LunarFarming.CURE_GFX, height = 60, sound = LunarFarming.SOUND)) {
+        state.cure()
+        player.addXp(Skills.FARMING, LunarFarming.CURE_PLANT_FARMING_XP)
+    }
+}
+
+on_spell_on_obj(parent = 430, child = SpellbookData.FERTILE_SOIL.component) {
+    val (view, bin) = lunarPatch(player)
+    LunarFarming.fertileRefusal(view, bin)?.let {
+        player.message(it)
+        return@on_spell_on_obj
+    }
+    val obj = player.getInteractingGameObj()
+    val state = player.farmingManager().getPatchManager(Patch.byPatchId(obj.id)!!).state
+    if (player.castLunar(spell(SpellbookData.FERTILE_SOIL), xp = LunarFarming.FERTILE_SOIL_MAGIC_XP, animation = LunarFarming.FERTILE_ANIM,
+            graphic = -1, sound = LunarFarming.SOUND)) {
+        world.spawn(TileGraphic(obj.tile, LunarFarming.FERTILE_GFX, 60))
+        LunarFarming.fertilise(state)
+        player.addXp(Skills.FARMING, LunarFarming.FERTILE_SOIL_FARMING_XP)
+        player.message("You treat the ${state.patch.patchName} with supercompost.")
     }
 }
