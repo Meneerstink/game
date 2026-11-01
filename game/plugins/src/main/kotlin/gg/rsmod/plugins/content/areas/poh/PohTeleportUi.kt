@@ -130,6 +130,7 @@ object PohTeleportUi {
         }
         Trace.log(Trace.Cat.INTERFACE) { "house teleport ${leaf.name} for ${player.username} from $interfaceId -> $tile" }
         player.canTeleport(leaf.type) {
+            if (interfaceId == JEWELLERY_BOX) JewelleryBoxRecent.remember(player, leaf)
             player.teleport(tile, leaf.type)
         }
     }

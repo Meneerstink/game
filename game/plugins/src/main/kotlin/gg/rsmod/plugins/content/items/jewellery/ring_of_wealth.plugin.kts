@@ -15,11 +15,7 @@ val RING_OF_WEALTH =
         Items.RING_OF_WEALTH_1,
     )
 
-private val LOCATIONS =
-    mapOf(
-        "Miscellania" to Tile(2528, 3859, 0),
-        "Grand Exchange" to Tile(3164, 3460, 0),
-    )
+private val LOCATIONS = gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH
 
 on_equipment_option(item = Items.RING_OF_WEALTH, option = "Rub") {
     player.message(

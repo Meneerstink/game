@@ -13,7 +13,7 @@ import kotlin.test.assertTrue
 
 /**
  * Equip requirements come from `items.yml` `skill_reqs` (ItemMetadataService); the 667 cache carries the client's wield requirements
- * as param pairs 749/750 .. 757/758 (skill id, level). The 2026-09-14 regression audit found native 667 equipment without the cache
+ * as param pairs 749/750 .. 759/760 (skill id, level). The 2026-09-14 regression audit found native 667 equipment without the cache
  * requirement (1,423, e.g. Dragon platebody 60 Defence), with skill and level swapped (126, e.g. Third-age range top) and 29 value
  * conflicts. The conflicts were decided per OSRS Wiki item page (decision (d)): Mystic robes "require 40 Magic and 20 Defence",
  * pickaxes/axes need only Attack to wield ("41 Mining to use, and 40 Attack to equip"), Spiny helmet "5 Defence", lit bug lantern
@@ -24,6 +24,8 @@ import kotlin.test.assertTrue
 class ItemSkillRequirementsCacheAuditTests {
     private val osrsOverrides: Map<Int, Map<Int, Int>> =
         mapOf(
+            // N479, owner: same rules as all Void. RS Wiki /w/Void_knight_equipment includes Defence 42.
+            Items.VOID_KNIGHT_DEFLECTOR_19712 to (0..6).associateWith { if (it == 5) 22 else 42 },
             14497 to mapOf(1 to 40, 6 to 70), 14499 to mapOf(1 to 40, 6 to 70), 14501 to mapOf(1 to 40, 6 to 70),
             14732 to mapOf(1 to 40, 6 to 70), 14733 to mapOf(1 to 40, 6 to 70), 14734 to mapOf(1 to 40, 6 to 70),
             Items.ABYSSAL_TENTACLE to mapOf(0 to 75),
@@ -40,7 +42,7 @@ class ItemSkillRequirementsCacheAuditTests {
             Items.INITIATE_CUISSE to mapOf(1 to 20, 5 to 10),
         )
 
-    private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+    private val library = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString())
 
     @AfterTest
     fun close() {
@@ -59,7 +61,7 @@ class ItemSkillRequirementsCacheAuditTests {
     /** The cache wield requirements, or null when a pair is malformed (skill outside 0-24 or level outside 1-120). */
     private fun cacheRequirements(def: ItemDef): Map<Int, Int>? {
         val out = LinkedHashMap<Int, Int>()
-        for (k in 749..757 step 2) {
+        for (k in 749..759 step 2) {
             val skill = def.params[k]
             val level = def.params[k + 1]
             if (skill == null && level == null) continue

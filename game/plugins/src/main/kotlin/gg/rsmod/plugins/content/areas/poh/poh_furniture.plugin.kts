@@ -92,6 +92,13 @@ on_obj_option(obj = PlayerHouse.ARMOUR_STAND, option = "repair") {
 
 // ------------------------------------------------------------------ the PvP/PvM room
 
+// N506: cache 62926 currently has only Teleport Menu; Claude adds Last-destination separately.
+if (if_obj_has_option(obj = PlayerHouse.JEWELLERY_BOX, option = JewelleryBoxRecent.OPTION)) {
+    on_obj_option(obj = PlayerHouse.JEWELLERY_BOX, option = JewelleryBoxRecent.OPTION) {
+        JewelleryBoxRecent.repeat(player)
+    }
+}
+
 // Ornate Jewellery Box (OSRS 37520): the OSRS jewellery box screen (OSRS 590) with the six jewellery items' destinations.
 on_obj_option(obj = PlayerHouse.JEWELLERY_BOX, option = "teleport menu") {
     PohTeleportUi.openJewelleryBox(player)
