@@ -26,7 +26,11 @@ private val ESTATE_AGENTS = listOf(Npcs.ESTATE_AGENT, Npcs.ESTATE_AGENT_6715)
 ESTATE_AGENTS.forEach { npcId ->
     if (if_npc_has_option(npc = npcId, option = "talk-to")) {
         on_npc_option(npc = npcId, option = "talk-to") {
-            player.queue { estateAgentChat(this) }
+            player.queue {
+                // N410: the Estate agent sells the Construction cape to a real 99 (OSRS Wiki "Cape of Accomplishment").
+                if (gg.rsmod.plugins.content.skills.SkillcapeSeller.offer(this, npcId)) return@queue
+                estateAgentChat(this)
+            }
         }
     }
 }

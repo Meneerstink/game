@@ -33,6 +33,11 @@ object SkillcapeSeller {
             Npcs.LARRIAR to Skillcapes.RUNECRAFTING,
             Npcs.HUNTING_EXPERT to Skillcapes.HUNTER,
             Npcs.PIKKUPSTIX to Skillcapes.SUMMONING,
+            // N410 (ChatGPT-B cape table 11-01: "Herblore/Farming/Construction missen verkooproute"): OSRS Wiki - the Estate
+            // agents sell the Construction cape. Kaqemeex (Herblore) and Martin the Master Gardener (Farming) sell it through
+            // their own dialogue ([sell]).
+            Npcs.ESTATE_AGENT to Skillcapes.CONSTRUCTION,
+            Npcs.ESTATE_AGENT_6715 to Skillcapes.CONSTRUCTION,
         )
 
     /** The skill behind a cape: the enum follows the 667 skill ids (Attack 0 ... Summoning 23). */
@@ -61,6 +66,22 @@ object SkillcapeSeller {
         if (task.options("May I buy a skillcape, please?", "Something else.") != 1) return false
         buy(task, cape, name)
         return true
+    }
+
+    /**
+     * A master's own "sell me a skillcape" choice (Kaqemeex, Martin the Master Gardener): the same purchase for a real 99,
+     * otherwise a short refusal - never a dead end.
+     */
+    suspend fun sell(
+        task: QueueTask,
+        cape: Skillcapes,
+    ) {
+        val name = Skills.getSkillName(task.player.world, skill(cape))
+        if (!has99(task.player, cape)) {
+            task.chatNpc("I can only sell a Skillcape of $name to someone", "who has truly mastered the skill.")
+            return
+        }
+        buy(task, cape, name)
     }
 
     private suspend fun buy(

@@ -26,4 +26,20 @@ class SkillcapeSellerTests {
         assertEquals(Skills.RUNECRAFTING, SkillcapeSeller.skill(Skillcapes.RUNECRAFTING))
         assertEquals(Skills.SUMMONING, SkillcapeSeller.skill(Skillcapes.SUMMONING))
     }
+
+    @Test
+    fun `N410 - every one of the 24 skillcapes can be bought from a master, never only from Max`() {
+        val sources =
+            java.io.File("src/main/kotlin/gg/rsmod/plugins/content").walkTopDown()
+                .filter { it.isFile && (it.name.endsWith(".kts") || it.name.endsWith(".kt")) }
+                .map { it.readText() }
+                .filter { "purchaseSkillcape(" in it || "SkillcapeSeller.sell(" in it }
+                .toList()
+        val missing =
+            Skillcapes.values().filter { cape ->
+                cape !in SkillcapeSeller.SELLERS.values && sources.none { "Skillcapes.${cape.name}" in it }
+            }
+        assertTrue(missing.isEmpty(), "no master sells: $missing")
+        assertEquals(Skillcapes.CONSTRUCTION, SkillcapeSeller.SELLERS[Npcs.ESTATE_AGENT])
+    }
 }

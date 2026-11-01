@@ -511,7 +511,13 @@ on_spell_on_player(430, SpellbookData.STAT_SPY.component) {
     }
 }
 
-/** Dream: sit and recover life points five times faster until moved or attacked. */
+/**
+ * Dream: sit and recover life points until moved or attacked. N72 deel C (OSRS Wiki Dream: "1 HP every 20 seconds", three times
+ * the normal rate, on its own timer): 10 life points every 33 ticks (was 5 every 5 ticks, over three times OSRS).
+ */
+val DREAM_HEAL_TICKS = 33
+val DREAM_HEAL = 10
+
 on_magic_spell_button("Dream") { metadata ->
     if (player.getCurrentLifepoints() >= player.getMaximumLifepoints()) {
         player.message("You have no need to dream - your life points are full.")
@@ -523,9 +529,9 @@ on_magic_spell_button("Dream") { metadata ->
             player.graphic(1056)
             player.animate(6296)
             while (player.getCurrentLifepoints() < player.getMaximumLifepoints()) {
-                wait(5)
+                wait(DREAM_HEAL_TICKS)
                 if (player.isDead() || player.hasMoveDestination() || player.isAttacking()) break
-                player.heal(5)
+                player.heal(DREAM_HEAL)
                 player.graphic(1056)
             }
             player.animate(6297)
@@ -593,7 +599,10 @@ on_magic_spell_button("Spellbook Swap") { metadata ->
             return@queue
         }
         MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
-        player.addXp(Skills.MAGIC, 96.0, checkBrawlingGloves = true)
+        // N72 deel C (OSRS Wiki Spellbook Swap: 130 XP, a cast; Void SpellbookSwap seq 6299 / gfx 1062; was 96 XP, no cast).
+        player.animate(6299)
+        player.graphic(1062)
+        player.addXp(Skills.MAGIC, 130.0, checkBrawlingGloves = true)
         SpellbookSwap.start(player, book)
         player.message("You have 2 minutes before your spellbook changes back to the Lunar spellbook!")
     }

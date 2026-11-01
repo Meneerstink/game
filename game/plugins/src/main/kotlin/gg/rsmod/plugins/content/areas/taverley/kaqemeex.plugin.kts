@@ -148,7 +148,9 @@ suspend fun postQuest(it: QueueTask) { // dialogue available AFTER druidic ritua
             circlesDialogue(it)
         }
         4 -> {
-            // TODO: Add skillcape dialogue.
+            // N410: the Herblore cape (OSRS Wiki "Cape of Accomplishment": Kaqemeex) - was a dead option.
+            it.chatPlayer("Can you sell me a skillcape?")
+            gg.rsmod.plugins.content.skills.SkillcapeSeller.sell(it, gg.rsmod.plugins.content.skills.Skillcapes.HERBLORE)
         }
     }
 }
