@@ -45,6 +45,9 @@ object CollectionLogPages {
             "king black dragon" to listOf("Prince black dragon", "Kbd heads", "Draconic visage", "Dragon pickaxe"),
             "kalphite queen" to listOf("Kalphite princess", "Kq head", "Jar of sand", "Dragon 2h sword", "Dragon chainbody", "Dragon pickaxe"),
             "chaos elemental" to listOf("Pet chaos elemental", "Dragon 2h sword", "Dragon pickaxe"),
+            // N522: OSRS Wiki Collection log "Chaos Fanatic" / "Crazy Archaeologist" (3 items each).
+            "chaos fanatic" to listOf("Odium shard 1", "Malediction shard 1", "Pet chaos elemental"),
+            "crazy archaeologist" to listOf("Odium shard 2", "Malediction shard 2", "Fedora"),
             "corporeal beast" to listOf("Pet dark core", "Elysian sigil", "Spectral sigil", "Arcane sigil", "Holy elixir", "Jar of spirits"),
             "giant mole" to listOf("Baby mole", "Mole skin", "Mole claw"),
             "general graardor" to listOf("Pet general graardor", "Bandos chestplate", "Bandos tassets", "Bandos boots", "Bandos hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),

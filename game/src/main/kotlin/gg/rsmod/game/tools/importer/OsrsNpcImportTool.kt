@@ -100,6 +100,9 @@ object OsrsNpcImportTool {
             // Swap option changes to - Ornate combat dummy 8598, wilderness 10508, kalphite 10509, kurask 10510, vampyre 10511,
             // dragon 10512 (npc ids from the wiki's variant table).
             "poh-dummy" to listOf(10507, 8598, 10508, 10509, 10510, 10511, 10512),
+            // N522 bundle 1 (owner 2026-11-01 "alle osrs wilderness bosses"): OSRS Wiki infobox ids Chaos Fanatic 6619 and Crazy
+            // archaeologist 6618 and the scenery "Miniature chaotic clouds" 6620 that wander round the fanatic (classic frames: OsrsNpcProbeTool).
+            "wildy-bosses-1" to listOf(6619, 6618, 6620),
         )
     }
 
@@ -140,6 +143,11 @@ object OsrsNpcImportTool {
             // Muncher 39571 -> 8749, the portals 39548/39549 -> 8750, 39582 -> 8751, Death's desk 39570 -> 8752) and the swirl
             // behind the item on Death's Coffer screen (OSRS interface 670:7 -> 7301).
             "deaths-office" to listOf(6853, 8749, 8750, 8751, 8752, 7301),
+            // wildy-bosses-1: their stand sequences are imported OSRS human ones, so combat plays the OSRS human sequences too.
+            // Kronos-184 data/npcs/combat Chaos_Fanatic / Crazy_archaeologist + bosses/CrazyArchaeologist.java (melee 423):
+            // ZAROS_VERTICAL_CASTING 1979, HUMAN_UNARMED_DEF 425, MACRO_SANDWICH_LADY_KNOCKOUT 2304 (death), BOOK_CHUCK 3353,
+            // HUMAN_UNARMEDKICK 423 (RuneLite gameval AnimationID names).
+            "wildy-bosses-1" to listOf(1979, 425, 2304, 3353, 423),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
             "deadman-breach" to

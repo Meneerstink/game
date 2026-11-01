@@ -20494,4 +20494,7 @@ object Items {
     // N490 (owner 2026-10-31 plan): OSRS item 28775 "Ruinous powers" (OsrsItemImportTool batch ruinous-book, tx-20261101-055020;
     // options Read / Destroy, tx-20261101-055141) - read once to unlock the Ruinous Powers after Desert Treasure II.
     const val RUINOUS_POWERS = 24624
+    // N522 bundle 1: OSRS item 11990 "Fedora" (Crazy archaeologist drop; OsrsItemImportTool batch wildy-bosses-1, tx-20261101-135009).
+    const val FEDORA = 24625
+    const val FEDORA_NOTED = 24626
 }

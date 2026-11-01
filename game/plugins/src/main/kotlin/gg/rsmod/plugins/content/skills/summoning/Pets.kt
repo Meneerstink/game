@@ -115,8 +115,13 @@ object Pets {
         val tier: Int,
         val dropNpcs: Set<Int>,
         val dropRate: Int,
+        /** N522: a drop npc with its own OSRS rate (`npc:rate` in pet_tiers.tsv; Pet chaos elemental 1/300 elemental, 1/1,000 fanatic). */
+        val npcRates: Map<Int, Int> = emptyMap(),
     ) {
         val dropOnly: Boolean get() = dropNpcs.isNotEmpty()
+
+        /** The OSRS 1/N rate of [npcId]: its own rate, else the pet's [dropRate]. */
+        fun rateFor(npcId: Int): Int = npcRates[npcId] ?: dropRate
     }
 
     @Volatile
@@ -246,11 +251,20 @@ object Pets {
         lines.filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
             val c = line.split('\t')
             require(c.size >= 2) { "bad pet tier line '$line'" }
-            val npcs = c.getOrNull(2)?.split(',')?.mapNotNull { it.trim().toIntOrNull() }?.toSet() ?: emptySet()
+            // A drop npc is `id` (the pet's rate) or `id:rate` (its own OSRS rate).
+            val entries = c.getOrNull(2)?.split(',')?.map { it.trim() }?.filter { it.isNotEmpty() } ?: emptyList()
+            val npcRates = HashMap<Int, Int>()
+            val npcs =
+                entries.map { e ->
+                    val parts = e.split(':')
+                    val id = parts[0].trim().toIntOrNull() ?: error("pet '${c[0]}' bad drop npc '$e'")
+                    if (parts.size > 1) npcRates[id] = parts[1].trim().toIntOrNull()?.takeIf { it > 0 } ?: error("pet '${c[0]}' bad rate in '$e'")
+                    id
+                }.toSet()
             val rate = c.getOrNull(3)?.trim()?.toIntOrNull() ?: 0
             require(c[1].trim().toInt() in 1..3) { "pet '${c[0]}' tier must be 1..3" }
             require(npcs.isEmpty() == (rate == 0)) { "pet '${c[0]}' needs both drop npcs and a drop rate, or neither" }
-            PetInfo(c[0], c[1].trim().toInt(), npcs, rate)
+            PetInfo(c[0], c[1].trim().toInt(), npcs, rate, npcRates)
         }
 
     fun install(
@@ -714,14 +728,14 @@ object Pets {
     ): Award? = variantOfItem(item)?.let { award(player, it.pet, item, purchased) }
 
     /**
-     * The kill roll's chance per kill of [npcId]: the OSRS 1 / [PetInfo.dropRate] times the killer's Annihilation drop rate [rate]
+     * The kill roll's chance per kill of [npcId]: the OSRS 1 / [PetInfo.rateFor] times the killer's Annihilation drop rate [rate]
      * (N313, owner 2026-10-24: "de bracket-boost geldt voor pets" - Pet Zilyana 1/5,000 becomes 1/1,000 at 5x), at most 1; 0 for an
      * npc without a pet. [roll] and the Drop Viewer (N108: Normal = 1x, Your chance = the player's rate) both read it.
      */
     fun dropChance(
         npcId: Int,
         rate: Double = 1.0,
-    ): Double = dropFor(npcId)?.let { (rate.coerceAtLeast(1.0) / it.dropRate).coerceAtMost(1.0) } ?: 0.0
+    ): Double = dropFor(npcId)?.let { (rate.coerceAtLeast(1.0) / it.rateFor(npcId)).coerceAtMost(1.0) } ?: 0.0
 
     /** The kill roll of `on_npc_killed`: [dropChance] at the killer's kill rate per kill of one of the pet's boss npcs. */
     fun roll(

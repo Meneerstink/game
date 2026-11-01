@@ -149,6 +149,12 @@ object OsrsFxImportTool {
             // 667 curse Wrath (OSRS Wiki File:Wrath.gif). RuneLite gameval SpotanimID NEX_MUSHROOM_CLOUD_PROJANIM 2012,
             // NEX_MUSHROOM_CLOUD_SPOTANIM 2013, NEX_MUSHROOM_CLOUD_SPOTANIM_SMALL 2014 (Nex's own Wrath, the same effect).
             "ruinouswrath" to listOf(2012, 2013, 2014),
+            // N522 bundle 1: Chaos Fanatic and Crazy archaeologist graphics whose OSRS definition differs from the 667 one with the
+            // same id. 552 (the explosion on the target's tile) has a byte-identical spotanim definition but showed nothing in the 667 client
+            // (test client 2026-11-01: its rev-667 sequence 3152 differs), so it is imported too. Ids: Kronos-184 bosses/ChaosFanatic.java (554 attack, 551 ground,
+            // 157 explosion, 305 disarm hit), tarnish projectile_definitions "Chaos Fanatic Range" (553 cast), RuneLite gameval
+            // SpotanimID CRAZY_ARCHAEOLOGIST_BOOK 1259 / _BOOK_SPECIAL 1260, RuneLite aoewarnings CHAOS_FANATIC_AOE 551.
+            "wildy-bosses-1" to listOf(551, 553, 554, 157, 305, 1259, 1260, 552),
         )
 
     /**

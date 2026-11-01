@@ -12961,5 +12961,9 @@ object Npcs {
     const val THIRD_AGE_RANGER = 14404 // 8636
     const val THIRD_AGE_MAGE = 14405 // 8637
     const val WATSON = 14406 // 7303
+    // N522 bundle 1 (owner 2026-11-01): OsrsNpcImportTool batch wildy-bosses-1, tx-20261101-134931; OSRS id in the comment.
+    const val CHAOS_FANATIC = 15052 // 6619
+    const val CRAZY_ARCHAEOLOGIST = 15053 // 6618
+    const val MINIATURE_CHAOTIC_CLOUDS = 15054 // 6620 (scenery round the Chaos Fanatic, tx-20261101-140025)
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }
