@@ -63,7 +63,7 @@ on_npc_option(npc = Npcs.AZZANADRA, option = "talk-to") {
                 "not given away to passers-by.",
                 facialExpression = FacialExpression.CALM_TALK,
             )
-            // N489: the Ruinous Powers need only the Prayer level (owner 2026-10-31), so he switches those books for everyone.
+            // N490: Ruinous is independent of Curses; switchBook requires DT2 and the consumed drop.
             when (options("Switch me to the Ruinous Powers.", "Switch me to the normal prayers.", "I'll leave you to your rest.")) {
                 1 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
                 2 -> AncientCurses.switchBook(player, AncientCurses.PrayerBook.NORMAL)

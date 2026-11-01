@@ -64,7 +64,7 @@ object QuestGuideUi {
         mapOf(
             DesertTreasure to "Ancient Magicks<br>spellbook",
             LunarDiplomacy to "Lunar spellbook<br>and Vengeance",
-            DesertTreasureII to "Ancient rings and<br>ancient sceptres",
+            DesertTreasureII to "Rings, sceptres and<br>Ruinous (book needed)",
             TempleAtSenntisten to "Ancient Curses<br>prayer book",
             KingsRansom to "Piety and<br>Chivalry",
             DragonSlayerII to "Ava's assembler<br>and Myths' Guild",

@@ -10,6 +10,8 @@ import gg.rsmod.plugins.content.drops.DropTable
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.drops.GUARANTEED_TABLE_NAME
 import gg.rsmod.plugins.content.mechanics.prayer.PrayerScrolls
+import gg.rsmod.plugins.content.mechanics.prayer.RuinousBookDrops
+import gg.rsmod.plugins.content.mechanics.prayer.RuinousUnlocks
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachLoot
 import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters
@@ -172,7 +174,20 @@ object DropSources {
     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
         val base = viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
-        return personal(player, source, base)
+        val personal = personal(player, source, base)
+        // N490: only the new drop line; ownership/unlock is personal and must never enter the shared view cache.
+        val kind = ruinousSource(player.world, source) ?: return personal
+        val chance = 1.0 / kind.denominator
+        val eligible = RuinousUnlocks.eligibleForDrop(player)
+        val line = Line("ruinous", Items.RUINOUS_POWERS, itemName(player.world, Items.RUINOUS_POWERS), "1",
+            if (eligible) chance else 0.0, chance, note = if (eligible) null else "Already unlocked or owned")
+        return View(personal.always, sorted(player.world, personal.lines + line))
+    }
+
+    fun ruinousSource(world: World, source: Source): RuinousBookDrops.Source? = when (source.kind) {
+        Kind.CHEST -> RuinousBookDrops.Source.CHEST
+        Kind.NPC, Kind.BREACH, Kind.GUARDIAN, Kind.JAD -> RuinousBookDrops.sourceOf(world, if (source.kind == Kind.NPC) source.tableNpc else source.modelNpc)
+        else -> null
     }
 
     /** Lines that depend on the player himself: the emblem (only without one), a chest pet he already owns. */

@@ -64,6 +64,9 @@ class RuinousPowersTests {
         var icon = -1
         every { player.prayerIcon } answers { icon }
         every { player.prayerIcon = any() } answers { icon = firstArg() }
+        // N490: mechanics fixtures represent a player who completed DT2 and consumed the drop.
+        gg.rsmod.plugins.content.quests.foundation.DesertTreasureII.setStage(player, gg.rsmod.plugins.content.quests.foundation.DesertTreasureII.completedValue)
+        player.attr[RuinousUnlocks.UNLOCKED] = true
         AncientCurses.switchBook(player, AncientCurses.PrayerBook.RUINOUS)
         return player
     }

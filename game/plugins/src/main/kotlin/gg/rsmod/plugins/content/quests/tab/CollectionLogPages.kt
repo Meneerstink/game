@@ -126,12 +126,12 @@ object CollectionLogPages {
         // the pets without a boss here; N306 the breach page has the breach bosses' own pets, no chest pets.
         val chestPets = DeadmanChestLoot.pets().map { it.second }.distinct()
         fun gearFirst(items: List<Int>) = items.distinct().sortedBy { if (DropGroups.category(world, it) == DropGroups.Group.GEAR) 0 else 1 }
-        val chestItems = (gearFirst(DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList()) + chestPets).distinct()
+        val chestItems = (gearFirst(DeadmanChestLoot.FIXED.map { it.item } + PrayerScrolls.SCROLLS.toList() + Items.RUINOUS_POWERS) + chestPets).distinct()
         pages += Page("chest", Category.DEADMAN, "Deadman's Chest", listOf("chest"), chestItems, "Deadman's Chests opened")
         val breaches = sources.filter { it.kind == DropSources.Kind.BREACH }
         val breachKeys = breaches.map { it.key }
         val breachPets = breaches.flatMap { it.npcs.toList() }.mapNotNull { Pets.dropFor(it)?.pet }.distinct().mapNotNull { Pets.baseItem(it) }.sortedBy { name(it) }
-        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList()) + breachPets).distinct()
+        val breachItems = (gearFirst(BreachLoot.MEGA_RARE + BreachLoot.RARE.map { it.item } + listOfNotNull(BreachIds.ARCHAIC_EMBLEM_TIER_5.takeIf { it > 0 }) + PrayerScrolls.SCROLLS.toList() + Items.RUINOUS_POWERS) + breachPets).distinct()
         pages += Page("breach", Category.DEADMAN, "Breaches", breachKeys, breachItems, "Breach monster kills")
         // ---- Clues: the elite casket's uniques.
         val elite = runCatching { EliteCasketTable.itemProbabilities() }.getOrNull()
@@ -146,6 +146,8 @@ object CollectionLogPages {
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
         // ---- Other: N423 (owner 2026-10-29 23:4x: "alle 5 in de Collection Log") the five burden trinkets - three drop, two are sold.
         pages += Page("burden_trinkets", Category.OTHER, "Burden Trinkets", emptyList(), gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.values().map { it.item })
+        // N490: includes Revenants and the chest guardian, which have no regular boss log page.
+        pages += Page("ruinous", Category.OTHER, "Ruinous Powers", sources.filter { DropSources.ruinousSource(world, it) != null }.map { it.key }, listOf(Items.RUINOUS_POWERS))
         // ---- Other: every pet.
         val pets = Pets.infos.keys.mapNotNull { Pets.baseItem(it) }.distinct().sortedBy { name(it) }
         if (pets.isNotEmpty()) pages += Page("pets", Category.OTHER, "All Pets", emptyList(), pets)
@@ -161,7 +163,8 @@ object CollectionLogPages {
         val view = DropSources.view(player, boss, 1.0)
         val chances = DropSources.itemChances(view)
         if (osrs != null) {
-            return osrs.mapNotNull { want -> chances.keys.firstOrNull { name(it) == want.lowercase() } }.distinct()
+            val ruinous = listOfNotNull(Items.RUINOUS_POWERS.takeIf { it in chances })
+            return (osrs.mapNotNull { want -> chances.keys.firstOrNull { name(it) == want.lowercase() } } + ruinous).distinct()
         }
         // No OSRS page: the pet and the rare lines of the boss's own table (1/100 or rarer), never a shared table's lines.
         val out = ArrayList<Int>()

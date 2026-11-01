@@ -12,6 +12,8 @@ import gg.rsmod.plugins.content.quests.Quest.Companion.getQuest
  */
 on_login {
     QuestStatus.login(player)
+    // N490 V6: legacy quests must be restored before validating the saved Ruinous book.
+    gg.rsmod.plugins.content.mechanics.prayer.RuinousUnlocks.login(player)
     player.setEvents(interfaceId = 190, component = 18, to = 399, setting = 30)
 }
 
