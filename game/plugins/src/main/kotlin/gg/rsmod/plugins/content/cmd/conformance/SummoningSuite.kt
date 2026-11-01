@@ -403,6 +403,10 @@ object SummoningSuite : Conformance.Suite {
                 ?.count { it.item == cargoId && it.isOwnedBy(bot) } ?: 0
             run.check(e, "BoB cargo falls where it died (D16)", onGround, "owner 2026-11-01" to 1)
             run.check(e, "nothing to Death's Office", BeastOfBurden.deathsDomainCount(bot) - office0, "D16" to 0)
+            // Tidy up: the dropped cargo would otherwise lie in the next suite's arena (conform deadman 11-01 counted a Bronze bar).
+            run.world.chunks.get(deathTile, createIfNeeded = false)
+                ?.getEntities<gg.rsmod.game.model.entity.GroundItem>(deathTile, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                ?.filter { it.item == cargoId && it.isOwnedBy(bot) }?.forEach { run.world.remove(it) }
         }
         run.recording.untrack(fam)
     }
