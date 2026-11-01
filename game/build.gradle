@@ -841,6 +841,13 @@ task runPohObjectOptionTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.PohObjectOptionTool'
 }
 
+task runQuickPrayerZeroPointsTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N483: quick prayers can be chosen at 0 Prayer points (new clientscript 5401 = 2295 without the points check, called by 2290 and 5). Usage: --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.QuickPrayerZeroPointsTool'
+}
+
 task runFeroxFollowupTool(type: JavaExec) {
     group = 'tools'
     description = 'Ferox follow-up: remove BH + green FFA portal placements and rename the home teleport spell string (A7 CacheTransaction on both caches). Usage: --args="plan|apply"'
