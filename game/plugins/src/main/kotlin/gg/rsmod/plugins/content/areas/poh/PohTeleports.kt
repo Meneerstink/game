@@ -120,7 +120,7 @@ object PohTeleports {
                                 "Monastery" to Tile(3052, 3490, 0), "Ranging Guild" to Tile(2654, 3441, 0),
                             ),
                         ),
-                        Branch("Ring of wealth", fixed(Items.RING_OF_WEALTH_4, "Miscellania" to Tile(2528, 3859, 0), "Grand Exchange" to Tile(3164, 3460, 0))),
+                        Branch("Ring of wealth", fixed(Items.RING_OF_WEALTH_4, *gg.rsmod.plugins.content.magic.teleports.JewelleryDestinations.RING_OF_WEALTH.toList().toTypedArray())),
                         Branch(
                             "Ring of slaying",
                             fixed(

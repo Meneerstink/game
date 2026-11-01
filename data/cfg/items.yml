@@ -239874,7 +239874,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
-    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}]
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 5, 'level': 22}, {'skill': 6, 'level': 42}]
 - id: 19713
   name: "Junk"
   examine: "It's an Junk"
@@ -290655,7 +290655,7 @@
     remove_beard: false
     remove_arms: false
     attack_audio: -1
-    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}]
+    skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 5, 'level': 22}, {'skill': 6, 'level': 42}]
 - id: 24621
   name: "Void knight deflector (l) (broken)"
   examine: "A broken void knight shield."
