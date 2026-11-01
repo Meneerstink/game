@@ -301,6 +301,14 @@ task runOsrsRegionImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsRegionImportTool'
 }
 
+task runOsrsLocOffsetPatchTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Re-encodes an imported OSRS loc type on its own id with a height offset (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsLocOffsetPatchTool --args="<batch> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsLocOffsetPatchTool'
+}
+
 task runCurseTooltipCacheTool(type: JavaExec) {
     group = 'tools'
     description = 'Prayer-tab hover texts of the curses and Augury/Rigour (CacheTransaction, both caches). ' +

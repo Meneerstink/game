@@ -32,6 +32,10 @@ object OsrsRegionImportTool {
             // the three surface entrances "Cavern" 26762 (OSRS square 12861: 3231,3936 / 3231,3951 / 3241,3949); the exits "Crevice"
             // 26763 are inside 12961. Transports: Kronos-184 activities/wilderness/Scorpia.java.
             "scorpia-pit" to Batch(listOf(12961), listOf(26762), "Scorpion Pit cave (Scorpia)"),
+            // N522 bundle 2: the "Volcanic Forge" 26755 where the odium / malediction shards become wards (OSRS Wiki "Volcanic Forge";
+            // OSRS square 13373 places two at 3366,3937 and 3367,3937 rot 2). Only the loc type: the rev-667 surface stays, the
+            // server places it (Kronos-184 activities/wilderness/Volcano.java).
+            "volcanic-forge" to Batch(emptyList(), listOf(26755), "Volcanic Forge (wards)"),
         )
 
     class Plan(

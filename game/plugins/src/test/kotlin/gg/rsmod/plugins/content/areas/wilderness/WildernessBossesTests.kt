@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.areas.wilderness.bosses.ChaosFanaticCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.CrazyArchaeologistCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaPit
+import gg.rsmod.plugins.content.areas.wilderness.bosses.VolcanicForge
 import gg.rsmod.plugins.content.quests.tab.CollectionLogPages
 import gg.rsmod.plugins.content.skills.summoning.Pets
 import java.io.File
@@ -174,5 +175,20 @@ class WildernessBossesTests {
         assertEquals(53, Tile(3234, 10340).getWildernessLevel())
         assertEquals(55, Tile(3232, 10352).getWildernessLevel())
         assertEquals(listOf("Odium shard 3", "Malediction shard 3", "Scorpia's offspring"), CollectionLogPages.OSRS["scorpia"])
+    }
+
+    @Test
+    fun `N522 bundle 2 - the Volcanic Forge decodes from the cache and turns each set of three shards into its own ward`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, ObjectDef::class.java)
+        assertEquals("Volcanic Forge", definitions.get(ObjectDef::class.java, VolcanicForge.FORGE).name)
+        assertEquals(6, VolcanicForge.SHARDS.size)
+        listOf(Items.ODIUM_SHARD_1, Items.ODIUM_SHARD_2, Items.ODIUM_SHARD_3).forEach { assertEquals(VolcanicForge.Ward.ODIUM, VolcanicForge.SHARDS[it]) }
+        listOf(Items.MALEDICTION_SHARD_1, Items.MALEDICTION_SHARD_2, Items.MALEDICTION_SHARD_3).forEach {
+            assertEquals(VolcanicForge.Ward.MALEDICTION, VolcanicForge.SHARDS[it])
+        }
+        assertEquals(Items.ODIUM_WARD, VolcanicForge.Ward.ODIUM.ward)
+        assertEquals(Items.MALEDICTION_WARD, VolcanicForge.Ward.MALEDICTION.ward)
+        assertTrue(VolcanicForge.TILES.all { it.getWildernessLevel() >= 50 }, "the forge stands in the deep Wilderness")
     }
 }
