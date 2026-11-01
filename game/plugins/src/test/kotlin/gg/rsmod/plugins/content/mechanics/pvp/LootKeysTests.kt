@@ -108,7 +108,7 @@ class LootKeysTests {
     }
 
     @Test
-    fun `loot keys are always lost on death, even for an unskulled player with Protect Item`() {
+    fun `loot keys are always lost on death, even for an unskulled player keeping 3`() {
         val inventory = arrayOfNulls<Item>(28)
         inventory[0] = Item(Items.LOOT_KEY, 1)
         inventory[1] = whip
@@ -116,7 +116,7 @@ class LootKeysTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = arrayOfNulls(14),
-                itemProtectionActive = true,
+                keepCount = 3,
                 valueProvider = ItemRiskValueProvider { 1 },
                 alwaysLost = LootKeys::isKey,
             )

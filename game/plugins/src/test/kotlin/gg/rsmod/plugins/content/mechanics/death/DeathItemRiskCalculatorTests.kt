@@ -6,8 +6,8 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 /**
- * Regression tests for [DeathItemRiskCalculator]: the keep-1 rule (owner 2026-09-26: Protect Item keeps 1 item,
- * skulled or not), combined inventory+equipment
+ * Regression tests for [DeathItemRiskCalculator]: the keep count ([DeathRules.keepCount], N503 D2: 3 on an unskulled monster
+ * death, otherwise 0), combined inventory+equipment
  * ranking, stack-quantity preservation, and the [ItemRiskValueProvider]
  * abstraction actually driving the ranking (rather than a hardcoded field).
  */
@@ -19,7 +19,7 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = false,
+                keepCount = 0,
                 valueProvider = valueProviderOf(),
             )
 
@@ -35,7 +35,7 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = valueProviderOf(),
             )
 
@@ -45,10 +45,31 @@ class DeathItemRiskCalculatorTests {
     }
 
     @Test
-    fun `the keep count is the one shared DeathRules constant`() {
-        assertEquals(DeathRules.PROTECT_ITEM_KEEP, DeathItemRiskCalculator.protectedItemCount(itemProtectionActive = true))
-        assertEquals(1, DeathRules.PROTECT_ITEM_KEEP)
-        assertEquals(0, DeathItemRiskCalculator.protectedItemCount(itemProtectionActive = false))
+    fun `N503 D2 - the keep count is 3 on an unskulled monster death, 0 skulled, 0 on every PvP death`() {
+        assertEquals(3, DeathRules.keepCount(DeathContext.PVM_SAFE, skulled = false))
+        assertEquals(0, DeathRules.keepCount(DeathContext.PVM_SAFE, skulled = true))
+        assertEquals(0, DeathRules.keepCount(DeathContext.WILDERNESS_PVP, skulled = false))
+        assertEquals(0, DeathRules.keepCount(DeathContext.WILDERNESS_PVP, skulled = true))
+    }
+
+    @Test
+    fun `N503 D2 - keep 3 keeps the three most valuable single items across both containers`() {
+        val inventory = arrayOfNulls<Item?>(28).also {
+            it[0] = Item(995, 1000)
+            it[1] = Item(1, 1)
+            it[2] = Item(2, 1)
+        }
+        val equipment = arrayOfNulls<Item?>(14).also { it[3] = Item(3, 1) }
+        val values = mapOf(995 to 1L, 1 to 50L, 2 to 5L, 3 to 500L)
+        val result =
+            DeathItemRiskCalculator.calculate(
+                inventory = inventory,
+                equipment = equipment,
+                keepCount = DeathRules.keepCount(DeathContext.PVM_SAFE, skulled = false),
+                valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
+            )
+        assertEquals(listOf(3, 1, 2), result.protected.map { it.item.id })
+        assertEquals(listOf(995 to 1000), result.lost.map { it.item.id to it.item.amount })
     }
     @Test
     fun `protection ranks across inventory and equipment combined`() {
@@ -62,14 +83,14 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = equipment,
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
             )
         val equipFirst =
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = equipment,
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = ItemRiskValueProvider { if (it == 3) 500L else values[it] ?: 0L },
             )
 
@@ -98,7 +119,7 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
             )
 
@@ -124,7 +145,7 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = ItemRiskValueProvider { values[it] ?: 0L },
             )
 
@@ -145,14 +166,14 @@ class DeathItemRiskCalculatorTests {
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = lowFirst,
             )
         val resultB =
             DeathItemRiskCalculator.calculate(
                 inventory = inventory,
                 equipment = emptyEquipment(),
-                itemProtectionActive = true,
+                keepCount = 1,
                 valueProvider = highFirst,
             )
 

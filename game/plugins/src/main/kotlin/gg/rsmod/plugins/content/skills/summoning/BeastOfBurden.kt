@@ -102,6 +102,127 @@ object BeastOfBurden {
 
     val allKeys = storageByPouch.values.map { it.key } + PET_KEYS.values
 
+    /** N503 D17: the largest pack a pet can have (the Pack yak trinket), so every pet's own pack fits any follower pack. */
+    const val PET_PACK_CAPACITY = 30
+
+    /**
+     * N503 D17 (owner 2026-11-01: "upgraded pet oppakken: items blijven in de pet"): every pet has its own pack, keyed by the pet's
+     * base item (one per pet, not per trinket size like [PET_KEYS]). While the pet is out its items are in the follower pack of its
+     * trinket size; Pick-up, dismiss, Shoo and a monster death put them in here ([stowPetCargo]), and the pet coming out again
+     * takes them back ([unstowPetCargo]). Registered for every pet by `pets.plugin.kts`, so they are saved with the account and
+     * counted as owned (Possessions).
+     */
+    fun petPackKey(baseItem: Int): ContainerKey = ContainerKey("$PET_PACK_PREFIX$baseItem", capacity = PET_PACK_CAPACITY, stackType = ContainerStackType.NORMAL)
+
+    const val PET_PACK_PREFIX = "bob_petpack_"
+
+    /** The follower pack (its trinket size) and the own pack of the pet with item [petItem]; null for a plain pet. */
+    private fun petPacks(
+        player: Player,
+        petItem: Int?,
+    ): Pair<ContainerKey, ContainerKey>? {
+        val pet = petItem?.let { Pets.variantOfItem(it)?.pet } ?: return null
+        val tier = BurdenTrinkets.upgradeOf(player, pet) ?: return null
+        val own = Pets.baseItem(pet)?.let { petPackKey(it) } ?: return null
+        return PET_KEYS.getValue(tier) to own
+    }
+
+    /** Moves every stack of [from] into [to] (attributes kept); what does not fit stays. Returns the number of stacks moved whole. */
+    private fun moveAll(
+        from: ItemContainer,
+        to: ItemContainer,
+    ): Int {
+        var moved = 0
+        for (slot in 0 until from.capacity) {
+            val item = from[slot] ?: continue
+            val added = to.addPreservingAttr(item, assureFullInsertion = false).completed
+            from[slot] = if (added >= item.amount) null else Item(item, item.amount - added)
+            if (added >= item.amount) moved++
+        }
+        return moved
+    }
+
+    /**
+     * D17: the pet [petItem] (the one out) leaves - its follower pack goes into its own pack. Works without the npc (a login that
+     * puts the pet in the backpack). Returns how many stacks it keeps.
+     */
+    fun stowPetCargo(
+        player: Player,
+        petItem: Int? = Pets.itemOf(player),
+    ): Int {
+        val (follower, own) = petPacks(player, petItem) ?: return 0
+        val held = player.containers[follower] ?: return 0
+        if (held.rawItems.none { it != null }) return 0
+        val moved = moveAll(held, container(player, own))
+        synchronise(player)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet pack stowed: $moved stacks into ${own.name} for ${player.username}" }
+        return moved
+    }
+
+    /** D17: the upgraded pet that just came out takes its own pack back into its follower pack. Returns the stacks left behind. */
+    fun unstowPetCargo(player: Player): Int {
+        if (Familiar.current(player) != null) return 0
+        val (follower, own) = petPacks(player, Pets.itemOf(player)) ?: return 0
+        val stored = player.containers[own] ?: return 0
+        if (stored.rawItems.none { it != null }) return 0
+        moveAll(stored, container(player, follower))
+        val left = stored.rawItems.count { it != null }
+        if (left > 0) player.message("Your pet can't carry everything it has stored: $left ${if (left == 1) "item stays" else "items stay"} with it until it has room.")
+        synchronise(player)
+        return left
+    }
+
+    /** D17: how many stacks [pet]'s own pack holds (0 when the pet has none). */
+    fun petPackCount(
+        player: Player,
+        pet: String,
+    ): Int {
+        val base = Pets.baseItem(pet) ?: return 0
+        return player.containers[petPackKey(base)]?.rawItems?.count { it != null } ?: 0
+    }
+
+    /**
+     * D19 (owner 2026-11-01: "melding bij inloggen"): how many pets carry items - each pet's own pack, plus the follower pack of the
+     * upgraded pet that is out.
+     */
+    fun petsCarrying(player: Player): Int {
+        val stowed = player.containers.entries.count { (key, held) -> key.name.startsWith(PET_PACK_PREFIX) && held.rawItems.any { it != null } }
+        val out = if (isUpgradedPetOut(player) && storedCount(player) > 0) 1 else 0
+        return stowed + out
+    }
+
+    /** D19: the login line, or null when no pet carries anything. */
+    fun petsCarryingMessage(player: Player): String? =
+        when (val n = petsCarrying(player)) {
+            0 -> null
+            1 -> "1 of your pets still carries items."
+            else -> "$n of your pets still carry items."
+        }
+
+    /**
+     * N503 D16 (owner 2026-11-01, OSRS): a beast of burden that dies while its owner lives drops what it carried on the ground where
+     * it died - the owner's own ground items (the normal drop times), not Death's Office.
+     */
+    fun dropAtFamiliar(
+        player: Player,
+        tile: gg.rsmod.game.model.Tile,
+    ): Int {
+        val key = activeKey(player) ?: return 0
+        val held = container(player, key)
+        var dropped = 0
+        for (slot in 0 until held.capacity) {
+            val item = held[slot] ?: continue
+            player.world.spawn(gg.rsmod.game.model.entity.GroundItem(Item(item), tile, player))
+            held[slot] = null
+            dropped++
+        }
+        if (dropped > 0) {
+            player.message("$RECOVERY_RED Your familiar's items have fallen to the ground where it died.")
+            synchronise(player)
+        }
+        return dropped
+    }
+
     /** The carrying contract for [pouch], for [SummoningLedger] to check against the ledger. */
     fun storageFor(pouch: SummoningPouchData): Storage? = storageByPouch[pouch]
 

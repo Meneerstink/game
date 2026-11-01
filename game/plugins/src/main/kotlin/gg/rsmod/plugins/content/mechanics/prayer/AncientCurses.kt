@@ -592,6 +592,12 @@ object AncientCurses {
         val player = task.player
         when (slot) {
             AncientCurse.PROTECT_ITEM_SLOT -> {
+                // N503 D1: Protect Item does not work in Deadman Mode - the curse slot says so too.
+                if (player.attr[UNLOCKED_ATTR] == true) {
+                    player.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
+                    ProtectItemDisabled.refuse(player)
+                    return
+                }
                 if (player.attr[UNLOCKED_ATTR] != true) {
                     player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
                     return
@@ -630,7 +636,8 @@ object AncientCurses {
     }
 
     fun selectedQuickCurseSlots(player: Player): List<Int> =
-        (AncientCurse.PROTECT_ITEM_SLOT..AncientCurse.TURMOIL_SLOT).filter {
+        // N503 D1: Protect Item never takes part in a quick set.
+        ((AncientCurse.PROTECT_ITEM_SLOT + 1)..AncientCurse.TURMOIL_SLOT).filter {
             player.getVarbit(AncientCurse.QUICK_VARBIT_BASE + it) != 0
         }
 
@@ -641,6 +648,11 @@ object AncientCurses {
         val varbit = AncientCurse.QUICK_VARBIT_BASE + slot
         if (player.getVarbit(varbit) != 0) {
             player.setVarbit(varbit, 0)
+            return
+        }
+        if (slot == AncientCurse.PROTECT_ITEM_SLOT) {
+            player.setVarbit(varbit, 0)
+            ProtectItemDisabled.refuse(player)
             return
         }
         if (player.attr[UNLOCKED_ATTR] != true || player.skills.getMaxLevel(Skills.PRAYER) < level) {

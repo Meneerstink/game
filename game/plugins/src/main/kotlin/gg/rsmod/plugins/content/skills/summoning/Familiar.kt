@@ -779,7 +779,8 @@ object Familiar {
         val owner = npc.attr[DAMAGE_CREDIT_ATTR]?.get() as? Player ?: return
         if (owner.attr[FAMILIAR_ATTR]?.get() !== npc) return
         if (BeastOfBurden.isBobNpc(npc.id)) {
-            BeastOfBurden.release(owner)
+            // N503 D16 (owner 2026-11-01, OSRS): its items fall where it died, as the owner's ground items - not to Death's Office.
+            BeastOfBurden.dropAtFamiliar(owner, npc.tile)
         }
         // Overnight 2026-10-02 block 6: the death was silent unless a player landed the killing blow (NpcCombatAudio.onDeath
         // only reached the killer) - the owner and everyone near hear it now, whoever killed it.

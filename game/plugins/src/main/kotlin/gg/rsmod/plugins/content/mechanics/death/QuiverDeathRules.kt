@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.World
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.content.items.osrs.DizanasQuiver
@@ -74,7 +73,7 @@ object QuiverDeathRules {
         killer: Player?,
         ammo: List<Item>,
     ) {
-        ammo.forEach { world.spawn(GroundItem(it, victim.tile, killer)) }
+        ammo.forEach { world.spawn(PvpLootTimes.groundItem(it, victim.tile, killer)) }
     }
 
     private fun strip(

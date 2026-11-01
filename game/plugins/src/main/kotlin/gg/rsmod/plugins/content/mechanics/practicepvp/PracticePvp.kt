@@ -134,6 +134,12 @@ object PracticePvp {
      * per [grant] being called before [startMatch]). */
     fun isHoldingTempGear(player: Player): Boolean = player.attr[GRANTED_SLOTS_ATTR] != null
 
+    /**
+     * N514 / N503 D11 (owner 2026-11-01): a death in a Practice PvP match - or while still holding its free preset - is a safe death:
+     * nothing is lost, nobody gets loot, no gravestone (SafeDeath, like the Duel Arena and Clan Wars).
+     */
+    fun safeDeath(player: Player): Boolean = player.attr[IN_MATCH_ATTR] == true || isHoldingTempGear(player)
+
     /** Call on death, manual leave, and logout - always safe/idempotent. */
     fun cleanup(player: Player) {
         val slots = player.attr[GRANTED_SLOTS_ATTR]

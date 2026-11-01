@@ -105,8 +105,8 @@ object ClientHud {
         for (item in items) {
             if (item.item != itemId || !item.canBeViewedBy(player)) continue
             amount += item.amount
-            // World.cycle: an item despawns once currentCycle reaches gItemDespawnDelay; world spawns (respawnCycles set) never do.
-            val remaining = if (item.respawnCycles != -1) Int.MAX_VALUE else maxOf(0, world.gameContext.gItemDespawnDelay - item.currentCycle)
+            // World.cycle: an item despawns once currentCycle reaches its despawnAt (N503: PvP loot has its own); world spawns (respawnCycles set) never do.
+            val remaining = if (item.respawnCycles != -1) Int.MAX_VALUE else maxOf(0, item.despawnAt(world) - item.currentCycle)
             if (first == null || remaining < soonest) {
                 soonest = remaining
                 first = item

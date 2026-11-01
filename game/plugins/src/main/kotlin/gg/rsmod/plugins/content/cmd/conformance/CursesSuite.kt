@@ -68,6 +68,12 @@ object CursesSuite : Conformance.Suite {
             if (!only(name)) continue
             val from = run.world.currentCycle
             run.progress("curses: $name")
+            // N503 D1 (owner 2026-11-01): Protect Item no longer activates - the click is refused (protectItemDeath checks it).
+            if (c["slot"].asInt() == AncientCurse.PROTECT_ITEM_SLOT) {
+                protectItemRefused(run, bot, "curse ${name.lowercase()}", curse = true)
+                run.window("curse ${name.lowercase()}", from)
+                continue
+            }
             try {
                 activation(run, bot, c, ref, "curse ${name.lowercase()}", curse = true)
             } catch (e: Throwable) {
@@ -111,6 +117,11 @@ object CursesSuite : Conformance.Suite {
                     putObject("level").put("novite", levels.getOrNull(p.slot) ?: -1)
                     putObject("drain_s_per_tenth").put("novite", drains.getOrNull(p.slot) ?: -1.0)
                 }
+            if (p == Prayer.PROTECT_ITEM) {
+                protectItemRefused(run, bot, "prayer ${p.name.lowercase()}", curse = false)
+                run.window("prayer ${p.name.lowercase()}", from)
+                continue
+            }
             try {
                 activation(run, bot, node, ref, "prayer ${p.name.lowercase()}", curse = false)
             } catch (e: Throwable) {
@@ -240,6 +251,23 @@ object CursesSuite : Conformance.Suite {
      * reference treated Novite's closePrayers groups as "shared membership closes", which is not how Novite's switchPrayer works
      * (each slot closes a list of groups) - reference\prayer\curses.json _about.
      */
+    /** N503 D1: a click on Protect Item leaves it off and says why (ProtectItemDisabled). */
+    private suspend fun QueueTask.protectItemRefused(
+        run: Conformance.Run,
+        bot: Client,
+        e: String,
+        curse: Boolean,
+    ) {
+        offAll(bot, curse)
+        bot.setCurrentPrayerPoints(99)
+        val from = run.world.currentCycle
+        Bots.button(bot, BOOK, BOOK_GRID, 1, if (curse) AncientCurse.PROTECT_ITEM_SLOT else Prayer.PROTECT_ITEM.slot)
+        wait(2)
+        run.check(e, "stays off (D1: disabled in Deadman)", Prayers.isActive(bot, Prayer.PROTECT_ITEM), "owner 2026-11-01" to false)
+        val said = run.recording.of(bot.username, "msg").filter { it.cycle >= from }.any { gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE in it.text }
+        run.expectTrue(e, "says why", said, "message '${gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE}'")
+    }
+
     private suspend fun QueueTask.pairs(
         run: Conformance.Run,
         bot: Client,
@@ -701,7 +729,10 @@ object CursesSuite : Conformance.Suite {
         offAll(bot, true)
     }
 
-    /** Protect Item (prayer slot 10 and curse slot 0) keeps one item on death (server rule DeathRules.PROTECT_ITEM_KEEP). */
+    /**
+     * N503 D1/D2 (owner 2026-11-01, OSRS Deadman): Protect Item (prayer slot 10, curse slot 0) cannot be switched on and keeps nothing;
+     * an unskulled monster death keeps 3 items, a skulled one none (DeathRules.keepCount).
+     */
     private suspend fun QueueTask.protectItemDeath(
         run: Conformance.Run,
         bot: Client,
@@ -711,15 +742,21 @@ object CursesSuite : Conformance.Suite {
         bot.inventory.add(Item(Items.ABYSSAL_WHIP))
         bot.inventory.add(Item(Items.AMULET_OF_FURY))
         bot.inventory.add(Item(Items.DRAGON_CLAWS))
+        bot.inventory.add(Item(Items.DRAGON_BOOTS))
         val rules = gg.rsmod.plugins.content.mechanics.death.DeathRules
         val value = rules.rankValue(run.world)
-        fun kept() = gg.rsmod.plugins.content.mechanics.death.DeathResolver.resolve(bot, null, valueProvider = value).itemRisk.protectedItemCount
+        fun kept(skulled: Boolean) =
+            gg.rsmod.plugins.content.mechanics.death.DeathResolver.resolve(
+                bot, null, skulled = skulled, valueProvider = value,
+                contextOverride = gg.rsmod.plugins.content.mechanics.death.DeathContext.PVM_SAFE,
+            ).itemRisk.protectedItemCount
         for (ancient in listOf(false, true)) {
             book(bot, ancient)
             val name = if (ancient) "curse" else "prayer"
-            run.check(e, "items kept without Protect Item ($name book)", kept(), "server rule (DeathRules)" to 0)
             click(bot, if (ancient) AncientCurse.PROTECT_ITEM_SLOT else Prayer.PROTECT_ITEM.slot)
-            run.check(e, "items kept with Protect Item ($name book)", kept(), "server rule (DeathRules)" to rules.PROTECT_ITEM_KEEP)
+            run.check(e, "Protect Item stays off ($name book)", Prayers.isActive(bot, Prayer.PROTECT_ITEM), "D1: disabled in Deadman" to false)
+            run.check(e, "monster death, unskulled ($name book)", kept(false), "D2: 3 most valuable" to rules.PVM_UNSKULLED_KEEP)
+            run.check(e, "monster death, skulled ($name book)", kept(true), "D2: none" to 0)
             offAll(bot, ancient)
         }
         bot.inventory.removeAll()

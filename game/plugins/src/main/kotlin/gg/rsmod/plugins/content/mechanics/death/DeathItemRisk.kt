@@ -38,14 +38,8 @@ data class DeathItemRiskResult(
  */
 object DeathItemRiskCalculator {
     /**
-     * The number of single items a player keeps on death: [DeathRules.keepCount] (owner 2026-09-26 - Protect Item keeps
-     * exactly 1, skulled or not; nothing otherwise). [itemProtectionActive] must reflect an *active* Protect Item
-     * prayer/Ancient-Curse effect at the time of death, not merely an unlocked prayer level.
-     */
-    fun protectedItemCount(itemProtectionActive: Boolean): Int = DeathRules.keepCount(itemProtectionActive)
-    /**
      * Calculates protected vs. lost items across [inventory] and [equipment] combined, keeping
-     * the [protectedItemCount] most valuable *individual items* and losing the rest.
+     * the [keepCount] most valuable *individual items* ([DeathRules.keepCount], N503 D2) and losing the rest.
      *
      * Owner 2026-09-18 (MAJOR, "exactly RuneScape"): the kept count is a count of single items,
      * not of stacks. Ranking is by [valueProvider]'s per-unit value; a stack contributes one
@@ -74,7 +68,7 @@ object DeathItemRiskCalculator {
     fun calculate(
         inventory: Array<Item?>,
         equipment: Array<Item?>,
-        itemProtectionActive: Boolean,
+        keepCount: Int,
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
         alwaysLost: (itemId: Int) -> Boolean = { false },
@@ -92,8 +86,6 @@ object DeathItemRiskCalculator {
         // the items in the inventory, but not associated with the loot keys themselves").
         val forcedLost = slots.filter { !alwaysProtected(it.item.id) && alwaysLost(it.item.id) }
         val remaining = slots.filterNot { alwaysProtected(it.item.id) || alwaysLost(it.item.id) }
-
-        val keepCount = protectedItemCount(itemProtectionActive)
 
         // Stable sort (Kotlin's sortedByDescending preserves relative order of
         // equal keys), so equally-valued stacks keep their original slot order.

@@ -66,7 +66,7 @@ class OptionTitleSwordsTests {
             }
         }
         println("[N499] titles that leave the narrow swords:\n" + rows.sorted().joinToString("\n"))
-        assertTrue(rows.any { "items stored in your pet" in it }, "the pet warning is one of them")
+        // N503 D17 (2026-11-01): the "Warning: items stored in your pet!" question is gone - an upgraded pet keeps its items.
         assertTrue(tooWide.isEmpty(), "wider than the 480 px title line:\n" + tooWide.joinToString("\n"))
     }
 }

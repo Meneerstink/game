@@ -43,6 +43,23 @@ class GroundItem private constructor(
 
     internal var respawnCycles = -1
 
+    /**
+     * N503 (owner 2026-11-01 D5/D7/D8): this item's own timing, in cycles since it appeared. Null = the world's
+     * gItemPublicDelay / gItemDespawnDelay (every ordinary drop keeps 1 + 1 minute); PvP death loot sets its own
+     * (1 minute for the killer, then 4 minutes in the Wilderness or 60 outside it).
+     */
+    var publicCycles: Int? = null
+
+    /** N503: when this item despawns, counted from its appearance like [currentCycle]; null = the world's despawn delay. */
+    var despawnCycles: Int? = null
+
+    fun publicAt(world: World): Int = publicCycles ?: world.gameContext.gItemPublicDelay
+
+    fun despawnAt(world: World): Int = despawnCycles ?: world.gameContext.gItemDespawnDelay
+
+    /** N503: two stacks only merge on the ground when they would also disappear at the same moment. */
+    fun sameTiming(other: GroundItem): Boolean = publicCycles == other.publicCycles && despawnCycles == other.despawnCycles
+
     internal val attr = EnumMap<ItemAttribute, Int>(ItemAttribute::class.java)
 
     override val entityType: EntityType = EntityType.GROUND_ITEM

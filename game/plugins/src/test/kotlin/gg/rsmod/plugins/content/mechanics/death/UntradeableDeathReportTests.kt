@@ -80,7 +80,7 @@ class UntradeableDeathReportTests {
             ): String {
                 val p = player(defs)
                 p.inventory[0] = Item(id)
-                val preview = ItemsKeptOnDeath.preview(p, ItemsKeptOnDeath.Toggles(false, false, pvp, deep), value)
+                val preview = ItemsKeptOnDeath.preview(p, ItemsKeptOnDeath.Toggles(skulled = true, killedByPlayer = pvp, deepWilderness = deep), value)
                 if (preview.entries.isEmpty()) return "VANISHES"
                 // A converted item has several lines (the killer gets the base item + kit, the kit to the victim's grave): all of them.
                 if (preview.entries.size > 1 || preview.entries.single().item.id != id) {

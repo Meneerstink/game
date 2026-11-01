@@ -183,14 +183,15 @@ class RuinousPowersTests {
     }
 
     @Test
-    fun `Ruinous Protect Item keeps an item on a PvM death only`() {
+    fun `N503 D1 - Ruinous Protect Item cannot be switched on or quick-selected`() {
         val p = player()
         RuinousPowers.click(p, RuinousPrayer.PROTECT_ITEM.slot)
-        assertEquals(true, p.attr[PROTECT_ITEM_ATTR])
-        assertTrue(RuinousPowers.protectItemCounts(p, pvpDeath = false))
-        assertFalse(RuinousPowers.protectItemCounts(p, pvpDeath = true))
-        RuinousPowers.click(p, RuinousPrayer.PROTECT_ITEM.slot)
-        assertEquals(false, p.attr[PROTECT_ITEM_ATTR])
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.PROTECT_ITEM))
+        assertTrue(p.attr[PROTECT_ITEM_ATTR] != true)
+        RuinousPowers.activate(p, RuinousPrayer.PROTECT_ITEM)
+        assertFalse(RuinousPowers.isActive(p, RuinousPrayer.PROTECT_ITEM), "no route switches it on")
+        RuinousPowers.selectQuick(p, RuinousPrayer.PROTECT_ITEM.slot)
+        assertTrue(RuinousPowers.selectedQuick(p).isEmpty())
     }
 
     @Test

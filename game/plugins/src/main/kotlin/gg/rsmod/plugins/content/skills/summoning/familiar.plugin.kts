@@ -398,6 +398,8 @@ on_login {
     // N423: an upgraded pet's pack with no upgraded pet out to carry it (the trinket or the pet gone meanwhile) goes to Death's
     // Office, as a dismissed familiar's cargo would - never stranded.
     BeastOfBurden.rescueStrandedPetCargo(player)
+    // N503 D19 (owner 2026-11-01): a reminder when pets still carry items in their own packs (D17), so nothing is forgotten.
+    BeastOfBurden.petsCarryingMessage(player)?.let { player.message(it) }
     // N414: every pet the player has (or has in the Collection Log) counts as owned once - Perdu gives a lost one back.
     Pets.observe(player)
     // Unconditional: varps persist, so an account that logged out with a familiar and then lost it

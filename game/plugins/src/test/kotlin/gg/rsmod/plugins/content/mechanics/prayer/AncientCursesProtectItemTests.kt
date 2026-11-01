@@ -16,6 +16,7 @@ import io.mockk.mockk
 import kotlinx.coroutines.runBlocking
 import kotlin.test.Test
 import kotlin.test.assertEquals
+import gg.rsmod.plugins.api.ext.setVarbit
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 
@@ -62,15 +63,18 @@ class AncientCursesProtectItemTests {
     }
 
     @Test
-    fun `quick curse Protect Item uses the level fifty requirement`() {
+    fun `N503 D1 - quick curse Protect Item can never be selected, at any level`() {
         val underLevel = player(AncientCurses.PROTECT_ITEM_LEVEL - 1)
         AncientCurses.switchBook(underLevel, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.selectQuickCurse(underLevel, AncientCurse.PROTECT_ITEM_SLOT)
         assertEquals(emptyList(), AncientCurses.selectedQuickCurseSlots(underLevel))
 
-        val eligible = player(AncientCurses.PROTECT_ITEM_LEVEL)
+        val eligible = player(99)
         AncientCurses.switchBook(eligible, AncientCurses.PrayerBook.ANCIENT)
         AncientCurses.selectQuickCurse(eligible, AncientCurse.PROTECT_ITEM_SLOT)
-        assertTrue(AncientCurses.selectedQuickCurseSlots(eligible).contains(AncientCurse.PROTECT_ITEM_SLOT))
+        assertFalse(AncientCurses.selectedQuickCurseSlots(eligible).contains(AncientCurse.PROTECT_ITEM_SLOT))
+        // An older save with the bit still set: the orb never switches it on.
+        eligible.setVarbit(AncientCurse.QUICK_VARBIT_BASE + AncientCurse.PROTECT_ITEM_SLOT, 1)
+        assertFalse(AncientCurses.selectedQuickCurseSlots(eligible).contains(AncientCurse.PROTECT_ITEM_SLOT))
     }
 }

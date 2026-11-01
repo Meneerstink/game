@@ -193,7 +193,8 @@ object DeathExecutor {
         if (groundItems.isNotEmpty()) {
             val tile = victim.tile
             val owner = result.killer
-            groundItems.forEach { item -> world.spawn(GroundItem(Item(item), tile, owner)) }
+            // N503 (D5/D7/D8): 1 minute for the killer, then Wilderness 4 / elsewhere 60 minutes; without a killer public at once.
+            groundItems.forEach { item -> world.spawn(PvpLootTimes.groundItem(Item(item), tile, owner)) }
             // RuneLite Loot Tracker (PlayerLootReceived): the PK loot that appeared for the killer, one event per kill.
             owner?.let { gg.rsmod.plugins.content.mechanics.hud.LootTracker.playerKill(it, victim.username, groundItems.map { Item(it) }) }
         }

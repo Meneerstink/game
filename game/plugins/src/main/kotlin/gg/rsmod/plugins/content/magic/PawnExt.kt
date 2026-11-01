@@ -54,6 +54,7 @@ fun Player.canTeleport(
             if (!SevenSecondAction.isActive(this)) {
                 SevenSecondAction.start(this, SevenSecondAction.Kind.TELEPORT) {
                     if (validateTeleportRestrictions(type)) {
+                        gg.rsmod.plugins.content.mechanics.pvp.KillGrace.endEarly(this)
                         onConfirmed()
                     }
                 }
@@ -67,6 +68,8 @@ fun Player.canTeleport(
         DeadmanTimerGate.Teleport.INSTANT -> {}
     }
 
+    // N511 (D6): a teleport that goes ahead ends the post-kill grace - every route passes this gate.
+    gg.rsmod.plugins.content.mechanics.pvp.KillGrace.endEarly(this)
     onConfirmed()
     return true
 }
@@ -110,6 +113,8 @@ fun Player.teleportRefusal(type: TeleportType): List<String>? {
 }
 
 fun Pawn.prepareForTeleport() {
+    // N511 (owner 2026-11-01 D6, OSRS Deadman): teleporting ends the post-kill grace.
+    (this as? Player)?.let { gg.rsmod.plugins.content.mechanics.pvp.KillGrace.endEarly(it) }
     stopMovement()
     resetInteractions()
     clearHits()

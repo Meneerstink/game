@@ -27,6 +27,9 @@ import gg.rsmod.plugins.api.ext.setComponentText
  */
 
 val loadedPets = Pets.load()
+
+// N503 D17: every pet's own pack (its items stay in it when it is picked up), saved with the account.
+Pets.variants.mapNotNull { Pets.baseItem(it.pet) }.distinct().forEach { register_container_key(BeastOfBurden.petPackKey(it)) }
 val loadedEmotes = PetEmotes.load()
 val loadedVoices = PetVoices.load()
 val loadedChatheads = PetChatheads.load()

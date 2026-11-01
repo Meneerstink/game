@@ -17,12 +17,19 @@ import gg.rsmod.plugins.api.ext.playSound
  * [UntradeableDeathProtection.repairCost]: the item's repair price, or 500,000 for a mangled locked item.
  */
 object BrokenItemRepair {
-    suspend fun repair(task: QueueTask) {
+    /**
+     * @param playerLine what the player says first; null when he already asked (N508: Perdu's Talk-to option he chose). Using a
+     *   damaged item on Perdu asks with this line, as the player's own action.
+     */
+    suspend fun repair(
+        task: QueueTask,
+        playerLine: String? = "Can you repair this for me?",
+    ) {
         val player = task.player
         val definitions = player.world.definitions
         val damaged = (0 until player.inventory.capacity).filter { slot -> player.inventory[slot]?.let(UntradeableDeathProtection::isDamaged) == true }
         if (damaged.isEmpty()) return
-        task.chatPlayer("Can you repair this for me?")
+        playerLine?.let { task.chatPlayer(it) }
         val total =
             damaged.sumOf { UntradeableDeathProtection.repairCost(definitions, player.inventory[it]!!) }
                 .coerceAtMost(Int.MAX_VALUE.toLong()).toInt()

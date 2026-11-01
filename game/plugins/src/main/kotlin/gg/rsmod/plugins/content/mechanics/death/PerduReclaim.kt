@@ -63,7 +63,7 @@ object PerduReclaim {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "perdu reclaim recorded for ${player.username}: ${item.id}x${item.amount} at $price" }
     }
 
-    fun has(player: Player): Boolean = records(player).isNotEmpty() || PerduLostProperty.available(player).isNotEmpty()
+    fun has(player: Player): Boolean = offers(player).isNotEmpty()
 
     /** One line of Perdu's list: a destroyed item ([record]) or an OSRS Lost Property item ([PerduLostProperty]); price 0 = a lost pet. */
     data class Offer(
@@ -77,8 +77,15 @@ object PerduReclaim {
     }
 
     fun offers(player: Player): List<Offer> =
-        records(player).map { Offer(it.itemId, it.amount, it.price, record = it) } +
+        // N509 (owner 2026-11-01): Perdu only sells back untradeables. A record of a tradeable item (a noted potion the death rules took
+        // for an untradeable before notes inherited their item's tradeability) stays in the save but is never offered.
+        records(player).filter { !tradeable(player, it.itemId) }.map { Offer(it.itemId, it.amount, it.price, record = it) } +
             PerduLostProperty.available(player).map { Offer(it.itemId, 1, it.price, property = it) }
+
+    private fun tradeable(
+        player: Player,
+        itemId: Int,
+    ): Boolean = RepairPrices.itemDef(player.world.definitions, itemId)?.let { it.tradeable || it.noted } == true
 
     /** What Perdu sells in his Lost Property window (N382): every lost item with a price. */
     fun paidOffers(player: Player): List<Offer> = offers(player).filter { !it.free }

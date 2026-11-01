@@ -126,6 +126,15 @@ class ItemMetadataService : Service {
             }
         }
 
+        // N509 (owner 2026-11-01, bug 20261101-000732): a noted item is exactly as tradeable as the item it notes. items.yml marks every
+        // 667 note "tradeable: false", so the death rules took a noted ranging potion for an untradeable (the killer got coins, Perdu
+        // sold it back), a dropped note never turned public, a note could not be staked or sold to a shop that buys tradeables.
+        for (i in 0 until itemCount) {
+            val def = definitions.get(ItemDef::class.java, i)
+            if (!def.noted || def.noteLinkId <= 0 || def.noteLinkId >= itemCount) continue
+            def.tradeable = definitions.get(ItemDef::class.java, def.noteLinkId).tradeable
+        }
+
         logger.info { "Loaded ${items.size} item metadata set${if (items.size != 1) "s" else ""}." }
     }
 

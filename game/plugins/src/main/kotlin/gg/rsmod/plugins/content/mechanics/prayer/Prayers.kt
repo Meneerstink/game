@@ -125,6 +125,8 @@ object Prayers {
         // even though their client activation bits were saved.
         resetStatMods(player)
         setQuickPrayerSelectMode(player, false)
+        // N503 D1: Protect Item no longer works - an older save's active or quick-selected Protect Item is switched off.
+        ProtectItemDisabled.clearAtLogin(player)
         player.attr[PROTECT_ITEM_ATTR] = isActive(player, Prayer.PROTECT_ITEM)
         AncientCurses.restoreActiveState(player)
         player.setVarc(QUICK_PRAYERS_ACTIVE_VARC, 0)
@@ -188,7 +190,7 @@ object Prayers {
         prayer: Prayer,
     ): Boolean = player.getVarbit(prayer.qpVarbit) != 0
 
-    private fun selectedQuickPrayers(player: Player): List<Prayer> = Prayer.values.filter { isQuickPrayerSelected(player, it) }
+    private fun selectedQuickPrayers(player: Player): List<Prayer> = Prayer.values.filter { it != Prayer.PROTECT_ITEM && isQuickPrayerSelected(player, it) }
 
     /**
      * The prayer stat modifiers backing varbits 6857-6861. These are per-player values, so they
@@ -350,7 +352,7 @@ object Prayers {
         prayer: Prayer,
     ): Boolean {
         // N98: a missing prayer scroll / Defence level goes through the queued path, which shows the refusal box.
-        if (p.lock.delaysPrayer() || p.skills.getMaxLevel(Skills.PRAYER) < prayer.level || knightWavesRefusal(p, prayer) != null ||
+        if (p.lock.delaysPrayer() || prayer == Prayer.PROTECT_ITEM || p.skills.getMaxLevel(Skills.PRAYER) < prayer.level || knightWavesRefusal(p, prayer) != null ||
             PrayerScrolls.refusal(p, prayer) != null
         ) {
             return false
@@ -416,6 +418,11 @@ object Prayers {
         p: Player,
         prayer: Prayer,
     ) {
+        // N503 D1: no route switches Protect Item on (quick sets, curses, scripts); the clicks are refused in checkRequirements.
+        if (prayer == Prayer.PROTECT_ITEM) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            return
+        }
         if (!isActive(p, prayer)) {
             closes(prayer).forEach { other ->
                 if (isActive(p, other)) {
@@ -657,6 +664,13 @@ object Prayers {
         prayer: Prayer,
     ): Boolean {
         val p = it.player
+
+        // N503 D1: Protect Item does not work in Deadman Mode (OSRS High Risk), at any Prayer level.
+        if (prayer == Prayer.PROTECT_ITEM) {
+            p.syncVarp(ACTIVE_PRAYERS_VARP)
+            ProtectItemDisabled.refuse(p)
+            return false
+        }
 
         if (p.skills.getMaxLevel(Skills.PRAYER) < prayer.level) {
             p.syncVarp(ACTIVE_PRAYERS_VARP)

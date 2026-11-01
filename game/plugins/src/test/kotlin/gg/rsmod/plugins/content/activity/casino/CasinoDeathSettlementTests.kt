@@ -147,7 +147,7 @@ class CasinoDeathSettlementTests {
     fun `the death resolution routes the settled coins like beast of burden cargo, and every coin entry is gated`() {
         val death = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/death/death.plugin.kts").readText()
         assertTrue(death.contains("converted += casinoCoins(victim)"), "PvP: killer loot")
-        assertTrue(death.contains("takeAllCargo(victim) + casinoCoins(victim)"), "PvM: gravestone")
+        assertTrue(death.contains("cargo + casinoCoins(victim)"), "PvM: gravestone")
         assertTrue(death.contains("Casino.settleForDeath(victim)"), "safe death: paid back")
         val screens = File("src/main/kotlin/gg/rsmod/plugins/content/activity/casino/CasinoScreens.kt").readText()
         assertTrue(screens.contains("if (Casino.refusePlay(player)) return"), "every game screen opens through the gate")

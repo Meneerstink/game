@@ -50,4 +50,6 @@ on_player_death {
     player.setSkullIcon(SkullIcon.NONE)
     player.lootKeyIcons = 0
     CityGuards.release(player)
+    // N510 / N503 D15: the risk colour is worked out again from what is left - never the colour from before the death.
+    RiskSkull.recalculateAfterDeath(player)
 }

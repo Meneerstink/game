@@ -11,8 +11,10 @@ import gg.rsmod.game.model.timer.TimerKey
  * full minute regardless of subsequent movement, since the owner describes it as an unconditional
  * temporal grant once earned, not a location-bound one.
  *
- * Audit D-06: only a kill judged [ValidPkKill.Verdict.VALID] earns it ([grantForKill]) - a staged kill on a naked alt
- * (low risk, same address, repeat victim, fed kill ...) no longer buys a minute of immunity.
+ * N511 (owner 2026-11-01 D6, OSRS Deadman, replaces Audit D-06's "valid kills only"): EVERY single-combat kill earns it
+ * ([grantForKill]), also one that counts for nothing (low risk, repeat victim, daily cap, fed kill). Only an abuse verdict
+ * (same address, a staff account, self) never does - an alt feeding kills buys no immunity. Points and emblems still need a
+ * valid kill (Killstreaks.onJudgedKill, DeadmanEmblem.onPvpDeath). Attacking, dying, logging out and teleporting end it.
  * Audit D-05: every attack the holder makes afterwards ends it ([PvpSkull.onHitRegistered]), except the trailing hits
  * of the attack that made the kill ([isTrailingHit]).
  */
@@ -51,10 +53,10 @@ object KillGrace {
     }
 
     /**
-     * Audit D-06: whether a kill with [verdict] earns the grace - only a valid PK kill, never a self-kill, never in
-     * multi-combat ([multiCombat] = the victim's tile is multi-way).
+     * N511 (D6): whether a kill with [verdict] earns the grace - every single-combat kill except an abuse verdict, never a
+     * self-kill, never in multi-combat ([multiCombat] = the victim's tile is multi-way).
      */
-    fun earnsGrace(verdict: ValidPkKill.Verdict, self: Boolean, multiCombat: Boolean): Boolean = verdict.valid && !self && !multiCombat
+    fun earnsGrace(verdict: ValidPkKill.Verdict, self: Boolean, multiCombat: Boolean): Boolean = !verdict.abuse && !self && !multiCombat
 
     /**
      * Audit D-06: the one production entry point. Call once per resolved PvP death with the kill's [ValidPkKill] verdict
@@ -85,7 +87,7 @@ object KillGrace {
 
     fun cyclesLeft(player: Player): Int = if (player.timers.exists(GRACE_TIMER)) player.timers[GRACE_TIMER] else 0
 
-    /** Call when [player] attacks another player, or logs out - the two remaining "ends it
+    /** Call when [player] attacks another player, logs out or teleports (N511) - the "ends it
      * early" triggers the TimerKey's own resetOnDeath does not already cover. */
     fun endEarly(player: Player) {
         player.timers.remove(GRACE_TIMER)

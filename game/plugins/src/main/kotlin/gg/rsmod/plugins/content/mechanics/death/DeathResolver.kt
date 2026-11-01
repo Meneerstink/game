@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.attr.KILLER_ATTR
-import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.attr.PVP_AGGRESSOR_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.PVP_AGGRESSOR_WINDOW_TIMER
@@ -77,24 +76,19 @@ object DeathResolver {
     }
 
     /**
-     * @param itemProtectionActive
-     * Whether Protect Item is *active* right now (i.e. [PROTECT_ITEM_ATTR] is true), not merely unlocked. The skull no longer
-     * changes what is kept (owner 2026-09-26, [DeathRules.keepCount]).
-     * @param valueProvider the keep-1 ranking value - production callers pass [DeathRules.rankValue].
+     * @param skulled whether the victim is PK-skulled ([gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled]): N503 D2, an
+     *   unskulled monster death keeps 3 items, a skulled one none ([DeathRules.keepCount]). Protect Item no longer counts (D1).
+     * @param valueProvider the keep ranking value - production callers pass [DeathRules.rankValue].
      */
     fun resolve(
         victim: Player,
         killer: Player?,
-        itemProtectionActive: Boolean = victim.attr[PROTECT_ITEM_ATTR] == true,
+        skulled: Boolean = gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(victim),
         valueProvider: ItemRiskValueProvider,
         alwaysProtected: (itemId: Int) -> Boolean = { false },
         contextOverride: DeathContext? = null,
     ): DeathResolutionResult {
         val context = contextOverride ?: resolveContext(victim, killer)
-        // N463 (owner 2026-10-31): the Ruinous Powers Protect Item keeps its extra item on a PvM death only, never on a PvP death.
-        val protectItem =
-            itemProtectionActive &&
-                gg.rsmod.plugins.content.mechanics.prayer.RuinousPowers.protectItemCounts(victim, pvpDeath = context == DeathContext.WILDERNESS_PVP)
         // Snapshot the container backing arrays before any mutation happens.
         // ItemContainer.rawItems is a live alias to the same array the
         // container mutates in place, not a defensive copy, so calculation
@@ -103,21 +97,20 @@ object DeathResolver {
             DeathItemRiskCalculator.calculate(
                 inventory = victim.inventory.items.copyOf(),
                 equipment = victim.equipment.items.copyOf(),
-                itemProtectionActive = protectItem,
+                keepCount = DeathRules.keepCount(context, skulled),
                 valueProvider = valueProvider,
                 // Owner 2026-10-04: killed by a monster, a lockable untradeable (locked or not) is always kept and stays locked
                 // (OSRS Wiki "(l)": "Upon PvM death anywhere ... any locked items will stay with the player").
-                // N352 (owner 2026-10-24): a pet is always kept, also in the backpack and also on a monster death - the PvP rule
-                // (owner 2026-10-04 "pet kept") for every death, so a pet never goes to the gravestone.
+                // N503 D13/D14 (owner 2026-11-01): pets, burden trinkets and ornament kits are no longer kept - they go to the
+                // gravestone (DeathRules.toGrave, through alwaysLost below).
                 alwaysProtected = {
-                    alwaysProtected(it) || gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it) ||
-                        // N423: a beast of burden trinket is kept on every death, like the pet it upgrades.
-                        gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(it) ||
+                    alwaysProtected(it) ||
                         // The max capes a PvP death never takes (OSRS "always kept") are kept on a monster death too.
                         it in UntradeableDeathProtection.ALWAYS_KEPT_PVP ||
                         (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))
                 },
-                // Loot keys and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26).
+                // Loot keys and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26); pets, trinkets and kits go to the
+                // gravestone (N503 D13/D14).
                 alwaysLost = DeathRules::alwaysLost,
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)

@@ -174,12 +174,12 @@ class DeadmanEmblemTests {
     }
 
     @Test
-    fun `Audit D-08 and D-06 - points and the kill grace only follow a valid kill`() {
+    fun `Audit D-08 and N511 - points only follow a valid kill, the kill grace follows every single-combat kill`() {
         val (world, killer, victim) = fight("pts_killer", "pts_victim")
         assertEquals(Verdict.LOW_RISK, DeadmanEmblem.onPvpDeath(world, victim, killer, emptyList(), 0).verdict)
         assertEquals(null, killer.attr[StoreCatalogue.Currency.DEADMAN.attr], "a naked victim pays no Deadman Points")
         assertEquals(null, killer.attr[gg.rsmod.plugins.content.mechanics.pvp.CURRENT_KILLSTREAK_ATTR], "nor raises the streak")
-        assertFalse(gg.rsmod.plugins.content.mechanics.pvp.KillGrace.isProtected(killer), "nor earns the grace")
+        assertTrue(gg.rsmod.plugins.content.mechanics.pvp.KillGrace.isProtected(killer), "but earns the grace (OSRS, D6)")
 
         val (world2, killer2, victim2) = fight("pts_killer2", "pts_victim2")
         assertEquals(Verdict.VALID, DeadmanEmblem.onPvpDeath(world2, victim2, killer2, emptyList(), 1_000_000).verdict)
@@ -189,13 +189,13 @@ class DeadmanEmblemTests {
     }
 
     @Test
-    fun `protect item and an unskulled death never keep the emblem`() {
+    fun `an unskulled monster death (keep 3) never keeps the emblem`() {
         val emblem = DeadmanEmblem.emblemId(4)
         val risk =
             DeathItemRiskCalculator.calculate(
                 inventory = arrayOf(Item(emblem, 1), Item(4151, 1)),
                 equipment = arrayOfNulls(14),
-                itemProtectionActive = true,
+                keepCount = 3,
                 valueProvider = ItemRiskValueProvider { if (it == emblem) Long.MAX_VALUE else 1L },
                 alwaysLost = { DeadmanEmblem.isEmblem(it) },
             )
@@ -204,13 +204,13 @@ class DeadmanEmblemTests {
     }
 
     @Test
-    fun `N354 Protect Item never keeps the Archaic emblem either`() {
+    fun `N354 the keep-3 never keeps the Archaic emblem either`() {
         val archaic = gg.rsmod.plugins.content.mechanics.pvp.breach.BreachIds.ARCHAIC_EMBLEM_TIER_5
         val risk =
             DeathItemRiskCalculator.calculate(
                 inventory = arrayOf(Item(archaic, 1), Item(4151, 1)),
                 equipment = arrayOfNulls(14),
-                itemProtectionActive = true,
+                keepCount = 3,
                 valueProvider = ItemRiskValueProvider { if (it == archaic) Long.MAX_VALUE else 1L },
                 alwaysLost = gg.rsmod.plugins.content.mechanics.death.DeathRules::alwaysLost,
             )

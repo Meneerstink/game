@@ -19,7 +19,7 @@ import org.junit.Test
 /** Regression coverage for the persisted-varp to runtime-prayer lifecycle boundary. */
 class PrayerLifecycleTests {
     @Test
-    fun `login init restores normal active prayer and Protect Item runtime mirror`() {
+    fun `login init restores normal active prayers and switches a saved Protect Item off (N503 D1)`() {
         val fixture = Fixture()
         fixture.player.setVarbit(Prayer.PROTECT_FROM_MELEE.varbit, 1)
         fixture.player.setVarbit(Prayer.PROTECT_ITEM.varbit, 1)
@@ -27,8 +27,8 @@ class PrayerLifecycleTests {
         Prayers.init(fixture.player)
 
         assertTrue(Prayers.isActive(fixture.player, Prayer.PROTECT_FROM_MELEE))
-        assertTrue(Prayers.isActive(fixture.player, Prayer.PROTECT_ITEM))
-        assertTrue(fixture.attributes[PROTECT_ITEM_ATTR] == true)
+        assertFalse(Prayers.isActive(fixture.player, Prayer.PROTECT_ITEM))
+        assertFalse(fixture.attributes[PROTECT_ITEM_ATTR] == true)
     }
 
     @Test
@@ -64,7 +64,7 @@ class PrayerLifecycleTests {
         val world = mockk<World>(relaxed = true)
         val attributes = AttributeMap()
         private val definitions = mockk<DefinitionSet>()
-        private val varps = VarpSet((0..8000).toSet())
+        private val varps = VarpSet((0..12000).toSet())
 
         init {
             every { player.world } returns world

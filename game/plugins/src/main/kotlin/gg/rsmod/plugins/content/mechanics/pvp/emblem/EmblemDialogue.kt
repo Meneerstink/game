@@ -39,6 +39,6 @@ object EmblemDialogue {
         } else {
             player.message("It cannot grow any stronger.")
         }
-        player.message("Protect Item cannot save it: a player who kills you takes it, any other death destroys it.")
+        player.message("No death lets you keep it: a player who kills you takes it, any other death destroys it.")
     }
 }

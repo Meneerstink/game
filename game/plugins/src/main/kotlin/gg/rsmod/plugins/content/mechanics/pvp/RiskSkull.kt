@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.mechanics.pvp
 
-import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.zoneTile
 import gg.rsmod.game.sync.block.UpdateBlockType
@@ -45,7 +44,7 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
 
     /**
      * The value [player] would give away if a player killed them right now: [DeathRules.pvpLoss] - the very rules the real
-     * death runs (keep 1 with Protect Item, conversions, untradeable repair coins at the level-20 rule of the player's
+     * death runs (a PvP death keeps nothing, N503 D1/D2; conversions, untradeable repair coins at the level-20 rule of the player's
      * current tile and the loot behind carried keys), valued like the keep-1 ranking
      * ([DeathRules.rankValue]: guide price, coins at face value).
      */
@@ -55,7 +54,6 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
     ): Long =
         DeathRules.pvpLoss(
             player = player,
-            itemProtectionActive = player.attr[PROTECT_ITEM_ATTR] == true,
             deepWilderness = DeathRules.deepWilderness(player.tile),
             value = valueProvider,
         ).sumOf { valueProvider.getValue(it.id) * it.amount }
@@ -87,6 +85,20 @@ import gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider
             return live
         }
         return player.attr[FROZEN_TIER]?.let { SkullIcon.forId(it) }?.takeIf { it.id in 8..12 } ?: SkullIcon.DMM_VERY_LOW_RISK
+    }
+
+    /**
+     * N510 / N503 D15 (owner 2026-11-01: "of je kunt respawnen met een skull dit mag nooit"): after a death the colour is worked out
+     * again from what the player still carries - also in the safe zone they respawn in, the one moment the frozen colour
+     * ([FROZEN_TIER]) may change outside a dangerous area: the death itself changed the risk, it leaks nothing.
+     */
+    fun recalculateAfterDeath(
+        player: Player,
+        valueProvider: ItemRiskValueProvider = DeathRules.rankValue(player.world),
+    ) {
+        val live = tierFor(calculateRiskedValue(player, valueProvider)).let { if (it == SkullIcon.NONE) SkullIcon.DMM_VERY_LOW_RISK else it }
+        player.attr[FROZEN_TIER] = live.id
+        refresh(player, valueProvider)
     }
 
     /**

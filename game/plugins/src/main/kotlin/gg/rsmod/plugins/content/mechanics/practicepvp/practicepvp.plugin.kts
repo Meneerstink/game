@@ -19,11 +19,12 @@ EquipmentType.values().forEach { slot ->
     }
 }
 
-// Best-effort: player-pre-death plugins run in registration order, which this codebase
-// doesn't guarantee relative to death.plugin.kts's handler - see PracticePvp.kt's doc
-// comment for the residual (bounded, low-value-gear) risk this leaves if this handler
-// happens to run after the normal loot/gravestone resolution for the same death.
-on_player_pre_death {
+// N514 / N503 D11 (owner 2026-11-01): a Practice PvP death is safe - nothing lost, no loot, no gravestone. The match state must still
+// be there when death.plugin.kts asks SafeDeath (pre-death hooks have no fixed order), so the cleanup waits for the death itself
+// to finish (on_player_death, after the respawn) instead of running in the pre-death hook.
+gg.rsmod.plugins.content.mechanics.death.SafeDeath.register { PracticePvp.safeDeath(it) }
+
+on_player_death {
     PracticePvp.cleanup(player)
 }
 

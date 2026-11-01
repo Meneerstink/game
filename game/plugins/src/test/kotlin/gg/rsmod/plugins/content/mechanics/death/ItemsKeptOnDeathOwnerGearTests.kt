@@ -67,8 +67,10 @@ class ItemsKeptOnDeathOwnerGearTests {
         val guide = ItemRiskValueProvider { id -> defs.getNullable(ItemDef::class.java, id)?.let { OsrsGuidePrices.seed(it).toLong() } ?: 0L }
         val value = DeathRules.rankValue(defs, guide)
         fun ids(p: ItemsKeptOnDeath.Preview, section: ItemsKeptOnDeath.Section) = p.entries.filter { it.section == section }.map { it.item.id }.toSet()
-        val pvp = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(false, false, true, false), value)
-        assertEquals(setOf(Items.IMBUED_GUTHIX_MAX_CAPE_L, 23961), ids(pvp, ItemsKeptOnDeath.Section.KEPT), "only the locked cape (broken) and the pet stay")
+        val pvp = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = true, deepWilderness = false), value)
+        assertEquals(setOf(Items.IMBUED_GUTHIX_MAX_CAPE_L), ids(pvp, ItemsKeptOnDeath.Section.KEPT), "only the locked cape (broken) stays")
+        // N503 D13: the pet goes to the gravestone, never to the killer.
+        assertTrue(23961 in ids(pvp, ItemsKeptOnDeath.Section.GRAVESTONE), "the pet waits in the gravestone")
         val lost = ids(pvp, ItemsKeptOnDeath.Section.LOST)
         // Tradeable OSRS gear as itself; Moon armour broken (23110/23112/23114); Harmonised staff = staff + orb; (or) = base + kit.
         assertTrue(lost.containsAll(listOf(22878, 22880, 22876, 22946, 22372, 22911, 22724, 23128, 23134)), "$lost")
@@ -79,18 +81,18 @@ class ItemsKeptOnDeathOwnerGearTests {
         assertTrue(lost.none { it in listOf(23101, 23102, 23103, 23083, 22330, 22355) }, "converting items never show as themselves: $lost")
         assertTrue(pvp.entries.single { it.item.id == Items.IMBUED_GUTHIX_MAX_CAPE_L }.message.contains("break"))
 
-        val deep = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(true, false, true, true), value)
+        val deep = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = true, deepWilderness = true), value)
         val kept = deep.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }
-        // N352: the pet is always kept, outside the Protect Item count; Protect Item still keeps the most valuable item.
-        assertEquals(23961, kept.first().item.id, "the pet first")
-        assertTrue("always keep your pet" in kept.first().message, kept.first().message)
-        assertEquals(22878, kept[1].item.id, "Protect Item keeps the most valuable item (Ancestral robe top)")
+        // N503 D1/D2: a PvP death keeps nothing - the Ancestral robe top goes to the killer; D13: the pet to the gravestone.
+        assertTrue(kept.none { it.item.id == 23961 }, "the pet is not kept")
+        assertTrue(23961 in ids(deep, ItemsKeptOnDeath.Section.GRAVESTONE))
+        assertTrue(22878 in ids(deep, ItemsKeptOnDeath.Section.LOST), "no item is protected on a PvP death")
         assertTrue(kept.single { it.item.id == Items.IMBUED_GUTHIX_MAX_CAPE_L }.message.contains("mangled"))
 
-        val pvm = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(false, false, false, false), value)
+        val pvm = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = false, deepWilderness = false), value)
         assertTrue(ids(pvm, ItemsKeptOnDeath.Section.LOST).isEmpty(), "a PvM death gives nothing away")
-        // N352 (owner 2026-10-24): a monster death keeps the pet too - it never goes to the gravestone.
-        assertTrue(23961 in ids(pvm, ItemsKeptOnDeath.Section.KEPT), "${pvm.entries}")
-        assertTrue(23961 !in ids(pvm, ItemsKeptOnDeath.Section.GRAVESTONE))
+        // N503 D13 (owner 2026-11-01, replaces N352): a monster death sends the pet to the gravestone too.
+        assertTrue(23961 in ids(pvm, ItemsKeptOnDeath.Section.GRAVESTONE), "${pvm.entries}")
+        assertTrue(23961 !in ids(pvm, ItemsKeptOnDeath.Section.KEPT))
     }
 }

@@ -81,8 +81,8 @@ class DeathExecutorTests {
         val executed = DeathExecutor.execute(world, result)
 
         assertTrue(executed)
-        // Audit D-06: a no-risk kill (this fixture) is not a valid PK, so it earns no kill grace.
-        assertFalse(KillGrace.isProtected(killer), "an invalid (low-risk) kill must not start kill grace")
+        // N511 (D6): a no-risk kill (this fixture) is not a valid PK, but every single-combat kill earns the grace (OSRS).
+        assertTrue(KillGrace.isProtected(killer), "a low-risk single-combat kill still starts kill grace")
         assertFalse(DeathExecutor.execute(world, result))
         // N246: the kept item moves up into the slot the lost stack left.
         assertEquals(KEPT_ITEM, victim.inventory[0]?.id, "kept item must remain, sorted to the top")

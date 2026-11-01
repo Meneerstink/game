@@ -133,10 +133,11 @@ class BurdenTrinketsTests {
     }
 
     @Test
-    fun `a trinket is always kept on death, like a pet`() {
+    fun `N503 D14 - a trinket goes to the gravestone on every death, never to the killer`() {
         BurdenTrinkets.Tier.values().forEach { t ->
-            val fate = gg.rsmod.plugins.content.mechanics.death.UntradeableDeathProtection.fateOf(SummoningTestCache.definitions, Item(t.item), deepWilderness = true)
-            assertEquals(gg.rsmod.plugins.content.mechanics.death.UntradeableFate.UNCHANGED, fate.fate, t.trinketName)
+            assertTrue(gg.rsmod.plugins.content.mechanics.death.DeathRules.toGrave(t.item), t.trinketName)
+            assertTrue(gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.converts(t.item), t.trinketName)
+            assertEquals(emptyList(), gg.rsmod.plugins.content.mechanics.death.PvpDeathBreakables.killerItems(Item(t.item)), t.trinketName)
         }
     }
 

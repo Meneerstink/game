@@ -48,13 +48,13 @@ class RiskSkullTests {
         val player = newPlayer()
         player.inventory[0] = Item(1, 1) // value 10
         player.inventory[1] = Item(2, 1) // value 5
-        player.inventory[2] = Item(3, 1) // value 20 -> the one Protect Item would keep
+        player.inventory[2] = Item(3, 1) // value 20
         player.inventory[3] = Item(4, 1) // value 1
 
-        // Owner 2026-09-26: without Protect Item everything is lost; with it only the single most valuable item is kept.
+        // N503 D1/D2: a PvP death keeps nothing - an (old) Protect Item flag changes nothing either.
         assertEquals(36L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
         player.attr[gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR] = true
-        assertEquals(16L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
+        assertEquals(36L, RiskSkull.calculateRiskedValue(player, testValueProvider()))
     }
 
     @Test
@@ -142,6 +142,18 @@ class RiskSkullTests {
 
         verify { player.skullIcon = SkullIcon.DMM_VERY_LOW_RISK_SKULLED.id }
         verify { player.lootKeyIcons = 2 }
+    }
+
+    @Test
+    fun `N510 D15 - after a death the colour is worked out again, also in the safe zone the player respawns in`() {
+        val player = newPlayer()
+        for (slot in 0 until 20) player.inventory[slot] = Item(5, 1) // 10m in the dangerous area
+        val before = RiskSkull.iconFor(player, testValueProvider())
+        every { player.tile } returns SAFE_TILE
+        player.inventory.removeAll()
+        assertEquals(before, RiskSkull.iconFor(player, testValueProvider()), "frozen until the death")
+        RiskSkull.recalculateAfterDeath(player, testValueProvider())
+        assertEquals(SkullIcon.DMM_VERY_LOW_RISK, RiskSkull.iconFor(player, testValueProvider()), "nothing left: the lowest colour")
     }
 
     @Test

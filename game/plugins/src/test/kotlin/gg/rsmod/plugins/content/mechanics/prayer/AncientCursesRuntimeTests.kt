@@ -210,7 +210,7 @@ class AncientCursesRuntimeTests {
     }
 
     @Test
-    fun `orb activates and deactivates quick curses including Protect Item and Turmoil`() {
+    fun `orb activates and deactivates quick curses and Turmoil, never Protect Item (N503 D1)`() {
         val fixture = Fixture()
         fixture.ancient()
         val player = fixture.player
@@ -218,9 +218,9 @@ class AncientCursesRuntimeTests {
         Prayers.toggleQuickPrayers(player, Prayers.QUICK_PRAYERS_TOGGLE_OPTION)
         assertTrue(AncientCurses.isTurmoilActive(player))
         assertTrue(AncientCurses.isCurseActive(player, AncientCurse.BERSERKER))
-        assertTrue(Prayers.isActive(player, Prayer.PROTECT_ITEM))
-        assertTrue(player.attr[PROTECT_ITEM_ATTR] == true)
-        assertEquals(1, player.getVarbit(AncientCurse.PROTECT_ITEM_VARBIT))
+        assertFalse(Prayers.isActive(player, Prayer.PROTECT_ITEM))
+        assertFalse(player.attr[PROTECT_ITEM_ATTR] == true)
+        assertEquals(0, player.getVarbit(AncientCurse.PROTECT_ITEM_VARBIT))
         assertEquals(1, player.varcs[Prayers.QUICK_PRAYERS_ACTIVE_VARC])
         Prayers.toggleQuickPrayers(player, Prayers.QUICK_PRAYERS_TOGGLE_OPTION)
         assertFalse(AncientCurses.isTurmoilActive(player))
@@ -228,7 +228,7 @@ class AncientCursesRuntimeTests {
         assertFalse(Prayers.isActive(player, Prayer.PROTECT_ITEM))
         assertFalse(player.attr[PROTECT_ITEM_ATTR] == true)
         assertEquals(0, player.getVarbit(AncientCurse.PROTECT_ITEM_VARBIT))
-        assertEquals(listOf(0, 5, 19), AncientCurses.selectedQuickCurseSlots(player))
+        assertEquals(listOf(5, 19), AncientCurses.selectedQuickCurseSlots(player))
     }
 
     @Test
@@ -287,7 +287,8 @@ class AncientCursesRuntimeTests {
 
         kotlinx.coroutines.runBlocking { AncientCurses.onBookButton(task, AncientCurse.PROTECT_ITEM_SLOT) }
 
-        assertTrue(Prayers.isActive(player, Prayer.PROTECT_ITEM))
+        // N503 D1: the click is refused (Protect Item does not work in Deadman Mode); the curse overhead stays.
+        assertFalse(Prayers.isActive(player, Prayer.PROTECT_ITEM))
         assertEquals(PrayerIcon.DEFLECT_MELEE.id, currentIcon)
     }
 

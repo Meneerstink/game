@@ -143,6 +143,15 @@ object ValidPkKill {
         return first == address(b)
     }
 
+    /**
+     * N513 / N503 D10 (owner 2026-11-01): a kill between two accounts on the same address (an alt) or with a staff account involved
+     * hands the killer nothing - the victim's items go to the victim's own gravestone, as on a monster death (death.plugin.kts).
+     */
+    fun abuseKill(
+        killer: Player,
+        victim: Player,
+    ): Boolean = killer !== victim && (sameAddress(killer, victim) || isStaff(killer) || isStaff(victim))
+
     fun isStaff(player: Player): Boolean = player.world.privileges.isEligible(player.privilege, Privilege.MOD_POWER)
 
     /**

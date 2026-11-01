@@ -50,7 +50,15 @@ fun resolveDeath(victim: Player) {
     // If an NPC/environmental hit lands after a live PvP hit, use the shared aggressor window so
     // the death remains player-caused instead of silently falling back to PvM recovery.
     // Audit X-04: a killer who is no longer online is never credited (DeathResolver.resolveKiller).
-    val killer = DeathResolver.resolveKiller(victim)
+    val playerKiller = DeathResolver.resolveKiller(victim)
+    // N513 / N503 D10 (owner 2026-11-01): killed by your own alt (same address) or with a staff account involved, nothing goes to the
+    // killer: the death is handled as a monster death - your items go to your own gravestone (the 3-item rule applies), nothing breaks.
+    val abuseKill = playerKiller != null && gg.rsmod.plugins.content.mechanics.pvp.ValidPkKill.abuseKill(playerKiller, victim)
+    if (abuseKill) {
+        playerKiller!!.message("<col=ef1020>This kill gives you nothing: both accounts play from the same address, or a staff account was involved.")
+        gg.rsmod.plugins.content.mechanics.pvp.emblem.EmblemLog.write("ABUSE_KILL", victim, "killer" to playerKiller.username, "victim" to victim.username, "rule" to "items to the victim's gravestone")
+    }
+    val killer = if (abuseKill) null else playerKiller
     // Audit D-06: kill grace is granted once, by DeathExecutor, for a resolved PvP death only.
 
     val logger = world.getService(LoggerService::class.java, searchSubclasses = true)
@@ -61,7 +69,7 @@ fun resolveDeath(victim: Player) {
         killer == null && gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.isSkulled(victim) &&
             (victim.attr[KILLER_ATTR]?.get() as? gg.rsmod.game.model.entity.Npc)
                 ?.let { gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(it) } == true
-    val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else null
+    val contextOverride = if (killedBySkulledGuard) DeathContext.WILDERNESS_PVP else if (abuseKill) DeathContext.PVM_SAFE else null
 
     val pvpDeath = (contextOverride ?: DeathResolver.resolveContext(victim, killer)) == DeathContext.WILDERNESS_PVP
     // Everything the victim carried before the death takes it counts as earned for Perdu's Lost Property.
@@ -93,23 +101,33 @@ fun resolveDeath(victim: Player) {
             // player killer (a skulled player killed by a guard) it all becomes public ground loot like the rest.
             extraPvpLoot = {
                 val converted = mutableListOf<Item>()
+                // Audit X-01 / owner 2026-10-31 23:4x: what the familiar or the upgraded pet that is out carries is the killer's
+                // (unprotected PvP loot) - taken first, before the pet itself leaves for the gravestone below.
+                val cargo = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim)
                 // Owner Q14=A (2026-10-06): a conversion's victim share (Menaphite ornament kit, the full slayer helmet's imbue
-                // parts) goes to the victim's gravestone; imbue point refunds are credited inside execute.
+                // parts) goes to the victim's gravestone; imbue point refunds are credited inside execute. N503 D13/D14: so do
+                // the carried pets, burden trinkets and kits, and the pet that is out.
                 val toGrave = mutableListOf<Item>()
                 PvpDeathBreakables.execute(world, result, converting, toGrave = { toGrave += it }) { converted += it }
+                gg.rsmod.plugins.content.skills.summoning.Pets.takeFollowerForDeath(victim)?.let { toGrave += it }
                 DeathExecutor.graveForPvpVictim(victim, toGrave, graveTile, logger)
                 converted += UntradeableDeathProtection.execute(victim, untradeables)
                 val droppedProtectedAmmo = QuiverDeathRules.stripProtected(victim, result)
                 converted += PvpDeathBreakables.stripProtectedEther(victim, result)
                 converted += droppedLostAmmo + droppedProtectedAmmo
-                // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch.
-                converted += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim)
+                // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch (taken above).
+                converted += cargo
                 converted += casinoCoins(victim)
                 converted
             },
             // Owner 2026-09-26: on a PvM death the beast of burden's cargo goes to the gravestone with everything else - taken
-            // here, before the gravestone is filled, not afterwards by the familiar's despawn.
-            extraPvmItems = { gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.takeAllCargo(victim) + casinoCoins(victim) },
+            // here, before the gravestone is filled, not afterwards by the familiar's despawn. N503 D17: an upgraded pet keeps what
+            // it carries (its own pack); D13: the pet itself goes to the gravestone.
+            extraPvmItems = {
+                val bob = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden
+                val cargo = if (bob.isUpgradedPetOut(victim)) emptyList() else bob.takeAllCargo(victim)
+                cargo + casinoCoins(victim) + listOfNotNull(gg.rsmod.plugins.content.skills.summoning.Pets.takeFollowerForDeath(victim))
+            },
         )
     if (executed) {
         // Audit X-05: persist the transfer at once, like trades do - a crash before the next autosave

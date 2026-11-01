@@ -14,19 +14,24 @@ import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
  * the risk skull ([gg.rsmod.plugins.content.mechanics.pvp.RiskSkull]), so none of them can predict something the death does
  * not do. Owner decisions 2026-09-26:
  *
- *  - PvP and PvM: everything is lost; Protect Item (the prayer or the Ancient Curses slot) keeps exactly [PROTECT_ITEM_KEEP]
- *    item, skulled or not. There are no always-kept items.
- *  - The kept item is the most valuable one: tradeables by Grand Exchange guide price, untradeables by their repair price
+ *  - N503 D1/D2 (owner 2026-11-01, OSRS Deadman; replaces "Protect Item keeps 1"): killed by a monster you keep your
+ *    [PVM_UNSKULLED_KEEP] most valuable items while unskulled and none while skulled; a PvP death keeps none. Protect Item keeps
+ *    nothing (it cannot be switched on, ProtectItemDisabled).
+ *  - The kept items are the most valuable ones: tradeables by Grand Exchange guide price, untradeables by their repair price
  *    ([RepairPrices], [rankValue]).
  *  - Loot keys and emblems are never kept ([alwaysLost]). (N424: the looting bag is out of the game.)
  *  - Emblems ([isEmblem]; owner 2026-10-24, N354/N359): Protect Item never saves one; a player who kills you takes it, every
  *    other death (a monster, a guard, a PvP death without a player killer) destroys it - never a gravestone or ground item.
  */
 object DeathRules {
-    /** The one keep count: Protect Item keeps this many items. */
-    const val PROTECT_ITEM_KEEP = 1
+    /** N503 D2: an unskulled player killed by a monster keeps this many items (OSRS "Items Kept on Death"). */
+    const val PVM_UNSKULLED_KEEP = 3
 
-    fun keepCount(itemProtectionActive: Boolean): Int = if (itemProtectionActive) PROTECT_ITEM_KEEP else 0
+    /** The one keep count (N503 D2): 3 on an unskulled monster death, 0 skulled, 0 on every PvP death. */
+    fun keepCount(
+        context: DeathContext,
+        skulled: Boolean,
+    ): Int = if (context == DeathContext.PVM_SAFE && !skulled) PVM_UNSKULLED_KEEP else 0
 
     /**
      * OSRS: an untradeable breaks "if the death occurred at level 20 Wilderness and below" and is destroyed / mangled "above
@@ -38,7 +43,17 @@ object DeathRules {
 
     fun deepWilderness(tile: Tile): Boolean = deepWilderness(tile.getWildernessLevel())
 
-    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId)
+    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId) || toGrave(itemId)
+
+    /**
+     * N503 D13/D14 (owner 2026-11-01, replaces N352 "a pet is always kept" and N423 "a trinket is always kept"): pets, burden
+     * trinkets and ornament kits are never kept and never the killer's - they go to the victim's gravestone on every death that is
+     * not safe (and from there to Death's Office). They never take one of the 3 kept places (D2).
+     */
+    fun toGrave(itemId: Int): Boolean =
+        gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(itemId) ||
+            gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(itemId) ||
+            gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(itemId)
 
     /** The Deadman emblems (tier 1-6) and the breach's Archaic emblem (tier 5). */
     fun isEmblem(itemId: Int): Boolean =
@@ -68,7 +83,6 @@ object DeathRules {
      */
     fun pvpLoss(
         player: Player,
-        itemProtectionActive: Boolean,
         deepWilderness: Boolean,
         value: ItemRiskValueProvider,
     ): List<Item> {
@@ -77,7 +91,7 @@ object DeathRules {
             DeathResolver.resolve(
                 victim = player,
                 killer = null,
-                itemProtectionActive = itemProtectionActive,
+                skulled = true,
                 valueProvider = value,
                 contextOverride = DeathContext.WILDERNESS_PVP,
             )

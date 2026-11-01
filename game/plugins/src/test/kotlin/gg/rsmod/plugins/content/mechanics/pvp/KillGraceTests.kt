@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.mechanics.pvp
 
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.timer.TimerMap
+import gg.rsmod.plugins.content.magic.prepareForTeleport
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.Test
@@ -62,12 +63,16 @@ class KillGraceTests {
     }
 
     @Test
-    fun `Audit D-06 - only a valid single-combat kill of another player earns the grace`() {
+    fun `N511 D6 - every single-combat kill of another player earns the grace, an abuse verdict never`() {
         val killer = newPlayer()
         val victim = newPlayer()
-        for (verdict in ValidPkKill.Verdict.values().filter { !it.valid }) {
+        for (verdict in ValidPkKill.Verdict.values().filter { it.abuse }) {
             assertFalse(KillGrace.grantForKill(killer, victim, verdict, multiCombat = false), "$verdict must not grant")
             assertFalse(KillGrace.isProtected(killer), "$verdict must not grant")
+        }
+        for (verdict in ValidPkKill.Verdict.values().filter { !it.valid && !it.abuse }) {
+            assertTrue(KillGrace.grantForKill(killer, victim, verdict, multiCombat = false), "$verdict (counts for nothing) still grants")
+            KillGrace.endEarly(killer)
         }
         assertFalse(KillGrace.grantForKill(killer, victim, ValidPkKill.Verdict.VALID, multiCombat = true), "multi-combat")
         assertFalse(KillGrace.grantForKill(killer, killer, ValidPkKill.Verdict.VALID, multiCombat = false), "self")
@@ -131,6 +136,17 @@ class KillGraceTests {
         KillGrace.grant(killer)
         assertTrue(KillGrace.GRACE_TIMER.resetOnDeath, "the killer's own death ends it")
         assertFalse(KillGrace.GRACE_TIMER.persistenceKey != null, "never persisted: a relog cannot keep it")
+    }
+
+    @Test
+    fun `N511 D6 - a teleport ends the grace (every teleport passes prepareForTeleport or the canTeleport gate)`() {
+        val killer = newPlayer()
+        KillGrace.grant(killer)
+        assertTrue(KillGrace.isProtected(killer))
+        killer.prepareForTeleport()
+        assertFalse(KillGrace.isProtected(killer), "teleporting ends the grace")
+        val source = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/magic/PawnExt.kt").readText()
+        assertTrue(source.split("KillGrace.endEarly(this)").size - 1 == 2, "both canTeleport outcomes (instant, after the countdown) end it")
     }
 
     private fun newPlayer(): Player {

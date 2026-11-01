@@ -165,7 +165,7 @@ class FamiliarLifecycleTests {
     }
 
     @Test
-    fun `familiar death moves bob cargo to deaths domain and clears state`() {
+    fun `N503 D16 - familiar death drops its bob cargo where it died and clears state`() {
         val player = newPlayer(Npcs.PACK_YAK, Tile(3222, 3218, 0))
         val world = player.world
         val familiar = Familiar.current(player)!!
@@ -173,11 +173,13 @@ class FamiliarLifecycleTests {
         val key = BeastOfBurden.activeKey(player)!!
         assertEquals(5, BeastOfBurden.grant(player, Item(Items.COINS_995, 5)))
 
+        val at = familiar.tile
         Familiar.onDeath(familiar)
 
-        verify(exactly = 0) { world.spawn(any<GroundItem>()) }
+        // OSRS: the items fall on the ground where the familiar died, as the owner's own ground items - not to Death's Office.
+        verify(exactly = 1) { world.spawn(match<GroundItem> { it.item == Items.COINS_995 && it.amount == 5 && it.tile == at }) }
         assertEquals(0, player.containers.getValue(key).getItemCount(Items.COINS_995))
-        assertEquals(5, player.deathRecovery.getItemCount(Items.COINS_995))
+        assertEquals(0, player.deathRecovery.getItemCount(Items.COINS_995))
         assertNull(Familiar.current(player))
     }
 

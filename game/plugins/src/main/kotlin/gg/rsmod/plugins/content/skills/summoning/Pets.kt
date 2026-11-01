@@ -24,7 +24,8 @@ import java.lang.ref.WeakReference
  * - The Summoning tab (662) and orb (747) show the pet like a familiar: varp 448 = the pet's item, varp 1174 = its npc (Novite
  *   `Pet.sendMainConfigurations` / `switchOrb`), with Call Follower and Dismiss. Following, the recovery teleport and the placement beside
  *   the owner are [Familiar]'s own code. Dismiss returns the pet to the inventory (or the bank): an OSRS pet cannot be freed.
- * - The pet survives logout and death ("Pets will now respawn with you on death and will keep on following you", OSRS Wiki Pet).
+ * - The pet survives logout. N503 D13 (owner 2026-11-01, not OSRS): on a death that is not safe it goes to the gravestone as its item
+ *   ([takeFollowerForDeath]); an upgraded pet keeps its items in its own pack (D17).
  * - Metamorphosis turns the pet into the next variant of the same pet (OSRS Wiki Metamorphosis). CUSTOM_SERVER_OVERRIDE: the OSRS
  *   unlock items (metamorphic dust, remnants, ores, ...) do not exist here, so every variant of the pet is in the cycle.
  * - A boss kill rolls its pet at the OSRS rate times the killer's Annihilation drop rate (N313) (OSRS Wiki Pet): "You have a funny feeling like you're being followed." (follower),
@@ -369,34 +370,26 @@ object Pets {
         }
         player.animate(DROP_ANIMATION)
         val npc = spawn(player, variant)
+        // N503 D17: an upgraded pet comes out with what it kept in its own pack.
+        BeastOfBurden.unstowPetCargo(player)
         sound(player, DROP_SOUND, npc.tile)
         PetVoices.appear(player, npc)
         return true
     }
 
     /**
-     * N423: an upgraded pet carrying items is picked up like a beast of burden is dismissed - asked first, then its pack goes to
-     * Death's Office (normal fee). Returns true when the caller may go on now (nothing carried); false when a question was asked
-     * and [then] runs on "Yes".
+     * N503 D17 (owner 2026-11-01, replaces N423/N499 "its items go to Death's Office"): an upgraded pet that leaves (Pick-up, dismiss,
+     * Shoo, a place it can't follow) keeps what it carries in its own pack ([BeastOfBurden.stowPetCargo]); it has it again the next
+     * time it comes out. Says so when it carried anything.
      */
-    private fun confirmCargo(
-        player: Player,
-        then: () -> Unit,
-    ): Boolean {
-        if (!BeastOfBurden.isUpgradedPetOut(player) || BeastOfBurden.storedCount(player) == 0) return true
-        player.queue {
-            // N499 (owner 2026-10-31 20:5x: "warning you have items stored in your bob ofzo"): the warning as the title (it takes the
-            // wide sword pair, OptionTitleSwords), the consequence in the answer.
-            if (options("Yes - its items go to Death's Office.", "No.", title = "Warning: items stored in your pet!") == 1) then()
-        }
-        return false
+    private fun keepCargo(player: Player) {
+        if (BeastOfBurden.stowPetCargo(player) > 0) player.message("Your pet keeps the items it is carrying.")
     }
 
     /** Pick-up on the follower: back into the inventory. */
     fun pickUp(
         player: Player,
         npc: Npc,
-        confirmed: Boolean = false,
     ) {
         if (current(player) !== npc) {
             player.message("This isn't your pet.")
@@ -408,8 +401,7 @@ object Pets {
             player.message("You don't have enough inventory space to do that.")
             return
         }
-        if (!confirmed && !confirmCargo(player) { pickUp(player, npc, confirmed = true) }) return
-        BeastOfBurden.release(player)
+        keepCargo(player)
         player.animate(DROP_ANIMATION)
         val at = npc.tile
         clear(player)
@@ -420,7 +412,7 @@ object Pets {
     /**
      * "Shoo" on the Clockwork cat (Void ClockworkCat.kt; owner 2026-10-31, N407 vraag 2: "zoals RS"): after "Are you sure you want to
      * release your pet?" the cat winds down and is gone - not into the backpack. It stays owned once, so Perdu gives it back for free
-     * (N414). An Upgraded cat's cargo goes to Death's Office, as on Pick-up, and the Yes answer says so.
+     * (N414). An Upgraded cat keeps its cargo in its own pack (N503 D17), as on Pick-up.
      */
     fun shoo(
         player: Player,
@@ -430,18 +422,16 @@ object Pets {
             player.message("This isn't your pet.")
             return
         }
-        val carrying = BeastOfBurden.isUpgradedPetOut(player) && BeastOfBurden.storedCount(player) > 0
         player.queue {
             // Void's "Are you sure you want to release your pet?" runs into the title's swords (about 40 characters fit; seen in the
             // test client 2026-10-31), so the title is the short form of the same question.
-            val yes = if (carrying) "Yes - its items go to Death's Office." else "Yes."
-            if (options(yes, "No.", title = "Release your clockwork cat?") != 1) {
+            if (options("Yes.", "No.", title = "Release your clockwork cat?") != 1) {
                 player.message("You choose not to shoo away the clockwork cat.")
                 return@queue
             }
             if (current(player) !== npc) return@queue
             itemOf(player)?.let { variantOfItem(it)?.pet }?.let { recordOwned(player, listOf(it)) }
-            BeastOfBurden.release(player)
+            keepCargo(player)
             clear(player)
             player.message("The clockwork cat winds down and stops.")
             gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet shoo: ${npc.id} released by ${player.username}" }
@@ -449,14 +439,10 @@ object Pets {
     }
 
     /** Dismiss from the Summoning tab / orb: the pet goes to the inventory, else the bank; it is never lost. */
-    fun dismiss(
-        player: Player,
-        confirmed: Boolean = false,
-    ) {
+    fun dismiss(player: Player) {
         current(player) ?: return
         val item = itemOf(player)?.let { i -> variantOfItem(i)?.let { shownItem(player, it) } ?: i } ?: return
-        if (!confirmed && !confirmCargo(player) { dismiss(player, confirmed = true) }) return
-        if (player.inventory.hasSpace || player.bank.hasSpace) BeastOfBurden.release(player)
+        if (player.inventory.hasSpace || player.bank.hasSpace) keepCargo(player)
         when {
             player.inventory.hasSpace -> {
                 val at = current(player)?.tile
@@ -477,13 +463,13 @@ object Pets {
 
     /**
      * A place the pet can't follow puts it in the backpack, quietly (N407 point 15: the Ape Atoll Agility Course, [PetPlaces]).
-     * False - nothing moved - when the backpack is full or an Upgraded pet is carrying items (those would go to Death's Office).
+     * False - nothing moved - when the backpack is full. An Upgraded pet keeps its items in its own pack (N503 D17).
      */
     fun stow(player: Player): Boolean {
         val npc = current(player) ?: return false
         val item = itemOf(player)?.let { i -> variantOfItem(i)?.let { shownItem(player, it) } ?: i } ?: return false
         if (!player.inventory.hasSpace) return false
-        if (BeastOfBurden.isUpgradedPetOut(player) && BeastOfBurden.storedCount(player) > 0) return false
+        keepCargo(player)
         val at = npc.tile
         clear(player)
         player.inventory.add(item, 1, assureFullInsertion = true)
@@ -805,11 +791,29 @@ object Pets {
             return
         }
         if (Familiar.current(player) != null) {
-            // Two followers can never be out together: the pet goes back into the backpack (bank when full).
+            // Two followers can never be out together: the pet goes back into the backpack (bank when full), keeping its items (D17).
+            BeastOfBurden.stowPetCargo(player, item)
             player.attr.remove(PET_ITEM_ATTR)
             if (!player.inventory.add(item, 1, assureFullInsertion = true).hasSucceeded()) player.bank.add(item, 1, assureFullInsertion = true)
             return
         }
         PetVoices.appear(player, spawn(player, variant))
+        BeastOfBurden.unstowPetCargo(player)
+    }
+
+    /**
+     * N503 D13 (owner 2026-11-01): the pet that is out (or hidden by a minigame) does not survive its owner's death any more - it goes to
+     * the gravestone as its item (the "Upgraded" item while a trinket is bound), on every death that is not safe. What it carries
+     * stays with it ([BeastOfBurden.stowPetCargo], D17) - on a PvP death the caller hands the follower pack to the killer first
+     * ([BeastOfBurden.takeAllCargo]). Returns the item for the gravestone, or null when no pet is out.
+     */
+    fun takeFollowerForDeath(player: Player): Item? {
+        val item = itemOf(player) ?: return null
+        val shown = variantOfItem(item)?.let { shownItem(player, it) } ?: item
+        BeastOfBurden.stowPetCargo(player, item)
+        clear(player)
+        player.attr.remove(HIDDEN_ATTR)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.SUMMON) { "pet $shown goes to the gravestone of ${player.username}" }
+        return Item(shown, 1)
     }
 }

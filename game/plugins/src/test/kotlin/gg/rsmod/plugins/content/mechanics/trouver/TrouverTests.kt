@@ -213,7 +213,7 @@ class TrouverTests {
             gg.rsmod.plugins.content.mechanics.death.DeathItemRiskCalculator.calculate(
                 inventory = arrayOf(Item(Items.ANCIENT_SCEPTRE_L, 1)),
                 equipment = arrayOfNulls(14),
-                itemProtectionActive = false,
+                keepCount = 0,
                 valueProvider = gg.rsmod.plugins.content.mechanics.death.ItemRiskValueProvider { 1L },
             )
         assertEquals(listOf(Items.ANCIENT_SCEPTRE_L), risk.lost.map { it.item.id })

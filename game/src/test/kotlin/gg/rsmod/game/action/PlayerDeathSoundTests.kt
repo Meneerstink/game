@@ -29,9 +29,11 @@ class PlayerDeathSoundTests {
     fun `the death cry is spawned with the death animation`() {
         val source = File("src/main/kotlin/gg/rsmod/game/action/PlayerDeathAction.kt").readText()
         val anim = source.indexOf("player.animate(deathAnim.id)")
-        val sound = source.indexOf("world.spawn(deathSound(player))")
+        val sound = source.indexOf("world.spawn(deathSound(player).also { it.excluded = player })")
+        val own = source.indexOf("player.playDeathCry()")
         assertTrue(anim >= 0 && sound > anim, "the area sound is spawned right after the death animation starts")
-        assertTrue(sound < source.indexOf("wait(deathAnim.cycleLength + 1)"), "before the animation's wait")
+        assertTrue(own > anim, "N505: the victim hears his own cry as a sound effect (his Area sounds slider may be 0)")
+        assertTrue(sound < source.indexOf("wait(deathAnim.cycleLength + 1)") && own < source.indexOf("wait(deathAnim.cycleLength + 1)"), "before the animation's wait")
     }
 
     private fun player(

@@ -94,6 +94,8 @@ object RuinousPowers {
         prayer: RuinousPrayer,
     ): String? =
         when {
+            // N503 D1: Protect Item does not work in Deadman Mode.
+            prayer == RuinousPrayer.PROTECT_ITEM -> ProtectItemDisabled.MESSAGE
             player.skills.getMaxLevel(Skills.PRAYER) < prayer.level -> "You need a Prayer level of at least ${prayer.level} to use ${prayer.named}."
             prayer.group == RuinousPrayer.Group.OVERHEAD && Prayers.overheadsDisabled(player) -> "You cannot use overhead prayers right now."
             else -> null
@@ -134,7 +136,7 @@ object RuinousPowers {
         } else {
             refusal(player, prayer)?.let {
                 // N488: the OSRS refusal sound with the message (prayer_op synth 2673).
-                if (player.skills.getMaxLevel(Skills.PRAYER) < prayer.level) Prayers.refuseSound(player)
+                if (player.skills.getMaxLevel(Skills.PRAYER) < prayer.level || prayer == RuinousPrayer.PROTECT_ITEM) Prayers.refuseSound(player)
                 player.message(it)
                 return
             }
@@ -153,6 +155,10 @@ object RuinousPowers {
         playSound: Boolean = true,
     ) {
         if (isActive(player, prayer)) return
+        if (prayer == RuinousPrayer.PROTECT_ITEM) {
+            player.syncVarp(RuinousPowersCacheTool.ACTIVE_VARP)
+            return
+        }
         RuinousPrayer.values.filter { prayer.conflictsWith(it) && isActive(player, it) }.forEach { deactivate(player, it, playSound) }
         player.setVarbit(prayer.varbit, 1)
         Prayers.markActivated(player, prayer)
@@ -236,7 +242,7 @@ object RuinousPowers {
         prayer: RuinousPrayer,
     ): Boolean = player.getVarbit(prayer.quickVarbit) != 0
 
-    fun selectedQuick(player: Player): List<RuinousPrayer> = RuinousPrayer.values.filter { isQuickSelected(player, it) }
+    fun selectedQuick(player: Player): List<RuinousPrayer> = RuinousPrayer.values.filter { it != RuinousPrayer.PROTECT_ITEM && isQuickSelected(player, it) }
 
     /** 271:42 in quick-select mode: the same exclusions as the live book; a prayer above the player's level cannot be picked. */
     fun selectQuick(
@@ -247,6 +253,11 @@ object RuinousPowers {
         if (!isBook(player) || player.isDead() || !player.lock.canUsePrayer()) return
         if (isQuickSelected(player, prayer)) {
             player.setVarbit(prayer.quickVarbit, 0)
+            return
+        }
+        if (prayer == RuinousPrayer.PROTECT_ITEM) {
+            player.setVarbit(prayer.quickVarbit, 0)
+            ProtectItemDisabled.refuse(player)
             return
         }
         if (player.skills.getMaxLevel(Skills.PRAYER) < prayer.level) {
@@ -395,12 +406,6 @@ object RuinousPowers {
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) { "ruinous rebuke ${target.username} recoil $recoil -> $rebuked" }
         return rebuked
     }
-
-    /** Protect Item on this death: always on a PvM death, never on a PvP death (owner 2026-10-31). */
-    fun protectItemCounts(
-        player: Player,
-        pvpDeath: Boolean,
-    ): Boolean = !(pvpDeath && on(player, RuinousPrayer.PROTECT_ITEM))
 
     /** Fumus' Vow: after an attack of [attacker] (re)poisoned [target] at [severity], the poison damage lands at once. */
     fun afterPoisonInflicted(

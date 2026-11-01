@@ -2,7 +2,6 @@ package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.attr.AttributeKey
-import gg.rsmod.game.model.attr.PROTECT_ITEM_ATTR
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool
@@ -23,7 +22,7 @@ import gg.rsmod.game.model.entity.zoneTile
 /**
  * The OSRS "Items Kept on Death" screen (OSRS interface 4, built as 667 interface [INTERFACE_ID] by
  * `DeathsOfficeInterfaceImportTool`; owner 2026-09-26: "OSRS-scherm bouwen"). The server fills it from [preview], which runs
- * the very same rules as a real death ([DeathResolver] with [DeathRules] keep 1, [UntradeableDeathProtection],
+ * the very same rules as a real death ([DeathResolver] with [DeathRules.keepCount], [UntradeableDeathProtection],
  * [PvpDeathBreakables], [QuiverDeathRules] and loot keys), so the screen cannot disagree with a death.
  *
  * Sections and texts are OSRS clientscript `deathkeep_left_redraw` (974): "Items that are KEPT:", "Items that go to your
@@ -49,19 +48,29 @@ object ItemsKeptOnDeath {
 
     data class Preview(val entries: List<Entry>, val graveFee: Int, val riskValue: Long)
 
-    /** The four "what if" toggles (protect item, skulled, killed by a player, deep Wilderness). */
-    data class Toggles(val protectItem: Boolean, val skulled: Boolean, val killedByPlayer: Boolean, val deepWilderness: Boolean)
+    /**
+     * The "what if" toggles (N503, owner 2026-11-01 D1/D2/D18): skulled, killed by a player (unticked = the "PvM death" box ticked),
+     * deep Wilderness. Protect Item has none: it does not work in Deadman Mode (D1), so its toggle is hidden.
+     */
+    data class Toggles(val skulled: Boolean, val killedByPlayer: Boolean, val deepWilderness: Boolean)
 
     /**
      * Owner 2026-10-04: the notice in the free space of the right panel ("a message telling players that above level 20 Wilderness
      * some items need a Trouver parchment ... and that a PvM death is safe", as professional as possible). 138 px wide, 8 lines.
      */
     const val NOTICE_TEXT =
-        "<col=ffffff>PvM deaths are safe:</col> your items wait in your gravestone.<br>" +
-            "<col=ffffff>Above Wilderness level 20,</col> lock untradeables with a Trouver parchment at Perdu or lose them."
+        "<col=ffffff>Killed by a monster:</col> unskulled you keep your 3 most valuable items; the rest goes to your gravestone.<br>" +
+            "<col=ffffff>Killed by a player:</col> you keep nothing. Protect Item does not work in Deadman Mode."
 
-    /** The "PK Skull active" toggle (deathkeep_right_initbutton index 1), hidden - see [open]. */
-    private const val SKULL_TOGGLE = 1
+    /** The "Protect Item prayer enabled" toggle (deathkeep_right_initbutton index 0), hidden - see [open]. */
+    private const val PROTECT_TOGGLE = 0
+
+    /** N503 D18: toggle 2 reads "PvM death" (OSRS), ticked = a monster kill; the screen opens unticked = killed by a player. */
+    private const val PVM_TOGGLE = 2
+    const val PVM_TOGGLE_TEXT = "PvM death"
+
+    /** Inside a toggle look layer: its text (DeathsOfficeInterfaceImportTool: look + 11). */
+    private const val TOGGLE_TEXT = 11
 
     private val TOGGLES = AttributeKey<Toggles>()
     private val SHOWN = AttributeKey<List<Entry>>()
@@ -84,7 +93,7 @@ object ItemsKeptOnDeath {
             DeathResolver.resolve(
                 victim = player,
                 killer = null,
-                itemProtectionActive = toggles.protectItem,
+                skulled = toggles.skulled,
                 valueProvider = value,
                 contextOverride = if (pvp) DeathContext.WILDERNESS_PVP else DeathContext.PVM_SAFE,
             )
@@ -97,9 +106,7 @@ object ItemsKeptOnDeath {
         result.itemRisk.protected.forEach {
             // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
             val always = !pvp && UntradeableDeathProtection.lockable(it.item.id)
-            val pet = gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(it.item.id)
-            val trinket = gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(it.item.id)
-            entries += Entry(Section.KEPT, it.item, if (pet) line(it.item, "You always keep your pet.", "You always keep your pets.") else if (trinket) line(it.item, "You always keep your burden trinket.", "You always keep your burden trinkets.") else if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "You'll protect your most valuable item.", "You'll protect your most valuable item."))
+            entries += Entry(Section.KEPT, it.item, if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "Unskulled, you keep your 3 most valuable items when a monster kills you.", "Unskulled, you keep your 3 most valuable items when a monster kills you."))
         }
         // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
         untradeables.forEach { outcome ->
@@ -120,8 +127,16 @@ object ItemsKeptOnDeath {
                     entries += Entry(Section.DELETED, item, line(item, "This item will be lost; the player who kills you receives $coins coins.", "These items will be lost; the player who kills you receives $coins coins."))
             }
         }
-        // Beast-of-burden cargo follows the death like everything else: to the killer (PvP) or into the gravestone (PvM).
-        val cargo = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull()?.map { Item(it) } ?: emptyList()
+        // Beast-of-burden cargo follows the death like everything else: to the killer (PvP) or into the gravestone (PvM). N503 D17: an
+        // upgraded pet keeps its items on a monster death (they stay in its own pack); D13: the pet that is out goes to the gravestone.
+        val bob = gg.rsmod.plugins.content.skills.summoning.BeastOfBurden
+        val upgradedPet = bob.isUpgradedPetOut(player)
+        val cargo = bob.activeContainer(player)?.rawItems?.filterNotNull()?.map { Item(it) } ?: emptyList()
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        pets.itemOf(player)?.let { item -> pets.variantOfItem(item)?.let { pets.shownItem(player, it) } ?: item }?.let { follower ->
+            val keeps = if (upgradedPet && cargo.isNotEmpty() && !pvp) " It keeps the items it carries." else ""
+            entries += Entry(Section.GRAVESTONE, Item(follower), "${name(player, follower)}: Your pet goes to your gravestone.$keeps")
+        }
         var risk = 0L
         if (pvp) {
             val lost =
@@ -146,6 +161,11 @@ object ItemsKeptOnDeath {
                     entries += Entry(Section.GRAVESTONE, slot.item, line(slot.item, "You never lose an ornament kit: it goes to your gravestone.", "You never lose an ornament kit: they go to your gravestone."))
                     return@forEach
                 }
+                // N503 D13/D14: a pet or a burden trinket is never the killer's - it goes to your gravestone.
+                if (PvpDeathBreakables.petOrTrinket(slot.item.id)) {
+                    entries += Entry(Section.GRAVESTONE, slot.item, line(slot.item, "This item goes to your gravestone.", "These items go to your gravestone."))
+                    return@forEach
+                }
                 when {
                     loot == null -> entries += Entry(Section.KEPT, slot.item, line(slot.item, "You'll keep this item.", "You'll keep these items."))
                     loot.isEmpty() -> deleted(player, entries, slot.item)
@@ -163,7 +183,7 @@ object ItemsKeptOnDeath {
             UntradeableDeathProtection.killerLoot(untradeables).forEach { risk += value.getValue(it.id) * it.amount }
         } else {
             // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
-            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || DeathRules.isEmblem(it.id) } + cargo
+            val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || DeathRules.isEmblem(it.id) } + (if (upgradedPet) emptyList() else cargo)
             toGrave.forEach { item ->
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))
@@ -189,14 +209,14 @@ object ItemsKeptOnDeath {
     }
 
     /**
-     * The toggles start at the player's real situation (deathkeep_init arguments). Owner 2026-10-04: standing in a dangerous
-     * zone (Wilderness or Deadman, [AreaState.isDangerous] - the predicate the HUD and the PvP gate share) opens the PvP view.
+     * The toggles start at the player's real skull and tile (deathkeep_init arguments). N503 D18 (owner 2026-10-31 23:4x / 11-01): this
+     * is a Deadman server, so the screen always opens on "Killed by a player" - the "PvM death" box unticked - wherever the player
+     * stands (it used to open the PvM view outside dangerous zones).
      */
     fun currentToggles(player: Player): Toggles =
         Toggles(
-            protectItem = player.attr[PROTECT_ITEM_ATTR] == true,
             skulled = PvpSkull.isSkulled(player),
-            killedByPlayer = gg.rsmod.plugins.content.mechanics.pvp.AreaState.isDangerous(player.zoneTile()),
+            killedByPlayer = true,
             deepWilderness = DeathRules.deepWilderness(player.zoneTile()),
         )
 
@@ -204,13 +224,18 @@ object ItemsKeptOnDeath {
         player.attr[TOGGLES] = currentToggles(player)
         player.openInterface(INTERFACE_ID, InterfaceDestination.MAIN_SCREEN)
         player.setInterfaceEvents(INTERFACE_ID, CLOSE, -1..-1, EVENTS_OP1)
-        for (i in 0 until 4) if (i != SKULL_TOGGLE) player.setInterfaceEvents(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, -1..-1, EVENTS_OP1)
-        // Owner 2026-10-04: "pk skull active needs to be removed from items kept on death - every player is skulled" (and the skull
-        // changes nothing, DeathRules.keepCount). The toggle is hidden and the two below it move up into its place.
-        player.setComponentHidden(INTERFACE_ID, Layout.TOGGLE_FIRST + SKULL_TOGGLE * Layout.TOGGLE_STRIDE, hidden = true)
+        for (i in 0 until 4) if (i != PROTECT_TOGGLE) player.setInterfaceEvents(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, -1..-1, EVENTS_OP1)
+        // N503 D1: Protect Item does not work in Deadman Mode - its toggle is hidden and the three below it move up. The skull
+        // counts again (D2: unskulled keeps 3 on a monster death), so "PK Skull active" is back (hidden since 2026-10-04).
+        player.setComponentHidden(INTERFACE_ID, Layout.TOGGLE_FIRST + PROTECT_TOGGLE * Layout.TOGGLE_STRIDE, hidden = true)
+        player.setComponentHidden(INTERFACE_ID, Layout.TOGGLE_FIRST + 1 * Layout.TOGGLE_STRIDE, hidden = false)
+        // D18: "Killed by a player" becomes the OSRS "PvM death" box (the PvP view is the default).
+        val pvm = Layout.TOGGLE_FIRST + PVM_TOGGLE * Layout.TOGGLE_STRIDE
+        player.setComponentText(INTERFACE_ID, pvm + Layout.LOOK_ON + TOGGLE_TEXT, PVM_TOGGLE_TEXT)
+        player.setComponentText(INTERFACE_ID, pvm + Layout.LOOK_OFF + TOGGLE_TEXT, PVM_TOGGLE_TEXT)
         player.setComponentText(INTERFACE_ID, Layout.NOTICE, NOTICE_TEXT)
-        var y = 30 + Layout.TOGGLE_HEIGHTS[0] + 5
-        for (i in SKULL_TOGGLE + 1 until 4) {
+        var y = 30
+        for (i in PROTECT_TOGGLE + 1 until 4) {
             player.setComponentPosition(INTERFACE_ID, Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE, 10, y)
             y += Layout.TOGGLE_HEIGHTS[i] + 5
         }
@@ -233,18 +258,17 @@ object ItemsKeptOnDeath {
     }
 
     /**
-     * N241 (owner 2026-10-23: "Wilderness beyond level 20 lijkt niets te doen"): on this server only a death a player causes takes
-     * items (a monster kill is always safe, [DeathResolver]), so the level-20 rule exists only for a player kill - ticking "Wilderness
-     * beyond level 20" also ticks "Killed by a player", and unticking "Killed by a player" unticks it, so the screen never shows a
-     * combination whose answer cannot differ.
+     * N241 (owner 2026-10-23: "Wilderness beyond level 20 lijkt niets te doen"): the level-20 rule exists only for a player kill -
+     * ticking "Wilderness beyond level 20" unticks "PvM death", and ticking "PvM death" unticks it, so the screen never shows a
+     * combination whose answer cannot differ. Index 1 is the skull (N503 D2), index 2 the "PvM death" box (D18).
      */
     fun toggled(
         t: Toggles,
         index: Int,
     ): Toggles =
         when (index) {
-            0 -> t.copy(protectItem = !t.protectItem)
-            2 -> if (t.killedByPlayer) t.copy(killedByPlayer = false, deepWilderness = false) else t.copy(killedByPlayer = true)
+            1 -> t.copy(skulled = !t.skulled)
+            PVM_TOGGLE -> if (t.killedByPlayer) t.copy(killedByPlayer = false, deepWilderness = false) else t.copy(killedByPlayer = true)
             3 -> if (t.deepWilderness) t.copy(deepWilderness = false) else t.copy(deepWilderness = true, killedByPlayer = true)
             else -> t
         }
@@ -314,7 +338,7 @@ object ItemsKeptOnDeath {
             (INTERFACE_ID shl 16) or Layout.SCROLLBAR,
             if (y > 0) y + 3 else 0,
         )
-        val states = booleanArrayOf(toggles.protectItem, toggles.skulled, toggles.killedByPlayer, toggles.deepWilderness)
+        val states = booleanArrayOf(false, toggles.skulled, !toggles.killedByPlayer, toggles.deepWilderness)
         states.forEachIndexed { i, on ->
             val base = Layout.TOGGLE_FIRST + i * Layout.TOGGLE_STRIDE
             player.setComponentHidden(INTERFACE_ID, base + Layout.LOOK_ON, hidden = !on)

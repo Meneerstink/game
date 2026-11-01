@@ -34,6 +34,10 @@ spawn_obj(obj = Objs.SINGING_BOWL, x = 3163, z = 3494, type = 10, rot = 0)
 // Perdu (upstream OSRS npc 7456) is a real import (RCV-012 "ferox" batch, tx-20260914-103151, local
 // npc id 14394) - not a placeholder. She fronts both her real OSRS services: repairing every
 // PvpDeathBreakables broken item at its sourced cost, and the Trouver lock/unlock engine below.
+val PERDU_REPAIR = "Can you repair my items?"
+val PERDU_LOST = "Have you got any of my lost things?"
+val PERDU_NOTHING = "Nothing, thanks."
+
 on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
     player.queue {
         // OSRS Wiki "Breach (scenery)": "The player can find the location of the active breach by talking to Perdu".
@@ -46,13 +50,24 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
             chatNpc("I can repair and protect eligible equipment, and I return things you've lost - for a price.", wrap = true)
             return@queue
         }
-        if (hasBroken) BrokenItemRepair.repair(this)
-        if (!hasLost) return@queue
-        // N414: lost pets come back free, in the dialogue; N382: everything with a price is in his Lost Property window.
-        gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this)
-        if (gg.rsmod.plugins.content.mechanics.death.PerduReclaim.paidOffers(player).isNotEmpty()) {
-            chatNpc("I've also got some of your things. Have a look.", wrap = true)
-            gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player)
+        // N508 (owner 2026-11-01, bug 20261101-000701): a real dialogue - the player chooses what to ask. Before, his character said
+        // "Can you repair this for me?" on his own as soon as a broken item was in the backpack.
+        val choices = listOfNotNull(PERDU_REPAIR.takeIf { hasBroken }, PERDU_LOST.takeIf { hasLost }, PERDU_NOTHING)
+        when (choices[options(*choices.toTypedArray()) - 1]) {
+            PERDU_REPAIR -> {
+                chatPlayer(PERDU_REPAIR)
+                BrokenItemRepair.repair(this, playerLine = null)
+            }
+            PERDU_LOST -> {
+                chatPlayer(PERDU_LOST)
+                // N414: lost pets come back free, in the dialogue; N382: everything with a price is in his Lost Property window.
+                gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this)
+                if (gg.rsmod.plugins.content.mechanics.death.PerduReclaim.paidOffers(player).isNotEmpty()) {
+                    chatNpc("I've got some of your things. Have a look.", wrap = true)
+                    gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player)
+                }
+            }
+            else -> chatPlayer(PERDU_NOTHING)
         }
     }
 }

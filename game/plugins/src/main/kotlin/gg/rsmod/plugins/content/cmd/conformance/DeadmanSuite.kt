@@ -624,16 +624,22 @@ object DeadmanSuite : Conformance.Suite {
             if (died && !g.isDead()) break
         }
         val found = mutableSetOf<String>()
+        val guardLoot = mutableListOf<gg.rsmod.game.model.entity.GroundItem>()
         for (centre in listOf(lastTile, square)) for (dx in -6..6) for (dz in -6..6) {
             val tile = centre.transform(dx, dz)
             run.world.chunks.get(tile)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(tile, gg.rsmod.game.model.EntityType.GROUND_ITEM)
-                ?.forEach { if (it.item == Items.ARMADYL_GODSWORD) found += "${it.tile}#${System.identityHashCode(it)}" }
+                ?.forEach {
+                    if (it.item == Items.ARMADYL_GODSWORD && found.add("${it.tile}#${System.identityHashCode(it)}")) guardLoot += it
+                }
         }
         val ground = found.size
         run.note("guard kill: last tile $lastTile, godsword on the ground at $found")
         run.expectTrue(e, "killed by guards: died", died, "tile=${g.tile} last=$lastTile")
         run.check(e, "killed by guards: no loot key", keys() - keysBefore, "owner: no player killer, no key" to 0)
         run.check(e, "killed by guards: the godsword lies on the ground", ground, "owner: public ground loot" to 1)
+        // N503 D7 (owner 2026-11-01): guard + skull - the loot is everyone's at once and lies there 60 minutes.
+        run.check(e, "killed by guards: the godsword is public at once", guardLoot.all { it.isPublic() }, "D7: meteen op de grond voor iedereen" to true)
+        run.check(e, "killed by guards: the godsword stays 60 minutes", guardLoot.map { it.despawnAt(run.world) - it.currentCycle >= 5990 }.toString(), "D7: 60 min" to "[true]")
         stopAll()
 
         // 7. Audit 2026-10-02: the guard that came follows a skulled intruder down to the AFK basement under the GE hall (another
@@ -834,7 +840,15 @@ object DeadmanSuite : Conformance.Suite {
         for (dx in -3..3) for (dz in -3..3) {
             val t = deathTile.transform(dx, dz)
             run.world.chunks.get(t)?.getEntities<gg.rsmod.game.model.entity.GroundItem>(t, gg.rsmod.game.model.EntityType.GROUND_ITEM)
-                ?.forEach { if (it.item == Items.ARMADYL_GODSWORD && it.isOwnedBy(b)) owned++ }
+                ?.forEach {
+                    if (it.item == Items.ARMADYL_GODSWORD && it.isOwnedBy(b)) {
+                        owned++
+                        // N503 D5: 1 minute for the killer, then 4 (Wilderness) / 60 (elsewhere) minutes for everyone.
+                        val stretch = gg.rsmod.plugins.content.mechanics.death.PvpLootTimes.publicStretch(it.tile)
+                        run.check(e, "sixth kill: the killer has the loot 1 minute", it.publicAt(run.world), "D5" to 100)
+                        run.check(e, "sixth kill: then everyone ${stretch / 100} minutes", it.despawnAt(run.world), "D5" to 100 + stretch)
+                    }
+                }
         }
         run.check(e, "sixth kill: the godsword lies on the ground for the killer", owned, "owner 2026-09-17: ground loot when the keys are full" to 1)
         for (p in listOf(a, b)) {

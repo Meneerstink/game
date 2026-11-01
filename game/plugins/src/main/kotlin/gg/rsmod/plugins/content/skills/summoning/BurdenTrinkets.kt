@@ -260,7 +260,8 @@ object BurdenTrinkets {
         val bound = bindings(player).toMutableMap()
         if (bound[pet] != tier.item) return false
         val following = Pets.itemOf(player)?.let { Pets.variantOfItem(it) }?.pet == pet
-        if (following && cargoCount(player) > 0) {
+        // N503 D17: a pet that is not out may still carry items in its own pack - those must come out first as well.
+        if ((following && cargoCount(player) > 0) || BeastOfBurden.petPackCount(player, pet) > 0) {
             player.message("Your ${upgradedName(petName(player, pet))} is still carrying items. Take them out first.")
             return false
         }

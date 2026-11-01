@@ -1,7 +1,6 @@
 package gg.rsmod.plugins.content.mechanics.death
 
 import gg.rsmod.game.model.World
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
@@ -283,11 +282,19 @@ object PvpDeathBreakables {
         return ImbueRefund(route.currency, route.price)
     }
 
+    /**
+     * N503 D13/D14 (owner 2026-11-01): a pet or a burden trinket lost on a PvP death goes to the victim's gravestone as itself (its
+     * attributes kept) - never to the killer, never kept.
+     */
+    fun petOrTrinket(itemId: Int): Boolean =
+        gg.rsmod.plugins.content.skills.summoning.Pets.isPetItem(itemId) || gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.isTrinket(itemId)
+
     /** Victim-side items of a converted [item] ([VICTIM_GRAVE]), per stack. */
-    fun victimGraveItems(item: Item): List<Item> = VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
+    fun victimGraveItems(item: Item): List<Item> =
+        if (petOrTrinket(item.id)) listOf(Item(item)) else VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
 
     fun converts(itemId: Int): Boolean =
-        itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
+        petOrTrinket(itemId) || itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
             OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId in kitToGrave ||
             gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(itemId) || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
@@ -343,7 +350,7 @@ object PvpDeathBreakables {
         breaking: List<DeathSlotItem>,
         toGrave: (Item) -> Unit = {},
         prices: ItemRiskValueProvider = GuidePriceValueProvider(world),
-        drop: (Item) -> Unit = { world.spawn(GroundItem(it, result.victim.tile, result.killer)) },
+        drop: (Item) -> Unit = { world.spawn(PvpLootTimes.groundItem(it, result.victim.tile, result.killer)) },
     ): Int {
         val victim = result.victim
         var equipmentChanged = false
@@ -489,6 +496,8 @@ object PvpDeathBreakables {
         }
         // K01 deel 5: a carried kit is never lost - it goes to the victim's gravestone ([VICTIM_GRAVE]), nothing for the killer.
         if (gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(id)) return emptyList()
+        // N503 D13/D14: a pet or a burden trinket goes to the victim's gravestone ([victimGraveItems]), nothing for the killer.
+        if (petOrTrinket(id)) return emptyList()
         // "Items Kept on Death": dropped to the PKer as the non-ornamented item; its kit goes to the victim's gravestone (every kit is
         // untradeable since K01 deel 5 - before, the PKer got the tradeable kit as well).
         if (id in kitToGrave) return listOf(Item(OsrsOrnamentKits.forOrnamented(id)!!.base, item.amount))

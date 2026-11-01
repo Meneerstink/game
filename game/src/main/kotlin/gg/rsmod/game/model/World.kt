@@ -364,7 +364,7 @@ class World(
             groundItem.currentCycle++
 
             if ((groundItem.isPublic() || remainPrivate) &&
-                groundItem.currentCycle >= gameContext.gItemDespawnDelay &&
+                groundItem.currentCycle >= groundItem.despawnAt(this) &&
                 groundItem.respawnCycles == -1
             ) {
                 /*
@@ -372,7 +372,7 @@ class World(
                  * despawn delay set by our game, we add it to our removal queue.
                  */
                 groundItemRemoval.add(groundItem)
-            } else if (!groundItem.isPublic() && groundItem.currentCycle >= gameContext.gItemPublicDelay) {
+            } else if (!groundItem.isPublic() && groundItem.currentCycle >= groundItem.publicAt(this)) {
                 /*
                  * If the ground item is not public, but its cycle count has
                  * reached the public delay set by our game, we make it public.
@@ -591,7 +591,8 @@ class World(
             val oldItem =
                 chunk.getEntities<GroundItem>(tile, EntityType.GROUND_ITEM).firstOrNull {
                     it.item == item.item &&
-                        it.ownerUID == item.ownerUID
+                        it.ownerUID == item.ownerUID &&
+                        it.sameTiming(item)
                 }
             if (oldItem != null) {
                 val oldAmount = oldItem.amount

@@ -99,7 +99,10 @@ object PlayerDeathAction : KLogging() {
         player.resetFacePawn()
         wait(2)
         player.animate(deathAnim.id)
-        world.spawn(deathSound(player))
+        // N505 (owner 2026-11-01 "geen death-geluiden"; his client has Area sounds and Music at 0 - test client 11-01 played 512): the
+        // dying player hears his own cry as an ordinary sound effect (the Sound effects slider), everyone around him as an area sound.
+        world.spawn(deathSound(player).also { it.excluded = player })
+        player.playDeathCry()
         wait(deathAnim.cycleLength + 1)
         // Void PlayerDeath: the death animation plays out first, then the death jingle and the items (owner 2026-10-04 030147:
         // "the character loses the inventory first, then the death animation; no sound"). The pre-death hook resolves the items
@@ -173,6 +176,13 @@ object PlayerDeathAction : KLogging() {
         val deathPluginInstance = Plugin(player)
         deathPlugin(deathPluginInstance)
     }
+}
+
+/** N505: the victim's own death cry, sent like a plugin sound effect (SynthSoundMessage) and traced the same way. */
+private fun Player.playDeathCry() {
+    val id = PlayerDeathAction.deathSound(this).id
+    gg.rsmod.game.model.AvTrace.log { "sound player=$username id=$id loops=1 delay=0 volume=255 rate=256 cycle=${world.currentCycle} from=PlayerDeathAction (own death cry)" }
+    write(gg.rsmod.game.message.impl.SynthSoundMessage(sound = id, loops = 1, delay = 0, volume = 255, rate = 256))
 }
 
 private fun Player.playJingle(

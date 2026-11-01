@@ -33,6 +33,14 @@ object TabEvents {
         PaneMountHooks.register(InterfaceDestination.ATTACK_TAB.interfaceId) { player -> combatTab(player) }
         PaneMountHooks.register(InterfaceDestination.PRAYER_TAB.interfaceId) { player ->
             gg.rsmod.plugins.content.mechanics.prayer.Prayers.unlockPrayerBookButtons(player)
+            // N515 (test client 2026-11-01 02:1x): after a switch to the Curses or Ruinous book their cells had no "Activate" (right-click:
+            // only Cancel) and no click reached the server - the grid of those books is built by the tab's onLoad script after the
+            // mount, so the events of this tick could land before the slots existed. Sent once more a tick later, like the spellbooks
+            // (magic_tab.plugin.kts).
+            player.world.queue {
+                wait(1)
+                if (player.isOnline) gg.rsmod.plugins.content.mechanics.prayer.Prayers.unlockPrayerBookButtons(player)
+            }
         }
         // The chat history (137 in 752:9) was mounted at login only; a window-mode switch re-mounts 752 without it.
         PaneMountHooks.register(InterfaceDestination.CHAT_BOX_PANE.interfaceId) { player ->

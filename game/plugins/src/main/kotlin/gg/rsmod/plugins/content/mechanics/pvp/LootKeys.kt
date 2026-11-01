@@ -302,7 +302,7 @@ object LootKeys {
             setSlot(killer, index, items)
             if (!killer.inventory.add(KEY_IDS[index], 1).hasSucceeded()) {
                 // Owner 2026-09-17: a full inventory never loses the key - it lands on the victim's tile.
-                world.spawn(GroundItem(KEY_IDS[index], 1, victim.tile, killer))
+                world.spawn(gg.rsmod.plugins.content.mechanics.death.PvpLootTimes.groundItem(KEY_IDS[index], 1, victim.tile, killer))
                 markKeyOnGround(killer, index)
                 killer.message("Your inventory is full, so your loot key has dropped on the ground.")
             } else {

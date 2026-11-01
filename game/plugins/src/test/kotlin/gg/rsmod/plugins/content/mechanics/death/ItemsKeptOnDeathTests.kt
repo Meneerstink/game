@@ -48,28 +48,32 @@ class ItemsKeptOnDeathTests {
 
     @Test
     fun `N241 - Wilderness beyond level 20 only exists for a player kill, so the two toggles move together`() {
-        val off = ItemsKeptOnDeath.Toggles(protectItem = false, skulled = true, killedByPlayer = false, deepWilderness = false)
+        val off = ItemsKeptOnDeath.Toggles(skulled = true, killedByPlayer = false, deepWilderness = false)
         val deep = ItemsKeptOnDeath.toggled(off, 3)
-        assertTrue(deep.deepWilderness && deep.killedByPlayer, "ticking level 20 ticks Killed by a player")
+        assertTrue(deep.deepWilderness && deep.killedByPlayer, "ticking level 20 unticks PvM death")
         val pvm = ItemsKeptOnDeath.toggled(deep, 2)
-        assertTrue(!pvm.killedByPlayer && !pvm.deepWilderness, "unticking Killed by a player unticks level 20")
+        assertTrue(!pvm.killedByPlayer && !pvm.deepWilderness, "ticking PvM death unticks level 20")
         val shallow = ItemsKeptOnDeath.toggled(deep, 3)
         assertTrue(shallow.killedByPlayer && !shallow.deepWilderness, "level 20 off keeps the player kill")
-        assertEquals(off.copy(protectItem = true), ItemsKeptOnDeath.toggled(off, 0))
+        // N503 D1: the hidden Protect Item toggle changes nothing; D2: the skull toggle flips the skull.
+        assertEquals(off, ItemsKeptOnDeath.toggled(off, 0))
+        assertEquals(off.copy(skulled = false), ItemsKeptOnDeath.toggled(off, 1))
     }
 
     private val value = ItemRiskValueProvider { if (it == Items.AVERNIC_DEFENDER) 600_000L else 1L }
 
     @Test
-    fun `PvM - protect item keeps the most valuable item, everything else goes to the gravestone`() {
+    fun `N503 D2 PvM - unskulled keeps the 3 most valuable items, everything else goes to the gravestone`() {
         val player = newPlayer()
         player.inventory[0] = Item(Items.AVERNIC_DEFENDER, 1)
         player.inventory[1] = Item(Items.COINS_995, 100)
-        val preview = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(true, false, false, false), value)
-        // Owner 2026-10-04: killed by a monster, a lockable untradeable (Avernic defender) is always kept; Protect Item keeps 1 more.
-        assertEquals(listOf(Items.AVERNIC_DEFENDER, Items.COINS_995), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id })
-        assertEquals(listOf(Items.COINS_995 to 99), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
+        val preview = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = false, deepWilderness = false), value)
+        // Owner 2026-10-04: killed by a monster, a lockable untradeable (Avernic defender) is always kept; unskulled 3 more items.
+        assertEquals(listOf(Items.AVERNIC_DEFENDER to 1, Items.COINS_995 to 3), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id to it.item.amount })
+        assertEquals(listOf(Items.COINS_995 to 97), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
         assertEquals(0, preview.graveFee, "the gravestone is free")
+        val skulled = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = true, killedByPlayer = false, deepWilderness = false), value)
+        assertEquals(listOf(Items.COINS_995 to 100), skulled.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount }, "skulled keeps none")
     }
 
     @Test
@@ -77,13 +81,13 @@ class ItemsKeptOnDeathTests {
         val player = newPlayer()
         player.inventory[0] = Item(Items.AVERNIC_DEFENDER, 1)
         player.inventory[1] = Item(Items.COINS_995, 100)
-        val low = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(false, false, true, false), value)
+        val low = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = true, deepWilderness = false), value)
         val kept = low.entries.single { it.section == ItemsKeptOnDeath.Section.KEPT }
         assertEquals(Items.AVERNIC_DEFENDER, kept.item.id)
         assertTrue("600,000 coins" in kept.message, kept.message)
         assertEquals(listOf(Items.COINS_995), low.entries.filter { it.section == ItemsKeptOnDeath.Section.LOST }.map { it.item.id })
 
-        val deep = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(false, false, true, true), value)
+        val deep = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = true, deepWilderness = true), value)
         assertEquals(listOf(Items.AVERNIC_DEFENDER), deep.entries.filter { it.section == ItemsKeptOnDeath.Section.DELETED }.map { it.item.id })
         assertTrue(deep.entries.none { it.section == ItemsKeptOnDeath.Section.KEPT })
         assertEquals(600_100L, deep.riskValue, "the killer's coins count as risk")
