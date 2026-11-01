@@ -555,11 +555,12 @@ object SystemsSuite : Conformance.Suite {
                 if (run.world.collision.isClipped(start)) continue
                 val label = "K$id-$n"
                 val p = run.bot(start, label)
-                wait(2)
+                wait(5) // the login messages and HUD first, as a player's client (2 ticks was too early: the click got lost)
                 val c = run.world.currentCycle
                 Bots.inject(p, OpLoc1Message(0, x, id, z))
-                repeat(16) { wait(1) }
-                val anims = run.recording.of(label, "out").filter { it.cycle >= c && (it.text.startsWith("anim id=740 ") || it.text.startsWith("anim id=1148 ") || it.text.startsWith("anim id=839 ")) }
+                repeat(30) { wait(1) } // a bot on the far side first walks round to the climbing side (9306: 2907,3685 -> 2912,3687)
+                // 3381 / 3382 = the OSRS rock-climb animations (one per direction) the Trollheim rocks use now (test client 2026-11-01).
+                val anims = run.recording.of(label, "out").filter { it.cycle >= c && listOf(740, 1148, 839, 3381, 3382).any { a -> it.text.startsWith("anim id=$a ") } }
                 val m = run.recording.of(label, "msg").filter { it.cycle >= c }.map { it.text }.filter { it.contains("MessageGame") && !it.contains("__RSPS_HUD__") }
                 detail += "side$n: anim=${anims.size} at ${p.tile.x},${p.tile.z} ${m.joinToString(" / ").take(80)}; "
                 if (anims.isNotEmpty()) {
@@ -621,9 +622,10 @@ object SystemsSuite : Conformance.Suite {
         run: Conformance.Run,
         arena: Tile,
     ) {
+        // N101 (Deadman's Chest): the trinket moved from the Deadman shop into the chest's exclusive loot.
         run.expectTrue(
-            "trinket", "sold in the Deadman shop",
-            StoreCatalogue.entries(StoreCatalogue.Shop.DEADMAN).any { it.purchaseItem == Items.TRINKET_OF_FAIRIES }, "Deadman shop entries",
+            "trinket", "comes from the Deadman's Chest",
+            gg.rsmod.plugins.content.mechanics.pvp.chest.DeadmanChestLoot.FIXED.any { it.item == Items.TRINKET_OF_FAIRIES }, "DeadmanChestLoot.FIXED",
         )
         val a = run.bot(arena.transform(4, 3), "TT")
         a.inventory.add(Items.TRINKET_OF_FAIRIES, 1)
@@ -929,7 +931,8 @@ object SystemsSuite : Conformance.Suite {
         run.recording.track(a, "TA")
         repeat(12) { wait(1) }
         val e = "chattabs"
-        for ((component, varp) in listOf(8 to 2159, 16 to 1055, 22 to 1054)) {
+        // 751:16 (Assist, varp 1055) is gone since A21 (owner 2026-10-11: the Assist System is removed; TabEvents hides its tab).
+        for ((component, varp) in listOf(8 to 2159, 22 to 1054)) {
             for (op in 2..4) {
                 Bots.button(a, 751, component, option = op)
                 wait(1)
@@ -1230,21 +1233,7 @@ object SystemsSuite : Conformance.Suite {
         a.attr.remove(gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR)
         b.attr.remove(gg.rsmod.plugins.content.activity.casino.FLOWER_MATCH_ATTR)
         wait(1)
-        // POH lectern (400): Camelot teleport tablets, option 1 (one) and option 4 (X, typed 2) with the lectern open.
-        a.inventory.add(Items.SOFT_CLAY, 5)
-        a.inventory.add(Items.LAW_RUNE, 10)
-        a.inventory.add(Items.AIR_RUNE, 50)
-        a.openInterface(400, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
-        wait(1)
-        Bots.button(a, 400, 5, option = 1)
-        repeat(8) { wait(1) }
-        run.check(e, "lectern: Make 1 (lectern open)", a.inventory.getItemCount(Items.CAMELOT_TELEPORT), "made" to 1)
-        a.openInterface(400, gg.rsmod.plugins.api.InterfaceDestination.MAIN_SCREEN)
-        wait(1)
-        Bots.button(a, 400, 5, option = 4)
-        typeNumber(a, 2)
-        repeat(14) { wait(1) }
-        run.check(e, "lectern: Make X = 2 (lectern open)", a.inventory.getItemCount(Items.CAMELOT_TELEPORT), "made" to 3)
+        // The POH lectern is gone with the whole study (save point 2026-10-11, owner-approved house layout) - no lectern check.
         // Dizana's quiver: Store-X with the quiver screen open.
         val quiverId =
             listOf(Items.DIZANAS_QUIVER, Items.DIZANAS_QUIVER_UNCHARGED, Items.DIZANAS_QUIVER_L, Items.DIZANAS_QUIVER_L_UNCHARGED).firstOrNull { id ->
