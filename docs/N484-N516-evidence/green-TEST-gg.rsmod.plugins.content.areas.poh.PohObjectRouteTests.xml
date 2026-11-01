@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.areas.poh.PohObjectRouteTests" tests="2" skipped="0" failures="0" errors="0" timestamp="2026-11-01T10:11:51" hostname="LAPTOP-KLOL515N" time="0.376">
+  <properties/>
+  <testcase name="every option of every loc the house places has a route" classname="gg.rsmod.plugins.content.areas.poh.PohObjectRouteTests" time="0.092"/>
+  <testcase name="the listed routes exist in their files" classname="gg.rsmod.plugins.content.areas.poh.PohObjectRouteTests" time="0.284"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 01, 2026 11:11:50 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>

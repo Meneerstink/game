@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" tests="19" skipped="0" failures="1" errors="0" timestamp="2026-11-01T07:07:09" hostname="LAPTOP-KLOL515N" time="30.428">
+  <properties/>
+  <testcase name="N100 Drop Viewer shows the killer's real chance for every bulk npc table at every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="17.988"/>
+  <testcase name="N92 class - only the fixed rewards, the AFK area and test bots bypass the rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="1.711"/>
+  <testcase name="N100 breach monsters - the unique chances get the rate, the regular lines are served rarest first, one line per roll" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="2.623"/>
+  <testcase name="N92 rate command - the real rate command prints the rate the player really gains, every skill by name and by number in every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="1.738"/>
+  <testcase name="N92 bonus XP is gone - with bonus-experience on, a login shows no bonus orb and no gain gets the time-played bonus" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.026"/>
+  <testcase name="N100 Barrows chest - every roll stays one result, the rare lines get the bracket factor, the commons give way" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.055">
+    <failure message="java.lang.AssertionError: seven rolls, ONE result each at 1.0x expected:&lt;7&gt; but was:&lt;5&gt;" type="java.lang.AssertionError">java.lang.AssertionError: seven rolls, ONE result each at 1.0x expected:&lt;7&gt; but was:&lt;5&gt;
+	at org.junit.Assert.fail(Assert.java:89)
+	at org.junit.Assert.failNotEquals(Assert.java:835)
+	at org.junit.Assert.assertEquals(Assert.java:120)
+	at gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests.N100 Barrows chest - every roll stays one result, the rare lines get the bracket factor, the commons give way(AnnihilationRatesTests.kt:521)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.junit.runners.model.FrameworkMethod$1.runReflectiveCall(FrameworkMethod.java:59)
+	at org.junit.internal.runners.model.ReflectiveCallable.run(ReflectiveCallable.java:12)
+	at org.junit.runners.model.FrameworkMethod.invokeExplosively(FrameworkMethod.java:56)
+	at org.junit.internal.runners.statements.InvokeMethod.evaluate(InvokeMethod.java:17)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.BlockJUnit4ClassRunner$1.evaluate(BlockJUnit4ClassRunner.java:100)
+	at org.junit.runners.ParentRunner.runLeaf(ParentRunner.java:366)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:103)
+	at org.junit.runners.BlockJUnit4ClassRunner.runChild(BlockJUnit4ClassRunner.java:63)
+	at org.junit.runners.ParentRunner$4.run(ParentRunner.java:331)
+	at org.junit.runners.ParentRunner$1.schedule(ParentRunner.java:79)
+	at org.junit.runners.ParentRunner.runChildren(ParentRunner.java:329)
+	at org.junit.runners.ParentRunner.access$100(ParentRunner.java:66)
+	at org.junit.runners.ParentRunner$2.evaluate(ParentRunner.java:293)
+	at org.junit.internal.runners.statements.RunAfters.evaluate(RunAfters.java:27)
+	at org.junit.runners.ParentRunner$3.evaluate(ParentRunner.java:306)
+	at org.junit.runners.ParentRunner.run(ParentRunner.java:413)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.runTestClass(JUnitTestClassExecutor.java:108)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:57)
+	at org.gradle.api.internal.tasks.testing.junit.JUnitTestClassExecutor.execute(JUnitTestClassExecutor.java:39)
+	at org.gradle.api.internal.tasks.testing.junit.AbstractJUnitTestClassProcessor.processTestClass(AbstractJUnitTestClassProcessor.java:62)
+	at org.gradle.api.internal.tasks.testing.SuiteTestClassProcessor.processTestClass(SuiteTestClassProcessor.java:52)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:566)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:36)
+	at org.gradle.internal.dispatch.ReflectionDispatch.dispatch(ReflectionDispatch.java:24)
+	at org.gradle.internal.dispatch.ContextClassLoaderDispatch.dispatch(ContextClassLoaderDispatch.java:33)
+	at org.gradle.internal.dispatch.ProxyDispatchAdapter$DispatchingInvocationHandler.invoke(ProxyDispatchAdapter.java:94)
+	at com.sun.proxy.$Proxy2.processTestClass(Unknown Source)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker$2.run(TestWorker.java:176)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.executeAndMaintainThreadName(TestWorker.java:129)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:100)
+	at org.gradle.api.internal.tasks.testing.worker.TestWorker.execute(TestWorker.java:60)
+	at org.gradle.process.internal.worker.child.ActionExecutionWorker.execute(ActionExecutionWorker.java:56)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:113)
+	at org.gradle.process.internal.worker.child.SystemApplicationClassLoaderWorker.call(SystemApplicationClassLoaderWorker.java:65)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.run(GradleWorkerMain.java:69)
+	at worker.org.gradle.process.internal.worker.GradleWorkerMain.main(GradleWorkerMain.java:74)
+</failure>
+  </testcase>
+  <testcase name="N92 class - every skill gains exactly its bracket rate in every bracket and xpMultiplier tells the real gain" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.202"/>
+  <testcase name="N100 Godwars Frozen key pieces - the hit window is rate times wider, capped, nothing above combat 134" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.126"/>
+  <testcase name="N184 quest XP is exact, the Wolf Whistle reward and the Summoning kit follow the rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.212"/>
+  <testcase name="N100 rolls that are not a monster kill stay 1x - boxes, chests, pickpockets, stalls and the bird-nest route" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="1.002"/>
+  <testcase name="N92 red line - exactly once per rate change at 61, 81 and 96, never at relog, never for an existing account" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.252"/>
+  <testcase name="N100 kill drops - rarest first, one pick per table, guaranteed and quantities stay, nested once" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="3.442"/>
+  <testcase name="N92 class - no command or engine copy of the 2011 level curve call is left" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.919"/>
+  <testcase name="N92 owner case - combat 138 with every skill 99 gains combat XP at 20x and skilling XP at 10x" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.003"/>
+  <testcase name="N92 bonus XP command - the staff command that granted a bonus XP access which no longer does anything is gone" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.008"/>
+  <testcase name="N92 rate command - skill aliases, unknown names and numbers outside the skill list never print a made-up rate" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.015"/>
+  <testcase name="N349 every Deadman lamp gives exactly what the Emblem Trader says, at every bracket" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.075"/>
+  <testcase name="N38 a lamp names the experience really gained, also at the 200M cap" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.004"/>
+  <testcase name="N92 rate command - the owner's 138 account, a new account and the tier rise (never down)" classname="gg.rsmod.plugins.content.mechanics.pvp.annihilation.AnnihilationRatesTests" time="0.018"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[SLF4J: No SLF4J providers were found.
+SLF4J: Defaulting to no-operation (NOP) logger implementation
+SLF4J: See https://www.slf4j.org/codes.html#noProviders for further details.
+SLF4J: Class path contains SLF4J bindings targeting slf4j-api versions 1.7.x or earlier.
+SLF4J: Ignoring binding found at [jar:file:/C:/Users/Pa/.gradle/caches/modules-2/files-2.1/org.apache.logging.log4j/log4j-slf4j-impl/2.11.2/4d44e4edc4a7fb39f09b95b09f560a15976fa1ba/log4j-slf4j-impl-2.11.2.jar!/org/slf4j/impl/StaticLoggerBinder.class]
+SLF4J: See https://www.slf4j.org/codes.html#ignoredBindings for an explanation.
+nov. 01, 2026 8:07:15 A.M. io.netty.util.internal.PlatformDependent <clinit>
+INFO: Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+]]></system-err>
+</testsuite>
