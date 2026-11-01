@@ -370,8 +370,10 @@ object SummoningSuite : Conformance.Suite {
         // Foragers cannot be given items (withdraw only), so they have no stored cargo to rescue.
         val cargo = capacity != null && BeastOfBurden.activeContainer(bot) != null && !BeastOfBurden.isWithdrawOnlyNpc(fam.id)
         val office0 = BeastOfBurden.deathsDomainCount(bot)
+        var cargoId = -1
         if (cargo) {
             val item = cargoItem(bot)
+            cargoId = item
             bot.inventory.add(item, 1)
             Bots.itemOnNpc(bot, bot.inventory.getItemIndex(item, false), fam)
             wait(2)
@@ -382,13 +384,26 @@ object SummoningSuite : Conformance.Suite {
         val anims = run.recording.of("familiar", "out").filter { it.cycle >= c && it.text.startsWith("anim ") }.map { idOf(it.text) }
         sound(run, e, "familiar death", c, run.world.currentCycle, "familiar")
         run.check(e, "death animation", anims.lastOrNull(), "void" to v?.get("death_anim")?.takeIf { !it.isNull }?.asInt())
-        run.expectTrue(e, "gone after death", Familiar.current(bot) == null && !run.world.npcs.contains(fam), "still there=${run.world.npcs.contains(fam)}")
+        // The npc stays while its death animation plays (the imported familiar death sequences are longer than the old 667 ones):
+        // wait for it, at most 20 ticks after the killing hit, and report how long it took.
+        var gone = 8
+        while (gone < 20 && (Familiar.current(bot) != null || run.world.npcs.contains(fam))) { wait(1); gone++ }
+        run.expectTrue(e, "gone after death", Familiar.current(bot) == null && !run.world.npcs.contains(fam), "still there=${run.world.npcs.contains(fam)} after $gone ticks")
         bot.varps.getState(VARP_FOLLOWER_CHATHEAD).let { v1174 ->
             run.expectTrue(e, "varp 1174 cleared after death", v1174 == 0 || v1174 == -1, "1174=$v1174", NO_FOLLOWER_1174)
         }
         val said = gameMessages(run, "Conf1", c)
         run.expectTrue(e, "owner told the familiar died", said.isNotEmpty(), said.joinToString(" / ").ifEmpty { "(no message)" }, "a message")
-        if (cargo) run.check(e, "BoB cargo rescued into Death's Office (owner rule)", BeastOfBurden.deathsDomainCount(bot) - office0, "owner" to 1)
+        // N503 D16 (owner 2026-11-01, OSRS): a beast of burden that dies drops its items where it died, as the owner's ground items -
+        // no longer to Death's Office.
+        if (cargo) {
+            val deathTile = fam.tile
+            val onGround = run.world.chunks.get(deathTile, createIfNeeded = false)
+                ?.getEntities<gg.rsmod.game.model.entity.GroundItem>(deathTile, gg.rsmod.game.model.EntityType.GROUND_ITEM)
+                ?.count { it.item == cargoId && it.isOwnedBy(bot) } ?: 0
+            run.check(e, "BoB cargo falls where it died (D16)", onGround, "owner 2026-11-01" to 1)
+            run.check(e, "nothing to Death's Office", BeastOfBurden.deathsDomainCount(bot) - office0, "D16" to 0)
+        }
         run.recording.untrack(fam)
     }
 
