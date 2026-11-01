@@ -290668,3 +290668,9 @@
   tradeable: false
   weight: 0.4
   equipment: null
+- id: 24623
+  name: "Deadman chest"
+  examine: "Supplies to start again after a player killed you."
+  tradeable: false
+  weight: 4.0
+  equipment: null

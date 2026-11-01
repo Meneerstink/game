@@ -82,7 +82,9 @@ class RuinousPowersTests {
             val struct = definitions.get(StructDef::class.java, enum.getInt(slot))
             assertEquals(RuinousPowersCacheTool.STRUCT_BASE + slot, struct.id)
             assertEquals(prayer.level, struct.getInt(737))
-            assertEquals("Level ${prayer.level}<br>${prayer.named}<br>${cell.text}", struct.getString(734))
+            // N503 D1 (owner 2026-11-01): ProtectItemHighRiskCacheTool replaced the Protect Item line in the cache.
+            val text = if (prayer == RuinousPrayer.PROTECT_ITEM) gg.rsmod.game.tools.importer.ProtectItemHighRiskCacheTool.DISABLED_LINE else cell.text
+            assertEquals("Level ${prayer.level}<br>${prayer.named}<br>$text", struct.getString(734))
             val active = definitions.get(VarbitDef::class.java, prayer.varbit)
             assertEquals(RuinousPowersCacheTool.ACTIVE_VARP, active.varp)
             assertEquals(slot, active.startBit)

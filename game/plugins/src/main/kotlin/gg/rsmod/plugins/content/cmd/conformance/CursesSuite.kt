@@ -187,14 +187,17 @@ object CursesSuite : Conformance.Suite {
         }
         activationSound(run, e, c, c1, anims, gfx)
         // Drain over 30 s at prayer bonus 0 (no equipment).
-        c["drain_s_per_tenth"]?.get("novite")?.asDouble()?.takeIf { it > 0 }?.let { rate ->
+        // An owner decision wins over Novite (Turmoil drains like Piety, balance plan 2026-10-31).
+        val drain = c["drain_s_per_tenth"]
+        val owner = drain?.get("owner_2026_10_31") != null
+        (drain?.get("owner_2026_10_31") ?: drain?.get("novite"))?.asDouble()?.takeIf { it > 0 }?.let { rate ->
             // Points are whole numbers (varbit 9816); 30 s gives 1.6 to 15 points, judged within 1 point.
             val p0 = bot.getCurrentPrayerPoints()
             val ms = 30_000L
             wait((ms / world.gameContext.cycleTime).toInt())
             val points = p0 - bot.getCurrentPrayerPoints()
             val expected = ms / 1000.0 / rate / 10.0
-            run.check(e, "drain in 30 s (prayer points, bonus 0)", points, "novite" to "%.1f".format(java.util.Locale.ENGLISH, expected), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) <= 1.0 })
+            run.check(e, "drain in 30 s (prayer points, bonus 0)", points, (if (owner) "owner 2026-10-31" else "novite") to "%.1f".format(java.util.Locale.ENGLISH, expected), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) <= 1.0 })
         }
         // Off again (click), and it really goes off.
         Bots.button(bot, BOOK, BOOK_GRID, 1, slot)
@@ -1195,12 +1198,13 @@ object CursesSuite : Conformance.Suite {
 
     /**
      * The chat lines the bot received from [from] on. The Deadman HUD rides on type-99 game messages (`__RSPS_HUD__:...`) that
-     * the client never prints; they were taken for the refusal message (conform curses 2026-10-09: "measured __RSPS_HUD__:dmmt|").
+     * the client never prints; they were taken for the refusal message (conform curses 2026-10-09: "measured __RSPS_HUD__:dmmt|"; 2026-11-01 the same
+     * with `__RSPS_UI__:tip|` - every client hook line is skipped).
      */
     private fun messages(
         run: Conformance.Run,
         from: Int,
-    ) = run.recording.of("Conf1", "msg").filter { it.cycle >= from && it.text.startsWith("MessageGameMessage") && !it.text.contains("message=__RSPS_HUD__") }.map { it.text }
+    ) = run.recording.of("Conf1", "msg").filter { it.cycle >= from && it.text.startsWith("MessageGameMessage") && !it.text.contains("message=__RSPS_") }.map { it.text }
 
     private fun text(msg: String) = Regex("message=(.*?)(, \\w+=|\\)$)").find(msg)?.groupValues?.get(1)
 

@@ -75,7 +75,9 @@ class FollowerRecoveryTextTests {
     fun `pickup prompt login notice and all recovery routes use office not the entrance name`() {
         val root = File("src/main/kotlin/gg/rsmod/plugins/content")
         val pets = File(root, "skills/summoning/Pets.kt").readText()
-        assertTrue("Yes - its items go to Death's Office." in pets)
+        // N503 D17 (owner 2026-11-01): Pick-up keeps the items in the pet - no Death's Office prompt any more.
+        assertTrue("Your pet keeps the items it is carrying." in pets)
+        assertFalse("its items go to Death's Office." in pets.substringAfter("private fun keepCargo"))
         val login = File(root, "skills/summoning/familiar.plugin.kts").readText()
         assertTrue("You have items stored at Death's Office." in login)
         assertTrue("Death's Office" in DeathsOffice.loginNotices(null, true).single())

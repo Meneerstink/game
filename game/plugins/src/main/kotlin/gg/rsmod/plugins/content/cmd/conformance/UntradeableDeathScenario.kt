@@ -224,9 +224,13 @@ object UntradeableDeathScenario {
             Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_L).forEach {
             run.expectTrue(e, "monster: ${name(run, it)} is kept whole", held.any { h -> h.id == it && !UntradeableDeathProtection.isDamaged(h) }, "held=${held.map { h -> h.id }}")
         }
-        listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE, Items.GLOVES_7462).forEach {
-            run.expectTrue(e, "monster: ${name(run, it)} waits in the gravestone", it in grave, "gravestone=$grave")
+        // N503 D2 (owner 2026-11-01): an unskulled monster death keeps the 3 most valuable items - so these may be kept instead of
+        // waiting in the gravestone, but each is in one of the two places and at most 3 of them are kept.
+        val graveOrKept = listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE, Items.GLOVES_7462)
+        graveOrKept.forEach {
+            run.expectTrue(e, "monster: ${name(run, it)} waits in the gravestone or is one of the 3 kept", it in grave || held.any { h -> h.id == it }, "gravestone=$grave held=${held.map { h -> h.id }}")
         }
+        run.expectTrue(e, "monster: at most 3 of them kept (D2)", graveOrKept.count { id -> held.any { it.id == id } } <= 3, "held=${held.map { it.id }}")
         gg.rsmod.plugins.content.mechanics.death.Gravestone.clear(b)
         b.gravestone.removeAll()
     }

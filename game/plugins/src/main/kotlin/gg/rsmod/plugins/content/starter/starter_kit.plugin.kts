@@ -23,6 +23,11 @@ on_item_option(item = NewPlayerConfig.current.starterChestItem, option = "open")
     NewPlayerStart.openStarterPack(player)
 }
 
+// N517 / N503 D9: the Deadman chest a PvP death victim receives (PvpRespawnChest).
+on_item_option(item = PvpRespawnChest.ITEM, option = "open") {
+    PvpRespawnChest.open(player)
+}
+
 on_login {
     val newAccount = player.attr[NEW_ACCOUNT_ATTR] ?: return@on_login
     if (newAccount) {

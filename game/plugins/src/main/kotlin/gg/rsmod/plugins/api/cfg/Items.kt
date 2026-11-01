@@ -20487,4 +20487,7 @@ object Items {
     const val VOID_KNIGHT_DEFLECTOR_L = 24620
     const val VOID_KNIGHT_DEFLECTOR_L_BROKEN = 24621
     const val VOID_KNIGHT_DEFLECTOR_L_MANGLED = 24622
+
+    // N517 / N503 D9 (owner 2026-11-01): the Deadman chest a PvP death victim receives - clone of 23881 (Deadman starter pack).
+    const val DEADMAN_CHEST = 24623
 }

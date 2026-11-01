@@ -129,6 +129,11 @@ fun resolveDeath(victim: Player) {
                 cargo + casinoCoins(victim) + listOfNotNull(gg.rsmod.plugins.content.skills.summoning.Pets.takeFollowerForDeath(victim))
             },
         )
+    if (executed && pvpDeath && killer != null) {
+        // N517 / N503 D9 (owner 2026-11-01): a player killer (not an alt or staff, not a guard) - the victim gets a Deadman chest
+        // (78,000 coins + a Deadman's skull), at most one an hour (PvpRespawnChest).
+        gg.rsmod.plugins.content.starter.PvpRespawnChest.grant(victim)
+    }
     if (executed) {
         // Audit X-05: persist the transfer at once, like trades do - a crash before the next autosave
         // would otherwise give the victim everything back while the killer keeps the loot.

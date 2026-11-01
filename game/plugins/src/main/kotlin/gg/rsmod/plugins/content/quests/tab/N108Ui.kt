@@ -240,7 +240,12 @@ object N108Ui {
 
     /** Tooltips (component hash -> text, '\n' = new line) shown by the client while the mouse is on the component. */
     fun tooltips(player: Player, tips: List<Pair<Int, String>>) {
-        sendBatched(player, "tip|", tips.map { "${it.first}," + it.second.replace(";", ",").replace("|", "/") })
+        // Only what changed (2026-11-01: the Deadman tab's Map button sent its tooltip every tick to every player - 4,058 lines in
+        // 40 minutes to one conformance bot, which also hid the real chat lines from the curses suite). [reset] clears it.
+        val changed = tips.filter { (hash, text) -> cache(player)[key(hash ushr 16, hash and 0xFFFF, 10)] != text }
+        if (changed.isEmpty()) return
+        changed.forEach { (hash, text) -> cache(player)[key(hash ushr 16, hash and 0xFFFF, 10)] = text }
+        sendBatched(player, "tip|", changed.map { "${it.first}," + it.second.replace(";", ",").replace("|", "/") })
     }
 
     /** Sets the scroll height of [layer] and rebuilds its scrollbar (DeathsOffice SCROLL_SCRIPT). */

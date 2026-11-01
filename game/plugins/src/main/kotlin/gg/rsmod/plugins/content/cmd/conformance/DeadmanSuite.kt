@@ -263,6 +263,9 @@ object DeadmanSuite : Conformance.Suite {
             val singles = before.filter { it.second == 1 }.sortedByDescending { prices.getValue(it.first) }
             val expectKept = singles.take(expectedKept).map { it.first }.sorted()
             val deathTile = b.tile
+            // N517 / N503 D9: the victim of a player kill gets a Deadman chest, at most one an hour.
+            val chestDue = gg.rsmod.plugins.content.starter.PvpRespawnChest.eligible(b)
+            val chest = gg.rsmod.plugins.content.starter.PvpRespawnChest.ITEM
             // State a PvP death must clear or restore (OSRS: Tele Block, venom, special attack, prayer, run energy).
             b.timers[gg.rsmod.game.model.timer.TELEBLOCK_TIMER] = 500
             Venom.envenom(b)
@@ -282,8 +285,13 @@ object DeadmanSuite : Conformance.Suite {
             Combat.reset(a)
             wait(2)
             run.expectTrue(e, "$label: the victim died and respawned", died && !b.isDead(), "dead=${b.isDead()} tile=${b.tile}")
-            val keptNow = (b.equipment.toList() + b.inventory.toList()).filterNotNull().map { it.id to it.amount }
-            run.check(e, "$label: items kept", keptNow.map { it.first }.sorted(), "owner 2026-09-26: Protect Item keeps 1, else 0" to expectKept)
+            val respawned = (b.equipment.toList() + b.inventory.toList()).filterNotNull().map { it.id to it.amount }
+            run.check(e, "$label: Deadman chest after the PvP death", respawned.count { it.first == chest } + b.bank.getItemCount(chest),
+                "N517: one an hour per victim (due=$chestDue)" to if (chestDue) 1 else 0)
+            b.inventory.remove(chest, b.inventory.getItemCount(chest))
+            b.bank.remove(chest, b.bank.getItemCount(chest))
+            val keptNow = respawned.filter { it.first != chest }
+            run.check(e, "$label: items kept", keptNow.map { it.first }.sorted(), "N503 D1/D2: a PvP death keeps nothing, Protect Item does not work" to expectKept)
             val keyIds = gg.rsmod.plugins.content.mechanics.pvp.LootKeys.heldKeyIndexes(a)
             val keyItems = keyIds.flatMap { gg.rsmod.plugins.content.mechanics.pvp.LootKeys.slotItems(a, it) }.map { it.id to it.amount }
             run.check(e, "$label: one loot key for the killer", keyIds.size, "1 per kill" to 1)
@@ -319,8 +327,9 @@ object DeadmanSuite : Conformance.Suite {
         }
 
         kill("unskulled", skulled = false, protectItem = false, expectedKept = 0)
-        kill("unskulled + Protect Item", skulled = false, protectItem = true, expectedKept = 1)
-        kill("skulled + Protect Item", skulled = true, protectItem = true, expectedKept = 1)
+        // N503 D1 (owner 2026-11-01): Protect Item does not work in Deadman Mode - it never keeps an item.
+        kill("unskulled + Protect Item", skulled = false, protectItem = true, expectedKept = 0)
+        kill("skulled + Protect Item", skulled = true, protectItem = true, expectedKept = 0)
     }
 
     // ---- teleport: the Deadman teleport gate on the real spell button ---------------------------------------------------
@@ -1002,10 +1011,12 @@ object DeadmanSuite : Conformance.Suite {
             return n
         }
 
-        // 1. Killed by the npc alone: everything to the gravestone (owner 2026-09-26: PvM deaths are recoverable).
+        // 1. Killed by the npc alone: everything to the gravestone (owner 2026-09-26: PvM deaths are recoverable) - N503 D2: a skulled
+        // player keeps nothing on a monster death, so the godsword must reach the gravestone (unskulled it would be one of the 3 kept).
         reset(v, spot)
         giant.moveTo(spot.transform(1, 0))
         v.inventory.add(Items.ARMADYL_GODSWORD, 1)
+        gg.rsmod.plugins.content.mechanics.pvp.PvpSkull.applyTestSkull(v)
         val tile1 = v.tile
         val keys0 = keyCount()
         val ground0 = groundNear(tile1, Items.ARMADYL_GODSWORD)
