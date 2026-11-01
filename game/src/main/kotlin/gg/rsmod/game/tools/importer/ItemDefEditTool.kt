@@ -20,6 +20,7 @@ import java.io.File
  * edit <cachePath> <itemId> <outFile>
  *      [--name=<text>] [--str=<opcode>:<text>[;...]] [--short=<opcode>:<value>[,...]] [--int=<opcode>:<value>[,...]]
  *      [--remove=<opcode>[,...]] [--remove-param=<paramId>[,...]] [--int-param=<paramId>:<value>[,...]]
+ *      [--str-param=<paramId>:<text>[;...]]
  * ```
  *
  * Every override value must come from a real source (the pinned upstream definition), never from
@@ -65,6 +66,10 @@ object ItemDefEditTool {
         val removedParamIds =
             flags["remove-param"]?.split(',')?.filter { it.isNotBlank() }?.map { it.trim().toInt() }?.toSet() ?: emptySet()
         val intParams = parsePairs(flags["int-param"])
+        // N410: --str-param=<paramId>:<text>[;...] sets string params (e.g. 528-532 = the worn-equipment options).
+        val stringParams =
+            flags["str-param"]?.split(';')?.filter { it.isNotBlank() }?.associate { pair -> pair.substringBefore(':').trim().toInt() to pair.substringAfter(':') }
+                ?: emptyMap()
 
         val edited =
             ItemDefCodec.cloneWithOverrides(
@@ -75,6 +80,7 @@ object ItemDefEditTool {
                 removedOpcodes = removedOpcodes,
                 removedParamIds = removedParamIds,
                 intParams = intParams,
+                stringParams = stringParams,
             )
 
         println("SOURCE=$cachePath item=$itemId bytes=${source.size} sha1=${CacheItemProbeTool.sha1(source)} name=${ItemDefCodec.readName(source)}")
