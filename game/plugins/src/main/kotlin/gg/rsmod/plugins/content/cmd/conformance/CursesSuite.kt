@@ -83,7 +83,7 @@ object CursesSuite : Conformance.Suite {
         }
         if (filter.isEmpty()) {
             val from = run.world.currentCycle
-            pairs(run, bot, curses.map { it["slot"].asInt() to it["name"].asText() }, closesOf(ref["closes_rules"]), "curse pairs", curse = true, source = "closes_rules: 2011 KB, owner 2026-09-18, Darkan")
+            pairs(run, bot, curses.map { it["slot"].asInt() to it["name"].asText() }, closesOf(ref["closes_rules_owner_n47"] ?: ref["closes_rules"]), "curse pairs", curse = true, source = if (ref.has("closes_rules_owner_n47")) "owner N47 (VRAGEN 11 = A): Sap and Leech never together" else "closes_rules: 2011 KB, owner 2026-09-18, Darkan")
             run.window("curse pairs", from)
         }
         for (c in curses) {
