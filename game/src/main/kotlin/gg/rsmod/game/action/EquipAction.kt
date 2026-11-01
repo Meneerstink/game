@@ -23,7 +23,7 @@ object EquipAction {
             "attack",
             "defence",
             "strength",
-            "hitpoints",
+            "constitution",
             "ranged",
             "prayer",
             "magic",
@@ -33,7 +33,7 @@ object EquipAction {
             "fishing",
             "firemaking",
             "crafting",
-            "Smithing",
+            "smithing",
             "mining",
             "herblore",
             "agility",
@@ -43,6 +43,7 @@ object EquipAction {
             "runecrafting",
             "hunter",
             "construction",
+            "summoning",
         )
 
     /**

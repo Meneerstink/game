@@ -7,6 +7,8 @@ Skillcapes.values().forEach { cape ->
         if (def.equipmentMenu.any { it?.lowercase() == "boost" }) {
             on_equipment_option(item, option = "boost") { SkillcapeBoost.apply(player, cape) }
         }
-        on_item_equip(item) { SkillcapeBoost.apply(player, cape) }
+        // Construction joins the option binding above once Claude adds its missing cache Boost param.
+        on_item_equip(item) { SkillcapeBoost.equip(player, item) }
+        on_item_unequip(item) { SkillcapeBoost.remove(player, item) }
     }
 }

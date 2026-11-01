@@ -5,46 +5,38 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.Skills
 
 /**
- * K03 N410 part 4: the skillcape Boost. OSRS Wiki "Cape of Accomplishment": "temporarily boosts the player's effective level in the
- * cape's skill by 1, up to 100, lasting up to 60 seconds" (the normal boost decay); "Selecting Boost in the equipment menu or
- * equipping the cape activates it"; it "cannot be reactivated until its skill has dropped back to 99"; the Hitpoints and Prayer
- * capes "have a 1 minute cool-down period between uses of this effect". The max cape has no Boost.
+ * N410: https://oldschool.runescape.wiki/w/Cape_of_Accomplishment#Skill_boost
+ * Equip/Boost raises 99 to 100, subject to normal decay and a minute cooldown for Constitution/Prayer.
+ * https://oldschool.runescape.wiki/w/Magic_cape also specifies no drain restoration and removal on unequip.
+ * Track our own activation so removing a cape does not erase a potion boost. Max capes and hoods have no Boost.
  */
 object SkillcapeBoost {
     const val CAP = 100
     const val COOLDOWN_TICKS = 100
 
     private val LAST_USE = AttributeKey<Int>()
+    private val ACTIVE_SKILL = AttributeKey<Int>()
 
-    /** The boosted level, or null when there is nothing to boost (no real 99, or the skill is still above 99). */
+    /** Only an undrained 99 can become 100. */
     fun boosted(
         base: Int,
         current: Int,
-    ): Int? = if (base < 99 || current > 99) null else minOf(current + 1, CAP)
+    ): Int? = if (base == 99 && current == 99) CAP else null
 
     fun hasCooldown(skill: Int): Boolean = skill == Skills.CONSTITUTION || skill == Skills.PRAYER
 
     fun capeFor(item: Int): Skillcapes? = Skillcapes.values().firstOrNull { item == it.untrimmedCape || item == it.trimmedCape }
 
-    /** Applies the boost of [cape] to [player]; false when nothing changed. */
-    fun apply(
-        player: Player,
-        cape: Skillcapes,
-    ): Boolean {
-        val skill = SkillcapeSeller.skill(cape)
-        // Hitpoints and Prayer live in their own varbits (lifepoints / prayer points); every other skill is its current level.
-        val current =
-            when (skill) {
-                Skills.CONSTITUTION -> player.getCurrentLifepoints()
-                Skills.PRAYER -> player.getCurrentPrayerPoints()
-                else -> player.skills.getCurrentLevel(skill)
-            }
-        val level = boosted(player.skills.getMaxLevel(skill), current) ?: return false
-        if (hasCooldown(skill)) {
-            val last = player.attr[LAST_USE]
-            if (last != null && player.world.currentCycle - last < COOLDOWN_TICKS) return false
-            player.attr[LAST_USE] = player.world.currentCycle
+    fun equip(player: Player, item: Int): Boolean = capeFor(item)?.let { apply(player, it) } ?: false
+
+    private fun current(player: Player, skill: Int): Int =
+        when (skill) {
+            Skills.CONSTITUTION -> player.getCurrentLifepoints()
+            Skills.PRAYER -> player.getCurrentPrayerPoints()
+            else -> player.skills.getCurrentLevel(skill)
         }
+
+    private fun setCurrent(player: Player, skill: Int, level: Int) {
         when (skill) {
             Skills.CONSTITUTION -> player.setCurrentLifepoints(level)
             Skills.PRAYER -> {
@@ -53,6 +45,32 @@ object SkillcapeBoost {
             }
             else -> player.skills.setCurrentLevel(skill, level)
         }
+    }
+
+    /** Runs on removal and replacement. A drain or a stronger boost must survive unchanged. */
+    fun remove(player: Player, item: Int) {
+        val skill = capeFor(item)?.let { SkillcapeSeller.skill(it) } ?: return
+        if (player.attr[ACTIVE_SKILL] != skill) return
+        player.attr.remove(ACTIVE_SKILL)
+        if (current(player, skill) == CAP) {
+            setCurrent(player, skill, minOf(99, player.skills.getMaxLevel(skill)))
+        }
+    }
+
+    /** Applies the boost of [cape] to [player]; false when nothing changed. */
+    fun apply(
+        player: Player,
+        cape: Skillcapes,
+    ): Boolean {
+        val skill = SkillcapeSeller.skill(cape)
+        val level = boosted(player.skills.getMaxLevel(skill), current(player, skill)) ?: return false
+        if (hasCooldown(skill)) {
+            val last = player.attr[LAST_USE]
+            if (last != null && player.world.currentCycle - last < COOLDOWN_TICKS) return false
+            player.attr[LAST_USE] = player.world.currentCycle
+        }
+        setCurrent(player, skill, level)
+        player.attr[ACTIVE_SKILL] = skill
         return true
     }
 }

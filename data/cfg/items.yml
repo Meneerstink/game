@@ -105026,6 +105026,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1908
@@ -105059,6 +105060,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1909
@@ -105092,6 +105094,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1910
@@ -105122,6 +105125,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 2, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1911
@@ -105155,6 +105159,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 2, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1912
@@ -105188,6 +105193,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 2, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1913
@@ -105218,6 +105224,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 1, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1914
@@ -105251,6 +105258,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 1, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1915
@@ -105284,6 +105292,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 1, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1916
@@ -105314,6 +105323,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 4, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1917
@@ -105347,6 +105357,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 4, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1918
@@ -105380,6 +105391,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 4, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1919
@@ -105410,6 +105422,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 5, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1920
@@ -105443,6 +105456,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 5, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1921
@@ -105476,6 +105490,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 5, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1922
@@ -105506,6 +105521,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 6, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1923
@@ -105539,6 +105555,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 6, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1924
@@ -105572,6 +105589,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 6, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1925
@@ -105602,6 +105620,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 20, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1926
@@ -105635,6 +105654,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 20, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1927
@@ -105668,6 +105688,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 20, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1928
@@ -105698,6 +105719,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 3, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1929
@@ -105731,6 +105753,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 3, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1930
@@ -105764,6 +105787,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 3, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1931
@@ -105794,6 +105818,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 16, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1932
@@ -105827,6 +105852,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 16, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1933
@@ -105860,6 +105886,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 16, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1934
@@ -105890,6 +105917,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 15, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1935
@@ -105923,6 +105951,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 15, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1936
@@ -105956,6 +105985,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 15, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1937
@@ -105986,6 +106016,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 17, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1938
@@ -106019,6 +106050,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 17, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1939
@@ -106052,6 +106084,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 17, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1940
@@ -106082,6 +106115,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 12, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1941
@@ -106115,6 +106149,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 12, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1942
@@ -106148,6 +106183,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 12, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1943
@@ -106178,6 +106214,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 9, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1944
@@ -106211,6 +106248,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 9, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1945
@@ -106244,6 +106282,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 9, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1946
@@ -106274,6 +106313,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 18, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1947
@@ -106307,6 +106347,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 18, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1948
@@ -106340,6 +106381,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 18, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1949
@@ -106370,6 +106412,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 22, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1950
@@ -106403,6 +106446,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 22, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1951
@@ -106436,6 +106480,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 22, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1952
@@ -106466,6 +106511,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 14, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1953
@@ -106499,6 +106545,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 14, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1954
@@ -106532,6 +106579,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 14, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1955
@@ -106562,6 +106610,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 13, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1956
@@ -106595,6 +106644,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 13, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1957
@@ -106628,6 +106678,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 13, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1958
@@ -106658,6 +106709,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 10, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1959
@@ -106691,6 +106743,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 10, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1960
@@ -106724,6 +106777,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 10, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1961
@@ -106754,6 +106808,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 7, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1962
@@ -106787,6 +106842,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 7, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1963
@@ -106820,6 +106876,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 7, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1964
@@ -106850,6 +106907,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 11, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1965
@@ -106883,6 +106941,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 11, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1966
@@ -106916,6 +106975,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 11, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1967
@@ -106946,6 +107006,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 8, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1968
@@ -106979,6 +107040,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 8, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1969
@@ -107012,6 +107074,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 8, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1970
@@ -107042,6 +107105,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 19, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1971
@@ -107075,6 +107139,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 19, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 1972
@@ -107108,6 +107173,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 19, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 1973
@@ -108386,6 +108452,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 21, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 2015
@@ -108419,6 +108486,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 21, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 2016
@@ -108452,6 +108520,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 21, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 2017
@@ -135503,6 +135572,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 2603
@@ -135536,6 +135606,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 2604
@@ -135569,6 +135640,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 2605
@@ -249167,6 +249239,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -249367,6 +249440,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -249399,6 +249473,7 @@
   tradeable: false
   weight: 0.4
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     attack_stab: 0
     attack_slash: 0
     attack_crush: 0
@@ -275659,6 +275734,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6474
@@ -275692,6 +275768,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6475
@@ -275725,6 +275802,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6476
@@ -275758,6 +275836,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6477
@@ -275791,6 +275870,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6478
@@ -275824,6 +275904,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6479
@@ -275875,6 +275956,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6480
@@ -275908,6 +275990,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6481
@@ -275941,6 +276024,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6482
@@ -276076,6 +276160,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6486
@@ -276109,6 +276194,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6487
@@ -276148,6 +276234,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6488
@@ -276261,6 +276348,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6491
@@ -276294,6 +276382,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6492
@@ -276333,6 +276422,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6493
@@ -276366,6 +276456,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6494
@@ -276399,6 +276490,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6495
@@ -276432,6 +276524,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6496
@@ -286349,6 +286442,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6689
@@ -286382,6 +286476,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6690
@@ -286415,6 +286510,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6691
@@ -286448,6 +286544,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6692
@@ -286481,6 +286578,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6693
@@ -286514,6 +286612,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 0
     equip_type: -1
     appearance_id: 6694
@@ -290164,6 +290263,7 @@
   tradeable: false
   weight: 0.453
   equipment:
+    skill_reqs: [{'skill': 0, 'level': 99}, {'skill': 1, 'level': 99}, {'skill': 2, 'level': 99}, {'skill': 3, 'level': 99}, {'skill': 4, 'level': 99}, {'skill': 5, 'level': 99}, {'skill': 6, 'level': 99}, {'skill': 7, 'level': 99}, {'skill': 8, 'level': 99}, {'skill': 9, 'level': 99}, {'skill': 10, 'level': 99}, {'skill': 11, 'level': 99}, {'skill': 12, 'level': 99}, {'skill': 13, 'level': 99}, {'skill': 14, 'level': 99}, {'skill': 15, 'level': 99}, {'skill': 16, 'level': 99}, {'skill': 17, 'level': 99}, {'skill': 18, 'level': 99}, {'skill': 19, 'level': 99}, {'skill': 20, 'level': 99}, {'skill': 21, 'level': 99}, {'skill': 22, 'level': 99}, {'skill': 23, 'level': 99}]
     equip_slot: 1
     equip_type: -1
     appearance_id: 6693
