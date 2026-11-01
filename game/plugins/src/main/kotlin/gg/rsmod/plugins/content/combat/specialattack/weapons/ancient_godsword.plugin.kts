@@ -8,8 +8,8 @@ import gg.rsmod.plugins.content.items.osrs.AncientGodsword
 
 /**
  * OSRS-IMPORT Ancient godsword - Blood Sacrifice (rules and sources in [AncientGodsword]). Look: the imported OSRS sequence
- * NGS_SPECIAL_PLAYER and spotanim NGS_SPECIAL_SPOTANIM. Sound: see the explosion below (2911 "blood_sacrifice" is the Ruby
- * bolts (e) sound). Owner live test: the generic godsword special sound 3869 was wrong.
+ * NGS_SPECIAL_PLAYER and spotanim NGS_SPECIAL_SPOTANIM. The imported OSRS godsword special sound plays on the swing;
+ * owner 2026-11-01 (N235): no separate sound on the delayed sacrifice hit.
  * The sacrifice hit uses the server's typeless hitsplat.
  */
 SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) {
@@ -38,11 +38,6 @@ SpecialAttacks.register(AncientGodsword.SPECIAL_ENERGY, Items.ANCIENT_GODSWORD) 
         if (victim.isDead() || attacker.isDead() || (victim is Player && !victim.isOnline) || !attacker.isOnline) return@queue
         if (victim.tile.height != attacker.tile.height || victim.tile.getDistance(attacker.tile) >= AncientGodsword.ESCAPE_DISTANCE) return@queue
         val before = victim.getCurrentLifepoints()
-        // The Blood Sacrifice explosion: sound for both players (the attacker hears it wherever the victim is within 5 tiles).
-        // Owner 2026-09-29: 2911 blood_sacrifice is the Ruby bolts (e) sound (wiki note), wrong here. The special is Nex 2021's
-        // sacrifice mechanic, so it plays OSRS 5239 nex2021_sacrifice_attack_impact (ADAPTED by name).
-        attacker.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.NEX2021_SACRIFICE_ATTACK_IMPACT)
-        if (victim is Player) victim.playSound(gg.rsmod.plugins.content.items.osrs.OsrsSfx.NEX2021_SACRIFICE_ATTACK_IMPACT)
         // source = attacker: kill credit (damage map, breach record) - a sacrifice kill was a death without a killer before.
         victim.hit(damage = AncientGodsword.SACRIFICE_DAMAGE, type = HitType.REGULAR_HIT, source = attacker)
         val dealt = minOf(AncientGodsword.SACRIFICE_DAMAGE, before)
