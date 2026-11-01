@@ -7,13 +7,29 @@ on_npc_option(npc = Npcs.WILFRED, option = "talk-to") {
         if (player.skills.getMaxLevel(Skills.WOODCUTTING) >= 99) {
             mainChatWith99(this)
         } else {
-            mainChat(player)
+            // N410: without 99 Woodcutting Wilfred said nothing ("Nothing interesting happens."). His own lines (runescape.wiki
+            // Transcript:Wilfred, the two that are not RS3-only content).
+            when (options("Who are you?", "What is that cape you're wearing?", "Goodbye.")) {
+                FIRST_OPTION -> {
+                    chatPlayer("Who are you?")
+                    chatNpc(
+                        "My name is Wilfred and I'm the best woodsman in Asgarnia! I've spent my life studying the best " +
+                            "methods for woodcutting. That's why I have this cape, the Skillcape of Woodcutting.",
+                        wrap = true,
+                    )
+                }
+                SECOND_OPTION -> {
+                    chatPlayer("What is that cape you're wearing?")
+                    chatNpc(
+                        "This is a Skillcape of Woodcutting. Only a person who has achieved the highest possible level " +
+                            "in a skill can wear one.",
+                        wrap = true,
+                    )
+                }
+                else -> chatPlayer("Goodbye.")
+            }
         }
     }
-}
-
-fun mainChat(player: Player) {
-    player.message("Nothing interesting happens.")
 }
 
 suspend fun mainChatWith99(it: QueueTask) {
