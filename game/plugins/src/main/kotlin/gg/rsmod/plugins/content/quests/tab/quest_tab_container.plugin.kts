@@ -25,6 +25,7 @@ QuestTab.Tab.values().forEach { tab ->
 // ---- 1 Quests
 for (r in 0 until N.QP.ROWS) {
     on_button(interfaceId = N.QUESTS, component = N.QP.row(r) + 4) { QuestTab.questClick(player, r) }
+    on_button(interfaceId = N.QUESTS, component = N.QP.row(r) + 3) { QuestTab.questClick(player, r, toggle = true) }
 }
 
 // ---- 2 Deadman

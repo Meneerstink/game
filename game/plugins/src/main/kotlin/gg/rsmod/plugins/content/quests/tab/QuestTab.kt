@@ -58,7 +58,9 @@ object QuestTab {
     /** The classic quest list (190) is showing in the Quests tab instead of the groups. */
     private val CLASSIC = AttributeKey<Boolean>()
     private val OPEN_QUESTS = AttributeKey<MutableSet<String>>()
-    private val QUEST_ROWS = AttributeKey<List<String>>()
+    private val QUEST_ROWS = AttributeKey<List<QuestRow>>()
+    private val QUEST_PAGE = AttributeKey<Int>()
+    private val QUEST_EVENTS = AttributeKey<List<Pair<Boolean, Boolean>>>()
 
     val REFRESH_TIMER = TimerKey()
 
@@ -82,6 +84,7 @@ object QuestTab {
     }
 
     fun mount(player: Player) {
+        player.attr.remove(QUEST_EVENTS)
         val tab = selected(player)
         N108Ui.reset(player, CONTAINER)
         Tab.values().forEach { t ->
@@ -112,7 +115,6 @@ object QuestTab {
                     for (s in 0 until 5) player.setInterfaceEvents(tab.panel, LP.slot(s) + 1, -1..-1, EVENTS_OP1)
                 }
             }
-            if (tab == Tab.QUESTS) for (r in 0 until QP.ROWS) player.setInterfaceEvents(tab.panel, QP.row(r) + 4, -1..-1, EVENTS_OP1)
         }
         refresh(player)
         player.timers[REFRESH_TIMER] = 1
@@ -169,6 +171,8 @@ object QuestTab {
     private const val KIND_QUEST = 1
     private const val KIND_SUB = 2
     private const val KIND_LINK = 3
+    private const val PREVIOUS_PAGE = "previous-page"
+    private const val NEXT_PAGE = "next-page"
 
     fun questRows(player: Player): List<QuestRow> {
         val open = player.attr[OPEN_QUESTS] ?: HashSet<String>().also { player.attr[OPEN_QUESTS] = it }
@@ -198,23 +202,47 @@ object QuestTab {
                 val reqs = REQUIREMENTS[name].orEmpty()
                 val isOpen = name in open
                 out += QuestRow(KIND_QUEST, name, icon, text, null, if (reqs.isEmpty()) null else if (isOpen) "q_two" else "q_tw", star = quest == chosen)
-                if (isOpen) reqs.forEach { r -> out += QuestRow(KIND_SUB, name, if (done) "q_ck7" else "q_dot5", "<col=b3a78f>$r</col>", null, null) }
+                if (isOpen) reqs.forEach { r -> out += QuestRow(KIND_SUB, r, if (done) "q_ck7" else "q_dot5", "<col=b3a78f>$r</col>", null, null) }
             }
         }
         return out
     }
 
+    /** Existing cache has 30 static rows. Page overflow instead of silently losing the last groups/quests. */
+    internal fun visibleQuestRows(player: Player): List<QuestRow> {
+        val all = questRows(player)
+        val pageSize = QP.ROWS - 2
+        val pages = if (all.size <= QP.ROWS) 1 else (all.size + pageSize - 1) / pageSize
+        val page = (player.attr[QUEST_PAGE] ?: 0).coerceIn(0, pages - 1)
+        player.attr[QUEST_PAGE] = page
+        if (pages == 1) return all
+        return buildList {
+            if (page > 0) add(QuestRow(KIND_LINK, PREVIOUS_PAGE, null, "Previous page", null, null))
+            addAll(all.drop(page * pageSize).take(pageSize))
+            if (page < pages - 1) add(QuestRow(KIND_LINK, NEXT_PAGE, null, "Next page", null, null))
+        }
+    }
+
     private fun drawQuests(player: Player) {
         val p = QuestTab.Tab.QUESTS.panel
-        val rows = questRows(player)
-        player.attr[QUEST_ROWS] = rows.map { if (it.kind == KIND_QUEST || it.kind == KIND_LINK) it.key else "" }
+        val rows = visibleQuestRows(player)
+        val previousRows = player.attr[QUEST_ROWS]
+        player.attr[QUEST_ROWS] = rows
         val chosen = QuestGuideUi.ROWS.count { QuestChoices.chosen(player, it) != null }
         N108Ui.text(player, p, N108InterfaceImportTool.P_RIGHT, if (QuestChoices.isLegacy(player)) "" else "<col=9a9083>Groups</col> $chosen/${QuestGuideUi.ROWS.size}")
+        val previousEvents = player.attr[QUEST_EVENTS]
+        val events = (0 until QP.ROWS).map { r -> rows.getOrNull(r).let { (it != null && it.kind != KIND_GROUP) to (it?.arrow != null) } }
+        player.attr[QUEST_EVENTS] = events
         var y = 0
         val fonts = ArrayList<Pair<Int, String>>()
         for (r in 0 until QP.ROWS) {
             val base = QP.row(r)
             val row = rows.getOrNull(r)
+            val clickable = row != null && row.kind != KIND_GROUP
+            if (previousEvents?.getOrNull(r) != events[r]) {
+                player.setInterfaceEvents(p, base + 4, -1..-1, if (clickable) EVENTS_OP1 else 0)
+                player.setInterfaceEvents(p, base + 3, -1..-1, if (row?.arrow != null) EVENTS_OP1 else 0)
+            }
             if (row == null) {
                 for (c in 0 until QP.ROW_STRIDE) N108Ui.hidden(player, p, base + c, true)
                 continue
@@ -245,10 +273,15 @@ object QuestTab {
             N108Ui.hidden(player, p, base + 3, row.arrow == null)
             if (row.arrow != null) {
                 N108Ui.sprite(player, p, base + 3, row.arrow)
+                if (previousEvents == null || previousRows?.getOrNull(r)?.arrow == null) N108Ui.op(player, p, base + 3, "Toggle requirements")
                 N108Ui.pos(player, p, base + 3, if (row.arrow == "q_two") 151 else 152, y + if (row.arrow == "q_two") 5 else 4)
             }
             N108Ui.pos(player, p, base + 4, 0, y)
-            N108Ui.hidden(player, p, base + 4, row.kind != KIND_QUEST && row.kind != KIND_LINK)
+            N108Ui.size(player, p, base + 4, if (row.arrow != null) 145 else 160, h)
+            if (previousEvents == null || previousRows?.getOrNull(r)?.kind != row.kind) {
+                N108Ui.op(player, p, base + 4, if (row.kind == KIND_LINK) "View page" else "View quest overview")
+            }
+            N108Ui.hidden(player, p, base + 4, !clickable)
             // The chosen quest: the gold star right after its name (design 05).
             N108Ui.hidden(player, p, base + 5, !row.star)
             if (row.star) N108Ui.pos(player, p, base + 5, textX + N108Ui.p11(player.world, row.text) + 3, y - 2)
@@ -258,16 +291,24 @@ object QuestTab {
         N108Ui.scroll(player, p, QP.LIST, QP.SCROLLBAR, maxOf(y + 2, QP.LIST_H))
     }
 
-    fun questClick(player: Player, row: Int) {
-        val key = player.attr[QUEST_ROWS]?.getOrNull(row)?.takeIf { it.isNotEmpty() } ?: return
-        if (key == "classic") {
-            player.attr[CLASSIC] = true
-            mount(player)
-            return
+    fun questClick(player: Player, row: Int, toggle: Boolean = false) {
+        if (selected(player) != Tab.QUESTS || !player.interfaces.isVisible(Tab.QUESTS.panel)) return
+        if (row !in 0 until QP.ROWS) return
+        val clicked = player.attr[QUEST_ROWS]?.getOrNull(row) ?: return
+        if (clicked.kind == KIND_GROUP) return
+        if (clicked.kind == KIND_LINK) {
+            val delta = if (clicked.key == NEXT_PAGE) 1 else -1
+            player.attr[QUEST_PAGE] = (player.attr[QUEST_PAGE] ?: 0) + delta
+            N108Ui.scrollTop(player, Tab.QUESTS.panel, QP.LIST, QP.SCROLLBAR, QP.LIST_H)
+            drawQuests(player)
+        } else if (toggle) {
+            if (clicked.kind != KIND_QUEST || clicked.arrow == null) return
+            val open = player.attr[OPEN_QUESTS] ?: HashSet<String>().also { player.attr[OPEN_QUESTS] = it }
+            if (!open.remove(clicked.key)) open += clicked.key
+            drawQuests(player)
+        } else {
+            QuestTabDetails.open(player, clicked.key)
         }
-        val open = player.attr[OPEN_QUESTS] ?: HashSet<String>().also { player.attr[OPEN_QUESTS] = it }
-        if (!open.remove(key)) open += key
-        drawQuests(player)
     }
 
     // ================================================================== 2 Deadman
