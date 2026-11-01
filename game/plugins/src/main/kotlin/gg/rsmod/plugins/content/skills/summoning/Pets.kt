@@ -604,6 +604,16 @@ object Pets {
     /** N414: the pets [player] had once and has nowhere now - Perdu gives each back for free. */
     fun lost(player: Player): List<String> = ownedOnce(player).filter { !owns(player, it) }.sortedBy { baseItem(it) }
 
+    /** The Collection Log item a pet [item] of [pet] fills: itself when it has its own slot, else the pet's base item (P18). */
+    internal fun logItem(
+        player: Player,
+        pet: String,
+        item: Int,
+    ): Int {
+        val slots = runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLogPages.allItems(player) }.getOrNull() ?: return item
+        return if (item in slots) item else baseItem(pet)?.takeIf { it in slots } ?: item
+    }
+
     enum class Award { DUPLICATE, FOLLOWER, BACKPACK, BANK, LOST }
 
     /** Where a pet reward goes (OSRS Wiki Pet, "Obtaining a pet"; the bank replaces Probita here). */
@@ -645,7 +655,9 @@ object Pets {
             PetMorphs.unlock(player, byItem.getValue(item))
             recordOwned(player, listOf(pet))
             if (!purchased) {
-                runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, listOf(item to 1)) }
+                // N297 report P18: a variant received (a red baby chinchompa, a rift guardian in its altar's colour) fills the pet's
+                // one log slot, as in OSRS - the log lists the base item, so a variant without its own slot is recorded as the base.
+                runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, source, listOf(logItem(player, pet, item) to 1)) }
                     .onFailure { gg.rsmod.game.model.Trace.crash("collection log pet", it) }
             }
             // N88 part 1 (Council N88): OSRS plays "Getting pet" on a new pet - Jagex synth 2320 triffid_appear, proven by waveform
