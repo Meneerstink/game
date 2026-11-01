@@ -532,6 +532,12 @@ object AncientCurses {
         player: Player,
         book: PrayerBook,
     ) {
+        if (book == PrayerBook.RUINOUS) {
+            RuinousUnlocks.refusal(player)?.let {
+                player.message(it)
+                return
+            }
+        }
         if (book == PrayerBook.ANCIENT && player.attr[UNLOCKED_ATTR] != true) {
             player.filterableMessage("Complete The Temple at Senntisten to use the Ancient Curses.")
             return
@@ -562,6 +568,16 @@ object AncientCurses {
 
     /** "normal", "ancient" (the existing messages) and "Ruinous Powers". */
     fun bookName(book: PrayerBook): String = if (book == PrayerBook.RUINOUS) "Ruinous Powers" else book.name.lowercase()
+
+    /** N490 V6: migrate an old locked book at login, even when a saved combat timer is still running. */
+    internal fun resetLockedRuinousBook(player: Player) {
+        Prayers.deactivateAll(player)
+        deactivateAllCurses(player)
+        player.attr[CURRENT_BOOK_ATTR] = PrayerBook.NORMAL.name
+        syncBookVarbit(player)
+        Prayers.confirmQuickPrayerSelection(player)
+        player.openInterface(gg.rsmod.plugins.api.InterfaceDestination.PRAYER_TAB)
+    }
 
     /**
      * A click on the prayer grid (interface 271 component 8) while the curse book is shown.

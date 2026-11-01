@@ -38,7 +38,7 @@ object QuestChoices {
         mapOf(
             DesertTreasure to "Desert Treasure (Ancient Magicks)",
             LunarDiplomacy to "Lunar Diplomacy (Lunar, Vengeance)",
-            DesertTreasureII to "Desert Treasure II (sceptres, Magus ring)",
+            DesertTreasureII to "Desert Treasure II (sceptres, rings, Ruinous book access)",
             TempleAtSenntisten to "Temple at Senntisten (Ancient Curses)",
             KingsRansom to "King's Ransom (Piety, Chivalry)",
             DragonSlayerII to "Dragon Slayer II (Ava's assembler)",

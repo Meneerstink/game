@@ -227,6 +227,7 @@ object DeadmanChest {
         player: Player,
         random: Random = Random(),
         scrollRandom: Random = Random(),
+        ruinousRandom: Random = Random(),
     ): DeadmanChestLoot.Reward {
         val reward = DeadmanChestLoot.roll(random, ownsPet = { Pets.owns(player, it) })
         // N104: the chest's count first, so the Collection Log records the item at this chest's number.
@@ -252,6 +253,10 @@ object DeadmanChest {
             addOrDrop(player, it, 1)
             player.message("<col=ef1020>The chest also holds a prayer scroll!</col>")
             runCatching { gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, "chest", listOf(it to 1)) }
+        }
+        val ruinous = gg.rsmod.plugins.content.mechanics.prayer.RuinousBookDrops
+        if (ruinous.roll(player, gg.rsmod.plugins.content.mechanics.prayer.RuinousBookDrops.Source.CHEST, ruinousRandom)) {
+            ruinous.award(player, player.tile, "chest", "a Deadman's Chest", inventory = true)
         }
         return reward
     }

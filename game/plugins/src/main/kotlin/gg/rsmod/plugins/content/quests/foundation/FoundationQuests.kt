@@ -848,7 +848,7 @@ object KingsRansom : ShortQuest(
 object DesertTreasureII : ShortQuest(
     name = "Desert Treasure II - The Fallen Empire",
     startPoint = "Speak to the Archaeologist in the Grand Exchange hall.",
-    rewards = "5 Quest Points, three 100,000 XP ancient lamps, ancient rings, ancient sceptres and the Ring of shadows.",
+    rewards = "5 Quest Points, three 100,000 XP ancient lamps, ancient rings, ancient sceptres, the Ring of shadows and access to Ruinous Powers after reading its dropped book.",
     pointReward = 5,
     questId = OsrsQuestVarps.DESERT_TREASURE_II,
     slot = OsrsQuestSlots.DESERT_TREASURE_II,
@@ -882,6 +882,7 @@ object DesertTreasureII : ShortQuest(
                     "Ability to wear the ancient rings",
                     "Ability to make and wield the ancient sceptres",
                     "Access to the Scar essence mine",
+                    "Ruinous Powers (find and read the dropped book)",
                 ),
             unlock = { p ->
                 p.attr[UnlockNpcRewards.DESERT_TREASURE_II_REWARDED] = true
@@ -1006,16 +1007,17 @@ object DesertTreasureII : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.ARCHAEOLOGIST,
-                journal = listOf("I should tell the ${red("Archaeologist")} in the Grand", "Exchange hall that the vault is safe."),
-                done = listOf("The Archaeologist catalogued the vault's treasures."),
+                npc = Npcs.AZZANADRA,
+                journal = listOf("I should tell ${red("Azzanadra")} in the Grand", "Exchange hall that the vault is safe."),
+                done = listOf("Azzanadra opened the way to the Ruinous Powers."),
                 place = "the Grand Exchange hall",
                 location = GE_HALL,
                 talk = {
                     chatNpc(
-                        "The four of them, sealed again? And the vault's all",
-                        "mine to catalogue? You wonderful lunatic!",
-                        facialExpression = FacialExpression.LAUGH_EXCITED,
+                        "The vault is safe. The Ruinous Powers are now open",
+                        "to you, but first find and read the Ruinous powers",
+                        "book. It is a rare drop, not a gift I can give you.",
+                        facialExpression = FacialExpression.CALM_TALK,
                     )
                     true
                 },
