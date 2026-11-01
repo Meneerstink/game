@@ -55,6 +55,10 @@ val wildernessRegionIds =
         12603,
         12604,
         12605,
+        // N522 bundle 3: the imported OSRS Revenant Caves (underground level 17-40).
+        12701,
+        12702,
+        12703,
         12855,
         12856,
         12857,
@@ -62,6 +66,10 @@ val wildernessRegionIds =
         12859,
         12860,
         12861,
+        // N522 bundle 3: the imported OSRS Revenant Caves (east half).
+        12957,
+        12958,
+        12959,
         // N522: the imported OSRS Scorpion Pit (Scorpia), underground level 53-55.
         12961,
         13111,

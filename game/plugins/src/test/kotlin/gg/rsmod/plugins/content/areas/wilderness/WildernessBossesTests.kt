@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ChaosFanaticCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.CrazyArchaeologistCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat
+import gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaves
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaPit
 import gg.rsmod.plugins.content.areas.wilderness.bosses.VolcanicForge
 import gg.rsmod.plugins.content.quests.tab.CollectionLogPages
@@ -190,5 +191,46 @@ class WildernessBossesTests {
         assertEquals(Items.ODIUM_WARD, VolcanicForge.Ward.ODIUM.ward)
         assertEquals(Items.MALEDICTION_WARD, VolcanicForge.Ward.MALEDICTION.ward)
         assertTrue(VolcanicForge.TILES.all { it.getWildernessLevel() >= 50 }, "the forge stands in the deep Wilderness")
+    }
+
+    @Test
+    fun `N522 bundle 3 - the Revenant Caves locs decode and the ways in and out sit at their OSRS Wilderness levels`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, ObjectDef::class.java)
+        mapOf(
+            RevenantCaves.CAVERN_17 to ("Cavern" to "Enter"),
+            RevenantCaves.CAVERN_40 to ("Cavern" to "Enter"),
+            RevenantCaves.STAIRS_SOUTH to ("Stairs" to "Climb-up"),
+            RevenantCaves.STAIRS_NORTH to ("Stairs" to "Climb-up"),
+            RevenantCaves.PILLAR to ("Pillar" to "Jump-to"),
+        ).forEach { (id, v) ->
+            val def = definitions.get(ObjectDef::class.java, id)
+            assertEquals(v.first, def.name, "$id")
+            assertTrue(def.options.any { it.equals(v.second, ignoreCase = true) }, "$id ${v.first}: ${v.second}")
+        }
+        assertEquals("Trapdoor", definitions.get(ObjectDef::class.java, RevenantCaves.TRAPDOOR).name)
+        // OSRS Wiki: the caves run from level 17 to 40; the southern stairs come out in level 17, the northern in level 36.
+        // The level 17 cavern lands at y 10056: (10056 - 9920) / 8 + 1 = 18 (the caves start at level 17 on y 10048).
+        assertEquals(17, gg.rsmod.game.model.Tile(3196, 10048).getWildernessLevel())
+        assertEquals(18, RevenantCaves.ENTRANCES.getValue(RevenantCaves.CAVERN_17).getWildernessLevel())
+        assertEquals(40, RevenantCaves.ENTRANCES.getValue(RevenantCaves.CAVERN_40).getWildernessLevel())
+        assertEquals(17, RevenantCaves.EXITS.getValue(RevenantCaves.STAIRS_SOUTH).getWildernessLevel())
+        assertEquals(36, RevenantCaves.EXITS.getValue(RevenantCaves.STAIRS_NORTH).getWildernessLevel())
+        // "exclusively a singles-plus combat area": none of the cave squares is multi.
+        val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
+        listOf(12701, 12702, 12703, 12957, 12958, 12959).forEach { assertFalse("- $it" in multi, "cave square $it must stay single-way") }
+    }
+
+    @Test
+    fun `N522 bundle 3 - a pillar is jumped from one take-off tile two away to the other, at its OSRS Agility level`() {
+        assertEquals(5, RevenantCaves.PILLARS.size)
+        assertEquals(listOf(65, 75, 75, 75, 89), RevenantCaves.PILLARS.map { it.agility }.sorted())
+        RevenantCaves.PILLARS.forEach { p ->
+            assertEquals(p.sideB, RevenantCaves.landing(p, p.sideA))
+            assertEquals(p.sideA, RevenantCaves.landing(p, p.sideB))
+            assertEquals(null, RevenantCaves.landing(p, p.tile), "standing on the pillar is no take-off")
+            assertEquals(4, kotlin.math.abs(p.sideA.x - p.sideB.x) + kotlin.math.abs(p.sideA.z - p.sideB.z))
+            assertEquals(p, RevenantCaves.pillarAt(p.tile))
+        }
     }
 }

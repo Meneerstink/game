@@ -24,6 +24,11 @@ object OsrsRegionImportTool {
         val squares: List<Int>,
         val extraLocTypes: List<Int> = emptyList(),
         val note: String,
+        /**
+         * Squares that DO exist in the rev-667 map but hold nothing in use (checked per batch: no code, spawn or transport there);
+         * their groups are overwritten in place, the loc file keeps its own XTEA key (CacheTransaction re-encrypts with it).
+         */
+        val replaceSquares: Set<Int> = emptySet(),
     )
 
     val BATCHES: Map<String, Batch> =
@@ -36,6 +41,13 @@ object OsrsRegionImportTool {
             // OSRS square 13373 places two at 3366,3937 and 3367,3937 rot 2). Only the loc type: the rev-667 surface stays, the
             // server places it (Kronos-184 activities/wilderness/Volcano.java).
             "volcanic-forge" to Batch(emptyList(), listOf(26755), "Volcanic Forge (wards)"),
+            // N522 bundle 3: the OSRS Revenant Caves (x 3136-3263, y 10048-10239: 12704/12960 have no OSRS map; Kronos-184 RevCaves.java exits 3194,10055 and
+            // 3240,10235, pillars 3180-3241 x 10086-10209) and the surface entrances 31555 (3073,3654) / 31556 (3124,3831).
+            // 12957 exists in the rev-667 map but only holds nameless filler (loc 37098 x1467, 39105-39135); nothing references it.
+            "rev-caves" to Batch(listOf(12701, 12702, 12703, 12957, 12958, 12959), listOf(31555, 31556), "Revenant Caves", replaceSquares = setOf(12957)),
+            // The 2020 exits come out at two surface "Trapdoor"s (OSRS Wiki "Trapdoor (Revenant Caves)": 3103,3655 rot 3 and 3122,3805
+            // rot 1 in OSRS squares 12345 / 12347, "it only opens from the inside"); the server places them.
+            "rev-caves-trapdoors" to Batch(emptyList(), listOf(31557), "Revenant Caves exit trapdoors"),
         )
 
     class Plan(
@@ -72,7 +84,7 @@ object OsrsRegionImportTool {
         verify.forEach { println("VERIFY_ERROR: $it") }
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes and names")
-        batch.squares.forEach { zeroXteaKey(it) }
+        batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(it) }
         appendAssetMap(name, batch, plan, tx.id)
     }
 
@@ -88,9 +100,14 @@ object OsrsRegionImportTool {
             val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
             try {
                 val maps = library.index(FeroxImportTool.MAP_INDEX)
+                val localKeys = Rev667RegionProbeTool.loadKeys(File(FeroxImportTool.XTEAS_FILE))
                 batch.squares.forEach { square ->
-                    check(maps.archive(mapName(square)) == null && maps.archive(locName(square)) == null) {
-                        "${mapName(square)} / ${locName(square)} already exist; this tool only fills empty squares"
+                    if (square in batch.replaceSquares) {
+                        check(maps.archive(mapName(square)) != null) { "${mapName(square)} missing; replaceSquares only overwrites existing squares" }
+                    } else {
+                        check(maps.archive(mapName(square)) == null && maps.archive(locName(square)) == null) {
+                            "${mapName(square)} / ${locName(square)} already exist; this tool only fills empty squares"
+                        }
                     }
                 }
                 var nextGroup = (maps.archiveIds().maxOrNull() ?: -1) + 1
@@ -165,13 +182,27 @@ object OsrsRegionImportTool {
                         dst.overlayId = if (src.overlayId != 0) mapOverlay(src.overlayId) else 0
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
                     }
-                    val mapGroup = nextGroup++
-                    val locGroup = nextGroup++
                     val locs = region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
                     val locBytes = Rev667LocCodec.encode(locs)
                     check(Rev667LocCodec.decode(locBytes).size == locs.size) { "loc encode/decode count mismatch" }
-                    mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)}", groupName = mapName(square))
-                    mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (unencrypted)", groupName = locName(square))
+                    val mapGroup: Int
+                    val locGroup: Int
+                    if (square in batch.replaceSquares) {
+                        val key = localKeys[square]
+                        val mapArchive = maps.archive(mapName(square))!!
+                        val locArchive = maps.archive(locName(square), key) ?: error("${locName(square)} missing or unreadable")
+                        mapGroup = mapArchive.id
+                        locGroup = locArchive.id
+                        val oldTiles = mapArchive.file(0)!!.data!!
+                        val oldLocs = locArchive.file(0)!!.data!!
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)} (replaces rev-667 filler)", CacheItemProbeTool.sha1(oldTiles))
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (replaces rev-667 filler, own key)", CacheItemProbeTool.sha1(oldLocs), xtea = key)
+                    } else {
+                        mapGroup = nextGroup++
+                        locGroup = nextGroup++
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)}", groupName = mapName(square))
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (unencrypted)", groupName = locName(square))
+                    }
                     squareGroups[square] = mapGroup to locGroup
                     println("SQUARE $square ${mapName(square)}=$mapGroup ${locName(square)}=$locGroup locs=${locs.size}")
                 }

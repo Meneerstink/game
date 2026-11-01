@@ -265,6 +265,9 @@ object OsrsFxImportTool {
             // Owner 2026-10-10 (POH OSRS pieces): the idle animations of the Altar of the Occult multiloc 29150 (7303) and the
             // Portal Nexus 33410 (367), for OsrsLocImportTool batch "poh-house".
             "poh-house" to listOf(7303, 367),
+            // N522 bundle 3: the only animated loc of the OSRS Revenant Caves squares (OSRS loc 40376, seq 4218), for
+            // OsrsRegionImportTool batch "rev-caves".
+            "rev-caves" to listOf(4218),
         )
 
     /** OSRS synth sounds by Jagex config name (OSRS Wiki "List of sound IDs", read 2026-09-17). */
