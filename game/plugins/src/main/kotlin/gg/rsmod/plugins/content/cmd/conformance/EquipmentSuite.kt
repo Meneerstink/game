@@ -52,9 +52,6 @@ object EquipmentSuite : Conformance.Suite {
     /** Wiki equipment_slot -> the 667 equipment container slot. */
     private val SLOT = mapOf("head" to 0, "cape" to 1, "neck" to 2, "weapon" to 3, "2h" to 3, "body" to 4, "shield" to 5, "legs" to 7, "hands" to 9, "feet" to 10, "ring" to 12, "ammo" to 13)
 
-    /** Items whose cache name matches several wiki versions: the 667 id -> the exact wiki page (else the first by name). */
-    private val PAGE_BY_ID = mapOf(11283 to "Dragonfire shield#Charged", 11284 to "Dragonfire shield#Uncharged")
-
     /** Wiki bonus field -> index in Pawn.equipmentBonuses (BonusSlot; 667 order puts magic attack before ranged). */
     private val BONUS =
         linkedMapOf(
@@ -96,6 +93,10 @@ object EquipmentSuite : Conformance.Suite {
                 if (kind == "armour" && d.equipSlot == 3) return@mapNotNull null
                 if (filter.isNotEmpty() && !d.name.lowercase().contains(filter)) return@mapNotNull null
                 if (high && !isHigh(d)) return@mapNotNull null
+                EquipmentReferences.exclusion(d)?.let { reason ->
+                    run.note("excluded ${d.id} ${d.name}: $reason")
+                    return@mapNotNull null
+                }
                 d
             }
         val items = all.drop(opts["from"]?.toIntOrNull() ?: 0).take(opts["count"]?.toIntOrNull() ?: Int.MAX_VALUE)
@@ -125,7 +126,7 @@ object EquipmentSuite : Conformance.Suite {
                         val from = world.currentCycle
                         run.laneStarts[lane] = from
                         try {
-                            item(run, bot, dummy, arena, def, PAGE_BY_ID[def.id]?.let { byName[it.lowercase()] } ?: byName[def.name.lowercase()], entry, "W$lane", "D$lane")
+                            item(run, bot, dummy, arena, def, EquipmentReferences.resolve(def.id, def.name, byName), entry, "W$lane", "D$lane")
                         } catch (e: Throwable) {
                             run.add(Result(entry, "scenario", Verdict.FAIL, "runs to the end", "threw $e"))
                         }
@@ -171,6 +172,7 @@ object EquipmentSuite : Conformance.Suite {
         val world = run.world
         if (ref == null) run.add(Result(e, "reference", Verdict.UNSOURCED, "no OSRS Wiki item of this exact name", "-"))
         val b = ref?.get("bonuses")
+        val source = ref?.get("source")?.asText() ?: "wiki"
         reset(bot, arena)
         val wikiSlot = b?.get("equipment_slot")?.asText()
         val twoHanded = wikiSlot == "2h"
@@ -216,8 +218,8 @@ object EquipmentSuite : Conformance.Suite {
             run.add(Result(e, "equips (level 99 bot)", Verdict.FAIL, "in the equipment", "not equipped; messages: ${said.joinToString(" / ").take(160)}"))
             return
         }
-        run.check(e, "equipment slot", slot, "wiki" to wikiSlot?.let { SLOT[it] })
-        if (def.equipSlot == 3) run.check(e, "two-handed removes the shield", bot.equipment[5] == null, "wiki" to (twoHanded as Any?).takeIf { wikiSlot != null })
+        run.check(e, "equipment slot", slot, source to wikiSlot?.let { SLOT[it] })
+        if (def.equipSlot == 3) run.check(e, "two-handed removes the shield", bot.equipment[5] == null, source to (twoHanded as Any?).takeIf { wikiSlot != null })
         run.expectTrue(e, "appearance updated on equip", run.recording.of(botLabel, "out").any { it.cycle >= c0 && it.text == "appearance" }, "no appearance block after equipping")
         // Bonuses on the player (all equipment is this item alone, the shield removed for armour-free numbers).
         if (!twoHanded && slot != 5) bot.equipment[5] = null
@@ -228,7 +230,7 @@ object EquipmentSuite : Conformance.Suite {
                 val wiki = b[field]?.takeIf { !it.isNull }?.asText()?.replace("+", "")?.toDoubleOrNull() ?: continue
                 // The server stores magic damage in tenths of a percent (10 = 1 %), so 0.5 % steps stay exact.
                 val measured = if (field == "magic_damage_bonus") bot.equipmentBonuses[idx] / 10.0 else bot.equipmentBonuses[idx]
-                run.check(e, "bonus $field", measured, "wiki" to (if (field == "magic_damage_bonus") wiki else wiki.toInt()), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) < 0.01 })
+                run.check(e, "bonus $field", measured, source to (if (field == "magic_damage_bonus") wiki else wiki.toInt()), same = { a, b -> a != null && b != null && Math.abs(a.toString().toDouble() - b.toString().toDouble()) < 0.01 })
             }
         }
         if (def.equipSlot == 3) weapon(run, bot, dummy, arena, def, ref, e, botLabel, dummyLabel) else armour(run, bot, dummy, arena, def, ref, e, botLabel, dummyLabel)
@@ -620,6 +622,7 @@ object EquipmentSuite : Conformance.Suite {
                 n.contains("hand cannon") -> Items.HAND_CANNON_SHOT
                 n.contains("atlatl") -> Items.ATLATL_DART
                 n.contains("seercull") -> Items.RUNE_ARROW
+                EquipmentReferences.registeredAmmo(def.id) != null -> EquipmentReferences.registeredAmmo(def.id)
                 n.contains("crossbow") || n.contains("c'bow") -> Items.RUNITE_BOLTS
                 n.contains("ogre") && n.contains("bow") -> Items.OGRE_ARROW
                 n.contains("dark bow") || n.contains("twisted bow") -> Items.DRAGON_ARROW

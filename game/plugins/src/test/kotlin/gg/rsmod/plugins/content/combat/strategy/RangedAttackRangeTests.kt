@@ -24,6 +24,16 @@ import kotlin.test.assertEquals
 class RangedAttackRangeTests {
     private val wiki =
         mapOf(
+            // N521: complete low-tier thrown class plus the two non-metal crossbow exceptions.
+            Items.HOLY_WATER to 4,
+            Items.BRONZE_THROWNAXE to 4,
+            Items.IRON_THROWNAXE to 4,
+            Items.STEEL_THROWNAXE to 4,
+            Items.MITHRIL_THROWNAXE to 4,
+            Items.ADAMANT_THROWNAXE to 4,
+            Items.RUNE_THROWNAXE to 4,
+            Items.PHOENIX_CROSSBOW to 5,
+            Items.CROSSBOW to 10,
             Items.TOXIC_BLOWPIPE to 5,
             Items.BLAZING_BLOWPIPE to 5,
             Items.CAMPHOR_BLOWPIPE to 5,

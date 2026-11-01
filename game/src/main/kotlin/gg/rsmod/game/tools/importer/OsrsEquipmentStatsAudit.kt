@@ -73,6 +73,9 @@ object OsrsEquipmentStatsAudit {
             }
 
     /**
+     * N521: robe tops 540/544/546 and Legends' Quest Blue hat 740 retain their 667 names;
+     * their same-id OSRS definitions are the tops and the +2 quest hat, not the name-matched bottoms / +3 hat.
+     *
      * 667 items that are the same item as the build-240 definition with the same id but are spelled differently (verified pair by pair
      * 2026-09-14 from the MISSING roster: "Bronze dart (p)" = "Bronze dart(p)", "Bronze fire arrows" = "Bronze fire arrow" and its
      * lit copy, "Ahrim's robe top" = "Ahrim's robetop", "Seers' ring", "Mages' book", "Third-age robe top" = "3rd Age robe top",
@@ -80,7 +83,7 @@ object OsrsEquipmentStatsAudit {
      * diverge (667 11770 is Root cutting, OSRS 11770 Seers ring (i)) and are never matched by id alone.
      */
     val SAME_ITEM_BY_ID: Set<Int> =
-        (listOf(598, 942, 3094, 6731, 6889, 9244, 9341, 10338, 10340, 10342, 11217, 11222, 11227, 11228, 11229, 11231, 11233, 11234) +
+        (listOf(540, 544, 546, 740, 598, 942, 3094, 6731, 6889, 9244, 9341, 10338, 10340, 10342, 11217, 11222, 11227, 11228, 11229, 11231, 11233, 11234) +
             (812..817) + (870..876) + listOf(883, 885, 887, 889, 891, 893) + (2532..2541) + listOf(4712, 4714) + (4868..4871) +
             (4874..4877) + (5616..5641) + (5654..5667)).toSet()
 

@@ -71,6 +71,10 @@ object RangedCombatStrategy : CombatStrategy {
                     Items.SLING, Items.KAYLES_SLING -> 2
                     in Knives.KNIVES -> 4
                     in Javelins.JAVELINS, Items.COMP_OGRE_BOW -> 5
+                    // N521: OSRS build-240 param 13 and Wiki attack ranges; these fell back to 7.
+                    Items.PHOENIX_CROSSBOW -> 5
+                    Items.CROSSBOW -> 10
+                    Items.HOLY_WATER, in Items.BRONZE_THROWNAXE..Items.RUNE_THROWNAXE -> 4
                     Items.DORGESHUUN_CBOW -> 6
                     // OSRS Wiki "Hunters' sunlight crossbow": 8 tiles (10 on longrange).
                     Items.HUNTERS_SUNLIGHT_CROSSBOW -> 8

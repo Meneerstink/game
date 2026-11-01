@@ -55,6 +55,31 @@ class OsrsEquipmentStatsAuditTests {
         assertEquals("0.5", OsrsEquipmentStatsAudit.format("magic_damage", 5))
     }
 
+    @Test
+    fun `N521 same-id robe tops and quest hat match the source instead of their namesakes`() {
+        val ids = setOf(540, 544, 546, 740)
+        val matches = OsrsEquipmentStatsAudit.auditByName(YML, SOURCE, MAPPING.keys, mutableListOf()).filter { it.localId in ids }
+        assertEquals(ids, matches.map { it.localId }.toSet())
+        matches.forEach { m ->
+            assertEquals(m.localId, m.upstreamId)
+            assertTrue(m.diffs.isEmpty(), m.toString())
+        }
+        val byId = YML.associateBy { it.path("id").asInt() }
+        for ((id, slot, prayer) in listOf(Triple(538, 7, 4), Triple(540, 4, 4), Triple(542, 7, 5), Triple(544, 4, 6), Triple(546, 4, 5), Triple(548, 7, 4))) {
+            assertEquals(slot, SOURCE.getValue(id).wearPos1)
+            assertEquals(slot, byId.getValue(id).path("equipment").path("equip_slot").asInt())
+            assertEquals(prayer, byId.getValue(id).path("equipment").path("prayer").asInt())
+        }
+    }
+
+    @Test
+    fun `N521 retired tools retain a source slot without being wearable`() {
+        for (id in (466..478 step 2) + (492..506 step 2)) {
+            assertEquals(3, SOURCE.getValue(id).wearPos1)
+            assertTrue(!OsrsEquipmentStatsAudit.osrsWearable(SOURCE.getValue(id)), "retired tool $id")
+        }
+    }
+
     companion object {
         /** OSRS Wiki "Toxic blowpipe": the blowpipe "cannot be wielded if it is uncharged". */
         private val IMPORTED_EXCEPTIONS =
