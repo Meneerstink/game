@@ -53,6 +53,10 @@ object TabEvents {
         PaneMountHooks.register(InterfaceDestination.CHATBOX_TABS.interfaceId) { player ->
             player.setComponentHidden(InterfaceDestination.CHATBOX_TABS.interfaceId, ASSIST_TAB, true)
             player.setComponentPosition(InterfaceDestination.CHATBOX_TABS.interfaceId, REPORT_TAB, REPORT_X, REPORT_Y)
+            // N240 (owner 10-31 23:4x: 'naast de Report-knop is het nog steeds leeg'): Report runs on to the bar's right edge, as the wider
+            // OSRS Report button - its sprite and text (751:14/15) are 0x0 = fill the layer, so they grow with it. Re-sent on every mount.
+            gg.rsmod.plugins.content.quests.tab.N108Ui.reset(player, InterfaceDestination.CHATBOX_TABS.interfaceId)
+            gg.rsmod.plugins.content.quests.tab.N108Ui.size(player, InterfaceDestination.CHATBOX_TABS.interfaceId, REPORT_TAB, REPORT_WIDTH, REPORT_HEIGHT)
         }
     }
 
@@ -63,6 +67,11 @@ object TabEvents {
     const val REPORT_TAB = 13
     const val REPORT_X = 404
     const val REPORT_Y = 1
+
+    /** N240: from the Assist tab's left edge (404) to 4 px before the bar's right edge (751:0 is 519 wide), 22 high like the tabs. */
+    const val REPORT_WIDTH = 519 - REPORT_X - 4
+
+    const val REPORT_HEIGHT = 22
 
     private fun combatTab(player: Player) {
         player.sendWeaponComponentInformation()

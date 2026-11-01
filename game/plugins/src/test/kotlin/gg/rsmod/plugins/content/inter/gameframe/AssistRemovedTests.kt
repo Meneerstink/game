@@ -22,6 +22,8 @@ class AssistRemovedTests {
     fun `the Assist tab of the chat filter bar is hidden on every mount of 751`() {
         TabEvents.install()
         val player = mockk<Player>(relaxed = true)
+        // N240: the mount also sizes Report through N108Ui, which keeps its per-player cache in the attributes.
+        io.mockk.every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         PaneMountHooks.afterMount(player, 751)
         verify(exactly = 1) { player.write(IfSetHideMessage(hash = (751 shl 16) or 12, hidden = true)) }
     }
