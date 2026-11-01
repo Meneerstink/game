@@ -32,6 +32,11 @@ class QuestTabClickTests {
             val world = mockk<World>(relaxed = true)
             val defs = mockk<DefinitionSet>(relaxed = true)
             every { defs.get(VarbitDef::class.java, any()) } answers { VarbitDef(secondArg()) }
+            // Quest overviews name skill requirements through enum 680 (Skills.getSkillName); a relaxed mock returned the wrong type
+            // once another test had registered quests with skill requirements (package run).
+            val skillNames = mockk<gg.rsmod.game.fs.def.EnumDef>(relaxed = true)
+            every { skillNames.getString(any()) } returns "Attack"
+            every { defs.get(gg.rsmod.game.fs.def.EnumDef::class.java, any()) } returns skillNames
             every { world.definitions } returns defs
             every { player.world } returns world
             every { player.attr } returns attrs

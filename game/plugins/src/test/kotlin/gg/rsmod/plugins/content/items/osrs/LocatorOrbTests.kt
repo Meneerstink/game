@@ -296,7 +296,11 @@ class LocatorOrbTests {
             val f = Fixture()
             f.inventory[0] = Item(id)
             assertFalse(UntradeableDeathProtection.lockable(id))
-            val pvm = DeathResolver.resolve(f.player, null, false, { 2L }, contextOverride = DeathContext.PVM_SAFE)
+            // N503 D2 (owner 2026-11-01): an unskulled monster death keeps the 3 most valuable items - the lone orb is kept; skulled
+            // it keeps nothing and the orb waits in the gravestone.
+            val kept = DeathResolver.resolve(f.player, null, false, { 2L }, contextOverride = DeathContext.PVM_SAFE)
+            assertEquals(listOf(id), kept.itemRisk.protected.map { it.item.id })
+            val pvm = DeathResolver.resolve(f.player, null, true, { 2L }, contextOverride = DeathContext.PVM_SAFE)
             assertEquals(listOf(id), pvm.itemRisk.lost.map { it.item.id })
             assertTrue(UntradeableDeathProtection.splitPvp(f.definitions, pvm, false).second.isEmpty())
             for (deep in listOf(false, true)) {

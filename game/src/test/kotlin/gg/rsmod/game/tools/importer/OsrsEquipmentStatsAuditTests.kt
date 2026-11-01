@@ -57,7 +57,12 @@ class OsrsEquipmentStatsAuditTests {
 
     companion object {
         /** OSRS Wiki "Toxic blowpipe": the blowpipe "cannot be wielded if it is uncharged". */
-        private val IMPORTED_EXCEPTIONS = mapOf(22624 to "Toxic blowpipe (empty)")
+        private val IMPORTED_EXCEPTIONS =
+            mapOf(
+                22624 to "Toxic blowpipe (empty)",
+                // N490 (owner plan 2026-10-31 17:3x): the OSRS shield-book is only read here (Read / Destroy), never worn.
+                24624 to "Ruinous powers",
+            )
 
         private lateinit var YML: List<com.fasterxml.jackson.databind.JsonNode>
         private lateinit var SOURCE: Map<Int, ModernItemDef>

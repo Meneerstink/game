@@ -1323,3 +1323,13 @@
   usage: "::pets <block>"
   description: "Test tool: empty your inventory and spawn one block of 28 pet items (every pet once, OSRS pets first, then the 667 pets)."
   example: "::pets 1"
+- name: prayerbook
+  rank: admin
+  usage: "::prayerbook <normal|curses|ruinous>"
+  description: "Test tool: switch your prayer book (Ruinous only once it is unlocked: Desert Treasure II + the Ruinous powers book, N490)."
+  example: "::prayerbook curses"
+- name: petdrop
+  rank: admin
+  usage: "::petdrop <pet item id>"
+  description: "Test tool: receive a pet exactly like a boss drop (collection log, Getting pet sound, world message; a duplicate gives nothing)."
+  example: "::petdrop 24112"

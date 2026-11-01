@@ -16,11 +16,12 @@ class OwnerBuglist20260917cTests {
     @Test
     fun `every breath-charged shield swaps between its charged and uncharged item with its charges`() {
         DragonfireShield.FAMILIES.forEach { family ->
+            // N11 bundle 6 (2026-10-31): the 667 Dragonfire shield keeps its own id (changesForm = false), only the counter changes.
             val charged = DragonfireShield.withCharges(Item(family.uncharged), 7)
-            assertEquals(family.charged, charged.id, "${family.noun} ${family.uncharged} with charges is the charged item")
+            assertEquals(if (family.changesForm) family.charged else family.uncharged, charged.id, "${family.noun} ${family.uncharged} with charges")
             assertEquals(7, DragonfireShield.charges(charged))
             val emptied = DragonfireShield.withCharges(charged, 0)
-            assertEquals(family.uncharged, emptied.id, "${family.noun} ${family.charged} emptied is the uncharged item")
+            assertEquals(if (family.changesForm) family.uncharged else charged.id, emptied.id, "${family.noun} emptied")
             assertEquals(0, DragonfireShield.charges(emptied))
             assertTrue(DragonfireShield.inspectMessage(charged).contains("7 charges"))
         }
