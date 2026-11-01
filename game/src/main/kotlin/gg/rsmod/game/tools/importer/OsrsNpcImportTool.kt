@@ -103,6 +103,8 @@ object OsrsNpcImportTool {
             // N522 bundle 1 (owner 2026-11-01 "alle osrs wilderness bosses"): OSRS Wiki infobox ids Chaos Fanatic 6619 and Crazy
             // archaeologist 6618 and the scenery "Miniature chaotic clouds" 6620 that wander round the fanatic (classic frames: OsrsNpcProbeTool).
             "wildy-bosses-1" to listOf(6619, 6618, 6620),
+            // N522 bundle 2: OSRS Wiki infobox ids Scorpia 6615, Scorpia's offspring (monster) 6616, Scorpia's guardian 6617.
+            "wildy-bosses-2" to listOf(6615, 6616, 6617),
         )
     }
 
@@ -148,6 +150,9 @@ object OsrsNpcImportTool {
             // ZAROS_VERTICAL_CASTING 1979, HUMAN_UNARMED_DEF 425, MACRO_SANDWICH_LADY_KNOCKOUT 2304 (death), BOOK_CHUCK 3353,
             // HUMAN_UNARMEDKICK 423 (RuneLite gameval AnimationID names).
             "wildy-bosses-1" to listOf(1979, 425, 2304, 3353, 423),
+            // wildy-bosses-2: Kronos-184 data/npcs/combat Scorpia.json (6254/6255/6256, also used for the guardian) and RuneLite gameval
+            // AnimationID SMALL_SCORPION_UPDATE_DEFEND 6259 / _DEATH 6260 / _ATTACK 6261 (offspring); SCORPION_UPDATE_ATTACK_TAIL 6254.
+            "wildy-bosses-2" to listOf(6254, 6255, 6256, 6259, 6260, 6261),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
             "deadman-breach" to

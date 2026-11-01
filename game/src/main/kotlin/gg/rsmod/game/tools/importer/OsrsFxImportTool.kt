@@ -155,6 +155,9 @@ object OsrsFxImportTool {
             // 157 explosion, 305 disarm hit), tarnish projectile_definitions "Chaos Fanatic Range" (553 cast), RuneLite gameval
             // SpotanimID CRAZY_ARCHAEOLOGIST_BOOK 1259 / _BOOK_SPECIAL 1260, RuneLite aoewarnings CHAOS_FANATIC_AOE 551.
             "wildy-bosses-1" to listOf(551, 553, 554, 157, 305, 1259, 1260, 552),
+            // N522 bundle 2 (Scorpia), Kronos-184 bosses/scorpia: guardian heal projectile 109, guardian spawn 144, offspring projectile
+            // 663. Same model/seq ids in both caches, imported anyway like 552 (the rev-667 sequences of the same id can differ).
+            "wildy-bosses-2" to listOf(109, 144, 663),
         )
 
     /**

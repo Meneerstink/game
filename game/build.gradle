@@ -293,6 +293,14 @@ task runOsrsFxImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsFxImportTool'
 }
 
+task runOsrsRegionImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'OSRS map squares that are empty in the 667 map, imported on their own coordinates (CacheTransaction, both caches). ' +
+        'Usage: ./gradlew :game:runOsrsRegionImportTool --args="<batch> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsRegionImportTool'
+}
+
 task runCurseTooltipCacheTool(type: JavaExec) {
     group = 'tools'
     description = 'Prayer-tab hover texts of the curses and Augury/Rigour (CacheTransaction, both caches). ' +
