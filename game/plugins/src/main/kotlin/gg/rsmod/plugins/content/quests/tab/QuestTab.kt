@@ -419,7 +419,9 @@ object QuestTab {
         val base = DP.event(event)
         val y = DP.EVENT_Y + event * DP.EVENT_STEP
         N108Ui.text(player, p, base + 2, title)
-        val timeW = if (time.isEmpty()) 0 else N108Ui.p11(world, time)
+        // N518 class: measured with every digit as the widest one, so the place line keeps its size while the clock ticks (it was
+        // re-sized - a size hook to the client - nearly every second).
+        val timeW = if (time.isEmpty()) 0 else N108Ui.p11(world, time.replace(Regex("[0-9]"), "8"))
         if (map) {
             N108Ui.pos(player, p, base + 4, EVENT_RIGHT - 53, y + 11)
             N108Ui.pos(player, p, base + 5, EVENT_MAP_X, y + 1)
