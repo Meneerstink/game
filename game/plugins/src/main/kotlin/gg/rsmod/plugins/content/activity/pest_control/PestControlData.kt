@@ -71,12 +71,6 @@ val PC_KNIGHT_IDS = intArrayOf(Npcs.VOID_KNIGHT, Npcs.VOID_KNIGHT_3785)
 /** Void Knight hitpoints: the 2009scape overlay starts at "200" (1:1 since the HP unit migration, was x 10). */
 const val PC_KNIGHT_LIFEPOINTS = 200
 
-/** N232: from this many players on the Void Knight takes the pests' full damage (PestControlHandler.knightDamage). */
-const val KNIGHT_FULL_DAMAGE_TEAM = 5
-
-/** N232: the share of the pests' damage the Void Knight takes with a solo player. */
-const val KNIGHT_SOLO_DAMAGE_SHARE = 1.0 / 3
-
 /** 2009scape: a destroyed portal gives the Void Knight 50 hitpoints back. */
 const val PC_KNIGHT_PORTAL_HEAL = 50
 

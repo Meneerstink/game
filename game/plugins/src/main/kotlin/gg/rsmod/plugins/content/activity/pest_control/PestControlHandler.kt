@@ -274,35 +274,20 @@ object PestControlHandler {
         addZeal(source, dealt)
     }
 
-    /**
-     * N232 (owner 2026-10-23: "pest control is nu veel te moeilijk als solo speler omdat de void knight te snel doodgaat... dit moet
-     * iets makkelijker"): the waves are built for a full team, which keeps most pests busy away from the knight. The damage the
-     * Void Knight takes scales with the team: 5 or more players (the RS lander minimum) take all of it, fewer a share of
-     * [players] / 5, a solo player a third. Rounded at random ([roll] in 0..1) so the expected damage is exact, also for 1-hits.
-     */
+    /** N232: rounded at random so even one-point hits receive the small team's exact average share. */
     fun knightDamage(
         players: Int,
         damage: Int,
         roll: Double = Random.nextDouble(),
     ): Int {
         if (damage <= 0) return damage
-        val share = (players / KNIGHT_FULL_DAMAGE_TEAM.toDouble()).coerceIn(KNIGHT_SOLO_DAMAGE_SHARE, 1.0) * damage
+        val share = PestControlBalance.profile(players, PestControlTier.NOVICE).damageShare * damage
         val whole = share.toInt()
         return whole + if (roll < share - whole) 1 else 0
     }
 
-    /** N232: at most one shifter beside the knight per player, never more than Darkan's 4 (solo: one at a time). */
-    fun knightShifterCap(players: Int): Int = players.coerceIn(1, KNIGHT_MAX_SHIFTERS)
-
-    /** PawnExt.dealHit: a hit on the Void Knight of a running game, scaled by [knightDamage]. */
-    fun modifyIncomingDamage(
-        target: Npc,
-        damage: Int,
-    ): Int {
-        if (target.id !in PC_KNIGHT_IDS || damage <= 0) return damage
-        val game = gameOf(target)?.takeIf { it.knight === target } ?: return damage
-        return knightDamage(game.players.size, damage)
-    }
+    /** N232: fewer direct knight attackers for small teams; identical on every boat. */
+    fun knightShifterCap(players: Int): Int = PestControlBalance.profile(players, PestControlTier.NOVICE).knightShifters
 
     /** [zeal] whole zeal: damage dealt, or 5 for a repair. */
     fun addZeal(
@@ -412,6 +397,18 @@ class PestControlGame(
     val barricades = mutableListOf<gg.rsmod.game.model.entity.GameObject>()
     val players = mutableListOf<Player>()
     private val shieldOrder = (0..3).shuffled()
+    private val knightDamageBudget = PestControlBalance.KnightDamageBudget()
+    val balance get() = PestControlBalance.profile(players.size, tier)
+
+    internal fun knightDamage(damage: Int, roll: Double = Random.nextDouble()): Int =
+        knightDamageBudget.apply(ticks, PestControlHandler.knightDamage(players.size, damage, roll), balance.knightDamagePerWindow)
+
+    /** Apply at impact: queued, delayed and scripted hits all use the remaining team and one shared budget. */
+    internal fun configureKnightDamage() {
+        knight.hitModifier = { hit ->
+            if (active) hit.hitmarks.forEach { mark -> mark.damage = knightDamage(mark.damage) }
+        }
+    }
 
     /** Which portal each spinner belongs to (it heals that portal and explodes when it dies). */
     val spinnerPortal = HashMap<Npc, Int>()
@@ -461,6 +458,7 @@ class PestControlGame(
 
     fun removePlayer(p: Player) {
         players.remove(p)
+        rebalancePopulation()
     }
 
     /** Spawns the shielded portals, the Void Knight and the leave squire (2009scape PestControlSession.spawnNPCs). */
@@ -477,6 +475,7 @@ class PestControlGame(
         world.spawn(knight)
         knight.combatDef = knight.combatDef.copy(lifepoints = PC_KNIGHT_LIFEPOINTS)
         knight.setCurrentLifepoints(PC_KNIGHT_LIFEPOINTS)
+        configureKnightDamage()
         // The knight neither moves nor fights back; monsters can still hit it.
         knight.lock = gg.rsmod.game.model.LockState.FULL
         // No "Attack" option in the cache (players never hit it), but the pests must: the shared combat gate's npc-only target.
@@ -539,11 +538,11 @@ class PestControlGame(
         }
         monsters.removeIf { !it.isSpawned() || it.isDead() }
         spinnerPortal.keys.removeIf { it !in monsters }
-        val playerCount = players.size
+        rebalancePopulation()
         for (i in 0..3) {
             val portal = portals[i] ?: continue
             if (portal.isDead() || !portal.isSpawned()) continue
-            if ((ticks % 35 - playerCount) == 0 && monsters.size + 5 < 100) spawnWave(i, portal)
+            if (ticks % balance.waveTicks == 0 && monsters.size < balance.populationCap) spawnWave(i, portal)
             if (portalDirty[i] && ticks % 10 == 0) {
                 val lp = portal.getCurrentLifepoints()
                 sendAll(13 + i, (if (lp > portal.getMaximumLifepoints() / 4) "<col=00FF00>" else "<col=FF0000>") + lp)
@@ -566,9 +565,9 @@ class PestControlGame(
      * Darkan PestPortal.processNPC / PestControl.createPestNPC for index 4: every 15 ticks the knight brings a shifter (and 1 time in 5 a
      * second one) on a free tile within 5 tiles of it, at most 4 alive. Our 2009scape port spawned nothing at the knight.
      */
-    private fun spawnKnightShifter(): Boolean {
+    internal fun spawnKnightShifter(): Boolean {
         knightShifters.removeIf { !it.isSpawned() || it.isDead() }
-        if (knightShifters.size >= PestControlHandler.knightShifterCap(players.size) || !knight.isSpawned() || knight.isDead()) return false
+        if (knightShifters.size >= PestControlHandler.knightShifterCap(players.size) || monsters.size >= balance.populationCap || !knight.isSpawned() || knight.isDead()) return false
         val ids = PC_SHIFTERS[tier.difficulty]
         val tile =
             (0 until 10).map { knight.tile.transform(Random.nextInt(-5, 6), Random.nextInt(-5, 6), 0) }
@@ -585,7 +584,7 @@ class PestControlGame(
     }
 
     /** 2009scape removePortalShield: message, overlay shield hidden, the portal becomes attackable. */
-    private fun dropShield(index: Int) {
+    internal fun dropShield(index: Int) {
         if (!shieldUp[index]) return
         shieldUp[index] = false
         val message = "The ${PC_PORTAL_NAMES[index]} portal shield has dropped!"
@@ -605,34 +604,71 @@ class PestControlGame(
     }
 
     /** 2009scape PCPortalNPC.spawnNPCs: a wave of difficulty-indexed monsters walking out towards the knight. */
-    private fun spawnWave(
+    internal fun spawnWave(
         index: Int,
         portal: Npc,
+        random: Random = Random.Default,
     ) {
         val d = tier.difficulty
-        var amount = d + 1 + players.size / 10
-        if (d == 0) amount += 1 // 2009scape: ((index + 1) * 3) / 2 = 1 extra on the novice lander
+        val amount = minOf(balance.waveSize, (balance.populationCap - monsters.size).coerceAtLeast(0))
         val dx = Integer.signum(knight.tile.x - portal.tile.x)
         val dz = Integer.signum(knight.tile.z - portal.tile.z)
-        val spinners = spinnerPortal.count { it.value == index }
-        val brawlers = monsters.count { pestMonsterOf(it.id) == PestMonster.BRAWLER }
         for (n in 0 until amount) {
             val ids =
-                when (Random.nextInt(7)) {
+                when (random.nextInt(7)) {
                     0 -> PC_SPLATTERS[d]
                     1 -> PC_SHIFTERS[d]
                     2 -> PC_RAVAGERS[d]
-                    3 -> if (spinners < 3) PC_SPINNERS[d] else PC_TORCHERS[d]
+                    3 -> if (spinnerPortal.count { it.value == index } < balance.spinnersPerPortal) PC_SPINNERS[d] else PC_TORCHERS[d]
                     4 -> PC_TORCHERS[d]
                     5 -> PC_DEFILERS[d]
-                    else -> if (brawlers < 2) PC_BRAWLERS[d] else PC_DEFILERS[d]
+                    else -> if (monsters.count { pestMonsterOf(it.id) == PestMonster.BRAWLER } < 2) PC_BRAWLERS[d] else PC_DEFILERS[d]
                 }
             var x = dx * 3
             var z = dz * 3
             if (x == 0) x = n else z = n
             val centre = portal.tile.transform(1, 1, 0)
-            spawnMonster(ids[Random.nextInt(ids.size)], centre.transform(x, z, 0), index)
+            val id = ids[random.nextInt(ids.size)]
+            val tile = if (pestMonsterOf(id) == PestMonster.SPINNER) {
+                val visible = spinnerTile(index)
+                if (visible == null) {
+                    PestControlTrace.problem("no clear spinner tile at portal $index in ${tier.displayName}; spawn skipped")
+                    continue
+                }
+                visible
+            } else centre.transform(x, z, 0)
+            spawnMonster(id, tile, index)
         }
+    }
+
+    /** Keep a clear gap around all portals, and a separate, walkable tile for each spinner. */
+    internal fun spinnerTile(index: Int, spinner: Npc? = null): Tile? {
+        val portal = portals.getOrNull(index) ?: return null
+        val tiles = PestControlBalance.spinnerTiles(portal.tile, portal.getSize())
+        return tiles.firstOrNull { tile ->
+            map.area.contains(tile) && !world.collision.isClipped(tile) &&
+                portals.filterNotNull().none { p ->
+                    tile.x in p.tile.x until p.tile.x + p.getSize() && tile.z in p.tile.z until p.tile.z + p.getSize()
+                } && spinnerPortal.keys.none { it !== spinner && it.tile == tile }
+        }
+    }
+
+    /** Apply departures to pests already alive, not only the next wave. No drops/zeal for despawning excess pests. */
+    internal fun rebalancePopulation() {
+        fun remove(monster: Npc) {
+            monster.resetInteractions()
+            monster.stopMovement()
+            world.remove(monster)
+            monsters.remove(monster)
+            spinnerPortal.remove(monster)
+            knightShifters.remove(monster)
+        }
+        knightShifters.removeIf { it !in monsters || !it.isSpawned() || it.isDead() }
+        knightShifters.toList().drop(balance.knightShifters).forEach { remove(it) }
+        for (index in 0..3) {
+            spinnerPortal.filterValues { it == index }.keys.toList().drop(balance.spinnersPerPortal).forEach { remove(it) }
+        }
+        monsters.toList().drop(balance.populationCap).forEach { remove(it) }
     }
 
     /** One pest monster of this game: never respawns, hunts only this game's players, a spinner belongs to [portalIndex]. */
@@ -643,7 +679,7 @@ class PestControlGame(
     ): Npc {
         val monster = Npc(id, tile, world)
         monster.respawnOverride = false
-        monster.walkRadius = 64
+        monster.walkRadius = if (pestMonsterOf(id) == PestMonster.SPINNER) 0 else 64
         // Darkan PestControlGameController.canMove / PestControl.isBrawlerAt: a player cannot step onto a brawler's tile (they
         // wall off the knight's path); every other pest is walked through as in OSRS.
         monster.blocksPlayers = pestMonsterOf(id) == PestMonster.BRAWLER

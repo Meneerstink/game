@@ -61,8 +61,8 @@ class PestControlSpinnerTests {
         every { f.spinner.tile } returns Tile(3300, 3300)
         PestControlMonsters.spinner(f.game, f.spinner, roll = 0)
         assertEquals(20, f.hp)
-        val portalTile = f.portal.tile
-        verify { f.spinner.walkTo(portalTile) }
+        val visibleTile = f.game.spinnerTile(0, f.spinner)!!
+        verify { f.spinner.walkTo(visibleTile) }
     }
 
     @Test
@@ -127,6 +127,8 @@ class PestControlSpinnerTests {
         every { game.monsters } returns mutableListOf()
         every { portal.getCentreTile() } returns Tile(3200, 3200)
         every { portal.tile } returns Tile(3200, 3200)
+        every { portal.getSize() } returns 3
+        every { game.spinnerTile(0, spinner) } returns Tile(3203, 3200)
         every { portal.isSpawned() } returns true
         every { portal.getMaximumLifepoints() } returns maximum
         every { portal.getCurrentLifepoints() } answers { f.hp }

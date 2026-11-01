@@ -272,10 +272,6 @@ fun Pawn.dealHit(
     if (target is Npc && damage > 0) {
         damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
     }
-    // Pest Control: the Void Knight takes a share of the pests' damage in a small team (N232).
-    if (target is Npc && damage > 0) {
-        damage = gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.modifyIncomingDamage(target, damage.toInt()).toDouble()
-    }
     // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
     // Reading getCombatClass again on impact can use a different style after a weapon switch.
     val curseHitStyle = when (hitType) {

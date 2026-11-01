@@ -155,10 +155,17 @@ object PestControlMonsters {
         m: Npc,
         roll: Int = Random.nextInt(10),
     ) {
-        if (roll >= 2) return
         val index = game.spinnerPortal[m] ?: return
         val portal = game.portals[index] ?: return
         if (portal.isDead() || !portal.isSpawned()) return
+        // N232: even a full-health portal must not hide its spinner. Fix overlap before the heal/chance early returns.
+        val overlaps = m.tile.x in portal.tile.x until portal.tile.x + portal.getSize() &&
+            m.tile.z in portal.tile.z until portal.tile.z + portal.getSize()
+        if (overlaps) {
+            game.spinnerTile(index, m)?.let { m.stopMovement(); m.moveTo(it) }
+            return
+        }
+        if (roll >= 2) return
         if (portal.getCurrentLifepoints() >= portal.getMaximumLifepoints()) return
         if (m.tile.isWithinRadius(portal.getCentreTile(), 5)) {
             m.facePawn(portal)
@@ -167,7 +174,7 @@ object PestControlMonsters {
             portal.setCurrentLifepoints(minOf(portal.getMaximumLifepoints(), portal.getCurrentLifepoints() + spinnerHeal(portal.getMaximumLifepoints(), game.players.size)))
             game.portalHit(portal)
         } else {
-            m.walkTo(portal.tile)
+            game.spinnerTile(index, m)?.let { m.walkTo(it) }
         }
     }
 
