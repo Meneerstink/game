@@ -12965,5 +12965,9 @@ object Npcs {
     const val CHAOS_FANATIC = 15052 // 6619
     const val CRAZY_ARCHAEOLOGIST = 15053 // 6618
     const val MINIATURE_CHAOTIC_CLOUDS = 15054 // 6620 (scenery round the Chaos Fanatic, tx-20261101-140025)
+    // N522 bundle 2 (Scorpia): OsrsNpcImportTool batch wildy-bosses-2, tx-20261101-202308; OSRS id in the comment.
+    const val SCORPIA = 15055 // 6615
+    const val SCORPIAS_OFFSPRING = 15056 // 6616
+    const val SCORPIAS_GUARDIAN = 15057 // 6617
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
 }

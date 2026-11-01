@@ -387,6 +387,11 @@ fun Pawn.dealHit(
         }
     }
 
+    // N522 Scorpia: every attack against her, a splash included, counts toward summoning her guardians (OSRS Wiki "Scorpia's guardian").
+    if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.SCORPIA) {
+        hit.addAction { gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat.onAttacked(target) }
+    }
+
     // Re-check PvP safety when a delayed hit lands. This closes the boundary
     // window for projectiles/spells fired before either player entered home.
     val creditedPlayer = attr[DAMAGE_CREDIT_ATTR]?.get() as? Player

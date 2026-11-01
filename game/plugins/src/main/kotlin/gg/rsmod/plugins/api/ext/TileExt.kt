@@ -62,6 +62,8 @@ val wildernessRegionIds =
         12859,
         12860,
         12861,
+        // N522: the imported OSRS Scorpion Pit (Scorpia), underground level 53-55.
+        12961,
         13111,
         13112,
         13113,

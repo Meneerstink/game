@@ -4,11 +4,15 @@ import com.displee.cache.CacheLibrary
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.fs.def.NpcDef
+import gg.rsmod.game.fs.def.ObjectDef
 import gg.rsmod.game.model.Tile
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ChaosFanaticCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.CrazyArchaeologistCombat
+import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat
+import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaPit
 import gg.rsmod.plugins.content.quests.tab.CollectionLogPages
 import gg.rsmod.plugins.content.skills.summoning.Pets
 import java.io.File
@@ -98,5 +102,77 @@ class WildernessBossesTests {
     fun `the Collection log lists the OSRS items of both bosses`() {
         assertEquals(listOf("Odium shard 1", "Malediction shard 1", "Pet chaos elemental"), CollectionLogPages.OSRS["chaos fanatic"])
         assertEquals(listOf("Odium shard 2", "Malediction shard 2", "Fedora"), CollectionLogPages.OSRS["crazy archaeologist"])
+    }
+
+    @Test
+    fun `N522 bundle 2 - Scorpia, her offspring and guardians and the pit locs decode from the game cache`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, NpcDef::class.java)
+        definitions.load(library, ObjectDef::class.java)
+        val attack = listOf(null, "Attack", null, null, null)
+        listOf(
+            Triple(Npcs.SCORPIA, "Scorpia", 5),
+            Triple(Npcs.SCORPIAS_OFFSPRING, "Scorpia's offspring", 1),
+            Triple(Npcs.SCORPIAS_GUARDIAN, "Scorpia's guardian", 1),
+        ).forEach { (id, name, size) ->
+            val def = definitions.get(NpcDef::class.java, id)
+            assertEquals(name, def.name, "$id")
+            assertEquals(size, def.size, "$id $name size")
+            assertEquals(attack, def.options.map { it?.takeIf { o -> o.isNotEmpty() } }, "$id $name options")
+        }
+        val cavern = definitions.get(ObjectDef::class.java, ScorpiaPit.CAVERN)
+        assertEquals("Cavern", cavern.name)
+        assertTrue(cavern.options.any { it.equals("Enter", ignoreCase = true) }, "Cavern: Enter")
+        val crevice = definitions.get(ObjectDef::class.java, ScorpiaPit.CREVICE)
+        assertEquals("Crevice", crevice.name)
+        assertTrue(crevice.options.any { it.equals("Use", ignoreCase = true) }, "Crevice: Use")
+    }
+
+    @Test
+    fun `N522 bundle 2 - every surface cavern leads into the pit and every crevice back to the surface by that cavern`() {
+        assertEquals(3, ScorpiaPit.CAVERNS.size)
+        assertEquals(3, ScorpiaPit.CREVICES.size)
+        ScorpiaPit.CAVERNS.forEach { c ->
+            assertEquals(c.exit, ScorpiaPit.cavernExit(c.tile))
+            assertEquals(12961, c.exit.regionId, "cavern ${c.tile} leads into the pit")
+            assertTrue(c.tile.z in 3900..3999, "cavern ${c.tile} stands in the level 50+ Wilderness")
+        }
+        ScorpiaPit.CREVICES.forEach { (loc, exit) ->
+            assertEquals(12961, loc.regionId)
+            assertEquals(exit, ScorpiaPit.creviceExit(loc))
+            val nearest = ScorpiaPit.CAVERNS.minOf { maxOf(kotlin.math.abs(it.tile.x - exit.x), kotlin.math.abs(it.tile.z - exit.z)) }
+            assertTrue(nearest <= 3, "crevice $loc comes out next to a cavern ($exit)")
+        }
+        assertEquals(null, ScorpiaPit.cavernExit(Tile(3000, 3900)))
+    }
+
+    @Test
+    fun `N522 bundle 2 - guardians heal from 3 tiles of her 5x5 and appear inside it`() {
+        val o = Tile(3234, 10340)
+        assertEquals(0, ScorpiaCombat.distanceToArea(o.transform(2, 2), o, 5), "under her")
+        assertEquals(3, ScorpiaCombat.distanceToArea(o.transform(7, 0), o, 5), "3 east of her east edge")
+        assertEquals(4, ScorpiaCombat.distanceToArea(o.transform(-4, 1), o, 5))
+        assertEquals(3, ScorpiaCombat.distanceToArea(o.transform(-3, -3), o, 5), "diagonal")
+        assertEquals(Int.MAX_VALUE, ScorpiaCombat.distanceToArea(Tile(o.x, o.z, 1), o, 5), "other plane")
+        assertEquals(99, ScorpiaCombat.GUARDIAN_THRESHOLD)
+        assertEquals(8, ScorpiaCombat.HEAL)
+        assertEquals(3, ScorpiaCombat.HEAL_TICKS)
+        assertEquals(25, ScorpiaCombat.GUARDIAN_IDLE_TICKS)
+        assertEquals(2, ScorpiaCombat.PRAYER_DRAIN)
+        assertEquals(16, ScorpiaCombat.MAX_HIT)
+    }
+
+    @Test
+    fun `N522 bundle 2 - Scorpia's offspring pet drops from Scorpia at 1 in 2016, the pit is multi-combat, the log lists her items`() {
+        val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()
+        Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
+        assertEquals("Scorpia's offspring", Pets.dropFor(Npcs.SCORPIA)?.pet)
+        assertEquals(1.0 / 2016, Pets.dropChance(Npcs.SCORPIA), 1e-12)
+        val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
+        assertTrue("- 12961" in multi, "Scorpion Pit region in multi.yml")
+        // The pit is Wilderness (PvP rules, teleport limits, loot timers): OSRS level 53 at Scorpia, 54 at the north crevices.
+        assertEquals(53, Tile(3234, 10340).getWildernessLevel())
+        assertEquals(55, Tile(3232, 10352).getWildernessLevel())
+        assertEquals(listOf("Odium shard 3", "Malediction shard 3", "Scorpia's offspring"), CollectionLogPages.OSRS["scorpia"])
     }
 }
