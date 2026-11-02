@@ -66,6 +66,19 @@ object ModernRegionProbeTool {
                 )
             }
             flags.forEach { (f, n) -> out.appendLine("TILEFLAG settings=$f tiles=$n") }
+            // Per plane: tiles with an underlay / overlay / flags, and the height range (N522 bundle 4a: why one square renders black).
+            for (plane in 0 until 4) {
+                var u = 0; var o = 0; var f = 0; var minH = Int.MAX_VALUE; var maxH = Int.MIN_VALUE; val fl = sortedMapOf<Int, Int>()
+                for (lx in 0 until 64) for (lz in 0 until 64) {
+                    if (!inBox(region.rx * 64 + lx, region.rz * 64 + lz)) continue
+                    val t = region.tiles[plane][lx][lz]
+                    if (t.underlayId > 0) u++
+                    if (t.overlayId != 0) o++
+                    if (t.settings != 0) { f++; fl.merge(t.settings, 1, Int::plus) }
+                    minH = minOf(minH, t.height); maxH = maxOf(maxH, t.height)
+                }
+                out.appendLine("PLANE $plane underlay=$u overlay=$o flagged=$f flags=$fl height=$minH..$maxH")
+            }
 
             // ---- locs ----
             val locDefs = reader.files(2, 6)
