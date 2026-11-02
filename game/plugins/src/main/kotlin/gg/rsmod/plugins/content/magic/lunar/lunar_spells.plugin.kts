@@ -38,7 +38,7 @@ import gg.rsmod.game.model.TileGraphic
  * LunarListeners/HealSpell/VengeanceSpell/MagicImbueSpell handlers (same-era ids) and the 2011
  * RuneScape Wiki for experience values.
  *
- * Out of scope / not implemented here: NPC Contact (needs per-NPC dialogue routing), Borrowed
+ * Out of scope / not implemented here: Borrowed
  * Power, Tune Bane Ore, Repair Rune Pouch, Remote Farm (farming). Those buttons currently do nothing.
  * Fertile Soil and Cure Plant (cast on a patch) are at the bottom (N72 deel C, LunarFarming).
  */
@@ -681,11 +681,29 @@ on_spell_on_item(fromInterface = 430, fromComponent = SpellbookData.BOOST_POTION
 }
 
 // Spells with no implementation yet (see file header) - bind so the click is at least acknowledged.
-listOf("NPC Contact", "Remote Farm").forEach { name ->
+listOf("Remote Farm").forEach { name ->
     on_magic_spell_button(name) {
         player.message("This spell is not available yet.")
     }
 }
+
+// N72 Astral Contact / NPC Contact (NpcContact: Void donor): cast, then the contact window two ticks later.
+on_magic_spell_button("NPC Contact") { metadata ->
+    if (!player.castLunar(metadata, xp = NpcContact.XP, animation = NpcContact.ANIMATION, graphic = NpcContact.GRAPHIC,
+            height = NpcContact.GRAPHIC_HEIGHT, sound = NpcContact.SOUND)) return@on_magic_spell_button
+    player.queue {
+        wait(2)
+        NpcContact.open(player)
+    }
+}
+
+(NpcContact.CONTACTS.flatMap { listOf(it.head, it.label) }).forEach { component ->
+    on_button(NpcContact.INTERFACE, component) { NpcContact.byComponent(component)?.let { NpcContact.contact(player, it) } }
+}
+on_button(NpcContact.INTERFACE, arrayOf(NpcContact.RANDOM_HEAD, NpcContact.RANDOM_LABEL)) {
+    NpcContact.contact(player, NpcContact.CONTACTS.random())
+}
+on_button(NpcContact.INTERFACE, NpcContact.CLOSE) { player.closeInterface(NpcContact.INTERFACE) }
 
 /*
  * N72 deel C: Cure Plant (430:55) and Fertile Soil (430:24) are cast ON a farming patch (spell-on-object); the rules per patch
