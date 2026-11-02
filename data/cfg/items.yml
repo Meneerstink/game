@@ -290781,3 +290781,165 @@
   tradeable: false
   weight: 0.014
   equipment: null
+- id: 24625
+  name: "Fedora"
+  examine: "Makes you look fedorable."
+  tradeable: true
+  weight: 0.2
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6755
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24626
+  name: "Fedora"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24627
+  name: "Bracelet of ethereum"
+  examine: "The bracelet glows with ethereal power."
+  tradeable: false
+  weight: 0.25
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6756
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24628
+  name: "Bracelet of ethereum (uncharged)"
+  examine: "The bracelet is dull and powerless."
+  tradeable: true
+  weight: 0.25
+  equipment:
+    equip_slot: 9
+    equip_type: -1
+    appearance_id: 6757
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24629
+  name: "Bracelet of ethereum (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24630
+  name: "Amulet of avarice"
+  examine: "A hauntingly beautiful amulet bearing the shape of a skull."
+  tradeable: true
+  weight: 0.01
+  equipment:
+    equip_slot: 2
+    equip_type: -1
+    appearance_id: 6758
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 10
+    attack_slash: 10
+    attack_crush: 10
+    attack_magic: 10
+    attack_ranged: 10
+    defence_stab: 3
+    defence_slash: 3
+    defence_crush: 3
+    defence_magic: 3
+    defence_ranged: 3
+    summoning: 0
+    melee_strength: 6
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24631
+  name: "Amulet of avarice"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24632
+  name: "Ancient crystal"
+  examine: "An ancient crystal containing magical energy."
+  tradeable: true
+  weight: 13.607
+  equipment: null
+- id: 24633
+  name: "Ancient crystal"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null

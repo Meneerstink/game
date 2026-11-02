@@ -222,6 +222,8 @@ object MeleeCombatFormula : CombatFormula {
         hit = floor(hit * TargetModifiers.meleeDragonbaneDamage(player, target))
         // Revenant chainmaces: "an additional 50% melee accuracy and damage boost ... when attacking any NPC in the Wilderness".
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
+        // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
 
         hit =
             if (specialPassiveMultiplier == 1.0) {
@@ -253,6 +255,8 @@ object MeleeCombatFormula : CombatFormula {
         hit = TargetModifiers.addPercent(hit, TargetModifiers.meleeDemonbanePercent(player, target))
         hit = floor(hit * TargetModifiers.meleeDragonbaneAccuracy(player, target))
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
+        // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
         hit = floor(hit * specialAttackMultiplier)
         return hit
     }

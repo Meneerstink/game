@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ChaosFanaticCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.CrazyArchaeologistCombat
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat
+import gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants
 import gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaves
 import gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaPit
 import gg.rsmod.plugins.content.areas.wilderness.bosses.VolcanicForge
@@ -232,5 +233,48 @@ class WildernessBossesTests {
             assertEquals(4, kotlin.math.abs(p.sideA.x - p.sideB.x) + kotlin.math.abs(p.sideA.z - p.sideB.z))
             assertEquals(p, RevenantCaves.pillarAt(p.tile))
         }
+    }
+
+    @Test
+    fun `N522 bundle 3b - the revenant drop formula matches the OSRS Wiki template per combat level`() {
+        // Template:Revenants/Drops: A = floor(2200 / floor(sqrt(cb))), B = 15 + floor((cb + 60)^2 / 200).
+        assertEquals(1100, RevenantCaveRevenants.a(7))
+        assertEquals(37, RevenantCaveRevenants.b(7))
+        assertEquals(200, RevenantCaveRevenants.a(135))
+        assertEquals(205, RevenantCaveRevenants.b(135))
+        assertEquals(6, RevenantCaveRevenants.maxEther(7)) // 2 .. (2 + 1) * 2
+        assertEquals(24, RevenantCaveRevenants.maxEther(135)) // 2 .. (11 + 1) * 2
+        assertEquals(51, RevenantCaveRevenants.maxCoins(7))
+        assertEquals(15, RevenantCaveRevenants.lootingBagRate(7))
+        assertEquals(10, RevenantCaveRevenants.lootingBagRate(15))
+        assertEquals(3, RevenantCaveRevenants.lootingBagRate(52))
+        assertEquals(4, RevenantCaveRevenants.evenEther(5))
+        assertEquals(2, RevenantCaveRevenants.evenEther(1))
+        // The six ancient artefacts are the six Deadman emblem tiers, by rank.
+        assertEquals((23864..23869).toList(), (1..6).map { RevenantCaveRevenants.emblem(it) })
+    }
+
+    @Test
+    fun `N522 bundle 3b - the cave holds the OSRS Wiki number of each revenant, all inside the imported cave squares`() {
+        val counts = RevenantCaveRevenants.REVS.associate { it.name to it.spawns.size }
+        assertEquals(
+            mapOf(
+                "Revenant imp" to 4, "Revenant goblin" to 2, "Revenant pyrefiend" to 4, "Revenant hobgoblin" to 2, "Revenant cyclops" to 2,
+                "Revenant hellhound" to 2, "Revenant demon" to 4, "Revenant ork" to 4, "Revenant dark beast" to 2, "Revenant knight" to 2,
+                "Revenant dragon" to 2,
+            ),
+            counts,
+        )
+        val squares = setOf(12701, 12702, 12703, 12957, 12958, 12959)
+        RevenantCaveRevenants.REVS.forEach { r -> r.spawns.forEach { assertTrue(it.regionId in squares, "${r.name} at $it") } }
+        assertEquals(listOf(7, 15, 52, 60, 82, 90, 98, 105, 120, 126, 135), RevenantCaveRevenants.REVS.map { it.combat })
+    }
+
+    @Test
+    fun `N522 bundle 3b - revenants use magic unless it is protected, then the style the target defends worse against`() {
+        val c = RevenantCaveRevenants.Combat
+        assertEquals(RevenantCaveRevenants.Combat.Style.MAGIC, c.chooseStyle(protectsMagic = false, stabDef = 0, rangedDef = 500))
+        assertEquals(RevenantCaveRevenants.Combat.Style.MELEE, c.chooseStyle(protectsMagic = true, stabDef = 50, rangedDef = 200))
+        assertEquals(RevenantCaveRevenants.Combat.Style.RANGED, c.chooseStyle(protectsMagic = true, stabDef = 200, rangedDef = 50))
     }
 }

@@ -970,6 +970,9 @@ object OsrsItemImportTool {
             "adamant-seeds" to listOf(Spec(29458)),
             // N522 bundle 1: OSRS Wiki "Fedora" id 11990 (Crazy archaeologist drop 1/128, head slot, tradeable, noteable).
             "wildy-bosses-1" to listOf(Spec(11990, noted = true)),
+            // N522 bundle 3b: OSRS revenant drops that are missing here - OSRS Wiki ids Bracelet of ethereum 21816 / (uncharged) 21817,
+            // Amulet of avarice 22557, Ancient crystal 21804 (all tradeable and noteable).
+            "rev-caves" to listOf(Spec(21816, noted = true), Spec(21817, noted = true), Spec(22557, noted = true), Spec(21804, noted = true)),
             // Owner 2026-09-19 ("fix everything" - Chitin's use): OSRS Wiki "Blighted overload" ids 29631 (4) / 29634 (3) / 29637 (2)
             // / 29640 (1), noteable, tradeable; drink/mix handled in mechanics/pvp/breach/blighted_overload.plugin.kts.
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),

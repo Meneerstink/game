@@ -158,6 +158,9 @@ object OsrsFxImportTool {
             // N522 bundle 2 (Scorpia), Kronos-184 bosses/scorpia: guardian heal projectile 109, guardian spawn 144, offspring projectile
             // 663. Same model/seq ids in both caches, imported anyway like 552 (the rev-667 sequences of the same id can differ).
             "wildy-bosses-2" to listOf(109, 144, 663),
+            // N522 bundle 3b: the OSRS revenants' ranged projectile 206, magic projectile 1415, magic impact 1454 and heal 1221
+            // (Kronos-184 activities/miscpvm/Revenant.java).
+            "rev-caves" to listOf(206, 1415, 1454, 1221),
         )
 
     /**

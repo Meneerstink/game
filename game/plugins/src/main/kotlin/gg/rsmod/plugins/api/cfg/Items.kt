@@ -20497,4 +20497,12 @@ object Items {
     // N522 bundle 1: OSRS item 11990 "Fedora" (Crazy archaeologist drop; OsrsItemImportTool batch wildy-bosses-1, tx-20261101-135009).
     const val FEDORA = 24625
     const val FEDORA_NOTED = 24626
+    // N522 bundle 3b: OsrsItemImportTool batch rev-caves (tx-20261101-234134) - OSRS revenant drops missing here.
+    const val BRACELET_OF_ETHEREUM = 24627 // 21816
+    const val BRACELET_OF_ETHEREUM_UNCHARGED = 24628 // 21817
+    const val BRACELET_OF_ETHEREUM_UNCHARGED_NOTED = 24629
+    const val AMULET_OF_AVARICE = 24630 // 22557
+    const val AMULET_OF_AVARICE_NOTED = 24631
+    const val ANCIENT_CRYSTAL = 24632 // 21804
+    const val ANCIENT_CRYSTAL_NOTED = 24633
 }

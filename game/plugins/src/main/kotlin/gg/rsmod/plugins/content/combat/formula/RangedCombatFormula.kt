@@ -159,6 +159,8 @@ object RangedCombatFormula : CombatFormula {
         // OSRS-IMPORT bows (wiki DPS calculator order): revenant bows x3/2 in the Wilderness, Scorching bow demonbane +30 %, then the
         // Tonalztics of Ralos x3/4.
         if (gg.rsmod.plugins.content.items.osrs.RevenantBows.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
+        // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
         if (gg.rsmod.plugins.content.items.osrs.ScorchingBow.demonbane(player, target)) {
             hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.Demonbane.scaled(target, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT))
         }
@@ -207,6 +209,8 @@ object RangedCombatFormula : CombatFormula {
         hit = floor(hit * TargetModifiers.rangedAccuracyMultiplier(player, target))
         // OSRS-IMPORT bows: revenant bows x3/2 in the Wilderness, Scorching bow demonbane +30 % (before the special factor).
         if (gg.rsmod.plugins.content.items.osrs.RevenantBows.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
+        // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
         if (gg.rsmod.plugins.content.items.osrs.ScorchingBow.demonbane(player, target)) {
             hit = TargetModifiers.addPercent(hit, gg.rsmod.plugins.content.items.osrs.Demonbane.scaled(target, gg.rsmod.plugins.content.items.osrs.ScorchingBow.DEMONBANE_PERCENT))
         }

@@ -12970,4 +12970,16 @@ object Npcs {
     const val SCORPIAS_OFFSPRING = 15056 // 6616
     const val SCORPIAS_GUARDIAN = 15057 // 6617
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService
+    // N522 bundle 3b: OsrsNpcImportTool batch rev-caves, tx-20261101-233312 - the OSRS Revenant Caves revenants; OSRS id in the comment.
+    const val REVENANT_IMP_OSRS = 15058 // 7881
+    const val REVENANT_GOBLIN_OSRS = 15059 // 7931
+    const val REVENANT_PYREFIEND_OSRS = 15060 // 7932
+    const val REVENANT_HOBGOBLIN_OSRS = 15061 // 7933
+    const val REVENANT_CYCLOPS_OSRS = 15062 // 7934
+    const val REVENANT_HELLHOUND_OSRS = 15063 // 7935
+    const val REVENANT_DEMON_OSRS = 15064 // 7936
+    const val REVENANT_ORK_OSRS = 15065 // 7937
+    const val REVENANT_DARK_BEAST_OSRS = 15066 // 7938
+    const val REVENANT_KNIGHT_OSRS = 15067 // 7939
+    const val REVENANT_DRAGON_OSRS = 15068 // 7940
 }

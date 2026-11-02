@@ -105,6 +105,9 @@ object OsrsNpcImportTool {
             "wildy-bosses-1" to listOf(6619, 6618, 6620),
             // N522 bundle 2: OSRS Wiki infobox ids Scorpia 6615, Scorpia's offspring (monster) 6616, Scorpia's guardian 6617.
             "wildy-bosses-2" to listOf(6615, 6616, 6617),
+            // N522 bundle 3b: the OSRS Revenant Caves revenants (OSRS Wiki infobox ids): imp 7881, goblin 7931, pyrefiend 7932,
+            // hobgoblin 7933, cyclops 7934, hellhound 7935, demon 7936, ork 7937, dark beast 7938, knight 7939, dragon 7940.
+            "rev-caves" to listOf(7881, 7931, 7932, 7933, 7934, 7935, 7936, 7937, 7938, 7939, 7940),
         )
     }
 
@@ -153,6 +156,11 @@ object OsrsNpcImportTool {
             // wildy-bosses-2: Kronos-184 data/npcs/combat Scorpia.json (6254/6255/6256, also used for the guardian) and RuneLite gameval
             // AnimationID SMALL_SCORPION_UPDATE_DEFEND 6259 / _DEATH 6260 / _ATTACK 6261 (offspring); SCORPION_UPDATE_ATTACK_TAIL 6254.
             "wildy-bosses-2" to listOf(6254, 6255, 6256, 6259, 6260, 6261),
+            // rev-caves: attack / defend / death of each revenant - Kronos-184 data/npcs/combat (Imp 169/170/172, Goblin 6184/6183/6182,
+            // Revanant_Pyrefiend 1582/1581/1580, _Cyclops 4652/4651/4653, _Hellhound 6562/6566/6576, _Demon 64/65/67, _Ork 4320/4322/4321,
+            // _Dark_Beast 2731/2732/2733, _Knight 386/424/836, _Dragon 80/89/92); hobgoblin (not in Kronos): RuneLite gameval AnimationID
+            // HOBGOBLIN_ATTACK 163 / _BLOCK 165 / _DEATH 167.
+            "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).
             "deadman-breach" to
