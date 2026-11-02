@@ -1,5 +1,6 @@
 # 78legacy - EERSTE STAP: lees C:\RSPS\HOOFDLIJST.txt HELEMAAL (het enige startbestand). Werk alleen aan de klussen in sectie 1.
 
+KETENS (eigenaar 2026-11-02, VERPLICHT): bij ELKE bug en wens de passende keten(s) uit C:\RSPS\KETENS.txt kiezen, in de BUGLIJST-regel zetten ('KETEN: ...'), per punt afvinken met BEWIJS in het dossier (kopje KETEN-BEWIJS) incl. A9 LIVE-bewijs; punt zonder bewijs = niet af.
 GOUDEN REGEL 2 (eigenaar 2026-11-02 18:0x, voor WENSEN en BUGS): een wens (bv. 'importeer een OSRS-boss') = letterlijk een CORRECTE
 werking volgens OSRS: de agent test zelf, probeert het kapot te krijgen (breektest), neemt ALLE gerelateerde subsystemen mee en fixt
 ze (drops, pets, Drop Viewer, Collection Log, kaart/minimap, geluid, dood/PvP, winkels, examines, teleports ...) en VERZINT NIETS:
