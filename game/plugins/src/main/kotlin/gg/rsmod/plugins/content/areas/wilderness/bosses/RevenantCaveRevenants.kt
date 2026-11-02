@@ -220,7 +220,7 @@ object RevenantCaveRevenants {
             val note: (Int) -> Int = { id -> if (avarice) gg.rsmod.game.model.item.Item(id).toNoted(defs).id else id }
             if (!RevenantGear.absorbsEther(player)) {
                 guaranteed {
-                    obj(Items.REVENANT_ETHER, 2..maxEther(cb))
+                    obj(Items.REVENANT_ETHER, 2..maxEther(cb), step = 2)
                 }
             }
             main {
@@ -251,8 +251,8 @@ object RevenantCaveRevenants {
             }
         }
 
-    /** Ether rounded down to an even amount (the wiki note), never below 2. */
-    fun evenEther(amount: Int): Int = (amount - amount % 2).coerceAtLeast(2)
+    /** One even ether amount 2 .. [maxEther] (the wiki note), uniformly - the same roll as the table's step-2 line. */
+    fun rollEther(cb: Int): Int = 2 + 2 * (0..(maxEther(cb) - 2) / 2).random()
 
     // ------------------------------------------------------------------ fight
 

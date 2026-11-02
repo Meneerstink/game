@@ -248,8 +248,15 @@ class WildernessBossesTests {
         assertEquals(15, RevenantCaveRevenants.lootingBagRate(7))
         assertEquals(10, RevenantCaveRevenants.lootingBagRate(15))
         assertEquals(3, RevenantCaveRevenants.lootingBagRate(52))
-        assertEquals(4, RevenantCaveRevenants.evenEther(5))
-        assertEquals(2, RevenantCaveRevenants.evenEther(1))
+        // Avarice "Check" (donor AmuletOfAvaricePlugin): ticks x 0.6 s, each part only when above 0.
+        assertEquals("30 minutes", gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeTimeText(3000))
+        assertEquals("1 minutes and 6 seconds", gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeTimeText(110))
+        assertEquals("3 seconds", gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeTimeText(5))
+        // Ether only in even amounts, every even amount 2 .. max reachable (both the bracelet roll and the table line).
+        val rolls = (1..2000).map { RevenantCaveRevenants.rollEther(135) }.toSet()
+        assertEquals((2..24 step 2).toSet(), rolls)
+        val line = gg.rsmod.plugins.content.drops.DropEntry.ItemRangeDrop(gg.rsmod.game.model.item.Item(23017), 2..24, step = 2)
+        assertEquals((2..24 step 2).toSet(), (1..2000).map { line.getDrop().amount }.toSet())
         // The six ancient artefacts are the six Deadman emblem tiers, by rank.
         assertEquals((23864..23869).toList(), (1..6).map { RevenantCaveRevenants.emblem(it) })
     }

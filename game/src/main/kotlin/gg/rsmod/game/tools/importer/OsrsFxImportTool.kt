@@ -197,6 +197,9 @@ object OsrsFxImportTool {
             // Owner 2026-09-29 (revenant weapons "fully working"): gameval AnimationID WILD_CAVE_CHAINMACE_CRUSH 245 / _STAB 246 /
             // _DEFEND 7200, HUMAN_SPECIAL_ACCURSED 9961, HUMAN_SPECIAL_URSINE 9962 / HUMAN_SPECIAL02_URSINE 9963.
             "revseq" to listOf(245, 246, 7200, 9961, 9962, 9963),
+            // N522 bundle 1 follow-up (2026-11-02): the worn Fedora option "Tip" plays gameval AnimationID FEDORA_TIP 2418 (667 seq 2418 is
+            // an npc animation on base 263, not the hat tip).
+            "fedora-tip" to listOf(2418),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

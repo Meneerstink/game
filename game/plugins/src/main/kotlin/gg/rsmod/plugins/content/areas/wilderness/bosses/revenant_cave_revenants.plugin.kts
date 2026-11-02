@@ -73,7 +73,7 @@ on_npc_death(*RevenantCaveRevenants.ids) {
     // Toggled absorption: the ether (left out of the table for this player) goes into the bracelet.
     if (RevenantGear.absorbsEther(killer)) {
         val rev = RevenantCaveRevenants.BY_ID.getValue(npc.id)
-        val amount = RevenantCaveRevenants.evenEther(world.random(2..RevenantCaveRevenants.maxEther(rev.combat)))
+        val amount = RevenantCaveRevenants.rollEther(rev.combat)
         RevenantGear.absorbEther(killer, amount, npc.tile)
     }
 }
@@ -119,6 +119,26 @@ on_item_option(item = Items.BRACELET_OF_ETHEREUM_UNCHARGED, option = "dismantle"
 }
 
 // ------------------------------------------------------------------ Amulet of avarice
+
+// Warning before wearing it - donor Near Reality AmuletOfAvariceEquipPlugin (Kris): "Wearing this amulet will give you a PK skull."
+// with "Give me a PK skull." / "Cancel."; only the confirmed second attempt goes through.
+val AVARICE_CONFIRMED = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
+can_equip_item(Items.AMULET_OF_AVARICE) {
+    if (player.attr[AVARICE_CONFIRMED] == true) {
+        player.attr.remove(AVARICE_CONFIRMED)
+        return@can_equip_item true
+    }
+    player.queue {
+        if (options("Give me a PK skull.", "Cancel.", title = "Wearing this amulet will give you a PK skull.") != 1) return@queue
+        val slot = player.inventory.getItemIndex(Items.AMULET_OF_AVARICE, skipAttrItems = false)
+        val item = player.inventory[slot.coerceAtLeast(0)]?.takeIf { slot >= 0 && it.id == Items.AMULET_OF_AVARICE } ?: return@queue
+        player.attr[AVARICE_CONFIRMED] = true
+        gg.rsmod.game.action.EquipAction.equip(player, item, slot)
+        player.attr.remove(AVARICE_CONFIRMED)
+    }
+    false
+}
 
 on_item_equip(Items.AMULET_OF_AVARICE) { RevenantGear.onAvariceEquip(player) }
 on_timer(RevenantGear.AVARICE_TIMER) { RevenantGear.refreshAvariceSkull(player) }
@@ -190,3 +210,24 @@ on_command("maledictus", Privilege.ADMIN_POWER) {
     val ok = RevenantMaledictus.spawn(world, values[index])
     player.message(if (ok) "Revenant maledictus spawned: ${values[index]}." else "A Revenant maledictus is already active.")
 }
+
+// Forinthry Surge around the amulet - donor Near Reality ForinthrySurge.kt / AmuletOfAvaricePlugin.kt (Andys1814): "Check" tells the time
+// left, taking the amulet off ends the surge, and running out says so (OSRS Wiki: the surge needs the amulet worn).
+fun surgeLost(player: Player) = player.message("<col=4f006f>You have lost your Forinthry surge.</col>")
+
+on_equipment_option(item = Items.AMULET_OF_AVARICE, option = "check") {
+    val ticks = if (player.timers.has(RevenantMaledictus.FORINTHRY_SURGE)) player.timers[RevenantMaledictus.FORINTHRY_SURGE] else 0
+    if (ticks <= 0) {
+        player.message("You don't have Forinthry surge.")
+        return@on_equipment_option
+    }
+    player.message("You have ${RevenantGear.surgeTimeText(ticks)} of Forinthry surge remaining.")
+}
+
+on_item_unequip(Items.AMULET_OF_AVARICE) {
+    if (!player.timers.has(RevenantMaledictus.FORINTHRY_SURGE)) return@on_item_unequip
+    player.timers.remove(RevenantMaledictus.FORINTHRY_SURGE)
+    surgeLost(player)
+}
+
+on_timer(RevenantMaledictus.FORINTHRY_SURGE) { surgeLost(player) }

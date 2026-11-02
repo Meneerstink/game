@@ -238,3 +238,8 @@ on_npc_death(Npcs.CHAOS_FANATIC, Npcs.CRAZY_ARCHAEOLOGIST) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
 }
+
+// Fedora (Crazy archaeologist drop): the worn option "Tip" plays OSRS FEDORA_TIP 2418, imported as 16220 (fedora-tip, tx-20261102-105038).
+on_equipment_option(item = Items.FEDORA, option = "tip") {
+    player.animate(16220)
+}

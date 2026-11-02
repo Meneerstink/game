@@ -42,7 +42,9 @@ sealed class DropEntry {
     class ItemRangeDrop(
         val item: Item,
         val quantityRange: IntRange,
+        /** Only every [step]-th amount from the first can drop (e.g. revenant ether: even amounts only). */
+        val step: Int = 1,
     ) : DropEntry() {
-        fun getDrop() = Item(item, quantityRange.random())
+        fun getDrop() = Item(item, quantityRange.first + step * (0..(quantityRange.last - quantityRange.first) / step).random())
     }
 }

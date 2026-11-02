@@ -493,11 +493,12 @@ class TableBuilder(
         id: Int,
         quantityRange: IntRange,
         slots: Int = 1,
+        step: Int = 1,
     ) {
         val item = Item(id, quantityRange.first)
 
         occupiedSlots += slots
-        entries.add(Entry(occupiedSlots, DropEntry.ItemRangeDrop(item, quantityRange)))
+        entries.add(Entry(occupiedSlots, DropEntry.ItemRangeDrop(item, quantityRange, step)))
     }
 
     fun objs(

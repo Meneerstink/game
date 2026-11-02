@@ -50,6 +50,18 @@ object RevenantGear {
     /** N522 Forinthry Surge (Revenant maledictus): "an additional 15% accuracy and damage buff against all revenants" (OSRS Wiki). */
     fun surgeBoost(player: Player, target: Pawn): Boolean = RevenantMaledictus.surge(player) && isRevenant(target)
 
+    /** Donor AmuletOfAvaricePlugin "Check": "N minutes and M seconds" (each part only when above 0; 1 tick = 0.6 s). */
+    fun surgeTimeText(ticks: Int): String {
+        val total = ticks * 6 / 10
+        val minutes = total / 60
+        val seconds = total % 60
+        return buildString {
+            if (minutes > 0) append("$minutes minutes")
+            if (minutes > 0 && seconds > 0) append(" and ")
+            if (seconds > 0 || minutes == 0) append("$seconds seconds")
+        }
+    }
+
     /** Re-arms the skull every tick while the amulet is worn ([refreshAvariceSkull]); not saved, re-armed at login. */
     val AVARICE_TIMER = gg.rsmod.game.model.timer.TimerKey()
 
