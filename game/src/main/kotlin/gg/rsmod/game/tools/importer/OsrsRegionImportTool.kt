@@ -39,6 +39,10 @@ object OsrsRegionImportTool {
         val tilesOnly: Boolean = false,
         /** Keep only plane 0 of the tile file (planes 1-3 left empty) - an Escape Caves rendering experiment. */
         val plane0Only: Boolean = false,
+        /** Every written tile gets this height (an Escape Caves rendering experiment); null keeps the OSRS heights. */
+        val flatHeight: Int? = null,
+        /** Leave out the OSRS "hidden" overlays (rgb ff00ff, no texture) - an Escape Caves rendering experiment. */
+        val dropHiddenOverlays: Boolean = false,
     )
 
     val BATCHES: Map<String, Batch> =
@@ -68,6 +72,9 @@ object OsrsRegionImportTool {
             // WBR_VENENATIS_WEB_* are spawned by the fight (RuneLite gameval ObjectID names).
             // N522 bundle 4a: the Escape Caves tile file again, in place, without the OSRS 0x8 flag (see clearTileFlags).
             "escape-caves-fix" to Batch(listOf(13472), emptyList(), "Escape Caves tiles without flag 0x8", replaceSquares = setOf(13472), clearTileFlags = 0x8, tilesOnly = true),
+            "escape-caves-original" to Batch(listOf(13472), emptyList(), "Escape Caves tiles exactly as imported (undo the experiments)", replaceSquares = setOf(13472), tilesOnly = true),
+            "escape-caves-nohidden" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only, no hidden overlays", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true, dropHiddenOverlays = true),
+            "escape-caves-flat" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only, flat height 30", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true, flatHeight = 30),
             "escape-caves-plane0" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true),
             // N522 bundle 4b: Spindel's Web Chasm (Near Reality WebChasm 1610-1651 x 11524-11571 plane 2 -> square 6580) and its surface
             // entrance 47078 WILD_VENENATIS_SINGLES_ENTRANCE01 (Near Reality 3183,3744).
@@ -201,11 +208,12 @@ object OsrsRegionImportTool {
                         if (batch.plane0Only && plane > 0) continue
                         val src = region.tiles[plane][lx][lz]
                         val dst = tiles.tiles[plane][lx][lz]
-                        dst.height = src.height
+                        dst.height = batch.flatHeight ?: src.height
                         dst.flags = src.settings and batch.clearTileFlags.inv()
                         dst.overlayShape = src.overlayPath
                         dst.overlayRotation = src.overlayRotation
-                        dst.overlayId = if (src.overlayId != 0) mapOverlay(src.overlayId) else 0
+                        val hidden = batch.dropHiddenOverlays && src.overlayId != 0 && modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
+                        dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
                     }
                     val locs = region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }

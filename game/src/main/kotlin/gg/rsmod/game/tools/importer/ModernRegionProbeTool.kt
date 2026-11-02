@@ -94,7 +94,7 @@ object ModernRegionProbeTool {
                 if (def != null) modelIds.addAll(def.models)
                 val types = placements.map { it.type }.distinct().sorted()
                 out.appendLine(
-                    "LOC id=$id n=${placements.size} types=$types name='${def?.name ?: "MISSING"}' " +
+                    "LOC id=$id n=${placements.size} types=$types name='${def?.name ?: "MISSING"}' clipped=${def?.modelClipped} " +
                         "size=${def?.sizeX}x${def?.sizeY} interact=${def?.interactType} blocksProjectile=${def?.blocksProjectile} " +
                         "wallOrDoor=${def?.wallOrDoor} anim=${def?.animationId} models=${def?.models} modelTypes=${def?.modelTypes} " +
                         "options=${def?.options?.toList()} varbit=${def?.varbitId} varp=${def?.varpId} transforms=${def?.transforms?.toList()} " +
