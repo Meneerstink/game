@@ -43,6 +43,11 @@ object OsrsRegionImportTool {
         val flatHeight: Int? = null,
         /** Leave out the OSRS "hidden" overlays (rgb ff00ff, no texture) - an Escape Caves rendering experiment. */
         val dropHiddenOverlays: Boolean = false,
+        /**
+         * Escape Caves experiment: rewrite only the loc file of [replaceSquares] from the locs ALREADY in our cache, without the
+         * placements of these local loc ids (null = normal import).
+         */
+        val locsOnlyWithout: Set<Int>? = null,
     )
 
     val BATCHES: Map<String, Batch> =
@@ -75,6 +80,10 @@ object OsrsRegionImportTool {
             "escape-caves-original" to Batch(listOf(13472), emptyList(), "Escape Caves tiles exactly as imported (undo the experiments)", replaceSquares = setOf(13472), tilesOnly = true),
             "escape-caves-nohidden" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only, no hidden overlays", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true, dropHiddenOverlays = true),
             "escape-caves-flat" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only, flat height 30", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true, flatHeight = 30),
+            "escape-caves-noblocks" to Batch(listOf(13472), emptyList(), "Escape Caves locs without the void blocks 63012", replaceSquares = setOf(13472), locsOnlyWithout = setOf(63012)),
+            "escape-caves-nolocs" to Batch(listOf(13472), emptyList(), "Escape Caves without any loc", replaceSquares = setOf(13472), locsOnlyWithout = (0..70000).toSet()),
+            "escape-caves-x" to Batch(listOf(13472), emptyList(), "Escape Caves locs experiment (RSPS_ESC_DROP)", replaceSquares = setOf(13472), locsOnlyWithout = (System.getenv("RSPS_ESC_DROP") ?: "").split(",").filter { it.isNotBlank() }.flatMap { r -> r.split("-").let { (it[0].toInt()..it.last().toInt()).toList() } }.toSet()),
+            "escape-caves-alllocs" to Batch(listOf(13472), emptyList(), "Escape Caves locs back as imported", replaceSquares = setOf(13472), locsOnlyWithout = emptySet()),
             "escape-caves-plane0" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true),
             // N522 bundle 4b: Spindel's Web Chasm (Near Reality WebChasm 1610-1651 x 11524-11571 plane 2 -> square 6580) and its surface
             // entrance 47078 WILD_VENENATIS_SINGLES_ENTRANCE01 (Near Reality 3183,3744).
@@ -117,7 +126,7 @@ object OsrsRegionImportTool {
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes and names")
         batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(it) }
-        if (!batch.tilesOnly) appendAssetMap(name, batch, plan, tx.id)
+        if (!batch.tilesOnly && batch.locsOnlyWithout == null) appendAssetMap(name, batch, plan, tx.id)
     }
 
     fun buildPlan(
@@ -216,7 +225,17 @@ object OsrsRegionImportTool {
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
                     }
-                    val locs = region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
+                    val locs =
+                        if (batch.locsOnlyWithout != null) {
+                            // the loc ids the 'silk-chasm' import gave these OSRS locs (asset map), minus the left-out ones
+                            val text = File(FeroxImportTool.ASSET_MAP).readText()
+                            val block = text.substringAfter("OSRS region import 'silk-chasm'").substringBefore("    models:")
+                            val existing = Regex("upstream_id: (\\d+), local_id: (\\d+)").findAll(block).associate { it.groupValues[1].toInt() to it.groupValues[2].toInt() }
+                            region.locs.map { Rev667Loc(existing.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
+                                .filter { it.id !in batch.locsOnlyWithout }.also { println("LOCS_KEPT ${it.size} of ${region.locs.size}") }
+                        } else {
+                            region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
+                        }
                     val locBytes = Rev667LocCodec.encode(locs)
                     check(Rev667LocCodec.decode(locBytes).size == locs.size) { "loc encode/decode count mismatch" }
                     val mapGroup: Int
@@ -243,7 +262,12 @@ object OsrsRegionImportTool {
                 dropped.distinct().forEach { println("DROPPED $it") }
                 overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString(localOverlays[l - 1]?.rgb ?: -1)} tex=${localOverlays[l - 1]?.texture}") }
                 println("PLAN $name squares=${batch.squares} types=${importedDefs.size} models=${modelIdMap.size} floors underlay=${underlayMap.size} overlay=${overlayMap.size} mutations=${mutations.size}")
-                val planned = if (batch.tilesOnly) mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ") } else mutations
+                val planned =
+                    when {
+                        batch.tilesOnly -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ") }
+                        batch.locsOnlyWithout != null -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" locs ") }
+                        else -> mutations
+                    }
                 if (batch.tilesOnly) println("TILES_ONLY ${planned.size} tile file(s): ${planned.joinToString { it.label }}")
                 return Plan(planned, locIdMap, modelIdMap, dropped.distinct(), squareGroups)
             } finally {

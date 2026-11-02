@@ -18,6 +18,18 @@ object OsrsModelConversion {
      */
     val NATIVE_SAME_TEXTURES: Set<Int> = setOf(6, 8, 12, 17, 19, 21, 27, 34, 40)
 
+    /**
+     * A face the OSRS client never draws (RuneLite ModelData.toModel / light): an untextured face with render type 2, or with
+     * transparency -1 (which the OSRS client turns into type 2), gets colour -2 and is skipped. The rev-667 client has no such
+     * rule and draws it in its own colour - N522: the Escape Caves cave mouths and wall blocks covered the whole screen in black.
+     */
+    fun isHiddenFace(m: ModelData, i: Int): Boolean {
+        if ((m.faceTexture?.get(i)?.toInt() ?: -1) != -1) return false
+        val alpha = m.faceAlpha?.get(i)?.toInt() ?: 0
+        if (alpha == -2) return false
+        return alpha == -1 || (m.shadingType?.get(i)?.toInt() ?: 0) == 2
+    }
+
     /** Every OSRS texture kept on a converted model, with its rev-667 id. */
     val KEPT_TEXTURES: Map<Int, Int> = NATIVE_SAME_TEXTURES.associateWith { it } + IMPORTED_TEXTURES
 

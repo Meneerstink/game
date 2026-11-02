@@ -99,7 +99,7 @@ object ModernRegionProbeTool {
                         "wallOrDoor=${def?.wallOrDoor} anim=${def?.animationId} models=${def?.models} modelTypes=${def?.modelTypes} " +
                         "options=${def?.options?.toList()} varbit=${def?.varbitId} varp=${def?.varpId} transforms=${def?.transforms?.toList()} " +
                         "recolours=${def?.recolourFind?.size ?: 0} retextures=${def?.retextureFind?.size ?: 0} " +
-                        "mapScene=${def?.mapSceneId} unknownOps=${def?.unknownOpcodes}",
+                        "mapScene=${def?.mapSceneId} unknownOps=${def?.unknownOpcodes} hiddenFaces=${def?.models?.map { m -> osrsHiddenFaces(reader, m) }}",
                 )
                 placements.forEach { p ->
                     out.appendLine("  AT ${region.rx * 64 + p.localX},${region.rz * 64 + p.localZ},${p.plane} type=${p.type} rot=${p.rotation}")
@@ -672,4 +672,17 @@ class RegionBuffer(private val data: ByteArray) {
             '\u017e', '\u0178',
         )
     }
+
+}
+
+/** OSRS faces its client never draws (untextured render type 2, or transparency -1): "hidden/total" for the region probe. */
+fun osrsHiddenFaces(reader: ModernCacheReader, modelId: Int): String {
+    val bytes = reader.file(ModernCacheReader.INDEX_MODEL, modelId, 0) ?: return "missing"
+    val m = runCatching { ModernModelDecoder.decode(bytes, flattenTextures = true) }.getOrElse { return "undecodable" }
+    val hidden = (0 until m.faceCount).count { i -> OsrsModelConversion.isHiddenFace(m, i) }
+    val raw = runCatching { ModernModelDecoder.decode(bytes) }.getOrNull()
+    val tex = raw?.faceTexture?.filter { it.toInt() != -1 }?.groupingBy { it.toInt() }?.eachCount()
+    val alpha = m.faceAlpha?.count { it.toInt() != 0 } ?: 0
+    val black = (0 until m.faceCount).count { m.faceColour[it].toInt() and 0x7F < 8 }
+    return "$hidden/${m.faceCount} tex=$tex alpha=$alpha dark=$black"
 }
