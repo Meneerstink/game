@@ -48,6 +48,8 @@ object OsrsRegionImportTool {
          * placements of these local loc ids (null = normal import).
          */
         val locsOnlyWithout: Set<Int>? = null,
+        /** Every tile and loc moved this many planes up (planes past 3 dropped); with [locsOnlyWithout] both files are rewritten. */
+        val planeShift: Int = 0,
     )
 
     val BATCHES: Map<String, Batch> =
@@ -82,6 +84,7 @@ object OsrsRegionImportTool {
             "escape-caves-flat" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only, flat height 30", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true, flatHeight = 30),
             "escape-caves-noblocks" to Batch(listOf(13472), emptyList(), "Escape Caves locs without the void blocks 63012", replaceSquares = setOf(13472), locsOnlyWithout = setOf(63012)),
             "escape-caves-nolocs" to Batch(listOf(13472), emptyList(), "Escape Caves without any loc", replaceSquares = setOf(13472), locsOnlyWithout = (0..70000).toSet()),
+            "escape-caves-up2" to Batch(listOf(13472), emptyList(), "Escape Caves moved 2 planes up (floor on plane 2 like the Silk Chasm)", replaceSquares = setOf(13472), locsOnlyWithout = emptySet(), planeShift = 2),
             "escape-caves-x" to Batch(listOf(13472), emptyList(), "Escape Caves locs experiment (RSPS_ESC_DROP)", replaceSquares = setOf(13472), locsOnlyWithout = (System.getenv("RSPS_ESC_DROP") ?: "").split(",").filter { it.isNotBlank() }.flatMap { r -> r.split("-").let { (it[0].toInt()..it.last().toInt()).toList() } }.toSet()),
             "escape-caves-alllocs" to Batch(listOf(13472), emptyList(), "Escape Caves locs back as imported", replaceSquares = setOf(13472), locsOnlyWithout = emptySet()),
             "escape-caves-plane0" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true),
@@ -215,8 +218,9 @@ object OsrsRegionImportTool {
                     val tiles = Rev667TileMap()
                     for (plane in 0 until 4) for (lx in 0 until 64) for (lz in 0 until 64) {
                         if (batch.plane0Only && plane > 0) continue
+                        if (plane + batch.planeShift > 3) continue
                         val src = region.tiles[plane][lx][lz]
-                        val dst = tiles.tiles[plane][lx][lz]
+                        val dst = tiles.tiles[plane + batch.planeShift][lx][lz]
                         dst.height = batch.flatHeight ?: src.height
                         dst.flags = src.settings and batch.clearTileFlags.inv()
                         dst.overlayShape = src.overlayPath
@@ -231,7 +235,8 @@ object OsrsRegionImportTool {
                             val text = File(FeroxImportTool.ASSET_MAP).readText()
                             val block = text.substringAfter("OSRS region import 'silk-chasm'").substringBefore("    models:")
                             val existing = Regex("upstream_id: (\\d+), local_id: (\\d+)").findAll(block).associate { it.groupValues[1].toInt() to it.groupValues[2].toInt() }
-                            region.locs.map { Rev667Loc(existing.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
+                            region.locs.filter { it.plane + batch.planeShift <= 3 }
+                                .map { Rev667Loc(existing.getValue(it.id), it.localX, it.localZ, it.plane + batch.planeShift, it.type, it.rotation) }
                                 .filter { it.id !in batch.locsOnlyWithout }.also { println("LOCS_KEPT ${it.size} of ${region.locs.size}") }
                         } else {
                             region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
@@ -265,6 +270,7 @@ object OsrsRegionImportTool {
                 val planned =
                     when {
                         batch.tilesOnly -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ") }
+                        batch.locsOnlyWithout != null && batch.planeShift != 0 -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && (it.label.contains(" locs ") || it.label.contains(" tiles ")) }
                         batch.locsOnlyWithout != null -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" locs ") }
                         else -> mutations
                     }
