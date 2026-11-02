@@ -113,6 +113,8 @@ object OsrsNpcImportTool {
             // N522 bundle 4a: Venenatis 6610, her spiderling 12000 (RuneLite gameval NpcID VENENATIS_SPIDERLING) and the Escape Caves'
             // grizzly bear 11989 / poison spider 11990 (OSRS Wiki infobox ids).
             "venenatis" to listOf(6610, 12000, 11989, 11990),
+            // N522 bundle 4b: Spindel 11998 (RuneLite gameval NpcID VENENATIS_SINGLES) and her spiderling 12001 (SPINDEL_SPIDERLING).
+            "spindel" to listOf(11998, 12001),
         )
     }
 

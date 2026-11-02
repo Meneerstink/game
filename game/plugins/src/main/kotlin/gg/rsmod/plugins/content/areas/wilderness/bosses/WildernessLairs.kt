@@ -34,6 +34,8 @@ object WildernessLairs {
     const val SILK_CHASM_ENTRANCE = 63103 // OSRS 47077
     const val ESCAPE_CAVE_SURFACE = 63104 // OSRS 47175
     const val SILK_CHASM_EXIT = 63018 // OSRS 47000
+    const val WEB_CHASM_ENTRANCE = 63182 // OSRS 47078 (N522 bundle 4b, Spindel)
+    const val WEB_CHASM_EXIT = 63116 // OSRS 47000 in the Web Chasm (1630,11527 plane 2)
     const val ESCAPE_EXIT_1 = 63089 // OSRS 47147
     const val ESCAPE_EXIT_2 = 63090 // OSRS 47148
     const val ESCAPE_EXIT_3 = 63091 // OSRS 47149
@@ -60,6 +62,13 @@ object WildernessLairs {
      */
     const val ESCAPE_CAVES_OPEN = false
 
+    /**
+     * The Web Chasm entrance: OSRS has it at 3183,3744 (rot 1), but our 667 surface is unwalkable 3176-3190 x 3735-3752 there (test
+     * client ::clip 2026-11-02: every tile refuses every step), so it stands 10 tiles east at the nearest walkable spot, its west
+     * (approach) side on open ground - a question for the owner (or import the OSRS surface square 12602).
+     */
+    val WEB_CHASM_ENTRANCE_TILE = Tile(3193, 3744)
+
     val ESCAPE_SURFACE =
         listOf(
             Placed(ESCAPE_CAVE_SURFACE, Tile(3282, 3774), 0),
@@ -68,13 +77,18 @@ object WildernessLairs {
             Placed(ESCAPE_CAVE_SURFACE, Tile(3260, 3832), 0),
         )
 
-    val SURFACE = listOf(Placed(SILK_CHASM_ENTRANCE, Tile(3321, 3794), 1)) + (if (ESCAPE_CAVES_OPEN) ESCAPE_SURFACE else emptyList())
+    val SURFACE =
+        listOf(Placed(SILK_CHASM_ENTRANCE, Tile(3321, 3794), 1), Placed(WEB_CHASM_ENTRANCE, WEB_CHASM_ENTRANCE_TILE, 1)) +
+            (if (ESCAPE_CAVES_OPEN) ESCAPE_SURFACE else emptyList())
+
+    /** The Web Chasm's own exit back to the surface, in front of the entrance (donor: 3182,3746 - unwalkable here). */
+    val WEB_CHASM_SURFACE_EXIT = Tile(3191, 3746)
 
     /** While the Escape Caves are closed: the Silk Chasm exit puts the player on the entrance's approach side (OSRS: west of it). */
     val SILK_CHASM_SURFACE_EXIT = Tile(3319, 3795)
 
     /** Lair entrance -> arrival inside the lair. */
-    val LAIR_ARRIVAL = mapOf(SILK_CHASM_ENTRANCE to Tile(3424, 10212, 2))
+    val LAIR_ARRIVAL = mapOf(SILK_CHASM_ENTRANCE to Tile(3424, 10212, 2), WEB_CHASM_ENTRANCE to Tile(1632, 11556, 2))
 
     /** Surface cave (by its tile) -> arrival in the Escape Caves, and the exit inside that leads back to it. */
     data class EscapeRoute(val surface: Tile, val arrival: Tile, val exitTile: Tile)

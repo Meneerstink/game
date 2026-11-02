@@ -76,6 +76,7 @@ object CollectionLogPages {
         )
 
     private val DK = setOf("dagannoth rex", "dagannoth prime", "dagannoth supreme")
+    private val SPIDERS = setOf("venenatis", "spindel")
 
     @Volatile private var built: List<Page>? = null
 
@@ -106,8 +107,16 @@ object CollectionLogPages {
         // ---- Bosses
         val bosses = sources.filter { it.group == DropSources.Group.BOSSES }
         val dks = bosses.filter { it.name.lowercase() in DK }
+        // N522 bundle 4b: OSRS Collection log "Venenatis and Spindel" - one page for both spiders (their kills together).
+        val spiders = bosses.filter { it.name.lowercase() in SPIDERS }
         for (boss in bosses.sortedBy { it.name.lowercase() }) {
             if (boss in dks) continue
+            if (boss.name.lowercase() == "spindel" && spiders.any { it.name.lowercase() == "venenatis" }) continue
+            if (boss.name.lowercase() == "venenatis") {
+                val items = bossItems(player, boss, OSRS["venenatis"], ::name)
+                if (items.isNotEmpty()) pages += Page(boss.key, Category.BOSSES, "Venenatis and Spindel", spiders.map { it.key }, items)
+                continue
+            }
             if (boss.kind == DropSources.Kind.BARROWS) {
                 val items = Barrows.REWARD_ARMOUR.values.flatMap { it.toList() } + Items.BOLT_RACK
                 pages += Page("barrows", Category.BOSSES, "Barrows Chests", listOf("barrows"), items.filter { it in Barrows.COLLECTION_LOG_ITEMS }, "Barrows Chests opened")

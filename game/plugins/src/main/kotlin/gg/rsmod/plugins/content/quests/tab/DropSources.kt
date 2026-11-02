@@ -85,7 +85,7 @@ object DropSources {
         setOf(
             "king black dragon", "kalphite queen", "chaos elemental", "corporeal beast", "dagannoth rex", "dagannoth prime",
             "dagannoth supreme", "tormented demon", "glacor", "wildywyrm", "bork", "nex", "general graardor", "kree'arra",
-            "commander zilyana", "k'ril tsutsaroth", "giant mole", "chaos fanatic", "crazy archaeologist", "scorpia", "venenatis",
+            "commander zilyana", "k'ril tsutsaroth", "giant mole", "chaos fanatic", "crazy archaeologist", "scorpia", "venenatis", "spindel",
             "vet'ion", "callisto", "kalphite king", "queen black dragon", "tztok-jad", "jad",
         )
 

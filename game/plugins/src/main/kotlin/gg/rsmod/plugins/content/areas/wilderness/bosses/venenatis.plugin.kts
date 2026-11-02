@@ -12,30 +12,37 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 WildernessLairs.SURFACE.forEach { p -> spawn_obj(obj = p.id, x = p.tile.x, z = p.tile.z, type = 10, rot = p.rot) }
 
-on_obj_option(obj = WildernessLairs.SILK_CHASM_ENTRANCE, option = "enter") {
-    val arrival = WildernessLairs.LAIR_ARRIVAL.getValue(WildernessLairs.SILK_CHASM_ENTRANCE)
-    WildernessLairs.enter(player) { WildernessLairs.crawl(player, arrival) }
-}
-
-// "In order to peek inside the lair, the player must have at least 20 kills registered in their name" (OSRS Wiki); the messages: donor.
-on_obj_option(obj = WildernessLairs.SILK_CHASM_ENTRANCE, option = "peek") {
-    val kc = runCatching { player.getNpcKillCount(VenenatisCombat.NPC) }.getOrDefault(0)
-    if (kc < 20) {
-        player.message(
-            "You don't know this cave well enough to glean any useful information. You feel that you'll be more succesful once " +
-                "you've killed whatever is inside, ${20 - kc} times.",
-        )
-        return@on_obj_option
+// The two spider lairs: entrance -> its boss arena (Silk Chasm: Venenatis, Web Chasm: Spindel).
+mapOf(WildernessLairs.SILK_CHASM_ENTRANCE to VenenatisCombat.VENENATIS_ARENA, WildernessLairs.WEB_CHASM_ENTRANCE to VenenatisCombat.SPINDEL_ARENA).forEach { (entrance, arena) ->
+    on_obj_option(obj = entrance, option = "enter") {
+        val arrival = WildernessLairs.LAIR_ARRIVAL.getValue(entrance)
+        WildernessLairs.enter(player) { WildernessLairs.crawl(player, arrival) }
     }
-    var count = 0
-    world.players.forEach { if (VenenatisCombat.inChasm(it.tile)) count++ }
-    player.message(
-        if (count > 0) "You peek into the darkness and can make out some movement. There is activity inside."
-        else "You peek into the darkness and can make out no movement. There is no activity inside.",
-    )
+
+    // "In order to peek inside the lair, the player must have at least 20 kills registered in their name" (OSRS Wiki); the messages: donor.
+    on_obj_option(obj = entrance, option = "peek") {
+        val kc = runCatching { player.getNpcKillCount(arena.npc) }.getOrDefault(0)
+        if (kc < 20) {
+            player.message(
+                "You don't know this cave well enough to glean any useful information. You feel that you'll be more succesful once " +
+                    "you've killed whatever is inside, ${20 - kc} times.",
+            )
+            return@on_obj_option
+        }
+        var count = 0
+        world.players.forEach { if (arena.inChasm(it.tile)) count++ }
+        player.message(
+            if (count > 0) "You peek into the darkness and can make out some movement. There is activity inside."
+            else "You peek into the darkness and can make out no movement. There is no activity inside.",
+        )
+    }
 }
 
-listOf(WildernessLairs.SILK_CHASM_ENTRANCE, WildernessLairs.ESCAPE_CAVE_SURFACE).forEach { id ->
+on_obj_option(obj = WildernessLairs.WEB_CHASM_EXIT, option = "exit") {
+    WildernessLairs.crawl(player, WildernessLairs.WEB_CHASM_SURFACE_EXIT)
+}
+
+listOf(WildernessLairs.SILK_CHASM_ENTRANCE, WildernessLairs.WEB_CHASM_ENTRANCE, WildernessLairs.ESCAPE_CAVE_SURFACE).forEach { id ->
     on_obj_option(obj = id, option = "check-fee") {
         player.queue { itemMessageBox(WildernessLairs.checkFeeText(player), item = Items.COINS_995, amountOrZoom = 10_000) }
     }
@@ -101,14 +108,14 @@ set_combat_def(npc = VenenatisCombat.NPC) {
 
 spawn_npc(npc = VenenatisCombat.NPC, x = VenenatisCombat.SPAWN.x, z = VenenatisCombat.SPAWN.z, height = VenenatisCombat.SPAWN.height, walkRadius = 0)
 
-on_npc_spawn(VenenatisCombat.NPC) { VenenatisCombat.onSpawn(npc) }
+listOf(VenenatisCombat.NPC, VenenatisCombat.SPINDEL).forEach { boss -> on_npc_spawn(boss) { VenenatisCombat.onSpawn(npc) } }
 
 on_npc_combat(*VenenatisCombat.Combat.ids) {
     npc.queue { VenenatisCombat.Combat.handleSpecialCombat(this) }
 }
 
-// Venenatis' Spiderling (OSRS Wiki infobox, id 12000): 5 hitpoints, max 3, attack speed 4.
-set_combat_def(npc = VenenatisCombat.SPIDERLING) {
+// Venenatis' / Spindel's Spiderling (OSRS Wiki infoboxes, ids 12000 / 12001 - the same): 5 hitpoints, max 3, attack speed 4.
+listOf(VenenatisCombat.SPIDERLING, VenenatisCombat.SPINDEL_SPIDERLING).forEach { spiderlingId -> set_combat_def(npc = spiderlingId) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.STAB
@@ -131,7 +138,7 @@ set_combat_def(npc = VenenatisCombat.SPIDERLING) {
         block = 16186 // _DEFEND 6250
         death = 16187 // _DEATH 6251
     }
-}
+} }
 
 on_npc_combat(*VenenatisCombat.SpiderlingCombat.ids) {
     npc.queue { VenenatisCombat.SpiderlingCombat.handleSpecialCombat(this) }
@@ -236,12 +243,128 @@ val venenatisDrops =
 
 DropTableFactory.register(venenatisDrops, VenenatisCombat.NPC)
 
-on_npc_death(VenenatisCombat.NPC) {
+on_npc_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) {
     VenenatisCombat.onDeath(npc)
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
     WildernessLairs.onTopDamageKill(killer)
 }
+
+// ------------------------------------------------------------------ Spindel (N522 bundle 4b; OSRS Wiki infobox, id 11998)
+
+set_combat_def(npc = VenenatisCombat.SPINDEL) {
+    configs {
+        attackSpeed = 4
+        attackStyle = StyleType.STAB
+        respawnDelay = 9
+    }
+    aggro {
+        radius = VenenatisCombat.REACH
+        alwaysAggro()
+    }
+    stats {
+        hitpoints = 5150
+        attack = 200
+        strength = 130
+        defence = 225
+        magic = 235
+        ranged = 286
+    }
+    bonuses {
+        defenceStab = 70
+        defenceSlash = 70
+        defenceCrush = 10
+        defenceMagic = 205
+        defenceRanged = 103
+    }
+    anims {
+        attack = VenenatisCombat.ANIM_MELEE
+        death = VenenatisCombat.ANIM_DEATH
+    }
+}
+
+spawn_npc(npc = VenenatisCombat.SPINDEL, x = VenenatisCombat.SPINDEL_ARENA.spawn.x, z = VenenatisCombat.SPINDEL_ARENA.spawn.z, height = VenenatisCombat.SPINDEL_ARENA.spawn.height, walkRadius = 0)
+
+// OSRS Wiki "Spindel" drops (2026-11-02). Not ported: Dark fishing bait (1/128 - not in this game, left as nothing), Brimstone key
+// (Konar only), Wilderness Slayer tertiaries. The pet (Venenatis spiderling 1/2,800) is rolled by Pets (pet_tiers.tsv).
+val spindelDrops =
+    DropTableFactory.build {
+        guaranteed {
+            obj(Items.BIG_BONES)
+        }
+        // At most one unique a kill: dragon 2h 1/358, dragon pickaxe 1/358, fangs 1/618, treasonous ring 1/716, voidwaker gem 1/912
+        // over the common denominator 16,814,544.
+        table("unique") {
+            total(16_814_544)
+            obj(Items.DRAGON_2H_SWORD, slots = 46_968)
+            obj(Items.DRAGON_PICKAXE, slots = 46_968)
+            obj(Items.FANGS_OF_VENENATIS, slots = 27_208)
+            obj(Items.TREASONOUS_RING, slots = 23_484)
+            obj(Items.VOIDWAKER_GEM, slots = 18_437)
+            nothing(16_814_544 - 163_065)
+        }
+        main {
+            total(128)
+            // food and potions
+            obj(Items.DARK_CRAB, quantity = 8, slots = 5)
+            obj(Items.SUPER_RESTORE_4, quantity = 3, slots = 5)
+            // weapons and armour
+            obj(Items.RUNE_KNIFE, quantity = 30, slots = 5)
+            obj(Items.RUNE_PICKAXE, slots = 12)
+            obj(Items.RUNE_2H_SWORD, slots = 3)
+            // runes and ammunition
+            obj(Items.CHAOS_RUNE, quantity = 180, slots = 7)
+            obj(Items.BLOOD_RUNE, quantity = 150, slots = 7)
+            obj(Items.DEATH_RUNE, quantity = 220, slots = 7)
+            obj(Items.CANNONBALL, quantity = 200, slots = 4)
+            obj(Items.DIAMOND_BOLTS_E, quantity = 60, slots = 5)
+            // materials
+            obj(Items.UNCUT_DIAMOND_NOTED, quantity = 7, slots = 8)
+            obj(Items.GOLD_ORE_NOTED, quantity = 180, slots = 6)
+            obj(Items.MAGIC_LOGS_NOTED, quantity = 60, slots = 5)
+            obj(Items.LIMPWURT_ROOT_NOTED, quantity = 18, slots = 5)
+            obj(Items.ONYX_BOLT_TIPS, quantity = 35, slots = 5)
+            obj(Items.RED_SPIDERS_EGGS_NOTED, quantity = 250, slots = 3)
+            obj(Items.UNCUT_DRAGONSTONE, slots = 2)
+            obj(Items.UNCUT_RUBY_NOTED, quantity = 14, slots = 1)
+            obj(Items.GRIMY_SNAPDRAGON_NOTED, quantity = 40, slots = 1)
+            obj(Items.UNICORN_HORN_NOTED, quantity = 60, slots = 1)
+            // other
+            obj(Items.COINS_995, quantity = 14_000, slots = 21)
+            obj(Items.SUPERCOMPOST_NOTED, quantity = 60, slots = 4)
+            obj(Items.ANTIPOISON_4_NOTED_5953, quantity = 6, slots = 3) // OSRS "Antidote++(4)" = the 667 Antipoison++ (4)
+            nothing(1) // Dark fishing bait (not in this game)
+            obj(Items.MAGIC_SEED, slots = 1)
+            obj(Items.PALM_TREE_SEED, slots = 1)
+        }
+        table("supplies") {
+            total(54)
+            obj(Items.BLIGHTED_ANGLERFISH, 5..6, slots = 5)
+            obj(Items.BLIGHTED_KARAMBWAN, 5..6, slots = 5)
+            obj(Items.BLIGHTED_SUPER_RESTORE3, 3..4, slots = 5)
+            obj(Items.BLIGHTED_SUPER_RESTORE4, 3..4, slots = 5)
+            obj(Items.RANGING_POTION_2, 2..3, slots = 5)
+            obj(Items.SUPER_COMBAT_POTION_2, 2..3, slots = 5)
+            nothing(24)
+        }
+        table("looting_bag") {
+            total(3)
+            obj(Items.LOOTING_BAG, slots = 1)
+            nothing(2)
+        }
+        table("strange_fruit") {
+            total(5)
+            obj(Items.STRANGE_FRUIT, slots = 1)
+            nothing(4)
+        }
+        table("elite_clue") {
+            total(100)
+            obj(Items.CLUE_SCROLL_ELITE, slots = 1)
+            nothing(99)
+        }
+    }
+
+DropTableFactory.register(spindelDrops, VenenatisCombat.SPINDEL)
 
 // ------------------------------------------------------------------ the Escape Caves' monsters (OSRS Wiki infoboxes + LocLines)
 
@@ -322,13 +445,13 @@ on_npc_combat(*EscapeCaveMonsters.ids) {
     npc.queue { EscapeCaveMonsters.handleSpecialCombat(this) }
 }
 
-// Test path for the test server: ::venenatis hp <hitpoints> sets the hitpoints of the Venenatis nearest to the player.
+// Test path for the test server: ::venenatis hp <hitpoints> sets the hitpoints of the Venenatis or Spindel nearest to the player.
 on_command("venenatis", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     val hp = args.getOrNull(1)?.toIntOrNull()
     if (args.firstOrNull() != "hp" || hp == null) return@on_command player.message("::venenatis hp <hitpoints>")
     var found: Npc? = null
-    world.npcs.forEach { n -> if (n.id == VenenatisCombat.NPC && n.tile.isWithinRadius(player.tile, 30)) found = n }
+    world.npcs.forEach { n -> if ((n.id == VenenatisCombat.NPC || n.id == VenenatisCombat.SPINDEL) && n.tile.isWithinRadius(player.tile, 30)) found = n }
     val v = found ?: return@on_command player.message("No Venenatis near you.")
     v.setCurrentLifepoints(hp.coerceIn(1, v.getMaximumLifepoints()))
     player.message("Venenatis hitpoints: ${v.getCurrentLifepoints()}.")

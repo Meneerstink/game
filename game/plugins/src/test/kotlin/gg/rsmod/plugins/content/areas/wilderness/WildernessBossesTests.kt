@@ -356,4 +356,33 @@ class WildernessBossesTests {
             CollectionLogPages.OSRS["venenatis"],
         )
     }
+
+    @Test
+    fun `N522 bundle 4b - Spindel decodes, keeps her own arena and max hits, her chasm is level 29 and she drops the pet at 1 in 2800`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, NpcDef::class.java)
+        definitions.load(library, ObjectDef::class.java)
+        assertEquals("Spindel", definitions.get(NpcDef::class.java, Npcs.SPINDEL_OSRS).name)
+        assertEquals("Spindel's Spiderling", definitions.get(NpcDef::class.java, Npcs.SPINDEL_SPIDERLING_OSRS).name)
+        val lairs = gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs
+        val entrance = definitions.get(ObjectDef::class.java, lairs.WEB_CHASM_ENTRANCE)
+        listOf("Enter", "Peek", "Check-Fee").forEach { op -> assertTrue(entrance.options.any { it.equals(op, ignoreCase = true) }, op) }
+        assertTrue(definitions.get(ObjectDef::class.java, lairs.WEB_CHASM_EXIT).options.any { it.equals("Exit", ignoreCase = true) })
+        val v = gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat
+        val a = v.SPINDEL_ARENA
+        assertEquals(listOf(14, 31, 24), listOf(a.maxMelee, a.maxRanged, a.maxMagic))
+        assertTrue(a.inChasm(lairs.LAIR_ARRIVAL.getValue(lairs.WEB_CHASM_ENTRANCE)) && a.inChasm(a.spawn) && a.inMoveArea(a.middle.x, a.middle.z))
+        assertFalse(v.VENENATIS_ARENA.inChasm(a.spawn))
+        val exit = lairs.WEB_CHASM_SURFACE_EXIT
+        assertTrue(kotlin.math.abs(exit.x - lairs.WEB_CHASM_ENTRANCE_TILE.x) <= 2 && kotlin.math.abs(exit.z - lairs.WEB_CHASM_ENTRANCE_TILE.z) <= 3, "exit in front of the entrance")
+        assertEquals(29, a.spawn.getWildernessLevel(), "OSRS Wiki: the Web Chasm interior is level 29")
+        assertEquals(36, v.VENENATIS_ARENA.spawn.getWildernessLevel())
+        val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
+        assertFalse("- 6580" in multi, "the Web Chasm is singles-plus")
+        val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()
+        Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
+        assertEquals("Venenatis spiderling", Pets.dropFor(Npcs.SPINDEL_OSRS)?.pet)
+        assertEquals(1.0 / 2800, Pets.dropChance(Npcs.SPINDEL_OSRS), 1e-12)
+        assertEquals(1.0 / 1500, Pets.dropChance(Npcs.VENENATIS_OSRS), 1e-12)
+    }
 }

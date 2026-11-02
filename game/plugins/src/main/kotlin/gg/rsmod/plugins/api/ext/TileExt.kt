@@ -75,6 +75,8 @@ val wildernessRegionIds =
         // N522 bundle 4a: the OSRS Silk Chasm (Venenatis) and the Escape Caves.
         13727,
         13472,
+        // N522 bundle 4b: the OSRS Web Chasm (Spindel) - far from the Wilderness coordinates, level 29 ([FIXED_WILDERNESS_LEVELS]).
+        6580,
         13111,
         13112,
         13113,
@@ -110,10 +112,17 @@ val wildernessRegionIds =
  * underground offset constant; the Novite alternative is recorded here, not silently discarded,
  * in case real revision-667 map geometry differs - see the M1 handoff for the open note.
  */
+/**
+ * Wilderness squares whose level does not follow from their coordinates. OSRS Wiki "Web Chasm": "The Web Chasm interior has been
+ * adjusted to level 29 Wilderness, to match the entrance."
+ */
+val FIXED_WILDERNESS_LEVELS = mapOf(6580 to 29)
+
 fun Tile.getWildernessLevel(): Int {
     if (!wildernessRegionIds.contains(regionId)) {
         return 0
     }
+    FIXED_WILDERNESS_LEVELS[regionId]?.let { return it }
     val level =
         when (z) {
             in 3525..3967 -> (z - 3520) / 8 + 1

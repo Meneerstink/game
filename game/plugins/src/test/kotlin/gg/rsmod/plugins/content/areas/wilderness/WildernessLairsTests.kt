@@ -107,7 +107,7 @@ class WildernessLairsTests {
     @Test
     fun `while the Escape Caves are closed only the Silk Chasm entrance is placed and its exit leads to its approach side`() {
         if (WildernessLairs.ESCAPE_CAVES_OPEN) return
-        assertEquals(listOf(WildernessLairs.SILK_CHASM_ENTRANCE), WildernessLairs.SURFACE.map { it.id })
+        assertEquals(listOf(WildernessLairs.SILK_CHASM_ENTRANCE, WildernessLairs.WEB_CHASM_ENTRANCE), WildernessLairs.SURFACE.map { it.id })
         val exit = WildernessLairs.SILK_CHASM_SURFACE_EXIT
         assertTrue(kotlin.math.abs(exit.x - 3321) <= 2 && kotlin.math.abs(exit.z - 3794) <= 2, "beside the entrance")
     }

@@ -39,6 +39,48 @@ object VenenatisCombat {
     const val NPC = Npcs.VENENATIS_OSRS
     const val SPIDERLING = Npcs.VENENATIS_SPIDERLING_OSRS
 
+    /** N522 bundle 4b: Spindel (OSRS 11998) - "otherwise her mechanics are identical" (OSRS Wiki "Venenatis/Strategies"). */
+    const val SPINDEL = Npcs.SPINDEL_OSRS
+    const val SPINDEL_SPIDERLING = Npcs.SPINDEL_SPIDERLING_OSRS
+
+    /** One spider boss and her chasm: OSRS Wiki max hits, Near Reality MIDDLE / MOVE_AREA / WEB_AREA / chasm polygon. */
+    data class Arena(
+        val npc: Int,
+        val spiderling: Int,
+        val maxMelee: Int,
+        val maxRanged: Int,
+        val maxMagic: Int,
+        val spawn: Tile,
+        val middle: Tile,
+        val chasmX: IntRange,
+        val chasmZ: IntRange,
+        val moveX: IntRange,
+        val moveZ: IntRange,
+        val corridorX: IntRange,
+        val corridorZ: IntRange,
+    ) {
+        fun inChasm(t: Tile): Boolean = t.height == spawn.height && t.x in chasmX && t.z in chasmZ
+
+        fun inMoveArea(x: Int, z: Int): Boolean = x in moveX && z in moveZ
+
+        fun inWebArea(x: Int, z: Int): Boolean = inMoveArea(x, z) || (x in corridorX && z in corridorZ)
+    }
+
+    val VENENATIS_ARENA =
+        Arena(
+            Npcs.VENENATIS_OSRS, Npcs.VENENATIS_SPIDERLING_OSRS, 21, 35, 30, Tile(3423, 10203, 2), Tile(3423, 10204, 2),
+            3404..3442, 10183..10226, 3415..3432, 10195..10214, 3422..3425, 10184..10195,
+        )
+
+    /** Spindel: max 14 melee / 31 ranged / 24 magic (OSRS Wiki infobox); the Web Chasm (donor WebChasm / Spindel.java). */
+    val SPINDEL_ARENA =
+        Arena(
+            Npcs.SPINDEL_OSRS, Npcs.SPINDEL_SPIDERLING_OSRS, 14, 31, 24, Tile(1630, 11547, 2), Tile(1630, 11547, 2),
+            1610..1651, 11524..11571, 1623..1640, 11539..11558, 1630..1633, 11526..11539,
+        )
+
+    fun arena(npc: Npc): Arena = if (npc.id == SPINDEL || npc.id == SPINDEL_SPIDERLING) SPINDEL_ARENA else VENENATIS_ARENA
+
     const val ANIM_RANGED = 16180 // NPC_VENENATIS_RANGED_01 9989
     const val ANIM_MAGIC = 16181 // _MAGIC_01 9990
     const val ANIM_MELEE = 16182 // _MELEE_01 9991
@@ -89,13 +131,13 @@ object VenenatisCombat {
     }
 
     /** The Silk Chasm floor, square 13727 (Near Reality SilkChasm 3404-3442 x 10183-10226, plane 2). */
-    fun inChasm(tile: Tile): Boolean = tile.height == 2 && tile.x in 3404..3442 && tile.z in 10183..10226
+    fun inChasm(tile: Tile): Boolean = VENENATIS_ARENA.inChasm(tile)
 
     /** The move area (donor MOVE_AREA). */
-    fun inMoveArea(x: Int, z: Int): Boolean = x in 3415..3432 && z in 10195..10214
+    fun inMoveArea(x: Int, z: Int): Boolean = VENENATIS_ARENA.inMoveArea(x, z)
 
     /** The donor WEB_AREA: the move area plus the corridor 3422-3425 x 10184-10195. */
-    fun inWebArea(x: Int, z: Int): Boolean = inMoveArea(x, z) || (x in 3422..3425 && z in 10184..10195)
+    fun inWebArea(x: Int, z: Int): Boolean = VENENATIS_ARENA.inWebArea(x, z)
 
     fun ranged(attack: Int): Boolean = attack % 16 < 8
 
@@ -132,7 +174,7 @@ object VenenatisCombat {
     fun targets(npc: Npc): List<Player> {
         val list = mutableListOf<Player>()
         npc.world.players.forEach { p ->
-            if (p.isOnline && !p.isDead() && !p.invisible && inChasm(p.tile) && p.tile.isWithinRadius(npc.getCentreTile(), REACH)) list += p
+            if (p.isOnline && !p.isDead() && !p.invisible && arena(npc).inChasm(p.tile) && p.tile.isWithinRadius(npc.getCentreTile(), REACH)) list += p
         }
         return list
     }
@@ -154,7 +196,7 @@ object VenenatisCombat {
     }
 
     object Combat : CombatScript() {
-        override val ids = intArrayOf(NPC)
+        override val ids = intArrayOf(NPC, SPINDEL)
 
         override suspend fun handleSpecialCombat(it: QueueTask) {
             val npc = it.npc
@@ -194,19 +236,20 @@ object VenenatisCombat {
             val players = targets(npc).ifEmpty { listOfNotNull(primary) }
             if (players.isEmpty()) return false
             val bonus = living(npc) * SPIDERLING_BONUS
+            val arena = arena(npc)
             val rangedPhase = ranged(attack)
             var animated = false
             players.forEach { p ->
                 val adjacent = adjacent(npc, p.tile)
                 if (adjacent && npc.world.random(2) != 0) {
                     if (!animated) npc.animate(ANIM_MELEE).also { animated = true }
-                    melee(npc, p, MAX_MELEE + bonus)
+                    melee(npc, p, arena.maxMelee + bonus)
                 } else if (rangedPhase) {
                     if (!animated) npc.animate(ANIM_RANGED).also { animated = true }
-                    rangedHit(npc, p, MAX_RANGED + bonus)
+                    rangedHit(npc, p, arena.maxRanged + bonus)
                 } else {
                     if (!animated) npc.animate(ANIM_MAGIC).also { animated = true }
-                    magicHit(npc, p, MAX_MAGIC + bonus)
+                    magicHit(npc, p, arena.maxMagic + bonus)
                 }
             }
             if (spawnsSpiderlings(attack)) summonSpiderlings(npc)
@@ -245,8 +288,9 @@ object VenenatisCombat {
             val list = spiderlings(npc)
             list.removeAll { !it.isSpawned() || it.isDead() }
             repeat(SPIDERLINGS) {
-                val tile = Tile(MIDDLE.x + npc.world.random(-5..5), MIDDLE.z + npc.world.random(-5..5), MIDDLE.height)
-                val spiderling = Npc(SPIDERLING, tile, npc.world)
+                val middle = arena(npc).middle
+                val tile = Tile(middle.x + npc.world.random(-5..5), middle.z + npc.world.random(-5..5), middle.height)
+                val spiderling = Npc(arena(npc).spiderling, tile, npc.world)
                 spiderling.respawns = false
                 spiderling.attr[OWNER] = npc
                 spiderling.attr[OWNER_LIFE] = npc.attr[LIFE] ?: 0
@@ -270,7 +314,7 @@ object VenenatisCombat {
                     val piece = webPiece(row, column) ?: continue
                     val x = origin.x + row
                     val z = origin.z + column
-                    if (!inWebArea(x, z)) continue
+                    if (!arena(npc).inWebArea(x, z)) continue
                     val obj = DynamicObject(piece, 11, 0, Tile(x, z, centre.height))
                     world.spawn(obj)
                     webs += obj
@@ -297,18 +341,19 @@ object VenenatisCombat {
 
         /** Donor: a random tile of the move area more than 3 tiles away; else the middle. */
         private fun shuffle(npc: Npc) {
+            val arena = arena(npc)
             val options = mutableListOf<Tile>()
-            for (x in 3415..3432) for (z in 10195..10214) {
+            for (x in arena.moveX) for (z in arena.moveZ) {
                 if (kotlin.math.abs(x - npc.tile.x) > 3 || kotlin.math.abs(z - npc.tile.z) > 3) options += Tile(x, z, npc.tile.height)
             }
-            val dest = options.randomOrNull() ?: MIDDLE
+            val dest = options.randomOrNull() ?: arena.middle
             npc.walkTo(dest)
         }
     }
 
     /** The spiderling: max 3 stab, and every attack drains 1 prayer (wiki), with the donor's message. */
     object SpiderlingCombat : CombatScript() {
-        override val ids = intArrayOf(SPIDERLING)
+        override val ids = intArrayOf(SPIDERLING, SPINDEL_SPIDERLING)
 
         override suspend fun handleSpecialCombat(it: QueueTask) {
             val npc = it.npc
