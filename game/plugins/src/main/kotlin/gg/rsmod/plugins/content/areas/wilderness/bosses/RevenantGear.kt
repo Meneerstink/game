@@ -43,9 +43,12 @@ object RevenantGear {
 
     /** Every revenant: the OSRS cave ones and the rev-667 ones elsewhere in the Wilderness. */
     fun isRevenant(target: Pawn): Boolean =
-        target is Npc && (target.id in RevenantCaveRevenants.BY_ID || target.id in gg.rsmod.plugins.content.areas.wilderness.Revenants.ids)
+        target is Npc && (target.id in RevenantCaveRevenants.BY_ID || target.id == RevenantMaledictus.NPC || target.id in gg.rsmod.plugins.content.areas.wilderness.Revenants.ids)
 
     fun avariceBoost(player: Player, target: Pawn): Boolean = wearsAvarice(player) && isRevenant(target)
+
+    /** N522 Forinthry Surge (Revenant maledictus): "an additional 15% accuracy and damage buff against all revenants" (OSRS Wiki). */
+    fun surgeBoost(player: Player, target: Pawn): Boolean = RevenantMaledictus.surge(player) && isRevenant(target)
 
     /** Re-arms the skull every tick while the amulet is worn ([refreshAvariceSkull]); not saved, re-armed at login. */
     val AVARICE_TIMER = gg.rsmod.game.model.timer.TimerKey()

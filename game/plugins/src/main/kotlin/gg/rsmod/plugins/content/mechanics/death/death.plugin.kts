@@ -90,6 +90,9 @@ fun resolveDeath(victim: Player) {
     val (result, untradeables) = UntradeableDeathProtection.splitPvp(world.definitions, afterConversions, deepWilderness)
     // OSRS: "In instanced areas, the Gravestone will aim to appear outside the instance where its owner can loot it."
     val graveTile = GraveLocations.graveTile(victim)
+    // N522 (OSRS Revenant Caves): a death inside the caves, or a player kill anywhere in the Wilderness, costs the paid entrance fee;
+    // a player killer gets the 100,000 coins as loot (OSRS Wiki "Revenant Caves").
+    val revenantFeeCoins = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveFee.onDeath(victim, if (pvpDeath) killer else null)
     val executed =
         DeathExecutor.execute(
             world = world,
@@ -118,6 +121,7 @@ fun resolveDeath(victim: Player) {
                 // Audit X-01: a beast of burden's cargo is unprotected PvP loot, not a free Death's Domain batch (taken above).
                 converted += cargo
                 converted += casinoCoins(victim)
+                converted += revenantFeeCoins
                 converted
             },
             // Owner 2026-09-26: on a PvM death the beast of burden's cargo goes to the gravestone with everything else - taken

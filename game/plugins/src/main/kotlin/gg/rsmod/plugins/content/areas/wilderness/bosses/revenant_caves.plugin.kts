@@ -9,7 +9,8 @@ RevenantCaves.SURFACE.forEach { p -> spawn_obj(obj = p.id, x = p.tile.x, z = p.t
 
 RevenantCaves.ENTRANCES.forEach { (cavern, arrival) ->
     on_obj_option(obj = cavern, option = "enter") {
-        RevenantCaves.crawl(player, arrival, "You enter the cave.")
+        // N522: the OSRS entrance fee (100,000 coins, from the bank if need be) before the crawl - [RevenantCaveFee].
+        RevenantCaveFee.enter(player) { RevenantCaves.crawl(player, arrival, "You enter the cave.") }
     }
 }
 

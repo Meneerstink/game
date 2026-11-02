@@ -161,6 +161,10 @@ object OsrsFxImportTool {
             // N522 bundle 3b: the OSRS revenants' ranged projectile 206, magic projectile 1415, magic impact 1454 and heal 1221
             // (Kronos-184 activities/miscpvm/Revenant.java).
             "rev-caves" to listOf(206, 1415, 1454, 1221),
+            // N522 bundle 3c: the Revenant maledictus - RuneLite gameval SpotanimID REVENANT_SUPERIOR_STANDARD_ATTACK 2033,
+            // _SPECIAL_2_IMPACT 2034, _BARRAGE_IMPACT 2035, WINDSURGE_TRAVEL 1456, WINDBLAST_IMPACT 134, ICE_BARRAGE_IMPACT 369,
+            // SHADOW_BURST_IMPACT 382 (Near Reality RevenantMaledictus.kt uses 2033, 1456, 134, 2034, 382, 369).
+            "rev-maledictus" to listOf(2033, 2034, 2035, 1456, 134, 369, 382),
         )
 
     /**

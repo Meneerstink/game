@@ -224,6 +224,7 @@ object MeleeCombatFormula : CombatFormula {
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
         // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeBoost(player, target)) hit = floor(hit * 23 / 20)
 
         hit =
             if (specialPassiveMultiplier == 1.0) {
@@ -257,6 +258,7 @@ object MeleeCombatFormula : CombatFormula {
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) hit = floor(hit * 3 / 2)
         // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) hit = floor(hit * 6 / 5)
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeBoost(player, target)) hit = floor(hit * 23 / 20)
         hit = floor(hit * specialAttackMultiplier)
         return hit
     }

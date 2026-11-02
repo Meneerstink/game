@@ -277,4 +277,22 @@ class WildernessBossesTests {
         assertEquals(RevenantCaveRevenants.Combat.Style.MELEE, c.chooseStyle(protectsMagic = true, stabDef = 50, rangedDef = 200))
         assertEquals(RevenantCaveRevenants.Combat.Style.RANGED, c.chooseStyle(protectsMagic = true, stabDef = 200, rangedDef = 50))
     }
+
+    @Test
+    fun `N522 bundle 3c - the Revenant maledictus decodes, spawns only inside the caves and rolls the donor attack table`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, NpcDef::class.java)
+        val def = definitions.get(NpcDef::class.java, gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC)
+        assertEquals("Revenant maledictus", def.name)
+        assertEquals(5, def.size)
+        assertEquals(listOf(null, "Attack", null, null, null), def.options.map { it?.takeIf { o -> o.isNotEmpty() } })
+        val m = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus
+        assertEquals(11, gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.Spawn.values().size, "OSRS Wiki: eleven spawn areas")
+        assertEquals(mapOf("north" to 3, "middle" to 5, "south" to 3), gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.Spawn.values().groupingBy { it.hint }.eachCount())
+        gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.Spawn.values().forEach { assertTrue(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveFee.inCaves(it.tile), "$it") }
+        // Out of 19: blood 3, ice 2, air surge 1, the standard spike 13.
+        assertEquals(mapOf("blood" to 3, "ice" to 2, "surge" to 1, "standard" to 13), (0..18).groupingBy { gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.Combat.attackFor(it) }.eachCount())
+        assertTrue(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.isRevenant(
+            io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true).also { io.mockk.every { it.id } returns m.NPC }), "avarice / bracelet treat it as a revenant")
+    }
 }

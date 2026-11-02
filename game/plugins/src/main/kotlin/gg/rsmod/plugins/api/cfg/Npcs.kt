@@ -12982,4 +12982,5 @@ object Npcs {
     const val REVENANT_DARK_BEAST_OSRS = 15066 // 7938
     const val REVENANT_KNIGHT_OSRS = 15067 // 7939
     const val REVENANT_DRAGON_OSRS = 15068 // 7940
+    const val REVENANT_MALEDICTUS_OSRS = 15069 // 11246
 }

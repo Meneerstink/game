@@ -3,6 +3,8 @@ package gg.rsmod.plugins.content.areas.wilderness.bosses
 import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
 import gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR
 import gg.rsmod.plugins.content.drops.DropTableFactory
+import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.game.model.priv.Privilege
 
 /**
  * N522 bundle 3b: the OSRS revenants of the OSRS Revenant Caves ([RevenantCaveRevenants]) and their two items ([RevenantGear]).
@@ -64,6 +66,8 @@ on_npc_combat(*RevenantCaveRevenants.Combat.ids) {
 }
 
 on_npc_death(*RevenantCaveRevenants.ids) {
+    // N522 bundle 3c: every revenant slain feeds the Revenant maledictus' rolling spawn chance (its combat level).
+    RevenantMaledictus.onRevenantDeath(world, RevenantCaveRevenants.BY_ID.getValue(npc.id).combat)
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
     // Toggled absorption: the ether (left out of the table for this player) goes into the bracelet.
@@ -120,3 +124,69 @@ on_item_equip(Items.AMULET_OF_AVARICE) { RevenantGear.onAvariceEquip(player) }
 on_timer(RevenantGear.AVARICE_TIMER) { RevenantGear.refreshAvariceSkull(player) }
 on_login { if (RevenantGear.wearsAvarice(player)) RevenantGear.onAvariceEquip(player) }
 // "Check" (worn) is not handled: its OSRS message is not on the wiki or in a donor.
+
+// ------------------------------------------------------------------ Revenant maledictus (N522 bundle 3c)
+
+// OSRS Wiki infobox: level 397, 1,250 hitpoints, attack speed 5, aggressive, poison and venom immune.
+set_combat_def(npc = RevenantMaledictus.NPC) {
+    configs {
+        attackSpeed = 5
+        attackStyle = StyleType.RANGED
+        respawnDelay = Int.MAX_VALUE
+    }
+    aggro {
+        radius = RevenantMaledictus.ATTACK_RANGE
+        alwaysAggro()
+    }
+    stats {
+        hitpoints = 12500
+        attack = 106
+        strength = 126
+        defence = 90
+        magic = 130
+        ranged = 130
+    }
+    bonuses {
+        attackBonus = 72
+        strengthBonus = 78
+        attackMagic = 60
+        magicDamageBonus = 60
+        attackRanged = 265
+        rangedStrengthBonus = 60
+        defenceStab = 201
+        defenceSlash = 206
+        defenceCrush = 188
+        defenceMagic = 101
+        defenceRanged = 231
+    }
+    anims {
+        attack = RevenantMaledictus.ANIM_STANDARD
+        death = RevenantMaledictus.ANIM_DEATH
+    }
+}
+
+on_npc_combat(*RevenantMaledictus.Combat.ids) {
+    npc.queue {
+        RevenantMaledictus.Combat.handleSpecialCombat(this)
+    }
+}
+
+on_npc_death(RevenantMaledictus.NPC) {
+    RevenantMaledictus.onDeath(npc)
+}
+
+// Test path for the test server: ::maledictus [spawn index 0-10] spawns it at once (the OSRS spawn is a rare roll on revenant kills);
+// ::maledictus hp <hitpoints> sets the active one's hitpoints (to test the kill and the drops without a long fight).
+on_command("maledictus", Privilege.ADMIN_POWER) {
+    val values = RevenantMaledictus.Spawn.values()
+    val args = player.getCommandArgs()
+    if (args.firstOrNull() == "hp") {
+        val npc = RevenantMaledictus.instance?.takeIf { RevenantMaledictus.active() } ?: return@on_command player.message("No Revenant maledictus is active.")
+        val hp = args.getOrNull(1)?.toIntOrNull() ?: return@on_command player.message("::maledictus hp <hitpoints>")
+        npc.setCurrentLifepoints(hp.coerceIn(1, npc.getMaximumLifepoints()))
+        return@on_command player.message("Revenant maledictus hitpoints: ${npc.getCurrentLifepoints()}.")
+    }
+    val index = player.getCommandArgs().firstOrNull()?.toIntOrNull()?.coerceIn(0, values.size - 1) ?: 0
+    val ok = RevenantMaledictus.spawn(world, values[index])
+    player.message(if (ok) "Revenant maledictus spawned: ${values[index]}." else "A Revenant maledictus is already active.")
+}

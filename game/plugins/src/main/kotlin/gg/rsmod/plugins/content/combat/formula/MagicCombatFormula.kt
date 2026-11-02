@@ -163,6 +163,7 @@ object MagicCombatFormula : CombatFormula {
             if (pawn is Player && gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(pawn, target)) hit = Math.floor(hit * 3 / 2)
             // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
             if (pawn is Player && gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(pawn, target)) hit = Math.floor(hit * 6 / 5)
+            if (pawn is Player && gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeBoost(pawn, target)) hit = Math.floor(hit * 23 / 20)
             // Elemental weakness: + ⌊Base Max × weakness %⌋, after the slayer/salve step (ElementalWeakness).
             hit += Math.floor(baseMax * ElementalWeakness.percent(target, spell) / 100.0)
             // Charged tomes: "stacking multiplicatively with Magic damage bonuses" (Tomes).
@@ -293,6 +294,7 @@ object MagicCombatFormula : CombatFormula {
         if (gg.rsmod.plugins.content.items.osrs.RevenantWeapons.wildernessBuff(player, target)) smoke = Math.floor(smoke * 3 / 2)
         // N522: Amulet of avarice, "an additional 20% increase in accuracy and damage when fighting revenants" (OSRS Wiki).
         if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.avariceBoost(player, target)) smoke = Math.floor(smoke * 6 / 5)
+        if (gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeBoost(player, target)) smoke = Math.floor(smoke * 23 / 20)
         var roll = Math.floor(smoke * gg.rsmod.plugins.content.items.osrs.Tomes.accuracyMultiplier(player, target, castingSpell(player)))
         // Ice ancient sceptre: +10 % for ice spells on freezable, not frozen targets (AncientSceptres).
         roll = Math.floor(roll * gg.rsmod.plugins.content.items.osrs.AncientSceptres.iceAccuracyMultiplier(player, target, castingSpell(player)))

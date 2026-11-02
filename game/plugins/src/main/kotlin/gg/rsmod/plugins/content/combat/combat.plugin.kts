@@ -302,7 +302,9 @@ suspend fun cycle(it: QueueTask): Boolean {
             // single-way combat zone" - a breach monster is never reserved by the first player on it. The player side keeps the
             // normal rule ("players can also be attacked by another player in a single area if they are not being attacked by
             // the boss").
-            val sharedBreachTarget = target is Npc && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(target) && pawn is Player
+            // N522: the Revenant maledictus is "functionally multi-combat; it can be attacked by any number of players" (OSRS Wiki).
+            val sharedBreachTarget = target is Npc && pawn is Player && (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(target) ||
+                target.id == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC)
             // Breach audit 2026-09-27 (B6): a breach monster that is already fighting a player keeps doing so when other players
             // hit it ("multiple players can attack the same boss") or when a PKer hits its target - it was released by the
             // single-way rules below. Who may start fighting whom is decided by the aggro search and the players' own checks.
