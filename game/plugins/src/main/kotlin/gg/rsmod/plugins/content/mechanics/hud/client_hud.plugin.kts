@@ -26,6 +26,12 @@ on_world_init {
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("deadman hud for ${player.username}", e)
         }
+        // N522 bundle 4a: leaving the Wilderness ends a boss-lair visit (the lair-fee death rule); the Escape Caves prayer drain.
+        try {
+            gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs.tick(player)
+        } catch (e: Exception) {
+            gg.rsmod.game.model.Trace.crash("wilderness lairs for ${player.username}", e)
+        }
         try {
             gg.rsmod.plugins.content.mechanics.pvp.chest.ChestMapMarker.sync(player)
         } catch (e: Exception) {

@@ -92,7 +92,9 @@ fun resolveDeath(victim: Player) {
     val graveTile = GraveLocations.graveTile(victim)
     // N522 (OSRS Revenant Caves): a death inside the caves, or a player kill anywhere in the Wilderness, costs the paid entrance fee;
     // a player killer gets the 100,000 coins as loot (OSRS Wiki "Revenant Caves").
-    val revenantFeeCoins = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveFee.onDeath(victim, if (pvpDeath) killer else null)
+    val revenantFeeCoins = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveFee.onDeath(victim, if (pvpDeath) killer else null) +
+        // N522 bundle 4a: the Wilderness boss lair fee - lost to a player kill before leaving the Wilderness, dropped for the killer.
+        gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs.onDeath(victim, if (pvpDeath) killer else null)
     val executed =
         DeathExecutor.execute(
             world = world,

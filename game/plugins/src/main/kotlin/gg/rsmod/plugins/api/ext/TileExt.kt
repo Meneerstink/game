@@ -72,6 +72,9 @@ val wildernessRegionIds =
         12959,
         // N522: the imported OSRS Scorpion Pit (Scorpia), underground level 53-55.
         12961,
+        // N522 bundle 4a: the OSRS Silk Chasm (Venenatis) and the Escape Caves.
+        13727,
+        13472,
         13111,
         13112,
         13113,

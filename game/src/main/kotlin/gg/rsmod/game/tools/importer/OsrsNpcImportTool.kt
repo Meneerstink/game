@@ -110,6 +110,9 @@ object OsrsNpcImportTool {
             "rev-caves" to listOf(7881, 7931, 7932, 7933, 7934, 7935, 7936, 7937, 7938, 7939, 7940),
             // N522 bundle 3c: the Revenant maledictus (OSRS Wiki infobox id 11246, classic frames: OsrsNpcProbeTool).
             "rev-maledictus" to listOf(11246),
+            // N522 bundle 4a: Venenatis 6610, her spiderling 12000 (RuneLite gameval NpcID VENENATIS_SPIDERLING) and the Escape Caves'
+            // grizzly bear 11989 / poison spider 11990 (OSRS Wiki infobox ids).
+            "venenatis" to listOf(6610, 12000, 11989, 11990),
         )
     }
 
@@ -165,6 +168,10 @@ object OsrsNpcImportTool {
             // rev-maledictus: RuneLite gameval AnimationID NPC_REVENANT_SUPERIOR_ATTACK_MELEE 9277 / _ATTACK_STUN 9278 / _ATTACK_HEAL 9279
             // / _DEATH 9280 / _SPAWN 9281 / _ATTACK_DOT 9282 (WALK 9275 / IDLE 9276 come with the npc definition).
             "rev-maledictus" to listOf(9277, 9278, 9279, 9280, 9281, 9282),
+            // venenatis: RuneLite gameval AnimationID NPC_VENENATIS_RANGED_01 9989 / _MAGIC_01 9990 / _MELEE_01 9991 / _DEATH_01 9992 /
+            // _SPAWN_01 9993; spiderling SMALL_SPIDER_UPDATE_ATTACK 6249 / _DEFEND 6250 / _DEATH 6251; grizzly BEAR_REWORK_ATTACK 4925 /
+            // _DEFEND 4927 / _DEATH 4929; poison spider SPIDER_UPDATE_ATTACK 5327 / _DEFEND 5328 / _DEATH 5329 (the stand sets of their defs).
+            "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
             // that animate the same frame base as each npc's stand sequence (OsrsNpcProbeTool "skeleton", 2026-09-19).

@@ -295,4 +295,65 @@ class WildernessBossesTests {
         assertTrue(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.isRevenant(
             io.mockk.mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true).also { io.mockk.every { it.id } returns m.NPC }), "avarice / bracelet treat it as a revenant")
     }
+
+    @Test
+    fun `N522 bundle 4a - Venenatis, her spiderling, the Escape Caves monsters and the lair locs decode from the game cache`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, NpcDef::class.java)
+        definitions.load(library, ObjectDef::class.java)
+        mapOf(
+            Npcs.VENENATIS_OSRS to ("Venenatis" to 4),
+            Npcs.VENENATIS_SPIDERLING_OSRS to ("Venenatis' Spiderling" to 1),
+            Npcs.GRIZZLY_BEAR_ESCAPE_CAVES to ("Grizzly bear" to 2),
+            Npcs.POISON_SPIDER_ESCAPE_CAVES to ("Poison spider" to 1),
+        ).forEach { (id, v) ->
+            val def = definitions.get(NpcDef::class.java, id)
+            assertEquals(v.first, def.name, "$id")
+            assertEquals(v.second, def.size, "$id size")
+            assertTrue(def.options.any { it.equals("Attack", ignoreCase = true) }, "$id attackable")
+        }
+        val lairs = gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs
+        mapOf(
+            lairs.SILK_CHASM_ENTRANCE to listOf("Enter", "Peek", "Check-Fee"),
+            lairs.ESCAPE_CAVE_SURFACE to listOf("Enter"),
+            lairs.SILK_CHASM_EXIT to listOf("Exit"),
+            lairs.ESCAPE_EXIT_1 to listOf("Exit"),
+            lairs.ESCAPE_EXIT_2 to listOf("Exit"),
+            lairs.ESCAPE_EXIT_3 to listOf("Climb-up"),
+        ).forEach { (id, ops) ->
+            val def = definitions.get(ObjectDef::class.java, id)
+            ops.forEach { op -> assertTrue(def.options.any { it.equals(op, ignoreCase = true) }, "$id ${def.name} option $op: ${def.options.toList()}") }
+        }
+        // The Silk Chasm and the Escape Caves are multi-combat in OSRS.
+        val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
+        listOf(13727, 13472).forEach { assertTrue("- $it" in multi, "square $it multi") }
+    }
+
+    @Test
+    fun `N522 bundle 4a - Venenatis' cycle - 8 ranged then 8 magic, spiderlings on the 1st ranged, web on the 3rd magic, a move every 4`() {
+        val v = gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat
+        assertEquals((0..7).toList(), (0..15).filter { v.ranged(it) })
+        assertEquals(listOf(0), (0..15).filter { v.spawnsSpiderlings(it) })
+        assertEquals(listOf(10), (0..15).filter { v.shootsWeb(it) })
+        assertEquals(listOf(0, 4, 8, 12), (0..15).filter { v.movesAfter(it) })
+        // The donor web: 9x9 minus the corners; the outer ring harmless (47085), 4 corner pieces (47086), the rest the centre (47084).
+        val pieces = (0..8).flatMap { r -> (0..8).mapNotNull { c -> v.webPiece(r, c) } }
+        assertEquals(69, pieces.size)
+        assertEquals(4, pieces.count { it == v.WEB_CORNER })
+        assertEquals(20, pieces.count { it == v.WEB_EDGE })
+        assertEquals(45, pieces.count { it == v.WEB_CENTRE })
+        assertTrue(v.inChasm(v.SPAWN) && v.inMoveArea(v.SPAWN.x, v.SPAWN.z))
+    }
+
+    @Test
+    fun `N522 bundle 4a - Venenatis spiderling drops from Venenatis at 1 in 1500, the log lists the 6 Venenatis and Spindel items`() {
+        val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()
+        Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
+        assertEquals("Venenatis spiderling", Pets.dropFor(Npcs.VENENATIS_OSRS)?.pet)
+        assertEquals(1.0 / 1500, Pets.dropChance(Npcs.VENENATIS_OSRS), 1e-12)
+        assertEquals(
+            listOf("Venenatis spiderling", "Fangs of Venenatis", "Voidwaker gem", "Dragon 2h sword", "Dragon pickaxe", "Treasonous ring"),
+            CollectionLogPages.OSRS["venenatis"],
+        )
+    }
 }

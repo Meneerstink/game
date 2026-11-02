@@ -49,6 +49,9 @@ regions:
 # Wilderness Regions
 # N522: OSRS Scorpion Pit (Scorpia, imported map square 12961) - multi-combat in OSRS.
 - 12961
+# N522 bundle 4a: OSRS Silk Chasm (Venenatis, 13727) and the Escape Caves (13472) - multi-combat in OSRS.
+- 13727
+- 13472
 - 12861
 - 13117
 - 13373

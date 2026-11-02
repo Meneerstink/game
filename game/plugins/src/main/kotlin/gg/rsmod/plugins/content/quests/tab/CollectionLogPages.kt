@@ -50,6 +50,8 @@ object CollectionLogPages {
             "crazy archaeologist" to listOf("Odium shard 2", "Malediction shard 2", "Fedora"),
             // N522: OSRS Wiki Collection log "Scorpia" (3 items).
             "scorpia" to listOf("Odium shard 3", "Malediction shard 3", "Scorpia's offspring"),
+            // N522: OSRS Wiki Collection log "Venenatis and Spindel" (6 items).
+            "venenatis" to listOf("Venenatis spiderling", "Fangs of Venenatis", "Voidwaker gem", "Dragon 2h sword", "Dragon pickaxe", "Treasonous ring"),
             "corporeal beast" to listOf("Pet dark core", "Elysian sigil", "Spectral sigil", "Arcane sigil", "Holy elixir", "Jar of spirits"),
             "giant mole" to listOf("Baby mole", "Mole skin", "Mole claw"),
             "general graardor" to listOf("Pet general graardor", "Bandos chestplate", "Bandos tassets", "Bandos boots", "Bandos hilt", "Godsword shard 1", "Godsword shard 2", "Godsword shard 3"),

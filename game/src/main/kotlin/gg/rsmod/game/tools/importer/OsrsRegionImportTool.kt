@@ -29,6 +29,14 @@ object OsrsRegionImportTool {
          * their groups are overwritten in place, the loc file keeps its own XTEA key (CacheTransaction re-encrypts with it).
          */
         val replaceSquares: Set<Int> = emptySet(),
+        /**
+         * Tile flag bits cleared on import. N522 bundle 4a: OSRS sets 0x8 on whole cave floors (the Escape Caves), but in the rev-667
+         * client 0x8 means "do not draw this tile" (Static409 draws a level only where (tileFlags and 0x8) == 0) - the cave, the
+         * player and every npc in it stayed black.
+         */
+        val clearTileFlags: Int = 0,
+        /** Rewrite only the tile files of [replaceSquares] (no loc types, models, loc files or asset map entries). */
+        val tilesOnly: Boolean = false,
     )
 
     val BATCHES: Map<String, Batch> =
@@ -48,6 +56,17 @@ object OsrsRegionImportTool {
             // The 2020 exits come out at two surface "Trapdoor"s (OSRS Wiki "Trapdoor (Revenant Caves)": 3103,3655 rot 3 and 3122,3805
             // rot 1 in OSRS squares 12345 / 12347, "it only opens from the inside"); the server places them.
             "rev-caves-trapdoors" to Batch(emptyList(), listOf(31557), "Revenant Caves exit trapdoors"),
+            // N522 bundle 3c: the level 26 "Crevice" (OSRS 40386 WILD_CAVE_ENTRANCE_MID, 3067,3740 rot 3 in OSRS square 12090). Imported
+            // (tx-20261102-074444 -> loc 62996) but NOT placed: its landing is in no source - 40387 WILD_CAVE_EXIT_MID is the "Blocked
+            // opening" at both cavern arrivals (3194,10055 / 3240,10235), not a third exit.
+            "rev-caves-crevice" to Batch(emptyList(), listOf(40386), "Revenant Caves level 26 crevice"),
+            // N522 bundle 4a: Venenatis' Silk Chasm (OSRS Wiki / Near Reality SilkChasm 3404-3442 x 10183-10226 plane 2 -> square 13727) and
+            // the Escape Caves (Near Reality EscapeCavesArea 3327-3392 x 10241-10303 -> square 13472; 13728 has no OSRS map); surface locs: the lair entrance
+            // 47077 WILD_VENANATIS_ENTRANCE01 (3321,3794) and the Escape Caves entrances 47175 WILD_CAVE_EXIT01; the webs 47084-47086
+            // WBR_VENENATIS_WEB_* are spawned by the fight (RuneLite gameval ObjectID names).
+            // N522 bundle 4a: the Escape Caves tile file again, in place, without the OSRS 0x8 flag (see clearTileFlags).
+            "escape-caves-fix" to Batch(listOf(13472), emptyList(), "Escape Caves tiles without flag 0x8", replaceSquares = setOf(13472), clearTileFlags = 0x8, tilesOnly = true),
+            "silk-chasm" to Batch(listOf(13727, 13472), listOf(47077, 47175, 47084, 47085, 47086), "Silk Chasm (Venenatis) and Escape Caves"),
         )
 
     class Plan(
@@ -85,7 +104,7 @@ object OsrsRegionImportTool {
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes and names")
         batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(it) }
-        appendAssetMap(name, batch, plan, tx.id)
+        if (!batch.tilesOnly) appendAssetMap(name, batch, plan, tx.id)
     }
 
     fun buildPlan(
@@ -176,7 +195,7 @@ object OsrsRegionImportTool {
                         val src = region.tiles[plane][lx][lz]
                         val dst = tiles.tiles[plane][lx][lz]
                         dst.height = src.height
-                        dst.flags = src.settings
+                        dst.flags = src.settings and batch.clearTileFlags.inv()
                         dst.overlayShape = src.overlayPath
                         dst.overlayRotation = src.overlayRotation
                         dst.overlayId = if (src.overlayId != 0) mapOverlay(src.overlayId) else 0
@@ -207,8 +226,11 @@ object OsrsRegionImportTool {
                     println("SQUARE $square ${mapName(square)}=$mapGroup ${locName(square)}=$locGroup locs=${locs.size}")
                 }
                 dropped.distinct().forEach { println("DROPPED $it") }
+                overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString(localOverlays[l - 1]?.rgb ?: -1)} tex=${localOverlays[l - 1]?.texture}") }
                 println("PLAN $name squares=${batch.squares} types=${importedDefs.size} models=${modelIdMap.size} floors underlay=${underlayMap.size} overlay=${overlayMap.size} mutations=${mutations.size}")
-                return Plan(mutations, locIdMap, modelIdMap, dropped.distinct(), squareGroups)
+                val planned = if (batch.tilesOnly) mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ") } else mutations
+                if (batch.tilesOnly) println("TILES_ONLY ${planned.size} tile file(s): ${planned.joinToString { it.label }}")
+                return Plan(planned, locIdMap, modelIdMap, dropped.distinct(), squareGroups)
             } finally {
                 library.close()
             }

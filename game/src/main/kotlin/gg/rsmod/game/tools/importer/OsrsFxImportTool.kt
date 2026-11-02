@@ -165,6 +165,9 @@ object OsrsFxImportTool {
             // _SPECIAL_2_IMPACT 2034, _BARRAGE_IMPACT 2035, WINDSURGE_TRAVEL 1456, WINDBLAST_IMPACT 134, ICE_BARRAGE_IMPACT 369,
             // SHADOW_BURST_IMPACT 382 (Near Reality RevenantMaledictus.kt uses 2033, 1456, 134, 2034, 382, 369).
             "rev-maledictus" to listOf(2033, 2034, 2035, 1456, 134, 369, 382),
+            // N522 bundle 4a: Venenatis - RuneLite gameval SpotanimID FX_VENENATIS_RANGED_PROJECTILE 2356 / _RANGED_IMPACT 2357 /
+            // _MAGIC_PROJECTILE 2358 / _MAGIC_IMPACT 2359 / _WEB_PROJECTILE 2360 / _WEB_IMPACT 2361 (Near Reality Venenatis.java / WebObject).
+            "venenatis" to listOf(2356, 2357, 2358, 2359, 2360, 2361),
         )
 
     /**
