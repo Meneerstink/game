@@ -115,6 +115,10 @@ object OsrsNpcImportTool {
             "venenatis" to listOf(6610, 12000, 11989, 11990),
             // N522 bundle 4b: Spindel 11998 (RuneLite gameval NpcID VENENATIS_SINGLES) and her spiderling 12001 (SPINDEL_SPIDERLING).
             "spindel" to listOf(11998, 12001),
+            // N522 bundle 5 (owner 2026-11-01 20:2x: the OLD pre-2023 Callisto and Vet'ion): run with RSPS_OSRS_SOURCE_CACHE =
+            // import-source/openrs2-1151/cache (build 209) - Callisto 6609, Vet'ion 6611, Vet'ion Reborn 6612, Skeleton Hellhound 6613,
+            // Greater Skeleton Hellhound 6614 (classic models there; the 2023 rework made them skeletal).
+            "wildy-old" to listOf(6609, 6611, 6612, 6613, 6614),
         )
     }
 
@@ -173,6 +177,9 @@ object OsrsNpcImportTool {
             // venenatis: RuneLite gameval AnimationID NPC_VENENATIS_RANGED_01 9989 / _MAGIC_01 9990 / _MELEE_01 9991 / _DEATH_01 9992 /
             // _SPAWN_01 9993; spiderling SMALL_SPIDER_UPDATE_ATTACK 6249 / _DEFEND 6250 / _DEATH 6251; grizzly BEAR_REWORK_ATTACK 4925 /
             // _DEFEND 4927 / _DEATH 4929; poison spider SPIDER_UPDATE_ATTACK 5327 / _DEFEND 5328 / _DEATH 5329 (the stand sets of their defs).
+            // wildy-old: Kronos-184 data/npcs/combat Callisto 4925/4927/4929 (BEAR_REWORK_*), Vet'ion 5499/5508/5503 + earthquake 5507
+            // (SKELETON_UPDATE_GIANT_*), Skeleton Hellhound 6559/6557/6558.
+            "wildy-old" to listOf(4925, 4927, 4929, 5499, 5508, 5503, 5507, 6559, 6557, 6558),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
@@ -384,7 +391,12 @@ object OsrsNpcImportTool {
 
             val localIds = OsrsFxImportTool.existingFx(assetMap).toMutableMap()
             val npcOwned = OsrsFxImportTool.npcOwnedFx(assetMap).toMutableSet()
-            fun local(kind: String, upstream: Int, allocate: () -> Int): Int {
+            // N522 bundle 5: RSPS_OSRS_SOURCE_TAG (e.g. r1151) keys every asset of a run against another OSRS cache apart
+            // (r1151model:18886 ...), so an older revision never shares or REPLACES what was imported from the pinned cache (the 1151
+            // run would have rewritten base 1491 under the revenant hellhound and model 18886 under the grizzly bear).
+            val sourceTag = System.getenv("RSPS_OSRS_SOURCE_TAG")?.takeIf { it.isNotBlank() } ?: ""
+            fun local(kindIn: String, upstream: Int, allocate: () -> Int): Int {
+                val kind = sourceTag + kindIn
                 if ("$kind:$upstream" !in localIds) npcOwned += "$kind:$upstream"
                 // Breach audit 2026-09-27 (C5): OsrsFxImportTool converts OSRS frames onto the merged PLAYER rig. Reusing one of its
                 // framesets / bases / sequences here would re-put those frames converted for an npc skeleton over the player's
@@ -396,6 +408,7 @@ object OsrsNpcImportTool {
 
             fun put(index: Int, group: Int, file: Int, bytes: ByteArray, label: String) {
                 val current = library.data(index, group, file)?.let { CacheItemProbeTool.sha1(it) }
+                if (current != null && current != CacheItemProbeTool.sha1(bytes)) println("WOULD_REPLACE index=$index group=$group file=$file $label")
                 mutations += CacheMutation(index, group, file, bytes, label, expectedCurrentSha1 = current?.takeIf { it != CacheItemProbeTool.sha1(bytes) })
             }
 
@@ -404,7 +417,7 @@ object OsrsNpcImportTool {
                 ownMovement: Boolean = false,
             ): Int {
                 if (seqId in SHARED_MOVEMENT_SEQS && !ownMovement) return seqId
-                localIds["seq:$seqId"]?.let { return it }
+                localIds["${sourceTag}seq:$seqId"]?.let { return it }
                 val seqBytes = reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, seqId) ?: error("OSRS sequence $seqId missing")
                 val seq = OsrsFxImportTool.decodeOsrsSeq(seqBytes)
                 dropped += seq.dropped.map { "seq $seqId: $it" }

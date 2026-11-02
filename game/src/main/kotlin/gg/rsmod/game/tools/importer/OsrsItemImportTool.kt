@@ -30,7 +30,9 @@ object OsrsItemImportTool {
         return OsrsDecalLiftTool.liftAll(model)?.let { Rev667ModelEncoder.encode(it.first) } ?: converted
     }
 
-    val SOURCE_CACHE = RspsPaths.root("import-source/openrs2-2686/cache")
+    // N522 bundle 5: RSPS_OSRS_SOURCE_CACHE points one run at another OSRS cache (import-source/openrs2-1276 = build 211, the pre-2023
+    // Wilderness boss rework definitions); the pinned 2686 cache stays the default.
+    val SOURCE_CACHE = System.getenv("RSPS_OSRS_SOURCE_CACHE")?.takeIf { it.isNotBlank() } ?: RspsPaths.root("import-source/openrs2-2686/cache")
     val TARGETS = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
     val ASSET_MAP = RspsPaths.root("OSRS_IMPORT_MASTER.yml")
 

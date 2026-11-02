@@ -12989,4 +12989,10 @@ object Npcs {
     const val POISON_SPIDER_ESCAPE_CAVES = 15073 // 11990
     const val SPINDEL_OSRS = 15074 // 11998
     const val SPINDEL_SPIDERLING_OSRS = 15075 // 12001
+    // N522 bundle 5: the pre-2023 bosses from OSRS cache 1151 (OsrsNpcImportTool wildy-old, tag r1151).
+    const val CALLISTO_OLD = 15076 // 6609 (build 209)
+    const val VETION_OLD = 15077 // 6611 (build 209)
+    const val VETION_REBORN_OLD = 15078 // 6612 (build 209)
+    const val SKELETON_HELLHOUND_OLD = 15079 // 6613 (build 209)
+    const val GREATER_SKELETON_HELLHOUND_OLD = 15080 // 6614 (build 209)
 }

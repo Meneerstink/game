@@ -50,6 +50,10 @@ object CollectionLogPages {
             "crazy archaeologist" to listOf("Odium shard 2", "Malediction shard 2", "Fedora"),
             // N522: OSRS Wiki Collection log "Scorpia" (3 items).
             "scorpia" to listOf("Odium shard 3", "Malediction shard 3", "Scorpia's offspring"),
+            // N522 bundle 5: OSRS Wiki Collection log "Callisto and Artio" / "Vet'ion and Calvar'ion" (6 items each; Artio and Calvar'ion
+            // are not in this game).
+            "callisto" to listOf("Callisto cub", "Tyrannical ring", "Dragon pickaxe", "Dragon 2h sword", "Claws of Callisto", "Voidwaker hilt"),
+            "vet'ion" to listOf("Vet'ion Jr.", "Ring of the gods", "Dragon pickaxe", "Dragon 2h sword", "Skull of Vet'ion", "Voidwaker blade"),
             // N522: OSRS Wiki Collection log "Venenatis and Spindel" (6 items).
             "venenatis" to listOf("Venenatis spiderling", "Fangs of Venenatis", "Voidwaker gem", "Dragon 2h sword", "Dragon pickaxe", "Treasonous ring"),
             "corporeal beast" to listOf("Pet dark core", "Elysian sigil", "Spectral sigil", "Arcane sigil", "Holy elixir", "Jar of spirits"),

@@ -1,0 +1,306 @@
+package gg.rsmod.plugins.content.areas.wilderness.bosses
+
+import gg.rsmod.game.model.Direction
+import gg.rsmod.game.model.LockState
+import gg.rsmod.game.model.Tile
+import gg.rsmod.game.model.TileGraphic
+import gg.rsmod.game.model.attr.AttributeKey
+import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.combat.CombatScript
+import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.game.model.combat.WeaponStyle
+import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.Pawn
+import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.queue.QueueTask
+import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.cfg.Npcs
+import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.combat.*
+import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+import gg.rsmod.plugins.content.skills.agility.exactMove
+
+/**
+ * N522 bundle 5 (owner 2026-11-01 20:2x: "Callisto + Vet'ion = OUDE (pre-2023) OSRS-versie"): the classic Callisto and Vet'ion as they
+ * were before the February 2023 Wilderness boss rework - definitions from OpenRS2 cache 1151 (OSRS build 209, 2022-11-16; the rework
+ * made them skeletal, which this client cannot show), imported with RSPS_OSRS_SOURCE_TAG=r1151 so nothing of the pinned cache changed.
+ *
+ * Mechanics: Kronos-184 (a pre-2023 OSRS server; activities/wilderness/bosses/Callisto.java, Vetion.java, data/npcs/combat) - Callisto
+ * claws (80% next to him), else the shockwave (80%, up to 60, "Callisto's fury sends an almighty shockwave through you.") or the roar
+ * (up to 4 tiles back, 3 damage, a 2-tick stun, "Callisto's roar throws you backwards."), and 1 in 12 a small heal (4-10, graphic 157);
+ * Vet'ion melee (85% next to him), the earthquake (20%, 10-tick cooldown, up to 45 to everyone within 12 tiles, "Vet'ion pummels the ground
+ * sending a shattering earthquake shockwave through you.") or three lightning blasts (the target's tile + two within 2, up to 30 three
+ * ticks later); below half hitpoints two hellhounds ("Kill, my pets!" / "Bahh! Go, dogs!!", "GRRRRRRRRRRRRRRRRRRR") during which he takes
+ * no damage; killed, he rises as Vet'ion Reborn at once ("Now do it again!!") and only that kill counts.
+ */
+object OldWildernessBosses {
+    const val CALLISTO = Npcs.CALLISTO_OLD
+    const val VETION = Npcs.VETION_OLD
+    const val VETION_REBORN = Npcs.VETION_REBORN_OLD
+    const val HELLHOUND = Npcs.SKELETON_HELLHOUND_OLD
+    const val GREATER_HELLHOUND = Npcs.GREATER_SKELETON_HELLHOUND_OLD
+
+    // Callisto: BEAR_REWORK_ATTACK / _DEFEND / _DEATH (r1151 copies)
+    const val CALLISTO_ATTACK = 16206
+    const val CALLISTO_DEFEND = 16207
+    const val CALLISTO_DEATH = 16208
+    const val GFX_SHOCKWAVE = 3216 // OSRS 395
+    const val GFX_ROAR = 3217 // OSRS 245
+    const val GFX_HEAL = 3127 // OSRS 157
+    const val CALLISTO_MAX = 60
+    const val ROAR_DAMAGE = 3
+
+    // Vet'ion: SKELETON_UPDATE_GIANT_ATTACK / VARY3_DEFEND / GIANT_DEATH / VARY3_ATTACK (the earthquake)
+    const val VETION_ATTACK = 16209
+    const val VETION_DEFEND = 16210
+    const val VETION_DEATH = 16211
+    const val VETION_EARTHQUAKE = 16212
+    const val GFX_LIGHTNING = 3218 // OSRS 280
+    const val GFX_LIGHTNING_HIT = 3219 // OSRS 281
+    const val VETION_MAX = 45
+    const val REBORN_MAX = 46
+    const val EARTHQUAKE_MAX = 45
+    const val LIGHTNING_MAX = 30
+    const val EARTHQUAKE_RANGE = 12
+    const val EARTHQUAKE_COOLDOWN = 10
+
+    // Skeleton hellhounds: Kronos 6559 / 6557 / 6558
+    const val HOUND_ATTACK = 16213
+    const val HOUND_DEFEND = 16214
+    const val HOUND_DEATH = 16215
+
+    /** Kronos-184 data/npcs/spawns/wilderness.json. */
+    val CALLISTO_SPAWN = Tile(3291, 3847)
+    val VETION_SPAWN = Tile(3224, 3790)
+    const val VETION_RESPAWN_TICKS = 50
+
+    val DOGS = AttributeKey<MutableList<Npc>>()
+    val DOGS_CALLED = AttributeKey<Boolean>()
+    val EARTHQUAKE_READY_CYCLE = AttributeKey<Int>()
+
+    fun isVetion(id: Int): Boolean = id == VETION || id == VETION_REBORN
+
+    fun dogs(npc: Npc): MutableList<Npc> = npc.attr[DOGS] ?: mutableListOf<Npc>().also { npc.attr[DOGS] = it }
+
+    fun dogsAlive(npc: Npc): Boolean = dogs(npc).any { it.isSpawned() && !it.isDead() }
+
+    /** Vet'ion takes no damage while his hellhounds live (Kronos Vetion.block); called from the shared hit path. */
+    fun modifyIncomingDamage(target: Npc, damage: Int): Int = if (isVetion(target.id) && dogsAlive(target)) 0 else damage
+
+    fun removeDogs(npc: Npc) {
+        dogs(npc).forEach { if (it.isSpawned()) npc.world.remove(it) }
+        dogs(npc).clear()
+    }
+
+    /** Melee reach of a large npc: next to its footprint, not diagonal past a corner. */
+    fun adjacent(npc: Npc, t: Tile): Boolean {
+        val size = npc.getSize()
+        val dx = if (t.x < npc.tile.x) npc.tile.x - t.x else if (t.x >= npc.tile.x + size) t.x - (npc.tile.x + size - 1) else 0
+        val dz = if (t.z < npc.tile.z) npc.tile.z - t.z else if (t.z >= npc.tile.z + size) t.z - (npc.tile.z + size - 1) else 0
+        return dx + dz == 1
+    }
+
+    /** One step of the roar's push: away from Callisto along the axis the player stands on (Kronos getClosestX / Y). */
+    fun pushVector(npc: Npc, t: Tile): Pair<Int, Int> {
+        val size = npc.getSize()
+        val cx = t.x.coerceIn(npc.tile.x, npc.tile.x + size - 1)
+        val cz = t.z.coerceIn(npc.tile.z, npc.tile.z + size - 1)
+        return Integer.signum(t.x - cx) to Integer.signum(t.z - cz)
+    }
+
+    /** The donor rolls: Callisto claws next to him 80%, else shockwave 80% / roar; a heal 1 in 12. */
+    fun callistoAttack(adjacent: Boolean, roll100: Int, roll100b: Int): String =
+        when {
+            adjacent && roll100 < 80 -> "claws"
+            roll100b < 80 -> "shockwave"
+            else -> "roar"
+        }
+
+    object CallistoCombat : CombatScript() {
+        override val ids = intArrayOf(CALLISTO)
+
+        override suspend fun handleSpecialCombat(it: QueueTask) {
+            val npc = it.npc
+            var target = npc.getCombatTarget() ?: return
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
+                npc.facePawn(target)
+                if (npc.moveToAttackRange(it, target, distance = 8, projectile = true)) {
+                    val p = target as? Player
+                    when (callistoAttack(adjacent(npc, target.tile), npc.world.random(99), npc.world.random(99))) {
+                        "claws" -> claws(npc, target)
+                        "shockwave" -> shockwave(npc, target)
+                        else -> if (p != null) roar(npc, p) else claws(npc, target)
+                    }
+                    if (npc.world.random(11) == 0) {
+                        npc.graphic(GFX_HEAL)
+                        npc.setCurrentLifepoints((npc.getCurrentLifepoints() + npc.world.random(4..10)).coerceAtMost(npc.getMaximumLifepoints()))
+                    }
+                }
+                npc.postAttackLogic(target)
+                it.wait(npc.combatDef.attackSpeed)
+                target = npc.getCombatTarget() ?: break
+            }
+            npc.resetFacePawn()
+            npc.removeCombatTarget()
+        }
+
+        private fun claws(npc: Npc, target: Pawn) {
+            npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.ACCURATE)
+            npc.animate(CALLISTO_ATTACK)
+            val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+            npc.dealHit(target = target, maxHit = CALLISTO_MAX.toDouble(), landHit = land, delay = 1, hitType = HitType.MELEE)
+        }
+
+        /** Donor projectile (395, 43, 31, 51, 36, 10, 15, 127); the hit ignores defence (always rolls). */
+        private fun shockwave(npc: Npc, target: Pawn) {
+            npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
+            npc.animate(CALLISTO_ATTACK)
+            npc.world.spawn(npc.createProjectile(target, GFX_SHOCKWAVE, startHeight = 43, endHeight = 31, delay = 51, angle = 15))
+            val delay = gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile())
+            npc.dealHit(target = target, maxHit = CALLISTO_MAX.toDouble(), landHit = true, delay = delay, hitType = HitType.MAGIC)
+            (target as? Player)?.message("Callisto's fury sends an almighty shockwave through you.")
+        }
+
+        /** Up to 4 tiles back while each step is free, 3 damage, a 2-tick stun (donor). */
+        private fun roar(npc: Npc, p: Player) {
+            npc.animate(CALLISTO_ATTACK)
+            val (vx, vz) = pushVector(npc, p.tile)
+            var end = Tile(p.tile)
+            if (vx != 0 || vz != 0) {
+                repeat(4) {
+                    val next = Tile(end.x + vx, end.z + vz, end.height)
+                    if (end.sameAs(next) || npc.world.collision.isBlocked(end, Direction.between(end, next), projectile = false)) return@repeat
+                    end = next
+                }
+            }
+            p.graphic(GFX_ROAR, height = 124, delay = 5)
+            npc.dealHit(target = p, minHit = ROAR_DAMAGE.toDouble(), maxHit = ROAR_DAMAGE.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT)
+            p.stun(2) {}
+            p.message("Callisto's roar throws you backwards.")
+            if (!end.sameAs(p.tile)) {
+                val dest = end
+                p.lockingQueue(lockState = LockState.FULL) { exactMove(p, dest, delay = 60, direction = Direction.between(dest, npc.tile)) }
+            }
+        }
+    }
+
+    object VetionCombat : CombatScript() {
+        override val ids = intArrayOf(VETION, VETION_REBORN)
+
+        override suspend fun handleSpecialCombat(it: QueueTask) {
+            val npc = it.npc
+            var target = npc.getCombatTarget() ?: return
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
+                npc.facePawn(target)
+                callDogs(npc, target)
+                if (npc.moveToAttackRange(it, target, distance = 10, projectile = true)) {
+                    val world = npc.world
+                    val quakeReady = world.currentCycle >= (npc.attr[EARTHQUAKE_READY_CYCLE] ?: 0)
+                    when {
+                        adjacent(npc, target.tile) && world.random(99) < 85 -> melee(npc, target)
+                        quakeReady && world.random(99) < 20 -> earthquake(npc)
+                        else -> lightning(npc, target)
+                    }
+                }
+                npc.postAttackLogic(target)
+                it.wait(npc.combatDef.attackSpeed)
+                target = npc.getCombatTarget() ?: break
+            }
+            npc.resetFacePawn()
+            npc.removeCombatTarget()
+        }
+
+        /** Below half hitpoints, once a phase: two hellhounds (greater for Reborn) next to him, on his target. */
+        fun callDogs(npc: Npc, target: Pawn) {
+            if (npc.attr[DOGS_CALLED] == true || npc.getCurrentLifepoints() >= npc.getMaximumLifepoints() / 2) return
+            npc.attr[DOGS_CALLED] = true
+            npc.forceChat(if (npc.id == VETION) "Kill, my pets!" else "Bahh! Go, dogs!!")
+            val hound = if (npc.id == VETION) HELLHOUND else GREATER_HELLHOUND
+            repeat(2) { i ->
+                val dog = Npc(hound, Tile(npc.tile.x + 1 + npc.world.random(-1..1), npc.tile.z + 1 + npc.world.random(-1..1), npc.tile.height), npc.world)
+                dog.respawns = false
+                if (npc.world.spawn(dog)) {
+                    dogs(npc) += dog
+                    dog.facePawn(target)
+                    dog.attack(target)
+                    if (i == 0) dog.forceChat("GRRRRRRRRRRRRRRRRRRR")
+                }
+            }
+        }
+
+        private fun melee(npc: Npc, target: Pawn) {
+            val reborn = npc.id == VETION_REBORN
+            npc.prepareAttack(CombatClass.MELEE, if (reborn) StyleType.CRUSH else StyleType.STAB, WeaponStyle.ACCURATE)
+            npc.animate(VETION_ATTACK)
+            val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+            npc.dealHit(target = target, maxHit = (if (reborn) REBORN_MAX else VETION_MAX).toDouble(), landHit = land, delay = 1, hitType = HitType.MELEE)
+        }
+
+        private fun earthquake(npc: Npc) {
+            npc.attr[EARTHQUAKE_READY_CYCLE] = npc.world.currentCycle + EARTHQUAKE_COOLDOWN
+            npc.animate(VETION_EARTHQUAKE)
+            val source = Tile(npc.tile.x + 1, npc.tile.z + 1, npc.tile.height)
+            npc.world.players.forEach { p ->
+                if (p.isOnline && !p.isDead() && p.tile.height == source.height && p.tile.isWithinRadius(source, EARTHQUAKE_RANGE)) {
+                    npc.dealHit(target = p, maxHit = EARTHQUAKE_MAX.toDouble(), landHit = true, delay = 1, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)
+                    p.message("Vet'ion pummels the ground sending a shattering earthquake shockwave through you.")
+                }
+            }
+        }
+
+        /** The target's tile and two more within 2 (not under him); whoever stands on one 3 ticks later takes up to 30 (donor). */
+        private fun lightning(npc: Npc, target: Pawn) {
+            npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
+            npc.animate(VETION_ATTACK)
+            val world = npc.world
+            val centre = Tile(target.tile)
+            val options = mutableListOf<Tile>()
+            for (dx in -2..2) for (dz in -2..2) {
+                if (dx == 0 && dz == 0) continue
+                val t = Tile(centre.x + dx, centre.z + dz, centre.height)
+                if (t.x in npc.tile.x until npc.tile.x + npc.getSize() && t.z in npc.tile.z until npc.tile.z + npc.getSize()) continue
+                options += t
+            }
+            options.shuffle()
+            val tiles = listOf(centre) + options.take(2)
+            tiles.forEach { t ->
+                // Donor projectile (280, 40, 2, 41, 150, 0, 40, 11) from his centre.
+                world.spawn(npc.createProjectile(t, GFX_LIGHTNING, startHeight = 40, endHeight = 2, delay = 41, angle = 40, lifespan = 41 + 60))
+            }
+            world.queue {
+                wait(3)
+                tiles.forEach { t -> world.spawn(TileGraphic(t, GFX_LIGHTNING_HIT, 0)) }
+                if (npc.isDead() || !npc.isSpawned()) return@queue
+                world.players.forEach { p ->
+                    if (p.isOnline && !p.isDead() && tiles.any { it.sameAs(p.tile) }) {
+                        npc.dealHit(target = p, maxHit = LIGHTNING_MAX.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT)
+                    }
+                }
+            }
+        }
+    }
+
+    /** The skeleton hellhounds: crush melee, max 26 / greater 32 (Kronos-184 data/npcs/combat). */
+    object HoundCombat : CombatScript() {
+        override val ids = intArrayOf(HELLHOUND, GREATER_HELLHOUND)
+
+        override suspend fun handleSpecialCombat(it: QueueTask) {
+            val npc = it.npc
+            var target = npc.getCombatTarget() ?: return
+            while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
+                npc.facePawn(target)
+                if (npc.moveToAttackRange(it, target, distance = 1, projectile = false)) {
+                    npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.ACCURATE)
+                    npc.animate(HOUND_ATTACK)
+                    val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
+                    npc.dealHit(target = target, maxHit = (if (npc.id == HELLHOUND) 26 else 32).toDouble(), landHit = land, delay = 1, hitType = HitType.MELEE)
+                }
+                npc.postAttackLogic(target)
+                it.wait(npc.combatDef.attackSpeed)
+                target = npc.getCombatTarget() ?: break
+            }
+            npc.resetFacePawn()
+            npc.removeCombatTarget()
+        }
+    }
+}

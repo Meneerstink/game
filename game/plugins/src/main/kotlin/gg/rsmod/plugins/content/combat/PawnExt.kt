@@ -272,6 +272,10 @@ fun Pawn.dealHit(
     if (target is Npc && damage > 0) {
         damage = gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.modifyIncomingDamage(target, hitType, damage.toInt()).toDouble()
     }
+    // N522 bundle 5: the old Vet'ion takes no damage while his skeleton hellhounds live (Kronos-184 Vetion.block).
+    if (target is Npc && damage > 0) {
+        damage = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.modifyIncomingDamage(target, damage.toInt()).toDouble()
+    }
     // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
     // Reading getCombatClass again on impact can use a different style after a weapon switch.
     val curseHitStyle = when (hitType) {

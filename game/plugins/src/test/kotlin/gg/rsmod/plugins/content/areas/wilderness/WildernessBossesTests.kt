@@ -385,4 +385,37 @@ class WildernessBossesTests {
         assertEquals(1.0 / 2800, Pets.dropChance(Npcs.SPINDEL_OSRS), 1e-12)
         assertEquals(1.0 / 1500, Pets.dropChance(Npcs.VENENATIS_OSRS), 1e-12)
     }
+
+    @Test
+    fun `N522 bundle 5 - the classic Callisto, Vet'ion, Vet'ion Reborn and hellhounds decode, with their donor attack rolls and pets`() {
+        val definitions = DefinitionSet()
+        definitions.load(library, NpcDef::class.java)
+        val o = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses
+        mapOf(
+            o.CALLISTO to ("Callisto" to 5),
+            o.VETION to ("Vet'ion" to 3),
+            o.VETION_REBORN to ("Vet'ion Reborn" to 3),
+            o.HELLHOUND to ("Skeleton Hellhound" to 2),
+            o.GREATER_HELLHOUND to ("Greater Skeleton Hellhound" to 2),
+        ).forEach { (id, v) ->
+            val def = definitions.get(NpcDef::class.java, id)
+            assertEquals(v.first, def.name, "$id")
+            assertEquals(v.second, def.size, "$id size")
+            assertTrue(def.basId >= 0, "$id has a BAS")
+        }
+        // Kronos: claws 80% next to him, else shockwave 80% / roar.
+        assertEquals("claws", o.callistoAttack(true, 79, 99))
+        assertEquals("shockwave", o.callistoAttack(true, 80, 79))
+        assertEquals("roar", o.callistoAttack(false, 0, 80))
+        assertEquals("shockwave", o.callistoAttack(false, 0, 0))
+        assertTrue(o.CALLISTO_SPAWN.getWildernessLevel() > 0 && o.VETION_SPAWN.getWildernessLevel() > 0)
+        val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()
+        Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
+        assertEquals("Callisto cub", Pets.dropFor(o.CALLISTO)?.pet)
+        assertEquals("Vet'ion Jr.", Pets.dropFor(o.VETION)?.pet)
+        assertEquals(1.0 / 1500, Pets.dropChance(o.CALLISTO), 1e-12)
+        assertEquals(1.0 / 1500, Pets.dropChance(o.VETION), 1e-12)
+        assertEquals(listOf("Callisto cub", "Tyrannical ring", "Dragon pickaxe", "Dragon 2h sword", "Claws of Callisto", "Voidwaker hilt"), CollectionLogPages.OSRS["callisto"])
+        assertEquals(listOf("Vet'ion Jr.", "Ring of the gods", "Dragon pickaxe", "Dragon 2h sword", "Skull of Vet'ion", "Voidwaker blade"), CollectionLogPages.OSRS["vet'ion"])
+    }
 }
