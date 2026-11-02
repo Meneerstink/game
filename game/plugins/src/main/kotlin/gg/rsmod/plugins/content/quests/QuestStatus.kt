@@ -67,6 +67,8 @@ object QuestStatus {
     fun login(player: Player) {
         if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
         sync(player)
+        // N501: a finished Desert Treasure II without the Ring of shadows anywhere gets it once.
+        gg.rsmod.plugins.content.quests.foundation.RingOfShadowsReclaim.onLogin(player)
     }
 
     /**

@@ -59,6 +59,7 @@ class DesertTreasureIIRouteTests {
             every { world.definitions } returns definitions
             every { player.inventory } returns inventory
             every { player.bank } returns bank
+            every { player.containers } returns hashMapOf(INVENTORY_KEY to inventory, BANK_KEY to bank)
             every { player.equipment } returns ItemContainer(definitions, EQUIPMENT_KEY)
             every { player.tile } returns Tile(3164, 3491)
             every { player.interfaces.optionsOpen } answers { optionsOpen }
@@ -169,6 +170,27 @@ class DesertTreasureIIRouteTests {
         assertTrue(FoundationRewards.isRewarded(account.player, DesertTreasureII))
         assertEquals(0, account.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED))
         assertFalse(FoundationRewards.complete(account.player, DesertTreasureII))
+    }
+
+    @Test
+    fun `N501 a legacy account gets the Ring of shadows once at login, an account that has one gets none`() {
+        val account = Account(new = false)
+        QuestChoices.applyLegacy(account.player)
+        RingOfShadowsReclaim.onLogin(account.player)
+        assertEquals(1, account.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED))
+        account.inventory.remove(Items.RING_OF_SHADOWS_UNCHARGED, 1)
+        RingOfShadowsReclaim.onLogin(account.player)
+        assertEquals(0, account.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED), "only once - a lost ring is bought back")
+
+        val owner = Account(new = false)
+        QuestChoices.applyLegacy(owner.player)
+        owner.bank.add(gg.rsmod.game.model.item.Item(Items.RING_OF_SHADOWS))
+        RingOfShadowsReclaim.onLogin(owner.player)
+        assertEquals(0, owner.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED))
+
+        val fresh = Account()
+        RingOfShadowsReclaim.onLogin(fresh.player)
+        assertEquals(0, fresh.inventory.getItemCount(Items.RING_OF_SHADOWS_UNCHARGED), "no quest, no ring")
     }
 
     companion object {

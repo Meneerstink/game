@@ -1630,6 +1630,10 @@ object FoundationQuests {
                 actions += Action("${quest.name}.") { runReminder(this, quest, stage) }
             }
         }
+        // N501: the Archaeologist sells a lost Ring of shadows again (OSRS: the Mysterious Bandit, 75,000 coins).
+        if (npc == Npcs.ARCHAEOLOGIST && DesertTreasureII.isFinished(player)) {
+            actions += Action("I've lost my Ring of shadows.") { RingOfShadowsReclaim.offer(this) }
+        }
         if (actions.isEmpty()) return false
         if (actions.size == 1 && direct) {
             actions.single().run(task)
