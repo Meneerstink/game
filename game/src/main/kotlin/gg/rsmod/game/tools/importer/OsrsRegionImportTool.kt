@@ -37,6 +37,8 @@ object OsrsRegionImportTool {
         val clearTileFlags: Int = 0,
         /** Rewrite only the tile files of [replaceSquares] (no loc types, models, loc files or asset map entries). */
         val tilesOnly: Boolean = false,
+        /** Keep only plane 0 of the tile file (planes 1-3 left empty) - an Escape Caves rendering experiment. */
+        val plane0Only: Boolean = false,
     )
 
     val BATCHES: Map<String, Batch> =
@@ -66,6 +68,7 @@ object OsrsRegionImportTool {
             // WBR_VENENATIS_WEB_* are spawned by the fight (RuneLite gameval ObjectID names).
             // N522 bundle 4a: the Escape Caves tile file again, in place, without the OSRS 0x8 flag (see clearTileFlags).
             "escape-caves-fix" to Batch(listOf(13472), emptyList(), "Escape Caves tiles without flag 0x8", replaceSquares = setOf(13472), clearTileFlags = 0x8, tilesOnly = true),
+            "escape-caves-plane0" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true),
             // N522 bundle 4b: Spindel's Web Chasm (Near Reality WebChasm 1610-1651 x 11524-11571 plane 2 -> square 6580) and its surface
             // entrance 47078 WILD_VENENATIS_SINGLES_ENTRANCE01 (Near Reality 3183,3744).
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
@@ -195,6 +198,7 @@ object OsrsRegionImportTool {
                 regions.forEach { (square, region) ->
                     val tiles = Rev667TileMap()
                     for (plane in 0 until 4) for (lx in 0 until 64) for (lz in 0 until 64) {
+                        if (batch.plane0Only && plane > 0) continue
                         val src = region.tiles[plane][lx][lz]
                         val dst = tiles.tiles[plane][lx][lz]
                         dst.height = src.height
