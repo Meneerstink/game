@@ -80,6 +80,8 @@ set_combat_def(npc = VenenatisCombat.NPC) {
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 10
+        poisonImmune = true
+        venomImmune = true
     }
     aggro {
         radius = VenenatisCombat.REACH
@@ -235,9 +237,9 @@ val venenatisDrops =
             nothing(399)
         }
         table("curved_bone") {
-            total(10025) // 1/5,012.5
-            obj(Items.CURVED_BONE, slots = 2)
-            nothing(10023)
+            total(5000) // Wiki Long bone: only rolled if the 1/400 long-bone roll failed.
+            obj(Items.CURVED_BONE, slots = 1)
+            nothing(4999)
         }
     }
 
@@ -246,7 +248,8 @@ DropTableFactory.register(venenatisDrops, VenenatisCombat.NPC)
 on_npc_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) {
     VenenatisCombat.onDeath(npc)
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
-    DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
+    if (npc.id == VenenatisCombat.NPC) WildernessBossLoot.drop(npc)
+    else DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
     WildernessLairs.onTopDamageKill(killer)
 }
 
@@ -257,6 +260,8 @@ set_combat_def(npc = VenenatisCombat.SPINDEL) {
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 9
+        poisonImmune = true
+        venomImmune = true
     }
     aggro {
         radius = VenenatisCombat.REACH

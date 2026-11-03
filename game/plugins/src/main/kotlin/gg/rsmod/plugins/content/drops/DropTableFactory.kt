@@ -67,6 +67,22 @@ object DropTableFactory {
         type: DropTableType = DropTableType.KILL,
     ): Boolean = tables[type]!!.containsKey(id)
 
+    /** Wiki Drop table: wilderness uniques are pre-rolled; a successful roll replaces the main loot, not tertiaries. */
+    fun mainReplacementTable(npcId: Int, tables: List<DropTable>): DropTable? =
+        tables.firstOrNull { it.name == "pre_roll" } ?: tables.firstOrNull {
+            it.name == "unique" && npcId in intArrayOf(
+                gg.rsmod.plugins.api.cfg.Npcs.CALLISTO_OLD, gg.rsmod.plugins.api.cfg.Npcs.VETION_OLD,
+                gg.rsmod.plugins.api.cfg.Npcs.VENENATIS_OSRS, gg.rsmod.plugins.api.cfg.Npcs.SPINDEL_OSRS,
+            )
+        }
+
+    fun mainTableWeight(npcId: Int, tables: List<DropTable>, rate: Double): Double =
+        mainReplacementTable(npcId, tables)?.let { 1.0 - lineChances(it, rate).sum() } ?: 1.0
+
+    /** One shared pre-roll for a group boss; personal rolls must not roll this table again. */
+    fun rollMainReplacement(player: Player, npcId: Int, rate: Double): List<Item> =
+        tables(player, npcId)?.let { mainReplacementTable(npcId, it) }?.let { DropEntry.TableDrop(it).getDrop(rate) }.orEmpty()
+
     /**
      * Gets a drop for a player killing an NPC.
      */
@@ -89,34 +105,47 @@ object DropTableFactory {
             items.filter { runCatching { world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it.id) }.getOrNull() == null }.forEach {
                 gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.ITEM) { "drop table $npcId gave item ${it.id} which does not exist in the cache" }
             }
-            // Friends chat LootShare: a shared kill hands each item to one of the sharers (LootShare).
-            val sharers = if (type == DropTableType.KILL) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
-            // RuneLite Loot Tracker: what each owner really received from this kill, one event per owner.
-            val received = LinkedHashMap<Player, MutableList<Item>>()
-            items.forEach { item ->
-                if (sharers == null) {
-                    createDrop(world, item, tile, player)
-                    received.getOrPut(player) { mutableListOf() } += item
-                } else {
-                    gg.rsmod.plugins.content.inter.friends.LootShare.share(world, player, sharers, item, tile) { shared, owner ->
-                        createDrop(world, shared, tile, owner)
-                        received.getOrPut(owner) { mutableListOf() } += shared
-                    }
-                }
-            }
-            if (type == DropTableType.KILL) {
-                if (received.isEmpty()) received[player] = mutableListOf()
-                received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
-                // N104: the Collection Log, with the kill count of the Drop Viewer entry this npc belongs to.
-                received.forEach { (owner, loot) ->
-                    runCatching {
-                        val source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(owner, npcId)?.key
-                        gg.rsmod.plugins.content.quests.tab.CollectionLog.record(owner, source, loot.map { it.id to it.amount })
-                    }.onFailure { gg.rsmod.game.model.Trace.crash("collection log", it) }
-                }
-            }
+            giveDrop(world, player, npcId, tile, items, type)
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)
+        }
+    }
+
+    /** Hand out an already rolled reward, retaining ground ownership, Loot Tracker and Collection Log. */
+    fun giveDrop(
+        world: World,
+        player: Player,
+        npcId: Int,
+        tile: Tile,
+        items: List<Item>,
+        type: DropTableType = DropTableType.KILL,
+        allowLootShare: Boolean = true,
+    ) {
+        // Boss contribution rewards already have an owner; do not distribute them a second time.
+        val sharers = if (type == DropTableType.KILL && allowLootShare) gg.rsmod.plugins.content.inter.friends.LootShare.sharers(player, tile) else null
+        // RuneLite Loot Tracker: what each owner really received from this kill, one event per owner.
+        val received = LinkedHashMap<Player, MutableList<Item>>()
+        items.forEach { item ->
+            if (sharers == null) {
+                createDrop(world, item, tile, player)
+                received.getOrPut(player) { mutableListOf() } += item
+            } else {
+                gg.rsmod.plugins.content.inter.friends.LootShare.share(world, player, sharers, item, tile) { shared, owner ->
+                    createDrop(world, shared, tile, owner)
+                    received.getOrPut(owner) { mutableListOf() } += shared
+                }
+            }
+        }
+        if (type == DropTableType.KILL) {
+            if (received.isEmpty()) received[player] = mutableListOf()
+            received.forEach { (owner, loot) -> gg.rsmod.plugins.content.mechanics.hud.LootTracker.npcKill(owner, npcId, loot) }
+            // N104: the Collection Log, with the kill count of the Drop Viewer entry this npc belongs to.
+            received.forEach { (owner, loot) ->
+                runCatching {
+                    val source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(owner, npcId)?.key
+                    gg.rsmod.plugins.content.quests.tab.CollectionLog.record(owner, source, loot.map { it.id to it.amount })
+                }.onFailure { gg.rsmod.game.model.Trace.crash("collection log", it) }
+            }
         }
     }
 
@@ -178,6 +207,7 @@ object DropTableFactory {
         tableId: Int,
         type: DropTableType = DropTableType.KILL,
         rate: Double = 1.0,
+        replacementLoot: List<Item>? = null,
     ): MutableList<Item>? {
         val items = mutableListOf<Item>()
 
@@ -195,8 +225,19 @@ object DropTableFactory {
                 items.addAll(guaranteedItems(guaranteed))
             }
 
-            val remainingTables = remaining.map { DropEntry.TableDrop(it) }
-            items.addAll(remainingTables.flatMap { it.getDrop(rate) })
+            val replacement = mainReplacementTable(tableId, remaining)
+            val unique = replacementLoot ?: replacement?.let { DropEntry.TableDrop(it).getDrop(rate) }.orEmpty()
+            items.addAll(unique)
+            // The builder stores tables in a HashMap: explicitly order this dependent pair.
+            val longBone = remaining.firstOrNull { it.name == "long_bone" }
+            if (longBone != null) items.addAll(DropEntry.TableDrop(longBone).getDrop(rate))
+            val remainingTables = remaining.filter { it !== replacement && it !== longBone && (it.name != "main" || unique.isEmpty()) }.map { DropEntry.TableDrop(it) }
+            remainingTables.forEach { entry ->
+                // Mod Ash / Wiki Long bone: the 1/5000 curved roll only happens after the long-bone roll fails.
+                if (entry.table.name != "curved_bone" || items.none { it.id == gg.rsmod.plugins.api.cfg.Items.LONG_BONE }) {
+                    items.addAll(entry.getDrop(rate))
+                }
+            }
             return items
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)

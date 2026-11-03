@@ -482,7 +482,7 @@ class DropViewerTests {
     }
 
     companion object {
-        private val CACHE_PATH = Paths.get("..", "..", "data", "cache").toFile().toString()
+        private val CACHE_PATH = System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString()
         private val DEFINITIONS = DefinitionSet()
 
         @BeforeClass

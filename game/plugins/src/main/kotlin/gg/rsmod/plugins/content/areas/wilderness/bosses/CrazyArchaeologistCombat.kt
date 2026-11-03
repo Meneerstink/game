@@ -80,7 +80,7 @@ object CrazyArchaeologistCombat : CombatScript() {
         while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = ATTACK_RANGE, projectile = true)) {
-                val adjacent = isAdjacent(npc.tile, target.tile)
+                val adjacent = canKick(npc, target.tile)
                 when (choose(adjacent, npc.world.random(7), npc.world.random(1))) {
                     Attack.SPECIAL -> special(npc, target)
                     Attack.MELEE -> {
@@ -100,6 +100,9 @@ object CrazyArchaeologistCombat : CombatScript() {
         npc.resetFacePawn()
         npc.removeCombatTarget()
     }
+
+    fun canKick(npc: Npc, tile: Tile): Boolean = gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+        npc.world.collision, npc.tile, npc.getSize(), npc.getSize(), tile, 1, 1)
 
     private fun ranged(npc: Npc, target: Pawn) {
         npc.prepareAttack(CombatClass.RANGED, StyleType.RANGED, WeaponStyle.ACCURATE)
@@ -139,6 +142,7 @@ object CrazyArchaeologistCombat : CombatScript() {
         npc.forceChat(SHOUT_SPECIAL)
         npc.animate(ANIM_THROW)
         val world = npc.world
+        val life = WildernessBossLife.token(npc)
         val all = landingTiles(npc, target) { it.shuffled() }
         val first = all.take(3)
         val split = all.drop(3)
@@ -147,7 +151,7 @@ object CrazyArchaeologistCombat : CombatScript() {
         }
         world.queue {
             wait(SPECIAL_TICKS)
-            if (!explode(npc, first)) return@queue
+            if (!WildernessBossLife.active(npc, life) || !explode(npc, first)) return@queue
             // The book on the target's tile splits into two more (Kronos SECONDARY_MAGIC_PROJECTILE from the first landing tile).
             split.forEach { tile ->
                 world.spawn(
@@ -161,7 +165,7 @@ object CrazyArchaeologistCombat : CombatScript() {
                 )
             }
             wait(SPECIAL_TICKS)
-            explode(npc, split)
+            if (WildernessBossLife.active(npc, life)) explode(npc, split)
         }
     }
 
@@ -174,7 +178,7 @@ object CrazyArchaeologistCombat : CombatScript() {
         world.players.forEach { p -> if (p.isOnline && !p.isDead() && tiles.any { inBlast(it, p.tile) }) victims += p }
         victims.forEach { p ->
             p.playSound(Sfx.EXPLOSION)
-            npc.dealHit(target = p, maxHit = MAX_SPECIAL.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT)
+            npc.dealHit(target = p, maxHit = MAX_SPECIAL.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)
         }
         return true
     }

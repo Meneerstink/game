@@ -5,6 +5,7 @@ import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.content.drops.DropEntry
 import gg.rsmod.plugins.content.drops.DropTable
 import gg.rsmod.plugins.content.drops.DropTableFactory
@@ -86,7 +87,7 @@ object DropSources {
             "king black dragon", "kalphite queen", "chaos elemental", "corporeal beast", "dagannoth rex", "dagannoth prime",
             "dagannoth supreme", "tormented demon", "glacor", "wildywyrm", "bork", "nex", "general graardor", "kree'arra",
             "commander zilyana", "k'ril tsutsaroth", "giant mole", "chaos fanatic", "crazy archaeologist", "scorpia", "venenatis", "spindel",
-            "vet'ion", "callisto", "kalphite king", "queen black dragon", "tztok-jad", "jad",
+            "vet'ion", "callisto", "kalphite king", "queen black dragon", "tztok-jad", "jad", "revenant maledictus",
         )
 
     @Volatile private var built: List<Source>? = null
@@ -152,6 +153,11 @@ object DropSources {
             if (out.none { s -> s.npcs.contains(Jad.ID) }) out += Source("jad", "TzTok-Jad", Jad.ID, intArrayOf(Jad.ID), it.combatLevel, Group.BOSSES, Kind.JAD)
         }
         out += Source("barrows", "Barrows chest", Barrows.Brother.values().first().npc, intArrayOf(), 0, Group.BOSSES, Kind.BARROWS)
+        // Maledictus awards two dragon rolls but is a separate kill, model and source.
+        val maledictus = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC
+        if (DropTableFactory.hasTable(Npcs.REVENANT_DRAGON_OSRS) && npcName(world, maledictus).isNotBlank()) {
+            out += Source("npc:$maledictus", npcName(world, maledictus), maledictus, intArrayOf(maledictus), npcLevel(world, maledictus), Group.BOSSES, Kind.NPC, Npcs.REVENANT_DRAGON_OSRS)
+        }
         out += Source("chest", "Deadman's Chest", -1, intArrayOf(), 0, Group.DEADMAN, Kind.CHEST)
         if (guardian > 0) out += Source("guardian", npcName(world, guardian).ifBlank { "Zemouregal" }, guardian, intArrayOf(guardian), npcLevel(world, guardian), Group.DEADMAN, Kind.GUARDIAN)
         BreachMonsters.ROSTER.filter { !it.summon }.forEach { m ->
@@ -211,7 +217,7 @@ object DropSources {
     private fun buildView(player: Player, source: Source, rate: Double): View {
         val world = player.world
         return when (source.kind) {
-            Kind.NPC -> npcView(player, source, rate)
+            Kind.NPC -> if (source.modelNpc == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC) maledictusView(player, source, rate) else npcView(player, source, rate)
             Kind.BREACH -> breachView(world, rate, source.modelNpc)
             Kind.CHEST -> chestView(world, 1.0, emptySet())
             Kind.GUARDIAN -> View(listOfNotNull(archaic(world, "top damage")), sorted(world, trinketLines(world, source.modelNpc)))
@@ -265,12 +271,48 @@ object DropSources {
                 }
                 continue
             }
-            walk(world, table, DropTableFactory.lineChances(table, rate), DropTableFactory.lineChances(table, 1.0), 1.0, 1.0, "t:${table.name}", lines)
+            val main = table.name == "main"
+            val longBone = tables.firstOrNull { it.name == "long_bone" }
+            val boneWeight = if (table.name == "curved_bone" && longBone != null) 1 - DropTableFactory.lineChances(longBone, rate).sum() else 1.0
+            val normalBoneWeight = if (table.name == "curved_bone" && longBone != null) 1 - DropTableFactory.lineChances(longBone, 1.0).sum() else 1.0
+            walk(world, table, DropTableFactory.lineChances(table, rate), DropTableFactory.lineChances(table, 1.0),
+                if (main) DropTableFactory.mainTableWeight(source.tableNpc, tables, rate) else boneWeight,
+                if (main) DropTableFactory.mainTableWeight(source.tableNpc, tables, 1.0) else normalBoneWeight, "t:${table.name}", lines)
         }
         petLine(world, source.tableNpc, rate)?.let { lines += it }
         lines += trinketLines(world, source.tableNpc)
         return View(mergeAlways(always), sorted(world, merge(lines)))
     }
+
+    /** The top-damage reward and participation supplies, in the existing viewer row format. */
+    private fun maledictusView(player: Player, source: Source, rate: Double): View {
+        val world = player.world
+        val dragon = npcView(player, source, rate)
+        val flat = ArrayList<Line>()
+        fun flatten(line: Line) { if (line.tag == Tag.TABLE) line.kids.forEach(::flatten) else flat += line }
+        dragon.lines.forEach(::flatten)
+        val lines = merge(flat).map { line ->
+            Line(line.key, line.item, line.name, line.quantity, twice(line.your), twice(line.normal), note = "Top damage; 2 rolls")
+        }.toMutableList()
+        for (tier in 1..2) {
+            val item = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants.emblem(tier)
+            val at = lines.indexOfFirst { it.item == item && it.quantity == "1" }
+            val prior = lines.getOrNull(at)
+            val line = Line("maledictus:emblem:$tier", item, itemName(world, item), "1", 1 - 0.5 * (1 - (prior?.your ?: 0.0)),
+                1 - 0.5 * (1 - (prior?.normal ?: 0.0)), note = "Top damage")
+            if (at >= 0) lines[at] = line else lines += line
+        }
+        fun supply(item: Int, quantity: String, chance: Double) = Line("maledictus:supply:$item", item, itemName(world, item), quantity, chance, chance, note = "Other damage dealers")
+        lines += supply(Items.BLIGHTED_SUPER_RESTORE4, "1", 1.0)
+        listOf(Items.BLIGHTED_ANGLERFISH, Items.BLIGHTED_KARAMBWAN, Items.BLIGHTED_MANTA_RAY).forEach { lines += supply(it, "2", 1.0 / 3) }
+        val always = dragon.always.map { line ->
+            val quantity = Regex("\\d+").replace(line.quantity) { (it.value.toInt() * 2).toString() }
+            Line(line.key, line.item, line.name, quantity, 1.0, 1.0, note = "Top damage; 2 rolls")
+        }
+        return View(always, sorted(world, lines))
+    }
+
+    fun twice(chance: Double): Double = 1 - (1 - chance) * (1 - chance)
 
     /**
      * N423 deel 5: the burden trinkets a kill of [npc] can give - the same chance for everyone (no bracket boost), so Your = Normal
@@ -299,9 +341,10 @@ object DropSources {
 
     /** The tier 1 emblem line of a monster with 150+ hp outside the guards (deadman_emblem.plugin.kts). */
     private fun emblemLine(world: World, source: Source): Line? {
-        val combat = world.plugins.allNpcCombatDefs()[source.tableNpc] ?: return null
+        val combatId = if (source.modelNpc == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC) source.modelNpc else source.tableNpc
+        val combat = world.plugins.allNpcCombatDefs()[combatId] ?: return null
         if (gg.rsmod.plugins.content.mechanics.pvp.CityGuards.GUARD_IDS.contains(source.tableNpc)) return null
-        val wild = DropViewerPlaces.inWilderness(world, source.tableNpc)
+        val wild = combatId == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC || DropViewerPlaces.inWilderness(world, combatId)
         val chance = DeadmanEmblem.dropChance(combat.lifepoints, wild)
         if (chance <= 0.0) return null
         val item = DeadmanEmblem.FIRST_EMBLEM

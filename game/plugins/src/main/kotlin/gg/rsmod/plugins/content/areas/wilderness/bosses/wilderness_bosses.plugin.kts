@@ -23,6 +23,10 @@ set_combat_def(npc = Npcs.CHAOS_FANATIC) {
         attackStyle = StyleType.MAGIC
         respawnDelay = 15
     }
+    aggro {
+        radius = ChaosFanaticCombat.ATTACK_RANGE
+        alwaysAggro()
+    }
     stats {
         hitpoints = 2250
         attack = 1
@@ -55,6 +59,10 @@ set_combat_def(npc = Npcs.CRAZY_ARCHAEOLOGIST) {
         attackSpeed = 3
         attackStyle = StyleType.RANGED
         respawnDelay = 15
+    }
+    aggro {
+        radius = CrazyArchaeologistCombat.ATTACK_RANGE
+        alwaysAggro()
     }
     stats {
         hitpoints = 2250

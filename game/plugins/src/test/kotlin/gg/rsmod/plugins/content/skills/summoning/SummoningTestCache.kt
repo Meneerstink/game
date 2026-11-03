@@ -30,7 +30,7 @@ import java.nio.file.Paths
  */
 object SummoningTestCache {
     val definitions: DefinitionSet by lazy {
-        val store = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+        val store = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString())
         val definitions = DefinitionSet()
         definitions.loadAll(store)
         check(definitions.getCount(ItemDef::class.java) != 0) {

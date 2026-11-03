@@ -230,7 +230,11 @@ fun Pawn.dealHit(
     // POH combat dummy (owner 2026-09-29): every attack lands for the attacker's max hit.
     val combatDummy = target is Npc && target.attr[gg.rsmod.plugins.content.areas.poh.PlayerHouse.COMBAT_DUMMY_ATTR] == true
     @Suppress("NAME_SHADOWING")
-    val landHit = landHit || combatDummy
+    val spiderling = this is Player && target is Npc && target.id in intArrayOf(
+        gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.SPIDERLING,
+        gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.SPINDEL_SPIDERLING,
+    )
+    val landHit = landHit || combatDummy || spiderling
     // OSRS Wiki "Hit delay": "If the entity receiving the hit is processed earlier than the entity dealing the hit, then the hit will
     // be delayed by an additional one tick"; NPCs are processed before players. Every delay passed in here carries that tick (melee 1
     // = 0 + 1, ranged/magic 2 + ...), right for any hit on an NPC. Between two players PID decides: a receiver processed after the
@@ -239,7 +243,7 @@ fun Pawn.dealHit(
     val delay = if (this is Player && target is Player && delay > 0 && world.pid(target) > world.pid(this)) delay - 1 else delay
     var damage =
         when {
-            combatDummy -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()
+            combatDummy || spiderling -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()
             landHit -> (rollDamage(minHit, maxHit) + bonusDamage).toDouble()
             else -> 0.0
         }
@@ -274,7 +278,7 @@ fun Pawn.dealHit(
     }
     // N522 bundle 5: the old Vet'ion takes no damage while his skeleton hellhounds live (Kronos-184 Vetion.block).
     if (target is Npc && damage > 0) {
-        damage = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.modifyIncomingDamage(target, damage.toInt()).toDouble()
+        damage = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.modifyIncomingDamage(target, damage.toInt(), hitType).toDouble()
     }
     // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
     // Reading getCombatClass again on impact can use a different style after a weapon switch.
@@ -394,6 +398,12 @@ fun Pawn.dealHit(
     // N522 Scorpia: every attack against her, a splash included, counts toward summoning her guardians (OSRS Wiki "Scorpia's guardian").
     if (target is Npc && target.id == gg.rsmod.plugins.api.cfg.Npcs.SCORPIA) {
         hit.addAction { gg.rsmod.plugins.content.areas.wilderness.bosses.ScorpiaCombat.onAttacked(target) }
+    }
+    if (target is Npc && gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.isVetion(target.id)) {
+        hit.addAction {
+            val opponent = target.getCombatTarget() ?: this@dealHit
+            gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.VetionCombat.callDogs(target, opponent)
+        }
     }
 
     // Re-check PvP safety when a delayed hit lands. This closes the boundary

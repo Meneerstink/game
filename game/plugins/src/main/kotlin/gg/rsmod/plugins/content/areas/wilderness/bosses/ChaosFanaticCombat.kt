@@ -95,6 +95,9 @@ object ChaosFanaticCombat : CombatScript() {
             else -> Attack.DISARM
         }
 
+    fun cooldownAfter(cooldownLeft: Int, attack: Attack): Int =
+        if (attack == Attack.EXPLOSION) COOLDOWN_ATTACKS else (cooldownLeft - 1).coerceAtLeast(0)
+
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         var target = npc.getCombatTarget() ?: return
@@ -102,12 +105,13 @@ object ChaosFanaticCombat : CombatScript() {
             npc.facePawn(target)
             if (npc.moveToAttackRange(it, target, distance = ATTACK_RANGE, projectile = true)) {
                 val left = npc.attr[COOLDOWN_LEFT] ?: 0
-                when (choose(left, npc.world.random(14))) {
+                val attack = choose(left, npc.world.random(14))
+                when (attack) {
                     Attack.RED -> red(npc, target)
                     Attack.EXPLOSION -> explosion(npc, target)
                     Attack.DISARM -> disarm(npc, target)
                 }
-                if (left > 0) npc.attr[COOLDOWN_LEFT] = left - 1
+                npc.attr[COOLDOWN_LEFT] = cooldownAfter(left, attack)
                 npc.forceChat(SHOUTS.random())
             }
             npc.postAttackLogic(target)
@@ -170,22 +174,29 @@ object ChaosFanaticCombat : CombatScript() {
     private fun explosion(npc: Npc, target: Pawn) {
         npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
         npc.animate(ANIM_ATTACK)
-        npc.attr[COOLDOWN_LEFT] = COOLDOWN_ATTACKS + 1 // this attack itself is counted down at the end of the swing
         val world = npc.world
+        val life = WildernessBossLife.token(npc)
         val tiles = explosionTiles(npc, target) { it.shuffled() }
         tiles.forEach { tile ->
             world.spawn(npc.createProjectile(tile, GFX_GREEN_PROJECTILE, startHeight = 80, endHeight = 0, delay = GROUND_DELAY, angle = 16, lifespan = GROUND_LIFESPAN))
         }
         world.queue {
             wait(EXPLOSION_TICKS)
+            if (!WildernessBossLife.active(npc, life)) return@queue
             tiles.forEachIndexed { i, tile -> world.spawn(TileGraphic(tile, if (i == 0) GFX_EXPLOSION_CENTRE else GFX_EXPLOSION, 0)) }
             if (target is Player && target.isOnline) target.playSound(Sfx.EXPLOSION)
             // Poll 83 (2 April 2025): only the last player who engaged in combat is hit.
-            if (npc.isDead() || !npc.isSpawned() || target.isDead()) return@queue
-            if (target is Player && !target.isOnline) return@queue
-            if (tiles.any { it.sameAs(target.tile) }) {
-                npc.dealHit(target = target, maxHit = MAX_EXPLOSION.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT)
+            val victim = explosionVictim(npc, target)
+            if (victim.isDead() || (victim is Player && !victim.isOnline)) return@queue
+            if (tiles.any { it.sameAs(victim.tile) }) {
+                npc.dealHit(target = victim, maxHit = MAX_EXPLOSION.toDouble(), landHit = true, delay = 0, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)
             }
         }
+    }
+
+    /** A familiar's last hit belongs to its player; only the last engaged player can be hit (Poll 83). */
+    fun explosionVictim(npc: Npc, fallback: Pawn): Pawn {
+        val last = npc.getLastHitBy() ?: return fallback
+        return (last as? Player) ?: (last.attr[gg.rsmod.game.model.attr.DAMAGE_CREDIT_ATTR]?.get() as? Player) ?: fallback
     }
 }
