@@ -66,6 +66,17 @@ object RespawnPoints {
         player.attr[RESPAWN_TILE_ATTR] = tile.as30BitInteger
     }
 
+    /**
+     * Buys [point] for [PRICE], paid like every fee of Death: his Coffer first, then coins carried, then the bank (DeathPayment).
+     * Death and Krystilia (owner 2026-11-04, N522 V1: her Edgeville offer at Death's price, the same bought point) both sell here.
+     */
+    fun buy(player: Player, point: Point): Boolean {
+        if (owns(player, point)) return true
+        if (!gg.rsmod.plugins.content.mechanics.death.DeathPayment.pay(player, PRICE.toLong())) return false
+        player.attr[OWNED] = (player.attr[OWNED] ?: 0) or (1 shl point.ordinal)
+        return true
+    }
+
     fun useHome(player: Player) {
         player.attr.remove(RESPAWN_TILE_ATTR)
     }
@@ -125,12 +136,10 @@ object RespawnPoints {
         val point = offered[choice - 1]
         if (!owns(player, point)) {
             if (options("Pay ${String.format(java.util.Locale.US, "%,d", PRICE)} coins.", "No, thanks.", title = "Respawn at ${point.label}?") != 1) return
-            // Paid like every fee of Death: his Coffer first, then coins carried, then the bank (DeathPayment).
-            if (!gg.rsmod.plugins.content.mechanics.death.DeathPayment.pay(player, PRICE.toLong())) {
+            if (!buy(player, point)) {
                 death("You haven't got ${String.format(java.util.Locale.US, "%,d", PRICE)} coins - not in my Coffer, with you or in your bank.", wrap = true)
                 return
             }
-            player.attr[OWNED] = (player.attr[OWNED] ?: 0) or (1 shl point.ordinal)
         }
         activate(player, point)
         death("It is done. You will return to the living at ${point.label}.", wrap = true)

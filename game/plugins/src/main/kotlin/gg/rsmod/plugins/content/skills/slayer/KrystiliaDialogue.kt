@@ -50,10 +50,31 @@ object KrystiliaDialogue {
             !remote && choice == 4 -> {
                 chatPlayer("What can you do apart from Slayer Master stuff?", wrap = true)
                 say("Quite a lot! Those stupid guards think they've trapped me here for causing trouble, but I can get back out to the Wilderness for some fun anytime I like.", id)
-                // Owner's respawn decision 2026-09-26: Death sells every respawn point (RespawnPoints, 500k). An owned Edgeville point is
-                // switched here with the OSRS lines; the OSRS 5m offer for an unowned point and the "back to Lumbridge" branch wait for the
-                // owner's answer (N541) - until then the conversation ends here, no invented line.
-                if (RespawnPoints.owns(player, RespawnPoints.Point.EDGEVILLE) && RespawnPoints.active(player) != RespawnPoints.Point.EDGEVILLE) {
+                // Owner 2026-11-04 (N522 V1): her OSRS Edgeville offer at Death's price (RespawnPoints.PRICE, 500k, Death's payment
+                // order), the same bought point as at Death. The "back to Lumbridge" branch (respawn already Edgeville) is not built:
+                // Lumbridge is a bought point here, not the free default - open question in N541.
+                val edgeville = RespawnPoints.Point.EDGEVILLE
+                if (RespawnPoints.available(edgeville) && !RespawnPoints.owns(player, edgeville) && RespawnPoints.active(player) != edgeville) {
+                    say("Hey, perhaps you'd like me to fix it so that you respawn in Edgeville whenever you die. If you love the Wilderness as much as I do, you might enjoy that.", id)
+                    if (options("Tell me more.", "That doesn't interest me.") != 1) {
+                        chatPlayer("That doesn't interest me.", wrap = true)
+                        say("Maybe you just can't handle Edgeville!", id)
+                        return@with
+                    }
+                    chatPlayer("Tell me more.", wrap = true)
+                    say("Alright, here's the deal: Whenever you drop dead, I'll try to make you reappear in Edgeville, down by the southern ruins. You'll lose your items as normal.", id)
+                    say("My magic won't affect you if you die in some fancy place like Castle Wars or the Emir's Arena; those places have their own magic trying to make you 'safe'.", id)
+                    say("I'll want a one-off payment of ${String.format(java.util.Locale.US, "%,d", RespawnPoints.PRICE)} coins. If you get your respawn changed later, and then need me to set it back to Edgeville, I won't bill you again.", id)
+                    if (!RespawnPoints.buy(player, edgeville)) {
+                        chatPlayer("I'm not carrying that much money.", wrap = true)
+                        say("Scared of dropping it? Hah!", id)
+                        return@with
+                    }
+                    chatPlayer("Okay, switch my spawn to Edgeville.", wrap = true)
+                    RespawnPoints.activate(player, edgeville)
+                    return@with
+                }
+                if (RespawnPoints.owns(player, edgeville) && RespawnPoints.active(player) != edgeville) {
                     say("So do you want to respawn in Edgeville in future?", id)
                     if (options("Please switch my respawn back to Edgeville.", "No, I don't want to respawn in Edgeville.") != 1) {
                         chatPlayer("No, I don't want to respawn in Edgeville.", wrap = true)
@@ -97,7 +118,13 @@ object KrystiliaDialogue {
                 else "You're still hunting ${current.identifier.lowercase()}; you have $remaining to go. Come back when you've finished your task.", id)
             return@with
         }
-        // Transcript:Krystilia has no refusal for new players; she assigns anything the player has the Slayer level for.
+        // OSRS Wiki "Krystilia": "She will refuse to assign tasks to players who are still Level 1 in Slayer, insisting that they first
+        // need to speak to the Burthorpe Slayer Master Turael". Her own words are in no source: owner 2026-11-04 (N522 V2) - a short
+        // game message that follows the wiki.
+        if (player.skills.getMaxLevel(Skills.SLAYER) <= 1) {
+            player.message("Krystilia won't assign you a task until you have spoken to Turael, the Slayer Master in Burthorpe, about how Slayer works.")
+            return@with
+        }
         if (player.attr[Krystilia.WARNED] != true) {
             say("Before I assign you anything, I want to make something clear. My tasks have to be done in the Wilderness. Only kills inside the Wilderness will count.", id)
             say("I don't check combat levels when choosing tasks, either. So even if other masters won't assign you 'tough' monsters, I'll pick anything for which you have the Slayer level, provided you can physically get to it.", id)
