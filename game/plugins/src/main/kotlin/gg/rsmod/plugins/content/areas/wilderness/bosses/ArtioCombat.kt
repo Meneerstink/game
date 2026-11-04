@@ -114,15 +114,18 @@ object ArtioCombat : CombatScript() {
                 target = npc.getCombatTarget() ?: break
                 continue
             }
+            // Wiki: melee is her main attack; "if she cannot attack with melee, she will begin using a much weaker ranged attack until she
+            // can reach her target" - Near Reality follows every tick and picks ranged / orb whenever the target is not in reach.
             if (inMeleeReach(npc, target.tile)) {
                 melee(npc, target)
-            } else if (npc.moveToAttackRange(it, target, distance = 10, projectile = true)) {
+            } else if (inArena(target.tile)) {
                 if (npc.world.random(4) == 0) orb(npc, target) else ranged(npc)
             }
             if ((npc.attr[PHASE] ?: 1) >= 3) layTraps(npc)
             npc.postAttackLogic(target)
-            // Tick by tick, so a roar threshold crossed between attacks roars at once (Near Reality: on the hit).
+            // Tick by tick: follow the target, and a roar threshold crossed between attacks roars at once (Near Reality: on the hit).
             for (t in 0 until npc.combatDef.attackSpeed) {
+                follow(npc, target)
                 it.wait(1)
                 if (roarIfDue(npc)) break
             }
@@ -130,6 +133,12 @@ object ArtioCombat : CombatScript() {
         }
         npc.resetFacePawn()
         npc.removeCombatTarget()
+    }
+
+    /** Near Reality processNPC calcFollow: walk towards a target out of melee reach unless frozen (the engine keeps a frozen npc still). */
+    private fun follow(npc: Npc, target: Pawn) {
+        if (target.isDead() || !inArena(target.tile) || inMeleeReach(npc, target.tile) || npc.timers.has(FROZEN_TIMER)) return
+        npc.walkTo(target.tile)
     }
 
     /** The roar at 66 % / 33 %: breaks a freeze, 4 ticks freeze immunity, lays traps. */
