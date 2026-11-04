@@ -2,7 +2,7 @@
  * WILDERNESS NPC & ITEM SPAWNS
  * @author Harley Gilpin <https://github.com/HarleyGilpin>
  */
-spawn_npc(npc = Npcs.CHAOS_ELEMENTAL, x = 3258, z = 3923, walkRadius = 10, direction = Direction.WEST)
+// Chaos Elemental: the OSRS one spawns from wilderness/bosses/chaos_elemental.plugin.kts (N522 nachtrun deel 1).
 spawn_npc(npc = Npcs.BIG_WOLF_7005, x = 3236, z = 3915, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.BIG_WOLF_7005, x = 3237, z = 3919, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.BIG_WOLF_7005, x = 3241, z = 3914, walkRadius = 5, direction = Direction.WEST)

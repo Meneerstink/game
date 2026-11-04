@@ -168,6 +168,10 @@ object OsrsFxImportTool {
             // N522 bundle 4a: Venenatis - RuneLite gameval SpotanimID FX_VENENATIS_RANGED_PROJECTILE 2356 / _RANGED_IMPACT 2357 /
             // _MAGIC_PROJECTILE 2358 / _MAGIC_IMPACT 2359 / _WEB_PROJECTILE 2360 / _WEB_IMPACT 2361 (Near Reality Venenatis.java / WebObject).
             "venenatis" to listOf(2356, 2357, 2358, 2359, 2360, 2361),
+            // N522 nachtrun deel 1: the OSRS Chaos Elemental's casting / travel / impact graphics (RuneLite gameval SpotanimID
+            // CHAOSELEMENTAL_SPOTANIM_MADNESS_CASTING 550 .. _DISCORD_IMPACT 558). The 667 spotanims with these ids are the HD remakes
+            // (other models and sequences, OsrsFxProbeTool 2026-11-04); 551-554 already came with wildy-bosses-1 (Chaos Fanatic).
+            "chaos-elemental" to listOf(550, 555, 556, 557, 558),
             // N522 bundle 5 (cache 1151): the old Callisto's shockwave 395, heal 157, roar on the player 245; the old Vet'ion's magic 280 /
             // impact 281 (Kronos-184 bosses/Callisto.java, Vetion.java).
             "wildy-old" to listOf(395, 245, 280, 281), // heal 157 = 3127 (wildy-bosses-1)

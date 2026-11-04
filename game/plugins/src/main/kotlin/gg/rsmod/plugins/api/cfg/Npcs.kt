@@ -2923,7 +2923,7 @@ object Npcs {
     const val GULL_3197 = 3197
     const val BANKER_PIRATE_MALE_EYEPATCH_3198 = 3198
     const val BANKER_PIRATE_MALE_HAT_3199 = 3199
-    const val CHAOS_ELEMENTAL = 3200
+    const val CHAOS_ELEMENTAL_667 = 3200 // the 667 HD remodel, no longer spawned (N522 nachtrun deel 1)
     const val KILLERWATT = 3201
     const val KILLERWATT_3202 = 3202
     const val STORM_CLOUD = 3203
@@ -12967,6 +12967,7 @@ object Npcs {
     const val MINIATURE_CHAOTIC_CLOUDS = 15054 // 6620 (scenery round the Chaos Fanatic, tx-20261101-140025)
     // N522 bundle 2 (Scorpia): OsrsNpcImportTool batch wildy-bosses-2, tx-20261101-202308; OSRS id in the comment.
     const val SCORPIA = 15055 // 6615
+    const val CHAOS_ELEMENTAL = 15082 // OSRS 2054 (N522 nachtrun deel 1, tx-20261104-220735)
     const val SCORPIAS_OFFSPRING = 15056 // 6616
     const val SCORPIAS_GUARDIAN = 15057 // 6617
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService

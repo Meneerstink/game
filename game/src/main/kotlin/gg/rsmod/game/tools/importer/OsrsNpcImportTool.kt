@@ -122,6 +122,9 @@ object OsrsNpcImportTool {
             // N541: Krystilia, the Wilderness Slayer master in the Edgeville jail (OSRS Wiki infobox id 7663; Talk-to / Assignment /
             // Trade / Rewards). 667 id 7663 is Fistandantilus, so she gets a new local id (Krystilia.npcId resolves her by name).
             "krystilia" to listOf(7663),
+            // N522 nachtrun deel 1 (owner 2026-11-02 15:4x "Chaos Elemental VOLLEDIG OSRS"): the OSRS Chaos Elemental (OSRS Wiki infobox id
+            // 2054, models 11216 + 57329; RuneLite gameval NpcID CHAOSELEMENTAL). The 667 npc 3200 is the later HD remodel (model 38137).
+            "chaos-elemental" to listOf(2054),
         )
     }
 
@@ -183,6 +186,9 @@ object OsrsNpcImportTool {
             // wildy-old: Kronos-184 data/npcs/combat Callisto 4925/4927/4929 (BEAR_REWORK_*), Vet'ion 5499/5508/5503 + earthquake 5507
             // (SKELETON_UPDATE_GIANT_*), Skeleton Hellhound 6559/6557/6558.
             "wildy-old" to listOf(4925, 4927, 4929, 5499, 5508, 5503, 5507, 6559, 6557, 6558),
+            // chaos-elemental: RuneLite gameval AnimationID CHAOSELEMENTAL_ATTACK 3146 / CHAOSELEMENTAL_DEATH 3147 (READY 3144 / WALK 3145
+            // come with the npc definition; the Chaos Elemental has no defend sequence in OSRS).
+            "chaos-elemental" to listOf(3146, 3147),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences

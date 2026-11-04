@@ -75,7 +75,7 @@ internal object WildernessBossTestSupport {
                 counts[id] = (counts[id] ?: 0) + secondArg<Int>()
             }
             attributes[ItemActionGuard.STATUS_CAPTURE] = messages
-                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin").forEach { name ->
+                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin", "Chaos_elemental_plugin").forEach { name ->
                     scripts.loadClass("gg.rsmod.plugins.content.areas.wilderness.bosses.$name")
                         .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
                         .newInstance(repo, world, mockk<Server>(relaxed = true))
@@ -108,6 +108,7 @@ internal object WildernessBossTestSupport {
         val actual = view.always + view.lines.filter { it.tag != DropSources.Tag.TABLE }
         fun canonical(name: String): String = name.lowercase().replace("steel cannonball", "cannonball")
             .replace("grimy ranarr weed", "grimy ranarr").replace("antidote++", "antipoison++")
+            .replace("runite bar", "rune bar").replace("adamantite bar", "adamant bar") // OSRS names of the 667 "Rune bar" / "Adamant bar"
             .replace("zamorak monk top", "zamorak robe").replace("zamorak monk bottom", "zamorak robe")
             .replace(" (noted)", "").replace(" ", "").replace("'", "")
         fun q(text: String): String = text.replace(" (noted)", "").replace(",", "").replace("–", "-")
@@ -125,6 +126,7 @@ internal object WildernessBossTestSupport {
             // These fractions come from the independently recorded Wiki unique rows, not our drop builder.
             val mainWeight = when (wiki) {
                 "Chaos Fanatic", "Crazy archaeologist", "Scorpia" -> 127.0 / 128
+                "Chaos Elemental" -> 255.0 / 256
                 "Callisto", "Vetion", "Venenatis" -> 1 - (1.0 / 196 + 1.0 / 256 + 1.0 / 256 + 1.0 / 360 + 1.0 / 512)
                 "Spindel" -> 1 - (1.0 / 358 + 1.0 / 358 + 1.0 / 618 + 1.0 / 716 + 1.0 / 912)
                 else -> 1.0

@@ -1,0 +1,43 @@
+# OSRS Wiki Chaos Elemental (2026-11-04); solo quantities, plain 1x rates; main-table rates are conditional on failing the dragon pickaxe pre-roll
+# name	quantity	wiki rate	table
+Blighted anglerfish	2	1/5	minor
+Blighted karambwan	3	1/5	minor
+Blighted super restore(4)	1	1/5	minor
+Dragon bones	1	1/5	minor
+Super combat potion(1)	1	1/5	minor
+Dragon pickaxe	1	1/256	unique
+Rune dart	100	5/128	main
+Rune platelegs	1	4/128	main
+Rune plateskirt	1	4/128	main
+Rune 2h sword	1	3/128	main
+Rune battleaxe	1	3/128	main
+Rune full helm	1	3/128	main
+Rune kiteshield	1	3/128	main
+Mystic air staff	1	3/128	main
+Mystic water staff	1	3/128	main
+Mystic earth staff	1	3/128	main
+Mystic fire staff	1	3/128	main
+Dragon dagger	1	2/128	main
+Dragon 2h sword	1	2/128	main
+Dragon platelegs	1	2/128	main
+Dragon plateskirt	1	2/128	main
+Chaos rune	300-500	8/128	main
+Blood rune	100-250	8/128	main
+Rune arrow	150	5/128	main
+Grimy ranarr weed	5-8 (noted)	4/128	main
+Grimy snapdragon	5-8 (noted)	4/128	main
+Grimy avantoe	5-8 (noted)	3/128	main
+Grimy kwuarm	5-8 (noted)	3/128	main
+Coal	75-150 (noted)	5/128	main
+Mahogany plank	8-16 (noted)	5/128	main
+Runite bar	3-5 (noted)	4/128	main
+Adamantite bar	8-12 (noted)	4/128	main
+Coins	20005-29995	7/128	main
+Blighted ancient ice sack	20-40	5/128	main
+Blighted karambwan	15-25 (noted)	4/128	main
+Blighted anglerfish	10-15 (noted)	4/128	main
+Wilderness crabs teleport	2	2/128	main
+# Weapon poison(++) on the Wiki = our item name 'Weapon poison++'
+Weapon poison++	1	10/128	tertiary
+Looting bag	1	1/3	tertiary
+Clue scroll (elite)	1	1/200	tertiary
