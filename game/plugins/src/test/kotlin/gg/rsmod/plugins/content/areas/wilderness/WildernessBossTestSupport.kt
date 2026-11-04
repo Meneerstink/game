@@ -75,7 +75,7 @@ internal object WildernessBossTestSupport {
                 counts[id] = (counts[id] ?: 0) + secondArg<Int>()
             }
             attributes[ItemActionGuard.STATUS_CAPTURE] = messages
-                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin", "Chaos_elemental_plugin").forEach { name ->
+                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin", "Chaos_elemental_plugin", "Artio_plugin").forEach { name ->
                     scripts.loadClass("gg.rsmod.plugins.content.areas.wilderness.bosses.$name")
                         .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
                         .newInstance(repo, world, mockk<Server>(relaxed = true))
@@ -128,7 +128,7 @@ internal object WildernessBossTestSupport {
                 "Chaos Fanatic", "Crazy archaeologist", "Scorpia" -> 127.0 / 128
                 "Chaos Elemental" -> 255.0 / 256
                 "Callisto", "Vetion", "Venenatis" -> 1 - (1.0 / 196 + 1.0 / 256 + 1.0 / 256 + 1.0 / 360 + 1.0 / 512)
-                "Spindel" -> 1 - (1.0 / 358 + 1.0 / 358 + 1.0 / 618 + 1.0 / 716 + 1.0 / 912)
+                "Spindel", "Artio" -> 1 - (1.0 / 358 + 1.0 / 358 + 1.0 / 618 + 1.0 / 716 + 1.0 / 912)
                 else -> 1.0
             }
             // Wiki rounds Scorpia's effective 127/128 * 1/2000 to 1/2015.75.

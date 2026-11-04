@@ -29,6 +29,9 @@ object OsrsLocImportTool {
             // the seven ground-edging "Theme space" spaces 29123-29129 (OSRS 2499 region 7534 chunk 5,0) - and the Otherworldly
             // theme built on them: the five "Otherworldly garden" edgings 29248-29252 and the "Otherworldly theme" 29253 (Remove).
             "poh-theme" to listOf(29130, 29123, 29124, 29125, 29126, 29127, 29128, 29129, 29248, 29249, 29250, 29251, 29252, 29253),
+            // N522 nachtrun deel 2: Artio's / Callisto's bear trap - RuneLite gameval ObjectID CALLISTO_TRAP_LOC 47146 (Near Reality
+            // Callisto.addTrapsAtCoords spawns it; its idle 10000 / snap 9999 animations are skeletal and dropped).
+            "artio" to listOf(47146),
         )
 
     /**

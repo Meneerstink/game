@@ -51,7 +51,7 @@ object CollectionLogPages {
             // N522: OSRS Wiki Collection log "Scorpia" (3 items).
             "scorpia" to listOf("Odium shard 3", "Malediction shard 3", "Scorpia's offspring"),
             // N522 bundle 5: OSRS Wiki Collection log "Callisto and Artio" / "Vet'ion and Calvar'ion" (6 items each; Artio and Calvar'ion
-            // are not in this game).
+            // share the page, [PAIRS]).
             "callisto" to listOf("Callisto cub", "Tyrannical ring", "Dragon pickaxe", "Dragon 2h sword", "Claws of Callisto", "Voidwaker hilt"),
             "vet'ion" to listOf("Vet'ion Jr.", "Ring of the gods", "Dragon pickaxe", "Dragon 2h sword", "Skull of Vet'ion", "Voidwaker blade"),
             // N522: OSRS Wiki Collection log "Venenatis and Spindel" (6 items).
@@ -80,7 +80,16 @@ object CollectionLogPages {
         )
 
     private val DK = setOf("dagannoth rex", "dagannoth prime", "dagannoth supreme")
-    private val SPIDERS = setOf("venenatis", "spindel")
+    /**
+     * OSRS shares one Collection log page between a Wilderness boss and its singles variant ("Venenatis and Spindel", N522 bundle 4b;
+     * "Callisto and Artio", "Vet'ion and Calvar'ion", N522 nachtrun deel 2): main boss -> (singles boss, page title).
+     */
+    private val PAIRS =
+        mapOf(
+            "venenatis" to ("spindel" to "Venenatis and Spindel"),
+            "callisto" to ("artio" to "Callisto and Artio"),
+            "vet'ion" to ("calvar'ion" to "Vet'ion and Calvar'ion"),
+        )
 
     @Volatile private var built: List<Page>? = null
 
@@ -111,16 +120,20 @@ object CollectionLogPages {
         // ---- Bosses
         val bosses = sources.filter { it.group == DropSources.Group.BOSSES }
         val dks = bosses.filter { it.name.lowercase() in DK }
-        // N522 bundle 4b: OSRS Collection log "Venenatis and Spindel" - one page for both spiders (their kills together).
-        val spiders = bosses.filter { it.name.lowercase() in SPIDERS }
+        val names = bosses.map { it.name.lowercase() }.toSet()
+        val partners = PAIRS.values.map { it.first }.toSet()
         for (boss in bosses.sortedBy { it.name.lowercase() }) {
             // Maledictus' uniques fill the OSRS Revenants page below, rather than inventing a separate boss page.
             if (boss.modelNpc == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC) continue
             if (boss in dks) continue
-            if (boss.name.lowercase() == "spindel" && spiders.any { it.name.lowercase() == "venenatis" }) continue
-            if (boss.name.lowercase() == "venenatis") {
-                val items = bossItems(player, boss, OSRS["venenatis"], ::name)
-                if (items.isNotEmpty()) pages += Page(boss.key, Category.BOSSES, "Venenatis and Spindel", spiders.map { it.key }, items)
+            val lower = boss.name.lowercase()
+            // The singles variant fills its main boss's page; alone (main boss missing) it keeps a page of its own.
+            if (lower in partners && PAIRS.any { (main, pair) -> pair.first == lower && main in names }) continue
+            val pair = PAIRS[lower]
+            if (pair != null && pair.first in names) {
+                val items = bossItems(player, boss, OSRS[lower], ::name)
+                val keys = bosses.filter { it.name.lowercase() == lower || it.name.lowercase() == pair.first }.map { it.key }
+                if (items.isNotEmpty()) pages += Page(boss.key, Category.BOSSES, pair.second, keys, items)
                 continue
             }
             if (boss.kind == DropSources.Kind.BARROWS) {

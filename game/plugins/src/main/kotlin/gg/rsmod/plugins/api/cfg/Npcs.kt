@@ -12968,6 +12968,7 @@ object Npcs {
     // N522 bundle 2 (Scorpia): OsrsNpcImportTool batch wildy-bosses-2, tx-20261101-202308; OSRS id in the comment.
     const val SCORPIA = 15055 // 6615
     const val CHAOS_ELEMENTAL = 15082 // OSRS 2054 (N522 nachtrun deel 1, tx-20261104-220735)
+    const val ARTIO = 15083 // OSRS 11992 baked skeletal (N522 nachtrun deel 2, tx-20261104-230952)
     const val SCORPIAS_OFFSPRING = 15056 // 6616
     const val SCORPIAS_GUARDIAN = 15057 // 6617
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService

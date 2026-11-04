@@ -172,6 +172,10 @@ object OsrsFxImportTool {
             // CHAOSELEMENTAL_SPOTANIM_MADNESS_CASTING 550 .. _DISCORD_IMPACT 558). The 667 spotanims with these ids are the HD remakes
             // (other models and sequences, OsrsFxProbeTool 2026-11-04); 551-554 already came with wildy-bosses-1 (Chaos Fanatic).
             "chaos-elemental" to listOf(550, 555, 556, 557, 558),
+            // N522 nachtrun deel 2: Artio (the Callisto rig) - RuneLite gameval SpotanimID FX_CALLISTO_TRAP 2343, FX_CALLISTO_RANGED_SPOTANIM
+            // 2349 / _PROJECTILE 2350 / _IMPACT 2351, FX_CALLISTO_ENRAGE 2352 / _SMALL 2353, WINDBLAST_TRAVEL 133 (the knockback orb, dreambot
+            // MagicFightArtio "Projectile: 133"; WINDBLAST_IMPACT 134 came with rev-maledictus).
+            "artio" to listOf(2343, 2349, 2350, 2351, 133, 1255), // 1255: Near Reality KNOCKBACK_PLAYER_GRAPHICS; // ENRAGE 2352/2353: skeletal sequence 3473408, refused (glow not shown)
             // N522 bundle 5 (cache 1151): the old Callisto's shockwave 395, heal 157, roar on the player 245; the old Vet'ion's magic 280 /
             // impact 281 (Kronos-184 bosses/Callisto.java, Vetion.java).
             "wildy-old" to listOf(395, 245, 280, 281), // heal 157 = 3127 (wildy-bosses-1)

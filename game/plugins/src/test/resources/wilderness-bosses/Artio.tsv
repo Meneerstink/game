@@ -1,0 +1,46 @@
+# OSRS Wiki Artio (2026-11-05); solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Big bones	1	Always	independent
+Dragon 2h sword	1	1/358	unique
+Dragon pickaxe	1	1/358	unique
+Claws of Callisto	1	1/618	unique
+Tyrannical ring	1	1/716	unique
+Voidwaker hilt	1	1/912	unique
+Dark crab	9	5/128	main
+Super restore(4)	3	5/128	main
+Rune 2h sword	1	3/128	main
+Rune pickaxe	1	12/128	main
+Chaos rune	300	7/128	main
+Death rune	220	7/128	main
+Blood rune	140	7/128	main
+Soul rune	150	5/128	main
+Steel cannonball	190	4/128	main
+Uncut ruby	17 (noted)	4/128	main
+Uncut diamond	7 (noted)	3/128	main
+Uncut dragonstone	1	2/128	main
+Limpwurt root	20 (noted)	5/128	main
+Magic logs	60 (noted)	5/128	main
+Mahogany logs	200 (noted)	6/128	main
+Dragon bones	25 (noted)	3/128	main
+Grimy toadflax	40 (noted)	1/128	main
+Coconut	30 (noted)	2/128	main
+Red dragonhide	55 (noted)	3/128	main
+Coins	12000	21/128	main
+Dark fishing bait	300	1/128	main
+Supercompost	60 (noted)	4/128	main
+Yew seed	1	1/128	main
+Magic seed	1	1/128	main
+Ranarr seed	3	5/128	main
+Snapdragon seed	1	5/128	main
+Palm tree seed	1	1/128	main
+Blighted anglerfish	5-6	1/18	independent
+Blighted karambwan	5-6	1/18	independent
+Blighted super restore(3)	3-4	1/18	independent
+Blighted super restore(4)	3-4	1/18	independent
+Ranging potion(2)	2-3	1/18	independent
+Super combat potion(2)	2-3	1/18	independent
+Looting bag	1	1/3	independent
+Long bone	1	1/400	independent
+Curved bone	1	1/5012.5	independent
+Callisto cub	1	1/2800	independent
+Clue scroll (elite)	1	1/100	independent

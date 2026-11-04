@@ -72,7 +72,7 @@ object DropTableFactory {
         tables.firstOrNull { it.name == "pre_roll" } ?: tables.firstOrNull {
             it.name == "unique" && npcId in intArrayOf(
                 gg.rsmod.plugins.api.cfg.Npcs.CALLISTO_OLD, gg.rsmod.plugins.api.cfg.Npcs.VETION_OLD,
-                gg.rsmod.plugins.api.cfg.Npcs.VENENATIS_OSRS, gg.rsmod.plugins.api.cfg.Npcs.SPINDEL_OSRS,
+                gg.rsmod.plugins.api.cfg.Npcs.VENENATIS_OSRS, gg.rsmod.plugins.api.cfg.Npcs.SPINDEL_OSRS, gg.rsmod.plugins.api.cfg.Npcs.ARTIO,
             )
         }
 
