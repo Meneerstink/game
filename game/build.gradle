@@ -373,6 +373,14 @@ task runWildernessDungeonsMapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.WildernessDungeonsMapTool'
 }
 
+task runHomeRoomsMapProjectionTool(type: JavaExec) {
+    group = 'tools'
+    description = 'World map: Death\'s Office + Skilling Basement projected onto the GE (N563). ' +
+        'Usage: ./gradlew :game:runHomeRoomsMapProjectionTool --args="show|plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.HomeRoomsMapProjectionTool'
+}
+
 task runFeroxFloorRepairTool(type: JavaExec) {
     group = 'tools'
     description = 'Re-matches Ferox tile overlays keeping the minimap colour (CacheTransaction, both caches). ' +
