@@ -505,7 +505,19 @@ class Rev667LocType(val id: Int) {
                 u8(67)
                 u16(src.modelSizeY)
             }
-            if (src.mapSceneId != -1) dropped.add("loc ${src.id}: map scene ${src.mapSceneId}")
+            // N529/N531: OSRS map scene / map area -> the pixel-proven 667 msi (op102) / mapelement (op107); unproven ones stay dropped.
+            if (src.mapSceneId != -1) {
+                OsrsMapIconTable.SCENE_TO_MSI[src.mapSceneId]?.let {
+                    u8(102)
+                    u16(it)
+                } ?: dropped.add("loc ${src.id}: map scene ${src.mapSceneId}")
+            }
+            if (src.mapAreaId != -1) {
+                OsrsMapIconTable.AREA_TO_MAP_ELEMENT[src.mapAreaId]?.let {
+                    u8(107)
+                    u16(it)
+                } ?: dropped.add("loc ${src.id}: map area ${src.mapAreaId}")
+            }
             if (src.blockingMask != 0) {
                 u8(69)
                 u8(src.blockingMask)

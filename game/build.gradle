@@ -349,6 +349,30 @@ task runFeroxMinimapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.FeroxMinimapTool'
 }
 
+task runOsrsLocMapDataTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Adds pixel-proven LocType msi/mapelement to EVERY imported OSRS loc of OSRS_IMPORT_MASTER.yml (N529/N531). ' +
+        'Usage: ./gradlew :game:runOsrsLocMapDataTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsLocMapDataTool'
+}
+
+task runWildernessWorldMapTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Rebuilds the world-map main/area records of the Wilderness squares from the current landscape (N529). ' +
+        'Usage: ./gradlew :game:runWildernessWorldMapTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WildernessWorldMapTool'
+}
+
+task runWildernessDungeonsMapTool(type: JavaExec) {
+    group = 'tools'
+    description = 'World map Wilderness Dungeons: old Forinthry revenant dungeon out, OSRS Revenant Caves in (N562). ' +
+        'Usage: ./gradlew :game:runWildernessDungeonsMapTool --args="show|plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WildernessDungeonsMapTool'
+}
+
 task runFeroxFloorRepairTool(type: JavaExec) {
     group = 'tools'
     description = 'Re-matches Ferox tile overlays keeping the minimap colour (CacheTransaction, both caches). ' +
