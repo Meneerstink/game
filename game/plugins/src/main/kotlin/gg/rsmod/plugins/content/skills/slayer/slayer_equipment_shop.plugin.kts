@@ -38,7 +38,7 @@ create_shop(
 
 // Every Slayer master (one list: SlayerMaster), not only the first three.
 val masters =
-    (gg.rsmod.plugins.content.skills.slayer.data.SlayerMaster.values().map { it.id } + 7779).filter { id ->
+    (gg.rsmod.plugins.content.skills.slayer.data.SlayerMaster.values().map { it.id } + 7779 + listOfNotNull(Krystilia.npcId(world))).filter { id ->
         world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it.equals("trade", ignoreCase = true) }
     }
 

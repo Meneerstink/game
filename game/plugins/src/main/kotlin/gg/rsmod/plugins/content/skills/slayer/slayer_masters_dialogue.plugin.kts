@@ -137,11 +137,20 @@ suspend fun giveTask(
     val blockedTasks = player.attr[BLOCKED_TASKS] as MutableList<String>
 
     if (player.getSlayerAssignment() != null) {
+        if (slayerMaster == SlayerMaster.TURAEL && Krystilia.active(player) &&
+            slayerData.getAssignmentsForMaster(slayerMaster).none { it.assignment == player.getSlayerAssignment() }) {
+            it.chatNpc("Although, it's not an assignment that I'd normally give... I guess I could give you a new assignment, if you'd like.", wrap = true)
+            // OSRS Krystilia: a Turael replacement resets the Wilderness streak, never the standard streak.
+            if (it.options("Yes, please.", "No, thanks.", title = "Reset your Wilderness task streak of ${player.attr[Krystilia.STREAK] ?: 0}?") != 1) return
+            player.attr[Krystilia.STREAK] = 0
+            player.removeSlayerAssignment()
+        } else {
         it.chatNpc(
             "You're still hunting ${player.getSlayerAssignment()!!.identifier.lowercase()}, you have ${player.attr[SLAYER_AMOUNT]} to go. Come back when you've finished your task.",
             wrap = true,
         )
         return
+        }
     }
 
     // K03 N410: the Slayer cape "Allows bypassing combat level requirements for new tasks" (OSRS Wiki "Cape of Accomplishment").

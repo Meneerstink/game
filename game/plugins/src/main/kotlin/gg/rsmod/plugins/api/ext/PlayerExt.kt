@@ -1759,6 +1759,14 @@ fun Player.openJewelleryCraftingInterface() {
 }
 
 fun Player.contactSlayerMaster(fromRing: Boolean = false) {
+    val krystilia = gg.rsmod.plugins.content.skills.slayer.Krystilia
+    val krystiliaId = krystilia.npcId(world)
+    if (attr[krystilia.TASK] == true || krystiliaId != null && attr[SLAYER_MASTER] == krystiliaId) {
+        // Enchanted gem reports progress; only Astral Contact can issue a task remotely.
+        getSlayerKillsRemaining()
+        if (attr[krystilia.TASK] == true) message("As your slayer task is from Krystilia, you can only perform it inside the Wilderness")
+        return
+    }
     if (!attr.has(SLAYER_MASTER)) {
         message("You try to activate the gem; but get no response.")
         return

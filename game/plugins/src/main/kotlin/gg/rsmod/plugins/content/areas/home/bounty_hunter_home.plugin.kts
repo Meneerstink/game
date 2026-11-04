@@ -55,6 +55,10 @@ listOf(FeroxObjects.BARRIER_A, FeroxObjects.BARRIER_B, FeroxObjects.BARRIER_FIEL
             // barrier wall beside the gap), then through the field to the other landing.
             try {
                 gg.rsmod.plugins.content.skills.agility.walkToTileFrom(this, player, startTile)
+                if (BountyHunterHome.barrierRefusesEntry(goingOutward, gate, player.timers.has(gg.rsmod.game.model.timer.TELEBLOCK_TIMER))) {
+                    player.message(BountyHunterHome.BARRIER_TELEBLOCK_MESSAGE)
+                    return@lockingQueue
+                }
                 player.faceTile(endTile)
                 gg.rsmod.plugins.content.skills.agility.walkOverTileFrom(this, player, endTile)
             } catch (e: gg.rsmod.plugins.content.skills.agility.ObstacleApproachFailed) {

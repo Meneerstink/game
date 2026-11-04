@@ -14,7 +14,12 @@ set_slayer_logic {
         val player = npc.damageMap.getMostDamage() as? Player
         // If the entity is a Player and has the same slayer assignment as the NPC, decrese the amount
         if (player != null && player.getSlayerAssignment() != null) {
-            if (player.getSlayerAssignment() == npc.combatDef.slayerAssignment) {
+            if (player.attr[Krystilia.TASK] == true) {
+                if (Krystilia.matches(player, npc)) player.handleDecrease(npc)
+                else if (Krystilia.current(player)?.names?.contains(npc.def.name.lowercase()) == true && !Krystilia.wilderness(player, player.tile)) {
+                    player.message("As your slayer task is from Krystilia, you can only perform it inside the Wilderness")
+                }
+            } else if (player.getSlayerAssignment() == npc.combatDef.slayerAssignment) {
                 player.handleDecrease(npc)
             }
         }

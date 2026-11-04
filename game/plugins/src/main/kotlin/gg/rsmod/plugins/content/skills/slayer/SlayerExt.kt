@@ -38,12 +38,18 @@ fun Player.getSlayerAssignment(): SlayerAssignment? {
  * @param npc The NPC that the player killed to decrease their slayer task count.
  */
 fun Player.handleDecrease(npc: Npc) {
+    if ((attr[SLAYER_AMOUNT] ?: 0) <= 0) return
+    if (attr[Krystilia.TASK] == true && !Krystilia.matches(this, npc)) return
     if (attr.has(SLAYER_AMOUNT)) {
         addXp(Skills.SLAYER, npc.combatDef.slayerXp)
         val amount = attr.getOrDefault(SLAYER_AMOUNT, 0)
         attr.put(SLAYER_AMOUNT, amount - 1)
     }
     if (attr.getOrDefault(SLAYER_AMOUNT, 0) <= 0) {
+        if (attr[Krystilia.TASK] == true) {
+            Krystilia.complete(this)
+            return
+        }
         // Increment the consecutive slayer tasks counter
         val consecutiveTasks = attr.getOrDefault(CONSECUTIVE_SLAYER_TASKS, 0) + 1
         attr.put(CONSECUTIVE_SLAYER_TASKS, consecutiveTasks)
@@ -81,6 +87,7 @@ fun Player.handleDecrease(npc: Npc) {
  * and slayer amount attributes. If the player has no slayer task, no action is taken.
  */
 fun Player.removeSlayerAssignment() {
+    attr.remove(Krystilia.TASK)
     if (attr.has(SLAYER_ASSIGNMENT)) {
         message("Your slayer assignment has been removed.")
         attr.remove(SLAYER_ASSIGNMENT)

@@ -17,7 +17,7 @@ import gg.rsmod.game.model.combat.StyleType
  *
  * Attack logic: [gg.rsmod.plugins.content.combat.scripts.impl.WildyWyrmCombatScript].
  */
-spawn_npc(npc = Npcs.WILDYWYRM, x = 3093, z = 10123, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false)
+// N527: spawn suspended while the owner chooses a new location outside the retired dungeon. Definitions retained.
 
 set_combat_def(npc = Npcs.WILDYWYRM) {
     configs {

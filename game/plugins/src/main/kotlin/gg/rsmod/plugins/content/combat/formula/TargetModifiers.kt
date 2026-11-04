@@ -97,6 +97,9 @@ object TargetModifiers {
     ): Boolean {
         // The POH combat dummy "functions as any slayer task" (OSRS Wiki "Ornate undead combat dummy").
         if (gg.rsmod.plugins.content.areas.poh.PlayerHouse.isCombatDummy(target)) return true
+        if (player.attr[gg.rsmod.plugins.content.skills.slayer.Krystilia.TASK] == true) {
+            return target is Npc && gg.rsmod.plugins.content.skills.slayer.Krystilia.matches(player, target)
+        }
         val assignment = player.getSlayerAssignment() ?: return false
         return target is Npc && target.combatDef.slayerAssignment == assignment
     }

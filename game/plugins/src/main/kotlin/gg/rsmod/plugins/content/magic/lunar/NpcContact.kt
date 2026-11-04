@@ -12,6 +12,8 @@ import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentNpcHead
 import gg.rsmod.plugins.api.ext.setComponentText
 import java.lang.ref.WeakReference
+import gg.rsmod.plugins.content.skills.slayer.Krystilia
+import gg.rsmod.plugins.content.skills.slayer.KrystiliaDialogue
 
 /**
  * N72 "Astral Contact" (the OSRS name of the Lunar spell NPC Contact, 430:26). Owner 2026-11-01 14:1x: make it work with the npcs
@@ -58,6 +60,13 @@ object NpcContact {
         // Void: "The cache reuses Murphy's slot; replace him with the Abyss's dark mage".
         player.setComponentNpcHead(INTERFACE, 30, Npcs.DARK_MAGE_2262)
         player.setComponentText(INTERFACE, 47, "Dark mage")
+        // Reuse the already supported, hidden Spria slot (Void 429:12/40) for this imported master.
+        Krystilia.npcId(player.world)?.let { id ->
+            player.setComponentHidden(INTERFACE, 12, false)
+            player.setComponentHidden(INTERFACE, 40, false)
+            player.setComponentNpcHead(INTERFACE, 12, id)
+            player.setComponentText(INTERFACE, 40, "Krystilia")
+        }
     }
 
     /** The npc option index (1-based) of Talk-to on [npcId], or -1. */
@@ -77,5 +86,10 @@ object NpcContact {
         }
         player.attr[INTERACTING_NPC_ATTR] = WeakReference(npc)
         if (!player.world.plugins.executeNpc(player, npc.id, option)) player.message("${contact.name} is too busy to talk right now.")
+    }
+
+    fun contactKrystilia(player: Player) {
+        player.closeInterface(INTERFACE)
+        KrystiliaDialogue.open(player, remote = true)
     }
 }

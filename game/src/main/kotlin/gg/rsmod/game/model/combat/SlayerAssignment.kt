@@ -51,4 +51,11 @@ enum class SlayerAssignment(
     COW("Cows"),
     ICE_WARRIOR("Ice Warriors"),
     ICE_GIANT("Ice Giants"),
+    // N541: Krystilia's OSRS task identifiers (Wiki Krystilia oldid=15389119).
+    AVIANSIE("Aviansies"), BANDIT("Bandits"), BLACK_DEMON("Black Demons"), BLACK_KNIGHT("Black Knights"),
+    CHAOS_DRUID("Chaos Druids"), DARK_WARRIOR("Dark Warriors"), DUST_DEVIL("Dust Devils"), EARTH_WARRIOR("Earth Warriors"),
+    ENT("Ents"), FIRE_GIANT("Fire Giants"), JELLY("Jellies"), LAVA_DRAGON("Lava Dragons"), MAGIC_AXE("Magic Axes"),
+    MAMMOTH("Mammoths"), PIRATE("Pirates"), REVENANT("Revenants"), ROGUE("Rogues"), SPIRITUAL_CREATURE("Spiritual Creatures"),
+    CALLISTO("Callisto"), CHAOS_ELEMENTAL("Chaos Elemental"), CHAOS_FANATIC("Chaos Fanatic"),
+    CRAZY_ARCHAEOLOGIST("Crazy archaeologist"), SCORPIA("Scorpia"), VENENATIS("Venenatis"), VETION("Vet'ion"),
 }

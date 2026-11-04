@@ -5,6 +5,7 @@ import gg.rsmod.game.model.SimplePolygonArea
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.getWildernessLevel
+import gg.rsmod.plugins.api.ext.message
 
 /**
  * Rev-667 object ids of the Ferox Enclave content imported by `FeroxImportTool`
@@ -160,6 +161,15 @@ object BountyHunterHome {
         gate: GateInfo,
         teleblocked: Boolean,
     ): Boolean = teleblocked && !goingOutward && gate.exitsToWilderness
+
+    /** The common step gate also covers a pass-through already queued when Tele Block lands. */
+    fun blocksTeleblockedEntry(player: Player, from: Tile, to: Tile): Boolean {
+        if (!player.timers.has(gg.rsmod.game.model.timer.TELEBLOCK_TIMER)) return false
+        val home = player.world.gameContext.home
+        if (isSafe(from, home) || !isSafe(to, home)) return false
+        player.message(BARRIER_TELEBLOCK_MESSAGE)
+        return true
+    }
 
     /** Owner decision 2026-09-13 (no source text exists). */
     const val BARRIER_TELEBLOCK_MESSAGE = "A magical force prevents you from passing through the barrier while you are tele-blocked."

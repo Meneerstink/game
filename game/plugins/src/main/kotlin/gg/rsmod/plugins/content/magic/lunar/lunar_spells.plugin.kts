@@ -700,6 +700,9 @@ on_magic_spell_button("NPC Contact") { metadata ->
 (NpcContact.CONTACTS.flatMap { listOf(it.head, it.label) }).forEach { component ->
     on_button(NpcContact.INTERFACE, component) { NpcContact.byComponent(component)?.let { NpcContact.contact(player, it) } }
 }
+listOf(12, 40).forEach { component ->
+    on_button(NpcContact.INTERFACE, component) { NpcContact.contactKrystilia(player) }
+}
 on_button(NpcContact.INTERFACE, arrayOf(NpcContact.RANDOM_HEAD, NpcContact.RANDOM_LABEL)) {
     NpcContact.contact(player, NpcContact.CONTACTS.random())
 }

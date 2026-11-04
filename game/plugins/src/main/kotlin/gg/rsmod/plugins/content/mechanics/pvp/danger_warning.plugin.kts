@@ -9,7 +9,8 @@ import gg.rsmod.game.model.MoveGate
 
 on_world_init {
     MoveGate.step = { player, from, to ->
-        DangerWarning.intercept(player, from, to, destination = player.movementQueue.peekLast() ?: to, walk = true)
+        gg.rsmod.plugins.content.areas.home.BountyHunterHome.blocksTeleblockedEntry(player, from, to) ||
+            DangerWarning.intercept(player, from, to, destination = player.movementQueue.peekLast() ?: to, walk = true)
     }
     MoveGate.teleport = { player, to -> DangerWarning.intercept(player, player.tile, to, destination = to, walk = false) }
     DangerWarning.open = { player, destination, walk ->

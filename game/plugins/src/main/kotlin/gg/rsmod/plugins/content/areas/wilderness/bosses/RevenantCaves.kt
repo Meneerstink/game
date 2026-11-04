@@ -4,6 +4,8 @@ import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.LockState
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.collision.Landing
+import gg.rsmod.game.model.timer.FROZEN_TIMER
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.skills.agility.exactMove
 import gg.rsmod.plugins.content.skills.agility.hasAgility
@@ -15,7 +17,8 @@ import gg.rsmod.plugins.content.skills.agility.hasAgility
  * Ways in and out - OSRS Wiki "Cavern (Revenant Caves)" (level 17 at 3073,3654 and level 40 at 3124,3831, one-way in since 2020) and
  * "Stairs (Revenant Caves)" (the exits: southern 3218,10058, northern 3244,10215). Arrival / exit tiles and the crawl (anim 2796,
  * 2 ticks, "You enter the cave." / "You exit the cave."): Kronos-184 activities/wilderness/RevCaves.java - the caverns are unchanged
- * since then; the exits became the two stairs in 2020 and come out at two surface trapdoors ([EXITS]). The level 26 "Crevice" (OSRS loc 40386, 3067,3740) is not built: no donor or wiki source says where it lands.
+ * since then; the exits became the two stairs in 2020 and come out at two surface trapdoors ([EXITS]). Updated cave landings,
+ * including the level 26 Crevice: Zaryx InstantMovementObjects.java REVENANT_OPENING_* / REVENANT_CREVICE_WEST.
  *
  * Pillars - OSRS loc 31561 "Pillar" (Jump-to) at the five Kronos / OSRS map positions; Agility 65 / 75 / 89 per the OSRS Wiki
  * ("65 Agility: between the revenant goblin and the southern revenant ork", 75 west of the northern ork and the north-west
@@ -28,6 +31,7 @@ object RevenantCaves {
     const val STAIRS_SOUTH = 62975 // OSRS 31558
     const val STAIRS_NORTH = 62992 // OSRS 43868
     const val PILLAR = 62978 // OSRS 31561
+    const val CREVICE = 62996 // OSRS 40386, tx-20261102-074444
 
     const val ANIM_CRAWL = 2796
     const val ANIM_JUMP = 741
@@ -41,12 +45,14 @@ object RevenantCaves {
         listOf(
             Placed(CAVERN_17, Tile(3073, 3654), 0),
             Placed(CAVERN_40, Tile(3124, 3831), 3),
+            Placed(CREVICE, Tile(3067, 3740), 0),
             Placed(TRAPDOOR, Tile(3103, 3655), 3),
             Placed(TRAPDOOR, Tile(3122, 3805), 1),
         )
 
-    /** Surface cavern -> cave arrival (Kronos). */
-    val ENTRANCES = mapOf(CAVERN_17 to Tile(3196, 10056), CAVERN_40 to Tile(3241, 10234))
+    /** Surface entrance -> current cave arrival (Zaryx). */
+    // Zaryx InstantMovementObjects.java:199-205, post-2020 map. Old Kronos landings are solid scenery now.
+    val ENTRANCES = mapOf(CAVERN_17 to Tile(3197, 10056), CAVERN_40 to Tile(3241, 10233), CREVICE to Tile(3187, 10127))
 
     /**
      * Cave stairs -> surface: OSRS Wiki "Trapdoor (Revenant Caves)" - "Players will appear in level 17 Wilderness if taking the
@@ -81,13 +87,15 @@ object RevenantCaves {
         player.lockingQueue(lockState = LockState.FULL) {
             player.animate(ANIM_CRAWL)
             wait(2)
-            player.moveTo(dest)
+            player.moveTo(Landing.resolve(player.world.collision, dest))
             player.animate(-1)
             player.filterableMessage(message)
         }
     }
 
     fun jump(player: Player, pillar: Pillar) {
+        // OSRS Revenant Caves changes: pillars cannot be used while frozen or bound.
+        if (player.timers.has(FROZEN_TIMER)) return
         val landing = landing(pillar, player.tile) ?: return
         if (!player.hasAgility(pillar.agility, "You need an agility level of ${pillar.agility} to jump across this pillar.")) return
         val dir = Direction.between(player.tile, landing)

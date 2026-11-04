@@ -1,6 +1,8 @@
 package gg.rsmod.plugins.content.areas.wilderness.bosses
 
 import gg.rsmod.game.message.impl.HintArrowMessage
+import gg.rsmod.game.message.impl.HintArrowTileMessage
+import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.TileGraphic
 import gg.rsmod.game.model.World
@@ -107,7 +109,8 @@ object RevenantMaledictus {
     fun spawn(world: World, at: Spawn): Boolean {
         if (active()) return false
         val npc = Npc(NPC, Tile(at.tile), world)
-        npc.respawns = false
+        // setNpcDefaults recomputes respawns during world.spawn; use the persistent per-NPC override.
+        npc.respawnOverride = false
         if (!world.spawn(npc)) return false
         npc.animate(ANIM_SPAWN)
         instance = npc
@@ -116,7 +119,7 @@ object RevenantMaledictus {
         world.players.forEach { p ->
             if (RevenantCaveFee.inCaves(p.tile)) {
                 p.message(at.localMessage())
-                p.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_NPC, target = npc.index))
+                syncHint(p)
             } else {
                 p.message(at.globalMessage())
             }
@@ -125,9 +128,27 @@ object RevenantMaledictus {
     }
 
     private const val HINT_SLOT = 1
+    private val LAST_HINT = AttributeKey<Int>()
+
+    /** Tile hints work outside the local NPC update radius, and survive entering/relogging during a spawn. */
+    fun syncHint(player: Player) {
+        val npc = instance?.takeIf { active() && it.world === player.world && RevenantCaveFee.inCaves(player.tile) }
+        val centre = npc?.getCentreTile()
+        val previous = player.attr[LAST_HINT]
+        if (centre == null) {
+            if (previous != null) player.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_CLEAR))
+            player.attr.remove(LAST_HINT)
+        } else if (previous != centre.as30BitInteger) {
+            player.write(HintArrowTileMessage(slot = HINT_SLOT, x = centre.x, z = centre.z, level = centre.height, drawDistance = 255))
+            player.attr[LAST_HINT] = centre.as30BitInteger
+        }
+    }
 
     fun clearHints(world: World) {
-        world.players.forEach { p -> if (RevenantCaveFee.inCaves(p.tile)) p.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_CLEAR)) }
+        world.players.forEach { p ->
+            if (p.attr.has(LAST_HINT)) p.write(HintArrowMessage(slot = HINT_SLOT, type = HintArrowMessage.TYPE_CLEAR))
+            p.attr.remove(LAST_HINT)
+        }
     }
 
     /** "will attack all players in range simultaneously" - the living players of the caves within [ATTACK_RANGE]. */
