@@ -239,12 +239,12 @@ class WildernessBossesTests {
     }
 
     @Test
-    fun `N522 V4 - a pillar fails 20 percent at its own Agility level, less with more Agility, never at 99`() {
+    fun `N522 V4 - a pillar fails about 20 percent at its own Agility level, less with more Agility, and still 5 in 256 at 99`() {
         RevenantCaves.PILLARS.forEach { p ->
-            assertEquals(0.20, RevenantCaves.failChance(p, p.agility), 1e-9)
-            assertEquals(0.0, RevenantCaves.failChance(p, 99), 1e-9)
-            assertTrue(RevenantCaves.failChance(p, p.agility + 5) < 0.20)
-            assertTrue(RevenantCaves.failChance(p, p.agility + 5) > 0.0)
+            assertEquals(51 / 256.0, RevenantCaves.failChance(p, p.agility), 1e-9)
+            assertEquals(5 / 256.0, RevenantCaves.failChance(p, 99), 1e-9, "never 0% (owner)")
+            assertEquals(5 / 256.0, RevenantCaves.failChance(p, 120), 1e-9, "boosted past 99 counts as 99")
+            assertTrue(RevenantCaves.failChance(p, minOf(99, p.agility + 5)) < 51 / 256.0)
         }
         assertEquals(listOf(3.5, 3.8, 3.8, 3.8, 4.5), RevenantCaves.PILLARS.map { RevenantCaves.failXp(it) }.sorted())
     }

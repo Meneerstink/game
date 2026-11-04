@@ -105,14 +105,26 @@ object RevenantCaves {
     /**
      * Failing a jump - OSRS Wiki "Pillar (Revenant Caves)": "Failing the jump will deal 4-11 damage, but the player will still make it
      * across", fail xp 3.5 / 3.8 / 4.5. The OSRS fail rate is in no source; owner 2026-11-04 (N522 V4): "20 procent bijv afhankelijk
-     * agility level" -> 20% at the pillar's own level, falling in a straight line to 0% at 99 (boosted level counts, as for the jump).
+     * agility level" -> about 20% at the pillar's own level, falling with the level (boosted level counts, as for the jump; see below).
      */
-    const val FAIL_AT_REQUIREMENT = 0.20
+    // Owner 2026-11-04 18:5x: "mogen nooit 0% kans hebben om te failen" -> the OSRS skilling success roll (OSRS Wiki "Skilling success
+    // rate" oldid 15267313: x = floor((low*(99-L) + high*(L-1))/98 + 0.5), success = (1+x)/256) with high 250 like the three
+    // Wilderness Agility Course obstacles (Mod Ash 2024-01-13 via the wiki): 5/256 = 1.95% fail at 99. Low per pillar so that the
+    // fail chance at its own level is 51/256 = 19.9% (PILLAR-FAILRATE.txt; derived, the real pillar chart is unknown).
+    const val FAIL_HIGH = 250
+
+    fun failLow(pillar: Pillar): Int =
+        when (pillar.agility) {
+            65 -> 117
+            75 -> 61
+            else -> -203
+        }
 
     fun failChance(pillar: Pillar, agility: Int): Double {
-        if (agility >= 99) return 0.0
-        val span = (99 - pillar.agility).coerceAtLeast(1)
-        return (FAIL_AT_REQUIREMENT * (99 - agility) / span).coerceIn(0.0, FAIL_AT_REQUIREMENT)
+        val l = agility.coerceIn(1, 99)
+        val x = kotlin.math.floor((failLow(pillar) * (99 - l) + FAIL_HIGH * (l - 1)) / 98.0 + 0.5)
+        val success = ((1 + x) / 256.0).coerceIn(0.0, 1.0)
+        return 1.0 - success
     }
 
     fun failXp(pillar: Pillar): Double =
