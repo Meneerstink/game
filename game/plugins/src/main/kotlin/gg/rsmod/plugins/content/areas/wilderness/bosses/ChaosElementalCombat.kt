@@ -160,7 +160,7 @@ object ChaosElementalCombat : CombatScript() {
             wait(delay)
             if (!WildernessBossLife.active(npc, life)) return@queue
             val p = target as? Player ?: return@queue
-            if (!p.isOnline || p.isDead() || p.tile.height != npc.tile.height) return@queue
+            if (!p.isOnline || p.isDead() || !inReach(npc, p)) return@queue
             val dest = teleportDestination(npc, p.tile, steps)
             p.graphic(GFX_CONFUSION_IMPACT, height = 100)
             p.playSound(Sfx.CHAOS_ELEMENTAL_CONFUSION_IMPACT)
@@ -171,6 +171,11 @@ object ChaosElementalCombat : CombatScript() {
             p.message(MSG_CONFUSION)
         }
     }
+
+    /** A player who teleported away while the spell flew is not pushed or stripped elsewhere (same plane, within [REACH] of the elemental). */
+    const val REACH = 16
+
+    fun inReach(npc: Npc, p: Player): Boolean = p.tile.height == npc.tile.height && p.tile.isWithinRadius(npc.tile, REACH)
 
     /** Kronos teleportAttack: [steps] tiles straight away from the footprint ([OldWildernessBosses.pushVector]) while each step is free. */
     fun teleportDestination(npc: Npc, start: Tile, steps: Int): Tile {
@@ -192,7 +197,7 @@ object ChaosElementalCombat : CombatScript() {
         npc.world.queue {
             wait(delay)
             if (!WildernessBossLife.active(npc, life)) return@queue
-            if (!target.isOnline || target.isDead()) return@queue
+            if (!target.isOnline || target.isDead() || !inReach(npc, target)) return@queue
             target.graphic(GFX_MADNESS_IMPACT, height = 100)
             target.playSound(Sfx.CHAOS_ELEMENTAL_MADNESS_IMPACT)
             unequip(target)
