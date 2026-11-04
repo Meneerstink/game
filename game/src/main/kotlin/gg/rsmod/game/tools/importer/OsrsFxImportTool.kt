@@ -210,6 +210,9 @@ object OsrsFxImportTool {
             "wildy-lairs-seq" to listOf(1727, 4217, 9227, 10028),
             // N564: the lava gas and crater locs around the Callisto's Den / Escape Caves entrances (gameval GAS 523, CRATER 524).
             "lair-surface-seq" to listOf(523, 524),
+            // Owner 2026-11-04 21:5x: the animated locs of the OSRS squares 13114/13115 around the Escape Caves entrances
+            // (OsrsRegionImportTool 'escape-surface'): gameval AnimationID CAMEL_STEAM 1881, WILD_BANNER 3940.
+            "escape-surface-seq" to listOf(1881, 3940),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

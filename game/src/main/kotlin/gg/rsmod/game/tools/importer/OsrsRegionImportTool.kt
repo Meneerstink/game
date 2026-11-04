@@ -147,6 +147,25 @@ object OsrsRegionImportTool {
                 patch = intArrayOf(3214, 3780, 3229, 3796), excludeOsrsLocs = setOf(46995)),
             "lair-surface-escape" to Batch(listOf(12859), emptyList(), "Escape Caves north-west entrance surface", replaceSquares = setOf(12859),
                 patch = intArrayOf(3253, 3824, 3263, 3839), excludeOsrsLocs = setOf(47175)),
+            // Owner 2026-11-04 21:5x ('Ja, OSRS-grond'): the rev-667 lava field with rock pillars in squares 13114/13115 (x 3264-3327,
+            // z 3712-3839) where OSRS has plain Wilderness - the four Escape Caves entrances and the Silk Chasm entrance stood in it
+            // (world map: a black block with a lava rim). Both squares become the OSRS surface like the volcano; the entrances are
+            // server-placed (WildernessLairs), so the OSRS copies 47077 (Silk Chasm) and 47175 (Escape Caves) are left out.
+            "escape-surface" to Batch(listOf(13114, 13115), emptyList(), "Lava field around the Escape Caves entrances: OSRS surface", replaceSquares = setOf(13114, 13115),
+                // OSRS overlay 99 (rgb ff00ff, no texture) is "hidden" - not drawn in OSRS; here it would be a lilac floor (N541).
+                overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(47077, 47175), dropHiddenOverlays = true),
+            // The rim of that lava field lies in the neighbouring squares (world map 2026-11-04 21:5x: a straight lava strip around the new
+            // ground; only unnamed lava-edge scenery 14427/14495/336/... there). 16-tile strips of those squares become OSRS as well.
+            "escape-rim-w58" to Batch(listOf(12858), emptyList(), "Escape Caves lava rim west (12858)", replaceSquares = setOf(12858),
+                patch = intArrayOf(3248, 3712, 3263, 3775), overlayOverrides = mapOf(6 to 6), dropHiddenOverlays = true),
+            "escape-rim-w59" to Batch(listOf(12859), emptyList(), "Escape Caves lava rim west (12859)", replaceSquares = setOf(12859),
+                patch = intArrayOf(3248, 3776, 3263, 3839), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(47175), dropHiddenOverlays = true),
+            "escape-rim-e58" to Batch(listOf(13370), emptyList(), "Escape Caves lava rim east (13370)", replaceSquares = setOf(13370),
+                patch = intArrayOf(3328, 3712, 3343, 3775), overlayOverrides = mapOf(6 to 6), dropHiddenOverlays = true),
+            "escape-rim-e59" to Batch(listOf(13371), emptyList(), "Escape Caves lava rim east (13371)", replaceSquares = setOf(13371),
+                patch = intArrayOf(3328, 3776, 3343, 3839), overlayOverrides = mapOf(6 to 6), dropHiddenOverlays = true),
+            "escape-rim-n" to Batch(listOf(13116), emptyList(), "Escape Caves lava rim north (13116)", replaceSquares = setOf(13116),
+                patch = intArrayOf(3264, 3840, 3327, 3855), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(47140), dropHiddenOverlays = true),
             "wildy-lairs" to Batch(listOf(13473, 13215, 7092, 7604), listOf(47140, 46995, 47141), "Wilderness boss lairs (Callisto's Den, Vet'ion's Rest, Hunter's End, Skeletal Tomb)"),
         )
 
