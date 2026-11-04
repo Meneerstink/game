@@ -298,6 +298,22 @@ class WildernessBossSpindelTests : WildernessBossContractTests(VenenatisCombat.S
             verify(exactly = 0) { recoil.onIncomingHit(any(), any(), any()) }
         } finally { unmockkObject(vengeance, recoil) }
     }
+    @Test fun `a spider boss and her own spiderlings are one attacker for the single-way rules`() {
+        val f = WildernessBossTestSupport.Fixture()
+        val spindel = f.npc(VenenatisCombat.SPINDEL)
+        val other = f.npc(VenenatisCombat.SPINDEL)
+        val mine = f.npc(VenenatisCombat.SPINDEL_SPIDERLING).also { it.attr[VenenatisCombat.OWNER] = spindel }
+        val sister = f.npc(VenenatisCombat.SPINDEL_SPIDERLING).also { it.attr[VenenatisCombat.OWNER] = spindel }
+        val stray = f.npc(VenenatisCombat.SPINDEL_SPIDERLING).also { it.attr[VenenatisCombat.OWNER] = other }
+        val Combat = gg.rsmod.plugins.content.combat.Combat
+        assertTrue(Combat.sameSide(mine, spindel))
+        assertTrue(Combat.sameSide(spindel, mine))
+        assertTrue(Combat.sameSide(mine, sister))
+        assertFalse(Combat.sameSide(stray, spindel))
+        assertFalse(Combat.sameSide(other, spindel))
+        assertFalse(Combat.sameSide(f.npc(OldWildernessBosses.CALLISTO), f.npc(OldWildernessBosses.CALLISTO)))
+        assertFalse(Combat.sameSide(f.player, spindel))
+    }
     @Test fun `Spindel never exceeds ten spiderlings and her arena excludes the other boss and other floors`() {
         assertEquals(2, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.SPINDEL, 8))
         assertEquals(1, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.SPINDEL, 9))

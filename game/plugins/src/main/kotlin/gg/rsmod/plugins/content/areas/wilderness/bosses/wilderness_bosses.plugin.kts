@@ -166,11 +166,7 @@ val chaosFanaticDrops =
             table(Rare.rareTable, slots = 4)
             table(Gems.gemTable, slots = 4)
         }
-        table("looting_bag") {
-            total(3)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(2)
-        }
+        // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("hard_clue") {
             total(128)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
@@ -223,11 +219,7 @@ val crazyArchaeologistDrops =
             table(Gems.gemTable, slots = 4)
             nothing(1) // the OSRS Wiki table sums to 127/128
         }
-        table("looting_bag") {
-            total(3)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(2)
-        }
+        // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("tertiary") {
             total(128)
             obj(Items.FEDORA, slots = 1)

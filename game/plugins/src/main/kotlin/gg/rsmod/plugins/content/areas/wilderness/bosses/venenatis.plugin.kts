@@ -216,11 +216,7 @@ val venenatisDrops =
             obj(Items.SUPER_COMBAT_POTION_2, 2..3, slots = 1)
             nothing(12)
         }
-        table("looting_bag") {
-            total(3)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(2)
-        }
+        // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("strange_fruit") {
             total(5)
             obj(Items.STRANGE_FRUIT, slots = 1)
@@ -352,11 +348,7 @@ val spindelDrops =
             obj(Items.SUPER_COMBAT_POTION_2, 2..3, slots = 5)
             nothing(24)
         }
-        table("looting_bag") {
-            total(3)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(2)
-        }
+        // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("strange_fruit") {
             total(5)
             obj(Items.STRANGE_FRUIT, slots = 1)

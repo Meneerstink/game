@@ -258,7 +258,7 @@ object VenenatisCombat {
                     magicHit(npc, p, arena.maxMagic + bonus)
                 }
             }
-            if (spawnsSpiderlings(attack)) summonSpiderlings(npc)
+            if (spawnsSpiderlings(attack)) summonSpiderlings(npc, primary?.takeIf { it in players } ?: players.first())
             if (shootsWeb(attack)) shootWeb(npc, Tile((primary?.takeIf { it in players } ?: players.first()).tile))
             val done = (attack + 1) % 16
             npc.attr[ATTACKS] = done
@@ -290,7 +290,13 @@ object VenenatisCombat {
             npc.dealHit(target = p, maxHit = max.toDouble(), landHit = land, delay = delay, hitType = HitType.MAGIC, onHit = { p.graphic(GFX_MAGIC_HIT, height = 120) })
         }
 
-        private fun summonSpiderlings(npc: Npc) {
+        /**
+         * N522 (testclient 2026-11-04): in the single-way (singles-plus, OSRS Wiki "Singles-plus combat") Web Chasm the aggression
+         * pick never chose a player already fighting Spindel, so her spiderlings stood idle - OSRS: "otherwise her mechanics are
+         * identical" and the spiderlings "drain prayer on every hit" (Venenatis/Strategies). Outside multi-combat a new spiderling
+         * therefore joins the boss's target at once, as Vet'ion's hellhounds do; in the multi Silk Chasm aggression still picks.
+         */
+        internal fun summonSpiderlings(npc: Npc, target: Player? = null) {
             val list = spiderlings(npc)
             list.removeAll { !it.isSpawned() || it.isDead() }
             repeat(spiderlingsToSummon(npc.id, list.size)) {
@@ -303,6 +309,7 @@ object VenenatisCombat {
                 if (npc.world.spawn(spiderling)) {
                     list += spiderling
                     summoned += spiderling
+                    if (target != null && !spiderling.tile.isMulti(npc.world)) spiderling.attack(target)
                 }
             }
         }

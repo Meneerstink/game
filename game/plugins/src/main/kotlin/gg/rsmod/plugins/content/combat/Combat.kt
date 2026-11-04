@@ -443,7 +443,22 @@ object Combat {
     fun sameSide(
         a: Pawn,
         b: Pawn,
-    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true
+    ): Boolean = a === b || actingFor(a)?.let { it === actingFor(b) } == true || bossSide(a) === bossSide(b) && bossSide(a) != null
+
+    /**
+     * N522 (testclient 2026-11-04): a spider boss and the spiderlings she summoned are one attacker for the single-way rules - in the
+     * singles-plus Web Chasm her spiderlings join her target ("otherwise her mechanics are identical", OSRS Wiki Venenatis/Strategies),
+     * and the player must still be able to fight Spindel and her spiderlings (no "I'm already under attack!").
+     */
+    private fun bossSide(pawn: Pawn): Npc? {
+        val npc = pawn as? Npc ?: return null
+        val spiders = gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat
+        return when (npc.id) {
+            spiders.SPIDERLING, spiders.SPINDEL_SPIDERLING -> npc.attr[spiders.OWNER]
+            spiders.NPC, spiders.SPINDEL -> npc
+            else -> null
+        }
+    }
 
     /**
      * The Slayer gate (one rule for every attack route): an npc with a Slayer requirement above the player's Slayer level cannot be

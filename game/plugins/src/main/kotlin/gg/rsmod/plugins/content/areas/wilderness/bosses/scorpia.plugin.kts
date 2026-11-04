@@ -214,11 +214,7 @@ val scorpiaDrops =
             obj(Items.BLIGHTED_SUPER_RESTORE4_NOTED, quantity = 5, slots = 5)
             nothing(2) // Wilderness crabs teleport (not in this game)
         }
-        table("looting_bag") {
-            total(3)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(2)
-        }
+        // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("hard_clue") {
             total(100)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
@@ -228,27 +224,9 @@ val scorpiaDrops =
 
 DropTableFactory.register(scorpiaDrops, Npcs.SCORPIA)
 
-// Scorpia's offspring: Looting bag 1/10 in the Wilderness (OSRS Wiki). Not ported: Ensouled scorpion head, beginner clue (no beginner
-// clues here), Krystilia tertiaries.
-val offspringDrops =
-    DropTableFactory.build {
-        table("looting_bag") {
-            total(10)
-            obj(Items.LOOTING_BAG, slots = 1)
-            nothing(9)
-        }
-    }
-
-DropTableFactory.register(offspringDrops, Npcs.SCORPIAS_OFFSPRING)
-
-// Wiki Scorpia's guardian: killing a guardian manually can give a looting bag (1/3).
-DropTableFactory.register(DropTableFactory.build {
-    table("looting_bag") {
-        total(3)
-        obj(Items.LOOTING_BAG, slots = 1)
-        nothing(2)
-    }
-}, Npcs.SCORPIAS_GUARDIAN)
+// Scorpia's offspring and guardian drop nothing here: their only OSRS drop the Wilderness gives is the looting bag (offspring 1/10,
+// guardian 1/3), and the bag is out of the game (N424 / N561, owner 2026-10-29 + 2026-11-04). Not ported either: Ensouled scorpion
+// head, beginner clue (no beginner clues here), Krystilia tertiaries.
 
 on_npc_death(Npcs.SCORPIA, Npcs.SCORPIAS_OFFSPRING, Npcs.SCORPIAS_GUARDIAN) {
     if (npc.id == Npcs.SCORPIA) ScorpiaCombat.removeGuardians(npc)

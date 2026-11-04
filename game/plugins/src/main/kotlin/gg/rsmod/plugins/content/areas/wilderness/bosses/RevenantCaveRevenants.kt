@@ -41,7 +41,7 @@ import kotlin.math.sqrt
  * Drops - OSRS Wiki "Template:Revenants/Drops" (DropLogProject, Jagex data), per combat level: A = floor(2200 / floor(sqrt(cb))),
  * B = 15 + floor((cb + 60)^2 / 200). Each kill: ether always; one roll in A - 1 on the rare table (the uniques, 1 / 26.667, and the
  * statuette table out of 40), min(A, B) - 1 on the 198-weight table, the rest coins (only below level 132); the blighted table at
- * 100 / (250 - cb); the looting bag. Owner decision N522: the six ancient artefacts are OUR Deadman emblems - by rank, emblem ->
+ * 100 / (250 - cb); no looting bag (N424 / N561: out of the game). Owner decision N522: the six ancient artefacts are OUR Deadman emblems - by rank, emblem ->
  * tier 1, totem 2, statuette 3, medallion 4, effigy 5, relic 6. Unskulled off-task rates. Not ported: the Revenant cave teleport
  * (today's OSRS item is the configurable 'Middle entrance' scroll that needs the level 26 crevice, not built yet) - its weight is
  * left as nothing so every other rate stays the wiki rate; the champion scrolls (no Champions' Challenge here).
@@ -111,9 +111,6 @@ object RevenantCaveRevenants {
     fun maxEther(cb: Int): Int = (floor(sqrt(cb.toDouble())).toInt() + 1) * 2
 
     fun maxCoins(cb: Int): Int = 1 + 25 * floor(sqrt(cb.toDouble())).toInt()
-
-    /** Looting bag: 1/15 below level 10, 1/3 above 50, else 1/floor(150 / cb). */
-    fun lootingBagRate(cb: Int): Int = if (cb < 10) 15 else if (cb > 50) 3 else 150 / cb
 
     fun emblem(tier: Int): Int = DeadmanEmblem.FIRST_EMBLEM + tier - 1
 
@@ -242,12 +239,6 @@ object RevenantCaveRevenants {
                 obj(Items.BLIGHTED_KARAMBWAN, 1..2, slots = 10)
                 obj(Items.BLIGHTED_SUPER_RESTORE4, slots = 5)
                 nothing(5 + (150 - cb)) // the Revenant cave teleport (5, not ported) + the miss: 95 + 5 + 150 - cb = 250 - cb
-            }
-            table("looting_bag") {
-                val n = lootingBagRate(cb)
-                total(n)
-                obj(Items.LOOTING_BAG, slots = 1)
-                nothing(n - 1)
             }
         }
 
