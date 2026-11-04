@@ -1699,6 +1699,14 @@ on_command("clip", Privilege.ADMIN_POWER) {
     }
 }
 
+// ::itembox <item> <amountOrZoom> - shows the item message box (interface 519) to check how a model fits (N522 fee box, 2026-11-04).
+on_command("itembox", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    val item = args.getOrNull(0)?.toIntOrNull() ?: 995
+    val amount = args.getOrNull(1)?.toIntOrNull() ?: 1
+    player.queue { itemMessageBox("itembox item=$item amountOrZoom=$amount", item = item, amountOrZoom = amount) }
+}
+
 on_command("equ", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::equ 3 19709</col>") { values ->

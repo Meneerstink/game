@@ -255,6 +255,12 @@ class WildernessBossesTests {
         assertEquals((2..24 step 2).toSet(), rolls)
         val line = gg.rsmod.plugins.content.drops.DropEntry.ItemRangeDrop(gg.rsmod.game.model.item.Item(23017), 2..24, step = 2)
         assertEquals((2..24 step 2).toSet(), (1..2000).map { line.getDrop().amount }.toSet())
+        // Uniques are their own roll (15 slots of uniqueTotal): 1/(A x 26.667), skulled 1/(A x 14.667), on task 1/(A x 5.333) / 1/(A x 2.933).
+        val a = RevenantCaveRevenants.a(135).toDouble()
+        assertEquals(a * 26.667, RevenantCaveRevenants.uniqueTotal(200, skulled = false, onTask = false) / 15.0, a * 0.01)
+        assertEquals(a * 14.667, RevenantCaveRevenants.uniqueTotal(200, skulled = true, onTask = false) / 15.0, a * 0.01)
+        assertEquals(a * 5.333, RevenantCaveRevenants.uniqueTotal(200, skulled = false, onTask = true) / 15.0, a * 0.01)
+        assertEquals(a * 2.933, RevenantCaveRevenants.uniqueTotal(200, skulled = true, onTask = true) / 15.0, a * 0.01)
         // The six ancient artefacts are the six Deadman emblem tiers, by rank.
         assertEquals((23864..23869).toList(), (1..6).map { RevenantCaveRevenants.emblem(it) })
     }

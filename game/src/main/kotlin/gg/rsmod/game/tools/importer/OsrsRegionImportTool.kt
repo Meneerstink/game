@@ -121,6 +121,11 @@ object OsrsRegionImportTool {
             // Owner 2026-11-04 ('vanbuiten als je t gebouw in kijkt graphical bugg'): the OSRS "hidden" overlays (rgb ff00ff, no texture -
             // not drawn in OSRS) became a lilac floor here. Tiles of the same rectangle again, without them.
             "edgeville-jail-tiles" to Batch(listOf(12342), emptyList(), "Edgeville jail tiles without hidden overlays", replaceSquares = setOf(12342), patch = intArrayOf(3106, 3509, 3112, 3518), tilesOnly = true, dropHiddenOverlays = true, overlayOverrides = mapOf(11 to 11)),
+            // N532/N538 (owner 2026-11-02 'wilderness volcano VOLLEDIG WEG', 2026-11-04 'trapdoor overlapt de wilderness volcano'): the
+            // rev-667 volcano sits in squares 12345/12346/12601/12602 (hundreds of locs on planes 1-3 that OSRS does not have; 12347 and
+            // 12603 match OSRS). The four squares become the OSRS surface; the Revenant Caves caverns / trapdoors and the Web Chasm entrance
+            // are server-placed (spawn_obj), so they stay. N522-WILDERNESS-ONDERZOEK 3.1.
+            "wilderness-volcano" to Batch(listOf(12345, 12346, 12601, 12602), emptyList(), "Wilderness volcano removed: OSRS surface", replaceSquares = setOf(12345, 12346, 12601, 12602)),
             "silk-chasm" to Batch(listOf(13727, 13472), listOf(47077, 47175, 47084, 47085, 47086), "Silk Chasm (Venenatis) and Escape Caves"),
         )
 

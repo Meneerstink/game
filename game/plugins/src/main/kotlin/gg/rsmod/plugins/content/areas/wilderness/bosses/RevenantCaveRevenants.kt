@@ -22,6 +22,7 @@ import gg.rsmod.plugins.content.combat.strategy.MagicCombatStrategy
 import gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy
 import gg.rsmod.plugins.content.drops.DropTableFactory
 import gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem
+import gg.rsmod.plugins.content.skills.slayer.getSlayerAssignment
 import kotlin.math.floor
 import kotlin.math.min
 import kotlin.math.sqrt
@@ -122,48 +123,56 @@ object RevenantCaveRevenants {
     fun rareTable(skulled: Boolean) =
         if (skulled) rareSkulled else rareUnskulled
 
+    // Template:Revenants/Drops oldid=15089327 (N522-WILDERNESS-ONDERZOEK 1.3): the artefact ("statuette") roll is its own table out of
+    // 40 (skulled 22, no dragon med helm), taken on the 1/A rare slot; the uniques are a separate roll (below). Before 2026-11-04 both
+    // shared one 405 / 235 table, which gave 1/27 instead of 1/26.667 and 60/405 instead of 6/40.
     private val rareSkulled =
         DropTableFactory.build {
             main {
-                total(235)
-                obj(Items.AMULET_OF_AVARICE, slots = 6)
-                obj(Items.CRAWS_BOW_U, slots = 3)
-                obj(Items.THAMMARONS_SCEPTRE_U, slots = 3)
-                obj(Items.VIGGORAS_CHAINMACE_U, slots = 3)
-                obj(emblem(1), slots = 10) // ancient emblem 1/22 skulled
-                obj(emblem(2), slots = 40)
-                obj(emblem(3), slots = 20)
-                obj(emblem(4), slots = 10)
-                obj(emblem(5), slots = 10)
-                obj(emblem(6), slots = 10)
-                obj(Items.ANCIENT_CRYSTAL, slots = 30)
-                obj(Items.MAGIC_SEED, 2..6, slots = 40)
-                obj(Items.YEW_SEED, 2..6, slots = 40)
-                nothing(10) // the skulled statuette lines sum to 21/22
+                total(22)
+                obj(emblem(1), slots = 1) // ancient emblem 1/22 skulled
+                obj(emblem(2), slots = 4) // ancient totem
+                obj(emblem(3), slots = 2) // ancient statuette
+                obj(emblem(4), slots = 1) // ancient medallion
+                obj(emblem(5), slots = 1) // ancient effigy
+                obj(emblem(6), slots = 1) // ancient relic
+                obj(Items.ANCIENT_CRYSTAL, slots = 3)
+                obj(Items.MAGIC_SEED, 2..6, slots = 4)
+                obj(Items.YEW_SEED, 2..6, slots = 4)
+                nothing(1) // the skulled lines sum to 21/22
             }
         }
 
     private val rareUnskulled =
         DropTableFactory.build {
             main {
-                total(405)
-                obj(Items.AMULET_OF_AVARICE, slots = 6)
-                obj(Items.CRAWS_BOW_U, slots = 3)
-                obj(Items.THAMMARONS_SCEPTRE_U, slots = 3)
-                obj(Items.VIGGORAS_CHAINMACE_U, slots = 3)
+                total(40)
                 // The six ancient artefacts are our Deadman emblems (owner decision N522), by rank.
-                obj(emblem(1), slots = 60) // ancient emblem 6/40
-                obj(emblem(2), slots = 40) // ancient totem 4/40
-                obj(emblem(3), slots = 20) // ancient statuette 2/40
-                obj(emblem(4), slots = 10) // ancient medallion 1/40
-                obj(emblem(5), slots = 10) // ancient effigy 1/40
-                obj(emblem(6), slots = 10) // ancient relic 1/40
-                obj(Items.ANCIENT_CRYSTAL, slots = 30)
-                obj(Items.MAGIC_SEED, 2..6, slots = 40)
-                obj(Items.YEW_SEED, 2..6, slots = 40)
-                obj(Items.DRAGON_MED_HELM, slots = 130)
-                // The statuette lines sum to 39/40 of the rare roll; the uniques take the rest (1/26.667 ~ 15/405).
+                obj(emblem(1), slots = 6) // ancient emblem 6/40
+                obj(emblem(2), slots = 4) // ancient totem 4/40
+                obj(emblem(3), slots = 2) // ancient statuette 2/40
+                obj(emblem(4), slots = 1) // ancient medallion 1/40
+                obj(emblem(5), slots = 1) // ancient effigy 1/40
+                obj(emblem(6), slots = 1) // ancient relic 1/40
+                obj(Items.ANCIENT_CRYSTAL, slots = 3)
+                obj(Items.MAGIC_SEED, 2..6, slots = 4)
+                obj(Items.YEW_SEED, 2..6, slots = 4)
+                obj(Items.DRAGON_MED_HELM, slots = 13)
+                nothing(1) // the lines sum to 39/40
             }
+        }
+
+    /**
+     * The uniques roll per kill (same template): unskulled 1/(A x 26.667) = 3/(80A), skulled 1/(A x 14.667) = 3/(44A); on a revenant
+     * Slayer task 1/(A x 5.333) = 3/(16A) and skulled 1/(A x 2.933) = 15/(44A). Of a unique the Amulet of avarice is 2/5 and each
+     * wilderness weapon 1/5, so the four lines take 6 + 3 + 3 + 3 = 15 slots of [uniqueTotal].
+     */
+    fun uniqueTotal(a: Int, skulled: Boolean, onTask: Boolean): Int =
+        when {
+            onTask && skulled -> 44 * a
+            onTask -> 80 * a
+            skulled -> 220 * a
+            else -> 400 * a
         }
 
     /**
@@ -227,6 +236,15 @@ object RevenantCaveRevenants {
                 table(rareTable(skulled), slots = 1)
                 table(standardTable(note), slots = m - 1)
                 if (a > m) obj(Items.COINS_995, 1..maxCoins(cb), slots = a - m)
+            }
+            table("uniques") {
+                val onTask = player.getSlayerAssignment() == gg.rsmod.game.model.combat.SlayerAssignment.REVENANT &&
+                    (player.attr[gg.rsmod.game.model.attr.SLAYER_AMOUNT] ?: 0) > 0
+                total(uniqueTotal(a(cb), skulled, onTask))
+                obj(Items.AMULET_OF_AVARICE, slots = 6)
+                obj(Items.CRAWS_BOW_U, slots = 3)
+                obj(Items.THAMMARONS_SCEPTRE_U, slots = 3)
+                obj(Items.VIGGORAS_CHAINMACE_U, slots = 3)
             }
             table("blighted") {
                 total(250 - cb)
