@@ -63,11 +63,10 @@ object WildernessLairs {
     const val ESCAPE_CAVES_OPEN = false
 
     /**
-     * The Web Chasm entrance: OSRS has it at 3183,3744 (rot 1), but our 667 surface is unwalkable 3176-3190 x 3735-3752 there (test
-     * client ::clip 2026-11-02: every tile refuses every step), so it stands 10 tiles east at the nearest walkable spot, its west
-     * (approach) side on open ground - a question for the owner (or import the OSRS surface square 12602).
+     * The Web Chasm entrance at its OSRS place 3183,3744 (rot 1, OSRS map square 12602). Until 2026-11-04 the rev-667 volcano made
+     * 3176-3190 x 3735-3752 unwalkable and it stood at 3193,3744; the volcano is gone (OsrsRegionImportTool 'wilderness-volcano').
      */
-    val WEB_CHASM_ENTRANCE_TILE = Tile(3193, 3744)
+    val WEB_CHASM_ENTRANCE_TILE = Tile(3183, 3744)
 
     val ESCAPE_SURFACE =
         listOf(
@@ -81,8 +80,8 @@ object WildernessLairs {
         listOf(Placed(SILK_CHASM_ENTRANCE, Tile(3321, 3794), 1), Placed(WEB_CHASM_ENTRANCE, WEB_CHASM_ENTRANCE_TILE, 1)) +
             (if (ESCAPE_CAVES_OPEN) ESCAPE_SURFACE else emptyList())
 
-    /** The Web Chasm's own exit back to the surface, in front of the entrance (donor: 3182,3746 - unwalkable here). */
-    val WEB_CHASM_SURFACE_EXIT = Tile(3191, 3746)
+    /** The Web Chasm's own exit back to the surface, in front of the entrance (donor Near Reality: 3182,3746). */
+    val WEB_CHASM_SURFACE_EXIT = Tile(3182, 3746)
 
     /** While the Escape Caves are closed: the Silk Chasm exit puts the player on the entrance's approach side (OSRS: west of it). */
     val SILK_CHASM_SURFACE_EXIT = Tile(3319, 3795)

@@ -202,6 +202,9 @@ object OsrsFxImportTool {
             "fedora-tip" to listOf(2418),
             // N541: the wall torches (OSRS loc 196) of the Edgeville jail animate with gameval AnimationID TORCH 481.
             "edgeville-jail-seq" to listOf(481),
+            // N532: the animated locs of the OSRS surface squares 12345/12346/12601/12602 (volcano removal): gameval AnimationID
+            // CANDLE_FLICKER 2564, ELEM1_QIP_FURNACE_GLOW 4860, WBR_VETION_ENTRANCE_FRAME 9985.
+            "wilderness-volcano-seq" to listOf(2564, 4860, 9985),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

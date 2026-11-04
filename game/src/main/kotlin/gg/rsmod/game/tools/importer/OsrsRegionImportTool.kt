@@ -62,6 +62,8 @@ object OsrsRegionImportTool {
          * overlay ids are the shared pre-2008 floors (OSRS 9 and rev-667 9 are both rgb 505050), so 11 -> 11 (rgb 665d58, stone).
          */
         val overlayOverrides: Map<Int, Int> = emptyMap(),
+        /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
+        val excludeOsrsLocs: Set<Int> = emptySet(),
     ) {
         fun inPatch(square: Int, lx: Int, lz: Int): Boolean {
             val p = patch ?: return true
@@ -125,7 +127,11 @@ object OsrsRegionImportTool {
             // rev-667 volcano sits in squares 12345/12346/12601/12602 (hundreds of locs on planes 1-3 that OSRS does not have; 12347 and
             // 12603 match OSRS). The four squares become the OSRS surface; the Revenant Caves caverns / trapdoors and the Web Chasm entrance
             // are server-placed (spawn_obj), so they stay. N522-WILDERNESS-ONDERZOEK 3.1.
-            "wilderness-volcano" to Batch(listOf(12345, 12346, 12601, 12602), emptyList(), "Wilderness volcano removed: OSRS surface", replaceSquares = setOf(12345, 12346, 12601, 12602)),
+            "wilderness-volcano" to Batch(listOf(12345, 12346, 12601, 12602), emptyList(), "Wilderness volcano removed: OSRS surface", replaceSquares = setOf(12345, 12346, 12601, 12602),
+                // OSRS 6 (rgb 0, water texture 25) -> our water overlay 6 (rgb 387b61), not the lilac 38. Left out: the Revenant Caves
+                // Cavern 31555 and Trapdoor 31557 and the Web Chasm entrance 47078 (the server places its own working copies) and the
+                // Vet'ion's Rest entrance 47141 (owner 2026-11-02: the old Vet'ion without a cave).
+                overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(31555, 31557, 47078, 47141)),
             "silk-chasm" to Batch(listOf(13727, 13472), listOf(47077, 47175, 47084, 47085, 47086), "Silk Chasm (Venenatis) and Escape Caves"),
         )
 
@@ -226,7 +232,7 @@ object OsrsRegionImportTool {
                 val locIdMap = LinkedHashMap<Int, Int>()
                 val neededModels = sortedSetOf<Int>()
                 val importedDefs = LinkedHashMap<Int, ModernObjectDef>()
-                (regions.flatMap { (sq, r) -> r.locs.filter { batch.inPatch(sq, it.localX, it.localZ) }.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
+                (regions.flatMap { (sq, r) -> r.locs.filter { batch.inPatch(sq, it.localX, it.localZ) && it.id !in batch.excludeOsrsLocs }.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
                     if (id in locIdMap) return@forEach
                     val def = ModernObjectDef.decode(id, modernLocDefs[id] ?: error("modern loc $id missing"))
                     locIdMap[id] = nextLocId++
@@ -246,6 +252,9 @@ object OsrsRegionImportTool {
                     mutations += CacheMutation(FeroxImportTool.MODEL_INDEX, localId, 0, OsrsModelConversion.convert(modern, modernId, dropped), "$name model osrs=$modernId -> $localId")
                 }
 
+                // Every loc animation must be imported first (OsrsFxImportTool); list them all at once instead of failing on the first.
+                val missingSeqs = importedDefs.values.map { it.animationId }.filter { it != -1 && seqs["seq:$it"] == null }.distinct().sorted()
+                check(missingSeqs.isEmpty()) { "loc animations not imported yet (add an OsrsFxImportTool SEQ_BATCHES entry): $missingSeqs" }
                 importedDefs.forEach { (modernId, def) ->
                     val localId = locIdMap.getValue(modernId)
                     val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
@@ -293,10 +302,11 @@ object OsrsRegionImportTool {
                                 .filter { it.id !in batch.locsOnlyWithout }.also { println("LOCS_KEPT ${it.size} of ${region.locs.size}") }
                         } else if (ownLocs != null) {
                             ownLocs.filterNot { batch.inPatch(square, it.localX, it.localZ) } +
-                                region.locs.filter { batch.inPatch(square, it.localX, it.localZ) }
+                                region.locs.filter { batch.inPatch(square, it.localX, it.localZ) && it.id !in batch.excludeOsrsLocs }
                                     .map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
                         } else {
-                            region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
+                            region.locs.filter { it.id !in batch.excludeOsrsLocs }
+                                .map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
                         }
                     val locBytes = Rev667LocCodec.encode(locs)
                     check(Rev667LocCodec.decode(locBytes).size == locs.size) { "loc encode/decode count mismatch" }
