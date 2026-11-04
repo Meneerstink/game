@@ -119,6 +119,9 @@ object OsrsNpcImportTool {
             // import-source/openrs2-1151/cache (build 209) - Callisto 6609, Vet'ion 6611, Vet'ion Reborn 6612, Skeleton Hellhound 6613,
             // Greater Skeleton Hellhound 6614 (classic models there; the 2023 rework made them skeletal).
             "wildy-old" to listOf(6609, 6611, 6612, 6613, 6614),
+            // N541: Krystilia, the Wilderness Slayer master in the Edgeville jail (OSRS Wiki infobox id 7663; Talk-to / Assignment /
+            // Trade / Rewards). 667 id 7663 is Fistandantilus, so she gets a new local id (Krystilia.npcId resolves her by name).
+            "krystilia" to listOf(7663),
         )
     }
 

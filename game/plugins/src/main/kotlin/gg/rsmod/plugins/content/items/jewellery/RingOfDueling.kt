@@ -15,6 +15,12 @@ object RingOfDueling {
     val FEROX = Tile(3151, 3635)
     val DESTINATIONS = linkedMapOf("Duel Arena" to Tile(3308, 3234), "Castle Wars" to Tile(2440, 3089), "Ferox Enclave" to FEROX)
 
+    /** The charge messages as the old 667 handler had them (OSRS Wiki: "Your ring of dueling has four uses left." / "... crumbles to dust."). */
+    private val USES_LEFT = listOf("seven uses", "six uses", "five uses", "four uses", "three uses", "two uses", "one use")
+
+    fun chargeMessage(used: Int): String =
+        USES_LEFT.getOrNull(ITEMS.indexOf(used))?.let { "Your ring of duelling has $it left." } ?: "Your ring of duelling crumbles to dust."
+
     fun replacement(id: Int): Int? = ITEMS.indexOf(id).takeIf { it >= 0 }?.let { ITEMS.getOrNull(it + 1) }
 
     /** Capture slot/item before dialogue/countdown; moving/replacing a ring never buys a free teleport. */
@@ -30,8 +36,7 @@ object RingOfDueling {
         player.canTeleport(TeleportType.FEROCIOUS_RING) { // jewellery visuals, OSRS dueling limit: level 20
             if (!spend(player, used, slot, equipped)) return@canTeleport
             player.teleport(destination, TeleportType.FEROCIOUS_RING)
-            val remaining = ITEMS.size - ITEMS.indexOf(used.id) - 1
-            player.message(if (remaining == 0) "Your ring of duelling crumbles to dust." else "Your ring of duelling has $remaining uses left.")
+            player.message(chargeMessage(used.id))
         }
     }
 }

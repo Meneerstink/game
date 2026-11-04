@@ -33,7 +33,9 @@ class KrystiliaTests {
         assertEquals(36, rows.size)
         val actual = rows.map { row ->
             val (name, amount, weight) = row.split('\t')
-            val task = Krystilia.TASKS.single { name.lowercase() in it.names || name == "Revenant" && it.assignment == SlayerAssignment.REVENANT }
+            // A wiki row names the task (e.g. "Spiritual creature", "Revenant"), not always one of the npcs that count for it.
+            val task = Krystilia.TASKS.singleOrNull { name.lowercase() in it.names }
+                ?: Krystilia.TASKS.single { it.assignment.identifier.lowercase().startsWith(name.lowercase()) }
             assertEquals(amount, "${task.amount.first}-${task.amount.last}", name)
             assertEquals(weight.toInt(), task.weight, name)
             task

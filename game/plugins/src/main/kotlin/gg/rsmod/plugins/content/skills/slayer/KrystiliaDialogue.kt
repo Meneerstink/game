@@ -27,28 +27,58 @@ object KrystiliaDialogue {
         val choice = if (remote) options("I need another assignment.", "Let's talk about the difficulty of my assignments.", "Err... Nothing...")
             else options("I need another assignment.", "Have you any rewards for me, or anything to trade?", "Let's talk about the difficulty of my assignments.",
                 "What can you do apart from Slayer Master stuff?", "I love your hat! Where did you get it from?", "Er... Nothing...")
+        // Transcript:Krystilia: the player says each chosen line (the hat option is spoken as "I love the hat! ...").
         when {
-            choice == 1 -> assignment(q, id)
+            choice == 1 -> {
+                chatPlayer("I need another assignment.", wrap = true)
+                assignment(q, id)
+            }
             !remote && choice == 2 -> {
+                chatPlayer("Have you any rewards for me, or anything to trade?", wrap = true)
                 say("I have quite a few rewards you can earn, and a wide variety of Slayer equipment for sale.", id)
                 when (options("Look at rewards.", "Look at shop.", "Cancel.")) {
                     1 -> rewards(player)
                     2 -> player.openShop("Slayer Equipment")
                 }
             }
-            choice == (if (remote) 2 else 3) -> difficulty(q, id)
-            !remote && choice == 4 -> {
-                say("Quite a lot! Those stupid guards think they've trapped me here for causing trouble, but I can get back out to the Wilderness for some fun anytime I like.", id)
-                // Owner's existing respawn decision wins over the OSRS 5m service: Death sells all points for 500k.
-                if (RespawnPoints.owns(player, RespawnPoints.Point.EDGEVILLE)) {
-                    say("So do you want to respawn in Edgeville in future?", id)
-                    if (options("Please switch my respawn back to Edgeville.", "No, I don't want to respawn in Edgeville.") == 1) {
-                        RespawnPoints.activate(player, RespawnPoints.Point.EDGEVILLE)
-                        say("Done.", id)
-                    }
-                } else player.message("Death himself arranges it these days.")
+            choice == (if (remote) 2 else 3) -> {
+                chatPlayer("Let's talk about the difficulty of my assignments.", wrap = true)
+                difficulty(q, id)
             }
-            !remote && choice == 5 -> hat(q, id)
+            !remote && choice == 4 -> {
+                chatPlayer("What can you do apart from Slayer Master stuff?", wrap = true)
+                say("Quite a lot! Those stupid guards think they've trapped me here for causing trouble, but I can get back out to the Wilderness for some fun anytime I like.", id)
+                // Owner's respawn decision 2026-09-26: Death sells every respawn point (RespawnPoints, 500k). An owned Edgeville point is
+                // switched here with the OSRS lines; the OSRS 5m offer for an unowned point and the "back to Lumbridge" branch wait for the
+                // owner's answer (N541) - until then the conversation ends here, no invented line.
+                if (RespawnPoints.owns(player, RespawnPoints.Point.EDGEVILLE) && RespawnPoints.active(player) != RespawnPoints.Point.EDGEVILLE) {
+                    say("So do you want to respawn in Edgeville in future?", id)
+                    if (options("Please switch my respawn back to Edgeville.", "No, I don't want to respawn in Edgeville.") != 1) {
+                        chatPlayer("No, I don't want to respawn in Edgeville.", wrap = true)
+                        say("Boring!", id)
+                        return@with
+                    }
+                    chatPlayer("Please switch my respawn back to Edgeville.", wrap = true)
+                    if (RespawnPoints.active(player) == RespawnPoints.Point.FEROX) {
+                        say("Couldn't handle Ferox Enclave? Do you really think you could handle Edgeville?", id)
+                    } else {
+                        say("Sounds like you're looking for some fun! Are you sure you can handle it?", id)
+                    }
+                    if (options("Yes, switch my respawn to Edgeville.", "No, maybe another time.") != 1) {
+                        chatPlayer("No, maybe another time.", wrap = true)
+                        say("Boring!", id)
+                        return@with
+                    }
+                    chatPlayer("Yes, switch my respawn to Edgeville.", wrap = true)
+                    RespawnPoints.activate(player, RespawnPoints.Point.EDGEVILLE)
+                    say("Done.", id)
+                }
+            }
+            !remote && choice == 5 -> {
+                chatPlayer("I love the hat! Where did you get it from?", wrap = true)
+                hat(q, id)
+            }
+            else -> chatPlayer(if (remote) "Err... Nothing..." else "Er... Nothing...", wrap = true)
         }
     }
 
@@ -65,16 +95,15 @@ object KrystiliaDialogue {
                 else "You're still hunting ${current.identifier.lowercase()}; you have $remaining to go. Come back when you've finished your task.", id)
             return@with
         }
-        if (player.skills.getMaxLevel(Skills.SLAYER) == 1 && player.attr[STARTED_SLAYER] != true) {
-            // Exact level-1 refusal is missing from the wiki transcript; use its sourced direction as a game message.
-            player.message("Speak to the Burthorpe Slayer Master Turael first.")
-            return@with
-        }
+        // Transcript:Krystilia has no refusal for new players; she assigns anything the player has the Slayer level for.
         if (player.attr[Krystilia.WARNED] != true) {
             say("Before I assign you anything, I want to make something clear. My tasks have to be done in the Wilderness. Only kills inside the Wilderness will count.", id)
             say("I don't check combat levels when choosing tasks, either. So even if other masters won't assign you 'tough' monsters, I'll pick anything for which you have the Slayer level, provided you can physically get to it.", id)
             say("You might get a few unusual loot drops while you're on my assignments, if you're lucky. So, do you want me to assign you something?", id)
-            if (options("Yes, I understand I must kill it in the Wilderness.", "No thanks, I don't want tasks from you.") != 1) return@with
+            if (options("Yes, I understand I must kill it in the Wilderness.", "No thanks, I don't want tasks from you.") != 1) {
+                chatPlayer("No thanks, I don't want tasks from you.", wrap = true)
+                return@with
+            }
             player.attr[Krystilia.WARNED] = true
         }
         // Recheck after every suspended dialogue: one active task across both master types.
@@ -86,8 +115,16 @@ object KrystiliaDialogue {
         Krystilia.assign(player, selected, amount, id)
         say("Your new task is to kill $amount ${selected.assignment.identifier.lowercase()}.", id)
         when (options("Got any tips for me?", "Okay, great!")) {
-            1 -> say("You've got to do the task in the Wilderness.", id)
-            2 -> say("Good luck! Don't forget to come back when you need a new assignment.", id)
+            1 -> {
+                chatPlayer("Got any tips for me?", wrap = true)
+                // The per-task Slayer task tip comes first in OSRS (N541 research); then her fixed line.
+                say("You've got to do the task in the Wilderness.", id)
+                chatPlayer("Great, thanks!", wrap = true)
+            }
+            2 -> {
+                chatPlayer("Okay, great!", wrap = true)
+                say("Good luck! Don't forget to come back when you need a new assignment.", id)
+            }
         }
     }
 
