@@ -18,7 +18,7 @@ spawn_npc(npc = Npcs.ICE_SPIDER, x = 2962, z = 3933, walkRadius = 5) // N522 OSR
 spawn_npc(npc = Npcs.ICE_SPIDER, x = 2963, z = 3923, walkRadius = 5) // N522 OSRS O0106 Ice spider
 spawn_npc(npc = Npcs.ICE_SPIDER, x = 2963, z = 3929, walkRadius = 5) // N522 OSRS O0107 Ice spider
 spawn_npc(npc = Npcs.ICE_SPIDER, x = 2965, z = 3927, walkRadius = 5) // N522 OSRS O0108 Ice spider
-spawn_npc(npc = Npcs.ICE_SPIDER, x = 2965, z = 3931, walkRadius = 5) // N522 OSRS O0109 Ice spider
+spawn_npc(npc = Npcs.ICE_SPIDER, x = 2964, z = 3930, walkRadius = 5) // N522 OSRS O0109 Ice spider
 spawn_npc(npc = Npcs.ICE_WARRIOR, x = 2947, z = 3934, walkRadius = 5) // N522 OSRS O0110 Ice warrior
 spawn_npc(npc = Npcs.ICE_WARRIOR, x = 2948, z = 3917, walkRadius = 5) // N522 OSRS O0111 Ice warrior
 spawn_npc(npc = Npcs.ICE_WARRIOR, x = 2949, z = 3926, walkRadius = 5) // N522 OSRS O0112 Ice warrior

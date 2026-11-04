@@ -18,7 +18,7 @@ spawn_npc(npc = Npcs.BANDIT, x = 3032, z = 3695, walkRadius = 5) // N522 OSRS O0
 spawn_npc(npc = Npcs.BANDIT, x = 3033, z = 3705, walkRadius = 5) // N522 OSRS O0194 Bandit
 spawn_npc(npc = Npcs.BANDIT, x = 3035, z = 3703, walkRadius = 5) // N522 OSRS O0195 Bandit
 spawn_npc(npc = Npcs.BANDIT, x = 3036, z = 3669, walkRadius = 5) // N522 OSRS O0196 Bandit
-spawn_npc(npc = Npcs.BANDIT, x = 3037, z = 3656, walkRadius = 5) // N522 OSRS O0197 Bandit
+spawn_npc(npc = Npcs.BANDIT, x = 3038, z = 3655, walkRadius = 5) // N522 OSRS O0197 Bandit
 spawn_npc(npc = Npcs.BANDIT, x = 3037, z = 3683, walkRadius = 5) // N522 OSRS O0198 Bandit
 spawn_npc(npc = Npcs.BANDIT, x = 3038, z = 3691, walkRadius = 5) // N522 OSRS O0199 Bandit
 spawn_npc(npc = Npcs.BANDIT, x = 3040, z = 3683, walkRadius = 5) // N522 OSRS O0200 Bandit

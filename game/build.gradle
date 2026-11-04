@@ -373,6 +373,14 @@ task runWildernessDungeonsMapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.WildernessDungeonsMapTool'
 }
 
+task runSpawnTileProbeTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only: spawn_npc lines on blocked tiles / under solid objects (N522). ' +
+        'Usage: ./gradlew :game:runSpawnTileProbeTool --args="<spawn plugin dir> [N522-only]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SpawnTileProbeTool'
+}
+
 task runWildernessMapOsrsTool(type: JavaExec) {
     group = 'tools'
     description = 'World map Wilderness + Wilderness Dungeons like OSRS: lair/cave labels, Open Map links, OSRS dungeon layout (N529). ' +

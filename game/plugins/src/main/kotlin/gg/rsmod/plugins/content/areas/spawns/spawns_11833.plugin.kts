@@ -49,13 +49,13 @@ spawn_npc(npc = Npcs.GIANT_RAT_87, x = 2971, z = 3690, walkRadius = 5) // N522 O
 spawn_npc(npc = Npcs.GIANT_RAT_446, x = 2973, z = 3694, walkRadius = 5) // N522 OSRS O0017 Giant rat
 spawn_npc(npc = Npcs.GIANT_RAT_87, x = 2977, z = 3700, walkRadius = 5) // N522 OSRS O0018 Giant rat
 spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2985, z = 3677, walkRadius = 5) // N522 OSRS O0019 Giant spider
-spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2987, z = 3687, walkRadius = 5) // N522 OSRS O0020 Giant spider
+spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2986, z = 3686, walkRadius = 5) // N522 OSRS O0020 Giant spider
 spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2989, z = 3684, walkRadius = 5) // N522 OSRS O0021 Giant spider
 spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2990, z = 3688, walkRadius = 5) // N522 OSRS O0022 Giant spider
 spawn_npc(npc = Npcs.GIANT_SPIDER, x = 2992, z = 3689, walkRadius = 5) // N522 OSRS O0023 Giant spider
 spawn_npc(npc = Npcs.GRIZZLY_BEAR, x = 2988, z = 3671, walkRadius = 5) // N522 OSRS O0024 Grizzly bear
 spawn_npc(npc = Npcs.GRIZZLY_BEAR, x = 3001, z = 3674, walkRadius = 5) // N522 OSRS O0025 Grizzly bear
-spawn_npc(npc = Npcs.RAT, x = 2954, z = 3707, walkRadius = 5) // N522 OSRS O0026 Rat
+spawn_npc(npc = Npcs.RAT, x = 2953, z = 3706, walkRadius = 5) // N522 OSRS O0026 Rat
 spawn_npc(npc = Npcs.RAT, x = 2955, z = 3702, walkRadius = 5) // N522 OSRS O0027 Rat
 spawn_npc(npc = Npcs.RAT, x = 2956, z = 3704, walkRadius = 5) // N522 OSRS O0028 Rat
 spawn_npc(npc = Npcs.RAT, x = 2958, z = 3706, walkRadius = 5) // N522 OSRS O0029 Rat
