@@ -684,5 +684,25 @@ fun osrsHiddenFaces(reader: ModernCacheReader, modelId: Int): String {
     val tex = raw?.faceTexture?.filter { it.toInt() != -1 }?.groupingBy { it.toInt() }?.eachCount()
     val alpha = m.faceAlpha?.count { it.toInt() != 0 } ?: 0
     val black = (0 until m.faceCount).count { m.faceColour[it].toInt() and 0x7F < 8 }
-    return "$hidden/${m.faceCount} tex=$tex alpha=$alpha dark=$black"
+    // Bounds and which way the faces look (N522 Escape Caves: one-sided void shells vs closed boxes).
+    val bx = "${m.vertexX.minOrNull()}..${m.vertexX.maxOrNull()}"
+    val by = "${m.vertexY.minOrNull()}..${m.vertexY.maxOrNull()}"
+    val bz = "${m.vertexZ.minOrNull()}..${m.vertexZ.maxOrNull()}"
+    val facing = IntArray(6)
+    for (i in 0 until m.faceCount) {
+        val a = m.faceA[i]; val b = m.faceB[i]; val c = m.faceC[i]
+        val ux = m.vertexX[b] - m.vertexX[a]; val uy = m.vertexY[b] - m.vertexY[a]; val uz = m.vertexZ[b] - m.vertexZ[a]
+        val vx = m.vertexX[c] - m.vertexX[a]; val vy = m.vertexY[c] - m.vertexY[a]; val vz = m.vertexZ[c] - m.vertexZ[a]
+        val nx = uy.toLong() * vz - uz.toLong() * vy
+        val ny = uz.toLong() * vx - ux.toLong() * vz
+        val nz = ux.toLong() * vy - uy.toLong() * vx
+        val ax = kotlin.math.abs(nx); val ay = kotlin.math.abs(ny); val az = kotlin.math.abs(nz)
+        val k = when {
+            ax >= ay && ax >= az -> if (nx > 0) 0 else 1
+            ay >= az -> if (ny > 0) 2 else 3
+            else -> if (nz > 0) 4 else 5
+        }
+        facing[k]++
+    }
+    return "$hidden/${m.faceCount} tex=$tex alpha=$alpha dark=$black v=${m.version} x=$bx y=$by z=$bz facing(+x,-x,+y,-y,+z,-z)=${facing.toList()}"
 }

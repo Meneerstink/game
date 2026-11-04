@@ -51,7 +51,7 @@ listOf(WildernessLairs.SILK_CHASM_ENTRANCE, WildernessLairs.WEB_CHASM_ENTRANCE, 
 // The lair's exit: one of the three Escape Caves points (OSRS Wiki "Silk Chasm").
 on_obj_option(obj = WildernessLairs.SILK_CHASM_EXIT, option = "exit") {
     val dest =
-        if (WildernessLairs.ESCAPE_CAVES_OPEN) WildernessLairs.lairExitPoint(world.currentCycle) { world.random(WildernessLairs.LAIR_EXIT_POINTS.size - 1) }
+        if (WildernessLairs.ESCAPE_CAVES_OPEN) WildernessLairs.lairExitPoint(WildernessLairs.SILK_CHASM_EXIT, world.currentCycle) { world.random(WildernessLairs.LAIR_EXIT_POINTS.size - 1) }
         else WildernessLairs.SILK_CHASM_SURFACE_EXIT
     WildernessLairs.crawl(player, dest)
 }

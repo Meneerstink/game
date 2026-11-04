@@ -99,9 +99,17 @@ class WildernessLairsTests {
             assertEquals(r, WildernessLairs.exitRoute(r.exitTile))
         }
         WildernessLairs.LAIR_EXIT_POINTS.forEach { assertTrue(WildernessLairs.inEscapeCaves(it), "$it") }
-        val first = WildernessLairs.lairExitPoint(1000) { 1 }
-        assertEquals(first, WildernessLairs.lairExitPoint(1010) { 2 }, "within 17 ticks: the same point")
-        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[2], WildernessLairs.lairExitPoint(1030) { 2 })
+        val silk = WildernessLairs.SILK_CHASM_EXIT
+        val first = WildernessLairs.lairExitPoint(silk, 1000) { 1 }
+        assertEquals(first, WildernessLairs.lairExitPoint(silk, 1010) { 2 }, "within 17 ticks: the same point")
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[0], WildernessLairs.lairExitPoint(-1, 1011) { 0 }, "another lair rolls its own point")
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[2], WildernessLairs.lairExitPoint(silk, 1030) { 2 })
+    }
+
+    @Test
+    fun `the Escape Caves are open - the four surface caves are placed and the camera fix is in the client`() {
+        assertTrue(WildernessLairs.ESCAPE_CAVES_OPEN)
+        assertEquals(4, WildernessLairs.SURFACE.count { it.id == WildernessLairs.ESCAPE_CAVE_SURFACE })
     }
 
     @Test

@@ -56,11 +56,11 @@ object WildernessLairs {
     data class Placed(val id: Int, val tile: Tile, val rot: Int)
 
     /**
-     * The Escape Caves are imported but closed: the 667 client draws their OSRS square black while the player stands on its floor
-     * (plane 0) and only shows it from plane 1 (test client 2026-11-02; clearing the OSRS 0x8 tile flag did not help). Until that is
-     * solved the lair exits lead to the surface beside the entrance and the four surface caves are not placed.
+     * The Escape Caves are open (2026-11-04). They were closed from 2026-11-02 because the screen went black inside; the cause was the
+     * camera, not the map: a low camera hangs behind the 4-tile-high void walls of the narrow passages. The client now keeps the
+     * camera up there (RspsCamera.areaMinPitch, client f3009f8c). False again = lair exits to the surface, no surface caves.
      */
-    const val ESCAPE_CAVES_OPEN = false
+    const val ESCAPE_CAVES_OPEN = true
 
     /**
      * The Web Chasm entrance at its OSRS place 3183,3744 (rot 1, OSRS map square 12602). Until 2026-11-04 the rev-667 volcano made
@@ -103,8 +103,8 @@ object WildernessLairs {
     /** Where a lair exit puts the player in the Escape Caves. */
     val LAIR_EXIT_POINTS = listOf(Tile(3360, 10295), Tile(3341, 10255), Tile(3376, 10255))
 
-    private var lastExitCycle = Int.MIN_VALUE / 2
-    private var lastExitPoint = LAIR_EXIT_POINTS[0]
+    /** Per lair (its exit loc id): the cycle and point of the latest exit - "the previous player" leaving the SAME lair. */
+    private val lastExit = HashMap<Int, Pair<Int, Tile>>()
 
     /** The Escape Caves, OSRS square 13472 (Near Reality EscapeCavesArea 3327-3392 x 10241-10303). */
     fun inEscapeCaves(tile: Tile): Boolean = tile.height == 0 && tile.x in 3327..3392 && tile.z in 10241..10303
@@ -231,11 +231,15 @@ object WildernessLairs {
         }
     }
 
-    /** A lair exit: one of the three Escape Caves points; within 10 seconds (17 ticks) of the previous exit, the same point. */
-    fun lairExitPoint(cycle: Int, roll: () -> Int): Tile {
-        if (cycle - lastExitCycle >= 17) lastExitPoint = LAIR_EXIT_POINTS[roll()]
-        lastExitCycle = cycle
-        return lastExitPoint
+    /**
+     * A lair exit: one of the three Escape Caves points; within 10 seconds (17 ticks) of the previous player leaving the same lair, the
+     * same point (OSRS Wiki "Silk Chasm": "any player who exits within 10 seconds of the previous player will arrive at the same point").
+     */
+    fun lairExitPoint(lair: Int, cycle: Int, roll: () -> Int): Tile {
+        val last = lastExit[lair]
+        val point = if (last != null && cycle - last.first < 17) last.second else LAIR_EXIT_POINTS[roll()]
+        lastExit[lair] = cycle to point
+        return point
     }
 }
 
@@ -247,6 +251,7 @@ object EscapeCaveMonsters : gg.rsmod.game.model.combat.CombatScript() {
     override val ids = intArrayOf(gg.rsmod.plugins.api.cfg.Npcs.GRIZZLY_BEAR_ESCAPE_CAVES, gg.rsmod.plugins.api.cfg.Npcs.POISON_SPIDER_ESCAPE_CAVES)
 
     const val MAX_HIT = 8
+    const val SPIDER_POISON = 6
 
     override suspend fun handleSpecialCombat(it: gg.rsmod.game.model.queue.QueueTask) {
         val npc = it.npc
@@ -260,7 +265,10 @@ object EscapeCaveMonsters : gg.rsmod.game.model.combat.CombatScript() {
                     if (spider) gg.rsmod.plugins.content.combat.formula.RangedCombatFormula.getAccuracy(npc, target)
                     else gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula.getAccuracy(npc, target)
                 val delay = if (spider) gg.rsmod.plugins.content.combat.strategy.RangedCombatStrategy.getHitDelay(npc.getFrontFacingTile(target), target.getCentreTile()) else 1
-                npc.dealHit(target = target, maxHit = MAX_HIT.toDouble(), landHit = accuracy >= npc.world.randomDouble(), delay = delay, hitType = gg.rsmod.plugins.api.HitType.REGULAR_HIT)
+                val landed = accuracy >= npc.world.randomDouble()
+                npc.dealHit(target = target, maxHit = MAX_HIT.toDouble(), landHit = landed, delay = delay, hitType = gg.rsmod.plugins.api.HitType.REGULAR_HIT)
+                // "Poisonous: Yes (6)" (OSRS Wiki infobox); on a landed hit like every poisonous npc here (NpcAttacks attack.poison).
+                if (spider && landed) target.poison(SPIDER_POISON)
             }
             npc.postAttackLogic(target)
             it.wait(npc.combatDef.attackSpeed)
