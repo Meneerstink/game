@@ -153,6 +153,8 @@ set_combat_def(npc = RevenantMaledictus.NPC) {
         attackSpeed = 5
         attackStyle = StyleType.RANGED
         respawnDelay = Int.MAX_VALUE
+        poisonImmune = true
+        venomImmune = true
     }
     aggro {
         radius = RevenantMaledictus.ATTACK_RANGE

@@ -8,7 +8,6 @@ import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.CombatScript
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
-import gg.rsmod.game.model.entity.GroundItem
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
@@ -58,9 +57,10 @@ object RevenantMaledictus {
     const val SURGE_MAX = 25
     const val ATTACK_RANGE = 10
     const val MARK_TICKS = 3
-    const val FREEZE_TICKS = 10 // donor freeze(6) in its 600 ms game-tick seconds = 6 s = 10 ticks
+    const val FREEZE_TICKS = 6 // donor freeze(6) + attackingDelay = now + 3600 ms (six 600-ms ticks)
+    val ICE_ATTACK_LOCK = TimerKey(resetOnDeath = true)
     const val SPAWN_DENOMINATOR = 10_000
-    const val COOLDOWN_TICKS = 3_000 // 30 minutes
+    const val COOLDOWN_TICKS = 4_500 // 45 minutes, Wiki revision 15293777
 
     /** Forinthry Surge: +15% accuracy and damage against revenants for 30 minutes (OSRS Wiki). */
     val FORINTHRY_SURGE = TimerKey(persistenceKey = "forinthry_surge", resetOnDeath = false)
@@ -135,7 +135,7 @@ object RevenantMaledictus {
         val list = mutableListOf<Player>()
         npc.world.players.forEach { p ->
             if (p.isOnline && !p.isDead() && !p.invisible && p.tile.height == npc.tile.height && RevenantCaveFee.inCaves(p.tile) &&
-                p.tile.isWithinRadius(npc.getCentreTile(), ATTACK_RANGE)
+                p.tile.isWithinRadius(npc.getCentreTile(), ATTACK_RANGE) && npc.hasLineOfSightTo(p, projectile = true, maximumDistance = ATTACK_RANGE)
             ) {
                 list += p
             }
@@ -163,20 +163,22 @@ object RevenantMaledictus {
         val top = damagers.firstOrNull() ?: return
         val tile = npc.tile
         val artefact = if (world.random(1) == 0) RevenantCaveRevenants.emblem(1) else RevenantCaveRevenants.emblem(2)
-        world.spawn(GroundItem(artefact, 1, tile, top))
-        repeat(2) { DropTableFactory.getDrop(world, top, Npcs.REVENANT_DRAGON_OSRS, tile) }
+        val loot = mutableListOf(Item(artefact))
+        repeat(2) { loot += DropTableFactory.getDrop(top, Npcs.REVENANT_DRAGON_OSRS, rate = DropTableFactory.killRate(top)).orEmpty() }
+        DropTableFactory.giveDrop(world, top, NPC, tile, loot, allowLootShare = false)
         if (RevenantGear.wearsAvarice(top)) {
             top.timers[FORINTHRY_SURGE] = SURGE_TICKS
             top.message("You feel the power of Forinthry surge granting you additional strength against the revenants.")
         }
         damagers.drop(1).forEach { p ->
-            world.spawn(GroundItem(Items.BLIGHTED_SUPER_RESTORE4, 1, p.tile, p))
             val food = listOf(Items.BLIGHTED_ANGLERFISH, Items.BLIGHTED_KARAMBWAN, Items.BLIGHTED_MANTA_RAY)[world.random(2)]
-            world.spawn(GroundItem(food, 2, p.tile, p))
+            DropTableFactory.giveDrop(world, p, NPC, p.tile, listOf(Item(Items.BLIGHTED_SUPER_RESTORE4), Item(food, 2)), allowLootShare = false)
         }
     }
 
     fun surge(player: Player): Boolean = player.timers.has(FORINTHRY_SURGE)
+
+    fun protectedDamage(damage: Int, protected: Boolean): Int = if (protected) damage / 2 else damage
 
     object Combat : CombatScript() {
         override val ids = intArrayOf(NPC)
@@ -187,7 +189,7 @@ object RevenantMaledictus {
             while (it.awaitAttackDelay(npc) && npc.canEngageCombat(target)) {
                 npc.facePawn(target)
                 if (npc.moveToAttackRange(it, target, distance = ATTACK_RANGE, projectile = true)) {
-                    attack(npc, target)
+                    attack(npc)
                 }
                 npc.postAttackLogic(target)
                 it.wait(npc.combatDef.attackSpeed)
@@ -206,12 +208,13 @@ object RevenantMaledictus {
                 else -> "standard"
             }
 
-        private fun attack(npc: Npc, primary: gg.rsmod.game.model.entity.Pawn) {
-            val players = targets(npc).ifEmpty { listOfNotNull(primary as? Player) }
+        private fun attack(npc: Npc) {
+            val players = targets(npc)
             if (players.isEmpty()) return
             when (attackFor(npc.world.random(18))) {
                 "blood" -> marked(npc, players, ANIM_BLOOD) { p ->
-                    npc.dealHit(target = p, maxHit = BLOOD_MAX.toDouble(), landHit = true, delay = 0, hitType = HitType.MAGIC, onHit = { hit ->
+                    val damage = protectedDamage(npc.world.random(BLOOD_MAX), p.isProtectedFrom(CombatClass.MAGIC))
+                    npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = damage > 0, delay = 0, hitType = HitType.MAGIC, applyDeflectProtection = false, onHit = { hit ->
                         val dealt = hit.hit.hitmarks.sumOf { h -> h.damage }
                         if (dealt > 0 && !npc.isDead()) {
                             npc.setCurrentLifepoints((npc.getCurrentLifepoints() + dealt / 2).coerceAtMost(npc.getMaximumLifepoints()))
@@ -219,8 +222,12 @@ object RevenantMaledictus {
                     })
                 }
                 "ice" -> marked(npc, players, ANIM_ICE) { p ->
+                    val damage = protectedDamage(npc.world.random(MAX_HIT), p.isProtectedFrom(CombatClass.MAGIC))
+                    npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = damage > 0, delay = 0, hitType = HitType.MAGIC, applyDeflectProtection = false)
                     p.graphic(GFX_ICE_IMPACT)
                     p.freeze(FREEZE_TICKS, npc) { p.message("You have been frozen in place by the Revenant Maledictus' attack!") }
+                    // The ice attack also prevents attacking; a normal freeze only stops walking.
+                    p.timers[ICE_ATTACK_LOCK] = FREEZE_TICKS
                 }
                 "surge" -> surge(npc, players[npc.world.random(players.size - 1)], players)
                 else -> standard(npc, players)
@@ -234,9 +241,10 @@ object RevenantMaledictus {
                 // Donor projectile (2033, 75, 25, 25, 15, 18, 64, 5): start 25, end 25, delay 15, angle 18.
                 npc.world.spawn(npc.createProjectile(p, GFX_STANDARD, startHeight = 25, endHeight = 25, delay = 15, angle = 18))
                 val delay = RangedCombatStrategy.getHitDelay(npc.getFrontFacingTile(p), p.getCentreTile())
-                val land = RangedCombatFormula.getAccuracy(npc, p) >= npc.world.randomDouble()
+                val land = RangedCombatFormula.getUnprotectedAccuracy(npc, p) >= npc.world.randomDouble()
                 val max = RevenantGear.revenantMaxHitAgainst(p, MAX_HIT)
-                npc.dealHit(target = p, maxHit = max, landHit = land, delay = delay, hitType = HitType.RANGE)
+                val damage = protectedDamage(rollDamage(0.0, max), p.isProtectedFrom(CombatClass.RANGED))
+                npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = land && damage > 0, delay = delay, hitType = HitType.RANGE, applyDeflectProtection = false)
             }
         }
 
@@ -245,11 +253,12 @@ object RevenantMaledictus {
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(anim)
             val world = npc.world
+            val life = WildernessBossLife.token(npc)
             val marks = players.map { it to Tile(it.tile) }
             marks.forEach { (_, t) -> world.spawn(TileGraphic(t, GFX_MARKER, 0)) }
             world.queue {
                 wait(MARK_TICKS)
-                if (npc.isDead() || !npc.isSpawned()) return@queue
+                if (!WildernessBossLife.active(npc, life)) return@queue
                 marks.forEach { (p, t) -> if (p.isOnline && !p.isDead() && p.tile.sameAs(t)) onLand(p) }
             }
         }
@@ -259,22 +268,23 @@ object RevenantMaledictus {
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(ANIM_SURGE)
             val world = npc.world
+            val life = WildernessBossLife.token(npc)
             val tile = Tile(aim.tile)
             // Donor projectile (1456, 85, 0, 25, 50, 45, 64, 5): start 85, end 0, delay 25.
             world.spawn(npc.createProjectile(tile, GFX_SURGE_TRAVEL, startHeight = 85, endHeight = 0, delay = 25, angle = 16, lifespan = 25 + 50))
             world.queue {
                 wait(3)
-                if (npc.isDead() || !npc.isSpawned()) return@queue
+                if (!WildernessBossLife.active(npc, life)) return@queue
                 world.spawn(TileGraphic(tile, GFX_SURGE_CENTRE, 0))
                 for (dx in -2..2) for (dz in -2..2) {
                     if (dx == 0 && dz == 0) continue
                     world.spawn(TileGraphic(tile.transform(dx, dz), GFX_SURGE_RING, 0, delay = if (maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz)) == 1) 15 else 25))
                 }
                 players.forEach { p ->
-                    if (!p.isOnline || p.isDead()) return@forEach
+                    if (!p.isOnline || p.isDead() || p.tile.height != tile.height) return@forEach
                     if (kotlin.math.abs(p.tile.x - tile.x) > 2 || kotlin.math.abs(p.tile.z - tile.z) > 2) return@forEach
                     val max = if (p.isProtectedFrom(CombatClass.MAGIC)) SURGE_MAX / 2.0 else SURGE_MAX.toDouble()
-                    npc.dealHit(target = p, maxHit = max, landHit = true, delay = 0, hitType = HitType.REGULAR_HIT)
+                    npc.dealHit(target = p, maxHit = max, landHit = true, delay = 0, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)
                 }
             }
         }

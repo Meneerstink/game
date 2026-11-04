@@ -1,0 +1,44 @@
+# OSRS Wiki revision 15358779; solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Big bones	1	Always	independent
+Dragon 2h sword	1	1/358	unique
+Dragon pickaxe	1	1/358	unique
+Fangs of Venenatis	1	1/618	unique
+Treasonous ring	1	1/716	unique
+Voidwaker gem	1	1/912	unique
+Dark crab	8	5/128	main
+Super restore(4)	3	5/128	main
+Rune knife	30	5/128	main
+Rune pickaxe	1	12/128	main
+Rune 2h sword	1	3/128	main
+Chaos rune	180	7/128	main
+Blood rune	150	7/128	main
+Death rune	220	7/128	main
+Steel cannonball	200	4/128	main
+Diamond bolts (e)	60	5/128	main
+Uncut diamond	7 (noted)	8/128	main
+Gold ore	180 (noted)	6/128	main
+Magic logs	60 (noted)	5/128	main
+Limpwurt root	18 (noted)	5/128	main
+Onyx bolt tips	35	5/128	main
+Red spiders' eggs	250 (noted)	3/128	main
+Uncut dragonstone	1	2/128	main
+Uncut ruby	14 (noted)	1/128	main
+Grimy snapdragon	40 (noted)	1/128	main
+Unicorn horn	60 (noted)	1/128	main
+Coins	14000	21/128	main
+Supercompost	60 (noted)	4/128	main
+Antidote++(4)	6 (noted)	3/128	main
+Dark fishing bait	200	1/128	main
+Magic seed	1	1/128	main
+Palm tree seed	1	1/128	main
+Blighted anglerfish	5-6	5/54	independent
+Blighted karambwan	5-6	5/54	independent
+Blighted super restore(3)	3-4	5/54	independent
+Blighted super restore(4)	3-4	5/54	independent
+Ranging potion(2)	2-3	5/54	independent
+Super combat potion(2)	2-3	5/54	independent
+Looting bag	1	1/3	independent
+Strange fruit	1	1/5	independent
+Venenatis spiderling	1	1/2800	independent
+Clue scroll (elite)	1	1/100	independent

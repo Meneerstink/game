@@ -1,0 +1,53 @@
+# OSRS Wiki revision 15360463; solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Big bones	1	Always	independent
+Bones	1	Always	independent
+Claws of Callisto	1	1/196	unique
+Dragon 2h sword	1	1/256	unique
+Dragon pickaxe	1	1/256	unique
+Voidwaker hilt	1	1/360	unique
+Tyrannical ring	1	1/512	unique
+Mystic earth staff	4 (noted)	2/126	main
+Mystic robe top	4 (noted)	2/126	main
+Mystic robe bottom	4 (noted)	2/126	main
+Rune pickaxe	5 (noted)	8/126	main
+Rune 2h sword	3 (noted)	3/126	main
+Rune kiteshield	4 (noted)	2/126	main
+Rune platebody	4 (noted)	2/126	main
+Blood rune	500	7/126	main
+Death rune	700	7/126	main
+Chaos rune	900	7/126	main
+Soul rune	450	5/126	main
+Steel cannonball	600	4/126	main
+Uncut ruby	50 (noted)	4/126	main
+Uncut diamond	25 (noted)	3/126	main
+Uncut dragonstone	5 (noted)	2/126	main
+Limpwurt root	100 (noted)	5/126	main
+Magic logs	225 (noted)	5/126	main
+Mahogany logs	600 (noted)	6/126	main
+Red dragonhide	170 (noted)	3/126	main
+Coconut	135 (noted)	2/126	main
+Grimy toadflax	100 (noted)	1/126	main
+Grimy dwarf weed	45 (noted)	1/126	main
+Grimy ranarr weed	45 (noted)	1/126	main
+Grimy snapdragon	45 (noted)	1/126	main
+Ranarr seed	11	5/126	main
+Snapdragon seed	5	5/126	main
+Coins	50000	10/126	main
+Dark crab	50 (noted)	5/126	main
+Super restore(4)	10 (noted)	5/126	main
+Supercompost	225 (noted)	4/126	main
+Dragon bones	75 (noted)	3/126	main
+Blighted anglerfish	100 (noted)	1/126	main
+Wilderness crabs teleport	4	3/126	main
+Blighted anglerfish	5-6	1/18	independent
+Blighted karambwan	5-6	1/18	independent
+Blighted super restore(3)	3-4	1/18	independent
+Blighted super restore(4)	3-4	1/18	independent
+Ranging potion(2)	2-3	1/18	independent
+Super combat potion(2)	2-3	1/18	independent
+Looting bag	1	1/3	independent
+Long bone	1	1/400	independent
+Callisto cub	1	1/1500	independent
+Curved bone	1	2/10025	independent
+Clue scroll (elite)	1	1/100	independent

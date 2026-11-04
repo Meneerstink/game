@@ -163,18 +163,24 @@ object VenenatisCombat {
 
     fun living(npc: Npc): Int = spiderlings(npc).count { it.isSpawned() && !it.isDead() }
 
+    fun spiderlingsToSummon(id: Int, alive: Int): Int =
+        if (id == SPINDEL) minOf(SPIDERLINGS, (10 - alive).coerceAtLeast(0)) else SPIDERLINGS
+
+    /** Wiki Strategies: the damaging web is a centred 7x5; the outside pieces are scenery. */
+    fun inDamagingWeb(centre: Tile, tile: Tile): Boolean = tile.height == centre.height &&
+        kotlin.math.abs(tile.x - centre.x) <= 3 && kotlin.math.abs(tile.z - centre.z) <= 2
+
+    fun recoilImmune(id: Int): Boolean = id == NPC || id == SPINDEL || id == SPIDERLING || id == SPINDEL_SPIDERLING
+
     /** Melee reach of a large npc: a tile next to its footprint, not diagonal past a corner. */
-    fun adjacent(npc: Npc, t: Tile): Boolean {
-        val size = npc.getSize()
-        val dx = if (t.x < npc.tile.x) npc.tile.x - t.x else if (t.x >= npc.tile.x + size) t.x - (npc.tile.x + size - 1) else 0
-        val dz = if (t.z < npc.tile.z) npc.tile.z - t.z else if (t.z >= npc.tile.z + size) t.z - (npc.tile.z + size - 1) else 0
-        return dx + dz == 1
-    }
+    fun adjacent(npc: Npc, t: Tile): Boolean = gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+        npc.world.collision, npc.tile, npc.getSize(), npc.getSize(), t, 1, 1)
 
     fun targets(npc: Npc): List<Player> {
         val list = mutableListOf<Player>()
         npc.world.players.forEach { p ->
-            if (p.isOnline && !p.isDead() && !p.invisible && arena(npc).inChasm(p.tile) && p.tile.isWithinRadius(npc.getCentreTile(), REACH)) list += p
+            if (p.isOnline && !p.isDead() && !p.invisible && arena(npc).inChasm(p.tile) && p.tile.isWithinRadius(npc.getCentreTile(), REACH) &&
+                npc.hasLineOfSightTo(p, projectile = true, maximumDistance = REACH)) list += p
         }
         return list
     }
@@ -233,7 +239,7 @@ object VenenatisCombat {
         /** One swing at every player in reach; true when she then shuffles to another spot. */
         private fun swing(npc: Npc, primary: Player?): Boolean {
             val attack = npc.attr[ATTACKS] ?: 0
-            val players = targets(npc).ifEmpty { listOfNotNull(primary) }
+            val players = targets(npc)
             if (players.isEmpty()) return false
             val bonus = living(npc) * SPIDERLING_BONUS
             val arena = arena(npc)
@@ -241,7 +247,7 @@ object VenenatisCombat {
             var animated = false
             players.forEach { p ->
                 val adjacent = adjacent(npc, p.tile)
-                if (adjacent && npc.world.random(2) != 0) {
+                if (adjacent) {
                     if (!animated) npc.animate(ANIM_MELEE).also { animated = true }
                     melee(npc, p, arena.maxMelee + bonus)
                 } else if (rangedPhase) {
@@ -253,7 +259,7 @@ object VenenatisCombat {
                 }
             }
             if (spawnsSpiderlings(attack)) summonSpiderlings(npc)
-            if (shootsWeb(attack)) primary?.let { shootWeb(npc, Tile(it.tile)) }
+            if (shootsWeb(attack)) shootWeb(npc, Tile((primary?.takeIf { it in players } ?: players.first()).tile))
             val done = (attack + 1) % 16
             npc.attr[ATTACKS] = done
             if (!movesAfter(done)) return false
@@ -287,7 +293,7 @@ object VenenatisCombat {
         private fun summonSpiderlings(npc: Npc) {
             val list = spiderlings(npc)
             list.removeAll { !it.isSpawned() || it.isDead() }
-            repeat(SPIDERLINGS) {
+            repeat(spiderlingsToSummon(npc.id, list.size)) {
                 val middle = arena(npc).middle
                 val tile = Tile(middle.x + npc.world.random(-5..5), middle.z + npc.world.random(-5..5), middle.height)
                 val spiderling = Npc(arena(npc).spiderling, tile, npc.world)
@@ -304,11 +310,12 @@ object VenenatisCombat {
         /** The donor's web: a projectile to the tile, then the 9x9 pattern centred on it for 20 ticks. */
         private fun shootWeb(npc: Npc, centre: Tile) {
             val world = npc.world
+            val life = WildernessBossLife.token(npc)
             world.spawn(npc.createProjectile(centre, GFX_WEB, startHeight = 43, endHeight = 0, delay = 30, angle = 25, lifespan = 30 + 40))
             val origin = Tile(centre.x - 4, centre.z - 4, centre.height)
             world.queue {
                 wait(2)
-                if (npc.isDead() || !npc.isSpawned()) return@queue
+                if (!WildernessBossLife.active(npc, life)) return@queue
                 val webs = mutableListOf<DynamicObject>()
                 for (row in 0..8) for (column in 0..8) {
                     val piece = webPiece(row, column) ?: continue
@@ -320,9 +327,9 @@ object VenenatisCombat {
                     webs += obj
                 }
                 repeat(WEB_TICKS) {
-                    if (npc.isDead() || !npc.isSpawned()) return@repeat
+                    if (!WildernessBossLife.active(npc, life)) return@repeat
                     webs.forEach { w ->
-                        if (w.id == WEB_EDGE) return@forEach
+                        if (w.id == WEB_EDGE || !inDamagingWeb(centre, w.tile)) return@forEach
                         world.players.forEach { p ->
                             if (p.isOnline && !p.isDead() && p.tile.sameAs(w.tile)) {
                                 npc.dealHit(target = p, minHit = 3.0, maxHit = 3.0, landHit = true, delay = 0, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)

@@ -149,7 +149,8 @@ object Combat {
         strategy: CombatStrategy,
     ): Boolean = canEngage(pawn, target) && strategy.canAttack(pawn, target)
 
-    fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY)
+    fun isAttackDelayReady(pawn: Pawn): Boolean = !pawn.timers.has(ATTACK_DELAY) &&
+        !pawn.timers.has(gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.ICE_ATTACK_LOCK)
 
     /** Audit X-10: minimum logout hold after a player is attacked or takes a hit (poison and venom included). */
     const val LOGOUT_HOLD_TICKS = 16

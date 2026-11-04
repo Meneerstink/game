@@ -241,8 +241,25 @@ val offspringDrops =
 
 DropTableFactory.register(offspringDrops, Npcs.SCORPIAS_OFFSPRING)
 
-on_npc_death(Npcs.SCORPIA, Npcs.SCORPIAS_OFFSPRING) {
+// Wiki Scorpia's guardian: killing a guardian manually can give a looting bag (1/3).
+DropTableFactory.register(DropTableFactory.build {
+    table("looting_bag") {
+        total(3)
+        obj(Items.LOOTING_BAG, slots = 1)
+        nothing(2)
+    }
+}, Npcs.SCORPIAS_GUARDIAN)
+
+on_npc_death(Npcs.SCORPIA, Npcs.SCORPIAS_OFFSPRING, Npcs.SCORPIAS_GUARDIAN) {
     if (npc.id == Npcs.SCORPIA) ScorpiaCombat.removeGuardians(npc)
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
-    DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
+    val items = DropTableFactory.getDrop(killer, npc.id, rate = DropTableFactory.killRate(killer)).orEmpty()
+    DropTableFactory.giveDrop(world, killer, npc.id, npc.tile, items)
+    if (npc.id == Npcs.SCORPIA && items.none { it.id == Items.ODIUM_SHARD_3 || it.id == Items.MALEDICTION_SHARD_3 }) {
+        val pets = gg.rsmod.plugins.content.skills.summoning.Pets
+        val info = pets.dropFor(npc.id)
+        if (info != null && world.randomDouble() < (DropTableFactory.killRate(killer) / info.rateFor(npc.id)).coerceAtMost(1.0)) {
+            pets.award(killer, info.pet, source = gg.rsmod.plugins.content.quests.tab.DropSources.forNpc(killer, npc.id)?.key)
+        }
+    }
 }

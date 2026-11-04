@@ -6,7 +6,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 /**
  * N522 bundle 5: the classic (pre-2023) Callisto and Vet'ion on the surface ([OldWildernessBosses]). Stats and spawns: Kronos-184 (a
- * pre-2023 OSRS server); drop tables: the current OSRS Wiki tables (owner decision pending - so the Voidwaker hilt and blade can be had).
+ * pre-2023 OSRS server); current OSRS Wiki drop tables (owner decision 2026-11-02, including Voidwaker hilt and blade).
  */
 
 // ------------------------------------------------------------------ Callisto (Kronos-184 data/npcs/combat/Callisto.json)
@@ -16,6 +16,8 @@ set_combat_def(npc = OldWildernessBosses.CALLISTO) {
         attackSpeed = 4
         attackStyle = StyleType.CRUSH
         respawnDelay = 50
+        poisonImmune = true
+        venomImmune = true
     }
     aggro {
         radius = 8
@@ -45,6 +47,11 @@ set_combat_def(npc = OldWildernessBosses.CALLISTO) {
 
 spawn_npc(npc = OldWildernessBosses.CALLISTO, x = OldWildernessBosses.CALLISTO_SPAWN.x, z = OldWildernessBosses.CALLISTO_SPAWN.z, walkRadius = 8)
 
+on_npc_spawn(OldWildernessBosses.CALLISTO) {
+    val boss = npc
+    boss.hitModifier = { hit -> OldWildernessBosses.modifyIncomingHit(boss, hit) }
+}
+
 on_npc_combat(*OldWildernessBosses.CallistoCombat.ids) {
     npc.queue { OldWildernessBosses.CallistoCombat.handleSpecialCombat(this) }
 }
@@ -55,8 +62,11 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
     set_combat_def(npc = id) {
         configs {
             attackSpeed = 4
-            attackStyle = if (id == OldWildernessBosses.VETION) StyleType.STAB else StyleType.CRUSH
+            attackStyle = StyleType.STAB
             respawnDelay = Int.MAX_VALUE
+            deathDelay = if (id == OldWildernessBosses.VETION) 0 else 1
+            poisonImmune = true
+            venomImmune = true
         }
         aggro {
             radius = 10
@@ -85,8 +95,11 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
         }
     }
     on_npc_spawn(id) {
+        val boss = npc
+        boss.hitModifier = { hit -> OldWildernessBosses.modifyIncomingHit(boss, hit) }
         npc.respawns = false
         npc.attr[OldWildernessBosses.DOGS_CALLED] = false
+        if (id == OldWildernessBosses.VETION_REBORN) OldWildernessBosses.startRebornTimeout(npc)
     }
 }
 
@@ -98,13 +111,7 @@ on_npc_combat(*OldWildernessBosses.VetionCombat.ids) {
 
 on_npc_death(OldWildernessBosses.VETION) {
     OldWildernessBosses.removeDogs(npc)
-    val killer = npc.damageMap.getMostDamage()
-    val reborn = gg.rsmod.game.model.entity.Npc(OldWildernessBosses.VETION_REBORN, Tile(npc.tile), world)
-    reborn.respawns = false
-    if (world.spawn(reborn)) {
-        reborn.forceChat("Now do it again!!")
-        if (killer != null) reborn.attack(killer)
-    }
+    OldWildernessBosses.nextPhase(npc, OldWildernessBosses.VETION_REBORN)?.forceChat("Do it again!!")
 }
 
 on_npc_death(OldWildernessBosses.VETION_REBORN) {
@@ -164,6 +171,11 @@ on_npc_combat(*OldWildernessBosses.HoundCombat.ids) {
 // champion scroll (not in this game). Uniques at most one a kill: 1/196, 1/256, 1/256, 1/360, 1/512 over 1,128,960. Pets: pet_tiers.tsv.
 
 fun spiderLikeTertiary(builder: gg.rsmod.plugins.content.drops.DropTableBuilder) {
+    builder.table("elite_clue") {
+        total(100)
+        obj(Items.CLUE_SCROLL_ELITE, slots = 1)
+        nothing(99)
+    }
     builder.table("supplies") {
         total(18)
         obj(Items.BLIGHTED_ANGLERFISH, 5..6, slots = 1)
@@ -185,9 +197,9 @@ fun spiderLikeTertiary(builder: gg.rsmod.plugins.content.drops.DropTableBuilder)
         nothing(399)
     }
     builder.table("curved_bone") {
-        total(10025)
-        obj(Items.CURVED_BONE, slots = 2)
-        nothing(10023)
+        total(5000) // Wiki Long bone: only rolled if the 1/400 long-bone roll failed.
+        obj(Items.CURVED_BONE, slots = 1)
+        nothing(4999)
     }
 }
 

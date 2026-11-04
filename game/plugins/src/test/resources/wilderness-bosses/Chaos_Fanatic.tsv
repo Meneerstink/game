@@ -1,0 +1,31 @@
+# OSRS Wiki revision 15346616; solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Bones	1	Always	independent
+Odium shard 1	1	1/256	unique
+Malediction shard 1	1	1/256	unique
+Battlestaff	5 (noted)	5/128	main
+Splitbark body	1	5/128	main
+Splitbark legs	1	5/128	main
+Zamorak monk top	1	4/128	main
+Zamorak monk bottom	1	4/128	main
+Ancient staff	1	1/128	main
+Fire rune	250	4/128	main
+Smoke rune	30	4/128	main
+Chaos rune	175	4/128	main
+Blood rune	50	4/128	main
+Monkfish	3	8/128	main
+Shark	1	8/128	main
+Prayer potion(4)	1	8/128	main
+Anchovy pizza	8 (noted)	4/128	main
+Coins	499-3998	18/128	main
+Grimy lantadyme	4 (noted)	8/128	main
+Ring of life	1	7/128	main
+Chaos talisman	1	6/128	main
+Wine of Zamorak	10 (noted)	6/128	main
+Uncut emerald	6 (noted)	5/128	main
+Uncut sapphire	4 (noted)	5/128	main
+Sinister key	1	4/128	main
+Pure essence	250 (noted)	2/128	main
+Looting bag	1	1/3	independent
+Pet chaos elemental	1	1/1000	independent
+Clue scroll (hard)	1	1/128	independent

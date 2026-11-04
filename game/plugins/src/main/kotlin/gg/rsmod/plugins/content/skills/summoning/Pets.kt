@@ -735,7 +735,14 @@ object Pets {
     fun dropChance(
         npcId: Int,
         rate: Double = 1.0,
-    ): Double = dropFor(npcId)?.let { (rate.coerceAtLeast(1.0) / it.rateFor(npcId)).coerceAtMost(1.0) } ?: 0.0
+    ): Double = dropFor(npcId)?.let {
+        val boosted = rate.coerceAtLeast(1.0)
+        // Wiki Scorpia 15362166: a shard pre-roll prevents the 1/2000 pet roll (effective 127/256000 at 1x).
+        val eligible = if (npcId == gg.rsmod.plugins.api.cfg.Npcs.SCORPIA)
+            1.0 - gg.rsmod.plugins.content.drops.DropBoost.chances(doubleArrayOf(1.0 / 256, 1.0 / 256, 0.0), boosted).sum()
+        else 1.0
+        eligible * (boosted / it.rateFor(npcId)).coerceAtMost(1.0)
+    } ?: 0.0
 
     /** The kill roll of `on_npc_killed`: [dropChance] at the killer's kill rate per kill of one of the pet's boss npcs. */
     fun roll(

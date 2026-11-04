@@ -1,0 +1,37 @@
+# OSRS Wiki revision 15362166; solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Odium shard 3	1	1/256	unique
+Malediction shard 3	1	1/256	unique
+Battlestaff	5-8 (noted)	6/128	main
+Rune 2h sword	1	5/128	main
+Rune pickaxe	1	5/128	main
+Rune kiteshield	1	5/128	main
+Rune chainbody	1	4/128	main
+Rune platelegs	1	4/128	main
+Rune scimitar	1	4/128	main
+Rune warhammer	1	4/128	main
+Mystic earth staff	1	4/128	main
+Mystic robe top	1	1/128	main
+Mystic robe bottom	1	1/128	main
+Dragon scimitar	1	1/128	main
+Dragon 2h sword	1	1/128	main
+Death rune	100-150	8/128	main
+Blood rune	100-150	8/128	main
+Chaos rune	150-200	8/128	main
+Grimy kwuarm	10-15 (noted)	5/128	main
+Grimy dwarf weed	10-15 (noted)	5/128	main
+Grimy torstol	10-15 (noted)	5/128	main
+Grimy snapdragon	4-7 (noted)	5/128	main
+Uncut ruby	15-20 (noted)	6/128	main
+Uncut diamond	10-15 (noted)	4/128	main
+Runite ore	3 (noted)	4/128	main
+Dragon javelin tips	30-50	4/128	main
+Onyx bolt tips	6-10	2/128	main
+Coins	25002-34962	7/128	main
+Blighted anglerfish	15-25 (noted)	5/128	main
+Blighted super restore(4)	5 (noted)	5/128	main
+Wilderness crabs teleport	2	2/128	main
+Looting bag	1	1/3	independent
+Ensouled scorpion head	1	1/18	independent
+Scorpia's offspring	1	1/2015.75	independent
+Clue scroll (hard)	1	1/100	independent

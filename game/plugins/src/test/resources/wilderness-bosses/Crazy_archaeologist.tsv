@@ -1,0 +1,30 @@
+# OSRS Wiki revision 15374897; solo quantities, plain 1x rates; main-table rates are conditional on failing the unique pre-roll
+# name	quantity	wiki rate	table
+Bones	1	Always	independent
+Odium shard 2	1	1/256	unique
+Malediction shard 2	1	1/256	unique
+Amulet of power	1	7/128	main
+Rune crossbow	2	5/128	main
+Red d'hide body	1	4/128	main
+Rune knife	10	4/128	main
+Mud rune	30	4/128	main
+Steel cannonball	150	4/128	main
+Dragon arrow	75	1/128	main
+Shark	1	8/128	main
+Potato with cheese	3	8/128	main
+Prayer potion(4)	1	8/128	main
+Anchovy pizza	8 (noted)	4/128	main
+Coins	499-3998	18/128	main
+Grimy dwarf weed	4 (noted)	8/128	main
+White berries	10 (noted)	6/128	main
+Silver ore	40 (noted)	6/128	main
+Uncut emerald	6 (noted)	5/128	main
+Uncut sapphire	4 (noted)	5/128	main
+Red dragonhide	10 (noted)	5/128	main
+Rusty sword	1	4/128	main
+Muddy key	1	4/128	main
+Onyx bolt tips	12	4/128	main
+Long bone	1	2/128	main
+Looting bag	1	1/3	independent
+Fedora	1	1/128	independent
+Clue scroll (hard)	1	1/128	independent

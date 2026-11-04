@@ -114,6 +114,8 @@ object CollectionLogPages {
         // N522 bundle 4b: OSRS Collection log "Venenatis and Spindel" - one page for both spiders (their kills together).
         val spiders = bosses.filter { it.name.lowercase() in SPIDERS }
         for (boss in bosses.sortedBy { it.name.lowercase() }) {
+            // Maledictus' uniques fill the OSRS Revenants page below, rather than inventing a separate boss page.
+            if (boss.modelNpc == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC) continue
             if (boss in dks) continue
             if (boss.name.lowercase() == "spindel" && spiders.any { it.name.lowercase() == "venenatis" }) continue
             if (boss.name.lowercase() == "venenatis") {
@@ -165,6 +167,14 @@ object CollectionLogPages {
         // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
         // ---- Other: N423 (owner 2026-10-29 23:4x: "alle 5 in de Collection Log") the five burden trinkets - three drop, two are sold.
+        val revenants = sources.filter { s -> s.npcs.any { it in gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants.BY_ID || it == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC } }
+        if (revenants.isNotEmpty()) {
+            // OSRS Collection log: Revenants. The six artefacts are OUR Deadman emblems (owner N522 decision).
+            val wanted = listOf(Items.CRAWS_BOW_U, Items.THAMMARONS_SCEPTRE_U, Items.VIGGORAS_CHAINMACE_U, Items.AMULET_OF_AVARICE,
+                Items.BRACELET_OF_ETHEREUM_UNCHARGED, Items.ANCIENT_CRYSTAL) + (1..6).map { gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants.emblem(it) }
+            val available = revenants.flatMap { DropSources.itemChances(DropSources.view(player, it, 1.0)).keys }.map { unnoted(world, it) }.toSet()
+            pages += Page("revenants", Category.OTHER, "Revenants", revenants.map { it.key }, wanted.filter { it in available })
+        }
         pages += Page("burden_trinkets", Category.OTHER, "Burden Trinkets", emptyList(), gg.rsmod.plugins.content.skills.summoning.BurdenTrinkets.Tier.values().map { it.item })
         // N490: includes Revenants and the chest guardian, which have no regular boss log page.
         pages += Page("ruinous", Category.OTHER, "Ruinous Powers", sources.filter { DropSources.ruinousSource(world, it) != null }.map { it.key }, listOf(Items.RUINOUS_POWERS))

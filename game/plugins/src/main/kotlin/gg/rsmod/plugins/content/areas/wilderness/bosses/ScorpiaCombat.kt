@@ -185,24 +185,31 @@ object ScorpiaCombat : CombatScript() {
     /** Heal every [HEAL_TICKS] while within [HEAL_RANGE], else walk to her; gone after [GUARDIAN_IDLE_TICKS] out of range. */
     private fun startHealing(guardian: Npc, scorpia: Npc) {
         val world = guardian.world
+        val life = WildernessBossLife.token(scorpia)
         world.queue {
             wait(1)
+            var lastHeal = world.currentCycle
+            var nextHeal = world.currentCycle
             while (guardian.isSpawned() && !guardian.isDead()) {
-                if (!scorpia.isSpawned() || scorpia.isDead()) {
+                if (!WildernessBossLife.active(scorpia, life)) {
                     world.remove(guardian)
                     break
                 }
-                if (inHealRange(guardian, scorpia)) {
-                    guardian.attr[LAST_IN_RANGE] = world.currentCycle
-                    if (scorpia.getCurrentLifepoints() < scorpia.getMaximumLifepoints()) heal(guardian, scorpia)
-                } else if (world.currentCycle - (guardian.attr[LAST_IN_RANGE] ?: world.currentCycle) >= GUARDIAN_IDLE_TICKS) {
+                if (world.currentCycle - lastHeal >= GUARDIAN_IDLE_TICKS) {
                     world.remove(guardian)
                     scorpia.attr[GUARDIAN_LIST]?.remove(guardian)
                     break
+                }
+                if (inHealRange(guardian, scorpia)) {
+                    if (world.currentCycle >= nextHeal && scorpia.getCurrentLifepoints() < scorpia.getMaximumLifepoints()) {
+                        heal(guardian, scorpia)
+                        lastHeal = world.currentCycle
+                        nextHeal = world.currentCycle + HEAL_TICKS
+                    }
                 } else {
                     guardian.walkTo(scorpia.getCentreTile())
                 }
-                wait(HEAL_TICKS)
+                wait(1)
             }
         }
     }

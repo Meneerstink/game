@@ -31,7 +31,7 @@ import kotlin.test.assertTrue
  * the blast areas, the pet rate per boss and the Collection log lists.
  */
 class WildernessBossesTests {
-    private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+    private val library = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toFile().toString())
 
     @AfterTest
     fun close() {
@@ -166,11 +166,11 @@ class WildernessBossesTests {
     }
 
     @Test
-    fun `N522 bundle 2 - Scorpia's offspring pet drops from Scorpia at 1 in 2016, the pit is multi-combat, the log lists her items`() {
+    fun `Scorpia's pet roll follows the shard pre-roll and the pit and log keep their existing integration`() {
         val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()
         Pets.load(File(dir, "pets.tsv"), File(dir, "pet_tiers.tsv"))
         assertEquals("Scorpia's offspring", Pets.dropFor(Npcs.SCORPIA)?.pet)
-        assertEquals(1.0 / 2016, Pets.dropChance(Npcs.SCORPIA), 1e-12)
+        assertEquals(127.0 / 256000, Pets.dropChance(Npcs.SCORPIA), 1e-12)
         val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
         assertTrue("- 12961" in multi, "Scorpion Pit region in multi.yml")
         // The pit is Wilderness (PvP rules, teleport limits, loot timers): OSRS level 53 at Scorpia, 54 at the north crevices.

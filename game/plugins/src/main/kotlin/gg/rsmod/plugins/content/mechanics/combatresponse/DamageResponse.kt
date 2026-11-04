@@ -45,6 +45,9 @@ object DamageResponse {
         deflectDamage: Int = damage,
     ) {
         if ((damage <= 0 && deflectDamage <= 0) || attacker.isDead() || target.isDead()) return
+        // Wiki: both modern spiders and their spiderlings are immune to recoil-like effects.
+        if (attacker is gg.rsmod.game.model.entity.Npc &&
+            gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.recoilImmune(attacker.id)) return
         if (target.attr[REFLECTING_DAMAGE_ATTR] == true) return
 
         target.attr[REFLECTING_DAMAGE_ATTR] = true
