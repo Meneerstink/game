@@ -133,6 +133,21 @@ object OsrsRegionImportTool {
                 // Vet'ion's Rest entrance 47141 (owner 2026-11-02: the old Vet'ion without a cave).
                 overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(31555, 31557, 47078, 47141)),
             "silk-chasm" to Batch(listOf(13727, 13472), listOf(47077, 47175, 47084, 47085, 47086), "Silk Chasm (Venenatis) and Escape Caves"),
+            // N522 (owner 2026-11-04 17:0x: all four Wilderness boss lairs): Callisto's Den 13473 (plane 0), Vet'ion's Rest 13215 (plane 1),
+            // Hunter's End 7092 (Artio, plane 0), Skeletal Tomb 7604 (Calvar'ion, plane 1) - N522-WILDERNESS-ONDERZOEK-2 1b.2 (OSRS cache
+            // placements, Near Reality WildernessBossEntrance/Exit). Surface entrances placed by the server: 47140 Callisto (3291,3849 rot 3),
+            // 46995 Vet'ion "Crevice" (3221,3787 rot 1), 47141 Artio "Cave Entrance" (3115,3676 rot 0); Calvar'ion's 46996 "Memorial" came
+            // with the 'wilderness-volcano' squares.
+            // The surface around the lair entrances that stand on rev-667 ground (N564, testclient 2026-11-04: "I can't reach that!"):
+            // only these rectangles become OSRS, the rest of the squares (Red Dragon Isle, the Demonic Ruins) stays. The entrances
+            // themselves are server-placed, so the OSRS copies are left out.
+            "lair-surface-callisto" to Batch(listOf(13116), emptyList(), "Callisto's Den entrance surface", replaceSquares = setOf(13116),
+                patch = intArrayOf(3285, 3842, 3301, 3858), excludeOsrsLocs = setOf(47140)),
+            "lair-surface-vetion" to Batch(listOf(12859), emptyList(), "Vet'ion's Rest entrance surface", replaceSquares = setOf(12859),
+                patch = intArrayOf(3214, 3780, 3229, 3796), excludeOsrsLocs = setOf(46995)),
+            "lair-surface-escape" to Batch(listOf(12859), emptyList(), "Escape Caves north-west entrance surface", replaceSquares = setOf(12859),
+                patch = intArrayOf(3253, 3824, 3263, 3839), excludeOsrsLocs = setOf(47175)),
+            "wildy-lairs" to Batch(listOf(13473, 13215, 7092, 7604), listOf(47140, 46995, 47141), "Wilderness boss lairs (Callisto's Den, Vet'ion's Rest, Hunter's End, Skeletal Tomb)"),
         )
 
     class Plan(
@@ -369,7 +384,7 @@ object OsrsRegionImportTool {
         transactionId: String,
     ) {
         val sb = StringBuilder()
-        sb.appendLine("  - name: OSRS region import '$name' - ${batch.note} (squares ${batch.squares}, same coordinates)")
+        sb.appendLine("  - name: OSRS region import '$name' - ${batch.note.replace(": ", ", ")} (squares ${batch.squares}, same coordinates)")
         sb.appendLine("    transaction_id: $transactionId")
         sb.appendLine("    source: OpenRS2 cache 2499, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
         sb.appendLine("    loc_ids:")

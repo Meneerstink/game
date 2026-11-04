@@ -21,35 +21,16 @@ import gg.rsmod.plugins.content.mechanics.prayer.AncientCurses
  * EquipAction writes a PROBLEM trace for it. The accounts keep the owner rank, so ::gear_<set> / ::osrsgear switch sets.
  */
 object TeamAccountPresets {
-    private val OWNER_COMMON = listOf(
-        Items.NEITIZNOT_FACEGUARD, Items.INFERNAL_CAPE, Items.AMULET_OF_FURY, Items.GLOVES_7462, Items.ETERNAL_BOOTS,
-        Items.RING_OF_SUFFERING_R,
-    ).map { it to 1 }
-
     private val FOOD = listOf(Items.SHARK to 10)
 
     class Account(val name: String, val curses: Boolean, val preset: GearPresets.Preset)
 
     val ALL: List<Account> =
         listOf(
-            Account(
-                "teamtest1", false,
-                GearPresets.Preset(
-                    "teamtest1", "Owner hybrid (Toxic staff of the dead + Elidinis' ward, Karil's)",
-                    OWNER_COMMON + listOf(Items.TOXIC_STAFF_OF_THE_DEAD to 1, Items.ELIDINIS_WARD to 1, Items.KARILS_TOP to 1,
-                        Items.KARILS_SKIRT to 1, Items.OPAL_DRAGON_BOLTS_E to 301),
-                    FOOD,
-                ),
-            ),
-            Account(
-                "teamtest2", true,
-                GearPresets.Preset(
-                    "teamtest2", "Owner ranged (Dark bow + dragon arrows, Karil's 100)",
-                    OWNER_COMMON + listOf(Items.DARK_BOW to 1, Items.KARILS_TOP_100 to 1, Items.KARILS_SKIRT_100 to 1,
-                        Items.DRAGON_ARROW to 98),
-                    FOOD,
-                ),
-            ),
+            // Owner 2026-11-04: in the test client ALWAYS max gear - teamtest1 max melee, teamtest2 max range (::gear_max /
+            // ::gear_maxrange). His own hybrid/ranged sets stay available as ::gear_owner / ::gear_ownerrange.
+            Account("teamtest1", false, GearPresets.forCommand("gear_max")!!),
+            Account("teamtest2", true, GearPresets.forCommand("gear_maxrange")!!),
             Account("teamtest3", true, GearPresets.forCommand("gear_torva")!!),
             Account(
                 "teamtest4", false,

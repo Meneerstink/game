@@ -76,8 +76,60 @@ object WildernessLairs {
             Placed(ESCAPE_CAVE_SURFACE, Tile(3260, 3832), 0),
         )
 
+    // ------------------------------------------------------------ the four other lairs (owner 2026-11-04 17:0x)
+    // OsrsRegionImportTool 'wildy-lairs' (tx-20261104-165825): Callisto's Den 13473, Vet'ion's Rest 13215, Hunter's End 7092,
+    // Skeletal Tomb 7604. Entrances, arrivals and exits: OSRS cache 2686 placements + Near Reality WildernessBossEntrance / Exit
+    // (N522-WILDERNESS-ONDERZOEK-2 1b.2). The big lairs (Callisto, Vet'ion, like Venenatis) leave into the Escape Caves, the small ones
+    // (Artio, Calvar'ion, like Spindel) back to the surface.
+    const val CALLISTO_DEN_ENTRANCE = 63557 // OSRS 47140 "Cave Entrance"
+    const val VETION_REST_ENTRANCE = 63558 // OSRS 46995 "Crevice" (Jump-Down)
+    const val HUNTERS_END_ENTRANCE = 63559 // OSRS 47141 "Cave Entrance"
+    const val SKELETAL_TOMB_ENTRANCE = 63397 // OSRS 46996 "Memorial" (map-placed by 'wilderness-volcano', 3180,3683)
+    const val DEN_EXIT = 63538 // OSRS 47122 "Cave" (Callisto's Den and Hunter's End)
+    const val REST_EXIT = 63442 // OSRS 46925 "Cave" (Vet'ion's Rest and Skeletal Tomb)
+
+    /** A lair: its entrance loc, arrival, exit (loc + tile), where the exit leads (null = the Escape Caves), its area and boss ids. */
+    data class Lair(
+        val name: String,
+        val entrance: Int,
+        val arrival: Tile,
+        val exitLoc: Int,
+        val exitTile: Tile,
+        val surfaceExit: Tile?,
+        val x: IntRange,
+        val z: IntRange,
+        val height: Int,
+        val bosses: List<Int>,
+    ) {
+        fun contains(t: Tile): Boolean = t.height == height && t.x in x && t.z in z
+    }
+
+    val LAIRS =
+        listOf(
+            Lair("Callisto's Den", CALLISTO_DEN_ENTRANCE, Tile(3359, 10334, 0), DEN_EXIT, Tile(3358, 10315, 0), null,
+                3341..3377, 10309..10347, 0, listOf(OldWildernessBosses.CALLISTO)),
+            // Near Reality lands the player on the boss's own tile (3295,10202 for Vet'ion and 1887,11546 for Calvar'ion); OSRS players
+            // walk through npcs, here the 3x3 boss holds them (owner 2026-11-04 'je staat stuck op een tile'). The landing is the
+            // tile straight south of the boss, in the same room (no source gives the exact tile).
+            Lair("Vet'ion's Rest", VETION_REST_ENTRANCE, Tile(3295, 10199, 1), REST_EXIT, Tile(3294, 10190, 1), null,
+                3285..3305, 10189..10216, 1, listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN)),
+            Lair("Hunter's End", HUNTERS_END_ENTRANCE, Tile(1759, 11550, 0), DEN_EXIT, Tile(1758, 11531, 0), Tile(3115, 3675, 0),
+                1739..1777, 11525..11562, 0, emptyList()),
+            Lair("Skeletal Tomb", SKELETAL_TOMB_ENTRANCE, Tile(1887, 11543, 1), REST_EXIT, Tile(1886, 11534, 1), Tile(3180, 3682, 0),
+                1877..1898, 11533..11560, 1, emptyList()),
+        )
+
+    fun lairByEntrance(id: Int): Lair? = LAIRS.firstOrNull { it.entrance == id }
+
+    fun lairByExit(id: Int, tile: Tile): Lair? = LAIRS.firstOrNull { it.exitLoc == id && it.exitTile.x == tile.x && it.exitTile.z == tile.z && it.exitTile.height == tile.height }
+
     val SURFACE =
         listOf(Placed(SILK_CHASM_ENTRANCE, Tile(3321, 3794), 1), Placed(WEB_CHASM_ENTRANCE, WEB_CHASM_ENTRANCE_TILE, 1)) +
+            listOf(
+                Placed(CALLISTO_DEN_ENTRANCE, Tile(3291, 3849), 3),
+                Placed(VETION_REST_ENTRANCE, Tile(3221, 3787), 1),
+                Placed(HUNTERS_END_ENTRANCE, Tile(3115, 3676), 0),
+            ) +
             (if (ESCAPE_CAVES_OPEN) ESCAPE_SURFACE else emptyList())
 
     /** The Web Chasm's own exit back to the surface, in front of the entrance (donor Near Reality: 3182,3746). */

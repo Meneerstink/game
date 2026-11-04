@@ -205,6 +205,11 @@ object OsrsFxImportTool {
             // N532: the animated locs of the OSRS surface squares 12345/12346/12601/12602 (volcano removal): gameval AnimationID
             // CANDLE_FLICKER 2564, ELEM1_QIP_FURNACE_GLOW 4860, WBR_VETION_ENTRANCE_FRAME 9985.
             "wilderness-volcano-seq" to listOf(2564, 4860, 9985),
+            // N522: the animated locs of the four Wilderness boss lairs (OsrsRegionImportTool 'wildy-lairs'): gameval AnimationID
+            // ROCK_POOL 1727, DTTD_LITTLE_DRIP 4217, LEAGUE3_FOG_IDLE 9227, COFFIN_VETION_CANDLES01 10028 (N522-WILDERNESS-ONDERZOEK-2 1b.4).
+            "wildy-lairs-seq" to listOf(1727, 4217, 9227, 10028),
+            // N564: the lava gas and crater locs around the Callisto's Den / Escape Caves entrances (gameval GAS 523, CRATER 524).
+            "lair-surface-seq" to listOf(523, 524),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

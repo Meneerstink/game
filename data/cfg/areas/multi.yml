@@ -52,6 +52,10 @@ regions:
 # N522 bundle 4a: OSRS Silk Chasm (Venenatis, 13727) and the Escape Caves (13472) - multi-combat in OSRS.
 - 13727
 - 13472
+# N522 (2026-11-04): Callisto's Den (13473) and Vet'ion's Rest (13215) - multi-combat in OSRS; Hunter's End 7092 and the Skeletal
+# Tomb 7604 are singles-plus (not listed, like the Web Chasm 6580).
+- 13473
+- 13215
 - 12861
 - 13117
 - 13373

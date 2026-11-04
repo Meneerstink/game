@@ -72,9 +72,13 @@ object OldWildernessBosses {
     const val HOUND_DEFEND = 16214
     const val HOUND_DEATH = 16215
 
-    /** Kronos-184 data/npcs/spawns/wilderness.json. */
-    val CALLISTO_SPAWN = Tile(3291, 3847)
-    val VETION_SPAWN = Tile(3224, 3790)
+    /**
+     * Owner 2026-11-04 17:0x: the old Callisto and Vet'ion move into their OSRS lairs (OsrsRegionImportTool 'wildy-lairs'). The spots
+     * are the lair bosses' own (Near Reality CallistosDen / VetionsRest: 3359,10328 plane 0 and 3295,10202 plane 1); until 2026-11-04
+     * they stood on the surface (Kronos-184 data/npcs/spawns/wilderness.json 3291,3847 / 3224,3790).
+     */
+    val CALLISTO_SPAWN = Tile(3359, 10328, 0)
+    val VETION_SPAWN = Tile(3295, 10202, 1)
     const val VETION_RESPAWN_TICKS = 50
     const val REBORN_TIMEOUT_TICKS = 500 // five minutes (pre-rework Wiki 14352478)
 

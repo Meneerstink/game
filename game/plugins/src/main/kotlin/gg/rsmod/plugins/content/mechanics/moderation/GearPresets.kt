@@ -23,6 +23,7 @@ object GearPresets {
 
     private fun set(vararg items: Int) = items.map { it to 1 }
 
+    private val OWNER_COMMON = set(Items.NEITIZNOT_FACEGUARD, Items.INFERNAL_CAPE, Items.AMULET_OF_FURY, Items.GLOVES_7462, Items.ETERNAL_BOOTS, Items.RING_OF_SUFFERING_R)
     private val RANGED_ACCESSORIES = set(Items.NECKLACE_OF_ANGUISH, Items.BLESSED_DIZANAS_QUIVER, Items.ZARYTE_VAMBRACES, Items.PEGASIAN_BOOTS)
     private val MELEE_ACCESSORIES = set(Items.AMULET_OF_RANCOUR_S, Items.INFERNAL_CAPE, Items.FEROCIOUS_GLOVES, Items.PRIMORDIAL_BOOTS, Items.BERSERKER_RING_I)
     private val MAGIC_ACCESSORIES = set(Items.OCCULT_NECKLACE, Items.IMBUED_ZAMORAK_CAPE, Items.TORMENTED_BRACELET, Items.ETERNAL_BOOTS, Items.MAGUS_RING)
@@ -30,6 +31,32 @@ object GearPresets {
 
     val ALL: List<Preset> =
         listOf(
+            // Owner 2026-11-04: the standard max test sets ("waarom maak je geen standaard max gear test set"), with potions.
+            Preset(
+                "gear_max", "Max melee (Torva, Osmumten's fang, Avernic, rancour, ferocious, Ultor, primordial, infernal)",
+                set(Items.TORVA_FULL_HELM, Items.TORVA_PLATEBODY, Items.TORVA_PLATELEGS, Items.OSMUMTENS_FANG, Items.AVERNIC_DEFENDER,
+                    Items.AMULET_OF_RANCOUR, Items.FEROCIOUS_GLOVES, Items.ULTOR_RING, Items.PRIMORDIAL_BOOTS, Items.INFERNAL_CAPE),
+                listOf(Items.SUPER_COMBAT_POTION_4 to 4, Items.SUPER_RESTORE_4 to 4, Items.SHARK to 10),
+            ),
+            Preset(
+                "gear_maxrange", "Max range (Masori (f), Zaryte crossbow, buckler, anguish, Dizana's quiver, diamond dragon bolts (e))",
+                set(Items.MASORI_MASK_F, Items.MASORI_BODY_F, Items.MASORI_CHAPS_F, Items.ZARYTE_CROSSBOW, Items.TWISTED_BUCKLER,
+                    Items.NECKLACE_OF_ANGUISH, Items.DIZANAS_QUIVER, Items.ZARYTE_VAMBRACES, Items.PEGASIAN_BOOTS, Items.VENATOR_RING) +
+                    listOf(Items.DIAMOND_DRAGON_BOLTS_E to 5000),
+                listOf(Items.RANGING_POTION_4 to 4, Items.SUPER_RESTORE_4 to 4, Items.SHARK to 10),
+            ),
+            // The owner's own sets from his bug reports (teamtest1/2 wore them until 2026-11-04).
+            Preset(
+                "gear_owner", "Owner hybrid (Toxic staff of the dead + Elidinis' ward, Karil's)",
+                OWNER_COMMON + listOf(Items.TOXIC_STAFF_OF_THE_DEAD to 1, Items.ELIDINIS_WARD to 1, Items.KARILS_TOP to 1,
+                    Items.KARILS_SKIRT to 1, Items.OPAL_DRAGON_BOLTS_E to 301),
+                listOf(Items.SHARK to 10),
+            ),
+            Preset(
+                "gear_ownerrange", "Owner ranged (Dark bow + dragon arrows, Karil's 100)",
+                OWNER_COMMON + listOf(Items.DARK_BOW to 1, Items.KARILS_TOP_100 to 1, Items.KARILS_SKIRT_100 to 1, Items.DRAGON_ARROW to 98),
+                listOf(Items.SHARK to 10),
+            ),
             Preset(
                 "gear_eclipse", "Eclipse moon + Eclipse atlatl",
                 set(Items.ECLIPSE_MOON_HELM, Items.ECLIPSE_MOON_CHESTPLATE, Items.ECLIPSE_MOON_TASSETS, Items.ECLIPSE_ATLATL, Items.TWISTED_BUCKLER) +

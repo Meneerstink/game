@@ -45,7 +45,7 @@ set_combat_def(npc = OldWildernessBosses.CALLISTO) {
     }
 }
 
-spawn_npc(npc = OldWildernessBosses.CALLISTO, x = OldWildernessBosses.CALLISTO_SPAWN.x, z = OldWildernessBosses.CALLISTO_SPAWN.z, walkRadius = 8)
+spawn_npc(npc = OldWildernessBosses.CALLISTO, x = OldWildernessBosses.CALLISTO_SPAWN.x, z = OldWildernessBosses.CALLISTO_SPAWN.z, height = OldWildernessBosses.CALLISTO_SPAWN.height, walkRadius = 8)
 
 on_npc_spawn(OldWildernessBosses.CALLISTO) {
     val boss = npc
@@ -103,7 +103,7 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
     }
 }
 
-spawn_npc(npc = OldWildernessBosses.VETION, x = OldWildernessBosses.VETION_SPAWN.x, z = OldWildernessBosses.VETION_SPAWN.z, walkRadius = 10)
+spawn_npc(npc = OldWildernessBosses.VETION, x = OldWildernessBosses.VETION_SPAWN.x, z = OldWildernessBosses.VETION_SPAWN.z, height = OldWildernessBosses.VETION_SPAWN.height, walkRadius = 10)
 
 on_npc_combat(*OldWildernessBosses.VetionCombat.ids) {
     npc.queue { OldWildernessBosses.VetionCombat.handleSpecialCombat(this) }

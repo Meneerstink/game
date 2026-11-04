@@ -9,6 +9,7 @@ import gg.rsmod.game.model.container.ContainerStackType
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getWildernessLevel
 import gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs
 import io.mockk.every
 import io.mockk.mockk
@@ -104,6 +105,23 @@ class WildernessLairsTests {
         assertEquals(first, WildernessLairs.lairExitPoint(silk, 1010) { 2 }, "within 17 ticks: the same point")
         assertEquals(WildernessLairs.LAIR_EXIT_POINTS[0], WildernessLairs.lairExitPoint(-1, 1011) { 0 }, "another lair rolls its own point")
         assertEquals(WildernessLairs.LAIR_EXIT_POINTS[2], WildernessLairs.lairExitPoint(silk, 1030) { 2 })
+    }
+
+    @Test
+    fun `the four new lairs - each exit tile names one lair, big lairs lead to the Escape Caves, levels follow the OSRS Wiki`() {
+        assertEquals(4, WildernessLairs.LAIRS.size)
+        WildernessLairs.LAIRS.forEach { lair ->
+            assertEquals(lair, WildernessLairs.lairByExit(lair.exitLoc, lair.exitTile), lair.name)
+            assertEquals(lair, WildernessLairs.lairByEntrance(lair.entrance), lair.name)
+            assertTrue(lair.contains(lair.arrival), "${lair.name} arrival inside")
+            assertTrue(lair.contains(lair.exitTile), "${lair.name} exit inside")
+        }
+        assertEquals(listOf("Callisto's Den", "Vet'ion's Rest"), WildernessLairs.LAIRS.filter { it.surfaceExit == null }.map { it.name })
+        val levels = WildernessLairs.LAIRS.associate { it.name to it.arrival.getWildernessLevel() }
+        assertEquals(mapOf("Callisto's Den" to 40, "Vet'ion's Rest" to 35, "Hunter's End" to 21, "Skeletal Tomb" to 21), levels)
+        assertEquals(35, gg.rsmod.game.model.Tile(3424, 10212, 2).getWildernessLevel(), "Silk Chasm")
+        assertTrue(gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.CALLISTO_SPAWN.let { WildernessLairs.LAIRS[0].contains(it) })
+        assertTrue(gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.VETION_SPAWN.let { WildernessLairs.LAIRS[1].contains(it) })
     }
 
     @Test

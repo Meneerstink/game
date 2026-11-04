@@ -401,7 +401,7 @@ class WildernessBossesTests {
         val exit = lairs.WEB_CHASM_SURFACE_EXIT
         assertTrue(kotlin.math.abs(exit.x - lairs.WEB_CHASM_ENTRANCE_TILE.x) <= 2 && kotlin.math.abs(exit.z - lairs.WEB_CHASM_ENTRANCE_TILE.z) <= 3, "exit in front of the entrance")
         assertEquals(29, a.spawn.getWildernessLevel(), "OSRS Wiki: the Web Chasm interior is level 29")
-        assertEquals(36, v.VENENATIS_ARENA.spawn.getWildernessLevel())
+        assertEquals(35, v.VENENATIS_ARENA.spawn.getWildernessLevel(), "OSRS Wiki infobox Silk Chasm: wilderness = 35")
         val multi = Paths.get("..", "..", "data", "cfg", "areas", "multi.yml").toFile().readLines().map { it.trim() }
         assertFalse("- 6580" in multi, "the Web Chasm is singles-plus")
         val dir = Paths.get("..", "..", "data", "cfg", "pets").toFile()

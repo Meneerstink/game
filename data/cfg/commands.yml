@@ -1253,6 +1253,41 @@
   usage: "::gear_zcb"
   description: "Gear preset (Gear tab of ::mod): wear Masori (f) + Zaryte crossbow with diamond dragon bolts (e); ruby, dragonstone and onyx dragon bolts (e) in the inventory. Worn gear goes to the bank."
   example: "::gear_zcb"
+- name: gear_max
+  rank: owner
+  usage: "::gear_max"
+  description: "Test set (owner 2026-11-04, teamtest1 at login): max melee - Torva, Osmumten's fang, Avernic defender, Amulet of rancour, Ferocious gloves, Ultor ring, Primordial boots, Infernal cape; super combats, super restores, sharks. Worn gear goes to the bank."
+  example: "::gear_max"
+- name: gear_maxrange
+  rank: owner
+  usage: "::gear_maxrange"
+  description: "Test set (owner 2026-11-04, teamtest2 at login): max range - Masori (f), Zaryte crossbow, Twisted buckler, Necklace of anguish, Dizana's quiver, diamond dragon bolts (e); ranging potions, super restores, sharks. Worn gear goes to the bank."
+  example: "::gear_maxrange"
+- name: gear_owner
+  rank: owner
+  usage: "::gear_owner"
+  description: "The owner's hybrid set from his bug reports (Toxic staff of the dead + Elidinis' ward, Karil's). Worn gear goes to the bank."
+  example: "::gear_owner"
+- name: gear_ownerrange
+  rank: owner
+  usage: "::gear_ownerrange"
+  description: "The owner's ranged set from his bug reports (Dark bow + dragon arrows, Karil's 100). Worn gear goes to the bank."
+  example: "::gear_ownerrange"
+- name: maledictus
+  rank: admin
+  usage: "::maledictus [0-10] | ::maledictus hp <n>"
+  description: "Test: spawn the Revenant maledictus at one of its 11 places, or set its hitpoints."
+  example: "::maledictus 3"
+- name: venenatis
+  rank: admin
+  usage: "::venenatis hp <n>"
+  description: "Test: set the hitpoints of the Venenatis, Spindel, Callisto or Vet'ion near you (within 30 tiles)."
+  example: "::venenatis hp 100"
+- name: itembox
+  rank: admin
+  usage: "::itembox [item id] [amount]"
+  description: "Test: show an item in a dialogue box (item model size check)."
+  example: "::itembox 995 100"
 - name: gear_ballista
   rank: owner
   usage: "::gear_ballista"

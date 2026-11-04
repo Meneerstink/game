@@ -77,6 +77,11 @@ val wildernessRegionIds =
         13472,
         // N522 bundle 4b: the OSRS Web Chasm (Spindel) - far from the Wilderness coordinates, level 29 ([FIXED_WILDERNESS_LEVELS]).
         6580,
+        // N522 (2026-11-04): Callisto's Den, Vet'ion's Rest, Hunter's End, Skeletal Tomb ([FIXED_WILDERNESS_LEVELS]).
+        13473,
+        13215,
+        7092,
+        7604,
         13111,
         13112,
         13113,
@@ -116,7 +121,9 @@ val wildernessRegionIds =
  * Wilderness squares whose level does not follow from their coordinates. OSRS Wiki "Web Chasm": "The Web Chasm interior has been
  * adjusted to level 29 Wilderness, to match the entrance."
  */
-val FIXED_WILDERNESS_LEVELS = mapOf(6580 to 29)
+// The boss lairs have one Wilderness level each (OSRS Wiki infobox "wilderness"): Web Chasm 29, Silk Chasm 35, Callisto's Den 40,
+// Vet'ion's Rest 35, Hunter's End 21, Skeletal Tomb 21.
+val FIXED_WILDERNESS_LEVELS = mapOf(6580 to 29, 13727 to 35, 13473 to 40, 13215 to 35, 7092 to 21, 7604 to 21)
 
 fun Tile.getWildernessLevel(): Int {
     if (!wildernessRegionIds.contains(regionId)) {
