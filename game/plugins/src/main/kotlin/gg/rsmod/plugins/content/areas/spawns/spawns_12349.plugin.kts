@@ -2,10 +2,6 @@
  * WILDERNESS NPC & ITEM SPAWNS
  * @author Harley Gilpin <https://github.com/HarleyGilpin>
  */
-spawn_npc(npc = Npcs.GIANT_BAT, x = 3075, z = 3950, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.GIANT_BAT, x = 3076, z = 3954, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.GIANT_BAT, x = 3072, z = 3954, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.GIANT_BAT, x = 3072, z = 3946, walkRadius = 5, direction = Direction.WEST)
 
 spawn_item(item = Items.KNIFE, amount = 1, x = 3106, z = 3952, respawnCycles = 90)
 
@@ -28,3 +24,11 @@ spawn_npc(npc = Npcs.BATTLE_MAGE, x = 3111, z = 3933, walkRadius = 5, direction 
 spawn_npc(npc = Npcs.BATTLE_MAGE_914, x = 3114, z = 3933, walkRadius = 5, direction = Direction.EAST)
 
 spawn_npc(npc = Npcs.KOLODION_907, x = 3105, z = 3933, walkRadius = 5, direction = Direction.EAST)
+
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3073, z = 3961, walkRadius = 5) // N522 OSRS O0324 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3074, z = 3952, walkRadius = 5) // N522 OSRS O0325 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3075, z = 3955, walkRadius = 5) // N522 OSRS O0326 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3076, z = 3961, walkRadius = 5) // N522 OSRS O0327 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3077, z = 3949, walkRadius = 5) // N522 OSRS O0328 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3079, z = 3957, walkRadius = 5) // N522 OSRS O0329 Giant bat
+spawn_npc(npc = Npcs.GIANT_BAT, x = 3080, z = 3961, walkRadius = 5) // N522 OSRS O0330 Giant bat

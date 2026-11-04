@@ -2,7 +2,8 @@
  * WILDERNESS NPC & ITEM SPAWNS
  * @author Harley Gilpin <https://github.com/HarleyGilpin>
  */
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3016, z = 3745, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3030, z = 3752, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3055, z = 3758, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3069, z = 3739, walkRadius = 5, direction = Direction.WEST)
+
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3019, z = 3760, walkRadius = 5) // N522 OSRS O0210 Chaos dwarf
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3019, z = 3766, walkRadius = 5) // N522 OSRS O0211 Chaos dwarf
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3021, z = 3755, walkRadius = 5) // N522 OSRS O0212 Chaos dwarf
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3025, z = 3763, walkRadius = 5) // N522 OSRS O0213 Chaos dwarf

@@ -2,9 +2,6 @@
  * WILDERNESS NPC & ITEM SPAWNS
  * @author Harley Gilpin <https://github.com/HarleyGilpin>
  */
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3247, z = 3781, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3238, z = 3795, walkRadius = 5, direction = Direction.WEST)
-spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3248, z = 3801, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.RED_DRAGON, x = 3224, z = 3829, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.RED_DRAGON, x = 3216, z = 3815, walkRadius = 5, direction = Direction.WEST)
 spawn_npc(npc = Npcs.RED_DRAGON, x = 3189, z = 3834, walkRadius = 5, direction = Direction.WEST)
@@ -29,3 +26,7 @@ spawn_item(item = Items.BLACK_DAGGER, amount = 1, x = 3180, z = 3822, respawnCyc
 spawn_item(item = Items.VIAL, amount = 1, x = 3187, z = 3836, respawnCycles = 90)
 spawn_item(item = Items.VIAL, amount = 1, x = 3197, z = 3845, respawnCycles = 90)
 spawn_item(item = Items.IRON_KITESHIELD, amount = 1, x = 3247, z = 3793, respawnCycles = 90)
+
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3241, z = 3788, walkRadius = 5) // N522 OSRS O0562 Chaos dwarf
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3241, z = 3796, walkRadius = 5) // N522 OSRS O0563 Chaos dwarf
+spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3250, z = 3787, walkRadius = 5) // N522 OSRS O0564 Chaos dwarf
