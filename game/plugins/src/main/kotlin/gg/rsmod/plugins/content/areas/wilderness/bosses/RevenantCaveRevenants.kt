@@ -52,6 +52,29 @@ object RevenantCaveRevenants {
     const val GFX_MAGIC = 3202 // OSRS 1415
     const val GFX_MAGIC_HIT = 3203 // OSRS 1454
     const val GFX_HEAL = 3204 // OSRS 1221
+
+    /**
+     * OSRS Wiki "Revenants" (21 April 2021 change): "Revenants now heal when below half health, but cannot heal again for 15 ticks
+     * (9 seconds), and heal anywhere from 8-36 times. They will still heal when below half health if available." The heal amount (+1/4
+     * of the hitpoints) is the Kronos donor's; the wiki gives none. The count is rolled per life ([resetHeals] on spawn).
+     */
+    const val HEAL_COOLDOWN = 15
+    val HEAL_COUNT = 8..36
+    val HEALS_LEFT = gg.rsmod.game.model.attr.AttributeKey<Int>()
+    val LAST_HEAL_CYCLE = gg.rsmod.game.model.attr.AttributeKey<Int>()
+
+    fun resetHeals(npc: Npc) {
+        npc.attr.remove(HEALS_LEFT)
+        npc.attr.remove(LAST_HEAL_CYCLE)
+    }
+
+    fun mayHeal(npc: Npc): Boolean {
+        if (npc.getCurrentLifepoints() >= npc.getMaximumLifepoints() / 2) return false
+        if (!npc.attr.has(HEALS_LEFT)) npc.attr[HEALS_LEFT] = npc.world.random(HEAL_COUNT)
+        if ((npc.attr[HEALS_LEFT] ?: 0) <= 0) return false
+        val last = npc.attr[LAST_HEAL_CYCLE] ?: return true
+        return npc.world.currentCycle - last >= HEAL_COOLDOWN
+    }
     const val GFX_SPLASH = 85
 
     const val MAGIC_EXTRA_TARGETS = 10
@@ -292,7 +315,7 @@ object RevenantCaveRevenants {
                     }
                 val distance = if (style == Style.MELEE) 1 else 5
                 if (npc.moveToAttackRange(it, target, distance = distance, projectile = style != Style.MELEE)) {
-                    if (npc.getCurrentLifepoints() < npc.getMaximumLifepoints() / 2 && npc.world.random(4) == 0) {
+                    if (mayHeal(npc)) {
                         heal(npc)
                     } else {
                         when (style) {
@@ -311,6 +334,8 @@ object RevenantCaveRevenants {
         }
 
         private fun heal(npc: Npc) {
+            npc.attr[HEALS_LEFT] = (npc.attr[HEALS_LEFT] ?: 0) - 1
+            npc.attr[LAST_HEAL_CYCLE] = npc.world.currentCycle
             npc.graphic(GFX_HEAL)
             npc.setCurrentLifepoints((npc.getCurrentLifepoints() + npc.getMaximumLifepoints() / 4).coerceAtMost(npc.getMaximumLifepoints()))
         }

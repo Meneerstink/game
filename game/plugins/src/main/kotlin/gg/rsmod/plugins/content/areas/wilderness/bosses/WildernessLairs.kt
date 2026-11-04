@@ -162,7 +162,7 @@ object WildernessLairs {
             return
         }
         player.queue {
-            itemMessageBox("You need to pay a $cost coin fee to enter. This can be taken from your inventory or bank.", item = Items.COINS_995, amountOrZoom = 10_000)
+            itemMessageBox("You need to pay a $cost coin fee to enter. This can be taken from your inventory or bank.", item = Items.COINS_995, amountOrZoom = 100) // the 100 pile fits the box (RevenantCaveFee)
             val choice = options("Yes.", "Yes, and don't ask again.", "No.", title = "Pay $cost coins to enter?")
             if (choice != 1 && choice != 2) return@queue
             if (!pay(player)) {

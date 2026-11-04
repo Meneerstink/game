@@ -78,7 +78,10 @@ object RemovedItems {
             // becomes the normal item at login first (DeadmanGear.migrate runs before [purge]); nothing may offer these again.
             gg.rsmod.plugins.content.items.armor.DeadmanGear.CONVERT.keys + CORRUPT_IDS +
             // N424 (owner 2026-10-29): the looting bag is out of the game; its old contents go to the bank first (LootingBag.retire).
-            gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS
+            gg.rsmod.plugins.content.mechanics.pvp.LootingBag.IDS +
+            // Owner 2026-11-04 15:1x: the Forinthry bracelet (667 revenant-cave item) is OUT of the game - no drop, shop or recipe,
+            // existing copies gone at login (like the looting bag). OSRS has no such item.
+            setOf(Items.FORINTHRY_BRACE_1, Items.FORINTHRY_BRACE_2, Items.FORINTHRY_BRACE_3, Items.FORINTHRY_BRACE_4, Items.FORINTHRY_BRACE_5)
 
     /**
      * N464 (owner 2026-10-30: the Zaryte bow "staat nog in de grand exc"): the client's Grand Exchange item search lists every item

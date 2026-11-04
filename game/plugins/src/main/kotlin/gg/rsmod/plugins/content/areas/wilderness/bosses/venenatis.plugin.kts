@@ -44,7 +44,7 @@ on_obj_option(obj = WildernessLairs.WEB_CHASM_EXIT, option = "exit") {
 
 listOf(WildernessLairs.SILK_CHASM_ENTRANCE, WildernessLairs.WEB_CHASM_ENTRANCE, WildernessLairs.ESCAPE_CAVE_SURFACE).forEach { id ->
     on_obj_option(obj = id, option = "check-fee") {
-        player.queue { itemMessageBox(WildernessLairs.checkFeeText(player), item = Items.COINS_995, amountOrZoom = 10_000) }
+        player.queue { itemMessageBox(WildernessLairs.checkFeeText(player), item = Items.COINS_995, amountOrZoom = 100) } // the 100 pile fits the box
     }
 }
 

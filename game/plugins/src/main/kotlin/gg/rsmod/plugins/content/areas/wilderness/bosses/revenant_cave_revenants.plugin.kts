@@ -56,6 +56,7 @@ RevenantCaveRevenants.REVS.forEach { rev ->
     // A charged Bracelet of ethereum makes revenants tolerant (OSRS Wiki); otherwise they are aggressive.
     on_npc_spawn(rev.id) {
         npc.aggroCheck = { _, p -> !RevenantGear.wearsCharged(p) }
+        RevenantCaveRevenants.resetHeals(npc) // a new life rolls its own 8-36 heals
     }
 }
 

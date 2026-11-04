@@ -138,12 +138,8 @@ enum class EnchantmentData(
         spell = SpellbookData.LVL_3_ENCHANT,
         sound = 146,
     ),
-    DIAMOND_BRACELET(
-        raw = Items.DIAMOND_BRACELET,
-        product = Items.FORINTHRY_BRACE_5,
-        spell = SpellbookData.LVL_4_ENCHANT,
-        sound = 138,
-    ),
+    // The diamond bracelet made the Forinthry bracelet, which is out of the game (owner 2026-11-04). OSRS makes the Abyssal bracelet,
+    // not in this cache yet - question for the owner (N522: import it?); until then a diamond bracelet is not enchantable.
     DRAGONSTONE_BRACELET(
         raw = Items.DRAGON_BRACELET,
         product = Items.COMBAT_BRACELET_4,

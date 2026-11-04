@@ -63,7 +63,9 @@ object RevenantCaveFee {
             return
         }
         player.queue {
-            itemMessageBox(PROMPT, item = Items.COINS_995, amountOrZoom = FEE)
+            // The amount picks the coin stack model: from 1,000 up the pile is wider than the box and was cut off (owner 2026-11-04,
+            // ::itembox 995 100/1000/10000); the 100 pile fits.
+            itemMessageBox(PROMPT, item = Items.COINS_995, amountOrZoom = 100)
             val choice = options("Yes", "Yes, don't ask again", "No", title = "Pay the entrance fee?")
             if (choice != 1 && choice != 2) return@queue
             if (!pay(player)) {

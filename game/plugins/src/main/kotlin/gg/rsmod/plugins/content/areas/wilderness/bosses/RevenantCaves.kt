@@ -93,9 +93,20 @@ object RevenantCaves {
         }
     }
 
+    /** OSRS Wiki "Pillar (Revenant Caves)" oldid: Agility info xp1-3 = 6.5 / 7.5 / 8.9 for the 65 / 75 / 89 pillars. */
+    fun xp(pillar: Pillar): Double = pillar.agility / 10.0
+
+    /**
+     * OSRS Wiki "Pillar (Revenant Caves)": "Players that are under the influence of a bind effect however are prevented from making
+     * use of these shortcuts until 3 ticks before the freeze has worn off (that is, when it begins to thaw)."
+     */
+    const val THAW_TICKS = 3
+
     fun jump(player: Player, pillar: Pillar) {
-        // OSRS Revenant Caves changes: pillars cannot be used while frozen or bound.
-        if (player.timers.has(FROZEN_TIMER)) return
+        if (player.timers.has(FROZEN_TIMER) && player.timers[FROZEN_TIMER] > THAW_TICKS) {
+            player.message(gg.rsmod.game.model.entity.Entity.MAGIC_STOPS_YOU_FROM_MOVING)
+            return
+        }
         val landing = landing(pillar, player.tile) ?: return
         if (!player.hasAgility(pillar.agility, "You need an agility level of ${pillar.agility} to jump across this pillar.")) return
         val dir = Direction.between(player.tile, landing)
@@ -106,6 +117,8 @@ object RevenantCaves {
             player.animate(ANIM_JUMP)
             exactMove(player, Tile(landing.x, landing.z, player.tile.height), delay = 35, direction = dir, startDelay = 5)
             wait(1)
+            // The fail chance (4-11 damage, still crossing, lower xp) is in no source we have - not built (N522 VRAAG).
+            player.addXp(gg.rsmod.plugins.api.Skills.AGILITY, xp(pillar))
         }
     }
 }

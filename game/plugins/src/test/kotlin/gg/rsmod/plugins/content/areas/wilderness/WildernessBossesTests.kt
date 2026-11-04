@@ -233,6 +233,9 @@ class WildernessBossesTests {
             assertEquals(4, kotlin.math.abs(p.sideA.x - p.sideB.x) + kotlin.math.abs(p.sideA.z - p.sideB.z))
             assertEquals(p, RevenantCaves.pillarAt(p.tile))
         }
+        // OSRS Wiki Agility info: 6.5 / 7.5 / 8.9 xp; a bind lets go of the pillars 3 ticks before it wears off.
+        assertEquals(listOf(6.5, 7.5, 7.5, 7.5, 8.9), RevenantCaves.PILLARS.map { RevenantCaves.xp(it) }.sorted())
+        assertEquals(3, RevenantCaves.THAW_TICKS)
     }
 
     @Test
