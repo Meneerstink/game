@@ -239,6 +239,17 @@ class WildernessBossesTests {
     }
 
     @Test
+    fun `N522 V4 - a pillar fails 20 percent at its own Agility level, less with more Agility, never at 99`() {
+        RevenantCaves.PILLARS.forEach { p ->
+            assertEquals(0.20, RevenantCaves.failChance(p, p.agility), 1e-9)
+            assertEquals(0.0, RevenantCaves.failChance(p, 99), 1e-9)
+            assertTrue(RevenantCaves.failChance(p, p.agility + 5) < 0.20)
+            assertTrue(RevenantCaves.failChance(p, p.agility + 5) > 0.0)
+        }
+        assertEquals(listOf(3.5, 3.8, 3.8, 3.8, 4.5), RevenantCaves.PILLARS.map { RevenantCaves.failXp(it) }.sorted())
+    }
+
+    @Test
     fun `N522 bundle 3b - the revenant drop formula matches the OSRS Wiki template per combat level`() {
         // Template:Revenants/Drops: A = floor(2200 / floor(sqrt(cb))), B = 15 + floor((cb + 60)^2 / 200).
         assertEquals(1100, RevenantCaveRevenants.a(7))

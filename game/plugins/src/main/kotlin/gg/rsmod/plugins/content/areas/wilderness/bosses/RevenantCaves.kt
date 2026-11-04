@@ -102,6 +102,26 @@ object RevenantCaves {
      */
     const val THAW_TICKS = 3
 
+    /**
+     * Failing a jump - OSRS Wiki "Pillar (Revenant Caves)": "Failing the jump will deal 4-11 damage, but the player will still make it
+     * across", fail xp 3.5 / 3.8 / 4.5. The OSRS fail rate is in no source; owner 2026-11-04 (N522 V4): "20 procent bijv afhankelijk
+     * agility level" -> 20% at the pillar's own level, falling in a straight line to 0% at 99 (boosted level counts, as for the jump).
+     */
+    const val FAIL_AT_REQUIREMENT = 0.20
+
+    fun failChance(pillar: Pillar, agility: Int): Double {
+        if (agility >= 99) return 0.0
+        val span = (99 - pillar.agility).coerceAtLeast(1)
+        return (FAIL_AT_REQUIREMENT * (99 - agility) / span).coerceIn(0.0, FAIL_AT_REQUIREMENT)
+    }
+
+    fun failXp(pillar: Pillar): Double =
+        when (pillar.agility) {
+            65 -> 3.5
+            75 -> 3.8
+            else -> 4.5
+        }
+
     fun jump(player: Player, pillar: Pillar) {
         if (player.timers.has(FROZEN_TIMER) && player.timers[FROZEN_TIMER] > THAW_TICKS) {
             player.message(gg.rsmod.game.model.entity.Entity.MAGIC_STOPS_YOU_FROM_MOVING)
@@ -110,6 +130,8 @@ object RevenantCaves {
         val landing = landing(pillar, player.tile) ?: return
         if (!player.hasAgility(pillar.agility, "You need an agility level of ${pillar.agility} to jump across this pillar.")) return
         val dir = Direction.between(player.tile, landing)
+        val level = player.skills.getCurrentLevel(gg.rsmod.plugins.api.Skills.AGILITY)
+        val failed = java.util.concurrent.ThreadLocalRandom.current().nextDouble() < failChance(pillar, level)
         player.lockingQueue(lockState = LockState.FULL) {
             player.animate(ANIM_JUMP)
             exactMove(player, Tile(pillar.tile.x, pillar.tile.z, player.tile.height), delay = 35, direction = dir, startDelay = 5)
@@ -117,8 +139,13 @@ object RevenantCaves {
             player.animate(ANIM_JUMP)
             exactMove(player, Tile(landing.x, landing.z, player.tile.height), delay = 35, direction = dir, startDelay = 5)
             wait(1)
-            // The fail chance (4-11 damage, still crossing, lower xp) is in no source we have - not built (N522 VRAAG).
-            player.addXp(gg.rsmod.plugins.api.Skills.AGILITY, xp(pillar))
+            if (failed) {
+                // 4-11 OSRS hitpoints = 40-110 lifepoints here; the player still lands across (wiki).
+                player.hit(java.util.concurrent.ThreadLocalRandom.current().nextInt(4, 12) * 10)
+                player.addXp(gg.rsmod.plugins.api.Skills.AGILITY, failXp(pillar))
+            } else {
+                player.addXp(gg.rsmod.plugins.api.Skills.AGILITY, xp(pillar))
+            }
         }
     }
 }
