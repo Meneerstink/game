@@ -92,7 +92,7 @@ object NpcDeathAction : KLogging() {
     }
 
     /** N451: the whole game ticks a short death animation really plays (client frame lengths are 20 ms, a tick 600 ms), at least 1. */
-    fun deathAnimationTicks(def: AnimDef): Int = (if (def.frameLength > 0) def.frameLength / 30 else def.cycleLength).coerceAtLeast(1)
+    fun deathAnimationTicks(def: AnimDef): Int = (if (def.playedFrameLength > 0) def.playedFrameLength / 30 else def.cycleLength).coerceAtLeast(1)
 
     /**
      * Death cleanup must not depend on an optional plugin hook being perfect. The queue runner

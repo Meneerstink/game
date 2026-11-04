@@ -28,6 +28,21 @@ class NpcDeathTimingTests {
     }
 
     @Test
+    fun `a death sequence that holds its last pose is waited for its played frames only`() {
+        val cache = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: File("../data/cache").path)
+        try {
+            val defs = DefinitionSet().also { it.load(cache, AnimDef::class.java) }
+            // OSRS CHAOSELEMENTAL_DEATH 3147 imported as 16234: 19 frames of 62 client cycles, then a 20000-cycle hold frame.
+            val death = defs.get(AnimDef::class.java, 16234)
+            assertEquals(62, death.playedFrameLength)
+            assertEquals(2, NpcDeathAction.deathAnimationTicks(death))
+            assertEquals(95, defs.get(AnimDef::class.java, 4167).playedFrameLength, "no hold frame: unchanged")
+        } finally {
+            cache.close()
+        }
+    }
+
+    @Test
     fun `the npc is hidden for its death delay after a death animation`() {
         val source = File("src/main/kotlin/gg/rsmod/game/action/NpcDeathAction.kt").readText()
         val delay = source.substringAfter("if (deathDelay > 0) {").substringBefore("wait(deathDelay)")

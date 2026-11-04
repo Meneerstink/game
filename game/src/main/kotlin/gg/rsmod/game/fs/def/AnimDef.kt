@@ -48,6 +48,15 @@ class AnimDef(
     val frameLength: Int get() = if (::frameLengths.isInitialized) frameLengths.sum() else 0
 
     /**
+     * [frameLength] without a "hold" last frame (>= 200 client cycles, the same rule as [cycleLength]): an OSRS death sequence such as
+     * CHAOSELEMENTAL_DEATH 3147 ends on a 20000-cycle frame that freezes the last pose until the npc is removed (N522 nachtrun
+     * 2026-11-04: counted, the Chaos Elemental's drop came 6.7 minutes after its death).
+     */
+    val playedFrameLength: Int get() =
+        if (!::frameLengths.isInitialized) 0
+        else frameLengths.withIndex().sumOf { (i, len) -> if (i < frameLengths.size - 1 || len < 200) len else 0 }
+
+    /**
      * The 667 client's SeqType loop fields (owner priority #1 2026-10-03, noclip / stuck after obstacles). Opcode 2 `loopOffset`:
      * when the last frame ends the client jumps back this many frames and plays on, up to [maxLoops] (opcode 8, default 99)
      * times - a climb such as 740 (16 frames, loopOffset 16) therefore plays ~96 s on the client while [cycleLength] says 2
