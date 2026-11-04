@@ -373,6 +373,14 @@ task runWildernessDungeonsMapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.WildernessDungeonsMapTool'
 }
 
+task runWildernessMapOsrsTool(type: JavaExec) {
+    group = 'tools'
+    description = 'World map Wilderness + Wilderness Dungeons like OSRS: lair/cave labels, Open Map links, OSRS dungeon layout (N529). ' +
+        'Usage: ./gradlew :game:runWildernessMapOsrsTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.WildernessMapOsrsTool'
+}
+
 task runHomeRoomsMapProjectionTool(type: JavaExec) {
     group = 'tools'
     description = 'World map: Death\'s Office + Skilling Basement projected onto the GE (N563). ' +

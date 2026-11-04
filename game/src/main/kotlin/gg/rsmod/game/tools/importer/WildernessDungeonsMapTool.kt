@@ -18,6 +18,9 @@ import java.io.File
  * the new caves ([DISPLAY_SHIFT_X]), records rebuilt from the landscape with [FeroxWorldMapTool.encodeSquare].
  *
  * Usage: `./gradlew :game:runWildernessDungeonsMapTool --args="show|plan|apply"`
+ *
+ * SUPERSEDED (tx-20261104-195739): [WildernessMapOsrsTool] put the caves back at their own place like OSRS (no [DISPLAY_SHIFT_X]) by
+ * moving the King Black Dragon lair to the OSRS display; do not run this tool again.
  */
 object WildernessDungeonsMapTool {
     const val INDEX = 23
