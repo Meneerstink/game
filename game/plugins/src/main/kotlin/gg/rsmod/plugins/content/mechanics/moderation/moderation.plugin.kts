@@ -94,6 +94,22 @@ GearPresets.ALL.forEach { preset ->
     }
 }
 
+// Owner 2026-11-04 ('je bent dood want je bot prayt niet'): boss tests on the team test accounts died between two restores.
+// ::god toggles "take no damage" - only for the team test accounts (TeamAccountPresets), never for a real account.
+on_command("god", Privilege.OWNER_POWER) {
+    if (TeamAccountPresets.forName(player.username) == null) {
+        player.message("::god is only for the team test accounts.")
+        return@on_command
+    }
+    if (player.hitModifier == null) {
+        player.hitModifier = { hit -> hit.hitmarks.forEach { it.damage = 0 } }
+        player.message("God mode on: you take no damage (test account).")
+    } else {
+        player.hitModifier = null
+        player.message("God mode off.")
+    }
+}
+
 // ---- mute -------------------------------------------------------------------------------------------------------------
 
 on_command("mute", Privilege.MOD_POWER) {

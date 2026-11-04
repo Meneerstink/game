@@ -1273,6 +1273,11 @@
   usage: "::gear_ownerrange"
   description: "The owner's ranged set from his bug reports (Dark bow + dragon arrows, Karil's 100). Worn gear goes to the bank."
   example: "::gear_ownerrange"
+- name: god
+  rank: owner
+  usage: "::god"
+  description: "Test: toggle 'take no damage' - only on the team test accounts (boss tests without dying)."
+  example: "::god"
 - name: maledictus
   rank: admin
   usage: "::maledictus [0-10] | ::maledictus hp <n>"
