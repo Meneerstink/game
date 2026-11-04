@@ -50,7 +50,26 @@ object OsrsRegionImportTool {
         val locsOnlyWithout: Set<Int>? = null,
         /** Every tile and loc moved this many planes up (planes past 3 dropped); with [locsOnlyWithout] both files are rewritten. */
         val planeShift: Int = 0,
-    )
+        /**
+         * Patch only this absolute rectangle (minX, minZ, maxX, maxZ, all planes) of a [replaceSquares] square that is IN USE: the
+         * OSRS tiles and the OSRS locs whose origin lies inside replace ours there; every other tile and loc of the square is kept
+         * byte for byte. N541: the Edgeville jail, a closed decor block in the rev-667 map.
+         */
+        val patch: IntArray? = null,
+        /**
+         * OSRS overlay id -> rev-667 overlay id, ahead of the nearest-colour match. The nearest-colour match ignores textures: OSRS
+         * overlay 11 (rgb 0, texture 46) landed on rev-667 overlay 38 (rgb 0, texture 17) and showed lilac (owner 2026-11-04). The low
+         * overlay ids are the shared pre-2008 floors (OSRS 9 and rev-667 9 are both rgb 505050), so 11 -> 11 (rgb 665d58, stone).
+         */
+        val overlayOverrides: Map<Int, Int> = emptyMap(),
+    ) {
+        fun inPatch(square: Int, lx: Int, lz: Int): Boolean {
+            val p = patch ?: return true
+            val x = (square ushr 8) * 64 + lx
+            val z = (square and 0xFF) * 64 + lz
+            return x in p[0]..p[2] && z in p[1]..p[3]
+        }
+    }
 
     val BATCHES: Map<String, Batch> =
         mapOf(
@@ -91,6 +110,17 @@ object OsrsRegionImportTool {
             // N522 bundle 4b: Spindel's Web Chasm (Near Reality WebChasm 1610-1651 x 11524-11571 plane 2 -> square 6580) and its surface
             // entrance 47078 WILD_VENENATIS_SINGLES_ENTRANCE01 (Near Reality 3183,3744).
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
+            // N541 (owner 2026-11-04: Krystilia must be reachable; the jail roof never hid): the Edgeville jail, OSRS Wiki Krystilia
+            // "found in Edgeville's jail north-east of the bank" (3109,3516). Our square 12342 holds the bank and home content, so
+            // only the jail rectangle is patched (the rev-667 building was a closed block: every tile unwalkable, no roof flag).
+            "edgeville-jail-probe" to Batch(listOf(12342), emptyList(), "Edgeville jail (probe, wide)", replaceSquares = setOf(12342), patch = intArrayOf(3102, 3505, 3116, 3522)),
+            // The OSRS jail: walls 1902 (planes 0-1) and 1913 (plane 2) on x 3107-3112 / z 3510-3518, open doorway in the east wall at
+            // 3112,3514-3515 (no door in OSRS), Krystilia's barred cell 3108-3109 x 3516-3517 (bars 997/1548), rack, corpses, torches 196
+            // (TORCH 481, OsrsFxImportTool 'edgeville-jail-seq'). The rectangle also takes the rev-667 block 3106-3112 x 3509-3518 away.
+            "edgeville-jail" to Batch(listOf(12342), emptyList(), "Edgeville jail", replaceSquares = setOf(12342), patch = intArrayOf(3106, 3509, 3112, 3518)),
+            // Owner 2026-11-04 ('vanbuiten als je t gebouw in kijkt graphical bugg'): the OSRS "hidden" overlays (rgb ff00ff, no texture -
+            // not drawn in OSRS) became a lilac floor here. Tiles of the same rectangle again, without them.
+            "edgeville-jail-tiles" to Batch(listOf(12342), emptyList(), "Edgeville jail tiles without hidden overlays", replaceSquares = setOf(12342), patch = intArrayOf(3106, 3509, 3112, 3518), tilesOnly = true, dropHiddenOverlays = true, overlayOverrides = mapOf(11 to 11)),
             "silk-chasm" to Batch(listOf(13727, 13472), listOf(47077, 47175, 47084, 47085, 47086), "Silk Chasm (Venenatis) and Escape Caves"),
         )
 
@@ -170,6 +200,7 @@ object OsrsRegionImportTool {
                     }
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
+                        batch.overlayOverrides[tileValue - 1]?.let { return@getOrPut it + 1 }
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
                         FeroxImportTool.bestOverlay(def, localOverlays) + 1
                     }
@@ -177,12 +208,20 @@ object OsrsRegionImportTool {
                 // ---- loc types: every one imported new ----
                 val regions = batch.squares.associateWith { ModernRegion.load(modern, it, keys[it] ?: error("No modern key for $it")) }
                 val modernLocDefs = modern.files(2, 6)
+                if (batch.patch != null) {
+                    regions.forEach { (square, region) ->
+                        region.locs.filter { batch.inPatch(square, it.localX, it.localZ) }.forEach {
+                            val def = ModernObjectDef.decode(it.id, modernLocDefs[it.id]!!)
+                            println("PATCH_OSRS_LOC ${it.id} '${def.name}' at ${(square ushr 8) * 64 + it.localX},${(square and 0xFF) * 64 + it.localZ},${it.plane} type=${it.type} rot=${it.rotation} size=${def.sizeX}x${def.sizeY} anim=${def.animationId} ops=${def.options.toList()}")
+                        }
+                    }
+                }
                 val localTypes = Rev667RegionProbeTool.locTypes(library)
                 var nextLocId = (localTypes.keys.maxOrNull() ?: -1) + 1
                 val locIdMap = LinkedHashMap<Int, Int>()
                 val neededModels = sortedSetOf<Int>()
                 val importedDefs = LinkedHashMap<Int, ModernObjectDef>()
-                (regions.values.flatMap { r -> r.locs.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
+                (regions.flatMap { (sq, r) -> r.locs.filter { batch.inPatch(sq, it.localX, it.localZ) }.map { it.id } }.distinct().sorted() + batch.extraLocTypes).forEach { id ->
                     if (id in locIdMap) return@forEach
                     val def = ModernObjectDef.decode(id, modernLocDefs[id] ?: error("modern loc $id missing"))
                     locIdMap[id] = nextLocId++
@@ -215,8 +254,17 @@ object OsrsRegionImportTool {
                 // ---- the squares, on their own OSRS coordinates ----
                 val squareGroups = LinkedHashMap<Int, Pair<Int, Int>>()
                 regions.forEach { (square, region) ->
-                    val tiles = Rev667TileMap()
+                    // Patch mode starts from our own square and only overwrites the rectangle.
+                    val ownTiles = if (batch.patch != null) Rev667TileCodec.decode(maps.archive(mapName(square))!!.file(0)!!.data!!) else null
+                    val ownLocs = if (batch.patch != null) Rev667LocCodec.decode(maps.archive(locName(square), localKeys[square])!!.file(0)!!.data!!) else null
+                    val tiles = ownTiles ?: Rev667TileMap()
+                    if (batch.patch != null) {
+                        ownLocs!!.filter { batch.inPatch(square, it.localX, it.localZ) }.forEach {
+                            println("PATCH_DROPS_OWN_LOC ${it.id} at ${(square ushr 8) * 64 + it.localX},${(square and 0xFF) * 64 + it.localZ},${it.plane} type=${it.type} rot=${it.rotation}")
+                        }
+                    }
                     for (plane in 0 until 4) for (lx in 0 until 64) for (lz in 0 until 64) {
+                        if (!batch.inPatch(square, lx, lz)) continue
                         if (batch.plane0Only && plane > 0) continue
                         if (plane + batch.planeShift > 3) continue
                         val src = region.tiles[plane][lx][lz]
@@ -238,6 +286,10 @@ object OsrsRegionImportTool {
                             region.locs.filter { it.plane + batch.planeShift <= 3 }
                                 .map { Rev667Loc(existing.getValue(it.id), it.localX, it.localZ, it.plane + batch.planeShift, it.type, it.rotation) }
                                 .filter { it.id !in batch.locsOnlyWithout }.also { println("LOCS_KEPT ${it.size} of ${region.locs.size}") }
+                        } else if (ownLocs != null) {
+                            ownLocs.filterNot { batch.inPatch(square, it.localX, it.localZ) } +
+                                region.locs.filter { batch.inPatch(square, it.localX, it.localZ) }
+                                    .map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
                         } else {
                             region.locs.map { Rev667Loc(locIdMap.getValue(it.id), it.localX, it.localZ, it.plane, it.type, it.rotation) }
                         }

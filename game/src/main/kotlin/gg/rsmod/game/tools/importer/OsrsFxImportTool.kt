@@ -200,6 +200,8 @@ object OsrsFxImportTool {
             // N522 bundle 1 follow-up (2026-11-02): the worn Fedora option "Tip" plays gameval AnimationID FEDORA_TIP 2418 (667 seq 2418 is
             // an npc animation on base 263, not the hat tip).
             "fedora-tip" to listOf(2418),
+            // N541: the wall torches (OSRS loc 196) of the Edgeville jail animate with gameval AnimationID TORCH 481.
+            "edgeville-jail-seq" to listOf(481),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

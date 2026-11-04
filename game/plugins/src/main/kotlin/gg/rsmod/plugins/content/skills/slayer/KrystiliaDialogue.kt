@@ -25,8 +25,10 @@ object KrystiliaDialogue {
     suspend fun talk(q: QueueTask, id: Int, remote: Boolean = false) = with(q) {
         say("Yeah? What do you want?", id)
         val choice = if (remote) options("I need another assignment.", "Let's talk about the difficulty of my assignments.", "Err... Nothing...")
+            // Transcript:Krystilia has six lines; the rev-667 option box holds five (a sixth broke it in the test client, 2026-11-04), so
+            // "Er... Nothing..." - which only ends the talk - is left to closing the box.
             else options("I need another assignment.", "Have you any rewards for me, or anything to trade?", "Let's talk about the difficulty of my assignments.",
-                "What can you do apart from Slayer Master stuff?", "I love your hat! Where did you get it from?", "Er... Nothing...")
+                "What can you do apart from Slayer Master stuff?", "I love your hat! Where did you get it from?")
         // Transcript:Krystilia: the player says each chosen line (the hat option is spoken as "I love the hat! ...").
         when {
             choice == 1 -> {
