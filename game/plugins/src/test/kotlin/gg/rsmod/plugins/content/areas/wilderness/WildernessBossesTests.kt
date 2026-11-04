@@ -245,9 +245,7 @@ class WildernessBossesTests {
         assertEquals(6, RevenantCaveRevenants.maxEther(7)) // 2 .. (2 + 1) * 2
         assertEquals(24, RevenantCaveRevenants.maxEther(135)) // 2 .. (11 + 1) * 2
         assertEquals(51, RevenantCaveRevenants.maxCoins(7))
-        assertEquals(15, RevenantCaveRevenants.lootingBagRate(7))
-        assertEquals(10, RevenantCaveRevenants.lootingBagRate(15))
-        assertEquals(3, RevenantCaveRevenants.lootingBagRate(52))
+        // N424 / N561: no looting bag roll (the bag is out of the game; LootingBagRemovedTests guards every drop file).
         // Avarice "Check" (donor AmuletOfAvaricePlugin): ticks x 0.6 s, each part only when above 0.
         assertEquals("30 minutes", gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeTimeText(3000))
         assertEquals("1 minutes and 6 seconds", gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantGear.surgeTimeText(110))

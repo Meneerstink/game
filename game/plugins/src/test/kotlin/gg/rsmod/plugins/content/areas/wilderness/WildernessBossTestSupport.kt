@@ -111,7 +111,9 @@ internal object WildernessBossTestSupport {
             .replace("zamorak monk top", "zamorak robe").replace("zamorak monk bottom", "zamorak robe")
             .replace(" (noted)", "").replace(" ", "").replace("'", "")
         fun q(text: String): String = text.replace(" (noted)", "").replace(",", "").replace("–", "-")
-        val unsupported = setOf("Wilderness crabs teleport", "Dark fishing bait", "Ensouled scorpion head", "Brimstone key", "Skeleton champion scroll")
+        // Looting bag: out of the game by owner decision (N424 2026-10-29, N561 2026-11-04) - it must never drop.
+        val unsupported = setOf("Wilderness crabs teleport", "Dark fishing bait", "Ensouled scorpion head", "Brimstone key", "Skeleton champion scroll", "Looting bag")
+        assertTrue(actual.none { it.item == Items.LOOTING_BAG || it.item == Items.LOOTING_BAG_OPEN }, "$wiki drops no looting bag (N561)")
         val expected = File("src/test/resources/wilderness-bosses/${wiki.replace(' ', '_')}.tsv").readLines()
             .filter { it.isNotBlank() && !it.startsWith('#') }.map { it.split('\t') }
             .filter { it[0] !in unsupported }
