@@ -51,9 +51,27 @@ object KrystiliaDialogue {
                 chatPlayer("What can you do apart from Slayer Master stuff?", wrap = true)
                 say("Quite a lot! Those stupid guards think they've trapped me here for causing trouble, but I can get back out to the Wilderness for some fun anytime I like.", id)
                 // Owner 2026-11-04 (N522 V1): her OSRS Edgeville offer at Death's price (RespawnPoints.PRICE, 500k, Death's payment
-                // order), the same bought point as at Death. The "back to Lumbridge" branch (respawn already Edgeville) is not built:
-                // Lumbridge is a bought point here, not the free default - open question in N541.
+                // order), the same bought point as at Death. Her "back to Lumbridge" branch sends the player back to this game's free
+                // default, the Grand Exchange, and names it (owner 2026-11-04, N522 V6).
                 val edgeville = RespawnPoints.Point.EDGEVILLE
+                if (RespawnPoints.active(player) == edgeville) {
+                    say("So how's that Edgeville respawn working for you?", id)
+                    if (options("Please switch my respawn back to the Grand Exchange.", "It's fine, thanks.") != 1) {
+                        chatPlayer("It's fine, thanks.", wrap = true)
+                        return@with
+                    }
+                    chatPlayer("Please switch my respawn back to the Grand Exchange.", wrap = true)
+                    say("You really want to respawn in that dead-end slum? Are you sure? Come and see me if you want to respawn in Edgeville again; I won't ask for more money.", id)
+                    if (options("Yes, switch my respawn to the Grand Exchange.", "No, I'll keep the Edgeville respawn.") != 1) {
+                        chatPlayer("No, I'll keep the Edgeville respawn.", wrap = true)
+                        say("Good choice.", id)
+                        return@with
+                    }
+                    chatPlayer("Yes, switch my respawn to the Grand Exchange.", wrap = true)
+                    RespawnPoints.useHome(player)
+                    say("Done.", id)
+                    return@with
+                }
                 if (RespawnPoints.available(edgeville) && !RespawnPoints.owns(player, edgeville) && RespawnPoints.active(player) != edgeville) {
                     say("Hey, perhaps you'd like me to fix it so that you respawn in Edgeville whenever you die. If you love the Wilderness as much as I do, you might enjoy that.", id)
                     if (options("Tell me more.", "That doesn't interest me.") != 1) {
