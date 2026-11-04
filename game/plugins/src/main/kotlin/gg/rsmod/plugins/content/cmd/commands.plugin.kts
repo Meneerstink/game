@@ -741,6 +741,22 @@ on_command("anim", Privilege.ADMIN_POWER) {
     }
 }
 
+/** N522 nachtrun deel 2 (skeletal bake proof): `::npcanim <seq>` plays a sequence on the npc nearest to the player (within 10 tiles). */
+on_command("npcanim", Privilege.ADMIN_POWER) {
+    val args = player.getCommandArgs()
+    tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::npcanim 16236</col>") { values ->
+        val id = values[0].toInt()
+        val npc = world.npcs.entries.filterNotNull().filter { it.tile.height == player.tile.height && it.tile.isWithinRadius(player.tile, 10) }
+            .minByOrNull { it.tile.getDistance(player.tile) }
+        if (npc == null) {
+            player.message("No npc within 10 tiles.", type = ChatMessageType.CONSOLE)
+            return@tryWithUsage
+        }
+        npc.animate(id)
+        player.message("Npc ${npc.id} (${npc.name}) animates $id, ${world.getAnimationFrames(id)} frames.", type = ChatMessageType.CONSOLE)
+    }
+}
+
 on_command("render", Privilege.ADMIN_POWER) {
     val args = player.getCommandArgs()
     tryWithUsage(player, args, "Invalid format! Example of proper command <col=42C66C>::render 1</col>") { values ->

@@ -330,6 +330,161 @@ object OsrsPetImportTool {
     }
 
     /**
+     * N522 nachtrun deel 2 (owner 2026-11-04 15:5x: Artio + Calvar'ion via route B - bake to classic frames, client unchanged): skeletal OSRS
+     * boss npcs baked exactly like the skeletal pets ([skeletal]: [SkeletalBakeTool.bakeSet], one shared base per npc), with their combat
+     * sequences next to the movement ones. Per batch: OSRS npc id -> extra OSRS sequences (RuneLite gameval AnimationID).
+     */
+    val SKELETAL_NPC_BATCHES: Map<String, List<Pair<Int, List<Int>>>> =
+        mapOf(
+            // Artio (NpcID CALLISTO_SINGLES 11992, the Callisto rig): NPC_CALLISTO_IDLE01 10011 / WALK01 10009 from the definition, plus
+            // ATTACK_MELEE01 10012, ATTACK_RANGED01 10013, ATTACK_MAGIC01 10014, ENRAGED01 10015, SPAWN01 10016, DEATH01 10017.
+            "artio" to listOf(11992 to listOf(10012, 10013, 10014, 10015, 10016, 10017)),
+        )
+
+    private fun skeletalNpcs(
+        batch: String,
+        apply: Boolean,
+    ) {
+        val only: Int? = null
+        val jobs = SKELETAL_NPC_BATCHES[batch] ?: error("unknown skeletal npc batch $batch (${SKELETAL_NPC_BATCHES.keys})")
+        val assetMap = File(OsrsItemImportTool.ASSET_MAP)
+        val targets = OsrsItemImportTool.TARGETS
+        val reader = ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE))
+        val library = CacheLibrary(targets[0])
+        val mutations = mutableListOf<CacheMutation>()
+        val records = mutableListOf<String>()
+        val dropped = mutableListOf<String>()
+        val plans = mutableListOf<String>()
+        try {
+            fun next(index: Int): Int = (library.index(index).archiveIds().maxOrNull() ?: -1) + 1
+            fun nextPaged(index: Int): Int {
+                val group = library.index(index).archiveIds().maxOrNull() ?: return 0
+                val maxFile = library.index(index).archive(group)?.fileIds()?.maxOrNull() ?: -1
+                return (group shl 7) + maxFile + 1
+            }
+            var nextNpc = nextPaged(OsrsNpcImportTool.INDEX_NPC)
+            var nextBas = (library.index(OsrsNpcImportTool.INDEX_CONFIG).archive(OsrsNpcImportTool.GROUP_BAS)?.fileIds()?.maxOrNull() ?: -1) + 1
+            var nextSeq = nextPaged(OsrsFxImportTool.INDEX_SEQ)
+            var nextFrameset = next(OsrsFxImportTool.INDEX_FRAMES)
+            var nextBase = next(OsrsFxImportTool.INDEX_BASES)
+            var nextSynth = next(OsrsFxImportTool.INDEX_SYNTH)
+            val census = ModelNamespaceCensusTool.census(targets[0], targets[1], assetMap)
+            check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
+            check(census.untracedReferenceTypes.isEmpty()) { "untraced model reference types: ${census.untracedReferenceTypes}" }
+            val modelCandidates = OsrsItemImportTool.meshModelCandidates(census)
+            val localIds = OsrsFxImportTool.existingFx(assetMap).toMutableMap()
+
+            fun local(kind: String, upstream: Int, allocate: () -> Int): Int =
+                localIds.getOrPut("$kind:$upstream") { allocate().also { records += "$kind|$upstream|$it" } }
+
+            fun put(index: Int, group: Int, file: Int, bytes: ByteArray, label: String) {
+                val current = library.data(index, group, file)?.let { CacheItemProbeTool.sha1(it) }
+                mutations += CacheMutation(index, group, file, bytes, label, expectedCurrentSha1 = current?.takeIf { it != CacheItemProbeTool.sha1(bytes) })
+            }
+
+            val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
+            for ((osrsId, extraSeqs) in jobs) {
+                val n = OsrsNpcProbeTool.decodeOsrs(osrsId, npcFiles[osrsId] ?: error("OSRS npc $osrsId missing"))
+                val seqs = (OsrsNpcProbeTool.movementSeqs(n).values.filter { it >= 0 } + extraSeqs).distinct()
+                val localBase = local("npc_baked_base", n.id) { nextBase++ }
+                val baked = SkeletalBakeTool.bakeSet(reader, n.models.toList(), seqs, localBase)
+                put(OsrsFxImportTool.INDEX_BASES, localBase, 0, baked.base, "npc ${n.id} ${n.name}: baked base for osrs npc ${n.id}")
+                val localModels =
+                    n.models.mapIndexed { i, m ->
+                        local("npc_baked_model", packed(n.id, i)) { modelCandidates.removeAt(0) }
+                            .also { put(ModelConvertTool.MODEL_INDEX, it, 0, baked.models[i], "npc ${n.id} ${n.name}: osrs model $m baked for npc ${n.id}") }
+                    }
+                val localHeads =
+                    n.chatheads.map { m ->
+                        local("npc_model", m) { modelCandidates.removeAt(0) }
+                            .also { put(ModelConvertTool.MODEL_INDEX, it, 0, OsrsModelConversion.convert(reader, m, dropped), "osrs npc model $m") }
+                    }
+                val seqMap =
+                    seqs.mapIndexed { si, osrsSeq ->
+                        val frameset = local("npc_baked_frameset", packed(n.id, si)) { nextFrameset++ }
+                        baked.frames[si].forEachIndexed { fi, bytes -> put(OsrsFxImportTool.INDEX_FRAMES, frameset, fi, bytes, "npc ${n.id} ${n.name}: baked frame $fi of osrs seq $osrsSeq") }
+                        val seq = OsrsFxImportTool.Seq(frameDurations = baked.durations[si], frames = IntArray(baked.frames[si].size) { (frameset shl 16) or it })
+                        // The skeletal sequence's sounds (opcode 14, per tick) go on the baked frame showing that tick; the synth is imported
+                        // under the same asset key as OsrsFxImportTool's. Two sounds on one frame: the later moves to the next free frame.
+                        val ticks = baked.ticks[si]
+                        val skeletalSeq = SkeletalBakeTool.decodeSkeletalSeq(reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, osrsSeq)!!)!!
+                        skeletalSeq.sounds.sortedBy { it[0] }.forEach { (tick, synth, loops, radius) ->
+                            val localSynth =
+                                local("synth", synth) { nextSynth++ }.also { id ->
+                                    put(OsrsFxImportTool.INDEX_SYNTH, id, 0, reader.file(OsrsFxImportTool.INDEX_SYNTH, synth, 0) ?: error("OSRS synth $synth missing"), "osrs synth $synth")
+                                }
+                            var frame = ticks.indexOfLast { it <= tick }.coerceAtLeast(0)
+                            while (frame in seq.sounds) frame++
+                            if (frame >= ticks.size || loops < 1) {
+                                dropped += "npc ${n.id} ${n.name}: seq $osrsSeq sound $synth at tick $tick (no free baked frame)"
+                            } else {
+                                seq.sounds[frame] = localSynth to loops
+                                seq.soundRadius[frame] = radius
+                            }
+                        }
+                        val seqBytes = OsrsFxImportTool.encode667Seq(seq)
+                        OsrsFxImportTool.decode667SeqFrames(seqBytes)
+                        val localSeq = local("npc_baked_seq", packed(n.id, si)) { nextSeq++ }
+                        put(OsrsFxImportTool.INDEX_SEQ, localSeq ushr 7, localSeq and 0x7F, seqBytes, "npc ${n.id} ${n.name}: baked osrs seq $osrsSeq for npc ${n.id}")
+                        osrsSeq to localSeq
+                    }.toMap()
+                val basId = local("bas", n.id) { nextBas++ }
+                put(OsrsNpcImportTool.INDEX_CONFIG, OsrsNpcImportTool.GROUP_BAS, basId, OsrsNpcImportTool.encode667Bas(n) { seqMap.getValue(it) }, "bas for osrs npc ${n.id}")
+                val localNpc = local("npc", n.id) { nextNpc++ }
+                val npcBytes = OsrsNpcImportTool.encode667Npc(n, localModels.toIntArray(), localHeads.toIntArray(), basId, dropped)
+                put(OsrsNpcImportTool.INDEX_NPC, localNpc ushr 7, localNpc and 0x7F, npcBytes, "osrs npc ${n.id} ${n.name}")
+                plans +=
+                    "PLAN skeletal npc ${n.id} -> $localNpc bas=$basId models=${n.models.toList()}->$localModels heads=$localHeads " +
+                    "seqs=$seqMap vertices=${baked.vertices} clusters=${baked.signatureClusters}->${baked.clusters} " +
+                    "error max=${"%.1f".format(baked.maxError)} mean=${"%.2f".format(baked.meanError)} far=${baked.farOff}/${baked.vertexFrames} (667 units)"
+            }
+        } finally {
+            library.close()
+            reader.close()
+        }
+        plans.forEach { println(it) }
+        dropped.distinct().forEach { println("DROPPED $it") }
+        var unique = mutations.distinctBy { it.describeLocation() }
+        if (only != null) {
+            // N407 2026-10-31 (--only): a new emote re-bakes the pet's frames and model, but its existing sequences and chathead models
+            // keep their current bytes - later fixes (sounds, chathead lifts) changed them after the first bake and must not be undone.
+            val (keep, change) = unique.partition { it.expectedCurrentSha1 != null && (it.label.contains("baked osrs seq") || it.label.startsWith("osrs npc model")) }
+            keep.forEach { println("  KEPT_AS_IS ${it.label}") }
+            unique = change
+        }
+        val transaction = CacheTransaction(targets = targets, mutations = unique)
+        val plan = transaction.preflight()
+        val errors = transaction.blockingErrors(plan)
+        println("PREFLIGHT transaction=${transaction.id} mutations=${unique.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
+        errors.forEach { println("  BLOCKING: $it") }
+        check(errors.isEmpty()) { "preflight blocked; nothing written" }
+        // N407 2026-10-31: show what a run would overwrite, so a re-bake never silently undoes a later fix.
+        plan.filter { "${it.outcome}" == "REPLACE" }.forEach { println("  REPLACE $it") }
+        if (!apply) {
+            println("DRY_RUN records=${records.size}")
+            return
+        }
+        val result = transaction.apply(plan)
+        val problems = transaction.verify()
+        if (problems.isNotEmpty()) {
+            problems.forEach { println("  VERIFY_FAILURE: $it") }
+            println("ROLLED_BACK ${transaction.rollback()}")
+            error("transaction ${transaction.id} failed verification and was rolled back")
+        }
+        println("APPLIED transaction=${result.transactionId} writes=${result.applied} skipped=${result.skipped}")
+        if (records.isNotEmpty()) {
+            val block = StringBuilder()
+            records.forEach { r ->
+                val (kind, upstream, localId) = r.split('|')
+                block.append("  - fx_kind: $kind\n    upstream_fx_id: $upstream\n    local_fx_id: $localId\n    status: IMPORTED_BY_OSRS_SKELETAL_NPC\n    transaction: ${transaction.id}\n")
+            }
+            val text = assetMap.readText()
+            assetMap.writeText(if (text.endsWith("\n")) text + block else "$text\n$block")
+            println("ASSET_MAP appended ${records.size} skeletal npc import entries")
+        }
+    }
+
+    /**
      * N88 part 2 (owner 2026-10-17 "OSRS PETS DO NOT MAKE ANY SOUND", Council N88 2026-10-18 point 2): OSRS keeps most follower pets
      * silent, but their own Jagex twin (the non-follower copy of the same pet) or their parent creature walks with frame sounds. Those
      * exact OSRS sounds go on OUR follower's matching movement sequence (stand -> stand, walk -> walk, ...) at the same point of the
@@ -871,6 +1026,7 @@ object OsrsPetImportTool {
     fun main(args: Array<String>) {
         val rows = OsrsPetRoster.load()
         when (args.firstOrNull()) {
+            "skeletal-npc" -> skeletalNpcs(args[1], "--apply" in args)
             "skeletal" -> skeletal("--apply" in args, args.firstOrNull { it.startsWith("--only=") }?.removePrefix("--only=")?.toInt())
             "sounds" -> sounds("--apply" in args)
             "table" -> table()
