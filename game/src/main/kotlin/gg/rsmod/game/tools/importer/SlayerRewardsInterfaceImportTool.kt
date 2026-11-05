@@ -136,6 +136,30 @@ object SlayerRewardsInterfaceImportTool {
             Extend(Reward(53, "Revenenenenenants", "Whenever you get a Revenants task, it will be a bigger task.", 100, icon(11634), false), "REVENANT"),
         )
 
+    /**
+     * Buy tab (OSRS dbtable column / slayer_rewards_buy_init enum_840: Slayer ring (8) 75, broad bolts 35 and broad arrows 35 per 250,
+     * herb sack 750, rune pouch 750, looting bag 10) with our items (Info texts: OSRS enum 843): Ring of slaying (8) is the 667 Slayer ring (8), Broad-tipped bolts
+     * the broad bolts; the herb sack does not exist here and the looting bag is out of the game (owner 2026-11-04). Menu as
+     * slayer_rewards_buy_init: "Buy 1 / 5 / 10 / 50", "... set(s)" for a stack, only "Buy 1" for the rune pouch.
+     */
+    data class BuyItem(val item: Int, val name: String, val amount: Int, val points: Int, val singleOnly: Boolean, val info: String) {
+        val ops: List<String>
+            get() =
+                when {
+                    singleOnly -> listOf("Info", "Buy 1", "", "", "", "", "", "", "", "Examine")
+                    amount == 1 -> listOf("Info", "Buy 1", "Buy 5", "Buy 10", "Buy 50", "", "", "", "", "Examine")
+                    else -> listOf("Info", "Buy 1 set", "Buy 5 sets", "Buy 10 sets", "Buy 50 sets", "", "", "", "", "Examine")
+                }
+    }
+
+    val BUY =
+        listOf(
+            BuyItem(13281, "Ring of slaying (8)", 1, 75, singleOnly = false, info = "A wieldable ring that can check your task progress. It has 8 charges for teleporting to useful Slayer sites."),
+            BuyItem(13280, "Broad-tipped bolts", 250, 35, singleOnly = false, info = "Crossbow bolts that can pierce the hides of creatures such as Turoth and Kurasks. Levels 55 Slayer and 61 Ranged required, and a runite crossbow or better."),
+            BuyItem(4160, "Broad arrow", 250, 35, singleOnly = false, info = "Arrows that can pierce the hides of creatures such as Turoth and Kurasks. Levels 55 Slayer and 50 Ranged required, and a magic bow or better."),
+            BuyItem(23746, "Rune pouch", 1, 750, singleOnly = true, info = "The rune pouch has the ability to store up to 16,000 runes of 3 types."),
+        )
+
     /** One placed box: its first component and its rectangle inside the scroll layer. */
     data class Box(val first: Int, val x: Int, val y: Int, val w: Int, val h: Int, val descHeight: Int)
 
@@ -244,8 +268,9 @@ object SlayerRewardsInterfaceImportTool {
         for (slot in 0 until BUY_SLOTS) {
             val x = slot % 5 * column
             val y = slot / 5 * (32 + 35)
+            val item = BUY.getOrNull(slot)
             b.add(DeathsOfficeInterfaceImportTool.Comp(BUY_FIRST + slot * 2, 5, x + (column - 36) / 2, y, 36, 32, BUY_SCROLL, hidden = true,
-                outline = 1, shadow = 0x333333, ops = listOf("Info", "Buy 1", "Buy 5", "Buy 10", "Buy 50", "", "", "", "", "Examine")))
+                outline = 1, shadow = 0x333333, ops = item?.ops ?: emptyList(), opBase = item?.let { "<col=ff9040>${it.name}</col>" } ?: ""))
             b.text(BUY_FIRST + slot * 2 + 1, x, y + 32, column, 15, BUY_SCROLL, fonts.p12, "", hidden = true)
         }
 

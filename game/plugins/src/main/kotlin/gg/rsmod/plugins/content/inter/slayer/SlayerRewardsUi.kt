@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.runClientScript
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentItem
+import gg.rsmod.plugins.api.ext.setComponentPosition
 import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
@@ -43,16 +44,8 @@ object SlayerRewardsUi {
 
     enum class Kind { UNLOCK, DISABLE, EXTEND, DISABLE_EXTEND, EXTEND_ALL }
 
-    /** Buy tab (OSRS slayer_rewards_buy: Slayer ring (8) 75, broad bolts / arrows 250 for 35, rune pouch 750): our items. */
-    data class BuyItem(val item: Int, val amount: Int, val points: Int, val sets: Boolean, val single: Boolean)
-
-    val BUY =
-        listOf(
-            BuyItem(13281, 1, 75, sets = false, single = false), // Ring of slaying (8) = OSRS Slayer ring (8)
-            BuyItem(13280, 250, 35, sets = true, single = false), // Broad-tipped bolts = OSRS Broad bolts
-            BuyItem(4160, 250, 35, sets = true, single = false), // Broad arrow
-            BuyItem(23746, 1, 750, sets = false, single = true), // Rune pouch
-        )
+    /** Buy tab: [T.BUY] (the tool bakes the same list's menus). */
+    private val BUY get() = T.BUY
 
     // ---- reward state ----
     private val UNLOCK_KEYS: Map<Int, AttributeKey<Boolean>> =
@@ -178,6 +171,21 @@ object SlayerRewardsUi {
     }
 
     // ---- clicks ----
+    /**
+     * The menu entry (op1..op10) a 667 IF_BUTTON packet carries, by its opcode (IfButton1Handler FIRST_OPTION 61, SECOND 64, THIRD 4,
+     * FOURTH 18, FIFTH 10; 25 = op10 "Examine", testclient 2026-11-05: the packet's option index is not the op number).
+     */
+    fun opOf(opcode: Int): Int =
+        when (opcode) {
+            61 -> 1
+            64 -> 2
+            4 -> 3
+            18 -> 4
+            10 -> 5
+            25 -> 10
+            else -> 0
+        }
+
     fun button(player: Player, component: Int, option: Int) {
         when {
             component == gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.CLOSE -> player.closeInterface(T.INTERFACE_ID)
@@ -215,7 +223,20 @@ object SlayerRewardsUi {
         showConfirm(player, text, Pending(Kind.EXTEND_ALL, -1, cost), "Confirm")
     }
 
+    /** slayer_rewards_buy_op Info: name, the OSRS description and the cost; only Back, moved to the middle (92, 165). */
+    private fun showInfo(player: Player, item: T.BuyItem) {
+        player.attr.remove(PENDING)
+        val cost = if (item.amount > 1) "Cost: ${item.points} points for ${item.amount}" else "Cost: ${item.points} points each"
+        player.setComponentText(T.INTERFACE_ID, T.CONFIRM_TEXT, "<u=ff981f>${item.name}</u><br><br>${item.info}<br><br>$cost")
+        player.setComponentHidden(T.INTERFACE_ID, T.CONFIRM_OK, true)
+        player.setComponentPosition(T.INTERFACE_ID, T.CONFIRM_BACK, 92, 165)
+        player.setComponentHidden(T.INTERFACE_ID, T.PANEL, true)
+        player.setComponentHidden(T.INTERFACE_ID, T.CONFIRM, false)
+    }
+
     private fun showConfirm(player: Player, text: String, pending: Pending, op: String) {
+        player.setComponentHidden(T.INTERFACE_ID, T.CONFIRM_OK, false)
+        player.setComponentPosition(T.INTERFACE_ID, T.CONFIRM_BACK, 33, 165)
         player.attr[PENDING] = pending
         player.setComponentText(T.INTERFACE_ID, T.CONFIRM_TEXT, text)
         T.CONFIRM_OPS.forEachIndexed { i, name -> player.setComponentHidden(T.INTERFACE_ID, T.CONFIRM_OPS_FIRST + i, name != op) }
@@ -260,10 +281,11 @@ object SlayerRewardsUi {
         val item = BUY.getOrNull(slot) ?: return
         val name = player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.item).name
         when (option) {
-            1 -> player.message("$name: ${"%,d".format(java.util.Locale.ENGLISH, item.points)} points${if (item.sets) " for ${item.amount}" else ""}.")
+            1 -> showInfo(player, item)
             10 -> player.message(player.world.definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, item.item).examine ?: name)
             in 2..5 -> {
-                val wanted = if (item.single) 1 else intArrayOf(1, 5, 10, 50)[option - 2]
+                if (item.singleOnly && option != 2) return
+                val wanted = intArrayOf(1, 5, 10, 50)[option - 2]
                 var bought = 0
                 for (i in 0 until wanted) {
                     if (player.getSlayerPointsCount() < item.points) break

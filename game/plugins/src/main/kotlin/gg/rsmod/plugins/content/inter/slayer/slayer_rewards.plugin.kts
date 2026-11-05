@@ -32,7 +32,7 @@ SlayerRewardsBridge.openAssignment = { p -> openAssignmentInterface(p) }
 SlayerRewardsUi.bake { text, width -> gg.rsmod.plugins.content.quests.tab.N108Ui.lines(world, "p11_full", text, width) }
 for (component in 0 until gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool.COMPONENT_COUNT) {
     on_button(gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool.INTERFACE_ID, component) {
-        SlayerRewardsUi.button(player, component, player.getInteractingOption())
+        SlayerRewardsUi.button(player, component, SlayerRewardsUi.opOf(player.getInteractingOpcode()))
     }
 }
 
