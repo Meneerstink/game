@@ -30,11 +30,19 @@ object WildernessBossLife {
         origin.attr[SUCCESSOR]?.let { return it.takeIf { n -> n.isSpawned() } }
         val next = create()
         origin.attr[SUCCESSOR] = next
+        val replacingLivePhase = !origin.isDead()
         val pending = PendingSpawn({ origin.world.spawn(next) }) { ready(next) }
         if (pending.attempt()) return next
         gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "wildy boss successor ${origin.id}->${next.id} insert failed; retrying once per tick" }
         origin.world.queue {
-            do { wait(1) } while (!pending.attempt())
+            while (true) {
+                wait(1)
+                if (replacingLivePhase && (origin.isDead() || !origin.isSpawned())) {
+                    if (origin.attr[SUCCESSOR] === next) origin.attr.remove(SUCCESSOR)
+                    return@queue // The real death/respawn now owns the successor, not the timed-out live phase.
+                }
+                if (pending.attempt()) return@queue
+            }
         }
         return null
     }
