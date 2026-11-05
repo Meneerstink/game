@@ -123,7 +123,6 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
     if (killer != null) {
         // The drop table and pet are Vet'ion's (one Vet'ion kill = both forms).
         WildernessBossLoot.drop(npc)
-        WildernessLairs.onTopDamageKill(killer)
     }
     world.queue {
         wait(OldWildernessBosses.VETION_RESPAWN_TICKS)
@@ -312,5 +311,4 @@ DropTableFactory.register(vetionDrops, OldWildernessBosses.VETION)
 on_npc_death(OldWildernessBosses.CALLISTO) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     WildernessBossLoot.drop(npc)
-    WildernessLairs.onTopDamageKill(killer)
 }

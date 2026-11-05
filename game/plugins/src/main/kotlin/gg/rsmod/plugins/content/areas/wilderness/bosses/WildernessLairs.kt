@@ -51,7 +51,10 @@ object WildernessLairs {
     val SINCE_VISIT = AttributeKey<Boolean>(persistenceKey = "wildy_lair_since_visit")
 
     /** Entered the Escape Caves from the surface: the prayer drain (cleared when leaving them). */
-    val ESCAPE_DRAIN_TICKS = AttributeKey<Int>()
+    val ESCAPE_DRAIN_TICKS = AttributeKey<Int>(persistenceKey = "escape_cave_surface_drain_ticks")
+    /** All arrivals, including lair exits and login. Persisted so reconnecting inside cannot reset residence. */
+    val ESCAPE_STAY_TICKS = AttributeKey<Int>(persistenceKey = "escape_cave_stay_ticks")
+    const val ESCAPE_DWELL_GRACE_TICKS = 50 // Wiki says approximately 30 seconds; exact OSRS rate remains unmeasured (V4).
 
     data class Placed(val id: Int, val tile: Tile, val rot: Int)
 
@@ -114,9 +117,9 @@ object WildernessLairs {
             Lair("Vet'ion's Rest", VETION_REST_ENTRANCE, Tile(3295, 10199, 1), REST_EXIT, Tile(3294, 10190, 1), null,
                 3285..3305, 10189..10216, 1, listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN)),
             Lair("Hunter's End", HUNTERS_END_ENTRANCE, Tile(1759, 11550, 0), DEN_EXIT, Tile(1758, 11531, 0), Tile(3115, 3675, 0),
-                1739..1777, 11525..11562, 0, emptyList()),
+                1739..1777, 11525..11562, 0, listOf(ArtioCombat.NPC)),
             Lair("Skeletal Tomb", SKELETAL_TOMB_ENTRANCE, Tile(1887, 11543, 1), REST_EXIT, Tile(1886, 11534, 1), Tile(3180, 3682, 0),
-                1877..1898, 11533..11560, 1, emptyList()),
+                1877..1898, 11533..11560, 1, listOf(CalvarionCombat.NORMAL, CalvarionCombat.ENRAGED)),
         )
 
     fun lairByEntrance(id: Int): Lair? = LAIRS.firstOrNull { it.entrance == id }
@@ -176,6 +179,15 @@ object WildernessLairs {
     fun onTopDamageKill(player: Player) {
         player.attr[DISCOUNT_KILLS] = ((player.attr[DISCOUNT_KILLS] ?: 0) + 1).coerceAtMost(BASE_FEE / DISCOUNT_PER_KILL)
     }
+
+    fun onCompletedKill(player: Player, npcId: Int) {
+        val reward = OldWildernessBosses.rewardNpc(npcId) ?: return
+        if (reward in setOf(OldWildernessBosses.CALLISTO, OldWildernessBosses.VETION, ArtioCombat.NPC,
+                CalvarionCombat.NORMAL, VenenatisCombat.NPC, VenenatisCombat.SPINDEL)) onTopDamageKill(player)
+    }
+
+    fun peekKillCount(player: Player, lair: Lair): Int =
+        gg.rsmod.plugins.content.quests.tab.KillCounts.ofNpcs(player, lair.bosses.toIntArray())
 
     fun available(player: Player): Long =
         player.inventory.getItemCount(Items.COINS_995).toLong() + player.bank.getItemCount(Items.COINS_995)
@@ -255,13 +267,17 @@ object WildernessLairs {
         if (player.attr[SINCE_VISIT] == true && runCatching { player.tile.getWildernessLevel() <= 0 }.getOrDefault(false)) {
             player.attr[SINCE_VISIT] = false
         }
-        val drain = player.attr[ESCAPE_DRAIN_TICKS] ?: return
         if (!inEscapeCaves(player.tile) || player.isDead()) {
-            player.attr.remove(ESCAPE_DRAIN_TICKS)
+            player.attr.remove(ESCAPE_DRAIN_TICKS, ESCAPE_STAY_TICKS)
             return
         }
-        val ticks = drain + 1
-        player.attr[ESCAPE_DRAIN_TICKS] = ticks
+        val stayed = ((player.attr[ESCAPE_STAY_TICKS] ?: 0).coerceAtLeast(0) + 1).coerceAtMost(1_000_000)
+        player.attr[ESCAPE_STAY_TICKS] = stayed
+        val entered = player.attr[ESCAPE_DRAIN_TICKS]?.let { (it + 1).coerceAtMost(1_000_000) }
+        if (entered != null) player.attr[ESCAPE_DRAIN_TICKS] = entered
+        // Surface entry and prolonged residence are two causes of the same drain, never additive.
+        val ticks = maxOf(entered ?: 0, (stayed - ESCAPE_DWELL_GRACE_TICKS).coerceAtLeast(0))
+        if (ticks == 0) return
         // Near Reality EscapeCavesArea: the message after the first tick, then max(1, ticks / 20) prayer every 5 ticks.
         if (ticks == 2) {
             player.message("<col=ef1020>You feel a chill down your spine as the air in the cave weakens you, the air seems to be getting thicker over time</col>")
@@ -302,9 +318,11 @@ object WildernessLairs {
     }
 
     fun crawl(player: Player, dest: Tile, message: String? = null, after: () -> Unit = {}) {
+        val entering = lairName(dest) != null || (!inEscapeCaves(player.tile) && inEscapeCaves(dest))
         player.lockingQueue(lockState = LockState.FULL) {
             player.animate(ANIM_CRAWL)
-            wait(2)
+            // The additional entry-animation wait was removed on OSRS on 20 September 2023.
+            if (!entering) wait(2)
             player.moveTo(dest)
             noteEntry(dest, player.world.currentCycle)
             player.animate(-1)
@@ -317,13 +335,15 @@ object WildernessLairs {
      * A lair exit: one of the three Escape Caves points; within 10 seconds (17 ticks) of the previous player leaving the same lair, the
      * same point (OSRS Wiki "Silk Chasm": "any player who exits within 10 seconds of the previous player will arrive at the same point").
      */
-    /** Logging out in a big lair (Callisto's Den, Vet'ion's Rest, the Silk Chasm) = an exit into the Escape Caves; null anywhere else. */
+    /** Jagex 25 March 2026: logout returns outside Escape Caves. Small lairs use their own surface exit. */
     fun logoutExit(tile: Tile, cycle: Int, roll: () -> Int): Tile? {
-        if (!ESCAPE_CAVES_OPEN) return null
-        val entrance = LAIRS.firstOrNull { it.surfaceExit == null && it.contains(tile) }?.entrance
-            ?: SILK_CHASM_ENTRANCE.takeIf { VenenatisCombat.VENENATIS_ARENA.inChasm(tile) }
-            ?: return null
-        return lairExitPoint(entrance, cycle, roll)
+        val lair = LAIRS.firstOrNull { it.contains(tile) }
+        lair?.surfaceExit?.let { return Tile(it) }
+        if (VenenatisCombat.SPINDEL_ARENA.inChasm(tile)) return Tile(WEB_CHASM_SURFACE_EXIT)
+        if (lair == null && !VenenatisCombat.VENENATIS_ARENA.inChasm(tile)) return null
+        // Exact OSRS logout tile is not published. Reuse a paired shaft's existing south-side safe landing.
+        // Do not alter ordinary lair-exit selection or its 10-second pursuit state.
+        return surfaceLanding(ESCAPE_ROUTES[Math.floorMod(roll(), ESCAPE_ROUTES.size)])
     }
 
     fun lairExitPoint(lair: Int, cycle: Int, roll: () -> Int): Tile {

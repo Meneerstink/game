@@ -74,7 +74,6 @@ on_npc_death(CalvarionCombat.ENRAGED) {
     val killer = npc.damageMap.getMostDamage() as? Player
     if (killer != null) {
         DropTableFactory.getDrop(world, killer, CalvarionCombat.NORMAL, npc.tile)
-        WildernessLairs.onTopDamageKill(killer)
     }
     world.queue {
         // Infobox respawn 14 ticks.

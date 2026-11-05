@@ -247,7 +247,6 @@ on_npc_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
     if (npc.id == VenenatisCombat.NPC) WildernessBossLoot.drop(npc)
     else DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
-    WildernessLairs.onTopDamageKill(killer)
 }
 
 // ------------------------------------------------------------------ Spindel (N522 bundle 4b; OSRS Wiki infobox, id 11998)
