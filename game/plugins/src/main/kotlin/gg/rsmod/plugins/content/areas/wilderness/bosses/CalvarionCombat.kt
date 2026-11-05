@@ -63,7 +63,13 @@ object CalvarionCombat : CombatScript() {
 
     const val GFX_LIGHTNING = 3232 // FX_VETION_ATTACK_MAGIC_IMPACT_01 2346
     const val GFX_LIGHTNING_ENRAGED = 3233 // _IMPACT_02 2347
-    const val GFX_SHIELD_SHADOW = 3234 // FX_VETION_ATTACK_MELEE 2348
+    /**
+     * N522 ronde 2: the shield-bash tiles as the live game shows them (DreamBot CalvarionData LESSER_AOE_ATTACK {1446, 2184}):
+     * GARGBOSS_DEBRIS_SHADOW_90 1446 marks the tiles, ZEBAK_ROAR_WAVE_DUST 2184 is the bash (OsrsFxImportTool n522-r2). 2348
+     * FX_VETION_ATTACK_MELEE (3234) on the tiles had no source.
+     */
+    const val GFX_SHIELD_SHADOW = 3235 // OSRS 1446
+    const val GFX_SHIELD_DUST = 3236 // OSRS 2184
 
     const val LIGHTNING_DIRECT_MAX = 20
     const val LIGHTNING_SPLASH_MAX = 10
@@ -214,6 +220,9 @@ object CalvarionCombat : CombatScript() {
     fun strike(npc: Npc, tiles: List<Tile>, gfx: Int) {
         val world = npc.world
         val life = WildernessBossLife.token(npc)
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            "calvarion bolts n=${tiles.size} gfx=$gfx at=${tiles.joinToString(" ") { "${it.x},${it.z}" }}"
+        }
         tiles.forEach { world.spawn(TileGraphic(it, gfx, 0)) }
         world.queue {
             wait(LIGHTNING_TICKS)
@@ -239,6 +248,7 @@ object CalvarionCombat : CombatScript() {
         world.queue {
             wait(LIGHTNING_TICKS)
             if (!WildernessBossLife.active(npc, life)) return@queue
+            tiles.filter { ScorpiaCombat.distanceToArea(it, npc.tile, npc.getSize()) > 0 }.forEach { world.spawn(TileGraphic(it, GFX_SHIELD_DUST, 0)) }
             players(npc).filter { p -> tiles.any { it.sameAs(p.tile) } }.forEach { p ->
                 val damage = world.random(SHIELD_MAX)
                 npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = damage > 0, delay = 0, hitType = HitType.REGULAR_HIT, applyDeflectProtection = false)

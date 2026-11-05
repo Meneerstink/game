@@ -25,10 +25,68 @@ object FeroxBarrierOptionTool {
     const val FIELD_LOC_ID = 62438
     const val OPTION = "Pass-Through"
 
+    /** OSRS loc 39656 opcode 24: the field's idle animation (classic seq 6954, OsrsFxImportTool batch "n522-r2"). */
+    const val OSRS_FIELD_SEQ = 6954
+
+    /**
+     * N522 ronde 2 / N576 ('onzichtbare rode Ferox-barriere voor de helft'): the Ferox import dropped the field's animation, so the
+     * field stands still at half height. `anim-plan|anim-apply` appends opcode 24 with the local id of OSRS seq 6954.
+     */
+    private fun animate(apply: Boolean) {
+        val group = FIELD_LOC_ID ushr 8
+        val file = FIELD_LOC_ID and 0xFF
+        val seq = OsrsFxImportTool.existingFx(java.io.File(OsrsItemImportTool.ASSET_MAP))["seq:$OSRS_FIELD_SEQ"]
+            ?: error("OSRS seq $OSRS_FIELD_SEQ not imported yet - run OsrsFxImportTool n522-r2 --apply first")
+        val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
+        val current =
+            try {
+                library.data(LOC_INDEX, group, file) ?: error("loc $FIELD_LOC_ID absent")
+            } finally {
+                library.close()
+            }
+        val currentSha1 = CacheItemProbeTool.sha1(current)
+        val before = Rev667LocType.decode(FIELD_LOC_ID, current)
+        println("CURRENT bytes=${current.size} sha1=$currentSha1 models=${before.allModels} options=${before.options.toList()} anim=${before.animation}")
+        check(before.animation == -1) { "loc $FIELD_LOC_ID already animates (${before.animation}); refusing" }
+        check(current.last() == 0.toByte()) { "loc $FIELD_LOC_ID does not end with the opcode-0 terminator" }
+        val updated =
+            ByteArrayOutputStream().use { out ->
+                out.write(current, 0, current.size - 1)
+                out.write(24)
+                out.write(seq ushr 8)
+                out.write(seq and 0xFF)
+                out.write(0)
+                out.toByteArray()
+            }
+        val after = Rev667LocType.decode(FIELD_LOC_ID, updated)
+        check(after.animation == seq && after.allModels == before.allModels && after.options.toList() == before.options.toList()) {
+            "re-decode mismatch: anim=${after.animation}"
+        }
+        println("INTENDED bytes=${updated.size} sha1=${CacheItemProbeTool.sha1(updated)} anim=$seq (OSRS $OSRS_FIELD_SEQ)")
+        val mutation = CacheMutation(LOC_INDEX, group, file, updated, "ferox barrier field loc $FIELD_LOC_ID + OSRS idle seq $OSRS_FIELD_SEQ -> $seq", currentSha1)
+        val tx = CacheTransaction(listOf(FeroxImportTool.GAME_CACHE, FeroxImportTool.FILE_SERVER_CACHE), listOf(mutation))
+        val preflight = tx.preflight()
+        preflight.forEach { println("PREFLIGHT $it") }
+        val blocking = tx.blockingErrors(preflight)
+        blocking.forEach { println("BLOCKING: $it") }
+        if (!apply) {
+            println("PLAN_ONLY transaction=${tx.id} (nothing written)")
+            return
+        }
+        check(blocking.isEmpty()) { "Preflight has blocking errors; refusing to apply." }
+        val result = tx.apply(preflight)
+        println("APPLIED transaction=${tx.id} applied=${result.applied} skipped=${result.skipped}")
+        val verify = tx.verify()
+        verify.forEach { println("VERIFY_ERROR: $it") }
+        check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
+        println("VERIFY_OK both targets hold intended bytes (journal ${tx.journalDir})")
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val mode = args.getOrNull(0) ?: "plan"
-        require(mode == "plan" || mode == "apply") { "Usage: plan|apply" }
+        if (mode == "anim-plan" || mode == "anim-apply") return animate(mode == "anim-apply")
+        require(mode == "plan" || mode == "apply") { "Usage: plan|apply|anim-plan|anim-apply" }
         val group = FIELD_LOC_ID ushr 8
         val file = FIELD_LOC_ID and 0xFF
 

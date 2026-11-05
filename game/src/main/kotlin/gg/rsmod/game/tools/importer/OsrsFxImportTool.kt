@@ -178,6 +178,9 @@ object OsrsFxImportTool {
             // Calvar'ion: RuneLite gameval SpotanimID FX_VETION_ATTACK_MAGIC_01 2344 / _02 2345, _MAGIC_IMPACT_01 2346 (blue lightning) /
             // _02 2347 (orange, enraged), FX_VETION_ATTACK_MELEE 2348 (Near Reality Vetion.java REGULAR_ / ENRAGED_LIGHTNING).
             "calvarion" to listOf(2344, 2345, 2346, 2347, 2348),
+            // N522 ronde 2: Calvar'ion's shield-bash markers as the live game sends them - DreamBot CalvarionData LESSER_AOE_ATTACK
+            // {1446, 2184} (graphics objects) = gameval GARGBOSS_DEBRIS_SHADOW_90 1446 + ZEBAK_ROAR_WAVE_DUST 2184.
+            "n522-r2" to listOf(1446, 2184),
             "artio" to listOf(2343, 2349, 2350, 2351, 133, 1255), // 1255: Near Reality KNOCKBACK_PLAYER_GRAPHICS; // ENRAGE 2352/2353: skeletal sequence 3473408, refused (glow not shown)
             // N522 bundle 5 (cache 1151): the old Callisto's shockwave 395, heal 157, roar on the player 245; the old Vet'ion's magic 280 /
             // impact 281 (Kronos-184 bosses/Callisto.java, Vetion.java).
@@ -302,6 +305,9 @@ object OsrsFxImportTool {
             // HYDRA_CHATHEAD_TALK 8265, HUNLLEF_PET_CHAT_TALK 8427, ZALCANO_CHAT_TALK 8446, NIGHTMARE_PET_CHAT_TALK 8636 / _IDLE
             // 8635, JALTOKJAD_CHATHEAD_PET 8858, FSB_PET_CHATHEAD 8907.
             "pet-chatheads" to listOf(2415, 7130, 7179, 7182, 7399, 7804, 7805, 7958, 7979, 8135, 8265, 8427, 8446, 8635, 8636, 8858, 8907),
+            // N522 ronde 2 / N576: the idle animation of the Ferox Enclave energy field (OSRS loc 39656 opcode 24 = seq 6954, classic),
+            // dropped by the Ferox import - without it the field stands still at half height. FeroxBarrierOptionTool binds it to 62438.
+            "n522-r2" to listOf(6954),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren"): the water animation of OSRS loc 29241
             // "Ornate pool of Rejuvenation" (OsrsLocImportTool batch of the same name keeps it once this is imported).
             "poh-pool" to listOf(7304),
