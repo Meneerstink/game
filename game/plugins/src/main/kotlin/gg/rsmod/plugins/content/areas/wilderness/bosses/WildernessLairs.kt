@@ -278,11 +278,35 @@ object WildernessLairs {
         }
     }
 
+    /** The boss lair a tile is in (the four lairs, the Silk Chasm 13727 and the Web Chasm 6580), or null. */
+    fun lairName(tile: Tile): String? =
+        LAIRS.firstOrNull { it.contains(tile) }?.name ?: when (tile.regionId) {
+            13727 -> "Silk Chasm"
+            6580 -> "Web Chasm"
+            else -> null
+        }
+
+    /** OSRS Wiki Silk Chasm: "Upon any player entering the lair, all players inside will be unable to teleport for 3 ticks." */
+    const val ENTRY_TELEPORT_LOCK_TICKS = 3
+    private val lastEntry = HashMap<String, Int>()
+
+    fun noteEntry(dest: Tile, cycle: Int) {
+        lairName(dest)?.let { lastEntry[it] = cycle }
+    }
+
+    /** True while someone entered this player's lair less than 3 ticks ago (owner 11-05: for everyone, no diary exception). */
+    fun entryTeleportLocked(tile: Tile, cycle: Int): Boolean {
+        val lair = lairName(tile) ?: return false
+        val at = lastEntry[lair] ?: return false
+        return cycle - at in 0 until ENTRY_TELEPORT_LOCK_TICKS
+    }
+
     fun crawl(player: Player, dest: Tile, message: String? = null, after: () -> Unit = {}) {
         player.lockingQueue(lockState = LockState.FULL) {
             player.animate(ANIM_CRAWL)
             wait(2)
             player.moveTo(dest)
+            noteEntry(dest, player.world.currentCycle)
             player.animate(-1)
             message?.let { player.filterableMessage(it) }
             after()

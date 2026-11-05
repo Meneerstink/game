@@ -57,6 +57,23 @@ class WildernessLairsTests {
     }
 
     @Test
+    fun `someone entering a lair stops everyone inside that lair from teleporting for 3 ticks, other lairs and the surface stay free`() {
+        val den = WildernessLairs.LAIRS.single { it.name == "Callisto's Den" }
+        val inDen = Tile(3360, 10330, 0)
+        WildernessLairs.noteEntry(den.arrival, 1000)
+        assertTrue(WildernessLairs.entryTeleportLocked(inDen, 1000))
+        assertTrue(WildernessLairs.entryTeleportLocked(inDen, 1002))
+        assertFalse(WildernessLairs.entryTeleportLocked(inDen, 1003))
+        val rest = WildernessLairs.LAIRS.single { it.name == "Vet'ion's Rest" }
+        assertFalse(WildernessLairs.entryTeleportLocked(rest.arrival, 1001))
+        assertFalse(WildernessLairs.entryTeleportLocked(Tile(3291, 3848), 1001))
+        WildernessLairs.noteEntry(Tile(3424, 10212, 2), 2000) // Silk Chasm
+        assertTrue(WildernessLairs.entryTeleportLocked(Tile(3430, 10215, 2), 2001))
+        WildernessLairs.noteEntry(Tile(3291, 3848), 3000) // an exit to the surface marks nothing
+        assertFalse(WildernessLairs.entryTeleportLocked(Tile(3291, 3848), 3000))
+    }
+
+    @Test
     fun `the 50,000 fee comes from the inventory then the bank, and each top-damage boss kill takes 10,000 off the next fee`() {
         val p = player(inventory = 20_000, bank = 100_000)
         assertEquals(50_000, WildernessLairs.fee(p))

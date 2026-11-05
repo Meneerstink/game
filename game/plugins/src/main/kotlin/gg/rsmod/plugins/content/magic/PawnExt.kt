@@ -109,6 +109,11 @@ fun Player.teleportRefusal(type: TeleportType): List<String>? {
         return listOf("You can't use this teleport here.")
     }
 
+    // OSRS Wiki Silk Chasm: someone entered this boss lair less than 3 ticks ago - no teleport (the wiki names no message).
+    if (gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessLairs.entryTeleportLocked(tile, world.currentCycle)) {
+        return emptyList()
+    }
+
     return null
 }
 
