@@ -705,6 +705,14 @@ task runItemTransactionTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ItemTransactionTool'
 }
 
+task runMapEnvironmentTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N568: copy a rev-667 opcode-0 environment record (fog/sun) onto imported OSRS map squares without one. ' +
+        'Usage: ./gradlew :game:runMapEnvironmentTool --args="<sourceSquare> <targetSquare>... [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.MapEnvironmentTool'
+}
+
 task runSourceCacheProbeTool(type: JavaExec) {
     group = 'tools'
     description = 'Modern-content import pipeline: read-only probe of the pinned upstream modern ' +
