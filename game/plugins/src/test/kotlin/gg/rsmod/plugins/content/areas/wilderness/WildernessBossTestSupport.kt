@@ -75,7 +75,7 @@ internal object WildernessBossTestSupport {
                 counts[id] = (counts[id] ?: 0) + secondArg<Int>()
             }
             attributes[ItemActionGuard.STATUS_CAPTURE] = messages
-                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin", "Chaos_elemental_plugin", "Artio_plugin").forEach { name ->
+                listOf("Wilderness_bosses_plugin", "Old_wilderness_bosses_plugin", "Scorpia_plugin", "Venenatis_plugin", "Revenant_cave_revenants_plugin", "Chaos_elemental_plugin", "Artio_plugin", "Calvarion_plugin").forEach { name ->
                     scripts.loadClass("gg.rsmod.plugins.content.areas.wilderness.bosses.$name")
                         .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
                         .newInstance(repo, world, mockk<Server>(relaxed = true))
@@ -128,7 +128,7 @@ internal object WildernessBossTestSupport {
                 "Chaos Fanatic", "Crazy archaeologist", "Scorpia" -> 127.0 / 128
                 "Chaos Elemental" -> 255.0 / 256
                 "Callisto", "Vetion", "Venenatis" -> 1 - (1.0 / 196 + 1.0 / 256 + 1.0 / 256 + 1.0 / 360 + 1.0 / 512)
-                "Spindel", "Artio" -> 1 - (1.0 / 358 + 1.0 / 358 + 1.0 / 618 + 1.0 / 716 + 1.0 / 912)
+                "Spindel", "Artio", "Calvar'ion" -> 1 - (1.0 / 358 + 1.0 / 358 + 1.0 / 618 + 1.0 / 716 + 1.0 / 912)
                 else -> 1.0
             }
             // Wiki rounds Scorpia's effective 127/128 * 1/2000 to 1/2015.75.
@@ -175,7 +175,7 @@ abstract class WildernessBossContractTests(
         val f = WildernessBossTestSupport.Fixture()
         val source = DropSources.forNpc(f.player, id)!!
         CollectionLogPages.install(listOf(CollectionLogPages.Page(source.key, CollectionLogPages.Category.BOSSES, source.name, listOf(source.key), listOf(1))))
-        val deathId = if (id == OldWildernessBosses.VETION) OldWildernessBosses.VETION_REBORN else id
+        val deathId = when (id) { OldWildernessBosses.VETION -> OldWildernessBosses.VETION_REBORN; gg.rsmod.plugins.api.cfg.Npcs.CALVARION -> gg.rsmod.plugins.api.cfg.Npcs.CALVARION_ENRAGED; else -> id }
         f.counts[deathId] = 1234
         if (id == OldWildernessBosses.VETION) {
             f.counts[id] = 2000 // includes incomplete old first phases; must not inflate the completed count

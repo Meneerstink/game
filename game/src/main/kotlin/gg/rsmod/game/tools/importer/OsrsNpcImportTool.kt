@@ -125,6 +125,9 @@ object OsrsNpcImportTool {
             // N522 nachtrun deel 1 (owner 2026-11-02 15:4x "Chaos Elemental VOLLEDIG OSRS"): the OSRS Chaos Elemental (OSRS Wiki infobox id
             // 2054, models 11216 + 57329; RuneLite gameval NpcID CHAOSELEMENTAL). The 667 npc 3200 is the later HD remodel (model 38137).
             "chaos-elemental" to listOf(2054),
+            // N522 nachtrun deel 2: Calvar'ion's Skeleton Hellhound 12107 (level 115) and Greater Skeleton Hellhound 12108 (level 139)
+            // (OSRS Wiki infobox ids; classic DOG_UPDATE_WOLF_READY 6580 / SKELETON_HELLHOUND_WALK 6577).
+            "calvarion-hounds" to listOf(12107, 12108),
         )
     }
 
@@ -189,6 +192,9 @@ object OsrsNpcImportTool {
             // chaos-elemental: RuneLite gameval AnimationID CHAOSELEMENTAL_ATTACK 3146 / CHAOSELEMENTAL_DEATH 3147 (READY 3144 / WALK 3145
             // come with the npc definition; the Chaos Elemental has no defend sequence in OSRS).
             "chaos-elemental" to listOf(3146, 3147),
+            // calvarion-hounds: RuneLite gameval AnimationID DOG_UPDATE_SKELETON_HELLHOUND_ATTACK 6579 / _DEFEND 6578, DOG_UPDATE_WOLF_DEATH
+            // 6558 (the old skeleton hellhounds' Kronos death on the same wolf rig).
+            "calvarion-hounds" to listOf(6579, 6578, 6558),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences

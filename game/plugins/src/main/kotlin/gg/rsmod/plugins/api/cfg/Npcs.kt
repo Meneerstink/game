@@ -12969,6 +12969,10 @@ object Npcs {
     const val SCORPIA = 15055 // 6615
     const val CHAOS_ELEMENTAL = 15082 // OSRS 2054 (N522 nachtrun deel 1, tx-20261104-220735)
     const val ARTIO = 15083 // OSRS 11992 baked skeletal (N522 nachtrun deel 2, tx-20261104-230952)
+    const val CALVARION = 15084 // OSRS 11993 baked skeletal (N522 nachtrun deel 2, tx-20261105-000956)
+    const val CALVARION_ENRAGED = 15085 // OSRS 11994 baked skeletal
+    const val CALVARION_HELLHOUND = 15086 // OSRS 12107 (tx-20261105-001319)
+    const val CALVARION_GREATER_HELLHOUND = 15087 // OSRS 12108
     const val SCORPIAS_OFFSPRING = 15056 // 6616
     const val SCORPIAS_GUARDIAN = 15057 // 6617
     // Auto-generated file using class gg.rsmod.game.service.game.DumpEntityIdService

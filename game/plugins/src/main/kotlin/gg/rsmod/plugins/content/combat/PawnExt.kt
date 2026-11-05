@@ -280,6 +280,10 @@ fun Pawn.dealHit(
     if (target is Npc && damage > 0) {
         damage = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.modifyIncomingDamage(target, damage.toInt(), hitType).toDouble()
     }
+    // N522 nachtrun deel 2: Calvar'ion only takes crush damage, and none while his hellhounds live (OSRS Wiki).
+    if (target is Npc && damage > 0) {
+        damage = gg.rsmod.plugins.content.areas.wilderness.bosses.CalvarionCombat.modifyIncomingDamage(target, this, hitType, damage.toInt()).toDouble()
+    }
     // Preserve the hit's declared style and the damage before Deflect reduces it to zero.
     // Reading getCombatClass again on impact can use a different style after a weapon switch.
     val curseHitStyle = when (hitType) {

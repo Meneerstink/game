@@ -339,6 +339,13 @@ object OsrsPetImportTool {
             // Artio (NpcID CALLISTO_SINGLES 11992, the Callisto rig): NPC_CALLISTO_IDLE01 10011 / WALK01 10009 from the definition, plus
             // ATTACK_MELEE01 10012, ATTACK_RANGED01 10013, ATTACK_MAGIC01 10014, ENRAGED01 10015, SPAWN01 10016, DEATH01 10017.
             "artio" to listOf(11992 to listOf(10012, 10013, 10014, 10015, 10016, 10017)),
+            // Calvar'ion (NpcID VETION_SINGLE 11993, enraged VETION_2_SINGLE 11994): NPC_VETION_IDLE / WALK _01 / _02 from the definitions,
+            // plus ATTACK_MAGIC 9969 / 9970, ATTACK_MELEE 9971 / 9972, DEFEND_PARRY 9973 / 9974, DEFEND_SHIELD 9975 / 9976, SPAWN 9977,
+            // ENRAGE 9978 / 9979, DEATH 9980 / 9981 (_01 = normal, _02 = enraged; Near Reality Vetion.java uses 9969/9971/9973/9975/9980).
+            "calvarion" to listOf(
+                11993 to listOf(9969, 9971, 9973, 9975, 9977, 9978, 9980),
+                11994 to listOf(9970, 9972, 9974, 9976, 9979, 9981),
+            ),
         )
 
     private fun skeletalNpcs(

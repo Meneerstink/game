@@ -26,6 +26,7 @@ object KillCounts {
     // Count completed fights, including entries that group several NPC forms under the same name.
     private fun completedForm(id: Int): Int = when (id) {
         OldWildernessBosses.VETION -> OldWildernessBosses.VETION_REBORN
+        Npcs.CALVARION -> Npcs.CALVARION_ENRAGED
         Npcs.KALPHITE_QUEEN, Npcs.KALPHITE_QUEEN_1159 -> Npcs.KALPHITE_QUEEN_1160
         else -> id
     }

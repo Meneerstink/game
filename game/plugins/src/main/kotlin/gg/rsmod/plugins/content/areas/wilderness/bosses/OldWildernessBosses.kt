@@ -92,6 +92,9 @@ object OldWildernessBosses {
     fun rewardNpc(id: Int): Int? = when (id) {
         VETION -> null
         VETION_REBORN -> VETION
+        // N522 nachtrun deel 2: Calvar'ion the same way - one reward after the enraged form.
+        Npcs.CALVARION -> null
+        Npcs.CALVARION_ENRAGED -> Npcs.CALVARION
         else -> id
     }
 
