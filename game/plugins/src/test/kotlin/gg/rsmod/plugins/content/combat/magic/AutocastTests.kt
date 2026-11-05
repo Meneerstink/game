@@ -330,7 +330,9 @@ class AutocastTests {
         // Only attacks (and eating - Foods, consumables - / Granite maul, which OSRS delays too) write the attack timer - never equip, spell selection or UI.
         // deadman_breach.plugin.kts: the Abyssal Sire breach teleport special delays that npc's own next attack (2026-09-28), not a player's.
         // NexCombatScript.kt (C4 port, 10-23): Nex's own special attacks set her own next attack, as TormentedDemonCombatScript does.
-        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "NexCombatScript.kt", "Foods.kt", "consumables.plugin.kts", "GraniteMaul.kt", "deadman_breach.plugin.kts"), sources)
+        // CalvarionCombat.kt (N522 nachtrun deel 2): the shield bash leaves the players it hits "unable to attack for the next 4.8 seconds"
+        // (OSRS Wiki Calvar'ion/Strategies) - a boss mechanic on the victims, not equipment or spell selection.
+        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "NexCombatScript.kt", "Foods.kt", "consumables.plugin.kts", "GraniteMaul.kt", "deadman_breach.plugin.kts", "CalvarionCombat.kt"), sources)
     }
 
     @Test
