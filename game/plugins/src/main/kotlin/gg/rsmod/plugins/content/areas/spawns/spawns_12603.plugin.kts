@@ -18,3 +18,6 @@ spawn_npc(npc = Npcs.MOSS_GIANT, x = 3147, z = 3805, walkRadius = 5) // N522 OSR
 spawn_npc(npc = Npcs.SKELETON_92, x = 3137, z = 3798, walkRadius = 5) // N522 OSRS O0433 Skeleton
 spawn_npc(npc = Npcs.SKELETON_92, x = 3143, z = 3802, walkRadius = 5) // N522 OSRS O0434 Skeleton
 spawn_npc(npc = Npcs.SKELETON_92, x = 3179, z = 3786, walkRadius = 5) // N522 OSRS O0435 Skeleton
+
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3187, z = 3812, walkRadius = 5) // N522 OSRS O0425 Lava dragon
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3190, z = 3834, walkRadius = 5) // N522 OSRS O0426 Lava dragon

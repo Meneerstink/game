@@ -90,3 +90,8 @@ spawn_npc(
     direction = Direction.NORTH,
     static = false,
 ) // Will o' the wisp
+
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3299, z = 3586, walkRadius = 5) // N522 OSRS O0579 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3301, z = 3597, walkRadius = 5) // N522 OSRS O0580 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3305, z = 3614, walkRadius = 5) // N522 OSRS O0581 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3306, z = 3631, walkRadius = 5) // N522 OSRS O0582 Ent

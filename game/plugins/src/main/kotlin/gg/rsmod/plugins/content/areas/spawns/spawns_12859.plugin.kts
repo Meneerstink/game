@@ -30,3 +30,9 @@ spawn_item(item = Items.IRON_KITESHIELD, amount = 1, x = 3247, z = 3793, respawn
 spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3241, z = 3788, walkRadius = 5) // N522 OSRS O0562 Chaos dwarf
 spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3241, z = 3796, walkRadius = 5) // N522 OSRS O0563 Chaos dwarf
 spawn_npc(npc = Npcs.CHAOS_DWARF, x = 3250, z = 3787, walkRadius = 5) // N522 OSRS O0564 Chaos dwarf
+
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3200, z = 3813, walkRadius = 5) // N522 OSRS O0565 Lava dragon (Wiki 3201,3814; nearest free tile, SpawnTileProbeTool 2026-11-05)
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3205, z = 3834, walkRadius = 5) // N522 OSRS O0566 Lava dragon
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3211, z = 3809, walkRadius = 5) // N522 OSRS O0567 Lava dragon
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3213, z = 3819, walkRadius = 5) // N522 OSRS O0568 Lava dragon
+spawn_npc(npc = Npcs.LAVA_DRAGON_OSRS, x = 3223, z = 3830, walkRadius = 5) // N522 OSRS O0569 Lava dragon

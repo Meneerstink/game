@@ -141,6 +141,9 @@ object Pickpocketing {
         player: Player,
         targetInfo: PickpocketTarget,
     ): Int {
+        // N522 report section 5: the imported OSRS Rogue uses its ordinary loot roll plus the sourced Rogue-outfit effect.
+        // The legacy agility/overshoot lucky triple/quadruple has no OSRS source (see class note), so do not introduce it here.
+        if (targetInfo == PickpocketTarget.WildernessRogue) return 1
         val thievingLevelOvershoot = player.skills.getCurrentLevel(Skills.THIEVING) - targetInfo.level
         val agilityLevelOvershoot = player.skills.getCurrentLevel(Skills.AGILITY) - targetInfo.level
 

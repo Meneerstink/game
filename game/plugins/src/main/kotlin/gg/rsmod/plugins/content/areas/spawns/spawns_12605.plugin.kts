@@ -18,3 +18,6 @@ spawn_npc(npc = Npcs.MAGIC_AXE, x = 3190, z = 3959, walkRadius = 5) // N522 OSRS
 spawn_npc(npc = Npcs.MAGIC_AXE, x = 3191, z = 3961, walkRadius = 5) // N522 OSRS O0476 Magic axe
 spawn_npc(npc = Npcs.MAGIC_AXE, x = 3193, z = 3958, walkRadius = 5) // N522 OSRS O0478 Magic axe
 spawn_npc(npc = Npcs.MAGIC_AXE, x = 3194, z = 3960, walkRadius = 5) // N522 OSRS O0479 Magic axe
+
+spawn_npc(npc = Npcs.RUNITE_GOLEM_OSRS, x = 3178, z = 3938, walkRadius = 5) // N522 OSRS O0480 Runite Golem
+spawn_npc(npc = Npcs.RUNITE_GOLEM_OSRS, x = 3191, z = 3934, walkRadius = 5) // N522 OSRS O0481 Runite Golem

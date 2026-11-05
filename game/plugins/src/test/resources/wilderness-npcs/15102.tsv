@@ -1,0 +1,92 @@
+# Exact sourced items/quantities/fractions; missing items/excluded/quest loot listed in handoff.
+526	1	1/1	Bones Elder Chaos druid oldid=15337739 raw:83
+1035	1	4/1419	Zamorak monk top Elder Chaos druid oldid=15337739 raw:92
+1033	1	4/1419	Zamorak monk bottom Elder Chaos druid oldid=15337739 raw:93
+22866	1	1/1419	Elder chaos hood Elder Chaos druid oldid=15337739 raw:94
+22864	1	1/1419	Elder chaos robe Elder Chaos druid oldid=15337739 raw:95
+22862	1	1/1419	Elder chaos top Elder Chaos druid oldid=15337739 raw:96
+9142	8-28	2/43	Mithril bolts Elder Chaos druid oldid=15337739 raw:101
+563	6	7/129	Law rune Elder Chaos druid oldid=15337739 raw:102
+556	56	5/129	Air rune Elder Chaos druid oldid=15337739 raw:103
+559	19	5/129	Body rune Elder Chaos druid oldid=15337739 raw:104
+562	7	5/129	Chaos rune Elder Chaos druid oldid=15337739 raw:105
+557	19	5/129	Earth rune Elder Chaos druid oldid=15337739 raw:106
+558	22	5/129	Mind rune Elder Chaos druid oldid=15337739 raw:107
+561	12	1/129	Nature rune Elder Chaos druid oldid=15337739 raw:108
+199	1	5/172	Grimy guam leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:1
+199	2	5/129	Grimy guam leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:1
+199	3	5/172	Grimy guam leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:1
+199	4	5/516	Grimy guam leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:1
+201	1	15/688	Grimy marrentill Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:2
+201	2	5/172	Grimy marrentill Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:2
+201	3	15/688	Grimy marrentill Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:2
+201	4	5/688	Grimy marrentill Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:2
+203	1	45/2752	Grimy tarromin Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:3
+203	2	15/688	Grimy tarromin Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:3
+203	3	45/2752	Grimy tarromin Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:3
+203	4	15/2752	Grimy tarromin Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:3
+205	1	35/2752	Grimy harralander Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:4
+205	2	35/2064	Grimy harralander Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:4
+205	3	35/2752	Grimy harralander Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:4
+205	4	35/8256	Grimy harralander Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:4
+207	1	55/5504	Grimy ranarr weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:5
+207	2	55/4128	Grimy ranarr weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:5
+207	3	55/5504	Grimy ranarr weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:5
+207	4	55/16512	Grimy ranarr weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:5
+209	1	5/688	Grimy irit leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:6
+209	2	5/516	Grimy irit leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:6
+209	3	5/688	Grimy irit leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:6
+209	4	5/2064	Grimy irit leaf Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:6
+211	1	15/2752	Grimy avantoe Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:7
+211	2	5/688	Grimy avantoe Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:7
+211	3	15/2752	Grimy avantoe Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:7
+211	4	5/2752	Grimy avantoe Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:7
+213	1	25/5504	Grimy kwuarm Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:8
+213	2	25/4128	Grimy kwuarm Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:8
+213	3	25/5504	Grimy kwuarm Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:8
+213	4	25/16512	Grimy kwuarm Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:8
+215	1	5/1376	Grimy cadantine Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:9
+215	2	5/1032	Grimy cadantine Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:9
+215	3	5/1376	Grimy cadantine Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:9
+215	4	5/4128	Grimy cadantine Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:9
+2485	1	15/5504	Grimy lantadyme Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:10
+2485	2	5/1376	Grimy lantadyme Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:10
+2485	3	15/5504	Grimy lantadyme Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:10
+2485	4	5/5504	Grimy lantadyme Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:10
+217	1	15/5504	Grimy dwarf weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:11
+217	2	5/1376	Grimy dwarf weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:11
+217	3	15/5504	Grimy dwarf weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:11
+217	4	5/5504	Grimy dwarf weed Elder Chaos druid oldid=15337739 raw:115 + Template:HerbDropLines oldid=15325751 raw:11
+995	80	7/129	Coins Elder Chaos druid oldid=15337739 raw:120
+995	250	2/43	Coins Elder Chaos druid oldid=15337739 raw:121
+227	4	10/129	Vial of water Elder Chaos druid oldid=15337739 raw:126
+1295	1	5/129	Steel longsword Elder Chaos druid oldid=15337739 raw:127
+231	4	1/129	Snape grass Elder Chaos druid oldid=15337739 raw:129
+1594	1	1/129	Unholy mould Elder Chaos druid oldid=15337739 raw:130
+995	3000	7/5504	Coins Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:43
+1623	1	37/16512	Uncut sapphire Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:48
+987	1	677/528384	Loop half of key Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:55
+985	1	677/528384	Tooth half of key Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:62
+1621	1	37/33024	Uncut emerald Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:69
+1619	1	37/66048	Uncut ruby Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:76
+2363	1	5/16512	Runite bar Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:83
+561	67	1/5504	Nature rune Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:88
+1319	1	1/5504	Rune 2h sword Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:93
+1373	1	1/5504	Rune battleaxe Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:98
+563	45	1/8256	Law rune Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:103
+560	45	1/8256	Death rune Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:108
+886	150	1/8256	Steel arrow Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:113
+892	42	1/8256	Rune arrow Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:118
+829	20	1/8256	Adamant javelin Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:123
+1185	1	1/8256	Rune sq shield Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:128
+1615	1	1/8256	Dragonstone Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:133
+443	100	1/8256	Silver ore Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:138
+1462	1	37/176128	Nature talisman Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:151
+1617	1	37/264192	Uncut diamond Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:184
+1201	1	1/16512	Rune kiteshield Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:191
+1149	1	1/16512	Dragon med helm Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:196
+1247	1	517/8454144	Rune spear Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:201
+830	5	37/528384	Rune javelin Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:208
+2366	1	517/16908288	Shield left half Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:215
+1249	1	517/22544384	Dragon spear Elder Chaos druid oldid=15337739 raw:135 + Module:RareDropLines oldid=15343549 raw:222
+2722	1	1/128	Clue scroll (hard) Elder Chaos druid oldid=15337739 raw:141

@@ -105,6 +105,7 @@ object SkillingPets {
         mapOf(
             PickpocketTarget.ManWoman to 257_211, PickpocketTarget.Farmer to 257_211, PickpocketTarget.FemaleHamMember to 257_211,
             PickpocketTarget.MaleHamMember to 257_211, PickpocketTarget.Warrior to 257_211, PickpocketTarget.Rogue to 257_211,
+            PickpocketTarget.WildernessRogue to 257_211, // N522: same sourced Rogue pet base; pickpocket only, never kill loot.
             PickpocketTarget.CaveGoblin to 257_211, PickpocketTarget.MasterFarmer to 257_211, PickpocketTarget.Guard to 257_211,
             PickpocketTarget.FremennikCitizen to 257_211, PickpocketTarget.DesertBandit to 257_211,
             PickpocketTarget.KnightOfArdougne to 257_211, PickpocketTarget.MenaphiteThug to 257_211,

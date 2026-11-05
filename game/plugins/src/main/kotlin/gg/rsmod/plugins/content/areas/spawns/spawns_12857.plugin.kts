@@ -35,3 +35,10 @@ spawn_npc(npc = Npcs.RAT, x = 3252, z = 3676, walkRadius = 5) // N522 OSRS O0549
 spawn_npc(npc = Npcs.RAT, x = 3257, z = 3668, walkRadius = 5) // N522 OSRS O0550 Rat
 spawn_npc(npc = Npcs.RAT, x = 3260, z = 3670, walkRadius = 5) // N522 OSRS O0551 Rat
 spawn_npc(npc = Npcs.RAT, x = 3261, z = 3673, walkRadius = 5) // N522 OSRS O0552 Rat
+
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3201, z = 3684, walkRadius = 5) // N522 OSRS O0541 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3202, z = 3669, walkRadius = 5) // N522 OSRS O0542 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3211, z = 3690, walkRadius = 5) // N522 OSRS O0543 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3218, z = 3697, walkRadius = 5) // N522 OSRS O0544 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3223, z = 3671, walkRadius = 5) // N522 OSRS O0545 Ent
+spawn_npc(npc = Npcs.ENT_OSRS, x = 3231, z = 3702, walkRadius = 5) // N522 OSRS O0546 Ent

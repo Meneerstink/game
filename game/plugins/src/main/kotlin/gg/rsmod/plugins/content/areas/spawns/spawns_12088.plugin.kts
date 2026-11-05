@@ -34,3 +34,22 @@ spawn_npc(npc = Npcs.DARK_WARRIOR, x = 3029, z = 3637, height = 1, walkRadius = 
 spawn_npc(npc = Npcs.DARK_WARRIOR, x = 3035, z = 3631, height = 1, walkRadius = 5) // N522 OSRS O0185 Dark warrior
 spawn_npc(npc = Npcs.DARK_WARRIOR, x = 3036, z = 3624, height = 1, walkRadius = 5) // N522 OSRS O0186 Dark warrior
 spawn_npc(npc = Npcs.DARK_WARRIOR, x = 3036, z = 3639, height = 1, walkRadius = 5) // N522 OSRS O0187 Dark warrior
+
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3021, z = 3638, walkRadius = 5) // N522 OSRS O0142 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3022, z = 3626, walkRadius = 5) // N522 OSRS O0144 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3023, z = 3629, walkRadius = 5) // N522 OSRS O0146 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3023, z = 3632, walkRadius = 5) // N522 OSRS O0147 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3026, z = 3630, walkRadius = 5) // N522 OSRS O0148 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3027, z = 3634, walkRadius = 5) // N522 OSRS O0149 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3028, z = 3629, walkRadius = 5) // N522 OSRS O0150 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3028, z = 3632, walkRadius = 5) // N522 OSRS O0151 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3029, z = 3634, walkRadius = 5) // N522 OSRS O0152 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3030, z = 3630, walkRadius = 5) // N522 OSRS O0155 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3030, z = 3638, walkRadius = 5) // N522 OSRS O0156 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3031, z = 3634, walkRadius = 5) // N522 OSRS O0157 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3032, z = 3626, walkRadius = 5) // N522 OSRS O0158 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3032, z = 3632, walkRadius = 5) // N522 OSRS O0159 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3033, z = 3630, walkRadius = 5) // N522 OSRS O0160 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3035, z = 3625, walkRadius = 5) // N522 OSRS O0161 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3035, z = 3629, walkRadius = 5) // N522 OSRS O0162 Dark warrior
+spawn_npc(npc = Npcs.DARK_WARRIOR_OSRS, x = 3037, z = 3637, walkRadius = 5) // N522 OSRS O0166 Dark warrior
