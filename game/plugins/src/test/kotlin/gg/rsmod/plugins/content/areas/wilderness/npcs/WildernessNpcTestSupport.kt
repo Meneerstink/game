@@ -56,6 +56,9 @@ internal object WildernessNpcTestSupport {
                     .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
                     .newInstance(repo, world, mockk<Server>(relaxed = true))
             }
+            // A package run: an earlier test class may have built the Drop Viewer registry without these npcs (WildernessBossTestSupport resets too).
+            DropSources.reset()
+            gg.rsmod.plugins.content.quests.tab.CollectionLogPages.reset()
         }
 
         fun npc(id: Int, tile: Tile = Tile(3200, 3800)): Npc {
