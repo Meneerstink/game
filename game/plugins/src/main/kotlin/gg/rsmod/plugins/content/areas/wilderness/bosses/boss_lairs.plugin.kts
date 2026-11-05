@@ -52,3 +52,8 @@ on_npc_completed { killer, npc -> WildernessLairs.onCompletedKill(killer, npc.id
 on_logout {
     WildernessLairs.logoutExit(player.tile, world.currentCycle) { world.random(WildernessLairs.ESCAPE_ROUTES.size - 1) }?.let { player.moveTo(it) }
 }
+
+// Also rescue a saved location from an older build or interrupted shutdown, using the same six-lair rule.
+on_login {
+    WildernessLairs.logoutExit(player.tile, world.currentCycle) { world.random(WildernessLairs.ESCAPE_ROUTES.size - 1) }?.let { player.moveTo(it) }
+}

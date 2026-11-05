@@ -74,6 +74,8 @@ class WildernessSharedLootTests {
                 every { f.player.equipment[EquipmentType.RING.id] } returns ring
                 val boosted = DropSources.view(f.player, source, 1.0).lines.single { it.item == clue.item }
                 assertEquals(clue.normal * 2, boosted.normal, 1e-12, source.name)
+                val index = DropSources.personalWildernessIndex(f.player, DropSources.ItemIndex(emptyMap(), emptyMap()), 1.0, listOf(source))
+                assertEquals(boosted.normal, index.sources.getValue(clue.item).single().third, 1e-12, "item search: ${source.name}")
                 val table = DropTableFactory.tables(f.player, id)!!.single { it.name == "hard_clue" || it.name == "elite_clue" }
                 assertEquals(boosted.normal, DropTableFactory.lineChances(table, 1.0).first(), 1e-12)
                 every { f.player.equipment[EquipmentType.RING.id] } returns null

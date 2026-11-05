@@ -16,6 +16,7 @@ import kotlin.test.*
 class SinglesPlusTests {
     private val world = mockk<World>(relaxed = true)
     private var cycle = 100
+    private var npcIndex = 0
     init {
         every { world.currentCycle } answers { cycle }
         every { world.npcs } returns PawnList(arrayOfNulls<Npc>(16))
@@ -35,7 +36,8 @@ class SinglesPlusTests {
         every { it.attr } returns AttributeMap()
         every { it.owner } returns null
         every { it.isDead() } returns false
-        every { it.index } returns 1
+        val index = ++npcIndex
+        every { it.index } returns index
         world.npcs.add(it)
     }
 
@@ -63,6 +65,8 @@ class SinglesPlusTests {
         assertFalse(a.isAttackedByOtherThan(b))
         assertFalse(a.isAttackedByOtherThan(boss))
         assertTrue(a.isAttackedByOtherThan(third))
+        assertFalse(SinglesPlus.allowsImpact(third, a), "a projectile already in flight cannot steal an ongoing PvP fight")
+        assertTrue(SinglesPlus.allowsImpact(b, a))
         val ordinary = npc(at, 1)
         assertTrue(a.isAttackedByOtherThan(ordinary))
         cycle += Combat.PJ_TICKS

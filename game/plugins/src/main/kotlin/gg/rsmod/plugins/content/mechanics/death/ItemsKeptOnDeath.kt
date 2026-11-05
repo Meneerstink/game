@@ -105,7 +105,7 @@ object ItemsKeptOnDeath {
         fun line(item: Item, one: String, many: String) =
             if (item.amount > 1) "${spaced(item.amount.toLong())} x ${name(player, item.id)}: $many" else "${name(player, item.id)}: $one"
         result.itemRisk.protected.forEach {
-            // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
+            // N593: actual locked states are extra keeps, while unlocked gear occupies the ranked slots.
             val always = !pvp && gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry.isLockedAnyState(it.item.id)
             entries += Entry(Section.KEPT, it.item, if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "Unskulled, you keep your 3 most valuable items when a monster kills you.", "Unskulled, you keep your 3 most valuable items when a monster kills you."))
         }

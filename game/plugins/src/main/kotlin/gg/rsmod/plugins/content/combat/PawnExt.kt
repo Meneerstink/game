@@ -426,7 +426,7 @@ fun Pawn.dealHit(
             (this is Npc && !isSpawned()) ||
             disruptionShieldAbsorbs(this, target, damage.toInt()) ||
             when {
-                this is Player && target is Player -> !AreaState.canPlayersFight(this, target)
+                this is Player && target is Player -> !AreaState.canPlayersFight(this, target) || !SinglesPlus.allowsImpact(this, target)
                 creditedPlayer != null && target is Player -> !AreaState.canPlayersFight(creditedPlayer, target)
                 else -> false
             }

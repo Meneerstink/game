@@ -195,7 +195,8 @@ object DeadmanEmblem {
         val placed = receiveResult(killer, 1, Source.DROP, "npc ${npc.id}")
         killer.message("<col=ef1020><shad=000000>${receiptText(1, placed.destination)}</shad></col>")
         killer.playSound(Sfx.ENCHANT_ONYX_RING)
-        EmblemLog.write("DROP", killer, "tierBefore" to 0, "tierAfter" to 1, "npc" to "${npc.id} ${npc.def.name} lp=${npc.combatDef.lifepoints}", "chance" to "%.6f".format(chance), "area" to area(killer))
+        EmblemLog.write("DROP", killer, "tierBefore" to 0, "tierAfter" to placed.ownedTier, "destination" to placed.destination.name,
+            "npc" to "${npc.id} ${npc.def.name} lp=${npc.combatDef.lifepoints}", "chance" to "%.6f".format(chance), "area" to area(killer))
     }
 
     // ------------------------------------------------------------------ PvP

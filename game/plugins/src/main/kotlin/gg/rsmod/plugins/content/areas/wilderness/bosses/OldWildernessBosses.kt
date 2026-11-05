@@ -139,6 +139,7 @@ object OldWildernessBosses {
             }
             val target = npc.getCombatTarget() ?: npc.damageMap.getMostDamage()
             if (target != null && !target.isDead() && (target !is Player || target.isOnline)) next.attack(target)
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(next, "spawn", target)
             onReady(next)
             // A timeout keeps its live predecessor until its replacement actually exists.
             if (!npc.isDead() && npc.isSpawned()) npc.world.remove(npc)
@@ -304,6 +305,7 @@ object OldWildernessBosses {
                 dog.respawns = false
                 if (npc.world.spawn(dog)) {
                     dogs(npc) += dog
+                    gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(dog, "spawn", target)
                     dog.facePawn(target)
                     dog.attack(target)
                     if (i == 0) dog.forceChat("GRRRRRRRRRRRRRRRRRRR")

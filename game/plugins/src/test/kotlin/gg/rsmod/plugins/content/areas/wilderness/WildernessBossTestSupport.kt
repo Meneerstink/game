@@ -38,6 +38,9 @@ import kotlin.test.assertTrue
 internal object WildernessBossTestSupport {
     // Drop builders load their nested classes lazily, after script construction. Keep this loader alive for the test JVM.
     private val scripts = URLClassLoader(arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader)
+    fun script(name: String, repo: PluginRepository, world: World): Any = scripts.loadClass(name)
+        .getConstructor(PluginRepository::class.java, World::class.java, Server::class.java)
+        .newInstance(repo, world, mockk<Server>(relaxed = true))
     val definitions: DefinitionSet by lazy {
         val path = System.getenv("RSPS_TEST_CACHE") ?: Paths.get("..", "..", "data", "cache").toString()
         val defs = DefinitionSet()

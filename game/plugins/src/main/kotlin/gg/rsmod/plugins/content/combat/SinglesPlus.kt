@@ -31,6 +31,10 @@ object SinglesPlus {
         return held.opponent.get()?.takeIf { it.isOnline && !it.isDead() && contains(it.tile) }
     }
 
+    fun allowsImpact(attacker: Player, target: Player): Boolean =
+        (reservation(attacker)?.let { it === target } ?: true) &&
+            (reservation(target)?.let { it === attacker } ?: true)
+
     private val BOSS_ATTACKERS = setOf(ArtioCombat.NPC, CalvarionCombat.NORMAL, CalvarionCombat.ENRAGED, VenenatisCombat.SPINDEL,
         VenenatisCombat.SPINDEL_SPIDERLING, CalvarionCombat.HOUND, CalvarionCombat.GREATER_HOUND,
         RevenantMaledictus.NPC)
