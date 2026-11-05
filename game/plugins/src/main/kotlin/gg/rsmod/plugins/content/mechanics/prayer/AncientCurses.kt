@@ -563,8 +563,19 @@ object AncientCurses {
         player.openInterface(gg.rsmod.plugins.api.InterfaceDestination.PRAYER_TAB)
         player.setVarbit(AncientCurse.PROTECT_ITEM_VARBIT, 0)
         Prayers.confirmQuickPrayerSelection(player)
-        player.filterableMessage("You switch to the ${bookName(book)} prayer book.")
+        // N546 (owner 2026-11-05 12:5x, choice A - no OSRS sound exists for it): every book change sounds like the hymnal unlock (N198,
+        // Trailblazer 'unlock power') and says so in red, at every route (Azzanadra, altars, house altar, command).
+        player.playSound(gg.rsmod.plugins.api.cfg.Sfx.TRAILBLAZER_UNLOCK_POWER)
+        player.message("<col=ef1020>Your prayer book is now the ${bookTitle(book)}.</col>")
     }
+
+    /** N546: the book's name in the red switch line. */
+    fun bookTitle(book: PrayerBook): String =
+        when (book) {
+            PrayerBook.RUINOUS -> "Ruinous Powers"
+            PrayerBook.ANCIENT -> "Ancient Curses"
+            else -> "normal prayers"
+        }
 
     /** "normal", "ancient" (the existing messages) and "Ruinous Powers". */
     fun bookName(book: PrayerBook): String = if (book == PrayerBook.RUINOUS) "Ruinous Powers" else book.name.lowercase()
