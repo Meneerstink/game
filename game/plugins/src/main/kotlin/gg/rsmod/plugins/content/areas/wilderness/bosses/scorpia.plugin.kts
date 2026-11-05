@@ -16,6 +16,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = Npcs.SCORPIA) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 14
@@ -51,6 +52,7 @@ set_combat_def(npc = Npcs.SCORPIA) {
 
 set_combat_def(npc = Npcs.SCORPIAS_OFFSPRING) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.RANGED
         respawnDelay = 5
@@ -83,6 +85,7 @@ set_combat_def(npc = Npcs.SCORPIAS_OFFSPRING) {
 
 set_combat_def(npc = Npcs.SCORPIAS_GUARDIAN) {
     configs {
+            waitFullDeathAnimation = true
         // The DSL requires a speed; the guardian never swings ([ScorpiaCombat] heal loop, the no-op combat plugin below).
         attackSpeed = 4
         attackStyle = StyleType.STAB

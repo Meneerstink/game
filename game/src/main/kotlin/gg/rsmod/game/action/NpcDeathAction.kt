@@ -69,7 +69,8 @@ object NpcDeathAction : KLogging() {
         deathAnimation.filter { it >= 0 }.forEach { anim ->
             val def = npc.world.definitions.get(AnimDef::class.java, anim)
             npc.animate(def.id)
-            val timer = if (def.cycleLength >= 6) def.cycleLength - 4 else deathAnimationTicks(def)
+            val timer = if (npc.combatDef.waitFullDeathAnimation) completedDeathAnimationTicks(def)
+                else if (def.cycleLength >= 6) def.cycleLength - 4 else deathAnimationTicks(def)
             wait(timer)
         }
         if (deathDelay > 0) {
@@ -96,6 +97,10 @@ object NpcDeathAction : KLogging() {
 
     /** N451: the whole game ticks a short death animation really plays (client frame lengths are 20 ms, a tick 600 ms), at least 1. */
     fun deathAnimationTicks(def: AnimDef): Int = (if (def.playedFrameLength > 0) def.playedFrameLength / 30 else def.cycleLength).coerceAtLeast(1)
+
+    /** Round UP the played part only: the source's 20000-cycle hold frame is a pose, not another 400 seconds. */
+    fun completedDeathAnimationTicks(def: AnimDef): Int =
+        (if (def.playedFrameLength > 0) (def.playedFrameLength + 29) / 30 else def.cycleLength).coerceAtLeast(1)
 
     /**
      * Death cleanup must not depend on an optional plugin hook being perfect. The queue runner

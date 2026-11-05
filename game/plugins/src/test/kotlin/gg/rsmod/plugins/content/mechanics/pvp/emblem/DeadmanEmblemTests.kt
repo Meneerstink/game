@@ -14,6 +14,7 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.game.model.timer.TimerMap
 import gg.rsmod.plugins.content.mechanics.death.DeathContainerSource
 import gg.rsmod.plugins.content.mechanics.death.DeathContext

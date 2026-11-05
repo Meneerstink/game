@@ -11,6 +11,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = ArtioCombat.NPC) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 5
         attackStyle = StyleType.CRUSH
         respawnDelay = 11

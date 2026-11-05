@@ -195,7 +195,7 @@ object VenenatisCombat {
     }
 
     fun onDeath(npc: Npc) {
-        val mine = synchronized(summoned) { summoned.filter { it.attr[OWNER] === npc } }
+        val mine = (synchronized(summoned) { summoned.filter { it.attr[OWNER] === npc } } + spiderlings(npc)).distinct()
         mine.forEach { if (it.isSpawned()) npc.world.remove(it) }
         summoned.removeAll(mine)
         spiderlings(npc).clear()

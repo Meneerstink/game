@@ -13,6 +13,7 @@ import gg.rsmod.plugins.api.ext.doubleItemMessageBox
 import gg.rsmod.plugins.api.ext.focusTab
 import gg.rsmod.plugins.api.ext.itemMessageBox
 import gg.rsmod.plugins.api.ext.messageBox
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.content.mechanics.death.DeathPayment

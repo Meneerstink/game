@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = OldWildernessBosses.CALLISTO) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.CRUSH
         respawnDelay = 50
@@ -61,6 +62,7 @@ on_npc_combat(*OldWildernessBosses.CallistoCombat.ids) {
 listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { id ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = 4
             attackStyle = StyleType.STAB
             completesEncounter = id == OldWildernessBosses.VETION_REBORN
@@ -132,6 +134,7 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
 mapOf(OldWildernessBosses.HELLHOUND to listOf(1100, 210, 250, 150, 101, 103, 10, 180, 266), OldWildernessBosses.GREATER_HELLHOUND to listOf(1900, 240, 310, 220, 150, 163, 20, 210, 275)).forEach { (id, v) ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = 4
             attackStyle = StyleType.CRUSH
             respawnDelay = Int.MAX_VALUE

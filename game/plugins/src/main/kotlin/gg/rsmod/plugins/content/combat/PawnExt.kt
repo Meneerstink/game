@@ -423,6 +423,7 @@ fun Pawn.dealHit(
     val creditedPlayer = attr[DAMAGE_CREDIT_ATTR]?.get() as? Player
     hit.setCancelIf {
         isDead() ||
+            (this is Npc && !isSpawned()) ||
             disruptionShieldAbsorbs(this, target, damage.toInt()) ||
             when {
                 this is Player && target is Player -> !AreaState.canPlayersFight(this, target)

@@ -19,6 +19,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters
 
 set_combat_def(npc = Npcs.CHAOS_FANATIC) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 2
         attackStyle = StyleType.MAGIC
         respawnDelay = 15
@@ -56,6 +57,7 @@ set_combat_def(npc = Npcs.CHAOS_FANATIC) {
 
 set_combat_def(npc = Npcs.CRAZY_ARCHAEOLOGIST) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 3
         attackStyle = StyleType.RANGED
         respawnDelay = 15

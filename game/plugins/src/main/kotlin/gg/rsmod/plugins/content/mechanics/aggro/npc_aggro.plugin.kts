@@ -258,7 +258,15 @@ fun mayTarget(
     npc: Npc,
     target: Player,
     range: Int,
-): Boolean = refusal(npc, target, range) == null
+): Boolean {
+    val reason = refusal(npc, target, range)
+    if (reason != null && gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossTerritory.watches(npc.id)) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            "aggro refusal npc=${npc.id}#${npc.index} target=${target.username} at=${target.tile} spawn=${npc.spawnTile} reason=$reason"
+        }
+    }
+    return reason == null
+}
 
 /** Why [npc] may not pick [target] (null = it may); the breach trace logs the reason per candidate. */
 fun refusal(

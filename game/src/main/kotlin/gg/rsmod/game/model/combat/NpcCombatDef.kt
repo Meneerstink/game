@@ -41,6 +41,8 @@ data class NpcCombatDef(
     val attackGfx: Int = -1,
     /** A transformation is a death lifecycle, but is not a completed encounter. */
     val completesEncounter: Boolean = true,
+    /** Imported OSRS death sequences must finish all played frames before loot; hold-last-pose frames are excluded. */
+    val waitFullDeathAnimation: Boolean = false,
 ) {
     companion object {
         private const val DEFAULT_LIFEPOINTS = 100

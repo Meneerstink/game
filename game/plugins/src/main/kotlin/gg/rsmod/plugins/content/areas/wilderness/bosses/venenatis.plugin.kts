@@ -77,6 +77,7 @@ listOf(WildernessLairs.ESCAPE_EXIT_1 to "exit", WildernessLairs.ESCAPE_EXIT_2 to
 
 set_combat_def(npc = VenenatisCombat.NPC) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 10
@@ -119,6 +120,7 @@ on_npc_combat(*VenenatisCombat.Combat.ids) {
 // Venenatis' / Spindel's Spiderling (OSRS Wiki infoboxes, ids 12000 / 12001 - the same): 5 hitpoints, max 3, attack speed 4.
 listOf(VenenatisCombat.SPIDERLING, VenenatisCombat.SPINDEL_SPIDERLING).forEach { spiderlingId -> set_combat_def(npc = spiderlingId) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = Int.MAX_VALUE
@@ -242,6 +244,8 @@ val venenatisDrops =
 
 DropTableFactory.register(venenatisDrops, VenenatisCombat.NPC)
 
+on_npc_pre_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) { VenenatisCombat.onDeath(npc) }
+
 on_npc_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) {
     VenenatisCombat.onDeath(npc)
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
@@ -253,6 +257,7 @@ on_npc_death(VenenatisCombat.NPC, VenenatisCombat.SPINDEL) {
 
 set_combat_def(npc = VenenatisCombat.SPINDEL) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 9
@@ -369,6 +374,7 @@ DropTableFactory.register(spindelDrops, VenenatisCombat.SPINDEL)
 // Grizzly bear (Escape Caves) 11989: level 83, 75 hitpoints, max 8 typeless melee, attack speed 4, aggressive.
 set_combat_def(npc = Npcs.GRIZZLY_BEAR_ESCAPE_CAVES) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.CRUSH
         respawnDelay = 25
@@ -395,6 +401,7 @@ set_combat_def(npc = Npcs.GRIZZLY_BEAR_ESCAPE_CAVES) {
 // Poison spider (Escape Caves) 11990: level 48, 73 hitpoints, max 8 typeless ranged, attack speed 5, aggressive.
 set_combat_def(npc = Npcs.POISON_SPIDER_ESCAPE_CAVES) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 5
         attackStyle = StyleType.RANGED
         respawnDelay = 25
@@ -449,9 +456,14 @@ on_command("venenatis", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val hp = args.getOrNull(1)?.toIntOrNull()
     if (args.firstOrNull() != "hp" || hp == null) return@on_command player.message("::venenatis hp <hitpoints>")
     var found: Npc? = null
-    val bosses = setOf(VenenatisCombat.NPC, VenenatisCombat.SPINDEL, OldWildernessBosses.CALLISTO, OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN, ArtioCombat.NPC, gg.rsmod.plugins.api.cfg.Npcs.WILDYWYRM)
-    world.npcs.forEach { n -> if (n.id in bosses && n.tile.isWithinRadius(player.tile, 30)) found = n }
-    val v = found ?: return@on_command player.message("No Venenatis, Spindel, Callisto or Vet'ion near you.")
+    val bosses = setOf(VenenatisCombat.NPC, VenenatisCombat.SPINDEL, OldWildernessBosses.CALLISTO, OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN,
+        ArtioCombat.NPC, CalvarionCombat.NORMAL, CalvarionCombat.ENRAGED, Npcs.SCORPIA, Npcs.CHAOS_ELEMENTAL, Npcs.CHAOS_FANATIC,
+        Npcs.CRAZY_ARCHAEOLOGIST, RevenantMaledictus.NPC, Npcs.WILDYWYRM, Npcs.KING_BLACK_DRAGON, Npcs.CORPOREAL_BEAST)
+    world.npcs.forEach { n ->
+        if (n.id in bosses && !n.isDead() && n.tile.height == player.tile.height && n.tile.isWithinRadius(player.tile, 30) &&
+            (found == null || n.tile.getDistance(player.tile) < found!!.tile.getDistance(player.tile))) found = n
+    }
+    val v = found ?: return@on_command player.message("No Wilderness boss near you.")
     v.setCurrentLifepoints(hp.coerceIn(1, v.getMaximumLifepoints()))
     player.message("Boss hitpoints: ${v.getCurrentLifepoints()}.")
 }

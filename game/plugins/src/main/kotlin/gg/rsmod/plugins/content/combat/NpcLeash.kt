@@ -88,6 +88,8 @@ object NpcLeash {
         // familiar exception below let a player drag a breach boss anywhere - into a safe zone, even the GE - behind his familiar.
         if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return breachMayPursue(npc, target, attackRange)
         if (target is Npc && target.owner != null) return true
+        val territories = gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossTerritory
+        territories.mayPursue(npc, target.tile)?.let { return it }
         // Deadman guards (owner 2026-09-17: "they need to be always aggro in a safezone when a player
         // enters with a skull, so even if a barrier or object is in the way the guard needs to walk
         // behind it and still attack the player"): a guard is leashed to its safe zone, not to a
@@ -96,7 +98,8 @@ object NpcLeash {
         if (gg.rsmod.plugins.content.mechanics.pvp.CityGuards.isGuard(npc)) {
             return gg.rsmod.plugins.content.mechanics.pvp.CityGuards.mayPursue(npc, target)
         }
-        return withinAggro(npc.spawnTile, target.tile, maxRange(npc.id), attackRange)
+        val max = if (npc.id in territories.SURFACE_BOSSES) maxOf(maxRange(npc.id), npc.combatDef.aggressiveRadius) else maxRange(npc.id)
+        return withinAggro(npc.spawnTile, target.tile, max, attackRange)
     }
 
     /**
