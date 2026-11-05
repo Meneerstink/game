@@ -24,6 +24,18 @@ on_npc_option(Npcs.BOB, option = "talk-to") {
     player.queue { optionsDialogue(this) }
 }
 
+// N560 (owner 2026-11-02: a broken Eclipse moon piece used on Bob said "Nothing interesting happens"): OSRS Wiki "Eclipse moon
+// chestplate" / Barrows equipment - "Having an NPC such as Bob ... repair it" - using a Barrows or Moon piece (any stage, broken
+// included) on Bob opens the same repair as "Can you repair my items for me?"; the frozen key is recharged the same way.
+gg.rsmod.plugins.content.items.armor.CombatPoints.allIds().forEach { id ->
+    on_item_on_npc(item = id, npc = Npcs.BOB) {
+        player.queue { BarrowsRepair.repair(this) }
+    }
+}
+on_item_on_npc(item = Items.FROZEN_KEY_20120, npc = Npcs.BOB) {
+    player.queue { if (FrozenKey.rechargeSlot(player) != null) FrozenKey.recharge(this) else BarrowsRepair.repair(this) }
+}
+
 suspend fun quest(task: QueueTask) {
     task.chatNpc("Get yer own!")
 }

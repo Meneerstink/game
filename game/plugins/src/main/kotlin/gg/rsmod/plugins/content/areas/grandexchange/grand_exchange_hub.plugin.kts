@@ -75,10 +75,13 @@ on_npc_option(npc = Npcs.PERDU, option = "talk-to") {
 // N382 (owner 2026-10-24): Perdu's Trade is the OSRS Lost Property shop window - the player's own lost items at their price.
 on_npc_option(npc = Npcs.PERDU, option = "trade") {
     if (gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player)) return@on_npc_option
-    player.queue {
-        // Nothing with a price: the free pets, else why there is nothing.
-        if (!gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this)) gg.rsmod.plugins.content.mechanics.death.PerduReclaim.nothingToReturn(this)
+    // Nothing with a price: a lost pet comes back free in the dialogue (N414); N544 (owner 2026-11-02, after N250): otherwise Trade
+    // still opens the Lost Property window - empty, like OSRS - instead of a chat line.
+    if (gg.rsmod.plugins.content.mechanics.death.PerduReclaim.freeOffers(player).isNotEmpty()) {
+        player.queue { gg.rsmod.plugins.content.mechanics.death.PerduReclaim.returnPets(this) }
+        return@on_npc_option
     }
+    gg.rsmod.plugins.content.mechanics.death.PerduShop.open(player, allowEmpty = true)
 }
 
 // Perdu's Trouver unlock and her use-item repair are registered in mechanics/trouver/trouver.plugin.kts, after the registry is filled.

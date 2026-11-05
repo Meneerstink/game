@@ -77,6 +77,9 @@ object CombatPoints {
 
     fun chainFor(id: Int): Chain? = byId[id]
 
+    /** Every Barrows / Moon id (pristine, every stage, broken): what can be used on a repair npc (N560). */
+    fun allIds(): Set<Int> = byId.keys
+
     /** Points left on [item] (its chain must be [chain]). */
     fun pointsOf(
         chain: Chain,

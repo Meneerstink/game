@@ -59,10 +59,11 @@ object PerduShop {
     fun open(
         player: Player,
         page: Int = 0,
+        allowEmpty: Boolean = false,
     ): Boolean {
         PerduLostProperty.observe(player)
         val all = PerduReclaim.paidOffers(player)
-        if (all.isEmpty()) return false
+        if (all.isEmpty() && !allowEmpty) return false
         val shown = page.coerceIn(0, (all.size - 1) / PAGE_SIZE)
         val shop = Shop(NAME, StockType.NORMAL, PurchasePolicy.BUY_NONE, Currency, arrayOfNulls<ShopItem>(PAGE_SIZE), emptyArray(), false, hideStock = true)
         player.attr[PAGE] = shown
