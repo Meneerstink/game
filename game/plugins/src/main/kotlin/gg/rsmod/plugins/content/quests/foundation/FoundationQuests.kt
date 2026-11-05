@@ -1632,7 +1632,7 @@ object FoundationQuests {
         }
         // N501: the Archaeologist sells a lost Ring of shadows again (OSRS: the Mysterious Bandit, 75,000 coins).
         if (npc == Npcs.ARCHAEOLOGIST && DesertTreasureII.isFinished(player)) {
-            actions += Action("I've lost my Ring of shadows.") { RingOfShadowsReclaim.offer(this) }
+            actions += Action("I need another ring.") { RingOfShadowsReclaim.offer(this) }
         }
         if (actions.isEmpty()) return false
         if (actions.size == 1 && direct) {

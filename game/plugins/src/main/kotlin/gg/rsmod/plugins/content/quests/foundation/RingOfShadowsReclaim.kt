@@ -7,6 +7,10 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.options
+import gg.rsmod.plugins.api.ext.chatNpc
+import gg.rsmod.plugins.api.ext.chatPlayer
+import gg.rsmod.plugins.api.ext.itemMessageBox
+import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.content.mechanics.ownership.Possessions
 
@@ -41,20 +45,32 @@ object RingOfShadowsReclaim {
         return null
     }
 
-    /** The Archaeologist's offer, for players who finished Desert Treasure II. */
+    /**
+     * The Archaeologist's offer, for players who finished Desert Treasure II. OSRS Wiki "Transcript:Mysterious Bandit" (current option
+     * "I need another ring." / "Very well, but it will cost you...", then the purchase as the historical dialogue words it, which is the
+     * shop's whole content here: "Pay 75,000 for a Ring of Shadows?", "Seems I don't have enough coins..." / "Well off you go then.",
+     * "You will need some space to hold it first.", "The bandit hands you a Ring of Shadows." + "Take good care of that. It's very poweful.").
+     * The Archaeologist speaks the bandit's lines; the item box names him instead of the bandit.
+     */
     suspend fun offer(task: QueueTask) {
         val player = task.player
-        if (task.options("Yes, pay 75,000 coins.", "No.", title = "Buy a Ring of shadows for 75,000 coins?") != 1) return
+        val npc = Npcs.ARCHAEOLOGIST
+        task.chatPlayer("I need another ring.")
+        task.chatNpc("Very well, but it will cost you...", npc = npc)
+        if (task.options("Yes.", "No.", title = "Pay 75,000 for a Ring of Shadows?") != 1) return
         if (player.inventory.getItemCount(Items.COINS_995) < PRICE) {
-            player.message("You need 75,000 coins to buy a Ring of shadows.")
+            task.chatPlayer("Seems I don't have enough coins...")
+            task.chatNpc("Well off you go then.", npc = npc)
             return
         }
+        // The coins leave the slot they fill only when the stack is exactly 75,000; any other stack needs a free slot.
         if (player.inventory.isFull && player.inventory.getItemCount(Items.COINS_995) > PRICE) {
-            player.message("You don't have enough inventory space.")
+            task.chatNpc("You will need some space to hold it first.", npc = npc)
             return
         }
-        player.inventory.remove(Items.COINS_995, PRICE)
+        if (!player.inventory.remove(Items.COINS_995, PRICE).hasSucceeded()) return
         player.inventory.add(Items.RING_OF_SHADOWS_UNCHARGED)
-        player.message("You buy a Ring of shadows for 75,000 coins.")
+        task.itemMessageBox("The archaeologist hands you a Ring of Shadows.", Items.RING_OF_SHADOWS_UNCHARGED)
+        task.chatNpc("Take good care of that. It's very poweful.", npc = npc)
     }
 }
