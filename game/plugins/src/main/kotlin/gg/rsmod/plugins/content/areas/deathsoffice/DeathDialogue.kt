@@ -13,6 +13,7 @@ import gg.rsmod.plugins.api.ext.doubleItemMessageBox
 import gg.rsmod.plugins.api.ext.focusTab
 import gg.rsmod.plugins.api.ext.itemMessageBox
 import gg.rsmod.plugins.api.ext.messageBox
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.options
 import gg.rsmod.plugins.api.ext.player
 import gg.rsmod.plugins.content.mechanics.death.DeathPayment
@@ -141,6 +142,34 @@ object DeathDialogue {
         itemMessageBox(gravestoneHint(timeLeft), GRAVE_PICTURE)
     }
 
+    /** Owner V6a: early collection while a grave stands is optional and costs 15% of existing office valuation. */
+    suspend fun QueueTask.collectAtDeath() {
+        val collection = gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection
+        val quote = collection.quote(player, gg.rsmod.plugins.content.mechanics.death.DeathRules.rankValue(player.world))
+        if (quote != null) {
+            val fee = String.format(java.util.Locale.US, "%,d", quote.fee)
+            if (options("Yes.", "No.", title = "Retrieve your gravestone items for $fee coins (15%)?") != 1) return
+            if (!player.isOnline || player.isDead() || !DeathsOfficeArea.inOffice(player.tile)) return
+            when (collection.collect(player, quote)) {
+                gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection.Outcome.COLLECTED -> GravestoneWorld.despawn(player)
+                gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection.Outcome.STALE -> {
+                    player.message("Your gravestone has changed. Please choose Collect again.")
+                    return
+                }
+                gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection.Outcome.NO_ROOM -> {
+                    player.message("Please collect some items from Death's storage first.")
+                    OfficeInterface.open(player)
+                    return
+                }
+                gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection.Outcome.CANNOT_AFFORD -> {
+                    player.message("You don't have enough coins to pay the $fee coin fee.")
+                    return
+                }
+            }
+        }
+        OfficeInterface.open(player)
+    }
+
     private fun topic(label: String, done: Boolean): String = if (done) "<str>$label</str>" else label
 
     private suspend fun QueueTask.tutorialOptions() {
@@ -261,7 +290,7 @@ object DeathDialogue {
                 }
                 3 -> {
                     me("Yes, have you got anything for me?")
-                    OfficeInterface.open(player)
+                    collectAtDeath()
                     return
                 }
                 4 -> if (!moreOptions()) return

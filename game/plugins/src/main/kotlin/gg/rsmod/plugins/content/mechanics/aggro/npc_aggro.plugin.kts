@@ -258,7 +258,15 @@ fun mayTarget(
     npc: Npc,
     target: Player,
     range: Int,
-): Boolean = refusal(npc, target, range) == null
+): Boolean {
+    val reason = refusal(npc, target, range)
+    if (reason != null && gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossTerritory.watches(npc.id)) {
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            "aggro refusal npc=${npc.id}#${npc.index} target=${target.username} at=${target.tile} spawn=${npc.spawnTile} reason=$reason"
+        }
+    }
+    return reason == null
+}
 
 /** Why [npc] may not pick [target] (null = it may); the breach trace logs the reason per candidate. */
 fun refusal(
@@ -277,7 +285,7 @@ fun refusal(
     if (!target.tile.isMulti(world) && target.isAttackedByOtherThan(npc)) return "single-under-attack"
     // ... also when another npc picked him on this same tick and has not hit yet (idle breach monsters chose him together).
     val aggressor = target.getAggressor()
-    if (!target.tile.isMulti(world) && aggressor is Npc && aggressor !== npc && !aggressor.isDead() && world.npcs.contains(aggressor) && aggressor.getCombatTarget() === target) return "single-picked-by-other"
+    if (!target.tile.isMulti(world) && aggressor is Npc && !Combat.sameSide(aggressor, npc) && !aggressor.isDead() && world.npcs.contains(aggressor) && aggressor.getCombatTarget() === target) return "single-picked-by-other"
     // ... and for breach monsters any other live breach npc that targets him (a retaliating one never sets the aggressor attribute)
     if (!target.tile.isMulti(world) && gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc) &&
         gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.live.any { it !== npc && !it.isDead() && it.getCombatTarget() === target }

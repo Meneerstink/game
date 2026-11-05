@@ -16,6 +16,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = Npcs.SCORPIA) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.STAB
         respawnDelay = 14
@@ -51,6 +52,7 @@ set_combat_def(npc = Npcs.SCORPIA) {
 
 set_combat_def(npc = Npcs.SCORPIAS_OFFSPRING) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.RANGED
         respawnDelay = 5
@@ -83,6 +85,7 @@ set_combat_def(npc = Npcs.SCORPIAS_OFFSPRING) {
 
 set_combat_def(npc = Npcs.SCORPIAS_GUARDIAN) {
     configs {
+            waitFullDeathAnimation = true
         // The DSL requires a speed; the guardian never swings ([ScorpiaCombat] heal loop, the no-op combat plugin below).
         attackSpeed = 4
         attackStyle = StyleType.STAB
@@ -216,9 +219,10 @@ val scorpiaDrops =
         }
         // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("hard_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 

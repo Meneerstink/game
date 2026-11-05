@@ -61,8 +61,6 @@ object NpcDeathAction : KLogging() {
 
         npc.resetFacePawn()
 
-        runDeathHook(npc, "slayer") { world.plugins.executeSlayerLogic(npc) }
-
         // N451 (owner 2026-10-30, Warriors' Guild: "als ze doodgaan verschijnen ze nog 1 seconde levend"): a short death animation
         // waited its length rounded UP to whole ticks and then the death delay, and once the animation had ended the client drew
         // the npc standing again until it was removed (Animated armour: 4167 runs 1.9 s, removed after 3.0 s). It now waits the
@@ -71,12 +69,18 @@ object NpcDeathAction : KLogging() {
         deathAnimation.filter { it >= 0 }.forEach { anim ->
             val def = npc.world.definitions.get(AnimDef::class.java, anim)
             npc.animate(def.id)
-            val timer = if (def.cycleLength >= 6) def.cycleLength - 4 else deathAnimationTicks(def)
+            val timer = if (npc.combatDef.waitFullDeathAnimation) completedDeathAnimationTicks(def)
+                else if (def.cycleLength >= 6) def.cycleLength - 4 else deathAnimationTicks(def)
             wait(timer)
         }
         if (deathDelay > 0) {
             if (deathAnimation.any { it >= 0 }) npc.invisible = true
             wait(deathDelay)
+        }
+        if (npc.combatDef.completesEncounter) {
+            (npc.attr[KILLER_ATTR]?.get() as? Player)?.let { killer ->
+                runDeathHook(npc, "npc-completed") { world.plugins.executeNpcCompleted(killer, npc) }
+            }
         }
         runDeathHook(npc, "npc-death") { world.plugins.executeNpcDeath(npc) }
 
@@ -93,6 +97,10 @@ object NpcDeathAction : KLogging() {
 
     /** N451: the whole game ticks a short death animation really plays (client frame lengths are 20 ms, a tick 600 ms), at least 1. */
     fun deathAnimationTicks(def: AnimDef): Int = (if (def.playedFrameLength > 0) def.playedFrameLength / 30 else def.cycleLength).coerceAtLeast(1)
+
+    /** Round UP the played part only: the source's 20000-cycle hold frame is a pose, not another 400 seconds. */
+    fun completedDeathAnimationTicks(def: AnimDef): Int =
+        (if (def.playedFrameLength > 0) (def.playedFrameLength + 29) / 30 else def.cycleLength).coerceAtLeast(1)
 
     /**
      * Death cleanup must not depend on an optional plugin hook being perfect. The queue runner

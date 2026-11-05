@@ -171,16 +171,65 @@ class WildernessLairsTests {
         assertTrue(kotlin.math.abs(exit.x - 3321) <= 2 && kotlin.math.abs(exit.z - 3794) <= 2, "beside the entrance")
     }
 
-    @Test fun `logging out in a big lair leaves at an Escape Caves lair exit, small lairs and the surface stay`() {
+    @Test fun `logout follows the March 2026 hotfix while small lairs use their own surface exits`() {
         val den = WildernessLairs.LAIRS.single { it.name == "Callisto's Den" }
         val rest = WildernessLairs.LAIRS.single { it.name == "Vet'ion's Rest" }
         val hunters = WildernessLairs.LAIRS.single { it.name == "Hunter's End" }
-        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[1], WildernessLairs.logoutExit(den.arrival, 1000) { 1 })
-        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[2], WildernessLairs.logoutExit(rest.arrival, 2000) { 2 })
-        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[0], WildernessLairs.logoutExit(gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.VENENATIS_ARENA.spawn, 3000) { 0 })
-        kotlin.test.assertNull(WildernessLairs.logoutExit(hunters.arrival, 4000) { 0 }, "Hunter's End leaves to the surface")
+        assertEquals(WildernessLairs.surfaceLanding(WildernessLairs.ESCAPE_ROUTES[1]), WildernessLairs.logoutExit(den.arrival, 1000) { 1 })
+        assertEquals(WildernessLairs.surfaceLanding(WildernessLairs.ESCAPE_ROUTES[2]), WildernessLairs.logoutExit(rest.arrival, 2000) { 2 })
+        assertEquals(WildernessLairs.surfaceLanding(WildernessLairs.ESCAPE_ROUTES[0]), WildernessLairs.logoutExit(gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.VENENATIS_ARENA.spawn, 3000) { 0 })
+        assertEquals(hunters.surfaceExit, WildernessLairs.logoutExit(hunters.arrival, 4000) { 0 })
+        val tomb = WildernessLairs.LAIRS.single { it.name == "Skeletal Tomb" }
+        assertEquals(tomb.surfaceExit, WildernessLairs.logoutExit(tomb.arrival, 4000) { 0 })
+        assertEquals(WildernessLairs.WEB_CHASM_SURFACE_EXIT, WildernessLairs.logoutExit(Tile(1632, 11556, 2), 4000) { 0 })
         kotlin.test.assertNull(WildernessLairs.logoutExit(Tile(3164, 3494), 5000) { 0 })
-        // Within 10 seconds of the previous player out of the same lair: the same point.
-        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[1], WildernessLairs.logoutExit(den.arrival, 1010) { 2 })
+        repeat(4) { r -> assertFalse(WildernessLairs.inEscapeCaves(WildernessLairs.logoutExit(den.arrival, 1000) { r }!!)) }
+    }
+
+    @Test fun `lair arrivals also drain after prolonged residence and reconnect cannot reset stored residence`() {
+        val p = player(0, 0, Tile(3350, 10260))
+        var run = 10.0
+        every { p.runEnergy } answers { run }
+        every { p.runEnergy = any() } answers { run = firstArg() }
+        repeat(WildernessLairs.ESCAPE_DWELL_GRACE_TICKS) { WildernessLairs.tick(p) }
+        assertEquals(10.0, run)
+        repeat(5) { WildernessLairs.tick(p) }
+        assertEquals(9.0, run)
+        // Login loads the persisted counter. Surface-entry state is absent on a lair arrival.
+        p.attr[WildernessLairs.ESCAPE_STAY_TICKS] = 90
+        repeat(5) { WildernessLairs.tick(p) }
+        assertEquals(7.0, run)
+        every { p.tile } returns Tile(3283, 3773)
+        WildernessLairs.tick(p)
+        kotlin.test.assertNull(p.attr[WildernessLairs.ESCAPE_STAY_TICKS])
+    }
+
+    @Test fun `Artio grants the same capped discount and incomplete forms grant none`() {
+        val p = player(0, 50_000)
+        WildernessLairs.onCompletedKill(p, gg.rsmod.plugins.api.cfg.Npcs.VETION_OLD)
+        WildernessLairs.onCompletedKill(p, gg.rsmod.plugins.api.cfg.Npcs.CALVARION)
+        assertEquals(50_000, WildernessLairs.fee(p))
+        repeat(4) { WildernessLairs.onCompletedKill(p, gg.rsmod.plugins.api.cfg.Npcs.ARTIO) }
+        assertTrue(WildernessLairs.pay(p))
+        p.attr[WildernessLairs.SINCE_VISIT] = true
+        assertEquals(10_000, WildernessLairs.onDeath(p, player(0, 0)).single().amount, "only paid escrow is refunded")
+        repeat(5) { WildernessLairs.onCompletedKill(p, gg.rsmod.plugins.api.cfg.Npcs.ARTIO) }
+        assertTrue(WildernessLairs.pay(p))
+        p.attr[WildernessLairs.SINCE_VISIT] = true
+        assertTrue(WildernessLairs.onDeath(p, player(0, 0)).isEmpty(), "a free entry cannot mint 50k")
+    }
+
+    @Test fun `Peek uses completed counts for both phases and includes Artio and Calvarion`() {
+        val p = player(0, 0)
+        val ids = gg.rsmod.plugins.api.cfg.Npcs
+        every { p.getNpcKillCount(any()) } returns 0
+        every { p.getNpcKillCount(ids.VETION_OLD) } returns 1000
+        every { p.getNpcKillCount(ids.VETION_REBORN_OLD) } returns 19
+        val rest = WildernessLairs.LAIRS.single { it.name == "Vet'ion's Rest" }
+        assertEquals(19, WildernessLairs.peekKillCount(p, rest))
+        every { p.getNpcKillCount(ids.ARTIO) } returns 20
+        every { p.getNpcKillCount(ids.CALVARION_ENRAGED) } returns 21
+        assertEquals(20, WildernessLairs.peekKillCount(p, WildernessLairs.LAIRS.single { it.name == "Hunter's End" }))
+        assertEquals(21, WildernessLairs.peekKillCount(p, WildernessLairs.LAIRS.single { it.name == "Skeletal Tomb" }))
     }
 }

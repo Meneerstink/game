@@ -13,6 +13,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = OldWildernessBosses.CALLISTO) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.CRUSH
         respawnDelay = 50
@@ -61,8 +62,10 @@ on_npc_combat(*OldWildernessBosses.CallistoCombat.ids) {
 listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { id ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = 4
             attackStyle = StyleType.STAB
+            completesEncounter = id == OldWildernessBosses.VETION_REBORN
             respawnDelay = Int.MAX_VALUE
             deathDelay = if (id == OldWildernessBosses.VETION) 0 else 1
             poisonImmune = true
@@ -93,6 +96,8 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
             // Vet'ion does not fall: he rises as Vet'ion Reborn at once (Kronos startDeath -> transform); only Reborn plays the death.
             death = if (id == OldWildernessBosses.VETION) -1 else OldWildernessBosses.VETION_DEATH
         }
+        // Wiki 14352478/15360817: 624 XP for a complete two-form fight, credited to its total MVP.
+        slayer { experience = 312.0 }
     }
     on_npc_spawn(id) {
         val boss = npc
@@ -111,7 +116,7 @@ on_npc_combat(*OldWildernessBosses.VetionCombat.ids) {
 
 on_npc_death(OldWildernessBosses.VETION) {
     OldWildernessBosses.removeDogs(npc)
-    OldWildernessBosses.nextPhase(npc, OldWildernessBosses.VETION_REBORN)?.forceChat("Do it again!!")
+    OldWildernessBosses.nextPhase(npc, OldWildernessBosses.VETION_REBORN, onReady = { it.forceChat("Do it again!!") })
 }
 
 on_npc_death(OldWildernessBosses.VETION_REBORN) {
@@ -119,15 +124,9 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
     val killer = npc.damageMap.getMostDamage() as? Player
     if (killer != null) {
         // The drop table and pet are Vet'ion's (one Vet'ion kill = both forms).
-        DropTableFactory.getDrop(world, killer, OldWildernessBosses.VETION, npc.tile)
-        WildernessLairs.onTopDamageKill(killer)
+        WildernessBossLoot.drop(npc)
     }
-    world.queue {
-        wait(OldWildernessBosses.VETION_RESPAWN_TICKS)
-        val vetion = gg.rsmod.game.model.entity.Npc(OldWildernessBosses.VETION, Tile(OldWildernessBosses.VETION_SPAWN), world)
-        vetion.walkRadius = 10
-        world.spawn(vetion)
-    }
+    WildernessBossLife.respawn(npc, OldWildernessBosses.VETION, OldWildernessBosses.VETION_SPAWN, 10, OldWildernessBosses.VETION_RESPAWN_TICKS)
 }
 
 // ------------------------------------------------------------------ the skeleton hellhounds (Kronos-184 data/npcs/combat)
@@ -135,6 +134,7 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
 mapOf(OldWildernessBosses.HELLHOUND to listOf(1100, 210, 250, 150, 101, 103, 10, 180, 266), OldWildernessBosses.GREATER_HELLHOUND to listOf(1900, 240, 310, 220, 150, 163, 20, 210, 275)).forEach { (id, v) ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = 4
             attackStyle = StyleType.CRUSH
             respawnDelay = Int.MAX_VALUE
@@ -172,9 +172,10 @@ on_npc_combat(*OldWildernessBosses.HoundCombat.ids) {
 
 fun spiderLikeTertiary(builder: gg.rsmod.plugins.content.drops.DropTableBuilder) {
     builder.table("elite_clue") {
-        total(100)
+        val denominator = WildernessBossClues.denominator(builder.player, 100)
+        total(denominator)
         obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-        nothing(99)
+        nothing(denominator - 1)
     }
     builder.table("supplies") {
         total(18)
@@ -307,6 +308,5 @@ DropTableFactory.register(vetionDrops, OldWildernessBosses.VETION)
 
 on_npc_death(OldWildernessBosses.CALLISTO) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
-    DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
-    WildernessLairs.onTopDamageKill(killer)
+    WildernessBossLoot.drop(npc)
 }

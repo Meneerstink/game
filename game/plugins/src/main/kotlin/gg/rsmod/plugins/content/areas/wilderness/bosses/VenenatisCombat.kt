@@ -195,7 +195,7 @@ object VenenatisCombat {
     }
 
     fun onDeath(npc: Npc) {
-        val mine = synchronized(summoned) { summoned.filter { it.attr[OWNER] === npc } }
+        val mine = (synchronized(summoned) { summoned.filter { it.attr[OWNER] === npc } } + spiderlings(npc)).distinct()
         mine.forEach { if (it.isSpawned()) npc.world.remove(it) }
         summoned.removeAll(mine)
         spiderlings(npc).clear()
@@ -385,8 +385,9 @@ object VenenatisCombat {
                     val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
                     npc.dealHit(target = target, maxHit = 3.0, landHit = land, delay = 1, hitType = HitType.MELEE)
                     (target as? Player)?.let { p ->
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "attack.drain", p)
                         p.alterPrayerPoints(-1)
-                        p.filterableMessage("You feel yourself drained by the spiderling")
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "impact.drain", p)
                     }
                 }
                 npc.postAttackLogic(target)

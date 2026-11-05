@@ -970,6 +970,30 @@ class PluginRepository(
      * elsewhere.
      */
     private val npcKilledListeners = ObjectArrayList<(Player, Npc) -> Unit>()
+    private val npcCompletedListeners = ObjectArrayList<(Player, Npc) -> Unit>()
+
+    fun bindNpcCompleted(listener: (Player, Npc) -> Unit) {
+        npcCompletedListeners.add(listener)
+        pluginCount++
+    }
+
+    fun executeNpcCompleted(killer: Player, npc: Npc) {
+        if (!gg.rsmod.game.model.combat.NpcEncounter.claim(npc)) return
+        try {
+            executeSlayerLogic(npc)
+        } catch (e: Throwable) {
+            e.rethrowIfFatal()
+            logger.error("NPC completed Slayer hook failed for id=${npc.id}; continuing rewards.", e)
+        }
+        npcCompletedListeners.forEach { listener ->
+            try {
+                listener(killer, npc)
+            } catch (e: Throwable) {
+                e.rethrowIfFatal()
+                logger.error("NPC completed listener failed for id=${npc.id}; continuing other rewards.", e)
+            }
+        }
+    }
 
     fun bindNpcKilled(listener: (Player, Npc) -> Unit) {
         npcKilledListeners.add(listener)

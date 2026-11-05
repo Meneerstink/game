@@ -177,11 +177,15 @@ object DropSources {
 
     private val viewCache = java.util.concurrent.ConcurrentHashMap<String, View>()
 
+    private fun playerDependent(npcId: Int): Boolean =
+        gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.isPlayerDependent(npcId) ||
+            npcId in gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossClues.NPCS
+
     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
         // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
         // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
-        val base = if (gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.isPlayerDependent(source.tableNpc)) {
+        val base = if (playerDependent(source.tableNpc)) {
             buildView(player, source, rate)
         } else viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
         val personal = personal(player, source, base)
@@ -623,7 +627,7 @@ object DropSources {
 
     /** N522: refresh only the new player-dependent NPC contributions in an otherwise shared item-search index. */
     internal fun personalWildernessIndex(player: Player, base: ItemIndex, rate: Double, sources: List<Source> = all(player)): ItemIndex {
-        val dependent = gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops::isPlayerDependent
+        val dependent = ::playerDependent
         val dynamic = sources.filter { dependent(it.tableNpc) }
         if (dynamic.isEmpty()) return base
         val names = HashMap(base.names)

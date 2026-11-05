@@ -274,7 +274,10 @@ object CalvarionCombat : CombatScript() {
     /** First form at 0: the enraged form on the same tile, full health, a ring of orange lightning (Near Reality lightningRing). */
     fun enrage(npc: Npc): Npc? {
         removeHounds(npc)
-        val next = OldWildernessBosses.nextPhase(npc, ENRAGED) ?: return null
+        return OldWildernessBosses.nextPhase(npc, ENRAGED, onReady = ::enrageEffects)
+    }
+
+    private fun enrageEffects(next: Npc) {
         next.forceChat(SHOUT_ENRAGE)
         val mid = next.tile.transform(1, 1)
         val ring = listOf(1 to 3, 2 to 2, 3 to 1, 3 to -1, 2 to -2, 1 to -3, -1 to -3, -2 to -2, -3 to -1, -3 to 1, -2 to 2, -1 to 3)
@@ -282,7 +285,6 @@ object CalvarionCombat : CombatScript() {
         next.animate(ANIM_SUMMON_ENRAGED)
         strike(next, ring, GFX_LIGHTNING_ENRAGED)
         startEnrageTimeout(next)
-        return next
     }
 
     /** Wiki: not finished within 5 minutes, he reverts to the normal form (with the hitpoints he has). */
@@ -292,7 +294,7 @@ object CalvarionCombat : CombatScript() {
             wait(ENRAGE_TIMEOUT_TICKS)
             if (!WildernessBossLife.active(npc, life)) return@queue
             removeHounds(npc)
-            if (OldWildernessBosses.nextPhase(npc, NORMAL, npc.getCurrentLifepoints()) != null) npc.world.remove(npc)
+            OldWildernessBosses.nextPhase(npc, NORMAL, npc.getCurrentLifepoints())
         }
     }
 

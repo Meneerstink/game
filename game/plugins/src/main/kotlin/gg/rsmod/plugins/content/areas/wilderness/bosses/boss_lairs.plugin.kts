@@ -14,7 +14,7 @@ WildernessLairs.LAIRS.forEach { lair ->
     }
 
     on_obj_option(obj = lair.entrance, option = "peek") {
-        val kc = lair.bosses.firstOrNull()?.let { runCatching { player.getNpcKillCount(it) }.getOrDefault(0) } ?: 0
+        val kc = WildernessLairs.peekKillCount(player, lair)
         if (kc < 20) {
             // The messages: Near Reality WildernessBossEntrance (as for the Silk / Web Chasm).
             player.message(
@@ -46,11 +46,9 @@ listOf(WildernessLairs.DEN_EXIT, WildernessLairs.REST_EXIT).forEach { id ->
     }
 }
 
-/**
- * N522 nachtrun deel 6: OSRS Wiki "Escape Caves": logging out inside a boss lair "counts as an exit", "the player arriving at one of the
- * three boss lair exits at random" (the same one within 10 seconds per lair, [WildernessLairs.lairExitPoint]). The big lairs only - the
- * small ones (Hunter's End, Skeletal Tomb, Web Chasm) leave to the surface and the Wiki names no logout rule for them.
- */
+// Jagex 25 March 2026 supersedes the older Wiki logout rule. Ordinary exits still lead underground.
+on_npc_completed { killer, npc -> WildernessLairs.onCompletedKill(killer, npc.id) }
+
 on_logout {
-    WildernessLairs.logoutExit(player.tile, world.currentCycle) { world.random(WildernessLairs.LAIR_EXIT_POINTS.size - 1) }?.let { player.moveTo(it) }
+    WildernessLairs.logoutExit(player.tile, world.currentCycle) { world.random(WildernessLairs.ESCAPE_ROUTES.size - 1) }?.let { player.moveTo(it) }
 }

@@ -43,6 +43,15 @@ object DeathRules {
 
     fun deepWilderness(tile: Tile): Boolean = deepWilderness(tile.getWildernessLevel())
 
+    /** Owner V6b, OSRS 8 January 2025: these consumables disappear on Wilderness PvM and PvP deaths. */
+    fun destroyInWilderness(player: Player, itemId: Int): Boolean {
+        if (player.tile.getWildernessLevel() <= 0) return false
+        val definitions = player.world.definitions
+        val def = definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, itemId)
+        val plain = if (def?.noted == true) def.noteLinkId else itemId
+        return plain == gg.rsmod.plugins.api.cfg.Items.PHOENIX_NECKLACE || LootKeys.isFoodOrPotion(definitions, plain)
+    }
+
     // N522 nachtrun deel 3: Larran's key "always dropped on player death" (OSRS Wiki) - to the killer in PvP, the grave in PvM.
     fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId) || toGrave(itemId) ||
         itemId == gg.rsmod.plugins.content.skills.slayer.LarransChests.KEY
@@ -116,6 +125,6 @@ object DeathRules {
         loss += gg.rsmod.plugins.content.skills.summoning.BeastOfBurden.activeContainer(player)?.rawItems?.filterNotNull() ?: emptyList()
         // A live casino round is settled into the killer's loot too (death.plugin.kts casinoCoins, bug search 2026-10-02).
         loss += gg.rsmod.plugins.content.activity.casino.CasinoWallet.coinStacks(gg.rsmod.plugins.content.activity.casino.Casino.riskCoins(player))
-        return loss
+        return loss.filterNot { destroyInWilderness(player, it.id) }
     }
 }

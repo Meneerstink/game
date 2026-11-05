@@ -120,13 +120,14 @@ object DeathExecutor {
             // plan in ONE call, so a kill produces a loot key or ground loot - never both, unless the
             // killer already holds the maximum number of keys.
             DeathContext.WILDERNESS_PVP -> {
-                val converted = extraPvpLoot()
+                val converted = extraPvpLoot().filterNot { DeathRules.destroyInWilderness(victim, it.id) }
                 // Deadman emblems never become loot-key or ground loot: DeadmanEmblem hands them to the killer. Without a player
                 // killer (a guard, a monster in a dangerous zone) the Archaic emblem is destroyed too (N359), never ground loot.
                 if (result.killer == null) destroyEmblems(victim, toRemove.filter { DeathRules.isEmblem(it.item.id) && !gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) })
                 val loot =
                     toRemove.filterNot {
-                        gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) || (result.killer == null && DeathRules.isEmblem(it.item.id))
+                        gg.rsmod.plugins.content.mechanics.pvp.emblem.DeadmanEmblem.isEmblem(it.item.id) || (result.killer == null && DeathRules.isEmblem(it.item.id)) ||
+                            DeathRules.destroyInWilderness(victim, it.item.id)
                     }
                 val keys = gg.rsmod.plugins.content.mechanics.pvp.LootKeys
                 // The real value the killer takes (emblem excluded): lost stacks, converted loot and the loot stored behind
@@ -142,9 +143,9 @@ object DeathExecutor {
                 // N359 (owner 2026-10-24): an emblem is destroyed on a death that is not a PvP kill - no gravestone.
                 val lostEmblems = toRemove.filter { DeathRules.isEmblem(it.item.id) }.toSet()
                 destroyEmblems(victim, lostEmblems.toList())
-                val recoverable = toRemove - lostKeys.toSet() - lostEmblems
+                val recoverable = (toRemove - lostKeys.toSet() - lostEmblems).filterNot { DeathRules.destroyInWilderness(victim, it.item.id) }
                 // Owner 2026-09-26: beast-of-burden cargo (and anything else the caller detaches) joins the same gravestone.
-                val extra = extraPvmItems()
+                val extra = extraPvmItems().filterNot { DeathRules.destroyInWilderness(victim, it.id) }
                 if (recoverable.isNotEmpty() || extra.isNotEmpty()) {
                     createGravestone(victim, recoverable, logger, extra, graveTile)
                 }

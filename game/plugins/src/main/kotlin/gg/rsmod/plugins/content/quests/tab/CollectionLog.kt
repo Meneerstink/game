@@ -72,7 +72,15 @@ object CollectionLog {
      */
     fun record(player: Player, sourceKey: String?, items: List<Pair<Int, Int>>): List<Int> {
         if (items.isEmpty()) return emptyList()
-        val logItems = runCatching { CollectionLogPages.allItems(player) }.getOrElse { return emptyList() }
+        val logItems = runCatching {
+            if (sourceKey == null || sourceKey == "store") CollectionLogPages.allItems(player)
+            else {
+                // An item on the clue/chest page is not automatically a log item when a boss drops it.
+                val pages = CollectionLogPages.pagesFor(player, sourceKey) + listOfNotNull(CollectionLogPages.byKey(player, sourceKey))
+                val shared = CollectionLogPages.all(player).filter { it.key == "pets" || it.key == "burden_trinkets" }
+                (pages + shared).flatMap { it.items }.toSet()
+            }
+        }.getOrElse { return emptyList() }
         val map = player.attr[PARSED] ?: parse(player.attr[ATTR]).also { player.attr[PARSED] = it }
         val before = entries(player).keys.toSet()
         val kc = sourceKey?.let { KillCounts.get(player, it) } ?: 0

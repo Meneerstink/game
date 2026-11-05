@@ -19,6 +19,7 @@ import gg.rsmod.plugins.content.mechanics.pvp.breach.BreachMonsters
 
 set_combat_def(npc = Npcs.CHAOS_FANATIC) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 2
         attackStyle = StyleType.MAGIC
         respawnDelay = 15
@@ -56,6 +57,7 @@ set_combat_def(npc = Npcs.CHAOS_FANATIC) {
 
 set_combat_def(npc = Npcs.CRAZY_ARCHAEOLOGIST) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 3
         attackStyle = StyleType.RANGED
         respawnDelay = 15
@@ -168,9 +170,10 @@ val chaosFanaticDrops =
         }
         // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("hard_clue") {
-            total(128)
+            val denominator = WildernessBossClues.denominator(player, 128)
+            total(denominator)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
-            nothing(127)
+            nothing(denominator - 1)
         }
     }
 
@@ -226,9 +229,10 @@ val crazyArchaeologistDrops =
             nothing(127)
         }
         table("hard_clue") {
-            total(128)
+            val denominator = WildernessBossClues.denominator(player, 128)
+            total(denominator)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
-            nothing(127)
+            nothing(denominator - 1)
         }
     }
 

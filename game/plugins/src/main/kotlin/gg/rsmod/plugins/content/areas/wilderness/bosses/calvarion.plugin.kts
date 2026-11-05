@@ -13,7 +13,9 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 listOf(CalvarionCombat.NORMAL to 6, CalvarionCombat.ENRAGED to 5).forEach { (id, speed) ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = speed
+            completesEncounter = id == CalvarionCombat.ENRAGED
             attackStyle = StyleType.SLASH
             respawnDelay = Int.MAX_VALUE
             deathDelay = if (id == CalvarionCombat.NORMAL) 0 else 1
@@ -41,9 +43,13 @@ listOf(CalvarionCombat.NORMAL to 6, CalvarionCombat.ENRAGED to 5).forEach { (id,
         }
         anims {
             attack = if (id == CalvarionCombat.NORMAL) CalvarionCombat.ANIM_MAGIC else CalvarionCombat.ANIM_MAGIC_ENRAGED
+            // Cache 2686/gameval NPC_VETION_DEFEND_PARRY_01/02 9973/9974, already baked as 16253/16262.
+            block = if (id == CalvarionCombat.NORMAL) 16253 else 16262
             // The first form does not fall: the enraged form rises at once (Near Reality sendDeath -> setTransformation).
             death = if (id == CalvarionCombat.NORMAL) -1 else CalvarionCombat.ANIM_DEATH
         }
+        // Wiki 15375801: 322.5 XP for the complete fight, not twice that amount.
+        slayer { experience = 161.25 }
     }
     on_npc_spawn(id) {
         val boss = npc
@@ -71,15 +77,8 @@ on_npc_death(CalvarionCombat.ENRAGED) {
     val killer = npc.damageMap.getMostDamage() as? Player
     if (killer != null) {
         DropTableFactory.getDrop(world, killer, CalvarionCombat.NORMAL, npc.tile)
-        WildernessLairs.onTopDamageKill(killer)
     }
-    world.queue {
-        // Infobox respawn 14 ticks.
-        wait(14)
-        val boss = gg.rsmod.game.model.entity.Npc(CalvarionCombat.NORMAL, Tile(CalvarionCombat.SPAWN), world)
-        boss.walkRadius = 3
-        world.spawn(boss)
-    }
+    WildernessBossLife.respawn(npc, CalvarionCombat.NORMAL, CalvarionCombat.SPAWN, 3, 14)
 }
 
 // ------------------------------------------------------------------ the hellhounds (OSRS Wiki infoboxes 12107 / 12108)
@@ -90,6 +89,7 @@ mapOf(
 ).forEach { (id, v) ->
     set_combat_def(npc = id) {
         configs {
+            waitFullDeathAnimation = true
             attackSpeed = 4
             attackStyle = StyleType.CRUSH
             respawnDelay = Int.MAX_VALUE
@@ -213,9 +213,10 @@ val calvarionDrops =
             nothing(4999)
         }
         table("elite_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 

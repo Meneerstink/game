@@ -11,6 +11,7 @@ import gg.rsmod.plugins.content.drops.DropTableFactory
 
 set_combat_def(npc = ArtioCombat.NPC) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 5
         attackStyle = StyleType.CRUSH
         respawnDelay = 11
@@ -135,9 +136,10 @@ val artioDrops =
             nothing(4999)
         }
         table("elite_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 

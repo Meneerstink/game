@@ -14,7 +14,7 @@ class NpcDeathHookIsolationTests {
         assertTrue("private inline fun runDeathHook" in source)
         assertTrue("world.plugins.executeNpcPreDeath(npc)" in source)
         assertTrue("world.plugins.executeNpcDeath(npc)" in source)
-        assertTrue("world.plugins.executeSlayerLogic(npc)" in source)
+        assertTrue("world.plugins.executeNpcCompleted(killer, npc)" in source)
         assertTrue("runDeathHook(npc, \"npc-death\")" in source)
         assertTrue("world.remove(npc)" in source)
     }

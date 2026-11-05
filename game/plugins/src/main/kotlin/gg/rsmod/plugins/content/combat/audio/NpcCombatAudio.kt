@@ -268,6 +268,10 @@ object NpcCombatAudio {
         target: Pawn,
         anim: Int = npc.combatDef.attackAnimation,
     ) {
+        if (WildernessBossAudio.handles(npc.id)) {
+            if (!WildernessBossAudio.manualAttack(npc)) WildernessBossAudio.dispatch(npc, "attack.${WildernessBossAudio.action(npc)}", target)
+            return
+        }
         val traced = gg.rsmod.game.model.BreachTrace.watches(npc.id)
         val row = rowFor(npc.id)
         if ((row == null || (row.attack.isEmpty() && row.attackBlocked == null)) && npc.attr[LAST_ATTACK_SOUND_CYCLE] != npc.world.currentCycle) {
@@ -341,6 +345,7 @@ object NpcCombatAudio {
         source: Pawn,
         npc: Npc,
     ) {
+        if (WildernessBossAudio.handles(npc.id)) { WildernessBossAudio.dispatch(npc, "defend", source); return }
         // Owner live test 2026-09-28 (Commander Zilyana, K'ril Tsutsaroth silent when hit): their hit sound lives only on the
         // block animation's frames, and an attack animation still running skips the block (Pawn.isAnimationProtected). The
         // block's frame sound only counts while that animation really plays; when it is skipped the server sends it itself.
@@ -366,6 +371,7 @@ object NpcCombatAudio {
         killer: Player,
         npc: Npc,
     ) {
+        if (WildernessBossAudio.handles(npc.id)) { WildernessBossAudio.dispatch(npc, "death", killer); return }
         // A familiar's death is voiced once, for its owner and everyone near it, by Familiar.onDeath (also when no player killed it).
         if (FamiliarAudio.isFamiliarNpc(npc.id)) return
         val id = rowFor(npc.id)?.death ?: -1

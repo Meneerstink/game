@@ -14,8 +14,8 @@ import gg.rsmod.plugins.content.mechanics.store.StoreNpcs
 
 // PvM: tier 1 drops from NPCs with 150+ HP. Breach monsters have their own reward (archaic emblem), guards and safe
 // minigames give nothing.
-on_npc_killed { killer, npc ->
-    if (DeadmanBreach.isBreachNpc(npc) || CityGuards.isGuard(npc) || SafeDeath.isSafe(killer)) return@on_npc_killed
+on_npc_completed { killer, npc ->
+    if (DeadmanBreach.isBreachNpc(npc) || CityGuards.isGuard(npc) || SafeDeath.isSafe(killer)) return@on_npc_completed
     DeadmanEmblem.onNpcKilled(world, killer, npc)
 }
 

@@ -151,6 +151,7 @@ on_login { if (RevenantGear.wearsAvarice(player)) RevenantGear.onAvariceEquip(pl
 // OSRS Wiki infobox: level 397, 1,250 hitpoints, attack speed 5, aggressive, poison and venom immune.
 set_combat_def(npc = RevenantMaledictus.NPC) {
     configs {
+        waitFullDeathAnimation = true
         attackSpeed = 5
         attackStyle = StyleType.RANGED
         respawnDelay = Int.MAX_VALUE

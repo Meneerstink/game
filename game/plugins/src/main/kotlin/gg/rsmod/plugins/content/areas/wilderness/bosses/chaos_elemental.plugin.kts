@@ -14,6 +14,7 @@ import gg.rsmod.plugins.content.drops.global.Rare
 
 set_combat_def(npc = Npcs.CHAOS_ELEMENTAL) {
     configs {
+            waitFullDeathAnimation = true
         attackSpeed = 4
         attackStyle = StyleType.MAGIC
         // Infobox respawn 14 ticks (= 8.4 seconds, OSRS Wiki changelog April 2024).
@@ -130,9 +131,10 @@ val chaosElementalDrops =
             nothing(118)
         }
         table("elite_clue") {
-            total(200)
+            val denominator = WildernessBossClues.denominator(player, 200)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(199)
+            nothing(denominator - 1)
         }
     }
 

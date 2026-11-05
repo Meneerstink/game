@@ -659,6 +659,9 @@ abstract class KotlinPlugin(
      */
     fun on_npc_killed(listener: (killer: Player, npc: Npc) -> Unit) = r.bindNpcKilled(listener)
 
+    /** One reward event after the death animation, excluding intermediate encounter forms. */
+    fun on_npc_completed(listener: (killer: Player, npc: Npc) -> Unit) = r.bindNpcCompleted(listener)
+
     /**
      * Set the combat logic for [npc] and [others], which will override the [set_combat_logic]
      * logic.

@@ -39,6 +39,8 @@ object NpcCombatDsl {
             if (builder.attackGfx > -1) combatBuilder.setAttackGfx(builder.attackGfx)
             combatBuilder.setRespawnDelay(builder.respawnDelay)
             combatBuilder.setDeathDelay(builder.deathDelay)
+            combatBuilder.completesEncounter = builder.completesEncounter
+            combatBuilder.waitFullDeathAnimation = builder.waitFullDeathAnimation
             combatBuilder.setPoisonDamage(builder.poisonDamage)
             combatBuilder.setVenomDamage(builder.venomDamage)
             if (builder.poisonImmune) {
@@ -127,6 +129,8 @@ object NpcCombatDsl {
 
     @CombatDslMarker
     class ConfigBuilder {
+        var completesEncounter = true
+        var waitFullDeathAnimation = false
         /**
          * The speed at which the npc can attack, in cycles.
          */

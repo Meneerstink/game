@@ -53,6 +53,7 @@ sealed class GraveTakeOutcome {
  * gravestone whose items do not all fit in a full Death's Office keeps standing until there is room.
  */
 object Gravestone {
+    val GENERATION = gg.rsmod.game.model.attr.AttributeKey<Long>(persistenceKey = "gravestone_generation")
     fun exists(player: Player): Boolean = player.attr[GRAVESTONE_TILE_ATTR] != null
 
     fun tile(player: Player): Tile? = player.attr[GRAVESTONE_TILE_ATTR]?.let { Tile.from30BitHash(it) }
@@ -82,6 +83,7 @@ object Gravestone {
         moveExisting: Boolean,
         config: DeathsDomainConfig = DeathsDomainConfig.current,
     ): GraveDeposit {
+        player.attr[GENERATION] = (player.attr[GENERATION] ?: 0L) + 1L
         val definitions = player.world.definitions
         val grave = player.gravestone
         val hadGrave = exists(player) && !grave.isEmpty

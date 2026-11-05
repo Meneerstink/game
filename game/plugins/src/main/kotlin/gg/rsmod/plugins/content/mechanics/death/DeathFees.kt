@@ -12,6 +12,13 @@ import gg.rsmod.game.model.item.ItemAttribute
  * cargo Death held for free, gravestone items whose fee was paid) - they stay free.
  */
 object DeathFees {
+    const val EARLY_COLLECTION_PERCENT = 15
+
+    fun earlyCollectionFee(items: List<Item>, value: ItemRiskValueProvider, config: DeathsDomainConfig = DeathsDomainConfig.current): Long =
+        items.fold(0L) { sum, item ->
+            val fee = officeFee(item, item.amount, value, config.copy(officeFeePercent = EARLY_COLLECTION_PERCENT))
+            if (sum > Long.MAX_VALUE - fee) Long.MAX_VALUE else sum + fee
+        }
     fun isFeeFree(item: Item): Boolean = item.getAttr(ItemAttribute.DEATH_FEE_FREE) == 1
 
     /** Death's Office fee per unit of [item] (0 when the item is free or worth less than 100,000). */

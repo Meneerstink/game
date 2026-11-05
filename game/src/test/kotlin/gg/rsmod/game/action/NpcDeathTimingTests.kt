@@ -13,6 +13,21 @@ import kotlin.test.assertTrue
  * animation is waited for the whole ticks it really plays, and the npc is hidden for its death delay - it never stands again.
  */
 class NpcDeathTimingTests {
+    @Test fun `imported Wilderness deaths finish their real played frames before loot without waiting the terminal hold`() {
+        val cache = CacheLibrary(System.getenv("RSPS_TEST_CACHE") ?: File("../data/cache").path)
+        try {
+            val defs = DefinitionSet().also { it.load(cache, AnimDef::class.java) }
+            // Independent read-only JS5 probe, 2026-11-05: local sequence -> played 20ms cycles, rounded-up 600ms ticks.
+            val expected = mapOf(16114 to (47 to 2), 16124 to (124 to 5), 16171 to (90 to 3), 16183 to (145 to 5),
+                16208 to (188 to 7), 16211 to (180 to 6), 16234 to (62 to 3), 16243 to (150 to 5), 16265 to (150 to 5))
+            expected.forEach { (id, timing) ->
+                val def = defs.get(AnimDef::class.java, id)
+                assertEquals(timing.first, def.playedFrameLength, "seq $id")
+                assertEquals(timing.second, NpcDeathAction.completedDeathAnimationTicks(def), "seq $id")
+                assertTrue(NpcDeathAction.completedDeathAnimationTicks(def) * 30 >= def.playedFrameLength)
+            }
+        } finally { cache.close() }
+    }
     @Test
     fun `the animated armour collapse is waited 3 whole ticks, not 4`() {
         val cache = CacheLibrary(File("../data/cache").path)

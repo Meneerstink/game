@@ -123,34 +123,33 @@ object OldWildernessBosses {
     }
 
     /** Preserve the whole fight's damage credit, rather than losing phase one to a fresh damage map. */
-    fun nextPhase(npc: Npc, id: Int, hitpoints: Int? = null, keepDogs: Boolean = false): Npc? {
-        val next = Npc(id, Tile(npc.tile), npc.world)
-        next.respawns = false
-        next.walkRadius = 10
-        if (!npc.world.spawn(next)) {
-            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "Vetion phase spawn failed: ${npc.id} -> $id at ${npc.tile}" }
-            return null
+    fun nextPhase(npc: Npc, id: Int, hitpoints: Int? = null, keepDogs: Boolean = false, onReady: (Npc) -> Unit = {}): Npc? =
+        WildernessBossLife.successor(npc, {
+            Npc(id, Tile(npc.tile), npc.world).also { it.respawns = false; it.walkRadius = 10 }
+        }) { next ->
+            gg.rsmod.game.model.combat.NpcEncounter.transfer(npc, next)
+            npc.world.players.forEach { p ->
+                val damage = npc.damageMap.getDamageFrom(p)
+                if (damage > 0) next.damageMap.add(p, damage)
+            }
+            if (hitpoints != null) next.setCurrentLifepoints(hitpoints)
+            if (keepDogs) {
+                next.attr[DOGS_CALLED] = npc.attr[DOGS_CALLED] == true
+                next.attr[DOGS] = dogs(npc)
+            }
+            val target = npc.getCombatTarget() ?: npc.damageMap.getMostDamage()
+            if (target != null && !target.isDead() && (target !is Player || target.isOnline)) next.attack(target)
+            onReady(next)
+            // A timeout keeps its live predecessor until its replacement actually exists.
+            if (!npc.isDead() && npc.isSpawned()) npc.world.remove(npc)
         }
-        npc.world.players.forEach { p ->
-            val damage = npc.damageMap.getDamageFrom(p)
-            if (damage > 0) next.damageMap.add(p, damage)
-        }
-        if (hitpoints != null) next.setCurrentLifepoints(hitpoints)
-        if (keepDogs) {
-            next.attr[DOGS_CALLED] = npc.attr[DOGS_CALLED] == true
-            next.attr[DOGS] = dogs(npc)
-        }
-        val target = npc.getCombatTarget() ?: npc.damageMap.getMostDamage()
-        if (target != null && !target.isDead() && (target !is Player || target.isOnline)) next.attack(target)
-        return next
-    }
 
     fun startRebornTimeout(npc: Npc) {
         val life = WildernessBossLife.token(npc)
         npc.world.queue {
             wait(REBORN_TIMEOUT_TICKS)
             if (!WildernessBossLife.active(npc, life)) return@queue
-            if (nextPhase(npc, VETION, npc.getCurrentLifepoints(), keepDogs = true) != null) npc.world.remove(npc)
+            nextPhase(npc, VETION, npc.getCurrentLifepoints(), keepDogs = true)
         }
     }
 
@@ -212,8 +211,10 @@ object OldWildernessBosses {
                         else -> if (p != null) roar(npc, p) else claws(npc, target)
                     }
                     if (npc.world.random(11) == 0) {
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "attack.heal", target)
                         npc.graphic(GFX_HEAL)
                         npc.setCurrentLifepoints((npc.getCurrentLifepoints() + npc.world.random(4..10)).coerceAtMost(npc.getMaximumLifepoints()))
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "impact.heal", target)
                     }
                 }
                 npc.postAttackLogic(target)
@@ -225,6 +226,7 @@ object OldWildernessBosses {
         }
 
         private fun claws(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "melee", target)
             npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.ACCURATE)
             npc.animate(CALLISTO_ATTACK)
             val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
@@ -233,6 +235,7 @@ object OldWildernessBosses {
 
         /** Donor projectile (395, 43, 31, 51, 36, 10, 15, 127); the hit ignores defence (always rolls). */
         private fun shockwave(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "shockwave", target)
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(CALLISTO_ATTACK)
             npc.world.spawn(npc.createProjectile(target, GFX_SHOCKWAVE, startHeight = 43, endHeight = 31, delay = 51, angle = 15))
@@ -243,6 +246,7 @@ object OldWildernessBosses {
 
         /** Up to 4 tiles back while each step is free, 3 damage, a 2-tick stun (donor). */
         internal fun roar(npc: Npc, p: Player) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "roar", p)
             npc.animate(CALLISTO_ATTACK)
             val start = Tile(p.tile)
             val end = pushDestination(npc, start)
@@ -308,6 +312,7 @@ object OldWildernessBosses {
         }
 
         private fun melee(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "melee", target)
             val reborn = npc.id == VETION_REBORN
             npc.prepareAttack(CombatClass.MELEE, StyleType.STAB, WeaponStyle.ACCURATE)
             npc.animate(VETION_ATTACK)
@@ -316,6 +321,7 @@ object OldWildernessBosses {
         }
 
         private fun earthquake(npc: Npc) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "earthquake")
             npc.attr[EARTHQUAKE_READY_CYCLE] = npc.world.currentCycle + EARTHQUAKE_COOLDOWN
             npc.animate(VETION_EARTHQUAKE)
             val source = Tile(npc.tile.x + 1, npc.tile.z + 1, npc.tile.height)
@@ -330,6 +336,7 @@ object OldWildernessBosses {
 
         /** The target's tile and two more within 2 (not under him); whoever stands on one 3 ticks later takes up to 30 (donor). */
         private fun lightning(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "lightning", target)
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(VETION_ATTACK)
             val world = npc.world

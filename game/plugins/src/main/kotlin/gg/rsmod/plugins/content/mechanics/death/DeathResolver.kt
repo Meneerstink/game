@@ -99,19 +99,16 @@ object DeathResolver {
                 equipment = victim.equipment.items.copyOf(),
                 keepCount = DeathRules.keepCount(context, skulled),
                 valueProvider = valueProvider,
-                // Owner 2026-10-04: killed by a monster, a lockable untradeable (locked or not) is always kept and stays locked
-                // (OSRS Wiki "(l)": "Upon PvM death anywhere ... any locked items will stay with the player").
-                // N503 D13/D14 (owner 2026-11-01): pets, burden trinkets and ornament kits are no longer kept - they go to the
-                // gravestone (DeathRules.toGrave, through alwaysLost below).
+                // N593 owner 2026-11-05: only actually locked (l) states are extra keeps on PvM death.
                 alwaysProtected = {
                     alwaysProtected(it) ||
                         // The max capes a PvP death never takes (OSRS "always kept") are kept on a monster death too.
-                        it in UntradeableDeathProtection.ALWAYS_KEPT_PVP ||
-                        (context == DeathContext.PVM_SAFE && UntradeableDeathProtection.lockable(it))
+                        (if (context == DeathContext.PVM_SAFE) gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry.isLockedAnyState(it)
+                        else it in UntradeableDeathProtection.ALWAYS_KEPT_PVP)
                 },
                 // Loot keys and Deadman emblems are never kept (RCV-012 3b, owner 2026-09-25/26); pets, trinkets and kits go to the
                 // gravestone (N503 D13/D14).
-                alwaysLost = DeathRules::alwaysLost,
+                alwaysLost = { DeathRules.alwaysLost(it) || DeathRules.destroyInWilderness(victim, it) },
             )
         return DeathResolutionResult(context, victim, killer, itemRisk)
     }

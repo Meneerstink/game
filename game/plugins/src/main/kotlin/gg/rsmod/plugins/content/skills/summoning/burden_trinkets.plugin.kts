@@ -72,8 +72,8 @@ on_login {
 }
 
 // N423 deel 5: a boss kill rolls the three smaller trinkets (BurdenTrinketDrops); a breach npc rolls per contributor in DeadmanBreach.
-on_npc_killed { killer, npc ->
-    if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return@on_npc_killed
+on_npc_completed { killer, npc ->
+    if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return@on_npc_completed
     BurdenTrinketDrops.onKill(killer, npc.id, npc.tile)
 }
 

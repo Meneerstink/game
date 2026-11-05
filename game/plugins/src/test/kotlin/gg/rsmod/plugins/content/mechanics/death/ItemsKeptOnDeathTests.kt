@@ -62,18 +62,49 @@ class ItemsKeptOnDeathTests {
 
     private val value = ItemRiskValueProvider { if (it == Items.AVERNIC_DEFENDER) 600_000L else 1L }
 
+    @Test fun `only actual locked states survive in addition to the three ranked PvM items`() {
+        gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.registerAll()
+        val p = newPlayer()
+        listOf(Items.DRAGON_PICKAXE, Items.DRAGON_2H_SWORD, Items.RUNE_PLATEBODY, Items.FIRE_CAPE,
+            Items.FIRE_CAPE_LOCKED_22324, Items.FIRE_CAPE_L_BROKEN, Items.FIRE_CAPE_L_MANGLED).forEachIndexed { i, id -> p.inventory[i] = Item(id) }
+        val rank = ItemRiskValueProvider { if (it == Items.FIRE_CAPE) 1L else 100L }
+        for (skulled in listOf(false, true)) {
+            val resolved = DeathResolver.resolve(p, null, skulled, rank, contextOverride = DeathContext.PVM_SAFE)
+            assertTrue(resolved.itemRisk.lost.any { it.item.id == Items.FIRE_CAPE })
+            val locked = setOf(Items.FIRE_CAPE_LOCKED_22324, Items.FIRE_CAPE_L_BROKEN, Items.FIRE_CAPE_L_MANGLED)
+            assertTrue(locked.all { id -> resolved.itemRisk.protected.any { it.item.id == id } })
+            assertEquals(if (skulled) 3 else 6, resolved.itemRisk.protected.size)
+        }
+    }
+
+    @Test fun `Wilderness consumables are deleted in preview and actual PvM death but retained by normal rules outside`() {
+        val p = newPlayer()
+        val consumables = listOf(Items.SHARK, Items.SUPER_RESTORE_4, Items.PHOENIX_NECKLACE)
+        every { p.tile } returns Tile(3424,10212,2)
+        consumables.forEachIndexed { i, id -> p.inventory[i] = Item(id) }
+        val preview = ItemsKeptOnDeath.preview(p, ItemsKeptOnDeath.Toggles(false, false, false), value)
+        assertEquals(consumables.toSet(), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.DELETED }.map { it.item.id }.toSet())
+        val resolved = DeathResolver.resolve(p, null, false, value, contextOverride = DeathContext.PVM_SAFE)
+        assertTrue(DeathExecutor.execute(p.world, resolved))
+        assertTrue(p.inventory.isEmpty)
+        assertTrue(p.gravestone.isEmpty)
+        assertTrue(p.deathRecovery.isEmpty)
+        every { p.tile } returns Tile(3094,3469)
+        consumables.forEach { assertFalse(DeathRules.destroyInWilderness(p, it)) }
+    }
+
     @Test
     fun `N503 D2 PvM - unskulled keeps the 3 most valuable items, everything else goes to the gravestone`() {
         val player = newPlayer()
         player.inventory[0] = Item(Items.AVERNIC_DEFENDER, 1)
         player.inventory[1] = Item(Items.COINS_995, 100)
         val preview = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = false, killedByPlayer = false, deepWilderness = false), value)
-        // Owner 2026-10-04: killed by a monster, a lockable untradeable (Avernic defender) is always kept; unskulled 3 more items.
-        assertEquals(listOf(Items.AVERNIC_DEFENDER to 1, Items.COINS_995 to 3), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id to it.item.amount })
-        assertEquals(listOf(Items.COINS_995 to 97), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
+        // N593 owner 2026-11-05: an unlocked defender occupies one of the three ranked slots.
+        assertEquals(listOf(Items.AVERNIC_DEFENDER to 1, Items.COINS_995 to 2), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.KEPT }.map { it.item.id to it.item.amount })
+        assertEquals(listOf(Items.COINS_995 to 98), preview.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount })
         assertEquals(0, preview.graveFee, "the gravestone is free")
         val skulled = ItemsKeptOnDeath.preview(player, ItemsKeptOnDeath.Toggles(skulled = true, killedByPlayer = false, deepWilderness = false), value)
-        assertEquals(listOf(Items.COINS_995 to 100), skulled.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount }, "skulled keeps none")
+        assertEquals(setOf(Items.AVERNIC_DEFENDER to 1, Items.COINS_995 to 100), skulled.entries.filter { it.section == ItemsKeptOnDeath.Section.GRAVESTONE }.map { it.item.id to it.item.amount }.toSet(), "skulled keeps no unlocked item")
     }
 
     @Test

@@ -89,6 +89,9 @@ class NpcCombatBuilder {
 
     private var attackGfx = -1
 
+    var completesEncounter = true
+    var waitFullDeathAnimation = false
+
     fun build(): NpcCombatDef {
         check(maxHealth != -1) { "Max health must be set." }
         check(attackSpeed != -1) { "Attack speed must be set." }
@@ -137,6 +140,8 @@ class NpcCombatBuilder {
             venomImmunity,
             attackProjectile = attackProjectile,
             attackGfx = attackGfx,
+            completesEncounter = completesEncounter,
+            waitFullDeathAnimation = waitFullDeathAnimation,
         )
     }
 
