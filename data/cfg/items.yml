@@ -178351,7 +178351,7 @@
     attack_audio: -1
 - id: 15018
   name: "Seers' ring (i)"
-  examine: "It's an Seers' ring (i)."
+  examine: "A mysterious ring that can fill the wearer with magical power..."
   tradeable: false
   weight: 0.0
   equipment:
@@ -178383,7 +178383,7 @@
     attack_audio: -1
 - id: 15019
   name: "Archers' ring (i)"
-  examine: "It's an Archers' ring (i)."
+  examine: "A fabled ring that improves the wearer's skill with a bow..."
   tradeable: false
   weight: 0.0
   equipment:
@@ -178415,7 +178415,7 @@
     attack_audio: -1
 - id: 15020
   name: "Warrior ring (i)"
-  examine: "It's an Warrior ring (i)."
+  examine: "A legendary ring once worn by Fremennik warriors."
   tradeable: false
   weight: 0.0
   equipment:
@@ -179719,7 +179719,7 @@
   equipment: null
 - id: 15220
   name: "Berserker ring (i)"
-  examine: "It's an Berserker ring (i)."
+  examine: "A ring reputed to bring out a berserk fury in its wearer."
   tradeable: false
   weight: 0.0
   equipment:
@@ -265418,7 +265418,7 @@
   equipment: null
 - id: 22324
   name: "Fire cape (l)"
-  examine: "A cape of fire, locked with a Trouver parchment."
+  examine: "A cape of fire."
   destroy_message: ""
   tradeable: false
   weight: 1.8
@@ -286678,7 +286678,7 @@
   equipment: null
 - id: 23826
   name: "Anglerfish"
-  examine: "A fish with a nasty taste."
+  examine: "I hope this tastes better than it looks."
   tradeable: true
   weight: 0.4
   equipment: null
@@ -289718,7 +289718,7 @@
   equipment: null
 - id: 24151
   name: "Mithril defender (l)"
-  examine: "A defensive weapon, locked with a Trouver parchment."
+  examine: "A defensive weapon."
   tradeable: false
   weight: 0.4
   equipment:
@@ -289752,7 +289752,7 @@
     absorb_ranged: 0
 - id: 24152
   name: "Adamant defender (l)"
-  examine: "A defensive weapon, locked with a Trouver parchment."
+  examine: "A defensive weapon."
   tradeable: false
   weight: 0.4
   equipment:
@@ -289786,7 +289786,7 @@
     absorb_ranged: 0
 - id: 24153
   name: "Rune defender (l)"
-  examine: "A defensive weapon, locked with a Trouver parchment."
+  examine: "A defensive weapon."
   tradeable: false
   weight: 0.4
   equipment:
@@ -289820,7 +289820,7 @@
     absorb_ranged: 0
 - id: 24154
   name: "Dragon defender (l)"
-  examine: "A defensive weapon, locked with a Trouver parchment."
+  examine: "A defensive weapon."
   tradeable: false
   weight: 0.4
   equipment:
@@ -289853,7 +289853,7 @@
     skill_reqs: [{'skill': 1, 'level': 60}]
 - id: 24155
   name: "Avernic defender (l)"
-  examine: "A defensive weapon, locked with a Trouver parchment."
+  examine: "A defensive weapon."
   tradeable: false
   weight: 0.453
   equipment:
@@ -289887,7 +289887,7 @@
     absorb_ranged: 0
 - id: 24156
   name: "Rune defender (l)(t)"
-  examine: "A defensive weapon trimmed with gold, locked with a Trouver parchment."
+  examine: "A defensive weapon trimmed with gold."
   tradeable: false
   weight: 0.453
   equipment:
@@ -289921,7 +289921,7 @@
     absorb_ranged: 0
 - id: 24157
   name: "Dragon defender (l)(t)"
-  examine: "A defensive weapon trimmed with gold, locked with a Trouver parchment."
+  examine: "A defensive weapon trimmed with gold."
   tradeable: false
   weight: 0.453
   equipment:
@@ -289955,7 +289955,7 @@
     absorb_ranged: 0
 - id: 24158
   name: "Fighter torso (l)"
-  examine: "A Penance Fighter torso armour, locked with a Trouver parchment."
+  examine: "A Penance Fighter torso armour."
   tradeable: false
   weight: 4.0
   equipment:
@@ -289989,7 +289989,7 @@
     absorb_ranged: 6
 - id: 24159
   name: "Void knight top (l)"
-  examine: "Torso armour from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "Torso armour from the order of the Void Knights."
   tradeable: false
   weight: 6.8
   equipment:
@@ -290023,7 +290023,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24160
   name: "Elite void top (l)"
-  examine: "Superior torso armour from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "Superior torso armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -290056,7 +290056,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24161
   name: "Void knight robe (l)"
-  examine: "Leg armour of the order of the Void Knights, locked with a Trouver parchment."
+  examine: "Leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -290090,7 +290090,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24162
   name: "Elite void robe (l)"
-  examine: "Superior leg armour from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "Superior leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.0
   equipment:
@@ -290123,7 +290123,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24163
   name: "Void knight gloves (l)"
-  examine: "Gloves as used by the order of the Void Knights, locked with a Trouver parchment."
+  examine: "Gloves as used by the order of the Void Knights."
   tradeable: false
   weight: 0.5
   equipment:
@@ -290157,7 +290157,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24164
   name: "Void mage helm (l)"
-  examine: "A mage helm from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "A mage helm from the order of the Void Knights."
   tradeable: false
   weight: 0.0
   equipment:
@@ -290191,7 +290191,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24165
   name: "Void ranger helm (l)"
-  examine: "A ranger helm from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "A ranger helm from the order of the Void Knights."
   tradeable: false
   weight: 3.6
   equipment:
@@ -290225,7 +290225,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24166
   name: "Void melee helm (l)"
-  examine: "A melee helm from the order of the Void Knights, locked with a Trouver parchment."
+  examine: "A melee helm from the order of the Void Knights."
   tradeable: false
   weight: 0.4
   equipment:
@@ -290259,7 +290259,7 @@
     skill_reqs: [{'skill': 0, 'level': 42}, {'skill': 1, 'level': 42}, {'skill': 2, 'level': 42}, {'skill': 3, 'level': 42}, {'skill': 4, 'level': 42}, {'skill': 6, 'level': 42}, {'skill': 5, 'level': 22}]
 - id: 24167
   name: "Infernal max cape (l)"
-  examine: "The cape worn by only the most experienced players, locked with a Trouver parchment."
+  examine: "The cape worn by only the most experienced players."
   tradeable: false
   weight: 0.453
   equipment:
@@ -290383,7 +290383,7 @@
   equipment: null
 - id: 24183
   name: "Fighter torso (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled Penance Fighter torso."
   tradeable: false
   weight: 4.0
   equipment: null
@@ -290395,7 +290395,7 @@
   equipment: null
 - id: 24185
   name: "Void knight top (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "Mangled torso armour from the order of the Void Knights."
   tradeable: false
   weight: 6.803
   equipment: null
@@ -290407,7 +290407,7 @@
   equipment: null
 - id: 24187
   name: "Elite void top (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "Mangled superior torso armour from the order of the Void Knights."
   tradeable: false
   weight: 6.803
   equipment: null
@@ -290419,7 +290419,7 @@
   equipment: null
 - id: 24189
   name: "Void knight robe (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "Mangled leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.164
   equipment: null
@@ -290431,7 +290431,7 @@
   equipment: null
 - id: 24191
   name: "Elite void robe (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "Mangled superior leg armour from the order of the Void Knights."
   tradeable: false
   weight: 8.164
   equipment: null
@@ -290443,7 +290443,7 @@
   equipment: null
 - id: 24193
   name: "Void knight gloves (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "Mangled gloves as used by the order of the Void Knights."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290455,7 +290455,7 @@
   equipment: null
 - id: 24195
   name: "Void mage helm (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled mage helm from the order of the Void Knights."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290467,7 +290467,7 @@
   equipment: null
 - id: 24197
   name: "Void ranger helm (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled ranger helm from the order of the Void Knights."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290479,7 +290479,7 @@
   equipment: null
 - id: 24199
   name: "Void melee helm (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled melee helm from the order of the Void Knights."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290491,7 +290491,7 @@
   equipment: null
 - id: 24201
   name: "Infernal max cape (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "This cape is mangled."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290503,7 +290503,7 @@
   equipment: null
 - id: 24203
   name: "Infernal cape (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled Infernal cape."
   tradeable: false
   weight: 1.814
   equipment: null
@@ -290641,13 +290641,13 @@
   equipment: null
 - id: 24226
   name: "Dizana's quiver (l) (broken)"
-  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum."
+  examine: "A broken Quiver, perhaps Perdu could fix it."
   tradeable: false
   weight: 0.453
   equipment: null
 - id: 24227
   name: "Dizana's quiver (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled Quiver, perhaps Perdu could fix it."
   tradeable: false
   weight: 0.453
   equipment: null
@@ -290665,13 +290665,13 @@
   equipment: null
 - id: 24230
   name: "Blessed Dizana's quiver (l) (broken)"
-  examine: "A broken Quiver awarded to those who have proved their worth in the Colosseum. Blessed by Ralos."
+  examine: "A broken Quiver. Blessed by Ralos. Perhaps Perdu could fix it."
   tradeable: false
   weight: 0.453
   equipment: null
 - id: 24231
   name: "Blessed Dizana's quiver (l) (mangled)"
-  examine: "It has been mangled. Perdu can repair it for 500,000 coins."
+  examine: "A mangled Quiver. Blessed by Ralos. Perhaps Perdu could fix it."
   tradeable: false
   weight: 0.453
   equipment: null
