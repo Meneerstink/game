@@ -128,6 +128,11 @@ object OsrsNpcImportTool {
             // N522 nachtrun deel 2: Calvar'ion's Skeleton Hellhound 12107 (level 115) and Greater Skeleton Hellhound 12108 (level 139)
             // (OSRS Wiki infobox ids; classic DOG_UPDATE_WOLF_READY 6580 / SKELETON_HELLHOUND_WALK 6577).
             "calvarion-hounds" to listOf(12107, 12108),
+            // N522 nachtrun deel 5 (owner 2026-11-04 22:2x 'Ja': import the OSRS Wilderness npcs without a 667 version; ids GPT-A
+            // team/dossiers/N522-NPCS-ONDERZOEK.txt / RuneLite gameval NpcID): Dark warrior 6606, Scorpion 3024, King Scorpion 3027,
+            // Zombie pirates 13489-13493, Rogue 526 / 6603, Lava dragon 6593, Ent 6594 + Ent trunk 9474, Mammoth 6604,
+            // Elder Chaos druid 6607, Runite Golem 6600 + Runite rocks 6601.
+            "wildy-npcs" to listOf(6606, 3024, 3027, 13489, 13490, 13491, 13492, 13493, 526, 6603, 6593, 6594, 9474, 6604, 6607, 6600, 6601),
         )
     }
 
@@ -135,7 +140,7 @@ object OsrsNpcImportTool {
      * Npcs that never move and have no movement sequences in OSRS: they keep their model's rest pose (no humanoid default).
      * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig; the POH combat dummies 10507/8598/10508-10512 are posts.
      */
-    val STATIC_NPCS = setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512)
+    val STATIC_NPCS = setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601) // 6601 Runite rocks (N522 deel 5)
 
     /**
      * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.
@@ -195,6 +200,12 @@ object OsrsNpcImportTool {
             // calvarion-hounds: RuneLite gameval AnimationID DOG_UPDATE_SKELETON_HELLHOUND_ATTACK 6579 / _DEFEND 6578, DOG_UPDATE_WOLF_DEATH
             // 6558 (the old skeleton hellhounds' Kronos death on the same wolf rig).
             "calvarion-hounds" to listOf(6579, 6578, 6558),
+            // wildy-npcs (GPT-A N522-NPCS-ONDERZOEK.txt, all classic, same frame base as each npc's stand): SCORPION_UPDATE_ATTACK_TAIL
+            // 6254 / _DEFEND 6255 / _DEATH 6256; ZOMBIE_UPDATE_DEFEND_NORMAL 5567 / _ATTACK_NORMAL 5568 / _DEATH_NORMAL 5569; DRAGON_ATTACK 80,
+            // DRAGON_FIREBREATH_ALL_ATTACK 81, DRAGON_BLOCK 89, DRAGON_DEATH 92; NPC_ENT_DEFEND_01 12504 / _02 12505, _ATTACK_01 12506 /
+            // _02 12507, _DEATH_01 12508; MAMMOTH_ATTACK 304 / _BLOCK 305 / _DEATH 307; GOLEM_ATTACK 153 / _BLOCK 154 / _DEATH 156.
+            // The human ones (Dark warrior, Rogues, Elder Chaos druid) stand on the shared 808 rig and fight with the 667 human sequences.
+            "wildy-npcs" to listOf(6254, 6255, 6256, 5567, 5568, 5569, 80, 81, 89, 92, 12504, 12505, 12506, 12507, 12508, 304, 305, 307, 153, 154, 156),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences
