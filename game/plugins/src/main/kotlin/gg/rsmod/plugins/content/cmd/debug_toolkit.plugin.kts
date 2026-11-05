@@ -444,6 +444,23 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->
         if (p.gameSystem.inject(msg)) "clicked option $slot of npc $id#${target.index} at ${target.tile.x},${target.tile.z} for ${p.username}" else "no handler"
     }
 }
+// `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
+gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val slot = a.getOrNull(1)?.toIntOrNull()
+    val id = a.getOrNull(2)?.toIntOrNull()
+    var npc: gg.rsmod.game.model.entity.Npc? = null
+    if (p != null && id != null) {
+        w.npcs.forEach { n -> if (n.id == id && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
+    }
+    val target = npc
+    if (p == null || slot == null || target == null || p.inventory[slot] == null) {
+        "usage: opnpcitem <name> <inventory slot with an item> <npc id> (an npc with that id on his plane)"
+    } else {
+        val msg = gg.rsmod.game.message.impl.OpNpcTMessage(target.index, (679 shl 16), slot, 0)
+        if (p.gameSystem.inject(msg)) "used slot $slot (${p.inventory[slot]?.id}) on npc $id#${target.index} for ${p.username}" else "no handler"
+    }
+}
 // `opheld <name> <option 1-5> <item id>`: an inventory item option (Dig with a spade, Rub, Eat...) through the real handler path.
 gg.rsmod.game.CommandServerCommands.handlers["opheld"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
