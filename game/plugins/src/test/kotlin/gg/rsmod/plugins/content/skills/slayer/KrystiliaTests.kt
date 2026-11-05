@@ -22,6 +22,7 @@ class KrystiliaTests {
         every { p.combatLevel } returns 3
     }
     private fun npc(p: Player, name: String, tile: Tile = p.tile): Npc = mockk<Npc>(relaxed = true).also { n ->
+        every { n.attr } returns AttributeMap()
         every { n.world } returns p.world
         every { n.tile } returns tile
         every { n.def } returns NpcDef(1).apply { this.name = name }

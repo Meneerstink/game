@@ -74,7 +74,8 @@ on_login {
 // N423 deel 5: a boss kill rolls the three smaller trinkets (BurdenTrinketDrops); a breach npc rolls per contributor in DeadmanBreach.
 on_npc_completed { killer, npc ->
     if (gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) return@on_npc_completed
-    BurdenTrinketDrops.onKill(killer, npc.id, npc.tile)
+    val rewardId = gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.rewardNpc(npc.id) ?: return@on_npc_completed
+    BurdenTrinketDrops.onKill(killer, rewardId, npc.tile)
 }
 
 on_world_init {
