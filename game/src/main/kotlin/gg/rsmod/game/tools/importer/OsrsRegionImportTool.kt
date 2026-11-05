@@ -169,6 +169,8 @@ object OsrsRegionImportTool {
             // N569 (owner 2026-11-05 06:3x 'OSRS-grond importeren'): Larran's small chest stands in the "Ruins" north-east of the Chaos
             // Temple (OSRS 34831 = multiloc 33343/34828 at 3281,3659 rot 1). Our walls match OSRS, but the 667 ground/models differ and a
             // 667 Skeleton 14603 stood on the chest tile; the OSRS ruins rectangle replaces ours. The chest itself is placed by the server.
+            // REVERTED (tx-20261105-065305, SquareJournalRestoreTool): the converted OSRS lava ground decoration (14456/14457/14460...)
+            // came out as flat yellow/black triangles; the rev-667 square uses the same loc ids as OSRS and stays. Do not re-apply.
             "larran-ruins" to Batch(listOf(13113), emptyList(), "Larran's small chest: OSRS Ruins", replaceSquares = setOf(13113),
                 patch = intArrayOf(3266, 3648, 3300, 3676), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(34831), dropHiddenOverlays = true),
             // N569: Larran's big chest (OSRS 34832 = multiloc 34829/34830 at 3018,3955 plane 1 rot 2) on the OSRS ship west of the Pirates'

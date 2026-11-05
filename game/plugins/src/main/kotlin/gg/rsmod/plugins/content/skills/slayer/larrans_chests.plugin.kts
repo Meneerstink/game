@@ -9,13 +9,19 @@ package gg.rsmod.plugins.content.skills.slayer
 if (LarransChests.ENABLED) spawn_obj(obj = LarransChests.SMALL, x = LarransChests.SMALL_TILE.x, z = LarransChests.SMALL_TILE.z, height = LarransChests.SMALL_TILE.height, type = 10, rot = 1)
 if (LarransChests.BIG_PLACED) spawn_obj(obj = LarransChests.BIG, x = LarransChests.BIG_TILE.x, z = LarransChests.BIG_TILE.z, height = LarransChests.BIG_TILE.height, type = 10, rot = 2)
 
-// The OSRS ship's ladders (OsrsRegionImportTool 'larran-ship'): Zaryx PirateShipLadders - Climb-up = the player's tile one plane up,
-// Climb-down one plane down (272/273 deck, 245/246 quarterdeck).
-listOf(LarransChests.SHIP_LADDER_UP, LarransChests.SHIP_LADDER_UP_2).forEach { id ->
-    on_obj_option(obj = id, option = "climb-up") { player.handleLadder(height = player.tile.height + 1) }
+// The OSRS ship's ladders (OsrsRegionImportTool 'larran-ship'). Deck 272/273 (3018,3957, both rot 2 = used from the north): Zaryx
+// PirateShipLadders - the player's tile one plane up / down. Quarterdeck 245 (rot 0, used from the south, plane 1) / 246 (rot 2, used
+// from the north, plane 2) at 3017/3019,3959: the player's tile one plane up would stand beside the raised deck (z 3960-3964, OSRS
+// walls 249) with no way back, so each lands on the tile in front of the ladder it arrives at.
+on_obj_option(obj = LarransChests.SHIP_LADDER_UP, option = "climb-up") { player.handleLadder(height = player.tile.height + 1) }
+on_obj_option(obj = LarransChests.SHIP_LADDER_DOWN, option = "climb-down") { player.handleLadder(height = player.tile.height - 1) }
+on_obj_option(obj = LarransChests.SHIP_LADDER_UP_2, option = "climb-up") {
+    val ladder = player.getInteractingGameObj().tile
+    player.handleLadder(x = ladder.x, z = ladder.z + 1, height = ladder.height + 1)
 }
-listOf(LarransChests.SHIP_LADDER_DOWN, LarransChests.SHIP_LADDER_DOWN_2).forEach { id ->
-    on_obj_option(obj = id, option = "climb-down") { player.handleLadder(height = player.tile.height - 1) }
+on_obj_option(obj = LarransChests.SHIP_LADDER_DOWN_2, option = "climb-down") {
+    val ladder = player.getInteractingGameObj().tile
+    player.handleLadder(x = ladder.x, z = ladder.z - 1, height = ladder.height - 1)
 }
 
 fun unlock(player: Player, big: Boolean) {

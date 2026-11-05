@@ -22,8 +22,9 @@ import kotlin.math.floor
  */
 object LarransChests {
     /**
-     * ON since both chests stand on OSRS ground (N569, owner 2026-11-05 'OSRS-grond importeren'): OsrsRegionImportTool 'larran-ruins'
-     * (tx-20261105-062946) and 'larran-ship' (tx-20261105-063026).
+     * ON (N569, owner 2026-11-05 'OSRS-grond importeren'): the big chest stands on the OSRS ship ('larran-ship', tx-20261105-063026);
+     * the rev-667 Ruins match the OSRS Ruins loc for loc (the OSRS import was reverted, tx-20261105-065305), the small chest replaces
+     * the 667 Skeleton on its tile with the OSRS rotation.
      */
     const val ENABLED = true
 

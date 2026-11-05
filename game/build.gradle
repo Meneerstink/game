@@ -1026,3 +1026,10 @@ task runDeadmanChestImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.DeadmanChestImportTool'
     workingDir = rootProject.projectDir
 }
+
+task runSquareJournalRestoreTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Puts one map square (tiles + locs) back to the bytes an earlier transaction journalled. Usage: --args="<tx id> <square> plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SquareJournalRestoreTool'
+}
