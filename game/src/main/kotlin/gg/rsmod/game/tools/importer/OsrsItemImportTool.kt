@@ -980,6 +980,14 @@ object OsrsItemImportTool {
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
             // N522 nachtrun deel 3: Larran's key (OSRS Wiki infobox id 23490, stackable, not noteable) - Krystilia's Wilderness Slayer key.
             "larran" to listOf(Spec(23490)),
+            // N570: Krystilia's other 'unusual loot' - Slayer's enchantment 21257 (stackable, tradeable) and Slayer's staff (e) 21255
+            // (untradeable; OSRS Wiki: 75 Magic + 55 Slayer, the Slayer's staff 4170 client params with 752 = 75, weapon type and attack
+            // sound of 4170 in items.yml).
+            "slayers-enchantment" to listOf(
+                Spec(21257),
+                Spec(21255, rev667Params = mapOf(644 to 28, 686 to 1, 749 to 18, 750 to 55, 751 to 6, 752 to 75), weaponType = 1, attackAudio = 2555,
+                    rev667StringParams = mapOf(528 to "Check")),
+            ),
             "deadstaves" to
                 listOf(
                     Spec(11791, noted = true, rev667Params = deadStaffParams()), // Staff of the dead
