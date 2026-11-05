@@ -129,23 +129,10 @@ object DeathDialogue {
         )
     }
 
-    /** N202: Death holds nothing yet - everything the player lost is still in his standing gravestone. */
-    fun itemsOnlyInGravestone(player: Player): Boolean =
-        player.deathRecovery.isEmpty && gg.rsmod.plugins.content.mechanics.death.Gravestone.exists(player) && !player.gravestone.isEmpty
-
-    /** The line Death says on "Collect" while the items are in the gravestone ([timeLeft] = m:ss until it collapses). */
-    fun gravestoneHint(timeLeft: String): String =
-        "Your items are not with me - they are in your ${red}gravestone$END near where you died. Right-click it and choose " +
-            "${red}Loot$END to take them back, free of charge. It collapses in ${red}$timeLeft$END; then they come to me."
-
-    suspend fun QueueTask.itemsInGravestone(timeLeft: String) {
-        itemMessageBox(gravestoneHint(timeLeft), GRAVE_PICTURE)
-    }
-
     /** Owner V6a: early collection while a grave stands is optional and costs 15% of existing office valuation. */
     suspend fun QueueTask.collectAtDeath() {
         val collection = gg.rsmod.plugins.content.mechanics.death.EarlyDeathCollection
-        val quote = collection.quote(player, gg.rsmod.plugins.content.mechanics.death.DeathRules.rankValue(player.world))
+        val quote = collection.quote(player, gg.rsmod.plugins.content.mechanics.death.GuidePriceValueProvider(player.world))
         if (quote != null) {
             val fee = String.format(java.util.Locale.US, "%,d", quote.fee)
             if (options("Yes.", "No.", title = "Retrieve your gravestone items for $fee coins (15%)?") != 1) return

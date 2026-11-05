@@ -50,6 +50,19 @@ import kotlin.test.assertTrue
  * requires a loaded [ItemDef] to decide whether an item stacks.
  */
 class DeathExecutorTests {
+    @Test fun `a Wilderness PvP death destroys consumables instead of spawning them or storing them in recovery`() {
+        val victim = newPlayer()
+        every { victim.tile } returns Tile(3424, 10212, 2)
+        val ids = listOf(gg.rsmod.plugins.api.cfg.Items.SHARK, gg.rsmod.plugins.api.cfg.Items.SUPER_RESTORE_4,
+            gg.rsmod.plugins.api.cfg.Items.PHOENIX_NECKLACE)
+        ids.forEachIndexed { slot, id -> victim.inventory[slot] = Item(id) }
+        val result = DeathResolver.resolve(victim, null, true, ItemRiskValueProvider { 1_000_000L }, contextOverride = DeathContext.WILDERNESS_PVP)
+        assertTrue(DeathExecutor.execute(victim.world, result))
+        assertTrue(victim.inventory.isEmpty)
+        assertTrue(victim.gravestone.isEmpty)
+        assertTrue(victim.deathRecovery.isEmpty)
+        assertTrue(spawnedItems.isEmpty(), "destroyed consumables never become ground loot")
+    }
     @Test
     fun `PvP death spawns lost items as killer-owned ground loot exactly once`() {
         val victim = newPlayer()
