@@ -167,6 +167,10 @@ object OsrsRegionImportTool {
             "escape-rim-n" to Batch(listOf(13116), emptyList(), "Escape Caves lava rim north (13116)", replaceSquares = setOf(13116),
                 patch = intArrayOf(3264, 3840, 3327, 3855), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(47140), dropHiddenOverlays = true),
             "wildy-lairs" to Batch(listOf(13473, 13215, 7092, 7604), listOf(47140, 46995, 47141), "Wilderness boss lairs (Callisto's Den, Vet'ion's Rest, Hunter's End, Skeletal Tomb)"),
+            // N568 (A9 2026-11-05): the lairs' OSRS "hidden" overlays (rgb ff00ff, no texture - OSRS does not draw them) came in as pale
+            // floors outside the cave walls; the same tiles again without them (tiles only, the locs and the fog record stay).
+            "wildy-lairs-nohidden" to Batch(listOf(13473, 13215, 7092, 7604), emptyList(), "Wilderness boss lairs tiles without hidden overlays",
+                replaceSquares = setOf(13473, 13215, 7092, 7604), tilesOnly = true, dropHiddenOverlays = true),
         )
 
     class Plan(
@@ -306,6 +310,10 @@ object OsrsRegionImportTool {
                     val ownTiles = if (batch.patch != null) Rev667TileCodec.decode(maps.archive(mapName(square))!!.file(0)!!.data!!) else null
                     val ownLocs = if (batch.patch != null) Rev667LocCodec.decode(maps.archive(locName(square), localKeys[square])!!.file(0)!!.data!!) else null
                     val tiles = ownTiles ?: Rev667TileMap()
+                    // N568: a re-import of a replaced square keeps its rev-667 environment records (MapEnvironmentTool's fog record).
+                    if (ownTiles == null && square in batch.replaceSquares) {
+                        maps.archive(mapName(square))?.file(0)?.data?.let { tiles.trailing = Rev667TileCodec.decode(it).trailing }
+                    }
                     if (batch.patch != null) {
                         ownLocs!!.filter { batch.inPatch(square, it.localX, it.localZ) }.forEach {
                             println("PATCH_DROPS_OWN_LOC ${it.id} at ${(square ushr 8) * 64 + it.localX},${(square and 0xFF) * 64 + it.localZ},${it.plane} type=${it.type} rot=${it.rotation}")
