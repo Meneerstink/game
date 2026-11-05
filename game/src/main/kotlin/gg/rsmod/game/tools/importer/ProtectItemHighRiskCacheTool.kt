@@ -13,6 +13,8 @@ import java.io.File
  * effect line (param 734) says it does not work. The server refuses every activation (ProtectItemDisabled).
  *
  * One [CacheTransaction] over both production caches; running it again is a no-op.
+ * N543 (2026-11-05): the icon is now the book's own Protect Item icon with the OSRS red ring ([ProtectItemDeadmanIconCacheTool]);
+ * this tool keeps the "does not work" line and never puts the skull back over the ring icons.
  * Usage: `java -cp <game lib> gg.rsmod.game.tools.importer.ProtectItemHighRiskCacheTool plan|apply`
  */
 object ProtectItemHighRiskCacheTool {
@@ -98,6 +100,9 @@ object ProtectItemHighRiskCacheTool {
         check(encode(params).contentEquals(current)) { "struct does not round-trip" }
         val tooltip = params[PARAM_TOOLTIP] as String
         if (params[PARAM_COLOUR] == SPRITE && params[PARAM_GREY] == SPRITE && tooltip.endsWith(DISABLED_LINE)) return null
+        // N543: ProtectItemDeadmanIconCacheTool replaced the skull with the OSRS ring - never put the skull back.
+        val ringIcons = (0 until ProtectItemDeadmanIconCacheTool.CELLS.size).flatMap { listOf(ProtectItemDeadmanIconCacheTool.spriteFor(it, false), ProtectItemDeadmanIconCacheTool.spriteFor(it, true)) }
+        if (params[PARAM_COLOUR] in ringIcons && tooltip.endsWith(DISABLED_LINE)) return null
         check(tooltip.endsWith(oldLine) || tooltip.endsWith(DISABLED_LINE)) { "tooltip '$tooltip' does not end with '$oldLine'" }
         params[PARAM_COLOUR] = SPRITE
         params[PARAM_GREY] = SPRITE
