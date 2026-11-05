@@ -11,9 +11,8 @@ import kotlin.math.floor
 /**
  * N522 nachtrun deel 3 (Krystilia, rapport 2): Larran's key and Larran's small / big chest.
  *
- * - Larran's key (OSRS 23490, imported as [KEY]): dropped by monsters killed on a Krystilia task. OSRS Wiki "Larran's key" (2026-11-05):
- *   1 in floor(0.3 x (80 - L)^2) + 100 for combat level L 1-80, 1 in floor(-5/27 x L) + 115 for 81-350, 1 in 50 above 350; Slayer monsters
- *   (a Slayer level requirement) +20 %. (The +15 % of the OSRS Wilderness Slayer Cave and superior monsters do not exist here.)
+ * - Larran's key (OSRS 23490, imported as [KEY]): dropped by monsters killed on a Krystilia task, rate [keyDenominator] (Wiki template).
+ *   (The +15 % of the OSRS Wilderness Slayer Cave and superior monsters do not exist here.)
  * - Larran's small chest (OSRS 33343, north-east of the Chaos Temple, 3281,3659) and big chest (OSRS 34829, the ship west of the Pirates'
  *   Hideout, 3018,3955 plane 1): Unlock with a key. Loot: OSRS Wiki "Larran's small chest" / "Larran's big chest" (2026-11-05), main table
  *   out of 60; the big chest pre-rolls each Dagon'hai piece 1/256; 3/60 (1/20) the fish table, whose fish follow the player's Fishing level
@@ -44,16 +43,22 @@ object LarransChests {
     val BIG_TILE = Tile(3018, 3955, 1)
     const val BIG_PLACED = false
 
-    /** The chance of a key for one task kill of an npc of combat level [level] (Wiki formula, x1.2 for Slayer monsters). */
-    fun keyChance(level: Int, slayerMonster: Boolean): Double {
-        val l = level.coerceAtLeast(1)
-        val denominator = when {
-            l <= 80 -> floor(0.3 * (80 - l) * (80 - l)) + 100
-            l <= 350 -> floor(-5.0 / 27.0 * l) + 115
-            else -> 50.0
+    /**
+     * The chance of a key for one task kill of an npc of combat level [level]: OSRS Wiki Template:WildernessSlayerDropTable (the table the
+     * monster pages transclude; it differs from the prose of "Larran's key" in the 81-350 band): 100 + floor(0.3 x (80 - c)^2) below 81,
+     * floor(99 - (c - 81) x 49 / 269) up to 350, 50 above; a Slayer monster (Slayer level requirement) has 1 / floor(N / 1.2).
+     */
+    fun keyDenominator(level: Int, slayerMonster: Boolean): Int {
+        val c = level.coerceAtLeast(1)
+        val n = when {
+            c < 81 -> 100 + floor(0.3 * (80 - c) * (80 - c)).toInt()
+            c < 351 -> floor(99 - (c - 81) * (49.0 / (350 - 81))).toInt()
+            else -> 50
         }
-        return (1.0 / denominator) * if (slayerMonster) 1.2 else 1.0
+        return if (slayerMonster) floor(n / 1.2).toInt() else n
     }
+
+    fun keyChance(level: Int, slayerMonster: Boolean): Double = 1.0 / keyDenominator(level, slayerMonster)
 
     /** Called once per task kill (SlayerExt.handleDecrease, before the count goes down - so the task's last kill counts too). */
     fun rollKey(player: Player, npc: Npc) {

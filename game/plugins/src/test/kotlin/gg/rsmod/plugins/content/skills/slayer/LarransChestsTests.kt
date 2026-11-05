@@ -6,14 +6,15 @@ import kotlin.test.assertNull
 
 /** N522 nachtrun deel 3: OSRS Wiki "Larran's key" / "Larran's small chest" / "Larran's big chest", Module:Slayer chest fish chart. */
 class LarransChestsTests {
-    @Test fun `key chance follows the three Wiki combat-level bands and Slayer monsters get 20 percent more`() {
-        assertEquals(1.0 / 1972, LarransChests.keyChance(1, false), 1e-12) // floor(0.3 x 79^2) + 100
-        assertEquals(1.0 / 100, LarransChests.keyChance(80, false), 1e-12)
-        assertEquals(1.0 / 100, LarransChests.keyChance(81, false), 1e-12) // floor(-15.0) + 115
-        assertEquals(1.0 / 50, LarransChests.keyChance(350, false), 1e-12) // floor(-64.8) + 115
-        assertEquals(1.0 / 58, LarransChests.keyChance(305, false), 1e-12) // Chaos Elemental: floor(-56.5) + 115
-        assertEquals(1.0 / 50, LarransChests.keyChance(1000, false), 1e-12)
-        assertEquals(1.2 / 100, LarransChests.keyChance(80, true), 1e-12)
+    @Test fun `key rate follows Template WildernessSlayerDropTable`() {
+        assertEquals(1972, LarransChests.keyDenominator(1, false)) // 100 + floor(0.3 x 79^2)
+        assertEquals(100, LarransChests.keyDenominator(80, false))
+        assertEquals(99, LarransChests.keyDenominator(81, false)) // floor(99 - 0)
+        assertEquals(58, LarransChests.keyDenominator(305, false)) // Chaos Elemental: floor(99 - 224 x 49 / 269) = floor(58.2)
+        assertEquals(50, LarransChests.keyDenominator(350, false))
+        assertEquals(50, LarransChests.keyDenominator(1000, false))
+        assertEquals(83, LarransChests.keyDenominator(80, true)) // floor(100 / 1.2)
+        assertEquals(1.0 / 58, LarransChests.keyChance(305, false), 1e-12)
     }
 
     @Test fun `both main tables are out of 60 with the fish table at 3 of 60`() {
