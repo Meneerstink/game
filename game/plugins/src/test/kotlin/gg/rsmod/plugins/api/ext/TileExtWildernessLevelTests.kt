@@ -64,6 +64,13 @@ class TileExtWildernessLevelTests {
     }
 
     @Test
+    fun `the Edgeville Dungeon past the Wilderness gate is Wilderness like OSRS - black demons, earth warriors, chaos druids`() {
+        assertEquals(5, Tile(3088, 9958, 0).getWildernessLevel()) // the 3 black demons
+        assertEquals(9, Tile(3120, 9990, 0).getWildernessLevel()) // earth warriors
+        assertEquals(0, Tile(3132, 9916, 0).getWildernessLevel()) // south of the gate
+    }
+
+    @Test
     fun `a tile outside every listed wilderness region is never in the Wilderness`() {
         val tile = Tile(3200, 3300, 0)
         assertEquals(false, wildernessRegionIds.contains(tile.regionId), "sanity check: must not be a listed region")

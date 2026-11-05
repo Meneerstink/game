@@ -39,6 +39,9 @@ val wildernessRegionIds =
         12092,
         12093,
         12190,
+        // N573: Edgeville Dungeon north of the Wilderness gate (y 9920+) - OSRS Wiki Black demon: 'Edgeville Dungeon (Wilderness)'.
+        12443,
+        12444,
         12343,
         12344,
         12345,
