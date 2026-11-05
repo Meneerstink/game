@@ -219,14 +219,16 @@ object UntradeableDeathScenario {
         if (!died) return
         val held = (b.inventory.toList() + b.equipment.toList()).filterNotNull()
         val grave = b.gravestone.toList().filterNotNull().map { it.id }
-        listOf(Items.VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP, Items.FIGHTER_TORSO, Items.FIRE_CAPE, Items.FIRE_CAPE_LOCKED_22324, Items.RUNE_DEFENDER,
-            Items.DRAGON_DEFENDER, Items.INFERNAL_CAPE, Items.RUNE_POUCH, Items.MAX_CAPE, Items.VOID_KNIGHT_TOP_L, Items.DRAGON_DEFENDER_L,
-            Items.VOID_KNIGHT_DEFLECTOR_19712, Items.VOID_KNIGHT_DEFLECTOR_L).forEach {
-            run.expectTrue(e, "monster: ${name(run, it)} is kept whole", held.any { h -> h.id == it && !UntradeableDeathProtection.isDamaged(h) }, "held=${held.map { h -> h.id }}")
+        // N593 (owner 2026-11-05 15:5x, replaces the 10-04 rule 'a lockable is always kept on a monster death'): like OSRS only an
+        // actually LOCKED (l) item is an extra keep; an unlocked lockable is one of the 3 most valuable or waits in the gravestone.
+        listOf(Items.FIRE_CAPE_LOCKED_22324, Items.VOID_KNIGHT_TOP_L, Items.DRAGON_DEFENDER_L, Items.VOID_KNIGHT_DEFLECTOR_L).forEach {
+            run.expectTrue(e, "monster: locked ${name(run, it)} is kept whole", held.any { h -> h.id == it && !UntradeableDeathProtection.isDamaged(h) }, "held=${held.map { h -> h.id }}")
         }
         // N503 D2 (owner 2026-11-01): an unskulled monster death keeps the 3 most valuable items - so these may be kept instead of
         // waiting in the gravestone, but each is in one of the two places and at most 3 of them are kept.
-        val graveOrKept = listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE, Items.GLOVES_7462)
+        val graveOrKept = listOf(Items.COLOSSAL_BLADE, Items.HOLY_BOOK, Items.SARADOMIN_CAPE, Items.GLOVES_7462,
+            Items.VOID_KNIGHT_TOP, Items.ELITE_VOID_KNIGHT_TOP, Items.FIGHTER_TORSO, Items.FIRE_CAPE, Items.RUNE_DEFENDER, Items.DRAGON_DEFENDER,
+            Items.INFERNAL_CAPE, Items.RUNE_POUCH, Items.MAX_CAPE, Items.VOID_KNIGHT_DEFLECTOR_19712)
         graveOrKept.forEach {
             run.expectTrue(e, "monster: ${name(run, it)} waits in the gravestone or is one of the 3 kept", it in grave || held.any { h -> h.id == it }, "gravestone=$grave held=${held.map { h -> h.id }}")
         }
