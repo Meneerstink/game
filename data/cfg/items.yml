@@ -290943,3 +290943,9 @@
   tradeable: true
   weight: 0.0
   equipment: null
+- id: 24638
+  name: "Larran's key"
+  examine: "Opens Larran's chests in the Wilderness."
+  tradeable: true
+  weight: 0.0
+  equipment: null

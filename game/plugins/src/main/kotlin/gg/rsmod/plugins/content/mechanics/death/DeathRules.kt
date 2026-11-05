@@ -43,7 +43,9 @@ object DeathRules {
 
     fun deepWilderness(tile: Tile): Boolean = deepWilderness(tile.getWildernessLevel())
 
-    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId) || toGrave(itemId)
+    // N522 nachtrun deel 3: Larran's key "always dropped on player death" (OSRS Wiki) - to the killer in PvP, the grave in PvM.
+    fun alwaysLost(itemId: Int): Boolean = LootKeys.isKey(itemId) || isEmblem(itemId) || toGrave(itemId) ||
+        itemId == gg.rsmod.plugins.content.skills.slayer.LarransChests.KEY
 
     /**
      * N503 D13/D14 (owner 2026-11-01, replaces N352 "a pet is always kept" and N423 "a trinket is always kept"): pets, burden

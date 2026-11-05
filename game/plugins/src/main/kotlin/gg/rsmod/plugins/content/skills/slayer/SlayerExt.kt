@@ -40,6 +40,8 @@ fun Player.getSlayerAssignment(): SlayerAssignment? {
 fun Player.handleDecrease(npc: Npc) {
     if ((attr[SLAYER_AMOUNT] ?: 0) <= 0) return
     if (attr[Krystilia.TASK] == true && !Krystilia.matches(this, npc)) return
+    // N522 nachtrun deel 3: Larran's key on a Krystilia task kill, before the count goes down (the last kill of the task counts too).
+    if (attr[Krystilia.TASK] == true) LarransChests.rollKey(this, npc)
     if (attr.has(SLAYER_AMOUNT)) {
         addXp(Skills.SLAYER, npc.combatDef.slayerXp)
         val amount = attr.getOrDefault(SLAYER_AMOUNT, 0)

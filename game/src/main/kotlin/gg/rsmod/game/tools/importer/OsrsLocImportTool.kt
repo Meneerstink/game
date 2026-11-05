@@ -32,6 +32,9 @@ object OsrsLocImportTool {
             // N522 nachtrun deel 2: Artio's / Callisto's bear trap - RuneLite gameval ObjectID CALLISTO_TRAP_LOC 47146 (Near Reality
             // Callisto.addTrapsAtCoords spawns it; its idle 10000 / snap 9999 animations are skeletal and dropped).
             "artio" to listOf(47146),
+            // N522 nachtrun deel 3: Larran's small chest 33343 (closed) / 34828 (open) and Larran's big chest 34829 / 34830 (OSRS Wiki
+            // infobox ids; Unlock / Check on the closed ones).
+            "larran" to listOf(33343, 34828, 34829, 34830),
         )
 
     /**
