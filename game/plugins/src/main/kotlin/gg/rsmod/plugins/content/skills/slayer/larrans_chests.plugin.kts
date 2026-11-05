@@ -6,7 +6,7 @@ package gg.rsmod.plugins.content.skills.slayer
  */
 
 spawn_obj(obj = LarransChests.SMALL, x = LarransChests.SMALL_TILE.x, z = LarransChests.SMALL_TILE.z, height = LarransChests.SMALL_TILE.height, type = 10, rot = 0)
-spawn_obj(obj = LarransChests.BIG, x = LarransChests.BIG_TILE.x, z = LarransChests.BIG_TILE.z, height = LarransChests.BIG_TILE.height, type = 10, rot = 0)
+if (LarransChests.BIG_PLACED) spawn_obj(obj = LarransChests.BIG, x = LarransChests.BIG_TILE.x, z = LarransChests.BIG_TILE.z, height = LarransChests.BIG_TILE.height, type = 10, rot = 0)
 
 fun unlock(player: Player, big: Boolean) {
     if (!player.inventory.contains(LarransChests.KEY)) {

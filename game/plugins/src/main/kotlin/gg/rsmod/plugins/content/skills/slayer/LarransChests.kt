@@ -30,11 +30,12 @@ object LarransChests {
 
     val SMALL_TILE = Tile(3281, 3659, 0)
     /**
-     * OSRS Wiki LocLine 3018,3955 plane 1 is, on the rev-667 ship west of the Pirates' Hideout, a tile of the blocked rail / boom line
-     * (clip: out=NESW in=NESW, nobody can stand next to it - "I can't reach that!", testclient 2026-11-05). The chest stands on the
-     * nearest open deck tile instead, reached from 3017,3954.
+     * OSRS Wiki LocLine 3018,3955 plane 1, on the ship west of the Pirates' Hideout. The rev-667 ship there is scenery: every deck tile
+     * on plane 1 is blocked (clip out=NESW in=NESW) and the open plane-1 tiles float beside the hull (testclient 2026-11-05), so nobody can
+     * reach a chest on it. The big chest is therefore NOT placed until the OSRS ship (walkable deck) is imported - BUGLIJST N569.
      */
-    val BIG_TILE = Tile(3017, 3953, 1)
+    val BIG_TILE = Tile(3018, 3955, 1)
+    const val BIG_PLACED = false
 
     /** The chance of a key for one task kill of an npc of combat level [level] (Wiki formula, x1.2 for Slayer monsters). */
     fun keyChance(level: Int, slayerMonster: Boolean): Double {
