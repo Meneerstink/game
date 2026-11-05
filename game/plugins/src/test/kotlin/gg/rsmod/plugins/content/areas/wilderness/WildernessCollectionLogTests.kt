@@ -23,4 +23,15 @@ class WildernessCollectionLogTests {
             assertEquals(listOf(Items.RUNE_KITESHIELD), CollectionLog.record(f.player, "elite", listOf(Items.RUNE_KITESHIELD to 1)))
         } finally { CollectionLogPages.reset() }
     }
+
+    @Test fun `the chest guardian still logs its emblem on the Breaches page without being a breach kill-count source`() {
+        val f = WildernessBossTestSupport.Fixture()
+        val breach = CollectionLogPages.Page("breach", CollectionLogPages.Category.DEADMAN, "Breaches", listOf("npc:1"), listOf(Items.ODIUM_SHARD_1))
+        CollectionLogPages.install(listOf(breach))
+        try {
+            assertEquals(listOf(Items.ODIUM_SHARD_1), CollectionLog.record(f.player, "guardian", listOf(Items.ODIUM_SHARD_1 to 1)))
+            assertFalse("guardian" in breach.sources)
+            assertEquals(emptyList(), CollectionLog.record(f.player, "npc:999", listOf(Items.ODIUM_SHARD_1 to 1)))
+        } finally { CollectionLogPages.reset() }
+    }
 }

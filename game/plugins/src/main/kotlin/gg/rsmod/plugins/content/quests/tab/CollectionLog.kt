@@ -70,13 +70,20 @@ object CollectionLog {
      * [items] (id to amount) came to [player] from [sourceKey] (a Drop Viewer entry key, null when the route has none). Only log
      * items count; returns the ids that were new.
      */
+    /**
+     * Sources whose log items live on another page without being one of its kill-count sources (KillCounts.ofPage sums the page's
+     * sources): the Deadman's Chest guardian (DeadmanChestWorld, source "guardian") logs its Archaic emblem on the Breaches page.
+     */
+    private val LOG_ONLY_PAGE = mapOf("guardian" to "breach")
+
     fun record(player: Player, sourceKey: String?, items: List<Pair<Int, Int>>): List<Int> {
         if (items.isEmpty()) return emptyList()
         val logItems = runCatching {
             if (sourceKey == null || sourceKey == "store") CollectionLogPages.allItems(player)
             else {
                 // An item on the clue/chest page is not automatically a log item when a boss drops it.
-                val pages = CollectionLogPages.pagesFor(player, sourceKey) + listOfNotNull(CollectionLogPages.byKey(player, sourceKey))
+                val pages = CollectionLogPages.pagesFor(player, sourceKey) + listOfNotNull(CollectionLogPages.byKey(player, sourceKey)) +
+                    listOfNotNull(LOG_ONLY_PAGE[sourceKey]?.let { CollectionLogPages.byKey(player, it) })
                 val shared = CollectionLogPages.all(player).filter { it.key == "pets" || it.key == "burden_trinkets" }
                 (pages + shared).flatMap { it.items }.toSet()
             }
