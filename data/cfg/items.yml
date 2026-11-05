@@ -276793,7 +276793,7 @@
     appearance_id: 6502
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -276895,7 +276895,7 @@
     appearance_id: 6505
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -276997,7 +276997,7 @@
     appearance_id: 6508
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277099,7 +277099,7 @@
     appearance_id: 6511
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277201,7 +277201,7 @@
     appearance_id: 6514
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277303,7 +277303,7 @@
     appearance_id: 6517
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277411,7 +277411,7 @@
     appearance_id: 6520
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277531,7 +277531,7 @@
     appearance_id: 6523
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
@@ -277651,7 +277651,7 @@
     appearance_id: 6526
     remove_head: false
     remove_beard: false
-    remove_arms: true
+    remove_arms: false
     weapon_type: -1
     attack_speed: 4
     attack_stab: 0
