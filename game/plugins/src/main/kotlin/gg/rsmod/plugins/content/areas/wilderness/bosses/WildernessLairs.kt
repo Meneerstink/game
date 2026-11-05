@@ -269,6 +269,12 @@ object WildernessLairs {
         if (ticks % 5 == 0) {
             val drainBy = maxOf(1, ticks / 20)
             player.alterPrayerPoints(-drainBy)
+            // OSRS Wiki Escape Caves: "slowly losing prayer points and run energy" (no rate given) - owner 11-05: run energy at the prayer rate.
+            if (player.runEnergy > 0.0) {
+                player.runEnergy = (player.runEnergy - drainBy).coerceAtLeast(0.0)
+                if (player.runEnergy <= 0.0) player.varps.setState(gg.rsmod.plugins.api.cfg.Varps.RUN_STATE, 0)
+                player.sendRunEnergy(player.runEnergy.toInt())
+            }
         }
     }
 

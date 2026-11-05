@@ -41,6 +41,22 @@ class WildernessLairsTests {
     }
 
     @Test
+    fun `the Escape Caves drain run energy at the prayer rate - 1 point per 5 ticks, more the longer you stay, never below 0`() {
+        val p = player(0, 0, at = Tile(3350, 10260))
+        var run = 50.0
+        every { p.runEnergy } answers { run }
+        every { p.runEnergy = any() } answers { run = firstArg() }
+        p.attr[WildernessLairs.ESCAPE_DRAIN_TICKS] = 0
+        repeat(5) { WildernessLairs.tick(p) }
+        assertEquals(49.0, run) // tick 5: max(1, 5 / 20) = 1
+        repeat(35) { WildernessLairs.tick(p) }
+        assertEquals(41.0, run) // ticks 10..35 take 1 each (6), ticks 40 takes 2
+        run = 1.0
+        repeat(5) { WildernessLairs.tick(p) }
+        assertEquals(0.0, run)
+    }
+
+    @Test
     fun `the 50,000 fee comes from the inventory then the bank, and each top-damage boss kill takes 10,000 off the next fee`() {
         val p = player(inventory = 20_000, bank = 100_000)
         assertEquals(50_000, WildernessLairs.fee(p))
