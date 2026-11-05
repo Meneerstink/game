@@ -287,6 +287,15 @@ object WildernessLairs {
      * A lair exit: one of the three Escape Caves points; within 10 seconds (17 ticks) of the previous player leaving the same lair, the
      * same point (OSRS Wiki "Silk Chasm": "any player who exits within 10 seconds of the previous player will arrive at the same point").
      */
+    /** Logging out in a big lair (Callisto's Den, Vet'ion's Rest, the Silk Chasm) = an exit into the Escape Caves; null anywhere else. */
+    fun logoutExit(tile: Tile, cycle: Int, roll: () -> Int): Tile? {
+        if (!ESCAPE_CAVES_OPEN) return null
+        val entrance = LAIRS.firstOrNull { it.surfaceExit == null && it.contains(tile) }?.entrance
+            ?: SILK_CHASM_ENTRANCE.takeIf { VenenatisCombat.VENENATIS_ARENA.inChasm(tile) }
+            ?: return null
+        return lairExitPoint(entrance, cycle, roll)
+    }
+
     fun lairExitPoint(lair: Int, cycle: Int, roll: () -> Int): Tile {
         val last = lastExit[lair]
         val point = if (last != null && cycle - last.first < 17) last.second else LAIR_EXIT_POINTS[roll()]

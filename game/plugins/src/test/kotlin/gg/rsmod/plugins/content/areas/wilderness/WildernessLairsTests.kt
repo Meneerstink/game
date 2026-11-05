@@ -137,4 +137,17 @@ class WildernessLairsTests {
         val exit = WildernessLairs.SILK_CHASM_SURFACE_EXIT
         assertTrue(kotlin.math.abs(exit.x - 3321) <= 2 && kotlin.math.abs(exit.z - 3794) <= 2, "beside the entrance")
     }
+
+    @Test fun `logging out in a big lair leaves at an Escape Caves lair exit, small lairs and the surface stay`() {
+        val den = WildernessLairs.LAIRS.single { it.name == "Callisto's Den" }
+        val rest = WildernessLairs.LAIRS.single { it.name == "Vet'ion's Rest" }
+        val hunters = WildernessLairs.LAIRS.single { it.name == "Hunter's End" }
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[1], WildernessLairs.logoutExit(den.arrival, 1000) { 1 })
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[2], WildernessLairs.logoutExit(rest.arrival, 2000) { 2 })
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[0], WildernessLairs.logoutExit(gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.VENENATIS_ARENA.spawn, 3000) { 0 })
+        kotlin.test.assertNull(WildernessLairs.logoutExit(hunters.arrival, 4000) { 0 }, "Hunter's End leaves to the surface")
+        kotlin.test.assertNull(WildernessLairs.logoutExit(Tile(3164, 3494), 5000) { 0 })
+        // Within 10 seconds of the previous player out of the same lair: the same point.
+        assertEquals(WildernessLairs.LAIR_EXIT_POINTS[1], WildernessLairs.logoutExit(den.arrival, 1010) { 2 })
+    }
 }

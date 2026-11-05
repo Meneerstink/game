@@ -52,12 +52,5 @@ listOf(WildernessLairs.DEN_EXIT, WildernessLairs.REST_EXIT).forEach { id ->
  * small ones (Hunter's End, Skeletal Tomb, Web Chasm) leave to the surface and the Wiki names no logout rule for them.
  */
 on_logout {
-    if (!WildernessLairs.ESCAPE_CAVES_OPEN) return@on_logout
-    val tile = player.tile
-    val entrance =
-        WildernessLairs.LAIRS.firstOrNull { it.surfaceExit == null && it.contains(tile) }?.entrance
-            ?: WildernessLairs.SILK_CHASM_ENTRANCE.takeIf { VenenatisCombat.VENENATIS_ARENA.inChasm(tile) }
-            ?: return@on_logout
-    val dest = WildernessLairs.lairExitPoint(entrance, world.currentCycle) { world.random(WildernessLairs.LAIR_EXIT_POINTS.size - 1) }
-    player.moveTo(dest)
+    WildernessLairs.logoutExit(player.tile, world.currentCycle) { world.random(WildernessLairs.LAIR_EXIT_POINTS.size - 1) }?.let { player.moveTo(it) }
 }
