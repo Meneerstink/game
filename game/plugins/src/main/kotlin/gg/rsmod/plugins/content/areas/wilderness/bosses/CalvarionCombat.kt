@@ -24,7 +24,9 @@ import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
  * hellhounds 12107 / 12108 (OsrsNpcImportTool calvarion-hounds), lightning FX_VETION_ATTACK_* (OsrsFxImportTool calvarion).
  *
  * Mechanics - OSRS Wiki "Calvar'ion" + "Calvar'ion/Strategies" (2026-11-05), tick details from Near Reality (zaryx-nr) Vetion.java:
- * - Only crush hurts him ("Immune to all combat styles except crush"); no damage at all while his hellhounds live.
+ * - Every style hurts him; his defences make crush the one to use (Wiki: "resistant to any combat style other than crush", dcrush -10;
+ *   N522 fix 6: the old crush-only rule had no source and turned every stab/slash/ranged/magic hit into 0). No damage at all while his
+ *   hellhounds live.
  * - Lightning (Near Reality lightningAttack): five tiles - one next to the target, four more within 5 - glow, and 2 ticks later strike a
  *   3x3: up to 20 on the tile itself, up to 10 next to it; protection prayers do not help. Blue (normal) / orange (enraged).
  * - Shield bash, "only used when in melee distance" (Near Reality: a player within 4, 1 in 2): shadows mark "two tiles thick on a side or
@@ -115,15 +117,14 @@ object CalvarionCombat : CombatScript() {
 
     fun houndsAlive(npc: Npc): Boolean = hounds(npc).any { it.isSpawned() && !it.isDead() }
 
-    /** Shared hit path (combat PawnExt): only crush hurts him, and nothing while his hellhounds live. */
+    /** Shared hit path (combat PawnExt): nothing while his hellhounds live (Wiki: "complete damage immunity while alive"). */
     fun modifyIncomingDamage(target: Npc, attacker: Pawn, hitType: HitType, damage: Int): Int {
         if (!isCalvarion(target.id) || damage <= 0) return damage
         if (houndsAlive(target)) {
             (attacker as? Player)?.message(MSG_IMMUNE)
             return 0
         }
-        val crush = hitType == HitType.MELEE && CombatConfigs.getCombatStyle(attacker) == StyleType.CRUSH
-        return if (crush) damage else 0
+        return damage
     }
 
     /** At impact: a hit already flying when the hounds came is stopped too. */

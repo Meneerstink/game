@@ -51,6 +51,8 @@ set_combat_def(npc = Npcs.CHAOS_FANATIC) {
         block = ChaosFanaticCombat.ANIM_DEFEND
         death = ChaosFanaticCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Chaos Fanatic" infobox: slayxp 253 (Krystilia boss task; 0 XP before).
+    slayer { experience = 253.0 }
 }
 
 // ------------------------------------------------------------------ Crazy archaeologist (OSRS Wiki infobox, id 6618)
@@ -90,6 +92,8 @@ set_combat_def(npc = Npcs.CRAZY_ARCHAEOLOGIST) {
         block = CrazyArchaeologistCombat.ANIM_DEFEND
         death = CrazyArchaeologistCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Crazy archaeologist" infobox: slayxp 275 (Krystilia boss task; 0 XP before).
+    slayer { experience = 275.0 }
 }
 
 on_npc_combat(*ChaosFanaticCombat.ids) {

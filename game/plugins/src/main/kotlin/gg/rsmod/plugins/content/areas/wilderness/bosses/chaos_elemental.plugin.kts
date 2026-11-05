@@ -47,6 +47,8 @@ set_combat_def(npc = Npcs.CHAOS_ELEMENTAL) {
         block = -1
         death = ChaosElementalCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Chaos Elemental" infobox: slayxp 268.75 (Krystilia boss task; 0 XP before).
+    slayer { experience = 268.75 }
 }
 
 on_npc_combat(*ChaosElementalCombat.ids) {

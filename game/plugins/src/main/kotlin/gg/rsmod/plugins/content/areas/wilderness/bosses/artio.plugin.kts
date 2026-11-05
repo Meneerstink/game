@@ -43,6 +43,8 @@ set_combat_def(npc = ArtioCombat.NPC) {
         attack = ArtioCombat.ANIM_MELEE
         death = ArtioCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Artio" infobox: slayxp 518 (Krystilia boss task; 0 XP before).
+    slayer { experience = 518.0 }
 }
 
 on_npc_combat(*ArtioCombat.ids) {

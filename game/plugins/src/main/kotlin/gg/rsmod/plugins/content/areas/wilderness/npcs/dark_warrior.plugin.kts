@@ -15,7 +15,6 @@ set_combat_def(npc = Npcs.DARK_WARRIOR_OSRS) {
         attackSpeed = 4
         attackStyle = StyleType.SLASH
         respawnDelay = 50
-        xpMultiplier = 1.1
     }
     aggro {
         radius = 8 // existing server search radius; exact OSRS radius is not in the report

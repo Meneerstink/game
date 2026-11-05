@@ -170,7 +170,13 @@ object VenenatisCombat {
     fun inDamagingWeb(centre: Tile, tile: Tile): Boolean = tile.height == centre.height &&
         kotlin.math.abs(tile.x - centre.x) <= 3 && kotlin.math.abs(tile.z - centre.z) <= 2
 
-    fun recoilImmune(id: Int): Boolean = id == NPC || id == SPINDEL || id == SPIDERLING || id == SPINDEL_SPIDERLING
+    /**
+     * OSRS Wiki "Category:Monsters immune to recoil" (2026-11-05), the wilderness bosses of this server: Venenatis, Spindel and their
+     * spiderlings, Artio, Calvar'ion and both his hellhounds (N522 fix 6). The pre-2023 Callisto / Vet'ion here were not (the list is the
+     * reworked bosses).
+     */
+    fun recoilImmune(id: Int): Boolean = id == NPC || id == SPINDEL || id == SPIDERLING || id == SPINDEL_SPIDERLING ||
+        id == ArtioCombat.NPC || CalvarionCombat.isCalvarion(id) || id == CalvarionCombat.HOUND || id == CalvarionCombat.GREATER_HOUND
 
     /** Melee reach of a large npc: a tile next to its footprint, not diagonal past a corner. */
     fun adjacent(npc: Npc, t: Tile): Boolean = gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(

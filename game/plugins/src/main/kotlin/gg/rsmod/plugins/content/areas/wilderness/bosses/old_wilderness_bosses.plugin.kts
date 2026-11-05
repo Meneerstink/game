@@ -44,6 +44,8 @@ set_combat_def(npc = OldWildernessBosses.CALLISTO) {
         block = OldWildernessBosses.CALLISTO_DEFEND
         death = OldWildernessBosses.CALLISTO_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Callisto" revision 14355607 (pre-2023 infobox): slayxp 312 (Krystilia boss task; 0 XP before).
+    slayer { experience = 312.0 }
 }
 
 spawn_npc(npc = OldWildernessBosses.CALLISTO, x = OldWildernessBosses.CALLISTO_SPAWN.x, z = OldWildernessBosses.CALLISTO_SPAWN.z, height = OldWildernessBosses.CALLISTO_SPAWN.height, walkRadius = 8)

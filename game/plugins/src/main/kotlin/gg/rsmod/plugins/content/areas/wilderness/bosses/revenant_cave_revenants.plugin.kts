@@ -10,6 +10,14 @@ import gg.rsmod.game.model.priv.Privilege
  * N522 bundle 3b: the OSRS revenants of the OSRS Revenant Caves ([RevenantCaveRevenants]) and their two items ([RevenantGear]).
  */
 
+/** OSRS Wiki "Revenant <kind>" infoboxes, slayxp (2026-11-05). */
+val REVENANT_SLAYER_XP = mapOf(
+    Npcs.REVENANT_IMP_OSRS to 10.0, Npcs.REVENANT_GOBLIN_OSRS to 14.0, Npcs.REVENANT_PYREFIEND_OSRS to 48.0,
+    Npcs.REVENANT_HOBGOBLIN_OSRS to 73.0, Npcs.REVENANT_CYCLOPS_OSRS to 119.0, Npcs.REVENANT_HELLHOUND_OSRS to 86.0,
+    Npcs.REVENANT_DEMON_OSRS to 86.0, Npcs.REVENANT_ORK_OSRS to 115.0, Npcs.REVENANT_DARK_BEAST_OSRS to 157.0,
+    Npcs.REVENANT_KNIGHT_OSRS to 168.0, Npcs.REVENANT_DRAGON_OSRS to 186.0,
+)
+
 RevenantCaveRevenants.REVS.forEach { rev ->
     set_combat_def(npc = rev.id) {
         configs {
@@ -47,6 +55,8 @@ RevenantCaveRevenants.REVS.forEach { rev ->
             block = rev.defend
             death = rev.death
         }
+        // N522 fix 3: Slayer xp per revenant (OSRS Wiki infobox slayxp, fetched 2026-11-05; 0 XP before).
+        slayer { experience = REVENANT_SLAYER_XP.getValue(rev.id) }
     }
 
     rev.spawns.forEach { t -> spawn_npc(npc = rev.id, x = t.x, z = t.z, walkRadius = 4, direction = Direction.SOUTH) }
@@ -187,6 +197,8 @@ set_combat_def(npc = RevenantMaledictus.NPC) {
         attack = RevenantMaledictus.ANIM_STANDARD
         death = RevenantMaledictus.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Revenant maledictus" infobox: slayxp 920 (Krystilia boss task; 0 XP before).
+    slayer { experience = 920.0 }
 }
 
 on_npc_combat(*RevenantMaledictus.Combat.ids) {

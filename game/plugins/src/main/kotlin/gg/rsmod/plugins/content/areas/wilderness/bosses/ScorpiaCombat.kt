@@ -32,7 +32,7 @@ import java.lang.ref.WeakReference
  *    killed guardians do not respawn, even if she heals back to full. They never attack.
  *  - offspring: ranged, max 2, attack speed 4, poisonous starting at 6, "incredibly accurate" (ranged attack bonus +900).
  * Ids and the rest (no Jagex documentation): Kronos-184 bosses/scorpia (team/dossiers/N522-SCORPIA-DONOR.txt): poison chance 1/6
- * (Scorpia) and 1/8 (offspring) per damaging hit, guardians spawn inside her 5x5 with spotanim 144 at height 20, heal projectile 109,
+ * (Scorpia) and 1/8 (offspring) per attack (Wiki "Poison": landed or not, through prayers), guardians spawn inside her 5x5 with spotanim 144 at height 20, heal projectile 109,
  * offspring projectile 663 (range 4). OsrsFxImportTool wildy-bosses-2 (tx-20261101-202238): 109 -> 3135, 144 -> 3199, 663 -> 3200;
  * OsrsNpcImportTool wildy-bosses-2 (tx-20261101-202308): AnimationID SCORPION_UPDATE_ATTACK_TAIL 6254 -> 16122, _DEFEND 6255 -> 16123,
  * _DEATH 6256 -> 16124, SMALL_SCORPION_UPDATE_DEFEND 6259 -> 16125, _DEATH 6260 -> 16126, _ATTACK 6261 -> 16127.
@@ -107,7 +107,9 @@ object ScorpiaCombat : CombatScript() {
         if (target is Player && target.isProtectedFrom(CombatClass.MELEE)) drainPrayer(target)
         val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
         npc.dealHit(target = target, maxHit = MAX_HIT.toDouble(), landHit = land, delay = 1, hitType = HitType.MELEE, onHit = { hit ->
-            if (dealtDamage(hit) && npc.world.random(POISON_ROLL - 1) == 0) target.poison(POISON)
+            // OSRS Wiki "Poison": "Monsters that can inflict poison may do so regardless of whether or not they inflict any damage, even if
+            // protection prayers are used" (N522 fix 9; it needed damage before). The 1/6 itself is Kronos (no Wiki number).
+            if (!target.isDead() && npc.world.random(POISON_ROLL - 1) == 0) target.poison(POISON)
         })
     }
 
@@ -253,7 +255,7 @@ object ScorpiaCombat : CombatScript() {
             )
             val land = RangedCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
             npc.dealHit(target = target, maxHit = OFFSPRING_MAX_HIT.toDouble(), landHit = land, delay = delay, hitType = HitType.RANGE, onHit = { hit ->
-                if (dealtDamage(hit) && npc.world.random(OFFSPRING_POISON_ROLL - 1) == 0) target.poison(OFFSPRING_POISON)
+                if (!target.isDead() && npc.world.random(OFFSPRING_POISON_ROLL - 1) == 0) target.poison(OFFSPRING_POISON) // as Scorpia (Wiki "Poison")
             })
         }
     }

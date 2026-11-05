@@ -127,7 +127,6 @@ set_combat_def(npc = KBD) {
     configs {
         attackSpeed = 4
         attackStyle = StyleType.STAB
-        xpMultiplier = 1.075
         respawnDelay = 16
     }
     species {

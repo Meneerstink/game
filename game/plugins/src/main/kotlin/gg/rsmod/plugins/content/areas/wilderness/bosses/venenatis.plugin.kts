@@ -107,6 +107,8 @@ set_combat_def(npc = VenenatisCombat.NPC) {
         attack = VenenatisCombat.ANIM_MELEE
         death = VenenatisCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Venenatis" infobox: slayxp 956.2 (Krystilia boss task; 0 XP before).
+    slayer { experience = 956.2 }
 }
 
 spawn_npc(npc = VenenatisCombat.NPC, x = VenenatisCombat.SPAWN.x, z = VenenatisCombat.SPAWN.z, height = VenenatisCombat.SPAWN.height, walkRadius = 0)
@@ -287,6 +289,8 @@ set_combat_def(npc = VenenatisCombat.SPINDEL) {
         attack = VenenatisCombat.ANIM_MELEE
         death = VenenatisCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Spindel" infobox: slayxp 541 (Krystilia boss task; 0 XP before).
+    slayer { experience = 541.0 }
 }
 
 spawn_npc(npc = VenenatisCombat.SPINDEL, x = VenenatisCombat.SPINDEL_ARENA.spawn.x, z = VenenatisCombat.SPINDEL_ARENA.spawn.z, height = VenenatisCombat.SPINDEL_ARENA.spawn.height, walkRadius = 0)

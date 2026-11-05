@@ -31,8 +31,8 @@ import gg.rsmod.plugins.content.skills.agility.exactMove
  * (up to 4 tiles back, 3 damage, a 2-tick stun, "Callisto's roar throws you backwards."), and 1 in 12 a small heal (4-10, graphic 157);
  * Vet'ion melee (85% next to him), the earthquake (20%, 10-tick cooldown, up to 45 to everyone within 12 tiles, "Vet'ion pummels the ground
  * sending a shattering earthquake shockwave through you.") or three lightning blasts (the target's tile + two within 2, up to 30 three
- * ticks later); below half hitpoints two hellhounds ("Kill, my pets!" / "Bahh! Go, dogs!!", "GRRRRRRRRRRRRRRRRRRR") during which he takes
- * no damage; killed, he rises as Vet'ion Reborn at once ("Now do it again!!") and only that kill counts.
+ * ticks later); below half hitpoints two hellhounds ("Kill, my pets!" / "Bahh! Go, Dogs!!"; the donor's hound "GRRRR..." has no OSRS source and is gone, N522 fix 4) during which he takes
+ * no damage; killed, he rises as Vet'ion Reborn at once ("Do it again!!", pre-rework Wiki 14352478 Quotes) and only that kill counts.
  */
 object OldWildernessBosses {
     const val CALLISTO = Npcs.CALLISTO_OLD
@@ -308,7 +308,6 @@ object OldWildernessBosses {
                     gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(dog, "spawn", target)
                     dog.facePawn(target)
                     dog.attack(target)
-                    if (i == 0) dog.forceChat("GRRRRRRRRRRRRRRRRRRR")
                 }
             }
         }

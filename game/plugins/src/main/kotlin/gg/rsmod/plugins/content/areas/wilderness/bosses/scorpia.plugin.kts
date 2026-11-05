@@ -46,6 +46,8 @@ set_combat_def(npc = Npcs.SCORPIA) {
         block = ScorpiaCombat.ANIM_DEFEND
         death = ScorpiaCombat.ANIM_DEATH
     }
+    // N522 fix 3: OSRS Wiki "Scorpia" infobox: slayxp 260 (Krystilia boss task; 0 XP before).
+    slayer { experience = 260.0 }
 }
 
 // ------------------------------------------------------------------ Scorpia's offspring (OSRS Wiki infobox, id 6616)

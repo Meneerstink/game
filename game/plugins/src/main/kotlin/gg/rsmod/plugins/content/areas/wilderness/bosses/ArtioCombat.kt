@@ -251,6 +251,9 @@ object ArtioCombat : CombatScript() {
         val life = WildernessBossLife.token(npc)
         val list = traps(npc)
         val tiles = synchronized(list) { trapTiles(npc, list.map { it.tile }.toSet()) }
+        gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+            "artio traps phase=${npc.attr[PHASE] ?: 1} laid=${tiles.size} at=${tiles.joinToString(" ") { "${it.x},${it.z}" }}"
+        }
         tiles.forEach { t ->
             val trap = DynamicObject(TRAP_LOC, 10, 0, t)
             world.spawn(trap)

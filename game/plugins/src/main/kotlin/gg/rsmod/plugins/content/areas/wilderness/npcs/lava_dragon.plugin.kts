@@ -15,7 +15,6 @@ set_combat_def(npc = Npcs.LAVA_DRAGON_OSRS) {
         attackSpeed = 4
         attackStyle = StyleType.SLASH
         respawnDelay = 14
-        xpMultiplier = 1.05
     }
     aggro {
         radius = 8 // existing server search radius; exact OSRS radius is not in the report

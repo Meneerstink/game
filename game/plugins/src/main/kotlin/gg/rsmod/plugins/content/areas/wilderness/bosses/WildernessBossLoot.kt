@@ -79,6 +79,10 @@ object WildernessBossLoot {
                     else -> Item(item.id, quantity(item.amount, share.fraction))
                 }
             }.toMutableList()
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) {
+                "drop GROUP table ${contract.rewardNpc} for ${share.player.username} share=${"%.2f".format(share.fraction)} at ${npc.tile.x},${npc.tile.z}: " +
+                    items.joinToString(",") { "${it.id}x${it.amount}" }.ifEmpty { "nothing" }
+            }
             DropTableFactory.giveDrop(npc.world, share.player, contract.rewardNpc, npc.tile, items, allowLootShare = false)
         }
     }
