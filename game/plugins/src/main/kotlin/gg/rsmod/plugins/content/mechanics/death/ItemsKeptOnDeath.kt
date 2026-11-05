@@ -60,7 +60,8 @@ object ItemsKeptOnDeath {
      */
     const val NOTICE_TEXT =
         "<col=ffffff>Killed by a monster:</col> unskulled you keep your 3 most valuable items; the rest goes to your gravestone.<br>" +
-            "<col=ffffff>Killed by a player:</col> you keep nothing. Protect Item does not work in Deadman Mode."
+            "<col=ffffff>Killed by a player:</col> you keep nothing. Protect Item does not work in Deadman Mode.<br>" +
+            "In the Wilderness, food, potions and Phoenix necklaces are destroyed."
 
     /** The "Protect Item prayer enabled" toggle (deathkeep_right_initbutton index 0), hidden - see [open]. */
     private const val PROTECT_TOGGLE = 0
@@ -105,7 +106,7 @@ object ItemsKeptOnDeath {
             if (item.amount > 1) "${spaced(item.amount.toLong())} x ${name(player, item.id)}: $many" else "${name(player, item.id)}: $one"
         result.itemRisk.protected.forEach {
             // Owner 2026-10-04: on a death against a monster a lockable untradeable always stays (and stays locked).
-            val always = !pvp && UntradeableDeathProtection.lockable(it.item.id)
+            val always = !pvp && gg.rsmod.plugins.content.mechanics.trouver.TrouverRegistry.isLockedAnyState(it.item.id)
             entries += Entry(Section.KEPT, it.item, if (always) line(it.item, "You always keep this item when a monster kills you.", "You always keep these items when a monster kills you.") else line(it.item, "Unskulled, you keep your 3 most valuable items when a monster kills you.", "Unskulled, you keep your 3 most valuable items when a monster kills you."))
         }
         // PvP untradeables (owner 2026-09-26, OSRS level-20 rule): broken, mangled or emptied ones stay with the player.
@@ -142,6 +143,7 @@ object ItemsKeptOnDeath {
             val lost =
                 result.itemRisk.lost.map { it.item } + lostAmmo + cargo
             lost.forEach { item ->
+                if (DeathRules.destroyInWilderness(player, item.id)) { deleted(player, entries, item); return@forEach }
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.LOST, item, line(item, "This item will be lost to the player who kills you.", "These items will be lost to the player who kills you."))
             }
@@ -185,6 +187,7 @@ object ItemsKeptOnDeath {
             // Owner 2026-09-26: everything lost on a PvM death goes to the gravestone, and taking it back is free.
             val toGrave = result.itemRisk.lost.map { it.item }.filterNot { LootKeys.isKey(it.id) || DeathRules.isEmblem(it.id) } + (if (upgradedPet) emptyList() else cargo)
             toGrave.forEach { item ->
+                if (DeathRules.destroyInWilderness(player, item.id)) { deleted(player, entries, item); return@forEach }
                 risk += value.getValue(item.id) * item.amount
                 entries += Entry(Section.GRAVESTONE, item, line(item, "This item will be sent to your gravestone.", "These items will be sent to your gravestone."))
             }
