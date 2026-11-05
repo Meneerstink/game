@@ -113,13 +113,18 @@ object DeadmanEmblem {
     // ------------------------------------------------------------------ receiving (the single entry for every new emblem)
 
     enum class Source { DROP, PVP_TRANSFER, ADMIN_CREATE, PENDING, RECLAIM }
+    enum class Destination { INVENTORY, BANK, CASHOUT }
+    data class Receipt(val ownedTier: Int, val destination: Destination)
 
     /**
      * Gives [player] an emblem of [tier] under the one-emblem rule. Keeps the best emblem, cashes the other in for Deadman
      * Points, places a new emblem in the inventory, else the bank, else cashes it in. Never creates a second emblem and never
      * deletes an earned one without paying it out. Returns the tier the player owns afterwards.
      */
-    fun receive(player: Player, tier: Int, source: Source, context: String = ""): Int {
+    fun receive(player: Player, tier: Int, source: Source, context: String = ""): Int =
+        receiveResult(player, tier, source, context).ownedTier
+
+    fun receiveResult(player: Player, tier: Int, source: Source, context: String = ""): Receipt {
         require(tier in 1..MAX_TIER)
         val held = holdings(player).sortedByDescending { it.tier }
         val best = held.firstOrNull()
@@ -129,7 +134,7 @@ object DeadmanEmblem {
             payPoints(player, tier)
             player.message("<col=ef1020>You already own a tier ${best.tier} Deadman emblem, so the tier $tier emblem was cashed in for ${points(tier)} Deadman Points.")
             EmblemLog.write("CASHOUT", player, "tierBefore" to tier, "tierAfter" to 0, "reward" to "${points(tier)} points", "reason" to "auto: owns tier ${best.tier}", "source" to source.name, "context" to context)
-            return best.tier
+            return Receipt(best.tier, Destination.CASHOUT)
         }
         if (best != null) {
             // The incoming emblem is better: the old one is cashed in. A carried one is replaced in its own slot; a banked
@@ -138,19 +143,28 @@ object DeadmanEmblem {
             best.container[best.slot] = if (best.inBank) null else Item(emblemId(tier), 1)
             player.message("<col=ef1020>Your tier ${best.tier} Deadman emblem was cashed in for ${points(best.tier)} Deadman Points to make room for the tier $tier emblem.")
             EmblemLog.write("CASHOUT", player, "tierBefore" to best.tier, "tierAfter" to 0, "reward" to "${points(best.tier)} points", "reason" to "auto: replaced by tier $tier", "source" to source.name, "context" to context)
-            if (!best.inBank) return tier
+            if (!best.inBank) return Receipt(tier, Destination.INVENTORY)
         }
-        when {
-            player.inventory.add(emblemId(tier), 1).hasSucceeded() -> Unit
-            player.bank.add(emblemId(tier), 1).hasSucceeded() -> player.message("<col=ef1020>Your inventory is full, so the tier $tier Deadman emblem was sent to your bank.")
+        val destination = when {
+            player.inventory.add(emblemId(tier), 1).hasSucceeded() -> Destination.INVENTORY
+            player.bank.add(emblemId(tier), 1).hasSucceeded() -> {
+                player.message("<col=ef1020>Your inventory is full, so the tier $tier Deadman emblem was sent to your bank.")
+                Destination.BANK
+            }
             else -> {
                 payPoints(player, tier)
                 player.message("<col=ef1020>Your inventory and bank are full, so the tier $tier Deadman emblem was cashed in for ${points(tier)} Deadman Points.")
                 EmblemLog.write("CASHOUT", player, "tierBefore" to tier, "tierAfter" to 0, "reward" to "${points(tier)} points", "reason" to "auto: no space", "source" to source.name, "context" to context)
-                return 0
+                return Receipt(0, Destination.CASHOUT)
             }
         }
-        return tier
+        return Receipt(tier, destination)
+    }
+
+    fun receiptText(tier: Int, destination: Destination): String = when (destination) {
+        Destination.INVENTORY -> "A Deadman emblem (tier $tier) has been added to your inventory!"
+        Destination.BANK -> "A Deadman emblem (tier $tier) has been sent to your bank!"
+        Destination.CASHOUT -> "A Deadman emblem (tier $tier) has been cashed in for ${points(tier)} Deadman Points!"
     }
 
     private fun cashAway(player: Player, held: Held, reason: String) {
@@ -178,9 +192,8 @@ object DeadmanEmblem {
         val chance = dropChance(npc.combatDef.lifepoints, wilderness)
         if (chance <= 0.0 || ownedTier(killer) > 0) return
         if (world.randomDouble() >= chance) return
-        val placed = receive(killer, 1, Source.DROP, "npc ${npc.id}")
-        if (placed == 0) return
-        killer.message("<col=ef1020><shad=000000>A Deadman emblem (tier 1) has dropped for you!</shad></col>")
+        val placed = receiveResult(killer, 1, Source.DROP, "npc ${npc.id}")
+        killer.message("<col=ef1020><shad=000000>${receiptText(1, placed.destination)}</shad></col>")
         killer.playSound(Sfx.ENCHANT_ONYX_RING)
         EmblemLog.write("DROP", killer, "tierBefore" to 0, "tierAfter" to 1, "npc" to "${npc.id} ${npc.def.name} lp=${npc.combatDef.lifepoints}", "chance" to "%.6f".format(chance), "area" to area(killer))
     }

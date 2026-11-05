@@ -67,6 +67,7 @@ object SlayerRewardsUi {
         (T.EXTENDS.indices).forEach { i -> enableBox(player, T.EXTEND_FIRST_BOX + i * T.BOX_STRIDE) }
         player.setInterfaceEvents(T.INTERFACE_ID, T.EXTEND_BAR, -1..-1, EVENTS_OP1)
         BUY.indices.forEach { player.setInterfaceEvents(T.INTERFACE_ID, T.BUY_FIRST + it * 2, -1..-1, EVENTS_BUY) }
+        SlayerTasksUi.enable(player)
         player.setInterfaceEvents(T.INTERFACE_ID, T.CONFIRM_BACK, -1..-1, EVENTS_OP1)
         T.CONFIRM_OPS.indices.forEach { player.setInterfaceEvents(T.INTERFACE_ID, T.CONFIRM_OPS_FIRST + it, -1..-1, EVENTS_OP1) }
         player.attr.remove(PENDING)
@@ -82,17 +83,13 @@ object SlayerRewardsUi {
     }
 
     fun selectTab(player: Player, tab: Int) {
-        if (tab == TAB_TASKS) {
-            // The OSRS Tasks tab is a later step: the 667 assignment screen keeps Cancel / Block working.
-            openAssignment(player)
-            return
-        }
         player.attr[TAB] = tab
         T.TAB_NAMES.indices.forEach { player.setComponentSprite(T.INTERFACE_ID, T.TAB_FIRST + 2 * it, if (it == tab) T.TAB_ON else T.TAB_OFF) }
         player.setComponentHidden(T.INTERFACE_ID, T.UNLOCK_LAYER, tab != TAB_UNLOCK)
         player.setComponentHidden(T.INTERFACE_ID, T.EXTEND_LAYER, tab != TAB_EXTEND)
         player.setComponentHidden(T.INTERFACE_ID, T.BUY_LAYER, tab != TAB_BUY)
-        player.setComponentHidden(T.INTERFACE_ID, T.TASKS_LAYER, true)
+        player.setComponentHidden(T.INTERFACE_ID, T.TASKS_LAYER, tab != TAB_TASKS)
+        if (tab == TAB_TASKS) { SlayerTasksUi.draw(player); return }
         val (scroll, scrollbar, height) =
             when (tab) {
                 TAB_UNLOCK -> Triple(T.UNLOCK_SCROLL, T.UNLOCK_SCROLLBAR, unlockHeight)
@@ -188,6 +185,10 @@ object SlayerRewardsUi {
         }
 
     fun button(player: Player, component: Int, option: Int) {
+        if (component in SlayerTasksUi.CANCEL until SlayerTasksUi.COMPONENT_COUNT) {
+            if (player.attr[TAB] == TAB_TASKS) SlayerTasksUi.button(player, component)
+            return
+        }
         when {
             component == gg.rsmod.game.tools.importer.DeathsOfficeInterfaceImportTool.CLOSE -> player.closeInterface(T.INTERFACE_ID)
             component in T.TAB_FIRST until T.TAB_FIRST + 2 * T.TAB_NAMES.size -> selectTab(player, (component - T.TAB_FIRST) / 2)

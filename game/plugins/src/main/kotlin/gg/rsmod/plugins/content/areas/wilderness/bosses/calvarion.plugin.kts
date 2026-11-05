@@ -75,13 +75,7 @@ on_npc_death(CalvarionCombat.ENRAGED) {
     if (killer != null) {
         DropTableFactory.getDrop(world, killer, CalvarionCombat.NORMAL, npc.tile)
     }
-    world.queue {
-        // Infobox respawn 14 ticks.
-        wait(14)
-        val boss = gg.rsmod.game.model.entity.Npc(CalvarionCombat.NORMAL, Tile(CalvarionCombat.SPAWN), world)
-        boss.walkRadius = 3
-        world.spawn(boss)
-    }
+    WildernessBossLife.respawn(npc, CalvarionCombat.NORMAL, CalvarionCombat.SPAWN, 3, 14)
 }
 
 // ------------------------------------------------------------------ the hellhounds (OSRS Wiki infoboxes 12107 / 12108)

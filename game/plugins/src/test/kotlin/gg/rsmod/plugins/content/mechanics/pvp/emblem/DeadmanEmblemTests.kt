@@ -357,6 +357,24 @@ class DeadmanEmblemTests {
         assertEquals(DeadmanEmblem.points(3) + DeadmanEmblem.points(2), player.attr[StoreCatalogue.Currency.DEADMAN.attr])
     }
 
+    @Test fun `receipt and its message describe the actual inventory bank or cashout destination`() {
+        val p = newPlayer("receipt")
+        assertEquals(DeadmanEmblem.Destination.INVENTORY, DeadmanEmblem.receiveResult(p, 1, DeadmanEmblem.Source.DROP).destination)
+        assertEquals(DeadmanEmblem.Destination.CASHOUT, DeadmanEmblem.receiveResult(p, 1, DeadmanEmblem.Source.DROP).destination)
+        val full = newPlayer("receiptbank")
+        for (i in 0 until full.inventory.capacity) full.inventory[i] = Item(Items.SHARK)
+        assertEquals(DeadmanEmblem.Destination.BANK, DeadmanEmblem.receiveResult(full, 1, DeadmanEmblem.Source.DROP).destination)
+        for (destination in DeadmanEmblem.Destination.values()) {
+            val text = DeadmanEmblem.receiptText(1, destination)
+            assertFalse(text.contains("dropped"))
+            assertTrue(text.contains(when (destination) {
+                DeadmanEmblem.Destination.INVENTORY -> "inventory"
+                DeadmanEmblem.Destination.BANK -> "bank"
+                DeadmanEmblem.Destination.CASHOUT -> "cashed"
+            }))
+        }
+    }
+
     // ---------------------------------------------------------------- fixtures
 
     private data class Fight(val world: World, val killer: Player, val victim: Player)

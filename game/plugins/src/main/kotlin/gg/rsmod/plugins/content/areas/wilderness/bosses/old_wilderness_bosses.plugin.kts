@@ -114,7 +114,7 @@ on_npc_combat(*OldWildernessBosses.VetionCombat.ids) {
 
 on_npc_death(OldWildernessBosses.VETION) {
     OldWildernessBosses.removeDogs(npc)
-    OldWildernessBosses.nextPhase(npc, OldWildernessBosses.VETION_REBORN)?.forceChat("Do it again!!")
+    OldWildernessBosses.nextPhase(npc, OldWildernessBosses.VETION_REBORN, onReady = { it.forceChat("Do it again!!") })
 }
 
 on_npc_death(OldWildernessBosses.VETION_REBORN) {
@@ -124,12 +124,7 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
         // The drop table and pet are Vet'ion's (one Vet'ion kill = both forms).
         WildernessBossLoot.drop(npc)
     }
-    world.queue {
-        wait(OldWildernessBosses.VETION_RESPAWN_TICKS)
-        val vetion = gg.rsmod.game.model.entity.Npc(OldWildernessBosses.VETION, Tile(OldWildernessBosses.VETION_SPAWN), world)
-        vetion.walkRadius = 10
-        world.spawn(vetion)
-    }
+    WildernessBossLife.respawn(npc, OldWildernessBosses.VETION, OldWildernessBosses.VETION_SPAWN, 10, OldWildernessBosses.VETION_RESPAWN_TICKS)
 }
 
 // ------------------------------------------------------------------ the skeleton hellhounds (Kronos-184 data/npcs/combat)

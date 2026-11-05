@@ -123,35 +123,33 @@ object OldWildernessBosses {
     }
 
     /** Preserve the whole fight's damage credit, rather than losing phase one to a fresh damage map. */
-    fun nextPhase(npc: Npc, id: Int, hitpoints: Int? = null, keepDogs: Boolean = false): Npc? {
-        val next = Npc(id, Tile(npc.tile), npc.world)
-        next.respawns = false
-        next.walkRadius = 10
-        if (!npc.world.spawn(next)) {
-            gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "Vetion phase spawn failed: ${npc.id} -> $id at ${npc.tile}" }
-            return null
+    fun nextPhase(npc: Npc, id: Int, hitpoints: Int? = null, keepDogs: Boolean = false, onReady: (Npc) -> Unit = {}): Npc? =
+        WildernessBossLife.successor(npc, {
+            Npc(id, Tile(npc.tile), npc.world).also { it.respawns = false; it.walkRadius = 10 }
+        }) { next ->
+            gg.rsmod.game.model.combat.NpcEncounter.transfer(npc, next)
+            npc.world.players.forEach { p ->
+                val damage = npc.damageMap.getDamageFrom(p)
+                if (damage > 0) next.damageMap.add(p, damage)
+            }
+            if (hitpoints != null) next.setCurrentLifepoints(hitpoints)
+            if (keepDogs) {
+                next.attr[DOGS_CALLED] = npc.attr[DOGS_CALLED] == true
+                next.attr[DOGS] = dogs(npc)
+            }
+            val target = npc.getCombatTarget() ?: npc.damageMap.getMostDamage()
+            if (target != null && !target.isDead() && (target !is Player || target.isOnline)) next.attack(target)
+            onReady(next)
+            // A timeout keeps its live predecessor until its replacement actually exists.
+            if (!npc.isDead() && npc.isSpawned()) npc.world.remove(npc)
         }
-        gg.rsmod.game.model.combat.NpcEncounter.transfer(npc, next)
-        npc.world.players.forEach { p ->
-            val damage = npc.damageMap.getDamageFrom(p)
-            if (damage > 0) next.damageMap.add(p, damage)
-        }
-        if (hitpoints != null) next.setCurrentLifepoints(hitpoints)
-        if (keepDogs) {
-            next.attr[DOGS_CALLED] = npc.attr[DOGS_CALLED] == true
-            next.attr[DOGS] = dogs(npc)
-        }
-        val target = npc.getCombatTarget() ?: npc.damageMap.getMostDamage()
-        if (target != null && !target.isDead() && (target !is Player || target.isOnline)) next.attack(target)
-        return next
-    }
 
     fun startRebornTimeout(npc: Npc) {
         val life = WildernessBossLife.token(npc)
         npc.world.queue {
             wait(REBORN_TIMEOUT_TICKS)
             if (!WildernessBossLife.active(npc, life)) return@queue
-            if (nextPhase(npc, VETION, npc.getCurrentLifepoints(), keepDogs = true) != null) npc.world.remove(npc)
+            nextPhase(npc, VETION, npc.getCurrentLifepoints(), keepDogs = true)
         }
     }
 
