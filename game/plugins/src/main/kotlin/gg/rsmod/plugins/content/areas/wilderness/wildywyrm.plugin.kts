@@ -83,8 +83,11 @@ on_npc_option(npc = Npcs.MOUND, option = "investigate") {
     }
 }
 
-on_npc_death(Npcs.WILDYWYRM) {
+// on_npc_killed, not on_npc_death: wildywyrm_drops.plugin.kts owns the single on_npc_death binding of 3334 (it would overwrite this one).
+on_npc_killed { _, npc ->
+    if (npc.id != Npcs.WILDYWYRM) return@on_npc_killed
     val home = npc.spawnTile
+    val world = npc.world
     world.queue {
         wait(WYRM_MOUND_RESPAWN)
         spawnMound(world, home)
