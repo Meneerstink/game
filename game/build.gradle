@@ -1033,3 +1033,10 @@ task runSquareJournalRestoreTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.SquareJournalRestoreTool'
 }
+
+task runSlayerRewardsInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N522 2e: builds the OSRS Slayer Rewards screen as interface 1185. Usage: --args="[--apply] [--replace-from-journal=<tx>]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool'
+}

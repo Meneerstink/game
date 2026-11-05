@@ -23,7 +23,16 @@ val masters =
  */
 masters.forEach {
     on_npc_option(npc = it, option = "rewards") {
-        openBuyInterface(player)
+        // N522 2e (owner 2026-11-05): the OSRS Slayer Rewards screen; its Tasks tab hands over to the 667 assignment screen below.
+        SlayerRewardsUi.open(player)
+    }
+}
+
+SlayerRewardsBridge.openAssignment = { p -> openAssignmentInterface(p) }
+SlayerRewardsUi.bake { text, width -> gg.rsmod.plugins.content.quests.tab.N108Ui.lines(world, "p11_full", text, width) }
+for (component in 0 until gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool.COMPONENT_COUNT) {
+    on_button(gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool.INTERFACE_ID, component) {
+        SlayerRewardsUi.button(player, component, player.getInteractingOption())
     }
 }
 
@@ -375,8 +384,9 @@ val assignmentButtonIds = arrayOf(14, 15, 23, 26)
 assignmentButtonIds.forEach {
     on_button(ASSIGNMENT_INTERFACE, component = it) {
         when (it) {
-            14 -> openLearnInterface(player)
-            15 -> openBuyInterface(player)
+            // N522 2e: Learn / Buy are the OSRS screen's Unlock / Buy tabs now.
+            14 -> SlayerRewardsUi.open(player, SlayerRewardsUi.TAB_UNLOCK)
+            15 -> SlayerRewardsUi.open(player, SlayerRewardsUi.TAB_BUY)
             23, 26 -> cancelSlayerTask(player)
         }
     }

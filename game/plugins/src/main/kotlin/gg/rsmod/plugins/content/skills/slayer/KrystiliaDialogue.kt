@@ -12,10 +12,8 @@ import gg.rsmod.plugins.content.areas.deathsoffice.RespawnPoints
 object KrystiliaDialogue {
     private suspend fun QueueTask.say(line: String, id: Int) = chatNpc(line, npc = id, wrap = true)
 
-    fun rewards(player: Player) {
-        player.openInterface(164, InterfaceDestination.MAIN_SCREEN)
-        player.setComponentText(164, 20, player.getSlayerPointsCount().toString())
-    }
+    /** N522 2e: the OSRS Slayer Rewards screen (owner 2026-11-05: the imported 426, not the 667 Learn screen). */
+    fun rewards(player: Player) = gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.open(player)
 
     fun open(player: Player, remote: Boolean = false) {
         val id = Krystilia.npcId(player.world) ?: return

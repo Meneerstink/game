@@ -980,6 +980,9 @@ object OsrsItemImportTool {
             "blighted-overload" to listOf(Spec(29631, noted = true), Spec(29634, noted = true), Spec(29637, noted = true), Spec(29640, noted = true)),
             // N522 nachtrun deel 3: Larran's key (OSRS Wiki infobox id 23490, stackable, not noteable) - Krystilia's Wilderness Slayer key.
             "larran" to listOf(Spec(23490)),
+            // N522 2e: the Slayer Rewards box icons (OSRS dbtable 117 column 2) that have no 667 item of the same look - display only
+            // (SlayerRewardsInterfaceImportTool.ICON_IMPORTS: 24641-24648; 23493 is the Larran's key count look already at 24636).
+            "slayer-reward-icons" to listOf(4455, 3851, 3064, 6784, 1648, 11844, 1667, 11634).map { Spec(it) },
             // N570: Krystilia's other 'unusual loot' - Slayer's enchantment 21257 (stackable, tradeable) and Slayer's staff (e) 21255
             // (untradeable; OSRS Wiki: 75 Magic + 55 Slayer, the Slayer's staff 4170 client params with 752 = 75, weapon type and attack
             // sound of 4170 in items.yml).
