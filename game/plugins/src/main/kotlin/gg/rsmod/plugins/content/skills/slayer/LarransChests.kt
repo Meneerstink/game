@@ -22,6 +22,13 @@ import kotlin.math.floor
  * - Not in this game (left as nothing, every other rate stays OSRS): Celastrus / Dragonfruit tree / Redwood tree seed, Shark lure.
  */
 object LarransChests {
+    /**
+     * OFF until both chests stand on OSRS ground (N569): the rev-667 map hides the small chest's tile 3281,3659 in the walls of its
+     * "Ruins" (OSRS has other ground there - HOOFDLIJST OPEN 'Ruins' vs 'Bone Yard') and the ship deck of the big chest is blocked. A key
+     * without a chest to open is no port, so no keys drop either.
+     */
+    const val ENABLED = false
+
     const val KEY = 24638 // OSRS 23490 (OsrsItemImportTool batch larran, tx-20261105-005933)
     const val SMALL = 63857 // OSRS 33343 Larran's small chest (closed)
     const val SMALL_OPEN = 63858 // OSRS 34828
@@ -50,6 +57,7 @@ object LarransChests {
 
     /** Called once per task kill (SlayerExt.handleDecrease, before the count goes down - so the task's last kill counts too). */
     fun rollKey(player: Player, npc: Npc) {
+        if (!ENABLED) return
         // A failing drop must never break the task count it rides on (the same rule as DropTableFactory.getDrop).
         try {
             val chance = keyChance(npc.def.combatLevel, npc.combatDef.slayerReq > 1)

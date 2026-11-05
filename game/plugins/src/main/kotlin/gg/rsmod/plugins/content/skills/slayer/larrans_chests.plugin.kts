@@ -5,7 +5,7 @@ package gg.rsmod.plugins.content.skills.slayer
  * no Larran's chests). Unlock takes one Larran's key; the loot goes to the inventory, what does not fit lands at the player's feet.
  */
 
-spawn_obj(obj = LarransChests.SMALL, x = LarransChests.SMALL_TILE.x, z = LarransChests.SMALL_TILE.z, height = LarransChests.SMALL_TILE.height, type = 10, rot = 0)
+if (LarransChests.ENABLED) spawn_obj(obj = LarransChests.SMALL, x = LarransChests.SMALL_TILE.x, z = LarransChests.SMALL_TILE.z, height = LarransChests.SMALL_TILE.height, type = 10, rot = 0)
 if (LarransChests.BIG_PLACED) spawn_obj(obj = LarransChests.BIG, x = LarransChests.BIG_TILE.x, z = LarransChests.BIG_TILE.z, height = LarransChests.BIG_TILE.height, type = 10, rot = 0)
 
 fun unlock(player: Player, big: Boolean) {
