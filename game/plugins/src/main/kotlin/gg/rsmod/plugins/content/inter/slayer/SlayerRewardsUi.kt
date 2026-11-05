@@ -172,16 +172,17 @@ object SlayerRewardsUi {
 
     // ---- clicks ----
     /**
-     * The menu entry (op1..op10) a 667 IF_BUTTON packet carries, by its opcode (IfButton1Handler FIRST_OPTION 61, SECOND 64, THIRD 4,
-     * FOURTH 18, FIFTH 10; 25 = op10 "Examine", testclient 2026-11-05: the packet's option index is not the op number).
+     * The menu entry (op1..op10) a 667 IF_BUTTON packet carries, by its opcode (data/packets.yml IfButtonMessage opcodes
+     * 10,64,61,4,52,81,18,25,91,20; measured in the testclient 2026-11-05: op1 61, op2 64, op3 4, op4 52, op5 81, op10 25 - the
+     * packet's option index is not the op number).
      */
     fun opOf(opcode: Int): Int =
         when (opcode) {
             61 -> 1
             64 -> 2
             4 -> 3
-            18 -> 4
-            10 -> 5
+            52 -> 4
+            81 -> 5
             25 -> 10
             else -> 0
         }
