@@ -118,6 +118,20 @@ class RuinousUnlocksTests {
     }
 
     @Test
+    fun `N545 the warning is shown only when reading would really unlock`() {
+        val a = Account()
+        a.book()
+        assertFalse(RuinousUnlocks.wouldUnlock(a.player), "no DT2 - the refusal, no warning")
+        a.quest()
+        assertTrue(RuinousUnlocks.wouldUnlock(a.player))
+        assertEquals(RuinousUnlocks.ReadResult.UNLOCKED, RuinousUnlocks.read(a.player))
+        a.book()
+        assertFalse(RuinousUnlocks.wouldUnlock(a.player), "already unlocked - no second warning")
+        val read = File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/prayer/ruinous_unlocks.plugin.kts").readText()
+        assertTrue("You are about to unlock Ruinous prayers, are you sure?" in read && "confirmItemAction(" in read)
+    }
+
+    @Test
     fun `central switch refuses each missing prerequisite and accepts both without needing Curses`() {
         val a = Account()
         AncientCurses.switchBook(a.player, AncientCurses.PrayerBook.RUINOUS)

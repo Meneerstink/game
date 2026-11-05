@@ -19,6 +19,10 @@ object RuinousUnlocks {
 
     enum class ReadResult { QUEST_REQUIRED, ALREADY_UNLOCKED, MISSING_BOOK, UNLOCKED }
 
+    /** N545: reading now would unlock (quest done, not unlocked yet, the book in the backpack) - only then the warning is shown. */
+    fun wouldUnlock(player: Player): Boolean =
+        DesertTreasureII.isFinished(player) && player.attr[UNLOCKED] != true && player.inventory.contains(Items.RUINOUS_POWERS)
+
     /** No suspension between checking, consuming exactly one book and persisting the unlock. */
     fun read(player: Player): ReadResult {
         if (!DesertTreasureII.isFinished(player)) return ReadResult.QUEST_REQUIRED
