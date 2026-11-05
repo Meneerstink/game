@@ -122,7 +122,7 @@ on_npc_death(OldWildernessBosses.VETION_REBORN) {
     val killer = npc.damageMap.getMostDamage() as? Player
     if (killer != null) {
         // The drop table and pet are Vet'ion's (one Vet'ion kill = both forms).
-        DropTableFactory.getDrop(world, killer, OldWildernessBosses.VETION, npc.tile)
+        WildernessBossLoot.drop(npc)
         WildernessLairs.onTopDamageKill(killer)
     }
     world.queue {
@@ -175,9 +175,10 @@ on_npc_combat(*OldWildernessBosses.HoundCombat.ids) {
 
 fun spiderLikeTertiary(builder: gg.rsmod.plugins.content.drops.DropTableBuilder) {
     builder.table("elite_clue") {
-        total(100)
+        val denominator = WildernessBossClues.denominator(builder.player, 100)
+        total(denominator)
         obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-        nothing(99)
+        nothing(denominator - 1)
     }
     builder.table("supplies") {
         total(18)
@@ -310,6 +311,6 @@ DropTableFactory.register(vetionDrops, OldWildernessBosses.VETION)
 
 on_npc_death(OldWildernessBosses.CALLISTO) {
     val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
-    DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
+    WildernessBossLoot.drop(npc)
     WildernessLairs.onTopDamageKill(killer)
 }

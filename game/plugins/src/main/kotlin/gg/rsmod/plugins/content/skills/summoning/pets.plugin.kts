@@ -175,7 +175,7 @@ Pets.variants.filter { it.classic }.forEach { variant ->
 on_npc_completed { killer, npc ->
     // Scorpia's pet is rolled after her shard pre-roll; it cannot accompany a shard.
     if (npc.id == Npcs.SCORPIA) return@on_npc_completed
-    if (npc.id == gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.NPC) return@on_npc_completed
+    if (gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLoot.manages(npc.id)) return@on_npc_completed
     gg.rsmod.plugins.content.areas.wilderness.bosses.OldWildernessBosses.rewardNpc(npc.id)?.let { Pets.roll(killer, it) }
 }
 

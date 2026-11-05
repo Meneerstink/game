@@ -162,7 +162,7 @@ on_timer(TASK_MINUTE) {
 }
 
 on_npc_completed { killer, npc ->
-    if (npc.id == gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.NPC) {
+    if (gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLoot.manages(npc.id)) {
         gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLoot.onKilled(npc, killer)
     } else {
         KillCounts.onNpcKilled(killer, npc.id)

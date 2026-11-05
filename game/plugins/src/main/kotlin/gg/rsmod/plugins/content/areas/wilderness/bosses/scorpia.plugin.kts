@@ -216,9 +216,10 @@ val scorpiaDrops =
         }
         // N424 / N561 (owner 2026-10-29 + 2026-11-04): no looting bag - it is out of the game (OSRS: 1/3 here).
         table("hard_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_HARD, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 

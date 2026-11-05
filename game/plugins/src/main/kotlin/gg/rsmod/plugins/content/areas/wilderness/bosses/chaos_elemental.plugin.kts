@@ -130,9 +130,10 @@ val chaosElementalDrops =
             nothing(118)
         }
         table("elite_clue") {
-            total(200)
+            val denominator = WildernessBossClues.denominator(player, 200)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(199)
+            nothing(denominator - 1)
         }
     }
 

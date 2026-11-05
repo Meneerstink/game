@@ -223,9 +223,10 @@ val venenatisDrops =
             nothing(4)
         }
         table("elite_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
         table("long_bone") {
             total(400)
@@ -355,9 +356,10 @@ val spindelDrops =
             nothing(4)
         }
         table("elite_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 

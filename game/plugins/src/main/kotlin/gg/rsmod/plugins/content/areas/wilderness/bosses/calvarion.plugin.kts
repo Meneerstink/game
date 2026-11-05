@@ -216,9 +216,10 @@ val calvarionDrops =
             nothing(4999)
         }
         table("elite_clue") {
-            total(100)
+            val denominator = WildernessBossClues.denominator(player, 100)
+            total(denominator)
             obj(Items.CLUE_SCROLL_ELITE, slots = 1)
-            nothing(99)
+            nothing(denominator - 1)
         }
     }
 
