@@ -146,8 +146,8 @@ listOf(Items.DIZANAS_MAX_CAPE_BROKEN, Items.DIZANAS_MAX_CAPE_L_BROKEN, Items.DIZ
 }
 
 /*
- * "Inspect" on creation materials and "Read" on the Trouver parchment: OSRS answers with a short description of the item. The exact
- * wording is not on the wiki pages (SOURCE_GAP), so the item's own cache examine text is shown - sourced text, no invented message.
+ * "Inspect" on creation materials and "Read" on the Trouver parchment: OSRS answers with a short description of the item. N557: the
+ * wiki transcript text where it exists (OsrsInspectTexts); otherwise the item's own cache examine text - no invented message.
  */
 on_world_init_late {
     for (id in 22328 until world.definitions.getCount(ItemDef::class.java)) {
@@ -157,6 +157,8 @@ on_world_init_late {
             val index = def.inventoryMenu.indexOfFirst { it.equals(option, ignoreCase = true) }
             if (index < 0 || world.plugins.hasItemOption(id, index + 1)) return@forEach
             on_item_option(item = id, option = option) {
+                // N557: the OSRS transcript answer where the wiki has one; the examine only where it has none.
+                if (option == "Inspect" && OsrsInspectTexts.inspect(player, id)) return@on_item_option
                 val examine = world.definitions.get(ItemDef::class.java, id).examine
                 player.message(if (examine.isNullOrBlank()) "You see nothing unusual about the ${itemName(id).lowercase()}." else examine)
             }

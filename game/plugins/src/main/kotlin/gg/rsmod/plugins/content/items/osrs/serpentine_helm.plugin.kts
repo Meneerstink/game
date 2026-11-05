@@ -100,16 +100,25 @@ listOf(Items.SERPENTINE_HELM_UNCHARGED, Items.SERPENTINE_VISAGE).forEach { disma
     }
 }
 
-// Neitiznot faceguard: OSRS makes it with Olaf the Bard ("Talk to Olaf the Bard with a basilisk jaw"); ADAPTED here as the basilisk jaw
-// used on a helm of neitiznot. Dismantle gives both parts back.
-gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT, Items.NEITIZNOT_FACEGUARD)
+// Neitiznot faceguard (N557, OSRS Wiki 'Neitiznot faceguard' + 'Transcript:Basilisk jaw'): the jaw goes on a helm of Neitiznot only after
+// Olaf the Bard told the basilisk jaw story (olaf_the_bard.plugin.kts sets OsrsInspectTexts.BASILISK_STORY); before that the OSRS refusal.
+// The Fremennik Exiles is not in this world, so it is not asked. Dismantle gives both parts back.
+gg.rsmod.plugins.content.items.combine.AttachConfirm.route(Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT, Items.NEITIZNOT_FACEGUARD) {
+    it.attr[OsrsInspectTexts.BASILISK_STORY] == true
+}
 on_item_on_item(item1 = Items.BASILISK_JAW, item2 = Items.HELM_OF_NEITIZNOT) {
     if (!player.inventory.contains(Items.BASILISK_JAW) || !player.inventory.contains(Items.HELM_OF_NEITIZNOT)) return@on_item_on_item
+    if (player.attr[OsrsInspectTexts.BASILISK_STORY] != true) {
+        player.message(
+            "You're not quite sure how to do that. Perhaps Olaf the Bard can help. He's likely to know a good story about Basilisk Jaws.",
+        )
+        return@on_item_on_item
+    }
     player.inventory.remove(Items.BASILISK_JAW, 1)
     player.inventory.remove(Items.HELM_OF_NEITIZNOT, 1)
     player.inventory.add(Items.NEITIZNOT_FACEGUARD, 1)
     gg.rsmod.plugins.content.items.combine.ItemAttachSounds.attached(player, Items.BASILISK_JAW, Items.HELM_OF_NEITIZNOT)
-    player.message("You fit the basilisk jaw onto the helm.")
+    player.queue { itemMessageBox("You attach the Basilisk Jaw to the Helm of Neitiznot.", Items.NEITIZNOT_FACEGUARD) }
 }
 
 if (helmHasOption(Items.NEITIZNOT_FACEGUARD, "Dismantle", worn = false)) {
@@ -122,6 +131,9 @@ if (helmHasOption(Items.NEITIZNOT_FACEGUARD, "Dismantle", worn = false)) {
         }
         player.inventory[slot] = gg.rsmod.game.model.item.Item(Items.HELM_OF_NEITIZNOT)
         player.inventory.add(Items.BASILISK_JAW, 1)
+        // Whoever owned a faceguard has made one (OSRS: only after Olaf's story) - also a faceguard made before N557 - so they can put it back.
+        player.attr[OsrsInspectTexts.BASILISK_STORY] = true
+        player.queue { itemMessageBox("You remove the Basilisk Jaw from the Neitiznot Faceguard.", Items.HELM_OF_NEITIZNOT) }
     }
 }
 
