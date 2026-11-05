@@ -178064,7 +178064,7 @@
 - id: 15009
   name: "Gold ring (i)"
   examine: "It's an Gold ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178096,7 +178096,7 @@
 - id: 15010
   name: "Sapphire ring (i)"
   examine: "It's an Sapphire ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178128,7 +178128,7 @@
 - id: 15011
   name: "Emerald ring (i)"
   examine: "It's an Emerald ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178160,7 +178160,7 @@
 - id: 15012
   name: "Ruby ring (i)"
   examine: "It's an Ruby ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 3
@@ -178192,7 +178192,7 @@
 - id: 15013
   name: "Diamond ring (i)"
   examine: "It's an Diamond ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 5
@@ -178224,7 +178224,7 @@
 - id: 15014
   name: "Dragonstone ring (i)"
   examine: "It's an Dragonstone ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 5
@@ -178256,7 +178256,7 @@
 - id: 15015
   name: "Lunar ring (i)"
   examine: "It's an Lunar ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178288,7 +178288,7 @@
 - id: 15016
   name: "Ring of charos (a)(i)"
   examine: "It's an Ring of charos (a)(i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178320,7 +178320,7 @@
 - id: 15017
   name: "Onyx ring (i)"
   examine: "It's an Onyx ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 6
@@ -178352,7 +178352,7 @@
 - id: 15018
   name: "Seers' ring (i)"
   examine: "It's an Seers' ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178384,7 +178384,7 @@
 - id: 15019
   name: "Archers' ring (i)"
   examine: "It's an Archers' ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -178416,7 +178416,7 @@
 - id: 15020
   name: "Warrior ring (i)"
   examine: "It's an Warrior ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0
@@ -179720,7 +179720,7 @@
 - id: 15220
   name: "Berserker ring (i)"
   examine: "It's an Berserker ring (i)."
-  tradeable: true
+  tradeable: false
   weight: 0.0
   equipment:
     attack_stab: 0

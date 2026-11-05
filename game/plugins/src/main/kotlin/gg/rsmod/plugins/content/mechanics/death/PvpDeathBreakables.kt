@@ -165,6 +165,16 @@ object PvpDeathBreakables {
             // Owner 2026-10-06 ("Yes, 20,000 Loyalty"): Seers ring (i) / Archers ring (i), the same imbue route and refund.
             Items.SEERS_RING_I to listOf(Items.SEERS_RING),
             Items.ARCHERS_RING_I to listOf(Items.ARCHERS_RING),
+            // N537 (owner 2026-11-02: '(i)-items horen onruilbaar - geldt voor meer items'): the other imbued rings of this cache are
+            // untradeable now and lose their imbue the same way (the killer gets the tradeable plain ring). Lunar ring (i) and Ring of
+            // charos (a)(i) have an untradeable base: they follow the untradeable rules (Perdu).
+            Items.GOLD_RING_I to listOf(Items.GOLD_RING),
+            Items.SAPPHIRE_RING_I to listOf(Items.SAPPHIRE_RING),
+            Items.EMERALD_RING_I to listOf(Items.EMERALD_RING),
+            Items.RUBY_RING_I to listOf(Items.RUBY_RING),
+            Items.DIAMOND_RING_I to listOf(Items.DIAMOND_RING),
+            Items.DRAGONSTONE_RING_I to listOf(Items.DRAGONSTONE_RING),
+            Items.ONYX_RING_I to listOf(Items.ONYX_RING),
             Items.MAGIC_SHORTBOW_I to listOf(Items.MAGIC_SHORTBOW),
             Items.SLAYER_HELMET to listOf(Items.BLACK_MASK),
             Items.SLAYER_HELMET_E to listOf(Items.BLACK_MASK),
