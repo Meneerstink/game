@@ -448,7 +448,7 @@ on_command("venenatis", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
     val hp = args.getOrNull(1)?.toIntOrNull()
     if (args.firstOrNull() != "hp" || hp == null) return@on_command player.message("::venenatis hp <hitpoints>")
     var found: Npc? = null
-    val bosses = setOf(VenenatisCombat.NPC, VenenatisCombat.SPINDEL, OldWildernessBosses.CALLISTO, OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN, ArtioCombat.NPC)
+    val bosses = setOf(VenenatisCombat.NPC, VenenatisCombat.SPINDEL, OldWildernessBosses.CALLISTO, OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN, ArtioCombat.NPC, gg.rsmod.plugins.api.cfg.Npcs.WILDYWYRM)
     world.npcs.forEach { n -> if (n.id in bosses && n.tile.isWithinRadius(player.tile, 30)) found = n }
     val v = found ?: return@on_command player.message("No Venenatis, Spindel, Callisto or Vet'ion near you.")
     v.setCurrentLifepoints(hp.coerceIn(1, v.getMaximumLifepoints()))
