@@ -164,7 +164,8 @@ object KrystiliaDialogue {
         when (options("Got any tips for me?", "Okay, great!")) {
             1 -> {
                 chatPlayer("Got any tips for me?", wrap = true)
-                // The per-task Slayer task tip comes first in OSRS (N541 research); then her fixed line.
+                // OSRS Transcript:Krystilia - the corresponding Slayer task tip first, then her fixed line.
+                KrystiliaTips.TIPS[selected.assignment]?.let { say(it, id) }
                 say("You've got to do the task in the Wilderness.", id)
                 chatPlayer("Great, thanks!", wrap = true)
             }
