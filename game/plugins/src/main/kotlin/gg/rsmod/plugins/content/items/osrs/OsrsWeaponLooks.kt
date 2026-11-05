@@ -170,6 +170,7 @@ object OsrsWeaponLooks {
             Items.SHADOW_ANCIENT_SCEPTRE, Items.BLOOD_ANCIENT_SCEPTRE_L, Items.ICE_ANCIENT_SCEPTRE_L, Items.SMOKE_ANCIENT_SCEPTRE_L,
             Items.SHADOW_ANCIENT_SCEPTRE_L, Items.PURGING_STAFF, Items.SMOKE_BATTLESTAFF, Items.MIST_BATTLESTAFF, Items.MYSTIC_MIST_STAFF,
             Items.DUST_BATTLESTAFF, Items.MYSTIC_DUST_STAFF, Items.LAVA_BATTLESTAFF_OR, Items.STEAM_BATTLESTAFF_OR, Items.MYSTIC_STEAM_STAFF_OR,
+            Items.SLAYERS_STAFF_E,
         )
         // Wands: HUMAN_STAFF_PUMMEL 414 - combat-logger "Wand melee auto"; the Glabay per-item table agrees (21006 Kodai, 12422 3rd age wand).
         register(Look(all(OsrsSeq.HUMAN_STAFF_PUMMEL), block = OsrsSeq.OSRS_DEFEND_WAND), Items.KODAI_WAND, Items.THIRDAGE_WAND, Items.DRAGON_HUNTER_WAND)
