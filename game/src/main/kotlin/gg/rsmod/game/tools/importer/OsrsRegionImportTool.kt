@@ -111,6 +111,14 @@ object OsrsRegionImportTool {
             "escape-caves-plane0" to Batch(listOf(13472), emptyList(), "Escape Caves tiles, plane 0 only", replaceSquares = setOf(13472), tilesOnly = true, plane0Only = true),
             // N522 bundle 4b: Spindel's Web Chasm (Near Reality WebChasm 1610-1651 x 11524-11571 plane 2 -> square 6580) and its surface
             // entrance 47078 WILD_VENENATIS_SINGLES_ENTRANCE01 (Near Reality 3183,3744).
+            // N523 step 1 (owner: 'eerst alleen de GEBIEDEN importeren (kaart + ingang, rondlopen)'): Theatre of Blood - Ver Sinhaza 14642 (empty in
+            // the 667 map) and the six room squares (12611/13123 have an empty 667 entry, the rest are absent). The Meiyerditch strip of 14386 later.
+            "tob-area" to Batch(listOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), emptyList(), "Theatre of Blood area (Ver Sinhaza + rooms)",
+                replaceSquares = setOf(13123, 12611)),
+            // N523: the room floors (Bloat, Xarpus, Verzik) carry OSRS tile flag 0x8, which the rev-667 client reads as "do not draw" (as in
+            // the Escape Caves, bundle 4a) - rewrite only the tile files without it.
+            "tob-area-tiles" to Batch(listOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), emptyList(), "Theatre of Blood tiles without flag 0x8",
+                replaceSquares = setOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), clearTileFlags = 0x8, tilesOnly = true),
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
             // N541 (owner 2026-11-04: Krystilia must be reachable; the jail roof never hid): the Edgeville jail, OSRS Wiki Krystilia
             // "found in Edgeville's jail north-east of the bank" (3109,3516). Our square 12342 holds the bank and home content, so

@@ -224,6 +224,9 @@ object OsrsFxImportTool {
             // Owner 2026-11-04 21:5x: the animated locs of the OSRS squares 13114/13115 around the Escape Caves entrances
             // (OsrsRegionImportTool 'escape-surface'): gameval AnimationID CAMEL_STEAM 1881, WILD_BANNER 3940.
             "escape-surface-seq" to listOf(1881, 3940),
+            // N523 step 1: the animated locs of the Theatre of Blood area (OsrsRegionImportTool 'tob-area'): gameval AnimationID FIRE 475,
+            // DS2_LITHKREN_BARRIER_GLOW 7929, TOB_BLOAT_CHAMBER_IDLE 8086, TOB_BLOAT_SWINGING_CHAIN 8087, HAZARDOUS_WATER_CURSED_* 13516/13518/13521.
+            "tob-area-seq" to listOf(475, 7929, 8086, 8087, 13516, 13518, 13521),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL
