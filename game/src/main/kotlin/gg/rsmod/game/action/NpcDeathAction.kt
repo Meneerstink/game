@@ -61,8 +61,6 @@ object NpcDeathAction : KLogging() {
 
         npc.resetFacePawn()
 
-        runDeathHook(npc, "slayer") { world.plugins.executeSlayerLogic(npc) }
-
         // N451 (owner 2026-10-30, Warriors' Guild: "als ze doodgaan verschijnen ze nog 1 seconde levend"): a short death animation
         // waited its length rounded UP to whole ticks and then the death delay, and once the animation had ended the client drew
         // the npc standing again until it was removed (Animated armour: 4167 runs 1.9 s, removed after 3.0 s). It now waits the
@@ -77,6 +75,11 @@ object NpcDeathAction : KLogging() {
         if (deathDelay > 0) {
             if (deathAnimation.any { it >= 0 }) npc.invisible = true
             wait(deathDelay)
+        }
+        if (npc.combatDef.completesEncounter) {
+            (npc.attr[KILLER_ATTR]?.get() as? Player)?.let { killer ->
+                runDeathHook(npc, "npc-completed") { world.plugins.executeNpcCompleted(killer, npc) }
+            }
         }
         runDeathHook(npc, "npc-death") { world.plugins.executeNpcDeath(npc) }
 

@@ -131,6 +131,7 @@ object OldWildernessBosses {
             gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) { "Vetion phase spawn failed: ${npc.id} -> $id at ${npc.tile}" }
             return null
         }
+        gg.rsmod.game.model.combat.NpcEncounter.transfer(npc, next)
         npc.world.players.forEach { p ->
             val damage = npc.damageMap.getDamageFrom(p)
             if (damage > 0) next.damageMap.add(p, damage)

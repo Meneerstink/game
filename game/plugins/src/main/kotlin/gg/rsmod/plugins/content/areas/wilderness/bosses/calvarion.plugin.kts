@@ -14,6 +14,7 @@ listOf(CalvarionCombat.NORMAL to 6, CalvarionCombat.ENRAGED to 5).forEach { (id,
     set_combat_def(npc = id) {
         configs {
             attackSpeed = speed
+            completesEncounter = id == CalvarionCombat.ENRAGED
             attackStyle = StyleType.SLASH
             respawnDelay = Int.MAX_VALUE
             deathDelay = if (id == CalvarionCombat.NORMAL) 0 else 1
@@ -44,6 +45,8 @@ listOf(CalvarionCombat.NORMAL to 6, CalvarionCombat.ENRAGED to 5).forEach { (id,
             // The first form does not fall: the enraged form rises at once (Near Reality sendDeath -> setTransformation).
             death = if (id == CalvarionCombat.NORMAL) -1 else CalvarionCombat.ANIM_DEATH
         }
+        // Wiki 15375801: 322.5 XP for the complete fight, not twice that amount.
+        slayer { experience = 161.25 }
     }
     on_npc_spawn(id) {
         val boss = npc

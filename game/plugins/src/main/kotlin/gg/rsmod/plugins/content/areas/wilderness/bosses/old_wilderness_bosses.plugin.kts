@@ -63,6 +63,7 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
         configs {
             attackSpeed = 4
             attackStyle = StyleType.STAB
+            completesEncounter = id == OldWildernessBosses.VETION_REBORN
             respawnDelay = Int.MAX_VALUE
             deathDelay = if (id == OldWildernessBosses.VETION) 0 else 1
             poisonImmune = true
@@ -93,6 +94,8 @@ listOf(OldWildernessBosses.VETION, OldWildernessBosses.VETION_REBORN).forEach { 
             // Vet'ion does not fall: he rises as Vet'ion Reborn at once (Kronos startDeath -> transform); only Reborn plays the death.
             death = if (id == OldWildernessBosses.VETION) -1 else OldWildernessBosses.VETION_DEATH
         }
+        // Wiki 14352478/15360817: 624 XP for a complete two-form fight, credited to its total MVP.
+        slayer { experience = 312.0 }
     }
     on_npc_spawn(id) {
         val boss = npc

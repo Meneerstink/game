@@ -161,7 +161,7 @@ on_timer(TASK_MINUTE) {
     }.onFailure { gg.rsmod.game.model.Trace.crash("deadman tasks minute", it) }
 }
 
-on_npc_killed { killer, npc ->
+on_npc_completed { killer, npc ->
     if (npc.id == gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.NPC) {
         gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLoot.onKilled(npc, killer)
     } else {

@@ -38,6 +38,7 @@ fun Player.getSlayerAssignment(): SlayerAssignment? {
  * @param npc The NPC that the player killed to decrease their slayer task count.
  */
 fun Player.handleDecrease(npc: Npc) {
+    if (!npc.combatDef.completesEncounter) return
     if ((attr[SLAYER_AMOUNT] ?: 0) <= 0) return
     if (attr[Krystilia.TASK] == true && !Krystilia.matches(this, npc)) return
     // N522 nachtrun deel 3: Larran's key on a Krystilia task kill, before the count goes down (the last kill of the task counts too).
@@ -45,7 +46,7 @@ fun Player.handleDecrease(npc: Npc) {
     // N570: Slayer's enchantment, Krystilia's second unusual loot (not tied to Larran's switch).
     if (attr[Krystilia.TASK] == true) SlayersStaffE.rollEnchantment(this, npc)
     if (attr.has(SLAYER_AMOUNT)) {
-        addXp(Skills.SLAYER, npc.combatDef.slayerXp)
+        addXp(Skills.SLAYER, gg.rsmod.game.model.combat.NpcEncounter.slayerXp(npc))
         val amount = attr.getOrDefault(SLAYER_AMOUNT, 0)
         attr.put(SLAYER_AMOUNT, amount - 1)
     }

@@ -39,6 +39,8 @@ data class NpcCombatDef(
      * Gfx played on the npc itself when it launches its standard attack, or -1 for none.
      */
     val attackGfx: Int = -1,
+    /** A transformation is a death lifecycle, but is not a completed encounter. */
+    val completesEncounter: Boolean = true,
 ) {
     companion object {
         private const val DEFAULT_LIFEPOINTS = 100

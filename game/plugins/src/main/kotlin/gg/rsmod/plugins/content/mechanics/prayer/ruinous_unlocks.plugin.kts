@@ -22,7 +22,7 @@ on_item_option(item = Items.RUINOUS_POWERS, option = "read") {
     }
 }
 
-on_npc_killed { killer, npc ->
+on_npc_completed { killer, npc ->
     // Breaches award their eligible contributors once in DeadmanBreach.dropLoot.
     if (!gg.rsmod.plugins.content.mechanics.pvp.breach.DeadmanBreach.isBreachNpc(npc)) {
         RuinousBookDrops.onKill(killer, npc.id, npc.tile)
