@@ -22,11 +22,10 @@ import kotlin.math.floor
  */
 object LarransChests {
     /**
-     * OFF until both chests stand on OSRS ground (N569): the rev-667 map hides the small chest's tile 3281,3659 in the walls of its
-     * "Ruins" (OSRS has other ground there - HOOFDLIJST OPEN 'Ruins' vs 'Bone Yard') and the ship deck of the big chest is blocked. A key
-     * without a chest to open is no port, so no keys drop either.
+     * ON since both chests stand on OSRS ground (N569, owner 2026-11-05 'OSRS-grond importeren'): OsrsRegionImportTool 'larran-ruins'
+     * (tx-20261105-062946) and 'larran-ship' (tx-20261105-063026).
      */
-    const val ENABLED = false
+    const val ENABLED = true
 
     const val KEY = 24638 // OSRS 23490 (OsrsItemImportTool batch larran, tx-20261105-005933)
     const val SMALL = 63857 // OSRS 33343 Larran's small chest (closed)
@@ -35,13 +34,15 @@ object LarransChests {
     const val BIG_OPEN = 63860 // OSRS 34830
 
     val SMALL_TILE = Tile(3281, 3659, 0)
-    /**
-     * OSRS Wiki LocLine 3018,3955 plane 1, on the ship west of the Pirates' Hideout. The rev-667 ship there is scenery: every deck tile
-     * on plane 1 is blocked (clip out=NESW in=NESW) and the open plane-1 tiles float beside the hull (testclient 2026-11-05), so nobody can
-     * reach a chest on it. The big chest is therefore NOT placed until the OSRS ship (walkable deck) is imported - BUGLIJST N569.
-     */
+    /** OSRS Wiki LocLine 3018,3955 plane 1, on the OSRS ship west of the Pirates' Hideout (imported 'larran-ship'). */
     val BIG_TILE = Tile(3018, 3955, 1)
-    const val BIG_PLACED = false
+    const val BIG_PLACED = true
+
+    /** The OSRS ship's ladders, imported loc types (OSRS 272/273 deck at 3018,3957; 245/246 quarterdeck at 3017/3019,3959). */
+    const val SHIP_LADDER_UP = 63927
+    const val SHIP_LADDER_DOWN = 63928
+    const val SHIP_LADDER_UP_2 = 63917
+    const val SHIP_LADDER_DOWN_2 = 63918
 
     /**
      * The chance of a key for one task kill of an npc of combat level [level]: OSRS Wiki Template:WildernessSlayerDropTable (the table the

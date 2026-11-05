@@ -166,6 +166,20 @@ object OsrsRegionImportTool {
                 patch = intArrayOf(3328, 3776, 3343, 3839), overlayOverrides = mapOf(6 to 6), dropHiddenOverlays = true),
             "escape-rim-n" to Batch(listOf(13116), emptyList(), "Escape Caves lava rim north (13116)", replaceSquares = setOf(13116),
                 patch = intArrayOf(3264, 3840, 3327, 3855), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(47140), dropHiddenOverlays = true),
+            // N569 (owner 2026-11-05 06:3x 'OSRS-grond importeren'): Larran's small chest stands in the "Ruins" north-east of the Chaos
+            // Temple (OSRS 34831 = multiloc 33343/34828 at 3281,3659 rot 1). Our walls match OSRS, but the 667 ground/models differ and a
+            // 667 Skeleton 14603 stood on the chest tile; the OSRS ruins rectangle replaces ours. The chest itself is placed by the server.
+            "larran-ruins" to Batch(listOf(13113), emptyList(), "Larran's small chest: OSRS Ruins", replaceSquares = setOf(13113),
+                patch = intArrayOf(3266, 3648, 3300, 3676), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(34831), dropHiddenOverlays = true),
+            // N569: Larran's big chest (OSRS 34832 = multiloc 34829/34830 at 3018,3955 plane 1 rot 2) on the OSRS ship west of the Pirates'
+            // Hideout: Ship's ladders 272/273 (3018,3957 planes 0-1) and 245/246 (3017/3019,3959 planes 1-2), a walkable deck. The 667 ship
+            // there is scenery with a blocked deck. Chest placed by the server.
+            "larran-ship" to Batch(listOf(12093), emptyList(), "Larran's big chest: OSRS ship", replaceSquares = setOf(12093),
+                patch = intArrayOf(3009, 3940, 3028, 3967), overlayOverrides = mapOf(6 to 6), excludeOsrsLocs = setOf(34832), dropHiddenOverlays = true),
+            // N526 (owner 2026-11-05: 'zoek het verschil met OSRS'): FeroxImportTool took x 3122-3188; west of the west wall (x 3112-3121)
+            // OSRS has the two statues 39674, bushes, ruined wall pieces 23849/23851/12278 where the 667 forest still stood.
+            "ferox-west" to Batch(listOf(12344), emptyList(), "Ferox Enclave west approach: OSRS surface", replaceSquares = setOf(12344),
+                patch = intArrayOf(3112, 3602, 3121, 3647), overlayOverrides = mapOf(6 to 6), dropHiddenOverlays = true),
             "wildy-lairs" to Batch(listOf(13473, 13215, 7092, 7604), listOf(47140, 46995, 47141), "Wilderness boss lairs (Callisto's Den, Vet'ion's Rest, Hunter's End, Skeletal Tomb)"),
             // N568 (A9 2026-11-05): the lairs' OSRS "hidden" overlays (rgb ff00ff, no texture - OSRS does not draw them) came in as pale
             // floors outside the cave walls; the same tiles again without them (tiles only, the locs and the fog record stay).
