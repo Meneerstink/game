@@ -31,11 +31,14 @@ on_equipment_option(item = STAFF_E, option = "check") {
     SlayersStaffE.check(player, item)
 }
 
+// Revert asks its own OSRS question (the charges line), so ItemActionGuard's shared "Are you sure" GUI is skipped.
+gg.rsmod.plugins.content.items.ItemActionGuard.selfConfirming("revert", STAFF_E)
+
 on_item_option(item = STAFF_E, option = "revert") {
     val slot = player.getInteractingItemSlot()
     val item = player.inventory[slot] ?: return@on_item_option
     player.queue {
-        messageBox(SlayersStaffE.chargesLine(SlayersStaffE.charges(item)))
+        itemMessageBox(SlayersStaffE.chargesLine(SlayersStaffE.charges(item)), STAFF_E)
         if (options("Yes", "No") != 1) return@queue
         if (player.inventory[slot]?.id != STAFF_E) return@queue
         player.inventory[slot] = gg.rsmod.game.model.item.Item(STAFF)
