@@ -100,6 +100,9 @@ object CalvarionCombat : CombatScript() {
     val HOUNDS = AttributeKey<MutableList<Npc>>()
     val HOUNDS_CALLED = AttributeKey<Boolean>()
 
+    /** The Calvar'ion a hellhound fights for (the single-way rules count them as one attacker, Combat.bossSide). */
+    val OWNER = AttributeKey<Npc>()
+
     fun isCalvarion(id: Int) = id == NORMAL || id == ENRAGED
 
     fun enraged(npc: Npc) = npc.id == ENRAGED
@@ -255,6 +258,7 @@ object CalvarionCombat : CombatScript() {
             val dog = Npc(if (enraged(npc)) GREATER_HOUND else HOUND, t, world)
             dog.respawns = false
             dog.walkRadius = 5
+            dog.attr[OWNER] = npc
             if (world.spawn(dog)) {
                 hounds(npc) += dog
                 if (target != null && !target.isDead()) dog.attack(target)

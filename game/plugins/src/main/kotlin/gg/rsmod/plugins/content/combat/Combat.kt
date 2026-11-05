@@ -453,9 +453,13 @@ object Combat {
     private fun bossSide(pawn: Pawn): Npc? {
         val npc = pawn as? Npc ?: return null
         val spiders = gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat
+        val calvarion = gg.rsmod.plugins.content.areas.wilderness.bosses.CalvarionCombat
         return when (npc.id) {
             spiders.SPIDERLING, spiders.SPINDEL_SPIDERLING -> npc.attr[spiders.OWNER]
             spiders.NPC, spiders.SPINDEL -> npc
+            // N522 nachtrun deel 2: the same in the singles-plus Skeletal Tomb - Calvar'ion and his hellhounds are one attacker.
+            calvarion.HOUND, calvarion.GREATER_HOUND -> npc.attr[calvarion.OWNER]
+            calvarion.NORMAL, calvarion.ENRAGED -> npc
             else -> null
         }
     }
