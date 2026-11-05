@@ -233,6 +233,25 @@ enum class PickpocketTarget(
         damage = 20..20,
         stunnedTicks = 8,
     ),
+    WildernessRogue(
+        objectIds = listOf(Npcs.ROGUE_OSRS),
+        level = 32,
+        minChance = 75,
+        maxChance = 240,
+        xp = 36.5,
+        drops = DropTableFactory.build {
+            main {
+                total(144)
+                obj(Items.COINS_995, 25..40, slots = 123)
+                obj(Items.AIR_RUNE, quantity = 8, slots = 9)
+                obj(Items.JUG_OF_WINE, slots = 6)
+                obj(Items.LOCKPICK, slots = 5)
+                obj(Items.IRON_DAGGER_P, slots = 1)
+            }
+        },
+        damage = 2..2,
+        stunnedTicks = 8,
+    ), // N522 report section 5; lvl135 has no Pickpocket option. Existing engine controls modifiers/pet.
     Rogue(
         objectIds = listOf(Npcs.ROGUE),
         level = 32,

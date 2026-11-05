@@ -14722,3 +14722,39 @@
   examine: "Can never possibly go hungry."
 - id: 15081
   examine: "A witch who likes chaos - she looks dangerous!"
+
+# N522 part 5: verbatim examines from N522-NPCS-ONDERZOEK.txt.
+- id: 15088
+  examine: "A warrior touched by chaos."
+- id: 15089
+  examine: "An extremely vicious scorpion."
+- id: 15090
+  examine: "Wow! Scorpions shouldn't grow that big."
+- id: 15091
+  examine: "Aaaargh, me hearty!"
+- id: 15092
+  examine: "Aaaargh, me hearty!"
+- id: 15093
+  examine: "Aaaargh, me hearty!"
+- id: 15094
+  examine: "Aaaargh, me hearty!"
+- id: 15095
+  examine: "Aaaargh, me hearty!"
+- id: 15096
+  examine: "Rogueish."
+- id: 15097
+  examine: "A very strong rogue."
+- id: 15098
+  examine: "It's dripping with molten lava."
+- id: 15099
+  examine: "He ent such a bad guy."
+- id: 15100
+  examine: "The trunk of a dead Ent."
+- id: 15101
+  examine: "A woolly, elephantine monster."
+- id: 15102
+  examine: "An elder, more dangerous kind of druid."
+- id: 15103
+  examine: "Runite that's come alive!"
+- id: 15104
+  examine: "A rocky outcrop."

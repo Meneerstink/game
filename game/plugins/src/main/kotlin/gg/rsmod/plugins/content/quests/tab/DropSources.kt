@@ -179,7 +179,11 @@ object DropSources {
 
     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
-        val base = viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
+        // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
+        // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
+        val base = if (gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.isPlayerDependent(source.tableNpc)) {
+            buildView(player, source, rate)
+        } else viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
         val personal = personal(player, source, base)
         // N490: only the new drop line; ownership/unlock is personal and must never enter the shared view cache.
         val kind = ruinousSource(player.world, source) ?: return personal
@@ -599,7 +603,7 @@ object DropSources {
 
     /** Built once per drop rate (the first search at that rate), then a search is a lookup. */
     fun itemIndex(player: Player, rate: Double = DropTableFactory.killRate(player)): ItemIndex =
-        indexes[rate] ?: synchronized(indexes) {
+        (indexes[rate] ?: synchronized(indexes) {
             indexes[rate] ?: run {
                 val start = System.nanoTime()
                 val names = HashMap<Int, String>()
@@ -615,7 +619,26 @@ object DropSources {
                     gg.rsmod.game.Server.logger.info("Drop Viewer: item index at {}x ({} items) built in {} ms.", rate, names.size, (System.nanoTime() - start) / 1_000_000)
                 }
             }
+        }).let { personalWildernessIndex(player, it, rate) }
+
+    /** N522: refresh only the new player-dependent NPC contributions in an otherwise shared item-search index. */
+    internal fun personalWildernessIndex(player: Player, base: ItemIndex, rate: Double, sources: List<Source> = all(player)): ItemIndex {
+        val dependent = gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops::isPlayerDependent
+        val dynamic = sources.filter { dependent(it.tableNpc) }
+        if (dynamic.isEmpty()) return base
+        val names = HashMap(base.names)
+        val bySource = base.sources.mapValuesTo(HashMap()) { (_, entries) ->
+            entries.filterNot { dependent(it.first.tableNpc) }.toMutableList()
         }
+        bySource.entries.removeIf { it.value.isEmpty() }
+        dynamic.forEach { source ->
+            itemChances(view(player, source, rate)).forEach { (item, chance) ->
+                names.getOrPut(item) { itemName(player.world, item) }
+                bySource.getOrPut(item) { ArrayList() } += Triple(source, chance.first, chance.second)
+            }
+        }
+        return ItemIndex(names.filterKeys { it in bySource }, bySource)
+    }
 
 
     /** Every item of a view with its chance per kill (folded tables included, the same item added up). */

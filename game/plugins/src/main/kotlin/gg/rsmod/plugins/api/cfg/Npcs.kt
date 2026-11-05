@@ -13001,4 +13001,25 @@ object Npcs {
     const val VETION_REBORN_OLD = 15078 // 6612 (build 209)
     const val SKELETON_HELLHOUND_OLD = 15079 // 6613 (build 209)
     const val GREATER_SKELETON_HELLHOUND_OLD = 15080 // 6614 (build 209)
+
+
+
+    // N522 part 5; cache tx-20261105-015318. Upstream OSRS id in each comment.
+    const val DARK_WARRIOR_OSRS = 15088 // 6606
+    const val SCORPION_OSRS = 15089 // 3024
+    const val KING_SCORPION_OSRS = 15090 // 3027
+    const val ZOMBIE_PIRATE_OSRS = 15091 // 13489
+    const val ZOMBIE_PIRATE_OSRS_28_A = 15092 // 13490
+    const val ZOMBIE_PIRATE_OSRS_28_B = 15093 // 13491
+    const val ZOMBIE_PIRATE_OSRS_34_A = 15094 // 13492
+    const val ZOMBIE_PIRATE_OSRS_34_B = 15095 // 13493
+    const val ROGUE_OSRS = 15096 // 526
+    const val ROGUE_OSRS_135 = 15097 // 6603
+    const val LAVA_DRAGON_OSRS = 15098 // 6593
+    const val ENT_OSRS = 15099 // 6594
+    const val ENT_TRUNK_OSRS = 15100 // 9474
+    const val MAMMOTH_OSRS = 15101 // 6604
+    const val ELDER_CHAOS_DRUID_OSRS = 15102 // 6607
+    const val RUNITE_GOLEM_OSRS = 15103 // 6600
+    const val RUNITE_ROCKS_OSRS = 15104 // 6601
 }

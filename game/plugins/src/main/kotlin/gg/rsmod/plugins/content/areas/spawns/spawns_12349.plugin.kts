@@ -32,3 +32,6 @@ spawn_npc(npc = Npcs.GIANT_BAT, x = 3076, z = 3961, walkRadius = 5) // N522 OSRS
 spawn_npc(npc = Npcs.GIANT_BAT, x = 3077, z = 3949, walkRadius = 5) // N522 OSRS O0328 Giant bat
 spawn_npc(npc = Npcs.GIANT_BAT, x = 3079, z = 3957, walkRadius = 5) // N522 OSRS O0329 Giant bat
 spawn_npc(npc = Npcs.GIANT_BAT, x = 3080, z = 3961, walkRadius = 5) // N522 OSRS O0330 Giant bat
+
+spawn_npc(npc = Npcs.ROGUE_OSRS, x = 3076, z = 3916, walkRadius = 5) // N522 OSRS O0331 Rogue
+spawn_npc(npc = Npcs.ROGUE_OSRS, x = 3079, z = 3909, walkRadius = 5) // N522 OSRS O0332 Rogue
