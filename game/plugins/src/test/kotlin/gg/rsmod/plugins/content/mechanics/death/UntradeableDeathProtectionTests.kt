@@ -98,6 +98,16 @@ class UntradeableDeathProtectionTests {
     }
 
     @Test
+    fun `N552 an already broken high-tier item is lost above level 20 for nothing, kept below 20, low tier kept everywhere`() {
+        val deep = UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.VOID_KNIGHT_TOP_BROKEN), deepWilderness = true)
+        assertEquals(UntradeableFate.DESTROYED, deep.fate, "broken Void above 20: lost like the whole piece (OSRS 'lost completely')")
+        assertEquals(0L, deep.killerCoins, "it already paid its killer once")
+        assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.VOID_KNIGHT_TOP_BROKEN), false).fate, "below 20: kept broken")
+        assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.FIRE_CAPE_BROKEN), true).fate, "low tier: kept broken above 20")
+        assertEquals(UntradeableFate.UNCHANGED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.DRAGON_DEFENDER_BROKEN), true).fate, "defenders: kept broken")
+    }
+
+    @Test
     fun `rune pouch keeps the empty pouch below 20 and is destroyed above 20 when unlocked`() {
         assertEquals(UntradeableFate.POUCH_EMPTIED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), false).fate)
         assertEquals(UntradeableFate.DESTROYED, UntradeableDeathProtection.fateOf(DEFINITIONS, Item(Items.RUNE_POUCH), true).fate)

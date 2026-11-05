@@ -149,7 +149,18 @@ object UntradeableDeathProtection {
         // A damaged item already paid its killer once (a broken item left over from the old rules): lost, but for nothing.
         if (!lockable(item.id)) return UntradeableOutcomeFate(UntradeableFate.LOST_FOR_COINS, if (isDamaged(item)) 0L else lostCoins(definitions, item))
         val locked = gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables.ALL.any { item.id == it.lockedItemId || item.id == it.brokenItemId || item.id == it.mangledItemId }
-        if (isDamaged(item)) return UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+        if (isDamaged(item)) {
+            // N552 (owner 2026-11-02: "broken Void hou je blijkbaar boven level 20" = wrong): OSRS Items Kept on Death - above level 20
+            // an unlocked high-tier breakable is "lost completely", only low-tier breakables are "kept in broken form". The same item
+            // already broken is lost there too (it paid its killer once: no coins, Perdu keeps a record); locked forms and the low
+            // tier (fire capes, defenders - breaksAboveTwenty) stay as they are.
+            val lowTier = PvpDeathBreakables.forBroken(item.id)?.breaksAboveTwenty == true
+            return if (deepWilderness && !locked && !lowTier && PvpDeathBreakables.forBroken(item.id) != null) {
+                UntradeableOutcomeFate(UntradeableFate.DESTROYED, 0L)
+            } else {
+                UntradeableOutcomeFate(UntradeableFate.UNCHANGED, 0L)
+            }
+        }
         if (RunePouch.isPouch(item.id)) {
             return if (locked || !deepWilderness) {
                 UntradeableOutcomeFate(UntradeableFate.POUCH_EMPTIED, 0L)
