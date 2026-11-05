@@ -54,6 +54,9 @@ object NpcContact {
 
     fun byComponent(component: Int): Contact? = CONTACTS.firstOrNull { component == it.head || component == it.label }
 
+    /** 429:12 camera zoom for Krystilia's OSRS head (cache 2200 = the 667 heads' size). */
+    const val KRYSTILIA_ZOOM = 1100
+
     fun open(player: Player) {
         player.openInterface(INTERFACE, InterfaceDestination.MAIN_SCREEN)
         HIDDEN.forEach { player.setComponentHidden(INTERFACE, it, true) }
@@ -65,6 +68,9 @@ object NpcContact {
             player.setComponentHidden(INTERFACE, 12, false)
             player.setComponentHidden(INTERFACE, 40, false)
             player.setComponentNpcHead(INTERFACE, 12, id)
+            // N572: her OSRS head model is about half the size of the 667 heads at the slot's cache camera (zoom 2200, like Turael's
+            // 429:13); the camera comes in so the face matches the others (testclient 2026-11-05).
+            player.write(gg.rsmod.game.message.impl.IfSetAngleMessage(hash = (INTERFACE shl 16) or 12, zoom = KRYSTILIA_ZOOM, xan = 15, yan = 1999))
             player.setComponentText(INTERFACE, 40, "Krystilia")
         }
     }

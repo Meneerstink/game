@@ -148,6 +148,7 @@ object InterfaceHookProbeTool {
             if (c.clientcode != 0) parts += "clientcode=${c.clientcode}"
             if (c.spriteId != -1) parts += "sprite=${c.spriteId}"
             if (c.modelId != -1) parts += "model=${c.modelId}"
+            c.camera?.let { parts += "camera=xan ${it[0]} yan ${it[1]} zan ${it[2]} zoom ${it[3]}" }
             if (c.opBase.isNotEmpty()) parts += "opBase='${c.opBase}'"
             if (c.ops.isNotEmpty()) {
                 parts += "ops=[" + c.ops.mapIndexed { i, op -> "${i + 1}:'${op ?: ""}'" }.joinToString(",") + "]"
@@ -432,7 +433,12 @@ object InterfaceHookProbeTool {
         val y: Int = 0,
         val width: Int = 0,
         val height: Int = 0,
+        /** MODEL(6) camera: xan2d, yan2d, zan2d, zoom2d (null when the component has none). N572. */
+        val camera: IntArray? = null,
     )
+
+    /** The baked model camera (xan, yan, zan, zoom) of one raw MODEL(6) component, null when none. */
+    fun componentModelCamera(data: ByteArray): IntArray? = decodeComponent(data).camera
 
     private const val TYPE_LAYER = 0
     private const val TYPE_RECTANGLE = 3
@@ -464,6 +470,7 @@ object InterfaceHookProbeTool {
     private fun decodeComponent(data: ByteArray): DecodedComponent {
         var modelId = -1
         var spriteId = -1
+        var camera: IntArray? = null
         val p = PacketReader(data)
         var version = p.g1()
         if (version == 255) version = -1
@@ -522,18 +529,12 @@ object InterfaceHookProbeTool {
                 if (ortho2d) {
                     p.g2s()
                     p.g2s() // modelOriginX/Y
-                    p.g2()
-                    p.g2()
-                    p.g2()
-                    p.g2() // xan2d/yan2d/zan2d/zoom2d
+                    camera = intArrayOf(p.g2(), p.g2(), p.g2(), p.g2()) // xan2d/yan2d/zan2d/zoom2d
                 } else if (orthoView) {
                     p.g2s()
                     p.g2s()
                     p.g2s() // modelOriginX/Y/Z
-                    p.g2()
-                    p.g2()
-                    p.g2() // xan2d/yan2d/zan2d
-                    p.g2s() // zoom2d
+                    camera = intArrayOf(p.g2(), p.g2(), p.g2(), p.g2s()) // xan2d/yan2d/zan2d/zoom2d
                 }
                 p.g2() // modelAnimation
                 if (resizeModeX.toInt() != 0) p.g2() // modelAspectRatioX
@@ -652,7 +653,7 @@ object InterfaceHookProbeTool {
 
         return DecodedComponent(
             type, name, text, layer, clientcode, opBase, ops, events, hooks, triggers, modelId, spriteId,
-            originalX, originalY, originalWidth, originalHeight,
+            originalX, originalY, originalWidth, originalHeight, camera,
         )
     }
 
