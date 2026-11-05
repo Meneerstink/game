@@ -64,7 +64,7 @@ object PerduShop {
         val all = PerduReclaim.paidOffers(player)
         if (all.isEmpty()) return false
         val shown = page.coerceIn(0, (all.size - 1) / PAGE_SIZE)
-        val shop = Shop(NAME, StockType.NORMAL, PurchasePolicy.BUY_NONE, Currency, arrayOfNulls<ShopItem>(PAGE_SIZE), emptyArray(), false)
+        val shop = Shop(NAME, StockType.NORMAL, PurchasePolicy.BUY_NONE, Currency, arrayOfNulls<ShopItem>(PAGE_SIZE), emptyArray(), false, hideStock = true)
         player.attr[PAGE] = shown
         fill(player, shop, all)
         player.openShop(shop)

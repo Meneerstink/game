@@ -35,6 +35,8 @@ data class Shop(
     val items: Array<ShopItem?>,
     val sampleItems: Array<ShopItem?>,
     val containsSamples: Boolean,
+    /** N559: the window draws no stock number (OSRS "Lost Property shop": item and price only) - varp 2407 for clientscript 2723. */
+    val hideStock: Boolean = false,
 ) {
     /**
      * The [gg.rsmod.game.model.entity.Player.uid]s for players who currently have

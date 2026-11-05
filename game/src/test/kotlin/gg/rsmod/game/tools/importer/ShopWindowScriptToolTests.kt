@@ -38,6 +38,7 @@ class ShopWindowScriptToolTests {
         val code: List<Ins>,
         val locals: IntArray,
         val invs: Map<Pair<Int, Int>, Pair<Int, Int>>,
+        val varps: Map<Int, Int> = emptyMap(),
     ) {
         val ints = ArrayDeque<Int>()
         val strings = ArrayDeque<String>()
@@ -63,6 +64,7 @@ class ShopWindowScriptToolTests {
                 }
                 when (ins.opcode) {
                     0 -> ints.addLast(ins.int)
+                    1 -> ints.addLast(varps[ins.int] ?: 0)
                     3 -> strings.addLast(ins.string!!)
                     6 -> jump()
                     8, 9, 10 -> {
@@ -177,18 +179,20 @@ class ShopWindowScriptToolTests {
             fun number(
                 count: Int,
                 cape: Boolean = false,
+                noStock: Boolean = false,
             ): Run {
                 val locals = IntArray(served.intLocals)
                 locals[2] = 4
                 locals[6] = 3
                 locals[15] = if (cape) 1 else 0
-                return Run(code, locals, mapOf((4 to 3) to (1234 to count))).run(block, stop = end)
+                return Run(code, locals, mapOf((4 to 3) to (1234 to count)), mapOf(ShopWindowScriptTool.NO_STOCK_VARP to if (noStock) 1 else 0)).run(block, stop = end)
             }
             assertEquals("10000" to 0xFFFF00, number(10_000).let { it.text to it.colour }, "$cache: 10000 in yellow")
             assertEquals("99999" to 0xFFFF00, number(99_999).let { it.text to it.colour })
             assertEquals("250K" to 0xFFFFFF, number(250_000).let { it.text to it.colour })
             assertEquals("12M" to 0x00FF80, number(12_000_000).let { it.text to it.colour })
             assertNull(number(10_000, cape = true).text, "$cache: a skillcape row shows no number, as before")
+            assertNull(number(10_000, noStock = true).text, "$cache: N559 Perdu's Lost Property (varp 2407 = 1) shows no number")
             assertTrue(number(10_000).stoppedAt == code.indexOf(end), "the block ends at the cell's own end")
 
             // 7 children per filled cell, 7 hidden ones per empty cell.

@@ -86,6 +86,34 @@ class PerduLostPropertyTests {
     }
 
     @Test
+    fun `N559 a lost untradeable is not sold back while the player has it again - grave, bank or worn - and only one per item`() {
+        val player = newPlayer()
+        PerduReclaim.record(player, Item(Items.NEITIZNOT_FACEGUARD), 50_000)
+        PerduReclaim.record(player, Item(Items.NEITIZNOT_FACEGUARD), 50_000)
+        assertEquals(1, PerduReclaim.offers(player).count { it.itemId == Items.NEITIZNOT_FACEGUARD }, "two records, one offer")
+        player.gravestone[0] = Item(Items.NEITIZNOT_FACEGUARD)
+        assertTrue(PerduReclaim.offers(player).none { it.itemId == Items.NEITIZNOT_FACEGUARD }, "in the gravestone: not offered (the dupe)")
+        val offer = PerduReclaim.Offer(Items.NEITIZNOT_FACEGUARD, 1, 50_000, record = PerduReclaim.records(player).first())
+        player.inventory.add(Items.COINS_995, 100_000)
+        assertEquals("You don't need that back - you still have it.", PerduReclaim.claim(player, offer), "an old window cannot buy it either")
+        player.gravestone[0] = null
+        player.equipment[0] = Item(Items.NEITIZNOT_FACEGUARD)
+        assertTrue(PerduReclaim.offers(player).none { it.itemId == Items.NEITIZNOT_FACEGUARD }, "worn: not offered")
+        player.equipment[0] = null
+        assertEquals(null, PerduReclaim.claim(player, offer), "really lost: bought back")
+        assertTrue(PerduReclaim.offers(player).none { it.itemId == Items.NEITIZNOT_FACEGUARD }, "bought: the second record stays hidden")
+        assertEquals(1, PerduReclaim.records(player).count { it.itemId == Items.NEITIZNOT_FACEGUARD }, "the second record is kept")
+    }
+
+    @Test
+    fun `N559 a locked defender's broken form counts as owning the defender`() {
+        val player = newPlayer()
+        PerduReclaim.record(player, Item(Items.DRAGON_DEFENDER_L), 1_000)
+        player.bank.add(Items.DRAGON_DEFENDER_L_BROKEN, 1)
+        assertTrue(PerduReclaim.offers(player).none { it.itemId == Items.DRAGON_DEFENDER_L })
+    }
+
+    @Test
     fun `a broken or locked imbued cape counts as owning one`() {
         val player = newPlayer()
         player.inventory[0] = Item(Items.IMBUED_ZAMORAK_CAPE)

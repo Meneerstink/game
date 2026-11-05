@@ -1040,3 +1040,10 @@ task runSlayerRewardsInterfaceImportTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.SlayerRewardsInterfaceImportTool'
 }
+
+task runShopWindowScriptTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Shop window clientscripts 2720/2723 + inv 4 + varp 2407 (N42/N62/N221/N222/N559). Usage: --args="[--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ShopWindowScriptTool'
+}

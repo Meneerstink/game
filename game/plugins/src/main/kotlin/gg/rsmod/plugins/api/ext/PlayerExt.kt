@@ -115,6 +115,8 @@ fun Player.openShop(
         // coin, so those shops send -1 as well: no icon rather than a wrong one.
         val shownCurrency = currentShop.currency.currencyItem.takeIf { it in SHOP_CURRENCY_ICONS } ?: -1
         setVarp(Varps.SHOP_CURRENCY, shownCurrency)
+        // N559: Perdu's Lost Property draws no stock numbers (ShopWindowScriptTool.NO_STOCK_VARP).
+        setVarp(gg.rsmod.game.tools.importer.ShopWindowScriptTool.NO_STOCK_VARP, if (currentShop.hideStock) 1 else 0)
 
         shopDirty = true
         setVarc(199, -1)

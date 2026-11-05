@@ -173,6 +173,29 @@ object ShopWindowScriptTool {
         return script.encode()
     }
 
+    /**
+     * N559 (owner 2026-11-02: "Perdu Lost Property toont ook de hoeveelheid bij items"; the OSRS "Lost Property shop" interface shows
+     * the item and its price, no stock number): while varp [NO_STOCK_VARP] is 1 the stock number child stays empty, like a skillcape
+     * row's. The server sets it before opening a shop (1 for Perdu, 0 for every other shop). Unchanged when already there.
+     */
+    const val NO_STOCK_VARP = 2407
+
+    fun patchHideStock(current: ByteArray): ByteArray {
+        val script = ClientScriptEditor.decode(current)
+        if (script.code.any { it.opcode == PUSH_VAR && it.int == NO_STOCK_VARP }) return current
+        val code = script.code
+        // The skillcape test patchLayout put in front of the number: local 15 -> BRANCH_IF_TRUE end.
+        val skillcape =
+            script.find(PUSH_INT_LOCAL to 15, BRANCH_IF_TRUE to null).filter {
+                code[it + 1].target != null && code.getOrNull(it + 2)?.let { n -> n.opcode == PUSH_INT_LOCAL && n.int == 2 } == true &&
+                    code.getOrNull(it + 4)?.opcode == INV_GETNUM
+            }
+        check(skillcape.size == 1) { "clientscript $LAYOUT_SCRIPT: stock-number skillcape test found ${skillcape.size} times (run patchLayout first)" }
+        val end = code[skillcape.single() + 1].target!!
+        script.insert(skillcape.single() + 2, listOf(Ins(PUSH_VAR, NO_STOCK_VARP), int(1), Ins(BRANCH_EQUALS, target = end)))
+        return script.encode()
+    }
+
     /** Inventory config 4 with [Shop.CLIENT_VISIBLE_SLOTS] slots (opcode 2 = size). */
     fun patchStockInv(current: ByteArray): ByteArray {
         check(current.size == 4 && current[0].toInt() == 2 && current[3].toInt() == 0) { "inv $SHOP_STOCK_INV config is not 'size only': ${current.toList()}" }
@@ -194,6 +217,19 @@ object ShopWindowScriptTool {
                 if (!patched.contentEquals(current)) {
                     mutations += CacheMutation(key.first, key.second, 0, patched, label, expectedCurrentSha1 = CacheItemProbeTool.sha1(current))
                 }
+            }
+            // N559: the hide-stock flag after the layout patch (same clientscript, applied on top of the bytes above).
+            val layout = mutations.lastOrNull { it.indexId == CLIENTSCRIPT_INDEX && it.groupId == LAYOUT_SCRIPT }?.newBytes
+                ?: requireNotNull(library.data(CLIENTSCRIPT_INDEX, LAYOUT_SCRIPT, 0))
+            val hidden = patchHideStock(layout)
+            if (!hidden.contentEquals(layout)) {
+                mutations.removeAll { it.indexId == CLIENTSCRIPT_INDEX && it.groupId == LAYOUT_SCRIPT }
+                val original = requireNotNull(library.data(CLIENTSCRIPT_INDEX, LAYOUT_SCRIPT, 0))
+                mutations += CacheMutation(CLIENTSCRIPT_INDEX, LAYOUT_SCRIPT, 0, hidden, "clientscript $LAYOUT_SCRIPT: no stock number while varp $NO_STOCK_VARP = 1 (N559 Perdu)",
+                    expectedCurrentSha1 = CacheItemProbeTool.sha1(original))
+            }
+            if (library.data(CONFIG_INDEX, 16, NO_STOCK_VARP) == null) {
+                mutations += CacheMutation(CONFIG_INDEX, 16, NO_STOCK_VARP, byteArrayOf(0), "varp $NO_STOCK_VARP (shop without stock numbers, N559)")
             }
             val inv = requireNotNull(library.data(CONFIG_INDEX, INV_GROUP, SHOP_STOCK_INV)) { "inv $SHOP_STOCK_INV config missing" }
             val sized = patchStockInv(inv)

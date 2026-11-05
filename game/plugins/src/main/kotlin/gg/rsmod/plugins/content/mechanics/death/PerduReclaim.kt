@@ -79,8 +79,29 @@ object PerduReclaim {
     fun offers(player: Player): List<Offer> =
         // N509 (owner 2026-11-01): Perdu only sells back untradeables. A record of a tradeable item (a noted potion the death rules took
         // for an untradeable before notes inherited their item's tradeability) stays in the save but is never offered.
-        records(player).filter { !tradeable(player, it.itemId) }.map { Offer(it.itemId, it.amount, it.price, record = it) } +
+        // N559 (owner 2026-11-02 '!! DUPE': a Neitiznot faceguard in the gravestone AND on Perdu's list): OSRS sells a lost item back
+        // only "as long as you do not have another copy" - a record is offered only while the player owns no form of the item
+        // anywhere (Possessions: carried, worn, bank, gravestone, Death's Office, Grand Exchange, familiar), and one per item; the
+        // other records of that item stay saved for when it is lost again.
+        records(player).withIndex().filter { !tradeable(player, it.value.itemId) }
+            .filter { stackable(player, it.value.itemId) || gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(player, family(it.value.itemId)) == null }
+            .distinctBy { if (stackable(player, it.value.itemId)) "row:${it.index}" else "item:${family(it.value.itemId).minOrNull()}" }
+            .map { Offer(it.value.itemId, it.value.amount, it.value.price, record = it.value) } +
             PerduLostProperty.available(player).map { Offer(it.itemId, 1, it.price, property = it) }
+
+    /** A stack (tickets, runes ...): one copy rule does not apply, every lost stack is its own row. */
+    private fun stackable(player: Player, itemId: Int): Boolean = RepairPrices.itemDef(player.world.definitions, itemId)?.stackable == true
+
+    /** Every id that is the same item for ownership: its Trouver lock family (base, (l), broken, mangled) and its 667 duplicates. */
+    fun family(itemId: Int): Set<Int> {
+        val lockables = gg.rsmod.plugins.content.mechanics.trouver.TrouverLockables
+        val base = lockables.ALIASES[itemId] ?: itemId
+        val lockable = lockables.ALL.firstOrNull { base == it.baseItemId || base == it.lockedItemId || base == it.brokenItemId || base == it.mangledItemId }
+        val ids = mutableSetOf(itemId, base)
+        lockable?.let { ids += listOfNotNull(it.baseItemId, it.lockedItemId, it.brokenItemId, it.mangledItemId) }
+        ids += lockables.ALIASES.filterValues { it in ids }.keys
+        return ids
+    }
 
     private fun tradeable(
         player: Player,
@@ -152,6 +173,10 @@ object PerduReclaim {
         val current = records(player).toMutableList()
         val index = offer.record?.let { current.indexOf(it) } ?: -1
         if (offer.record != null && index < 0) return "I don't have that any more."
+        // N559: the same "no other copy" rule at the moment of buying (the window may be older than the item now in the bank).
+        if (offer.record != null && !stackable(player, offer.itemId) && gg.rsmod.plugins.content.mechanics.ownership.Possessions.whereOwned(player, family(offer.itemId)) != null) {
+            return "You don't need that back - you still have it."
+        }
         if (offer.property != null && offer.property !in PerduLostProperty.available(player)) return "You don't need that back - you still have it."
         // OSRS Wiki "Perdu" (25 Feb 2026): "Perdu will no longer sell you an item that you don't have space to carry."
         if (player.inventory.freeSlotCount < 1) return "You'll need a free inventory space for that."
