@@ -25,6 +25,41 @@ create_shop(
 }
 
 /*
+ * N501 (owner 2026-11-02 + 2026-11-05 12:5x choice A): the Archaeologist's Desert Treasure II reward shop, for players who finished the
+ * quest. Prices are the OSRS making costs of the parts: Ancient staff = OSRS GE (prices.runescape.wiki latest 2026-11-05: low 58,802 /
+ * high 61,229 -> 60,015); every part without a GE price (Ancient icon, the four quartzes - untradeable in OSRS) = 75,000, the Ring of
+ * shadows' own OSRS price (Mysterious Bandit). Ancient sceptre = staff + icon (OSRS Wiki: "made by bringing the untradeable Ancient icon
+ * and staff to Eblis"); a coloured sceptre = sceptre + its quartz. The Breach Trader keeps selling the sceptres for points (owner: both).
+ * The DT2 boss rings/vestiges are not in it (economy decision still open).
+ */
+val DT2_STAFF = 60_015
+val DT2_PART = 75_000
+val DT2_SCEPTRE = DT2_STAFF + DT2_PART
+val DT2_REWARDS =
+    listOf(
+        Items.RING_OF_SHADOWS_UNCHARGED to DT2_PART,
+        Items.ANCIENT_ICON to DT2_PART,
+        Items.ANCIENT_SCEPTRE to DT2_SCEPTRE,
+        Items.BLOOD_QUARTZ to DT2_PART,
+        Items.ICE_QUARTZ to DT2_PART,
+        Items.SMOKE_QUARTZ to DT2_PART,
+        Items.SHADOW_QUARTZ to DT2_PART,
+        Items.BLOOD_ANCIENT_SCEPTRE to DT2_SCEPTRE + DT2_PART,
+        Items.ICE_ANCIENT_SCEPTRE to DT2_SCEPTRE + DT2_PART,
+        Items.SMOKE_ANCIENT_SCEPTRE to DT2_SCEPTRE + DT2_PART,
+        Items.SHADOW_ANCIENT_SCEPTRE to DT2_SCEPTRE + DT2_PART,
+    )
+
+create_shop(
+    "Desert Treasure II Rewards",
+    CoinCurrency(),
+    containsSamples = false,
+    purchasePolicy = PurchasePolicy.BUY_STOCK,
+) {
+    DT2_REWARDS.forEachIndexed { slot, (item, price) -> items[slot] = ShopItem(item, 1_000, sellPrice = price) }
+}
+
+/*
  * Owner 2026-09-20: "all dialoge is not interesting make it interesting like for azzanadra say something like you
  * have unlocked a mysterious prayer please open your prayer book". Every line below is kept short enough to sit on
  * one chatbox row, and each one carries the facial expression that fits it instead of the default HAPPY_TALKING.
@@ -201,12 +236,21 @@ on_npc_option(npc = Npcs.ARCHAEOLOGIST, option = "talk-to") {
             "extraordinaire, voted best in the field four years running.",
             facialExpression = FacialExpression.HAPPY,
         )
-        when (options("Switch me to Ancient Magicks.", "Sell me an ancient staff.", "Good luck with the dig.")) {
+        // N501: the Desert Treasure II rewards only for players who finished it (OSRS: the quest's rewards).
+        val dt2 = gg.rsmod.plugins.content.quests.foundation.DesertTreasureII.isFinished(player)
+        val choice =
+            if (dt2) {
+                options("Switch me to Ancient Magicks.", "Sell me an ancient staff.", "Show me the Desert Treasure II rewards.", "Good luck with the dig.")
+            } else {
+                options("Switch me to Ancient Magicks.", "Sell me an ancient staff.", "Good luck with the dig.")
+            }
+        when (choice) {
             1 -> {
                 chatPlayer("Switch me to Ancient Magicks.", facialExpression = FacialExpression.CALM_TALK)
                 Spellbooks.select(player, Spellbook.ANCIENT)
             }
             2 -> player.openShop("Ancient Magicks Shop")
+            3 -> if (dt2) player.openShop("Desert Treasure II Rewards")
         }
     }
 }
