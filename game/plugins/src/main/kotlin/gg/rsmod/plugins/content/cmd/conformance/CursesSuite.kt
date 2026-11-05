@@ -9,6 +9,7 @@ import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.game.sync.block.UpdateBlockType
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.getPrayerBonus
 import gg.rsmod.plugins.api.ext.getVarbit
 import gg.rsmod.plugins.api.ext.refreshBonuses
@@ -267,8 +268,11 @@ object CursesSuite : Conformance.Suite {
         Bots.button(bot, BOOK, BOOK_GRID, 1, if (curse) AncientCurse.PROTECT_ITEM_SLOT else Prayer.PROTECT_ITEM.slot)
         wait(2)
         run.check(e, "stays off (D1: disabled in Deadman)", Prayers.isActive(bot, Prayer.PROTECT_ITEM), "owner 2026-11-01" to false)
-        val said = run.recording.of(bot.username, "msg").filter { it.cycle >= from }.any { gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE in it.text }
-        run.expectTrue(e, "says why", said, "message '${gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE}'")
+        // N543 (owner 2026-11-02): the reason opens in the chatbox dialogue (message box 210), not as a chat line.
+        val said = bot.interfaces.isVisible(210) ||
+            run.recording.of(bot.username, "msg").filter { it.cycle >= from }.any { gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE in it.text }
+        run.expectTrue(e, "says why", said, "chatbox dialogue '${gg.rsmod.plugins.content.mechanics.prayer.ProtectItemDisabled.MESSAGE}'")
+        bot.closeInterface(210)
     }
 
     private suspend fun QueueTask.pairs(

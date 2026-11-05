@@ -17,10 +17,14 @@ object ProtectItemDisabled {
     /** Our own text: OSRS sends the refusal from the server and the wording is not in the cache. */
     const val MESSAGE = "Protect Item does not work in Deadman Mode."
 
-    /** Tells [player] why and plays the OSRS refusal sound. Always true, so callers can write `if (refuse(p)) return`. */
+    /**
+     * Tells [player] why and plays the OSRS refusal sound. Always true, so callers can write `if (refuse(p)) return`.
+     * N543 (owner 2026-11-02 'hij moet chatinterface geven, nu geeft die chatmelding'): the reason opens in the chatbox dialogue, like
+     * the other prayer refusals (Rigour/Augury scroll, Knight Waves), instead of a chat line.
+     */
     fun refuse(player: Player): Boolean {
         Prayers.refuseSound(player)
-        player.message(MESSAGE)
+        player.queue { messageBox(MESSAGE) }
         return true
     }
 
