@@ -54,7 +54,8 @@ object CalvarionCombat : CombatScript() {
     const val ANIM_MELEE_ENRAGED = 16261
     const val ANIM_SHIELD_ENRAGED = 16262
     const val ANIM_SUMMON_ENRAGED = 16263
-    const val ANIM_ENRAGE = 16256
+    const val ANIM_ENRAGE = 16256 // NPC_VETION_ENRAGE_01 9978
+    const val ANIM_ENRAGE_ENRAGED = 16264 // NPC_VETION_ENRAGE_02 9979
 
     const val HOUND_ATTACK = 16267 // DOG_UPDATE_SKELETON_HELLHOUND_ATTACK 6579
     const val HOUND_DEFEND = 16268 // _DEFEND 6578
@@ -159,6 +160,12 @@ object CalvarionCombat : CombatScript() {
         return listOf(first) + pick(around).take(BOLTS - 1)
     }
 
+    const val MAX_PLAYER_BOLTS = 7
+
+    /** One bolt on or next to each other player (the target already has his), all players together capped at [MAX_PLAYER_BOLTS]. */
+    fun playerBolts(others: List<Tile>, free: (Tile) -> Boolean, offset: () -> Int): List<Tile> =
+        others.take(MAX_PLAYER_BOLTS - 1).map { p -> p.transform(offset(), offset()).takeIf(free) ?: p }
+
     /** 2 ticks after the glow: up to 20 on the tile itself, up to 10 next to it (Near Reality lightningHit). */
     fun lightningMax(distance: Int): Int = when (distance) { 0 -> LIGHTNING_DIRECT_MAX; 1 -> LIGHTNING_SPLASH_MAX; else -> 0 }
 
@@ -196,7 +203,11 @@ object CalvarionCombat : CombatScript() {
         val world = npc.world
         val t = Tile(target.tile)
         val adjacent = t.transform(world.random(-1..1), world.random(-1..1))
-        val tiles = lightningTiles(t, { inTomb(it) && !world.collision.isClipped(it) }, { it.shuffled() }, adjacent)
+        val free: (Tile) -> Boolean = { inTomb(it) && !world.collision.isClipped(it) }
+        val tiles = lightningTiles(t, free, { it.shuffled() }, adjacent).toMutableList()
+        // N522 ronde 2 (Wiki Calvar'ion/Strategies): "One bolt will appear for every player in the chamber, capped at seven" - every other
+        // player in the tomb gets his own bolt on or next to him, next to the solo five.
+        tiles += playerBolts(players(npc).filter { it != target }.map { Tile(it.tile) }, free) { world.random(-1..1) }
         strike(npc, tiles, if (e) GFX_LIGHTNING_ENRAGED else GFX_LIGHTNING)
     }
 
@@ -283,7 +294,9 @@ object CalvarionCombat : CombatScript() {
         val mid = next.tile.transform(1, 1)
         val ring = listOf(1 to 3, 2 to 2, 3 to 1, 3 to -1, 2 to -2, 1 to -3, -1 to -3, -2 to -2, -3 to -1, -3 to 1, -2 to 2, -1 to 3)
             .map { (dx, dz) -> mid.transform(dx, dz) }.filter { !next.world.collision.isClipped(it) }
-        next.animate(ANIM_SUMMON_ENRAGED)
+        // N522 ronde 2: OSRS runs NPC_VETION_ENRAGE here (the transforming VETION_TRANS_SINGLE 11995 'when he transforms and you should sit
+        // under him', DreamBot CalvarionData); the enraged model's own seq is ENRAGE_02 9979 = 16264 (tx-20261105-000956), not a defend.
+        next.animate(ANIM_ENRAGE_ENRAGED)
         strike(next, ring, GFX_LIGHTNING_ENRAGED)
         startEnrageTimeout(next)
     }

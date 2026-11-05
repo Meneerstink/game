@@ -15,6 +15,15 @@ class CalvarionTests : WildernessBossContractTests(CalvarionCombat.NORMAL, 150, 
         assertEquals(0, CalvarionCombat.lightningMax(2))
     }
 
+    @Test fun `every other player in the tomb gets a bolt on or next to him, seven players at most`() {
+        val others = (1..9).map { Tile(1880 + it, 11545, 1) }
+        val bolts = CalvarionCombat.playerBolts(others, { true }) { 1 }
+        assertEquals(6, bolts.size, "the target's own bolt + 6 = the Wiki cap of 7")
+        bolts.forEachIndexed { i, b -> assertTrue(b.sameAs(others[i].transform(1, 1))) }
+        val fallback = CalvarionCombat.playerBolts(others.take(1), { false }) { 1 }
+        assertTrue(fallback.single().sameAs(others[0]), "a blocked neighbour falls back to the player's own tile")
+    }
+
     @Test fun `five bolts - one next to the target, four more within 5`() {
         val t = Tile(1887, 11540, 1)
         val tiles = CalvarionCombat.lightningTiles(t, { true }, { it }, t.transform(1, 0))

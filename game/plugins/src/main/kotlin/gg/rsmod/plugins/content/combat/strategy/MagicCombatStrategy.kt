@@ -374,6 +374,11 @@ object MagicCombatStrategy : CombatStrategy {
                 // exactly one cast to land; damage, freeze, graphic and sound stay the real spell's.
                 pawn.attr.remove(FORCE_NEXT_LAND)
                 true
+            } else if (primary && pawn is Player &&
+                gg.rsmod.plugins.content.areas.wilderness.bosses.ArtioCombat.firstFreezeLands(pawn, target, spell.effect is SpellEffect.Freeze)
+            ) {
+                // N522 ronde 2 (Wiki Artio): her first freeze always lands with Magic accuracy above 0.
+                true
             } else if (pawn is Player) {
                 gg.rsmod.plugins.content.items.osrs.ConflictionGauntlets.roll(pawn, target, spell.uniqueId, accuracy, primary && !iceAgainstPlayer) { world.randomDouble() }
             } else {

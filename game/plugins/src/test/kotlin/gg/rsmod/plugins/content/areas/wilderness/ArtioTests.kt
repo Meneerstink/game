@@ -28,6 +28,34 @@ class ArtioTests : WildernessBossContractTests(ArtioCombat.NPC, 450, listOf(250,
         assertEquals(50, ArtioCombat.knockbackDamage(0))
     }
 
+    @Test fun `knocked into a trap is a flat 5 (Wiki), the trap adds its own hit`() {
+        assertEquals(5, ArtioCombat.knockbackDamage(1, intoTrap = true))
+        assertEquals(5, ArtioCombat.knockbackDamage(3, intoTrap = true))
+    }
+
+    @Test fun `the trap roar is ENRAGED01 10015, the spawn keeps SPAWN01 10016`() {
+        assertEquals(16241, ArtioCombat.ANIM_ROAR)
+        assertEquals(16242, ArtioCombat.ANIM_SPAWN)
+    }
+
+    @Test fun `the first freeze lands only with magic accuracy above 0 while she is free and not immune`() {
+        val f = WildernessBossTestSupport.Fixture()
+        val npc = f.npc(ArtioCombat.NPC, ArtioCombat.SPAWN)
+        val timers = gg.rsmod.game.model.timer.TimerMap()
+        every { npc.timers } returns timers
+        val player = mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        val bonuses = IntArray(14)
+        every { player.equipmentBonuses } returns bonuses
+        bonuses[gg.rsmod.plugins.api.BonusSlot.ATTACK_MAGIC.id] = 1
+        assertTrue(ArtioCombat.firstFreezeLands(player, npc, freezes = true))
+        assertFalse(ArtioCombat.firstFreezeLands(player, npc, freezes = false), "a non-freezing spell rolls as normal")
+        bonuses[gg.rsmod.plugins.api.BonusSlot.ATTACK_MAGIC.id] = 0
+        assertFalse(ArtioCombat.firstFreezeLands(player, npc, freezes = true), "Wiki: greater than 0")
+        bonuses[gg.rsmod.plugins.api.BonusSlot.ATTACK_MAGIC.id] = 20
+        npc.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = 10
+        assertFalse(ArtioCombat.firstFreezeLands(player, npc, freezes = true), "already frozen: normal roll")
+    }
+
     @Test fun `protect from melee halves the 15 to 35 swipe`() {
         assertEquals(35, ArtioCombat.meleeDamage(35, protected = false))
         assertEquals(17, ArtioCombat.meleeDamage(35, protected = true))

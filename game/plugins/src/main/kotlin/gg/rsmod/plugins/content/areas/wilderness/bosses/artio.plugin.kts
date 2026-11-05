@@ -58,7 +58,7 @@ spawn_npc(npc = ArtioCombat.NPC, x = ArtioCombat.SPAWN.x, z = ArtioCombat.SPAWN.
 
 on_npc_spawn(ArtioCombat.NPC) {
     ArtioCombat.reset(npc)
-    npc.animate(ArtioCombat.ANIM_ROAR)
+    npc.animate(ArtioCombat.ANIM_SPAWN)
 }
 
 // ------------------------------------------------------------------ drops (OSRS Wiki drop table, 2026-11-05)
