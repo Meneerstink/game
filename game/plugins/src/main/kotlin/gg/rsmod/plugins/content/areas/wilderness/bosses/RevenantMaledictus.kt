@@ -232,7 +232,9 @@ object RevenantMaledictus {
         private fun attack(npc: Npc) {
             val players = targets(npc)
             if (players.isEmpty()) return
-            when (attackFor(npc.world.random(18))) {
+            val action = attackFor(npc.world.random(18))
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, action)
+            when (action) {
                 "blood" -> marked(npc, players, ANIM_BLOOD) { p ->
                     val damage = protectedDamage(npc.world.random(BLOOD_MAX), p.isProtectedFrom(CombatClass.MAGIC))
                     npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = damage > 0, delay = 0, hitType = HitType.MAGIC, applyDeflectProtection = false, onHit = { hit ->

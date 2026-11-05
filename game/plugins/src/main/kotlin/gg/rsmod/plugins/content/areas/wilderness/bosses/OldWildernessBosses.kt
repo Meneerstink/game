@@ -211,8 +211,10 @@ object OldWildernessBosses {
                         else -> if (p != null) roar(npc, p) else claws(npc, target)
                     }
                     if (npc.world.random(11) == 0) {
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "attack.heal", target)
                         npc.graphic(GFX_HEAL)
                         npc.setCurrentLifepoints((npc.getCurrentLifepoints() + npc.world.random(4..10)).coerceAtMost(npc.getMaximumLifepoints()))
+                        gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "impact.heal", target)
                     }
                 }
                 npc.postAttackLogic(target)
@@ -224,6 +226,7 @@ object OldWildernessBosses {
         }
 
         private fun claws(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "melee", target)
             npc.prepareAttack(CombatClass.MELEE, StyleType.CRUSH, WeaponStyle.ACCURATE)
             npc.animate(CALLISTO_ATTACK)
             val land = MeleeCombatFormula.getAccuracy(npc, target) >= npc.world.randomDouble()
@@ -232,6 +235,7 @@ object OldWildernessBosses {
 
         /** Donor projectile (395, 43, 31, 51, 36, 10, 15, 127); the hit ignores defence (always rolls). */
         private fun shockwave(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "shockwave", target)
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(CALLISTO_ATTACK)
             npc.world.spawn(npc.createProjectile(target, GFX_SHOCKWAVE, startHeight = 43, endHeight = 31, delay = 51, angle = 15))
@@ -242,6 +246,7 @@ object OldWildernessBosses {
 
         /** Up to 4 tiles back while each step is free, 3 damage, a 2-tick stun (donor). */
         internal fun roar(npc: Npc, p: Player) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "roar", p)
             npc.animate(CALLISTO_ATTACK)
             val start = Tile(p.tile)
             val end = pushDestination(npc, start)
@@ -307,6 +312,7 @@ object OldWildernessBosses {
         }
 
         private fun melee(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "melee", target)
             val reborn = npc.id == VETION_REBORN
             npc.prepareAttack(CombatClass.MELEE, StyleType.STAB, WeaponStyle.ACCURATE)
             npc.animate(VETION_ATTACK)
@@ -315,6 +321,7 @@ object OldWildernessBosses {
         }
 
         private fun earthquake(npc: Npc) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "earthquake")
             npc.attr[EARTHQUAKE_READY_CYCLE] = npc.world.currentCycle + EARTHQUAKE_COOLDOWN
             npc.animate(VETION_EARTHQUAKE)
             val source = Tile(npc.tile.x + 1, npc.tile.z + 1, npc.tile.height)
@@ -329,6 +336,7 @@ object OldWildernessBosses {
 
         /** The target's tile and two more within 2 (not under him); whoever stands on one 3 ticks later takes up to 30 (donor). */
         private fun lightning(npc: Npc, target: Pawn) {
+            gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.begin(npc, "lightning", target)
             npc.prepareAttack(CombatClass.MAGIC, StyleType.MAGIC, WeaponStyle.ACCURATE)
             npc.animate(VETION_ATTACK)
             val world = npc.world

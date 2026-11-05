@@ -448,6 +448,15 @@ fun Pawn.dealHit(
     if (this is Npc && !gg.rsmod.plugins.content.combat.attack.NpcAttacks.playedSectionSoundsThisCycle(this)) {
         gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onAttack(this, target, gg.rsmod.plugins.content.combat.attack.NpcAttacks.attackAnimThisCycle(this))
     }
+    if (this is Npc && gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.handles(id)) {
+        val cue = gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.action(this)
+        val npc = this
+        val life = gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLife.token(npc)
+        hit.addAction {
+            if (gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossLife.active(npc, life))
+                gg.rsmod.plugins.content.combat.audio.WildernessBossAudio.dispatch(npc, "impact.$cue", target)
+        }
+    }
     if (target is Npc) {
         hit.addAction {
             gg.rsmod.plugins.content.combat.audio.NpcCombatAudio.onDefend(this@dealHit, target)
