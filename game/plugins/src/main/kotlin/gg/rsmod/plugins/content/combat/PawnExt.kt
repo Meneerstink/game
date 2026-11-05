@@ -102,7 +102,14 @@ fun Pawn.liveLastHitBy(): Pawn? =
 
 /** Single-way rule: within the PJ window ([Combat.PJ_TIMER], 17 ticks) this pawn is being fought by someone that still exists, other than [other]. */
 // Owner and his familiar are one attacker for the single-way rules (Combat.sameSide, owner A9 2026-10-11).
-fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean = timers.has(Combat.PJ_TIMER) && liveLastHitBy().let { it != null && !Combat.sameSide(it, other) }
+fun Pawn.isAttackedByOtherThan(other: Pawn): Boolean {
+    SinglesPlus.reservation(this)?.let { opponent ->
+        return !Combat.sameSide(opponent, other) && !SinglesPlus.ignoresReservation(this, other, opponent)
+    }
+    return timers.has(Combat.PJ_TIMER) && liveLastHitBy().let {
+        it != null && !Combat.sameSide(it, other) && !SinglesPlus.ignoresReservation(this, other, it)
+    }
+}
 
 fun Pawn.removeCombatTarget() = attr.remove(COMBAT_TARGET_FOCUS_ATTR)
 
@@ -224,6 +231,7 @@ fun Pawn.dealHit(
     bonusDamage: Int = 0,
     applyDeflectProtection: Boolean = true,
 ): PawnHit {
+    SinglesPlus.recordAttack(this, target)
     // Calculate the 1:1 real damage, applying a random factor.
     // Combat formulas and hitpoints use the same 1:1 real-damage unit. Keep the hitmark value
     // identical to the rolled damage so server state, hitbars and client hit splats agree.

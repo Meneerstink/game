@@ -173,6 +173,7 @@ object Combat {
         pawn: Pawn,
         target: Pawn,
     ) {
+        SinglesPlus.recordAttack(pawn, target)
         // Interruptible actions observe the actual swing, even when a re-armed combat timer stays at the same value.
         pawn.recordAction()
         target.recordAction()
@@ -494,6 +495,10 @@ object Combat {
         }
 
         val pvp = pawn.entityType.isPlayer && target.entityType.isPlayer
+
+        // The low-level gate is also used by instant specials and manual spells, before resources are consumed.
+        if (pawn is Player && target is Player && SinglesPlus.contains(pawn.tile) && SinglesPlus.contains(target.tile) &&
+            (pawn.isAttackedByOtherThan(target) || target.isAttackedByOtherThan(pawn))) return false
 
         if (pawn is Player) {
             if (!pawn.isOnline) {
