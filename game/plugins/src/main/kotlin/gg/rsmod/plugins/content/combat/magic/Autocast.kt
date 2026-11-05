@@ -64,12 +64,12 @@ object AutocastWeapons {
      */
     val CRUMBLE_UNDEAD_WEAPONS: Set<Int> =
         setOf(
-            Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD,
+            Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF, Items.SLAYERS_STAFF_E, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD,
             Items.STAFF_OF_BALANCE,
         ) + STAFF_OF_LIGHT
 
     /** Void knight mace and Slayer's staff: "From the standard spellbook, can only autocast Wave spells and Surge spells" (+ their additional spells). */
-    private val WAVE_SURGE_ONLY: Set<Int> = setOf(Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF)
+    private val WAVE_SURGE_ONLY: Set<Int> = setOf(Items.VOID_KNIGHT_MACE, Items.SLAYERS_STAFF, Items.SLAYERS_STAFF_E)
 
     private fun isWaveOrSurge(spell: CombatSpell): Boolean = spell.name.endsWith("_WAVE") || spell.name.endsWith("_SURGE")
 

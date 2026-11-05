@@ -427,6 +427,8 @@ object MagicCombatStrategy : CombatStrategy {
                 hitType = HitType.MAGIC,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
+        // N570 Slayer's staff (e): one charge per Magic Dart that hits a task monster (after the max hit above used it).
+        if (pawn is Player && primary) gg.rsmod.plugins.content.skills.slayer.SlayersStaffE.afterCast(pawn, target, spell, landHit)
         // Revenant sceptre worn while casting: "1 ether per attack" (once per cast, not per barrage target).
         if (pawn is Player && primary) gg.rsmod.plugins.content.items.osrs.RevenantWeapons.afterAttack(pawn)
         if (landHit) {

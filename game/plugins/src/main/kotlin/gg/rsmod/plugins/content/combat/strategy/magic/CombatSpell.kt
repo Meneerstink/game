@@ -513,7 +513,7 @@ enum class CombatSpell(
         experience = 30.0,
         // OSRS Wiki "Staff of the Dead": it can autocast Magic Dart; the toxic staff "shares the same features".
         // OSRS Wiki "Staff of Balance": autocast "Includes Crumble Undead, Magic Dart, and Claws of Guthix".
-        requiredWeapons = intArrayOf(Items.SLAYERS_STAFF, Items.STAFF_OF_LIGHT, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE),
+        requiredWeapons = intArrayOf(Items.SLAYERS_STAFF, Items.SLAYERS_STAFF_E, Items.STAFF_OF_LIGHT, Items.STAFF_OF_THE_DEAD, Items.TOXIC_STAFF_UNCHARGED, Items.TOXIC_STAFF_OF_THE_DEAD, Items.STAFF_OF_BALANCE),
         requiredWeaponMessage = "You need to be wielding a slayer's staff or staff of light to cast this spell.",
     ),
     /**

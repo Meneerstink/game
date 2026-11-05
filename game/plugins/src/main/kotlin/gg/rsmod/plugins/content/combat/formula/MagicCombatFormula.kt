@@ -124,7 +124,13 @@ object MagicCombatFormula : CombatFormula {
             specialBase?.toDouble()
                 ?: spell?.let { s ->
                     // Players: OSRS level-scaled base (elemental tiers, Magic Dart); npcs cast the fixed base.
-                    (if (pawn is Player) CombatSpell.baseMaxHit(s, pawn.skills.getCurrentLevel(Skills.MAGIC)) else s.maxHit).toDouble()
+                    when {
+                        // N570 Slayer's staff (e): Magic Dart on the current Slayer assignment, floor(Magic/6) + 13.
+                        pawn is Player && gg.rsmod.plugins.content.skills.slayer.SlayersStaffE.boosts(pawn, target, s) ->
+                            gg.rsmod.plugins.content.skills.slayer.SlayersStaffE.boostedMaxHit(pawn.skills.getCurrentLevel(Skills.MAGIC))
+                        pawn is Player -> CombatSpell.baseMaxHit(s, pawn.skills.getCurrentLevel(Skills.MAGIC))
+                        else -> s.maxHit
+                    }.toDouble()
                 }
                 ?: (pawn as? Player)?.let { p ->
                     gg.rsmod.plugins.content.items.osrs.PoweredStaves.wielded(p)?.baseMaxHit(p.skills.getCurrentLevel(Skills.MAGIC))?.toDouble()

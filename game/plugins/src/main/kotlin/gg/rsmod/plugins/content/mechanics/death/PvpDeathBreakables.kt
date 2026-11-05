@@ -193,6 +193,9 @@ object PvpDeathBreakables {
             // Owner 2026-10-06 ("Killer gets hydra leather"): no OSRS PvP rule on "Ferocious gloves"; "Items Kept on Death" - untradeables
             // are "converted into their tradeable form and offered to the killer", and the gloves revert to hydra leather at the machine.
             Items.FEROCIOUS_GLOVES to listOf(Items.HYDRA_LEATHER),
+            // N570: "Items Kept on Death" - untradeables are "converted into their tradeable form and offered to the killer"; the
+            // Slayer's staff (e) is a Slayer's staff plus an enchantment that "crumbles to dust", so the killer gets the staff.
+            Items.SLAYERS_STAFF_E to listOf(Items.SLAYERS_STAFF),
         ) + BOUNTY_HUNTER_KITTED.associateWith { listOf(OsrsOrnamentKits.forOrnamented(it)!!.base) }
 
     /**

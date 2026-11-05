@@ -20505,4 +20505,6 @@ object Items {
     const val AMULET_OF_AVARICE_NOTED = 24631
     const val ANCIENT_CRYSTAL = 24632 // 21804
     const val ANCIENT_CRYSTAL_NOTED = 24633
+    const val SLAYERS_ENCHANTMENT = 24639 // 21257
+    const val SLAYERS_STAFF_E = 24640 // 21255
 }
