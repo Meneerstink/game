@@ -13,6 +13,29 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaAkkhaTests {
+    @Test fun `autonomous director performs six autos then special at tick36 and changes style`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3201, 3199); every { p.equipmentBonuses } returns IntArray(18)
+        every { p.equipment[3] } returns null
+        val s = AkkhaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        val auto = mockk<ToaAutoAttack>(relaxed = true)
+        s.autoEvidence = CombatClass.values().associateWith { auto }; s.target = p
+        var specials = 0; s.specialDirector = { specials++ }; s.shadowChargeDirector = {}
+        repeat(37) { s.cycle() }
+        io.mockk.verify(exactly = 6) { auto.fire(s, p) }
+        assertEquals(1, specials); assertEquals(CombatClass.RANGED, s.style)
+        assertEquals(0, s.autos)
+    }
+    @Test fun `trailing orb expiry follows documented path0 versus2 memory ordering`() {
+        for (feeling in listOf(false, true)) {
+            val interval = AkkhaCombat.blastInterval(feeling)
+            val baseMemoryEnd = 9 + 4 * interval
+            val orbExpiry = AkkhaCombat.trailDuration(feeling) + 6
+            assertTrue(orbExpiry > baseMemoryEnd)
+            assertTrue(orbExpiry < 11 + 5 * interval)
+        }
+    }
     @Test fun `current single style prayer blocks only Akkhas active style, enrage admits melee only`() {
         val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())
         val melee = Hit.Builder().addHit(10, HitType.MELEE.id).build()
@@ -90,5 +113,15 @@ internal class ToaTestFixture {
         every { npc.isDead() } returns false
         every { npc.getMaximumLifepoints() } returns 400
         every { npc.getCurrentLifepoints() } returns 400
+        every { npc.equipmentBonuses } returns IntArray(18)
+        every { world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.NpcDef(secondArg()).apply { combatLevel = 100; size = 1 }
+        }
+        val blocks = gg.rsmod.game.sync.block.UpdateBlockSet()
+        gg.rsmod.game.sync.block.UpdateBlockType.values().forEach { blocks.updateBlocks[it] = gg.rsmod.game.sync.block.UpdateBlockStructure(1, emptyList()) }
+        every { world.npcUpdateBlocks } returns blocks
+        var index = 10
+        every { world.spawn(any<Npc>()) } answers { firstArg<Npc>().index = ++index; true }
+        every { world.remove(any<Npc>()) } answers { firstArg<Npc>().index = -1 }
     }
 }

@@ -16,10 +16,18 @@ object ToaBossFx {
     fun seqFor(who: Npc, osrs: Int): Int {
         val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
         val osrsNpc = ids.osrsNpcOf(who.getTransmogId().takeIf { it >= 0 } ?: who.id)
-        return (if (osrsNpc != null) ids.npcSeq(osrsNpc, osrs) else ids.seq(osrs)) ?: -1
+        return (if (osrsNpc != null) ids.npcSeq(ToaBossNpcs.canonical(osrsNpc), osrs) else ids.seq(osrs)) ?: -1
     }
 
     fun spot(osrs: Int): Int? = gg.rsmod.plugins.content.activity.toa.ToaIds.spot(osrs)
+    fun weakness(npc: Npc, element: gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element, percent: Int) {
+        require(percent >= 0)
+        npc.attr[gg.rsmod.plugins.content.combat.formula.ElementalWeakness.INSTANCE] =
+            gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Weakness(element, percent)
+    }
+    // Existing imported scenery from90-locmap; newly imported dynamic locs are read from Claude's id table.
+    private val locations = mapOf(45149 to 64599, 45509 to 64756, 45643 to 64850, 45649 to 64856, 45752 to 64945)
+    fun loc(osrs: Int): Int? = gg.rsmod.plugins.content.activity.toa.ToaIds.loc(osrs) ?: locations[osrs]
     fun projectile(npc: Npc, target: Player, osrs: Int, magic: Boolean, ticks: Int) {
         val gfx = spot(osrs) ?: return
         val type = if (magic) ProjectileType.MAGIC else ProjectileType.ARROW

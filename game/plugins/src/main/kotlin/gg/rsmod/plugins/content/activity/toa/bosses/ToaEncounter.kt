@@ -8,6 +8,8 @@ import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.combat.StyleType
 import gg.rsmod.game.model.combat.WeaponStyle
 import gg.rsmod.game.model.entity.Npc
+import gg.rsmod.game.model.entity.DynamicObject
+import gg.rsmod.game.model.collision.ObjectType
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ext.*
@@ -92,6 +94,7 @@ data class ToaNpcStats(
     val strengthBonus: Int = 0, val rangedStrength: Int = 0, val magicStrength: Int = 0,
     val stab: Int = 0, val slash: Int = 0, val crush: Int = 0, val mage: Int = 0, val range: Int = 0,
     val deathSeq: Int = -1,
+    val species: Set<Any> = emptySet(),
 ) {
     fun definition(c: ToaEncounterContext, path: Boolean = true, group: Boolean = true, scaleDefence: Boolean = true): NpcCombatDef {
         ToaScale.validate(c)
@@ -106,17 +109,26 @@ data class ToaNpcStats(
                 ToaScale.stat(magic, c), ToaScale.stat(ranged, c)),
             attackSpeed = speed, bonuses = bonuses, respawnDelay = -1, poisonImmunity = true, venomImmunity = true,
             deathAnimation = listOf(ToaBossFx.seq(deathSeq)), waitFullDeathAnimation = true,
+            species = species,
         )
     }
 }
 
 /** Common ownership/lifecycle. No global encounter singleton: two rooms cannot share timers, minions or phase state. */
 object ToaEncounter {
+    data class Definition(val osrsNpc: Int, val stats: ToaNpcStats, val factory: (Npc, ToaEncounterContext) -> ToaBossSession)
+    val definitions = linkedMapOf<String, Definition>()
     val CONTEXT = AttributeKey<ToaEncounterContext>()
     val SESSION = AttributeKey<ToaBossSession>()
     val MINION_SESSION = AttributeKey<ToaBossSession>()
 
     fun context(npc: Npc): ToaEncounterContext? = npc.attr[CONTEXT]
+    fun forPlayer(player: Player): ToaBossSession? {
+        player.attr[SESSION]?.takeIf { !it.closed && it.eligible(player) }?.let { return it }
+        var found: ToaBossSession? = null
+        player.world.npcs.forEach { candidate -> candidate.attr[SESSION]?.takeIf { !it.closed && it.eligible(player) }?.let { found = it } }
+        return found
+    }
     fun attach(npc: Npc, context: ToaEncounterContext, factory: (Npc, ToaEncounterContext) -> ToaBossSession): ToaBossSession {
         ToaScale.validate(context)
         npc.attr[SESSION]?.close()
@@ -131,7 +143,10 @@ object ToaEncounter {
                     session.cycle()
                     wait(1)
                 }
-            } finally { session.close() }
+            } finally {
+                session.close()
+                if (context is StandaloneToaContext && npc.isSpawned() && !npc.isDead()) npc.world.remove(npc)
+            }
         }
         return session
     }
@@ -149,11 +164,18 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
     val children = mutableListOf<Npc>()
     private data class Event(val tick: Int, val generation: Int?, val action: () -> Unit)
     private val events = mutableListOf<Event>()
+    private val objectCleanup = mutableSetOf<() -> Unit>()
     abstract val stats: ToaNpcStats
+    open val minimumDefence: Int = 0
+    fun applyBonuses(actor: Npc = npc) {
+        actor.equipmentBonuses.fill(0)
+        actor.combatDef.bonuses.forEachIndexed { i, bonus -> if (i < actor.equipmentBonuses.size) actor.equipmentBonuses[i] = bonus }
+    }
     open fun configure() {
         npc.respawnOverride = false
         npc.naivePathfinding = true
         npc.combatDef = stats.definition(context).let { d -> d.copy(deathAnimation = listOf(ToaBossFx.seqFor(npc, stats.deathSeq))) }
+        applyBonuses()
         npc.combatDef.stats.forEachIndexed { i, level -> npc.stats.setMaxLevel(i, level); npc.stats.setCurrentLevel(i, level) }
         npc.setCurrentLifepoints(npc.getMaximumLifepoints())
         npc.hitModifier = { hit ->
@@ -166,6 +188,10 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
     fun active(): Boolean = !closed && npc.isSpawned() && !npc.isDead()
     fun cycle() {
         if (!active()) return
+        children.removeAll { !it.isSpawned() }
+        if (minimumDefence > 0 && npc.stats.getCurrentLevel(2) < ToaScale.stat(minimumDefence, context)) {
+            npc.stats.setCurrentLevel(2, ToaScale.stat(minimumDefence, context))
+        }
         val due = events.filter { it.tick <= tick }.toList()
         events.removeAll(due.toSet())
         for (e in due) {
@@ -189,6 +215,7 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
         closed = true; generation++; events.clear()
         children.toList().forEach { if (it.isSpawned()) npc.world.remove(it) }
         children.clear()
+        objectCleanup.toList().asReversed().forEach { it() }; objectCleanup.clear()
         npc.stopMovement()
         npc.removeCombatTarget()
         npc.hitModifier = null
@@ -198,14 +225,39 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
         val child = Npc(id, Tile(tile), npc.world)
         child.respawnOverride = false
         child.attr[ToaEncounter.MINION_SESSION] = this
+        child.naivePathfinding = true
         npc.world.spawn(child)
-        child.combatDef = spec.definition(context, path, group).let { d -> d.copy(deathAnimation = listOf(ToaBossFx.seqFor(child, spec.deathSeq))) }
+        child.combatDef = spec.definition(context, path, group).let { d -> d.copy(completesEncounter = false, deathAnimation = listOf(ToaBossFx.seqFor(child, spec.deathSeq))) }
+        applyBonuses(child)
         child.combatDef.stats.forEachIndexed { i, level -> child.stats.setMaxLevel(i, level); child.stats.setCurrentLevel(i, level) }
         child.setCurrentLifepoints(child.getMaximumLifepoints())
+        child.hitModifier = { hit -> if (hit.source is Player && !eligible(hit.source as Player)) hit.hitmarks.forEach { it.damage = 0 } }
         children += child
         return child
     }
     fun remove(child: Npc) { children.remove(child); if (child.isSpawned()) npc.world.remove(child) }
+    /** Dynamic encounter locs retain collision from their imported definition, and restore the displaced scenery on cleanup. */
+    fun placeObject(osrs: Int, tile: Tile): () -> Unit {
+        val id = ToaBossFx.loc(osrs) ?: return {}
+        val previous = npc.world.getObject(tile, ObjectType.INTERACTABLE)
+        // Banana peel's imported definition has no clipping; dung's definition does. Never mutate shared cache definitions.
+        val obj = DynamicObject(id, 10, 0, Tile(tile))
+        npc.world.spawn(obj)
+        var removed = false
+        lateinit var cleanup: () -> Unit
+        cleanup = {
+            if (!removed) {
+                removed = true
+                if (obj.isSpawned(npc.world)) {
+                    npc.world.remove(obj)
+                    previous?.let { npc.world.spawn(DynamicObject(it)) }
+                }
+                objectCleanup.remove(cleanup)
+            }
+        }
+        objectCleanup += cleanup
+        return cleanup
+    }
     fun animate(osrs: Int, who: Npc = npc) { ToaBossFx.seqFor(who, osrs).takeIf { it >= 0 }?.let { who.animate(it) } }
     fun gfx(osrs: Int, tile: Tile) { ToaBossFx.spot(osrs)?.let { npc.world.spawn(gg.rsmod.game.model.TileGraphic(tile, it, 0)) } }
     fun message(text: String) { players().forEach { it.message(text) } }
@@ -222,32 +274,37 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
     fun attack(p: Player, maxHit: Int, style: CombatClass?, delay: Int = 0,
         protectedNumerator: Int = 0, protectedDenominator: Int = 1, accuracy: Boolean = true,
         prayerAtLaunch: Boolean = false, minHit: Int = 0,
-        after: (Int) -> Unit = {}) {
+        actor: Npc = npc, after: (Int) -> Unit = {}) {
         require(maxHit >= 0 && minHit in 0..maxHit && delay >= 0)
         require(protectedDenominator > 0 && protectedNumerator in 0..protectedDenominator)
         if (!eligible(p)) return
         val phase = generation
         val launchProtection = if (prayerAtLaunch && style != null) p.isProtectedFrom(style) else null
-        if (style != null) npc.prepareAttack(style, when (style) {
+        if (style != null) actor.prepareAttack(style, when (style) {
             CombatClass.MELEE -> StyleType.SLASH
             CombatClass.RANGED -> StyleType.RANGED
             else -> StyleType.MAGIC
         }, WeaponStyle.ACCURATE)
         val lands = !accuracy || style == null || when (style) {
-            CombatClass.MELEE -> MeleeCombatFormula.getUnprotectedAccuracy(npc, p)
-            CombatClass.RANGED -> RangedCombatFormula.getUnprotectedAccuracy(npc, p)
-            else -> MagicCombatFormula.getUnprotectedAccuracy(npc, p)
+            CombatClass.MELEE -> MeleeCombatFormula.getUnprotectedAccuracy(actor, p)
+            CombatClass.RANGED -> RangedCombatFormula.getUnprotectedAccuracy(actor, p)
+            else -> MagicCombatFormula.getUnprotectedAccuracy(actor, p)
         } >= npc.world.randomDouble()
         val rolled = if (lands) npc.world.random(minHit..maxHit) else 0
         later(delay) {
-            if (!eligible(p)) return@later
+            if (!eligible(p) || !actor.isSpawned() || actor.isDead()) return@later
             val protected = launchProtection ?: (style != null && p.isProtectedFrom(style))
             val damage = ToaProtection.damage(rolled, protected, protectedNumerator, protectedDenominator, inv("Quiet Prayers"))
-            val hit = npc.dealHit(p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = lands && damage > 0,
+            val hit = actor.dealHit(p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = lands && damage > 0,
                 delay = 0, hitType = when (style) { CombatClass.MELEE -> HitType.MELEE; CombatClass.RANGED -> HitType.RANGE;
                     CombatClass.MAGIC -> HitType.MAGIC; else -> HitType.REGULAR_HIT }, applyDeflectProtection = false)
-            hit.hit.setCancelIf { !active() || generation != phase || !eligible(p) }
-            hit.hit.addAction { after(hitmarks.sumOf { it.damage }) }
+            hit.hit.setCancelIf { !active() || generation != phase || !eligible(p) || !actor.isSpawned() || actor.isDead() }
+            hit.hit.addAction {
+                val dealt = hitmarks.sumOf { it.damage }
+                // Wiki invocation Deadly Prayers: lose20% of damage in prayer points (integer points).
+                if (inv("Deadly Prayers") && eligible(p)) p.skills.alterCurrentLevel(gg.rsmod.plugins.api.Skills.PRAYER, -dealt / 5)
+                after(dealt)
+            }
         }
     }
     fun incomingStyle(type: Int): CombatClass? = when (type) {

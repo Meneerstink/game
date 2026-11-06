@@ -1,0 +1,76 @@
+package gg.rsmod.plugins.content.activity.toa.bosses
+
+import kotlin.test.*
+
+class ToaWardensTests {
+    @Test fun `P3 director advances east west centre and suspends slams during siphons`() {
+        val f = ToaTestFixture(); val s = WardensCombat.Session(f.npc, ToaTestContext())
+        s.phase = WardensCombat.Phase.P3
+        val slams = mutableListOf<WardensCombat.Slam>()
+        s.slamDirector = { _, slam -> slams += slam }
+        repeat(15) { s.cycle() }
+        assertEquals(listOf(WardensCombat.Slam.EAST, WardensCombat.Slam.WEST, WardensCombat.Slam.CENTRE), slams)
+        s.phase = WardensCombat.Phase.SIPHONS
+        repeat(20) { s.cycle() }; assertEquals(3, slams.size)
+    }
+    @Test fun `P1 director is active each tick and P2 obeys the selected warden interval`() {
+        val s = WardensCombat.Session(ToaTestFixture().npc, ToaTestContext())
+        var charges = 0; var autos = 0
+        s.p1Director = { charges++ }; s.p2Director = { autos++ }
+        repeat(8) { s.cycle() }; assertEquals(8, charges)
+        s.phase = WardensCombat.Phase.P2; s.phaseTwoWarden = WardensCombat.Warden.TUMEKEN
+        repeat(17) { s.cycle() }; assertEquals(3, autos)
+    }
+    @Test fun `west disrupted warden is destroyed so west block selects Tumeken for P2`() {
+        assertEquals(WardensCombat.Warden.TUMEKEN, WardensCombat.phaseTwo(true))
+        assertEquals(WardensCombat.Warden.ELIDINIS, WardensCombat.phaseTwo(false))
+        assertEquals(WardensCombat.Warden.ELIDINIS, WardensCombat.opposite(WardensCombat.phaseTwo(true)))
+    }
+    @Test fun `specific P3 cadence wins over generic invocation description`() {
+        assertEquals(7, WardensCombat.slamInterval(emptySet()))
+        assertEquals(6, WardensCombat.slamInterval(setOf("Overclocked")))
+        assertEquals(4, WardensCombat.slamInterval(setOf("Overclocked", "Overclocked 2")))
+        assertEquals(3, WardensCombat.slamInterval(setOf("Overclocked", "Overclocked 2", "Insanity")))
+    }
+    @Test fun `siphon health uses currently alive players and not initial party size`() {
+        assertEquals(listOf(1, 1, 1, 2, 2, 3, 3, 4), (1..8).map(WardensCombat::siphonHp))
+        assertFailsWith<IllegalArgumentException> { WardensCombat.siphonHp(0) }
+    }
+    @Test fun `core exposure boundaries use remaining true health, with fivefold transfer`() {
+        assertEquals(21, WardensCombat.coreExposure(800, 1000))
+        assertEquals(29, WardensCombat.coreExposure(799, 1000))
+        assertEquals(29, WardensCombat.coreExposure(600, 1000))
+        assertEquals(37, WardensCombat.coreExposure(599, 1000))
+        assertEquals(275, WardensCombat.coreDamage(55))
+        assertEquals(4500, WardensCombat.coreHp(ToaTestContext()))
+        assertEquals(7200, WardensCombat.coreHp(ToaTestContext(raidLevel = 600)))
+    }
+    @Test fun `P2 begins with correct vulnerable style and switches only after core return`() {
+        assertEquals(gg.rsmod.game.model.combat.CombatClass.MAGIC, WardensCombat.allowedStyle(WardensCombat.Warden.ELIDINIS, 0))
+        assertEquals(gg.rsmod.game.model.combat.CombatClass.RANGED, WardensCombat.allowedStyle(WardensCombat.Warden.TUMEKEN, 0))
+        assertEquals(gg.rsmod.game.model.combat.CombatClass.RANGED, WardensCombat.allowedStyle(WardensCombat.Warden.ELIDINIS, 1))
+        assertEquals(gg.rsmod.game.model.combat.CombatClass.MAGIC, WardensCombat.allowedStyle(WardensCombat.Warden.TUMEKEN, 1))
+    }
+    @Test fun `obelisk special cannot repeat until all three were executed`() {
+        val s = WardensCombat.Session(ToaTestFixture().npc, ToaTestContext())
+        var count = 0
+        s.obeliskSpecial(WardensCombat.ObeliskSpecial.CONVERGING) { count++ }
+        assertFailsWith<IllegalArgumentException> { s.obeliskSpecial(WardensCombat.ObeliskSpecial.CONVERGING) { count++ } }
+        s.obeliskSpecial(WardensCombat.ObeliskSpecial.WINDMILL) { count++ }
+        s.obeliskSpecial(WardensCombat.ObeliskSpecial.LIGHTNING) { count++ }
+        s.obeliskSpecial(WardensCombat.ObeliskSpecial.CONVERGING) { count++ }
+        assertEquals(4, count)
+    }
+    @Test fun `phantoms follow surviving P3 warden, not the P2 one`() {
+        assertEquals(listOf(11777, 11776), WardensCombat.phantoms(WardensCombat.Warden.ELIDINIS))
+        assertEquals(listOf(11774, 11775), WardensCombat.phantoms(WardensCombat.Warden.TUMEKEN))
+    }
+    @Test fun `enrage heal can occur only once and cancels a queued slam`() {
+        val s = WardensCombat.Session(ToaTestFixture().npc, ToaTestContext())
+        var slam = 0; s.later(2) { slam++ }
+        s.enterEnrage(); val generation = s.generation
+        s.enterEnrage(); assertEquals(generation, s.generation)
+        repeat(5) { s.cycle() }; assertEquals(0, slam)
+        assertEquals(WardensCombat.Phase.ENRAGE, s.phase)
+    }
+}

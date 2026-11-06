@@ -9,6 +9,35 @@ import io.mockk.verify
 import kotlin.test.*
 
 class ToaEncounterTests {
+    @Test fun `runtime definition assignment refreshes real equipment bonuses for root and spawned minion`() {
+        val f = ToaTestFixture()
+        var definition = gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT
+        every { f.npc.combatDef } answers { definition }
+        every { f.npc.combatDef = any() } answers { definition = firstArg() }
+        val s = AkkhaCombat.Session(f.npc, ToaTestContext())
+        s.configure()
+        assertEquals(115, f.npc.equipmentBonuses[3]); assertEquals(120, f.npc.equipmentBonuses[6])
+        val child = assertNotNull(s.spawn(ToaBossNpcs.AKKHA_SHADOW, Tile(3205, 3205), AkkhaCombat.SHADOW_STATS))
+        assertEquals(115, child.equipmentBonuses[3]); assertEquals(120, child.equipmentBonuses[6])
+        assertEquals(70, child.getCurrentLifepoints()); assertFalse(child.combatDef.completesEncounter)
+        s.close(); assertFalse(child.isSpawned())
+    }
+    @Test fun `a target leaving the room before impact never receives the queued hit`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3200, 3200)
+        val participants = mutableListOf(p)
+        val s = AkkhaCombat.Session(f.npc, ToaTestContext(players = participants))
+        s.attack(p, 10, null, delay = 3, accuracy = false)
+        participants.clear(); repeat(5) { s.cycle() }
+        verify(exactly = 0) { p.addHit(any()) }
+    }
+    @Test fun `source ids cannot silently be sent as local packet ids`() {
+        assertNotEquals(ToaBossNpcs.AKKHA, assertNotNull(ToaBossNpcs.local(ToaBossNpcs.AKKHA)))
+        assertNotEquals(9784, ToaBossFx.seq(9784))
+        assertEquals(-1, ToaBossFx.seq(Int.MAX_VALUE)); assertNull(ToaBossFx.spot(Int.MAX_VALUE))
+        assertNull(ToaBossNpcs.local(Int.MAX_VALUE))
+    }
     @Test fun `room contexts reject invalid party and path bounds before scheduling`() {
         assertFailsWith<IllegalArgumentException> { ToaScale.validate(ToaTestContext(partySize = 0)) }
         assertFailsWith<IllegalArgumentException> { ToaScale.validate(ToaTestContext(partySize = 9)) }
