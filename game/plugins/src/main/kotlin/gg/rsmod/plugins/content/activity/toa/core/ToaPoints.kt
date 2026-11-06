@@ -92,7 +92,15 @@ class ToaPointsLedger(roster: Collection<PlayerUID>) {
         return mvp
     }
 
+    private val deaths = hashMapOf<PlayerUID, Int>()
+
+    /** Nobody in the party died this raid (OSRS challenge rewards). */
+    val deathless: Boolean get() = deaths.isEmpty()
+
+    fun deaths(player: PlayerUID): Int = deaths[player] ?: 0
+
     fun death(player: PlayerUID) {
+        if (player in total) deaths[player] = (deaths[player] ?: 0) + 1
         val current = total[player] ?: return
         total[player] = maxOf(0, current - maxOf(current / 5, DEATH_MINIMUM))
     }

@@ -56,9 +56,10 @@ object ToaChest {
                 player?.attr?.get(COMPLETIONS) ?: 0,
                 player?.attr?.get(HAD_THREAD) == true,
                 player?.let(::ownedJewels) ?: emptySet(),
+                owns = { osrs -> player != null && ToaLootItems.local(osrs)?.let { holds(player, it) } == true },
             )
         }
-        val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default)
+        val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
         present.forEach { player ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
             val drops = result.drops[player.uid].orEmpty()
@@ -83,7 +84,10 @@ object ToaChest {
 
     private fun ownedJewels(player: Player): Set<Int> = ToaLoot.JEWELS.filter { jewel ->
         listOfNotNull(ToaLootItems.local(jewel), PARTISAN_OF_JEWEL[jewel]?.let(ToaLootItems::local)).any { id ->
-            player.inventory.contains(id) || player.bank.contains(id) || player.equipment.contains(id)
+            holds(player, id)
         }
     }.toSet()
+
+    private fun holds(player: Player, id: Int): Boolean =
+        player.inventory.contains(id) || player.bank.contains(id) || player.equipment.contains(id)
 }

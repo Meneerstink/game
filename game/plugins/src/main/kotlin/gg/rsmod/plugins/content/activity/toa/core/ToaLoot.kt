@@ -14,6 +14,8 @@ data class ToaLootPlayer(
     val hadThread: Boolean,
     /** The jewels this player owns (or has in a partisan), by OSRS id - the Chest wiki's ownership check, not the collection log. */
     val ownedJewels: Set<Int>,
+    /** Whether the player holds an item (inventory, equipment or bank) by OSRS id - the challenge rewards are never duplicated. */
+    val owns: (Int) -> Boolean = { false },
 )
 
 /**
@@ -68,6 +70,23 @@ object ToaLoot {
     const val THREAD_OF_ELIDINIS = 27279
     const val TUMEKENS_GUARDIAN = 27352
     const val CLUE_SCROLL_ELITE = 12073
+
+    /** Masori crafting kit, Menaphite ornament kit, Cursed phalanx (OSRS: deathless at raid level 350 / 425 / 500). */
+    val CHALLENGE_KITS = listOf(27372, 27255, 27248)
+    /** One pet remnant per player per raid in the OSRS priority Akkha -> Zebak -> Ba-Ba -> Kephri -> Ancient (OSRS: raid level 450 + more). */
+    val REMNANTS = listOf(27377, 27380, 27378, 27379, 27381)
+
+    /**
+     * Owner 2026-11-06 22:1x ("ja" on Claude's advice): our highest mode is Expert (300), so the challenge rewards drop from Expert instead
+     * of OSRS 350/425/500 (kits) and 450 (remnants). As in OSRS only when NOBODY in the party died, and never an item the player owns.
+     * ONZEKER: an item already used on its gear (kit applied) is not recognised here unless [ToaLootPlayer.owns] checks the variant.
+     */
+    fun challengeRewards(raidLevel: Int, partyDeathless: Boolean, owns: (Int) -> Boolean): List<ToaLootDrop> {
+        if (raidLevel < ToaMode.EXPERT.raidLevel || !partyDeathless) return emptyList()
+        val kits = CHALLENGE_KITS.filterNot(owns).map { ToaLootDrop(it, 1) }
+        val remnant = REMNANTS.firstOrNull { !owns(it) }?.let { ToaLootDrop(it, 1) }
+        return kits + listOfNotNull(remnant)
+    }
     /** Breach of the Scarab, Eye of the Corruptor, Jewel of the Sun, Jewel of Amascut (build 240). */
     val JEWELS = listOf(27283, 27285, 27289, 30893)
 
@@ -122,7 +141,7 @@ object ToaLoot {
      * The whole chest of one completed raid. [players] = everybody whose points count (leavers too: their points stay in the party sum,
      * but only present players receive - the caller passes [present]). One purple at most; its winner gets no commons.
      */
-    fun roll(players: List<ToaLootPlayer>, present: Set<PlayerUID>, raidLevel: Int, random: Random): Result {
+    fun roll(players: List<ToaLootPlayer>, present: Set<PlayerUID>, raidLevel: Int, random: Random, partyDeathless: Boolean = false): Result {
         val partyPoints = players.sumOf { it.rewardPoints }
         val drops = linkedMapOf<PlayerUID, MutableList<ToaLootDrop>>()
         var winner: PlayerUID? = null
@@ -148,6 +167,7 @@ object ToaLoot {
                 list += ToaLootDrop((if (missing.isEmpty()) JEWELS else missing)[random.nextInt(if (missing.isEmpty()) JEWELS.size else missing.size)], 1)
             }
             if (random.nextDouble() < eliteClueChance(p.rewardPoints)) list += ToaLootDrop(CLUE_SCROLL_ELITE, 1)
+            list += challengeRewards(raidLevel, partyDeathless, p.owns)
         }
         return Result(winner, drops)
     }

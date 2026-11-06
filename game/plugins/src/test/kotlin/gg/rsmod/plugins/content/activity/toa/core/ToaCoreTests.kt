@@ -106,6 +106,21 @@ class ToaCoreTests {
     }
 
     @Test
+    fun `challenge rewards only at Expert, only deathless, never owned, one remnant in OSRS priority`() {
+        assertTrue(ToaLoot.challengeRewards(150, partyDeathless = true) { false }.isEmpty())
+        assertTrue(ToaLoot.challengeRewards(300, partyDeathless = false) { false }.isEmpty())
+        val all = ToaLoot.challengeRewards(300, partyDeathless = true) { false }.map { it.osrsItem }
+        assertEquals(ToaLoot.CHALLENGE_KITS + 27377, all) // three kits + Remnant of Akkha first
+        val owned = setOf(27372, 27377, 27380)
+        val some = ToaLoot.challengeRewards(300, partyDeathless = true) { it in owned }.map { it.osrsItem }
+        assertEquals(listOf(27255, 27248, 27378), some) // next remnant after Akkha and Zebak is Ba-Ba
+        val ledger = ToaPointsLedger(listOf(a, b))
+        assertTrue(ledger.deathless)
+        ledger.death(b)
+        assertTrue(!ledger.deathless)
+    }
+
+    @Test
     fun `a missing jewel is the one given while any is missing`() {
         val owned = ToaLoot.JEWELS.take(3).toSet()
         val player = ToaLootPlayer(a, 2_000, 75, hadThread = true, ownedJewels = owned)
