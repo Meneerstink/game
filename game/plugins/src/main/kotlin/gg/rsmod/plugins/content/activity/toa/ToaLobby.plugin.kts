@@ -18,7 +18,7 @@ on_obj_option(ToaLocs.GROUPING_OBELISK, "Inspect") {
 }
 
 on_obj_option(ToaLocs.TOMB, "Enter") {
-    if (ToaMap.inLobby(player.tile) && ToaLobby.canEnter(player)) ToaLobby.of(world).start(player)
+    if (ToaMap.inLobby(player.tile) && ToaLobby.canEnter(player)) ToaLobby.of(world).requestStart(player)
 }
 
 on_logout {
@@ -26,3 +26,8 @@ on_logout {
 }
 
 on_login { ToaLobby.of(world).login(player) }
+
+// The original multiloc parent must retain its imported transforms for the personal niche appearance.
+ToaIds.loc(46082)?.let { id ->
+    on_obj_option(id, "Claim") { if (ToaRewards.hasUnclaimed(player)) ToaUi.showRewards(player) }
+}

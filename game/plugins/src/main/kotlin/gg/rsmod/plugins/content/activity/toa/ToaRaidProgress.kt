@@ -24,12 +24,14 @@ class ToaRaidProgress(
         private set
     private var generation = 0
     private var pendingWipe: Pair<ToaRoomRun, Int>? = null
+    private var closed = false
     val wardensUnlocked: Boolean get() = cleared.size == ToaPath.values().size
+    fun challengeCleared(path: ToaPath): Boolean = path in challenges
 
     fun elapsedCycles(cycle: Int): Int = startCycle?.let { ((finishCycle ?: cycle) - it).coerceAtLeast(0) } ?: 0
 
     fun challenge(path: ToaPath, cycle: Int): ToaRoomRun? {
-        if (failed || finished || path in cleared || (activePath != null && activePath != path)) return null
+        if (closed || failed || finished || path in cleared || (activePath != null && activePath != path)) return null
         val key = ToaRoomKey(path, false)
         val previous = current
         if (previous?.key == key && previous.status == ToaRoomStatus.RUNNING) return previous
@@ -40,14 +42,14 @@ class ToaRaidProgress(
     }
 
     fun boss(path: ToaPath): ToaRoomRun? {
-        if (failed || finished || activePath != path || path !in challenges || path in cleared) return null
+        if (closed || failed || finished || activePath != path || path !in challenges || path in cleared) return null
         val key = ToaRoomKey(path, true)
         if (current?.key == key && current?.status == ToaRoomStatus.RUNNING) return current
         return start(key)
     }
 
     fun wardens(): ToaRoomRun? {
-        if (!wardensUnlocked || failed || finished) return null
+        if (closed || !wardensUnlocked || failed || finished) return null
         val key = ToaRoomKey(null, true)
         if (current?.key == key && current?.status == ToaRoomStatus.RUNNING) return current
         return start(key)
@@ -62,6 +64,7 @@ class ToaRaidProgress(
 
     fun clear(run: ToaRoomRun, cycle: Int): Boolean {
         if (current !== run || run.status != ToaRoomStatus.RUNNING || failed || finished) return false
+        if (pendingWipe?.let { it.first === run && it.second < cycle } == true) return false
         run.status = ToaRoomStatus.CLEARED
         pendingWipe = null
         val path = run.key.path
@@ -93,6 +96,14 @@ class ToaRaidProgress(
         event(ToaRoomEvent.RESET, run)
         current = null
         return true
+    }
+
+    fun close() {
+        if (closed) return
+        closed = true
+        current?.takeIf { it.status == ToaRoomStatus.RUNNING }?.status = ToaRoomStatus.RESET
+        current = null
+        pendingWipe = null
     }
 }
 

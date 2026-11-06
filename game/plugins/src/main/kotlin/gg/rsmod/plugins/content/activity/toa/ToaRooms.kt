@@ -13,8 +13,9 @@ enum class ToaPath(val door: Int, val challengeEntry: Tile, val bossDoor: Int, v
 /** Register from the later puzzle/boss card. A missing implementation deliberately does not grant a clear. */
 object ToaRooms {
     private val factories = hashMapOf<ToaRoomKey, (ToaRaid) -> ToaRoom>()
-    fun register(key: ToaRoomKey, factory: (ToaRaid) -> ToaRoom) {
+    fun register(key: ToaRoomKey, factory: (ToaRaid) -> ToaRoom): AutoCloseable {
         check(factories.putIfAbsent(key, factory) == null) { "Duplicate ToA room: $key" }
+        return AutoCloseable { if (factories[key] === factory) factories.remove(key) }
     }
     fun create(raid: ToaRaid, key: ToaRoomKey): ToaRoom = factories[key]?.invoke(raid) ?: object : ToaRoom {}
 }
