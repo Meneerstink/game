@@ -423,4 +423,92 @@ class RuinousPowersTests {
         assertTrue(RuinousPowers.isActive(q, RuinousPrayer.VINDICATION))
         io.mockk.verify(exactly = 0) { q.graphic(Redemption.HEAL_GRAPHIC) }
     }
+
+    /**
+     * N583 Ruinous audit (owner 2026-11-06: "show stat adjustment echte data uit de server"): the prayer tab's panel (clientscript
+     * RuinousPowersCacheTool.STAT_SCRIPT) shows, per skill, the strongest active Ruinous prayer's percentage. Every number it can show
+     * is the server's own multiplier for that prayer alone, and a prayer the panel leaves out of a skill does nothing to it.
+     */
+    @Test
+    fun `the stat adjustments panel shows exactly the server multipliers`() {
+        val readers =
+            mapOf<Int, (Player) -> Double>(
+                0 to RuinousPowers::meleeAttack,
+                2 to RuinousPowers::meleeStrength,
+                4 to RuinousPowers::rangedAttack,
+                6 to RuinousPowers::magicAttack,
+            )
+        assertEquals(readers.keys, RuinousPowersCacheTool.STAT_TABLE.map { it.first }.toSet())
+        RuinousPowersCacheTool.STAT_TABLE.forEach { (skill, rows) ->
+            val read = readers.getValue(skill)
+            RuinousPrayer.values.filter { it != RuinousPrayer.PROTECT_ITEM }.forEach { prayer ->
+                val p = player()
+                RuinousPowers.click(p, prayer.slot)
+                val shown = rows.firstOrNull { it.first == prayer.slot }?.second ?: 0
+                assertEquals(shown.toLong(), pct(read(p)), "skill $skill, ${prayer.named}")
+            }
+        }
+    }
+
+    /** OSRS Wiki Fumus' Vow: a dragon dagger(p++) (severity 30) deals 6 damage at once; the poison itself is not used up. */
+    @Test
+    fun `Fumus' Vow deals the poison damage at once`() {
+        val attacker = player()
+        val target = player()
+        RuinousPowers.afterPoisonInflicted(attacker, target, 30)
+        io.mockk.verify(exactly = 0) { target.addHit(any()) }
+        RuinousPowers.click(attacker, RuinousPrayer.FUMUS_VOW.slot)
+        RuinousPowers.afterPoisonInflicted(attacker, target, 30)
+        io.mockk.verify { target.addHit(match { h -> h.hitmarks.single().damage == 6 && h.hitmarks.single().type == gg.rsmod.plugins.api.HitType.POISON.id && h.source === attacker }) }
+    }
+
+    /** OSRS Wiki Cruor's Vow: "upon killing an opponent" +3 Hitpoints and -3 Prayer points - once per kill, nothing for a hit. */
+    @Test
+    fun `Cruor's Vow heals 3 and drains 3 once per kill`() {
+        val attacker = player()
+        RuinousPowers.click(attacker, RuinousPrayer.CRUOR_VOW.slot)
+        val alive = player()
+        every { alive.getCurrentLifepoints() } returns 50
+        RuinousPowers.onDamageDealt(attacker, alive, 20)
+        io.mockk.verify(exactly = 0) { attacker.decreasePrayerPoints(3) }
+        val dead = player()
+        every { dead.getCurrentLifepoints() } returns 0
+        RuinousPowers.onDamageDealt(attacker, dead, 20)
+        RuinousPowers.onDamageDealt(attacker, dead, 15)
+        io.mockk.verify(exactly = 1) { attacker.decreasePrayerPoints(3) }
+    }
+
+    /** OSRS Wiki Rejuvenation: 1 Hitpoint every ~20 seconds (3x the normal 60), switching it on or off restarts the timer. */
+    @Test
+    fun `Rejuvenation restores Hitpoints three times as fast`() {
+        val rates = gg.rsmod.plugins.content.mechanics.restoration.RestorationRates
+        val normal = player()
+        val rejuv = player()
+        RuinousPowers.click(rejuv, RuinousPrayer.REJUVENATION.slot)
+        assertEquals(1, rates.lifePointRate(normal))
+        assertEquals(3, rates.lifePointRate(rejuv))
+        // 600 ticks = 6 minutes = 60 restoration steps of 10 ticks: 6 points normally, 18 with Rejuvenation.
+        assertEquals(6, (1..60).sumOf { rates.lifeDue(normal) })
+        assertEquals(18, (1..60).sumOf { rates.lifeDue(rejuv) })
+    }
+
+    /** OSRS Wiki Berserker (Ruinous): after 15 seconds on, a boosted combat stat drains every 90 seconds instead of 60 (50 % longer). */
+    @Test
+    fun `Berserker makes a boosted combat stat last 50 percent longer after 15 seconds`() {
+        val boosted = gg.rsmod.plugins.content.mechanics.restoration.BoostedCombatStats
+        val p = player()
+        assertEquals(100, boosted.ticksUntilDecay(p))
+        RuinousPowers.click(p, RuinousPrayer.BERSERKER.slot)
+        assertEquals(100, boosted.ticksUntilDecay(p))
+        every { lastWorld.currentCycle } returns 100 + RuinousPowers.METABOLISE_DELAY_TICKS
+        assertEquals(150, boosted.ticksUntilDecay(p))
+    }
+
+    /** OSRS Wiki Ruinous Powers drain table: drain effect per prayer (x10 here) - the server drains exactly these. */
+    @Test
+    fun `every prayer drains at its OSRS Wiki rate`() {
+        val wiki =
+            listOf(4, 18, 18, 18, 18, 1, 14, 14, 14, 22, 2, 18, 12, 12, 9, 28, 28, 28, 14, 14, 14, 14, 3, 28)
+        assertEquals(wiki.map { it * 10 }, RuinousPrayer.values.map { it.drainEffect })
+    }
 }
