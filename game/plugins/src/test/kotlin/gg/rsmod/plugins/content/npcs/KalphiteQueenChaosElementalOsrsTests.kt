@@ -39,8 +39,10 @@ class KalphiteQueenChaosElementalOsrsTests {
 
     @Test
     fun `Chaos Elemental delayed player effects reject stale targets`() {
-        val script = File("src/main/kotlin/gg/rsmod/plugins/content/combat/scripts/impl/ChaosElementalCombatScript.kt").readText()
-        assertTrue("target.isDead() || (target is Player && !target.isOnline)" in script)
-        assertTrue("target.isDead() || !target.isOnline || target.inventory.freeSlotCount == 0" in script)
+        // T8 (2026-11-06): since b35420cf5 (N522, the OSRS Chaos Elemental) the script is areas/wilderness/bosses/ChaosElementalCombat.kt;
+        // its delayed confusion/madness effects still drop a target that died or logged out in between.
+        val script = File("src/main/kotlin/gg/rsmod/plugins/content/areas/wilderness/bosses/ChaosElementalCombat.kt").readText()
+        assertTrue("!p.isOnline || p.isDead()" in script)
+        assertTrue("!target.isOnline || target.isDead()" in script)
     }
 }
