@@ -185,6 +185,18 @@ object OsrsPetImportTool {
         return osrsNpc * 16 + index
     }
 
+    /**
+     * N462 ToA (2026-11-06): a boss has more than 16 sequences (Akkha 38). Index 0-15 keep [packed] (existing ledger keys unchanged);
+     * index 16+ use their own key kinds (`npc_baked_*_hi`) packed as `osrsNpc * 64 + index`.
+     */
+    private fun packedHi(
+        osrsNpc: Int,
+        index: Int,
+    ): Int {
+        require(index in 16..63)
+        return osrsNpc * 64 + index
+    }
+
     private fun skeletal(
         apply: Boolean,
         only: Int? = null,
@@ -346,6 +358,49 @@ object OsrsPetImportTool {
             // with several bone weights). Movement only (stand 9653 / walk 9649); the bake is the timeline + SSE fallback, the client plays
             // the real skeletal clip. Not spawned anywhere - test client only until the ToA build.
             "toa-warden-proof" to listOf(11753 to emptyList()),
+            // N462 ToA bosses (owner 2026-11-06 18:0x 'importeer de toa bosses, je hoeft geen toestemming te vragen'): every visually distinct
+            // ToA npc (variants with the same models + rig share one local npc), each with EVERY sequence of its rig (cache 2686 clip -> rig,
+            // ChatGPT-A N462-notities	oa(-clips.tsv / 50-seq-defs.tsv, grouped by scratch toa_rigs.py). The bake is the timeline + the SSE
+            // fallback; the client plays the real skeletal clips (SkeletalSidecarExportTool per npc).
+            "toa-bosses" to listOf(
+                11789 to listOf(9421, 9760, 9761, 9762, 9763, 9764, 9765, 9766, 9767, 9768, 9769, 9770, 9771, 9772, 9773, 9774, 9775, 9776, 9777, 9778, 9779, 9780, 9781, 9782, 9783, 9784, 9785, 9786, 9787, 9788, 9789, 9790, 9791, 9792, 9793, 9809, 9810, 9811), // Akkha models [46360,46356,46357] rig 2065
+                11797 to listOf(9421, 9760, 9761, 9762, 9763, 9764, 9765, 9766, 9767, 9768, 9769, 9770, 9771, 9772, 9773, 9774, 9775, 9776, 9777, 9778, 9779, 9780, 9781, 9782, 9783, 9784, 9785, 9786, 9787, 9788, 9789, 9790, 9791, 9792, 9793, 9809, 9810, 9811), // Akkha's Shadow models [46367,46370,46369] rig 2065
+                11777 to listOf(9421, 9760, 9761, 9762, 9763, 9764, 9765, 9766, 9767, 9768, 9769, 9770, 9771, 9772, 9773, 9774, 9775, 9776, 9777, 9778, 9779, 9780, 9781, 9782, 9783, 9784, 9785, 9786, 9787, 9788, 9789, 9790, 9791, 9792, 9793, 9809, 9810, 9811), // Akkha's Phantom models [46368,46363] rig 2065
+                11778 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Ba-Ba models [46352,46350] rig 2063
+                11709 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon Brawler models [46345] rig 2063
+                11710 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon Thrower models [46348,46350] rig 2063
+                11711 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon Mage models [46354] rig 2063
+                11715 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon Shaman models [46346] rig 2063
+                11716 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Volatile Baboon models [46342] rig 2063
+                11717 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Cursed Baboon models [46347] rig 2063
+                11718 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon Thrall models [46349] rig 2063
+                11781 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Baboon models [46351,46350] rig 2063
+                11775 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), // Ba-Ba's Phantom models [46343,46350] rig 2063
+                11719 to listOf(9419, 9572, 9573, 9574, 9575, 9576, 9577, 9578, 9579, 9580, 9581, 9582, 9583), // Kephri models [46417] rig 2079
+                11724 to listOf(9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599), // Soldier Scarab models [46424] rig 2083
+                11725 to listOf(9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599), // Spitting Scarab models [46428] rig 2083
+                11726 to listOf(9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599), // Arcane Scarab models [46423] rig 2083
+                11727 to listOf(9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599), // Agile Scarab models [46427] rig 2083
+                11723 to listOf(9605, 9606, 9607, 9608), // Scarab Swarm models [46405] rig 2077
+                11776 to listOf(9419, 9572, 9573, 9574, 9575, 9576, 9577, 9578, 9579, 9580, 9581, 9582, 9583), // Kephri's Phantom models [46416] rig 2079
+                11730 to listOf(9618, 9620, 9622, 9624, 9626, 9628, 9630, 9632, 9634, 9636), // Zebak models [46399] rig 2074
+                11731 to listOf(9619, 9621, 9623, 9625, 9627, 9629, 9631, 9633, 9635, 9637), // Zebak's Tail models [46400] rig 2075
+                11774 to listOf(9618, 9620, 9622, 9624, 9626, 9628, 9630, 9632, 9634, 9636), // Zebak's Phantom models [46398] rig 2074
+                11753 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Elidinis' Warden models [46332] rig 2062
+                11756 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Tumeken's Warden models [46337] rig 2062
+                11755 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Elidinis' Warden models [46336] rig 2062
+                11758 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Tumeken's Warden models [46334] rig 2062
+                11759 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Elidinis' Warden models [46335] rig 2062
+                11760 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Tumeken's Warden models [46333] rig 2062
+                11761 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Elidinis' Warden models [46335,46331] rig 2062
+                11762 to listOf(9420, 9649, 9650, 9651, 9652, 9653, 9654, 9655, 9656, 9657, 9658, 9659, 9660, 9661, 9662, 9663, 9664, 9665, 9666, 9667, 9668, 9669, 9670, 9671, 9672, 9673, 9674, 9675, 9676, 9677, 9678, 9679, 9680, 9681, 9682, 9683, 9684, 9685), // Tumeken's Warden models [46333,46331] rig 2062
+                11770 to listOf(9704), // Core models [45291] rig 2028
+                11767 to listOf(9716, 9717, 9718, 9719), // Phantom models [46415] rig 2078
+                11654 to listOf(9532, 9533, 9534, 9535, 9536, 9537, 9538, 9539, 9540), // Apmeken models [46402] rig 2076
+                11657 to listOf(9532, 9533, 9534, 9535, 9536, 9537, 9538, 9539, 9540), // Crondis models [46403] rig 2076
+                11661 to listOf(9529, 9530, 9531), // Scabaras models [44749] rig 2023
+                11686 to listOf(9532, 9533, 9534, 9535, 9536, 9537, 9538, 9539, 9540), // Het models [46401] rig 2076
+            ),
             "calvarion" to listOf(
                 11993 to listOf(9969, 9971, 9973, 9975, 9977, 9978, 9980),
                 11994 to listOf(9970, 9972, 9974, 9976, 9979, 9981),
@@ -412,7 +467,7 @@ object OsrsPetImportTool {
                     }
                 val seqMap =
                     seqs.mapIndexed { si, osrsSeq ->
-                        val frameset = local("npc_baked_frameset", packed(n.id, si)) { nextFrameset++ }
+                        val frameset = if (si < 16) local("npc_baked_frameset", packed(n.id, si)) { nextFrameset++ } else local("npc_baked_frameset_hi", packedHi(n.id, si)) { nextFrameset++ }
                         baked.frames[si].forEachIndexed { fi, bytes -> put(OsrsFxImportTool.INDEX_FRAMES, frameset, fi, bytes, "npc ${n.id} ${n.name}: baked frame $fi of osrs seq $osrsSeq") }
                         val seq = OsrsFxImportTool.Seq(frameDurations = baked.durations[si], frames = IntArray(baked.frames[si].size) { (frameset shl 16) or it })
                         // The skeletal sequence's sounds (opcode 14, per tick) go on the baked frame showing that tick; the synth is imported
@@ -435,7 +490,7 @@ object OsrsPetImportTool {
                         }
                         val seqBytes = OsrsFxImportTool.encode667Seq(seq)
                         OsrsFxImportTool.decode667SeqFrames(seqBytes)
-                        val localSeq = local("npc_baked_seq", packed(n.id, si)) { nextSeq++ }
+                        val localSeq = if (si < 16) local("npc_baked_seq", packed(n.id, si)) { nextSeq++ } else local("npc_baked_seq_hi", packedHi(n.id, si)) { nextSeq++ }
                         put(OsrsFxImportTool.INDEX_SEQ, localSeq ushr 7, localSeq and 0x7F, seqBytes, "npc ${n.id} ${n.name}: baked osrs seq $osrsSeq for npc ${n.id}")
                         osrsSeq to localSeq
                     }.toMap()
