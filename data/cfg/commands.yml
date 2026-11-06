@@ -1377,3 +1377,9 @@
   usage: "::petdrop <pet item id>"
   description: "Test tool: receive a pet exactly like a boss drop (collection log, Getting pet sound, world message; a duplicate gives nothing)."
   example: "::petdrop 24112"
+
+- name: toatest
+  rank: admin
+  usage: "::toatest <clear|wipe|wardens|reward>"
+  description: "Test server only: drive the ToA room lifecycle while puzzle and boss implementations are being connected."
+  example: "::toatest clear"
