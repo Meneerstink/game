@@ -185,17 +185,18 @@ class InteractionApproachLoopTests {
         val failures = mutableListOf<String>()
         // A walk with turns, U-turns and crossings: east 6, north 4, west 3, south 6, east 2, north 1, back west 5.
         val legs = listOf(6 to 0, 0 to 4, -3 to 0, 0 to -6, 2 to 0, 0 to 1, -5 to 0)
-        for (size in listOf(1, 2)) for (run in listOf(false, true)) {
+        for (size in listOf(1, 2)) for (run in listOf(false, true)) for (fast in listOf(false, true)) {
             val npc = spawnNpc(size, follower = true)
             val p = player("ow", ARENA.transform(size, 0), run)
             follower = p to npc
+            followerRuns = fast
             var at = p.tile
             for ((lx, lz) in legs) {
                 at = at.transform(lx, lz)
                 p.walkTo(at)
                 repeat(Math.max(Math.abs(lx), Math.abs(lz)) + 1) {
                     tick(1)
-                    if (overlaps(p, npc)) failures += "size $size run=$run: follower at ${npc.tile} on its owner at ${p.tile}"
+                    if (overlaps(p, npc)) failures += "size $size run=$run fast=$fast: follower at ${npc.tile} on its owner at ${p.tile}"
                 }
             }
             tick(4)
@@ -312,12 +313,16 @@ class InteractionApproachLoopTests {
 
     private var follower: Pair<Client, Npc>? = null
 
+    /** A follower that keeps up with a running owner (Pets.FAST_PETS: Nexling, Babi - two steps a tick). */
+    private var followerRuns = false
+
     private fun report(failures: List<String>) {
         if (failures.isNotEmpty()) fail("${failures.size} approach loop(s):\n" + failures.joinToString("\n"))
     }
 
     private fun reset() {
         follower = null
+        followerRuns = false
         cleanUp()
         tick(1)
     }
@@ -442,7 +447,7 @@ class InteractionApproachLoopTests {
                     // mockk cannot always build): every player's cycle in PID order.
                     world.playersInPidOrder().forEach { it.cycle() }
                     // The familiar timer runs inside the player cycle (familiar.plugin.kts), before anyone moves.
-                    follower?.let { (p, f) -> Familiar.follow(p, f) }
+                    follower?.let { (p, f) -> Familiar.follow(p, f, runs = followerRuns) }
                     continue
                 }
                 task.execute(world, service)
