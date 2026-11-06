@@ -124,6 +124,13 @@ ToaIds.item(ToaSupplies.BAG_SOURCE)?.let { id ->
     }
 }
 
+// N462 points + chest (ToaChest): room points at each clear (ToaRaid), the Wardens' death rolls the chest once.
+ToaChest.install()
+run {
+    val previous = ToaRaidEvents.completed
+    ToaRaidEvents.completed = { raid, record -> ToaChest.fill(raid); previous(raid, record) }
+}
+
 on_player_death_start { ToaLobby.of(world).raid(player.uid)?.deathStart(player) }
 
 on_player_death {

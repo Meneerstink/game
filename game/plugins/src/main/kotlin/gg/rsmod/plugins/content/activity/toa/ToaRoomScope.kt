@@ -12,6 +12,8 @@ class ToaRoomScope(val raid: ToaRaid, val run: ToaRoomRun) {
     private val npcs = mutableListOf<Npc>()
     private val objects = mutableListOf<Pair<GameObject, GameObject?>>()
     private val cleanup = mutableListOf<() -> Unit>()
+    /** Every npc this room spawned (killed ones too, until close) - their damage maps give the room points (ToaChest.creditRoom). */
+    val spawned: List<Npc> get() = npcs.toList()
     val active: Boolean get() = !closed && raid.progress.current === run && run.status == ToaRoomStatus.RUNNING
 
     fun spawn(npc: Npc): Boolean {
