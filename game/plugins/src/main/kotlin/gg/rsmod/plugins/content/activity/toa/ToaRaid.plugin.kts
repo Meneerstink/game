@@ -35,7 +35,7 @@ ToaPath.values().forEach { path ->
 
 arrayOf("Pass", "Quick-Pass").forEach { option ->
     on_obj_option(ToaLocs.BARRIER, option) {
-        ToaLobby.of(world).raid(player.uid)?.passBarrier(player, player.getInteractingObject())
+        ToaLobby.of(world).raid(player.uid)?.passBarrier(player, player.getInteractingGameObj())
     }
 }
 
@@ -69,7 +69,7 @@ listOf(ToaLocs.KEPHRI_EXIT, ToaLocs.AKKHA_EXIT, ToaLocs.BABA_EXIT, ToaLocs.ZEBAK
 }
 
 listOfNotNull(ToaIds.loc(44786), ToaIds.loc(44787)).distinct().forEach { id ->
-    on_obj_option(id, 1) { ToaLobby.of(world).raid(player.uid)?.openChest(player, player.getInteractingObject()) }
+    on_obj_option(id, 1) { ToaLobby.of(world).raid(player.uid)?.openChest(player, player.getInteractingGameObj()) }
 }
 
 ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId?.let { id ->
