@@ -191,7 +191,7 @@ class InstancedMapAllocator {
                  * If there's no players in the [map] area, we can de-allocate
                  * the map.
                  */
-                if (world.players.none { map.area.contains(it.tile) }) {
+                if (InstancedMapAttribute.MANAGED_LIFETIME !in map.attr && world.players.none { map.area.contains(it.tile) }) {
                     deallocate(world, map)
                 }
             }

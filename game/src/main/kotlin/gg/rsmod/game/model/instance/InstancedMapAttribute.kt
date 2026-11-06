@@ -6,6 +6,9 @@ package gg.rsmod.game.model.instance
  * @author Tom <rspsmods@gmail.com>
  */
 enum class InstancedMapAttribute {
+    /** Content owns the lifetime, including an empty map awaiting party reconnect/reward collection. */
+    MANAGED_LIFETIME,
+
     /**
      * The instanced map will de-allocate if its owner logs out in the map area.
      * Requires an owner for the instanced map.
