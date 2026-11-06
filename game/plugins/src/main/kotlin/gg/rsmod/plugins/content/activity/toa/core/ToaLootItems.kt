@@ -18,6 +18,8 @@ object ToaLootItems {
         27232 to Items.MASORI_CHAPS,
         27279 to 23748, // Thread of Elidinis
         27352 to 24022, // Tumeken's guardian
+        27372 to 23067, // Masori crafting kit (20-item-manifest.tsv)
+        27255 to 22937, // Menaphite ornament kit
         12073 to Items.CLUE_SCROLL_ELITE, // OSRS Clue scroll (elite) -> our elite clue
     )
 
