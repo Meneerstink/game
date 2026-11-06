@@ -1392,6 +1392,6 @@
 
 - name: toaboss
   rank: admin
-  usage: "::toaboss <akkha> [raidlevel 0-600] [partysize 1-8] [path 0-6] | ::toaboss stop"
-  description: "Test client only: spawn a ToA boss encounter next to you outside the raid (N462)."
-  example: "::toaboss akkha 150 1 0"
+  usage: "::toaboss <akkha|zebak|baba|kephri|wardens> [raidlevel 0-600] [partysize 1-8] | stop"
+  description: "Test tool: spawn a ToA boss encounter with room membership and raid scaling, or stop your current test encounter."
+  example: "::toaboss zebak 150 1"

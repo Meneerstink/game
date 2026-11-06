@@ -13,8 +13,7 @@ import gg.rsmod.plugins.api.ext.*
 import kotlin.math.abs
 
 /** Sources: Akkha oldid15383708; Strategies oldid15392814 lines1108-1153; official Summer Sweep Up: Combat (25Jun2025).
- * T12/T01 are deliberately explicit: unpublished first-flash/impact/orb spawn timing is supplied by an evidence-backed director,
- * not inferred from a skeletal clip duration. Public mechanic methods below execute a supplied, validated sequence.
+ * Published rules take priority; missing server timings use cache measurements under the task card's ONZEKER policy.
  */
 object AkkhaCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.AKKHA)).toIntArray()
@@ -23,7 +22,7 @@ object AkkhaCombat : CombatScript() {
     val SHADOW_STATS = STATS.copy(hp = 70, defence = 30)
     // Wiki infobox gives 55 as overall max, not a complete per-style table. Do not silently use 55 for all three styles.
     const val PUBLISHED_MAX = 55
-    fun autosBeforeSpecial(stayVigilant: Boolean) = if (stayVigilant) 5 else 6
+    fun autosBeforeSpecial(@Suppress("UNUSED_PARAMETER") stayVigilant: Boolean = false) = 6
     fun nextStyle(style: CombatClass) = when (style) {
         CombatClass.MELEE -> CombatClass.RANGED
         CombatClass.RANGED -> CombatClass.MAGIC
@@ -31,9 +30,11 @@ object AkkhaCombat : CombatScript() {
     }
     fun shadowThreshold(stage: Int, max: Int): Int = max * (80 - 20 * stage) / 100
     fun enrageHits(size: Int) = 3 + size - 1
-    fun blastInterval(feelingSpecial: Boolean) = if (feelingSpecial) 2 else 4
-    fun extraMemoryBursts(path: Int) = minOf(path / 2, 2)
-    fun orbDamage(beforeCap: Int, protected: Boolean): Int = minOf(25, if (protected) beforeCap * 3 / 4 else beforeCap)
+    fun blastInterval(@Suppress("UNUSED_PARAMETER") feelingSpecial: Boolean = false) = 4
+    // ONZEKER T12:4-flash2tick preview+1teleport tick; orbs expire after base memory but before path2+ memory (Strategies1142).
+    fun trailDuration(feelingSpecial: Boolean) = 3 + 5 * blastInterval(feelingSpecial)
+    fun extraMemoryBursts(@Suppress("UNUSED_PARAMETER") path: Int) = 0
+    fun orbDamage(beforeCap: Int, protected: Boolean, quiet: Boolean = false): Int = minOf(25, ToaProtection.damage(beforeCap, protected, 3, 4, quiet))
     enum class Quadrant { FIRE, SHADOW, LIGHTNING, ICE }
     fun quadrant(t: Tile, centre: Tile): Quadrant = when {
         t.x < centre.x && t.z >= centre.z -> Quadrant.FIRE
@@ -59,8 +60,9 @@ object AkkhaCombat : CombatScript() {
             ToaEncounter.attach(npc, c, ::Session)
         }
     }
-    class Session(npc: Npc, context: ToaEncounterContext) : ToaBossSession(npc, context) {
+    class Session(npc: Npc, input: ToaEncounterContext) : ToaBossSession(npc, input) {
         override val stats = STATS
+        override val minimumDefence = 70 // Wiki Akkha/Strategies1110.
         var style = CombatClass.MELEE
         var autos = 0
         var shadowStage = 0
@@ -74,17 +76,27 @@ object AkkhaCombat : CombatScript() {
         // ONZEKER T02: cache2686 square14676 floor-platform envelope3672..3687; NPC corners inferred inside that envelope.
         var shadowTiles: Map<Quadrant, Tile> = mapOf(Quadrant.FIRE to centre.transform(-7, 5), Quadrant.SHADOW to centre.transform(5, 5),
             Quadrant.LIGHTNING to centre.transform(5, -7), Quadrant.ICE to centre.transform(-7, -7))
-        var specialDirector: ((Session) -> Unit)? = { it.defaultSpecial() }
-        var orbDirector: ((Session) -> Unit)? = { it.defaultOrbs() }
-        var shadowChargeDirector: ((Session) -> Unit)? = { it.chargeShadows() }
-        // ONZEKER T12: standard NPC melee/ranged formula applied to published base levels/bonuses; magic uses same18 fallback.
-        //55 in the infobox equals22 at the capped RL375 damage factor, and is not multiplied by2.5 again.
-        var autoEvidence: Map<CombatClass, ToaAutoAttack> = mapOf(
+        var specialDirector: (Session) -> Unit = { it.defaultSpecial() }
+        var orbDirector: (Session) -> Unit = { it.defaultOrbs() }
+        var shadowChargeDirector: (Session) -> Unit = { it.chargeShadows() }
+        // ONZEKER T12: no complete per-style max table. Melee22 uses the same encounter's published shadow max22;
+        // ranged18 follows lvl100/+40strength; magic18 follows that closest quantified ranged value. Infobox55 is not a per-style table.
+        private val baseAutos = mapOf(
             CombatClass.MELEE to ToaAutoAttack(22, CombatClass.MELEE, 1, 1, 4, prayerAtLaunch = true),
-            CombatClass.RANGED to ToaAutoAttack(18, CombatClass.RANGED, 3, 1, 10, prayerAtLaunch = true),
-            CombatClass.MAGIC to ToaAutoAttack(18, CombatClass.MAGIC, 3, 1, 10, prayerAtLaunch = true))
+            CombatClass.RANGED to ToaAutoAttack(18, CombatClass.RANGED, 3, 1, 10, prayerAtLaunch = true, projectile = 2255),
+            CombatClass.MAGIC to ToaAutoAttack(18, CombatClass.MAGIC, 3, 1, 10, prayerAtLaunch = true, projectile = 2253))
+        var autoEvidence: Map<CombatClass, ToaAutoAttack> = baseAutos
         private var shadowCharge = 0
+        private var styleChanged = 0
+        private val slowUntil = mutableMapOf<Player, Int>()
+        private val previousDelay = mutableMapOf<Player, Int>()
+        private val burning = mutableMapOf<Player, Int>()
 
+        override fun configure() {
+            super.configure()
+            // Akkha Wiki infobox (checked2026-11-06): Freeze100% resistance. Use the engine's existing immunity gate.
+            npc.timers[gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER] = Int.MAX_VALUE
+        }
         fun immune(): Boolean = memoryActive || (shadowStage > 0 && !enraged &&
             shadows[quadrant(npc.getCentreTile(), centre)]?.let { it.isSpawned() && !it.isDead() } != false
             )
@@ -112,10 +124,23 @@ object AkkhaCombat : CombatScript() {
             }
         }
         override fun onTick() {
+            val attackDelay = gg.rsmod.game.model.timer.ATTACK_DELAY
+            slowUntil.toMap().forEach { (p, until) ->
+                if (!eligible(p) || tick >= until) {
+                    slowUntil.remove(p); previousDelay.remove(p)
+                    if (eligible(p)) p.message("The ice around you melts away.")
+                } else {
+                    val delay = if (p.timers.has(attackDelay)) p.timers[attackDelay] else 0
+                    if (delay > ((previousDelay[p] ?: delay) - 1).coerceAtLeast(0)) p.timers[attackDelay] = delay + 1
+                    previousDelay[p] = if (p.timers.has(attackDelay)) p.timers[attackDelay] else 0
+                }
+            }
             val max = npc.getMaximumLifepoints()
             if (!enraged && shadowStage < 4 && npc.getCurrentLifepoints() <= shadowThreshold(shadowStage, max)) restoreShadows()
-            if (enraged) { orbDirector?.invoke(this) ?: unresolved("T12: unstable-orb spawn/move cadence and base damage"); return }
-            shadowChargeDirector?.invoke(this)
+            if (enraged) { orbDirector(this); return }
+            shadowChargeDirector(this)
+            // ONZEKER T12: more than one minute becomes101ticks; prevents an unreachable melee target stalling forever.
+            if (tick - styleChanged > 100 && !memoryActive) { style = nextStyle(style); autos = 0; styleChanged = tick; retarget() }
             if (memoryActive || tick < nextAttack) return
             val live = players()
             val tank = target?.takeIf { it in live } ?: live.firstOrNull() ?: return
@@ -124,19 +149,17 @@ object AkkhaCombat : CombatScript() {
             follow(tank)
             val meleeTarget = live.firstOrNull { distance(it.tile) == 0 } ?: tank
             if (style == CombatClass.MELEE && !meleeReach(meleeTarget.tile)) return
-            if (autos >= autosBeforeSpecial(inv("Stay Vigilant"))) {
-                specialDirector?.invoke(this) ?: unresolved("T12: special selection/first impact/expiry; no guessed rotation")
-                autos = 0; style = nextStyle(style); retarget()
+            if (autos >= autosBeforeSpecial()) {
+                specialDirector(this)
+                autos = 0; style = nextStyle(style); styleChanged = tick; retarget()
             } else {
-                val spec = autoEvidence[style]
-                if (spec != null) {
+                val spec = autoEvidence[style] ?: baseAutos.getValue(style)
+                run {
                     animate(when (style) { CombatClass.MELEE -> 9770; CombatClass.RANGED -> 9772; else -> 9774 })
                     val victims = if (style == CombatClass.MELEE) live.filter { it.tile.isWithinRadius(meleeTarget.tile, 1) && meleeReach(it.tile) } else live
                     victims.forEach { spec.fire(this, it) }
-                    if (inv("Keep Back") && style != CombatClass.MELEE) {
-                        autoEvidence[CombatClass.MELEE]?.let { swipe -> live.filter { meleeReach(it.tile) }.forEach { swipe.fire(this, it) } }
-                    }
-                } else unresolved("T01/T12: Akkha $style per-style max/protection/flight")
+
+                }
                 autos++
             }
             nextAttack = tick + stats.speed
@@ -150,25 +173,23 @@ object AkkhaCombat : CombatScript() {
         private fun defaultSpecial() {
             // ONZEKER T12: Wiki lists the choices but no weights; uniform selection among legal specials.
             val choices = if (context.partySize == 1) listOf(0, 2) else listOf(0, 1, 2)
-            val selected = if (inv("Double Trouble")) {
-                if (context.partySize == 1) listOf(0, 2) else choices.shuffled().take(2)
-            } else listOf(choices[npc.world.random(choices.lastIndex)])
+            val selected = listOf(choices[npc.world.random(choices.lastIndex)])
             selected.forEach { choice -> when (choice) {
                 0 -> {
-                    val count = 4 + extraMemoryBursts(context.pathLevel) // ONZEKER T12: four base flashes, one per arena quadrant.
+                    val count = 4 // ONZEKER T12: four base flashes, one per arena quadrant.
                     val pattern = mutableListOf(Quadrant.values()[npc.world.random(3)])
                     repeat(count - 1) {
                         val options = Quadrant.values().filter { adjacent(pattern.last(), it) }
                         pattern += options[npc.world.random(options.lastIndex)]
                     }
                     pattern.forEachIndexed { i, q -> later(i * 2) {
-                        shadowTiles[q]?.let { gfx(when(q) { Quadrant.FIRE ->2258; Quadrant.SHADOW ->2257; Quadrant.LIGHTNING ->2256; Quadrant.ICE ->2259 }, it) }
+                        gfx(when(q) { Quadrant.FIRE ->2258; Quadrant.SHADOW ->2257; Quadrant.LIGHTNING ->2256; Quadrant.ICE ->2259 }, shadowTile(q))
                     } }
                     // ONZEKER T12: flash2ticks=stomp seq9788(60cycles), disappear1tick=seq9784(30cycles), impact after full preview.
                     memoryBlast(pattern, count * 2 + 1, 22)
                 }
-                1 -> detonate(stats.speed, 22, inv("Feeling Special?") && npc.world.random(1) == 1)
-                else -> trail(players().associateWith { Tile(it.tile) }, stats.speed * 2, 1, stats.speed, 22)
+                1 -> detonate(stats.speed, 22, false)
+                else -> trail(players().associateWith { Tile(it.tile) }, trailDuration(false), 1, stats.speed, 22)
             } }
         }
         private fun defaultOrbs() {
@@ -191,8 +212,10 @@ object AkkhaCombat : CombatScript() {
             shadowStage++
             shadowCharge = 0
             shadows.values.toList().forEach { remove(it) }; shadows.clear()
-            if (shadowTiles.size == 4) shadowTiles.forEach { (q, t) -> spawn(ToaBossNpcs.AKKHA_SHADOW, t, SHADOW_STATS)?.let { shadows[q] = it } }
-            else unresolved("T02: four shadow corner coordinates")
+            Quadrant.values().forEach { q -> spawn(ToaBossNpcs.AKKHA_SHADOW, shadowTile(q), SHADOW_STATS)?.let {
+                shadows[q] = it
+                ToaBossFx.weakness(it, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.AIR, 60) // Shadow Wiki infobox.
+            } }
             message(if (shadowStage == 1) "Shadows appear throughout the room!" else "The shadows in the room are restored!")
         }
         fun enterEnrage(preserveIncoming: Boolean = false) {
@@ -203,8 +226,13 @@ object AkkhaCombat : CombatScript() {
             shadows.values.toList().forEach { remove(it) }; shadows.clear()
             relocate()
         }
+        private fun shadowTile(q: Quadrant): Tile = shadowTiles[q] ?: when (q) {
+            // ONZEKER T02: retain the measured-envelope debug corner if an adapter supplies an incomplete map.
+            Quadrant.FIRE -> centre.transform(-7, 5); Quadrant.SHADOW -> centre.transform(5, 5)
+            Quadrant.LIGHTNING -> centre.transform(5, -7); Quadrant.ICE -> centre.transform(-7, -7)
+        }
         private fun relocate() {
-            val choices = shadowTiles.values.filter { !sameTile(it, npc.tile) }
+            val choices = Quadrant.values().map(::shadowTile).filter { !sameTile(it, npc.tile) }
             choices.randomOrNull()?.let { npc.moveTo(it); animate(9785) }
         }
         /** Validate the whole pattern before scheduling anything; adjacent flash rule is not a diagonal random walk. */
@@ -212,7 +240,7 @@ object AkkhaCombat : CombatScript() {
             require(pattern.isNotEmpty() && pattern.zipWithNext().all { adjacent(it.first, it.second) })
             require(firstImpact >= 0 && baseDamage >= 0)
             memoryActive = true; animate(9784); message("Sections of the room start to glow...")
-            val interval = blastInterval(inv("Feeling Special?"))
+            val interval = blastInterval()
             pattern.forEachIndexed { i, safe -> later(firstImpact + i * interval) {
                 players().filter { quadrant(it.tile, centre) != safe }.forEach { elementalHit(it, baseDamage) }
             } }
@@ -231,7 +259,7 @@ object AkkhaCombat : CombatScript() {
             gfx(when (quadrant(p.tile, centre)) { Quadrant.FIRE -> 2258; Quadrant.SHADOW -> 2257; Quadrant.LIGHTNING -> 2256; Quadrant.ICE -> 2259 }, p.tile)
             // ONZEKER T12: expiry uses four published6tick attack intervals; proc cadence derives from2tick stomp seq9788.
             when (quadrant(p.tile, centre)) {
-                Quadrant.FIRE -> repeat(4) { i -> later((i + 1) * stats.speed) { if (eligible(p)) attack(p, 5, null, accuracy = false, minHit = 5) } }
+                Quadrant.FIRE -> burn(p)
                 Quadrant.SHADOW -> {
                     listOf(gg.rsmod.plugins.api.Skills.ATTACK, gg.rsmod.plugins.api.Skills.STRENGTH, gg.rsmod.plugins.api.Skills.DEFENCE,
                         gg.rsmod.plugins.api.Skills.RANGED, gg.rsmod.plugins.api.Skills.MAGIC).forEach { skill -> p.skills.alterCurrentLevel(skill, -3) }
@@ -239,12 +267,22 @@ object AkkhaCombat : CombatScript() {
                 }
                 Quadrant.LIGHTNING -> gg.rsmod.plugins.content.mechanics.prayer.Prayers.disableOverheads(p, stats.speed)
                 Quadrant.ICE -> {
-                    val timer = gg.rsmod.game.model.timer.ATTACK_DELAY
-                    p.timers[timer] = (if (p.timers.has(timer)) p.timers[timer] else 0) + 1
-                    later(stats.speed * 4) { if (eligible(p)) p.message("The ice around you melts away.") }
+                    slowUntil[p] = tick + stats.speed * 4
                 }
             }
         }
+        private fun burn(p: Player) {
+            if (!eligible(p) || (burning[p] ?: 0) > tick) return
+            burning[p] = tick + stats.speed * 4
+            repeat(4) { i -> later((i + 1) * stats.speed) {
+                if (eligible(p)) {
+                    attack(p, 5, null, accuracy = false, minHit = 5)
+                    players().filter { it !== p && it.tile.isWithinRadius(p.tile, 1) }.forEach { burn(it) }
+                }
+                if (i == 3) burning.remove(p)
+            } }
+        }
+        override fun close() { npc.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER); slowUntil.clear(); previousDelay.clear(); burning.clear(); shadows.clear(); super.close() }
         fun trail(previous: Map<Player, Tile>, duration: Int, armDelay: Int, orbLife: Int, baseDamage: Int) {
             require(duration > 0 && armDelay >= 0 && orbLife > 0)
             message("Magical orbs begin to materialise around you!")
@@ -255,11 +293,6 @@ object AkkhaCombat : CombatScript() {
                     val old = last.put(p, Tile(p.tile)) ?: return@forEach
                     if (!sameTile(old, p.tile)) {
                         trailOrb(old, armDelay, orbLife, baseDamage)
-                        if (inv("Feeling Special?")) {
-                            val dx = (p.tile.x - old.x).coerceIn(-1, 1); val dz = (p.tile.z - old.z).coerceIn(-1, 1)
-                            // Strategies/ToA invocation descriptions: additional orb two tiles in front.
-                            trailOrb(p.tile.transform(dx * 2, dz * 2), armDelay, orbLife, baseDamage)
-                        }
                     }
                 }
                 later(1) { sample(left - 1) }
@@ -288,7 +321,7 @@ object AkkhaCombat : CombatScript() {
                 if (touched.isNotEmpty()) {
                     val beforeCap = ToaScale.damage(baseDamage, context) / touched.size
                     touched.forEach { p ->
-                        val damage = orbDamage(beforeCap, p.isProtectedFrom(CombatClass.MAGIC))
+                        val damage = orbDamage(beforeCap, p.isProtectedFrom(CombatClass.MAGIC), false)
                         attack(p, damage, null, accuracy = false, minHit = damage); gfx(2260, p.tile)
                     }
                     remove(orb); return
@@ -303,11 +336,12 @@ object AkkhaCombat : CombatScript() {
 
 /** Each supplied field must have a server/tick source. A missing T01 field does not acquire an invented default. */
 data class ToaAutoAttack(val baseMax: Int, val style: CombatClass, val delay: Int,
-    val protectionNumerator: Int = 0, val protectionDenominator: Int = 1, val prayerAtLaunch: Boolean = false) {
+    val protectionNumerator: Int = 0, val protectionDenominator: Int = 1, val prayerAtLaunch: Boolean = false,
+    val projectile: Int = -1) {
     init { require(baseMax >= 0 && delay >= 0 && protectionDenominator > 0 && protectionNumerator in 0..protectionDenominator) }
-    fun fire(s: ToaBossSession, p: Player) {
-        if (style != CombatClass.MELEE) ToaBossFx.projectile(s.npc, p, if (style == CombatClass.MAGIC) 2253 else 2255, style == CombatClass.MAGIC, delay)
+    fun fire(s: ToaBossSession, p: Player, after: (Int) -> Unit = {}) {
+        if (projectile >= 0) ToaBossFx.projectile(s.npc, p, projectile, style == CombatClass.MAGIC, delay)
         s.attack(p, ToaScale.damage(baseMax, s.context), style, delay, protectionNumerator, protectionDenominator,
-            prayerAtLaunch = prayerAtLaunch)
+            prayerAtLaunch = prayerAtLaunch, after = after)
     }
 }
