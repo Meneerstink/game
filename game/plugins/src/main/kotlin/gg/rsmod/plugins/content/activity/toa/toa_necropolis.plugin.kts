@@ -25,8 +25,11 @@ on_world_init {
 
 ToaIds.loc(44010)?.let { entry ->
     on_obj_option(obj = entry, option = "enter") {
-        // Without the quest OSRS shows the Blocked Entry (44008) instead - built with the short quest (card n462-toa-log-quest).
-        if (!ToaLobby.canEnter(player)) return@on_obj_option
+        // Without the quest OSRS shows the Blocked Entry (44008, Inspect): its box (Transcript:Beneath Cursed Sands, before the cutscene).
+        if (!ToaLobby.canEnter(player)) {
+            player.queue { messageBox("The entrance is completely blocked. There doesn't seem to be any way through.") }
+            return@on_obj_option
+        }
         player.moveTo(LOBBY_ARRIVAL)
     }
 }

@@ -146,6 +146,8 @@ object OsrsNpcImportTool {
                     11752, 11769, 11772, 11773, 11782, 11783, 11784, 11785, 11786, 11787, 11788, 11800, 11801, 11802, 11803, 11804, 11805,
                     11806, 11807, 11808, 12132,
                 ),
+            // N462 Beneath Cursed Sands (short quest): the Head Menaphite Guard 11529 (OSRS Wiki: combat 174, the quest's fight).
+            "bcs" to listOf(11529),
         )
     }
 

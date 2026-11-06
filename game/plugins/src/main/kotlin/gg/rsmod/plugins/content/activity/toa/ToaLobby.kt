@@ -3,8 +3,7 @@ package gg.rsmod.plugins.content.activity.toa
 import gg.rsmod.game.model.PlayerUID
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.plugins.content.quests.QuestStatus
-import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
+import gg.rsmod.plugins.content.quests.foundation.BeneathCursedSands
 import java.util.WeakHashMap
 
 /** World-thread registry, independent of Friends Chat membership. */
@@ -102,9 +101,8 @@ class ToaLobby private constructor() {
         private val worlds = WeakHashMap<World, ToaLobby>()
         fun of(world: World): ToaLobby = worlds.getOrPut(world) { ToaLobby() }
 
-        /** E2 owner decision: accept existing completion; later short BCS only changes this seam. */
-        fun canEnter(player: Player): Boolean = QuestStatus.isCompleted(player,
-            FoundationQuests.COMPLETED.first { it.name == "Beneath Cursed Sands" })
+        /** OSRS: the Tombs of Amascut need Beneath Cursed Sands (N462 short quest; owner E2: old completions kept by BeneathCursedSands.migrate). */
+        fun canEnter(player: Player): Boolean = BeneathCursedSands.isFinished(player)
     }
 }
 

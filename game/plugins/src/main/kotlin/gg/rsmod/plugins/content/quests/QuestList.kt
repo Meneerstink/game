@@ -301,7 +301,7 @@ object QuestList {
             QuestListEntry(191, "Secrets of the North", 2, varp(1916, complete = 1)),
             QuestListEntry(192, "Bone Voyage", 1, varp(1917, complete = 1)),
             QuestListEntry(193, "Mage Arena II", 0, varp(1918, complete = 1)),
-            QuestListEntry(194, "Beneath Cursed Sands", 2, varp(1919, complete = 1)),
+            QuestListEntry(194, "Beneath Cursed Sands", 2, varp(1919, complete = 10)), // N462: short quest, complete = BeneathCursedSands.completedValue (clientscript 2193 case patched to 10)
         )
 
     private val bySlot = ENTRIES.associateBy { it.slot }

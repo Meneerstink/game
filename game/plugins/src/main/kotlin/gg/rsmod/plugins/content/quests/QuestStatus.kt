@@ -4,6 +4,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.cfg.Varps
 import gg.rsmod.plugins.api.ext.getVarp
 import gg.rsmod.plugins.api.ext.setVarp
+import gg.rsmod.plugins.content.quests.foundation.BeneathCursedSands
 import gg.rsmod.plugins.content.quests.foundation.ChoiceGroup
 import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 import gg.rsmod.plugins.content.quests.foundation.QuestChoices
@@ -27,8 +28,8 @@ import gg.rsmod.plugins.content.quests.foundation.ShortQuest
 object QuestStatus {
     enum class State { NOT_STARTED, IN_PROGRESS, COMPLETED }
 
-    /** The eight quests that are not simply completed, by list slot. */
-    val CHOICE_QUESTS: Map<Int, ShortQuest> by lazy { ChoiceGroup.values().flatMap { it.quests }.associateBy { it.slot } }
+    /** The quests that are not simply completed, by list slot: the eight choice quests and (N462) the short Beneath Cursed Sands. */
+    val CHOICE_QUESTS: Map<Int, ShortQuest> by lazy { (ChoiceGroup.values().flatMap { it.quests } + BeneathCursedSands).associateBy { it.slot } }
 
     /** The quest points of the whole list: the quest tab's maximum and the quest point cape's requirement. */
     val MAX_POINTS: Int get() = QuestList.ENTRIES.sumOf { it.points }
@@ -65,6 +66,8 @@ object QuestStatus {
      * Login: legacy accounts get their eight choice quests (once), then the client is brought in line with the status.
      */
     fun login(player: Player) {
+        // N462 owner E2: the old always-complete Beneath Cursed Sands entry stays completed (once, before anything reads it).
+        BeneathCursedSands.migrate(player)
         if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
         sync(player)
         // N501: a finished Desert Treasure II without the Ring of shadows anywhere gets it once.

@@ -105,7 +105,9 @@ object OsrsLocImportTool {
                 val localTypes = Rev667RegionProbeTool.locTypes(library)
                 var nextLocId = (localTypes.keys.maxOrNull() ?: -1) + 1
                 val census = ModelNamespaceCensusTool.census(FeroxImportTool.GAME_CACHE, FeroxImportTool.FILE_SERVER_CACHE, assetMap)
-                val free = census.provenFreeHoles.iterator()
+                // N462 (toa-locs 2026-11-06): the ToA boss import used up the holes below the ceiling; after the holes the census's safe range
+                // above every physical, referenced and mapped model id (ModelNamespaceCensusTool.safeFreeRange) is just as proven free.
+                val free = (census.provenFreeHoles.asSequence() + census.safeFreeRange.asSequence()).iterator()
                 val modelIdMap = LinkedHashMap<Int, Int>()
                 val locIdMap = LinkedHashMap<Int, Int>()
 

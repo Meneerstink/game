@@ -309,6 +309,9 @@ object OsrsItemImportTool {
                     Spec(27368), Spec(27369), // Dawn scarab egg, Ancient key
                     Spec(27300), Spec(27302), Spec(27304), Spec(27306), Spec(27308), Spec(27310), Spec(27312), // ToA books
                 ),
+            // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
+            // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
+            "bcs-items" to listOf(Spec(26967), Spec(26969)),
             // Voidwaker and its three pieces. The wiki's "slash sword" styles are the 667 scimitar style set 6: Rune scimitar
             // 1333 (644 1582, 686 6, audio 2500) plus 687 for Disrupt; 75 Attack.
             "voidwaker" to

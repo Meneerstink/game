@@ -60,7 +60,8 @@ object QuestListCacheTool {
             NewQuest(191, "Secrets of the North", "Secrets of the North (sort)", 3, GE_X, GE_Z, 1916, 1),
             NewQuest(192, "Bone Voyage", "Bone Voyage (sort)", 1, GE_X, GE_Z, 1917, 1),
             NewQuest(193, "Mage Arena II", "Mage Arena II (sort)", 5, GE_X, GE_Z, 1918, 1),
-            NewQuest(194, "Beneath Cursed Sands", "Beneath Cursed Sands (sort)", 3, GE_X, GE_Z, 1919, 1),
+            // N462: Beneath Cursed Sands is a short quest since 2026-11-06 (server BeneathCursedSands.completedValue 10, 1..3 = in progress).
+            NewQuest(194, "Beneath Cursed Sands", "Beneath Cursed Sands (sort)", 3, GE_X, GE_Z, 1919, 10),
         )
 
     @JvmStatic
@@ -194,12 +195,25 @@ object QuestListCacheTool {
         check(switchIndex >= 0) { "clientscript $PROGRESS_SCRIPT has no switch" }
         val missing = QUESTS.filter { it.slot !in cases }
         if (missing.isEmpty()) {
+            // Every slot has its case; a quest whose "complete" value changed (N462 Beneath Cursed Sands 1 -> 10) gets its PUSH_INT operand
+            // rewritten in place (same length, no offset moves).
+            var patched = data
             QUESTS.forEach { quest ->
                 val target = switchIndex + cases.getValue(quest.slot) + 1
                 val push = instructions[target]
                 check(push.opcode == PUSH_VARP && push.intOperand == quest.varp) { "slot ${quest.slot} case does not read varp ${quest.varp}" }
+                val complete = instructions[target + 1]
+                check(complete.opcode == PUSH_INT) { "slot ${quest.slot} case does not push its complete value" }
+                if (complete.intOperand != quest.complete) {
+                    if (patched === data) patched = data.copyOf()
+                    val at = complete.start + 2
+                    patched[at] = (quest.complete ushr 24).toByte()
+                    patched[at + 1] = (quest.complete ushr 16).toByte()
+                    patched[at + 2] = (quest.complete ushr 8).toByte()
+                    patched[at + 3] = quest.complete.toByte()
+                }
             }
-            return data
+            return patched
         }
         val body = ByteArrayOutputStream()
         var index = instructions.size
