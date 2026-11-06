@@ -65,8 +65,15 @@ RevenantCaveRevenants.REVS.forEach { rev ->
 
     // A charged Bracelet of ethereum makes revenants tolerant (OSRS Wiki); otherwise they are aggressive.
     on_npc_spawn(rev.id) {
-        npc.aggroCheck = { _, p -> !RevenantGear.wearsCharged(p) }
         RevenantCaveRevenants.resetHeals(npc) // a new life rolls its own 8-36 heals
+        // Dagrun 2026-11-06 (test client: a charged bracelet worn, the Revenant hellhound attacked anyway): npc_aggro's
+        // on_global_npc_spawn sets aggroCheck = defaultAggressiveness on the same spawn and overwrote this check. One tick later
+        // (the old 667 Revenants plugin did the same) the bracelet check wraps whatever the global plugin set.
+        npc.queue {
+            wait(1)
+            val base = npc.aggroCheck
+            npc.aggroCheck = { n, p -> !RevenantGear.wearsCharged(p) && (base == null || base(n, p)) }
+        }
     }
 }
 

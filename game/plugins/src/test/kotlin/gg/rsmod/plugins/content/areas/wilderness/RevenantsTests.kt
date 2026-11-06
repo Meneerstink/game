@@ -40,4 +40,18 @@ class RevenantsTests {
             assertEquals(Revenants.HEALS_PER_LIFE - 1, Revenants.healsLeft(b), "$id: a's respawn does not refill b")
         }
     }
+
+    /**
+     * Dagrun 2026-11-06 (test client: a charged Bracelet of ethereum worn, the OSRS Revenant hellhound attacked anyway): npc_aggro's
+     * global spawn hook sets aggroCheck on the same spawn, so the bracelet check must be put on a tick later and wrap that check.
+     */
+    @Test
+    fun `the charged-bracelet tolerance of the OSRS revenants is set after the global aggression hook and wraps it`() {
+        val src = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/areas/wilderness/bosses/revenant_cave_revenants.plugin.kts").readText()
+        val spawn = src.substringAfter("on_npc_spawn(rev.id) {").substringBefore("on_npc_combat")
+        kotlin.test.assertTrue("wait(1)" in spawn, "bracelet check one tick after the global hook")
+        kotlin.test.assertTrue("!RevenantGear.wearsCharged(p) && (base == null || base(n, p))" in spawn, "wraps the global check")
+        val global = java.io.File("src/main/kotlin/gg/rsmod/plugins/content/mechanics/aggro/npc_aggro.plugin.kts").readText()
+        kotlin.test.assertTrue("on_global_npc_spawn" in global && "npc.aggroCheck =" in global, "the global hook this ordering guards against")
+    }
 }
