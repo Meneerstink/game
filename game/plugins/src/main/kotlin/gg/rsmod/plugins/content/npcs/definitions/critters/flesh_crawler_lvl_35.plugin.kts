@@ -20,24 +20,26 @@ val table = DropTableFactory
 val fleshCrawler =
     table.build {
         main {
-            total(256)
+            total(100)
+            // N571 (2026-11-06): OSRS Wiki 'Flesh crawler' members drop table, out of 100 (same for levels 28/35/41). The old 667
+            // table filled 280 of 256 slots and had a Black full helm + Starved ancient effigy that OSRS never drops.
             // Runes
-            obj(Items.BODY_RUNE, quantityRange = 3..12, slots = 25)
-            obj(Items.DUST_RUNE, quantityRange = 2..23, slots = 17)
-            obj(Items.FIRE_RUNE, quantity = 42, slots = 8)
-            obj(Items.NATURE_RUNE, quantityRange = 5..10, slots = 2)
-            // Other Drops
-            obj(Items.COINS_995, quantityRange = 1..101, slots = 25)
-            obj(Items.IRON_ORE_NOTED, quantityRange = 1..10, slots = 25)
-            obj(Items.ASHES, quantity = 1, slots = 25)
-            obj(Items.BOTTOM_OF_SCEPTRE, quantity = 1, slots = 2)
-            obj(Items.SILVER_BAR, quantity = 1, slots = 25)
-            obj(Items.BLACK_FULL_HELM, quantity = 1, slots = 8)
-            obj(Items.STARVED_ANCIENT_EFFIGY, quantity = 1, slots = 1)
+            obj(Items.BODY_RUNE, quantityRange = 3..12, slots = 10)
+            obj(Items.FIRE_RUNE, quantity = 42, slots = 4)
+            obj(Items.DUST_RUNE, quantityRange = 3..9, slots = 10)
+            obj(Items.NATURE_RUNE, quantity = 5, slots = 4)
+            // Materials
+            obj(Items.IRON_ORE, quantity = 1, slots = 5)
+            obj(Items.IRON_ORE_NOTED, quantityRange = 3..7, slots = 12)
+            obj(Items.SILVER_BAR, quantity = 1, slots = 2)
+            // Other
+            obj(Items.COINS_995, quantityRange = 5..84, slots = 7)
+            obj(Items.ASHES, quantity = 1, slots = 4)
+            obj(Items.BOTTOM_OF_SCEPTRE, quantity = 1, slots = 3)
             // Tables
-            table(Herbs.minorHerbTable, slots = 43)
+            table(Herbs.minorHerbTable, slots = 35)
             table(Rare.rareTable, slots = 2)
-            nothing(72)
+            nothing(2)
         }
         table("Charms") {
             total(1000)

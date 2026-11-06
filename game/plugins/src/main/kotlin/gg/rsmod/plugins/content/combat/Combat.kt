@@ -360,7 +360,9 @@ object Combat {
         val dx = maxOf(0, t.x - (s.x + sSize - 1), s.x - (t.x + tSize - 1))
         val dz = maxOf(0, t.z - (s.z + sSize - 1), s.z - (t.z + tSize - 1))
         if (dx == 0 && dz == 0) return false
-        if (range <= 1) return (dx == 1 && dz == 0) || (dx == 0 && dz == 1)
+        // N596 (2026-11-06): range 1 also needs a shared edge WITHOUT a wall between the bodies (OSRS: no melee over a wall, fence or
+        // table edge) - the same MeleeReach rule the route search uses to "arrive". Geometry alone let a swing land through a wall.
+        if (range <= 1) return gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(pawn.world.collision, s, sSize, sSize, t, tSize, tSize)
         return maxOf(dx, dz) <= range && pawn.world.collision.raycast(s, t, projectile = true)
     }
 

@@ -234,7 +234,10 @@ suspend fun cycle(it: QueueTask): Boolean {
 
     if (pawn is Npc && dataAttackRange != null) {
         // handled above
-    } else if (strategy == MeleeCombatStrategy && pawn.tile.getDistance(target.tile) <= pawn.getSize()) {
+    } else if (strategy == MeleeCombatStrategy && Combat.inMeleeReach(pawn, target, attackRange)) {
+        // N596 (2026-11-06): the route failed, but the attacker may already stand in real melee reach (e.g. the target stands on a
+        // tile the route search cannot end on). The old shortcut (south-west distance <= own size) also passed through a wall or
+        // fence ('no route' in the npcpath trace, yet the swing landed) - now only a real reach counts.
         pathFound = true
     }
 

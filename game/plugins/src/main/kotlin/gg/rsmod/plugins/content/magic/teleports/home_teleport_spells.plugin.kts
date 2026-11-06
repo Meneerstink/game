@@ -30,12 +30,11 @@ HomeTeleport.values.forEach { teleport ->
 
     on_magic_spell_button(teleport.spellName) {
         if (player.timers.has(HOME_TELEPORT_TIMER) && player.privilege.id != 2) {
-            val minutes = player.timers.getMinutesLeft(HOME_TELEPORT_TIMER)
-            if (minutes != null && minutes > 0) {
-                player.message("You need to wait another ${minutes.appendToString("minute")} to cast this spell.")
-            } else {
-                player.message("You need to wait another couple of seconds to cast this spell.")
-            }
+            // N590 (owner 2026-11-05 'couple of seconds ... waarom'): OSRS Wiki Lumbridge Home Teleport - the player "is notified with
+            // the remaining time in minutes". Whole minutes rounded UP (100 ticks = 1 minute), so the last minute reads '1 minute'
+            // instead of the rsmod text 'a couple of seconds', and right after a cast it reads 30, not 29.
+            val minutes = (player.timers[HOME_TELEPORT_TIMER] + 99) / 100
+            player.message("You need to wait another ${minutes.appendToString("minute")} to cast this spell.")
             return@on_magic_spell_button
         }
         // Deadman PvP guards plan (2026-09-16): the two-arg canTeleport overload makes a skulled player's 7-second countdown start

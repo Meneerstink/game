@@ -483,6 +483,10 @@
   usage: "::noclip"
   description: "Toggle no-clip: walk through walls and objects."
   example: "::noclip"
+- name: npcanim
+  rank: admin
+  usage: "::npcanim <animId>"
+  description: "Plays an animation on the nearest NPC within 10 tiles (test tool)."
 - name: npc
   rank: admin
   usage: "::npc <npcId> [walkRadius]"

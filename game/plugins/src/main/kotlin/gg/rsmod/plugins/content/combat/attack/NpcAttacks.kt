@@ -587,7 +587,10 @@ object NpcAttacks {
         val targetSize = target.getSize()
         if (npc.tile.height != target.tile.height) return false
         if (attack.range <= 1) {
-            return Combat.areBordering(npc.tile.x, npc.tile.z, size, size, target.tile.x, target.tile.z, targetSize, targetSize)
+            // N596 (2026-11-06): a melee section needs a shared edge without a wall (MeleeReach, the rule the approach route uses to
+            // arrive). Combat.areBordering also accepted a diagonal corner and ignored walls/fences - a hit over a wall, or a stop
+            // on a diagonal where OSRS melee cannot hit.
+            return gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(npc.world.collision, npc.tile, size, size, target.tile, targetSize, targetSize)
         }
         val overlapping =
             npc.tile.x < target.tile.x + targetSize && target.tile.x < npc.tile.x + size &&

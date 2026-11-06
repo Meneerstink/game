@@ -241,7 +241,8 @@ object ArtioCombat : CombatScript() {
         if (!p.isOnline || p.isDead()) return
         val start = Tile(p.tile)
         val (dest, moved) = pushDestination(npc, start) { trapAt(npc, it) != null }
-        val onTrap = !dest.sameAs(start) && trapAt(npc, dest) != null
+        val trap = if (dest.sameAs(start)) null else trapAt(npc, dest)
+        val onTrap = trap != null
         gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.COMBAT) {
             "artio orb knockback ${p.username} ${start.x},${start.z} -> ${dest.x},${dest.z} moved=$moved trap=$onTrap protected=${p.isProtectedFrom(CombatClass.MAGIC)}"
         }
@@ -250,6 +251,14 @@ object ArtioCombat : CombatScript() {
         if (!p.isProtectedFrom(CombatClass.MAGIC)) {
             val damage = knockbackDamage(moved, onTrap)
             npc.dealHit(target = p, minHit = damage.toDouble(), maxHit = damage.toDouble(), landHit = true, delay = 0, hitType = HitType.MAGIC, applyDeflectProtection = false)
+        }
+        // Dagrun 2026-11-06 (testclient: 'trap=true' but no bind, no trap hit): the trap's own tick check never saw the player on its
+        // tile - he landed and walked back to her in the same tick. Wiki: knocked "into a trap" the trap catches him and deals its own
+        // damage - it springs right here (bound before he lands, so he stays on it) and is used up.
+        if (trap != null) {
+            synchronized(traps(npc)) { traps(npc).remove(trap) }
+            if (trap.isSpawned(npc.world)) npc.world.remove(trap)
+            spring(npc, p)
         }
         if (!dest.sameAs(start)) {
             p.lockingQueue(priority = TaskPriority.STRONG, lockState = LockState.FULL) {
@@ -315,6 +324,7 @@ object ArtioCombat : CombatScript() {
             world.queue {
                 for (tick in 0 until TRAP_TICKS) {
                     if (!WildernessBossLife.active(npc, life)) break
+                    if (synchronized(list) { trap !in list }) break // sprung by a knockback (knockback)
                     val victim = players(npc).firstOrNull { it.tile.sameAs(t) }
                     if (victim != null) {
                         spring(npc, victim)

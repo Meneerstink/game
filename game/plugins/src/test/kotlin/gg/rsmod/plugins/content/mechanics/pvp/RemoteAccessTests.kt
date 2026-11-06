@@ -129,7 +129,8 @@ class RemoteAccessTests {
     fun `routes that move a player later, or open a remote service, use the shared gate`() {
         // DGN 2026-10-21: `::dungeon` and the Daemonheim floor loop are removed with Dungeoneering (DungeoneeringRemovedTests).
         read("activity/pest_control/PestControlHandler.kt").let {
-            assertTrue(it.contains("RemoteAccess.refuse(player"), "boarding")
+            // N525: since 9bf8ae543 (N516) boarding uses travel = refuse + the teleport rules (a Tele Block may not board either).
+            assertTrue(it.contains("RemoteAccess.travel(player"), "boarding")
             assertTrue(it.contains("RemoteAccess.moveRefusal(p"), "the game start re-checks every boarder")
         }
         read("mechanics/practicepvp/PracticePvp.kt").let {

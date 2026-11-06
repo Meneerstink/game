@@ -240,6 +240,62 @@ class InteractionApproachLoopTests {
     }
 
     /**
+     * N596 (2026-11-06, Pest Control 6427,34 -> shifter 6427,35: 'no route' yet the swing landed): a player walled in on all four
+     * sides attacks an npc on the next tile beyond the wall (all four sides, 1x1 and 2x2). OSRS: no melee over a wall or fence -
+     * he never swings; without the wall the same attack does fire.
+     */
+    @Test
+    fun `no melee swing over a wall`() {
+        val failures = mutableListOf<String>()
+        val cell = ARENA.transform(4, 4)
+        for (size in listOf(1, 2)) for ((dx, dz) in listOf(0 to 1, 1 to 0, 0 to -size, -size to 0)) {
+            boxIn(cell, add = true)
+            try {
+                val npc = spawnNpcAt(size, cell.transform(dx, dz))
+                val p = player("mw", cell, false)
+                if (gg.rsmod.plugins.content.combat.Combat.inMeleeReach(p, npc, 1)) failures += "size $size at ($dx,$dz): inMeleeReach over the wall"
+                p.attack(npc)
+                repeat(6) {
+                    tick(1)
+                    if (p.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)) failures += "size $size at ($dx,$dz): swung over the wall at tick ${it + 1}"
+                }
+                reset()
+            } finally {
+                boxIn(cell, add = false)
+            }
+        }
+        // The control: no wall, same spot - the swing fires.
+        val npc = spawnNpcAt(1, cell.transform(0, 1))
+        val p = player("mo", cell, false)
+        assertTrue("in reach without a wall", gg.rsmod.plugins.content.combat.Combat.inMeleeReach(p, npc, 1))
+        p.attack(npc)
+        var swung = false
+        repeat(4) { tick(1); swung = swung || p.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY) }
+        if (!swung) failures += "control without a wall: no swing"
+        reset()
+        report(failures)
+    }
+
+    /** Walls on all four edges of [cell] (both sides of each edge). */
+    private fun boxIn(
+        cell: Tile,
+        add: Boolean,
+    ) {
+        val n = gg.rsmod.game.model.Direction.NORTH
+        val s = gg.rsmod.game.model.Direction.SOUTH
+        val e = gg.rsmod.game.model.Direction.EAST
+        val w = gg.rsmod.game.model.Direction.WEST
+        val update = gg.rsmod.game.model.collision.CollisionUpdate.Builder()
+        update.setType(if (add) gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD else gg.rsmod.game.model.collision.CollisionUpdate.Type.REMOVE)
+        update.putTile(cell, false, n, s, e, w)
+        update.putTile(cell.transform(0, 1), false, s)
+        update.putTile(cell.transform(0, -1), false, n)
+        update.putTile(cell.transform(1, 0), false, w)
+        update.putTile(cell.transform(-1, 0), false, e)
+        world.collision.applyUpdate(update.build())
+    }
+
+    /**
      * Breaktest: three npcs stand round the target. A player is not blocked by npc bodies (osrs-docs Entity Collision: only npcs check
      * the entity flags), so he may end on any side - also on another npc - as long as he ends beside the target without a loop.
      */

@@ -163,6 +163,9 @@ class AncientCursesVisualAudioTests {
         AncientCurse.values().forEach { curse ->
             val fixture = RuntimeFixture()
             AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+            // T8 (2026-11-06): since N546 (c5b0dade0) the book change itself plays the Trailblazer unlock sound - only count what
+            // the curse click sends.
+            io.mockk.clearMocks(fixture.player, answers = false, childMocks = false)
             AncientCurses.toggleCurse(fixture.player, curse)
             val expected = if (curse.activationGraphic == null) AncientCurses.activationSound(curse) else null
             runCatching {
@@ -179,6 +182,7 @@ class AncientCursesVisualAudioTests {
         }
         val fixture = RuntimeFixture()
         AncientCurses.switchBook(fixture.player, AncientCurses.PrayerBook.ANCIENT)
+        io.mockk.clearMocks(fixture.player, answers = false, childMocks = false)
         AncientCurses.toggleTurmoil(fixture.player)
         runCatching { verify(exactly = 0) { fixture.player.write(match<gg.rsmod.game.message.Message> { it is SynthSoundMessage }) } }
             .onFailure { offenders += "Turmoil: activation sent a server sound" }
