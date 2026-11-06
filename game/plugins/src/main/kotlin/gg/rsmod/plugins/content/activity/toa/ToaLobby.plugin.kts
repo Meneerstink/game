@@ -43,3 +43,26 @@ on_login { ToaLobby.of(world).login(player) }
 ToaIds.loc(46082)?.let { id ->
     on_obj_option(id, "Claim") { if (ToaRewards.hasUnclaimed(player)) ToaUi.showRewards(player) }
 }
+
+// N462 Icthlarin's shroud chest (OSRS loc 46080 toa_lobby_cape_chest, "Search"; across from the Grouping Obelisk). OSRS Wiki Icthlarin's
+// shroud: tiers 1-5 at 100 / 500 / 1,000 / 1,500 / 2,000 Normal/Expert completions; Transcript:Chest (Icthlarin's shroud): "Take
+// Icthlarin's shroud (tier N)." -> "You take a mysterious shroud from the chest.". ONZEKER (no source): nothing unlocked, every unlocked
+// tier already owned or a full inventory - the chest then just offers nothing / gives nothing.
+ToaIds.loc(46080)?.let { chest ->
+    val tiers = listOf(100 to 27257, 500 to 27259, 1_000 to 27261, 1_500 to 27263, 2_000 to 27265)
+    on_obj_option(chest, "Search") {
+        val done = player.attr[ToaChest.COMPLETIONS_NORMAL_EXPERT] ?: 0
+        val offer = tiers.mapIndexedNotNull { index, (needed, osrs) ->
+            val local = ToaIds.item(osrs) ?: return@mapIndexedNotNull null
+            val held = player.inventory.contains(local) || player.bank.contains(local) || player.equipment.contains(local)
+            if (done >= needed && !held) (index + 1) to local else null
+        }
+        if (offer.isEmpty()) return@on_obj_option
+        player.queue {
+            val pick = offer.getOrNull(options(*offer.map { "Take Icthlarin's shroud (tier ${it.first})." }.toTypedArray()) - 1) ?: return@queue
+            if (player.inventory.freeSlotCount == 0) return@queue
+            player.inventory.add(pick.second)
+            messageBox("You take a mysterious shroud from the chest.")
+        }
+    }
+}
