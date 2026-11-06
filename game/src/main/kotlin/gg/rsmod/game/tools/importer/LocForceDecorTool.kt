@@ -19,11 +19,20 @@ object LocForceDecorTool {
         require(args.size == 2 && args[1] in setOf("plan", "apply")) { "Usage: <import name> plan|apply" }
         val (name, mode) = args
         val ledger = File(FeroxImportTool.ASSET_MAP).readText()
-        val header = "OSRS region import '$name'"
-        require(ledger.contains(header)) { "no ledger block $header" }
-        val block = ledger.substringAfter(header).substringAfter("loc_ids:").substringBefore("    models:")
-        val localIds = Regex("""upstream_id: (\d+), local_id: (\d+)""").findAll(block).map { it.groupValues[2].toInt() }.toList()
-        require(localIds.isNotEmpty()) { "no loc ids in $header" }
+        // N462 (2026-11-06): `tx:<transaction>` = the locs an OsrsLocImportTool batch recorded (fx_kind osrs_loc_loc, that transaction) -
+        // the ToA locs the raid places itself (Scabaras/warning tiles, Kephri dung ...) are ground decoration too.
+        val localIds =
+            if (name.startsWith("tx:")) {
+                val tx = name.removePrefix("tx:")
+                Regex("""- fx_kind: osrs_loc_loc\s+upstream_fx_id: \d+\s+local_fx_id: (\d+)\s+status: IMPORTED_BY_OSRS_LOC_TOOL\s+transaction: ${Regex.escape(tx)}\b""")
+                    .findAll(ledger).map { it.groupValues[1].toInt() }.toList()
+            } else {
+                val header = "OSRS region import '$name'"
+                require(ledger.contains(header)) { "no ledger block $header" }
+                val block = ledger.substringAfter(header).substringAfter("loc_ids:").substringBefore("    models:")
+                Regex("""upstream_id: (\d+), local_id: (\d+)""").findAll(block).map { it.groupValues[2].toInt() }.toList()
+            }
+        require(localIds.isNotEmpty()) { "no loc ids for $name" }
         val mutations = ArrayList<CacheMutation>()
         var already = 0
         val library = CacheLibrary(FeroxImportTool.GAME_CACHE)

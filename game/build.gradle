@@ -226,6 +226,14 @@ task runSkeletalSidecarExportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.SkeletalSidecarExportTool'
 }
 
+task runOsrsInterfacePortTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N462: port OSRS if3 interfaces (ToA 481/482/771-778) to 667 if3 - static components, frame scripts rebuilt, sprites copied. ' +
+        'Usage: --args="<group,...|toa> [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsInterfacePortTool'
+}
+
 task runOsrsPetImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS pet roster (data/cfg/pets/osrs_pets.tsv): probe, import the skeletal followers (baked), or write the server pet table. ' +

@@ -449,11 +449,29 @@ object OsrsPetImportTool {
             }
 
             val npcFiles = reader.files(ModernCacheReader.INDEX_CONFIG, OsrsNpcProbeTool.CONFIG_GROUP_NPC)
-            for ((osrsId, extraSeqs) in jobs) {
+            // N462 (2026-11-06): the bakes run in parallel (one ModernCacheReader per task; SkeletalBakeTool keeps no shared mutable state) -
+            // the 37 ToA npcs took ~65 min one by one. Every id is still allocated in job order: the bases here, the rest in the loop below.
+            val jobDefs = jobs.map { (osrsId, extraSeqs) ->
                 val n = OsrsNpcProbeTool.decodeOsrs(osrsId, npcFiles[osrsId] ?: error("OSRS npc $osrsId missing"))
                 val seqs = (OsrsNpcProbeTool.movementSeqs(n).values.filter { it >= 0 } + extraSeqs).distinct()
-                val localBase = local("npc_baked_base", n.id) { nextBase++ }
-                val baked = SkeletalBakeTool.bakeSet(reader, n.models.toList(), seqs, localBase)
+                Triple(n, seqs, local("npc_baked_base", n.id) { nextBase++ })
+            }
+            val threads = (System.getProperty("rsps.bakeThreads") ?: System.getenv("RSPS_BAKE_THREADS") ?: "3").toInt().coerceIn(1, 8)
+            val pool = java.util.concurrent.Executors.newFixedThreadPool(threads)
+            val bakes =
+                try {
+                    jobDefs.map { (n, seqs, localBase) ->
+                        pool.submit<SkeletalBakeTool.BakedSet> {
+                            ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { r -> SkeletalBakeTool.bakeSet(r, n.models.toList(), seqs, localBase) }
+                                .also { println("BAKED npc ${n.id} ${n.name}") }
+                        }
+                    }.map { it.get() }
+                } finally {
+                    pool.shutdown()
+                }
+            for ((jobIndex, job) in jobDefs.withIndex()) {
+                val (n, seqs, localBase) = job
+                val baked = bakes[jobIndex]
                 put(OsrsFxImportTool.INDEX_BASES, localBase, 0, baked.base, "npc ${n.id} ${n.name}: baked base for osrs npc ${n.id}")
                 val localModels =
                     n.models.mapIndexed { i, m ->

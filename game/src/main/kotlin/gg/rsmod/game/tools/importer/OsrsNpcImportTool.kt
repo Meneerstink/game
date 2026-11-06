@@ -133,6 +133,19 @@ object OsrsNpcImportTool {
             // Zombie pirates 13489-13493, Rogue 526 / 6603, Lava dragon 6593, Ent 6594 + Ent trunk 9474, Mammoth 6604,
             // Elder Chaos druid 6607, Runite Golem 6600 + Runite rocks 6601.
             "wildy-npcs" to listOf(6606, 3024, 3027, 13489, 13490, 13491, 13492, 13493, 526, 6603, 6593, 6594, 9474, 6604, 6607, 6600, 6601),
+            // N462 ToA (owner 2026-11-06 18:0x 'importeer de toa bosses'): every ToA npc with CLASSIC models/frames (GPT-A
+            // N462-notities\toa\50-skeletal-consumenten.tsv; the skeletal ones: OsrsPetImportTool skeletal-npc toa-bosses). Osmumten 11689-11693
+            // + Spirit 11691, Helpful Spirit 11694, Ghost 11695, Amascut 11696, obelisks 11698/11699, Palms of Resourcefulness 11700-11704,
+            // crocodiles 11705/11740/11741, Het's Seal 11706/11707, Orb of Darkness 11708, eggs 11728/11729, jugs 11735/11736, boulders 11737/
+            // 11782/11783, waves 11738/11739, blood clouds 11742/11743, helper npcs 11744/11745/11769/11773/11788/11805, Wardens obelisks
+            // 11750-11752/12132, Energy Siphon 11772, rubble 11784-11787, Akkha orbs 11800-11804, Bank Camel 11806, Maisa 11807/11808.
+            "toa-classic" to
+                listOf(
+                    11689, 11690, 11691, 11692, 11693, 11694, 11695, 11696, 11698, 11699, 11700, 11701, 11702, 11703, 11704, 11705, 11706,
+                    11707, 11708, 11728, 11729, 11735, 11736, 11737, 11738, 11739, 11740, 11741, 11742, 11743, 11744, 11745, 11750, 11751,
+                    11752, 11769, 11772, 11773, 11782, 11783, 11784, 11785, 11786, 11787, 11788, 11800, 11801, 11802, 11803, 11804, 11805,
+                    11806, 11807, 11808, 12132,
+                ),
         )
     }
 
@@ -140,7 +153,12 @@ object OsrsNpcImportTool {
      * Npcs that never move and have no movement sequences in OSRS: they keep their model's rest pose (no humanoid default).
      * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig; the POH combat dummies 10507/8598/10508-10512 are posts.
      */
-    val STATIC_NPCS = setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601) // 6601 Runite rocks (N522 deel 5)
+    val STATIC_NPCS =
+        setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601) + // 6601 Runite rocks (N522 deel 5)
+            // N462 ToA: no movement sequences in OSRS (GPT-A 50-skeletal-consumenten.tsv directSeqRefs {}): obelisks, palms, Het's Seal,
+            // eggs, jug 11735, boulder 11737, helper npcs and rubble.
+            setOf(11698, 11699, 11700, 11701, 11702, 11703, 11704, 11706, 11707, 11728, 11729, 11735, 11737, 11744, 11745, 11784, 11785,
+                11786, 11787, 11788, 11805)
 
     /**
      * Batches whose entries are renamed clones of an OSRS npc: the same models, BAS and options, only the cache name changed.
@@ -206,6 +224,10 @@ object OsrsNpcImportTool {
             // _02 12507, _DEATH_01 12508; MAMMOTH_ATTACK 304 / _BLOCK 305 / _DEATH 307; GOLEM_ATTACK 153 / _BLOCK 154 / _DEATH 156.
             // The human ones (Dark warrior, Rogues, Elder Chaos druid) stand on the shared 808 rig and fight with the 667 human sequences.
             "wildy-npcs" to listOf(6254, 6255, 6256, 5567, 5568, 5569, 80, 81, 89, 92, 12504, 12505, 12506, 12507, 12508, 304, 305, 307, 153, 154, 156),
+            // toa-classic (N462, RuneLite gameval AnimationID; classic frames per GPT-A 50-skeletal-sequences.tsv): crocodiles CROC_PARRY 2035 /
+            // CROC_DEATH 2038 / CROC_ATTACK 2039 / CROC_ATTACK_MERGE 9804; Wardens P1/P2 obelisk FX_OBELISK_WARDENS01_* 9720-9726 and
+            // FX_OBELISK_WARDENS02_* 9727-9734; energy siphon FX_WARDENS_ENERGY_DEATH01 9735 / _GROUNDED01 9736; TOA_BOULDER_ROLLING 9518.
+            "toa-classic" to listOf(2035, 2038, 2039, 9804) + (9720..9736).toList() + listOf(9518),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences

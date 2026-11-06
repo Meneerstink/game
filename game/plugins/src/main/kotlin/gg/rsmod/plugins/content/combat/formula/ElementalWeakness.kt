@@ -58,11 +58,20 @@ object ElementalWeakness {
         return Element.values().firstOrNull { spell.name.startsWith(it.name.replace("AIR", "WIND") + "_") }
     }
 
+    /**
+     * N462 (2026-11-06): a weakness for ONE spawned npc that changes with its phase (OSRS Wiki Kephri: shielded vs final phase differ;
+     * set by the encounter code per phase). Present = wins over the id/name tables; a null value = no weakness for this npc right now.
+     */
+    val INSTANCE = gg.rsmod.game.model.attr.AttributeKey<Weakness>()
+    /** Present-but-null marker for [INSTANCE] (attribute maps cannot hold a "present null"). */
+    val INSTANCE_NONE = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
     /** The weakness percentage [spell] exploits on [target], 0 when none applies. */
     fun percent(target: Pawn, spell: CombatSpell?): Int {
         if (target !is Npc) return 0
         val element = elementOf(spell) ?: return 0
-        val weakness = of(target.id, target.def.name) ?: return 0
+        if (target.attr[INSTANCE_NONE] == true) return 0
+        val weakness = target.attr[INSTANCE] ?: of(target.id, target.def.name) ?: return 0
         return if (weakness.element == element) weakness.percent else 0
     }
 }

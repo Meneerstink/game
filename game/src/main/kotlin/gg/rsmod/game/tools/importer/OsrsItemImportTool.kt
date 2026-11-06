@@ -272,6 +272,43 @@ object OsrsItemImportTool {
                 listOf(
                     Spec(26219, noted = true, rev667Params = mapOf(644 to 1381, 686 to 5, 687 to 1, 749 to 0, 750 to 82), weaponType = 5, attackAudio = 2500),
                 ),
+            // N462 ToA items (GPT-A N462-notities\toa\20-item-manifest.tsv; names/ops/note ids from cache 2686). Weapons:
+            //  - Keris partisans: OSRS params 434/436 = Attack 80 on the jewelled ones, none on the plain partisan. OSRS "Partisan" styles are
+            //    Stab/Lunge/Pound/Block; the nearest 667 set is the Keris/sword set 5 (Stab/Lunge/Slash/Block) - ONZEKER (Pound = crush),
+            //    noted in N462 for the item audit; no special attack (no 687).
+            //  - Tumeken's shadow: powered staff class (staffParams), OSRS 434/436 = Magic 85; worn Check comes from upstream param 451.
+            //  - Osmumten's fang (or): the fang's own client params (Eviscerate 687) with OSRS 436 = Attack 82.
+            "toa-items" to
+                listOf(
+                    Spec(25979, rev667Params = mapOf(686 to 5), weaponType = 5), // Keris partisan
+                    Spec(25981, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of breaching
+                    Spec(27287, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of corruption
+                    Spec(27291, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of the sun
+                    Spec(30891, rev667Params = mapOf(686 to 5, 749 to 0, 750 to 80), weaponType = 5), // Keris partisan of amascut
+                    Spec(27283), Spec(27285), Spec(27289), Spec(30893), // Breach of the Scarab, Eye of the Corruptor, Jewel of the Sun, Jewel of Amascut
+                    Spec(27275, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow
+                    Spec(27277, noted = true, rev667Params = staffParams(85), weaponType = 1), // Tumeken's shadow (uncharged)
+                    Spec(27246, rev667Params = mapOf(644 to 1381, 686 to 5, 687 to 1, 749 to 0, 750 to 82), weaponType = 5, attackAudio = 2500), // Osmumten's fang (or)
+                    Spec(27248), // Cursed phalanx
+                    Spec(27355, noted = true), // Masori armour set (f)
+                    Spec(27377), Spec(27378), Spec(27379), Spec(27380), Spec(27381), // pet remnants
+                    Spec(27257), Spec(27259), Spec(27261), Spec(27263), Spec(27265), // Icthlarin's shroud tiers 1-5
+                    Spec(27370), // Mask of Rebirth
+                    // raid supplies + raid-only items
+                    Spec(27314), // Supplies (bag)
+                    Spec(27315, noted = true), Spec(27317, noted = true), Spec(27319, noted = true), Spec(27321, noted = true), // Nectar (4)-(1)
+                    Spec(27323, noted = true), Spec(27325, noted = true), // Silk dressing (2)/(1)
+                    Spec(27327, noted = true), Spec(27329, noted = true), Spec(27331, noted = true), Spec(27333, noted = true), // Tears of Elidinis
+                    Spec(27335, noted = true), Spec(27337, noted = true), // Blessed crystal scarab
+                    Spec(27339, noted = true), Spec(27341, noted = true), // Liquid adrenaline
+                    Spec(27343, noted = true), Spec(27345, noted = true), // Smelling salts
+                    Spec(27347, noted = true), Spec(27349, noted = true), // Ambrosia
+                    Spec(27351), // Honey locust
+                    Spec(27293), Spec(27295), Spec(27296), Spec(27297), // Cache of runes, Water container, Mirror, Neutralising potion
+                    Spec(27214), Spec(27216, noted = true), Spec(27219), Spec(27221), Spec(27223), Spec(27225), // dung, fossilised dung, Fang, Big banana, Eldritch ashes, Grain
+                    Spec(27368), Spec(27369), // Dawn scarab egg, Ancient key
+                    Spec(27300), Spec(27302), Spec(27304), Spec(27306), Spec(27308), Spec(27310), Spec(27312), // ToA books
+                ),
             // Voidwaker and its three pieces. The wiki's "slash sword" styles are the 667 scimitar style set 6: Rune scimitar
             // 1333 (644 1582, 686 6, audio 2500) plus 687 for Disrupt; 75 Attack.
             "voidwaker" to

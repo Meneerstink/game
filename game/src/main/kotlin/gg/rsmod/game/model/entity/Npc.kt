@@ -245,7 +245,11 @@ class Npc private constructor(
 
     override fun isRunning(): Boolean = false
 
-    override fun getSize(): Int = world.definitions.get(NpcDef::class.java, id).size
+    /**
+     * N462 (2026-11-06): a transmogrified npc takes the size of the form it shows (OSRS: the Wardens' obelisk becomes a 3x3, later a 5x5
+     * Warden) - pathing, reach and the centre tile follow the visible form. Without a transmog: its own definition.
+     */
+    override fun getSize(): Int = world.definitions.get(NpcDef::class.java, getTransmogId().takeIf { it >= 0 } ?: id).size
 
     override fun getCurrentLifepoints(): Int = hitpoints
 

@@ -203,16 +203,17 @@ class CacheTransaction(
             return ApplyResult(id, applied = 0, skipped = plan.size, journalDir = journalDir)
         }
 
-        // Journal first, for every target, before a single byte is written anywhere.
-        changing.forEach { entry ->
-            withLibrary(entry.target) { library ->
+        // Journal first, for every target, before a single byte is written anywhere. N462 (2026-11-06): one library per target for the
+        // whole journal pass - opening the cache again for every entry made a 46,701-mutation import journal at ~8 entries/second (hours).
+        changing.groupBy { it.target }.forEach { (target, entries) -> withLibrary(target) { library -> entries.forEach { entry ->
+            run {
                 (if (entry.mutation.storedReference != null) storedGroup(library, entry.mutation) else pinnedUndecodable(library, entry.mutation))?.let { stored ->
                     // N10: the old group cannot be decoded (no key), so the journal keeps it as stored plus its reference entry.
                     storedJournal(entry.target, entry.mutation).writeBytes(stored)
                     val archive = library.index(entry.mutation.indexId).archive(entry.mutation.groupId, null, true)!!
                     val whirlpool = archive.whirlpool?.joinToString("") { "%02x".format(it) } ?: ""
                     referenceJournal(entry.target, entry.mutation).writeText("crc=${archive.crc}\nrevision=${archive.revision}\nwhirlpool=$whirlpool\n")
-                    return@withLibrary
+                    return@run
                 }
                 val current = library.data(entry.mutation.indexId, entry.mutation.groupId, entry.mutation.fileId, entry.mutation.xtea)
                 journalFile(entry.target, entry.mutation).writeBytes(current ?: ByteArray(0))
@@ -222,7 +223,7 @@ class CacheTransaction(
                     absentMarker(entry.target, entry.mutation).writeText("absent")
                 }
             }
-        }
+        } } }
 
         // Locations actually written by this attempt, tracked as they happen rather than assumed
         // from `changing`, so a target-2 failure after target 1 succeeds knows exactly what needs

@@ -236,6 +236,20 @@ object OsrsFxImportTool {
             // POTTERY_TOMB_BOBBING01 9499, WALLKIT_TOMB_CROCODILE01_IDLE01 9500, TOA_TELEPORTER_IDLE 9501, TOA_PILLAR_IDLE 9503,
             // TOA_OSMUMTEN_CHEST_CLOSED 9504, CRONDIS_SPEAR_TRAP_IDLE 9562, TOA_WARDENS_DEBRIS_FLOATING 9712, FX_FIRE01_IDLE 9808.
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
+            // N462 ToA spotanims (GPT-A N462-notities\toa\50-spot-defs.tsv x 50-skeletal-sequences.tsv): 100 with classic sequences, then
+            // the 43 with a skeletal sequence (baked by the skeletal spot route in main; SKELETAL_SPOT lines -> SkeletalSidecarExportTool).
+            "toa-spot" to
+                listOf(
+                    355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
+                    2154, 2155, 2156, 2157, 2158, 2159, 2160, 2161, 2162, 2163, 2164, 2165, 2167, 2168, 2169, 2170, 2171, 2174, 2175, 2180,
+                    2181, 2182, 2184, 2187, 2188, 2189, 2190, 2193, 2194, 2195, 2197, 2198, 2199, 2200, 2201, 2202, 2203, 2205, 2206, 2207,
+                    2208, 2209, 2211, 2212, 2213, 2224, 2225, 2226, 2227, 2228, 2236, 2237, 2238, 2239, 2240, 2242, 2243, 2244, 2245, 2246,
+                    2247, 2248, 2250, 2251, 2252, 2253, 2254, 2255, 2256, 2257, 2258, 2259, 2260, 2953, 3027, 3178, 3763, 3979, 3980, 3981,
+                    // skeletal (baked + SKELETAL_SPOT sidecar):
+                    2141, 2142, 2143, 2144, 2146, 2147, 2148, 2149, 2150, 2151, 2166, 2172, 2173, 2176, 2177, 2178, 2179, 2183, 2185, 2186,
+                    2191, 2192, 2204, 2210, 2214, 2215, 2216, 2217, 2218, 2219, 2220, 2221, 2222, 2223, 2229, 2230, 2231, 2232, 2233, 2234,
+                    2235, 2241, 2249,
+                ),
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
             "necropolis-seq" to listOf(13509, 13510, 13511, 13512, 13513, 13564),
@@ -1074,8 +1088,51 @@ object OsrsFxImportTool {
                 try {
                     val spot = decodeOsrsSpot(spotBytes)
                     var localSeq = -1
-                    if (spot.seq >= 0) localSeq = stageSeq(spot.seq, staged)
                     var localModel = -1
+                    // N462 (skeletal route A, 2026-11-06): a spotanim whose sequence is skeletal (animaya) gets the same treatment as the
+                    // skeletal npcs (OsrsPetImportTool skeletal-npc): its model + sequence baked to classic frames (the timeline, frame sounds
+                    // and the Software-SSE fallback); the client plays the real clip once SkeletalSidecarExportTool wrote skin_s<localSpot>.
+                    val skeletalSeq = spot.seq.takeIf { it >= 0 }
+                        ?.let { reader.file(ModernCacheReader.INDEX_CONFIG, ModernCacheReader.CONFIG_GROUP_SEQUENCE, it) }
+                        ?.let { SkeletalBakeTool.decodeSkeletalSeq(it) }
+                    if (skeletalSeq != null && spot.model >= 0) {
+                        val localBase = local("spot_baked_base", spotId) { nextBase++ }
+                        val baked = SkeletalBakeTool.bakeSet(reader, listOf(spot.model), listOf(spot.seq), localBase)
+                        staged += { put(INDEX_BASES, localBase, 0, baked.base, "spotanim $spotId: baked base") }
+                        localModel = local("spot_baked_model", spotId) { modelHoles.removeAt(0) }
+                        staged += { put(ModelConvertTool.MODEL_INDEX, localModel, 0, baked.models[0], "spotanim $spotId: osrs model ${spot.model} baked") }
+                        val frameset = local("spot_baked_frameset", spotId) { nextFrameset++ }
+                        baked.frames[0].forEachIndexed { fi, bytes ->
+                            staged += { put(INDEX_FRAMES, frameset, fi, bytes, "spotanim $spotId: baked frame $fi of osrs seq ${spot.seq}") }
+                        }
+                        val seq = Seq(frameDurations = baked.durations[0], frames = IntArray(baked.frames[0].size) { (frameset shl 16) or it })
+                        val ticks = baked.ticks[0]
+                        skeletalSeq.sounds.sortedBy { it[0] }.forEach { (tick, synth, loops, radius) ->
+                            val localSynth = stageSynth(synth, staged)
+                            var frame = ticks.indexOfLast { it <= tick }.coerceAtLeast(0)
+                            while (frame in seq.sounds) frame++
+                            if (frame >= ticks.size || loops < 1) {
+                                dropped += "spotanim $spotId: seq ${spot.seq} sound $synth at tick $tick (no free baked frame)"
+                            } else {
+                                seq.sounds[frame] = localSynth to loops
+                                seq.soundRadius[frame] = radius
+                            }
+                        }
+                        val seq667 = encode667Seq(seq)
+                        decode667SeqFrames(seq667)
+                        localSeq = local("spot_baked_seq", spotId) { nextSeq++ }
+                        val ls = localSeq
+                        staged += { put(INDEX_SEQ, ls ushr 7, ls and 0x7F, seq667, "spotanim $spotId: baked osrs seq ${spot.seq}") }
+                        dropped += spot.dropped.map { "spotanim $spotId: $it" }
+                        val localSpot = local("spotanim", spotId) { nextSpot++ }
+                        val spot667 = encode667Spot(spot, localModel, localSeq)
+                        staged += { put(INDEX_SPOTANIM, localSpot ushr 8, localSpot and 0xFF, spot667, "osrs spotanim $spotId (skeletal, baked)") }
+                        staged.forEach { it() }
+                        println("PLAN spotanim $spotId -> $localSpot model ${spot.model}->$localModel seq ${spot.seq}->$localSeq SKELETAL vertices=${baked.vertices} error max=${"%.1f".format(baked.maxError)}")
+                        println("SKELETAL_SPOT s$localSpot ${spot.model} $localSeq=${spot.seq}")
+                        continue
+                    }
+                    if (spot.seq >= 0) localSeq = stageSeq(spot.seq, staged)
                     if (spot.model >= 0) {
                         val modelBytes = OsrsModelConversion.convert(reader, spot.model, dropped)
                         localModel = local("spotanim_model", spot.model) { modelHoles.removeAt(0) }

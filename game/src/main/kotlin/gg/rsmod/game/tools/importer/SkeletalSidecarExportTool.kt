@@ -30,9 +30,22 @@ object SkeletalSidecarExportTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        // N462: `cache-file plan|apply <file>` = one job per line ("<owner> <osrsModel,...> <localSeq>=<osrsSeq> ..."), one JVM for all.
+        if (args.firstOrNull() == "cache-file") {
+            val lines = File(args[2]).readLines().map { it.trim() }.filter { it.isNotEmpty() && !it.startsWith("#") }
+            lines.forEachIndexed { i, line ->
+                val parts = line.split(Regex("\\s+"))
+                println("JOB ${i + 1}/${lines.size}: $line")
+                val export = export(parts[0], parts[1].split(',').map { it.trim().toInt() }, parts.drop(2).map { a -> a.split('=').let { it[0].toInt() to it[1].toInt() } })
+                cache(args[1], export)
+            }
+            println("ALL_JOBS_DONE ${lines.size}")
+            return
+        }
         require(args.size >= 5) { "usage: dir <outDir> | cache plan|apply, then <localNpc> <osrsModel,...> <localSeq>=<osrsSeq> ..." }
         val mode = args[0]
-        val localNpc = args[2].toInt()
+        // A local npc id, or `s<localSpot>` for a skeletal spotanim (OsrsFxImportTool SKELETAL_SPOT lines, N462).
+        val localNpc = args[2].also { require(it.toIntOrNull() != null || (it.startsWith("s") && it.drop(1).toIntOrNull() != null)) { "bad owner $it" } }
         val models = args[3].split(',').map { it.trim().toInt() }
         val seqPairs = args.drop(4).map { a -> a.split('=').let { it[0].toInt() to it[1].toInt() } }
         val export = export(localNpc, models, seqPairs)
@@ -48,7 +61,7 @@ object SkeletalSidecarExportTool {
         }
     }
 
-    fun export(localNpc: Int, models: List<Int>, seqPairs: List<Pair<Int, Int>>): Export {
+    fun export(localNpc: String, models: List<Int>, seqPairs: List<Pair<Int, Int>>): Export {
         val files = LinkedHashMap<String, ByteArray>()
         val lines = ArrayList<String>()
         ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { reader ->

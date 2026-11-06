@@ -54,3 +54,9 @@ spawn_npc(
     direction = Direction.NORTH,
     static = false,
 ) // Priest
+
+// N462 (2026-11-06, K-GEBIED G6): OSRS Wiki Necropolis "Monsters: Desert wolf (x2)" - location map pins 3297,2713 and 3300,2711
+// (ChatGPT-A N462-notities\toa\40-necropolis-spawns.tsv).
+listOf(3297 to 2713, 3300 to 2711).forEach { (x, z) ->
+    spawn_npc(npc = Npcs.DESERT_WOLF, x = x, z = z, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Desert Wolf
+}
