@@ -374,6 +374,9 @@ object OsrsFxImportTool {
             // Owner 2026-09-18 (Zaryte crossbow / Ancient godsword specials): Jagex sound config names from the gameval table
             // (Alter-rework data/cfg/rscm/sound.rscm, 2026-09-19): 5306 zaryte_crossbow_special, 3869 godwars_godsword_special_attack.
             "weaponsfx5" to listOf(5306, 3869),
+            // N581 (dagrun 2026-11-06): the hellhounds' summon cry wbr_vention_hellhound_call_01 6910 (N522-GELUIDSBRONNEN, owner V1
+            // 2026-11-05 18:0x: the current OSRS Vet'ion sounds per function) - their "spawn" cue had no local sound yet.
+            "n522-houndcall" to listOf(6910),
             // N3 (Accursed sceptre special silent): its special shows Vet'ion's own spell (SPELLS_VETION01_SPECIAL / _TRAVEL02), so it
             // casts with Vet'ion's magic-attack sound wbr_vetion_attack_magic_first_arm_movement_01 6862 (OSRS Wiki sound list; ADAPTED:
             // the weapon's own server-sent special sound is undocumented).

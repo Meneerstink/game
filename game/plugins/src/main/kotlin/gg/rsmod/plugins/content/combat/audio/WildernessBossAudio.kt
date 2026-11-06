@@ -38,7 +38,8 @@ object WildernessBossAudio {
         sourced("attack.melee", "wbr_vention_hellhound_attack_bark_01", 6904, 10305),
         sourced("defend", "wbr_vention_hellhound_defend_snarl_01", 6928, 10306),
         sourced("death", "wbr_vention_hellhound_death_01", 6952, 10307),
-        Cue("spawn"), // wbr_vention_hellhound_call_01 (6910) has no imported local sound yet.
+        // N581 dagrun 2026-11-06: OsrsFxImportTool batch n522-houndcall, tx-20261106-115630.
+        sourced("spawn", "wbr_vention_hellhound_call_01", 6910, 10598),
     )
 
     val contracts: Map<Int, Map<String, Cue>> = mapOf(

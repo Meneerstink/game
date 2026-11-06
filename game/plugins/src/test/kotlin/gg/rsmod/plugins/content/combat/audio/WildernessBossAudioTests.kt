@@ -36,7 +36,7 @@ class WildernessBossAudioTests {
         assertEquals(10597,sound(15078,"death")); assertEquals(10518,sound(15078,"spawn"))
         for (id in listOf(15079,15080)) {
             assertEquals(listOf(10305,10306,10307),listOf("attack.melee","defend","death").map { sound(id,it) })
-            assertNull(sound(id,"spawn"), "OSRS 6910 is not imported")
+            assertEquals(10598, sound(id,"spawn"), "N581: OSRS 6910 wbr_vention_hellhound_call_01 imported as 10598 (tx-20261106-115630)")
         }
         for (id in listOf(15069,15071,15075,15072,15073)) {
             assertTrue(WildernessBossAudio.contracts.getValue(id).values.all { it.sound == null })
