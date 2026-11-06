@@ -88,4 +88,7 @@ enum class ItemAttribute {
      * Charges a Bow of Faerdhinen has used (plugins CrystalEquipment): OSRS progress towards corruption, 1% per 2,000.
      */
     CORRUPTION_CHARGES_USED,
+
+    /** Identifies an instance-owned ToA Supplies bag; preserved by inventory moves and reconnect. */
+    TOA_SUPPLY_BAG_TOKEN,
 }

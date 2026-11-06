@@ -70,6 +70,12 @@ object CollectionLogPages {
     /** The Pest Control page's key: the source key [PestControlRewards] records its rewards with. */
     const val PEST_CONTROL = "pest_control"
 
+    /** N462: cache 2686 enum 4805 (ToA collection log): guardian, shadow (u), ward, Masori x3, lightbearer, fang, thread, 4 jewels, 3 kits,
+     *  cache of runes, Icthlarin's shroud 1-5, 5 remnants. */
+    const val TOA = "toa"
+    val TOA_ITEMS = listOf(27352, 27277, 25985, 27226, 27229, 27232, 25975, 26219, 27279, 27283, 27285, 27289, 30893, 27255, 27248, 27372,
+        27293, 27257, 27259, 27261, 27263, 27265, 27377, 27378, 27379, 27380, 27381)
+
     /** OSRS Collection log "Pest Control" order: Void knight top, robe, gloves, mace, elite top, elite robe, the three helms, the seal. */
     val PEST_CONTROL_ITEMS =
         listOf(
@@ -179,6 +185,11 @@ object CollectionLogPages {
         }
         // ---- Minigames: Pest Control (the reward items recorded when the Void Knight hands them over, PestControlRewards.confirm).
         pages += Page(PEST_CONTROL, Category.MINIGAMES, "Pest Control", emptyList(), PEST_CONTROL_ITEMS)
+        // ---- N462 Tombs of Amascut: the 27 slots of the OSRS log in cache order (cache 2686 enum 4805; GPT-A 30-enums-structs.tsv), shown under
+        // Bosses (our log has no Raids tab); the count is the account's raid completions (ToaChest.COMPLETIONS, all modes together).
+        TOA_ITEMS.mapNotNull(gg.rsmod.plugins.content.activity.toa.core.ToaLootItems::local).takeIf { it.isNotEmpty() }?.let {
+            pages += Page(TOA, Category.BOSSES, "Tombs of Amascut", listOf(TOA), it, "Tombs of Amascut completions")
+        }
         // ---- Other: N423 (owner 2026-10-29 23:4x: "alle 5 in de Collection Log") the five burden trinkets - three drop, two are sold.
         val revenants = sources.filter { s -> s.npcs.any { it in gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantCaveRevenants.BY_ID || it == gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC } }
         if (revenants.isNotEmpty()) {
