@@ -72,4 +72,14 @@ class ToaRoomLifecycleTests {
         }
         assertFailsWith<IllegalArgumentException> { ToaRaidSettings(invocations = setOf("Try Again", "Hardcore Run")) }
     }
+
+    @Test fun `late completion on following tick cannot cancel a previous wipe`() {
+        val raid = ToaRaidProgress(ToaRaidSettings())
+        val run = raid.challenge(ToaPath.HET, 0)!!
+        assertTrue(run.wipe(1))
+        assertFalse(run.clear(2))
+        assertTrue(raid.cycle(2))
+        assertEquals(1, raid.failedAttempts)
+        assertFalse(raid.challengeCleared(ToaPath.HET))
+    }
 }
