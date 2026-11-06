@@ -22,6 +22,9 @@ object ToaChest {
     /** Raid completions per account (the Thread of Elidinis and jewel chances scale with it). */
     val COMPLETIONS = AttributeKey<Int>(persistenceKey = "toa_completions")
     val HAD_THREAD = AttributeKey<Boolean>(persistenceKey = "toa_had_thread")
+    /** Normal/Expert completions apart (OSRS: Icthlarin's shrouds at 100/500/1,000/1,500/2,000 Normal/Expert completions, lobby cape chest
+     *  46080 'Search' - its exact claim rules are not in the sources yet, so the chest itself is still open). */
+    val COMPLETIONS_NORMAL_EXPERT = AttributeKey<Int>(persistenceKey = "toa_completions_normal_expert")
 
     /** A jewel counts as owned while the jewel or its Keris partisan is held (Chest wiki: ownership check, not the collection log). */
     private val PARTISAN_OF_JEWEL = mapOf(27283 to 25981, 27285 to 27287, 27289 to 27291, 30893 to 30891)
@@ -68,6 +71,9 @@ object ToaChest {
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
         present.forEach { player ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
+            if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
+                player.attr[COMPLETIONS_NORMAL_EXPERT] = (player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0) + 1
+            }
             val drops = result.drops[player.uid].orEmpty()
             if (drops.any { it.osrsItem == ToaLoot.THREAD_OF_ELIDINIS }) player.attr[HAD_THREAD] = true
             pending[raid.rewardToken to player.uid] = drops.mapNotNull { drop ->
