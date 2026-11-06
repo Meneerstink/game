@@ -215,6 +215,12 @@ object OsrsInterfacePortTool {
                     list += C(next++, 3, 0, 0, 0, 0, id, 1, 1, 1, 1, false, colour = 0x0e0e0c)
                     list += C(next++, 3, 0, 0, 2, 2, id, 1, 1, 1, 1, false, colour = 0x474745)
                     extras += "thinbox parent=$id components=$first..${next - 1}"
+                } else if (event == "onLoad" && script == 1191) {
+                    // [clientscript,thinstonebox] -> [proc,thinstonebox](component, 0): two unfilled rectangles 0x383023 / 0x5a5245.
+                    val first = next
+                    list += C(next++, 3, 0, 0, 0, 0, id, 1, 1, 1, 1, false, colour = 0x383023)
+                    list += C(next++, 3, 0, 0, 2, 2, id, 1, 1, 1, 1, false, colour = 0x5a5245)
+                    extras += "thinstonebox parent=$id components=$first..${next - 1}"
                 } else if (event == "onLoad" && script == 6609) {
                     // [clientscript,toa_invocations_init](scrollbar, invocations) -> [proc,script6610] per invocation: 5 children, row 7*12+3 = 87.
                     val parent = args[2].asInt() and 0xFFFF
@@ -259,6 +265,22 @@ object OsrsInterfacePortTool {
             }
             sprites += ORB_FILLER_FULL; sprites += ORB_FILLER_PRIMARY
             extras += "hud party slots (6577) components=$first..${next - 1} (per slot: text, filler graphic; slot i text=$first+2i, filler=$first+2i+1)"
+        }
+        if (group == 771) {
+            // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: six 36x32 item
+            // slots, 2 columns x 3 rows, spread over the layer (x 0/56, y 0/44/87); compare with an OSRS screenshot in the test client.
+            val first = next
+            for (slot in 0 until 6) list += C(next++, 5, (slot % 2) * 56, (slot / 2) * 44 - (if (slot / 2 == 2) 1 else 0), 36, 32, 10, 0, 0, 0, 0, true)
+            extras += "chest items (ONZEKER layout) components=$first..${next - 1}"
+        }
+        if (group == 778) {
+            // [proc,toa_midraidloot_bag_draw] (6784) into toa_midraidloot_bag:items (778:5): one 36x32 item graphic per bag slot at
+            // ((i % 4) * 44, (i / 4) * 32), ops Withdraw-1 / Withdraw-5 / Withdraw-All / Drop (+ Examine as op 9 in OSRS; 667 lists ops 1..5
+            // here: Examine as op 5). 28 slots pre-made, hidden; the server sets the objects of inv 810 and unhides.
+            val first = next
+            for (slot in 0 until 28) list += C(next++, 5, (slot % 4) * 44, (slot / 4) * 32, 36, 32, 5, 0, 0, 0, 0, true,
+                ops = listOf("Withdraw-1", "Withdraw-5", "Withdraw-All", "Drop", "Examine"))
+            extras += "bag slots (6784) components=$first..${next - 1}"
         }
         if (group == 772) {
             // [clientscript,toa_partylist_addline] 6601 / [proc,toa_partylist_fillline] 6602 / [proc,toa_partylist_entry_init] 6603: party row r

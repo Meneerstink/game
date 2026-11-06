@@ -22,6 +22,20 @@ ToaInterfaces.of(ToaInterfaces.PARTY_LIST)?.let { iface ->
     }
 }
 
+ToaInterfaces.of(ToaInterfaces.BAG)?.let { iface ->
+    (listOf(ToaBagUi.CLOSE) + (0 until ToaBagUi.SLOT_COUNT).map { ToaBagUi.SLOTS + it }).forEach { component ->
+        on_button(iface, component) {
+            ToaBagUi.click(player, component, gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.opOf(player.getInteractingOpcode()))
+        }
+    }
+}
+
+ToaInterfaces.of(ToaInterfaces.REWARDS)?.let { iface ->
+    listOf(ToaRewardsUi.CLOSE, ToaRewardsUi.TAKE_ALL, ToaRewardsUi.BANK_ALL, ToaRewardsUi.DISCARD_ALL).forEach { component ->
+        on_button(iface, component) { ToaRewardsUi.click(player, component) }
+    }
+}
+
 ToaInterfaces.of(ToaInterfaces.SUMMARY)?.let { iface ->
     on_button(iface, 88) { ToaSummaryUi.close(player) }
 }
