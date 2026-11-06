@@ -30,6 +30,12 @@ object ToaChest {
 
     init {
         ToaRewards.roller = ToaRewardRoller { context -> pending.remove(context.raidToken to context.player).orEmpty() }
+        // Collection log: the items as they are taken from the chest / niche (N462 page 'toa').
+        val previous = ToaRewards.claimed
+        ToaRewards.claimed = { player, items ->
+            gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.TOA, items.map { it.id to it.amount })
+            previous(player, items)
+        }
     }
 
     fun install() = Unit
