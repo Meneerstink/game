@@ -295,6 +295,12 @@ class Rev667LocType(val id: Int) {
                             }
                         }
                     }
+                    ModelArchive.LOC_WIDE_MODELS -> repeat(buf.u8()) {
+                        // N462: opcode 1 with int model ids (archive 37, ids above 0xFFFF).
+                        val shape = buf.i8()
+                        val list = def.modelsByShape.getOrPut(shape) { mutableListOf() }
+                        repeat(buf.u8()) { list.add(buf.i32()) }
+                    }
                     2 -> def.name = buf.string()
                     14 -> def.sizeX = buf.u8()
                     15 -> def.sizeZ = buf.u8()
@@ -418,14 +424,21 @@ class Rev667LocType(val id: Int) {
                 val types = src.modelTypes ?: List(src.models.size) { 10 }
                 val byShape = LinkedHashMap<Int, MutableList<Int>>()
                 src.models.forEachIndexed { i, m -> byShape.getOrPut(types[i]) { mutableListOf() }.add(modelRemap(m)) }
-                u8(1)
+                // N462: any model above 0xFFFF (archive 37) makes the whole list the 78 client's wide opcode 241 (int ids).
+                val wide = byShape.values.any { list -> list.any { ModelArchive.isWide(it) } }
+                u8(if (wide) ModelArchive.LOC_WIDE_MODELS else 1)
                 u8(byShape.size)
                 byShape.forEach { (shape, models) ->
                     u8(shape)
                     u8(models.size)
                     models.forEach { m ->
-                        require(m in 0..0xFFFF) { "model $m not addressable by a rev-667 loc." }
-                        u16(m)
+                        require(m in 0..ModelArchive.MAX_MODEL_ID) { "model $m not addressable by a 78 loc." }
+                        if (wide) {
+                            u16(m ushr 16)
+                            u16(m and 0xFFFF)
+                        } else {
+                            u16(m)
+                        }
                     }
                 }
             }

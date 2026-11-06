@@ -49,7 +49,7 @@ object OsrsForearmTool {
                 val meshes =
                     worn.map { op ->
                         val model = ops.getValue(op)
-                        Rev667ModelDecoder.decode(library.data(INDEX_MODEL, model, 0) ?: error("item $local worn model $model missing"), geometryOnly = true)
+                        Rev667ModelDecoder.decode(ModelArchive.read(library, model) ?: error("item $local worn model $model missing"), geometryOnly = true)
                     }
                 WornForearm.opcodeFor(piece, worn.toSet(), meshes)?.let { Change(local, def.name, it, piece) }
             }
@@ -84,7 +84,7 @@ object OsrsForearmTool {
                         val id =
                             ModelIdAllocator.resolveFromCandidates(piece.sourceIdentity, WornForearm.ROLE, existing.modelLocalIdByMappingKey, candidates, reserved)
                         reserved += id
-                        val current = library.data(INDEX_MODEL, id, 0)
+                        val current = ModelArchive.read(library, id)
                         when {
                             current == null -> {
                                 mutations += CacheMutation(INDEX_MODEL, id, 0, piece.bytes, "rev-667 bare forearm (kit model ${piece.kitModel})")

@@ -55,7 +55,7 @@ object ModelConvertTool {
                 val library = CacheLibrary(args[1])
                 try {
                     args.drop(2).map { it.toInt() }.forEach { groupId ->
-                        val data = library.data(MODEL_INDEX, groupId)
+                        val data = ModelArchive.read(library, groupId)
                         if (data == null) {
                             println("MODEL_$groupId=ABSENT")
                             return@forEach
@@ -77,7 +77,7 @@ object ModelConvertTool {
                 val library = CacheLibrary(args[1])
                 try {
                     args.drop(2).map { it.toInt() }.forEach { groupId ->
-                        val data = library.data(MODEL_INDEX, groupId)
+                        val data = ModelArchive.read(library, groupId)
                         if (data == null) {
                             println("MODEL_$groupId=ABSENT")
                             return@forEach
@@ -94,7 +94,7 @@ object ModelConvertTool {
                 try {
                     val census = sortedMapOf<String, Int>()
                     for (groupId in args[2].toInt()..args[3].toInt()) {
-                        val data = library.data(MODEL_INDEX, groupId)
+                        val data = ModelArchive.read(library, groupId)
                         val outcome =
                             when {
                                 data == null -> "ABSENT"

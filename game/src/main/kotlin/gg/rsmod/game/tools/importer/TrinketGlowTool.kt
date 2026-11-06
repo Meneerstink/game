@@ -63,7 +63,7 @@ object TrinketGlowTool {
             println("SPOTANIM $GLOW bytes=${glow.joinToString("") { "%02x".format(it) }}")
             check(glow[0] == 1.toByte()) { "spotanim $GLOW does not start with its model" }
             val model = ((glow[1].toInt() and 0xFF) shl 8) or (glow[2].toInt() and 0xFF)
-            val mesh = Rev667ModelDecoder.decode(library.data(MODEL_INDEX, model, 0) ?: error("model $model missing"), geometryOnly = true)
+            val mesh = Rev667ModelDecoder.decode(ModelArchive.read(library, model) ?: error("model $model missing"), geometryOnly = true)
             val colours = mesh.faceColour.map { it.toInt() and 0xFFFF }.distinct().sorted()
             println("MODEL $model colours=${colours.joinToString { "$it(h${hue(it)} s${saturation(it)} l${lightness(it)})" }}")
             check(colours.size in 1..255) { "model $model has ${colours.size} colours" }

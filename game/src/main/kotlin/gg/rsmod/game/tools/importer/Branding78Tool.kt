@@ -380,7 +380,7 @@ object Branding78Tool {
                 } else {
                     val census = ModelNamespaceCensusTool.census(GAME_CACHE, FILE_SERVER_CACHE, File(FeroxImportTool.ASSET_MAP))
                     check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
-                    census.provenFreeHoles.filter { it in 1..0xFFFF && library.data(MODEL_INDEX, it, 0) == null }.sorted()
+                    census.provenFreeHoles.filter { it in 1..0xFFFF && ModelArchive.read(library, it) == null }.sorted()
                 }
             val lastLoc = library.index(LOC_INDEX).archiveIds().maxOrNull()!!.let { g -> (g shl 8) + (library.index(LOC_INDEX).archive(g)!!.fileIds().maxOrNull() ?: 0) }
             val sprite = HashMap<String, Int>()

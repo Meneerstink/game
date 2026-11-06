@@ -253,7 +253,7 @@ object OsrsLookTool {
 
                 fun localModel(code: Int, upstreamModel: Int): Int {
                     existing.modelLocalIdByMappingKey[ModelIdAllocator.mappingKey("upstream_model:$upstreamModel", MODEL_ROLE)]?.let { mapped ->
-                        checkNotNull(library.data(INDEX_MODEL, mapped, 0)) { "upstream model $upstreamModel is mapped to $mapped, which is missing" }
+                        checkNotNull(ModelArchive.read(library, mapped)) { "upstream model $upstreamModel is mapped to $mapped, which is missing" }
                         println("  MODEL op $code upstream $upstreamModel -> REUSE local $mapped (asset map)")
                         return mapped
                     }
@@ -267,7 +267,7 @@ object OsrsLookTool {
                     val bytes = if (slot == OsrsWristFit.HANDS_SLOT) OsrsWristFit.fitBytes(plain, pieces.first { it.female == female }) else plain
                     val id = ModelIdAllocator.resolveFromCandidates("upstream_model:$upstreamModel", MODEL_ROLE, emptyMap(), candidates, reserved)
                     reserved += id
-                    check(library.data(INDEX_MODEL, id, 0) == null) { "census candidate model $id is not empty" }
+                    check(ModelArchive.read(library, id) == null) { "census candidate model $id is not empty" }
                     newModels[upstreamModel] = NewModel(upstreamModel, id, bytes)
                     mutations += CacheMutation(INDEX_MODEL, id, 0, bytes, "osrs look: upstream model $upstreamModel (${def.name}${slot?.let { " slot $it" } ?: ""})")
                     println("  MODEL op $code upstream $upstreamModel -> NEW local $id${slot?.let { " (worn slot $it)" } ?: ""}")

@@ -151,7 +151,7 @@ object DeadmanChestImportTool {
                 // Same source body and movement as the existing breach import, verified above; preserve the NEW variant's
                 // source scale, options, colours and combat level through the existing faithful NPC encoder.
                 fun importedModel(id: Int): Int = ids["npc_model:$id"]?.also { local ->
-                    put(7, local, 0, cache.data(7, local, 0) ?: error("Missing guardian model $id"), "existing guardian model $id")
+                    put(7, local, 0, ModelArchive.read(cache, local) ?: error("Missing guardian model $id"), "existing guardian model $id")
                 } ?: error("Missing imported guardian model $id")
                 val bas = ids["bas:$BREACH_GUARDIAN"] ?: error("Missing imported Zemouregal BAS")
                 put(OsrsNpcImportTool.INDEX_CONFIG, OsrsNpcImportTool.GROUP_BAS, bas,

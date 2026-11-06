@@ -94,6 +94,7 @@ object NpcRenameTool {
                 40, 41 -> skip(u8() * 4)
                 42 -> skip(u8())
                 60, 160 -> skip(u8() * 2)
+                241, 242 -> skip(u8() * 4) // N462: wide model / chathead ids (archive 37)
                 // 109 crawl off, 111 no shadow, 141 follower, 143 flag: no payload (as NpcOptionsTool; N423: every pet carries 141).
                 93, 99, 107, 109, 111, 141, 143, 158, 159, 162 -> {}
                 95 -> {

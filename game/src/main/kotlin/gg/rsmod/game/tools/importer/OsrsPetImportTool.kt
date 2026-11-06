@@ -401,6 +401,9 @@ object OsrsPetImportTool {
                 11661 to listOf(9529, 9530, 9531), // Scabaras models [44749] rig 2023
                 11686 to listOf(9532, 9533, 9534, 9535, 9536, 9537, 9538, 9539, 9540), // Het models [46401] rig 2076
             ),
+            // N462 (11-06 23:xx): the second Warden core (NpcID 11771, model 45293 - not identical to 11770's 45291, so no alias), same
+            // rig 2028 and core sequence 9704 as 11770.
+            "toa-core" to listOf(11771 to listOf(9704)),
             "calvarion" to listOf(
                 11993 to listOf(9969, 9971, 9973, 9975, 9977, 9978, 9980),
                 11994 to listOf(9970, 9972, 9974, 9976, 9979, 9981),

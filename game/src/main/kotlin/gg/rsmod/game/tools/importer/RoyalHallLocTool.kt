@@ -1393,9 +1393,9 @@ object RoyalHallLocTool {
                 else -> error("materials table has ${materials.present.size} rows; texture $CARPET_TEXTURE is taken by something else")
             }
             // The corner turret without its little guard (TURRET_MODEL_CLEAN, used by 62766).
-            val turretSource = library.data(MODEL_INDEX, TURRET_MODEL, 0) ?: error("turret model missing")
+            val turretSource = ModelArchive.read(library, TURRET_MODEL) ?: error("turret model missing")
             val (turretMesh, turretCut) = turretWithoutGuard(turretSource)
-            val currentTurret = library.data(MODEL_INDEX, TURRET_MODEL_CLEAN, 0)
+            val currentTurret = ModelArchive.read(library, TURRET_MODEL_CLEAN)
             println("MODEL $TURRET_MODEL_CLEAN = $TURRET_MODEL without its guard ($turretCut faces) ${if (currentTurret == null) "create" else if (currentTurret.contentEquals(turretMesh)) "in place" else "REPLACE"}")
             if (currentTurret == null || !currentTurret.contentEquals(turretMesh)) {
                 mutations += CacheMutation(MODEL_INDEX, TURRET_MODEL_CLEAN, 0, turretMesh, "Royal Hall turret without the guard", currentTurret?.let { CacheItemProbeTool.sha1(it) })
@@ -1404,7 +1404,7 @@ object RoyalHallLocTool {
             TURRET_STOREY_MODELS.forEachIndexed { storey, model ->
                 val piece = turretStorey(turretMesh, storey)
                 val decoded = Rev667ModelDecoder.decode(piece, geometryOnly = true)
-                val current = library.data(MODEL_INDEX, model, 0)
+                val current = ModelArchive.read(library, model)
                 if (current != null && !current.contentEquals(piece)) {
                     val loc = TURRET_STOREY_LOCS[storey]
                     val owner = library.data(LOC_INDEX, loc ushr 8, loc and 0xFF)?.let { Rev667LocType.decode(loc, it).allModels }
@@ -1434,12 +1434,12 @@ object RoyalHallLocTool {
                 mutations += CacheMutation(LOC_INDEX, v.id ushr 8, v.id and 0xFF, wanted, v.label, current?.let { CacheItemProbeTool.sha1(it) })
             }
             CUTS.forEach { cut ->
-                val source = library.data(MODEL_INDEX, cut.model, 0) ?: error("model ${cut.model} missing")
+                val source = ModelArchive.read(library, cut.model) ?: error("model ${cut.model} missing")
                 val (mesh, faces) = cutModel(source, cut.x, cut.z)
                 val back = Rev667ModelDecoder.decode(mesh)
                 val orig = Rev667ModelDecoder.decode(source)
                 check(back.vertexCount == orig.vertexCount && back.faceCount == orig.faceCount) { "model ${cut.newModel} changed its size" }
-                val currentMesh = library.data(MODEL_INDEX, cut.newModel, 0)
+                val currentMesh = ModelArchive.read(library, cut.newModel)
                 println("MODEL ${cut.newModel} = ${cut.model} with $faces of ${orig.faceCount} faces cut (${if (currentMesh == null) "create" else if (currentMesh.contentEquals(mesh)) "in place" else "REPLACE"})")
                 if (currentMesh == null || !currentMesh.contentEquals(mesh)) {
                     mutations += CacheMutation(MODEL_INDEX, cut.newModel, 0, mesh, "Royal Hall floor cut from GE paving model ${cut.model}", currentMesh?.let { CacheItemProbeTool.sha1(it) })

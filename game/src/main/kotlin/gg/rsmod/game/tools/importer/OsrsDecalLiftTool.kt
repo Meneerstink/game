@@ -276,7 +276,7 @@ object OsrsDecalLiftTool {
         val mutations = ArrayList<CacheMutation>()
         try {
             models.forEach { id ->
-                val current = library.data(MODEL_INDEX, id, 0) ?: return@forEach
+                val current = ModelArchive.read(library, id) ?: return@forEach
                 val model = runCatching { Rev667ModelDecoder.decode(current) }.getOrNull() ?: return@forEach
                 // Never write a mesh this codec cannot reproduce byte for byte.
                 if (!Rev667ModelEncoder.encode(model).contentEquals(current)) return@forEach

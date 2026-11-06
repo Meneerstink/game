@@ -62,7 +62,7 @@ object DeadmanEmblemTool {
         require(mode in setOf("probe", "preview", "plan", "apply")) { "Usage: probe|preview|plan|apply" }
         val library = CacheLibrary(GAME_CACHE)
         try {
-            val donorModel = Rev667ModelDecoder.decode(library.data(MODEL_INDEX, EMBLEM_DONOR_MODEL, 0) ?: error("donor model missing"))
+            val donorModel = Rev667ModelDecoder.decode(ModelArchive.read(library, EMBLEM_DONOR_MODEL) ?: error("donor model missing"))
             val share = DeadmanEmblemArt.clockwiseOutwardShare(donorModel)
             println("DONOR_MODEL $EMBLEM_DONOR_MODEL bounds x=${donorModel.vertexX.minOrNull()}..${donorModel.vertexX.maxOrNull()} y=${donorModel.vertexY.minOrNull()}..${donorModel.vertexY.maxOrNull()} z=${donorModel.vertexZ.minOrNull()}..${donorModel.vertexZ.maxOrNull()} faces=${donorModel.faceCount} clockwiseOutward=${"%.2f".format(share)}")
             // The renderer culls one winding; an outward-facing closed model tells which (the share is near 1 or near 0).
@@ -127,7 +127,7 @@ object DeadmanEmblemTool {
         val firstLamp = ids.getProperty("lamp1")?.toInt() ?: (firstEmblem + 6)
         check(firstModel + 5 <= 0xFFFF) { "model ids do not fit the item model field" }
         if (!ids.containsKey("model1")) {
-            for (m in firstModel until firstModel + 6) check(library.data(MODEL_INDEX, m, 0) == null) { "model $m is not free" }
+            for (m in firstModel until firstModel + 6) check(ModelArchive.read(library, m) == null) { "model $m is not free" }
         }
         if (!ids.containsKey("emblem1")) check(firstEmblem == nextItem) { "emblem ids must follow the last item" }
         println("IDS sprites=$firstSprite.. textures=$firstTexture.. models=$firstModel.. emblems=$firstEmblem.. lamps=$firstLamp..")

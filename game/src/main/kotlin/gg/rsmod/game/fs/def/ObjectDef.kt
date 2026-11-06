@@ -108,6 +108,10 @@ class ObjectDef(
                     skipReadModelIds(buf)
                 }
             }
+            241 -> repeat(buf.readUnsignedByte().toInt()) { // N462: 78 wide model opcode (int model ids above 0xFFFF, archive 37; tools/importer/ModelArchive).
+                buf.readByte()
+                repeat(buf.readUnsignedByte().toInt()) { buf.readInt() }
+            }
             2 -> name = buf.readString()
             14 -> width = buf.readUnsignedByte().toInt()
             15 -> length = buf.readUnsignedByte().toInt()

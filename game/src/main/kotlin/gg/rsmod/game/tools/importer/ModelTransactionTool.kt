@@ -108,7 +108,7 @@ object ModelTransactionTool {
         targets.mapNotNull { target ->
             val library = CacheLibrary(target)
             try {
-                val stored = library.data(ModelConvertTool.MODEL_INDEX, groupId)
+                val stored = ModelArchive.read(library, groupId)
                 when {
                     stored == null -> "MODEL_ABSENT at $target: index ${ModelConvertTool.MODEL_INDEX} group $groupId has no data after the write."
                     else ->

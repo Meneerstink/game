@@ -30,7 +30,7 @@ object ItemTextureProbeTool {
             "r667" -> {
                 val library = CacheLibrary(args[1])
                 args.drop(2).map { it.toInt() }.forEach { m ->
-                    val bytes = library.data(ModelConvertTool.MODEL_INDEX, m) ?: return@forEach println("MODEL_$m absent")
+                    val bytes = ModelArchive.read(library, m) ?: return@forEach println("MODEL_$m absent")
                     println("MODEL_$m ${summary(Rev667ModelDecoder.decode(bytes))}")
                 }
                 library.close()

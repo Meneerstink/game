@@ -103,9 +103,9 @@ object PetHeadRecolourTool {
                 println("NOTHING_TO_DO: the head is no longer the Imp head $IMP_HEAD")
                 return
             }
-            val body = Rev667ModelDecoder.decode(library.data(MODEL_INDEX, ICEFIEND_BODY, 0) ?: error("model $ICEFIEND_BODY missing"), geometryOnly = true)
+            val body = Rev667ModelDecoder.decode(ModelArchive.read(library, ICEFIEND_BODY) ?: error("model $ICEFIEND_BODY missing"), geometryOnly = true)
             // Both meshes carry complex texture mappings, which the encoder cannot write: the head's colour bytes are patched in place.
-            val headBytes = library.data(MODEL_INDEX, IMP_HEAD, 0) ?: error("model $IMP_HEAD missing")
+            val headBytes = ModelArchive.read(library, IMP_HEAD) ?: error("model $IMP_HEAD missing")
             val head = Rev667ModelDecoder.decode(headBytes, geometryOnly = true)
             println("BODY $ICEFIEND_BODY ${histogram(body.faceColour)}")
             println("HEAD $IMP_HEAD ${histogram(head.faceColour)}")

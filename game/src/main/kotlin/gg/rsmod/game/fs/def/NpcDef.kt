@@ -115,6 +115,11 @@ class NpcDef(
                 val count = buf.readUnsignedByte()
                 chatheadModels = IntArray(count.toInt()) { buf.readUnsignedShort().toInt() }
             }
+            241 -> repeat(buf.readUnsignedByte().toInt()) { buf.readInt() } // N462: 78 wide model opcode (int model ids above 0xFFFF, archive 37; tools/importer/ModelArchive).
+            242 -> {
+                val count = buf.readUnsignedByte()
+                chatheadModels = IntArray(count.toInt()) { buf.readInt() }
+            }
             160 -> {
                 val count = buf.readUnsignedByte()
                 for (i in 0 until count) {

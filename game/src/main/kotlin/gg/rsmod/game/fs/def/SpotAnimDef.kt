@@ -28,6 +28,7 @@ class SpotAnimDef(
     override fun decode(buf: ByteBuf, opcode: Int) {
         when (opcode) {
             1 -> modelId = buf.readShort().toInt()
+            241 -> modelId = buf.readInt() // N462: 78 wide model opcode (int model ids above 0xFFFF, archive 37; tools/importer/ModelArchive).
             2 -> animationId = buf.readShort().toInt()
             4 -> scaleXZ = buf.readShort().toInt()
             5 -> scaleY = buf.readShort().toInt()

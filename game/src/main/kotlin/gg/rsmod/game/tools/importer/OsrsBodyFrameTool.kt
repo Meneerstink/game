@@ -140,7 +140,7 @@ object OsrsBodyFrameTool {
                     other != null -> refused += "model $modelId also used by $other"
                     foreign.isNotEmpty() -> refused += "model $modelId also worn by non-imported items $foreign"
                     else -> {
-                        val current = library.data(INDEX_MODEL, modelId, 0) ?: error("model $modelId missing")
+                        val current = ModelArchive.read(library, modelId) ?: error("model $modelId missing")
                         val model = Rev667ModelDecoder.decode(current)
                         if (model.version >= OsrsBodyFrame.FRAME_VERSION) {
                             already++

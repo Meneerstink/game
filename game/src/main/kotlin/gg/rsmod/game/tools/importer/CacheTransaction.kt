@@ -92,6 +92,10 @@ class CacheTransaction(
         targets.flatMap { target ->
             withLibrary(target) { library ->
                 mutations.map { mutation ->
+                    if (!library.exists(mutation.indexId)) {
+                        // N462: model archive 37 before its first model - every location in it is absent.
+                        return@map PreflightEntry(target, mutation, null, null, classify(mutation, null))
+                    }
                     if (mutation.storedReference != null) {
                         val current = storedGroup(library, mutation)
                         val archive = library.index(mutation.indexId).archive(mutation.groupId, null, true)
@@ -215,7 +219,8 @@ class CacheTransaction(
                     referenceJournal(entry.target, entry.mutation).writeText("crc=${archive.crc}\nrevision=${archive.revision}\nwhirlpool=$whirlpool\n")
                     return@run
                 }
-                val current = library.data(entry.mutation.indexId, entry.mutation.groupId, entry.mutation.fileId, entry.mutation.xtea)
+                val current = if (!library.exists(entry.mutation.indexId)) null
+                    else library.data(entry.mutation.indexId, entry.mutation.groupId, entry.mutation.fileId, entry.mutation.xtea)
                 journalFile(entry.target, entry.mutation).writeBytes(current ?: ByteArray(0))
                 if (current == null) {
                     // Distinguish "was absent" from "was an empty archive" so rollback can remove
@@ -236,6 +241,7 @@ class CacheTransaction(
                 if (forTarget.isEmpty()) return@forEach
                 onBeforeTargetWrite?.invoke(target)
                 withLibrary(target) { library ->
+                    if (forTarget.any { it.mutation.indexId == ModelArchive.MODELS_EXT }) ModelArchive.ensureExtIndex(library)
                     forTarget.forEach { entry ->
                         val mutation = entry.mutation
                         if (mutation.newBytes == null) {
@@ -356,7 +362,8 @@ class CacheTransaction(
         targets.forEach { target ->
             withLibrary(target) { library ->
                 mutations.forEach { mutation ->
-                    val actual = if (mutation.storedReference != null) storedGroup(library, mutation)
+                    val actual = if (!library.exists(mutation.indexId)) null
+                        else if (mutation.storedReference != null) storedGroup(library, mutation)
                         else library.data(mutation.indexId, mutation.groupId, mutation.fileId, mutation.xtea)
                     val actualSha = actual?.let { CacheItemProbeTool.sha1(it) }
                     val intendedSha = mutation.newBytes?.let { CacheItemProbeTool.sha1(it) }
@@ -563,8 +570,9 @@ class CacheTransaction(
  *   different content is treated as unknown and classified [MutationOutcome.CONFLICT].
  */
 class CacheMutation(
-    val indexId: Int,
-    val groupId: Int,
+    /** Archive 7 with a model id >= [ModelArchive.EXT_BASE] is stored as archive 37, group id - 65536 ([ModelArchive]). */
+    indexId: Int,
+    groupId: Int,
     val fileId: Int,
     val newBytes: ByteArray?,
     val label: String,
@@ -605,6 +613,9 @@ class CacheMutation(
     /** Journal restore only: [newBytes] is a complete stored single-file group; its current RAW SHA1 is [expectedCurrentSha1]. */
     val storedReference: StoredCacheReference? = null,
 ) {
+    val indexId: Int = ModelArchive.indexOf(indexId, groupId)
+    val groupId: Int = ModelArchive.groupOf(indexId, groupId)
+
     init {
         require(undecodableCurrentSha1 == null || newBytes != null) { "an undecodable group can only be replaced, not removed" }
         require(storedReference == null || (newBytes != null && fileId == 0 && xtea == null && undecodableCurrentSha1 == null &&

@@ -225,9 +225,15 @@ class ItemDefCodecTests {
 
         val outOfRange =
             runCatching {
-                ItemDefCodec.cloneWithOverrides(donor(), emptyMap(), shortOverrides = mapOf(1 to 70000))
+                ItemDefCodec.cloneWithOverrides(donor(), emptyMap(), shortOverrides = mapOf(1 to ModelArchive.MAX_MODEL_ID + 1))
             }.exceptionOrNull()
-        assertTrue("an id past the 16-bit model ceiling must fail, got $outOfRange", outOfRange is IllegalArgumentException)
+        assertTrue("an id past the model ceiling (archive 37) must fail, got $outOfRange", outOfRange is IllegalArgumentException)
+        // N462: a non-model short opcode keeps the 16-bit limit.
+        val shortOutOfRange =
+            runCatching {
+                ItemDefCodec.cloneWithOverrides(donor(), emptyMap(), shortOverrides = mapOf(95 to 70000))
+            }.exceptionOrNull()
+        assertTrue("a non-model short past 65535 must fail, got $shortOutOfRange", shortOutOfRange is IllegalArgumentException)
     }
 
     /**
