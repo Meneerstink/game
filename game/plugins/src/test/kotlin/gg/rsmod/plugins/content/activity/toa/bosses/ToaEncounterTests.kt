@@ -16,6 +16,8 @@ class ToaEncounterTests {
         every { f.npc.combatDef = any() } answers { definition = firstArg() }
         val s = AkkhaCombat.Session(f.npc, ToaTestContext())
         s.configure()
+        assertEquals(115, f.npc.equipmentBonuses[gg.rsmod.plugins.api.BonusSlot.ATTACK_SLASH.id])
+        assertEquals(30, f.npc.equipmentBonuses[gg.rsmod.plugins.api.ext.NPC_STRENGTH_BONUS_INDEX])
         assertEquals(115, f.npc.equipmentBonuses[3]); assertEquals(120, f.npc.equipmentBonuses[6])
         val child = assertNotNull(s.spawn(ToaBossNpcs.AKKHA_SHADOW, Tile(3205, 3205), AkkhaCombat.SHADOW_STATS))
         assertEquals(115, child.equipmentBonuses[3]); assertEquals(120, child.equipmentBonuses[6])
@@ -50,7 +52,42 @@ class ToaEncounterTests {
         assertEquals(250, ToaScale.damage(100, ToaTestContext(raidLevel = 600)))
         assertEquals(340, ToaScale.hp(100, ToaTestContext(raidLevel = 600)))
         assertEquals(listOf(10, 19, 28, 34, 40, 46, 52, 58), (1..8).map(ToaScale::groupTenths))
-        assertEquals(listOf(100, 108, 113, 118, 123, 128, 133), (0..6).map(ToaScale::pathPercent))
+        assertEquals(List(7) { 100 }, (0..6).map(ToaScale::pathPercent))
+    }
+    @Test fun `simplified raid discards old invocation and path effects while retaining live membership`() {
+        val members = mutableListOf<Player>()
+        val c = ToaTestContext(players = members, raidLevel = 300, pathLevel = 6,
+            invocations = setOf("Quiet Prayers", "Deadly Prayers", "Insanity", "Stay Vigilant"))
+        val s = AkkhaCombat.Session(ToaTestFixture().npc, c)
+        assertEquals(0, s.context.pathLevel); assertTrue(s.context.invocations.isEmpty())
+        assertFalse(s.inv("Quiet Prayers")); assertFalse(s.inv("Stay Vigilant"))
+        assertEquals(220, ToaScale.hp(100, c)); assertEquals(220, ToaScale.damage(100, c))
+        val p = mockk<Player>(relaxed = true); members += p
+        assertEquals(listOf(p), s.context.players)
+        members.clear(); assertTrue(s.context.players.isEmpty())
+    }
+    @Test fun `Entry Normal and Expert use the OSRS raid scale for HP damage and combat stats`() {
+        for ((level, expected) in listOf(0 to 100, 150 to 160, 300 to 220)) {
+            val c = ToaTestContext(raidLevel = level)
+            assertEquals(expected, ToaScale.hp(100, c))
+            assertEquals(expected, ToaScale.damage(100, c))
+            assertEquals(expected, ToaScale.stat(100, c))
+        }
+    }
+    @Test fun `raid scope owns child spawning for credit and a rejected spawn never enters the session`() {
+        val f = ToaTestFixture(); var credited = 0
+        val c = object : ToaEncounterContext by ToaTestContext() {
+            override fun spawnChild(npc: Npc): Boolean { credited++; return f.world.spawn(npc) }
+        }
+        val s = AkkhaCombat.Session(f.npc, c)
+        assertNotNull(s.spawn(ToaBossNpcs.AKKHA_SHADOW, Tile(3205, 3205), AkkhaCombat.SHADOW_STATS))
+        assertEquals(1, credited); assertEquals(1, s.children.size)
+        val denied = AkkhaCombat.Session(f.npc, object : ToaEncounterContext by ToaTestContext() {
+            override fun spawnChild(npc: Npc) = false
+        })
+        assertNull(denied.spawn(ToaBossNpcs.AKKHA_SHADOW, Tile(3205, 3205), AkkhaCombat.SHADOW_STATS))
+        assertTrue(denied.children.isEmpty())
+        s.close(); denied.close()
     }
     @Test fun `contexts use real lifepoints once, and each NPC has its own mutable combat definition`() {
         val c = ToaTestContext()
@@ -88,6 +125,26 @@ class ToaEncounterTests {
         online = true; dead = true; assertFalse(s.eligible(p))
         dead = false; present = false; assertFalse(s.eligible(p))
         present = true; s.close(); assertFalse(s.eligible(p))
+    }
+    @Test fun `solo duo and eight-player pending attacks recheck logout death and plane transfer`() {
+        for (size in listOf(1, 2, 8)) {
+            val f = ToaTestFixture()
+            var eligible = true
+            val members = List(size) { i -> mockk<Player>(relaxed = true).also { p ->
+                every { p.isOnline } answers { eligible || i % 3 != 0 }
+                every { p.isDead() } answers { !eligible && i % 3 == 1 }
+                every { p.tile } answers { Tile(3200, 3200, if (!eligible && i % 3 == 2) 1 else 0) }
+            } }
+            val s = object : ToaBossSession(f.npc, ToaTestContext(players = members, partySize = size)) {
+                override val stats = AkkhaCombat.STATS
+                override fun onTick() {}
+            }
+            members.forEach { p -> assertTrue(s.eligible(p)); s.attack(p, 10, null, delay = 2, accuracy = false) }
+            eligible = false
+            repeat(4) { s.cycle() }
+            members.forEach { p -> verify(exactly = 0) { p.addHit(any()) } }
+            s.close()
+        }
     }
     @Test fun `boss death cancels queued special and cleanup removes children exactly once`() {
         val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())

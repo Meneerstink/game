@@ -9,9 +9,10 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.combat.poison
 
-/** Zebak oldid15351537; Strategies oldid15392814 lines807-839; Jug oldid15139696; Blood Cloud oldid15196975.
- * T17: use the detailed Strategies blood-heal rule (2x), retain the Blood Blitz conflict in the dossier.
+/** Zebak oldid15351537; Strategies oldid15392814 lines807-839; Jug oldid15139696.
+ * Owner21:5x: invocation-only blood attacks and path variants are excluded.
  * T18/T01: special layout/cadence, acid ramp and projectile split timings require measured inputs.
  */
 object ZebakCombat : CombatScript() {
@@ -22,12 +23,11 @@ object ZebakCombat : CombatScript() {
         stab = 150, slash = 350, crush = 350, mage = 5, range = 150, deathSeq = 2038) // Crocodile (ToA) infobox in05-brontekst.
     val thresholds = listOf(85, 70, 55, 40)
     fun enraged(hp: Int, max: Int) = hp.toLong() * 4 < max
-    fun waterRadius(upsetStomach: Boolean) = if (upsetStomach) 1 else 2
-    fun acidRadius(upsetStomach: Boolean) = if (upsetStomach) 2 else 1
-    fun narrowedGap(base: Int, path: Int) = (base - minOf(path / 2, 2)).coerceAtLeast(1)
-    fun bloodHeal(dealt: Int) = dealt * 2
-    // ONZEKER T18: Wiki says faster every two path levels; reduce the published7/4 intervals by one at2 and4.
-    fun attackInterval(enraged: Boolean, path: Int) = ((if (enraged) 4 else 7) - minOf(path / 2, 2)).coerceAtLeast(2)
+    fun waterRadius(@Suppress("UNUSED_PARAMETER") upsetStomach: Boolean = false) = 2
+    fun acidRadius(@Suppress("UNUSED_PARAMETER") upsetStomach: Boolean = false) = 1
+    fun narrowedGap(base: Int, @Suppress("UNUSED_PARAMETER") path: Int) = base.coerceAtLeast(1)
+    // Wiki: base7/4 ticks. Owner 21:5x: no path-specific speed changes.
+    fun attackInterval(enraged: Boolean, @Suppress("UNUSED_PARAMETER") path: Int) = if (enraged) 4 else 7
     fun maxHit(style: CombatClass, c: ToaEncounterContext) = ToaScale.damage(if (style == CombatClass.MELEE) 38 else 16, c)
     enum class Special { ROAR, WAVES }
     data class Rock(val tile: Tile, var hp: Int = 150)
@@ -38,28 +38,26 @@ object ZebakCombat : CombatScript() {
         val npc = it.npc
         if (npc.attr[ToaEncounter.SESSION]?.closed != false) ToaEncounter.context(npc)?.let { ToaEncounter.attach(npc, it, ::Session) }
     }
-    class Session(npc: Npc, context: ToaEncounterContext) : ToaBossSession(npc, context) {
+    class Session(npc: Npc, input: ToaEncounterContext) : ToaBossSession(npc, input) {
         override val stats = STATS
         override val minimumDefence = 50 // Wiki Zebak base70 ->50 drain floor.
         var isEnraged = false
         var thresholdIndex = 0
         var nextSpecial = Special.ROAR
-        var firstSpecialVerified = true // ONZEKER T18: first choice is roar; thereafter the published alternating order.
         val pending = ArrayDeque<Special>()
         val acid = mutableSetOf<Tile>()
+        private val acidCleanup = mutableMapOf<Tile, () -> Unit>()
         val rocks = mutableListOf<Rock>()
         val jugs = mutableSetOf<Npc>()
         private val specialNpcs = mutableSetOf<Npc>()
         var tail: Npc? = null
         var autoSelector: (Session) -> ToaAutoAttack = { it.defaultAuto() }
         var specialDirector: (Session, Special) -> Unit = { s, special -> s.defaultSpecial(special) }
-        var bloodDirector: (Session) -> Unit = { it.defaultBlood() }
         var acidDirector: (Session, Player) -> Unit = { s, p -> s.acidHit(p) }
         var pathAttackInterval: (Session) -> Int = { attackInterval(it.isEnraged, it.context.pathLevel) }
-        val centre = npc.spawnTile.transform(4, -8)
+        var centre = npc.spawnTile.transform(4, -8) // ONZEKER T02: debug geometry; raid adapter supplies the measured platform centre.
         private val acidExposure = mutableMapOf<Player, Int>()
         private var specialUntil = 0
-        private var autoCount = 0
         private var waveSet = 0
         private val bleeding = mutableMapOf<Player, Pair<Int, Tile>>()
         private val water = mutableMapOf<Player, Pair<Npc?, Int>>()
@@ -78,7 +76,7 @@ object ZebakCombat : CombatScript() {
             // ONZEKER T01/T18: melee chip follows Akkha75% reduction; ranged/magic flight uses the4tick attack clip.
             return ToaAutoAttack(if (style == CombatClass.MELEE) 38 else 16, style, if (style == CombatClass.MELEE) 1 else 4,
                 if (style == CombatClass.MELEE) 1 else 0, if (style == CombatClass.MELEE) 4 else 1,
-                projectile = if (style == CombatClass.MAGIC) 2176 else if (style == CombatClass.RANGED) 2178 else -1)
+                projectile = if (style == CombatClass.MAGIC) { if (isEnraged) 2177 else 2176 } else if (style == CombatClass.RANGED) { if (isEnraged) 2179 else 2178 } else -1)
         }
         private fun acidHit(p: Player) {
             // ONZEKER T18: escalating tile damage2,4,6... uses the published poison2 as starting value; exact ramp unpublished.
@@ -109,7 +107,7 @@ object ZebakCombat : CombatScript() {
                     later(4 * stats.speed + 27) { remove(r) }
                 } }
                 // Wiki: four regular attacks to position jugs; roar clip9628=270cycles=9ticks (92-seqticks).
-                roar(4 * stats.speed, 9, 50, Direction.SOUTH) // ONZEKER T18: max50 fallback;9tick clip spaces the three roars.
+                roar(4 * stats.speed, 9, 38, Direction.SOUTH) // ONZEKER T18: nearest published Zebak max38;9tick roar clip spaces impacts.
                 later(4 * stats.speed) { nextAttack = tick + 27 }
                 specialUntil = tick + 4 * stats.speed + 27
             } else {
@@ -124,21 +122,6 @@ object ZebakCombat : CombatScript() {
                 } }
                 specialUntil = tick + 3 * stats.speed + 17
             }
-        }
-        private fun defaultBlood() {
-            // ONZEKER T17: every fourth auto, alternating barrage and clouds; Strategies2x heal takes priority over old Blitz text.
-            if (autoCount % 4 != 0) return
-            if (autoCount % 8 == 0) {
-                val amount = if (inv("Blood Thinners")) 3 else 1
-                repeat(amount) { i ->
-                    val tile = centre.transform(i * 2 - amount + 1, -6)
-                    val victim = players().minByOrNull { it.tile.getDistance(tile) }?.takeIf { it.tile.isWithinRadius(tile, 8) }
-                    // ONZEKER T17: hidden cloud HP uses same arena's published crocodile HP30; exact cloud HP remains unmeasured.
-                    spawn(if (inv("Arterial Spray")) 11742 else 11743, tile, STATS.copy(hp = 30), path = false, group = false)?.let {
-                        bloodCloud(it, victim, if (inv("Arterial Spray")) 4 else 2)
-                    }
-                }
-            } else bloodBarrage(players(), 11, 3)
         }
         override fun onTick() {
             bleeding.toMap().forEach { (p, state) ->
@@ -181,6 +164,8 @@ object ZebakCombat : CombatScript() {
             if (pending.isNotEmpty()) {
                 if (tick >= specialUntil) specialDirector(this, pending.removeFirst())
             }
+            // Roar callbacks may have extended nextAttack while starting this special.
+            if (tick < nextAttack) return
             autoSelector(this).let { auto ->
                 animate(if (auto.style == CombatClass.MELEE) { if (isEnraged) 9622 else 9620 } else { if (isEnraged) 9626 else 9624 })
                 tail?.let { animate(if (auto.style == CombatClass.MELEE) { if (isEnraged) 9623 else 9621 } else { if (isEnraged) 9627 else 9625 }, it) }
@@ -195,13 +180,19 @@ object ZebakCombat : CombatScript() {
                     }
                 }
             }
-            autoCount++
-            if (inv("Not Just a Head")) bloodDirector(this)
+            // Owner: blood attacks belong to Not Just a Head and are disabled in simplified ToA.
             nextAttack = tick + pathAttackInterval(this)
         }
         fun addAcid(centre: Tile) {
-            val radius = acidRadius(inv("Upset Stomach"))
-            for (dx in -radius..radius) for (dz in -radius..radius) acid += centre.transform(dx, dz)
+            val radius = acidRadius()
+            for (dx in -radius..radius) for (dz in -radius..radius) {
+                val tile = centre.transform(dx, dz)
+                // Cache2686 loc45570 toa_zebak_vomit01 is a non-clipping1x1 tile (50-loc-defs).
+                if (acid.add(tile)) acidCleanup[tile] = placeObject(45570, tile)
+            }
+        }
+        private fun clearAcid(predicate: (Tile) -> Boolean) {
+            acid.filter(predicate).forEach { tile -> acid.remove(tile); acidCleanup.remove(tile)?.invoke() }
         }
         fun enterWater(p: Player, tile: Tile) {
             if (!eligible(p) || onPlatform(tile) || p in water) return
@@ -220,8 +211,8 @@ object ZebakCombat : CombatScript() {
             leaveWater(p)
         }
         fun shatterJug(jug: Npc) {
-            val centre = Tile(jug.tile); val radius = waterRadius(inv("Upset Stomach"))
-            acid.removeAll { it.height == centre.height && it.isWithinRadius(centre, radius) }
+            val centre = Tile(jug.tile); val radius = waterRadius()
+            clearAcid { it.height == centre.height && it.isWithinRadius(centre, radius) }
             gfx(2192, centre); jugs.remove(jug); specialNpcs.remove(jug); remove(jug)
         }
         /** Collision-tested single steps support cardinal AND diagonal push/pull without rolling through a rock. */
@@ -242,9 +233,16 @@ object ZebakCombat : CombatScript() {
             require(firstImpact >= 0 && spacing > 0 && baseDamage >= 0)
             repeat(3) { n -> later(firstImpact + n * spacing) {
                 animate(9628); tail?.let { animate(9629, it) }
+                gfx(2184, npc.getCentreTile())
                 val standing = rocks.filter { it.hp > 0 }
                 players().filter { p -> standing.none { behindRock(p.tile, it.tile, direction) } }.forEach {
                     attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false)
+                    // ONZEKER T18: unquantified roar shove uses the same encounter's one-step wave displacement.
+                    if (npc.world.collision.canStep(it.tile, direction)) {
+                        val end = it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
+                        it.stopMovement(); it.teleportTo(end)
+                        if (!onPlatform(end)) enterWater(it, end)
+                    }
                 }
                 // One -50 per wave, regardless of how many players shelter behind the same rock.
                 standing.forEach { it.hp = (it.hp - 50).coerceAtLeast(0) }
@@ -257,7 +255,7 @@ object ZebakCombat : CombatScript() {
             val segments = row.mapNotNull { t -> spawn(11738, t, STATS.copy(hp = 1), path = false, group = false) }.also { specialNpcs += it }
             fun advance(current: List<Tile>, left: Int) {
                 if (left == 0) { segments.forEach { specialNpcs.remove(it); remove(it) }; return }
-                current.forEach { t -> acid.removeAll { sameTile(it, t) } }
+                current.forEach { t -> clearAcid { sameTile(it, t) } }
                 jugs.toList().filter { jug -> current.any { sameTile(it, jug.tile) } }.forEach { moveJug(it, direction, 1) }
                 players().filter { p -> current.any { sameTile(it, p.tile) } }.forEach { p ->
                     val damage = ToaScale.damage(baseDamage, context)
@@ -272,36 +270,6 @@ object ZebakCombat : CombatScript() {
             }
             advance(row, steps)
         }
-        fun bloodBarrage(victims: List<Player>, baseMax: Int, delay: Int) {
-            if (!inv("Not Just a Head")) return
-            val radius = if (inv("Arterial Spray")) 2 else 1 // ONZEKER T17: wider-area invocation doubles normal3x3 radius.
-            victims.filter { eligible(it) }.forEach { p -> later(delay) {
-                if (eligible(p)) {
-                    val stacked = victims.count { eligible(it) && it.tile.isWithinRadius(p.tile, radius) }
-                    attack(p, ToaScale.damage(baseMax * stacked, context), CombatClass.MAGIC,
-                        accuracy = false, after = { dealt -> heal(bloodHeal(dealt)) })
-                }
-            } }
-        }
-        fun bloodCloud(cloud: Npc, target: Player?, baseDrain: Int) {
-            fun cycleCloud() {
-                if (!cloud.isSpawned() || cloud.isDead()) return
-                cloud.setCurrentLifepoints((cloud.getCurrentLifepoints() - 2).coerceAtLeast(0))
-                if (cloud.getCurrentLifepoints() == 0) { remove(cloud); return }
-                // Never acquire a fresh target. Leaving the room does not transfer the cloud's aggro to another player.
-                if (target != null && eligible(target)) {
-                    cloud.walkTo(target.tile)
-                    if (target.tile.isWithinRadius(cloud.tile, 1)) attack(target, baseDrain, null, accuracy = false, after = { dealt ->
-                        if (cloud.isSpawned()) cloud.setCurrentLifepoints(minOf(cloud.getMaximumLifepoints(), cloud.getCurrentLifepoints() + dealt))
-                    })
-                } else if (target == null) {
-                    val direction = Direction.NESW[npc.world.random(3)]
-                    if (npc.world.collision.canStep(cloud.tile, direction)) cloud.walkTo(cloud.tile.transform(direction.getDeltaX(), direction.getDeltaZ()))
-                }
-                later(1, acrossPhase = true) { cycleCloud() }
-            }
-            cycleCloud()
-        }
-        override fun close() { water.keys.toList().forEach { if (eligible(it)) climbUp(it); leaveWater(it) }; bleeding.clear(); acidExposure.clear(); pending.clear(); acid.clear(); rocks.clear(); jugs.clear(); super.close() }
+        override fun close() { water.keys.toList().forEach { if (eligible(it)) climbUp(it); leaveWater(it) }; bleeding.clear(); acidExposure.clear(); pending.clear(); clearAcid { true }; rocks.clear(); jugs.clear(); specialNpcs.clear(); super.close() }
     }
 }

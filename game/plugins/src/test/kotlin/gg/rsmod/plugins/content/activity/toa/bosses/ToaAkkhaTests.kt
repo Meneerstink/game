@@ -8,6 +8,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeMap
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.ext.freeze
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.*
@@ -27,13 +28,13 @@ class ToaAkkhaTests {
         assertEquals(1, specials); assertEquals(CombatClass.RANGED, s.style)
         assertEquals(0, s.autos)
     }
-    @Test fun `trailing orb expiry follows documented path0 versus2 memory ordering`() {
-        for (feeling in listOf(false, true)) {
+    @Test fun `trailing orb expiry keeps the base memory ordering without path extensions`() {
+        for (feeling in listOf(false)) {
             val interval = AkkhaCombat.blastInterval(feeling)
             val baseMemoryEnd = 9 + 4 * interval
             val orbExpiry = AkkhaCombat.trailDuration(feeling) + 6
             assertTrue(orbExpiry > baseMemoryEnd)
-            assertTrue(orbExpiry < 11 + 5 * interval)
+            assertEquals(29, orbExpiry) // No longer extended by path levels.
         }
     }
     @Test fun `current single style prayer blocks only Akkhas active style, enrage admits melee only`() {
@@ -55,20 +56,20 @@ class ToaAkkhaTests {
         assertEquals(2320, ToaScale.hp(400, c.copy(partySize = 8)))
         assertEquals(55, ToaScale.damage(55, c.copy(partySize = 8)))
         assertEquals(137, ToaScale.damage(55, c.copy(raidLevel = 600)))
-        assertEquals(10491, ToaScale.hp(400, c.copy(raidLevel = 600, partySize = 8, pathLevel = 6)))
-        assertEquals(182, ToaScale.damage(55, c.copy(raidLevel = 600, pathLevel = 6)))
+        assertEquals(7888, ToaScale.hp(400, c.copy(raidLevel = 600, partySize = 8, pathLevel = 6)))
+        assertEquals(137, ToaScale.damage(55, c.copy(raidLevel = 600, pathLevel = 6)))
     }
-    @Test fun `special is seventh or sixth attack and styles cycle forward`() {
+    @Test fun `special is seventh attack and obsolete Stay Vigilant cannot shorten the cycle`() {
         assertEquals(6, AkkhaCombat.autosBeforeSpecial(false))
-        assertEquals(5, AkkhaCombat.autosBeforeSpecial(true))
+        assertEquals(6, AkkhaCombat.autosBeforeSpecial(true))
         assertEquals(CombatClass.RANGED, AkkhaCombat.nextStyle(CombatClass.MELEE))
         assertEquals(CombatClass.MAGIC, AkkhaCombat.nextStyle(CombatClass.RANGED))
         assertEquals(CombatClass.MELEE, AkkhaCombat.nextStyle(CombatClass.MAGIC))
     }
-    @Test fun `four thresholds and one extra memory burst at path two and four`() {
+    @Test fun `four thresholds and base memory speed ignore obsolete path or Feeling Special flags`() {
         assertEquals(listOf(320, 240, 160, 80), (0..3).map { AkkhaCombat.shadowThreshold(it, 400) })
-        assertEquals(listOf(0, 0, 1, 1, 2, 2, 2), (0..6).map(AkkhaCombat::extraMemoryBursts))
-        assertEquals(4, AkkhaCombat.blastInterval(false)); assertEquals(2, AkkhaCombat.blastInterval(true))
+        assertEquals(List(7) { 0 }, (0..6).map(AkkhaCombat::extraMemoryBursts))
+        assertEquals(4, AkkhaCombat.blastInterval(false)); assertEquals(4, AkkhaCombat.blastInterval(true))
     }
     @Test fun `memory never moves diagonally and detonation stack is safe`() {
         assertTrue(AkkhaCombat.adjacent(AkkhaCombat.Quadrant.FIRE, AkkhaCombat.Quadrant.SHADOW))
@@ -82,6 +83,17 @@ class ToaAkkhaTests {
         assertEquals(15, AkkhaCombat.orbDamage(20, true))
         assertEquals(25, AkkhaCombat.orbDamage(40, true))
         assertEquals(3, AkkhaCombat.enrageHits(1)); assertEquals(10, AkkhaCombat.enrageHits(8))
+    }
+    @Test fun `Akkha freeze immunity uses the engine freeze gate and is cleared on encounter close`() {
+        val f = ToaTestFixture(); val root = Npc(1, Tile(3200, 3200), f.world)
+        f.world.spawn(root)
+        val s = AkkhaCombat.Session(root, ToaTestContext())
+        s.configure()
+        var applied = 0
+        assertFalse(root.freeze(32) { applied++ })
+        assertEquals(0, applied)
+        assertFalse(root.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER))
+        s.close(); assertFalse(root.timers.has(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER))
     }
     @Test fun `phase cancellation and close discard pending special and minions`() {
         val f = ToaTestFixture()
@@ -103,6 +115,7 @@ internal class ToaTestFixture {
     val npc = mockk<Npc>(relaxed = true)
     val world = mockk<World>(relaxed = true)
     init {
+        every { world.gameContext.npcStatCount } returns 5
         every { npc.world } returns world
         every { npc.attr } returns AttributeMap()
         every { npc.tile } returns Tile(3200, 3200)

@@ -17,13 +17,13 @@ class ToaZebakTests {
         repeat(15) { s.cycle() }
         assertEquals(3, autos); assertEquals(1, specials); assertEquals(1, s.thresholdIndex)
     }
-    @Test fun `higher path never disables autos and speed is bounded at two ticks`() {
-        assertEquals(listOf(7, 7, 6, 6, 5, 5, 5), (0..6).map { ZebakCombat.attackInterval(false, it) })
-        assertEquals(listOf(4, 4, 3, 3, 2, 2, 2), (0..6).map { ZebakCombat.attackInterval(true, it) })
+    @Test fun `legacy path level never changes base seven tick and enraged four tick speed`() {
+        assertEquals(List(7) { 7 }, (0..6).map { ZebakCombat.attackInterval(false, it) })
+        assertEquals(List(7) { 4 }, (0..6).map { ZebakCombat.attackInterval(true, it) })
     }
-    @Test fun `both ranged and magic can be fully blocked, Quiet Prayers leaves ten percent`() {
+    @Test fun `ranged and magic remain fully blocked even with an obsolete Quiet Prayers flag`() {
         assertEquals(0, ToaProtection.damage(16, true))
-        assertEquals(1, ToaProtection.damage(16, true, quiet = true))
+        assertEquals(0, ToaProtection.damage(16, true, quiet = true))
         assertEquals(16, ToaProtection.damage(16, false))
     }
     @Test fun `autos have separate 38 melee and 16 ranged magic maxima, with group-independent damage`() {
@@ -32,8 +32,8 @@ class ToaZebakTests {
         assertEquals(16, ZebakCombat.maxHit(CombatClass.RANGED, zero))
         assertEquals(16, ZebakCombat.maxHit(CombatClass.MAGIC, zero))
         val high = zero.copy(raidLevel = 600, partySize = 8, pathLevel = 6)
-        assertEquals(53, ZebakCombat.maxHit(CombatClass.RANGED, high))
-        assertEquals(126, ZebakCombat.maxHit(CombatClass.MELEE, high))
+        assertEquals(40, ZebakCombat.maxHit(CombatClass.RANGED, high))
+        assertEquals(95, ZebakCombat.maxHit(CombatClass.MELEE, high))
     }
     @Test fun `enrage is below a quarter and clears every queued threshold`() {
         assertFalse(ZebakCombat.enraged(145, 580))
@@ -49,14 +49,14 @@ class ToaZebakTests {
         repeat(10) { s.cycle() }
         assertTrue(s.pending.isEmpty(), "crossing four thresholds during enrage must not enqueue delayed specials")
     }
-    @Test fun `Upset Stomach reverses water and acid sizes, jug water cleans every tile of its square`() {
-        assertEquals(2, ZebakCombat.waterRadius(false)); assertEquals(1, ZebakCombat.waterRadius(true))
-        assertEquals(1, ZebakCombat.acidRadius(false)); assertEquals(2, ZebakCombat.acidRadius(true))
+    @Test fun `simplified encounters ignore an old Upset Stomach flag and keep base acid size`() {
+        assertEquals(2, ZebakCombat.waterRadius(false)); assertEquals(2, ZebakCombat.waterRadius(true))
+        assertEquals(1, ZebakCombat.acidRadius(false)); assertEquals(1, ZebakCombat.acidRadius(true))
         val f = ToaTestFixture()
         val s = ZebakCombat.Session(f.npc, ToaTestContext())
         s.addAcid(Tile(3200, 3200)); assertEquals(9, s.acid.size)
         val upset = ZebakCombat.Session(f.npc, ToaTestContext(invocations = setOf("Upset Stomach")))
-        upset.addAcid(Tile(3200, 3200)); assertEquals(25, upset.acid.size)
+        upset.addAcid(Tile(3200, 3200)); assertEquals(9, upset.acid.size)
     }
     @Test fun `roar safety extends three tiles behind a rock, never to the fourth or the wrong plane`() {
         val rock = Tile(100, 100)
@@ -73,9 +73,8 @@ class ToaZebakTests {
         repeat(7) { s.cycle() }
         assertEquals(0, rock.hp)
     }
-    @Test fun `path gap narrows only twice and detailed blood heal rule doubles actual damage`() {
-        assertEquals(listOf(5, 5, 4, 4, 3, 3, 3), (0..6).map { ZebakCombat.narrowedGap(5, it) })
-        assertEquals(0, ZebakCombat.bloodHeal(0)); assertEquals(22, ZebakCombat.bloodHeal(11))
+    @Test fun `legacy path levels cannot narrow the base wave gap`() {
+        assertEquals(List(7) { 5 }, (0..6).map { ZebakCombat.narrowedGap(5, it) })
     }
     @Test fun `close removes persistent acid rocks and queued roar without late damage`() {
         val f = ToaTestFixture(); val s = ZebakCombat.Session(f.npc, ToaTestContext())
