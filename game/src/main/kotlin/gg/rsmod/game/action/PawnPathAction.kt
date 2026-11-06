@@ -471,7 +471,12 @@ object PawnPathAction {
         val dz = maxOf(0, target.z - (source.z + sourceSize - 1), source.z - (target.z + targetSize - 1))
         val gap = maxOf(dx, dz)
         if (gap < 1 || gap > range) return false
-        if (range == 1 && !projectile) return bordering(source, sourceSize, target, targetSize)
+        // N596 (2026-11-06, GPT-A C5): a range-1 melee reach needs the shared edge WITHOUT a wall (MeleeReach) - the same rule the
+        // combat swing checks. AabbUtil.areBordering stopped a walk beside a fence the attack could not cross: the player stood
+        // there for ever instead of walking round it.
+        if (range == 1 && !projectile) {
+            return gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(pawn.world.collision, source, sourceSize, sourceSize, target, targetSize, targetSize)
+        }
         return pawn.world.collision.raycast(source, target, projectile)
     }
 
@@ -584,11 +589,4 @@ object PawnPathAction {
         tile2: Tile,
         size2: Int,
     ): Boolean = AabbUtil.areOverlapping(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
-
-    private fun bordering(
-        tile1: Tile,
-        size1: Int,
-        tile2: Tile,
-        size2: Int,
-    ): Boolean = AabbUtil.areBordering(tile1.x, tile1.z, size1, size1, tile2.x, tile2.z, size2, size2)
 }

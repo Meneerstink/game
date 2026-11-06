@@ -276,6 +276,39 @@ class InteractionApproachLoopTests {
         report(failures)
     }
 
+    /**
+     * N596 breaktest: a 3-tile wall stands between the player and the npc, with open floor round its ends. The player must not stop
+     * beside the wall (the walk's own reach check used to ignore walls) - he walks round it and swings from the free side.
+     */
+    @Test
+    fun `a player behind a short wall walks round it and then swings`() {
+        val failures = mutableListOf<String>()
+        // Wall between z=0 and z=1 for x = -1..1 (relative to the cell); the player south of its middle, the npc north of it.
+        val cell = ARENA.transform(4, 4)
+        val wall = (-1..1).map { cell.transform(it, 0) }
+        walls(wall, add = true)
+        try {
+            for (run in listOf(false, true)) {
+                val npc = spawnNpcAt(1, cell.transform(0, 1))
+                val p = player("wr", cell, run)
+                p.attack(npc)
+                var swung = false
+                var ticks = 0
+                while (ticks < 12 && !swung) {
+                    tick(1)
+                    ticks++
+                    swung = p.timers.has(gg.rsmod.game.model.timer.ATTACK_DELAY)
+                }
+                if (!swung) failures += "run=$run: no swing in 12 ticks, player stopped at ${p.tile} (npc ${npc.tile})"
+                else if (p.tile.sameAs(cell)) failures += "run=$run: swung from behind the wall at ${p.tile}"
+                reset()
+            }
+        } finally {
+            walls(wall, add = false)
+        }
+        report(failures)
+    }
+
     /** Walls on all four edges of [cell] (both sides of each edge). */
     private fun boxIn(
         cell: Tile,
