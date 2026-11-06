@@ -3,7 +3,6 @@ package gg.rsmod.plugins.content.activity.toa
 import gg.rsmod.game.model.PlayerUID
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
-import gg.rsmod.game.model.instance.InstancedMap
 import gg.rsmod.plugins.content.quests.QuestStatus
 import gg.rsmod.plugins.content.quests.foundation.FoundationQuests
 import java.util.WeakHashMap
@@ -56,7 +55,7 @@ class ToaLobby private constructor() {
         } ?: return null
         val map = ToaMap.allocate(world)
         if (map == null) { party.allocationFailed(); return null }
-        val raid = ToaRaid(party.id, roster, party.settings.copy(invocations = party.settings.invocations.toSet()), map)
+        val raid = ToaRaid(party.id, roster, party.settings.copy(invocations = party.settings.invocations.toSet()), map, world)
         roster.forEach { uid ->
             raids[uid] = raid
             membership.remove(uid)
@@ -73,6 +72,7 @@ class ToaLobby private constructor() {
         if (raid.remaining.isEmpty() || player.world.players.none { it.uid in raid.remaining && raid.map.area.contains(it.tile) }) {
             raid.remaining.forEach { raids.remove(it) }
             raid.remaining.clear()
+            raid.close()
             player.world.instanceAllocator.release(player.world, raid.map)
         }
     }
@@ -85,12 +85,17 @@ class ToaLobby private constructor() {
         if (!others) {
             raid.remaining.forEach { raids.remove(it) }
             raid.remaining.clear()
+            raid.close()
             player.world.instanceAllocator.release(player.world, raid.map)
         }
     }
 
     fun login(player: Player) {
         raids[player.uid]?.let { player.teleportTo(ToaMap.instance(it.map, ToaMap.NEXUS)) }
+    }
+
+    fun cycle() {
+        raids.values.toSet().forEach { it.progress.cycle(it.world.currentCycle) }
     }
 
     companion object {
@@ -103,7 +108,3 @@ class ToaLobby private constructor() {
     }
 }
 
-/** Instance and frozen roster; room state is added in the next small commit. */
-class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSettings, val map: InstancedMap) {
-    val remaining = roster.toMutableSet()
-}
