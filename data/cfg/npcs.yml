@@ -14758,3 +14758,69 @@
   examine: "Runite that's come alive!"
 - id: 15104
   examine: "A rocky outcrop."
+- id: 15105
+  examine: "An ancient automaton imbued with the power of Elidinis." # OSRS 11753 (N462 ToA)
+- id: 15106
+  examine: "A manifestation of vengeance." # OSRS 11789 (N462 ToA)
+- id: 15107
+  examine: "A shadow of vengeance." # OSRS 11797 (N462 ToA)
+- id: 15108
+  examine: "A phantom of Akkha." # OSRS 11777 (N462 ToA)
+- id: 15109
+  examine: "A big ol' monke." # OSRS 11778 (N462 ToA)
+- id: 15110
+  examine: "An undead baboon brawler." # OSRS 11709 (N462 ToA)
+- id: 15111
+  examine: "An undead baboon thrower." # OSRS 11710 (N462 ToA)
+- id: 15112
+  examine: "An undead baboon mage." # OSRS 11711 (N462 ToA)
+- id: 15113
+  examine: "An undead baboon shaman." # OSRS 11715 (N462 ToA)
+- id: 15114
+  examine: "An undead volatile baboon." # OSRS 11716 (N462 ToA)
+- id: 15115
+  examine: "An undead cursed baboon." # OSRS 11717 (N462 ToA)
+- id: 15116
+  examine: "An undead baboon thrall." # OSRS 11718 (N462 ToA)
+- id: 15117
+  examine: "An undead baboon." # OSRS 11781 (N462 ToA)
+- id: 15118
+  examine: "A phantom of Ba-Ba." # OSRS 11775 (N462 ToA)
+- id: 15119
+  examine: "The cursed mother." # OSRS 11719 (N462 ToA)
+- id: 15120
+  examine: "One of Kephri's false children." # OSRS 11724 (N462 ToA)
+- id: 15121
+  examine: "One of Kephri's false children." # OSRS 11725 (N462 ToA)
+- id: 15122
+  examine: "One of Kephri's false children." # OSRS 11726 (N462 ToA)
+- id: 15123
+  examine: "A tiny annoying scarab." # OSRS 11727 (N462 ToA)
+- id: 15124
+  examine: "A buzzing mass of angry scarabs." # OSRS 11723 (N462 ToA)
+- id: 15125
+  examine: "A phantom of Kephri." # OSRS 11776 (N462 ToA)
+- id: 15126
+  examine: "A big dead croc." # OSRS 11730 (N462 ToA)
+- id: 15127
+  examine: "Scaley." # OSRS 11731 (N462 ToA)
+- id: 15128
+  examine: "A phantom of Zebak." # OSRS 11774 (N462 ToA)
+- id: 15129
+  examine: "An ancient automaton imbued with the power of Tumeken." # OSRS 11756 (N462 ToA)
+- id: 15130
+  examine: "An ancient automaton imbued with the power of Elidinis." # OSRS 11755 (N462 ToA)
+- id: 15131
+  examine: "An ancient automaton imbued with the power of Tumeken." # OSRS 11758 (N462 ToA)
+- id: 15132
+  examine: "An ancient automaton imbued with the power of Elidinis." # OSRS 11759 (N462 ToA)
+- id: 15133
+  examine: "An ancient automaton imbued with the power of Tumeken." # OSRS 11760 (N462 ToA)
+- id: 15134
+  examine: "An ancient automaton imbued with the power of Elidinis." # OSRS 11761 (N462 ToA)
+- id: 15135
+  examine: "An ancient automaton imbued with the power of Tumeken." # OSRS 11762 (N462 ToA)
+- id: 15136
+  examine: "The heart of an ancient automaton." # OSRS 11770 (N462 ToA)
+- id: 15137
+  examine: "A deadly apparition." # OSRS 11767 (N462 ToA)

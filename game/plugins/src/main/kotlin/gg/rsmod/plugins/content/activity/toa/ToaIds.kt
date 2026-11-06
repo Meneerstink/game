@@ -18,6 +18,16 @@ object ToaIds {
     }
 
     fun npc(osrs: Int): Int? = table["npc:$osrs"]
+
+    /** Local npc -> the OSRS npc it was imported from (variants with the same models share one local npc; this is the imported one). */
+    private val osrsNpcs: Map<Int, Int> by lazy { table.filterKeys { it.startsWith("npc:") }.entries.associate { (k, v) -> v to k.removePrefix("npc:").toInt() } }
+    fun osrsNpcOf(local: Int): Int? = osrsNpcs[local]
+
+    /**
+     * The local sequence of OSRS [osrsSeq] FOR npc [osrsNpc]: a skeletal npc's sequences are baked per npc (own frames and skin), so the
+     * same OSRS sequence has a different local id for Ba-Ba and for each baboon. Falls back to the npc-less mapping (classic sequences).
+     */
+    fun npcSeq(osrsNpc: Int, osrsSeq: Int): Int? = table["npcseq:$osrsNpc:$osrsSeq"] ?: table["seq:$osrsSeq"]
     fun seq(osrs: Int): Int? = table["seq:$osrs"]
     fun spot(osrs: Int): Int? = table["spotanim:$osrs"]
     fun item(osrs: Int): Int? = table["item:$osrs"]

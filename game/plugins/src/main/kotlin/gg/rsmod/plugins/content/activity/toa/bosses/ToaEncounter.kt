@@ -153,7 +153,7 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
     open fun configure() {
         npc.respawnOverride = false
         npc.naivePathfinding = true
-        npc.combatDef = stats.definition(context)
+        npc.combatDef = stats.definition(context).let { d -> d.copy(deathAnimation = listOf(ToaBossFx.seqFor(npc, stats.deathSeq))) }
         npc.combatDef.stats.forEachIndexed { i, level -> npc.stats.setMaxLevel(i, level); npc.stats.setCurrentLevel(i, level) }
         npc.setCurrentLifepoints(npc.getMaximumLifepoints())
         npc.hitModifier = { hit ->
@@ -199,14 +199,14 @@ abstract class ToaBossSession(val npc: Npc, val context: ToaEncounterContext) {
         child.respawnOverride = false
         child.attr[ToaEncounter.MINION_SESSION] = this
         npc.world.spawn(child)
-        child.combatDef = spec.definition(context, path, group)
+        child.combatDef = spec.definition(context, path, group).let { d -> d.copy(deathAnimation = listOf(ToaBossFx.seqFor(child, spec.deathSeq))) }
         child.combatDef.stats.forEachIndexed { i, level -> child.stats.setMaxLevel(i, level); child.stats.setCurrentLevel(i, level) }
         child.setCurrentLifepoints(child.getMaximumLifepoints())
         children += child
         return child
     }
     fun remove(child: Npc) { children.remove(child); if (child.isSpawned()) npc.world.remove(child) }
-    fun animate(osrs: Int, who: Npc = npc) { ToaBossFx.seq(osrs).takeIf { it >= 0 }?.let { who.animate(it) } }
+    fun animate(osrs: Int, who: Npc = npc) { ToaBossFx.seqFor(who, osrs).takeIf { it >= 0 }?.let { who.animate(it) } }
     fun gfx(osrs: Int, tile: Tile) { ToaBossFx.spot(osrs)?.let { npc.world.spawn(gg.rsmod.game.model.TileGraphic(tile, it, 0)) } }
     fun message(text: String) { players().forEach { it.message(text) } }
     fun inv(name: String): Boolean = name in context.invocations

@@ -21,7 +21,6 @@ object ToaBossNpcs {
     const val ELIDINIS_P3 = 11761
     const val TUMEKEN_P3 = 11762
     const val CORE = 11770
-    // Import not published yet. Missing mappings deliberately do not bind unrelated 667 NPCs.
-    val mappings: Map<Int, Int> = emptyMap()
-    fun local(osrs: Int): Int? = mappings[osrs]
+    // Local ids from Claude's import (data/cfg/toa/ids.tsv via ToaIds); a missing one never binds an unrelated 667 npc.
+    fun local(osrs: Int): Int? = gg.rsmod.plugins.content.activity.toa.ToaIds.npc(osrs)
 }

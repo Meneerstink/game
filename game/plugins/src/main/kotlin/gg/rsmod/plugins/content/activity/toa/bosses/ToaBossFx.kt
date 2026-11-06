@@ -9,10 +9,17 @@ import gg.rsmod.plugins.api.ext.createProjectile
  * Frame sounds travel with the imported sequence. T01: no guessed server sound/projectile packet parameters.
  */
 object ToaBossFx {
-    val sequences: Map<Int, Int> = emptyMap()
-    val spots: Map<Int, Int> = emptyMap()
-    fun seq(osrs: Int): Int = sequences[osrs] ?: -1
-    fun spot(osrs: Int): Int? = spots[osrs]
+    // Local ids from Claude's import (data/cfg/toa/ids.tsv via ToaIds).
+    fun seq(osrs: Int): Int = gg.rsmod.plugins.content.activity.toa.ToaIds.seq(osrs) ?: -1
+
+    /** The sequence as baked for [who] (skeletal npcs have their own frames per npc; Ba-Ba and each baboon differ). */
+    fun seqFor(who: Npc, osrs: Int): Int {
+        val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
+        val osrsNpc = ids.osrsNpcOf(who.getTransmogId().takeIf { it >= 0 } ?: who.id)
+        return (if (osrsNpc != null) ids.npcSeq(osrsNpc, osrs) else ids.seq(osrs)) ?: -1
+    }
+
+    fun spot(osrs: Int): Int? = gg.rsmod.plugins.content.activity.toa.ToaIds.spot(osrs)
     fun projectile(npc: Npc, target: Player, osrs: Int, magic: Boolean, ticks: Int) {
         val gfx = spot(osrs) ?: return
         val type = if (magic) ProjectileType.MAGIC else ProjectileType.ARROW
