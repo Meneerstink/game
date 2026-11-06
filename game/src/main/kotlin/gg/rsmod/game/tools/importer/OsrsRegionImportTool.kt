@@ -98,6 +98,12 @@ object OsrsRegionImportTool {
          * (never onto a textured rev-667 one). Same free/unused proof as [newOverlaySlots].
          */
         val newUnderlaySlots: List<Int>? = null,
+        /**
+         * Only these existing rev-667 underlay definitions are candidates (nothing written). N462 Necropolis: every rev-667 underlay is
+         * textured (the nearest colour, 123, is a stone tile grid - OSRS has plain sand), so the Necropolis maps onto the plain ToA
+         * underlays of 'toa-map-floors' (one of them is exactly OSRS 123 b8b098).
+         */
+        val underlayCandidates: Set<Int>? = null,
     ) {
         init {
             require(squareOffset == null || (replaceSquares.isEmpty() && patch == null && locsOnlyWithout == null && !tilesOnly)) {
@@ -175,6 +181,17 @@ object OsrsRegionImportTool {
             // Second pass (owner 'kwaliteitswerk'): 10 slots left ~1067 of 4275 overlay tiles visibly off (testclient: grey-brown sand in the
             // Zebak room). 19 rev-667 overlay definitions are used by NO tile of any of our 2267 map squares (census 2026-11-06): 16 17 23 27
             // 31 40 45 46 66 127 129 147 157 174 175 181 183 226 237 - reused (the tool re-checks that), so 29 exact OSRS colours in total.
+            // N462 ToA entrance (owner 2026-11-06 'Necropolis importeren zoals OSRS'): OSRS 2499 == 2686 for these squares. Necropolis town
+            // 13354, north 13355, pyramid side 13611, desert 13610, coast/sea 13353 13609 13097 (52_41, 53_41, 51_41). Rev-667: 13354/13610
+            // terrain without locs, 13355 667 desert filler (744 unnamed locs), 13611 no key (no locs drawn today); 13097/13353/13609 absent (created). The rev-667
+            // spawns there (crocodiles, lizards, vultures, archaeologists Kerner/Abigail, Scabaras locusts: spawns_13355/13611) are not
+            // used by any code and go with the OSRS map. Sophanem 13098/13099 (also Sophanem in OSRS) stays rev-667.
+            "necropolis" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis (ToA entrance)",
+                replaceSquares = setOf(13354, 13355, 13610, 13611), clearTileFlags = 0x8, dropHiddenOverlays = true,
+                plainOverlaysStayPlain = true),
+            "necropolis-floors" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis tiles on plain underlays",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
+                underlayCandidates = (listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)).toSet()),
             "toa-map-floors" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut tiles, 29 exact overlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
                 keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true,
@@ -272,6 +289,9 @@ object OsrsRegionImportTool {
         val squareGroups: Map<Int, Pair<Int, Int>>,
     )
 
+    /** Replaced squares whose old loc file had no working key (written unencrypted; their key must be zeroed after apply). */
+    private val keylessReplaced = LinkedHashSet<Int>()
+
     fun mapName(square: Int) = "m${square ushr 8}_${square and 0xFF}"
 
     fun locName(square: Int) = "l${square ushr 8}_${square and 0xFF}"
@@ -299,6 +319,7 @@ object OsrsRegionImportTool {
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes and names")
         if (!batch.retileTargets) batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(batch.target(it)) }
+        keylessReplaced.forEach { setZeroKey(it) }
         if (!batch.tilesOnly && batch.locsOnlyWithout == null && !batch.retileTargets) appendAssetMap(name, batch, plan, tx.id)
     }
 
@@ -345,7 +366,13 @@ object OsrsRegionImportTool {
                     underlayMap.getOrPut(tileValue) {
                         forcedUnderlay[tileValue]?.let { return@getOrPut it + 1 }
                         val rgb = modernUnderlays[tileValue - 1]?.rgb ?: error("modern underlay ${tileValue - 1} missing")
-                        val candidates = if (batch.newUnderlaySlots != null) newUnderlays else localUnderlays
+                        val candidates = when {
+                            batch.newUnderlaySlots != null -> newUnderlays
+                            batch.underlayCandidates != null -> localUnderlays.filterKeys { it in batch.underlayCandidates }.also { m ->
+                                check(m.size == batch.underlayCandidates.size) { "underlay candidates missing: ${batch.underlayCandidates - m.keys}" }
+                            }
+                            else -> localUnderlays
+                        }
                         candidates.minByOrNull { Rev667FloorCodec.colourDistance(it.value, rgb) }!!.key + 1
                     }
                 /** New plain overlays (local id -> def) written by this batch ([Batch.newOverlaySlots]); OSRS tile value -> local id. */
@@ -532,6 +559,7 @@ object OsrsRegionImportTool {
 
                 // ---- the squares, on their own OSRS coordinates ----
                 val squareGroups = LinkedHashMap<Int, Pair<Int, Int>>()
+                keylessReplaced.clear()
                 regions.forEach { (square, region) ->
                     // Patch mode starts from our own square and only overwrites the rectangle.
                     val ownTiles = if (batch.patch != null) Rev667TileCodec.decode(maps.archive(mapName(square))!!.file(0)!!.data!!) else null
@@ -596,13 +624,25 @@ object OsrsRegionImportTool {
                     } else if (square in batch.replaceSquares) {
                         val key = localKeys[square]
                         val mapArchive = maps.archive(mapName(square))!!
-                        val locArchive = maps.archive(locName(square), key) ?: error("${locName(square)} missing or unreadable")
                         mapGroup = mapArchive.id
-                        locGroup = locArchive.id
                         val oldTiles = mapArchive.file(0)!!.data!!
-                        val oldLocs = locArchive.file(0)!!.data!!
                         mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)} (replaces rev-667 filler)", CacheItemProbeTool.sha1(oldTiles))
-                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (replaces rev-667 filler, own key)", CacheItemProbeTool.sha1(oldLocs), xtea = key)
+                        val locArchive = try { maps.archive(locName(square), key) } catch (e: Exception) { null }
+                        val oldLocs = try { locArchive?.file(0)?.data } catch (e: Exception) { null }
+                        if (oldLocs != null) {
+                            locGroup = locArchive!!.id
+                            mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (replaces rev-667 filler, own key)", CacheItemProbeTool.sha1(oldLocs), xtea = key)
+                        } else {
+                            // N462 Necropolis: a loc file without a (working) key - the client and server cannot read it today. Same route as
+                            // KeylessMapLocRepairTool (N10): pin the STORED container, write the new loc file unencrypted; the square's key
+                            // becomes 0,0,0,0 after apply (keylessReplaced).
+                            locGroup = maps.archives().firstOrNull { it.hashName == locName(square).hashCode() }?.id ?: error("${locName(square)} missing")
+                            val stored = maps.readArchiveSector(locGroup)?.data ?: error("${locName(square)} has no stored container")
+                            mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (replaces an unreadable rev-667 loc file, now unencrypted)",
+                                undecodableCurrentSha1 = CacheItemProbeTool.sha1(stored))
+                            keylessReplaced += square
+                            println("KEYLESS ${locName(square)}: rev-667 loc file unreadable with ${if (key == null) "no key" else "its key"} - replaced unencrypted")
+                        }
                     } else {
                         val t = batch.target(square)
                         mapGroup = nextGroup++
@@ -631,6 +671,20 @@ object OsrsRegionImportTool {
                 library.close()
             }
         }
+    }
+
+    /** Like [zeroXteaKey], but also overwrites an existing (wrong) key with 0,0,0,0. */
+    private fun setZeroKey(square: Int) {
+        val file = File(FeroxImportTool.XTEAS_FILE)
+        val root = JsonParser().parse(file.readText()).asJsonArray
+        val entry = root.firstOrNull { it.asJsonObject.get("mapsquare").asInt == square }?.asJsonObject
+        if (entry == null) {
+            zeroXteaKey(square)
+            return
+        }
+        entry.add("key", JsonArray().apply { repeat(4) { add(0) } })
+        file.writeText(GsonBuilder().setPrettyPrinting().create().toJson(root))
+        println("XTEAS key of $square set to 0,0,0,0 (its loc file is unencrypted now)")
     }
 
     private fun zeroXteaKey(square: Int) {
