@@ -207,6 +207,107 @@ class InteractionApproachLoopTests {
         report(failures)
     }
 
+    /** Breaktest: a wall between them - both players walk round it to the free side and meet, no loop at the corner. */
+    @Test
+    fun `two players on either side of a wall meet round its end`() {
+        val failures = mutableListOf<String>()
+        // A wall 5 tiles long between z=0 and z=1 (x 0..4); the players stand on both sides of its middle.
+        val wall = (0..4).map { ARENA.transform(it, 0) }
+        walls(wall, add = true)
+        try {
+            for (bFirst in listOf(false, true)) for (run in listOf(false, true)) for (option in listOf("attack", "trade")) {
+                val b0 = if (bFirst) player("wb", ARENA.transform(2, 1), run) else null
+                val a = player("wa", ARENA.transform(2, 0), run)
+                val b = b0 ?: player("wb", ARENA.transform(2, 1), run)
+                val r =
+                    if (option == "attack") {
+                        a.attack(b)
+                        b.attack(a)
+                        settle(a, b, 14)
+                    } else {
+                        clickPlayer(a, b)
+                        clickPlayer(b, a)
+                        interactionEnds(listOf(a to b, b to a), 14)
+                    }
+                if (r != null) failures += "$option bFirst=$bFirst run=$run: $r"
+                reset()
+            }
+        } finally {
+            walls(wall, add = false)
+        }
+        report(failures)
+    }
+
+    /**
+     * Breaktest: three npcs stand round the target. A player is not blocked by npc bodies (osrs-docs Entity Collision: only npcs check
+     * the entity flags), so he may end on any side - also on another npc - as long as he ends beside the target without a loop.
+     */
+    @Test
+    fun `attacking an npc surrounded by other npcs ends beside it`() {
+        val failures = mutableListOf<String>()
+        for (run in listOf(false, true)) for ((dx, dz) in listOf(0 to 4, 4 to 0, -3 to -3)) {
+            val target = spawnNpc(1)
+            listOf(1 to 0, -1 to 0, 0 to 1).forEach { (x, z) -> spawnNpcAt(1, ARENA.transform(x, z)) }
+            val p = player("cr", ARENA.transform(dx, dz), run)
+            p.attack(target)
+            val r = settle(p, target, 16)
+            if (r != null) failures += "run=$run start ($dx,$dz): $r"
+            reset()
+        }
+        report(failures)
+    }
+
+    /** Breaktest: a 3x3 npc stands on the player - the player steps out from under it and fights beside it. */
+    @Test
+    fun `a player under a big npc steps out and fights beside it`() {
+        val failures = mutableListOf<String>()
+        for (run in listOf(false, true)) for ((dx, dz) in listOf(1 to 1, 0 to 0, 2 to 1)) {
+            val npc = spawnNpc(3)
+            val p = player("un", ARENA.transform(dx, dz), run)
+            p.attack(npc)
+            val r = settle(p, npc, 10)
+            if (r != null) failures += "run=$run under at ($dx,$dz): $r"
+            reset()
+        }
+        report(failures)
+    }
+
+    /** Follow is no approach: a mutual Follow may dance (OSRS Wiki "Double follow") but stays close and never throws. */
+    @Test
+    fun `a mutual Follow stays close together`() {
+        val a = player("fa", ARENA, false)
+        val b = player("fb", ARENA.transform(3, 2), false)
+        // following.plugin.kts is not loaded here: its cycle is a plain walk to the tile behind the target, every tick.
+        repeat(20) {
+            if (!a.hasMoveDestination()) a.walkTo(b.tile.transform(-b.faceDirection.getDeltaX(), -b.faceDirection.getDeltaZ()))
+            if (!b.hasMoveDestination()) b.walkTo(a.tile.transform(-a.faceDirection.getDeltaX(), -a.faceDirection.getDeltaZ()))
+            tick(1)
+        }
+        assertTrue("a Follow walk is no approach", a.approach == null && b.approach == null)
+        val gap = maxOf(Math.abs(a.tile.x - b.tile.x), Math.abs(a.tile.z - b.tile.z))
+        assertTrue("mutual Follow stays within 2 tiles (was $gap: ${a.tile} / ${b.tile})", gap <= 2)
+    }
+
+    private fun walls(
+        tiles: List<Tile>,
+        add: Boolean,
+    ) {
+        val update = gg.rsmod.game.model.collision.CollisionUpdate.Builder()
+        update.setType(if (add) gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD else gg.rsmod.game.model.collision.CollisionUpdate.Type.REMOVE)
+        tiles.forEach { update.putTile(it, false, gg.rsmod.game.model.Direction.NORTH) }
+        tiles.forEach { update.putTile(it.transform(0, 1), false, gg.rsmod.game.model.Direction.SOUTH) }
+        world.collision.applyUpdate(update.build())
+    }
+
+    private fun spawnNpcAt(
+        size: Int,
+        at: Tile,
+    ): Npc {
+        val npc = Npc(ids.getValue(size), at, world)
+        assertTrue("npc spawned", world.spawn(npc))
+        npcs += npc
+        return npc
+    }
     // --- harness -------------------------------------------------------------------------------------------------------------
 
     private var follower: Pair<Client, Npc>? = null
