@@ -322,11 +322,6 @@ object PawnPathAction {
             return false
         }
 
-        if (holdsForApproachingPlayer(pawn, target)) {
-            pawn.stopMovement()
-            return reachedMovingTarget(pawn, target, interactionRange, lineOfSight || projectile)
-        }
-
         if (frozen) {
             // A frozen pawn cannot walk, so it attacks only when the target is in reach from where it stands. Conformance
             // run 2026-09-29 (equipment reach): the melee branch passed the attack range as the TARGET SIZE to bordering()
@@ -386,6 +381,9 @@ object PawnPathAction {
                 MovementQueue.StepType.NORMAL
             }
         pawn.walkPath(route.path, stepType, detectCollision = true)
+        if (pawn.movementQueue.hasDestination()) {
+            pawn.approach = Approach(WeakReference(target), interactionRange, lineOfSight || projectile, Tile(targetTile), stepType)
+        }
 
         if (pawn.hasLineOfSightTo(target, true, interactionRange) && projectile) {
             return route.success
@@ -397,10 +395,6 @@ object PawnPathAction {
         var lastTile = pawn.tile
         var stalled = 0
         while (!pawn.tile.sameAs(route.tail)) {
-            if (holdsForApproachingPlayer(pawn, target)) {
-                pawn.stopMovement()
-                return reachedMovingTarget(pawn, target, reach?.invoke() ?: interactionRange, lineOfSight || projectile)
-            }
             if (!targetTile.sameAs(target.tile)) {
                 // N214: a moving target that came into reach is reached - routing again to its new tile chased a follower that
                 // was already beside the player (pet and owner walking towards each other).
@@ -502,25 +496,86 @@ object PawnPathAction {
     }
 
     /**
-     * N448 (owner 2026-10-30, Pest Control: "pathing issues met t attacken van npcs creert een lus"): every queue of a tick runs
-     * before anyone moves (QueueHandlerTask, then the player and npc cycles), so an npc and the player attacking it both step
-     * towards the other's OLD tile - from a diagonal they land diagonal again or on one tile, tick after tick (the diagonal dance;
-     * N245 had the same with a follower). OSRS processes the npc first and the player re-routes to its new tile. Here the npc holds
-     * while the player who is attacking or interacting with it (facing it) is already walking in within two tiles; the player then
-     * arrives beside it and the npc fights from where it stands. A player running away or standing still is chased as before.
+     * N245 / N448 / N417 (owner 2026-10-31 + 2026-11-06: "als je interact met een monster, npc of player dansen ze soort van een lus"):
+     * what a pawn's queued steps walk to. Every queue of a tick runs before anyone moves (QueueHandlerTask, then the player and npc
+     * cycles; players move before npcs), so two pawns walking to each other both planned against the OTHER's old tile: from a
+     * diagonal they swapped corners for ever (two players: Attack, Trade, Talk-to ... - InteractionApproachLoopTests), two players
+     * landed on one tile and walked off side by side, and a follower stepped onto the tile its owner had just walked onto.
+     * OSRS checks an interaction right before a pawn moves, against where the target stands at that moment (osrs-docs Entity
+     * Interactions; rsmod PlayerInteractionProcessor pre/post-movement check): [beforeStep] does that for every approach - in reach
+     * now = no step; target moved since the route was planned (or the next step lands in its body) = route again to where it
+     * stands now. The second of the two to move then sees the first one's new tile, and the approach ends beside the other.
+     * Follow is not an approach (following.plugin.kts): a mutual Follow may still dance as in OSRS (Wiki Pathfinding "Double follow").
      */
-    fun holdsForApproachingPlayer(
-        pawn: Pawn,
-        target: Pawn,
-    ): Boolean {
-        if (pawn !is gg.rsmod.game.model.entity.Npc || target !is Player) return false
-        if (target.attr[FACING_PAWN_ATTR]?.get() != pawn || !target.hasMoveDestination()) return false
-        if (pawn.tile.height != target.tile.height) return false
-        val s = pawn.tile
-        val t = target.tile
-        val dx = maxOf(0, t.x - (s.x + pawn.getSize() - 1), s.x - (t.x + target.getSize() - 1))
-        val dz = maxOf(0, t.z - (s.z + pawn.getSize() - 1), s.z - (t.z + target.getSize() - 1))
-        return maxOf(dx, dz) <= 2
+    class Approach(
+        val target: WeakReference<Pawn>,
+        val range: Int,
+        val lineOfSight: Boolean,
+        val plannedTargetTile: Tile,
+        val stepType: MovementQueue.StepType,
+        /** A follower (Familiar.follow): breadth-first search, at most [maxSteps] steps and never into the owner's body. */
+        val follower: Boolean = false,
+        val maxSteps: Int = Int.MAX_VALUE,
+    )
+
+    /** Called by [MovementQueue.cycle] right before [pawn] moves, while it has an [Pawn.approach]. */
+    fun beforeStep(pawn: Pawn) {
+        val a = pawn.approach ?: return
+        val target = a.target.get()
+        if (target == null || target.tile.height != pawn.tile.height || (target is Npc && !target.isSpawned()) ||
+            (target is Player && !target.isOnline)
+        ) {
+            pawn.approach = null
+            return
+        }
+        val ps = pawn.getSize()
+        val ts = target.getSize()
+        val overlapping = overlap(pawn.tile, ps, target.tile, ts)
+        val hasSteps = pawn.movementQueue.hasDestination()
+        if (!overlapping && reachedMovingTarget(pawn, target, a.range, a.lineOfSight)) {
+            // In reach where both stand now: no step this tick (the waiting interaction / attack runs from here).
+            if (hasSteps) {
+                if (pawn is Player) pawn.write(SetMapFlagMessage(255, 255))
+                pawn.movementQueue.clear()
+            }
+            if (!a.follower) pawn.approach = null
+            return
+        }
+        val nextInBody = pawn.movementQueue.peekFirstStep()?.let { overlap(it.tile, ps, target.tile, ts) } == true
+        val moved = !target.tile.sameAs(a.plannedTargetTile)
+        if (!overlapping && !(hasSteps && (moved || nextInBody))) return
+        // Route again from here to where the target stands now, with the same request the approach was planned with.
+        val projectile = a.range > 2
+        val builder =
+            PathRequest
+                .Builder()
+                .setPoints(Tile(pawn.tile), Tile(target.tile))
+                .setSourceSize(ps, ps)
+                .setTargetSize(ts, ts)
+                .setProjectilePath(a.lineOfSight || projectile)
+                .setTouchRadius(a.range)
+                .clipPathNodes(node = true, link = true)
+        if (!a.lineOfSight && !projectile) builder.clipDiagonalTiles()
+        builder.clipOverlapTiles()
+        val strategy =
+            if (a.follower) {
+                gg.rsmod.game.model.path.strategy.BFSPathFindingStrategy(pawn.world.collision)
+            } else {
+                pawn.createPathFindingStrategy()
+            }
+        val route = strategy.calculateRoute(builder.build())
+        var path = route.path.toList()
+        if (a.follower) {
+            path = path.dropLastWhile { step -> overlap(step, ps, target.tile, ts) }.take(a.maxSteps)
+        }
+        pawn.movementQueue.clear()
+        if (path.isEmpty()) {
+            if (pawn is Player) pawn.write(SetMapFlagMessage(255, 255))
+            if (!a.follower) pawn.approach = null
+            return
+        }
+        pawn.walkPath(java.util.ArrayDeque(path), a.stepType, detectCollision = true)
+        pawn.approach = Approach(a.target, a.range, a.lineOfSight, Tile(target.tile), a.stepType, a.follower, a.maxSteps)
     }
 
     private fun overlap(

@@ -127,6 +127,13 @@ abstract class Pawn(
     var lastStepCycle = Int.MIN_VALUE / 2
 
     /**
+     * N245/N448: the pawn whose edge (or reach) this pawn's queued steps walk to - set by [gg.rsmod.game.action.PawnPathAction.walkTo]
+     * and a follower's route, dropped by any other path, [stopMovement] and a teleport. Checked right before the pawn moves
+     * ([gg.rsmod.game.action.PawnPathAction.beforeStep]): in reach = stop, target moved = route again to where it stands NOW.
+     */
+    var approach: gg.rsmod.game.action.PawnPathAction.Approach? = null
+
+    /**
      * The last [Direction] this pawn was facing.
      */
     internal var lastFacingDirection: Direction = Direction.SOUTH
@@ -322,6 +329,7 @@ abstract class Pawn(
             write(SetMapFlagMessage(255, 255))
         }
         movementQueue.clear()
+        approach = null
     }
 
     fun getCentreTile(): Tile = tile.transform(getSize() shr 1, getSize() shr 1)
@@ -577,6 +585,7 @@ abstract class Pawn(
         stepType: MovementQueue.StepType,
         detectCollision: Boolean,
     ) {
+        approach = null
         if (path.isEmpty()) {
             if (this is Player) {
                 write(SetMapFlagMessage(255, 255))
@@ -762,6 +771,7 @@ abstract class Pawn(
         blockBuffer.teleport = true
         tile = Tile(x, z, height)
         movementQueue.clear()
+        approach = null
         (this as? Npc)?.reRegisterChunk()
     }
 
@@ -782,6 +792,7 @@ abstract class Pawn(
         blockBuffer.teleport = !tile.isWithinRadius(x, z, height, Player.NORMAL_VIEW_DISTANCE)
         tile = Tile(x, z, height)
         movementQueue.clear()
+        approach = null
         (this as? Npc)?.reRegisterChunk()
         addMovementBlocks()
         traceArrival(from, "moveTo")

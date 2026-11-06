@@ -444,6 +444,36 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->
         if (p.gameSystem.inject(msg)) "clicked option $slot of npc $id#${target.index} at ${target.tile.x},${target.tile.z} for ${p.username}" else "no handler"
     }
 }
+// `opplayer <name> <option text> <other>` (N245 pathing loop): a player option (Trade with, Attack, Follow, ...) on another player through
+// the real handler path, found by its menu text; `pairpos <a> <b>`: the tick and both tiles in one line, for a tick-by-tick poll.
+gg.rsmod.game.CommandServerCommands.handlers["opplayer"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val text = a.getOrNull(1)?.replace("_", " ")
+    val other = w.getPlayerForName(a.getOrNull(2)?.replace("_", " ") ?: "")
+    val slot = if (p != null && text != null) p.options.indexOfFirst { it != null && it.equals(text, ignoreCase = true) } + 1 else 0
+    if (p == null || other == null || slot <= 0) {
+        "usage: opplayer <name> <option text> <other> (options: ${p?.options?.filterNotNull()?.joinToString(",")})"
+    } else {
+        val msg =
+            when (slot) {
+                1 -> gg.rsmod.game.message.impl.OpPlayer1Message(other.index)
+                2 -> gg.rsmod.game.message.impl.OpPlayer2Message(other.index)
+                3 -> gg.rsmod.game.message.impl.OpPlayer3Message(other.index)
+                4 -> gg.rsmod.game.message.impl.OpPlayer4Message(other.index)
+                5 -> gg.rsmod.game.message.impl.OpPlayer5Message(other.index)
+                6 -> gg.rsmod.game.message.impl.OpPlayer6Message(other.index)
+                7 -> gg.rsmod.game.message.impl.OpPlayer7Message(other.index)
+                8 -> gg.rsmod.game.message.impl.OpPlayer8Message(other.index)
+                else -> gg.rsmod.game.message.impl.OpPlayer9Message(other.index)
+            }
+        if (p.gameSystem.inject(msg)) "clicked '$text' (option $slot) on ${other.username} for ${p.username}" else "no handler"
+    }
+}
+gg.rsmod.game.CommandServerCommands.handlers["pairpos"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val o = w.getPlayerForName(a.getOrNull(1)?.replace("_", " ") ?: "")
+    if (p == null || o == null) "usage: pairpos <a> <b>" else "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} ${o.username}@${o.tile.x},${o.tile.z}"
+}
 // `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
 gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client

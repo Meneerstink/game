@@ -90,6 +90,8 @@ class MovementQueue(
     }
 
     fun cycle() {
+        // N245/N448: an approach is checked against where its target stands NOW (it may have moved earlier this tick).
+        if (pawn.approach != null) gg.rsmod.game.action.PawnPathAction.beforeStep(pawn)
         var next = steps.poll()
         if (next != null) {
             var tile = pawn.tile

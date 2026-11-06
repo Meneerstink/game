@@ -383,6 +383,12 @@ object ObjectPathAction {
 
         val last = pawn.movementQueue.peekLast()
 
+        // N245 (GPT-A onderzoek C3): the mover clears the queue when a step is refused (a MoveGate, a barricade or door that
+        // changed after the route was planned); the pawn then never reaches [last] and this loop waited for it for ever. Stop
+        // waiting once nothing is left to walk and the pawn has stood still for PawnPathAction.STALL_TICKS ticks.
+        var stalled = 0
+        var lastTile = pawn.tile
+        var blocked = false
         while (last != null &&
             !pawn.tile.sameAs(last) &&
             !pawn.timers.has(FROZEN_TIMER) &&
@@ -390,6 +396,15 @@ object ObjectPathAction {
             pawn.lock.canMove()
         ) {
             wait(1)
+            if (pawn.tile.sameAs(lastTile)) {
+                if (++stalled >= PawnPathAction.STALL_TICKS && !pawn.hasMoveDestination()) {
+                    blocked = true
+                    break
+                }
+            } else {
+                stalled = 0
+                lastTile = pawn.tile
+            }
         }
 
         if (pawn.timers.has(STUN_TIMER)) {
@@ -410,6 +425,9 @@ object ObjectPathAction {
             }
             return Route(route.path, success = true, tail = route.tail)
         }
+
+        // Stopped short of the planned tile: not there (the caller says it cannot reach it instead of using it from afar).
+        if (blocked) return Route(ArrayDeque(), success = false, tail = pawn.tile)
 
         return route
     }

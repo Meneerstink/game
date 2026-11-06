@@ -70,10 +70,17 @@ object GroundItemPathAction {
             p.writeMessage(Entity.YOU_CANT_REACH_THAT)
             return
         }
+        // N245 (GPT-A onderzoek C3): a refused step clears the queue and the player never reaches [destination]; this loop waited
+        // for it for ever. After PawnPathAction.STALL_TICKS ticks standing still with nothing left to walk it decides from here.
+        var stalled = 0
+        var lastTile = p.tile
         while (true) {
             if (!p.tile.sameAs(destination) && opt != SPELL_ON_GROUND_ITEM_OPTION) {
-                wait(1)
-                continue
+                if (p.tile.sameAs(lastTile)) stalled++ else { stalled = 0; lastTile = p.tile }
+                if (stalled <= PawnPathAction.STALL_TICKS || p.hasMoveDestination()) {
+                    wait(1)
+                    continue
+                }
             }
             if (opt == SPELL_ON_GROUND_ITEM_OPTION && !p.tile.isWithinRadius(destination, 10)) {
                 wait(1)

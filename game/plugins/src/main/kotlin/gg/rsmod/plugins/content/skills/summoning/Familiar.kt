@@ -945,7 +945,10 @@ object Familiar {
         // target is explicitly cleared here so a familiar cannot remain in a permanent idle
         // state because its combat lock outlived the target.
         val combatTarget = npc.getCombatTarget()
-        if (combatTarget?.isAlive() == true) return
+        if (combatTarget?.isAlive() == true) {
+            npc.approach?.takeIf { it.follower }?.let { npc.approach = null }
+            return
+        }
         if (combatTarget != null) {
             npc.removeCombatTarget()
             npc.resetFacePawn()
@@ -967,22 +970,14 @@ object Familiar {
          *    owner cannot be reached (moveNear), which the search's partial route is.
          */
         npc.attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] = true
-        // N245 (owner 2026-10-23: Talk-to / Pick-up on a pet - "blijven naar elkaar toe lopen"): while the owner walks to interact
-        // with this follower, the follower waits. Both aimed for a shared edge with the other in the same tick, so from a diagonal
-        // they stepped round each other (and again, every tick). PawnPathAction.walk faces the target first, so the owner's face
-        // target plus a walk in progress is "coming to me".
-        val ownerFacing = (player.attr[gg.rsmod.game.model.attr.FACING_PAWN_ATTR] as? java.lang.ref.WeakReference<*>)?.get()
-        if (ownerFacing === npc && player.hasMoveDestination()) {
-            npc.movementQueue.clear()
-            npc.facePawn(player)
-            return
-        }
         val target = player.tile
         if (gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
                 npc.world.collision, npc.tile, npc.getSize(), npc.getSize(), target, player.getSize(), player.getSize(),
             )
         ) {
             npc.facePawn(player)
+            // N245: the owner may still walk onto it this tick - the follower then steps out of him (PawnPathAction.beforeStep).
+            npc.approach = followApproach(player, npc, target, MovementQueue.StepType.FORCED_WALK, 1)
             return
         }
         val request =
@@ -1012,9 +1007,23 @@ object Familiar {
         } else {
             val stepType = if (steps.size >= 2) MovementQueue.StepType.FORCED_RUN else MovementQueue.StepType.FORCED_WALK
             npc.walkPath(java.util.ArrayDeque(steps), stepType = stepType, detectCollision = true)
+            // N245 (conformance 'walk: never on the owner's tile', bull ant / desert wyrm / evil turnip / spirit mosquito): the
+            // route aims at the owner's tile from the START of the tick, but the owner moves first - checked again right before the
+            // follower moves, against where he stands then (PawnPathAction.beforeStep): beside him = no step, else a new route there.
+            npc.approach = followApproach(player, npc, target, stepType, steps.size)
         }
         npc.facePawn(player)
     }
+
+    private fun followApproach(
+        player: Player,
+        npc: Npc,
+        ownerTile: Tile,
+        stepType: MovementQueue.StepType,
+        maxSteps: Int,
+    ) = gg.rsmod.game.action.PawnPathAction.Approach(
+        java.lang.ref.WeakReference(player), 1, false, Tile(ownerTile), stepType, follower = true, maxSteps = maxSteps,
+    )
 
     /**
      * Whether a familiar of [npcSize] with its south-west corner on [npcTile] is already standing
