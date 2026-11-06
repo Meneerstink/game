@@ -335,6 +335,7 @@ fun Pawn.dealHit(
         }
     // OSRS hitsplats (owner 2026-10-09): the attacker sees its own hit lit and, from a player, the max splat at its max hit.
     hit.source = this
+    hit.sourceCombatClass = curseHitStyle
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
     val pawnHit = PawnHit(hit, executeHit)

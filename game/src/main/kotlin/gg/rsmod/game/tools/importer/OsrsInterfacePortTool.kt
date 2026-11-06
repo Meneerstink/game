@@ -100,7 +100,7 @@ object OsrsInterfacePortTool {
             3 -> { o.p4(c.colour); o.p1(if (c.filled) 1 else 0); o.p1(c.opacity) }
             9 -> { o.p1(c.lineWidth); o.p4(c.colour); o.p1(0) }
             6 -> {
-                o.p2(if (c.model < 0) 65535 else c.model); o.p1(if (c.ortho) 1 else 0)
+                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } }); o.p1(if (c.ortho) 1 else 0)
                 o.p2(c.originX); o.p2(c.originY); o.p2(c.xan); o.p2(c.yan); o.p2(c.zan); o.p2(c.zoom); o.p2(65535)
                 if (c.wMode != 0) o.p2(0)
                 if (c.hMode != 0) o.p2(0)
@@ -194,7 +194,11 @@ object OsrsInterfacePortTool {
                     i(n, "hidden") != 0, ops = ops, colour = i(n, "colour"), lineWidth = i(n, "lineWidth", 1).coerceAtLeast(1))
                 6 -> {
                     val osrsModel = i(n, "model", -1)
-                    val local = if (osrsModel >= 0) localModel(osrsModel) else null
+                    val imported = if (osrsModel >= 0) localModel(osrsModel) else null
+                    // N462: a 667 interface component carries its model as u16 (client Component decoder); a model in archive 37
+                    // (id above 0xFFFF) cannot be addressed there, so it is reported like a missing import instead of truncated.
+                    val local = imported?.takeIf { !ModelArchive.isWide(it) }
+                    if (imported != null && local == null) reports += "$group:$id model $osrsModel -> local $imported is in archive 37 (u16 interface field)"
                     if (local == null) common(0).also { reports += "$group:$id model $osrsModel not imported -> empty layer" }
                     else C(id, 6, i(n, "x"), i(n, "y"), i(n, "width"), i(n, "height"), parent, i(n, "widthMode"), i(n, "heightMode"), i(n, "xMode"),
                         i(n, "yMode"), i(n, "hidden") != 0, ops = ops, opBase = n["name"]?.asText().orEmpty(), model = local,

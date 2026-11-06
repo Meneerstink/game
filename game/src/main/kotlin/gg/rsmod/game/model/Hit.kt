@@ -54,6 +54,9 @@ class Hit private constructor(
     /** The source's max hit for this attack (-1 = unknown): a player source shows the max splat at max(10, this). */
     var sourceMaxHit: Int = -1
 
+    /** N462: the attack style this hit was launched with (dealHit), also for a miss - not the attacker's style at impact. */
+    var sourceCombatClass: gg.rsmod.game.model.combat.CombatClass? = null
+
     /** Damage at which the target and source see the [HitmarkGroup.max] splat; NPC or unknown sources never do. */
     fun maxHitThreshold(): Int {
         val player = source?.entityType?.isPlayer == true
