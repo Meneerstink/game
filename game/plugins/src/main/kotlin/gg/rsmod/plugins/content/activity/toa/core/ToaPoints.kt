@@ -37,6 +37,25 @@ enum class ToaPointSource(val multiplier: Double) {
     WARDENS_P2_AFTER_THIRD_DOWN(0.0),
     WARDENS_P3(2.5),
     CORE(0.0),
+    ;
+
+    companion object {
+        /** OSRS npc id -> source (RuneLite gameval NpcID names: TOA_PATH_APMEKEN_BABOON_* 11709-11718, TOA_BABA 11778, TOA_ZEBAK 11730/11732,
+         *  TOA_KEPHRI_SHIELD_SCARAB/GUARDIAN_*/SCARAB_RANGEKITE 11723-11727, TOA_HET_GOAL(_VULNERABLE) 11706/11707, WARDENS_P1/P2_OBELISK
+         *  11751/11752, TOA_WARDEN_*_PHASE2_* 11753-11758, *_PHASE3 11761/11762, TOA_WARDEN_*_CORE 11770/11771). */
+        fun of(osrsNpc: Int): ToaPointSource = when (osrsNpc) {
+            in 11709..11718 -> APMEKEN_BABOON
+            11778 -> BABA
+            11730, 11732 -> ZEBAK
+            in 11723..11727 -> KEPHRI_SCARAB
+            11706, 11707 -> HETS_SEAL
+            11751, 11752 -> OBELISK
+            in 11753..11758 -> WARDENS_P2
+            11761, 11762 -> WARDENS_P3
+            11770, 11771 -> CORE
+            else -> DEFAULT
+        }
+    }
 }
 
 /**
