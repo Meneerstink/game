@@ -163,8 +163,15 @@ object VenenatisCombat {
 
     fun living(npc: Npc): Int = spiderlings(npc).count { it.isSpawned() && !it.isDead() }
 
+    /**
+     * Living cap. Spindel 10. Venenatis 2: OSRS 25-03-2026 "Venenatis will now spawn slightly fewer spiderlings" gives no number,
+     * so the owner chose "maximaal 2" living at a time (N586, 2026-11-06 15:2x).
+     */
+    const val VENENATIS_MAX_LIVING = 2
+    const val SPINDEL_MAX_LIVING = 10
+
     fun spiderlingsToSummon(id: Int, alive: Int): Int =
-        if (id == SPINDEL) minOf(SPIDERLINGS, (10 - alive).coerceAtLeast(0)) else SPIDERLINGS
+        minOf(SPIDERLINGS, ((if (id == SPINDEL) SPINDEL_MAX_LIVING else VENENATIS_MAX_LIVING) - alive).coerceAtLeast(0))
 
     /** Wiki Strategies: the damaging web is a centred 7x5; the outside pieces are scenery. */
     fun inDamagingWeb(centre: Tile, tile: Tile): Boolean = tile.height == centre.height &&

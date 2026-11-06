@@ -314,6 +314,12 @@ class WildernessBossSpindelTests : WildernessBossContractTests(VenenatisCombat.S
         assertFalse(Combat.sameSide(f.npc(OldWildernessBosses.CALLISTO), f.npc(OldWildernessBosses.CALLISTO)))
         assertFalse(Combat.sameSide(f.player, spindel))
     }
+    @Test fun `Venenatis never has more than two living spiderlings`() {
+        assertEquals(2, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.NPC, 0))
+        assertEquals(1, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.NPC, 1))
+        assertEquals(0, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.NPC, 2))
+        assertEquals(0, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.NPC, 5))
+    }
     @Test fun `Spindel never exceeds ten spiderlings and her arena excludes the other boss and other floors`() {
         assertEquals(2, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.SPINDEL, 8))
         assertEquals(1, VenenatisCombat.spiderlingsToSummon(VenenatisCombat.SPINDEL, 9))
