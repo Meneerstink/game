@@ -357,6 +357,14 @@ task runOsrsLocMapDataTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsLocMapDataTool'
 }
 
+task runOsrsWristTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Fits every imported OSRS hands mesh outside the 667 skin forearm (OsrsWristFitTests, N565). ' +
+        'Usage: ./gradlew :game:runOsrsWristTool [--args="--apply"]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.OsrsWristTool'
+}
+
 task runWildernessWorldMapTool(type: JavaExec) {
     group = 'tools'
     description = 'Rebuilds the world-map main/area records of the Wilderness squares from the current landscape (N529). ' +
