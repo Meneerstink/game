@@ -210,6 +210,14 @@ task runRemovedContentCacheTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.RemovedContentCacheTool'
 }
 
+task runLocForceDecorTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N462: add rev-667 loc opcode 73 (forcedecor) to every loc type of an OSRS region import (they draw like OSRS with Ground decoration off). ' +
+        'Usage: --args="<import name> plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.LocForceDecorTool'
+}
+
 task runSkeletalSidecarExportTool(type: JavaExec) {
     group = 'tools'
     description = 'N462 skeletal client proof: export real OSRS rig/clip/skin sidecars of one npc (read-only on the OSRS cache). ' +

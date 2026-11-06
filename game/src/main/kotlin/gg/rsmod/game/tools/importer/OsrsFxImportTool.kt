@@ -230,6 +230,12 @@ object OsrsFxImportTool {
             // N523 step 1: the animated locs of the Theatre of Blood area (OsrsRegionImportTool 'tob-area'): gameval AnimationID FIRE 475,
             // DS2_LITHKREN_BARRIER_GLOW 7929, TOB_BLOAT_CHAMBER_IDLE 8086, TOB_BLOAT_SWINGING_CHAIN 8087, HAZARDOUS_WATER_CURSED_* 13516/13518/13521.
             "tob-area-seq" to listOf(475, 7929, 8086, 8087, 13516, 13518, 13521),
+            // N462 ToA map: the animated locs of the raid block + lobby (OsrsRegionImportTool 'toa-raid' / 'toa-lobby'), all classic (no
+            // animaya): gameval AnimationID WILLOWTHEWISP 1071, _100GUIDE_SPOTLIGHT 3445, LUNAR_DREAM_DREAM_LIGHT_SHIMMER 3542,
+            // UNICORN_REWORK_READY 6374, GATEWAY_TOMB01_BARRIER01_IDLE01 9495, WALLKIT_TOMB_MONKEY01_BLINK01 9497, TOA_DUST_FALLING 9498,
+            // POTTERY_TOMB_BOBBING01 9499, WALLKIT_TOMB_CROCODILE01_IDLE01 9500, TOA_TELEPORTER_IDLE 9501, TOA_PILLAR_IDLE 9503,
+            // TOA_OSMUMTEN_CHEST_CLOSED 9504, CRONDIS_SPEAR_TRAP_IDLE 9562, TOA_WARDENS_DEBRIS_FLOATING 9712, FX_FIRE01_IDLE 9808.
+            "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL

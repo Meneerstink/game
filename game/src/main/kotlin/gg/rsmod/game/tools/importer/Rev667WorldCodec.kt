@@ -267,6 +267,9 @@ class Rev667LocType(val id: Int) {
     var mapElement = -1
     val allModels: List<Int> get() = modelsByShape.values.flatten()
 
+    /** Every opcode [decode] read, in order (LocForceDecorTool: is op 73 forcedecor already there). */
+    val opcodes = mutableListOf<Int>()
+
     companion object {
         fun decode(
             id: Int,
@@ -277,6 +280,7 @@ class Rev667LocType(val id: Int) {
             while (true) {
                 val op = buf.u8()
                 if (op == 0) break
+                def.opcodes += op
                 when (op) {
                     1, 5 -> {
                         // Opcode 5 carries two shape/model lists (main + low-detail), exactly as the

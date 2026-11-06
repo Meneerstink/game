@@ -64,7 +64,51 @@ object OsrsRegionImportTool {
         val overlayOverrides: Map<Int, Int> = emptyMap(),
         /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
         val excludeOsrsLocs: Set<Int> = emptySet(),
+        /**
+         * N462 ToA (2026-11-06): write every square this many squares (dx, dz) away from its OSRS position - a whole block moves by one
+         * offset, so squares keep their OSRS neighbours and every coordinate inside stays OSRS + (64*dx, 64*dz). For OSRS squares whose
+         * own position is taken by rev-667 content in use (the ToA raid rooms sit on rev-667 dungeons). Null = OSRS position.
+         */
+        val squareOffset: Pair<Int, Int>? = null,
+        /**
+         * N462 ToA (2026-11-06): an untextured OSRS overlay only maps onto an untextured rev-667 overlay (the nearest-colour match
+         * ignores textures and gave the ToA lobby's plain stone floors rev-667 textures 3/17/508/514/598...). Textured OSRS overlays keep
+         * the normal match. Off for the older batches so their re-runs stay byte-equal.
+         */
+        val plainOverlaysStayPlain: Boolean = false,
+        /** Squares of a [squareOffset] batch that stay on their OSRS position (the ToA lobby next to the moved raid block). */
+        val keepInPlace: Set<Int> = emptySet(),
+        /**
+         * N462 ToA: rev-667 overlay ids (a tile stores the overlay in ONE byte, so ids stop at 254) that get plain overlay definitions
+         * with the exact OSRS colour - given to the OSRS overlays whose best plain rev-667 match is worst, weighted by the number of tiles
+         * that use them. Every other OSRS overlay maps onto the best plain one (old or new). A slot is either free, or an existing
+         * definition that NO tile of any map square outside this batch's own target squares uses (checked over every square at plan
+         * time; the replace is pinned on its current bytes).
+         */
+        val newOverlaySlots: List<Int>? = null,
+        /**
+         * Second pass of a [squareOffset] batch that already exists: rewrite only the tile files of the target squares (+ the overlay
+         * definitions of [newOverlaySlots]); loc files, loc types and models stay as the first pass wrote them.
+         */
+        val retileTargets: Boolean = false,
+        /**
+         * N462 ToA: rev-667 underlay ids (tile value = opcode - 81, so definitions stop at 173) that get PLAIN underlay definitions with the
+         * exact OSRS colour. Every rev-667 underlay carries a texture (opcode 2) while OSRS underlays are plain colour - the ToA floors
+         * came out mottled and dark. Given to the OSRS underlays with the most tiles; the rest maps onto the nearest of those plain ones
+         * (never onto a textured rev-667 one). Same free/unused proof as [newOverlaySlots].
+         */
+        val newUnderlaySlots: List<Int>? = null,
     ) {
+        init {
+            require(squareOffset == null || (replaceSquares.isEmpty() && patch == null && locsOnlyWithout == null && !tilesOnly)) {
+                "squareOffset only creates new squares"
+            }
+        }
+
+        /** Where OSRS square [square] is written. */
+        fun target(square: Int): Int =
+            squareOffset?.takeIf { square !in keepInPlace }?.let { (dx, dz) -> (((square ushr 8) + dx) shl 8) or ((square and 0xFF) + dz) } ?: square
+
         fun inPatch(square: Int, lx: Int, lz: Int): Boolean {
             val p = patch ?: return true
             val x = (square ushr 8) * 64 + lx
@@ -120,6 +164,29 @@ object OsrsRegionImportTool {
             "tob-area-tiles" to Batch(listOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), emptyList(), "Theatre of Blood tiles without flag 0x8",
                 replaceSquares = setOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), clearTileFlags = 0x8, tilesOnly = true),
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
+            // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
+            // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
+            // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667
+            // dungeons in use, so the whole block moves +9,+24 squares to the free bank 64..70 x 104..108 (border 63..71 x 103..109 free in
+            // both caches, no code or spawns there). Lessons N522/N523: OSRS tile flag 0x8 = 'do not draw' in rev 667, hidden overlays out.
+            "toa-map" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
+                "Tombs of Amascut lobby (in place) + raid rooms (moved +9,+24)", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
+                keepInPlace = setOf(13454), plainOverlaysStayPlain = true, newOverlaySlots = (245..254).toList()),
+            // Second pass (owner 'kwaliteitswerk'): 10 slots left ~1067 of 4275 overlay tiles visibly off (testclient: grey-brown sand in the
+            // Zebak room). 19 rev-667 overlay definitions are used by NO tile of any of our 2267 map squares (census 2026-11-06): 16 17 23 27
+            // 31 40 45 46 66 127 129 147 157 174 175 181 183 226 237 - reused (the tool re-checks that), so 29 exact OSRS colours in total.
+            "toa-map-floors" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
+                "Tombs of Amascut tiles, 29 exact overlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
+                keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true,
+                newOverlaySlots = listOf(16, 17, 23, 27, 31, 40, 45, 46, 66, 127, 129, 147, 157, 174, 175, 181, 183, 226, 237) + (245..254),
+                // underlay census 2026-11-06: definitions no tile of another square uses (2 39 40 42 82 131 132 135 141 151 152 153) + the free
+                // 166..173 (a tile stores underlay = opcode - 81, so 173 is the last one)
+                newUnderlaySlots = listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)),
+            "toa-raid" to Batch(listOf(14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
+                "Tombs of Amascut raid rooms", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24, plainOverlaysStayPlain = true),
+            // The ToA lobby (Osmumten's tomb entrance hall, Grouping Obelisk 46068, Invocation Board 46073): OSRS 13454 = 52_142, absent in
+            // both rev-667 caches - same coordinates.
+            "toa-lobby" to Batch(listOf(13454), emptyList(), "Tombs of Amascut lobby", clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true),
             // N541 (owner 2026-11-04: Krystilia must be reachable; the jail roof never hid): the Edgeville jail, OSRS Wiki Krystilia
             // "found in Edgeville's jail north-east of the bank" (3109,3516). Our square 12342 holds the bank and home content, so
             // only the jail rectangle is patched (the rev-667 building was a closed block: every tile unwalkable, no roof flag).
@@ -231,8 +298,8 @@ object OsrsRegionImportTool {
         verify.forEach { println("VERIFY_ERROR: $it") }
         check(verify.isEmpty()) { "Post-apply verification failed; see journal ${tx.id} for rollback." }
         println("VERIFY_OK both targets hold intended bytes and names")
-        batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(it) }
-        if (!batch.tilesOnly && batch.locsOnlyWithout == null) appendAssetMap(name, batch, plan, tx.id)
+        if (!batch.retileTargets) batch.squares.filterNot { it in batch.replaceSquares }.forEach { zeroXteaKey(batch.target(it)) }
+        if (!batch.tilesOnly && batch.locsOnlyWithout == null && !batch.retileTargets) appendAssetMap(name, batch, plan, tx.id)
     }
 
     fun buildPlan(
@@ -249,11 +316,15 @@ object OsrsRegionImportTool {
                 val maps = library.index(FeroxImportTool.MAP_INDEX)
                 val localKeys = Rev667RegionProbeTool.loadKeys(File(FeroxImportTool.XTEAS_FILE))
                 batch.squares.forEach { square ->
-                    if (square in batch.replaceSquares) {
+                    if (batch.retileTargets) {
+                        val t = batch.target(square)
+                        check(maps.archive(mapName(t)) != null) { "${mapName(t)} missing; retileTargets only rewrites squares the first pass wrote" }
+                    } else if (square in batch.replaceSquares) {
                         check(maps.archive(mapName(square)) != null) { "${mapName(square)} missing; replaceSquares only overwrites existing squares" }
                     } else {
-                        check(maps.archive(mapName(square)) == null && maps.archive(locName(square)) == null) {
-                            "${mapName(square)} / ${locName(square)} already exist; this tool only fills empty squares"
+                        val t = batch.target(square)
+                        check(maps.archive(mapName(t)) == null && maps.archive(locName(t)) == null) {
+                            "${mapName(t)} / ${locName(t)} already exist; this tool only fills empty squares"
                         }
                     }
                 }
@@ -265,21 +336,152 @@ object OsrsRegionImportTool {
                 val localUnderlays = FeroxImportTool.decodeLocalFloors(library, Rev667RegionProbeTool.UNDERLAY_GROUP) { Rev667FloorCodec.decodeUnderlay(it).rgb }
                 val localOverlays = FeroxImportTool.decodeLocalFloors(library, Rev667RegionProbeTool.OVERLAY_GROUP) { Rev667FloorCodec.decodeOverlay(it) }
                 val underlayMap = HashMap<Int, Int>()
+                val overlayUse = HashMap<Int, Int>()
                 val overlayMap = HashMap<Int, Int>()
+                /** New plain underlays (local id -> rgb) written by this batch ([Batch.newUnderlaySlots]); OSRS tile value -> local id. */
+                val newUnderlays = LinkedHashMap<Int, Int>()
+                val forcedUnderlay = HashMap<Int, Int>()
                 fun mapUnderlay(tileValue: Int): Int =
                     underlayMap.getOrPut(tileValue) {
+                        forcedUnderlay[tileValue]?.let { return@getOrPut it + 1 }
                         val rgb = modernUnderlays[tileValue - 1]?.rgb ?: error("modern underlay ${tileValue - 1} missing")
-                        localUnderlays.minByOrNull { Rev667FloorCodec.colourDistance(it.value, rgb) }!!.key + 1
+                        val candidates = if (batch.newUnderlaySlots != null) newUnderlays else localUnderlays
+                        candidates.minByOrNull { Rev667FloorCodec.colourDistance(it.value, rgb) }!!.key + 1
                     }
+                /** New plain overlays (local id -> def) written by this batch ([Batch.newOverlaySlots]); OSRS tile value -> local id. */
+                val newOverlays = LinkedHashMap<Int, Rev667OverlayDef>()
+                val forcedOverlay = HashMap<Int, Int>()
+                val reusedSlots = batch.newOverlaySlots.orEmpty().toSet()
+                fun overlayCandidates(def: ModernOverlayDef): Map<Int, Rev667OverlayDef> {
+                    // a slot being (re)written must not be matched with its old definition
+                    val all = localOverlays.filterKeys { it !in reusedSlots } + newOverlays
+                    return if (batch.plainOverlaysStayPlain && def.texture == -1) all.filterValues { it.texture == -1 }.ifEmpty { all } else all
+                }
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
                         batch.overlayOverrides[tileValue - 1]?.let { return@getOrPut it + 1 }
+                        forcedOverlay[tileValue]?.let { return@getOrPut it + 1 }
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
-                        FeroxImportTool.bestOverlay(def, localOverlays) + 1
+                        FeroxImportTool.bestOverlay(def, overlayCandidates(def)) + 1
                     }
 
                 // ---- loc types: every one imported new ----
                 val regions = batch.squares.associateWith { ModernRegion.load(modern, it, keys[it] ?: error("No modern key for $it")) }
+                batch.newUnderlaySlots?.let { slots ->
+                    val underlayIndex = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(Rev667RegionProbeTool.UNDERLAY_GROUP)!!
+                    slots.forEach { check(it in 0..173) { "underlay $it is not a tile value (opcode - 81 <= 174)" } }
+                    val ownTargets = batch.squares.map { mapName(batch.target(it)) }.toSet()
+                    val tileNames = HashMap<Int, String>()
+                    for (x in 0 until 256) for (z in 0 until 256) "m${x}_$z".let { tileNames[it.hashCode()] = it }
+                    val usedElsewhere = HashMap<Int, String>()
+                    var scanned = 0
+                    maps.archives().forEach { archive ->
+                        val n = tileNames[archive.hashName] ?: return@forEach
+                        if (n in ownTargets) return@forEach
+                        val data = maps.archive(archive.id)?.file(0)?.data ?: error("tile file $n unreadable - cannot prove the underlay slots free")
+                        val decoded = Rev667TileCodec.decode(data)
+                        scanned++
+                        for (pl in 0 until 4) for (x in 0 until 64) for (z in 0 until 64) {
+                            val v = decoded.tiles[pl][x][z].underlayId
+                            if (v != 0 && (v - 1) in slots) usedElsewhere.putIfAbsent(v - 1, n)
+                        }
+                    }
+                    slots.forEach { slot -> check(underlayIndex.file(slot) == null || slot !in usedElsewhere) { "underlay $slot is used by ${usedElsewhere[slot]} - not free to reuse" } }
+                    println("UNDERLAY_SLOTS scanned $scanned other tile files; ${slots.size} slots: free=${slots.filter { underlayIndex.file(it) == null }} reused-unused=${slots.filter { underlayIndex.file(it) != null }}")
+                    val uses = HashMap<Int, Int>()
+                    regions.forEach { (square, region) ->
+                        for (plane in 0 until 4) for (lx in 0 until 64) for (lz in 0 until 64) {
+                            if (!batch.inPatch(square, lx, lz) || (batch.plane0Only && plane > 0) || plane + batch.planeShift > 3) continue
+                            val v = region.tiles[plane][lx][lz].underlayId
+                            if (v != 0) uses.merge(v, 1, Int::plus)
+                        }
+                    }
+                    // Greedy coverage: each slot goes to the OSRS underlay that lowers sum(tiles x squared distance to the nearest chosen colour)
+                    // the most - so one slot is not spent on a colour next to another chosen one while a distinct floor colour stays off.
+                    val rgbOf = uses.keys.associateWith { modernUnderlays[it - 1]?.rgb ?: error("modern underlay ${it - 1} missing") }
+                    val chosen = ArrayList<Int>()
+                    fun cost(set: List<Int>): Long = uses.entries.sumOf { (v, n) ->
+                        n.toLong() * (set.minOfOrNull { Rev667FloorCodec.colourDistance(rgbOf.getValue(it), rgbOf.getValue(v)) } ?: 3 * 255 * 255).toLong()
+                    }
+                    repeat(minOf(slots.size, uses.size)) {
+                        chosen += uses.keys.filter { it !in chosen }.minByOrNull { cost(chosen + it) }!!
+                    }
+                    println("UNDERLAY_COVERAGE remaining error (tiles x squared distance) = ${cost(chosen)}")
+                    chosen.map { v -> uses.entries.first { it.key == v } }.zip(slots).forEach { (use, slot) ->
+                        val rgb = modernUnderlays[use.key - 1]?.rgb ?: error("modern underlay ${use.key - 1} missing")
+                        newUnderlays[slot] = rgb
+                        forcedUnderlay[use.key] = slot
+                        val bytes = byteArrayOf(1, ((rgb shr 16) and 0xFF).toByte(), ((rgb shr 8) and 0xFF).toByte(), (rgb and 0xFF).toByte(), 0)
+                        val back = Rev667FloorCodec.decodeUnderlay(bytes)
+                        check(back.rgb == rgb && back.texture == -1) { "underlay $slot encode/decode mismatch" }
+                        val current = underlayIndex.file(slot)?.data
+                        mutations += CacheMutation(Rev667RegionProbeTool.CONFIG_INDEX, Rev667RegionProbeTool.UNDERLAY_GROUP, slot, bytes, "$name underlay $slot = OSRS underlay ${use.key - 1} rgb ${Integer.toHexString(rgb)} plain (${use.value} tiles)",
+                            expectedCurrentSha1 = current?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
+                        println("NEW_UNDERLAY $slot <- OSRS ${use.key - 1} rgb=${Integer.toHexString(rgb)} tiles=${use.value}")
+                    }
+                    println("UNDERLAYS ${uses.size} used; ${minOf(uses.size, slots.size)} exact, ${maxOf(0, uses.size - slots.size)} to the nearest plain one")
+                }
+                batch.newOverlaySlots?.let { slots ->
+                    val overlayIndex = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(Rev667RegionProbeTool.OVERLAY_GROUP)!!
+                    slots.forEach { check(it in 0..254) { "overlay $it is not a one-byte tile value" } }
+                    // Every tile of every map square outside this batch's targets: an existing slot may only be rewritten when none uses it.
+                    val ownTargets = batch.squares.map { mapName(batch.target(it)) }.toSet()
+                    // group names are stored as hashes (String.hashCode): every possible tile-file name m<x>_<z>
+                    val tileNames = HashMap<Int, String>()
+                    for (x in 0 until 256) for (z in 0 until 256) "m${x}_$z".let { tileNames[it.hashCode()] = it }
+                    val usedElsewhere = HashMap<Int, String>()
+                    var scanned = 0
+                    maps.archives().forEach { archive ->
+                        val n = tileNames[archive.hashName] ?: return@forEach
+                        if (n in ownTargets) return@forEach
+                        val data = maps.archive(archive.id)?.file(0)?.data ?: error("tile file $n unreadable - cannot prove the overlay slots free")
+                        val decoded = Rev667TileCodec.decode(data)
+                        scanned++
+                        for (pl in 0 until 4) for (x in 0 until 64) for (z in 0 until 64) {
+                            val v = decoded.tiles[pl][x][z].overlayId and 0xFF
+                            if (v != 0 && (v - 1) in slots) usedElsewhere.putIfAbsent(v - 1, n)
+                        }
+                    }
+                    slots.forEach { slot -> check(overlayIndex.file(slot) == null || slot !in usedElsewhere) { "overlay $slot is used by ${usedElsewhere[slot]} - not free to reuse" } }
+                    println("OVERLAY_SLOTS scanned $scanned other tile files; ${slots.size} slots: free=${slots.filter { overlayIndex.file(it) == null }} reused-unused=${slots.filter { overlayIndex.file(it) != null }}")
+                    // tiles per OSRS overlay that will be drawn (same filter as the tile loop below)
+                    val uses = HashMap<Int, Int>()
+                    regions.forEach { (square, region) ->
+                        for (plane in 0 until 4) for (lx in 0 until 64) for (lz in 0 until 64) {
+                            if (!batch.inPatch(square, lx, lz) || (batch.plane0Only && plane > 0) || plane + batch.planeShift > 3) continue
+                            val v = region.tiles[plane][lx][lz].overlayId
+                            if (v == 0) continue
+                            val hidden = batch.dropHiddenOverlays && modernOverlays[v - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
+                            if (!hidden && (v - 1) !in batch.overlayOverrides) uses.merge(v, 1, Int::plus)
+                        }
+                    }
+                    val ranked = uses.entries.mapNotNull { (v, n) ->
+                        val def = modernOverlays[v - 1] ?: return@mapNotNull null
+                        if (def.texture != -1) return@mapNotNull null
+                        val best = FeroxImportTool.bestOverlay(def, overlayCandidates(def))
+                        val distance = Rev667FloorCodec.colourDistance(def.rgb, (localOverlays[best] ?: error("overlay $best")).rgb)
+                        Triple(v, n.toLong() * distance, distance)
+                    }.filter { it.third > 0 }.sortedByDescending { it.second }
+                    ranked.take(slots.count()).zip(slots.toList()).forEach { (pick, slot) ->
+                        val def = modernOverlays[pick.first - 1]!!
+                        val local = Rev667OverlayDef(def.rgb, -1, def.hideUnderlay, def.secondaryRgb)
+                        newOverlays[slot] = local
+                        forcedOverlay[pick.first] = slot
+                        val out = java.io.ByteArrayOutputStream()
+                        out.write(1); out.write((def.rgb shr 16) and 0xFF); out.write((def.rgb shr 8) and 0xFF); out.write(def.rgb and 0xFF)
+                        if (!def.hideUnderlay) out.write(5)
+                        if (def.secondaryRgb != -1) { out.write(7); out.write((def.secondaryRgb shr 16) and 0xFF); out.write((def.secondaryRgb shr 8) and 0xFF); out.write(def.secondaryRgb and 0xFF) }
+                        out.write(11); out.write(0x7F) // blend priority of the plain rev-667 overlays (e.g. 43, 145)
+                        out.write(0)
+                        val bytes = out.toByteArray()
+                        val back = Rev667FloorCodec.decodeOverlay(bytes)
+                        check(back.rgb == def.rgb && back.texture == -1 && back.occludes == def.hideUnderlay) { "overlay $slot encode/decode mismatch" }
+                        val current = overlayIndex.file(slot)?.data
+                        mutations += CacheMutation(Rev667RegionProbeTool.CONFIG_INDEX, Rev667RegionProbeTool.OVERLAY_GROUP, slot, bytes, "$name overlay $slot = OSRS overlay ${pick.first - 1} rgb ${Integer.toHexString(def.rgb)} (${uses[pick.first]} tiles)",
+                            expectedCurrentSha1 = current?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
+                        println("NEW_OVERLAY $slot <- OSRS ${pick.first - 1} rgb=${Integer.toHexString(def.rgb)} tiles=${uses[pick.first]} best-old-distance=${pick.third}")
+                    }
+                }
                 val modernLocDefs = modern.files(2, 6)
                 if (batch.patch != null) {
                     regions.forEach { (square, region) ->
@@ -307,7 +509,8 @@ object OsrsRegionImportTool {
                 check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
                 val free = census.provenFreeHoles.filter { it in 1..0xFFFF }.sorted().iterator()
                 val modelIdMap = LinkedHashMap<Int, Int>()
-                neededModels.forEach { modernId ->
+                // retileTargets: loc types and models exist from the first pass - nothing new to allocate.
+                if (!batch.retileTargets) neededModels.forEach { modernId ->
                     check(free.hasNext()) { "Out of proven-free model ids." }
                     val localId = free.next()
                     modelIdMap[modernId] = localId
@@ -317,7 +520,7 @@ object OsrsRegionImportTool {
                 // Every loc animation must be imported first (OsrsFxImportTool); list them all at once instead of failing on the first.
                 val missingSeqs = importedDefs.values.map { it.animationId }.filter { it != -1 && seqs["seq:$it"] == null }.distinct().sorted()
                 check(missingSeqs.isEmpty()) { "loc animations not imported yet (add an OsrsFxImportTool SEQ_BATCHES entry): $missingSeqs" }
-                importedDefs.forEach { (modernId, def) ->
+                if (!batch.retileTargets) importedDefs.forEach { (modernId, def) ->
                     val localId = locIdMap.getValue(modernId)
                     val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped) { seqs["seq:$it"] }
                     val decoded = Rev667LocType.decode(localId, bytes)
@@ -355,6 +558,7 @@ object OsrsRegionImportTool {
                         dst.overlayRotation = src.overlayRotation
                         val hidden = batch.dropHiddenOverlays && src.overlayId != 0 && modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
+                        if (dst.overlayId != 0) overlayUse.merge(src.overlayId, 1, Int::plus)
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
                     }
                     val locs =
@@ -378,7 +582,18 @@ object OsrsRegionImportTool {
                     check(Rev667LocCodec.decode(locBytes).size == locs.size) { "loc encode/decode count mismatch" }
                     val mapGroup: Int
                     val locGroup: Int
-                    if (square in batch.replaceSquares) {
+                    if (batch.retileTargets) {
+                        val t = batch.target(square)
+                        val mapArchive = maps.archive(mapName(t))!!
+                        val current = mapArchive.file(0)!!.data!!
+                        // keep the environment records (MapEnvironmentTool) the square has now
+                        tiles.trailing = Rev667TileCodec.decode(current).trailing
+                        mapGroup = mapArchive.id
+                        locGroup = -1
+                        val bytes = Rev667TileCodec.encode(tiles)
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, bytes, "$name tiles ${mapName(t)} (OSRS ${mapName(square)}, retile)",
+                            current.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) })
+                    } else if (square in batch.replaceSquares) {
                         val key = localKeys[square]
                         val mapArchive = maps.archive(mapName(square))!!
                         val locArchive = maps.archive(locName(square), key) ?: error("${locName(square)} missing or unreadable")
@@ -389,19 +604,22 @@ object OsrsRegionImportTool {
                         mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)} (replaces rev-667 filler)", CacheItemProbeTool.sha1(oldTiles))
                         mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (replaces rev-667 filler, own key)", CacheItemProbeTool.sha1(oldLocs), xtea = key)
                     } else {
+                        val t = batch.target(square)
                         mapGroup = nextGroup++
                         locGroup = nextGroup++
-                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(square)}", groupName = mapName(square))
-                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(square)} (unencrypted)", groupName = locName(square))
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, mapGroup, 0, Rev667TileCodec.encode(tiles), "$name tiles ${mapName(t)} (OSRS ${mapName(square)})", groupName = mapName(t))
+                        mutations += CacheMutation(FeroxImportTool.MAP_INDEX, locGroup, 0, locBytes, "$name locs ${locName(t)} (OSRS ${locName(square)}, unencrypted)", groupName = locName(t))
                     }
                     squareGroups[square] = mapGroup to locGroup
-                    println("SQUARE $square ${mapName(square)}=$mapGroup ${locName(square)}=$locGroup locs=${locs.size}")
+                    println("SQUARE $square ${mapName(square)} -> ${mapName(batch.target(square))}=$mapGroup ${locName(batch.target(square))}=$locGroup locs=${locs.size}")
                 }
                 dropped.distinct().forEach { println("DROPPED $it") }
-                overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString(localOverlays[l - 1]?.rgb ?: -1)} tex=${localOverlays[l - 1]?.texture}") }
+                underlayMap.forEach { (m, l) -> println("FLOOR underlay osrs=${m - 1} rgb=${Integer.toHexString(modernUnderlays[m - 1]?.rgb ?: -1)} -> local ${l - 1} rgb=${Integer.toHexString(newUnderlays[l - 1] ?: localUnderlays[l - 1] ?: -1)}${if (newUnderlays.containsKey(l - 1)) " NEW plain" else ""}") }
+                overlayMap.forEach { (m, l) -> println("FLOOR overlay osrs=${m - 1} tiles=${overlayUse[m] ?: 0} rgb=${Integer.toHexString(modernOverlays[m - 1]?.rgb ?: -1)} tex=${modernOverlays[m - 1]?.texture} -> local ${l - 1} rgb=${Integer.toHexString((newOverlays[l - 1] ?: localOverlays[l - 1])?.rgb ?: -1)} tex=${(newOverlays[l - 1] ?: localOverlays[l - 1])?.texture}${if (newOverlays.containsKey(l - 1)) " NEW" else ""}") }
                 println("PLAN $name squares=${batch.squares} types=${importedDefs.size} models=${modelIdMap.size} floors underlay=${underlayMap.size} overlay=${overlayMap.size} mutations=${mutations.size}")
                 val planned =
                     when {
+                        batch.retileTargets -> mutations.filter { (it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ")) || it.label.startsWith("$name overlay ") || it.label.startsWith("$name underlay ") }
                         batch.tilesOnly -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" tiles ") }
                         batch.locsOnlyWithout != null && batch.planeShift != 0 -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && (it.label.contains(" locs ") || it.label.contains(" tiles ")) }
                         batch.locsOnlyWithout != null -> mutations.filter { it.indexId == FeroxImportTool.MAP_INDEX && it.label.contains(" locs ") }
@@ -435,7 +653,7 @@ object OsrsRegionImportTool {
         transactionId: String,
     ) {
         val sb = StringBuilder()
-        sb.appendLine("  - name: OSRS region import '$name' - ${batch.note.replace(": ", ", ")} (squares ${batch.squares}, same coordinates)")
+        sb.appendLine("  - name: OSRS region import '$name' - ${batch.note.replace(": ", ", ")} (squares ${batch.squares}, ${batch.squareOffset?.let { "moved ${it.first},${it.second} squares -> ${batch.squares.map { s -> batch.target(s) }}" } ?: "same coordinates"})")
         sb.appendLine("    transaction_id: $transactionId")
         sb.appendLine("    source: OpenRS2 cache 2499, map squares ${plan.squareGroups.entries.joinToString { "${it.key} -> groups ${it.value.first}/${it.value.second}" }}")
         sb.appendLine("    loc_ids:")
