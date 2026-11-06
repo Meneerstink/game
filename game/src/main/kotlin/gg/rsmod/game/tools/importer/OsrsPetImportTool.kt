@@ -342,6 +342,10 @@ object OsrsPetImportTool {
             // Calvar'ion (NpcID VETION_SINGLE 11993, enraged VETION_2_SINGLE 11994): NPC_VETION_IDLE / WALK _01 / _02 from the definitions,
             // plus ATTACK_MAGIC 9969 / 9970, ATTACK_MELEE 9971 / 9972, DEFEND_PARRY 9973 / 9974, DEFEND_SHIELD 9975 / 9976, SPAWN 9977,
             // ENRAGE 9978 / 9979, DEATH 9980 / 9981 (_01 = normal, _02 = enraged; Near Reality Vetion.java uses 9969/9971/9973/9975/9980).
+            // N462 ToA skeletal route A, weighted-skin gate (2026-11-06): Elidinis' Warden P2 (NpcID 11753, model 46332, ~930 vertices
+            // with several bone weights). Movement only (stand 9653 / walk 9649); the bake is the timeline + SSE fallback, the client plays
+            // the real skeletal clip. Not spawned anywhere - test client only until the ToA build.
+            "toa-warden-proof" to listOf(11753 to emptyList()),
             "calvarion" to listOf(
                 11993 to listOf(9969, 9971, 9973, 9975, 9977, 9978, 9980),
                 11994 to listOf(9970, 9972, 9974, 9976, 9979, 9981),

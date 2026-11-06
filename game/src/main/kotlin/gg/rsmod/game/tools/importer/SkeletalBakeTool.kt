@@ -463,7 +463,7 @@ object SkeletalBakeTool {
 
     /** OSRS skeletal sequence fields (opcode 13 id, 15 range); null when it is not skeletal. */
     /** [sounds]: opcode 14 frame sounds as (tick, OSRS synth id, loops, radius) - played by the OSRS client on that tick. */
-    class SkeletalSeq(val animaya: Int, val start: Int, val end: Int, val sounds: List<IntArray> = emptyList())
+    class SkeletalSeq(val animaya: Int, val start: Int, val end: Int, val sounds: List<IntArray> = emptyList(), val mask: IntArray? = null)
 
     fun decodeSkeletalSeq(bytes: ByteArray): SkeletalSeq? {
         val c = In(bytes)
@@ -471,6 +471,7 @@ object SkeletalBakeTool {
         var start = -1
         var end = -1
         val sounds = ArrayList<IntArray>()
+        var mask: IntArray? = null
         while (c.remaining > 0) {
             when (val op = c.u8()) {
                 0 -> break
@@ -499,12 +500,14 @@ object SkeletalBakeTool {
                     end = c.u16()
                 }
                 16 -> c.u8()
-                17 -> repeat(c.u8()) { c.u8() }
+                // N462: the skeletal bone mask (OSRS SequenceDefinition opcode 17): an action plays on the bones NOT in it, the
+                // movement on the bones in it.
+                17 -> mask = IntArray(c.u8()) { c.u8() }
                 18 -> while (c.u8() != 0) Unit
                 else -> error("unknown OSRS sequence opcode $op")
             }
         }
-        return if (id >= 0) SkeletalSeq(id, start, end, sounds) else null
+        return if (id >= 0) SkeletalSeq(id, start, end, sounds, mask) else null
     }
 
     class Baked(

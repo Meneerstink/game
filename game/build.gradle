@@ -210,6 +210,14 @@ task runRemovedContentCacheTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.RemovedContentCacheTool'
 }
 
+task runSkeletalSidecarExportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N462 skeletal client proof: export real OSRS rig/clip/skin sidecars of one npc (read-only on the OSRS cache). ' +
+        'Usage: --args="dir <outDir> | cache plan|apply, then <localNpc> <osrsModel,...> <localSeq>=<osrsSeq> ..."'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.SkeletalSidecarExportTool'
+}
+
 task runOsrsPetImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS pet roster (data/cfg/pets/osrs_pets.tsv): probe, import the skeletal followers (baked), or write the server pet table. ' +
