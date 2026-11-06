@@ -7,7 +7,7 @@ package gg.rsmod.game.tools.importer
  * listed stays dropped (and reported) - never a guessed id.
  */
 object OsrsMapIconTable {
-    val SCENE_TO_MSI = mapOf(1 to 1, 4 to 4, 5 to 5, 6 to 6, 7 to 7, 11 to 11, 12 to 12, 27 to 27, 46 to 46, 64 to 64, 65 to 65, 70 to 70)
+    val SCENE_TO_MSI = mapOf(1 to 1, 4 to 4, 5 to 5, 6 to 6, 7 to 7, 11 to 11, 12 to 12, 27 to 27, 46 to 46, 64 to 64, 65 to 65, 68 to 68, 70 to 70)
 
     val AREA_TO_MAP_ELEMENT =
         mapOf(
@@ -16,8 +16,8 @@ object OsrsMapIconTable {
         )
 
     /** SOURCE_BLOCKED scenes: 22 is an empty OSRS frame, the rest have no 667 picture (nearest diff >= 0.11). */
-    val BLOCKED_SCENES = setOf(22, 81, 82, 101, 102, 103, 128, 129, 146, 147, 148, 149)
+    val BLOCKED_SCENES = setOf(22, 81, 82, 101, 102, 103, 128, 129, 146, 147, 148, 149, 250, 251)
 
-    /** SOURCE_BLOCKED areas (no 667 picture) and 652 (Death's Office: DeathsOfficeMapImportTool puts 1108 on one loc per entrance). */
-    val BLOCKED_AREAS = setOf(13, 66, 71, OsrsLocMapDataTool.DEATHS_OFFICE_AREA)
+    /** SOURCE_BLOCKED areas (no 667 picture), the OSRS quest-start icons 792/831 (= our quest icon 1116; owner N227: no quest icons on the map - OsrsLocMapDataTool skips them) and 652 (Death's Office: DeathsOfficeMapImportTool puts 1108 on one loc per entrance). */
+    val BLOCKED_AREAS = setOf(13, 66, 71, 91, 792, 831, OsrsLocMapDataTool.DEATHS_OFFICE_AREA)
 }

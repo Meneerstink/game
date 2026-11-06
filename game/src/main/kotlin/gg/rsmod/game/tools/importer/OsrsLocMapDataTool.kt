@@ -97,6 +97,13 @@ object OsrsLocMapDataTool {
             val picked = pick(frame, -1, elements)
             // Bank 5, pub 33 and 40 sit just above MAX_DIFF (0.013-0.020); FeroxMinimapTool proved them on a contact sheet.
             val (id, why) = if (picked.first == null && a in FeroxMinimapTool.AREA_TO_MAP_ELEMENT) FeroxMinimapTool.AREA_TO_MAP_ELEMENT.getValue(a) to "Ferox contact-sheet proof, ${picked.second}" else picked
+            // T8 dagrun 2026-11-06: OSRS quest-start icons (sprite 1454, areas 792/831) match our hall-quest icon 1116 pixel for pixel,
+            // but the owner wants no standard quest icons on the map (N227) - they are skipped like a value without a picture.
+            if (id == QuestMapIconTool.HALL_QUEST_ELEMENT) {
+                blockedAreas[a] = "'$name' quest icon (owner N227: no standard quest icons on the map)"
+                println("AREA osrs=$a '$name' sprite=$sprite -> SKIPPED (quest icon, N227)")
+                return@forEach
+            }
             if (id != null) areaMap[a] = id else blockedAreas[a] = "'$name' $why"
             println("AREA osrs=$a '$name' sprite=$sprite -> mapelement=${id ?: "BLOCKED"} ($why)")
         }
