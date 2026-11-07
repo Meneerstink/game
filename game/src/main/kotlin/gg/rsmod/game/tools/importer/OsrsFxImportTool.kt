@@ -841,9 +841,15 @@ object OsrsFxImportTool {
     ): ByteArray {
         val out = ByteArrayOutputStream()
         if (localModel >= 0) {
-            check(localModel <= OsrsItemImportTool.SPOTANIM_MODEL_LIMIT) { "spotanim model $localModel above the signed-short limit" }
-            out.u8(1)
-            out.u16(localModel)
+            if (localModel > 0xFFFF) {
+                // N462 wide model opcode (archive 37): client SpotAnimationType 241 g4, server SpotAnimDef 241 readInt.
+                out.u8(241)
+                out.write(byteArrayOf((localModel ushr 24).toByte(), (localModel ushr 16).toByte(), (localModel ushr 8).toByte(), localModel.toByte()))
+            } else {
+                check(localModel <= OsrsItemImportTool.SPOTANIM_MODEL_LIMIT) { "spotanim model $localModel above the signed-short limit" }
+                out.u8(1)
+                out.u16(localModel)
+            }
         }
         if (localSeq >= 0) {
             out.u8(2)
@@ -991,7 +997,11 @@ object OsrsFxImportTool {
             val census = ModelNamespaceCensusTool.census(TARGETS[0], TARGETS[1], assetMap)
             check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
             check(census.untracedReferenceTypes.isEmpty()) { "untraced model reference types: ${census.untracedReferenceTypes}" }
-            val modelHoles = census.provenFreeHoles.filter { it in 1..OsrsItemImportTool.SPOTANIM_MODEL_LIMIT }.sorted().toMutableList()
+            // Low holes first (opcode 1, a short), then - when those are used up (07-11: the ToA spots were all refused with an empty list) -
+            // the free ids above 0xFFFF in archive 37, written with the wide opcode 241 (client SpotAnimationType 241 = g4, server
+            // SpotAnimDef 241 = int). Ids 32768..65535 are skipped: the server reads opcode 1 as a signed short.
+            val modelHoles = (census.provenFreeHoles.filter { it in 1..OsrsItemImportTool.SPOTANIM_MODEL_LIMIT }.sorted() +
+                census.safeFreeRange.filter { it > 0xFFFF }).toMutableList()
             println("CENSUS spotanim_model_holes=${modelHoles.size} next spot=$nextSpot seq=$nextSeq frameset=$nextFrameset base=$nextBase synth=$nextSynth")
 
             val localIds = existing.toMutableMap()
