@@ -29,8 +29,19 @@ object ToaBossRooms {
         ToaPath.SCABARAS to Spawn("kephri", Tile(3551, 5409, ToaPath.SCABARAS.bossEntry.height)),
     )
 
+    /**
+     * The Wardens: the encounter starts on the P1 obelisk (OSRS npc 11750/11751, Obelisk Wiki LocLine 3808,5154 plane 1). A multi-form
+     * fight (obelisk -> P2 Warden -> core -> P3) keeps or replaces its root npc; the boss card marks the end of the WHOLE fight with
+     * [ENCOUNTER_DONE] on the root npc (or the root npc itself dies) - only then the raid clears the Wardens and opens the vault.
+     * ONZEKER T02: 3808,5154 is the obelisk's Wiki map square (centre); the obelisk is spawned with that tile as its south-west corner
+     * minus half its size (cache size).
+     */
+    val WARDENS = Spawn("wardens", Tile(3808, 5154, 1))
+    val ENCOUNTER_DONE = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
+
     fun register(): List<AutoCloseable> =
-        SPAWNS.map { (path, spawn) -> ToaRooms.register(ToaRoomKey(path, true)) { raid -> Room(raid, spawn) } }
+        SPAWNS.map { (path, spawn) -> ToaRooms.register(ToaRoomKey(path, true)) { raid -> Room(raid, spawn) } } +
+            ToaRooms.register(ToaRoomKey(null, true)) { raid -> Room(raid, WARDENS, centred = true) }
 
     /** The live raid view a boss card targets: the room's active players, the raid's level, children through the room scope. */
     class RaidContext(private val raid: ToaRaid, private val scope: ToaRoomScope) : ToaEncounterContext {
@@ -42,7 +53,7 @@ object ToaBossRooms {
         override fun spawnChild(npc: Npc): Boolean = scope.active && scope.spawn(npc)
     }
 
-    class Room(private val raid: ToaRaid, private val spawn: Spawn) : ToaRoom {
+    class Room(private val raid: ToaRaid, private val spawn: Spawn, private val centred: Boolean = false) : ToaRoom {
         var boss: Npc? = null
             private set
 
@@ -50,7 +61,8 @@ object ToaBossRooms {
             val definition = ToaEncounter.definitions[spawn.encounter] ?: return
             val scope = raid.scope(run) ?: return
             val id = ToaBossNpcs.local(definition.osrsNpc) ?: return
-            val npc = Npc(id, ToaMap.instance(raid.map, spawn.tile), raid.world)
+            val half = if (centred) raid.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).size / 2 else 0
+            val npc = Npc(id, ToaMap.instance(raid.map, spawn.tile.transform(-half, -half)), raid.world)
             npc.respawnOverride = false
             val context = RaidContext(raid, scope)
             npc.attr[ToaEncounter.CONTEXT] = context
@@ -61,11 +73,11 @@ object ToaBossRooms {
             // first dead tick would close the scope and cut the animation). The generation token ignores a death after a wipe/retry.
             scope.queue {
                 var died = false
-                while (npc.isSpawned()) {
+                while (npc.isSpawned() && npc.attr[ENCOUNTER_DONE] != true) {
                     if (npc.isDead()) died = true
                     wait(1)
                 }
-                if (died) run.clear(raid.world.currentCycle)
+                if (died || npc.attr[ENCOUNTER_DONE] == true) run.clear(raid.world.currentCycle)
             }
         }
 
