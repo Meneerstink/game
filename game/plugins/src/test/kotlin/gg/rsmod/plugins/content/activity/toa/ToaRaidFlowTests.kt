@@ -159,6 +159,8 @@ class ToaRaidFlowTests {
             assertTrue(raid.progress.wardensUnlocked)
             assertEquals(ToaPath.values().toSet(), raid.progress.completedPaths)
             f.players.forEach { assertTrue(raid.enterWardens(it)) }
+            // Strategies 1423: the Wardens wait for every party member to speak to Osmumten (Begin) in the walled entry corridor.
+            f.players.forEach { assertTrue(raid.readyForWardens(it)) }
             assertEquals(size, raid.activePlayers().size)
             clear()
             assertTrue(raid.progress.finished)

@@ -70,7 +70,25 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         return true
     }
 
-    private fun waitsForCrystal(key: ToaRoomKey) = key.boss && key.path in ARENA_ENTRY
+    private fun waitsForCrystal(key: ToaRoomKey) = (key.boss && key.path in ARENA_ENTRY) || key.wardens
+
+    private val wardensReady = mutableSetOf<PlayerUID>()
+
+    /**
+     * Wardens: OSRS Wiki Tombs_of_Amascut/Strategies?oldid=15392814 line 1423 'All party members must speak to Osmumten ... before the
+     * fight can begin.' The entry corridor (cache2686 15184 plane 1, x3806-3810 z5172-5177) is walled in by blocked tiles, so speaking
+     * to Osmumten (11690, ToaScene.WARDENS_OSMUMTEN) moves the player into the arena; phase 1 starts once every living participant has.
+     * ONZEKER T26: exact OSRS arena landing tile (WARDENS_ARENA) is unpublished.
+     */
+    fun readyForWardens(player: Player): Boolean {
+        if (!contains(player) || player.isDead()) return false
+        val run = progress.current ?: return false
+        if (!run.key.wardens || !participants.alive(run, player.uid)) return false
+        wardensReady += player.uid
+        player.teleportTo(ToaMap.instance(map, WARDENS_ARENA))
+        if (activePlayers().all { it.uid in wardensReady }) { wardensReady.clear(); startRoom(run) }
+        return true
+    }
 
     private fun startRoom(run: ToaRoomRun) {
         if (started.add(run.generation)) rooms.getValue(run.generation).first.start(run)
@@ -289,6 +307,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     companion object {
         // 40-loc-placements: Wardens lower Exit3806,5178,p1; vault Entry3679,5171,p0.
         val WARDENS_ENTRY = Tile(3808, 5176, 1)
+        /** ONZEKER T26: first open arena row south of the walled entry corridor (::clipmap 07-11: z5166 free, z5167-5171 blocked). */
+        val WARDENS_ARENA = Tile(3808, 5164, 1)
         val REWARD_ENTRY = Tile(3679, 5169)
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
