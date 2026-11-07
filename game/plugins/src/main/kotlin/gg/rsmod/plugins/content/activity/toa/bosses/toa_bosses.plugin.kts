@@ -10,6 +10,7 @@ val encounters = listOf(
     Triple("baba", BabaCombat, ToaEncounter.Definition(ToaBossNpcs.BABA, BabaCombat.STATS, BabaCombat::Session)),
     Triple("kephri", KephriCombat, ToaEncounter.Definition(ToaBossNpcs.KEPHRI, KephriCombat.STATS, KephriCombat::Session)),
     Triple("zebak", ZebakCombat, ToaEncounter.Definition(ToaBossNpcs.ZEBAK, ZebakCombat.STATS, ZebakCombat::Session)),
+    Triple("wardens", WardensCombat, ToaEncounter.Definition(ToaBossNpcs.OBELISK, WardensCombat.OBELISK_STATS, WardensCombat::Session)),
 )
 encounters.forEach { (name, script, definition) ->
     ToaEncounter.definitions[name] = definition
@@ -33,6 +34,7 @@ encounters.forEach { (name, script, definition) ->
 listOf(ToaBossNpcs.AKKHA_SHADOW, ToaBossNpcs.UNSTABLE_ORB, 11800, 11801, 11802, 11803,
     ToaBossNpcs.BABOON, 11782, 11783, 11784,
     ToaBossNpcs.SWARM, ToaBossNpcs.SOLDIER, ToaBossNpcs.SPITTING, ToaBossNpcs.ARCANE, ToaBossNpcs.AGILE, 11728, 11729,
+    11752, 11767, 11768, 11769, ToaBossNpcs.CORE, 11771, 11772, 11773, 11774, 11775, 11776, 11777,
     ToaBossNpcs.ZEBAK_TAIL, 11735, 11736, 11737, 11738, 11741, 11742, 11743).mapNotNull(ToaBossNpcs::local).distinct().forEach { id ->
     on_npc_combat(npc = id) { }
 }

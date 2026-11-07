@@ -14,6 +14,24 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaAkkhaTests {
+    @Test fun `protection icons follow every style and enrage then clear on close`() {
+        val icons = gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
+        io.mockk.mockkObject(icons)
+        try {
+            val f = ToaTestFixture(); val frames = mutableListOf<Int>()
+            every { icons.show(f.npc, any()) } answers { frames += secondArg<Int>(); true }
+            every { icons.clear(f.npc) } returns Unit
+            val s = AkkhaCombat.Session(f.npc, ToaTestContext())
+            s.configure(); s.style = CombatClass.RANGED; s.style = CombatClass.MAGIC; s.enterEnrage()
+            assertEquals(listOf(0, 1, 2, 6), frames)
+            s.close(); io.mockk.verify(exactly = 1) { icons.clear(f.npc) }
+        } finally { io.mockk.unmockkObject(icons) }
+    }
+    @Test fun `incoming protection uses launch style after a weapon switch`() {
+        val s = AkkhaCombat.Session(ToaTestFixture().npc, ToaTestContext())
+        val hit = Hit.Builder().addHit(10, HitType.RANGE.id).build().also { it.sourceCombatClass = CombatClass.MELEE }
+        s.incoming(hit); assertEquals(0, hit.hitmarks.single().damage)
+    }
     @Test fun `autonomous director performs six autos then special at tick36 and changes style`() {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
         every { p.isOnline } returns true; every { p.isDead() } returns false

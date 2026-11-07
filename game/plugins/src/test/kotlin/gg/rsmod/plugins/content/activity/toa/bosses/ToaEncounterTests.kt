@@ -9,6 +9,30 @@ import io.mockk.verify
 import kotlin.test.*
 
 class ToaEncounterTests {
+    @Test fun `head icon clones retain per npc baked animations while real form transmogs use their own rig`() {
+        val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
+        io.mockk.mockkObject(ids)
+        try {
+            val f = ToaTestFixture()
+            io.mockk.every { f.npc.id } returns 15106
+            io.mockk.every { f.npc.getTransmogId() } returns 15203
+            io.mockk.every { ids.osrsNpcOf(15203) } returns null
+            io.mockk.every { ids.osrsNpcOf(15106) } returns 11789
+            io.mockk.every { ids.npcSeq(11789, 9770) } returns 21001
+            assertEquals(21001, ToaBossFx.seqFor(f.npc, 9770))
+            io.mockk.every { f.npc.getTransmogId() } returns 15129
+            io.mockk.every { ids.osrsNpcOf(15129) } returns 11756
+            io.mockk.every { ids.npcSeq(11756, 9770) } returns 21002
+            assertEquals(21002, ToaBossFx.seqFor(f.npc, 9770))
+        } finally { io.mockk.unmockkObject(ids) }
+    }
+    @Test fun `ordinary standalone cleanup removes a live root only once`() {
+        val f = ToaTestFixture(); val root = Npc(1, Tile(3200, 3200), f.world)
+        f.world.spawn(root)
+        val s = AkkhaCombat.Session(root, ToaTestContext())
+        s.finishStandalone(root); s.finishStandalone(root)
+        assertFalse(root.isSpawned()); verify(exactly = 1) { f.world.remove(root) }
+    }
     @Test fun `runtime definition assignment refreshes real equipment bonuses for root and spawned minion`() {
         val f = ToaTestFixture()
         var definition = gg.rsmod.game.model.combat.NpcCombatDef.DEFAULT
@@ -149,12 +173,17 @@ class ToaEncounterTests {
     @Test fun `minion melee reach uses its complete footprint without a diagonal or plane shortcut`() {
         val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())
         val child = mockk<Npc>(relaxed = true)
+        every { child.world } returns f.world
         every { child.tile } returns Tile(3205, 3205); every { child.getSize() } returns 3
         assertTrue(s.actorMeleeReach(child, Tile(3208, 3207)))
         assertTrue(s.actorMeleeReach(child, Tile(3206, 3206)))
         assertFalse(s.actorMeleeReach(child, Tile(3208, 3208)))
         assertFalse(s.actorMeleeReach(child, Tile(3209, 3207)))
         assertFalse(s.actorMeleeReach(child, Tile(3208, 3207, 1)))
+        every { f.world.collision.isBlocked(any(), any(), false) } returns true
+        assertFalse(s.actorMeleeReach(child, Tile(3208, 3207)), "an adjacent minion cannot melee through a wall")
+        every { f.world.collision.isBlocked(any(), any(), false) } returns false
+        assertTrue(s.actorMeleeReach(child, Tile(3208, 3207)))
     }
     @Test fun `boss death cancels queued special and cleanup removes children exactly once`() {
         val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())

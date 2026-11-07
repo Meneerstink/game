@@ -15,7 +15,9 @@ object ToaBossFx {
     /** The sequence as baked for [who] (skeletal npcs have their own frames per npc; Ba-Ba and each baboon differ). */
     fun seqFor(who: Npc, osrs: Int): Int {
         val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
-        val osrsNpc = ids.osrsNpcOf(who.getTransmogId().takeIf { it >= 0 } ?: who.id)
+        // Head-icon copies share their root's rig but are deliberately absent from the import manifest.
+        // Real form transmogs still take precedence when they have an imported source identity.
+        val osrsNpc = who.getTransmogId().takeIf { it >= 0 }?.let(ids::osrsNpcOf) ?: ids.osrsNpcOf(who.id)
         return (if (osrsNpc != null) ids.npcSeq(ToaBossNpcs.canonical(osrsNpc), osrs) else ids.seq(osrs)) ?: -1
     }
 

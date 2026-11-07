@@ -10,6 +10,7 @@ import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.ext.*
+import gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
 import kotlin.math.abs
 
 /** Sources: Akkha oldid15383708; Strategies oldid15392814 lines1108-1153; official Summer Sweep Up: Combat (25Jun2025).
@@ -64,6 +65,10 @@ object AkkhaCombat : CombatScript() {
         override val stats = STATS
         override val minimumDefence = 70 // Wiki Akkha/Strategies1110.
         var style = CombatClass.MELEE
+            set(value) {
+                field = value
+                if (!enraged) showProtection()
+            }
         var autos = 0
         var shadowStage = 0
         var enraged = false
@@ -94,8 +99,17 @@ object AkkhaCombat : CombatScript() {
 
         override fun configure() {
             super.configure()
+            showProtection()
             // Akkha Wiki infobox (checked2026-11-06): Freeze100% resistance. Use the engine's existing immunity gate.
             npc.timers[gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER] = Int.MAX_VALUE
+        }
+        private fun showProtection() {
+            // OSRS cache2686 npc11790/91/92/93-96, archive440 frames0/1/2/6 (Claude's measured clone table).
+            ToaHeadIcons.show(npc, if (enraged) 6 else when (style) {
+                CombatClass.MELEE -> 0
+                CombatClass.RANGED -> 1
+                else -> 2
+            })
         }
         fun immune(): Boolean = memoryActive || (shadowStage > 0 && !enraged &&
             shadows[quadrant(npc.getCentreTile(), centre)]?.let { it.isSpawned() && !it.isDead() } != false
@@ -104,7 +118,7 @@ object AkkhaCombat : CombatScript() {
         override fun incoming(hit: Hit) {
             var remaining = npc.getCurrentLifepoints()
             hit.hitmarks.forEach { mark ->
-                val attackStyle = incomingStyle(mark.type)
+                val attackStyle = incomingStyle(hit, mark.type)
                 if (immune() || (!enraged && attackStyle == style) || (enraged && attackStyle != CombatClass.MELEE)) mark.damage = 0
                 if (!enraged && mark.damage >= remaining) {
                     // Intercept before Pawn.hitsCycle starts a real death. Remaining marks see the new phase.
@@ -221,6 +235,7 @@ object AkkhaCombat : CombatScript() {
         fun enterEnrage(preserveIncoming: Boolean = false) {
             if (enraged) return
             enraged = true; newPhase(); memoryActive = false
+            showProtection()
             val restored = maxOf(1, npc.getMaximumLifepoints() / 5)
             npc.setCurrentLifepoints(if (preserveIncoming) npc.getCurrentLifepoints() + restored else restored)
             shadows.values.toList().forEach { remove(it) }; shadows.clear()
@@ -282,7 +297,12 @@ object AkkhaCombat : CombatScript() {
                 if (i == 3) burning.remove(p)
             } }
         }
-        override fun close() { npc.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER); slowUntil.clear(); previousDelay.clear(); burning.clear(); shadows.clear(); super.close() }
+        override fun close() {
+            if (closed) return
+            ToaHeadIcons.clear(npc)
+            npc.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
+            slowUntil.clear(); previousDelay.clear(); burning.clear(); shadows.clear(); super.close()
+        }
         fun trail(previous: Map<Player, Tile>, duration: Int, armDelay: Int, orbLife: Int, baseDamage: Int) {
             require(duration > 0 && armDelay >= 0 && orbLife > 0)
             message("Magical orbs begin to materialise around you!")

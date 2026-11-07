@@ -157,7 +157,7 @@ object ToaEncounter {
                 }
             } finally {
                 session.close()
-                if (context is StandaloneToaContext && npc.isSpawned() && !npc.isDead()) npc.world.remove(npc)
+                if (context is StandaloneToaContext) session.finishStandalone(npc)
             }
         }
         return session
@@ -234,6 +234,10 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     }
     abstract fun onTick()
     open fun incoming(hit: Hit) {}
+    /** The debug root normally disappears on exit. Multi-form encounters may retain it for their final death sequence. */
+    open fun finishStandalone(root: Npc) {
+        if (root.isSpawned() && !root.isDead()) root.world.remove(root)
+    }
     open fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? = null
     fun later(delay: Int, acrossPhase: Boolean = false, action: () -> Unit) {
         require(delay >= 0)
@@ -301,8 +305,10 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     fun meleeReach(tile: Tile): Boolean = actorMeleeReach(npc, tile)
     fun actorMeleeReach(actor: Npc, tile: Tile): Boolean {
         val t = actor.tile; val size = actor.getSize()
-        return tile.height == t.height && distance(tile, t, size) <= 1 &&
-            (tile.x in t.x until t.x + size || tile.z in t.z until t.z + size)
+        if (tile.height != t.height) return false
+        // Preserve the encounter's underfoot attacks, but share the engine's wall check for adjacent bodies (N596).
+        return distance(tile, t, size) == 0 || gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+            actor.world.collision, t, size, size, tile, 1, 1)
     }
     fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(p.tile) }
     /** Resolve protection at impact (Zebak), and cancel on phase/death/logout/teleport/reset. */
