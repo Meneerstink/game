@@ -284,6 +284,26 @@ gg.rsmod.game.CommandServerCommands.handlers["oplocitem"] = { w, a ->
     }
 }
 // `findloc <name> <loc id> [radius]`: where the locs with that id stand around the player (agent client checks).
+// `clipmap <x> <z> <height> [radius]` (N462 vault-chest route): one row per z (north first); per tile a hex digit of the open
+// cardinal steps (N=1 E=2 S=4 W=8; 'F' = free, '0' = shut in).
+gg.rsmod.game.CommandServerCommands.handlers["clipmap"] = { w, a ->
+    val x = a.getOrNull(0)?.toIntOrNull()
+    val z = a.getOrNull(1)?.toIntOrNull()
+    val h = a.getOrNull(2)?.toIntOrNull() ?: 0
+    val r = (a.getOrNull(3)?.toIntOrNull() ?: 6).coerceIn(1, 20)
+    if (x == null || z == null) "usage: clipmap <x> <z> <height> [radius]" else {
+        val dirs = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
+        val rows = (z + r downTo z - r).map { tz ->
+            "$tz " + (x - r..x + r).joinToString("") { tx ->
+                val t = gg.rsmod.game.model.Tile(tx, tz, h)
+                var m = 0
+                dirs.forEachIndexed { i, d -> if (w.collision.canTraverse(tile = t, direction = d, projectile = false, water = false)) m = m or (1 shl i) }
+                Integer.toHexString(m).uppercase()
+            }
+        }
+        "clipmap x=${x - r}..${x + r}: " + rows.joinToString(" | ")
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["findloc"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     val id = a.getOrNull(1)?.toIntOrNull()
