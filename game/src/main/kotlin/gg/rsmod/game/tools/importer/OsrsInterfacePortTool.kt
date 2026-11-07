@@ -143,6 +143,9 @@ object OsrsInterfacePortTool {
         val extras = ArrayList<String>()
         val reports = ArrayList<String>()
         val sprites = LinkedHashSet<Int>()
+        // An onLoad script can size a component the loop has not added yet (776: component 0 runs 6609 for component 5), so such
+        // writes wait until every component of the group is in the list.
+        val afterComponents = ArrayList<() -> Unit>()
         val ids = node.fieldNames().asSequence().map { it.toInt() }.sorted().toList()
         require(ids == (0 until ids.size).toList()) { "group $group: component ids not 0..${ids.size - 1}" }
         var next = ids.size
@@ -249,7 +252,8 @@ object OsrsInterfacePortTool {
                             alignX = 0, alignY = 0, shadow = true, colour = 0xff981f)
                         bottom = y + h
                     }
-                    list.first { it.id == parent }.scrollH = bottom
+                    val scrollHeight = bottom
+                    afterComponents += { list.first { it.id == parent }.scrollH = scrollHeight }
                     extras += "invocation info rows (6609/6610) parent=$parent components=$first..${next - 1} (5 per row: back,line,icon,name,text; " +
                         "order = enum 4664 without category 15) scrollHeight=$bottom; scrollbar ${args[1].asInt() and 0xFFFF} not drawn (mouse wheel scrolls)"
                 } else {
@@ -257,6 +261,7 @@ object OsrsInterfacePortTool {
                 }
             }
         }
+        afterComponents.forEach { it() }
         if (group == 481) {
             // [proc,toa_hud_status_init](container, filler) per party slot 0..7 (containers 6+4i, fillers 9+4i): a p12 shadowed text filling
             // the container and a 26x26 tiling graphic at the bottom of the filler. 667 has no server IF_SETSIZE, so the filler graphic keeps
