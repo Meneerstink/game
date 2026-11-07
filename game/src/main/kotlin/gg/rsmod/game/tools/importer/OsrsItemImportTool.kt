@@ -312,6 +312,8 @@ object OsrsItemImportTool {
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),
+            // N462 07-11 (ChatGPT-B Crondis): Gricoller's can 13353 waters the palm too (OSRS Wiki Palm of Resourcefulness).
+            "toa-gricoller" to listOf(Spec(13353)),
             // N462 ToA chest commons not imported yet (wiki Chest (Tombs of Amascut): Lily of the Sands 1-46 noted, Blood essence 1-6).
             "toa-commons" to listOf(Spec(27272, noted = true), Spec(26390, noted = true), Spec(26392)), // Lily of the Sands, Blood essence (inactive + active)
             // Voidwaker and its three pieces. The wiki's "slash sword" styles are the 667 scimitar style set 6: Rune scimitar

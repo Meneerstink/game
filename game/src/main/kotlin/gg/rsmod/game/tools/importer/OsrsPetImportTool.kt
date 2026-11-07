@@ -404,6 +404,9 @@ object OsrsPetImportTool {
             // N462 (11-06 23:xx): the second Warden core (NpcID 11771, model 45293 - not identical to 11770's 45291, so no alias), same
             // rig 2028 and core sequence 9704 as 11770.
             "toa-core" to listOf(11771 to listOf(9704)),
+            // N462 07-11 (ChatGPT-B puzzles): Apmeken big baboons 11712-11714 (same models as 11709-11711 but scale 38, so no alias) and the
+            // Scabaras ranged nuisance Scarab 11697 (Spitting Scarab model 46428, scale 60) - rigs 2063 / 2083 like their kin.
+            "toa-bosses2" to listOf(11712 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), 11713 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), 11714 to listOf(9737, 9738, 9739, 9740, 9741, 9742, 9743, 9744, 9745, 9746, 9747, 9748, 9749, 9750, 9751, 9752, 9753, 9754, 9755, 9756), 11697 to listOf(9584, 9585, 9586, 9587, 9588, 9589, 9590, 9591, 9592, 9593, 9594, 9595, 9596, 9597, 9598, 9599)),
             "calvarion" to listOf(
                 11993 to listOf(9969, 9971, 9973, 9975, 9977, 9978, 9980),
                 11994 to listOf(9970, 9972, 9974, 9976, 9979, 9981),
