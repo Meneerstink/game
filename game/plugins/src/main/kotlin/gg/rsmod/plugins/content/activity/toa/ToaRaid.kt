@@ -40,6 +40,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         scene = ToaScene(this).also { it.refresh() }
     }
     fun openChest(player: Player, obj: gg.rsmod.game.model.entity.GameObject): Boolean = scene?.openChest(player, obj) == true
+    /** A unique was rolled: the burial chamber's flames glow purple for the whole party ([ToaScene.vault]). */
+    fun vaultPurple() { scene?.vault(purple = true) }
 
     fun contains(player: Player): Boolean = !closed && player.uid in remaining && map.area.contains(player.tile)
     fun players(): List<Player> = remaining.mapNotNull { members[it] }.filter { it.uid !in offline && it.isOnline && contains(it) }

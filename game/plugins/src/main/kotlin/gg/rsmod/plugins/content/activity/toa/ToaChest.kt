@@ -69,6 +69,7 @@ object ToaChest {
             )
         }
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
+        if (result.purpleWinner != null) glowPurple(raid)
         present.forEach { player ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
             if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
@@ -88,6 +89,9 @@ object ToaChest {
             ToaRewards.open(player, raid)
         }
     }
+
+    /** Wiki ToA Rewards: a rolled unique makes the flames around Osmumten's sarcophagus glow purple ([ToaScene.vault]). */
+    private fun glowPurple(raid: ToaRaid) = raid.vaultPurple()
 
     private fun noted(player: Player, id: Int): Int {
         val def = player.world.definitions.getNullable(ItemDef::class.java, id) ?: return id
