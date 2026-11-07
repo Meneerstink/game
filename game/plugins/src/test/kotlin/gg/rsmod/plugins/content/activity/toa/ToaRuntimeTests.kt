@@ -19,6 +19,31 @@ class ToaRuntimeTests {
     }
     @AfterTest fun cleanup() { unmockkObject(ToaRecovery); unmockkObject(ToaLobby.Companion) }
 
+    @Test fun `raid queries use only cached roster and reconnect replaces the old player object`() {
+        val f = Fixture(8)
+        val raid = ToaRaid(1, f.players.take(2).map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        repeat(100) { assertEquals(f.players.take(2), raid.players()) }
+        val old = f.players[0]
+        raid.disconnect(old)
+        assertEquals(listOf(f.players[1]), raid.players())
+        val replacement = mockk<Player>(relaxed = true)
+        every { replacement.uid } returns old.uid
+        every { replacement.world } returns f.world
+        every { replacement.isOnline } returns true
+        every { replacement.isDead() } returns false
+        every { replacement.tile } answers { f.tiles.getValue(old.uid) }
+        every { replacement.teleportTo(any()) } answers { f.tiles[old.uid] = firstArg(); Unit }
+        raid.reconnect(replacement)
+        assertEquals(listOf(replacement, f.players[1]), raid.players())
+        raid.remove(old.uid)
+        raid.reconnect(old)
+        assertEquals(listOf(f.players[1]), raid.players())
+        verify(exactly = 1) { f.world.players }
+        raid.close()
+        assertTrue(raid.players().isEmpty())
+    }
+
     @Test fun `room starts once after landing and dead entrants cannot reenter or fight`() {
         val f = Fixture(2)
         val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)

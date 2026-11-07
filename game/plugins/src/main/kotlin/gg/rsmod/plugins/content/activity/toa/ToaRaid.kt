@@ -15,6 +15,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         private set
     val memberNames = hashMapOf<PlayerUID, String>()
     val remaining = roster.toMutableSet()
+    // Resolve the roster once. Hot encounter queries must cost O(party), not O(world player capacity).
+    // Login can create a new Player object: reconnect replaces the cached reference below.
+    private val members = world.players.entries.filterNotNull().filter { it.uid in remaining }.associateBy { it.uid }.toMutableMap()
     val offline = mutableSetOf<PlayerUID>()
     val participants = ToaParticipants()
     val checkpoints = ToaCheckpoints()
@@ -39,7 +42,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     fun openChest(player: Player, obj: gg.rsmod.game.model.entity.GameObject): Boolean = scene?.openChest(player, obj) == true
 
     fun contains(player: Player): Boolean = !closed && player.uid in remaining && map.area.contains(player.tile)
-    fun players(): List<Player> = world.players.entries.filterNotNull().filter { it.uid in remaining && contains(it) }
+    fun players(): List<Player> = remaining.mapNotNull { members[it] }.filter { it.uid !in offline && it.isOnline && contains(it) }
     /** Boss and puzzle cards must target this live view, excluding spectators and disconnected entrants. */
     fun activePlayers(): List<Player> = progress.current?.let { run ->
         players().filter { !it.isDead() && participants.alive(run, it.uid) && inRoom(it, run.key) }
@@ -139,9 +142,11 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     }
 
     fun disconnect(player: Player) { offline += player.uid; lose(player.uid) }
-    fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid }
+    fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid; members.remove(uid) }
 
     fun reconnect(player: Player) {
+        if (player.uid !in remaining) return
+        members[player.uid] = player
         offline -= player.uid
         // 21-supplies-dood: returning to a new active encounter also counts as a death/spectator.
         progress.current?.takeIf { it.status == ToaRoomStatus.RUNNING }?.let { run ->
@@ -253,6 +258,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         participants.clear()
         retry = null
         scene?.close(); scene = null
+        members.clear()
     }
 
     private fun stopTransientCombat() {
