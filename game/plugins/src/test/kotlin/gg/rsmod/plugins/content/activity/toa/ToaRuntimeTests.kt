@@ -24,7 +24,7 @@ class ToaRuntimeTests {
         val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
         f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
         var starts = 0
-        val registration = ToaRooms.register(ToaRoomKey(ToaPath.HET, false)) { active -> object : ToaRoom {
+        val registration = ToaRooms.replaceForTest(ToaRoomKey(ToaPath.HET, false)) { active -> object : ToaRoom {
             override fun start(run: ToaRoomRun) {
                 starts++
                 assertEquals(ToaPath.HET.challengeEntry, ToaMap.source(active.map, f.players[0].tile))
