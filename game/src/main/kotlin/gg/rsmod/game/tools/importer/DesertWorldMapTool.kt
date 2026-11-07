@@ -52,9 +52,18 @@ object DesertWorldMapTool {
                 val worldMap = library.index(FeroxWorldMapTool.WORLD_MAP_INDEX)
                 val mainGroup = worldMap.archive("main") ?: error("world map group main missing")
                 val areaFile = mainGroup.file("area") ?: error("main/area missing")
-                val current = library.data(FeroxWorldMapTool.WORLD_MAP_INDEX, mainGroup.id, areaFile.id) ?: error("main/area unreadable")
+                val live = library.data(FeroxWorldMapTool.WORLD_MAP_INDEX, mainGroup.id, areaFile.id) ?: error("main/area unreadable")
+                // --base <file>: rebuild from that main/area (the journalled original of an earlier run) instead of the current one
+                val baseFile = args.indexOf("--base").takeIf { it >= 0 }?.let { File(args[it + 1]) }
+                val current = baseFile?.readBytes() ?: live
+                println("BASE ${baseFile ?: "current cache"} ${current.size} bytes (cache now ${live.size})")
                 val area = FeroxWorldMapTool.parse(current)
                 val have = area.records.map { it.x to it.z }.toSet()
+                // 18:0x testclient crash (WorldMap.decodeTile AIOOBE -117888): the client sizes its tile arrays from the map area's display
+                // chunks; a square outside them writes out of bounds. New squares only inside the box of the snapshot's own records.
+                val minX = area.records.minOf { it.x }; val maxX = area.records.maxOf { it.x }
+                val minZ = area.records.minOf { it.z }; val maxZ = area.records.maxOf { it.z }
+                println("RECORD BOX x $minX..$maxX z $minZ..$maxZ")
 
                 val modernUnderlays = modern.files(2, 1).mapValues { ModernFloorDefs.decodeUnderlay(it.value) }
                 val modernOverlays = modern.files(2, 4).mapValues { ModernFloorDefs.decodeOverlay(it.value) }
@@ -109,6 +118,7 @@ object DesertWorldMapTool {
                 for (x in XS) for (z in ZS) {
                     val sq = x to z
                     if (sq in have && sq !in OVERRIDE && sq !in SEA_FIX) continue
+                    if (x !in minX..maxX || z !in minZ..maxZ) { println("square ${x}_$z: outside the map area box - left out"); continue }
                     val region = (x shl 8) or z
                     val osrs = runCatching { ModernRegion.load(modern, region, modernKeys[region]) }.getOrElse {
                         println("square ${x}_$z: not in OSRS either (${it.message?.take(60)})"); null
@@ -218,7 +228,7 @@ object DesertWorldMapTool {
                 println("NEW=$appended OVERRIDE=$rebuilt main/area ${current.size} -> ${updated.size} bytes")
                 if (appended + rebuilt > 0) {
                     mutations += CacheMutation(FeroxWorldMapTool.WORLD_MAP_INDEX, mainGroup.id, areaFile.id, updated,
-                        "N462 world map main/area: OSRS desert squares (world map only)", CacheItemProbeTool.sha1(current))
+                        "N462 world map main/area: OSRS desert squares (world map only)", CacheItemProbeTool.sha1(live))
                 }
             } finally {
                 library.close()
