@@ -29,9 +29,17 @@ ToaIds.item(CrondisRoom.CONTAINER)?.let { id ->
     on_item_option(id, "Destroy") {
         val item = player.getInteractingItem()
         val slot = player.getInteractingItemSlot()
+        val room = ToaPuzzles.of(player) as? CrondisRoom
         player.queue {
-            //Water-container Wiki destroy text, not a custom confirmation message.
-            if (confirmWarning("Another will be nearby.") && player.inventory[slot] === item) player.inventory[slot] = null
+            if (room != null && !room.eligible(player)) return@queue
+            val dialog = this
+            var waiting = true
+            room?.scope?.onClose { if (waiting) dialog.terminate() } //options()'s terminateAction closes the owned chatbox too.
+            try {
+                //Water-container Wiki destroy text. A stale Yes cannot consume an item after a room wipe/retry.
+                if (confirmWarning("Another will be nearby.") && (room == null || room.eligible(player)) &&
+                    player.inventory[slot] === item) player.inventory[slot] = null
+            } finally { waiting = false }
         }
     }
     can_drop_item(id) { false }

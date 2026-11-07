@@ -37,7 +37,7 @@ class CrondisPuzzle<K : Any>(val partySize: Int) {
     }
 
     fun water(player: K): Double = carriers[player]?.water ?: 0.0
-    // Water container wiki: a nonempty container never displays less than1%, including repeated halvings.
+    //Wiki guarantees nonempty>=1%. ONZEKER T18: ceil rounding of fractions (the exact fractional display rule is not published).
     fun displayedWater(player: K): Int = ceil(water(player)).toInt().coerceIn(0, 100)
 
     /** Refill duration is supplied by a measured reference; T18 explicitly has no published duration. */
