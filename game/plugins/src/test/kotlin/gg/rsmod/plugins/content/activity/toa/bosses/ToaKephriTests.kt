@@ -7,6 +7,32 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaKephriTests {
+    @Test fun `Agile retreats at running speed between attacks and stops at a real blocked edge`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false; every { p.tile } returns Tile(3200, 3200)
+        every { p.equipmentBonuses } returns IntArray(18)
+        val scarab = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
+        every { scarab.tile } returns Tile(3201, 3200)
+        every { scarab.isSpawned() } returns true; every { scarab.isDead() } returns false
+        every { scarab.world } returns f.world
+        every { scarab.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { scarab.equipmentBonuses } returns IntArray(18)
+        val east = gg.rsmod.game.model.Direction.EAST
+        every { f.world.collision.canStep(Tile(3201, 3200), east) } returns true
+        every { f.world.collision.canStep(Tile(3202, 3200), east) } returns true
+        val s = KephriCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        s.agile += scarab; s.autoDirector = {}; s.specialDirector = {}
+        repeat(2) { s.cycle() }
+        io.mockk.verify(exactly = 2) {
+            scarab.walkTo(Tile(3203, 3200), gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN)
+        }
+        every { f.world.collision.canStep(Tile(3202, 3200), east) } returns false
+        s.cycle()
+        io.mockk.verify(exactly = 1) {
+            scarab.walkTo(Tile(3202, 3200), gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN)
+        }
+        s.close()
+    }
     @Test fun `Agile hatch ignores raid level while preserving infobox group health`() = withToaNpcMappings(11728, 11729) {
         val s = KephriCombat.Session(ToaTestFixture().npc, ToaTestContext(partySize = 8, raidLevel = 600, pathLevel = 6))
         s.autoDirector = {}; s.specialDirector = {}

@@ -92,7 +92,7 @@ object AkkhaCombat : CombatScript() {
             CombatClass.MAGIC to ToaAutoAttack(18, CombatClass.MAGIC, 3, 1, 10, prayerAtLaunch = true, projectile = 2253))
         var autoEvidence: Map<CombatClass, ToaAutoAttack> = baseAutos
         private var shadowCharge = 0
-        private var styleChanged = 0
+        private var lastAttack = 0
         private val slowUntil = mutableMapOf<Player, Int>()
         private val previousDelay = mutableMapOf<Player, Int>()
         private val burning = mutableMapOf<Player, Int>()
@@ -154,7 +154,7 @@ object AkkhaCombat : CombatScript() {
             if (enraged) { orbDirector(this); return }
             shadowChargeDirector(this)
             // ONZEKER T12: more than one minute becomes101ticks; prevents an unreachable melee target stalling forever.
-            if (tick - styleChanged > 100 && !memoryActive) { style = nextStyle(style); autos = 0; styleChanged = tick; retarget() }
+            if (tick - lastAttack > 100 && !memoryActive) { style = nextStyle(style); autos = 0; lastAttack = tick; retarget() }
             if (memoryActive || tick < nextAttack) return
             val live = players()
             val tank = target?.takeIf { it in live } ?: live.firstOrNull() ?: return
@@ -165,7 +165,7 @@ object AkkhaCombat : CombatScript() {
             if (style == CombatClass.MELEE && !meleeReach(meleeTarget.tile)) return
             if (autos >= autosBeforeSpecial()) {
                 specialDirector(this)
-                autos = 0; style = nextStyle(style); styleChanged = tick; retarget()
+                autos = 0; style = nextStyle(style); lastAttack = tick; retarget()
             } else {
                 val spec = autoEvidence[style] ?: baseAutos.getValue(style)
                 run {
@@ -175,6 +175,8 @@ object AkkhaCombat : CombatScript() {
 
                 }
                 autos++
+                // Wiki Akkha57: the minute counts inability to attack, not time spent in the current style.
+                lastAttack = tick
             }
             nextAttack = tick + stats.speed
         }

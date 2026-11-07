@@ -3,6 +3,42 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 import kotlin.test.*
 
 class ToaWardensTests {
+    @Test fun `nearly arrived P1 charged shot survives P2 transition but distant shots and reset do not`() {
+        fun delivered(delay: Int, reset: Boolean = false): Int {
+            val f = ToaTestFixture(); val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+            io.mockk.every { p.isOnline } returns true; io.mockk.every { p.isDead() } returns false
+            io.mockk.every { p.tile } returns gg.rsmod.game.model.Tile(3200, 3200)
+            val s = WardensCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+            s.p1Director = {}; s.p2Director = {}
+            var hits = 0
+            io.mockk.every { p.addHit(any()) } answers { hits++; Unit }
+            s.chargedShot(listOf(p), WardensCombat.Warden.ELIDINIS, delay) { 30 }
+            repeat(2) { s.cycle() }
+            s.startPhaseTwo()
+            if (reset) s.close()
+            repeat(delay + 1) { s.cycle() }
+            s.close()
+            return hits
+        }
+        assertEquals(1, delivered(6), "orb with4ticks left must still hit after the obelisk falls")
+        assertEquals(0, delivered(10), "orb with8ticks left must be cancelled")
+        assertEquals(0, delivered(6, reset = true), "wipe/close must still cancel the carried shot")
+    }
+    @Test fun `windmill has all four arms instead of leaving two entire quadrants safe`() {
+        val origin = gg.rsmod.game.model.Tile(3808, 5154, 1)
+        val first = WardensCombat.windmillTiles(origin, 0)
+        for (distance in listOf(1, 6, 12)) {
+            for ((dx, dz) in listOf(0 to 1, 1 to 0, 0 to -1, -1 to 0))
+                assertTrue(origin.transform(dx * distance, dz * distance) in first)
+        }
+        assertFalse(origin in first)
+        assertFalse(origin.transform(13, 0) in first)
+        val diagonal = WardensCombat.windmillTiles(origin, 1)
+        for ((dx, dz) in listOf(1 to 1, 1 to -1, -1 to -1, -1 to 1))
+            assertTrue(origin.transform(dx * 6, dz * 6) in diagonal)
+        assertFalse(origin.transform(6, 0) in diagonal)
+        assertEquals(first, WardensCombat.windmillTiles(origin, 8))
+    }
     @Test fun `P2 protection swaps on core return and P3 shows all prayers only during siphons`() {
         val icons = gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
         io.mockk.mockkObject(icons)

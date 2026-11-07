@@ -60,6 +60,11 @@ object WardensCombat : CombatScript() {
         if ((warden == Warden.ELIDINIS) == (returnedCores % 2 == 0)) CombatClass.MAGIC else CombatClass.RANGED
     /** Akkha's Phantom oldid15196965: ranged first, then three attacks of each style. */
     fun akkhaPhantomStyle(attackIndex: Int): CombatClass = if (attackIndex / 3 % 2 == 0) CombatClass.RANGED else CombatClass.MAGIC
+    /** Strategies1484: FOUR windmill arms, with the existing eight-position clockwise rotation. */
+    fun windmillTiles(origin: Tile, rotation: Int): Set<Tile> = (0 until 4).flatMap { arm ->
+        val direction = gg.rsmod.game.model.Direction.ANGLED_ORDER[Math.floorMod(rotation + arm * 2, 8)]
+        (1..12).map { n -> origin.transform(direction.getDeltaX() * n, direction.getDeltaZ() * n) }
+    }.toSet()
     fun phantoms(warden: Warden) = if (warden == Warden.ELIDINIS) listOf(11777, 11776) else listOf(11774, 11775)
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
@@ -101,6 +106,7 @@ object WardensCombat : CombatScript() {
         private val phantomNext = mutableMapOf<Int, Int>()
         private val phantomAttacks = mutableMapOf<Int, Int>()
         private var p2Attacks = 0
+        private var phaseTwoStarted = Int.MIN_VALUE
         private var lastShieldHit = 0
         private var removedRows = 0
         private var enrageStart = 0
@@ -266,9 +272,7 @@ object WardensCombat : CombatScript() {
                         hurt(column, 10 + i)
                     }
                     ObeliskSpecial.WINDMILL -> repeat(8) { i ->
-                        val direction = gg.rsmod.game.model.Direction.ANGLED_ORDER[i]
-                        val opposite = direction.getOpposite()
-                        val tiles = (1..12).flatMap { n -> listOf(origin.transform(direction.getDeltaX() * n, direction.getDeltaZ() * n), origin.transform(opposite.getDeltaX() * n, opposite.getDeltaZ() * n)) }.toSet()
+                        val tiles = windmillTiles(origin, i)
                         tiles.forEach { gfx(2198, it) }; hurt(tiles, 2 + i * 2)
                     }
                     ObeliskSpecial.LIGHTNING -> players().map { Tile(it.tile) }.forEach { t ->
@@ -442,8 +446,15 @@ object WardensCombat : CombatScript() {
         }
         fun chargedShot(victims: List<Player>, warden: Warden, delay: Int, groupDamage: (Player) -> Int) {
             val solo = context.partySize == 1
-            victims.forEach { p -> attack(p, if (solo) { if (warden == Warden.ELIDINIS) 45 else 30 } else groupDamage(p),
-                null, delay, accuracy = false) }
+            val impact = tick + delay
+            val maxima = victims.associateWith { p -> if (solo) { if (warden == Warden.ELIDINIS) 45 else 30 } else groupDamage(p) }
+            // Strategies1446: an orb with ~3seconds left still hits after the obelisk falls. Keep only this P1
+            // callback across the transition, not UFOs/other hazards. T20: the approximate3seconds becomes5ticks.
+            later(delay, acrossPhase = true) {
+                if (phase == Phase.OBELISK || phase == Phase.P2 && impact.toLong() - phaseTwoStarted <= 5) {
+                    maxima.forEach { (p, max) -> attack(p, max, null, accuracy = false) }
+                }
+            }
         }
         private fun applyStats(spec: ToaNpcStats) {
             npc.combatDef = spec.definition(context, path = false).copy(completesEncounter = false,
@@ -480,6 +491,7 @@ object WardensCombat : CombatScript() {
         }
         fun startPhaseTwo() {
             if (phase != Phase.OBELISK) return
+            phaseTwoStarted = tick
             newPhase(); phase = Phase.P2
             // Tie selection is unpublished. A room adapter must supply a choice if both sides were disrupted equally.
             // ONZEKER T19: ties use the existing Tumeken default; all unequal choices follow detailed Strategies.

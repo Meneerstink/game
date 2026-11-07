@@ -48,6 +48,19 @@ object BabaCombat : CombatScript() {
     data class RollingRow(val tiles: List<Tile>, val cracked: Int)
     fun overlaps(a: Tile, sizeA: Int, b: Tile, sizeB: Int): Boolean = a.height == b.height &&
         a.x < b.x + sizeB && a.x + sizeA > b.x && a.z < b.z + sizeB && a.z + sizeA > b.z
+    /** Strategies1350: only contact with the FRONT of a rolling boulder knocks a player back.
+     * Its rear and sides remain passable; its full footprint still destroys baboons and debris (1354).
+     */
+    fun rollingContact(player: Tile, rock: Tile, size: Int, direction: Direction): Boolean {
+        if (!overlaps(player, 1, rock, size)) return false
+        return when (direction) {
+            Direction.WEST -> player.x == rock.x
+            Direction.EAST -> player.x == rock.x + size - 1
+            Direction.SOUTH -> player.z == rock.z
+            Direction.NORTH -> player.z == rock.z + size - 1
+            else -> false
+        }
+    }
     override suspend fun handleSpecialCombat(it: QueueTask) {
         val npc = it.npc
         if (npc.attr[ToaEncounter.SESSION]?.closed != false) ToaEncounter.context(npc)?.let { ToaEncounter.attach(npc, it, ::Session) }
@@ -299,7 +312,7 @@ object BabaCombat : CombatScript() {
             val next = rock.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
             rock.moveTo(next)
             (baboons + debris).filter { overlaps(it.tile, it.getSize(), next, rock.getSize()) }.toList().forEach { remove(it); baboons.remove(it); debris.remove(it) }
-            players().filter { p -> overlaps(p.tile, 1, next, rock.getSize()) }.forEach { p ->
+            players().filter { p -> rollingContact(p.tile, next, rock.getSize(), direction) }.forEach { p ->
                 attack(p, ToaScale.damage(damage, context), null, accuracy = false)
                 var destination = Tile(p.tile)
                 repeat(4) {
