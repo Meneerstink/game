@@ -146,6 +146,16 @@ class ToaEncounterTests {
             s.close()
         }
     }
+    @Test fun `minion melee reach uses its complete footprint without a diagonal or plane shortcut`() {
+        val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())
+        val child = mockk<Npc>(relaxed = true)
+        every { child.tile } returns Tile(3205, 3205); every { child.getSize() } returns 3
+        assertTrue(s.actorMeleeReach(child, Tile(3208, 3207)))
+        assertTrue(s.actorMeleeReach(child, Tile(3206, 3206)))
+        assertFalse(s.actorMeleeReach(child, Tile(3208, 3208)))
+        assertFalse(s.actorMeleeReach(child, Tile(3209, 3207)))
+        assertFalse(s.actorMeleeReach(child, Tile(3208, 3207, 1)))
+    }
     @Test fun `boss death cancels queued special and cleanup removes children exactly once`() {
         val f = ToaTestFixture(); val s = AkkhaCombat.Session(f.npc, ToaTestContext())
         val child = mockk<Npc>(relaxed = true); every { child.isSpawned() } returns true
