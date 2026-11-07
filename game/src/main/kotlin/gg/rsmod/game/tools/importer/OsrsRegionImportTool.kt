@@ -126,6 +126,17 @@ object OsrsRegionImportTool {
     /** N462: OSRS sea overlays (texture 1 / 130..149, and the plain shallow sea 150) -> rev-667 sea overlay 111. */
     val NECROPOLIS_SEA: Map<Int, Int> = (listOf(5, 150) + (441..501)).associateWith { 111 }
 
+    /**
+     * N601 (owner 07-11 20:1x 'A': 667-HD floors for the Necropolis and every ToA room). The textured rev-667 underlays the rev-667
+     * desert towns are built from (census of our cache 07-11 20:2x, plane 0 tiles: Sophanem 51_43, Pollnivneach 52_46, Nardah 53_45):
+     * 60/61 sand (texture 128), 63 earth (154), 125 (612), 128 (348), 27 (425), 64 (510), 49 (312), 48 (495), 47 grass (519).
+     */
+    val DESERT_HD_UNDERLAYS: Set<Int> = setOf(60, 61, 63, 125, 128, 27, 64, 49, 48, 47)
+
+    /** The textured rev-667 underlays of the desert pyramid/dungeon interiors (Pyramid Plunder 29-31 x 68-70, the dungeons below the
+     * desert 49-55 x 139-150; same census): sandstone, dark stone and the black void (71 = 030303). */
+    val PYRAMID_HD_UNDERLAYS: Set<Int> = setOf(61, 93, 56, 54, 55, 71, 62, 125, 145, 144, 0, 140, 111, 147, 102)
+
     val BATCHES: Map<String, Batch> =
         mapOf(
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
@@ -219,6 +230,18 @@ object OsrsRegionImportTool {
                 // underlay census 2026-11-06: definitions no tile of another square uses (2 39 40 42 82 131 132 135 141 151 152 153) + the free
                 // 166..173 (a tile stores underlay = opcode - 81, so 173 is the last one)
                 newUnderlaySlots = listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)),
+            // N601 (owner 07-11 20:1x 'A'): third tile pass = 667-HD ground. Overlays stay as the earlier passes made them (sea 111,
+            // exact plain colours - the slots are not rewritten, so the nearest plain match is the same exact slot); the underlays map
+            // onto the textured rev-667 town/desert underlays instead of the plain ToA slots.
+            "necropolis-hd" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis on 667-HD desert underlays",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
+                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_SEA),
+            "necropolis-west-hd" to Batch(listOf(13098), emptyList(), "Necropolis west on 667-HD desert underlays",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
+                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_SEA),
+            "toa-map-hd" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
+                "Tombs of Amascut on 667-HD pyramid underlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
+                keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true, underlayCandidates = PYRAMID_HD_UNDERLAYS),
             "toa-raid" to Batch(listOf(14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut raid rooms", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24, plainOverlaysStayPlain = true),
             // The ToA lobby (Osmumten's tomb entrance hall, Grouping Obelisk 46068, Invocation Board 46073): OSRS 13454 = 52_142, absent in
