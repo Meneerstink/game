@@ -11,6 +11,7 @@ class ToaRoomScope(val raid: ToaRaid, val run: ToaRoomRun) {
     private var closed = false
     private val npcs = mutableListOf<Npc>()
     private val objects = mutableListOf<Pair<GameObject, GameObject?>>()
+    private val ownedObjects = java.util.Collections.newSetFromMap(java.util.IdentityHashMap<GameObject, Boolean>())
     private val cleanup = mutableListOf<() -> Unit>()
     /** Every npc this room spawned (killed ones too, until close) - their damage maps give the room points (ToaChest.creditRoom). */
     val spawned: List<Npc> get() = npcs.toList()
@@ -28,7 +29,11 @@ class ToaRoomScope(val raid: ToaRaid, val run: ToaRoomRun) {
         val original = raid.world.chunks.getOrCreate(obj.tile)
             .getEntities<GameObject>(obj.tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
             .firstOrNull { raid.world.locLayer(it.type) == raid.world.locLayer(obj.type) }
+            //A previous state of this scope is transient too. Restoring a COPY of it during close leaves an unowned loc:
+            //GameObject has identity equality, so a later remove(previousState) cannot remove that copy.
+            ?.takeUnless { it in ownedObjects }
         raid.world.spawn(obj)
+        ownedObjects += obj
         objects += obj to original
     }
 
@@ -52,6 +57,6 @@ class ToaRoomScope(val raid: ToaRaid, val run: ToaRoomRun) {
             raid.world.remove(obj)
             if (original != null) raid.world.spawn(DynamicObject(original))
         }
-        cleanup.clear(); npcs.clear(); objects.clear()
+        cleanup.clear(); npcs.clear(); objects.clear(); ownedObjects.clear()
     }
 }

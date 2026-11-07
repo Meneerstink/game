@@ -40,6 +40,33 @@ class ToaCrondisTests {
         }
     }
 
+    @Test fun `two players using the same waterfall get only one fill through immediate and delayed item routes`() {
+        val saved = ToaPuzzleReferences.crondis
+        val defaults = saved ?: CrondisDefaults.reference()
+        ToaPuzzleReferences.crondis = defaults.copy(trapEvents = ToaPuzzleReferences.Evidence(
+            defaults.trapEvents.value.map { it.copy(cycle = it.cycle + 10000) },
+            "postpone traps beyond the isolated waterfall contention check"))
+        try {
+            for (immediate in listOf(false, true)) {
+                lateinit var room: CrondisRoom
+                ToaPuzzleFixture(2, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
+                    f.players.forEach {
+                        it.inventory.add(assertNotNull(ToaIds.item(CrondisRoom.CONTAINER)))
+                        f.at(it, Tile(3927, 5255))
+                    }
+                    f.advance()
+                    val waterfall = f.obj(45398, CrondisRoom.WATERFALLS.first())
+                    f.players.forEach { assertTrue(room.fill(it, waterfall, itemUsed = immediate)) }
+                    f.advance()
+                    assertEquals(100.0, f.players.sumOf { room.puzzle.water(it.uid) })
+                    assertEquals(1, f.players.count { room.puzzle.water(it.uid) == 100.0 })
+                    assertFalse(room.puzzle.waterfallAvailable(0, f.cycle))
+                    assertNull(f.raid.progress.boss(ToaPath.CRONDIS))
+                }
+            }
+        } finally { ToaPuzzleReferences.crondis = saved }
+    }
+
     @Test fun `world queues advance a room once per cycle and stop immediately after wipe`() {
         lateinit var room: CrondisRoom
         ToaPuzzleFixture(1, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->

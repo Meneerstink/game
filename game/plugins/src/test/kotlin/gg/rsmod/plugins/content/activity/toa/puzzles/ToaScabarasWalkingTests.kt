@@ -37,6 +37,38 @@ class ToaScabarasWalkingTests {
         }
     }
 
+    @Test fun `every memory and light transition and every sum witness is reachable in every chamber`() {
+        val kinds = listOf(Kind.MEMORY, Kind.LIGHTS, Kind.OBELISKS, Kind.ADDITION)
+        for (rotation in kinds.indices) {
+            val layout = ScabarasDefaults.layoutForOrder(8, kinds.drop(rotation) + kinds.take(rotation))
+            val geometry = ToaPuzzleSourceCollision("scabaras", Tile(3520, 5248))
+            geometry.refresh(layout.gates.map { DynamicObject(it.closedLoc, it.shape, it.rotation, it.tile) } + listOf(
+                DynamicObject(45338, 10, 0, layout.memoryButton), DynamicObject(45339, 10, 0, layout.tablet)))
+            //Connectivity with every OTHER plate excluded proves that any five-flash sequence or lights solution can be walked.
+            for (board in listOf(layout.memoryTiles, layout.lights)) for (from in board) for (to in board) {
+                if (from == to) continue
+                assertTrue(geometry.route(from, to, stepOn = true, avoid = board.toSet() - to).success,
+                    "plate transition $from->$to in chamber rotation$rotation")
+            }
+            val cellIndex = layout.additionTiles.withIndex().associate { it.value to it.index }
+            val westMiddle = Tile(layout.additionTiles.minOf { it.x } - 1,
+                layout.additionTiles.minOf { it.z } + 2)
+            for ((target, cells) in solutions) {
+                val witness = cells.map { layout.additionTiles[it] }.toSet()
+                val visited = linkedSetOf<Int>()
+                var position = westMiddle
+                for (destination in witness) {
+                    val route = geometry.route(position, destination, stepOn = true, avoid = layout.additionTiles.toSet() - witness)
+                    assertTrue(route.success, "target$target in chamber rotation$rotation, $position->$destination")
+                    route.path.forEach { tile -> cellIndex[tile]?.let(visited::add) }
+                    position = route.tail
+                }
+                assertEquals(cells.toSet(), visited, "no extra glyph may be activated while walking")
+                assertEquals(target, visited.sumOf { ScabarasPuzzle.NUMBER_GRID[it] })
+            }
+        }
+    }
+
     @Test fun `all chamber assignments have a physically walked solo and eight player solve route`() {
         val saved = ScabarasReferences.profile
         val defaults = ScabarasDefaults.reference()
