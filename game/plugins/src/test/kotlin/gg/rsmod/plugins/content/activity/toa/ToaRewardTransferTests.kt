@@ -15,6 +15,7 @@ class ToaRewardTransferTests {
     @Test fun `full inventory retains escrow and inventory bank reconnect conserve the actual items`() {
         val defs = mockk<DefinitionSet>()
         every { defs.get(ItemDef::class.java, any()) } answers { ItemDef(secondArg<Int>()).apply { stacks = id == 995 } }
+        every { defs.getNullable(ItemDef::class.java, any()) } answers { ItemDef(secondArg<Int>()).apply { stacks = id == 995 } }
         val world = mockk<World>(relaxed = true)
         every { world.definitions } returns defs
         val player = mockk<Player>(relaxed = true)

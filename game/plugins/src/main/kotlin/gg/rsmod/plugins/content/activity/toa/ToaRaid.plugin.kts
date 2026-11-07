@@ -169,6 +169,9 @@ on_command("toatest", Privilege.ADMIN_POWER) {
         "wipe" -> raid.progress.current?.wipe(world.currentCycle)
         "wardens" -> raid.enterWardens(player)
         "reward" -> raid.crystal(player, null)
+        // Wardens P2 -> P3 without the core fight (the P2 style alternates per returned core; test accounts carry one style).
+        "p3" -> (gg.rsmod.plugins.content.activity.toa.bosses.ToaEncounter.forPlayer(player)
+            as? gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Session)?.let { it.exposeCore(); it.startPhaseThree(); true } ?: false
         else -> false
     }
     player.message("ToA test: $result; clears=${raid.progress.completedPaths.size}, attempts=${raid.progress.failedAttempts}, ticks=${raid.progress.elapsedCycles(world.currentCycle)}")

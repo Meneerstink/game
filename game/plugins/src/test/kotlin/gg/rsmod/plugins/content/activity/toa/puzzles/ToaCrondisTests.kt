@@ -57,7 +57,9 @@ class ToaCrondisTests {
                     f.advance()
                     val waterfall = f.obj(45398, CrondisRoom.WATERFALLS.first())
                     f.players.forEach { assertTrue(room.fill(it, waterfall, itemUsed = immediate)) }
-                    f.advance()
+                    // The click lands outside a cycle here; in the server the delayed route's queue starts in the click's own tick, so
+                    // wait(2) fills one tick later (Strategies793: the item route saves exactly 1 tick) = two fixture advances.
+                    f.advance(if (immediate) 1 else 2)
                     assertEquals(100.0, f.players.sumOf { room.puzzle.water(it.uid) })
                     assertEquals(1, f.players.count { room.puzzle.water(it.uid) == 100.0 })
                     assertFalse(room.puzzle.waterfallAvailable(0, f.cycle))
