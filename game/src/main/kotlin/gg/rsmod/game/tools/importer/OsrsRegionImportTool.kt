@@ -541,7 +541,9 @@ object OsrsRegionImportTool {
                 // ---- models ----
                 val census = ModelNamespaceCensusTool.census(FeroxImportTool.GAME_CACHE, FeroxImportTool.FILE_SERVER_CACHE, File(FeroxImportTool.ASSET_MAP))
                 check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
-                val free = census.provenFreeHoles.filter { it in 1..0xFFFF }.sorted().iterator()
+                // N462 07-11: the same pool as OsrsLocImportTool - census holes + the proven-safe range, which since the model-id
+                // fix (archive 37, ModelIdAllocator ceiling 131071) runs above 65535 ('Out of proven-free model ids' for 13098).
+                val free = (census.provenFreeHoles.filter { it >= 1 }.sorted().asSequence() + census.safeFreeRange.asSequence()).distinct().iterator()
                 val modelIdMap = LinkedHashMap<Int, Int>()
                 // retileTargets: loc types and models exist from the first pass - nothing new to allocate.
                 if (!batch.retileTargets) neededModels.forEach { modernId ->
