@@ -21,6 +21,18 @@ val ENTRANCE = Tile(3357, 2711, 0)
 val LOBBY_ARRIVAL = Tile(3358, 9127, 0)
 val OUTSIDE = Tile(3356, 2712, 0)
 
+/*
+ * Fairy ring AKP (OSRS Wiki Fairy ring AKP: 3284,2706; cache 2686 square 13098 loc 29495 shape 10 rot 0). The region import kept only
+ * the animation of its definition (local 66204: no model, no name, no options - an invisible ring nobody could Use, so the island had no
+ * way back). Every other ring here is the rev-667 'Fairy ring' 14142 (Use -> dial, fairy_rings.plugin.kts); the same one stands here.
+ */
+val AKP_RING = Tile(3284, 2706, 0)
+
+on_world_init {
+    ToaIds.loc(29495)?.let { broken -> world.getObject(AKP_RING, ObjectType.INTERACTABLE)?.takeIf { it.id == broken }?.let { world.remove(it) } }
+    world.spawn(DynamicObject(14142, 22, 0, AKP_RING))
+}
+
 on_world_init {
     val open = ToaIds.loc(44010) ?: return@on_world_init
     world.getObject(ENTRANCE, ObjectType.INTERACTABLE)?.let { world.remove(it) }
