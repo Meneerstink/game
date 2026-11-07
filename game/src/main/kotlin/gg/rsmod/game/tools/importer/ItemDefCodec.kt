@@ -109,8 +109,13 @@ object ItemDefCodec {
         require(shortOverrides.keys.all { it in FIXED_2 }) {
             "Only two-byte opcodes ($FIXED_2) can be short-overridden by this codec."
         }
-        require(shortOverrides.values.all { it in 0..0xFFFF }) {
-            "A short override outside 0..65535 cannot be encoded: $shortOverrides"
+        // N462: a model id above 0xFFFF (archive 37) is written as the 78 client's wide opcode 240 (target opcode + int) instead of
+        // the 16-bit model opcode, which is dropped from the donor; every other override stays a plain short.
+        val wideModels = shortOverrides.filter { (op, v) -> op in ModelArchive.OBJ_MODEL_OPCODES && ModelArchive.isWide(v) }
+        val narrowShorts = shortOverrides - wideModels.keys
+        require(wideModels.values.all { it <= ModelArchive.MAX_MODEL_ID }) { "A model id past ${ModelArchive.MAX_MODEL_ID} cannot be addressed: $wideModels" }
+        require(narrowShorts.values.all { it in 0..0xFFFF }) {
+            "A short override outside 0..65535 cannot be encoded: $narrowShorts"
         }
         require(intOverrides.keys.all { it in FIXED_4 }) {
             "Only four-byte opcodes ($FIXED_4) can be int-overridden by this codec."
@@ -129,9 +134,14 @@ object ItemDefCodec {
             if (opcode == 0) {
                 // Opcodes the donor never had are appended just before the terminator; a TLV stream
                 // has no significant ordering, and the server's and client's decoders both loop.
-                shortOverrides.filterKeys { it !in seen }.forEach { (missing, value) ->
+                narrowShorts.filterKeys { it !in seen }.forEach { (missing, value) ->
                     output.writeByte(missing)
                     output.writeShort(value)
+                }
+                wideModels.forEach { (target, value) ->
+                    output.writeByte(ModelArchive.OBJ_WIDE_MODEL)
+                    output.writeByte(target)
+                    output.writeInt(value)
                 }
                 intOverrides.filterKeys { it !in seen }.forEach { (missing, value) ->
                     output.writeByte(missing)
@@ -158,11 +168,14 @@ object ItemDefCodec {
             // this codec ever having to know an opcode's width twice.
             val field = Unpooled.buffer()
             copyOrOverrideField(
-                input, field, opcode, stringOverrides, shortOverrides, intOverrides, removedParamIds + stringParams.keys + intParams.keys,
+                input, field, opcode, stringOverrides, narrowShorts, intOverrides, removedParamIds + stringParams.keys + intParams.keys,
             )
             if (opcode == 249 && stringParams.isNotEmpty()) appendStringParams(field, 0, stringParams)
             if (opcode == 249 && intParams.isNotEmpty()) appendIntParams(field, 0, intParams)
-            if (opcode !in removedOpcodes) {
+            // A donor model field this call sets wide is replaced by the appended opcode 240; a donor opcode 240 for a field this
+            // call overrides (either width) is stale.
+            val replacedWide = opcode == ModelArchive.OBJ_WIDE_MODEL && field.getUnsignedByte(0).toInt() in shortOverrides.keys
+            if (opcode !in removedOpcodes && opcode !in wideModels.keys && !replacedWide) {
                 output.writeByte(opcode)
                 output.writeBytes(field)
             }
@@ -196,6 +209,9 @@ object ItemDefCodec {
             described +=
                 if (opcode in FIXED_2) {
                     "$opcode=${((payload[0].toInt() and 0xFF) shl 8) or (payload[1].toInt() and 0xFF)}"
+                } else if (opcode == ModelArchive.OBJ_WIDE_MODEL) {
+                    // N462: reported as the 16-bit opcode whose model field it sets (census roles, probes).
+                    "${payload[0].toInt() and 0xFF}=${java.nio.ByteBuffer.wrap(payload, 1, 4).int}"
                 } else if (opcode in STRING_OPCODES) {
                     "$opcode=\"${String(payload, 0, maxOf(payload.size - 1, 0), Charsets.ISO_8859_1)}\""
                 } else if (payload.isEmpty()) {
@@ -268,6 +284,7 @@ object ItemDefCodec {
             opcode == 42 -> copyCountPrefixed(input, output, entryWidth = 1)
             opcode == 132 -> copyCountPrefixed(input, output, entryWidth = 2)
             opcode == 249 -> copyParams(input, output, removedParamIds)
+            opcode == ModelArchive.OBJ_WIDE_MODEL -> copyBytes(input, output, 5)
             else ->
                 throw IllegalArgumentException(
                     "Unknown item-def opcode $opcode - this codec's field-width table is derived from " +

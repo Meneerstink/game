@@ -31,7 +31,7 @@ object OsrsNpcImportTool {
     const val INDEX_NPC = 18
     const val INDEX_CONFIG = 2
     const val GROUP_BAS = 32
-    const val MODEL_ID_LIMIT = 65535
+    const val MODEL_ID_LIMIT = ModelArchive.MAX_MODEL_ID
 
     /** Sequence ids proven to mean the same movement role in both caches (667 BAS 4 vs OSRS Man 3106). */
     val SHARED_MOVEMENT_SEQS = setOf(808, 819, 820, 821, 822)
@@ -146,6 +146,8 @@ object OsrsNpcImportTool {
                     11752, 11769, 11772, 11773, 11782, 11783, 11784, 11785, 11786, 11787, 11788, 11800, 11801, 11802, 11803, 11804, 11805,
                     11806, 11807, 11808, 12132,
                 ),
+            // N462 Beneath Cursed Sands (short quest): the Head Menaphite Guard 11529 (OSRS Wiki: combat 174, the quest's fight).
+            "bcs" to listOf(11529),
         )
     }
 
@@ -278,6 +280,11 @@ object OsrsNpcImportTool {
         write(v and 0xFF)
     }
 
+    private fun ByteArrayOutputStream.i32(v: Int) {
+        u16(v ushr 16)
+        u16(v)
+    }
+
     private fun ByteArrayOutputStream.str(v: String) {
         write(v.toByteArray(Charsets.ISO_8859_1))
         write(0)
@@ -327,9 +334,14 @@ object OsrsNpcImportTool {
         dropped: MutableList<String>,
     ): ByteArray {
         val out = ByteArrayOutputStream()
-        out.u8(1)
+        // N462: a model above 0xFFFF (archive 37) makes the list the 78 client's wide opcode 241 / 242 (int ids).
+        val wideModels = models.any { ModelArchive.isWide(it) }
+        out.u8(if (wideModels) ModelArchive.NPC_WIDE_MODELS else 1)
         out.u8(models.size)
-        models.forEach { check(it in 0..MODEL_ID_LIMIT) { "model $it above the unsigned-short limit" }; out.u16(it) }
+        models.forEach {
+            check(it in 0..MODEL_ID_LIMIT) { "model $it above the model id limit" }
+            if (wideModels) out.i32(it) else out.u16(it)
+        }
         out.u8(2)
         out.str(n.name)
         if (n.size != 1) {
@@ -354,9 +366,11 @@ object OsrsNpcImportTool {
             }
         }
         if (chatheads.isNotEmpty()) {
-            out.u8(60)
+            chatheads.forEach { check(it in 0..MODEL_ID_LIMIT) { "chathead model $it above the model id limit" } }
+            val wideHeads = chatheads.any { ModelArchive.isWide(it) }
+            out.u8(if (wideHeads) ModelArchive.NPC_WIDE_HEADS else 60)
             out.u8(chatheads.size)
-            chatheads.forEach { out.u16(it) }
+            chatheads.forEach { if (wideHeads) out.i32(it) else out.u16(it) }
         }
         if (!n.minimap) out.u8(93)
         if (n.combat > 0) {

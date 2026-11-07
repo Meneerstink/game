@@ -96,7 +96,7 @@ object GeHomeBannerTool {
         try {
             when (mode) {
                 "probe" -> args.drop(1).map { it.toInt() }.forEach { modelId ->
-                    val data = library.data(7, modelId, 0) ?: return@forEach println("MODEL $modelId missing")
+                    val data = ModelArchive.read(library, modelId) ?: return@forEach println("MODEL $modelId missing")
                     val (colourBlock, textureBlock) = colourAndTextureBlocks(data)
                     val textures = textureBlock?.filter { it >= 0 }?.groupingBy { it }?.eachCount()
                     val colours = colourBlock.indices.filter { textureBlock == null || textureBlock[it] < 0 }.groupingBy { colourBlock[it] }.eachCount()
@@ -114,7 +114,7 @@ object GeHomeBannerTool {
                 "locmodels" -> args.drop(1).map { it.toInt() }.forEach { loc ->
                     val def = Rev667LocType.decode(loc, library.data(16, loc ushr 8, loc and 0xFF) ?: return@forEach println("LOC $loc missing"))
                     def.allModels.forEach { m ->
-                        val data = library.data(7, m, 0) ?: return@forEach
+                        val data = ModelArchive.read(library, m) ?: return@forEach
                         val d = runCatching { Rev667ModelDecoder.decode(data) }.getOrNull()
                         println("LOC $loc '${def.name}' model $m " + (d?.describe()?.lines()?.filter { it.startsWith("bounds") || it.startsWith("vertexCount") }?.joinToString(" ") ?: "undecodable"))
                     }
@@ -166,7 +166,7 @@ object GeHomeBannerTool {
                     val from = args[1].toInt()
                     val to = args[2].toInt()
                     args.drop(3).map { it.toInt() }.forEach { modelId ->
-                        val data = library.data(7, modelId, 0) ?: error("model $modelId missing")
+                        val data = ModelArchive.read(library, modelId) ?: error("model $modelId missing")
                         val ptr = texturePointer(data) ?: error("model $modelId has no face textures")
                         val faces = colourAndTextureBlocks(data).first.size
                         val updated = data.copyOf()

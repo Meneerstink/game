@@ -41,7 +41,7 @@ object BurdenTrinketTool {
                 try {
                     val models =
                         (intArrayOf(TRINKET_OF_FAIRIES_MODEL) + POUCH_MODELS).associateWith { id ->
-                            Rev667ModelDecoder.decode(requireNotNull(library.data(MODEL_INDEX, id, 0)) { "model $id missing" })
+                            Rev667ModelDecoder.decode(requireNotNull(ModelArchive.read(library, id)) { "model $id missing" })
                         }
                     out.parentFile?.mkdirs()
                     out.writeText(models.entries.joinToString(",\n", "{\n", "\n}") { (id, m) -> "\"$id\":${json(m)}" })
@@ -357,7 +357,7 @@ object BurdenTrinketTool {
                 val mesh = requireNotNull(meshes[t.pouchModel]) { "no mesh for pouch ${t.pouchModel} in $meshFile" }
                 val bytes = Rev667ModelEncoder.encode(mesh)
                 check(ModelConvertTool.compare(mesh, Rev667ModelDecoder.decode(bytes)).isEmpty()) { "${t.name}: the mesh does not decode back" }
-                val old = requireNotNull(library.data(MODEL_INDEX, model, 0)) { "model $model missing" }
+                val old = requireNotNull(ModelArchive.read(library, model)) { "model $model missing" }
                 println("PLAN item $item '${t.name}' model $model: ${old.size} -> ${bytes.size} bytes, faces ${mesh.faceCount}")
                 mutations += CacheMutation(MODEL_INDEX, model, 0, bytes, "N438 ${t.name} sharper, bigger emblem", CacheItemProbeTool.sha1(old))
             }

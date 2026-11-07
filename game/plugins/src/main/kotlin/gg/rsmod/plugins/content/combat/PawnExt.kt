@@ -242,7 +242,10 @@ fun Pawn.dealHit(
         gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.SPIDERLING,
         gg.rsmod.plugins.content.areas.wilderness.bosses.VenenatisCombat.SPINDEL_SPIDERLING,
     )
-    val landHit = landHit || combatDummy || spiderling
+    // N462: a content rule (ToA) can make the attack accurate or a max hit before the roll (PlayerAttackRules).
+    val attackRule = if (this is Player && target is Npc) PlayerAttackRules.of(this, target, hitType) else PlayerAttackRules.Rule.NORMAL
+    val forcedMax = combatDummy || spiderling || attackRule == PlayerAttackRules.Rule.MAX_HIT
+    val landHit = landHit || forcedMax || attackRule == PlayerAttackRules.Rule.ACCURATE
     // OSRS Wiki "Hit delay": "If the entity receiving the hit is processed earlier than the entity dealing the hit, then the hit will
     // be delayed by an additional one tick"; NPCs are processed before players. Every delay passed in here carries that tick (melee 1
     // = 0 + 1, ranged/magic 2 + ...), right for any hit on an NPC. Between two players PID decides: a receiver processed after the
@@ -251,7 +254,7 @@ fun Pawn.dealHit(
     val delay = if (this is Player && target is Player && delay > 0 && world.pid(target) > world.pid(this)) delay - 1 else delay
     var damage =
         when {
-            combatDummy || spiderling -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()
+            forcedMax -> (kotlin.math.floor(maxHit + 1e-9).toInt().coerceAtLeast(0) + bonusDamage).toDouble()
             landHit -> (rollDamage(minHit, maxHit) + bonusDamage).toDouble()
             else -> 0.0
         }
@@ -332,6 +335,7 @@ fun Pawn.dealHit(
         }
     // OSRS hitsplats (owner 2026-10-09): the attacker sees its own hit lit and, from a player, the max splat at its max hit.
     hit.source = this
+    hit.sourceCombatClass = curseHitStyle
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
     val pawnHit = PawnHit(hit, executeHit)

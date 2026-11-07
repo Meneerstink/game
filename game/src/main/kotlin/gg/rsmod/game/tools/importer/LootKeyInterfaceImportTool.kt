@@ -247,7 +247,7 @@ object LootKeyInterfaceImportTool {
                 o.p1(0) // lineDirection
             }
             TYPE_MODEL -> {
-                o.p2(if (c.model < 0) 65535 else c.model)
+                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } })
                 o.p1(1) // model flags: ortho2d
                 o.p2(c.modelOriginX)
                 o.p2(c.modelOriginY)

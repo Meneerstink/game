@@ -31,7 +31,7 @@ object TextureColourRepairTool {
         var untextured = 0
         try {
             pairs.forEach { (local, upstream) ->
-                val current = library.data(ModelConvertTool.MODEL_INDEX, local)
+                val current = ModelArchive.read(library, local)
                 if (current == null) {
                     skipped.add("local $local absent")
                     return@forEach

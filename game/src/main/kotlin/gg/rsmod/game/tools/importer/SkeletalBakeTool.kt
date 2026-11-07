@@ -1128,7 +1128,7 @@ object SkeletalBakeTool {
                 if (modelWritable) {
                     put(7, localModel, 0, baked.model, "rebake: $label model $osrsModel -> $localModel")
                 } else {
-                    check(baked.model.contentEquals(library.data(7, localModel, 0)!!)) { "$label: model $localModel is not the labelled loc model" }
+                    check(baked.model.contentEquals(ModelArchive.read(library, localModel)!!)) { "$label: model $localModel is not the labelled loc model" }
                 }
                 put(OsrsFxImportTool.INDEX_BASES, base, 0, baked.base, "rebake: $label base $base")
                 baked.frames.forEachIndexed { i, f -> put(OsrsFxImportTool.INDEX_FRAMES, frameset, i, f, "rebake: $label frame $frameset:$i (client units)") }
@@ -1221,7 +1221,7 @@ object SkeletalBakeTool {
                         val localModel = ids["osrs_loc_model:${spot.model}"] ?: error("model ${spot.model} not imported")
                         val base = nextBase++
                         val baked = bake(reader, spot.model, spot.seq, base)
-                        check(baked.model.contentEquals(library.data(7, localModel, 0)!!)) { "model $localModel is not the labelled loc model; run locs first" }
+                        check(baked.model.contentEquals(ModelArchive.read(library, localModel)!!)) { "model $localModel is not the labelled loc model; run locs first" }
                         val frameset = nextFrameset++
                         val seqId = nextSeq++
                         val local = nextSpot++

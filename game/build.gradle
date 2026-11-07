@@ -792,6 +792,14 @@ task runModelTransactionTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ModelTransactionTool'
 }
 
+task runQuestListCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Quest list structs/enum/progress script for the FoundationQuests (N462: Beneath Cursed Sands complete 10). ' +
+        'Usage: ./gradlew :game:runQuestListCacheTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.QuestListCacheTool'
+}
+
 task runModelNamespaceCensusTool(type: JavaExec) {
     group = 'tools'
     description = 'Modern-content import pipeline: read-only model-id namespace/capacity census - ' +

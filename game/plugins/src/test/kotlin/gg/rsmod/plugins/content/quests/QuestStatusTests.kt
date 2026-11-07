@@ -24,6 +24,7 @@ import gg.rsmod.plugins.api.ext.setVarp
 import gg.rsmod.plugins.content.items.osrs.OsrsQuestRequirements
 import gg.rsmod.plugins.content.items.osrs.QuestStubs
 import gg.rsmod.plugins.content.quests.QuestStatus.State
+import gg.rsmod.plugins.content.quests.foundation.BeneathCursedSands
 import gg.rsmod.plugins.content.quests.foundation.ChoiceGroup
 import gg.rsmod.plugins.content.quests.foundation.DesertTreasure
 import gg.rsmod.plugins.content.quests.foundation.DragonSlayerII
@@ -282,6 +283,28 @@ class QuestStatusTests {
         } finally {
             library.close()
         }
+    }
+
+    // ------------------------------------------------------------------------- N462 Beneath Cursed Sands (short quest)
+
+    @Test
+    fun `N462 an old account keeps the always-complete Beneath Cursed Sands entry (owner E2)`() {
+        val account = Account(isNew = false)
+        account.player.setVarp(BeneathCursedSands.questId, 1) // the old CompletedOsrsQuest value
+        BeneathCursedSands.migrate(account.player)
+        assertEquals(State.COMPLETED, QuestStatus.state(account.player, BeneathCursedSands))
+        assertTrue(FoundationRewards.isRewarded(account.player, BeneathCursedSands), "no second reward for a kept completion")
+    }
+
+    @Test
+    fun `N462 a new account plays Beneath Cursed Sands and its progress is never turned into a completion`() {
+        val account = Account(isNew = true)
+        BeneathCursedSands.migrate(account.player)
+        assertEquals(State.NOT_STARTED, QuestStatus.state(account.player, BeneathCursedSands))
+        account.player.setVarp(BeneathCursedSands.questId, 1) // step 1 open
+        BeneathCursedSands.migrate(account.player)
+        assertEquals(State.IN_PROGRESS, QuestStatus.state(account.player, BeneathCursedSands))
+        assertFalse(gg.rsmod.plugins.content.activity.toa.ToaLobby.canEnter(account.player), "no Tombs of Amascut before the quest")
     }
 
     companion object {

@@ -607,7 +607,9 @@ object OsrsFxImportTool {
     }
 
     /** Proven per-type value scale (origin/translate x4, rotation x16, scale and alpha unchanged). */
-    val SCALE_BY_TYPE = mapOf(0 to 4, 1 to 4, 2 to 16, 3 to 1, 5 to 1)
+    // N462 (toa-classic): OSRS framemaps also carry type 4 groups; neither the OSRS client's Model.animate (types 0/1/2/3/5) nor the 667
+    // client applies a type 4 transform, so it is copied through unscaled (a no-op on both sides) instead of aborting the import.
+    val SCALE_BY_TYPE = mapOf(0 to 4, 1 to 4, 2 to 16, 3 to 1, 4 to 1, 5 to 1)
 
     /** OSRS frame -> rev-667 frame for [localBaseId]; [types] are the OSRS base's types. */
     fun convertFrame(

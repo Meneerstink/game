@@ -61,7 +61,8 @@ import java.io.File
 object ModelNamespaceCensusTool {
     const val MODEL_INDEX = ModelConvertTool.MODEL_INDEX
     const val MIN_MODEL_ID = 0
-    const val MAX_MODEL_ID = 0xFFFF
+    /** N462: archive 7 (0..65535) + archive 37 (65536..131071), see [ModelArchive]. */
+    const val MAX_MODEL_ID = ModelArchive.MAX_MODEL_ID
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -195,7 +196,7 @@ object ModelNamespaceCensusTool {
     private fun physicalModelIds(cachePath: String): Set<Int> {
         val library = CacheLibrary(cachePath)
         try {
-            return library.index(MODEL_INDEX).archiveIds().toSet()
+            return ModelArchive.physicalIds(library)
         } finally {
             library.close()
         }
@@ -301,6 +302,7 @@ object ModelNamespaceCensusTool {
                 if (opcode == 0) break
                 when (opcode) {
                     1 -> modelId = buf.readShort().toInt()
+                    ModelArchive.SPOT_WIDE_MODEL -> modelId = buf.readInt()
                     2, 4, 5, 6 -> buf.readShort()
                     7, 8 -> buf.readByte()
                     9, 10, 11, 12, 13 -> {}

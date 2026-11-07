@@ -153,7 +153,7 @@ object OsrsTextureImportTool {
                     val raw = runCatching { ModernModelDecoder.decode(bytes) }.getOrNull() ?: return@forEach
                     val faceTex = raw.faceTexture ?: return@forEach
                     if (faceTex.none { it.toInt() == osrsTex }) return@forEach
-                    val current = library.data(ModelConvertTool.MODEL_INDEX, local) ?: return@forEach
+                    val current = ModelArchive.read(library, local) ?: return@forEach
                     fun colour(t: Int) = osrsTextureAverageHsl(reader.file(ModernCacheReader.INDEX_TEXTURE, 0, t) ?: error("texture $t missing"))
                     val flattened = Rev667ModelEncoder.encode(stripTextures(raw) { colour(it) })
                     if (!flattened.contentEquals(current)) {

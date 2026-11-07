@@ -68,7 +68,7 @@ object OsrsWristTool {
             val targets = targets(reader, ImportBatchOrchestrator.readExistingMapping(File(OsrsItemImportTool.ASSET_MAP)))
             println("HANDS MESHES ${targets.size}")
             targets.forEach { t ->
-                val current = library.data(INDEX_MODEL, t.local, 0) ?: error("model ${t.local} missing")
+                val current = ModelArchive.read(library, t.local) ?: error("model ${t.local} missing")
                 val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsWristFit.HANDS_SLOT, t.female)
                 val fitted = OsrsWristFit.fitBytes(plain, pieces.getValue(t.female))
                 if (current.contentEquals(fitted)) {

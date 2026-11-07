@@ -56,6 +56,11 @@ object Rev667ModelReferenceWalkers {
                 }
                 42 -> repeat(buf.u8()) { buf.i8() }
                 60 -> repeat(buf.u8()) { record(buf.u16(), "npc_head_model") }
+                ModelArchive.NPC_WIDE_MODELS -> repeat(buf.u8()) {
+                    val m = buf.i32()
+                    if (m != -1) record(m, "npc_model")
+                }
+                ModelArchive.NPC_WIDE_HEADS -> repeat(buf.u8()) { record(buf.i32(), "npc_head_model") }
                 93, 99, 107, 109, 111, 141, 143, 158, 159, 162 -> {}
                 95, 97, 98, 102, 103, 122, 123, 127, 137, 138, 139, 142 -> buf.u16()
                 100, 101, 119, 125, 128, 140, 163, 165, 168 -> buf.i8()
@@ -139,6 +144,11 @@ object Rev667ModelReferenceWalkers {
                     buf.u16()
                 }
                 in 60..69 -> record(buf.u16(), "idk_head_model")
+                ModelArchive.IDK_WIDE_MODELS -> repeat(buf.u8()) { record(buf.i32(), "idk_model") }
+                ModelArchive.IDK_WIDE_HEAD -> {
+                    buf.u8()
+                    record(buf.i32(), "idk_head_model")
+                }
                 else -> error("IDK $idkId: unknown rev-667 idk opcode $op at ${buf.position}")
             }
         }

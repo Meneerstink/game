@@ -100,7 +100,7 @@ object OsrsInterfacePortTool {
             3 -> { o.p4(c.colour); o.p1(if (c.filled) 1 else 0); o.p1(c.opacity) }
             9 -> { o.p1(c.lineWidth); o.p4(c.colour); o.p1(0) }
             6 -> {
-                o.p2(if (c.model < 0) 65535 else c.model); o.p1(if (c.ortho) 1 else 0)
+                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } }); o.p1(if (c.ortho) 1 else 0)
                 o.p2(c.originX); o.p2(c.originY); o.p2(c.xan); o.p2(c.yan); o.p2(c.zan); o.p2(c.zoom); o.p2(65535)
                 if (c.wMode != 0) o.p2(0)
                 if (c.hMode != 0) o.p2(0)
@@ -143,6 +143,9 @@ object OsrsInterfacePortTool {
         val extras = ArrayList<String>()
         val reports = ArrayList<String>()
         val sprites = LinkedHashSet<Int>()
+        // An onLoad script can size a component the loop has not added yet (776: component 0 runs 6609 for component 5), so such
+        // writes wait until every component of the group is in the list.
+        val afterComponents = ArrayList<() -> Unit>()
         val ids = node.fieldNames().asSequence().map { it.toInt() }.sorted().toList()
         require(ids == (0 until ids.size).toList()) { "group $group: component ids not 0..${ids.size - 1}" }
         var next = ids.size
@@ -194,7 +197,11 @@ object OsrsInterfacePortTool {
                     i(n, "hidden") != 0, ops = ops, colour = i(n, "colour"), lineWidth = i(n, "lineWidth", 1).coerceAtLeast(1))
                 6 -> {
                     val osrsModel = i(n, "model", -1)
-                    val local = if (osrsModel >= 0) localModel(osrsModel) else null
+                    val imported = if (osrsModel >= 0) localModel(osrsModel) else null
+                    // N462: a 667 interface component carries its model as u16 (client Component decoder); a model in archive 37
+                    // (id above 0xFFFF) cannot be addressed there, so it is reported like a missing import instead of truncated.
+                    val local = imported?.takeIf { !ModelArchive.isWide(it) }
+                    if (imported != null && local == null) reports += "$group:$id model $osrsModel -> local $imported is in archive 37 (u16 interface field)"
                     if (local == null) common(0).also { reports += "$group:$id model $osrsModel not imported -> empty layer" }
                     else C(id, 6, i(n, "x"), i(n, "y"), i(n, "width"), i(n, "height"), parent, i(n, "widthMode"), i(n, "heightMode"), i(n, "xMode"),
                         i(n, "yMode"), i(n, "hidden") != 0, ops = ops, opBase = n["name"]?.asText().orEmpty(), model = local,
@@ -245,7 +252,8 @@ object OsrsInterfacePortTool {
                             alignX = 0, alignY = 0, shadow = true, colour = 0xff981f)
                         bottom = y + h
                     }
-                    list.first { it.id == parent }.scrollH = bottom
+                    val scrollHeight = bottom
+                    afterComponents += { list.first { it.id == parent }.scrollH = scrollHeight }
                     extras += "invocation info rows (6609/6610) parent=$parent components=$first..${next - 1} (5 per row: back,line,icon,name,text; " +
                         "order = enum 4664 without category 15) scrollHeight=$bottom; scrollbar ${args[1].asInt() and 0xFFFF} not drawn (mouse wheel scrolls)"
                 } else {
@@ -253,6 +261,7 @@ object OsrsInterfacePortTool {
                 }
             }
         }
+        afterComponents.forEach { it() }
         if (group == 481) {
             // [proc,toa_hud_status_init](container, filler) per party slot 0..7 (containers 6+4i, fillers 9+4i): a p12 shadowed text filling
             // the container and a 26x26 tiling graphic at the bottom of the filler. 667 has no server IF_SETSIZE, so the filler graphic keeps

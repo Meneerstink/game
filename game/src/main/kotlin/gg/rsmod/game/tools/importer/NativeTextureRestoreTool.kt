@@ -31,7 +31,7 @@ object NativeTextureRestoreTool {
             val native = OsrsModelConversion.NATIVE_SAME_TEXTURES
             val skipped = ArrayList<String>()
             pairs.forEach { (local, upstream) ->
-                val current = library.data(ModelConvertTool.MODEL_INDEX, local) ?: return@forEach
+                val current = ModelArchive.read(library, local) ?: return@forEach
                 for (reader in readers) {
                     val bytes = reader.file(ModernCacheReader.INDEX_MODEL, upstream, 0) ?: continue
                     val raw = runCatching { ModernModelDecoder.decode(bytes) }.getOrNull() ?: continue

@@ -1556,13 +1556,15 @@ object FoundationQuests {
             // counter: the warrior in the porch found no way to the player - quests run 2026-10-10). The world's own Arianwyn
             // (8951) there is not spawned any more.
             QuestNpcPost(Npcs.ARIANWYN, LLETYA, gg.rsmod.game.model.Direction.SOUTH, listOf("Tirannwn breathes again.", "Prifddinas sings for all of us now.")),
+            // N462 Beneath Cursed Sands: Maisa at her campsite east of Sophanem (OSRS Wiki Maisa map 3378,2794); idle line from the OSRS transcript.
+            QuestNpcPost(Npcs.MAISA, MAISA_CAMP, gg.rsmod.game.model.Direction.WEST, listOf("Be careful. There's something creepy about all of this.")),
         )
 
 
     val SHORT: List<ShortQuest> =
-        listOf(DesertTreasure, LunarDiplomacy, TempleAtSenntisten, KingsRansom, DesertTreasureII, DragonSlayerII, SongOfTheElves, MonkeyMadnessII)
+        listOf(DesertTreasure, LunarDiplomacy, TempleAtSenntisten, KingsRansom, DesertTreasureII, DragonSlayerII, SongOfTheElves, MonkeyMadnessII, BeneathCursedSands)
 
-    /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1, Beneath Cursed Sands 2; Mage Arena II is a miniquest (0). */
+    /** OSRS Wiki quest points: Sins of the Father 2, Children of the Sun 1, Secrets of the North 2, Bone Voyage 1; Mage Arena II is a miniquest (0). Beneath Cursed Sands (2) is a short quest since N462. */
     val COMPLETED: List<CompletedOsrsQuest> =
         listOf(
             CompletedOsrsQuest("Sins of the Father", 2, OsrsQuestVarps.SINS_OF_THE_FATHER, OsrsQuestSlots.SINS_OF_THE_FATHER, "Vanstrom Klause was defeated and Darkmeyer freed."),
@@ -1570,7 +1572,6 @@ object FoundationQuests {
             CompletedOsrsQuest("Secrets of the North", 2, OsrsQuestVarps.SECRETS_OF_THE_NORTH, OsrsQuestSlots.SECRETS_OF_THE_NORTH, "The secrets of the Weiss mountains were revealed."),
             CompletedOsrsQuest("Bone Voyage", 1, OsrsQuestVarps.BONE_VOYAGE, OsrsQuestSlots.BONE_VOYAGE, "The Varrock Museum's barge reached Fossil Island."),
             CompletedOsrsQuest("Mage Arena II", 0, OsrsQuestVarps.MAGE_ARENA_II, OsrsQuestSlots.MAGE_ARENA_II, "Kolodion's enchanted god capes were earned."),
-            CompletedOsrsQuest("Beneath Cursed Sands", 2, OsrsQuestVarps.BENEATH_CURSED_SANDS, OsrsQuestSlots.BENEATH_CURSED_SANDS, "The Tombs of Amascut were opened."),
         )
 
     /** Registers every quest with the quest tab (Quest.quests) exactly once, at plugin load. */

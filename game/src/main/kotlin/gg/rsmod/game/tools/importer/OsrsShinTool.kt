@@ -51,7 +51,7 @@ object OsrsShinTool {
             val targets = targets(reader, ImportBatchOrchestrator.readExistingMapping(File(OsrsItemImportTool.ASSET_MAP)))
             println("LEGS MESHES ${targets.size}")
             targets.forEach { t ->
-                val current = library.data(INDEX_MODEL, t.local, 0) ?: error("model ${t.local} missing")
+                val current = ModelArchive.read(library, t.local) ?: error("model ${t.local} missing")
                 val plain = OsrsModelConversion.convert(reader, t.upstream, dropped, OsrsBodyFrame.LEGS_SLOT, t.female)
                 // The end state of a mesh that needs the A5 decal lift is the importer's (N12): shin fit, then the lift.
                 val fitted = OsrsItemImportTool.decalLifted(plain)

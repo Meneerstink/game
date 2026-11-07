@@ -153,7 +153,7 @@ object GeHomeGatehouseTool {
                 val def = Rev667LocType.decode(id, bytes)
                 println("LOC $id bytes=${bytes.joinToString(" ") { "%02x".format(it) }} models=${def.modelsByShape}")
                 def.allModels.distinct().forEach { modelId ->
-                    val data = library.data(7, modelId, 0) ?: return@forEach println("  MODEL $modelId missing")
+                    val data = ModelArchive.read(library, modelId) ?: return@forEach println("  MODEL $modelId missing")
                     val newFormat = data[data.size - 1] == (-1).toByte() && data[data.size - 2] == (-1).toByte()
                     val h = data.size - if (newFormat) 23 else 18
                     val vertices = ((data[h].toInt() and 0xFF) shl 8) or (data[h + 1].toInt() and 0xFF)

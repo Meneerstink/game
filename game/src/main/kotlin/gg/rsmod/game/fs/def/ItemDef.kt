@@ -101,6 +101,14 @@ class ItemDef(
             16 -> members = true
             18 -> buf.readShort()
             23 -> maleWornModel = buf.readUnsignedShort()
+            240 -> {
+                // N462: 78 wide model opcode (int model ids above 0xFFFF, archive 37; tools/importer/ModelArchive).
+                when (buf.readUnsignedByte().toInt()) {
+                    23 -> maleWornModel = buf.readInt()
+                    25 -> maleWornModel2 = buf.readInt()
+                    else -> buf.readInt()
+                }
+            }
             24 -> buf.readUnsignedShort()
             25 -> maleWornModel2 = buf.readUnsignedShort()
             26 -> buf.readUnsignedShort()

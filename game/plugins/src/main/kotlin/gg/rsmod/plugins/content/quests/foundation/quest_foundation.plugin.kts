@@ -414,6 +414,8 @@ mapOf(
     Npcs.ANITA to listOf("It's so peaceful by the Grand Tree now.", "Thank you for everything."),
     // Edmond already stands in East Ardougne (spawns_10292); the quest used to spawn a second one next to him.
     Npcs.EDMOND to listOf("Ardougne is quieter these days, thank Saradomin.", "Elena sends her regards from Prifddinas."),
+    // N462 Beneath Cursed Sands starts at Jamila's stall in Sophanem (spawns_13099); her OSRS greeting (Transcript:Beneath Cursed Sands).
+    BeneathCursedSands.startNpc to listOf("Hello there. Looking to buy some of my wares?"),
 ).forEach { (id, idle) ->
     on_npc_option(npc = id, option = "talk-to") {
         player.queue {

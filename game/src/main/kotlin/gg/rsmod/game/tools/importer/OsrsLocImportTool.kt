@@ -68,7 +68,8 @@ object OsrsLocImportTool {
                     46160, 46162, 46163, 46165, 46166, 46168, 46173, 46174, 46175, 46176, 46180, 46181, 46182, 46183,
                     46184, 46185, 46186, 46187, 46188, 46189, 46196, 46229, 46230, 46231, 46238, 46239, 49568, 49569,
                     49570, 49571, 49572, 49573, 49574, 49575, 49576, 49577, 49578, 49579, 49580, 49581, 49582, 49583,
-                    58525, 62519, 62520, 62521,
+                    // 62519-62521 removed 2026-11-07: in neither cache 2686 nor RuneLite gameval ObjectID (not real ToA locs).
+                    58525,
                 ),
         )
 
@@ -105,7 +106,9 @@ object OsrsLocImportTool {
                 val localTypes = Rev667RegionProbeTool.locTypes(library)
                 var nextLocId = (localTypes.keys.maxOrNull() ?: -1) + 1
                 val census = ModelNamespaceCensusTool.census(FeroxImportTool.GAME_CACHE, FeroxImportTool.FILE_SERVER_CACHE, assetMap)
-                val free = census.provenFreeHoles.iterator()
+                // N462 (toa-locs 2026-11-06): the ToA boss import used up the holes below the ceiling; after the holes the census's safe range
+                // above every physical, referenced and mapped model id (ModelNamespaceCensusTool.safeFreeRange) is just as proven free.
+                val free = (census.provenFreeHoles.asSequence() + census.safeFreeRange.asSequence()).iterator()
                 val modelIdMap = LinkedHashMap<Int, Int>()
                 val locIdMap = LinkedHashMap<Int, Int>()
 

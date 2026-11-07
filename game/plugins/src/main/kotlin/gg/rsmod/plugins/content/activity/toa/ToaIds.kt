@@ -31,5 +31,9 @@ object ToaIds {
     fun seq(osrs: Int): Int? = table["seq:$osrs"]
     fun spot(osrs: Int): Int? = table["spotanim:$osrs"]
     fun item(osrs: Int): Int? = table["item:$osrs"]
+
+    /** Local item -> the OSRS item it was imported from (ToA supplies: dose arithmetic on the OSRS ids). */
+    private val osrsItems: Map<Int, Int> by lazy { table.filterKeys { it.startsWith("item:") }.entries.associate { (k, v) -> v to k.removePrefix("item:").toInt() } }
+    fun itemSource(local: Int): Int? = osrsItems[local]
     fun loc(osrs: Int): Int? = table["loc:$osrs"]
 }

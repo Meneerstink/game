@@ -89,7 +89,7 @@ object PetChatheadRigTool {
                 }
             }
             models.forEach { model ->
-                val current = library.data(MODEL_INDEX, model, 0) ?: error("model $model missing")
+                val current = ModelArchive.read(library, model) ?: error("model $model missing")
                 if (vertexLabelOffset(current) == null) {
                     println("SKIP model $model: no vertex labels")
                     return@forEach

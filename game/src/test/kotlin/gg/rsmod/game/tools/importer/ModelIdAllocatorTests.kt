@@ -74,7 +74,7 @@ class ModelIdAllocatorTests {
                 provenSafeFreeStart = ModelIdAllocator.MAX_MODEL_ID,
                 provenSafeFreeEnd = ModelIdAllocator.MAX_MODEL_ID,
             )
-        assertEquals(65535, id)
+        assertEquals(ModelIdAllocator.MAX_MODEL_ID, id)
     }
 
     @Test(expected = IllegalArgumentException::class)

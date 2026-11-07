@@ -106,7 +106,7 @@ object WornForearm {
     fun pieces(library: CacheLibrary): List<Piece> =
         listOf(false, true).map { female ->
             val kitModel = armsKitModel(library, female)
-            val kit = Rev667ModelDecoder.decode(requireNotNull(library.data(ModelConvertTool.MODEL_INDEX, kitModel, 0)) { "model $kitModel missing" }, geometryOnly = true)
+            val kit = Rev667ModelDecoder.decode(requireNotNull(ModelArchive.read(library, kitModel)) { "model $kitModel missing" }, geometryOnly = true)
             val piece = cut(kit)
             val bytes = Rev667ModelEncoder.encode(piece)
             val differences = ModelConvertTool.compare(piece, Rev667ModelDecoder.decode(bytes))
