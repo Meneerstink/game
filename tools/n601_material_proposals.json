@@ -1,0 +1,216 @@
+{
+  "status": "RESEARCH PROPOSAL ONLY; not applied; in-game material comparison pending",
+  "id_convention": "zero-based config IDs; tile encoding is ID+1; hidden overlays stay dropped",
+  "cache_snapshot": "2026-11-07 23:35-23:37 local caches; global census 2271 map squares",
+  "overlay_overrides": {
+    "1": 74,
+    "3": 19,
+    "10": 0,
+    "12": 250,
+    "24": 24,
+    "25": 25,
+    "29": 91,
+    "36": 51,
+    "48": 47,
+    "49": 158,
+    "65": 254,
+    "71": 237,
+    "76": 76,
+    "81": 187,
+    "85": 85,
+    "114": 253,
+    "115": 31,
+    "116": 9,
+    "118": 187,
+    "122": 122,
+    "132": 101,
+    "133": 133,
+    "138": 0,
+    "172": 172,
+    "181": 235,
+    "184": 90,
+    "185": 239,
+    "189": 251,
+    "193": 46,
+    "197": 91,
+    "205": 25,
+    "214": 76,
+    "215": 239,
+    "216": 76,
+    "218": 47,
+    "220": 248,
+    "221": 47,
+    "227": 129,
+    "228": 253,
+    "231": 235,
+    "232": 127,
+    "235": 127,
+    "236": 127,
+    "237": 27,
+    "238": 147,
+    "239": 252,
+    "241": 147,
+    "242": 101,
+    "244": 101,
+    "245": 113,
+    "246": 91,
+    "247": 246,
+    "248": 55,
+    "249": 23,
+    "250": 111,
+    "251": 226,
+    "252": 183,
+    "5": 111,
+    "441": 111,
+    "444": 111,
+    "447": 111,
+    "450": 111,
+    "453": 111,
+    "474": 111,
+    "477": 111,
+    "480": 111,
+    "483": 111,
+    "486": 111
+  },
+  "reserved_overlay_texture_patches": {
+    "23": {
+      "texture": 301,
+      "donor_overlay": 91,
+      "keep_rgb": "f5eeec",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "27": {
+      "texture": 301,
+      "donor_overlay": 112,
+      "keep_rgb": "958b67",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "46": {
+      "texture": 301,
+      "donor_overlay": 133,
+      "keep_rgb": "431d1b",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "127": {
+      "texture": 600,
+      "donor_overlay": 74,
+      "keep_rgb": "212a3e",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "129": {
+      "texture": 408,
+      "donor_overlay": 0,
+      "keep_rgb": "1c1919",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "147": {
+      "texture": 505,
+      "donor_overlay": 102,
+      "keep_rgb": "7d7657",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "183": {
+      "texture": 408,
+      "donor_overlay": 0,
+      "keep_rgb": "1c1b14",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "226": {
+      "texture": 301,
+      "donor_overlay": 133,
+      "keep_rgb": "4e2c2a",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "237": {
+      "texture": 493,
+      "donor_overlay": 85,
+      "keep_rgb": "660000",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "246": {
+      "texture": 301,
+      "donor_overlay": 133,
+      "keep_rgb": "8c7973",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "248": {
+      "texture": 408,
+      "donor_overlay": 0,
+      "keep_rgb": "12110e",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "250": {
+      "texture": 301,
+      "donor_overlay": 133,
+      "keep_rgb": "993333",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "252": {
+      "texture": 505,
+      "donor_overlay": 102,
+      "keep_rgb": "665f47",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "253": {
+      "texture": 408,
+      "donor_overlay": 0,
+      "keep_rgb": "131111",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    },
+    "254": {
+      "texture": 301,
+      "donor_overlay": 133,
+      "keep_rgb": "788868",
+      "scope": "no uses outside 21 ToA/Necropolis squares in the global census; recheck at apply time"
+    }
+  },
+  "unresolved_overlay_ids": {
+    "189": "Orange f99322, Ba-Ba: preserve current flat 251 until material/function is verified; do not turn this into an arbitrary lava/carpet texture."
+  },
+  "keep_flat_overlay_ids": [
+    36,
+    115
+  ],
+  "object_texture_proposals": {
+    "8": {
+      "target": 8,
+      "basis": "HD leaves; visual material correspondence, NOT byte/pixel identical to OSRS; preserve cutout"
+    },
+    "18": {
+      "target": 18,
+      "basis": "Native Sack5574, Grain Sack8801-8803 and model5494 actually use 667 texture18; source toa_sack_full46077 also uses source model5494/texture18. Material correspondence, not pixel identity. Native677 rejected by actual render: numbered debug checker."
+    },
+    "29": {
+      "target": 29,
+      "basis": "HD grass blades, visual match, NOT pixel identical; preserve cutout"
+    },
+    "30": {
+      "target": 30,
+      "basis": "HD fern fronds, visual match, NOT pixel identical; preserve cutout"
+    },
+    "96": {
+      "target": null,
+      "basis": "OSRS gold/white/dark hieroglyphs; no native equivalent demonstrated; native96 is noise; propose source sprite1635 restoration using 667 cutout material, allocated IDs from tool only; canvas128x128 crop124x127 offset0,1"
+    },
+    "97": {
+      "target": null,
+      "basis": "OSRS large gold/white/dark hieroglyphs; native97 gradient; propose source sprite3592 restoration using 667 cutout material; canvas128x128 crop61x120 offset34,4"
+    },
+    "116": {
+      "target": null,
+      "basis": "OSRS skull pile, native116 noise; source sprite4667 restoration with opaque 667 sprite material; canvas128x128 opaque"
+    }
+  },
+  "apply_order": [
+    "Implement overlay-definition texture patch preserving other flags and RGB; do not apply to unverified outside consumers",
+    "Retile toa-map-hd with overlay_overrides, plus explicit Necropolis197/205 proposals in necropolis-west-hd (122/214/216/sea already HD)",
+    "Preserve source flag0x8 on planes1-3 when retile clears plane0 flag0x8; include lobby13454 in-place; existing ToaUpperTileFlagTool covers only moved raid squares",
+    "Restore only ledger-selected ToA/Necropolis model textured faces, keeping UVs/shape/scale/colour/alpha of every other face; do not run global model restore blindly",
+    "Test every room and material in GL, compare source screenshots, then A9 by Claude"
+  ],
+  "not_a_claim": [
+    "No testclient round performed in this resumed run; NIEUWE CLIENT KLAAR marker absent",
+    "A textured object pass changes only models that actually have texture faces; untextured OSRS architecture cannot acquire HD surface detail from an ID map alone",
+    "Native floor map is an art/material proposal; colour-preserving patches reuse native HD texture functions but retain the existing imported floor colours"
+  ]
+}
