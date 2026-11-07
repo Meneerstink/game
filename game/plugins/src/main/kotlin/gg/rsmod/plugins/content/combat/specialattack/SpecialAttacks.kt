@@ -60,7 +60,7 @@ object SpecialAttacks {
         val weaponId = player.getEquipment(EquipmentType.WEAPON)?.id ?: return null
         val reach = reaches[weaponId] ?: return null
         val special = attacks[weaponId] ?: return null
-        if (AttackTab.getEnergy(player) < special.energyRequired || !reach.requirement(player)) return null
+        if (!AttackTab.canAffordSpecial(player, special.energyRequired) || !reach.requirement(player)) return null
         return reach
     }
 
@@ -93,12 +93,12 @@ object SpecialAttacks {
     fun executeInstant(player: Player): Boolean {
         val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return false
         val special = instantAttacks[weaponItem.id] ?: return false
-        if (AttackTab.getEnergy(player) < special.energyRequired) {
+        if (!AttackTab.canAffordSpecial(player, special.energyRequired)) {
             player.message("You don't have enough power left.")
             return true
         }
         if (special.attack(player)) {
-            AttackTab.setEnergy(player, AttackTab.getEnergy(player) - special.energyRequired)
+            AttackTab.spendSpecial(player, special.energyRequired)
         }
         return true
     }
@@ -133,7 +133,7 @@ object SpecialAttacks {
         val weaponItem = player.getEquipment(EquipmentType.WEAPON) ?: return Outcome.NOT_USED
         val special = attacks[weaponItem.id] ?: return Outcome.NOT_USED
 
-        if (AttackTab.getEnergy(player) < special.energyRequired) {
+        if (!AttackTab.canAffordSpecial(player, special.energyRequired)) {
             player.message("You don't have enough power left.")
             return Outcome.NOT_USED
         }
@@ -145,7 +145,7 @@ object SpecialAttacks {
             return Outcome.NOT_USED
         }
 
-        AttackTab.setEnergy(player, AttackTab.getEnergy(player) - special.energyRequired)
+        AttackTab.spendSpecial(player, special.energyRequired)
 
         val combatContext = CombatContext(world, player)
         target?.let { combatContext.target = it }
@@ -162,7 +162,7 @@ object SpecialAttacks {
         if (combatContext.failed) {
             // Audit C-15: the energy is only really spent on success. It is drained before the attack (specials read the
             // remaining energy) and returned here when the special could not be performed.
-            AttackTab.setEnergy(player, minOf(100, AttackTab.getEnergy(player) + special.energyRequired))
+            AttackTab.refundSpecial(player, special.energyRequired)
             return Outcome.FAILED
         }
         return Outcome.PERFORMED

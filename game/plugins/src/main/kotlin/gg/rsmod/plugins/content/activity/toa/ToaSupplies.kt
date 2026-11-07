@@ -168,6 +168,7 @@ class ToaSupplies(private val raid: ToaRaid) {
         private val REDUCTIONS = mapOf("Need Some Help?" to 66, "Need Less Help?" to 33, "No Help Needed" to 10)
 
         fun cleanup(player: Player) {
+            ToaConsumables.clear(player)
             // Raid-exclusive supplies cannot be exported by teleport/logout or the deposit pot.
             // ONZEKER T28: exact exit cleanup order needs OSRS comparison; remove the same imported family in all containers.
             val ids = (BAG_SOURCE..27351).mapNotNull(ToaIds::item).toSet()

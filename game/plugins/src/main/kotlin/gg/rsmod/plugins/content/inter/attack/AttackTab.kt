@@ -24,6 +24,23 @@ object AttackTab {
 
     fun getEnergy(p: Player): Int = p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) / 10
 
+    /**
+     * A special attack's cost in the varp's own tenths. N462 ToA Liquid adrenaline (OSRS Wiki Liquid adrenaline?oldid=15355208:
+     * "special attack costs are halved", 25% -> 12.5%, 75% -> 37.5%): half while [gg.rsmod.plugins.content.activity.toa.ToaConsumables.ADRENALINE_TIMER] runs.
+     */
+    fun specialCostTenths(p: Player, percent: Int): Int =
+        if (p.timers.has(gg.rsmod.plugins.content.activity.toa.ToaConsumables.ADRENALINE_TIMER)) percent * 5 else percent * 10
+
+    fun canAffordSpecial(p: Player, percent: Int): Boolean = p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) >= specialCostTenths(p, percent)
+
+    fun spendSpecial(p: Player, percent: Int) {
+        p.setVarp(SPECIAL_ATTACK_ENERGY_VARP, (p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) - specialCostTenths(p, percent)).coerceAtLeast(0))
+    }
+
+    fun refundSpecial(p: Player, percent: Int) {
+        p.setVarp(SPECIAL_ATTACK_ENERGY_VARP, minOf(1000, p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) + specialCostTenths(p, percent)))
+    }
+
     fun disableSpecial(p: Player) {
         p.setVarp(SPECIAL_ATTACK_VARP, 0)
     }
