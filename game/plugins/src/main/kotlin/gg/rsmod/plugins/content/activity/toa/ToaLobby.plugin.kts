@@ -59,12 +59,19 @@ ToaIds.loc(46080)?.let { chest ->
             val held = player.inventory.contains(local) || player.bank.contains(local) || player.equipment.contains(local)
             if (done >= needed && !held) (index + 1) to local else null
         }
-        if (offer.isEmpty()) return@on_obj_option
+        // Icthlarin's hood (tier 5) (Wiki, OSRS 27267): from this chest after 2,000 Normal/Expert raids. ONZEKER: the transcript has no hood
+        // line - offered as "Take Icthlarin's hood." in the shrouds' pattern.
+        val hood = ToaIds.item(27267)?.takeIf { id -> done >= 2_000 && !player.inventory.contains(id) && !player.bank.contains(id) && !player.equipment.contains(id) }
+        // A dialogue holds five lines: with all five shrouds offered the hood comes once one of them is taken.
+        val lines = (offer.map { "Take Icthlarin's shroud (tier ${it.first})." } + listOfNotNull(hood?.let { "Take Icthlarin's hood." })).take(5)
+        val ids = (offer.map { it.second } + listOfNotNull(hood)).take(5)
+        if (ids.isEmpty()) return@on_obj_option
         player.queue {
-            val pick = offer.getOrNull(options(*offer.map { "Take Icthlarin's shroud (tier ${it.first})." }.toTypedArray()) - 1) ?: return@queue
+            val picked = ids.getOrNull(options(*lines.toTypedArray()) - 1) ?: return@queue
             if (player.inventory.freeSlotCount == 0) return@queue
-            player.inventory.add(pick.second)
-            gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.TOA, listOf(pick.second to 1))
+            player.inventory.add(picked)
+            if (picked == hood) return@queue
+            gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.TOA, listOf(picked to 1))
             messageBox("You take a mysterious shroud from the chest.")
         }
     }

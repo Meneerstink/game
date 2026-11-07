@@ -312,6 +312,8 @@ object OsrsItemImportTool {
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),
+            // N462 Icthlarin's hood (tier 5), OSRS 27267: "the chest across from the Grouping Obelisk" after 2,000 Normal/Expert raids (Wiki).
+            "toa-hood" to listOf(Spec(27267)),
             // N462 07-11 (ChatGPT-B Crondis): Gricoller's can 13353 waters the palm too (OSRS Wiki Palm of Resourcefulness).
             "toa-gricoller" to listOf(Spec(13353)),
             // N462 ToA chest commons not imported yet (wiki Chest (Tombs of Amascut): Lily of the Sands 1-46 noted, Blood essence 1-6).
