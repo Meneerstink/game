@@ -48,6 +48,28 @@ class ToaManagedInstanceTests {
         assertEquals(0, world.instanceAllocator.activeMapCount)
     }
 
+    @Test fun `copied blocked terrain stops walking but not projectiles, like the world`() {
+        // N462 Zebak (testclient 07-11): the water around him is blocked terrain; in the raid instance it also stopped every
+        // ranged/magic attack from the dry platform ('I can't reach that!'). The world loads terrain as walk-only collision.
+        val world = world()
+        val water = Tile(4100, 6660, 0)
+        val chunk = world.chunks.getOrCreate(water)
+        chunk.blockedTiles.add(water)
+        world.collision.applyUpdate(gg.rsmod.game.model.collision.CollisionUpdate.Builder().apply {
+            setType(gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD)
+            putTile(water, false, *gg.rsmod.game.model.Direction.NESW)
+        }.build())
+        val raid = allocate(world, true)
+        val copy = raid.area.bottomLeft.transform(4, 4, 0)
+        for (dir in gg.rsmod.game.model.Direction.NESW) {
+            assertEquals(world.collision.isBlocked(water, dir, projectile = false), world.collision.isBlocked(copy, dir, projectile = false), "walk $dir")
+            assertTrue(world.collision.isBlocked(copy, dir, projectile = false), "the water stays walk-blocked ($dir)")
+            assertFalse(world.collision.isBlocked(copy, dir, projectile = true), "a projectile crosses the water ($dir)")
+        }
+        assertEquals(world.chunks.getOrCreate(water).getMatrix(0).get(4, 4), world.chunks.getOrCreate(copy).getMatrix(0).get(4, 4))
+        world.instanceAllocator.release(world, raid)
+    }
+
     @Test fun `parallel groups share no scene objects or collision and release affects only its group`() {
         val world = world()
         val source = Tile(4098, 6658, 1)

@@ -1,9 +1,11 @@
 package gg.rsmod.game.model.instance
 
 import gg.rsmod.game.model.Area
+import gg.rsmod.game.model.Direction
 import gg.rsmod.game.model.EntityType
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
+import gg.rsmod.game.model.collision.CollisionUpdate
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.entity.StaticObject
@@ -298,14 +300,23 @@ class InstancedMapAllocator {
                             }
                         }
 
+                        // N462 (ToA Zebak, testclient 07-11 19:3x 'I can't reach that!' from the dry platform beside him): blocked
+                        // TERRAIN (water, cache tile flag 0x1) only stops walking - the world loads it as putTile(tile, impenetrable =
+                        // false, NESW) (DefinitionSet.loadRegion). The copy used block(impenetrable = true): FULL_COLLISION also stopped
+                        // every projectile over the water and overwrote the loc flags already on that tile. Same flags as the world now.
+                        val terrain = CollisionUpdate.Builder().apply { setType(CollisionUpdate.Type.ADD) }
+                        var anyTerrain = false
                         copyChunk.blockedTiles.forEach { tile ->
                             if (tile.height == copyTile.height && tile.isInSameChunk(copyTile)) {
                                 val localX = tile.x % 8
                                 val localZ = tile.z % 8
                                 val local = baseTile.transformAndRotate(localX, localZ, chunk.rot)
-                                newChunk.getMatrix(chunkH).block(local.x % 8, local.z % 8, impenetrable = true)
+                                newChunk.blockedTiles.add(local)
+                                terrain.putTile(local, false, *Direction.NESW)
+                                anyTerrain = true
                             }
                         }
+                        if (anyTerrain) world.collision.applyUpdate(terrain.build())
                     } else {
                         for (lx in 0 until Chunk.CHUNK_SIZE) {
                             for (lz in 0 until Chunk.CHUNK_SIZE) {
