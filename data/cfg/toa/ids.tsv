@@ -3284,6 +3284,7 @@ seq	426	15782	asset map
 seq	428	15789	asset map
 seq	429	15798	asset map
 seq	440	15790	asset map
+seq	457	17453	spotanim 302
 seq	475	16292	asset map
 seq	480	17110	classic for npc 11741
 seq	481	16221	asset map
@@ -4101,6 +4102,9 @@ seq	9540	17078	baked for npc 11654
 seq	9542	17107	classic for npc 11708
 seq	9547	17305	spotanim 2140
 seq	9562	16316	asset map
+seq	9563	17450	classic
+seq	9564	17451	classic
+seq	9565	17452	classic
 seq	9567	17302	spotanim 2134
 seq	9570	17301	spotanim 2133
 seq	9571	17300	spotanim 2132
@@ -4470,6 +4474,7 @@ seq	13801	16045	asset map
 seq	13802	16047	asset map
 seq	13803	16046	asset map
 seq	14449	15991	asset map
+spotanim	302	3387	model 65895
 spotanim	355	3257	model 65792
 spotanim	2075	3258	model 65793
 spotanim	2076	3237	model 4051
