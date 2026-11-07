@@ -13,10 +13,11 @@ class OpLoc3Decoder : MessageDecoder<OpLoc3Message>() {
         values: HashMap<String, Number>,
         stringValues: HashMap<String, String>,
     ): OpLoc3Message {
-        val id = values["id"]!!.toInt()
+        val idRaw = values["id"]!!.toInt()
         val x = values["x"]!!.toInt()
         val z = values["z"]!!.toInt()
-        val movementType = values["movement_type"]!!.toInt()
+        val movementRaw = values["movement_type"]!!.toInt()
+        val (movementType, id) = gg.rsmod.game.message.WideLocId.fromClient(movementRaw, idRaw) // N462 loc ids > 0xFFFF
         return OpLoc3Message(id, x, z, movementType)
     }
 }
