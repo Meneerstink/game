@@ -162,7 +162,16 @@ class ToaLobby private constructor() {
         fun of(world: World): ToaLobby = worlds.getOrPut(world) { ToaLobby() }
 
         /** OSRS: the Tombs of Amascut need Beneath Cursed Sands (N462 short quest; owner E2: old completions kept by BeneathCursedSands.migrate). */
-        fun canEnter(player: Player): Boolean = BeneathCursedSands.isFinished(player)
+        fun canEnter(player: Player): Boolean = isOpenFor(player) && BeneathCursedSands.isFinished(player)
+
+        /**
+         * Release gate (owner 07-11 14:5x, interim release A): client + cache with the Necropolis go live while ToA is unfinished, so the
+         * raid stays closed on the live server - open on the test server (-Drsps.testServer=true) and for admins (live A9 checks).
+         * Opening ToA for everyone = removing this gate.
+         */
+        fun isOpenFor(player: Player): Boolean =
+            System.getProperty("rsps.testServer") == "true" ||
+                player.world.privileges.isEligible(player.privilege, gg.rsmod.game.model.priv.Privilege.ADMIN_POWER)
     }
 }
 
