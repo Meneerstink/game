@@ -286,8 +286,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         private val WARDENS_REGIONS = setOf(15184, 15696)
         /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
         // ::clip 07-11: Akkha rim 3691-3693, Ba-Ba wall x3798; Kephri wall = west edge of x3543 (cache2686 14164 loc85 z5400-5416).
-        // Zebak (crystal 45506 at 3954,5408 on the entrance platform, arena below) is in GPT-A's Zebak card (heights), not here yet.
+        // Zebak: cache2686 map15700 p1 bridge bit2 lowers the dry arena to collision plane0; x3934,z5408 is inside its east platform.
         val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1), ToaPath.APMEKEN to Tile(3800, 5408),
-            ToaPath.SCABARAS to Tile(3544, 5408))
+            ToaPath.SCABARAS to Tile(3544, 5408), ToaPath.CRONDIS to Tile(3934, 5408))
     }
 }
