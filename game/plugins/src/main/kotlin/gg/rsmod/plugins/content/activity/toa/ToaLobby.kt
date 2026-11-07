@@ -52,8 +52,10 @@ class ToaLobby private constructor() {
         return true
     }
 
-    fun start(player: Player): ToaRaid? {
-        val party = party(player.uid) ?: create(player.uid) ?: return null
+    /** [allowCreate]: the test command may start a solo party; a party's own start never creates one (ultrareview #4). */
+    fun start(player: Player, allowCreate: Boolean = true): ToaRaid? {
+        val party = party(player.uid) ?: (if (allowCreate) create(player.uid) else null) ?: return null
+        if (!allowCreate && party.leader != player.uid) return null
         val world = player.world
         val players = world.players.entries.filterNotNull().associateBy { it.uid }
         val roster = party.start(player.uid) { uid ->
@@ -89,7 +91,7 @@ class ToaLobby private constructor() {
         val members = player.world.players.entries.filterNotNull().filter { it.uid in party.members }
         if (members.size != party.members.size || members.any { !ToaMap.inLobby(it.tile) || !canEnter(it) }) return
         val unconfirmed = members.filter { ToaRewards.hasUnclaimed(it) && rewardConfirmations[it.uid] != party.id }
-        if (unconfirmed.isEmpty()) { start(player); return }
+        if (unconfirmed.isEmpty()) { start(player, allowCreate = false); return }
         unconfirmed.forEach { member ->
             val prompt = party.id to member.uid
             if (rewardPrompts[prompt]?.terminated != false) member.queue promptWork@ {
@@ -98,7 +100,10 @@ class ToaLobby private constructor() {
                 try {
                     if (ToaUi.confirmRewards(this) && membership[member.uid] === party) {
                         rewardConfirmations[member.uid] = party.id
-                        if (members.all { !ToaRewards.hasUnclaimed(it) || rewardConfirmations[it.uid] == party.id }) start(player)
+                        // The party's CURRENT leader starts it - the requester may have quit the party while this prompt was open.
+                        val leader = member.world.players.entries.filterNotNull().firstOrNull { it.uid == party.leader }
+                        if (leader != null && membership[leader.uid] === party &&
+                            members.all { !ToaRewards.hasUnclaimed(it) || rewardConfirmations[it.uid] == party.id }) start(leader, allowCreate = false)
                     }
                 } finally { if (rewardPrompts[prompt] === this) rewardPrompts.remove(prompt) }
             }
@@ -130,17 +135,37 @@ class ToaLobby private constructor() {
 
     fun cycle() {
         raids.values.toSet().forEach { raid ->
-            // Engine teleports (spells, items, staff tools) also end membership; keep the requested destination.
-            raid.world.players.entries.filterNotNull().filter {
-                it.uid in raid.remaining && it.uid !in raid.offline && !raid.map.area.contains(it.tile)
-            }.forEach { leaveRaid(it, returnToLobby = false) }
-            if (raid.remaining.isNotEmpty()) {
-                raid.cycle()
-                if (raid.progress.failed) {
-                    raid.players().filter { !it.isDead() }.forEach { leaveRaid(it) }
+            // One raid's failure must not stop the others (ultrareview #4): it is logged and that raid is closed and released.
+            try {
+                // Engine teleports (spells, items, staff tools) also end membership; keep the requested destination.
+                raid.world.players.entries.filterNotNull().filter {
+                    it.uid in raid.remaining && it.uid !in raid.offline && !raid.map.area.contains(it.tile)
+                }.forEach { leaveRaid(it, returnToLobby = false) }
+                if (raid.remaining.isNotEmpty()) {
+                    raid.cycle()
+                    if (raid.progress.failed) {
+                        raid.players().filter { !it.isDead() }.forEach { leaveRaid(it) }
+                    }
+                    releaseIfEmpty(raid)
                 }
-                releaseIfEmpty(raid)
+            } catch (e: Exception) {
+                logger.error(e) { "ToA raid ${raid.id} failed its cycle - closing it" }
+                abandon(raid)
             }
+        }
+    }
+
+    /** A raid whose cycle threw: everybody to the lobby (safe, items kept), the instance released even when closing throws too. */
+    private fun abandon(raid: ToaRaid) {
+        try {
+            raid.world.players.entries.filterNotNull().filter { it.uid in raid.remaining }.forEach { p ->
+                runCatching { leaveRaid(p) }.onFailure { logger.error(it) { "ToA abandon: leaveRaid ${p.username}" } }
+            }
+            raid.remaining.toList().forEach { raids.remove(it) }
+            raid.remaining.clear()
+            runCatching { raid.close() }.onFailure { logger.error(it) { "ToA abandon: close ${raid.id}" } }
+        } finally {
+            runCatching { raid.world.instanceAllocator.release(raid.world, raid.map) }
         }
     }
 

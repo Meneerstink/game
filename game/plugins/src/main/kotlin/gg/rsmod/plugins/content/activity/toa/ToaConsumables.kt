@@ -65,6 +65,8 @@ object ToaConsumables {
     fun use(player: Player, kind: Kind, localId: Int, slot: Int): Boolean {
         val item = player.inventory[slot] ?: return false
         if (item.id != localId) return false
+        // Raid supplies work inside the raid only (ultrareview #4: an exported Ambrosia or Smelling salts boosted PvP/bossing anywhere).
+        if (ToaLobby.of(player.world).raid(player.uid)?.contains(player) != true) return false
         val food = kind == Kind.HONEY_LOCUST
         if (player.timers.has(if (food) FOOD_DELAY else POTION_DELAY)) return false
         if (food) {

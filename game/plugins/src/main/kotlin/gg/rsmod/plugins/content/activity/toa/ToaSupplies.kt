@@ -172,7 +172,8 @@ class ToaSupplies(private val raid: ToaRaid) {
             // Raid-exclusive supplies cannot be exported by teleport/logout or the deposit pot.
             // ONZEKER T28: exact exit cleanup order needs OSRS comparison; remove the same imported family in all containers.
             val ids = (BAG_SOURCE..27351).mapNotNull(ToaIds::item).toSet()
-            listOf(player.inventory, player.bank).forEach { container ->
+            // Every container, also a beast of burden's or a burden-trinket pet's store (ultrareview #4: supplies left the raid there).
+            (listOf(player.inventory, player.bank) + player.containers.values).forEach { container ->
                 container.rawItems.forEachIndexed { slot, item -> if (item?.id in ids) container[slot] = null }
             }
         }

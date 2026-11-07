@@ -49,6 +49,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     fun contains(player: Player): Boolean = !closed && player.uid in remaining && map.area.contains(player.tile)
     fun players(): List<Player> = remaining.mapNotNull { members[it] }.filter { it.uid !in offline && it.isOnline && contains(it) }
+    /** Every member still in the raid, also those logged out right now (their last Player object) - points and chest shares. */
+    fun memberObjects(): List<Player> = remaining.mapNotNull { members[it] }
     /** Boss and puzzle cards must target this live view, excluding spectators and disconnected entrants. */
     fun activePlayers(): List<Player> = progress.current?.let { run ->
         players().filter { !it.isDead() && participants.alive(run, it.uid) && inRoom(it, run.key) }
@@ -90,8 +92,19 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         if (!run.key.wardens || !participants.alive(run, player.uid)) return false
         wardensReady += player.uid
         player.teleportTo(ToaMap.instance(map, WARDENS_ARENA))
-        if (activePlayers().all { it.uid in wardensReady }) { wardensReady.clear(); startRoom(run) }
+        checkWardensStart()
         return true
+    }
+
+    /**
+     * Phase 1 starts once every member still taking part has spoken to Osmumten. Re-checked every cycle (ultrareview #4): a member who
+     * logs out, walks out or dies before speaking no longer holds the others in an arena without a boss.
+     */
+    private fun checkWardensStart() {
+        val run = progress.current ?: return
+        if (!run.key.wardens || run.status != ToaRoomStatus.RUNNING || run.generation in started || wardensReady.isEmpty()) return
+        val active = activePlayers()
+        if (active.isNotEmpty() && active.all { it.uid in wardensReady }) { wardensReady.clear(); startRoom(run) }
     }
 
     private fun startRoom(run: ToaRoomRun) {
@@ -190,7 +203,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             run.wipe(world.currentCycle)
     }
 
-    fun disconnect(player: Player) { offline += player.uid; lose(player.uid) }
+    // A death cut short by the disconnect never reaches on_player_death: without 'dying -= uid' the retry after a wipe waited for the
+    // dropped member (ultrareview #4).
+    fun disconnect(player: Player) { offline += player.uid; dying -= player.uid; lose(player.uid) }
     fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid; members.remove(uid) }
 
     fun reconnect(player: Player) {
@@ -204,13 +219,24 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 lose(player.uid)
             }
         }
-        respawn(player)
+        // Only the place: a reconnect is no death, so no full restore (ultrareview #4: log out/in healed HP, prayer, spec and run
+        // anywhere in the raid). The honey locusts owed after a wipe still come.
+        dying -= player.uid
+        if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
+        // Logged out when the Wardens died: the completion counts now; the chest share waits in ToaChest's escrow.
+        if (progress.finished) ToaChest.completionOnReconnect(this, player)
+        place(player)
     }
 
     fun respawn(player: Player) {
         dying -= player.uid
         ToaRecovery.full(player)
         if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
+        place(player)
+    }
+
+    /** The respawn/reconnect tile: the burial chamber after the Wardens, the running room's checkpoint, the retry's, else the Nexus. */
+    private fun place(player: Player) {
         val run = progress.current
         val destination = when {
             progress.finished -> REWARD_ENTRY
@@ -229,6 +255,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             players().filter { participants.alive(run, it.uid) && (it.isDead() || !inRoom(it, run.key)) }
                 .forEach { lose(it.uid) }
         }
+        checkWardensStart()
         progress.cycle(world.currentCycle)
         val key = retry ?: return
         if (progress.failed || dying.isNotEmpty()) return
@@ -264,7 +291,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
                 stats.cleared(run.key, world.currentCycle)
-                stats.credit(players(), scope.spawned)
+                stats.credit(memberObjects(), scope.spawned)
                 ToaChest.creditRoom(this, scope.spawned)
                 room.clear(run); scope.close(); rooms.remove(run.generation)
                 points.completeRoom()
@@ -294,6 +321,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             ToaRoomEvent.RESET -> {
                 room.reset(run); scope.close(); rooms.remove(run.generation); participants.clear()
                 started -= run.generation
+                wardensReady.clear()
                 stopTransientCombat()
                 retry = run.key
             }

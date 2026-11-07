@@ -12,7 +12,7 @@ import gg.rsmod.plugins.api.ext.setInterfaceEvents
 /**
  * N462: OSRS toa_chests (771) "Tombs of Amascut" - the personal reward chest: the chest model, the items and the buttons Take-all (771:6,
  * op 1), Bank-all (771:4, op 6) and Discard-all (771:8, op 6) (OSRS cache 2686 interface 771, actions from 30-interface-componenten.tsv).
- * Component ids: OSRS 771:0..10; steelborder of 771:1 = 11..22 (close 22); item slots 23..28 (layout ONZEKER, see OsrsInterfacePortTool).
+ * Component ids: OSRS 771:0..10; steelborder of 771:1 = 11..22 (close 22); item slots 23..34 (layout ONZEKER, see OsrsInterfacePortTool).
  */
 object ToaRewardsUi {
     const val BANK_ALL = 4
@@ -20,7 +20,8 @@ object ToaRewardsUi {
     const val DISCARD_ALL = 8
     const val CLOSE = 22
     const val ITEMS = 23
-    const val SLOTS = 6
+    /** OsrsInterfacePortTool 771: 12 item slots (one roll holds up to 10 lines). */
+    const val SLOTS = 12
     private const val OP1 = 0x2
     private const val OP6 = 1 shl 6
 

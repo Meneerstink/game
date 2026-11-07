@@ -170,8 +170,9 @@ on_command("toatest", Privilege.ADMIN_POWER) {
 val TOA_CYCLE = TimerKey()
 on_world_init { world.timers[TOA_CYCLE] = 1 }
 on_timer(TOA_CYCLE) {
-    ToaLobby.of(world).cycle()
+    // Re-armed first: World.cycle removes a world timer whose plugin throws, which stopped every raid (ultrareview #4).
     world.timers[TOA_CYCLE] = 1
+    ToaLobby.of(world).cycle()
 }
 
 // N462 Raid Summary (OSRS toa_raid_summary 482): the Scoreboard 44942 (Read) on the east side of the burial chamber - "players can review

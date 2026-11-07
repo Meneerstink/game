@@ -27,8 +27,10 @@ class ToaRaidStats {
 
     /** At a room clear, before the scope removes them: what every member did to and took from the room's npcs (their damage maps). */
     fun credit(players: List<Player>, npcs: List<Npc>) {
+        // Damage dealt per account (a reconnect makes a new Player object; ultrareview #4).
+        val dealtByUid = HashMap<gg.rsmod.game.model.PlayerUID, Int>().also { m -> npcs.forEach { n -> n.damageMap.damageByPlayerUid().forEach { (u, d) -> m.merge(u, d, Int::plus) } } }
         players.forEach { p ->
-            val dealt = npcs.sumOf { it.damageMap.getDamageFrom(p) }
+            val dealt = dealtByUid[p.uid] ?: 0
             val taken = npcs.sumOf { p.damageMap.getDamageFrom(it) }
             if (dealt > 0) damageDealt.merge(p.uid, dealt, Int::plus)
             if (taken > 0) damageTaken.merge(p.uid, taken, Int::plus)

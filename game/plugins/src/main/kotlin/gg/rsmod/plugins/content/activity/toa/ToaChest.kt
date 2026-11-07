@@ -52,18 +52,36 @@ object ToaChest {
 
     /** A room is cleared: every raid member's damage on each of the room's npcs (dead or alive, any form) becomes room points. */
     fun creditRoom(raid: ToaRaid, npcs: List<Npc>) {
+        // Per account, also for a member who logged out (ultrareview #4: the damage of a member offline at the clear was lost).
+        val members = raid.remaining
         npcs.forEach { npc ->
             val source = ToaPointSource.of(ToaIds.osrsNpcOf(npc.id) ?: -1)
-            raid.players().forEach { player ->
-                val damage = npc.damageMap.getDamageFrom(player)
-                if (damage > 0) raid.points.damage(player.uid, damage, source)
+            npc.damageMap.damageByPlayerUid().forEach { (uid, damage) ->
+                if (uid in members && damage > 0) raid.points.damage(uid, damage, source)
             }
         }
     }
 
+    /** Raid token -> members whose completion still has to be counted (they were logged out when the Wardens died). */
+    private val completionsDue = hashMapOf<String, MutableSet<PlayerUID>>()
+
+    private fun countCompletion(raid: ToaRaid, player: Player) {
+        player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
+        if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
+            player.attr[COMPLETIONS_NORMAL_EXPERT] = (player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0) + 1
+        }
+    }
+
+    fun completionOnReconnect(raid: ToaRaid, player: Player) {
+        if (completionsDue[raid.rewardToken]?.remove(player.uid) == true) countCompletion(raid, player)
+    }
+
     /** The Wardens died: roll the whole chest once and park every present member's share for the escrow. */
     fun fill(raid: ToaRaid) {
-        val present = raid.players()
+        val online = raid.players()
+        // Every member still in the raid gets a share - a member logged out at the kill too (ultrareview #4); he opens the chest after
+        // his reconnect, which puts him in the burial chamber. Leavers (no longer in `remaining`) only count for the party points.
+        val present = raid.memberObjects()
         val lootPlayers = raid.roster.map { uid ->
             val player = present.firstOrNull { it.uid == uid }
             ToaLootPlayer(
@@ -79,10 +97,7 @@ object ToaChest {
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
         if (result.purpleWinner != null) glowPurple(raid)
         present.forEach { player ->
-            player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
-            if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
-                player.attr[COMPLETIONS_NORMAL_EXPERT] = (player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0) + 1
-            }
+            if (player in online) countCompletion(raid, player) else completionsDue.getOrPut(raid.rewardToken) { mutableSetOf() } += player.uid
             val drops = result.drops[player.uid].orEmpty()
             if (drops.any { it.osrsItem == ToaLoot.THREAD_OF_ELIDINIS }) player.attr[HAD_THREAD] = true
             pending[raid.rewardToken to player.uid] = drops.mapNotNull { drop ->
@@ -94,7 +109,7 @@ object ToaChest {
                     Item(if (drop.noted) noted(player, local) else local, drop.amount)
                 }
             }
-            ToaRewards.open(player, raid)
+            if (player in online) ToaRewards.open(player, raid)
         }
     }
 

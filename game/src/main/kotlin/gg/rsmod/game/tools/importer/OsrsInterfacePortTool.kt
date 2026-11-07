@@ -279,10 +279,11 @@ object OsrsInterfacePortTool {
             extras += "hud party slots (6577) components=$first..${next - 1} (per slot: text, filler graphic; slot i text=$first+2i, filler=$first+2i+1)"
         }
         if (group == 771) {
-            // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: six 36x32 item
-            // slots, 2 columns x 3 rows, spread over the layer (x 0/56, y 0/44/87); compare with an OSRS screenshot in the test client.
+            // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: twelve 36x32 item
+            // slots, 3 columns x 4 rows (x 0/28/56, y 0/29/58/87) - one roll holds up to 10 lines (3 commons, pet, thread, jewel, clue, 3 kits,
+            // remnant; ultrareview #4: 6 slots hid the rest); compare with an OSRS screenshot in the test client.
             val first = next
-            for (slot in 0 until 6) list += C(next++, 5, (slot % 2) * 56, (slot / 2) * 44 - (if (slot / 2 == 2) 1 else 0), 36, 32, 10, 0, 0, 0, 0, true)
+            for (slot in 0 until 12) list += C(next++, 5, (slot % 3) * 28, (slot / 3) * 29, 36, 32, 10, 0, 0, 0, 0, true)
             extras += "chest items (ONZEKER layout) components=$first..${next - 1}"
         }
         if (group == 778) {

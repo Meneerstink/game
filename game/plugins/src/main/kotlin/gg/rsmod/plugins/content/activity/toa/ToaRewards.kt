@@ -84,6 +84,11 @@ object ToaRewards {
         return reward
     }
 
+    private fun unnoted(player: Player, id: Int): Int {
+        val def = player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, id) ?: return id
+        return if (def.noted && def.noteLinkId > 0) def.noteLinkId else id
+    }
+
     fun take(player: Player, toBank: Boolean = false, expectedToken: String? = null) {
         val reward = stored(player) ?: return
         if (expectedToken != null && reward.raidToken != expectedToken) return
@@ -92,8 +97,10 @@ object ToaRewards {
         val planned = ItemContainer(destination)
         val given = mutableListOf<Item>()
         val remaining = reward.withdraw { id, amount ->
-            val moved = planned.add(id, amount, assureFullInsertion = false, applyCreationRedirect = false).completed
-            if (moved > 0) given += Item(id, moved)
+            // The bank keeps items unnoted (Bank.depositInternal): noted commons go in as their unnoted stack (ultrareview #4).
+            val target = if (toBank) unnoted(player, id) else id
+            val moved = planned.add(target, amount, assureFullInsertion = false, applyCreationRedirect = false).completed
+            if (moved > 0) given += Item(target, moved)
             moved
         }
         for (slot in 0 until destination.capacity) destination[slot] = planned[slot]?.let(::Item)

@@ -44,7 +44,10 @@ if (ToaInterfaces.of(ToaInterfaces.SUPPLIES) != null) {
         val choices = ToaSupplies.Choice.values()
         val stage = raid.checkpoints.stage
         val offers = raid.supplies.offers(player)
-        ToaSuppliesUi.open(player, choices.map { choice -> offers[choice].orEmpty().map { it.id to it.amount } }) { index ->
+        // One stack per item type (ultrareview #4: one entry per unit filled the 9 slots with Nectar x1 and hid dressings/scarabs/ambrosia).
+        ToaSuppliesUi.open(player, choices.map { choice ->
+            offers[choice].orEmpty().groupBy { it.id }.map { (id, units) -> id to units.sumOf { it.amount } }
+        }) { index ->
             if (raid.checkpoints.stage == stage) raid.supplies.claim(player, choices[index])
         }
     }
@@ -60,7 +63,16 @@ if (ToaInterfaces.of(ToaInterfaces.BAG) != null) {
                 if (player.inventory[inventorySlot] === bagItem) {
                     when (action) {
                         ToaBagUi.Action.WITHDRAW_1 -> raid.supplies.withdraw(player, inventorySlot, supplySlot = slot)
-                        ToaBagUi.Action.WITHDRAW_5 -> repeat(5) { raid.supplies.withdraw(player, inventorySlot, supplySlot = slot) }
+                        // Up to five of the clicked supply: each withdrawal takes the next slot holding that item (the clicked slot is empty
+                        // after the first one - ultrareview #4).
+                        ToaBagUi.Action.WITHDRAW_5 -> {
+                            val id = raid.supplies.bag(player, bagItem)?.contents()?.getOrNull(slot)
+                            if (id != null) repeat(5) {
+                                val item = player.inventory[inventorySlot] ?: return@repeat
+                                val next = raid.supplies.bag(player, item)?.contents()?.indexOfFirst { it == id }?.takeIf { it >= 0 } ?: return@repeat
+                                raid.supplies.withdraw(player, inventorySlot, supplySlot = next)
+                            }
+                        }
                         ToaBagUi.Action.WITHDRAW_ALL -> raid.supplies.withdraw(player, inventorySlot, all = true)
                         else -> Unit
                     }

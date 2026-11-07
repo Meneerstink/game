@@ -57,6 +57,14 @@ class DamageMap(
     fun getDamageFrom(pawn: Pawn): Int = map[pawn]?.totalDamage ?: 0
 
     /**
+     * Total damage per player ACCOUNT: a reconnect makes a new [gg.rsmod.game.model.entity.Player] object, whose earlier hits sit under
+     * the old one (N462 ToA room points, ultrareview #4). Entries whose old object was already collected are gone (weak keys).
+     */
+    fun damageByPlayerUid(): Map<gg.rsmod.game.model.PlayerUID, Int> =
+        map.entries.mapNotNull { (pawn, stack) -> (pawn as? gg.rsmod.game.model.entity.Player)?.let { it.uid to stack.totalDamage } }
+            .groupBy({ it.first }, { it.second }).mapValues { it.value.sum() }
+
+    /**
      * Gets the [Pawn] that has dealt the most damage in this map.
      *
      * @param timeFrameCycles
