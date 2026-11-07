@@ -5253,3 +5253,8 @@ loc	56163	66305	 [necropolis-west]
 loc	59408	66306	 [necropolis-west]
 loc	11390	66311	 [loc-tool tx-20261107-161224]
 loc	11391	66312	 [loc-tool tx-20261107-161224]
+seq	9543	17457	toa-shadow
+spotanim	2125	3388	toa-shadow model 66054
+spotanim	2126	3389	toa-shadow model 66055
+spotanim	2127	3390	toa-shadow model 66056
+item	27267	24741	toa-hood
