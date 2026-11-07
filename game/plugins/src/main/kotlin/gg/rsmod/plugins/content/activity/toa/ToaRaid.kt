@@ -217,6 +217,11 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                     if (run.key.boss) ToaRecovery.full(it) else ToaRecovery.challenge(it)
                 }
                 if (run.key.path != null && run.key.boss) checkpoints.pathsCleared(progress.completedPaths.size)
+                // ONZEKER T26: a walled arena (ARENA_ENTRY) has its Teleport crystal outside the wall - after the kill the party is put
+                // back in the antechamber next to it (no OSRS source for the way out was found).
+                run.key.path?.takeIf { run.key.boss && it in ARENA_ENTRY }?.let { path ->
+                    players().filter { !it.isDead() && inRoom(it, run.key) }.forEach { it.teleportTo(ToaMap.instance(map, path.bossEntry)) }
+                }
                 scene?.refresh()
                 ToaRaidEvents.roomCleared(this, run)
                 if (run.key.wardens) {
@@ -261,6 +266,6 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
         /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
-        val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1)) // 3691-3692 = blocked arena rim (::clip 07-11)
+        val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1), ToaPath.APMEKEN to Tile(3800, 5408)) // ::clip 07-11: Akkha rim 3691-3693, Ba-Ba wall x3798
     }
 }

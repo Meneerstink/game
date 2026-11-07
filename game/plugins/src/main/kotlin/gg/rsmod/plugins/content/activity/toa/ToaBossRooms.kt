@@ -12,7 +12,8 @@ import gg.rsmod.plugins.content.activity.toa.bosses.ToaEncounterContext
  * the room, and the boss's death clears the room. A boss whose card is not active yet leaves its room uncleared (ToaRooms).
  */
 object ToaBossRooms {
-    class Spawn(val encounter: String, val tile: Tile)
+    /** [centred] = [tile] is the OSRS Wiki map square (the npc's centre), not its south-west tile (07-11: Zebak 9x9 overlapped the platform). */
+    class Spawn(val encounter: String, val tile: Tile, val centred: Boolean = false)
 
     /**
      * OSRS spawn tile per boss room. Kephri 3551,5409 and Zebak 3921,5408 = wiki infobox maps (04/05-brontekst); the plane is
@@ -25,8 +26,8 @@ object ToaBossRooms {
         ToaPath.HET to Spawn("akkha", Tile(3679, 5406, 1)),
         // Ba-Ba (size 5): ONZEKER T02 - no infobox map; centre of the arena locs of square 15188 (plane-1 decor x3786-3826, z5396-5420).
         ToaPath.APMEKEN to Spawn("baba", Tile(3804, 5406, ToaPath.APMEKEN.bossEntry.height)),
-        ToaPath.CRONDIS to Spawn("zebak", Tile(3921, 5408, ToaPath.CRONDIS.bossEntry.height)),
-        ToaPath.SCABARAS to Spawn("kephri", Tile(3551, 5409, ToaPath.SCABARAS.bossEntry.height)),
+        ToaPath.CRONDIS to Spawn("zebak", Tile(3921, 5408, ToaPath.CRONDIS.bossEntry.height), centred = true),
+        ToaPath.SCABARAS to Spawn("kephri", Tile(3551, 5409, ToaPath.SCABARAS.bossEntry.height), centred = true),
     )
 
     /**
@@ -36,12 +37,12 @@ object ToaBossRooms {
      * ONZEKER T02: 3808,5154 is the obelisk's Wiki map square (centre); the obelisk is spawned with that tile as its south-west corner
      * minus half its size (cache size).
      */
-    val WARDENS = Spawn("wardens", Tile(3808, 5154, 1))
+    val WARDENS = Spawn("wardens", Tile(3808, 5154, 1), centred = true)
     val ENCOUNTER_DONE = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
 
     fun register(): List<AutoCloseable> =
         SPAWNS.map { (path, spawn) -> ToaRooms.register(ToaRoomKey(path, true)) { raid -> Room(raid, spawn) } } +
-            ToaRooms.register(ToaRoomKey(null, true)) { raid -> Room(raid, WARDENS, centred = true) }
+            ToaRooms.register(ToaRoomKey(null, true)) { raid -> Room(raid, WARDENS) }
 
     /** The live raid view a boss card targets: the room's active players, the raid's level, children through the room scope. */
     class RaidContext(private val raid: ToaRaid, private val scope: ToaRoomScope) : ToaEncounterContext {
@@ -53,7 +54,7 @@ object ToaBossRooms {
         override fun spawnChild(npc: Npc): Boolean = scope.active && scope.spawn(npc)
     }
 
-    class Room(private val raid: ToaRaid, private val spawn: Spawn, private val centred: Boolean = false) : ToaRoom {
+    class Room(private val raid: ToaRaid, private val spawn: Spawn) : ToaRoom {
         var boss: Npc? = null
             private set
 
@@ -61,7 +62,7 @@ object ToaBossRooms {
             val definition = ToaEncounter.definitions[spawn.encounter] ?: return
             val scope = raid.scope(run) ?: return
             val id = ToaBossNpcs.local(definition.osrsNpc) ?: return
-            val half = if (centred) raid.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).size / 2 else 0
+            val half = if (spawn.centred) raid.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).size / 2 else 0
             val npc = Npc(id, ToaMap.instance(raid.map, spawn.tile.transform(-half, -half)), raid.world)
             npc.respawnOverride = false
             val context = RaidContext(raid, scope)

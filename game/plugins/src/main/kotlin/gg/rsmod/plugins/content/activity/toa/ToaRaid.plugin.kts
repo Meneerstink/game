@@ -42,7 +42,9 @@ arrayOf("Pass", "Quick-Pass").forEach { option ->
 mapOf(ToaLocs.KEPHRI_CRYSTAL to ToaPath.SCABARAS, ToaLocs.AKKHA_CRYSTAL to ToaPath.HET,
     ToaLocs.BABA_CRYSTAL to ToaPath.APMEKEN, ToaLocs.ZEBAK_CRYSTAL to ToaPath.CRONDIS).forEach { (id, path) ->
     arrayOf("Use", "Quick-Use").forEach { option ->
-        on_obj_option(id, option) { ToaLobby.of(world).raid(player.uid)?.crystal(player, path) }
+        // ONZEKER T26 (07-11 testclient): the crystal stands in the antechamber behind the arena's invisible wall (Akkha: rim x3691-3693);
+        // usable from up to 6 tiles in line of sight so the party gets in and, after the kill, out again.
+        on_obj_option(id, option, lineOfSightDistance = 6) { ToaLobby.of(world).raid(player.uid)?.crystal(player, path) }
     }
 }
 
