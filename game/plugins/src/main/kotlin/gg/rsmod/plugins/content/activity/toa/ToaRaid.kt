@@ -25,6 +25,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     val progress = ToaRaidProgress(settings, ::onRoomEvent)
     /** N462 OSRS points (ToaPointsLedger): room points from kills (ToaChest.onKill), totals at each clear, death penalty. */
     val points = gg.rsmod.plugins.content.activity.toa.core.ToaPointsLedger(roster)
+    /** Room times and damage dealt/taken for the Raid Summary (482) on the burial chamber's Scoreboard. */
+    val stats = ToaRaidStats()
     private val rooms = hashMapOf<Int, Pair<ToaRoom, ToaRoomScope>>()
     private val started = mutableSetOf<Int>()
     private val dying = mutableSetOf<PlayerUID>()
@@ -244,6 +246,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     private fun onRoomEvent(event: ToaRoomEvent, run: ToaRoomRun) {
         if (event == ToaRoomEvent.START) {
+            stats.started(run.key, world.currentCycle)
             val scope = ToaRoomScope(this, run)
             val room = ToaRooms.create(this, run.key)
             rooms[run.generation] = room to scope
@@ -255,6 +258,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         when (event) {
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
+                stats.cleared(run.key, world.currentCycle)
+                stats.credit(players(), scope.spawned)
                 ToaChest.creditRoom(this, scope.spawned)
                 room.clear(run); scope.close(); rooms.remove(run.generation)
                 points.completeRoom()

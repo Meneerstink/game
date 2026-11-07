@@ -173,3 +173,13 @@ on_timer(TOA_CYCLE) {
     ToaLobby.of(world).cycle()
     world.timers[TOA_CYCLE] = 1
 }
+
+// N462 Raid Summary (OSRS toa_raid_summary 482): the Scoreboard 44942 (Read) on the east side of the burial chamber - "players can review
+// their performance in the raid by reading the scoreboard on the eastern side of the burial chamber" (Tombs of Amascut?oldid=15391794 l.599).
+ToaIds.loc(44942)?.let { scoreboard ->
+    on_obj_option(obj = scoreboard, option = "read") {
+        val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_obj_option
+        gg.rsmod.plugins.content.activity.toa.ui.ToaSummaryUi.open(player, raid.stats.times(raid.progress.elapsedCycles(world.currentCycle)),
+            raid.settings.raidLevel, raid.settings.invocations.size)
+    }
+}
