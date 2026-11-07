@@ -51,8 +51,16 @@ val PICKAXES = gg.rsmod.plugins.content.skills.mining.PickaxeType.values.map { i
 // N462 07-11: the lobby cavity (OSRS 49566 toa_lobby_wall02_cavity_parent at 3367,9114, ops Take-pickaxe / Deposit-pickaxe, the same
 // varbit 14440) - OSRS Wiki ToA changes 30 August 2023 'A cavity has been added in the raid lobby where players can deposit and
 // retrieve their pickaxe' - shares the statues' stored pickaxe.
-listOfNotNull(HetIds.loc(45468), gg.rsmod.plugins.content.activity.toa.ToaIds.loc(49566)).distinct().forEach { id ->
-    on_obj_option(id, "Take-pickaxe") {
+// The parents (statue 45468, cavity 49566) are multilocs on varbit 14440; the 667 import drops the table, so ToaMultilocs places
+// variant 0 (45470 / 49568); every variant (cache2686 transforms) gets the options its own definition has (49568, the empty cavity,
+// only 'Deposit-pickaxe').
+val PICKAXE_HOLDERS = listOf(45468, 49566) +
+    listOf(45470, 45471, 45472, 45473, 45474, 45475, 45476, 45477, 45478, 45479, 45480, 45481, 45482, 45483, 45484, 55808, 55809) +
+    listOf(49568, 49569, 49570, 49571, 49572, 49573, 49574, 49575, 49576, 49577, 49578, 49579, 49580, 49581, 49582, 55810, 55811)
+fun hasOption(id: Int, option: String) =
+    world.definitions.getNullable(ObjectDef::class.java, id)?.options?.any { it?.equals(option, ignoreCase = true) == true } == true
+PICKAXE_HOLDERS.mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.loc(it) }.distinct().forEach { id ->
+    if (hasOption(id, "Take-pickaxe")) on_obj_option(id, "Take-pickaxe") {
         val stored = player.attr[STORED]
         if (player.inventory.isFull) { player.message("You don't have enough inventory space."); return@on_obj_option }
         if (stored != null && stored > 0) {
@@ -60,7 +68,7 @@ listOfNotNull(HetIds.loc(45468), gg.rsmod.plugins.content.activity.toa.ToaIds.lo
             player.attr.remove(STORED)
         } else player.inventory.add(Items.BRONZE_PICKAXE)
     }
-    on_obj_option(id, "Deposit-pickaxe") {
+    if (hasOption(id, "Deposit-pickaxe")) on_obj_option(id, "Deposit-pickaxe") {
         if (player.attr[STORED]?.let { it > 0 } == true) return@on_obj_option // ONZEKER T25: OSRS message unknown
         val slot = player.inventory.rawItems.indexOfFirst { it != null && it.id in PICKAXES && it.id != Items.BRONZE_PICKAXE }
         if (slot < 0) return@on_obj_option

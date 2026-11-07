@@ -1,0 +1,14 @@
+# N462 07-11: OSRS multiloc parents without own models in the ToA/Necropolis squares; the 667 import drops the varbit
+# transform table (Rev667WorldCodec), so the server places transform[0]. kind osrsParent osrsVariant x z plane shape rot jagex
+world	2882	43888	3378	2787	0	10	2	bcs_maisa_camp_tent
+world	44595	44004	3348	2759	0	10	1	bcs_necropolis_entry
+world	46224	46083	3370	9114	0	10	1	toa_rewards_chest_lobby
+world	46225	46086	3363	9125	0	11	0	toa_lobby_lamp_crate
+world	49566	49568	3367	9114	0	10	1	toa_lobby_wall02_cavity_parent
+raid	46228	46239	3658	5153	0	10	0	toa_vault_strange_wall_op
+raid	46232	46229	3654	5154	0	10	1	toa_vault_strange_chest_parent
+raid	45468	45470	3662	5275	0	10	2	toa_het_statue_parent
+raid	45468	45470	3662	5283	0	10	0	toa_het_statue_parent
+raid	45468	45470	3679	5267	0	10	2	toa_het_statue_parent
+raid	45468	45470	3679	5291	0	10	0	toa_het_statue_parent
+raid	45468	45470	3695	5284	0	10	0	toa_het_statue_parent
