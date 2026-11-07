@@ -226,6 +226,13 @@ task runSkeletalSidecarExportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.SkeletalSidecarExportTool'
 }
 
+task runNpcHeadIconCloneTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N462: copy a local NPCType with 667 opcode 102 headIcon (boss overhead prayers). Usage: --args="<npc>:<icon>[,...] [--apply]"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NpcHeadIconCloneTool'
+}
+
 task runOsrsInterfacePortTool(type: JavaExec) {
     group = 'tools'
     description = 'N462: port OSRS if3 interfaces (ToA 481/482/771-778) to 667 if3 - static components, frame scripts rebuilt, sprites copied. ' +

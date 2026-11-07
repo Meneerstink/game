@@ -24,7 +24,7 @@ class ToaRuntimeTests {
         val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
         f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
         var starts = 0
-        val registration = ToaRooms.register(ToaRoomKey(ToaPath.HET, false)) { active -> object : ToaRoom {
+        val registration = ToaRooms.replaceForTest(ToaRoomKey(ToaPath.HET, false)) { active -> object : ToaRoom {
             override fun start(run: ToaRoomRun) {
                 starts++
                 assertEquals(ToaPath.HET.challengeEntry, ToaMap.source(active.map, f.players[0].tile))
@@ -80,6 +80,7 @@ class ToaRuntimeTests {
         mockkObject(ToaLobby.Companion)
         every { ToaLobby.canEnter(any()) } returns true
         val a = f.map(6400); val b = f.map(6912)
+        val allocator = f.world.instanceAllocator // verify on the mock itself: a getter inside verify{} counts as a call
         every { f.world.instanceAllocator.allocate(f.world, any(), any()) } returnsMany listOf(a, b)
         val lobby = ToaLobby.of(f.world)
         val (p1, p2, p3, p4) = f.players
@@ -89,18 +90,18 @@ class ToaRuntimeTests {
         assertNotSame(first.map, second.map)
         f.tiles[p1.uid] = ToaMap.LOBBY // allocator logout runs before the plugin hook
         lobby.logout(p1)
-        verify(exactly = 0) { f.world.instanceAllocator.release(f.world, a) }
+        verify(exactly = 0) { allocator.release(f.world, a) }
         lobby.login(p1)
         assertTrue(first.contains(p1))
         lobby.leaveRaid(p2)
         f.tiles[p1.uid] = Tile(3200, 3200) // an external spell/item teleport
         lobby.cycle(); lobby.cycle()
         assertNull(lobby.raid(p1.uid))
-        verify(exactly = 1) { f.world.instanceAllocator.release(f.world, a) }
+        verify(exactly = 1) { allocator.release(f.world, a) }
         assertTrue(second.contains(p3)); assertTrue(second.contains(p4))
-        verify(exactly = 0) { f.world.instanceAllocator.release(f.world, b) }
+        verify(exactly = 0) { allocator.release(f.world, b) }
         for (p in listOf(p3, p4)) { f.tiles[p.uid] = ToaMap.LOBBY; lobby.logout(p) }
-        verify(exactly = 1) { f.world.instanceAllocator.release(f.world, b) }
+        verify(exactly = 1) { allocator.release(f.world, b) }
         assertNull(lobby.raid(p3.uid)); assertNull(lobby.raid(p4.uid))
     }
 

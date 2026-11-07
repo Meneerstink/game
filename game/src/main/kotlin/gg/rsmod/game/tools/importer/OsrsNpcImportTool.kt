@@ -148,6 +148,9 @@ object OsrsNpcImportTool {
                 ),
             // N462 Beneath Cursed Sands (short quest): the Head Menaphite Guard 11529 (OSRS Wiki: combat 174, the quest's fight).
             "bcs" to listOf(11529),
+            // N462 Necropolis G6 (ChatGPT-B2 07-11): OSRS Crocodile 4184 (== 11581 == 11582 byte-identical) x12 and Desert Lizard 459/460/461
+            // (459 == 12003) x4 - the local 667 Crocodile 6779 / Lizard 2803 are other meshes.
+            "necropolis" to listOf(4184, 459, 460, 461),
         )
     }
 
@@ -230,6 +233,8 @@ object OsrsNpcImportTool {
             // CROC_DEATH 2038 / CROC_ATTACK 2039 / CROC_ATTACK_MERGE 9804; Wardens P1/P2 obelisk FX_OBELISK_WARDENS01_* 9720-9726 and
             // FX_OBELISK_WARDENS02_* 9727-9734; energy siphon FX_WARDENS_ENERGY_DEATH01 9735 / _GROUNDED01 9736; TOA_BOULDER_ROLLING 9518.
             "toa-classic" to listOf(2035, 2038, 2039, 9804) + (9720..9736).toList() + listOf(9518),
+            // necropolis: CROC_PARRY 2035 / CROC_DEATH 2038 / CROC_ATTACK 2039; SLAYER_LIZARD_ATTACK 2776 / _DEFEND 2777 / _DEATH 2778.
+            "necropolis" to listOf(2035, 2038, 2039, 2776, 2777, 2778),
             "venenatis" to listOf(9989, 9990, 9991, 9992, 9993, 6249, 6250, 6251, 4925, 4927, 4929, 5327, 5328, 5329),
             "rev-caves" to listOf(169, 170, 172, 6184, 6183, 6182, 1582, 1581, 1580, 163, 165, 167, 4652, 4651, 4653, 6562, 6566, 6576, 64, 65, 67, 4320, 4322, 4321, 2731, 2732, 2733, 386, 424, 836, 80, 89, 92),
             // deadman-breach: attack / defend / death sequences, chosen by RuneLite gameval AnimationID name among the OSRS sequences

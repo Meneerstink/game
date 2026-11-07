@@ -14,6 +14,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.dealHit
+import gg.rsmod.plugins.content.combat.PlayerAttackRules
 import gg.rsmod.plugins.content.combat.removeCombatTarget
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
@@ -107,7 +108,7 @@ data class ToaNpcStats(
     fun definition(c: ToaEncounterContext, path: Boolean = true, group: Boolean = true, scaleDefence: Boolean = true): NpcCombatDef {
         ToaScale.validate(c)
         val bonuses = MutableList(18) { 0 }
-        // The melee formula reads ATTACK_STAB/SLASH/CRUSH (0..2); NPC-specific strength helpers still use10..13.
+        // The melee formula reads ATTACK_STAB/SLASH/CRUSH (0..2); NPC-specific bonus helpers still use10..13.
         for (index in 0..2) bonuses[index] = attackBonus
         bonuses[3] = magicBonus; bonuses[4] = rangedBonus
         bonuses[5] = stab; bonuses[6] = slash; bonuses[7] = crush; bonuses[8] = mage; bonuses[9] = range
@@ -162,9 +163,18 @@ object ToaEncounter {
         return session
     }
     fun stop(npc: Npc) { npc.attr[SESSION]?.close() }
+    /** Resolve before dealHit rolls: landed hits retain ordinary damage-map, XP and launch-style accounting. */
+    fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? {
+        val session = target.attr[SESSION] ?: target.attr[MINION_SESSION] ?: return null
+        if (!target.isSpawned() || target.isDead() || !session.active() || !session.eligible(player)) return null
+        return session.playerAttackRule(player, target, type)
+    }
 }
 
-abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
+abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
+    /** Active form; multi-form encounters retain their adapter root separately for completion. */
+    var npc: Npc = npc
+        protected set
     val context: ToaEncounterContext = object : ToaEncounterContext {
         override val players get() = input.players
         override val partySize get() = input.partySize
@@ -224,6 +234,7 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
     }
     abstract fun onTick()
     open fun incoming(hit: Hit) {}
+    open fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? = null
     fun later(delay: Int, acrossPhase: Boolean = false, action: () -> Unit) {
         require(delay >= 0)
         if (delay == 0) { if (active()) action(); return }
@@ -287,9 +298,11 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
     fun heal(amount: Int) { npc.setCurrentLifepoints(minOf(npc.getMaximumLifepoints(), npc.getCurrentLifepoints() + amount)) }
     fun distance(tile: Tile, origin: Tile = npc.tile, size: Int = npc.getSize()): Int =
         max(maxOf(origin.x - tile.x, 0, tile.x - (origin.x + size - 1)), maxOf(origin.z - tile.z, 0, tile.z - (origin.z + size - 1)))
-    fun meleeReach(tile: Tile): Boolean {
-        val t = npc.tile; val s = npc.getSize()
-        return distance(tile) <= 1 && (tile.x in t.x until t.x + s || tile.z in t.z until t.z + s)
+    fun meleeReach(tile: Tile): Boolean = actorMeleeReach(npc, tile)
+    fun actorMeleeReach(actor: Npc, tile: Tile): Boolean {
+        val t = actor.tile; val size = actor.getSize()
+        return tile.height == t.height && distance(tile, t, size) <= 1 &&
+            (tile.x in t.x until t.x + size || tile.z in t.z until t.z + size)
     }
     fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(p.tile) }
     /** Resolve protection at impact (Zebak), and cancel on phase/death/logout/teleport/reset. */
@@ -333,6 +346,7 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
         HitType.MAGIC.id, HitType.CRIT_MAGIC.id -> CombatClass.MAGIC
         else -> null
     }
+    fun incomingStyle(hit: Hit, type: Int): CombatClass? = hit.sourceCombatClass ?: incomingStyle(type)
     fun sameTile(a: Tile, b: Tile): Boolean = a.height == b.height && a.x == b.x && a.z == b.z
     private val missing = mutableSetOf<String>()
     fun missingAsset(key: String) {

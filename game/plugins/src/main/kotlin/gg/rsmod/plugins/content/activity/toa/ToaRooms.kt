@@ -17,5 +17,10 @@ object ToaRooms {
         check(factories.putIfAbsent(key, factory) == null) { "Duplicate ToA room: $key" }
         return AutoCloseable { if (factories[key] === factory) factories.remove(key) }
     }
+    /** Tests only: swap in a factory for [key] even when a plugin already registered one; closing restores the plugin's. */
+    fun replaceForTest(key: ToaRoomKey, factory: (ToaRaid) -> ToaRoom): AutoCloseable {
+        val previous = factories.put(key, factory)
+        return AutoCloseable { if (previous != null) factories[key] = previous else factories.remove(key) }
+    }
     fun create(raid: ToaRaid, key: ToaRoomKey): ToaRoom = factories[key]?.invoke(raid) ?: object : ToaRoom {}
 }
