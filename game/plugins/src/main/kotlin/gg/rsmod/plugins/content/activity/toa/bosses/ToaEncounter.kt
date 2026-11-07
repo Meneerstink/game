@@ -107,7 +107,7 @@ data class ToaNpcStats(
     fun definition(c: ToaEncounterContext, path: Boolean = true, group: Boolean = true, scaleDefence: Boolean = true): NpcCombatDef {
         ToaScale.validate(c)
         val bonuses = MutableList(18) { 0 }
-        // The melee formula reads ATTACK_STAB/SLASH/CRUSH (0..2); NPC-specific strength helpers still use10..13.
+        // The melee formula reads ATTACK_STAB/SLASH/CRUSH (0..2); NPC-specific bonus helpers still use10..13.
         for (index in 0..2) bonuses[index] = attackBonus
         bonuses[3] = magicBonus; bonuses[4] = rangedBonus
         bonuses[5] = stab; bonuses[6] = slash; bonuses[7] = crush; bonuses[8] = mage; bonuses[9] = range
@@ -287,9 +287,11 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
     fun heal(amount: Int) { npc.setCurrentLifepoints(minOf(npc.getMaximumLifepoints(), npc.getCurrentLifepoints() + amount)) }
     fun distance(tile: Tile, origin: Tile = npc.tile, size: Int = npc.getSize()): Int =
         max(maxOf(origin.x - tile.x, 0, tile.x - (origin.x + size - 1)), maxOf(origin.z - tile.z, 0, tile.z - (origin.z + size - 1)))
-    fun meleeReach(tile: Tile): Boolean {
-        val t = npc.tile; val s = npc.getSize()
-        return distance(tile) <= 1 && (tile.x in t.x until t.x + s || tile.z in t.z until t.z + s)
+    fun meleeReach(tile: Tile): Boolean = actorMeleeReach(npc, tile)
+    fun actorMeleeReach(actor: Npc, tile: Tile): Boolean {
+        val t = actor.tile; val size = actor.getSize()
+        return tile.height == t.height && distance(tile, t, size) <= 1 &&
+            (tile.x in t.x until t.x + size || tile.z in t.z until t.z + size)
     }
     fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(p.tile) }
     /** Resolve protection at impact (Zebak), and cancel on phase/death/logout/teleport/reset. */

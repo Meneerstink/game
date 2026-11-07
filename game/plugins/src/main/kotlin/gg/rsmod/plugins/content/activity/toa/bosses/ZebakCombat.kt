@@ -138,7 +138,7 @@ object ZebakCombat : CombatScript() {
                     p.setVarp(173, 0); p.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = 2
                     state.first?.takeIf { it.isSpawned() && !it.isDead() }?.let { croc ->
                         croc.walkTo(p.tile)
-                        if (tick % CROC_STATS.speed == 0 && croc.tile.isWithinRadius(p.tile, 2)) {
+                        if (tick % CROC_STATS.speed == 0 && actorMeleeReach(croc, p.tile)) {
                             animate(2039, croc)
                             attack(p, ToaScale.damage(18, context), CombatClass.MELEE, 1, 1, 4, actor = croc)
                         }

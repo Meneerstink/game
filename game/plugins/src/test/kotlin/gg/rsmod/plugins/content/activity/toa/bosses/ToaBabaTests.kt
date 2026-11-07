@@ -16,6 +16,11 @@ class ToaBabaTests {
         assertFalse(BabaCombat.overlaps(rock, 3, Tile(101, 101, 1), 1))
         assertTrue(BabaCombat.overlaps(rock, 3, Tile(102, 102), 3))
     }
+    @Test fun `all eight cached sarcophagi retain their north south facing`() {
+        assertEquals(8, BabaCombat.COFFINS_OSRS.size)
+        assertEquals(setOf(3803, 3808, 3813, 3818), BabaCombat.COFFINS_OSRS.keys.map { it.x }.toSet())
+        assertTrue(BabaCombat.COFFINS_OSRS.all { (tile, facing) -> if (tile.z == 5400) facing == 3 else tile.z == 5416 && facing == 1 })
+    }
     @Test fun `crossing rolling threshold invokes active director once and suspends autos`() {
         val f = ToaTestFixture(); every { f.npc.getCurrentLifepoints() } returns 253
         every { f.npc.getMaximumLifepoints() } returns 380
@@ -26,19 +31,20 @@ class ToaBabaTests {
     }
     @Test fun `default baboon count remains within published one to four for all groups`() {
         assertEquals(listOf(1, 1, 2, 2, 3, 3, 4, 4), (1..8).map(BabaCombat::baboonCount))
-        assertTrue(BabaCombat.rollingInterval(true) < BabaCombat.rollingInterval(false))
+        assertEquals(BabaCombat.rollingInterval(true), BabaCombat.rollingInterval(false))
     }
-    @Test fun `2025 melee prayer fully blocks Ba-Ba unless Quiet Prayers is active`() {
+    @Test fun `2025 melee prayer fully blocks Ba-Ba and ignores obsolete Quiet Prayers`() {
         assertEquals(0, ToaProtection.damage(24, true))
         assertEquals(24, ToaProtection.damage(24, false))
-        assertEquals(2, ToaProtection.damage(24, true, quiet = true))
+        assertEquals(0, ToaProtection.damage(24, true, quiet = true))
         assertEquals(24, ToaProtection.damage(24, false, quiet = true))
     }
     @Test fun `melee max and six tick speed follow context without a group damage multiplier`() {
         assertEquals(24, BabaCombat.maxHit(ToaTestContext()))
         assertEquals(60, BabaCombat.maxHit(ToaTestContext(raidLevel = 600, partySize = 8)))
-        assertEquals(79, BabaCombat.maxHit(ToaTestContext(raidLevel = 600, partySize = 8, pathLevel = 6)))
+        assertEquals(60, BabaCombat.maxHit(ToaTestContext(raidLevel = 600, partySize = 8, pathLevel = 6)))
         assertEquals(6, BabaCombat.STATS.speed)
+        assertEquals(gg.rsmod.game.model.combat.StyleType.CRUSH, BabaCombat.STATS.definition(ToaTestContext()).attackStyleType)
     }
     @Test fun `rolling thresholds use thirds and can each trigger only once`() {
         assertFalse(BabaCombat.rollingThreshold(0, 254, 380))
@@ -52,14 +58,17 @@ class ToaBabaTests {
         assertFalse(BabaCombat.validCracks(listOf(0, 1, 2, 3, 4, 3, 2, 1, 2, 3)), "initial safe lane is one of the middle three")
         assertFalse(BabaCombat.validCracks(listOf(1, 4, 3, 2, 1, 2, 3, 2, 1, 0)), "may not shift three columns")
         assertFalse(BabaCombat.validCracks(List(9) { 2 }))
-        assertEquals(listOf(25, 25, 27, 27, 31, 31, 31), (0..6).map(BabaCombat::crackedHp))
+        assertEquals(List(7) { 25 }, (0..6).map(BabaCombat::crackedHp))
+    }
+    @Test fun `boulder health follows its published half group scaling and ignores raid level`() {
+        assertEquals(listOf(25, 36, 47, 55, 62, 70, 77, 85), (1..8).map(BabaCombat::boulderHp))
+        assertFailsWith<IllegalArgumentException> { BabaCombat.boulderHp(9) }
     }
     @Test fun `rock throw spends blocker health and all blocker kinds null the player hit`() {
         assertEquals(10, BabaCombat.blockerDamage(BabaCombat.BlockerKind.DEBRIS))
         assertEquals(30, BabaCombat.blockerDamage(BabaCombat.BlockerKind.SARCOPHAGUS))
         assertEquals(12, BabaCombat.blockerDamage(BabaCombat.BlockerKind.BABOON))
         assertEquals(0, BabaCombat.blockerDamage(BabaCombat.BlockerKind.PLAYER))
-        assertEquals(5, BabaCombat.PEEL_STUN_TICKS)
     }
     @Test fun `melee beyond spawn line ends rolling but a projectile cannot end it`() {
         val f = ToaTestFixture(); val s = BabaCombat.Session(f.npc, ToaTestContext())
@@ -72,12 +81,28 @@ class ToaBabaTests {
     }
     @Test fun `death or reset invalidates a pending rolling row and removes room hazards`() {
         val f = ToaTestFixture(); val s = BabaCombat.Session(f.npc, ToaTestContext())
-        s.rolling = true; s.peels += Tile(3200, 3200)
+        s.rolling = true
         var rowSpawns = 0
         s.later(2) { rowSpawns++ }; s.endRolling(); repeat(5) { s.cycle() }
         assertEquals(0, rowSpawns)
         s.later(2) { rowSpawns++ }; s.close(); repeat(5) { s.cycle() }
-        assertEquals(0, rowSpawns); assertTrue(s.peels.isEmpty())
+        assertEquals(0, rowSpawns); assertTrue(s.boulders.isEmpty())
+    }
+    @Test fun `baboon gets guaranteed max even on an accuracy miss and no foreign player can damage it`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3200, 3200)
+        val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        s.summonBaboons(listOf(Tile(3205, 3205)))
+        val baboon = s.baboons.single()
+        val hit = Hit.Builder().addHit(0, HitType.BLOCK.id).build().also { it.source = p; it.sourceMaxHit = 42 }
+        baboon.hitModifier!!.invoke(hit)
+        assertEquals(42, hit.hitmarks.single().damage)
+        val outsider = mockk<Player>(relaxed = true)
+        val foreign = Hit.Builder().addHit(10, HitType.MELEE.id).build().also { it.source = outsider; it.sourceMaxHit = 42 }
+        baboon.hitModifier!!.invoke(foreign)
+        assertEquals(0, foreign.hitmarks.single().damage)
+        s.close(); assertFalse(baboon.isSpawned())
     }
     @Test fun `unproven baboon team mapping cannot silently create a fifth minion`() {
         val s = BabaCombat.Session(ToaTestFixture().npc, ToaTestContext())

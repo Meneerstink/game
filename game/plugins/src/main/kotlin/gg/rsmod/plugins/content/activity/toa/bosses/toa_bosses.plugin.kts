@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 // No ambient spawns: the raid adapter or ::toaboss owns encounter creation and membership.
 val encounters = listOf(
     Triple("akkha", AkkhaCombat, ToaEncounter.Definition(ToaBossNpcs.AKKHA, AkkhaCombat.STATS, AkkhaCombat::Session)),
+    Triple("baba", BabaCombat, ToaEncounter.Definition(ToaBossNpcs.BABA, BabaCombat.STATS, BabaCombat::Session)),
     Triple("zebak", ZebakCombat, ToaEncounter.Definition(ToaBossNpcs.ZEBAK, ZebakCombat.STATS, ZebakCombat::Session)),
 )
 encounters.forEach { (name, script, definition) ->
@@ -22,6 +23,7 @@ encounters.forEach { (name, script, definition) ->
 
 // Their encounter drives minions/hazards; suppress the generic NPC auto-retaliation loop.
 listOf(ToaBossNpcs.AKKHA_SHADOW, ToaBossNpcs.UNSTABLE_ORB, 11800, 11801, 11802, 11803,
+    ToaBossNpcs.BABOON, 11782, 11783, 11784,
     ToaBossNpcs.ZEBAK_TAIL, 11735, 11736, 11737, 11738, 11741, 11742, 11743).mapNotNull(ToaBossNpcs::local).distinct().forEach { id ->
     on_npc_combat(npc = id) { }
 }
