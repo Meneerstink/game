@@ -20,7 +20,11 @@ object ToaBossRooms {
      * ONZEKER T02 - Akkha's arena tile is the one the boss screenshots used, to be checked against OSRS in the test client.
      */
     val SPAWNS: Map<ToaPath, Spawn> = mapOf(
-        ToaPath.HET to Spawn("akkha", Tile(3679, 5407, 1)),
+        // Akkha (size 3, cache npc 11789): centred on the arena centre 3680,5407 = middle of the AKKHA_ARENA_OUTER ring locs
+        // x3668-3692 / z5395-5419 (40-loc-placements, square 14676 plane 1) - the quadrant split of AkkhaCombat uses that centre.
+        ToaPath.HET to Spawn("akkha", Tile(3679, 5406, 1)),
+        // Ba-Ba (size 5): ONZEKER T02 - no infobox map; centre of the arena locs of square 15188 (plane-1 decor x3786-3826, z5396-5420).
+        ToaPath.APMEKEN to Spawn("baba", Tile(3804, 5406, ToaPath.APMEKEN.bossEntry.height)),
         ToaPath.CRONDIS to Spawn("zebak", Tile(3921, 5408, ToaPath.CRONDIS.bossEntry.height)),
         ToaPath.SCABARAS to Spawn("kephri", Tile(3551, 5409, ToaPath.SCABARAS.bossEntry.height)),
     )
