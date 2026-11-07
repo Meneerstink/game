@@ -1102,3 +1102,19 @@ task runShopWindowScriptTool(type: JavaExec) {
     classpath = sourceSets.main.runtimeClasspath
     main = 'gg.rsmod.game.tools.importer.ShopWindowScriptTool'
 }
+
+// N601: code-only entry points; patch apply is run by Claude in the cache window.
+task runToaOverlayTexturePatchTool(type: JavaExec) {
+    group = 'tools'
+    description = 'ToA reserved overlay HD textures, full scope census on both caches. Usage: --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ToaOverlayTexturePatchTool'
+}
+
+task runToaObjectTexturePlanTool(type: JavaExec) {
+    group = 'tools'
+    description = 'Read-only ToA OSRS loc/model to 667 texture proposals. Usage: --args="plan"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ToaObjectTexturePlanTool'
+    workingDir = rootProject.projectDir
+}
