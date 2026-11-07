@@ -190,6 +190,8 @@ object OsrsFxImportTool {
             // N462 Path of Het light beam: FX_BEAM_ATTACK02..08 (2113-2119, models 43911/45318-45322, seq 9368) + FX_BEAM_IMPACT01 2120
             // (RuneLite SpotanimID; cache2686). Which one is the Het beam is checked in the test client against the Wiki screenshot.
             "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
+            // N462 Path of Scabaras falling roof (ChatGPT-B, RuneLiteSequenceSolver observation): SpotanimID MM_ROOFCOLLAPSE 302.
+            "toa-scabaras-fx" to listOf(302),
             "toa-spot" to
                 listOf(
                     355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
@@ -254,6 +256,9 @@ object OsrsFxImportTool {
             // TOA_OSMUMTEN_CHEST_CLOSED 9504, CRONDIS_SPEAR_TRAP_IDLE 9562, TOA_WARDENS_DEBRIS_FLOATING 9712, FX_FIRE01_IDLE 9808.
             // N462 07-11 (ChatGPT-B Apmeken): pillar shake 9502 (9503 = settled, already in toa-map-seq).
             "toa-apmeken-seq" to listOf(9502),
+            // N462 Path of Crondis spear traps: gameval AnimationID CRONDIS_SPEAR_TRAP_ACTIVATE 9563, _SPEAR 9564, _SPEAR02 9565
+            // (idle 9562 is in toa-map-seq).
+            "toa-crondis-seq" to listOf(9563, 9564, 9565),
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
