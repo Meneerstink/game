@@ -791,6 +791,8 @@ fun Player.unlockSong(
             )!!
             .musicTrackList
             .first { trackIndex == it.index }
+    // N462: no unlock varp (667 unused range 864-895, OSRS imports above 1023) - the track still plays.
+    if (musicTrack.varp < 0) return
 
     val bitNum = musicTrack.bitNum
     val oldValue = getVarp(musicTrack.varp)

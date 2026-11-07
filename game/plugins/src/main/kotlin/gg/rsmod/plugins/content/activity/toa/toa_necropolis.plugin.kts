@@ -11,11 +11,15 @@ import gg.rsmod.game.model.entity.DynamicObject
  * keeps only the base definition (no varbit transform), so the server places the open entrance; every account that may enter has the quest
  * (owner E2: existing completion stays) - the short quest for new accounts later checks ToaLobby.canEnter here.
  * Inside, the lobby "Exit" (46087, 3358,9129) leads back out.
- * ONZEKER: the two landing tiles (no source gives them); checked walkable in the test client.
+ * Cache 13354 plane 1 carries the bridge flag (settings 10/11) over the entrance hall and its stairs, so the loader puts the
+ * entrance on game plane 0 (DefinitionSet bridge shift) - placing it on plane 1 left it floating and unclickable above the hall
+ * (07-11 live check: only 'Walk here' at the door, and the exit put players on the hall roof).
+ * ONZEKER: the two landing tiles (no source gives them); OUTSIDE = the hall floor in front of the door (cache plane 1
+ * settings 10 = walkable bridge, checked on live 07-11).
  */
-val ENTRANCE = Tile(3357, 2711, 1)
+val ENTRANCE = Tile(3357, 2711, 0)
 val LOBBY_ARRIVAL = Tile(3358, 9127, 0)
-val OUTSIDE = Tile(3358, 2709, 1)
+val OUTSIDE = Tile(3356, 2712, 0)
 
 on_world_init {
     val open = ToaIds.loc(44010) ?: return@on_world_init

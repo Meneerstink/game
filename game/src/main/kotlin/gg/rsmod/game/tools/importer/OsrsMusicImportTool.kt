@@ -92,10 +92,17 @@ object OsrsMusicImportTool {
     }
 
     /** [current] with [key] -> [value] added; an existing identical entry is kept, a different one is refused. */
-    fun withEntry(current: ByteArray, key: Int, value: ByteArray): ByteArray {
+    fun withEntry(current: ByteArray, key: Int, value: ByteArray, replace: Boolean = false): ByteArray {
         val data = decode(current)
         check(encode(data).contentEquals(current)) { "enum re-encode is not byte-identical" }
-        data.entries[key]?.let { check(it.contentEquals(value)) { "enum key $key already holds a different value" }; return current }
+        data.entries[key]?.let { old ->
+            if (old.contentEquals(value)) return current
+            // N462 (owner 07-11 'dan verwijder je bepaalde tracks in regios die niet populair zijn'): a holiday-event slot is reused.
+            check(replace) { "enum key $key already holds a different value" }
+            println("REPLACE enum key $key: ${String(old, Charsets.ISO_8859_1).trimEnd('\u0000')} (${old.joinToString(",")})")
+            data.entries[key] = value
+            return encode(EnumData(data.header, data.opcode, data.arraySize, data.entries, data.trailer))
+        }
         data.entries[key] = value
         return encode(EnumData(data.header, data.opcode, maxOf(data.arraySize, key + 1), data.entries, data.trailer))
     }
@@ -106,7 +113,9 @@ object OsrsMusicImportTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val mode = args.firstOrNull() ?: error("Usage: plan|apply [upstreamSong localGroup musicIndex name]")
+        val replace = "--replace" in args
+        @Suppress("NAME_SHADOWING") val args = args.filter { it != "--replace" }.toTypedArray()
+        val mode = args.firstOrNull() ?: error("Usage: plan|apply [--replace] [upstreamSong localGroup musicIndex name]")
         // 2026-09-26: optional track arguments, e.g. "apply 679 1011 1017 Rest in Peace" (Death's Office, OSRS Wiki cacheid 679).
         val UPSTREAM_SONG = args.getOrNull(1)?.toInt() ?: UPSTREAM_SONG
         val LOCAL_SONG_GROUP = args.getOrNull(2)?.toInt() ?: LOCAL_SONG_GROUP
@@ -125,11 +134,12 @@ object OsrsMusicImportTool {
         } finally {
             library.close()
         }
-        val newNames = withEntry(names, MUSIC_INDEX, stringValue(NAME))
-        val newGroups = withEntry(groups, MUSIC_INDEX, intValue(LOCAL_SONG_GROUP))
-        // A first run adds exactly one entry to each enum; a re-run finds it and changes nothing.
-        check(decode(newNames).entries.size - decode(names).entries.size == (if (newNames === names) 0 else 1))
-        check(decode(newGroups).entries.size - decode(groups).entries.size == (if (newGroups === groups) 0 else 1))
+        val newNames = withEntry(names, MUSIC_INDEX, stringValue(NAME), replace)
+        val newGroups = withEntry(groups, MUSIC_INDEX, intValue(LOCAL_SONG_GROUP), replace)
+        // A first run adds exactly one entry to each enum (a --replace run changes one); a re-run finds it and changes nothing.
+        val added = if (replace) 0..1 else 1..1
+        check(decode(newNames).entries.size - decode(names).entries.size in (if (newNames === names) 0..0 else added))
+        check(decode(newGroups).entries.size - decode(groups).entries.size in (if (newGroups === groups) 0..0 else added))
         println("SONG upstream=$UPSTREAM_SONG bytes=${song.size} sha1=${CacheItemProbeTool.sha1(song)} -> index $MUSIC_INDEX_ID group $LOCAL_SONG_GROUP")
         println("ENUM $NAMES_ENUM ${names.size} -> ${newNames.size} bytes, ENUM $GROUPS_ENUM ${groups.size} -> ${newGroups.size} bytes, key $MUSIC_INDEX")
 

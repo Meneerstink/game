@@ -44,6 +44,10 @@ object FairyRings {
             "ajq" to Destination("Dungeons: Cave south of Dorgesh-Kaan", Tile(2735, 5221, 0)),
             "ajr" to Destination("Kandarin: Slayer cave south-east of Rellekka", Tile(2780, 3613, 0)),
             "ajs" to Destination("Islands: Penguins near Miscellania", Tile(2500, 3896, 0)),
+            // N462: OSRS Wiki Fairy ring AKP "Kharidian Desert: Necropolis" - ring 29495 at 3284,2706 (cache 2686 square 13098,
+            // imported by OsrsRegionImportTool 'necropolis-west'). OSRS unlocks it on entering the Necropolis early in Beneath Cursed
+            // Sands; like every other code here it has no unlock check (ONZEKER, dossier N462).
+            "akp" to Destination("Kharidian Desert: Necropolis", Tile(3284, 2706, 0)),
             "akq" to Destination("Kandarin: Piscatoris Hunter area", Tile(2319, 3619, 0)),
             "aks" to Destination("Feldip Hills: Feldip Hunter area", Tile(2571, 2956, 0)),
             "alp" to Destination("Kandarin: Feldip Hills", Tile(2468, 4189, 0)),

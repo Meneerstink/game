@@ -79,7 +79,9 @@ class RegionMusicService : Service {
             val rawMusic = ObjectMapper(YAMLFactory()).readValue(reader, Map::class.java)
             rawMusic.forEach { (key, value) ->
                 val index = (value as Map<*, *>).getOrDefault("index", -1) as Int
-                val varp = musicTrackVarps[index.floorDiv(32)]
+                // N462: OSRS tracks imported above index 1023 have no 667 unlock varp (the table ends at MUSIC_TRACKS_31); they play
+                // through their enum entries, the unlock is skipped (-1, see unlockSong).
+                val varp = musicTrackVarps.getOrElse(index.floorDiv(32)) { -1 }
                 val bitNum = index - index.floorDiv(32) * 32
                 val areas =
                     when (val areasValue = value["areas"]) {
@@ -117,7 +119,7 @@ class RegionMusicService : Service {
             ).values
             .filter { it.key !in musicTrackList.map { it.index } }
             .forEach {
-                val varp = musicTrackVarps[it.key.floorDiv(32)]
+                val varp = musicTrackVarps.getOrElse(it.key.floorDiv(32)) { -1 }
                 val bitNum = it.key - it.key.floorDiv(32) * 32
                 val track =
                     MusicTrack(

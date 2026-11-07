@@ -189,8 +189,12 @@ val SOPHANEM_STALL = Tile(3311, 2779, 0)
 /** OSRS Wiki Maisa (Beneath Cursed Sands version): campsite east of Sophanem, map 3378,2794. */
 val MAISA_CAMP = Tile(3378, 2794, 0)
 
-/** The fight at the necropolis excavation, before the pyramid entrance (toa_necropolis.plugin.kts OUTSIDE 3358,2709,1). ONZEKER: tile checked in the test client. */
-val HEAD_GUARD_TILE = Tile(3358, 2706, 1)
+/**
+ * The fight at the necropolis excavation, on the stairway before the pyramid entrance. ONZEKER: no source gives the tile; cache 13354
+ * plane 1 settings 10 (walkable bridge -> game plane 0) at local 27,26 - the old 3358,2706,1 was inside the pyramid body (settings 11),
+ * which put player and guard on the hall roof (07-11 live check).
+ */
+val HEAD_GUARD_TILE = Tile(3355, 2714, 0)
 
 /** Local ids of the OSRS imports (data/cfg/toa/ids.tsv): Head Menaphite Guard 11529, Keris partisan 25979, Circlet of water (uncharged) 26967. */
 val HEAD_MENAPHITE_GUARD: Int? get() = ToaIds.npc(11529)

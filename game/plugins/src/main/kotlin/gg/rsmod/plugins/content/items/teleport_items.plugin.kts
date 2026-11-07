@@ -148,11 +148,37 @@ val SCEPTRE_DESTS =
         Dest("Jaleustrophos", Tile(3341, 2827)),
         Dest("Jaldraocht", Tile(3232, 2897)),
     )
+/*
+ * N462: OSRS Wiki Pharaoh's sceptre - "Jaltevas, the Tomb of the Father. Teleports players next to the obelisk in the necropolis";
+ * "Players must commune with the obelisk with the sceptre in your inventory before being able to teleport here" (uncharged works).
+ * Obelisk = OSRS necropolis_obelisk 44296 (Commune) at 3316,2718 rot 1 (cache 2686 square 13098). ONZEKER: the landing tile (no
+ * source gives it) = the free tile south of the obelisk.
+ */
+val JALTEVAS = Dest("Jaltevas", Tile(3317, 2716, 0))
+val JALTEVAS_UNLOCKED = gg.rsmod.game.model.attr.AttributeKey<Boolean>("sceptre_jaltevas")
 listOf(Items.PHARAOHS_SCEPTRE_3, Items.PHARAOHS_SCEPTRE_2, Items.PHARAOHS_SCEPTRE_1).let { chain ->
     chain.forEachIndexed { i, item ->
         val next = chain.getOrNull(i + 1) ?: Items.PHARAOHS_SCEPTRE
-        bindTeleport(item, "Teleport", null, next, SCEPTRE_DESTS)
+        on_item_option(item = item, option = "Teleport") {
+            val dests = SCEPTRE_DESTS + listOfNotNull(JALTEVAS.takeIf { player.attr[JALTEVAS_UNLOCKED] == true })
+            player.queue {
+                val choice = options(*dests.map { it.name }.toTypedArray(), "Nowhere.", title = "Where would you like to teleport to?")
+                dests.getOrNull(choice - 1)?.let { player.itemTeleport(item, null, next, it.tile) }
+            }
+        }
         SCEPTRE_DESTS.forEach { d -> bindTeleport(item, d.name, EquipmentType.WEAPON, next, listOf(d)) }
+    }
+}
+gg.rsmod.plugins.content.activity.toa.ToaIds.loc(44296)?.let { obelisk ->
+    on_obj_option(obj = obelisk, option = "commune") {
+        // ONZEKER: the Wiki (Pharaoh's sceptre, Obelisk (Necropolis)) quotes no game message for communing - none is invented here.
+        val sceptres = listOf(Items.PHARAOHS_SCEPTRE_3, Items.PHARAOHS_SCEPTRE_2, Items.PHARAOHS_SCEPTRE_1, Items.PHARAOHS_SCEPTRE)
+        if (sceptres.none { player.inventory.contains(it) }) return@on_obj_option
+        player.attr.put(JALTEVAS_UNLOCKED, true)
+    }
+    // OSRS Wiki Necropolis (Transportation): 'requires having used the sceptre on the obelisk north of the necropolis mine'.
+    listOf(Items.PHARAOHS_SCEPTRE_3, Items.PHARAOHS_SCEPTRE_2, Items.PHARAOHS_SCEPTRE_1, Items.PHARAOHS_SCEPTRE).forEach { sceptre ->
+        on_item_on_obj(obj = obelisk, item = sceptre) { player.attr.put(JALTEVAS_UNLOCKED, true) }
     }
 }
 on_item_option(item = Items.PHARAOHS_SCEPTRE, option = "Teleport") { player.message("Your sceptre has no charges left.") }

@@ -590,6 +590,14 @@ task runFeroxWorldMapTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.FeroxWorldMapTool'
 }
 
+task runNecropolisWorldMapTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N462: rebuilds the world-map records of the Necropolis squares from the current landscape. ' +
+        'Usage: ./gradlew :game:runNecropolisWorldMapTool --args="plan|apply"'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.NecropolisWorldMapTool'
+}
+
 task runStoreMapIconTool(type: JavaExec) {
     group = 'tools'
     description = 'Minimap + world map icons for the three 78 Store npcs (npc mapelement follows the npc; world map static ' +

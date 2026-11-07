@@ -2230,8 +2230,7 @@ grimly_fiendish:
     - region: 6475
 tune_from_the_dune:
   index: 510
-  areas:
-    - region: 13611
+  areas: []
 copris_lunaris:
   index: 512
   areas:
@@ -2444,10 +2443,6 @@ cavernous_mythology:
   index: 635
   areas:
     - region: 8025
-winter_funfare:
-  index: 636
-  areas:
-    - region: 8282
 waiting_for_battle:
   index: 637
   areas:
@@ -2596,16 +2591,6 @@ honkytonky_harmony:
   areas:
     - x: [ 2955, 2995, 2953, 2953, 2960, 2960, 2961, 2961, 2960, 2960, 2957, 2957 ]
       y: [ 3378, 3374, 3374, 3366, 3366, 3369, 3369, 3373, 3373, 3375, 3375, 3378 ]
-trick_or_treat:
-  index: 720
-  areas:
-    - region: 15184
-itsy_bitsy:
-  index: 721
-  areas:
-    - x: [ 1980, 1971 ]
-      y: [ 5308, 5298 ]
-    - region: 15184
 poison_dreams:
   index: 722
   areas:
@@ -2663,10 +2648,6 @@ silent_knight:
   index: 736
   areas:
     - region: 10584
-ghost_of_christmas_presents:
-  index: 737
-  areas:
-    - region: 10327
 battle_of_souls:
   index: 739
   areas:
@@ -2704,10 +2685,6 @@ stillwater:
   areas:
     - x: [ 2576, 2589 ]
       y: [ 3523, 3532 ]
-an_easter_united:
-  index: 747
-  areas:
-    - region: 9811
 thieves_guild_i:
   index: 749
   areas:
@@ -2938,10 +2915,6 @@ right_of_conquest:
       y: [ 9034, 9045 ]
     - x: [ 2640, 2652 ]
       y: [ 9054, 9067 ]
-halloween_party:
-  index: 939
-  areas:
-    - region: 17235
 black_zabeth_live:
   index: 940
   areas:
@@ -2968,12 +2941,6 @@ precarious_void:
   areas:
     - x: [ 4511, 4529 ]
       y: [ 5644, 5658 ]
-christmas_caverns:
-  index: 953
-  areas:
-    - region: 11354
-    - region: 11098
-    - region: 11610
 seasonal_sports:
   index: 954
   areas:
@@ -2996,3 +2963,63 @@ zaros_zeitgeist:
   areas:
     - x: [ 2900, 2940 ]
       y: [ 5188, 5219 ]
+# N462 07-11 (owner 'necropolis eigen soundtrack' / 'elke toa room eigen soundtrack'): OSRS tracks, OSRS Wiki Tombs of Amascut Music +
+# track 'Cache ID'; imported by work/claude-scripts/toa_music_import.sh. ToA rooms are instances: tiles run the source square's music.
+dunes_of_eternity:  # Necropolis (OSRS Wiki: unlocks during Beneath Cursed Sands)
+  index: 1018
+  areas:
+    - region: 13354
+    - region: 13355
+    - region: 13610
+    - region: 13611
+    - x: [ 3264, 3327, 3327, 3264 ]
+      y: [ 2688, 2688, 2747, 2747 ]
+into_the_tombs:  # ToA lobby
+  index: 1019
+  areas:
+    - region: 13454
+beneath_cursed_sands:  # ToA Nexus (OSRS 14160)
+  index: 1020
+  areas:
+    - region: 16488
+test_of_strength:  # Path of Het (OSRS 14674)
+  index: 1021
+  areas:
+    - region: 17002
+sands_of_time:  # Akkha (OSRS 14676)
+  index: 1022
+  areas:
+    - region: 17004
+test_of_companionship:  # Path of Apmeken (OSRS 15186)
+  index: 1023
+  areas:
+    - region: 17514
+ape_ex_predator:  # Ba-Ba (OSRS 15188)
+  index: 636
+  areas:
+    - region: 17516
+test_of_isolation:  # Path of Scabaras (OSRS 14162)
+  index: 720
+  areas:
+    - region: 16490
+a_mothers_curse:  # Kephri (OSRS 14164)
+  index: 721
+  areas:
+    - region: 16492
+test_of_resourcefulness:  # Path of Crondis (OSRS 15698)
+  index: 737
+  areas:
+    - region: 18026
+jaws_of_gluttony:  # Zebak (OSRS 15700)
+  index: 747
+  areas:
+    - region: 18028
+amascuts_promise:  # Wardens (OSRS 15184, 15696)
+  index: 939
+  areas:
+    - region: 17512
+    - region: 18024
+laid_to_rest:  # ToA burial chamber, rewards (OSRS 14672)
+  index: 953
+  areas:
+    - region: 17000
