@@ -10,12 +10,34 @@ import java.io.File
  * 'necropolis' + 'necropolis-west') rewrote the map squares below but not their world-map records, so the map still showed the old
  * rev-667 desert there. This rebuilds exactly those records from the current landscape with [FeroxWorldMapTool.encodeSquare] (which
  * reproduces untouched squares byte for byte). Squares the snapshot has no record for (OSRS-only sea squares) are reported, not added.
+ * Adds the 'Necropolis' town label like [FeroxWorldMapTool] did for Ferox.
  *
  * Usage: `./gradlew :game:runNecropolisWorldMapTool --args="plan|apply"`.
  */
 object NecropolisWorldMapTool {
     /** 51_41 13097, 51_42 13098, 52_41 13353, 52_42 13354, 52_43 13355, 53_41 13609, 53_42 13610, 53_43 13611. */
     val SQUARES = listOf(51 to 41, 51 to 42, 52 to 41, 52 to 42, 52 to 43, 53 to 41, 53 to 42, 53 to 43)
+
+    /** The town label (OSRS world map 'Necropolis'): first free MapElementType (HOOFDLIJST sectie 3: mapelement 1148). */
+    const val LABEL_ELEMENT = 1148
+    const val LABEL_TEXT = "Necropolis"
+    /** OSRS Wiki Necropolis infobox {{Map|name=Necropolis|x=3340|y=2724}}. */
+    const val LABEL_X = 3340
+    const val LABEL_Z = 2724
+
+    /** Edgeville's town-label element 92 with the text replaced (same bytes as [FeroxWorldMapTool.labelElement]). */
+    fun labelElement(): ByteArray =
+        ByteArrayOutputStream().use { out ->
+            out.write(3)
+            out.write(LABEL_TEXT.toByteArray(Charsets.ISO_8859_1))
+            out.write(0)
+            out.write(6); out.write(1)
+            out.write(4); out.write(0xFF); out.write(0xFF); out.write(0xFF)
+            out.write(8); out.write(1)
+            out.write(19); out.write(950 ushr 8); out.write(950 and 0xFF)
+            out.write(0)
+            out.toByteArray()
+        }
 
     @JvmStatic
     fun main(args: Array<String>) {
@@ -53,6 +75,14 @@ object NecropolisWorldMapTool {
                 mutations += CacheMutation(FeroxWorldMapTool.WORLD_MAP_INDEX, mainGroup.id, areaFile.id, updated,
                     "N462 world map main/area: Necropolis squares rebuilt", CacheItemProbeTool.sha1(current))
             }
+            val label = library.data(FeroxWorldMapTool.CONFIG_INDEX, FeroxWorldMapTool.MAP_ELEMENT_GROUP, LABEL_ELEMENT)
+            check(label == null || label.contentEquals(labelElement())) { "element $LABEL_ELEMENT is taken" }
+            if (label == null) mutations += CacheMutation(FeroxWorldMapTool.CONFIG_INDEX, FeroxWorldMapTool.MAP_ELEMENT_GROUP, LABEL_ELEMENT, labelElement(), "N462 Necropolis label element", null)
+            val staticGroup = worldMap.archive("main_staticelements") ?: error("main_staticelements missing")
+            val entry = MansionMapIconTool.staticEntry(LABEL_ELEMENT, LABEL_X, LABEL_Z, 0)
+            val existing = staticGroup.fileIds().filter { f -> library.data(FeroxWorldMapTool.WORLD_MAP_INDEX, staticGroup.id, f)?.contentEquals(entry) == true }
+            if (existing.isEmpty()) mutations += CacheMutation(FeroxWorldMapTool.WORLD_MAP_INDEX, staticGroup.id, (staticGroup.fileIds().maxOrNull() ?: -1) + 1, entry, "N462 Necropolis label", null)
+            else println("IN PLACE label")
         } finally {
             library.close()
         }
