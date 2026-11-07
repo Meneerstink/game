@@ -141,6 +141,94 @@ object OsrsRegionImportTool {
 
     val PYRAMID_HD_UNDERLAYS: Set<Int> = setOf(60, 61, 93, 56, 54, 55, 71, 62, 125, 145, 144, 0, 140, 111, 147, 102)
 
+    /** N601 approved material proposal (tools/n601_material_proposals.json, a5a23ecb5).
+     * Zero-based config ids. Keep-flat 36/115 and unresolved 189 deliberately use the existing fallback.
+     * Run ToaOverlayTexturePatchTool apply BEFORE toa-map-hd --apply; reserved slots keep their RGB.
+     */
+    val TOA_HD_OVERLAYS: Map<Int, Int> = mapOf(
+        1 to 74,
+        3 to 19,
+        10 to 0,
+        12 to 250,
+        24 to 24,
+        25 to 25,
+        29 to 91,
+        48 to 47,
+        49 to 158,
+        65 to 254,
+        71 to 237,
+        76 to 76,
+        81 to 187,
+        85 to 85,
+        114 to 253,
+        116 to 9,
+        118 to 187,
+        122 to 122,
+        132 to 101,
+        133 to 133,
+        138 to 0,
+        172 to 172,
+        181 to 235,
+        184 to 90,
+        185 to 239,
+        193 to 46,
+        197 to 91,
+        205 to 25,
+        214 to 76,
+        215 to 239,
+        216 to 76,
+        218 to 47,
+        220 to 248,
+        221 to 47,
+        227 to 129,
+        228 to 253,
+        231 to 235,
+        232 to 127,
+        235 to 127,
+        236 to 127,
+        237 to 27,
+        238 to 147,
+        239 to 252,
+        241 to 147,
+        242 to 101,
+        244 to 101,
+        245 to 113,
+        246 to 91,
+        247 to 246,
+        248 to 55,
+        249 to 23,
+        250 to 111,
+        251 to 226,
+        252 to 183,
+        5 to 111,
+        441 to 111,
+        444 to 111,
+        447 to 111,
+        450 to 111,
+        453 to 111,
+        474 to 111,
+        477 to 111,
+        480 to 111,
+        483 to 111,
+        486 to 111,
+    )
+
+    /** Shared by the import loop and fixture tests; tile values are config ids + 1. */
+    fun resolveOverlay(
+        tileValue: Int,
+        source: ModernOverlayDef,
+        batch: Batch,
+        candidates: Map<Int, Rev667OverlayDef>,
+        forced: Int? = null,
+    ): Int {
+        batch.overlayOverrides[tileValue - 1]?.let { target ->
+            check(target in 0..254 && target in candidates) { "override target overlay $target missing or outside one-byte range" }
+            println("OVERLAY_OVERRIDE osrs ${tileValue - 1} rgb=${"%06x".format(source.rgb)} tex=${source.texture} -> $target")
+            return target + 1
+        }
+        return (forced ?: FeroxImportTool.bestOverlay(source, candidates)) + 1
+    }
+
     val BATCHES: Map<String, Batch> =
         mapOf(
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
@@ -245,7 +333,8 @@ object OsrsRegionImportTool {
                 underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_HD_OVERLAYS),
             "toa-map-hd" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut on 667-HD pyramid underlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
-                keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true, underlayCandidates = PYRAMID_HD_UNDERLAYS),
+                keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true, underlayCandidates = PYRAMID_HD_UNDERLAYS,
+                overlayOverrides = TOA_HD_OVERLAYS),
             "toa-raid" to Batch(listOf(14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut raid rooms", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24, plainOverlaysStayPlain = true),
             // The ToA lobby (Osmumten's tomb entrance hall, Grouping Obelisk 46068, Invocation Board 46073): OSRS 13454 = 52_142, absent in
@@ -433,14 +522,9 @@ object OsrsRegionImportTool {
                 }
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
-                        batch.overlayOverrides[tileValue - 1]?.let {
-                            val d = modernOverlays[tileValue - 1]
-                            println("OVERLAY_OVERRIDE osrs ${tileValue - 1} rgb=${d?.rgb?.let { c -> "%06x".format(c) }} tex=${d?.texture} -> $it")
-                            return@getOrPut it + 1
-                        }
-                        forcedOverlay[tileValue]?.let { return@getOrPut it + 1 }
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
-                        FeroxImportTool.bestOverlay(def, overlayCandidates(def)) + 1
+                        resolveOverlay(tileValue, def, batch,
+                            if ((tileValue - 1) in batch.overlayOverrides) localOverlays else overlayCandidates(def), forcedOverlay[tileValue])
                     }
 
                 // ---- loc types: every one imported new ----
