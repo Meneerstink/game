@@ -63,7 +63,15 @@ internal class ToaPuzzleFixture(count: Int, val path: ToaPath, factory: (ToaRaid
         every { world.locLayer(any()) } answers { when (firstArg<Int>()) { in 0..3 -> 0; in 4..8 -> 1; 22 -> 3; else -> 2 } }
         every { world.spawn(any<Npc>()) } answers { firstArg<Npc>().also { it.index = nextNpcIndex++; entities += it }; true }
         every { world.remove(any<Npc>()) } answers { firstArg<Npc>().also { entities -= it; it.index = -1 }; Unit }
-        every { world.spawn(any<GameObject>()) } answers { entities += firstArg<GameObject>(); Unit }
+        every { world.spawn(any<GameObject>()) } answers {
+            val obj = firstArg<GameObject>()
+            //World.spawn replaces the existing loc on the same tile/layer, including another dynamic puzzle state.
+            entities.filterIsInstance<GameObject>().firstOrNull {
+                it.tile == obj.tile && world.locLayer(it.type) == world.locLayer(obj.type)
+            }?.let { entities -= it }
+            entities += obj
+            Unit
+        }
         every { world.remove(any<GameObject>()) } answers { entities -= firstArg<GameObject>(); Unit }
         every { world.spawn(any<GroundItem>()) } answers { entities += firstArg<GroundItem>(); Unit }
         every { world.remove(any<GroundItem>()) } answers { entities -= firstArg<GroundItem>(); Unit }
