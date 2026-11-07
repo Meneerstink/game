@@ -2,6 +2,7 @@ package gg.rsmod.plugins.content.activity.toa
 
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.DynamicObject
+import gg.rsmod.plugins.content.inter.bank.openBank
 import gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface
 
 /*

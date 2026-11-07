@@ -13,6 +13,24 @@ class ToaScene(private val raid: ToaRaid) {
     private var osmumten: Npc? = null
     private val pathOsmumten = hashMapOf<ToaPath, Npc>()
 
+    init {
+        ToaMultilocs.placeRaid(raid)
+        vault(purple = false)
+    }
+
+    /**
+     * The burial chamber: sarcophagus 46220, barrier 46221 and tile glow 46222 (cache2686 square 14672) are multilocs on varbit 14373 ->
+     * *_closed / *_closed_rare (loc.sym 44825/44826, 44938/44939, 44996/44997). The 667 import drops multiloc tables, so the variants
+     * are placed here: white flames, or purple for the whole party when a unique was rolled (Wiki ToA Rewards: "the flames around
+     * Osmumten's sarcophagus will glow purple rather than white"). ONZEKER: the opening animation has no sequence id in the sources.
+     */
+    fun vault(purple: Boolean) {
+        for ((normal, rare, at) in VAULT) {
+            val id = ToaIds.loc(if (purple) rare else normal) ?: continue
+            at.forEach { (tile, shape, rotation) -> raid.world.spawn(DynamicObject(id, shape, rotation, ToaMap.instance(raid.map, tile))) }
+        }
+    }
+
     private fun place(id: Int?, source: Tile, rotation: Int) {
         if (id == null || placed[source] == id) return
         raid.world.spawn(DynamicObject(id, 10, rotation, ToaMap.instance(raid.map, source)))
@@ -81,6 +99,15 @@ class ToaScene(private val raid: ToaRaid) {
             Door(ToaPath.APMEKEN, 46158, Tile(3562, 5146), 1), Door(ToaPath.CRONDIS, 46161, Tile(3541, 5155), 3),
             Door(ToaPath.HET, 46164, Tile(3539, 5146), 3))
         private val WARDENS_DOOR = Tile(3548, 5134)
+        /** cache2686 14672 placements (tile, shape, rotation) of the vault sarcophagus / barrier / tile glow, with normal + rare variant. */
+        private val VAULT: List<Triple<Int, Int, List<Triple<Tile, Int, Int>>>> = listOf(
+            Triple(44825, 44826, listOf(Triple(Tile(3679, 5140), 10, 2))),
+            Triple(44938, 44939, listOf(
+                Triple(Tile(3678, 5140), 0, 2), Triple(Tile(3678, 5141), 0, 2), Triple(Tile(3679, 5140), 0, 3), Triple(Tile(3679, 5141), 0, 1),
+                Triple(Tile(3680, 5140), 0, 3), Triple(Tile(3680, 5141), 0, 1), Triple(Tile(3681, 5140), 0, 3), Triple(Tile(3681, 5141), 0, 1),
+                Triple(Tile(3682, 5140), 0, 0), Triple(Tile(3682, 5141), 0, 0))),
+            Triple(44996, 44997, (3679..3681).flatMap { x -> (5140..5141).map { z -> Triple(Tile(x, z), 22, 3) } }),
+        )
         // Helpful_Spirit and Deposit_pot wiki map pins (source snapshots under N462-notities/toa/sources/wiki).
         private val SPIRIT = Tile(3547, 5157)
         private val DEPOSIT_POT = Tile(3546, 5154)
