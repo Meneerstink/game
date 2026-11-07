@@ -410,12 +410,25 @@ object OsrsInterfacePortTool {
         }
         val lines = ArrayList<String>()
         lines += "osrs_group\tlocal_interface\tcomponents\textra\treport"
+        // --reuse replaces a component this tool wrote before: the current bytes are the expected ones (a guarded overwrite, not a conflict).
+        val current = CacheLibrary(TARGETS[0])
+        try {
+            ported.forEach { p ->
+                val iface = interfaceOf.getValue(p.osrsGroup)
+                p.components.forEach { c ->
+                    if (c.type == 5 && c.sprite >= 0) c.sprite = spriteMap.getValue(c.sprite)
+                    val bytes = encode(c)
+                    val old = if (previous.isNotEmpty()) current.data(INDEX_INTERFACES, iface, c.id) else null
+                    val expected = old?.takeIf { !it.contentEquals(bytes) }?.let { CacheItemProbeTool.sha1(it) }
+                    mutations += CacheMutation(INDEX_INTERFACES, iface, c.id, bytes, "interface $iface:${c.id} (osrs ${p.osrsGroup}) type=${c.type}",
+                        expectedCurrentSha1 = expected)
+                }
+            }
+        } finally {
+            current.close()
+        }
         ported.forEach { p ->
             val iface = interfaceOf.getValue(p.osrsGroup)
-            p.components.forEach { c ->
-                if (c.type == 5 && c.sprite >= 0) c.sprite = spriteMap.getValue(c.sprite)
-                mutations += CacheMutation(INDEX_INTERFACES, iface, c.id, encode(c), "interface $iface:${c.id} (osrs ${p.osrsGroup}) type=${c.type}")
-            }
             lines += "${p.osrsGroup}\t$iface\t${p.components.size}\t${p.extras.joinToString(" | ")}\t${p.reports.joinToString(" | ")}"
             println("PLAN osrs ${p.osrsGroup} -> interface $iface: ${p.components.size} components")
             p.extras.forEach { println("  EXTRA $it") }
