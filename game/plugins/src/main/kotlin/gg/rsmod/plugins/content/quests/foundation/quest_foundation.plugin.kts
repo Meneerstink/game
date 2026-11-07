@@ -417,7 +417,8 @@ mapOf(
     // N462 Beneath Cursed Sands starts at Jamila's stall in Sophanem (spawns_13099); her OSRS greeting (Transcript:Beneath Cursed Sands).
     BeneathCursedSands.startNpc to listOf("Hello there. Looking to buy some of my wares?"),
 ).forEach { (id, idle) ->
-    on_npc_option(npc = id, option = "talk-to") {
+    // N462 07-11 testclient: Jamila stands behind her stall's counter (Sophanem market) - talk across it like OSRS.
+    on_npc_option(npc = id, option = "talk-to", lineOfSightDistance = if (id == BeneathCursedSands.startNpc) 2 else -1) {
         player.queue {
             if (!FoundationQuests.talk(this, id)) chatNpc(*idle.toTypedArray(), facialExpression = FacialExpression.CALM_TALK)
         }

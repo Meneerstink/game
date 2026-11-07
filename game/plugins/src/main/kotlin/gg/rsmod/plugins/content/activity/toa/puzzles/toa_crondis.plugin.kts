@@ -12,7 +12,8 @@ listOf(45398, 45399).mapNotNull(ToaIds::loc).distinct().forEach { id ->
     } }
 }
 (CrondisRoom.PALM..CrondisRoom.PALM + 3).mapNotNull(ToaIds::npc).distinct().forEach { id ->
-    on_npc_option(npc = id, option = "Water") { (ToaPuzzles.of(player) as? CrondisRoom)?.water(player, player.getInteractingNpc()) }
+    // Claude 07-11 testclient: the palm stands in a planter whose low rim blocks walking - water it across the rim (2 tiles in sight).
+    on_npc_option(npc = id, option = "Water", lineOfSightDistance = 2) { (ToaPuzzles.of(player) as? CrondisRoom)?.water(player, player.getInteractingNpc()) }
     ToaIds.item(CrondisRoom.CONTAINER)?.let { item -> on_item_on_npc(item = item, npc = id) {
         (ToaPuzzles.of(player) as? CrondisRoom)?.water(player, player.getInteractingNpc(), itemUsed = true)
     } }

@@ -2279,6 +2279,7 @@ npc	11693	15146	classic Osmumten
 npc	11694	15147	classic Helpful Spirit
 npc	11695	15148	classic Ghost
 npc	11696	15149	classic Amascut
+npc	11697	15216	skeletal bas=2475
 npc	11698	15150	classic <col=00ffff>Obelisk</col>
 npc	11699	15151	classic <col=00ffff>Obelisk</col>
 npc	11700	15152	classic <col=00ffff>Palm of Resourcefulness</col>
@@ -2293,6 +2294,9 @@ npc	11708	15160	classic <col=00ffff>Orb of Darkness</col>
 npc	11709	15110	skeletal bas=2418
 npc	11710	15111	skeletal bas=2419
 npc	11711	15112	skeletal bas=2420
+npc	11712	15213	skeletal bas=2472
+npc	11713	15214	skeletal bas=2473
+npc	11714	15215	skeletal bas=2474
 npc	11715	15113	skeletal bas=2421
 npc	11716	15114	skeletal bas=2422
 npc	11717	15115	skeletal bas=2423
@@ -2390,6 +2394,22 @@ npcseq	11686:9537	17098	baked
 npcseq	11686:9538	17099	baked
 npcseq	11686:9539	17092	baked
 npcseq	11686:9540	17091	baked
+npcseq	11697:9584	17434	baked
+npcseq	11697:9585	17435	baked
+npcseq	11697:9586	17433	baked
+npcseq	11697:9587	17436	baked
+npcseq	11697:9588	17437	baked
+npcseq	11697:9589	17438	baked
+npcseq	11697:9590	17439	baked
+npcseq	11697:9591	17440	baked
+npcseq	11697:9592	17441	baked
+npcseq	11697:9593	17442	baked
+npcseq	11697:9594	17443	baked
+npcseq	11697:9595	17444	baked
+npcseq	11697:9596	17445	baked
+npcseq	11697:9597	17446	baked
+npcseq	11697:9598	17447	baked
+npcseq	11697:9599	17448	baked
 npcseq	11709:9737	16462	baked
 npcseq	11709:9738	16463	baked
 npcseq	11709:9739	16460	baked
@@ -2450,6 +2470,66 @@ npcseq	11711:9753	16515	baked
 npcseq	11711:9754	16516	baked
 npcseq	11711:9755	16517	baked
 npcseq	11711:9756	16518	baked
+npcseq	11712:9737	17376	baked
+npcseq	11712:9738	17377	baked
+npcseq	11712:9739	17374	baked
+npcseq	11712:9740	17375	baked
+npcseq	11712:9741	17373	baked
+npcseq	11712:9742	17378	baked
+npcseq	11712:9743	17379	baked
+npcseq	11712:9744	17380	baked
+npcseq	11712:9745	17381	baked
+npcseq	11712:9746	17382	baked
+npcseq	11712:9747	17383	baked
+npcseq	11712:9748	17384	baked
+npcseq	11712:9749	17385	baked
+npcseq	11712:9750	17386	baked
+npcseq	11712:9751	17387	baked
+npcseq	11712:9752	17388	baked
+npcseq	11712:9753	17389	baked
+npcseq	11712:9754	17390	baked
+npcseq	11712:9755	17391	baked
+npcseq	11712:9756	17392	baked
+npcseq	11713:9737	17396	baked
+npcseq	11713:9738	17397	baked
+npcseq	11713:9739	17394	baked
+npcseq	11713:9740	17395	baked
+npcseq	11713:9741	17393	baked
+npcseq	11713:9742	17398	baked
+npcseq	11713:9743	17399	baked
+npcseq	11713:9744	17400	baked
+npcseq	11713:9745	17401	baked
+npcseq	11713:9746	17402	baked
+npcseq	11713:9747	17403	baked
+npcseq	11713:9748	17404	baked
+npcseq	11713:9749	17405	baked
+npcseq	11713:9750	17406	baked
+npcseq	11713:9751	17407	baked
+npcseq	11713:9752	17408	baked
+npcseq	11713:9753	17409	baked
+npcseq	11713:9754	17410	baked
+npcseq	11713:9755	17411	baked
+npcseq	11713:9756	17412	baked
+npcseq	11714:9737	17416	baked
+npcseq	11714:9738	17417	baked
+npcseq	11714:9739	17414	baked
+npcseq	11714:9740	17415	baked
+npcseq	11714:9741	17413	baked
+npcseq	11714:9742	17418	baked
+npcseq	11714:9743	17419	baked
+npcseq	11714:9744	17420	baked
+npcseq	11714:9745	17421	baked
+npcseq	11714:9746	17422	baked
+npcseq	11714:9747	17423	baked
+npcseq	11714:9748	17424	baked
+npcseq	11714:9749	17425	baked
+npcseq	11714:9750	17426	baked
+npcseq	11714:9751	17427	baked
+npcseq	11714:9752	17428	baked
+npcseq	11714:9753	17429	baked
+npcseq	11714:9754	17430	baked
+npcseq	11714:9755	17431	baked
+npcseq	11714:9756	17432	baked
 npcseq	11715:9737	16522	baked
 npcseq	11715:9738	16523	baked
 npcseq	11715:9739	16520	baked
@@ -4001,6 +4081,7 @@ seq	9498	16310	spotanim 2174
 seq	9499	16311	asset map
 seq	9500	16312	asset map
 seq	9501	16313	asset map
+seq	9502	17449	classic
 seq	9503	16314	asset map
 seq	9504	16315	asset map
 seq	9518	17117	classic for npc 11782
