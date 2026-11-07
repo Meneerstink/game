@@ -11,6 +11,7 @@ class ToaScene(private val raid: ToaRaid) {
     private val placed = hashMapOf<Tile, Int>()
     private var spirit: Npc? = null
     private var osmumten: Npc? = null
+    private val pathOsmumten = hashMapOf<ToaPath, Npc>()
 
     private fun place(id: Int?, source: Tile, rotation: Int) {
         if (id == null || placed[source] == id) return
@@ -37,6 +38,15 @@ class ToaScene(private val raid: ToaRaid) {
             spirit?.let { raid.world.remove(it) }; spirit = null
             placed.remove(DEPOSIT_POT)?.let { raid.world.remove(DynamicObject(it, 10, 0, ToaMap.instance(raid.map, DEPOSIT_POT))) }
         }
+        // cache2686 2/9/11830-11834 toa_osmumten_<boss>: varbit13836 20-24 shows Osmumten 11689 (Talk-to/Proceed) in the boss room
+        // once its demi-boss is dead (LlemonDuck toa plugin QuickProceedSwaps: TOA_OSMUMTEN_VIS 'post-demi-boss').
+        val bossOsmumten = ToaNpcs.TOA_OSMUMTEN_VIS.localId
+        for (path in raid.progress.completedPaths) {
+            if (bossOsmumten == null || path in pathOsmumten) continue
+            val tile = BOSS_OSMUMTEN[path] ?: continue
+            pathOsmumten[path] = Npc(bossOsmumten, ToaMap.instance(raid.map, tile), raid.world)
+                .also { raid.world.spawn(it); it.respawns = false; it.walkRadius = 0 }
+        }
         if (raid.progress.finished) {
             CHESTS.take(raid.roster.size).forEach { place(ToaIds.loc(44786), it.tile, it.rotation) }
             val id = ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId
@@ -59,6 +69,7 @@ class ToaScene(private val raid: ToaRaid) {
     fun close() {
         spirit?.let { raid.world.remove(it) }; spirit = null
         osmumten?.let { raid.world.remove(it) }; osmumten = null
+        pathOsmumten.values.forEach { raid.world.remove(it) }; pathOsmumten.clear()
         placed.clear() // The allocator releases all owned scenery/collision with this instance.
     }
 
@@ -75,6 +86,10 @@ class ToaScene(private val raid: ToaRaid) {
         private val DEPOSIT_POT = Tile(3546, 5154)
         // ONZEKER T30: adjacent to sarcophagus46220 at3679,5140 from placements; exact NPC spawn needs OSRS capture.
         private val OSMUMTEN = Tile(3681, 5143)
+        // ONZEKER T26: the boss-room Osmumten is a server spawn (not in the map); tile = inside each arena, near the boss's crystal
+        // landing (ToaRaid.ARENA_ENTRY). Zebak: on the east platform, the dry side of his pool (ToaZebakReachTests x3926+).
+        val BOSS_OSMUMTEN = mapOf(ToaPath.HET to Tile(3687, 5407, 1), ToaPath.APMEKEN to Tile(3802, 5408),
+            ToaPath.SCABARAS to Tile(3546, 5408), ToaPath.CRONDIS to Tile(3930, 5408, ToaPath.CRONDIS.bossEntry.height))
         // loc.sym toa_vault_chest_loc0..7 and 40-loc-placements, each mapped to the corresponding roster slot.
         private val CHESTS = listOf(Chest(Tile(3686, 5145), 1), Chest(Tile(3673, 5145), 3),
             Chest(Tile(3686, 5142), 1), Chest(Tile(3673, 5142), 3), Chest(Tile(3686, 5148), 1),

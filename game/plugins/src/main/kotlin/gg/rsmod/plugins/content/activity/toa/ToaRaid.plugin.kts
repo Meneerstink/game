@@ -42,8 +42,8 @@ arrayOf("Pass", "Quick-Pass").forEach { option ->
 mapOf(ToaLocs.KEPHRI_CRYSTAL to ToaPath.SCABARAS, ToaLocs.AKKHA_CRYSTAL to ToaPath.HET,
     ToaLocs.BABA_CRYSTAL to ToaPath.APMEKEN, ToaLocs.ZEBAK_CRYSTAL to ToaPath.CRONDIS).forEach { (id, path) ->
     arrayOf("Use", "Quick-Use").forEach { option ->
-        // ONZEKER T26 (07-11 testclient): the crystal stands in the antechamber behind the arena's invisible wall (Akkha: rim x3691-3693);
-        // usable from up to 6 tiles in line of sight so the party gets in and, after the kill, out again.
+        // <boss>_teleport (cache2686 loc.sym): the crystal in the room's entrance takes the party over the arena's invisible wall;
+        // usable from up to 6 tiles in line of sight (the crystal is on the wall line).
         on_obj_option(id, option, lineOfSightDistance = 6) { ToaLobby.of(world).raid(player.uid)?.crystal(player, path) }
     }
 }
@@ -72,6 +72,13 @@ listOf(ToaLocs.KEPHRI_EXIT, ToaLocs.AKKHA_EXIT, ToaLocs.BABA_EXIT, ToaLocs.ZEBAK
 
 listOfNotNull(ToaIds.loc(44786), ToaIds.loc(44787)).distinct().forEach { id ->
     on_obj_option(id, 1) { ToaLobby.of(world).raid(player.uid)?.openChest(player, player.getInteractingGameObj()) }
+}
+
+// cache2686 2/9/11689: Osmumten after a demi-boss, ops Talk-to / Proceed (ToaScene.BOSS_OSMUMTEN).
+ToaNpcs.TOA_OSMUMTEN_VIS.localId?.let { id ->
+    arrayOf("Talk-to", "Proceed").forEach { option ->
+        on_npc_option(id, option) { ToaLobby.of(world).raid(player.uid)?.proceed(player) }
+    }
 }
 
 ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId?.let { id ->

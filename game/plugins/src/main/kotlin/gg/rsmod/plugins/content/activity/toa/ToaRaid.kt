@@ -112,9 +112,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             player.teleportTo(ToaMap.instance(map, REWARD_ENTRY))
         } else {
             if (path !in progress.completedPaths) {
-                // 07-11 testclient: the boss's arena is closed by invisible walls (Akkha: INVISWALL_BLOCKRANGE x3693, cache2686 square
-                // 14676); the room's Teleport crystal in the antechamber is the way in while the boss run is on. ONZEKER T26 (no source
-                // text for the entry): landing tile inside the wall, next to the crystal.
+                // The arena is closed off from the entrance by inviswall_blockrange (loc 85: Akkha ring x3668-3698 square 14676,
+                // Ba-Ba x3790-3798 15188, Kephri x3543 14164); the room's <boss>_teleport crystal (45866/45754/45505, Use/Quick-Use,
+                // LlemonDuck QuickProceedSwaps) in that entrance is the way in. ONZEKER T26: landing tile just inside the wall.
                 val arena = ARENA_ENTRY[path] ?: return false
                 val run = progress.current ?: return false
                 if (run.key != ToaRoomKey(path, true) || !participants.alive(run, player.uid)) return false
@@ -123,6 +123,15 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             }
             player.teleportTo(ToaMap.instance(map, ToaMap.NEXUS))
         }
+        return true
+    }
+
+    /** Osmumten (11689 Proceed) in a cleared demi-boss room: back to the Nexus. Talk-to does the same (no OSRS transcript, ONZEKER T26). */
+    fun proceed(player: Player): Boolean {
+        if (!contains(player) || player.isDead()) return false
+        val source = ToaMap.source(map, player.tile) ?: return false
+        if (progress.completedPaths.none { it.bossEntry.regionId == source.regionId }) return false
+        player.teleportTo(ToaMap.instance(map, ToaMap.NEXUS))
         return true
     }
 
@@ -222,11 +231,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                     if (run.key.boss) ToaRecovery.full(it) else ToaRecovery.challenge(it)
                 }
                 if (run.key.path != null && run.key.boss) checkpoints.pathsCleared(progress.completedPaths.size)
-                // ONZEKER T26: a walled arena (ARENA_ENTRY) has its Teleport crystal outside the wall - after the kill the party is put
-                // back in the antechamber next to it (no OSRS source for the way out was found).
-                run.key.path?.takeIf { run.key.boss && it in ARENA_ENTRY }?.let { path ->
-                    players().filter { !it.isDead() && inRoom(it, run.key) }.forEach { it.teleportTo(ToaMap.instance(map, path.bossEntry)) }
-                }
+                // After a demi-boss the party stays in the arena; the scene shows Osmumten there (Proceed -> Nexus, see ToaScene).
                 scene?.refresh()
                 ToaRaidEvents.roomCleared(this, run)
                 if (run.key.wardens) {
@@ -272,6 +277,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
         /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
-        val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1), ToaPath.APMEKEN to Tile(3800, 5408)) // ::clip 07-11: Akkha rim 3691-3693, Ba-Ba wall x3798
+        // ::clip 07-11: Akkha rim 3691-3693, Ba-Ba wall x3798; Kephri wall = west edge of x3543 (cache2686 14164 loc85 z5400-5416).
+        // Zebak (crystal 45506 at 3954,5408 on the entrance platform, arena below) is in GPT-A's Zebak card (heights), not here yet.
+        val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1), ToaPath.APMEKEN to Tile(3800, 5408),
+            ToaPath.SCABARAS to Tile(3544, 5408))
     }
 }
