@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.activity.toa.ui
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
+import gg.rsmod.plugins.api.ext.isInterfaceVisible
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentPosition
@@ -34,6 +35,9 @@ object ToaHudUi {
 
     fun open(player: Player) {
         val iface = ToaInterfaces.of(ToaInterfaces.HUD) ?: return
+        // 07-11 testclient: the raid redraws every tick (timer) - reopening the overlay each time closed+opened it every tick
+        // (client freezes, U5 packet spam). Open once; later draws only set texts.
+        if (player.isInterfaceVisible(iface)) return
         player.openInterface(iface, InterfaceDestination.PVP_OVERLAY)
     }
 

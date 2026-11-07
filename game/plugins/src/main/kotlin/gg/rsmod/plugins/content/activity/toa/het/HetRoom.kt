@@ -54,8 +54,9 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         layout.walls.forEach { wall -> wall.tiles.forEachIndexed { i, p ->
             val end = i == 0 || i == wall.tiles.lastIndex
             val id = when { wall.worn && end -> HetIds.WORN_END; wall.worn -> HetIds.WORN; end -> HetIds.STONE_END; else -> HetIds.STONE }
-            // ONZEKER T23: end pieces face outwards along the wall, internal pieces follow the wall's axis.
-            val rot = if (wall.horizontal) (if (end && i == 0) 3 else 1) else (if (end && i == 0) 2 else 0)
+            // Testclient 07-11 (top-down vs the Wiki screenshot): rotation 0 runs a piece along x, 1 along z (rot 1 on a horizontal wall
+            // gave a comb of loose slabs). ONZEKER T23: which way an end piece's cap faces - the two ends of a wall are mirrored.
+            val rot = if (wall.horizontal) (if (end && i == 0) 2 else 0) else (if (end && i == 0) 3 else 1)
             loc(id, p, rot)?.let { obj -> scope.spawn(obj); placed[p] = obj }
         } }
         b.mirrors.forEach { showMirror(it) }

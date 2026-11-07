@@ -108,7 +108,16 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             if (!progress.finished) return false
             player.teleportTo(ToaMap.instance(map, REWARD_ENTRY))
         } else {
-            if (path !in progress.completedPaths) return false
+            if (path !in progress.completedPaths) {
+                // 07-11 testclient: the boss's arena is closed by invisible walls (Akkha: INVISWALL_BLOCKRANGE x3693, cache2686 square
+                // 14676); the room's Teleport crystal in the antechamber is the way in while the boss run is on. ONZEKER T26 (no source
+                // text for the entry): landing tile inside the wall, next to the crystal.
+                val arena = ARENA_ENTRY[path] ?: return false
+                val run = progress.current ?: return false
+                if (run.key != ToaRoomKey(path, true) || !participants.alive(run, player.uid)) return false
+                player.teleportTo(ToaMap.instance(map, arena))
+                return true
+            }
             player.teleportTo(ToaMap.instance(map, ToaMap.NEXUS))
         }
         return true
@@ -251,5 +260,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         val REWARD_ENTRY = Tile(3679, 5169)
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
+        /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
+        val ARENA_ENTRY = mapOf(ToaPath.HET to Tile(3690, 5407, 1)) // 3691-3692 = blocked arena rim (::clip 07-11)
     }
 }

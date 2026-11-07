@@ -13,8 +13,8 @@ class LodAddChangeEncoder : MessageEncoder<LocAddChangeMessage>() {
     ): Number =
         when (key) {
             "tile" -> message.tile
-            "settings" -> message.settings
-            "id" -> message.id
+            "settings" -> gg.rsmod.game.message.WideLocId.settings(message.settings, message.id)
+            "id" -> gg.rsmod.game.message.WideLocId.low(message.id)
             else -> throw Exception("Unhandled value key.")
         }
 
