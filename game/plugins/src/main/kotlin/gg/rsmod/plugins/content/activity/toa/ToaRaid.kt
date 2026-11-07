@@ -300,7 +300,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 ToaChest.creditRoom(this, scope.spawned)
                 stats.roomPoints(points.roomSnapshot().filterKeys { it in remaining })
                 if (run.key.wardens) stats.wardensDefeated(this)
-                ToaLoreBooks.drop(world, run.key, scope.spawned) // before close: the boss npc still has its tile
+                ToaLoreBooks.drop(world, run.key, scope.spawned, players().filter { !it.isDead() }) // before close: the boss npc still has its tile
                 room.clear(run); scope.close(); rooms.remove(run.generation)
                 points.completeRoom()
                 started -= run.generation
