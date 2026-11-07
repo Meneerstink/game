@@ -263,6 +263,9 @@ object OsrsFxImportTool {
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
             "necropolis-seq" to listOf(13509, 13510, 13511, 13512, 13513, 13564),
+            // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
+            // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
+            "necropolis-west-seq" to listOf(3743, 9845, 13159),
             "weaponseq1" to
                 listOf(
                     3294, 3295, 3296, 3297, 3300, // ABYSSAL_DAGGER_HACK / BLOCK / IDLE / LUNGE / SPECIAL
