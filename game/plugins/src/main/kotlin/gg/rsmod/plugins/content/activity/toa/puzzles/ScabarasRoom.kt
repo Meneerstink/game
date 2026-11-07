@@ -299,8 +299,10 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     private fun scarabCycle() {
         val ref = reference ?: return
         for (spawn in ref.scarabSpawns.value) {
+            // Owner 07-11 22:3x (advice A, no OSRS number published): at most 8 nuisance scarabs alive, the Crondis crocodile limit.
             if (raid.roster.size >= spawn.minimumPartySize && tick >= spawn.cycle &&
-                (tick - spawn.cycle) % ref.scarabRepeatCycles.value == 0) {
+                (tick - spawn.cycle) % ref.scarabRepeatCycles.value == 0 &&
+                scarabs.keys.count { it.isSpawned() && !it.isDead() } < MAX_SCARABS) {
                 val death = ToaIds.npcSeq(SCARAB, ref.scarabDeathSequence.value) ?: -1
                 val def = definition(raid.settings.raidLevel, raid.roster.size).copy(deathAnimation = listOf(death), waitFullDeathAnimation = true)
                 spawn(SCARAB, spawn.tile, def)?.let {
@@ -334,6 +336,7 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         pending.clear(); contacts.clear(); lastContactCycle.clear(); revealed.clear(); scarabs.clear(); obeliskNpcs.clear()
     }
     companion object {
+        const val MAX_SCARABS = 8
         //Cache2686 NPC11697-11699,07-scabaras-brontekst,50-npc-defs. Local IDs exclusively through ToaIds.
         const val SCARAB = 11697
         const val OBELISK = 11698
