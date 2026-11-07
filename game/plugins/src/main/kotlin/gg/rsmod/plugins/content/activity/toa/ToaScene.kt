@@ -118,7 +118,10 @@ class ToaScene(private val raid: ToaRaid) {
             Triple(44996, 44997, (3679..3681).flatMap { x -> (5140..5141).map { z -> Triple(Tile(x, z), 22, 3) } }),
         )
         // Helpful_Spirit and Deposit_pot wiki map pins (source snapshots under N462-notities/toa/sources/wiki).
-        private val SPIRIT = Tile(3547, 5157)
+        // Wiki {{Map|3547,5157|r=2}} is an area, not the tile: 3547,5157 holds the solid 'Pots' 45278 (opcode 27) and every tile next
+        // to it is pots/brazier/blocked decor, so the spirit was unreachable ('I can't reach that!', testclient round 11). 3546,5156 is
+        // the walkable tile inside r=2 that the Nexus floor reaches (from 3546,5155).
+        private val SPIRIT = Tile(3546, 5156)
         private val DEPOSIT_POT = Tile(3546, 5154)
         // ONZEKER T30: adjacent to sarcophagus46220 at3679,5140 from placements; exact NPC spawn needs OSRS capture.
         private val OSMUMTEN = Tile(3681, 5143)
