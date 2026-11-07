@@ -64,7 +64,25 @@ ToaIds.loc(46080)?.let { chest ->
             val pick = offer.getOrNull(options(*offer.map { "Take Icthlarin's shroud (tier ${it.first})." }.toTypedArray()) - 1) ?: return@queue
             if (player.inventory.freeSlotCount == 0) return@queue
             player.inventory.add(pick.second)
+            gg.rsmod.plugins.content.quests.tab.CollectionLog.record(player, gg.rsmod.plugins.content.quests.tab.CollectionLogPages.TOA, listOf(pick.second to 1))
             messageBox("You take a mysterious shroud from the chest.")
+        }
+    }
+    // Icthlarin's shroud (tier 1)?oldid=15191015 l.23: 'the right-click "Change" option to alter the cape's appearance to other tiers,
+    // providing that they have met the completion count required for them'. ONZEKER: the choice menu's wording is not sourced - the
+    // tiers are offered by their item names.
+    val shrouds = tiers.mapIndexedNotNull { index, (needed, osrs) -> ToaIds.item(osrs)?.let { Triple(index + 1, needed, it) } }
+    shrouds.forEach { (_, _, held) ->
+        on_item_option(item = held, option = "change") {
+            val slot = player.getInteractingItemSlot()
+            val done = player.attr[ToaChest.COMPLETIONS_NORMAL_EXPERT] ?: 0
+            val choices = shrouds.filter { (_, needed, id) -> done >= needed && id != held }
+            if (choices.isEmpty()) return@on_item_option
+            player.queue {
+                val names = choices.map { (tier, _, _) -> "Icthlarin's shroud (tier $tier)" }
+                val pick = choices.getOrNull(options(*names.toTypedArray()) - 1) ?: return@queue
+                if (player.inventory[slot]?.id == held) player.inventory[slot] = gg.rsmod.game.model.item.Item(pick.third)
+            }
         }
     }
 }
