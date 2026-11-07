@@ -35,6 +35,12 @@ class ToaRaidStats {
         }
     }
 
+    /** The player table, roster order. ONZEKER: the OSRS title rules (Wiki line 603: The Carry, The Tank ...) have no published tie-break or
+     *  priority when several apply - no title is shown until that is sourced. */
+    fun rows(raid: ToaRaid): List<ToaSummaryUi.Row> = raid.roster.map { uid ->
+        ToaSummaryUi.Row(raid.memberNames[uid] ?: "", damageDealt[uid] ?: 0, damageTaken[uid] ?: 0, raid.points.deaths(uid))
+    }
+
     fun room(path: ToaPath?, boss: Boolean): Int? = roomCycles[ToaRoomKey(path, boss)]
 
     fun times(overallCycles: Int?): ToaSummaryUi.Times {

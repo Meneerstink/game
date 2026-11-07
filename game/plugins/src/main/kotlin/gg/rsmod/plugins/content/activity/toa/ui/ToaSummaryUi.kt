@@ -4,6 +4,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.openInterface
+import gg.rsmod.plugins.api.ext.setComponentHidden
 import gg.rsmod.plugins.api.ext.setComponentText
 import gg.rsmod.plugins.api.ext.setInterfaceEvents
 
@@ -39,7 +40,16 @@ object ToaSummaryUi {
         return "%02d:%02d".format(seconds / 60, seconds % 60)
     }
 
-    fun open(player: Player, times: Times, raidLevel: Int, activeInvocations: Int) {
+    /** One member's line of the player table (name, damage dealt, damage taken, deaths, title). */
+    class Row(val name: String, val dealt: Int, val taken: Int, val deaths: Int, val title: String = "")
+
+    /** OsrsInterfacePortTool 482 extras: 8 pre-made text rows per column, column order name, dealt, taken, deaths, title. */
+    const val ROWS_FIRST = 107
+    const val ROWS_PER_COLUMN = 8
+
+    fun rowComponent(column: Int, row: Int): Int = ROWS_FIRST + column * ROWS_PER_COLUMN + row
+
+    fun open(player: Player, times: Times, raidLevel: Int, activeInvocations: Int, rows: List<Row> = emptyList()) {
         val iface = ToaInterfaces.of(ToaInterfaces.SUMMARY) ?: return
         player.openInterface(iface, InterfaceDestination.MAIN_SCREEN)
         mapOf(KEPHRI to times.kephri, AKKHA to times.akkha, BABA to times.baba, ZEBAK to times.zebak, WARDENS to times.wardens,
@@ -49,6 +59,15 @@ object ToaSummaryUi {
         player.setComponentText(iface, RAID_LEVEL, raidLevel.toString())
         player.setComponentText(iface, ACTIVE, activeInvocations.toString())
         closeComponent?.let { player.setInterfaceEvents(iface, it, -1..-1, 0x2) }
+        for (r in 0 until ROWS_PER_COLUMN) {
+            val row = rows.getOrNull(r)
+            val texts = listOf(row?.name, row?.dealt?.toString(), row?.taken?.toString(), row?.deaths?.toString(), row?.title)
+            texts.forEachIndexed { column, text ->
+                val c = rowComponent(column, r)
+                player.setComponentText(iface, c, text.orEmpty())
+                player.setComponentHidden(iface, c, row == null)
+            }
+        }
     }
 
     /** The steelborder close button: OSRS 482 has 77 components; the port tool adds 482:1's steelborder first (77..88, title 78, close 88),

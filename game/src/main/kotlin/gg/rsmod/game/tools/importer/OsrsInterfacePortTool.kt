@@ -346,6 +346,20 @@ object OsrsInterfacePortTool {
                 extras += "supply bundle $bundle components=$first..${next - 1} (thinbox 2, items 9 = ${first + 2}..${first + 10}, button $button: 9 sprites + text)"
             }
         }
+        if (group == 482) {
+            // N462 Raid Summary player table: OSRS builds one row per member into the empty column layers 482:46..50 (titles, deaths,
+            // damage taken, damage dealt, name) with a script our dump does not hold. Here 8 pre-made rows per column (party max 8),
+            // hidden until the server fills them. ONZEKER (no source script): row pitch 20 below the 24-px header line (482:51 y=24),
+            // p11 0xff981f centred - checked against the wiki screenshot in the testclient.
+            val first = next
+            for (column in listOf(50, 49, 48, 47, 46)) {
+                for (row in 0 until 8) {
+                    list += C(next++, 4, 0, 26 + row * 20, 0, 18, column, 1, 0, 0, 0, true, font = font(494), text = "", alignX = 1,
+                        alignY = 1, shadow = true, colour = 0xff981f)
+                }
+            }
+            extras += "raid summary rows components=$first..${next - 1} (columns name 50, dealt 49, taken 48, deaths 47, title 46; 8 each, column c row r = $first + 8c + r)"
+        }
         if (group == 774) {
             // [clientscript,toa_partydetails_addmember]: ~steelborder(toa_partydetails:frame (774:3), "Party of <leader>" | "Party Details", 0).
             steelborder(3, "Party Details")

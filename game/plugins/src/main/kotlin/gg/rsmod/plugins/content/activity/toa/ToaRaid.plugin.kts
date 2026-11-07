@@ -180,6 +180,6 @@ ToaIds.loc(44942)?.let { scoreboard ->
     on_obj_option(obj = scoreboard, option = "read") {
         val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_obj_option
         gg.rsmod.plugins.content.activity.toa.ui.ToaSummaryUi.open(player, raid.stats.times(raid.progress.elapsedCycles(world.currentCycle)),
-            raid.settings.raidLevel, raid.settings.invocations.size)
+            raid.settings.raidLevel, raid.settings.invocations.size, raid.stats.rows(raid))
     }
 }
