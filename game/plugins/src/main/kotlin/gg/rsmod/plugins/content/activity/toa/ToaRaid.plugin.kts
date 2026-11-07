@@ -81,6 +81,13 @@ ToaNpcs.TOA_OSMUMTEN_VIS.localId?.let { id ->
     }
 }
 
+// cache2686 11690 Osmumten in the Wardens entry corridor (ops Talk-to / Begin): Strategies 1423, every party member speaks to him first.
+ToaNpcs.TOA_OSMUMTEN_WARDENS_VIS.localId?.let { id ->
+    arrayOf("Talk-to", "Begin").forEach { option ->
+        on_npc_option(id, option) { ToaLobby.of(world).raid(player.uid)?.readyForWardens(player) }
+    }
+}
+
 ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId?.let { id ->
     arrayOf("Talk-to", "Leave").forEach { option ->
         on_npc_option(id, option) {
