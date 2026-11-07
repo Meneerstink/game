@@ -7,6 +7,9 @@ gen/
 
 /data/saves/
 /data/logs/
+# N462: runtime server records (AtomicFiles writes the sibling temporary file).
+/data/toa/records.json
+/data/toa/records.json.tmp
 # Audit S-05: the RSA private key must never be in git; RsaService generates one when it is missing.
 data/rsa/*.pem
 
