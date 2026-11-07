@@ -238,6 +238,9 @@ object OsrsFxImportTool {
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
             // N462 ToA spotanims (GPT-A N462-notities\toa\50-spot-defs.tsv x 50-skeletal-sequences.tsv): 100 with classic sequences, then
             // the 43 with a skeletal sequence (baked by the skeletal spot route in main; SKELETAL_SPOT lines -> SkeletalSidecarExportTool).
+            // N462 Path of Het light beam: FX_BEAM_ATTACK02..08 (2113-2119, models 43911/45318-45322, seq 9368) + FX_BEAM_IMPACT01 2120
+            // (RuneLite SpotanimID; cache2686). Which one is the Het beam is checked in the test client against the Wiki screenshot.
+            "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
             "toa-spot" to
                 listOf(
                     355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
