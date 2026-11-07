@@ -88,6 +88,12 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     fun enterBoss(player: Player, path: ToaPath): Boolean {
         if (!contains(player) || player.isDead()) return false
+        // A member who died during the boss respawns at the path checkpoint (challenge entry); once the boss is cleared the way on
+        // to the boss room stays open so they reach Osmumten (Proceed -> Nexus) like the rest (GPT-A 07-11: spectator was stuck).
+        if (path in progress.completedPaths) {
+            player.teleportTo(ToaMap.instance(map, path.bossEntry))
+            return true
+        }
         val run = progress.boss(path) ?: return false
         return enter(player, run, path.bossEntry)
     }

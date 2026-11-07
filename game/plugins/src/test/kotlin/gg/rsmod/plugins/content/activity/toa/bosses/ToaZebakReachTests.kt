@@ -57,7 +57,8 @@ class ToaZebakReachTests {
             assertTrue(session.meleeReach(p.tile), "Zebak must also be able to melee the player from the walk-blocked water")
             assertEquals(CombatClass.MELEE, session.autoSelector(session).style)
         }
-        assertFalse(session.actorMeleeReach(f.npc, Tile(3926, 5408)), "the generic source-side check reproduces the water-tile failure")
+        // 0feb684a7: the generic boss melee reach is checked from the player's tile, so the water-tile failure is gone there too.
+        assertTrue(session.actorMeleeReach(f.npc, Tile(3926, 5408)), "the generic boss melee reach covers the east platform edge")
         every { p.tile } returns Tile(3927, 5408)
         assertFalse(Combat.inMeleeReach(p, f.npc, 1))
         assertFalse(session.meleeReach(p.tile))

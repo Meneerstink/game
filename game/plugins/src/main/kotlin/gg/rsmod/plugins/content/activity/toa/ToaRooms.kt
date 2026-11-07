@@ -7,7 +7,9 @@ enum class ToaPath(val door: Int, val challengeEntry: Tile, val bossDoor: Int, v
     SCABARAS(ToaLocs.SCABARAS, Tile(3523, 5279), ToaLocs.KEPHRI_ENTRY, Tile(3535, 5408)),
     HET(ToaLocs.HET, Tile(3697, 5280), ToaLocs.AKKHA_ENTRY, Tile(3697, 5408, 1)),
     APMEKEN(ToaLocs.APMEKEN, Tile(3793, 5280), ToaLocs.BABA_ENTRY, Tile(3790, 5408)),
-    CRONDIS(ToaLocs.CRONDIS, Tile(3953, 5280), ToaLocs.ZEBAK_ENTRY, Tile(3959, 5408, 1)),
+    // Zebak: cache2686 15700 plane 1 carries the bridge flag over x3958-3963 (test fixture cache2686-15700-collision.txt), so the
+    // entrance is game plane 0 - the same as his arena and Osmumten (ad648f994).
+    CRONDIS(ToaLocs.CRONDIS, Tile(3953, 5280), ToaLocs.ZEBAK_ENTRY, Tile(3959, 5408, 0)),
 }
 
 /** Register from the later puzzle/boss card. A missing implementation deliberately does not grant a clear. */

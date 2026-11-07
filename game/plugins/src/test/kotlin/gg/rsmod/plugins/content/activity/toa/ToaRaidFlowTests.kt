@@ -102,6 +102,8 @@ class ToaRaidFlowTests {
             assertFalse(old.clear(f.cycle), "stale callbacks cannot clear the retry")
             assertFalse(old.wipe(f.cycle))
             assertEquals(size, raid.activePlayers().size)
+            // A walled boss arena waits for its teleport crystal again after the wipe (0feb684a7).
+            if (retry.key.boss && retry.key.path in ToaRaid.ARENA_ENTRY) f.players.forEach { assertTrue(raid.crystal(it, retry.key.path)) }
             return retry
         }
         try {
@@ -145,10 +147,13 @@ class ToaRaidFlowTests {
                     }
                 }
                 clear()
-                // Proceed's contract requires the boss room. A respawned spectator is at the puzzle checkpoint;
-                // do not pretend that a controller test proves its still-open physical route to Osmumten/the Nexus.
-                f.players.filter { ToaMap.source(f.map, it.tile)?.regionId == path.bossEntry.regionId }
-                    .forEach { assertTrue(raid.proceed(it)) }
+                // A respawned spectator is at the puzzle checkpoint: after the clear the boss door takes it to the boss room
+                // (Osmumten), and Proceed then works for everybody.
+                f.players.filter { ToaMap.source(f.map, it.tile)?.regionId != path.bossEntry.regionId }.forEach {
+                    assertTrue(raid.enterBoss(it, path), "the boss door stays open after the clear")
+                    assertEquals(path.bossEntry.regionId, ToaMap.source(f.map, it.tile)?.regionId)
+                }
+                f.players.forEach { assertTrue(raid.proceed(it)) }
                 assertEquals(index + 1, raid.progress.completedPaths.size)
             }
             assertTrue(raid.progress.wardensUnlocked)
