@@ -36,6 +36,13 @@ object OsrsOrnamentKits {
     const val ORB_ADD = "You add the orb to the staff."
     const val ORB_REMOVE = "You remove the orb from the staff."
 
+    /** A ToA ornament by OSRS ids ([base] may already be local); null while an item is not imported. */
+    private fun toa(ornamented: Int, base: Int, kit: Int): Ornament? {
+        val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
+        val localBase = if (base == Items.OSMUMTENS_FANG) base else ids.item(base) ?: return null
+        return Ornament(ids.item(ornamented) ?: return null, localBase, ids.item(kit) ?: return null, pvpConvert = false)
+    }
+
     val ALL =
         listOf(
             Ornament(Items.OCCULT_NECKLACE_OR, Items.OCCULT_NECKLACE, Items.OCCULT_ORNAMENT_KIT),
@@ -75,6 +82,10 @@ object OsrsOrnamentKits {
             // magegeara: "Elidinis' ward (f)" + "Menaphite ornament kit" (both untradeable); "Dismantle" separates them; on a PvP death
             // "the Menaphite ornament kit will be placed in their gravestone" (no base + kit drop to the PKer).
             Ornament(Items.ELIDINIS_WARD_OR, Items.ELIDINIS_WARD_F, Items.MENAPHITE_ORNAMENT_KIT, pvpConvert = false),
+            // N462 ToA (OSRS Wiki Cursed phalanx / Breach of the Scarab / Eye of the Corruptor / Jewel of the Sun / Jewel of Amascut): the phalanx
+            // is attached to Osmumten's fang -> fang (or); each jewel to the Keris partisan -> its partisan; "Dismantle" returns both. All
+            // four jewels and the phalanx are untradeable (kit to the gravestone on a PvP death). Local ids from the ToA import table.
+            *listOfNotNull(toa(27246, Items.OSMUMTENS_FANG, 27248), toa(25981, 25979, 27283), toa(27287, 25979, 27285), toa(27291, 25979, 27289), toa(30891, 25979, 30893)).toTypedArray(),
             // casket-ornaments (OSRS Wiki kit and ornamented item pages): tradeable elite / master kits; the ornamented item is untradeable
             // and "can be dismantled anytime, returning the tradeable [base] and ornament kit". The legs/skirt kit fits both leg pieces.
             Ornament(Items.ARMADYL_GODSWORD_OR, Items.ARMADYL_GODSWORD, Items.ARMADYL_GODSWORD_ORNAMENT_KIT),
