@@ -123,6 +123,9 @@ object OsrsRegionImportTool {
         }
     }
 
+    /** N462: OSRS sea overlays (texture 1 / 130..149, and the plain shallow sea 150) -> rev-667 sea overlay 111. */
+    val NECROPOLIS_SEA: Map<Int, Int> = (listOf(5, 150) + (441..501)).associateWith { 111 }
+
     val BATCHES: Map<String, Batch> =
         mapOf(
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
@@ -199,6 +202,16 @@ object OsrsRegionImportTool {
             "necropolis-floors" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis tiles on plain underlays",
                 clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
                 underlayCandidates = (listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)).toSet()),
+            // N462 07-11 18:1x (testclient AKP island): the OSRS sea round the Necropolis came in on rev-667 overlay 161 (rgb 435541,
+            // texture 493) = a flat GREEN sea. The sea overlays (OSRS texture 1 = water, 130..149 = the newer sea textures; 150 = plain
+            // shallow sea 7296b7) go to the rev-667 sea overlay 111 (rgb 60769a, texture 669) the snapshot's own sea squares use.
+            // Same settings as the first passes otherwise, so only the sea tiles change.
+            "necropolis-water" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis sea on the rev-667 sea overlay",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
+                underlayCandidates = (listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)).toSet(),
+                overlayOverrides = NECROPOLIS_SEA),
+            "necropolis-west-water" to Batch(listOf(13098), emptyList(), "Necropolis west sea on the rev-667 sea overlay",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true, overlayOverrides = NECROPOLIS_SEA),
             "toa-map-floors" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut tiles, 29 exact overlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
                 keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true,
@@ -393,7 +406,11 @@ object OsrsRegionImportTool {
                 }
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
-                        batch.overlayOverrides[tileValue - 1]?.let { return@getOrPut it + 1 }
+                        batch.overlayOverrides[tileValue - 1]?.let {
+                            val d = modernOverlays[tileValue - 1]
+                            println("OVERLAY_OVERRIDE osrs ${tileValue - 1} rgb=${d?.rgb?.let { c -> "%06x".format(c) }} tex=${d?.texture} -> $it")
+                            return@getOrPut it + 1
+                        }
                         forcedOverlay[tileValue]?.let { return@getOrPut it + 1 }
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
                         FeroxImportTool.bestOverlay(def, overlayCandidates(def)) + 1
@@ -541,7 +558,9 @@ object OsrsRegionImportTool {
                 // ---- models ----
                 val census = ModelNamespaceCensusTool.census(FeroxImportTool.GAME_CACHE, FeroxImportTool.FILE_SERVER_CACHE, File(FeroxImportTool.ASSET_MAP))
                 check(census.physicalDivergentIds.isEmpty() && census.referencedDivergentIds.isEmpty()) { "target caches diverge" }
-                val free = census.provenFreeHoles.filter { it in 1..0xFFFF }.sorted().iterator()
+                // N462 07-11: the same pool as OsrsLocImportTool - census holes + the proven-safe range, which since the model-id
+                // fix (archive 37, ModelIdAllocator ceiling 131071) runs above 65535 ('Out of proven-free model ids' for 13098).
+                val free = (census.provenFreeHoles.filter { it >= 1 }.sorted().asSequence() + census.safeFreeRange.asSequence()).distinct().iterator()
                 val modelIdMap = LinkedHashMap<Int, Int>()
                 // retileTargets: loc types and models exist from the first pass - nothing new to allocate.
                 if (!batch.retileTargets) neededModels.forEach { modernId ->

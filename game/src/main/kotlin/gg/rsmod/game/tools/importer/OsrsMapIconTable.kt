@@ -7,12 +7,15 @@ package gg.rsmod.game.tools.importer
  * listed stays dropped (and reported) - never a guessed id.
  */
 object OsrsMapIconTable {
-    val SCENE_TO_MSI = mapOf(1 to 1, 4 to 4, 5 to 5, 6 to 6, 7 to 7, 11 to 11, 12 to 12, 27 to 27, 46 to 46, 64 to 64, 65 to 65, 68 to 68, 70 to 70)
+    // N462 07-11: + 26 (square 13098 import; OsrsLocMapDataTool pixel proof)
+    val SCENE_TO_MSI = mapOf(1 to 1, 4 to 4, 5 to 5, 6 to 6, 7 to 7, 11 to 11, 12 to 12, 26 to 26, 27 to 27, 46 to 46, 64 to 64, 65 to 65, 68 to 68, 70 to 70)
 
     val AREA_TO_MAP_ELEMENT =
         mapOf(
             5 to 560, 8 to 563, 9 to 564, 12 to 567, 21 to 575, 28 to 582, 33 to 587, 36 to 590, 37 to 591, 40 to 594,
             41 to 595, 42 to 596, 53 to 607, 58 to 612, 65 to 618,
+            // N462 07-11 (square 13098 import): OSRS area 970 sprite 1504 = mapelement 612 (OsrsLocMapDataTool pixel proof diff 0,007).
+            970 to 612,
         )
 
     /** SOURCE_BLOCKED scenes: 22 is an empty OSRS frame, the rest have no 667 picture (nearest diff >= 0.11). */

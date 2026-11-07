@@ -39,8 +39,10 @@ on_logout {
 
 on_login { ToaLobby.of(world).login(player) }
 
-// The original multiloc parent must retain its imported transforms for the personal niche appearance.
-ToaIds.loc(46082)?.let { id ->
+// The Rewards Niche: toa_rewards_chest_lobby 46224 (varbit 14319) -> 46083 'False Door' closed / 46082 'Rewards Niche' open, both
+// 'Claim'. The 667 import drops the multiloc table and the look is per player in OSRS, so ToaMultilocs places 46083 for everybody and
+// both variants open the unclaimed rewards.
+listOfNotNull(ToaIds.loc(46082), ToaIds.loc(46083)).forEach { id ->
     on_obj_option(id, "Claim") { if (ToaRewards.hasUnclaimed(player)) ToaUi.showRewards(player) }
 }
 
