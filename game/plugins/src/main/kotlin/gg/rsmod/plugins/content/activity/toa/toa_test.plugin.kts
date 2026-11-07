@@ -23,6 +23,17 @@ on_command("toastart", Privilege.ADMIN_POWER) {
     }
 }
 
+/** '::toahp <n>' - set every living npc of the current ToA room to n hitpoints (test server; phase/death tests without a long fight). */
+on_command("toahp", Privilege.ADMIN_POWER) {
+    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
+    val hp = player.getCommandArgs().firstOrNull()?.toIntOrNull() ?: return@on_command
+    val run = raid.progress.current ?: return@on_command
+    val npcs = raid.scope(run)?.spawned?.filter { it.isSpawned() && !it.isDead() }.orEmpty()
+    npcs.forEach { it.setCurrentLifepoints(hp.coerceAtMost(it.getMaximumLifepoints())) }
+    player.message("ToA test hp $hp on ${npcs.size} npc(s): ${npcs.joinToString { "${it.id}" }}")
+}
+
 on_command("toaroom", Privilege.ADMIN_POWER) {
     if (System.getProperty("rsps.testServer") != "true") return@on_command
     val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
