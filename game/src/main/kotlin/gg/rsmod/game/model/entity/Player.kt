@@ -1186,6 +1186,15 @@ abstract class Player(
     fun hasLargeViewport(): Boolean = largeViewport
 
     /**
+     * N462: npcs further than 15 tiles (the 5-bit add delta) reach the client only through the 78 client's NPC_INFO_LARGE (opcode 145,
+     * 8-bit deltas). The big ToA rooms turn it on (Zebak 9x9 stood 17 tiles from the landing tile and was never sent). Clients without
+     * that packet cannot read it - only content that needs it turns it on.
+     */
+    fun setLargeViewport(large: Boolean) {
+        largeViewport = large
+    }
+
+    /**
      * Invoked when the player should close their current interface modal.
      */
     /**

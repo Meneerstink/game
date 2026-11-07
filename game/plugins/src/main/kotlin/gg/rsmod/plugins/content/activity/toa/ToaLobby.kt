@@ -112,6 +112,7 @@ class ToaLobby private constructor() {
 
     fun leaveRaid(player: Player, returnToLobby: Boolean = true) {
         val raid = raids.remove(player.uid) ?: return
+        player.setLargeViewport(false)
         raid.remove(player.uid)
         player.clearHits(); player.removeCombatTarget()
         ToaUi.close(player)
@@ -142,6 +143,8 @@ class ToaLobby private constructor() {
                     it.uid in raid.remaining && it.uid !in raid.offline && !raid.map.area.contains(it.tile)
                 }.forEach { leaveRaid(it, returnToLobby = false) }
                 if (raid.remaining.isNotEmpty()) {
+                    // The big rooms: npcs up to the large-viewport distance reach the client (Player.setLargeViewport).
+                    raid.players().forEach { if (!it.hasLargeViewport()) it.setLargeViewport(true) }
                     raid.cycle()
                     if (raid.progress.failed) {
                         raid.players().filter { !it.isDead() }.forEach { leaveRaid(it) }

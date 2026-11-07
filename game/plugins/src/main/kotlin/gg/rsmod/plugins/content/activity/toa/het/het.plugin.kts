@@ -14,8 +14,10 @@ import java.util.WeakHashMap
 val rooms = WeakHashMap<ToaRaid, HetRoom>()
 ToaRooms.register(ToaRoomKey(ToaPath.HET, false)) { raid -> HetRoom(raid).also { rooms[raid] = it } }
 
+// Only a living participant of the running Het room acts on its puzzle (ultrareview #6: a dead spectator respawned at the Het checkpoint
+// could still turn mirrors and mine the seal).
 fun room(p: gg.rsmod.game.model.entity.Player): HetRoom? =
-    ToaLobby.of(p.world).raid(p.uid)?.takeIf { it.contains(p) }?.let { rooms[it] }
+    ToaLobby.of(p.world).raid(p.uid)?.takeIf { it.contains(p) && p in it.activePlayers() }?.let { rooms[it] }
 
 HetIds.loc(HetIds.MIRROR)?.let { id ->
     on_obj_option(id, "Pick-up") { room(player)?.pickUp(player, player.getInteractingGameObj()) }
@@ -59,6 +61,9 @@ val PICKAXE_HOLDERS = listOf(45468, 49566) +
     listOf(49568, 49569, 49570, 49571, 49572, 49573, 49574, 49575, 49576, 49577, 49578, 49579, 49580, 49581, 49582, 55810, 55811)
 fun hasOption(id: Int, option: String) =
     world.definitions.getNullable(ObjectDef::class.java, id)?.options?.any { it?.equals(option, ignoreCase = true) == true } == true
+// ultrareview #6: the lobby shows the cavity variant with both options (multilocs.tsv 49566 -> 49569), else a deposited pickaxe could not be
+// taken back in the lobby; only the raid's statues hand out the free bronze pickaxe.
+val CAVITIES = (listOf(49566) + (49568..49582) + listOf(55810, 55811)).mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.loc(it) }.toSet()
 PICKAXE_HOLDERS.mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.loc(it) }.distinct().forEach { id ->
     if (hasOption(id, "Take-pickaxe")) on_obj_option(id, "Take-pickaxe") {
         val stored = player.attr[STORED]
@@ -66,7 +71,7 @@ PICKAXE_HOLDERS.mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.loc(it
         if (stored != null && stored > 0) {
             player.inventory.add(stored)
             player.attr.remove(STORED)
-        } else player.inventory.add(Items.BRONZE_PICKAXE)
+        } else if (id !in CAVITIES) player.inventory.add(Items.BRONZE_PICKAXE)
     }
     if (hasOption(id, "Deposit-pickaxe")) on_obj_option(id, "Deposit-pickaxe") {
         if (player.attr[STORED]?.let { it > 0 } == true) return@on_obj_option // ONZEKER T25: OSRS message unknown

@@ -183,6 +183,8 @@ players:
 npcs:
 
   updating-opcode: 6
+  # N462: the 78 client's NPC_INFO_LARGE (8-bit add deltas), sent while Player.hasLargeViewport (the big ToA rooms).
+  large-updating-opcode: 145
 
   # Exact read order of the 667 client, NPCList.processExtendedInfo (NpcExtendedInfoFlag).
   order:

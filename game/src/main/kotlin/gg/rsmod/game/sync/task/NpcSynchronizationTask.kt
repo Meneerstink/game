@@ -183,7 +183,8 @@ class NpcSynchronizationTask(
         tile.height <= player.tile.height &&
             Tile(tile.x, tile.z, player.tile.height).isWithinRadius(
                 player.tile,
-                if (player.hasLargeViewport()) Player.LARGE_VIEW_DISTANCE else Player.NORMAL_VIEW_DISTANCE,
+                // N462: 32 in the large viewport (ToA rooms) - well inside the client's 104-tile scene; the 8-bit delta allows 127.
+                if (player.hasLargeViewport()) LARGE_SCENE_RADIUS else Player.NORMAL_VIEW_DISTANCE,
             ) &&
             (tile.height == player.tile.height || !underFloor(player, tile))
 
@@ -204,6 +205,7 @@ class NpcSynchronizationTask(
 
     companion object {
         private const val MAX_LOCAL_NPCS = 255
+        private const val LARGE_SCENE_RADIUS = 32
         private const val MAX_NPC_ADDITIONS_PER_CYCLE = 40
 
         /** State [NpcUpdateBlockSegment] re-sends to a player whose client only now learns of the npc. */

@@ -237,6 +237,9 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
             if (!weakened || sealHp <= 0) break
             val damage = HetSeal.hit(player.skills.getCurrentLevel(Skills.MINING), pick.tier, raid.world.random(2))
             sealHp = (sealHp - damage).coerceAtLeast(0)
+            // Room points: ToaChest.creditRoom reads the seal npc's damage map (ToaPointSource HETS_SEAL x2.5) - the mining hits were never
+            // recorded there, so Path of Het paid 0 points and had no MVP (ultrareview #6).
+            seal?.damageMap?.add(player, damage)
             player.addXp(Skills.MINING, HetSeal.XP_PER_HIT)
             if (sealHp == 0) { destroySeal(); break }
         }
