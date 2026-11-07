@@ -353,13 +353,15 @@ object OsrsInterfacePortTool {
             // hidden until the server fills them. ONZEKER (no source script): row pitch 20 below the 24-px header line (482:51 y=24),
             // p11 0xff981f centred - checked against the wiki screenshot in the testclient.
             val first = next
-            for (column in listOf(50, 49, 48, 47, 46)) {
+            // Names go in 482:45 (wmode 1: parent width - 274 = 102, full height); 482:50 is only the 24-px 'Name' header cell and
+            // clipped every row (testclient round 11: empty name column). Cache2686 482:45..50 decoded with tools/cache667/osrs_if3.py.
+            for (column in listOf(45, 49, 48, 47, 46)) {
                 for (row in 0 until 8) {
                     list += C(next++, 4, 0, 26 + row * 20, 0, 18, column, 1, 0, 0, 0, true, font = font(494), text = "", alignX = 1,
                         alignY = 1, shadow = true, colour = 0xff981f)
                 }
             }
-            extras += "raid summary rows components=$first..${next - 1} (columns name 50, dealt 49, taken 48, deaths 47, title 46; 8 each, column c row r = $first + 8c + r)"
+            extras += "raid summary rows components=$first..${next - 1} (columns name 45, dealt 49, taken 48, deaths 47, title 46; 8 each, column c row r = $first + 8c + r)"
         }
         if (group == 774) {
             // [clientscript,toa_partydetails_addmember]: ~steelborder(toa_partydetails:frame (774:3), "Party of <leader>" | "Party Details", 0).
