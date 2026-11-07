@@ -12,6 +12,10 @@ class ToaKephriTests {
         val collision = gg.rsmod.game.model.collision.CollisionManager(gg.rsmod.game.model.region.ChunkSet(f.world))
         every { f.world.collision } returns collision; every { f.world.chunks } returns collision.chunks
         every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.world } returns f.world
+        every { f.world.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.VarbitDef(secondArg())
+        }
         every { p.equipmentBonuses } returns IntArray(18)
         every { p.isOnline } returns true; every { p.isDead() } returns false
         var playerTile = Tile(3200, 3200)
@@ -40,6 +44,11 @@ class ToaKephriTests {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
         // Generic relaxed AttributeMap.get otherwise invents Object for the prayer-book String.
         every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.world } returns f.world
+        // Do not let the generic relaxed DefinitionSet invent an untyped Definition.
+        every { f.world.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.VarbitDef(secondArg())
+        }
         every { p.isOnline } returns true; every { p.isDead() } returns false; every { p.tile } returns Tile(3200, 3200)
         every { p.equipmentBonuses } returns IntArray(18)
         val scarab = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)
