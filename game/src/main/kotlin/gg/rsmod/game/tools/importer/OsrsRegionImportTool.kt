@@ -191,11 +191,11 @@ object OsrsRegionImportTool {
                 plainOverlaysStayPlain = true),
             // N462 07-11 (owner 'dat hele gebied correct integreren net zoals osrs'): OSRS 13098 also holds the Necropolis west of the town -
             // the mine, the necropolis_obelisk 44296 (3316,2718, Pharaoh's sceptre Jaltevas), fairy ring AKP 29495 (3284,2706) with the
-            // stepping stones 43989/43990 and the excavation camp. Sophanem's south city wall (icthalarins_city_wall) is at z 2749 in OSRS,
-            // so only z 2688-2747 becomes OSRS; the wall and the town north of it stay rev-667 (no code/spawn uses the patched part).
-            "necropolis-west" to Batch(listOf(13098), emptyList(), "Necropolis west: mine, obelisk, fairy ring AKP",
-                replaceSquares = setOf(13098), patch = intArrayOf(3264, 2688, 3327, 2747), clearTileFlags = 0x8, dropHiddenOverlays = true,
-                plainOverlaysStayPlain = true),
+            // stepping stones 43989/43990 and the excavation camp. The rev-667 cache has NO square m51_42 at all (07-11 plan: 'm51_42
+            // missing'; live check78: white void, black minimap south of Sophanem) - the whole square is created from OSRS, including the
+            // southern row of Sophanem's city wall (icthalarins_city_wall, z 2749-2751) that joins the rev-667 town in 13099 above it.
+            "necropolis-west" to Batch(listOf(13098), emptyList(), "Necropolis west: mine, obelisk, fairy ring AKP (square created)",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true),
             "necropolis-floors" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis tiles on plain underlays",
                 clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
                 underlayCandidates = (listOf(2, 39, 40, 42, 82, 131, 132, 135, 141, 151, 152, 153) + (166..173)).toSet()),

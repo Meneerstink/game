@@ -2968,12 +2968,11 @@ zaros_zeitgeist:
 dunes_of_eternity:  # Necropolis (OSRS Wiki: unlocks during Beneath Cursed Sands)
   index: 1018
   areas:
+    - region: 13098
     - region: 13354
     - region: 13355
     - region: 13610
     - region: 13611
-    - x: [ 3264, 3327, 3327, 3264 ]
-      y: [ 2688, 2688, 2747, 2747 ]
 into_the_tombs:  # ToA lobby
   index: 1019
   areas:

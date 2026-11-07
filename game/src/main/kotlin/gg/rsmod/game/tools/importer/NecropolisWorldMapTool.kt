@@ -69,8 +69,17 @@ object NecropolisWorldMapTool {
                 copied = r.end
             }
             out.write(current, copied, current.size - copied)
+            // 07-11: 13098 did not exist in the rev-667 cache (no landscape, no world-map record) and is created by 'necropolis-west' -
+            // a full-square record for every created square with a landscape is appended (records are read sequentially).
+            var appended = 0
+            SQUARES.filter { (x, z) -> area.records.none { it.x == x && it.z == z } }.forEach { (x, z) ->
+                val land = runCatching { FeroxWorldMapTool.landscape(library, keys, x, z) }.getOrNull()
+                if (land == null) { println("square ${x}_$z: no landscape either - left out"); return@forEach }
+                out.write(FeroxWorldMapTool.encodeSquare(x, z, land.first, land.second, area, def))
+                println("square ${x}_$z: APPENDED new record"); appended++; changed++
+            }
             val updated = out.toByteArray()
-            check(FeroxWorldMapTool.parse(updated).records.size == area.records.size) { "record count changed" }
+            check(FeroxWorldMapTool.parse(updated).records.size == area.records.size + appended) { "record count changed" }
             if (changed > 0) {
                 mutations += CacheMutation(FeroxWorldMapTool.WORLD_MAP_INDEX, mainGroup.id, areaFile.id, updated,
                     "N462 world map main/area: Necropolis squares rebuilt", CacheItemProbeTool.sha1(current))
