@@ -69,4 +69,14 @@ class HetBoardTests {
         assertEquals(5, HetSeal.hit(1, HetSeal.Tier.BELOW_RUNE, 0))
         assertFailsWith<IllegalArgumentException> { HetSeal.hit(50, HetSeal.Tier.RUNE, 3) }
     }
+
+    @Test fun `pickaxe tier follows the metal, not the item name`() {
+        val t = gg.rsmod.plugins.content.skills.mining.PickaxeType::class.java.enumConstants.associateWith { HetPickaxe.tier(it) }
+        assertEquals(HetSeal.Tier.BELOW_RUNE, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.GILDED_BRONZE))
+        assertEquals(HetSeal.Tier.RUNE, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.INFERNO_ADZE))
+        assertEquals(HetSeal.Tier.RUNE, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.OSRS_GILDED))
+        assertEquals(HetSeal.Tier.DRAGON, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.GILDED_DRAGON))
+        assertEquals(HetSeal.Tier.DRAGON, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.THIRD_AGE))
+        assertEquals(HetSeal.Tier.BELOW_RUNE, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.ADAMANT))
+    }
 }

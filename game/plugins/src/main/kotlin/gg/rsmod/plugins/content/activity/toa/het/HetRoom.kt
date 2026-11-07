@@ -1,6 +1,5 @@
 package gg.rsmod.plugins.content.activity.toa.het
 
-import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.TileGraphic
 import gg.rsmod.game.model.attr.AttributeKey
@@ -11,6 +10,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.activity.toa.*
+import gg.rsmod.plugins.content.skills.mining.PickaxeType
 
 /**
  * N462 Path of Het challenge room (ToaRoomKey(HET, challenge)). The raid owns membership/clear/wipe; this room owns the puzzle state
@@ -30,6 +30,8 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
     private var tick = 0
     private val placed = hashMapOf<HetPos, GameObject>()
     private val orbs = mutableListOf<Pair<Npc, HetDir>>()
+    /** Players holding picked-up mirrors (ultrareview #6: a carrier who died/left/logged out took the mirror off the board for good). */
+    private val carriers = hashMapOf<Player, Int>()
 
     val weakened: Boolean get() = tick < weakenedUntil
 
@@ -95,6 +97,27 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         if (seal != null && !weakened && seal!!.getTransmogId() >= 0) seal!!.setTransmogId(-1)
         if (tick % HetIds.ORB_INTERVAL == 0) spawnOrb(b)
         moveOrbs(b)
+        returnMirrors(b)
+    }
+
+    /** A carrier who is no longer an active player in this room (dead, left, logged out) or no longer holds the item: the mirror goes
+     *  back to a free movable-mirror start tile of the layout, in its start rotation (no OSRS source for where; the puzzle must stay
+     *  solvable - "The light can always be reflected correctly using 1-3 mirrors"). */
+    private fun returnMirrors(b: HetBoard) {
+        if (carriers.isEmpty()) return
+        val item = HetIds.item(HetIds.MIRROR_ITEM) ?: return
+        val active = raid.activePlayers().toSet()
+        carriers.entries.toList().forEach { (player, count) ->
+            val holds = if (player in active) player.inventory.getItemCount(item) else 0
+            val lost = count - holds.coerceAtMost(count)
+            if (lost <= 0) return@forEach
+            if (player !in active) player.inventory.remove(item, player.inventory.getItemCount(item))
+            if (holds <= 0 || player !in active) carriers.remove(player) else carriers[player] = holds
+            repeat(lost) {
+                val spec = b.layout.mirrors.firstOrNull { it.movable && b.free(it.pos) } ?: return@repeat
+                if (b.place(spec.pos, spec.rotation)) showMirror(b.mirrorAt(spec.pos)!!)
+            }
+        }
     }
 
     private fun fire(b: HetBoard) {
@@ -178,6 +201,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         if (!b.pickUp(p)) return
         clearTile(p)
         player.inventory.add(item)
+        carriers[player] = (carriers[player] ?: 0) + 1
     }
 
     fun place(player: Player, slot: Int) {
@@ -186,6 +210,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         val p = pos(player.tile) ?: return
         if (player.inventory[slot]?.id != item || !b.place(p, 0)) return // ONZEKER T25: no OSRS message known
         player.inventory.remove(item, 1, beginSlot = slot)
+        carriers[player]?.let { if (it <= 1) carriers.remove(player) else carriers[player] = it - 1 }
         showMirror(b.mirrorAt(p)!!)
     }
 
@@ -261,6 +286,9 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
 
     private fun close() {
         board = null; seal = null; placed.clear(); orbs.clear(); weakenedUntil = -1
+        // A carried mirror belongs to the old board: the retry/next room starts with all three on the new board.
+        HetIds.item(HetIds.MIRROR_ITEM)?.let { item -> carriers.keys.forEach { it.inventory.remove(item, it.inventory.getItemCount(item)) } }
+        carriers.clear()
         // A wipe drafts a new puzzle: the next start() builds a fresh board; the scope removed every placed loc/npc.
     }
 
@@ -316,16 +344,20 @@ data class HetPickaxe(val animation: Int, val rollTicks: Int, val tier: HetSeal.
     companion object {
         fun of(player: Player): HetPickaxe? {
             val mining = player.skills.getMaxLevel(Skills.MINING)
-            val type = gg.rsmod.plugins.content.skills.mining.PickaxeType.values.reversed().firstOrNull {
+            val type = PickaxeType.values.filter {
                 mining >= it.level && (player.equipment.contains(it.item) || player.inventory.contains(it.item))
-            } ?: return null
-            val name = player.world.definitions.get(ItemDef::class.java, type.item).name.lowercase()
-            val tier = when {
-                listOf("dragon", "crystal", "3rd age", "infernal").any { it in name } -> HetSeal.Tier.DRAGON
-                "rune" in name || "gilded" in name -> HetSeal.Tier.RUNE
-                else -> HetSeal.Tier.BELOW_RUNE
-            }
-            return HetPickaxe(type.animation, type.ticksBetweenRolls, tier)
+            }.maxWithOrNull(compareBy<PickaxeType>({ tier(it) }, { -it.ticksBetweenRolls })) ?: return null
+            return HetPickaxe(type.animation, type.ticksBetweenRolls, tier(type))
+        }
+
+        /** The metal tier of each pickaxe (ultrareview #6: was matched on the item name, so every 667 gilded pick counted as rune and the
+         *  inferno adze as below rune). 667 gilded X = X; OSRS Gilded pickaxe = rune stats (Wiki); 3rd age pickaxe = dragon stats (Wiki);
+         *  inferno adze = rune (level 41, same roll speed in PickaxeType). */
+        fun tier(type: PickaxeType): HetSeal.Tier = when (type) {
+            PickaxeType.DRAGON, PickaxeType.DRAGON_OR, PickaxeType.DRAGON_OR_UPGRADED, PickaxeType.GILDED_DRAGON,
+            PickaxeType.THIRD_AGE -> HetSeal.Tier.DRAGON
+            PickaxeType.RUNE, PickaxeType.GILDED_RUNE, PickaxeType.OSRS_GILDED, PickaxeType.INFERNO_ADZE -> HetSeal.Tier.RUNE
+            else -> HetSeal.Tier.BELOW_RUNE
         }
     }
 }

@@ -189,7 +189,8 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         val animation = ToaIds.seq(route.sequence) ?: Anims.REACH_OUT_GRAB //ONZEKER T02 legacy reach if stepping-stone seq769 not yet mapped.
         player.animate(animation)
         scope.queue {
-            wait(route.duration)
+            //WorldQueueTaskSet cycles a new queue's first wait in the same tick, so wait(n+1) = n ticks (ultrareview #6: was 1 tick early).
+            wait(route.duration + 1)
             if (eligible(player) && source(player.tile)?.let(route.from::contains) == true) player.teleportTo(instance(route.destination))
         }
         return true

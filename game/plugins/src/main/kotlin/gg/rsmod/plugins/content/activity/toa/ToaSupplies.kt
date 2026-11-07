@@ -171,7 +171,9 @@ class ToaSupplies(private val raid: ToaRaid) {
             ToaConsumables.clear(player)
             // Raid-exclusive supplies cannot be exported by teleport/logout or the deposit pot.
             // ONZEKER T28: exact exit cleanup order needs OSRS comparison; remove the same imported family in all containers.
-            val ids = (BAG_SOURCE..27351).mapNotNull(ToaIds::item).toSet()
+            // + the puzzle items (ultrareview #6): Crondis water container 27295, Het mirror 27296, Neutralising potion 27297
+            // (RuneLite ItemID TOA_CRONDIS_WATER_CONTAINER / TOA_HET_MIRROR / TOA_PATH_APMEKEN_POTION; Wiki: obtained in the raid rooms).
+            val ids = ((BAG_SOURCE..27351) + (27295..27297)).mapNotNull(ToaIds::item).toSet()
             // Every container, also a beast of burden's or a burden-trinket pet's store (ultrareview #4: supplies left the raid there).
             (listOf(player.inventory, player.bank) + player.containers.values).forEach { container ->
                 container.rawItems.forEachIndexed { slot, item -> if (item?.id in ids) container[slot] = null }

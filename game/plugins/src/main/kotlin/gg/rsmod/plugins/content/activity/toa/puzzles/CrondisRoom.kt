@@ -83,7 +83,8 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             }
         }
         //Strategies793: using the item saves exactly1 tick on each waterfall/palm interaction.
-        if (itemUsed) fill() else scope.queue { wait(1); if (live) fill() }
+        //WorldQueueTaskSet cycles a new queue's first wait in the same tick, so wait(n+1) = n ticks (ultrareview #6: was 1 tick early).
+        if (itemUsed) fill() else scope.queue { wait(2); if (live) fill() }
         return true
     }
 
@@ -102,7 +103,8 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 }
             }
         }
-        if (itemUsed) pour() else scope.queue { wait(1); if (live) pour() }
+        //WorldQueueTaskSet cycles a new queue's first wait in the same tick, so wait(n+1) = n ticks (ultrareview #6: was 1 tick early).
+        if (itemUsed) pour() else scope.queue { wait(2); if (live) pour() }
         return true
     }
 
