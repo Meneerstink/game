@@ -48,7 +48,10 @@ HetIds.item(HetIds.MIRROR_ITEM)?.let { id ->
  */
 val STORED = AttributeKey<Int>("toa_het_pickaxe")
 val PICKAXES = gg.rsmod.plugins.content.skills.mining.PickaxeType.values.map { it.item }.toSet()
-HetIds.loc(45468)?.let { id ->
+// N462 07-11: the lobby cavity (OSRS 49566 toa_lobby_wall02_cavity_parent at 3367,9114, ops Take-pickaxe / Deposit-pickaxe, the same
+// varbit 14440) - OSRS Wiki ToA changes 30 August 2023 'A cavity has been added in the raid lobby where players can deposit and
+// retrieve their pickaxe' - shares the statues' stored pickaxe.
+listOfNotNull(HetIds.loc(45468), gg.rsmod.plugins.content.activity.toa.ToaIds.loc(49566)).distinct().forEach { id ->
     on_obj_option(id, "Take-pickaxe") {
         val stored = player.attr[STORED]
         if (player.inventory.isFull) { player.message("You don't have enough inventory space."); return@on_obj_option }
