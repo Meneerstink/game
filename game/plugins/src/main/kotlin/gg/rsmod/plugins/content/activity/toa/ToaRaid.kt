@@ -177,6 +177,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     fun deathStart(player: Player) {
         if (!dying.add(player.uid)) return
+        // Death ends the supplies' running effects (Smelling salts would boost the respawned player again, dressing/scarab keep healing).
+        ToaConsumables.clear(player)
         points.death(player.uid)
         lose(player.uid)
         ToaRaidEvents.playerDeath(this, player.uid)
