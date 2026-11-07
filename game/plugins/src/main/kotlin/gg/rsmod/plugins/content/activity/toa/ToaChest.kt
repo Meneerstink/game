@@ -69,6 +69,7 @@ object ToaChest {
             )
         }
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
+        if (result.purpleWinner != null) glowPurple(raid)
         present.forEach { player ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
             if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
@@ -86,6 +87,29 @@ object ToaChest {
                 }
             }
             ToaRewards.open(player, raid)
+        }
+    }
+
+    /**
+     * Wiki ToA Rewards: "If a unique item is rolled, the flames around Osmumten's sarcophagus will glow purple rather than white".
+     * The burial chamber's sarcophagus 46220, barrier 46221 and tile glow 46222 (cache2686 square 14672, 3678-3682 x 5140-5141) are
+     * multilocs on varbit 14373 -> the *_closed / *_closed_rare variants (44825/44826, 44938/44939, 44996/44997, loc.sym). The whole party
+     * sees the same flames, so the parents are swapped for their rare variant in this raid's instance. ONZEKER: the opening animation
+     * ('a short animation will play where it is opened') has no sequence id in the sources - not played.
+     */
+    private fun glowPurple(raid: ToaRaid) {
+        val rare = mapOf(46220 to 44826, 46221 to 44939, 46222 to 44997)
+            .mapNotNull { (parent, variant) -> ToaIds.loc(parent)?.let { p -> ToaIds.loc(variant)?.let { p to it } } }.toMap()
+        if (rare.isEmpty()) return
+        for (x in 3678..3682) for (z in 5140..5141) {
+            val tile = ToaMap.instance(raid.map, gg.rsmod.game.model.Tile(x, z))
+            raid.world.chunks.getOrCreate(tile)
+                .getEntities<gg.rsmod.game.model.entity.GameObject>(tile, gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                .filter { it.id in rare }.toList()
+                .forEach { obj ->
+                    raid.world.remove(obj)
+                    raid.world.spawn(gg.rsmod.game.model.entity.DynamicObject(obj, rare.getValue(obj.id)))
+                }
         }
     }
 
