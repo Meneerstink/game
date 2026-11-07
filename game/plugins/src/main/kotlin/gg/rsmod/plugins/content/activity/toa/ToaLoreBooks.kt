@@ -140,12 +140,16 @@ object ToaLoreBooks {
     const val JACKALS_TORCH = 27312
     const val BAGS = 44984
 
-    /** 'Always' x1 from the boss (item Drop sources): on the ground under the boss that died last (largest max HP among the room's npcs;
-     *  for the Wardens the Warden killed last). Public in the instance; ONZEKER: whether OSRS drops one per player is not published. */
+    /** 'Always' x1 from the boss (item Drop sources): on the ground under the boss npc of the room (for the Wardens the P3 Warden with
+     *  the lowest hitpoints = the one killed). Public in the instance; ONZEKER: whether OSRS drops one per player is not published. */
     fun drop(world: gg.rsmod.game.model.World, key: ToaRoomKey, spawned: List<gg.rsmod.game.model.entity.Npc>) {
         val osrs = if (key.wardens) WARDENS else if (key.boss) key.path?.let(CAPTURE::get) else null
         val id = osrs?.let(ToaIds::item) ?: return
-        val boss = spawned.maxByOrNull { it.getMaximumLifepoints() } ?: return
+        val bosses = listOf(gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.AKKHA, gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.ZEBAK,
+            gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.BABA, gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.KEPHRI,
+            gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.ELIDINIS_P3, gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.TUMEKEN_P3)
+            .mapNotNull(ToaIds::npc).toSet()
+        val boss = spawned.filter { it.id in bosses }.minByOrNull { it.getCurrentLifepoints() } ?: return
         world.spawn(gg.rsmod.game.model.entity.GroundItem(id, 1, gg.rsmod.game.model.Tile(boss.getCentreTile())))
     }
 }
