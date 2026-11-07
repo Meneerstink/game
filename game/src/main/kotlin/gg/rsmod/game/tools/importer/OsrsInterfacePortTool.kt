@@ -100,7 +100,10 @@ object OsrsInterfacePortTool {
             3 -> { o.p4(c.colour); o.p1(if (c.filled) 1 else 0); o.p1(c.opacity) }
             9 -> { o.p1(c.lineWidth); o.p4(c.colour); o.p1(0) }
             6 -> {
-                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } }); o.p1(if (c.ortho) 1 else 0)
+                // 667 Component.decode (client Component.java:824): flag 0x1 = the 2D camera block (origin x/y, xan/yan/zan, zoom) follows,
+                // 0x4 = orthographic. The camera block is always written below, so 0x1 is always set (07-11: writing 0 for a
+                // non-orthographic model shifted every later field - interface 771 comp 3 read past its end).
+                o.p2(if (c.model < 0) 65535 else c.model.also { require(it <= 0xFFFF) { "interface model $it is in archive 37 - a 667 component model is u16" } }); o.p1(0x1 or if (c.ortho) 0x4 else 0)
                 o.p2(c.originX); o.p2(c.originY); o.p2(c.xan); o.p2(c.yan); o.p2(c.zan); o.p2(c.zoom); o.p2(65535)
                 if (c.wMode != 0) o.p2(0)
                 if (c.hMode != 0) o.p2(0)
@@ -388,8 +391,17 @@ object OsrsInterfacePortTool {
             library.close()
         }
         val ported = groups.map { g -> port(g, root[g.toString()] ?: error("group $g not in $JSON"), fonts) }
+        // --reuse (07-11): re-port onto the interface/sprite ids of the previous run (data/cfg/toa/interfaces.tsv) - the server and the
+        // ported scripts already point at them; only groups/sprites not in that table get new ids.
+        val previous = if ("--reuse" in args) File(RspsPaths.data("cfg/toa/interfaces.tsv")).takeIf { it.isFile }?.readLines()
+            ?.filter { it.isNotBlank() && !it.startsWith("#") }?.map { it.split('\t') }.orEmpty() else emptyList()
+        val oldInterfaces = previous.filter { it[0] == "interface" }.associate { it[1].toInt() to it[2].toInt() }
+        val oldSprites = previous.filter { it[0] == "sprite" }.associate { it[1].toInt() to it[2].toInt() }
         val spriteMap = LinkedHashMap<Int, Int>()
-        ported.flatMap { it.sprites }.distinct().forEachIndexed { i, s -> spriteMap[s] = firstSprite + i }
+        var newSprites = 0
+        ported.flatMap { it.sprites }.distinct().forEach { s -> spriteMap[s] = oldSprites[s] ?: (firstSprite + newSprites++) }
+        var newInterfaces = 0
+        val interfaceOf = ported.associate { p -> p.osrsGroup to (oldInterfaces[p.osrsGroup] ?: (firstInterface + newInterfaces++)) }
         val mutations = ArrayList<CacheMutation>()
         ModernCacheReader(File(SOURCE_CACHE)).use { src ->
             spriteMap.forEach { (osrs, local) ->
@@ -398,8 +410,8 @@ object OsrsInterfacePortTool {
         }
         val lines = ArrayList<String>()
         lines += "osrs_group\tlocal_interface\tcomponents\textra\treport"
-        ported.forEachIndexed { gi, p ->
-            val iface = firstInterface + gi
+        ported.forEach { p ->
+            val iface = interfaceOf.getValue(p.osrsGroup)
             p.components.forEach { c ->
                 if (c.type == 5 && c.sprite >= 0) c.sprite = spriteMap.getValue(c.sprite)
                 mutations += CacheMutation(INDEX_INTERFACES, iface, c.id, encode(c), "interface $iface:${c.id} (osrs ${p.osrsGroup}) type=${c.type}")
@@ -416,7 +428,7 @@ object OsrsInterfacePortTool {
         println("PREFLIGHT transaction=${tx.id} mutations=${mutations.size} outcomes=${plan.groupingBy { it.outcome }.eachCount()}")
         errors.forEach { println("  BLOCKING: $it") }
         check(errors.isEmpty()) { "preflight blocked; nothing written" }
-        if (!apply) { println("DRY_RUN interfaces $firstInterface..${firstInterface + ported.size - 1} sprites ${spriteMap.values.firstOrNull()}..${spriteMap.values.lastOrNull()}"); return }
+        if (!apply) { println("DRY_RUN interfaces ${interfaceOf.values.minOrNull()}..${interfaceOf.values.maxOrNull()} sprites ${spriteMap.values.minOrNull()}..${spriteMap.values.maxOrNull()}"); return }
         val result = tx.apply(plan)
         val problems = tx.verify()
         problems.forEach { println("  VERIFY_FAILURE: $it") }
@@ -424,7 +436,7 @@ object OsrsInterfacePortTool {
         REPORT.writeText(lines.joinToString("\n", postfix = "\n"))
         // The server reads the ids at start (activity/toa/ui/ToaInterfaces.kt): interface per OSRS group, sprite per OSRS sprite.
         File(RspsPaths.data("cfg/toa/interfaces.tsv")).apply { parentFile.mkdirs() }.writeText(
-            (ported.mapIndexed { gi, p -> "interface\t${p.osrsGroup}\t${firstInterface + gi}" } + spriteMap.map { (o, l) -> "sprite\t$o\t$l" })
+            (ported.map { p -> "interface\t${p.osrsGroup}\t${interfaceOf.getValue(p.osrsGroup)}" } + spriteMap.map { (o, l) -> "sprite\t$o\t$l" })
                 .joinToString("\n", prefix = "# N462 OsrsInterfacePortTool transaction ${tx.id} - generated, do not edit\n", postfix = "\n"),
         )
         println("APPLIED transaction=${tx.id} writes=${result.applied} VERIFY_OK report=$REPORT")
