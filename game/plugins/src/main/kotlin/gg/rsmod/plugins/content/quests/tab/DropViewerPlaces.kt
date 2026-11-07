@@ -40,6 +40,8 @@ object DropViewerPlaces {
                 DropSources.Kind.CHEST -> DeadmanChestWorld.activeTimed()?.tile
                 DropSources.Kind.GUARDIAN -> DeadmanChestWorld.activeTimed()?.tile
                 DropSources.Kind.BARROWS -> Tile(3565, 3289)
+                // N462: the Jaltevas Pyramid entrance in the Necropolis (toa_necropolis.plugin.kts ENTRANCE).
+                DropSources.Kind.TOA -> Tile(3357, 2711)
                 else -> spawnOf(world, source.modelNpc)
             } ?: return null
         return place(world, tile)

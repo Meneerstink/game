@@ -43,7 +43,7 @@ import kotlin.math.pow
 object DropSources {
     enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters") }
 
-    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD }
+    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA }
 
     class Source(
         val key: String,
@@ -153,6 +153,10 @@ object DropSources {
             if (out.none { s -> s.npcs.contains(Jad.ID) }) out += Source("jad", "TzTok-Jad", Jad.ID, intArrayOf(Jad.ID), it.combatLevel, Group.BOSSES, Kind.JAD)
         }
         out += Source("barrows", "Barrows chest", Barrows.Brother.values().first().npc, intArrayOf(), 0, Group.BOSSES, Kind.BARROWS)
+        // N462: the Tombs of Amascut reward chest (key = the Collection Log page CollectionLogPages.TOA); model Tumeken's Warden (OSRS 11762).
+        gg.rsmod.plugins.content.activity.toa.ToaIds.npc(11762)?.let { warden ->
+            out += Source(CollectionLogPages.TOA, "Tombs of Amascut", warden, intArrayOf(), 0, Group.BOSSES, Kind.TOA)
+        }
         // Maledictus awards two dragon rolls but is a separate kill, model and source.
         val maledictus = gg.rsmod.plugins.content.areas.wilderness.bosses.RevenantMaledictus.NPC
         if (DropTableFactory.hasTable(Npcs.REVENANT_DRAGON_OSRS) && npcName(world, maledictus).isNotBlank()) {
@@ -231,6 +235,7 @@ object DropSources {
             Kind.GUARDIAN -> View(listOfNotNull(archaic(world, "top damage")), sorted(world, trinketLines(world, source.modelNpc)))
             Kind.BARROWS -> barrowsView(world, rate)
             Kind.JAD -> jadView(world, source, rate)
+            Kind.TOA -> toaView(world)
         }
     }
 
@@ -531,6 +536,61 @@ object DropSources {
             lines += Line("tab$i", l.item, itemName(world, l.item), l.quantity, perChest(your[i + 1]), perChest(normal[i + 1]))
         }
         return View(emptyList(), sorted(world, merge(lines)))
+    }
+
+    /** N462 the ToA chest for one reference raid ([TOA_REFERENCE_POINTS] points, solo, Normal): every chance from [ToaLoot] (Chest wiki
+     *  oldid 15385393 formulas). Raid loot has no bracket boost (bracketLine: "no boost on this loot"). */
+    const val TOA_REFERENCE_POINTS = 20_000
+    val TOA_REFERENCE_LEVEL = gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel
+
+    private fun toaView(world: World): View {
+        val loot = gg.rsmod.plugins.content.activity.toa.core.ToaLoot
+        val local = gg.rsmod.plugins.content.activity.toa.core.ToaLootItems::local
+        val points = TOA_REFERENCE_POINTS
+        val level = TOA_REFERENCE_LEVEL
+        val purple = loot.purpleChance(points, level)
+        val weights = loot.Unique.values().sumOf { it.weight }.toDouble()
+        val lines = ArrayList<Line>()
+        loot.Unique.values().forEach { u ->
+            val id = local(u.osrsItem) ?: return@forEach
+            val p = purple * u.weight / weights
+            lines += Line("toa:${u.name}", id, itemName(world, id), "1", p, p)
+        }
+        local(loot.TUMEKENS_GUARDIAN)?.let { id ->
+            val p = loot.petChance(points, level)
+            lines += Line("toa:pet", id, itemName(world, id), "1", p, p, Tag.PET)
+        }
+        local(loot.THREAD_OF_ELIDINIS)?.let { id ->
+            val p = loot.threadChance(0, false)
+            lines += Line("toa:thread", id, itemName(world, id), "1", p, p, note = "First raid; 3/10 at 15 raids, 1/50 once you had one")
+        }
+        loot.JEWELS.forEach { osrs ->
+            val id = local(osrs) ?: return@forEach
+            val p = loot.jewelChance(0, false) / loot.JEWELS.size
+            lines += Line("toa:jewel:$osrs", id, itemName(world, id), "1", p, p, note = "A jewel you do not have yet")
+        }
+        local(loot.CLUE_SCROLL_ELITE)?.let { id ->
+            val p = loot.eliteClueChance(points)
+            lines += Line("toa:clue", id, itemName(world, id), "1", p, p)
+        }
+        // Three rolls of 1/27 over the commons; the purple winner gets none.
+        val roll = 1 - Math.pow(1 - 1.0 / loot.Common.values().size, 3.0)
+        val commons = loot.Common.values().mapNotNull { c ->
+            val id = local(c.osrsItem) ?: return@mapNotNull null
+            val shown = if (c.noted) world.definitions.getNullable(ItemDef::class.java, id)?.noteLinkId?.takeIf { it > 0 } ?: id else id
+            val p = roll * (1 - purple)
+            Line("toa:common:${c.name}", shown, itemName(world, shown), loot.commonAmount(c, points, level).toString(), p, p)
+        }
+        local(loot.Common.COINS.osrsItem)?.let { icon ->
+            val p = 1 - purple
+            lines += Line("toa:commons", icon, "Common loot", "1", p, p, Tag.TABLE, sorted(world, commons), sub = "3 rolls, without a purple")
+        }
+        // Challenge rewards (owner 2026-11-06 22:1x): from Expert, nobody in the party died, never one you own.
+        (loot.CHALLENGE_KITS + loot.REMNANTS.first()).forEach { osrs ->
+            val id = local(osrs) ?: return@forEach
+            lines += Line("toa:challenge:$osrs", id, itemName(world, id), "1", 0.0, 0.0, note = "Expert, nobody died")
+        }
+        return View(emptyList(), sorted(world, lines))
     }
 
     private fun jadView(world: World, source: Source, rate: Double): View {

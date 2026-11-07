@@ -142,6 +142,8 @@ object CollectionLogPages {
                 if (items.isNotEmpty()) pages += Page(boss.key, Category.BOSSES, pair.second, keys, items)
                 continue
             }
+            // N462: the ToA page is built below from the OSRS log list (enum 4805), not from the chest's view.
+            if (boss.kind == DropSources.Kind.TOA) continue
             if (boss.kind == DropSources.Kind.BARROWS) {
                 val items = Barrows.REWARD_ARMOUR.values.flatMap { it.toList() } + Items.BOLT_RACK
                 pages += Page("barrows", Category.BOSSES, "Barrows Chests", listOf("barrows"), items.filter { it in Barrows.COLLECTION_LOG_ITEMS }, "Barrows Chests opened")
