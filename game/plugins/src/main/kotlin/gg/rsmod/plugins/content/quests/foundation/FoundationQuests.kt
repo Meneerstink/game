@@ -1557,7 +1557,7 @@ object FoundationQuests {
             // (8951) there is not spawned any more.
             QuestNpcPost(Npcs.ARIANWYN, LLETYA, gg.rsmod.game.model.Direction.SOUTH, listOf("Tirannwn breathes again.", "Prifddinas sings for all of us now.")),
             // N462 Beneath Cursed Sands: Maisa at her campsite east of Sophanem (OSRS Wiki Maisa map 3378,2794); idle line from the OSRS transcript.
-            QuestNpcPost(Npcs.MAISA, MAISA_CAMP, gg.rsmod.game.model.Direction.WEST, listOf("Be careful. There's something creepy about all of this.")),
+            QuestNpcPost(MAISA, MAISA_CAMP, gg.rsmod.game.model.Direction.WEST, listOf("Be careful. There's something creepy about all of this.")),
         )
 
 

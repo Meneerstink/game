@@ -51,7 +51,7 @@ object QuestMapIconTool {
      * Oneiromancer, Azzanadra, and since N255 (owner 2026-10-23: "Aleck ... moet toch ook een quest icoon hebben net als King Narnode")
      * Gossip, Aleck, Edmond and King Narnode Shareen.
      */
-    val QUEST_NPCS = listOf(1918, 4511, 1971, 813, 5110, 714, 670)
+    val QUEST_NPCS = listOf(1918, 4511, 1971, 813, 5110, 714, 670, 5268) // 5268 Jamila: N462 Beneath Cursed Sands
 
     /** One opcode of a MapElementType stream: where it starts and where its payload starts. */
     class Op(val code: Int, val at: Int, val payload: Int, val end: Int)

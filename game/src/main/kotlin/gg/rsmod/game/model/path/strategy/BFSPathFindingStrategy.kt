@@ -25,7 +25,20 @@ class BFSPathFindingStrategy(
      */
     private val npcBodies: Set<Tile>? = null,
     private val playerTiles: Set<Tile>? = null,
+    /**
+     * How far from the start the search may go, and how many tiles it may visit. N462 (07-11, ToA reward vault): the vault chest is
+     * 24 tiles from where the party lands and every route stopped at the 20-tile edge ('I can't reach that!'). A player's route in
+     * OSRS is searched on a 128x128 grid around the player (rsmod-pathfinder / Darkan RouteFinder searchMapSize 128), so players
+     * get [PLAYER_MAX_DISTANCE]; npcs keep the old radius.
+     */
+    private val maxDistance: Int = MAX_DISTANCE,
+    private val maxNodes: Int = 256 * 10,
 ) : PathFindingStrategy(collision) {
+    companion object {
+        const val PLAYER_MAX_DISTANCE = 63
+        const val PLAYER_MAX_NODES = 128 * 128
+    }
+
     override fun calculateRoute(request: PathRequest): Route {
         val start = request.start
         val end = request.end
@@ -43,7 +56,7 @@ class BFSPathFindingStrategy(
         val nodes = ArrayDeque<Node>()
         val closed = ObjectOpenHashSet<Node>()
         var tail: Node? = null
-        var searchLimit = 256 * 10
+        var searchLimit = maxNodes
         var success = false
 
         nodes.add(Node(tile = start, parent = null))
@@ -76,7 +89,7 @@ class BFSPathFindingStrategy(
                 val tile = head.tile.step(direction)
                 val node = Node(tile = tile, parent = head)
                 if (!closed.contains(node) &&
-                    start.isWithinRadius(tile, MAX_DISTANCE) &&
+                    start.isWithinRadius(tile, maxDistance) &&
                     !isStepBlocked(head.tile, direction, sourceWidth, sourceLength, clipNode, clipLink) &&
                     !isOccupied(tile, sourceWidth, sourceLength)
                 ) {

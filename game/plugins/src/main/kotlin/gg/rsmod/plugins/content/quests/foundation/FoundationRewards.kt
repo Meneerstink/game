@@ -64,7 +64,15 @@ object FoundationRewards {
 
     /** Completes [quest] with its full reward; false (and nothing happens) when the account already had it. */
     fun complete(player: Player, quest: ShortQuest): Boolean {
-        if (isRewarded(player, quest)) return false
+        if (isRewarded(player, quest)) {
+            // N462 (07-11 test client, Beneath Cursed Sands): an account rewarded before (migration, an earlier run) that plays the
+            // last step again was left on that step for ever, with no message. The quest completes; the reward is not paid twice.
+            if (quest.stage(player) < quest.completedValue) {
+                quest.setStage(player, quest.completedValue)
+                gg.rsmod.plugins.content.quests.QuestStatus.sync(player)
+            }
+            return false
+        }
         player.attr[rewardedKey(quest)] = true
         val reward = quest.reward
         quest.setStage(player, quest.completedValue)

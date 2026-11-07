@@ -41,14 +41,15 @@ class ToaApmekenTests {
     @Test fun `private shaking keeps the real support ID clickable instead of sending an unresolvable fake object`() {
         ToaPuzzleFixture(1, ToaPath.APMEKEN, ::ApmekenRoom).use { f ->
             val viewer = f.players.single()
-            every { viewer.lastKnownRegionBase } returns viewer.tile.transform(-48, -48)
+            every { viewer.lastKnownRegionBase } returns viewer.tile.transform(-48, -48).let { gg.rsmod.game.model.Coordinate(it.x, it.z, it.height) }
             every { ToaIds.seq(9502) } returns 9001
             val tile = ToaMap.instance(f.map, ApmekenRoom.PILLARS.first())
             ToaPuzzleVisuals.pillar(viewer, tile, shaking = true)
             verify(exactly = 1) { viewer.write(match<LocAnimMessage> {
                 it.animation == 9001 && it.gameObject.id == 50000 + 45494 && it.gameObject.tile == tile
             }) }
-            verify(exactly = 0) { viewer.write(any<LocAddChangeMessage>()) }
+            // any<T>() matches every message (erasure): only a real LocAddChangeMessage may fail this.
+            verify(exactly = 0) { viewer.write(match { it is LocAddChangeMessage }) }
         }
     }
 

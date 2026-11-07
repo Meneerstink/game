@@ -80,7 +80,7 @@ object BeneathCursedSands : ShortQuest(
     override val steps =
         listOf(
             QuestStep(
-                npc = Npcs.MAISA,
+                npc = MAISA,
                 journal = listOf("Jamila slipped me a message. I should meet ${red("Maisa")} at her", "camp east of ${red("Sophanem")}."),
                 done = listOf("I met Maisa at her camp east of Sophanem."),
                 place = "Maisa's camp",
@@ -107,7 +107,7 @@ object BeneathCursedSands : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.MAISA,
+                npc = MAISA,
                 journal = listOf("I should go with ${red("Maisa")} to the excavation at the ${red("necropolis")}", "and defeat the ${red("Head Menaphite Guard")} (level 174)."),
                 done = listOf("I defeated the Head Menaphite Guard at the necropolis."),
                 place = "the necropolis",
@@ -138,7 +138,7 @@ object BeneathCursedSands : ShortQuest(
                 },
             ),
             QuestStep(
-                npc = Npcs.MAISA,
+                npc = MAISA,
                 journal = listOf("I should tell ${red("Maisa")} at her camp what I found", "at the necropolis."),
                 done = listOf("Maisa opened the way into the Tombs of Amascut."),
                 place = "Maisa's camp",
@@ -194,5 +194,9 @@ val HEAD_GUARD_TILE = Tile(3358, 2706, 1)
 
 /** Local ids of the OSRS imports (data/cfg/toa/ids.tsv): Head Menaphite Guard 11529, Keris partisan 25979, Circlet of water (uncharged) 26967. */
 val HEAD_MENAPHITE_GUARD: Int? get() = ToaIds.npc(11529)
+
+/** OSRS Maisa of Beneath Cursed Sands (npc 11474 BCS_MAISA_VIS = model 44185, head 44760; imported as the identical ToA Maisa 11807
+ *  TOA_MAISA_VIS). 07-11 test client: the 667 npc 5281 was the old Contact! Maisa (moustache, sunglasses). */
+val MAISA: Int get() = ToaIds.npc(11807) ?: Npcs.MAISA
 val KERIS_PARTISAN: Int? get() = ToaIds.item(25979)
 val CIRCLET_OF_WATER: Int? get() = ToaIds.item(26967)

@@ -1226,6 +1226,13 @@ abstract class Pawn(
         return if (this is Npc && this.smartPathfinding && !this.ignoresEntityCollision) {
             val (bodies, players) = occupiedTiles()
             BFSPathFindingStrategy(collision, bodies, players)
+        } else if (entityType.isPlayer && !copyChunks) {
+            // copyChunks only holds the CHUNK_VIEW_RADIUS chunks around the pawn: the wide player search would leave that copy.
+            BFSPathFindingStrategy(
+                collision,
+                maxDistance = BFSPathFindingStrategy.PLAYER_MAX_DISTANCE,
+                maxNodes = BFSPathFindingStrategy.PLAYER_MAX_NODES,
+            )
         } else if (entityType.isPlayer || (this is Npc && this.smartPathfinding)) {
             BFSPathFindingStrategy(
                 collision,
