@@ -13,6 +13,8 @@ object OsrsMapIconTable {
         mapOf(
             5 to 560, 8 to 563, 9 to 564, 12 to 567, 21 to 575, 28 to 582, 33 to 587, 36 to 590, 37 to 591, 40 to 594,
             41 to 595, 42 to 596, 53 to 607, 58 to 612, 65 to 618,
+            // N462 07-11 (square 13098 import): OSRS area 970 sprite 1504 = mapelement 612 (OsrsLocMapDataTool pixel proof diff 0,007).
+            970 to 612,
         )
 
     /** SOURCE_BLOCKED scenes: 22 is an empty OSRS frame, the rest have no 667 picture (nearest diff >= 0.11). */
