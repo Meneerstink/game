@@ -8,10 +8,14 @@ PlayerAttackRules.register(ToaEncounter::playerAttackRule)
 val encounters = listOf(
     Triple("akkha", AkkhaCombat, ToaEncounter.Definition(ToaBossNpcs.AKKHA, AkkhaCombat.STATS, AkkhaCombat::Session)),
     Triple("baba", BabaCombat, ToaEncounter.Definition(ToaBossNpcs.BABA, BabaCombat.STATS, BabaCombat::Session)),
+    Triple("kephri", KephriCombat, ToaEncounter.Definition(ToaBossNpcs.KEPHRI, KephriCombat.STATS, KephriCombat::Session)),
     Triple("zebak", ZebakCombat, ToaEncounter.Definition(ToaBossNpcs.ZEBAK, ZebakCombat.STATS, ZebakCombat::Session)),
 )
 encounters.forEach { (name, script, definition) ->
     ToaEncounter.definitions[name] = definition
+    if (ToaBossNpcs.local(definition.osrsNpc) == null) gg.rsmod.game.model.Trace.problem(gg.rsmod.game.model.Trace.Cat.COMBAT) {
+        "ToA encounter $name: root NPC ${definition.osrsNpc} has no import mapping; regenerate cfg/toa/ids.tsv before starting the room"
+    }
     script.ids.distinct().forEach { id ->
         set_combat_def(id, definition.stats.definition(object : ToaEncounterContext {
             override val players = emptyList<gg.rsmod.game.model.entity.Player>()
@@ -28,6 +32,7 @@ encounters.forEach { (name, script, definition) ->
 // Their encounter drives minions/hazards; suppress the generic NPC auto-retaliation loop.
 listOf(ToaBossNpcs.AKKHA_SHADOW, ToaBossNpcs.UNSTABLE_ORB, 11800, 11801, 11802, 11803,
     ToaBossNpcs.BABOON, 11782, 11783, 11784,
+    ToaBossNpcs.SWARM, ToaBossNpcs.SOLDIER, ToaBossNpcs.SPITTING, ToaBossNpcs.ARCANE, ToaBossNpcs.AGILE, 11728, 11729,
     ToaBossNpcs.ZEBAK_TAIL, 11735, 11736, 11737, 11738, 11741, 11742, 11743).mapNotNull(ToaBossNpcs::local).distinct().forEach { id ->
     on_npc_combat(npc = id) { }
 }
