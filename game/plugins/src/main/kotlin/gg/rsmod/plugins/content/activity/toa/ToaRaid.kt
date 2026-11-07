@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.instance.InstancedMap
+import gg.rsmod.plugins.api.ext.playJingle
 import gg.rsmod.plugins.content.combat.removeCombatTarget
 import java.util.UUID
 
@@ -291,6 +292,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
                 stats.cleared(run.key, world.currentCycle)
+                // Jingles (OSRS Wiki Test of Nobility / Tomb Cleared (Tombs of Amascut), cache ids 295/296 -> our index 11 groups 488/489,
+                // OsrsJingleImportTool): a challenge room cleared plays Test of Nobility, a defeated boss Tomb Cleared - once, for the members there.
+                players().forEach { it.playJingle(if (run.key.boss) JINGLE_TOMB_CLEARED else JINGLE_TEST_OF_NOBILITY) }
                 stats.credit(memberObjects(), scope.spawned)
                 ToaChest.creditRoom(this, scope.spawned)
                 room.clear(run); scope.close(); rooms.remove(run.generation)
@@ -356,6 +360,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         /** OSRS Honey locust 27351 (stackable). */
         const val HONEY_LOCUST = 27351
         const val LOCUSTS_PER_WIPE = 2
+        const val JINGLE_TEST_OF_NOBILITY = 488
+        const val JINGLE_TOMB_CLEARED = 489
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
         /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
