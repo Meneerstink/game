@@ -192,6 +192,9 @@ object OsrsFxImportTool {
             "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
             // N462 Path of Scabaras falling roof (ChatGPT-B, RuneLiteSequenceSolver observation): SpotanimID MM_ROOFCOLLAPSE 302.
             "toa-scabaras-fx" to listOf(302),
+            // N462 Tumeken's shadow built-in spell (RuneLite SpotanimID TUMEKENS_SHADOW_CASTING 2125 / _TRAVEL 2126 / _IMPACT 2127; the cast
+            // animation TOA_SPELL_TUMEKEN01_CAST01 9543 is in SEQ_BATCHES under the same name).
+            "toa-shadow" to listOf(2125, 2126, 2127),
             "toa-spot" to
                 listOf(
                     355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
@@ -331,6 +334,8 @@ object OsrsFxImportTool {
             "n34seq" to listOf(420, 415, 403, 397, 410, 383, 3176, 7516, 7517, 424), // 424 bows/thrown: only an npc-rig copy existed
             // OSRS max cape emote, player side: MAX_CAPE_PLAYER_ANIM 7121 (the spotanim is in BATCHES under the same name).
             "maxcapeemote" to listOf(7121),
+            // N462 Tumeken's shadow cast, RuneLite AnimationID TOA_SPELL_TUMEKEN01_CAST01 9543 (spotanims: BATCHES "toa-shadow").
+            "toa-shadow" to listOf(9543),
             // OSRS pet Beef (Interact -> Emote, OSRS Wiki Beef): the sniff COWBOSS_PET_EMOTE 13801 and, with the rare whirlwind,
             // COWBOSS_PET_EMOTE_CHARGE 13803 (5.16 s, the length of the whirlwind's own sequence 13802). RuneLite gameval AnimationID.
             "pet-beef" to listOf(13801, 13803),
