@@ -46,7 +46,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         loc(HetIds.CASTER, layout.caster.sw, rotation(layout.casterFacing))?.let { scope.spawn(it) }
         loc(HetIds.TARGET, layout.target.sw, 0)?.let { scope.spawn(it) }
         HetIds.npc(HetIds.SEAL)?.let { id ->
-            val npc = Npc(id, ToaMap.instance(raid.map, tile(layout.seal.sw)), raid.world)
+            val npc = Npc(id, tile(layout.seal.sw), raid.world)
             npc.respawnOverride = false
             npc.walkRadius = 0
             if (scope.spawn(npc)) seal = npc
@@ -246,7 +246,8 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         val r = run ?: return
         val b = board ?: return
         seal?.let { raid.world.remove(it) }; seal = null
-        loc(HetIds.SEAL_BROKEN, b.layout.seal.sw, 0)?.let { raid.scope(r)?.spawn(it) }
+        // Broken seal stays after the clear (Het's Seal 'Broken seal' 45489); outside the room scope, released with the instance.
+        loc(HetIds.SEAL_BROKEN, b.layout.seal.sw, 0)?.let { raid.world.spawn(it) }
         r.clear(raid.world.currentCycle)
     }
 
