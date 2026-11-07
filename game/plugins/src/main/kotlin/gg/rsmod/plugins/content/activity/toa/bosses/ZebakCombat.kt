@@ -72,9 +72,16 @@ object ZebakCombat : CombatScript() {
         var onPlatform: (Tile) -> Boolean = { it.height == centre.height && it.x in centre.x - 8..centre.x + 8 && it.z in centre.z - 8..centre.z + 8 }
         override fun configure() {
             super.configure()
+            // OSRS cache2686 models 46399/46400 share one origin: body z=-1049..44, tail z=47..1412.
+            // Both NPCs are 9x9; moving the tail by nine tiles detaches it. The fight platform is east of that origin
+            // (map15700; Wiki "Tombs of Amascut - Fighting Zebak.png"), so both halves face east throughout the fight.
+            npc.setSpawnFacing(Direction.EAST)
+            npc.static = true
             // cache2686 map15700 loc45509: (3933,5397,rot0) and (3933,5419,rot2).
             placeObject(45509, centre.transform(-1, -11)); placeObject(45509, centre.transform(-1, 11), 2)
-            tail = spawn(ToaBossNpcs.ZEBAK_TAIL, npc.spawnTile.transform(0, 9), STATS.copy(hp = 1))?.also { t ->
+            tail = spawn(ToaBossNpcs.ZEBAK_TAIL, npc.spawnTile, STATS.copy(hp = 1))?.also { t ->
+                t.setSpawnFacing(Direction.EAST)
+                t.static = true
                 t.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
             }
         }
