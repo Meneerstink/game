@@ -10,3 +10,11 @@ package gg.rsmod.plugins.content.areas.spawns
  * (459 green / 460 yellow / 461 orange; 12003 duplicates 459). Direction and walk radius are not supplied by the map pins.
  * The import handoff and cache comparisons are in team/dossiers/N462.txt; no guessed spawns until those gaps are resolved.
  */
+
+// N462 07-11 (Claude, OsrsNpcImportTool 'necropolis'): the four OSRS Desert Lizards west of Ullek at their Wiki map pins
+// (Desert Lizard oldid=15389340). Local 15200/15201/15202 = OSRS 459 green / 460 yellow / 461 orange. ONZEKER: the pins do not say
+// which colour stands where (one of each + green again); walkRadius 5, default facing.
+spawn_npc(npc = 15200, x = 3346, z = 2800, height = 0, walkRadius = 5)
+spawn_npc(npc = 15201, x = 3348, z = 2803, height = 0, walkRadius = 5)
+spawn_npc(npc = 15202, x = 3344, z = 2804, height = 0, walkRadius = 5)
+spawn_npc(npc = 15200, x = 3352, z = 2805, height = 0, walkRadius = 5)
