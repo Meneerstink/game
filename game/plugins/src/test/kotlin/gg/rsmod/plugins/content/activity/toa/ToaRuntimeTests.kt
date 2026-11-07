@@ -172,6 +172,9 @@ class ToaRuntimeTests {
             every { p.isDead() } answers { uid in dead }
             every { p.teleportTo(any()) } answers { tiles[uid] = firstArg(); Unit }
             val definitions = mockk<DefinitionSet>(relaxed = true)
+            // Real ItemDefs: a respawn after a wipe now adds Honey locusts (owner 07-11 20:5x, 2 per player).
+            every { definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, any()) } answers { gg.rsmod.game.fs.def.ItemDef(secondArg<Int>()) }
+            every { definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, any()) } answers { gg.rsmod.game.fs.def.ItemDef(secondArg<Int>()) }
             every { p.inventory } returns ItemContainer(definitions, 28, ContainerStackType.NORMAL)
             every { p.bank } returns ItemContainer(definitions, 800, ContainerStackType.STACK)
             tiles[uid] = ToaMap.LOBBY
