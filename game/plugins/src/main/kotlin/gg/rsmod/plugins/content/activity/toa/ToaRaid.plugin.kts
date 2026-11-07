@@ -57,7 +57,7 @@ mapOf(ToaLocs.KEPHRI_CRYSTAL to ToaPath.SCABARAS, ToaLocs.AKKHA_CRYSTAL to ToaPa
 
 on_obj_option(ToaLocs.WARDENS_CRYSTAL, "Use") { ToaLobby.of(world).raid(player.uid)?.crystal(player, null) }
 
-// Closed root has no option until Claude imports 46168. Numeric binding is ready for the corrected cache definition.
+// The closed root 46167 has no options in cache2686; ToaScene swaps in the imported open door 46168 (Enter/Quick-Enter) once all paths are done.
 on_obj_option(ToaLocs.WARDENS, 1) { ToaLobby.of(world).raid(player.uid)?.enterWardens(player) }
 on_obj_option(ToaLocs.WARDENS, 2) { ToaLobby.of(world).raid(player.uid)?.enterWardens(player) }
 ToaIds.loc(46168)?.let { id ->

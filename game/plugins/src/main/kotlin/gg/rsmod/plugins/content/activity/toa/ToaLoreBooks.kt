@@ -142,7 +142,8 @@ object ToaLoreBooks {
 
     /** 'Always' x1 from the boss (item Drop sources): on the ground under the boss npc of the room (for the Wardens the P3 Warden with
      *  the lowest hitpoints = the one killed). Public in the instance; ONZEKER: whether OSRS drops one per player is not published. */
-    fun drop(world: gg.rsmod.game.model.World, key: ToaRoomKey, spawned: List<gg.rsmod.game.model.entity.Npc>) {
+    fun drop(world: gg.rsmod.game.model.World, key: ToaRoomKey, spawned: List<gg.rsmod.game.model.entity.Npc>,
+             players: List<gg.rsmod.game.model.entity.Player>) {
         val osrs = if (key.wardens) WARDENS else if (key.boss) key.path?.let(CAPTURE::get) else null
         val id = osrs?.let(ToaIds::item) ?: return
         val bosses = listOf(gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.AKKHA, gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.ZEBAK,
@@ -150,6 +151,11 @@ object ToaLoreBooks {
             gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.ELIDINIS_P3, gg.rsmod.plugins.content.activity.toa.bosses.ToaBossNpcs.TUMEKEN_P3)
             .mapNotNull(ToaIds::npc).toSet()
         val boss = spawned.filter { it.id in bosses }.minByOrNull { it.getCurrentLifepoints() } ?: return
-        world.spawn(gg.rsmod.game.model.entity.GroundItem(id, 1, gg.rsmod.game.model.Tile(boss.getCentreTile())))
+        // Testclient round 10: Zebak's centre is in the walk-blocked moat ('I can't reach that!'). A boss standing on blocked tiles
+        // drops at the nearest player in the room instead (no OSRS tile published; the book must stay takeable).
+        val centre = gg.rsmod.game.model.Tile(boss.getCentreTile())
+        val reachable = !world.collision.isClipped(centre)
+        val tile = if (reachable) centre else players.minByOrNull { it.tile.getDistance(centre) }?.let { gg.rsmod.game.model.Tile(it.tile) } ?: centre
+        world.spawn(gg.rsmod.game.model.entity.GroundItem(id, 1, tile))
     }
 }

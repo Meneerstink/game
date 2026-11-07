@@ -68,11 +68,13 @@ ToaInterfaces.of(ToaInterfaces.INVOCATIONS)?.let { iface ->
     // Owner 07-11 21:5x: no invocations (decision A, 3 modes) -> 'Read' shows the party's chosen mode + raid level instead of the
     // invocation list. ONZEKER: both lines are our own wording (no OSRS text for modes exists).
     on_obj_option(ToaLocs.INVOCATION_BOARD, "Read") {
-        val party = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(world).party(player.uid)
+        val lobby = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(world)
+        // The party's settings, or those of the raid it started (testclient round 10: a started party read 'not in a party').
+        val settings = lobby.party(player.uid)?.settings ?: lobby.raid(player.uid)?.settings
         player.queue {
-            if (party == null) messageBox("You are not in a party.")
+            if (settings == null) messageBox("You are not in a party.")
             else {
-                val level = party.settings.raidLevel
+                val level = settings.raidLevel
                 messageBox("${gg.rsmod.plugins.content.activity.toa.core.ToaMode.of(level).label} mode - Raid level $level")
             }
         }

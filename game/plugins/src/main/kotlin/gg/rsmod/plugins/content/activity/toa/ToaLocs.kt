@@ -12,7 +12,7 @@ object ToaLocs {
     const val APMEKEN = 65273 // 46158
     const val CRONDIS = 65274 // 46161
     const val HET = 65275 // 46164
-    const val WARDENS = 65276 // 46167: closed variant. TODO Claude import open source 46168 (Enter/Quick-Enter).
+    const val WARDENS = 65276 // 46167: closed variant; the open 46168 (Enter/Quick-Enter, local 66126) is placed by ToaScene once wardensUnlocked.
     const val KEPHRI_ENTRY = 64686 // 45337
     const val AKKHA_ENTRY = 64588 // 45131
     const val BABA_ENTRY = 64751 // 45500

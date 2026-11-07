@@ -111,6 +111,22 @@ object WardensCombat : CombatScript() {
         private var removedRows = 0
         private var enrageStart = 0
         private val floor = mutableMapOf<Tile, () -> Unit>()
+        /** P3 floor tiles that are blocked terrain in map15696 (the static floor is only z5157..5165) and walkable while the
+         *  encounter's floor stands (testclient round 10: 'I can't reach that!' - no route on the whole P3 floor). */
+        private val openedFloor = mutableSetOf<Tile>()
+        private fun setFloorWalkable(tile: Tile, walkable: Boolean) {
+            val world = npc.world
+            if (walkable) {
+                val blocked = gg.rsmod.game.model.Direction.NESW.none {
+                    world.collision.canTraverse(tile = tile, direction = it, projectile = false, water = false)
+                }
+                if (!blocked || !openedFloor.add(tile)) return
+            } else if (!openedFloor.remove(tile)) return
+            val u = gg.rsmod.game.model.collision.CollisionUpdate.Builder()
+            u.setType(if (walkable) gg.rsmod.game.model.collision.CollisionUpdate.Type.REMOVE else gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD)
+            u.putTile(tile, false, *gg.rsmod.game.model.Direction.NESW)
+            world.collision.applyUpdate(u.build())
+        }
         private val lightningStruck = mutableMapOf<Tile, Int>()
         private var amascut: Npc? = null
         private val uncreditedP2 = mutableSetOf<Npc>()
@@ -345,7 +361,7 @@ object WardensCombat : CombatScript() {
                 val z = centre.z + 7 - removedRows
                 for (x in centre.x - ARENA_HALF_WIDTH..centre.x + ARENA_HALF_WIDTH) {
                     val t = Tile(x, z, origin.height)
-                    floor.remove(t)?.invoke(); floor[t] = placeObject(45649, t)
+                    floor.remove(t)?.invoke(); floor[t] = placeObject(45649, t); setFloorWalkable(t, false)
                 }
                 removedRows++
             }
@@ -558,7 +574,7 @@ object WardensCombat : CombatScript() {
             npc.faceTile(centre)
             // The room's instance already contains square15696; no allocation or raid-skeleton mutation is needed.
             for (x in -ARENA_HALF_WIDTH..ARENA_HALF_WIDTH) for (z in -8..7) {
-                val tile = centre.transform(x, z); floor[tile] = placeObject(45643, tile)
+                val tile = centre.transform(x, z); floor[tile] = placeObject(45643, tile); setFloorWalkable(tile, true)
             }
             // Phantom Wiki centre3937,5142,size8(cache): south-west3933,5138, behind the north-facing Warden.
             amascut = spawn(11767, if (raidRoom) fromSource(Tile(3933, 5138, 1)) else origin.transform(-1, -7), P3_STATS.copy(hp = 1), path = false, group = false)?.also { a ->
