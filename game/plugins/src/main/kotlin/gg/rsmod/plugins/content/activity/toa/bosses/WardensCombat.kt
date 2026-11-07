@@ -120,6 +120,13 @@ object WardensCombat : CombatScript() {
         fun chargingTile(warden: Warden): Tile = fromSource(Tile(
             if (warden == Warden.ELIDINIS) 3792 else 3821, 5152, initialCentre.height))
 
+        /** Strategies1474: the active Warden comes out to pursue players. Cache2686 loc45605 blocks the charging plinth
+         * (west3792..3796 / east3820..3824). Keeping P2 there blocks even ranged LOS and ejects an unreachable core.
+         * T02: these are the nearest complete5x5 footprints on the room floor x3797..3819, not measured OSRS landing pins.
+         */
+        fun phaseTwoTile(warden: Warden): Tile = fromSource(Tile(
+            if (warden == Warden.ELIDINIS) 3797 else 3815, 5152, initialCentre.height))
+
         fun transferToPhaseThree() {
             val party = players().toList() // Snapshot before moving root: eligibility checks use its plane.
             origin = fromSource(P3_ORIGIN); centre = fromSource(P3_CENTRE)
@@ -478,12 +485,11 @@ object WardensCombat : CombatScript() {
             // ONZEKER T19: ties use the existing Tumeken default; all unequal choices follow detailed Strategies.
             if (westBlocked != eastBlocked) phaseTwoWarden = phaseTwo(westBlocked > eastBlocked)
             phaseThreeWarden = opposite(phaseTwoWarden)
-            val risenTile = charging[phaseTwoWarden]?.let { Tile(it.tile) }
             charging.values.toList().forEach { remove(it) }; charging.clear()
             children.toList().forEach { remove(it) }
             ToaBossNpcs.local(11752)?.let { rootNpc.setTransmogId(it) }
             activate(if (phaseTwoWarden == Warden.ELIDINIS) ToaBossNpcs.ELIDINIS_P2 else ToaBossNpcs.TUMEKEN_P2,
-                risenTile ?: origin, if (phaseTwoWarden == Warden.ELIDINIS) ELIDINIS_P2_STATS else TUMEKEN_P2_STATS)
+                phaseTwoTile(phaseTwoWarden), if (phaseTwoWarden == Warden.ELIDINIS) ELIDINIS_P2_STATS else TUMEKEN_P2_STATS)
             animate(9663); lastShieldHit = tick; nextAttack = tick + 13; phaseChanged?.invoke(phase) // measured wake9663=13ticks.
         }
         fun exposeCore() {
