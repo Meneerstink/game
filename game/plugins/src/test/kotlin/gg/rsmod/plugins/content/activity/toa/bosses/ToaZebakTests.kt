@@ -6,6 +6,30 @@ import gg.rsmod.game.model.combat.CombatClass
 import kotlin.test.*
 
 class ToaZebakTests {
+    @Test fun `body and tail share the OSRS model origin and face the eastern platform in translated raids`() {
+        // Cache2686 NPC11730/11731 both size9, models46399/46400 share origin (adjacent z bounds44/47).
+        // Map15700 and the Wiki fighting screenshot place the platform to their east, not their south.
+        for (origin in listOf(Tile(3917, 5404), Tile(10397, 284))) {
+            val f = ToaTestFixture()
+            io.mockk.every { f.npc.spawnTile } returns origin
+            io.mockk.every { f.npc.tile } returns origin
+            io.mockk.every { f.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.NpcDef(secondArg()).apply { size = 9 }
+            }
+            val s = ZebakCombat.Session(f.npc, ToaTestContext())
+            s.configure()
+            val tail = assertNotNull(s.tail)
+            assertEquals(origin, tail.spawnTile)
+            assertEquals(9, tail.getSize())
+            assertEquals(Direction.EAST, tail.faceDirection)
+            assertTrue(tail.static)
+            io.mockk.verify(exactly = 1) { f.npc.setSpawnFacing(Direction.EAST) }
+            io.mockk.verify(exactly = 1) { f.npc.static = true }
+            s.close()
+            assertFalse(tail.isSpawned(), "reset must remove the joined tail with the body")
+        }
+    }
+
     @Test fun `water crocodiles use NPC11741 combat data rather than the Crondis NPC11705 infobox`() {
         // Immutable cache2686 npc-defs.json:11741, op74=250/op76=70/params14=2/params10=0.
         val f = ToaTestFixture(); val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
