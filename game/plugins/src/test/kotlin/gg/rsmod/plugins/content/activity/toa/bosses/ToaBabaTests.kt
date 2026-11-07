@@ -18,7 +18,7 @@ class ToaBabaTests {
         every { p.isOnline } returns true; every { p.isDead() } returns false; every { p.tile } returns Tile(3210, 3206)
         val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
         s.cycle()
-        io.mockk.verify { f.npc.moveTo(Tile(3216, 3200)) }
+        io.mockk.verify { f.npc.moveTo(Tile(3215, 3200)) } // throne dais SW (origin +15, 07-11 testclient: borders the floor)
         io.mockk.verify { p.teleportTo(Tile(3192, 3206)) }
         assertTrue(s.rolling)
         s.close()
