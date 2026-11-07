@@ -83,6 +83,9 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             val token = memory.show(sequence) ?: return false
             layout.memoryTiles.forEach { unplace(it, 10) }
             scope.queue {
+                //WorldQueueTaskSet cycles a new coroutine's first wait immediately. Enter playback after that startup step,
+                //otherwise flashCycles=1 adds AND removes the first plate in one tick: players see only4 of the5 flashes.
+                wait(1)
                 for (cell in sequence) {
                     if (!live || memory.generation != token) return@queue
                     place(ref.memoryShownLoc.value, layout.memoryTiles[cell], 10)
