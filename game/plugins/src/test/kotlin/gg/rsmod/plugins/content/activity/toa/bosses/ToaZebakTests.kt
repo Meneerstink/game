@@ -6,6 +6,21 @@ import gg.rsmod.game.model.combat.CombatClass
 import kotlin.test.*
 
 class ToaZebakTests {
+    @Test fun `water crocodiles use NPC11741 combat data rather than the Crondis NPC11705 infobox`() {
+        // Immutable cache2686 npc-defs.json:11741, op74=250/op76=70/params14=2/params10=0.
+        val f = ToaTestFixture(); val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { p.isOnline } returns true; io.mockk.every { p.isDead() } returns false
+        val s = ZebakCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        io.mockk.every { p.tile } returns s.centre.transform(9, 0)
+        s.enterWater(p, p.tile)
+        val croc = s.children.single()
+        assertEquals(ToaBossNpcs.local(11741), croc.id)
+        assertEquals(250, croc.stats.getCurrentLevel(0)); assertEquals(70, croc.stats.getCurrentLevel(1))
+        assertEquals(2, croc.combatDef.attackSpeed); assertEquals(0, croc.equipmentBonuses[11])
+        assertEquals(8.0, gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula.getMaxHit(croc, p, 1.0, 1.0))
+        assertEquals(8, ZebakCombat.CROC_MAX_HIT)
+        s.close(); assertFalse(croc.isSpawned())
+    }
     @Test fun `autonomous director attacks at published intervals and queues threshold special only once`() {
         val f = ToaTestFixture()
         io.mockk.every { f.npc.getMaximumLifepoints() } returns 580

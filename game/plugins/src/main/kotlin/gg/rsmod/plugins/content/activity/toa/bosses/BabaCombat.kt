@@ -198,7 +198,9 @@ object BabaCombat : CombatScript() {
             if (rolling) return
             val live = players()
             val tank = target?.takeIf { it in live } ?: live.firstOrNull() ?: return
-            target = tank; npc.facePawn(tank); follow(tank)
+            target = tank
+            leaveThroneFor(tank)
+            npc.facePawn(tank); follow(tank)
             underTicks = if (distance(tank.tile) == 0) underTicks + 1 else 0
             if (underTicks >= 2 && tick >= nextAttack) {
                 // ONZEKER T16: accelerated stomp uses measured2tick9742clip,1tick warning, published base24 max.
@@ -215,6 +217,21 @@ object BabaCombat : CombatScript() {
                 // Strategies1338: subsequent aggro is based on current HP; stable room order resolves equal HP (ONZEKER T16).
                 target = live.minByOrNull { it.getCurrentLifepoints() }
             }
+        }
+        private fun leaveThroneFor(tank: Player) {
+            if (!sameTile(npc.tile, origin.transform(15, 0)) || meleeReach(tank.tile)) return
+            // B60/S1350: after Rolling Stones Ba-Ba resumes chasing/attacking. The entire throne dais is
+            // walk-blocked in cache2686 map15188, so an ordinary walkTo cannot even take its first step.
+            // ONZEKER T02: exact OSRS dismount pin is unpublished. Use the nearest complete walkable body
+            // immediately west of that dais, clear of players; subsequent chasing retains normal collision.
+            val size = npc.getSize()
+            if (npc.world.collision.canBodyStep(npc.tile, size, size, Direction.WEST, water = false)) return
+            val live = players()
+            val landing = (1..size).flatMap { x -> (-size..size).map { z -> npc.tile.transform(-x, z) } }
+                .filter { tile -> npc.world.collision.canBodyStep(tile, size, size, Direction.WEST, water = false) &&
+                    live.none { overlaps(tile, size, it.tile, 1) } }
+                .minByOrNull { abs(it.x - npc.tile.x) + abs(it.z - npc.tile.z) } ?: return
+            npc.stopMovement(); npc.moveTo(landing)
         }
         /** One fixed target tile per player, captured at cast; not a homing falling rock. */
         fun rockfall(impactDelay: Int, baseDamage: Int, debrisTiles: List<Tile>) {

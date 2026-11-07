@@ -388,7 +388,8 @@ object WardensCombat : CombatScript() {
                     val threshold = maxOf(1, npc.getMaximumLifepoints() / 20)
                     var remaining = npc.getCurrentLifepoints()
                     hit.hitmarks.forEach { mark ->
-                        if (!enraged && remaining - mark.damage < threshold) {
+                        // Strategies1563: enrage starts upon REACHING five percent, including an exact-boundary hit.
+                        if (!enraged && remaining - mark.damage <= threshold) {
                             mark.damage = (remaining - threshold).coerceAtLeast(0)
                             enterEnrage(preserveIncoming = true)
                         }
