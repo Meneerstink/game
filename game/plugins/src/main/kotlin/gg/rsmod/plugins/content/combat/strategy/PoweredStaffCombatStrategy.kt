@@ -44,6 +44,13 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         val impactHeight = base.impactGfx?.height ?: 0
         val animation = CAST_WAVE_STAFF
         return when {
+            // N462 Tumeken's shadow (batch toa-shadow): RuneLite SpotanimID TUMEKENS_SHADOW_CASTING 2125 / _TRAVEL 2126 / _IMPACT 2127,
+            // AnimationID TOA_SPELL_TUMEKEN01_CAST01 9543 - local ids from the ToA id table once imported (none shown until then).
+            staff.shadow -> {
+                val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
+                Look(Graphic(ids.spot(2125) ?: -1, castHeight), ids.spot(2126) ?: -1, Graphic(ids.spot(2127) ?: -1, impactHeight),
+                    ids.seq(9543) ?: animation)
+            }
             // Revenant sceptres (batch revfx, gameval SPELLS_THAMMARON01_TRAVEL01 2340 / SPELLS_VETION01_TRAVEL 2337): the spell
             // projectile only - no cast or impact spotanim is named for them (ADAPTED: none played).
             staff == PoweredStaves.Staff.THAMMARON -> Look(Graphic(-1, 0), OsrsGfx.THAMMARON_TRAVEL, Graphic(-1, 0), animation)
@@ -56,7 +63,8 @@ object PoweredStaffCombatStrategy : CombatStrategy {
 
     override fun getAttackRange(pawn: Pawn): Int {
         val player = pawn as? Player ?: return PoweredStaves.ATTACK_RANGE
-        val range = PoweredStaves.ATTACK_RANGE + if (PoweredStaves.isLongrange(player)) PoweredStaves.LONGRANGE_EXTRA_RANGE else 0
+        val base = if (PoweredStaves.wielded(player)?.shadow == true) PoweredStaves.SHADOW_ATTACK_RANGE else PoweredStaves.ATTACK_RANGE
+        val range = base + if (PoweredStaves.isLongrange(player)) PoweredStaves.LONGRANGE_EXTRA_RANGE else 0
         return minOf(10, range)
     }
 
@@ -95,7 +103,7 @@ object PoweredStaffCombatStrategy : CombatStrategy {
         player.animate(look.castAnimation)
 
         val projectile = player.createProjectile(target, gfx = look.projectile, type = ProjectileType.MAGIC)
-        world.spawn(projectile)
+        if (look.projectile >= 0) world.spawn(projectile)
         val hitDelay = MagicCombatStrategy.getHitDelay(player.getCentreTile(), target.getCentreTile())
         // Confliction gauntlets: a powered staff's next attack on the same enemy after a miss rolls accuracy twice.
         val landHit =

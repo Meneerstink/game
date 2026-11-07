@@ -59,6 +59,8 @@ object PoweredStaves {
          * activated at 0 ether, may attack players, and is charged / uncharged by revenant_weapons.plugin.kts.
          */
         val revenant: Boolean = false,
+        /** N462 Tumeken's shadow: its own passive (equipment magic attack and damage x3, x4 inside ToA) and range/look. */
+        val shadow: Boolean = false,
     ) {
         SEAS(
             Items.TRIDENT_OF_THE_SEAS, Items.UNCHARGED_TRIDENT, Items.TRIDENT_OF_THE_SEAS_FULL, 2_500, 75,
@@ -90,6 +92,15 @@ object PoweredStaves {
             Items.ACCURSED_SCEPTRE, Items.ACCURSED_SCEPTRE_U, null, RevenantWeapons.MAX_ETHER, 70,
             listOf(Item(Items.REVENANT_ETHER, 1)), setOf(Items.REVENANT_ETHER), -6, 0.0, revenant = true,
         ),
+
+        // N462 OSRS Wiki Tumeken's shadow: "requiring 85 Magic to wield", "charged with soul and chaos runes, holding up to 20,000
+        // charges"; each cast 2 soul + 5 chaos; uncharge "getting all of their runes back"; max hit floor(Magic/3 + 1). ToA imports
+        // (OSRS 27275 charged, 27277 uncharged -> ToaIds).
+        SHADOW(
+            gg.rsmod.plugins.content.activity.toa.ToaIds.item(27275) ?: -2, gg.rsmod.plugins.content.activity.toa.ToaIds.item(27277) ?: -3,
+            null, 20_000, 85, listOf(Item(Items.SOUL_RUNE, 2), Item(Items.CHAOS_RUNE, 5)), setOf(Items.SOUL_RUNE, Items.CHAOS_RUNE), 1, 0.0,
+            shadow = true,
+        ),
         ;
 
         val ids: Set<Int> get() = setOfNotNull(charged, uncharged, full)
@@ -101,6 +112,23 @@ object PoweredStaves {
     fun chargedTierOf(itemId: Int): Staff? = Staff.values().firstOrNull { it.charged == itemId || it.full == itemId }
 
     const val ATTACK_RANGE = 7
+
+    /** Tumeken's shadow: "attack range is 8" (OSRS Wiki). */
+    const val SHADOW_ATTACK_RANGE = 8
+
+    /**
+     * Tumeken's shadow passive (OSRS Wiki): the magic attack bonus and magic damage of the worn equipment "multiplied by three (four within
+     * the Tombs of Amascut), capped at a total of 100% magic damage"; built-in spell only, and "the multiplier does not apply" in PvP.
+     */
+    fun shadowMultiplier(pawn: Pawn, target: Pawn?): Int {
+        val player = pawn as? Player ?: return 1
+        if (wielded(player)?.shadow != true || !usingBuiltInSpell(player) || target is Player) return 1
+        val inToa = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(player.world).raid(player.uid)?.contains(player) == true
+        return if (inToa) 4 else 3
+    }
+
+    /** Magic damage cap of the shadow passive: 100 % (the bonus slot holds tenths of a percent). */
+    const val SHADOW_DAMAGE_CAP = 1000
 
     /** "Combat Options" / osrsbox stance data: Longrange extends the attack range by 2. */
     const val LONGRANGE_EXTRA_RANGE = 2

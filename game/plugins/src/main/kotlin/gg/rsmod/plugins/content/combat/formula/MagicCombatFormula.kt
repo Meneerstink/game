@@ -153,8 +153,11 @@ object MagicCombatFormula : CombatFormula {
 
             // OSRS Wiki "Maximum magic hit": ⌊⌊Base + Gauntlets + Charge⌋ × (1 + Visible bonuses + Void + Prayer)⌋ -
             // the percentages add up before multiplying. The player bonus slot holds tenths of a percent.
+            // N462 Tumeken's shadow: the worn magic damage x3 (x4 in ToA), at most 100 % (PoweredStaves.shadowMultiplier).
+            val shadow = gg.rsmod.plugins.content.items.osrs.PoweredStaves.shadowMultiplier(pawn, target)
+            val worn = if (shadow > 1) minOf(pawn.getMagicDamageBonus() * shadow, gg.rsmod.plugins.content.items.osrs.PoweredStaves.SHADOW_DAMAGE_CAP) else pawn.getMagicDamageBonus()
             val additive =
-                pawn.getMagicDamageBonus() / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn) +
+                worn / 1000.0 + getEliteVoidMagicDamage(pawn) + getPrayerMagicDamage(pawn) +
                     gg.rsmod.plugins.content.items.osrs.SmokeStaves.magicDamageBonus(pawn, spell) +
                     gg.rsmod.plugins.content.items.osrs.VirtusRobes.ancientMagicksBonus(pawn, spell)
             val baseMax = Math.floor(hit)
@@ -219,7 +222,8 @@ object MagicCombatFormula : CombatFormula {
             } else {
                 0.0
             }
-        val b = getEquipmentAttackBonus(pawn)
+        // N462 Tumeken's shadow: the worn magic attack bonus x3 (x4 in ToA), negative bonuses too (OSRS Wiki).
+        val b = getEquipmentAttackBonus(pawn) * gg.rsmod.plugins.content.items.osrs.PoweredStaves.shadowMultiplier(pawn, target)
 
         var maxRoll = a * (b + 64.0)
         if (pawn is Player) {
