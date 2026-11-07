@@ -834,7 +834,14 @@ object InterfaceModelReferences {
             archive.fileIds().forEach { slot ->
                 val bytes = archive.file(slot)?.data ?: return@forEach
                 components++
-                val modelId = InterfaceHookProbeTool.componentModelId(bytes)
+                // N462 07-11: one component the 667 Component.decode port cannot read to its end must not stop the whole census (it
+                // stopped the Wardens core import); report it so the interface itself is checked in the client.
+                val modelId = try {
+                    InterfaceHookProbeTool.componentModelId(bytes)
+                } catch (e: IndexOutOfBoundsException) {
+                    println("PROBLEM census: interface $interfaceId component $slot undecodable (${bytes.size} bytes): ${e.message}")
+                    -1
+                }
                 if (modelId != -1) record(modelId, "interface_model")
             }
         }
