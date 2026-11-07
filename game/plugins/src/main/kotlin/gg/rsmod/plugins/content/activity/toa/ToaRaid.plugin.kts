@@ -42,9 +42,9 @@ arrayOf("Pass", "Quick-Pass").forEach { option ->
 mapOf(ToaLocs.KEPHRI_CRYSTAL to ToaPath.SCABARAS, ToaLocs.AKKHA_CRYSTAL to ToaPath.HET,
     ToaLocs.BABA_CRYSTAL to ToaPath.APMEKEN, ToaLocs.ZEBAK_CRYSTAL to ToaPath.CRONDIS).forEach { (id, path) ->
     arrayOf("Use", "Quick-Use").forEach { option ->
-        // <boss>_teleport (cache2686 loc.sym): the crystal in the room's entrance takes the party over the arena's invisible wall;
-        // usable from up to 6 tiles in line of sight (the crystal is on the wall line).
-        on_obj_option(id, option, lineOfSightDistance = 6) { ToaLobby.of(world).raid(player.uid)?.crystal(player, path) }
+        // <boss>_teleport (cache2686 loc.sym): the crystal in the room's entrance takes the party over the arena's invisible wall.
+        // Plain adjacent reach: a line-of-sight range failed on Akkha's solid 2x2 crystal ('I can't reach that!', 07-11 testclient).
+        on_obj_option(id, option) { ToaLobby.of(world).raid(player.uid)?.crystal(player, path) }
     }
 }
 

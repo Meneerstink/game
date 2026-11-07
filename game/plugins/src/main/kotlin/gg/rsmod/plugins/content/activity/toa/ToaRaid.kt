@@ -62,9 +62,16 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         scene?.refresh()
         player.teleportTo(ToaMap.instance(map, tile))
         if (run.key.boss) ToaRecovery.bossEntry(player)
-        // Combat attachment sees the player in the correct instance/plane, never the previous room.
-        if (started.add(run.generation)) rooms.getValue(run.generation).first.start(run)
+        // Combat attachment sees the player in the correct instance/plane, never the previous room. A walled arena starts at its
+        // crystal (07-11 testclient: Kephri threw and froze players in the entrance before they could reach the crystal).
+        if (!waitsForCrystal(run.key)) startRoom(run)
         return true
+    }
+
+    private fun waitsForCrystal(key: ToaRoomKey) = key.boss && key.path in ARENA_ENTRY
+
+    private fun startRoom(run: ToaRoomRun) {
+        if (started.add(run.generation)) rooms.getValue(run.generation).first.start(run)
     }
 
     fun enterChallenge(player: Player, path: ToaPath): Boolean {
@@ -119,6 +126,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 val run = progress.current ?: return false
                 if (run.key != ToaRoomKey(path, true) || !participants.alive(run, player.uid)) return false
                 player.teleportTo(ToaMap.instance(map, arena))
+                startRoom(run)
                 return true
             }
             player.teleportTo(ToaMap.instance(map, ToaMap.NEXUS))
@@ -203,7 +211,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         } ?: return
         val tile = if (key.wardens) WARDENS_ENTRY else if (key.boss) key.path!!.bossEntry else key.path!!.challengeEntry
         present.forEach { participants.enter(run, it.uid); it.teleportTo(ToaMap.instance(map, tile)) }
-        if (started.add(run.generation)) rooms.getValue(run.generation).first.start(run)
+        if (!waitsForCrystal(key)) startRoom(run)
     }
 
     private fun checkpoint(key: ToaRoomKey): Tile = key.path?.challengeEntry ?: ToaMap.NEXUS

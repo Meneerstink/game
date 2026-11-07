@@ -124,8 +124,10 @@ object BabaCombat : CombatScript() {
             // Strategies1353: the scream destroys the previous Rockfall debris.
             debris.toList().forEach { remove(it) }; debris.clear()
             // cache2686 5/15188/1: throne45756 at3822,5407 faces west; door45754 at3794,5408.
-            // ONZEKER T02: boss SW3820,5406 and row x3818 inferred from that throne and its5x5 footprint.
-            npc.stopMovement(); animate(9748); npc.moveTo(origin.transform(16, 0)); npc.faceTile(origin)
+            // ONZEKER T02: boss SW3819,5406 = first tile of the throne dais (cache2686 15188 terrain p0 x3819+ blocked, arena floor
+            // ends x3818), so she borders the floor: Strategies1350 'attacked with melee past the boulder starting point'. SW3820
+            // left a blocked tile between floor and Ba-Ba - she could not be meleed and the fight never ended (07-11 testclient).
+            npc.stopMovement(); animate(9748); npc.moveTo(origin.transform(15, 0)); npc.faceTile(origin)
             players().forEach { p ->
                 var tile = Tile(p.tile)
                 repeat((p.tile.x - (origin.x - 8)).coerceAtLeast(0)) {

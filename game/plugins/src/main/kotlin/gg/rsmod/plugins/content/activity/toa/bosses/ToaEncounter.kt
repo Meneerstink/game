@@ -335,9 +335,12 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     fun actorMeleeReach(actor: Npc, tile: Tile): Boolean {
         val t = actor.tile; val size = actor.getSize()
         if (tile.height != t.height) return false
-        // Preserve the encounter's underfoot attacks, but share the engine's wall check for adjacent bodies (N596).
+        // Preserve the encounter's underfoot attacks, but share the engine's wall check for adjacent bodies (N596). The edge is
+        // checked from the player's (walkable) tile: a boss on blocked terrain (Ba-Ba's throne dais x3819+, Zebak's pool) failed
+        // the check from its own side and never hit back (07-11 testclient, owner 'ba ba attackt niet eens terug'). Real walls
+        // flag both sides of the edge, so they still block.
         return distance(tile, t, size) == 0 || gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
-            actor.world.collision, t, size, size, tile, 1, 1)
+            actor.world.collision, tile, 1, 1, t, size, size)
     }
     fun follow(p: Player) { if (!meleeReach(p.tile)) npc.walkTo(p.tile) }
     /** Resolve protection at impact (Zebak), and cancel on phase/death/logout/teleport/reset. */
