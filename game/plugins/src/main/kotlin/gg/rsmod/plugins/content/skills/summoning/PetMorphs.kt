@@ -104,11 +104,61 @@ object PetMorphs {
      * form of the pet - also the ones OSRS unlocks with an item or a skill here (rift guardian colours, Gulliver, ores, logs, seeds,
      * berries, firelighters); those items still change the pet directly. Only forms of the same pet, never another pet.
      */
-    @Suppress("UNUSED_PARAMETER")
     fun isUnlocked(
         player: Player,
         variant: Pets.Variant,
-    ): Boolean = true
+    ): Boolean = variant.osrsItem !in TOA_REMNANT_FORMS || variant.osrsItem in unlockedSet(player)
+
+    /**
+     * N462 Tumeken's guardian (owner 07-11 20:5x "remnant op de pet gebruiken volledig correct" - for THIS pet the 10-25 "every form open"
+     * no longer holds): Wiki Tumeken's guardian?oldid=15352754 Metamorphosis table - Remnant of Akkha -> Akkhito, Ba-Ba -> Babi, Kephri ->
+     * Kephriti, Zebak -> Zebo, Ancient remnant -> Tumeken's AND Elidinis' damaged guardian. Tumeken's / Elidinis' guardian stay free.
+     * Transcript:Remnant of Akkha / Ancient remnant "When used on Tumeken's guardian": the unlock message below.
+     * ONZEKER: whether the remnant is used up is not in the sources - it is (the unlock is permanent, the item has no other use).
+     */
+    const val TOA_GUARDIAN = "Tumeken's guardian"
+    const val MSG_TOA_REMNANT = "Congratulations! You've unlocked a new metamorphosis option for your pet."
+    /** OSRS remnant -> the OSRS pet forms it unlocks (first = the form the pet takes). */
+    val TOA_REMNANTS: Map<Int, List<Int>> = linkedMapOf(
+        27377 to listOf(27382), // Remnant of Akkha -> Akkhito
+        27378 to listOf(27383), // Remnant of Ba-Ba -> Babi
+        27379 to listOf(27384), // Remnant of Kephri -> Kephriti
+        27380 to listOf(27385), // Remnant of Zebak -> Zebo
+        27381 to listOf(27386, 27387), // Ancient remnant -> Tumeken's / Elidinis' damaged guardian
+    )
+    val TOA_REMNANT_FORMS: Set<Int> = TOA_REMNANTS.values.flatten().toSet()
+
+    /** Whether items used on this pet (follower or item) can change it. */
+    fun morphsWithItems(pet: String): Boolean = pet in USES || pet == "Gull (pet)" || pet == TOA_GUARDIAN
+
+    /** The local items that change [pet] when used on its item in the inventory. */
+    fun itemUsesOf(pet: String): List<Int> =
+        USES[pet].orEmpty().map { it.item }.distinct() +
+            if (pet == TOA_GUARDIAN) TOA_REMNANTS.keys.mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.item(it) } else emptyList()
+
+    /** A remnant used on Tumeken's guardian (follower or item); null when [item] is no remnant. */
+    private fun toaRemnant(player: Player, petItem: Int, item: Int, onFollower: Boolean, slot: Int): Boolean? {
+        val osrs = TOA_REMNANTS.keys.firstOrNull { gg.rsmod.plugins.content.activity.toa.ToaIds.item(it) == item } ?: return null
+        val forms = TOA_REMNANTS.getValue(osrs).mapNotNull { variantByOsrs(TOA_GUARDIAN, it) }
+        val target = forms.firstOrNull() ?: return true
+        val unlocked = unlockedSet(player)
+        if (forms.all { it.osrsItem in unlocked }) {
+            // Already unlocked: the pet takes the form, the remnant stays (no OSRS message is sourced for this case).
+            if (onFollower) Pets.morphFollower(player, target)
+            else if (slot >= 0 && player.inventory[slot]?.id == petItem) player.inventory[slot] = Item(Pets.shownItem(player, target), 1)
+            return true
+        }
+        if (!player.inventory.remove(item, 1, assureFullRemoval = true).hasSucceeded()) return true
+        forms.forEach { unlocked += it.osrsItem }
+        player.attr[UNLOCKED_ATTR] = unlocked.sorted().joinToString(",")
+        player.message(MSG_TOA_REMNANT)
+        if (onFollower) {
+            Pets.morphFollower(player, target)
+        } else if (slot >= 0 && player.inventory[slot]?.id == petItem) {
+            player.inventory[slot] = Item(Pets.shownItem(player, target), 1)
+        }
+        return true
+    }
 
     /** Unlocks [variant]; true when it was new. */
     fun unlock(
@@ -152,6 +202,7 @@ object PetMorphs {
     ): Boolean {
         val pet = Pets.variantOfItem(petItem)?.pet ?: return false
         if (pet == "Gull (pet)" && onFollower && isFish(player, item)) return feedGull(player, item)
+        if (pet == TOA_GUARDIAN) toaRemnant(player, petItem, item, onFollower, slot)?.let { return it }
         val use = USES[pet]?.firstOrNull { it.item == item } ?: return false
         if (use.followerOnly && !onFollower) {
             player.message("Your pet needs to be following you for that.")

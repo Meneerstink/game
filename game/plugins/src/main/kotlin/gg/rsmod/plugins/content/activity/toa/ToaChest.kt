@@ -43,6 +43,13 @@ object ToaChest {
 
     fun install() = Unit
 
+    /** The remnant [osrs] was used on the pet: every form it unlocks is in the player's unlocked metamorphoses. */
+    fun remnantUsed(player: Player, osrs: Int): Boolean {
+        val forms = gg.rsmod.plugins.content.skills.summoning.PetMorphs.TOA_REMNANTS[osrs] ?: return false
+        val unlocked = player.attr[gg.rsmod.plugins.content.skills.summoning.PetMorphs.UNLOCKED_ATTR].orEmpty().split(',').mapNotNull { it.trim().toIntOrNull() }
+        return forms.all { it in unlocked }
+    }
+
     /** A room is cleared: every raid member's damage on each of the room's npcs (dead or alive, any form) becomes room points. */
     fun creditRoom(raid: ToaRaid, npcs: List<Npc>) {
         npcs.forEach { npc ->
@@ -65,7 +72,8 @@ object ToaChest {
                 player?.attr?.get(COMPLETIONS) ?: 0,
                 player?.attr?.get(HAD_THREAD) == true,
                 player?.let(::ownedJewels) ?: emptySet(),
-                owns = { osrs -> player != null && ToaLootItems.local(osrs)?.let { holds(player, it) } == true },
+                // A remnant already used on Tumeken's guardian counts as owned (its forms are unlocked), else the same remnant came again.
+                owns = { osrs -> player != null && (ToaLootItems.local(osrs)?.let { holds(player, it) } == true || remnantUsed(player, osrs)) },
             )
         }
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)

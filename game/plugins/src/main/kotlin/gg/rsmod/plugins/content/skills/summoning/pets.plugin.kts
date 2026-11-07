@@ -120,14 +120,14 @@ Pets.variants.forEach { variant ->
             on_any_item_on_npc(npc = npcId) {
                 val npc = player.getInteractingNpc()
                 val used = player.getInteractingItem()
-                val morphs = variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)"
+                val morphs = PetMorphs.morphsWithItems(variant.pet)
                 when {
                     Pets.current(player) !== npc -> player.message("This isn't your pet.")
                     morphs && PetMorphs.useItem(player, Pets.itemOf(player) ?: variant.item, used.id, onFollower = true) -> {}
                     else -> BeastOfBurden.deposit(player, used)
                 }
             }
-        } else if (variant.pet in PetMorphs.USES || variant.pet == "Gull (pet)") {
+        } else if (PetMorphs.morphsWithItems(variant.pet)) {
             // The items that change a pet (PetMorphs.USES, Gull's fish), used on the follower.
             on_any_item_on_npc(npc = npcId) {
                 val npc = player.getInteractingNpc()
@@ -140,7 +140,7 @@ Pets.variants.forEach { variant ->
         }
     }
     // ... and on the pet item in the inventory where OSRS allows it (Rock golem: "while it is in the inventory or following").
-    PetMorphs.USES[variant.pet].orEmpty().map { it.item }.distinct().forEach { useItem ->
+    PetMorphs.itemUsesOf(variant.pet).forEach { useItem ->
         petItems.forEach { petItem ->
             on_item_on_item(item1 = useItem, item2 = petItem) {
                 val petSlot = if (player.getInteractingItemId() == petItem) player.getInteractingItemSlot() else player.getInteractingOtherItemSlot()
