@@ -14824,3 +14824,16 @@
   examine: "The heart of an ancient automaton." # OSRS 11770 (N462 ToA)
 - id: 15137
   examine: "A deadly apparition." # OSRS 11767 (N462 ToA)
+
+# N462: OSRS npc 4184; https://oldschool.runescape.wiki/w/Crocodile?oldid=15374665 L14. Local id resolved from toa/ids.tsv.
+- id: 15199
+  examine: "Never smile at a..."
+# N462: OSRS npc 459; https://oldschool.runescape.wiki/w/Desert_Lizard?oldid=15389340 L16. Local id resolved from toa/ids.tsv.
+- id: 15200
+  examine: "A cold-blooded creature, partial to warmth."
+# N462: OSRS npc 460; https://oldschool.runescape.wiki/w/Desert_Lizard?oldid=15389340 L16. Local id resolved from toa/ids.tsv.
+- id: 15201
+  examine: "A cold-blooded creature, partial to warmth."
+# N462: OSRS npc 461; https://oldschool.runescape.wiki/w/Desert_Lizard?oldid=15389340 L16. Local id resolved from toa/ids.tsv.
+- id: 15202
+  examine: "A cold-blooded creature, partial to warmth."

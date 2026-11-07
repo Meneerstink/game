@@ -72359,3 +72359,46 @@
 - id: 62347
 - id: 62348
 - id: 62349
+
+# N462: OSRS loc 44296; https://oldschool.runescape.wiki/w/Obelisk_(Necropolis)?oldid=14893186 L10. Local id resolved from toa/ids.tsv.
+- id: 66296
+  examine: "An ancient obelisk."
+# N462: OSRS loc 43989; https://oldschool.runescape.wiki/w/Stepping_stone_(Necropolis)?oldid=15329531 L10. Local id resolved from toa/ids.tsv.
+- id: 66210
+  examine: "A well placed stone."
+# N462: OSRS loc 43990; https://oldschool.runescape.wiki/w/Stepping_stone_(Necropolis)?oldid=15329531 L10. Local id resolved from toa/ids.tsv.
+- id: 66211
+  examine: "A well placed stone."
+# N462: OSRS loc 29495; https://oldschool.runescape.wiki/w/Fairy_ring?oldid=15388952 L11. Local id resolved from toa/ids.tsv.
+- id: 66204
+  examine: "Don't eat any!"
+# N462: OSRS loc 46075; https://oldschool.runescape.wiki/w/Bank_Camel?oldid=15261945 L16. Local id resolved from toa/ids.tsv.
+- id: 66099
+  examine: "A well equipped camel."
+# N462: OSRS loc 46231; https://oldschool.runescape.wiki/w/Bank_Camel?oldid=15261945 L17. Local id resolved from toa/ids.tsv.
+- id: 66144
+  examine: "Cam, the well equipped camel."
+# N462: OSRS loc 11362; https://oldschool.runescape.wiki/w/Clay_rocks?oldid=15372445 L15. Local id resolved from toa/ids.tsv.
+- id: 65339
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11364; https://oldschool.runescape.wiki/w/Iron_rocks?oldid=15372456 L34. Local id resolved from toa/ids.tsv.
+- id: 65340
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11366; https://oldschool.runescape.wiki/w/Coal_rocks?oldid=15359934 L27. Local id resolved from toa/ids.tsv.
+- id: 65341
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11374; https://oldschool.runescape.wiki/w/Adamantite_rocks?oldid=15285301 L27. Local id resolved from toa/ids.tsv.
+- id: 65342
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11386; https://oldschool.runescape.wiki/w/Sandstone_rocks?oldid=15393066 L11. Local id resolved from toa/ids.tsv.
+- id: 66182
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11387; https://oldschool.runescape.wiki/w/Granite_rocks?oldid=15371270 L11. Local id resolved from toa/ids.tsv.
+- id: 66183
+  examine: "A rocky outcrop."
+# N462: OSRS loc 11390; https://oldschool.runescape.wiki/w/Rocks_(empty)?oldid=15073028 L24. Local id resolved from toa/ids.tsv.
+- id: 66311
+  examine: "Stoney!"
+# N462: OSRS loc 11391; https://oldschool.runescape.wiki/w/Rocks_(empty)?oldid=15073028 L25. Local id resolved from toa/ids.tsv.
+- id: 66312
+  examine: "Stoney!"
