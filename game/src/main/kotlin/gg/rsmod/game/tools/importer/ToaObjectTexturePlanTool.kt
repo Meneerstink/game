@@ -10,7 +10,7 @@ object ToaObjectTexturePlanTool {
     @JvmStatic
     fun main(args: Array<String>) {
         require(args.isEmpty() || args.contentEquals(arrayOf("plan"))) { "Usage: plan (object application is deferred)" }
-        val proposals = JsonParser.parseString(File("tools/n601_material_proposals.json").readText())
+        val proposals = JsonParser().parse(File("tools/n601_material_proposals.json").readText())
             .asJsonObject.getAsJsonObject("object_texture_proposals")
         val keys = ModernRegionProbeTool.loadKeys(File(RspsPaths.root("import-source/openrs2-2686/keys.json")))
         val raid = OsrsRegionImportTool.BATCHES.getValue("toa-map-hd").squares
