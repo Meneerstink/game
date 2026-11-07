@@ -14,6 +14,7 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.dealHit
+import gg.rsmod.plugins.content.combat.PlayerAttackRules
 import gg.rsmod.plugins.content.combat.removeCombatTarget
 import gg.rsmod.plugins.content.combat.formula.MagicCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
@@ -162,9 +163,18 @@ object ToaEncounter {
         return session
     }
     fun stop(npc: Npc) { npc.attr[SESSION]?.close() }
+    /** Resolve before dealHit rolls: landed hits retain ordinary damage-map, XP and launch-style accounting. */
+    fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? {
+        val session = target.attr[SESSION] ?: target.attr[MINION_SESSION] ?: return null
+        if (!target.isSpawned() || target.isDead() || !session.active() || !session.eligible(player)) return null
+        return session.playerAttackRule(player, target, type)
+    }
 }
 
-abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
+abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
+    /** Active form; multi-form encounters retain their adapter root separately for completion. */
+    var npc: Npc = npc
+        protected set
     val context: ToaEncounterContext = object : ToaEncounterContext {
         override val players get() = input.players
         override val partySize get() = input.partySize
@@ -224,6 +234,7 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
     }
     abstract fun onTick()
     open fun incoming(hit: Hit) {}
+    open fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? = null
     fun later(delay: Int, acrossPhase: Boolean = false, action: () -> Unit) {
         require(delay >= 0)
         if (delay == 0) { if (active()) action(); return }
@@ -335,6 +346,7 @@ abstract class ToaBossSession(val npc: Npc, input: ToaEncounterContext) {
         HitType.MAGIC.id, HitType.CRIT_MAGIC.id -> CombatClass.MAGIC
         else -> null
     }
+    fun incomingStyle(hit: Hit, type: Int): CombatClass? = hit.sourceCombatClass ?: incomingStyle(type)
     fun sameTile(a: Tile, b: Tile): Boolean = a.height == b.height && a.x == b.x && a.z == b.z
     private val missing = mutableSetOf<String>()
     fun missingAsset(key: String) {

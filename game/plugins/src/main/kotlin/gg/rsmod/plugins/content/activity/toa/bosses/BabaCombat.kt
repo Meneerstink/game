@@ -12,6 +12,7 @@ import gg.rsmod.plugins.api.HitType
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.combat.formula.RangedCombatFormula
 import gg.rsmod.plugins.content.combat.formula.MeleeCombatFormula
+import gg.rsmod.plugins.content.combat.PlayerAttackRules
 import kotlin.math.abs
 
 /** Ba-Ba oldid15200300; Strategies oldid15392814 lines1338-1355; Boulder page in 03-baba-brontekst.
@@ -37,11 +38,13 @@ object BabaCombat : CombatScript() {
     const val BOULDER = 11782 // RuneLite NpcID TOA_BABA_BOULDER
     const val CRACKED_BOULDER = 11783
     const val BABOON_MAX = 1 // ONZEKER T16: individual Baboon Wiki infobox explicitly publishes "1?"; prefer that over a guessed formula.
-    fun blockerDamage(kind: BlockerKind) = when (kind) { BlockerKind.DEBRIS -> 10; BlockerKind.SARCOPHAGUS -> 30; BlockerKind.BABOON -> 12; BlockerKind.PLAYER -> 0 }
+    fun blockerDamage(kind: BlockerKind) = when (kind) { BlockerKind.DEBRIS -> 10; BlockerKind.SARCOPHAGUS -> 30; BlockerKind.BABOON -> 12 }
     /** Cache2686 map15188, 40-loc-placements.tsv: all eight sarcophagi, retaining their facing. */
     val COFFINS_OSRS = listOf(3803, 3808, 3813, 3818).flatMap { x -> listOf(Tile(x, 5400) to 3, Tile(x, 5416) to 1) }.toMap()
-    enum class BlockerKind { DEBRIS, SARCOPHAGUS, BABOON, PLAYER }
-    data class Blocker(val tile: Tile, val kind: BlockerKind, val size: Int = 1, val player: Player? = null, val damage: (Int) -> Unit)
+    // ONZEKER T16 source conflict: Ba-Ba's main page also names players as cover; detailed Strategies1343 explicitly
+    // lists "these three sources". Follow the detailed mechanic as required by the card; Claude verifies player cover in OSRS.
+    enum class BlockerKind { DEBRIS, SARCOPHAGUS, BABOON }
+    data class Blocker(val tile: Tile, val kind: BlockerKind, val size: Int = 1, val damage: (Int) -> Unit)
     data class RollingRow(val tiles: List<Tile>, val cracked: Int)
     fun overlaps(a: Tile, sizeA: Int, b: Tile, sizeB: Int): Boolean = a.height == b.height &&
         a.x < b.x + sizeB && a.x + sizeA > b.x && a.z < b.z + sizeB && a.z + sizeA > b.z
@@ -58,16 +61,16 @@ object BabaCombat : CombatScript() {
         var rollingDirector: (Session) -> Unit = { it.defaultRolling() }
         var specialDirector: (Session) -> Unit = { it.defaultSpecial() }
         val origin = Tile(npc.spawnTile)
-        var meleePastSpawnLine: (Player) -> Boolean = { it.tile.z >= origin.z + 12 }
+        var meleePastSpawnLine: (Player) -> Boolean = { it.tile.x >= origin.x + 14 }
         val baboons = mutableListOf<Npc>()
         val debris = mutableListOf<Npc>()
         val boulders = mutableListOf<Npc>()
+        private val maxHitTargets = mutableMapOf<Npc, Boolean>()
         val blockers = mutableListOf<Blocker>()
         private val coffins = linkedMapOf<Tile, Int>()
-        // ONZEKER T02: debug-relative placement; the raid adapter maps COFFINS_OSRS into its instance before configure().
-        var coffinTiles: Map<Tile, Int> = listOf(-10, -5, 0, 5).flatMap { x ->
-            listOf(origin.transform(x, -8) to 3, origin.transform(x, 8) to 1)
-        }.toMap()
+        // Same source->instance translation as the room adapter; standalone debug preserves the relative scene.
+        // ONZEKER T02: source boss SW3804,5406 is the adapter's provisional spawn, not a measured OSRS NPC spawn.
+        var coffinTiles: Map<Tile, Int> = COFFINS_OSRS.mapKeys { (tile, _) -> origin.transform(tile.x - 3804, tile.z - 5406) }
         private val coffinCleanup = mutableMapOf<Tile, () -> Unit>()
         private var autoCount = 0
         private var specialIndex = 0
@@ -92,7 +95,7 @@ object BabaCombat : CombatScript() {
                     val centre = target?.let { npc.getFrontFacingTile(it) } ?: npc.getCentreTile()
                     val tiles = mutableSetOf<Tile>()
                     for (dx in -radius..radius) for (dz in -radius..radius) {
-                        if (if (radius == 2) dx == 0 || dz == 0 else dx * dx + dz * dz <= 10) tiles += centre.transform(dx, dz)
+                        tiles += centre.transform(dx, dz) // Strategies1347: base rough5x5 area; no Shaking Things Up variant.
                     }
                     // The swipe animation supplies its frame sounds; no unrelated baboon magic spot on the ground.
                     // ONZEKER T16: seq9742=2ticks supplies warning; base24 published melee max for unquantified special.
@@ -116,16 +119,17 @@ object BabaCombat : CombatScript() {
                 b.setCurrentLifepoints((b.getCurrentLifepoints() - amount).coerceAtLeast(0)); if (b.isDead()) { remove(b) }
             } }
             coffins.filterValues { it > 0 }.keys.forEach { t -> blockers += Blocker(t, BlockerKind.SARCOPHAGUS) { amount -> damageCoffin(t, amount) } }
-            players().forEach { p -> blockers += Blocker(Tile(p.tile), BlockerKind.PLAYER, player = p) {} }
         }
         private fun defaultRolling() {
             // Strategies1353: the scream destroys the previous Rockfall debris.
             debris.toList().forEach { remove(it) }; debris.clear()
-            npc.stopMovement(); animate(9748); npc.moveTo(origin.transform(0, 14))
+            // cache2686 5/15188/1: throne45756 at3822,5407 faces west; door45754 at3794,5408.
+            // ONZEKER T02: boss SW3820,5406 and row x3818 inferred from that throne and its5x5 footprint.
+            npc.stopMovement(); animate(9748); npc.moveTo(origin.transform(16, 0)); npc.faceTile(origin)
             players().forEach { p ->
                 var tile = Tile(p.tile)
-                repeat((p.tile.z - (origin.z - 9)).coerceAtLeast(0)) {
-                    if (npc.world.collision.canStep(tile, Direction.SOUTH)) tile = tile.transform(0, -1)
+                repeat((p.tile.x - (origin.x - 8)).coerceAtLeast(0)) {
+                    if (npc.world.collision.canStep(tile, Direction.WEST)) tile = tile.transform(-1, 0)
                 }
                 p.stopMovement(); p.teleportTo(tile)
             }
@@ -134,17 +138,17 @@ object BabaCombat : CombatScript() {
                 if (index > 0) {
                     val legal = (0..4).filter { abs(it - lane) <= 2 }; lane = legal[npc.world.random(legal.lastIndex)]
                 }
-                RollingRow(List(5) { col -> origin.transform(-5 + col * 3, 11) }, lane)
+                RollingRow(List(5) { col -> origin.transform(14, -5 + col * 3) }, lane)
             }
             // ONZEKER T02/T16: five3wide lanes over24tiles; falling/rolling clip-derived cadence, pending OSRS room trace.
-            later(2) { rollingStones(rows, rollingInterval(false), 1, Direction.SOUTH, 24, 24) }
+            later(2) { rollingStones(rows, rollingInterval(false), 1, Direction.WEST, 24, 24) }
         }
         private fun minionsTick() {
             baboons.toList().forEach { b ->
                 if (b.isDead() || !b.isSpawned()) { baboons.remove(b); return@forEach }
                 if (tick % BABOON_STATS.speed != 0) return@forEach
                 val coffin = coffins.filterValues { it > 0 }.keys.minByOrNull { it.getDistance(b.tile) }
-                if (coffin != null && tick % (BABOON_STATS.speed * 3) == 0) {
+                if (coffin != null && b === baboons.firstOrNull() && tick % (BABOON_STATS.speed * 3) == 0) {
                     b.walkTo(coffin)
                     if (b.tile.isWithinRadius(coffin, 1)) damageCoffin(coffin, 20)
                 } else players().minByOrNull { it.tile.getDistance(b.tile) }?.let { p ->
@@ -153,11 +157,13 @@ object BabaCombat : CombatScript() {
                 }
             }
             if (tick % stats.speed == 0) coffins.filterValues { it == 0 }.keys.forEach { t ->
-                val p = players().minByOrNull { it.tile.getDistance(t) } ?: return@forEach
-                val target = Tile(p.tile); gfx(2246, target)
+                // Strategies1349: energy is a cone IN FRONT of the open coffin, never a homing rock at a player's tile.
+                // ONZEKER T16: five-tile cone uses the published5x5 Shockwave span;2tick warning is the swipe clip.
+                val sign = if (coffinTiles[t] == 3) 1 else -1
+                val cone = (1..5).flatMap { depth -> (-depth / 2..depth / 2).map { x -> t.transform(x, sign * depth) } }.toSet()
+                cone.forEach { gfx(2246, it) }
                 later(2) {
-                    val radius = 0
-                    players().filter { it.tile.isWithinRadius(target, radius) }.forEach { victim ->
+                    players().filter { p -> cone.any { sameTile(it, p.tile) } }.forEach { victim ->
                         // ONZEKER T16: unquantified sarcophagus hit uses the published Ba-Ba max24.
                         attack(victim, ToaScale.damage(24, context), null, accuracy = false)
                     }
@@ -166,7 +172,7 @@ object BabaCombat : CombatScript() {
         }
 
         override fun incoming(hit: Hit) {
-            if (rolling && hit.source is Player && hit.hitmarks.any { incomingStyle(it.type) == CombatClass.MELEE } && meleePastSpawnLine(hit.source as Player)) endRolling()
+            if (rolling && hit.source is Player && hit.hitmarks.any { incomingStyle(hit, it.type) == CombatClass.MELEE } && meleePastSpawnLine(hit.source as Player)) endRolling()
         }
         override fun onTick() {
             if (!rolling && rollingThreshold(rollingStage, npc.getCurrentLifepoints(), npc.getMaximumLifepoints())) {
@@ -202,10 +208,9 @@ object BabaCombat : CombatScript() {
             // Both debris shadows are telegraphed as well as the player-targeted rocks (Strategies1342).
             (tiles + debrisTiles).forEach { gfx(2250, it) }
             later(impactDelay) {
-                players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false) }
+                players().filter { p -> (tiles + debrisTiles).any { sameTile(it, p.tile) } }.forEach { attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false) }
                 // Debris HP is 10 per room participant (Strategies1342), not the generic raid HP multiplier.
                 debrisTiles.forEach { tile ->
-                    players().filter { p -> sameTile(tile, p.tile) }.forEach { attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false) }
                     players().filter { p -> !sameTile(tile, p.tile) && overlaps(tile, 3, p.tile, 1) }.forEach { p ->
                         val d = Direction.between(tile.transform(1, 1), p.tile).takeIf { it != Direction.NONE } ?: Direction.SOUTH
                         var end = Tile(p.tile)
@@ -222,10 +227,12 @@ object BabaCombat : CombatScript() {
         /** ~6 ticks is only an estimate in the Wiki (T16), so the caller supplies the measured delay. */
         fun rockThrow(delay: Int, baseDamage: Int) {
             val targets = players()
+            // RuneLite SpotanimID.TOA_BABA_RANGED_TRAVEL; flight matches the documented~6tick Rock Throw warning.
+            targets.forEach { ToaBossFx.projectile(npc, it, 2244, false, delay) }
             later(delay) {
                 rebuildBlockers()
                 val cover = targets.filter { eligible(it) }.associateWith { p ->
-                    blockers.filter { distance(p.tile, it.tile, it.size) <= 1 && (it.kind != BlockerKind.PLAYER || it.player !== p) }
+                    blockers.filter { distance(p.tile, it.tile, it.size) <= 1 }
                 }
                 cover.forEach { (p, near) ->
                     if (near.isEmpty()) attack(p, ToaScale.damage(baseDamage, context), null, accuracy = false)
@@ -255,15 +262,15 @@ object BabaCombat : CombatScript() {
             } }
         }
         fun guaranteeMaxHit(child: Npc, rangedOnly: Boolean = false) {
+            maxHitTargets[child] = rangedOnly
             child.hitModifier = { hit ->
                 val p = hit.source as? Player
                 if (p != null && !eligible(p)) hit.hitmarks.forEach { it.damage = 0 }
-                else if (p != null) hit.hitmarks.forEach { mark ->
-                    if (!rangedOnly || (incomingStyle(mark.type) ?: gg.rsmod.plugins.content.combat.CombatConfigs.getCombatClass(p)) == CombatClass.RANGED) {
-                        mark.damage = hit.sourceMaxHit.coerceAtLeast(0)
-                    }
-                }
             }
+        }
+        override fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? {
+            val rangedOnly = maxHitTargets[target] ?: return null
+            return if (!rangedOnly || incomingStyle(type.id) == CombatClass.RANGED) PlayerAttackRules.Rule.MAX_HIT else null
         }
         fun rollingStones(rows: List<RollingRow>, spawnInterval: Int, stepInterval: Int, direction: Direction,
             travelSteps: Int, baseDamage: Int, hp: Int = boulderHp(context.partySize)) {
@@ -308,6 +315,6 @@ object BabaCombat : CombatScript() {
             boulders.toList().forEach { remove(it) }; boulders.clear()
             nextAttack = tick + stats.speed
         }
-        override fun close() { coffinCleanup.clear(); coffins.clear(); baboons.clear(); debris.clear(); boulders.clear(); blockers.clear(); super.close() }
+        override fun close() { coffinCleanup.clear(); coffins.clear(); baboons.clear(); debris.clear(); boulders.clear(); blockers.clear(); maxHitTargets.clear(); super.close() }
     }
 }

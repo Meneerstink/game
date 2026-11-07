@@ -4,11 +4,25 @@ import gg.rsmod.game.model.Hit
 import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.content.combat.PlayerAttackRules
 import io.mockk.every
 import io.mockk.mockk
 import kotlin.test.*
 
 class ToaBabaTests {
+    @Test fun `default rolling goes from the cached eastern throne toward the western entrance`() {
+        val f = ToaTestFixture()
+        every { f.npc.getCurrentLifepoints() } returns 253; every { f.npc.getMaximumLifepoints() } returns 380
+        every { f.world.collision.canStep(any<gg.rsmod.game.model.Tile>(), gg.rsmod.game.model.Direction.WEST) } returns true
+        val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false; every { p.tile } returns Tile(3210, 3206)
+        val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        s.cycle()
+        io.mockk.verify { f.npc.moveTo(Tile(3216, 3200)) }
+        io.mockk.verify { p.teleportTo(Tile(3192, 3206)) }
+        assertTrue(s.rolling)
+        s.close()
+    }
     @Test fun `boulder collisions use the complete footprint including its far edge`() {
         val rock = Tile(100, 100)
         assertTrue(BabaCombat.overlaps(rock, 3, Tile(102, 102), 1))
@@ -68,7 +82,7 @@ class ToaBabaTests {
         assertEquals(10, BabaCombat.blockerDamage(BabaCombat.BlockerKind.DEBRIS))
         assertEquals(30, BabaCombat.blockerDamage(BabaCombat.BlockerKind.SARCOPHAGUS))
         assertEquals(12, BabaCombat.blockerDamage(BabaCombat.BlockerKind.BABOON))
-        assertEquals(0, BabaCombat.blockerDamage(BabaCombat.BlockerKind.PLAYER))
+        assertEquals(3, BabaCombat.BlockerKind.values().size, "players do not provide Rock Throw cover")
     }
     @Test fun `melee beyond spawn line ends rolling but a projectile cannot end it`() {
         val f = ToaTestFixture(); val s = BabaCombat.Session(f.npc, ToaTestContext())
@@ -88,21 +102,42 @@ class ToaBabaTests {
         s.later(2) { rowSpawns++ }; s.close(); repeat(5) { s.cycle() }
         assertEquals(0, rowSpawns); assertTrue(s.boulders.isEmpty())
     }
-    @Test fun `baboon gets guaranteed max even on an accuracy miss and no foreign player can damage it`() {
+    @Test fun `baboon max is decided before roll for points and XP and foreign players cannot damage it`() {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
         every { p.isOnline } returns true; every { p.isDead() } returns false
         every { p.tile } returns Tile(3200, 3200)
         val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
         s.summonBaboons(listOf(Tile(3205, 3205)))
         val baboon = s.baboons.single()
-        val hit = Hit.Builder().addHit(0, HitType.BLOCK.id).build().also { it.source = p; it.sourceMaxHit = 42 }
-        baboon.hitModifier!!.invoke(hit)
-        assertEquals(42, hit.hitmarks.single().damage)
+        assertEquals(PlayerAttackRules.Rule.MAX_HIT, ToaEncounter.playerAttackRule(p, baboon, HitType.MELEE))
+        assertEquals(PlayerAttackRules.Rule.MAX_HIT, ToaEncounter.playerAttackRule(p, baboon, HitType.MAGIC))
         val outsider = mockk<Player>(relaxed = true)
         val foreign = Hit.Builder().addHit(10, HitType.MELEE.id).build().also { it.source = outsider; it.sourceMaxHit = 42 }
         baboon.hitModifier!!.invoke(foreign)
         assertEquals(0, foreign.hitmarks.single().damage)
+        assertNull(ToaEncounter.playerAttackRule(outsider, baboon, HitType.MELEE))
         s.close(); assertFalse(baboon.isSpawned())
+        assertNull(ToaEncounter.playerAttackRule(p, baboon, HitType.MELEE))
+    }
+    @Test fun `cracked boulders guarantee ranged max before the roll only`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3200, 3200)
+        val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        // The import table is owned by a concurrent import chain; this rule test only needs a scoped child actor.
+        val rock = gg.rsmod.game.model.entity.Npc(2, Tile(3205, 3205), f.world)
+        f.world.spawn(rock); rock.attr[ToaEncounter.MINION_SESSION] = s; s.children += rock
+        s.guaranteeMaxHit(rock, rangedOnly = true)
+        assertEquals(PlayerAttackRules.Rule.MAX_HIT, ToaEncounter.playerAttackRule(p, rock, HitType.RANGE))
+        assertNull(ToaEncounter.playerAttackRule(p, rock, HitType.MELEE))
+        assertNull(ToaEncounter.playerAttackRule(p, rock, HitType.MAGIC))
+    }
+    @Test fun `a launched melee miss ends rolling even if its splat is BLOCK`() {
+        val f = ToaTestFixture(); val s = BabaCombat.Session(f.npc, ToaTestContext())
+        val p = mockk<Player>(relaxed = true)
+        s.rolling = true; s.meleePastSpawnLine = { true }
+        val hit = Hit.Builder().addHit(0, HitType.BLOCK.id).build().also { it.source = p; it.sourceCombatClass = gg.rsmod.game.model.combat.CombatClass.MELEE }
+        s.incoming(hit); assertFalse(s.rolling)
     }
     @Test fun `unproven baboon team mapping cannot silently create a fifth minion`() {
         val s = BabaCombat.Session(ToaTestFixture().npc, ToaTestContext())

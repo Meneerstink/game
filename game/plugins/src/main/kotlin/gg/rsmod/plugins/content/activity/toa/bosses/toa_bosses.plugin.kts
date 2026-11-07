@@ -1,5 +1,9 @@
 package gg.rsmod.plugins.content.activity.toa.bosses
 
+import gg.rsmod.plugins.content.combat.PlayerAttackRules
+
+PlayerAttackRules.register(ToaEncounter::playerAttackRule)
+
 // No ambient spawns: the raid adapter or ::toaboss owns encounter creation and membership.
 val encounters = listOf(
     Triple("akkha", AkkhaCombat, ToaEncounter.Definition(ToaBossNpcs.AKKHA, AkkhaCombat.STATS, AkkhaCombat::Session)),
