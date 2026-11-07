@@ -671,6 +671,14 @@ object WardensCombat : CombatScript() {
                     wait(1)
                 }
                 vortex?.takeIf { it.isSpawned() }?.let { rootNpc.world.remove(it) }
+                // Wiki Wardens: 'A white teleportation crystal will appear from where the Warden once stood, leading players to
+                // Osmumten's chamber' (loc 45579 Use; the static copy sits in the P1 room only). On the Warden's north row, next to the
+                // party's floor (the 5x5 footprint itself is void), so the party can reach it.
+                gg.rsmod.plugins.content.activity.toa.ToaIds.loc(45579)?.let { id ->
+                    val size = dying.getSize()
+                    rootNpc.world.spawn(gg.rsmod.game.model.entity.DynamicObject(id, 10, 0,
+                        gg.rsmod.game.model.Tile(dying.tile.x + size / 2, dying.tile.z + size - 1, dying.tile.height)))
+                }
                 completeAfterDespawn(dying)
                 if (standaloneRoom && rootNpc.isSpawned()) rootNpc.world.remove(rootNpc)
             }
