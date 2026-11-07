@@ -100,8 +100,9 @@ object QuestListCacheTool {
                 structIds[quest.slot] = id
                 val bytes = encodeStruct(quest)
                 val current = library.data(CONFIG_INDEX, STRUCT_GROUP, id)
-                if (current == null || !current.contentEquals(bytes)) {
-                    check(current == null) { "struct $id exists with other content" }
+                // An existing struct is left alone: QuestListPart2CacheTool (2026-09-27) deliberately rewrote the sort names
+                // ("!6 Dragon Slayer II"), so "other content" is the later tool's state, not a conflict (07-11: it stopped the N462 chain).
+                if (current == null) {
                     mutations += CacheMutation(CONFIG_INDEX, STRUCT_GROUP, id, bytes, "quest struct ${quest.name} (slot ${quest.slot})")
                 }
             }
