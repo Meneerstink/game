@@ -263,8 +263,8 @@ object ZebakCombat : CombatScript() {
                 players().filter { p -> standing.none { behindRock(p.tile, it.tile, direction) } }.forEach {
                     attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false)
                     // ONZEKER T18: unquantified roar shove uses the same encounter's one-step wave displacement.
-                    if (npc.world.collision.canStep(it.tile, direction)) {
-                        val end = it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
+                    val end = it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
+                    if (npc.world.collision.canStep(it.tile, direction) || !onPlatform(end)) { // same edge rule as the waves
                         it.stopMovement(); it.teleportTo(end)
                         if (!onPlatform(end)) enterWater(it, end)
                     }
@@ -287,8 +287,12 @@ object ZebakCombat : CombatScript() {
                     attack(p, damage, null, accuracy = false, minHit = damage)
                     val next = p.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
                     val canStep = npc.world.collision.canStep(p.tile, direction)
-                    if (canStep) p.teleportTo(next)
-                    if (!onPlatform(next) || !canStep) onWater(p, next)
+                    // Wiki Zebak (Tidal Waves): "If the wave pushes the player over into the water, they will need to quickly scale back up a
+                    // nearby ramp". The moat is walk-blocked for normal walking, so the edge step failed canStep and the player stayed on
+                    // the platform (the next tick then left the water at once): over the edge the wave now always moves the player in.
+                    val intoWater = !onPlatform(next)
+                    if (canStep || intoWater) { p.stopMovement(); p.teleportTo(next) }
+                    if (intoWater) onWater(p, next)
                 }
                 segments.forEach { it.moveTo(it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())) }
                 later(interval) { advance(current.map { it.transform(direction.getDeltaX(), direction.getDeltaZ()) }, left - 1) }
