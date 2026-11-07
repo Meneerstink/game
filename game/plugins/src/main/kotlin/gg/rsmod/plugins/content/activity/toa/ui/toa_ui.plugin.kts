@@ -65,6 +65,17 @@ ToaInterfaces.of(ToaInterfaces.SUMMARY)?.let { iface ->
 
 // OSRS Invocation Board (46073, op "Read"): the list of every invocation with its effect and raid level (toa_invocations 776).
 ToaInterfaces.of(ToaInterfaces.INVOCATIONS)?.let { iface ->
-    on_obj_option(ToaLocs.INVOCATION_BOARD, "Read") { ToaInvocationsUi.open(player) }
+    // Owner 07-11 21:5x: no invocations (decision A, 3 modes) -> 'Read' shows the party's chosen mode + raid level instead of the
+    // invocation list. ONZEKER: both lines are our own wording (no OSRS text for modes exists).
+    on_obj_option(ToaLocs.INVOCATION_BOARD, "Read") {
+        val party = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(world).party(player.uid)
+        player.queue {
+            if (party == null) messageBox("You are not in a party.")
+            else {
+                val level = party.settings.raidLevel
+                messageBox("${gg.rsmod.plugins.content.activity.toa.core.ToaMode.of(level).label} mode - Raid level $level")
+            }
+        }
+    }
     on_button(iface, ToaInvocationsUi.CLOSE) { ToaInvocationsUi.click(player, ToaInvocationsUi.CLOSE) }
 }
