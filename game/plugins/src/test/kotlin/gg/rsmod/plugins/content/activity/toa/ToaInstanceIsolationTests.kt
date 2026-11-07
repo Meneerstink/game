@@ -25,7 +25,8 @@ class ToaInstanceIsolationTests {
         assertNotSame(a.values, b.values)
         assertEquals(a.values.keys, b.values.keys)
         assertEquals(1, ToaPath.HET.bossEntry.height)
-        assertEquals(1, ToaPath.CRONDIS.bossEntry.height)
+        // Cache2686 15700 plane 1 carries the bridge flag over the Zebak entry, so the game plane is 0 (ToaRooms CRONDIS, 07-11 14:2x).
+        assertEquals(0, ToaPath.CRONDIS.bossEntry.height)
         assertTrue(ToaPath.values().all { it.challengeEntry.height == 0 })
     }
 }
