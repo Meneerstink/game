@@ -191,6 +191,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     fun deathStart(player: Player) {
         if (!dying.add(player.uid)) return
+        stats.died(player, world.currentCycle)
         // Death ends the supplies' running effects (Smelling salts would boost the respawned player again, dressing/scarab keep healing).
         ToaConsumables.clear(player)
         points.death(player.uid)
@@ -297,6 +298,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 players().forEach { it.playJingle(if (run.key.boss) JINGLE_TOMB_CLEARED else JINGLE_TEST_OF_NOBILITY) }
                 stats.credit(memberObjects(), scope.spawned)
                 ToaChest.creditRoom(this, scope.spawned)
+                stats.roomPoints(points.roomSnapshot().filterKeys { it in remaining })
+                if (run.key.wardens) stats.wardensDefeated(this)
                 room.clear(run); scope.close(); rooms.remove(run.generation)
                 points.completeRoom()
                 started -= run.generation

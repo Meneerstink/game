@@ -105,7 +105,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         }
         // Strategies 1068: "Getting caught in the light beam will also inflict damage, albeit lower than the orbs."
         raid.activePlayers().filter { p -> pos(p.tile)?.let { it in beam.tiles } == true }
-            .forEach { it.hit(HetIds.BEAM_DAMAGE) }
+            .forEach { it.hit(HetIds.BEAM_DAMAGE); raid.stats.hetBeam(it, raid.world.currentCycle) }
         // The beam itself: one flat projectile per straight segment (caster -> each mirror -> the end), ONZEKER T24.
         HetIds.spot(HetIds.BEAM)?.let { gfx ->
             val points = listOf(b.layout.caster.centre) + beam.turns + listOfNotNull(beam.tiles.lastOrNull()?.takeIf { it !in beam.turns })

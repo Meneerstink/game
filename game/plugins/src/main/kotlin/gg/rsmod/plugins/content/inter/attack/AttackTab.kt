@@ -34,6 +34,7 @@ object AttackTab {
     fun canAffordSpecial(p: Player, percent: Int): Boolean = p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) >= specialCostTenths(p, percent)
 
     fun spendSpecial(p: Player, percent: Int) {
+        gg.rsmod.plugins.content.activity.toa.ToaRaidStats.of(p)?.specialAttack(p, percent) // N462 Raid Summary title The Specialist
         p.setVarp(SPECIAL_ATTACK_ENERGY_VARP, (p.getVarp(SPECIAL_ATTACK_ENERGY_VARP) - specialCostTenths(p, percent)).coerceAtLeast(0))
     }
 

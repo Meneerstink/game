@@ -159,6 +159,7 @@ object ZebakCombat : CombatScript() {
             water.toMap().forEach { (p, state) ->
                 if (!eligible(p) || onPlatform(p.tile)) leaveWater(p)
                 else {
+                    gg.rsmod.plugins.content.activity.toa.ToaRaidStats.of(p)?.inZebakWater(p) // The Swimmer (Raid Summary title)
                     p.setVarp(173, 0); p.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = 2
                     state.first?.takeIf { it.isSpawned() && !it.isDead() }?.let { croc ->
                         croc.walkTo(p.tile)

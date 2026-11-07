@@ -49,6 +49,7 @@ object Foods {
         food: Food,
     ) {
         val delay = if (food.comboFood) COMBO_FOOD_DELAY else FOOD_DELAY
+        gg.rsmod.plugins.content.activity.toa.ToaRaidStats.of(p)?.ate(p) // N462 Raid Summary titles (The Glutton / The Picky Eater)
         val anim = if (p.hasEquipped(EquipmentType.WEAPON, Items.SLED)) Anims.EAT_FOOD_ON_SLED else Anims.EAT_FOOD
 
         val kebabEffect: Pair<Int, String>? =

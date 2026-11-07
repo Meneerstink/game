@@ -78,6 +78,7 @@ object ToaConsumables {
             val next = doses.getOrNull(index + 1)?.let(ToaIds::item)
             player.inventory[slot] = next?.let { gg.rsmod.game.model.item.Item(it) }
         }
+        if (food) ToaRaidStats.of(player)?.ate(player)
         if (kind.drink || food) {
             player.animate(Anims.EAT_FOOD)
             player.playSound(if (food) Sfx.EAT else Sfx.LIQUID)

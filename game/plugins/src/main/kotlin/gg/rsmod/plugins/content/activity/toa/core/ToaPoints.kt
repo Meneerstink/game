@@ -82,6 +82,9 @@ class ToaPointsLedger(roster: Collection<PlayerUID>) {
 
     fun roomPoints(player: PlayerUID): Int = room[player] ?: 0
 
+    /** Every member's points of the room being cleared (0 for a member without damage). */
+    fun roomSnapshot(): Map<PlayerUID, Int> = total.keys.associateWith { room[it] ?: 0 }
+
     /** A room is completed: room points move to the totals, the single highest scorer gets the MVP bonus. Returns the MVP, if any. */
     fun completeRoom(): PlayerUID? {
         val best = room.values.maxOrNull()
