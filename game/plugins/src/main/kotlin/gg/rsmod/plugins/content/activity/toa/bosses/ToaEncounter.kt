@@ -133,13 +133,27 @@ object ToaEncounter {
     val SESSION = AttributeKey<ToaBossSession>()
     val MINION_SESSION = AttributeKey<ToaBossSession>()
     val MELEE_STYLE = AttributeKey<StyleType>()
+    // SESSION on a player is also the ::toaboss debugger's ownership handle. A raid cache must not grant that command ownership.
+    internal val PLAYER_SESSION = AttributeKey<ToaBossSession>()
+    private val ACTIVE = AttributeKey<MutableSet<ToaBossSession>>()
 
     fun context(npc: Npc): ToaEncounterContext? = npc.attr[CONTEXT]
     fun forPlayer(player: Player): ToaBossSession? {
-        player.attr[SESSION]?.takeIf { !it.closed && it.eligible(player) }?.let { return it }
-        var found: ToaBossSession? = null
-        player.world.npcs.forEach { candidate -> candidate.attr[SESSION]?.takeIf { !it.closed && it.eligible(player) }?.let { found = it } }
-        return found
+        val cached = player.attr[PLAYER_SESSION] ?: player.attr[SESSION]
+        cached?.takeIf { it.npc.world === player.world && it.active() && it.eligible(player) }?.let { return it }
+        player.attr.remove(PLAYER_SESSION)
+        // A late room entrant may not have requested its encounter before.
+        // Search only this world's attached encounters, never the world's entire NPC slot array.
+        return player.world.attr[ACTIVE]?.firstOrNull { it.active() && it.eligible(player) }?.also { it.bind(player) }
+    }
+    internal fun unregister(session: ToaBossSession) {
+        if (!session.attached) return
+        session.attached = false
+        val world = session.npc.world
+        world.attr[ACTIVE]?.let { sessions ->
+            sessions.remove(session)
+            if (sessions.isEmpty()) world.attr.remove(ACTIVE)
+        }
     }
     fun attach(npc: Npc, context: ToaEncounterContext, factory: (Npc, ToaEncounterContext) -> ToaBossSession): ToaBossSession {
         ToaScale.validate(context)
@@ -148,6 +162,12 @@ object ToaEncounter {
         val session = factory(npc, context)
         npc.attr[SESSION] = session
         session.configure()
+        npc.world.attr[ACTIVE].let { existing ->
+            val sessions = existing ?: linkedSetOf<ToaBossSession>().also { npc.world.attr[ACTIVE] = it }
+            sessions += session
+        }
+        session.attached = true
+        session.players().forEach(session::bind)
         npc.world.queue {
             try {
                 while (session.active()) {
@@ -192,6 +212,12 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     var generation = 0
         private set
     val children = mutableListOf<Npc>()
+    internal var attached = false
+    private val boundPlayers = mutableSetOf<Player>()
+    internal fun bind(player: Player) {
+        player.attr[ToaEncounter.PLAYER_SESSION] = this
+        boundPlayers += player
+    }
     private data class Event(val tick: Int, val generation: Int?, val action: () -> Unit)
     private val events = mutableListOf<Event>()
     private val objectCleanup = mutableSetOf<() -> Unit>()
@@ -249,6 +275,9 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     open fun close() {
         if (closed) return
         closed = true; generation++; events.clear()
+        ToaEncounter.unregister(this)
+        boundPlayers.forEach { if (it.attr[ToaEncounter.PLAYER_SESSION] === this) it.attr.remove(ToaEncounter.PLAYER_SESSION) }
+        boundPlayers.clear()
         children.toList().forEach { if (it.isSpawned()) npc.world.remove(it) }
         children.clear()
         objectCleanup.toList().asReversed().forEach { it() }; objectCleanup.clear()

@@ -9,6 +9,89 @@ import io.mockk.verify
 import kotlin.test.*
 
 class ToaEncounterTests {
+    @Test fun `attached lookup caches current and late entrants without scanning any world NPC slots`() {
+        val f = ToaTestFixture()
+        every { f.world.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        val members = mutableListOf<Player>()
+        fun player() = mockk<Player>(relaxed = true).also {
+            every { it.world } returns f.world
+            every { it.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+            every { it.isOnline } returns true
+            every { it.isDead() } returns false
+            every { it.tile } returns Tile(3200, 3200)
+        }
+        val first = player(); val late = player(); members += first
+        val session = ToaEncounter.attach(f.npc, ToaTestContext(players = members)) { npc, context ->
+            object : ToaBossSession(npc, context) {
+                override val stats = AkkhaCombat.STATS
+                override fun configure() {}
+                override fun onTick() {}
+            }
+        }
+        try {
+            assertSame(session, first.attr[ToaEncounter.PLAYER_SESSION])
+            assertNull(first.attr[ToaEncounter.SESSION], "caching a raid participant must not transfer ownership to the boss debugger")
+            assertNull(ToaEncounter.forPlayer(late))
+            members += late
+            repeat(100) {
+                assertSame(session, ToaEncounter.forPlayer(first))
+                assertSame(session, ToaEncounter.forPlayer(late))
+            }
+            assertSame(session, late.attr[ToaEncounter.PLAYER_SESSION])
+            members.remove(late)
+            assertNull(ToaEncounter.forPlayer(late))
+            assertNull(late.attr[ToaEncounter.PLAYER_SESSION])
+            every { first.isDead() } returns true
+            assertNull(ToaEncounter.forPlayer(first))
+            every { first.isDead() } returns false
+            assertSame(session, ToaEncounter.forPlayer(first))
+        } finally { session.close() }
+        assertNull(first.attr[ToaEncounter.PLAYER_SESSION])
+        assertNull(ToaEncounter.forPlayer(first))
+        verify(exactly = 0) { f.world.npcs }
+        verify(exactly = 0) { f.world.players }
+    }
+
+    @Test fun `closing an old encounter preserves a newer players session and worlds are isolated`() {
+        val a = ToaTestFixture(); val b = ToaTestFixture()
+        every { a.world.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { b.world.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        val p = mockk<Player>(relaxed = true)
+        every { p.world } returns a.world
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3200, 3200)
+        fun attach(f: ToaTestFixture) = ToaEncounter.attach(f.npc, ToaTestContext(players = listOf(p))) { npc, c ->
+            object : ToaBossSession(npc, c) {
+                override val stats = AkkhaCombat.STATS
+                override fun configure() {}
+                override fun onTick() {}
+            }
+        }
+        val old = attach(a)
+        val otherRoot = mockk<Npc>(relaxed = true)
+        every { otherRoot.world } returns a.world
+        every { otherRoot.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { otherRoot.tile } returns Tile(3200, 3200)
+        every { otherRoot.isSpawned() } returns true; every { otherRoot.isDead() } returns false
+        val newer = ToaEncounter.attach(otherRoot, ToaTestContext(players = listOf(p))) { npc, c ->
+            object : ToaBossSession(npc, c) {
+                override val stats = AkkhaCombat.STATS
+                override fun configure() {}
+                override fun onTick() {}
+            }
+        }
+        old.close()
+        assertSame(newer, ToaEncounter.forPlayer(p))
+        newer.close()
+        val foreign = attach(b)
+        // A Player belongs to one world: a foreign context must never be returned from its registry.
+        assertNull(ToaEncounter.forPlayer(p))
+        assertNull(p.attr[ToaEncounter.PLAYER_SESSION])
+        foreign.close()
+        verify(exactly = 0) { a.world.npcs; b.world.npcs }
+    }
+
     @Test fun `head icon clones retain per npc baked animations while real form transmogs use their own rig`() {
         val ids = gg.rsmod.plugins.content.activity.toa.ToaIds
         io.mockk.mockkObject(ids)
