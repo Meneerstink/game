@@ -135,6 +135,10 @@ object OsrsRegionImportTool {
 
     /** The textured rev-667 underlays of the desert pyramid/dungeon interiors (Pyramid Plunder 29-31 x 68-70, the dungeons below the
      * desert 49-55 x 139-150; same census): sandstone, dark stone and the black void (71 = 030303). */
+    /** N601 Necropolis sand paths (plain OSRS overlays, census 07-11 20:2x) on textured rev-667 desert paths: OSRS 122 (b8b098) = rev-667 122
+     *  (b8b098, texture 507), OSRS 214 (b3986c) / 216 (a29976) -> rev-667 76 (b79767, texture 512; the desert path of 52_49/53_49). */
+    val NECROPOLIS_HD_OVERLAYS: Map<Int, Int> = NECROPOLIS_SEA + mapOf(122 to 122, 214 to 76, 216 to 76)
+
     val PYRAMID_HD_UNDERLAYS: Set<Int> = setOf(60, 61, 93, 56, 54, 55, 71, 62, 125, 145, 144, 0, 140, 111, 147, 102)
 
     val BATCHES: Map<String, Batch> =
@@ -235,10 +239,10 @@ object OsrsRegionImportTool {
             // onto the textured rev-667 town/desert underlays instead of the plain ToA slots.
             "necropolis-hd" to Batch(listOf(13097, 13353, 13354, 13355, 13609, 13610, 13611), emptyList(), "Necropolis on 667-HD desert underlays",
                 clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
-                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_SEA),
+                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_HD_OVERLAYS),
             "necropolis-west-hd" to Batch(listOf(13098), emptyList(), "Necropolis west on 667-HD desert underlays",
                 clearTileFlags = 0x8, dropHiddenOverlays = true, plainOverlaysStayPlain = true, retileTargets = true,
-                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_SEA),
+                underlayCandidates = DESERT_HD_UNDERLAYS, overlayOverrides = NECROPOLIS_HD_OVERLAYS),
             "toa-map-hd" to Batch(listOf(13454, 14160, 14162, 14164, 14672, 14674, 14676, 15184, 15186, 15188, 15696, 15698, 15700), emptyList(),
                 "Tombs of Amascut on 667-HD pyramid underlays", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 9 to 24,
                 keepInPlace = setOf(13454), plainOverlaysStayPlain = true, retileTargets = true, underlayCandidates = PYRAMID_HD_UNDERLAYS),
