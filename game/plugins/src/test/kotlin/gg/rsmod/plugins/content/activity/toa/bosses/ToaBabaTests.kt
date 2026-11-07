@@ -81,6 +81,11 @@ class ToaBabaTests {
         every { f.npc.getSize() } returns 5
         val p = mockk<Player>(relaxed = true)
         every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.world } returns f.world
+        // Accuracy reads defence prayers through the player's actual world definitions.
+        every { f.world.definitions.get(gg.rsmod.game.fs.def.VarbitDef::class.java, any()) } answers {
+            gg.rsmod.game.fs.def.VarbitDef(secondArg())
+        }
         every { p.isOnline } returns true; every { p.isDead() } returns false
         every { p.equipmentBonuses } returns IntArray(18)
         every { p.tile } returns Tile(3817, 5408)
