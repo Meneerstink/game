@@ -89,7 +89,7 @@ class ToaScene(private val raid: ToaRaid) {
         // ONZEKER T26: the boss-room Osmumten is a server spawn (not in the map); tile = inside each arena, near the boss's crystal
         // landing (ToaRaid.ARENA_ENTRY). Zebak: on the east platform, the dry side of his pool (ToaZebakReachTests x3926+).
         val BOSS_OSMUMTEN = mapOf(ToaPath.HET to Tile(3687, 5407, 1), ToaPath.APMEKEN to Tile(3802, 5408),
-            ToaPath.SCABARAS to Tile(3546, 5408), ToaPath.CRONDIS to Tile(3930, 5408, ToaPath.CRONDIS.bossEntry.height))
+            ToaPath.SCABARAS to Tile(3546, 5408), ToaPath.CRONDIS to Tile(3930, 5408))
         // loc.sym toa_vault_chest_loc0..7 and 40-loc-placements, each mapped to the corresponding roster slot.
         private val CHESTS = listOf(Chest(Tile(3686, 5145), 1), Chest(Tile(3673, 5145), 3),
             Chest(Tile(3686, 5142), 1), Chest(Tile(3673, 5142), 3), Chest(Tile(3686, 5148), 1),

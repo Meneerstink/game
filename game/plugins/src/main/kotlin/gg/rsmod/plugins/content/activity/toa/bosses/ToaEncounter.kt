@@ -331,7 +331,7 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
     fun heal(amount: Int) { npc.setCurrentLifepoints(minOf(npc.getMaximumLifepoints(), npc.getCurrentLifepoints() + amount)) }
     fun distance(tile: Tile, origin: Tile = npc.tile, size: Int = npc.getSize()): Int =
         max(maxOf(origin.x - tile.x, 0, tile.x - (origin.x + size - 1)), maxOf(origin.z - tile.z, 0, tile.z - (origin.z + size - 1)))
-    fun meleeReach(tile: Tile): Boolean = actorMeleeReach(npc, tile)
+    open fun meleeReach(tile: Tile): Boolean = actorMeleeReach(npc, tile)
     fun actorMeleeReach(actor: Npc, tile: Tile): Boolean {
         val t = actor.tile; val size = actor.getSize()
         if (tile.height != t.height) return false

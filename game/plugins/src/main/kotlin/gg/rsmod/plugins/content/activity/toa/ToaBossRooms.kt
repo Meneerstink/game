@@ -26,7 +26,8 @@ object ToaBossRooms {
         ToaPath.HET to Spawn("akkha", Tile(3679, 5406, 1)),
         // Ba-Ba (size 5): ONZEKER T02 - no infobox map; centre of the arena locs of square 15188 (plane-1 decor x3786-3826, z5396-5420).
         ToaPath.APMEKEN to Spawn("baba", Tile(3804, 5406, ToaPath.APMEKEN.bossEntry.height)),
-        ToaPath.CRONDIS to Spawn("zebak", Tile(3921, 5408, ToaPath.CRONDIS.bossEntry.height), centred = true),
+        // Cache2686 map15700: plane1's bridge bit lowers arena terrain/loc collision to plane0 (ToaZebakReachTests).
+        ToaPath.CRONDIS to Spawn("zebak", Tile(3921, 5408), centred = true),
         ToaPath.SCABARAS to Spawn("kephri", Tile(3551, 5409, ToaPath.SCABARAS.bossEntry.height), centred = true),
     )
 

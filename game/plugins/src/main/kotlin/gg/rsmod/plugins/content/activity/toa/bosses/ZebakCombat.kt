@@ -70,6 +70,15 @@ object ZebakCombat : CombatScript() {
                 t.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
             }
         }
+        /** Chompington: Zebak melees the adjacent platform tiles. His own water tiles are walk-blocked (cache2686 15700).
+         * Check the edge from the player's dry tile, as the player's melee does; testing from the water rejects valid melee autos.
+         * Real walls flag both sides of the edge, so they still block. No terrain collision is removed.
+         */
+        override fun meleeReach(tile: Tile): Boolean {
+            if (tile.height != npc.tile.height) return false
+            return distance(tile) == 0 || gg.rsmod.game.model.path.MeleeReach.bordersWithoutWall(
+                npc.world.collision, tile, 1, 1, npc.tile, npc.getSize(), npc.getSize())
+        }
         private fun defaultAuto(): ToaAutoAttack {
             val close = players().any { meleeReach(it.tile) }
             val style = if (close) CombatClass.MELEE else if (npc.world.random(1) == 0) CombatClass.RANGED else CombatClass.MAGIC
