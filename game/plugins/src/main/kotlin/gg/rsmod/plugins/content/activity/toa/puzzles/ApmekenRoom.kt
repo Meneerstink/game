@@ -26,7 +26,7 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     private val actors = linkedMapOf<Npc, Actor>()
     private val pools = linkedMapOf<Tile, Pair<GameObject, Int>>()
     private val viewers = linkedSetOf<Player>()
-    private val viewerBases = hashMapOf<Player, Tile?>()
+    private val viewerBases = hashMapOf<Player, gg.rsmod.game.model.Coordinate?>()
     private val pending = mutableListOf<Pair<Int, () -> Unit>>()
 
     override fun startPuzzle(): Boolean {
@@ -103,7 +103,7 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     private fun drawSight() {
         val draw = reference?.drawSight?.value ?: return
         val holder = players.firstOrNull { it.uid == puzzle.sight }
-        players.forEach { draw(it, holder, puzzle.task); viewerBases[it] = it.lastKnownRegionBase?.let { base -> Tile(base) } }
+        players.forEach { draw(it, holder, puzzle.task); viewerBases[it] = it.lastKnownRegionBase }
     }
 
     override fun cycle() {
