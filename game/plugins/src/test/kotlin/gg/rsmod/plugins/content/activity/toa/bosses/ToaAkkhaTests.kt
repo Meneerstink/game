@@ -14,6 +14,25 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaAkkhaTests {
+    @Test fun `kiting timeout counts a full minute from the last auto rather than the style change`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3201, 3199); every { p.equipmentBonuses } returns IntArray(18)
+        every { p.equipment[3] } returns null
+        val s = AkkhaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        val auto = mockk<ToaAutoAttack>(relaxed = true)
+        s.autoEvidence = CombatClass.values().associateWith { auto }; s.target = p
+        s.shadowChargeDirector = {}
+        repeat(19) { s.cycle() } // Four autos at0,6,12,18; no style change or special.
+        io.mockk.verify(exactly = 4) { auto.fire(s, p) }
+        every { p.tile } returns Tile(3210, 3210)
+        repeat(100) { s.cycle() }
+        assertEquals(CombatClass.MELEE, s.style, "recent attacks must reset the one-minute inability timer")
+        io.mockk.verify(exactly = 4) { auto.fire(s, p) }
+        s.cycle()
+        assertEquals(CombatClass.RANGED, s.style, "more than100 ticks without an attack permits a style change")
+        s.close()
+    }
     @Test fun `protection icons follow every style and enrage then clear on close`() {
         val icons = gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
         io.mockk.mockkObject(icons)

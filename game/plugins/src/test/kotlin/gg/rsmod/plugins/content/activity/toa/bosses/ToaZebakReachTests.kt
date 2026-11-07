@@ -18,6 +18,31 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaZebakReachTests {
+    @Test fun `real raid special geometry leaves dry reachable roar cover east of Zebak`() {
+        val f = ToaTestFixture()
+        val southWest = Tile(3917, 5404)
+        every { f.npc.spawnTile } returns southWest; every { f.npc.tile } returns southWest
+        every { f.npc.getSize() } returns 9
+        every { f.npc.getMaximumLifepoints() } returns 580; every { f.npc.getCurrentLifepoints() } returns 493
+        val source = ToaSourceCollision(f.world, 15700)
+        val s = ZebakCombat.Session(f.npc, ToaTestContext())
+        assertEquals(Tile(3934, 5408), s.centre)
+        s.cycle() // Real default85% Great Roar director; no supplied test layout.
+        assertEquals(3, s.rocks.size)
+        assertEquals(5, s.jugs.size)
+        for (rock in s.rocks) {
+            assertFalse(source.collision.isClipped(rock.tile), "rock must be on the actual dry platform: ${rock.tile}")
+            val safe = rock.tile.transform(1, 0)
+            assertTrue(ZebakCombat.behindRock(safe, rock.tile, Direction.EAST))
+            assertFalse(source.collision.isClipped(safe), "cover must be a walkable tile east of the rock")
+            val request = PathRequest.Builder().setPoints(Tile(3934, 5408), safe).setSourceSize(1, 1)
+                .setTargetSize(1, 1).setTouchRadius(0).setProjectilePath(false)
+                .clipPathNodes(node = true, link = true).clipDiagonalTiles().build()
+            assertTrue(BFSPathFindingStrategy(source.collision).calculateRoute(request).success)
+        }
+        assertTrue(s.jugs.all { !source.collision.isClipped(it.tile) }, "all5 jugs must be reachable on dry ground")
+        s.close()
+    }
     @Test fun `centred nine by nine Zebak can be approached and meleed from the east platform`() {
         val f = ToaTestFixture()
         val spawn = ToaBossRooms.SPAWNS.getValue(ToaPath.CRONDIS)

@@ -55,7 +55,9 @@ object ZebakCombat : CombatScript() {
         var specialDirector: (Session, Special) -> Unit = { s, special -> s.defaultSpecial(special) }
         var acidDirector: (Session, Player) -> Unit = { s, p -> s.acidHit(p) }
         var pathAttackInterval: (Session) -> Int = { attackInterval(it.isEnraged, it.context.pathLevel) }
-        var centre = npc.spawnTile.transform(4, -8) // ONZEKER T02: debug geometry; raid adapter supplies the measured platform centre.
+        // Cache2686 map15700 bridge terrain: the fight platform is EAST of the boss, centred on3934,5408.
+        // Boss SW3917,5404 -> platform+17,+4. The raid adapter supplies the translated boss spawn, not another geometry override.
+        var centre = npc.spawnTile.transform(17, 4)
         private val acidExposure = mutableMapOf<Player, Int>()
         private var specialUntil = 0
         private var waveSet = 0
@@ -64,8 +66,8 @@ object ZebakCombat : CombatScript() {
         var onPlatform: (Tile) -> Boolean = { it.height == centre.height && it.x in centre.x - 8..centre.x + 8 && it.z in centre.z - 8..centre.z + 8 }
         override fun configure() {
             super.configure()
-            // ONZEKER T02: relative ramp positions for debug arena; real raid adapter supplies the room geometry.
-            placeObject(45509, centre.transform(-9, -5)); placeObject(45509, centre.transform(9, -5))
+            // cache2686 map15700 loc45509: (3933,5397,rot0) and (3933,5419,rot2).
+            placeObject(45509, centre.transform(-1, -11)); placeObject(45509, centre.transform(-1, 11), 2)
             tail = spawn(ToaBossNpcs.ZEBAK_TAIL, npc.spawnTile.transform(0, 9), STATS.copy(hp = 1))?.also { t ->
                 t.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
             }
@@ -97,9 +99,9 @@ object ZebakCombat : CombatScript() {
         private fun defaultSpecial(special: Special) {
             jugs.toList().forEach { remove(it) }; jugs.clear()
             // ONZEKER T02: room-relative layouts until OSRS spawn traces exist; central jug can always clear a rock's safe strip.
-            val rockTiles = listOf(-4, 0, 4).map { centre.transform(it, 0) }
+            val rockTiles = listOf(-4, 0, 4).map { centre.transform(0, it) }
             listOf(-6, -3, 0, 3, 6).forEach { x ->
-                val tile = centre.transform(x, -3)
+                val tile = centre.transform(3, x)
                 spawn(11735, tile, STATS.copy(hp = 1), path = false, group = false)?.let { jug ->
                     jugs += jug; specialNpcs += jug
                     jug.hitModifier = { h ->
@@ -108,7 +110,7 @@ object ZebakCombat : CombatScript() {
                     }
                 }
             }
-            listOf(-6, -3, 0, 3, 6).forEach { x -> addAcid(centre.transform(x, -1)); addAcid(centre.transform(x, -5)) }
+            listOf(-6, -3, 0, 3, 6).forEach { z -> addAcid(centre.transform(1, z)); addAcid(centre.transform(5, z)) }
             if (special == Special.ROAR) {
                 rocks.clear(); rocks += rockTiles.map(::Rock)
                 rockTiles.forEach { tile -> spawn(11737, tile, STATS.copy(hp = 150), path = false, group = false)?.let { r ->
@@ -116,7 +118,7 @@ object ZebakCombat : CombatScript() {
                     later(4 * stats.speed + 27) { remove(r) }
                 } }
                 // Wiki: four regular attacks to position jugs; roar clip9628=270cycles=9ticks (92-seqticks).
-                roar(4 * stats.speed, 9, 38, Direction.SOUTH) // ONZEKER T18: nearest published Zebak max38;9tick roar clip spaces impacts.
+                roar(4 * stats.speed, 9, 38, Direction.EAST) // Away from Zebak, which stands west of the source platform.
                 later(4 * stats.speed) { nextAttack = tick + 27 }
                 specialUntil = tick + 4 * stats.speed + 27
             } else {

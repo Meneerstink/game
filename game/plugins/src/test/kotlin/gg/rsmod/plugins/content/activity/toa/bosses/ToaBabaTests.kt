@@ -10,6 +10,51 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaBabaTests {
+    @Test fun `a player can pass through a boulder side or rear without another front knockback`() {
+        val rock = Tile(3815, 5402)
+        val west = gg.rsmod.game.model.Direction.WEST
+        for (z in 5402..5404) {
+            assertTrue(BabaCombat.rollingContact(Tile(3815, z), rock, 3, west))
+            assertFalse(BabaCombat.rollingContact(Tile(3816, z), rock, 3, west))
+            assertFalse(BabaCombat.rollingContact(Tile(3817, z), rock, 3, west))
+        }
+        assertFalse(BabaCombat.rollingContact(Tile(3815, 5405), rock, 3, west))
+        assertFalse(BabaCombat.rollingContact(Tile(3815, 5403, 1), rock, 3, west))
+        assertTrue(BabaCombat.rollingContact(Tile(3817, 5403), rock, 3, gg.rsmod.game.model.Direction.EAST))
+        assertTrue(BabaCombat.rollingContact(Tile(3816, 5402), rock, 3, gg.rsmod.game.model.Direction.SOUTH))
+        assertTrue(BabaCombat.rollingContact(Tile(3816, 5404), rock, 3, gg.rsmod.game.model.Direction.NORTH))
+    }
+    @Test fun `default melee cutoff admits the walkable western throne edge and resumes normal combat`() {
+        val f = ToaTestFixture()
+        every { f.npc.spawnTile } returns Tile(3804, 5406)
+        every { f.npc.tile } returns Tile(3819, 5406)
+        every { f.npc.getSize() } returns 5
+        val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.equipmentBonuses } returns IntArray(18)
+        every { p.tile } returns Tile(3817, 5408)
+        val s = BabaCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        s.rolling = true
+        s.incoming(Hit.Builder().addHit(1, HitType.MELEE.id).build().also { it.source = p })
+        assertTrue(s.rolling, "a melee hit before the current spawn cutoff must not skip boulders")
+        every { p.tile } returns Tile(3818, 5408)
+        s.incoming(Hit.Builder().addHit(1, HitType.RANGE.id).build().also { it.source = p })
+        assertTrue(s.rolling, "ranged from the throne edge must not skip boulders")
+        s.incoming(Hit.Builder().addHit(0, HitType.BLOCK.id).build().also {
+            it.source = p; it.sourceCombatClass = gg.rsmod.game.model.combat.CombatClass.MELEE
+        })
+        assertFalse(s.rolling, "even a melee miss at the reachable throne edge ends Rolling Stones")
+        assertTrue(s.boulders.isEmpty())
+        var resumed = 0
+        s.specialDirector = { resumed++ }
+        repeat(BabaCombat.STATS.speed + 1) { s.cycle() }
+        assertEquals(1, resumed, "ordinary melee and its special counter must resume after boulders")
+        assertSame(p, s.target)
+        every { p.tile } returns Tile(3810, 5408)
+        s.cycle()
+        io.mockk.verify { f.npc.walkTo(Tile(3810, 5408)) }
+        s.close()
+    }
     @Test fun `default rolling goes from the cached eastern throne toward the western entrance`() {
         val f = ToaTestFixture()
         every { f.npc.getCurrentLifepoints() } returns 253; every { f.npc.getMaximumLifepoints() } returns 380

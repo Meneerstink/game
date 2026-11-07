@@ -128,16 +128,21 @@ object KephriCombat : CombatScript() {
         }
         private fun minionsTick() {
             agile.removeAll { !it.isSpawned() || it.isDead() }
-            agile.forEach { scarab -> if (tick % AGILE_STATS.speed == 0) players().minByOrNull { it.tile.getDistance(scarab.tile) }?.let { p ->
-                scarab.facePawn(p)
-                animate(9594, scarab)
+            agile.forEach { scarab -> players().minByOrNull { it.tile.getDistance(scarab.tile) }?.let { p ->
                 if (p.tile.isWithinRadius(scarab.tile, 2)) {
                     val dx = (scarab.tile.x - p.tile.x).compareTo(0); val dz = (scarab.tile.z - p.tile.z).compareTo(0)
                     val d = gg.rsmod.game.model.Direction.between(scarab.tile, scarab.tile.transform(dx, dz))
-                    if (d != gg.rsmod.game.model.Direction.NONE && npc.world.collision.canStep(scarab.tile, d)) scarab.walkTo(scarab.tile.transform(dx, dz))
+                    // Agile Scarab43: retreats at RUNNING speed. Movement is independent of its four-tick ranged attack.
+                    var end = Tile(scarab.tile)
+                    repeat(2) { if (d != gg.rsmod.game.model.Direction.NONE && npc.world.collision.canStep(end, d)) end = end.transform(dx, dz) }
+                    if (!sameTile(end, scarab.tile)) scarab.walkTo(end, gg.rsmod.game.model.MovementQueue.StepType.FORCED_RUN)
                 }
-                ToaBossFx.projectile(scarab, p, 2154, false, 2)
-                attack(p, 5, CombatClass.RANGED, 2, actor = scarab)
+                if (tick % AGILE_STATS.speed == 0) {
+                    scarab.facePawn(p)
+                    animate(9594, scarab)
+                    ToaBossFx.projectile(scarab, p, 2154, false, 2)
+                    attack(p, 5, CombatClass.RANGED, 2, actor = scarab)
+                }
             } }
             overlords.toMap().forEach { (id, scarab) ->
                 if (!scarab.isSpawned() || scarab.isDead()) { overlords.remove(id); arcaneCharge.remove(scarab); return@forEach }
