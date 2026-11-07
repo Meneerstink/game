@@ -5,7 +5,8 @@ package gg.rsmod.plugins.content.skills.mining
  * Prospect always wins), text and timing from the 667 Void donor (content/skill/mining/Mining.kt objectApproach("Prospect")).
  */
 val PROSPECT_DEPLETED: Set<Int> =
-    RockType.objects.map { world.definitions.get(ObjectDef::class.java, it).depleted }.filter { it != -1 }.toSet()
+    RockType.objects.map { world.definitions.get(ObjectDef::class.java, it).depleted }.filter { it != -1 }.toSet() +
+        OsrsImportedRocks.depletedLocal // N462: the imported OSRS ROCKS1/ROCKS2
 
 world.plugins.bindObjectFallback { player, obj, opt ->
     val id = obj.getTransform(player)
@@ -15,7 +16,7 @@ world.plugins.bindObjectFallback { player, obj, opt ->
         player.message("There is currently no ore available in this rock.")
         return@bindObjectFallback true
     }
-    val rock = RockType.values.firstOrNull { id in it.objectIds }
+    val rock = RockType.values.firstOrNull { id in it.objectIds } ?: OsrsImportedRocks.byLocal[id]
     player.queue {
         player.message("You examine the rock for ores...")
         wait(4)

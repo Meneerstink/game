@@ -15,6 +15,9 @@ import java.io.File
 object OsrsLocImportTool {
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
+            // ROCKS2 11391; CLAYROCK1..ADAMANTITEROCK2 deplete to them) - OsrsImportedRocks sets them as the depleted form.
+            "necropolis-rocks" to listOf(11390, 11391),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241
