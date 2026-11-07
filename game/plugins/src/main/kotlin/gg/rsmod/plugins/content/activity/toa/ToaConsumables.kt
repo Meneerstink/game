@@ -149,9 +149,11 @@ object ToaConsumables {
                 player.timers[SALTS_TIMER] = SALTS_INTERVAL
             }
             Kind.HONEY_LOCUST -> {
-                // Heals 20 (can overheal) and restores prayer as a dose of prayer potion (floor(level/4) + 7 here).
+                // Honey locust?oldid=15352003: heals 20 (overheal), prayer "7 + 25% of the player's current Prayer level", depleted combat
+                // stats "8 + 25% of the player's base level" (a super restore dose).
                 player.heal(20, 20)
-                player.restorePrayer(skills.getMaxLevel(Skills.PRAYER) / 4 + 7)
+                player.restorePrayer(skills.getCurrentLevel(Skills.PRAYER) / 4 + 7)
+                COMBAT.forEach { s -> restoreDrained(player, s, skills.getMaxLevel(s) / 4 + 8) }
             }
         }
     }
