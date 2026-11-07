@@ -12,6 +12,105 @@ import io.mockk.*
 import kotlin.test.*
 
 class ToaApmekenTests {
+    @Test fun `disconnecting the sight holder during corruption transfers ownership and leaves a completable task`() {
+        val saved = ApmekenReferences.profile
+        val defaults = ApmekenDefaults.reference()
+        ApmekenReferences.profile = defaults.copy(actors = ToaPuzzleReferences.Evidence(
+            defaults.actors.value.mapValues { (_, actor) -> actor.copy(range = 1, hitDelay = 1000) }, "isolate participant loss"))
+        try {
+            lateinit var room: ApmekenRoom
+            ToaPuzzleFixture(2, ToaPath.APMEKEN) { ApmekenRoom(it).also { room = it } }.use { f ->
+                f.advance()
+                val old = f.players.first(); val survivor = f.players[1]
+                assertEquals(old.uid, room.puzzle.sight)
+                assertTrue(room.takePotions(survivor))
+                assertTrue(room.puzzle.beginTask(ApmekenPuzzle.Action.CORRUPTION, 1, emptyMap(), room.tick + 13))
+                f.raid.disconnect(old); f.advance()
+                assertEquals(survivor.uid, room.puzzle.sight)
+                assertFalse(room.eligible(old)); assertFalse(room.pour(old))
+                assertTrue(room.pour(survivor)); assertNull(room.puzzle.task)
+                f.raid.reconnect(old); f.advance()
+                assertFalse(room.eligible(old), "a spectator cannot regain task ownership")
+                assertEquals(survivor.uid, room.puzzle.sight)
+                assertTrue(room.live); assertNull(f.raid.progress.boss(ToaPath.APMEKEN))
+            }
+        } finally { ApmekenReferences.profile = saved }
+    }
+
+    @Test fun `source collision permits the player click route from supplies to every task site`() {
+        val geometry = ToaPuzzleSourceCollision("apmeken", Tile(3776, 5248))
+        //40-loc-placements2686/15186: antechamber hammer45497 and potion45498; pass45135 then enter from3797,5280.
+        for (crate in listOf(Tile(3793, 5284), Tile(3795, 5285)))
+            assertTrue(geometry.route(ToaPath.APMEKEN.challengeEntry, crate).success, "supply crate$crate")
+        val inside = Tile(3797, 5280)
+        for (site in ApmekenRoom.PILLARS) {
+            val route = geometry.route(inside, site, 3, 3)
+            assertTrue(route.success, "roof support$site")
+            //At most10 running ticks from the entry; the supplied task window is13 ticks.
+            assertTrue((route.path.size + 1) / 2 < 13, "support$site takes${route.path.size} walking steps")
+        }
+        for (vent in ApmekenRoom.VENTS) {
+            val route = geometry.route(inside, vent, stepOn = true)
+            assertTrue(route.success, "vent$vent")
+            assertEquals(vent, route.tail)
+            assertTrue((route.path.size + 1) / 2 < 13)
+        }
+        assertTrue(geometry.route(inside, Tile(3806, 5280), stepOn = true).success, "corruption stack west of the statue")
+    }
+
+    @Test fun `default timed tasks can be solved through crate repair vent and corruption actions before their deadlines`() {
+        val saved = ApmekenReferences.profile
+        val defaults = ApmekenDefaults.reference()
+        ApmekenReferences.profile = defaults.copy(actors = ToaPuzzleReferences.Evidence(
+            defaults.actors.value.mapValues { (_, actor) -> actor.copy(range = 1, hitDelay = 1000) },
+            "isolate scheduled task route from projectile flight"))
+        try {
+            for (size in listOf(1, 2, 8)) {
+                lateinit var room: ApmekenRoom
+                ToaPuzzleFixture(size, ToaPath.APMEKEN) { ApmekenRoom(it).also { room = it } }.use { f ->
+                    f.players.forEach { assertTrue(room.takeHammer(it)) }
+                    f.advance()
+                    f.players.forEach { assertTrue(room.takePotions(it)) }
+                    val potion = assertNotNull(ToaIds.item(ApmekenRoom.POTION))
+                    val tasks = if (size == 1) listOf(ApmekenPuzzle.Action.PILLAR, ApmekenPuzzle.Action.VENT)
+                        else ApmekenPuzzle.Action.values().toList()
+                    for (kind in tasks) {
+                        while (room.puzzle.task == null && room.tick < 80) f.advance()
+                        val task = assertNotNull(room.puzzle.task, "no scheduled $kind task for$size players")
+                        assertEquals(kind, task.type)
+                        assertEquals(size, task.required + if (kind == ApmekenPuzzle.Action.CORRUPTION) 1 else 0)
+                        val inventoryBefore = f.players.sumOf { it.inventory.getItemCount(potion) }
+                        if (kind == ApmekenPuzzle.Action.CORRUPTION) {
+                            val holder = f.players.single { it.uid == room.puzzle.sight }
+                            //Players stack on the Sight holder; one Pour cleanses the entire stack.
+                            f.players.forEach { f.at(it, Tile(3806, 5280)) }
+                            assertTrue(room.pour(holder))
+                            assertEquals(inventoryBefore - 1, f.players.sumOf { it.inventory.getItemCount(potion) })
+                        } else {
+                            var member = 0
+                            for ((site, uses) in task.remainingSites.toMap()) repeat(uses) {
+                                val player = f.players[member++]
+                                if (kind == ApmekenPuzzle.Action.PILLAR) {
+                                    f.at(player, ApmekenRoom.PILLAR_FRONTS[site])
+                                    assertTrue(room.repair(player, f.obj(45494, ApmekenRoom.PILLARS[site])))
+                                } else {
+                                    f.at(player, ApmekenRoom.VENTS[site])
+                                    assertTrue(room.pour(player))
+                                }
+                            }
+                            assertEquals(inventoryBefore - if (kind == ApmekenPuzzle.Action.VENT) size else 0,
+                                f.players.sumOf { it.inventory.getItemCount(potion) })
+                        }
+                        assertTrue(room.tick < task.deadline)
+                        assertNull(room.puzzle.task)
+                        assertNull(f.raid.progress.boss(ToaPath.APMEKEN), "tasks alone do not clear the eight waves")
+                        f.advance()
+                    }
+                }
+            }
+        } finally { ApmekenReferences.profile = saved }
+    }
+
     @Test fun `volatile detonation happens once while a lethal hit waits for the engine death phase`() {
         val saved = ApmekenReferences.profile
         val defaults = ApmekenDefaults.reference()

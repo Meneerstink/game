@@ -9,6 +9,37 @@ import gg.rsmod.plugins.content.activity.toa.*
 import io.mockk.*
 
 class ToaCrondisTests {
+    @Test fun `all can variants water a real palm with full inventory and Gricoller consumes ten charges once`() {
+        lateinit var room: CrondisRoom
+        ToaPuzzleFixture(1, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
+            val player = f.players.single()
+            val palm = f.entities.filterIsInstance<Npc>().single()
+            repeat(28) { player.inventory[it] = gg.rsmod.game.model.item.Item(100 + it) }
+            val cans = gg.rsmod.plugins.content.skills.farming.logic.handler.WaterHandler.wateringCans
+            for (charges in 1..8) {
+                player.inventory[0] = gg.rsmod.game.model.item.Item(cans[charges])
+                assertTrue(room.waterCan(player, palm, 0))
+                assertEquals(cans[charges - 1], player.inventory[0]!!.id)
+                assertFalse(room.waterCan(player, palm, 0), "double click must not consume a second dose")
+                assertEquals(cans[charges - 1], player.inventory[0]!!.id)
+                assertEquals(charges.toDouble(), room.puzzle.growth)
+                f.advance()
+            }
+            val gricoller = gg.rsmod.game.model.item.Item(assertNotNull(ToaIds.item(CrondisRoom.GRICOLLER)))
+            gricoller.putAttr(gg.rsmod.game.model.item.ItemAttribute.CHARGES, 20)
+            player.inventory[0] = gricoller
+            assertTrue(room.waterCan(player, palm, 0))
+            assertEquals(10, gricoller.getAttr(gg.rsmod.game.model.item.ItemAttribute.CHARGES))
+            assertFalse(room.waterCan(player, palm, 0))
+            f.advance()
+            assertTrue(room.waterCan(player, palm, 0)); assertEquals(10.0, room.puzzle.growth)
+            assertEquals(0, gricoller.getAttr(gg.rsmod.game.model.item.ItemAttribute.CHARGES))
+            f.advance()
+            assertFalse(room.waterCan(player, palm, 0)); assertEquals(10.0, room.puzzle.growth)
+            assertNotNull(player.inventory[27], "watering must not require a spare inventory slot")
+        }
+    }
+
     @Test fun `world queues advance a room once per cycle and stop immediately after wipe`() {
         lateinit var room: CrondisRoom
         ToaPuzzleFixture(1, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
@@ -22,21 +53,28 @@ class ToaCrondisTests {
     }
 
     @Test fun `death and logout during carrying invalidate personal water while the other player continues`() {
-        lateinit var room: CrondisRoom
-        ToaPuzzleFixture(2, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
-            val p = f.players.first()
-            p.inventory.add(assertNotNull(ToaIds.item(CrondisRoom.CONTAINER)))
-            f.advance()
-            assertTrue(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[0]), true))
-            assertEquals(100.0, room.puzzle.water(p.uid))
-            f.dead += p.uid; f.advance()
-            assertEquals(0.0, room.puzzle.water(p.uid)); assertFalse(room.eligible(p))
-            assertFalse(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[1]), true))
-            f.dead -= p.uid; f.advance()
-            assertTrue(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[1]), true))
-            f.world.players.entries[1] = null; f.advance()
-            assertEquals(0.0, room.puzzle.water(p.uid)); assertFalse(room.eligible(p))
-            assertTrue(room.eligible(f.players[1])); assertTrue(room.live)
+        for (death in listOf(false, true)) {
+            lateinit var room: CrondisRoom
+            ToaPuzzleFixture(2, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
+                val p = f.players.first()
+                p.inventory.add(assertNotNull(ToaIds.item(CrondisRoom.CONTAINER)))
+                f.advance()
+                assertTrue(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[0]), true))
+                assertEquals(100.0, room.puzzle.water(p.uid))
+                //Use the real lifecycle hooks, including the cached raid roster and spectator state after recovery/reconnect.
+                if (death) { f.dead += p.uid; f.raid.deathStart(p) }
+                else { f.raid.disconnect(p); f.world.players.entries[1] = null }
+                f.advance()
+                assertEquals(0.0, room.puzzle.water(p.uid)); assertFalse(room.eligible(p))
+                if (death) { f.dead -= p.uid; f.raid.respawn(p) } else f.raid.reconnect(p)
+                f.advance()
+                assertFalse(room.eligible(p), "returning during the same challenge must remain a spectator")
+                assertFalse(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[1]), true))
+                val teammate = f.players[1]
+                teammate.inventory.add(assertNotNull(ToaIds.item(CrondisRoom.CONTAINER)))
+                assertTrue(room.fill(teammate, f.obj(45398, CrondisRoom.WATERFALLS[1]), true))
+                assertTrue(room.eligible(teammate)); assertTrue(room.live)
+            }
         }
     }
 
