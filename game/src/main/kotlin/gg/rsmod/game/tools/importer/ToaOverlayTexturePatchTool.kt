@@ -106,8 +106,14 @@ object ToaOverlayTexturePatchTool {
 
     internal fun census(terrain: Sequence<Pair<String, ByteArray>>, slots: Set<Int>): Int {
         var scanned = 0
+        val unreadable = mutableListOf<String>()
         terrain.forEach { (name, bytes) ->
-            val map = Rev667TileCodec.decode(bytes)
+            // Some 667 squares do not decode with Rev667TileCodec (buffer ends early). B2's python census (tools/n601_graphics_probe.py)
+            // read all 2271 squares; report them here instead of aborting, and never accept an unreadable ToA/Necropolis target.
+            val map = try { Rev667TileCodec.decode(bytes) } catch (e: Exception) {
+                check(name !in TARGET_NAMES) { "ToA/Necropolis square $name does not decode; refusing" }
+                unreadable += name; return@forEach
+            }
             scanned++
             if (name !in TARGET_NAMES) {
                 for (plane in 0 until 4) for (x in 0 until 64) for (z in 0 until 64) {
@@ -118,6 +124,7 @@ object ToaOverlayTexturePatchTool {
                 }
             }
         }
+        if (unreadable.isNotEmpty()) println("CENSUS_UNREADABLE ${unreadable.size} (covered by tools/n601_graphics_probe.py): ${unreadable.joinToString(" ")}")
         return scanned
     }
 
