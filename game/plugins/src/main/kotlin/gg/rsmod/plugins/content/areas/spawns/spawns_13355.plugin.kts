@@ -1,20 +1,12 @@
 package gg.rsmod.plugins.content.areas.spawns
 
 /*
- * N462 (2026-11-06, K-GEBIED G6): square 13355 now carries the OSRS Necropolis terrain (OsrsRegionImportTool 'necropolis'). Its OSRS spawns
- * are the four Desert Lizards "West of Ruins of Ullek" (OSRS Wiki Desert Lizard location map pins 3346,2800 / 3348,2803 / 3344,2804 /
- * 3352,2805; ChatGPT-A N462-notities\toa\40-necropolis-spawns.tsv). The 667 crocodiles (11, in what is now the Necropolis), lizards (9) and
- * vultures (3) of this square have no OSRS counterpart here (OSRS Wiki Necropolis: monsters = Desert wolf x2, quest-only guards) and are
- * gone; no code referenced them (N462 dossier 18:5x).
+ * N462 / K-GEBIED G6: the old 667 crocodiles, lizards and vultures were removed when this square became OSRS terrain.
+ * The four OSRS Desert Lizard map pins west of Ullek are (3346,2800), (3348,2803), (3344,2804), (3352,2805), plane 0.
+ * Source: OSRS Wiki Desert Lizard oldid=15389340; N462-notities/toa/40-necropolis-spawns.tsv.
+ *
+ * Do not substitute Lizard 2803 (level 42, size 3) for Desert Lizard (level 24, size 2). The similarly named 2804..2806
+ * also use modified 667 model data, not the OSRS meshes. Await Claude's OSRS NPC import and per-tile colour evidence
+ * (459 green / 460 yellow / 461 orange; 12003 duplicates 459). Direction and walk radius are not supplied by the map pins.
+ * The import handoff and cache comparisons are in team/dossiers/N462.txt; no guessed spawns until those gaps are resolved.
  */
-listOf(3346 to 2800, 3348 to 2803, 3344 to 2804, 3352 to 2805).forEach { (x, z) ->
-    spawn_npc(
-        npc = Npcs.LIZARD,
-        x = x,
-        z = z,
-        height = 0,
-        walkRadius = 5,
-        direction = Direction.NORTH,
-        static = false,
-    ) // Desert Lizard
-}

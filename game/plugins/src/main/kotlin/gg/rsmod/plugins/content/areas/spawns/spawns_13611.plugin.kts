@@ -1,22 +1,13 @@
 package gg.rsmod.plugins.content.areas.spawns
 
 /*
- * N462 (2026-11-06, K-GEBIED G6): square 13611 now carries the OSRS terrain (Jaltevas side + Ruins of Ullek; OsrsRegionImportTool
- * 'necropolis'). Its OSRS spawns are the twelve crocodiles "Near the Ruins of Ullek" (OSRS Wiki Crocodile location map pins; ChatGPT-A
- * N462-notities\toa\40-necropolis-spawns.tsv). The 667 archaeologists Kerner/Abigail (plane 1) and the Scabaras locusts/lancers/rangers have
- * no OSRS counterpart on this square and no code uses them (N462 dossier 18:5x) - removed.
+ * N462 / K-GEBIED G6: the old 667 archaeologists Kerner/Abigail and Scabaras locusts/lancers/rangers were removed.
+ * Twelve OSRS Crocodiles belong near Ullek, at the plane-0 map pins recorded in N462-notities/toa/40-necropolis-spawns.tsv
+ * (OSRS Wiki Crocodile oldid=15374665). Await Claude's import before restoring those spawns.
+ *
+ * Crocodile 6779 is the level-89 667 Ullek monster, not OSRS level 63. Local 1993 has level 63 but shares 6779's remodeled
+ * 667 model 31023, rather than OSRS model 6454. Neither satisfies the task's same-name AND same-model identity requirement.
+ * OSRS 4184/11581/11582 have identical cache definitions; 11582 is the land variant (Wiki infobox). No raid crocodile alias.
+ * Direction and walk radius are unproven: the Wiki map pins do not justify the previous NORTH / radius 5 settings.
+ * Exact tiles and import evidence are in team/dossiers/N462.txt; keep this square free of substitutes pending that handoff.
  */
-listOf(
-    3412 to 2774, 3416 to 2773, 3416 to 2777, 3417 to 2764, 3418 to 2782, 3418 to 2788,
-    3421 to 2772, 3424 to 2761, 3424 to 2767, 3425 to 2783, 3428 to 2774, 3428 to 2790,
-).forEach { (x, z) ->
-    spawn_npc(
-        npc = Npcs.CROCODILE_6779,
-        x = x,
-        z = z,
-        height = 0,
-        walkRadius = 5,
-        direction = Direction.NORTH,
-        static = false,
-    ) // Crocodile
-}
