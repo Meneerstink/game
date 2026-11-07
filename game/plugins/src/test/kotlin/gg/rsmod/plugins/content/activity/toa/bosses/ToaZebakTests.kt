@@ -45,6 +45,19 @@ class ToaZebakTests {
         assertEquals(8, ZebakCombat.CROC_MAX_HIT)
         s.close(); assertFalse(croc.isSpawned())
     }
+    @Test fun `a wave over the platform edge moves the player into the walk-blocked moat`() {
+        // Wiki Zebak (Tidal Waves): 'If the wave pushes the player over into the water, they will need to quickly scale back up a ramp'.
+        val f = ToaTestFixture(); val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        io.mockk.every { p.isOnline } returns true; io.mockk.every { p.isDead() } returns false
+        val s = ZebakCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        val edge = s.centre.transform(0, 8)
+        io.mockk.every { p.tile } returns edge
+        io.mockk.every { f.world.collision.canStep(any(), any()) } returns false // the moat is walk-blocked (cache2686 15700)
+        s.wave(listOf(edge), Direction.NORTH, 1, 1, 8) { pl, tile -> s.enterWater(pl, tile) }
+        io.mockk.verify { p.teleportTo(s.centre.transform(0, 9)) }
+        assertEquals(1, s.children.count { it.id == ToaBossNpcs.local(11741) }, "a moat crocodile joins the player in the water")
+        s.close()
+    }
     @Test fun `autonomous director attacks at published intervals and queues threshold special only once`() {
         val f = ToaTestFixture()
         io.mockk.every { f.npc.getMaximumLifepoints() } returns 580
