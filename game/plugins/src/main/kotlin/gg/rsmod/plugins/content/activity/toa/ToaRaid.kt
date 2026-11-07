@@ -31,6 +31,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     private val started = mutableSetOf<Int>()
     private val dying = mutableSetOf<PlayerUID>()
     private var retry: ToaRoomKey? = null
+    /** Members owed honey locusts after a wipe (handed out at their respawn). */
+    private val locustsDue = mutableSetOf<PlayerUID>()
     private var scene: ToaScene? = null
     private val lastBarrier = hashMapOf<PlayerUID, Int>()
     var completion: ToaCompletion? = null
@@ -206,6 +208,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     fun respawn(player: Player) {
         dying -= player.uid
         ToaRecovery.full(player)
+        if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
         val run = progress.current
         val destination = when {
             progress.finished -> REWARD_ENTRY
@@ -280,7 +283,12 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                     ToaRaidEvents.completed(this, record)
                 }
             }
-            ToaRoomEvent.WIPE -> room.wipe(run)
+            ToaRoomEvent.WIPE -> {
+                room.wipe(run)
+                // Honey locust?oldid=15352003: 'given to players who have failed a challenge or boss room' (not with On a Diet). The amount
+                // is not published ('seems to vary according to the room'): owner 07-11 20:5x = 2 per player. Given at the respawn.
+                if ("On a Diet" !in settings.invocations) locustsDue += remaining
+            }
             ToaRoomEvent.RESET -> {
                 room.reset(run); scope.close(); rooms.remove(run.generation); participants.clear()
                 started -= run.generation
@@ -315,6 +323,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         /** ONZEKER T26: first open arena row south of the walled entry corridor (::clipmap 07-11: z5166 free, z5167-5171 blocked). */
         val WARDENS_ARENA = Tile(3808, 5164, 1)
         val REWARD_ENTRY = Tile(3679, 5169)
+        /** OSRS Honey locust 27351 (stackable). */
+        const val HONEY_LOCUST = 27351
+        const val LOCUSTS_PER_WIPE = 2
         // 40-kaart-bron.tsv: Wardens lower/upper arena source squares.
         private val WARDENS_REGIONS = setOf(15184, 15696)
         /** Boss arenas behind an invisible wall: the tile the antechamber's Teleport crystal puts a player on (ONZEKER T26). */
