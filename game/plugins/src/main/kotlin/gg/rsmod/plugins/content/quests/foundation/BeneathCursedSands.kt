@@ -179,8 +179,9 @@ object BeneathCursedSands : ShortQuest(
     }
 }
 
-/** Jamila at her craft stall in Sophanem (spawns_13099; OSRS Wiki Jamila map 3311,2780). */
-const val JAMILA = 5267
+/** Jamila at her craft stall in Sophanem (spawns_13099; OSRS Wiki Jamila map 3311,2780). 667 npc 5268 = Jamila (Talk-to, Trade); 5267 is
+ * the 667 multi-npc on varbit 3275 (0 = nothing, 1 = 5268) that nothing sets - she was invisible and had no options (07-11 boot crash). */
+const val JAMILA = gg.rsmod.plugins.api.cfg.Npcs.JAMILA
 
 /** OSRS Wiki Beneath Cursed Sands startmap 3309,2779; Jamila's stall. */
 val SOPHANEM_STALL = Tile(3311, 2779, 0)

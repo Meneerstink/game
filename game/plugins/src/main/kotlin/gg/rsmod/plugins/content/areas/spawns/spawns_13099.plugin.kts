@@ -521,7 +521,7 @@ spawn_npc(
 ) // Tarik
 spawn_npc(npc = 5261, x = 3314, z = 2756, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Stonemason
 spawn_npc(npc = 5263, x = 3305, z = 2770, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Nathifa
-spawn_npc(npc = 5267, x = 3311, z = 2779, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Jamila
+spawn_npc(npc = Npcs.JAMILA, x = 3311, z = 2779, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Jamila (5268; 5267 = invisible multi-npc on an unused varbit, N462 07-11)
 spawn_npc(npc = 5269, x = 3306, z = 2778, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Sophanem guard
 spawn_npc(npc = 5271, x = 3308, z = 2763, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Sophanem guard
 spawn_npc(npc = 5271, x = 3289, z = 2758, height = 0, walkRadius = 5, direction = Direction.NORTH, static = false) // Sophanem guard
