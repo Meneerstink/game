@@ -185,6 +185,23 @@ object OsrsFxImportTool {
             // N522 bundle 5 (cache 1151): the old Callisto's shockwave 395, heal 157, roar on the player 245; the old Vet'ion's magic 280 /
             // impact 281 (Kronos-184 bosses/Callisto.java, Vetion.java).
             "wildy-old" to listOf(395, 245, 280, 281), // heal 157 = 3127 (wildy-bosses-1)
+            // N462 ToA spotanims (moved 07-11 from SEQ_BATCHES, where the 06-11 import ran them as SEQUENCES: no ToA gfx existed) (GPT-A N462-notities\toa\50-spot-defs.tsv x 50-skeletal-sequences.tsv): 100 with classic sequences, then
+            // the 43 with a skeletal sequence (baked by the skeletal spot route in main; SKELETAL_SPOT lines -> SkeletalSidecarExportTool).
+            // N462 Path of Het light beam: FX_BEAM_ATTACK02..08 (2113-2119, models 43911/45318-45322, seq 9368) + FX_BEAM_IMPACT01 2120
+            // (RuneLite SpotanimID; cache2686). Which one is the Het beam is checked in the test client against the Wiki screenshot.
+            "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
+            "toa-spot" to
+                listOf(
+                    355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
+                    2154, 2155, 2156, 2157, 2158, 2159, 2160, 2161, 2162, 2163, 2164, 2165, 2167, 2168, 2169, 2170, 2171, 2174, 2175, 2180,
+                    2181, 2182, 2184, 2187, 2188, 2189, 2190, 2193, 2194, 2195, 2197, 2198, 2199, 2200, 2201, 2202, 2203, 2205, 2206, 2207,
+                    2208, 2209, 2211, 2212, 2213, 2224, 2225, 2226, 2227, 2228, 2236, 2237, 2238, 2239, 2240, 2242, 2243, 2244, 2245, 2246,
+                    2247, 2248, 2250, 2251, 2252, 2253, 2254, 2255, 2256, 2257, 2258, 2259, 2260, 2953, 3027, 3178, 3763, 3979, 3980, 3981,
+                    // skeletal (baked + SKELETAL_SPOT sidecar):
+                    2141, 2142, 2143, 2144, 2146, 2147, 2148, 2149, 2150, 2151, 2166, 2172, 2173, 2176, 2177, 2178, 2179, 2183, 2185, 2186,
+                    2191, 2192, 2204, 2210, 2214, 2215, 2216, 2217, 2218, 2219, 2220, 2221, 2222, 2223, 2229, 2230, 2231, 2232, 2233, 2234,
+                    2235, 2241, 2249,
+                ),
         )
 
     /**
@@ -236,23 +253,6 @@ object OsrsFxImportTool {
             // POTTERY_TOMB_BOBBING01 9499, WALLKIT_TOMB_CROCODILE01_IDLE01 9500, TOA_TELEPORTER_IDLE 9501, TOA_PILLAR_IDLE 9503,
             // TOA_OSMUMTEN_CHEST_CLOSED 9504, CRONDIS_SPEAR_TRAP_IDLE 9562, TOA_WARDENS_DEBRIS_FLOATING 9712, FX_FIRE01_IDLE 9808.
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
-            // N462 ToA spotanims (GPT-A N462-notities\toa\50-spot-defs.tsv x 50-skeletal-sequences.tsv): 100 with classic sequences, then
-            // the 43 with a skeletal sequence (baked by the skeletal spot route in main; SKELETAL_SPOT lines -> SkeletalSidecarExportTool).
-            // N462 Path of Het light beam: FX_BEAM_ATTACK02..08 (2113-2119, models 43911/45318-45322, seq 9368) + FX_BEAM_IMPACT01 2120
-            // (RuneLite SpotanimID; cache2686). Which one is the Het beam is checked in the test client against the Wiki screenshot.
-            "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
-            "toa-spot" to
-                listOf(
-                    355, 2075, 2076, 2077, 2078, 2079, 2080, 2081, 2132, 2133, 2134, 2135, 2136, 2137, 2138, 2139, 2140, 2145, 2152, 2153,
-                    2154, 2155, 2156, 2157, 2158, 2159, 2160, 2161, 2162, 2163, 2164, 2165, 2167, 2168, 2169, 2170, 2171, 2174, 2175, 2180,
-                    2181, 2182, 2184, 2187, 2188, 2189, 2190, 2193, 2194, 2195, 2197, 2198, 2199, 2200, 2201, 2202, 2203, 2205, 2206, 2207,
-                    2208, 2209, 2211, 2212, 2213, 2224, 2225, 2226, 2227, 2228, 2236, 2237, 2238, 2239, 2240, 2242, 2243, 2244, 2245, 2246,
-                    2247, 2248, 2250, 2251, 2252, 2253, 2254, 2255, 2256, 2257, 2258, 2259, 2260, 2953, 3027, 3178, 3763, 3979, 3980, 3981,
-                    // skeletal (baked + SKELETAL_SPOT sidecar):
-                    2141, 2142, 2143, 2144, 2146, 2147, 2148, 2149, 2150, 2151, 2166, 2172, 2173, 2176, 2177, 2178, 2179, 2183, 2185, 2186,
-                    2191, 2192, 2204, 2210, 2214, 2215, 2216, 2217, 2218, 2219, 2220, 2221, 2222, 2223, 2229, 2230, 2231, 2232, 2233, 2234,
-                    2235, 2241, 2249,
-                ),
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
             "necropolis-seq" to listOf(13509, 13510, 13511, 13512, 13513, 13564),
