@@ -9,6 +9,7 @@ import gg.rsmod.plugins.content.magic.SpellbookData
 
 // Sapphire enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 29) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_1_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue
@@ -22,6 +23,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 29) {
 
 // Emerald enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 41) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_2_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue
@@ -35,6 +37,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 41) {
 
 // Ruby enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 53) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_3_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue
@@ -48,6 +51,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 53) {
 
 // Diamond enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 61) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_4_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue
@@ -61,6 +65,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 61) {
 
 // Dragonstone enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 76) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_5_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue
@@ -74,6 +79,7 @@ on_spell_on_item(fromInterface = 192, fromComponent = 76) {
 
 // Onyx enchantment
 on_spell_on_item(fromInterface = 192, fromComponent = 88) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val spell = SpellbookData.LVL_6_ENCHANT
         val data = MagicSpells.getMetadata(spellId = spell.uniqueId) ?: return@queue

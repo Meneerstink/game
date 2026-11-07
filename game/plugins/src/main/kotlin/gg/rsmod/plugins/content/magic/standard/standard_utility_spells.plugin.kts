@@ -36,6 +36,7 @@ fun bonesTo(
     produce: Int,
     xp: Double,
 ) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return
     if (gg.rsmod.plugins.content.magic.BonesToFruit.refuseWithoutBones(player)) return
     if (!MagicSpells.canCast(player, metadata.lvl, metadata.runes)) return
     MagicSpells.removeRunes(player, metadata.runes, metadata.sprite)
@@ -155,6 +156,7 @@ private val BOLT_ENCHANTS =
     )
 
 on_magic_spell_button("Enchant Crossbow Bolt") {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_magic_spell_button
     player.openInterface(432, InterfaceDestination.MAIN_SCREEN)
 }
 

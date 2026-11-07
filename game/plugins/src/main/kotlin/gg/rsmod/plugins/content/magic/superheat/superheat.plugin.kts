@@ -11,6 +11,7 @@ val SUPERHEAT_TIMER = TimerKey()
 
 // superheat
 on_spell_on_item(fromInterface = 192, fromComponent = 50) {
+    if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_item
     player.queue(TaskPriority.STRONG) {
         val data = MagicSpells.getMetadata(spellId = SpellbookData.SUPERHEAT_ITEM.uniqueId) ?: return@queue
         if (MagicSpells.canCast(player, data.lvl, data.runes)) {

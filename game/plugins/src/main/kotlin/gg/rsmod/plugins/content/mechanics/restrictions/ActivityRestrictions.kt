@@ -3,7 +3,7 @@ package gg.rsmod.plugins.content.mechanics.restrictions
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.plugins.api.ext.message
 
-enum class RestrictedAction { EAT, DRINK, PRAYER, SPECIAL_ATTACK, TELEPORT, SUMMON }
+enum class RestrictedAction { EAT, DRINK, PRAYER, SPECIAL_ATTACK, TELEPORT, SUMMON, UTILITY_SPELL }
 
 /**
  * RCV-010 C2: one shared gate for activity rules (Duel Arena rules today; any other ruleset registers the same

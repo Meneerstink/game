@@ -40,6 +40,7 @@ object DuelArenaRules {
             RestrictedAction.SPECIAL_ATTACK -> "You can't use special attacks in this duel.".takeIf { DuelRule.NO_SPECIAL_ATTACKS in rules }
             RestrictedAction.TELEPORT -> "A magical force prevents you from teleporting from the arena."
             RestrictedAction.SUMMON -> "Summoning has been disabled during this duel!".takeIf { DuelRule.ENABLE_SUMMONING !in rules }
+            RestrictedAction.UTILITY_SPELL -> null
         }
     }
 

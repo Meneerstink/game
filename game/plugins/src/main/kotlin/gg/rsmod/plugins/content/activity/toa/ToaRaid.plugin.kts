@@ -5,6 +5,13 @@ import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.plugins.content.mechanics.death.SafeDeath
 
 SafeDeath.register { player -> ToaLobby.of(player.world).raid(player.uid)?.contains(player) == true }
+// OSRS Wiki Tombs of Amascut (Mechanics): "It is not possible to cast standard spellbook utility spells inside the raid (with the exception of
+// Telekinetic Grab and Monster Inspect), although utility spells from the Lunar spellbook do work." Teleports are not utility spells.
+// ONZEKER: the refusal message is not in the sources.
+gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { p, action ->
+    if (action == gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL && ToaLobby.of(p.world).raid(p.uid)?.contains(p) == true)
+        "You can't use that spell here." else null
+}
 
 can_attack { attacker, target ->
     val raidA = (attacker as? Player)?.let { ToaLobby.of(world).raid(it.uid) }

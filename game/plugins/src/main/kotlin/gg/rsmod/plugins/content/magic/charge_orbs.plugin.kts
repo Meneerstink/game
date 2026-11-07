@@ -23,10 +23,12 @@ val CHARGE_ORB_INTERVAL = 6
 
 ORB_SPELLS.forEach { orbSpell ->
     on_spell_on_obj(parent = orbSpell.spell.interfaceId, child = orbSpell.spell.component, obj = orbSpell.obelisk) {
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_obj
         chargeOrbs(player, orbSpell)
     }
     // Any other object: the spell's own refusal (Void OrbCharging wording).
     on_spell_on_obj(parent = orbSpell.spell.interfaceId, child = orbSpell.spell.component) {
+        if (gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.refuse(player, gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.UTILITY_SPELL)) return@on_spell_on_obj
         val article = if (orbSpell.element.first() in "aeiou") "an" else "a"
         player.message("This spell needs to be cast on $article ${orbSpell.element} obelisk.")
     }
