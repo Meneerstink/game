@@ -7,8 +7,39 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaKephriTests {
+    @Test fun `Agile retreat consumes two real movement steps and respects a solid destination tile`() {
+        val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        val collision = gg.rsmod.game.model.collision.CollisionManager(gg.rsmod.game.model.region.ChunkSet(f.world))
+        every { f.world.collision } returns collision; every { f.world.chunks } returns collision.chunks
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+        every { p.equipmentBonuses } returns IntArray(18)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        var playerTile = Tile(3200, 3200)
+        every { p.tile } answers { playerTile }
+        val scarab = gg.rsmod.game.model.entity.Npc(2, Tile(3201, 3200), f.world)
+        f.world.spawn(scarab)
+        scarab.combatDef = KephriCombat.AGILE_STATS.definition(ToaTestContext()); scarab.setCurrentLifepoints(30)
+        scarab.naivePathfinding = true; scarab.ignoresEntityCollision = true
+        val s = KephriCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+        s.agile += scarab; s.children += scarab; s.applyBonuses(scarab)
+        s.autoDirector = {}; s.specialDirector = {}
+        s.cycle(); scarab.movementQueue.cycle()
+        assertEquals(Tile(3203, 3200), scarab.tile, "FORCED_RUN must move two tiles even without player run enabled")
+        collision.applyUpdate(gg.rsmod.game.model.collision.CollisionUpdate.Builder().apply {
+            setType(gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD)
+            putTile(Tile(3205, 3200), false, *gg.rsmod.game.model.Direction.NESW)
+        }.build())
+        playerTile = Tile(3202, 3200)
+        s.cycle(); scarab.movementQueue.cycle()
+        assertEquals(Tile(3204, 3200), scarab.tile, "the first retreat step is valid; the solid second tile is not")
+        s.cycle(); scarab.movementQueue.cycle()
+        assertEquals(Tile(3204, 3200), scarab.tile, "continued pressure cannot push a scarab through the blocked edge")
+        s.close(); assertFalse(scarab.isSpawned())
+    }
     @Test fun `Agile retreats at running speed between attacks and stops at a real blocked edge`() {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
+        // Generic relaxed AttributeMap.get otherwise invents Object for the prayer-book String.
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         every { p.isOnline } returns true; every { p.isDead() } returns false; every { p.tile } returns Tile(3200, 3200)
         every { p.equipmentBonuses } returns IntArray(18)
         val scarab = mockk<gg.rsmod.game.model.entity.Npc>(relaxed = true)

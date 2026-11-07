@@ -236,7 +236,7 @@ object AkkhaCombat : CombatScript() {
         }
         fun enterEnrage(preserveIncoming: Boolean = false) {
             if (enraged) return
-            enraged = true; newPhase(); memoryActive = false
+            enraged = true; newPhase(); memoryActive = false; npc.invisible = false
             showProtection()
             val restored = maxOf(1, npc.getMaximumLifepoints() / 5)
             npc.setCurrentLifepoints(if (preserveIncoming) npc.getCurrentLifepoints() + restored else restored)
@@ -256,12 +256,17 @@ object AkkhaCombat : CombatScript() {
         fun memoryBlast(pattern: List<Quadrant>, firstImpact: Int, baseDamage: Int) {
             require(pattern.isNotEmpty() && pattern.zipWithNext().all { adjacent(it.first, it.second) })
             require(firstImpact >= 0 && baseDamage >= 0)
-            memoryActive = true; animate(9784); message("Sections of the room start to glow...")
+            memoryActive = true; npc.stopMovement(); animate(9784); message("Sections of the room start to glow...")
+            // S1130: Akkha disappears throughout Memory Blast, not just for the disappearance animation.
+            // Cache9784 is one tick long. Hide after that clip and restore visibility before the return clip.
+            later(1) { npc.invisible = true }
             val interval = blastInterval()
             pattern.forEachIndexed { i, safe -> later(firstImpact + i * interval) {
                 players().filter { quadrant(it.tile, centre) != safe }.forEach { elementalHit(it, baseDamage) }
             } }
-            later(firstImpact + pattern.lastIndex * interval + interval) { memoryActive = false; animate(9785) }
+            later(firstImpact + pattern.lastIndex * interval + interval) {
+                memoryActive = false; npc.invisible = false; animate(9785)
+            }
         }
         fun detonate(delay: Int, baseDamage: Int, diagonal: Boolean = false) {
             if (context.partySize == 1) return
@@ -301,6 +306,7 @@ object AkkhaCombat : CombatScript() {
         }
         override fun close() {
             if (closed) return
+            npc.invisible = false
             ToaHeadIcons.clear(npc)
             npc.timers.remove(gg.rsmod.game.model.timer.FREEZE_IMMUNITY_TIMER)
             slowUntil.clear(); previousDelay.clear(); burning.clear(); shadows.clear(); super.close()

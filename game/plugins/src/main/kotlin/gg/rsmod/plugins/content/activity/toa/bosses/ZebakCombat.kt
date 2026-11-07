@@ -19,8 +19,14 @@ object ZebakCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.ZEBAK)).toIntArray()
     val STATS = ToaNpcStats(580, 250, 140, 70, 100, 120, 7, 160, 215, 220, 100, 16, 30,
         160, 160, 260, 200, 110, 9634)
-    val CROC_STATS = ToaNpcStats(30, 150, 60, 100, 30, 1, 7, strengthBonus = 100,
-        stab = 150, slash = 350, crush = 350, mage = 5, range = 150, deathSeq = 2038) // Crocodile (ToA) infobox in05-brontekst.
+    // Cache2686 NPC11741 TOA_ZEBAK_WATERCROC: Attack250, Strength70, params14(speed)=2,10(strength bonus)=0.
+    // Crocodile(ToA) Wiki infobox in05-brontekst is NPC11705, the DIFFERENT Crondis puzzle crocodile.
+    // ONZEKER T18: unpublished HP/defensive levels/bonuses and action clips retain that related crocodile's fallback.
+    val CROC_STATS = ToaNpcStats(30, 250, 70, 100, 30, 1, 2, strengthBonus = 0,
+        stab = 150, slash = 350, crush = 350, mage = 5, range = 150, deathSeq = 2038)
+    // ONZEKER T18: actual bite max unpublished; standard NPC melee formula from measured70/+0 gives
+    // floor(0.5 + (70+9)*(0+64)/640)=8, rather than the unrelated puzzle crocodile's published18.
+    const val CROC_MAX_HIT = 8
     val thresholds = listOf(85, 70, 55, 40)
     fun enraged(hp: Int, max: Int) = hp.toLong() * 4 < max
     fun waterRadius(@Suppress("UNUSED_PARAMETER") upsetStomach: Boolean = false) = 2
@@ -151,7 +157,7 @@ object ZebakCombat : CombatScript() {
                         croc.walkTo(p.tile)
                         if (tick % CROC_STATS.speed == 0 && actorMeleeReach(croc, p.tile)) {
                             animate(2039, croc)
-                            attack(p, ToaScale.damage(18, context), CombatClass.MELEE, 1, 1, 4, actor = croc)
+                            attack(p, ToaScale.damage(CROC_MAX_HIT, context), CombatClass.MELEE, 1, 1, 4, actor = croc)
                         }
                     }
                 }

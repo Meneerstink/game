@@ -3,6 +3,35 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 import kotlin.test.*
 
 class ToaWardensTests {
+    @Test fun `an exact five percent hit starts enrage immediately in every mode and solo or eight players`() {
+        for (level in listOf(0, 150, 300)) for (party in listOf(1, 8)) {
+            val f = ToaTestFixture()
+            val root = gg.rsmod.game.model.entity.Npc(1, gg.rsmod.game.model.Tile(3200, 3200), f.world)
+            f.world.spawn(root)
+            val s = WardensCombat.Session(root, ToaTestContext(raidLevel = level, partySize = party))
+            s.phase = WardensCombat.Phase.P3; s.siphonStage = 4
+            root.combatDef = WardensCombat.P3_STATS.definition(s.context)
+            root.scriptedDeath = true
+            val max = root.getMaximumLifepoints(); val threshold = max / 20
+            root.setCurrentLifepoints(threshold + 2)
+            root.hitModifier = s::incoming
+            fun hit() {
+                root.addHit(gg.rsmod.game.model.Hit.Builder().addHit(1, gg.rsmod.plugins.api.HitType.MELEE.id).build())
+                root.hitsCycle()
+            }
+            hit()
+            assertEquals(threshold + 1, root.getCurrentLifepoints())
+            assertEquals(WardensCombat.Phase.P3, s.phase)
+            hit()
+            assertEquals(WardensCombat.Phase.ENRAGE, s.phase, "RL$level party$party: exactly five percent cannot wait for a later attack")
+            assertEquals(threshold + max / 5, root.getCurrentLifepoints(), "one 20% max-health heal")
+            val healed = root.getCurrentLifepoints()
+            hit()
+            assertEquals(healed - 1, root.getCurrentLifepoints(), "enrage healing must not repeat")
+            assertEquals(ToaScale.stat(180, s.context), root.stats.getCurrentLevel(2))
+            s.close()
+        }
+    }
     @Test fun `nearly arrived P1 charged shot survives P2 transition but distant shots and reset do not`() {
         fun delivered(delay: Int, reset: Boolean = false): Int {
             val f = ToaTestFixture(); val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
@@ -21,6 +50,8 @@ class ToaWardensTests {
             return hits
         }
         assertEquals(1, delivered(6), "orb with4ticks left must still hit after the obelisk falls")
+        assertEquals(1, delivered(7), "the retained approximate five-tick boundary is inclusive")
+        assertEquals(0, delivered(8), "a shot six ticks away must not cross the transition")
         assertEquals(0, delivered(10), "orb with8ticks left must be cancelled")
         assertEquals(0, delivered(6, reset = true), "wipe/close must still cancel the carried shot")
     }

@@ -14,6 +14,37 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaAkkhaTests {
+    @Test fun `Memory Blast hides Akkha after the disappearance clip and restores him on completion enrage or reset`() {
+        for (exit in listOf("complete", "enrage", "reset", "early reset")) {
+            val f = ToaTestFixture(); val root = Npc(1, Tile(3200, 3200), f.world)
+            f.world.spawn(root)
+            root.combatDef = AkkhaCombat.STATS.definition(ToaTestContext()); root.setCurrentLifepoints(400)
+            val s = AkkhaCombat.Session(root, ToaTestContext())
+            s.nextAttack = Int.MAX_VALUE
+            root.movementQueue.addStep(Tile(3201, 3200), gg.rsmod.game.model.MovementQueue.StepType.NORMAL, false)
+            s.memoryBlast(listOf(AkkhaCombat.Quadrant.FIRE, AkkhaCombat.Quadrant.SHADOW), 3, 22)
+            assertFalse(root.movementQueue.hasDestination(), "a vanished boss must stop the old chase path")
+            assertFalse(root.invisible, "allow the one-tick disappearance clip to play")
+            if (exit == "early reset") {
+                s.close(); repeat(15) { s.cycle() }
+                assertFalse(root.invisible, "reset before the hide tick must cancel the pending disappearance")
+                continue
+            }
+            repeat(2) { s.cycle() }
+            assertTrue(root.invisible, "the one-tick clip alone previously returned to visible idle during the blast")
+            assertTrue(s.immune())
+            gg.rsmod.game.sync.task.NpcPostSynchronizationTask.run(root)
+            assertTrue(root.invisible, "normal NPC post-sync must preserve the Memory Blast state")
+            when (exit) {
+                "complete" -> { repeat(10) { s.cycle() }; assertFalse(s.memoryActive) }
+                "enrage" -> { s.enterEnrage(); assertTrue(s.enraged) }
+                else -> s.close()
+            }
+            assertFalse(root.invisible, "Akkha must be visible again after $exit")
+            s.close(); repeat(15) { s.cycle() }
+            assertFalse(root.invisible, "a cancelled hide callback must not hide the actor later")
+        }
+    }
     @Test fun `kiting timeout counts a full minute from the last auto rather than the style change`() {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
         every { p.isOnline } returns true; every { p.isDead() } returns false

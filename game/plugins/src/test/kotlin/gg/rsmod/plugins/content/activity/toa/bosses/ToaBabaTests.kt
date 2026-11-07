@@ -10,6 +10,53 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaBabaTests {
+    @Test fun `a walkable throne position uses normal pathing without a corrective teleport`() {
+        val f = ToaTestFixture()
+        every { f.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, 1) } returns
+            gg.rsmod.game.fs.def.NpcDef(1).apply { size = 5 }
+        val collision = gg.rsmod.game.model.collision.CollisionManager(gg.rsmod.game.model.region.ChunkSet(f.world))
+        every { f.world.collision } returns collision; every { f.world.chunks } returns collision.chunks
+        val root = gg.rsmod.game.model.entity.Npc(1, Tile(3200, 3200), f.world)
+        f.world.spawn(root)
+        root.combatDef = BabaCombat.STATS.definition(ToaTestContext()); root.setCurrentLifepoints(380)
+        root.naivePathfinding = true; root.ignoresEntityCollision = true
+        root.moveTo(Tile(3215, 3200))
+        val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3206, 3202)
+        val s = BabaCombat.Session(root, ToaTestContext(players = listOf(p)))
+        s.nextAttack = Int.MAX_VALUE; s.cycle()
+        assertEquals(Tile(3215, 3200), root.tile, "an unblocked debug arena needs no throne recovery")
+        assertTrue(root.movementQueue.hasDestination(), "the ordinary collision-respecting path must do the movement")
+        s.close()
+    }
+    @Test fun `Ba-Ba actually leaves the blocked throne and walks after Rolling Stones on source collision`() {
+        val f = ToaTestFixture()
+        every { f.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, 1) } returns
+            gg.rsmod.game.fs.def.NpcDef(1).apply { size = 5 }
+        val source = ToaSourceCollision(f.world, 15188)
+        every { f.world.chunks } returns source.collision.chunks
+        val root = gg.rsmod.game.model.entity.Npc(1, Tile(3804, 5406), f.world)
+        f.world.spawn(root)
+        root.combatDef = BabaCombat.STATS.definition(ToaTestContext())
+        root.setCurrentLifepoints(380); root.naivePathfinding = true; root.ignoresEntityCollision = true
+        root.moveTo(Tile(3819, 5406))
+        val p = mockk<Player>(relaxed = true)
+        every { p.isOnline } returns true; every { p.isDead() } returns false
+        every { p.tile } returns Tile(3810, 5408)
+        assertFalse(source.collision.canBodyStep(root.tile, 5, 5, gg.rsmod.game.model.Direction.WEST, water = false),
+            "the old walkTo-only implementation cannot leave even the first throne tile")
+        val s = BabaCombat.Session(root, ToaTestContext(players = listOf(p)))
+        s.rolling = true; s.endRolling(); s.nextAttack = Int.MAX_VALUE
+        s.cycle()
+        assertEquals(Tile(3814, 5406), root.tile, "nearest complete free footprint, not an arbitrary arena teleport")
+        assertTrue(root.movementQueue.hasDestination(), "the real NPC pathfinder must enqueue the chase")
+        root.movementQueue.cycle()
+        assertTrue(root.tile.x < 3814, "a real movement cycle must leave the throne side towards the player")
+        assertFalse(source.collision.isClipped(root.tile))
+        assertFalse(s.rolling)
+        s.close()
+    }
     @Test fun `a player can pass through a boulder side or rear without another front knockback`() {
         val rock = Tile(3815, 5402)
         val west = gg.rsmod.game.model.Direction.WEST
@@ -26,10 +73,14 @@ class ToaBabaTests {
     }
     @Test fun `default melee cutoff admits the walkable western throne edge and resumes normal combat`() {
         val f = ToaTestFixture()
+        // This regression resumes a real accuracy roll after Rolling Stones.
+        every { f.npc.entityType } returns gg.rsmod.game.model.EntityType.NPC
+        every { f.npc.combatDef } returns BabaCombat.STATS.definition(ToaTestContext())
         every { f.npc.spawnTile } returns Tile(3804, 5406)
         every { f.npc.tile } returns Tile(3819, 5406)
         every { f.npc.getSize() } returns 5
         val p = mockk<Player>(relaxed = true)
+        every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         every { p.isOnline } returns true; every { p.isDead() } returns false
         every { p.equipmentBonuses } returns IntArray(18)
         every { p.tile } returns Tile(3817, 5408)
