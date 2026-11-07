@@ -135,7 +135,7 @@ object OsrsRegionImportTool {
 
     /** The textured rev-667 underlays of the desert pyramid/dungeon interiors (Pyramid Plunder 29-31 x 68-70, the dungeons below the
      * desert 49-55 x 139-150; same census): sandstone, dark stone and the black void (71 = 030303). */
-    val PYRAMID_HD_UNDERLAYS: Set<Int> = setOf(61, 93, 56, 54, 55, 71, 62, 125, 145, 144, 0, 140, 111, 147, 102)
+    val PYRAMID_HD_UNDERLAYS: Set<Int> = setOf(60, 61, 93, 56, 54, 55, 71, 62, 125, 145, 144, 0, 140, 111, 147, 102)
 
     val BATCHES: Map<String, Batch> =
         mapOf(
