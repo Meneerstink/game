@@ -549,9 +549,9 @@ object DropSources {
         val points = TOA_REFERENCE_POINTS
         val level = TOA_REFERENCE_LEVEL
         val purple = loot.purpleChance(points, level)
-        val weights = loot.Unique.values().sumOf { it.weight }.toDouble()
+        val weights = gg.rsmod.plugins.content.activity.toa.core.ToaLoot.Unique.values().sumOf { it.weight }.toDouble()
         val lines = ArrayList<Line>()
-        loot.Unique.values().forEach { u ->
+        gg.rsmod.plugins.content.activity.toa.core.ToaLoot.Unique.values().forEach { u ->
             val id = local(u.osrsItem) ?: return@forEach
             val p = purple * u.weight / weights
             lines += Line("toa:${u.name}", id, itemName(world, id), "1", p, p)
@@ -574,14 +574,14 @@ object DropSources {
             lines += Line("toa:clue", id, itemName(world, id), "1", p, p)
         }
         // Three rolls of 1/27 over the commons; the purple winner gets none.
-        val roll = 1 - Math.pow(1 - 1.0 / loot.Common.values().size, 3.0)
-        val commons = loot.Common.values().mapNotNull { c ->
+        val roll = 1 - Math.pow(1 - 1.0 / gg.rsmod.plugins.content.activity.toa.core.ToaLoot.Common.values().size, 3.0)
+        val commons = gg.rsmod.plugins.content.activity.toa.core.ToaLoot.Common.values().mapNotNull { c ->
             val id = local(c.osrsItem) ?: return@mapNotNull null
             val shown = if (c.noted) world.definitions.getNullable(ItemDef::class.java, id)?.noteLinkId?.takeIf { it > 0 } ?: id else id
             val p = roll * (1 - purple)
             Line("toa:common:${c.name}", shown, itemName(world, shown), loot.commonAmount(c, points, level).toString(), p, p)
         }
-        local(loot.Common.COINS.osrsItem)?.let { icon ->
+        local(gg.rsmod.plugins.content.activity.toa.core.ToaLoot.Common.COINS.osrsItem)?.let { icon ->
             val p = 1 - purple
             lines += Line("toa:commons", icon, "Common loot", "1", p, p, Tag.TABLE, sorted(world, commons), sub = "3 rolls, without a purple")
         }
