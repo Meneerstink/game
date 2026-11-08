@@ -125,19 +125,7 @@ on_song_end {
     } else {
         // If the playlist is off, find out if we're in any region / area that has any associated songs and play a
         // random one
-        val musicTracks = world.getService(RegionMusicService::class.java)?.musicTrackList
-        val songsToChoose = mutableListOf<RegionMusicService.MusicTrack>()
-        musicTracks?.forEach { musicTrack ->
-            musicTrack.areas.forEach {
-                val vertices = (it.x zip it.y).map { pos -> Tile(pos.first, pos.second) }
-                val playerInRegion = it.region == player.tile.regionId
-                val playerInPolygonArea =
-                    vertices.isNotEmpty() && SimplePolygonArea(vertices.toTypedArray()).containsTile(player.tile)
-                if (playerInRegion || playerInPolygonArea) {
-                    songsToChoose.add(musicTrack)
-                }
-            }
-        }
+        val songsToChoose = world.getService(RegionMusicService::class.java)?.tracksAt(player).orEmpty()
 
         if (songsToChoose.size == 0) return@on_song_end
 
