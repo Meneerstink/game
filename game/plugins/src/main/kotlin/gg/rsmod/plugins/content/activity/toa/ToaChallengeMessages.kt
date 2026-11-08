@@ -14,8 +14,10 @@ import gg.rsmod.plugins.content.activity.toa.core.ToaMode
  *   the count is red (<col=ff0000>) like every OSRS kill count.
  * - Wiki Tombs Speed Runner: the chat's "Total Time" after each challenge "does not account for the down-time in between rooms"
  *   (= the sum of the room durations).
- * ONZEKER T27 (no source found): the colour of the times (written plain) and the words between Duration and "completion time" in the
- * Wardens line; whether the boss rooms also say "Challenge started" (the pattern is shared, so they do here).
+ * - RuneLite 27fcc1da ChatCommandsPluginTest:1359-1427: every mode's count; the Wardens' Duration and challenge completion time
+ *   use ef1020, separated by <br>; overall time is a separate game message. Owner: omit personal best records/suffixes.
+ * - Red Rookie TombsOfAmascutStats 2dc8a8eb:108-121 observes all five boss start messages.
+ * ONZEKER T27: colour/interpunctuation of ordinary room completion times; do not extrapolate other chat colours.
  */
 object ToaChallengeMessages {
     fun name(key: ToaRoomKey): String = when {
@@ -31,10 +33,14 @@ object ToaChallengeMessages {
 
     fun started(key: ToaRoomKey): String = "Challenge started: ${name(key)}."
 
-    /** [duration]/[total] in game ticks. For the Wardens [total] is the whole raid. */
+    /** [duration]/[total] in game ticks: this room and the sum of all completed rooms, excluding travel/supplies. */
     fun complete(key: ToaRoomKey, duration: Int, total: Int, raidLevel: Int): String =
-        if (key.wardens) "Challenge complete: The Wardens. Duration: ${time(duration)}. ${raidName(raidLevel)} total completion time: ${time(total)}."
+        if (key.wardens) "Challenge complete: The Wardens. Duration: <col=ef1020>${time(duration)}</col><br>" +
+            "${raidName(raidLevel)} challenge completion time: <col=ef1020>${time(total)}</col>."
         else "Challenge complete: ${name(key)}. Duration: ${time(duration)}. Total: ${time(total)}."
+
+    fun overall(raidLevel: Int, ticks: Int): String =
+        "${raidName(raidLevel)} total completion time: <col=ef1020>${time(ticks)}</col>."
 
     fun raidName(raidLevel: Int): String = when (ToaMode.of(raidLevel)) {
         ToaMode.ENTRY -> "Tombs of Amascut: Entry Mode"

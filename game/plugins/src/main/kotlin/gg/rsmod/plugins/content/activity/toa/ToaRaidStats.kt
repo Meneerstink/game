@@ -123,7 +123,8 @@ class ToaRaidStats {
     fun room(path: ToaPath?, boss: Boolean): Int? = roomCycles[ToaRoomKey(path, boss)]
 
     fun times(overallCycles: Int?): ToaSummaryUi.Times {
-        val challenges = ToaPath.values().mapNotNull { room(it, false) }
+        // Wiki Tombs Speed Runner?oldid=14926068: cumulative challenge time includes paths AND boss fights, not downtime.
+        val challenges = roomCycles.values
         return ToaSummaryUi.Times(
             kephri = room(ToaPath.SCABARAS, true), akkha = room(ToaPath.HET, true), baba = room(ToaPath.APMEKEN, true),
             zebak = room(ToaPath.CRONDIS, true), wardens = room(null, true),

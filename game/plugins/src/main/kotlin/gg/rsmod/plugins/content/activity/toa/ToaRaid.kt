@@ -322,9 +322,12 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 // "Challenge complete: <room>. Duration: m:ss.cc. Total: m:ss.cc" (Total = the room times so far, no down-time between
                 // rooms - Wiki Tombs Speed Runner); the Wardens line carries the raid's total completion time (ToaChallengeMessages).
                 val duration = stats.roomCycles[run.key] ?: 0
-                val total = if (run.key.wardens) progress.elapsedCycles(world.currentCycle) else stats.roomCycles.values.sum()
+                val total = stats.roomCycles.values.sum()
                 val done = ToaChallengeMessages.complete(run.key, duration, total, settings.raidLevel)
-                players().forEach { it.message(done) }
+                players().forEach {
+                    it.message(done)
+                    if (run.key.wardens) it.message(ToaChallengeMessages.overall(settings.raidLevel, progress.elapsedCycles(world.currentCycle)))
+                }
                 // Jingles (OSRS Wiki Test of Nobility / Tomb Cleared (Tombs of Amascut), cache ids 295/296 -> our index 11 groups 488/489,
                 // OsrsJingleImportTool): a challenge room cleared plays Test of Nobility, a defeated boss Tomb Cleared - once, for the members there.
                 players().forEach { it.playJingle(if (run.key.boss) JINGLE_TOMB_CLEARED else JINGLE_TEST_OF_NOBILITY) }

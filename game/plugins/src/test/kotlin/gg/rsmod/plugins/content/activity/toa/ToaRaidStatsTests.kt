@@ -20,7 +20,7 @@ class ToaRaidStatsTests {
         assertEquals(100, t.het)
         assertEquals(350, t.akkha)
         assertEquals(60, t.crondis)
-        assertEquals(160, t.challengeTotal)
+        assertEquals(510, t.challengeTotal)
         assertEquals(1000, t.overall)
         assertNull(t.wardens)
         assertNull(t.kephri)
