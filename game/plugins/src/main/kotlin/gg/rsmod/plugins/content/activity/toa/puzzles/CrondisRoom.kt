@@ -80,6 +80,8 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         val fill = {
             if (eligible(player) && player.tile == tile && player.inventory.rawItems.any { it === container } &&
                 puzzle.fill(player.uid, index, raid.world.currentCycle, ref.refillCycles.value[raid.roster.size - 1])) {
+                // OSRS gameplay: Kaoz OSRS DQ6FzzXdA4E, 08:30; only a successful refill announces it.
+                player.message("You fill your container.")
                 player.animate(ToaIds.seq(ref.fillSequence.value) ?: Anims.REACH_OUT_GRAB)
                 dry += index; waterfall(index, true)
             }

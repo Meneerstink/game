@@ -40,7 +40,13 @@ class ToaRuntimeTests {
         val party = assertNotNull(lobby.create(founder.uid))
         assertTrue(lobby.join(promoted.uid, founder.uid))
         assertTrue(party.transfer(founder.uid, promoted.uid))
+        val chats = f.players.associateWith { member -> mutableListOf<String>().also {
+            member.attr[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] = it
+        } }
+        assertNull(lobby.start(founder, allowCreate = false))
+        assertTrue(chats.values.all { it.isEmpty() }, "a rejected start must not announce entry")
         val raid = assertNotNull(lobby.start(promoted))
+        chats.values.forEach { assertEquals(listOf("You enter the Tombs of Amascut..."), it) }
         try {
             assertEquals(founder.uid, raid.roster.first())
             assertEquals(promoted.uid, raid.leader)

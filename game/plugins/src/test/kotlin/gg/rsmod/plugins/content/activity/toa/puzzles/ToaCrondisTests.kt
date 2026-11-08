@@ -55,6 +55,9 @@ class ToaCrondisTests {
                         f.at(it, Tile(3927, 5255))
                     }
                     f.advance()
+                    val chats = f.players.associateWith { member -> mutableListOf<String>().also {
+                        member.attr[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] = it
+                    } }
                     val waterfall = f.obj(45398, CrondisRoom.WATERFALLS.first())
                     f.players.forEach { assertTrue(room.fill(it, waterfall, itemUsed = immediate)) }
                     // The click lands outside a cycle here; in the server the delayed route's queue starts in the click's own tick, so
@@ -62,6 +65,10 @@ class ToaCrondisTests {
                     f.advance(if (immediate) 1 else 2)
                     assertEquals(100.0, f.players.sumOf { room.puzzle.water(it.uid) })
                     assertEquals(1, f.players.count { room.puzzle.water(it.uid) == 100.0 })
+                    chats.forEach { (member, messages) ->
+                        assertEquals(if (room.puzzle.water(member.uid) == 100.0) 1 else 0,
+                            messages.count { it == "You fill your container." }, "only the successful carrier hears a refill")
+                    }
                     assertFalse(room.puzzle.waterfallAvailable(0, f.cycle))
                     assertNull(f.raid.progress.boss(ToaPath.CRONDIS))
                 }
@@ -145,6 +152,8 @@ class ToaCrondisTests {
         lateinit var room: CrondisRoom
         ToaPuzzleFixture(1, ToaPath.CRONDIS) { CrondisRoom(it).also { room = it } }.use { f ->
             val p = f.players.single()
+            val messages = mutableListOf<String>()
+            p.attr[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] = messages
             val source = f.entities.filterIsInstance<gg.rsmod.game.model.entity.GroundItem>().first()
             repeat(28) { p.inventory[it] = gg.rsmod.game.model.item.Item(100 + it) }
             assertFalse(p.inventory.add(source.item).hasSucceeded())
@@ -156,6 +165,7 @@ class ToaCrondisTests {
             f.cycle++; f.raid.progress.cycle(f.cycle)
             f.advance(3)
             assertTrue(room.puzzle.closed); assertEquals(0.0, room.puzzle.water(p.uid))
+            assertFalse("You fill your container." in messages, "a cancelled refill must stay silent")
             assertTrue(f.entities.isEmpty()); assertNull(f.raid.progress.boss(ToaPath.CRONDIS))
             assertFalse(room.fill(p, f.obj(45398, CrondisRoom.WATERFALLS[0]), true))
         }

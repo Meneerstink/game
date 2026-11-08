@@ -3,6 +3,7 @@ package gg.rsmod.plugins.content.activity.toa
 import gg.rsmod.game.model.PlayerUID
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.quests.foundation.BeneathCursedSands
 import java.util.WeakHashMap
 import gg.rsmod.plugins.content.combat.removeCombatTarget
@@ -80,6 +81,8 @@ class ToaLobby private constructor() {
             raids[uid] = raid
             membership.remove(uid)
             players.getValue(uid).teleportTo(ToaMap.instance(map, ToaMap.NEXUS))
+            // OSRS gameplay: Kaoz OSRS DQ6FzzXdA4E, 07:17 (N462 MELDINGEN-BRON).
+            players.getValue(uid).message("You enter the Tombs of Amascut...")
         }
         parties.remove(party.id)
         return raid
