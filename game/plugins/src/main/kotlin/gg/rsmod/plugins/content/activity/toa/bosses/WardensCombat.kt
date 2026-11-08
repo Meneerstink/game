@@ -515,6 +515,9 @@ object WardensCombat : CombatScript() {
             // ONZEKER T19: ties use the existing Tumeken default; all unequal choices follow detailed Strategies.
             if (westBlocked != eastBlocked) phaseTwoWarden = phaseTwo(westBlocked > eastBlocked)
             phaseThreeWarden = opposite(phaseTwoWarden)
+            // Red Rookie TombsOfAmascutStats 2dc8a8eb:117-120 reads these exact OSRS phase messages.
+            message("As ${if (phaseThreeWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden falls, " +
+                "${if (phaseTwoWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden powers up!")
             charging.values.toList().forEach { remove(it) }; charging.clear()
             children.toList().forEach { remove(it) }
             ToaBossNpcs.local(11752)?.let { rootNpc.setTransmogId(it) }
@@ -558,6 +561,8 @@ object WardensCombat : CombatScript() {
         fun startPhaseThree() {
             if (phase != Phase.CORE) return
             core?.let { remove(it) }; core = null; newPhase(); phase = Phase.P3
+            message("${if (phaseTwoWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden uses the last of its power to restore " +
+                "${if (phaseThreeWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden!")
             // Root stays in the lower room until the final P3 actor dies.
             activate(if (phaseThreeWarden == Warden.ELIDINIS) ToaBossNpcs.ELIDINIS_P3 else ToaBossNpcs.TUMEKEN_P3,
                 if (raidRoom) fromSource(P3_ORIGIN) else origin, P3_STATS)

@@ -66,13 +66,21 @@ object ToaHudUi {
 
     fun drawRaid(player: Player, raidLevel: Int, elapsedTicks: Int, currentPath: Int, pathLevels: IntArray) {
         val iface = ToaInterfaces.of(ToaInterfaces.HUD) ?: return
+        // Cache2686 CS2 6579 and graphic.sym: toa_difficulty_icons,0..2 = 4660..4662.
+        ToaInterfaces.sprite(4660 + when { raidLevel >= 300 -> 2; raidLevel >= 150 -> 1; else -> 0 })
+            ?.let { player.setComponentSprite(iface, 41, it) }
         player.setComponentText(iface, LEVEL, "Level: $raidLevel")
         val seconds = elapsedTicks * 3 / 5
         player.setComponentText(iface, TIMER, "%02d:%02d".format(seconds / 60, seconds % 60))
-        val inNexus = currentPath !in 1..4
+        val inNexus = currentPath == 0
+        val inPath = currentPath in 1..4
         player.setComponentHidden(iface, NEXUS_LEVELS, !inNexus)
-        player.setComponentHidden(iface, PATH_LEVELS, inNexus)
+        player.setComponentHidden(iface, PATH_LEVELS, !inPath)
         if (inNexus) NEXUS_LEVEL.forEachIndexed { p, c -> player.setComponentText(iface, c, (pathLevels.getOrNull(p) ?: 0).toString()) }
-        else player.setComponentText(iface, PATH_LEVEL, (pathLevels.getOrNull(currentPath - 1) ?: 0).toString())
+        else if (inPath) {
+            // CS2 6579: toa_invocation_icons_small,4..7 = 4635..4638; existing imported sprites.
+            ToaInterfaces.sprite(4634 + currentPath)?.let { player.setComponentSprite(iface, 44, it) }
+            player.setComponentText(iface, PATH_LEVEL, (pathLevels.getOrNull(currentPath - 1) ?: 0).toString())
+        }
     }
 }

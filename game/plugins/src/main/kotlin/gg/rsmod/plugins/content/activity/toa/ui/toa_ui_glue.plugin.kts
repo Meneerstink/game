@@ -14,7 +14,7 @@ if (ToaInterfaces.of(ToaInterfaces.HUD) != null) {
             ToaHudUi.close(player)
         } else {
             ToaHudUi.open(player)
-            ToaHudUi.drawRaid(player, state.raidLevel, state.elapsedCycles, currentPath = 0, pathLevels = IntArray(4))
+            ToaHudUi.drawRaid(player, state.raidLevel, state.elapsedCycles, currentPath = state.currentPath, pathLevels = IntArray(4))
         }
         previous(player, state)
     }

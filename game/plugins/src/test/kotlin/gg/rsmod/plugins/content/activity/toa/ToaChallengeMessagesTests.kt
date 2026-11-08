@@ -19,7 +19,16 @@ class ToaChallengeMessagesTests {
         assertEquals("Ba-Ba", splits.matchEntire(ToaChallengeMessages.complete(ToaRoomKey(ToaPath.APMEKEN, true), 5, 5, 0))!!.groupValues[1])
         val w = ToaChallengeMessages.complete(ToaRoomKey(null, true), 300, 3000, 300)
         assertEquals("30:00.00", wardens.matchEntire(w)!!.groupValues[2].trimEnd('.'))
-        assertTrue("Tombs of Amascut: Expert Mode total completion time" in w)
+        assertEquals("Challenge complete: The Wardens. Duration: <col=ef1020>3:00.00</col><br>" +
+            "Tombs of Amascut: Expert Mode challenge completion time: <col=ef1020>30:00.00</col>.", w)
+        assertEquals("Tombs of Amascut: Expert Mode total completion time: <col=ef1020>31:00.00</col>.",
+            ToaChallengeMessages.overall(300, 3100))
+        for (level in listOf(0, 150, 300)) {
+            val complete = ToaChallengeMessages.complete(ToaRoomKey(null, true), 10, 100, level)
+            assertTrue("${ToaChallengeMessages.raidName(level)} challenge completion time:" in complete)
+            assertFalse("personal best" in complete)
+            assertTrue(ToaChallengeMessages.overall(level, 150).endsWith("<col=ef1020>1:30.00</col>."))
+        }
     }
 
     @Test fun `completion count names the mode like the OSRS kill count`() {

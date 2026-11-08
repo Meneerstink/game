@@ -132,9 +132,16 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 missing("T22 invalid or incomplete source wave${puzzle.wave + 1}")
             }
         }
+        val expiring = puzzle.task?.type
         val missed = puzzle.expireTask(tick)
         if (missed > 0) {
-            players.forEach { damage(it, ref.missedActionDamage.value(raid.roster.size, missed)) }; drawSight()
+            // ToaMistakeTracker c73766d0 ApmekenPuzzleDetector:62-64,120-128: exact team-wide OSRS game messages.
+            val text = when (checkNotNull(expiring)) {
+                ApmekenPuzzle.Action.VENT -> "The fumes filling the room suddenly ignite!"
+                ApmekenPuzzle.Action.PILLAR -> "Damaged roof supports cause some debris to fall on you!"
+                ApmekenPuzzle.Action.CORRUPTION -> "Your group is overwhelmed by Amascut's corruption!"
+            }
+            players.forEach { it.message(text); damage(it, ref.missedActionDamage.value(raid.roster.size, missed)) }; drawSight()
         }
         if (tick > 0 && tick % ref.sightCycle.value == 0 && players.isNotEmpty()) {
             puzzle.transferSight(ref.chooseSight.value(players).uid); drawSight()

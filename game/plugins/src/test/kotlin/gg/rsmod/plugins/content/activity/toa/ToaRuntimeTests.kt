@@ -11,6 +11,69 @@ import io.mockk.*
 import kotlin.test.*
 
 class ToaRuntimeTests {
+    @Test fun `only the leader opens a new path and followers cannot start the timer or switch the route`() {
+        for (path in ToaPath.values()) {
+            val f = Fixture(2)
+            val (leader, follower) = f.players
+            val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+            f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+            try {
+                val before = follower.tile
+                assertFalse(raid.enterChallenge(follower, path))
+                assertEquals(before, follower.tile)
+                assertNull(raid.progress.current); assertNull(raid.progress.startCycle)
+                assertTrue(raid.enterChallenge(leader, path))
+                assertFalse(raid.enterChallenge(follower, ToaPath.values().first { it != path }))
+                assertTrue(raid.enterChallenge(follower, path))
+                assertEquals(2, raid.activePlayers().size)
+            } finally { raid.close() }
+        }
+    }
+
+    @Test fun `transferred party leadership survives raid creation even when roster order differs`() {
+        val f = Fixture(2)
+        val (founder, promoted) = f.players
+        mockkObject(ToaLobby.Companion)
+        every { ToaLobby.canEnter(any()) } returns true
+        every { f.world.instanceAllocator.allocate(f.world, any(), any()) } returns f.map(6400)
+        val lobby = ToaLobby.of(f.world)
+        val party = assertNotNull(lobby.create(founder.uid))
+        assertTrue(lobby.join(promoted.uid, founder.uid))
+        assertTrue(party.transfer(founder.uid, promoted.uid))
+        val raid = assertNotNull(lobby.start(promoted))
+        try {
+            assertEquals(founder.uid, raid.roster.first())
+            assertEquals(promoted.uid, raid.leader)
+            assertFalse(raid.enterChallenge(founder, ToaPath.HET))
+            assertTrue(raid.enterChallenge(promoted, ToaPath.HET))
+            assertTrue(raid.enterChallenge(founder, ToaPath.HET))
+        } finally { f.players.forEach { lobby.leaveRaid(it) } }
+    }
+
+    @Test fun `summary ranks room points after puzzle clear credits action points`() {
+        val f = Fixture(2)
+        val roster = f.players.map { it.uid }
+        val registrations = ToaPath.values().flatMap { path -> listOf(false, true).map { boss ->
+            ToaRooms.replaceForTest(ToaRoomKey(path, boss)) { raid -> object : ToaRoom {
+                override fun clear(run: ToaRoomRun) { raid.points.damage(roster[1], 100) }
+            } }
+        } }
+        val raid = ToaRaid(1, roster, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        try {
+            for (path in ToaPath.values()) {
+                f.players.forEach { assertTrue(raid.enterChallenge(it, path)) }
+                val challenge = raid.progress.current!!
+                assertTrue(challenge.clear(f.cycle)); assertFalse(challenge.clear(f.cycle))
+                f.players.forEach { assertTrue(raid.enterBoss(it, path)) }
+                assertTrue(raid.progress.current!!.clear(f.cycle))
+            }
+            assertEquals("The Leech", raid.stats.title(raid, roster[0]), "late puzzle points count toward the five-room title")
+            assertEquals(0, raid.points.rewardPoints(roster[0]))
+            assertEquals(8 * (100 + 600), raid.points.rewardPoints(roster[1]), "neither clear hook nor MVP credit runs twice")
+        } finally { raid.close(); registrations.asReversed().forEach { it.close() } }
+    }
+
     @BeforeTest fun recovery() {
         mockkObject(ToaRecovery)
         every { ToaRecovery.full(any()) } just Runs
@@ -180,18 +243,18 @@ class ToaRuntimeTests {
         val f = Fixture(2)
         val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
         f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
-        val p = f.players[0]
+        val p = f.players[1]
         try {
             raid.disconnect(p); raid.reconnect(p)
             assertEquals(0, raid.points.deaths(p.uid))
             raid.disconnect(p)
-            assertTrue(raid.enterChallenge(f.players[1], ToaPath.HET))
+            assertTrue(raid.enterChallenge(f.players[0], ToaPath.HET))
             raid.reconnect(p)
             assertEquals(1, raid.points.deaths(p.uid))
             assertFalse(raid.canFight(p))
             raid.disconnect(p)
             assertTrue(raid.progress.current!!.clear(f.cycle))
-            assertTrue(raid.enterBoss(f.players[1], ToaPath.HET))
+            assertTrue(raid.enterBoss(f.players[0], ToaPath.HET))
             raid.reconnect(p)
             assertEquals(1, raid.points.deaths(p.uid), "the same already-dead member does not gain another death across room changes")
         } finally { raid.close() }

@@ -66,7 +66,7 @@ class ToaLobby private constructor() {
         } ?: return null
         val map = ToaMap.allocate(world)
         if (map == null) { party.allocationFailed(); return null }
-        val raid = ToaRaid(party.id, roster, party.settings.copy(invocations = party.settings.invocations.toSet()), map, world)
+        val raid = ToaRaid(party.id, roster, party.settings.copy(invocations = party.settings.invocations.toSet()), map, world, leader = party.leader)
         try { raid.prepare(roster.map { players.getValue(it) }) } catch (e: Exception) {
             raid.close()
             world.instanceAllocator.release(world, map)
