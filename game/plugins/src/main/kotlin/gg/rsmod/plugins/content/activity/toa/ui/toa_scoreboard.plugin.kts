@@ -5,7 +5,10 @@ import gg.rsmod.plugins.content.activity.toa.ToaRaidEvents
 import gg.rsmod.plugins.content.activity.toa.ToaRecordStore
 
 // Both cache variants: lobby Scoreboard, OSRS 46071 / 46072 (local 65228 / 66097).
-listOfNotNull(ToaIds.loc(46071), ToaIds.loc(46072)).distinct().forEach { id ->
+// Only variants that carry 'Read' in the imported cache (66097 / 46072 has no options; binding it crashed the boot, round 12).
+listOfNotNull(ToaIds.loc(46071), ToaIds.loc(46072)).distinct().filter { id ->
+    world.definitions.getNullable(gg.rsmod.game.fs.def.ObjectDef::class.java, id)?.options?.any { it.equals("Read", true) } == true
+}.forEach { id ->
     on_obj_option(id, "Read") { ToaScoreboardUi.open(player) }
 }
 
