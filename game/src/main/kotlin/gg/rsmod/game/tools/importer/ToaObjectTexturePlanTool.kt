@@ -46,12 +46,16 @@ object ToaObjectTexturePlanTool {
         val keys = ModernRegionProbeTool.loadKeys(File(RspsPaths.root("import-source/openrs2-2686/keys.json")))
         val squares = OsrsRegionImportTool.BATCHES.getValue("toa-map-hd").squares +
             listOf(13097, 13098, 13353, 13354, 13355, 13609, 13610, 13611)
-        val placed = squares.flatMap { square ->
-            // Cache 2686 keys.json is empty ([]): its loc files are no longer XTEA-encrypted, so a missing key is the zero key
-            // (Xtea.decryptContainer passes zero-key containers through). A wrong key would fail decoding, never silently skip.
-            val key = keys[square] ?: IntArray(4)
-            ModernRegion.load(reader, square, key).locs.map { it.id }.also {
-                check(it.isNotEmpty()) { "square $square decoded no locs; refusing incomplete object plan" }
+        val olderKeys = ModernRegionProbeTool.loadKeys(File(FeroxImportTool.MODERN_KEYS))
+        val placed = ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { older ->
+            squares.flatMap { square ->
+                // Cache 2686 keys.json is empty ([]): its loc files are no longer XTEA-encrypted, so a missing key is the zero key
+                // (Xtea.decryptContainer passes zero-key containers through). A wrong key would fail decoding, never silently skip.
+                // Squares the 2686 map index does not name (the lobby m52_142) come from cache 2499, the cache they were imported from.
+                val locs = runCatching { ModernRegion.load(reader, square, keys[square] ?: IntArray(4)) }
+                    .getOrElse { ModernRegion.load(older, square, olderKeys[square] ?: IntArray(4)) }.locs.map { it.id }
+                check(locs.isNotEmpty()) { "square $square decoded no locs; refusing incomplete object plan" }
+                locs
             }
         }
         val runtime = File("data/cfg/toa/ids.tsv").readLines().mapNotNull { line ->
@@ -59,13 +63,18 @@ object ToaObjectTexturePlanTool {
         }
         val result = (placed + runtime).toSortedSet()
         val pending = java.util.ArrayDeque(result)
+        val skipped = sortedSetOf<Int>()
         while (pending.isNotEmpty()) {
             val loc = pending.removeFirst()
-            val def = ModernObjectDef.decode(loc, reader.file(2, 6, loc) ?: error("OSRS loc $loc missing"))
-            check(def.unknownOpcodes.isEmpty()) { "OSRS loc $loc has unknown opcodes ${def.unknownOpcodes}" }
+            // A loc whose 2686 definition uses an opcode our decoder does not know (e.g. 100 on 29495) is left exactly as it is
+            // now - reported, never guessed and never written.
+            val def = runCatching { ModernObjectDef.decode(loc, reader.file(2, 6, loc) ?: error("OSRS loc $loc missing")) }
+                .getOrNull()?.takeIf { it.unknownOpcodes.isEmpty() }
+            if (def == null) { skipped += loc; continue }
             def.transforms?.filter { it >= 0 }?.forEach { if (result.add(it)) pending.add(it) }
         }
-        return result
+        if (skipped.isNotEmpty()) println("SKIP_UNDECODABLE locs=${skipped.size} ${skipped.joinToString(",")}: unchanged (unknown 2686 loc opcodes)")
+        return result - skipped
     }
 
     internal fun objectRows(loc: Int, model: Int, textures: Set<Int>, proposals: JsonObject): List<String> =
