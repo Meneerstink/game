@@ -108,10 +108,12 @@ object KephriCombat : CombatScript() {
                         .filter { it !in dung && !npc.world.collision.isClipped(it) && !sameTile(it, start) }
                         .minByOrNull { it.getDistance(start) }
             }, tiles = { p ->
-                val start = marked.getValue(p); val end = p.tile
-                val dx = (end.x - start.x).compareTo(0); val dz = (end.z - start.z).compareTo(0)
+                val start = marked.getValue(p)
+                // Strategies: dung follows the outward strike direction. A nearby fallback landing must not
+                // rotate that line into a different part of the arena when an earlier pile blocks the ray.
+                val dx = (start.x - centre.x).compareTo(0); val dz = (start.z - centre.z).compareTo(0)
                 (0..3).map { start.transform(dx * it, (if (dx == 0 && dz == 0) -1 else dz) * it) }
-            }, place = { t -> placeObject(45149, t) }) // TOA_KEPHRI_DUNG01; cache2686 ObjectID1, local64599 in90-locmap.
+            }, place = { t -> placeObject(45504, t) }) // Cache2686 KEPHRI_DUNG: blocks walking, not projectiles (18/27); 45149 is static decor.
         }
         private fun defaultRecharge() {
             val count = swarmCount(shieldBreaks)

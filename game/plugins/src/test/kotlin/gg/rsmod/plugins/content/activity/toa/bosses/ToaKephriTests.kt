@@ -7,6 +7,45 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaKephriTests {
+    @Test fun `five blocked repeat dung strikes preserve their original line instead of spreading behind the player`() {
+        for ((dx, dz) in listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1, 1 to 1, 1 to -1, -1 to 1, -1 to -1)) {
+            val f = ToaTestFixture()
+            val p = mockk<Player>(relaxed = true)
+            every { p.attr } returns gg.rsmod.game.model.attr.AttributeMap()
+            every { p.isOnline } returns true
+            every { p.isDead() } returns false
+            val start = Tile(3202 + dx * 4, 3202 + dz * 4)
+            var playerTile = start
+            every { p.tile } answers { playerTile }
+            every { p.teleportTo(any<Tile>()) } answers { playerTile = firstArg() }
+            val s = io.mockk.spyk(KephriCombat.Session(f.npc, ToaTestContext(players = listOf(p))))
+            s.autoDirector = {}; s.specialDirector = {}
+            var removed = 0
+            val placedSources = mutableListOf<Int>()
+            every { s.placeObject(any(), any(), any()) } answers { placedSources += firstArg<Int>(); { removed++; Unit } }
+            every { f.world.collision.isClipped(any<Tile>()) } returns false
+            every { f.world.collision.canStep(any<Tile>(), any<gg.rsmod.game.model.Direction>()) } answers {
+                val tile = firstArg<Tile>()
+                val direction = secondArg<gg.rsmod.game.model.Direction>()
+                tile.transform(direction.getDeltaX(), direction.getDeltaZ()) !in s.dung
+            }
+            s.dungDirector(s, listOf(p)); repeat(4) { s.cycle() }
+            val firstLine = s.dung.toSet()
+            assertTrue(firstLine.isNotEmpty())
+            assertEquals(setOf(45504), placedSources.toSet(), "OSRS KEPHRI_DUNG must replace the projectile-blocking static decor")
+            repeat(5) {
+                playerTile = start
+                s.dungDirector(s, listOf(p)); repeat(4) { s.cycle() }
+                assertEquals(firstLine, s.dung, "a blocked $dx,$dz landing must not rotate the original line")
+                assertTrue(playerTile !in s.dung, "fallback must still leave a walkable landing")
+            }
+            s.newPhase()
+            assertEquals(firstLine, s.dung, "changing phase does not expire dung")
+            s.close(); s.close()
+            assertEquals(firstLine.size, removed, "each original pile is removed once at encounter cleanup")
+        }
+    }
+
     @Test fun `Agile retreat consumes two real movement steps and respects a solid destination tile`() {
         val f = ToaTestFixture(); val p = mockk<Player>(relaxed = true)
         val collision = gg.rsmod.game.model.collision.CollisionManager(gg.rsmod.game.model.region.ChunkSet(f.world))
