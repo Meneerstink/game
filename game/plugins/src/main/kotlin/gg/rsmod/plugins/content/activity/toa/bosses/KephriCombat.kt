@@ -64,6 +64,9 @@ object KephriCombat : CombatScript() {
             ToaBossNpcs.SPITTING to centre.transform(6, 6), ToaBossNpcs.SOLDIER to centre.transform(6, 0))
         val cleanupDung = mutableListOf<() -> Unit>()
         private var autoCount = 0
+        /** ToA Extended Kephri (reads the real game): ATK_COUNT_INIT 3 / ATK_COUNT_MAX 5 - the first special after three fireballs,
+         *  then a special after every five; the special replaces that attack (NPC_KEPHRI_ATTACK_SPECIAL_EGGS 9578 resets the count). */
+        private var fireballsBeforeSpecial = 3
         override fun configure() {
             super.configure()
             ToaBossFx.weakness(npc, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.FIRE, 40)
@@ -72,21 +75,23 @@ object KephriCombat : CombatScript() {
         private val arcaneCharge = mutableMapOf<Npc, Int>()
         private val maxHitTargets = mutableSetOf<Npc>()
         private fun defaultSpecial() {
-            if (++autoCount % 4 != 0) return // ONZEKER T14: specials alternate every four6tick autos.
+            // ONZEKER T14: which special comes first; they alternate Dung Strike / Mass Incubation (dung in its place with too many scarabs).
+            ++autoCount
             agile.removeAll { !it.isSpawned() || it.isDead() }
             val limit = 2 // ONZEKER T15: base two dark eggs; exact active scarab cap remains unpublished.
-            if (autoCount % 8 == 4 || agile.size >= limit) defaultDung(dungTargets()) else {
+            if (autoCount % 2 == 1 || agile.size >= limit) defaultDung(dungTargets()) else {
                 val placements = linkedMapOf<Tile, Boolean>()
                 // ONZEKER T02/T15: two base light/dark pairs evenly distributed around Kephri; no invocation variant.
                 repeat(limit) { i ->
                     placements[centre.transform(if (i % 2 == 0) -6 else 6, i * 3 - 5)] = true
                     placements[centre.transform(i * 3 - 5, if (i % 2 == 0) -6 else 6)] = false
                 }
-                incubation(placements, 6, 24, limit) // ONZEKER T14: hatch after6tick attack interval; explosion published boss max24.
+                // ToA Extended Kephri TICK_COUNT_EGG = 15: an egg hatches/explodes 15 ticks after it lands. Explosion = published boss max24.
+                incubation(placements, 15, 24, limit)
             }
         }
         private fun defaultDung(victims: List<Player>) {
-            animate(9577) // ONZEKER T02/T14: named3tick radial magic clip; exact Dung Strike action binding untraced.
+            animate(9578) // ToA Extended: every special resets its attack counter on 9578 (fireballs are 9577); ONZEKER T14 for dung.
             val marked = victims.associateWith { Tile(it.tile) }
             // ONZEKER T14: warning3ticks=seq9577; stun2seconds rounds up to4game ticks.
             dungStrike(victims, 3, 4, destination = { p ->
@@ -237,8 +242,8 @@ object KephriCombat : CombatScript() {
             minionsTick()
             // Strategies0969: bomber scarabs continue the dodgeable auto during shield recharge.
             if (tick >= nextAttack) {
-                autoDirector(this)
-                if (phase == Phase.SHIELD) specialDirector(this)
+                if (phase == Phase.SHIELD && fireballsBeforeSpecial <= 0) { specialDirector(this); fireballsBeforeSpecial = 5 }
+                else { autoDirector(this); if (phase == Phase.SHIELD) fireballsBeforeSpecial-- }
                 nextAttack = tick + stats.speed
             }
         }
@@ -256,7 +261,7 @@ object KephriCombat : CombatScript() {
         fun fireball(targetTiles: List<Tile>, impact: Int, baseMax: Int,
             protectionNumerator: Int, protectionDenominator: Int) {
             require(impact >= 0 && baseMax >= 0)
-            animate(9575)
+            animate(9577) // NPC_KEPHRI_ATTACK_MAGIC_RADIAL: ToA Extended ANIM_ID_FIREBALL_ATTACK = 9577 (was 9575 ATTACK_RANGED).
             targetTiles.forEach { gfx(2147, it) }
             later(impact) {
                 targetTiles.forEach { gfx(2148, it) }

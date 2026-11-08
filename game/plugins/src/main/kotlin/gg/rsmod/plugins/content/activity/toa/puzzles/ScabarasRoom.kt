@@ -164,7 +164,9 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
 
     fun hitObelisk(player: Player, npc: Npc): Boolean {
         if (!eligible(player) || npc !in obeliskNpcs || obelisks.complete || Kind.OBELISKS in skipped) return false
-        player.setCombatTarget(npc) //A real weapon attack must reach/land; merely clicking a distant NPC cannot solve it.
+        // A real weapon attack must reach/land; merely clicking a distant NPC cannot solve it. Testclient 08-11: setCombatTarget only
+        // stored the focus attribute - no swing ever started, so no obelisk could be struck and the room could not be solved.
+        player.attack(npc)
         return true
     }
 

@@ -99,7 +99,7 @@ class ToaKephriTests {
     }
     @Test fun `default specials hatch only two dark eggs and reset removes the resulting scarabs`() = withToaNpcMappings(11728, 11729) {
         val f = ToaTestFixture(); val s = KephriCombat.Session(f.npc, ToaTestContext())
-        repeat(49) { s.cycle() } // specials at fourth/eighth6tick auto: dung tick18, eggs42, hatch48.
+        repeat(72) { s.cycle() } // ToA Extended cadence: 3 fireballs, dung tick18, 5 fireballs, eggs tick54, hatch 15 ticks later (69).
         assertTrue(s.eggs.isEmpty()); assertEquals(2, s.agile.size)
         val children = s.agile.toList()
         s.close()
@@ -174,7 +174,8 @@ class ToaKephriTests {
         var autos = 0; var specials = 0
         s.autoDirector = { autos++ }; s.specialDirector = { specials++ }
         repeat(25) { s.cycle() }
-        assertEquals(5, autos); assertEquals(5, specials)
+        // ToA Extended Kephri: three fireballs, then the special REPLACES the fourth attack (tick 18), then fireballs again.
+        assertEquals(4, autos); assertEquals(1, specials)
         assertEquals(KephriCombat.Phase.SHIELD, s.phase)
     }
     @Test fun `Kephri carries the kalphite tag used by the Keris combat formulas`() {
