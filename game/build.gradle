@@ -332,6 +332,22 @@ task runToaSpotAlphaPatchTool(type: JavaExec) {
     workingDir = rootProject.projectDir
 }
 
+task runToaUpperTileFlagTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N601 restore source upper-plane bit8: plan|apply [raid|lobby|necropolis|all].'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ToaUpperTileFlagTool'
+    workingDir = rootProject.projectDir
+}
+
+task runToaObjectTexturePatchTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N601 approved native ToA object texture restoration, plan|apply (CacheTransaction).'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ToaObjectTexturePatchTool'
+    workingDir = rootProject.projectDir
+}
+
 task runOsrsRegionImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS map squares that are empty in the 667 map, imported on their own coordinates (CacheTransaction, both caches). ' +

@@ -111,6 +111,17 @@ object WardensCombat : CombatScript() {
         private var removedRows = 0
         private var enrageStart = 0
         private val floor = mutableMapOf<Tile, () -> Unit>()
+        private val hiddenFloorScenery = mutableListOf<gg.rsmod.game.model.entity.GameObject>()
+        private val baseFloorIds = listOf(45646, 45647, 45648).mapNotNull(ToaBossFx::loc).toSet()
+
+        private fun hideBaseFloor(tile: Tile) {
+            // Cache15696 has ground-decor45646..48 (models45432/45469/45471) at the same height as the encounter's type10 floor.
+            // Different client layers do not replace each other: leaving both produces coplanar flicker and shows floor after collapse.
+            val existing = npc.world.getObject(tile, gg.rsmod.game.model.collision.ObjectType.FLOOR_DECORATION) ?: return
+            if (existing.id !in baseFloorIds) return
+            npc.world.remove(existing)
+            hiddenFloorScenery += existing
+        }
         /** P3 floor tiles that are blocked terrain in map15696 (the static floor is only z5157..5165) and walkable while the
          *  encounter's floor stands (testclient round 10: 'I can't reach that!' - no route on the whole P3 floor). */
         private val openedFloor = mutableSetOf<Tile>()
@@ -575,7 +586,9 @@ object WardensCombat : CombatScript() {
             npc.faceTile(centre)
             // The room's instance already contains square15696; no allocation or raid-skeleton mutation is needed.
             for (x in -ARENA_HALF_WIDTH..ARENA_HALF_WIDTH) for (z in -8..7) {
-                val tile = centre.transform(x, z); floor[tile] = placeObject(45643, tile); setFloorWalkable(tile, true)
+                val tile = centre.transform(x, z)
+                hideBaseFloor(tile)
+                floor[tile] = placeObject(45643, tile); setFloorWalkable(tile, true)
             }
             // Phantom Wiki centre3937,5142,size8(cache): south-west3933,5138, behind the north-facing Warden.
             amascut = spawn(11767, if (raidRoom) fromSource(Tile(3933, 5138, 1)) else origin.transform(-1, -7), P3_STATS.copy(hp = 1), path = false, group = false)?.also { a ->
@@ -666,6 +679,8 @@ object WardensCombat : CombatScript() {
             siphons.clear(); reversedSiphons.clear(); floor.clear(); lightningStruck.clear(); charging.clear()
             phantomNpcs.clear(); phantomNext.clear(); phantomAttacks.clear()
             super.close(); npc.scriptedDeath = false
+            hiddenFloorScenery.forEach { rootNpc.world.spawn(gg.rsmod.game.model.entity.DynamicObject(it)) }
+            hiddenFloorScenery.clear()
             if (dying != null) rootNpc.world.queue {
                 var elapsed = 0
                 while (dying.isSpawned() && rootNpc.isSpawned()) {

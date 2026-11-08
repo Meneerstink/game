@@ -22,7 +22,7 @@ object ToaBossRooms {
      */
     val SPAWNS: Map<ToaPath, Spawn> = mapOf(
         // Akkha (size 3, cache npc 11789): centred on the arena centre 3680,5407 = middle of the AKKHA_ARENA_OUTER ring locs
-        // x3668-3692 / z5395-5419 (40-loc-placements, square 14676 plane 1) - the quadrant split of AkkhaCombat uses that centre.
+        // x3668-3692 / z5395-5419 (40-loc-placements, square 14676 plane 1). The floor cross is independently at3681,5408 below.
         ToaPath.HET to Spawn("akkha", Tile(3679, 5406, 1)),
         // Ba-Ba (size 5): ONZEKER T02 - no infobox map; centre of the arena locs of square 15188 (plane-1 decor x3786-3826, z5396-5420).
         ToaPath.APMEKEN to Spawn("baba", Tile(3804, 5406, ToaPath.APMEKEN.bossEntry.height)),
@@ -71,7 +71,11 @@ object ToaBossRooms {
             npc.attr[ToaEncounter.CONTEXT] = context
             if (!scope.spawn(npc)) return
             boss = npc
-            ToaEncounter.attach(npc, context, definition.factory)
+            val session = ToaEncounter.attach(npc, context, definition.factory)
+            if (session is gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.Session) {
+                // N601: floor glyphs and the quadrant split use the actual cache floor cross, independent of the unproven NPC spawn.
+                session.centre = ToaMap.instance(raid.map, gg.rsmod.plugins.content.activity.toa.bosses.AkkhaArena.SOURCE_CENTRE)
+            }
             // The boss's death clears this run once its death sequence has played (the death handler despawns it; clearing at the
             // first dead tick would close the scope and cut the animation). The generation token ignores a death after a wipe/retry.
             scope.queue {

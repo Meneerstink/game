@@ -198,9 +198,6 @@ object AkkhaCombat : CombatScript() {
                         val options = Quadrant.values().filter { adjacent(pattern.last(), it) }
                         pattern += options[npc.world.random(options.lastIndex)]
                     }
-                    pattern.forEachIndexed { i, q -> later(i * 2) {
-                        gfx(when(q) { Quadrant.FIRE ->2258; Quadrant.SHADOW ->2257; Quadrant.LIGHTNING ->2256; Quadrant.ICE ->2259 }, shadowTile(q))
-                    } }
                     // ONZEKER T12: flash2ticks=stomp seq9788(60cycles), disappear1tick=seq9784(30cycles), impact after full preview.
                     memoryBlast(pattern, count * 2 + 1, 22)
                 }
@@ -257,12 +254,20 @@ object AkkhaCombat : CombatScript() {
             require(pattern.isNotEmpty() && pattern.zipWithNext().all { adjacent(it.first, it.second) })
             require(firstImpact >= 0 && baseDamage >= 0)
             memoryActive = true; npc.stopMovement(); animate(9784); message("Sections of the room start to glow...")
+            // The preview is the actual glowing floor symbol, not the elemental damage graphic on a far-away shadow npc.
+            // Cache locs45868..45871 + seq9759 (90 client cycles, final30 cycles blank). Preserve existing T12 preview cadence.
+            pattern.forEachIndexed { i, q -> later(i * 2) {
+                val clearMarker = placeObject(AkkhaArena.markerLoc(q), AkkhaArena.markerTile(centre, q))
+                later(3, acrossPhase = true) { clearMarker() }
+            } }
             // S1130: Akkha disappears throughout Memory Blast, not just for the disappearance animation.
             // Cache9784 is one tick long. Hide after that clip and restore visibility before the return clip.
             later(1) { npc.invisible = true }
             val interval = blastInterval()
             pattern.forEachIndexed { i, safe -> later(firstImpact + i * interval) {
-                players().filter { quadrant(it.tile, centre) != safe }.forEach { elementalHit(it, baseDamage) }
+                // Strategies1130 + Wiki Fighting_Akkha image: all three unsafe quadrants erupt, even with no player standing there.
+                AkkhaArena.blastTiles(centre, safe).forEach { t -> gfx(AkkhaArena.impactSpot(quadrant(t, centre)), t) }
+                players().filter { quadrant(it.tile, centre) != safe }.forEach { elementalHit(it, baseDamage, showGraphic = false) }
             } }
             later(firstImpact + pattern.lastIndex * interval + interval) {
                 memoryActive = false; npc.invisible = false; animate(9785)
@@ -276,9 +281,9 @@ object AkkhaCombat : CombatScript() {
                 live.forEach { victim -> if (tiles.any { (source, t) -> source !== victim && detonationHits(t, tiles.getValue(victim), diagonal) }) elementalHit(victim, baseDamage) }
             }
         }
-        fun elementalHit(p: Player, baseDamage: Int) {
+        fun elementalHit(p: Player, baseDamage: Int, showGraphic: Boolean = true) {
             attack(p, ToaScale.damage(baseDamage, context), null, accuracy = false)
-            gfx(when (quadrant(p.tile, centre)) { Quadrant.FIRE -> 2258; Quadrant.SHADOW -> 2257; Quadrant.LIGHTNING -> 2256; Quadrant.ICE -> 2259 }, p.tile)
+            if (showGraphic) gfx(AkkhaArena.impactSpot(quadrant(p.tile, centre)), p.tile)
             // ONZEKER T12: expiry uses four published6tick attack intervals; proc cadence derives from2tick stomp seq9788.
             when (quadrant(p.tile, centre)) {
                 Quadrant.FIRE -> burn(p)

@@ -453,7 +453,7 @@ class ModernObjectDef(val id: Int) {
     var transforms: IntArray? = null
     var ambientSoundId = -1
     var mapAreaId = -1
-    var randomizeAnimStart = false
+    var randomizeAnimStart = true
     var deferAnimChange = false
     var params: Map<Int, Any>? = null
     val unknownOpcodes = mutableListOf<Int>()
@@ -583,7 +583,7 @@ class ModernObjectDef(val id: Int) {
                         def.contouredGroundValue = buf.u8() * 256
                     }
                     82 -> def.mapAreaId = buf.u16()
-                    89 -> def.randomizeAnimStart = true
+                    89 -> def.randomizeAnimStart = false
                     90 -> def.deferAnimChange = true
                     91 -> buf.u8()
                     93 -> {
