@@ -11,6 +11,31 @@ import io.mockk.*
 import kotlin.test.*
 
 class ToaRuntimeTests {
+    @Test fun `summary ranks room points after puzzle clear credits action points`() {
+        val f = Fixture(2)
+        val roster = f.players.map { it.uid }
+        val registrations = ToaPath.values().flatMap { path -> listOf(false, true).map { boss ->
+            ToaRooms.replaceForTest(ToaRoomKey(path, boss)) { raid -> object : ToaRoom {
+                override fun clear(run: ToaRoomRun) { raid.points.damage(roster[1], 100) }
+            } }
+        } }
+        val raid = ToaRaid(1, roster, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        try {
+            for (path in ToaPath.values()) {
+                f.players.forEach { assertTrue(raid.enterChallenge(it, path)) }
+                val challenge = raid.progress.current!!
+                assertTrue(challenge.clear(f.cycle)); assertFalse(challenge.clear(f.cycle))
+                f.players.forEach { assertTrue(raid.enterBoss(it, path)) }
+                assertTrue(raid.progress.current!!.clear(f.cycle))
+            }
+            assertEquals("The Leech", raid.stats.title(raid, roster[0]), "late puzzle points count toward the five-room title")
+            assertEquals(0, raid.points.rewardPoints(roster[0]))
+            assertEquals(8 * (100 + 600), raid.points.rewardPoints(roster[1]), "neither clear hook nor MVP credit runs twice")
+        } finally { raid.close(); registrations.asReversed().forEach { it.close() } }
+    }
+
+
     @BeforeTest fun recovery() {
         mockkObject(ToaRecovery)
         every { ToaRecovery.full(any()) } just Runs

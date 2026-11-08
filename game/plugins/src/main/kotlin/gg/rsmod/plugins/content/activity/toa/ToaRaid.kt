@@ -333,10 +333,11 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 players().forEach { it.playJingle(if (run.key.boss) JINGLE_TOMB_CLEARED else JINGLE_TEST_OF_NOBILITY) }
                 stats.credit(memberObjects(), scope.spawned)
                 ToaChest.creditRoom(this, scope.spawned)
-                stats.roomPoints(points.roomSnapshot().filterKeys { it in remaining })
                 if (run.key.wardens) stats.wardensDefeated(this)
                 ToaLoreBooks.drop(world, run.key, scope.spawned, players().filter { !it.isDead() }) // before close: the boss npc still has its tile
-                room.clear(run); scope.close(); rooms.remove(run.generation)
+                room.clear(run) // Puzzle adapters credit action points at this boundary (ToaPuzzleRoom.clear).
+                stats.roomPoints(points.roomSnapshot().filterKeys { it in remaining })
+                scope.close(); rooms.remove(run.generation)
                 points.completeRoom()
                 started -= run.generation
                 participants.clear()
