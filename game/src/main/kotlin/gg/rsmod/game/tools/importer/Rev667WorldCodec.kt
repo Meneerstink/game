@@ -510,6 +510,8 @@ class Rev667LocType(val id: Int) {
             if (src.retextureFind?.isNotEmpty() == true) dropped.add("loc ${src.id}: retexture table (modern texture ids)")
             if (src.rotated) u8(62)
             if (!src.shadow) u8(64)
+            // OSRS and 667 opcode89 both disable a random initial frame. Required for timed floor-marker previews (N601).
+            if (!src.randomizeAnimStart) u8(89)
             if (src.modelSizeX != 128) {
                 u8(65)
                 u16(src.modelSizeX)

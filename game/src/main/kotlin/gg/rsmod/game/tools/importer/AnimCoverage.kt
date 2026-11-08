@@ -62,7 +62,7 @@ object AnimCoverage {
         val face = HashSet<Int>()
         val missing = ArrayList<Int>()
         for (id in models) {
-            val data = library.data(INDEX_MODELS, id, 0)
+            val data = ModelArchive.read(library, id)
             if (data == null) {
                 missing += id
                 continue
@@ -134,15 +134,19 @@ object AnimCoverage {
         return Result(seq, frames.size, problems, animated, reached)
     }
 
-    /** Models (opcode 1) of a rev-667 npc definition. */
+    /** Models (opcode1 or78wide241) of an imported rev-667 npc definition. */
     fun npcModels(
         library: CacheLibrary,
         npc: Int,
     ): List<Int> {
         val bytes = library.data(INDEX_NPCS, npc ushr 7, npc and 0x7F) ?: return emptyList()
-        if (bytes.isEmpty() || (bytes[0].toInt() and 0xFF) != 1) return emptyList()
-        val n = bytes[1].toInt() and 0xFF
-        return (0 until n).map { ((bytes[2 + it * 2].toInt() and 0xFF) shl 8) or (bytes[3 + it * 2].toInt() and 0xFF) }
+        if (bytes.isEmpty()) return emptyList()
+        val cursor = OsrsFxImportTool.Cursor(bytes)
+        val op = cursor.u8()
+        if (op != 1 && op != ModelArchive.NPC_WIDE_MODELS) return emptyList()
+        return List(cursor.u8()) {
+            if (op == 1) cursor.u16() else (cursor.u16() shl 16) or cursor.u16()
+        }
     }
 
     /** (model, sequence) of a rev-667 spotanim (opcodes 1 and 2, the first ones every encoder writes). */

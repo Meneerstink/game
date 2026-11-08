@@ -13,8 +13,16 @@ import java.io.File
  * Usage: `<batch> [--apply]` - without `--apply` only plan + preflight run.
  */
 object OsrsLocImportTool {
+    internal fun requireMarkerSequence(batch: String, imported: Map<String, Int>) {
+        if (batch == "toa-akkha-markers") check(imported.containsKey("seq:9759")) {
+            "Akkha markers require seq9759; apply OsrsFxImportTool toa-akkha-marker-seq first (refusing static markers)."
+        }
+    }
+
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // Apply OsrsFxImportTool toa-akkha-marker-seq first; reuses these four existing loc/model ids and restores seq9759.
+            "toa-akkha-markers" to listOf(45868, 45869, 45870, 45871),
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
             // ROCKS2 11391; CLAYROCK1..ADAMANTITEROCK2 deplete to them) - OsrsImportedRocks sets them as the depleted form.
             "necropolis-rocks" to listOf(11390, 11391),
@@ -101,6 +109,7 @@ object OsrsLocImportTool {
         val dropped = ArrayList<String>()
         val records = ArrayList<String>()
         val importedSeqs = OsrsFxImportTool.existingFx(assetMap)
+        requireMarkerSequence(args[0], importedSeqs)
 
         ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { modern ->
             val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
