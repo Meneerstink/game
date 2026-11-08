@@ -93,7 +93,8 @@ class ToaOverlayTexturePatchTests {
         File(dir, "main_file_cache.idx255").createNewFile()
         val library = CacheLibrary.create(dir.absolutePath)
         try {
-            while (!library.exists(9)) library.createIndex()
+            // Named indices: the map archive must keep its name hash ("m52_142"), or the tool cannot find any terrain.
+            while (!library.exists(9)) library.createIndex(com.displee.compress.CompressionType.GZIP, 6, 0, true, false)
             library.put(2, 4, 250, fields + extraField + byteArrayOf(0))
             library.put(9, 301, 0, byteArrayOf(1))
             val map = Rev667TileMap()
