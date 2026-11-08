@@ -47,8 +47,12 @@ object ToaObjectTexturePlanTool {
         val squares = OsrsRegionImportTool.BATCHES.getValue("toa-map-hd").squares +
             listOf(13097, 13098, 13353, 13354, 13355, 13609, 13610, 13611)
         val placed = squares.flatMap { square ->
-            val key = keys[square] ?: error("Missing OSRS key for $square; refusing incomplete object plan")
-            ModernRegion.load(reader, square, key).locs.map { it.id }
+            // Cache 2686 keys.json is empty ([]): its loc files are no longer XTEA-encrypted, so a missing key is the zero key
+            // (Xtea.decryptContainer passes zero-key containers through). A wrong key would fail decoding, never silently skip.
+            val key = keys[square] ?: IntArray(4)
+            ModernRegion.load(reader, square, key).locs.map { it.id }.also {
+                check(it.isNotEmpty()) { "square $square decoded no locs; refusing incomplete object plan" }
+            }
         }
         val runtime = File("data/cfg/toa/ids.tsv").readLines().mapNotNull { line ->
             val p = line.split('\t'); if (p.size >= 3 && p[0] == "loc") p[1].toInt() else null
