@@ -12,6 +12,28 @@ import io.mockk.*
 import kotlin.test.*
 
 class ToaApmekenTests {
+    @Test fun `a missed task announces its exact cause once to every raider`() {
+        val expected = mapOf(
+            ApmekenPuzzle.Action.VENT to "The fumes filling the room suddenly ignite!",
+            ApmekenPuzzle.Action.PILLAR to "Damaged roof supports cause some debris to fall on you!",
+            ApmekenPuzzle.Action.CORRUPTION to "Your group is overwhelmed by Amascut's corruption!",
+        )
+        for ((kind, message) in expected) {
+            lateinit var room: ApmekenRoom
+            ToaPuzzleFixture(2, ToaPath.APMEKEN) { ApmekenRoom(it).also { room = it } }.use { f ->
+                f.advance()
+                val chats = f.players.map { p -> mutableListOf<String>().also {
+                    p.attr[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] = it
+                } }
+                assertTrue(room.puzzle.beginTask(kind, 1,
+                    if (kind == ApmekenPuzzle.Action.CORRUPTION) emptyMap() else mapOf(0 to 1), room.tick + 1))
+                f.advance(4)
+                assertNull(room.puzzle.task)
+                chats.forEach { assertEquals(listOf(message), it) }
+            }
+        }
+    }
+
     @Test fun `disconnecting the sight holder during corruption transfers ownership and leaves a completable task`() {
         val saved = ApmekenReferences.profile
         val defaults = ApmekenDefaults.reference()
