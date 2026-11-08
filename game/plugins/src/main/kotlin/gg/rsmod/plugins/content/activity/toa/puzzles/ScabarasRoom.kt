@@ -74,8 +74,16 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         return true
     }
 
+    /** Last memory sequence shown (test server '::toastate' only). */
+    private var lastMemory: List<Int> = emptyList()
     override fun debugState(player: Player) = "scabaras tick=$tick finished=$finished skipped=$skipped " +
-        "lights=${lights.complete} addition=${addition.target} memory=${memory.generation} obelisks=${obelisks.complete}"
+        "lights=${lights.complete}/${initial.lights} addition=${addition.target} memory=$lastMemory obeliskOrder=${initial.obeliskOrder} " +
+        "obelisks=${obelisks.complete} memTiles=${layout.memoryTiles.map { instance(it).let { t -> "${t.x},${t.z}" } }} " +
+        "button=${instance(layout.memoryButton).let { "${it.x},${it.z}" }} tablet=${instance(layout.tablet).let { "${it.x},${it.z}" }} " +
+        "lightTiles=${layout.lights.map { instance(it).let { t -> "${t.x},${t.z}" } }} " +
+        "addTiles=${layout.additionTiles.map { instance(it).let { t -> "${t.x},${t.z}" } }} " +
+        "obelisks=${layout.obelisks.map { instance(it).let { t -> "${t.x},${t.z}" } }} " +
+        "match=${initial.leftSymbols}/${initial.rightSymbols} matchBtns=${layout.matchingButtons.map { b -> b.map { instance(it).let { t -> "${t.x},${t.z}" } } }}"
 
     fun button(player: Player, obj: GameObject): Boolean {
         if (!eligible(player)) return false
@@ -84,6 +92,7 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             val ref = reference!!
             val sequence = ref.memoryOrder.value(memory.generation + 1)
             val token = memory.show(sequence) ?: return false
+            lastMemory = sequence
             layout.memoryTiles.forEach { unplace(it, 10) }
             scope.queue {
                 //WorldQueueTaskSet cycles a new coroutine's first wait immediately. Enter playback after that startup step,

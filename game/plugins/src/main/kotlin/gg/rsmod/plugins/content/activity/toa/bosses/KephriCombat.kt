@@ -292,7 +292,10 @@ object KephriCombat : CombatScript() {
                     require(p.tile.isWithinRadius(end, 10))
                     p.message("Kephri throws you back!"); p.stopMovement()
                     p.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = stunTicks; p.teleportTo(end)
-                    tiles(p).forEach { tile -> if (dung.add(tile)) { gfx(2145, tile); cleanupDung += place(tile) } }
+                    // Testclient 08-11: a short knockback (wall) made the dung row cover the landing tile; the player then stood inside a
+                    // blocked pile and could not path or attack at all ('I can't reach that!'). Dung never lands on a player's tile.
+                    tiles(p).filter { tile -> players().none { sameTile(it.tile, tile) } }
+                        .forEach { tile -> if (dung.add(tile)) { gfx(2145, tile); cleanupDung += place(tile) } }
                 }
             }
         }

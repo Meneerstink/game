@@ -718,7 +718,9 @@ object OsrsRegionImportTool {
                         val src = region.tiles[plane][lx][lz]
                         val dst = tiles.tiles[plane + batch.planeShift][lx][lz]
                         dst.height = batch.flatHeight ?: src.height
-                        dst.flags = src.settings and batch.clearTileFlags.inv()
+                        // N601/N462 08-11: clear only on plane 0 (N522: 0x8 on cave FLOORS). On planes 1-3 OSRS 0x8 = "render on level 0"
+                        // (ToaUpperTileFlagTool); clearing it there turned every ToA ceiling into a black upper level (Kephri, 57991 tiles).
+                        dst.flags = if (plane == 0) src.settings and batch.clearTileFlags.inv() else src.settings
                         dst.overlayShape = src.overlayPath
                         dst.overlayRotation = src.overlayRotation
                         val hidden = batch.dropHiddenOverlays && src.overlayId != 0 && modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
