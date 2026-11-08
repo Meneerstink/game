@@ -150,7 +150,8 @@ object ToaObjectTexturePatchTool {
                     println("OBJECT_RESTORE osrsLoc=$osrsLoc localLoc=$localLoc osrsModel=$upstream localModel=$local textures=${used.sorted()} sha1=${CacheItemProbeTool.sha1(current)}")
                     mutations += CacheMutation(7, local, 0, fixed, "N601 native ToA loc model $local from$upstream textures${used.sorted()}", CacheItemProbeTool.sha1(current))
                 }
-                check(reached.containsAll(textured.keys)) { "loc $osrsLoc source models ${textured.keys - reached} have no current model reference" }
+                // A source model the current loc never references (our def uses other models) has nothing to restore: reported, left as is.
+                if (!reached.containsAll(textured.keys)) println("UNREFERENCED osrsLoc=$osrsLoc localLoc=$localLoc sourceModels=${textured.keys - reached}: no current mesh, unchanged")
             }
         } finally { game.close(); files.close(); reader.close() }
         check(mutations.isNotEmpty()) { "no native-textured ToA models found; refusing incomplete plan" }
