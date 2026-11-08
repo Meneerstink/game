@@ -6,7 +6,7 @@ import org.junit.Test
 import java.io.File
 
 class ToaHdOverlayTests {
-    private fun proposals() = JsonParser.parseString(
+    private fun proposals() = JsonParser().parse(
         sequenceOf(File("tools/n601_material_proposals.json"), File("../tools/n601_material_proposals.json"))
             .first { it.isFile }.readText(),
     ).asJsonObject
