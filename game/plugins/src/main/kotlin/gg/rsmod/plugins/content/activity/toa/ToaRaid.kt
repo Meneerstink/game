@@ -11,7 +11,9 @@ import gg.rsmod.plugins.content.combat.removeCombatTarget
 import java.util.UUID
 
 /** One world-thread raid controller per party. Room implementations receive this instance, never a global room. */
-class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSettings, val map: InstancedMap, val world: World) {
+class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSettings, val map: InstancedMap, val world: World,
+    val leader: PlayerUID = roster.first()) {
+    init { require(leader in roster) }
     val rewardToken: String = UUID.randomUUID().toString()
     var closed = false
         private set
@@ -129,6 +131,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             player.teleportTo(ToaMap.instance(map, path.challengeEntry))
             return true
         }
+        // Strategies?oldid=15392814:692: the leader enters a path before other members may follow.
+        // Preserve the existing departure fallback when the original leader has permanently left the raid.
+        if (progress.activePath == null && leader in remaining && player.uid != leader) return false
         val run = progress.challenge(path, world.currentCycle) ?: return false
         return enter(player, run, path.challengeEntry)
     }
