@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.combat.CombatClass
 import gg.rsmod.game.model.combat.NpcCombatDef
 import gg.rsmod.game.model.entity.*
+import gg.rsmod.plugins.content.combat.removeCombatTarget
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.activity.toa.*
 import gg.rsmod.plugins.content.activity.toa.puzzles.ScabarasReferences.Kind
@@ -65,7 +66,12 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 val player = hit.source as? Player
                 val landed = hit.hitmarks.any { it.damage > 0 }
                 hit.hitmarks.forEach { it.damage = 0 }
-                if (landed && player != null && eligible(player)) strike(player, index)
+                if (landed && player != null && eligible(player)) {
+                    strike(player, index)
+                    // One 'Hit' = one strike: the ordinary combat loop kept hitting the same obelisk and every repeat counted as a wrong
+                    // strike that reset the order (testclient 08-11). The player picks the next obelisk himself.
+                    player.removeCombatTarget()
+                }
             }
             // Cache 11698 has a "Hit" option, not "Attack": the combat gate refused it ('You can't attack this npc.', testclient 08-11).
             npc.attr[gg.rsmod.plugins.content.combat.Combat.PLAYER_ATTACKABLE_ATTR] = true
