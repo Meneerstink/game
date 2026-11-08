@@ -268,5 +268,7 @@ object GuardedZones {
             // The AFK skill basement under the Grand Exchange hall (owner 2026-09-26, "safe zone"): its own map square.
             gg.rsmod.plugins.content.newplayer.AfkArea.contains(tile) ||
             // Pest Control (2026-10-02): the lander decks and every game instance - players fight the pests, never each other.
-            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.isSafeTile(tile)
+            gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.isSafeTile(tile) ||
+            // Tombs of Amascut (N462 08-11): the raid instance - party members fight the tomb, never each other.
+            gg.rsmod.plugins.content.activity.toa.ToaLobby.isRaidTile(tile)
 }

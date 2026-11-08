@@ -190,6 +190,8 @@ object OsrsFxImportTool {
             // N462 Path of Het light beam: FX_BEAM_ATTACK02..08 (2113-2119, models 43911/45318-45322, seq 9368) + FX_BEAM_IMPACT01 2120
             // (RuneLite SpotanimID; cache2686). Which one is the Het beam is checked in the test client against the Wiki screenshot.
             "toa-het-fx" to listOf(2113, 2114, 2115, 2116, 2117, 2118, 2119, 2120),
+            // N462 08-11: the vertical Het beam piece FX_BEAM_ATTACK01 2064 (model 43911, seq 9368; LlemonDuck BeamTimerTracker "vertical").
+            "toa-het-fx2" to listOf(2064),
             // N462 Path of Scabaras falling roof (ChatGPT-B, RuneLiteSequenceSolver observation): SpotanimID MM_ROOFCOLLAPSE 302.
             "toa-scabaras-fx" to listOf(302),
             // N462 Tumeken's shadow built-in spell (RuneLite SpotanimID TUMEKENS_SHADOW_CASTING 2125 / _TRAVEL 2126 / _IMPACT 2127; the cast

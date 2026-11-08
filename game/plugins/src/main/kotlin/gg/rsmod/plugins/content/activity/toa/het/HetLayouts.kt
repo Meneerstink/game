@@ -50,7 +50,9 @@ object HetLayouts {
         minX = 3670, maxX = 3690, minZ = 5271, maxZ = 5289,
     )
 
-    /** The solved rotations of [ENERGY_BEAM] (test + documentation). */
+    /** The solved rotations of [ENERGY_BEAM] (test + documentation). 08-11: = LlemonDuck HetSolution.SOLUTION_6 (puzzle base = shielded
+     *  statue SW - (12,9) = 3670,5270): mirrors (3,10) NORTH_EAST, (3,17) SOUTH_EAST, (14,17) SOUTH_WEST - the screenshot route is a real
+     *  OSRS route. OSRS has 9 routes (SOLUTION_1..9); their walls/fixed mirrors are not in that source, so only this room is built. */
     val ENERGY_BEAM_SOLUTION = mapOf(HetPos(3673, 5280) to 0, HetPos(3673, 5287) to 1, HetPos(3684, 5287) to 2)
 
     val ALL = listOf(ENERGY_BEAM)

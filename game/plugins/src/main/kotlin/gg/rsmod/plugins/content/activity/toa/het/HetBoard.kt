@@ -12,9 +12,9 @@ package gg.rsmod.plugins.content.activity.toa.het
  * - "There are three mirrors that can be picked up, placed, rotated and pushed. The other mirrors are fixed; in group encounters, some
  *   of these are dirty and must be cleaned first to reflect light." "The light can always be reflected correctly using 1-3 mirrors."
  *
- * ONZEKER T22 (no source): which two sides a mirror reflects between per rotation. A mirror has four rotations (Rotate-clockwise /
- * -anticlockwise) and reflects a beam by 90 degrees, so each rotation is one corner: rotation r reflects between FACES[r]; a beam
- * hitting the back of a mirror is blocked. To be checked against the model in the test client (the shiny face must face both sides).
+ * Which two sides a mirror reflects between per rotation: LlemonDuck HetTileState (RuneLite, reads the loc rotation from the real OSRS
+ * scene, config bits 6-7): 0 = NORTH_EAST, 1 = SOUTH_EAST, 2 = SOUTH_WEST, 3 = NORTH_WEST - exactly [HetMirror.FACES]. A beam hitting
+ * the back of a mirror is blocked; dirty mirrors are never movable (same source).
  */
 enum class HetDir(val dx: Int, val dz: Int) {
     NORTH(0, 1), EAST(1, 0), SOUTH(0, -1), WEST(-1, 0);
@@ -45,7 +45,7 @@ class HetMirror(var pos: HetPos, var rotation: Int, val movable: Boolean, var di
     fun rotate(clockwise: Boolean) { rotation = (rotation + if (clockwise) 1 else 3) % 4 }
 
     companion object {
-        /** ONZEKER T22: rotation -> the two sides of the reflecting corner (see class comment). */
+        /** Rotation -> the two sides of the reflecting corner (LlemonDuck HetTileState ORIENTATION_*, see the file comment). */
         val FACES = arrayOf(HetDir.NORTH to HetDir.EAST, HetDir.EAST to HetDir.SOUTH, HetDir.SOUTH to HetDir.WEST, HetDir.WEST to HetDir.NORTH)
 
         /** The rotation that turns a beam travelling [travel] into [exit] (a 90 degree turn), or null. */
@@ -81,7 +81,40 @@ data class HetLayout(
     init { require(mirrors.count { it.movable } <= 3) }
 }
 
-data class HetBeam(val tiles: List<HetPos>, val hitTarget: Boolean, val turns: List<HetPos>)
+/** [dirs] = the travel direction leaving each of [tiles]; [crash] = the tile the beam ran into (target, barrier, statue, a mirror's
+ *  back), null when it left the room. */
+data class HetBeam(val tiles: List<HetPos>, val hitTarget: Boolean, val turns: List<HetPos>,
+    val dirs: List<HetDir> = emptyList(), val crash: HetPos? = null)
+
+/**
+ * The beam as OSRS draws it: a graphics object per tile, no projectile (LlemonDuck BeamTimerTracker: "at least one of these three is
+ * guaranteed to happen; there are others for each corner direction": 2114 horizontal, 2064 vertical, 2120 crash into an object;
+ * RuneLite SpotanimID FX_BEAM_ATTACK01 2064, FX_BEAM_ATTACK03 2114, 2116-2119 the corner pieces, FX_BEAM_IMPACT01 2120).
+ * ONZEKER T24: which corner id belongs to which pair of sides ([CORNERS], indexed like [HetMirror.FACES]) - checked in the test client.
+ */
+object HetBeamFx {
+    const val HORIZONTAL = 2114
+    const val VERTICAL = 2064
+    const val IMPACT = 2120
+    /** FACES[r] -> corner spotanim: N+E, E+S, S+W, W+N. */
+    val CORNERS = intArrayOf(2116, 2117, 2118, 2119)
+
+    fun graphics(board: HetBoard, beam: HetBeam): List<Pair<HetPos, Int>> {
+        val out = ArrayList<Pair<HetPos, Int>>(beam.tiles.size + 1)
+        beam.tiles.forEachIndexed { i, p ->
+            if (p == beam.crash) return@forEachIndexed
+            val mirror = if (p in beam.turns) board.mirrorAt(p) else null
+            val id = when {
+                mirror != null -> CORNERS[mirror.rotation]
+                beam.dirs.getOrNull(i)?.let { it == HetDir.EAST || it == HetDir.WEST } == true -> HORIZONTAL
+                else -> VERTICAL
+            }
+            out += p to id
+        }
+        beam.crash?.let { out += it to IMPACT }
+        return out
+    }
+}
 
 class HetBoard(val layout: HetLayout, group: Boolean) {
     val mirrors: MutableList<HetMirror> = layout.mirrors.map { HetMirror(it.pos, it.rotation, it.movable, group && it.dirtyInGroups) }.toMutableList()
@@ -99,19 +132,23 @@ class HetBoard(val layout: HetLayout, group: Boolean) {
     fun trace(maxSteps: Int = 256): HetBeam {
         val tiles = mutableListOf<HetPos>()
         val turns = mutableListOf<HetPos>()
+        val dirs = mutableListOf<HetDir>()
         var dir = layout.casterFacing
         var p = layout.caster.centre.step(dir, layout.caster.size / 2 + 1)
         repeat(maxSteps) {
-            if (p in layout.target) return HetBeam(tiles, true, turns)
-            if (p.x !in layout.minX..layout.maxX || p.z !in layout.minZ..layout.maxZ || blocked(p)) return HetBeam(tiles, false, turns)
+            if (p in layout.target) return HetBeam(tiles, true, turns, dirs, p)
+            if (p.x !in layout.minX..layout.maxX || p.z !in layout.minZ..layout.maxZ) return HetBeam(tiles, false, turns, dirs)
+            if (blocked(p)) return HetBeam(tiles, false, turns, dirs, p)
             tiles += p
+            dirs += dir
             mirrorAt(p)?.let { m ->
-                dir = m.reflect(dir) ?: return HetBeam(tiles, false, turns)
+                dir = m.reflect(dir) ?: return HetBeam(tiles, false, turns, dirs, p)
                 turns += p
+                dirs[dirs.lastIndex] = dir
             }
             p = p.step(dir)
         }
-        return HetBeam(tiles, false, turns)
+        return HetBeam(tiles, false, turns, dirs)
     }
 
     fun pickUp(p: HetPos): Boolean {

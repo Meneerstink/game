@@ -19,6 +19,16 @@ ToaRooms.register(ToaRoomKey(ToaPath.HET, false)) { raid -> HetRoom(raid).also {
 fun room(p: gg.rsmod.game.model.entity.Player): HetRoom? =
     ToaLobby.of(p.world).raid(p.uid)?.takeIf { it.contains(p) && p in it.activePlayers() }?.let { rooms[it] }
 
+// Test server only: the running puzzle room's state in one line (N462 08-11 testclient rounds).
+on_command("toastate", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
+    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
+    val text = rooms[raid]?.takeIf { it.board != null }?.debugState()
+        ?: gg.rsmod.plugins.content.activity.toa.puzzles.ToaPuzzles.of(player)?.debugState(player)
+        ?: "no puzzle room"
+    player.message("ToA state: $text")
+}
+
 HetIds.loc(HetIds.MIRROR)?.let { id ->
     on_obj_option(id, "Pick-up") { room(player)?.pickUp(player, player.getInteractingGameObj()) }
     on_obj_option(id, "Rotate-clockwise") { room(player)?.rotate(player, player.getInteractingGameObj(), true) }

@@ -74,6 +74,9 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         return true
     }
 
+    override fun debugState(player: Player) = "scabaras tick=$tick finished=$finished skipped=$skipped " +
+        "lights=${lights.complete} addition=${addition.target} memory=${memory.generation} obelisks=${obelisks.complete}"
+
     fun button(player: Player, obj: GameObject): Boolean {
         if (!eligible(player)) return false
         val tile = source(obj.tile) ?: return false

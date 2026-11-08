@@ -40,6 +40,8 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         return true
     }
 
+    override fun debugState(player: Player) = "apmeken tick=$tick wave=${puzzle.wave} alive=${puzzle.remaining} " +
+        "task=${puzzle.task?.type} sight=${puzzle.sight == player.uid} complete=${puzzle.complete}"
     override fun enter(player: Player) { viewers += player; puzzle.enter(player.uid); drawSight() }
     override fun leave(player: Player) {
         val next = players.filter { it !== player }.takeIf { it.isNotEmpty() }?.let { reference!!.chooseSight.value(it).uid }
@@ -47,9 +49,15 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         reference?.drawSight?.value?.invoke(player, null, null); viewers -= player; viewerBases.remove(player)
     }
 
+    /** Update:Tombs of Amascut: Balancing & Bugfixes (1 September 2022): "Completing the room will now delete the regular Hammer from
+     *  your Inventory." */
+    override fun cleared() {
+        players.forEach { p -> p.inventory.getItemCount(Items.HAMMER).takeIf { it > 0 }?.let { p.inventory.remove(Items.HAMMER, it) } }
+    }
+
     fun takeHammer(player: Player): Boolean {
         if (!act(player) || player.inventory.contains(Items.HAMMER)) return false
-        //Strategies1292: this crate gives the existing ordinary hammer. No source makes that normal item temporary.
+        //Strategies1292: this crate gives the existing ordinary hammer; completing the room deletes it again (cleared()).
         return player.inventory.add(Items.HAMMER).hasSucceeded()
     }
     fun takePotions(player: Player): Boolean {

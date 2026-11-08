@@ -6,6 +6,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.content.activity.toa.core.ToaLoot
 import gg.rsmod.plugins.content.activity.toa.core.ToaLootItems
 import gg.rsmod.plugins.content.activity.toa.core.ToaLootPlayer
@@ -25,6 +26,9 @@ object ToaChest {
     /** Normal/Expert completions apart (OSRS: Icthlarin's shrouds at 100/500/1,000/1,500/2,000 Normal/Expert completions, lobby cape chest
      *  46080 'Search' - its exact claim rules are not in the sources yet, so the chest itself is still open). */
     val COMPLETIONS_NORMAL_EXPERT = AttributeKey<Int>(persistenceKey = "toa_completions_normal_expert")
+    /** OSRS keeps a count per mode ("Tombs of Amascut", "...: Entry Mode", "...: Expert Mode" - RuneLite ChatCommandsPlugin). */
+    val COMPLETIONS_BY_MODE = gg.rsmod.plugins.content.activity.toa.core.ToaMode.values()
+        .associateWith { AttributeKey<Int>(persistenceKey = "toa_completions_" + it.name.lowercase()) }
 
     /** A jewel counts as owned while the jewel or its Keris partisan is held (Chest wiki: ownership check, not the collection log). */
     private val PARTISAN_OF_JEWEL = mapOf(27283 to 25981, 27285 to 27287, 27289 to 27291, 30893 to 30891)
@@ -70,6 +74,10 @@ object ToaChest {
         if (raid.settings.raidLevel >= gg.rsmod.plugins.content.activity.toa.core.ToaMode.NORMAL.raidLevel) {
             player.attr[COMPLETIONS_NORMAL_EXPERT] = (player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0) + 1
         }
+        val key = COMPLETIONS_BY_MODE.getValue(gg.rsmod.plugins.content.activity.toa.core.ToaMode.of(raid.settings.raidLevel))
+        val count = (player.attr[key] ?: 0) + 1
+        player.attr[key] = count
+        player.message(ToaChallengeMessages.count(raid.settings.raidLevel, count))
     }
 
     fun completionOnReconnect(raid: ToaRaid, player: Player) {

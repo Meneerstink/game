@@ -189,6 +189,11 @@ class ToaLobby private constructor() {
         private val worlds = WeakHashMap<World, ToaLobby>()
         fun of(world: World): ToaLobby = worlds.getOrPut(world) { ToaLobby() }
 
+        /** N462 08-11: a tile of a running raid instance. The raid is a private party instance (Wiki ToA: deaths in the raid are
+         *  safe); Deadman PvP between party members must not be possible there - folded into GuardedZones like Pest Control. */
+        fun isRaidTile(tile: gg.rsmod.game.model.Tile): Boolean =
+            worlds.values.any { lobby -> lobby.raids.values.any { !it.closed && it.map.area.contains(tile) } }
+
         /** OSRS: the Tombs of Amascut need Beneath Cursed Sands (N462 short quest; owner E2: old completions kept by BeneathCursedSands.migrate). */
         fun canEnter(player: Player): Boolean = isOpenFor(player) && BeneathCursedSands.isFinished(player)
 

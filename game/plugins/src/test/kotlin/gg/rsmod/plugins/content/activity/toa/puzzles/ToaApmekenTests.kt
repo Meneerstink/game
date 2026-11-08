@@ -144,8 +144,8 @@ class ToaApmekenTests {
             every { ToaIds.seq(9502) } returns 9001
             val tile = ToaMap.instance(f.map, ApmekenRoom.PILLARS.first())
             ToaPuzzleVisuals.pillar(viewer, tile, shaking = true)
-            verify(exactly = 1) { viewer.write(match<LocAnimMessage> {
-                it.animation == 9001 && it.gameObject.id == 50000 + 45494 && it.gameObject.tile == tile
+            verify(exactly = 1) { viewer.write(match {
+                it is LocAnimMessage && it.animation == 9001 && it.gameObject.id == 50000 + 45494 && it.gameObject.tile == tile
             }) }
             // any<T>() matches every message (erasure): only a real LocAddChangeMessage may fail this.
             verify(exactly = 0) { viewer.write(match { it is LocAddChangeMessage }) }
@@ -157,10 +157,10 @@ class ToaApmekenTests {
             val viewer = f.players[0]; val target = f.players[1]
             every { ToaIds.spot(2137) } returns 9000 //Synthetic imported visual in the fixture, not a real cache ID.
             ToaPuzzleVisuals.playerSpot(viewer, target, 2137)
-            verify(exactly = 1) { viewer.write(match<MapAnimMessage> { it.id == 9000 && it.tile == (2 or (1 shl 28)) }) }
-            verify(exactly = 0) { target.write(any<MapAnimMessage>()) }
+            verify(exactly = 1) { viewer.write(match { it is MapAnimMessage && it.id == 9000 && it.tile == (2 or (1 shl 28)) }) }
+            verify(exactly = 0) { target.write(match { it is MapAnimMessage }) }
             ToaPuzzleVisuals.playerSpot(viewer, target, null)
-            verify(exactly = 1) { viewer.write(match<MapAnimMessage> { it.id == -1 && it.tile == (2 or (1 shl 28)) }) }
+            verify(exactly = 1) { viewer.write(match { it is MapAnimMessage && it.id == -1 && it.tile == (2 or (1 shl 28)) }) }
         }
     }
 

@@ -28,6 +28,8 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
     var weakenedUntil = -1
         private set
     private var tick = 0
+    /** Tick of the next caster beam; -1 while the seal is weakened (LlemonDuck BeamTimerTracker: no beam while vulnerable). */
+    private var nextBeam = -1
     private val placed = hashMapOf<HetPos, GameObject>()
     private val orbs = mutableListOf<Pair<Npc, HetDir>>()
     /** Players holding picked-up mirrors (ultrareview #6: a carrier who died/left/logged out took the mirror off the board for good). */
@@ -43,6 +45,8 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         board = b
         tick = 0
         weakenedUntil = -1
+        // BeamTimerTracker: the first beam BEAM_FIRE_RATE_TICKS + 1 after "Challenge started: Path of Het." (ToaRaid.startRoom).
+        nextBeam = HetIds.BEAM_INTERVAL + 1
         sealHp = HetSeal.hp(raid.roster.size.coerceIn(1, 8))
         // Statues and the seal (OSRS: dynamic encounter locs/npc, not on the map).
         loc(HetIds.CASTER, layout.caster.sw, rotation(layout.casterFacing))?.let { scope.spawn(it) }
@@ -70,6 +74,10 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         }
     }
 
+    /** Test server only ('::toastate'). */
+    fun debugState() = "het tick=$tick nextBeam=$nextBeam weakenedUntil=$weakenedUntil sealHp=$sealHp " +
+        "beamHits=${board?.trace()?.hitTarget} carriers=${carriers.size} orbs=${orbs.size}"
+
     private fun tile(p: HetPos, height: Int = 0) = ToaMap.instance(raid.map, Tile(p.x, p.z, height))
     fun pos(t: Tile): HetPos? = ToaMap.source(raid.map, t)?.let { HetPos(it.x, it.z) }
 
@@ -93,7 +101,9 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         val r = run ?: return
         if (r.status != ToaRoomStatus.RUNNING) return
         tick++
-        if (tick % HetIds.BEAM_INTERVAL == 0) fire(b)
+        // BeamTimerTracker: protected again (vulnerable -> protected) = next beam BEAM_FIRE_RATE_TICKS + 1 later.
+        if (nextBeam < 0 && weakenedUntil >= 0 && tick >= weakenedUntil) nextBeam = weakenedUntil + HetIds.BEAM_INTERVAL + 1
+        if (nextBeam in 0..tick) fire(b)
         if (seal != null && !weakened && seal!!.getTransmogId() >= 0) seal!!.setTransmogId(-1)
         if (tick % HetIds.ORB_INTERVAL == 0) spawnOrb(b)
         moveOrbs(b)
@@ -122,23 +132,17 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
 
     private fun fire(b: HetBoard) {
         val beam = b.trace()
-        // Beam visual: the impact sparkle on the last tile (ONZEKER T24: OSRS draws the beam itself client-side; FX_BEAM_* not imported).
-        HetIds.spot(HetIds.BEAM_IMPACT)?.let { gfx ->
-            (beam.turns + listOfNotNull(beam.tiles.lastOrNull())).forEach { raid.world.spawn(TileGraphic(tile(it), gfx, 0)) }
+        nextBeam = tick + HetIds.BEAM_INTERVAL
+        // OSRS draws the beam as a graphics object on every tile (straight / corner / crash), not as a projectile (HetBeamFx).
+        HetBeamFx.graphics(b, beam).forEach { (p, osrs) ->
+            HetIds.spot(osrs)?.let { gfx -> raid.world.spawn(TileGraphic(tile(p), gfx, 0)) }
         }
         // Strategies 1068: "Getting caught in the light beam will also inflict damage, albeit lower than the orbs."
         raid.activePlayers().filter { p -> pos(p.tile)?.let { it in beam.tiles } == true }
             .forEach { it.hit(HetIds.BEAM_DAMAGE); raid.stats.hetBeam(it, raid.world.currentCycle) }
-        // The beam itself: one flat projectile per straight segment (caster -> each mirror -> the end), ONZEKER T24.
-        HetIds.spot(HetIds.BEAM)?.let { gfx ->
-            val points = listOf(b.layout.caster.centre) + beam.turns + listOfNotNull(beam.tiles.lastOrNull()?.takeIf { it !in beam.turns })
-            points.zipWithNext().forEach { (from, to) ->
-                raid.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder().setTiles(tile(from), tile(to)).setGfx(gfx)
-                    .setHeights(HetIds.BEAM_HEIGHT, HetIds.BEAM_HEIGHT).setSlope(0, 0).setTimes(0, HetIds.BEAM_CYCLES).build())
-            }
-        }
         if (beam.hitTarget) {
             weakenedUntil = tick + HetSeal.WEAKENED_TICKS
+            nextBeam = -1
             seal?.let { s -> HetIds.npc(HetIds.SEAL_WEAKENED)?.let { s.setTransmogId(it) } }
         }
     }
@@ -285,7 +289,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
     override fun reset(run: ToaRoomRun) = close()
 
     private fun close() {
-        board = null; seal = null; placed.clear(); orbs.clear(); weakenedUntil = -1
+        board = null; seal = null; placed.clear(); orbs.clear(); weakenedUntil = -1; nextBeam = -1
         // A carried mirror belongs to the old board: the retry/next room starts with all three on the new board.
         HetIds.item(HetIds.MIRROR_ITEM)?.let { item -> carriers.keys.forEach { it.inventory.remove(item, it.inventory.getItemCount(item)) } }
         carriers.clear()
@@ -314,17 +318,8 @@ object HetIds {
     const val SEAL_WEAKENED = 11707
     const val ORB = 11708
     const val MIRROR_ITEM = 27296
-    /** FX_BEAM_IMPACT01 (RuneLite SpotanimID 2120) - ONZEKER T24 that this is the Het beam; not imported yet (no local id = no gfx). */
-    const val BEAM_IMPACT = 2120
-    /** FX_BEAM_ATTACK03 (SpotanimID 2114, model 45320 = same model range as the Het locs 457xx/459xx; seq 9368) - ONZEKER T24 which of
-     * 2113-2119 the Het beam is (2113/2115 recolour, 2114/2116-2119 other models); check against the screenshot in the test client. */
-    const val BEAM = 2114
-    const val BEAM_HEIGHT = 60
-    /** Projectile flight in client cycles (30 = one game tick): long enough to read as a beam. ONZEKER T24. */
-    const val BEAM_CYCLES = 40
-
-    /** ONZEKER T24 (no source): ticks between two caster beams. 15-tick weakened window + a short protected gap. */
-    const val BEAM_INTERVAL = 20
+    /** LlemonDuck BeamTimerTracker BEAM_FIRE_RATE_TICKS: ticks between two caster beams (beam graphics: [HetBeamFx]). */
+    const val BEAM_INTERVAL = 9
     /** ONZEKER T24: "moderate damage" (Orb of Darkness Wiki) / beam "lower than the orbs" (Strategies 1068) - no numbers published. */
     const val ORB_DAMAGE = 8
     const val BEAM_DAMAGE = 4

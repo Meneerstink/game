@@ -13,8 +13,10 @@ object ApmekenDefaults {
     private fun <T> e(value: T, source: String) = ToaPuzzleReferences.Evidence(value, source)
     private val sight = hashMapOf<Player, gg.rsmod.game.model.PlayerUID?>()
     private val corrupted = hashMapOf<Player, Set<Player>>()
-    private val spawnTiles = listOf(Tile(3799, 5274), Tile(3817, 5286), Tile(3799, 5286), Tile(3817, 5274),
-        Tile(3804, 5274), Tile(3812, 5286), Tile(3804, 5286), Tile(3812, 5274))
+    /** The six baboon spawn points: LlemonDuck ApmekenWaveOverlay SPAWN_POINTS (region x/y 24/32/40 x 40/24, read from the real OSRS
+     *  NpcSpawned events) on the Apmeken region 59,82 (base 3776,5248). Which baboon takes which point is not published. */
+    private val spawnTiles = listOf(Tile(3800, 5288), Tile(3808, 5288), Tile(3816, 5288), Tile(3800, 5272), Tile(3808, 5272),
+        Tile(3816, 5272))
 
     fun reference(): ApmekenReferences.Profile = ApmekenReferences.Profile(
         waves = e({ size, wave -> plan(size, wave) },

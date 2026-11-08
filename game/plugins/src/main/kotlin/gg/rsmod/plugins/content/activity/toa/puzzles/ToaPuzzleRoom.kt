@@ -84,10 +84,15 @@ abstract class ToaPuzzleRoom(val raid: ToaRaid) : ToaRoom {
     final override fun clear(run: ToaRoomRun) {
         if (!::scope.isInitialized || scope.run !== run || credited) return
         credited = true
+        cleared()
         //Same room boundary as ToaChest's NPC damage maps. A wipe cannot leak a failed attempt's puzzle points into the retry.
         points.forEach { (uid, amount) -> raid.points.damage(uid, amount) }
         points.clear()
     }
+    /** The room was completed (before the scope closes): room-specific completion effects. */
+    protected open fun cleared() {}
+    /** Test server only ('::toastate'): the puzzle's state in one line. */
+    open fun debugState(player: Player): String = javaClass.simpleName
     protected open fun enter(player: Player) {}
     protected open fun leave(player: Player) {}
     fun eligible(player: Player): Boolean = live && player in players

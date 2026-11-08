@@ -60,6 +60,8 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     }
 
     override fun leave(player: Player) { held.remove(player.uid); puzzle.remove(player.uid) }
+    override fun debugState(player: Player) = "crondis tick=$tick growth=${"%.1f".format(puzzle.growth)}/${puzzle.requiredWater} " +
+        "stage=${puzzle.palmStage} water=${"%.1f".format(puzzle.water(player.uid))} crocs=${crocodiles.keys.count { it.isSpawned() && !it.isDead() }}"
 
     /** Engine option1 uses a pickup condition, bypassing on_ground_item_option entirely. */
     fun canTake(player: Player, item: GroundItem): Boolean {

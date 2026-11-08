@@ -79,4 +79,30 @@ class HetBoardTests {
         assertEquals(HetSeal.Tier.DRAGON, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.THIRD_AGE))
         assertEquals(HetSeal.Tier.BELOW_RUNE, t.getValue(gg.rsmod.plugins.content.skills.mining.PickaxeType.ADAMANT))
     }
+
+    @Test fun `the solved beam is drawn per tile - straight pieces, a corner on each turning mirror and the crash on the target`() {
+        val b = solved()
+        val beam = b.trace()
+        val fx = HetBeamFx.graphics(b, beam)
+        assertEquals(beam.tiles.size + 1, fx.size)
+        assertEquals(HetBeamFx.IMPACT, fx.last().second)
+        assertTrue(beam.crash!! in HetLayouts.ENERGY_BEAM.target)
+        beam.turns.forEach { t -> assertEquals(HetBeamFx.CORNERS[b.mirrorAt(t)!!.rotation], fx.first { it.first == t }.second) }
+        // the first leg leaves the caster along its facing: horizontal for east/west, vertical for north/south
+        val first = fx.first().second
+        val facing = HetLayouts.ENERGY_BEAM.casterFacing
+        if (beam.tiles.first() !in beam.turns)
+            assertEquals(if (facing == HetDir.EAST || facing == HetDir.WEST) HetBeamFx.HORIZONTAL else HetBeamFx.VERTICAL, first)
+    }
+
+    @Test fun `a beam blocked by a mirror's back crashes on that mirror and one leaving the room has no crash`() {
+        val b = solved()
+        b.mirrorAt(HetPos(3673, 5287))!!.rotate(true)
+        val beam = b.trace()
+        assertFalse(beam.hitTarget)
+        val fx = HetBeamFx.graphics(b, beam)
+        assertEquals(if (beam.crash == null) 0 else 1, fx.count { it.second == HetBeamFx.IMPACT })
+        beam.crash?.let { assertEquals(it to HetBeamFx.IMPACT, fx.last()) }
+        assertEquals(beam.tiles.size, beam.dirs.size)
+    }
 }

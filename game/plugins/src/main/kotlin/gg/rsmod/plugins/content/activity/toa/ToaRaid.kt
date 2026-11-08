@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.instance.InstancedMap
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.playJingle
 import gg.rsmod.plugins.content.combat.removeCombatTarget
 import java.util.UUID
@@ -109,7 +110,13 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     }
 
     private fun startRoom(run: ToaRoomRun) {
-        if (started.add(run.generation)) rooms.getValue(run.generation).first.start(run)
+        if (!started.add(run.generation)) return
+        rooms.getValue(run.generation).first.start(run)
+        // The room time counts from the real start (a walled arena: its crystal), the moment "Challenge started" is sent.
+        stats.started(run.key, world.currentCycle)
+        // LlemonDuck BeamTimerTracker: "Challenge started: Path of Het." when the room begins (ToaChallengeMessages).
+        val text = ToaChallengeMessages.started(run.key)
+        activePlayers().forEach { it.message(text) }
     }
 
     fun enterChallenge(player: Player, path: ToaPath): Boolean {
@@ -280,7 +287,6 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     private fun onRoomEvent(event: ToaRoomEvent, run: ToaRoomRun) {
         if (event == ToaRoomEvent.START) {
-            stats.started(run.key, world.currentCycle)
             val scope = ToaRoomScope(this, run)
             val room = ToaRooms.create(this, run.key)
             rooms[run.generation] = room to scope
@@ -293,6 +299,12 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
                 stats.cleared(run.key, world.currentCycle)
+                // "Challenge complete: <room>. Duration: m:ss.cc. Total: m:ss.cc" (Total = the room times so far, no down-time between
+                // rooms - Wiki Tombs Speed Runner); the Wardens line carries the raid's total completion time (ToaChallengeMessages).
+                val duration = stats.roomCycles[run.key] ?: 0
+                val total = if (run.key.wardens) progress.elapsedCycles(world.currentCycle) else stats.roomCycles.values.sum()
+                val done = ToaChallengeMessages.complete(run.key, duration, total, settings.raidLevel)
+                players().forEach { it.message(done) }
                 // Jingles (OSRS Wiki Test of Nobility / Tomb Cleared (Tombs of Amascut), cache ids 295/296 -> our index 11 groups 488/489,
                 // OsrsJingleImportTool): a challenge room cleared plays Test of Nobility, a defeated boss Tomb Cleared - once, for the members there.
                 players().forEach { it.playJingle(if (run.key.boss) JINGLE_TOMB_CLEARED else JINGLE_TEST_OF_NOBILITY) }
