@@ -8,7 +8,7 @@ import gg.rsmod.game.model.queue.QueueTask
 /** Interface import seam: never send OSRS 481/482/771-778 IDs into an unconverted 667 cache. */
 object ToaUi {
     data class State(val raidLevel: Int, val elapsedCycles: Int, val failedAttempts: Int,
-        val completedPaths: Set<ToaPath>, val wardensUnlocked: Boolean, val finished: Boolean)
+        val completedPaths: Set<ToaPath>, val wardensUnlocked: Boolean, val finished: Boolean, val currentPath: Int = 0)
 
     private val LAST = AttributeKey<State>()
     var draw: (Player, State?) -> Unit = { _, _ -> }
@@ -49,8 +49,12 @@ object ToaUi {
     fun refresh(player: Player, raid: ToaRaid) {
         val p = raid.progress
         // Draw only changed data; imported HUD scripts can interpolate the clock between updates.
+        val region = ToaMap.source(raid.map, player.tile)?.regionId
+        // Cache2686 CS2 6579: 0 Nexus; 1 Scabaras, 2 Het, 3 Apmeken, 4 Crondis; 5/6 hide both path panels.
+        val path = ToaPath.values().firstOrNull { it.challengeEntry.regionId == region || it.bossEntry.regionId == region }
+            ?.ordinal?.plus(1) ?: when (region) { 15184, 15696 -> 5; 14672 -> 6; else -> 0 }
         val state = State(raid.settings.raidLevel, p.elapsedCycles(raid.world.currentCycle), p.failedAttempts,
-            p.completedPaths, p.wardensUnlocked, p.finished)
+            p.completedPaths, p.wardensUnlocked, p.finished, path)
         if (player.attr[LAST] == state) return
         player.attr[LAST] = state
         draw(player, state)
