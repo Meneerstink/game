@@ -32,6 +32,8 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     private val rooms = hashMapOf<Int, Pair<ToaRoom, ToaRoomScope>>()
     private val started = mutableSetOf<Int>()
     private val dying = mutableSetOf<PlayerUID>()
+    /** One penalty for the logout, also if the party moves to another room before this member rejoins. */
+    private val offlineEncounterDeaths = mutableSetOf<PlayerUID>()
     private var retry: ToaRoomKey? = null
     /** Members owed honey locusts after a wipe (handed out at their respawn). */
     private val locustsDue = mutableSetOf<PlayerUID>()
@@ -214,16 +216,35 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
 
     // A death cut short by the disconnect never reaches on_player_death: without 'dying -= uid' the retry after a wipe waited for the
     // dropped member (ultrareview #4).
-    fun disconnect(player: Player) { offline += player.uid; dying -= player.uid; lose(player.uid) }
-    fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid; members.remove(uid) }
+    fun disconnect(player: Player) {
+        if (player.uid !in remaining || !offline.add(player.uid)) return
+        val run = progress.current?.takeIf { it.status == ToaRoomStatus.RUNNING }
+        // Tombs of Amascut?oldid=15391794 L515: an encounter logout counts as a death on rejoin.
+        // Charge now so an offline member cannot earn deathless challenge rewards at the Wardens' death.
+        if (run != null) {
+            offlineEncounterDeaths += player.uid
+            if (!participants.participating(run, player.uid) || participants.alive(run, player.uid)) disconnectDeath(player)
+        } else if (player.uid in dying) offlineEncounterDeaths += player.uid
+        dying -= player.uid
+        lose(player.uid)
+    }
+
+    private fun disconnectDeath(player: Player) {
+        ToaConsumables.clear(player)
+        points.death(player.uid)
+        ToaRaidEvents.playerDeath(this, player.uid)
+    }
+    fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid; offlineEncounterDeaths -= uid; members.remove(uid) }
 
     fun reconnect(player: Player) {
         if (player.uid !in remaining) return
         members[player.uid] = player
         offline -= player.uid
+        val countedOnLogout = offlineEncounterDeaths.remove(player.uid)
         // 21-supplies-dood: returning to a new active encounter also counts as a death/spectator.
         progress.current?.takeIf { it.status == ToaRoomStatus.RUNNING }?.let { run ->
             if (!participants.participating(run, player.uid)) {
+                if (!countedOnLogout) disconnectDeath(player)
                 participants.enter(run, player.uid)
                 lose(player.uid)
             }
@@ -232,8 +253,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         // anywhere in the raid). The honey locusts owed after a wipe still come.
         dying -= player.uid
         if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
-        // Logged out when the Wardens died: the completion counts now; the chest share waits in ToaChest's escrow.
-        if (progress.finished) ToaChest.completionOnReconnect(this, player)
+        // Completion and loot are already in personal persistent escrow, including when offline at the kill.
         place(player)
     }
 
@@ -298,7 +318,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         when (event) {
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
-                stats.cleared(run.key, world.currentCycle)
+                stats.cleared(run.key, if (run.key.wardens) progress.finishCycle ?: world.currentCycle else world.currentCycle)
                 // "Challenge complete: <room>. Duration: m:ss.cc. Total: m:ss.cc" (Total = the room times so far, no down-time between
                 // rooms - Wiki Tombs Speed Runner); the Wardens line carries the raid's total completion time (ToaChallengeMessages).
                 val duration = stats.roomCycles[run.key] ?: 0

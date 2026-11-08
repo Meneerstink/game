@@ -66,6 +66,15 @@ class RegionMusicService : Service {
         val plane: Int = 0,
     )
 
+    /** Resolve copied rooms for every automatic play, including on_song_end (ToA has twelve source squares). */
+    fun tracksAt(player: gg.rsmod.game.model.entity.Player): List<MusicTrack> {
+        val tile = player.world.instanceAllocator.getMap(player.tile)?.sourceTile(player.tile) ?: player.tile
+        return musicTrackList.filter { track -> track.areas.any { area ->
+            area.region == tile.regionId || (area.x.isNotEmpty() &&
+                gg.rsmod.game.model.SimplePolygonArea((area.x zip area.y).map { (x, z) -> gg.rsmod.game.model.Tile(x, z) }.toTypedArray()).containsTile(tile))
+        } }
+    }
+
     override fun init(
         server: Server,
         world: World,

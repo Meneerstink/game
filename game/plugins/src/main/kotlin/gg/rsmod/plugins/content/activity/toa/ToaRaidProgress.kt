@@ -55,6 +55,17 @@ class ToaRaidProgress(
         return start(key)
     }
 
+    /** Final Warden 0HP stops time immediately; the room/loot still wait for its complete death animation.
+     * Tombs of Amascut?oldid=15391794 changelog 8 September 2022 (01-route.tsv). */
+    fun freezeWardensClock(cycle: Int): Boolean {
+        val run = current ?: return false
+        if (closed || failed || finished || !run.key.wardens || run.status != ToaRoomStatus.RUNNING || finishCycle != null) return false
+        if (pendingWipe?.let { it.first === run && it.second < cycle } == true) return false
+        finishCycle = cycle
+        pendingWipe = null // A simultaneous final kill wins over a queued team wipe.
+        return true
+    }
+
     private fun start(key: ToaRoomKey): ToaRoomRun {
         val run = ToaRoomRun(key, ++generation, this)
         current = run
@@ -69,7 +80,7 @@ class ToaRaidProgress(
         pendingWipe = null
         val path = run.key.path
         when {
-            path == null -> { finished = true; finishCycle = cycle }
+            path == null -> { finished = true; if (finishCycle == null) finishCycle = cycle }
             run.key.boss -> { cleared += path; activePath = null }
             else -> challenges += path
         }
@@ -79,7 +90,7 @@ class ToaRaidProgress(
 
     /** Settle only after the whole death/clear tick; clear wins in either callback order. */
     fun wipe(run: ToaRoomRun, cycle: Int): Boolean {
-        if (current !== run || run.status != ToaRoomStatus.RUNNING || failed || finished || pendingWipe != null) return false
+        if (current !== run || run.status != ToaRoomStatus.RUNNING || failed || finished || finishCycle != null || pendingWipe != null) return false
         pendingWipe = run to cycle
         return true
     }

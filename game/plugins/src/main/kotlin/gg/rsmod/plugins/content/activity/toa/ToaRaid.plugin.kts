@@ -84,7 +84,13 @@ listOfNotNull(ToaIds.loc(44786), ToaIds.loc(44787)).distinct().forEach { id ->
 // cache2686 2/9/11689: Osmumten after a demi-boss, ops Talk-to / Proceed (ToaScene.BOSS_OSMUMTEN).
 ToaNpcs.TOA_OSMUMTEN_VIS.localId?.let { id ->
     arrayOf("Talk-to", "Proceed").forEach { option ->
-        on_npc_option(id, option) { ToaLobby.of(world).raid(player.uid)?.proceed(player) }
+        on_npc_option(id, option) {
+            val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_npc_option
+            if (option == "Proceed") raid.proceed(player) else player.queue {
+                chatNpc(ToaDialogues.DEMI, npc = id)
+                raid.proceed(player) // revalidates room/membership after the dialogue
+            }
+        }
     }
 }
 
@@ -100,9 +106,11 @@ ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId?.let { id ->
         on_npc_option(id, option) {
             val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_npc_option
             if (raid.progress.finished && raid.contains(player)) player.queue {
-                // Transcript:Osmumten, leaving the reward vault.
+                if (option == "Talk-to") ToaDialogues.vault(this, player, id)
+                // Revalidate after every awaited conversation: leaving a raid must not cause a later dialogue to leave a new raid.
+                if (!raid.contains(player) || ToaLobby.of(world).raid(player.uid) !== raid) return@queue
                 if (options("Yes.", "No.", title = "Are you ready to leave the Tombs of Amascut?") == 1)
-                    ToaLobby.of(world).leaveRaid(player)
+                    if (raid.contains(player) && ToaLobby.of(world).raid(player.uid) === raid) ToaLobby.of(world).leaveRaid(player)
             }
         }
     }
@@ -111,7 +119,15 @@ ToaNpcs.TOA_OSMUMTEN_VAULT_VIS_2.localId?.let { id ->
 ToaNpcs.TOA_MIDRAIDLOOT_TRADER.localId?.let { id ->
     on_npc_option(id, "Claim") {
         ToaLobby.of(world).raid(player.uid)?.let { raid ->
-            if (raid.contains(player) && raid.checkpoints.offered(player.uid)) ToaUi.showSupplies(player, raid)
+            if (raid.contains(player) && !player.isDead()) player.queue {
+                val stage = raid.checkpoints.stage
+                if (!raid.checkpoints.offered(player.uid)) messageBox(ToaDialogues.CLAIMED)
+                else {
+                    messageBox(ToaDialogues.OFFER)
+                    if (raid.contains(player) && !player.isDead() && raid.checkpoints.stage == stage && raid.checkpoints.offered(player.uid))
+                        ToaUi.showSupplies(player, raid)
+                }
+            }
         }
     }
 }
@@ -125,6 +141,15 @@ ToaIds.loc(49583)?.let { id ->
 }
 
 ToaIds.item(ToaSupplies.BAG_SOURCE)?.let { id ->
+    ToaSupplies.supplySources().mapNotNull(ToaIds::item).distinct().forEach { supply ->
+        on_item_on_item(item1 = supply, item2 = id) {
+            val a = player.getInteractingItemSlot()
+            val b = player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
+            val bagSlot = if (player.inventory[a]?.id == id) a else b
+            val itemSlot = if (bagSlot == a) b else a
+            ToaLobby.of(world).raid(player.uid)?.supplies?.returnItem(player, itemSlot, bagSlot)
+        }
+    }
     on_item_option(id, "Open") {
         ToaLobby.of(world).raid(player.uid)?.let { ToaUi.showBag(player, it, player.getInteractingItemSlot()) }
     }

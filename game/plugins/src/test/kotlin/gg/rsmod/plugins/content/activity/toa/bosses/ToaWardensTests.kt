@@ -3,6 +3,27 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 import kotlin.test.*
 
 class ToaWardensTests {
+    @Test fun `actual final actor zero HP freezes the raid clock once while preserving its death animation`() {
+        val f = ToaTestFixture()
+        val root = gg.rsmod.game.model.entity.Npc(1, gg.rsmod.game.model.Tile(3200, 3200), f.world)
+        f.world.spawn(root)
+        val c = io.mockk.mockk<gg.rsmod.plugins.content.activity.toa.ToaBossRooms.RaidContext>(relaxed = true)
+        io.mockk.every { c.partySize } returns 1
+        io.mockk.every { c.raidLevel } returns 150
+        io.mockk.every { c.players } returns emptyList()
+        io.mockk.every { c.spawnChild(any()) } answers { f.world.spawn(firstArg<gg.rsmod.game.model.entity.Npc>()) }
+        val s = WardensCombat.Session(root, c)
+        s.configure(); s.startPhaseTwo(); s.exposeCore(); s.startPhaseThree()
+        val final = s.npc
+        final.setCurrentLifepoints(0)
+        s.phase = WardensCombat.Phase.ENRAGE
+        s.close(); s.close()
+        io.mockk.verify(exactly = 1) { c.finalWardenDied() }
+        assertTrue(final.isSpawned())
+        assertTrue(root.isSpawned())
+        assertFalse(root.attr[gg.rsmod.plugins.content.activity.toa.ToaBossRooms.ENCOUNTER_DONE] == true)
+    }
+
     @Test fun `an exact five percent hit starts enrage immediately in every mode and solo or eight players`() {
         for (level in listOf(0, 150, 300)) for (party in listOf(1, 8)) {
             val f = ToaTestFixture()

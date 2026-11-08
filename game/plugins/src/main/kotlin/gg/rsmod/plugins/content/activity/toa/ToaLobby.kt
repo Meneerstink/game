@@ -130,6 +130,7 @@ class ToaLobby private constructor() {
     }
 
     fun login(player: Player) {
+        ToaChest.reconcileOffline(player)
         val raid = raids[player.uid]
         if (raid == null) ToaSupplies.cleanup(player) else raid.reconnect(player)
     }

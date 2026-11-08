@@ -73,6 +73,42 @@ class ToaRoomLifecycleTests {
         assertFailsWith<IllegalArgumentException> { ToaRaidSettings(invocations = setOf("Try Again", "Hardcore Run")) }
     }
 
+    @Test fun `final Warden zero HP freezes clock before animation without opening loot early`() {
+        val raid = ToaRaidProgress(ToaRaidSettings())
+        assertFalse(raid.freezeWardensClock(0))
+        for ((i, path) in ToaPath.values().withIndex()) {
+            raid.challenge(path, 100 + i * 10)!!.clear(101 + i * 10)
+            assertFalse(raid.freezeWardensClock(102 + i * 10))
+            raid.boss(path)!!.clear(103 + i * 10)
+        }
+        val final = assertNotNull(raid.wardens())
+        assertTrue(final.wipe(150))
+        assertTrue(raid.freezeWardensClock(150))
+        assertFalse(raid.freezeWardensClock(151))
+        assertFalse(raid.cycle(151))
+        assertFalse(final.wipe(160))
+        assertFalse(raid.finished, "death animation still owns the completion and reward gate")
+        assertEquals(50, raid.elapsedCycles(190))
+        assertTrue(final.clear(184))
+        assertEquals(50, raid.elapsedCycles(500))
+        assertEquals(0, raid.failedAttempts)
+        assertTrue(raid.finished)
+    }
+
+    @Test fun `final Warden dying after a previous tick wipe cannot cancel the failed attempt`() {
+        val raid = ToaRaidProgress(ToaRaidSettings())
+        for (path in ToaPath.values()) {
+            raid.challenge(path, 100)!!.clear(101)
+            raid.boss(path)!!.clear(102)
+        }
+        val final = assertNotNull(raid.wardens())
+        final.wipe(150)
+        assertFalse(raid.freezeWardensClock(151))
+        assertTrue(raid.cycle(151))
+        assertNull(raid.finishCycle)
+        assertEquals(1, raid.failedAttempts)
+    }
+
     @Test fun `late completion on following tick cannot cancel a previous wipe`() {
         val raid = ToaRaidProgress(ToaRaidSettings())
         val run = raid.challenge(ToaPath.HET, 0)!!
