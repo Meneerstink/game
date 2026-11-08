@@ -155,6 +155,48 @@ class ToaRuntimeTests {
         } finally { ToaRaidEvents.completed = previous; raid.close() }
     }
 
+    @Test fun `encounter logout counts one death blocks deathless rewards and cannot revive by reconnect`() {
+        val f = Fixture(2)
+        val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        val p = f.players[0]
+        try {
+            f.players.forEach { assertTrue(raid.enterChallenge(it, ToaPath.HET)) }
+            raid.disconnect(p); raid.disconnect(p)
+            assertEquals(1, raid.points.deaths(p.uid))
+            assertFalse(raid.points.deathless)
+            raid.reconnect(p); raid.reconnect(p)
+            assertEquals(1, raid.points.deaths(p.uid))
+            assertFalse(raid.canFight(p))
+            assertTrue(raid.progress.current!!.clear(f.cycle))
+            f.players.forEach { assertTrue(raid.enterBoss(it, ToaPath.HET)) }
+            raid.deathStart(p)
+            raid.disconnect(p); raid.reconnect(p)
+            assertEquals(2, raid.points.deaths(p.uid), "actual death before logout must not be charged again")
+        } finally { raid.close() }
+    }
+
+    @Test fun `Nexus logout is free until rejoining a newly started encounter`() {
+        val f = Fixture(2)
+        val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        val p = f.players[0]
+        try {
+            raid.disconnect(p); raid.reconnect(p)
+            assertEquals(0, raid.points.deaths(p.uid))
+            raid.disconnect(p)
+            assertTrue(raid.enterChallenge(f.players[1], ToaPath.HET))
+            raid.reconnect(p)
+            assertEquals(1, raid.points.deaths(p.uid))
+            assertFalse(raid.canFight(p))
+            raid.disconnect(p)
+            assertTrue(raid.progress.current!!.clear(f.cycle))
+            assertTrue(raid.enterBoss(f.players[1], ToaPath.HET))
+            raid.reconnect(p)
+            assertEquals(1, raid.points.deaths(p.uid), "the same already-dead member does not gain another death across room changes")
+        } finally { raid.close() }
+    }
+
     private class Fixture(count: Int) {
         val world = mockk<World>(relaxed = true)
         val tiles = hashMapOf<PlayerUID, Tile>()
