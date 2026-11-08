@@ -47,6 +47,7 @@ object ToaBossRooms {
 
     /** The live raid view a boss card targets: the room's active players, the raid's level, children through the room scope. */
     class RaidContext(private val raid: ToaRaid, private val scope: ToaRoomScope) : ToaEncounterContext {
+        fun finalWardenDied() { raid.progress.freezeWardensClock(raid.world.currentCycle) }
         override val players get() = raid.activePlayers()
         override val partySize: Int get() = raid.roster.size.coerceIn(1, 8)
         override val raidLevel: Int get() = raid.settings.raidLevel.coerceIn(0, 600)

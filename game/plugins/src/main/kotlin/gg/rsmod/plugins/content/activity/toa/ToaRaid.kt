@@ -318,7 +318,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         when (event) {
             ToaRoomEvent.CLEAR -> {
                 // Room points from every npc of the room (damage maps survive the kill) before the scope removes them, then the totals.
-                stats.cleared(run.key, world.currentCycle)
+                stats.cleared(run.key, if (run.key.wardens) progress.finishCycle ?: world.currentCycle else world.currentCycle)
                 // "Challenge complete: <room>. Duration: m:ss.cc. Total: m:ss.cc" (Total = the room times so far, no down-time between
                 // rooms - Wiki Tombs Speed Runner); the Wardens line carries the raid's total completion time (ToaChallengeMessages).
                 val duration = stats.roomCycles[run.key] ?: 0

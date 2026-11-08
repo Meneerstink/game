@@ -130,7 +130,8 @@ object WardensCombat : CombatScript() {
         private val lightningStruck = mutableMapOf<Tile, Int>()
         private var amascut: Npc? = null
         private val uncreditedP2 = mutableSetOf<Npc>()
-        private val raidRoom = input is ToaBossRooms.RaidContext
+        private val raidContext = input as? ToaBossRooms.RaidContext
+        private val raidRoom = raidContext != null
         private val standaloneRoom = input is StandaloneToaContext
         private val initialCentre = npc.spawnTile.transform(npc.getSize() / 2, npc.getSize() / 2)
 
@@ -656,6 +657,7 @@ object WardensCombat : CombatScript() {
         override fun close() {
             if (closed) return
             val dying = npc.takeIf { it !== rootNpc && it.isDead() && phase in listOf(Phase.P3, Phase.ENRAGE) }
+            if (dying != null) raidContext?.finalWardenDied()
             val vortex = amascut?.takeIf { dying != null && it.isSpawned() }
             // Wiki: P2 awards no points after its third down. Every down has its own scoped actor/damageMap.
             uncreditedP2.forEach { it.damageMap.reset() }; uncreditedP2.clear()
