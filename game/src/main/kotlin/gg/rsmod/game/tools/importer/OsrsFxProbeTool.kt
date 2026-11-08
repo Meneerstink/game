@@ -119,6 +119,8 @@ object OsrsFxProbeTool {
             when (data[pos++].toInt() and 0xFF) {
                 0 -> return null
                 1, 4, 5, 6 -> pos += 2
+                241 -> pos += 4
+                ToaSpotAlphaPatchTool.OSRS_ALPHA_OPCODE -> Unit
                 2 -> return ((data[pos].toInt() and 0xFF) shl 8) or (data[pos + 1].toInt() and 0xFF)
                 3 -> pos += 4
                 7, 8 -> pos += 1

@@ -81,6 +81,20 @@ class ModelNamespaceCensusToolTests {
     }
 
     @Test
+    fun osrsAlphaMarkerDoesNotHideWideModelReferencesOrSequenceFromAudits() {
+        val (game, fileServer) = pairOfCaches()
+        // Marker deliberately precedes both fields: walkers must consume opcodes, not assume their position.
+        val def = byteArrayOf(242.toByte(), 241.toByte(), 0, 1, 1, 91, 2, 0x43, 0xdc.toByte(), 0) // model65883, seq17372
+        putSpotanim(game, 3381, def)
+        putSpotanim(fileServer, 3381, def)
+        val report = ModelNamespaceCensusTool.census(game, fileServer, noMappingFile())
+        assertEquals(1, report.referencedByRole["spotanim_model"])
+        assertEquals(65883, report.highestReferencedId)
+        val library = CacheLibrary(game)
+        try { assertEquals(65883 to 17372, AnimCoverage.spotanim(library, 3381)) } finally { library.close() }
+    }
+
+    @Test
     fun referencedButPhysicallyMissingIsFlaggedAsAnAnomalyNotAFreeHole() {
         val (game, fileServer) = pairOfCaches()
         // Item references model 500, but model 500 is never written into either cache's index 7 -

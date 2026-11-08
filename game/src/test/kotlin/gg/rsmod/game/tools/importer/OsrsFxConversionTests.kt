@@ -73,6 +73,6 @@ class OsrsFxConversionTests {
         val spot = OsrsFxImportTool.decodeOsrsSpot(byteArrayOf(3, 0, 0, 0x1a, 0x51, 2, 0x1b, 0xac.toByte(), 8, 0, 0))
         assertEquals(6737, spot.model)
         assertEquals(7084, spot.seq)
-        assertContentEquals(byteArrayOf(1, 0x12, 0x34, 2, 0x3a, 0x98.toByte(), 8, 0, 0), OsrsFxImportTool.encode667Spot(spot, 0x1234, 15000))
+        assertContentEquals(byteArrayOf(1, 0x12, 0x34, 2, 0x3a, 0x98.toByte(), 8, 0, 242.toByte(), 0), OsrsFxImportTool.encode667Spot(spot, 0x1234, 15000))
     }
 }

@@ -324,6 +324,14 @@ task runOsrsFxImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.OsrsFxImportTool'
 }
 
+task runToaSpotAlphaPatchTool(type: JavaExec) {
+    group = 'tools'
+    description = 'N601 ToA spot alpha order marker, plan|apply [beam|all-toa] (client patch required).'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ToaSpotAlphaPatchTool'
+    workingDir = rootProject.projectDir
+}
+
 task runOsrsRegionImportTool(type: JavaExec) {
     group = 'tools'
     description = 'OSRS map squares that are empty in the 667 map, imported on their own coordinates (CacheTransaction, both caches). ' +

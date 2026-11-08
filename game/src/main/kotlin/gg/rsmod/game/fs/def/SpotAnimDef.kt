@@ -24,11 +24,15 @@ class SpotAnimDef(
     private var hillType = 0
     private var hillValue = -1
     private var loop = false
+    /** Client-only imported OSRS alpha order marker (N601); no server behaviour. */
+    var osrsAlphaOrder = false
+        private set
 
     override fun decode(buf: ByteBuf, opcode: Int) {
         when (opcode) {
             1 -> modelId = buf.readShort().toInt()
             241 -> modelId = buf.readInt() // N462: 78 wide model opcode (int model ids above 0xFFFF, archive 37; tools/importer/ModelArchive).
+            242 -> osrsAlphaOrder = true
             2 -> animationId = buf.readShort().toInt()
             4 -> scaleXZ = buf.readShort().toInt()
             5 -> scaleY = buf.readShort().toInt()

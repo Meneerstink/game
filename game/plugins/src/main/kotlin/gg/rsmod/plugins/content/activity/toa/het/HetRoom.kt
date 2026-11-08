@@ -135,7 +135,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
         nextBeam = tick + HetIds.BEAM_INTERVAL
         // OSRS draws the beam as a graphics object on every tile (straight / corner / crash), not as a projectile (HetBeamFx).
         HetBeamFx.graphics(b, beam).forEach { (p, osrs) ->
-            HetIds.spot(osrs)?.let { gfx -> raid.world.spawn(TileGraphic(tile(p), gfx, 0)) }
+            HetIds.spot(osrs)?.let { gfx -> raid.world.spawn(TileGraphic(tile(p), gfx, HetBeamFx.HEIGHT)) }
         }
         // Strategies 1068: "Getting caught in the light beam will also inflict damage, albeit lower than the orbs."
         raid.activePlayers().filter { p -> pos(p.tile)?.let { it in beam.tiles } == true }

@@ -305,7 +305,7 @@ object ModelNamespaceCensusTool {
                     ModelArchive.SPOT_WIDE_MODEL -> modelId = buf.readInt()
                     2, 4, 5, 6 -> buf.readShort()
                     7, 8 -> buf.readByte()
-                    9, 10, 11, 12, 13 -> {}
+                    9, 10, 11, 12, 13, ToaSpotAlphaPatchTool.OSRS_ALPHA_OPCODE -> {}
                     14 -> buf.readByte()
                     15 -> buf.readShort()
                     16 -> buf.readInt()

@@ -67,6 +67,8 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 hit.hitmarks.forEach { it.damage = 0 }
                 if (landed && player != null && eligible(player)) strike(player, index)
             }
+            // Cache 11698 has a "Hit" option, not "Attack": the combat gate refused it ('You can't attack this npc.', testclient 08-11).
+            npc.attr[gg.rsmod.plugins.content.combat.Combat.PLAYER_ATTACKABLE_ATTR] = true
             obeliskNpcs += npc
         }
         drawLights(); drawAddition(); drawMatching(); drawGates()

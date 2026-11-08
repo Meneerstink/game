@@ -264,6 +264,9 @@ object OsrsFxImportTool {
             // N462 Path of Crondis spear traps: gameval AnimationID CRONDIS_SPEAR_TRAP_ACTIVATE 9563, _SPEAR 9564, _SPEAR02 9565
             // (idle 9562 is in toa-map-seq).
             "toa-crondis-seq" to listOf(9563, 9564, 9565),
+            // N601: the Memory Blast preview is a glowing floor symbol loc, not the elemental hit spot on a shadow npc.
+            // Cache2686 locs45868-45871 all reference FX_SYMBOL_FLOOR_GLOW01 (9759), classic 90-client-cycle clip.
+            "toa-akkha-marker-seq" to listOf(9759),
             "toa-map-seq" to listOf(1071, 3445, 3542, 6374, 9495, 9497, 9498, 9499, 9500, 9501, 9503, 9504, 9562, 9712, 9808),
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
@@ -873,6 +876,9 @@ object OsrsFxImportTool {
             out.u16(localSeq)
         }
         out.write(spot.keep.toByteArray())
+        // N601 client opcode: OSRS priority order with no depth writes for translucent faces.
+        // Native 667 effects keep their own layering; never flatten/recolour the source glow or change its alpha frames.
+        out.u8(ToaSpotAlphaPatchTool.OSRS_ALPHA_OPCODE)
         out.u8(0)
         return out.toByteArray()
     }

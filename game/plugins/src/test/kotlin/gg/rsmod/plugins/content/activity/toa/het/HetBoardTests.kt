@@ -88,11 +88,31 @@ class HetBoardTests {
         assertEquals(HetBeamFx.IMPACT, fx.last().second)
         assertTrue(beam.crash!! in HetLayouts.ENERGY_BEAM.target)
         beam.turns.forEach { t -> assertEquals(HetBeamFx.CORNERS[b.mirrorAt(t)!!.rotation], fx.first { it.first == t }.second) }
+        // Cache2686 core tube endpoints: the solved route turns W->N (E+N), N->E (S+E), E->S (W+S).
+        assertEquals(listOf(2119, 2116, 2117), beam.turns.map { p -> fx.first { it.first == p }.second })
         // the first leg leaves the caster along its facing: horizontal for east/west, vertical for north/south
         val first = fx.first().second
         val facing = HetLayouts.ENERGY_BEAM.casterFacing
         if (beam.tiles.first() !in beam.turns)
             assertEquals(if (facing == HetDir.EAST || facing == HetDir.WEST) HetBeamFx.HORIZONTAL else HetBeamFx.VERTICAL, first)
+    }
+
+    @Test fun `all mirror rotations select the corner with the matching source model edges`() {
+        // Model45319 east+north;45321 east+south;45318 west+south;45322 west+north.
+        val sourceEdges = mapOf(2119 to setOf(HetDir.NORTH, HetDir.EAST), 2116 to setOf(HetDir.EAST, HetDir.SOUTH),
+            2117 to setOf(HetDir.SOUTH, HetDir.WEST), 2118 to setOf(HetDir.WEST, HetDir.NORTH))
+        HetMirror.FACES.forEachIndexed { rotation, (a, b) ->
+            assertEquals(setOf(a, b), sourceEdges.getValue(HetBeamFx.CORNERS[rotation]))
+        }
+    }
+
+    @Test fun `beam centre matches the source emitter and lies inside both mirror glass discs in client units`() {
+        // Source sphere46192 alpha80 face vertices Y=-150..-116, scaleHeight256/128, Mesh.upscale x4.
+        val emitterCentre = (150 + 116) / 2 * 2 * 4
+        assertEquals(emitterCentre, HetBeamFx.HEIGHT)
+        // Both movable45756 and fixed45759 reflective glass span Y=-315..-219; the beam core radius is8 OSRS units.
+        assertTrue(HetBeamFx.HEIGHT - 8 * 4 >= 219 * 4)
+        assertTrue(HetBeamFx.HEIGHT + 8 * 4 <= 315 * 4)
     }
 
     @Test fun `a beam blocked by a mirror's back crashes on that mirror and one leaving the room has no crash`() {

@@ -160,7 +160,9 @@ object AnimCoverage {
             when (u8()) {
                 0 -> break
                 1 -> model = u16()
+                ModelArchive.SPOT_WIDE_MODEL -> model = (u16() shl 16) or u16()
                 2 -> seq = u16()
+                ToaSpotAlphaPatchTool.OSRS_ALPHA_OPCODE -> Unit
                 else -> break
             }
         }

@@ -47,6 +47,8 @@ object Combat {
      * so players cannot target it, yet the pests must be able to. Checked in [canEngage] next to the familiar exception.
      */
     val NPC_ONLY_TARGET_ATTR = AttributeKey<Boolean>()
+    /** An npc whose cache combat verb is not "Attack" (ToA Scabaras obelisk 11698: "Hit") - players may still fight it. */
+    val PLAYER_ATTACKABLE_ATTR = AttributeKey<Boolean>()
 
     /**
      * The single-way "already under attack" window. OSRS Wiki "PJ timer": "In single-way combat when under attack by a monster,
@@ -554,7 +556,8 @@ object Combat {
             val npcOnlyTarget = pawn !is Player && target.attr[NPC_ONLY_TARGET_ATTR] == true
             // N24: a player is gated on the definition his client shows (the transmog's), an npc attacker on the base one.
             val gateDef = if (pawn is Player) attackOptionDef(target) else target.def
-            if ((!gateDef.isAttackable() && !publicFamiliar && !npcOnlyTarget && (pawn is Player || target.owner == null)) ||
+            val verbAttackable = gateDef.isAttackable() || (pawn is Player && target.attr[PLAYER_ATTACKABLE_ATTR] == true)
+            if ((!verbAttackable && !publicFamiliar && !npcOnlyTarget && (pawn is Player || target.owner == null)) ||
             target.combatDef.lifepoints == -1) {
                 // Owner 2026-09-24: players only ever see the game message, never internal npc ids.
                 (pawn as? Player)?.message("You can't attack this npc.")

@@ -90,14 +90,21 @@ data class HetBeam(val tiles: List<HetPos>, val hitTarget: Boolean, val turns: L
  * The beam as OSRS draws it: a graphics object per tile, no projectile (LlemonDuck BeamTimerTracker: "at least one of these three is
  * guaranteed to happen; there are others for each corner direction": 2114 horizontal, 2064 vertical, 2120 crash into an object;
  * RuneLite SpotanimID FX_BEAM_ATTACK01 2064, FX_BEAM_ATTACK03 2114, 2116-2119 the corner pieces, FX_BEAM_IMPACT01 2120).
- * ONZEKER T24: which corner id belongs to which pair of sides ([CORNERS], indexed like [HetMirror.FACES]) - checked in the test client.
+ * Corner sides follow the actual cache2686 model extents (N601): +X east, +Z north; the tube reaches the tile edge on those sides.
  */
 object HetBeamFx {
     const val HORIZONTAL = 2114
     const val VERTICAL = 2064
     const val IMPACT = 2120
+    /** Cache2686 caster model46192's luminous sphere: Y[-150,-116], centre=-133, loc45486 scaleHeight256/128.
+     * Thus its emitter is266 OSRS units above the floor (mirror45756/45759 glass centre267, radius48).
+     * MapAnimMessage height is already in667 fine units, unlike the OSRS model coordinates: x4, not0 at the floor.
+     * Geometry-derived alignment; the original OSRS graphics-object packet height is not published.
+     */
+    const val HEIGHT = 133 * 2 * 4
     /** FACES[r] -> corner spotanim: N+E, E+S, S+W, W+N. */
-    val CORNERS = intArrayOf(2116, 2117, 2118, 2119)
+    // 2119/model45319 N+E; 2116/model45321 E+S; 2117/model45318 S+W; 2118/model45322 W+N.
+    val CORNERS = intArrayOf(2119, 2116, 2117, 2118)
 
     fun graphics(board: HetBoard, beam: HetBeam): List<Pair<HetPos, Int>> {
         val out = ArrayList<Pair<HetPos, Int>>(beam.tiles.size + 1)
