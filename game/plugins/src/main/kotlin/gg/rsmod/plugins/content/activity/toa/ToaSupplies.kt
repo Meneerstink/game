@@ -6,10 +6,13 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.messageBox
 import kotlin.random.Random
 
 /** Bag mechanics live independently of interface778, so the UI card can operate actual slots. */
 class ToaSupplyBag(items: List<Int>) {
+    companion object { const val CAPACITY = 28 }
+    init { require(items.size <= CAPACITY) }
     private val slots = items.map<Int, Int?> { it }.toMutableList()
     fun contents(): List<Int?> = slots.toList()
     val empty: Boolean get() = slots.all { it == null }
@@ -23,8 +26,23 @@ class ToaSupplyBag(items: List<Int>) {
     fun replace(slot: Int, id: Int?) { require(slot in slots.indices); slots[slot] = id }
     fun put(id: Int): Boolean {
         val slot = slots.indexOfFirst { it == null }
-        if (slot < 0) return false
-        slots[slot] = id
+        if (slot < 0) {
+            if (slots.size == CAPACITY) return false
+            slots += id
+        } else slots[slot] = id
+        return true
+    }
+    /** Transcript:Helpful_Spirit oldid14889419: a second claim goes into the same bag, capped at 28 items. */
+    fun addAll(items: List<Int>): Boolean {
+        if (slots.count { it != null } + items.size > CAPACITY) return false
+        items.forEach { check(put(it)) }
+        return true
+    }
+
+    fun swap(from: Int, to: Int): Boolean {
+        if (from !in 0 until CAPACITY || to !in 0 until CAPACITY) return false
+        while (slots.size <= maxOf(from, to)) slots += null
+        val first = slots[from]; slots[from] = slots[to]; slots[to] = first
         return true
     }
 }
@@ -50,6 +68,14 @@ class ToaSupplies(private val raid: ToaRaid) {
             val bagId = ToaIds.item(BAG_SOURCE) ?: return@deliver false
             val sourceItems = offers(player.uid).getValue(choice)
             val items = sourceItems.map { ToaIds.item(it) ?: return@deliver false }
+            // Same owner's existing bag, also when temporarily stored in a burden container: never create a second capacity.
+            bags.entries.firstOrNull { it.key.first == player.uid }?.value?.let { existing ->
+                if (!existing.addAll(items)) {
+                    player.queue { messageBox("The spirit gives you a strange look. You don't have enough room in your supply bag for what he's offering.") }
+                    return@deliver false
+                }
+                return@deliver true
+            }
             val token = sequence + 1
             val item = Item(bagId).putAttr(ItemAttribute.TOA_SUPPLY_BAG_TOKEN, token)
             if (!player.inventory.addPreservingAttr(item).hasSucceeded()) return@deliver false
@@ -61,6 +87,34 @@ class ToaSupplies(private val raid: ToaRaid) {
 
     fun bag(player: Player, item: Item): ToaSupplyBag? = item.getAttr(ItemAttribute.TOA_SUPPLY_BAG_TOKEN)
         ?.let { bags[player.uid to it] }
+
+    /** Supplies_(Tombs_of_Amascut) oldid15191037 L30: return a removed supply to the first empty slot, preserving its dose. */
+    fun returnItem(player: Player, itemSlot: Int, bagSlot: Int): Boolean {
+        if (!raid.contains(player) || player.isDead() || itemSlot == bagSlot) return false
+        val item = player.inventory[itemSlot] ?: return false
+        val source = ToaIds.itemSource(item.id) ?: return false
+        if (item.amount != 1 || !isSupply(source)) return false
+        val bag = player.inventory[bagSlot]?.let { bag(player, it) } ?: return false
+        if (!bag.put(item.id)) return false
+        player.inventory[itemSlot] = null
+        return true
+    }
+
+    fun swap(player: Player, bagSlot: Int, from: Int, to: Int): Boolean {
+        if (!raid.contains(player) || player.isDead()) return false
+        return player.inventory[bagSlot]?.let { bag(player, it) }?.swap(from, to) == true
+    }
+
+    /** Same ground-item route as dropping a supply from inventory; no new visibility/despawn constants. */
+    fun drop(player: Player, bagSlot: Int, slot: Int): Boolean {
+        if (!raid.contains(player) || player.isDead()) return false
+        val bag = player.inventory[bagSlot]?.let { bag(player, it) } ?: return false
+        if (!bag.withdraw(slot) { id, _ ->
+            player.world.spawn(gg.rsmod.game.model.entity.GroundItem(Item(id), player.tile, player)); true
+        }) return false
+        if (bag.empty) destroy(player, bagSlot, disintegrated = true)
+        return true
+    }
 
     fun withdraw(player: Player, inventorySlot: Int, supplySlot: Int? = null, all: Boolean = false): Boolean {
         if (!raid.contains(player) || player.isDead()) return false
@@ -138,6 +192,9 @@ class ToaSupplies(private val raid: ToaRaid) {
         private data class Family(val full: Int, val doses: Int)
         private val FAMILIES = listOf(Family(NECTAR, 4), Family(TEARS, 4), Family(SILK, 2), Family(SCARAB, 2),
             Family(ADRENALINE, 2), Family(SALTS, 2), Family(AMBROSIA, 2))
+
+        fun isSupply(source: Int): Boolean = FAMILIES.any { source in it.full..(it.full + 2 * (it.doses - 1)) && (source - it.full) % 2 == 0 }
+        fun supplySources(): List<Int> = FAMILIES.flatMap { f -> (0 until f.doses).map { f.full + 2 * it } }
 
         fun bundle(choice: Choice, settings: ToaRaidSettings, random: Random): List<Int> {
             val amounts = when (choice) {

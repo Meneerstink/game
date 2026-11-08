@@ -74,7 +74,12 @@ if (ToaInterfaces.of(ToaInterfaces.BAG) != null) {
                             }
                         }
                         ToaBagUi.Action.WITHDRAW_ALL -> raid.supplies.withdraw(player, inventorySlot, all = true)
-                        else -> Unit
+                        ToaBagUi.Action.DROP -> raid.supplies.drop(player, inventorySlot, slot)
+                        ToaBagUi.Action.EXAMINE -> {
+                            raid.supplies.bag(player, bagItem)?.contents()?.getOrNull(slot)?.let { id ->
+                                player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, id)?.examine?.let { player.message(it) }
+                            }
+                        }
                     }
                     ToaBagUi.refresh(player, contents())
                 }

@@ -125,6 +125,15 @@ ToaIds.loc(49583)?.let { id ->
 }
 
 ToaIds.item(ToaSupplies.BAG_SOURCE)?.let { id ->
+    ToaSupplies.supplySources().mapNotNull(ToaIds::item).distinct().forEach { supply ->
+        on_item_on_item(item1 = supply, item2 = id) {
+            val a = player.getInteractingItemSlot()
+            val b = player.attr[gg.rsmod.game.model.attr.OTHER_ITEM_SLOT_ATTR] ?: return@on_item_on_item
+            val bagSlot = if (player.inventory[a]?.id == id) a else b
+            val itemSlot = if (bagSlot == a) b else a
+            ToaLobby.of(world).raid(player.uid)?.supplies?.returnItem(player, itemSlot, bagSlot)
+        }
+    }
     on_item_option(id, "Open") {
         ToaLobby.of(world).raid(player.uid)?.let { ToaUi.showBag(player, it, player.getInteractingItemSlot()) }
     }
