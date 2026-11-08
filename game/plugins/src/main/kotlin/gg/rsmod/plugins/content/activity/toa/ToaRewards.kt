@@ -74,6 +74,16 @@ object ToaRewards {
 
     fun open(player: Player, raid: ToaRaid): ToaPersonalReward? {
         if (!raid.progress.finished || !raid.contains(player)) return null
+        return saveRoll(player, raid)
+    }
+
+    /** Trusted completion path: InstancedMapAllocator.logout has already moved an offline member to the lobby. */
+    fun complete(player: Player, raid: ToaRaid): ToaPersonalReward? {
+        if (!raid.progress.finished || player.uid !in raid.remaining) return null
+        return saveRoll(player, raid)
+    }
+
+    private fun saveRoll(player: Player, raid: ToaRaid): ToaPersonalReward {
         val reward = ToaPersonalReward.open(stored(player), raid.rewardToken) {
             roller.roll(ToaRewardContext(raid.rewardToken, player.uid, raid.roster.toList(), raid.settings,
                 raid.progress.elapsedCycles(raid.world.currentCycle), raid.progress.failedAttempts))

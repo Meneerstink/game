@@ -12,6 +12,7 @@ import gg.rsmod.plugins.content.activity.toa.core.ToaLootItems
 import gg.rsmod.plugins.content.activity.toa.core.ToaLootPlayer
 import gg.rsmod.plugins.content.activity.toa.core.ToaPointSource
 import kotlin.random.Random
+import gg.rsmod.plugins.api.ext.persistNow
 
 /**
  * N462: the raid's points and its chest. Points: at a room clear every member's damage on each of the room's npcs (DamageMap) goes to the
@@ -66,8 +67,31 @@ object ToaChest {
         }
     }
 
-    /** Raid token -> members whose completion still has to be counted (they were logged out when the Wardens died). */
-    private val completionsDue = hashMapOf<String, MutableSet<PlayerUID>>()
+    private data class OfflineCompletion(val escrow: String, val completions: Int, val normalExpert: Int,
+        val byMode: Map<gg.rsmod.plugins.content.activity.toa.core.ToaMode, Int>, val hadThread: Boolean)
+    private val offlineCompletions = hashMapOf<PlayerUID, OfflineCompletion>()
+
+    private fun rememberOffline(player: Player) {
+        val escrow = player.attr[ToaRewards.ESCROW] ?: return
+        offlineCompletions[player.uid] = OfflineCompletion(escrow, player.attr[COMPLETIONS] ?: 0,
+            player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0,
+            COMPLETIONS_BY_MODE.mapValues { (_, key) -> player.attr[key] ?: 0 }, player.attr[HAD_THREAD] == true)
+    }
+
+    /** Called on every login, even after the original raid was released. Disk already survives a process restart. */
+    fun reconcileOffline(player: Player) {
+        val pending = offlineCompletions[player.uid] ?: return
+        player.attr[ToaRewards.ESCROW] = pending.escrow
+        player.attr[COMPLETIONS] = maxOf(player.attr[COMPLETIONS] ?: 0, pending.completions)
+        player.attr[COMPLETIONS_NORMAL_EXPERT] = maxOf(player.attr[COMPLETIONS_NORMAL_EXPERT] ?: 0, pending.normalExpert)
+        pending.byMode.forEach { (mode, count) ->
+            val key = COMPLETIONS_BY_MODE.getValue(mode)
+            player.attr[key] = maxOf(player.attr[key] ?: 0, count)
+        }
+        if (pending.hadThread) player.attr[HAD_THREAD] = true
+        player.persistNow()
+        offlineCompletions.remove(player.uid)
+    }
 
     private fun countCompletion(raid: ToaRaid, player: Player) {
         player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
@@ -78,10 +102,6 @@ object ToaChest {
         val count = (player.attr[key] ?: 0) + 1
         player.attr[key] = count
         player.message(ToaChallengeMessages.count(raid.settings.raidLevel, count))
-    }
-
-    fun completionOnReconnect(raid: ToaRaid, player: Player) {
-        if (completionsDue[raid.rewardToken]?.remove(player.uid) == true) countCompletion(raid, player)
     }
 
     /** The Wardens died: roll the whole chest once and park every present member's share for the escrow. */
@@ -105,7 +125,7 @@ object ToaChest {
         val result = ToaLoot.roll(lootPlayers, present.map { it.uid }.toSet(), raid.settings.raidLevel, Random.Default, raid.points.deathless)
         if (result.purpleWinner != null) glowPurple(raid)
         present.forEach { player ->
-            if (player in online) countCompletion(raid, player) else completionsDue.getOrPut(raid.rewardToken) { mutableSetOf() } += player.uid
+            countCompletion(raid, player)
             val drops = result.drops[player.uid].orEmpty()
             if (drops.any { it.osrsItem == ToaLoot.THREAD_OF_ELIDINIS }) player.attr[HAD_THREAD] = true
             pending[raid.rewardToken to player.uid] = drops.mapNotNull { drop ->
@@ -117,7 +137,10 @@ object ToaChest {
                     Item(if (drop.noted) noted(player, local) else local, drop.amount)
                 }
             }
-            if (player in online) ToaRewards.open(player, raid)
+            // Persist the completion, thread flag and exact rolled share together, even for an offline member.
+            // Otherwise the last online member leaving releases the raid; the next login cannot find pending loot/completion.
+            ToaRewards.complete(player, raid)
+            if (player !in online) rememberOffline(player)
         }
     }
 

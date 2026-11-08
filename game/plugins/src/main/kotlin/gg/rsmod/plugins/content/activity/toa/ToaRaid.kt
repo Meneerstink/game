@@ -232,8 +232,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         // anywhere in the raid). The honey locusts owed after a wipe still come.
         dying -= player.uid
         if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
-        // Logged out when the Wardens died: the completion counts now; the chest share waits in ToaChest's escrow.
-        if (progress.finished) ToaChest.completionOnReconnect(this, player)
+        // Completion and loot are already in personal persistent escrow, including when offline at the kill.
         place(player)
     }
 
