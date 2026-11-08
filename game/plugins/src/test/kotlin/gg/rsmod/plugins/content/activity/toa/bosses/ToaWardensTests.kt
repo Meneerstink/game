@@ -3,6 +3,29 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 import kotlin.test.*
 
 class ToaWardensTests {
+    @Test fun `both Warden choices announce phase transitions once and never on a repeated callback`() {
+        for (choice in WardensCombat.Warden.values()) {
+            val f = ToaTestFixture()
+            val p = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+            val attributes = gg.rsmod.game.model.attr.AttributeMap()
+            val chat = mutableListOf<String>()
+            attributes[gg.rsmod.plugins.content.items.ItemActionGuard.STATUS_CAPTURE] = chat
+            io.mockk.every { p.attr } returns attributes
+            io.mockk.every { p.isOnline } returns true
+            io.mockk.every { p.isDead() } returns false
+            io.mockk.every { p.tile } returns gg.rsmod.game.model.Tile(3200, 3200)
+            val s = WardensCombat.Session(f.npc, ToaTestContext(players = listOf(p)))
+            s.phaseTwoWarden = choice
+            s.startPhaseTwo(); s.startPhaseTwo()
+            s.exposeCore(); s.startPhaseThree(); s.startPhaseThree()
+            val p2 = if (choice == WardensCombat.Warden.ELIDINIS) "Elidinis'" else "Tumeken's"
+            val p3 = if (choice == WardensCombat.Warden.ELIDINIS) "Tumeken's" else "Elidinis'"
+            assertEquals(listOf("As $p3 Warden falls, $p2 Warden powers up!",
+                "$p2 Warden uses the last of its power to restore $p3 Warden!"), chat)
+            s.close()
+        }
+    }
+
     @Test fun `actual final actor zero HP freezes the raid clock once while preserving its death animation`() {
         val f = ToaTestFixture()
         val root = gg.rsmod.game.model.entity.Npc(1, gg.rsmod.game.model.Tile(3200, 3200), f.world)
