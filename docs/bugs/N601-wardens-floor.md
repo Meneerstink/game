@@ -62,10 +62,55 @@ The setup uses test room clears and an HP reduction, so this is a graphics check
 not a full raid completion. OSRS reference frames from the Kaoz guide are
 `build/n462-sources/d2/entry-video-{2000,2140,2350}.png`.
 
-P3 still has two patches of ground showing through the floor. The grid lift
-does not solve that separate overlap. Read-only terrain measurements find
-plane 0 and plane 1 at the same height (raw height 1); the imported map omits
-the source hidden overlays 41/123, and plane 0 contains grey underlay 55.
-These observations narrow the next investigation; they are not a proven fix.
-No complete N601 claim or live verification is made here. The release must
-include the cache change.
+The grid-only repair left two grey patches of terrain showing through the P3
+playable floor. Source map 15696 puts terrain and these models at the same
+height; the 667 depth buffer could still choose the terrain over the model.
+
+## Terrain clearance repair, 2026-11-09
+
+`ToaWardenFloorDepthTool` derives each output from source cache 2686, keeps the
+existing grid repair and moves every layer up by the existing decal clearance
+of one model unit. X/Z coordinates, faces, colours and priorities stay the same.
+The plain source model has priorities 2/3; the two broken variants have 2/3/4.
+The tool checks those exact layer counts and accepts only the original,
+grid-only or final cache bytes. Repeated apply cannot keep raising the floor.
+
+Transaction `tx-20261109-032831` applied six mutations, verified in both caches.
+Testserver, fileserver and clients were stopped. A second apply,
+`tx-20261109-032859`, changed zero entries and skipped all six. An independent
+probe translated the previously verified grid-only fixtures and matched all
+six cache entries byte for byte. Rollback: `C:/RSPS/import-journal/tx-20261109-032831/`.
+
+After stopping the local testserver/fileserver, reproduce with:
+
+```powershell
+java -Xmx2g -cp 'game/build/install/game/lib/*' `
+  gg.rsmod.game.tools.importer.ToaWardenFloorDepthTool plan
+java -Xmx2g -cp 'game/build/install/game/lib/*' `
+  gg.rsmod.game.tools.importer.ToaWardenFloorDepthTool apply
+```
+
+| Local model | Final SHA-256 |
+| --- | --- |
+| 16567 | 417b8c038b1e2ee5622068c5e1abdc8d48cacfec482859c020ff4a6ed06a36f2 |
+| 16980 | c4bf1c0a41ecc5038b1dd4544adde767ea2927a01d726aebe9f8fc5bfd6e5458 |
+| 17016 | c6d0f3f4bebcbfceb0ffc0b929ca01f42cb6631f54110ae07e5bdd5a07740ebe |
+
+Validation: `ToaWardenFloorDepthTests` 2/2 green, own `installDist` green,
+lint zero findings. Proof: `C:/RSPS/work/gpt-a/build/n601-floor-depth/`:
+XML, logs, source hashes, expected-byte probe, cache manifest and rebuild log.
+
+MID/GlToolkit on own testserver (2026-11-09): P1, actual P2 and P3 inspected;
+two grey patches no longer show through the playable floor. Five P3 builds
+(initial plus four wipes/retries) reached the proper P2/P3 NPC forms; the fifth
+build retained the repaired floor. Screenshots in `C:/RSPS/screens/N601/`:
+`a-p3-depth-p1-mid.png`, `a-p3-depth-p2-high-mid.png`,
+`a-p3-depth-p3-high-mid.png`, `a-p3-depth-p3-side-mid.png`,
+`a-p3-depth-p3-after-five-mid.png`. Compared against the original Kaoz frames
+at 2140/2350 seconds. This used diagnostic clears/HP changes, not a raid run.
+Client 1372 closed before committing; no new client code in this repair.
+
+Open: grey terrain remains outside the playable floor near the collapsed edge;
+Kephri's wall/camera comparison and the other N601 rooms also remain open.
+No complete N601 or live claim. Claude must include this cache change in the
+release and perform A9.

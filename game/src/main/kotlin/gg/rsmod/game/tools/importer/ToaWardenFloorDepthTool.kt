@@ -28,7 +28,10 @@ object ToaWardenFloorDepthTool {
         require(source.version == 12 && source.texSpaceCount == 0 && source.vertexCount > 0)
         require(source.vertexX.all { it in -64..64 } && source.vertexZ.all { it in -64..64 })
         require(source.vertexY.all { it in -1..0 } && source.vertexY.any { it == 0 }) { "Unexpected floor height" }
-        require(source.facePriority?.toSet() == setOf(2.toByte(), 3.toByte())) { "Unexpected floor layers" }
+        // The plain tile has base/grid priorities 2/3; both broken tiles also have rubble at 3 and the grid at 4.
+        val expectedLayers = if (sourceId == 45432) mapOf(2.toByte() to 2, 3.toByte() to 32)
+            else mapOf(2.toByte() to 2, 3.toByte() to 2, 4.toByte() to 32)
+        require(source.facePriority?.toList()?.groupingBy { it }?.eachCount() == expectedLayers) { "Unexpected floor layers" }
         val original = Rev667ModelEncoder.encode(source)
         val grid = OsrsDecalLiftTool.liftAll(source)?.first ?: source
         val gridBytes = Rev667ModelEncoder.encode(grid)
