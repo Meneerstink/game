@@ -38,7 +38,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     private val offlineEncounterDeaths = mutableSetOf<PlayerUID>()
     private var retry: ToaRoomKey? = null
     /** Members owed honey locusts after a wipe (handed out at their respawn). */
-    private val locustsDue = mutableSetOf<PlayerUID>()
+    private val locustsDue = mutableMapOf<PlayerUID, Int>()
     private var scene: ToaScene? = null
     private val lastBarrier = hashMapOf<PlayerUID, Int>()
     var completion: ToaCompletion? = null
@@ -239,7 +239,10 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         points.death(player.uid)
         ToaRaidEvents.playerDeath(this, player.uid)
     }
-    fun remove(uid: PlayerUID) { lose(uid); remaining -= uid; offline -= uid; dying -= uid; offlineEncounterDeaths -= uid; members.remove(uid) }
+    fun remove(uid: PlayerUID) {
+        lose(uid); remaining -= uid; offline -= uid; dying -= uid; offlineEncounterDeaths -= uid
+        locustsDue.remove(uid); members.remove(uid)
+    }
 
     fun reconnect(player: Player) {
         if (player.uid !in remaining) return
@@ -257,7 +260,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         // Only the place: a reconnect is no death, so no full restore (ultrareview #4: log out/in healed HP, prayer, spec and run
         // anywhere in the raid). The honey locusts owed after a wipe still come.
         dying -= player.uid
-        if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
+        deliverLocusts(player)
         // Completion and loot are already in personal persistent escrow, including when offline at the kill.
         place(player)
     }
@@ -265,8 +268,17 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     fun respawn(player: Player) {
         dying -= player.uid
         ToaRecovery.full(player)
-        if (locustsDue.remove(player.uid)) ToaIds.item(HONEY_LOCUST)?.let { player.inventory.add(it, LOCUSTS_PER_WIPE) }
+        deliverLocusts(player)
         place(player)
+    }
+
+    /** Preserve the owner's two-per-wipe entitlement when insertion fails; never invent a bank/ground fallback. */
+    private fun deliverLocusts(player: Player) {
+        val due = locustsDue[player.uid] ?: return
+        val item = ToaIds.item(HONEY_LOCUST) ?: return
+        val delivered = player.inventory.add(item, due, assureFullInsertion = false).completed
+        if (delivered == due) locustsDue.remove(player.uid)
+        else if (delivered > 0) locustsDue[player.uid] = due - delivered
     }
 
     /** The respawn/reconnect tile: the burial chamber after the Wardens, the running room's checkpoint, the retry's, else the Nexus. */
@@ -284,7 +296,12 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     /** Called once per world cycle, after death/clear callbacks for the preceding cycle have settled. */
     fun cycle() {
         if (closed) return
-        players().forEach { ToaUi.refresh(it, this) }
+        players().forEach {
+            ToaUi.refresh(it, this)
+            // A full inventory or capped stack must not consume pending wipe supplies. Retry once space is available,
+            // after the death animation/respawn; repeated respawn/rejoin/cycle calls cannot issue them twice.
+            if (!it.isDead() && it.uid !in dying) deliverLocusts(it)
+        }
         progress.current?.takeIf { it.status == ToaRoomStatus.RUNNING }?.let { run ->
             players().filter { participants.alive(run, it.uid) && (it.isDead() || !inRoom(it, run.key)) }
                 .forEach { lose(it.uid) }
@@ -365,7 +382,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
                 room.wipe(run)
                 // Honey locust?oldid=15352003: 'given to players who have failed a challenge or boss room' (not with On a Diet). The amount
                 // is not published ('seems to vary according to the room'): owner 07-11 20:5x = 2 per player. Given at the respawn.
-                if ("On a Diet" !in settings.invocations) locustsDue += remaining
+                if ("On a Diet" !in settings.invocations) remaining.forEach {
+                    locustsDue[it] = (locustsDue[it] ?: 0) + LOCUSTS_PER_WIPE
+                }
             }
             ToaRoomEvent.RESET -> {
                 room.reset(run); scope.close(); rooms.remove(run.generation); participants.clear()
@@ -389,6 +408,7 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
         participants.clear()
         retry = null
         scene?.close(); scene = null
+        locustsDue.clear()
         members.clear()
     }
 

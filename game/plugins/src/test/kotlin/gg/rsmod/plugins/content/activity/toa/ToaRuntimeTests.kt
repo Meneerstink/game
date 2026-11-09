@@ -266,6 +266,114 @@ class ToaRuntimeTests {
         } finally { raid.close() }
     }
 
+    @Test fun `solo and duo keep full inventory wipe supplies in every room over five retries`() {
+        val locust = assertNotNull(ToaIds.item(ToaRaid.HONEY_LOCUST))
+        val keys = ToaPath.values().flatMap { listOf(ToaRoomKey(it, false), ToaRoomKey(it, true)) } + ToaRoomKey(null, true)
+        val rooms = keys.map { key -> ToaRooms.replaceForTest(key) { object : ToaRoom {} } }
+        val completed = ToaRaidEvents.completed
+        ToaRaidEvents.completed = { _, _ -> }
+        try {
+            for (size in 1..2) {
+                val f = Fixture(size)
+                val raid = ToaRaid(size.toLong(), f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+                f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+                try {
+                    for (key in keys) {
+                        f.players.forEach { p ->
+                            assertTrue(when {
+                                key.wardens -> raid.enterWardens(p)
+                                key.boss -> raid.enterBoss(p, key.path!!)
+                                else -> raid.enterChallenge(p, key.path!!)
+                            })
+                        }
+                        repeat(5) {
+                            val old = assertNotNull(raid.progress.current)
+                            f.players.forEach { p ->
+                                p.inventory.removeAll()
+                                assertEquals(28, p.inventory.add(385, 28).completed)
+                                f.dead += p.uid
+                                raid.deathStart(p); raid.deathStart(p)
+                            }
+                            f.cycle++; raid.cycle()
+                            assertNull(raid.progress.current, "wait for the death animations: $key")
+                            f.players.forEach { p ->
+                                f.dead -= p.uid
+                                raid.respawn(p); raid.respawn(p)
+                                assertEquals(28, p.inventory.getItemCount(385), "safe death preserves the full inventory")
+                                assertEquals(0, p.inventory.getItemCount(locust), "no room yet")
+                            }
+                            f.players.forEach { it.inventory.remove(385, 1) }
+                            f.cycle++; raid.cycle()
+                            f.players.forEach { assertEquals(2, it.inventory.getItemCount(locust), "two locusts after space opens: $key") }
+                            repeat(5) { f.cycle++; raid.cycle() }
+                            f.players.forEach { assertEquals(2, it.inventory.getItemCount(locust), "no duplicate delivery") }
+                            assertFalse(old.wipe(f.cycle), "the previous generation cannot grant another wipe")
+                            assertEquals(key, raid.progress.current?.key)
+                        }
+                        assertTrue(raid.progress.current!!.clear(++f.cycle))
+                    }
+                } finally { raid.close() }
+            }
+        } finally { ToaRaidEvents.completed = completed; rooms.asReversed().forEach { it.close() } }
+    }
+
+    @Test fun `offline wipe supply delivery retains a partial capped stack without duplicating on rejoin`() {
+        val f = Fixture(2)
+        val (offline, other) = f.players
+        val locust = assertNotNull(ToaIds.item(ToaRaid.HONEY_LOCUST))
+        val room = ToaRooms.replaceForTest(ToaRoomKey(ToaPath.HET, false)) { object : ToaRoom {} }
+        val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        try {
+            offline.inventory.add(locust, Int.MAX_VALUE - 1)
+            offline.inventory.add(385, 27)
+            f.players.forEach { assertTrue(raid.enterChallenge(it, ToaPath.HET)) }
+            raid.disconnect(offline)
+            f.dead += other.uid; raid.deathStart(other)
+            f.cycle++; raid.cycle()
+            assertEquals(Int.MAX_VALUE - 1, offline.inventory.getItemCount(locust), "offline members receive nothing before rejoin")
+            raid.reconnect(offline); raid.reconnect(offline)
+            assertEquals(Int.MAX_VALUE, offline.inventory.getItemCount(locust), "one delivered, one still owed")
+            f.dead -= other.uid; raid.respawn(other)
+            assertEquals(2, other.inventory.getItemCount(locust))
+            offline.inventory.remove(locust, 2)
+            repeat(5) { f.cycle++; raid.cycle() }
+            assertEquals(Int.MAX_VALUE - 1, offline.inventory.getItemCount(locust), "only the outstanding one is delivered")
+            raid.reconnect(offline); raid.respawn(offline)
+            assertEquals(Int.MAX_VALUE - 1, offline.inventory.getItemCount(locust))
+        } finally { raid.close(); room.close() }
+    }
+
+    @Test fun `successive full inventory wipes accumulate and leaving forfeits pending locusts`() {
+        val f = Fixture(1)
+        val p = f.players.single()
+        val locust = assertNotNull(ToaIds.item(ToaRaid.HONEY_LOCUST))
+        val room = ToaRooms.replaceForTest(ToaRoomKey(ToaPath.HET, false)) { object : ToaRoom {} }
+        val raid = ToaRaid(1, listOf(p.uid), ToaRaidSettings(), f.map(6400), f.world)
+        f.tiles[p.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS)
+        try {
+            p.inventory.add(385, 28)
+            assertTrue(raid.enterChallenge(p, ToaPath.HET))
+            repeat(5) {
+                f.dead += p.uid; raid.deathStart(p)
+                f.cycle++; raid.cycle()
+                f.dead -= p.uid; raid.respawn(p)
+                f.cycle++; raid.cycle()
+            }
+            assertEquals(0, p.inventory.getItemCount(locust))
+            p.inventory.remove(385, 1)
+            f.cycle++; raid.cycle()
+            assertEquals(10, p.inventory.getItemCount(locust), "two for every wipe, including earlier undelivered supplies")
+            p.inventory.removeAll(); p.inventory.add(385, 28)
+            f.dead += p.uid; raid.deathStart(p)
+            f.cycle++; raid.cycle()
+            raid.remove(p.uid)
+            f.dead -= p.uid; p.inventory.removeAll()
+            raid.respawn(p); raid.reconnect(p); f.cycle++; raid.cycle()
+            assertEquals(0, p.inventory.getItemCount(locust), "departed members have no pending delivery")
+        } finally { raid.close(); room.close() }
+    }
+
     private class Fixture(count: Int) {
         val world = mockk<World>(relaxed = true)
         val tiles = hashMapOf<PlayerUID, Tile>()
@@ -284,7 +392,9 @@ class ToaRuntimeTests {
             every { p.teleportTo(any()) } answers { tiles[uid] = firstArg(); Unit }
             val definitions = mockk<DefinitionSet>(relaxed = true)
             // Real ItemDefs: a respawn after a wipe now adds Honey locusts (owner 07-11 20:5x, 2 per player).
-            every { definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, any()) } answers { gg.rsmod.game.fs.def.ItemDef(secondArg<Int>()) }
+            every { definitions.get(gg.rsmod.game.fs.def.ItemDef::class.java, any()) } answers {
+                gg.rsmod.game.fs.def.ItemDef(secondArg<Int>()).apply { stacks = id == ToaIds.item(ToaRaid.HONEY_LOCUST) }
+            }
             every { definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, any()) } answers { gg.rsmod.game.fs.def.ItemDef(secondArg<Int>()) }
             every { p.inventory } returns ItemContainer(definitions, 28, ContainerStackType.NORMAL)
             every { p.bank } returns ItemContainer(definitions, 800, ContainerStackType.STACK)
