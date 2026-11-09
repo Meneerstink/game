@@ -97,8 +97,10 @@ object ClientHudSync {
             state.cycle = now
         }
 
+        val previousActor = state.last?.get()
         val opponent = heldOpponent(player, state)
-        if (opponent != state.opponent) {
+        // N601: a recycled NPC/player index can have identical health. A fresh actor must still bind the client panel.
+        if (opponent != state.opponent || state.last?.get() !== previousActor) {
             ClientHud.send(player, opponent)
             state.opponent = opponent
         }
