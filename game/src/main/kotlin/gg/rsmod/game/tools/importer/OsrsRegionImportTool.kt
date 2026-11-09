@@ -221,6 +221,10 @@ object OsrsRegionImportTool {
         candidates: Map<Int, Rev667OverlayDef>,
         forced: Int? = null,
     ): Int {
+        ToaMinimapMaskTool.local(tileValue, source, batch.squares)?.let { target ->
+            ToaMinimapMaskTool.validateNative(target, candidates[target] ?: error("Native minimap mask $target missing; apply ToaMinimapMaskTool first"))
+            return target + 1
+        }
         if (ToaHiddenFloorTool.preserveMask(tileValue, source, batch.squares)) {
             ToaHiddenFloorTool.validateNative(candidates[ToaHiddenFloorTool.LOCAL_OVERLAY] ?: error("Native transparent overlay41 missing"))
             return ToaHiddenFloorTool.LOCAL_OVERLAY + 1
@@ -518,17 +522,23 @@ object OsrsRegionImportTool {
                 /** New plain overlays (local id -> def) written by this batch ([Batch.newOverlaySlots]); OSRS tile value -> local id. */
                 val newOverlays = LinkedHashMap<Int, Rev667OverlayDef>()
                 val forcedOverlay = HashMap<Int, Int>()
-                val reusedSlots = batch.newOverlaySlots.orEmpty().toSet()
+                val toaMasks = ToaMinimapMaskTool.isToa(batch.squares)
+                val protectedSlots = if (toaMasks) ToaMinimapMaskTool.ALLOCATED else emptySet()
+                val reusedSlots = batch.newOverlaySlots.orEmpty().filterNot { it in protectedSlots }.toSet()
                 fun overlayCandidates(def: ModernOverlayDef): Map<Int, Rev667OverlayDef> {
                     // a slot being (re)written must not be matched with its old definition
-                    val all = localOverlays.filterKeys { it !in reusedSlots } + newOverlays
+                    val all = (localOverlays.filterKeys { it !in reusedSlots } + newOverlays)
+                        .filterValues { !toaMasks || it.rgb != 0xff00ff }
                     return if (batch.plainOverlaysStayPlain && def.texture == -1) all.filterValues { it.texture == -1 }.ifEmpty { all } else all
                 }
                 fun mapOverlay(tileValue: Int): Int =
                     overlayMap.getOrPut(tileValue) {
                         val def = modernOverlays[tileValue - 1] ?: error("modern overlay ${tileValue - 1} missing")
                         resolveOverlay(tileValue, def, batch,
-                            if ((tileValue - 1) in batch.overlayOverrides) localOverlays else overlayCandidates(def), forcedOverlay[tileValue])
+                            if ((tileValue - 1) in batch.overlayOverrides ||
+                                ToaHiddenFloorTool.preserveMask(tileValue, def, batch.squares) ||
+                                ToaMinimapMaskTool.local(tileValue, def, batch.squares) != null) localOverlays
+                            else overlayCandidates(def), forcedOverlay[tileValue])
                     }
 
                 // ---- loc types: every one imported new ----
@@ -587,7 +597,8 @@ object OsrsRegionImportTool {
                     }
                     println("UNDERLAYS ${uses.size} used; ${minOf(uses.size, slots.size)} exact, ${maxOf(0, uses.size - slots.size)} to the nearest plain one")
                 }
-                batch.newOverlaySlots?.let { slots ->
+                batch.newOverlaySlots?.let { requestedSlots ->
+                    val slots = requestedSlots.filterNot { it in protectedSlots }
                     val overlayIndex = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(Rev667RegionProbeTool.OVERLAY_GROUP)!!
                     slots.forEach { check(it in 0..254) { "overlay $it is not a one-byte tile value" } }
                     // Every tile of every map square outside this batch's targets: an existing slot may only be rewritten when none uses it.
@@ -619,6 +630,7 @@ object OsrsRegionImportTool {
                             if (v == 0) continue
                             // Native ToA transparent masks need no new colour slot and must survive a later retile.
                             if (ToaHiddenFloorTool.preserveMask(v, modernOverlays[v - 1], batch.squares)) continue
+                            if (ToaMinimapMaskTool.local(v, modernOverlays[v - 1], batch.squares) != null) continue
                             val hidden = batch.dropHiddenOverlays && modernOverlays[v - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
                             if (!hidden && (v - 1) !in batch.overlayOverrides) uses.merge(v, 1, Int::plus)
                         }
@@ -731,7 +743,8 @@ object OsrsRegionImportTool {
                         dst.overlayRotation = src.overlayRotation
                         val hidden = batch.dropHiddenOverlays && src.overlayId != 0 &&
                             modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true &&
-                            !ToaHiddenFloorTool.preserveMask(src.overlayId, modernOverlays[src.overlayId - 1], batch.squares)
+                            !ToaHiddenFloorTool.preserveMask(src.overlayId, modernOverlays[src.overlayId - 1], batch.squares) &&
+                            ToaMinimapMaskTool.local(src.overlayId, modernOverlays[src.overlayId - 1], batch.squares) == null
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         if (dst.overlayId != 0) overlayUse.merge(src.overlayId, 1, Int::plus)
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
