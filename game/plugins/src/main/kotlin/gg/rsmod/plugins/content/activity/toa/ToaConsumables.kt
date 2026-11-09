@@ -10,9 +10,11 @@ import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.filterableMessage
 import gg.rsmod.plugins.api.ext.heal
+import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.playSound
 import gg.rsmod.plugins.api.ext.restorePrayer
 import gg.rsmod.plugins.content.items.potion.PotionType
+import gg.rsmod.plugins.content.activity.toa.core.ToaMode
 import gg.rsmod.plugins.content.mechanics.run.RunEnergy
 
 /**
@@ -66,11 +68,16 @@ object ToaConsumables {
         val item = player.inventory[slot] ?: return false
         if (item.id != localId) return false
         // Raid supplies work inside the raid only (ultrareview #4: an exported Ambrosia or Smelling salts boosted PvP/bossing anywhere).
-        if (ToaLobby.of(player.world).raid(player.uid)?.contains(player) != true) return false
+        val raid = ToaLobby.of(player.world).raid(player.uid) ?: return false
+        if (!raid.contains(player)) return false
         val food = kind == Kind.HONEY_LOCUST
         if (player.timers.has(if (food) FOOD_DELAY else POTION_DELAY)) return false
+        // Honey locust?oldid=15352003: in Expert, a stack larger than the wipe allowance falls to one upon eating.
+        // The owner fixes that allowance at two per player for every room (07-11 20:5x).
+        val locustsFlyAway = food && ToaMode.of(raid.settings.raidLevel) == ToaMode.EXPERT && item.amount > ToaRaid.LOCUSTS_PER_WIPE
         if (food) {
-            if (!player.inventory.remove(localId, 1, beginSlot = slot).hasSucceeded()) return false
+            val consumed = if (locustsFlyAway) item.amount - 1 else 1
+            if (!player.inventory.remove(localId, consumed, beginSlot = slot).hasSucceeded()) return false
         } else {
             val doses = osrsDoses(kind)
             val index = doses.indexOfFirst { ToaIds.item(it) == localId }
@@ -78,6 +85,7 @@ object ToaConsumables {
             val next = doses.getOrNull(index + 1)?.let(ToaIds::item)
             player.inventory[slot] = next?.let { gg.rsmod.game.model.item.Item(it) }
         }
+        if (locustsFlyAway) player.message("Some of your honey locusts fly away under the immense pressure of the tomb.")
         if (food) ToaRaidStats.of(player)?.ate(player)
         if (kind.drink || food) {
             player.animate(Anims.EAT_FOOD)
