@@ -62,55 +62,83 @@ The setup uses test room clears and an HP reduction, so this is a graphics check
 not a full raid completion. OSRS reference frames from the Kaoz guide are
 `build/n462-sources/d2/entry-video-{2000,2140,2350}.png`.
 
-The grid-only repair left two grey patches of terrain showing through the P3
-playable floor. Source map 15696 puts terrain and these models at the same
-height; the 667 depth buffer could still choose the terrain over the model.
+The grid-only repair initially left grey terrain showing through and around
+the P3 floor. The cause was the removal of OSRS transparent terrain masks.
 
-## Terrain clearance repair, 2026-11-09
+## Transparent source masks, 2026-11-09
 
-`ToaWardenFloorDepthTool` derives each output from source cache 2686, keeps the
-existing grid repair and moves every layer up by the existing decal clearance
-of one model unit. X/Z coordinates, faces, colours and priorities stay the same.
-The plain source model has priorities 2/3; the two broken variants have 2/3/4.
-The tool checks those exact layer counts and accepts only the original,
-grid-only or final cache bytes. Repeated apply cannot keep raising the floor.
+OSRS overlay 41 has RGB `ff00ff`, no texture, no secondary colour and
+`hideUnderlay=false`. The existing native 667 overlay 41 has the same fields.
+The client decodes its colour to -1. In both `Class306.loadUnblended` and
+`loadBlended`, an absent overlay changes shape 0 into underlay-only shape 12;
+an existing transparent overlay preserves the source shape, then omits its
+overlay faces. Dropping the overlay therefore exposed the grey underlay.
 
-Transaction `tx-20261109-032831` applied six mutations, verified in both caches.
-Testserver, fileserver and clients were stopped. A second apply,
-`tx-20261109-032859`, changed zero entries and skipped all six. An independent
-probe translated the previously verified grid-only fixtures and matched all
-six cache entries byte for byte. Rollback: `C:/RSPS/import-journal/tx-20261109-032831/`.
+`ToaHiddenFloorTool` restores this source mask, shape and rotation only in ToA
+maps. Heights, flags, underlays, unrelated tiles and environment bytes stay the
+same. The tool checks both native definitions and refuses changed heights or
+conflicting overlays. `OsrsRegionImportTool` preserves the same masks during
+future ToA imports and does not allocate an unnecessary new colour slot.
+Other import batches and hidden masks with secondary/minimap colours retain
+their previous behaviour.
 
-After stopping the local testserver/fileserver, reproduce with:
+Cache transaction `tx-20261109-040030`: 19,002 masks in eleven maps, 22 verified
+mutations across both caches. A second apply reports `NOTHING_TO_DO`. An
+independent Python byte encoder matched all 26 target map entries, including
+the two unchanged maps. Full hashes, original files and expected bytes are in
+`C:/RSPS/work/gpt-a/build/n601-hidden-floor/expected-manifest.json` and that
+folder. Rollback originals: `C:/RSPS/import-journal/tx-20261109-040030/`.
+
+| Source square | Target tile file | Restored masks |
+| --- | --- | --- |
+| 13454 | m52_142 | 4258 |
+| 14160 | m64_104 | 615 |
+| 14162 | m64_106 | 983 |
+| 14164 | m64_108 | 826 |
+| 14672 | m66_104 | 1138 |
+| 14674 | m66_106 | 0 |
+| 14676 | m66_108 | 374 |
+| 15184 | m68_104 | 440 |
+| 15186 | m68_106 | 526 |
+| 15188 | m68_108 | 2498 |
+| 15696 | m70_104 | 4361 |
+| 15698 | m70_106 | 2983 |
+| 15700 | m70_108 | 0 |
+
+After stopping testserver, fileserver and clients, reproduce with:
 
 ```powershell
 java -Xmx2g -cp 'game/build/install/game/lib/*' `
-  gg.rsmod.game.tools.importer.ToaWardenFloorDepthTool plan
+  gg.rsmod.game.tools.importer.ToaHiddenFloorTool plan
 java -Xmx2g -cp 'game/build/install/game/lib/*' `
-  gg.rsmod.game.tools.importer.ToaWardenFloorDepthTool apply
+  gg.rsmod.game.tools.importer.ToaHiddenFloorTool apply
 ```
 
-| Local model | Final SHA-256 |
-| --- | --- |
-| 16567 | 417b8c038b1e2ee5622068c5e1abdc8d48cacfec482859c020ff4a6ed06a36f2 |
-| 16980 | c4bf1c0a41ecc5038b1dd4544adde767ea2927a01d726aebe9f8fc5bfd6e5458 |
-| 17016 | c6d0f3f4bebcbfceb0ffc0b929ca01f42cb6631f54110ae07e5bdd5a07740ebe |
+A/B verification restored the three models to their grid-only heights using
+`restore-tx-20261109-040105-040f8995-3a0a-4b67-a17c-0eb5cde9fd54`.
+All six model payloads match the grid-only hashes in the earlier table. With
+these original heights, restoring the masks removes the grey patches both
+inside and outside the playable P3 floor. The one-unit floor-raising candidate
+`87bd6f422` is superseded; its offline tool/tests are removed. Do not reapply
+transaction `tx-20261109-032831`. The earlier grid repair remains required.
 
-Validation: `ToaWardenFloorDepthTests` 2/2 green, own `installDist` green,
-lint zero findings. Proof: `C:/RSPS/work/gpt-a/build/n601-floor-depth/`:
-XML, logs, source hashes, expected-byte probe, cache manifest and rebuild log.
+Validation: `ToaHiddenFloorTests` 4/4 and `ToaHdOverlayTests` 4/4 green,
+independent map bytes 26/26, native mask definition checked in both caches,
+git diff --check clean. The current change only affects offline cache/import tools. Runtime
+uses the previously built own gameplay artefact (04:40) after a cache/server/
+client restart; no new gameplay code or client code is involved.
 
-MID/GlToolkit on own testserver (2026-11-09): P1, actual P2 and P3 inspected;
-two grey patches no longer show through the playable floor. Five P3 builds
-(initial plus four wipes/retries) reached the proper P2/P3 NPC forms; the fifth
-build retained the repaired floor. Screenshots in `C:/RSPS/screens/N601/`:
-`a-p3-depth-p1-mid.png`, `a-p3-depth-p2-high-mid.png`,
-`a-p3-depth-p3-high-mid.png`, `a-p3-depth-p3-side-mid.png`,
-`a-p3-depth-p3-after-five-mid.png`. Compared against the original Kaoz frames
-at 2140/2350 seconds. This used diagnostic clears/HP changes, not a raid run.
-Client 1372 closed before committing; no new client code in this repair.
+MID/GlToolkit screenshots: `C:/RSPS/screens/N601/a-hidden-*-mid.png`, including
+lobby, Nexus, all four puzzles/bosses, actual Wardens P1/P2/P3 and loot chamber.
+P3 is compared with original Kaoz frame 2350s. The fifth confirmed P3 build
+(initial plus four checked wipe/retries) is also inspected. These are graphics
+and lifecycle checks using diagnostic clears/HP changes, not a raid run.
+The earlier fixed-delay repetition had an uncompleted P1 and is excluded;
+`runtime-break-checked.log` confirms both P2 and P3 for every accepted repeat.
+Client 9852 closed during the resumed verification before committing; resumed P3 and loot screenshots inspected. Logs/XML/source hashes/census/byte proof
+are in `C:/RSPS/work/gpt-a/build/n601-hidden-floor/`.
 
-Open: grey terrain remains outside the playable floor near the collapsed edge;
-Kephri's wall/camera comparison and the other N601 rooms also remain open.
-No complete N601 or live claim. Claude must include this cache change in the
-release and perform A9.
+Remaining N601 work includes other floor materials and secondary-colour masks,
+Kephri's exact camera comparison and the full OSRS room comparisons. No complete
+N601 or A9/live claim. Claude must release the current cache, including the
+retained grid repair and these map masks, then perform A9.

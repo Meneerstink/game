@@ -221,6 +221,10 @@ object OsrsRegionImportTool {
         candidates: Map<Int, Rev667OverlayDef>,
         forced: Int? = null,
     ): Int {
+        if (ToaHiddenFloorTool.preserveMask(tileValue, source, batch.squares)) {
+            ToaHiddenFloorTool.validateNative(candidates[ToaHiddenFloorTool.LOCAL_OVERLAY] ?: error("Native transparent overlay41 missing"))
+            return ToaHiddenFloorTool.LOCAL_OVERLAY + 1
+        }
         batch.overlayOverrides[tileValue - 1]?.let { target ->
             check(target in 0..254 && target in candidates) { "override target overlay $target missing or outside one-byte range" }
             println("OVERLAY_OVERRIDE osrs ${tileValue - 1} rgb=${"%06x".format(source.rgb)} tex=${source.texture} -> $target")
@@ -613,6 +617,8 @@ object OsrsRegionImportTool {
                             if (!batch.inPatch(square, lx, lz) || (batch.plane0Only && plane > 0) || plane + batch.planeShift > 3) continue
                             val v = region.tiles[plane][lx][lz].overlayId
                             if (v == 0) continue
+                            // Native ToA transparent masks need no new colour slot and must survive a later retile.
+                            if (ToaHiddenFloorTool.preserveMask(v, modernOverlays[v - 1], batch.squares)) continue
                             val hidden = batch.dropHiddenOverlays && modernOverlays[v - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
                             if (!hidden && (v - 1) !in batch.overlayOverrides) uses.merge(v, 1, Int::plus)
                         }
@@ -723,7 +729,9 @@ object OsrsRegionImportTool {
                         dst.flags = if (plane == 0) src.settings and batch.clearTileFlags.inv() else src.settings
                         dst.overlayShape = src.overlayPath
                         dst.overlayRotation = src.overlayRotation
-                        val hidden = batch.dropHiddenOverlays && src.overlayId != 0 && modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true
+                        val hidden = batch.dropHiddenOverlays && src.overlayId != 0 &&
+                            modernOverlays[src.overlayId - 1]?.let { it.rgb == 0xFF00FF && it.texture == -1 } == true &&
+                            !ToaHiddenFloorTool.preserveMask(src.overlayId, modernOverlays[src.overlayId - 1], batch.squares)
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         if (dst.overlayId != 0) overlayUse.merge(src.overlayId, 1, Int::plus)
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
