@@ -16,6 +16,17 @@ object ToaMap {
     const val CACHE_OFFSET_Z = 1536
     val REGIONS = listOf(14160, 14162, 14164, 14674, 14676, 15186, 15188, 15698, 15700, 15184, 15696, 14672)
 
+    /**
+     * N462 group bug 11-11: the cache squares the raid is copied from. Tile.isMulti answers for an instance tile from its copy
+     * source, and none of these squares was multi-combat - so a second player got "Someone is already fighting this." on Kephri.
+     * The whole raid is multi-combat in OSRS: the party fights each boss together (Wiki ToA/Strategies: Akkha "in larger sizes,
+     * he will take an additional hit per player"; at raid level 300 Akkha's orb damage "split between all players on that tile").
+     * Registered once at world init (toa ToaRaid.plugin.kts), so nothing has to be undone when a raid instance is released.
+     */
+    val CACHE_REGIONS: List<Int> = REGIONS.map { region ->
+        ((((region shr 8) * 64 + CACHE_OFFSET_X) shr 6) shl 8) or (((region and 255) * 64 + CACHE_OFFSET_Z) shr 6)
+    }
+
     // 40-loc-placements.tsv: lobby Entry (3357,9112), nexus Exit (3549,5163); landing just inside each.
     val LOBBY = Tile(3359, 9114)
     val NEXUS = Tile(3551, 5161)

@@ -5,6 +5,8 @@ import gg.rsmod.game.model.priv.Privilege
 import gg.rsmod.plugins.content.mechanics.death.SafeDeath
 
 SafeDeath.register { player -> ToaLobby.of(player.world).raid(player.uid)?.contains(player) == true }
+// N462: every raid room is multi-combat (see ToaMap.CACHE_REGIONS); instance tiles resolve through these copy sources.
+ToaMap.CACHE_REGIONS.forEach { region -> set_multi_combat_region(region) }
 // OSRS Wiki Tombs of Amascut (Mechanics): "It is not possible to cast standard spellbook utility spells inside the raid (with the exception of
 // Telekinetic Grab and Monster Inspect), although utility spells from the Lunar spellbook do work." Teleports are not utility spells.
 // ONZEKER: the refusal message is not in the sources.
