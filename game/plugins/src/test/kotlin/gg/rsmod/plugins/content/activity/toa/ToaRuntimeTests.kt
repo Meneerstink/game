@@ -41,8 +41,10 @@ class ToaRuntimeTests {
             assertFalse(raid.enterChallenge(follower, ToaPath.HET))
             raid.disconnect(leader)
             assertTrue(raid.enterChallenge(follower, ToaPath.HET), "Nexus soft-lock while the leader is offline")
+            // Wiki ToA (Disconnect) 'Rejoin': returning while the encounter runs = spectator at the path checkpoint, not the Nexus.
             raid.reconnect(leader)
-            assertTrue(raid.enterChallenge(leader, ToaPath.HET))
+            assertEquals(ToaMap.instance(raid.map, ToaPath.HET.challengeEntry), f.tiles[leader.uid])
+            assertEquals(ToaPath.HET, raid.progress.activePath)
         } finally { raid.close() }
     }
 
