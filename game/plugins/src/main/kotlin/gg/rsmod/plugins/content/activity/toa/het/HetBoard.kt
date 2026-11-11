@@ -194,12 +194,12 @@ object HetSeal {
     const val HIT_TICKS = 2
     const val XP_PER_HIT = 35.0
 
-    /** "Its health scales with the number of players but not with raid level" - ONZEKER T21: the general ToA group HP rule
-     * (100% + 90% for players 2-3 + 60% from the 4th, 10-schaal.tsv) because the Wiki gives no separate seal table. */
+    /** Wiki Het's Seal "HP scaling in different team sizes" (11-11): "raid level or selected invocations have no effect on the HP of
+     * Het's Seal. Its HP scales differently to other NPCs found within the raid" - the published table per team size 1..8. */
+    val HP_BY_TEAM_SIZE = listOf(BASE_HP, 225, 321, 417, 512, 608, 704, 800)
     fun hp(partySize: Int): Int {
         require(partySize in 1..8)
-        val tenths = 10 + 9 * minOf(partySize - 1, 2) + 6 * maxOf(partySize - 3, 0)
-        return BASE_HP * tenths / 10
+        return HP_BY_TEAM_SIZE[partySize - 1]
     }
 
     enum class Tier { BELOW_RUNE, RUNE, DRAGON }

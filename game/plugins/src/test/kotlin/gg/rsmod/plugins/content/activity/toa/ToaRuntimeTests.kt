@@ -30,6 +30,22 @@ class ToaRuntimeTests {
         }
     }
 
+    @Test fun `an offline leader does not lock the party out of the next path`() {
+        // N462-LEIDER 11-11: the leader opens a path first (Strategies:692), but a disconnected leader (rejoinable) must not soft-lock
+        // the others in the Nexus; once back he simply follows.
+        val f = Fixture(2)
+        val (leader, follower) = f.players
+        val raid = ToaRaid(1, f.players.map { it.uid }, ToaRaidSettings(), f.map(6400), f.world)
+        f.players.forEach { f.tiles[it.uid] = ToaMap.instance(raid.map, ToaMap.NEXUS) }
+        try {
+            assertFalse(raid.enterChallenge(follower, ToaPath.HET))
+            raid.disconnect(leader)
+            assertTrue(raid.enterChallenge(follower, ToaPath.HET), "Nexus soft-lock while the leader is offline")
+            raid.reconnect(leader)
+            assertTrue(raid.enterChallenge(leader, ToaPath.HET))
+        } finally { raid.close() }
+    }
+
     @Test fun `transferred party leadership survives raid creation even when roster order differs`() {
         val f = Fixture(2)
         val (founder, promoted) = f.players

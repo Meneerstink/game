@@ -132,8 +132,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
             return true
         }
         // Strategies?oldid=15392814:692: the leader enters a path before other members may follow.
-        // Preserve the existing departure fallback when the original leader has permanently left the raid.
-        if (progress.activePath == null && leader in remaining && player.uid != leader) return false
+        // Preserve the existing departure fallback when the original leader has permanently left the raid; an OFFLINE leader
+        // (rejoinable, Wiki ToA Disconnect) must not lock the party in the Nexus either (11-11, owner question N462-LEIDER, advice A).
+        if (progress.activePath == null && leader in remaining && leader !in offline && player.uid != leader) return false
         val run = progress.challenge(path, world.currentCycle) ?: return false
         return enter(player, run, path.challengeEntry)
     }

@@ -61,7 +61,7 @@ class HetBoardTests {
 
     @Test fun `seal hp and Mod Ash mining hits`() {
         assertEquals(119, HetSeal.hp(1))
-        assertTrue(HetSeal.hp(2) > HetSeal.hp(1) && HetSeal.hp(8) > HetSeal.hp(3))
+        assertEquals(listOf(119, 225, 321, 417, 512, 608, 704, 800), (1..8).map { HetSeal.hp(it) }) // Wiki team-size table
         assertEquals(17, HetSeal.hit(85, HetSeal.Tier.DRAGON, 0)) // 7 x 17 = 119: "Dragon Pickaxe and 85 Mining ... 7 times"
         assertEquals(119, 7 * HetSeal.hit(85, HetSeal.Tier.DRAGON, 0))
         assertEquals(15, HetSeal.hit(85, HetSeal.Tier.RUNE, 0))
