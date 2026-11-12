@@ -41,7 +41,9 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     }
 
     override fun debugState(player: Player) = "apmeken tick=$tick wave=${puzzle.wave} alive=${puzzle.remaining} " +
-        "task=${puzzle.task?.type} sight=${puzzle.sight == player.uid} complete=${puzzle.complete}"
+        "task=${puzzle.task?.type} sites=${puzzle.task?.remainingSites?.filterValues { it > 0 }?.keys} " +
+        "pillars=${PILLARS.map { instance(it).let { t -> "${t.x},${t.z}" } }} vents=${VENTS.map { instance(it).let { t -> "${t.x},${t.z}" } }} " +
+        "sight=${puzzle.sight == player.uid} complete=${puzzle.complete}"
     override fun enter(player: Player) { viewers += player; puzzle.enter(player.uid); drawSight() }
     override fun leave(player: Player) {
         val next = players.filter { it !== player }.takeIf { it.isNotEmpty() }?.let { reference!!.chooseSight.value(it).uid }

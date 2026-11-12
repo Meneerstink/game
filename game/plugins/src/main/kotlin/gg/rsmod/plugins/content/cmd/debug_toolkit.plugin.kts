@@ -441,6 +441,44 @@ gg.rsmod.game.CommandServerCommands.handlers["cwtick"] = { w, a ->
 }
 // `opnpc <name> <slot 1-5> <npc id>`: an npc option (Attack, Talk-to...) on the nearest npc with that id, through the real handler
 // path (Barrows facing E21 checked in the agent's own client).
+// `walk <name> <x> <z>` (N462 werklijst f): a real map click (MoveGameClickMessage) through ClickMapHandler, so test runs walk/run with
+// server pathing instead of teleporting.
+gg.rsmod.game.CommandServerCommands.handlers["walk"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val x = a.getOrNull(1)?.toIntOrNull()
+    val z = a.getOrNull(2)?.toIntOrNull()
+    if (p == null || x == null || z == null) "usage: walk <name> <x> <z>"
+    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.MoveGameClickMessage(x, z, 0))) "walk ${p.username} ${p.tile.x},${p.tile.z} -> $x,$z"
+    else "no handler"
+}
+// `opobj <name> <op 1-4> <item id> <x> <z>` (N462 werklijst f): a ground-item option (Take = 3) through the real OpObj handler.
+gg.rsmod.game.CommandServerCommands.handlers["opobj"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val n = a.drop(1).map { it.toIntOrNull() }
+    if (p == null || n.size < 4 || n.any { it == null }) "usage: opobj <name> <op 1-4> <item id> <x> <z>"
+    else {
+        val (op, item, x, z) = n.map { it!! }
+        val msg = when (op) {
+            1 -> gg.rsmod.game.message.impl.OpObj1Message(item, x, z, 0)
+            2 -> gg.rsmod.game.message.impl.OpObj2Message(item, x, z, 0)
+            3 -> gg.rsmod.game.message.impl.OpObj3Message(item, x, z, 0)
+            else -> gg.rsmod.game.message.impl.OpObj4Message(item, x, z, 0)
+        }
+        if (p.gameSystem.inject(msg)) "ground op $op of $item at $x,$z for ${p.username}" else "no handler"
+    }
+}
+// `ifbutton <name> <interface> <component> [option 1-10]` (N462 werklijst f): a button click through the real IfButton1Handler
+// (visibility/lock gates included), e.g. the ToA reward chest Bank-all (1188:4) after every test run.
+gg.rsmod.game.CommandServerCommands.handlers["ifbutton"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val iface = a.getOrNull(1)?.toIntOrNull()
+    val comp = a.getOrNull(2)?.toIntOrNull()
+    val option = a.getOrNull(3)?.toIntOrNull() ?: 1
+    if (p == null || iface == null || comp == null || option !in 1..10) "usage: ifbutton <name> <interface> <component> [option 1-10]"
+    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.IfButtonMessage((iface shl 16) or comp, option - 1, -1, -1, 61)))
+        "button $iface:$comp op$option for ${p.username} (visible=${p.interfaces.isVisible(iface)})"
+    else "no handler"
+}
 gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()

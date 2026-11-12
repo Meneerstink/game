@@ -202,13 +202,11 @@ class ToaLobby private constructor() {
         fun canEnter(player: Player): Boolean = isOpenFor(player) && BeneathCursedSands.isFinished(player)
 
         /**
-         * Release gate (owner 07-11 14:5x, interim release A): client + cache with the Necropolis go live while ToA is unfinished, so the
-         * raid stays closed on the live server - open on the test server (-Drsps.testServer=true) and for admins (live A9 checks).
-         * Opening ToA for everyone = removing this gate.
+         * Release gate (owner 07-11 14:5x interim release A: closed on live except admins). OPENED for everyone 12-11 (owner 11-11
+         * 'ja als alles af is': 3 full runs Entry/Normal/Expert played without test commands, N462 werklijst h).
          */
-        fun isOpenFor(player: Player): Boolean =
-            System.getProperty("rsps.testServer") == "true" ||
-                player.world.privileges.isEligible(player.privilege, gg.rsmod.game.model.priv.Privilege.ADMIN_POWER)
+        @Suppress("UNUSED_PARAMETER")
+        fun isOpenFor(player: Player): Boolean = true
     }
 }
 
