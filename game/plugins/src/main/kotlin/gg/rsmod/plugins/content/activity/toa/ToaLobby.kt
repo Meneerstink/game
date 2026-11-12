@@ -23,6 +23,7 @@ class ToaLobby private constructor() {
     fun raid(uid: PlayerUID): ToaRaid? = raids[uid]
     fun create(uid: PlayerUID): ToaParty? {
         if (uid in membership || uid in raids) return null
+        parties.values.forEach { it.withdraw(uid) }
         return ToaParty(++sequence, uid).also { parties[it.id] = it; membership[uid] = it }
     }
 
@@ -50,6 +51,38 @@ class ToaLobby private constructor() {
         membership.remove(uid)
         rewardConfirmations.remove(uid)
         rewardPrompts.keys.removeAll { it.second == uid }
+        return true
+    }
+
+    /** N604: the Grouping Obelisk party list (772) - every party that has not entered yet, in creation order. */
+    fun listed(): List<ToaParty> = parties.values.filter { !it.started }
+    fun partyById(id: Long): ToaParty? = parties[id]
+
+    /** N604 party details (774) Apply: a player outside every party applies; the leader accepts or rejects. */
+    fun apply(uid: PlayerUID, party: ToaParty): Boolean =
+        uid !in membership && uid !in raids && parties[party.id] === party && party.apply(uid)
+
+    fun withdraw(uid: PlayerUID, party: ToaParty): Boolean = party.withdraw(uid)
+
+    fun accept(actor: PlayerUID, uid: PlayerUID): Boolean {
+        val party = membership[actor] ?: return false
+        if (uid in membership || uid in raids) { party.withdraw(uid); return false }
+        if (!party.accept(actor, uid)) return false
+        membership[uid] = party
+        // A member applies nowhere else (OSRS: one party per player).
+        parties.values.forEach { it.withdraw(uid) }
+        return true
+    }
+
+    fun reject(actor: PlayerUID, uid: PlayerUID): Boolean = membership[actor]?.reject(actor, uid) == true
+
+    /** 774 "Disband" (leader): the party is gone for every member and applicant. */
+    fun disband(actor: PlayerUID): Boolean {
+        val party = membership[actor] ?: return false
+        if (party.leader != actor || party.started) return false
+        party.members.forEach { uid -> membership.remove(uid); rewardConfirmations.remove(uid) }
+        rewardPrompts.keys.removeAll { it.first == party.id }
+        parties.remove(party.id)
         return true
     }
 
@@ -126,7 +159,7 @@ class ToaLobby private constructor() {
 
     fun logout(player: Player) {
         val raid = raids[player.uid]
-        if (raid == null) { leave(player.uid); return }
+        if (raid == null) { leave(player.uid); parties.values.forEach { it.withdraw(player.uid) }; return }
         raid.disconnect(player)
         // 21-supplies-dood: rejoin needs another online party member on the same world.
         releaseIfEmpty(raid)

@@ -39,6 +39,29 @@ class ToaPartyStateTests {
         assertFailsWith<IllegalStateException> { party.settings = ToaRaidSettings(150) }
     }
 
+    @Test fun `N604 apply accept reject kick blocks until unblock`() {
+        val party = ToaParty(1, uid(1))
+        assertFalse(party.apply(uid(1)))                 // the leader is already in
+        assertTrue(party.apply(uid(2)))
+        assertFalse(party.apply(uid(2)))                 // one application
+        assertFalse(party.accept(uid(3), uid(2)))        // only the leader accepts
+        assertTrue(party.accept(uid(1), uid(2)))
+        assertEquals(listOf(uid(1), uid(2)), party.members)
+        assertTrue(party.applicants.isEmpty())
+        assertTrue(party.apply(uid(3)))
+        assertTrue(party.reject(uid(1), uid(3)))
+        assertTrue(party.apply(uid(3)))
+        assertTrue(party.withdraw(uid(3)))
+        assertTrue(party.kick(uid(1), uid(2)))
+        assertFalse(party.apply(uid(2)))                 // kicked = blocked
+        assertFalse(party.unblock(uid(2)))               // not the leader
+        assertTrue(party.unblock(uid(1)))
+        assertTrue(party.apply(uid(2)))
+        for (n in 4..10) party.join(uid(n))
+        assertFalse(party.apply(uid(11)))                // full party
+        assertFalse(party.accept(uid(1), uid(2)))        // no room any more
+    }
+
     @Test fun `failed allocation permits retry`() {
         val party = ToaParty(1, uid(1))
         party.start(uid(1)) { true }

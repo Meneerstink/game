@@ -26,8 +26,34 @@ class ToaParty(val id: Long, leader: PlayerUID) {
         return true
     }
 
+    /** N604 (OSRS party details, toa_partydetails_addapplicant 6727): players who applied and wait for the leader's Accept/Reject. */
+    private val applied = linkedSetOf<PlayerUID>()
+    val applicants: List<PlayerUID> get() = applied.toList()
+    /** Kicked players cannot apply again until the leader presses Unblock (774 "Unblock", leader layout of bottom_modify 6730). */
+    private val blocked = hashSetOf<PlayerUID>()
+    /** "Preferred completions" (774 Completions / 772 sort_completions); 0 = none ("-"). */
+    var preferredCompletions = 0
+    /** For the party list age column (raids_partylist_age_write 1575: m:ss). */
+    val createdAt = System.currentTimeMillis()
+
+    fun canApply(uid: PlayerUID): Boolean = !started && uid !in roster && uid !in applied && uid !in blocked && roster.size < CAPACITY
+
+    fun apply(uid: PlayerUID): Boolean = canApply(uid) && applied.add(uid)
+
+    fun withdraw(uid: PlayerUID): Boolean = applied.remove(uid)
+
+    fun accept(actor: PlayerUID, uid: PlayerUID): Boolean {
+        if (actor != leader || uid !in applied || !join(uid)) return false
+        applied.remove(uid)
+        return true
+    }
+
+    fun reject(actor: PlayerUID, uid: PlayerUID): Boolean = actor == leader && applied.remove(uid)
+
+    fun unblock(actor: PlayerUID): Boolean = actor == leader && !started && blocked.isNotEmpty().also { blocked.clear() }
+
     fun kick(actor: PlayerUID, member: PlayerUID): Boolean =
-        actor == leader && actor != member && leave(member)
+        (actor == leader && actor != member && leave(member)).also { if (it) blocked += member }
 
     fun transfer(actor: PlayerUID, member: PlayerUID): Boolean {
         if (started || actor != leader || member !in roster) return false

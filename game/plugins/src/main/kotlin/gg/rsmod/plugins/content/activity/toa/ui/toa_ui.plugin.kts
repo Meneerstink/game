@@ -22,14 +22,16 @@ on_command("toaui", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
         "rewards" -> ToaRewardsUi.open(player, listOf(995 to 10000)) { player.message("chest action $it") }
         "bag" -> ToaBagUi.open(player, listOf(gg.rsmod.plugins.content.activity.toa.ToaIds.item(27315)?.let { it to 1 })) { slot, a -> player.message("bag $slot $a") }
         "lobby" -> { ToaLobbyHudUi.open(player); ToaLobbyHudUi.draw(player, ToaLobbyHudUi.Status.PARTY, listOf(player.username)) }
-        "list" -> ToaPartyListUi.open(player, listOf(ToaPartyListUi.Row(player.username, 1, 0, 0, 0, 0))) { player.message("view party $it") }
+        "list" -> ToaPartyListUi.open(player)
         else -> player.message("::toaui party|board|hud|supplies|summary|rewards|bag|lobby|list")
     }
 }
 
 ToaInterfaces.of(ToaInterfaces.PARTY_DETAILS)?.let { iface ->
-    (listOf(ToaPartyDetailsUi.CLOSE) + ToaInvocationTable.ENTRIES.indices.map { ToaPartyDetailsUi.tile(it) }).forEach { component ->
-        on_button(iface, component) { ToaPartyDetailsUi.click(player, component) }
+    ToaPartyDetailsUi.BUTTONS.forEach { component ->
+        on_button(iface, component) {
+            ToaPartyDetailsUi.click(player, component, gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.opOf(player.getInteractingOpcode()))
+        }
     }
 }
 
@@ -40,7 +42,7 @@ ToaInterfaces.of(ToaInterfaces.SUPPLIES)?.let { iface ->
 }
 
 ToaInterfaces.of(ToaInterfaces.PARTY_LIST)?.let { iface ->
-    (listOf(ToaPartyListUi.CLOSE) + (0 until ToaPartyListUi.ROWS).map { ToaPartyListUi.row(it) }).forEach { component ->
+    (listOf(ToaPartyListUi.CLOSE) + ToaPartyListUi.BUTTONS.toList() + (0 until ToaPartyListUi.ROWS).map { ToaPartyListUi.row(it) }).forEach { component ->
         on_button(iface, component) { ToaPartyListUi.click(player, component) }
     }
 }

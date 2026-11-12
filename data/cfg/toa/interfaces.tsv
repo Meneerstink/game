@@ -1,4 +1,4 @@
-# N462 OsrsInterfacePortTool transactions tx-20261107-041902 + tx-20261107-205905 (482,771 --reuse, same ids) - generated, do not edit
+# N462 OsrsInterfacePortTool transactions tx-20261107-041902 + tx-20261107-205905 (482,771 --reuse) + 12-11 (772,774 --reuse, N604) - merged, do not edit
 interface	481	1186
 interface	482	1187
 interface	771	1188
@@ -82,3 +82,27 @@ sprite	934	8888
 sprite	935	8889
 sprite	936	8890
 sprite	831	8891
+sprite	1050	8895
+sprite	4565	8896
+sprite	4566	8897
+sprite	4567	8898
+sprite	4570	8899
+sprite	921	8900
+sprite	922	8901
+sprite	923	8902
+sprite	924	8903
+sprite	925	8904
+sprite	926	8905
+sprite	927	8906
+sprite	928	8907
+sprite	1021	8908
+sprite	2564	8909
+sprite	2565	8910
+sprite	2566	8911
+sprite	2567	8912
+sprite	4571	8913
+sprite	4573	8914
+sprite	4574	8915
+sprite	4575	8916
+sprite	4577	8917
+sprite	4578	8918

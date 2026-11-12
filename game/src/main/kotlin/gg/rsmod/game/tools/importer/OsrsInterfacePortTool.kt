@@ -65,7 +65,7 @@ object OsrsInterfacePortTool {
         val shadow: Boolean = false, val colour: Int = 0, val filled: Boolean = false, val lineWidth: Int = 1,
         val ops: List<String> = emptyList(), val opBase: String = "",
         val model: Int = -1, val originX: Int = 0, val originY: Int = 0, val xan: Int = 0, val yan: Int = 0, val zan: Int = 0,
-        val zoom: Int = 0, val ortho: Boolean = false,
+        val zoom: Int = 0, val ortho: Boolean = false, val flipH: Boolean = false,
     )
 
     /** OSRS model -> local model recorded by an import (OsrsLocImportTool fx_kind osrs_loc_model, region import role loc_model). */
@@ -95,7 +95,8 @@ object OsrsInterfacePortTool {
         o.p1(if (c.hidden) 1 else 0)
         when (c.type) {
             0 -> { o.p2(c.scrollW); o.p2(c.scrollH); o.p1(if (c.noClickThrough) 1 else 0) }
-            5 -> { o.p4(c.sprite); o.p2(0); o.p1(if (c.tiling) 1 else 0); o.p1(c.opacity); o.p1(0); o.p4(0); o.p1(0); o.p1(0); o.p4(0) }
+            // 667 Component.decode TYPE_GRAPHIC: graphic, angle, flags (tiling), transparency, outline, shadow, horizontalFlip, verticalFlip.
+            5 -> { o.p4(c.sprite); o.p2(0); o.p1(if (c.tiling) 1 else 0); o.p1(c.opacity); o.p1(0); o.p4(0); o.p1(if (c.flipH) 1 else 0); o.p1(0); o.p4(0) }
             4 -> { o.p2(if (c.font < 0) 65535 else c.font); o.str(c.text); o.p1(c.lineHeight); o.p1(c.alignX); o.p1(c.alignY); o.p1(if (c.shadow) 1 else 0); o.p4(c.colour); o.p1(c.opacity) }
             3 -> { o.p4(c.colour); o.p1(if (c.filled) 1 else 0); o.p1(c.opacity) }
             9 -> { o.p1(c.lineWidth); o.p4(c.colour); o.p1(0) }
@@ -176,6 +177,36 @@ object OsrsInterfacePortTool {
             g(3, 6, 2, 0, 26, 23, 0, 0, CLOSE_BUTTON, ops = listOf("Close"))
             extras += "steelborder parent=$p components=$first..${next - 1} title=$titleId '$title' close=$close (op 1 Close; hover 536 not swapped)"
             return titleId
+        }
+        /**
+         * [proc,script1558]/[proc,script1560] ([proc,v2_stone_button_out_filled] 208 or, [pressed], v2_stone_button_in): a button layer at
+         * (x, y, w, h) in [p] carrying op 1 = [label] (if_setop(1, removetags(label))) - or no op when [op] is false - with tradebacking_light,
+         * the 9-slice frame and the p12 0xff981f centred shadowed label. 11 components; returns the layer (the click target).
+         */
+        fun stoneButton(p: Int, x: Int, y: Int, w: Int, h: Int, xm: Int, ym: Int, label: String, pressed: Boolean = false,
+                        hidden: Boolean = false, op: Boolean = true, text: String = label): Int {
+            val layer = next
+            list += C(next++, 0, x, y, w, h, p, 0, 0, xm, ym, hidden, ops = if (op) listOf(label.replace(Regex("<[^>]*>"), "")) else emptyList())
+            val frame = if (pressed) intArrayOf(921, 922, 923, 924, 925, 926, 927, 928) else STONE_BUTTON
+            fun s(sx: Int, sy: Int, sw: Int, sh: Int, wm: Int, hm: Int, xm2: Int, ym2: Int, sprite: Int) {
+                sprites += sprite
+                list += C(next++, 5, sx, sy, sw, sh, layer, wm, hm, xm2, ym2, false, sprite = sprite, tiling = true)
+            }
+            s(0, 0, 2, 2, 1, 1, 1, 1, TRADEBACKING_LIGHT)
+            s(0, 0, 9, 9, 0, 0, 0, 0, frame[0]); s(w - 9, 0, 9, 9, 0, 0, 0, 0, frame[1])
+            s(0, h - 9, 9, 9, 0, 0, 0, 0, frame[2]); s(w - 9, h - 9, 9, 9, 0, 0, 0, 0, frame[3])
+            s(0, 9, 9, h - 18, 0, 0, 0, 0, frame[4]); s(9, 0, w - 18, 9, 0, 0, 0, 0, frame[5])
+            s(w - 9, 9, 9, h - 18, 0, 0, 0, 0, frame[6]); s(9, h - 9, w - 18, 9, 0, 0, 0, 0, frame[7])
+            list += C(next++, 4, 0, 0, 0, 0, layer, 1, 1, 1, 1, false, font = font(495), text = text, alignX = 1, alignY = 1,
+                shadow = true, colour = 0xff981f)
+            return layer
+        }
+        /** Replaces OSRS component [id] (already in the list) by a copy with [ops] - the click target of a server-drawn tab/button. */
+        fun withOps(id: Int, ops: List<String>) {
+            val index = list.indexOfFirst { it.id == id }
+            val o = list[index]
+            list[index] = C(o.id, o.type, o.x, o.y, o.w, o.h, o.parent, o.wMode, o.hMode, o.xMode, o.yMode, o.hidden, o.scrollW, o.scrollH,
+                o.noClickThrough, ops = ops)
         }
         for (id in ids) {
             val n = node[id.toString()]
@@ -315,10 +346,31 @@ object OsrsInterfacePortTool {
             }
             list.first { it.id == 16 }.scrollH = 45 * 20
             val none = next
-            list += C(next++, 4, 0, 0, 0, 0, 16, 1, 1, 1, 1, true, font = font(495), text = "No parties are currently listed.", alignX = 1,
+            // In the fixed list area 772:15, not the 900-px scroll list 16: centred there it sat 450 px down, out of view (N604 testclient).
+            list += C(next++, 4, 0, 0, 0, 0, 15, 1, 1, 1, 1, true, font = font(495), text = "No parties are currently listed.", alignX = 1,
                 alignY = 1, shadow = true, colour = 0xff981f)
             extras += "party rows (6601-6603) components=$first..${none - 1} (per row 17+r: background, members, name, completions, invocations, " +
                 "raid level, difficulty, age = 8 each from $first + 8r) none-text=$none"
+            // N604 (12-11): [proc,toa_partylist_setsort] -> [proc,toa_partylist_sortbutton_draw] per sort header 772:8..14: the arrow
+            // "sortarrows,0" (1050) 7x5 at (0, 2) centre/bottom - trans 0 on the default sort (%raids_listsort_list 0 = members), 100 on the
+            // others - and the icon 19x18 at (0, 2) centre/top: toa_grouping_icons 0 members, 1 name, 2 completions, 3 invocations,
+            // 4 raid level, 14 mode, 5 age (graphic.sym 4565..4570, 4579). Sorting by click is not ported (no op, nothing dead).
+            val sortFirst = next
+            listOf(8 to 4565, 9 to 4566, 10 to 4567, 11 to 4568, 12 to 4569, 13 to 4579, 14 to 4570).forEach { (header, icon) ->
+                sprites += 1050; sprites += icon
+                list += C(next++, 5, 0, 2, 7, 5, header, 0, 0, 1, 2, false, sprite = 1050, opacity = if (header == 8) 0 else 100)
+                list += C(next++, 5, 0, 2, 19, 18, header, 0, 0, 1, 0, false, sprite = icon)
+            }
+            extras += "sort headers components=$sortFirst..${next - 1} (per header 8+k: arrow $sortFirst+2k, icon $sortFirst+2k+1)"
+            // [proc,script1558] for toa_partylist:refresh (63) "Refresh", :myparty (64) "Make Party" | "My Party" ([proc,toa_partylist_setpartybutton]
+            // on %toa_mycontroller) and :filter (65) "Friends/Clan Only" (out; [proc,script4161] = pressed when %toa_partylist_filter = 1).
+            // 116x32 each; the two-state ones are two stacked layers, the server shows one.
+            val refresh = stoneButton(63, 0, 0, 116, 32, 0, 0, "Refresh")
+            val make = stoneButton(64, 0, 0, 116, 32, 0, 0, "Make Party")
+            val mine = stoneButton(64, 0, 0, 116, 32, 0, 0, "My Party", hidden = true)
+            val filterOut = stoneButton(65, 0, 0, 116, 32, 0, 0, "Friends/Clan Only")
+            val filterIn = stoneButton(65, 0, 0, 116, 32, 0, 0, "Friends/Clan Only", pressed = true, hidden = true)
+            extras += "buttons (script1558, 11 components each, layer = click target) refresh=$refresh make=$make mine=$mine filterOut=$filterOut filterIn=$filterIn"
         }
         if (group == 777) {
             // [clientscript,toa_midraidloot_init] (6777): per bundle (777:4/7/10, 154x201) [proc,toa_midraidloot_draw_bundle] (6778) = thinbox +
@@ -385,6 +437,82 @@ object OsrsInterfacePortTool {
             list.first { it.id == parent }.scrollH = y + 73
             extras += "invocation tiles (6749/6750) parent=$parent components=$first..${next - 1} (3 per invocation: click rect 'Activate'/'Deactivate', " +
                 "icon 1298 off / 1297 on, name 0x9f9f9f off / 0xd39f34 on) scrollHeight=${y + 73}"
+            // N604 (12-11) - the members/applicants view (owner 11-06 A: no invocations; the leader picks the mode at the obelisk).
+            // [proc,toa_partydetails_back_button] (6765): "menu_buttons,4" (1021) 21x21 in toa_partydetails:back (774:4). ONZEKER: its label
+            // comes from a server script call not in the dump -> op "Back".
+            val back = next
+            sprites += 1021
+            list += C(next++, 5, 0, 0, 21, 21, 4, 0, 0, 1, 1, false, sprite = 1021, ops = listOf("Back"))
+            // [proc,toa_partydetails_cleartabs] -> [proc,script3723]/[proc,script3726] per tab (members 774:6, applicants 774:7): left cap 20x21,
+            // tiled middle (w-40)x21 from x 20, right cap h-flipped, p12 text at (0,1) size (0,19) minus/abs. Not selected = tabs_modal_short,2/3
+            // (2566/2567) text 0xff981f; selected = ,0/,1 (2564/2565) text 0xffa82f - the server swaps sprites + colour. Op 1 = the tab label.
+            val tabFirst = next
+            listOf(6 to "Members", 7 to "Applicants").forEach { (tab, label) ->
+                withOps(tab, listOf(label))
+                sprites += 2564; sprites += 2565; sprites += 2566; sprites += 2567
+                list += C(next++, 5, 0, 0, 20, 21, tab, 0, 0, 0, 0, false, sprite = 2566)
+                list += C(next++, 5, 20, 0, 40, 21, tab, 1, 0, 0, 0, false, sprite = 2567, tiling = true)
+                list += C(next++, 5, 0, 0, 20, 21, tab, 0, 0, 2, 0, false, sprite = 2566, flipH = true)
+                list += C(next++, 4, 0, 1, 0, 19, tab, 1, 0, 1, 0, false, font = font(495), text = label, alignX = 1, alignY = 1, shadow = true,
+                    colour = 0xff981f)
+            }
+            extras += "tabs components=$tabFirst..${next - 1} (members 6 / applicants 7: left, middle, right, text = 4 each)"
+            // [proc,toa_partydetails_header_icon_draw] (6769): a 19x18 graphic centred in each column header. ONZEKER mapping (checked in the test
+            // client): name = toa_grouping_icons,1 (NAME), combat..prayer = ,6..,13, completions = ,2.
+            val headerFirst = next
+            val headerIcons = listOf(4566, 4571, 4572, 4573, 4574, 4575, 4576, 4577, 4578, 4567)
+            for (base in listOf(21, 37)) headerIcons.forEachIndexed { k, icon ->
+                sprites += icon
+                list += C(next++, 5, 0, 0, 19, 18, base + k, 0, 0, 1, 1, false, sprite = icon)
+            }
+            extras += "header icons components=$headerFirst..${next - 1} (members 21..30 then applicants 37..46)"
+            // [clientscript,toa_partydetails_addmember] (6722) / [clientscript,toa_partydetails_addapplicant] (6727): 8 rows of 22 px each in
+            // toa_partydetails:members_list (774:32) and :applicants_list (774:48): a black filled background (trans 246 even / 228 odd), a click
+            // rect for the leader's ops (members: "Kick", own row "Quit Party"; applicants: "Accept", "Reject"; hidden until the viewer leads)
+            // and 10 p11 centred shadowed cells at the header columns (name 114, combat..prayer 31/23x7, completions 111).
+            val widths = listOf(114, 31, 23, 23, 23, 23, 23, 23, 23, 111)
+            val rowFirst = next
+            for ((listComp, applicants) in listOf(32 to false, 48 to true)) {
+                for (r in 0 until 8) {
+                    list += C(next++, 3, 0, r * 22, 0, 22, listComp, 1, 0, 1, 0, true, colour = 0, filled = true, opacity = if (r % 2 == 0) 246 else 228)
+                    val ops = when { applicants -> listOf("Accept", "Reject"); r == 0 -> listOf("Quit Party"); else -> listOf("Kick") }
+                    list += C(next++, 3, 0, r * 22, 0, 22, listComp, 1, 0, 1, 0, true, colour = 0, filled = false, opacity = 255, ops = ops)
+                    var x = 0
+                    widths.forEach { w ->
+                        list += C(next++, 4, x, r * 22, w, 22, listComp, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true,
+                            colour = 0xff981f)
+                        x += w
+                    }
+                }
+            }
+            extras += "rows components=$rowFirst..${next - 1} (members 774:32 then applicants 774:48, 8 rows x 12: background, op rect, 10 cells)"
+            // [proc,toa_partydetails_bottom_modify] (6730) in toa_partydetails:bottom (774:60), buttons y 2 h 32 gap 4: a viewer who is not the
+            // leader gets Refresh | Apply / Withdraw / Leave (Apply greyed when he cannot apply) | Completions text (96, 96, 114); the leader
+            // Refresh | Disband | Unblock | Completions with op "Set" (64, 64, 64, 109). The server shows one layout.
+            val bottomFirst = next
+            stoneButton(60, 0, 2, 96, 32, 0, 0, "Refresh", hidden = true)
+            stoneButton(60, 100, 2, 96, 32, 0, 0, "Apply", hidden = true)
+            stoneButton(60, 100, 2, 96, 32, 0, 0, "Withdraw", hidden = true)
+            stoneButton(60, 100, 2, 96, 32, 0, 0, "Leave", hidden = true)
+            stoneButton(60, 100, 2, 96, 32, 0, 0, "Apply", hidden = true, op = false, text = "<col=7f7f7f><str=9f9f9f>Apply</str></col>")
+            stoneButton(60, 0, 2, 64, 32, 0, 0, "Refresh", hidden = true)
+            stoneButton(60, 68, 2, 64, 32, 0, 0, "Disband", hidden = true)
+            stoneButton(60, 136, 2, 64, 32, 0, 0, "Unblock", hidden = true)
+            // [proc,script6740]/[proc,script6741]/[proc,script6742]: "Completions: -" | "Completions: <n>" | leader "Set Completions" (op "Set").
+            list += C(next++, 4, 200, 2, 114, 32, 60, 0, 0, 0, 0, true, font = font(495), text = "Completions: -", alignX = 1, alignY = 1, shadow = true,
+                colour = 0xff981f)
+            list += C(next++, 4, 204, 2, 109, 32, 60, 0, 0, 0, 0, true, font = font(495), text = "Set Completions", alignX = 1, alignY = 1, shadow = true,
+                colour = 0xff981f, ops = listOf("Set"), opBase = "<col=ff9040>Completions</col>")
+            extras += "bottom components=$bottomFirst..${next - 1} (8 buttons x 11: refresh, apply, withdraw, leave, apply-grey, leader refresh, " +
+                "disband, unblock; then completions text, leader completions text)"
+            // Owner 11-06 A (3 modes instead of invocations): the leader's "Set" on the mode text toa_partydetails:raid_mode (774:74), the same
+            // control as the Completions "Set" ([proc,script6742]) - a hidden click rect over it, shown for the leader only.
+            val modeText = list.first { it.id == 74 }
+            val modeSet = next
+            list += C(next++, 3, modeText.x, modeText.y, modeText.w, modeText.h, modeText.parent, modeText.wMode, modeText.hMode, modeText.xMode,
+                modeText.yMode, true, colour = 0, filled = false, opacity = 255, ops = listOf("Set"), opBase = "<col=ff9040>Mode</col>")
+            extras += "mode set rect=$modeSet"
+            extras += "back=$back"
         }
         return Ported(group, list, extras, reports, sprites)
     }
@@ -465,10 +593,18 @@ object OsrsInterfacePortTool {
         check(problems.isEmpty()) { "verify failed - journal ${result.journalDir}" }
         REPORT.writeText(lines.joinToString("\n", postfix = "\n"))
         // The server reads the ids at start (activity/toa/ui/ToaInterfaces.kt): interface per OSRS group, sprite per OSRS sprite.
-        File(RspsPaths.data("cfg/toa/interfaces.tsv")).apply { parentFile.mkdirs() }.writeText(
-            (ported.map { p -> "interface\t${p.osrsGroup}\t${interfaceOf.getValue(p.osrsGroup)}" } + spriteMap.map { (o, l) -> "sprite\t$o\t$l" })
-                .joinToString("\n", prefix = "# N462 OsrsInterfacePortTool transaction ${tx.id} - generated, do not edit\n", postfix = "\n"),
-        )
+        // N604 (12-11): MERGE into the table - a run for some groups used to overwrite it with only those groups and their sprites, so
+        // the server lost the ids of every other ported window (481, 482, 771, 773, 775-778) until the file was merged by hand.
+        val table = File(RspsPaths.data("cfg/toa/interfaces.tsv")).apply { parentFile.mkdirs() }
+        val merged = LinkedHashMap<Pair<String, String>, String>()
+        if (table.isFile) table.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.forEach { line ->
+            val f = line.split('\t'); if (f.size >= 3) merged[f[0] to f[1]] = line
+        }
+        ported.forEach { p -> merged["interface" to p.osrsGroup.toString()] = "interface\t${p.osrsGroup}\t${interfaceOf.getValue(p.osrsGroup)}" }
+        spriteMap.forEach { (o, l) -> merged["sprite" to o.toString()] = "sprite\t$o\t$l" }
+        val lines2 = merged.values.filter { it.startsWith("interface") } + merged.values.filter { it.startsWith("sprite") }
+        table.writeText(lines2.joinToString("\n", prefix = "# N462 OsrsInterfacePortTool, last transaction ${tx.id} (merged) - generated, do not edit\n",
+            postfix = "\n"))
         println("APPLIED transaction=${tx.id} writes=${result.applied} VERIFY_OK report=$REPORT")
     }
 }
