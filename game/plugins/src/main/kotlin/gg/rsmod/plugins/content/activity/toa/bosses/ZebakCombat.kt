@@ -17,7 +17,7 @@ import gg.rsmod.plugins.content.combat.poison
  */
 object ZebakCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.ZEBAK)).toIntArray()
-    val STATS = ToaNpcStats(580, 250, 140, 70, 100, 120, 7, 160, 215, 220, 100, 16, 30,
+    val STATS = ToaNpcStats(ToaDuration.boss(580), 250, 140, 70, 100, 120, 7, 160, 215, 220, 100, 16, 30,
         160, 160, 260, 200, 110, 9634)
     // Cache2686 NPC11741 TOA_ZEBAK_WATERCROC: Attack250, Strength70, params14(speed)=2,10(strength bonus)=0.
     // Crocodile(ToA) Wiki infobox in05-brontekst is NPC11705, the DIFFERENT Crondis puzzle crocodile.

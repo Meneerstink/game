@@ -255,7 +255,7 @@ class ToaCrondisTests {
     @Test fun `solo and eight player palms can be completed with conserved water`() {
         for (size in listOf(1, 8)) {
             val state = CrondisPuzzle<Int>(size)
-            assertEquals(175 + 125 * (size - 1), state.requiredWater)
+            assertEquals((175 + 125 * (size - 1)) * 75 / 100, state.requiredWater) // OSRS Strategies:783 x ToaDuration.PUZZLE_PERCENT
             (0 until size).forEach { state.container(it, Any()) }
             var cycle = 0
             var delivered = 0.0

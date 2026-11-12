@@ -200,7 +200,7 @@ class ToaEncounterTests {
         val c = ToaTestContext()
         val first = AkkhaCombat.STATS.definition(c)
         val second = AkkhaCombat.STATS.definition(c)
-        assertEquals(400, first.lifepoints)
+        assertEquals(ToaDuration.boss(400), first.lifepoints)
         assertFalse(first === second)
         first.attackStyleType = gg.rsmod.game.model.combat.StyleType.CRUSH
         assertFalse(second.attackStyleType == first.attackStyleType)

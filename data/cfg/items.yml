@@ -290989,3 +290989,1027 @@
     absorb_melee: 0
     absorb_magic: 0
     absorb_ranged: 0
+- id: 24649
+  name: "Keris partisan"
+  examine: "A mystical-feeling polearm."
+  tradeable: false
+  weight: 2.267
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6760
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 4
+    attack_stab: 58
+    attack_slash: -2
+    attack_crush: 57
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 45
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24650
+  name: "Keris partisan of breaching"
+  examine: "A mystical-feeling polearm imbued with great power."
+  tradeable: false
+  weight: 3.218
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6761
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 4
+    attack_stab: 58
+    attack_slash: -2
+    attack_crush: 57
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 45
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24651
+  name: "Keris partisan of corruption"
+  examine: "A mystical-feeling polearm imbued with destructive power."
+  tradeable: false
+  weight: 3.218
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6762
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 4
+    attack_stab: 58
+    attack_slash: -2
+    attack_crush: 57
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 45
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24652
+  name: "Keris partisan of the sun"
+  examine: "A mystical-feeling polearm imbued with radiating power."
+  tradeable: false
+  weight: 3.218
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6763
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 4
+    attack_stab: 58
+    attack_slash: -2
+    attack_crush: 57
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 45
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24653
+  name: "Keris partisan of amascut"
+  examine: "A powerful polearm imbued with pinpoint precision."
+  tradeable: false
+  weight: 3.218
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6764
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 4
+    attack_stab: 58
+    attack_slash: -2
+    attack_crush: 57
+    attack_magic: 2
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 45
+    prayer: 3
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 0, 'level': 80}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24654
+  name: "Breach of the Scarab"
+  examine: "A jewel with a scarab etched upon it that radiates with power."
+  tradeable: false
+  weight: 0.951
+  equipment: null
+- id: 24655
+  name: "Eye of the Corruptor"
+  examine: "A jewel with a symbol of destruction etched upon it that radiates with power."
+  tradeable: false
+  weight: 0.951
+  equipment: null
+- id: 24656
+  name: "Jewel of the Sun"
+  examine: "A jewel with a symbol of the sun etched upon it that radiates with power."
+  tradeable: false
+  weight: 0.951
+  equipment: null
+- id: 24657
+  name: "Jewel of Amascut"
+  examine: "A jewel that amascut once used and has now discarded."
+  tradeable: false
+  weight: 0.951
+  equipment: null
+- id: 24658
+  name: "Tumeken's shadow"
+  examine: "An ancient staff created using a higher power."
+  tradeable: false
+  weight: 5.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6765
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 85}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24659
+  name: "Tumeken's shadow (uncharged)"
+  examine: "An ancient staff created using a higher power."
+  tradeable: true
+  weight: 4.0
+  equipment:
+    equip_slot: 3
+    equip_type: 5
+    appearance_id: 6766
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 1
+    attack_speed: 5
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 35
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 20
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 1
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    skill_reqs: [{'skill': 6, 'level': 85}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24660
+  name: "Tumeken's shadow (uncharged)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24661
+  name: "Osmumten's fang (or)"
+  examine: "A deadly sword created long ago."
+  tradeable: false
+  weight: 1.814
+  equipment:
+    equip_slot: 3
+    equip_type: -1
+    appearance_id: 6767
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: 5
+    attack_speed: 5
+    attack_stab: 105
+    attack_slash: 75
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 103
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: 2500
+    skill_reqs: [{'skill': 0, 'level': 82}]
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24662
+  name: "Cursed phalanx"
+  examine: "Cursed with a strange magical power. Looks like it could be attached to something."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24663
+  name: "Masori armour set (f)"
+  examine: "A set containing a Masori mask (f), Masori body (f), Masori chaps (f)"
+  tradeable: true
+  weight: 0.05
+  equipment: null
+- id: 24664
+  name: "Masori armour set (f)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24665
+  name: "Remnant of Akkha"
+  examine: "Contains the essence of Akkha."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24666
+  name: "Remnant of Ba-Ba"
+  examine: "Contains the essence of Ba-Ba."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24667
+  name: "Remnant of Kephri"
+  examine: "Contains the essence of Kephri."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24668
+  name: "Remnant of Zebak"
+  examine: "Contains the essence of Zebak."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24669
+  name: "Ancient remnant"
+  examine: "Contains the essence of two legendary guardians."
+  tradeable: false
+  weight: 0.19
+  equipment: null
+- id: 24670
+  name: "Icthlarin's shroud (tier 1)"
+  examine: "A cloak made to honour the dead."
+  tradeable: false
+  weight: 0.305
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6768
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24671
+  name: "Icthlarin's shroud (tier 2)"
+  examine: "A cloak made to honour the dead."
+  tradeable: false
+  weight: 0.305
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6769
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24672
+  name: "Icthlarin's shroud (tier 3)"
+  examine: "A cloak made to honour the dead."
+  tradeable: false
+  weight: 0.305
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6770
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24673
+  name: "Icthlarin's shroud (tier 4)"
+  examine: "A cloak made to honour the dead."
+  tradeable: false
+  weight: 0.305
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6771
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24674
+  name: "Icthlarin's shroud (tier 5)"
+  examine: "A cloak made to honour the dead."
+  tradeable: false
+  weight: 0.305
+  equipment:
+    equip_slot: 1
+    equip_type: -1
+    appearance_id: 6772
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24675
+  name: "Mask of Rebirth"
+  examine: "A mask representing rebirth."
+  tradeable: false
+  weight: 0.35
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6773
+    remove_head: true
+    remove_beard: true
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24676
+  name: "Supplies"
+  examine: "Some helpful supplies."
+  tradeable: false
+  weight: 4.989
+  equipment: null
+- id: 24677
+  name: "Nectar (4)"
+  examine: "Provides immediate healing at the cost of combat prowess."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24678
+  name: "Nectar (4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24679
+  name: "Nectar (3)"
+  examine: "Provides immediate healing at the cost of combat prowess."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24680
+  name: "Nectar (3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24681
+  name: "Nectar (2)"
+  examine: "Provides immediate healing at the cost of combat prowess."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24682
+  name: "Nectar (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24683
+  name: "Nectar (1)"
+  examine: "Provides immediate healing at the cost of combat prowess."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24684
+  name: "Nectar (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24685
+  name: "Silk dressing (2)"
+  examine: "Restores a large amount of health over time."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24686
+  name: "Silk dressing (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24687
+  name: "Silk dressing (1)"
+  examine: "Restores a large amount of health over time."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24688
+  name: "Silk dressing (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24689
+  name: "Tears of Elidinis (4)"
+  examine: "Restores combat abilities and prayer for you and for nearby allies."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24690
+  name: "Tears of Elidinis (4)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24691
+  name: "Tears of Elidinis (3)"
+  examine: "Restores combat abilities and prayer for you and for nearby allies."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24692
+  name: "Tears of Elidinis (3)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24693
+  name: "Tears of Elidinis (2)"
+  examine: "Restores combat abilities and prayer for you and for nearby allies."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24694
+  name: "Tears of Elidinis (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24695
+  name: "Tears of Elidinis (1)"
+  examine: "Restores combat abilities and prayer for you and for nearby allies."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24696
+  name: "Tears of Elidinis (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24697
+  name: "Blessed crystal scarab (2)"
+  examine: "Restores a large amount of prayer over time."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24698
+  name: "Blessed crystal scarab (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24699
+  name: "Blessed crystal scarab (1)"
+  examine: "Restores a large amount of prayer over time."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24700
+  name: "Blessed crystal scarab (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24701
+  name: "Liquid adrenaline (2)"
+  examine: "Reduces how much energy is used when performing a special attack."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24702
+  name: "Liquid adrenaline (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24703
+  name: "Liquid adrenaline (1)"
+  examine: "Reduces how much energy is used when performing a special attack."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24704
+  name: "Liquid adrenaline (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24705
+  name: "Smelling salts (2)"
+  examine: "Repeatedly boosts combat abilities over time and restores run energy."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24706
+  name: "Smelling salts (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24707
+  name: "Smelling salts (1)"
+  examine: "Repeatedly boosts combat abilities over time and restores run energy."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24708
+  name: "Smelling salts (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24709
+  name: "Ambrosia (2)"
+  examine: "Restores and boosts health and prayer while also curing poison."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24710
+  name: "Ambrosia (2)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24711
+  name: "Ambrosia (1)"
+  examine: "Restores and boosts health and prayer while also curing poison."
+  tradeable: true
+  weight: 0.453
+  equipment: null
+- id: 24712
+  name: "Ambrosia (1)"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24713
+  name: "Honey locust"
+  examine: "Just close your eyes and pretend it's beef jerky."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 24714
+  name: "Cache of runes"
+  examine: "An intricate casket engraved with images of blood, soul and death runes."
+  tradeable: false
+  weight: 0.489
+  equipment: null
+- id: 24715
+  name: "Water container"
+  examine: "It's a little leaky!"
+  tradeable: false
+  weight: 2.0
+  equipment: null
+- id: 24716
+  name: "Mirror"
+  examine: "I can just about see something in the reflection."
+  tradeable: false
+  weight: 1.0
+  equipment: null
+- id: 24717
+  name: "Neutralising potion"
+  examine: "For neutralising toxic fumes and corruption."
+  tradeable: false
+  weight: 0.0
+  equipment: null
+- id: 24718
+  name: "Scarab dung"
+  examine: "Eww, it stinks! Why would I want this?"
+  tradeable: false
+  weight: 0.38
+  equipment: null
+- id: 24719
+  name: "Fossilised dung"
+  examine: "Perhaps this was more valuable in another age?"
+  tradeable: true
+  weight: 0.38
+  equipment: null
+- id: 24720
+  name: "Fossilised dung"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24721
+  name: "Fang"
+  examine: "Fallen out during battle."
+  tradeable: false
+  weight: 0.6
+  equipment: null
+- id: 24722
+  name: "Big banana"
+  examine: "Too big to eat."
+  tradeable: false
+  weight: 0.3
+  equipment: null
+- id: 24723
+  name: "Eldritch ashes"
+  examine: "A heap of strange ashes."
+  tradeable: false
+  weight: 0.05
+  equipment: null
+- id: 24724
+  name: "Grain"
+  examine: "That's right! Grain!"
+  tradeable: false
+  weight: 0.5
+  equipment: null
+- id: 24725
+  name: "Dawn scarab egg"
+  examine: "A small scarab egg."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 24726
+  name: "Ancient key"
+  examine: "A key received from a camel."
+  tradeable: false
+  weight: 0.01
+  equipment: null
+- id: 24727
+  name: "Akila's journal"
+  examine: "A journal found at the entrance to Osmumten's Tomb."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24728
+  name: "Het's capture"
+  examine: "A book about Amascut's capture of Het."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24729
+  name: "Apmeken's capture"
+  examine: "A book about Amascut's capture of Apmeken."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24730
+  name: "Scabaras' capture"
+  examine: "A book about Amascut's capture of Scabaras."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24731
+  name: "Crondis' capture"
+  examine: "A book about Amascut's capture of Crondis."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24732
+  name: "The wardens"
+  examine: "A book about the Wardens."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24733
+  name: "The jackal's torch"
+  examine: "An old Menaphite story."
+  tradeable: false
+  weight: 0.51
+  equipment: null
+- id: 24734
+  name: "Circlet of water (uncharged)"
+  examine: "A magical circlet for keeping you hydrated in the desert. It needs charging."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6774
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24735
+  name: "Circlet of water"
+  examine: "A magical circlet for keeping you hydrated in the desert."
+  tradeable: false
+  weight: 1.0
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6775
+    remove_head: false
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0
+- id: 24736
+  name: "Lily of the Sands"
+  examine: "A beautiful lily."
+  tradeable: true
+  weight: 0.003
+  equipment: null
+- id: 24737
+  name: "Lily of the Sands"
+  examine: "Swamp this note at any bank for the equivalent item"
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24738
+  name: "Blood essence"
+  examine: "A blood-filled essence with magical properties."
+  tradeable: true
+  weight: 0.0
+  equipment: null
+- id: 24739
+  name: "Blood essence (active)"
+  examine: "A blood-filled essence with magical properties."
+  tradeable: false
+  weight: 0.001
+  equipment: null
+- id: 24740
+  name: "Gricoller's can"
+  examine: "Contains far more water than should fit in such a small can."
+  tradeable: false
+  weight: 0.98
+  equipment: null
+- id: 24741
+  name: "Icthlarin's hood (tier 5)"
+  examine: "A hood made to honour the dead."
+  tradeable: false
+  weight: 0.21
+  equipment:
+    equip_slot: 0
+    equip_type: -1
+    appearance_id: 6777
+    remove_head: true
+    remove_beard: false
+    remove_arms: false
+    weapon_type: -1
+    attack_speed: 4
+    attack_stab: 0
+    attack_slash: 0
+    attack_crush: 0
+    attack_magic: 0
+    attack_ranged: 0
+    defence_stab: 0
+    defence_slash: 0
+    defence_crush: 0
+    defence_magic: 0
+    defence_ranged: 0
+    summoning: 0
+    melee_strength: 0
+    prayer: 0
+    ranged_strength: 0
+    magic_damage: 0.0
+    attack_audio: -1
+    absorb_melee: 0
+    absorb_magic: 0
+    absorb_ranged: 0

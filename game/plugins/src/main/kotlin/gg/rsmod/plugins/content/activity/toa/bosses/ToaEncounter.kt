@@ -63,6 +63,19 @@ class StandaloneToaContext(
 /** Wiki ToA scaling (10-schaal.tsv). All values are real HP, never the combat DSL's historical HP*10 unit.
  * T04: one final integer truncation is explicit here; hidden OSRS intermediate rounding remains unverified.
  */
+/** N462 besluit eigenaar 11-11 16:5x-17:0x (advies A 'akkoord'): een ToA-run bij ons duurt MAX 35 minuten (OSRS: een uur of langer). Inkorten
+ * = bazen iets minder hp + puzzels korter; volgorde, mechanics, raid level-schaal en loot blijven OSRS. De OSRS-basiswaarden blijven in
+ * de STATS-regels zichtbaar via [boss]; alleen de hoofdbazen (Akkha, Ba-Ba, Kephri, Zebak, Wardens obelisk/P2/P3), geen minions.
+ * Meting 11-11 20:xx (dossier N462): solo Expert met max gear Kephri 5:09, Ba-Ba 3:24 op 100%. Meting 12-11 op 75% (max gear, god):
+ * Akkha 7:04, Zebak 4:41, Wardens P1 2:15 + P2 (kern 4500 = de P2-pool) + P3 ~4:30 -> raid ~43 min; 55% = Expert solo max gear en
+ * Normal met goede gear elk ~35 min (dossier N462 12-11 04:xx). */
+object ToaDuration {
+    const val BOSS_HP_PERCENT = 55
+    /** Crondis palm water (OSRS 175 + 125 per extra member). Apmeken: OSRS waves 1,2,3,5,7,8 (ApmekenPuzzle.KEPT_OSRS_WAVES). */
+    const val PUZZLE_PERCENT = 75
+    fun boss(osrsBaseHp: Int): Int = ((osrsBaseHp * BOSS_HP_PERCENT + 50) / 100).coerceAtLeast(1)
+}
+
 object ToaScale {
     fun validate(c: ToaEncounterContext) {
         require(c.partySize in 1..8)

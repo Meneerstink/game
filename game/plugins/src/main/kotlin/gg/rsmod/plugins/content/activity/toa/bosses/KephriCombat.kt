@@ -18,7 +18,9 @@ import gg.rsmod.plugins.content.combat.PlayerAttackRules
  */
 object KephriCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.KEPHRI)).toIntArray()
-    val STATS = ToaNpcStats(150, 0, 0, 80, 125, 0, 6, magicBonus = 125, magicStrength = 50,
+    /** Final phase hp (OSRS 80), shortened with the other bosses (ToaDuration). */
+    val FINAL_HP = ToaDuration.boss(80)
+    val STATS = ToaNpcStats(ToaDuration.boss(150), 0, 0, 80, 125, 0, 6, magicBonus = 125, magicStrength = 50,
         stab = 60, slash = 300, crush = 100, mage = 200, range = 300, deathSeq = 9582,
         species = setOf(gg.rsmod.plugins.api.NpcSpecies.KALPHITE)) // Wiki infobox attribute: kalphite; Keris family checks this tag.
     private val SCARAB_SPECIES = setOf<Any>(gg.rsmod.plugins.api.NpcSpecies.KALPHITE)
@@ -47,7 +49,7 @@ object KephriCombat : CombatScript() {
         override val minimumDefence = 60 // Strategies951.
         var phase = Phase.SHIELD
         var shieldBreaks = 0
-        var shield = ToaScale.hp(150, context)
+        var shield = ToaScale.hp(STATS.hp, context)
         var dungIndex = 0
         val dung = mutableSetOf<Tile>()
         val eggs = mutableMapOf<Npc, Boolean>()
@@ -117,7 +119,7 @@ object KephriCombat : CombatScript() {
         }
         private fun defaultRecharge() {
             val count = swarmCount(shieldBreaks)
-            val cap = ToaScale.hp(150, context) * 115 / 100 // ONZEKER T14: Wiki says approximately115%.
+            val cap = ToaScale.hp(STATS.hp, context) * 115 / 100 // ONZEKER T14: Wiki says approximately115%.
             shield = 0
             val edges = listOf(centre.transform(8, 8), centre.transform(8, -8), centre.transform(0, -9),
                 centre.transform(-8, -8), centre.transform(-8, 8), centre.transform(0, 9))
@@ -128,7 +130,7 @@ object KephriCombat : CombatScript() {
                 at += firstSwarmInterval(i)
                 at to edges[(start + i) % edges.size]
             }
-            val heal = (ToaScale.hp(150, context) / (10 + context.partySize - 1)).coerceAtLeast(1)
+            val heal = (ToaScale.hp(STATS.hp, context) / (10 + context.partySize - 1)).coerceAtLeast(1)
             swarms(schedule, List(count) { heal }, { tile -> tile.getDistance(centre).coerceAtLeast(1) }, cap)
             // ONZEKER T14: phase ends after last spawn+8travel ticks+7tick measured wakeup9581.
             later(at + 15) { finishRecharge(shield) }
@@ -178,7 +180,7 @@ object KephriCombat : CombatScript() {
                             val amount = 5 + 2 * scarab.getCurrentLifepoints() / scarab.getMaximumLifepoints().coerceAtLeast(1)
                             // Specific Soldier Scarab article: its swarm restores shield OR health, respectively.
                             // This active minion heal is separate from Kephri's removed passive final-phase regeneration.
-                            if (phase == Phase.FINAL) heal(amount) else { shield = minOf(ToaScale.hp(150, context) * 115 / 100, shield + amount); if (phase == Phase.SHIELD) npc.setCurrentLifepoints(shield) }
+                            if (phase == Phase.FINAL) heal(amount) else { shield = minOf(ToaScale.hp(STATS.hp, context) * 115 / 100, shield + amount); if (phase == Phase.SHIELD) npc.setCurrentLifepoints(shield) }
                             gfx(2150, scarab.tile)
                         }
                     }
@@ -206,7 +208,7 @@ object KephriCombat : CombatScript() {
                 shield -= mark.damage
                 if (shield == 0 && phase == Phase.SHIELD) {
                     // Reserve 1 HP so the engine does not invoke real death for a broken shield.
-                    val reserve = if (shieldBreaks == 2) ToaScale.hp(80, context) else 1
+                    val reserve = if (shieldBreaks == 2) ToaScale.hp(FINAL_HP, context) else 1
                     npc.setCurrentLifepoints(npc.getCurrentLifepoints() + reserve)
                     breakShield(preserveIncoming = true)
                 }
@@ -218,7 +220,7 @@ object KephriCombat : CombatScript() {
             eggs.keys.toList().forEach { remove(it) }; eggs.clear()
             if (shieldBreaks >= 3) {
                 phase = Phase.FINAL
-                npc.combatDef = stats.copy(hp = 80).definition(context).copy(deathAnimation = listOf(ToaBossFx.seqFor(npc, stats.deathSeq)))
+                npc.combatDef = stats.copy(hp = FINAL_HP).definition(context).copy(deathAnimation = listOf(ToaBossFx.seqFor(npc, stats.deathSeq)))
                 applyBonuses()
                 npc.graphic(-1)
                 ToaBossFx.weakness(npc, gg.rsmod.plugins.content.combat.formula.ElementalWeakness.Element.FIRE, 35)

@@ -121,7 +121,7 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             puzzle.killed(it.npc)
             if (!it.npc.isSpawned()) actors.remove(it.npc)
         }
-        if (puzzle.wave < 8 && puzzle.remaining <= ref.remainingThresholds.value[puzzle.wave]) {
+        if (puzzle.wave < ApmekenPuzzle.WAVES.size && puzzle.remaining <= ref.remainingThresholds.value[puzzle.wave]) {
             val plan = ref.waves.value(raid.roster.size, puzzle.wave + 1)
             val spawned = mutableListOf<Npc>()
             val advanced = puzzle.nextWave(ref.remainingThresholds.value[puzzle.wave]) {

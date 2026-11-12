@@ -20,7 +20,7 @@ import kotlin.math.abs
  */
 object BabaCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.BABA)).toIntArray()
-    val STATS = ToaNpcStats(380, 150, 160, 80, 100, 0, 6, strengthBonus = 26,
+    val STATS = ToaNpcStats(ToaDuration.boss(380), 150, 160, 80, 100, 0, 6, strengthBonus = 26,
         stab = 80, slash = 160, crush = 240, mage = 280, range = 200, deathSeq = 9754, meleeStyle = gg.rsmod.game.model.combat.StyleType.CRUSH)
     val BABOON_STATS = ToaNpcStats(10, 0, 0, 50, 50, 80, 4, rangedBonus = 80, rangedStrength = 20,
         stab = 10, slash = 50, crush = 50, mage = 50, range = 50, deathSeq = 9754)

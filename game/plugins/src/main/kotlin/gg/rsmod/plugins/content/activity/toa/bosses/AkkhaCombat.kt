@@ -18,7 +18,7 @@ import kotlin.math.abs
  */
 object AkkhaCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.AKKHA)).toIntArray()
-    val STATS = ToaNpcStats(400, 100, 140, 80, 100, 100, 6, 115, 115, 115, 30, 40, 40,
+    val STATS = ToaNpcStats(ToaDuration.boss(400), 100, 140, 80, 100, 100, 6, 115, 115, 115, 30, 40, 40,
         60, 120, 120, 10, 60, 9792)
     val SHADOW_STATS = STATS.copy(hp = 70, defence = 30)
     // Wiki infobox gives 55 as overall max, not a complete per-style table. Do not silently use 55 for all three styles.

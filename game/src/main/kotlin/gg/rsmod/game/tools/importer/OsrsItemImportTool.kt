@@ -1447,7 +1447,9 @@ object OsrsItemImportTool {
             dropped.distinct().forEach { println("DROPPED $it") }
             println("TRANSACTION ${result.transactionId} applied=${result.applyResult != null} finalized=${result.newlyFinalized.size} recovered=${result.recoveredAndFinalized.size}")
 
-            if (apply && ymlOut != null) {
+            // N462 12-11: --yml-only writes the items.yml entries of an already-imported batch without a cache write (the ToA batches
+            // were imported without their items.yml, so e.g. Tumeken's shadow had no equipment metadata and could not be wielded).
+            if ((apply || "--yml-only" in args) && ymlOut != null) {
                 val library = CacheLibrary(TARGETS[0])
                 val ranks =
                     try {

@@ -43,7 +43,7 @@ object ApmekenReferences {
         val drawSight: Evidence<(viewer: Player, holder: Player?, task: ApmekenPuzzle.Task<gg.rsmod.game.model.PlayerUID>?) -> Unit>,
     ) {
         init {
-            require(remainingThresholds.value.size == 8 && remainingThresholds.value.all { it >= 0 })
+            require(remainingThresholds.value.size == ApmekenPuzzle.WAVES.size && remainingThresholds.value.all { it >= 0 })
             require(taskRepeatCycles.value > 0 && sightCycle.value > 0 && wrongActionDamage.value >= 0)
             require(thrallCap.value > 0 && summonCycles.value > 0 && volatileChargeCycles.value >= 0)
             require(venomPoolCycles.value > 0 && cursedStepCycles.value > 0 && cursedWalkTiles.value.isNotEmpty())

@@ -21,10 +21,10 @@ import gg.rsmod.plugins.content.activity.toa.ToaHeadIcons
 object WardensCombat : CombatScript() {
     override val ids: IntArray get() = listOf(ToaBossNpcs.OBELISK, ToaBossNpcs.ELIDINIS_P2, ToaBossNpcs.TUMEKEN_P2,
         ToaBossNpcs.ELIDINIS_P3, ToaBossNpcs.TUMEKEN_P3).mapNotNull(ToaBossNpcs::local).distinct().toIntArray()
-    val OBELISK_STATS = ToaNpcStats(260, 200, 150, 100, 100, 100, 4, stab = 70, slash = 70, crush = 70, mage = 50, range = 20)
-    val ELIDINIS_P2_STATS = ToaNpcStats(140, 300, 150, 100, 190, 190, 7, 0, 225, 225, 10, 0, 0, 70, 70, 70, -30, 70, 9662)
+    val OBELISK_STATS = ToaNpcStats(ToaDuration.boss(260), 200, 150, 100, 100, 100, 4, stab = 70, slash = 70, crush = 70, mage = 50, range = 20)
+    val ELIDINIS_P2_STATS = ToaNpcStats(ToaDuration.boss(140), 300, 150, 100, 190, 190, 7, 0, 225, 225, 10, 0, 0, 70, 70, 70, -30, 70, 9662)
     val TUMEKEN_P2_STATS = ELIDINIS_P2_STATS.copy(speed = 8, strengthBonus = 25, magicStrength = 12, rangedStrength = 12)
-    val P3_STATS = ToaNpcStats(880, 150, 150, 150, 150, 150, 7, 0, 230, 300, 40, 40, 40, 40, 40, 20, 20, 20, 9662)
+    val P3_STATS = ToaNpcStats(ToaDuration.boss(880), 150, 150, 150, 150, 150, 7, 0, 230, 300, 40, 40, 40, 40, 40, 20, 20, 20, 9662)
     enum class Warden { ELIDINIS, TUMEKEN }
     enum class Phase { OBELISK, P2, CORE, P3, SIPHONS, ENRAGE }
     enum class Slam { EAST, WEST, CENTRE }
@@ -54,7 +54,8 @@ object WardensCombat : CombatScript() {
         else -> 37
     }
     /** 75% reduction to the additional-RL slope (2022 changelog). T04: final truncation, intermediate OSRS order unverified. */
-    fun coreHp(c: ToaEncounterContext): Int = (4500L * (1000 + c.raidLevel) * ToaScale.groupTenths(c.partySize) / 10000).toInt()
+    // Wiki infobox P2 "hitpoints2 = 4500" (core-ejected) = the P2 Warden's real health pool -> ToaDuration like the other boss pools.
+    fun coreHp(c: ToaEncounterContext): Int = (ToaDuration.boss(4500).toLong() * (1000 + c.raidLevel) * ToaScale.groupTenths(c.partySize) / 10000).toInt()
     fun coreDamage(hit: Int) = hit * 5
     fun allowedStyle(warden: Warden, returnedCores: Int): CombatClass =
         if ((warden == Warden.ELIDINIS) == (returnedCores % 2 == 0)) CombatClass.MAGIC else CombatClass.RANGED
@@ -135,7 +136,11 @@ object WardensCombat : CombatScript() {
             } else if (!openedFloor.remove(tile)) return
             val u = gg.rsmod.game.model.collision.CollisionUpdate.Builder()
             u.setType(if (walkable) gg.rsmod.game.model.collision.CollisionUpdate.Type.REMOVE else gg.rsmod.game.model.collision.CollisionUpdate.Type.ADD)
-            u.putTile(tile, false, *gg.rsmod.game.model.Direction.NESW)
+            // N462 12-11 (testserver, ranged from the P3 floor: 'I can't reach that!'; clipmap proj: every floor tile only passable
+            // westwards): the encounter floor loc 45643 also adds PROJECTILE flags, which only walking was cleared of - a crossbow or
+            // spell from the floor never reached the Warden. Opening a tile clears both (impenetrable = true on REMOVE); a collapsed
+            // tile blocks walking only (OSRS: projectiles fly over the void, the Warden himself stands there).
+            u.putTile(tile, walkable, *gg.rsmod.game.model.Direction.NESW)
             world.collision.applyUpdate(u.build())
         }
         private val lightningStruck = mutableMapOf<Tile, Int>()

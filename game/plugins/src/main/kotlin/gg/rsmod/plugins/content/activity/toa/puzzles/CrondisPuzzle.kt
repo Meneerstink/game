@@ -11,8 +11,13 @@ import kotlin.math.ceil
 class CrondisPuzzle<K : Any>(val partySize: Int) {
     init { require(partySize in 1..8) }
 
-    // Strategies:783: 175 solo, +125 per additional raid member. Never scales with raid level.
-    val requiredWater = 175 + 125 * (partySize - 1)
+    // Strategies:783: OSRS 175 solo, +125 per additional raid member. Never scales with raid level.
+    // Owner decision 11-11 (raid max 35 minutes): the palm needs ToaDuration.PUZZLE_PERCENT of that water.
+    val requiredWater = osrsRequiredWater(partySize) * gg.rsmod.plugins.content.activity.toa.bosses.ToaDuration.PUZZLE_PERCENT / 100
+
+    companion object {
+        fun osrsRequiredWater(partySize: Int): Int = 175 + 125 * (partySize - 1)
+    }
     var growth = 0.0
         private set
     var closed = false

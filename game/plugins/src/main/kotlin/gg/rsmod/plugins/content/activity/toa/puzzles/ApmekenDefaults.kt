@@ -21,7 +21,7 @@ object ApmekenDefaults {
     fun reference(): ApmekenReferences.Profile = ApmekenReferences.Profile(
         waves = e({ size, wave -> plan(size, wave) },
             "ONZEKER T22: Strategies1304-1326 solo compositions and1298 one extra combat baboon for groups; uniform specialist/family selection and large-from-wave4 are provisional"),
-        remainingThresholds = e(listOf(0, 1, 1, 2, 2, 2, 2, 0),
+        remainingThresholds = e(listOf(0, 1, 1, 2, 2, 2, 2, 0).filterIndexed { i, _ -> i + 1 in ApmekenPuzzle.KEPT_OSRS_WAVES },
             "ONZEKER T22: Path_of_Apmeken30Aug2023 overlap increased; provisional thresholds within published wave sizes, final wave waits for every death"),
         tasks = e(listOf(
             task(26, ApmekenPuzzle.Action.PILLAR), task(52, ApmekenPuzzle.Action.VENT), task(78, ApmekenPuzzle.Action.CORRUPTION)),
@@ -63,7 +63,7 @@ object ApmekenDefaults {
         }.toMutableList()
         if (size > 1) types += listOf(Baboon.BRAWLER, Baboon.THROWER, Baboon.MAGE).random()
         return types.mapIndexed { index, original ->
-            val large = if (wave >= 4 && original.combat) Baboon.values().first { it.family == original.family && it.osrs in 11712..11714 } else original
+            val large = if (ApmekenPuzzle.KEPT_OSRS_WAVES[wave - 1] >= 4 && original.combat) Baboon.values().first { it.family == original.family && it.osrs in 11712..11714 } else original
             ApmekenReferences.Spawn(large, spawnTiles[index % spawnTiles.size])
         }
     }

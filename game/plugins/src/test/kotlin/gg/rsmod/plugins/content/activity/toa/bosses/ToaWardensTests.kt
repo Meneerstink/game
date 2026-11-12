@@ -140,9 +140,9 @@ class ToaWardensTests {
         for (path in listOf(0, 6)) {
             val solo = ToaTestContext(pathLevel = path)
             val group = ToaTestContext(raidLevel = 600, partySize = 8, pathLevel = path)
-            assertEquals(880, WardensCombat.P3_STATS.definition(solo).lifepoints)
-            assertEquals(17353, WardensCombat.P3_STATS.definition(group).lifepoints)
-            assertEquals(41760, WardensCombat.coreHp(group))
+            assertEquals(ToaDuration.boss(880), WardensCombat.P3_STATS.definition(solo).lifepoints) // OSRS 880 x ToaDuration
+            assertEquals(9544, WardensCombat.P3_STATS.definition(group).lifepoints) // 484 x 850/250 x 5.8
+            assertEquals(22968, WardensCombat.coreHp(group)) // OSRS 4500 x 1.6 x 5.8 = 41760, x ToaDuration 55%
             assertEquals(65, ToaScale.damage(26, group))
         }
     }
@@ -259,8 +259,8 @@ class ToaWardensTests {
         assertEquals(29, WardensCombat.coreExposure(600, 1000))
         assertEquals(37, WardensCombat.coreExposure(599, 1000))
         assertEquals(275, WardensCombat.coreDamage(55))
-        assertEquals(4500, WardensCombat.coreHp(ToaTestContext()))
-        assertEquals(7200, WardensCombat.coreHp(ToaTestContext(raidLevel = 600)))
+        assertEquals(ToaDuration.boss(4500), WardensCombat.coreHp(ToaTestContext())) // OSRS 4500 x ToaDuration
+        assertEquals(ToaDuration.boss(4500) * 16 / 10, WardensCombat.coreHp(ToaTestContext(raidLevel = 600)))
     }
     @Test fun `P2 begins with correct vulnerable style and switches only after core return`() {
         assertEquals(gg.rsmod.game.model.combat.CombatClass.MAGIC, WardensCombat.allowedStyle(WardensCombat.Warden.ELIDINIS, 0))
@@ -302,17 +302,17 @@ class ToaWardensTests {
             hit.source = p; hit.sourceMaxHit = amount
             target.addHit(hit); target.hitsCycle()
         }
-        strike(260)
+        strike(ToaDuration.boss(260))
         assertEquals(WardensCombat.Phase.P2, s.phase)
-        assertEquals(140, s.npc.getCurrentLifepoints()); assertTrue(s.npc.scriptedDeath)
+        assertEquals(ToaDuration.boss(140), s.npc.getCurrentLifepoints()); assertTrue(s.npc.scriptedDeath)
         assertEquals(1, root.getCurrentLifepoints()); assertTrue(root.isSpawned())
-        strike(140)
+        strike(ToaDuration.boss(140))
         assertEquals(WardensCombat.Phase.CORE, s.phase)
         assertEquals(1, s.npc.getCurrentLifepoints())
         val core = assertNotNull(s.core); assertEquals(s.coreMaximum, core.getCurrentLifepoints())
         s.returnCore()
         assertEquals(WardensCombat.Phase.P2, s.phase); assertFalse(core.isSpawned())
-        assertEquals(140, s.npc.getCurrentLifepoints()); assertEquals(1, s.returnedCores)
+        assertEquals(ToaDuration.boss(140), s.npc.getCurrentLifepoints()); assertEquals(1, s.returnedCores)
         val actor = s.npc
         s.close(); assertFalse(actor.scriptedDeath)
     }
@@ -369,8 +369,8 @@ class ToaWardensTests {
         val hit = gg.rsmod.game.model.Hit.Builder().addHit(60, gg.rsmod.plugins.api.HitType.RANGE.id).addHit(1, gg.rsmod.plugins.api.HitType.RANGE.id).build().also { it.source = p }
         root.addHit(hit); root.hitsCycle()
         assertEquals(WardensCombat.Phase.ENRAGE, s.phase)
-        assertEquals(219, root.getCurrentLifepoints()) //5% threshold44 + one20% heal176.
-        s.enterEnrage(); assertEquals(219, root.getCurrentLifepoints())
+        assertEquals(119, root.getCurrentLifepoints()) // max 484 (880 x ToaDuration 55%): 50 + one 20% heal 96 - 26 (to the 5% threshold 24) - 1.
+        s.enterEnrage(); assertEquals(119, root.getCurrentLifepoints())
         assertEquals(180, root.stats.getCurrentLevel(2))
         s.close()
     }

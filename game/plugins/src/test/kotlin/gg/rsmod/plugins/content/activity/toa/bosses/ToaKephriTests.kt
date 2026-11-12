@@ -148,8 +148,8 @@ class ToaKephriTests {
         for (path in listOf(0, 6)) {
             val solo = ToaTestContext(pathLevel = path)
             val group = ToaTestContext(raidLevel = 600, partySize = 8, pathLevel = path)
-            assertEquals(150, KephriCombat.STATS.definition(solo).lifepoints)
-            assertEquals(2958, KephriCombat.STATS.definition(group).lifepoints)
+            assertEquals(ToaDuration.boss(150), KephriCombat.STATS.definition(solo).lifepoints) // OSRS 150 x ToaDuration
+            assertEquals(1636, KephriCombat.STATS.definition(group).lifepoints) // 83 (150 x 55%) x 850/250 x 5.8
             assertEquals(272, KephriCombat.STATS.definition(group).stats[2])
             assertEquals(24, ToaScale.damage(24, solo)); assertEquals(60, ToaScale.damage(24, group))
             assertEquals(8, ToaProtection.damage(24, true, 1, 3))
@@ -221,7 +221,7 @@ class ToaKephriTests {
         assertTrue(gg.rsmod.plugins.api.NpcSpecies.KALPHITE in KephriCombat.STATS.definition(ToaTestContext()).species)
     }
     @Test fun `source infobox shield is150 and final health is80, not summary200`() {
-        assertEquals(150, KephriCombat.STATS.hp)
+        assertEquals(ToaDuration.boss(150), KephriCombat.STATS.hp); assertEquals(ToaDuration.boss(80), KephriCombat.FINAL_HP)
         assertEquals(6, KephriCombat.STATS.speed)
         assertEquals(80, KephriCombat.STATS.defence)
     }
@@ -297,8 +297,8 @@ class ToaKephriTests {
         s.finishRecharge(100); strike(100)
         assertEquals(KephriCombat.Phase.RECHARGE, s.phase); assertEquals(1, root.getCurrentLifepoints())
         s.finishRecharge(100); strike(100)
-        assertEquals(KephriCombat.Phase.FINAL, s.phase); assertEquals(80, root.getCurrentLifepoints())
-        assertEquals(80, root.getMaximumLifepoints()); assertEquals(3, s.shieldBreaks)
+        assertEquals(KephriCombat.Phase.FINAL, s.phase); assertEquals(KephriCombat.FINAL_HP, root.getCurrentLifepoints())
+        assertEquals(KephriCombat.FINAL_HP, root.getMaximumLifepoints()); assertEquals(3, s.shieldBreaks)
         assertEquals(35, root.attr[gg.rsmod.plugins.content.combat.formula.ElementalWeakness.INSTANCE]!!.percent)
         s.close(); assertTrue(s.children.isEmpty())
     }

@@ -291,13 +291,13 @@ gg.rsmod.game.CommandServerCommands.handlers["clipmap"] = { w, a ->
     val z = a.getOrNull(1)?.toIntOrNull()
     val h = a.getOrNull(2)?.toIntOrNull() ?: 0
     val r = (a.getOrNull(3)?.toIntOrNull() ?: 6).coerceIn(1, 20)
-    if (x == null || z == null) "usage: clipmap <x> <z> <height> [radius]" else {
+    if (x == null || z == null) "usage: clipmap <x> <z> <height> [radius] [proj]" else {
         val dirs = listOf(gg.rsmod.game.model.Direction.NORTH, gg.rsmod.game.model.Direction.EAST, gg.rsmod.game.model.Direction.SOUTH, gg.rsmod.game.model.Direction.WEST)
         val rows = (z + r downTo z - r).map { tz ->
             "$tz " + (x - r..x + r).joinToString("") { tx ->
                 val t = gg.rsmod.game.model.Tile(tx, tz, h)
                 var m = 0
-                dirs.forEachIndexed { i, d -> if (w.collision.canTraverse(tile = t, direction = d, projectile = false, water = false)) m = m or (1 shl i) }
+                dirs.forEachIndexed { i, d -> if (w.collision.canTraverse(tile = t, direction = d, projectile = a.getOrNull(4) == "proj", water = false)) m = m or (1 shl i) }
                 Integer.toHexString(m).uppercase()
             }
         }

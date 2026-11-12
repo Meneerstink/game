@@ -19,7 +19,10 @@ import gg.rsmod.plugins.content.inter.bank.Bank
  * charge-free variants are used (blessed quiver, active crystal), so nothing needs charging first.
  */
 object GearPresets {
-    class Preset(val command: String, val title: String, val worn: List<Pair<Int, Int>>, val extras: List<Pair<Int, Int>> = emptyList())
+    /** [weaponCharges]: charges put on the worn weapon (powered staves keep them in ItemAttribute.CHARGES; 0 = none). */
+    class Preset(val command: String, val title: String, val worn: List<Pair<Int, Int>>, val extras: List<Pair<Int, Int>> = emptyList()) {
+        var weaponCharges: Int = 0
+    }
 
     private fun set(vararg items: Int) = items.map { it to 1 }
 
@@ -83,6 +86,14 @@ object GearPresets {
                     RANGED_ACCESSORIES + listOf(Items.OSRS_DRAGON_JAVELIN to 5000),
                 listOf(Items.MORRIGANS_JAVELIN to 500),
             ),
+            // N462 12-11 (ToA Wardens P2 needs magic every other core; a Kodai wand without autocast only whacks): max magic with the
+            // ToA staff Tumeken's shadow (built-in spell, OSRS 27275 -> ToaIds), charged so it casts at once.
+            Preset(
+                "gear_maxmage", "Max magic (Ancestral, Tumeken's shadow, Elidinis' ward (f), occult, tormented, magus)",
+                set(Items.TWISTED_ANCESTRAL_HAT, Items.TWISTED_ANCESTRAL_ROBE_TOP, Items.TWISTED_ANCESTRAL_ROBE_BOTTOM,
+                    gg.rsmod.plugins.content.activity.toa.ToaIds.item(27275) ?: -1) + MAGIC_ACCESSORIES,
+                listOf(Items.SUPER_RESTORE_4 to 4, Items.SHARK to 10),
+            ).also { it.weaponCharges = 20000 },
             Preset(
                 "gear_ancestral", "Twisted ancestral + Kodai wand (Volatile spec)",
                 set(Items.TWISTED_ANCESTRAL_HAT, Items.TWISTED_ANCESTRAL_ROBE_TOP, Items.TWISTED_ANCESTRAL_ROBE_BOTTOM, Items.KODAI_WAND, Items.ELIDINIS_WARD_F) +
@@ -156,6 +167,8 @@ object GearPresets {
                 if (player.bank.add(id, amount, assureFullInsertion = false).hasSucceeded()) banked++ else failed += defs.get(ItemDef::class.java, id).name
             }
         }
+        // A spawned staff is worn as its uncharged item (no charges yet); PoweredStaves.withCharges swaps in the charged one.
+        if (preset.weaponCharges > 0) player.equipment[3]?.let { player.equipment[3] = gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(it, preset.weaponCharges) }
         player.message("<col=ff981f>${preset.title}</col> equipped. Your old gear is in the bank.")
         if (notBanked > 0) player.message("$notBanked worn item(s) could not be banked and are in your inventory.")
         if (banked > 0) player.message("$banked extra item(s) went to the bank (inventory full).")

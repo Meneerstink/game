@@ -144,8 +144,8 @@ class ApmekenPuzzle<K : Any>(val partySize: Int) {
     }
 
     companion object {
-        // Strategies1304-1326, exactly8 SOLO waves. SPECIAL remains a caller-supplied observed selection, not uniform RNG.
-        val WAVES = listOf(
+        // Strategies1304-1326: OSRS has exactly8 SOLO waves. SPECIAL remains a caller-supplied observed selection, not uniform RNG.
+        val OSRS_WAVES = listOf(
             listOf(Baboon.BRAWLER, Baboon.BRAWLER, Baboon.SHAMAN),
             listOf(Baboon.THROWER, Baboon.THROWER, Baboon.VOLATILE),
             listOf(Baboon.MAGE, Baboon.MAGE, Baboon.CURSED),
@@ -155,5 +155,9 @@ class ApmekenPuzzle<K : Any>(val partySize: Int) {
             listOf(Baboon.BRAWLER, Baboon.THROWER, Baboon.SHAMAN, Baboon.CURSED, Baboon.CURSED),
             listOf(Baboon.SHAMAN, Baboon.VOLATILE, Baboon.VOLATILE, Baboon.SPECIAL, Baboon.SPECIAL),
         )
+        /** Owner decision 11-11 (raid max 35 minutes, advies A: fewer puzzle rounds): OSRS waves 1,2,3,5,7,8 - waves 4 and 6 (repeats of
+         *  the small-type specials mix) are left out; every baboon type and the large-baboon waves (OSRS wave >= 4) stay. */
+        val KEPT_OSRS_WAVES = listOf(1, 2, 3, 5, 7, 8)
+        val WAVES = KEPT_OSRS_WAVES.map { OSRS_WAVES[it - 1] }
     }
 }

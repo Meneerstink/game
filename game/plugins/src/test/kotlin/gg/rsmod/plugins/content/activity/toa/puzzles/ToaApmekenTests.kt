@@ -199,7 +199,7 @@ class ToaApmekenTests {
                     assertEquals(f.players.first().uid, room.puzzle.sight)
                     assertNull(f.raid.progress.boss(ToaPath.APMEKEN))
                     f.advance()
-                    repeat(8) { wave ->
+                    repeat(ApmekenPuzzle.WAVES.size) { wave -> // 6: OSRS waves 1,2,3,5,7,8 (ToaDuration, 11-11)
                         assertEquals(wave + 1, room.puzzle.wave)
                         val actors = f.entities.filterIsInstance<Npc>()
                         assertTrue(actors.isNotEmpty())
@@ -256,11 +256,12 @@ class ToaApmekenTests {
         } finally { ApmekenReferences.profile = saved }
     }
 
-    @Test fun `installed default plans provide eight completable waves for solo and eight members`() {
+    @Test fun `installed default plans provide six completable waves (OSRS 1,2,3,5,7,8) for solo and eight members`() {
         val profile = assertNotNull(ApmekenReferences.profile)
         for (size in listOf(1, 8)) {
             val state = ApmekenPuzzle<Int>(size); repeat(size) { state.enter(it) }
-            repeat(8) { index ->
+            assertEquals(6, ApmekenPuzzle.WAVES.size)
+            repeat(ApmekenPuzzle.WAVES.size) { index ->
                 val plan = profile.waves.value(size, index + 1)
                 val ids = plan.map { Any() to it.type }
                 assertTrue(state.nextWave(profile.remainingThresholds.value[index]) { ids })
@@ -275,11 +276,11 @@ class ToaApmekenTests {
         }
     }
 
-    @Test fun `eight waves gate completion and source-provided compositions are checked for solo and eight`() {
+    @Test fun `six waves gate completion and source-provided compositions are checked for solo and eight`() {
         for (size in listOf(1, 8)) {
             val state = ApmekenPuzzle<Int>(size)
             repeat(size) { state.enter(it) }
-            repeat(8) { index ->
+            repeat(ApmekenPuzzle.WAVES.size) { index ->
                 assertFalse(state.complete)
                 assertTrue(state.nextWave(0) { expected ->
                     (expected.map { if (it == ApmekenPuzzle.Baboon.SPECIAL) ApmekenPuzzle.Baboon.SHAMAN else it } +
@@ -291,7 +292,7 @@ class ToaApmekenTests {
                 spawned.forEach { assertTrue(state.killed(it)); assertFalse(state.killed(it)) }
             }
             assertTrue(state.complete)
-            assertFalse(state.nextWave(0) { error("no ninth wave") })
+            assertFalse(state.nextWave(0) { error("no seventh wave") })
         }
     }
     private var spawned = emptyList<Any>()
