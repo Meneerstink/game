@@ -6,7 +6,8 @@ on_obj_option(ToaLocs.GROUPING_OBELISK, "Inspect") {
     player.queue {
         val lobby = ToaLobby.of(world)
         // Labels: 30-cs2-manifest (toa_partylist_setpartybutton, toa_partydetails_bottom_modify/addmember).
-        when (options("Make Party", "Apply", "Quit Party", "Kick", "Raid Level", "Cancel", title = "Grouping Obelisk")) {
+        // 5 entries: the 667 six-option chatbox (236) showed only the first line on live (A9 12-11); closing = walk away / Esc.
+        when (options("Make Party", "Apply", "Quit Party", "Kick", "Raid Level", title = "Grouping Obelisk")) {
             1 -> lobby.create(player.uid)
             2 -> inputPlayer()?.let { leader ->
                 if (ToaMap.inLobby(player.tile) && ToaMap.inLobby(leader.tile)) lobby.join(player.uid, leader.uid)
