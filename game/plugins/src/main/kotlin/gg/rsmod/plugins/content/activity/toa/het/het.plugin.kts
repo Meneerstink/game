@@ -19,9 +19,11 @@ ToaRooms.register(ToaRoomKey(ToaPath.HET, false)) { raid -> HetRoom(raid).also {
 fun room(p: gg.rsmod.game.model.entity.Player): HetRoom? =
     ToaLobby.of(p.world).raid(p.uid)?.takeIf { it.contains(p) && p in it.activePlayers() }?.let { rooms[it] }
 
-// Test server only: the running puzzle room's state in one line (N462 08-11 testclient rounds).
+// The running puzzle room's state in one line (N462 08-11 testclient rounds). Read-only: test server, or an OWNER on live (12-11, owner
+// 'je mag alles doen om te testen': the live chest A9 run of check78 reads the puzzle layout like on the test server).
 on_command("toastate", gg.rsmod.game.model.priv.Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (System.getProperty("rsps.testServer") != "true" &&
+        !player.privilege.powers.contains(gg.rsmod.game.model.priv.Privilege.OWNER_POWER)) return@on_command
     val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
     val text = rooms[raid]?.takeIf { it.board != null }?.debugState()
         ?: gg.rsmod.plugins.content.activity.toa.puzzles.ToaPuzzles.of(player)?.debugState(player)
