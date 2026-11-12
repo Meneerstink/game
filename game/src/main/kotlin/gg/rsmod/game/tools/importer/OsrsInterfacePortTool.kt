@@ -307,6 +307,9 @@ object OsrsInterfacePortTool {
                 list += C(next++, 5, 0, 0, 26, 26, 9 + 4 * slot, 0, 0, 1, 0, false, sprite = ORB_FILLER, tiling = true)
             }
             sprites += ORB_FILLER_FULL; sprites += ORB_FILLER_PRIMARY
+            // N462 12-11: [proc,toa_hud_draw] 6579 sets toa_difficulty_icons,1/,2 (4661/4662, Normal/Expert) at run time - only ,0 (4660)
+            // is a component default, so without these the server had no id and Normal/Expert kept the Entry icon.
+            sprites += 4661; sprites += 4662
             extras += "hud party slots (6577) components=$first..${next - 1} (per slot: text, filler graphic; slot i text=$first+2i, filler=$first+2i+1)"
         }
         if (group == 771) {

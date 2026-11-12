@@ -1,4 +1,4 @@
-# N462 OsrsInterfacePortTool transactions tx-20261107-041902 + tx-20261107-205905 (482,771 --reuse) + 12-11 (772,774 --reuse, N604) - merged, do not edit
+# N462 OsrsInterfacePortTool, last transaction tx-20261112-175736 (merged) - generated, do not edit
 interface	481	1186
 interface	482	1187
 interface	771	1188
@@ -106,3 +106,5 @@ sprite	4574	8915
 sprite	4575	8916
 sprite	4577	8917
 sprite	4578	8918
+sprite	4661	8919
+sprite	4662	8920

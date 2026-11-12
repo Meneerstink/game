@@ -25,6 +25,8 @@ class ToaHudStateTests {
         every { raid.progress } returns progress
         every { raid.map } returns map
         every { raid.settings } returns ToaRaidSettings(150)
+        every { raid.hudParty() } returns emptyList()
+        every { raid.roster } returns emptyList()
         var source = ToaMap.NEXUS
         every { map.sourceTile(player.tile) } answers { source.transform(ToaMap.CACHE_OFFSET_X, ToaMap.CACHE_OFFSET_Z) }
         val updates = mutableListOf<Int>()
@@ -63,6 +65,25 @@ class ToaHudStateTests {
                 verify { player.write(IfSetSpriteMessage((1186 shl 16) or 41, difficulty + 50000)) }
                 if (path in 1..4) verify { player.write(IfSetSpriteMessage((1186 shl 16) or 44, 4634 + path + 50000)) }
             }
+        } finally { unmockkObject(ToaInterfaces) }
+    }
+
+    @Test fun `party orbs follow the OSRS status rules`() {
+        // CS2 6584: min(26, scale(hp, base, 26)), at least 1 while alive; orb status = 1 + that.
+        assertEquals(27, ToaUi.hpStatus(99, 99))
+        assertEquals(14, ToaUi.hpStatus(50, 99))
+        assertEquals(2, ToaUi.hpStatus(1, 99))
+        assertEquals(1, ToaUi.hpStatus(0, 99))
+        assertEquals(27, ToaUi.hpStatus(120, 99), "boosted hp stays a full orb")
+        mockkObject(ToaInterfaces)
+        every { ToaInterfaces.of(ToaInterfaces.HUD) } returns 1186
+        every { ToaInterfaces.sprite(any()) } answers { firstArg<Int>() + 50000 }
+        try {
+            val player = mockk<Player>(relaxed = true)
+            ToaHudUi.drawParty(player, listOf(ToaHudUi.Slot("check78", 27), ToaHudUi.Slot("bravo", 30), null), self = 0)
+            verify { player.write(IfSetHideMessage((1186 shl 16) or 6, false)) }
+            verify { player.write(IfSetHideMessage((1186 shl 16) or 10, false)) }
+            for (i in 2 until 8) verify { player.write(IfSetHideMessage((1186 shl 16) or (6 + 4 * i), true)) }
         } finally { unmockkObject(ToaInterfaces) }
     }
 }

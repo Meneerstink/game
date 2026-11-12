@@ -57,6 +57,22 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     fun players(): List<Player> = remaining.mapNotNull { members[it] }.filter { it.uid !in offline && it.isOnline && contains(it) }
     /** Every member still in the raid, also those logged out right now (their last Player object) - points and chest shares. */
     fun memberObjects(): List<Player> = remaining.mapNotNull { members[it] }
+
+    /**
+     * N462 HUD party column, one entry per roster slot (= party order, max 8) like OSRS %toa_client_p0..7 (cache2686 CS2 6579/6583):
+     * null = slot hidden (left the raid), 30 = dead (also a member who died in the running room and now spectates), otherwise
+     * [ToaUi.hpStatus]. OSRS status 31 (white full orb) and the primary filler (orb_filler,17) have no published meaning: not used.
+     */
+    fun hudParty(): List<ToaUi.PartySlot?> {
+        val run = progress.current
+        return roster.take(8).map { uid ->
+            val p = members[uid]
+            if (uid !in remaining || p == null) return@map null
+            val lost = run != null && run.status == ToaRoomStatus.RUNNING && participants.participating(run, uid) && !participants.alive(run, uid)
+            val status = if (p.isDead() || lost) 30 else ToaUi.hpStatus(p.getCurrentLifepoints(), p.getMaximumLifepoints())
+            ToaUi.PartySlot(memberNames[uid] ?: p.username, status)
+        }
+    }
     /** Boss and puzzle cards must target this live view, excluding spectators and disconnected entrants. */
     fun activePlayers(): List<Player> = progress.current?.let { run ->
         players().filter { !it.isDead() && participants.alive(run, it.uid) && inRoom(it, run.key) }

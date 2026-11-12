@@ -15,6 +15,7 @@ if (ToaInterfaces.of(ToaInterfaces.HUD) != null) {
         } else {
             ToaHudUi.open(player)
             ToaHudUi.drawRaid(player, state.raidLevel, state.elapsedCycles, currentPath = state.currentPath, pathLevels = IntArray(4))
+            ToaHudUi.drawParty(player, state.party.map { slot -> slot?.let { ToaHudUi.Slot(it.name, it.status) } }, state.self)
         }
         previous(player, state)
     }

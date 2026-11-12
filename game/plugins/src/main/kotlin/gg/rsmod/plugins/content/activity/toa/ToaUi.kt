@@ -8,7 +8,17 @@ import gg.rsmod.game.model.queue.QueueTask
 /** Interface import seam: never send OSRS 481/482/771-778 IDs into an unconverted 667 cache. */
 object ToaUi {
     data class State(val raidLevel: Int, val elapsedCycles: Int, val failedAttempts: Int,
-        val completedPaths: Set<ToaPath>, val wardensUnlocked: Boolean, val finished: Boolean, val currentPath: Int = 0)
+        val completedPaths: Set<ToaPath>, val wardensUnlocked: Boolean, val finished: Boolean, val currentPath: Int = 0,
+        val party: List<PartySlot?> = emptyList(), val self: Int = -1)
+
+    /** One HUD party orb (OSRS %toa_client_p0..7 / name0..7): [status] 30 = dead, otherwise 1 + hitpoints scaled to 0..26. */
+    data class PartySlot(val name: String, val status: Int)
+
+    /** Cache2686 CS2 6584 toa_hud_statusmyself: min(26, scale(hp, max(1, base), 26)), at least 1 while hp > 0; the orb status is 1 + that. */
+    fun hpStatus(hp: Int, max: Int): Int {
+        val scaled = minOf(26, hp.coerceAtLeast(0) * 26 / max.coerceAtLeast(1))
+        return 1 + if (hp > 0) maxOf(1, scaled) else 0
+    }
 
     private val LAST = AttributeKey<State>()
     var draw: (Player, State?) -> Unit = { _, _ -> }
@@ -54,7 +64,7 @@ object ToaUi {
         val path = ToaPath.values().firstOrNull { it.challengeEntry.regionId == region || it.bossEntry.regionId == region }
             ?.ordinal?.plus(1) ?: when (region) { 15184, 15696 -> 5; 14672 -> 6; else -> 0 }
         val state = State(raid.settings.raidLevel, p.elapsedCycles(raid.world.currentCycle), p.failedAttempts,
-            p.completedPaths, p.wardensUnlocked, p.finished, path)
+            p.completedPaths, p.wardensUnlocked, p.finished, path, raid.hudParty(), raid.roster.indexOf(player.uid))
         if (player.attr[LAST] == state) return
         player.attr[LAST] = state
         draw(player, state)
