@@ -78,6 +78,7 @@ class ToaRecordStore(private val file: File) {
         fun completed(raid: ToaRaid, completion: ToaCompletion, store: ToaRecordStore = server) {
             // No partial/test-driver room clears in the public records table.
             if (completion.elapsedCycles <= 0 || raid.stats.roomCycles.size != 9) return
+            if (ToaTestGate.wasJumped(raid.id)) return // N609 14-11: A9 test jumps (ToaTestGate) never enter the records table
             val names = completion.roster.map { raid.memberNames[it] ?: return }
             store.submit(ToaMode.of(completion.settings.raidLevel), completion.elapsedCycles, names)
         }

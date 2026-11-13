@@ -169,6 +169,14 @@ object GearPresets {
         }
         // A spawned staff is worn as its uncharged item (no charges yet); PoweredStaves.withCharges swaps in the charged one.
         if (preset.weaponCharges > 0) player.equipment[3]?.let { player.equipment[3] = gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(it, preset.weaponCharges) }
+        // N609 13-11 (owner: 'de quiver is uncharged dus heeft geen passive'): a spawned Dizana's quiver has no CHARGES, so
+        // Dizana's Sunfire (+10 ranged accuracy, +1 ranged strength) never applied - the max set wears it fully charged.
+        val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver
+        // A charged quiver with 0 charges falls back to the UNCHARGED id on equip (fx34 botstate: cape 22660:0) - map both to charged.
+        player.equipment[1]?.takeIf { (it.id in quiver.CHARGED_FOR.values || it.id in quiver.CHARGED_FOR.keys) && quiver.charges(it) <= 0 }?.let { q ->
+            player.equipment[1] = gg.rsmod.game.model.item.Item(quiver.CHARGED_FOR[q.id] ?: q.id, q.amount).copyAttr(q)
+                .also { it.attr[gg.rsmod.game.model.item.ItemAttribute.CHARGES] = quiver.MAX_CHARGES }
+        }
         player.message("<col=ff981f>${preset.title}</col> equipped. Your old gear is in the bank.")
         if (notBanked > 0) player.message("$notBanked worn item(s) could not be banked and are in your inventory.")
         if (banked > 0) player.message("$banked extra item(s) went to the bank (inventory full).")

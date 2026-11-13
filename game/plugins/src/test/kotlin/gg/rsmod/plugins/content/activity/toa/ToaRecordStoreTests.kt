@@ -100,6 +100,7 @@ class ToaRecordStoreTests {
         val store = ToaRecordStore(tempFile())
         val raid = mockk<ToaRaid>()
         val roster = (1..8).map { PlayerUID(it) }
+        every { raid.id } returns 1L // N609 14-11: completed() asks ToaTestGate.wasJumped(raid.id)
         every { raid.memberNames } returns HashMap(roster.associateWith { "Member ${it.value}" })
         every { raid.stats.roomCycles } returns LinkedHashMap((ToaPath.values().flatMap { listOf(ToaRoomKey(it, false), ToaRoomKey(it, true)) } + ToaRoomKey(null, true))
             .associateWith { 10 })
@@ -108,5 +109,22 @@ class ToaRecordStoreTests {
         ToaRecordStore.completed(raid, completion, store)
         assertEquals(roster.map { "Member ${it.value}" }, store.get(ToaMode.EXPERT, 8)?.names)
         assertNull(store.get(ToaMode.EXPERT, 1))
+    }
+
+    /** N609 14-11 (idea 1, A9 jumps on live for check78): a raid that used a test jump never enters the public records table. */
+    @Test fun `a raid that used a test jump never becomes a record`() {
+        val store = ToaRecordStore(tempFile())
+        val raid = mockk<ToaRaid>()
+        val roster = listOf(PlayerUID(1))
+        every { raid.id } returns 4242L
+        every { raid.memberNames } returns HashMap(roster.associateWith { "check78" })
+        every { raid.stats.roomCycles } returns LinkedHashMap((ToaPath.values().flatMap { listOf(ToaRoomKey(it, false), ToaRoomKey(it, true)) } + ToaRoomKey(null, true))
+            .associateWith { 10 })
+        ToaTestGate.markJumpedForTest(4242L)
+        ToaRecordStore.completed(raid, ToaCompletion("jumped", roster, ToaRaidSettings(raidLevel = 0), 900, 1), store)
+        assertNull(store.get(ToaMode.ENTRY, 1))
+        // asked once and forgotten: the same raid id later (a new raid object) records normally
+        ToaRecordStore.completed(raid, ToaCompletion("again", roster, ToaRaidSettings(raidLevel = 0), 900, 1), store)
+        assertEquals(listOf("check78"), store.get(ToaMode.ENTRY, 1)?.names)
     }
 }

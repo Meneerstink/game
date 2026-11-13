@@ -6,7 +6,8 @@ import gg.rsmod.game.model.priv.Privilege
  * hoping a full run shows it. Test server only. '::toamech' alone lists the mechanics of the current boss.
  */
 on_command("toamech", Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toamech ${player.getCommandArgs().joinToString(" ")}")
     val s = gg.rsmod.plugins.content.activity.toa.bosses.ToaEncounter.forPlayer(player)
     val arg = player.getCommandArgs().firstOrNull()?.lowercase()
     val options: Map<String, () -> Unit> = when (s) {
@@ -90,7 +91,8 @@ on_command("toamech", Privilege.ADMIN_POWER) {
 /** N606: '::toaskip' marks the player's RUNNING puzzle room as cleared (test server only) so the photobook can reach every boss
  *  (enterBoss needs the path's challenge cleared). Same path as a real completion: ToaRoomRun.clear. */
 on_command("toaskip", Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toaskip")
     val raid = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(world).raid(player.uid) ?: return@on_command
     val run = raid.progress.current ?: return@on_command
     player.message("toaskip ${run.key}: ${run.clear(world.currentCycle)}")
@@ -99,7 +101,8 @@ on_command("toaskip", Privilege.ADMIN_POWER) {
 /** N606: '::toawardens' clears every path (puzzle + boss, as ::toaskip would) and enters the Wardens - photobook route to the last
  *  room without playing 4 paths. Test server only. */
 on_command("toawardens", Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toawardens")
     val raid = gg.rsmod.plugins.content.activity.toa.ToaLobby.of(world).raid(player.uid) ?: return@on_command
     for (path in gg.rsmod.plugins.content.activity.toa.ToaPath.values()) {
         if (path in raid.progress.completedPaths) continue

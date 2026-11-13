@@ -1395,3 +1395,93 @@
   usage: "::toaboss <akkha|zebak|baba|kephri|wardens> [raidlevel 0-600] [partysize 1-8] | stop"
   description: "Test tool: spawn a ToA boss encounter with room membership and raid scaling, or stop your current test encounter."
   example: "::toaboss zebak 150 1"
+- name: gear_maxmage
+  rank: owner
+  usage: "::gear_maxmage"
+  description: "Test set: max magic gear (counterpart of gear_max / gear_maxrange). Worn gear goes to the bank. Test bots follow it with bot_buff.sh."
+  example: "::gear_maxmage"
+- name: toastart
+  rank: admin
+  usage: "::toastart [entry|normal|expert]"
+  description: "Test server only: put yourself in the ToA lobby and start a solo raid in that mode."
+  example: "::toastart normal"
+- name: toajoin
+  rank: admin
+  usage: "::toajoin <leader>"
+  description: "Test server only: join the lobby party of <leader> so a second test client can follow the same raid."
+  example: "::toajoin teamtest1"
+- name: toastate
+  rank: admin
+  usage: "::toastate"
+  description: "Test tool: show the state of your ToA raid (room, progress, completed paths)."
+  example: "::toastate"
+- name: toabot
+  rank: admin
+  usage: "::toabot add [n] | follow | attack | kill <i|all> | logout <i> | login <i> | list | remove"
+  description: "Test server only: 2-8 player ToA tests with one client - conformance bots join your raid (never saved)."
+  example: "::toabot add 3"
+- name: toaroom
+  rank: admin
+  usage: "::toaroom <crondis|apmeken|scabaras|het> [boss]"
+  description: "ToA test jump: enter a room of your raid. Test server, and on live only check78/check79 (logged, never a record)."
+  example: "::toaroom scabaras boss"
+- name: toaskip
+  rank: admin
+  usage: "::toaskip"
+  description: "ToA test jump: mark the running puzzle room as cleared. Test server, and on live only check78/check79 (logged, never a record)."
+  example: "::toaskip"
+- name: toawardens
+  rank: admin
+  usage: "::toawardens"
+  description: "ToA test jump: clear every path and enter the Wardens. Test server, and on live only check78/check79 (logged, never a record)."
+  example: "::toawardens"
+- name: toamech
+  rank: admin
+  usage: "::toamech [mechanic]"
+  description: "ToA test jump: start one mechanic of the boss you fight (no argument = list). Test server, and on live only check78/check79."
+  example: "::toamech siphon"
+- name: toahp
+  rank: admin
+  usage: "::toahp <n>"
+  description: "ToA test jump: set every living npc of your current ToA room to n hitpoints. Test server, and on live only check78/check79."
+  example: "::toahp 50"
+- name: drink
+  rank: admin
+  usage: "::drink <potion name part>"
+  description: "Test bot: drink the first matching potion dose in your inventory through the normal potion code (real boost, real refusals)."
+  example: "::drink ranging"
+- name: pray
+  rank: admin
+  usage: "::pray <prayer name part> | off"
+  description: "Test bot: switch a prayer on in your current book (Ruinous or normal) through the normal prayer code; 'off' = all off."
+  example: "::pray annihilate"
+- name: summon
+  rank: admin
+  usage: "::summon <familiar name part>"
+  description: "Test bot: summon the familiar of a pouch in your inventory through the normal pouch code (level, points, pouch used)."
+  example: "::summon steel titan"
+- name: spec
+  rank: admin
+  usage: "::spec"
+  description: "Test bot: switch the special attack bar ON (same route as clicking it; energy cost and instant specials are real)."
+  example: "::spec"
+- name: famspec
+  rank: admin
+  usage: "::famspec"
+  description: "Test bot: use your familiar's scroll special on your current npc target (scroll and special points are used)."
+  example: "::famspec"
+- name: botextras
+  rank: admin
+  usage: "::botextras"
+  description: "Test bot: after a gear set, sharks to the bank, 2 steel titan pouches and 100 Steel of Legends scrolls in the backpack."
+  example: "::botextras"
+- name: botstate
+  rank: admin
+  usage: "::botstate"
+  description: "Test bot: one line with combat levels current/max, active prayers, cape/ring charges, familiar, attack style, special energy."
+  example: "::botstate"
+- name: botunlock
+  rank: admin
+  usage: "::botunlock ruinous"
+  description: "Test accounts (teamtest*) only: Desert Treasure II finished + Ruinous powers book read, so the bot can use the Ruinous book."
+  example: "::botunlock ruinous"

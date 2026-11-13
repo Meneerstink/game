@@ -1178,8 +1178,11 @@ on_command("restore", Privilege.ADMIN_POWER) {
     player.setCurrentLifepoints(player.getMaximumLifepoints())
     player.runEnergy = 100.0
     AttackTab.setEnergy(player, 100)
+    // N609 13-11 (owner: 'restore commando dat die geen range en melee reset bij potion drinken'): only DRAINED stats come back up
+    // to their real level; a potion boost (super combat, ranging) above it stays, so test bots fight with real boosts.
     for (i in 0 until player.skills.maxSkills) {
-        player.skills.setCurrentLevel(i, player.skills.getMaxLevel(i))
+        val max = player.skills.getMaxLevel(i)
+        if (player.skills.getCurrentLevel(i) < max) player.skills.setCurrentLevel(i, max)
     }
     player.message("You have been given restored stats.", type = ChatMessageType.GAME_MESSAGE)
     player.message("You have been given restored stats.", type = ChatMessageType.CONSOLE)

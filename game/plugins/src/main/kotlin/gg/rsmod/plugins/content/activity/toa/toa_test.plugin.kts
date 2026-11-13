@@ -39,7 +39,8 @@ on_command("toastart", Privilege.ADMIN_POWER) {
 
 /** '::toahp <n>' - set every living npc of the current ToA room to n hitpoints (test server; phase/death tests without a long fight). */
 on_command("toahp", Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toahp ${player.getCommandArgs().joinToString(" ")}")
     val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
     val hp = player.getCommandArgs().firstOrNull()?.toIntOrNull() ?: return@on_command
     val run = raid.progress.current ?: return@on_command
@@ -49,7 +50,8 @@ on_command("toahp", Privilege.ADMIN_POWER) {
 }
 
 on_command("toaroom", Privilege.ADMIN_POWER) {
-    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toaroom ${player.getCommandArgs().joinToString(" ")}")
     val raid = ToaLobby.of(world).raid(player.uid) ?: return@on_command
     val args = player.getCommandArgs()
     val path = ToaPath.values().firstOrNull { it.name.lowercase() == args.firstOrNull()?.lowercase() } ?: return@on_command
