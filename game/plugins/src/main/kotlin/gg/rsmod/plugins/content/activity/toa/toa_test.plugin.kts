@@ -7,6 +7,20 @@ import gg.rsmod.game.model.priv.Privilege
  * marked done through its varp by the caller) and starts a solo raid with that mode; '::toaroom <het|crondis|apmeken|scabaras> [boss]'
  * enters a room of the player's raid directly. Disabled outside the test server (system property rsps.testServer).
  */
+/**
+ * N606 13-11 (BREEK 'tweede speler kijkt mee'): '::toajoin <leader>' - this player joins the leader's lobby party (created if the leader
+ * has none) so a second real test client can watch the same raid; the leader then '::toastart'. Test server only.
+ */
+on_command("toajoin", Privilege.ADMIN_POWER) {
+    if (System.getProperty("rsps.testServer") != "true") return@on_command
+    val lobby = ToaLobby.of(world)
+    val leader = world.getPlayerForName(player.getCommandArgs().joinToString(" ")) ?: return@on_command
+    if (!ToaMap.inLobby(leader.tile)) leader.moveTo(ToaMap.LOBBY)
+    if (!ToaMap.inLobby(player.tile)) player.moveTo(ToaMap.LOBBY)
+    if (lobby.party(leader.uid) == null) lobby.create(leader.uid)
+    player.message("ToA test join ${leader.username}: ${lobby.join(player.uid, leader.uid)}")
+}
+
 on_command("toastart", Privilege.ADMIN_POWER) {
     if (System.getProperty("rsps.testServer") != "true") return@on_command
     val lobby = ToaLobby.of(world)
