@@ -39,7 +39,15 @@ object ToaHudUi {
         // (client freezes, U5 packet spam). Open once; later draws only set texts.
         if (player.isInterfaceVisible(iface)) return
         player.openInterface(iface, InterfaceDestination.PVP_OVERLAY)
+        // N606 13-11: OSRS toa_hud_init runs interface_dodger_init(dodger 481:2, content, 65256, left, top); its review (osrs-dumps
+        // [proc,interface_dodger_review] 194-196) moves a left/centre top HUD with bit 10 down 23 px below the mouseover-text row on
+        // desktop. The ported 481 cannot run that onLoad script, so the dodger stood at 0 and 'Walk here' covered 'Level: N'.
+        player.setComponentPosition(iface, DODGER, 0, DODGER_MOUSEOVER_OFFSET)
     }
+
+    /** OSRS 481:2 toa_hud:dodger and the interface_dodger mouseover-text offset (bit 10 of 65256). */
+    private const val DODGER = 2
+    private const val DODGER_MOUSEOVER_OFFSET = 23
 
     fun close(player: Player) {
         ToaInterfaces.of(ToaInterfaces.HUD)?.let { player.closeInterface(it) }

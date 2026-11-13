@@ -55,6 +55,7 @@ object ClientHudSync {
         var last: java.lang.ref.WeakReference<Pawn>? = null
         var lastPayload: String? = null
         var endedCycle = -1
+        var bossBar: String? = null
     }
 
     private val STATE = AttributeKey<State>()
@@ -103,6 +104,13 @@ object ClientHudSync {
         if (opponent != state.opponent || state.last?.get() !== previousActor) {
             ClientHud.send(player, opponent)
             state.opponent = opponent
+        }
+
+        // N606: the OSRS boss HP HUD (interface 303), only on change.
+        val bossBar = BossHpHud.payload(player)
+        if (bossBar != state.bossBar) {
+            ClientHud.send(player, bossBar)
+            state.bossBar = bossBar
         }
     }
 

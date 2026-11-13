@@ -85,6 +85,17 @@ object WardensCombat : CombatScript() {
         var returnedCores = 0
         var coreHealth = coreHp(context)
         val coreMaximum = coreHp(context)
+        /**
+         * N606 OSRS HP HUD (Kaoz 34:10-36:40): P2 = the Warden's damage bar in yellow ("Elidinis' Warden 106 / 225"); while the core
+         * is out the Warden's real health green/red ("60 / 5180" = coreHp); Obelisk and P3 the active form's health (default).
+         */
+        override fun hpHud() = when {
+            !active() -> null
+            phase == Phase.P2 -> gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(npc, npc.getCurrentLifepoints(), npc.getMaximumLifepoints(),
+                gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Style.DAMAGE)
+            phase == Phase.CORE -> gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(npc, coreHealth, coreMaximum)
+            else -> super.hpHud()
+        }
         var core: Npc? = null
         var siphonStage = 0
         var slamIndex = 0

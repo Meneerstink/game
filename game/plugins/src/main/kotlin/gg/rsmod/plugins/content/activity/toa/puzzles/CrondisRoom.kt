@@ -39,6 +39,7 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         if ((listOf(45398, 45399) + reference!!.trapEvents.value.flatMap { listOfNotNull(it.warningLoc, it.activeLoc) }).any { ToaIds.loc(it) == null })
             return missing("Crondis waterfall/trap locs")
         palm = spawn(PALM, PALM_TILE) ?: return false
+        LIVE += this
         //The palm has a Water option and a growth meter, not a combat death/loot route (cache11700..11704).
         palm!!.hitModifier = { hit -> hit.hitmarks.forEach { it.damage = 0 } }
         reference!!.containerTiles.value.forEach { tile ->
@@ -60,6 +61,17 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     }
 
     override fun leave(player: Player) { held.remove(player.uid); puzzle.remove(player.uid) }
+
+    /**
+     * N606 OSRS HP HUD: the Palm of Resourcefulness in cyan, its water against the water it needs ("Palm of Resourcefulness 0 / 200"
+     * -> "183 / 200", falling when a crocodile eats - Kaoz Entry guide 0:13-1:33; OSRS npc 11700-11704 param 510 = the HUD name).
+     */
+    fun hpHud(player: Player): gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar? {
+        val tree = palm ?: return null
+        if (!eligible(player) || puzzle.closed || !tree.isSpawned() || tree.world !== player.world) return null
+        return gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(tree, puzzle.growth.toInt(), puzzle.requiredWater,
+            gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Style.SHIELD, "Palm of Resourcefulness")
+    }
     override fun debugState(player: Player) = "crondis tick=$tick growth=${"%.1f".format(puzzle.growth)}/${puzzle.requiredWater} " +
         "stage=${puzzle.palmStage} water=${"%.1f".format(puzzle.water(player.uid))} crocs=${crocodiles.keys.count { it.isSpawned() && !it.isDead() }}"
 
@@ -243,6 +255,8 @@ class CrondisRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
     override fun closePuzzle() { puzzle.close(); held.clear(); crocodiles.clear(); crocodileAttackers.clear(); items.clear(); dry.clear(); palm = null }
 
     companion object {
+        /** N606: rooms with a palm, for the HP HUD provider (weak: a finished raid's room goes with it). */
+        val LIVE: MutableSet<CrondisRoom> = java.util.Collections.newSetFromMap(java.util.WeakHashMap<CrondisRoom, Boolean>())
         // 09b-crondis-brontekst Wiki item/palm/crocodile infoboxes; local IDs ONLY via ToaIds.
         const val CONTAINER = 27295
         //RuneLite gameval ItemID.ZEAH_WATERINGCAN=13353; Palm wiki: ten charges per water point.

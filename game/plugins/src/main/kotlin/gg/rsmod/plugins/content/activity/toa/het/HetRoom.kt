@@ -55,7 +55,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
             val npc = Npc(id, tile(layout.seal.sw), raid.world)
             npc.respawnOverride = false
             npc.walkRadius = 0
-            if (scope.spawn(npc)) seal = npc
+            if (scope.spawn(npc)) { seal = npc; LIVE += this }
         }
         layout.walls.forEach { wall -> wall.tiles.forEachIndexed { i, p ->
             val end = i == 0 || i == wall.tiles.lastIndex
@@ -72,6 +72,18 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
                 cycle()
             }
         }
+    }
+
+    /**
+     * N606 OSRS HP HUD: Het's Seal in cyan ("Het's Seal 130 / 130" -> "5 / 130", Kaoz Entry guide 26:40-27:30) for the players in this
+     * room while the puzzle runs.
+     */
+    fun hpHud(player: Player): gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar? {
+        val s = seal ?: return null
+        if (run?.status != ToaRoomStatus.RUNNING || !s.isSpawned() || s.world !== player.world || !player.tile.isWithinRadius(s.tile, 32)) return null
+        // OSRS npc 11706/11707 param 510 = "Het's Seal" (the npc name says "(protected)" / "(weakened)").
+        return gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(s, sealHp, HetSeal.hp(raid.roster.size.coerceIn(1, 8)),
+            gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Style.SHIELD, "Het's Seal")
     }
 
     /** Test server only ('::toastate'). */
@@ -298,6 +310,8 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
 
     companion object {
         val ROOM = AttributeKey<HetRoom>()
+        /** N606: rooms with a seal, for the HP HUD provider (weak: a finished raid's room goes with it). */
+        val LIVE: MutableSet<HetRoom> = java.util.Collections.newSetFromMap(java.util.WeakHashMap<HetRoom, Boolean>())
     }
 }
 

@@ -272,6 +272,12 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
         tick++
     }
     abstract fun onTick()
+    /**
+     * N606: the OSRS boss HP HUD for this encounter (OSRS shows it for every ToA boss - Kaoz Entry guide, screens/N606/hpbar-osrs):
+     * the active form's health, green/red. Kephri (shield) and the Wardens (P2 damage bar, exposed core) override it.
+     */
+    open fun hpHud(): gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar? =
+        if (active()) gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(npc, npc.getCurrentLifepoints(), npc.getMaximumLifepoints()) else null
     open fun incoming(hit: Hit) {}
     /** The debug root normally disappears on exit. Multi-form encounters may retain it for their final death sequence. */
     open fun finishStandalone(root: Npc) {

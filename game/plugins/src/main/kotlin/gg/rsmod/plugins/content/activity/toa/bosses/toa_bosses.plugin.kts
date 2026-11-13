@@ -4,6 +4,14 @@ import gg.rsmod.plugins.content.combat.PlayerAttackRules
 
 PlayerAttackRules.register(ToaEncounter::playerAttackRule)
 
+// N606: the OSRS boss HP HUD (interface 303) for every ToA boss fight, Het's Seal and the Crondis palm (Kaoz Entry guide, screens/N606/hpbar-osrs).
+gg.rsmod.plugins.content.mechanics.hud.BossHpHud.providers += { player ->
+    // Only in the boss's own room (a member waiting in the Nexus at the same height is also 'eligible' for the encounter).
+    ToaEncounter.forPlayer(player)?.hpHud()?.takeIf { it.npc.tile.isWithinRadius(player.tile, 40) }
+        ?: gg.rsmod.plugins.content.activity.toa.het.HetRoom.LIVE.firstNotNullOfOrNull { it.hpHud(player) }
+        ?: gg.rsmod.plugins.content.activity.toa.puzzles.CrondisRoom.LIVE.firstNotNullOfOrNull { it.hpHud(player) }
+}
+
 // No ambient spawns: the raid adapter or ::toaboss owns encounter creation and membership.
 val encounters = listOf(
     Triple("akkha", AkkhaCombat, ToaEncounter.Definition(ToaBossNpcs.AKKHA, AkkhaCombat.STATS, AkkhaCombat::Session)),

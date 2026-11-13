@@ -52,6 +52,10 @@ object KephriCombat : CombatScript() {
         var phase = Phase.SHIELD
         var shieldBreaks = 0
         var shield = ToaScale.hp(STATS.hp, context)
+        /** N606 OSRS HP HUD (Kaoz 16:37-17:45): the shield in cyan down to "0 / 240" during the recharge, then the final health green/red. */
+        override fun hpHud() = if (!active()) null else if (phase == Phase.FINAL) super.hpHud()
+            else gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Bar(npc, shield, ToaScale.hp(STATS.hp, context),
+                gg.rsmod.plugins.content.mechanics.hud.BossHpHud.Style.SHIELD)
         var dungIndex = 0
         val dung = mutableSetOf<Tile>()
         val eggs = mutableMapOf<Npc, Boolean>()
