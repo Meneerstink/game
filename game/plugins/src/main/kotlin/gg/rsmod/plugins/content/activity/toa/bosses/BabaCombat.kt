@@ -31,8 +31,10 @@ object BabaCombat : CombatScript() {
     fun boulderHp(size: Int): Int { require(size in 1..8); return listOf(25, 36, 47, 55, 62, 70, 77, 85)[size - 1] }
     // ONZEKER T16: interpolate published1-4baboons as one per two party members, capped4.
     fun baboonCount(size: Int) = ((size + 1) / 2).coerceIn(1, 4)
-    // ONZEKER T16: base interval from two measured2tick special clips; no Boulderdash variant.
-    fun rollingInterval(@Suppress("UNUSED_PARAMETER") boulderdash: Boolean) = 4
+    // N606 13-11: measured in the Kaoz Entry guide (static camera, work/claude-scripts/baba_rows_measure.py, 1447.8-1449.4 and
+    // 1452.2-1455.8 s): rows travel ~40-42 px/s and lie 141-152 px apart = 3.4-3.75 s = ~6 ticks between sets (3 rows on the floor
+    // at a time; 4 gave 6 rows, owner 12-11 'geen opening'). No Boulderdash variant.
+    fun rollingInterval(@Suppress("UNUSED_PARAMETER") boulderdash: Boolean) = 6
     fun validCracks(columns: List<Int>): Boolean = columns.size == 10 && columns.first() in 1..3 &&
         columns.all { it in 0..4 } && columns.zipWithNext().all { abs(it.first - it.second) <= 2 }
     const val BOULDER = 11782 // RuneLite NpcID TOA_BABA_BOULDER
