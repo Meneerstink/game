@@ -367,7 +367,11 @@ object WardensCombat : CombatScript() {
         private fun defaultSiphons() {
             val living = players().size.coerceAtLeast(1)
             // ONZEKER T02/T20: four solo/eight group siphons over the21wide room; timeout20ticks from core21 fallback.
-            val tiles = if (living == 1) listOf(-5, -2, 2, 5).map { centre.transform(it, -3) }
+            // N609 13-11 (solo, MEASURED - wiki: 'solo and groups having their own batch', no number): Kaoz Entry guide solo sets
+            // land AROUND the player, 5 / 6 / 7 siphons in sets 1 / 2 / 3 (2361.0 s, 2407.6 s 2x3 block, 2445 s) = 4 + set number.
+            // ONZEKER: the exact tiles (random free floor within 3 of the player, never the player's own tile); groups unchanged.
+            val tiles = if (living == 1) soloSiphonTiles(players().firstOrNull()?.tile ?: centre, 4 + siphonStage)
+                    .ifEmpty { listOf(-5, -2, 2, 5).map { centre.transform(it, -3) } } // never an empty set (spawnSiphons requires one)
                 else listOf(-6, -2, 2, 6).flatMap { x -> listOf(centre.transform(x, -4), centre.transform(x, 2)) }
             // N609 13-11: the siphons arrive as red skulls flying out of the Warden (projectile 2226 FX_WARDENS_BOMB03; ToA Extended
             // PROJECTILE_ID_ENERGY_SIPHON, ToA Stats plugin 'the energy siphons (red skulls) as they fly to or from the Warden'). Kaoz
@@ -597,6 +601,14 @@ object WardensCombat : CombatScript() {
          * [wanted] when walkable, else the first walkable tile stepping from [wanted] towards the Warden's centre (the Warden stands
          * on the arena floor, so this never picks a tile behind the arena wall); [wanted] if none is found (test fixtures).
          */
+        /** [count] distinct free arena tiles within 3 of [around] (not [around] itself), picked with the world's random. */
+        fun soloSiphonTiles(around: Tile, count: Int): List<Tile> {
+            val clip = npc.world.collision
+            val pool = (-3..3).flatMap { dx -> (-3..3).map { dz -> Tile(around.x + dx, around.z + dz, around.height) } }
+                .filter { t -> !(t.x == around.x && t.z == around.z) && kotlin.math.abs(t.x - centre.x) <= ARENA_HALF_WIDTH &&
+                    t.z in (centre.z - 8) until (centre.z - 8 + ARENA_DEPTH) && !clip.isClipped(t) }.toMutableList()
+            return List(count.coerceAtMost(pool.size)) { pool.removeAt(npc.world.random(pool.lastIndex)) }
+        }
         fun freeFloor(wanted: Tile): Tile {
             val clip = npc.world.collision
             if (!clip.isClipped(wanted)) return wanted
