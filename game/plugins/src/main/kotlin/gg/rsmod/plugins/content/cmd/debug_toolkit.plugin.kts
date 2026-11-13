@@ -483,13 +483,14 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpc"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()
     val id = a.getOrNull(2)?.toIntOrNull()
+    val index = a.getOrNull(3)?.toIntOrNull() // optional npc index (nearnpcs 'id#index'): one specific npc, e.g. the cracked boulder in front (N606 13-11)
     var npc: gg.rsmod.game.model.entity.Npc? = null
     if (p != null && id != null) {
-        w.npcs.forEach { n -> if (n.id == id && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
+        w.npcs.forEach { n -> if (n.id == id && (index == null || n.index == index) && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
     }
     val target = npc
     if (p == null || slot == null || target == null) {
-        "usage: opnpc <name> <slot> <npc id> (an npc with that id on his plane)"
+        "usage: opnpc <name> <slot> <npc id> [npc index] (an npc with that id on his plane)"
     } else {
         val msg =
             when (slot) {
@@ -537,9 +538,10 @@ gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()
     val id = a.getOrNull(2)?.toIntOrNull()
+    val index = a.getOrNull(3)?.toIntOrNull() // optional npc index (nearnpcs 'id#index'): one specific npc, e.g. the cracked boulder in front (N606 13-11)
     var npc: gg.rsmod.game.model.entity.Npc? = null
     if (p != null && id != null) {
-        w.npcs.forEach { n -> if (n.id == id && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
+        w.npcs.forEach { n -> if (n.id == id && (index == null || n.index == index) && n.tile.height == p.tile.height && (npc == null || n.tile.getDistance(p.tile) < npc!!.tile.getDistance(p.tile))) npc = n }
     }
     val target = npc
     if (p == null || slot == null || target == null || p.inventory[slot] == null) {

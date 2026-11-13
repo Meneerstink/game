@@ -72,7 +72,7 @@ object OsrsLightingRepairTool {
     }
 
     /** Opcode -> (segment start, segment end exclusive) for a 667 npc definition (field widths as [NpcRenameTool.rename]). */
-    private fun npcSegments(bytes: ByteArray): List<Triple<Int, Int, Int>> {
+    internal fun npcSegments(bytes: ByteArray): List<Triple<Int, Int, Int>> {
         val out = ArrayList<Triple<Int, Int, Int>>()
         var pos = 0
         fun u8(): Int = bytes[pos++].toInt() and 0xFF
@@ -125,7 +125,7 @@ object OsrsLightingRepairTool {
     }
 
     /** Signed value of the one-byte [opcode] in [bytes], 0 when absent. */
-    private fun byteField(
+    internal fun byteField(
         bytes: ByteArray,
         segments: List<Triple<Int, Int, Int>>,
         opcode: Int,
