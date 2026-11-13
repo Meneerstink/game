@@ -20,6 +20,8 @@ object KephriCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.KEPHRI)).toIntArray()
     /** Cache2686 seq9519 toa_dung_drop (spotanim 2145) = 90 client cycles = 3 ticks before the pile lies on the floor. */
     const val DUNG_DROP_TICKS = 3
+    /** OSRS VFX_SCARAB_EXPLOSION01..04: the Kephri bomb hit (RuneLite ToA Mistake Tracker KEPHRI_BOMB_GRAPHICS_ID). */
+    val BOMB_EXPLOSIONS = intArrayOf(2156, 2157, 2158, 2159)
     /** Final phase hp (OSRS 80), shortened with the other bosses (ToaDuration). */
     val FINAL_HP = ToaDuration.boss(80)
     val STATS = ToaNpcStats(ToaDuration.boss(150), 0, 0, 80, 125, 0, 6, magicBonus = 125, magicStrength = 50,
@@ -284,9 +286,17 @@ object KephriCombat : CombatScript() {
             protectionNumerator: Int, protectionDenominator: Int) {
             require(impact >= 0 && baseMax >= 0)
             animate(9577) // NPC_KEPHRI_ATTACK_MAGIC_RADIAL: ToA Extended ANIM_ID_FIREBALL_ATTACK = 9577 (was 9575 ATTACK_RANGED).
-            targetTiles.forEach { gfx(2147, it) }
+            // N609 13-11: the OSRS bomb (RuneLite ToA Mistake Tracker KephriDetector) = projectile 2266 onto the tile, a shadow graphic
+            // GARGBOSS_DEBRIS_SHADOW_120/90/60 (1447/1446/2111 = 4/3/2 ticks to the hit) and on the hit VFX_SCARAB_EXPLOSION01-04
+            // (2156-2159). Kaoz Entry guide 889.4-892.4 s: orange drop from high above, yellow-orange burst, dark shadow. Was 2147/2148
+            // = the kamikaze scarab PROJECTILE drawn as a floor graphic. ONZEKER: which explosion variant per tile (random).
+            val shadow = when (impact) { 4 -> 1447; 3 -> 1446; 2 -> 2111; else -> -1 }
+            targetTiles.forEach { t ->
+                ToaBossFx.fallProjectile(npc, centre, t, 2266, impact)
+                if (shadow >= 0) gfx(shadow, t)
+            }
             later(impact) {
-                targetTiles.forEach { gfx(2148, it) }
+                targetTiles.forEach { gfx(BOMB_EXPLOSIONS[npc.world.random(BOMB_EXPLOSIONS.lastIndex)], it) }
                 val radius = 0
                 players().filter { p -> targetTiles.any { p.tile.isWithinRadius(it, radius) } }.forEach {
                     attack(it, ToaScale.damage(baseMax, context), CombatClass.MAGIC, accuracy = false,

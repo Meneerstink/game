@@ -35,6 +35,19 @@ object ToaBossFx {
     // Existing imported scenery from90-locmap; newly imported dynamic locs are read from Claude's id table.
     private val locations = mapOf(45149 to 64599, 45509 to 64756, 45643 to 64850, 45649 to 64856, 45752 to 64945)
     fun loc(osrs: Int): Int? = gg.rsmod.plugins.content.activity.toa.ToaIds.loc(osrs) ?: locations[osrs]
+    /**
+     * N609 13-11: a bomb dropped from high above [from] onto [to] (Kephri fireball 2266: Kaoz Entry guide 889.4-891.4 s, the orange
+     * drop comes down from well above Kephri onto the target tile). ONZEKER T01: start height / slope are measured against the video,
+     * the OSRS packet values are not known.
+     */
+    fun fallProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int, startHeight: Int = 220) {
+        val gfx = spot(osrs) ?: return
+        source.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder()
+            .setTiles(start = from, target = to).setGfx(gfx = gfx)
+            .setHeights(startHeight = startHeight, endHeight = 0)
+            .setSlope(angle = 0, steepness = 0)
+            .setTimes(delay = 0, lifespan = ticks.coerceAtLeast(1) * 30).build())
+    }
     /** N606: tile-to-tile flight (ejected cores, spat objects) - the projectile lands on the floor after [ticks]. */
     fun tileProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int) {
         val gfx = spot(osrs) ?: return

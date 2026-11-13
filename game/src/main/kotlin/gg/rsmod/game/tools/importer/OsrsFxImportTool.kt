@@ -209,6 +209,11 @@ object OsrsFxImportTool {
                     2191, 2192, 2204, 2210, 2214, 2215, 2216, 2217, 2218, 2219, 2220, 2221, 2222, 2223, 2229, 2230, 2231, 2232, 2233, 2234,
                     2235, 2241, 2249,
                 ),
+            // N609 13-11: Kephri's fireball (ToA Extended Kephri.java PROJECTILE_ID_PRE_FIREBALL 1481 / PROJECTILE_ID_FIREBALL 2266 =
+            // VORKATH_AREA_TRAVEL / _SMALL, model 35034 seq 7884) - missing from toa-spot, Kephri showed only the kamikaze scarab 2147.
+            // + the bomb shadow on the target tile: GARGBOSS_DEBRIS_SHADOW_90/120/60 (1446/1447/2111 = 3/4/2 ticks to the hit; RuneLite ToA
+            // Mistake Tracker KephriDetector KEPHRI_BOMB_SHADOW_GRAPHICS).
+            "toa-kephri-fireball" to listOf(1481, 2266, 1446, 1447, 2111),
         )
 
     /**

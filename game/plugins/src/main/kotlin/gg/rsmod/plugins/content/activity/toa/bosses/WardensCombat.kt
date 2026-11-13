@@ -35,6 +35,10 @@ object WardensCombat : CombatScript() {
     // ONZEKER T02: exact NPC/landing not published; infer the5x5 Warden just south of a16deep playable floor.
     const val ARENA_HALF_WIDTH = 10
     const val ARENA_DEPTH = 16
+    /** OSRS spotanims SPOTANIM_WARDENS01_UNDERTILE01_EXPLODE01..04 = the P3 earthquake on a struck tile (see [Session.defaultSlam]). */
+    val EARTHQUAKE_GFX = intArrayOf(2220, 2221, 2222, 2223)
+    /** Red-skull flight Warden -> siphon tile (Kaoz Entry guide 2358.4-2360.0 s, see [Session.defaultSiphons]). */
+    const val SIPHON_FLIGHT = 3
     /** ONZEKER T20: flight of the ejected/returning core projectile (2239/2240 have no seq); see exposeCore. */
     const val CORE_FLIGHT = 2
     val P3_ORIGIN = Tile(3934, 5145, 1)
@@ -347,8 +351,17 @@ object WardensCombat : CombatScript() {
         }
         private fun defaultSlam(slam: Slam) {
             // ONZEKER T02/T20: wave travels NORTH from the Warden over the floor; three rows/tick, sampled for late dodges.
+            // N609 13-11: 'The floor rises' (wiki Strategies; Kaoz Entry guide 2310.0-2310.7 s: the struck floor tiles lift as blocks in
+            // a travelling band, never flip). The earthquake = graphics objects 2220-2223 SPOTANIM_WARDENS01_UNDERTILE01_EXPLODE01..04
+            // (one model 45299, skeletal clips 490-493) on every struck tile, damage on the tick they start (RuneLite ToA Mistake
+            // Tracker WardensP3Detector EARTHQUAKE_GRAPHICS_IDS, hit delay 0). NOT 2228 SPOTANIM_WARDENS_TILES01: that is the flying
+            // 'tile debris' PROJECTILE (ToA Extended WardenP3 PROJECTILE_ID_TILE_DEBRIS) - its seq 9722 tumbles the slab up to 127°,
+            // which drew black wedges (the dark underside) on the floor. ONZEKER: which of the four variants OSRS puts on which tile has
+            // no source - one of the four OSRS variants at random per tile.
             repeat(ARENA_DEPTH) { row -> later(1 + row / 3) {
-                players().filter { p -> p.tile.z == centre.z - 8 + row && slamHits(slam, p.tile.x - centre.x) }.forEach { attack(it, ToaScale.damage(26, context, path = false), null, accuracy = false); gfx(2220, it.tile) }
+                val z = centre.z - 8 + row
+                for (dx in -ARENA_HALF_WIDTH..ARENA_HALF_WIDTH) if (slamHits(slam, dx)) gfx(EARTHQUAKE_GFX[npc.world.random(EARTHQUAKE_GFX.lastIndex)], Tile(centre.x + dx, z, origin.height))
+                players().filter { p -> p.tile.z == z && slamHits(slam, p.tile.x - centre.x) }.forEach { attack(it, ToaScale.damage(26, context, path = false), null, accuracy = false) }
             } }
         }
         private fun defaultSiphons() {
@@ -356,12 +369,17 @@ object WardensCombat : CombatScript() {
             // ONZEKER T02/T20: four solo/eight group siphons over the21wide room; timeout20ticks from core21 fallback.
             val tiles = if (living == 1) listOf(-5, -2, 2, 5).map { centre.transform(it, -3) }
                 else listOf(-6, -2, 2, 6).flatMap { x -> listOf(centre.transform(x, -4), centre.transform(x, 2)) }
-            spawnSiphons(tiles, 20, npc.getMaximumLifepoints() / 20) { s, left ->
+            // N609 13-11: the siphons arrive as red skulls flying out of the Warden (projectile 2226 FX_WARDENS_BOMB03; ToA Extended
+            // PROJECTILE_ID_ENERGY_SIPHON, ToA Stats plugin 'the energy siphons (red skulls) as they fly to or from the Warden'). Kaoz
+            // Entry guide 2358.4-2360.0 s: out of the Warden, fanned over the floor, landed as siphons after ~1.6 s = 3 ticks.
+            val from = npc.getCentreTile()
+            tiles.forEach { ToaBossFx.tileProjectile(npc, from, it, 2226, SIPHON_FLIGHT) }
+            later(SIPHON_FLIGHT) { if (phase == Phase.SIPHONS) spawnSiphons(tiles, 20, npc.getMaximumLifepoints() / 20) { s, left ->
                 // ONZEKER T20: base26 per untouched siphon; travelling ring preserves documented skull-skip opportunity.
                 repeat(12) { r -> s.later(r) { s.players().filter { kotlin.math.max(kotlin.math.abs(it.tile.x - centre.x), kotlin.math.abs(it.tile.z - centre.z)) == r }.forEach {
                     s.attack(it, ToaScale.damage(26 * left, context, path = false), null, accuracy = false)
                 } } }
-            }
+            } }
         }
         private fun defaultPhantom(id: Int) {
             val spec = when (id) { 11774 -> ZebakCombat.STATS; 11775 -> BabaCombat.STATS; 11776 -> KephriCombat.STATS; else -> AkkhaCombat.STATS }
@@ -391,7 +409,12 @@ object WardensCombat : CombatScript() {
                     }
                     else -> {
                         val targets = players().map { Tile(it.tile) }; animate(if (id == 11776) 9575 else 9744, child)
-                        targets.forEach { gfx(if (id == 11776) 2147 else 2250, it) }
+                        // N609 13-11: the Kephri phantom drops the same bomb as Kephri (ToA Extended WardenP3 PROJECTILE_ID_FIREBALL 2266,
+                        // Mistake Tracker WardensP3Detector KEPHRI_BOMB_GRAPHICS_IDS 2156-2159): falling 2266 + 4-tick shadow 1447, burst on
+                        // the hit (was 2147 = the kamikaze scarab projectile drawn as a floor graphic). Ba-Ba: falling boulder 2250.
+                        if (id == 11776) targets.forEach { t -> ToaBossFx.fallProjectile(child, Tile(child.getCentreTile()), t, 2266, 4); gfx(1447, t) }
+                        else targets.forEach { gfx(2250, it) }
+                        if (id == 11776) later(4) { targets.forEach { gfx(KephriCombat.BOMB_EXPLOSIONS[npc.world.random(KephriCombat.BOMB_EXPLOSIONS.lastIndex)], it) } }
                         // ONZEKER T01/T20: four-tick impact from the original boss's measured projectile clip.
                         later(4) { players().filter { p -> targets.any { sameTile(it, p.tile) } }.forEach {
                             attack(it, ToaScale.damage(24, context), if (id == 11776) CombatClass.MAGIC else null, accuracy = false,

@@ -5262,3 +5262,10 @@ spotanim	2064	3391	toa-shadow model 65882
 npc	11722	15217	corpse bas=2476 (reuses bake of 11719)
 npc	11733	15218	corpse bas=2477 (reuses bake of 11730)
 npc	11734	15219	corpse bas=2478 (reuses bake of 11731)
+spotanim	1481	3392	toa-shadow model 65793
+spotanim	2266	3393	toa-shadow model 65793
+spotanim	1446	3235	toa-shadow model 15468
+spotanim	1447	3394	toa-shadow model 15468
+seq	7817	17459	spotanim 1447
+spotanim	2111	3395	toa-shadow model 15468
+seq	9470	17460	spotanim 2111
