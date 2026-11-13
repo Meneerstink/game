@@ -52,7 +52,11 @@ on_command("toamech", Privilege.ADMIN_POWER) {
                 repeat(gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.STATS.speed * 6) { s.shadowChargeDirector(s) }
             })
         is gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Session -> mapOf(
-            "p1" to { s.p1Director(s) }, "p2" to { s.p2Director(s) }, "phase2" to { s.startPhaseTwo(); check(s.phase == gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Phase.P2) { "niet in P2 (fase ${s.phase})" } },
+            "p1" to { s.p1Director(s) }, "p2" to { s.p2Director(s) },
+            // N609 13-11: each P2 obelisk special on demand (wiki Strategies: Converging / Windmill / Lightning Skull; Kaoz 2243-2248 s).
+            "converging" to { s.defaultObelisk(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.ObeliskSpecial.CONVERGING) },
+            "windmill" to { s.defaultObelisk(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.ObeliskSpecial.WINDMILL) },
+            "lightning" to { s.defaultObelisk(gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.ObeliskSpecial.LIGHTNING) }, "phase2" to { s.startPhaseTwo(); check(s.phase == gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Phase.P2) { "niet in P2 (fase ${s.phase})" } },
             "core" to { s.exposeCore(); check(s.phase == gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Phase.CORE) { "geen kern (fase ${s.phase}); alleen vanuit P2" } },
             // 13-11 round 3: startPhaseThree() silently does nothing outside Phase.CORE (the core window had closed -> back to P2), so
             // the photobook took 'P3' shots of P2 and siphon then failed. Go through the core first and fail loudly if P3 is not reached.

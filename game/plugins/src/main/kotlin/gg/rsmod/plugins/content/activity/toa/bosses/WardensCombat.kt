@@ -306,32 +306,41 @@ object WardensCombat : CombatScript() {
             }
             if (p2Attacks % 4 == 0) defaultObelisk()
         }
-        private fun defaultObelisk() {
+        /** [forced] = test server '::toamech converging|windmill|lightning' (N609 photobook); null = the normal random pick. */
+        fun defaultObelisk(forced: ObeliskSpecial? = null) {
+            if (forced != null && forced in usedObeliskSpecials) usedObeliskSpecials.clear()
             val choices = ObeliskSpecial.values().filter { it !in usedObeliskSpecials }.ifEmpty { ObeliskSpecial.values().toList() }
-            val kind = choices[npc.world.random(choices.lastIndex)]
+            val kind = forced ?: choices[npc.world.random(choices.lastIndex)]
             obeliskSpecial(kind) {
                 gfx(when (kind) { ObeliskSpecial.CONVERGING -> 2199; ObeliskSpecial.WINDMILL -> 2200; else -> 2198 }, origin)
                 // ONZEKER T20: warnings2ticks=9727clip; beams advance1tile/tick; max26 or39with Penetration (1.5fallback).
                 fun hurt(tiles: Set<Tile>, delay: Int) { later(delay) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { p ->
                     attack(p, ToaScale.damage(26, context, path = false), null, accuracy = false)
                 } } }
+                // N609 13-11 (gelijke-camera Kaoz 2243-2248 s: rode bundeltegels over de arena; wiki Strategies: 'The floor will briefly glow
+                // before the beam is discharged'): the beam tiles were INVISIBLE (converging: no gfx at all; windmill: the yellow
+                // LIGHTNING_WARN 2198 per tile). Cache FX_WARDENS02_BLOODWAVE01 2201 (seq 9730 = FX_OBELISK_WARDENS02_WAVE) is the red tile
+                // glow (testclient ::gfx 3302 = red tile, screens/N609/beams.png). ONZEKER T20: glow one tick before the hit; 2202 unused.
+                fun beam(tiles: Set<Tile>, delay: Int) { later(maxOf(0, delay - 1)) { tiles.forEach { gfx(2201, it) } }; hurt(tiles, delay) }
                 when (kind) {
                     ObeliskSpecial.CONVERGING -> repeat(8) { i ->
                         val row = mutableSetOf<Tile>()
                         for (x in -8..8) { row += origin.transform(x, 8 - i); row += origin.transform(x, i - 8) }
-                        hurt(row, 2 + i)
+                        beam(row, 2 + i)
                         val column = mutableSetOf<Tile>()
                         for (z in -8..8) { column += origin.transform(8 - i, z); column += origin.transform(i - 8, z) }
-                        hurt(column, 10 + i)
+                        beam(column, 10 + i)
                     }
-                    ObeliskSpecial.WINDMILL -> repeat(8) { i ->
-                        val tiles = windmillTiles(origin, i)
-                        tiles.forEach { gfx(2198, it) }; hurt(tiles, 2 + i * 2)
-                    }
+                    ObeliskSpecial.WINDMILL -> repeat(8) { i -> beam(windmillTiles(origin, i), 2 + i * 2) }
                     ObeliskSpecial.LIGHTNING -> players().map { Tile(it.tile) }.forEach { t ->
                         val tiles = mutableSetOf<Tile>()
                         for (dx in -3..3) for (dz in -3..3) if (!(kotlin.math.abs(dx) == 2 && dz == 0 || kotlin.math.abs(dz) == 2 && dx == 0)) tiles += t.transform(dx, dz)
-                        gfx(2198, t); hurt(tiles, 4)
+                        // Wiki Strategies: 'launch several red skulls and discharge lightning outwards in 7x7 areas centred on where each skull
+                        // landed' - skull = PROJECTILE_ID_LIGHTNING 2225 (ToA Extended WardenP2), lightning = WARDENS_LIGHTNING 2197 per tile.
+                        ToaBossFx.tileProjectile(npc, origin, t, 2225, 4)
+                        gfx(2198, t)
+                        later(4) { tiles.forEach { gfx(2197, it) } }
+                        hurt(tiles, 4)
                     }
                 }
             }
