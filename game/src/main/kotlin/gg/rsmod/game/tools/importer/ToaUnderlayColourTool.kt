@@ -20,8 +20,36 @@ object ToaUnderlayColourTool {
     val FIXES: Map<Int, Pair<Int, Int>> = mapOf(133 to (144 to 82), 57 to (61 to 135), 117 to (140 to 117), 123 to (61 to 123),
         // 12-11 23:4x ronde 2 (fotoboek Zebak: platform GRIJS i.p.v. zand): nearest TEXTURED local underlay over the WHOLE cache instead of
         // the 16 pyramid candidates (an agent's choice, not the owner's) - keeps N601 '667-HD' and gets the OSRS colour back:
-        116 to (55 to 129), 109 to (54 to 134), 155 to (61 to 77), 77 to (61 to 77), 4 to (55 to 4), 89 to (54 to 104), 151 to (54 to 104),
+        116 to (55 to 129), 109 to (54 to 134), 4 to (55 to 4), 89 to (54 to 104), 151 to (54 to 104),
         132 to (0 to 161), 131 to (102 to 163))
+
+    /**
+     * N609 13-11 (eigenaar 'er gaat nog veel mis grafisch'; screens/N609/baba-compare.png): round 2 sent OSRS sand 155/77 (#d9bf93/#d9bb93,
+     * Ba-Ba square 15188, 696 tiles) to local 77 - right colour, but its HD texture 58 draws a white/grey CHECKERBOARD where OSRS (Kaoz
+     * Entry guide 1380/1440 s) shows plain sand. A new underlay with OSRS colour + sand texture is impossible: the rev-667 map stores an
+     * underlay as one opcode 81+id (max 174) and all 174 ids exist. First try 61 (pyramid sand, texture 128, #d0c074): no checkerboard
+     * but on screen hue ~55 deg and too light vs OSRS sand hue ~36 deg, V 170 (Kaoz 1380, screens/N609/baba-sand-before-after.png). So the
+     * textured local underlay with the OSRS hue: 101 (#b89b67, hue 37 deg, texture 301; darker base offsets our brighter tile lighting).
+     * OSRS underlay -> (locals it may hold now: round 2 77 / first try 61, local wanted).
+     */
+    val TEXTURED: Map<Int, Pair<Set<Int>, Int>> = mapOf(155 to (setOf(77, 61) to 101), 77 to (setOf(77, 61) to 101))
+
+    internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>): Pair<ByteArray, Map<Int, Int>> {
+        val map = Rev667TileCodec.decode(bytes)
+        check(Rev667TileCodec.encode(map).contentEquals(bytes)) { "Tile roundtrip failed" }
+        val counts = sortedMapOf<Int, Int>()
+        for (p in 0..3) for (x in 0..63) for (z in 0..63) {
+            val osrs = source[p][x][z].underlayId - 1
+            val (from, want) = TEXTURED[osrs] ?: continue
+            val tile = map.tiles[p][x][z]
+            val current = (tile.underlayId and 255) - 1
+            if (current == want) continue // already applied
+            check(current in from) { "Unexpected underlay $current (want $from) at $p/$x/$z for OSRS $osrs" }
+            tile.underlayId = want + 1
+            counts.merge(osrs, 1, Int::plus)
+        }
+        return Rev667TileCodec.encode(map) to counts
+    }
     val TARGETS = ToaUpperTileFlagTool.targets("raid")
 
     internal fun retarget(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>): Pair<ByteArray, Map<Int, Int>> {
@@ -64,8 +92,10 @@ object ToaUnderlayColourTool {
                     val other = requireNotNull(files.index(5).archive(name)) { "Fileserver missing $name" }
                     val before = requireNotNull(archive.file(0)?.data)
                     check(archive.id == other.id && before.contentEquals(other.file(0)?.data)) { "$name cache copies differ" }
-                    val (after, counts) = retarget(before, source)
-                    println("UNDERLAY_COLOUR source=$square target=$name retargeted=$counts")
+                    val (mid, counts1) = retarget(before, source)
+                    val (after, counts2) = retargetTextured(mid, source)
+                    val counts = counts1 + counts2
+                    println("UNDERLAY_COLOUR source=$square target=$name retargeted=$counts1 textured=$counts2")
                     if (!before.contentEquals(after)) mutations += CacheMutation(5, archive.id, 0, after,
                         "ToA $name: exact-colour underlays for OSRS ${counts.keys}", CacheItemProbeTool.sha1(before))
                 }
