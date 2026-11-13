@@ -28,6 +28,19 @@ on_command("toamech", Privilege.ADMIN_POWER) {
             })
         is gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.Session -> mapOf(
             "special" to { s.specialDirector(s) },
+            // N609 13-11: 'special' picks Memory Blast or Trail at random (solo) - the photobook / gelijke-camera shots need each one on
+            // demand (Kaoz 1730 s = Memory Blast). Same pattern rule as defaultSpecial (4 flashes, adjacent quadrants).
+            "memory" to {
+                val qs = gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.Quadrant.values()
+                val pattern = mutableListOf(qs.random())
+                repeat(3) { pattern += qs.filter { q -> gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.adjacent(pattern.last(), q) }.random() }
+                s.memoryBlast(pattern, 9, 22)
+            },
+            "trail" to {
+                s.trail(s.players().associateWith { gg.rsmod.game.model.Tile(it.tile) },
+                    gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.trailDuration(false), 1,
+                    gg.rsmod.plugins.content.activity.toa.bosses.AkkhaCombat.STATS.speed, 22)
+            },
             // 13-11 round 3: both directors are per-tick - orbs only fire when tick % speed == 0 and the shadow charge needs shadows
             // plus speed*6 calls, so one '::toamech' call mostly showed nothing. Same orb as defaultOrbs, and a full shadow charge.
             "orbs" to {
