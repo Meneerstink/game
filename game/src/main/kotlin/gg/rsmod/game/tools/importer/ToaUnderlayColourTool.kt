@@ -20,7 +20,7 @@ object ToaUnderlayColourTool {
     val FIXES: Map<Int, Pair<Int, Int>> = mapOf(133 to (144 to 82), 57 to (61 to 135), 117 to (140 to 117), 123 to (61 to 123),
         // 12-11 23:4x ronde 2 (fotoboek Zebak: platform GRIJS i.p.v. zand): nearest TEXTURED local underlay over the WHOLE cache instead of
         // the 16 pyramid candidates (an agent's choice, not the owner's) - keeps N601 '667-HD' and gets the OSRS colour back:
-        116 to (55 to 129), 109 to (54 to 134), 4 to (55 to 4), 89 to (54 to 104), 151 to (54 to 104),
+        109 to (54 to 134), 4 to (55 to 4), 151 to (54 to 104),
         132 to (0 to 161), 131 to (102 to 163))
 
     /**
@@ -32,7 +32,16 @@ object ToaUnderlayColourTool {
      * textured local underlay with the OSRS hue: 101 (#b89b67, hue 37 deg, texture 301; darker base offsets our brighter tile lighting).
      * OSRS underlay -> (locals it may hold now: round 2 77 / first try 61, local wanted).
      */
-    val TEXTURED: Map<Int, Pair<Set<Int>, Int>> = mapOf(155 to (setOf(77, 61) to 101), 77 to (setOf(77, 61) to 101))
+    val TEXTURED: Map<Int, Pair<Set<Int>, Int>> = mapOf(155 to (setOf(77, 61) to 101), 77 to (setOf(77, 61) to 101),
+        // N609 17:0x Apmeken puzzle: OSRS 116 (#665f47, the darker sand patches) went to 129 (texture 596 = COBBLESTONES, OSRS: smooth darker
+        // sand, Kaoz 1180 s). ToaUnderlayTrialTool stripes 129/134/96/91/150 (screens/N609/apmeken-trial-stripes.png): 150 blue slate,
+        // 91 pebbles, 96/134 smooth; 134 (#766b51, texture 300) on screen H/S/V 19/101/80 vs OSRS dark patches 19/85/72 -> 134.
+        // Squares 14162, 15186, 15698. 'from' includes the trial candidates.
+        116 to (setOf(129, 134, 96, 91, 150) to 134),
+        // N609 17:2x Kephri arena: OSRS 89 (#85665f) went to 104 (texture 681 = dark grey DOTS; OSRS: plain light pinkish grey, Kaoz 870 s,
+        // screen H/S/V 11/77/130). Trial stripes 104/73/134/105 (screens/N609/kephri-trial.png): 104 2/39/97, 73 4/61/140, 134 19/69/127,
+        // 105 18/61/153 -> 73 (#995566, texture 607) keeps the pink tone. Squares 14164 (+ wherever OSRS 89 sat on 54/104).
+        89 to (setOf(54, 104, 73, 134, 105) to 73))
 
     internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>): Pair<ByteArray, Map<Int, Int>> {
         val map = Rev667TileCodec.decode(bytes)
