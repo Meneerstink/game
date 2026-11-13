@@ -504,7 +504,18 @@ object WardensCombat : CombatScript() {
                     }
                 }
                 Phase.CORE -> Unit
-                Phase.SIPHONS -> players().filter { it.getCombatTarget() in siphons }.forEach { it.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY) }
+                Phase.SIPHONS -> {
+                    players().filter { it.getCombatTarget() in siphons }.forEach { it.timers.remove(gg.rsmod.game.model.timer.ATTACK_DELAY) }
+                    // N609 13-11: while a set runs, red streams flow from every live siphon up into the Warden (Kaoz Entry guide
+                    // 2407.9-2409.4 s; ToA Extended PROJECTILE_ID_ENERGY_SIPHON_CHARGE 2227 FX_WARDENS_CHARGING01). ONZEKER: interval
+                    // (every 2 ticks), flight and end height are read off the video, the OSRS packet values are not known.
+                    if (tick % 2 == 0) {
+                        val warden = npc.getCentreTile()
+                        siphons.filter { it.isSpawned() && it !in reversedSiphons }.forEach {
+                            ToaBossFx.tileProjectile(npc, it.tile, warden, 2227, 3, startHeight = 0, endHeight = 160)
+                        }
+                    }
+                }
                 Phase.P3 -> {
                     if (siphonStage < 4 && npc.getCurrentLifepoints().toLong() * 100 <= npc.getMaximumLifepoints().toLong() * (80 - 20 * siphonStage)) {
                         siphonStage++; phase = Phase.SIPHONS; newPhase(); ToaHeadIcons.show(npc, 9); animate(9682)

@@ -49,13 +49,14 @@ object ToaBossFx {
             .setTimes(delay = 0, lifespan = ticks.coerceAtLeast(1) * 30).build())
     }
     /** N606: tile-to-tile flight (ejected cores, spat objects) - the projectile lands on the floor after [ticks]. */
-    fun tileProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int) {
+    fun tileProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int,
+                       startHeight: Int = ProjectileType.MAGIC.startHeight, endHeight: Int = 0) {
         val gfx = spot(osrs) ?: return
         val type = ProjectileType.MAGIC
         // ONZEKER T01: standard server packet geometry, as projectile() below.
         source.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder()
             .setTiles(start = from, target = to).setGfx(gfx = gfx)
-            .setHeights(startHeight = type.startHeight, endHeight = 0)
+            .setHeights(startHeight = startHeight, endHeight = endHeight)
             .setSlope(angle = type.angle, steepness = type.steepness)
             .setTimes(delay = 0, lifespan = ticks.coerceAtLeast(1) * 30).build())
     }
