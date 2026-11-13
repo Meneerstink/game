@@ -35,6 +35,8 @@ object WardensCombat : CombatScript() {
     // ONZEKER T02: exact NPC/landing not published; infer the5x5 Warden just south of a16deep playable floor.
     const val ARENA_HALF_WIDTH = 10
     const val ARENA_DEPTH = 16
+    /** ONZEKER T20: flight of the ejected/returning core projectile (2239/2240 have no seq); see exposeCore. */
+    const val CORE_FLIGHT = 2
     val P3_ORIGIN = Tile(3934, 5145, 1)
     val P3_CENTRE = Tile(3936, 5158, 1)
     val P3_ENTRY = Tile(3936, 5156, 1)
@@ -225,7 +227,7 @@ object WardensCombat : CombatScript() {
                             addEnergy(w)
                             return
                         }
-                        orb?.moveTo(tile.transform(direction, 0)); later(1) { pulse(left - 1) }
+                        orb?.let { gg.rsmod.plugins.content.activity.toa.ToaSlide.step(it, tile.transform(direction, 0)) }; later(1) { pulse(left - 1) } // N606
                     }
                     pulse(travel)
                 }
@@ -266,14 +268,21 @@ object WardensCombat : CombatScript() {
                         gg.rsmod.plugins.content.mechanics.prayer.Prayers.disableOverheads(p, 1)
                         ToaBossFx.projectile(npc, p, when (style) { CombatClass.MELEE -> 2204; CombatClass.RANGED -> 2206; else -> 2208 }, true, 4)
                         attack(p, ToaScale.damage(max, context, path = false), style, 4, accuracy = false)
+                        // N606: the matching cache impacts TOA_WARDENS_PRAYER_MELEE/RANGED/MAGIC_IMPACT (2205/2207/2209) were never sent.
+                        later(4) { if (eligible(p)) ToaBossFx.spot(when (style) { CombatClass.MELEE -> 2205; CombatClass.RANGED -> 2207; else -> 2209 })?.let { p.graphic(it) } }
                     }
                 } else {
                     val tiles = players().map { Tile(it.tile) }
                     tiles.forEach { gfx(2210, it) }
-                    later(4) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { p ->
-                        p.stopMovement(); p.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = 4
-                        p.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = 4; ToaBossFx.spot(2211)?.let { p.graphic(it) }
-                    } }
+                    later(4) {
+                        val caught = players().filter { p -> tiles.any { sameTile(it, p.tile) } }
+                        caught.forEach { p ->
+                            p.stopMovement(); p.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = 4
+                            p.timers[gg.rsmod.game.model.timer.ATTACK_DELAY] = 4; ToaBossFx.spot(2211)?.let { p.graphic(it) }
+                        }
+                        // N606: a dodged entomb shows cache TOA_WARDENS_ENTOMB_MISS (2212) on its empty tile.
+                        tiles.filter { t -> caught.none { sameTile(it.tile, t) } }.forEach { gfx(2212, it) }
+                    }
                 }
             } else {
                 val style = if (meleeReach(target.tile)) CombatClass.MELEE else if (npc.world.random(1) == 0) CombatClass.RANGED else CombatClass.MAGIC
@@ -547,6 +556,15 @@ object WardensCombat : CombatScript() {
             ToaHeadIcons.clear(npc)
             val tile = coreTile ?: npc.tile.transform(1, -3)
             val duration = coreExposure(coreHealth, coreMaximum)
+            // N606 / Wiki ('Tumeken's Warden core ejection and destruction'): the core is EJECTED - it flies out of the Warden as
+            // cache PROJECTILE_WARDEN_TUMEKEN_CORE 2239 / ELIDINIS_CORE 2240 and only then lies on the floor.
+            // ONZEKER T20: flight time unpublished (projectile has no seq) -> CORE_FLIGHT ticks, added to the exposure so its length is unchanged.
+            ToaBossFx.tileProjectile(npc, npc.getCentreTile(), tile, if (phaseTwoWarden == Warden.TUMEKEN) 2239 else 2240, CORE_FLIGHT)
+            later(CORE_FLIGHT) { if (phase == Phase.CORE) spawnCore(tile) }
+            later(CORE_FLIGHT + duration) { returnCore() }
+            phaseChanged?.invoke(phase)
+        }
+        private fun spawnCore(tile: Tile) {
             core = spawn(if (phaseTwoWarden == Warden.TUMEKEN) ToaBossNpcs.CORE else 11771, tile, P3_STATS.copy(hp = coreMaximum, deathSeq = -1), path = false, group = false)?.also { child ->
                 child.combatDef = child.combatDef.copy(lifepoints = coreMaximum); child.setCurrentLifepoints(coreHealth)
                 child.scriptedDeath = true
@@ -563,11 +581,12 @@ object WardensCombat : CombatScript() {
                     }
                 }
             }
-            later(duration) { returnCore() }
-            phaseChanged?.invoke(phase)
         }
         fun returnCore() {
             if (phase != Phase.CORE) return
+            // N606: the surviving core flies back into the Warden (same core projectile, reversed).
+            core?.takeIf { it.isSpawned() }?.let { c -> ToaBossFx.tileProjectile(c, c.tile, npc.getCentreTile(),
+                if (phaseTwoWarden == Warden.TUMEKEN) 2239 else 2240, CORE_FLIGHT) }
             core?.let { remove(it) }; core = null
             returnedCores++; newPhase(); phase = Phase.P2
             activate(if (phaseTwoWarden == Warden.ELIDINIS) ToaBossNpcs.ELIDINIS_P2 else ToaBossNpcs.TUMEKEN_P2,

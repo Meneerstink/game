@@ -18,6 +18,8 @@ import gg.rsmod.plugins.content.combat.PlayerAttackRules
  */
 object KephriCombat : CombatScript() {
     override val ids: IntArray get() = listOfNotNull(ToaBossNpcs.local(ToaBossNpcs.KEPHRI)).toIntArray()
+    /** Cache2686 seq9519 toa_dung_drop (spotanim 2145) = 90 client cycles = 3 ticks before the pile lies on the floor. */
+    const val DUNG_DROP_TICKS = 3
     /** Final phase hp (OSRS 80), shortened with the other bosses (ToaDuration). */
     val FINAL_HP = ToaDuration.boss(80)
     val STATS = ToaNpcStats(ToaDuration.boss(150), 0, 0, 80, 125, 0, 6, magicBonus = 125, magicStrength = 50,
@@ -96,10 +98,21 @@ object KephriCombat : CombatScript() {
             animate(9578) // ToA Extended: every special resets its attack counter on 9578 (fireballs are 9577); ONZEKER T14 for dung.
             val marked = victims.associateWith { Tile(it.tile) }
             // ONZEKER T14: warning3ticks=seq9577; stun2seconds rounds up to4game ticks.
+            // 12-11 22:5x (eigenaar 'kephri room ... er wordt geen poep getekend'): OSRS (wiki Strategies0954 'Piles of dung will then fall
+            // down the direction the player was knocked back in'; wiki image 'Soldier Scarab Trapping.png') = STRAIGHT rows of piles along
+            // the knockback path. Our diagonal 4-tile line looked like scattered stains. Knockback + row now follow the dominant axis away
+            // from Kephri and cover every tile the player was thrown over (landing tile excluded).
+            fun outward(start: Tile): gg.rsmod.game.model.Direction {
+                val rx = start.x - centre.x; val rz = start.z - centre.z
+                return when {
+                    rx == 0 && rz == 0 -> gg.rsmod.game.model.Direction.SOUTH
+                    kotlin.math.abs(rx) >= kotlin.math.abs(rz) -> if (rx > 0) gg.rsmod.game.model.Direction.EAST else gg.rsmod.game.model.Direction.WEST
+                    else -> if (rz > 0) gg.rsmod.game.model.Direction.NORTH else gg.rsmod.game.model.Direction.SOUTH
+                }
+            }
             dungStrike(victims, 3, 4, destination = { p ->
                 val start = marked.getValue(p)
-                val dx = (start.x - centre.x).compareTo(0); val dz = (start.z - centre.z).compareTo(0)
-                val direction = gg.rsmod.game.model.Direction.between(start, start.transform(dx, if (dz == 0 && dx == 0) -1 else dz))
+                val direction = outward(start)
                 var end = Tile(p.tile)
                 repeat(10) {
                     if (npc.world.collision.canStep(end, direction)) end = end.transform(direction.getDeltaX(), direction.getDeltaZ())
@@ -109,12 +122,13 @@ object KephriCombat : CombatScript() {
                     (-10..10).flatMap { x -> (-10..10).map { z -> start.transform(x, z) } }
                         .filter { it !in dung && !npc.world.collision.isClipped(it) && !sameTile(it, start) }
                         .minByOrNull { it.getDistance(start) }
-            }, tiles = { p ->
-                val start = marked.getValue(p)
-                // Strategies: dung follows the outward strike direction. A nearby fallback landing must not
-                // rotate that line into a different part of the arena when an earlier pile blocks the ray.
-                val dx = (start.x - centre.x).compareTo(0); val dz = (start.z - centre.z).compareTo(0)
-                (0..3).map { start.transform(dx * it, (if (dx == 0 && dz == 0) -1 else dz) * it) }
+            }, tiles = { p, from, end ->
+                // Strategies: dung follows the outward strike direction. A nearby fallback landing (not on the ray) adds no
+                // piles, so a blocked repeat strike cannot rotate the line into a different part of the arena.
+                val direction = outward(marked.getValue(p))
+                val path = (0..10).map { from.transform(direction.getDeltaX() * it, direction.getDeltaZ() * it) }
+                val landing = path.indexOfFirst { sameTile(it, end) }
+                if (landing <= 0) emptyList() else path.take(landing)
             }, place = { t -> placeObject(45504, t) }) // Cache2686 KEPHRI_DUNG: blocks walking, not projectiles (18/27); 45149 is static decor.
         }
         private fun defaultRecharge() {
@@ -193,7 +207,7 @@ object KephriCombat : CombatScript() {
                             arcaneCharge[scarab] = 0
                             val route = listOf(centre.transform(6, -6), centre.transform(-6, 6), centre.transform(0, -7), centre.transform(6, 6))
                             val index = route.indexOfFirst { sameTile(it, scarab.tile) }.coerceAtLeast(0)
-                            scarab.moveTo(route[(index + 1) % route.size])
+                            scarab.moveTo(fitFloor(route[(index + 1) % route.size], scarab.getSize()))
                         }
                     }
                 }
@@ -285,7 +299,7 @@ object KephriCombat : CombatScript() {
             return selected
         }
         fun dungStrike(victims: List<Player>, delay: Int, stunTicks: Int,
-            destination: (Player) -> Tile?, tiles: (Player) -> List<Tile>, place: (Tile) -> (() -> Unit)) {
+            destination: (Player) -> Tile?, tiles: (Player, Tile, Tile) -> List<Tile>, place: (Tile) -> (() -> Unit)) {
             require(delay >= 0 && stunTicks >= 0)
             victims.filter { eligible(it) }.forEach { p ->
                 ToaBossFx.spot(2146)?.let { p.graphic(it) }
@@ -299,12 +313,17 @@ object KephriCombat : CombatScript() {
                         return@later
                     }
                     require(p.tile.isWithinRadius(end, 10))
+                    val from = Tile(p.tile)
                     p.message("Kephri throws you back!"); p.stopMovement()
                     p.timers[gg.rsmod.game.model.timer.FROZEN_TIMER] = stunTicks; p.teleportTo(end)
                     // Testclient 08-11: a short knockback (wall) made the dung row cover the landing tile; the player then stood inside a
                     // blocked pile and could not path or attack at all ('I can't reach that!'). Dung never lands on a player's tile.
-                    tiles(p).filter { tile -> players().none { sameTile(it.tile, tile) } }
-                        .forEach { tile -> if (dung.add(tile)) { gfx(2145, tile); cleanupDung += place(tile) } }
+                    // N606: each pile FALLS first (cache spotanim 2145 KEPHRI_DUNG_DROP, seq9519 toa_dung_drop = 90 cycles = 3 ticks) and the
+                    // blocking pile appears where it lands; the tile is reserved at once so later strikes respect the row.
+                    tiles(p, from, end).filter { tile -> players().none { sameTile(it.tile, tile) } }
+                        .forEach { tile -> if (dung.add(tile)) { gfx(2145, tile); later(DUNG_DROP_TICKS, acrossPhase = true) {
+                            if (tile in dung && players().none { sameTile(it.tile, tile) }) cleanupDung += place(tile) else dung.remove(tile)
+                        } } }
                 }
             }
         }
@@ -343,11 +362,23 @@ object KephriCombat : CombatScript() {
         }
         override fun playerAttackRule(player: Player, target: Npc, type: HitType): PlayerAttackRules.Rule? =
             if (target in maxHitTargets) PlayerAttackRules.Rule.MAX_HIT else null
+        /** N606 12-11 (eigenaar 'de mager npc in kephiri spawnd in de muur'): the 3x3 corner tiles (+6,+6)/(-6,+6) put the top row
+         *  on z+7 = the north wall (floor runs centre-9..+7 in z). Shift a footprint toward the centre until every tile is free
+         *  floor (max 3 steps); the documented corner stays the target, only the wall overlap is removed. */
+        fun fitFloor(tile: Tile, size: Int): Tile {
+            fun free(t: Tile) = (0 until size).all { dx -> (0 until size).all { dz -> !npc.world.collision.isClipped(t.transform(dx, dz)) } }
+            var t = tile
+            repeat(3) {
+                if (free(t)) return t
+                t = t.transform((centre.x - t.x).coerceIn(-1, 1), (centre.z - t.z).coerceIn(-1, 1))
+            }
+            return if (free(t)) t else tile
+        }
         fun spawnOverlord(id: Int, tile: Tile): Npc? {
             // ONZEKER T14: reuse a surviving same-type overlord rather than create an unbounded duplicate across shield breaks.
             overlords[id]?.takeIf { it.isSpawned() && !it.isDead() }?.let { return it }
             val spec = when (id) { ToaBossNpcs.SOLDIER -> SOLDIER_STATS; ToaBossNpcs.SPITTING -> SPITTING_STATS; ToaBossNpcs.ARCANE -> ARCANE_STATS; else -> return null }
-            return spawn(id, tile, spec)?.also { child ->
+            return spawn(id, fitFloor(tile, 3), spec)?.also { child ->
                 child.combatDef = spec.definition(context, scaleDefence = false).copy(completesEncounter = false,
                     deathAnimation = listOf(ToaBossFx.seqFor(child, spec.deathSeq)))
                 applyBonuses(child)

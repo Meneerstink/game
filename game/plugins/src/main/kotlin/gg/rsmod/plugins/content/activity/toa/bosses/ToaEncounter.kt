@@ -312,6 +312,7 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
         child.setCurrentLifepoints(child.getMaximumLifepoints())
         child.hitModifier = { hit -> if (hit.source is Player && !eligible(hit.source as Player)) hit.hitmarks.forEach { it.damage = 0 } }
         children += child
+        gg.rsmod.plugins.content.activity.toa.ToaGfxAudit.npcSpawned(child, osrs, players(), this::class.java.simpleName) // N606 audit (testserver)
         return child
     }
     fun remove(child: Npc) { children.remove(child); if (child.isSpawned()) npc.world.remove(child) }
@@ -320,6 +321,8 @@ abstract class ToaBossSession(npc: Npc, input: ToaEncounterContext) {
         val id = ToaBossFx.loc(osrs) ?: run { missingAsset("loc $osrs"); return {} }
         val previous = npc.world.getObject(tile, ObjectType.INTERACTABLE)
         // Imported loc definitions decide collision. Never mutate the shared cache definitions.
+        // N606 audit BEFORE the spawn: a blocking loc (sarcophagus, rock steps) would otherwise trip over its own collision.
+        gg.rsmod.plugins.content.activity.toa.ToaGfxAudit.locPlaced(npc.world, osrs, id, tile, 1, players(), this::class.java.simpleName)
         val obj = DynamicObject(id, 10, rotation, Tile(tile))
         npc.world.spawn(obj)
         var removed = false

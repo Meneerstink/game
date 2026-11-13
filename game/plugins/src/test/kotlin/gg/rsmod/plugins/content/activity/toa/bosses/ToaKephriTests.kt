@@ -29,13 +29,13 @@ class ToaKephriTests {
                 val direction = secondArg<gg.rsmod.game.model.Direction>()
                 tile.transform(direction.getDeltaX(), direction.getDeltaZ()) !in s.dung
             }
-            s.dungDirector(s, listOf(p)); repeat(4) { s.cycle() }
+            s.dungDirector(s, listOf(p)); repeat(8) { s.cycle() } // N606: strike 3 + pile drop 3
             val firstLine = s.dung.toSet()
             assertTrue(firstLine.isNotEmpty())
             assertEquals(setOf(45504), placedSources.toSet(), "OSRS KEPHRI_DUNG must replace the projectile-blocking static decor")
             repeat(5) {
                 playerTile = start
-                s.dungDirector(s, listOf(p)); repeat(4) { s.cycle() }
+                s.dungDirector(s, listOf(p)); repeat(8) { s.cycle() } // N606: strike 3 + pile drop 3
                 assertEquals(firstLine, s.dung, "a blocked $dx,$dz landing must not rotate the original line")
                 assertTrue(playerTile !in s.dung, "fallback must still leave a walkable landing")
             }

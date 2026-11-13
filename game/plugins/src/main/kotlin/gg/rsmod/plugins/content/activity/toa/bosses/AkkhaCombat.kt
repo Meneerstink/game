@@ -172,6 +172,8 @@ object AkkhaCombat : CombatScript() {
                     animate(when (style) { CombatClass.MELEE -> 9770; CombatClass.RANGED -> 9772; else -> 9774 })
                     val victims = if (style == CombatClass.MELEE) live.filter { it.tile.isWithinRadius(meleeTarget.tile, 1) && meleeReach(it.tile) } else live
                     victims.forEach { spec.fire(this, it) }
+                    // N606: the magic orb's landing (cache AKKHA_MAGIC_IMPACT 2254, pair of AKKHA_MAGIC_TRAVEL 2253) was never sent.
+                    if (style == CombatClass.MAGIC) later(spec.delay) { victims.filter { eligible(it) }.forEach { p -> ToaBossFx.spot(2254)?.let { p.graphic(it) } } }
 
                 }
                 autos++
@@ -359,7 +361,7 @@ object AkkhaCombat : CombatScript() {
                     }
                     remove(orb); return
                 }
-                orb.moveTo(orb.tile.transform(direction.getDeltaX(), direction.getDeltaZ()))
+                gg.rsmod.plugins.content.activity.toa.ToaSlide.step(orb, orb.tile.transform(direction.getDeltaX(), direction.getDeltaZ())) // N606: walk, not moveTo
                 later(interval) { move(left - 1) }
             }
             move(steps)

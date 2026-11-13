@@ -28,7 +28,10 @@ class ToaZebakReachTests {
         val s = ZebakCombat.Session(f.npc, ToaTestContext())
         assertEquals(Tile(3934, 5408), s.centre)
         s.cycle() // Real default85% Great Roar director; no supplied test layout.
+        assertEquals(0, s.jugs.size, "N606: jugs are spat first and only appear where they land")
+        repeat(ZebakCombat.SPIT_FLIGHT) { s.cycle() }
         assertEquals(3, s.rocks.size)
+        assertEquals(3, s.rocks.count { it.npc != null }, "each spat rock lands as a rock npc")
         assertEquals(5, s.jugs.size)
         for (rock in s.rocks) {
             assertFalse(source.collision.isClipped(rock.tile), "rock must be on the actual dry platform: ${rock.tile}")

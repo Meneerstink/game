@@ -21,6 +21,9 @@ class ToaRoomScope(val raid: ToaRaid, val run: ToaRoomRun) {
         check(active && npc.world === raid.world && raid.map.area.contains(npc.tile))
         if (!raid.world.spawn(npc)) return false
         npcs += npc
+        // N606 audit (testserver): room npcs (puzzles); encounter children are audited in ToaEncounter.spawn with their OSRS id.
+        if (npc.attr[gg.rsmod.plugins.content.activity.toa.bosses.ToaEncounter.MINION_SESSION] == null)
+            ToaGfxAudit.npcSpawned(npc, -1, ToaGfxAudit.nearbyPlayers(raid.world, npc.tile), "room ${run.key}")
         return true
     }
 

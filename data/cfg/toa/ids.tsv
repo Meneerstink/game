@@ -5259,3 +5259,6 @@ spotanim	2126	3389	toa-shadow model 66055
 spotanim	2127	3390	toa-shadow model 66056
 item	27267	24741	toa-hood
 spotanim	2064	3391	toa-shadow model 65882
+npc	11722	15217	corpse bas=2476 (reuses bake of 11719)
+npc	11733	15218	corpse bas=2477 (reuses bake of 11730)
+npc	11734	15219	corpse bas=2478 (reuses bake of 11731)

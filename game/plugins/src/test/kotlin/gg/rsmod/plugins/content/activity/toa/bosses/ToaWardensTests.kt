@@ -157,6 +157,7 @@ class ToaWardensTests {
         assertEquals(rule, ToaEncounter.playerAttackRule(p, f.npc, gg.rsmod.plugins.api.HitType.RANGE))
         assertNull(ToaEncounter.playerAttackRule(p, f.npc, gg.rsmod.plugins.api.HitType.MAGIC))
         s.exposeCore()
+        repeat(WardensCombat.CORE_FLIGHT + 1) { s.cycle() } // N606: the core flies out first; exposeCore ran outside a cycle -> +1 (due events run before tick++)
         val core = assertNotNull(s.core)
         assertEquals(gg.rsmod.plugins.content.combat.PlayerAttackRules.Rule.MAX_HIT,
             ToaEncounter.playerAttackRule(p, core, gg.rsmod.plugins.api.HitType.MELEE))
@@ -309,6 +310,7 @@ class ToaWardensTests {
         strike(ToaDuration.boss(140))
         assertEquals(WardensCombat.Phase.CORE, s.phase)
         assertEquals(1, s.npc.getCurrentLifepoints())
+        repeat(WardensCombat.CORE_FLIGHT + 1) { s.cycle() } // N606: the core flies out first; exposeCore ran outside a cycle -> +1 (due events run before tick++)
         val core = assertNotNull(s.core); assertEquals(s.coreMaximum, core.getCurrentLifepoints())
         s.returnCore()
         assertEquals(WardensCombat.Phase.P2, s.phase); assertFalse(core.isSpawned())

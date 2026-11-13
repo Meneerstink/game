@@ -36,7 +36,11 @@ object ZebakCombat : CombatScript() {
     fun attackInterval(enraged: Boolean, @Suppress("UNUSED_PARAMETER") path: Int) = if (enraged) 4 else 7
     fun maxHit(style: CombatClass, c: ToaEncounterContext) = ToaScale.damage(if (style == CombatClass.MELEE) 38 else 16, c)
     enum class Special { ROAR, WAVES }
-    data class Rock(val tile: Tile, var hp: Int = 150)
+    data class Rock(val tile: Tile, var hp: Int = 150) { var npc: Npc? = null }
+    /** Cache2686 seq9642 projectile_zebak_pitcher01 / seq9645 projectile_zebak_shield01 = 90 client cycles = 3 ticks of flight. */
+    const val SPIT_FLIGHT = 3
+    /** Cache2686 seq9632 npc_zebak01_attack_special = 120 client cycles = 4 ticks (the spit before every special). */
+    const val SPIT_TICKS = 4
     /** A rock blocks the ray away from Zebak for the next three floor tiles. Direction is room geometry supplied by the adapter. */
     fun behindRock(player: Tile, rock: Tile, direction: Direction): Boolean =
         player.height == rock.height && (1..3).any { n -> player.x == rock.x + direction.getDeltaX() * n && player.z == rock.z + direction.getDeltaZ() * n }
@@ -113,23 +117,40 @@ object ZebakCombat : CombatScript() {
             jugs.toList().forEach { remove(it) }; jugs.clear()
             // ONZEKER T02: room-relative layouts until OSRS spawn traces exist; central jug can always clear a rock's safe strip.
             val rockTiles = listOf(-4, 0, 4).map { centre.transform(0, it) }
-            listOf(-6, -3, 0, 3, 6).forEach { x ->
-                val tile = centre.transform(3, x)
-                spawn(11735, tile, STATS.copy(hp = 1), path = false, group = false)?.let { jug ->
-                    jugs += jug; specialNpcs += jug
-                    jug.hitModifier = { h ->
-                        h.hitmarks.forEach { it.damage = 0 }
-                        h.addAction { if (jug in jugs) shatterJug(jug) }
+            val jugTiles = listOf(-6, -3, 0, 3, 6).map { x -> centre.transform(3, x) }
+            val acidCentres = listOf(-6, -3, 0, 3, 6).flatMap { z -> listOf(centre.transform(1, z), centre.transform(5, z)) }
+            // N606 / Wiki Zebak/Strategies: "Poison and jugs are always spit out with each special attack" ("throw jugs, poison and
+            // two/three rocks onto the arena"). Spit clip seq9632 (+tail9633), then each object flies (pitcher/shield/vomit
+            // projectiles, cache spotanims 2173/2172/2194) and only appears where it lands - it no longer pops up out of nowhere.
+            animate(9632); tail?.let { animate(9633, it) }
+            // The spit clip must not be overwritten by an auto in the same tick; Great Roar still gets its four autos
+            // (tick+4, +11, +18, +25) before the first roar at 4*speed.
+            nextAttack = maxOf(nextAttack, tick + SPIT_TICKS)
+            jugTiles.forEach { spit(2173, it) }
+            acidCentres.forEach { spit(2194, it) }
+            if (special == Special.ROAR) {
+                rocks.clear(); rocks += rockTiles.map(::Rock)
+                rockTiles.forEach { spit(2172, it) }
+            }
+            later(SPIT_FLIGHT) {
+                jugTiles.forEach { tile ->
+                    spawn(11735, tile, STATS.copy(hp = 1), path = false, group = false)?.let { jug ->
+                        jugs += jug; specialNpcs += jug
+                        jug.hitModifier = { h ->
+                            h.hitmarks.forEach { it.damage = 0 }
+                            h.addAction { if (jug in jugs) shatterJug(jug) }
+                        }
+                    }
+                }
+                acidCentres.forEach(::addAcid)
+                if (special == Special.ROAR) rocks.forEach { rock ->
+                    spawn(11737, rock.tile, STATS.copy(hp = 150), path = false, group = false)?.let { r ->
+                        rock.npc = r; specialNpcs += r; r.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
+                        later(4 * stats.speed + 27 - SPIT_FLIGHT) { remove(r) }
                     }
                 }
             }
-            listOf(-6, -3, 0, 3, 6).forEach { z -> addAcid(centre.transform(1, z)); addAcid(centre.transform(5, z)) }
             if (special == Special.ROAR) {
-                rocks.clear(); rocks += rockTiles.map(::Rock)
-                rockTiles.forEach { tile -> spawn(11737, tile, STATS.copy(hp = 150), path = false, group = false)?.let { r ->
-                    specialNpcs += r; r.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
-                    later(4 * stats.speed + 27) { remove(r) }
-                } }
                 // Wiki: four regular attacks to position jugs; roar clip9628=270cycles=9ticks (92-seqticks).
                 roar(4 * stats.speed, 9, 38, Direction.EAST) // Away from Zebak, which stands west of the source platform.
                 later(4 * stats.speed) { nextAttack = tick + 27 }
@@ -137,14 +158,23 @@ object ZebakCombat : CombatScript() {
             } else {
                 val direction = if (waveSet++ % 2 == 0) Direction.NORTH else Direction.SOUTH
                 val gap = narrowedGap(5, context.pathLevel)
+                // Wiki Zebak/Strategies (Tidal Waves): "throw jugs and poison before slamming his tail, causing boulders to drop from one
+                // direction and cause a massive tidal wave". After the spit clip: tail slam (seq9630/9631) + falling boulders and dust
+                // (cache spotanims 2195 ZEBAK_ROCK_FALL / 2174 ZEBAK_DUSTFALL01) along the wave's start edge, then the waves.
+                // ONZEKER T18: the waves start with the slam; the exact slam-to-wave tick offset is unpublished.
+                val edge = (-8..8).map { x -> centre.transform(x, if (direction == Direction.NORTH) -8 else 8) }
+                later(SPIT_TICKS) {
+                    animate(9630); tail?.let { animate(9631, it) }
+                    edge.forEach { gfx(2195, it); gfx(2174, it) }
+                }
                 // ONZEKER T18: three waves,7ticks apart, one row/tick; wave gap from published path2/4 reductions.
-                repeat(3) { index -> later(index * stats.speed) {
+                repeat(3) { index -> later(SPIT_TICKS + index * stats.speed) {
                     val row = (-8..8).filter { it !in -(gap / 2)..(gap - 1) / 2 }.map { x ->
                         centre.transform(x, if (direction == Direction.NORTH) -8 else 8)
                     }
                     wave(row, direction, 17, 1, 8) { p, tile -> enterWater(p, tile) }
                 } }
-                specialUntil = tick + 3 * stats.speed + 17
+                specialUntil = tick + SPIT_TICKS + 3 * stats.speed + 17
             }
         }
         override fun onTick() {
@@ -208,6 +238,17 @@ object ZebakCombat : CombatScript() {
             // Owner: blood attacks belong to Not Just a Head and are disabled in simplified ToA.
             nextAttack = tick + pathAttackInterval(this)
         }
+        /** One spat object (jug / rock / acid) flying from Zebak's mouth to the tile where it will appear SPIT_FLIGHT ticks later. */
+        fun spit(osrs: Int, target: Tile) {
+            val gfx = ToaBossFx.spot(osrs) ?: return
+            val type = gg.rsmod.plugins.api.ProjectileType.MAGIC
+            // ONZEKER T01: standard server packet geometry (as ToaBossFx); flight = the projectile seq duration, ends on the floor.
+            npc.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder()
+                .setTiles(start = npc.getCentreTile(), target = target).setGfx(gfx = gfx)
+                .setHeights(startHeight = type.startHeight, endHeight = 0)
+                .setSlope(angle = type.angle, steepness = type.steepness)
+                .setTimes(delay = 0, lifespan = SPIT_FLIGHT * 30).build())
+        }
         fun addAcid(centre: Tile) {
             val radius = acidRadius()
             for (dx in -radius..radius) for (dz in -radius..radius) {
@@ -247,7 +288,7 @@ object ZebakCombat : CombatScript() {
                 if (!jug.isSpawned() || left == 0) return
                 val next = jug.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
                 if (!npc.world.collision.canStep(jug.tile, direction)) return
-                jug.moveTo(next)
+                gg.rsmod.plugins.content.activity.toa.ToaSlide.step(jug, next) // N606: walk, not moveTo
                 if (rocks.any { it.hp > 0 && sameTile(it.tile, next) }) { shatterJug(jug); return }
                 later(1) { step(left - 1) }
             }
@@ -264,13 +305,18 @@ object ZebakCombat : CombatScript() {
                     attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false)
                     // ONZEKER T18: unquantified roar shove uses the same encounter's one-step wave displacement.
                     val end = it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
-                    if (npc.world.collision.canStep(it.tile, direction) || !onPlatform(end)) { // same edge rule as the waves
+                    val canStep = npc.world.collision.canStep(it.tile, direction)
+                    if (canStep || !onPlatform(end)) { // same edge rule as the waves: walkable rim = shove, blocked edge = moat
                         it.stopMovement(); it.teleportTo(end)
-                        if (!onPlatform(end)) enterWater(it, end)
+                        if (!canStep && !onPlatform(end)) enterWater(it, end)
                     }
                 }
                 // One -50 per wave, regardless of how many players shelter behind the same rock.
-                standing.forEach { it.hp = (it.hp - 50).coerceAtLeast(0) }
+                standing.forEach { rock ->
+                    rock.hp = (rock.hp - 50).coerceAtLeast(0)
+                    // N606: a spent rock shatters visibly (cache spotanim 2191 ZEBAK_SHIELD_BREAK) instead of standing on until cleanup.
+                    if (rock.hp == 0) { gfx(2191, rock.tile); rock.npc?.let { specialNpcs.remove(it); remove(it) }; rock.npc = null }
+                }
             } }
         }
         /** The room adapter supplies the proven start edge, gap and end row; no unconstrained random layout can close every route. */
@@ -290,15 +336,34 @@ object ZebakCombat : CombatScript() {
                     // Wiki Zebak (Tidal Waves): "If the wave pushes the player over into the water, they will need to quickly scale back up a
                     // nearby ramp". The moat is walk-blocked for normal walking, so the edge step failed canStep and the player stayed on
                     // the platform (the next tick then left the water at once): over the edge the wave now always moves the player in.
-                    val intoWater = !onPlatform(next)
+                    // 12-11 22:1x (traced run 3): map15700 has WALKABLE rim land just past centre+-8 (rows 297/298 north, 278/279 south,
+                    // clipmap). A push onto walkable rim is an ordinary shove; only a blocked step over the platform edge is the moat
+                    // (it put players on dry rim tiles in the water state: crocodile + no attacks, and a ramp they could not climb).
+                    val intoWater = !canStep && !onPlatform(next)
                     if (canStep || intoWater) { p.stopMovement(); p.teleportTo(next) }
                     if (intoWater) onWater(p, next)
                 }
-                segments.forEach { it.moveTo(it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())) }
+                segments.forEach { gg.rsmod.plugins.content.activity.toa.ToaSlide.step(it, it.tile.transform(direction.getDeltaX(), direction.getDeltaZ())) } // N606
                 later(interval) { advance(current.map { it.transform(direction.getDeltaX(), direction.getDeltaZ()) }, left - 1) }
             }
             advance(row, steps)
         }
-        override fun close() { water.keys.toList().forEach { if (eligible(it)) climbUp(it); leaveWater(it) }; bleeding.clear(); acidExposure.clear(); pending.clear(); clearAcid { true }; rocks.clear(); jugs.clear(); specialNpcs.clear(); super.close() }
+        override fun close() {
+            // N606: Zebak's death (pre-death closes the session) - the tail plays its own death clip (cache2686 seq9635
+            // npc_zebak02_death, with the body's 9634) and goes when the body goes; ToaBossRooms then places both corpses.
+            tail?.takeIf { npc.isDead() && it.isSpawned() }?.let { t ->
+                children.remove(t)
+                ToaBossFx.seqFor(t, 9635).takeIf { it >= 0 }?.let { t.animate(it) }
+                // Inside a world queue 'npc' is QueueTask.npc (ctx as Npc, ctx = World) - capture the body first (13-11 ClassCastException).
+                val body = npc
+                val world = npc.world
+                world.queue {
+                    while (body.isSpawned()) wait(1)
+                    if (t.isSpawned()) world.remove(t)
+                }
+            }
+            closeSession()
+        }
+        private fun closeSession() { water.keys.toList().forEach { if (eligible(it)) climbUp(it); leaveWater(it) }; bleeding.clear(); acidExposure.clear(); pending.clear(); clearAcid { true }; rocks.clear(); jugs.clear(); specialNpcs.clear(); super.close() }
     }
 }

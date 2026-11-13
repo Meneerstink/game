@@ -78,6 +78,7 @@ class ToaWardensReachTests {
                 assertEquals(40, hit.hitmarks.single().damage)
             }
             session.exposeCore()
+            repeat(WardensCombat.CORE_FLIGHT + 1) { session.cycle() } // N606: the core flies out first; exposeCore ran outside a cycle -> +1 (due events run before tick++)
             val core = assertNotNull(session.core)
             val coreTile = core.tile
             val route = BFSPathFindingStrategy(source.collision).calculateRoute(

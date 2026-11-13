@@ -80,9 +80,17 @@ object ToaBossRooms {
             // first dead tick would close the scope and cut the animation). The generation token ignores a death after a wipe/retry.
             scope.queue {
                 var died = false
+                var at = npc.tile
+                var facing = npc.faceDirection
                 while (npc.isSpawned() && npc.attr[ENCOUNTER_DONE] != true) {
-                    if (npc.isDead()) died = true
+                    if (npc.isDead() && !died) { died = true; at = npc.tile; facing = npc.faceDirection }
                     wait(1)
+                }
+                // N606: Kephri / Zebak (+ tail) leave their cache2686 corpse npc where they died once the death sequence has played.
+                // The tail is 9x9 on Zebak's own origin (ZebakCombat), so both corpses share the tile; both are spawned facing EAST.
+                if (died) when (spawn.encounter) {
+                    "kephri" -> raid.corpse(11722, at, facing)
+                    "zebak" -> { raid.corpse(11733, at, gg.rsmod.game.model.Direction.EAST); raid.corpse(11734, at, gg.rsmod.game.model.Direction.EAST) }
                 }
                 if (died || npc.attr[ENCOUNTER_DONE] == true) run.clear(raid.world.currentCycle)
             }

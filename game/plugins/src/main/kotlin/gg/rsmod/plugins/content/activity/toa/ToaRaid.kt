@@ -44,6 +44,9 @@ class ToaRaid(val id: Long, val roster: List<PlayerUID>, val settings: ToaRaidSe
     var completion: ToaCompletion? = null
         private set
 
+    /** N606: leaves a demi-boss corpse in its arena (ToaScene.corpse); [at] is an instance tile. */
+    fun corpse(osrs: Int, at: gg.rsmod.game.model.Tile, facing: gg.rsmod.game.model.Direction) { scene?.corpse(osrs, at, facing) }
+
     fun prepare(members: List<Player> = players()) {
         check(scene == null && !closed)
         members.forEach { memberNames[it.uid] = it.username }

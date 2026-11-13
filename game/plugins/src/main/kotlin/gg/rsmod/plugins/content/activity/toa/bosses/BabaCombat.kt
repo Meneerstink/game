@@ -327,7 +327,7 @@ object BabaCombat : CombatScript() {
             if (!rolling || !rock.isSpawned() || rock.isDead()) return
             if (steps == 0) { boulders.remove(rock); remove(rock); return }
             val next = rock.tile.transform(direction.getDeltaX(), direction.getDeltaZ())
-            rock.moveTo(next)
+            gg.rsmod.plugins.content.activity.toa.ToaSlide.step(rock, next) // N606: walk, not moveTo (boulders were never on the client)
             (baboons + debris).filter { overlaps(it.tile, it.getSize(), next, rock.getSize()) }.toList().forEach { remove(it); baboons.remove(it); debris.remove(it) }
             players().filter { p -> rollingContact(p.tile, next, rock.getSize(), direction) }.forEach { p ->
                 attack(p, ToaScale.damage(damage, context), null, accuracy = false)

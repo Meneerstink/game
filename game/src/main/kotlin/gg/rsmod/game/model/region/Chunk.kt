@@ -382,7 +382,33 @@ class Chunk(
         return true
     }
 
+    /**
+     * N606 12-11 (ToA visual trace): every zone update the server creates for a tile graphic, a loc spawn/removal or a loc animation, so
+     * the server side of each graphic is in the log next to the client's [effect] lines (projectiles and entity graphics already were).
+     */
     private fun <T : Entity> createUpdateFor(
+        entity: T,
+        spawn: Boolean,
+    ): EntityUpdate<*>? {
+        // Own flag (effecttrace.on, laptop only): live runs with avtrace on, and logging every loc swap of a ToA room change cost a
+        // 2-4 s tick on the test server (12-11 22:2x) - this trace must never ride along on AvTrace alone.
+        if (EFFECT_TRACE && AvTrace.enabled) {
+            val t = entity.tile
+            val line = when (entity) {
+                is TileGraphic -> "tilegfx id=${entity.id} at=${t.x},${t.z},${t.height} height=${entity.height} delay=${entity.delay} rot=${entity.rotation}"
+                is TileAnimation -> "locanim loc=${entity.gameObject.id} at=${t.x},${t.z},${t.height} anim=${entity.animation}"
+                // Only locs placed/removed while the game runs (mechanics): every static map loc also passes here at world load
+                // (N606 first run: ~1 million lines, the test server never came up).
+                is GameObject -> if (entity.entityType != EntityType.DYNAMIC_OBJECT) null else
+                    "loc ${if (spawn) "spawn" else "remove"} id=${entity.id} at=${t.x},${t.z},${t.height} type=${entity.type} rot=${entity.rot}"
+                else -> null
+            }
+            if (line != null) AvTrace.log { line }
+        }
+        return createUpdateFor0(entity, spawn)
+    }
+
+    private fun <T : Entity> createUpdateFor0(
         entity: T,
         spawn: Boolean,
     ): EntityUpdate<*>? =
@@ -489,6 +515,8 @@ class Chunk(
     }
 
     companion object {
+        /** N606 visual trace switch: only where the file exists (never on live). */
+        private val EFFECT_TRACE: Boolean = java.io.File(gg.rsmod.game.RspsPaths.root("effecttrace.on")).exists()
         /**
          * The size of a chunk, in tiles.
          */

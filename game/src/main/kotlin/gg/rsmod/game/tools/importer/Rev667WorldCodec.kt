@@ -270,6 +270,9 @@ class Rev667LocType(val id: Int) {
     /** Every opcode [decode] read, in order (LocForceDecorTool: is op 73 forcedecor already there). */
     val opcodes = mutableListOf<Int>()
 
+    /** Byte offset of each opcode in [opcodes] (same index) - LocAmbientTool rewrites the value after opcode 29 in place. */
+    val opcodeOffsets = mutableListOf<Int>()
+
     companion object {
         fun decode(
             id: Int,
@@ -281,6 +284,7 @@ class Rev667LocType(val id: Int) {
                 val op = buf.u8()
                 if (op == 0) break
                 def.opcodes += op
+                def.opcodeOffsets += buf.position - 1
                 when (op) {
                     1, 5 -> {
                         // Opcode 5 carries two shape/model lists (main + low-detail), exactly as the

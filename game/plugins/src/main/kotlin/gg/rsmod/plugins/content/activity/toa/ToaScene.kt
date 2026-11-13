@@ -13,6 +13,7 @@ class ToaScene(private val raid: ToaRaid) {
     private var osmumten: Npc? = null
     private var wardensOsmumten: Npc? = null
     private val pathOsmumten = hashMapOf<ToaPath, Npc>()
+    private val corpses = mutableListOf<Npc>()
 
     init {
         ToaMultilocs.placeRaid(raid)
@@ -81,6 +82,21 @@ class ToaScene(private val raid: ToaRaid) {
         }
     }
 
+    /**
+     * N606 (13-11): a demi-boss's corpse. cache2686 has an option-less npc per corpse whose stand is the one-tick dead pose of the boss
+     * rig - 11722 toa_kephri_boss_dead (9583), 11733 toa_zebak_dead (9636), 11734 toa_zebak_tail_dead (9637) - placed where the boss
+     * died once its death sequence has ended (local ids: ToaCorpseNpcTool). ONZEKER: how long OSRS keeps it is unpublished -> until the
+     * raid closes. [at] is an instance tile.
+     */
+    fun corpse(osrs: Int, at: Tile, facing: gg.rsmod.game.model.Direction) {
+        val id = ToaIds.npc(osrs) ?: return
+        val npc = Npc(id, at, raid.world)
+        npc.setSpawnFacing(facing)
+        if (!raid.world.spawn(npc)) return
+        npc.respawns = false; npc.walkRadius = 0
+        corpses += npc
+    }
+
     fun openChest(player: Player, obj: GameObject): Boolean {
         if (!raid.progress.finished || !raid.contains(player)) return false
         val index = raid.roster.indexOf(player.uid)
@@ -97,6 +113,7 @@ class ToaScene(private val raid: ToaRaid) {
         osmumten?.let { raid.world.remove(it) }; osmumten = null
         wardensOsmumten?.let { raid.world.remove(it) }; wardensOsmumten = null
         pathOsmumten.values.forEach { raid.world.remove(it) }; pathOsmumten.clear()
+        corpses.forEach { if (it.isSpawned()) raid.world.remove(it) }; corpses.clear()
         placed.clear() // The allocator releases all owned scenery/collision with this instance.
     }
 

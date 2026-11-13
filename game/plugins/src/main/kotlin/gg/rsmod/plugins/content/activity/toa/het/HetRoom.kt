@@ -182,7 +182,7 @@ class HetRoom(private val raid: ToaRaid) : ToaRoom {
             if (next.x !in b.layout.minX..b.layout.maxX || next.z !in b.layout.minZ..b.layout.maxZ || b.blocked(next)) {
                 iterator.remove(); raid.world.remove(orb); continue
             }
-            orb.moveTo(tile(next))
+            gg.rsmod.plugins.content.activity.toa.ToaSlide.step(orb, tile(next)) // N606: walk, not moveTo (orbs were never on the client)
         }
     }
 

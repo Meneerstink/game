@@ -174,6 +174,10 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         val npc = spawn(type.osrs, tile, definition(type, raid.settings.raidLevel).copy(deathAnimation = listOf(death), waitFullDeathAnimation = true))
             ?: return null
         actors[npc] = Actor(npc, type, tick, parent)
+        // N606 (animatiedekking 12-11: NPC_MANDRILL_SPAWN01/02 nooit gespeeld; toagfx: baboons appear in the wall alcove = the OSRS spawn
+        // points): the baboon climbs out of its hole with the cache spawn clip (seq9752, 120 cycles = 4 ticks).
+        // ONZEKER T01: which of SPAWN01/SPAWN02 OSRS uses per hole is unpublished -> SPAWN01; check against a video.
+        if (parent == null) ToaIds.npcSeq(type.osrs, 9752)?.let { npc.animate(it) } ?: missing("npcseq:${type.osrs}:9752")
         return npc
     }
 
@@ -204,6 +208,8 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             if (detonation != null) {
                 if (tick >= detonation) {
                     actor.detonates = Int.MAX_VALUE //One blast even if the lethal hit/death queue is delayed to a later world phase.
+                    // N606: the blast itself (cache2686 spotanim 2249 SPOTANIM_MANDRILL_EXPLODE) was never sent - only the death clip.
+                    players.forEach { ToaPuzzleVisuals.spot(it, 2249, npc.tile) }
                     players.filter { it.tile.isWithinRadius(npc.tile, 1) }.forEach { damage(it, ref.volatileDamage.value(npc.getCurrentLifepoints())) }
                     actors.values.filter { it.npc !== npc && it.npc.tile.isWithinRadius(npc.tile, 1) }.toList().forEach {
                         // Strategies1279: kills nearby baboons regardless of HP. Pets are never in the owned actor collection.
