@@ -561,11 +561,31 @@ object WardensCombat : CombatScript() {
                 phaseTwoTile(phaseTwoWarden), if (phaseTwoWarden == Warden.ELIDINIS) ELIDINIS_P2_STATS else TUMEKEN_P2_STATS)
             animate(9663); lastShieldHit = tick; nextAttack = tick + 13; phaseChanged?.invoke(phase) // measured wake9663=13ticks.
         }
+        /**
+         * [wanted] when walkable, else the first walkable tile stepping from [wanted] towards the Warden's centre (the Warden stands
+         * on the arena floor, so this never picks a tile behind the arena wall); [wanted] if none is found (test fixtures).
+         */
+        fun freeFloor(wanted: Tile): Tile {
+            val clip = npc.world.collision
+            if (!clip.isClipped(wanted)) return wanted
+            val centre = npc.getCentreTile()
+            var t = wanted
+            repeat(10) {
+                val dx = Integer.signum(centre.x - t.x); val dz = Integer.signum(centre.z - t.z)
+                if (dx == 0 && dz == 0) return wanted
+                t = t.transform(dx, dz)
+                if (!clip.isClipped(t)) return t
+            }
+            return wanted
+        }
         fun exposeCore() {
             if (phase != Phase.P2) return
             newPhase(); phase = Phase.CORE; animate(9670); npc.setCurrentLifepoints(1)
             ToaHeadIcons.clear(npc)
-            val tile = coreTile ?: npc.tile.transform(1, -3)
+            // N606 13-11 (round 6 toagfx: Tumeken's core 'volledig in muur' at the south wall): OSRS lands the core on open floor
+            // a few tiles in front of the Warden, next to the player (Kaoz Entry guide 36:24-36:42). Keep the T02 offset, but a
+            // blocked landing tile takes the nearest free floor tile instead.
+            val tile = freeFloor(coreTile ?: npc.tile.transform(1, -3))
             val duration = coreExposure(coreHealth, coreMaximum)
             // N606 / Wiki ('Tumeken's Warden core ejection and destruction'): the core is EJECTED - it flies out of the Warden as
             // cache PROJECTILE_WARDEN_TUMEKEN_CORE 2239 / ELIDINIS_CORE 2240 and only then lies on the floor.

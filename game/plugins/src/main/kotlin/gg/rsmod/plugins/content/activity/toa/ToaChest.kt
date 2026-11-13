@@ -147,6 +147,27 @@ object ToaChest {
     /** Wiki ToA Rewards: a rolled unique makes the flames around Osmumten's sarcophagus glow purple ([ToaScene.vault]). */
     private fun glowPurple(raid: ToaRaid) = raid.vaultPurple()
 
+    /**
+     * N609 13-11 (eigenaar 'de bot pakte de reward jewel of sun was noted, vermoedelijk meer toa rewards zo'), TEST SERVER ONLY via
+     * '::toatest lootall <page>': puts every ToA reward (27 commons + fossilised dung noted as the Chest wiki table lists them, all uniques,
+     * jewels, thread, pet, clue, kits, remnants unnoted) in this player's escrow, 28 per page, so the chest window shows each icon once.
+     */
+    fun testAllLoot(player: Player, raid: ToaRaid, page: Int): Int {
+        val drops = ToaLoot.Common.values().map { it.osrsItem to it.noted } + (ToaLoot.FOSSILISED_DUNG to true) +
+            ToaLoot.Unique.values().map { it.osrsItem to false } +
+            (ToaLoot.JEWELS + ToaLoot.THREAD_OF_ELIDINIS + ToaLoot.TUMEKENS_GUARDIAN + ToaLoot.CLUE_SCROLL_ELITE +
+                ToaLoot.CHALLENGE_KITS + ToaLoot.REMNANTS).map { it to false }
+        val items = drops.mapNotNull { (osrs, isNoted) ->
+            ToaLootItems.local(osrs)?.let { ToaRewardItem(if (isNoted) noted(player, it) else it, 1) }
+                ?: run { player.message("lootall: OSRS $osrs niet geimporteerd"); null }
+        }
+        val chunk = items.chunked(28).getOrElse(page) { emptyList() }
+        player.attr.remove(ToaRewards.ESCROW)
+        player.attr[ToaRewards.ESCROW] = ToaPersonalReward.open(null, raid.rewardToken) { chunk }.encode()
+        player.message("lootall page $page: ${chunk.size}/${items.size} ids=${chunk.joinToString(",") { it.id.toString() }}")
+        return chunk.size
+    }
+
     private fun noted(player: Player, id: Int): Int {
         val def = player.world.definitions.getNullable(ItemDef::class.java, id) ?: return id
         return if (!def.noted && def.noteLinkId > 0) def.noteLinkId else id

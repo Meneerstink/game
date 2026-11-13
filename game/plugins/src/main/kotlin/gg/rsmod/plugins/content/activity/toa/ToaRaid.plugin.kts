@@ -196,6 +196,8 @@ on_command("toatest", Privilege.ADMIN_POWER) {
         "wipe" -> raid.progress.current?.wipe(world.currentCycle)
         "wardens" -> raid.enterWardens(player)
         "reward" -> raid.crystal(player, null)
+        // N609: every ToA reward in the chest window (page 0/1), to check icons + noted/unnoted against the Chest wiki table.
+        "lootall" -> ToaChest.testAllLoot(player, raid, player.getCommandArgs().getOrNull(1)?.toIntOrNull() ?: 0)
         // Wardens P2 -> P3 without the core fight (the P2 style alternates per returned core; test accounts carry one style).
         "p3" -> (gg.rsmod.plugins.content.activity.toa.bosses.ToaEncounter.forPlayer(player)
             as? gg.rsmod.plugins.content.activity.toa.bosses.WardensCombat.Session)?.let { it.exposeCore(); it.startPhaseThree(); true } ?: false
