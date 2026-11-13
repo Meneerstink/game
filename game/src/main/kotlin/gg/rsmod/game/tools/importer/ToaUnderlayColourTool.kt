@@ -43,13 +43,23 @@ object ToaUnderlayColourTool {
         // 105 18/61/153 -> 73 (#995566, texture 607) keeps the pink tone. Squares 14164 (+ wherever OSRS 89 sat on 54/104).
         89 to (setOf(54, 104, 73, 134, 105) to 73))
 
-    internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>): Pair<ByteArray, Map<Int, Int>> {
+    /**
+     * N609 17:5x: the same OSRS underlay can need a different local per room - OSRS blends underlay colours with their neighbours, the 667
+     * HD texture does not. OSRS 116 is darker sand next to sand (Apmeken: 134 measured right) but dark olive swamp next to OSRS 132 and
+     * water in Zebak (Kaoz 580-700 s). (OSRS square, OSRS underlay) -> (locals it may hold, local wanted); wins over [TEXTURED].
+     */
+    val TEXTURED_PER_SQUARE: Map<Pair<Int, Int>, Pair<Set<Int>, Int>> = mapOf(
+        // Zebak bank (plane 1 above bridge-flagged water, 15700): trial stripes 134/129/161/0/97 (cam-crondis-room-1759) -> 161 H/S/V
+        // 32/109/91 and 0 31/110/83 match OSRS dark olive 35/124/41 in hue; 161 = the local of the neighbouring OSRS 132 swamp it blends into.
+        (15700 to 116) to (setOf(129, 134, 161, 0, 97) to 161))
+
+    internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>, square: Int = -1): Pair<ByteArray, Map<Int, Int>> {
         val map = Rev667TileCodec.decode(bytes)
         check(Rev667TileCodec.encode(map).contentEquals(bytes)) { "Tile roundtrip failed" }
         val counts = sortedMapOf<Int, Int>()
         for (p in 0..3) for (x in 0..63) for (z in 0..63) {
             val osrs = source[p][x][z].underlayId - 1
-            val (from, want) = TEXTURED[osrs] ?: continue
+            val (from, want) = TEXTURED_PER_SQUARE[square to osrs] ?: TEXTURED[osrs] ?: continue
             val tile = map.tiles[p][x][z]
             val current = (tile.underlayId and 255) - 1
             if (current == want) continue // already applied
@@ -102,7 +112,7 @@ object ToaUnderlayColourTool {
                     val before = requireNotNull(archive.file(0)?.data)
                     check(archive.id == other.id && before.contentEquals(other.file(0)?.data)) { "$name cache copies differ" }
                     val (mid, counts1) = retarget(before, source)
-                    val (after, counts2) = retargetTextured(mid, source)
+                    val (after, counts2) = retargetTextured(mid, source, square)
                     val counts = counts1 + counts2
                     println("UNDERLAY_COLOUR source=$square target=$name retargeted=$counts1 textured=$counts2")
                     if (!before.contentEquals(after)) mutations += CacheMutation(5, archive.id, 0, after,
