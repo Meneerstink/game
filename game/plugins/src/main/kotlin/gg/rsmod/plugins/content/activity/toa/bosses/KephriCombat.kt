@@ -291,10 +291,9 @@ object KephriCombat : CombatScript() {
             // (2156-2159). Kaoz Entry guide 889.4-892.4 s: orange drop from high above, yellow-orange burst, dark shadow. Was 2147/2148
             // = the kamikaze scarab PROJECTILE drawn as a floor graphic. ONZEKER: which explosion variant per tile (random).
             val shadow = when (impact) { 4 -> 1447; 3 -> 1446; 2 -> 2111; else -> -1 }
-            targetTiles.forEach { t ->
-                ToaBossFx.fallProjectile(npc, centre, t, 2266, impact)
-                if (shadow >= 0) gfx(shadow, t)
-            }
+            // N609 14-11: first the pre-fireball 1481 rising from her back, then 2266 onto the tiles (ToaBossFx.kephriBomb, video source).
+            ToaBossFx.kephriBomb(npc, centre, targetTiles, impact)
+            targetTiles.forEach { t -> if (shadow >= 0) gfx(shadow, t) }
             later(impact) {
                 targetTiles.forEach { gfx(BOMB_EXPLOSIONS[npc.world.random(BOMB_EXPLOSIONS.lastIndex)], it) }
                 val radius = 0

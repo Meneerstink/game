@@ -40,13 +40,34 @@ object ToaBossFx {
      * drop comes down from well above Kephri onto the target tile). ONZEKER T01: start height / slope are measured against the video,
      * the OSRS packet values are not known.
      */
-    fun fallProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int, startHeight: Int = 220) {
+    fun fallProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int, startHeight: Int = 220,
+                       delay: Int = 0) {
         val gfx = spot(osrs) ?: return
         source.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder()
             .setTiles(start = from, target = to).setGfx(gfx = gfx)
             .setHeights(startHeight = startHeight, endHeight = 0)
             .setSlope(angle = 0, steepness = 0)
-            .setTimes(delay = 0, lifespan = ticks.coerceAtLeast(1) * 30).build())
+            .setTimes(delay = delay, lifespan = ticks.coerceAtLeast(1) * 30).build())
+    }
+
+    /**
+     * N609 14-11: the Kephri bomb in two stages. Source: Kephri guide (d2\kephri-guide.mp4 03:22-03:27, captions 'shoot a fireball from
+     * her butt which will explode in mid-air and then start making its way towards the tile'; frames 202.45-202.9 s a big dark round ball
+     * rising above Kephri, from 203.05 s the small orange flame falling onto the tiles) + ToA Extended Kephri/WardenP3
+     * PROJECTILE_ID_PRE_FIREBALL 1481 (VORKATH_AREA_TRAVEL, no target tile) and PROJECTILE_ID_FIREBALL 2266 (VORKATH_AREA_TRAVEL_SMALL).
+     * 1481 rises straight up from [from] for the first tick, then 2266 falls onto each tile until [ticks] (the dodge time is unchanged).
+     * ONZEKER T01: heights/timing measured against the video, the OSRS packet values are not known.
+     */
+    fun kephriBomb(source: Npc, from: gg.rsmod.game.model.Tile, tiles: List<gg.rsmod.game.model.Tile>, ticks: Int) {
+        spot(1481)?.let { gfx ->
+            source.world.spawn(gg.rsmod.game.model.entity.Projectile.Builder()
+                .setTiles(start = from, target = from).setGfx(gfx = gfx)
+                .setHeights(startHeight = 90, endHeight = 220)
+                .setSlope(angle = 0, steepness = 0)
+                .setTimes(delay = 0, lifespan = 30).build())
+        }
+        val rise = if (ticks >= 2) 30 else 0
+        tiles.forEach { fallProjectile(source, from, it, 2266, ticks, delay = rise) }
     }
     /** N606: tile-to-tile flight (ejected cores, spat objects) - the projectile lands on the floor after [ticks]. */
     fun tileProjectile(source: Npc, from: gg.rsmod.game.model.Tile, to: gg.rsmod.game.model.Tile, osrs: Int, ticks: Int,

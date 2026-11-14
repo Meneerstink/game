@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.ext.closeInterface
 import gg.rsmod.plugins.api.ext.isInterfaceVisible
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.setComponentHidden
+import gg.rsmod.plugins.content.mechanics.hud.ClientHudConfig
 import gg.rsmod.plugins.api.ext.setComponentPosition
 import gg.rsmod.plugins.api.ext.setComponentSprite
 import gg.rsmod.plugins.api.ext.setComponentText
@@ -39,11 +40,17 @@ object ToaHudUi {
         // (client freezes, U5 packet spam). Open once; later draws only set texts.
         if (player.isInterfaceVisible(iface)) return
         player.openInterface(iface, InterfaceDestination.PVP_OVERLAY)
+        player.attr.remove(ORBS_HIDDEN) // a freshly opened HUD shows the orbs again
+
         // N606 13-11: OSRS toa_hud_init runs interface_dodger_init(dodger 481:2, content, 65256, left, top); its review (osrs-dumps
         // [proc,interface_dodger_review] 194-196) moves a left/centre top HUD with bit 10 down 23 px below the mouseover-text row on
         // desktop. The ported 481 cannot run that onLoad script, so the dodger stood at 0 and 'Walk here' covered 'Level: N'.
         player.setComponentPosition(iface, DODGER, 0, DODGER_MOUSEOVER_OFFSET)
     }
+
+    /** OSRS 481:4 = the party HP orb column (ToA Extended HpOrbManager WIDGET_ID_ORBS); last state sent to this client. */
+    private const val ORBS = 4
+    private val ORBS_HIDDEN = gg.rsmod.game.model.attr.AttributeKey<Boolean>()
 
     /** OSRS 481:2 toa_hud:dodger and the interface_dodger mouseover-text offset (bit 10 of 65256). */
     private const val DODGER = 2
@@ -53,9 +60,26 @@ object ToaHudUi {
         ToaInterfaces.of(ToaInterfaces.HUD)?.let { player.closeInterface(it) }
     }
 
+    /**
+     * N609 14-11: ToA Extended 'Hide HP Orbs' (HpOrbManager: hides WidgetInfo.PACK(481, 4) after toa_hud_draw 6579 in the lobby/raid,
+     * only with the plugin on). Called every raid tick (ToaUi.everyTick), sends only on a change (U5). Hides 481:4 and the 8 slot
+     * containers (6 + 4i); true = the column came back, so the caller redraws the party.
+     */
+    fun syncOrbs(player: Player): Boolean {
+        val iface = ToaInterfaces.of(ToaInterfaces.HUD) ?: return false
+        if (!player.isInterfaceVisible(iface)) return false
+        val hide = ClientHudConfig.bool(player, "toaextended.enabled") && ClientHudConfig.bool(player, "toaextended.hideHpOrbs")
+        if ((player.attr[ORBS_HIDDEN] ?: false) == hide) return false
+        player.attr[ORBS_HIDDEN] = hide
+        player.setComponentHidden(iface, ORBS, hide)
+        if (hide) for (i in 0 until 8) player.setComponentHidden(iface, 6 + 4 * i, true)
+        return !hide
+    }
+
     /** [slots] in party order (index = party slot), [self] = this player's slot. */
     fun drawParty(player: Player, slots: List<Slot?>, self: Int) {
         val iface = ToaInterfaces.of(ToaInterfaces.HUD) ?: return
+        if (player.attr[ORBS_HIDDEN] == true) return // syncOrbs keeps the column hidden
         for (i in 0 until 8) {
             val slot = slots.getOrNull(i)
             val container = 6 + 4 * i

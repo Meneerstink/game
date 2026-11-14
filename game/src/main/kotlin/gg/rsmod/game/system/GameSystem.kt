@@ -283,6 +283,12 @@ class GameSystem(
             traceOutgoing(message)
         }
         gg.rsmod.game.model.Probe.message(client, message)
+        // N609 14-11: the game-message packet is variable-byte (< 256 bytes); GamePacketEncoder dropped longer ones silently (::botstate,
+        // ::toastate). Split at send time only: the trace above keeps the full line the test scripts read.
+        if (message is gg.rsmod.game.message.impl.MessageGameMessage && message.message.toByteArray().size > MAX_GAME_MESSAGE_BYTES) {
+            splitGameMessage(message.message).forEach { channel.write(message.copy(message = it)) }
+            return
+        }
         channel.write(message)
     }
 
@@ -369,6 +375,27 @@ class GameSystem(
         /** Interface 746 / 548 components whose cache onOp is clientscript 1303 (InterfaceHookProbeTool, 2026-10-02). */
         private val CLIENT_TAB_STONES: Set<Pair<Int, Int>> =
             ((39..54) + 176).map { 746 to it }.toSet() + ((99..106) + (129..136)).map { 548 to it }
+
+        /** Text bytes per game message: 255 minus type/flag/username header (username max 12 + 0), with margin. */
+        internal const val MAX_GAME_MESSAGE_BYTES = 220
+
+        /** Splits [text] into parts of at most [max] bytes, at the last space/comma, never inside a `<...>` tag. */
+        internal fun splitGameMessage(text: String, max: Int = MAX_GAME_MESSAGE_BYTES): List<String> {
+            val parts = mutableListOf<String>()
+            var rest = text
+            while (rest.toByteArray().size > max) {
+                var cut = max.coerceAtMost(rest.length)
+                while (cut > 1 && rest.substring(0, cut).toByteArray().size > max) cut--
+                val open = rest.lastIndexOf('<', cut - 1)
+                if (open > 0 && rest.indexOf('>', open) >= cut) cut = open
+                val brk = maxOf(rest.lastIndexOf(' ', cut - 1), rest.lastIndexOf(',', cut - 1))
+                if (brk > cut / 2) cut = brk + 1
+                parts += rest.substring(0, cut).trimEnd()
+                rest = rest.substring(cut).trimStart()
+            }
+            if (rest.isNotEmpty()) parts += rest
+            return parts
+        }
 
         /** Debug toolkit: ticks a click may take before "click did nothing" is reported. */
         private const val SILENT_CLICK_CYCLES = 3

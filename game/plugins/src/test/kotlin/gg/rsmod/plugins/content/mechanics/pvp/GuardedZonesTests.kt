@@ -163,4 +163,14 @@ class GuardedZonesTests {
         val yanille = GuardedZones.ZONES.first { it.name == "Yanille" }
         assertTrue((-2..2).any { dx -> (-2..2).any { dz -> yanille.contains(Tile(2614 + dx, 3104 + dz, 0)) } }, "snap target within 2 tiles")
     }
+
+    @Test
+    fun `the Tombs of Amascut lobby is guarded, the square around it is not`() {
+        // N609 14-11 (owner: 'de entree lobby toa dangerous zone'): the lobby (ToaMap.LOBBY landing, entry 3357,9112) is safe like the
+        // Pest Control lander decks; the raid instance itself was already guarded (ToaLobby.isRaidTile).
+        assertTrue(GuardedZones.contains(gg.rsmod.plugins.content.activity.toa.ToaMap.LOBBY))
+        assertTrue(GuardedZones.contains(Tile(3357, 9112, 0)))
+        assertFalse(GuardedZones.contains(Tile(3359, 9114, 1)), "only the lobby plane")
+        assertFalse(GuardedZones.contains(Tile(3340, 9114, 0)), "outside the lobby box")
+    }
 }

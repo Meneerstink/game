@@ -19,6 +19,8 @@ if (ToaInterfaces.of(ToaInterfaces.HUD) != null) {
         }
         previous(player, state)
     }
+    val previousTick = ToaUi.everyTick
+    ToaUi.everyTick = { player -> ToaHudUi.syncOrbs(player) or previousTick(player) }
 }
 
 if (ToaInterfaces.of(ToaInterfaces.REWARDS) != null) {
