@@ -879,6 +879,32 @@ gg.rsmod.game.CommandServerCommands.handlers["dlg"] = { w, a ->
         "dlg ${option ?: "continue"} for ${p.username}"
     else "no handler"
 }
+// `botlogin <name> <x> <z> [height]` / `botlogout <name>` (15-11 00:2x): a test player WITHOUT a client (conformance bot: real Client
+// without a socket, 99 all, never saved) - logic tests no longer depend on a client that has to draw (owner watches YouTube: a hidden
+// client times out on hook login/keys/shots). Drive it with the usual `as`/`opnpc`/`opheld`/`dlg` commands.
+val cmdBots = mutableMapOf<String, gg.rsmod.game.model.entity.Client>()
+gg.rsmod.game.CommandServerCommands.handlers["botlogin"] = { w, a ->
+    val name = a.getOrNull(0)
+    val n = a.drop(1).map { it.toIntOrNull() }
+    if (name == null || n.size < 2 || n.take(2).any { it == null }) "usage: botlogin <name> <x> <z> [height]"
+    else if (w.getPlayerForName(name) != null) "$name is already online"
+    else {
+        val bot = gg.rsmod.plugins.content.cmd.conformance.Bots.create(w, gg.rsmod.game.model.Tile(n[0]!!, n[1]!!, n.getOrNull(2) ?: 0), name)
+        cmdBots[name] = bot
+        "bot $name online at ${bot.tile.x},${bot.tile.z},${bot.tile.height}"
+    }
+}
+gg.rsmod.game.CommandServerCommands.handlers["botlogout"] = { w, a ->
+    val bot = cmdBots.remove(a.getOrNull(0) ?: "")
+    if (bot == null) "usage: botlogout <name> (a bot made with botlogin)"
+    else {
+        // Player.handleLogout without the save (as toa_bot.logoutBot): the same hooks a real logout runs.
+        runCatching { bot.interruptQueues() }
+        runCatching { bot.world.plugins.executeLogout(bot) }
+        runCatching { bot.world.unregister(bot) }
+        "bot ${bot.username} logged out"
+    }
+}
 // N415 test: `ma2where <name>` - the player's current follower locations (point index, south-west tile) and rotation steps left.
 gg.rsmod.game.CommandServerCommands.handlers["ma2where"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
