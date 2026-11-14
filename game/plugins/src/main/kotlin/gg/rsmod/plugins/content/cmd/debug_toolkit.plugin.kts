@@ -868,6 +868,17 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
         "${p.username} Mage Arena state $stage"
     }
 }
+// `dlg <name> [option 1-5]` (15-11 00:1x): answers the player's open dialogue from the server - no option = 'Click here to continue',
+// an option = that choice (options() reads button - 1). Same ResumePauseButton message the client sends, so scripts no longer need the
+// client to draw (a client hidden behind other windows does not process hook keys; owner watches YouTube).
+gg.rsmod.game.CommandServerCommands.handlers["dlg"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val option = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || (option != null && option !in 1..5)) "usage: dlg <name> [option 1-5]"
+    else if (p.gameSystem.inject(gg.rsmod.game.message.impl.ResumePauseButtonMessage(0, 0, (option ?: 0) + 1)))
+        "dlg ${option ?: "continue"} for ${p.username}"
+    else "no handler"
+}
 // N415 test: `ma2where <name>` - the player's current follower locations (point index, south-west tile) and rotation steps left.
 gg.rsmod.game.CommandServerCommands.handlers["ma2where"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
