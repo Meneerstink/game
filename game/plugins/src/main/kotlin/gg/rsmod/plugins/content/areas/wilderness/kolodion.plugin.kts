@@ -1,14 +1,11 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
-import gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA
-import gg.rsmod.plugins.content.magic.TeleportType
-import gg.rsmod.plugins.content.magic.teleport
 
 val kolodion = Npcs.KOLODION
 
 on_npc_option(kolodion, option = "talk-to") {
     player.queue {
-        if (player.attr.has(COMPLETED_MAGE_ARENA)) {
+        if (MageArena.completed(player)) {
             mageArenaCompletedDialogue(this)
         } else {
             kolodionDialogue(this)
@@ -80,7 +77,10 @@ suspend fun yesIndeedy(it: QueueTask) {
 }
 
 suspend fun okayLetsFight(it: QueueTask) {
-    val playerSpawnTile = Tile(x = 3104, z = 3933)
+    if (it.player.skills.getMaxLevel(Skills.MAGIC) < 60) {
+        it.chatNpc("Hah! A wizard of your level? Don't be absurd.")
+        return
+    }
     it.chatPlayer("Okay, let's fight.")
     it.chatNpc("I must first check that you are up to scratch.")
     it.chatPlayer("You don't need to worry about that.")
@@ -90,7 +90,7 @@ suspend fun okayLetsFight(it: QueueTask) {
         "you must prove yourself against me.",
     )
     // The player is teleported to the Mage Arena to fight against Kolodion
-    it.player.teleport(playerSpawnTile, TeleportType.MODERN)
+    MageArena.start(it.player)
     // (End of dialogue)
 }
 
