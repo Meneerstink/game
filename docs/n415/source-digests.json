@@ -1,0 +1,92 @@
+[
+  {
+    "page": "Ancient_fabric",
+    "sha256": "e9e6e9b591a4453ce922894bb4095842b60f6fb10a64e8bb2dc25288a6ee76d4",
+    "bytes": 1062
+  },
+  {
+    "page": "Demon's_heart",
+    "sha256": "8771a59743254af6478b8a411105fbe3ea0e157b37122873d0b535776e2f202a",
+    "bytes": 1247
+  },
+  {
+    "page": "Derwen",
+    "sha256": "3cab894b0fffbfe72ce41f4d7885511d641ab0ba38386aa4793a2a4e130434b4",
+    "bytes": 2856
+  },
+  {
+    "page": "Enchanted_symbol",
+    "sha256": "7130fb90507af13ca2168d637a6dd47bec5aac24f1a152a9944ba4ef7b2b68af",
+    "bytes": 3463
+  },
+  {
+    "page": "Energy_ball",
+    "sha256": "cc0875b8b4853e32ebc6f9a214d4b8ed953fccb83a2ad381e6eaf38694745d8a",
+    "bytes": 319
+  },
+  {
+    "page": "Ent's_roots",
+    "sha256": "84dd58d20611c29124a1b9c5627f7c5c2e028a215d9564e854104c875e43646e",
+    "bytes": 1212
+  },
+  {
+    "page": "Imbued_ancient_cape",
+    "sha256": "f4dbc3e6ab701b27b3c3342c3b69c9b9201ea76140cf33d4f9ecffab88b58331",
+    "bytes": 3190
+  },
+  {
+    "page": "Imbued_ancient_max_cape",
+    "sha256": "9756bd1946c232608f2339ef7c4e274adb9c3c5a05cfe919363ed5f697f58e75",
+    "bytes": 4303
+  },
+  {
+    "page": "Justiciar's_hand",
+    "sha256": "84d118fba9efd9fa1c4fba74005dafb0cdca7a67624d605f651b3dbd8a2d4dd9",
+    "bytes": 1381
+  },
+  {
+    "page": "Justiciar_Zachariah",
+    "sha256": "cb95d86166391d4deafc6848be98ba37e266e6cfe3551d5008e5fdee3dff9b4c",
+    "bytes": 4594
+  },
+  {
+    "page": "Kolodion",
+    "sha256": "80f00905aecba19f553de70290f90acdf6cddbf0e24dfa9e1b8c65b231dc7021",
+    "bytes": 7146
+  },
+  {
+    "page": "Mage_Arena_I",
+    "sha256": "5b05750cf0989130d45187ef1c80f6be3ab5e2efbac09fb697e8db99ab059c3c",
+    "bytes": 8070
+  },
+  {
+    "page": "Mage_Arena_II",
+    "sha256": "6e50ebe70c8d3ea861ef42d324dd57fe2a729d527875dccb39e227e21345d672",
+    "bytes": 20981
+  },
+  {
+    "page": "Map_God_followers_spawn_locations",
+    "sha256": "7e2e6906c76da5bc057725913a37fd6c10f9887c8794c3ef445066f3049d50ed",
+    "bytes": 4203
+  },
+  {
+    "page": "Porazdir",
+    "sha256": "1bdf91e573295a4befb2522e0c0e4ec457eebf642f0d96e179f778b01bcc9d40",
+    "bytes": 4144
+  },
+  {
+    "page": "Transcript_Kolodion",
+    "sha256": "753d36a64597094cf31db7682b0129bab2b0b2ebf26ee5a161ceeed4e4131def",
+    "bytes": 4121
+  },
+  {
+    "page": "Transcript_Mage_Arena_II",
+    "sha256": "2c45f153a7b0ff2c9a7e37e40dffcd6e9924479a84db0814de231b24bf540fde",
+    "bytes": 13311
+  },
+  {
+    "page": "Update_Pete_Kayer's_Challenges",
+    "sha256": "5e9c6c9338d9021da37e5ce732a664d460d075d98f99730e1149d33b2fb2ef87",
+    "bytes": 17754
+  }
+]
