@@ -79,8 +79,10 @@ object ToaGfxAudit {
      *  tile unwalkable on purpose; photobook 13-11 00:2x gave 141 false alarms). Extend only with proof.
      *  45643 = Wardens P3 floor: placed on the void BEFORE WardensCombat.setFloorWalkable(tile, true) opens the tile (round 3 13-11:
      *  247 false alarms, all on the P3 floor grid). 45752 = Ba-Ba sarcophagus: exactly the 8 cache2686 5/15188/1 static placements
-     *  (3803/3808/3813/3818 x 5400/5416, rot 3/1), whose map copy already blocks that tile. */
-    val LOC_OFF_FLOOR_OK = setOf(45649, 45643, 45752)
+     *  (3803/3808/3813/3818 x 5400/5416, rot 3/1), whose map copy already blocks that tile.
+     *  45606..45626 = Wardens charging_platform_0.._20 (N609 14-11): placed exactly on the static blocking platform 45605 it replaces
+     *  (WardensCombat.showCharge looks the map loc up), so 'volledig in muur' is the plinth itself (fx42 test: 1/1 tegels, 6672/6700,32). */
+    val LOC_OFF_FLOOR_OK = setOf(45649, 45643, 45752) + (45606..45626)
 
     fun locPlaced(world: World, osrs: Int, local: Int, tile: Tile, size: Int, players: List<Player>, what: String) {
         if (!enabled || osrs in LOC_OFF_FLOOR_OK) return

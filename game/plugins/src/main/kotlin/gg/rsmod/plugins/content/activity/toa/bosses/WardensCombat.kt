@@ -39,6 +39,8 @@ object WardensCombat : CombatScript() {
     val EARTHQUAKE_GFX = intArrayOf(2220, 2221, 2222, 2223)
     /** Red-skull flight Warden -> siphon tile (Kaoz Entry guide 2358.4-2360.0 s, see [Session.defaultSiphons]). */
     const val SIPHON_FLIGHT = 3
+    /** N609 14-11: charge points per Warden attack = the 20 ring segments of charging_platform_0.._20 (see addEnergy). */
+    const val CHARGE_STEPS = 20
     /** ONZEKER T20: flight of the ejected/returning core projectile (2239/2240 have no seq); see exposeCore. */
     const val CORE_FLIGHT = 2
     val P3_ORIGIN = Tile(3934, 5145, 1)
@@ -162,6 +164,7 @@ object WardensCombat : CombatScript() {
         }
         private val lightningStruck = mutableMapOf<Tile, Int>()
         private var amascut: Npc? = null
+        private var fallenWarden: Npc? = null
         private val uncreditedP2 = mutableSetOf<Npc>()
         private val raidContext = input as? ToaBossRooms.RaidContext
         private val raidRoom = raidContext != null
@@ -201,12 +204,50 @@ object WardensCombat : CombatScript() {
 
         private fun addEnergy(w: Warden) {
             energy[w] = energy.getValue(w) + 1
-            if (energy.getValue(w) >= 8) { energy[w] = 0; wardenCharged(w) }
+            // N609 14-11: OSRS charges a Warden in CHARGE_STEPS steps - the plinth has exactly 21 states
+            // (cache2686 locs 45606..45626 = toa_wardens_default_charging_platform_0.._20, each 6 more red ring faces); Kaoz entry
+            // 2020-2064 s: ~37 ticks from shot to shot with orbs partly blocked. Replaces the ONZEKER threshold 8 (3x too many shots).
+            if (energy.getValue(w) >= CHARGE_STEPS) { energy[w] = 0; wardenCharged(w) }
+            showCharge(w)
         }
+        private val platform = mutableMapOf<Warden, Pair<Tile, Int>?>()
+        private val platformState = mutableMapOf<Warden, Int>()
+        private val platformCleanup = mutableMapOf<Warden, () -> Unit>()
+        /** The static charging platform (map loc 45605) under [w]'s statue: its tile + rotation, looked up once. */
+        private fun platformOf(w: Warden): Pair<Tile, Int>? = platform.getOrPut(w) {
+            val local = ToaBossFx.loc(45605) ?: return@getOrPut null
+            val around = chargingTile(w)
+            (-3..3).flatMap { dx -> (-3..3).map { dz -> around.transform(dx, dz) } }.firstNotNullOfOrNull { t ->
+                npc.world.getObject(t, gg.rsmod.game.model.collision.ObjectType.INTERACTABLE)?.takeIf { it.id == local }?.let { Tile(it.tile) to it.rot }
+            }
+        }
+        /** N609: the red ring on the plinth fills with the Warden's charge (charging_platform_<n>, n = 0..20). */
+        private fun showCharge(w: Warden) {
+            // N609 14-11: the yellow charge bar above the statue (OSRS healthbar 36; our statue npc 11748/11749 carries it as
+            // NPCType opcode 122, ToaChargeBarTool). The bar shows lifepoints/max, so the charge is mirrored into the lifepoints
+            // (>= 1: a pawn at 0 skips its hits) and a bar-only hit (no hitmarks -> no damage, no death check) sends it.
+            charging[w]?.takeIf { it.isSpawned() }?.let { s ->
+                val max = s.getMaximumLifepoints()
+                if (max > 0) {
+                    s.setCurrentLifepoints((max * energy.getValue(w) / CHARGE_STEPS).coerceAtLeast(1))
+                    s.addHit(gg.rsmod.game.model.Hit.Builder().onlyShowHitbar().build())
+                }
+            }
+            val state = (energy.getValue(w) * 20 / CHARGE_STEPS).coerceIn(0, 20)
+            if (platformState[w] == state) return
+            val (tile, rot) = platformOf(w) ?: return
+            platformCleanup.remove(w)?.invoke()
+            platformState[w] = state
+            platformCleanup[w] = placeObject(45606 + state, tile, rot)
+        }
+        /** End of P1: the plinths return to the static map platform. */
+        private fun clearCharge() { platformCleanup.values.toList().forEach { it() }; platformCleanup.clear(); platformState.clear() }
 
         private fun defaultP1() {
             if (charging.isEmpty()) {
-                listOf(Warden.ELIDINIS to 11746, Warden.TUMEKEN to 11747).forEach { (w, id) ->
+                // N609 14-11: the ACTIVE charging statues are OSRS 11748/11749 (TOA_WARDEN_*_PHASE1; 11746/11747 = *_INACTIVE). Their
+                // own local copies carry the charge bar; without ToaChargeBarTool's ids they alias to the old 11753/11756 look.
+                listOf(Warden.ELIDINIS to 11748, Warden.TUMEKEN to 11749).forEach { (w, id) ->
                     spawn(id, chargingTile(w), OBELISK_STATS)?.let { child ->
                         child.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
                         child.faceTile(origin); animate(9665, child) // Cache NPC_WARDENS_DORMANT01 for the charging statues.
@@ -601,8 +642,18 @@ object WardensCombat : CombatScript() {
             // Red Rookie TombsOfAmascutStats 2dc8a8eb:117-120 reads these exact OSRS phase messages.
             message("As ${if (phaseThreeWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden falls, " +
                 "${if (phaseTwoWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden powers up!")
+            // N609 14-11 (eigenaar 'in fase 1/2 is de baas onzichtbaar'; Kaoz entry 2068-2096 s): the Warden that loses P1 is NOT removed -
+            // it collapses on its plinth (DEATH01 9662) and lies there as the damaged non-combat Warden (cache2686 11759/11760
+            // TOA_WARDEN_*_PHASE3_INACTIVE, models 46335/46333, stand IDLE02 9654; RuneLite ToA points trackers list 11759/11760
+            // as the 'non-combat wardens' of the P1->P2 transition) until it is restored for P3.
+            clearCharge()
+            val fallen = charging.remove(phaseThreeWarden)
             charging.values.toList().forEach { remove(it) }; charging.clear()
-            children.toList().forEach { remove(it) }
+            children.toList().forEach { if (it !== fallen) remove(it) }
+            fallenWarden = fallen?.also { f ->
+                ToaBossNpcs.local(if (phaseThreeWarden == Warden.ELIDINIS) 11759 else 11760)?.let { f.setTransmogId(it) }
+                animate(9662, f)
+            }
             ToaBossNpcs.local(11752)?.let { rootNpc.setTransmogId(it) }
             activate(if (phaseTwoWarden == Warden.ELIDINIS) ToaBossNpcs.ELIDINIS_P2 else ToaBossNpcs.TUMEKEN_P2,
                 phaseTwoTile(phaseTwoWarden), if (phaseTwoWarden == Warden.ELIDINIS) ELIDINIS_P2_STATS else TUMEKEN_P2_STATS)
@@ -635,7 +686,12 @@ object WardensCombat : CombatScript() {
         }
         fun exposeCore() {
             if (phase != Phase.P2) return
-            newPhase(); phase = Phase.CORE; animate(9670); npc.setCurrentLifepoints(1)
+            newPhase(); phase = Phase.CORE
+            // N609 14-11: OSRS swaps the Warden for its EXPOSED form while the core is out (cache2686 11755/11758
+            // TOA_WARDEN_*_PHASE2_EXPOSED, stand+walk = KNEELING01 9671, no ops) - it stays kneeling until STANDUP01 9672 in
+            // returnCore(). Before, only KNEEL01 played once and the Warden stood up again at once (idle 9653).
+            ToaBossNpcs.local(if (phaseTwoWarden == Warden.ELIDINIS) 11755 else 11758)?.let { npc.setTransmogId(it) }
+            animate(9670); npc.setCurrentLifepoints(1)
             ToaHeadIcons.clear(npc)
             // N606 13-11 (round 6 toagfx: Tumeken's core 'volledig in muur' at the south wall): OSRS lands the core on open floor
             // a few tiles in front of the Warden, next to the player (Kaoz Entry guide 36:24-36:42). Keep the T02 offset, but a
@@ -682,6 +738,7 @@ object WardensCombat : CombatScript() {
         fun startPhaseThree() {
             if (phase != Phase.CORE) return
             core?.let { remove(it) }; core = null; newPhase(); phase = Phase.P3
+            fallenWarden?.let { remove(it) }; fallenWarden = null // N609: the collapsed P1 Warden is the one restored for P3.
             message("${if (phaseTwoWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden uses the last of its power to restore " +
                 "${if (phaseThreeWarden == Warden.ELIDINIS) "Elidinis'" else "Tumeken's"} Warden!")
             // Root stays in the lower room until the final P3 actor dies.
