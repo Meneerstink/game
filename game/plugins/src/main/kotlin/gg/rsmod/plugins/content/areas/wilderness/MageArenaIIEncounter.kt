@@ -124,6 +124,7 @@ object MageArenaIIEncounter {
         val combatId = localNpc(follower.combat) ?: return null
         val npc = Npc(player, combatId, location.tile, player.world)
         npc.publicOwner = true
+        npc.attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
         npc.respawnOverride = false
         npc.attr[STATE] = State(follower, WeakReference(player), location.point)
         if (!player.world.spawn(npc)) return null
@@ -340,7 +341,10 @@ object MageArenaIIEncounter {
         npc.queue {
             wait(3)
             if (!npc.isAlive() || npc.world.collision.isClipped(tile)) return@queue
-            val ball = Npc(owner, healerId, tile, npc.world).apply { publicOwner = true; respawnOverride = false }
+            val ball = Npc(owner, healerId, tile, npc.world).apply {
+                publicOwner = true; respawnOverride = false
+                attr[gg.rsmod.plugins.content.combat.Combat.OWNER_ONLY_TARGET_ATTR] = true
+            }
             if (!npc.world.spawn(ball)) return@queue
             state.healers += ball
             while (ball.isSpawned() && ball.isAlive() && npc.isSpawned() && npc.isAlive()) {
