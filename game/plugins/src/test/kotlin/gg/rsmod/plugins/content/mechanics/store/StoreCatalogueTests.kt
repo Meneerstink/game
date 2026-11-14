@@ -72,9 +72,12 @@ class StoreCatalogueTests {
 
     @Test
     fun `approved max cape looks keep their Loyalty and Donator offers without auto pricing new variants`() {
+        // N415 owner 3A: the imbued god max looks leave the Donator store once Mage Arena II makes the capes earnable.
+        val imbued = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_GUTHIX_CAPE)
         gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             val unlocks = StoreCatalogue.ENTRIES.filter { it.kind == Kind.UNLOCK && it.purchaseItem == variant.cape }
-            assertEquals(setOf(Shop.LOYALTY, Shop.DONATOR), unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
+            val expected = if (variant.component in imbued) setOf(Shop.LOYALTY) else setOf(Shop.LOYALTY, Shop.DONATOR)
+            assertEquals(expected, unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
             unlocks.forEach { assertEquals(listOf(variant.component), it.requiredBaseItems) }
         }
         gg.rsmod.plugins.content.items.osrs.AncientCape.assets.max?.let { ancient ->

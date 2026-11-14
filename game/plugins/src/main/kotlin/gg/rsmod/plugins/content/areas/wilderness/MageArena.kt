@@ -22,15 +22,29 @@ import java.lang.ref.WeakReference
 
 /** MA1 mechanics. OSRS references and the outstanding OSRS form imports: docs/n415/RESEARCH.md. */
 object MageArena {
-    data class Form(val npc: Int, val hp: Int, val attack: Int, val strength: Int, val defence: Int, val magic: Int, val speed: Int)
+    /**
+     * The OSRS forms KOLHUMAN..KOLDEMON 1605-1609 (RuneLite gameval NpcID), imported by OsrsNpcImportTool batch mage-arena and resolved
+     * through data/cfg/mage-arena/ids.tsv. [legacy] (the old 667 art, troll/dark beast for forms 3/4) only stands in while that
+     * import is absent (unit tests); a release requires the mapping. Animations: each rig's casting / death / block sequence
+     * (gameval HUMAN_CASTING 811, GIANT_CASTING 132, SPIDER_UPDATE_CASTING_LARGE 5322, HUMAN_TRANS_CASTING 812, DEMON_ATTACK 64).
+     */
+    data class Form(val upstream: Int, val legacy: Int, val hp: Int, val attack: Int, val strength: Int, val defence: Int, val magic: Int,
+                    val speed: Int, val cast: Int, val death: Int, val block: Int, val legacyAnims: Triple<Int, Int, Int>) {
+        val npc: Int get() = MageArenaAssets.npc(upstream) ?: legacy
+        val imported: Boolean get() = MageArenaAssets.npc(upstream) != null
+        fun anims(): Triple<Int, Int, Int> {
+            if (!imported) return legacyAnims
+            return Triple(MageArenaAssets.sequence(cast) ?: legacyAnims.first, MageArenaAssets.sequence(death) ?: legacyAnims.second,
+                MageArenaAssets.sequence(block) ?: legacyAnims.third)
+        }
+    }
 
-    // Local 667 art for forms 3/4 is still troll/dark beast: must be replaced by Claude's OSRS import.
     val FORMS = listOf(
-        Form(Npcs.KOLODION_907, 3, 15, 10, 20, 15, 7),
-        Form(Npcs.KOLODION_908, 65, 55, 70, 72, 50, 7),
-        Form(Npcs.KOLODION_11301, 78, 69, 78, 47, 70, 7),
-        Form(Npcs.KOLODION_11302, 78, 28, 23, 58, 30, 7),
-        Form(Npcs.KOLODION_911, 107, 85, 98, 105, 400, 4),
+        Form(1605, Npcs.KOLODION_907, 3, 15, 10, 20, 15, 7, 811, 836, 424, Triple(811, 2888, 404)),
+        Form(1606, Npcs.KOLODION_908, 65, 55, 70, 72, 50, 7, 132, 131, 129, Triple(8577, 8576, 8578)),
+        Form(1607, Npcs.KOLODION_11301, 78, 69, 78, 47, 70, 7, 5322, 5321, 5320, Triple(13790, 13785, 13787)),
+        Form(1608, Npcs.KOLODION_11302, 78, 28, 23, 58, 30, 7, 812, 843, 424, Triple(2731, 2733, 2732)),
+        Form(1609, Npcs.KOLODION_911, 107, 85, 98, 105, 400, 4, 64, 67, 65, Triple(64, 67, 65)),
     )
     val STAFF_BY_CAPE = linkedMapOf(
         Items.SARADOMIN_CAPE to Items.SARADOMIN_STAFF,

@@ -194,7 +194,12 @@ object OsrsNpcImportTool {
             // N415: RuneLite AnimationID ZAMORAK_DEMON_BOSS_*, ENT_BOSS_*, WILD_ZEALOT_*.
             // Combat/special/spawn/death sequences do not all appear in the NPC movement definition.
             "mage-arena" to listOf(7838, 7840, 7841, 7842, 7843, 7844, 7846, 7848, 7849, 7850,
-                7853, 7854, 7962, 7963, 7964, 7965, 7966),
+                7853, 7854, 7962, 7963, 7964, 7965, 7966,
+                // MA1 OSRS Kolodion forms (KOLHUMAN..KOLDEMON 1605-1609): each rig's casting / block / death (gameval names):
+                // GIANT_CASTING 132, GIANT_BLOCK 129, GIANT_DEATH 131 (ogre form on the giant rig); SPIDER_UPDATE_CASTING_LARGE 5322,
+                // _DEFEND_LARGE 5320, _DEATH_LARGE 5321; HUMAN_TRANS_CASTING 812, HUMAN_TRANSDEATH 843, HUMAN_UNARMEDBLOCK 424 (ethereal);
+                // DEMON_ATTACK 64, DEMON_BLOCK 65, DEMON_DEATH 67; HUMAN_CASTING 811 and HUMAN_DEATH 836 (human form).
+                132, 129, 131, 5322, 5320, 5321, 812, 843, 424, 64, 65, 67, 811, 836),
             "mimic" to listOf(8308, 8309, 8310),
             // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
             // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).

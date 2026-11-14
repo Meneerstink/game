@@ -116,7 +116,9 @@ object MageArenaII {
     fun trackable(player: Player, assets: Assets = this.assets): List<God> {
         if (!started(player)) return emptyList()
         return God.values().filter { god ->
-            if (!completed(player)) !delivered(player, god)
+            // Wiki: "Once a follower is defeated, the symbol will no longer track that follower until the miniquest is complete"
+            // (its remains are held or handed in); remains lost again make it trackable again.
+            if (!completed(player)) !delivered(player, god) && !holdsRemains(player, god, assets)
             else assets.remains(god) != null && !holdsRemains(player, god, assets)
         }
     }

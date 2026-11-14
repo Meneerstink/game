@@ -4,11 +4,14 @@ import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.attr.prayedAtStatue
 import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 
-val humanForm = Npcs.KOLODION_907
-val ogreForm = Npcs.KOLODION_908
-val trollForm = Npcs.KOLODION_11301
-val darkBeastForm = Npcs.KOLODION_11302
-val demonForm = Npcs.KOLODION_911
+// OSRS overhead lines per form, in duel order (human, ogre, spider, ethereal, demon).
+val FORM_SHOUTS = listOf(
+    "You must prove yourself... now!",
+    "This is only the beginning; you can't beat me!",
+    "Foolish mortal; I am unstoppable.",
+    "Now you feel it... The dark energy.",
+    "Aaaaaaaarrgghhhh! The power!",
+)
 
 can_equip_any_item { player, item ->
     val allowed = MageArena.canEquip(player, item)
@@ -16,29 +19,11 @@ can_equip_any_item { player, item ->
     allowed
 }
 
-on_npc_spawn(npc = humanForm) {
-    npc.forceChat("You must prove yourself... now!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = ogreForm) {
-    npc.forceChat("This is only the beginning; you can't beat me!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = trollForm) {
-    npc.forceChat("Foolish mortal; I am unstoppable.")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = darkBeastForm) {
-    npc.forceChat("Now you feel it... The dark energy.")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
-}
-
-on_npc_spawn(npc = demonForm) {
-    npc.forceChat("Aaaaaaaarrgghhhh! The power!")
-    npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
+MageArena.FORMS.forEachIndexed { index, form ->
+    on_npc_spawn(npc = form.npc) {
+        npc.forceChat(FORM_SHOUTS[index])
+        npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)
+    }
 }
 
 // Each transformation belongs to one player's duel; there is no ordinary monster loot/respawn.
@@ -60,11 +45,10 @@ MageArena.FORMS.forEachIndexed { index, form ->
             ranged = 1
         }
         anims {
-            val existing = listOf(Triple(811, 2888, 404), Triple(8577, 8576, 8578),
-                Triple(13790, 13785, 13787), Triple(2731, 2733, 2732), Triple(64, 67, 65))[index]
-            attack = existing.first
-            death = existing.second
-            block = existing.third
+            val (cast, death, block) = form.anims()
+            attack = cast
+            this.death = death
+            this.block = block
         }
         aggro { radius = 0 } // The duel explicitly targets its owner after landing/each transformation.
         if (index == MageArena.FORMS.lastIndex) {

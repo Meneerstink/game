@@ -423,9 +423,12 @@ object StoreCatalogue {
         list += itemEntry(l, 23570, 25_000, "Clue cosmetics") // Ring of 3rd Age
 
         // Max cape look unlocks (owner 2026-09-19): earnable with Loyalty Points and buyable with Donator Points.
+        // N415 owner 2026-11-14 20:0x (3A): with Mage Arena II live the imbued god capes are earnable, so their max cape looks leave the
+        // Donator store; looks already bought stay unlocked (stored per player), the Loyalty offer is unchanged.
+        val imbuedGodCapes = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_GUTHIX_CAPE)
         gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             list += lookUnlockEntry(l, variant, 20_000)
-            list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
+            if (variant.component !in imbuedGodCapes) list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
         }
         // OSRS pets (owner 2026-09-30): tier 1 Donator, tier 2 Deadman, tier 3 Loyalty; boss-drop pets are never sold (StorePets).
         list += StorePets.entries()

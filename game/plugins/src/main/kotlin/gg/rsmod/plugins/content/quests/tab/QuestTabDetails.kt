@@ -28,10 +28,11 @@ object QuestTabDetails {
             ?: (FoundationQuests.SHORT + FoundationQuests.COMPLETED).firstOrNull { it.name == canonical(name) }
 
     fun open(player: Player, name: String) {
-        if (name == "Mage Arena I" || name == "Mage Arena II") {
+        // N415: MA1 has no registered Quest (no classic quest slot): its journal directly. MA2 is the registered MageArenaIIQuest
+        // and opens the same overview as every other quest (its journal through getObjective).
+        if (name == "Mage Arena I") {
             val journal = gg.rsmod.plugins.content.areas.wilderness.MageArenaJournal
-            val lines = if (name == "Mage Arena I") journal.first(player) else gg.rsmod.plugins.content.areas.wilderness.MageArenaII.journal(player)
-            journal.open(player, name, lines)
+            journal.open(player, name, journal.first(player))
             return
         }
         quest(name)?.let {
