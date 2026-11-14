@@ -34,7 +34,8 @@ object ToaUnderlayTrialTool {
         require(args.size == 5 && args[0] in setOf("plan", "apply")) { "Usage: plan|apply <osrsSquare> <osrsUnderlay> <current1,current2,...> <c1,c2,...>" }
         val square = args[1].toInt(); val osrs = args[2].toInt(); val current = args[3].split(',').map { it.trim().toInt() }.toSet()
         val candidates = args[4].split(',').map { it.trim().toInt() }
-        val name: String = ToaUpperTileFlagTool.targets("raid")[square] ?: error("$square is not a ToA raid map")
+        // N609 14-11: also the ToA lobby (13454) and the Necropolis squares - same OSRS->667 floor import.
+        val name: String = ToaUpperTileFlagTool.targets("all")[square] ?: error("$square is not a ToA raid/lobby/Necropolis map")
         val paths = listOf(RspsPaths.data("cache"), RspsPaths.root("file-server/cache"))
         val mutations = mutableListOf<CacheMutation>()
         ModernCacheReader(File(RspsPaths.root("import-source/openrs2-2686/cache"))).use { reader ->

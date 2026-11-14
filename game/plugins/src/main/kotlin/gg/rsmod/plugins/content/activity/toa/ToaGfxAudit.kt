@@ -22,7 +22,8 @@ object ToaGfxAudit {
 
     /** Spawned children that legitimately live off the walkable floor (OSRS): Zebak tail 11731 + moat crocodile 11741 in the water,
      *  Wardens charging statues 11746/11747 on their troughs. Extend only with proof from a run (false positive). */
-    val OFF_FLOOR_OK = setOf(11731, 11741, 11746, 11747, 11738, 11723) // 11738 Zebak wave over the whole row incl. water; 11723 Kephri swarms crawl in from the edge (spawn seq 9605)
+    val OFF_FLOOR_OK = setOf(11731, 11741, 11746, 11747, 11748, 11749, 11738, 11723) // 11738 Zebak wave over the whole row incl. water; 11723 Kephri swarms crawl in from the edge (spawn seq 9605)
+    // 11748/11749 (N609 14-11): the P1 charging statues now spawn as their OSRS PHASE1 ids instead of 11746/11747 - same plinth tiles (blocking platform 45605), same reason.
 
     private class Tracked(val npc: Npc, val what: String, val born: Int)
     private val tracked = java.util.Collections.synchronizedList(mutableListOf<Tracked>())

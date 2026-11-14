@@ -51,7 +51,10 @@ object ToaUnderlayColourTool {
     val TEXTURED_PER_SQUARE: Map<Pair<Int, Int>, Pair<Set<Int>, Int>> = mapOf(
         // Zebak bank (plane 1 above bridge-flagged water, 15700): trial stripes 134/129/161/0/97 (cam-crondis-room-1759) -> 161 H/S/V
         // 32/109/91 and 0 31/110/83 match OSRS dark olive 35/124/41 in hue; 161 = the local of the neighbouring OSRS 132 swamp it blends into.
-        (15700 to 116) to (setOf(129, 134, 161, 0, 97) to 161))
+        (15700 to 116) to (setOf(129, 134, 161, 0, 97) to 161),
+        // N609 14-11 ToA LOBBY (13454): OSRS 116 sand (#665f47) was local 55 (#4d4d4d + texture 497 = grey ROCK, 988 tiles) - Kaoz 60 s shows
+        // sand + navy floor. Trial stripes 134/161/101/55 (screens/N609/lobby-trial-0419) -> 134, the same local as the raid squares.
+        (13454 to 116) to (setOf(55, 134, 161, 101) to 134))
 
     internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>, square: Int = -1): Pair<ByteArray, Map<Int, Int>> {
         val map = Rev667TileCodec.decode(bytes)
@@ -69,7 +72,7 @@ object ToaUnderlayColourTool {
         }
         return Rev667TileCodec.encode(map) to counts
     }
-    val TARGETS = ToaUpperTileFlagTool.targets("raid")
+    val TARGETS = ToaUpperTileFlagTool.targets("raid") + ToaUpperTileFlagTool.targets("lobby") // N609 14-11: + lobby 13454
 
     internal fun retarget(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>): Pair<ByteArray, Map<Int, Int>> {
         val map = Rev667TileCodec.decode(bytes)
@@ -111,7 +114,8 @@ object ToaUnderlayColourTool {
                     val other = requireNotNull(files.index(5).archive(name)) { "Fileserver missing $name" }
                     val before = requireNotNull(archive.file(0)?.data)
                     check(archive.id == other.id && before.contentEquals(other.file(0)?.data)) { "$name cache copies differ" }
-                    val (mid, counts1) = retarget(before, source)
+                    // N609 14-11: the round-2 FIXES were measured in the raid squares only - the lobby gets just its per-square TEXTURED rule.
+                    val (mid, counts1) = if (square in ToaUpperTileFlagTool.targets("raid")) retarget(before, source) else before to emptyMap()
                     val (after, counts2) = retargetTextured(mid, source, square)
                     val counts = counts1 + counts2
                     println("UNDERLAY_COLOUR source=$square target=$name retargeted=$counts1 textured=$counts2")

@@ -17,14 +17,18 @@ object ToaOverlayTexturePatchTool {
         46 to Patch(301, 0x431d1b),
         127 to Patch(600, 0x212a3e),
         129 to Patch(408, 0x1c1919),
-        147 to Patch(505, 0x7d7657),
+        // N609 14-11: 505 = cobblestones, OSRS 238/241 are plain sand (#7d7657, Nexus/Scabaras/Apmeken/lobby, 194 tiles; nexus300-0430 still
+        // showed a cobble strip next to the fixed 252) -> 300 like 252.
+        147 to Patch(300, 0x7d7657),
         183 to Patch(408, 0x1c1b14),
         226 to Patch(301, 0x4e2c2a),
         237 to Patch(493, 0x660000),
         246 to Patch(301, 0x8c7973),
         248 to Patch(408, 0x12110e),
         250 to Patch(301, 0x993333),
-        252 to Patch(505, 0x665f47),
+        // N609 14-11: 505 = COBBLESTONES (Nexus 14160: 175 tiles of OSRS 239, OSRS plain sand #665f47; Kaoz 1090 s shows smooth sand bands,
+        // screens/N609/nexus-0424). Same OSRS colour as underlay 116, whose proven texture is 300 (local 134, Apmeken trial 13-11) -> 300.
+        252 to Patch(300, 0x665f47),
         253 to Patch(408, 0x131111),
         254 to Patch(301, 0x788868),
     )

@@ -1184,6 +1184,9 @@ on_command("restore", Privilege.ADMIN_POWER) {
         val max = player.skills.getMaxLevel(i)
         if (player.skills.getCurrentLevel(i) < max) player.skills.setCurrentLevel(i, max)
     }
+    // N609 14-11 (nachtrun ronde 8, testbot 'You need to recharge your Prayer at an altar.' midden in een gevecht): prayer POINTS are a
+    // separate counter (Prayers PRAYER_POINTS_VARP 2382) - resetting the Prayer level alone left them at 0. Fill them as a prayer potion would.
+    player.setCurrentPrayerPoints(player.skills.getMaxLevel(gg.rsmod.plugins.api.Skills.PRAYER))
     player.message("You have been given restored stats.", type = ChatMessageType.GAME_MESSAGE)
     player.message("You have been given restored stats.", type = ChatMessageType.CONSOLE)
 }

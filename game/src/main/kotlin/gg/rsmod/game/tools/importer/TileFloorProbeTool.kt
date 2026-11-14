@@ -27,7 +27,7 @@ object TileFloorProbeTool {
             val localO = FeroxImportTool.decodeLocalFloors(lib, Rev667RegionProbeTool.OVERLAY_GROUP) { Rev667FloorCodec.decodeOverlay(it) }
             ModernCacheReader(File(gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/cache"))).use { reader ->
                 val under = reader.files(2, 1); val over = reader.files(2, 4)
-                for ((square, name) in ToaUpperTileFlagTool.targets("raid")) {
+                for ((square, name) in ToaUpperTileFlagTool.targets(args.getOrNull(1) ?: "raid")) { // N609 14-11: optional scope lobby|necropolis|all
                     val raw = requireNotNull(reader.file(5, square, 0))
                     val src = ModernRegion.decodeTiles(raw)
                     val map = Rev667TileCodec.decode(requireNotNull(lib.index(5).archive(name)?.file(0)?.data))
