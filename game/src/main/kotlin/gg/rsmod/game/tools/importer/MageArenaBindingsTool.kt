@@ -6,9 +6,10 @@ import java.io.File
 /**
  * N415: export only finalized CacheTransaction ids to a deployable data/cfg table. No cache is opened or modified.
  * Claude runs this AFTER the three import batches and commits the generated file with the cache release.
- * Usage: java -cp <game-lib> gg.rsmod.game.tools.importer.MageArenaBindingsTool [ledger] [output]
+ * Usage: java -cp <game-lib> gg.rsmod.game.tools.importer.MageArenaBindingsTool [ledger] [output] [clonesTsv]
  */
 object MageArenaBindingsTool {
+    val CLONES = setOf("ancient-cape-locked-broken", "ancient-cape-locked-mangled")
     data class Plan(val rows: Map<String, Int>, val missing: List<String>) {
         fun text(): String {
             check(missing.isEmpty()) { "N415 imports are incomplete: ${missing.joinToString()}" }
@@ -17,25 +18,37 @@ object MageArenaBindingsTool {
         }
     }
 
-    fun plan(items: Map<String, Int>, fx: Map<String, Int>): Plan {
+    fun plan(items: Map<String, Int>, fx: Map<String, Int>, clones: Map<String, Int> = emptyMap()): Plan {
         val wanted = buildList {
             (OsrsItemImportTool.BATCHES.getValue("mage-arena") + OsrsItemImportTool.BATCHES.getValue("mage-arena-ancient")).forEach { add("item:${it.upstreamId}") }
             OsrsNpcImportTool.BATCHES.getValue("mage-arena").forEach { add("npc:$it") }
             OsrsNpcImportTool.EXTRA_SEQS.getValue("mage-arena").forEach { add("seq:$it") }
             OsrsFxImportTool.BATCHES.getValue("mage-arena").forEach { add("spotanim:$it") }
+            CLONES.forEach { add("variant:$it") }
         }
         val rows = wanted.mapNotNull { key ->
-            val local = if (key.startsWith("item:")) items["upstream_item:${key.substringAfter(':')}"] else fx[key]
+            val local = when {
+                key.startsWith("item:") -> items["upstream_item:${key.substringAfter(':')}"]
+                key.startsWith("variant:") -> clones[key.substringAfter(':')]
+                else -> fx[key]
+            }
             local?.let { key to it }
         }.toMap()
         return Plan(rows, wanted.filter { it !in rows })
     }
 
     @JvmStatic fun main(args: Array<String>) {
-        require(args.size <= 2) { "Usage: [finalizedLedger] [outputTsv]" }
+        require(args.size <= 3) { "Usage: [finalizedLedger] [outputTsv] [clonesTsv]" }
         val ledger = File(args.getOrNull(0) ?: RspsPaths.root("OSRS_IMPORT_MASTER.yml"))
         val output = File(args.getOrNull(1) ?: RspsPaths.data("cfg/mage-arena/ids.tsv"))
-        val plan = plan(ImportBatchOrchestrator.readExistingMapping(ledger).itemLocalIdBySourceIdentity, OsrsFxImportTool.existingFx(ledger))
+        val clones = args.getOrNull(2)?.let { File(it).readLines() }.orEmpty()
+            .filter { it.isNotBlank() && !it.startsWith("#") }.associate { line ->
+                val fields = line.split('\t')
+                require(fields.size == 2 && fields[0] in CLONES) { "Expected cloneIdentity<TAB>finalizedLocalId" }
+                fields[0] to fields[1].toInt().also { require(it > 0) { "Clone id must be finalized and positive" } }
+            }
+        val plan = plan(ImportBatchOrchestrator.readExistingMapping(ledger).itemLocalIdBySourceIdentity,
+            OsrsFxImportTool.existingFx(ledger), clones)
         val text = plan.text() // Refuses before any file/directory write when an import is missing.
         output.parentFile?.mkdirs()
         output.writeText(text)

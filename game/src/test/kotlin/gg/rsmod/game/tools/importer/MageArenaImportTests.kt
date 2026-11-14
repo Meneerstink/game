@@ -11,12 +11,16 @@ class MageArenaImportTests {
         assertTrue(missing.missing.isNotEmpty())
         assertFailsWith<IllegalStateException> { missing.text() }
         val items = missing.missing.filter { it.startsWith("item:") }.associate { "upstream_item:${it.substringAfter(':')}" to (60_000 + it.substringAfter(':').toInt()) }
-        val fx = missing.missing.filterNot { it.startsWith("item:") }.associateWith { 70_000 + it.substringAfter(':').toInt() }
-        val plan = MageArenaBindingsTool.plan(items, fx)
+        val fx = missing.missing.filter { !it.startsWith("item:") && !it.startsWith("variant:") }
+            .associateWith { 70_000 + it.substringAfter(':').toInt() }
+        assertEquals(MageArenaBindingsTool.CLONES.map { "variant:$it" }.toSet(), MageArenaBindingsTool.plan(items, fx).missing.toSet())
+        val clones = MageArenaBindingsTool.CLONES.mapIndexed { index, name -> name to (90_000 + index) }.toMap()
+        val plan = MageArenaBindingsTool.plan(items, fx, clones)
         assertTrue(plan.missing.isEmpty())
         assertEquals(missing.missing.size, plan.rows.size)
         assertTrue("item\t34633\t94633" in plan.text())
         assertTrue("npc\t7858\t77858" in plan.text())
+        assertTrue("variant\tancient-cape-locked-broken\t90000" in plan.text())
     }
     @Test fun `regular guardians are distinct source actors with their OSRS levels sizes and healer`() {
         ModernCacheReader(File(RspsPaths.root("import-source/openrs2-2686/cache"))).use { source ->
