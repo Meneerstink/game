@@ -54,7 +54,12 @@ object ToaUnderlayColourTool {
         (15700 to 116) to (setOf(129, 134, 161, 0, 97) to 161),
         // N609 14-11 ToA LOBBY (13454): OSRS 116 sand (#665f47) was local 55 (#4d4d4d + texture 497 = grey ROCK, 988 tiles) - Kaoz 60 s shows
         // sand + navy floor. Trial stripes 134/161/101/55 (screens/N609/lobby-trial-0419) -> 134, the same local as the raid squares.
-        (13454 to 116) to (setOf(55, 134, 161, 101) to 134))
+        (13454 to 116) to (setOf(55, 134, 161, 101) to 134),
+        // N609 14-11 NEXUS (14160): OSRS 104 navy #212a3e (360 tiles) was local 56 (#2e2e2e grey rock) and OSRS 103 #343b4b (137) local 144
+        // (#404040) - big grey patches where Kaoz 1090 s shows a dark navy floor. Trial 166/94/154/56 (screens/N609/nexus104in-0511): 94 too
+        // light blue, 154/56 grey; 166/172 are the EXACT OSRS colours (plain, as OSRS draws underlays) -> 166 and 172.
+        (14160 to 104) to (setOf(56, 166, 94, 154) to 166),
+        (14160 to 103) to (setOf(144, 172, 154, 94) to 172))
 
     internal fun retargetTextured(bytes: ByteArray, source: Array<Array<Array<ModernTile>>>, square: Int = -1): Pair<ByteArray, Map<Int, Int>> {
         val map = Rev667TileCodec.decode(bytes)
