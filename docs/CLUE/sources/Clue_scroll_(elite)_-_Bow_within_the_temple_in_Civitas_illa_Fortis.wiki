@@ -1,0 +1,51 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 28910
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+Note: If you had previously stored a full set of Sunfire armour in the stash unit prior to the april 2024 update, and go to rebuild the deleted stash unit, you will get back your initially stored full set of Sunfire armour.
+
+==Clue info==
+{{Clue info
+|id = 365
+|tier = elite
+|emote = Bow
+|text = Bow within the temple in Civitas illa Fortis.<br>Equip any piece of sunfire fanatic armour.
+|location = Temple in [[Civitas illa Fortis]]
+|items = Equip any piece of [[sunfire fanatic armour]].
+|equipment1 = Sunfire fanatic helm
+|equipment1alt1 = Sunfire fanatic cuirass
+|equipment1alt2 = Sunfire fanatic chausses
+|notes = Perform the [[Bow (emote)|bow]] emote near inside the temple in [[Civitas illa Fortis]].
+|map = {{Map|1699,3087|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 November 2024
+|update = Leagues V: Raging Echoes OUT NOW!
+|poll = 
+|change = A bug in which the clue step does not appear has been fixed.
+}}
+{{Subject changes
+|date = 3 April 2024
+|update = Varlamore Tweaks & Drop Rates
+|change = The clue now requires one piece of the [[sunfire fanatic armour]] rather than the entire set.
+}}
+{{Subject changes footer}}

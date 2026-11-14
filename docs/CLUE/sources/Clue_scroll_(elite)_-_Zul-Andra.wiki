@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 19783
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[map clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 134
+|text = The map reveals where to dig:<br><br>[[Zul-Andra]]. Fairy ring {{Fairycode|BJS}}.
+|items = 
+|notes = 
+|map = {{Map|2202,3062|mtype=pin|plane=0|mapID=-1}}
+}}

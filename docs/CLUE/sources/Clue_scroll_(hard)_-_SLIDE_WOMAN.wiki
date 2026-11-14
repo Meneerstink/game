@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by N 3 M Z!
+|value = 20
+|weight = 0.020
+|id = 12572
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 70
+|text = The anagram reveals<br>who to speak to:<br><br>SLIDE WOMAN
+|notes = Speak to [[Wise Old Man]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many bookcases are in the Wise Old Man's house?''
+
+Answer: '''28'''
+|map = {{Map|3088,3253|mtype=pin|plane=0|mapID=-1}}
+}}

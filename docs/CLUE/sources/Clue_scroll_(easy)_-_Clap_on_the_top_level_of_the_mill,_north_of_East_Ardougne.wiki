@@ -1,0 +1,38 @@
+{{External|rs=Clue scroll (easy) - Clap on the top level of the mill north of east Ardougne}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10206
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] crate on the top floor of the [[Kandarin windmill]]. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 288
+|tier = easy
+|emote = Clap
+|text = The emote reveals <br><br>Clap on the top level of the mill, north of East Ardougne. Equip a blue gnome robe top, HAM robe bottom and an unenchanted tiara.
+|location = Top floor of [[East Ardougne]]'s mill
+|items = Equip a [[blue robe top]], [[HAM robe bottom]] and an unenchanted [[tiara]].
+|equipment1 = Blue robe top
+|equipment2 = Ham robe
+|equipment3 = Tiara
+|notes = Perform the [[clap]] emote upstairs in the [[Ardougne]] windmill.
+|map = {{Map|2635,3385|mtype=pin|plane=2|mapID=0}}
+}}

@@ -1,0 +1,39 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10242
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]]. An [[amulet of glory (t)]] '''cannot''' be used to complete this step.
+
+==Clue info==
+{{Clue info
+|id = 10242
+|tier = hard
+|emote = Dance
+|text = The emote reveals <br><br>Dance at the cat-doored pyramid in Sophanem. Beware of double agents! Equip a ring of life, an uncharged amulet of glory and an adamant two-handed sword.
+|location = Outside the cat-doored pyramid in [[Sophanem]]
+|items = Equip a [[ring of life]], an uncharged [[amulet of glory]] and an [[adamant 2h sword]].
+|equipment1 = Ring of life
+|equipment2 = Amulet of glory
+|equipment3 = Adamant 2h sword
+|notes = Perform the [[dance]] emote outside the [[Jalsavrah Pyramid|great pyramid]] of [[Sophanem]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|3294,2781|mtype=pin|plane=0|mapID=-1}}
+}}

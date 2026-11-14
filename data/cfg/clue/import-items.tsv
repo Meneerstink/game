@@ -1,36 +1,4 @@
 # OSRS id	noted variant required	OSRS cache name
-207	true	Grimy ranarr weed
-225	true	Limpwurt root
-245	true	Wine of Zamorak
-269	true	Torstol
-315	true	Shrimps
-325	true	Sardine
-329	true	Salmon
-333	true	Trout
-347	true	Herring
-373	true	Swordfish
-379	true	Lobster
-385	true	Shark
-391	true	Manta ray
-451	true	Runite ore
-577	true	Blue wizard robe
-579	true	Blue wizard hat
-1391	true	Battlestaff
-1747	true	Black dragonhide
-1965	true	Cabbage
-2363	true	Runite bar
-2436	true	Super attack(4)
-2440	true	Super strength(4)
-2442	true	Super defence(4)
-2444	true	Ranging potion(4)
-2452	true	Antifire potion(4)
-3016	true	Super energy(4)
-3024	true	Super restore(4)
-3049	true	Grimy toadflax
-3051	true	Grimy snapdragon
-6685	true	Saradomin brew(4)
-7060	true	Tuna potato
-7218	true	Summer pie
 7370	true	Green d'hide body (g)
 7372	true	Green d'hide body (t)
 7374	true	Blue d'hide body (g)
@@ -43,12 +11,6 @@
 7392	true	Blue wizard robe (t)
 7394	true	Blue wizard hat (g)
 7396	true	Blue wizard hat (t)
-8778	true	Oak plank
-8780	true	Teak plank
-8782	true	Mahogany plank
-10280	true	Willow comp bow
-10282	true	Yew comp bow
-10284	true	Magic comp bow
 10316	true	Bob's red shirt
 10318	true	Bob's blue shirt
 10320	true	Bob's green shirt
@@ -60,7 +22,6 @@
 10378	true	Guthix d'hide body
 10384	true	Saradomin bracers
 10386	true	Saradomin d'hide body
-11951	true	Extended antifire(4)
 12193	true	Ancient robe top
 12205	true	Bronze platebody (g)
 12207	true	Bronze platelegs (g)
@@ -156,7 +117,6 @@
 12522	true	Red dragon mask
 12524	true	Black dragon mask
 12598	true	Holy sandals
-12913	true	Anti-venom+(4)
 13648	false	Clue bottle (easy)
 13649	false	Clue bottle (medium)
 13650	false	Clue bottle (hard)

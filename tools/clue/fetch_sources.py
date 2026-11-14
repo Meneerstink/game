@@ -32,16 +32,24 @@ def fetch(page):
     url = "https://oldschool.runescape.wiki/api.php?" + urllib.parse.urlencode({
         "action": "query", "titles": page, "prop": "revisions",
         "rvprop": "ids|timestamp|content", "rvslots": "main", "format": "json",
-        "formatversion": 2,
+        "formatversion": 2, "redirects": 1,
     })
     req = urllib.request.Request(url, headers={"User-Agent": "78legacy-ClueResearch/1.0"})
     with urllib.request.urlopen(req, timeout=40) as response:
         obj = json.load(response)["query"]["pages"][0]
+    return save_source(obj)
+
+
+def save_source(obj):
     if "missing" in obj:
-        return {"page": page, "missing": True}
+        return {"page": obj["title"], "missing": True}
     revision = obj["revisions"][0]
     raw = revision["slots"]["main"]["content"].encode("utf-8")
-    filename = page.replace("/", "__").replace(":", "_").replace(" ", "_") + ".wiki"
+    slug = obj["title"].replace("/", "__").replace(":", "_").replace(" ", "_")
+    slug = re.sub(r'[<>"\\|?*]', '_', slug)
+    if len(slug) > 145:
+        slug = slug[:130] + "_" + sha256(obj["title"].encode()).hexdigest()[:10]
+    filename = slug + ".wiki"
     (OUT / filename).write_bytes(raw)
     return {"page": obj["title"], "revision": revision["revid"],
             "revision_time": revision["timestamp"], "file": filename,

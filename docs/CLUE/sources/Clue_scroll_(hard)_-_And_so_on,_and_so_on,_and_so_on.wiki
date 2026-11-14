@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7243
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 868
+|text = The cryptic reveals where to dig:<br><br>And so on, and so on, and so on. Walking from the land of many unimportant things leads to a choice of paths.
+|items = 
+|notes = Dig in front of the castle on [[Etceteria]].
+|map = {{Map|2591,3879|mtype=pin|plane=0|mapID=-1}}
+}}

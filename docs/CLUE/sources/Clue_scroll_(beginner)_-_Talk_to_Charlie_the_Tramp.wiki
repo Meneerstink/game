@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = <!-- All beginner clue scrolls share an item ID. Leave blank to not break wiki id lookup -->
+}}
+[[File:Clue scroll (beginner) detail.png|100px|left]]
+'''Clue scroll (beginner)''' is a [[cryptic clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 
+|text = Talk to Charlie the Tramp in Varrock.
+|notes = Speak to [[Charlie the Tramp]] by the southern entrance to [[Varrock]]. He will give you a [[Charlie the Tramp/Tasks|task to complete]] in the form of a new clue scroll, consisting of bringing one of the following eight unnoted items to him:
+*[[Iron ore]]
+*[[Iron dagger]]
+*[[Raw herring]]
+*[[Raw trout]]
+*[[Trout]]
+*[[Pike]]
+*[[Leather body]]
+*[[Leather chaps]]
+|map = {{Map|x=3206|y=3390|plane=0|r=4|mtype=square}}
+}}
+
+==Transportation==
+[[Charlie the Tramp]] can be reached effectively via the following methods:
+
+*[[Achievement diary cape]] teleport to [[Toby]] and run south-west.
+*[[Varrock Teleport]] and run south.
+*[[Chronicle]] teleport and run north-east.
+*[[Combat bracelet]] teleport to the [[Champion's Guild]].
+*[[Senntisten Teleport]] and run west.

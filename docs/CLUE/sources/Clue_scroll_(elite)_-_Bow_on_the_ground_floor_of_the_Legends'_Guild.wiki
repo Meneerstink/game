@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggestion by Captaindun!
+|value = 20
+|weight = 0.020
+|id = 19789
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 19789
+|tier = elite
+|emote = Bow
+|text = The emote reveals <br><br>Bow on the ground floor of the Legends' Guild. Equip a Cape of Legends, a dragon battleaxe and an amulet of glory.
+|location = Outside the [[Legends' Guild]] building
+|items = Equip [[legend's cape]], a [[dragon battleaxe]] and an [[amulet of glory]].
+|equipment1 = Cape of Legends
+|equipment1price1 = Coins
+|equipment1price1qty = 675
+|equipment2 = Dragon battleaxe
+|equipment3 = Amulet of glory
+|notes = Perform the [[Bow (emote)|bow]] emote near outside the [[Legends' Guild]] door.
+|map = {{Map|2728,3377|mtype=pin|plane=0|mapID=-1}}
+}}

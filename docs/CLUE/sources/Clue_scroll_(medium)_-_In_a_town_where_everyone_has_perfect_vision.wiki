@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2837
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the drawers, the chatbox message "The drawers are locked!  A note left on the drawers reads: Don't forget to feed the chickens." is displayed, hinting that you must kill a [[chicken]] to get the key.
+
+==Clue info==
+{{Clue info
+|id = 746
+|text = The cryptic reveals <br><br>In a town where everyone has perfect vision, seek some locked drawers in a house that sits opposite a workshop.
+|items = 
+|notes = The [[Seers' Village]] house south of the [[Elemental Workshop]] entrance. Kill any [[chicken]] to obtain a key. The [[chicken]]s can be found in front of the [[Ranging Guild]].
+|map = {{Map|2709,3478|mtype=pin|plane=0|mapID=-1}}
+{{Map|2649,3441|mtype=pin|plane=0|mapID=-1}}
+}}

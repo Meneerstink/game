@@ -1,0 +1,31 @@
+{{External|rs=Clue scroll (medium) - 04 degrees 13 minutes north, 12 degrees 45 minutes east}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 2815
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 403
+|text = The coordinate reveals where to dig:<br><br>04.13N 12.45E
+|items = 
+|notes = North of [[Crandor]] island.
+
+|map = {{Map|2848,3296|mtype=pin|plane=0|mapID=-1}}
+}}

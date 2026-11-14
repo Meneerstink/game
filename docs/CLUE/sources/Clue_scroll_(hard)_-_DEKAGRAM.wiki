@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Solo Gi!
+|value = 20
+|weight = 0.020
+|id = 19888
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]]. 
+
+'''{{Colour|red|Warning}}: You must travel through low-level [[Wilderness]] to reach the [[Mage of Zamorak]] to teleport to the abyss. This causes a risk of being attacked by a [[player killer]] and so caution must be exercised before reaching the Abyss.
+
+Contacting the [[Dark Mage (Abyss)|Dark Mage]] via the [[Astral Contact]] spell will '''not''' work for this clue step.
+
+==Clue info==
+{{Clue info
+|id = 61
+|text = The anagram reveals who to speak to:<br><br>DEKAGRAM
+|notes = Speak to the [[Dark Mage (Abyss)|Dark Mage]] at the centre of the inner ring of the [[Abyss]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many rifts are found here in the abyss?''
+
+Answer: '''13'''
+|map = {{Map|3039,4835|mtype=pin|plane=0|mapID=-1}}
+}}

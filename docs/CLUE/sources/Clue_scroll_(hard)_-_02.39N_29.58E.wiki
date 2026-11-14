@@ -1,0 +1,40 @@
+{{external|rs=Clue scroll (hard) - 02 degrees 33 minutes north, 28 degrees 45 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3554
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 433
+|text = The coordinate reveals where to dig:<br><br>02.39N 29.58E
+|items = 
+|notes = Behind the [[Emir's Arena]].
+
+|map = {{Map|3399,3246|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 9 January 2020
+|update = Eating in the Bank
+|change = The Hard clue step requiring you to enter the Duel Arena has now been moved to outside the arena.
+}}
+{{Subject changes footer}}

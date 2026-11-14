@@ -20,6 +20,7 @@ BUILD = ROOT / "build/clue"
 SOURCES = ROOT / "docs/CLUE/sources"
 OUT = ROOT / "data/cfg/clue"
 TIERS = ("beginner", "easy", "medium", "hard", "elite", "master")
+TARGET_CACHE = Path("C:/RSPS/game/game/data/cache")
 
 
 def arithmetic(s):
@@ -89,7 +90,12 @@ def canonical(name):
     # Documented revision spelling changes, not substitutions of different items.
     name = {"black shortsword": "black sword", "zombie head (treasure trails)": "zombie head",
             "tooth half of a key": "tooth half of key", "loop half of a key": "loop half of key",
-            "rune bar": "runite bar", "dragon bracelet": "dragonstone bracelet"}.get(name, name)
+            "rune bar": "runite bar", "dragon bracelet": "dragonstone bracelet",
+            "grimy ranarr weed": "grimy ranarr", "torstol": "clean torstol",
+            "blue wizard robe": "wizard robe", "blue wizard hat": "wizard hat",
+            "antifire potion(4)": "antifire(4)", "willow comp bow": "willow composite bow",
+            "yew comp bow": "yew composite bow", "magic comp bow": "magic composite bow"}.get(name, name)
+    name = re.sub(r"(\w) \(([1-6])\)", r"\1(\2)", name)
     return name.replace("3rd age", "third-age").replace("third age", "third-age").replace("axe", "hatchet")
 
 
@@ -97,7 +103,11 @@ def export_local():
     sys.path.insert(0, "C:/RSPS/tools/cache667")
     from js5 import Cache
     from items import decode
-    cache = Cache(str(ROOT / "data/cache"))
+    # Worktree cache copies are not kept in sync with Claude's imports. Read the
+    # canonical target, in rb mode, and reject an inventory taken across a write.
+    marker = TARGET_CACHE / "main_file_cache.dat2"
+    before = (marker.stat().st_size, marker.stat().st_mtime_ns)
+    cache = Cache(str(TARGET_CACHE))
     out = {}
     try:
         for group, ids in cache.reference(19).items():
@@ -110,7 +120,9 @@ def export_local():
                 out[id] = row
     finally:
         cache.dat.close()
+    assert before == (marker.stat().st_size, marker.stat().st_mtime_ns), "Target cache changed during inventory; retry after the transaction"
     (BUILD / "local-items.json").write_text(json.dumps(out), encoding="utf-8")
+    (BUILD / "local-cache-provenance.json").write_text(json.dumps(dict(path=str(TARGET_CACHE), bytes=before[0], mtime_ns=before[1]), indent=2), encoding="utf-8")
     return out
 
 
@@ -143,8 +155,9 @@ def enum_items(encoded):
 def main():
     OUT.mkdir(parents=True, exist_ok=True)
     source = {int(id): row for id, row in json.loads((BUILD / "osrs-items.json").read_text()).items()}
-    local = ({int(k): v for k, v in json.loads((BUILD / "local-items.json").read_text()).items()}
-             if (BUILD / "local-items.json").exists() else export_local())
+    local = ({int(k): {(int(field) if field.isdigit() else field): value for field, value in v.items()}
+              for k, v in json.loads((BUILD / "local-items.json").read_text()).items()}
+             if (BUILD / "local-items.json").exists() and (BUILD / "local-cache-provenance.json").exists() and "--refresh-local" not in sys.argv else export_local())
     ledger = yaml.load(Path("C:/RSPS/OSRS_IMPORT_MASTER.yml").read_text(encoding="utf-8"), Loader=yaml.CSafeLoader)
     imported = {r["upstream_item_id"]: r["local_item_id"] for r in ledger["imports"]
                 if "upstream_item_id" in r and "local_item_id" in r}
@@ -170,8 +183,11 @@ def main():
                          "Coins": 995, "Zombie head (Treasure Trails)": 19912}
             upstream = overrides.get(row["name"])
             if upstream is None:
+                exact = [id for id in candidates if source[id]["name"].casefold() == row["name"].casefold()]
                 tradeable = [id for id in candidates if source[id]["geTradeable"]]
-                if len(tradeable) == 1:
+                if len(exact) == 1:
+                    upstream = exact[0]
+                elif len(tradeable) == 1:
                     upstream = tradeable[0]
                 elif len(candidates) == 1:
                     upstream = candidates[0]
@@ -189,8 +205,8 @@ def main():
             if unnoted in imported:
                 target = imported[unnoted]
                 assert target in local, (unnoted, target)
-            elif upstream in local and canonical(local[upstream].get("name") or "") == canonical(name) and not row["noted"]:
-                target = upstream
+            elif unnoted in local and canonical(local[unnoted].get("name") or "") == canonical(name):
+                target = unnoted
             elif len(candidates) == 1:
                 target = candidates[0]
             else:
@@ -254,6 +270,7 @@ def main():
         if row["placeholderTemplateId"] >= 0 or row["notedTemplate"] >= 0 or row["params"].get("59") or row["params"].get("295"):
             continue
         if (n.startswith(("Clue geode (", "Clue bottle (", "Clue nest (", "Scroll box (")) or
+                "scroll case" in n.lower() or
                 id in (23182, 23245, 19835, 19836)):
             extra.append(id)
             if id not in ids:

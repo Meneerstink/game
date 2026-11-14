@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2833
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the drawers, the chatbox message "The drawers are locked!  A note left on the drawers reads: Beware of the dog!" is displayed, hinting that you must kill a [[guard dog]] to get the key.
+
+==Clue info==
+{{Clue info
+|id = 742
+|text = The cryptic reveals <br><br>In a town where the guards are armed with maces, search the upstairs rooms of the Public House.
+|items = 
+|notes = Search the drawers upstairs in the pub north of [[Ardougne Castle]]. Kill a [[guard dog]] at [[Handelmort Mansion]] to obtain the key.
+|map = {{Map|2574,3326|mtype=pin|plane=1|mapID=-1}}
+{{Map|2635,3313|mtype=pin|plane=0|mapID=-1}}
+}}

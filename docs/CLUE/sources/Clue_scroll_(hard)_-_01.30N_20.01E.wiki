@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Suggested by No Eggs!
+|value = 20
+|weight = 0.020
+|id = 12554
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 432
+|text = The coordinate reveals where to dig:<br><br>01.30N 20.01E
+|items = 
+|notes = Small Island (fairy ring {{Fairycode|CLP}}).
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]].
+|map = {{Map|3081,3209|mtype=pin|plane=0|mapID=-1}}
+}}

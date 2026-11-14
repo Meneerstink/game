@@ -1,0 +1,31 @@
+{{External|rs=Clue scroll (medium) - 14 degrees 54 minutes north, 09 degrees 13 minutes east}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 7315
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 424
+|text = The coordinate reveals where to dig:<br><br>14.54N 09.13E
+|items = 
+|notes = East of [[Rellekka]], north-west of [[Golden Apple Tree]] ([[fairy ring]] {{Fairycode|AJR}}).
+
+|map = {{Map|2735,3638|mtype=pin|plane=0|mapID=-1}}
+}}

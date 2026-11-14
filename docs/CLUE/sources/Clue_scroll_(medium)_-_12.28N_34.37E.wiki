@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Suggested by Menaceman22!
+|value = 20
+|weight = 0.020
+|id = 12037
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 422
+|text = The coordinate reveals where to dig:<br><br>12.28N 34.37E
+|items = 
+|notes = Inside [[Fenkenstrain's Castle]].
+
+|map = {{Map|3548,3560|mtype=pin|plane=0|mapID=-1}}
+}}

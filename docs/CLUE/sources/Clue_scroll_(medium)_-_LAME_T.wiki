@@ -1,0 +1,42 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to answer this correctly.
+|value = 20
+|weight = 0.020
+|id = 28907
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 968
+|text = The anagram reveals who to speak to:<br><br>LAME T
+|notes = Speak to [[Metla]] at the [[Stonecutter Outpost]] in the [[Avium Savannah]] in [[Varlamore]].
+|map = {{Map|1742,2977|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 25 June 2025
+|update = Summer Sweep Up: Combat
+|change = The clue now has a 'Check steps' option.
+}}
+{{Subject changes
+|date = 27 March 2024
+|update = Easter & Varlamore Updates
+|poll = 
+|change = An issue with the clue where it behaved like a challenge scroll has been fixed.
+}}
+{{Subject changes footer}}

@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10252
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[Treasure Trails/Guide/Emote clues|emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10252
+|tier = hard
+|emote = Blow Kiss
+|text = The emote reveals <br><br>Blow a kiss between the tables in Shilo Village bank. Beware of double agents! Equip a blue mystic hat, bone spear and rune platebody.
+|location = Inside the bank of [[Shilo Village (location)|Shilo Village]]
+|items = Equip a blue [[mystic hat]], a [[bone spear]] and a [[rune platebody]].
+|equipment1 = Mystic hat
+|equipment2 = Bone spear
+|equipment3 = Rune platebody
+|notes = Perform the [[Blow Kiss]] emote between the tables in the [[Shilo Village bank]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|2852,2954|mtype=pin|plane=0|mapID=-1}}
+}}

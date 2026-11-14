@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|left|width=100x86]]
+'''Clue scroll (beginner)''' is a [[map clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|text = The map reveals where to dig:
+
+[[File:Map clue Falador stones.png]]
+|items = [[Spade]]
+|notes = North-east of [[Falador]], at the [[standing stones]].
+|map = {{Map|3043,3398|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Skull sceptre (i)]] teleport and run south-west.
+*[[Falador Teleport]] and run north-east.
+*[[Combat bracelet]] to the [[Edgeville Monastery]].
+*[[Lassar Teleport]] and run down the mountain.
+*[[Amulet of glory]] teleport to [[Edgeville]].
+*[[Balloon transport system]] to [[Taverley]].

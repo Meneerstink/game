@@ -1,0 +1,35 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|left|width=100x86]]
+'''Clue scroll (beginner)''' is a [[map clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|text = The map reveals where to dig:
+
+[[File:Map clue South-eastern Varrock Mine.png]]
+|items = [[Spade]]
+|notes = At the [[south-east Varrock mine]].
+|map = {{Map|3290,3373|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Senntisten Teleport]] and run north-west.
+*[[Chronicle]] teleport and run east.
+*[[Digsite teleport]] or [[Digsite pendant]] and run south-west.
+*[[Varrock Teleport]] and run out the southern gates then east.

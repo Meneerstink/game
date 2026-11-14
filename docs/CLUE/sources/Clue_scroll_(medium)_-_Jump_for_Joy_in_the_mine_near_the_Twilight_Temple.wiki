@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 29857
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 978
+|tier = medium
+|emote = Jump for Joy
+|emote2 = Bow
+|text = The clue reveals <br><br>Jump for Joy in the mine near the Twilight Temple. Bow before you talk to me. Equip a [[maple longbow]], a [[ruby amulet]] and some [[steel platelegs]].
+|location = Near the [[East Salvager Overlook mine]]
+|items = Equip a [[maple longbow]], a [[ruby amulet]] and some [[steel platelegs]].
+|equipment1 = Maple longbow
+|equipment2 = Ruby amulet
+|equipment3 = Steel platelegs
+|notes = Perform the [[jump for joy]] and [[Bow (emote)|bow]] emotes near in the mine near the Twilight Temple
+|map = {{Map|1672,3284|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 October 2024
+|update = Rewards and XP Improvements - Varlamore: The Rising Darkness
+|change = The corresponding [[STASH]] unit has been added for the emote clue.
+}}
+{{Subject changes footer}}

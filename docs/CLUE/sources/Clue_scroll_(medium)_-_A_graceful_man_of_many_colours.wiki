@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Perm Agility!
+|value = 20
+|weight = 0.020
+|id = 19760
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the [[Crate (Shayzien Styles)|crate]], the chatbox message "The drawers{{sic}} are locked! There is a huge hand print left on them{{Sic}}." is displayed, hinting that you must kill a [[hill giant]] to get the key.
+
+==Clue info==
+{{Clue info
+|id = 747
+|tier = medium
+|text = The cryptic reveals <br><br>A graceful man of many colours, his crates must be full of many delights.
+|notes = Kill any [[hill giant]] for a medium key. Then search the crate on the top floor of [[Osten]]'s clothing shop in [[Shayzien]].
+|map = {{Map|1506,3590|mtype=pin|plane=2|mapID=-1}}
+{{Map|1444,3613|mtype=pin|plane=0|mapID=-1}}
+}}

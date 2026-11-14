@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by iKips!
+|value = 20
+|weight = 0.020
+|id = 12135
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 80
+|text = The anagram reveals who to speak to:<br><br>NO OWNER
+|notes = Speak to [[Oronwen]] in [[Lletya]].
+Required: Access to Lletya, requiring completion of [[Mourning's End Part I]].
+
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''What is the minimum amount of quest points required to reach Lletya?''
+
+Answer: '''20'''
+|map = {{Map|2326,3177|mtype=pin|plane=0|mapID=-1}}
+}}

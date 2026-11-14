@@ -1,0 +1,27 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 March]] [[2024]]
+|update = Varlamore: Part One
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Hess!
+|value = 20
+|weight = 0.020
+|id = 28909
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 970
+|text = The coordinate reveals where to dig:<br><br>1.33S 24.24W
+|notes = Dig west of the [[Bazaar]] in [[Civitas illa Fortis]].
+|map = {{Map|1659,3111|mtype=pin|plane=0|mapID=-1}}
+}}

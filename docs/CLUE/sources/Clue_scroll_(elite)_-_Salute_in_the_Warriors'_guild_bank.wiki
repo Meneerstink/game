@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12077
+|leagueRegion = Asgarnia&Wilderness
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 362
+|tier = elite
+|emote = Salute
+|text = The emote reveals <br><br>Salute in the Warriors' guild bank. Equip only a black salamander.
+|location = [[Warriors' Guild]] bank
+|items = Equip only a [[black salamander]].
+|equipment1 = Black salamander
+|notes = Perform the [[salute]] emote in the [[Warriors' Guild bank]].
+|map = {{Map|2844,3542|mtype=pin|plane=0|mapID=-1}}
+}}

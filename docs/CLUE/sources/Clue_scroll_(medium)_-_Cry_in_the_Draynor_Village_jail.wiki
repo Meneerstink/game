@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by KahviPoju!
+|value = 20
+|weight = 0.020
+|id = 19780
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 319
+|tier = medium
+|emote = Cry
+|emote2 = Jump for Joy
+|text = The emote reveals <br><br>Cry in the Draynor Village jail. Jump for joy before you talk to me. Equip an adamant shortsword, a sapphire amulet and an adamant plateskirt.
+|location = Outside the entrance to [[Draynor Village]] jail
+|items = Equip an [[adamant shortsword]], a [[sapphire amulet]] and an [[adamant plateskirt]].
+|equipment1 = Adamant shortsword
+|equipment2 = Sapphire amulet
+|equipment3 = Adamant plateskirt
+|notes = Perform the [[cry]] and [[jump for joy]] emotes in the [[Draynor Village]] jail.
+|map = {{Map|3128,3245|mtype=pin|plane=0|mapID=-1}}
+}}

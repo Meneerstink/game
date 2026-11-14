@@ -1,0 +1,34 @@
+{{External|rs=Clue scroll (hard) - 06 degrees 00 minutes south, 21 degrees 48 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 7258
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 445
+|text = The coordinate reveals where to dig:<br><br>06.00S 21.48E
+|items = 
+|notes = West of the [[Bandit Camp]] in the [[Kharidian Desert]].
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|3138,2969|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Magyk!
+|value = 20
+|weight = 0.020
+|id = 12155
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 685
+|text = The cryptic reveals who to speak to:<br><br>His bark is worse than his bite.
+|items = 
+|notes = Speak to [[Barker]] in [[Canifis]]'s [[Barkers' Haberdashery]].
+|map = {{Map|3499,3503|mtype=pin|plane=0|mapID=-1}}
+}}

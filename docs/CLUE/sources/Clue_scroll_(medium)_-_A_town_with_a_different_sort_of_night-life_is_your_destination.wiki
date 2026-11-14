@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3609
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 838
+|text = The cryptic reveals where to search:<br><br>A town with a different sort of night-life is your destination. Search for some crates in one of the houses.
+|items = 
+|notes = Search the crate inside of the clothes shop in [[Canifis]].
+|map = {{Map|3498,3507|mtype=pin|plane=0|mapID=-1}}
+}}

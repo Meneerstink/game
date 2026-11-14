@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (hard) - A great view}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3573
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 826
+|text = The cryptic reveals where to search:<br><br>A great view - watch the rapidly drying hides get splashed. Check the box you are sitting on.
+|items = 
+|notes = Search the boxes on the {{FloorNumber|uk=1}} of [[Almera]]'s house, north of [[Baxtorian Falls]].
+|map = {{Map|2523,3493|mtype=pin|plane=1|mapID=-1}}
+}}

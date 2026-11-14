@@ -1,0 +1,48 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 373
+|tier = master
+|emote = Dance
+|text = The clue reveals <br><br>Dance in Iban's temple. Beware of double agents! Equip Iban's staff, a black mystic top and a black mystic bottom.
+|location=South-west corner in [[Iban's Temple]]/[[Well of Voyage]]
+|items = Equip an [[Iban's staff]], a [[black mystic top]] and a [[black mystic bottom]].
+|equipment1 = Iban's staff
+|equipment1price1 = Coins
+|equipment1price1qty = 0
+|equipment1alt1 = Iban's staff (u)
+|equipment1alt1price1 = Coins
+|equipment1alt1price1qty = 0
+|equipment1alt2 = Iban's staff (o)
+|equipment1alt2price1 = Coins
+|equipment1alt2price1qty = 0
+|equipment1alt3 = Iban's staff (u) (o)
+|equipment1alt3price1 = Coins
+|equipment1alt3price1qty = 0
+|equipment2 = Mystic robe top (dark)
+|equipment3 = Mystic robe bottom (dark)
+|notes = Perform the [[dance]] emote near the [[Well of Voyage]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|2011,4712|mtype=pin|plane=1|mapID=-1}}
+}}

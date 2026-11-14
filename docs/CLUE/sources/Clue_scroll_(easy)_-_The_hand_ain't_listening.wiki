@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Speedruns!
+|value = 20
+|weight = 0.020
+|id = 19824
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 668
+|text = The cryptic reveals who to speak to:<br><br>The hand ain't listening.
+|items = 
+|notes = Speak to [[The Face]] north of the [[Port Sarim]] [[Gerrant's Fishy Business.|fishing shop]].
+|map = {{Map|3019,3232|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,54 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[27 November]] [[2024]]
+|update = Leagues V: Raging Echoes OUT NOW!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = If only I could decipher this...
+|value = 20
+|weight = 0.020
+|id = 21524
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (elite) detail.png|left|100px]]
+'''Clue scroll (elite)''' is an [[Treasure Trails/Guide/Anagrams|anagram clue]] obtained during [[Treasure Trails]]. It states ''"This anagram reveals who to speak to next: Cirr Jad"''
+
+The player is required to speak to [[Jardric]] on [[Fossil Island]].
+
+{{Bug|It is possible to hold this clue step at the same time as another elite clue step. Completing this step right after completing a different elite treasure trail and receiving an elite casket will result in this clue completing the new treasure trail in 1 step, as it preserves your progress on the clue still in your inventory. WARNING: Holding 2 or more jardic steps when speaking to jardic will delete all but one.}}
+
+==Clue info==
+{{Clue info
+|id = 84
+|text = This anagram reveals who to speak to next:<br><br>CIRR JAD
+|notes = Speak to [[Jardric]] at the [[Fossil Island]] [[museum camp]] or at the [[canal barge]] north of the [[Digsite]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''What is 3 to the power of 0?''
+
+Answer: '''1'''
+|map = {{Map|3718,3811|3661,3849|mtype=pin|plane=0|mapID=-1}}
+{{Map|3580,3974|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 27 November 2024
+|update = Leagues V: Raging Echoes OUT NOW!
+|change = The item is now obtainable.
+}}
+{{Subject changes
+|date = 7 September 2017
+|update = Fossil Island
+|change = The item was added to the game but was unobtainable.
+}}
+{{Subject changes footer}}
+
+{{Treasure Trails}}

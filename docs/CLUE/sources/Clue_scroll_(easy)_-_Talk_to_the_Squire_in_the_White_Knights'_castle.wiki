@@ -1,0 +1,38 @@
+{{External|rs=Clue scroll (easy) - Talk to the Squire in the White Knights' castle in Falador}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2693
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 669
+|text = The cryptic reveals who to speak to:<br><br>Talk to the Squire in the White Knights' castle in Falador.
+|items = 
+|notes = Speak to [[Squire]] in the courtyard of the [[White Knights' Castle]].
+|map = {{Map|2977,3343|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Achievement diary cape]] teleport to [[Sir Rebral]].
+*[[Respawn Teleport]] or [[ring of returning]] teleport with respawn point set to [[Falador]].
+*[[Falador Teleport]].
+*[[Ring of wealth]] teleport to [[Falador Park]].
+*[[Balloon transport system]] to [[Taverley]].
+*[[Teleport to House]] with a [[player-owned house]] in [[Taverley]], or [[Construction cape]] teleport to the [[Taverley]] [[house portal]].

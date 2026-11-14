@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12548
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 340
+|tier = hard
+|emote = Jig
+|text = The emote reveals <br><br>Jig at Jiggig. Beware of double agents! Equip a Rune spear, rune platelegs and any rune heraldic helm.
+|location = By the dungeon entrance in [[Jiggig]]
+|items = Equip a [[Rune spear]], [[rune platelegs]] and any [[rune heraldic helm]].
+|equipment1 = Rune spear
+|equipment2 = Rune platelegs
+|equipment3 = Rune helm (h1)
+|equipment3alt1 = Rune helm (h2)
+|equipment3alt2 = Rune helm (h3)
+|equipment3alt3 = Rune helm (h4)
+|equipment3alt4 = Rune helm (h5)
+|notes = Perform the [[jig]] emote in the middle of [[Jiggig]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+
+Although the clue states "any rune heraldic helm", it is referring to the rune heraldic helms obtained from clues, so the rune heraldic helms created by using a [[pluming stand]] do not count.
+|map = {{Map|2477,3047|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,55 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 29859
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 976
+|tier = hard
+|emote = Panic
+|text = The clue reveals <br><br>Panic outside the Twilight Temple. Beware of double agents! Equip a rune longsword, rune platebody and a rune plateskirt.
+|location = Outside the [[Twilight Temple]]
+|items = Equip a [[rune longsword]], [[rune platebody]], and a [[rune plateskirt]].
+|equipment1 = Rune longsword
+|equipment2 = Rune platebody
+|equipment3 = Rune plateskirt
+|notes = Perform the [[panic]] emote near outside the [[Twilight Temple]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|1694,3247|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+* [[Pendant of Ates]] teleport to the [[Twilight Temple]]
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 October 2024
+|update = Rewards and XP Improvements - Varlamore: The Rising Darkness
+|poll =
+|change = 
+* The corresponding [[STASH]] unit has been added for the emote clue.
+* The items required have been changed; previously, it required a [[dragon longsword]], [[granite body]], and [[dragon plateskirt]].
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* Talking to [[Uri]] after killing the double agent from this clue will cause him to say "The puffins are up to something!" before saying a standard line of dialogue.

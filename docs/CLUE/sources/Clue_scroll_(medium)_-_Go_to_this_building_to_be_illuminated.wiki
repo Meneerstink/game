@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7298
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the drawers, the chatbox message "The drawers are locked!  A note on the top says 'I'm guarding the key at the market.'" is displayed, hinting that you must kill a [[Market Guard]] to get the key.
+
+==Clue info==
+{{Clue info
+|id = 743
+|text = The cryptic reveals <br><br>Go to this building to be illuminated, and check the drawers while you are there.
+|items = 
+|notes = Search the drawers in the first floor of the [[Lighthouse]]. Kill a [[Rellekka]] marketplace [[Market Guard|guard]] to obtain the [[Key (Treasure Trails)|key]]. Partial completion of [[Horror from the Deep]] is required to enter the lighthouse.
+|map = {{Map|2512,3641|mtype=pin|plane=1|mapID=-1}}
+{{Map|2643,3677|mtype=pin|plane=0|mapID=-1}}
+}}

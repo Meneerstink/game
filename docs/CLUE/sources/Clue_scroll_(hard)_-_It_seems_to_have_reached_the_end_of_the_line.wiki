@@ -1,0 +1,29 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7251
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 830
+|text = The cryptic reveals where to search:<br><br>It seems to have reached the end of the line, and it's still empty.
+|notes = Search the [[Mine cart (Dwarven Mine)|carts]] in the northern part of the [[Dwarven Mine]].
+|map = {{Map|3041,9820|mtype=pin|plane=0|mapID=-1}}
+}}

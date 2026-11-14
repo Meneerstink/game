@@ -1,0 +1,55 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 380
+|tier = master
+|emote = Angry
+|text = The clue reveals <br><br>Show your anger at the Wise old man. Beware of double agents! Equip an abyssal whip, a legend's cape and some spined chaps.
+|items = Equip an [[abyssal whip]], a [[Cape of Legends|legend's cape]] and some [[spined chaps]].
+|location=Behind [[Miss Schism]] in [[Draynor Village]]
+|equipment1 = Abyssal whip
+|equipment1alt1 = Abyssal tentacle
+|equipment1alt1price1 = Abyssal whip
+|equipment1alt1price2 = Kraken tentacle
+|equipment1alt2 = Abyssal whip (or)
+|equipment1alt2price1 = Abyssal whip
+|equipment1alt2price2 = Shattered relics variety ornament kit
+|equipment1alt3 = Abyssal tentacle (or)
+|equipment1alt3price1 = Abyssal whip
+|equipment1alt3price2 = Kraken tentacle
+|equipment1alt3price3 = Shattered relics variety ornament kit
+|equipment1alt4 = Frozen abyssal whip
+|equipment1alt4price1 = Abyssal whip
+|equipment1alt4price2 = Frozen whip mix
+|equipment1alt5 = Volcanic abyssal whip
+|equipment1alt5price1 = Abyssal whip
+|equipment1alt5price2 = Volcanic whip mix
+|equipment2 = Cape of Legends
+|equipment2price1 = Coins
+|equipment2price1qty = 675
+|equipment3 = Spined chaps
+|notes = Perform the [[angry]] emote behind [[Miss Schism]] in [[Draynor Village]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3088,3254|mtype=pin|plane=0|mapID=-1}}
+}}

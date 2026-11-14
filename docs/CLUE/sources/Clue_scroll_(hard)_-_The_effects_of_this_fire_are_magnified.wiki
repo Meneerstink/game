@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[10 January]] [[2019]]
+|update = The Kebos Lowlands
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23045
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 876
+|text = The cryptic reveals where to dig:<br><br>The effects of this fire are magnified.
+|items = 
+|notes = Dig near [[Ket'sal K'uk]] in western [[Kebos Swamp]].
+|map = {{Map|1179,3626|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+* Travel to the [[Farming Guild]] ([[skills necklace]], [[farming cape]], or take the [[Lovakengj Minecart Network]]) and run south to [[Kebos Swamp]], then run south-west

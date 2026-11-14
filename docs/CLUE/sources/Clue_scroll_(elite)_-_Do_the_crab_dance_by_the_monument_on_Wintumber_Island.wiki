@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[19 November]] [[2025]]
+|update = Sailing is OUT TODAY!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 31269
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 1006
+|tier = elite
+|emote = Crab dance
+|text = The clue reveals <br><br>Do the crab dance by the monument on Wintumber Island. Equip a crab helmet and a crab claw.
+|location = By the monument on [[Wintumber Island]]
+|items = Equip a [[crab helmet]] and a [[crab claw]].
+|equipment1 = Crab helmet
+|equipment1price1 = Coins
+|equipment1price1qty = 0
+|equipment2 = Crab claw
+|equipment2price1 = Coins
+|equipment2price1qty = 0
+|notes = Perform the [[crab dance]] emote near by the monument on [[Wintumber Island]].
+|map = {{Map|2069,2608|mtype=pin|plane=0|mapID=-1}}
+}}

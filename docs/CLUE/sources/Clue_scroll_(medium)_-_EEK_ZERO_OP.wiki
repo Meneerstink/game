@@ -1,0 +1,47 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2845
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 23
+|text = The anagram reveals<br>who to speak to:<br><br>EEK ZERO OP
+|items = 
+|notes = Speak to [[Zoo keeper]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many animals in total are there in the zoo?''
+
+Answer: '''50''' if [[Eagles' Peak]] has not been completed or '''51''' if it has
+|map = {{Map|2613,3269|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 14 May 2025
+|update = Yama, the Master of Pacts: Out Today
+|change = The challenge scroll answer was changed from 40 to 50 or 51.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* Prior to an [[Update:Yama, the Master of Pacts: Out Today|update]], the challenge scroll answer was 40 despite the zoo having 50 or 51 animals depending whether player has completed [[Eagles' Peak]].

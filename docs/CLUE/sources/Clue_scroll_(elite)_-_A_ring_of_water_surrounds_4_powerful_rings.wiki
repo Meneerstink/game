@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggestion by 1LetterShor
+|value = 20
+|weight = 0.020
+|id = 19809
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 854
+|text = The cryptic reveals where to dig:<br><br>A ring of water surrounds 4 powerful rings, dig above the ladder located there.
+|items = [[Pet rock]] and [[Rune thrownaxe]], or 85 [[Agility]]
+|notes = Dig near the ladder to the [[Dagannoth Kings]] in the [[Waterbirth Island Dungeon]].
+|map = {{Map|1910,4367|mtype=pin|plane=0|mapID=-1}}
+}}

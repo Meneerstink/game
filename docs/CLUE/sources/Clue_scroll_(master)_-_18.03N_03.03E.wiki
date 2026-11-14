@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[coordinate clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 535
+|text = The clue reveals where to dig:<br><br>18.03N 03.03E
+|notes = Dig waterbirth Island. Bring a pet rock and rune thrownaxe.
+The clue has an additional challenge:
+
+Kill a [[Brassican Mage]].
+|map = {{Map|2538,3739|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,89 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10264
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 313
+|tier = medium
+|emote = Cheer
+|emote2 = Headbang
+|text = The emote reveals <br><br>Cheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape.
+|location = Centre of the [[Barbarian Outpost Agility Course]]
+|items = Equip a [[steel platebody]], [[maple shortbow]] and a [[Wilderness cape]].
+|equipment1 = Steel platebody
+|equipment2 = Maple shortbow
+|equipment3 = Team-1 cape
+|equipment3alt1 = Team-2 cape
+|equipment3alt2 = Team-3 cape
+|equipment3alt3 = Team-4 cape
+|equipment3alt4 = Team-5 cape
+|equipment3alt5 = Team-6 cape
+|equipment3alt6 = Team-7 cape
+|equipment3alt7 = Team-8 cape
+|equipment3alt8 = Team-9 cape
+|equipment3alt9 = Team-10 cape
+|equipment3alt10 = Team-11 cape
+|equipment3alt11 = Team-12 cape
+|equipment3alt12 = Team-13 cape
+|equipment3alt13 = Team-14 cape
+|equipment3alt14 = Team-15 cape
+|equipment3alt15 = Team-16 cape
+|equipment3alt16 = Team-17 cape
+|equipment3alt17 = Team-18 cape
+|equipment3alt18 = Team-19 cape
+|equipment3alt19 = Team-20 cape
+|equipment3alt20 = Team-21 cape
+|equipment3alt21 = Team-22 cape
+|equipment3alt22 = Team-23 cape
+|equipment3alt23 = Team-24 cape
+|equipment3alt24 = Team-25 cape
+|equipment3alt25 = Team-26 cape
+|equipment3alt26 = Team-27 cape
+|equipment3alt27 = Team-28 cape
+|equipment3alt28 = Team-29 cape
+|equipment3alt29 = Team-30 cape
+|equipment3alt30 = Team-31 cape
+|equipment3alt31 = Team-32 cape
+|equipment3alt32 = Team-33 cape
+|equipment3alt33 = Team-34 cape
+|equipment3alt34 = Team-35 cape
+|equipment3alt35 = Team-36 cape
+|equipment3alt36 = Team-37 cape
+|equipment3alt37 = Team-38 cape
+|equipment3alt38 = Team-39 cape
+|equipment3alt39 = Team-40 cape
+|equipment3alt40 = Team-41 cape
+|equipment3alt41 = Team-42 cape
+|equipment3alt42 = Team-43 cape
+|equipment3alt43 = Team-44 cape
+|equipment3alt44 = Team-45 cape
+|equipment3alt45 = Team-46 cape
+|equipment3alt46 = Team-47 cape
+|equipment3alt47 = Team-48 cape
+|equipment3alt48 = Team-49 cape
+|equipment3alt49 = Team-50 cape
+|equipment3alt50 = Team cape zero
+|equipment3alt51 = Team cape x
+|equipment3alt52 = Team cape i
+|notes = Perform the [[cheer]] and [[headbang]] emotes in the [[Barbarian Outpost Agility Course|barbarian Outpost obstacle course]].
+|map = {{Map|2552,3556|mtype=pin|plane=0|mapID=-1}}
+}}

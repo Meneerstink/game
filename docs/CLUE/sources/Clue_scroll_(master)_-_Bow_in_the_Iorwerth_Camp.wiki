@@ -1,0 +1,72 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 19835
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 357
+|tier = master
+|emote = Bow
+|text = The emote reveals <br><br>Bow in the Iorwerth Camp. Beware of double agents!
+Equip a charged crystal bow.
+|items = Equip a [[Crystal bow]] or the [[bow of Faerdhinen]].
+|location = North-west tent in the [[Iorwerth Camp]]
+|equipment1 = Crystal bow
+|equipment1price1 = Crystal weapon seed
+|equipment1price2 = Coins
+|equipment1price2qty = 900000
+|equipment1alt1 = Bow of Faerdhinen
+|equipment1alt1price1 = Bow of Faerdhinen (inactive)
+|equipment1alt2 = Bow of Faerdhinen (c)
+|equipment1alt2price1 = Bow of Faerdhinen (inactive)
+|equipment1alt3 = Bow of Faerdhinen (c) (Amlodd)
+|equipment1alt3price1 = Bow of Faerdhinen (inactive)
+|equipment1alt3price2 = Coins
+|equipment1alt3price2qty = 500000
+|equipment1alt4 = Bow of Faerdhinen (c) (Cadarn)
+|equipment1alt4price1 = Bow of Faerdhinen (inactive)
+|equipment1alt4price2 = Coins
+|equipment1alt4price2qty = 500000
+|equipment1alt5 = Bow of Faerdhinen (c) (Crwys)
+|equipment1alt5price1 = Bow of Faerdhinen (inactive)
+|equipment1alt5price2 = Coins
+|equipment1alt5price2qty = 500000
+|equipment1alt6 = Bow of Faerdhinen (c) (Iorwerth)
+|equipment1alt6price1 = Bow of Faerdhinen (inactive)
+|equipment1alt6price2 = Coins
+|equipment1alt6price2qty = 500000
+|equipment1alt7 = Bow of Faerdhinen (c) (Ithell)
+|equipment1alt7price1 = Bow of Faerdhinen (inactive)
+|equipment1alt7price2 = Coins
+|equipment1alt7price2qty = 500000
+|equipment1alt8 = Bow of Faerdhinen (c) (Meilyr)
+|equipment1alt8price1 = Bow of Faerdhinen (inactive)
+|equipment1alt8price2 = Coins
+|equipment1alt8price2qty = 500000
+|equipment1alt9 = Bow of Faerdhinen (c) (Trahaearn)
+|equipment1alt9price1 = Bow of Faerdhinen (inactive)
+|equipment1alt9price2 = Coins
+|equipment1alt9price2qty = 500000
+|equipment1alt10 = Bow of Faerdhinen (c) (deadman)
+|equipment1alt10price1 = Bow of Faerdhinen (inactive)
+|equipment1alt10price2 = Annihilation weapon scroll
+|notes = [[Bow (emote)|Bow]] near the stools at the south-eastern fire in the [[Iorwerth Camp]]. Works with any amount of charges left on the bow, or the [[bow of Faerdhinen]].
+|map = {{Map|2204,3253|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 29853
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 849
+|text = The clue reveals where to dig:<br><br>Dig outside the bank on Aldarin.
+|notes = Dig outside the [[Aldarin bank|bank]] on [[Aldarin]]
+|map = {{Map|1390,2926|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Quetzal Transport System]] to [[Aldarin]].
+*[[Fairy ring]] code {{fairycode|ckq}}.
+*[[Construction cape]] teleport to [[Aldarin]], or [[Teleport to House]] with a [[player-owned house]] in [[Aldarin]].
+*[[Charter ship]] to [[Aldarin]]. (Unlocked after [[Children of the Sun]])
+*[[Pendant of Ates]] teleport to North Aldarin.

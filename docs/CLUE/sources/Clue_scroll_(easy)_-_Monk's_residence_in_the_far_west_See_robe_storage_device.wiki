@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19818
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 801
+|text = The cryptic reveals where to search:<br><br>Monk's residence in the far west. See robe storage device.
+|notes = Search the drawers in the south tent of the [[monk's camp]] on the southern coast of [[Hosidius]].
+|map = {{Map|1746,3490|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Teleport to House]] with a [[player-owned house]] in [[Hosidius]], or [[Construction cape]] teleport to the Hosidius [[house portal]].
+*[[Fairy ring]] code {{fairycode|akr}} and run south-west after arriving.
+*[[Xeric's talisman]] teleport to Xeric's Glade and run south.
+*[[Spirit tree patch]] in Hosidius, and run south-east across the bridge.
+*[[Skills necklace]] teleport to the [[Woodcutting Guild]].
+*[[Kharedst's memoirs]] or [[Book of the Dead]] teleport with [[Lunch by the Lancalliums]].
+*[[Kourend Castle Teleport]] and run south-east to Hosidius.

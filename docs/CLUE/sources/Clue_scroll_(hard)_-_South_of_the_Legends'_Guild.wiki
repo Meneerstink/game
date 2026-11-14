@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (hard) - Legends' Guild}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 7241
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[map clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 131
+|text = The map reveals where to dig:<br><br>South of the [[Legends' Guild]]. Fairy ring {{Fairycode|BLR}}.
+|items = 
+|notes = 
+|map = {{Map|2722,3338|mtype=pin|plane=0|mapID=-1}}
+}}

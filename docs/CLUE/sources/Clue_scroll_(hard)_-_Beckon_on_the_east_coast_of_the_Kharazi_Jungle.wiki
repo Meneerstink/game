@@ -1,0 +1,46 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12544
+|leagueRegion = Karamja&Fremennik
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 333
+|tier = hard
+|emote = Beckon
+|text = The emote reveals <br><br>Beckon on the east coast of the Kharazi Jungle. Beware of double agents! Equip any vestment stole and a heraldic rune shield.
+|location = North-east corner of the [[Kharazi Jungle]]
+|items = Equip any [[vestment stole]] and a [[heraldic rune shield]].
+|equipment1 = Saradomin stole
+|equipment1alt1 = Guthix stole
+|equipment1alt2 = Zamorak stole
+|equipment1alt3 = Armadyl stole
+|equipment1alt4 = Bandos stole
+|equipment1alt5 = Ancient stole
+|equipment2 = Rune shield (h1)
+|equipment2alt1 = Rune shield (h2)
+|equipment2alt2 = Rune shield (h3)
+|equipment2alt3 = Rune shield (h4)
+|equipment2alt4 = Rune shield (h5)
+|notes = Perform the [[beckon]] emote near the north-east corner of the [[Kharazi Jungle]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|2954,2933|mtype=pin|plane=0|mapID=-1}}
+}}

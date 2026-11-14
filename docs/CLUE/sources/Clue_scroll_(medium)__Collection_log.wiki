@@ -1,0 +1,5 @@
+There are a total of 115 items to collect from [[Clue scroll (medium)|medium Treasure Trails]].
+
+{{Sync|checkbox=show}}
+{{Collection log list|category=Medium Treasure Trails}}
+<noinclude>[[Category:Clue scrolls]]</noinclude>

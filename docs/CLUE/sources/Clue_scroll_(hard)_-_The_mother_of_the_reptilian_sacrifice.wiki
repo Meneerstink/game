@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19852
+|leagueRegion = Tirannwn
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 703
+|text = The cryptic reveals who to speak to:<br><br>The mother of the reptilian sacrifice.
+|items = 
+|notes = Speak to [[Zul-Cheray]] near the sacrificial boat at [[Zul-Andra]]. Requires completion of the [[Regicide]] quest.
+
+({{Fairycode|BJS}} if the player has {{SCP|Agility|76|link=yes}}).
+|map = {{Map|2204,3050|mtype=pin|plane=0|mapID=-1}}
+}}

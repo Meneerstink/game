@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Junk All Day!
+|value = 20
+|weight = 0.020
+|id = 12578
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 699
+|text = The cryptic reveals who to speak to:<br><br>Gold I see, yet gold I require. Give me 875 if death you desire.
+|items = 
+|notes = Speak to [[Saniboch]] near [[Brimhaven Dungeon]].
+|map = {{Map|2745,3151|mtype=pin|plane=0|mapID=-1}}
+}}

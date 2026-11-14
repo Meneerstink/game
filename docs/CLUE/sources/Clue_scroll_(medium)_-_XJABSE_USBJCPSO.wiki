@@ -1,0 +1,44 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19764
+}}
+[[File:Clue scroll (medium) detail.png|left|100px]]
+
+'''Clue scroll (medium)''' is a [[cipher clue]] obtained during [[Treasure Trails]].
+
+Traiborn's challenge clue is: ''How many air runes would I need to cast 630 wind waves?'' Each [[wind wave]] spell costs 5 [[air rune]]s and 1 [[death rune]]. The answer to this challenge can be solved with the following equation: 
+<math>\text{5 x 630 = 3150}</math>
+
+==Clue info==
+{{Clue info
+|id = 931
+|text = The cipher reveals who to speak to:<br><br>XJABSE USBJCPSO
+|notes = Speak to [[Wizard Traiborn]] on the {{FloorNumber|uk=1}} of the [[Wizards Tower]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many air runes would I need to cast 630 wind waves?''
+
+Answer: '''3150'''
+|map = {{Map|3112,3162|mtype=pin|plane=1|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 6 July 2022
+|update = PvP Arena: Soft Launch
+|change = Medium clue scroll cipher was changed to XJABSE USBJCPSO to reflect Wizard Traiborn's name change. The cipher was previously USBJCPSO.
+}}

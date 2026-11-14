@@ -1,0 +1,42 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 378
+|tier = master
+|emote = Jump for Joy
+|text = The clue reveals <br><br>Jump for joy in the centre of Zul-Andra. Beware of double agents! Equip a dragon 2h sword, bandos boots and an obsidian cape.
+|reference = The charged and uncharged Echo boots can also be stored and used for this clue step.
+|location = West of the pier in [[Zul-Andra]], next to a tree
+|items = Equip a [[dragon 2h sword]], [[Bandos boots]] and an [[obsidian cape]].
+|equipment1 = Dragon 2h sword
+|equipment2 = Bandos boots
+|equipment2alt1 = Guardian boots
+|equipment2alt2 = Echo boots
+|equipment2alt2price1 = Guardian boots
+|equipment2alt2price2 = Echo crystal
+|equipment3 = Obsidian cape
+|notes = Perform the [[jump for joy]] emote near the pier in [[Zul-andra]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|2199,3056|mtype=pin|plane=0|mapID=-1}}
+}}

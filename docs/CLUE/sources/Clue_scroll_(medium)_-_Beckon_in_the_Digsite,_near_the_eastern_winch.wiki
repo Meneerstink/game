@@ -1,0 +1,37 @@
+{{External|rs=Clue scroll (medium) - Beckon at Varrock Dig Site, near the eastern winch}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10274
+|leagueRegion = Misthalin&Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10274
+|tier = medium
+|emote = Beckon
+|emote2 = Bow
+|text = The emote reveals <br><br>Beckon in the Digsite, near the eastern winch. Bow before you talk to me. Equip a green gnome hat, snakeskin boots and an iron pickaxe.
+|location = [[Digsite]], just south of the eastern winch
+|items = Equip a [[Green hat|green gnome hat]], [[snakeskin boots]] and an [[iron pickaxe]].
+|equipment1 = Green hat
+|equipment2 = Snakeskin boots
+|equipment3 = Iron pickaxe
+|notes = Perform the [[beckon]] and [[Bow (emote)|bow]] emotes in the north-east corner of the [[Digsite]].
+|map = {{Map|3370,3425|mtype=pin|plane=0|mapID=-1}}
+}}

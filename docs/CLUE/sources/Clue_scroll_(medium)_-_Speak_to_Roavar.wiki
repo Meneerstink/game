@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3615
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 736
+|text = The cryptic reveals who to speak to:<br><br>Speak to [[Roavar]].
+|items = 
+|notes = Speak to [[Roavar]] in the [[Canifis]] tavern.
+|map = {{Map|3494,3474|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,39 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue written by Eager Beagle!
+|value = 20
+|weight = 0.020
+|id = 12057
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10
+|text = The anagram reveals<br>who to speak to:<br><br>A BAKER
+|notes = Speak to [[Baraek]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many stalls are there in Varrock Square?''
+
+Answer: '''5'''
+|map = {{Map|3217,3434|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transporation==
+*[[Varrock Teleport]].
+*[[Achievement diary cape]] teleport to [[Toby]].
+*[[Chronicle]] and run north.
+*[[Combat bracelet]] teleport to the [[Champions' Guild]] and run north.

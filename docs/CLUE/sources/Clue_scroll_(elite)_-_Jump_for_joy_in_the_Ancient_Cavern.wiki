@@ -1,0 +1,39 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12083
+|leagueRegion = Kandarin&Morytania,Kandarin&Wilderness
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 357
+|tier = elite
+|emote = Jump for Joy
+|text = The emote reveals <br><br>Jump for joy in the Ancient Cavern. Equip a granite shield, splitbark body and any rune heraldic helm.
+|location = Entrance of the [[Ancient Cavern]]
+|items = Equip a [[granite shield]], [[splitbark body]] and any [[rune heraldic helm]].
+|equipment1 = Granite shield
+|equipment2 = Splitbark body
+|equipment3 = Rune helm (h1)
+|equipment3alt1 = Rune helm (h2)
+|equipment3alt2 = Rune helm (h3)
+|equipment3alt3 = Rune helm (h4)
+|equipment3alt4 = Rune helm (h5)
+|notes = Perform the [[jump for joy]] emote near the entrance of the [[Ancient Cavern]].
+|map = {{Map|1768,5366|mtype=pin|plane=1|mapID=-1}}
+}}

@@ -1,0 +1,48 @@
+{{External|rs=Clue scroll (hard) - Shrug in the Zamorak temple}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10234
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 347
+|tier = hard
+|emote = Shrug
+|text = The emote reveals <br><br>Shrug in the woods east of the Level 19 Wilderness Obelisk. Beware of double agents! Equip rune platelegs, an iron platebody and blue dragonhide vambraces.
+|location = North of [[Chaos Temple (Wilderness)|Chaos Temple]] in the [[Wilderness]]
+|items = Equip [[rune platelegs]], an [[iron platebody]] and [[blue dragonhide vambraces]].
+|equipment1 = Rune platelegs
+|equipment2 = Iron platebody
+|equipment3 = Blue d'hide vambraces
+|notes = Perform the [[shrug]] emote north of the [[Chaos Temple (Wilderness)|chaos temple]] in the south-eastern [[Wilderness]].
+The clue has an additional challenge:
+Kill a [[Double agent]].
+|map = {{Map|3241,3672|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 April 2024
+|update = Undead Pirates, Colosseum Changes & more!
+|poll = Undead Pirates Rewards & More
+|change = The clue location has been moved slightly north of the temple.
+}}
+{{Subject changes footer}}

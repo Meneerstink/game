@@ -1,0 +1,47 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggestion by KahviPoju!
+|value = 20
+|weight = 0.020
+|id = 19791
+|leagueRegion = Kandarin&Morytania
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 19791
+|tier = elite
+|emote = Headbang
+|text = The emote reveals <br><br>Headbang in the Fight Arena pub. Equip a pirate bandana, a dragonstone necklace and and{{sic}} a magic longbow.
+|location = Outside the [[Fight Arena Bar]]
+|items = Equip a [[pirate bandana]], a [[dragonstone necklace]] and a [[magic longbow]].
+|equipment1 = Pirate bandana (blue)
+|equipment1alt1 = Pirate bandana (white)
+|equipment1alt2 = Pirate bandana (brown)
+|equipment1alt3 = Pirate bandana (red)
+|equipment2 = Dragon necklace
+|equipment3 = Magic longbow
+|notes = Perform the [[headbang]] emote outside the [[Fight Arena Bar|bar]] by the [[Fight Arena (location)|Fight Arena]].
+|map = {{Map|2568,3149|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 24 September 2025
+|update = Interface Uplift
+|change = All four colour variants of the [[pirate bandana]] can now be used for the clue scroll.
+}}
+{{Subject changes footer}}

@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 19835
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 357
+|tier = master
+|emote = Blow Kiss
+|text = The emote reveals <br><br>Blow a kiss outside K'ril Tsutsaroth's chamber. Equip a Zamorak full helm and the Shadow sword. Beware of double agents!
+|location = South-east corner of [[Zamorak's Fortress]]
+|items = Equip a [[Zamorak full helm]] and the [[Shadow sword]].
+|equipment1 = Zamorak full helm
+|equipment2 = Shadow sword
+|equipment2price1 = Coins
+|equipment2price1qty = 0
+|notes = 70 Hitpoints is required to access this part of the [[God Wars Dungeon]]. Completion of [[The General's Shadow]] miniquest is required to obtain the [[Shadow sword]].
+|map = {{Map|name=God Wars Dungeon|x:2925,y:5335|mapID=7|zoom=1|mtype=pin}}
+}}

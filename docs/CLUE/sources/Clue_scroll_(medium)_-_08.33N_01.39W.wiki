@@ -1,0 +1,31 @@
+{{External|rs=Clue scroll (medium) - 08 degrees 33 minutes north, 01 degrees 39 minutes west}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3592
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 412
+|text = The coordinate reveals where to dig:<br><br>08.33N 01.39W
+|items = 
+|notes = West of [[Tree Gnome Stronghold]], near the pen containing [[terrorbird]]s.
+
+|map = {{Map|2387,3435|mtype=pin|plane=0|mapID=-1}}
+}}

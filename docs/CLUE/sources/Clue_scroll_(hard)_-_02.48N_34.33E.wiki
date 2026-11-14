@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Hess!
+|value = 20
+|weight = 0.020
+|id = 19844
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 435
+|text = The coordinate reveals where to dig:<br><br>02.48N 34.33E
+|items = 
+|notes = North-east of [[Burgh de Rott]].
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|3546,3251|mtype=pin|plane=0|mapID=-1}}
+}}

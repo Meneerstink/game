@@ -1,0 +1,36 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10256
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]]. A [[Bridge (Mausoleum)|bridge]] connecting the Mausoleum to mainland Morytania can be built to reach the location for the clue step slightly faster than the traditional route, which requires accessing the [[experiments cave]] instead.
+
+==Clue info==
+{{Clue info
+|id = 327
+|tier = medium
+|emote = Panic
+|emote2 = Wave
+|text = The emote reveals <br><br>Panic by the mausoleum in Morytania. Wave before you speak to me. Equip a mithril plate skirt, a maple longbow and no boots.
+|location=[[Mausoleum]] west of [[Fenkenstrain's Castle]]
+|items = Equip a [[mithril plateskirt]], a [[maple longbow]] and no [[boots]].
+|equipment1 = Mithril plateskirt
+|equipment2 = Maple longbow
+|notes = Perform the [[panic]] and [[wave]] emotes near the [[mausoleum]] off the [[Morytania]] coast.
+|map = {{Map|3504,3576|mtype=pin|plane=0|mapID=-1}}
+}}

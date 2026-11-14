@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[cryptic clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 721
+|text = The clue reveals who to speak to:<br><br>Anger Abbot Langley.
+|notes = Speak to [[Abbot Langley]] in the [[Edgeville Monastery]].
+|items = Equip items that give negative Prayer bonus (e.g. [[Ancient staff]])
+|map = {{Map|3058,3487|mtype=pin|plane=0|mapID=-1}}
+}}

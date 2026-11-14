@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23131
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 21
+|text = The clue reveals who to speak to:<br><br>CLASH ION
+|notes = Speak to [[Nicholas]] north of the fishing shop in [[Port Piscarilius]].
+The clue has an additional challenge:
+
+Question: ''How many windows are in Tynan's shop?''
+
+Answer: '''4'''
+|map = {{Map|1841,3803|mtype=pin|plane=0|mapID=-1}}
+}}

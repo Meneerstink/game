@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2839
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the chest, the chatbox message "The chest is locked!  An inscription on the chest reads: Stand by your man." is displayed, hinting that you must kill one of the nearby [[men]] for the key.
+
+==Clue info==
+{{Clue info
+|id = 740
+|text = The cryptic reveals <br><br>In a town where wizards are known to gather, search upstairs in a large house to the north.
+|items = 
+|notes = Search the chest upstairs in the house north of [[Yanille]] [[Wizards' Guild]]. Kill a man for the key.
+|map = {{Map|2593,3108|mtype=pin|plane=1|mapID=-1}}
+{{Map|2594,3105|mtype=pin|plane=0|mapID=-1}}
+}}

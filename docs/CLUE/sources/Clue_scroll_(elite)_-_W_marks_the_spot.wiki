@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12148
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 853
+|text = The cryptic reveals where to dig:<br><br>W marks the spot.
+|items = 
+|notes = Dig near the middle of the [[Warriors' Guild]] entrance hall.
+|map = {{Map|2867,3546|mtype=pin|plane=0|mapID=-1}}
+}}

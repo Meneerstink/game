@@ -1,0 +1,27 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[23 July]] [[2025]]
+|update = Varlamore: The Final Dawn Out Now
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 30935
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 973
+|text = The clue reveals where to search:<br><br>Search the crate abandoned in the shadow of a mountain's grace.
+|notes = Search the crate near the building in [[Gloomthorn Trail]].
+|map = {{Map|1388,3216|mtype=pin|plane=0|mapID=-1}}
+}}

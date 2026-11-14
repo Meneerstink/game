@@ -1,0 +1,35 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12074
+|leagueRegion = No
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[emote clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 356
+|tier = elite
+|emote = Jump for Joy
+|text = The emote reveals <br><br>Jump for joy at the Neitiznot rune rock. Equip Rune boots, a proselyte hauberk and a dragonstone ring.
+|location = [[Central Fremennik Isles mine]] (note: NOT underground)
+|items = Equip [[Rune boots]], a [[proselyte hauberk]] and a [[dragonstone ring]].
+|equipment1 = Rune boots
+|equipment2 = Proselyte hauberk
+|equipment3 = Dragonstone ring
+|notes = Perform the [[jump for joy]] emote near a [[runite rock]] in the [[Fremennik Isles]].
+|map = {{Map|2375,3850|mtype=pin|plane=0|mapID=-1}}
+}}

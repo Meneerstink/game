@@ -1,0 +1,5 @@
+There are a total of 98 items to collect from [[Clue scroll (elite)|elite Treasure Trails]], 59 items from the standard table and 39 rare items.
+{{Sync|checkbox=show}}
+{{Collection log list|category=Elite Treasure Trails}}
+{{Collection log list|category=Elite Treasure Trails (Rare)}}
+<noinclude>[[Category:Clue scrolls]]</noinclude>

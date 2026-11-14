@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19830
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 666
+|text = The cryptic reveals who to speak to:<br><br>Talk to the Doomsayer.
+|items = 
+|notes = Speak to the [[Doomsayer]] east of [[Lumbridge Castle]].
+|map = {{Map|3230,3230|mtype=pin|plane=0|mapID=-1}}
+}}

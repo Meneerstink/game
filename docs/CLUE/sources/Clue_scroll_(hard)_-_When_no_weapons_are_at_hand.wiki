@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3579
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 827
+|text = The cryptic reveals where to search:<br><br>When no weapons are at hand, then is the time to reflect. In Saradomin's name, redemption draws closer...
+|items = 
+|notes = Search the drawers near on [[Entrana]], search the southern drawer in the house with the [[cooking range]].
+|map = {{Map|2818,3351|mtype=pin|plane=0|mapID=-1}}
+}}

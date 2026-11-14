@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[19 November]] [[2025]]
+|update = Sailing is OUT TODAY!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|destroy = If you drop it in here, a gryphon might eat it.
+|examine = I need to solve this!
+|value = 20
+|weight = 0.020
+|id = 31270
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+You can use this clue step to obtain some of the combat achievements for the [[Shellbane gryphon]], even while not on a slayer task. However, the gryphon will also not drop anything if the clue is not your inventory when it dies.
+
+==Clue info==
+{{Clue info
+|id = 1003
+|text = The cryptic reveals <br><br>Their bane awaits, but don't be going in there without permission.
+|notes = Kill the [[shellbane gryphon]].<br>A gryphon Slayer task '''is not required''' to complete the clue step.
+|map = {{Map|3175,2478|mtype=pin|plane=0|mapID=-1}}
+}}

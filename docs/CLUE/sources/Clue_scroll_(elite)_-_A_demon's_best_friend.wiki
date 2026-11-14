@@ -1,0 +1,27 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by EliteChaos!
+|value = 20
+|weight = 0.020
+|id = 19797
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 905
+|text = The cryptic reveals <br><br>A demon's best friend holds the next step of this clue.
+|notes = Kill a [[hellhound]].
+}}

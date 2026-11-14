@@ -561,6 +561,30 @@
       "file": "Treasure_Trails__Guide__Maps__Medium.wiki",
       "sha256": "359e5bb1bb98cbc0a7aec31620d1a88ff0da180dd6831ddb35a3d8e7acd039f5",
       "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Maps/Medium"
+    },
+    {
+      "page": "Scroll case",
+      "revision": 15344242,
+      "revision_time": "2026-09-15T20:41:18Z",
+      "file": "Scroll_case.wiki",
+      "sha256": "fe1986455528a5fa091ee95915fb3964c909566b266db7d0c2acc0721f6708bd",
+      "url": "https://oldschool.runescape.wiki/w/Scroll_case"
+    },
+    {
+      "page": "X Marks the Spot",
+      "revision": 15367156,
+      "revision_time": "2026-10-06T20:40:05Z",
+      "file": "X_Marks_the_Spot.wiki",
+      "sha256": "f83eb35a4161bc6e6ad65144a3e46ceb1f0914bd1b4f3ca6c1e02e1893aa41f1",
+      "url": "https://oldschool.runescape.wiki/w/X_Marks_the_Spot"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Maps Intro",
+      "revision": 14435985,
+      "revision_time": "2023-07-16T13:25:57Z",
+      "file": "Template_Treasure_Trails_Guide_Maps_Intro.wiki",
+      "sha256": "04ba071a1976e14a0f3cf2dcc5fef0ba5fe38d40875d87c3905503479f17eff7",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Maps_Intro"
     }
   ]
 }

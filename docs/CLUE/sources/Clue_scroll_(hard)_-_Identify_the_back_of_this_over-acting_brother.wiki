@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3568
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 700
+|text = The cryptic reveals who to speak to:<br><br>Identify the back of this over-acting brother. (He's a long way from home.)
+|items = 
+|notes = Speak to [[Hamid]] at the altar in the [[Emir's Arena]].
+|map = {{Map|3376,3284|mtype=pin|plane=0|mapID=-1}}
+}}

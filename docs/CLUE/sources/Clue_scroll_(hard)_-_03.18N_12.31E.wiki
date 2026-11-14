@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 12560
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 437
+|text = The coordinate reveals where to dig:<br><br>03.18N 12.31E
+|items = 
+|notes = [[Crandor island]]
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|2841,3267|mtype=pin|plane=0|mapID=-1}}
+}}

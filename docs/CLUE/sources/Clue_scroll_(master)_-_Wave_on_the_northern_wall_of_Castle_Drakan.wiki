@@ -1,0 +1,47 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 386
+|tier = master
+|emote = Wave
+|text = The clue reveals <br><br>Wave on the northern wall of Castle Drakan. Beware of double agents! Wear a dragon sq shield, splitbark body and any boater.
+|location = Northern wall of [[Castle Drakan]], by the sickle marking on the floor
+|items = Wear a [[dragon sq shield]], [[splitbark body]] and any [[boater]].
+|equipment1 = Dragon sq shield
+|equipment1alt1 = Dragon sq shield (g)
+|equipment1alt1price1 = Dragon sq shield
+|equipment1alt1price2 = Dragon sq shield ornament kit
+|equipment2 = Splitbark body
+|equipment3 = Red boater
+|equipment3alt1 = Orange boater
+|equipment3alt2 = Green boater
+|equipment3alt3 = Blue boater
+|equipment3alt4 = Black boater
+|equipment3alt5 = Pink boater
+|equipment3alt6 = Purple boater
+|equipment3alt7 = White boater
+|notes = Perform the [[wave]] emote near the northern wall of [[Castle Drakan]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3562,3379|mtype=pin|plane=0|mapID=-1}}
+}}

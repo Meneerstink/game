@@ -1,0 +1,38 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10202
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is an [[emote clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+The items can be stored in a [[STASH]] rock in the centre of the [[Rimmington mine]]. It requires {{SCP|Construction|27|link=yes}}, a [[hammer]], [[saw]], 2 [[Plank|planks]] and 10 [[Nails]] to build. Building the STASH rewards the player with 150 Construction XP.
+
+==Clue info==
+{{Clue info
+|id = 300
+|tier = easy
+|emote = Shrug
+|text = The emote reveals <br><br>Shrug in the mine near Rimmington. Equip a gold necklace, a gold ring and a bronze spear.
+|location = Centre of the [[Rimmington mine]]
+|items = Equip a [[gold necklace]], a [[gold ring]] and a [[bronze spear]].
+|equipment1 = Gold necklace
+|equipment2 = Gold ring
+|equipment3 = Bronze spear
+|notes = Perform the [[shrug]] emote near [[Rimmington mine]].
+|map = {{Map|2976,3238|mtype=pin|plane=0|mapID=-1}}
+}}

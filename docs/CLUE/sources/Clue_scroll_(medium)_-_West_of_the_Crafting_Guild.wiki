@@ -1,0 +1,30 @@
+{{External|rs=Clue scroll (medium) - Hobgoblin Peninsula}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 3596
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[map clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 114
+|text = The map reveals where to dig:<br><br>West of the [[Crafting Guild]].
+|items = 
+|notes = [[File:Map clue hobgoblin peninsula.png|200px]]
+|map = {{Map|2907,3295|mtype=pin|plane=0|mapID=-1}}
+}}

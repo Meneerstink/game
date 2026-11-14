@@ -1,0 +1,34 @@
+{{External|rs=Clue scroll (hard) - 24 degrees 26 minutes north, 26 degrees 24 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3558
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 473
+|text = The coordinate reveals where to dig:<br><br>24.24N 26.24E
+|items = 
+|notes = [[Wilderness]], [[Rogues' Castle]].
+
+The clue has an additional challenge:
+
+Kill a [[Zamorak wizard]]
+|map = {{Map|3285,3942|mtype=pin|plane=0|mapID=-1}}
+}}

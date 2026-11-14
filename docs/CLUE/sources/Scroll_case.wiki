@@ -1,0 +1,73 @@
+[[File:Minor master scroll case detail.png|thumb|right|200px|A [[minor master scroll case]].]]
+'''Scroll cases''' increase the total combined number [[Clue scroll|clue scrolls]]/[[Scroll box|scroll boxes]] that a player can hold in their inventory/bank upon opening. Cases are earned once the required number of scrolls for that tier have been completed and will be included with that clue's reward and every subsequent clue reward until consumed.
+
+The total number of clue scrolls you can have at a time starts at 2 for each clue tier, and can be increased to a maximum of 5 by opening the following scroll cases:
+
+* Minor scroll case - +1 scroll limit for its related tier only, from opening a certain number of [[reward casket]]s.
+* Major scroll case - +1 scroll limit for its related tier only, from opening a certain number of [[reward casket]]s.
+* [[Mimic scroll case]] - +1 scroll limit for all tiers, from defeating [[the Mimic]].
+
+Your current scroll box capacity can be checked at a [[Treasure Trail Statistics]] board. 
+
+==Reward caskets required==
+{| class="wikitable"
+!rowspan="2"|Tier
+!colspan="2"|Minor case
+!colspan="2"|Major case
+|-
+!Case
+!Required
+!Case
+!Required
+|-
+|Beginner
+|{{plinkp|Minor beginner scroll case}}
+|50
+|{{plinkp|Major beginner scroll case}}
+|100
+|-
+|Easy
+|{{plinkp|Minor easy scroll case}}
+|100
+|{{plinkp|Major easy scroll case}}
+|200
+|-
+|Medium
+|{{plinkp|Minor medium scroll case}}
+|100
+|{{plinkp|Major medium scroll case}}
+|250
+|-
+|Hard
+|{{plinkp|Minor hard scroll case}}
+|50
+|{{plinkp|Major hard scroll case}}
+|150
+|-
+|Elite
+|{{plinkp|Minor elite scroll case}}
+|50
+|{{plinkp|Major elite scroll case}}
+|150
+|-
+|Master
+|{{plinkp|Minor master scroll case}}
+|25
+|{{plinkp|Major master scroll case}}
+|75
+|}
+
+Acquiring the {{plink|mimic scroll case}} requires defeating [[the Mimic]] once.
+
+==Collection log==
+{{Sync}}
+{{Collection log list|category=Scroll Cases}}
+
+==Trivia==
+* If the player's inventory is full when receiving a case, the case will fall to the ground, and continue to drop from each casket opened after until the case is used. Attempting to pick up a duplicate scroll case on the ground gives the message {{mes|You've already obtained this scroll case!}}
+* Players who completed enough clue scrolls to be eligible for a case prior to [[Update:Stackable Clues are here!|the 2 July 2025 update]] that added scroll cases will have the cases in question be automatically opened and added to their [[collection log]]. 
+
+==See also==
+* [[Scroll box]]
+
+{{Treasure Trails}}

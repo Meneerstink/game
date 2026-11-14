@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Part of the world map, but where?
+|value = 20
+|weight = 0.020
+|id = 2829
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[map clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 124
+|text = The map reveals where to dig:<br><br>To the east of the [[Ranging Guild]].
+|items = 
+|notes = 
+|map = {{Map|2702,3429|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,37 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10272
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 315
+|tier = medium
+|emote = Cheer
+|emote2 = Angry
+|text = The emote reveals <br><br>Cheer in the Ogre Pen in the Training Camp. Show you are angry before you talk to me. Equip a green dragonhide body and chaps and a steel square shield.
+|location = Inside the [[ogre]] enclosure in the [[Combat Training Camp]]
+|items = Equip a [[green dragonhide body]] and [[Green d'hide chaps|chaps]] and a [[steel square shield]].
+|equipment1 = Green d'hide body
+|equipment2 = Green d'hide chaps
+|equipment3 = Steel sq shield
+|notes = Perform the [[cheer]] and [[angry]] emotes in the ogre cage in the [[Combat Training Camp]].
+|map = {{Map|2527,3375|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Cwars Addict!
+|value = 20
+|weight = 0.020
+|id = 12144
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 687
+|text = The cryptic reveals who to speak to:<br><br>I am the one who watches the giants. The giants in turn watch me. I watch with two while they watch with one. Come seek where I may be.
+|items = 
+|notes = Speak to [[Kamfreena]] on the top floor of the [[Warriors' Guild]].
+|map = {{Map|2845,3539|mtype=pin|plane=0|mapID=-1}}
+}}

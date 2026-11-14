@@ -1,0 +1,48 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 383
+|tier = master
+|emote = Spin
+|text = The clue reveals <br><br>Spin in front of the Soul Altar. Beware of double agents! Equip a dragon pickaxe, helm of Neitiznot and a pair of rune boots.
+|location=West of the [[Soul Altar (Kourend)|Soul Altar]]
+|items = Equip a [[dragon pickaxe]], [[helm of Neitiznot]] and a pair of [[rune boots]].
+|equipment1 = Dragon pickaxe
+|equipment1alt1 = Dragon pickaxe (or) (Trailblazer)
+|equipment1alt1price1 = Dragon pickaxe
+|equipment1alt1price2 = Trailblazer tool ornament kit
+|equipment1alt2 = Dragon pickaxe (upgraded)
+|equipment1alt2price1 = Dragon pickaxe
+|equipment1alt2price2 = Dragon pickaxe upgrade kit
+|equipment1alt3 = Crystal pickaxe
+|equipment1alt3price1 = Dragon pickaxe
+|equipment1alt3price2 = Crystal tool seed
+|equipment2 = Helm of Neitiznot
+|equipment2alt1 = Helm of Neitiznot (or)
+|equipment2alt1price1 = Helm of Neitiznot
+|equipment3 = Rune boots
+|notes = Perform the [[spin]] emote near the [[Soul Altar (Kourend)|Soul Altar]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|1815,3856|mtype=pin|plane=0|mapID=-1}}
+}}

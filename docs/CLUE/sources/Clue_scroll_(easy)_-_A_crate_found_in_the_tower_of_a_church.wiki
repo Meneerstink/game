@@ -1,0 +1,36 @@
+{{External|rs=Clue scroll (easy) - A crate found in the tower of a church is your next location}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2711
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 764
+|text = The cryptic reveals where to search:<br><br>A crate found in the tower of a church is your next location.
+|notes = Climb the ladder and search the crates on the first floor in the [[Ardougne church|church]] in [[Ardougne]]. 
+|map = {{Map|2612,3304|mtype=pin|plane=1|mapID=-1}}
+}}
+
+==Transportation==
+*[[Ardougne Teleport]].
+*[[Achievement diary cape]] teleport to [[Two-pints]].
+*[[Skills necklace]] teleport to the [[Fishing Guild]] and run south.
+*[[West Ardougne Teleport]].
+*[[Ardougne cloak]] teleport to [[Ardougne Monastery]].

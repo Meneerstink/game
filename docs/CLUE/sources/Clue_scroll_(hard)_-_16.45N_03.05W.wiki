@@ -1,0 +1,37 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 23167
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 478
+|text = The coordinate reveals where to dig:<br><br>16.45N 03.05W
+|items = 
+|notes = North-east of the [[Piscatoris Fishing Colony]] bank.
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+
+Quest Requirements:
+
+Partial completion of [[Swan Song]] for access to area. Even though you gain access to the Colony early on in the quest, the [[Sea Troll Queen]] must be beaten to access the non-instanced fishing colony.
+|map = {{Map|2341,3697|mtype=pin|plane=0|mapID=-1}}
+}}

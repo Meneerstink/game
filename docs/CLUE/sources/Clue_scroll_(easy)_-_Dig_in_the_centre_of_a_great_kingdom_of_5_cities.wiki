@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19826
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 847
+|text = The cryptic reveals where to dig:<br><br>Dig in the centre of a great kingdom of 5 cities.
+|notes = Dig in front of the large [[Statue (King Rada I)|statue]] in the centre of [[Great Kourend]].
+|map = {{Map|1639,3673|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Kourend Castle Teleport]].
+*[[Xeric's talisman]] teleport to Xeric's Heart.
+*[[Achievement diary cape]] teleport to [[Elise]].
+*[[Lovakengj Minecart Network]] to [[Kingstown]].

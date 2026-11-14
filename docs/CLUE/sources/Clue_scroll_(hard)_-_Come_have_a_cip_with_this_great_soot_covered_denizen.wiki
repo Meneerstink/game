@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Afropunk!
+|value = 20
+|weight = 0.020
+|id = 19846
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 634
+|text = The cryptic reveals who to speak to:<br><br>Come have a cip with this great soot covered denizen.
+|items = 
+|notes = Speak to [[Miner Magnus]] on [[Miscellania]], east of the [[Fairy rings|fairy ring]] CIP.
+The clue has an additional challenge:
+
+Question: ''How many coal rocks are around here?''
+
+Answer: '''8'''
+|map = {{Map|2527,3891|mtype=pin|plane=0|mapID=-1}}
+}}

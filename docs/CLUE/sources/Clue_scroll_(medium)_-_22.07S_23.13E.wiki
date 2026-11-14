@@ -1,0 +1,27 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[19 November]] [[2025]]
+|update = Sailing is OUT TODAY!
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 31275
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[coordinate clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 994
+|text = The coordinate reveals where to dig:<br><br>22.07S 23.13E
+|notes = Centre of the [[Great Conch]].
+|map = {{Map|3183,2453|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 29854
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 977
+|tier = easy
+|text = The clue reveals where to dig:<br><br>Dig at a waterfall by the pines in the serpent's shadow.
+|items = [[Spade]]
+|notes = Dig by the waterfall in [[Quetzacalli Gorge]].
+|map = {{Map|1490,3257|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Quetzal Transport System]] to [[Quetzacalli Gorge]].
+*[[Pendant of Ates]] to [[The Darkfrost]].

@@ -1,0 +1,46 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 19835
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 357
+|tier = master
+|emote = Cheer
+|location = North side of the [[Entrana]] church
+|text = The emote reveals <br><br>Cheer in the Entrana church. Beware of double agents! Equip a set of full black dragonhide armour.
+|items = Equip a full set of [[black dragonhide armour]].
+|equipment1 = Black d'hide body
+|equipment1price1 = Black dragon leather
+|equipment1price1qty = 6
+|equipment1price2 = Thread
+|equipment2 = Black d'hide chaps
+|equipment2price1 = Coins
+|equipment2price1qty = 0
+|equipment3 = Black d'hide vambraces
+|equipment3price1 = Coins
+|equipment3price1qty = 0
+|reference = These items must be crafted on the island from raw materials, requiring {{SCP|Crafting|84|link=yes}}.{{Boostable|yes}} The cost shown is the cost of six [[Black dragon leather]] and 3/5ths of a spool of [[thread]].
+|notes = [[Cheer]] in the Entrana Church. Players must take a [[needle]], [[thread]], and six [[Black_dragon_leather|black dragon leathers]], and craft the armour after arriving at [[Entrana]] requiring level 84 [[Crafting]] (boostable). Alternatively armour can be traded with another player on Entrana who has done so. Players with level 88 in [[Construction]] can make a master [[STASH unit]] to store the dragonhide armour in.
+Since players can't take in weapons, if the player does not wish to fight the Double Agent unarmed, options include bringing runes for offensive spells, materials to fletch ranged equipment, or [[celastrus bark]] to fletch a battlestaff.
+
+''Should players disconnect or log out while carrying the crafted armour on Entrana, they will be knocked out by a [[monk]] and sent to [[Port Sarim]] when logging back in. If this happens, the leather will need to be reobtained when attempting this clue again.''
+|map = {{Map|2850,3349|mtype=pin|plane=0|mapID=-1}}
+}}

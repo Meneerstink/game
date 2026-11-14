@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 19902
+|leagueRegion = Morytania
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 938
+|text = The cipher reveals who to speak to:<br><br>ZSBKDO ZODO
+|notes = Speak to [[Pirate Pete]] on the dock north-east of the [[Ectofuntus]].
+The clue has an additional challenge:
+
+A [[puzzle box]].
+|map = {{Map|3680,3537|mtype=pin|plane=0|mapID=-1}}
+}}

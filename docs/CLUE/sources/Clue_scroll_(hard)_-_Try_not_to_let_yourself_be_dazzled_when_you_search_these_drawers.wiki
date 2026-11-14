@@ -1,0 +1,61 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[16 February]] [[2022]]
+|update = 9th Birthday Event
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7255
+}}
+[[File:Clue scroll (hard) detail.png|left|150x150px]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 836
+|text = The cryptic reveals where to search:<br><br>Try not to let yourself be dazzled when you search these drawers.
+|items = 
+|notes = Search the western drawers in [[Jimmy Dazzler]]'s home near the [[East Ardougne]] [[Rat Pits]].
+|map = {{Map|2561,3323|mtype=pin|plane=0|mapID=0}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 16 February 2022
+|update = 9th Birthday Event
+|change = This clue step was made available in-game.
+}}
+{{Subject changes
+|date = 9 March 2017
+|update = General QoL!
+|change = The item's value was increased from 1 to 20.
+}}
+{{Subject changes
+|date = 2 July 2015
+|update = Clue Scroll Step Counter
+|poll = Old School Content Poll 34: XP droplets & Slayer
+|change = All clue scrolls now have a right-click 'Check steps' option that will allow you to see exactly how many steps you have completed so far.
+}}
+{{Subject changes
+|date = 6 March 2014
+|update = Teletabs, Clues and Poll 17
+|poll = Old School feature poll 16
+|change = The item was renamed from "Clue scroll" to "Clue scroll (hard)".
+}}
+{{Subject changes
+|date = 20 February 2006
+|update = Updates, updates and more updates...
+|poll = 
+|change = The item was first released, but was unobtainable after the release of ''Old School RuneScape'' for unknown reasons.
+}}
+{{Subject changes footer}}

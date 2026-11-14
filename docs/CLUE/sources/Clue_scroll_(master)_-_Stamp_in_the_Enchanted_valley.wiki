@@ -1,0 +1,49 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 384
+|tier = master
+|emote = Stamp
+|text = The clue reveals <br><br>Stamp in the Enchanted valley west of the waterfall. Beware of double agents! Equip a dragon axe.
+|location = Western side of the [[Enchanted Valley]] ({{Fairycode|bkq}})
+|items = Equip a [[dragon axe]].
+'''Note:''' An [[infernal axe]], [[crystal axe]], [[dragon felling axe]], or [[crystal felling axe]] also works.
+|equipment1 = Dragon axe
+|equipment1alt1 = Infernal axe
+|equipment1alt1price1 = Dragon axe
+|equipment1alt1price2 = Smouldering stone
+|equipment1alt2 = Crystal axe
+|equipment1alt2price1 = Dragon axe
+|equipment1alt2price2 = Crystal tool seed
+|equipment1alt3 = Dragon axe (or)
+|equipment1alt3price1 = Dragon axe
+|equipment1alt3price2 = Trailblazer tool ornament kit
+|equipment1alt4 = Dragon felling axe
+|equipment1alt5 = Crystal felling axe
+|equipment1alt5price1 = Dragon felling axe
+|equipment1alt5price2 = Crystal tool seed
+|notes = Perform the [[stamp]] emote near the north-western corner of the [[Enchanted Valley]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|3030,4522|mtype=pin|plane=0|mapID=-1}}
+}}

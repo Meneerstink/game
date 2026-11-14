@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 19906
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 935
+|text = The cipher reveals who to speak to:<br><br>VTYR APCNTGLW
+|notes = Speak to [[King Percival]] in the [[Fisher Realm]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many cannons are on this here castle?''
+
+Answer: '''5'''
+|map = {{Map|2634,4682|mtype=pin|plane=1|mapID=-1}}
+}}

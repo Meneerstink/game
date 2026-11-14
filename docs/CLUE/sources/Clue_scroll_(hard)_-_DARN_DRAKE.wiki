@@ -1,0 +1,30 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 February]] [[2020]]
+|update = The Nightmare of Ashihama
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to solve this.
+|value = 20
+|weight = 0.020
+|id = 24493
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 60
+|text = The anagram reveals who to speak to:<br><br>DARN DRAKE
+|notes = Speak to [[Daer Krand]] in the [[Sisterhood Sanctuary]].
+The clue has an additional challenge:
+
+A puzzle box.
+|map = {{Map|3728,3302|mtype=pin|plane=0|mapID=-1}}<br>{{Map|x=3821|y=9778|r=4|mapID=14|mtype=square}}
+}}

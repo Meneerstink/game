@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to decipher this.
+|value = 20
+|weight = 0.020
+|id = 19908
+|leagueRegion = General
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cipher clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 937
+|text = The cipher reveals who to speak to:<br><br>HCKTA IQFHCVJGT
+|notes = Speak to the [[Fairy Godfather]] in the [[Zanaris]] throne room.
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''There are 3 inputs and 4 letters on each ring How many total individual fairy ring codes are possible?''
+
+Answer: '''64'''
+|map = {{Map|2446,4428|mtype=pin|plane=0|mapID=-1}}
+}}

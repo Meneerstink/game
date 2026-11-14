@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[4 January]] [[2018]]
+|update = Dragon Slayer II
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 22001
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 848
+|text = The cryptic reveals where to dig:<br><br>Dig under Ithoi's cabin.
+|notes = Dig near [[Ithoi the Navigator|Ithoi]]'s cabin in [[Corsair Cove]].
+|map = {{Map|2529,2838|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Spirit tree]] to [[Feldip Hills]] and run east.
+*[[Charter ship]] to [[Corsair Cove]] and run west.
+*[[Mythical cape]] teleport to the [[Myths' Guild]].
+*Board a boat to [[Corsair Cove]] via [[Captain Tock]] or [[Cabin Boy Colin]] west of [[Rimmington]], with partial completion of [[The Corsair Curse]].
+*[[Feldip hills teleport]] and enter [[Corsair Cove]] with the northern [[Agility shortcut]], requiring 10 [[Agility]].
+*[[Fairy ring]] code {{fairycode|aks}} and run south to the [[Agility shortcut]], requiring 10 [[Agility]].

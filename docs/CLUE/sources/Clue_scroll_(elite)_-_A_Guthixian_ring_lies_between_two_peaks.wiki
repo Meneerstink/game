@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Shegged!
+|value = 20
+|weight = 0.020
+|id = 12156
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 819
+|text = The cryptic reveals where to search:<br><br>A Guthixian ring lies between two peaks. Search the stones and you'll find what you seek.
+|items = 
+|notes = Search the [[stones (Taverley)|stones]] several steps west of the Guthixian [[stone circle]] in [[Taverley]].
+|map = {{Map|2922,3484|mtype=pin|plane=0|mapID=-1}}
+}}

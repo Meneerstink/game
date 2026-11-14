@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 7296
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+Searching the chest displays the chatbox message "The chest is locked!  Crude graffiti on the chest reads: 'Barbarians rule ok!", hinting that the key to open it is dropped by [[barbarian]]s.
+
+==Clue info==
+{{Clue info
+|id = 739
+|text = The cryptic reveals <br><br>The dead, red dragon watches over this chest. He must really dig the view.
+|items = 
+|notes = Search the chest underneath the Red Dragon's head in the [[Exam Centre]]. Kill a [[Barbarian]] in [[Barbarian Village]] or [[Barbarian Outpost]] to receive the key.
+|map = {{Map|3353,3332|mtype=pin|plane=0|mapID=-1}}
+{{Map|3082,3419|mtype=pin|plane=0|mapID=-1}}
+}}

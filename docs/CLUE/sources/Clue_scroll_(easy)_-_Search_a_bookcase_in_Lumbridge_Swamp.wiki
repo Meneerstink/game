@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12166
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 782
+|text = The cryptic reveals where to search:<br><br>Search a bookcase in Lumbridge Swamp.
+|notes = Search the bookcase located in [[Father Urhney]]'s house in [[Lumbridge Swamp]].
+|map = {{Map|3146,3177|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Ring of the elements]] teleport to the [[Water Altar]].
+*[[Achievement diary cape]] teleport to [[Twiggy O'Korn]].
+*[[Amulet of glory]] teleport to [[Draynor Village]].
+*[[Necklace of passage]] teleport to the [[Wizards' Tower]].
+*[[Fairy ring]] code {{fairycode|dis}} and run north across the bridge then east.
+*[[Lumbridge Teleport]] and run south to the swamp.

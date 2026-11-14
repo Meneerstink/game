@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by epic niceXD!
+|value = 20
+|weight = 0.020
+|id = 19740
+|leagueRegion = Kourend
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[anagram clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 49
+|text = The anagram reveals<br>who to speak to:<br><br>R SLICER
+|items = 
+|notes = Speak to [[Clerris]]
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''If I have 1,000 blood runes, and cast 131 ice barrage spells, how many blood runes do I have left?''
+
+Answer: '''738'''
+|map = {{Map|1761,3850|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 19835
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 984
+|tier = master
+|emote = Think
+|text = The clue reveals <br><br>Think on the western coast of Salvager Overlook. Beware of double agents! Equip a Hueycoatl hide coif and some Hueycoatl hide vambraces.
+|location = Western coast of [[Salvager Overlook]]
+|items = Equip a Hueycoatl hide coif and some Hueycoatl hide vambraces.
+|equipment1 = Hueycoatl hide coif
+|equipment2 = Hueycoatl hide vambraces
+|notes = Perform the [[think]] emote near on the western coast of [[Salvager Overlook]]. 
+A [[STASH]] unit can be found just south of the [[landing site]] in an inconspicuous hole.{{Map|type=maplink|1614,3296|mtype=pin|text=}}
+
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|1610,3302|mtype=pin|plane=0|mapID=-1}}
+}}

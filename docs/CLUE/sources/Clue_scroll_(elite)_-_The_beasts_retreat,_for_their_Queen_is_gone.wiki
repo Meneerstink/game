@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Chris 1510!
+|value = 20
+|weight = 0.020
+|id = 12143
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 858
+|text = The cryptic reveals where to dig:<br><br>The beasts retreat, for their Queen is gone; the song of this town still plays on. Dig near the birthplace of a blade, be careful not to melt your spade.
+|items = 
+|notes = Dig near the [[furnace]] in [[Piscatoris Fishing Colony]].
+|map = {{Map|2342,3677|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (beginner)
+|image = [[File:Clue scroll (beginner).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = No
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 23182
+}}
+[[File:Clue scroll (beginner) detail.png|100px|left]]
+'''Clue scroll (beginner)''' is a [[cryptic clue]] obtained from [[Clue scroll (beginner)|beginner]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 712
+|text = The cryptic reveals who to speak to:<br><br>In a village of barbarians, I am the one who guards the village from up high.
+|notes = Talk to [[Hunding]] atop the tower on the east side of [[Barbarian Village]].
+|map = {{Map|3097,3429|mtype=pin|plane=2|mapID=-1}}
+}}
+
+==Transportation==
+*[[Skull sceptre (i)]] teleport.
+*[[Amulet of glory]] teleport to [[Edgeville]].
+*[[Combat bracelet]] teleport to [[Edgeville Monastery]].
+*[[Lassar Teleport]] and run south-east down the mountain.
+*[[Chronicle]] and run north-west and then across the bridge over [[River Lum]].
+*[[Varrock Teleport]] and run west.
+*[[Draynor Manor Teleport]] and run north around the fence of [[Draynor Manor]].

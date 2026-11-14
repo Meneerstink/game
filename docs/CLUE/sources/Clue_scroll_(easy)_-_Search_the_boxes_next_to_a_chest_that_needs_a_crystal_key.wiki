@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 23149
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 817
+|text = The cryptic reveals where to search:<br><br>Search the boxes next to a chest that needs a crystal key.
+|notes = Search the boxes near the [[Crystal Chest]] can be found in the house directly south of the [[witch's house (location)|witch's house]] in [[Taverley]].
+|map = {{Map|2915,3452|mtype=pin|plane=0|mapID=-1}}
+}}

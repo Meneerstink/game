@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12132
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is an [[anagram clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 74
+|text = The anagram reveals who to speak to:<br><br>CAREER IN MOON
+|notes = Speak to the [[Oneiromancer]] at the [[Astral Altar]] on [[Lunar Isle]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many Suqah inhabit Lunar isle?''
+
+Answer: '''25'''
+|map = {{Map|2150,3866|mtype=pin|plane=0|mapID=-1}}
+}}

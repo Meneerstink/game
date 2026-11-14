@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12099
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+[[File:Coordinate clue 10.05S 24.31E.png|thumb|right|300px|The location to dig for the clue.]]
+==Clue info==
+{{Clue info
+|id = 494
+|text = The coordinate reveals where to dig:<br><br>10.05S 24.31E
+|items = 
+|notes = South of [[Desert Treasure I]] [[Ancient Pyramid|pyramid]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or a [[Bandosian guard]]
+|map = {{Map|3225,2838|mtype=pin|plane=0|mapID=-1}}
+}}

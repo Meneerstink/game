@@ -1,0 +1,48 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[emote clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 385
+|tier = master
+|emote = Bull Roarer
+|text = The clue reveals <br><br>Swing a bullroarer at the top of the Watchtower. Beware of double agents! Equip a dragon plateskirt, climbing boots and a dragon chainbody.
+|location = Top of the [[Watchtower (building)|Watchtower]] in [[Yanille]]
+|items = Equip a [[dragon plateskirt]], [[climbing boots]] and a [[dragon chainbody]].
+|equipment1 = Dragon plateskirt
+|equipment1alt1 = Dragon plateskirt (g)
+|equipment1alt1price1 = Dragon plateskirt
+|equipment1alt1price2 = Dragon legs/skirt ornament kit
+|equipment1alt2 = Dragon plateskirt (cr)
+|equipment1alt2price1 = Dragon plateskirt
+|equipment2 = Climbing boots
+|equipment3 = Dragon chainbody
+|equipment3alt1 = Dragon chainbody (g)
+|equipment3alt1price1 = Dragon chainbody
+|equipment3alt1price2 = Dragon chainbody ornament kit
+|equipment4 = Bullroarer
+|equipment4price1 = Coins
+|equipment4price1qty = 0
+|notes = Use the "swing" option on a [[bullroarer]] at the top floor of the [[Yanille]] [[Watchtower]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|2930,4717|mtype=pin|plane=2|mapID=-1}}
+}}

@@ -1,0 +1,46 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[7 September]] [[2017]]
+|update = Fossil Island
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 21527
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 471
+|text = The coordinate reveals where to dig:<br><br>23.03N 41.24E
+|items = 
+|notes = Small Island north of [[Fossil Island]].
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+
+The small island is reachable by a small boat at the north-east end of the Mushroom Forest, or by using the zip line (requires 74 Agility) behind the Magic Mushtree at the House on the Hill (digsite pendant teleport to Fossil Island).
+|map = {{Map|3765,3899|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 20 August 2025
+|update = More Doom Tweaks, Poll 84, & Summer Sweep Up Changes
+|change = 
+* The clue scroll step has been moved west slightly along with the island.
+** The previous location was 23 degrees 0 minutes north, 41 degrees 33 minutes east.
+}}
+{{Subject changes footer}}

@@ -1,0 +1,33 @@
+{{External|rs=Clue scroll (medium) - You'll need to look for a city with a central fountain}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2831
+|leagueRegion = Kandarin&Misthalin
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+Searching the chest displays the chatbox message "The chest is locked! An inscription on the chest says: Property of Clock Tower Monastery.", hinting that the key to open it is dropped by the [[monk]]s in the [[Ardougne Monastery]].
+
+==Clue info==
+{{Clue info
+|id = 748
+|text = The cryptic reveals <br><br>You'll need to look for a town with a central fountain. Look for a locked chest in the town's chapel.
+|items = 
+|notes = Search the chest by the stairs in the [[Varrock]] church. Kill a [[monk]] in [[Ardougne Monastery]] to obtain the key.
+|map = {{Map|3256,3487|mtype=pin|plane=0|mapID=-1}}
+{{Map|2615,3209|mtype=pin|plane=0|mapID=-1}}
+}}

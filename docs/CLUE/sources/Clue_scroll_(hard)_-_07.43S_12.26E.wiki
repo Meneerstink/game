@@ -1,0 +1,36 @@
+{{External|rs=Clue scroll (hard) - 07 degrees 43 minutes south, 12 degrees 26 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 3534
+|leagueRegion = Karamja
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+Starting [[Legends' Quest]] is required in order to access the [[Kharazi Jungle]].
+
+==Clue info==
+{{Clue info
+|id = 447
+|text = The coordinate reveals where to dig:<br><br>07.43S 12.26E
+|items = 
+|notes = [[Kharazi Jungle]], near the [[water pool]] ([[fairy ring]] {{Fairycode|CKR}}).
+
+The clue has an additional challenge:
+
+Kill a [[Saradomin wizard]]
+|map = {{Map|2838,2914|mtype=pin|plane=0|mapID=-1}}
+}}

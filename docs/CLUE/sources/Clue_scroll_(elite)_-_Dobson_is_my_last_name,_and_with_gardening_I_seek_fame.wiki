@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by iKips!
+|value = 20
+|weight = 0.020
+|id = 12154
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 690
+|text = The cryptic reveals who to speak to:<br><br>Dobson is my last name, and with gardening I seek fame.
+|items = 
+|notes = Speak to [[Horacio]] in [[Handelmort Mansion]] in [[East Ardougne]].
+|map = {{Map|2635,3310|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,29 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Prince Kyou!
+|value = 20
+|weight = 0.020
+|id = 12158
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 857
+|text = The cryptic reveals where to dig:<br><br>Desert insects is what I see. Taking care of them was my responsibility. Your solution is found by digging near me.
+|items = 
+|notes = Dig in the [[Kalphite Cave]], near [[Shantay Pass]].
+|map = {{Map|3307,9505|mtype=pin|plane=0|mapID=-1}}
+}}

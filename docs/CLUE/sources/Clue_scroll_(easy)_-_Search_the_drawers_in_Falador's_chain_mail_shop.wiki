@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2694
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 775
+|text = The cryptic reveals where to search:<br><br>Search the drawers in Falador's chain mail shop.
+|items = 
+|notes = Search the drawers near [[Wayne's Chains! - Chainmail specialist.|Wayne's Chains - Chainmail Specialist]] store at the southern [[Falador]] walls.
+|map = {{Map|2969,3311|mtype=pin|plane=0|mapID=-1}}
+}}

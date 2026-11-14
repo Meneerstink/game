@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[4 January]] [[2018]]
+|update = Dragon Slayer II
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 22000
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 516
+|text = The coordinate reveals where to dig:<br><br>25.48N 35.00E
+|items = 
+|notes = [[Lithkren]]. [[Digsite pendant]] teleport if unlocked, otherwise take rowboat from west of [[Mushroom Meadow]] [[Mycelium Transportation System|mushtree]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or [[Bandosian guard]]
+|map = {{Map|3560,3987|mtype=pin|plane=0|mapID=-1}}
+}}

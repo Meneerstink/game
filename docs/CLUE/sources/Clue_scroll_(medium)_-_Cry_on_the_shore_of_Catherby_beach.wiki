@@ -1,0 +1,36 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12027
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 12027
+|tier = medium
+|emote = Cry
+|emote2 = Laugh
+|text = The emote reveals <br><br>Cry on the shore of Catherby beach. Laugh before you talk to me. Equip an adamant sq shield, a bone dagger and mithril platebody.
+|reference = A poisoned bone dagger of any tier will '''NOT''' work for these steps.
+|location = Outside [[Harry's Fishing Shop]] in [[Catherby]]
+|items = Equip a [[adamant sq shield]], a [[bone dagger]] and a [[mithril platebody]].
+|equipment1 = Adamant sq shield
+|equipment2 = Bone dagger
+|equipment3 = Mithril platebody
+|notes = Perform the [[cry]] and [[laugh]] emotes at the [[Catherby]] beach, near the fishing spots.
+|map = {{Map|2853,3424|mtype=pin|plane=0|mapID=-1}}
+}}

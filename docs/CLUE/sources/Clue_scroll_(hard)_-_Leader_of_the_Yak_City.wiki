@@ -1,0 +1,31 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Kincent!
+|value = 20
+|weight = 0.020
+|id = 19856
+|leagueRegion = Fremennik
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[cryptic clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+Requires partial completion of [[The Fremennik Isles]]. You must obtain jester outfit and talk to [[Slug Hemligssen]] before you can talk to [[Mawnis Burowgar]].
+
+==Clue info==
+{{Clue info
+|id = 713
+|text = The cryptic reveals who to speak to:<br><br>Leader of the Yak City.
+|items = 
+|notes = Speak to [[Mawnis Burowgar]] in [[Neitiznot]].
+|map = {{Map|2336,3799|mtype=pin|plane=0|mapID=-1}}
+}}

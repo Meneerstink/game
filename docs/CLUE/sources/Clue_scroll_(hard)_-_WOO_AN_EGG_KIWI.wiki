@@ -1,0 +1,32 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Afropunk!
+|value = 20
+|weight = 0.020
+|id = 19884
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[anagram clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 72
+|text = The anagram reveals<br>where to search:<br><br>WOO AN EGG KIWI
+|notes = Talk to [[Awowogei]]
+The clue has an additional challenge:
+
+Question: ''If I have 303 bananas, and share them between 31 friends evenly, only handing out full bananas. How many will I have left over?''
+
+Answer: '''24'''
+|map = {{Map|2802,2765|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,4 +1,18 @@
 # OSRS id	local id	cache name; generated from cache + OSRS_IMPORT_MASTER, not GE data
+208	208	null
+226	226	null
+246	246	null
+270	270	null
+316	316	null
+326	326	null
+330	330	null
+334	334	null
+348	348	null
+374	374	null
+380	380	null
+386	386	null
+392	392	null
+452	452	null
 554	554	Fire rune
 555	555	Water rune
 556	556	Air rune
@@ -11,6 +25,8 @@
 563	563	Law rune
 565	565	Blood rune
 566	566	Soul rune
+577	577	Blue wizard robe
+579	579	Blue wizard hat
 581	581	Black robe
 839	839	Longbow
 841	841	Shortbow
@@ -90,6 +106,7 @@
 1383	1383	Staff of water
 1385	1385	Staff of earth
 1387	1387	Staff of fire
+1392	1392	null
 1393	1393	Fire battlestaff
 1426	1426	Black mace
 1434	1434	Dragon mace
@@ -97,7 +114,15 @@
 1664	1664	Dragon necklace
 1727	1727	Amulet of magic
 1731	1731	Amulet of power
+1748	1748	null
 1965	1965	Cabbage
+1966	1966	null
+2364	2364	null
+2437	2437	null
+2441	2441	null
+2443	2443	null
+2445	2445	null
+2453	2453	null
 2497	2497	Black d'hide chaps
 2503	2503	Black d'hide body
 2577	2577	Ranger boots
@@ -153,6 +178,10 @@
 2677	2677	Clue scroll (easy)
 2722	2722	Clue scroll (hard)
 2801	2801	Clue scroll (medium)
+3017	3017	null
+3025	3025	null
+3050	3050	null
+3052	3052	null
 3204	3204	Dragon halberd
 3472	3472	Black plateskirt (t)
 3473	3473	Black plateskirt (g)
@@ -184,6 +213,9 @@
 5289	5289	Palm tree seed
 5315	5315	Yew seed
 5316	5316	Magic seed
+6686	6686	null
+7061	7061	null
+7219	7219	null
 7319	7319	Red boater
 7321	7321	Orange boater
 7323	7323	Green boater
@@ -216,9 +248,15 @@
 7398	7398	Enchanted robe
 7399	7399	Enchanted top
 7400	7400	Enchanted hat
+8779	8779	null
+8781	8781	null
+8783	8783	null
 9185	9185	Rune crossbow
 9194	9194	Onyx bolt tips
 9245	9245	Onyx bolts (e)
+10280	10280	Willow comp bow
+10282	10282	Yew comp bow
+10284	10284	Magic comp bow
 10286	10286	Rune helm (h1)
 10288	10288	Rune helm (h2)
 10290	10290	Rune helm (h3)
@@ -301,6 +339,7 @@
 10474	10474	Zamorak stole
 10476	10476	Purple sweets
 11115	11115	Dragonstone bracelet
+11952	23702	null
 12073	19043	Clue scroll (elite)
 12195	19390	Ancient robe legs
 12197	19372	Ancient cloak
@@ -392,6 +431,7 @@
 12623	19610	Ancient page 3
 12624	19611	Ancient page 4
 12642	23689	Lumberyard teleport
+12914	23256	null
 19724	23520	Left eye patch
 19730	24112	Bloodhound
 19943	23444	Arceuus scarf

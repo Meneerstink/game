@@ -1,0 +1,29 @@
+{{External|rs=Clue scroll (easy) - Search for a crate in Varrock Palace}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3515
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 766
+|text = The cryptic reveals where to search:<br><br>Search for a crate in Varrock Castle.
+|notes = Search the crate in the corner of the kitchen in [[Varrock Castle]].
+|map = {{Map|3224,3492|mtype=pin|plane=0|mapID=-1}}
+}}

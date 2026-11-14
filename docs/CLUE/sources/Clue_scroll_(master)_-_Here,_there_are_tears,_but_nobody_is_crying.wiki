@@ -1,0 +1,28 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is a [[cryptic clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 907
+|text = The clue reveals where to search:<br><br>Here, there are tears, but nobody is crying. Speak to the guardian and show off your alignment to balance.
+|items = Equip three Guthix related items.
+|notes = Speak with [[Juna]] in the [[Lumbridge Swamp Caves]].
+|map = {{Map|3251,9516|mtype=pin|plane=2|mapID=-1}}
+}}

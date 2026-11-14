@@ -1,0 +1,39 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[5 December]] [[2006]]
+|update = Treasure Trails, spiders and sheep
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 10236
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 10236
+|tier = hard
+|emote = Raspberry
+|text = The emote reveals <br><br>Blow a raspberry in the Fishing Guild bank. Beware of double agents! Equip an elemental shield, blue dragonhide chaps and a rune warhammer.
+|location = Inside the [[Fishing Guild]] bank
+|items = Equip an [[elemental shield]], [[blue dragonhide chaps]] and a [[rune warhammer]].
+|equipment1 = Elemental shield
+|equipment2 = Blue d'hide chaps
+|equipment3 = Rune warhammer
+|notes = Perform the [[raspberry]] emote in the [[Fishing Guild bank]].
+The clue has an additional challenge:
+
+Kill a [[double agent]].
+|map = {{Map|2588,3419|mtype=pin|plane=0|mapID=-1}}
+}}

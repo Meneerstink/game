@@ -1,0 +1,30 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2683
+|leagueRegion = Desert
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 673
+|text = The cryptic reveals who to speak to:<br><br>Talk to Zeke in Al Kharid.
+|items = 
+|notes = Speak to [[Zeke]] at [[Al Kharid]] [[Zeke's Superior Scimitars.|scimitar shop]].
+|map = {{Map|3287,3190|mtype=pin|plane=0|mapID=-1}}
+}}

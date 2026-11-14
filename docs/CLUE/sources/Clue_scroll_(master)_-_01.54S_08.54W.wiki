@@ -1,0 +1,33 @@
+{{Infobox Item
+|name = Clue scroll (master)
+|image = [[File:Clue scroll (master).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Hopefully leads to treasure.
+|value = 20
+|weight = 0.020
+|id = 19835
+}}
+[[File:Clue scroll (master) detail.png|100px|left]]
+'''Clue scroll (master)''' is an [[coordinate clue]] obtained from [[Clue scroll (master)|master]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 430
+|text = The coordinate reveals where to dig:<br><br>01.54S 08.54W
+|items =
+|notes = This clue requires partial completion of [[Regicide]].
+South of Port Tyras, easily accessible by charter ship or fairy ring code {{Fairycode|BJS}} (requires {{SCP|Agility|76}}).
+
+The clue has an additional challenge:
+
+Kill a [[Brassican Mage]].
+|map = {{Map|2155,3099|mtype=pin|plane=0|mapID=-1}}
+}}

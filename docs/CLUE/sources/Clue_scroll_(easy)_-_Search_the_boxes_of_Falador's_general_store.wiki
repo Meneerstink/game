@@ -1,0 +1,29 @@
+{{External|rs=Clue scroll (easy) - Search the crates of Falador's general store}}
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[5 May]] [[2004]]
+|update = Bigger Banks & Treasure Trails
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 2692
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 768
+|text = The cryptic reveals where to search:<br><br>Search the boxes of Falador's general store.
+|notes = Search the crates near [[Falador General Store]].
+|map = {{Map|2955,3390|mtype=pin|plane=0|mapID=-1}}
+}}

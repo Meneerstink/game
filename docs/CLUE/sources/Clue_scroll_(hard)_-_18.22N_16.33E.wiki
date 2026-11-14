@@ -1,0 +1,35 @@
+{{External|rs=Clue scroll (hard) - 18 degrees 22 minutes north, 16 degrees 33 minutes east}}
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[20 February]] [[2006]]
+|update = Updates, updates and more updates...
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = Perhaps someone at the observatory can teach me to navigate?
+|value = 20
+|weight = 0.020
+|id = 7260
+|leagueRegion = Wilderness
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is a [[coordinate clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 460
+|text = The coordinate reveals where to dig:<br><br>18.22N 16.33E
+|items = 
+|notes = [[Wilderness]], [[Forgotten Cemetery]]
+Closest teleport: [[Arceeus spellbook]] [[Cemetery Teleport]]
+
+The clue has an additional challenge:
+
+Kill a [[Zamorak wizard]]
+|map = {{Map|2970,3749|mtype=pin|plane=0|mapID=-1}}
+}}

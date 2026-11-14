@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (easy)
+|image = [[File:Clue scroll (easy).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue suggested by Versierd!
+|value = 20
+|weight = 0.020
+|id = 19814
+|leagueRegion = Misthalin
+}}
+[[File:Clue scroll (easy) detail.png|100px|left]]
+'''Clue scroll (easy)''' is a [[cryptic clue]] obtained from [[Clue scroll (easy)|easy]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 846
+|text = The cryptic reveals where to dig:<br><br>Dig where only the skilled, the wealthy, or the brave can choose not to visit again.
+|notes = Dig in the [[Lumbridge Castle]] courtyard.
+|map = {{Map|3221,3219|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Transportation==
+*[[Lumbridge Teleport]] or [[Lumbridge Home Teleport]].
+*[[Achievement diary cape]] teleport to [[Mikasi]].
+*[[Ring of the elements]] to the [[Water Altar]] and run north-east.
+*[[Amulet of glory]] teleport to [[Al Kharid]] or [[Draynor Village]].

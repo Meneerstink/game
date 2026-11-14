@@ -1,0 +1,22 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[23 July]] [[2025]]
+|update = Varlamore: The Final Dawn Out Now
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = I need to solve this!
+|value = 20
+|weight = 0.020
+|id = 30932
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[cryptic clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info|id=989|text=The clue reveals <br><br>Crush the spirited earth.|notes=Kill an earthen nagua.}}

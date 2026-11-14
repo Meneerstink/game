@@ -1,0 +1,43 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[25 September]] [[2024]]
+|update = Varlamore: The Rising Darkness is OUT NOW
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 29858
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is an [[emote clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 979
+|tier = medium
+|emote = Yes
+|emote2 = No
+|text = The clue reveals <br><br>Nod your head where the River Ortus meets the Proudspire. Indicate 'no' before you talk to me. Equip a blue wizard hat, a blue wizard robe and wear nothing on your legs.
+|location = By the fishing spot East of [[The Proudspire]]
+|items = Equip a [[blue wizard hat]], a [[blue wizard robe]] and wear nothing on your legs.
+|equipment1 = Blue wizard robe
+|equipment2 = Blue wizard hat
+|notes = Perform the [[yes]] and [[no]] emotes near where the River Ortus meets the Proudspire
+|map = {{Map|1626,3241|mtype=pin|plane=0|mapID=-1}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 October 2024
+|update = Rewards and XP Improvements - Varlamore: The Rising Darkness
+|change = The corresponding [[STASH]] unit has been added for the emote clue.
+}}
+{{Subject changes footer}}

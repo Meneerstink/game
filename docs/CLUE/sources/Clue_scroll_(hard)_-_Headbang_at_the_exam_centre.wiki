@@ -1,0 +1,38 @@
+{{Infobox Item
+|name = Clue scroll (hard)
+|image = [[File:Clue scroll (hard).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A set of instructions to be followed.
+|value = 20
+|weight = 0.020
+|id = 12542
+|leagueRegion = Misthalin&Morytania,Misthalin&Wilderness,Misthalin&Tirannwn,Misthalin&Kourend
+}}
+[[File:Clue scroll (hard) detail.png|100px|left]]
+'''Clue scroll (hard)''' is an [[emote clue]] obtained from [[Clue scroll (hard)|hard]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 12542
+|tier = hard
+|emote = Headbang
+|text = The emote reveals <br><br>Headbang at the exam centre. Beware of double agents! Equip a mystic fire staff, a diamond bracelet and rune boots.
+|location = Inside the [[Exam Centre]], near [[Terry Balando]]
+|items = Equip a [[mystic fire staff]], a [[diamond bracelet]] and [[rune boots]].
+|equipment1 = Mystic fire staff
+|equipment2 = Diamond bracelet
+|equipment3 = Rune boots
+|notes = Perform the [[headbang]] emote in the [[Digsite]] [[Exam Centre]].
+The clue has an additional challenge:
+
+Kill a [[Double agent]].
+|map = {{Map|3362,3340|mtype=pin|plane=0|mapID=-1}}
+}}

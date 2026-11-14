@@ -1,0 +1,41 @@
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 19770
+}}
+[[File:Clue scroll (medium) detail.png|left|100px]]
+'''Clue scroll (medium)''' is a [[cipher clue]] obtained during [[Treasure Trails]]. It requires you speak to [[Captain Harlan]] in [[Lumbridge]].
+
+==Clue info==
+{{Clue info
+|id = 929
+|text = The cipher reveals who to speak to:<br><br>BZOSZHM GZQKZM
+|notes = Speak to the [[Captain Harlan]] outside of [[Lumbridge Castle]].
+The clue requires completion of a [[challenge scroll]]:
+
+Question: ''How many snakeskins are needed in order to craft 44 boots, 29 vambraces and 34 bandanas?''
+
+Answer: '''666'''
+|map = {{Map|name=Captain Harlan|x=3218|y=3238|r=4|mtype=square|bucket=yes}}
+}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 November 2026
+|update = Quest Month Kick Off, TFA Tweaks & More
+|change = The cipher was changed from "HQNM LZM STSNQ" ([[Iron man tutor]]) to "BZOSZHM GZQKZM" ([[Captain Harlan]]).
+}}
+{{Subject changes footer}}

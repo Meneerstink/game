@@ -1,0 +1,33 @@
+{{External|rs}}
+{{Infobox Item
+|name = Clue scroll (medium)
+|image = [[File:Clue scroll (medium).png]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 3607
+|leagueRegion = Asgarnia
+}}
+[[File:Clue scroll (medium) detail.png|100px|left]]
+'''Clue scroll (medium)''' is a [[cryptic clue]] obtained from [[Clue scroll (medium)|medium]] [[Treasure Trails]].
+
+When searching the drawers, the chatbox message "The drawers are locked!  A note on the top of the drawers reads: Wait till I get my hands on Penda, he's nicked the key again!" is displayed, hinting that you must kill [[Penda]] to get the key.
+
+==Clue info==
+{{Clue info
+|id = 744
+|text = The cryptic reveals <br><br>Go to the village being attacked by trolls, search the drawers in one of the houses.
+|items = 
+|notes = Go to [[Dunstan]]'s house in the north-east corner of [[Burthorpe]]. Kill [[Penda]] in the [[Toad and Chicken]] to obtain the key.
+|map = {{Map|2921,3577|mtype=pin|plane=0|mapID=-1}}
+{{Map|2909,3539|mtype=pin|plane=0|mapID=-1}}
+}}

@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = Clue scroll (elite)
+|image = [[File:Clue scroll (elite).png]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = 
+|options = Read, Check steps, Drop
+|examine = A clue!
+|value = 20
+|weight = 0.020
+|id = 12096
+|leagueRegion = Kandarin
+}}
+[[File:Clue scroll (elite) detail.png|100px|left]]
+'''Clue scroll (elite)''' is a [[coordinate clue]] obtained from [[Clue scroll (elite)|elite]] [[Treasure Trails]].
+
+==Clue info==
+{{Clue info
+|id = 499
+|text = The coordinate reveals where to dig:<br><br>14.15S 08.01E
+|items = 
+|notes = South-west of [[Ape Atoll]]. The easiest teleports to this location are by:
+Using  [[gnome glider]] to "Ookookolly Undri" with the monkey face icon, after the completion of the quest [[Monkey Madness II]].  Alternatively, with the [[Fairy Ring]] code '''C.L.R''' and a [[Ninja monkey greegree]] or a [[Kruk monkey greegree]] exiting the [[Ape Atoll Agility Course]].
+
+The clue has an additional challenge:
+
+Kill an [[Armadylean guard]] or [[Bandosian guard]]
+|map = {{Map|2697,2705|mtype=pin|plane=0|mapID=-1}}
+}}
