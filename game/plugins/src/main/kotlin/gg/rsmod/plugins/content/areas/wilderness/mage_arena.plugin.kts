@@ -1,5 +1,6 @@
 package gg.rsmod.plugins.content.areas.wilderness
 
+import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.attr.prayedAtStatue
 import gg.rsmod.plugins.content.skills.agility.darkanForceMove
 
@@ -60,6 +61,11 @@ MageArena.FORMS.forEachIndexed { index, form ->
             block = existing.third
         }
         aggro { radius = 0 } // The duel explicitly targets its owner after landing/each transformation.
+        if (index == MageArena.FORMS.lastIndex) {
+            // OSRS Wiki Kolodion: only the final demon counts for black demon assignments,107 Slayer XP.
+            species { +NpcSpecies.DEMON }
+            slayer { assignment = SlayerAssignment.BLACK_DEMON; experience = 107.0 }
+        }
     }
 }
 

@@ -71,11 +71,14 @@ class StoreCatalogueTests {
     }
 
     @Test
-    fun `every max cape variant look is unlockable for Loyalty and Donator points and requires its real component`() {
-        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+    fun `approved max cape looks keep their Loyalty and Donator offers without auto pricing new variants`() {
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             val unlocks = StoreCatalogue.ENTRIES.filter { it.kind == Kind.UNLOCK && it.purchaseItem == variant.cape }
             assertEquals(setOf(Shop.LOYALTY, Shop.DONATOR), unlocks.map { it.shop }.toSet(), "look ${variant.cape}")
             unlocks.forEach { assertEquals(listOf(variant.component), it.requiredBaseItems) }
+        }
+        gg.rsmod.plugins.content.items.osrs.AncientCape.assets.max?.let { ancient ->
+            assertTrue(StoreCatalogue.ENTRIES.none { it.kind == Kind.UNLOCK && it.purchaseItem == ancient })
         }
     }
 

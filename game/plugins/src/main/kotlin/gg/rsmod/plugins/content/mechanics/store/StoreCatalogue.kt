@@ -423,7 +423,7 @@ object StoreCatalogue {
         list += itemEntry(l, 23570, 25_000, "Clue cosmetics") // Ring of 3rd Age
 
         // Max cape look unlocks (owner 2026-09-19): earnable with Loyalty Points and buyable with Donator Points.
-        gg.rsmod.plugins.content.items.osrs.MaxCapes.VARIANTS.forEach { variant ->
+        gg.rsmod.plugins.content.items.osrs.MaxCapes.STORE_LOOK_VARIANTS.forEach { variant ->
             list += lookUnlockEntry(l, variant, 20_000)
             list += lookUnlockEntry(d, variant, TIER_PRICE.getValue(Tier.PREMIUM))
         }

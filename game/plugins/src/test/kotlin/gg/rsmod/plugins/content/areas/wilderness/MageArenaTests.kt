@@ -13,6 +13,7 @@ import gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA
 import gg.rsmod.game.model.attr.prayedAtStatue
 import gg.rsmod.game.model.attr.receivedStaff
 import gg.rsmod.game.model.combat.CombatClass
+import gg.rsmod.game.model.combat.SlayerAssignment
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
@@ -22,6 +23,7 @@ import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.EquipmentType
 import gg.rsmod.plugins.api.HitType
+import gg.rsmod.plugins.api.NpcSpecies
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.content.combat.attack.NpcAttacks
@@ -142,6 +144,10 @@ class MageArenaTests {
         assertEquals(listOf(7, 7, 7, 7, 4), defs.map { it.attackSpeed })
         assertTrue(defs.all { it.spell == 503 && it.respawnDelay == 0 && it.aggressiveRadius == 0 })
         assertEquals(listOf(false, false, false, false, true), defs.map { it.completesEncounter })
+        assertTrue(defs.dropLast(1).all { it.slayerAssignment == null })
+        assertEquals(SlayerAssignment.BLACK_DEMON, defs.last().slayerAssignment)
+        assertEquals(107.0, defs.last().slayerXp)
+        assertTrue(NpcSpecies.DEMON in defs.last().species)
         MageArena.FORMS.zip(defs).forEach { (f, d) ->
             assertEquals(listOf(f.attack, f.strength, f.defence, f.magic, 1), d.stats)
         }

@@ -35,6 +35,13 @@ object QuestStatus {
     val MAX_POINTS: Int get() = QuestList.ENTRIES.sumOf { it.points }
 
     fun state(player: Player, slot: Int): State {
+        if (slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT) {
+            return when (gg.rsmod.plugins.content.areas.wilderness.MageArenaII.displayStage(player)) {
+                2 -> State.COMPLETED
+                1 -> State.IN_PROGRESS
+                else -> State.NOT_STARTED
+            }
+        }
         val choice = CHOICE_QUESTS[slot] ?: return State.COMPLETED
         val stage = choice.stage(player)
         return when {
@@ -79,6 +86,10 @@ object QuestStatus {
      * the maximum, then the quest list refresh so colours and order follow at once. Call after any status change.
      */
     fun sync(player: Player) {
+        // N415: this varp was historically auto-completed. It is a display mirror, never evidence of earned MA2.
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        val stage = ma2.displayStage(player)
+        if (player.getVarp(ma2.VARP) != stage) player.setVarp(ma2.VARP, stage)
         QuestList.ENTRIES.forEach { entry ->
             if (state(player, entry.slot) == State.COMPLETED && entry.progress.read(player) != COMPLETE) entry.progress.complete(player)
         }

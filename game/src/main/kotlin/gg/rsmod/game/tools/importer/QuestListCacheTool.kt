@@ -59,7 +59,7 @@ object QuestListCacheTool {
             NewQuest(190, "Children of the Sun", "Children of the Sun (sort)", 0, GE_X, GE_Z, 1915, 1),
             NewQuest(191, "Secrets of the North", "Secrets of the North (sort)", 3, GE_X, GE_Z, 1916, 1),
             NewQuest(192, "Bone Voyage", "Bone Voyage (sort)", 1, GE_X, GE_Z, 1917, 1),
-            NewQuest(193, "Mage Arena II", "Mage Arena II (sort)", 5, GE_X, GE_Z, 1918, 1),
+            NewQuest(193, "Mage Arena II", "Mage Arena II (sort)", 5, 2538, 4716, 1918, 2), // N415: full earned miniquest, Wiki startmap.
             // N462: Beneath Cursed Sands is a short quest since 2026-11-06 (server BeneathCursedSands.completedValue 10, 1..3 = in progress).
             NewQuest(194, "Beneath Cursed Sands", "Beneath Cursed Sands (sort)", 3, GE_X, GE_Z, 1919, 10),
         )

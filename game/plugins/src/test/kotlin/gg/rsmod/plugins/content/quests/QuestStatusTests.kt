@@ -113,7 +113,8 @@ class QuestStatusTests {
         val library = CacheLibrary(CACHE_PATH)
         val script =
             try {
-                library.data(QuestListCacheTool.CLIENTSCRIPT_INDEX, QuestListCacheTool.PROGRESS_SCRIPT, 0)!!
+                // N415 cache work belongs to Claude: test the planned pure script patch without writing either cache.
+                QuestListCacheTool.patchProgressScript(library.data(QuestListCacheTool.CLIENTSCRIPT_INDEX, QuestListCacheTool.PROGRESS_SCRIPT, 0)!!)
             } finally {
                 library.close()
             }
@@ -165,11 +166,11 @@ class QuestStatusTests {
     // ------------------------------------------------------------------------------------------------ the status
 
     @Test
-    fun `a new account has everything completed except the eight choice quests`() {
+    fun `a new account has reference quests completed but must earn choice quests and Mage Arena II`() {
         val account = Account(isNew = true)
         QuestStatus.login(account.player)
         QuestList.ENTRIES.forEach { entry ->
-            if (entry.slot in choiceSlots) {
+            if (entry.slot in choiceSlots || entry.slot == gg.rsmod.plugins.content.areas.wilderness.MageArenaII.SLOT) {
                 assertEquals(State.NOT_STARTED, QuestStatus.state(account.player, entry.slot), entry.name)
                 assertEquals(0, entry.progress.read(account.player), entry.name)
             } else {

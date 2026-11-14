@@ -28,7 +28,8 @@ object MaxCapes {
     const val MAX_CAPE = Items.MAX_CAPE_20767
     const val MAX_HOOD = Items.MAX_HOOD_20768
 
-    val VARIANTS =
+    /** Previously approved cosmetic store offers. New obtainable variants do not acquire a price automatically. */
+    val STORE_LOOK_VARIANTS =
         listOf(
             Variant(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_MAX_CAPE, Items.IMBUED_SARADOMIN_MAX_HOOD),
             Variant(Items.IMBUED_ZAMORAK_CAPE, Items.IMBUED_ZAMORAK_MAX_CAPE, Items.IMBUED_ZAMORAK_MAX_HOOD),
@@ -42,6 +43,8 @@ object MaxCapes {
             Variant(Items.INFERNAL_CAPE, Items.INFERNAL_MAX_CAPE, Items.INFERNAL_MAX_HOOD),
             Variant(Items.AVAS_ACCUMULATOR, Items.ACCUMULATOR_MAX_CAPE, Items.ACCUMULATOR_MAX_HOOD),
         )
+
+    val VARIANTS = STORE_LOOK_VARIANTS + listOfNotNull(AncientCape.maxVariant())
 
     /** Every wearable max cape variant: the combined capes and their (l) versions (the broken ones cannot be worn). */
     val WEARABLE_VARIANTS: Set<Int> by lazy {

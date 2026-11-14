@@ -22,11 +22,18 @@ object QuestTabDetails {
     }
 
     fun quest(name: String): Quest? =
-        QuestGuideUi.NAMES.entries.firstOrNull { it.value == name }?.key
+        gg.rsmod.plugins.content.areas.wilderness.MageArenaIIQuest.takeIf { it.name == name }
+            ?: QuestGuideUi.NAMES.entries.firstOrNull { it.value == name }?.key
             ?: Quest.getQuest(canonical(name))
             ?: (FoundationQuests.SHORT + FoundationQuests.COMPLETED).firstOrNull { it.name == canonical(name) }
 
     fun open(player: Player, name: String) {
+        if (name == "Mage Arena I" || name == "Mage Arena II") {
+            val journal = gg.rsmod.plugins.content.areas.wilderness.MageArenaJournal
+            val lines = if (name == "Mage Arena I") journal.first(player) else gg.rsmod.plugins.content.areas.wilderness.MageArenaII.journal(player)
+            journal.open(player, name, lines)
+            return
+        }
         quest(name)?.let {
             player.buildQuestOverview(it)
             return
