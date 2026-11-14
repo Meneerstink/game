@@ -1,0 +1,278 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Elite Cryptic clues==
+</noinclude>
+{| class = "wikitable align-center-3" width = "100%"
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue = [[Clue scroll (elite) - A demon's best friend|A demon's best friend holds the next step of this clue.]]
+|note = Kill a [[hellhound]].
+''Note: Killing [[Cerberus]] will count, but hellhounds inside the [[God Wars Dungeon]] will not count.''
+|task = kill
+|image =  Cryptic clue - kill hellhound.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - A Guthixian ring lies between two peaks|A Guthixian ring lies between two peaks. Search the stones and you'll find what you seek.]]
+|note = Search the stones several steps west of the Guthixian stone circle in [[Taverley]], search the stones.
+|task = search
+|image = Cryptic clue - search stones Taverley.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - A reck you say|A reck you say; let's pray there aren't any ghosts.]]
+|note = Speak to [[Father Aereck]] in [[Lumbridge]].
+|task = talk
+|image = Cryptic clue - talk Father Aereck.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - A ring of water surrounds 4 powerful rings|A ring of water surrounds 4 powerful rings, dig above the ladder located there.]]
+|note = Dig by the ladder leading to the [[Dagannoth Kings]]' room in the [[Waterbirth Island Dungeon]].
+|task = dig
+|image = Cryptic clue - dig dagannoth kings.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Banish a chilling spirit|Banish a chilling spirit.]]
+|note = Kill a [[Frost Nagua]]. [[Amoxliatl]] also counts for this.
+|task = kill
+|image = Cryptic clue - banish a chilling spirit.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Crush the spirited earth|Crush the spirited earth.]]
+|note = Kill an [[Earthen Nagua]].
+|task = kill
+|image = Cryptic clue - crush the spirited earth.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Desert insects is what I see|Desert insects is what I see. Taking care of them was my responsibility. Your solution is found by digging near me.]]
+|note = Dig next to the [[entomologist]], in the [[Kalphite Cave]] east of [[Shantay Pass]].
+|task = dig
+|image = Cryptic clue - Desert insects.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Dig under Razorlor's toad batta|Dig under Razorlor's toad batta.]]
+|note = Dig on the [[toad batta]] spawn in [[Tarn's Lair]]. See [[:File:Tarn's Lair map.png|this map]] for directions. From the entrance, follow the route C-K, or, alternatively, D-S-Q-P-O-N-M-L.
+Or faster: from the Slayer ring teleport, east, jump west past mages, get pushed by wall crushers, south, south, west, west, south, search the tile (floor) to deactivate the log trap and jump over, south, south, "go down", but you'll fall right where the [[toad batta]] is.
+|task = dig
+|image = Cryptic clue - dig Tarn's lair.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Dig where the forces of Zamorak and Saradomin collide|Dig where the forces of Zamorak and Saradomin collide.]]
+|note = Dig next to the law rift in the [[Abyss]], in the north-east section.
+|task = dig
+|image = Cryptic clue - Dig Abyss law rift.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Dobson is my last name, and with gardening I seek fame|Dobson is my last name, and with gardening I seek fame.]]
+|note = [[Horacio]], located in the garden of the [[Handelmort Mansion]] in [[East Ardougne]].
+|task = talk
+|image = Cryptic clue - speak to Horacio.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Does one really need a fire to stay warm here|Does one really need a fire to stay warm here?]]
+|note = Located next to the fire near the [[Volcanic Mine]] entrance on the [[Fossil Island Volcano]].
+|task = dig
+|image = Cryptic clue - a fire to stay warm.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Even the seers say this clue goes right over their heads|Even the seers say this clue goes right over their heads.]]
+|note = Search the crate on the [[Seers' Village Rooftop Course]]. Requires 60 [[Agility]] (can be boosted from 55 with a [[Summer pie]]).
+|task = search
+|image = Cryptic clue - Seers rooftop crate.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Ghostly bones|Ghostly bones.]]
+|note = Kill an [[Ankou]], which can be found on the 4th level of [[Stronghold of Security]], the [[Stronghold Slayer Cave]] (Slayer task required), the [[Catacombs of Kourend]], and [[The Forgotten Cemetery]].
+|task = kill
+|image = Cryptic clue - kill ankou.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Green is the colour of my death|Green is the colour of my death as the winter-guise, I swoop towards the ground.]]
+|note = '''Required:''' {{plinkp|Sled}}, partial completion of [[Troll Romance]].
+Players need to slide down to where [[Trollweiss]] grows on [[Trollweiss Mountain]].
+|task = dig
+|image =  Cryptic clue - dig trollweiss flowers.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Has no one told you it is rude to ask a lady her age|Has no one told you it is rude to ask a lady her age?]]
+|note = Speak to [[Mawrth]] in [[Lletya]]
+|task = talk
+|image = Cryptic clue - speak to Mawrth.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - His bark is worse than his bite|His bark is worse than his bite.]]
+|note = Speak to [[Barker]] at [[Canifis]]'s [[Barkers' Haberdashery]].
+|task = talk
+|image = Cryptic clue - speak to Barker.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - I am the one who watches the giants|I am the one who watches the giants. The giants in turn watch me. I watch with two while they watch with one. Come seek where I may be.]]
+|note = Speak to [[Kamfreena]] on the top floor of the [[Warriors' Guild]].
+|task = talk
+|image = Cryptic clue - speak kamfreena warriors.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - I burn between heroes and legends|I burn between heroes and legends.]]
+|note = Speak to the [[candle maker]] in [[Catherby]].
+|task = talk
+|image = Cryptic clue - speak to candle maker.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - I live in a deserted crack collecting soles|I live in a deserted crack collecting soles.]]
+|note = Enter the crack west of [[Nardah]] rug merchant, and talk to the [[Genie (Spirits of the Elid)|genie]]. A [[rope]] and a [[lightsource]] are required (partial completion of [[Spirits of the Elid]] required).
+|task = talk
+|image = Cryptic clue - nardah genie.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - In a while|In a while...]]
+|note = Kill a [[crocodile]].
+|task = kill
+|image = Cryptic clue - in a while....png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Let's hope you don't meet a watery death when you encounter this fiend|Let's hope you don't meet a watery death when you encounter this fiend.]]
+|note = Kill a [[waterfiend]]. Players cannot kill those found in the [[Kraken Cove]] as part of this clue.
+|task = kill
+|image = Cryptic clue - kill waterfiend.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Mix yellow with blue and add heat|Mix yellow with blue and add heat, make sure you bring protection.]]
+|note = Kill a [[green dragon]] or [[brutal green dragon]]. Players who have completed [[Dragon Slayer II]] can use the [[Myths' Guild]] basement to kill green dragons outside the [[Wilderness]].
+|task = kill
+|image = Cryptic clue - kill green dragon.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - More resources than I can handle|More resources than I can handle, but in a very dangerous area. Can't wait to strike gold!]]
+|note = Dig in the centre of the three [[gold rocks]] in the [[Resource Area]] deep in the [[Wilderness]]. An entry fee of 7,500 [[coins]] is required (6,000 if the medium [[Wilderness Diary]] is completed, 3,750 if the hard diary is completed, or free if the elite diary is completed).
+|task = dig
+|image  = Cryptic clue - dig resource area.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Observing someone in a swamp|Observing someone in a swamp, under the telescope lies treasure.]]
+|note = Dig by the telescope in the island where [[Broken Handz]] can be found (fairy ring code {{Fairycode|DLR}}).
+|task = dig
+|image  = Cryptic clue - dig poison waste telescope.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Reflection is the weakness for these eyes of evil|Reflection is the weakness for these eyes of evil.]]
+|note = Kill a [[basilisk]], which requires a [[mirror shield]] and 40 [[Slayer]]. [[Basilisk knight]]s also count, requiring 60 Slayer and completion of [[The Fremennik Exiles]].
+|task = kill
+|image = Cryptic clue - kill basilisk.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Right on the blessed border, cursed by the evil ones|Right on the blessed border, cursed by the evil ones. On the spot inaccessible by both; I will be waiting. The bugs' imminent possession holds the answer.]]
+|note = Dig right under the [[fairy ring]] located west of [[Filliman]]'s grotto. The fairy ring code is {{Fairycode|BIP}}. Players without access to fairy ring transport can use the [[Shortcuts|shortcut]] to get to the island provided they have 50 [[Agility]].
+|task = dig
+|image = Cryptic clue - salve river island.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Scattered coins and gems fill the floor|Scattered coins and gems fill the floor. The chest you seek is in the north east.]]
+|note = Kill the [[King Black Dragon]] for a [[Key (Treasure Trails)|key (elite)]], and then open the closed chest in the north-east corner of the [[King Black Dragon Lair|lair]].
+|task = key
+|image = Cryptic clue - coins and gems fill the floor.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - 'See you in your dreams' said the vegetable man|'See you in your dreams' said the vegetable man.]]
+|note = Speak to [[Dominic Onion]] at the [[Nightmare Zone]] teleport spot.
+|task = talk
+|image = Cryptic clue - talk dominic nmz.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue_scroll_(elite)_-_Show this to Sherlock|Show this to Sherlock.]]
+|note = [[Sherlock]] can be found south of [[Seers' Village]]. Players will have to perform one of the Sherlock tasks in order to complete this challenge.
+|image = Cryptic clue - talk sherlock.png
+|task = sherlock
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Speak to a Wyse man|Speak to a Wyse man.]]
+|note = Talk to [[Wyson the gardener]] at [[Falador Park]].
+|image = Cryptic clue - talk to wyse man.png
+|task = talk
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Surround my bones in fire, ontop the wooden pyre|Surround my bones in fire, on top the wooden pyre. Finally lay me to rest, before my one last test.]]
+|note = Kill a [[confused barbarian]] or [[lost barbarian]] within the [[Ancient Cavern]] to receive [[mangled bones]]. Construct a [[pyre ship]] and burn the bones onto the pyre with [[logs]], a [[tinderbox]], and an [[axe]]. Kill the [[ferocious barbarian spirit]] that spawns to receive the next clue.
+|task = kill
+|image = Cryptic clue - burn pyre logs.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - The beasts retreat, for their Queen is gone|The beasts retreat, for their Queen is gone; the song of this town still plays on. Dig near the birthplace of a blade, be careful not to melt your spade.]]
+|note = (Requires full completion of the [[Swan Song]] quest. There is no need to accept the reward though!) Dig in front of the small furnace in the [[Piscatoris Fishing Colony]].
+|task = dig
+|image = Cryptic_clue_-_dig_piscatoris colony.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Their bane awaits|Their bane awaits, but don't be going in there without permission.]]
+|note = Kill the [[shellbane gryphon]]. A gryphon Slayer task '''is not required''' to complete the clue step.
+|task = kill
+|image = Cryptic clue - their bane awaits.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - Three rule below and three sit at top|Three rule below and three sit at top. Come dig at my entrance.]]
+|task = dig
+|note = Dig in front of the entrance to the [[Waterbirth Island Dungeon]].
+|image = Cryptic clue - Three rule below.png
+|level = 4}}
+{{Cryptics
+|-
+|clue = [[Clue scroll (elite) - Varrock is where I reside|Varrock is where I reside, not the land of the dead, but I am so old, I should be there instead. Let's hope your reward is as good as it says, just 1 gold one and you can have it read.]]
+|note = Talk to [[Aris]], west of [[Varrock Square]].
+|task = talk
+|image = Cryptic clue - speak to Gypsy Aris.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - With a name like that, you'd expect a little more|With a name like that, you'd expect a little more than just a few scimitars.]]
+|note = Speak to [[Daga]] on [[Ape Atoll]]. Note: If [[Monkey Madness II]] has not been completed, you must be wielding any Monkey [[Greegree]] to speak to Daga. Either way, you do NOT need a [[M'speak amulet]]
+|task = talk
+|image = Cryptic clue - speak to daga.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - W marks the spot|W marks the spot.]]
+|note = Dig in the middle of the [[Warriors' Guild]] entrance hall. To enter, a player must have their [[Attack]] and [[Strength]] levels add up to a total of 130 or have either one equal to 99.
+|task = dig
+|image = Cryptic clue - w marks the spot.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - With drinks and dwarves I make my way|With drinks and dwarves I make my way, upon my head a glass will stay.]]
+|note = Speak to [[Funbo]] in [[The Lost Pickaxe]] pub in [[Cam Torum]].
+|task = talk
+|image = Cryptic clue - speak to Funbo.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You'll get licked|You'll get licked.]]
+|note = Kill a [[bloodveld]]. [[Mutated Bloodveld|Mutated]] variants do '''work'''. Bloodvelds in the [[God Wars Dungeon]] do '''work'''.
+|task = kill
+|image = Cryptic clue - kill bloodveld.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You'll have to plug your nose if you use this source of herbs|You'll have to plug your nose if you use this source of herbs.]]
+|note = Kill an [[aberrant spectre]] or [[deviant spectre]] and pick up the clue or casket that it drops.
+|task = kill
+|image = Cryptic clue - kill aberrant spectre.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You might have to turn over a few stones to progress|You might have to turn over a few stones to progress.]]
+|note = Kill a [[rock crab]] and pick up the [[reward casket (elite)|casket]] or [[Clue scroll (elite)|clue]] that it drops.
+|task = kill
+|image = Cryptic clue - kill a rock crab.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You must be 100 to play with me|You must be 100 to play with me.]]
+|note = Speak to the [[Veteran boat squire]] at [[Pest Control]].
+|task = talk
+|image = Cryptic clue - speak squire pest control.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You were 3 and I was the 6th Come speak to me|You were 3 and I was the 6th. Come speak to me.]]
+|note = Speak to [[Vannaka]] in [[Edgeville Dungeon]].
+|task = talk
+|image = Cryptic clue - speak to Vannaka.png
+|level = 4}}
+{{Cryptics
+|clue = [[Clue scroll (elite) - You will have to fly high where a sword cannot help you|You will have to fly high where a sword cannot help you.]]
+|note = Kill an [[aviansie]].
+|task = kill
+|image = Cryptic clue - kill aviansie.png
+|level = 4}}
+|}

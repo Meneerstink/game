@@ -1,0 +1,24 @@
+{{Infobox Scenery
+|name = Strange casket
+|image = [[File:Casket detail.png|284px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|quest = No
+|location = [[Watson's house]]
+|options = Search
+|examine = It looks like what you find when solving clues... but there's something odd about it.
+|map = {{Map|name=Strange casket|x=1646|y=3570|plane=1|r=1|mtype=pin}}
+|id = 34733
+}}
+[[File:Strange casket chathead.png|left]]
+The '''strange casket''' is a casket found upstairs in [[Watson's house]] in [[Hosidius]]. Players must speak to it in order to enable the chance of a reward casket turning into the [[Mimic]].
+
+If players have a Mimic in their inventory, they can bring it to the strange casket to fight [[The Mimic]].
+
+Should the player die in the fight, the strange casket will hold the player's items and will return them for a fee of 90,000 [[coins]] (which can be taken from its own storage). Like other [[Item Retrieval Service]]s, any items stored with the strange casket will be lost should the player die in '''any''' unsafe [[death]].
+
+==Dialogue==
+{{Hastranscript|scenery}}
+
+{{Treasure Trails}}

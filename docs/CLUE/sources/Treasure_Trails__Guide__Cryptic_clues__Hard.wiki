@@ -1,0 +1,440 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Hard Cryptic clues==
+</noinclude>
+{| class="wikitable sortable lighttable mw-collapsible align-center-3" width="100%" 
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue = [[Clue scroll (hard) - 46 is my number|46 is my number. My body is the colour of burnt orange and crawls among those with eight. Three mouths I have, yet I cannot eat. My blinking blue eye hides my grave.]]
+|note=Dig on top of the [[sapphire]] spawn in the [[Spiders]]' nest in level 46 [[Wilderness]] (north-west of [[Lava Dragon Isle]]).
+|task=dig
+|image=Cryptic clue - dig spider nest wilderness.png
+|level=3 }}
+{{Cryptics
+|clue=[[Clue scroll (hard) - A bag belt only?|'A bag belt only?', he asked his balding brothers.]]
+|note=Talk to [[Abbot Langley]] in the monastery near [[Edgeville]].
+|task=talk
+|image=Cryptic clue - speak Abbot Langley.png
+|level=3 }}
+{{Cryptics
+|clue=[[Clue scroll (hard) - A general who sets a 'shining' example|A general who sets a 'shining' example.]]
+|note=Speak to [[General Hining]] found at [[Tyras Camp]].
+|task=puzzle
+|image=Cryptic clue - speak to General Hining.png
+|level= 3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - A great view - watch the rapidly drying hides get splashed|A great view - watch the rapidly drying hides get splashed. Check the box you are sitting on.]]
+|note=[[Almera]]'s house north of [[Baxtorian Falls]], search the boxes on the {{FloorNumber|uk=1}}.
+|task=search
+|image=Cryptic clue - search box almera.png
+|level= 3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Aggie I see|Aggie I see, Lonely and southern I feel I am neither inside nor outside the house yet no house would be complete without me. The treasure lies beneath me!]]
+|note=Dig outside the window of [[Aggie]] the Witch's house in [[Draynor Village]].
+|task=dig
+|image=Cryptic clue - dig aggie's window.png
+|level= 3}}
+{{Cryptics
+|clue=[[AIQ 0440]]
+|note=Dig 4 steps east and 4 steps south of the centre of the [[fairy ring]] {{Fairycode|AIQ}} ([[Mudskipper Point]]).
+|task=dig
+|image=Cryptic clue - AIQ 0440.png
+|level=3 }}
+{{Cryptics
+|clue=[[AIR 2331]]
+|note=Dig 2 steps east and 1 step south of the centre of the [[fairy ring]] {{Fairycode|air}}.
+|task=dig
+|image=Cryptic clue - AIR 2331.png
+|level=3}}
+{{Cryptics
+|clue=[[AJP 3015]]
+|note=Dig 2 steps north and 5 steps west of the centre of the [[fairy ring]] {{Fairycode|AJP}}.
+|task=dig
+|image=Cryptic clue - AJP 3015.png
+|level= 3}}
+{{Cryptics
+|clue=[[ALP 1140]]
+|note= Dig 1 step east and 3 steps south of the centre of the [[fairy ring]] {{Fairycode|alp}} near the [[Lighthouse]].
+|task=dig
+|image=Cryptic clue - ALP 1440.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - And so on, and so on, and so on|And so on, and so on, and so on. Walking from the land of many unimportant things leads to a choice of paths.]]
+|note=Dig on [[Etceteria]] next to the [[evergreen]] tree in front of the castle walls.
+|task=dig
+|image=Cryptic clue - dig etceteria.png
+|level=3}}
+{{Cryptics
+|clue=[[BIP 7013]]
+|note=Dig 6 steps north and 3 steps west of the centre of the [[fairy ring]] {{Fairycode|BIP}} ([[Fairytale II - Cure a Queen]] or 50 [[Agility]] required).
+|task=dig
+|image=Cryptic clue - BIP 7013.png
+|level= 3}}
+{{Cryptics
+|clue=[[BJR 1123]]
+|note=Dig 1 steps south and 2 steps west of the centre of the [[fairy ring]] {{Fairycode|BJR}}. Partial completion of the [[Holy Grail]] quest is required to enter this area.
+|task=dig
+|image=Cryptic clue - BJR 1123.png
+|level= 3}}
+{{Cryptics
+|clue=[[BLP 6200]]
+|note= Dig 6 steps north and 2 steps east of the centre of the [[fairy ring]] {{Fairycode|BLP}}.
+|task=dig
+|image=Cryptic clue - BLP 6200.png
+|level=3}}
+{{Cryptics
+|clue=[[CIS 0009]]
+|note=Dig 9 steps west of the centre of the [[fairy ring]] (code {{Fairycode|cis}}) found north of the [[Arceuus Library]]. Alternatively, teleport to [[Arceuus]] and run north, or use a [[games necklace]] to teleport to the [[Wintertodt Camp|Wintertodt camp]] and run south.
+|task=dig
+|image=Cryptic clue - CIS 0009.png
+|level=3 }}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Citric cellar|Citric cellar.]]
+|note=Speak to [[Heckel Funch]] on the {{FloorNumber|uk=1}} in the [[Grand Tree]].
+|image= Cryptic clue - speak heckel funch.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue=[[CKP 0224]]
+|note=Dig 2 steps south and 2 steps west of the centre of the [[fairy ring]] {{Fairycode|ckp}}.
+|task=dig
+|image=Cryptic clue - CKP 0224.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - Come have a cip with this great soot covered denizen|Come have a cip with this great soot covered denizen.]]
+|note = Talk to [[Miner Magnus]] east of the [[fairy ring]] (code {{Fairycode|CIP}}).
+'''Answer:''' 8
+|task = talk
+|image = Cryptic clue - talk to Miner Magnus.png
+|level = 3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Come to the evil ledge|Come to the evil ledge, Yew know yew want to. Try not to get stung.]]
+|note=Dig in [[Edgeville]], just east of the southern [[yew tree]].
+|task=dig
+|image=Cryptic clue - come to the evil ledge.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Covered in shadows|Covered in shadows, the centre of the circle is where you will find the answer.]]
+|note=Dig in the centre of [[Mort'ton]], where the roads intersect. Just south of [[Razmire Keelgan]].
+|task=dig
+|image=Cryptic clue - dig centre circle mort'ton.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Dig in the lair of red wings|Dig in the lair of red wings, within the temple of the Sun and moon.]]
+|note=Dig in the red dragons room of [[Forthos dungeon]].
+|task=dig
+|image=Cryptic clue - Forthos dungeon.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - Dig where 4 siblings and I all live with our evil overlord|Dig where 4 siblings and I all live with our evil overlord.]]
+|note = Dig in the chicken pen inside the [[Champions' Guild]]. Requires 32 [[quest points]] to enter.
+|task = dig
+|image=Cryptic clue - dig chicken pen in champion's guild.png
+|level = 3}}
+{{Cryptics
+|clue=[[DIP 8511]]
+|note=Dig 7 steps north and 4 steps east of the centre of the [[fairy ring]] {{Fairycode|DIP}} ([[Abyssal Nexus]]).
+|task=dig
+|image=Cryptic clue - DIP 8511.png
+|level=3}}
+{{Cryptics
+|clue=[[DKS 2310]]
+|note=Dig 1 step north and 3 steps east of the centre of the [[fairy ring]] {{Fairycode|DKS}} (north-east of Rellekka).
+|task=dig
+|image=Cryptic clue - DKS 2310.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Four blades I have, yet draw no blood|Four blades I have, yet draw no blood; Still I turn my prey to powder. If you are brave, come search my roof; It is there my blades are louder.]]
+|note=[[Lumbridge]] [[windmill]], search the crates on the top floor.
+|task=search
+|image=Cryptic clue - search crate Lumbridge windmill.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Generally speaking, his nose was very bent|Generally speaking, his nose was very bent.]]
+|note=Talk to [[General Bentnoze]], found in the northernmost part of [[Goblin Village]]; he'll give you a puzzle box.
+|image=Cryptic clue - bentnoze goblin village.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Gold I see, yet gold I require|Gold I see, yet gold I require. Give me 875 if death you desire.]]
+|note=Speak to [[Saniboch]] at the [[Brimhaven Dungeon]] entrance.
+|image=Cryptic clue - speak saniboch.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - He knows just how easy it is to lose track of time|He knows just how easy it is to lose track of time.]]
+|note = Speak to [[Brother Kojo]] in the [[Clock Tower (building)|Clock Tower]]. ''Answer:'' 22.
+|task = talk
+|image = Cryptic clue - talk to Brother Kojo.png
+|level = 3}}
+{{Cryptics
+|clue= [[Clue scroll (hard) - His head might be hollow|His head might be hollow, but the crates nearby are filled with surprises.]]
+|note= Search the crates near the [[Clay golem]] in the [[Ruins of Uzer]].
+|task=search
+|image= Cryptic clue - search crate uzer.png
+|level=3 }}
+{{Cryptics
+|clue=I'd like to hear some music. Come and see me on the bridge in Falador Park, and play: ''<some music>''
+
+Thanks, Cecilia
+|note=Speak to [[Cecilia]], who is located on the bridge in [[Falador Park]].
+|task=talk
+|image=Cryptic clue - talk to Cecilia.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - I am a token of the greatest love|I am a token of the greatest love. I have no beginning or end. My eye is red, I can fit like a glove. Go to the place where it's money they lend,
+And dig by the gate to be my friend.]]
+|note=Dig by the gate in the basement of the [[West Varrock]] bank.
+|task=dig
+|image=Cryptic clue - dig west varrock bank basement.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - I have many arms, but legs I have just one|I have many arms but legs, I have just one. I have little family but my seed you can grow on, I am not dead, yet I am but a spirit, and my power, on your quests, you will earn the right to free it.]]
+|note = [[Spirit tree]] in [[Tree Gnome Village (location)|Tree Gnome Village]].
+'''Answer:''' 13112221
+|task = talk
+|image = Cryptic clue - talk to spirit tree.png
+|level = 3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - I lie lonely and forgotten in mid wilderness|I lie lonely and forgotten in mid wilderness, where the dead rise from their beds.
+Feel free to quarrel and wind me up and dig while you shoot their heads.]]
+|note=Directly under the [[crossbow]] respawn in the [[Graveyard of Shadows]] in level 18 [[Wilderness]].
+|task=dig
+|image=Cryptic clue - dig graveyard wilderness.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - I sit on the beach and cry for those that have passed on|I sit on the beach and cry for those that have passed on.]]
+|note=Dig on the beach of the [[Tear of the Soul]].
+|task=dig
+|image=Cryptic clue - dig Tear of the Soul.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - I watch the sea|I watch the sea. I watch you fish. I watch your tree.]]
+|note=Speak to [[Ellena]] at [[Catherby]] [[fruit tree patch]].
+|image=Cryptic clue - talk ellena catherby.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Identify the back of this over-acting brother|Identify the back of this over-acting brother. (He's a long way from home.)]]
+|note=Talk to [[Hamid]], the monk at the altar in the [[Emir's Arena]] hospital. You will receive a [[puzzle box]].
+|image=Cryptic clue - hamid duel arena.png
+|level=3|task = puzzle}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - If a man carried my burden|If a man carried my burden, he would break his back. I am not rich, but leave silver in my track. Speak to the keeper of my trail.]]
+|note=Speak to [[Gerrant]] in the [[Gerrant's Fishy Business|fish shop]] in [[Port Sarim]].
+|task=talk
+|image=Cryptic clue - speak to Gerrant.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - If you look closely enough|If you look closely enough, it seems that the archers have lost more than their needles.]]
+|note=Search the haystack by the south corner of the [[Ranging Guild]]. You need level 40 [[Ranged]] to access it.
+|image=Cryptic clue - search haystack ranging guild.png
+|level=3|task = search}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - In the city where merchants are said to have lived|In the city where merchants are said to have lived, talk to a man with a splendid cape, but a hat dropped by goblins.]]
+|note=Talk to the [[head chef]] in [[Cooks' Guild]] west of [[Varrock]]. Remember to wear a Chef's Hat or Varrock armour 3 and above.
+|task=talk
+|image=Cryptic_clues_-_Head_chef.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - It seems to have reached the end of the line|It seems to have reached the end of the line, and it's still empty.]]
+|note=Search the [[Mine cart (Dwarven Mine)|carts]] in the northern part of the [[Dwarven Mine]].
+|task=search
+|image=Cryptic clue - search cart dwarven mine.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Leader of the Yak City|Leader of the Yak City.]]
+|note=Talk to [[Mawnis Burowgar]] in [[Neitiznot]]. [[The Fremennik Isles]] quest upto the jester part or [[Silly jester costume|a silly jester costume]] is required.
+|task=talk
+|image= Cryptic clue - Talk Mawnis Neitiznot.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Mine was the strangest birth under the sun|Mine was the strangest birth under the sun. I left the crimson sack, yet life had not begun. Entered the world, and yet was seen by none.]]
+|note=Inside [[Karamja Volcano]], dig directly underneath the [[red spiders' eggs]] respawn.
+|task=dig
+|image=Cryptic clue - dig karamja volcano.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Must be full of railings|Must be full of railings.]]
+|task=search
+|note=Search the boxes around the hut where the broken dwarf cannon is, close to the start of the [[Dwarf Cannon|Dwarf Cannon quest]] (north-west of the [[Fishing Guild]]).
+|image=Cryptic clue - search boxes south Coal Trucks.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - My giant guardians below the market streets|My giant guardians below the market streets would be fans of rock and roll, if only they could grab hold of it. Dig near my green bubbles!]]
+|task=dig
+|note= Dig near the cauldron by [[moss giant]]s under [[Varrock Sewers]]. A [[slash]] weapon or [[knife]] is required to navigate through the sewers.
+
+Players with 51 [[Agility]] can use the [[Shortcuts|shortcut]] pipe from [[Edgeville Dungeon]] to direct access the clue location; a slash weapon or knife is not required in this case.
+|image=Cryptic clue - dig varrock sewers.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - My home is grey, and made of stone|My home is grey, and made of stone; A castle with a search for a meal. Hidden in some drawers I am, across from a wooden wheel.]]
+|note=Open the [[Drawers (Lumbridge Castle)|drawers]] inside the room with the [[spinning wheel]] on the {{FloorNumber|uk=1}} of [[Lumbridge Castle]].
+|task=search
+|image=Cryptic clue - search drawers lumbridge castle.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - My name is like a tree, yet it is spelt with a 'g'|My name is like a tree, yet it is spelt with a 'g'.
+Come see the fur which is right near me.]]
+|note=Speak to [[Wilough]], next to the fur merchant in [[Varrock Square]].
+|task=puzzle
+|image=Cryptic clue - speak wilough varrock.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Often sought out by scholars of histories past|Often sought out by scholars of histories past, find me where words of wisdom speak volumes.]]
+|note=Speak to an [[examiner]] at the [[Exam Centre]]. You might need to talk to several different examiners.
+|image=Cryptic clue - speak examiner.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue= [[Clue scroll (hard) - Probably filled with books on magic|Probably filled with books on magic.]]
+|note= Search the bookcase in the basement of [[Wizards' Tower]].
+|task= search
+|image= Cryptic clue - search bookcase wizard tower.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Read 'How to breed scorpions' By OWThathurt|Read 'How to breed scorpions.' By O.W.Thathurt.]]
+|note=Search the northern bookcase on the {{FloorNumber|uk=1}} of the [[Sorcerer's Tower]].
+|task=search
+|image=Cryptic clue - search bookcase sorcerer tower.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Rotting next to a ditch|Rotting next to a ditch. Dig next to the fish.]]
+|note=Dig next to a [[fishing spot]] on the south-east side of [[Burgh de Rott]].
+|task=dig
+|image=Cryptic clue - Dig next to the fish.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Small shoe|'Small shoe.' Often found with rod on mushroom.]]
+|note=Talk to any [[Gnome trainer]] in the [[Agility]] area of the [[Tree Gnome Stronghold]].
+|task=puzzle
+|image=Cryptic clue - talk gnome trainer.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Snah? I feel all confused, like one of those cakes|Snah? I feel all confused, like one of those cakes...]]
+|note=Talk to [[Hans]] roaming around [[Lumbridge Castle]]. (Walk anti-clockwise around castle to meet Hans quicker.)
+|task=talk
+|image=Cryptic clue - talk hans.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Surprising|Surprising? I bet he is...]]
+|note=Talk to [[Sir Prysin]] in [[Varrock Palace]].
+|image=Cryptic clue - sir prysin varrock.png
+|task=talk
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Surviving|Surviving.]]
+|note=Talk to [[Sir Vyvin]] on the {{FloorNumber|uk=2}} of [[Falador Castle]] (east side).
+|image=Cryptic clue - Surviving.png
+|task=puzzle
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - The beasts to my east snap claws and tails|The beasts to my east snap claws and tails, The rest to my west can slide and eat fish. The force to my north will jump and they'll wail, Come dig by my fire and make a wish.]]
+|note=Dig by the torch in the [[Ardougne Zoo]], between the [[penguin]]s and the [[scorpion]]s.
+|task=dig
+|image=Cryptic clue - dig ardougne zoo.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - The Big High War God left his mark on this place|The Big High War God left his mark on this place.]]
+|note=Dig anywhere in [[Yu'biusk]] ([[fairy ring]] {{fairycode|BLQ}} after completion of [[Land of the Goblins]]).
+|task=dig
+|image=Cryptic clue - dig in Yu'biusk.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - The cheapest water for miles around|The cheapest water for miles around, but they react badly to religious icons.]]
+|note= Search the crates in the [[General Store]] tent in the [[Bandit Camp (Kharidian Desert)|Bandit Camp]], south of the [[Bedabin Camp]].
+|task=search
+|image=Cryptic clue - search crate bandit camp.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - The effects of this fire are magnified|The effects of this fire are magnified.]]
+|note=Dig by the fire beside [[Ket'sal K'uk]] in the westernmost part of the [[Kebos Swamp]].
+|task=dig
+|image=Cryptic clue - dig Kebos Swamp.png
+|level=3 }}
+{{Cryptics
+|clue=[[Clue scroll (hard) - The keeper of Melzars Spare? Skeleton? Anar?|The keeper of Melzars...Spare? Skeleton? Anar?]]
+|note=Speak to [[Oziach]] in [[Edgeville]].
+|task=puzzle
+|image=Cryptic clue - oziach edgeville.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - The King's magic shouldn't be wasted by me|The King's magic shouldn't be wasted by me.]]
+|note = Talk to the [[Guardian mummy]] inside the [[Pyramid Plunder]] minigame in [[Sophanem]]. Partial completion of [[Icthlarin's Little Helper]] is required. The mummy will only be found in one of the four entrances, this might require players to check the other entrances.
+|task = puzzle
+|image = Cryptic clue - talk to guardian mummy.png
+|level = 3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - The magic of 4 colours, an early experience you could learn|The magic of 4 colours, an early experience you could learn. The large beast caged up top, rages, as his demised kin's loot now returns.]]
+|note = Speak to [[Wizard Mizgog]] at the top of the [[Wizards' Tower]] south of [[Draynor]]. Fairy ring code {{Fairycode|DIS}} takes you to the wizard's tower.
+
+The [[Amulet of the Eye]] allows easy access to the wizard tower basement, use it to teleport to the [[Temple of the Eye (location)|Temple of the Eye]] and then leave via the portal.
+|task = talk
+|image = Cryptic clue - talk to wizard mizgog.png
+|level = 3 }}
+{{Cryptics
+|clue=[[Clue scroll (hard) - The mother of the reptilian sacrifice|The mother of the reptilian sacrifice.]]
+|note=Talk to [[Zul-Cheray]] in a house near the sacrificial boat at [[Zul-Andra]].  Use fairy ring code {{Fairycode|BJS}}, treading on stepping stones (requiring 76 Agility) then walk east.
+|task=talk
+|image=Cryptic clue - talk to zul-cheray.png
+|level=3}}
+{{Cryptics
+|clue = [[Clue scroll (hard) - THEY'RE EVERYWHERE!!!!|THEY'RE EVERYWHERE!!!! But they were here first. Dig for treasure where the ground is rich with ore.]]
+|note = Dig at [[Barbarian Village]], next to the [[Stronghold of Security]].
+|task = dig
+|image = Cryptic clue barbarian village dig.png
+|level = 3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - This aviator is at the peak of his profession|This aviator is at the peak of his profession.]]
+|note=[[Captain Bleemadge]], the [[gnome glider]] pilot, is found at the top of [[White Wolf Mountain]].
+|task=puzzle
+|image=Cryptic clue - talk captain bleemadge.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - This village has a problem with cartloads of the undead|This village has a problem with cartloads of the undead. Try checking the bookcase to find an answer.]]
+|note=Search the bookcase by the doorway of the building just south-east of the [[Shilo Village Gem Mine]].
+|task=search
+|image=Cryptic clue - search bookcase shilo.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Try not to let yourself be dazzled when you search these drawers|Try not to let yourself be dazzled when you search these drawers.]]
+|note=Search the western drawers in [[Jimmy Dazzler]]'s home near the [[East Ardougne]] [[Rat Pits]].
+|task=search
+|image=Cryptic clue - try not to get Dazzled.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - When no weapons are at hand|When no weapons are at hand, then is the time to reflect. In Saradomin's name, redemption draws closer...]]
+|note=On [[Entrana]], search the southern drawer in the house with the [[cooking range]] on the western side of the island.
+|task=search
+|image=Cryptic clue - when no weapons are at hand.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - When you get tired of fighting|When you get tired of fighting, go deep, deep down until you need an antidote.]]
+|note=Go to [[Yanille Agility dungeon]] and fall into the place with the [[poison spider]]s, either by repeatedly walking across the balancing ledge (level 40 [[Agility]] required) or praying at the [[altar]] of [[Zamorak]]. Search the crate by the stairs leading up. ''Note: Falling by praying at the altar will result in 15 unavoidable damage. Falling from the ledge results in significantly less (around 3 or 4).''
+|task=search
+|image=Cryptic clue - When you get tired of fighting.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - Where the best are commemorated|Where the best are commemorated, and a celebratory cup, not just for beer.]]
+|note=Dig at the [[Clan Cup Trophy]] south-west of the [[Citharede Abbey]].
+|task=dig
+|image=Cryptic clue - clan wars cup.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - You have all of the elements available to solve this clue|You have all of the elements available to solve this clue. Fortunately you do not have to go as far as to stand in a draft.]]
+|note='''Requirements:''' Started [[Elemental Workshop I]]
+Search the crate, just west of the [[Air elemental]]s, inside the [[Elemental Workshop (dungeon)|Elemental Workshop]]. '''Note:''' A [[battered key]] is required to enter to workshop.
+|task=search
+|image=Cryptic clue - search crate elemental workshop.png
+|level=3}}
+{{Cryptics
+|clue=[[Clue scroll (hard) - You will need to under-cook to solve this one|You will need to under-cook to solve this one.]]
+|note=Search the crate in the [[Lumbridge]] basement.
+|task=search
+|image=Cryptic clue - search crate lumbridge basement.png
+|level=3}}
+|}

@@ -1,0 +1,201 @@
+'''Clue bottles''' are bottles that can be found while training [[Fishing]]. Opening them will destroy the bottle and leave players with a [[clue scroll]] of the same difficulty as the bottle given. Players will not receive a clue bottle if they possess a clue scroll of the same difficulty tier. Like clue scrolls, players can only have one of each type of clue bottle in their possession. Players can toggle whether or not to receive clue bottles by speaking to [[Arthur the Clue Hunter]] in [[Lumbridge]]. Clue bottles are replaced with [[Scroll box|scroll boxes]] if the player has completed [[X Marks the Spot]], and opening one after completing this quest will give players a scroll box of the corresponding difficulty instead of a clue scroll.
+
+If the player receives a clue bottle with a full inventory, it will be placed on the ground.
+
+There are five types of clue bottles:
+*{{plink|Clue bottle (beginner)}}
+*{{plink|Clue bottle (easy)}}
+*{{plink|Clue bottle (medium)}}
+*{{plink|Clue bottle (hard)}}
+*{{plink|Clue bottle (elite)}}
+
+==Rates==
+The chance of obtaining a clue bottle depends mainly on the player's Fishing level together with the type of fish that is caught, similar to how the drop rate of [[skilling pets]] is determined.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632048881880948736|date=4 March 2023|archiveurl=https://reldo.runescape.wiki/i/96597|archivedate=6 March 2023|quote=I did some spot-checking of the Wiki pages and the "base chance" numbers still look correct there, as does the formula for how your level is applied. The CA buff is applied to the "base chance" number *before* the formula is applied.}} In addition, the reward tiers unlocked by completing [[Combat Achievements]] grant a 5% boost to the drop rate of the corresponding clue tier, that is to say the [[Clue bottle (easy)|easy]], [[Clue bottle (medium)|medium]], [[Clue bottle (hard)|hard]], and [[Clue bottle (elite)|elite]] clue bottles.
+
+Equipping a [[ring of wealth (i)]] doubles the rate of finding clue bottles while fishing in the [[Wilderness]].{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1694683613994885224|date=24 August 2023|archiveurl=https://archive.ph/vWfaH{{^|https://archive.ph/A9yea}}|archivedate=24 August 2023|}}
+
+The benefits provided by [[Rada's blessing]] or [[spirit flakes]] do not apply to clue bottles, and hence their activation will not result in a second clue roll.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1635251548161994752|date=13 March 2023|archiveurl=https://reldo.runescape.wiki/i/105193|archivedate=30 July 2023|quote=[Oh, one more thing - I'm guessing double fish from Rada Blessing and Spirit Flakes don't result in another Clue Bottle roll, correct?] They do not. You're welcome :)}}
+{{Calculator:Fishing/Clue bottles}}
+
+===Formula===
+Upon a successful skilling action, a roll is made for each clue tier one is eligible to receive (based on which types of clue are already owned) independently of the outcome of any of the other rolls.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1634546471339974656|date=11 March 2023|archiveurl=https://reldo.runescape.wiki/i/105848|archivedate=15 July 2023|quote=[For Clue Geodes, Bottles, and Nests, if you already have a Beginner, Easy, Medium, and Hard Clues in the bank, the next clue received from skilling will 100% be an Elite Clue at the full rate, correct? (...)] No, the elite rate wouldn't be changed by that. It rolls for each *eligible* tier independently of the others; you simply wouldn't be doing a roll for beginner/easy/medium/hard clues, but this wouldn't affect your chance of getting an elite one.}} For each tier of clue bottle, the following formula is used to determine its drop chance, whereupon a roll is made if the player is eligible.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632764215743193089|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97160|archivedate=6 March 2023|quote=[(...) Then is it 1. Base chance 2. CA buff 3. Level formula 4. Clue tier multiplier] Ah, yes - that seems right.}}
+
+The chance is <math>1</math> in <math> \left\lfloor \frac{ \lfloor \text{BaseChance} \times \text{CA} \rfloor }{100 + \text{Fishing}} \times \text{ClueTier} \right\rfloor </math>
+
+Where:
+:<math>\text{BaseChance} =</math> The [[#Base chance|base chance]] of receiving a clue bottle from catching a specific type of fish. These are the same base chances that determine the drop rate of the [[heron]] pet.
+:<math>\text{CA} =</math> A multiplier of <math>0.95</math> if the corresponding reward tier of [[Combat Achievements]] has been unlocked, or <math>1</math> if it has not.
+:<math>\text{Fishing} =</math> The player's visible [[Fishing]] level. Visible boosts beyond level 99 are taken into account.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1573018832998109185|date=22 September 2022|archiveurl=https://reldo.runescape.wiki/i/102590|archivedate=10 June 2023|quote=The formula for dropping clue nests only benefits from visible boosts. So the +7 invisible one won't help, but a visible boost would help beyond 99 if you can get one.}}
+:<math>\text{ClueTier} =</math> The [[#Clue tier|clue tier modifier]] applied at the end based on the type of clue that is rolled.
+
+====Base chance====
+The table below displays the base chance of obtaining a clue bottle according to fish type.{{CiteTwitter|author=Mod Maz|url=https://twitter.com/SquirrelledMaz/status/704677112851124224|date=1 March 2016|archiveurl=https://reldo.runescape.wiki/i/27963979|archivedate=5 May 2026|quote=As promised - Clue Bottle Rates!}}{{CiteTwitter|author=Mod Tide|url=https://twitter.com/JagexTide/status/1131933683714330624|date=24 May 2019|archiveurl=https://reldo.runescape.wiki/i/106558|archivedate=24 May 2019|quote=I know its been a while since the clue expansion but here is the information on clue scroll drop rates and loot chances! If anything changes I will keep you posted. [https://docs.google.com/spreadsheets/d/16pVNHdZyynmxIbM9mynRDYT0LQsWxq-vbDs4_7DpnGM]}}{{CiteDiscord|author=Mod Ash|url=https://discord.com/channels/324132423636090880/431834766325841920/1385948139256676353|date=21 June 2025|archiveurl=https://reldo.runescape.wiki/i/27963980#chat-messages-431834766325841920-1385948139256676353|archivedate=5 May 2026|quote=I'll give you the full list.|notes=Note: This citation references [[heron]] pet rates, but the base rates are the same for pets and clue bottles.}}<!-- all three sources agree btw, I checked. Just wanted to include the older, less complete ones also. -->
+{| class="wikitable sortable"
+|-
+!Fish
+!Chance
+|-
+|[[Raw_shrimps|Shrimp]]
+|870,330
+|-
+|[[Raw_anchovies|Anchovies]]
+|870,330
+|-
+|[[Raw_karambwanji|Karambwanji]]
+|443,697
+|-
+|[[Raw_sardine|Sardine]]
+|1,056,000
+|-
+|[[Raw_herring|Herring]]
+|1,056,000
+|-
+|[[Raw mackerel|Mackerel]]
+|1,147,827
+|-
+|[[Raw cod|Cod]]
+|1,147,827
+|-
+|[[Raw bass|Bass]]
+|1,147,827
+|-
+|[[Raw_trout|Trout]]
+|923,616
+|-
+|[[Raw_salmon|Salmon]]
+|923,616
+|-
+|[[Raw_pike|Pike]]
+|305,792
+|-
+|[[Raw_rainbow_fish|Rainbow fish]]
+|137,739
+|-
+|[[Raw_tuna|Tuna]]
+|257,770
+|-
+|[[Raw_swordfish|Swordfish]]
+|257,770
+|-
+|[[Raw_lobster|Lobsters]]
+|116,129
+|-
+|[[Aerial fishing]]
+|636,833
+|-
+|[[Raw cave eel|Cave eels]]
+|257,770{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1533859319988486149|date=6 June 2022|archiveurl=https://reldo.runescape.wiki/i/99416|archivedate=9 July 2022|quote=Same as for tuna: 257,770}}
+|-
+|[[Raw_monkfish|Monkfish]]
+|138,583
+|-
+|[[Raw karambwan|Karambwan]]
+|170,874
+|-
+|[[Leaping trout]]
+|1,280,862
+|-
+|[[Leaping salmon]]
+|1,280,862
+|-
+|[[Leaping sturgeon]]
+|1,280,862
+|-
+|[[Raw_shark|Sharks]]
+|82,243
+|-
+|[[Infernal eel]]s
+|165,000
+|-
+|[[Raw_anglerfish|Anglerfish]]
+|78,649
+|-
+|[[Minnow]]
+|977,778
+|-
+|[[Raw_dark_crab|Dark crabs]]
+|149,434
+|-
+|[[Sacred eel]]s
+|99,000
+|-
+|[[Raw_guppy|Guppy]]
+|820,330
+|-
+|[[Raw_cavefish|Cavefish]]
+|300,792
+|-
+|[[Raw_tetra|Tetra]]
+|257,770
+|-
+|[[Raw_catfish|Catfish]]
+|152,120
+|-
+|[[Fishing spot (The Stranglewood)|Stranglewood]]
+|99,000{{CiteDiscord|name=hmmspots|author=Mod Ash|url=https://discord.com/channels/324132423636090880/431834766325841920/1501498782984966224|date=6 May 2026|quote=The Stranglewood one is using the Zulrah eel constant, which is 99,000.... The Civitas Park one is using the catfish constant, which is 152,120.|archiveurl=https://reldo.runescape.wiki/i/27963984#chat-messages-431834766325841920-1501498782984966224|archivedate=6 May 2026}}
+|-
+|[[Fishing spot (Civitas illa Fortis)|Fortis park]]
+|152,120{{Refn|name=hmmspots}}
+|-
+|[[Raw swordtip squid|Swordtip squid]]
+|257,770{{CiteNews|url=https://secure.runescape.com/m=news/a=13/more-sailing-and-interface-changes?oldschool=1|title=More Sailing and Interface Changes|newsdate=17 December 2025|name=Sailing}}
+|-
+|[[Raw jumbo squid|Jumbo squid]]
+|257,770{{Refn|name=Sailing}}
+|-
+|[[Raw giant krill|Giant krill]]
+|257,770{{Refn|name=Sailing}}
+|-
+|[[Raw haddock|Haddock]]
+|247,770{{Refn|name=Sailing}}
+|-
+|[[Raw yellowfin|Yellowfin]]
+|237,770{{Refn|name=Sailing}}
+|-
+|[[Raw halibut|Halibut]]
+|227,770{{Refn|name=Sailing}}
+|-
+|[[Raw bluefin|Bluefin]]
+|217,770{{Refn|name=Sailing}}
+|-
+|[[Raw marlin|Marlin]]
+|207,770{{Refn|name=Sailing}}
+|}
+
+====Clue tier====
+The following modifiers are applied to the denominator of the drop chance, depending on the type of clue for which a roll attempt is made.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632718561713029120|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97488|archivedate=6 March 2023|quote=Looks like you multiply the chance denominator by Beginner: 0.2 Easy: 1.7 Medium: 2.0 Hard: 3.3 Elite: 10.0 e.g. if the chance had been 1/100, for a beginner that'd become 1/20, and for an elite it'd become 1/1000.}}
+{| class="wikitable align-center-1"
+! colspan=2 |Clue tier
+!Modifier
+|-
+|{{plinkt|Clue scroll (beginner)|txt=Beginner}}
+|0.2
+|-
+|{{plinkt|Clue scroll (easy)|txt=Easy}}
+|1.7
+|-
+|{{plinkt|Clue scroll (medium)|txt=Medium}}
+|2
+|-
+|{{plinkt|Clue scroll (hard)|txt=Hard}}
+|3.3
+|-
+|{{plinkt|Clue scroll (elite)|txt=Elite}}
+|10
+|}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 21 July 2021
+|update = Combat Achievements
+|change = 
+*Clue bottle rates are now affected by completion of [[Combat Achievements]].
+*Clue bottles no longer roll to determine which tier of clue you get after the initial roll to give you a clue bottle.
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}

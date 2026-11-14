@@ -1,0 +1,150 @@
+'''Clue geodes''' are rare rocks that can be found while training the [[Mining]] skill instead of receiving an [[ore]] if the player has not completed [[X Marks the Spot]]. After completing the quest, [[Scroll box]]es are found instead. Searching them will give players a [[clue scroll]] of the same difficulty as the geode given, or the corresponding scroll box if the player completes X Marks the Spot after receiving it. Like clue scrolls, players can only have one of each difficulty of clue geode in their possession. If a player possesses a clue scroll of the same difficulty as the clue geode, they will be unable to search the geode until the clue scroll is no longer in their possession. Players can toggle whether or not they wish to receive clue vessels by talking to [[Arthur the Clue Hunter]] in [[Grand Exchange|The Grand Exchange]].
+
+There are five types of clue geodes:
+*{{plink|Clue geode (beginner)}}
+*{{plink|Clue geode (easy)}}
+*{{plink|Clue geode (medium)}}
+*{{plink|Clue geode (hard)}}
+*{{plink|Clue geode (elite)}}
+
+==Rates==
+The chance of obtaining a clue geode depends mainly on the player's Mining level together with the type of rock that is excavated, similar to how the drop rate of [[skilling pets]] is determined.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632048881880948736|date=4 March 2023|archiveurl=https://reldo.runescape.wiki/i/96597|archivedate=6 March 2023|quote=I did some spot-checking of the Wiki pages and the "base chance" numbers still look correct there, as does the formula for how your level is applied. The CA buff is applied to the "base chance" number *before* the formula is applied.}} In addition, the reward tiers unlocked by completing [[Combat Achievements]] grant a 5% boost to the drop rate of the corresponding clue tier, that is to say the [[Clue geode (easy)|easy]], [[Clue geode (medium)|medium]], [[Clue geode (hard)|hard]], and [[Clue geode (elite)|elite]] clue geodes.
+{{Calculator:Mining/Clue geodes}}
+
+===Formula===
+Upon a successful skilling action, a roll is made for each clue tier one is eligible to receive (based on which types of clue are already owned) independently of the outcome of any of the other rolls.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1634546471339974656|date=11 March 2023|archiveurl=https://reldo.runescape.wiki/i/105848|archivedate=15 July 2023|quote=[For Clue Geodes, Bottles, and Nests, if you already have a Beginner, Easy, Medium, and Hard Clues in the bank, the next clue received from skilling will 100% be an Elite Clue at the full rate, correct? (...)] No, the elite rate wouldn't be changed by that. It rolls for each *eligible* tier independently of the others; you simply wouldn't be doing a roll for beginner/easy/medium/hard clues, but this wouldn't affect your chance of getting an elite one.}} For each tier of clue geode, the following formula is used to determine its drop chance, whereupon a roll is made if the player is eligible.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632764215743193089|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97160|archivedate=6 March 2023|quote=[(...) Then is it 1. Base chance 2. CA buff 3. Level formula 4. Clue tier multiplier] Ah, yes - that seems right.}}
+
+The chance is <math>1</math> in <math> \left\lfloor \frac{ \lfloor \lfloor \text{BaseChance} \times 0.7 \rfloor \times \text{CA} \rfloor }{100 + \text{Mining}} \times \text{ClueTier} \right\rfloor </math>
+
+Where:
+:<math>\text{BaseChance} =</math> The [[#Base chance|base chance]] of receiving a clue geode from extracting a specific type of ore. These are the same base chances that determine the drop rate of the [[rock golem]] pet.
+:<math>\text{CA} =</math> A multiplier of <math>0.95</math> if the corresponding reward tier of [[Combat Achievements]] has been unlocked, or <math>1</math> if it has not.
+:<math>\text{Mining} =</math> The player's visible {{SCP|Mining}} Mining level. Visible boosts beyond level 99 are taken into account.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1573018832998109185|date=22 September 2022|archiveurl=https://reldo.runescape.wiki/i/102590|archivedate=10 June 2023|quote=The formula for dropping clue nests only benefits from visible boosts. So the +7 invisible one won't help, but a visible boost would help beyond 99 if you can get one.}}
+:<math>\text{ClueTier} =</math> The [[#Clue tier|clue tier modifier]] applied at the end based on the type of clue that is rolled.
+
+===Base chance===
+The table below displays the base chance of obtaining a clue geode according to rock type.{{CiteTwitter|author=Mod Tide|url=https://twitter.com/JagexTide/status/1131933683714330624|date=24 May 2019|archiveurl=https://reldo.runescape.wiki/i/106558|archivedate=24 May 2019|quote=I know its been a while since the clue expansion but here is the information on clue scroll drop rates and loot chances! If anything changes I will keep you posted. [https://docs.google.com/spreadsheets/d/16pVNHdZyynmxIbM9mynRDYT0LQsWxq-vbDs4_7DpnGM]}}
+{| class="wikitable sortable"
+|-
+!Rock
+!Chance
+|-
+|[[Clay rocks]]
+|741,600
+|-
+| [[Copper rocks]]
+|741,600
+|-
+|[[Tin rocks]]
+|741,600
+|-
+|[[Blurite rocks]]
+|741,600
+|-
+|[[Limestone rock]]
+|741,600
+|-
+|[[Iron rocks]]
+|741,600
+|-
+|[[Silver rocks]]
+|741,600
+|-
+|[[Barronite rocks]]
+|741,600
+|-
+|[[Calcified rocks]]
+|741,600{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1770851850566111624|date=21 March 2024|archiveurl=https://reldo.runescape.wiki/i/27963337|archivedate=7 April 2026|quote=It's there, same rate as iron and those other sources. Cheers :)}}
+|-
+|[[Coal rocks]]
+|290,640
+|-
+|[[Sandstone rocks]]
+|741,600
+|-
+|[[Gold rocks]]
+|296,640
+|-
+|[[Gem rocks]]
+|211,886
+|-
+|[[Granite rocks]]
+|741,600
+|-
+|[[Ash pile]]
+|741,600
+|-
+|[[Volcanic sulphur]]
+|710,000
+|-
+|[[Mithril rocks]]
+|148,320
+|-
+|[[Lovakite rocks]]
+|245,562
+|-
+|[[Adamantite rocks]]
+|59,328
+|-
+|[[Runite rocks]]
+|42,377
+|-
+|[[Amethyst crystals]]
+|46,350
+|-
+|[[Blast mine]]
+|123,600
+|-
+|[[Crashed Star]]
+|521,550{{CiteTwitter|author=Mod Ash|url=https://x.com/JagexAsh/status/1852978182724452399|date=3 November 2022|archiveurl=https://reldo.runescape.wiki/i/27962689|archivedate=4 November 2022|quote=Now it's 521,550 as a flat rate.}}
+|}
+
+===Clue tier===
+The following modifiers are applied to the denominator of the drop chance, depending on the type of ore for which a roll attempt is made.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632718561713029120|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97488|archivedate=6 March 2023|quote=Looks like you multiply the chance denominator by Beginner: 0.2 Easy: 1.7 Medium: 2.0 Hard: 3.3 Elite: 10.0 e.g. if the chance had been 1/100, for a beginner that'd become 1/20, and for an elite it'd become 1/1000.}}
+{| class="wikitable align-center-1"
+! colspan=2 |Clue tier
+!Modifier
+|-
+|{{plinkt|Clue scroll (beginner)|txt=Beginner}}
+|0.2
+|-
+|{{plinkt|Clue scroll (easy)|txt=Easy}}
+|1.7
+|-
+|{{plinkt|Clue scroll (medium)|txt=Medium}}
+|2
+|-
+|{{plinkt|Clue scroll (hard)|txt=Hard}}
+|3.3
+|-
+|{{plinkt|Clue scroll (elite)|txt=Elite}}
+|10
+|}
+
+===Other factors===
+Prior to the release of Combat Achievements, the [[ring of wealth (i)]] was confirmed to double the rate of clue geodes when mining in the [[Wilderness]], but whether that effect still applies has not yet been reaffirmed.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/752869262885347329|date=12 July 2016|archiveurl=https://reldo.runescape.wiki/i/98922|archivedate=6 October 2020|quote=Yes.}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 July 2025
+|update = Stackable Clues are here!
+|change = Clue geodes are only dropped prior to the completion of X Marks the Spot.
+}}
+{{Subject changes
+|date = 8 May 2024
+|update = Project Rebalance: Skilling & Poll 81 MTA Changes
+|change = Clue geode drop rates have been increased by ~30% from all sources.
+}}
+{{Subject changes
+|date = 21 July 2021
+|update = Combat Achievements
+|change = 
+*Clue geode rates are now affected by completion of [[Combat Achievements]].
+*Clue geodes no longer roll to determine which tier of clue you get after the initial roll to give you a clue geode.}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}

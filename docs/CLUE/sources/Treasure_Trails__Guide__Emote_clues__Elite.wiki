@@ -1,0 +1,126 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Elite Emote clues==
+</noinclude>
+{| class="wikitable lighttable" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (elite) - Blow a kiss in the heart of the lava maze|Blow a kiss in the heart of the lava maze.]]''
+''Equip [[black d'hide chaps]], a [[spotted cape]] and a [[rolling pin]].''
+|{{plinkp|Black d'hide chaps}} {{plinkp|Spotted cape}} {{plinkp|Rolling pin}}
+|Perform the emote at the centre of the [[Lava Maze]], next to entrance of the [[Lava Maze Dungeon]]. A [[Slash|slashing weapon]] or [[knife]] is required to navigate the maze.
+|[[File:Emote clue - kiss lava maze.png|150px]]
+|-
+|''[[Clue scroll (elite) - Bow on the ground floor of the Legends' Guild|Bow on the ground floor of the Legend's{{sic}} guild.]]'' 
+''Equip [[Cape of Legends|Legend's{{sic}} cape]], a [[dragon battleaxe]] and an [[amulet of glory]].''
+|{{plinkp|Cape of Legends}} {{plinkp|Dragon battleaxe}} {{plinkp|Amulet of glory(4)}}
+|Players require completion of [[Legends' Quest]] to access the [[Legends' Guild]]. An [[amulet of glory]] with any amount of charges or an [[amulet of eternal glory]] will work.
+|[[File:Emote clue - bow inside legends guild.png|150px]]
+|-
+|''[[Clue scroll (elite) - Bow upstairs in the Edgeville Monastery|Bow upstairs in the Edgeville Monastery.]]''
+''Equip a completed [[God book|prayer book]].''
+|{{plinkp|God book|pic=Book of Balance}}
+|Players require a [[Prayer]] level of 31 to enter the [[Edgeville Monastery]]. Any completed [[god book]] is usable for this clue.
+|[[File:Emote clue - bow edgeville monastery.png|150px]]
+|-
+|''[[Clue scroll (elite) - Bow within the temple in Civitas illa Fortis|Bow within the temple in Civitas illa Fortis.]]'' 
+''Equip any piece of [[sunfire fanatic armour]].''
+|{{plinkp|Sunfire fanatic helm}} {{plinkp|Sunfire fanatic cuirass}} {{plinkp|Sunfire fanatic chausses}}
+|The temple is found near the southern entrance to [[Civitas illa Fortis]].
+|[[File:Emote clue - bow fortis temple.png|150px]]
+|-
+|''[[Clue scroll (elite) - Cheer in the Shadow dungeon|Cheer in the Shadow dungeon.]]''
+''Equip a [[rune crossbow]], [[climbing boots]] and any [[mitre]].''
+|{{plinkp|Rune crossbow}} {{plinkp|Climbing boots}} {{plinkp|Mitre|pic=Zamorak mitre}}
+|Requires partial completion of [[Desert Treasure I]]. Bring a [[ring of visibility]] or a [[ring of shadows]]. The [[Rune crossbow (or)|ornamental rune crossbow]] also works. [[Climbing boots (g)]] do '''not''' work. The Egg priest mitre does '''not''' work.
+|[[File:Emote clue - cheer shadow dungeon.png|150px]]
+|-
+|''[[Clue scroll (elite) - Dance on the Fishing Platform|Dance on the Fishing Platform.]] ''
+''Equip [[barrows gloves]], an [[amulet of glory]] and a [[dragon med helm]].''
+|{{plinkp|Barrows gloves}} {{plinkp|Amulet of glory(4)}} {{plinkp|Dragon med helm}}
+|[[Barrows gloves]] require full completion of [[Recipe for Disaster]] to equip. An [[amulet of glory]] with any amount of charges or an [[amulet of eternal glory]] will work.
+|[[File:Emote clue - dance fish platform.png|150px]]
+|-
+|''[[Clue scroll (elite) - Do the crab dance by the monument on Wintumber Island|Do the crab dance by the monument on Wintumber Island.]]''
+''Equip a [[crab helmet]] and a [[crab claw]].''
+|{{plinkp|Crab helmet}} {{plinkp|Crab claw}}
+|Requires level 63 [[sailing]] to reach [[Wintumber Island]].
+|[[File:Emote clue - crab dance Wintumber Island.png|150px]]
+|-
+|''[[Clue scroll (elite) - Headbang at the top of Slayer Tower|Headbang at the top of the Slayer Tower.]]''
+''Equip a [[seercull]], a [[combat bracelet]], and [[helm of Neitiznot]].''
+|{{plinkp|Seercull}} {{plinkp|Combat bracelet}} {{plinkp|Helm of Neitiznot}}
+|Equipping the [[Helm of Neitiznot]] requires completion of [[The Fremennik Isles]]. If taking shortcuts to the top, it is advised to have a [[nosepeg]] or [[Slayer helmet]] in order to avoid stat draining from [[aberrant spectre]]s.
+|[[File:Emote clue - headbang top of slayer tower.png|150px]]
+|-
+|''[[Clue scroll (elite) - Headbang in the Fight Arena pub|Headbang in the Fight Arena pub.]] ''
+''Equip a [[pirate bandana]], a [[Dragon necklace|dragonstone necklace]] and a [[magic longbow]].''
+|{{plinkp|Pirate bandana|pic=Pirate bandana (brown)}} {{plinkp|Dragon necklace}} {{plinkp|Magic longbow}}
+|Near Nightmare Zone. On the west side of the fight arena.
+|[[File:Emote clue - headbang fight arena pub.png|150px]]
+|-
+|''[[Clue scroll (elite) - Jump for joy at the Neitiznot rune rock|Jump for joy at the Neitiznot rune rock.]]''
+''Equip [[rune boots]], a [[proselyte hauberk]] and a [[dragonstone ring]].''
+|{{plinkp|Rune boots}} {{plinkp|Proselyte hauberk}} {{plinkp|Dragonstone ring}}
+|Players must complete [[Fremennik Isles]] in order to access the [[Neitiznot]] [[runite rock]]. [[The Slug Menace]] must be completed in order to equip the [[Proselyte hauberk|Prostelyte Hauberk]].
+|[[File:Emote clue - jump neitiznot rocks.png|150px]]
+|-
+|''[[Clue scroll (elite) - Jump for joy in the Ancient Cavern|Jump for joy in the Ancient Cavern.]]''
+Equip a [[granite shield]], [[splitbark body]], and any [[rune heraldic helm]].
+|{{plinkp|Granite shield}} {{plinkp|Splitbark body}} {{plinkp|Rune heraldic armour#Helm|pic=Rune helm (h1)}}
+|Players need to have started the [[Barbarian Training]] [[miniquest]] in order to enter the caverns.
+The [[rune heraldic helm]] is the rune helm from [[Treasure Trails]], not the [[painted heraldic armour]] from [[player-owned house]]s!
+|[[File:Emote clue - jump ancient cavern.png|150px]]
+|-
+|''[[Clue scroll (elite) - Laugh by the fountain of heroes|Laugh by the fountain of heroes.]]''
+''Equip [[splitbark legs]], [[dragon boots]] and a [[rune longsword]].''
+|{{plinkp|Splitbark legs}} {{plinkp|Dragon boots}} {{plinkp|Rune longsword}}
+|Completion of [[Heroes' Quest]] is required. The [[Dragon boots (g)|gilded dragon boots]], [[Dragon boots (cr)]], [[primordial boots]], [[Avernic treads (pr)]], [[Avernic treads (pr)(et)]], [[Avernic treads (pr)(pe)]], [[Avernic treads (max)]] also work.
+|[[File:Emote clue - laugh fountain of heroes.png|150px]]
+|-
+|''[[Clue scroll (elite) - Laugh in front of the gem store in Ardougne market|Laugh in front of the gem store in Ardougne market.]]'' 
+''Equip a [[Castle wars bracelet]], a [[dragonstone amulet]] and a [[ring of forging]].''
+|{{plinkp|Castle wars bracelet}} {{plinkp|Dragonstone amulet}} {{plinkp|Ring of forging}}
+|
+|[[File:Emote clue - laugh ardougne gem stall.png|150px]]
+|-
+|''[[Clue scroll (elite) - Panic at the area flowers meet snow|Panic at the area flowers meet snow.]]'' 
+''Equip [[blue d'hide vambraces]], a [[dragon spear]] and a [[rune plateskirt]].''
+|{{plinkp|Blue d'hide vambraces}} {{plinkp|Dragon spear}} {{plinkp|Rune plateskirt}}
+|Panic by the [[Trollweiss]] flowers after [[sledding]] down [[Trollweiss Mountain]].
+Make sure to bring a sled, otherwise you won't be able to complete the step. The poisoned dragon spear or rune plateskirt versions do not work.
+|[[File:Emote clue - panic trollweiss.png|150px]]
+|-
+| ''[[Clue scroll (elite) - Salute by the Charcoal Burners|Salute by the Charcoal Burners.]]''
+''Equip a [[Farmer's strawhat]], [[Shayzien body (5)]], and [[Pyromancer robe|Pyromancer robes]].''
+| {{plinkp|Farmer's strawhat}} {{plinkp|Shayzien body (5)}} {{plinkp|Pyromancer robe}}
+| Salute by the [[charcoal furnace]] south of [[Hosidius]]
+| [[File:Emote clue - salute charcoal burners.png|150px]]
+|-
+|''[[Clue scroll (elite) - Salute in the Warriors' guild bank|Salute in the warriors' guild bank.]]''
+''Equip only a [[black salamander]].''
+|{{plinkp|Black salamander}}
+|[[Black salamander|Black salamanders]] require 70 [[Ranged]], 70 [[Magic]], and 70 [[Attack]] to equip.
+|[[File:Emote clue - salute warriors' guild bank.png|150px]]
+|-
+|''[[Clue scroll (elite) - Shrug in the Shayzien war tent|Shrug in the Shayzien war tent.]] ''
+''Equip a [[Mystic robe bottom|blue mystic robe bottom]], a [[rune kiteshield]] and any [[bob shirt]].''
+|{{plinkp|Mystic robe bottom}} {{plinkp|Rune kiteshield}} {{plinkp|Bob shirt|pic=Bob's black shirt}}
+|The War Tent is the large tent in the western end of the [[Shayzien Encampment]]. (South of the bank chest.)
+|[[File:Emote clue - shrug Shayzien command tent.png|150px]]
+|-
+|''[[Clue scroll (elite) - Spin in West Ardougne Church|Spin in West Ardougne Church.]]''
+''Equip a [[dragon spear]] and [[red d'hide chaps]].''
+|{{plinkp|Dragon spear}} {{plinkp|Red d'hide chaps}}
+|
+|[[File:Emote clue - spin West Ardougne church.png|150px]]
+|-
+|''[[Clue scroll (elite) - Yawn at the top of Trollheim|Yawn at the top of Trollheim.]]''
+''Equip a [[lava battlestaff]], [[black d'hide vambraces]] and a [[mind shield]].''
+|{{plinkp|Lava battlestaff}} {{plinkp|Black d'hide vambraces}} {{plinkp|Mind shield}}
+|Requires [[Elemental Workshop I]] and [[Elemental Workshop II|II]] and parts of [[Troll Stronghold]] completed. An [[Lava battlestaff (or)|ornamental lava battlestaff]] can be used.
+|[[File:Emote clue - yawn trollheim.png|150px]]
+|}

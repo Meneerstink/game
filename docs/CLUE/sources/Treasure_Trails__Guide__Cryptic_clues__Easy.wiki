@@ -1,0 +1,745 @@
+<noinclude>{{Treasure Trails Guide Cryptic Clues Intro}}
+
+==Easy Cryptic clues==
+</noinclude>{| class="wikitable align-center-3" width="100%"
+!Clue
+!Notes
+!Task
+!Image
+{{Cryptics
+|clue=[[Clue scroll (easy) - A crate found in the tower of a church|A crate found in the tower of a church is your next location.]]
+|note=Climb the ladder and search the crates on the {{FloorNumber|uk=1}} in the church in [[East Ardougne]].
+|task=search
+|image=Cryptic clue - search crate Ardougne church.png
+|level= 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Belladonna, my dear If only I had gloves|Belladonna, my dear. If only I had gloves, then I could hold you at last.]]
+|note=Talk to the [[Tool leprechaun]] at the [[Belladonna]] [[farming patch]] at [[Draynor Manor]].
+|task=talk
+|image=Cryptic clue - belladonna leprechaun.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig at a waterfall by the pines in the serpent's shadow|Dig at a waterfall by the pines in the serpent's shadow.]]
+|note=Dig in the [[flax]] field at [[Quetzacalli Gorge]].
+|task=dig
+|image=Cryptic clue - dig Quetzacalli Gorge.png
+|level= 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig between some ominous stones in Falador|Dig between some ominous stones in Falador.]]
+|note=Three standing stones inside a walled area. East of [[Falador]]'s northern gate.
+|task=dig
+|image=Cryptic clue - dig ominous stones falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig by the Giant's Den entrance|Dig by the Giant's Den entrance, looking out over Lake Molch.]]
+|note=South-east of [[Lake Molch]]. Just south of the Shayzien rowboat, outside the dungeon entrance.
+|task=dig
+|image=Cryptic clue - Dig by the Giant's Den.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig in the centre of a great kingdom of 5 cities|Dig in the centre of a great kingdom of 5 cities.]]
+|note=Dig in front of the large statue in the centre of [[Great Kourend]].
+|task=dig
+|image=Cryptic clue - dig centre Kourend statue.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig near some giant mushrooms|Dig near some giant mushrooms, behind the Grand Tree.]]
+|note=Dig near the red mushrooms north-west of the [[Grand Tree]]'s doors.
+|task=dig
+|image=Cryptic clue - dig mushrooms.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig outside the bank on Aldarin|Dig outside the bank on Aldarin.]]
+|note=Dig west of the [[Aldarin bank]].
+|task=dig
+|image=Cryptic clue - dig aldarin bank.png
+|level= 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig under Ithoi's cabin|Dig under Ithoi's cabin.]]
+|note=Dig under [[Ithoi the Navigator]]'s cabin. Players who have not started [[The Corsair Curse]] [[quest]] may reach the location using a [[Charter Ship]], via the [[Agility]] [[shortcut]] to the north (requires {{SCP|Agility|10}}), or by [[spirit tree]] to [[Feldip Hills]] and running east.
+|task=dig
+|image=Cryptic clue - dig Ithoi's cabin.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Dig where only the skilled, wealthy, or brave can choose not to visit again|Dig where only the skilled, the wealthy, or the brave can choose not to visit again.]]
+|note=Dig at the [[Lumbridge]] spawn (teleport area).
+|task=dig
+|image=Cryptic clue - dig lumbridge spawn.png
+|level= 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - He's been studying unusual tree migrations|He's been studying unusual tree migrations.]]
+|note=Talk to [[Ranulph]] at the western end of [[Auburnvale]].
+|task = talk
+|image = Cryptic clue - talk to Ranulph.png
+|level= 1}}
+{{Cryptics
+|clue=[[Cecilia|I'd like to hear some music. Come and see me on the bridge in Falador Park, and play: ''<some music>''
+
+Thanks, Cecilia]]
+|note=Speak to [[Cecilia]] on the bridge in [[Falador Park]].
+|task=talk
+|image=Cryptic clue - talk to Cecilia.png
+|level=1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - I wonder how many bronze shortswords he has handed out|I wonder how many bronze shortswords he has handed out.]]
+|note = Talk to [[Vannaka]] in [[Edgeville Dungeon]].
+|task = talk
+|image = Cryptic clue - vannaka edgeville dungeon.png
+|level = 1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - I would make a chemistry joke|I would make a chemistry joke, but I'm afraid I wouldn't get a reaction.]]
+|note = Talk to the [[Chemist]] west of [[Rimmington]]'s house portal.
+|task = talk
+|image = Cryptic clue - chemist rimmington.png
+|level = 1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - I wouldn't wear this jean on my legs|I wouldn't wear this jean on my legs.]]
+|note = Talk to [[Father Jean]] in the [[Hosidius]] church.
+|task = talk
+|image = Cryptic clue - talk Father Jean.png
+|level = 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Look in the ground floor crates of houses in Falador|Look in the ground floor crates of houses in Falador.]]
+|note=The house east of [[Falador east bank]].
+|task=search
+|image=Cryptic clue - The house east of the east bank.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Monk's residence in the far west See robe storage device|Monk's residence in the far west. See robe storage device.]]
+|note=Search the drawers in the south tent of the monk's camp found west of the [[Hosidius mine]].
+|task=search
+|image=Cryptic clue - see robe storage device.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - One of the sailors in Port Sarim|One of the sailors in Port Sarim is your next destination.]]
+|note=Speak to [[Captain Tobias]] on the docks of [[Port Sarim]].
+|task=talk
+|image=Cryptic clue - talk captain tobias port sarim.png
+|level=1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - Salty peter|Salty peter.]]
+|note = Talk to [[Konoo]] who is digging [[saltpetre]] in [[Hosidius]], east of the Woodcutting Guild.
+|task = Talk
+|image= Cryptic clue - talk to konoo.png
+|level = 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search a bookcase in Lumbridge Swamp|Search a bookcase in Lumbridge swamp.]]
+|note=Located in [[Father Urhney]]'s house.
+|task=search
+|image=Cryptic clue - search bookcase lumbridge swamp.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search a bookcase in the Wizards tower|Search a bookcase in the Wizards tower.]]
+|note=The bookcase located on the {{FloorNumber|uk=0}}.
+|task=search
+|image=Cryptic clue - search bookcase wizards tower.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search a wardrobe in Draynor|Search a wardrobe in Draynor.]]
+|note=Search the north wardrobe in [[Aggie]]'s house.
+|image=Cryptic clue - draynor wardrobe.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chest in Fred the Farmer's bedroom|Search the chest in Fred the Farmer's bedroom.]]
+|note=Search the chest by [[Fred the Farmer]]'s bed in his house north-west of [[Lumbridge]]
+|task=search
+|image=Cryptic clue - search chest fred the farmer.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search chests found in the upstairs of shops in Port Sarim|Search chests found in the upstairs of shops in Port Sarim.]]
+|note=Search the east chest on the 2nd floor of [[Wydin's Food Store]].
+|task=search
+|image=Cryptic clue - search chest wydin upstairs.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search for a crate in a building in Hemenster|Search for a crate in a building in Hemenster.]]
+|note=House north of the [[Fishing Contest]] quest area, west of [[Grandpa Jack]]. Use the [[combat bracelet]] to teleport to the [[Ranging Guild]] to get there quickly.
+|task=search
+|image=Cryptic clue - search crate hemenster.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search for a crate in Varrock Castle|Search for a crate in Varrock Castle.]]
+|Found in the [[Varrock Palace]] kitchen.
+|task=search
+|note=Search the crate in the corner of the kitchen in [[Varrock Castle]].
+|image=Cryptic clue - search crate varrock palace.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search for a crate on the ground floor of a house in Seers' Village|Search for a crate on the ground floor of a house in Seers' Village.]]
+|note=Search the crate in [[Phantuwti Fanstuwi Farsight]]'s house, south of the pub in [[Seers' Village]].
+|task=search
+|image=Cryptic clue - search crate phantuwti seers.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the bookcase in the monastery|Search the bookcase in the monastery.]]
+|note=Search the south-eastern bookcase at [[Edgeville Monastery]].
+|task=search
+|image=Cryptic clue - search bookcase monastery.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the food barrel at the top of the Hunter Guild|Search the food barrel at the top of the Hunter Guild.]]
+|note=Search the filled [[food pot]] at the top of the tree within the [[Hunter Guild]], accessed from climbing the rope inside.
+|task=search
+|image=Cryptic clue - search Hunter Guild food barrel.png
+|level= 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the eastern bookcase in Father Urhney's house|Search the eastern bookcase in Father Urhney's house.]]
+|note= [[Father Urhney]]'s house is on the west side of [[Lumbridge Swamp]].
+|task=search
+|image=Cryptic clue - search bookcase urhney.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes in a shop in Taverley|Search the boxes in a shop in Taverley.]]
+|note= Search the box in [[Gaius' Two Handed Shop]], south of Taverley's house portal.
+|task=search
+|image=Cryptic clue - search boxes taverley.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes in one of the tents in Al Kharid|Search the boxes in one of the tents in Al Kharid.]]
+|note=Search the crates in the tent east of the [[Silk trader]].
+|task=search
+|image=Cryptic clue - search boxes tents al kharid.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes in the goblin house near Lumbridge|Search the boxes in the goblin house near Lumbridge.]]
+|note=[[Lozar's house]] on the eastern side of the river.
+|task=search
+|image=Cryptic clue - search boxes goblin house lumbridge.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes in the house near the south entrance to Varrock|Search the boxes in the house near the south entrance to Varrock.]]
+|note=The first house on the left when entering the city from the southern entrance.
+|task=search
+|image=Cryptic clue - search boxes south entrance varrock.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes just outside the Armour shop in East Ardougne|Search the boxes just outside the Armour shop in East Ardougne.]]
+|note=Outside [[Zenesha's Plate Mail Body Shop]].
+|task=search
+|image=Cryptic clue - search boxes east ardougne armour shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes of Falador's general store|Search the boxes of Falador's general store.]]
+|note=[[Falador General Store]]
+|task=search
+|image=Cryptic clue - search boxes falador general store.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the boxes next to a chest that needs a crystal key|Search the boxes next to a chest that needs a crystal key.]]
+|note=[[Crystal chest]]
+|task=search
+|image=Cryptic clue - search boxes near crystal chest.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the bucket in the Port Sarim jail|Search the bucket in the Port Sarim jail.]]
+|note=Talk to [[Shantay]] at the [[Shantay Pass]], ask what this place is, and identify yourself as an outlaw. After you're jailed, refuse to pay the 5gp fine twice and you'll be sent to the [[Port Sarim jail]].
+|task=search
+|image=Cryptic clue - search bucket port sarim jail.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the bush at the digsite centre|Search the bush at the digsite centre.]]
+|note=The bush is on the east side of the west pathway towards the [[Digsite]] from the [[Exam Centre]].
+|task=search
+|image=Cryptic clue - search bush digsite centre.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chest in Barbarian Village|Search the chest in Barbarian Village.]]
+|note=The chest located in the house with a [[File:Spinning wheel icon.png]].
+|task=search
+|image=Cryptic clue - search chest barbarian village.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chest in the Duke of Lumbridge's bedroom|Search the chest in the Duke of Lumbridge's bedroom.]]
+|note=The [[Duke Horacio|Duke's]] room is on the {{FloorNumber|uk=1}} in [[Lumbridge Castle]].
+|task=search
+|image=Cryptic clue - search chest lumbridge duke.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chest in the left-hand tower of Camelot Castle|Search the chest in the left-hand tower of Camelot Castle.]]
+|note=Located on the {{FloorNumber|uk=2}} of the western tower of [[Camelot]].
+|task=search
+|image=Cryptic clue - search chest left tower camelot.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chests in the Dwarven Mine|Search the chests in the Dwarven Mine.]]
+|note=The chest is on the western wall, where [[Hura]]'s [[Crossbow Shop (Dwarven Mine)|Crossbow Shop]] is, in the [[Dwarven Mine]].
+|task=search
+|image=Cryptic clue - search chests dwarven mine.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the chests upstairs in Al Kharid Palace|Search the chests upstairs in Al Kharid Palace.]]
+|note=The chest is located in the north-east corner on the {{FloorNumber|uk=1}}.
+|task=search
+|image=Cryptic clue - search chests al kharid palace.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the Coffin in Edgeville|Search the Coffin in Edgeville.]]
+|note=Search the coffin located by the [[Edgeville teleport lever|Wilderness teleport lever]].
+|task=search
+|image=Cryptic clue - search coffin edgeville.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crate in the left-hand tower of Lumbridge Castle|Search the crate in the left-hand tower of Lumbridge Castle.]]
+|note=Located on the {{FloorNumber|uk=1}} of the southern tower at the [[Lumbridge Castle]] entrance.
+|task=search
+|image=Cryptic clue - search crate left tower lumbridge.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crate in the Toad and Chicken pub|Search the crate in the Toad and Chicken pub.]]
+|note=[[The Toad and Chicken]] pub is located in [[Burthorpe]].
+|task=search
+|image=Cryptic clue - search crate toad chicken pub.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crate near a cart in Port Khazard|Search the crate near a cart in Port Khazard.]]
+|note=Search by the southern [[Khazard General Store]] in [[Port Khazard]].
+|task=search
+|image=Cryptic clue - search crate port khazard.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in a bank in Varrock|Search the crates in a bank in Varrock.]]
+|note=Search in the basement of the [[West Varrock]] bank.
+|task=search
+|image=Cryptic clue - search crates west varrock bank.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in a house in Yanille that has a piano|Search the crates in a house in Yanille that has a piano.]]
+|note=The house is located north-west of the bank.
+|task=search
+|image=Cryptic clue - search crates piano yanille.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in Canifis|Search the crates in Canifis.]]
+|note=Search inside the shop, [[Rufus' Meat Emporium]].
+
+'''Note:''' This step is only given if the player has completed [[Priest in Peril]].{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1747242619317477421|date=16 January 2024|archiveurl=https://reldo.runescape.wiki/i/27963982|archivedate=6 May 2026|quote=I think it's gated behind Priest in Peril. Which is uncommon behaviour for clues, but that one seems to be an exception.}}
+|task=search
+|image=Cryptic clue - search crates canifis.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in Draynor Manor|Search the crates in Draynor Manor.]]
+|note=Top floor of the manor.
+|task=search
+|image=Cryptic clue - search crates draynor manor.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in East Ardougne's general store|Search the crates in East Ardougne's general store.]]
+|note=Located south of the [[Ardougne]] church.
+|task=search
+|image=Cryptic clue - search crates east ardougne general.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in Falador General store|Search the crates in Falador General store.]]
+|note=The [[Falador General Store]] can be found by the northern entrance to the city.
+|task=search
+|image=Cryptic clue - search crates falador general store.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in Horvik's armoury|Search the crates in Horvik's armoury.]]
+|note=[[Horvik]]'s in [[Varrock]].
+|task=search
+|image=Cryptic clue - search crates horvik.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the Barbarian Village helmet shop|Search the crates in the Barbarian Village helmet shop.]]
+|note=[[Peksa's Helmet Shop]] in [[Barbarian Village]].
+|task=search
+|image=Cryptic clue - search crates barbarian village.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the Dwarven mine|Search the crates in the Dwarven mine.]]
+|note=Search the east of the [[Ice Mountain]] ladder entrance in the [[Drogo's Mining Emporium]].
+|task=search
+|image=Cryptic clue - search crates dwarven mine.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the fruit store east of Hosidius|Search the crates in the fruit store just east of the Hosidius town centre.]]
+|note=Search the crates in house containing [[fruit stall]]s.
+|task=search
+|image=Cryptic clue - search crate fruit store.png
+|level=1}}
+
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the guard house in northern East Ardougne|Search the crates in the guard house of the northern gate of East Ardougne.]]
+|note=The guard house is north-east of the [[Handelmort Mansion]].
+|task=search
+|image=Cryptic clue - search crates guard house east ardougne.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the most north-western house in Al Kharid|Search the crates in the most north-western house in Al Kharid.]]
+|note=The house south-east of the gnome glider and the gem stall.
+|task=search
+|image=Cryptic clue - search crates north-west house al kharid.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the outhouse in Taverley|Search the crates in the outhouse of the long building in Taverley.]]
+|note=Located in the small building attached by a fence to the main building. Climb over the stile.
+|task=search
+|image=Cryptic clue - search crate outhouse taverley.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the Port Sarim Fishing shop|Search the crates in the Port Sarim Fishing shop.]]
+|note=Search the crates, by the door, in [[Gerrant's Fishy Business]] in [[Port Sarim]].
+|task=search
+|image=Cryptic clue - search crates port sarim fishing.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington|Search the crate in Rommiks crafting shop in Rimmington.]]
+|note=The crates in [[Rommik's Crafty Supplies]] in [[Rimmington]].
+|task=search
+|image=Cryptic clue - search crates Rommiks shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates in the shed just north of East Ardougne|Search the crates in the shed just north of East Ardougne.]]
+|note=The crates in the shed north of the northern [[Ardougne]] bank.
+|task=search
+|image=Cryptic clue - search crates east ardougne shed.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the crates near a cart in Varrock|Search the crates near a cart in Varrock.]]
+|note=South-east of [[Varrock Palace]], south of the [[Tree patch|tree farming patch]].
+|task=search
+|image=Cryptic clue - crate near varrock cart .png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the single crate in Horvik's smithy in Varrock|Search the single crate in Horvik's smithy in Varrock.]]
+|note=[[Horvik's Smithy]] is found north-east of [[Varrock Square]].
+|task=search
+|image=Cryptic clue - horvik's single crate.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers above Varrock's shops|Search the drawers above Varrock's shops.]]
+|note=Located upstairs in [[Thessalia's Fine Clothes]] shop in [[Varrock]].
+|task=search
+|image=Cryptic clue - search drawers varrock shops.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers found upstairs in East Ardougne's houses|Search the drawers found upstairs in East Ardougne's houses.]]
+|note=Upstairs of the pub north of the [[Ardougne Castle]].
+|task=search
+|image=Cryptic clue - search drawers east ardougne.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in a house in Draynor Village|Search the drawers in a house in Draynor Village.]]
+|note=The drawer is located in the northernmost house in [[Draynor Village]].
+|task=search
+|image=Cryptic clue - draynor village drawers.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in Catherby's Archery shop|Search the drawers in Catherby's Archery shop.]]
+|note=[[Hickton's Archery Emporium]] in [[Catherby]].
+|task=search
+|image=Cryptic clue - search drawers catherby archery.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in Falador's chain mail shop|Search the drawers in Falador's chain mail shop.]]
+|note=[[Wayne's Chains - Chainmail Specialist]] store at the southern [[Falador]] walls.
+|task=search
+|image=Cryptic clue - search drawers falador chain mail shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in one of Gertrude's bedrooms|Search the drawers in one of Gertrude's bedrooms.]]
+|note=[[Kanel]]'s bedroom (south-eastern room), outside of west [[Varrock]].
+|task=search
+|image=Cryptic clue - search drawers gertrude.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in the ground floor of a shop in Yanille|Search the drawers in the ground floor of a shop in Yanille.]]
+|note=Search the drawers in [[Yanille]]'s hunting shop.
+|task=search
+|image=Cryptic clue - search drawers yanille hunting shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in the house next to the Port Sarim mage shop|Search the drawers in the house next to the Port Sarim mage shop.]]
+|note=House east of [[Betty]]'s. Contains a cooking sink.
+|task=search
+|image=Cryptic clue - search drawers port sarim house.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers in the upstairs of a house in Catherby|Search the drawers in the upstairs of a house in Catherby.]]
+|note=[[Perdu]]'s house in [[Catherby]].
+|task=search
+|image=Cryptic clue - search drawers upstairs catherby.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers of houses in Burthorpe|Search the drawers of houses in Burthorpe.]]
+|note=Inside [[Hild]]'s house in the north-east corner of [[Burthorpe]].
+|task=search
+|image=Cryptic clue - search drawer Burthorpe.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers on the ground floor of a building facing Ardougne's market|Search the drawers on the ground floor of a building facing Ardougne's Market.]]
+|note=Inside [[Noella]]'s house north of the [[Ardougne Market|market]].
+|task=search
+|image=Cryptic clue - search drawers house ardougne market.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers upstairs in Falador's shield shop|Search the drawers upstairs in Falador's shield shop.]]
+|note=The 2nd floor of [[Cassie's Shield Shop]] near [[Falador]]'s north gates.
+|task=search
+|image=Cryptic clue - search drawers falador shield shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers, upstairs in the bank to the East of Varrock|Search the drawers upstairs in the bank to the East of Varrock.]]
+|note= [[East Varrock]] bank.
+|task=search
+|image=Cryptic clue - search drawers upstairs bank east varrock.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the drawers downstairs of houses in the eastern part of Falador|Search the drawers downstairs of houses in the eastern part of Falador.]]
+|note=House is located east of the eastern [[Falador]] bank and south of the fountain. The house is indicated by the [[File:Cooking range icon.png]] icon on the minimap.
+|task=search
+|image=Cryptic clue - search drawers falador houses.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the open crate found in the Hosidius kitchens|Search the open crate found in the Hosidius kitchens.]]
+|note=The [[Hosidius Kitchen]] is east of the [[mess]] in [[Hosidius]].
+|task=search
+|image=Cryptic clue - search crates in hosidius kitchen.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the tents in the Imperial Guard camp in Burthorpe for some boxes|Search the tents in the Imperial Guard camp in Burthorpe for some boxes.]]
+|note=Search in the tents in north-west corner of the camp.
+|task=search
+|image=Cryptic clue - search tents burthorpe.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search the wheelbarrow in Rimmington mine|Search the wheelbarrow in Rimmington mine.]]
+|note=The [[Rimmington mining site]] is located north of [[Rimmington]].
+|task=search
+|image=Cryptic clue - search wheelbarrow rimmington mine.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search through chests found in the upstairs of houses in eastern Falador|Search through chests found in the upstairs of houses in eastern Falador.]]
+|note=The house is located south-west of the [[Falador Party Room]]. There are two chests in the room; search the northern chest.
+|task=search
+|image=Cryptic clue - search chests falador upstairs.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search through some drawers in the upstairs of a house in Rimmington|Search through some drawers in the upstairs of a house in Rimmington.]]
+|note=On the {{FloorNumber|uk=1}} of the house north of [[Hetty|Hetty the Witch]]'s house in [[Rimmington]].
+|task=search
+|image=Cryptic clue - search drawers rimmington.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search through some drawers found in Taverley's houses|Search through some drawers found in Taverley's houses.]]
+|note=The south-eastern most house, south of [[Jatix's Herblore Shop]].
+|task=search
+|image=Cryptic clue - search drawers taverley.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Search upstairs in the houses of Seers' Village for some drawers|Search upstairs in the houses of Seers' Village for some drawers.]]
+|note=Located in the house with the [[spinning wheel]]. South of the [[Seers' Village]] bank.
+|task=search
+|image=Cryptic clue - search drawers seers village.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Someone watching the fights in the Emir's Arena|Someone watching the fights in the Emir's Arena is your next destination.]]
+|note=Talk to [[Jeed]], found on the upper floor of the south east arena, at the [[Emir's Arena]].
+|task=talk
+|image=Cryptic clue - talk jeed duel arena.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Arhein in Catherby|Speak to Arhein in Catherby.]]
+|note=[[Arhein]] is just south of the [[Catherby]] bank.
+|task=talk
+|image=Cryptic clue - talk arhein catherby.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Doric, who lives north of Falador|Speak to Doric, who lives north of Falador.]]
+|note=[[Doric]] is found north of [[Falador]] and east of the [[Taverley]] gate.
+|task=talk
+|image=Cryptic clue - speak doric falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Ellis in Al Kharid|Speak to Ellis in Al Kharid.]]
+|note=[[Ellis]] is the tanner just north of the [[Al Kharid]] bank.
+|task=talk
+|image=Cryptic clue - talk ellis al kharid.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Gaius in Taverley|Speak to Gaius in Taverley.]]
+|note=[[Gaius]] is found in his shop in the north-west corner in [[Taverley]], just south of Taverley's house portal.
+|task=talk
+|image=Cryptic clue - speak gaius taverley.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Hans to solve the clue|Speak to Hans to solve the clue.]]
+|note=[[Hans]] can be found at [[Lumbridge Castle]].
+|task=talk
+|image=Cryptic clue - speak hans lumbridge.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Jatix in Taverley|Speak to Jatix in Taverley.]]
+|note=[[Jatix]] is found in the middle of [[Taverley]].
+|task=speak
+|image=Cryptic clue - speak jatix taverley.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Ned in Draynor Village|Speak to Ned in Draynor Village.]]
+|note=[[Ned]] is found north or the [[Draynor]] bank.
+|task=talk
+|image=Cryptic clue - speak ned draynor.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Rusty north of Falador|Speak to Rusty north of Falador.]]
+|note=[[Rusty]] can be found north-east of [[Falador]] on the way to the [[Mind Altar]].
+|task=talk
+|image=Cryptic clue - speak rusty falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Sarah at Falador farm|Speak to Sarah at Falador farm.]]
+|note=Talk to [[Sarah]] at [[Falador farm]], north of [[Port Sarim]].
+|task=talk
+|image=Cryptic clue - speak sarah falador farm.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to Sir Kay in Camelot Castle|Speak to Sir Kay in Camelot Castle.]]
+|note=[[Sir Kay]] can be found in the courtyard at [[Camelot Castle]].
+|task=talk
+|image=Cryptic clue - speak sir kay camelot.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to the bartender of the Blue Moon Inn in Varrock|Speak to the bartender of the Blue Moon Inn in Varrock.]]
+|note=Talk to the [[Bartender (Blue Moon Inn)|bartender]] in [[Blue Moon Inn]] in [[Varrock]].
+|task=talk
+|image=Cryptic clue - speak bartender blue moon inn varrock.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to The Lady of the Lake|Speak to the Lady of the Lake.]]
+|note=Talk to the [[Lady of the Lake]] in [[Taverley]].
+|task=talk
+|image=Cryptic clue - speak lady of the lake.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Speak to the staff of Sinclair mansion|Speak to the staff of Sinclair mansion.]]
+|note=Speak to [[Louisa]], on the {{FloorNumber|uk=0}}, found at the [[Sinclair Mansion]].
+|task=talk
+|image=Cryptic clue - speak louisa sinclair mansion.png
+|level=1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - Strength potions with red spiders' eggs|Strength potions with red spiders' eggs? He is quite a herbalist.]]
+|note = Talk to [[Apothecary]] in south-western [[Varrock]]. (The) Apothecary is just north-west of the [[Varrock Swordshop]].
+|task=talk
+|image= Cryptic clue - talk apothecary varrock.png
+|level = 1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Surrounded by white walls and gems|Surrounded by white walls and gems.]]
+|note=Talk to [[Herquin]], the gem store owner in [[Falador]].
+|image=Cryptic clue - herquin falador.png
+|task=talk
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Ali the Leaflet Dropper|Talk to Ali the Leaflet Dropper north of the Al Kharid mine.]]
+|note=[[Ali the Leaflet Dropper]] can be found roaming north of the [[Al Kharid mine]].
+|task=talk
+|image=Cryptic clue - talk ali the leaflet dropper.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Ambassador Spanfipple|Talk to Ambassador Spanfipple in the White Knights Castle.]]
+|note=[[Ambassador Spanfipple]] can be found roaming on the {{FloorNumber|uk=1}} of the [[White Knights' Castle]].
+|task=talk
+|image=Cryptic clue - talk ambassador spanfipple.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to a party-goer in Falador|Talk to a party-goer in Falador.]]
+|note=[[Lucy]] is the bartender on the {{FloorNumber|uk=1}} of the [[Party Room]].
+|task=talk
+|image=Cryptic clue - talk lucy falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Cassie in Falador|Talk to Cassie in Falador.]]
+|note=[[Cassie]] is found just south-east of the northern [[Falador]] gate.
+|task=talk
+|image=Cryptic clue - speak cassie falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Charles at Port Piscarilius|Talk to Charles at Port Piscarilius.]]
+|note=[[Charles]] is found by [[Veos]]' ship in [[Port Piscarilius]].
+|task=talk
+|image=Cryptic clue - talk to charles.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the cook in the Blue Moon Inn|Talk to the cook in the Blue Moon Inn in Varrock.]]
+|note=The [[Blue Moon Inn]] can be found by the southern entrance to [[Varrock]].
+|task=talk
+|image=Cryptic clue - talk to blue moon cook.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Ermin|Talk to Ermin.]]
+|note=[[Ermin]] can be found on the {{FloorNumber|uk=1}} of the tree house south-east of the [[Gnome Agility Course]].
+|task=talk
+|image=Cryptic clue - talk ermin.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the barber in the Falador barber shop|Talk to the barber in the Falador barber shop.]]
+|note=The [[Hairdresser]] can be found in the barber shop, north of the west [[Falador]] bank.
+|task=talk
+|image=Cryptic clue - talk hairdresser falador barber shop.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the bartender of the Rusty Anchor in Port Sarim|Talk to the bartender of the Rusty Anchor in Port Sarim.]]
+|note=The [[Bartender (Rusty Anchor Inn)|Bartender]] can be found in the [[Rusty Anchor Inn]], which is located in the northern part of [[Port Sarim]].
+|task=talk
+|image=Cryptic clue - talk bartender rusty anchor.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the Doomsayer|Talk to the Doomsayer.]]
+|note=The [[Doomsayer]] can be found just north of [[Lumbridge Castle]] entrance.
+|task=talk
+|image=Cryptic clue - talk doomsayer.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Morgan in his house at Draynor Village|Talk to Morgan in his house at Draynor Village.]]
+|note=[[Morgan]] can be found in the house with the {{SCP|Quest}} map icon.
+|task=talk
+|image=Cryptic clue - talk morgan.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the mother of a basement dwelling son|Talk to the mother of a basement dwelling son.]]
+|note= Evil Dave's mother, [[Doris]], is located in the house west of [[Edgeville]] bank.
+|task=talk
+|image=Cryptic clue - talk doris edgeville.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to the Squire in the White Knights' castle|Talk to the Squire in the White Knights' castle in Falador.]]
+|note=The [[Squire]] is located in the courtyard of the [[White Knights' Castle]].
+|task=talk
+|image=Cryptic clue - talk squire falador.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Turael in Burthorpe|Talk to Turael in Burthorpe.]]
+|note=[[Turael]] is located in the small house east of [[The Toad and Chicken]] inn.
+|task=talk
+|image=Cryptic clue - talk to Turael.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Wayne at Wayne's Chains in Falador|Talk to Wayne at Wayne's Chains in Falador.]]
+|note=[[Wayne]]'s shop is found directly south of the [[White Knights' Castle]].
+|task=talk
+|image=Cryptic clue - talk to wayne.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Talk to Zeke in Al Kharid|Talk to Zeke in Al Kharid.]]
+|note=[[Zeke]] is the owner of the [[Zeke's Superior Scimitars|scimitar shop]] in [[Al Kharid]].
+|task=talk
+|image=Cryptic clue - talk zeke al kharid.png
+|level=1}}
+{{Cryptics
+|clue=[[Clue scroll (easy) - Thanks, Grandma!|Thanks, Grandma!]]
+|note=[[Tynan]] can be found in the north-east corner of [[Port Piscarilius]].
+|task=talk
+|image=Cryptic clue - talk to tynan.png
+|level=1}}
+{{Cryptics
+|clue = [[Clue scroll (easy) - The hand ain't listening|The hand ain't listening.]]
+|note = Talk to [[The Face]] located by the [[manhole (Rat Pits)|manhole]] just north of the [[Port Sarim]] fishing shop.
+|task = talk
+|image = Cryptic clue - talk to the face.png
+|level = 1}}
+|}
+<noinclude>
+
+==References==
+{{Reflist}}
+</noinclude>

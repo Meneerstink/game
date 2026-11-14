@@ -1,0 +1,54 @@
+<noinclude>[[File:Strange device (beginner) dig locations.png|thumb|right|Map of beginner Hot Cold locations.]]
+{{Treasure Trails Guide Hot Cold Intro|beginner}}
+
+</noinclude>
+{|class="wikitable"
+!Location
+!Image
+!Map
+|-
+|Inside the wheat field next to [[Draynor Village]]
+|[[File:Hot cold clue - Draynor Village wheat field.png|centre|300px]]
+|[[File:Hot cold clue - Draynor Village wheat field map.png|centre|200px]]
+|-
+|Atop [[Ice Mountain]]
+|[[File:Hot cold clue - Ice Mountain.png|centre|300px]]
+|[[File:Hot cold clue - Ice Mountain map.png|centre|200px]]
+|-
+|[[Cow]] field north of [[Lumbridge]]
+|[[File:Hot cold clue - Lumbridge cow field.png|centre|300px]]
+|[[File:Hot cold clue - Lumbridge cow field map.png|centre|200px]]
+|-
+|Patch of mushrooms just north-west of [[Draynor Manor]]
+|[[File:Hot cold clue - Draynor Manor.png|centre|300px]]
+|[[File:Hot cold clue - Draynor Manor map.png|centre|200px]]
+|-
+|North-east of [[Al Kharid Mine]]
+|[[File:Hot cold clue - Al Kharid Mine.png|centre|300px]]
+|[[File:Hot cold clue - Al Kharid Mine map.png|centre|200px]]
+|}
+
+=== Chronicle Trick ===
+The [[Chronicle]] Trick is an easy way to determine which of the possible locations your clue is at, and is performed as follows:
+
+1. Teleport to the Champions' Guild using the Chronicle, and check the orb
+
+2. If it is Cold, the clue is on Ice Mountain. 
+
+3. If it is Hot, the clue is in the Draynor wheat field 
+
+4. If it is Very Hot or Incredibly Hot, the clue is in the cow field furthest north of Lumbridge Castle. 
+
+5. If Warm, the clue is either north of the Al Kharid mine, or it is behind Draynor Manor. Take a step Eastward and check the orb again. If it is warmer, the clue is in Al Kharid, otherwise, it is behind the Draynor Manor.
+
+=== Crafting guild trick ===
+
+The [[Crafting guild]] is a hotspot for clue hunters, and its location may be used to pinpoint the dig spot together with the [[Achievement diary cape]]. An [[Amulet of glory]] may also be used for this strategy. 
+
+From a central tile in the Crafting Guild, touch the [[strange device]].
+
+1. If the possible locations are either '''the cow field north of Lumbridge''' or '''north-east of Al Kharid mine''', teleport to [[Twiggy O'Korn]] with the achievement diary cape and touch the strange device again. The dig location will be determined and, if it's the cow field, run from there. 
+
+2. Otherwise, if you get the other three locations, run to the '''south-western''' corner of the Crafting Guild and touch the strange device. From here, the '''Ice Mountain''' location will be either determined or discarded. 
+
+3. If the Ice Mountain possibility is discarded, and the possible locations are either '''the Draynor wheat field''' and '''behind the Draynor Manor''' teleport to Twiggy O'Korn with the achievement diary cape and touch the strange device again. The dig location will be determined and, if it's the wheat field, run from there.

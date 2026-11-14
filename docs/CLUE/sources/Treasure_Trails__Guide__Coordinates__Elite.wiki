@@ -1,0 +1,382 @@
+<noinclude>{{Treasure Trails Guide Coordinates Intro}}
+==Elite Coordinates==
+</noinclude><span id=400></span>{{Coordinates
+|coords = 00 degrees 18 minutes south,<br/>
+02 degrees 35 minutes west
+|req = Started [[Mourning's End Part I]]
+|image = Coordinate clue 00.18S 02.35W.png
+|map = 00.18S 02.35W map
+|notes = [[Flax field]] south of the [[Lletya]] bank. The image has the north compass facing east to provide a proper orientation.
+|level= 4
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+}}
+{{Coordinates
+|coords = 00 degrees 35 minutes north,<br/>
+35 degrees 50 minutes east
+|req = Partial completion of [[Darkness of Hallowvale]].
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 00.35N 35.50E.png
+|map = 00.35N 35.50E map
+|notes = After arriving at [[Meiyerditch]], walk up the wall until you pass a section where the boards creak (you are informed in the chat pane). Kick the boards, and then climb down into the passage below. Dig west of the wall rubble. If you already completed [[Darkness of Hallowvale]], then right-click on the boards for the option to climb down.
+The Armadylean guard fails to spawn and you have to dig at the clue until it spawns the Bandosian guard, which might take several attempts.
+|level=4}}
+{{Coordinates
+|coords = 00 degrees 41 minutes north,<br/>
+27 degrees 35 minutes west
+|req = Completion of [[Children of the Sun]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 00.41N 27.35W.png
+|map = 00.41N 27.35W map
+|notes = Dig by the river near the fishing spot north of the [[Fortis Aqueduct]]. It is south-east of [[Quetzacalli Gorge]].
+|level=4}}
+{{Coordinates
+|coords = 00 degrees 43 minutes north,<br/>
+11 degrees 13 minutes west
+|req = Completion of [[Pandemonium]], 66 [[Sailing]] and an [[Adamant keel]] for traversing the crystal-flecked waters.
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 00.43N 11.13W.png
+|map = 00.43N 11.13W map
+|notes = Sail north-west from [[Port Tyras]] and moor at [[Lledrith Island]]. Dig between the north-western most magic tree and the pond. 
+|level=4}}
+<span id=401></span><span id=402></span>{{Coordinates
+|coords = 02 degrees 35 minutes south,<br/>
+11 degrees 52 minutes east
+|req = [[Jungle Potion]] quest and 100 [[trading sticks]] are required to enter.
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 02.35S 11.52E.png
+|map = 02.35S 11.52E map
+|notes = Inside the [[Hardwood Grove]] at [[Tai Bwo Wannai]]. You will need 100 [[trading sticks]] for this unless you have completed the [[Karamja elite diary]].
+|level=4}}{{Coordinates
+|coords = 02 degrees 37 minutes north,<br/>
+27 degrees 09 minutes west
+|req = [[Children of the Sun]] is required to access [[the Proudspire]].
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 02.37N 27.09W.png
+|map = 02.37N 27.09W map
+|notes = At the summit of [[the Proudspire]]. The quickest way to reach there is to fly to [[Quetzacalli Gorge]] via the [[Quetzal Transport System]], then run east to the base of the mountain.
+|level=4}}
+<span id=403></span>{{Coordinates
+|coords = 03 degrees 09 minutes south,<br/>
+42 degrees 50 minutes east
+|req = [[Cabin Fever]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 03.09S 42.50E.png
+|map = 03.09S 42.50E map
+|notes = Small island located north-east of [[Mos Le'Harmless]], accessible through the '''western''' staircase located at the north-east corner of the [[Mos Le'Harmless Cave]]. Remember to wear a [[Witchwood icon]] when traversing the dungeon, as well as bringing a [[light source]] for players who haven't lit the fire pit (requires completion of [[Making Friends with My Arm]]). It is possible that an [[Armadylean guard]] may appear, which means you may have to bring [[Ranged equipment]].
+
+A [[Stepping Stone (Mos Le'Harmless, level 82)|level 82 Agility shortcut]] provides fast access from just north of the [[Trouble Brewing]] minigame entrance and eliminates the need to bring a Witchwood icon and light source.
+|level = 4}}
+{{Coordinates
+|coords = 03 degrees 46 minutes north,<br/>
+08 degrees 07 minutes west
+|req = [[Regicide]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 03.46N 08.07W.png
+|map = 03.46N 08.07W map
+|notes = North-west of [[Iorwerth Camp]] near some [[rabbit]]s. East of [[Shark]] [[fishing spot]].
+|level=4}}
+<span id=404></span><span id=405></span>{{Coordinates
+|coords = 05 degrees 07 minutes south,<br/>
+13 degrees 26 minutes east
+|req = Completion of the [[Shilo Village]] quest
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 05.07S 13.26E.png
+|map = 05.07S 13.26E map
+|notes = North-east [[Shilo Village (location)|Shilo Village]], dig in the centre of the bamboo pillars.
+|level=4}}
+{{Coordinates
+|coords = 05 degrees 18 minutes north,<br/>
+6 degrees 48 minutes west
+|req = Completion of the [[Song of the Elves]] quest
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 05.18S 06.48E.png
+|map = 05.18S 06.48E map
+|notes = In [[Prifddinas]], just west of the [[Tower of Voices]].
+|level=4}}
+{{Coordinates
+|coords = 05 degrees 24 minutes south,<br/>
+26 degrees 56 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 05.24S 26.56E.png
+|map = 05.24S 26.56E map
+|notes = On top of a cliff to the west of [[Pollnivneach]]. There is a level 83 Agility [[Slope_(Pollnivneach)|shortcut]] near [[Ali the Hag]]'s hut which provides faster access from Pollnivneach.
+|level=4}}
+{{Coordinates
+|coords = 05 degrees 39 minutes south,<br/>
+02 degrees 13 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 05.39S 02.13E.png
+|map = 05.39S 02.13E map
+|notes = Just south of [[Gu'Tanoth]], west of [[Gnormadium Avlafrim]]'s [[gnome glider]].
+|level=4}}
+<span id=406></span>{{Coordinates
+|coords = 06 degrees 28 minutes south,<br/>
+03 degrees 48 minutes west
+|req = No
+|fight = [[Bandosian guard]]
+|image = Coordinate clue 06.28S 03.48W.png
+|map = 06.28S 03.48W map
+|notes = On the north-eastern corner of the [[Isle of Souls]]. [[Fairy ring]] code {{Fairycode|BJP}} is nearby.
+|level=4}}
+{{Coordinates
+|coords = 06 degrees 35 minutes north,<br/>
+09 degrees 07 minutes east
+|req = Started [[Legends' Quest]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 06.35N 09.07E.png
+|map = 06.35N 09.07E map
+|notes = Outside the [[Legends' Guild]], north of the fountain.
+|level=4}}
+<span id=407></span><span id=408></span>{{Coordinates
+|coords = 08 degrees 15 minutes north,<br/>
+35 degrees 24 minutes east
+|req = [[Priest in Peril]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 08.15N 35.24E.png
+|map = 08.15N 35.24E map
+|notes = North of [[Dessous]]'s tomb from [[Desert Treasure I]].
+|level=4}}
+{{Coordinates
+|coords = 08 degrees 30 minutes south,<br/>
+10 degrees 48 minutes west
+|req = No
+|fight = [[Armadylean guard]]
+|image = Coordinate clue 08.30S 10.48W.png
+|map = 08.30S 10.48W map
+|notes = On the western end of the [[Isle of Souls]] by the fire remains.
+|level=4}}
+<span id=409></span>{{Coordinates
+|coords = 09 degrees 46 minutes south,<br/>
+43 degrees 22 minutes east
+|req = Started [[The Great Brain Robbery]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|level = 4
+|image = Coordinate clue 09.46S 43.22E.png
+|map = 09.46S 43.22E map
+|notes = East side of [[Harmony Island]]. It is suggested to bring [[Ranged equipment]] as it is possible an [[Armadylean guard]] will appear.
+}}
+<span id=410></span>{{Coordinates
+|coords = 10 degrees 05 minutes south,<br/>
+24 degrees 31 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 10.05S 24.31E.png
+|map = 10.05S 24.31E map
+|notes = South of the [[Ancient Pyramid]]. If you are having trouble finding the exact spot, increase the brightness to max to help see the contrast in sand colour. 16 blocks south of the northern cactus. A [[Stepping stone (north of Sophanem)|level 79 Agility shortcut]] crossing the River Elid allows fast access to this spot via [[Sophanem]].
+|level = 4
+}}
+{{Coordinates
+|coords = 10 degrees 52 minutes north,<br/>
+30 degrees 54 minutes west
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 10.52N 30.54W.png
+|map = 10.52N 30.54W map
+|notes = By the [[Ruins of Morra]].
+|level = 4
+}}
+<span id=411></span>{{Coordinates
+|coords = 10 degrees 54 minutes north,<br/>
+20 degrees 50 minutes west
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 10.54N 20.50W.png
+|map = 10.54N 20.50W map
+|notes = One step north of the [[bronze pickaxe]] spawn found in the small ruins north of the [[Hosidius mine]].
+|level = 4
+}}
+<span id=412></span>{{Coordinates
+|coords = 12 degrees 31 minutes north,<br/>
+43 degrees 11 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 12.31N 43.11E.png
+|map = 12.31N 43.11E map
+|notes = Dig south-east of the [[evergreen]] tree on the north-eastern portion of [[Dragontooth Island]]. Players will require a [[ghostspeak amulet]] and 25 [[ecto-tokens]] (10 if wearing a [[Ring of Charos(a)]]) or a one-time payment of 500 [[ecto-tokens]] at the [[Ghost captain]] to get to the island.
+|level = 4}}
+{{Coordinates
+|coords = 12 degrees 35 minutes north, <br/>
+36 degrees 20 minutes east
+|req= {{SCP|Agility|25}}
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 12.35N 36.20E.png
+|map = 12.35N 36.20E map
+|notes=Dig on the rocks, north of the wrecked ship, outside of [[Port Phasmatys]]. Climb the ladder of the wrecked ship, cross the gangplank, and jump on the rocks until the end is reached. Each jump requires 5% of your running energy.
+|level=4}}
+<span id=413></span>{{Coordinates
+|coords = 13 degrees 45 minutes south,<br/>
+15 degrees 30 minutes east
+|req = Partial completion of [[Monkey Madness I]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 13.45S 15.30E.png
+|map = 13.45S 15.30E map
+|notes = Eastern shore of [[Crash Island]], visited during the [[Monkey Madness I]] quest. There are poisonous scorpions there-bring an anti-poison.
+|level = 4
+}}
+<span id=414></span>{{Coordinates
+|coords = 14 degrees 13 minutes south,<br/>
+27 degrees 26 minutes east
+|req = Partial completion of [[Beneath Cursed Sands]]
+|image = Coordinate clue 14.13S 27.26E.png
+|notes = Dig in the mining site at the south-west part of the [[necropolis]]. Can be quickly accessed with level 62 [[Agility]] via the [[fairy ring]] code {{Fairycode|AKP}}.
+|map = 14.13S 27.26E map
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|level = 4}}
+{{Coordinates
+|coords = 14 degrees 15 minutes south,<br/>
+08 degrees 01 minutes east
+|req = Partial completion of [[Monkey Madness I]]
+|image = Coordinate clue 14.15S 08.01E.png
+|notes = Dig on top of the starfish on the south-westernmost shore of [[Ape Atoll]].
+|map = 14.15S 08.01E map
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|level = 4}}
+<span id=415></span><span id=416></span>{{Coordinates
+|coords = 16 degrees 09 minutes north,<br/>
+10 degrees 33 minutes east
+|req = A [[rope]] (if [[Mountain Daughter]] not completed)
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 16.09N 10.33E.png
+|map = 16.09N 10.33E map
+|notes = By the lake north of the [[Mountain Camp]] in the [[Fremennik Province]]. Fairy ring {{fairycode|ajr}} is nearby.
+|level = 4
+}}
+<span id=417></span>{{Coordinates
+|coords = 17 degrees 58 minutes north,<br/>
+19 degrees 05 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 17.58N 19.05E.png
+|notes = East of the [[Wilderness Obelisk]] in level 28 [[Wilderness]].
+|map = 17.58N 19.05E map
+|level=4}}
+<span id=418></span>{{Coordinates
+|coords = 18 degrees 05 minutes north,<br/>
+12 degrees 05 minutes east
+|req = Access to [[Trollheim]], requires quests
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 18.05N 12.05E.png
+|notes = West of the entrance to the [[Ice Path]], where the [[Troll child]] resides.
+|map = 18.05N_12.05E_map
+|level=4}}
+<span id=419></span>{{Coordinates
+|coords = 19 degrees 56 minutes north,<br/>
+02 degrees 31 minutes west
+|req = Partial completion of [[The Fremennik Isles]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 19.56N 02.31W.png
+|map = 19.56N 02.31W map
+|notes = At the very south-eastern part of [[Neitiznot]]. Dig 4 spaces west of the ladder.
+|level=4}}
+<span id=420></span>{{Coordinates
+|coords = 20 degrees 11 minutes north,<br/>
+07 degrees 41 minutes west
+|req = Started [[Lunar Diplomacy]] to access [[Pirates' Cove]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 20.11N 07.41W.png
+|map = 20.11N 07.41W map
+|notes = In the south-western area of the [[Pirates' Cove]], near the windswept tree.
+|level=4}}
+{{Coordinates
+|coords = 20 degrees 13 minutes north,<br/>
+08 degrees 07 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 20.13N 08.07E.png
+|map = 20.13N 08.07E map
+|notes = In the north-western part of the [[Trollweiss and Rellekka Hunter area]]. The [[fairy ring]] code {{Fairycode|DKS}} can be used to teleport nearby.
+|level=4}}
+{{Coordinates
+|coords = 20 degrees 24 minutes north,<br/>
+03 degrees 52 minutes west
+|req = Started [[The Fremennik Isles]] to access [[Neitiznot]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 20.24N 03.52W.png
+|map = 20.24N 03.52W map
+|notes = Outside the town near the bridge.
+|level=4}}
+<span id=421></span>{{Coordinates
+|coords = 21 degrees 03 minutes north,<br/>
+24 degrees 13 minutes east
+|level = 4
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 21.03N 24.13E.png
+|map = 21.03 24.13E map
+|notes = Level 40 [[Wilderness]], in the [[Lava Dragon Isle]]. An [[Anti-dragon shield]]
+or [[Antifire potion]] is recommended to bring for some protection against [[dragonfire]] attacks.
+}}
+<span id=422></span>{{Coordinates
+|coords = 22 degrees 54 minutes north,<br/>
+29 degrees 01 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 22.54N 29.01E.png
+|map = 22.54N 29.01E map
+|notes = At the [[Fountain of Rune]] in the north-eastern [[Wilderness]], in the small 'C' shaped wall.
+|level = 4}}
+<span id=423></span>{{Coordinates
+|coords = 23 degrees 48 minutes north,<br/>
+11 degrees 43 minutes west
+|requirements = Started [[Lunar Diplomacy]] to access [[Lunar Isle]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|level = 4
+|image = Coordinate clue 23.48N 11.43W.png
+|map = 23.48N 11.43W map|req = Started [[Lunar Diplomacy]] to access [[Lunar Isle]]|notes = Outside the western wall on [[Lunar Isle]].}}
+<span id=424></span>{{Coordinates
+|coords = 24 degrees 07 minutes north,<br/>
+23 degrees 22 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 24.07N 23.22E.png
+|notes = Inside the [[Resource Area]] (3 steps north of the fire). Requires 7,500 [[coins]] to enter (or 6,000, 3,750 or no coins with medium, hard and elite [[Wilderness Diary]] respectively).
+|map = 24.07N 23.22E map
+|level=4}}
+{{Coordinates
+|coords = 24 degrees 15 minutes north,<br/>
+13 degrees 30 minutes east
+|req = Partial completion of [[Making Friends with My Arm]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 24.15N 13.30E.png
+|notes = Inside the largest building in [[Weiss]]. Players must complete the quest up to the point where they speak to [[Mother]].
+|map = 24.15N 13.30E map
+|level=4}}
+{{Coordinates
+|coords = 24 degrees 20 minutes north,<br/>
+18 degrees 50 minutes east
+|level = 4
+|req = No
+|fight = [[Armadylean guard]]
+[[Bandosian guard]]
+|image = Coordinate clue 24.20N 18.50E.png
+|map = 24.20N 18.50E map
+|notes = South of the [[Pirates' Hideout]] in level 54 [[Wilderness]].
+}}
+<span id="425"></span>{{Coordinates
+|coords = 25 degrees 03 minutes north,<br/>
+29 degrees 22 minutes east
+|req = No
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 25.03N 29.22E.png
+|map = 25.03N 29.22E map
+|notes = On the peninsula in the north-easternmost corner of the [[Wilderness]], north of the [[Blighted Volcano]].
+|level = 4}}
+{{Coordinates|coords=25 degrees 48 minutes north,<br/>
+35 degrees 00 minutes east
+|fight=[[Armadylean guard]] or [[Bandosian guard]]
+|image=Coordinate clue 25.48N 35.00E.png
+|map=25.48N_35.00E_map
+|notes=Need to take the rowboat to travel to [[Lithkren]].The rowboat  is located south-west of Mushroom Meadow Mushtree([[Mycelium Transportation System]]). Walk west on the island and dig east next to the skroom next to the bones.
+|level=4
+|req=Partial completion of [[Dragon Slayer II]]}}
+<span id="426"></span>{{Coordinates
+|coords = 26 degrees 43 minutes north,<br/>
+01 degrees 22 minutes east
+|req = Partial completion of [[The Fremennik Exiles]]
+|fight = [[Armadylean guard]] or [[Bandosian guard]]
+|image = Coordinate clue 26.43N 01.22E.png
+|map = 26.43N 01.22E map
+|notes = North-east corner of the [[Island of Stone]].
+|level = 4}}

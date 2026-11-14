@@ -1,0 +1,88 @@
+<noinclude>{{Treasure Trails Guide Anagrams Intro}}
+==Master Anagrams==
+</noinclude>{|class="wikitable" border="2"
+!Anagram
+!Solution
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|''A Elf Knows''
+|[[Snowflake]]
+|Weiss
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Brucie Catnap''
+|[[Captain Bruce]]
+|Shayzien
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Car If Ices''
+|[[Sacrifice]]
+|[[Zul-Andra]], on the dock near [[Priestess Zul-Gwenwynig]].
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Ded War''
+|[[Edward]]
+|Inside [[Rogues' Castle]]
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Dim Tharn''
+|[[Mandrith]]
+|Outside the [[Wilderness Resource Area]].
+|[[Treasure Trails/Guide/Light boxes|Light box]] or [[Treasure Trails/Guide/Puzzle boxes|Puzzle box]]
+|-
+|''Duo Plug''
+|[[Dugopul]]
+|Graveyard on [[Ape Atoll]], south of [[Awowogei]]'s throne room.
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Forlun''
+|[[Runolf]]
+|[[Miscellania and Etceteria Dungeon]] (Requires partial completion of [[Royal Trouble]].)
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Im N Zezim''
+|[[Immenizz]]
+|The impling inside [[Puro-Puro]].
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Mal in Tau''
+|[[Luminata]]
+|East of the [[Burgh de Rott]] entrance, in town.
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Mold La Ran''
+|[[Old Man Ral]]
+|[[Meiyerditch]]
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Mus Kil Reader''
+|[[Radimus Erkle]]
+|[[Legends' Guild]]
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Rip Maul''
+|[[Primula]]
+|[[Myths' Guild]]
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Rue Go''
+|[[Goreu]]
+|[[Lletya]]
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Slam Duster Grail''
+|[[Guildmaster Lars]]
+|[[Woodcutting Guild]] in [[Hosidius]].
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Ten Wigs On''
+|[[Wingstone]]
+|Between [[Nardah]] and the [[Agility Pyramid]].
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]].
+|-
+|''Twenty Cure Iron''
+|[[New Recruit Tony]]
+|[[Graveyard of Heroes]] in [[Shayzien]].
+|[[Light box]] or [[Treasure Trails/Guide/Puzzle boxes|puzzle box]]
+|}

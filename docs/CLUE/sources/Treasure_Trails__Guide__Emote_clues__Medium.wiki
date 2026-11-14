@@ -1,0 +1,180 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Medium Emote clues==
+</noinclude>
+{| class="wikitable lighttable" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (medium) - Beckon in Tai Bwo Wannai|Beckon in Tai Bwo Wannai. Clap before you talk to me.]]''
+''Equip [[green d'hide chaps]], a [[ring of dueling]] and a [[mithril med helm]].''
+|{{plinkp|Green d'hide chaps}} {{plinkp|Ring of dueling}} {{plinkp|Mithril med helm}}
+|Do the emotes within the barricaded part of [[Tai Bwo Wannai]].
+|[[File:Emote clue - beckon tai bwo wannai.png|150px]]
+|-
+|''[[Clue scroll (medium) - Beckon in the Digsite, near the eastern winch|Beckon in the Digsite, near the eastern winch. Bow before you talk to me.]]''
+''Equip a [[green hat]], [[snakeskin boots]] and an [[iron pickaxe]].''
+|{{plinkp|Green hat}} {{plinkp|Snakeskin boots}} {{plinkp|Iron pickaxe}}
+|
+|[[File:Emote clue - beckon digsite winch.png|150px]]
+|-
+|''[[Clue scroll (medium) - Beckon in the Shayzien Combat Ring|Beckon in the Shayzien Combat Ring. Show your anger before you talk to me.]]'' 
+''Equip an [[adamant platebody]], [[adamant full helm]] and [[adamant platelegs]].''
+|{{plinkp|Adamant platebody}} {{plinkp|Adamant full helm}} {{plinkp|Adamant platelegs}}
+|The [[Combat Ring (Shayzien)|Combat Ring]] of [[Shayzien]] is located south-east of the bank. Other versions of the adamant platebody and legs do not work.
+|[[File:Emote clue - beckon shayzien ring.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cheer in the Barbarian Agility Arena|Cheer in the Barbarian Agility Arena. Headbang before you talk to me.]]''
+''Equip a [[steel platebody]], [[maple shortbow]] and a [[Team cape|Wilderness cape]].''
+|{{plinkp|Steel platebody}} {{plinkp|Maple shortbow}} {{plinkp|Team cape|pic=Team-1 cape}}
+|Requires miniquest [[Alfred Grimhand's Barcrawl]] and 30 in [[Ranged]] (to wield the [[maple shortbow]])
+While level '''35 [[Agility]]''' is required to enter the arena itself, '''the clue can be completed without it.''' Upon entering from the gate, walk into the building located to the south. Inside the building, walk to the most south-eastern corner, and do the emote. The [[Team cape i]], [[Team cape x]] and [[Team cape zero]] can also be used.
+|[[File:Emote clue - cheer headbang barbarian agility.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cheer in the Edgeville general store|Cheer in the Edgeville general store. Dance before you talk to me.]]''
+''Equip a [[brown apron]], [[leather boots]] and [[leather gloves]].''
+|{{plinkp|Brown apron}} {{plinkp|Leather boots}} {{plinkp|Leather gloves}}
+|
+|[[File:Emote clue - cheer edgeville general store.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cheer in the Ogre Pen in the Training Camp|Cheer in the Ogre Pen in the Training Camp. Show you are angry before you talk to me.]]''
+''Equip a [[green d'hide body]] and [[Green d'hide chaps|chaps]] and a [[Steel sq shield|steel square shield]].''
+|{{plinkp|Green d'hide body}} {{plinkp|Green d'hide chaps}} {{plinkp|Steel sq shield}}
+|Access to the [[Combat Training Camp]] requires completion of the [[Biohazard]] quest. Equipping the [[green d'hide body]] requires completion of [[Dragon Slayer I]].
+|[[File:Emote clue - cheer ogre training camp.png|150px]]
+|-
+|''[[Clue scroll (medium) - Clap in Seers court house|Clap in Seers court house. Spin before you talk to me.]]''
+''Equip an [[adamant halberd]], [[Mystic robe bottom|blue mystic robe bottom]] and a [[diamond ring]]. ''
+|{{plinkp|Adamant halberd}} {{plinkp|Mystic robe bottom}} {{plinkp|Diamond ring}}
+|[[Ironman]] accounts must start the [[Regicide]] quest to purchase an [[adamant halberd]].
+These can also be obtained as loot from [[Bull shark|Bull sharks]] .
+|[[File:Emote clue - clap seers court house.png|150px]]
+|-
+|''[[Clue scroll (medium) - Clap your hands north of Mount Karuulm|Clap your hands north of Mount Karuulm. Spin before you talk to me.]]''
+''Equip an [[adamant warhammer]], [[mithril boots]] and a [[ring of life]].''
+|{{plinkp|Adamant warhammer}} {{plinkp|Mithril boots}} {{plinkp|Ring of life}}
+|[[Fairy ring]] code {{fairycode|CIR}} or [[Battlefront teleport]], and run to the northern end of the volcano.
+|[[File:Emote clue - clap Mount Karuulm.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cry in the Catherby Ranging shop|Cry in the Catherby Ranging shop. Bow before you talk to me.]]''
+''Equip [[Blue boots|blue gnome boots]], a [[Hardleather body|hard leather body]] and an [[Silver sickle|unblessed silver sickle]].''
+|{{plinkp|Blue boots}} {{plinkp|Hardleather body}} {{plinkp|Silver sickle}}
+|
+|[[File:Emote clue - cry catherby ranging shop.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cry in the Draynor Village jail|Cry in the Draynor Village jail. Jump for joy before you talk to me.]]'' 
+''Equip an [[adamant shortsword]], a [[sapphire amulet]] and an [[adamant plateskirt]].''
+|{{plinkp|Adamant shortsword}} {{plinkp|Sapphire amulet}} {{plinkp|Adamant plateskirt}}
+|
+|[[File:Emote clue - cry draynor jail.png|150px]]
+|-
+|''[[Clue scroll (medium) - Cry on the shore of Catherby beach|Cry on the shore of Catherby beach. Laugh before you talk to me.]]'' 
+''Equip an [[adamant sq shield]], a [[bone dagger]] and [[mithril platebody]].''
+|{{plinkp|Adamant sq shield}} {{plinkp|Bone dagger}} {{plinkp|Mithril platebody}}
+|
+|[[File:Emote clue - cry catherby beach.png|150px]]
+|-
+|
+''[[Clue scroll (medium) - Cry on top of the western tree in the Gnome Agility Arena|Cry on top of the western tree in the Gnome Agility Arena. Indicate 'no' before you talk to me.]]''
+
+''Equip a [[steel kiteshield]], [[ring of forging]], and [[green d'hide chaps]].''
+|{{plinkp|Steel kiteshield}} {{plinkp|Ring of forging}} {{plinkp|Green d'hide chaps}}
+|
+|[[File:Emote clue - cry gnome agility arena.png|150px]]
+|-
+|''[[Clue scroll (medium) - Dance a jig under Shantay's Awning|Dance a jig under Shantay's Awning. Bow before you talk to me.]]''
+''Equip a [[bruise blue snelm]], an [[Staff of air|air staff]] and a [[Bronze sq shield|bronze square shield]].''
+|{{plinkp|Pointed bruise blue snelm}} {{plinkp|Staff of air}} {{plinkp|Bronze sq shield}}
+|South of [[Al Kharid]], [[Shantay Pass]]. Only the pointed blue snelm will work!
+|[[File:Emote clue - dance jig shantay awning.png|150px]]
+|-
+|''[[Clue scroll (medium) - Dance in the centre of Canifis|Dance in the centre of Canifis. Bow before you talk to me.]]''
+''Equip a [[Green robe top|green gnome robe top]], [[mithril platelegs]] and an [[Iron 2h sword|iron two-handed sword]].''
+|{{plinkp|Green robe top}} {{plinkp|Mithril platelegs}} {{plinkp|Iron 2h sword}}
+|
+|[[File:Emote clue - dance centre canifis.png|150px]]
+|-
+|''[[Clue scroll (medium) - Dance in the dark caves beneath Lumbridge Swamp|Dance in the dark caves beneath Lumbridge Swamp. Blow a kiss before you talk to me.]]''
+''Equip an [[Staff of air|air staff]], [[bronze full helm]] and an [[amulet of power]]. ''
+|{{plinkp|Staff of air}} {{plinkp|Bronze full helm}} {{plinkp|Amulet of power}}
+|
+You need a [[rope]] to enter this cave the first time.
+
+You always need a [[light source]] in the caves, except when you have built the [[fire of eternal light]].
+
+If using the [[Lumbridge]] Castle basement to access the caves via the northern entrance, you will need to step one square south of the cave entrance as the square next to the entrance does not work when you dance.
+
+Two [[STASH]] units are provided, one near each of the main entrances. Building one of them will automatically build the other one.
+
+|[[File:Emote clue - dance caves lumbridge swamp.png|150px]]
+|-
+|''[[Clue scroll (medium) - Jump for Joy in the mine near the Twilight Temple|Jump for Joy in the mine near the Twilight Temple. Bow before you talk to me.]]''
+''Equip a [[maple longbow]], a [[ruby amulet]] and some [[steel platelegs]].''
+|{{plinkp|Maple longbow}} {{plinkp|Ruby amulet}} {{plinkp|Steel platelegs}}
+|[[Pendant of Ates]] teleport to [[Twilight Temple]], or [[Quetzal Transport System]] to [[Salvager Overlook]] and head east towards the [[East Salvager Overlook mine]].
+|[[File:Emote clue - Jump for Joy Twlight Temple mine.png|150px]]
+|-
+|''[[Clue scroll (medium) - Jump for joy in the TzHaar sword shop|Jump for joy in the TzHaar sword shop. Shrug before you talk to me.]]''
+''Equip a [[steel longsword]], [[blue d'hide body]] and [[Mystic gloves|blue mystic gloves]].''
+|{{plinkp|Steel longsword}} {{plinkp|Blue d'hide body}} {{plinkp|Mystic gloves}}
+|{{Fairycode|blp}}
+|[[File:Emote clue - jump tzhaar sword shop.png|150px]]
+|-
+|''[[Clue scroll (medium) - Jump for joy in Yanille bank|Jump for joy in Yanille bank. Dance a jig before you talk to me.]]''
+''Equip a [[brown apron]], [[Adamant med helm|adamantite medium helm]] and [[snakeskin chaps]].''
+|{{plinkp|Brown apron}} {{plinkp|Adamant med helm}} {{plinkp|Snakeskin chaps}}
+|
+|[[File:Emote clue - jump joy yanille bank.png|150px]]
+|-
+|''[[Clue scroll (medium) - Nod your head where the River Ortus meets the Proudspire|Nod your head where the River Ortus meets the Proudspire. Indicate 'no' before you talk to me.]]''
+''Equip a [[blue wizard hat]], a [[blue wizard robe]] and wear nothing on your legs.''
+|{{plinkp|Blue wizard hat}} {{plinkp|Blue wizard robe}}
+|[[Pendant of Ates]] teleport to [[Twilight Temple]], then run north-west past the [[Tower of Ascension]] to the end of the [[River Ortus]].
+|[[File:Emote clue - Yes Proudspire.png|150px]]
+|-
+|''[[Clue scroll (medium) - Panic by the mausoleum in Morytania|Panic by the mausoleum in Morytania. Wave before you speak to me.]]''
+''Equip a [[Mithril plateskirt|mithril plate skirt]]''{{Sic}}'', [[maple longbow]] and no boots.''
+|{{plinkp|Mithril plateskirt}} {{plinkp|Maple longbow}}
+|Starting [[Creature of Fenkenstrain]] quest is required to access the area. Go through the tombstone south-east of [[Fenkenstrain's Castle]] to reach the [[Experiment cave]]. If the quest is '''not''' completed, kill an Experiment for a key. Go north-west through the gate (unlocked if the quest has been completed) and up the ladder. Remember, no boots. After the quest you can [[Mausoleum#Repairing_the_Bridge|repair the bridge]] to make a shortcut you can cross if you have 69 [[Agility]].
+|[[File:Emote clue - panic mausoleum.png|150px]]
+|-
+|''[[Clue scroll (medium) - Shrug in Catherby bank|Shrug in Catherby bank. Yawn before you talk to me.]]''
+''Equip a [[maple longbow]], [[green d'hide chaps]] and an [[iron med helm]].''
+|{{plinkp|Maple longbow}} {{plinkp|Green d'hide chaps}} {{plinkp|Iron med helm}}
+|
+|[[File:Emote clue - shrug catherby bank.png|150px]]
+|-
+|''[[Clue scroll (medium) - Spin on the bridge by the Barbarian Village|Spin on the bridge by the Barbarian Village. Salute before you talk to me.]]''
+''Equip [[purple gloves]], a [[steel kiteshield]] and a [[mithril full helm]].''
+|{{plinkp|Purple gloves}} {{plinkp|Steel kiteshield}} {{plinkp|Mithril full helm}}
+|
+|[[File:Emote clue - spin barbarian village bridge.png|150px]]
+|-
+|''[[Clue scroll (medium) - Think in the centre of the Observatory|Think in the centre of the Observatory. Spin before you talk to me.]]''
+''Equip a [[mithril chainbody]], [[Green d'hide chaps|green dragonhide chaps]] and a [[ruby amulet]].''
+|{{plinkp|Mithril chainbody}} {{plinkp|Green d'hide chaps}} {{plinkp|Ruby amulet}}
+|Players who have completed the [[Observatory Quest]] with level 23 [[Agility]], 24 [[Ranged]] and 28 [[Strength]] may use a shortcut by using the grapple-able rock just outside the observatory; players need only bring a crossbow and grapple for the first trip.
+
+Otherwise, players must navigate through the [[Observatory Dungeon]] to reach this clue.
+|[[File:Emote clue - think centre observatory.png|150px]]
+|-
+|''[[Clue scroll (medium) - Yawn in the Castle Wars lobby|Yawn in the Castle Wars lobby. Shrug before you talk to me.]]''
+''Equip a [[ruby amulet]], a [[mithril scimitar]] and a [[Team cape|Wilderness cape]].''
+|{{plinkp|Ruby amulet}} {{plinkp|Mithril scimitar}} {{plinkp|Team cape|pic=Team-1 cape}}
+|The [[Team cape i]], [[Team cape x]] and [[Team cape zero]] can also be used.
+|[[File:Emote clue - yawn castle wars lobby.png|150px]]
+|-
+|''[[Clue scroll (medium) - Yawn in the centre of the Arceuus Library|Yawn in the centre of Arceuus library. Nod your head before you talk to me.]]''
+''Equip [[Blue d'hide vambraces|blue dragonhide vambraces]], [[adamant boots]] and an [[adamant dagger]].''
+|{{plinkp|Blue d'hide vambraces}} {{plinkp|Adamant boots}} {{plinkp|Adamant dagger}}
+|The [[fairy ring]] code {{fairycode|CIS}} teleports you north of the library. Use the "yes" emote to nod your head.
+
+'''Note:''' You ''cannot'' get this step playing [[Ironman Mode]].{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1121328142336110592|date=25 April 2019|archiveurl=https://reldo.runescape.wiki/i/100826|archivedate=30 May 2020|quote=Interestingly, yes, that one is blocked for Iron players. The code does not say why.|name=noaddyboots}}
+|[[File:Emote clue - yawn arceuus library.png|150px]]
+|}
+<noinclude>
+
+==References==
+{{Reflist}}</noinclude>

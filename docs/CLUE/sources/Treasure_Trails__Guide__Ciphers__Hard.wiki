@@ -1,0 +1,77 @@
+<noinclude>{{Treasure Trails Guide Ciphers Intro}}
+==Hard Ciphers==
+</noinclude>
+{| class="wikitable sortable lighttable"
+!Cipher
+!Solution
+!Shift distance
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|[[BSOPME MZETQPS]]
+|[[Arnold Lydspor]]
+|<nowiki>+1</nowiki>
+|[[Piscatoris Fishing Colony]] [[Arnold's Eclectic Supplies.|general store]]/bank (requires completion of [[Swan Song]]) (North of [[Fairy rings|fairy ring]] {{Fairycode|AKQ}})
+|[[Puzzle box]]
+|-
+|[[BXJA UNJMNA YRCAR]]
+|[[Soar Leader Pitri]]
+|<nowiki>+9</nowiki>
+|{{FloorNumber|uk=1}} of the [[Hunter Guild]] (requires completion of [[Children of the Sun]]) (North-west of [[Fairy rings|fairy ring]] {{Fairycode|AJP}})
+|[[Puzzle box]]
+|-
+|[[GBJSZ RVFFO]]
+|[[Fairy Queen]]
+|<nowiki>+1</nowiki>
+|[[Fairy Resistance Hideout]] (requires [[Fairytale II - Cure a Queen]] quest to be '''finished''', use a [[fairy ring]] with the codes {{fairycode|AIR}}, {{fairycode|DLR}}, {{fairycode|DJQ}}, and {{fairycode|AJS}} in that order)
+|[[Puzzle box]]
+|-
+|[[HCKTA IQFHCVJGT]]
+|[[Fairy Godfather]]
+|<nowiki>+2</nowiki>
+|[[Zanaris]] throne room (requires you to have started [[Fairytale I - Growing Pains]])
+|64
+|-
+|[[IWPPLQTP]]
+|[[Gunnjorn]]
+|<nowiki>+2</nowiki>
+|[[Barbarian Outpost|Barbarian Outpost Agility course]]
+|[[Puzzle box]]
+|-
+|[[OVEXON]]
+|[[Eluned]]
+|<nowiki>+10</nowiki>
+|Outside [[Lletya]] or north-east of the [[Tyras Camp]]; requires you to have started [[Regicide]] quest (after talking to the [[Elf Tracker]]). After completion of [[Song of the Elves]], she can be found in the city of [[Prifddinas]] north of the dye trader.
+|53,000
+|-
+|[[UZZU MUJHRKYYKJ]]
+|[[Otto Godblessed]]
+|<nowiki>+6</nowiki>
+|[[Otto's Grotto]]
+|3
+|-
+|[[VTYR APCNTGLW]]
+|[[King Percival]]
+|<nowiki>+11</nowiki>
+|[[Fisher Realm]] - requires partial completion of the [[Holy Grail (quest)|Holy Grail]] quest ([[fairy ring]] code {{Fairycode|BJR}}, then run south up into the castle). He can be found on the second story of the castle.
+|5
+|-
+|[[YAROYGR]]
+|[[Sulisal]]
+|<nowiki>+6</nowiki>
+|[[Sulisal's Superb Fishing Store]] in [[Kastori]]
+|4
+|-
+|[[ZHLUG ROG PDQ]]
+|[[Weird Old Man]]
+|<nowiki>+3</nowiki>
+|[[Kalphite Lair]] entrance (north-west of [[fairy ring]] {{Fairycode|BIQ}})
+|150
+|-
+|[[ZSBKDO ZODO]]
+|[[Pirate Pete]]
+|<nowiki>+10</nowiki>
+|On the dock north-east of the [[Ectofuntus]]
+|[[Puzzle box]]
+|}
+{{Reflist|group=c}}

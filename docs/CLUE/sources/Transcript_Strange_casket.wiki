@@ -1,0 +1,60 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Do you... seek a challenge? If you do, the Mimic will test your mettle.}}
+* {{topt|Tell me about the Mimic.}}
+** '''Player:''' Tell me about the Mimic.
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} The Mimic is... a casket. When you find treasure, perhaps you will realise your casket is the Mimic.}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} If so, the Mimic will reveal itself, and summon you to its arena, to fight.}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} If you are victorious, the Mimic will reward you with... things.}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} So, would you like the chance to face the Mimic? The rewards are... special.}}
+** {{topt|Yes, I'd like to get Mimic challenges.}}
+*** '''Player:''' Yes, I'd like to get Mimic challenges.
+*** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} The Mimic is... pleased.}}
+*** {{tact|end}}
+** {{topt|No, I don't think I want that.}}
+*** '''Player:''' No, I don't think I want that.
+*** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} You may find me here if you change your mind. The Mimic will wait.}}
+*** {{tact|end}}
+* {{topt|What are you?}}
+** '''Player:''' What are you?
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} As you see, I am... a casket. Some of us are not mere vessels of wealth.}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Some of us speak. Some can walk. And some, like the Mimic... can fight.}}
+** {{topt|Tell me about the Mimic.}}
+*** {{tact|above}}
+** {{topt|I don't think I want that.}}
+*** {{tact|below}}
+* {{topt|I don't think I want that.}}
+** '''Player:''' I don't think I want that.
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} The Mimic is... disappointed.}}
+** {{tact|end}}
+
+===If the player opted in to receive Mimic challenges===
+* {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Do you... tire of the challenge?}}
+* {{topt|I don't want Mimic challenges anymore.}}
+** '''Player:''' I don't want Mimic challenges anymore.
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Very well. You shall not be challenged by the Mimic again. Return to me if you change your mind.}}
+** {{tact|end}}
+* {{topt|What are you?}}
+** '''Player:''' What are you?
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} As you see, I am... a casket. Some of us are not mere vessels of wealth.}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Some of us speak. Some can walk. And some, like the Mimic... can fight.}}
+** {{topt|I don't want Mimic challenges anymore.}}
+*** '''Player:''' I don't want Mimic challenges anymore.
+*** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Very well. You shall not be challenged by the Mimic again. Return to me if you change your mind.}}
+*** {{tact|end}}
+** {{topt|No, I want to keep getting mimic challenges.}}
+*** {{tact|below}}
+* {{topt|No, I want to keep getting mimic challenges.}}
+** '''Player:''' No, I want to keep getting mimic challenges.
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} The Mimic is... pleased.}}
+** {{tact|end}}
+
+===If the player has a Mimic in their inventory===
+* {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} The Mimic has... found you! Will you fight now?}}
+* {{topt|Fight the Mimic}}
+** {{tact|The player enters [[The Mimic]]'s arena.}}
+** {{tbox|If you {{Colour|#7f0000|die}} in here, your items can be retrieved from the {{Colour|#7f0000|Strange Casket}} in Watson's house, for a {{Colour|#7f0000|fee of 90,000 coins}}. Anything else you leave in here will be {{Colour|#7f0000|lost permanently}}.}}
+* {{topt|Come back later}}
+** {{tbox|pic=Casket (easy) detail.png|{{Colour|#0000FF|Strange casket}} Return to me when you are prepared.}}
+** {{tact|end}}

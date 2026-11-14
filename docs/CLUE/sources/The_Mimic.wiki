@@ -1,0 +1,218 @@
+{{External|rs=Giant Mimic}}
+{{otheruses|the boss|the item|Mimic}}
+{{Instance|irs=the [[strange casket]]|cost=90000}}
+{{HasStrategy}}
+{{Infobox Monster
+|name = The Mimic
+|image = [[File:The Mimic.png|250px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|combat = 186
+|size = 5
+|examine = Oh great, it's a casket that's come to life.
+|xpbonus = 25
+|max hit = 23
+|aggressive = No
+|poisonous = No
+|attack style = [[Crush]], [[Magic]]
+|attack speed = 3
+|hitpoints = 230
+|att = 185
+|str = 120
+|def = 120
+|mage = 60
+|range = 1
+|attbns = 135
+|strbns = 48
+|amagic = 180
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 160
+|dslash = 165
+|dcrush = 150
+|dmagic = 30
+|dlight = 145
+|dstandard = 145
+|dheavy = 145
+|poisonresistance = 100
+|venomresistance = 100
+|dropversion = Elite,Master
+|id = 8633
+|leagueRegion = Kourend
+}}
+'''The Mimic''' is a sporadic [[boss]] who can be fought by presenting a [[mimic|mimic casket]] to the [[strange casket]] found upstairs in [[Watson's house]]. Mimics can be obtained from an [[Reward casket (elite)|elite]] or [[Reward casket (master)|master reward casket]] '''after''' asking the strange casket to enable the chance to obtain a mimic casket (which is disabled by default). The elite reward casket has a 1/35 chance of being a mimic, while master reward caskets have a 1/15 chance.{{CiteTwitter|author=Mod Wolf|url=https://twitter.com/JagexWolf/status/1116299462870274048|date=11 April 2019|archiveurl=https://archive.is/ogJGw|archivedate=28 May 2020|quote=We will be changing the rate of The Mimic chance after a discussion with the team and your feedback that it may be a tad too rare. We will be keeping an eye on the frequency over the coming days, but these are the new rates which will be live shortly: Master: 1/15 Elite: 1/35}} There is a one-time guaranteed Mimic encounter (if Mimic encounters are enabled) on either the 10th master or 25th elite casket, whichever is first. If the master or elite threshold has already been exceeded and no Mimic has previously been encountered, the next casket of that tier will be the guaranteed encounter.{{CiteNews|url=https://secure.runescape.com/m=news/the-new-renderer-beta-is-out-today?oldschool=1|title=
+The New Renderer Beta is Out Today!|newsdate=09 July 2025|quote=You’ll be guaranteed a Mimic encounter on either your 10th Master or 25th Elite clue, if you have Mimic encounters enabled. If you’ve already passed this threshold for Elite or Master clues, but you haven't obtained one or unlocked the music track already, you’ll get a Mimic encounter on your next clue of that tier.|name=rendererbeta}}
+[[File:The Mimic fight area.png|thumb|left|250px|The area in which the player fights The Mimic.]]
+
+Players have six chances to kill The Mimic from a master clue, five from an elite clue, which corresponds to the item rolls from the obtained casket. Every time a player leaves or dies, the number of rolls on the drop table is decreased by one. If a player fails every attempt, they will not receive any loot from the original clue scroll. If the player dies at the same time as the mimic, the number of rolls is ''not'' decreased, but you will still need to retrieve your items from Watson's house.
+
+Players are encouraged to fight mimics, as they have fairly generous rewards for a very simple boss. Compared to its standard casket counterparts, the mimic can drop 3rd age equipment at a better rate, much like the [[dragon full helm]] from [[chewed bones]].
+
+==Fight overview==
+{{main|The Mimic/Strategies}}
+With the right strategy, The Mimic is very easy to defeat for any high-level player. However, at combat stats around 70, The Mimic can pose a real challenge.
+
+Always use [[Protect from Melee]], move around the room when the Mimic throws sweets, and ignore the spawned Third Age minions. Use stat-boosting potions and prayers as well.
+
+* The quickest way to slay The Mimic is to bring [[dragon claws]] or a [[dragon dagger]] with full [[strength bonus|melee gear]], then after using the two/four special attacks, switch into a full magic setup with a [[powered staff]]. With high melee stats and [[Piety]], you can switch to a [[abyssal whip|whip]] or better and kill the boss before minions even spawn.
+* Alternatively, using magic, The Mimic can be frozen using [[ice spells]] or [[Entangle]] evading the melee attack completely. [[Powered staves]] can then be used to quickly kill The Mimic.
+* Although The Mimic is weak to [[Magic]], players can also opt to use [[Ranged]] with a [[toxic blowpipe]].
+
+[[File:Fighting The Mimic.png|thumb|left|260px|A player faces The Mimic.]]
+The Mimic has three different attacks:
+
+* '''Melee attack:''' The Mimic can hit you with a normal melee attack if you are standing beside it.
+
+* '''Candy Attack:''' The Mimic throws six candies at you. If you fail to step out of the way, you will receive about 10 damage. Three candies are purple, and there is one red, one blue, and one green candy. The red, blue, and green candies spawn the [[Third Age Warrior]], [[Third Age Mage]], and [[Third Age Ranger]] respectively. There is no benefit to killing them as they drop nothing and, when killed, they instantly respawn when another candy attack occurs.
+
+* '''Stomp Attack:''' Sometimes, The Mimic will step one tile forward onto you. Alternatively, this attack is activated when you walk under The Mimic. For every tick (0.6 seconds) that you stand under The Mimic, you will receive damage. The damage scales as follows: 1-1-1-2-2-2-3-... and so on, capping out at 6 damage. Simply step away from The Mimic to stop and reset the damage counter.
+{{clear|left}}
+
+==Elite drops==
+{{DropLogProject|kills=10084}}
+
+Assuming it's killed on the first try, the average Elite Mimic bonus loot is worth {{Coins|{{EliteMimicValue}}}}.
+
+===100%===
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Elite}}
+{{DropsLine|name=Mahogany plank|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Pre-roll===
+The drop rates decrease slightly if the Mimic isn't killed on the first attempt.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1120443342100234241|date=22 April 2019|archiveurl=https://reldo.runescape.wiki/i/97964|archivedate=3 May 2019|quote=Basic rate is 1/40 from a master clue, 1/44 from elite. Bonus available for killing the thing first try.|name=firsttry}}{{CiteTwitter|name=fivepercent|author=Mod Ash|url=https://x.com/JagexAsh/status/1192035299452489729|date=6 November 2019|archiveurl=https://reldo.runescape.wiki/i/27963040|archivedate=6 November 2019|quote=5% - it's not huge, since we expected that players would achieve it most of the time once the update had been out for a while.}} There is a 1/250 (if killed on the 1st attempt) or 1/264 (if killed on the 2nd-5th attempts) chance to receive a [[3rd age item]], and six times that chance to receive a [[ring of 3rd age]].{{CiteTwitter|name=sixtimes|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1158655373378805760|date=6 August 2019|archiveurl=https://web.archive.org/save/https://twitter.com/JagexAsh/status/1158655373378805760|archivedate=8 August 2019|quote=Assuming you killed it first time, the chance of getting its rare table is 1/228 from a master clue, 1/250 from an elite one (N.B. the chance of getting a mimic from an elite clue in the first place is low). The third age ring itself is separate, and is 6x more common.}}
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Elite}}
+{{DropsLineReward|name=Ring of 3rd Age|quantity=1|rarity=6/250|altrarity=6/264}}
+{{DropsLineReward|name=3rd Age full helmet|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age platebody|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age platelegs|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age plateskirt|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age kiteshield|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age range coif|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age range top|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age range legs|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age vambraces|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age mage hat|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age robe top|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age robe|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age amulet|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age longsword|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age bow|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age wand|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age cloak|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age druidic robe top|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age druidic robe bottoms|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age druidic cloak|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age druidic staff|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age pickaxe|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsLineReward|name=3rd Age axe|quantity=1|rarity=1/5750|altrarity=1/6072}}
+{{DropsTableBottom}}
+
+===Main drops===
+The quantities received depend on how many attempts it took to kill the Mimic. Each failure reduces the quantity by 1/5 of the maximum.
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Elite}}
+{{DropsLineReward|name=Death rune|quantity=120-600|rarity=243/1250|altrarity=257/1320|quantitynotes={{Refn|group=d|Possible quantities: 600, 480, 360, 240, 120}}|raritynotes={{Refn|group=e|name=badatgame|Drops on this table become slightly more common if it takes 2-5 attempts.}}}}
+{{DropsLineReward|name=Blood rune|quantity=100-500|rarity=243/1250|altrarity=257/1320|quantitynotes={{Refn|group=d|Possible quantities: 500, 400, 300, 200, 100}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Grimy ranarr weed|quantity=5-25 (noted)|rarity=243/1250|altrarity=257/1320|quantitynotes={{Refn|group=d|Possible quantities: 25, 20, 15, 10, 5}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Wine of Zamorak|quantity=5-25 (noted)|rarity=243/1250|altrarity=257/1320|quantitynotes={{Refn|group=d|Possible quantities: 25, 20, 15, 10, 5}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Raw manta ray|quantity=3-15 (noted)|rarity=243/1250|altrarity=257/1320|quantitynotes={{Refn|group=d|Possible quantities: 15, 12, 9, 6, 3}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+{{Reflist|group=e}}
+
+===Tertiary===
+{{DropsTableHead|leagueRegion=No|dropversion=Elite}}
+{{DropsLineReward|name=Mimic scroll case|quantity=1|rarity=Always|raritynotes={{Refn|group=f|Only if the player has not opened a mimic scroll case.}}|gemw=No}}
+{{DropsTableBottom}}
+{{Reflist|group=f}}
+
+==Master drops==
+{{DropLogProject|kills=10084}}
+
+Assuming it's killed on the first try, the average Master Mimic bonus loot is worth {{Coins|{{MasterMimicValue}}}}.
+
+===100%===
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Master}}
+{{DropsLine|name=Mahogany plank|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Pre-roll===
+The drop rates decrease slightly if the Mimic isn't killed on the first attempt.<ref name=firsttry /><ref name=fivepercent /> There is a 1/228 (if killed on the 1st attempt) or 1/240 (if killed on the 2nd-6th attempts) chance to receive a [[3rd age item]], and six times that chance to receive a [[ring of 3rd age]].<ref name=sixtimes />
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Master}}
+{{DropsLineReward|name=Ring of 3rd Age|quantity=1|rarity=6/228|altrarity=6/240}}
+{{DropsLineReward|name=3rd Age full helmet|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age platebody|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age platelegs|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age plateskirt|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age kiteshield|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age range coif|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age range top|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age range legs|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age vambraces|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age mage hat|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age robe top|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age robe|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age amulet|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age longsword|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age bow|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age wand|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age cloak|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age druidic robe top|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age druidic robe bottoms|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age druidic cloak|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age druidic staff|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age pickaxe|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsLineReward|name=3rd Age axe|quantity=1|rarity=1/5244|altrarity=1/5520}}
+{{DropsTableBottom}}
+
+===Main drops===
+The quantities received depend on how many attempts it took to kill the Mimic. Each failure reduces the quantity by 1/6 of the maximum.
+{{DropsTableHead|leagueRegion=Kourend|dropversion=Master}}
+{{DropsLineReward|name=Death rune|quantity=100-600|rarity=221/1140|altrarity=233/1200|quantitynotes={{Refn|group=d|Possible quantities: 600, 500, 400, 300, 200, 100}}|raritynotes={{Refn|group=e|name=badatgame|Drops on this table become slightly more common if it takes 2-6 attempts.}}}}
+{{DropsLineReward|name=Blood rune|quantity=83-500|rarity=221/1140|altrarity=233/1200|quantitynotes={{Refn|group=d|Possible quantities: 500, 416, 333, 250, 166, 83}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Grimy ranarr weed|quantity=4-25 (noted)|rarity=221/1140|altrarity=233/1200|quantitynotes={{Refn|group=d|Possible quantities: 25, 20, 16, 12, 8, 4}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Wine of Zamorak|quantity=4-25 (noted)|rarity=221/1140|altrarity=233/1200|quantitynotes={{Refn|group=d|Possible quantities: 25, 20, 16, 12, 8, 4}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsLineReward|name=Raw manta ray|quantity=2-15 (noted)|rarity=221/1140|altrarity=233/1200|quantitynotes={{Refn|group=d|Possible quantities: 15, 12, 10, 7, 5, 2}}|raritynotes=<ref group=e name=badatgame />}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+{{Reflist|group=e}}
+
+===Tertiary===
+{{DropsTableHead|leagueRegion=No|dropversion=Master}}
+{{DropsLineReward|name=Mimic scroll case|quantity=1|rarity=Always|raritynotes={{Refn|group=f|Only if the player has not opened a mimic scroll case.}}|gemw=No}}
+{{DropsTableBottom}}
+{{Reflist|group=f}}
+
+==Combat Achievements==
+{{Sync}}
+{{Combat Achievements list|The Mimic}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 December 2025
+|update = Sailing XP Review & Further Fixes
+|change = Fixed a bug where players received their guaranteed Mimic on the 26th elite casket (or 11th master) instead of the intended 25th elite or 10th master.
+}}
+{{Subject changes
+|date = 9 July 2025
+|update = The New Renderer Beta is Out Today!
+|change = Players are now guaranteed to encounter The Mimic on either their 10th master or 25th elite clue. Players that already have completed more than 10 masters/25 elites, but have not obtained a mimic or unlocked the [[Box of Delights]] track, will receive it on their next clue of that tier.
+}}
+{{Subject changes
+|date = 9 December 2021
+|update = Grand Exchange Tax & Item Sink
+|change = The minimum [[HiScores]] killcount required for The Mimic has been lowered from 2 to 1.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*{{WP|Mimic (Dungeons & Dragons)|Mimics}} made their first appearance in the 1977 Monster Manual for the game ''{{wp|Dungeons & Dragons}}'' and have become one of the most iconic creatures from the franchise.
+
+==References==
+{{reflist}}
+
+{{Treasure Trails}}
+{{Bosses}}
+{{DEFAULTSORT:Mimic, The}}

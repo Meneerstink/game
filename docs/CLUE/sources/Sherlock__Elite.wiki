@@ -1,0 +1,137 @@
+<noinclude>{{Sync}}</noinclude>
+{| class="wikitable sortable lighttable qc-active"
+!Task
+!Skill(s) requirements
+!Other<br/>requirements
+!Items required
+|-
+|Equip a [[dragon scimitar|Dragon Scimitar]].
+|{{SCP|Attack|60|sort=y}}
+|Completion of [[Monkey Madness I]]
+|[[Dragon scimitar]]/[[Dragon scimitar (or)]]
+|-
+|[[Lvl-5 Enchant|Enchant]] a piece of dragonstone jewellery.
+|{{SCP|Magic|68|sort=y}}
+|{{NA|None}}
+|15 [[water rune|water]] and [[earth rune]]s, 1 cosmic rune, any unenchanted [[dragonstone]] jewellery<br />''Using an [[enchant dragonstone]] tablet does not count''
+|-
+|Craft a [[nature rune]].
+|{{SCP|Runecraft|44|sort=y}}
+|{{NA|None}}
+|[[Nature talisman]]/[[Nature tiara]]/[[Catalytic tiara]]/[[Hat of the Eye]]{{efn|name=catalytic|attuned to catalytic tiara}} (not needed if using [[Abyss]]), [[pure essence]]
+'''<u>''Note''</u>''''': Attempting to complete this step by accessing the Nature Altar through [[Guardians of the Rift]] aswell as Crafting a Nature Rune via the [[Ourania Altar]] '''<u>will not work</u>'''.''
+|-
+|Catch a [[mottled eel]] with aerial fishing in [[Lake Molch]].
+|{{SCP|Fishing|73|sort=y}}, {{SCP|Hunter|68}}
+|{{NA|None}}
+|[[Fish offcuts]]/[[Fine fish offcuts]]/[[King worm]]s
+|-
+|Score a goal in [[Werewolf_skullball|skullball]].
+|{{SCP|Agility|25|sort=y}}
+|Completed [[Priest in Peril]]
+|[[Ring of Charos]]
+|-
+|Complete a lap of [[Ape Atoll Agility Course|Ape Atoll agility course]].
+|{{SCP|Agility|48|sort=y}}
+|Started [[Monkey Madness I]]
+|[[Ninja monkey greegree]]/[[Kruk monkey greegree]]
+|-
+|Create a [[super defence potion]].
+|{{SCP|Herblore|66|sort=y}}
+|{{NA|None}}
+|[[Cadantine potion (unf)]], [[white berries]]
+|-
+|Steal from a [[chest (Ardougne Castle)|chest]] in [[Ardougne Castle]].
+|{{SCP|Thieving|72|sort=y}}
+|{{NA|None}}
+|None (The chests are on the {{FloorNumber|uk=1}}, behind a door that needs to be picked)
+|-
+|Craft a [[green d'hide body|green dragonhide body]].
+|{{SCP|Crafting|63|sort=y}}
+|{{NA|None}}
+|[[Needle]], [[thread]], 3 [[green dragon leather]]
+|-
+|String a [[yew longbow]].
+|{{SCP|Fletching|70|sort=y}}
+|{{NA|None}}
+|[[Bow string]], and an [[Yew longbow (u)|Unstrung yew longbow]] or a [[Knife]] and [[yew logs]].
+Adding bow string to the unstrung yew longbow completes the challenge.
+|-
+|Slay a [[dust devil]].
+|{{SCP|Slayer|65|sort=y}}
+|{{NA|None}}
+|A weapon, [[facemask]]/[[slayer helmet]]
+|-
+|Catch a [[black warlock]].
+|{{SCP|Hunter|45|sort=y}}
+|{{NA|None}}
+|[[Insect net]] and [[butterfly jar]], but neither if catching barehanded (requires 55 Hunter)
+|-
+|Catch a [[red chinchompa]].
+|{{SCP|Hunter|63|sort=y}}
+|Completion of [[Eagles' Peak]]
+|[[Box trap]]
+|-
+|Mine a [[mithril ore]].
+|{{SCP|Mining|55|sort=y}}
+|{{NA|None}}
+|A [[pickaxe]]
+|-
+|Smith a [[mithril 2h sword|Mithril 2h Sword]].
+|{{SCP|Smithing|64|sort=y}}
+|{{NA|None}}
+|[[Hammer]], 3 [[mithril bar]]s
+|-
+|Catch a [[raw shark]].
+|{{SCP|Fishing|76|sort=y}}
+|{{NA|None}}
+|[[Harpoon]] (if you cannot barbarian fish for them)<br />''Catching a [[big shark]] does not count''
+|-
+|Cut a [[yew logs|yew log]].
+|{{SCP|Woodcutting|60|sort=y}}
+|{{NA|None}}
+|An [[axe]]
+|-
+|Fix a [[Lamp (Dorgesh-Kaan)|magical lamp]] in [[Dorgesh-Kaan]].
+|{{SCP|Firemaking|52|sort=y}}, {{SCP|Crafting|52}}
+|Completion of [[Death to the Dorgeshuun]]
+|[[Light orb]]
+|-
+|Burn a [[yew log]].
+|{{SCP|Firemaking|60|sort=y}}
+|{{NA|None}}
+|[[Tinderbox]], [[yew logs]]
+|-
+|Cook a [[swordfish]]
+|{{SCP|Cooking|45|sort=y}}
+|{{NA|None}}
+|[[Raw swordfish]]
+|-
+|Craft multiple [[cosmic rune]]s from a single essence.
+|{{SCP|Runecraft|59|sort=y}}
+|Completion of [[Lost City]]
+|[[Cosmic talisman]]/[[Cosmic tiara]]/[[Catalytic tiara]]/[[Hat of the Eye]]{{efn|name=catalytic|attuned to catalytic tiara}} (not needed if using [[Abyss]]), [[pure essence]] 
+'''''<u>Note</u>''': Attempting to complete this step by accessing the Cosmic Altar through [[Guardians of the Rift]] '''<u>will not work</u>'''.''
+|-
+|Plant a [[watermelon seed]].
+|{{SCP|Farming|47|sort=y}}
+|{{NA|None}}
+|[[Rake]], [[seed dibber]], 3 [[watermelon seed]]s
+|-
+|Activate the [[Chivalry]] prayer.
+|{{SCP|Defence|65|sort=y}}, {{SCP|Prayer|60}}
+|Completion of the [[Knight Waves Training Ground]]
+|None
+|-
+|Smith a tier 2 or above [[Shayzien platebody (2)|Shayzien platebody]].
+|{{SCP|Mining|65|sort=y}}, {{SCP|Smithing|63}}
+|{{NA|None}}
+|4 [[Lovakite bar]]s
+|-
+|Mine some [[nickel ore|nickel]].
+|{{SCP|Mining|74}}{{Comma}}{{SCP|Sailing|62}} (to reach island)
+|{{NA|None}}
+|A [[pickaxe]]
+|}
+{{notelist}}
+[[Category:Treasure Trails]]

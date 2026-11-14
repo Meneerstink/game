@@ -1,0 +1,78 @@
+<noinclude>{{Treasure Trails Guide Anagrams Intro}}
+==Elite Anagrams==
+</noinclude>{|class="wikitable" border="2"
+!Anagram
+!Solution
+!Location
+![[Challenge scrolls (Treasure Trails)|Challenge]] answer
+|-
+|'''[[Clue scroll (elite) - AT HERG|AT HERG]]'''
+|[[Regath]]
+|South-eastern corner of [[Arceuus]] in the [[Regath's Wares|General Store]].
+|25
+|-
+|'''[[Clue scroll (elite) - CAREER IN MOON|CAREER IN MOON]]'''
+|[[Oneiromancer]]
+|[[Astral Altar]] on [[Lunar Isle]].
+|25
+|-
+|'''[[Clue scroll (elite) - Cirr Jad|Cirr Jad]]'''
+|[[Jardric]]
+|[[Fossil Island]] [[museum camp]].
+|1
+|-
+|'''[[Clue scroll (elite) - COOL NERD|COOL NERD]]'''
+|[[Old Crone]]
+|East of the [[Slayer Tower]].
+|619
+|-
+|'''[[Clue scroll (elite) - DR HITMAN|DR HITMAN]]'''
+|[[Mandrith]]
+|Outside the [[Wilderness Resource Area]].
+|28
+|-
+|'''[[Clue scroll (elite) - LADDER MEMO GUV|LADDER MEMO GUV]]'''
+|[[Guard Vemmeldo]]
+|Bank east of the [[Stronghold Slayer Cave]].
+|3
+|-
+|'''[[Clue scroll (elite) - MACHETE CLAM|MACHETE CLAM]]'''
+|[[Cam the Camel]]
+|Just outside the gates of the [[Emir's Arena]], [[Camulet]] ''not'' required.
+|6
+|-
+|'''[[Clue scroll (elite) - MAJORS LAVA BADS AIR|MAJORS LAVA BADS AIR]]'''
+|[[Ambassador Alvijar]]
+|North-east [[Dorgesh-Kaan]], middle floor, just south of the house with the quest symbol. (You must complete [[Another Slice of H.A.M.]] before attempting).
+|2,505
+|-
+|'''[[Clue scroll (elite) - NO OWNER|NO OWNER]]'''
+|[[Oronwen]]
+|[[Lletya Seamstress]] shop in [[Lletya]].
+|20
+|-
+|'''[[Clue scroll (elite) - OUR OWN NEEDS|OUR OWN NEEDS]]'''
+|[[Nurse Wooned]]
+|[[Infirmary]] in the [[Shayzien Encampment]].
+|16
+|-
+|'''[[Clue scroll (elite) - SNAKES SO I SAIL|SNAKES SO I SAIL]]'''
+|[[Lisse Isaakson]]
+|[[Neitiznot]]
+|2
+|-
+|'''[[Clue scroll (elite) - UNLEASH NIGHT MIST|UNLEASH NIGHT MIST]]'''
+|[[Sigli the Huntsman]]
+|[[Rellekka]]
+|302
+|}<noinclude>
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 17 July 2014
+|update = Boss Pets and Spawn Rates
+|change = Elite anagram clue NPC's no longer ignore you if you haven't completed your challenge scroll.
+}}
+{{Subject changes footer}}
+</noinclude>

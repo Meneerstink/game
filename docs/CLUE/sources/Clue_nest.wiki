@@ -1,0 +1,157 @@
+'''Clue nests''' are nests that can be found whilst training [[Woodcutting]], emptying [[Bird house trapping|bird houses]] on [[Fossil Island]], or trading in [[ent seed]]s if the player has not completed [[X Marks the Spot]]. After completing the quest they are replaced with a [[scroll box]] and [[bird nest]], though the nest '''will drop to the ground''' instead of going into the inventory automatically. Searching them will give players a [[clue scroll]] of the indicated difficulty, leaving an [[empty bird nest]] (excluding beginner clue nests searched on free-to-play worlds). If the player searches a clue nest after completing X Marks the Spot, they will receive the corresponding scroll box rather than a clue scroll. Like clue scrolls, players can only have one of each type of clue nest in their possession. However, players can receive two clue nests after receiving a log. Players can toggle whether or not to receive clue nests by speaking to [[Arthur the Clue Hunter]] in [[Lumbridge]].
+
+There are five types of clue nests:
+*{{plink|Clue nest (beginner)}}
+*{{plink|Clue nest (easy)}}
+*{{plink|Clue nest (medium)}}
+*{{plink|Clue nest (hard)}}
+*{{plink|Clue nest (elite)}}
+
+Clues are not awarded if the player already has a clue of that tier.
+
+==Woodcutting rates==
+The chance of obtaining a clue nest depends mainly on the player's Woodcutting level together with the type of tree that is chopped, similar to how the drop rate of [[skilling pets]] is determined.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632048881880948736|date=4 March 2023|archiveurl=https://reldo.runescape.wiki/i/96597|archivedate=6 March 2023|quote=I did some spot-checking of the Wiki pages and the "base chance" numbers still look correct there, as does the formula for how your level is applied. The CA buff is applied to the "base chance" number *before* the formula is applied.}} In addition, the reward tiers unlocked by completing [[Combat Achievements]] grant a 5% boost to the drop rate of the corresponding clue tier, that is to say the [[Clue nest (easy)|easy]], [[Clue nest (medium)|medium]], [[Clue nest (hard)|hard]], and [[Clue nest (elite)|elite]] clue nests.
+{{Calculator:Woodcutting/Clue nests}}
+
+===Formula===
+Upon a successful skilling action, a roll is made for each clue tier one is eligible to receive (based on which types of clue are already owned) independently of the outcome of any of the other rolls.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1634546471339974656|date=11 March 2023|archiveurl=https://reldo.runescape.wiki/i/105848|archivedate=15 July 2023|quote=[For Clue Geodes, Bottles, and Nests, if you already have a Beginner, Easy, Medium, and Hard Clues in the bank, the next clue received from skilling will 100% be an Elite Clue at the full rate, correct? (...)] No, the elite rate wouldn't be changed by that. It rolls for each *eligible* tier independently of the others; you simply wouldn't be doing a roll for beginner/easy/medium/hard clues, but this wouldn't affect your chance of getting an elite one.}} For each tier of clue nest, the following formula is used to determine its drop chance, whereupon a roll is made if the player is eligible.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632764215743193089|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97160|archivedate=6 March 2023|quote=[(...) Then is it 1. Base chance 2. CA buff 3. Level formula 4. Clue tier multiplier] Ah, yes - that seems right.}}
+
+The chance is <math>1</math> in <math> \left\lfloor \frac{ \lfloor \text{BaseChance} \times \text{CA} \rfloor }{100 + \text{Woodcutting}} \times \text{ClueTier} \right\rfloor </math>
+
+Where:
+:<math>\text{BaseChance} =</math> The [[#Base chance|base chance]] of receiving a clue nest from a specific tree type. These are the same base chances that determine the drop rate of the [[beaver]] pet.
+:<math>\text{CA} =</math> A multiplier of <math>0.95</math> if the corresponding reward tier of [[Combat Achievements]] has been unlocked, or <math>1</math> if it has not.
+:<math>\text{Woodcutting} =</math> The player's visible {{SCP|Woodcutting}} Woodcutting level. Visible boosts beyond level 99 are taken into account.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1573018832998109185|date=22 September 2022|archiveurl=https://reldo.runescape.wiki/i/102590|archivedate=10 June 2023|quote=The formula for dropping clue nests only benefits from visible boosts. So the +7 invisible one won't help, but a visible boost would help beyond 99 if you can get one.}}
+:<math>\text{ClueTier} =</math> The [[#Clue tier|clue tier modifier]] applied at the end based on the type of clue that is rolled.
+
+===Base chance===
+The table below displays the base chance of obtaining a clue nest according to tree type.{{CiteTwitter|author=Mod Tide|url=https://twitter.com/JagexTide/status/1131933683714330624|date=24 May 2019|archiveurl=https://reldo.runescape.wiki/i/106558|archivedate=24 May 2019|quote=I know its been a while since the clue expansion but here is the information on clue scroll drop rates and loot chances! If anything changes I will keep you posted. [https://docs.google.com/spreadsheets/d/16pVNHdZyynmxIbM9mynRDYT0LQsWxq-vbDs4_7DpnGM]}}
+{| class="wikitable sortable"
+|-
+!Tree
+!Base chance
+|-
+|[[Achey tree]]s
+|317,647
+|-
+|[[Tree|Normal trees]]
+|317,647
+|-
+|[[Oak tree]]s
+|361,146
+|-
+|[[Willow tree]]s
+|289,286
+|-
+|[[Teak tree]]s
+|264,336
+|-
+|[[Jatoba tree]]s
+|264,336
+|-
+|[[Juniper tree]]s
+|360,000
+|-
+|[[Maple tree]]s
+|221,918
+|-
+|[[Hollow tree]]s
+|214,367
+|-
+|[[Mahogany tree]]s
+|220,623
+|-
+|[[Arctic pine tree]]s
+|145,758
+|-
+|[[Yew tree]]s
+|145,013
+|-
+|[[Sulliuscep]]s
+|343,000
+|-
+|[[Camphor tree]]s
+|145,013
+|-
+|[[Magic tree]]s
+|72,321
+|-
+|[[Ironwood tree]]s
+|72,321
+|-
+|[[Redwood tree]]s
+|72,321
+|-
+|[[Rosewood tree]]s
+|72,321
+|}
+
+===Clue tier===
+The following modifiers are applied to the denominator of the drop chance, depending on the type of clue for which a roll attempt is made.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1632718561713029120|date=6 March 2023|archiveurl=https://reldo.runescape.wiki/i/97488|archivedate=6 March 2023|quote=Looks like you multiply the chance denominator by Beginner: 0.2 Easy: 1.7 Medium: 2.0 Hard: 3.3 Elite: 10.0 e.g. if the chance had been 1/100, for a beginner that'd become 1/20, and for an elite it'd become 1/1000.}}
+{| class="wikitable align-center-1"
+! colspan=2 |Clue tier
+!Modifier
+|-
+|{{plinkt|Clue scroll (beginner)|txt=Beginner}}
+|0.2
+|-
+|{{plinkt|Clue scroll (easy)|txt=Easy}}
+|1.7
+|-
+|{{plinkt|Clue scroll (medium)|txt=Medium}}
+|2
+|-
+|{{plinkt|Clue scroll (hard)|txt=Hard}}
+|3.3
+|-
+|{{plinkt|Clue scroll (elite)|txt=Elite}}
+|10
+|}
+
+===Other factors===
+Equipping a [[ring of wealth (i)]] will double the rate at which clue nests are dropped while chopping trees in the [[Wilderness]].{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1724050734952460411|date=13 November 2023|archiveurl=https://reldo.runescape.wiki/i/27964011|archivedate=13 May 2026|quote=[Since the release of Combat Achievements and Twitcher’s gloves, does the Ring of Wealth (i) still double the rate of clue nests in the wilderness?] Yes.}}
+
+The 10% uplift in the drop rate of bird nests granted by the [[Woodcutting cape]] does not apply to clue nests.{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1606695428988321793|date=24 December 2022|archiveurl=https://reldo.runescape.wiki/i/97173|archivedate=25 December 2023|quote=[The OSRS Wiki's Redwoods page states the WC cape's 10% bird nest drop buff doesn't apply to the clue nests, but everything else I can find never specifies what kind of nests it does applies to. Can you please confirm if the cape does anything at Redwoods? Thank you!] I don't see any references to it in the code there, including for the clue nests. It'd have helped with the non-clue nests, but those are not offered there. (...)}}
+
+[[Twitcher's gloves]] can be worn to give a 20% boost to the chance a bird nest received will be a clue nest.
+
+==Birdhouse rates==
+{{Incomplete|Birdhouse clue nest mechanics are not confirmed and any rates we have are rough estimates.}}
+
+The chance of getting a clue, ring, egg, or empty nest from [[bird house trapping]] depends on the tier of birdhouse and the player's [[Hunter]] level (seed nests only depend on Hunter level). When collecting loot, 10 rolls are performed with a chance of providing these nests. It is possible to obtain multiple clues from the same birdhouse in a single one of these 10 rolls, but once at least one clue has been awarded, further rolls do not attempt to give clues.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 July 2025
+|update = Stackable Clues are here!
+|change = Clue nests are replaced with [[scroll box]]es after the completion of [[X Marks the Spot]].
+}}
+{{Subject changes
+|date = 22 June 2022
+|update = Pride 2022, Pet Reclaim Changes & New Mobile Client!
+|change = All birds' nests now despawn after 2 minutes instead of 30 seconds.
+}}
+{{Subject changes
+|date = 21 July 2021
+|update = Combat Achievements
+|change = 
+*Clue nest rates are now affected by completion of [[Combat Achievements]].
+*Clue nests no longer roll to determine which tier of clue you get after the initial roll to give you a clue nest.
+}}
+{{Subject changes
+|date = 18 May 2017
+|update = Imbue Your Sceptre, Double Your Deaths, and get 3 for 2 on membership
+|change = Improved the click zone of clue nests.
+}}
+{{Subject changes 
+|date = 14 July 2016
+|update = Hidey Holes & Miniquests
+|change = Where possible, clue nests will now appear next to the player rather than under them.
+}}
+{{Subject changes footer}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}

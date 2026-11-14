@@ -1,0 +1,144 @@
+{{ToC|right}}
+{{Shortcut|ttfga}}
+This article contains all the possible clues when doing clue scrolls. For clues related to a specific clue scroll, see [[Treasure Trails/Full guide]].
+
+For the main article, see [[Treasure Trails]].
+
+==Preparation==
+===Difficulty levels===
+The 'level' of a [[clue scroll]] relates to its difficulty. There are six levels of clue scroll: [[Clue scroll (beginner)|Beginner]], [[Clue scroll (easy)|Easy]], [[Clue scroll (medium)|Medium]], [[Clue scroll (hard)|Hard]], [[Clue scroll (elite)|Elite]], and [[Clue scroll (master)|Master]]. An [[easy clue scroll]] is a low difficulty [[Treasure Trail]], with a low reward yield. A [[medium clue scroll]] is a medium difficulty Treasure Trail with a more substantial reward yield. A [[hard clue scroll]] is a hazardous Treasure Trail, which can be very rewarding. An [[elite clue scroll]] is the penultimate, dangerous clue scroll (both to receive and to complete). Elite clue scrolls, however, require killing higher level [[monster]]s, which is rewarded by its greatest and most expensive rewards as compared to other levelled scrolls. A [[master clue scroll]] is the most dangerous clue scroll and requires not only killing higher level monsters in both [[single-way]] and [[multi-way combat]] but also high level [[skill]] requirements.
+
+Clue scrolls are generated primarily by monster drops, but also can be generated through [[Thieving]], and as certain activity rewards. Each level of clue has a very different set of possible rewards and items, and hazards, so it is worth knowing what the player is in for.
+
+===Length===
+*[[Clue scroll (beginner)|Beginner clue scrolls]] can be between one and three clues long with few or no [[quest]] requirements.
+*[[Clue scroll (easy)|Easy clue scrolls]] can be between two and four clues long with few or no [[quest]] requirements.
+*[[Clue scroll (medium)|Medium clue scrolls]] can be between three and five clues long with some quest requirements.
+*[[Clue scroll (hard)|Hard clue scrolls]] can be between four and six clues long, with multiple enemies to defeat and can have high-levelled quest requirements.
+*[[Clue scroll (elite)|Elite clue scrolls]] can be between five and seven clues long, with multiple fights, and puzzles every step.
+*[[Clue scroll (master)|Master clue scrolls]] can be between five and eight clues long, with multiple fights, puzzles every step, and can have very high-levelled quest and [[skill]] requirements.
+
+===Recommended items===
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+
+====All level clues====
+{|class="wikitable align-center-1"
+! colspan="2" | Item
+! Description
+|-
+| style="width: 53pt;" | {{plinkp|Clue scroll (beginner)}} {{plinkp|Clue scroll (easy)}} {{plinkp|Clue scroll (medium)}} {{plinkp|Clue scroll (hard)}} {{plinkp|Clue scroll (elite)}} {{plinkp|Clue scroll (master)}}
+| [[Clue scroll]]
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Use this to travel over large distances.
+|-
+| {{plinkp|Energy potion}} {{plinkp|Super energy}} {{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Money]]
+| Use this to buy items needed for [[emote clues]] and for travel costs.
+|-
+| {{plinkt|Ring of Charos(a)}}
+| Used for extra benefits.
+|-
+| {{plinkp|Dramen staff}} {{plinkp|Lunar staff}}
+| [[Dramen staff|Dramen]] or [[lunar staff]]
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|}
+
+====Medium, hard and elite====
+'''Note: You are no longer required to own a [[sextant]], [[watch]], or [[chart]] in order to complete [[coordinate clues]].'''
+Alongside the above mentioned items, for these types of clues, you will often need some additional tools:
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Sextant}}
+| Use this to solve coordinate clues.
+|-
+| {{plinkt|Watch}}
+| Use this to solve coordinate clues.
+|-
+| {{plinkt|Chart}}
+| Use this to solve coordinate clues.
+|}
+
+====Hard, elite and master====
+[[Clue scroll (hard)|Hard]], [[Clue scroll (elite)|elite]], and [[master clues]] will often encounter various wizards and guardians that may prove difficult to fight. Therefore, the following items are recommended:
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkp|Shark}}
+| [[Food]]
+| Use this to restore your [[Hitpoints]] in [[combat]].
+|-
+| {{plinkt|Prayer potion}}s
+| Use this to restore your [[prayer points]] in [[combat]].
+|-
+| {{plinkp|Superantipoison}}
+| ([[Superantipoison|Super]]) [[antipoison]] potions
+| Use this to cure [[poison]] caused by [[Saradomin wizard]]s.
+|-
+| {{plinkp|Abyssal whip}}
+| [[Armour]] and a [[weapon]]
+| Use this to protect yourself and deal damage in [[combat]].
+|}
+
+===Quests===
+Having a high amount of [[quest points]] is beneficial when doing [[Treasure Trails]]. Many higher-level trails will lead a player into areas, which are locked by [[quests]]. If this is the case, the player must do the quest, up to where access to the area is granted, if they wish to complete their trail. If the player hasn't done the needed quest yet, but they have the requirements or are in a position to get them quickly, it is recommended that the player (trains and) does the quest, rather than getting rid of the [[clue scroll]].
+
+* Starting [[Fairytale II - Cure a Queen]] is highly recommended, as you will be able to use the [[Fairy rings]].
+
+==Anagrams==
+{{:Treasure Trails/Guide/Anagrams}}
+
+==Ciphers==
+{{:Treasure Trails/Guide/Ciphers}}
+
+==Coordinates==
+{{:Treasure Trails/Guide/Coordinates}}
+
+==Cryptic clues==
+{{:Treasure Trails/Guide/Cryptic clues}}
+
+==Emote clues==
+{{:Treasure Trails/Guide/Emote clues}}
+
+==Maps==
+{{:Treasure Trails/Guide/Maps}}
+
+==Hot Cold==
+{{:Treasure Trails/Guide/Hot Cold}}
+
+==Falo the Bard==
+{{:Falo the Bard}}
+
+==Sherlock==
+{{Sherlock Intro}}
+
+===Elite skill challenges===
+{{:Sherlock/Elite}}
+
+===Master skill challenges===
+{{:Sherlock/Master}}
+
+==Puzzle boxes==
+{{Puzzle Box Guide|master=display}}
+
+==Light boxes==
+{{:Treasure Trails/Guide/Light boxes}}
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Guides]]

@@ -1,0 +1,36 @@
+<noinclude>{{Treasure Trails Guide Maps Intro}}
+==Elite Maps==
+</noinclude>
+{| class="wikitable sortable"
+!Map
+!Location
+!Image
+|-
+|[[File:Map clue ape atoll shack.png|200px]]
+|In the south-west coast of [[Ape Atoll]], there is a little shack where the crate is located.
+
+Fairy ring code {{Fairycode|CLR}}''' '''is close to it. If you haven't completed [[Monkey Madness II]] then bring a ninja monkey greegree or [[Kruk greegree]] when using the fairy ring.
+|[[File:Map clue solution ape atoll shack.png|250px]]
+|-
+|[[File:Map clue Zul-Andra.png|200px]]
+|East of the small building in [[Zul-Andra]], next to the tree. Requires starting [[Regicide]].
+
+Fairy ring code {{Fairycode|BJS}} (76 [[Agility]])
+|[[File:Map clue solution Zul-Andra.png|250px]]
+|-
+|[[File:Map clue Burgh de Rott furnace.png|200px]]
+|East of the [[Burgh de Rott]] furnace. Requires starting [[In Aid of the Myreque]].
+|[[File:Map clue solution Burgh de Rott furnace.png|250px]]
+|-
+|[[File:Map clue Soul Altar.png|200px]]
+|Directly south of the [[Soul Altar (Kourend)|Soul Altar]].
+|[[File:Map clue solution Soul Altar.png|250x250px]]
+|-
+|[[File:Map clue Mogre Camp.png|200px]]
+|Inside the [[mudskipper]] cave west of the [[Mogre Camp]]. Speak to [[Murphy]] at [[Port Khazard]] to go diving. Players must collect five [[Rock (Mogre camp)|rocks]] before going inside.
+|[[File:Map clue solution Mogre Camp.png|250px]]
+|-
+|[[File:Map clue Castle Wars.png|200px]]
+|North east of [[Castle Wars]], just west of [[fairy ring]] {{Fairycode|CIQ}}
+|[[File:Map clue solution Castle Wars.png|250px]]
+|}

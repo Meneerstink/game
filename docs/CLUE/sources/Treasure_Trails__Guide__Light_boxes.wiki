@@ -1,0 +1,92 @@
+<noinclude>{{Otheruses|def=no|the item|Light box}}
+</noinclude>{{shortcut|ttglb}}
+
+'''Light boxes''' are a puzzle players will occasionally need to solve for a [[Clue scroll master|master]] [[Treasure Trails|Treasure Trail]]. Light boxes contain a 5x5 grid of lights and 8 switches to turn them on and off. The goal of the puzzle is to light all the lights.
+
+If destroyed, or otherwise lost, the puzzle will have to be solved again from the beginning.
+
+===Solving the puzzle===
+[[File:Light box interface.png|thumb|200px|The light box interface.]]
+One strategy is to concentrate on one light at a time and flip every switch, taking note on a piece of paper of which switches control that light. This is then repeated for all lights until a light is found which is only controlled by one switch. The position of the switch which turns that particular light on is the permanent position of that switch. Thus, it no longer becomes necessary to check that particular switch, thereby halving the remaining switch permutations. In other words, finding one is twice as hard as finding the next with the first one being the hardest to find.
+
+Alternatively, spam click one switch so you can note on a 5x5 grid which lights are controlled by that switch. Once you've done that for all 8 switches it will be clear which lights are only controlled by only one switch. Once you have the correct position of each of those switches, you can usually figure out the rest from the lights that are controlled by 2 switches (since you likely already have the permanent position of one of the two) or (after that) 3, etc.
+
+There is also a brute-force method, which requires turning the switches on in this order from left to right until the light box is solved:
+
+{| class="wikitable lighttable"
+!colspan="8"|Brute force method (from left to right)
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|F}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|G}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|F}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|H}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|F}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|G}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|F}}'''
+|-
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|E}}'''
+|ABA'''{{Colour|red|C}}'''
+|ABA'''{{Colour|red|D}}'''
+|ABA'''{{Colour|red|C}}'''
+|}<noinclude>
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

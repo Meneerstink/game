@@ -1,0 +1,260 @@
+<noinclude>{{Treasure Trails Guide Coordinates Intro}}
+==Master Coordinates==
+</noinclude><span id=500></span><span id=501></span>{{Coordinates
+|coords = 01 degrees 30 minutes north,<br/> 08 degrees 11 minutes west
+|req = [[Regicide]]
+|fight = [[Brassican Mage]]
+|level = 5
+|image = Coordinate clue 01.30N 08.11W.png
+|map = 01.30N 08.11W map
+|notes = In the hunter area directly south of the [[Iorwerth Camp]], past a stick trap, dig by the north-east edge of the pond. An [[Iorwerth camp teleport]] can greatly reduce the difficulty in reaching this position.
+
+From [[Lletya]]: Pass the tree, go west across the tripwire, continue west through the dense forest. Turn north and up the path to [[Prifddinas]]. Before the bridge and the water, head west through the dense forest. Then, keep going west past the leaves pitfall trap, then south-west past a stick trap.
+
+From [[Port Tyras]]: Go north through dense forest then east; go south through dense forest; step over tripwire; go east through the dense forest then north-west for quite a while; jump over the leaves. Finally, continue west till you arrive at an elven lamp next to mushrooms. Head south down the small path to the pond. Pass the stick trap and dig by the north-east edge of the pond.
+
+This clue can be frustrating due to the frequency of activating the stick traps, which deal significant amounts of damage. There is a better success rate of passing the trap by turning off run and walking past the trap.
+
+It's recommended to follow [[:File:Isafdar map.png|this map]] in order to not get lost.
+}}
+{{Coordinates
+|coords = 01 degrees 54 minutes south,<br/>
+08 degrees 54 minutes west
+|req = Partial completion of [[Regicide]]
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 01.54S 08.54W.png
+|map = 01.54S 08.54W map
+|notes = South of [[Port Tyras]], easily accessible by [[charter ship]] or [[fairy ring]] code {{Fairycode|BJS}} (requires {{SCP|Agility|76}})
+|level = 5}}
+<span id=502></span>{{Coordinates
+|coords = 02 degrees 09 minutes south,<br/>06 degrees 58 minutes west
+|req = Partial completion of [[Fairytale II - Cure a Queen]] for access to [[fairy rings]].
+|fight = [[Brassican Mage]]
+|level = 5
+|notes = [[Fairy ring]] ({{Fairycode|DLR}}) at the [[Poison Waste]].
+|image = Coordinate clue 02.09S 06.58W.png
+|map = 02.09S 06.58W map}}
+<span id=503></span>{{Coordinates
+|coords = 03 degrees 09 minutes south,<br/>
+43 degrees 26 minutes east
+|req = [[Cabin Fever]]
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 03.09S 43.26E.png
+|map = 03.09S 43.26E map
+|notes = Small island located north-east of [[Mos Le'Harmless]], accessible through the '''eastern''' staircase located at the north-east corner of the [[Mos Le'Harmless Cave]]. Remember to wear a [[Witchwood icon]] when traversing the dungeon, as well as bringing a [[light source]] for players who haven't lit the fire pit (requires completion of [[Making Friends with My Arm]]).
+|level = 5}}
+{{Coordinates
+|coords = 03 degrees 26 minutes north,
+12 degrees 18 minutes east
+|req = Partial completion of [[Dragon Slayer I]]
+|fight = [[Brassican Mage]]
+|level = 5
+|notes = [[Crandor]], centre of the island.
+|image = Coordinate_clue_03.26N 12.16E.png
+|map = 03.26N 12.16E_map
+}}
+{{Coordinates
+|coords = 03 degrees 50 minutes north,
+09 degrees 07 minutes east
+|req = No
+|fight = [[Brassican Mage]]
+|notes = [[Witchaven]], east from the chapel.
+|image = Coordinate clue 03.50N 09.07E.png
+|map = 03.50N 09.07E map
+|level = 5}}
+<span id=504></span>{{Coordinates
+|coords = 04 degrees 58 minutes north,<br/>
+36 degrees 56 minutes east
+|req = Partial completion of [[Darkness of Hallowvale]]
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 04.58N 36.56E.png
+|map = 04.58N 36.56E map
+|notes = Located outside the entrance to the [[Meiyerditch Mine]]. An easy way to reach the mine is to ask a [[vyrewatch]] to send you to the mines, and then mining 15 [[daeyalt ore]]s to leave or talking to a vampyre juvinate in the mines if The Blood Moon Rises has been completed.
+|level = 5}}
+<span id=505></span>{{Coordinates
+|coords = 05 degrees 13 minutes north,<br/>
+04 degrees 16 minutes west
+|req = Partial completion of [[Regicide]]
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 05.13N 04.16W.png
+|map = 05.13N 04.16W map
+|notes = East of the eastern entrance to [[Prifddinas]]. '''Be careful to not dig 1 tile east as it is in [[multi-combat]] and will spawn [[Ancient Wizard]]s instead.'''
+|level=5}}
+<span id=506></span><span id=507></span>{{Coordinates
+|coords = 07 degrees 37 minutes north, <br/>
+35 degrees 18 minutes east
+|req = No
+|notes = The [[Morytania Graveyard|graveyard]] where players fight [[Dessous]] during [[Desert Treasure I]]. [[Fairy ring]] {{fairycode|BKR}} is west of the graveyard. 
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 07.37N 35.18E.png
+|map = 07.37N 35.18E map
+|level = 5}}
+<span id=508></span>{{Coordinates
+|coords = 08 degrees 01 minutes north,<br/>
+20 degrees 58 minutes west
+|req = No
+|fight = [[Ancient Wizard]]s
+|image = Coordinate clue 08.00N 20.56W.png
+|map = 08.00N 20.56W map
+|notes = On [[Crabclaw Isle]]. Players must pay [[Sandicrahb]] 10,000 coins to reach the island, though this is reduced in half if the [[easy Kourend & Kebos Diary]] is completed, or free if the medium Kourend & Kebos Diary is completed.
+|level=5
+}}
+{{Coordinates
+|coords = 08 degrees 11 minutes north,<br/>
+12 degrees 30 minutes east
+|req = No
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 08.11N 12.30E.png
+|map = 08.11N 12.30E map
+|notes = Next to the ladder on the [[Water Obelisk Island]].
+|level=5
+}}
+<span id=509></span><span id=510></span><span id=511></span><span id=512></span>{{Coordinates
+|coords = 12 degrees 35 minutes north, <br/>
+36 degrees 22 minutes east
+|req= {{SCP|Agility|25}}
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 12.35N 36.22E.png
+|map = 12.35N 36.20E map
+|notes=Dig on the rocks, north of the wrecked ship, outside of [[Port Phasmatys]]. Climb the ladder of the wrecked ship, cross the gangplank, and jump on the rocks until the end is reached. Each jump requires 5% of your running energy.
+|level=5}}
+{{Coordinates
+|coords = 12 degrees 45 minutes north, <br/>
+20 degrees 09 minutes east
+|req= No
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 12.45N 20.09E.png
+|map = 12.45N 20.09E map
+|notes=By the [[Obelisk of Air]] in the [[Wilderness]]. Must be accessed through the [[Edgeville Dungeon]].
+|level=5}}
+<span id=513></span>{{Coordinates
+|coords = 13 degrees 33 minutes south,<br/>
+15 degrees 26 minutes east
+|req = Partial completion of [[Monkey Madness I]]
+|fight = [[Brassican Mage]]
+|notes = Eastern shore of [[Crash Island]].
+|image = Coordinate clue 13.33S 15.26E.png
+|map = 13.33S 15.26E map
+|level = 5
+}}
+<span id=514></span><span id=515></span><span id=516></span>{{Coordinates
+|coords = 16 degrees 41 minutes north, <br/>
+30 degrees 54 minutes west
+|req= No
+|fight = [[Ancient Wizard]]s
+|image = Coordinate clue 16.41N 30.54W.png
+|map = 16.41N 30.54W map
+|notes=By the [[lizardman shaman]] area west of [[Lizardman Canyon]].
+|level=5}}
+<span id=517></span><span id=518></span>{{Coordinates
+|coords = 18 degrees 03 minutes north, <br/>
+03 degrees 03 minutes east
+|req= 1,000 coins (or completion of [[The Fremennik Trials]])
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 18.03N 03.03E.png
+|map = 18.03N 03.03E map
+|notes=On top of [[Waterbirth Island]]. Accessed by climbing a set of [[Rocks (Waterbirth Island)|rocks]] with level 85 [[Agility]], or by running through the [[Waterbirth Island Dungeon|dungeon]], in which a [[pet rock]]/another player and a [[rune thrownaxe]] are required to reach the island's summit.
+|level=5}}
+{{Coordinates
+|coords = 18 degrees 26 minutes north, <br/>
+37 degrees 15 minutes west
+|req= {{SCP|Farming|85}}
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 18.26N 37.15W.png
+|map = 18.26N 37.15W map
+|notes=In the north wing of the [[Farming Guild]].
+|level=5}}
+<span id=519></span>{{Coordinates
+|coords = 19 degrees 43 minutes north,<br/>
+23 degrees 11 minutes west
+|req = No
+|fight = [[Ancient Wizard]]s
+|level = 5
+|notes = The coordinate is located in the crypt of the [[Arceuus]] church. To reach the crypt, head to the church and climb up the stairs, and then, climb down the stairs that follow.
+
+Players can make the [[ancient wizard]]s unaggressive by going up the stairs and climbing down immediately.
+|image = Coordinate clue 19.43N 23.11W.png
+|map = 19.43N 23.11W map
+}}
+<span id=520></span>{{Coordinates
+|coords = 20 degrees 35 minutes north,<br/>
+15 degrees 58 minutes east
+|req = No
+|fight = [[Ancient Wizard]]s
+|image = Coordinate clue 20.35N 15.58E.png
+|map = 20.35N 15.58E map
+|notes = North-west of [[The Forgotten Cemetery]], at level 38 [[Wilderness]], there is a [[Chaos Temple (church)|Chaos Temple]]. Dig inside the building. A [[cemetery teleport]] can be used to reach the coordinates relatively quickly.
+|level=5
+}}
+{{Coordinates
+|coords = 20 degrees 45 minutes north,<br/>
+7 degrees 26 degrees west
+|image = Coordinate clue 20.45N 07.26W.png
+|map = 20.45N 07.26W map
+|req = Started Lunar Diplomacy to access [[Pirates' Cove]]
+|fight = [[Ancient Wizard]]s
+|level = 5
+|notes = [[Pirates' Cove]]}}
+<span id=521></span>{{Coordinates
+|coords = 21 degrees 37 minutes north,<br/>
+21 degrees 13 minutes west
+|req = No
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 21.37N 21.13W.png
+|map = 21.37N 21.13W map
+|notes = In the [[dense essence mine]]. Easily reached with the [[fairy ring]] code {{Fairycode|CIS}}.
+|level = 5}}
+{{Coordinates
+|coords = 21 degrees 56 minutes north,<br/>
+10 degrees 56 minutes west
+|req = Started [[Lunar Diplomacy]]
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 21.56N 10.56W.png
+|map = 21.56N 10.56W map
+|notes = On [[Lunar Isle]], dig on the island west of the [[Astral Altar]].
+|level = 5}}
+<span id=522></span>{{Coordinates
+|coords = 22 degrees 24 minutes north, <br/>
+31 degrees 11 minutes west
+|req = No
+|notes = Northern area of the [[sulphur mine]] in [[Lovakengj]].
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 22.24N 31.11W.png
+|map = 22.24N 31.11W map
+|level = 5}}
+<span id=523></span><span id=524></span>{{Coordinates
+|coords = 24 degrees 00 minutes north,<br/>29 degrees 22 minutes east
+|req = No
+|fight = [[Ancient Wizard]]s
+|level = 5
+|notes = [[Blighted Volcano]] at level 51 [[Wilderness]].
+|image = Coordinate clue 24.00N 29.22E.png
+|map = 24.00N 29.22E map
+}}
+{{Coordinates
+|coords = 24 degrees 18 minutes north,<br/>
+23 degrees 22 minutes east
+|req = No
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 24.18N 23.22E.png
+|notes = Inside the [[Resource Area]], near the anvil. Requires 7,500 [[coins]] to enter (or 6,000, 3,750 or no coins with medium, hard and elite [[Wilderness Diary]] respectively).
+|map = 24.18N 23.22E map
+|level=5}}
+{{Coordinates
+|coords = 24 degrees 22 minutes north,<br/>
+27 degrees 00 minutes east
+|req = No
+|fight = [[Ancient Wizard]]s
+|image = Coordinate clue 24.22N 27.00E.png
+|notes = Outside [[Rogues' Castle]], north of the [[Wilderness Obelisk]].
+|map = 24.22N 27.00E map
+|level=5}}
+<span id=525></span>{{Coordinates
+|coords = 23 degrees 58 minutes north,<br/>
+18 degrees 22 minutes east
+|req = No
+|fight = [[Brassican Mage]]
+|image = Coordinate clue 23.58N 18.22E.png
+|map = 23.58N 18.22E map
+|notes = South-east of the [[Wilderness Agility Course]].
+|level = 5}}

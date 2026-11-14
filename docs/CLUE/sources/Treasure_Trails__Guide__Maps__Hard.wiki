@@ -1,0 +1,39 @@
+<noinclude>{{Treasure Trails Guide Maps Intro}}
+==Hard Maps==</noinclude>
+{| class="wikitable sortable"
+!Map
+!Location
+!Image
+|-
+|[[File:Map clue Lumberyard.png|200px]]
+|Search the crate inside the [[Lumberyard]], north-east of [[Varrock]].
+|[[File:Map clue solution Lumberyard.png|250px]]
+|-
+|[[File:Map clue observatory.png|200px]]
+|North-east of the [[Observatory]], north of [[Castle Wars]], search a crate in the western most building of the goblin overrun houses. This house holds the entrance stairs to the dungeon below.
+|[[File:Map clue solution Observatory.png|250px]]
+|-
+|[[File:Map clue Dark Warriors' Fortress.png|200px]]
+|In level 14 [[Wilderness]], at the [[Dark Warriors' Fortress]], search the pile of crates in the south-west corner of the central courtyard.
+'''Warning:'''
+
+<nowiki> </nowiki>Beware of level 145 [[dark warrior]]s. This area is also a hotspot for [[player killing|player killers]].
+|[[File:Map clue solution Dark Warriors' Fortress.png|250px]]
+|-
+|[[File:Map clue Yanille anvil.png|center|200px]]
+|South of [[Yanille]] bank. Behind the house with an anvil.
+|[[File:Map clue solution Yanille anvil.png|250px]]
+|-
+|[[File:Map clue small volcanoes.png|200px]]
+|Level 50 [[Wilderness]], near [[Wilderness Agility Course]]; south-west of [[Deep Wilderness Dungeon]] entrance and west of the [[Mage Arena]].
+|[[File:Map clue solution between three volcanoes.png|250px]]
+|-
+|[[File:Map clue Picnic tables.png|200px]]
+|The picnic tables south of the [[Legends' Guild]], north-east of [[East Ardougne]]. South of fairy ring {{Fairycode|BLR}}
+|[[File:Map clue solution Picnic table.png|250px]]
+|-
+|[[File:Map clue West Ardougne.png|200px]]
+|Located in [[West Ardougne]], dig inside one of the destroyed buildings. It is in the north-east corner of the housing buildings in the south-west area of West Ardougne. Head due west from the main gate, and you'll get to the buildings.
+|[[File:Map clue solution West Ardougne.png|250px]]
+|}
+[[Category:Treasure Trails]]

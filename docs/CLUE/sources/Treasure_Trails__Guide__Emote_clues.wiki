@@ -1,0 +1,26 @@
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+
+===Beginner Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Beginner}}
+
+===Easy Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Easy}}
+
+===Medium Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Medium}}
+
+===Hard Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Hard}}
+
+===Elite Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Elite}}
+
+===Master Emote clues===
+{{:Treasure Trails/Guide/Emote clues/Master}}<noinclude>
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Guides]]</noinclude>

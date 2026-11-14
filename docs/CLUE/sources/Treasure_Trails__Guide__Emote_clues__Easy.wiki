@@ -1,0 +1,208 @@
+<noinclude>{{Treasure Trails Guide Emote Clues Intro}}
+
+==Easy Emote clues==
+</noinclude>
+{| class="wikitable lighttable" width="100%"
+! width="33% " |Clue
+! width="12%" |Items
+! width="40%" |Notes
+! width="15%" |Map
+|-
+|''[[Clue scroll (easy) - Blow a raspberry at the monkey cage in Ardougne Zoo|Blow a raspberry at the monkey cage in Ardougne Zoo.]]''
+''Equip a [[Studded body|studded leather body]], [[bronze platelegs]] and a [[Staff|normal staff with no orb]].''
+|{{plinkp|Studded body}} {{plinkp|Bronze platelegs}} {{plinkp|Staff}}
+|
+|[[File:Emote clue - raspberry monkey cage zoo.png|150px]]
+|-
+|''[[Clue scroll (easy) - Blow raspberries outside the entrance to Keep Le Faye|Blow raspberries outside the entrance to Keep Le Faye.]]''
+''Equip a [[coif]], an [[iron platebody]] and [[leather gloves]].''
+|{{plinkp|Coif}} {{plinkp|Iron platebody}} {{plinkp|Leather gloves}}
+|Keep Le Faye can be found south of [[Seers' Village]], and can be easily reached by using [[Camelot Teleport]] then running south, or by using [[fairy ring]] code {{Fairycode|blr}}
+|[[File:Emote clue - raspberry keep le faye.png|150px]]
+|-
+|''[[Clue scroll (easy) - Bow in the office of the Emir's Arena|Bow in the office of the Emir's Arena.]]''
+''Equip an [[Iron chainbody|iron chain body]], [[leather chaps]] and [[coif]].''
+|{{plinkp|Iron chainbody}} {{plinkp|Leather chaps}} {{plinkp|Coif}}
+|
+|[[File:Emote clue - bow ticket office duel arena.png|150px]]
+|-
+|''[[Clue scroll (easy) - Bow outside the entrance to the Legends' Guild|Bow outside the entrance to the Legends' Guild.]]''
+''Equip [[iron platelegs]], an [[emerald amulet]] and an [[oak longbow]].''
+|{{plinkp|Iron platelegs}} {{plinkp|Emerald amulet}} {{plinkp|Oak longbow}}
+|
+|[[File:Emote clue - bow legends guild.png|150px]]
+|-
+|''[[Clue scroll (easy) - Cheer at the Druids' Circle|Cheer at the Druids' Circle.]]''
+''Equip a [[blue wizard hat]], a [[Bronze 2h sword|bronze two-handed sword]] and [[Ham boots|HAM boots]].''
+|{{plinkp|Blue wizard hat}} {{plinkp|Bronze 2h sword}} {{plinkp|Ham boots}}
+|
+|[[File:Emote clue - cheer druid circle.png|150px]]
+|-
+|''[[Clue scroll (easy) - Cheer at the games room|Cheer at the games room.]]''
+''Have nothing equipped at all when you do.''
+|Nothing
+|The basement of the [[Burthorpe Games Room]] in [[Burthorpe]]. 
+|[[File:Emote clue - cheer games room.png|150px]]
+|-
+|''[[Clue scroll (easy) - Cheer for the monks at Port Sarim|Cheer for the monks at Port Sarim.]]''
+''Equip a [[coif]], [[steel plateskirt]] and a [[sapphire necklace]].''
+|{{plinkp|Coif}} {{plinkp|Steel plateskirt}} {{plinkp|Sapphire necklace}}
+|Requires 20 [[Ranged]] for equipping the [[coif]].
+|[[File:Emote clue - cheer monks port sarim.png|150px]]
+|-
+|''[[Clue scroll (easy) - Clap in the main exam room in the Exam Centre|Clap in the main exam room in the Exam Centre.]]''
+''Equip a [[white apron]], [[Green boots|green gnome boots]] and [[leather gloves]].''
+|{{plinkp|White apron}} {{plinkp|Green boots}} {{plinkp|Leather gloves}}
+|The [[Exam Centre]] is located east of [[Varrock]], just south of the [[Digsite]].
+|[[File:Emote clue - clap exam centre.png|150px]]
+|-
+|''[[Clue scroll (easy) - Clap on the causeway to the Wizards' Tower|Clap on the causeway to the Wizards' Tower.]]''
+''Equip an [[Iron med helm|iron medium helmet]], [[emerald ring]] and a [[white apron]].''
+|{{plinkp|Iron med helm}} {{plinkp|Emerald ring}} {{plinkp|White apron}}
+|
+|[[File:Emote clue - clap causeway wizards tower.png|150px]]
+|-
+|''[[Clue scroll (easy) - Clap on the top level of the mill, north of East Ardougne|Clap on the top level of the mill, north of East Ardougne.]]''
+''Equip a [[Blue robe top|blue gnome robe top]], [[Ham robe|HAM robe bottom]] and an [[Tiara|unenchanted tiara]].''
+|{{plinkp|Blue robe top}} {{plinkp|Ham robe}} {{plinkp|Tiara}}
+|
+|[[File:Emote clue - clap mill north ardougne.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance a jig behind the bar on the Pandemonium|Dance a jig behind the bar on the Pandemonium.]]''
+''Equip a [[right eye patch]] and a [[bronze scimitar]].''
+|{{plinkp|Right eye patch}} {{plinkp|Bronze scimitar}}
+|
+|[[File:Emote clue - dance jig Pandemonium bar.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild|Dance a jig by the entrance to the Fishing Guild.]]''
+''Equip an [[emerald ring]], a [[sapphire amulet]], and a [[Bronze chainbody|bronze chain body]].''
+|{{plinkp|Emerald ring}} {{plinkp|Sapphire amulet}} {{plinkp|Bronze chainbody}}
+|
+|[[File:Emote clue - dance jig fishing guild entrance.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance at the crossroads north of Draynor|Dance at the crossroads north of Draynor.]]''
+''Equip an [[Iron chainbody|iron chain body]], a [[sapphire ring]] and a [[longbow]].''
+|{{plinkp|Iron chainbody}} {{plinkp|Sapphire ring}} {{plinkp|Longbow}}
+|
+|[[File:Emote clue - dance draynor crossroads.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance at the entrance to the Grand Exchange|Dance at the entrance to the Grand Exchange.]]''
+''Equip a [[pink skirt]], [[pink robe top]] and a [[body tiara]].''
+|{{Plinkp|Pink skirt}} {{Plinkp|Pink robe top}} {{Plinkp|Body tiara}}
+|'''Important note:''' [[Pink skirt]] from [[Varrock]], [[Pink robe top]] from [[Gnome Stronghold]]. Be aware of this!
+|[[File:Emote clue - dance ge entrance.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance in the Party Room|Dance in the Party Room.]]''
+''Equip a [[Steel full helm|steel full helmet]], [[steel platebody]] and an [[iron plateskirt]].''
+|{{plinkp|Steel full helm}} {{plinkp|Steel platebody}} {{plinkp|Iron plateskirt}}
+|
+|[[File:Emote clue - dance falador party room.png|150px]]
+|-
+|''[[Clue scroll (easy) - Dance in the shack in Lumbridge Swamp|Dance in the shack in Lumbridge Swamp.]]''
+''Equip a [[bronze dagger]], [[Iron full helm|iron full helmet]] and a [[gold ring]].''
+|{{plinkp|Bronze dagger}} {{plinkp|Iron full helm}} {{plinkp|Gold ring}}
+|This step provides players who have completed the [[Lumbridge and Draynor Diary#Elite|Lumbridge and Draynor elite diary]] an option to enter the shed. Those players are otherwise unable to enter without teleporting to [[Zanaris]]. 
+|[[File:Emote clue - dance shack lumbridge swamp.png|150px]]
+|-
+|''[[Clue scroll (easy) - Do a jig in Varrock's rune store|Do a jig in Varrock's rune store.]]''
+''Equip an [[air tiara]] and a [[staff of water]].''
+|{{Plinkp|Air tiara}} {{Plinkp|Staff of water}}
+|
+|[[File:Emote clue - dance jig varrock rune store.png|150px]]
+|-
+|''[[Clue scroll (easy) - Headbang in the mine north of Al Kharid|Headbang in the mine north of Al Kharid.]]''
+''Equip a [[desert shirt]], [[leather gloves]] and [[leather boots]].''
+|{{plinkp|Desert shirt}} {{plinkp|Leather gloves}} {{plinkp|Leather boots}}
+|
+|[[File:Emote clue - headbang al kharid mine.png|150px]]
+|-
+|''[[Clue scroll (easy) - Jump for joy at the beehives|Jump for joy at the beehives.]]''
+''Equip a [[desert shirt]], [[Green robe bottoms|green gnome robe bottoms]] and a [[steel axe]].''
+|{{plinkp|Desert shirt}} {{plinkp|Green robe bottoms}} {{plinkp|Steel axe}}
+|Beehives are located west of [[Catherby]].
+|[[File:Emote clue - jump joy beehives.png|150px]]
+|-
+|''[[Clue scroll (easy) - Laugh at the crossroads south of the Sinclair Mansion|Laugh at the crossroads south of the Sinclair mansion.]]''
+''Equip a [[Leather cowl|cowl]], a [[Blue wizard robe|blue wizard robe top]] and an [[iron scimitar]].''
+|{{plinkp|Leather cowl}} {{plinkp|Iron scimitar}} {{plinkp|Blue wizard robe}}
+|
+|[[File:Emote clue - laugh sinclair crossroads.png|150px]]
+|-
+|''[[Clue scroll (easy) - Panic in the Limestone Mine|Panic in the Limestone Mine.]]''
+''Equip [[bronze platelegs]], a [[steel pickaxe]] and a [[Steel med helm|steel medium helmet]].''
+|{{plinkp|Bronze platelegs}} {{plinkp|Steel pickaxe}} {{plinkp|Steel med helm}}
+|Located east of the [[Lumber Yard]].
+|[[File:Emote clue - panic limestone mine.png|150px]]
+|-
+|''[[Clue scroll (easy) - Panic on the pier where you catch the Fishing trawler|Panic on the pier where you catch the Fishing trawler.]]''
+''Have nothing equipped at all when you do.''
+|None
+|Northernmost dock in [[Port Khazard]], east of the [[Fight Arena (location)|Fight Arena]].
+|[[File:Emote clue - panic pier fishing trawler.png|150px]]
+|-
+|''[[Clue scroll (easy) - Shrug in the mine near Rimmington|Shrug in the mine near Rimmington.]]''
+''Equip a [[gold necklace]], a [[gold ring]] and a [[bronze spear]].''
+|{{plinkp|Gold necklace}} {{plinkp|Gold ring}} {{plinkp|Bronze spear}}
+|
+|[[File:Emote clue - shrug rimmington mine.png|150px]]
+|-
+|''[[Clue scroll (easy) - Spin at the crossroads north of Rimmington|Spin at the crossroads north of Rimmington.]]''
+''Equip a [[Green hat|green gnome hat]], [[Cream robe top|cream gnome top]] and [[leather chaps]].''
+|{{plinkp|Green hat}} {{plinkp|Cream robe top}} {{plinkp|Leather chaps}}
+|
+|[[File:Emote clue - spin rimmington crossroads.png|150px]]
+|-
+|''[[Clue scroll (easy) - Spin in Draynor Manor by the fountain|Spin in Draynor Manor by the fountain.]]''
+''Equip an [[iron platebody]], [[Studded chaps|studded leather chaps]] and a [[Bronze full helm|bronze full helmet]].''
+|{{plinkp|Iron platebody}} {{plinkp|Studded chaps}} {{plinkp|Bronze full helm}}
+|
+|[[File:Emote clue - spin draynor manor fountain.png|150px]]
+|-
+|''[[Clue scroll (easy) - Spin in the Varrock Castle courtyard|Spin in the Varrock Castle courtyard.]]''
+''Equip a [[black axe]], a [[coif]] and a [[ruby ring]].''
+|{{plinkp|Black axe}} {{plinkp|Coif}} {{plinkp|Ruby ring}}
+|
+|[[File:Emote clue - spin varrock castle courtyard.png|150px]]
+|-
+|''[[Clue scroll (easy) - Think in middle of the wheat field by the Lumbridge mill|Think in middle of the wheat field by the Lumbridge mill.]]''
+''Equip a [[Blue robe top|blue gnome robetop]], a [[Turquoise robe bottoms|turquoise gnome robe bottom]] and an [[oak shortbow]].''
+|{{plinkp|Blue robe top}} {{plinkp|Turquoise robe bottoms}} {{plinkp|Oak shortbow}}
+|
+|[[File:Emote clue - think lumbridge mill wheat field.png|150px]]
+|-
+|''[[Clue scroll (easy) - Wave along the south fence of the Lumber Yard|Wave along the south fence of the Lumber Yard.]]''
+''Equip a [[Hardleather body|hard leather body]], [[leather chaps]] and a [[bronze axe]].''
+|{{plinkp|Hardleather body}} {{plinkp|Leather chaps}} {{plinkp|Bronze_axe}}
+|
+|[[File:Emote clue - wave south fence lumber yard.png|150px]]
+|-
+|''[[Clue scroll (easy) - Wave in the Falador gem store|Wave in the Falador gem store.]]''
+''Equip a Mithril pickaxe, Black platebody and an Iron Kiteshield.''
+|{{plinkp|Mithril pickaxe}} {{plinkp|Black platebody}} {{plinkp|Iron kiteshield}}
+|
+|[[File:Emote clue - wave falador gem store.png|150px]]
+|-
+|''[[Clue scroll (easy) - Wave on Mudskipper Point|Wave on Mudskipper Point.]]''
+''Equip a [[black cape]], [[leather chaps]] and a [[steel mace]].''
+|{{plinkp|Black cape}} {{plinkp|Leather chaps}} {{plinkp|Steel mace}}
+|The [[fairy ring]] code {{fairycode|AIQ}} teleports you to the correct spot.
+|[[File:Emote clue - wave mudskipper point.png|150px]]
+|-
+|''[[Clue scroll (easy) - Yawn in Draynor Marketplace|Yawn in Draynor Marketplace.]]''
+''Equip [[Studded chaps|studded leather chaps]], an [[iron kiteshield]] and a [[steel longsword]].''
+|{{plinkp|Studded chaps}} {{plinkp|Iron kiteshield}} {{plinkp|Steel longsword}}
+|
+|[[File:Emote clue - yawn draynor marketplace.png|150px]]
+|-
+|''[[Clue scroll (easy) - Yawn in the Fortis Grand Museum|Yawn in the Fortis Grand Museum.]]''
+''Equip an [[emerald necklace]], [[blue skirt]], and [[Turquoise robe top|turquoise gnome robe top]].''
+|{{plinkp|Emerald necklace}} {{plinkp|Blue skirt}} {{plinkp|Turquoise robe top}}
+|
+|[[File:Emote clue - yawn Grand Museum.png|150px]]
+|-
+|''[[Clue scroll (easy) - Yawn in the Varrock library|Yawn in the Varrock library.]]''
+''Equip a [[Green robe top|green gnome robe top]], [[Ham robe|HAM robe bottom]] and an [[iron warhammer]].''
+|{{plinkp|Green robe top}} {{plinkp|Ham robe}} {{plinkp|Iron warhammer}}
+|
+|[[File:Emote clue - yawn varrock library.png|150px]]
+|}

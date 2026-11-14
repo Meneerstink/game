@@ -1,0 +1,35 @@
+<noinclude>{{Treasure Trails Guide Maps Intro}}
+==Easy Maps==</noinclude>
+{| class="wikitable sortable"
+!Map
+!Location
+!Image
+|-
+|[[File:Map clue Champions guild.png|200px]]
+|Locate the single tree that is west of the [[Champions' Guild]], outside [[Varrock]]. Dig two squares to the east of it.
+|[[File:Map clue solution Champions guild.png|250px]]
+|-
+|[[File:Map clue Al Kharid mines.png|200px]]
+|Just north of [[Al Kharid]], in the centre of the mine.
+|[[File:Map clue solution Al Kharid mines.png|250px]]
+|-
+|[[File:Map clue Wizard tower.png|200px]]
+|Directly behind the [[Wizards' Tower]], there's a fern you can use as a reference; the dig spot is one tile directly north of the fern. [[Fairy ring]] code {{Fairycode|DIS}} is very close.
+|[[File:Map clue solution Wizard tower.png|250px]]
+|-
+|[[File:Map clue Galahad.png|200px]]
+|One tile west of the north door of [[Galahad]]'s house, west of [[McGrubor's Wood]]. [[Fairy ring]] code {{Fairycode|ALS}} is very close, squeeze through the gate north-east of the fairy ring (around the building.)
+|[[File:Map clue solution Galahad.png|250px]]
+|-
+|[[File:Map clue Falador stones.png|200px]]
+|Due east of [[Falador]]'s north gate. Look for the (grapple) [[agility shortcut]] icon.
+|[[File:Map clue solution Falador stones.png|250px]]
+|-
+|[[File:Map clue South-eastern Varrock Mine.png|200px]]
+|[[South-east Varrock mine]]. Dig one square south of the small fern.
+|[[File:Map clue solution South-eastern Varrock Mine.png|250px]]
+|-
+|[[File:Map clue Falador statue crossroads.png|200px]]
+|The statue is located at the crossroads north of [[Falador]].
+|[[File:Map clue solution Falador statue crossroads.png|250px]]
+|}
