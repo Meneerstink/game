@@ -238,6 +238,11 @@ object DropTableFactory {
                     items.addAll(entry.getDrop(rate))
                 }
             }
+            // Caskets do not block clues; bank, grave and Death's Office do. Filter
+            // the rolled clue without rerolling the other loot or changing its rate.
+            val clueAdjusted = gg.rsmod.plugins.content.scrolls.ClueAcquisition.transform(player, items)
+            items.clear()
+            items.addAll(clueAdjusted)
             return items
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)

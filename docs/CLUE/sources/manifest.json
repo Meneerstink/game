@@ -585,6 +585,50 @@
       "file": "Template_Treasure_Trails_Guide_Maps_Intro.wiki",
       "sha256": "04ba071a1976e14a0f3cf2dcc5fef0ba5fe38d40875d87c3905503479f17eff7",
       "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Maps_Intro"
+    },
+    {
+      "page": "Drops",
+      "revision": 15359629,
+      "revision_time": "2026-10-01T13:15:12Z",
+      "file": "Drops.wiki",
+      "sha256": "19625ef3c30af81efb6b3a79a134b7c7beeda0c361d7ca27dbf8ca8827725a7e",
+      "url": "https://oldschool.runescape.wiki/w/Drops"
+    },
+    {
+      "page": "Reward casket",
+      "revision": 15366136,
+      "revision_time": "2026-10-05T21:23:02Z",
+      "file": "Reward_casket.wiki",
+      "sha256": "d523271fbd99d129f3a4e1f13737bced1eaec80bcda0949327e5b13f85e4c2f3",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket"
+    },
+    {
+      "page": "Clue scroll",
+      "revision": 15343108,
+      "revision_time": "2026-09-14T00:47:03Z",
+      "file": "Clue_scroll.wiki",
+      "sha256": "b58424a835b3513b396286aa22d58ad6cd45d25ccef2483a52ea035389a5aa64",
+      "url": "https://oldschool.runescape.wiki/w/Clue_scroll"
+    },
+    {
+      "page": "Entrana",
+      "revision": 15399173,
+      "revision_time": "2026-11-11T15:00:15Z",
+      "file": "Entrana.wiki",
+      "sha256": "3691be57d4cae81d7702f6e084a93a621726e2a95dcc6dcd3b9fb848434cf843",
+      "url": "https://oldschool.runescape.wiki/w/Entrana"
+    },
+    {
+      "page": "Treasure!",
+      "missing": true
+    },
+    {
+      "page": "Treasure! (Treasure Trails)",
+      "revision": 15353846,
+      "revision_time": "2026-09-23T03:55:19Z",
+      "file": "Treasure!_(Treasure_Trails).wiki",
+      "sha256": "b324a92187752d768348dd1cdf5b6ef9d7eed0c0a68eac153cb4c95c268dc576",
+      "url": "https://oldschool.runescape.wiki/w/Treasure%21_%28Treasure_Trails%29"
     }
   ]
 }

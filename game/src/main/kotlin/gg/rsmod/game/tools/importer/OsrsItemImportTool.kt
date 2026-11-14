@@ -1290,7 +1290,15 @@ object OsrsItemImportTool {
     @JvmStatic
     fun main(args: Array<String>) {
         val batchName = args.firstOrNull { !it.startsWith("--") } ?: error("Usage: <batch> [--apply] [--yml-out=<file>]")
-        val specs = BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys}).")
+        val specs = if (batchName == "clue") {
+            val roster = args.firstOrNull { it.startsWith("--clue-roster=") }?.substringAfter('=')
+                ?: error("clue requires --clue-roster=<reviewed import-items.tsv>")
+            File(roster).readLines().filter { it.isNotBlank() && !it.startsWith("#") }.map { line ->
+                val fields = line.split('\t')
+                require(fields.size == 3 && fields[1] in listOf("true", "false")) { "Invalid CLUE roster row: $line" }
+                Spec(fields[0].toInt(), noted = fields[1].toBoolean())
+            }.also { require(it.isNotEmpty() && it.map { spec -> spec.upstreamId }.distinct().size == it.size) }
+        } else BATCHES[batchName] ?: error("Unknown batch '$batchName' (known: ${BATCHES.keys}).")
         specs.firstOrNull { it.upstreamId in SAME_NAME_COPIES || it.upstreamId in SAME_NAME_COPIES_WITHOUT_MAIN }?.let {
             error("upstream ${it.upstreamId} is a same-name copy (owner answer: map to the main item, do not import)")
         }

@@ -8,6 +8,7 @@ import gg.rsmod.plugins.api.ext.refreshBonuses
 import gg.rsmod.plugins.content.items.osrs.Blowpipe
 import gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits
 import gg.rsmod.plugins.content.items.osrs.StaffOfTheDead
+import gg.rsmod.plugins.content.scrolls.ClueDeathItems
 
 /**
  * Untradeable combat items that break instead of dropping on an unprotected PvP death.
@@ -304,10 +305,10 @@ object PvpDeathBreakables {
 
     /** Victim-side items of a converted [item] ([VICTIM_GRAVE]), per stack. */
     fun victimGraveItems(item: Item): List<Item> =
-        if (petOrTrinket(item.id)) listOf(Item(item)) else VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
+        if (petOrTrinket(item.id) || ClueDeathItems.contains(item.id)) listOf(Item(item)) else VICTIM_GRAVE[item.id]?.map { Item(it, item.amount) } ?: emptyList()
 
     fun converts(itemId: Int): Boolean =
-        petOrTrinket(itemId) || itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
+        petOrTrinket(itemId) || ClueDeathItems.contains(itemId) || itemId in PVP_BASE || itemId in PVP_COINS_FROM_PARTS || itemId == Items.VENATOR_BOW || itemId == Items.TONALZTICS_OF_RALOS ||
             OsrsOrnamentKits.forPvpConversion(itemId) != null || itemId in kitToGrave ||
             gg.rsmod.plugins.content.items.osrs.OrnamentKitRules.isKit(itemId) || itemId == Items.TOXIC_BLOWPIPE ||
             itemId == Items.BLAZING_BLOWPIPE ||
@@ -433,6 +434,7 @@ object PvpDeathBreakables {
         victim: gg.rsmod.game.model.entity.Player? = null,
     ): List<Item>? {
         val id = item.id
+        if (ClueDeathItems.contains(id)) return emptyList()
         PVP_BASE[id]?.let { parts -> return parts.map { Item(it, item.amount) } + listOfNotNull(victim?.let { storedScrolls(it, item) }) }
         PVP_COINS_FROM_PARTS[id]?.let { parts -> return partsCoins(id, parts, item.amount, prices) }
         if (id == Items.VENATOR_BOW) {

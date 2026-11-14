@@ -1,0 +1,49 @@
+package gg.rsmod.plugins.content.areas.watson
+
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.content.scrolls.ClueScrollTier
+import kotlin.test.*
+
+class MimicChallengeTests {
+    @Test fun `failure consumes exactly one reward roll and all attempts can be exhausted`() {
+        for ((tier, count) in listOf(ClueScrollTier.ELITE to 5, ClueScrollTier.MASTER to 6)) {
+            val item = MimicChallenge.create(23729, tier)
+            assertEquals(count, MimicChallenge.remaining(item))
+            for (used in 1..count) {
+                val attempt = MimicChallenge.begin(item)!!
+                assertNull(MimicChallenge.begin(item))
+                assertTrue(MimicChallenge.settle(item, attempt, bossKilled = false))
+                assertFalse(MimicChallenge.settle(item, attempt, bossKilled = false))
+                assertEquals(count - used, MimicChallenge.remaining(item))
+            }
+            assertNull(MimicChallenge.begin(item))
+            assertFalse(MimicChallenge.defeated(item))
+        }
+    }
+
+    @Test fun `a simultaneous death victory keeps rolls and cannot be settled twice`() {
+        val item = MimicChallenge.create(23729, ClueScrollTier.MASTER)
+        val attempt = MimicChallenge.begin(item)!!
+        assertTrue(MimicChallenge.settle(item, attempt, bossKilled = true))
+        assertEquals(6, MimicChallenge.remaining(item))
+        assertTrue(MimicChallenge.defeated(item))
+        assertFalse(MimicChallenge.settle(item, attempt, bossKilled = false))
+        assertEquals(0, MimicChallenge.failures(item))
+    }
+
+    @Test fun `separate juggled caskets and unknown legacy items cannot share or invent state`() {
+        val first = MimicChallenge.create(23729, ClueScrollTier.ELITE)
+        val second = MimicChallenge.create(23729, ClueScrollTier.MASTER)
+        MimicChallenge.settle(first, MimicChallenge.begin(first)!!, bossKilled = false)
+        assertEquals(4, MimicChallenge.remaining(Item(first)))
+        assertEquals(6, MimicChallenge.remaining(second))
+        assertNull(MimicChallenge.tier(Item(23729)))
+        assertFalse(MimicChallenge.settle(Item(23729), 1, bossKilled = true))
+    }
+
+    @Test fun `stomp uses three ticks per damage increment and caps at six`() {
+        assertEquals(listOf(1,1,1,2,2,2,3,3,3), (1..9).map(MimicChallenge::stompDamage))
+        assertEquals(6, MimicChallenge.stompDamage(18))
+        assertEquals(6, MimicChallenge.stompDamage(600))
+    }
+}

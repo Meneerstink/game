@@ -178,6 +178,7 @@ object DropViewer {
             }
         }
         val underBoss = minions.values.flatten().map { it.key }.toSet()
+        group("CLUES", "Clues", null, false, sources.filter { it.group == DropSources.Group.CLUES })
         val monsters = sources.filter { it.group == DropSources.Group.MONSTERS && it.key !in underBoss }.sortedWith(compareBy({ it.name.lowercase() }, { it.level }))
         val monstersOpen = "MONSTERS" in open
         out += Slot(true, "G:MONSTERS", "Monsters", null, null, monstersOpen, false, -1)
@@ -347,7 +348,11 @@ object DropViewer {
         // Model: the npc; the Deadman's Chest its own loc model (N277, owner 2026-10-24 - it showed Zemouregal before).
         val chestModel = if (source.kind == DropSources.Kind.CHEST) chestModel(player) else -1
         val modelNpc = if (source.kind == DropSources.Kind.CHEST && chestModel < 0) DeadmanChestIds.guardianNpc else source.modelNpc
-        if (chestModel >= 0) {
+        if (source.modelItem >= 0) {
+            N108Ui.item(player, i, V.MODEL, source.modelItem, 1)
+            N108Ui.anim(player, i, V.MODEL, -1)
+            N108Ui.hidden(player, i, V.MODEL, false)
+        } else if (chestModel >= 0) {
             // N283 (owner 2026-10-24): the model stands still.
             N108Ui.plainModel(player, N108Ui.hash(i, V.MODEL), chestModel, CHEST_ZOOM, CHEST_XAN, false, CHEST_YAN)
             N108Ui.anim(player, i, V.MODEL, -1)
@@ -505,6 +510,7 @@ object DropViewer {
                 "$where$opened"
             }
             DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
+            DropSources.Kind.CLUE -> "Caskets opened <col=ffffff>${N108Ui.number(kc)}</col>"
             // N462: the chances are those of one reference raid (DropSources.toaView); the count is the account's completions.
             DropSources.Kind.TOA -> "Solo Normal, ${N108Ui.number(DropSources.TOA_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0)}</col>"
             else -> {

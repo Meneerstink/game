@@ -1,0 +1,6806 @@
+{
+  "easy": [
+    {
+      "name": "Thug",
+      "page": "Thug",
+      "url": "https://oldschool.runescape.wiki/w/Thug",
+      "variant": null,
+      "levels": "10",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Banshee",
+      "page": "Banshee",
+      "url": "https://oldschool.runescape.wiki/w/Banshee",
+      "variant": null,
+      "levels": "23",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Goblin Drop table 1 (m)",
+      "page": "Goblin",
+      "url": "https://oldschool.runescape.wiki/w/Goblin#Drop_table_1",
+      "variant": "Drop table 1",
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Goblin Drop table 2 (m)",
+      "page": "Goblin",
+      "url": "https://oldschool.runescape.wiki/w/Goblin#Drop_table_2",
+      "variant": "Drop table 2",
+      "levels": "2; 5; 13",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Lev",
+      "page": "Lev",
+      "url": "https://oldschool.runescape.wiki/w/Lev",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "H.A.M. Member",
+      "page": "H.A.M. Member",
+      "url": "https://oldschool.runescape.wiki/w/H.A.M._Member",
+      "variant": null,
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Rock Crab",
+      "page": "Rock Crab",
+      "url": "https://oldschool.runescape.wiki/w/Rock_Crab",
+      "variant": null,
+      "levels": "13",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Farmer Members",
+      "page": "Farmer",
+      "url": "https://oldschool.runescape.wiki/w/Farmer#Members",
+      "variant": "Members",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Minotaur (m)",
+      "page": "Minotaur",
+      "url": "https://oldschool.runescape.wiki/w/Minotaur",
+      "variant": null,
+      "levels": "12; 19; 27",
+      "quantity": "1",
+      "fractions": [
+        "1/101"
+      ],
+      "rarity": "1/101"
+    },
+    {
+      "name": "Cave bug Level 96",
+      "page": "Cave bug",
+      "url": "https://oldschool.runescape.wiki/w/Cave_bug#Level_96",
+      "variant": "Level 96",
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Mugger (m)",
+      "page": "Mugger",
+      "url": "https://oldschool.runescape.wiki/w/Mugger",
+      "variant": null,
+      "levels": "6",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Icefiend",
+      "page": "Icefiend",
+      "url": "https://oldschool.runescape.wiki/w/Icefiend",
+      "variant": null,
+      "levels": "13; 18",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Mystery box Members",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Members",
+      "variant": "Members",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "10/150"
+      ],
+      "rarity": "10/150"
+    },
+    {
+      "name": "Mystery box Entrana",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Entrana",
+      "variant": "Entrana",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "10/150"
+      ],
+      "rarity": "10/150"
+    },
+    {
+      "name": "Man (m)",
+      "page": "Man",
+      "url": "https://oldschool.runescape.wiki/w/Man",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Lanzig",
+      "page": "Lanzig",
+      "url": "https://oldschool.runescape.wiki/w/Lanzig",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Barbarian Low level (m)",
+      "page": "Barbarian",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian#Low_level",
+      "variant": "Low level",
+      "levels": "8; 9; 10",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Barbarian High level (m)",
+      "page": "Barbarian",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian#High_level",
+      "variant": "High level",
+      "levels": "15; 17",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Cave slime",
+      "page": "Cave slime",
+      "url": "https://oldschool.runescape.wiki/w/Cave_slime",
+      "variant": null,
+      "levels": "23",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Werewolf",
+      "page": "Werewolf",
+      "url": "https://oldschool.runescape.wiki/w/Werewolf",
+      "variant": null,
+      "levels": "88; 93",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Al Kharid warrior (m)",
+      "page": "Al Kharid warrior",
+      "url": "https://oldschool.runescape.wiki/w/Al_Kharid_warrior",
+      "variant": null,
+      "levels": "9",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Narf (m)",
+      "page": "Narf",
+      "url": "https://oldschool.runescape.wiki/w/Narf",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Woman (m)",
+      "page": "Woman",
+      "url": "https://oldschool.runescape.wiki/w/Woman",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Young impling",
+      "page": "Young impling",
+      "url": "https://oldschool.runescape.wiki/w/Young_impling",
+      "variant": null,
+      "levels": "22; 32",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Cave goblin (monster)",
+      "page": "Cave goblin (monster)",
+      "url": "https://oldschool.runescape.wiki/w/Cave_goblin_(monster)",
+      "variant": null,
+      "levels": "3",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gourmet impling",
+      "page": "Gourmet impling",
+      "url": "https://oldschool.runescape.wiki/w/Gourmet_impling",
+      "variant": null,
+      "levels": "28; 38",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "H.A.M. Guard",
+      "page": "H.A.M. Guard",
+      "url": "https://oldschool.runescape.wiki/w/H.A.M._Guard",
+      "variant": null,
+      "levels": "12; 18; 22",
+      "quantity": "1",
+      "fractions": [
+        "1/55"
+      ],
+      "rarity": "1/55"
+    },
+    {
+      "name": "Molanisk",
+      "page": "Molanisk",
+      "url": "https://oldschool.runescape.wiki/w/Molanisk",
+      "variant": null,
+      "levels": "51",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Managing Miscellania Fishing",
+      "page": "Managing Miscellania",
+      "url": "https://oldschool.runescape.wiki/w/Managing_Miscellania#Fishing",
+      "variant": "Fishing",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Common"
+    },
+    {
+      "name": "Managing Miscellania Fishing (cooked)",
+      "page": "Managing Miscellania",
+      "url": "https://oldschool.runescape.wiki/w/Managing_Miscellania#Fishing_(cooked)",
+      "variant": "Fishing (cooked)",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Common"
+    },
+    {
+      "name": "Gunthor the brave (m)",
+      "page": "Gunthor the brave",
+      "url": "https://oldschool.runescape.wiki/w/Gunthor_the_brave",
+      "variant": null,
+      "levels": "29",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Thief (m)",
+      "page": "Thief",
+      "url": "https://oldschool.runescape.wiki/w/Thief",
+      "variant": null,
+      "levels": "14; 16; 21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Baby impling",
+      "page": "Baby impling",
+      "url": "https://oldschool.runescape.wiki/w/Baby_impling",
+      "variant": null,
+      "levels": "17; 27",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Gourmet impling jar",
+      "page": "Gourmet impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Gourmet_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Afflicted",
+      "page": "Afflicted",
+      "url": "https://oldschool.runescape.wiki/w/Afflicted",
+      "variant": null,
+      "levels": "30; 32; 34; 37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Baby impling jar",
+      "page": "Baby impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Baby_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Young impling jar",
+      "page": "Young impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Young_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Dagannoth spawn",
+      "page": "Dagannoth spawn",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_spawn",
+      "variant": null,
+      "levels": "42",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ork",
+      "page": "Ork",
+      "url": "https://oldschool.runescape.wiki/w/Ork",
+      "variant": null,
+      "levels": "107",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Freidir",
+      "page": "Freidir",
+      "url": "https://oldschool.runescape.wiki/w/Freidir",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Borrokar",
+      "page": "Borrokar",
+      "url": "https://oldschool.runescape.wiki/w/Borrokar",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Lensa",
+      "page": "Lensa",
+      "url": "https://oldschool.runescape.wiki/w/Lensa",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Penda",
+      "page": "Penda",
+      "url": "https://oldschool.runescape.wiki/w/Penda",
+      "variant": null,
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Chest (Dorgesh-Kaan Average) Zanik's chests",
+      "page": "Chest (Dorgesh-Kaan Average)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Dorgesh-Kaan_Average)#Zanik's_chests",
+      "variant": "Zanik's chests",
+      "levels": "52",
+      "quantity": "1",
+      "fractions": [
+        "1/23"
+      ],
+      "rarity": "1/23"
+    },
+    {
+      "name": "Yuri",
+      "page": "Yuri",
+      "url": "https://oldschool.runescape.wiki/w/Yuri",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ogre Coffin",
+      "page": "Ogre Coffin",
+      "url": "https://oldschool.runescape.wiki/w/Ogre_Coffin",
+      "variant": null,
+      "levels": "20",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Drunken man (m)",
+      "page": "Drunken man",
+      "url": "https://oldschool.runescape.wiki/w/Drunken_man",
+      "variant": null,
+      "levels": "3",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Goblin guard",
+      "page": "Goblin guard",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_guard",
+      "variant": null,
+      "levels": "42",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Rogue Level 15",
+      "page": "Rogue",
+      "url": "https://oldschool.runescape.wiki/w/Rogue#Level_15",
+      "variant": "Level 15",
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ocga",
+      "page": "Ocga",
+      "url": "https://oldschool.runescape.wiki/w/Ocga",
+      "variant": null,
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Cuffs (m)",
+      "page": "Cuffs",
+      "url": "https://oldschool.runescape.wiki/w/Cuffs",
+      "variant": null,
+      "levels": "3",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sand Crab",
+      "page": "Sand Crab",
+      "url": "https://oldschool.runescape.wiki/w/Sand_Crab",
+      "variant": null,
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Jeff (m)",
+      "page": "Jeff",
+      "url": "https://oldschool.runescape.wiki/w/Jeff",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Joseph",
+      "page": "Joseph",
+      "url": "https://oldschool.runescape.wiki/w/Joseph",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Jennella",
+      "page": "Jennella",
+      "url": "https://oldschool.runescape.wiki/w/Jennella",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ceolburg",
+      "page": "Ceolburg",
+      "url": "https://oldschool.runescape.wiki/w/Ceolburg",
+      "variant": null,
+      "levels": "4",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Screaming banshee",
+      "page": "Screaming banshee",
+      "url": "https://oldschool.runescape.wiki/w/Screaming_banshee",
+      "variant": null,
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Hygd",
+      "page": "Hygd",
+      "url": "https://oldschool.runescape.wiki/w/Hygd",
+      "variant": null,
+      "levels": "4",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Alexis",
+      "page": "Alexis",
+      "url": "https://oldschool.runescape.wiki/w/Alexis",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Boris",
+      "page": "Boris",
+      "url": "https://oldschool.runescape.wiki/w/Boris",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Eduard",
+      "page": "Eduard",
+      "url": "https://oldschool.runescape.wiki/w/Eduard",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Galina",
+      "page": "Galina",
+      "url": "https://oldschool.runescape.wiki/w/Galina",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Imre",
+      "page": "Imre",
+      "url": "https://oldschool.runescape.wiki/w/Imre",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Georgy",
+      "page": "Georgy",
+      "url": "https://oldschool.runescape.wiki/w/Georgy",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Irina",
+      "page": "Irina",
+      "url": "https://oldschool.runescape.wiki/w/Irina",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ksenia",
+      "page": "Ksenia",
+      "url": "https://oldschool.runescape.wiki/w/Ksenia",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Liliya",
+      "page": "Liliya",
+      "url": "https://oldschool.runescape.wiki/w/Liliya",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Milla",
+      "page": "Milla",
+      "url": "https://oldschool.runescape.wiki/w/Milla",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Nikita",
+      "page": "Nikita",
+      "url": "https://oldschool.runescape.wiki/w/Nikita",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Nikolai",
+      "page": "Nikolai",
+      "url": "https://oldschool.runescape.wiki/w/Nikolai",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sofiya",
+      "page": "Sofiya",
+      "url": "https://oldschool.runescape.wiki/w/Sofiya",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Svetlana",
+      "page": "Svetlana",
+      "url": "https://oldschool.runescape.wiki/w/Svetlana",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Vera",
+      "page": "Vera",
+      "url": "https://oldschool.runescape.wiki/w/Vera",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Yadviga",
+      "page": "Yadviga",
+      "url": "https://oldschool.runescape.wiki/w/Yadviga",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Zoja",
+      "page": "Zoja",
+      "url": "https://oldschool.runescape.wiki/w/Zoja",
+      "variant": null,
+      "levels": "24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Breoca",
+      "page": "Breoca",
+      "url": "https://oldschool.runescape.wiki/w/Breoca",
+      "variant": null,
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Lobstrosity",
+      "page": "Lobstrosity",
+      "url": "https://oldschool.runescape.wiki/w/Lobstrosity",
+      "variant": null,
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ammonite Crab",
+      "page": "Ammonite Crab",
+      "url": "https://oldschool.runescape.wiki/w/Ammonite_Crab",
+      "variant": null,
+      "levels": "25",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Anja (m)",
+      "page": "Anja",
+      "url": "https://oldschool.runescape.wiki/w/Anja",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Hengel (m)",
+      "page": "Hengel",
+      "url": "https://oldschool.runescape.wiki/w/Hengel",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Swamp Crab",
+      "page": "Swamp Crab",
+      "url": "https://oldschool.runescape.wiki/w/Swamp_Crab",
+      "variant": null,
+      "levels": "55",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    {
+      "name": "Guard (H.A.M. Storerooms)",
+      "page": "Guard (H.A.M. Storerooms)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(H.A.M._Storerooms)",
+      "variant": null,
+      "levels": "20",
+      "quantity": "1",
+      "fractions": [
+        "6/500"
+      ],
+      "rarity": "6/500"
+    },
+    {
+      "name": "Skeleton (Tarn's Lair) Low level",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Low_level",
+      "variant": "Low level",
+      "levels": "42; 59",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Coffin (Hallowed Sepulchre)",
+      "page": "Coffin (Hallowed Sepulchre)",
+      "url": "https://oldschool.runescape.wiki/w/Coffin_(Hallowed_Sepulchre)",
+      "variant": null,
+      "levels": "66",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Sourhog",
+      "page": "Sourhog",
+      "url": "https://oldschool.runescape.wiki/w/Sourhog",
+      "variant": null,
+      "levels": "37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Casket (Reward pool)",
+      "page": "Casket (Reward pool)",
+      "url": "https://oldschool.runescape.wiki/w/Casket_(Reward_pool)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "5/100"
+      ],
+      "rarity": "5/100"
+    },
+    {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Goblin (Goblin Village) (m)",
+      "page": "Goblin (Goblin Village)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(Goblin_Village)",
+      "variant": null,
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Goblin (Vault of War) (m)",
+      "page": "Goblin (Vault of War)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(Vault_of_War)",
+      "variant": null,
+      "levels": "5\u201325",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Goblin (God Wars Dungeon)",
+      "page": "Goblin (God Wars Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Goblin_(God_Wars_Dungeon)",
+      "variant": null,
+      "levels": "12; 13; 15; 17",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Lynx",
+      "page": "Lynx",
+      "url": "https://oldschool.runescape.wiki/w/Lynx",
+      "variant": null,
+      "levels": "21; 24",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Barbarian (Barbarian Camp) Low level",
+      "page": "Barbarian (Barbarian Camp)",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian_(Barbarian_Camp)#Low_level",
+      "variant": "Low level",
+      "levels": "9; 10",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Barbarian (Barbarian Camp) High level",
+      "page": "Barbarian (Barbarian Camp)",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian_(Barbarian_Camp)#High_level",
+      "variant": "High level",
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Bronze Chest (red)",
+      "page": "Bronze Chest (red)",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_Chest_(red)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/98.56"
+      ],
+      "rarity": "2/98.56"
+    },
+    {
+      "name": "Bronze Chest (brown)",
+      "page": "Bronze Chest (brown)",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_Chest_(brown)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/98.59"
+      ],
+      "rarity": "2/98.59"
+    },
+    {
+      "name": "Bronze Chest (crimson)",
+      "page": "Bronze Chest (crimson)",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_Chest_(crimson)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/98.62"
+      ],
+      "rarity": "2/98.62"
+    },
+    {
+      "name": "Bronze Chest (black)",
+      "page": "Bronze Chest (black)",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_Chest_(black)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/98.64"
+      ],
+      "rarity": "2/98.64"
+    },
+    {
+      "name": "Bronze Chest (purple)",
+      "page": "Bronze Chest (purple)",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_Chest_(purple)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/98.67"
+      ],
+      "rarity": "2/98.67"
+    },
+    {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Rusty (m)",
+      "page": "Rusty",
+      "url": "https://oldschool.runescape.wiki/w/Rusty",
+      "variant": null,
+      "levels": "2",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Wealthy citizen",
+      "page": "Wealthy citizen",
+      "url": "https://oldschool.runescape.wiki/w/Wealthy_citizen",
+      "variant": null,
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "1/85"
+      ],
+      "rarity": "1/85"
+    },
+    {
+      "name": "Jaguar cub",
+      "page": "Jaguar cub",
+      "url": "https://oldschool.runescape.wiki/w/Jaguar_cub",
+      "variant": null,
+      "levels": "31",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Buffalo",
+      "page": "Buffalo",
+      "url": "https://oldschool.runescape.wiki/w/Buffalo",
+      "variant": null,
+      "levels": "9",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Thief (Varlamore)",
+      "page": "Thief (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Thief_(Varlamore)",
+      "variant": null,
+      "levels": "16",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Frost Crab",
+      "page": "Frost Crab",
+      "url": "https://oldschool.runescape.wiki/w/Frost_Crab",
+      "variant": null,
+      "levels": "15",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Fishy salvage",
+      "page": "Fishy salvage",
+      "url": "https://oldschool.runescape.wiki/w/Fishy_salvage",
+      "variant": null,
+      "levels": "26",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    {
+      "name": "Clue turtle Levels 5-29",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_5-29",
+      "variant": "Levels 5-29",
+      "levels": "5",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Always"
+    },
+    {
+      "name": "Clue turtle Levels 30-49",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_30-49",
+      "variant": "Levels 30-49",
+      "levels": "30",
+      "quantity": "1",
+      "fractions": [
+        "~8/20"
+      ],
+      "rarity": "8/20"
+    },
+    {
+      "name": "Clue turtle Levels 50-69",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_50-69",
+      "variant": "Levels 50-69",
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "~9/20"
+      ],
+      "rarity": "9/20"
+    },
+    {
+      "name": "Clue turtle Levels 70+",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_70+",
+      "variant": "Levels 70+",
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "~9/20"
+      ],
+      "rarity": "9/20"
+    },
+    {
+      "name": "Hermit crab",
+      "page": "Hermit crab",
+      "url": "https://oldschool.runescape.wiki/w/Hermit_crab",
+      "variant": null,
+      "levels": "19",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Dolphin",
+      "page": "Dolphin",
+      "url": "https://oldschool.runescape.wiki/w/Dolphin",
+      "variant": null,
+      "levels": "22",
+      "quantity": "1",
+      "fractions": [
+        "~1/55"
+      ],
+      "rarity": "1/55"
+    },
+    {
+      "name": "Tern",
+      "page": "Tern",
+      "url": "https://oldschool.runescape.wiki/w/Tern",
+      "variant": null,
+      "levels": "20",
+      "quantity": "1",
+      "fractions": [
+        "~1/125"
+      ],
+      "rarity": "1/125"
+    },
+    {
+      "name": "Eagle ray",
+      "page": "Eagle ray",
+      "url": "https://oldschool.runescape.wiki/w/Eagle_ray",
+      "variant": null,
+      "levels": "44",
+      "quantity": "1",
+      "fractions": [
+        "~1/75"
+      ],
+      "rarity": "1/75"
+    },
+    {
+      "name": "Brutus (m)",
+      "page": "Brutus",
+      "url": "https://oldschool.runescape.wiki/w/Brutus",
+      "variant": null,
+      "levels": "30",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    }
+  ],
+  "medium": [
+    {
+      "name": "Brine rat",
+      "page": "Brine rat",
+      "url": "https://oldschool.runescape.wiki/w/Brine_rat",
+      "variant": null,
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Catablepon (m)",
+      "page": "Catablepon",
+      "url": "https://oldschool.runescape.wiki/w/Catablepon",
+      "variant": null,
+      "levels": "49; 64; 68",
+      "quantity": "1",
+      "fractions": [
+        "1/101"
+      ],
+      "rarity": "1/101"
+    },
+    {
+      "name": "Cockatrice",
+      "page": "Cockatrice",
+      "url": "https://oldschool.runescape.wiki/w/Cockatrice",
+      "variant": null,
+      "levels": "37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Feral Vampyre",
+      "page": "Feral Vampyre",
+      "url": "https://oldschool.runescape.wiki/w/Feral_Vampyre",
+      "variant": null,
+      "levels": "61\u2013130",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Ice warrior (m)",
+      "page": "Ice warrior",
+      "url": "https://oldschool.runescape.wiki/w/Ice_warrior",
+      "variant": null,
+      "levels": "57",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Mystery box Members",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Members",
+      "variant": "Members",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "6/150"
+      ],
+      "rarity": "6/150"
+    },
+    {
+      "name": "Mystery box Entrana",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Entrana",
+      "variant": "Entrana",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "6/150"
+      ],
+      "rarity": "6/150"
+    },
+    {
+      "name": "Guard (m)",
+      "page": "Guard",
+      "url": "https://oldschool.runescape.wiki/w/Guard",
+      "variant": null,
+      "levels": "19; 20; 21; 22",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/106"
+      ],
+      "rarity": "1/128 ; 1/106"
+    },
+    {
+      "name": "Pyrefiend",
+      "page": "Pyrefiend",
+      "url": "https://oldschool.runescape.wiki/w/Pyrefiend",
+      "variant": null,
+      "levels": "43; 48",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Harpie Bug Swarm",
+      "page": "Harpie Bug Swarm",
+      "url": "https://oldschool.runescape.wiki/w/Harpie_Bug_Swarm",
+      "variant": null,
+      "levels": "46",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Werewolf",
+      "page": "Werewolf",
+      "url": "https://oldschool.runescape.wiki/w/Werewolf",
+      "variant": null,
+      "levels": "88; 93",
+      "quantity": "1",
+      "fractions": [
+        "1/512",
+        "1/256"
+      ],
+      "rarity": "1/512 ; 1/256"
+    },
+    {
+      "name": "Dagannoth",
+      "page": "Dagannoth",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth",
+      "variant": null,
+      "levels": "74; 92",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Tribesman",
+      "page": "Tribesman",
+      "url": "https://oldschool.runescape.wiki/w/Tribesman",
+      "variant": null,
+      "levels": "32",
+      "quantity": "1",
+      "fractions": [
+        "1/138"
+      ],
+      "rarity": "1/138"
+    },
+    {
+      "name": "Jungle horror",
+      "page": "Jungle horror",
+      "url": "https://oldschool.runescape.wiki/w/Jungle_horror",
+      "variant": null,
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Jogre",
+      "page": "Jogre",
+      "url": "https://oldschool.runescape.wiki/w/Jogre",
+      "variant": null,
+      "levels": "53; 58",
+      "quantity": "1",
+      "fractions": [
+        "1/129"
+      ],
+      "rarity": "1/129"
+    },
+    {
+      "name": "Dark warrior Great Kourend",
+      "page": "Dark warrior",
+      "url": "https://oldschool.runescape.wiki/w/Dark_warrior#Great_Kourend",
+      "variant": "Great Kourend",
+      "levels": "37; 51; 62",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    {
+      "name": "Possessed pickaxe Catacombs of Kourend",
+      "page": "Possessed pickaxe",
+      "url": "https://oldschool.runescape.wiki/w/Possessed_pickaxe#Catacombs_of_Kourend",
+      "variant": "Catacombs of Kourend",
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Mummy (Ancient Pyramid)",
+      "page": "Mummy (Ancient Pyramid)",
+      "url": "https://oldschool.runescape.wiki/w/Mummy_(Ancient_Pyramid)",
+      "variant": null,
+      "levels": "103",
+      "quantity": "1",
+      "fractions": [
+        "1/513"
+      ],
+      "rarity": "1/513"
+    },
+    {
+      "name": "Magic axe",
+      "page": "Magic axe",
+      "url": "https://oldschool.runescape.wiki/w/Magic_axe",
+      "variant": null,
+      "levels": "42",
+      "quantity": "1",
+      "fractions": [
+        "1/256",
+        "1/128"
+      ],
+      "rarity": "1/256 ; 1/128"
+    },
+    {
+      "name": "Earth impling",
+      "page": "Earth impling",
+      "url": "https://oldschool.runescape.wiki/w/Earth_impling",
+      "variant": null,
+      "levels": "36; 46",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Essence impling",
+      "page": "Essence impling",
+      "url": "https://oldschool.runescape.wiki/w/Essence_impling",
+      "variant": null,
+      "levels": "42; 52",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Abyssal leech",
+      "page": "Abyssal leech",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_leech",
+      "variant": null,
+      "levels": "41",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Guard (Burthorpe)",
+      "page": "Guard (Burthorpe)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Burthorpe)",
+      "variant": null,
+      "levels": "37",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Donny the lad (m)",
+      "page": "Donny the lad",
+      "url": "https://oldschool.runescape.wiki/w/Donny_the_lad",
+      "variant": null,
+      "levels": "34",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Speedy Keith (m)",
+      "page": "Speedy Keith",
+      "url": "https://oldschool.runescape.wiki/w/Speedy_Keith",
+      "variant": null,
+      "levels": "34",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Black Heather (m)",
+      "page": "Black Heather",
+      "url": "https://oldschool.runescape.wiki/w/Black_Heather",
+      "variant": null,
+      "levels": "34",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Skeleton brute",
+      "page": "Skeleton brute",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_brute",
+      "variant": null,
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Vampyre Juvinate",
+      "page": "Vampyre Juvinate",
+      "url": "https://oldschool.runescape.wiki/w/Vampyre_Juvinate",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Eclectic impling jar",
+      "page": "Eclectic impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Eclectic_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Black Guard Level 48",
+      "page": "Black Guard",
+      "url": "https://oldschool.runescape.wiki/w/Black_Guard#Level_48",
+      "variant": "Level 48",
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Abyssal guardian",
+      "page": "Abyssal guardian",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_guardian",
+      "variant": null,
+      "levels": "59",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Sea Snake Hatchling",
+      "page": "Sea Snake Hatchling",
+      "url": "https://oldschool.runescape.wiki/w/Sea_Snake_Hatchling",
+      "variant": null,
+      "levels": "62",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sea Snake Young",
+      "page": "Sea Snake Young",
+      "url": "https://oldschool.runescape.wiki/w/Sea_Snake_Young",
+      "variant": null,
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gnome",
+      "page": "Gnome",
+      "url": "https://oldschool.runescape.wiki/w/Gnome",
+      "variant": null,
+      "levels": "75",
+      "quantity": "1",
+      "fractions": [
+        "1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Abyssal walker",
+      "page": "Abyssal walker",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_walker",
+      "variant": null,
+      "levels": "81",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Giant Rock Crab",
+      "page": "Giant Rock Crab",
+      "url": "https://oldschool.runescape.wiki/w/Giant_Rock_Crab",
+      "variant": null,
+      "levels": "137",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Wallasalki",
+      "page": "Wallasalki",
+      "url": "https://oldschool.runescape.wiki/w/Wallasalki",
+      "variant": null,
+      "levels": "98",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Warrior (Rellekka)",
+      "page": "Warrior (Rellekka)",
+      "url": "https://oldschool.runescape.wiki/w/Warrior_(Rellekka)",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Eclectic impling",
+      "page": "Eclectic impling",
+      "url": "https://oldschool.runescape.wiki/w/Eclectic_impling",
+      "variant": null,
+      "levels": "50; 60",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Essence impling jar",
+      "page": "Essence impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Essence_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Paladin",
+      "page": "Paladin",
+      "url": "https://oldschool.runescape.wiki/w/Paladin",
+      "variant": null,
+      "levels": "62",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Black Guard Berserker",
+      "page": "Black Guard Berserker",
+      "url": "https://oldschool.runescape.wiki/w/Black_Guard_Berserker",
+      "variant": null,
+      "levels": "66",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Market Guard",
+      "page": "Market Guard",
+      "url": "https://oldschool.runescape.wiki/w/Market_Guard",
+      "variant": null,
+      "levels": "48",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Rock lobster",
+      "page": "Rock lobster",
+      "url": "https://oldschool.runescape.wiki/w/Rock_lobster",
+      "variant": null,
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeletal miner",
+      "page": "Skeletal miner",
+      "url": "https://oldschool.runescape.wiki/w/Skeletal_miner",
+      "variant": null,
+      "levels": "42",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Giant Sea Snake",
+      "page": "Giant Sea Snake",
+      "url": "https://oldschool.runescape.wiki/w/Giant_Sea_Snake",
+      "variant": null,
+      "levels": "149",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Earth impling jar",
+      "page": "Earth impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Earth_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Mammoth",
+      "page": "Mammoth",
+      "url": "https://oldschool.runescape.wiki/w/Mammoth",
+      "variant": null,
+      "levels": "80",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Dagannoth (Waterbirth Island) Level 88",
+      "page": "Dagannoth (Waterbirth Island)",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_(Waterbirth_Island)#Level_88",
+      "variant": "Level 88",
+      "levels": "88",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Dagannoth (Waterbirth Island) Level 90",
+      "page": "Dagannoth (Waterbirth Island)",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_(Waterbirth_Island)#Level_90",
+      "variant": "Level 90",
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sir Carl",
+      "page": "Sir Carl",
+      "url": "https://oldschool.runescape.wiki/w/Sir_Carl",
+      "variant": null,
+      "levels": "62",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sir Harry",
+      "page": "Sir Harry",
+      "url": "https://oldschool.runescape.wiki/w/Sir_Harry",
+      "variant": null,
+      "levels": "62",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sir Jerro",
+      "page": "Sir Jerro",
+      "url": "https://oldschool.runescape.wiki/w/Sir_Jerro",
+      "variant": null,
+      "levels": "62",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Monkey (Monkey Madness I)",
+      "page": "Monkey (Monkey Madness I)",
+      "url": "https://oldschool.runescape.wiki/w/Monkey_(Monkey_Madness_I)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Once"
+    },
+    {
+      "name": "Gnome child",
+      "page": "Gnome child",
+      "url": "https://oldschool.runescape.wiki/w/Gnome_child",
+      "variant": null,
+      "levels": "75",
+      "quantity": "1",
+      "fractions": [
+        "1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Angry barbarian spirit",
+      "page": "Angry barbarian spirit",
+      "url": "https://oldschool.runescape.wiki/w/Angry_barbarian_spirit",
+      "variant": null,
+      "levels": "166",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Berserk barbarian spirit",
+      "page": "Berserk barbarian spirit",
+      "url": "https://oldschool.runescape.wiki/w/Berserk_barbarian_spirit",
+      "variant": null,
+      "levels": "166",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Enraged barbarian spirit",
+      "page": "Enraged barbarian spirit",
+      "url": "https://oldschool.runescape.wiki/w/Enraged_barbarian_spirit",
+      "variant": null,
+      "levels": "166",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton heavy",
+      "page": "Skeleton heavy",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_heavy",
+      "variant": null,
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton hero",
+      "page": "Skeleton hero",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_hero",
+      "variant": null,
+      "levels": "146",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton thug",
+      "page": "Skeleton thug",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_thug",
+      "variant": null,
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton warlord",
+      "page": "Skeleton warlord",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_warlord",
+      "variant": null,
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Liam",
+      "page": "Liam",
+      "url": "https://oldschool.runescape.wiki/w/Liam",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Miala",
+      "page": "Miala",
+      "url": "https://oldschool.runescape.wiki/w/Miala",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Verak",
+      "page": "Verak",
+      "url": "https://oldschool.runescape.wiki/w/Verak",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Giant skeleton (Tarn's Lair)",
+      "page": "Giant skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Giant_skeleton_(Tarn%27s_Lair)",
+      "variant": null,
+      "levels": "100",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Giant skeleton (Shadow Dungeon)",
+      "page": "Giant skeleton (Shadow Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Giant_skeleton_(Shadow_Dungeon)",
+      "variant": null,
+      "levels": "80",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Guard (Shayzien)",
+      "page": "Guard (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Shayzien)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Head Guard",
+      "page": "Head Guard",
+      "url": "https://oldschool.runescape.wiki/w/Head_Guard",
+      "variant": null,
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "King Sand Crab",
+      "page": "King Sand Crab",
+      "url": "https://oldschool.runescape.wiki/w/King_Sand_Crab",
+      "variant": null,
+      "levels": "107",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Benjamin",
+      "page": "Benjamin",
+      "url": "https://oldschool.runescape.wiki/w/Benjamin",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Flaming pyrelord",
+      "page": "Flaming pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Flaming_pyrelord",
+      "variant": null,
+      "levels": "97",
+      "quantity": "1",
+      "fractions": [
+        "10/128",
+        "10/64"
+      ],
+      "rarity": "10/128 ; 10/64"
+    },
+    {
+      "name": "Cockathrice",
+      "page": "Cockathrice",
+      "url": "https://oldschool.runescape.wiki/w/Cockathrice",
+      "variant": null,
+      "levels": "89",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Soldier (Shayzien)",
+      "page": "Soldier (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Soldier_(Shayzien)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ancient Zygomite",
+      "page": "Ancient Zygomite",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Zygomite",
+      "variant": null,
+      "levels": "109",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton (mage)",
+      "page": "Skeleton (mage)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(mage)",
+      "variant": null,
+      "levels": "94",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gnome woman",
+      "page": "Gnome woman",
+      "url": "https://oldschool.runescape.wiki/w/Gnome_woman",
+      "variant": null,
+      "levels": "75",
+      "quantity": "1",
+      "fractions": [
+        "1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Former Vampyre",
+      "page": "Former Vampyre",
+      "url": "https://oldschool.runescape.wiki/w/Former_Vampyre",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/256"
+      ],
+      "rarity": "2/256"
+    },
+    {
+      "name": "Skeleton (Tarn's Lair) Medium level",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Medium_level",
+      "variant": "Medium level",
+      "levels": "40; 63; 72; 77",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skeleton (Tarn's Lair) Level 81",
+      "page": "Skeleton (Tarn's Lair)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Tarn%27s_Lair)#Level_81",
+      "variant": "Level 81",
+      "levels": "81",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sulphur Lizard",
+      "page": "Sulphur Lizard",
+      "url": "https://oldschool.runescape.wiki/w/Sulphur_Lizard",
+      "variant": null,
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Stone chest",
+      "page": "Stone chest",
+      "url": "https://oldschool.runescape.wiki/w/Stone_chest",
+      "variant": null,
+      "levels": "64",
+      "quantity": "1",
+      "fractions": [
+        "3/300"
+      ],
+      "rarity": "3/300"
+    },
+    {
+      "name": "Sergeant (Shayzien)",
+      "page": "Sergeant (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Sergeant_(Shayzien)",
+      "variant": null,
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Guard (Hosidius)",
+      "page": "Guard (Hosidius)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Hosidius)",
+      "variant": null,
+      "levels": "19; 22",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Pyrelord",
+      "page": "Pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Pyrelord",
+      "variant": null,
+      "levels": "60",
+      "quantity": "1",
+      "fractions": [
+        "1/104"
+      ],
+      "rarity": "1/104"
+    },
+    {
+      "name": "Infernal pyrelord",
+      "page": "Infernal pyrelord",
+      "url": "https://oldschool.runescape.wiki/w/Infernal_pyrelord",
+      "variant": null,
+      "levels": "134",
+      "quantity": "1",
+      "fractions": [
+        "10/104"
+      ],
+      "rarity": "10/104"
+    },
+    {
+      "name": "Coffin (Hallowed Sepulchre)",
+      "page": "Coffin (Hallowed Sepulchre)",
+      "url": "https://oldschool.runescape.wiki/w/Coffin_(Hallowed_Sepulchre)",
+      "variant": null,
+      "levels": "66",
+      "quantity": "1",
+      "fractions": [
+        "1/50",
+        "1/25"
+      ],
+      "rarity": "1/50 ; 1/25"
+    },
+    {
+      "name": "Chest (Isle of Souls Dungeon)",
+      "page": "Chest (Isle of Souls Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Isle_of_Souls_Dungeon)",
+      "variant": null,
+      "levels": "28",
+      "quantity": "1",
+      "fractions": [
+        "2/200"
+      ],
+      "rarity": "2/200"
+    },
+    {
+      "name": "Casket (Reward pool)",
+      "page": "Casket (Reward pool)",
+      "url": "https://oldschool.runescape.wiki/w/Casket_(Reward_pool)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/100"
+      ],
+      "rarity": "3/100"
+    },
+    {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Necromancer (Great Kourend)",
+      "page": "Necromancer (Great Kourend)",
+      "url": "https://oldschool.runescape.wiki/w/Necromancer_(Great_Kourend)",
+      "variant": null,
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Lynx Tamer",
+      "page": "Lynx Tamer",
+      "url": "https://oldschool.runescape.wiki/w/Lynx_Tamer",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Bandit (Shayzien)",
+      "page": "Bandit (Shayzien)",
+      "url": "https://oldschool.runescape.wiki/w/Bandit_(Shayzien)",
+      "variant": null,
+      "levels": "22",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Steel Chest (red)",
+      "page": "Steel Chest (red)",
+      "url": "https://oldschool.runescape.wiki/w/Steel_Chest_(red)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/134.35"
+      ],
+      "rarity": "3/134.35"
+    },
+    {
+      "name": "Steel Chest (brown)",
+      "page": "Steel Chest (brown)",
+      "url": "https://oldschool.runescape.wiki/w/Steel_Chest_(brown)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/134.39"
+      ],
+      "rarity": "3/134.39"
+    },
+    {
+      "name": "Steel Chest (crimson)",
+      "page": "Steel Chest (crimson)",
+      "url": "https://oldschool.runescape.wiki/w/Steel_Chest_(crimson)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/134.43"
+      ],
+      "rarity": "3/134.43"
+    },
+    {
+      "name": "Steel Chest (black)",
+      "page": "Steel Chest (black)",
+      "url": "https://oldschool.runescape.wiki/w/Steel_Chest_(black)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/134.46"
+      ],
+      "rarity": "3/134.46"
+    },
+    {
+      "name": "Steel Chest (purple)",
+      "page": "Steel Chest (purple)",
+      "url": "https://oldschool.runescape.wiki/w/Steel_Chest_(purple)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "3/134.5"
+      ],
+      "rarity": "3/134.5"
+    },
+    {
+      "name": "Black Chest (red)",
+      "page": "Black Chest (red)",
+      "url": "https://oldschool.runescape.wiki/w/Black_Chest_(red)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/140.98"
+      ],
+      "rarity": "4/140.98"
+    },
+    {
+      "name": "Black Chest (brown)",
+      "page": "Black Chest (brown)",
+      "url": "https://oldschool.runescape.wiki/w/Black_Chest_(brown)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/141.02"
+      ],
+      "rarity": "4/141.02"
+    },
+    {
+      "name": "Black Chest (crimson)",
+      "page": "Black Chest (crimson)",
+      "url": "https://oldschool.runescape.wiki/w/Black_Chest_(crimson)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/141.07"
+      ],
+      "rarity": "4/141.07"
+    },
+    {
+      "name": "Black Chest (black)",
+      "page": "Black Chest (black)",
+      "url": "https://oldschool.runescape.wiki/w/Black_Chest_(black)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/141.11"
+      ],
+      "rarity": "4/141.11"
+    },
+    {
+      "name": "Black Chest (purple)",
+      "page": "Black Chest (purple)",
+      "url": "https://oldschool.runescape.wiki/w/Black_Chest_(purple)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/141.15"
+      ],
+      "rarity": "4/141.15"
+    },
+    {
+      "name": "Tribeswoman",
+      "page": "Tribeswoman",
+      "url": "https://oldschool.runescape.wiki/w/Tribeswoman",
+      "variant": null,
+      "levels": "32",
+      "quantity": "1",
+      "fractions": [
+        "1/138"
+      ],
+      "rarity": "1/138"
+    },
+    {
+      "name": "Guard (Port Sarim jail) (m)",
+      "page": "Guard (Port Sarim jail)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Port_Sarim_jail)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Guard (Doric's hut) (m)",
+      "page": "Guard (Doric's hut)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Doric%27s_hut)",
+      "variant": null,
+      "levels": "19",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Scurrius MVP",
+      "page": "Scurrius",
+      "url": "https://oldschool.runescape.wiki/w/Scurrius#MVP",
+      "variant": "MVP",
+      "levels": "200; 250",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Rusty chest",
+      "page": "Rusty chest",
+      "url": "https://oldschool.runescape.wiki/w/Rusty_chest",
+      "variant": null,
+      "levels": "33",
+      "quantity": "1",
+      "fractions": [
+        "~1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Grimy Lizard",
+      "page": "Grimy Lizard",
+      "url": "https://oldschool.runescape.wiki/w/Grimy_Lizard",
+      "variant": null,
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Moonlight Cockatrice",
+      "page": "Moonlight Cockatrice",
+      "url": "https://oldschool.runescape.wiki/w/Moonlight_Cockatrice",
+      "variant": null,
+      "levels": "49",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Jaguar",
+      "page": "Jaguar",
+      "url": "https://oldschool.runescape.wiki/w/Jaguar",
+      "variant": null,
+      "levels": "67",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Bandit (Varlamore)",
+      "page": "Bandit (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Bandit_(Varlamore)",
+      "variant": null,
+      "levels": "23",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Black jaguar",
+      "page": "Black jaguar",
+      "url": "https://oldschool.runescape.wiki/w/Black_jaguar",
+      "variant": null,
+      "levels": "67",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Knight of Varlamore",
+      "page": "Knight of Varlamore",
+      "url": "https://oldschool.runescape.wiki/w/Knight_of_Varlamore",
+      "variant": null,
+      "levels": "46",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "White jaguar",
+      "page": "White jaguar",
+      "url": "https://oldschool.runescape.wiki/w/White_jaguar",
+      "variant": null,
+      "levels": "67",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Guard (Varlamore)",
+      "page": "Guard (Varlamore)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Varlamore)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Agility dispenser All Laps",
+      "page": "Agility dispenser",
+      "url": "https://oldschool.runescape.wiki/w/Agility_dispenser#All_Laps",
+      "variant": "All Laps",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/40",
+        "1/20"
+      ],
+      "rarity": "1/40 ; 1/20"
+    },
+    {
+      "name": "Chest (Aldarin Villas)",
+      "page": "Chest (Aldarin Villas)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Aldarin_Villas)",
+      "variant": null,
+      "levels": "36",
+      "quantity": "1",
+      "fractions": [
+        "1/90"
+      ],
+      "rarity": "1/90"
+    },
+    {
+      "name": "Emissary Chosen",
+      "page": "Emissary Chosen",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Chosen",
+      "variant": null,
+      "levels": "76",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Emissary Acolyte",
+      "page": "Emissary Acolyte",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Acolyte",
+      "variant": null,
+      "levels": "34",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Emissary Ascended",
+      "page": "Emissary Ascended",
+      "url": "https://oldschool.runescape.wiki/w/Emissary_Ascended",
+      "variant": null,
+      "levels": "117",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Guard (Aldarin)",
+      "page": "Guard (Aldarin)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Aldarin)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Pygmy kraken",
+      "page": "Pygmy kraken",
+      "url": "https://oldschool.runescape.wiki/w/Pygmy_kraken",
+      "variant": null,
+      "levels": "93",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Barracuda salvage",
+      "page": "Barracuda salvage",
+      "url": "https://oldschool.runescape.wiki/w/Barracuda_salvage",
+      "variant": null,
+      "levels": "35",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    {
+      "name": "Hammerhead shark",
+      "page": "Hammerhead shark",
+      "url": "https://oldschool.runescape.wiki/w/Hammerhead_shark",
+      "variant": null,
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "~1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Clue turtle Levels 30-49",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_30-49",
+      "variant": "Levels 30-49",
+      "levels": "30",
+      "quantity": "1",
+      "fractions": [
+        "~12/20"
+      ],
+      "rarity": "12/20"
+    },
+    {
+      "name": "Clue turtle Levels 50-69",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_50-69",
+      "variant": "Levels 50-69",
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "~6/20"
+      ],
+      "rarity": "6/20"
+    },
+    {
+      "name": "Clue turtle Levels 70+",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_70+",
+      "variant": "Levels 70+",
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "~6/20"
+      ],
+      "rarity": "6/20"
+    },
+    {
+      "name": "Guard (Auburnvale)",
+      "page": "Guard (Auburnvale)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Auburnvale)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Guard (Tlati Rainforest) (m)",
+      "page": "Guard (Tlati Rainforest)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Tlati_Rainforest)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/106"
+      ],
+      "rarity": "1/128 ; 1/106"
+    },
+    {
+      "name": "Osprey",
+      "page": "Osprey",
+      "url": "https://oldschool.runescape.wiki/w/Osprey",
+      "variant": null,
+      "levels": "63",
+      "quantity": "1",
+      "fractions": [
+        "~1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Pirate (Thieving)",
+      "page": "Pirate (Thieving)",
+      "url": "https://oldschool.runescape.wiki/w/Pirate_(Thieving)",
+      "variant": null,
+      "levels": "60",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Very rare"
+    },
+    {
+      "name": "Tarnished chest",
+      "page": "Tarnished chest",
+      "url": "https://oldschool.runescape.wiki/w/Tarnished_chest",
+      "variant": null,
+      "levels": "54",
+      "quantity": "1",
+      "fractions": [
+        "~1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Bull shark",
+      "page": "Bull shark",
+      "url": "https://oldschool.runescape.wiki/w/Bull_shark",
+      "variant": null,
+      "levels": "65",
+      "quantity": "1",
+      "fractions": [
+        "~1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Bottle of spinning comp-kvass",
+      "page": "Bottle of spinning comp-kvass",
+      "url": "https://oldschool.runescape.wiki/w/Bottle_of_spinning_comp-kvass",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Once"
+    },
+    {
+      "name": "Butterfly ray",
+      "page": "Butterfly ray",
+      "url": "https://oldschool.runescape.wiki/w/Butterfly_ray",
+      "variant": null,
+      "levels": "68",
+      "quantity": "1",
+      "fractions": [
+        "~1/85"
+      ],
+      "rarity": "1/85"
+    },
+    {
+      "name": "Guard (Port Roberts) (m)",
+      "page": "Guard (Port Roberts)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Port_Roberts)",
+      "variant": null,
+      "levels": "21",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/106"
+      ],
+      "rarity": "1/128 ; 1/106"
+    },
+    {
+      "name": "Mad Angel",
+      "page": "Mad Angel",
+      "url": "https://oldschool.runescape.wiki/w/Mad_Angel",
+      "variant": null,
+      "levels": "270; 588",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    }
+  ],
+  "hard": [
+    {
+      "name": "Green dragon Regular",
+      "page": "Green dragon",
+      "url": "https://oldschool.runescape.wiki/w/Green_dragon#Regular",
+      "variant": "Regular",
+      "levels": "79",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Green dragon Wilderness Slayer Cave",
+      "page": "Green dragon",
+      "url": "https://oldschool.runescape.wiki/w/Green_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "88",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Jelly Regular",
+      "page": "Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Jelly#Regular",
+      "variant": "Regular",
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Jelly Wilderness Slayer Cave",
+      "page": "Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Jelly#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    {
+      "name": "Cyclops Warriors' Guild Rooftop",
+      "page": "Cyclops",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops#Warriors'_Guild_Rooftop",
+      "variant": "Warriors' Guild Rooftop",
+      "levels": "56; 76",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    {
+      "name": "Cyclops Warriors' Guild Basement",
+      "page": "Cyclops",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops#Warriors'_Guild_Basement",
+      "variant": "Warriors' Guild Basement",
+      "levels": "106",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Mystery box Members",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Members",
+      "variant": "Members",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/150"
+      ],
+      "rarity": "4/150"
+    },
+    {
+      "name": "Mystery box Entrana",
+      "page": "Mystery box",
+      "url": "https://oldschool.runescape.wiki/w/Mystery_box#Entrana",
+      "variant": "Entrana",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "4/150"
+      ],
+      "rarity": "4/150"
+    },
+    {
+      "name": "Abyssal demon Standard",
+      "page": "Abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_demon#Standard",
+      "variant": "Standard",
+      "levels": "124",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Abyssal demon Wilderness Slayer Cave",
+      "page": "Abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "124",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Aberrant spectre",
+      "page": "Aberrant spectre",
+      "url": "https://oldschool.runescape.wiki/w/Aberrant_spectre",
+      "variant": null,
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Greater demon Regular",
+      "page": "Greater demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_demon#Regular",
+      "variant": "Regular",
+      "levels": "92; 100; 101; 113",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Greater demon Wilderness Slayer Cave",
+      "page": "Greater demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "104",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Hellhound Regular",
+      "page": "Hellhound",
+      "url": "https://oldschool.runescape.wiki/w/Hellhound#Regular",
+      "variant": "Regular",
+      "levels": "122",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    {
+      "name": "Hellhound God Wars Dungeon",
+      "page": "Hellhound",
+      "url": "https://oldschool.runescape.wiki/w/Hellhound#God_Wars_Dungeon",
+      "variant": "God Wars Dungeon",
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    {
+      "name": "Hellhound Wilderness Slayer Cave",
+      "page": "Hellhound",
+      "url": "https://oldschool.runescape.wiki/w/Hellhound#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "136",
+      "quantity": "1",
+      "fractions": [
+        "1/64",
+        "1/32"
+      ],
+      "rarity": "1/64 ; 1/32"
+    },
+    {
+      "name": "Ankou Regular",
+      "page": "Ankou",
+      "url": "https://oldschool.runescape.wiki/w/Ankou#Regular",
+      "variant": "Regular",
+      "levels": "75; 82; 86; 95",
+      "quantity": "1",
+      "fractions": [
+        "1/512",
+        "1/256"
+      ],
+      "rarity": "1/512 ; 1/256"
+    },
+    {
+      "name": "Ankou Wilderness Slayer Cave",
+      "page": "Ankou",
+      "url": "https://oldschool.runescape.wiki/w/Ankou#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "98",
+      "quantity": "1",
+      "fractions": [
+        "1/256",
+        "1/128"
+      ],
+      "rarity": "1/256 ; 1/128"
+    },
+    {
+      "name": "Nechryael",
+      "page": "Nechryael",
+      "url": "https://oldschool.runescape.wiki/w/Nechryael",
+      "variant": null,
+      "levels": "115",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Black demon Regular",
+      "page": "Black demon",
+      "url": "https://oldschool.runescape.wiki/w/Black_demon#Regular",
+      "variant": "Regular",
+      "levels": "172; 178; 184",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Black demon Wilderness Slayer Cave",
+      "page": "Black demon",
+      "url": "https://oldschool.runescape.wiki/w/Black_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "188",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Blue dragon",
+      "page": "Blue dragon",
+      "url": "https://oldschool.runescape.wiki/w/Blue_dragon",
+      "variant": null,
+      "levels": "111",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Bloodveld",
+      "page": "Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Bloodveld",
+      "variant": null,
+      "levels": "76; 81",
+      "quantity": "1",
+      "fractions": [
+        "1/256",
+        "1/128"
+      ],
+      "rarity": "1/256 ; 1/128"
+    },
+    {
+      "name": "Dark beast",
+      "page": "Dark beast",
+      "url": "https://oldschool.runescape.wiki/w/Dark_beast",
+      "variant": null,
+      "levels": "182",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Kurask",
+      "page": "Kurask",
+      "url": "https://oldschool.runescape.wiki/w/Kurask",
+      "variant": null,
+      "levels": "106",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Turoth",
+      "page": "Turoth",
+      "url": "https://oldschool.runescape.wiki/w/Turoth",
+      "variant": null,
+      "levels": "83; 85; 87; 89",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Bronze dragon Standard",
+      "page": "Bronze dragon",
+      "url": "https://oldschool.runescape.wiki/w/Bronze_dragon#Standard",
+      "variant": "Standard",
+      "levels": "131; 143",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gargoyle",
+      "page": "Gargoyle",
+      "url": "https://oldschool.runescape.wiki/w/Gargoyle",
+      "variant": null,
+      "levels": "111",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Steel dragon Standard",
+      "page": "Steel dragon",
+      "url": "https://oldschool.runescape.wiki/w/Steel_dragon#Standard",
+      "variant": "Standard",
+      "levels": "246; 274",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    {
+      "name": "Cave horror",
+      "page": "Cave horror",
+      "url": "https://oldschool.runescape.wiki/w/Cave_horror",
+      "variant": null,
+      "levels": "80",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Elf Warrior",
+      "page": "Elf Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Elf_Warrior",
+      "variant": null,
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Dagannoth Rex",
+      "page": "Dagannoth Rex",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Rex",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/42"
+      ],
+      "rarity": "1/42"
+    },
+    {
+      "name": "Black dragon Regular",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Regular",
+      "variant": "Regular",
+      "levels": "227",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Black dragon Wilderness Slayer Cave",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "247",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Dark warrior Level 145",
+      "page": "Dark warrior",
+      "url": "https://oldschool.runescape.wiki/w/Dark_warrior#Level_145",
+      "variant": "Level 145",
+      "levels": "145",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Red dragon",
+      "page": "Red dragon",
+      "url": "https://oldschool.runescape.wiki/w/Red_dragon",
+      "variant": null,
+      "levels": "152",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Waterfiend",
+      "page": "Waterfiend",
+      "url": "https://oldschool.runescape.wiki/w/Waterfiend",
+      "variant": null,
+      "levels": "115",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Iron dragon Standard",
+      "page": "Iron dragon",
+      "url": "https://oldschool.runescape.wiki/w/Iron_dragon#Standard",
+      "variant": "Standard",
+      "levels": "189; 215",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Terror dog Level 100",
+      "page": "Terror dog",
+      "url": "https://oldschool.runescape.wiki/w/Terror_dog#Level_100",
+      "variant": "Level 100",
+      "levels": "100",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Terror dog Level 110",
+      "page": "Terror dog",
+      "url": "https://oldschool.runescape.wiki/w/Terror_dog#Level_110",
+      "variant": "Level 110",
+      "levels": "110",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Suqah",
+      "page": "Suqah",
+      "url": "https://oldschool.runescape.wiki/w/Suqah",
+      "variant": null,
+      "levels": "111",
+      "quantity": "1",
+      "fractions": [
+        "1/129"
+      ],
+      "rarity": "1/129"
+    },
+    {
+      "name": "Vyrewatch",
+      "page": "Vyrewatch",
+      "url": "https://oldschool.runescape.wiki/w/Vyrewatch",
+      "variant": null,
+      "levels": "87\u2013125",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Dagannoth Supreme",
+      "page": "Dagannoth Supreme",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Supreme",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/42"
+      ],
+      "rarity": "1/42"
+    },
+    {
+      "name": "Dagannoth Prime",
+      "page": "Dagannoth Prime",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Prime",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/42"
+      ],
+      "rarity": "1/42"
+    },
+    {
+      "name": "Magpie impling",
+      "page": "Magpie impling",
+      "url": "https://oldschool.runescape.wiki/w/Magpie_impling",
+      "variant": null,
+      "levels": "65; 75",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Bandit Level 130",
+      "page": "Bandit",
+      "url": "https://oldschool.runescape.wiki/w/Bandit#Level_130",
+      "variant": "Level 130",
+      "levels": "130",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Brutal green dragon",
+      "page": "Brutal green dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_green_dragon",
+      "variant": null,
+      "levels": "227",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ninja impling",
+      "page": "Ninja impling",
+      "url": "https://oldschool.runescape.wiki/w/Ninja_impling",
+      "variant": null,
+      "levels": "74; 84",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Gorak Gems",
+      "page": "Gorak",
+      "url": "https://oldschool.runescape.wiki/w/Gorak#Gems",
+      "variant": "Gems",
+      "levels": "145; 149",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gorak Full",
+      "page": "Gorak",
+      "url": "https://oldschool.runescape.wiki/w/Gorak#Full",
+      "variant": "Full",
+      "levels": "145; 149",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Aviansie",
+      "page": "Aviansie",
+      "url": "https://oldschool.runescape.wiki/w/Aviansie",
+      "variant": null,
+      "levels": "69\u2013148",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Balfrug Kreeyath",
+      "page": "Balfrug Kreeyath",
+      "url": "https://oldschool.runescape.wiki/w/Balfrug_Kreeyath",
+      "variant": null,
+      "levels": "151",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Starlight",
+      "page": "Starlight",
+      "url": "https://oldschool.runescape.wiki/w/Starlight",
+      "variant": null,
+      "levels": "149",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Bree",
+      "page": "Bree",
+      "url": "https://oldschool.runescape.wiki/w/Bree",
+      "variant": null,
+      "levels": "146",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Growler",
+      "page": "Growler",
+      "url": "https://oldschool.runescape.wiki/w/Growler",
+      "variant": null,
+      "levels": "139",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Spiritual mage",
+      "page": "Spiritual mage",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_mage",
+      "variant": null,
+      "levels": "120; 121; 123; 182",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Spiritual mage Zaros",
+      "page": "Spiritual mage",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_mage#Zaros",
+      "variant": "Zaros",
+      "levels": "182",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    {
+      "name": "Spiritual ranger",
+      "page": "Spiritual ranger",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_ranger",
+      "variant": null,
+      "levels": "115\u2013158",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Spiritual ranger Zaros",
+      "page": "Spiritual ranger",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_ranger#Zaros",
+      "variant": "Zaros",
+      "levels": "158",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Spiritual warrior",
+      "page": "Spiritual warrior",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_warrior",
+      "variant": null,
+      "levels": "115\u2013158",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Spiritual warrior Zaros",
+      "page": "Spiritual warrior",
+      "url": "https://oldschool.runescape.wiki/w/Spiritual_warrior#Zaros",
+      "variant": "Zaros",
+      "levels": "158",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sergeant Strongstack",
+      "page": "Sergeant Strongstack",
+      "url": "https://oldschool.runescape.wiki/w/Sergeant_Strongstack",
+      "variant": null,
+      "levels": "141",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Nature impling",
+      "page": "Nature impling",
+      "url": "https://oldschool.runescape.wiki/w/Nature_impling",
+      "variant": null,
+      "levels": "58; 68",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Knight of Saradomin",
+      "page": "Knight of Saradomin",
+      "url": "https://oldschool.runescape.wiki/w/Knight_of_Saradomin",
+      "variant": null,
+      "levels": "101; 103",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Mourner Level 108",
+      "page": "Mourner",
+      "url": "https://oldschool.runescape.wiki/w/Mourner#Level_108",
+      "variant": "Level 108",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Paladin",
+      "page": "Paladin",
+      "url": "https://oldschool.runescape.wiki/w/Paladin",
+      "variant": null,
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "~1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Sergeant Steelwill",
+      "page": "Sergeant Steelwill",
+      "url": "https://oldschool.runescape.wiki/w/Sergeant_Steelwill",
+      "variant": null,
+      "levels": "142",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Sergeant Grimspike",
+      "page": "Sergeant Grimspike",
+      "url": "https://oldschool.runescape.wiki/w/Sergeant_Grimspike",
+      "variant": null,
+      "levels": "142",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Flight Kilisa",
+      "page": "Flight Kilisa",
+      "url": "https://oldschool.runescape.wiki/w/Flight_Kilisa",
+      "variant": null,
+      "levels": "159",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Wingman Skree",
+      "page": "Wingman Skree",
+      "url": "https://oldschool.runescape.wiki/w/Wingman_Skree",
+      "variant": null,
+      "levels": "143",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Flockleader Geerin",
+      "page": "Flockleader Geerin",
+      "url": "https://oldschool.runescape.wiki/w/Flockleader_Geerin",
+      "variant": null,
+      "levels": "149",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Zakl'n Gritch",
+      "page": "Zakl'n Gritch",
+      "url": "https://oldschool.runescape.wiki/w/Zakl%27n_Gritch",
+      "variant": null,
+      "levels": "142",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Tstanon Karlak",
+      "page": "Tstanon Karlak",
+      "url": "https://oldschool.runescape.wiki/w/Tstanon_Karlak",
+      "variant": null,
+      "levels": "145",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Magpie impling jar",
+      "page": "Magpie impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Magpie_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Cave kraken",
+      "page": "Cave kraken",
+      "url": "https://oldschool.runescape.wiki/w/Cave_kraken",
+      "variant": null,
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Nature impling jar",
+      "page": "Nature impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Nature_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Elder Chaos druid",
+      "page": "Elder Chaos druid",
+      "url": "https://oldschool.runescape.wiki/w/Elder_Chaos_druid",
+      "variant": null,
+      "levels": "129",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Scorpia",
+      "page": "Scorpia",
+      "url": "https://oldschool.runescape.wiki/w/Scorpia",
+      "variant": null,
+      "levels": "225",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Crazy archaeologist",
+      "page": "Crazy archaeologist",
+      "url": "https://oldschool.runescape.wiki/w/Crazy_archaeologist",
+      "variant": null,
+      "levels": "204",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Chaos Fanatic",
+      "page": "Chaos Fanatic",
+      "url": "https://oldschool.runescape.wiki/w/Chaos_Fanatic",
+      "variant": null,
+      "levels": "202",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Smoke devil",
+      "page": "Smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Smoke_devil",
+      "variant": null,
+      "levels": "160",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Thermonuclear smoke devil",
+      "page": "Thermonuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Thermonuclear_smoke_devil",
+      "variant": null,
+      "levels": "301",
+      "quantity": "1",
+      "fractions": [
+        "1/96"
+      ],
+      "rarity": "1/96"
+    },
+    {
+      "name": "Saradomin priest",
+      "page": "Saradomin priest",
+      "url": "https://oldschool.runescape.wiki/w/Saradomin_priest",
+      "variant": null,
+      "levels": "113",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Ork",
+      "page": "Ork",
+      "url": "https://oldschool.runescape.wiki/w/Ork",
+      "variant": null,
+      "levels": "107",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Ninja impling jar",
+      "page": "Ninja impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Ninja_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Frost dragon",
+      "page": "Frost dragon",
+      "url": "https://oldschool.runescape.wiki/w/Frost_dragon",
+      "variant": null,
+      "levels": "202",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Chest (Rogues' Castle) Medium Wilderness Diary",
+      "page": "Chest (Rogues' Castle)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Rogues%27_Castle)#Medium_Wilderness_Diary",
+      "variant": "Medium Wilderness Diary",
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/99",
+        "2/99"
+      ],
+      "rarity": "1/99 ; 2/99"
+    },
+    {
+      "name": "Chest (Rogues' Castle) Hard Wilderness Diary",
+      "page": "Chest (Rogues' Castle)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Rogues%27_Castle)#Hard_Wilderness_Diary",
+      "variant": "Hard Wilderness Diary",
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/99",
+        "2/99"
+      ],
+      "rarity": "1/99 ; 2/99"
+    },
+    {
+      "name": "Experiment No.2",
+      "page": "Experiment No.2",
+      "url": "https://oldschool.runescape.wiki/w/Experiment_No.2",
+      "variant": null,
+      "levels": "109",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Gangster",
+      "page": "Gangster",
+      "url": "https://oldschool.runescape.wiki/w/Gangster",
+      "variant": null,
+      "levels": "45; 50",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    {
+      "name": "Gang boss",
+      "page": "Gang boss",
+      "url": "https://oldschool.runescape.wiki/w/Gang_boss",
+      "variant": null,
+      "levels": "76; 83",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    {
+      "name": "Lizardman shaman",
+      "page": "Lizardman shaman",
+      "url": "https://oldschool.runescape.wiki/w/Lizardman_shaman",
+      "variant": null,
+      "levels": "150",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Tortured gorilla",
+      "page": "Tortured gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Tortured_gorilla",
+      "variant": null,
+      "levels": "141; 142",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    {
+      "name": "Demonic gorilla",
+      "page": "Demonic gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Demonic_gorilla",
+      "variant": null,
+      "levels": "275",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Brutal blue dragon",
+      "page": "Brutal blue dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_blue_dragon",
+      "variant": null,
+      "levels": "271",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Brutal black dragon",
+      "page": "Brutal black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_black_dragon",
+      "variant": null,
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Brutal red dragon",
+      "page": "Brutal red dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_red_dragon",
+      "variant": null,
+      "levels": "289",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Deviant spectre",
+      "page": "Deviant spectre",
+      "url": "https://oldschool.runescape.wiki/w/Deviant_spectre",
+      "variant": null,
+      "levels": "169",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Warped Jelly",
+      "page": "Warped Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Warped_Jelly",
+      "variant": null,
+      "levels": "112",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    {
+      "name": "Twisted Banshee",
+      "page": "Twisted Banshee",
+      "url": "https://oldschool.runescape.wiki/w/Twisted_Banshee",
+      "variant": null,
+      "levels": "89",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Greater Nechryael Regular",
+      "page": "Greater Nechryael",
+      "url": "https://oldschool.runescape.wiki/w/Greater_Nechryael#Regular",
+      "variant": "Regular",
+      "levels": "200",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Greater Nechryael Wilderness Slayer Cave",
+      "page": "Greater Nechryael",
+      "url": "https://oldschool.runescape.wiki/w/Greater_Nechryael#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "200",
+      "quantity": "1",
+      "fractions": [
+        "1/128",
+        "1/64"
+      ],
+      "rarity": "1/128 ; 1/64"
+    },
+    {
+      "name": "Mutated Bloodveld",
+      "page": "Mutated Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Mutated_Bloodveld",
+      "variant": null,
+      "levels": "123",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Skotizo",
+      "page": "Skotizo",
+      "url": "https://oldschool.runescape.wiki/w/Skotizo",
+      "variant": null,
+      "levels": "321",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Always"
+    },
+    {
+      "name": "Greater abyssal demon",
+      "page": "Greater abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_abyssal_demon",
+      "variant": null,
+      "levels": "342",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Abhorrent spectre",
+      "page": "Abhorrent spectre",
+      "url": "https://oldschool.runescape.wiki/w/Abhorrent_spectre",
+      "variant": null,
+      "levels": "253",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Night beast",
+      "page": "Night beast",
+      "url": "https://oldschool.runescape.wiki/w/Night_beast",
+      "variant": null,
+      "levels": "374",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "King kurask",
+      "page": "King kurask",
+      "url": "https://oldschool.runescape.wiki/w/King_kurask",
+      "variant": null,
+      "levels": "295",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Marble gargoyle",
+      "page": "Marble gargoyle",
+      "url": "https://oldschool.runescape.wiki/w/Marble_gargoyle",
+      "variant": null,
+      "levels": "349",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Nechryarch Normal",
+      "page": "Nechryarch",
+      "url": "https://oldschool.runescape.wiki/w/Nechryarch#Normal",
+      "variant": "Normal",
+      "levels": "300",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Nechryarch Greater",
+      "page": "Nechryarch",
+      "url": "https://oldschool.runescape.wiki/w/Nechryarch#Greater",
+      "variant": "Greater",
+      "levels": "300",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Vitreous Jelly",
+      "page": "Vitreous Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Jelly",
+      "variant": null,
+      "levels": "206",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Cave abomination",
+      "page": "Cave abomination",
+      "url": "https://oldschool.runescape.wiki/w/Cave_abomination",
+      "variant": null,
+      "levels": "206",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Repugnant spectre",
+      "page": "Repugnant spectre",
+      "url": "https://oldschool.runescape.wiki/w/Repugnant_spectre",
+      "variant": null,
+      "levels": "335",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Insatiable mutated Bloodveld",
+      "page": "Insatiable mutated Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Insatiable_mutated_Bloodveld",
+      "variant": null,
+      "levels": "278",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Insatiable Bloodveld",
+      "page": "Insatiable Bloodveld",
+      "url": "https://oldschool.runescape.wiki/w/Insatiable_Bloodveld",
+      "variant": null,
+      "levels": "202",
+      "quantity": "1",
+      "fractions": [
+        "10/256"
+      ],
+      "rarity": "10/256"
+    },
+    {
+      "name": "Nuclear smoke devil",
+      "page": "Nuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Nuclear_smoke_devil",
+      "variant": null,
+      "levels": "280",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Armoured zombie (Zemouregal's Base)",
+      "page": "Armoured zombie (Zemouregal's Base)",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_zombie_(Zemouregal%27s_Base)",
+      "variant": null,
+      "levels": "82",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Aquanite",
+      "page": "Aquanite",
+      "url": "https://oldschool.runescape.wiki/w/Aquanite",
+      "variant": null,
+      "levels": "145",
+      "quantity": "1",
+      "fractions": [
+        "~1/125"
+      ],
+      "rarity": "1/125"
+    },
+    {
+      "name": "Spitting Wyvern",
+      "page": "Spitting Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Spitting_Wyvern",
+      "variant": null,
+      "levels": "139",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    {
+      "name": "Taloned Wyvern",
+      "page": "Taloned Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Taloned_Wyvern",
+      "variant": null,
+      "levels": "147",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    {
+      "name": "Long-tailed Wyvern",
+      "page": "Long-tailed Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Long-tailed_Wyvern",
+      "variant": null,
+      "levels": "152",
+      "quantity": "1",
+      "fractions": [
+        "1/118"
+      ],
+      "rarity": "1/118"
+    },
+    {
+      "name": "Vitreous Warped Jelly",
+      "page": "Vitreous Warped Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Warped_Jelly",
+      "variant": null,
+      "levels": "241",
+      "quantity": "1",
+      "fractions": [
+        "10/64"
+      ],
+      "rarity": "10/64"
+    },
+    {
+      "name": "Screaming twisted banshee",
+      "page": "Screaming twisted banshee",
+      "url": "https://oldschool.runescape.wiki/w/Screaming_twisted_banshee",
+      "variant": null,
+      "levels": "144",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Wyrm",
+      "page": "Wyrm",
+      "url": "https://oldschool.runescape.wiki/w/Wyrm",
+      "variant": null,
+      "levels": "97",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Drake",
+      "page": "Drake",
+      "url": "https://oldschool.runescape.wiki/w/Drake",
+      "variant": null,
+      "levels": "192",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Hydra",
+      "page": "Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Hydra",
+      "variant": null,
+      "levels": "194",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Alchemical Hydra",
+      "page": "Alchemical Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Alchemical_Hydra",
+      "variant": null,
+      "levels": "426",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Skeleton (Shayzien Crypts)",
+      "page": "Skeleton (Shayzien Crypts)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Shayzien_Crypts)",
+      "variant": null,
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Zombie (Shayzien Crypts)",
+      "page": "Zombie (Shayzien Crypts)",
+      "url": "https://oldschool.runescape.wiki/w/Zombie_(Shayzien_Crypts)",
+      "variant": null,
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Sarachnis",
+      "page": "Sarachnis",
+      "url": "https://oldschool.runescape.wiki/w/Sarachnis",
+      "variant": null,
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    },
+    {
+      "name": "Temple Spider",
+      "page": "Temple Spider",
+      "url": "https://oldschool.runescape.wiki/w/Temple_Spider",
+      "variant": null,
+      "levels": "75",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Undead Druid",
+      "page": "Undead Druid",
+      "url": "https://oldschool.runescape.wiki/w/Undead_Druid",
+      "variant": null,
+      "levels": "105",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Guard (Prifddinas)",
+      "page": "Guard (Prifddinas)",
+      "url": "https://oldschool.runescape.wiki/w/Guard_(Prifddinas)",
+      "variant": null,
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Iorwerth Warrior Iorwerth Camp",
+      "page": "Iorwerth Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Warrior#Iorwerth_Camp",
+      "variant": "Iorwerth Camp",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Iorwerth Warrior Iorwerth Dungeon",
+      "page": "Iorwerth Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Warrior#Iorwerth_Dungeon",
+      "variant": "Iorwerth Dungeon",
+      "levels": "108",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Iorwerth Archer",
+      "page": "Iorwerth Archer",
+      "url": "https://oldschool.runescape.wiki/w/Iorwerth_Archer",
+      "variant": null,
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Elf Archer",
+      "page": "Elf Archer",
+      "url": "https://oldschool.runescape.wiki/w/Elf_Archer",
+      "variant": null,
+      "levels": "90",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Basilisk Knight",
+      "page": "Basilisk Knight",
+      "url": "https://oldschool.runescape.wiki/w/Basilisk_Knight",
+      "variant": null,
+      "levels": "204",
+      "quantity": "1",
+      "fractions": [
+        "1/192"
+      ],
+      "rarity": "1/192"
+    },
+    {
+      "name": "Basilisk Sentinel",
+      "page": "Basilisk Sentinel",
+      "url": "https://oldschool.runescape.wiki/w/Basilisk_Sentinel",
+      "variant": null,
+      "levels": "358",
+      "quantity": "1",
+      "fractions": [
+        "10/192"
+      ],
+      "rarity": "10/192"
+    },
+    {
+      "name": "Vyrewatch Sentinel",
+      "page": "Vyrewatch Sentinel",
+      "url": "https://oldschool.runescape.wiki/w/Vyrewatch_Sentinel",
+      "variant": null,
+      "levels": "151",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Coffin (Hallowed Sepulchre)",
+      "page": "Coffin (Hallowed Sepulchre)",
+      "url": "https://oldschool.runescape.wiki/w/Coffin_(Hallowed_Sepulchre)",
+      "variant": null,
+      "levels": "66",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Shadow Wyrm",
+      "page": "Shadow Wyrm",
+      "url": "https://oldschool.runescape.wiki/w/Shadow_Wyrm",
+      "variant": null,
+      "levels": "259",
+      "quantity": "1",
+      "fractions": [
+        "10/256"
+      ],
+      "rarity": "10/256"
+    },
+    {
+      "name": "Spiked Turoth",
+      "page": "Spiked Turoth",
+      "url": "https://oldschool.runescape.wiki/w/Spiked_Turoth",
+      "variant": null,
+      "levels": "244",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Guardian Drake",
+      "page": "Guardian Drake",
+      "url": "https://oldschool.runescape.wiki/w/Guardian_Drake",
+      "variant": null,
+      "levels": "376",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Colossal Hydra",
+      "page": "Colossal Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Colossal_Hydra",
+      "variant": null,
+      "levels": "309",
+      "quantity": "1",
+      "fractions": [
+        "10/128"
+      ],
+      "rarity": "10/128"
+    },
+    {
+      "name": "Casket (Reward pool)",
+      "page": "Casket (Reward pool)",
+      "url": "https://oldschool.runescape.wiki/w/Casket_(Reward_pool)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/100"
+      ],
+      "rarity": "2/100"
+    },
+    {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Albatross",
+      "page": "Albatross",
+      "url": "https://oldschool.runescape.wiki/w/Albatross",
+      "variant": null,
+      "levels": "110",
+      "quantity": "1",
+      "fractions": [
+        "~1/120"
+      ],
+      "rarity": "1/120"
+    },
+    {
+      "name": "Araxyte Level 96",
+      "page": "Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Araxyte#Level_96",
+      "variant": "Level 96",
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Araxyte Level 146",
+      "page": "Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Araxyte#Level_146",
+      "variant": "Level 146",
+      "levels": "146",
+      "quantity": "1",
+      "fractions": [
+        "1/86"
+      ],
+      "rarity": "1/86"
+    },
+    {
+      "name": "Silver Chest (red)",
+      "page": "Silver Chest (red)",
+      "url": "https://oldschool.runescape.wiki/w/Silver_Chest_(red)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/152.39"
+      ],
+      "rarity": "2/152.39"
+    },
+    {
+      "name": "Silver Chest (brown)",
+      "page": "Silver Chest (brown)",
+      "url": "https://oldschool.runescape.wiki/w/Silver_Chest_(brown)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/152.46"
+      ],
+      "rarity": "2/152.46"
+    },
+    {
+      "name": "Silver Chest (crimson)",
+      "page": "Silver Chest (crimson)",
+      "url": "https://oldschool.runescape.wiki/w/Silver_Chest_(crimson)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/152.53"
+      ],
+      "rarity": "2/152.53"
+    },
+    {
+      "name": "Silver Chest (black)",
+      "page": "Silver Chest (black)",
+      "url": "https://oldschool.runescape.wiki/w/Silver_Chest_(black)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/152.6"
+      ],
+      "rarity": "2/152.6"
+    },
+    {
+      "name": "Silver Chest (purple)",
+      "page": "Silver Chest (purple)",
+      "url": "https://oldschool.runescape.wiki/w/Silver_Chest_(purple)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "2/152.67"
+      ],
+      "rarity": "2/152.67"
+    },
+    {
+      "name": "Blood Reaver",
+      "page": "Blood Reaver",
+      "url": "https://oldschool.runescape.wiki/w/Blood_Reaver",
+      "variant": null,
+      "levels": "161; 174",
+      "quantity": "1",
+      "fractions": [
+        "1/112"
+      ],
+      "rarity": "1/112"
+    },
+    {
+      "name": "Intricate pouch",
+      "page": "Intricate pouch",
+      "url": "https://oldschool.runescape.wiki/w/Intricate_pouch",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/10"
+      ],
+      "rarity": "1/10"
+    },
+    {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Phantom Muspah",
+      "page": "Phantom Muspah",
+      "url": "https://oldschool.runescape.wiki/w/Phantom_Muspah",
+      "variant": null,
+      "levels": "368; 741",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    {
+      "name": "Cyclops (God Wars Dungeon)",
+      "page": "Cyclops (God Wars Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops_(God_Wars_Dungeon)",
+      "variant": null,
+      "levels": "81",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    {
+      "name": "Cyclops (Catacombs of Kourend)",
+      "page": "Cyclops (Catacombs of Kourend)",
+      "url": "https://oldschool.runescape.wiki/w/Cyclops_(Catacombs_of_Kourend)",
+      "variant": null,
+      "levels": "56; 76",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    {
+      "name": "Mutated Terrorbird",
+      "page": "Mutated Terrorbird",
+      "url": "https://oldschool.runescape.wiki/w/Mutated_Terrorbird",
+      "variant": null,
+      "levels": "178",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Mutated Tortoise",
+      "page": "Mutated Tortoise",
+      "url": "https://oldschool.runescape.wiki/w/Mutated_Tortoise",
+      "variant": null,
+      "levels": "247",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Warped Tortoise",
+      "page": "Warped Tortoise",
+      "url": "https://oldschool.runescape.wiki/w/Warped_Tortoise",
+      "variant": null,
+      "levels": "121",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Warped Terrorbird",
+      "page": "Warped Terrorbird",
+      "url": "https://oldschool.runescape.wiki/w/Warped_Terrorbird",
+      "variant": null,
+      "levels": "96; 138",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Stingray",
+      "page": "Stingray",
+      "url": "https://oldschool.runescape.wiki/w/Stingray",
+      "variant": null,
+      "levels": "92",
+      "quantity": "1",
+      "fractions": [
+        "~1/185"
+      ],
+      "rarity": "1/185"
+    },
+    {
+      "name": "Sulphur Nagua",
+      "page": "Sulphur Nagua",
+      "url": "https://oldschool.runescape.wiki/w/Sulphur_Nagua",
+      "variant": null,
+      "levels": "98",
+      "quantity": "1",
+      "fractions": [
+        "~1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "The Hueycoatl",
+      "page": "The Hueycoatl",
+      "url": "https://oldschool.runescape.wiki/w/The_Hueycoatl",
+      "variant": null,
+      "levels": "642",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Elite Black Knight",
+      "page": "Elite Black Knight",
+      "url": "https://oldschool.runescape.wiki/w/Elite_Black_Knight",
+      "variant": null,
+      "levels": "138",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Elite Dark Mage",
+      "page": "Elite Dark Mage",
+      "url": "https://oldschool.runescape.wiki/w/Elite_Dark_Mage",
+      "variant": null,
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Elite Dark Ranger",
+      "page": "Elite Dark Ranger",
+      "url": "https://oldschool.runescape.wiki/w/Elite_Dark_Ranger",
+      "variant": null,
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Elite Dark Warrior",
+      "page": "Elite Dark Warrior",
+      "url": "https://oldschool.runescape.wiki/w/Elite_Dark_Warrior",
+      "variant": null,
+      "levels": "96",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Skeleton (Lucien's camp)",
+      "page": "Skeleton (Lucien's camp)",
+      "url": "https://oldschool.runescape.wiki/w/Skeleton_(Lucien%27s_camp)",
+      "variant": null,
+      "levels": "132",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Dreadborn Araxyte",
+      "page": "Dreadborn Araxyte",
+      "url": "https://oldschool.runescape.wiki/w/Dreadborn_Araxyte",
+      "variant": null,
+      "levels": "281",
+      "quantity": "1",
+      "fractions": [
+        "1/192"
+      ],
+      "rarity": "1/192"
+    },
+    {
+      "name": "Frost Nagua",
+      "page": "Frost Nagua",
+      "url": "https://oldschool.runescape.wiki/w/Frost_Nagua",
+      "variant": null,
+      "levels": "104",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Chilled jelly",
+      "page": "Chilled jelly",
+      "url": "https://oldschool.runescape.wiki/w/Chilled_jelly",
+      "variant": null,
+      "levels": "112",
+      "quantity": "1",
+      "fractions": [
+        "1/64"
+      ],
+      "rarity": "1/64"
+    },
+    {
+      "name": "Armoured zombie (Zemouregal's Fort)",
+      "page": "Armoured zombie (Zemouregal's Fort)",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_zombie_(Zemouregal%27s_Fort)",
+      "variant": null,
+      "levels": "105",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Moss Giant (Iorwerth Dungeon)",
+      "page": "Moss Giant (Iorwerth Dungeon)",
+      "url": "https://oldschool.runescape.wiki/w/Moss_Giant_(Iorwerth_Dungeon)",
+      "variant": null,
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Eldric the Ice King",
+      "page": "Eldric the Ice King",
+      "url": "https://oldschool.runescape.wiki/w/Eldric_the_Ice_King",
+      "variant": null,
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Branda the Fire Queen",
+      "page": "Branda the Fire Queen",
+      "url": "https://oldschool.runescape.wiki/w/Branda_the_Fire_Queen",
+      "variant": null,
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Martial salvage",
+      "page": "Martial salvage",
+      "url": "https://oldschool.runescape.wiki/w/Martial_salvage",
+      "variant": null,
+      "levels": "73",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Clue turtle Levels 50-69",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_50-69",
+      "variant": "Levels 50-69",
+      "levels": "50",
+      "quantity": "1",
+      "fractions": [
+        "~5/20"
+      ],
+      "rarity": "5/20"
+    },
+    {
+      "name": "Clue turtle Levels 70+",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_70+",
+      "variant": "Levels 70+",
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "~3/20"
+      ],
+      "rarity": "3/20"
+    },
+    {
+      "name": "Earthen Nagua",
+      "page": "Earthen Nagua",
+      "url": "https://oldschool.runescape.wiki/w/Earthen_Nagua",
+      "variant": null,
+      "levels": "128",
+      "quantity": "1",
+      "fractions": [
+        "~1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Frigatebird",
+      "page": "Frigatebird",
+      "url": "https://oldschool.runescape.wiki/w/Frigatebird",
+      "variant": null,
+      "levels": "78",
+      "quantity": "1",
+      "fractions": [
+        "~1/170"
+      ],
+      "rarity": "1/170"
+    },
+    {
+      "name": "Gryphon",
+      "page": "Gryphon",
+      "url": "https://oldschool.runescape.wiki/w/Gryphon",
+      "variant": null,
+      "levels": "95",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Elder aquanite",
+      "page": "Elder aquanite",
+      "url": "https://oldschool.runescape.wiki/w/Elder_aquanite",
+      "variant": null,
+      "levels": "305",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Lava Strykewyrm",
+      "page": "Lava Strykewyrm",
+      "url": "https://oldschool.runescape.wiki/w/Lava_Strykewyrm",
+      "variant": null,
+      "levels": "116",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Magma strykewyrm",
+      "page": "Magma strykewyrm",
+      "url": "https://oldschool.runescape.wiki/w/Magma_strykewyrm",
+      "variant": null,
+      "levels": "249",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Dire gryphon",
+      "page": "Dire gryphon",
+      "url": "https://oldschool.runescape.wiki/w/Dire_gryphon",
+      "variant": null,
+      "levels": "209",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Reinforced chest",
+      "page": "Reinforced chest",
+      "url": "https://oldschool.runescape.wiki/w/Reinforced_chest",
+      "variant": null,
+      "levels": "76",
+      "quantity": "1",
+      "fractions": [
+        "~1/140"
+      ],
+      "rarity": "1/140"
+    },
+    {
+      "name": "Narwhal",
+      "page": "Narwhal",
+      "url": "https://oldschool.runescape.wiki/w/Narwhal",
+      "variant": null,
+      "levels": "111",
+      "quantity": "1",
+      "fractions": [
+        "~1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Tiger shark",
+      "page": "Tiger shark",
+      "url": "https://oldschool.runescape.wiki/w/Tiger_shark",
+      "variant": null,
+      "levels": "125",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Spined kraken",
+      "page": "Spined kraken",
+      "url": "https://oldschool.runescape.wiki/w/Spined_kraken",
+      "variant": null,
+      "levels": "128",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Rare"
+    },
+    {
+      "name": "Vitreous Chilled Jelly",
+      "page": "Vitreous Chilled Jelly",
+      "url": "https://oldschool.runescape.wiki/w/Vitreous_Chilled_Jelly",
+      "variant": null,
+      "levels": "241",
+      "quantity": "1",
+      "fractions": [
+        "10/64"
+      ],
+      "rarity": "10/64"
+    },
+    {
+      "name": "Manta ray (monster)",
+      "page": "Manta ray (monster)",
+      "url": "https://oldschool.runescape.wiki/w/Manta_ray_(monster)",
+      "variant": null,
+      "levels": "133",
+      "quantity": "1",
+      "fractions": [
+        "~1/120"
+      ],
+      "rarity": "1/120"
+    }
+  ],
+  "elite": [
+    {
+      "name": "Mithril dragon",
+      "page": "Mithril dragon",
+      "url": "https://oldschool.runescape.wiki/w/Mithril_dragon",
+      "variant": null,
+      "levels": "304",
+      "quantity": "1",
+      "fractions": [
+        "1/350"
+      ],
+      "rarity": "1/350"
+    },
+    {
+      "name": "King Black Dragon",
+      "page": "King Black Dragon",
+      "url": "https://oldschool.runescape.wiki/w/King_Black_Dragon",
+      "variant": null,
+      "levels": "276",
+      "quantity": "1",
+      "fractions": [
+        "1/450"
+      ],
+      "rarity": "1/450"
+    },
+    {
+      "name": "Giant Mole",
+      "page": "Giant Mole",
+      "url": "https://oldschool.runescape.wiki/w/Giant_Mole",
+      "variant": null,
+      "levels": "230",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Kalphite Queen",
+      "page": "Kalphite Queen",
+      "url": "https://oldschool.runescape.wiki/w/Kalphite_Queen",
+      "variant": null,
+      "levels": "333",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Abyssal demon Standard",
+      "page": "Abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_demon#Standard",
+      "variant": "Standard",
+      "levels": "124",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    {
+      "name": "Abyssal demon Wilderness Slayer Cave",
+      "page": "Abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_demon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "124",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    {
+      "name": "Chaos Elemental",
+      "page": "Chaos Elemental",
+      "url": "https://oldschool.runescape.wiki/w/Chaos_Elemental",
+      "variant": null,
+      "levels": "305",
+      "quantity": "1",
+      "fractions": [
+        "1/200",
+        "1/100"
+      ],
+      "rarity": "1/200 ; 1/100"
+    },
+    {
+      "name": "Dark beast",
+      "page": "Dark beast",
+      "url": "https://oldschool.runescape.wiki/w/Dark_beast",
+      "variant": null,
+      "levels": "182",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    {
+      "name": "Skeletal Wyvern",
+      "page": "Skeletal Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Skeletal_Wyvern",
+      "variant": null,
+      "levels": "140",
+      "quantity": "1",
+      "fractions": [
+        "1/350"
+      ],
+      "rarity": "1/350"
+    },
+    {
+      "name": "Steel dragon Standard",
+      "page": "Steel dragon",
+      "url": "https://oldschool.runescape.wiki/w/Steel_dragon#Standard",
+      "variant": "Standard",
+      "levels": "246; 274",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Dagannoth Rex",
+      "page": "Dagannoth Rex",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Rex",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    {
+      "name": "Black dragon Regular",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Regular",
+      "variant": "Regular",
+      "levels": "227",
+      "quantity": "1",
+      "fractions": [
+        "1/500",
+        "1/250"
+      ],
+      "rarity": "1/500 ; 1/250"
+    },
+    {
+      "name": "Black dragon Wilderness Slayer Cave",
+      "page": "Black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Black_dragon#Wilderness_Slayer_Cave",
+      "variant": "Wilderness Slayer Cave",
+      "levels": "247",
+      "quantity": "1",
+      "fractions": [
+        "1/500",
+        "1/250"
+      ],
+      "rarity": "1/500 ; 1/250"
+    },
+    {
+      "name": "Hero",
+      "page": "Hero",
+      "url": "https://oldschool.runescape.wiki/w/Hero",
+      "variant": null,
+      "levels": "80",
+      "quantity": "1",
+      "fractions": [
+        "1/900"
+      ],
+      "rarity": "1/900"
+    },
+    {
+      "name": "Salarin the twisted",
+      "page": "Salarin the twisted",
+      "url": "https://oldschool.runescape.wiki/w/Salarin_the_twisted",
+      "variant": null,
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Dagannoth Supreme",
+      "page": "Dagannoth Supreme",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Supreme",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    {
+      "name": "Dagannoth Prime",
+      "page": "Dagannoth Prime",
+      "url": "https://oldschool.runescape.wiki/w/Dagannoth_Prime",
+      "variant": null,
+      "levels": "303",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    {
+      "name": "Dragon impling jar",
+      "page": "Dragon impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Dragon_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Dragon impling",
+      "page": "Dragon impling",
+      "url": "https://oldschool.runescape.wiki/w/Dragon_impling",
+      "variant": null,
+      "levels": "83; 93",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "K'ril Tsutsaroth",
+      "page": "K'ril Tsutsaroth",
+      "url": "https://oldschool.runescape.wiki/w/K%27ril_Tsutsaroth",
+      "variant": null,
+      "levels": "650",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    {
+      "name": "Commander Zilyana",
+      "page": "Commander Zilyana",
+      "url": "https://oldschool.runescape.wiki/w/Commander_Zilyana",
+      "variant": null,
+      "levels": "596",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    {
+      "name": "Kree'arra",
+      "page": "Kree'arra",
+      "url": "https://oldschool.runescape.wiki/w/Kree%27arra",
+      "variant": null,
+      "levels": "580",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    {
+      "name": "General Graardor",
+      "page": "General Graardor",
+      "url": "https://oldschool.runescape.wiki/w/General_Graardor",
+      "variant": null,
+      "levels": "624",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    {
+      "name": "Cave kraken",
+      "page": "Cave kraken",
+      "url": "https://oldschool.runescape.wiki/w/Cave_kraken",
+      "variant": null,
+      "levels": "127",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    {
+      "name": "Kraken",
+      "page": "Kraken",
+      "url": "https://oldschool.runescape.wiki/w/Kraken",
+      "variant": null,
+      "levels": "291",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Lava dragon",
+      "page": "Lava dragon",
+      "url": "https://oldschool.runescape.wiki/w/Lava_dragon",
+      "variant": null,
+      "levels": "252",
+      "quantity": "1",
+      "fractions": [
+        "1/250",
+        "1/125"
+      ],
+      "rarity": "1/250 ; 1/125"
+    },
+    {
+      "name": "Callisto",
+      "page": "Callisto",
+      "url": "https://oldschool.runescape.wiki/w/Callisto",
+      "variant": null,
+      "levels": "470",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Vet'ion",
+      "page": "Vet'ion",
+      "url": "https://oldschool.runescape.wiki/w/Vet%27ion",
+      "variant": null,
+      "levels": "454",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Venenatis",
+      "page": "Venenatis",
+      "url": "https://oldschool.runescape.wiki/w/Venenatis",
+      "variant": null,
+      "levels": "464",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Smoke devil",
+      "page": "Smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Smoke_devil",
+      "variant": null,
+      "levels": "160",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    {
+      "name": "Thermonuclear smoke devil",
+      "page": "Thermonuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Thermonuclear_smoke_devil",
+      "variant": null,
+      "levels": "301",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Nex",
+      "page": "Nex",
+      "url": "https://oldschool.runescape.wiki/w/Nex",
+      "variant": null,
+      "levels": "1001",
+      "quantity": "1",
+      "fractions": [
+        "1/48"
+      ],
+      "rarity": "1/48"
+    },
+    {
+      "name": "Tormented Demon",
+      "page": "Tormented Demon",
+      "url": "https://oldschool.runescape.wiki/w/Tormented_Demon",
+      "variant": null,
+      "levels": "450",
+      "quantity": "1",
+      "fractions": [
+        "1/128"
+      ],
+      "rarity": "1/128"
+    },
+    {
+      "name": "Corporeal Beast",
+      "page": "Corporeal Beast",
+      "url": "https://oldschool.runescape.wiki/w/Corporeal_Beast",
+      "variant": null,
+      "levels": "785",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Zulrah",
+      "page": "Zulrah",
+      "url": "https://oldschool.runescape.wiki/w/Zulrah",
+      "variant": null,
+      "levels": "725",
+      "quantity": "1",
+      "fractions": [
+        "1/75"
+      ],
+      "rarity": "1/75"
+    },
+    {
+      "name": "Barbarian Assault/Gambles High",
+      "page": "Barbarian Assault/Gambles",
+      "url": "https://oldschool.runescape.wiki/w/Barbarian_Assault/Gambles#High",
+      "variant": "High",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/15"
+      ],
+      "rarity": "1/15"
+    },
+    {
+      "name": "Cerberus",
+      "page": "Cerberus",
+      "url": "https://oldschool.runescape.wiki/w/Cerberus",
+      "variant": null,
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Abyssal Sire",
+      "page": "Abyssal Sire",
+      "url": "https://oldschool.runescape.wiki/w/Abyssal_Sire",
+      "variant": null,
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/180"
+      ],
+      "rarity": "1/180"
+    },
+    {
+      "name": "Lizardman shaman",
+      "page": "Lizardman shaman",
+      "url": "https://oldschool.runescape.wiki/w/Lizardman_shaman",
+      "variant": null,
+      "levels": "150",
+      "quantity": "1",
+      "fractions": [
+        "1/1,200"
+      ],
+      "rarity": "1/1,200"
+    },
+    {
+      "name": "Tortured gorilla",
+      "page": "Tortured gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Tortured_gorilla",
+      "variant": null,
+      "levels": "141; 142",
+      "quantity": "1",
+      "fractions": [
+        "1/1,500"
+      ],
+      "rarity": "1/1,500"
+    },
+    {
+      "name": "Demonic gorilla",
+      "page": "Demonic gorilla",
+      "url": "https://oldschool.runescape.wiki/w/Demonic_gorilla",
+      "variant": null,
+      "levels": "275",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Brutal blue dragon",
+      "page": "Brutal blue dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_blue_dragon",
+      "variant": null,
+      "levels": "271",
+      "quantity": "1",
+      "fractions": [
+        "1/750"
+      ],
+      "rarity": "1/750"
+    },
+    {
+      "name": "Brutal black dragon",
+      "page": "Brutal black dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_black_dragon",
+      "variant": null,
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/250"
+      ],
+      "rarity": "1/250"
+    },
+    {
+      "name": "Brutal red dragon",
+      "page": "Brutal red dragon",
+      "url": "https://oldschool.runescape.wiki/w/Brutal_red_dragon",
+      "variant": null,
+      "levels": "289",
+      "quantity": "1",
+      "fractions": [
+        "1/500"
+      ],
+      "rarity": "1/500"
+    },
+    {
+      "name": "Skotizo",
+      "page": "Skotizo",
+      "url": "https://oldschool.runescape.wiki/w/Skotizo",
+      "variant": null,
+      "levels": "321",
+      "quantity": "1",
+      "fractions": [
+        "1/5"
+      ],
+      "rarity": "1/5"
+    },
+    {
+      "name": "Rune dragon",
+      "page": "Rune dragon",
+      "url": "https://oldschool.runescape.wiki/w/Rune_dragon",
+      "variant": null,
+      "levels": "380",
+      "quantity": "1",
+      "fractions": [
+        "1/300"
+      ],
+      "rarity": "1/300"
+    },
+    {
+      "name": "Greater abyssal demon",
+      "page": "Greater abyssal demon",
+      "url": "https://oldschool.runescape.wiki/w/Greater_abyssal_demon",
+      "variant": null,
+      "levels": "342",
+      "quantity": "1",
+      "fractions": [
+        "1/120"
+      ],
+      "rarity": "1/120"
+    },
+    {
+      "name": "Night beast",
+      "page": "Night beast",
+      "url": "https://oldschool.runescape.wiki/w/Night_beast",
+      "variant": null,
+      "levels": "374",
+      "quantity": "1",
+      "fractions": [
+        "1/120"
+      ],
+      "rarity": "1/120"
+    },
+    {
+      "name": "Nuclear smoke devil",
+      "page": "Nuclear smoke devil",
+      "url": "https://oldschool.runescape.wiki/w/Nuclear_smoke_devil",
+      "variant": null,
+      "levels": "280",
+      "quantity": "1",
+      "fractions": [
+        "10/750"
+      ],
+      "rarity": "10/750"
+    },
+    {
+      "name": "Adamant dragon",
+      "page": "Adamant dragon",
+      "url": "https://oldschool.runescape.wiki/w/Adamant_dragon",
+      "variant": null,
+      "levels": "338",
+      "quantity": "1",
+      "fractions": [
+        "1/320"
+      ],
+      "rarity": "1/320"
+    },
+    {
+      "name": "Ancient Wyvern",
+      "page": "Ancient Wyvern",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Wyvern",
+      "variant": null,
+      "levels": "210",
+      "quantity": "1",
+      "fractions": [
+        "1/350"
+      ],
+      "rarity": "1/350"
+    },
+    {
+      "name": "Deranged archaeologist",
+      "page": "Deranged archaeologist",
+      "url": "https://oldschool.runescape.wiki/w/Deranged_archaeologist",
+      "variant": null,
+      "levels": "276",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Grotesque Guardians",
+      "page": "Grotesque Guardians",
+      "url": "https://oldschool.runescape.wiki/w/Grotesque_Guardians",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/230"
+      ],
+      "rarity": "1/230"
+    },
+    {
+      "name": "Vorkath Post-quest",
+      "page": "Vorkath",
+      "url": "https://oldschool.runescape.wiki/w/Vorkath#Post-quest",
+      "variant": "Post-quest",
+      "levels": "732",
+      "quantity": "1",
+      "fractions": [
+        "1/65"
+      ],
+      "rarity": "1/65"
+    },
+    {
+      "name": "Hydra",
+      "page": "Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Hydra",
+      "variant": null,
+      "levels": "194",
+      "quantity": "1",
+      "fractions": [
+        "1/512"
+      ],
+      "rarity": "1/512"
+    },
+    {
+      "name": "Alchemical Hydra",
+      "page": "Alchemical Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Alchemical_Hydra",
+      "variant": null,
+      "levels": "426",
+      "quantity": "1",
+      "fractions": [
+        "1/256"
+      ],
+      "rarity": "1/256"
+    },
+    {
+      "name": "Yama",
+      "page": "Yama",
+      "url": "https://oldschool.runescape.wiki/w/Yama",
+      "variant": null,
+      "levels": "1238",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    {
+      "name": "Sarachnis",
+      "page": "Sarachnis",
+      "url": "https://oldschool.runescape.wiki/w/Sarachnis",
+      "variant": null,
+      "levels": "318",
+      "quantity": "1",
+      "fractions": [
+        "1/60"
+      ],
+      "rarity": "1/60"
+    },
+    {
+      "name": "Chest (Barrows)",
+      "page": "Chest (Barrows)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Barrows)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/200",
+        "1/29"
+      ],
+      "rarity": "1/200 \u2013 1/29"
+    },
+    {
+      "name": "Crystal impling jar",
+      "page": "Crystal impling jar",
+      "url": "https://oldschool.runescape.wiki/w/Crystal_impling_jar",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Crystal impling",
+      "page": "Crystal impling",
+      "url": "https://oldschool.runescape.wiki/w/Crystal_impling",
+      "variant": null,
+      "levels": "80; 90",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Reward Chest (The Gauntlet) Regular",
+      "page": "Reward Chest (The Gauntlet)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_Chest_(The_Gauntlet)#Regular",
+      "variant": "Regular",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/25"
+      ],
+      "rarity": "1/25"
+    },
+    {
+      "name": "Reward Chest (The Gauntlet) Corrupted",
+      "page": "Reward Chest (The Gauntlet)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_Chest_(The_Gauntlet)#Corrupted",
+      "variant": "Corrupted",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/20"
+      ],
+      "rarity": "1/20"
+    },
+    {
+      "name": "The Nightmare",
+      "page": "The Nightmare",
+      "url": "https://oldschool.runescape.wiki/w/The_Nightmare",
+      "variant": null,
+      "levels": "814",
+      "quantity": "1",
+      "fractions": [
+        "1/190",
+        "1/200"
+      ],
+      "rarity": "1/190 ; 1/200"
+    },
+    {
+      "name": "Monumental chest",
+      "page": "Monumental chest",
+      "url": "https://oldschool.runescape.wiki/w/Monumental_chest",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/25",
+        "3.5/25"
+      ],
+      "rarity": "1/25 \u2013 3.5/25"
+    },
+    {
+      "name": "Phosani's Nightmare",
+      "page": "Phosani's Nightmare",
+      "url": "https://oldschool.runescape.wiki/w/Phosani%27s_Nightmare",
+      "variant": null,
+      "levels": "1024",
+      "quantity": "1",
+      "fractions": [
+        "1/35"
+      ],
+      "rarity": "1/35"
+    },
+    {
+      "name": "Coffin (Hallowed Sepulchre)",
+      "page": "Coffin (Hallowed Sepulchre)",
+      "url": "https://oldschool.runescape.wiki/w/Coffin_(Hallowed_Sepulchre)",
+      "variant": null,
+      "levels": "66",
+      "quantity": "1",
+      "fractions": [
+        "1/60"
+      ],
+      "rarity": "1/60"
+    },
+    {
+      "name": "Grand Hallowed Coffin",
+      "page": "Grand Hallowed Coffin",
+      "url": "https://oldschool.runescape.wiki/w/Grand_Hallowed_Coffin",
+      "variant": null,
+      "levels": "84",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    {
+      "name": "Colossal Hydra",
+      "page": "Colossal Hydra",
+      "url": "https://oldschool.runescape.wiki/w/Colossal_Hydra",
+      "variant": null,
+      "levels": "309",
+      "quantity": "1",
+      "fractions": [
+        "10/512"
+      ],
+      "rarity": "10/512"
+    },
+    {
+      "name": "Gold key red",
+      "page": "Gold key red",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_red",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    {
+      "name": "Gold key brown",
+      "page": "Gold key brown",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_brown",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    {
+      "name": "Gold key crimson",
+      "page": "Gold key crimson",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_crimson",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    {
+      "name": "Gold key black",
+      "page": "Gold key black",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_black",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    {
+      "name": "Gold key purple",
+      "page": "Gold key purple",
+      "url": "https://oldschool.runescape.wiki/w/Gold_key_purple",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/139"
+      ],
+      "rarity": "1/139"
+    },
+    {
+      "name": "Vardorvis",
+      "page": "Vardorvis",
+      "url": "https://oldschool.runescape.wiki/w/Vardorvis",
+      "variant": null,
+      "levels": "572; 784; 1136",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Ancient chest",
+      "page": "Ancient chest",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_chest",
+      "variant": null,
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/12"
+      ],
+      "rarity": "1/12"
+    },
+    {
+      "name": "Gold Chest (red)",
+      "page": "Gold Chest (red)",
+      "url": "https://oldschool.runescape.wiki/w/Gold_Chest_(red)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/143.91"
+      ],
+      "rarity": "1/143.91"
+    },
+    {
+      "name": "Gold Chest (crimson)",
+      "page": "Gold Chest (crimson)",
+      "url": "https://oldschool.runescape.wiki/w/Gold_Chest_(crimson)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/144.09"
+      ],
+      "rarity": "1/144.09"
+    },
+    {
+      "name": "Gold Chest (brown)",
+      "page": "Gold Chest (brown)",
+      "url": "https://oldschool.runescape.wiki/w/Gold_Chest_(brown)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/144"
+      ],
+      "rarity": "1/144"
+    },
+    {
+      "name": "Gold Chest (black)",
+      "page": "Gold Chest (black)",
+      "url": "https://oldschool.runescape.wiki/w/Gold_Chest_(black)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/144.18"
+      ],
+      "rarity": "1/144.18"
+    },
+    {
+      "name": "Gold Chest (purple)",
+      "page": "Gold Chest (purple)",
+      "url": "https://oldschool.runescape.wiki/w/Gold_Chest_(purple)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/144.28"
+      ],
+      "rarity": "1/144.28"
+    },
+    {
+      "name": "Chest (Tombs of Amascut)",
+      "page": "Chest (Tombs of Amascut)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(Tombs_of_Amascut)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Varies"
+    },
+    {
+      "name": "Duke Sucellus",
+      "page": "Duke Sucellus",
+      "url": "https://oldschool.runescape.wiki/w/Duke_Sucellus",
+      "variant": null,
+      "levels": "538; 758; 1099",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Whisperer",
+      "page": "The Whisperer",
+      "url": "https://oldschool.runescape.wiki/w/The_Whisperer",
+      "variant": null,
+      "levels": "587; 791; 1146",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "The Leviathan",
+      "page": "The Leviathan",
+      "url": "https://oldschool.runescape.wiki/w/The_Leviathan",
+      "variant": null,
+      "levels": "593; 798; 1157",
+      "quantity": "1",
+      "fractions": [
+        "1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Phantom Muspah",
+      "page": "Phantom Muspah",
+      "url": "https://oldschool.runescape.wiki/w/Phantom_Muspah",
+      "variant": null,
+      "levels": "368; 741",
+      "quantity": "1",
+      "fractions": [
+        "1/45"
+      ],
+      "rarity": "1/45"
+    },
+    {
+      "name": "Artio",
+      "page": "Artio",
+      "url": "https://oldschool.runescape.wiki/w/Artio",
+      "variant": null,
+      "levels": "320",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Calvar'ion",
+      "page": "Calvar'ion",
+      "url": "https://oldschool.runescape.wiki/w/Calvar%27ion",
+      "variant": null,
+      "levels": "264",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Spindel",
+      "page": "Spindel",
+      "url": "https://oldschool.runescape.wiki/w/Spindel",
+      "variant": null,
+      "levels": "302",
+      "quantity": "1",
+      "fractions": [
+        "1/100",
+        "1/50"
+      ],
+      "rarity": "1/100 ; 1/50"
+    },
+    {
+      "name": "Araxxor",
+      "page": "Araxxor",
+      "url": "https://oldschool.runescape.wiki/w/Araxxor",
+      "variant": null,
+      "levels": "890",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Amoxliatl Post-quest",
+      "page": "Amoxliatl",
+      "url": "https://oldschool.runescape.wiki/w/Amoxliatl#Post-quest",
+      "variant": "Post-quest",
+      "levels": "",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Doom of Mokhaiotl",
+      "page": "Doom of Mokhaiotl",
+      "url": "https://oldschool.runescape.wiki/w/Doom_of_Mokhaiotl",
+      "variant": null,
+      "levels": "558\u2013908",
+      "quantity": "1",
+      "fractions": [
+        "1/75",
+        "1/50"
+      ],
+      "rarity": "1/75 ; 1/50"
+    },
+    {
+      "name": "Eldric the Ice King",
+      "page": "Eldric the Ice King",
+      "url": "https://oldschool.runescape.wiki/w/Eldric_the_Ice_King",
+      "variant": null,
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Branda the Fire Queen",
+      "page": "Branda the Fire Queen",
+      "url": "https://oldschool.runescape.wiki/w/Branda_the_Fire_Queen",
+      "variant": null,
+      "levels": "350",
+      "quantity": "1",
+      "fractions": [
+        "1/100"
+      ],
+      "rarity": "1/100"
+    },
+    {
+      "name": "Great white shark",
+      "page": "Great white shark",
+      "url": "https://oldschool.runescape.wiki/w/Great_white_shark",
+      "variant": null,
+      "levels": "175",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Clue turtle Levels 70+",
+      "page": "Clue turtle",
+      "url": "https://oldschool.runescape.wiki/w/Clue_turtle#Levels_70+",
+      "variant": "Levels 70+",
+      "levels": "70",
+      "quantity": "1",
+      "fractions": [
+        "~2/20"
+      ],
+      "rarity": "2/20"
+    },
+    {
+      "name": "Shellbane gryphon",
+      "page": "Shellbane gryphon",
+      "url": "https://oldschool.runescape.wiki/w/Shellbane_gryphon",
+      "variant": null,
+      "levels": "235",
+      "quantity": "1",
+      "fractions": [
+        "1/200"
+      ],
+      "rarity": "1/200"
+    },
+    {
+      "name": "Orca",
+      "page": "Orca",
+      "url": "https://oldschool.runescape.wiki/w/Orca",
+      "variant": null,
+      "levels": "205",
+      "quantity": "1",
+      "fractions": [
+        "~1/130"
+      ],
+      "rarity": "1/130"
+    },
+    {
+      "name": "Armoured kraken",
+      "page": "Armoured kraken",
+      "url": "https://oldschool.runescape.wiki/w/Armoured_kraken",
+      "variant": null,
+      "levels": "180",
+      "quantity": "1",
+      "fractions": [
+        "~1/160"
+      ],
+      "rarity": "1/160"
+    },
+    {
+      "name": "Vampyre kraken",
+      "page": "Vampyre kraken",
+      "url": "https://oldschool.runescape.wiki/w/Vampyre_kraken",
+      "variant": null,
+      "levels": "211",
+      "quantity": "1",
+      "fractions": [
+        "1/150"
+      ],
+      "rarity": "1/150"
+    },
+    {
+      "name": "Maggot King",
+      "page": "Maggot King",
+      "url": "https://oldschool.runescape.wiki/w/Maggot_King",
+      "variant": null,
+      "levels": "741",
+      "quantity": "1",
+      "fractions": [
+        "1/40"
+      ],
+      "rarity": "1/40"
+    },
+    {
+      "name": "Veiled kraken",
+      "page": "Veiled kraken",
+      "url": "https://oldschool.runescape.wiki/w/Veiled_kraken",
+      "variant": null,
+      "levels": "210",
+      "quantity": "1",
+      "fractions": [
+        "~1/140"
+      ],
+      "rarity": "1/140"
+    },
+    {
+      "name": "Venator",
+      "page": "Venator",
+      "url": "https://oldschool.runescape.wiki/w/Venator",
+      "variant": null,
+      "levels": "246",
+      "quantity": "1",
+      "fractions": [
+        "~1/1,250"
+      ],
+      "rarity": "1/1,250"
+    },
+    {
+      "name": "Blood-starved venator",
+      "page": "Blood-starved venator",
+      "url": "https://oldschool.runescape.wiki/w/Blood-starved_venator",
+      "variant": null,
+      "levels": "246",
+      "quantity": "1",
+      "fractions": [],
+      "rarity": "Unknown"
+    },
+    {
+      "name": "Chest (The Fractured Archive) Standard",
+      "page": "Chest (The Fractured Archive)",
+      "url": "https://oldschool.runescape.wiki/w/Chest_(The_Fractured_Archive)#Standard",
+      "variant": "Standard",
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/10"
+      ],
+      "rarity": "1/10"
+    }
+  ],
+  "master": [
+    {
+      "name": "Reward casket (hard)",
+      "page": "Reward casket (hard)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_(hard)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/15"
+      ],
+      "rarity": "1/15"
+    },
+    {
+      "name": "Reward casket (medium)",
+      "page": "Reward casket (medium)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_(medium)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/30"
+      ],
+      "rarity": "1/30"
+    },
+    {
+      "name": "Reward casket (easy)",
+      "page": "Reward casket (easy)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_(easy)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/50"
+      ],
+      "rarity": "1/50"
+    },
+    {
+      "name": "Reward casket (elite)",
+      "page": "Reward casket (elite)",
+      "url": "https://oldschool.runescape.wiki/w/Reward_casket_(elite)",
+      "variant": null,
+      "levels": "N/A",
+      "quantity": "1",
+      "fractions": [
+        "1/5"
+      ],
+      "rarity": "1/5"
+    }
+  ]
+}

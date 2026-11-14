@@ -279,6 +279,7 @@ class PluginRepository(
      * item can not be picked up.
      */
     private val groundItemPickupConditions = Int2ObjectOpenHashMap<Plugin.() -> Boolean>()
+    private val groundItemPickupAmounts = Int2ObjectOpenHashMap<(Player, Int) -> Int>()
 
     /**
      * A map of plugins that check if an item with the associated key, can be
@@ -1875,6 +1876,17 @@ class PluginRepository(
         if (!allowed) gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.ITEM) { "pickup refused ${p.username} item=$item by its pickup condition" }
         return allowed
     }
+
+    /** Item-specific quantity caps. Unchanged for every item without a registered cap. */
+    fun setGroundItemPickupAmount(item: Int, limit: (Player, Int) -> Int) {
+        if (groundItemPickupAmounts.containsKey(item)) {
+            if (rejectDuplicateBinding("Ground item pick-up amount already set: $item")) return
+        }
+        groundItemPickupAmounts[item] = limit
+    }
+
+    fun groundItemPickupAmount(player: Player, item: Int, amount: Int): Int =
+        (groundItemPickupAmounts[item]?.invoke(player, amount) ?: amount).coerceIn(0, amount)
 
     fun bindCanItemDrop(
         item: Int,

@@ -1,0 +1,64 @@
+package gg.rsmod.plugins.content.areas.watson
+
+import gg.rsmod.plugins.content.scrolls.ClueScrollTier
+
+// OSRS Wiki Watson map pin: 1646,3574 plane 0, walk radius 4. The imported house already occupies square 6455.
+spawn_npc(npc = Npcs.WATSON, x = 1646, z = 3574, height = 0, walkRadius = 4)
+
+on_npc_option(npc = Npcs.WATSON, option = "talk-to") {
+    player.queue { watsonDialogue(this) }
+}
+
+on_npc_option(npc = Npcs.WATSON, option = "check") {
+    val held = WatsonClues.stored(player)
+    // Adapted to the existing 667 message box pending the OSRS check-interface import.
+    player.queue { messageBox(WatsonClues.TIERS.joinToString("<br>") { "${it.name.lowercase().replaceFirstChar(Char::uppercase)}: ${if (it in held) "Yes" else "No"}" }) }
+}
+
+ClueScrollTier.values().filter { it.scrollId >= 0 }.forEach { tier ->
+    on_item_on_npc(item = tier.scrollId, npc = Npcs.WATSON) {
+        player.queue {
+            if (tier in WatsonClues.TIERS) watsonOffer(this, setOf(tier))
+            else chatNpc("Sorry ${player.username}. That scroll is for you, not me.", wrap = true)
+        }
+    }
+}
+
+suspend fun watsonDialogue(task: QueueTask) {
+    task.chatNpc("Hello there ${task.player.username}.", wrap = true)
+    when (task.options("Who are you?", "So what are master clue scrolls anyway?", "I have something for you.", "Goodbye.")) {
+        1 -> {
+            task.chatNpc("I am Watson, the master of clue scrolls. I have lived a long life here in Kourend. The lands are beautiful here.", wrap = true)
+            task.chatPlayer("You're the master are you?", wrap = true)
+            task.chatNpc("Ha! It is not so much due to my ego, but the fact that I give out master tier clue scrolls.", wrap = true)
+        }
+        2 -> task.chatNpc("Master clue scrolls are the most challenging of all clue scrolls. They will test you in ways you have not been tested before.", wrap = true)
+        3 -> {
+            val available = WatsonClues.TIERS.filter { task.player.inventory.contains(it.scrollId) && it !in WatsonClues.stored(task.player) }
+            if (available.size <= 1) watsonOffer(task, available.toSet())
+            else {
+                val labels = available.map { "Hand over ${it.name.lowercase()} clue." } + "Hand over all clues."
+                val selected = task.options(*labels.toTypedArray())
+                if (selected in 1..available.size) watsonOffer(task, setOf(available[selected - 1]))
+                else if (selected == labels.size) watsonOffer(task, available.toSet())
+            }
+        }
+        4 -> task.chatPlayer("Goodbye.", wrap = true)
+    }
+}
+
+suspend fun watsonOffer(task: QueueTask, offered: Set<ClueScrollTier>) {
+    when (WatsonClues.offer(task.player, offered)) {
+        WatsonClues.Result.NOTHING_NEW -> task.chatNpc("You need to bring me clue scroll you haven't already given me ${task.player.username}.", wrap = true)
+        WatsonClues.Result.STORED -> {
+            task.messageBox("You hand over the clue scroll to Watson.")
+            task.chatNpc("Thank you very much.", wrap = true)
+        }
+        WatsonClues.Result.MASTER_HELD -> task.chatNpc("I have a master scroll box for you, but you already have too many of them! Finish them or discard them, I don't care which.", wrap = true)
+        WatsonClues.Result.MASTER_GIVEN -> {
+            task.chatNpc("Nice work ${task.player.username}, I've had one of each lower tier clue scroll from you.", wrap = true)
+            task.messageBox("Watson hands you a master clue scroll.")
+        }
+        WatsonClues.Result.MISSING_IMPORT -> println("PROBLEM CLUE Watson master clue item 19835 is not imported; no items consumed")
+    }
+}

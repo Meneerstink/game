@@ -120,7 +120,8 @@ def main():
             if (not points and kind not in ("KILL",)) or kind == "UNKNOWN":
                 unresolved.append(dict(page=source["page"], reason=f"kind={kind}, map points={len(points)}"))
     cache.dat.close()
-    (OUT / "steps-source.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    # Research archive only. The owner selected about 70 runtime steps, not this full inventory.
+    (ROOT / "docs/CLUE/steps-source.json").write_text(json.dumps(rows, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
     (ROOT / "docs/CLUE/EXCLUDED-AREAS.tsv").write_text(
         "# Missing local map squares; existing square is not yet runtime proof\n" +
         "tier\tclue\tmissing map squares\tsource\n" +

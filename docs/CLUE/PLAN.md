@@ -40,19 +40,19 @@ the former rarity heuristic and provide all items in source order.
 
 ## Implementation order and remaining gates
 
-1. Six tiers, correct trail lengths, item-specific steps and persistent tier
+1. Five tiers (owner excludes beginner), correct trail lengths, item-specific steps and persistent tier
    progress; same-tier ownership across inventory/bank/grave/Death; dropped clue
    identity, relog, full-inventory replacement and duplicate-click safety.
-2. Exact six reward catalogues, grouped outcomes, per-casket roll counts, counters,
+2. Exact five reward catalogues with the owner's shop-only kit rerolls, grouped outcomes, per-casket roll counts, counters,
    master clue rolls, milestone rewards, bloodhound, Entrana rules, complete log
    and Drop Viewer data in the approved layout. All missing assets must resolve
    before a reward is consumed; never silently remove/reweight missing items.
-3. Replace the donor step pool with source-classified steps: emotes/Uri/double
+3. Replace the donor step pool with a limited source-classified selection (about 70 new steps): emotes/Uri/double
    agents/STASH, cryptic/search/talk, anagrams/challenges/ciphers, coordinates and
    wizards, maps, puzzles, light boxes, hot/cold, Falo, Charlie and Sherlock.
    Record each excluded step and the proven missing map/area in the dossier.
-4. Watson hand-in/check/NPC Contact and persistence; Mimic entry/instance, attempts,
-   combat/minions, exit/death/logout, reward/bonus and no-banking rule.
+4. GPT-B owns Watson hand-in/check/NPC Contact, Mimic arena/combat/death/rewards.
+   GPT-A supplies reward/log APIs and source evidence; do not overlap B's files.
 5. Source-by-source acquisition: NPC drop tables, nests/geodes/bottles, implings,
    activities, clue/scroll boxes. Preserve the approved drop-rate modifiers only
    where a current owner decision requires them, and show the actual roll rate.
@@ -61,18 +61,35 @@ the former rarity heuristic and provide all items in source order.
 
 ## Open source/activation points
 
-* Beginner rewards prohibit uniques before ten hours played. Obtain the exact
-  fallback roll rule; do not invent a replacement distribution.
+* Beginner is excluded by the owner; the source archive retains research but
+  runtime data, entry points, sources and log pages must not expose that tier.
 * The current Wiki contains scroll boxes/cases (July 2025), unlike the donor.
   They are in pinned cache 2686 and therefore belong to the parity work. Quest
   condition X Marks the Spot must be checked, not assumed complete for everyone.
 * Bloodhound's Dig option was added after the pinned cache (8 September 2026):
   runtime option/ID needs a source-compatible import plan, not a guessed slot.
-* The prior kits-from-stores-only exclusions conflict with this task's newer
-  explicit instruction for all OSRS casket rewards. This implementation follows
-  the newer task; record the restored kit sources for Claude's release review.
+* Owner 14-11 22:1x keeps kits shop-only. Kit outcomes reroll over the remaining
+  weighted table. Source probabilities stay in the evidence; the actual roll and
+  viewer use the conditional distribution, which slightly increases other rates.
+  No kit slots become nothing and no shop offer is removed.
 * No client layout, runtime sound, arena collision or death recovery claim is
   accepted from source tests alone. Those checks remain Claude's assigned gate.
 
 Every completed step is appended to `C:\RSPS\team\dossiers\CLUE.txt`. Do not mark
 CLUE complete while this plan or the handoff still contains unimplemented work.
+
+## OWNER DECISION 2026-11-14 21:5x (binding, from Claude)
+
+Do NOT build all 761 OSRS steps. Order: (1) exact OSRS casket rewards + Collection Log pages + Drop Viewer caskets, (2) Watson + Mimic, (3) beginner and master tiers, (4) only then a LIMITED set of new steps: a handful per OSRS step type per tier, only in areas we have. See team/dossiers/CLUE.txt 21:5x.
+
+Counts (Claude advice 21:5x, until the owner says otherwise): about 80 new steps: beginner 10, easy +15, medium +15, hard +15, elite +12, master 12, spread over each tier's OSRS step types, only in areas we have.
+
+OWNER 2026-11-14 22:0x (binding): SKIP the BEGINNER tier completely (no steps, casket, sources or Collection Log page). Master stays. About 70 new steps: easy/medium/hard +15, elite +12, master 12.
+
+OWNER 2026-11-14 22:1x (binding): (1) ornament kits stay SHOP-ONLY: no kits from clue caskets (a kit outcome becomes a normal roll on the rest of the table); (2) 3rd Age and gilded ALSO from caskets as OSRS (Donator store offer stays); (3) include scroll boxes/cases; (4) OSRS clue drop rates; (5) death with a clue/casket as OSRS; (6) Mimic as OSRS (opt-in).
+
+OWNER 2026-11-14 22:2x: include the monsters that appear when digging / performing a step, as OSRS: coordinate-dig wizards (Zamorak/Saradomin/Guthix/Armadyl/Bandos wizard, Ancient wizard, Brassican mage) and double agents on elite/master emote steps, with OSRS stats/attacks/chances and the must-defeat-first rule, for every step type you build.
+
+OWNER 2026-11-14 22:2x: GPT-B builds WATSON + MIMIC (own worktree, from 23:27). GPT-A: do NOT start Watson/Mimic; your part = OSRS casket rewards, Collection Log, Drop Viewer, scroll boxes, master tier, the ~70 steps and the dig monsters.
+
+OWNER 2026-11-14 22:4x (binding, owner-requested custom): the master tier is named "78 clue scroll" and its casket "Reward casket (78)"; colours Gold & onyx (scroll) / gold casket with onyx bands+lock (screens/N415-78clue). Mechanics and reward table stay OSRS master. Extra: a GOLD world broadcast on a rare 78-casket reward, and an opening effect (existing OSRS graphic+sound, note the source). Claude does the cache rename/recolour - list the item ids in your handoff. Exclusive cosmetic = later.

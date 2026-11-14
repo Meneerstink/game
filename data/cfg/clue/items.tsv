@@ -3,11 +3,8 @@
 226	226	null
 246	246	null
 270	270	null
-316	316	null
-326	326	null
 330	330	null
 334	334	null
-348	348	null
 374	374	null
 380	380	null
 386	386	null
@@ -25,90 +22,53 @@
 563	563	Law rune
 565	565	Blood rune
 566	566	Soul rune
-577	577	Blue wizard robe
-579	579	Blue wizard hat
-581	581	Black robe
-839	839	Longbow
-841	841	Shortbow
-843	843	Oak shortbow
-845	845	Oak longbow
 847	847	Willow longbow
 849	849	Willow shortbow
 855	855	Yew longbow
 857	857	Yew shortbow
 859	859	Magic longbow
 861	861	Magic shortbow
-882	882	Bronze arrow
-884	884	Iron arrow
 985	985	Tooth half of key
 987	987	Loop half of key
 989	989	Crystal key
 995	995	Coins
-1017	1017	Wizard hat
-1063	1063	Leather vambraces
-1069	1069	Steel platelegs
 1073	1073	Adamant platelegs
 1077	1077	Black platelegs
 1079	1079	Rune platelegs
-1083	1083	Steel plateskirt
-1089	1089	Black plateskirt
 1093	1093	Rune plateskirt
-1095	1095	Leather chaps
 1097	1097	Studded chaps
 1099	1099	Green d'hide chaps
-1107	1107	Black chainbody
-1119	1119	Steel platebody
 1123	1123	Adamant platebody
 1125	1125	Black platebody
 1127	1127	Rune platebody
-1129	1129	Leather body
-1131	1131	Hardleather body
 1133	1133	Studded body
 1135	1135	Green d'hide body
-1151	1151	Black med helm
-1157	1157	Steel full helm
 1161	1161	Adamant full helm
 1163	1163	Rune full helm
 1165	1165	Black full helm
-1167	1167	Leather cowl
 1169	1169	Coif
-1179	1179	Black sq shield
-1195	1195	Black kiteshield
 1201	1201	Rune kiteshield
-1207	1207	Steel dagger
 1211	1211	Adamant dagger
 1213	1213	Rune dagger
 1215	1215	Dragon dagger
 1217	1217	Black dagger
-1267	1267	Iron pickaxe
 1269	1269	Steel pickaxe
 1271	1271	Adamant pickaxe
 1275	1275	Rune pickaxe
-1283	1283	Black sword
-1295	1295	Steel longsword
 1297	1297	Black longsword
 1301	1301	Adamant longsword
 1303	1303	Rune longsword
 1305	1305	Dragon longsword
-1313	1313	Black 2h sword
-1327	1327	Black scimitar
-1341	1341	Black warhammer
-1353	1353	Steel axe
 1357	1357	Adamant axe
 1359	1359	Rune axe
 1361	1361	Black axe
-1365	1365	Steel battleaxe
 1367	1367	Black battleaxe
 1371	1371	Adamant battleaxe
 1373	1373	Rune battleaxe
 1377	1377	Dragon battleaxe
 1381	1381	Staff of air
-1383	1383	Staff of water
-1385	1385	Staff of earth
-1387	1387	Staff of fire
 1392	1392	null
 1393	1393	Fire battlestaff
-1426	1426	Black mace
 1434	1434	Dragon mace
 1645	1645	Dragonstone ring
 1664	1664	Dragon necklace
@@ -116,7 +76,6 @@
 1731	1731	Amulet of power
 1748	1748	null
 1965	1965	Cabbage
-1966	1966	null
 2364	2364	null
 2437	2437	null
 2441	2441	null
@@ -540,9 +499,6 @@
 23276	23632	Gilded pickaxe
 23279	23630	Gilded axe
 23282	23634	Gilded spade
-23321	23771	Rune scimitar ornament kit (Guthix)
-23324	23773	Rune scimitar ornament kit (Saradomin)
-23327	23775	Rune scimitar ornament kit (Zamorak)
 23336	19317	3rd Age druidic robe top
 23339	23424	3rd Age druidic robe bottoms
 23342	19308	3rd Age druidic staff

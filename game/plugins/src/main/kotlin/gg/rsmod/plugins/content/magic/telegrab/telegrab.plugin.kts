@@ -68,10 +68,18 @@ on_spell_on_ground_item(fromInterface = 192, fromComponent = 44) {
             // play the pickup sound
             player.playSound(Sfx.TELEGRAB_HIT)
 
-            // finally remove the ground item
+            // Recheck after travel: another pickup may now own this clue/tier.
+            if (!world.plugins.canPickupGroundItem(player, groundItem.item)) return@lockingQueue
+            val amount = world.plugins.groundItemPickupAmount(player, groundItem.item, groundItem.amount)
+            if (amount == 0) return@lockingQueue
+            val added = player.inventory.add(groundItem.asItem(amount), assureFullInsertion = true)
+            if (!added.hasSucceeded()) {
+                player.message("You don't have enough inventory space to hold that item.")
+                return@lockingQueue
+            }
             player.world.remove(groundItem)
-            // add the item
-            player.inventory.add(groundItem.item, groundItem.amount)
+            player.attr[gg.rsmod.game.model.attr.GROUNDITEM_PICKUP_TRANSACTION] = java.lang.ref.WeakReference(added)
+            world.plugins.executeGlobalGroundItemPickUp(player)
         }
     }
 }

@@ -41,9 +41,9 @@ import kotlin.math.pow
  * "Your chance" uses the player's own rate; "Normal" is the same code at 1x.
  */
 object DropSources {
-    enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters") }
+    enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters"), CLUES("Clues") }
 
-    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA }
+    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE }
 
     class Source(
         val key: String,
@@ -57,6 +57,7 @@ object DropSources {
         val kind: Kind,
         /** The npc id whose drop table is read ([Kind.NPC]). */
         val tableNpc: Int = -1,
+        val modelItem: Int = -1,
     )
 
     enum class Tag { NONE, PET, TABLE }
@@ -167,6 +168,9 @@ object DropSources {
         BreachMonsters.ROSTER.filter { !it.summon }.forEach { m ->
             out += Source("breach:${m.id}", m.name, m.id, intArrayOf(m.id), npcLevel(world, m.id), Group.DEADMAN, Kind.BREACH)
         }
+        gg.rsmod.plugins.content.scrolls.ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
+            out += Source(tier.key, tier.casketName, -1, intArrayOf(), 0, Group.CLUES, Kind.CLUE, modelItem = tier.casketId)
+        }
         return out
     }
 
@@ -236,6 +240,8 @@ object DropSources {
             Kind.BARROWS -> barrowsView(world, rate)
             Kind.JAD -> jadView(world, source, rate)
             Kind.TOA -> toaView(world)
+            Kind.CLUE -> gg.rsmod.plugins.content.scrolls.ClueRewardView.view(world,
+                checkNotNull(gg.rsmod.plugins.content.scrolls.ClueCompletions.tierForKey(source.key)))
         }
     }
 

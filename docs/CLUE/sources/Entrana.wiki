@@ -1,0 +1,447 @@
+{{External|rs|rsc}}
+{{Infobox Location
+|name = Entrana
+|image = [[File:Entrana.png|300px]]
+|release = [[27 February]] [[2002]]
+|update = Latest RuneScape News (27 February 2002)
+|members = Yes
+|location = [[Ardent Ocean]], [[Asgarnia]]
+|race = [[Human]]s
+|teleport = [[Balloon transport system]], [[Abyss]]
+|music = [[Background]]
+|map = {{Map|name=Entrana|zoom=1|x=2840|y=3358}}
+|type = island
+|leagueRegion = Asgarnia
+}}
+[[File:Entrana icon detail.png|left|130px]]
+'''Entrana''' is a large island south-west of [[Taverley]], occupied by [[Saradomin|Saradominist]] monks. When entering Entrana, adventurers are prohibited from bringing most [[weapons]] or [[armour]] with them.
+
+==History==
+Entrana is said to be where [[Saradomin]] first stepped foot on [[Gielinor]], and is therefore considered a holy site by his followers.{{Citation needed}} It seems that there was always some presence on the island since that time,{{CiteText|text=Display case (Varrock Museum, number 34)|quote=4th Age - yr 500-900 An early 4th Age map showing the human civilisations starting to settle into more permanent villages. After the God Wars, all the races began to rebuild their settlements.|note=Map shows Entrana on it.}} but there was no official organised township until the late [[Fourth Age]], when humans established towns on Entrana and [[Karamja]].{{CiteText|text=Display case (Varrock Museum, number 6)|quote=4th Age - yr 1937 Settlers established a town on the River Lum. Across the river they build a bridge and hence the town became called Lumbridge. This heralded more human settlements springing up early in the next age, where humans began to move into the desert, establishing Al Kharid, and towns on both Karamja and Entrana. }} When the art of [[Runecrafting]] was rediscovered by humans in the [[Fifth Age]], [[Runecrafting Crusades|barbarians invaded Entrana and destroyed the law altar]], believing the crafting of [[runes]] to be in defiance of the gods.
+
+Many powerful artefacts have been on the island. Prior to the [[Betrayal of Zaros]], the [[staff of Armadyl]] was almost brought to Entrana, but was stolen en-route.{{CiteNPC|npc=Valdez|quote=The vile thief Rennard accosted me as I made my way to Entrana, and after defeating me with a sneak attack, plundered the staff from my person, and left me for dead...|loc=Curse of the Empty Lord|notes=|name=}} At one point in time, the [[Holy Grail]] passed through Entrana.{{CiteNPC|npc=High Priest (Entrana)|quote=The object of which you speak did once pass through holy Entrana. I know not where it is now however.|loc=Holy Grail|notes=|name=}} Later, during the year 169, an [[assassin]] stole an [[Relic (Devious Minds)|ancient relic]] from the monks which supposedly had the power to allow the [[mahjarrat]] [[Azzanadra]] to contact [[Zaros]].
+
+==Accessing the island==
+=== Transportation ===
+* Via a ship in [[Port Sarim]] by talking to the [[Monk of Entrana|monks]] on the dock
+* through the [[Law Altar]] via the [[Abyss]] in the [[Wilderness]]
+* [[Balloon transport system]] 
+* Docking there via the [[Sailing]] skill (requires 36 Sailing)
+* [[Teleport to Boat]] — Entrana [[mooring point]] once a [[Boat|player-owned boat]] with a [[Greater teleport focus (facility)|greater teleport focus]] is docked there.
+
+Before being able to sail or fly to Entrana, the [[Monk of Entrana|monk]] or a balloon transport assistant will search the player to make sure that there are no prohibited items being brought to the island. At the [[law rift]], the power of [[Saradomin]] is present and will prevent the player from bringing prohibited equipment.
+
+If a player logs in on Entrana or exits the [[Law Altar]] with prohibited equipment, a [[Monk (Entrana)|monk]] will immediately appear next to the player on Entrana and knock them unconscious. The player will then reawaken in [[Port Sarim]] aboard the Entrana ferry, and exclaim {{overhead|Urrrrrgh!}}.
+
+=== Rules ===
+Generally, players cannot take any [[armour]] with attack or defence bonuses to the island. Most non-equipable items that deal damage (such as [[runes]] and [[poison dynamite]]) are allowed. Some items which violate these rules can still be brought to the island, listed below. 
+
+Trying to [[Telekinetic Grab]] dropped items on the coast of [[Falador]] will result in a chat message saying {{mes|I can't reach that.}}. Additionally, players '''cannot''' smuggle weapons or armour to Entrana by opening [[Treasure Trails]] caskets there, as they cannot be received on the island; an alternate version of the drop table without prohibited items is rolled instead<ref>{{PlainCiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1276268920270393348|date=25 Jun 2020|archiveurl=https://reldo.runescape.wiki/i/104301|archivedate=9 Dec 2020|quote=It rolls the table without such items being included, yeah. That also includes most equipable items, even items without stats such as Bob shirts. But it's a useful place to go if you want prayerbook pages.}}</ref>. This makes it useful for players seeking specific rewards such as god pages to open caskets on the island. However, [[Reward casket (beginner)|beginner]] and [[Reward casket (master)|master]] caskets may not be opened on the island; if attempted, a message displays saying {{mes|You cannot open this on Entrana, the monks are watching you too closely.}} Although monk's robes are allowed on the island, you are not able to receive the [[monk's robe top (g)]] or the [[monk's robe (g)]] from easy caskets here as they are considered a tier-specific clue unique on the easy clue loot table.
+
+These casket restrictions do not apply in the [[Entrana Dungeon]], so opening them inside the dungeon will roll the regular drop tables. However, as you cannot return to Entrana from the dungeon, this cannot be used to smuggle items onto the island.
+
+==== Exceptions ====
+Some items '''with bonuses''' can still be brought to Entrana:
+{| class="wikitable mw-collapsible mw-collapsed"
+!Item
+|-
+|{{plink|Magic secateurs}}
+|-
+|{{plink|Wizard robes|pic=Blue wizard robe}}<ref group="d">Trimmed and gold-trimmed variants are also allowed.</ref>
+|-
+|{{plink|Zamorak monk robes|pic=Zamorak monk top}}
+|-
+|{{plink|H.A.M. robes|pic=Ham shirt}}
+|-
+|{{plink|Canifis robes|pic=Yellow robe top}}
+|-
+|{{plink|Gnome robes|pic=Green robe top}}
+|-
+|{{plink|Yrsa's_Accoutrements#Stock|pic=Fremennik grey shirt|txt=Fremennik clothing}}
+|-
+|{{plink|Gloves of silence}}
+|-
+|{{plink|Ice gloves}}
+|-
+|{{plink|Penance gloves}}
+|-
+|{{plink|Twitcher's gloves}}
+|-
+|{{plink|Leather gloves}}
+|-
+|{{plink|Ghostly gloves}}<ref group="d" name="ghostly">Only gloves and boots are allowed. Other pieces to the [[ghostly robes]] set are not allowed.</ref>
+|-
+|{{plink|Ghostly boots}}<ref group="d" name="ghostly"></ref>
+|-
+|{{plink|Leather boots}}
+|-
+|{{plink|Boots of lightness}}
+|-
+|{{plink|Climbing boots}} / {{plink|Climbing boots (g)}}
+|-
+|{{plink|Rock-shell boots}}
+|-
+|{{plink|Boots of stone}}
+|-
+|{{plink|Spiked boots}}
+|-
+|{{plink|Vestment cloak|pic=Saradomin cloak|txt=Vestment cloaks}}
+|-
+|{{plink|Black_cape#Products|pic=Red cape|txt=Coloured capes}}
+|-
+|{{plink|Team cape|pic=Team-50 cape|txt=Team capes}}<ref group="d">[[Team cape i]], [[team cape x]], and [[team cape zero]] are also allowed.</ref>
+|-
+|{{plink|Spotted cape}} / {{plink|Spottier cape}}
+|-
+|{{plink|3rd Age cloak}}
+|-
+|{{plink|God cape|pic=Saradomin cape|txt=God capes}}
+|-
+|{{plink|God book|pic=Holy book|txt=God books}}
+|-
+|{{plink|Book of the Dead}}
+|-
+|{{plink|Tome of Water}} / {{plink|Tome of Earth}} <ref group="d">The [[tome of fire]] '''cannot''' be brought to Entrana.</ref>
+|-
+|{{plink|Chronicle}}
+|-
+|{{plink|Jewellery|pic=Amulet of rancour|txt=Any jewellery}}
+|-
+|{{plink|Blessing|pic=Rada's blessing 4}}s
+|-
+|[[Explorer's ring|Any Explorer's ring]]
+|-
+|Most other [[clothes|clothing]]
+|-
+|[[Ammunition]] (except [[darts]])
+|}
+{{Reflist|group="d"}}
+
+Some items '''without bonuses or which can't be equipped''' are still not allowed:
+{| class="wikitable mw-collapsible mw-collapsed"
+!Item
+|-
+|{{plink|Dwarf multicannon|pic=Cannon barrels}}
+|-
+|{{plink|Banner|pic=Saradomin banner|txt=Banners}}
+|-
+|{{plink|Godsword|pic=Godsword blade|txt=Dismantled godswords}}
+|-
+|{{plink|Swift blade}}
+|-
+|{{plink|Ham joint}}
+|-
+|{{plink|Magic insect net}}
+|-
+|{{plink|Insect net}}
+|-
+|{{plink|Impling jar}}
+|-
+|{{plink|Noose wand}}
+|-
+|{{plink|Hallowed hammer}}
+|-
+|{{plink|Prospector kit|pic=Prospector helmet}} / {{plink|Golden prospector kit|pic=Golden prospector helmet}}
+|-
+|{{plink|Looting bag}}<ref group="e">Only when containing other disallowed items.</ref>
+|-
+|{{plink|Extra supply crate}}
+|-
+|{{plink|Spoils of War}}
+|-
+|{{plink|Forgotten lockbox}}
+|-
+|{{plink|Tackle box}}<ref group="e">Only when containing [[Harpoon_(weapon)|wieldable harpoons]].</ref>
+|-
+|{{plink|Teasing stick}}
+|-
+|{{plink|Zealot's helm}}<ref group="e">The rest of the [[Zealot's robes]] outfit is still allowed.</ref>
+|-
+|{{plink|Noxious halberd|pic=Noxious blade|txt=Noxious halberd components}}
+|-
+|{{plink|Sage's greaves}}<ref group="e">Only obtainable during certain [[temporary event]]s.</ref>
+|-
+|}
+{{Reflist|group="e"}}
+
+==== Crafting items ====
+Players can create a number of otherwise-prohibited items by bringing their base materials to the island, as long as the player has the levels required to craft or fletch them:
+{| class="wikitable mw-collapsible mw-collapsed"
+!Item
+!Required materials
+|-
+|{{Plink|Dramen staff}}
+|{{Plink|Dramen branch}}
+|-
+|{{Plink|Battlestaff}}
+|{{Plink|Celastrus bark}}, {{Plink|knife}}, any desired [[Unpowered orb|elemental orbs]]
+|-
+|{{Plink|Silver sickle}}
+|{{Plink|Silver bar}}, {{Plink|sickle mould}}
+|-
+|{{Plink|Hunter's spear}} 
+|{{Plink|Teak logs}}, {{Plink|jerboa tail|txt=jerboa tails}}, {{Plink|hunter spear tips}}, {{Plink|knife}}
+|-
+|Wooden [[blowpipe]]s
+|Corresponding log, {{plink|squid beak}}, {{plink|knife}}, unfinished darts
+|-
+|{{Plink|Toxic blowpipe}}
+|{{Plink|Tanzanite fang}}, {{Plink|Zulrah's scales}}, unfinished darts 
+|-
+|[[Xerician armour]]
+|{{Plink|Xerician fabric}}, {{Plink|needle}}, {{Plink|thread}}
+|-
+|[[Splitbark armour]]
+|{{Plink|Fine cloth}}, {{Plink|bark}}, {{Plink|needle}}, {{Plink|thread}}
+|-
+|[[Bows]] or [[Crossbow (weapon)|crossbows]]
+|[[Unstrung bow|Unstrung bows]]/[[Unstrung crossbow|crossbows]], {{Plink|bow string|txt=bow}} or {{Plink|crossbow string}}
+|-
+|[[Leather shield]]s and [[Leather armour|armour]]
+|Corresponding leather, {{Plink|hammer}} or {{Plink|needle}} and {{Plink|thread}}
+|-
+|[[Wooden shields]]
+|Corresponding log, {{Plink|knife}}
+|-
+|[[Broodoo shield]]s
+|[[Tribal mask]], {{Plink|snakeskin}}, [[nails]] of any type, {{Plink|hammer}}
+|-
+|[[Darts]]
+|[[Dart tips]] and {{Plink|feather|txt=feathers}}
+|-
+|{{Plink|Skull sceptre}}
+|{{Plink|Left skull half}}, {{Plink|Right skull half}}, {{Plink|Bottom of sceptre}}, {{Plink|Top of sceptre}}
+|-
+|{{plink|Soulreaper axe}}
+|{{plink|Leviathan's lure}}, {{plink|Siren's staff}}, {{plink|Executioner's axe head}}, {{plink|Eye of the Duke}}, 2,000 {{plink|Blood rune}}s
+|-
+|{{Plink|Burning claws}}
+|2x {{Plink|Burning claw}}
+|-
+|{{plink|Scorching bow}}
+|{{plink|Tormented synapse}}, {{plink|Magic longbow (u)}}
+|}
+
+The standard [[skull sceptre]] (not imbued) '''will not''' autocast [[Crumble Undead]].
+
+==== Smuggling items ====
+Some items store or reward prohibited equipment, thus allowing players to open them on the island and smuggle in forbidden items:
+{| class="wikitable mw-collapsible mw-collapsed"
+!Smuggling method
+!Smuggleable items
+|-
+|Using a [[forestry kit]] with a [[cape pouch]]
+|[[Woodcutting cape]]
+|-
+|Opening Camdozaal [[Lockbox (disambiguation)|lockboxes]]
+|A variety of low-level armour
+|-
+|Opening a [[Christmas cracker]]
+|[[Black dagger]]
+|-
+|Swap [[Amy's saw]] to its [[Amy's saw (off-hand)|off-hand]] version, then switch back on the island
+|[[Amy's saw]]
+|-
+|Using a [[huntsman's kit]]
+|[[Magic insect net]], [[teasing stick]], [[noose wand]], [[hunter's spear]], [[Hunter cape]]
+|-
+|Implings can be brought onto the island with [[Dark Lure]] and caught barehanded
+|
+|-
+|Using [[Teleport to Boat]] appears to bypass some of the monks checks for weapons and armour{{Fact}}
+|[[Bows]]
+|}
+The [[Ghostly robe (bottom)|ghostly robe bottom]] can also be obtained on Entrana from [[Lennissa]] during [[Curse of the Empty Lord#Sequence 1|sequence one]] of the [[Curse of the Empty Lord]] [[miniquest]].
+
+== Locations ==
+
+=== Buildings ===
+[[File:Church of Entrana.png|thumb|350px|The seat of the High Priest of Entrana.]]
+{| class="wikitable"
+!Building
+!Description
+|-
+|[[Entrana church]]
+|The main building of Entrana, ran by the [[High Priest (Entrana)|High Priest]], the [[Entrana church]] is the most important building of all Entrana. Players can talk to the level 5 [[monk|monks]] to be healed. There is also a candle stand, from which players can steal [[candle]]s for 20 [[Thieving]] [[experience]] each.
+|-
+|[[Entrana homestead]]
+|A tiny homestead with chickens and eggs, as well as some nearby unicorns.
+|-
+|Entrana kitchen
+|A building near the docks featuring a [[range]].
+|-
+|Entrana workshop
+|Referred to as simply "the Furnace" by [[Fritz]]. Players can blow glass here, and sell to Fritz for 20 [[coins]] each. All ingredients for glassblowing ([[bucket of sand|sand]], [[soda ash]], and a furnace) are found on the island, alongside the [[glassblowing pipe]].
+|-
+|[[Frincos' Fabulous Herb Store.|Frincos' Fabulous Herb Store]]
+|A store selling various [[Herblore]] supplies.
+|-
+|Fritz' house
+|A nice, two-story house.
+|}
+[[File:Entrana homestead.png|thumb|The quaint Entrana homestead.]]
+
+=== Skill training spots ===
+There are four [[fishing spots]] on the docks, requiring either bait and a rod, or a [[small fishing net]]. There is also a fly-fishing location located on the river. A [[fishing rod]] spawns in the house right before the dock, and there is a [[chicken]] farm for [[feather]]s north of the dock. There is also a [[range]] nearby for [[Cooking]]. Players can bank their fish at the [[bank deposit box]] on the [[Port Sarim]] dock. Players can also find the following on the island:
+
+* Willow, oak, and regular trees — choppable if players can obtain an axe.
+
+* [[Hops patch]] — a patch for hops, which can be protected by [[Francis]].
+* [[Law Altar|Law altar]] — an altar for crafting law runes, requiring a [[law talisman]] to enter.
+
+=== Other ===
+Entrana has a large set of docks with a port, allowing players to travel to [[Port Sarim]] and manage [[Sailing]] activites. There is also a sand pit for collecting [[buckets of sand]], and the fearsome [[Entrana Dungeon|Entrana dungeon]]. Finally, players can access the [[hot air balloon]], a unique but somewhat convoluted method of traveling.[[File:Law Altar outside.png|thumb|width=450x450|The law altar, viewed from the sea.]]
+=== Spawns ===
+{| class="wikitable"
+!Item
+!Spawns
+!Location
+!Map
+|-
+|{{Plink|Bones}}
+|5
+|Throughout the dungeon
+|{{map|mapID=20|2829,9764|2831,9766|2857,9751|2857,9746|2859,9746|type=maplink|mtype=pin|group=Bones}}
+|-
+|{{Plink|Egg}}
+|3
+|Entrana homestead
+|{{map|2851,3372|2852,3369|2853,3370|type=maplink|mtype=pin|group=Egg}}
+|-
+|{{Plink|Fishing rod}}
+|1
+|Entrana kitchen
+|{{map|2860,3335|type=maplink|mtype=pin|group=Fishing rod}}
+|-
+|{{Plink|Glassblowing pipe}}
+|1
+|Fritz' home
+|{{map|2822,3355|type=maplink|mtype=pin|group=Glassblowing pipe}}
+|-
+|{{Plink|Kebab}}
+|1
+|Entrana homestead
+|{{map|2843,3369|type=maplink|mtype=pin|group=Kebab}}
+|-
+|{{Plink|Seaweed}}
+|10
+|North-western tip of the island
+|{{map|2803,3382|2804,3380|2804,3385|2805,3381|2805,3384|2807,3384|2807,3386|2809,3385|2809,3388|2810,3387|type=maplink|mtype=pin|group=Seaweed}}
+|-
+|{{Plink|Plank}}
+|2
+|Just east of the Entrana homestead
+|{{map|2846,3384|2848,3383|type=maplink|mtype=pin|group=Plank}}
+|-
+|{{Plink|Vial}}
+|2
+|Frincos' shop
+|{{map|2808,3343|2809,3342|type=maplink|mtype=pin|group=Vial}}
+|}
+
+==Inhabitants==
+
+=== Personalities ===
+
+* {{Chatl|Auguste}}, a monk with his head in the sky, dreaming of something more.
+* {{Chatl|Cave monk}}, a wary monk who warns players of the evil below the island.
+* {{Chatl|Crone}}, an elderly lady who points players in the direction of the [[Fisher King]].
+* {{Chatl|Francis}}, a monk farmer who protects [[Farming|crops]] for a fee.
+* {{Chatl|Frincos}}, a monk who runs [[Frincos' Fabulous Herb Store]].
+* {{Chatl|Fritz the Glassblower}}, a [[glassblowing]] enthusiast who'll pay for glass made by the player.
+* {{Chatl|High Priest (Entrana)|txt=High Priest}}, the leader of the [[Saradomin brew|Saradomin]] church.
+* {{Chatl|Mazion}}, a [[sand pit]] manager who [[The Hand in the Sand|finds something odd in his pit]].
+* Several {{Chatl|Monk|txt=monks}}, holy men who will heal players if asked.
+* {{Chatl|Monk (Entrana)|txt=Monk cleric}}, A man who kicks off players who violate the rules of Entrana.
+* {{Chatl|Monk of Entrana|pic=Monk of Entrana (1) chathead|txt=Monk of Entrana}}, who enforces Entrana's "no weapons or armour" policy.
+* {{Chatl|Port master|pic=Port master (Entrana) chathead}}, a port master who helps players with [[Sailing]] activities.
+* {{Chatl|Tool Leprechaun|txt=Tool leprechaun}}, a green-clad fellow who can store gardening supplies and note produce.
+
+[[File:Entrana firebird.png|thumb|width=250x250|The beautiful Entrana firebird.]]
+
+=== Monsters ===
+
+* [[Black bear]]
+* [[Chicken]]
+* [[Entrana firebird]]
+* [[Greater demon]] (x2)
+* [[Monk]] (x2)
+* [[Tree spirit (Lost City)|Tree spirit]]
+* [[Unicorn]]
+* [[Zombie (Entrana Dungeon)|Zombie]] (x5)
+
+==Quests==
+The following quests involve Entrana:
+
+* [[Curse of the Empty Lord]] (sequence one)
+* [[Desert Treasure I]]
+* [[Devious Minds]]
+* [[Enlightened Journey]]
+* [[Freeing Sir Amik Varze]]
+* [[The Hand in the Sand]]
+* [[Heroes' Quest]]
+* [[Holy Grail]]
+* [[Lost City]]
+* [[Monkey Madness II]]
+* [[Troll Stronghold]]
+
+== Music ==
+{| class="wikitable sortable"
+!Name
+! class="unsortable" |Unlock location
+! class="unsortable" |Music track
+|-
+|[[Background]]
+|Entrana
+|[[File:Background.ogg]]
+|-
+|[[Underground (music track)|Underground]]
+|[[Entrana Dungeon|Entrana dungeon]]
+|[[File:Underground.ogg]]
+|}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 13 January 2021
+|update = God Wars Instancing and Soul Wars Improvements
+|change = It is no longer possible to open [[Spoils of War]] on Entrana.
+}}
+{{Subject changes
+|date = 8 February 2018
+|update = PvM QoL updates & Wilderness Rejuvenation improvements
+|change = It isn't possible to sail to Entrana with ballistae of any kind. Previously it was possible to bypass the restriction imposed by the Monks of Entrana. 
+}}
+{{Subject changes
+|date = 6 August 2015
+|update = XP Drops, Jad Pet & Slayer
+|change = The Monks of Entrana now get suitably angry if you attempt to take Ghostly Robes to the island.
+}}
+{{Subject changes
+|date = 23 January 2014
+|update = Slayer Cave & High Risk Worlds
+|change = A portion of the dock on Entrana is no longer sinking.
+}}
+{{Subject changes
+|date = 13 November 2006
+|update = Player gallery and more bank space
+|change = It is now possible to bring [[magic secateurs]] travelling to Entrana when using the [[balloon transport system]].
+}}
+{{Subject changes
+|date = 20 September 2006
+|update = Slug Menace
+|change = It is no longer possible to bring forbidden hand slot items to Entrana when entering the [[Law Altar]] through the Abyss.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* Before the removal of the [[Axe head (random event)|axe head random event]], players commonly used it to smuggle axes onto Entrana by bringing their separate pieces.
+* In the [[Trailblazer League (2020)|Trailblazer League]] game mode, players could smuggle [[black dragonhide armour|black]] and [[blessed dragonhide armour|blessed]] bracers, chaps, and body armour to Entrana without objection from a passing monk by exiting the [[Law Altar]] with the [[crystal of memories]]. It is unclear whether this works in [[Deadman Mode]] with [[sigil of last recall]]. Similarly, implings caught in jars could be smuggled via the Law Altar with a crystal of memories to Entrana, but jars with prohibited equipment still couldn't be opened on the main island. Attempting to do so yielded the message: ''You can't loot impling jars here.'' However, they could be looted inside the Law Altar itself. It is unkown whether impling jars could be smuggled with a sigil of last recall.
+** In the [[Trailblazer Reloaded League]], players with the [[Banker's note (Trailblazer Reloaded, item)|banker's note]] could use it to un-note noted armour and weapons on the island. This was useful for completing clue steps that would otherwise have required players to craft the required items on Entrana.
+
+==References==
+{{Reflist}}
+
+{{Lost City}}
+{{Devious Minds}}
+{{Entrana}}

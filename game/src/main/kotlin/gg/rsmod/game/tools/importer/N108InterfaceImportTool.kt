@@ -155,8 +155,10 @@ object N108InterfaceImportTool {
         const val R_YOUR = 6
         const val R_NORMAL = 7
         /** Group headings and every drop table's lines (always open, N279) included; DropViewerAudit checks every entry fits. */
-        const val ROW_SLOTS = 200
-        const val LIST_FIRST = ROW_FIRST + ROW_SLOTS * ROW_STRIDE
+        // CLUE has 235 hard-casket source rows. Append capacity without moving any approved component id or geometry.
+        private const val ORIGINAL_ROWS = 200
+        const val ROW_SLOTS = 300
+        const val LIST_FIRST = ROW_FIRST + ORIGINAL_ROWS * ROW_STRIDE
         const val LIST_STRIDE = 9 // bg, arrow, icon, thumb, model, text, sub, view, toggle
         const val L_BG = 0
         const val L_ARROW = 1
@@ -173,7 +175,9 @@ object N108InterfaceImportTool {
          * the rows: the item's own 36 x 32 sprite in its 32 px row, unscaled (owner 17:5x, A).
          */
         const val ITEM_FIRST = LIST_FIRST + LIST_SLOTS * LIST_STRIDE
-        const val COUNT = ITEM_FIRST + ROW_SLOTS
+        private const val EXTRA_ROW_FIRST = ITEM_FIRST + ORIGINAL_ROWS
+        private const val EXTRA_ITEM_FIRST = EXTRA_ROW_FIRST + (ROW_SLOTS - ORIGINAL_ROWS) * ROW_STRIDE
+        const val COUNT = EXTRA_ITEM_FIRST + ROW_SLOTS - ORIGINAL_ROWS
 
         // geometry (window pixels)
         const val LIST_X = 8
@@ -212,11 +216,11 @@ object N108InterfaceImportTool {
         const val NAME_X = 261
         const val TAGS_Y = 66
 
-        fun row(i: Int) = ROW_FIRST + i * ROW_STRIDE
+        fun row(i: Int) = if (i < ORIGINAL_ROWS) ROW_FIRST + i * ROW_STRIDE else EXTRA_ROW_FIRST + (i - ORIGINAL_ROWS) * ROW_STRIDE
 
         fun slot(i: Int) = LIST_FIRST + i * LIST_STRIDE
 
-        fun item(i: Int) = ITEM_FIRST + i
+        fun item(i: Int) = if (i < ORIGINAL_ROWS) ITEM_FIRST + i else EXTRA_ITEM_FIRST + i - ORIGINAL_ROWS
     }
 
     fun viewer(fonts: LootKeyInterfaceImportTool.Fonts): List<Comp> {

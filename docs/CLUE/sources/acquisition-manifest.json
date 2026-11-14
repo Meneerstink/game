@@ -1,0 +1,47 @@
+{
+  "fetched_utc": "2026-11-14T21:02:51.131074+00:00",
+  "license": "OSRS Wiki CC BY-NC-SA 3.0",
+  "note": "Drop-source transclusions are a snapshot at fetch time, including on old article revisions.",
+  "pages": [
+    {
+      "page": "Clue scroll (easy)",
+      "revision": null,
+      "file": "acquisition-easy.html.gz",
+      "html_sha256": "1aaa74e445c5a2a1f0d800bc708d973ad65e618430fbfac2555e232318817edf",
+      "rows": 117,
+      "url": "https://oldschool.runescape.wiki/api.php?action=parse&page=Clue+scroll+%28easy%29&prop=text&format=json&formatversion=2"
+    },
+    {
+      "page": "Clue scroll (medium)",
+      "revision": null,
+      "file": "acquisition-medium.html.gz",
+      "html_sha256": "0053acdd13a30ced82dc7318c6f0d1080c1fa61ad4e10cb31816084be2455b19",
+      "rows": 141,
+      "url": "https://oldschool.runescape.wiki/api.php?action=parse&page=Clue+scroll+%28medium%29&prop=text&format=json&formatversion=2"
+    },
+    {
+      "page": "Clue scroll (hard)",
+      "revision": null,
+      "file": "acquisition-hard.html.gz",
+      "html_sha256": "3c9e27af0eb38c09852bb14395b4ce44c425f0782ad07dcfad66668783dcb6a3",
+      "rows": 199,
+      "url": "https://oldschool.runescape.wiki/api.php?action=parse&page=Clue+scroll+%28hard%29&prop=text&format=json&formatversion=2"
+    },
+    {
+      "page": "Clue scroll (elite)",
+      "revision": null,
+      "file": "acquisition-elite.html.gz",
+      "html_sha256": "2839fd87df6d71eff7ed393e0a472bf3eee3e41400c84bad62bb6d31c9001a9c",
+      "rows": 105,
+      "url": "https://oldschool.runescape.wiki/api.php?action=parse&page=Clue+scroll+%28elite%29&prop=text&format=json&formatversion=2"
+    },
+    {
+      "page": "Clue scroll (master)",
+      "revision": null,
+      "file": "acquisition-master.html.gz",
+      "html_sha256": "308dbab7168736fe73de6572d47a5b0a83064f313c38a2bd26ddab04e8df65c0",
+      "rows": 4,
+      "url": "https://oldschool.runescape.wiki/api.php?action=parse&page=Clue+scroll+%28master%29&prop=text&format=json&formatversion=2"
+    }
+  ]
+}

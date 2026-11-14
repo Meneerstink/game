@@ -136,6 +136,8 @@
 19930	true	Armadyl d'hide boots
 19933	true	Saradomin d'hide boots
 19936	true	Zamorak d'hide boots
+19941	false	Heavy casket
+20164	false	Large spade
 20166	true	Wooden shield (g)
 20169	true	Steel platebody (g)
 20172	true	Steel platelegs (g)
@@ -158,6 +160,7 @@
 20240	true	Crier coat
 20243	true	Crier bell
 20246	true	Black leprechaun hat
+20249	false	Clueless scroll
 20251	true	Arceuus banner
 20254	true	Hosidius banner
 20257	true	Lovakengj banner
@@ -172,9 +175,7 @@
 20362	false	Clue geode (hard)
 20364	false	Clue geode (elite)
 21387	true	Master scroll book (empty)
-23127	false	Clue nest (beginner)
-23129	false	Clue bottle (beginner)
-23182	false	Clue scroll (beginner)
+22675	false	Scroll sack
 23188	true	Guthix d'hide shield
 23191	true	Saradomin d'hide shield
 23194	true	Zamorak d'hide shield
@@ -188,19 +189,6 @@
 23218	true	Rune platebody (h4)
 23221	true	Rune platebody (h5)
 23224	true	Thieving bag
-23245	false	Reward casket (beginner)
-23285	true	Mole slippers
-23288	true	Frog slippers
-23291	true	Bear feet
-23294	true	Demon feet
-23297	true	Jester cape
-23300	true	Shoulder parrot
-23303	true	Monk's robe top (t)
-23306	true	Monk's robe (t)
-23309	true	Amulet of defence (t)
-23312	true	Sandwich lady hat
-23315	true	Sandwich lady top
-23318	true	Sandwich lady bottom
 23351	true	Cape of skulls
 23354	true	Amulet of power (t)
 23357	true	Rain bow
@@ -221,10 +209,19 @@
 23407	true	Wolf mask
 23410	true	Wolf cloak
 23413	true	Climbing boots (g)
-23442	false	Clue geode (beginner)
-24361	false	Scroll box (beginner)
 24362	false	Scroll box (easy)
 24363	false	Scroll box (medium)
 24364	false	Scroll box (hard)
 24365	false	Scroll box (elite)
 24366	false	Scroll box (master)
+30906	false	Minor easy scroll case
+30908	false	Major easy scroll case
+30910	false	Minor medium scroll case
+30912	false	Major medium scroll case
+30914	false	Minor hard scroll case
+30916	false	Major hard scroll case
+30918	false	Minor elite scroll case
+30920	false	Major elite scroll case
+30922	false	Minor master scroll case
+30924	false	Major master scroll case
+30926	false	Mimic scroll case

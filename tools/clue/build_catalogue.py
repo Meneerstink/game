@@ -19,7 +19,8 @@ ROOT = Path(__file__).resolve().parents[2]
 BUILD = ROOT / "build/clue"
 SOURCES = ROOT / "docs/CLUE/sources"
 OUT = ROOT / "data/cfg/clue"
-TIERS = ("beginner", "easy", "medium", "hard", "elite", "master")
+# Owner update in team/dossiers/CLUE.txt, 14-11 22:0x: no beginner content.
+TIERS = ("easy", "medium", "hard", "elite", "master")
 TARGET_CACHE = Path("C:/RSPS/game/game/data/cache")
 
 
@@ -62,11 +63,15 @@ def split_template(s):
     return result
 
 
-def reward_rows(tier):
+def reward_rows(tier, entrana=False):
     s = (SOURCES / f"Reward_casket_({tier}).wiki").read_text(encoding="utf-8")
     rows = []
     section = ""
-    for line_number, line in enumerate(s.splitlines(), 1):
+    offset = 0
+    if entrana:
+        offset = s[:s.index("==Rewards on Entrana==")].count("\n")
+        s = s[s.index("==Rewards on Entrana=="):]
+    for line_number, line in enumerate(s.splitlines(), 1 + offset):
         if line.startswith("===Tertiary"):
             break  # Separate once-per-casket rules, never part of a loot roll.
         if line.startswith("=="):
@@ -81,7 +86,8 @@ def reward_rows(tier):
         chance = probability(fields["rarity"])
         rows.append(dict(name=fields["name"], minimum=int(match[1]), maximum=int(match[2] or match[1]),
                          noted=bool(match[3]), numerator=chance.numerator, denominator=chance.denominator,
-                         section=section, sourceLine=line_number))
+                         section=section, sourceLine=line_number,
+                         ownerExcluded="ornament kit" in fields["name"].lower() or fields["name"].lower().endswith("colour kit")))
     return rows
 
 
@@ -251,8 +257,11 @@ def main():
     # directly from this cache. The four existing scroll/casket IDs stay compatible.
     extra = []
     enums = json.loads((BUILD / "osrs-enums.json").read_text())
-    enum_ids = dict(beginner=2322, easy=2141, medium=2142, hard=2143, elite=2144, master=2145, shared=2146)
+    enum_ids = dict(easy=2141, medium=2142, hard=2143, elite=2144, master=2145, shared=2146)
     log = {tier: dict(enum=id, items=enum_items(enums[str(id)])) for tier, id in enum_ids.items()}
+    # Source enum 3607 is the separate Scroll Cases log. Owner excludes its two beginner slots.
+    log["cases"] = dict(enum=3607, items=[id for id in enum_items(enums["3607"]) if id not in (30902, 30904)])
+    extra.extend((20164, 20249, 19941, 22675))  # Wiki milestone cosmetics; cache identities.
     for page in log.values():
         extra.extend(page["items"])
     for id in extra:
@@ -267,11 +276,13 @@ def main():
     (OUT / "collection-log.json").write_text(json.dumps(log, indent=2) + "\n", encoding="utf-8")
     for id, row in source.items():
         n = row["name"]
+        if "beginner" in n.lower():
+            continue
         if row["placeholderTemplateId"] >= 0 or row["notedTemplate"] >= 0 or row["params"].get("59") or row["params"].get("295"):
             continue
         if (n.startswith(("Clue geode (", "Clue bottle (", "Clue nest (", "Scroll box (")) or
                 "scroll case" in n.lower() or
-                id in (23182, 23245, 19835, 19836)):
+                id in (19835, 19836)):
             extra.append(id)
             if id not in ids:
                 if id in imported:
