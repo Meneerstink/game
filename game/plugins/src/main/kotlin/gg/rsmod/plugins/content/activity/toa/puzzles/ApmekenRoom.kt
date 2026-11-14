@@ -146,6 +146,11 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                 ApmekenPuzzle.Action.PILLAR -> "Damaged roof supports cause some debris to fall on you!"
                 ApmekenPuzzle.Action.CORRUPTION -> "Your group is overwhelmed by Amascut's corruption!"
             }
+            // N609 14-11 census: the failure graphics spawn on the players' tiles (toa-mistake-tracker ApmekenPuzzleDetector VENT 2138
+            // TOA_PATH_APMEKEN_GAS / PILLAR 2139 TOA_PATH_APMEKEN_RUBBLE; its comment: 'two players on the same tile as the graphics
+            // spawn ... only one takes damage'). Corruption: no graphic named in any source.
+            val failGfx = when (expiring) { ApmekenPuzzle.Action.VENT -> 2138; ApmekenPuzzle.Action.PILLAR -> 2139; else -> null }
+            failGfx?.let { g -> players.forEach { p -> players.forEach { viewer -> ToaPuzzleVisuals.spot(viewer, g, p.tile) } } }
             players.forEach { it.message(text); damage(it, ref.missedActionDamage.value(raid.roster.size, missed)) }; drawSight()
         }
         if (tick > 0 && tick % ref.sightCycle.value == 0 && players.isNotEmpty()) {
@@ -215,6 +220,9 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
                     actor.detonates = Int.MAX_VALUE //One blast even if the lethal hit/death queue is delayed to a later world phase.
                     // N606: the blast itself (cache2686 spotanim 2249 SPOTANIM_MANDRILL_EXPLODE) was never sent - only the death clip.
                     players.forEach { ToaPuzzleVisuals.spot(it, 2249, npc.tile) }
+                    // N609 14-11 census: OSRS spawns graphics object 131 FIREBLAST_IMPACT on the explosion centre (RuneLite toa-mistake-
+                    // tracker ApmekenPuzzleDetector VOLATILE_GRAPHICS_ID, 3x3 hit around it; raid-recorder GO_APMEKEN_VOLATILE_EXPLOSION).
+                    players.forEach { ToaPuzzleVisuals.spot(it, 131, npc.tile) }
                     players.filter { it.tile.isWithinRadius(npc.tile, 1) }.forEach { damage(it, ref.volatileDamage.value(npc.getCurrentLifepoints())) }
                     actors.values.filter { it.npc !== npc && it.npc.tile.isWithinRadius(npc.tile, 1) }.toList().forEach {
                         // Strategies1279: kills nearby baboons regardless of HP. Pets are never in the owned actor collection.

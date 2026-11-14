@@ -217,6 +217,14 @@ object OsrsFxImportTool {
             // + the bomb shadow on the target tile: GARGBOSS_DEBRIS_SHADOW_90/120/60 (1446/1447/2111 = 3/4/2 ticks to the hit; RuneLite ToA
             // Mistake Tracker KephriDetector KEPHRI_BOMB_SHADOW_GRAPHICS).
             "toa-kephri-fireball" to listOf(1481, 2266, 1446, 1447, 2111),
+            // N609 14-11 census (RuneLite toa-mistake-tracker + raid-recorder graphics objects): Apmeken volatile explosion 131
+            // FIREBLAST_IMPACT (ApmekenPuzzleDetector VOLATILE_GRAPHICS_ID), Ba-Ba slam 1103 DARKBOW_SMOKE_ARROW_IMPACT under each struck
+            // player + rubble explosion 1463 EARTHSURGE_IMPACT (BabaDetector), Het orb-of-darkness hit 379 SHADOW_RUSH_IMPACT
+            // (HetPuzzleDetector). 1103/379 exist only as 667 versions (different models) -> imported here. 131/1463 were already imported
+            // earlier as OSRS 3115/3074 (used outside ToA too): 'toa-census-fx-existing' is DRY-RUN only (PLAN lines for data/cfg/toa/ids.tsv
+            // via toa_ids_append_fx.py) - applying it would REPLACE those shared records (only adds opcode 242), so never --apply it.
+            "toa-census-fx" to listOf(1103, 379),
+            "toa-census-fx-existing" to listOf(131, 1463),
         )
 
     /**

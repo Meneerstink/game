@@ -141,6 +141,9 @@ object BabaCombat : CombatScript() {
         private fun rebuildBlockers() {
             blockers.clear()
             debris.filter { it.isSpawned() && !it.isDead() }.forEach { d -> blockers += Blocker(Tile(d.tile), BlockerKind.DEBRIS, size = d.getSize()) { amount ->
+                // N609 14-11 census: a rock striking the rubble shows graphic 1463 EARTHSURGE_IMPACT on it (RuneLite toa-mistake-
+                // tracker BabaDetector RUBBLE_EXPLOSION_GRAPHICS_ID = the Rubble npc's graphic; raid-recorder GO_BABA_RUBBLE_EXPLOSION).
+                ToaBossFx.spot(1463)?.let { d.graphic(it) }
                 d.setCurrentLifepoints((d.getCurrentLifepoints() - amount).coerceAtLeast(0)); if (d.isDead()) remove(d)
             } }
             baboons.filter { it.isSpawned() && !it.isDead() }.forEach { b -> blockers += Blocker(Tile(b.tile), BlockerKind.BABOON) { amount ->
@@ -257,7 +260,10 @@ object BabaCombat : CombatScript() {
             require(impactDelay >= 0 && debrisTiles.size == 2)
             val tiles = players().map { Tile(it.tile) }
             // Both debris shadows are telegraphed as well as the player-targeted rocks (Strategies1342).
-            (tiles + debrisTiles).forEach { gfx(2250, it) }
+            // N609 14-11 12:4x: the shadow graphic encodes the fall time - RuneLite toa-mistake-tracker BabaDetector
+            // FALLING_BOULDER_GRAPHICS_IDS {2250: 6 ticks, 2251: 4 ticks} (raid-recorder GO_BABA_BOULDER_SHADOW_LONG/_SHORT; gameval 2251
+            // TOA_BABA_ROCK_FALL_FASTER). Our rocks land after impactDelay 4, so the 6-tick shadow 2250 ran two ticks too long.
+            (tiles + debrisTiles).forEach { gfx(if (impactDelay <= 4) 2251 else 2250, it) }
             later(impactDelay) {
                 players().filter { p -> (tiles + debrisTiles).any { sameTile(it, p.tile) } }.forEach { attack(it, ToaScale.damage(baseDamage, context), null, accuracy = false) }
                 // Debris HP is 10 per room participant (Strategies1342), not the generic raid HP multiplier.
@@ -298,7 +304,9 @@ object BabaCombat : CombatScript() {
         fun shockwave(tiles: Set<Tile>, delay: Int, damageAt: (Player) -> Int) {
             require(delay >= 0)
             animate(9742)
-            later(delay) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { attack(it, damageAt(it), null, accuracy = false) } }
+            // N609 14-11 census: the slam lands with graphics object 1103 DARKBOW_SMOKE_ARROW_IMPACT under each struck player (RuneLite
+            // toa-mistake-tracker BabaDetector BABA_SLAM_GRAPHICS_ID 'spawning under the player'; raid-recorder GO_BABA_SLAM).
+            later(delay) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { gfx(1103, Tile(it.tile)); attack(it, damageAt(it), null, accuracy = false) } }
         }
         /** Counts/positions are source inputs: T16 only proves 1-4, not a team-size formula. */
         fun summonBaboons(tiles: List<Tile>) {

@@ -5272,3 +5272,7 @@ seq	9470	17460	spotanim 2111
 npc	11748	15220	copy of 11753 + charge bar sprite 8921 (ToaChargeBarTool tx-20261114-003309)
 npc	11749	15221	copy of 11756 + charge bar sprite 8921 (ToaChargeBarTool tx-20261114-003309)
 spotanim	317	3396	model 65815 (N610 cache317_apply.sh, OsrsFxImportTool toa-scabaras-rocks)
+spotanim	1103	3397	model 66061 (N609 census, OsrsFxImportTool toa-census-fx)
+spotanim	379	3398	model 66062 (N609 census, OsrsFxImportTool toa-census-fx)
+spotanim	131	3115	model 4051 (N609 census, OsrsFxImportTool toa-census-fx)
+spotanim	1463	3074	model 4034 (N609 census, OsrsFxImportTool toa-census-fx)
