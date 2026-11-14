@@ -40,6 +40,13 @@ object BabaCombat : CombatScript() {
     const val BOULDER = 11782 // RuneLite NpcID TOA_BABA_BOULDER
     const val CRACKED_BOULDER = 11783
     const val BABOON_MAX = 1 // ONZEKER T16: individual Baboon Wiki infobox explicitly publishes "1?"; prefer that over a guessed formula.
+    /** Ba-Ba's base shockwave (graphics object 1447): 3x3 around [centre] plus one tile at distance 2 north, south, east and west. */
+    fun shockwaveTiles(centre: Tile): Set<Tile> {
+        val tiles = mutableSetOf<Tile>()
+        for (dx in -1..1) for (dz in -1..1) tiles += centre.transform(dx, dz)
+        tiles += centre.transform(2, 0); tiles += centre.transform(-2, 0); tiles += centre.transform(0, 2); tiles += centre.transform(0, -2)
+        return tiles
+    }
     fun blockerDamage(kind: BlockerKind) = when (kind) { BlockerKind.DEBRIS -> 10; BlockerKind.SARCOPHAGUS -> 30; BlockerKind.BABOON -> 12 }
     /** Cache2686 map15188, 40-loc-placements.tsv: all eight sarcophagi, retaining their facing. */
     val COFFINS_OSRS = listOf(3803, 3808, 3813, 3818).flatMap { x -> listOf(Tile(x, 5400) to 3, Tile(x, 5416) to 1) }.toMap()
@@ -102,20 +109,26 @@ object BabaCombat : CombatScript() {
             coffins[t] = (hp - amount).coerceAtLeast(0)
             if (coffins[t] == 0) { coffinCleanup.remove(t)?.invoke(); coffinCleanup[t] = placeObject(45753, t, coffinTiles.getValue(t)) }
         }
+        /** Special 0 (also '::toamech shockwave'): Ba-Ba's base shockwave towards her target. */
+        fun shockwaveSpecial() {
+            val centre = target?.let { npc.getFrontFacingTile(it) } ?: npc.getCentreTile()
+            // N610 14-11: OSRS sends graphics object 1447 GARGBOSS_DEBRIS_SHADOW_120 on the shockwave centre (RuneLite ToA
+            // Extended Baba GRAPHICS_OBJECT_ID_SHOCKWAVE_SMALL); BabaSceneOverlay.renderShockwaveTiles: 3x3 + one tile at distance 2
+            // in each direction (= Strategies1347 'rough 5x5'; 1448 = 5x5 + arms at 3 is the Shaking Things Up invocation, not ours).
+            gfx(1447, centre)
+            // ONZEKER T16: seq9742=2ticks supplies warning; base24 published melee max for unquantified special.
+            shockwave(shockwaveTiles(centre), 2) { ToaScale.damage(24, context) }
+        }
+        /** '::toamech coffin' (test server): the sarcophagus nearest to [player] breaks open, so its cone attack starts. */
+        fun testOpenCoffin(player: Player): String {
+            val t = coffins.keys.minByOrNull { it.getDistance(player.tile) } ?: return "geen sarcofaag"
+            damageCoffin(t, 9999)
+            return "sarcofaag ${t.x},${t.z} open"
+        }
         private fun defaultSpecial() {
             if (++autoCount % 4 != 0) return // ONZEKER T16: four6tick autos between specials, fallback to published attack speed.
             when (specialIndex++ % 3) {
-                0 -> {
-                    val radius = 2
-                    val centre = target?.let { npc.getFrontFacingTile(it) } ?: npc.getCentreTile()
-                    val tiles = mutableSetOf<Tile>()
-                    for (dx in -radius..radius) for (dz in -radius..radius) {
-                        tiles += centre.transform(dx, dz) // Strategies1347: base rough5x5 area; no Shaking Things Up variant.
-                    }
-                    // The swipe animation supplies its frame sounds; no unrelated baboon magic spot on the ground.
-                    // ONZEKER T16: seq9742=2ticks supplies warning; base24 published melee max for unquantified special.
-                    shockwave(tiles, 2) { ToaScale.damage(24, context) }
-                }
+                0 -> shockwaveSpecial()
                 1 -> {
                     animate(9744)
                     rockfall(4, 24,
@@ -180,7 +193,9 @@ object BabaCombat : CombatScript() {
                 // ONZEKER T16: five-tile cone uses the published5x5 Shockwave span;2tick warning is the swipe clip.
                 val sign = if (coffinTiles[t] == 3) 1 else -1
                 val cone = (1..5).flatMap { depth -> (-depth / 2..depth / 2).map { x -> t.transform(x, sign * depth) } }.toSet()
-                cone.forEach { gfx(2246, it) }
+                // N610 14-11: OSRS fires projectile 2246 TOA_BABA_SKULL_PROJ from the open coffin to each tile (ToA Extended
+                // Baba.onProjectileMoved PROJECTILE_ID_SARCOPHAGUS_ATTACK -> renderSarcophagusTiles on projectile.getTarget()), not a gfx.
+                cone.forEach { ToaBossFx.tileProjectile(npc, t, it, 2246, 2) }
                 later(2) {
                     players().filter { p -> cone.any { sameTile(it, p.tile) } }.forEach { victim ->
                         // ONZEKER T16: unquantified sarcophagus hit uses the published Ba-Ba max24.

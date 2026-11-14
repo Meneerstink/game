@@ -10,6 +10,16 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class ToaBabaTests {
+    @Test fun `base shockwave is the 1447 shape - 3x3 plus one tile at distance 2 each way, 13 tiles`() {
+        val c = Tile(3200, 3200)
+        val tiles = BabaCombat.shockwaveTiles(c)
+        assertEquals(13, tiles.size)
+        for (dx in -1..1) for (dz in -1..1) assertTrue(c.transform(dx, dz) in tiles)
+        listOf(2 to 0, -2 to 0, 0 to 2, 0 to -2).forEach { (dx, dz) -> assertTrue(c.transform(dx, dz) in tiles) }
+        assertFalse(c.transform(2, 2) in tiles) // the old full 5x5 corner
+        assertFalse(c.transform(2, 1) in tiles)
+    }
+
     @Test fun `a walkable throne position uses normal pathing without a corrective teleport`() {
         val f = ToaTestFixture()
         every { f.world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, 1) } returns

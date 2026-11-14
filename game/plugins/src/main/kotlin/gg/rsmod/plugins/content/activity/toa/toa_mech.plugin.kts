@@ -18,7 +18,9 @@ on_command("toamech", Privilege.ADMIN_POWER) {
             // 13-11 round 3: like the real 66%/33% trigger (BabaCombat.onTick) - without rolling=true rollingStones skips every row,
             // so the photobook showed no boulders at all.
             "rolling" to { if (!s.rolling) { s.rollingStage++; s.rolling = true; s.newPhase(); s.rollingDirector(s) } },
-            "special" to { s.specialDirector(s) })
+            "special" to { s.specialDirector(s) },
+            // N610 14-11: the ToA Extended shockwave (gfx 1447) and sarcophagus (projectile 2246) overlays on demand
+            "shockwave" to { s.shockwaveSpecial() }, "coffin" to { player.message("toamech coffin: " + s.testOpenCoffin(player)) })
         is gg.rsmod.plugins.content.activity.toa.bosses.KephriCombat.Session -> mapOf(
             "dung" to { s.dungDirector(s, s.players()) }, "special" to { s.specialDirector(s) },
             // 13-11 round 3: the director alone runs with shieldBreaks 0 -> swarmCount 0 (no swarms, no overlords in the photobook).
@@ -104,8 +106,15 @@ on_command("toascab", Privilege.ADMIN_POWER) {
     if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
     gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toascab")
     val room = gg.rsmod.plugins.content.activity.toa.puzzles.ToaPuzzles.of(player) as? gg.rsmod.plugins.content.activity.toa.puzzles.ScabarasRoom
-    val upToAddition = player.getCommandArgs().firstOrNull()?.lowercase() == "addition"
-    player.message("toascab ${room?.testFinishAllButMatching(upToAddition) ?: "niet in de Scabaras-kamer"}")
+    val args = player.getCommandArgs().map { it.lowercase() }
+    if (args.firstOrNull() == "obelisk") {
+        player.message("toascab ${room?.testObelisks(player, args.getOrNull(1)?.toIntOrNull() ?: 1, "wrong" in args) ?: "niet in de Scabaras-kamer"}")
+        return@on_command
+    }
+    val upToAddition = args.firstOrNull() == "addition"
+    // the full answer (buttons) is longer than one game message (GamePacketEncoder 'Message length 260 too long'): split it
+    val text = room?.testFinishAllButMatching(upToAddition) ?: "niet in de Scabaras-kamer"
+    text.chunked(240).forEach { player.message("toascab $it") }
 }
 
 /** N606: '::toawardens' clears every path (puzzle + boss, as ::toaskip would) and enters the Wardens - photobook route to the last

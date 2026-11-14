@@ -1432,7 +1432,7 @@
   example: "::toaskip"
 - name: toascab
   rank: admin
-  usage: "::toascab [addition]"
+  usage: "::toascab [addition | obelisk <n> [wrong]]"
   description: "ToA test jump: in the Path of Scabaras mark every puzzle but the matching puzzle solved ('addition': only up to the number tablet). Test server, and on live only check78/check79."
   example: "::toascab"
 - name: toawardens

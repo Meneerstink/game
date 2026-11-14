@@ -92,6 +92,17 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             b.joinToString(" ") { instance(it).let { t -> "${t.x},${t.z}" } } } + if (ref == null) " (geen referentie)" else ""
     }
 
+    /** N610 test '::toascab obelisk <n> [wrong]': [correct] strikes in the solution order, then optionally one wrong strike (falling
+     *  rocks), through the same strike() as a landed weapon hit - the ToA Extended obelisk order / falling-rock overlays need a
+     *  deterministic hit (a real 'Hit' keeps swinging and resets the order). */
+    fun testObelisks(player: Player, correct: Int, wrong: Boolean): String {
+        val order = initial.obeliskOrder
+        repeat(correct.coerceIn(0, order.size)) { strike(player, order[it]) }
+        // a wrong strike = any obelisk that is not the next one in the order (the cursor may already be past [correct])
+        if (wrong) layout.obelisks.indices.firstOrNull { obelisks.cursor >= order.size || it != order[obelisks.cursor] }?.let { strike(player, it) }
+        return "obelisks order=$order cursor=${obelisks.cursor} complete=${obelisks.complete}"
+    }
+
     /** Last memory sequence shown (test server '::toastate' only). */
     private var lastMemory: List<Int> = emptyList()
     override fun debugState(player: Player) = "scabaras tick=$tick finished=$finished skipped=$skipped " +
@@ -197,9 +208,9 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         if (result == Result.WRONG) {
             val target = source(player.tile) ?: return
             if (target !in ref.rockSafeTiles.value) {
-                // N610 14-11: OSRS = GA_BEAST_ROCK_FALL 317 (ToA Extended ScabarasObeliskPuzzle GRAPHICS_OBJECT_ID_FALLING_ROCKS, imported
-                // tx-20261114-075356 as 3396) - switch to FALLING_ROCKS_SPOT once it is seen in the test client (not yet: dossier N610 09:5x).
-                players.forEach { ToaPuzzleVisuals.spot(it, ref.rockWarningSpot.value, instance(target)) }
+                // N610 14-11: the falling rocks are GA_BEAST_ROCK_FALL 317 (ToA Extended ScabarasObeliskPuzzle GRAPHICS_OBJECT_ID_FALLING_ROCKS,
+                // imported tx-20261114-075356); rockWarningSpot 302 MM_ROOFCOLLAPSE stays the sequence failure (SequencePuzzle reset).
+                players.forEach { ToaPuzzleVisuals.spot(it, FALLING_ROCKS_SPOT, instance(target)) }
                 pending += (tick + ref.rockDelay.value) to {
                     players.filter { source(it.tile) == target }.forEach { damage(it, raid.world.random(0..ref.rockMaxHit.value)) }
                 }
