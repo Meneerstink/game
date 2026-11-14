@@ -36,6 +36,23 @@ class MageArenaIITrackingTests {
         assertFalse(MageArenaIITracking.usableAt(Tile(3200, 10100))) // Revenant caves (underground)
     }
 
+    /**
+     * 14-11 23:3x: a comment pasted mid-line in the seed fix commented out `.take(3)` -> rotate() stored all 17 points, locations()
+     * rejected them (null) and the symbol went silent in the Wilderness. One distinct point per god, parsed back by locations().
+     */
+    @Test
+    fun `rotate gives each god exactly one distinct spawn point`() {
+        val player = io.mockk.mockk<gg.rsmod.game.model.entity.Player>(relaxed = true)
+        val attrs = gg.rsmod.game.model.attr.AttributeMap()
+        io.mockk.every { player.attr } returns attrs
+        MageArenaIITracking.rotate(player)
+        val locations = MageArenaIITracking.locations(player)
+        assertTrue(locations != null, "locations() must parse what rotate() stored: ${attrs[MageArenaIITracking.LOCATIONS]}")
+        assertEquals(MageArenaII.God.values().size, locations.size)
+        assertEquals(locations.size, locations.map { it.point }.toSet().size)
+        assertEquals(MageArenaIITracking.ROTATION_STEPS, attrs[MageArenaIITracking.STEPS_LEFT])
+    }
+
     @Test
     fun `45 minutes of Wilderness time is 250 steps of 18 ticks`() {
         assertEquals(4500, MageArenaIITracking.ROTATION_STEPS * MageArenaIITracking.STEP_TICKS)

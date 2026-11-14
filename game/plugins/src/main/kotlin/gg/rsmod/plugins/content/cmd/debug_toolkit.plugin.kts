@@ -873,7 +873,11 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2where"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     if (p == null) "usage: ma2where <name>" else {
         val t = gg.rsmod.plugins.content.areas.wilderness.MageArenaIITracking
-        "${p.username} locations=${t.locations(p)?.mapIndexed { i, l -> "${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values()[i]}@${l.point}:${l.tile.x},${l.tile.z}" }} steps=${p.attr[t.STEPS_LEFT]}"
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        "${p.username} locations=${t.locations(p)?.mapIndexed { i, l -> "${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values()[i]}@${l.point}:${l.tile.x},${l.tile.z}" }} steps=${p.attr[t.STEPS_LEFT]}" +
+            " started=${ma2.started(p)} completed=${ma2.completed(p)} delivered=${p.attr[ma2.DELIVERED]} trackable=${ma2.trackable(p)}" +
+            " usable=${t.usableAt(p.tile)} wild=${p.tile.getWildernessLevel()} symbol=${ma2.assets.symbol}" +
+            " held=${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values().filter { ma2.holdsRemains(p, it) }}"
     }
 }
 // N415 test: `ma2cast <name> <saradomin|guthix|zamorak>` - selects that god spell on autocast (wield an autocasting god weapon first:
