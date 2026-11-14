@@ -73,6 +73,8 @@ object MageArena {
     val FORM = AttributeKey<Int>(persistenceKey = "mage_arena_form")
     private val ACTIVE = AttributeKey<WeakReference<Npc>>()
     private val DUEL_FORM = AttributeKey<Int>()
+    /** Between the duel teleport and Kolodion's arrival: the arena is single-way, so nothing else may engage the duelist first. */
+    private val PENDING = AttributeKey<Boolean>()
     val ARRIVAL = Tile(3104, 3933)
     val FOE_TILE = Tile(3105, 3933)
     val BANK = Tile(2541, 4715)
@@ -81,21 +83,27 @@ object MageArena {
     fun canStart(player: Player): Boolean = !completed(player) && player.skills.getMaxLevel(Skills.MAGIC) >= 60
     fun active(player: Player): Npc? = player.attr[ACTIVE]?.get()?.takeIf { it.isSpawned() && it.isAlive() }
 
+    /** In (or entering) their own Kolodion duel: battle mages do not acquire them (Kolodion engages at once in OSRS). */
+    fun dueling(player: Player): Boolean = active(player) != null || player.attr[PENDING] == true
+
     /** Progress is saved at each transformation, including across retreat, death and logout. */
     fun start(player: Player): Boolean {
         if (!canStart(player)) return false
         if (active(player) != null) return false
+        player.attr[PENDING] = true
         player.teleport(ARRIVAL, TeleportType.MODERN)
         // teleport() queues its animation; spawning/attacking before landing loses the initial attack to the lock.
         player.world.queue {
             repeat(20) {
                 wait(1)
-                if (!player.isOnline || player.isDead() || completed(player)) return@queue
+                if (!player.isOnline || player.isDead() || completed(player)) { player.attr.remove(PENDING); return@queue }
                 if (!player.isLocked() && player.tile.isWithinRadius(ARRIVAL, 2)) {
                     spawn(player, player.attr[FORM] ?: 0, FOE_TILE)
+                    player.attr.remove(PENDING)
                     return@queue
                 }
             }
+            player.attr.remove(PENDING)
         }
         return true
     }

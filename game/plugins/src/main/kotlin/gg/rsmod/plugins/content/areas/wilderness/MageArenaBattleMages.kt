@@ -19,6 +19,7 @@ object MageArenaBattleMages {
 
     fun tolerates(npc: Npc, player: Player): Boolean {
         val spell = SPELLS[npc.id] ?: return false
+        if (MageArena.dueling(player)) return true
         val cape = player.getEquipment(EquipmentType.CAPE)?.id ?: return false
         return MagicCombatFormula.chargeApplies(spell, cape) ||
             (spell == CombatSpell.CLAWS_OF_GUTHIX && cape == Items.GUTHIX_CAPE_10720)

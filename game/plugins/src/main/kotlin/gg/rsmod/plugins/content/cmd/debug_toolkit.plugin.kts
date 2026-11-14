@@ -856,6 +856,9 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
         p.attr[gg.rsmod.game.model.attr.prayedAtStatue] = true
         p.attr[gg.rsmod.game.model.attr.receivedStaff] = true
         p.attr[ma2.MIGRATED] = true
+        // A test account counts as a legacy account (owner 2B: legacy = MA2 completed): start from a clean miniquest state.
+        p.attr[ma2.LEGACY_COMPLETED] = false; p.attr[ma2.STARTED] = false; p.attr[ma2.DELIVERED] = 0; p.attr[ma2.CREDITS] = 0
+        p.attr[ma2.FIRST_IMBUE] = false
         if (stage != "ma1") gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.SPELLS.forEach { p.attr[it.key] = 100 }
         if (stage == "started" || stage == "remains") p.attr[ma2.STARTED] = true
         if (stage == "remains") {
@@ -881,7 +884,8 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2cast"] = { w, a ->
         "saradomin" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.SARADOMIN_STRIKE
         "guthix" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.CLAWS_OF_GUTHIX
         "zamorak" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FLAMES_OF_ZAMORAK
-        else -> null
+        // Any other combat spell by its enum name (MA1 duel: e.g. fire_wave with a staff of fire).
+        else -> a.getOrNull(1)?.let { n -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.values().firstOrNull { it.name.equals(n, true) } }
     }
     if (p == null || spell == null) "usage: ma2cast <name> <saradomin|guthix|zamorak>" else {
         gg.rsmod.plugins.content.combat.magic.Autocast.select(p, spell, gg.rsmod.plugins.content.combat.magic.Autocast.Mode.STANDARD)
