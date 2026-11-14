@@ -22,6 +22,9 @@ object ToaUi {
 
     private val LAST = AttributeKey<State>()
     var draw: (Player, State?) -> Unit = { _, _ -> }
+
+    /** N609 14-11: runs every raid tick before the 'changed state only' check (cheap; e.g. ToA Extended 'Hide HP Orbs'); true = redraw. */
+    var everyTick: (Player) -> Boolean = { false }
     var showRewards: (Player) -> Unit = { player ->
         val token = ToaRewards.stored(player)?.raidToken
         player.queue {
@@ -65,6 +68,7 @@ object ToaUi {
             ?.ordinal?.plus(1) ?: when (region) { 15184, 15696 -> 5; 14672 -> 6; else -> 0 }
         val state = State(raid.settings.raidLevel, p.elapsedCycles(raid.world.currentCycle), p.failedAttempts,
             p.completedPaths, p.wardensUnlocked, p.finished, path, raid.hudParty(), raid.roster.indexOf(player.uid))
+        if (everyTick(player)) player.attr.remove(LAST)
         if (player.attr[LAST] == state) return
         player.attr[LAST] = state
         draw(player, state)

@@ -479,7 +479,8 @@ object WardensCombat : CombatScript() {
                         // N609 13-11: the Kephri phantom drops the same bomb as Kephri (ToA Extended WardenP3 PROJECTILE_ID_FIREBALL 2266,
                         // Mistake Tracker WardensP3Detector KEPHRI_BOMB_GRAPHICS_IDS 2156-2159): falling 2266 + 4-tick shadow 1447, burst on
                         // the hit (was 2147 = the kamikaze scarab projectile drawn as a floor graphic). Ba-Ba: falling boulder 2250.
-                        if (id == 11776) targets.forEach { t -> ToaBossFx.fallProjectile(child, Tile(child.getCentreTile()), t, 2266, 4); gfx(1447, t) }
+                        // 14-11: + pre-fireball 1481 (WardenP3 PROJECTILE_ID_PRE_FIREBALL) via ToaBossFx.kephriBomb.
+                        if (id == 11776) { ToaBossFx.kephriBomb(child, Tile(child.getCentreTile()), targets, 4); targets.forEach { t -> gfx(1447, t) } }
                         else targets.forEach { gfx(2250, it) }
                         if (id == 11776) later(4) { targets.forEach { gfx(KephriCombat.BOMB_EXPLOSIONS[npc.world.random(KephriCombat.BOMB_EXPLOSIONS.lastIndex)], it) } }
                         // ONZEKER T01/T20: four-tick impact from the original boss's measured projectile clip.
