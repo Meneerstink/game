@@ -110,6 +110,19 @@ class ToaZebakTests {
         val upset = ZebakCombat.Session(f.npc, ToaTestContext(invocations = setOf("Upset Stomach")))
         upset.addAcid(Tile(3200, 3200)); assertEquals(9, upset.acid.size)
     }
+    @Test fun `poison splatter always hits the impact tile, stays inside its 3x3 and never on a rock`() {
+        // N609 14-11: wiki Strategies0819 'random tile ... may splatter additional times in a 3x3 radius around the impact tile'
+        val f = ToaTestFixture()
+        repeat(40) {
+            val s = ZebakCombat.Session(f.npc, ToaTestContext())
+            val impact = Tile(3200, 3200); val rock = Tile(3201, 3200)
+            s.splatter(impact, listOf(rock))
+            assertTrue(s.acid.any { it.x == impact.x && it.z == impact.z }, "impact tile must always be acid")
+            assertTrue(s.acid.none { it.x == rock.x && it.z == rock.z }, "never acid under a rock")
+            assertTrue(s.acid.all { kotlin.math.abs(it.x - impact.x) <= 1 && kotlin.math.abs(it.z - impact.z) <= 1 })
+            assertTrue(s.acid.size in 1..8)
+        }
+    }
     @Test fun `roar safety extends three tiles behind a rock, never to the fourth or the wrong plane`() {
         val rock = Tile(100, 100)
         assertTrue(ZebakCombat.behindRock(Tile(101, 100), rock, Direction.EAST))

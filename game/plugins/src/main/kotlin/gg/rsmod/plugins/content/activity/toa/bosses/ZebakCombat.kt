@@ -31,6 +31,10 @@ object ZebakCombat : CombatScript() {
     fun enraged(hp: Int, max: Int) = hp.toLong() * 4 < max
     fun waterRadius(@Suppress("UNUSED_PARAMETER") upsetStomach: Boolean = false) = 2
     fun acidRadius(@Suppress("UNUSED_PARAMETER") upsetStomach: Boolean = false) = 1
+    /** Cache2686 toa_zebak_vomit01-07 (all seven = acid tiles: toa-mistake-tracker ZebakDetector). */
+    val ACID_LOCS = listOf(45570, 45571, 45572, 45573, 45574, 45575, 45576)
+    /** ONZEKER T02: number of poison impacts per special (unpublished; kept at the earlier 10). */
+    const val ACID_IMPACTS = 10
     fun narrowedGap(base: Int, @Suppress("UNUSED_PARAMETER") path: Int) = base.coerceAtLeast(1)
     // Wiki: base7/4 ticks. Owner 21:5x: no path-specific speed changes.
     fun attackInterval(enraged: Boolean, @Suppress("UNUSED_PARAMETER") path: Int) = if (enraged) 4 else 7
@@ -118,7 +122,21 @@ object ZebakCombat : CombatScript() {
             // ONZEKER T02: room-relative layouts until OSRS spawn traces exist; central jug can always clear a rock's safe strip.
             val rockTiles = listOf(-4, 0, 4).map { centre.transform(0, it) }
             val jugTiles = listOf(-6, -3, 0, 3, 6).map { x -> centre.transform(3, x) }
-            val acidCentres = listOf(-6, -3, 0, 3, 6).flatMap { z -> listOf(centre.transform(1, z), centre.transform(5, z)) }
+            // N609 14-11 11:5x (eigenaar 'gifplassen dichter dan OSRS'): was a fixed grid of 10 centres x full 3x3 = two solid strips.
+            // Wiki Zebak/Strategies0819: "The poison ... will splatter on a random tile in the arena and may splatter additional times in
+            // a 3x3 radius around the impact tile"; 0821: "The first iteration of Great Roar will always place rocks in front of him,
+            // poison right behind them"; 0815 "Rarely, acid may not cover a tile behind a rock" -> behind each rock a full 3x3 covering
+            // the three safe tiles (behindRock), every other impact on a random tile of the same platform area with a partial 3x3.
+            // ONZEKER T02: impact count (10 as before) and the 50% neighbour chance are unpublished.
+            val behind = if (special == Special.ROAR) rockTiles.map { it.transform(2, 0) } else emptyList()
+            // 11:5x testclient pools-1145: x 0..6 kept everything in one strip; the dry platform runs ~4 tiles west and 8 east of the
+            // centre (water beyond -5, onPlatform = +-8) -> impacts anywhere on the dry platform, never on a wall/clipped tile.
+            val randomCentres = List(ACID_IMPACTS - behind.size) {
+                var t = centre.transform((-4..7).random(), (-7..7).random())
+                repeat(5) { if (npc.world.collision.isClipped(t)) t = centre.transform((-4..7).random(), (-7..7).random()) }
+                t
+            }
+            val acidCentres = behind + randomCentres
             // N606 / Wiki Zebak/Strategies: "Poison and jugs are always spit out with each special attack" ("throw jugs, poison and
             // two/three rocks onto the arena"). Spit clip seq9632 (+tail9633), then each object flies (pitcher/shield/vomit
             // projectiles, cache spotanims 2173/2172/2194) and only appears where it lands - it no longer pops up out of nowhere.
@@ -142,7 +160,8 @@ object ZebakCombat : CombatScript() {
                         }
                     }
                 }
-                acidCentres.forEach(::addAcid)
+                behind.forEach(::addAcid)
+                randomCentres.forEach { splatter(it, rockTiles) }
                 if (special == Special.ROAR) rocks.forEach { rock ->
                     spawn(11737, rock.tile, STATS.copy(hp = 150), path = false, group = false)?.let { r ->
                         rock.npc = r; specialNpcs += r; r.hitModifier = { h -> h.hitmarks.forEach { it.damage = 0 } }
@@ -254,7 +273,23 @@ object ZebakCombat : CombatScript() {
             for (dx in -radius..radius) for (dz in -radius..radius) {
                 val tile = centre.transform(dx, dz)
                 // Cache2686 loc45570 toa_zebak_vomit01 is a non-clipping1x1 tile (50-loc-defs).
-                if (acid.add(tile)) acidCleanup[tile] = placeObject(45570, tile)
+                // N609 14-11: OSRS has SEVEN acid locs toa_zebak_vomit01-07 (45570-45576; 2 base models 46393/46394, extra bubble models
+                // 45075/45078/45080, recolours) and RuneLite toa-mistake-tracker ZebakDetector.ACID_TILE_GAME_OBJECT_IDS treats all seven
+                // as acid tiles. Kaoz Entry 656 s: pools of mixed size with bubbles; ours (only vomit01) were all the same size.
+                // ONZEKER: which variant OSRS picks per tile is unpublished - uniform random per tile.
+                if (acid.add(tile)) acidCleanup[tile] = placeObject(ACID_LOCS.random(), tile)
+            }
+        }
+        /** Wiki Strategies0819: impact tile always, "may splatter additional times in a 3x3 radius" (ONZEKER: 50% per neighbour).
+         *  Never on a rock tile (the rock npc stands there). */
+        fun splatter(impact: Tile, rockTiles: List<Tile> = emptyList()) {
+            for (dx in -1..1) for (dz in -1..1) {
+                val tile = impact.transform(dx, dz)
+                if ((dx != 0 || dz != 0) && kotlin.random.Random.nextBoolean()) continue
+                if (rockTiles.any { sameTile(it, tile) }) continue
+                // 12:0x toagfx PLACEMENT 45574 'volledig in muur/blokkade': a neighbour can fall on the platform edge - skip clipped tiles.
+                if (npc.world.collision.isClipped(tile)) continue
+                if (acid.add(tile)) acidCleanup[tile] = placeObject(ACID_LOCS.random(), tile)
             }
         }
         private fun clearAcid(predicate: (Tile) -> Boolean) {
