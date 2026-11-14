@@ -81,6 +81,17 @@ object OsrsItemImportTool {
      */
     val BATCHES: Map<String, List<Spec>> by lazy {
         mapOf(
+            // N415: OSRS Wiki + cache 2686 MA2 remains/symbol. Local ids come from the importer, never the upstream ids.
+            // Ancient fabric/capes are absent in 2686 and intentionally require an isolated newer-source batch.
+            "mage-arena" to listOf(Spec(21797), Spec(21798), Spec(21799), Spec(21800)),
+            // N415: names/models/options verified read-only in OpenRS2 2762 (build242, 2026-11-11).
+            // Explicit isolated RSPS_OSRS_SOURCE_CACHE override is required: 2686 predates these items.
+            // No Pete Kayer, Deadman-event cosmetic or unverified darker variant is imported.
+            "mage-arena-ancient" to listOf(
+                Spec(34625), Spec(34627), Spec(34629),
+                Spec(34633, rev667Params = mapOf(749 to 6, 750 to 75)),
+                Spec(34635), Spec(34637, rev667Params = mapOf(749 to 6, 750 to 75)), Spec(34641),
+            ),
             "pilot" to
                 listOf(
                     Spec(12002, noted = true, rev667Params = mapOf(749 to 6, 750 to 70)), // Occult necklace

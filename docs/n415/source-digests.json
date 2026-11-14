@@ -30,6 +30,11 @@
     "bytes": 1212
   },
   {
+    "page": "God_capes",
+    "sha256": "97786434a1f744a23016172046dd7e2bfcbdde721b7177a358be62f3feb68b38",
+    "bytes": 9505
+  },
+  {
     "page": "Imbued_ancient_cape",
     "sha256": "f4dbc3e6ab701b27b3c3342c3b69c9b9201ea76140cf33d4f9ecffab88b58331",
     "bytes": 3190
@@ -75,6 +80,11 @@
     "bytes": 4144
   },
   {
+    "page": "Transcript_Ancient_fabric",
+    "sha256": "209b6cfa0321774e5943615b91e0b1f866d06b5f15e268f9a998cd3fecaf706c",
+    "bytes": 584
+  },
+  {
     "page": "Transcript_Kolodion",
     "sha256": "753d36a64597094cf31db7682b0129bab2b0b2ebf26ee5a161ceeed4e4131def",
     "bytes": 4121
@@ -88,5 +98,35 @@
     "page": "Update_Pete_Kayer's_Challenges",
     "sha256": "5e9c6c9338d9021da37e5ce732a664d460d075d98f99730e1149d33b2fb2ef87",
     "bytes": 17754
+  },
+  {
+    "page": "Saradomin_Strike",
+    "sha256": "4afc369b97578e538d1af8c0bc7a3a403d373d038901adaf5bf1f6ae06b51fe8",
+    "bytes": 3378
+  },
+  {
+    "page": "Claws_of_Guthix",
+    "sha256": "b0424d0b335eb68cc91f2904f1f3156de9daf94a79c5a2092f6ca9325f25f2d3",
+    "bytes": 3399
+  },
+  {
+    "page": "Flames_of_Zamorak",
+    "sha256": "0f0ae501a7ea541d034ec1e87db83a707eb1d6213d59468aef5234f5747bc73d",
+    "bytes": 3499
+  },
+  {
+    "page": "Battle_mage",
+    "sha256": "e35634e01cc8df2d81f80d6f9560454ecb3f6cc99f3c3ae55d6854dfe115b45c",
+    "bytes": 5207
+  },
+  {
+    "page": "Charge",
+    "sha256": "2aab986afafde5d3b0098b3a68be660127d14b1109e89f8e491e76433aa2d800",
+    "bytes": 2529
+  },
+  {
+    "page": "Lost_Property_shop",
+    "sha256": "b62fa808fdbb0fdcf4279b42b16376a549ecab92256719faa5c2b9bfa507df8c",
+    "bytes": 12395
   }
 ]

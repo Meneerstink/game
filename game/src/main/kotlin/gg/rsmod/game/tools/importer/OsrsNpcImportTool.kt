@@ -57,6 +57,10 @@ object OsrsNpcImportTool {
      */
     val BATCHES: Map<String, List<Int>> by lazy {
         mapOf(
+            // N415: regular MA1/MA2 actors, deliberately separate from the Deadman breach definitions below.
+            // RuneLite gameval KOLHUMAN/KOLOGRE/KOLSPIDER/KOLETHEREAL/KOLDEMON; MA2_BOSS_* and MA2_GUTHIX_HEALER.
+            // This batch only plans imports unless Claude explicitly runs --apply through CacheTransaction.
+            "mage-arena" to listOf(1605, 1606, 1607, 1608, 1609, 5977, 7513, 7514, 7515, 7858, 7859, 7860),
             // OSRS Wiki "Ferox Enclave" personalities, ids from each npc's infobox.
             "ferox" to
                 listOf(
@@ -159,7 +163,8 @@ object OsrsNpcImportTool {
      * The OSRS graves 9856/9857 are gravestone models, not a humanoid rig; the POH combat dummies 10507/8598/10508-10512 are posts.
      */
     val STATIC_NPCS =
-        setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601) + // 6601 Runite rocks (N522 deel 5)
+        setOf(9856, 9857, 10507, 8598, 10508, 10509, 10510, 10511, 10512, 6601,
+            7514) + // N415: OSRS2686 Energy ball has no movement sequences; never give it the humanoid fallback.
             // N462 ToA: no movement sequences in OSRS (GPT-A 50-skeletal-consumenten.tsv directSeqRefs {}): obelisks, palms, Het's Seal,
             // eggs, jug 11735, boulder 11737, helper npcs and rubble.
             setOf(11698, 11699, 11700, 11701, 11702, 11703, 11704, 11706, 11707, 11728, 11729, 11735, 11737, 11744, 11745, 11784, 11785,
@@ -186,6 +191,10 @@ object OsrsNpcImportTool {
      */
     val EXTRA_SEQS: Map<String, List<Int>> =
         mapOf(
+            // N415: RuneLite AnimationID ZAMORAK_DEMON_BOSS_*, ENT_BOSS_*, WILD_ZEALOT_*.
+            // Combat/special/spawn/death sequences do not all appear in the NPC movement definition.
+            "mage-arena" to listOf(7838, 7840, 7841, 7842, 7843, 7844, 7846, 7848, 7849, 7850,
+                7853, 7854, 7962, 7963, 7964, 7965, 7966),
             "mimic" to listOf(8308, 8309, 8310),
             // deadman-guard: the gnome guards' combat on the OSRS gnome skeleton (base of GNOME_READY 2331): GNOME_ATTACKBOW 12043,
             // GNOME_ATTACKSWORD 12045, GNOME_BLOCK 12046, GNOME_DEATH 12048 (RuneLite gameval AnimationID, 2026-09-24).

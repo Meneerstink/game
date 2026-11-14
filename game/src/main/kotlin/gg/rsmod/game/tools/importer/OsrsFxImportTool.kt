@@ -34,6 +34,9 @@ object OsrsFxImportTool {
      */
     val BATCHES: Map<String, List<Int>> =
         mapOf(
+            // N415: gameval GUTHIX_CLAW_GREEN, MA2_GUTHIX_PROJ(_SMALL), MA2_ZAMORAK_PROJ,
+            // WILD_ZEALOT_SWORD_PROJ and WILD_ZEALOT_LIGHTNING. Includes specials omitted by Breach.
+            "mage-arena" to listOf(1511, 1512, 1513, 1514, 1515, 1518),
             "fxpilot" to
                 listOf(
                     1228, 1229, // SOTD_SPECIAL_START / EXTRA (Power of Death)

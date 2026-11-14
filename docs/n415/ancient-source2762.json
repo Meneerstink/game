@@ -1,0 +1,291 @@
+{
+  "cacheId": 2762,
+  "timestamp": "2026-11-11T11:45:06.321160Z",
+  "build": 242,
+  "download": "https://archive.openrs2.org/caches/runescape/2762/disk.zip",
+  "sha256": "95980055d29f43f35fe7337488ae34e083f0f79c410e0a80ca51cc572ddfe380",
+  "items": [
+    {
+      "name": "Imbued ancient max cape",
+      "inv": [
+        null,
+        "Wear",
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "3": 15,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "9": 0,
+        "8": 15,
+        "299": 20,
+        "295": 1
+      },
+      "wear": 1,
+      "cost": 99000,
+      "model": 29630,
+      "wear45": [
+        29616,
+        0
+      ],
+      "wear48": [
+        29624,
+        0
+      ],
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34625
+    },
+    {
+      "name": "Imbued ancient max hood",
+      "inv": [
+        null,
+        "Wear",
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "wear": 0,
+      "model": 29629,
+      "wear45": [
+        29614,
+        0
+      ],
+      "wear48": [
+        29623,
+        0
+      ],
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34627
+    },
+    {
+      "name": "Imbued ancient max cape (broken)",
+      "inv": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "295": 1
+      },
+      "wear": null,
+      "cost": 99000,
+      "model": 29630,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34629
+    },
+    {
+      "name": "Imbued ancient cape",
+      "inv": [
+        null,
+        "Wear",
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "1564": 1,
+        "434": 6,
+        "436": 75,
+        "3": 15,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "9": 0,
+        "8": 15,
+        "299": 20,
+        "295": 1
+      },
+      "wear": 1,
+      "model": 62044,
+      "wear45": [
+        62047,
+        0
+      ],
+      "wear48": [
+        62049,
+        0
+      ],
+      "cost": 80000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34633
+    },
+    {
+      "name": "Imbued ancient cape (broken)",
+      "inv": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "1564": 1,
+        "434": 6,
+        "436": 75,
+        "3": 15,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "9": 0,
+        "8": 15,
+        "299": 20,
+        "295": 1
+      },
+      "wear": 1,
+      "model": 62044,
+      "wear45": [
+        62047,
+        0
+      ],
+      "wear48": [
+        62049,
+        0
+      ],
+      "cost": 80000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34635
+    },
+    {
+      "name": "Imbued ancient cape (l)",
+      "inv": [
+        null,
+        "Wear",
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "1564": 1,
+        "434": 6,
+        "436": 75,
+        "3": 15,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "9": 0,
+        "8": 15,
+        "299": 20,
+        "295": 1
+      },
+      "wear": 1,
+      "model": 62044,
+      "wear45": [
+        62047,
+        0
+      ],
+      "wear48": [
+        62049,
+        0
+      ],
+      "cost": 80000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34637
+    },
+    {
+      "name": "Imbued ancient cape",
+      "inv": [
+        null,
+        "Wear",
+        null,
+        null,
+        null
+      ],
+      "params": {
+        "1564": 1,
+        "434": 6,
+        "436": 75,
+        "3": 15,
+        "5": 3,
+        "6": 3,
+        "7": 3,
+        "9": 0,
+        "8": 15,
+        "299": 20,
+        "295": 1
+      },
+      "wear": 1,
+      "model": 62044,
+      "wear45": [
+        62047,
+        0
+      ],
+      "wear48": [
+        62049,
+        0
+      ],
+      "cost": 80000,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34639
+    },
+    {
+      "name": "Ancient fabric",
+      "inv": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "params": {},
+      "wear": null,
+      "model": 62045,
+      "cost": 1,
+      "worn": [
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "upstreamId": 34641
+    }
+  ]
+}
