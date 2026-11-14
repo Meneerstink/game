@@ -92,7 +92,7 @@ object MageArenaIITracking {
 
     /** New, distinct points for the three followers; their old actors go (Wiki: "the creatures have moved locations"). */
     fun rotate(player: Player) {
-        val points = POINTS.indices.shuffled(java.util.Random(player.world.random(Int.MAX_VALUE).toLong())).take(MageArenaII.God.values().size)
+        val points = POINTS.indices.shuffled(java.util.Random(player.world.random(1_000_000_000).toLong())) // random(n) is inclusive: n + 1 must not overflow.take(MageArenaII.God.values().size)
         player.attr[LOCATIONS] = points.joinToString(";") { index ->
             val tile = spawnTile(player, POINTS[index])
             "$index,${tile.x},${tile.z}"
