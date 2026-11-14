@@ -302,5 +302,7 @@ fun canAttack(
     if (!target.isOnline || target.invisible) {
         return false
     }
+    // N415: acquisition only. Keeping this here prevents spawn-order/aggroCheck replacement from losing cape tolerance.
+    if (gg.rsmod.plugins.content.areas.wilderness.MageArenaBattleMages.tolerates(npc, target)) return false
     return npc.aggroCheck == null || npc.aggroCheck?.invoke(npc, target) == true
 }

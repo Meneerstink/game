@@ -11,7 +11,7 @@ object MageArenaJournal {
     fun first(player: Player): List<String> = buildList {
         add("Mage Arena I")
         if (!MageArena.completed(player)) {
-            add("Speak to Kolodion at the Mage Arena bank.60 Magic is required and cannot be boosted.")
+            add("Speak to Kolodion at the Mage Arena bank. 60 Magic is required and cannot be boosted.")
             add("Defeat Kolodion's five forms using Magic.")
             add("Forms defeated: ${(player.attr[MageArena.FORM] ?: 0).coerceIn(0, 5)} / 5.")
             return@buildList
@@ -19,7 +19,7 @@ object MageArenaJournal {
         add("Kolodion has been defeated.")
         if (player.attr[prayedAtStatue] != true) add("Step into the sparkling pool and pray at a god statue to receive a god cape.")
         if (player.attr[receivedStaff] != true) add("Bring the cape to the chamber guardian for its matching god staff.")
-        add("Additional god staves cost80,000 coins each. More god capes are available from the statues.")
+        add("Additional god staves cost 80,000 coins each. More god capes are available from the statues.")
         GodSpellTraining.SPELLS.forEach { add(GodSpellTraining.progress(player, it)) }
     }
 

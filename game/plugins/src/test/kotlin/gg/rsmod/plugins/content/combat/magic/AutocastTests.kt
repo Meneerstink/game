@@ -77,6 +77,31 @@ class AutocastTests {
     }
 
     @Test
+    fun `all three basic god staves support manual god casting but require an upgraded weapon for autocast`() {
+        val pairs = listOf(Items.SARADOMIN_STAFF to CombatSpell.SARADOMIN_STRIKE,
+            Items.GUTHIX_STAFF to CombatSpell.CLAWS_OF_GUTHIX, Items.ZAMORAK_STAFF to CombatSpell.FLAMES_OF_ZAMORAK)
+        pairs.forEach { (staff, spell) ->
+            assertTrue(staff in AutocastWeapons.requiredWeapons(spell), "manual cast must remain possible")
+            assertNotNull(AutocastWeapons.incompatibility(def(staff), spell))
+            assertNull(AutocastWeapons.incompatibility(def(staff), CombatSpell.FIRE_BLAST), "ordinary elemental autocast is unchanged")
+        }
+        assertNull(AutocastWeapons.incompatibility(def(Items.STAFF_OF_LIGHT), CombatSpell.SARADOMIN_STRIKE))
+        assertNull(AutocastWeapons.incompatibility(def(Items.VOID_KNIGHT_MACE), CombatSpell.CLAWS_OF_GUTHIX))
+        assertNull(AutocastWeapons.incompatibility(def(Items.STAFF_OF_THE_DEAD), CombatSpell.FLAMES_OF_ZAMORAK))
+    }
+
+    @Test
+    fun `both charged and uncharged autocasting revenant sceptres can manually cast and autocast Flames`() {
+        listOf(Items.THAMMARONS_SCEPTRE_A, Items.THAMMARONS_SCEPTRE_AU,
+            Items.ACCURSED_SCEPTRE_A, Items.ACCURSED_SCEPTRE_AU).forEach { staff ->
+            assertTrue(staff in AutocastWeapons.requiredWeapons(CombatSpell.FLAMES_OF_ZAMORAK))
+            assertNull(AutocastWeapons.incompatibility(def(staff), CombatSpell.FLAMES_OF_ZAMORAK))
+            assertNotNull(AutocastWeapons.incompatibility(def(staff), CombatSpell.SARADOMIN_STRIKE))
+            assertNotNull(AutocastWeapons.incompatibility(def(staff), CombatSpell.CLAWS_OF_GUTHIX))
+        }
+    }
+
+    @Test
     fun `every autocastable spell is in the cache layout exactly once and every layout slot is an autocastable spell`() {
         val live = AutocastInterfaceLayout.ALL.filter { (it.book to it.bookComponent) !in AutocastInterfaceLayout.RETIRED }
         AutocastInterfaceLayout.ALL.filter { (it.book to it.bookComponent) in AutocastInterfaceLayout.RETIRED }

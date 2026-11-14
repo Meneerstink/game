@@ -5,10 +5,12 @@ import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.Skills
 import gg.rsmod.plugins.api.cfg.Items
+import gg.rsmod.plugins.api.ext.getVarp
 
 /**
  * N415: earned MA2 state and synchronous inventory transactions. Source: Mage Arena II and its transcript.
- * Neither old auto-completed varp1918, cape ownership nor a Breach kill proves miniquest completion.
+ * Owner decision2026-11-14 2B: preserve old auto-completed varp1918 and its rights through an explicit one-time migration.
+ * Cape ownership and Breach kills do not independently grant completion.
  * Boss/tracking bindings remain a separate source/cache gate (docs/n415/CLAUDE-HANDOFF.md).
  */
 object MageArenaII {
@@ -23,6 +25,8 @@ object MageArenaII {
     val DELIVERED = AttributeKey<Int>(persistenceKey = "mage_arena_ii_delivered")
     val FIRST_IMBUE = AttributeKey<Boolean>(persistenceKey = "mage_arena_ii_first_imbue")
     val CREDITS = AttributeKey<Int>(persistenceKey = "mage_arena_ii_credits")
+    val MIGRATED = AttributeKey<Boolean>(persistenceKey = "mage_arena_ii_migrated")
+    val LEGACY_COMPLETED = AttributeKey<Boolean>(persistenceKey = "mage_arena_ii_legacy_completed")
     const val ALL_REMAINS = 7
     const val VARP = 1918
     const val SLOT = 193
@@ -35,7 +39,38 @@ object MageArenaII {
     }
     val assets = Assets(MageArenaAssets::item)
 
+    fun legacyCompleted(player: Player): Boolean = player.attr[LEGACY_COMPLETED] == true
+
+    /** Read the old complete value(1) BEFORE writing the new0/1/2 display. Never reinterpret a new started stage. */
+    fun migrate(player: Player) {
+        if (player.attr[MIGRATED] == true) return
+        if (player.attr[STARTED] != true && player.getVarp(VARP) >= 1) {
+            player.attr[LEGACY_COMPLETED] = true
+            player.attr[STARTED] = true
+            player.attr[DELIVERED] = ALL_REMAINS
+            player.attr[CREDITS] = ALL_REMAINS
+            // Preserve any existing first-reward claim; no item is removed or fabricated.
+        }
+        player.attr[MIGRATED] = true
+    }
+
     fun isRemains(itemId: Int, assets: Assets = this.assets): Boolean = God.values().any { assets.remains(it) == itemId }
+
+    /** Wiki item destroy text, including the original capitalisation. */
+    fun destroyDetails(assets: Assets = this.assets): Map<Int, String> = buildMap {
+        assets.symbol?.let { put(it, "Kolodion will offer you a replacement at the Mage Arena bank.") }
+        assets.remains(God.SARADOMIN)?.let { put(it, "You will have to locate and defeat the Saradominist Justiciar again.") }
+        assets.remains(God.GUTHIX)?.let { put(it, "You will have to locate and defeat the Guthixian Ent again.") }
+        assets.remains(God.ZAMORAK)?.let { put(it, "You will have to locate and defeat the Zamorakian Demon again.") }
+    }
+
+    /** Confirmation can suspend: recheck the original slot and never consume another item or quest credit. */
+    fun destroy(player: Player, itemId: Int, slot: Int, assets: Assets = this.assets): Boolean {
+        if (itemId !in destroyDetails(assets) || slot !in player.inventory.rawItems.indices) return false
+        if (player.inventory[slot]?.id != itemId) return false
+        player.inventory[slot] = null
+        return true
+    }
 
     fun started(player: Player): Boolean = player.attr[STARTED] == true
     fun delivered(player: Player, god: God): Boolean = (player.attr[DELIVERED] ?: 0) and god.bit != 0
@@ -57,6 +92,7 @@ object MageArenaII {
             return SymbolResult.OWNED
         }
         if (!player.inventory.add(assets.symbol!!).hasSucceeded()) return SymbolResult.INVENTORY_FULL
+        player.attr[MIGRATED] = true
         player.attr[STARTED] = true
         return SymbolResult.GRANTED
     }
@@ -72,12 +108,16 @@ object MageArenaII {
         return count
     }
 
-    /** Source symbol prompt: filter delivered remains during quest, carried remains after completion. */
+    /** Ownership includes familiar storage; handing the remains in still requires the player's inventory. */
+    fun holdsRemains(player: Player, god: God, assets: Assets = this.assets): Boolean =
+        assets.remains(god)?.let { id -> player.containers.values.any { it.contains(id) } } == true
+
+    /** Source symbol prompt: filter delivered remains during quest, owned remains after completion. */
     fun trackable(player: Player, assets: Assets = this.assets): List<God> {
         if (!started(player)) return emptyList()
         return God.values().filter { god ->
             if (!completed(player)) !delivered(player, god)
-            else assets.remains(god)?.let { !player.inventory.contains(it) } == true
+            else assets.remains(god) != null && !holdsRemains(player, god, assets)
         }
     }
 
@@ -104,13 +144,13 @@ object MageArenaII {
     fun journal(player: Player, assets: Assets = this.assets): List<String> = buildList {
         if (!started(player)) {
             add("Speak to Kolodion in the Mage Arena bank about additional challenges.")
-            add("Requirements: Mage Arena I,75 Magic and100 casts of each god spell inside the arena.")
+            add("Requirements: Mage Arena I, 75 Magic and 100 casts of each god spell inside the arena.")
             return@buildList
         }
         God.values().forEach { god ->
             add(when {
                 delivered(player, god) -> "I have given Kolodion the remains of the ${god.creature}."
-                assets.remains(god)?.let { player.inventory.contains(it) } == true -> "I should take the remains of the ${god.creature} to Kolodion."
+                holdsRemains(player, god, assets) -> "I should take the remains of the ${god.creature} to Kolodion."
                 else -> "I must use the enchanted symbol to find and defeat the ${god.creature}."
             })
         }

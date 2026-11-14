@@ -10,6 +10,12 @@ val trollForm = Npcs.KOLODION_11301
 val darkBeastForm = Npcs.KOLODION_11302
 val demonForm = Npcs.KOLODION_911
 
+can_equip_any_item { player, item ->
+    val allowed = MageArena.canEquip(player, item)
+    if (!allowed) player.message("God staves cannot be wielded with the cape of another god.")
+    allowed
+}
+
 on_npc_spawn(npc = humanForm) {
     npc.forceChat("You must prove yourself... now!")
     npc.graphic(Gfx.MAGEARENA_TRANSFORM_POOF, 100)

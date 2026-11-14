@@ -434,6 +434,7 @@ object MagicCombatStrategy : CombatStrategy {
                 landHit = landHit,
                 delay = hitDelay,
                 hitType = HitType.MAGIC,
+                sourceSpellId = spell.uniqueId,
             )
         val damage = pawnHit.hit.hitmarks.sumOf { it.damage }
         // N570 Slayer's staff (e): one charge per Magic Dart that hits a task monster (after the max hit above used it).

@@ -14,7 +14,9 @@ import io.mockk.mockk
 import kotlin.test.*
 
 class AncientCapeTests {
-    private val assets = AncientCape.Assets { 50_000 + it }
+    private val assets = AncientCape.Assets(item = { 50_000 + it }, variant = {
+        when (it) { "ancient-cape-locked-broken" -> 90_000; "ancient-cape-locked-mangled" -> 90_001; else -> null }
+    })
     private class Account {
         val attrs = AttributeMap()
         val player = mockk<Player>(relaxed = true)
@@ -71,7 +73,7 @@ class AncientCapeTests {
     @Test fun `cancelled or stale recipe missing source and wrong cape cannot consume fabric`() {
         val a = Account()
         a.inventory.add(Items.IMBUED_SARADOMIN_CAPE); a.inventory.add(assets.fabric!!)
-        assertEquals(AncientCape.Result.ASSETS_MISSING, AncientCape.convert(a.player, 0, AncientCape.Assets { null }))
+        assertEquals(AncientCape.Result.ASSETS_MISSING, AncientCape.convert(a.player, 0, AncientCape.Assets(item = { null })))
         a.inventory[0] = Item(Items.FIRE_CAPE)
         assertEquals(AncientCape.Result.MISSING_ITEMS, AncientCape.convert(a.player, 0, assets))
         assertEquals(1, a.inventory.getItemCount(assets.fabric!!))
@@ -92,8 +94,12 @@ class AncientCapeTests {
         val locked = AncientCape.lockables(assets).single()
         assertEquals(assets.cape, locked.baseItemId)
         assertEquals(assets.locked, locked.lockedItemId)
-        assertTrue(AncientCape.breakables(AncientCape.Assets { null }).isEmpty())
-        assertTrue(AncientCape.lockables(AncientCape.Assets { null }).isEmpty())
-        assertNull(AncientCape.maxVariant(AncientCape.Assets { null }))
+        assertEquals(assets.lockedBroken, locked.brokenItemId)
+        assertEquals(assets.lockedMangled, locked.mangledItemId)
+        assertTrue(AncientCape.lockables(AncientCape.Assets(item = assets.item) { null }).isEmpty(),
+            "do not expose a half-imported lockable with invisible damaged states")
+        assertTrue(AncientCape.breakables(AncientCape.Assets(item = { null })).isEmpty())
+        assertTrue(AncientCape.lockables(AncientCape.Assets(item = { null })).isEmpty())
+        assertNull(AncientCape.maxVariant(AncientCape.Assets(item = { null })))
     }
 }

@@ -13,7 +13,8 @@ import gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell
  * N415. OSRS Wiki Saradomin Strike / Claws of Guthix / Flames of Zamorak: initially usable only against
  * the arena battle mages;100 casts per spell, including splashes. Counters record casts, not hits or kills.
  * Transcript:Mage Arena II supplies the progress wording and thresholds. No old unrestricted cast is
- * treated as proof of training. The existing MA1 completion flag and existing owned items are preserved.
+ * treated as proof of training, except the owner's explicit2B grandfathering of old MA2 completion and its rights.
+ * The existing MA1 completion flag and existing owned items are preserved.
  */
 object GodSpellTraining {
     data class Training(val spell: CombatSpell, val word: String, val key: AttributeKey<Int>)
@@ -29,7 +30,8 @@ object GodSpellTraining {
     // A battle mage outside this square (e.g. an admin spawn) cannot train a spell.
     const val ARENA_SQUARE = 12349
 
-    fun casts(player: Player, training: Training): Int = (player.attr[training.key] ?: 0).coerceIn(0, REQUIRED_CASTS)
+    fun casts(player: Player, training: Training): Int = if (MageArenaII.legacyCompleted(player)) REQUIRED_CASTS
+        else (player.attr[training.key] ?: 0).coerceIn(0, REQUIRED_CASTS)
     fun mastered(player: Player): Boolean = SPELLS.all { casts(player, it) == REQUIRED_CASTS }
 
     private fun arenaTile(tile: Tile): Boolean = tile.height == 0 && tile.regionId == ARENA_SQUARE

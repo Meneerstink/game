@@ -19,6 +19,7 @@ import gg.rsmod.game.model.container.key.EQUIPMENT_KEY
 import gg.rsmod.game.model.container.key.INVENTORY_KEY
 import gg.rsmod.game.model.entity.Npc
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.skill.SkillSet
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.EquipmentType
@@ -72,6 +73,45 @@ class MageArenaTests {
         assertTrue(MageArena.canStart(a.player))
         a.complete()
         assertFalse(MageArena.canStart(a.player))
+    }
+
+    @Test fun `Charge unlock needs the first staff claim and persists after losing staff or cape`() {
+        val a = Account()
+        assertFalse(MageArena.canCharge(a.player))
+        a.complete()
+        a.inventory.add(Items.STAFF_OF_THE_DEAD)
+        assertFalse(MageArena.canCharge(a.player), "upgraded staff ownership does not prove the first reward")
+        a.inventory.add(Items.SARADOMIN_CAPE)
+        assertEquals(MageArena.StaffResult.GRANTED, MageArena.claimFirstStaff(a.player))
+        a.inventory.removeAll()
+        assertTrue(MageArena.canCharge(a.player), "Charge needs no cape or staff equipped to cast")
+    }
+
+    @Test fun `all normal cape and god staff pairs reject conflicting equips in either order including Guthix duplicate`() {
+        val a = Account()
+        val capes = MageArena.STAFF_BY_CAPE + (Items.GUTHIX_CAPE_10720 to Items.GUTHIX_STAFF)
+        capes.forEach { (cape, matchingStaff) ->
+            MageArena.STAFF_BY_CAPE.values.forEach { staff ->
+                a.equipment[EquipmentType.CAPE.id] = Item(cape)
+                assertEquals(staff == matchingStaff, MageArena.canEquip(a.player, staff))
+                a.equipment[EquipmentType.WEAPON.id] = Item(staff)
+                assertEquals(staff == matchingStaff, MageArena.canEquip(a.player, cape))
+            }
+        }
+        assertTrue(MageArena.compatibleGear(null, Items.SARADOMIN_STAFF))
+        assertTrue(MageArena.compatibleGear(Items.GUTHIX_CAPE, null))
+        assertTrue(MageArena.canEquip(a.player, Items.SHARK))
+    }
+
+    @Test fun `wearable legacy Guthix duplicate still entitles the completed player to the matching first staff`() {
+        for (worn in listOf(false, true)) {
+            val a = Account(); a.complete()
+            if (worn) a.equipment[EquipmentType.CAPE.id] = Item(Items.GUTHIX_CAPE_10720)
+            else a.inventory.add(Items.GUTHIX_CAPE_10720)
+            assertEquals(MageArena.StaffResult.GRANTED, MageArena.claimFirstStaff(a.player))
+            assertEquals(1, a.inventory.getItemCount(Items.GUTHIX_STAFF))
+            assertEquals(MageArena.StaffResult.ALREADY_CLAIMED, MageArena.claimFirstStaff(a.player))
+        }
     }
 
     @Test fun `first staff cannot be claimed by visiting the room or by dropping the cape`() {

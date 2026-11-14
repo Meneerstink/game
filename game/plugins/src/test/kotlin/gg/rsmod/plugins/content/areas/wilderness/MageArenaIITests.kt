@@ -19,6 +19,8 @@ import gg.rsmod.plugins.content.quests.QuestStatus
 import gg.rsmod.plugins.content.quests.tab.QuestTabDetails
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import kotlin.test.*
 
 class MageArenaIITests {
@@ -56,6 +58,45 @@ class MageArenaIITests {
     private fun deliver(a: Account, god: MageArenaII.God, count: Int = 1) {
         a.inventory.add(assets.remains(god)!!, count)
         assertEquals(count, MageArenaII.handIn(a.player, god, assets))
+    }
+
+    @Test fun `all three quest remains refuse actual bank deposits without removing items or changing progress`() {
+        val a = Account(); start(a)
+        mockkObject(MageArenaAssets)
+        try {
+            every { MageArenaAssets.item(any()) } answers { assets.item(firstArg()) }
+            MageArenaII.God.values().forEach { god ->
+                val item = assets.remains(god)!!
+                a.inventory.add(item)
+                val slot = a.inventory.getItemIndex(item, skipAttrItems = false)
+                assertFalse(gg.rsmod.plugins.content.inter.bank.Bank.deposit(a.player, a.inventory, slot, 1))
+                assertTrue(a.inventory.contains(item))
+                assertFalse(a.bank.contains(item))
+                assertFalse(MageArenaII.delivered(a.player, god))
+            }
+        } finally { unmockkObject(MageArenaAssets) }
+    }
+
+    @Test fun `destroy rechecks the original slot leaves handins intact and permits a lost symbol replacement`() {
+        val a = Account(); start(a)
+        val first = MageArenaII.God.SARADOMIN
+        deliver(a, first)
+        val symbol = assets.symbol!!
+        val slot = a.inventory.getItemIndex(symbol, skipAttrItems = false)
+        a.inventory[slot] = Item(Items.SHARK)
+        assertFalse(MageArenaII.destroy(a.player, symbol, slot, assets))
+        assertEquals(Items.SHARK, a.inventory[slot]?.id)
+        assertFalse(MageArenaII.destroy(a.player, Items.SHARK, slot, assets))
+        a.inventory[slot] = Item(symbol)
+        assertTrue(MageArenaII.destroy(a.player, symbol, slot, assets))
+        assertFalse(MageArenaII.destroy(a.player, symbol, slot, assets))
+        assertTrue(MageArenaII.delivered(a.player, first))
+        assertEquals(MageArenaII.SymbolResult.GRANTED, MageArenaII.symbol(a.player, assets))
+        val remains = assets.remains(MageArenaII.God.GUTHIX)!!
+        a.inventory.add(remains)
+        assertTrue(MageArenaII.destroy(a.player, remains, a.inventory.getItemIndex(remains, false), assets))
+        assertFalse(MageArenaII.delivered(a.player, MageArenaII.God.GUTHIX))
+        assertEquals(4, MageArenaII.destroyDetails(assets).size)
     }
 
     @Test fun `start requires actual MA1 base75 and all three independently trained spells`() {
@@ -134,6 +175,23 @@ class MageArenaIITests {
         assertEquals(MageArenaII.ImbueResult.IMBUED, MageArenaII.imbue(a.player, gods[1], 0))
         a.inventory[0] = Item(gods[1].cape)
         assertEquals(MageArenaII.ImbueResult.NO_CREDIT, MageArenaII.imbue(a.player, gods[1], 0))
+    }
+
+    @Test fun `owned remains in familiar storage suppress repeat tracking but cannot be handed in remotely`() {
+        val a = Account(); start(a)
+        val gods = MageArenaII.God.values()
+        gods.forEach { deliver(a, it) }
+        val key = gg.rsmod.game.model.container.key.ContainerKey("test_familiar", 10,
+            gg.rsmod.game.model.container.ContainerStackType.NORMAL)
+        val cargo = ItemContainer(a.defs, key)
+        a.player.containers[key] = cargo
+        cargo.add(assets.remains(gods[0])!!)
+        assertTrue(MageArenaII.holdsRemains(a.player, gods[0], assets))
+        assertEquals(listOf(gods[1], gods[2]), MageArenaII.trackable(a.player, assets))
+        assertEquals(0, MageArenaII.handIn(a.player, gods[0], assets))
+        assertTrue(cargo.contains(assets.remains(gods[0])!!))
+        cargo.removeAll()
+        assertEquals(3, MageArenaII.trackable(a.player, assets).size)
     }
 
     @Test fun `symbol filters delivered remains before completion and carried remains afterwards`() {

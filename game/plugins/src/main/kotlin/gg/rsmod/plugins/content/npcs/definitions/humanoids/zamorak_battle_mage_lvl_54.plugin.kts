@@ -27,11 +27,11 @@ ids.forEach {
     set_combat_def(it) {
         configs {
             attackSpeed = 4
-            respawnDelay = 50
+            respawnDelay = 150
             spell = 503
         }
         stats {
-            hitpoints = 120
+            hitpoints = 1200
             attack = 1
             strength = 1
             defence = 1

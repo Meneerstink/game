@@ -73,6 +73,7 @@ object QuestStatus {
      * Login: legacy accounts get their eight choice quests (once), then the client is brought in line with the status.
      */
     fun login(player: Player) {
+        gg.rsmod.plugins.content.areas.wilderness.MageArenaII.migrate(player)
         // N462 owner E2: the old always-complete Beneath Cursed Sands entry stays completed (once, before anything reads it).
         BeneathCursedSands.migrate(player)
         if (QuestChoices.isLegacy(player)) QuestChoices.applyLegacy(player)
@@ -86,8 +87,9 @@ object QuestStatus {
      * the maximum, then the quest list refresh so colours and order follow at once. Call after any status change.
      */
     fun sync(player: Player) {
-        // N415: this varp was historically auto-completed. It is a display mirror, never evidence of earned MA2.
+        // N415 owner2B: grandfather the old complete flag before replacing it with the new display mirror.
         val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        ma2.migrate(player)
         val stage = ma2.displayStage(player)
         if (player.getVarp(ma2.VARP) != stage) player.setVarp(ma2.VARP, stage)
         QuestList.ENTRIES.forEach { entry ->

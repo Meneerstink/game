@@ -37,6 +37,25 @@ object MageArena {
         Items.GUTHIX_CAPE to Items.GUTHIX_STAFF,
         Items.ZAMORAK_CAPE to Items.ZAMORAK_STAFF,
     )
+
+    /** OSRS Wiki Mage Arena I: basic god staves cannot be worn with a different god's normal cape. */
+    fun compatibleGear(cape: Int?, weapon: Int?): Boolean {
+        // Wearable667 Guthix duplicate (same cape/model slot in data/cfg/items.yml).
+        val canonicalCape = if (cape == Items.GUTHIX_CAPE_10720) Items.GUTHIX_CAPE else cape
+        val staff = STAFF_BY_CAPE[canonicalCape] ?: return true
+        return weapon !in STAFF_BY_CAPE.values || weapon == staff
+    }
+
+    fun canEquip(player: Player, item: Int): Boolean = when {
+        item in STAFF_BY_CAPE.values -> compatibleGear(player.getEquipment(EquipmentType.CAPE)?.id, item)
+        item in STAFF_BY_CAPE || item == Items.GUTHIX_CAPE_10720 -> compatibleGear(item, player.getEquipment(EquipmentType.WEAPON)?.id)
+        else -> true
+    }
+
+    /** OSRS Wiki Charge: claiming the first god staff is required, even when using an upgraded staff afterwards. */
+    fun canCharge(player: Player): Boolean = MageArenaII.legacyCompleted(player) ||
+        (completed(player) && player.attr[receivedStaff] == true)
+
     val FORM = AttributeKey<Int>(persistenceKey = "mage_arena_form")
     private val ACTIVE = AttributeKey<WeakReference<Npc>>()
     private val DUEL_FORM = AttributeKey<Int>()
@@ -129,10 +148,12 @@ object MageArena {
     fun claimFirstStaff(player: Player): StaffResult {
         if (!completed(player) || player.attr[prayedAtStatue] != true) return StaffResult.NOT_COMPLETED
         if (player.attr[receivedStaff] == true) return StaffResult.ALREADY_CLAIMED
-        val cape = STAFF_BY_CAPE.keys.firstOrNull {
-            player.inventory.contains(it) || player.getEquipment(EquipmentType.CAPE)?.id == it
-        } ?: return StaffResult.NO_CAPE
-        if (!player.inventory.add(STAFF_BY_CAPE.getValue(cape)).hasSucceeded()) return StaffResult.INVENTORY_FULL
+        val wornCape = player.getEquipment(EquipmentType.CAPE)?.id
+        val staff = STAFF_BY_CAPE.entries.firstOrNull { (cape, _) ->
+            player.inventory.contains(cape) || wornCape == cape ||
+                (cape == Items.GUTHIX_CAPE && (player.inventory.contains(Items.GUTHIX_CAPE_10720) || wornCape == Items.GUTHIX_CAPE_10720))
+        }?.value ?: return StaffResult.NO_CAPE
+        if (!player.inventory.add(staff).hasSucceeded()) return StaffResult.INVENTORY_FULL
         player.attr[receivedStaff] = true
         return StaffResult.GRANTED
     }

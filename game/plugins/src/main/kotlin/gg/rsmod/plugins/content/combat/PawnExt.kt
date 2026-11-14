@@ -230,6 +230,7 @@ fun Pawn.dealHit(
     hitType: HitType,
     bonusDamage: Int = 0,
     applyDeflectProtection: Boolean = true,
+    sourceSpellId: Int? = null,
 ): PawnHit {
     SinglesPlus.recordAttack(this, target)
     // Calculate the 1:1 real damage, applying a random factor.
@@ -282,6 +283,7 @@ fun Pawn.dealHit(
     // N415: reject Kolodion's forbidden styles before launch-time XP, as well as at impact.
     if (target is Npc && damage > 0) {
         damage = gg.rsmod.plugins.content.areas.wilderness.MageArena.modifyIncomingDamage(target, this, hitType, damage.toInt()).toDouble()
+        damage = gg.rsmod.plugins.content.areas.wilderness.MageArenaIIGuardians.modifyIncomingDamage(target, hitType, damage.toInt(), sourceSpellId).toDouble()
     }
     // Desert Treasure: Fareed only takes magic damage from water spells (quests/foundation/QuestBosses).
     if (target is Npc && damage > 0) {
@@ -340,6 +342,7 @@ fun Pawn.dealHit(
     // OSRS hitsplats (owner 2026-10-09): the attacker sees its own hit lit and, from a player, the max splat at its max hit.
     hit.source = this
     hit.sourceCombatClass = curseHitStyle
+    hit.sourceSpellId = if (curseHitStyle == CombatClass.MAGIC) sourceSpellId else null
     hit.sourceMaxHit = kotlin.math.floor(maxHit + 1e-9).toInt() + bonusDamage
 
     val pawnHit = PawnHit(hit, executeHit)

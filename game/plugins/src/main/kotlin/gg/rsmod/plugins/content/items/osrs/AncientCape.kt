@@ -10,7 +10,7 @@ import gg.rsmod.plugins.content.mechanics.trouver.TrouverLockable
 
 /** OSRS Wiki Ancient fabric, Imbued ancient cape, Imbued ancient max cape and Transcript:Ancient fabric. */
 object AncientCape {
-    class Assets(val item: (Int) -> Int?) {
+    class Assets(val item: (Int) -> Int?, val variant: (String) -> Int? = MageArenaAssets::variant) {
         val fabric get() = item(34641)
         val cape get() = item(34633)
         val broken get() = item(34635)
@@ -18,6 +18,8 @@ object AncientCape {
         val max get() = item(34625)
         val hood get() = item(34627)
         val maxBroken get() = item(34629)
+        val lockedBroken get() = variant("ancient-cape-locked-broken")
+        val lockedMangled get() = variant("ancient-cape-locked-mangled")
     }
     val assets = Assets(MageArenaAssets::item)
     val GOD_CAPES = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_ZAMORAK_CAPE)
@@ -70,6 +72,10 @@ object AncientCape {
     )
 
     fun lockables(assets: Assets = this.assets): List<TrouverLockable> = listOfNotNull(
-        assets.cape?.let { cape -> assets.locked?.let { TrouverLockable(cape, it) } },
+        assets.cape?.let { cape -> assets.locked?.let locked@{ locked ->
+            val broken = assets.lockedBroken ?: return@locked null
+            val mangled = assets.lockedMangled ?: return@locked null
+            TrouverLockable(cape, locked, broken, mangled)
+        } },
     )
 }

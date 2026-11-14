@@ -1,0 +1,7 @@
+# N415 / N416 clone-batch template for Claude, NOT a finalized executable allocation.
+# Replace every angle-bracket token with a CacheTransaction-finalized local id.
+# Donor is the LOCAL imported equivalent of OSRS34635, never raw34635.
+# Allocate two contiguous ids using the existing allocator, in the same dual-cache window.
+# Syntax verified against ItemTransactionTool.cloneBatch: donorId|newId|name|droppedOpcodes
+<LOCAL_BROKEN_34635>|<ALLOCATED_LOCKED_BROKEN>|Imbued ancient cape (l) (broken)|97,98,121,122
+<LOCAL_BROKEN_34635>|<ALLOCATED_LOCKED_MANGLED>|Imbued ancient cape (l) (mangled)|97,98,121,122
