@@ -258,8 +258,15 @@ object ImportBatchOrchestrator {
         root.path("imports").forEach { import ->
             val upstreamItemId = import.path("upstream_item_id")
             val localItemId = import.path("local_item_id")
-            if (upstreamItemId.isInt && localItemId.isInt) {
-                val identity = "upstream_item:${upstreamItemId.asInt()}"
+            val itemIdentity = when {
+                upstreamItemId.isInt -> "upstream_item:${upstreamItemId.asInt()}"
+                upstreamItemId.isTextual -> upstreamItemId.asText().takeIf { it.isNotBlank() }?.let {
+                    if (it.toIntOrNull() != null) "upstream_item:$it" else it
+                }
+                else -> null
+            }
+            if (itemIdentity != null && localItemId.isInt) {
+                val identity = itemIdentity
                 itemIds[identity] = localItemId.asInt()
                 itemIdentities += identity
             }
@@ -476,9 +483,19 @@ object ImportBatchOrchestrator {
     ): OrchestrationResult {
         val beforeRecovery = readExistingMapping(assetMapFile)
         val recovered = recoverUnfinalized(targets, beforeRecovery.mappedItemSourceIdentities, journalRoot)
-        if (recovered.isNotEmpty()) finalizeDurableMapping(assetMapFile, recovered, beforeRecovery)
+        // A PLAN must never edit the shared ledger. Recovery is a mutation too.
+        if (apply && recovered.isNotEmpty()) finalizeDurableMapping(assetMapFile, recovered, beforeRecovery)
 
-        val existing = readExistingMapping(assetMapFile)
+        // Dry runs use the recovered identities in memory as well: their plan must
+        // reuse the same landed IDs that an applying run would persist and reuse.
+        val durable = readExistingMapping(assetMapFile)
+        val existing = durable.copy(
+            itemLocalIdBySourceIdentity = durable.itemLocalIdBySourceIdentity + recovered.associate { it.sourceIdentity to it.localId },
+            modelLocalIdByMappingKey = durable.modelLocalIdByMappingKey + recovered.flatMap { it.models }.associate {
+                ModelIdAllocator.mappingKey(it.sourceIdentity, it.role) to it.localId
+            },
+            mappedItemSourceIdentities = durable.mappedItemSourceIdentities + recovered.map { it.sourceIdentity },
+        )
         val batchPlan =
             plan(
                 targets, batch, existing, nextFreeItemId(targets), modelSafeFreeStart, modelSafeFreeEnd, journalRoot,

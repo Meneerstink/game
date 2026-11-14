@@ -43,7 +43,7 @@ import kotlin.math.pow
 object DropSources {
     enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters"), CLUES("Clues") }
 
-    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE }
+    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE, MIMIC }
 
     class Source(
         val key: String,
@@ -168,6 +168,9 @@ object DropSources {
         BreachMonsters.ROSTER.filter { !it.summon }.forEach { m ->
             out += Source("breach:${m.id}", m.name, m.id, intArrayOf(m.id), npcLevel(world, m.id), Group.DEADMAN, Kind.BREACH)
         }
+        listOf("mimic_elite" to "The Mimic (elite)", "mimic_master" to "The Mimic (78)").forEach { (key, name) ->
+            out += Source(key, name, Npcs.THE_MIMIC_14402, intArrayOf(Npcs.THE_MIMIC_14402), 186, Group.BOSSES, Kind.MIMIC)
+        }
         gg.rsmod.plugins.content.scrolls.ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
             out += Source(tier.key, tier.casketName, -1, intArrayOf(), 0, Group.CLUES, Kind.CLUE, modelItem = tier.casketId)
         }
@@ -193,7 +196,7 @@ object DropSources {
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
         // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
         // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
-        val base = if (playerDependent(source.tableNpc)) {
+        val base = if (source.kind == Kind.CLUE || source.kind == Kind.MIMIC || playerDependent(source.tableNpc)) {
             buildView(player, source, rate)
         } else viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
         val personal = personal(player, source, base)
@@ -240,7 +243,9 @@ object DropSources {
             Kind.BARROWS -> barrowsView(world, rate)
             Kind.JAD -> jadView(world, source, rate)
             Kind.TOA -> toaView(world)
-            Kind.CLUE -> gg.rsmod.plugins.content.scrolls.ClueRewardView.view(world,
+            Kind.MIMIC -> gg.rsmod.plugins.content.areas.watson.MimicRewardView.view(player,
+                if (source.key == "mimic_elite") gg.rsmod.plugins.content.scrolls.ClueScrollTier.ELITE else gg.rsmod.plugins.content.scrolls.ClueScrollTier.MASTER)
+            Kind.CLUE -> gg.rsmod.plugins.content.scrolls.ClueRewardView.view(player,
                 checkNotNull(gg.rsmod.plugins.content.scrolls.ClueCompletions.tierForKey(source.key)))
         }
     }

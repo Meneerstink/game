@@ -5,17 +5,32 @@ on_obj_option(obj = StrangeCasket.LOC, option = "search") {
     player.queue { strangeCasket(this) }
 }
 
-// The Mimic casket item: the fight is not built yet (owner question 17: arena square), so opening it always gives the wiki's
-// "before the fight" message; the post-kill reward and the in-arena message follow with the fight.
-on_item_option(item = Items.MIMIC, option = "open") {
-    player.message(StrangeCasket.OPEN_BEFORE_FIGHT)
-}
-
 suspend fun casketSays(it: QueueTask, text: String) {
     it.itemMessageBox("${StrangeCasket.NAME} $text", item = Items.CASKET_EASY)
 }
 
 suspend fun strangeCasket(it: QueueTask) {
+    if (MimicRecovery.items(it.player).isNotEmpty()) {
+        if (it.options("Retrieve items", "Cancel", title = "Item Retrieval Service (90,000 coins)") == 1) {
+            when (MimicRecovery.retrieve(it.player)) {
+                MimicRecovery.Result.NO_COINS -> it.messageBox("You don't have enough coins.")
+                MimicRecovery.Result.NO_SPACE -> it.messageBox("You don't have enough inventory space to hold that item.")
+                else -> it.player.persistNow()
+            }
+        }
+        return
+    }
+    val mimic = it.player.inventory.firstOrNull { it?.id == Items.MIMIC && MimicChallenge.tier(it!!) != null && !MimicChallenge.defeated(it) }
+    if (mimic != null) {
+        casketSays(it, "The Mimic has... found you! Will you fight now?")
+        when (it.options("Fight the Mimic", "Come back later")) {
+            1 -> {
+                if (MimicEncounter.enter(it.player, mimic)) it.messageBox("If you <col=7f0000>die</col> in here, your items can be retrieved from the <col=7f0000>Strange Casket</col> in Watson's house, for a <col=7f0000>fee of 90,000 coins</col>. Anything else you leave in here will be <col=7f0000>lost permanently</col>.")
+            }
+            2 -> casketSays(it, "Return to me when you are prepared.")
+        }
+        return
+    }
     if (it.player.attr[StrangeCasket.MIMIC_CHALLENGES] == true) {
         casketSays(it, "Do you... tire of the challenge?")
         when (it.options("I don't want Mimic challenges anymore.", "What are you?", "No, I want to keep getting mimic challenges.")) {

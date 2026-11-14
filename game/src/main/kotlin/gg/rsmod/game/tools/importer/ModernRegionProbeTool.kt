@@ -194,6 +194,14 @@ class ModernRegion(
             val rx = regionId shr 8
             val rz = regionId and 0xFF
             val index = reader.index(5)
+            // OSRS cache 2686 (RuneLite RegionLoader): unnamed groups are keyed
+            // by region ID; file 0 is terrain, file 1 unencrypted locations.
+            if (!index.hasNames) {
+                val files = reader.files(5, regionId)
+                val terrain = files[0] ?: error("Modern cache has no terrain for region $regionId")
+                val locations = files[1] ?: error("Modern cache has no locations for region $regionId")
+                return ModernRegion(rx, rz, decodeTiles(terrain), decodeLocs(locations), terrain.size, locations.size)
+            }
             val mapGroup = index.groups.values.firstOrNull { it.nameHash == js5NameHash("m${rx}_$rz") }
                 ?: error("Modern cache has no map group m${rx}_$rz (hash ${js5NameHash("m${rx}_$rz")}); index5 groups=${index.groups.size} hasNames=${index.hasNames} sampleHashes=${index.groups.values.take(5).map { it.nameHash }} keyHashFor_l=${js5NameHash("l${rx}_$rz")}")
             val locGroup = index.groups.values.firstOrNull { it.nameHash == js5NameHash("l${rx}_$rz") }

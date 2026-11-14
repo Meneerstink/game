@@ -1410,8 +1410,21 @@ object OsrsItemImportTool {
                             // The cuff of an OSRS glove sits inside the thicker 667 forearm unless fitted (OsrsWristFit).
                             return OsrsWristFit.fitBytes(bytes, forearmPieces.first { it.female == handsFemale })
                         }
-                        val models = modelIds.map { ImportBatchOrchestrator.ModelSource("upstream_model:$it", "model", converted(it)) }
-                        val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces, ::converted) else emptyMap()
+                        val fullSlots = if (removesArms(entry.def)) forearmPieces.filter { piece ->
+                            val ids = if (piece.female) listOf(entry.def.femaleModel0, entry.def.femaleModel1, entry.def.femaleModel2)
+                                else listOf(entry.def.maleModel0, entry.def.maleModel1, entry.def.maleModel2)
+                            ids.all { it >= 0 } && WornForearm.leavesForearmGap(ids.map { Rev667ModelDecoder.decode(converted(it)) }, piece.kitForearmEnd)
+                        } else emptyList()
+                        val merged = fullSlots.associateBy { if (it.female) entry.def.femaleModel0 else entry.def.maleModel0 }
+                        check(merged.size == fullSlots.size) { "${entry.name}: one primary wear model shared by both genders needs separate identities" }
+                        check(entry.def.inventoryModel !in merged) { "${entry.name}: forearm merge must not change the inventory model" }
+                        val models = modelIds.map { model ->
+                            val piece = merged[model]
+                            ImportBatchOrchestrator.ModelSource("upstream_model:$model",
+                                if (piece == null) "model" else "clue_body_forearm_${if (piece.female) "female" else "male"}",
+                                if (piece == null) converted(model) else ClueForearmModel.appendBytes(converted(model), piece))
+                        }
+                        val forearm = if (removesArms(entry.def)) forearmOps(entry.def, forearmPieces - fullSlots.toSet(), ::converted) else emptyMap()
                         forearm.values.forEach { piece ->
                             check(models.none { it.sourceIdentity == piece.sourceIdentity }) { "${entry.name}: model id clash with ${piece.sourceIdentity}" }
                         }

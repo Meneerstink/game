@@ -9,8 +9,6 @@ import gg.rsmod.plugins.content.quests.tab.CollectionLog
 
 /** Wiki Scroll box / Scroll case, cache 2686 IDs. Cases increase capacity; they never permit two active clues of one tier. */
 object ClueContainers {
-    // X Marks the Spot is the OSRS prerequisite. This flag is a quest integration hook, not an invented global completion.
-    val BOXES_UNLOCKED = AttributeKey<Boolean>(persistenceKey = "clue_scroll_boxes_unlocked")
     data class Case(val osrs: Int, val tier: ClueScrollTier?, val threshold: Int, val flag: String)
     val boxes = mapOf(ClueScrollTier.EASY to 24362, ClueScrollTier.MEDIUM to 24363, ClueScrollTier.HARD to 24364,
         ClueScrollTier.ELITE to 24365, ClueScrollTier.MASTER to 24366)
@@ -24,7 +22,8 @@ object ClueContainers {
     )
     private val flags = cases.associateWith { AttributeKey<Boolean>(persistenceKey = "clue_case_${it.flag}") }
     fun opened(player: Player, case: Case): Boolean = player.attr[flags.getValue(case)] == true
-    fun enabled(player: Player): Boolean = player.attr[BOXES_UNLOCKED] == true
+    // Owner 2026-11-15 00:2x: everyone has the X Marks the Spot box unlock; no beginner quest here.
+    fun enabled(@Suppress("UNUSED_PARAMETER") player: Player): Boolean = true
     fun boxTier(item: Int): ClueScrollTier? = boxes.entries.firstOrNull { ClueItems.local(it.value) == item }?.key
     fun containers(player: Player) = listOf(player.inventory, player.bank, player.gravestone, player.deathRecovery)
     fun held(player: Player, item: Int): Boolean = item >= 0 && containers(player).any { it.contains(item) }

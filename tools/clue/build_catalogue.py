@@ -220,6 +220,8 @@ def main():
                 target = candidates[0]
             else:
                 target = None
+            if target is not None:
+                ids[unnoted] = target
             if target is not None and row["noted"]:
                 target = local[target].get(97)
                 if target not in local or not local[target].get(98):
@@ -265,6 +267,10 @@ def main():
     # Source enum 3607 is the separate Scroll Cases log. Owner excludes its two beginner slots.
     log["cases"] = dict(enum=3607, items=[id for id in enum_items(enums["3607"]) if id not in (30902, 30904)])
     extra.extend((20164, 20249, 19941, 22675, 25612))  # Wiki milestones + Watson's S.t.a.s.h blueprint.
+    mimic_file = OUT / 'mimic-rewards.json'
+    if mimic_file.is_file():
+        for table in json.loads(mimic_file.read_text(encoding='utf-8')).values():
+            extra.extend([table['guaranteed'], table['case']] + [row['osrsId'] for row in table['outcomes']])
     for page in log.values():
         extra.extend(page["items"])
     for id in extra:
@@ -272,6 +278,16 @@ def main():
             continue
         if id in imported:
             ids[id] = imported[id]
+        elif source[id]['notedTemplate'] >= 0:
+            parent = source[id]['notedId']
+            target = ids.get(parent) or imported.get(parent)
+            if target is None and parent in local and canonical(local[parent].get('name') or '') == canonical(source[parent]['name']):
+                target = parent
+            note = local.get(target, {}).get(97)
+            if note in local and local[note].get(98) and local[note].get(97) == target:
+                ids[id] = note
+            else:
+                missing.add(parent)
         elif id in local and canonical(local[id].get("name") or "") == canonical(source[id]["name"]):
             ids[id] = id
         else:

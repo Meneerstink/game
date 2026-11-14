@@ -8,10 +8,18 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.content.quests.tab.CollectionLog
 import gg.rsmod.plugins.content.skills.summoning.Pets
 import gg.rsmod.plugins.api.ext.message
+import gg.rsmod.plugins.api.ext.playJingle
 import kotlin.random.Random
 
 /** One loot planner/transaction for ordinary caskets and GPT-B's defeated Mimic. */
 object ClueCasketRewards {
+    fun milestone(tier: ClueScrollTier): Pair<Int, Int>? = when (tier) {
+        ClueScrollTier.EASY -> 500 to 20164
+        ClueScrollTier.MEDIUM -> 400 to 20249
+        ClueScrollTier.ELITE -> 200 to 19941
+        ClueScrollTier.MASTER -> 100 to 22675
+        else -> null // Hard unlocks Uri transform, not a reward item.
+    }
     data class Plan(val tier: ClueScrollTier, val rolls: Int, val rewards: List<Item>, val megaRare: Set<Int> = emptySet(), val bloodhound: Boolean = false)
     data class Award(val count: Int, val rewards: List<Item>, val overflow: List<Item>)
 
@@ -50,16 +58,19 @@ object ClueCasketRewards {
 
     /** Once-per-casket rolls and earned milestones, independent of the ordinary reward slots. */
     fun planForPlayer(player: Player, tier: ClueScrollTier, random: Random = Random.Default, rolls: Int? = null,
-                      extra: List<Item> = emptyList(), catalogue: ClueRewardCatalogue = ClueRewardCatalogue.current): Plan? {
+                      extra: List<Item> = emptyList(), catalogue: ClueRewardCatalogue = ClueCasketLocation.catalogue(player)): Plan? {
+        if (!ClueCasketLocation.permitted(player, tier)) {
+            player.message("You cannot open this on Entrana, the monks are watching you too closely.")
+            return null
+        }
+        val logMissing = ClueLogCatalogue.current.pages.values.flatMap { it.osrsItems }.distinct().filter { ClueItems.local(it) == null }
+        if (logMissing.isNotEmpty()) {
+            println("PROBLEM CLUE collection-log assets not mapped: ${logMissing.sorted()}; casket retained")
+            return null
+        }
         val completed = (ClueCompletions.get(player, tier).toLong() + 1).coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
         val sourceExtras = ClueContainers.dueCases(player, tier, completed).toMutableList()
-        val milestone = when (tier) {
-            ClueScrollTier.EASY -> 500 to 20164
-            ClueScrollTier.MEDIUM -> 400 to 20249
-            ClueScrollTier.ELITE -> 200 to 19941
-            ClueScrollTier.MASTER -> 100 to 22675
-            else -> null // Hard unlocks Uri transform, not a reward item.
-        }
+        val milestone = milestone(tier)
         if (milestone != null && completed >= milestone.first && !ClueContainers.held(player, ClueItems.local(milestone.second) ?: -1)) sourceExtras += milestone.second
         val mapped = sourceExtras.map { osrs ->
             val id = ClueItems.local(osrs) ?: run { println("PROBLEM CLUE milestone item $osrs not imported; casket retained"); return null }
@@ -67,7 +78,15 @@ object ClueCasketRewards {
         }.toMutableList()
         val master = if (tier.masterChance > 0) ClueContainers.rewardId(player, ClueScrollTier.MASTER, notify = false) else null
         // Eligible master outcomes must exist before a casket is consumed. No failed asset turns into a losing roll.
-        if (tier.masterChance > 0 && !ClueOwnership.owns(player, ClueScrollTier.MASTER) && ClueScrollTier.MASTER.scrollId < 0) return null
+        if (tier.masterChance > 0) {
+            val masterEligible = if (ClueContainers.enabled(player))
+                ClueContainers.count(player, ClueScrollTier.MASTER) < ClueContainers.capacity(player, ClueScrollTier.MASTER)
+                else !ClueOwnership.owns(player, ClueScrollTier.MASTER)
+            if (masterEligible && master == null) {
+                println("PROBLEM CLUE 78 clue/scroll box reward import missing; casket retained")
+                return null
+            }
+        }
         if (tier.masterChance > 0 && random.nextInt(tier.masterChance) == 0) {
             if (master != null) mapped += Item(master) else ClueContainers.rewardId(player, ClueScrollTier.MASTER)
         }
@@ -82,7 +101,11 @@ object ClueCasketRewards {
      */
     fun award(player: Player, slot: Int, source: Item, plan: Plan): Award? {
         if (slot !in 0 until player.inventory.capacity || player.inventory[slot] !== source || source.amount < 1) return null
-        if (source.id != plan.tier.casketId && source.id != ClueItems.local(23184)) return null
+        if (source.id != plan.tier.casketId) {
+            val mimic = gg.rsmod.plugins.content.areas.watson.MimicChallenge
+            if (mimic.tier(source) != plan.tier || !mimic.defeated(source) || mimic.active(source) ||
+                plan.rolls != mimic.remaining(source)) return null
+        }
         if (plan.rewards.isEmpty() || plan.rewards.any { it.amount <= 0 }) return null
         if (plan.rewards.any { player.world.definitions.getNullable(ItemDef::class.java, it.id) == null }) {
             println("PROBLEM CLUE ${plan.tier.name} reward definition missing; casket retained")
@@ -103,6 +126,11 @@ object ClueCasketRewards {
             if (before?.id != after?.id || before?.amount != after?.amount || before?.attr != after?.attr) player.inventory[index] = after
         }
         val count = ClueCompletions.opened(player, plan.tier)
+        // Wiki Treasure! (Treasure Trails), cache 2686 index 11/group 193.
+        // Byte-identical to our 667 jingle (docs/CLUE/ui-asset-evidence.json).
+        player.playJingle(193)
+        player.message("Well done, you've completed the Treasure Trail!")
+        player.message("<col=ff0000>You have completed $count ${plan.tier.displayName.lowercase()} Treasure Trails.</col>")
         overflow.forEach { player.world.spawn(GroundItem(it, player.tile, player)) }
         runCatching { CollectionLog.record(player, plan.tier.key, plan.rewards.map { it.id to it.amount }) }
             .onFailure { gg.rsmod.game.model.Trace.crash("clue collection log", it) }

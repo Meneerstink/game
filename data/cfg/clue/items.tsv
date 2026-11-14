@@ -1,14 +1,26 @@
 # OSRS id	local id	cache name; generated from cache + OSRS_IMPORT_MASTER, not GE data
+207	207	Grimy ranarr weed
 208	208	null
+225	225	Limpwurt root
 226	226	null
+245	245	Wine of Zamorak
 246	246	null
+269	269	Torstol
 270	270	null
+329	329	Salmon
 330	330	null
+333	333	Trout
 334	334	null
+373	373	Swordfish
 374	374	null
+379	379	Lobster
 380	380	null
+385	385	Shark
 386	386	null
+390	390	null
+391	391	Manta ray
 392	392	null
+451	451	Runite ore
 452	452	null
 554	554	Fire rune
 555	555	Water rune
@@ -67,6 +79,7 @@
 1373	1373	Rune battleaxe
 1377	1377	Dragon battleaxe
 1381	1381	Staff of air
+1391	1391	Battlestaff
 1392	1392	null
 1393	1393	Fire battlestaff
 1434	1434	Dragon mace
@@ -74,13 +87,20 @@
 1664	1664	Dragon necklace
 1727	1727	Amulet of magic
 1731	1731	Amulet of power
+1747	1747	Black dragonhide
 1748	1748	null
 1965	1965	Cabbage
+2363	2363	Runite bar
 2364	2364	null
+2436	2436	Super attack(4)
 2437	2437	null
+2440	2440	Super strength(4)
 2441	2441	null
+2442	2442	Super defence(4)
 2443	2443	null
+2444	2444	Ranging potion(4)
 2445	2445	null
+2452	2452	Antifire potion(4)
 2453	2453	null
 2497	2497	Black d'hide chaps
 2503	2503	Black d'hide body
@@ -137,9 +157,13 @@
 2677	2677	Clue scroll (easy)
 2722	2722	Clue scroll (hard)
 2801	2801	Clue scroll (medium)
+3016	3016	Super energy(4)
 3017	3017	null
+3024	3024	Super restore(4)
 3025	3025	null
+3049	3049	Grimy toadflax
 3050	3050	null
+3051	3051	Grimy snapdragon
 3052	3052	null
 3204	3204	Dragon halberd
 3472	3472	Black plateskirt (t)
@@ -172,8 +196,11 @@
 5289	5289	Palm tree seed
 5315	5315	Yew seed
 5316	5316	Magic seed
+6685	6685	Saradomin brew(4)
 6686	6686	null
+7060	7060	Tuna potato
 7061	7061	null
+7218	7218	Summer pie
 7219	7219	null
 7319	7319	Red boater
 7321	7321	Orange boater
@@ -207,8 +234,11 @@
 7398	7398	Enchanted robe
 7399	7399	Enchanted top
 7400	7400	Enchanted hat
+8778	8778	Oak plank
 8779	8779	null
+8780	8780	Teak plank
 8781	8781	null
+8782	8782	Mahogany plank
 8783	8783	null
 9185	9185	Rune crossbow
 9194	9194	Onyx bolt tips
@@ -298,6 +328,7 @@
 10474	10474	Zamorak stole
 10476	10476	Purple sweets
 11115	11115	Dragonstone bracelet
+11951	23701	Extended antifire(4)
 11952	23702	null
 12073	19043	Clue scroll (elite)
 12195	19390	Ancient robe legs
@@ -390,6 +421,7 @@
 12623	19610	Ancient page 3
 12624	19611	Ancient page 4
 12642	23689	Lumberyard teleport
+12913	23255	Anti-venom+(4)
 12914	23256	null
 19724	23520	Left eye patch
 19730	24112	Bloodhound

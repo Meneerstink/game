@@ -15,6 +15,15 @@ class ClueSceneProbe {
                     }
                 }
             }
+            for (int script : reader.index(12).getGroups().keySet()) {
+                byte[] raw = reader.file(12, script, 0);
+                if (raw == null) continue;
+                String text = new String(raw, StandardCharsets.ISO_8859_1);
+                for (String needle : new String[]{"Watson", "clues given", "Treasure Trails", "Scroll Box Capacity"}) {
+                    int at = text.indexOf(needle);
+                    if (at >= 0) System.out.println("SCRIPT " + script + " " + text.substring(at, Math.min(text.length(),at+150)).replaceAll("[\\p{Cntrl}]", " "));
+                }
+            }
             if (args.length > 2) {
                 int id = Integer.parseInt(args[2]);
                 var maps = reader.index(5);

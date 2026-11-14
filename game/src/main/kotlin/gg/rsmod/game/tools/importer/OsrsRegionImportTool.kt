@@ -104,6 +104,9 @@ object OsrsRegionImportTool {
          * underlays of 'toa-map-floors' (one of them is exactly OSRS 123 b8b098).
          */
         val underlayCandidates: Set<Int>? = null,
+        /** CLUE uses the owner-pinned cache 2686, whose maps need no XTEA keys. */
+        val sourceCache: String = FeroxImportTool.MODERN_CACHE,
+        val sourceKeys: String = FeroxImportTool.MODERN_KEYS,
     ) {
         init {
             require(squareOffset == null || (replaceSquares.isEmpty() && patch == null && locsOnlyWithout == null && !tilesOnly)) {
@@ -239,6 +242,9 @@ object OsrsRegionImportTool {
 
     val BATCHES: Map<String, Batch> =
         mapOf(
+            "clue-mimic-arena" to Batch(listOf(10819), note = "The Mimic arena, OSRS cache 2686 m42_67",
+                sourceCache = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/cache"),
+                sourceKeys = gg.rsmod.game.RspsPaths.root("import-source/openrs2-2686/keys.json")),
             // N522 bundle 2: OSRS Wiki "Scorpia" (cave in the Scorpion Pit, x 3233 y 10341 -> square 12961, empty in the 667 map) and
             // the three surface entrances "Cavern" 26762 (OSRS square 12861: 3231,3936 / 3231,3951 / 3241,3949); the exits "Crevice"
             // 26763 are inside 12961. Transports: Kronos-184 activities/wilderness/Scorpia.java.
@@ -471,11 +477,11 @@ object OsrsRegionImportTool {
         name: String,
         batch: Batch,
     ): Plan {
-        val keys = ModernRegionProbeTool.loadKeys(File(FeroxImportTool.MODERN_KEYS))
+        val keys = ModernRegionProbeTool.loadKeys(File(batch.sourceKeys))
         val seqs = OsrsFxImportTool.existingFx(File(FeroxImportTool.ASSET_MAP)).filterKeys { it.startsWith("seq:") }
         val mutations = ArrayList<CacheMutation>()
         val dropped = ArrayList<String>()
-        ModernCacheReader(File(FeroxImportTool.MODERN_CACHE)).use { modern ->
+        ModernCacheReader(File(batch.sourceCache)).use { modern ->
             val library = CacheLibrary(FeroxImportTool.GAME_CACHE)
             try {
                 val maps = library.index(FeroxImportTool.MAP_INDEX)
@@ -542,7 +548,11 @@ object OsrsRegionImportTool {
                     }
 
                 // ---- loc types: every one imported new ----
-                val regions = batch.squares.associateWith { ModernRegion.load(modern, it, keys[it] ?: error("No modern key for $it")) }
+                val regions = batch.squares.associateWith {
+                    val key = keys[it]
+                    check(key != null || !modern.index(5).hasNames) { "No modern key for $it" }
+                    ModernRegion.load(modern, it, key)
+                }
                 batch.newUnderlaySlots?.let { slots ->
                     val underlayIndex = library.index(Rev667RegionProbeTool.CONFIG_INDEX).archive(Rev667RegionProbeTool.UNDERLAY_GROUP)!!
                     slots.forEach { check(it in 0..173) { "underlay $it is not a tile value (opcode - 81 <= 174)" } }

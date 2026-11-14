@@ -1,0 +1,8 @@
+// Keep this card's tests on the reviewed worktree data; never read another branch's runtime catalogues.
+gradle.projectsEvaluated {
+    allprojects {
+        tasks.withType(Test).configureEach {
+            systemProperty 'rsps.data', new File(rootProject.projectDir, 'data').absolutePath
+        }
+    }
+}

@@ -95,4 +95,12 @@ enum class ItemAttribute {
     /** Stable Treasure Trail step key on the scroll itself; survives bank, drop, grave and serialization. */
     CLUE_STEP_KEY,
 
+    /** Mimic origin: the OSRS reward-casket ID, independent of enum order/local allocation. */
+    MIMIC_SOURCE_TIER,
+    MIMIC_FAILURES,
+    MIMIC_DEFEATED,
+    /** Attempt tokens make exit/death/logout settlement idempotent. */
+    MIMIC_ATTEMPT_SERIAL,
+    MIMIC_SETTLED_SERIAL,
+
 }
