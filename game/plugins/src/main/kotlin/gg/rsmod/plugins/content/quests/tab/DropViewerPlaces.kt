@@ -21,7 +21,8 @@ object DropViewerPlaces {
     fun spawnOf(world: World, id: Int): Tile? {
         spawns[id]?.let { return it }
         var found: Tile? = null
-        world.npcs.forEach { npc -> if (found == null && npc.id == id) found = Tile(npc.spawnTile) }
+        // N415: an owned npc (a Mage Arena II follower, Kolodion's duel forms) is a per-player spawn, never a fixed place.
+        world.npcs.forEach { npc -> if (found == null && npc.id == id && npc.owner == null) found = Tile(npc.spawnTile) }
         return found?.also { spawns[id] = it }
     }
 

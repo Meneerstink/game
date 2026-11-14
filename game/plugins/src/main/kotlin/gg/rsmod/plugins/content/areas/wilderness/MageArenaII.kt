@@ -44,7 +44,10 @@ object MageArenaII {
     /** Read the old complete value(1) BEFORE writing the new0/1/2 display. Never reinterpret a new started stage. */
     fun migrate(player: Player) {
         if (player.attr[MIGRATED] == true) return
-        if (player.attr[STARTED] != true && player.getVarp(VARP) >= 1) {
+        // Owner 2B: every account that saw the old always-complete entry keeps MA2 - the varp, or a legacy-cohort account that
+        // never logged in after the varp was written.
+        val legacy = player.getVarp(VARP) >= 1 || gg.rsmod.plugins.content.quests.foundation.QuestChoices.isLegacy(player)
+        if (player.attr[STARTED] != true && legacy) {
             player.attr[LEGACY_COMPLETED] = true
             player.attr[STARTED] = true
             player.attr[DELIVERED] = ALL_REMAINS

@@ -92,7 +92,17 @@ object PerduLostProperty {
             Entry(Items.IMBUED_SARADOMIN_CAPE, 250_000, variants = setOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_SARADOMIN_CAPE_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L, Items.IMBUED_SARADOMIN_CAPE_L_BROKEN, Items.IMBUED_SARADOMIN_CAPE_L_MANGLED)),
             Entry(Items.DRAKANS_MEDALLION, 30_000, multiple = true),
             Entry(Items.THREAD_OF_ELIDINIS, 350_000),
-        ) + DIARY_ITEMS.map { Entry(it, DIARY_PRICE, multiple = true) }
+        ) + DIARY_ITEMS.map { Entry(it, DIARY_PRICE, multiple = true) } + listOfNotNull(ancientCapeEntry())
+
+    /**
+     * N415 (owner 2026-11-14 21:3x 'alle mage arena 2 capes terugkopen bij Perdu, ook de nieuwe cape'): the Imbued ancient cape on the same
+     * terms as the three imbued god capes (250,000, every broken / locked form counts as owning it). Resolved through the MA import.
+     */
+    private fun ancientCapeEntry(): Entry? {
+        val a = gg.rsmod.plugins.content.items.osrs.AncientCape.assets
+        val cape = a.cape ?: return null
+        return Entry(cape, 250_000, variants = setOfNotNull(cape, a.broken, a.locked, a.lockedBroken, a.lockedMangled))
+    }
 
     private val byVariant: Map<Int, Entry> = ENTRIES.flatMap { e -> e.variants.map { it to e } }.toMap()
 
@@ -158,7 +168,7 @@ object PerduLostProperty {
         return ENTRIES.filter {
             // N415: a formerly unrestricted imported cape cannot bypass the actual miniquest unlock.
             // The source explicitly prevents Lost Property purchases before MA2 completion.
-            val ma2Cape = it.itemId in gg.rsmod.plugins.content.items.osrs.AncientCape.GOD_CAPES
+            val ma2Cape = it.itemId in gg.rsmod.plugins.content.items.osrs.AncientCape.GOD_CAPES || it.itemId == gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape
             (!ma2Cape || gg.rsmod.plugins.content.areas.wilderness.MageArenaII.completed(player)) &&
                 it.itemId in earned && (it.multiple || !owns(player, it))
         } + lostPets(player) + lostTrinkets(player)

@@ -252,7 +252,8 @@ class StoreCatalogueTests {
         assertEquals(StoreCatalogue.Section.GEAR, section(Items.ANCESTRAL_HAT))
         assertEquals(StoreCatalogue.Section.GEAR, section(Items.RING_OF_THE_GODS_I))
         assertEquals(StoreCatalogue.Section.PETS, section(Items.HELLKITTEN))
-        assertEquals(StoreCatalogue.Section.CAPES, section(Items.IMBUED_ZAMORAK_CAPE))
+        // N415 (owner question V3, advice chosen): the imbued god capes left the Deadman Shop - Mage Arena II earns them.
+        assertTrue(StoreCatalogue.ENTRIES.none { it.purchaseItem == Items.IMBUED_ZAMORAK_CAPE && it.kind != StoreCatalogue.Kind.UNLOCK })
         assertEquals(StoreCatalogue.Section.COSMETICS, section(Items.SANTA_HAT))
         StoreCatalogue.ENTRIES.filter { it.kind == StoreCatalogue.Kind.UNLOCK }.forEach { assertEquals(StoreCatalogue.Section.CAPES, StoreCatalogue.section(it)) }
     }

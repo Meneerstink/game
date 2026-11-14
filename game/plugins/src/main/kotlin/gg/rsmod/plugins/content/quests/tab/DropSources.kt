@@ -88,6 +88,7 @@ object DropSources {
             "dagannoth supreme", "tormented demon", "glacor", "wildywyrm", "bork", "nex", "general graardor", "kree'arra",
             "commander zilyana", "k'ril tsutsaroth", "giant mole", "chaos fanatic", "crazy archaeologist", "scorpia", "venenatis", "spindel",
             "vet'ion", "callisto", "artio", "calvar'ion", "kalphite king", "queen black dragon", "tztok-jad", "jad", "revenant maledictus",
+            "porazdir", "derwen", "justiciar zachariah",
         )
 
     @Volatile private var built: List<Source>? = null

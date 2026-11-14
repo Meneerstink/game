@@ -842,3 +842,54 @@ fun writeBugReport(
     Trace.log(Trace.Cat.INPUT) { "bug report ${file.name} by ${player.username}: $text" }
     return file
 }
+// N415 test: `ma2state <name> <ma1|trained|started|remains>` sets a Mage Arena stage for own-client checks (testserver saves nothing).
+// ma1 = MA1 done + statue + first staff; trained = + 100 casts of all three god spells; started = + MA2 started (talk to Kolodion for
+// the symbol); remains = + Saradomin and Guthix remains handed in (one follower left to track).
+gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val stage = a.getOrNull(1) ?: "trained"
+    if (p == null) {
+        "usage: ma2state <name> <ma1|trained|started|remains>"
+    } else {
+        val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
+        p.attr[gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA] = true
+        p.attr[gg.rsmod.game.model.attr.prayedAtStatue] = true
+        p.attr[gg.rsmod.game.model.attr.receivedStaff] = true
+        p.attr[ma2.MIGRATED] = true
+        if (stage != "ma1") gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.SPELLS.forEach { p.attr[it.key] = 100 }
+        if (stage == "started" || stage == "remains") p.attr[ma2.STARTED] = true
+        if (stage == "remains") {
+            p.attr[ma2.DELIVERED] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
+            p.attr[ma2.CREDITS] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
+        }
+        "${p.username} Mage Arena state $stage"
+    }
+}
+// N415 test: `ma2where <name>` - the player's current follower locations (point index, south-west tile) and rotation steps left.
+gg.rsmod.game.CommandServerCommands.handlers["ma2where"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: ma2where <name>" else {
+        val t = gg.rsmod.plugins.content.areas.wilderness.MageArenaIITracking
+        "${p.username} locations=${t.locations(p)?.mapIndexed { i, l -> "${gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.values()[i]}@${l.point}:${l.tile.x},${l.tile.z}" }} steps=${p.attr[t.STEPS_LEFT]}"
+    }
+}
+// N415 test: `ma2cast <name> <saradomin|guthix|zamorak>` - selects that god spell on autocast (wield an autocasting god weapon first:
+// staff of light / void knight mace / staff of the dead), so a scripted `opnpc` fight casts the follower's matching spell.
+gg.rsmod.game.CommandServerCommands.handlers["ma2cast"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val spell = when (a.getOrNull(1)) {
+        "saradomin" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.SARADOMIN_STRIKE
+        "guthix" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.CLAWS_OF_GUTHIX
+        "zamorak" -> gg.rsmod.plugins.content.combat.strategy.magic.CombatSpell.FLAMES_OF_ZAMORAK
+        else -> null
+    }
+    if (p == null || spell == null) "usage: ma2cast <name> <saradomin|guthix|zamorak>" else {
+        gg.rsmod.plugins.content.combat.magic.Autocast.select(p, spell, gg.rsmod.plugins.content.combat.magic.Autocast.Mode.STANDARD)
+        "${p.username} autocast ${spell.name} -> ${gg.rsmod.plugins.content.combat.magic.Autocast.resolve(p)?.name ?: "REFUSED"}"
+    }
+}
+// N415 test: `ma1duel <name>` - starts the Mage Arena I duel as the Kolodion dialogue does (MageArena.start; 60 base Magic needed).
+gg.rsmod.game.CommandServerCommands.handlers["ma1duel"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: ma1duel <name>" else "${p.username} duel started=${gg.rsmod.plugins.content.areas.wilderness.MageArena.start(p)} form=${p.attr[gg.rsmod.plugins.content.areas.wilderness.MageArena.FORM] ?: 0}"
+}

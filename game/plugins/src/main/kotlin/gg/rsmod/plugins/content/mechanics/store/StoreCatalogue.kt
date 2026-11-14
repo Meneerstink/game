@@ -341,8 +341,7 @@ object StoreCatalogue {
         listOf(Items.ELDER_CHAOS_ROBES_ORNAMENT_KIT, Items.DAGONHAI_ROBES_ORNAMENT_KIT, Items.HEAVY_BALLISTA_ORNAMENT_KIT)
             .forEach { list += kitEntry(m, it, "Deadman kits", price = 750, tradeable = TradeablePolicy.UNTRADEABLE) }
         // Owner 2026-10-10: Void and elite void are earned only through Pest Control (Void Knights' rewards), never in a mansion store.
-        listOf(Items.IMBUED_SARADOMIN_CAPE, Items.IMBUED_GUTHIX_CAPE, Items.IMBUED_ZAMORAK_CAPE)
-            .forEach { list += itemEntry(m, it, 400, "Imbued capes") }
+        // N415: the three imbued god capes left the Deadman Shop - Mage Arena II earns them (owner question V3, advice chosen).
         // Imbues (owner page 2026-09-29): the existing base ring + Deadman Points; the normal ring stays a PvM/GE product.
         listOf(Items.RING_OF_THE_GODS to Items.RING_OF_THE_GODS_I, Items.TYRANNICAL_RING to Items.TYRANNICAL_RING_I,
             Items.TREASONOUS_RING to Items.TREASONOUS_RING_I, Items.RING_OF_SUFFERING to Items.RING_OF_SUFFERING_I,

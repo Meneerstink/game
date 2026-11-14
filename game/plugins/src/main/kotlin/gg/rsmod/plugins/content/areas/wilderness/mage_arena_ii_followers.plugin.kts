@@ -47,7 +47,7 @@ MageArenaIIEncounter.FOLLOWERS.forEach { follower ->
     val id = MageArenaIIEncounter.localNpc(follower.combat) ?: return@forEach
     val guardian = MageArenaIIGuardians.ALL.first { it.god == follower.god }
     MageArenaIIGuardians.definition(guardian)?.let { set_combat_def(id, it) }
-    on_npc_combat(id) { npc.queue { MageArenaIICombatScript.handleSpecialCombat(this) } }
+    on_npc_combat(*intArrayOf(id)) { npc.queue { MageArenaIICombatScript.handleSpecialCombat(this) } }
     on_npc_death(id) { MageArenaIIEncounter.died(npc) }
     // Wiki Porazdir / Derwen / Justiciar Zachariah drops: the remains, always (the 1/3 Looting bag is out of the game, 11-04).
     MageArenaII.assets.remains(follower.god)?.let { remains ->

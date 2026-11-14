@@ -198,7 +198,8 @@ class MageArenaIITests {
         val a = Account(); start(a)
         val gods = MageArenaII.God.values()
         a.inventory.add(assets.remains(gods[0])!!)
-        assertEquals(3, MageArenaII.trackable(a.player, assets).size)
+        // Wiki: 'Once a follower is defeated, the symbol will no longer track that follower until the miniquest is complete'.
+        assertEquals(2, MageArenaII.trackable(a.player, assets).size)
         assertEquals(1, MageArenaII.handIn(a.player, gods[0], assets))
         assertEquals(2, MageArenaII.trackable(a.player, assets).size)
         deliver(a, gods[1]); deliver(a, gods[2])

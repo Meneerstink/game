@@ -14837,3 +14837,26 @@
 # N462: OSRS npc 461; https://oldschool.runescape.wiki/w/Desert_Lizard?oldid=15389340 L16. Local id resolved from toa/ids.tsv.
 - id: 15202
   examine: "A cold-blooded creature, partial to warmth."
+# N415: Mage Arena imports (local ids from data/cfg/mage-arena/ids.tsv). Wiki Kolodion: every duel form 'He's a shape-shifter.'; Wiki Porazdir / Derwen / Justiciar Zachariah examines (same as their Breach copies 14446-14448). The Derwen energy ball has no sourced examine.
+- id: 15222
+  examine: "He's a shape-shifter."
+- id: 15223
+  examine: "He's a shape-shifter."
+- id: 15224
+  examine: "He's a shape-shifter."
+- id: 15225
+  examine: "He's a shape-shifter."
+- id: 15226
+  examine: "He's a shape-shifter."
+- id: 15227
+  examine: "A powerful Saradominist justiciar."
+- id: 15231
+  examine: "A powerful Saradominist justiciar."
+- id: 15228
+  examine: "An ancient Guthixian Ent."
+- id: 15232
+  examine: "An ancient Guthixian Ent."
+- id: 15230
+  examine: "A rage-filled Zamorakian Demon."
+- id: 15233
+  examine: "A rage-filled Zamorakian Demon."

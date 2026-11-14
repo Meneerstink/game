@@ -66,9 +66,10 @@ object AncientCape {
         return MaxCapes.Variant(cape, max, hood)
     }
 
+    /** Same terms as the imbued god capes (PvpDeathBreakables): no coins out of nothing for the killer (owner V3), Perdu repair 96k / 99k. */
     fun breakables(assets: Assets = this.assets): List<PvpDeathBreakables.Breakable> = listOfNotNull(
-        assets.cape?.let { cape -> assets.broken?.let { PvpDeathBreakables.Breakable(cape, it, 96_000, 96_000) } },
-        assets.max?.let { cape -> assets.maxBroken?.let { PvpDeathBreakables.Breakable(cape, it, 99_000, 99_000) } },
+        assets.cape?.let { cape -> assets.broken?.let { PvpDeathBreakables.Breakable(cape, it, killerCoins = 0, repairCost = 96_000) } },
+        assets.max?.let { cape -> assets.maxBroken?.let { PvpDeathBreakables.Breakable(cape, it, killerCoins = 0, repairCost = 99_000) } },
     )
 
     fun lockables(assets: Assets = this.assets): List<TrouverLockable> = listOfNotNull(

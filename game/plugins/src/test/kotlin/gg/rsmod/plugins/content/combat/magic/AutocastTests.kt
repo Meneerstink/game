@@ -357,7 +357,9 @@ class AutocastTests {
         // NexCombatScript.kt (C4 port, 10-23): Nex's own special attacks set her own next attack, as TormentedDemonCombatScript does.
         // CalvarionCombat.kt (N522 nachtrun deel 2): the shield bash leaves the players it hits "unable to attack for the next 4.8 seconds"
         // (OSRS Wiki Calvar'ion/Strategies) - a boss mechanic on the victims, not equipment or spell selection.
-        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "NexCombatScript.kt", "Foods.kt", "consumables.plugin.kts", "GraniteMaul.kt", "deadman_breach.plugin.kts", "CalvarionCombat.kt"), sources)
+        assertEquals(setOf("Combat.kt", "TormentedDemonCombatScript.kt", "NexCombatScript.kt", "Foods.kt", "consumables.plugin.kts", "GraniteMaul.kt", "deadman_breach.plugin.kts", "CalvarionCombat.kt",
+            // N462 ToA Wardens/Zebak and N415 MA2 followers (the Justiciar's 3-tick sword while bound) set an npc's own attack delay.
+            "WardensCombat.kt", "ZebakCombat.kt", "MageArenaIIEncounter.kt"), sources)
     }
 
     @Test
