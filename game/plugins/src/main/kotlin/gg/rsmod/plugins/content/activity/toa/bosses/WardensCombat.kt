@@ -348,7 +348,9 @@ object WardensCombat : CombatScript() {
                 val style = if (meleeReach(target.tile)) CombatClass.MELEE else if (npc.world.random(1) == 0) CombatClass.RANGED else CombatClass.MAGIC
                 animate(when (style) { CombatClass.MELEE -> 9659; CombatClass.RANGED -> 9660; else -> 9661 })
                 players().filter { style != CombatClass.MELEE || it === target }.forEach { p ->
-                    if (style != CombatClass.MELEE) ToaBossFx.projectile(npc, p, if (style == CombatClass.RANGED) 2241 else 2213, style == CombatClass.MAGIC, 4)
+                    // N609 14-11 census: P2 magic auto = red skull 2224 FX_WARDENS_BOMB01 (RuneLite ToA Extended WardenP2 PROJECTILE_ID_RED_SKULL
+                    // -> Protect from Magic; WHITE_SKULL 2241 = ranged). 2213 TOA_WARDENS_MAGIC_IMPACT is an impact spotanim, not a projectile.
+                    if (style != CombatClass.MELEE) ToaBossFx.projectile(npc, p, if (style == CombatClass.RANGED) 2241 else 2224, style == CombatClass.MAGIC, 4)
                     // ONZEKER T01/T20: 4tick projectile clip9660/61; normal protection fully blocks, special alone disables prayers.
                     attack(p, ToaScale.damage(max, context, path = false), style, if (style == CombatClass.MELEE) 0 else 4)
                 }
@@ -463,7 +465,10 @@ object WardensCombat : CombatScript() {
                             else if (npc.world.random(1) == 0) CombatClass.RANGED else CombatClass.MAGIC
                         animate(if (id == 11777) { if (style == CombatClass.MAGIC) 9774 else 9772 } else 9624, child)
                         players().forEach { p ->
-                            ToaBossFx.projectile(child, p, if (id == 11777) { if (style == CombatClass.MAGIC) 2253 else 2255 } else if (style == CombatClass.MAGIC) 2176 else 2178, style == CombatClass.MAGIC, 3)
+                            // N609 14-11 census: the P3 Zebak phantom fires 2181 ZEBAK_MAGE_PROJANIM_SPLIT (magic) / 2187 ZEBAK_RANGED_FRAGMENT01
+                            // (ranged) - toa-mistake-tracker WardensP3Detector ZEBAK_ATTACKS + raid-recorder PJ_P3_ZEBAK_GHOST_*; the rocks
+                            // 2176/2178 are the Zebak BOSS's own autos (ZebakCombat), not the phantom's.
+                            ToaBossFx.projectile(child, p, if (id == 11777) { if (style == CombatClass.MAGIC) 2253 else 2255 } else if (style == CombatClass.MAGIC) 2181 else 2187, style == CombatClass.MAGIC, 3)
                             attack(p, ToaScale.damage(if (id == 11774) 16 else 18, context), style, 3,
                                 if (id == 11777) 1 else 0, if (id == 11777) 10 else 1,
                                 prayerAtLaunch = id == 11777, actor = child)
