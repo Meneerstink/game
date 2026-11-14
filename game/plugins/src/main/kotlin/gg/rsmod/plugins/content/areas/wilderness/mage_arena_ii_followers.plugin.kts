@@ -48,7 +48,13 @@ MageArenaIIEncounter.FOLLOWERS.forEach { follower ->
     val guardian = MageArenaIIGuardians.ALL.first { it.god == follower.god }
     MageArenaIIGuardians.definition(guardian)?.let { set_combat_def(id, it) }
     on_npc_combat(*intArrayOf(id)) { npc.queue { MageArenaIICombatScript.handleSpecialCombat(this) } }
-    on_npc_death(id) { MageArenaIIEncounter.died(npc) }
+    on_npc_death(id) {
+        MageArenaIIEncounter.died(npc)
+        // 14-11 23:5x: the table below was registered but never rolled (every boss rolls in its own death hook, like Artio) ->
+        // Porazdir died without his heart. Only the summoner may attack (owner decision 23:5x), so the top damager is the owner.
+        val killer = npc.damageMap.getMostDamage() as? Player ?: return@on_npc_death
+        DropTableFactory.getDrop(world, killer, npc.id, npc.tile)
+    }
     // Wiki Porazdir / Derwen / Justiciar Zachariah drops: the remains, always (the 1/3 Looting bag is out of the game, 11-04).
     MageArenaII.assets.remains(follower.god)?.let { remains ->
         val table = DropTableFactory

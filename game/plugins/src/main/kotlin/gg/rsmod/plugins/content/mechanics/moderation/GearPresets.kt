@@ -94,6 +94,16 @@ object GearPresets {
                     gg.rsmod.plugins.content.activity.toa.ToaIds.item(27275) ?: -1) + MAGIC_ACCESSORIES,
                 listOf(Items.SUPER_RESTORE_4 to 4, Items.SHARK to 10),
             ).also { it.weaponCharges = 20000 },
+            // N415 14-11 23:5x (owner: 'avernic defender als shield slot ... en een uncharged toxic staff'): Mage Arena I + II need god
+            // spells (Flames of Zamorak / Claws of Guthix / Saradomin strike) on autocast -> a CHARGED Toxic staff of the dead (one-
+            // handed) + Elidinis' ward (f); runes for all three god spells + Charge, a knife for the webs.
+            Preset(
+                "gear_magearena", "Max god-spell magic for Mage Arena (Ancestral, Toxic staff of the dead, Elidinis' ward (f), occult, tormented)",
+                set(Items.TWISTED_ANCESTRAL_HAT, Items.TWISTED_ANCESTRAL_ROBE_TOP, Items.TWISTED_ANCESTRAL_ROBE_BOTTOM, Items.TOXIC_STAFF_OF_THE_DEAD,
+                    Items.ELIDINIS_WARD_F) + MAGIC_ACCESSORIES,
+                listOf(Items.FIRE_RUNE to 5000, Items.BLOOD_RUNE to 5000, Items.AIR_RUNE to 5000, Items.DEATH_RUNE to 5000, Items.KNIFE to 1,
+                    Items.SUPER_RESTORE_4 to 4, Items.SHARK to 10),
+            ).also { it.weaponCharges = 11000 },
             Preset(
                 "gear_ancestral", "Twisted ancestral + Kodai wand (Volatile spec)",
                 set(Items.TWISTED_ANCESTRAL_HAT, Items.TWISTED_ANCESTRAL_ROBE_TOP, Items.TWISTED_ANCESTRAL_ROBE_BOTTOM, Items.KODAI_WAND, Items.ELIDINIS_WARD_F) +
@@ -168,7 +178,12 @@ object GearPresets {
             }
         }
         // A spawned staff is worn as its uncharged item (no charges yet); PoweredStaves.withCharges swaps in the charged one.
-        if (preset.weaponCharges > 0) player.equipment[3]?.let { player.equipment[3] = gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(it, preset.weaponCharges) }
+        if (preset.weaponCharges > 0) player.equipment[3]?.let {
+            // The toxic staff keeps Zulrah's scales, not a powered-staff charge (StaffOfTheDead.withScales, same attribute).
+            val dead = gg.rsmod.plugins.content.items.osrs.StaffOfTheDead
+            player.equipment[3] = if (it.id == Items.TOXIC_STAFF_OF_THE_DEAD || it.id == Items.TOXIC_STAFF_UNCHARGED) dead.withScales(it, preset.weaponCharges)
+                else gg.rsmod.plugins.content.items.osrs.PoweredStaves.withCharges(it, preset.weaponCharges)
+        }
         // N609 13-11 (owner: 'de quiver is uncharged dus heeft geen passive'): a spawned Dizana's quiver has no CHARGES, so
         // Dizana's Sunfire (+10 ranged accuracy, +1 ranged strength) never applied - the max set wears it fully charged.
         val quiver = gg.rsmod.plugins.content.items.osrs.DizanasQuiver
