@@ -43,6 +43,8 @@ object ZebakCombat : CombatScript() {
     data class Rock(val tile: Tile, var hp: Int = 150) { var npc: Npc? = null }
     /** Cache2686 seq9642 projectile_zebak_pitcher01 / seq9645 projectile_zebak_shield01 = 90 client cycles = 3 ticks of flight. */
     const val SPIT_FLIGHT = 3
+    /** N609 14-11: flight of an additional acid splatter (1555) from the impact to a neighbour (Kaoz Entry 672.75-673.25 s). */
+    const val SPLASH_FLIGHT = 1
     /** Cache2686 seq9632 npc_zebak01_attack_special = 120 client cycles = 4 ticks (the spit before every special). */
     const val SPIT_TICKS = 4
     /** A rock blocks the ray away from Zebak for the next three floor tiles. Direction is room geometry supplied by the adapter. */
@@ -283,13 +285,22 @@ object ZebakCombat : CombatScript() {
         /** Wiki Strategies0819: impact tile always, "may splatter additional times in a 3x3 radius" (ONZEKER: 50% per neighbour).
          *  Never on a rock tile (the rock npc stands there). */
         fun splatter(impact: Tile, rockTiles: List<Tile> = emptyList()) {
+            val extra = mutableListOf<Tile>()
             for (dx in -1..1) for (dz in -1..1) {
                 val tile = impact.transform(dx, dz)
                 if ((dx != 0 || dz != 0) && kotlin.random.Random.nextBoolean()) continue
                 if (rockTiles.any { sameTile(it, tile) }) continue
                 // 12:0x toagfx PLACEMENT 45574 'volledig in muur/blokkade': a neighbour can fall on the platform edge - skip clipped tiles.
                 if (npc.world.collision.isClipped(tile)) continue
+                if (dx != 0 || dz != 0) { extra += tile; continue }
                 if (acid.add(tile)) acidCleanup[tile] = placeObject(ACID_LOCS.random(), tile)
+            }
+            // N609 14-11: the additional splatters fly out of the impact as TOB_XARPUS_ACIDSPIT 1555 (ToA Extended Zebak
+            // PROJECTILE_ID_VENOM_SPLASH, an arena projectile next to VENOM 2194) and land a moment later - Kaoz Entry 672.75 s pools in
+            // lines, 673.0 s small specks beside them, 673.25 s the wide field. ONZEKER: flight 1 tick measured on the video.
+            extra.forEach { ToaBossFx.tileProjectile(npc, impact, it, 1555, SPLASH_FLIGHT) }
+            if (extra.isNotEmpty()) later(SPLASH_FLIGHT) {
+                extra.forEach { tile -> if (acid.add(tile)) acidCleanup[tile] = placeObject(ACID_LOCS.random(), tile) }
             }
         }
         private fun clearAcid(predicate: (Tile) -> Boolean) {

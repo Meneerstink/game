@@ -225,6 +225,8 @@ object OsrsFxImportTool {
             // via toa_ids_append_fx.py) - applying it would REPLACE those shared records (only adds opcode 242), so never --apply it.
             "toa-census-fx" to listOf(1103, 379),
             "toa-census-fx-existing" to listOf(131, 1463),
+            // N609 14-11: Zebak additional acid splatter = TOB_XARPUS_ACIDSPIT 1555 (ToA Extended Zebak PROJECTILE_ID_VENOM_SPLASH).
+            "toa-zebak-splash" to listOf(1555),
         )
 
     /**
