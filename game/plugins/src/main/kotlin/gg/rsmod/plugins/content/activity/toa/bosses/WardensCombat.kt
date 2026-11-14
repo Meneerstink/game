@@ -361,7 +361,9 @@ object WardensCombat : CombatScript() {
             val choices = ObeliskSpecial.values().filter { it !in usedObeliskSpecials }.ifEmpty { ObeliskSpecial.values().toList() }
             val kind = forced ?: choices[npc.world.random(choices.lastIndex)]
             obeliskSpecial(kind) {
-                gfx(when (kind) { ObeliskSpecial.CONVERGING -> 2199; ObeliskSpecial.WINDMILL -> 2200; else -> 2198 }, origin)
+                // N609 14-11 12:2x: 2199/2200 are PER-TILE hit graphics (RuneLite toa-mistake-tracker WardensP1P2Detector
+                // OBELISK_DDR_LIGHTNING 2199 / OBELISK_WINDMILL_LIGHTNING 2200, hit delay 0), not an obelisk flash -> placed in beam().
+                if (kind == ObeliskSpecial.LIGHTNING) gfx(2198, origin)
                 // ONZEKER T20: warnings2ticks=9727clip; beams advance1tile/tick; max26 or39with Penetration (1.5fallback).
                 fun hurt(tiles: Set<Tile>, delay: Int) { later(delay) { players().filter { p -> tiles.any { sameTile(it, p.tile) } }.forEach { p ->
                     attack(p, ToaScale.damage(26, context, path = false), null, accuracy = false)
@@ -370,7 +372,18 @@ object WardensCombat : CombatScript() {
                 // before the beam is discharged'): the beam tiles were INVISIBLE (converging: no gfx at all; windmill: the yellow
                 // LIGHTNING_WARN 2198 per tile). Cache FX_WARDENS02_BLOODWAVE01 2201 (seq 9730 = FX_OBELISK_WARDENS02_WAVE) is the red tile
                 // glow (testclient ::gfx 3302 = red tile, screens/N609/beams.png). ONZEKER T20: glow one tick before the hit; 2202 unused.
-                fun beam(tiles: Set<Tile>, delay: Int) { later(maxOf(0, delay - 1)) { tiles.forEach { gfx(2201, it) } }; hurt(tiles, delay) }
+                // N609 14-11 12:2x CORRECTION (owner 'bloedgolf voller dan OSRS'; Kaoz 2255 s = flat glowing red DISCS per tile, ours were
+                // upright domes): 2201 FX_WARDENS02_BLOODWAVE01 is NOT the beam tile. Two independent RuneLite sources name the tile
+                // graphics: toa-mistake-tracker WardensP1P2Detector + raid-recorder ToaMechanics: DDR (= converging) DDR_GRAPHICS 2235
+                // SPOTANIM_WARDENS01_DRONESTRIKE01_FIRE01 (scaleY 80 = the flat disc; hit 1 tick after it) + 2199 on the hit; windmill
+                // WINDMILL_SHADOW 2236 SPOTANIM_AMASCUT01_STRIKE01_HIGHLIGHT01 + WINDMILL_HIT 2234 SPOTANIM_AMASCUT01_STRIKE01 + 2200,
+                // instant. ONZEKER T20: windmill shadow lead (1 tick, like the old glow).
+                fun beam(tiles: Set<Tile>, delay: Int) {
+                    val windmill = kind == ObeliskSpecial.WINDMILL
+                    later(maxOf(0, delay - 1)) { tiles.forEach { gfx(if (windmill) 2236 else 2235, it) } }
+                    later(delay) { tiles.forEach { gfx(if (windmill) 2234 else 2199, it); if (windmill) gfx(2200, it) } }
+                    hurt(tiles, delay)
+                }
                 when (kind) {
                     ObeliskSpecial.CONVERGING -> repeat(8) { i ->
                         val row = mutableSetOf<Tile>()
