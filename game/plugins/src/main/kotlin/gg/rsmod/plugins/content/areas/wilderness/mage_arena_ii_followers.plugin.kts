@@ -61,5 +61,6 @@ MageArenaIIEncounter.localNpc(MageArenaIIEncounter.HEALER)?.let { healer ->
     set_combat_def(healer) {
         configs { attackSpeed = 6; respawnDelay = 0 }
         stats { hitpoints = 200 }
+        anims { death = -1 } // the OSRS energy ball has no sequences (static npc); an explicit none satisfies the builder
     }
 }
