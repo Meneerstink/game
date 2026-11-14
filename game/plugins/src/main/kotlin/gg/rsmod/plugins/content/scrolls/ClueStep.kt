@@ -11,6 +11,9 @@ import gg.rsmod.game.model.entity.Player
 interface ClueStep {
     val tier: ClueScrollTier
 
+    /** Internal persistence key, not a cache ID. Checked for collisions when steps register. */
+    val persistenceId: Int get() = "${tier.name}:$mapInterfaceId:$hint".hashCode()
+
     /**
      * Text shown to the player when they read a scroll that is on this step.
      */

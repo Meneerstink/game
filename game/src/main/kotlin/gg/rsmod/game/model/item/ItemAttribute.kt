@@ -91,4 +91,8 @@ enum class ItemAttribute {
 
     /** Identifies an instance-owned ToA Supplies bag; preserved by inventory moves and reconnect. */
     TOA_SUPPLY_BAG_TOKEN,
+
+    /** Stable Treasure Trail step key on the scroll itself; survives bank, drop, grave and serialization. */
+    CLUE_STEP_KEY,
+
 }

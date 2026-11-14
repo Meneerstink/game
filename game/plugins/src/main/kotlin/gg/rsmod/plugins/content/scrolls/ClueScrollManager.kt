@@ -4,6 +4,10 @@ import gg.rsmod.game.Server
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.entity.Player
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.item.Item
+import gg.rsmod.game.model.item.ItemAttribute
+import gg.rsmod.game.model.attr.GROUNDITEM_PICKUP_TRANSACTION
 import gg.rsmod.game.plugin.KotlinPlugin
 import gg.rsmod.game.plugin.PluginRepository
 import gg.rsmod.plugins.api.InterfaceDestination
@@ -13,10 +17,9 @@ import gg.rsmod.plugins.api.ext.player
 import kotlin.random.Random
 
 /**
- * Treasure Trail backbone: wires "read" on each tier's real 667 scroll id
- * ([ClueScrollTier]) to a persistent per-player, per-tier active step index, and
- * dispatches to whichever [ClueStep]s have been registered for that tier via
- * [registerStep]. Also owns step-completion: [tryDig]/[tryEmote] are called from the shared
+ * Treasure Trail lifecycle. The step belongs to the scroll; completed steps and
+ * trail length belong to the player/tier, including when juggling dropped clues.
+ * [tryDig]/[tryEmote] are called from the shared
  * spade-dig handler (`gardener.plugin.kts`, this engine's single-slot `on_item_option(SPADE,
  * "Dig")` binding) and the emote-tab hook (`EmotesTab.performEmote`) respectively, since neither
  * of those bindings can be duplicated - the same pattern this project already uses for Barrows'
@@ -33,21 +36,41 @@ class ClueScrollManager(
                 AttributeKey(persistenceKey = "clue_step_${tier.name.lowercase()}")
             }
 
+        private val progressAttrs = ClueScrollTier.values().associateWith { AttributeKey<Int>(persistenceKey = "clue_progress_${it.name.lowercase()}") }
+        private val lengthAttrs = ClueScrollTier.values().associateWith { AttributeKey<Int>(persistenceKey = "clue_length_${it.name.lowercase()}") }
+
         private val steps: Map<ClueScrollTier, MutableList<ClueStep>> =
             ClueScrollTier.values().toList().associateWith { mutableListOf<ClueStep>() }
 
         fun registerStep(step: ClueStep) {
+            check(steps.getValue(step.tier).none { it.persistenceId == step.persistenceId }) { "Duplicate clue step key: ${step.tier} ${step.hint}" }
             steps.getValue(step.tier).add(step)
+        }
+
+        fun progress(player: Player, tier: ClueScrollTier): Int = player.attr[progressAttrs.getValue(tier)] ?: 0
+
+        /** An uninitialised newly obtained clue resets tier progress; re-picking a read clue does not. */
+        fun prepare(player: Player, item: Item, tier: ClueScrollTier) {
+            val available = steps.getValue(tier)
+            if (available.isEmpty() || item.getAttr(ItemAttribute.CLUE_STEP_KEY) != null) return
+            // Convert the old per-player index once. All new scrolls store their own step.
+            val legacy = player.attr[activeStepAttrs.getValue(tier)]
+            player.attr.remove(activeStepAttrs.getValue(tier))
+            val step = legacy?.let { available.getOrNull(it) } ?: available.random()
+            item.putAttr(ItemAttribute.CLUE_STEP_KEY, step.persistenceId)
+            player.attr[progressAttrs.getValue(tier)] = 0
+            player.attr[lengthAttrs.getValue(tier)] = tier.rollTrailLength(Random.Default)
+            player.inventory.dirty = true
         }
 
         private fun activeStep(
             player: Player,
             tier: ClueScrollTier,
         ): ClueStep? {
-            if (!player.inventory.contains(tier.scrollId)) return null
-            val index = player.attr[activeStepAttrs.getValue(tier)] ?: return null
+            val item = player.inventory.firstOrNull { it?.id == tier.scrollId } ?: return null
+            val id = item.getAttr(ItemAttribute.CLUE_STEP_KEY) ?: return null
             val available = steps.getValue(tier)
-            return available.getOrNull(index)
+            return available.firstOrNull { it.persistenceId == id }
         }
 
         /**
@@ -85,30 +108,44 @@ class ClueScrollManager(
         }
 
         /**
-         * Resolves a completed step: clears the active-step index (so the next read rolls a
-         * fresh one) and, per [ClueScrollTier.completionChance], either grants the tier's real
-         * casket item or hands out another scroll of the same tier - the same "another clue"
-         * chain Novite's `ClueScrollManager.onSuccess` implements.
+         * Length is rolled once per trail, with OSRS bounds, rather than an
+         * unbounded donor percentage on every step. Validate replacement before mutation.
          */
         private fun complete(
             player: Player,
             tier: ClueScrollTier,
         ) {
-            player.attr.remove(activeStepAttrs.getValue(tier))
-            if (!player.inventory.contains(tier.scrollId)) return
-            player.inventory.remove(tier.scrollId, 1)
-            if (Random.nextInt(100) < tier.completionChance) {
-                player.inventory.add(tier.casketId, 1)
+            val slot = player.inventory.rawItems.indexOfFirst { it?.id == tier.scrollId }
+            if (slot < 0) return
+            val scroll = player.inventory[slot] ?: return
+            val completed = progress(player, tier) + 1
+            val length = player.attr[lengthAttrs.getValue(tier)] ?: return
+            if (completed >= length) {
+                if (tier.casketId < 0) return
+                val staged = ItemContainer(player.inventory)
+                staged[slot] = null
+                if (!staged.add(tier.casketId, 1, assureFullInsertion = true).hasSucceeded()) return
+                if (player.inventory[slot] !== scroll) return
+                for (i in 0 until staged.capacity) {
+                    val old = player.inventory[i]
+                    val next = staged[i]
+                    if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next
+                }
+                player.attr.remove(progressAttrs.getValue(tier))
+                player.attr.remove(lengthAttrs.getValue(tier))
                 player.message("You've found a casket!")
             } else {
-                player.inventory.add(tier.scrollId, 1)
+                scroll.putAttr(ItemAttribute.CLUE_STEP_KEY, steps.getValue(tier).random().persistenceId)
+                player.inventory.dirty = true
+                player.attr[progressAttrs.getValue(tier)] = completed
                 player.message("You've found another clue scroll!")
             }
         }
     }
 
     init {
-        ClueScrollTier.values().toList().forEach { tier ->
+        ClueScrollTier.values().filter { it.scrollId >= 0 }.forEach { tier ->
+            set_ground_item_condition(tier.scrollId) { ClueOwnership.mayReceive(player, tier.scrollId) }
             on_item_option(tier.scrollId, "read") {
                 val available = steps.getValue(tier)
                 if (available.isEmpty()) {
@@ -116,20 +153,20 @@ class ClueScrollManager(
                     return@on_item_option
                 }
 
-                val attr = activeStepAttrs.getValue(tier)
-                var index = player.attr[attr]
-                if (index == null || index !in available.indices) {
-                    index = Random.nextInt(available.size)
-                    player.attr[attr] = index
-                }
-
-                val step = available[index]
+                val item = player.inventory.firstOrNull { it?.id == tier.scrollId } ?: return@on_item_option
+                prepare(player, item, tier)
+                val step = activeStep(player, tier) ?: return@on_item_option
                 val mapInterfaceId = step.mapInterfaceId
                 if (mapInterfaceId != null) {
                     player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = mapInterfaceId)
                 } else {
                     player.message(step.hint)
                 }
+            }
+        }
+        on_global_item_pickup {
+            player.attr[GROUNDITEM_PICKUP_TRANSACTION]?.get()?.items?.forEach { slot ->
+                ClueOwnership.tier(slot.item.id)?.let { prepare(player, slot.item, it) }
             }
         }
     }
