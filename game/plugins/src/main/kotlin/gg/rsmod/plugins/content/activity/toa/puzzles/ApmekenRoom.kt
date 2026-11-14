@@ -100,11 +100,14 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         if (result == ApmekenPuzzle.Result.WRONG) damage(player, ref.wrongActionDamage.value)
         if (result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE)
             award(player.uid, 75 * ((task?.performed ?: before) - before)) //ONZEKER T22: Wiki loot module75 points per trap action.
+        if (vent >= 0 && target == null && task?.type == ApmekenPuzzle.Action.VENT &&
+            (result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE)) player.message(FIX_FUMES)
         drawSight()
         return result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE
     }
     private fun actionResult(player: Player, result: ApmekenPuzzle.Result): Boolean {
         if (result == ApmekenPuzzle.Result.WRONG) damage(player, reference!!.wrongActionDamage.value)
+        if (result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE) player.message(FIX_ROOF_SUPPORT)
         if (result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE) award(player.uid, 75)
         drawSight()
         return result == ApmekenPuzzle.Result.PERFORMED || result == ApmekenPuzzle.Result.COMPLETE
@@ -152,7 +155,9 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
             if (tick < task.cycle || (tick - task.cycle) % ref.taskRepeatCycles.value != 0) continue
             if (puzzle.beginTask(task.type, task.requiredByPartySize[raid.roster.size - 1],
                     task.usesByPartySize[raid.roster.size - 1], tick + task.duration)) {
-                players.forEach { it.message("You sense an issue somewhere in the room.") } // Strategies1291 literal.
+                // Strategies1291 literal for the party; N610 14-11: the holder of Apmeken's sight gets what the issue is (the exact OSRS
+                // game messages RuneLite ToA Extended Apmeken MESSAGE_SENSE_ROOF_SUPPORTS / MESSAGE_SENSE_FUMES reads). Corruption: no source.
+                players.forEach { it.message(senseMessage(task.type, it.uid == puzzle.sight)) }
                 drawSight()
             }
         }
@@ -267,7 +272,19 @@ class ApmekenRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         viewers.clear(); viewerBases.clear(); actors.clear(); pools.clear(); pending.clear(); puzzle.close()
     }
 
+    /** RuneLite ToA Extended Apmeken MESSAGE_SENSE_* / MESSAGE_FIX_* (Text.standardize = lower case of the OSRS game message). */
     companion object {
+        const val SENSE_ANY = "You sense an issue somewhere in the room."
+        const val SENSE_ROOF = "You sense an issue with the roof supports."
+        const val SENSE_FUMES = "You sense some strange fumes coming from holes in the floor."
+        const val FIX_ROOF_SUPPORT = "You repair the damaged roof support."
+        const val FIX_FUMES = "You neutralise the fumes coming from the hole."
+        fun senseMessage(type: ApmekenPuzzle.Action, sightHolder: Boolean): String = if (!sightHolder) SENSE_ANY else when (type) {
+            ApmekenPuzzle.Action.PILLAR -> SENSE_ROOF
+            ApmekenPuzzle.Action.VENT -> SENSE_FUMES
+            ApmekenPuzzle.Action.CORRUPTION -> SENSE_ANY
+        }
+
         //20-item-manifest/cache2/10/27297, 50-loc-defs45493.
         const val POTION = 27297
         const val VENOM_POOL = 45493

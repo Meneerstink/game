@@ -135,7 +135,10 @@ class NpcUpdateBlockSegment(
 
             UpdateBlockType.APPEARANCE -> {
                 val structure = blocks.updateBlocks[blockType]!!.values
-                buf.put(structure[0].type, structure[0].order, structure[0].transformation, npc.getTransmogId())
+                // N610 14-11: transmog -1 (back to its own form) went out as 65535 and the 667 client (NPCList ig2 -> NPCTypeList.list)
+                // loaded a non-existent type: the npc turned invisible (P3 Warden after ToaHeadIcons.clear). Send its own id, as
+                // AddLocalNpcSegment does.
+                buf.put(structure[0].type, structure[0].order, structure[0].transformation, npc.getTransmogId().takeIf { it >= 0 } ?: npc.id)
             }
 
             UpdateBlockType.COMBAT_LEVEL -> {

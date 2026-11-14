@@ -98,6 +98,16 @@ on_command("toaskip", Privilege.ADMIN_POWER) {
     player.message("toaskip ${run.key}: ${run.clear(world.currentCycle)}")
 }
 
+/** N610: '::toascab [addition]' in the Path of Scabaras: every puzzle but the matching puzzle solved ('addition': up to the tablet)
+ *  (ToA Extended matching-tile test). Test server, and on live only check78/check79 (ToaTestGate). */
+on_command("toascab", Privilege.ADMIN_POWER) {
+    if (!gg.rsmod.plugins.content.activity.toa.ToaTestGate.allowed(player)) return@on_command
+    gg.rsmod.plugins.content.activity.toa.ToaTestGate.jumped(player, "toascab")
+    val room = gg.rsmod.plugins.content.activity.toa.puzzles.ToaPuzzles.of(player) as? gg.rsmod.plugins.content.activity.toa.puzzles.ScabarasRoom
+    val upToAddition = player.getCommandArgs().firstOrNull()?.lowercase() == "addition"
+    player.message("toascab ${room?.testFinishAllButMatching(upToAddition) ?: "niet in de Scabaras-kamer"}")
+}
+
 /** N606: '::toawardens' clears every path (puzzle + boss, as ::toaskip would) and enters the Wardens - photobook route to the last
  *  room without playing 4 paths. Test server only. */
 on_command("toawardens", Privilege.ADMIN_POWER) {

@@ -159,6 +159,10 @@ object AkkhaCombat : CombatScript() {
             val live = players()
             val tank = target?.takeIf { it in live } ?: live.firstOrNull() ?: return
             target = tank
+            // N610 14-11: OSRS Akkha keeps its target as interacting between attacks (ToA Extended AkkhaSceneOverlay puts the attack
+            // tick counter on actor.getInteracting()); Npc.cycle dropped the face as soon as the target stood > 1 tile away (ranged/
+            // magic), so the client saw target -1. HOLD_FACING_ATTR keeps it, as CityGuards / Familiar do.
+            npc.attr[gg.rsmod.game.model.attr.HOLD_FACING_ATTR] = true
             npc.facePawn(tank)
             follow(tank)
             val meleeTarget = live.firstOrNull { distance(it.tile) == 0 } ?: tank

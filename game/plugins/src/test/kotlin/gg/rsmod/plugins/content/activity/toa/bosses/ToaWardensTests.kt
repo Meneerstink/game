@@ -3,6 +3,17 @@ package gg.rsmod.plugins.content.activity.toa.bosses
 import kotlin.test.*
 
 class ToaWardensTests {
+    @Test fun `P3 slam animations follow ToA Extended SlamDirection per Warden and the struck side`() {
+        // RIGHT 9674/9675 = first slam, west tile safe (our EAST); LEFT 9676/9677 = east tile safe (WEST); MIDDLE 9678/9679 = CENTRE
+        val e = WardensCombat.Warden.ELIDINIS
+        val t = WardensCombat.Warden.TUMEKEN
+        assertEquals(listOf(9674, 9676, 9678), WardensCombat.Slam.values().map { WardensCombat.slamSeq(it, e) })
+        assertEquals(listOf(9675, 9677, 9679), WardensCombat.Slam.values().map { WardensCombat.slamSeq(it, t) })
+        assertFalse(WardensCombat.slamHits(WardensCombat.Slam.EAST, -1)) // the plugin's left tile (x31) is safe on the RIGHT slam
+        assertFalse(WardensCombat.slamHits(WardensCombat.Slam.WEST, 1)) // the right tile (x33) on the LEFT slam
+        assertFalse(WardensCombat.slamHits(WardensCombat.Slam.CENTRE, 0))
+    }
+
     @Test fun `both Warden choices announce phase transitions once and never on a repeated callback`() {
         for (choice in WardensCombat.Warden.values()) {
             val f = ToaTestFixture()

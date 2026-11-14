@@ -169,7 +169,9 @@ object BabaCombat : CombatScript() {
                     b.walkTo(coffin)
                     if (b.tile.isWithinRadius(coffin, 1)) damageCoffin(coffin, 20)
                 } else players().minByOrNull { it.tile.getDistance(b.tile) }?.let { p ->
-                    ToaBossFx.projectile(b, p, 2244, false, 2)
+                    // N609 14-11: the baboon's own projectile is 2243 TOA_BABOON_RANGED_TRAVEL_2 (model 46350 at 38/128, RuneLite gameval +
+                    // ToA Extended Baba.PROJECTILE_ID_BABOON_ATTACK); 2244 TOA_BABA_RANGED_TRAVEL is Ba-Ba's full-size one.
+                    ToaBossFx.projectile(b, p, 2243, false, 2)
                     animate(9744, b); attack(p, ToaScale.damage(BABOON_MAX, context), CombatClass.RANGED, 2, actor = b)
                 }
             }

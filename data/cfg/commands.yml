@@ -1430,6 +1430,11 @@
   usage: "::toaskip"
   description: "ToA test jump: mark the running puzzle room as cleared. Test server, and on live only check78/check79 (logged, never a record)."
   example: "::toaskip"
+- name: toascab
+  rank: admin
+  usage: "::toascab [addition]"
+  description: "ToA test jump: in the Path of Scabaras mark every puzzle but the matching puzzle solved ('addition': only up to the number tablet). Test server, and on live only check78/check79."
+  example: "::toascab"
 - name: toawardens
   rank: admin
   usage: "::toawardens"

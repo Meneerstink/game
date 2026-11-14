@@ -55,6 +55,10 @@ object WardensCombat : CombatScript() {
         Slam.WEST -> offsetX <= 0
         Slam.CENTRE -> offsetX != 0
     }
+    /** RuneLite ToA Extended WardenP3.SlamDirection: RIGHT(9674 Elidinis, 9675 Tumeken) is the first slam and leaves the west tile
+     *  (region 15696 x31 = centre-1) safe = our EAST strike; LEFT(9676, 9677) leaves x33 safe = WEST; MIDDLE(9678, 9679) = CENTRE. */
+    fun slamSeq(slam: Slam, warden: Warden): Int = when (slam) { Slam.EAST -> 9674; Slam.WEST -> 9676; Slam.CENTRE -> 9678 } +
+        (if (warden == Warden.TUMEKEN) 1 else 0)
     fun siphonHp(living: Int): Int { require(living in 1..8); return if (living <= 3) 1 else living / 2 }
     fun coreExposure(hp: Int, max: Int): Int = when {
         hp.toLong() * 5 >= max.toLong() * 4 -> 21
@@ -571,7 +575,7 @@ object WardensCombat : CombatScript() {
                     }
                     if (tick >= nextAttack) {
                         val slam = Slam.values()[slamIndex % 3]
-                        animate(when (slam) { Slam.EAST -> 9676; Slam.WEST -> 9674; Slam.CENTRE -> 9678 })
+                        animate(slamSeq(slam, phaseThreeWarden))
                         slamDirector(this, slam)
                         slamIndex = (slamIndex + 1) % 3
                         nextAttack = tick + slamInterval(context.invocations)

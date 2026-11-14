@@ -194,6 +194,9 @@ object OsrsFxImportTool {
             "toa-het-fx2" to listOf(2064),
             // N462 Path of Scabaras falling roof (ChatGPT-B, RuneLiteSequenceSolver observation): SpotanimID MM_ROOFCOLLAPSE 302.
             "toa-scabaras-fx" to listOf(302),
+            // N610 14-11: Scabaras obelisk-puzzle falling rocks = GRAPHICS_OBJECT_ID_FALLING_ROCKS 317 in RuneLite ToA Extended
+            // ScabarasObeliskPuzzle (SpotanimID GA_BEAST_ROCK_FALL); 302 stays the sequence-puzzle failure (SequencePuzzle reset).
+            "toa-scabaras-rocks" to listOf(317),
             // N462 Tumeken's shadow built-in spell (RuneLite SpotanimID TUMEKENS_SHADOW_CASTING 2125 / _TRAVEL 2126 / _IMPACT 2127; the cast
             // animation TOA_SPELL_TUMEKEN01_CAST01 9543 is in SEQ_BATCHES under the same name).
             "toa-shadow" to listOf(2125, 2126, 2127),

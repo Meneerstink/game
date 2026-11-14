@@ -5271,3 +5271,4 @@ spotanim	2111	3395	toa-shadow model 15468
 seq	9470	17460	spotanim 2111
 npc	11748	15220	copy of 11753 + charge bar sprite 8921 (ToaChargeBarTool tx-20261114-003309)
 npc	11749	15221	copy of 11756 + charge bar sprite 8921 (ToaChargeBarTool tx-20261114-003309)
+spotanim	317	3396	model 65815 (N610 cache317_apply.sh, OsrsFxImportTool toa-scabaras-rocks)

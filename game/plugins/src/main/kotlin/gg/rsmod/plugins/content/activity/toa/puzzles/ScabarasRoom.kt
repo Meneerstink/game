@@ -82,6 +82,16 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         return true
     }
 
+    /** N610 test '::toascab [addition]' (ToaTestGate): every puzzle before the matching puzzle solved (Kind order: the addition
+     *  after its prerequisites), or with 'addition' only the prerequisites of the number tablet (memory, obelisks, lights). */
+    fun testFinishAllButMatching(upToAddition: Boolean = false): String {
+        Kind.values().filter { it != Kind.MATCHING && !(upToAddition && it == Kind.ADDITION) }.forEach { finish(it) }
+        drawMatching()
+        val ref = reference
+        return "finished=$finished canMatch=${progression.canMatch} tablet=${instance(layout.tablet).let { "${it.x},${it.z}" }} buttons=" + layout.matchingButtons.joinToString("|") { b ->
+            b.joinToString(" ") { instance(it).let { t -> "${t.x},${t.z}" } } } + if (ref == null) " (geen referentie)" else ""
+    }
+
     /** Last memory sequence shown (test server '::toastate' only). */
     private var lastMemory: List<Int> = emptyList()
     override fun debugState(player: Player) = "scabaras tick=$tick finished=$finished skipped=$skipped " +
@@ -187,6 +197,8 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         if (result == Result.WRONG) {
             val target = source(player.tile) ?: return
             if (target !in ref.rockSafeTiles.value) {
+                // N610 14-11: OSRS = GA_BEAST_ROCK_FALL 317 (ToA Extended ScabarasObeliskPuzzle GRAPHICS_OBJECT_ID_FALLING_ROCKS, imported
+                // tx-20261114-075356 as 3396) - switch to FALLING_ROCKS_SPOT once it is seen in the test client (not yet: dossier N610 09:5x).
                 players.forEach { ToaPuzzleVisuals.spot(it, ref.rockWarningSpot.value, instance(target)) }
                 pending += (tick + ref.rockDelay.value) to {
                     players.filter { source(it.tile) == target }.forEach { damage(it, raid.world.random(0..ref.rockMaxHit.value)) }
@@ -363,6 +375,7 @@ class ScabarasRoom(raid: ToaRaid) : ToaPuzzleRoom(raid) {
         const val SCARAB = 11697
         const val OBELISK = 11698
         const val OBELISK_LIT = 11699
+        const val FALLING_ROCKS_SPOT = 317
 
         /** Scarab infobox,07-scabaras +10-schaal: normal NPC HP/group and HP/defence/accuracy scaling; no path levels. */
         fun definition(raidLevel: Int, partySize: Int): NpcCombatDef {

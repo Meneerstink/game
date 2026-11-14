@@ -12,6 +12,14 @@ import io.mockk.*
 import kotlin.test.*
 
 class ToaApmekenTests {
+    @Test fun `only the sight holder learns which issue it is, with the OSRS messages ToA Extended reads`() {
+        assertEquals("You sense an issue with the roof supports.", ApmekenRoom.senseMessage(ApmekenPuzzle.Action.PILLAR, true))
+        assertEquals("You sense some strange fumes coming from holes in the floor.", ApmekenRoom.senseMessage(ApmekenPuzzle.Action.VENT, true))
+        for (action in ApmekenPuzzle.Action.values())
+            assertEquals("You sense an issue somewhere in the room.", ApmekenRoom.senseMessage(action, false))
+        assertEquals("You sense an issue somewhere in the room.", ApmekenRoom.senseMessage(ApmekenPuzzle.Action.CORRUPTION, true))
+    }
+
     @Test fun `a missed task announces its exact cause once to every raider`() {
         val expected = mapOf(
             ApmekenPuzzle.Action.VENT to "The fumes filling the room suddenly ignite!",
