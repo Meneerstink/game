@@ -1,0 +1,34 @@
+{{Infobox Item
+|name = S.t.a.s.h blueprint
+|image = [[File:S.t.a.s.h blueprint.png]]
+|release = [[7 April]] [[2021]]
+|update = Collection Log Improvements and The Last of Poll 74
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Drop
+|examine = I can use this to build a chart in my house.
+|value = 1
+|alchable = No
+|weight = 0.100
+|id = 25612
+}}
+[[File:S.t.a.s.h blueprint detail.png|left|120px]]
+A '''S.t.a.s.h blueprint''' is an item that can be purchased from [[Watson]] for {{NoCoins|500}} coins. It is used to make a [[S.t.a.s.h chart]] in a [[player-owned house]] [[study]].
+
+==Products==
+{{Uses material list|S.t.a.s.h blueprint}}
+
+==Shop locations==
+{{Store locations list|S.t.a.s.h blueprint}}
+
+==Trivia==
+* The name of this item does not have a correctly capitalised acronym; this is because all items in ''Old School RuneScape'' originally used ''ucfirst'' capitalisation, wherein the first letter of a string is capitalised, but the rest is not.{{CiteReddit|author=Mod Sarnie|url=https://www.reddit.com/r/2007scape/comments/mlyqkq/comment/gto9lzq/?context=3|title=Collection Log Improvements and The Last of Poll 74 - Game Update (07/04/21)|date=07 April 2021|archiveurl=https://reldo.runescape.wiki/i/106497|archivedate=13 April 2021|quote=This is something that happens engine side unfortunately, it will only capitalise the first letter of an object and the rest of the letters will become lower case.}}
+
+==References==
+{{Reflist}}
+
+{{Construction items}}

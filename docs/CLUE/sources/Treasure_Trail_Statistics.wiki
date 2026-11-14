@@ -1,0 +1,76 @@
+{{Infobox Scenery
+|version1 = Watson's house
+|version2 = Observatory reception house
+|name = Treasure Trail Statistics
+|image1 = [[File:Treasure Trail Statistics (Watson's house).png|250px]]
+|image2 = [[File:Treasure Trail Statistics (Observatory reception house).png|250px]]
+|release1 = [[6 July]] [[2016]]
+|release2 = [[12 June]] [[2014]]
+|update1 = Treasure Trail Expansion (2016)
+|update2 = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|location1 = [[Watson's house]]
+|location2 = Observatory reception house
+|options = Read
+|examine = ALL of the numbers.
+|map1 = {{Map|1646,3575|mtype=pin}}
+|map2 = {{Map|2445,3188|mtype=pin}}
+|id1 = 6567
+|id2 = 26634
+}}
+
+The '''Treasure Trail Statistics''' is an object which players can look at to check the amount of [[Treasure Trails]] they have completed. It shows the [[scroll box]] capacity of each tier, progress until the next scroll case of that tier, and if the [[Mimic scroll case]] has been obtained.
+
+==Ranks==
+[[File:Treasure Trail Statistics interface.png|thumb|Example interface for an avid clue solver.]]
+The interface also shows the player's [[Treasure_Trails#Ranks|Treasure Trails rank]]. This rank is determined by the total amount of completed [[clue scroll]]s.
+
+{| class="wikitable"
+!Completed clue scrolls
+!Rank
+|-
+|0–100
+|Beginner
+|-
+|101–200
+|Novice
+|-
+|201–400
+|The Explorer
+|-
+|401–600
+|Treasure Hunter
+|-
+|601–1000
+|Expert
+|-
+|1,001–1,500
+|Elite
+|-
+|1,501–2,000
+|Master
+|-
+|2,001+
+|Legend
+|}
+
+==Locations==
+*In the observatory reception house, located just north of the [[Observatory]].
+*In [[Watson's house]].
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 2 July 2025
+|update = Stackable Clues are here!
+|change = The board now displays the player's current scroll box capacity per tier and if the mimic scroll case has been obtained or not.
+}}
+{{Subject changes
+|date = 28 August 2014
+|update = Clan Cup Statues
+|change = The board no longer displays Treasure Trails rank as null with 100 total clues completed.
+}}
+{{Subject changes footer}}
+
+{{Treasure Trails}}

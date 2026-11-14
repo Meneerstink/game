@@ -1,0 +1,43 @@
+{{Infobox Monster
+|name = Third Age Ranger
+|image = [[File:Third Age Ranger.png|150px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|combat = 76
+|size = 1
+|examine = A reanimated ranger wearing the garb of ancient times.
+|xpbonus = 0
+|max hit = 12
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Ranged]]
+|attack speed = 4
+|hitpoints = 40
+|att = 1
+|str = 1
+|def = 80
+|mage = 1
+|range = 95
+|attbns = 0
+|strbns = 0
+|amagic = 0
+|mbns = 0
+|arange = 140
+|rngbns = 7
+|dstab = 55
+|dslash = 47
+|dcrush = 60
+|dmagic = 60
+|dlight = 55
+|dstandard = 55
+|dheavy = 55
+|poisonresistance = 0
+|venomresistance = 0
+|id = 8636
+|leagueRegion = Kourend
+}}
+
+The '''Third Age Ranger''' is a monster that is spawned when fighting [[The Mimic]]. It is spawned alongside the [[Third Age Warrior]] and [[Third Age Mage]]. It does not need to be defeated to beat The Mimic.
+
+{{Treasure Trails}}

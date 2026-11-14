@@ -1,0 +1,319 @@
+[[File:Fighting The Mimic.png|thumb|300px|A player faces The Mimic.]]
+Upon completion of an [[Elite clue scroll|elite]] or [[Master clue scroll|master]] [[clue scroll]], the casket received has a chance of turning out to be a mimic chest. Mimic caskets can only be obtained from an [[Reward casket (elite)|elite]] or [[Reward casket (master)|master reward casket]] '''after''' asking the [[strange casket]] to enable the chance to obtain a mimic casket (which is disabled by default). If players have not talked to the strange casket when they receive their first elite or master reward casket, they may choose whenever both casket types can roll for a mimic or not.
+
+==Attacks==
+The Mimic uses several attacks throughout the duration of the fight.
+
+* '''Melee attack:''' The Mimic can hit you with a normal melee attack if you are standing beside it.
+* '''Candy attack:''' The Mimic throws six candies at you. If you fail to step out of the way, you will receive about 10 damage. Three candies are purple, and there is one red, one blue and one green candy. The red, blue and green candies spawn the [[Third Age Warrior]], [[Third Age Mage]], and [[Third Age Ranger]] respectively. There is no benefit to killing them as they drop nothing and, when killed, they instantly respawn when another candy attack occurs.
+* '''Stomp Attack:''' Sometimes, The Mimic will step one tile forward onto you. Alternatively, this attack is activated when you walk under The Mimic. For every [[tick]] (0.6 seconds) that you stand under The Mimic, you will receive damage. The damage scales as follows: 1-1-1-2-2-2-3-... and so on, capping out at 6 damage. Simply step away from The Mimic to stop and reset the damage counter.
+
+==Suggested skills==
+<poem>
+*{{SCP|Magic|80+}} (Magic method)
+*{{SCP|Ranged|90+}} (Ranged method)
+*{{SCP|Attack|80+}} (Special attack)
+*{{SCP|Strength|80+}} (Special attack)
+*{{SCP|Defence|70+}}
+*{{SCP|Prayer|45+}} (74+ with Ranged)
+</poem>
+
+==Equipment==
+<tabber>
+Magic =
+Using magic alongside the [[dragon claws]] will allow the player to kill the Mimic relatively quickly. High-levelled players should have little difficulty defeating the mimic with high-end gear.
+<br>
+The player should always use [[Protect from Melee]] and move around the room when the Mimic throws sweets, and the player should ignore the spawned [[Third Age minions]]. Protect from Melee should be activated before the player enters the instance. The player should use stat-boosting potions and the ''invigorate'' option of the [[Imbued heart|imbued]]/[[saturated heart]] before entering the instance. The player should enter the fight in full melee gear and use both the dragon claws special attacks (can be substituted with [[burning claws]] or a [[dragon dagger]] if the player does not have dragon claws).
+<br>
+For lower-levelled players, it is helpful to freeze the Mimic in place with [[Entangle]] or [[ice spells]], which renders the Mimic unable to use melee attacks or the stomp attack as long as you are standing away from it.
+
+{{Recommended equipment
+|style = Magic
+|head1 = {{plink|Ancestral hat}}
+|head2 = {{plink|Virtus mask}}
+|head3 = {{plink|Void mage helm}} (if using [[Void Knight equipment]])
+|head4 = {{plink|Ahrim's hood}}
+|head5 = {{plink|Infinity hat}}
+|neck1 = {{plink|Occult necklace}}
+|neck2 = {{plink|Amulet of fury}}
+|neck3 = {{plink|Amulet of glory}}
+|neck4 = {{plink|Amulet of magic}}
+|neck5 = {{plink|Amulet of power}}
+|cape1 = {{plink|God capes#Imbuing|txt=Imbued god cape|pic=Imbued Saradomin cape}}
+|cape2 = {{plink|God capes|pic=Saradomin cape}}
+|cape3 = {{plink|Ardougne cloak 4}}
+|cape4 = {{plink|Ardougne cloak 3}}
+|cape5 = {{plink|Ardougne cloak 2}}
+|body1 = {{plink|Ancestral robe top}}
+|body2 = {{plink|Virtus robe top}}
+|body3 = {{plink|Elite void top}} / {{plink|Void knight top}} (if using [[Void Knight equipment]])
+|body4 = {{plink|Ahrim's robetop}}
+|body5 = {{plink|Infinity top}}
+|legs1 = {{plink|Ancestral robe bottom}}
+|legs2 = {{plink|Virtus robe bottom}}
+|legs3 = {{plink|Elite void robe}} / {{plink|Void knight robe}} (if using [[Void Knight equipment]])
+|legs4 = {{plink|Ahrim's robeskirt}}
+|legs5 = {{plink|Infinity bottoms}}
+|legs6 = {{plink|Mystic robe bottom}}
+|weapon1 = {{plink|Tumeken's shadow}}
+|weapon2 = {{plink|Eye of Ayak}}
+|weapon3 = {{plink|Sanguinesti staff}}
+|weapon4 = {{plink|Trident of the Swamp}}
+|weapon5 = {{plink|Trident of the Seas}}
+|shield1 = {{plink|Elidinis' ward (f)}}
+|shield2 = {{plink|Elidinis' ward}}
+|shield3 = {{plink|Arcane spirit shield}}
+|shield4 = {{plink|Ancient wyvern shield}} /<br/>{{plink|Mage's book}}
+|shield5 = {{plink|Malediction ward}}
+|ammo1 = {{plink|Rada's blessing 4}}
+|ammo2 = {{plink|Rada's blessing 3|txt=Rada's blessing 2 or 3}} /<br/>{{plink|God blessing|pic=Peaceful blessing}}
+|hands1 = {{plink|Confliction gauntlets}}
+|hands2 = {{plink|Tormented bracelet}}
+|hands3 = {{plink|Void knight gloves}} (if using [[Void Knight equipment]])
+|hands4 = {{plink|Barrows gloves}}
+|hands5 = {{plink|Dragon gloves}}
+|feet1 = {{plink|Avernic treads (max)}}
+|feet2 = {{plink|Eternal boots}}
+|feet3 = {{plink|Infinity boots}}/{{plink|Aranea boots}}
+|feet4 = {{plink|Bloodbark boots}}/{{plink|Wizard boots}}
+|feet5 = {{plink|Mystic boots}}
+|ring1 = {{plink|Magus ring}}
+|ring2 = {{plink|Seers ring (i)}}
+|ring3 = {{plink|Brimstone ring}}
+|ring4 = {{plink|Ring of suffering (ri)}}
+|ring5 = {{plink|Lunar ring}} /<br/> {{plink|Beacon ring}} /<br/>{{plink|Ring of the gods (i)}}
+|special1 = {{plink|Zorya's tome}}
+|special2 = {{plink|Dragon claws}} / {{plink|Voidwaker}}
+|special3 = {{plink|Burning claws}}
+|special4 = {{plink|Dragon dagger(p++)}}
+}}
+
+===Inventory===
+{{Inventory|align=right
+|1 = Voidwaker
+|2 = Torva full helm
+|3 = Divine super combat potion(4)
+|4 = {{Cheap prayer}}
+|5 = Amulet of rancour
+|6 = Infernal cape
+|7 = Anglerfish
+|8 = Anglerfish
+|9 = Torva platebody
+|10 = Torva platelegs
+|11 = Anglerfish
+|12 = Anglerfish
+|13 = Ferocious gloves
+|14 = Ultor ring
+|15 = 
+|16 = 
+|17 = 
+|18 = 
+|19 = 
+|20 = 
+|21 = 
+|22 = 
+|23 = 
+|24 = 
+|25 = Teleport to house (tablet)
+|26 = Saturated heart
+|27 = Watson teleport
+|28 = Mimic
+}}
+As the fight is relatively short, a full inventory of food and potions is not necessary. For lower-levelled players, increase the number of prayer-restoring potions and food, and consider bringing freeze spells.
+* Special attack weapon (optional)
+* Melee switch (optional)
+* Runes for [[Entangle]] or [[ice spells]] (optional)
+* 1 [[divine super combat potion]] (if bringing a melee switch)
+* 1 [[super restore]] or [[prayer potion]]
+* 4–6 [[anglerfish]]
+* Emergency teleport
+*[[Saturated heart]] or [[Imbued heart]] or [[magic potion]]
+* [[Watson teleport]] scroll
+|-|
+Ranged =
+Though the Mimic is weak to magic, using ranged alongside the [[dragon claws]] will still allow the player to kill the Mimic relatively quickly. High-levelled players should have little difficulty defeating the mimic with high-end gear.
+
+The player should always use [[Protect from Melee]] and move around the room when the Mimic throws sweets, and the player should ignore the spawned [[Third Age minions]]. Protect from Melee should be activated before the player enters the instance. The player should use stat-boosting potions before entering the instance. The player should enter the fight in full melee gear and use both the dragon claws special attacks (can be substituted with a [[dragon dagger]] if the player does not have dragon claws).
+
+{{Recommended equipment
+|style = Ranged
+|head1 = {{plink|Masori mask (f)}}
+|head2 = {{plink|Armadyl helmet}} /<br/>{{plink|Crystal helm}} {{efn|name="bowfa"|Use with [[Bow of Faerdhinen]]}}
+|head3 = {{plink|Void ranger helm}} (if using [[Void Knight equipment]])
+|head4 = {{plink|Blessed coif|pic=Ancient coif}}
+|head5 = {{plink|Archer helm}}
+|neck1 = {{plink|Necklace of rupture}}
+|neck2 = {{plink|Necklace of anguish}}
+|neck3 = {{plink|Necklace of Fangs}}
+|neck4 = {{plink|Amulet of fury}}
+|neck5 = {{plink|Amulet of glory}}
+|cape1 = {{plink|Dizana's quiver}}
+|cape2 = {{plink|Ava's assembler}}
+|cape3 = {{plink|Ava's accumulator}}
+|cape4 = {{plink|Ranging cape(t)}} ><br/>{{plink|Ava's attractor}}
+|body1 = {{plink|Masori body (f)}}
+|body2 = {{plink|Armadyl chestplate}} /<br/>{{plink|Crystal body}} {{efn|name="bowfa"}}
+|body3 = {{plink|Elite void top}} / {{plink|Void knight top}} (if using [[Void Knight equipment]])
+|body4 = {{plink|Karil's leathertop}}
+|body5 = {{plink|Blessed body|pic=Ancient d'hide body}}
+|legs1 = {{plink|Masori chaps (f)}}
+|legs2 = {{plink|Armadyl chainskirt}} /<br/>{{plink|Crystal legs}} {{efn|name="bowfa"}}
+|legs3 = {{plink|Elite void robe}} / {{plink|Void knight robe}} (if using [[Void Knight equipment]])
+|legs4 = {{plink|Karil's leatherskirt}}
+|legs5 = {{plink|Blessed chaps|pic=Ancient chaps}}
+|weapon1 = {{plink|Twisted bow}} (with [[Rune arrow|rune]] or better [[arrow]]s)
+|weapon2 = {{plink|Toxic blowpipe}} (with [[Rune dart|rune]] or better [[dart]]s) {{efn|Surpasses [[Bow of Faerdhinen]] only with at least 2 [[Masori]] armour pieces}}
+|weapon3 = {{plink|Bow of Faerdhinen}} {{efn|Only if using full [[Crystal armour]]}}
+|weapon4 = {{plink|Zaryte crossbow}} > {{plink|Armadyl crossbow}} > {{plink|Dragon crossbow}} > {{plink|Rune crossbow}}
+|shield1 = {{plink|Twisted buckler}}
+|shield2 = {{plink|Dragonfire ward}}
+|shield3 = {{plink|Odium ward}}
+|shield4 = {{plink|Book of Law}}
+|shield5 = {{plink|Unholy book}}
+|ammo1 = {{plink|Seeking dragon arrow}} > {{plink|Seeking amethyst arrow}}{{efn|Depending on accuracy, seeking amethyst arrows can be better than regular dragon arrows|name=seeking}} > {{plink|Dragon arrow}}{{efn|name=seeking}} > {{plink|Amethyst arrow}} > {{plink|Rune arrow}} (Twisted bow only)
+|ammo2 = {{plink|Rada's blessing 4}} > {{plink|Rada's blessing 3|txt=Rada's blessing 2 or 3}} / {{plink|God blessing|pic=Peaceful blessing}} (Toxic blowpipe or Bow of Faerdhinen)
+|ammo3 = {{plink|Diamond dragon bolts (e)}} > {{plink|Diamond bolts (e)}} (crossbow only)
+|hands1 = {{plink|Zaryte vambraces}}
+|hands2 = {{plink|Barrows gloves}}
+|hands3 = {{plink|Void knight gloves}} (if using [[Void Knight equipment]])
+|hands4 = {{plink|Ranger gloves}}
+|hands5 = {{plink|Blessed vambraces|pic=Ancient bracers}}
+|feet1 = {{plink|Avernic treads (max)}}
+|feet2 = {{plink|Pegasian boots}}
+|feet3 = {{plink|Ranger boots}}
+|feet4 = {{plink|Blessed boots|pic=Ancient d'hide boots}}
+|feet5 = {{plink|Aranea boots}}
+|ring1 = {{plink|Venator ring}}
+|ring2 = {{plink|Archers ring (i)}}
+|ring3 = {{plink|Ring of suffering (ri)}} /<br/>{{plink|Ring of shadows}}
+|ring4 = {{plink|Brimstone ring}}
+|ring5 = {{plink|Ring of the gods (i)}}
+|special1 = {{plink|Voidwaker}}
+|special2 = {{plink|Dragon claws}} /<br>{{plink|Burning claws}}
+|special3 = {{plink|Dragon dagger(p++)}}
+}}
+{{notelist}}
+
+===Inventory===
+{{Inventory|align=right
+|1 = Voidwaker
+|2 = Torva full helm
+|3 = Divine super combat potion(4)
+|4 = Divine ranging potion(4)
+|5 = Amulet of rancour
+|6 = Infernal cape
+|7 = {{Cheap prayer}}
+|8 = Anglerfish
+|9 = Torva platebody
+|10 = Torva platelegs
+|11 = Anglerfish
+|12 = Anglerfish
+|13 = Ferocious gloves
+|14 = Ultor ring
+|15 = Anglerfish
+|16 = Anglerfish
+|17 = 
+|18 = 
+|19 = 
+|20 = 
+|21 = 
+|22 = 
+|23 = 
+|24 = 
+|25 = Teleport to house (tablet)
+|26 = Watson teleport
+|27 = 
+|28 = Mimic
+}}
+As the fight is relatively short, a full inventory of food and potions is not necessary. For lower-levelled players, increase the number of prayer-restoring potions and food. Lower-levelled players should also consider bringing a stamina potion, as running around the room will drain run energy.
+* Special attack weapon (optional)
+* Melee switch (optional)
+* 1 [[divine super combat potion]]
+* 1 [[divine ranging potion]]
+* 1 [[super restore]] or [[prayer potion]]
+* 4–6 [[anglerfish]]
+* Emergency teleport
+* [[Watson teleport]] scroll
+|-|
+Melee =
+If you are an ironman or do not meet the minimum requirement for using Magic ([[Trident of the Seas]] or better powered staff), the fight is much easier using the [[Protect from Magic]] prayer against the [[Third Age Mage]], utilising melee gear to tank the Mimic, [[Third Age Warrior]], and [[Third Age Ranger]]. Using [[Super strength]] and [[Super attack]] potions with [[Piety]] will typically do similar or more DPS than an average mage set using the [[Warped sceptre]]. This makes the fight much easier as you have more damage resistance and allows players to take more food for their first few kills, or until better magic switches or a more powerful powered staff is obtained.
+<br>
+The player should start with [[Protect from Melee]] until the Mimic throws a set of sweets which spawn the [[Third Age Mage]], swapping then to [[Protect from Magic]]. Like the other strategies, ignore the [[Third Age minions]]. The player should enter the fight fully potted up and ready to use their best special attack weapon. Ensure [[Piety]] or your best melee boosting prayer is active for the duration of the fight.
+<br>
+Despite the Mimic's slight weakness to crush, a slash weapon will still typically outperform them.
+
+{{Recommended equipment
+|style = Melee
+|head1 = {{plink|Helm of Neitiznot}}
+|neck1 = {{plink|Amulet of fury}}
+|neck2 = {{plink|Amulet of glory}}
+|cape1 = {{plink|Fire cape}}
+|body1 = {{plink|Bandos chestplate}}
+|body2 = {{plink|Fighter torso}}
+|legs1 = {{plink|Bandos tassets}}
+|legs2 = {{plink|Verac's plateskirt}} / {{plink|Dharok's platelegs}} / {{plink|Torag's platelegs}}
+|legs3 = {{plink|Dragon platelegs}} / {{plink|Dragon plateskirt}}
+|weapon1 = {{plink|Abyssal tentacle}} > {{plink|Abyssal whip}}
+|weapon2 = {{plink|Zombie axe}}
+|weapon3 = {{plink|Arkan blade}}
+|shield1 = {{plink|Dragon defender}}
+|ammo1 = {{plink|Rada's blessing 4}} > {{plink|Rada's blessing 3|txt=Rada's blessing 2 or 3}} / {{plink|God blessing|pic=Peaceful blessing}}
+|hands1 = {{plink|Barrows gloves}}
+|feet1 = {{plink|Dragon boots}}
+|feet2 = {{plink|Mixed hide boots}}
+|feet3 = {{plink|Climbing boots}}
+|ring1 = {{plink|Berserker ring (i)}}
+|ring2 = {{plink|Ring of suffering (ri)}} /<br/>{{plink|Ring of shadows}}
+|ring3 = {{plink|Brimstone ring}}
+|ring4 = {{plink|Steel ring}}
+|special1 = {{plink|Voidwaker}}
+|special2 = {{plink|Dragon claws}} /<br>{{plink|Burning claws}}
+|special3 = {{plink|Arkan blade}}
+|special4 = {{plink|Dragon dagger(p++)}}
+}}
+
+===Inventory===
+{{Inventory|align=right
+|1 = Arkan blade
+|2 = Super strength(4)
+|3 = Super attack(4)
+|4 = {{Cheap prayer}}
+|5 = {{Cheap prayer}}
+|6 = Anglerfish
+|7 = Anglerfish
+|8 = Shark
+|9 = Cooked karambwan
+|10 = Shark
+|11 = Cooked karambwan
+|12 = Shark
+|13 = Cooked karambwan
+|14 = Shark
+|15 = Cooked karambwan
+|16 = Shark
+|17 = Cooked karambwan
+|18 = Shark
+|19 = Cooked karambwan
+|20 = Tuna potato
+|21 = Cooked karambwan
+|22 = Tuna potato
+|23 = Cooked karambwan
+|24 = Tuna potato
+|25 = Teleport to house (tablet)
+|26 = Watson teleport
+|27 = 
+|28 = Mimic
+}}
+Two prayer potions should be enough for the entire kill duration, keeping Piety and Protect from Magic up the entire time. Fill your inventory with the best food you have access to, along with some [[Cooked karambwan]] so you can [[Combo eat|combo eat]] to maximize your healing while minimising downtime. Keep auto retaliate off to avoid running to the spawned minions, and move around the room to keep from getting backed into a corner when the Mimic steps onto you, preventing unnecessary damage. You may wish to use the nearby [[Hosidius Kitchen]] to bank and pre-pot a [[Super defence]].
+* Special attack weapon
+* 1 [[Super combat potion]] or 1 of each [[Super attack potion]], [[Super strength potion]]
+* 2 [[super restore]], [[prayer potion]], or [[Moonlight moth mix]]
+* Best food available
+* [[Cooked karambwan]] for combo eating
+* Emergency teleport
+* Travel method to [[Watson's house]]
+* [[Mimic]]
+
+</tabber>
+
+{{DEFAULTSORT:Mimic, The/Strategies}}
+[[Category:Strategies]]

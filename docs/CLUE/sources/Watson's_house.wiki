@@ -1,0 +1,67 @@
+{{Infobox Location
+|name = Watson's house
+|image = [[File:Watson's house.png|300px]]
+|release = [[7 January]] [[2016]]
+|update = Zeah: Great Kourend
+|members = Yes
+|location = [[Hosidius]]
+|map = {{Map|name=Watson's house|x=1645|y=3570|height=250|zoom=2}}
+|type = building
+|leagueRegion = Kourend
+}}
+'''Watson's house''' is a building found below the maple tree near [[Hosidius]]. This building is home to [[Watson]], an NPC that plays a role in [[Clue scroll (master)|master clue scrolls]].
+
+{{Relative location
+|location = Watson's house
+|north = Mess
+|south = Woodcutting guild
+|east = Forthos Ruin
+|west = Shayzien
+}}
+
+==Transportation==
+*[[Watson teleport]]
+*[[Kharedst's memoirs]] or [[Book of the Dead]] - Lunch by the Lancalliums teleport and run west.
+*[[Skills necklace]] - Woodcutting Guild teleport and run north.
+*[[Xeric's talisman]] - Xeric's Lookout teleport and run north-east.
+*If using the [[Lovakengj Minecart Network]], the Hosidius West option is the closest to the house.
+
+==Features==
+
+==={{FloorNumber|uk=0|caps=y|nohelp=y}}===
+*[[Watson]]
+*[[Gruff McScruff]]
+*[[Noticeboard (Watson's house)|Noticeboard]] - A list of [[STASH|STASH unit]] locations, which players can use to check which STASH units are built and filled.
+*[[Treasure Trail Statistics]] - Players can look at this object to check the amount of [[Treasure Trails]] they have completed.
+*[[Pinboard]] - A list of clue scroll contributors, players that submitted suggestions for [[Treasure_Trails#Rewards|Treasure Trails rewards]].
+*[[Spinning wheel]]
+*[[Pump and drain]]
+*Cooking [[range]]
+
+==={{FloorNumber|uk=1|caps=y|nohelp=y}}===
+*[[Strange casket]] - Players must speak to it in order to enable the chance of a [[reward casket]] turning into the [[Mimic]]. If players have a Mimic in their inventory, they can bring it to the strange casket to fight [[The Mimic]].
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 23 May 2019
+|update = Hosidius Rework and Deadman Beta
+|change = Watson's house was renovated with Hosidius's rework.
+}}
+{{Subject changes
+|date = 17 November 2016
+|update = Great Kourend Rework
+|change = Watson's house gained an increase of size to make up for the removal of his neighbour's house during a rework to Kourend.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* This house was first unoccupied upon the release of Great Kourend, with no noticeable features, and was only known as Watson's house when Watson later moved into this house with the release of the Treasure Trail Expansion Update.
+* Just south of the house is one of the few [[toilet|toilets]] in [[Gielinor]]. Attempting to open the [[locked door]] will result in the player remarking {{mes|I'm sure this door is locked for a reason. I'll leave it be.}}
+
+<gallery>
+File:Watson's house toilet.png|One of the few toilets in Gielinor.
+</gallery>
+
+{{Great Kourend}}
+[[Category:Houses and homes]]

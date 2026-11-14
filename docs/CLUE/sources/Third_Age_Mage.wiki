@@ -1,0 +1,43 @@
+{{Infobox Monster
+|name = Third Age Mage
+|image = [[File:Third Age Mage.png|150px]]
+|release = [[11 April]] [[2019]]
+|update = Treasure Trails Expansion and Easter 2019
+|members = Yes
+|combat = 83
+|size = 1
+|examine = A reanimated mage wearing the garb of ancient times.
+|xpbonus = 0
+|max hit = 16
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Magic]]
+|attack speed = 4
+|hitpoints = 40
+|att = 1
+|str = 1
+|def = 80
+|mage = 110
+|range = 1
+|attbns = 0
+|strbns = 0
+|amagic = 145
+|mbns = 24
+|arange = 0
+|rngbns = 0
+|dstab = 5
+|dslash = 6
+|dcrush = 5
+|dmagic = 65
+|dlight = -5
+|dstandard = -5
+|dheavy = -5
+|poisonresistance = 0
+|venomresistance = 0
+|id = 8637
+|leagueRegion = Kourend
+}}
+
+The '''Third Age mage''' is a monster that is spawned when fighting [[The Mimic]]. It is spawned alongside the [[Third Age Ranger|Third Age ranger]] and [[Third Age Warrior|Third Age warrior]]. It does not need to be defeated to beat The Mimic.
+
+{{Treasure Trails}}

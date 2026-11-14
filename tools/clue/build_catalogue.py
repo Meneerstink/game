@@ -108,7 +108,7 @@ def canonical(name):
 def export_local():
     sys.path.insert(0, "C:/RSPS/tools/cache667")
     from js5 import Cache
-    from items import decode
+    from local_items import decode
     # Worktree cache copies are not kept in sync with Claude's imports. Read the
     # canonical target, in rb mode, and reject an inventory taken across a write.
     marker = TARGET_CACHE / "main_file_cache.dat2"
@@ -122,7 +122,10 @@ def export_local():
                 data = cache.file(19, group, file)
                 if not data:
                     continue
-                row = decode(data)
+                try:
+                    row = decode(data)
+                except Exception as error:
+                    raise ValueError(f"Cannot inventory target item {id} (group {group}, file {file}): {error}") from error
                 out[id] = row
     finally:
         cache.dat.close()
@@ -261,7 +264,7 @@ def main():
     log = {tier: dict(enum=id, items=enum_items(enums[str(id)])) for tier, id in enum_ids.items()}
     # Source enum 3607 is the separate Scroll Cases log. Owner excludes its two beginner slots.
     log["cases"] = dict(enum=3607, items=[id for id in enum_items(enums["3607"]) if id not in (30902, 30904)])
-    extra.extend((20164, 20249, 19941, 22675))  # Wiki milestone cosmetics; cache identities.
+    extra.extend((20164, 20249, 19941, 22675, 25612))  # Wiki milestones + Watson's S.t.a.s.h blueprint.
     for page in log.values():
         extra.extend(page["items"])
     for id in extra:

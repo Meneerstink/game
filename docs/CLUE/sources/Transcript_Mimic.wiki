@@ -1,0 +1,5 @@
+{{Transcript|item}}
+
+==Attempting to open the Mimic before fighting the Mimic==
+* {{tbox|pic=Mimic detail.png|Visit the Strange Casket, upstairs in Watson's house in Hosidius, to attempt the Mimic's challenge.}}
+* {{tact|end}}
