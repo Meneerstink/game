@@ -270,5 +270,8 @@ object GuardedZones {
             // Pest Control (2026-10-02): the lander decks and every game instance - players fight the pests, never each other.
             gg.rsmod.plugins.content.activity.pest_control.PestControlHandler.isSafeTile(tile) ||
             // Tombs of Amascut (N462 08-11): the raid instance - party members fight the tomb, never each other.
-            gg.rsmod.plugins.content.activity.toa.ToaLobby.isRaidTile(tile)
+            gg.rsmod.plugins.content.activity.toa.ToaLobby.isRaidTile(tile) ||
+            // N609 14-11 (owner report: 'de entree lobby toa dangerous zone'): the ToA lobby where parties gather (Grouping obelisk,
+            // Scoreboard, Invocation Board) is guarded like the Pest Control lander decks above - nobody fights each other there.
+            gg.rsmod.plugins.content.activity.toa.ToaMap.inLobby(tile)
 }
