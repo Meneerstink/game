@@ -534,6 +534,20 @@ gg.rsmod.game.CommandServerCommands.handlers["pairpos"] = { w, a ->
     if (p == null || o == null) "usage: pairpos <a> <b>" else "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} ${o.username}@${o.tile.x},${o.tile.z}"
 }
 // `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
+// `opheldu <name> <from item id> <to item id>` (N415 15-11): use one inventory item on another through the real OpHeldU route (the
+// client's 'Use X -> Y'), e.g. Ancient fabric on an imbued god cape - the first inventory slot holding each id is used.
+gg.rsmod.game.CommandServerCommands.handlers["opheldu"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
+    val from = a.getOrNull(1)?.toIntOrNull()
+    val to = a.getOrNull(2)?.toIntOrNull()
+    val fromSlot = if (p != null && from != null) p.inventory.rawItems.indexOfFirst { it?.id == from } else -1
+    val toSlot = if (p != null && to != null) p.inventory.rawItems.indexOfFirst { it?.id == to } else -1
+    if (p == null || fromSlot < 0 || toSlot < 0) "usage: opheldu <name> <from item id> <to item id> (both in the inventory)"
+    else {
+        val msg = gg.rsmod.game.message.impl.OpHeldUMessage(679 shl 16, fromSlot, from!!, 679 shl 16, toSlot, to!!)
+        if (p.gameSystem.inject(msg)) "used $from (slot $fromSlot) on $to (slot $toSlot) for ${p.username}" else "no handler"
+    }
+}
 gg.rsmod.game.CommandServerCommands.handlers["opnpcitem"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "") as? gg.rsmod.game.model.entity.Client
     val slot = a.getOrNull(1)?.toIntOrNull()
@@ -842,14 +856,14 @@ fun writeBugReport(
     Trace.log(Trace.Cat.INPUT) { "bug report ${file.name} by ${player.username}: $text" }
     return file
 }
-// N415 test: `ma2state <name> <ma1|trained|started|remains>` sets a Mage Arena stage for own-client checks (testserver saves nothing).
+// N415 test: `ma2state <name> <ma1|trained|started|remains|completed>` sets a Mage Arena stage for own-client checks (testserver saves nothing).
 // ma1 = MA1 done + statue + first staff; trained = + 100 casts of all three god spells; started = + MA2 started (talk to Kolodion for
 // the symbol); remains = + Saradomin and Guthix remains handed in (one follower left to track).
 gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
     val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
     val stage = a.getOrNull(1) ?: "trained"
     if (p == null) {
-        "usage: ma2state <name> <ma1|trained|started|remains>"
+        "usage: ma2state <name> <ma1|trained|started|remains|completed>"
     } else {
         val ma2 = gg.rsmod.plugins.content.areas.wilderness.MageArenaII
         p.attr[gg.rsmod.game.model.attr.COMPLETED_MAGE_ARENA] = true
@@ -861,6 +875,12 @@ gg.rsmod.game.CommandServerCommands.handlers["ma2state"] = { w, a ->
         p.attr[ma2.FIRST_IMBUE] = false
         if (stage != "ma1") gg.rsmod.plugins.content.areas.wilderness.GodSpellTraining.SPELLS.forEach { p.attr[it.key] = 100 }
         if (stage == "started" || stage == "remains") p.attr[ma2.STARTED] = true
+        if (stage == "completed") {
+            // 15-11: all three remains handed in and the first free imbue used (as after a real run: ma2_full.sh + ma2_finish.sh).
+            p.attr[ma2.STARTED] = true
+            p.attr[ma2.DELIVERED] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.ALL_REMAINS
+            p.attr[ma2.FIRST_IMBUE] = true
+        }
         if (stage == "remains") {
             p.attr[ma2.DELIVERED] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
             p.attr[ma2.CREDITS] = gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.SARADOMIN.bit or gg.rsmod.plugins.content.areas.wilderness.MageArenaII.God.GUTHIX.bit
