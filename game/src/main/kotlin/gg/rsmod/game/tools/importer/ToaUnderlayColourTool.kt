@@ -52,6 +52,10 @@ object ToaUnderlayColourTool {
         // Zebak bank (plane 1 above bridge-flagged water, 15700): trial stripes 134/129/161/0/97 (cam-crondis-room-1759) -> 161 H/S/V
         // 32/109/91 and 0 31/110/83 match OSRS dark olive 35/124/41 in hue; 161 = the local of the neighbouring OSRS 132 swamp it blends into.
         (15700 to 116) to (setOf(129, 134, 161, 0, 97) to 161),
+        // N609 14-11 15:0x (eigenaar 'ik zie groene ondergrond waarom'; photobook-1504 zebak-room-a vs Kaoz 668 s): OSRS 108 (#958b67) in the
+        // Zebak arena stayed local 125 (sand #a3964b) = a pale tan SQUARE mid-arena; OSRS blends it into the dark swamp like 116 above
+        // (13-11 note 'rechtsboven nog tan = OSRS 108 -> 125') -> the same local 161.
+        (15700 to 108) to (setOf(125, 161) to 161),
         // N609 14-11 ToA LOBBY (13454): OSRS 116 sand (#665f47) was local 55 (#4d4d4d + texture 497 = grey ROCK, 988 tiles) - Kaoz 60 s shows
         // sand + navy floor. Trial stripes 134/161/101/55 (screens/N609/lobby-trial-0419) -> 134, the same local as the raid squares.
         (13454 to 116) to (setOf(55, 134, 161, 101) to 134),
