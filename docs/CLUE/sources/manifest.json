@@ -963,14 +963,6 @@
       "url": "https://oldschool.runescape.wiki/w/Transcript%3ATorn_clue_scroll"
     },
     {
-      "page": "Challenge scroll",
-      "revision": 15186746,
-      "revision_time": "2026-04-22T04:10:27Z",
-      "file": "Challenge_scroll.wiki",
-      "sha256": "27177f50a23c9518066b25f6226ccc23ff7363a53a9d2b0139201cf1271cb1a2",
-      "url": "https://oldschool.runescape.wiki/w/Challenge_scroll"
-    },
-    {
       "page": "Transcript:Abbot Langley",
       "revision": 15324395,
       "revision_time": "2026-08-29T11:06:14Z",
@@ -1065,6 +1057,34 @@
       "file": "Amy's_saw_(off-hand).wiki",
       "sha256": "b6a5a699171fd709da89e371b8aba6e888f2b725d25a132aaecacef15a37e3b5",
       "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw_%28off-hand%29"
+    },
+    {
+      "page": "Transcript:Jorral",
+      "revision": 15248065,
+      "revision_time": "2026-07-02T04:29:58Z",
+      "file": "Transcript_Jorral.wiki",
+      "sha256": "3843700e9cdf208437023664297747dc607217fc75bf9985a87b8d204d332bb4",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AJorral"
+    },
+    {
+      "page": "Challenge scroll",
+      "revision": 15186746,
+      "revision_time": "2026-04-22T04:10:27Z",
+      "file": "Challenge_scroll.wiki",
+      "sha256": "27177f50a23c9518066b25f6226ccc23ff7363a53a9d2b0139201cf1271cb1a2",
+      "url": "https://oldschool.runescape.wiki/w/Challenge_scroll"
+    },
+    {
+      "page": "Challenge scroll (Sherlock)",
+      "missing": true
+    },
+    {
+      "page": "Barrows gloves",
+      "revision": 15322401,
+      "revision_time": "2026-08-27T21:40:07Z",
+      "file": "Barrows_gloves.wiki",
+      "sha256": "4fc678f43cce873dcb9bd2194784527098700c1e6348d6e355726d684d101810",
+      "url": "https://oldschool.runescape.wiki/w/Barrows_gloves"
     }
   ]
 }

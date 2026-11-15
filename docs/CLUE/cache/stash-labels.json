@@ -1,0 +1,604 @@
+{
+  "sourceEnumSha256": "d7efbab9b14bb0c8779c62fed9f807a739ccdd963785b07e179fbfa496c44623",
+  "nativeMetricId": 495,
+  "nativeMetricSha256": "89ad3edb9c7b93152db1d0b307b53606fd1d742545ab44a35961bc4287502ba4",
+  "sourceFontSha256": "01e6d6c080143a4a436361dc5c3ea40f83cb188bfda38f64f4e7ea0154680d0d",
+  "matchingAdvanceWidths": false,
+  "labels": {
+    "28983": {
+      "text": "Outside Varrock Palace courtyard",
+      "nativeLines143": 2,
+      "nativeWidth": 189
+    },
+    "28984": {
+      "text": "Near Herquin\u0027s shop in Falador",
+      "nativeLines143": 2,
+      "nativeWidth": 173
+    },
+    "28985": {
+      "text": "South of the Grand Exchange",
+      "nativeLines143": 2,
+      "nativeWidth": 165
+    },
+    "28986": {
+      "text": "Aubury\u0027s shop in Varrock",
+      "nativeLines143": 1,
+      "nativeWidth": 142
+    },
+    "28958": {
+      "text": "Near a shed in Lumbridge Swamp",
+      "nativeLines143": 2,
+      "nativeWidth": 182
+    },
+    "28959": {
+      "text": "On the bridge to the Misthalin Wizards\u0027 Tower",
+      "nativeLines143": 2,
+      "nativeWidth": 253
+    },
+    "28960": {
+      "text": "Draynor Village market",
+      "nativeLines143": 1,
+      "nativeWidth": 127
+    },
+    "28961": {
+      "text": "Limestone mine",
+      "nativeLines143": 1,
+      "nativeWidth": 87
+    },
+    "28962": {
+      "text": "Outside the Legends\u0027 Guild gates",
+      "nativeLines143": 2,
+      "nativeWidth": 188
+    },
+    "28963": {
+      "text": "Mudskipper Point",
+      "nativeLines143": 1,
+      "nativeWidth": 97
+    },
+    "28964": {
+      "text": "Near the Entrana ferry in Port Sarim",
+      "nativeLines143": 2,
+      "nativeWidth": 203
+    },
+    "28965": {
+      "text": "Al Kharid scorpion mine",
+      "nativeLines143": 1,
+      "nativeWidth": 131
+    },
+    "28966": {
+      "text": "Draynor Manor by the fountain",
+      "nativeLines143": 2,
+      "nativeWidth": 174
+    },
+    "28967": {
+      "text": "Wheat field near the Lumbridge windmill",
+      "nativeLines143": 2,
+      "nativeWidth": 221
+    },
+    "28968": {
+      "text": "Crossroads north of Draynor Village",
+      "nativeLines143": 2,
+      "nativeWidth": 204
+    },
+    "28969": {
+      "text": "Rimmington mine",
+      "nativeLines143": 1,
+      "nativeWidth": 93
+    },
+    "28970": {
+      "text": "Varrock Palace Library",
+      "nativeLines143": 1,
+      "nativeWidth": 126
+    },
+    "28971": {
+      "text": "Upstairs in the Ardougne windmill",
+      "nativeLines143": 2,
+      "nativeWidth": 187
+    },
+    "28972": {
+      "text": "Outside the Falador Party Room",
+      "nativeLines143": 2,
+      "nativeWidth": 178
+    },
+    "28973": {
+      "text": "Taverley Stone Circle",
+      "nativeLines143": 1,
+      "nativeWidth": 118
+    },
+    "28974": {
+      "text": "Catherby beehive field",
+      "nativeLines143": 1,
+      "nativeWidth": 129
+    },
+    "28975": {
+      "text": "Near the parrots in Ardougne Zoo",
+      "nativeLines143": 2,
+      "nativeWidth": 190
+    },
+    "28976": {
+      "text": "Road junction north of Rimmington",
+      "nativeLines143": 2,
+      "nativeWidth": 196
+    },
+    "28977": {
+      "text": "Outside the Fishing Guild",
+      "nativeLines143": 1,
+      "nativeWidth": 140
+    },
+    "28978": {
+      "text": "Outside Keep Le Faye",
+      "nativeLines143": 1,
+      "nativeWidth": 121
+    },
+    "28979": {
+      "text": "Road junction south of Sinclair Mansion",
+      "nativeLines143": 2,
+      "nativeWidth": 225
+    },
+    "28980": {
+      "text": "Outside the Digsite Exam Centre",
+      "nativeLines143": 2,
+      "nativeWidth": 181
+    },
+    "28981": {
+      "text": "Near the Sawmill Operator\u0027s booth",
+      "nativeLines143": 2,
+      "nativeWidth": 192
+    },
+    "28982": {
+      "text": "Mubariz\u0027s room at the Emir\u0027s Arena",
+      "nativeLines143": 2,
+      "nativeWidth": 198
+    },
+    "50738": {
+      "text": "Near the entrance of the Civitas illa Fortis Grand Museum",
+      "nativeLines143": 3,
+      "nativeWidth": 324
+    },
+    "58130": {
+      "text": "The bar on the Pandemonium",
+      "nativeLines143": 2,
+      "nativeWidth": 160
+    },
+    "29024": {
+      "text": "Chapel in West Ardougne",
+      "nativeLines143": 1,
+      "nativeWidth": 140
+    },
+    "29033": {
+      "text": "Fountain of Heroes",
+      "nativeLines143": 1,
+      "nativeWidth": 108
+    },
+    "29034": {
+      "text": "Entrance of the cavern under the whirlpool",
+      "nativeLines143": 2,
+      "nativeWidth": 240
+    },
+    "29035": {
+      "text": "Half-way down Trollweiss Mountain",
+      "nativeLines143": 2,
+      "nativeWidth": 193
+    },
+    "29036": {
+      "text": "Shayzien War Tent",
+      "nativeLines143": 1,
+      "nativeWidth": 103
+    },
+    "29037": {
+      "text": "Outside the Legends\u0027 Guild door",
+      "nativeLines143": 2,
+      "nativeWidth": 181
+    },
+    "29038": {
+      "text": "Near the gem stall in Ardougne market",
+      "nativeLines143": 2,
+      "nativeWidth": 216
+    },
+    "29039": {
+      "text": "Outside the bar by the Fight Arena",
+      "nativeLines143": 2,
+      "nativeWidth": 195
+    },
+    "41758": {
+      "text": "Near the Charcoal Burners",
+      "nativeLines143": 2,
+      "nativeWidth": 149
+    },
+    "29025": {
+      "text": "Near a runite rock in the Fremennik Isles",
+      "nativeLines143": 2,
+      "nativeWidth": 226
+    },
+    "29026": {
+      "text": "Near a ladder in the Wilderness Lava Maze",
+      "nativeLines143": 2,
+      "nativeWidth": 239
+    },
+    "29027": {
+      "text": "Entrance of the cave of Damis",
+      "nativeLines143": 2,
+      "nativeWidth": 170
+    },
+    "29028": {
+      "text": "Warriors\u0027 Guild bank",
+      "nativeLines143": 1,
+      "nativeWidth": 113
+    },
+    "29029": {
+      "text": "South-east corner of the Monastery",
+      "nativeLines143": 2,
+      "nativeWidth": 207
+    },
+    "29030": {
+      "text": "South-east corner of the Fishing Platform",
+      "nativeLines143": 2,
+      "nativeWidth": 238
+    },
+    "29031": {
+      "text": "Outside the Slayer Tower gargoyle room",
+      "nativeLines143": 2,
+      "nativeWidth": 223
+    },
+    "29032": {
+      "text": "On top of Trollheim Mountain",
+      "nativeLines143": 2,
+      "nativeWidth": 160
+    },
+    "50739": {
+      "text": "Outside the temple in Civitas illa Fortis",
+      "nativeLines143": 2,
+      "nativeWidth": 217
+    },
+    "58131": {
+      "text": "On Wintumber Island",
+      "nativeLines143": 1,
+      "nativeWidth": 114
+    },
+    "29018": {
+      "text": "Inside the Digsite Exam Centre",
+      "nativeLines143": 2,
+      "nativeWidth": 171
+    },
+    "29019": {
+      "text": "North-east corner of the Kharazi Jungle",
+      "nativeLines143": 2,
+      "nativeWidth": 229
+    },
+    "29020": {
+      "text": "Volcano in the north-eastern Wilderness",
+      "nativeLines143": 2,
+      "nativeWidth": 229
+    },
+    "29021": {
+      "text": "In the middle of Jiggig",
+      "nativeLines143": 1,
+      "nativeWidth": 124
+    },
+    "29022": {
+      "text": "Agility Pyramid",
+      "nativeLines143": 1,
+      "nativeWidth": 84
+    },
+    "29023": {
+      "text": "Hosidius Mess",
+      "nativeLines143": 1,
+      "nativeWidth": 81
+    },
+    "55405": {
+      "text": "Twilight Temple",
+      "nativeLines143": 1,
+      "nativeWidth": 81
+    },
+    "29009": {
+      "text": "Chaos Temple in the south-eastern Wilderness",
+      "nativeLines143": 3,
+      "nativeWidth": 263
+    },
+    "29010": {
+      "text": "Fishing Guild bank",
+      "nativeLines143": 1,
+      "nativeWidth": 101
+    },
+    "29011": {
+      "text": "Top floor of the Lighthouse",
+      "nativeLines143": 2,
+      "nativeWidth": 154
+    },
+    "29012": {
+      "text": "Outside the great pyramid of Sophanem",
+      "nativeLines143": 2,
+      "nativeWidth": 225
+    },
+    "29013": {
+      "text": "Noterazzo\u0027s shop in the Wilderness",
+      "nativeLines143": 2,
+      "nativeWidth": 202
+    },
+    "29014": {
+      "text": "West side of the Karamja banana plantation",
+      "nativeLines143": 3,
+      "nativeWidth": 250
+    },
+    "29015": {
+      "text": "Mountain Camp goat enclosure",
+      "nativeLines143": 2,
+      "nativeWidth": 173
+    },
+    "29016": {
+      "text": "Gnome Glider on White Wolf Mountain",
+      "nativeLines143": 2,
+      "nativeWidth": 208
+    },
+    "29017": {
+      "text": "Shilo Village bank",
+      "nativeLines143": 1,
+      "nativeWidth": 97
+    },
+    "29040": {
+      "text": "South-east corner of Lava Dragon Isle",
+      "nativeLines143": 2,
+      "nativeWidth": 217
+    },
+    "29041": {
+      "text": "Near the pier in Zul-Andra",
+      "nativeLines143": 2,
+      "nativeWidth": 147
+    },
+    "29042": {
+      "text": "Barrows Chest",
+      "nativeLines143": 1,
+      "nativeWidth": 81
+    },
+    "29043": {
+      "text": "Well of Voyage",
+      "nativeLines143": 1,
+      "nativeWidth": 83
+    },
+    "29044": {
+      "text": "Northern wall of Castle Drakan",
+      "nativeLines143": 2,
+      "nativeWidth": 171
+    },
+    "29045": {
+      "text": "7th Chamber of Jalsavrah",
+      "nativeLines143": 2,
+      "nativeWidth": 147
+    },
+    "29046": {
+      "text": "Soul Altar",
+      "nativeLines143": 1,
+      "nativeWidth": 55
+    },
+    "29047": {
+      "text": "Warriors\u0027 Guild bank",
+      "nativeLines143": 1,
+      "nativeWidth": 113
+    },
+    "29048": {
+      "text": "Entrana Chapel",
+      "nativeLines143": 1,
+      "nativeWidth": 85
+    },
+    "29049": {
+      "text": "TzHaar gem store",
+      "nativeLines143": 1,
+      "nativeWidth": 98
+    },
+    "29050": {
+      "text": "Tent in Lord Iorwerth\u0027s encampment",
+      "nativeLines143": 2,
+      "nativeWidth": 199
+    },
+    "29051": {
+      "text": "Outside Mudknuckles\u0027 hut",
+      "nativeLines143": 2,
+      "nativeWidth": 145
+    },
+    "29052": {
+      "text": "Centre of the Catacombs of Kourend",
+      "nativeLines143": 2,
+      "nativeWidth": 207
+    },
+    "29053": {
+      "text": "King Black Dragon\u0027s lair",
+      "nativeLines143": 1,
+      "nativeWidth": 131
+    },
+    "29054": {
+      "text": "Outside K\u0027ril Tsutsaroth\u0027s room",
+      "nativeLines143": 2,
+      "nativeWidth": 176
+    },
+    "29055": {
+      "text": "By the bear cage in Varrock Palace gardens",
+      "nativeLines143": 2,
+      "nativeWidth": 244
+    },
+    "29056": {
+      "text": "Outside the Wilderness axe hut",
+      "nativeLines143": 2,
+      "nativeWidth": 177
+    },
+    "29057": {
+      "text": "Top floor of the Yanille Watchtower",
+      "nativeLines143": 2,
+      "nativeWidth": 196
+    },
+    "29058": {
+      "text": "Death Altar",
+      "nativeLines143": 1,
+      "nativeWidth": 64
+    },
+    "29059": {
+      "text": "Behind Miss Schism in Draynor Village",
+      "nativeLines143": 2,
+      "nativeWidth": 210
+    },
+    "29060": {
+      "text": "North-western corner of the Enchanted Valley",
+      "nativeLines143": 2,
+      "nativeWidth": 260
+    },
+    "34953": {
+      "text": "North of Prifddinas by several maple trees",
+      "nativeLines143": 2,
+      "nativeWidth": 243
+    },
+    "50740": {
+      "text": "South of the gates to Cam Torum",
+      "nativeLines143": 2,
+      "nativeWidth": 184
+    },
+    "54275": {
+      "text": "West side of Salvager Overlook",
+      "nativeLines143": 2,
+      "nativeWidth": 177
+    },
+    "58132": {
+      "text": "On Brittle Isle",
+      "nativeLines143": 1,
+      "nativeWidth": 76
+    },
+    "29000": {
+      "text": "Lumbridge Swamp caves",
+      "nativeLines143": 1,
+      "nativeWidth": 135
+    },
+    "29001": {
+      "text": "Outside Catherby bank",
+      "nativeLines143": 1,
+      "nativeWidth": 129
+    },
+    "29002": {
+      "text": "Outside the Seers\u0027 Village courthouse",
+      "nativeLines143": 2,
+      "nativeWidth": 214
+    },
+    "29003": {
+      "text": "Outside Harry\u0027s Fishing Shop in Catherby",
+      "nativeLines143": 2,
+      "nativeWidth": 231
+    },
+    "29004": {
+      "text": "TzHaar weapons store",
+      "nativeLines143": 1,
+      "nativeWidth": 124
+    },
+    "29005": {
+      "text": "North of Evil Dave\u0027s house in Edgeville",
+      "nativeLines143": 2,
+      "nativeWidth": 216
+    },
+    "29006": {
+      "text": "North of the Shayzien combat ring",
+      "nativeLines143": 2,
+      "nativeWidth": 194
+    },
+    "29007": {
+      "text": "Entrance of the Arceuus library",
+      "nativeLines143": 2,
+      "nativeWidth": 178
+    },
+    "29008": {
+      "text": "Outside Draynor Village jail",
+      "nativeLines143": 2,
+      "nativeWidth": 154
+    },
+    "34647": {
+      "text": "North of Mount Karuulm",
+      "nativeLines143": 1,
+      "nativeWidth": 134
+    },
+    "55403": {
+      "text": "North of the Twilight Temple",
+      "nativeLines143": 2,
+      "nativeWidth": 154
+    },
+    "55404": {
+      "text": "Where the River Ortus meets the Proudspire",
+      "nativeLines143": 2,
+      "nativeWidth": 249
+    },
+    "28987": {
+      "text": "Centre of Canifis",
+      "nativeLines143": 1,
+      "nativeWidth": 97
+    },
+    "28988": {
+      "text": "Mausoleum off the Morytania coast",
+      "nativeLines143": 2,
+      "nativeWidth": 202
+    },
+    "28989": {
+      "text": "East of the Barbarian Village bridge",
+      "nativeLines143": 2,
+      "nativeWidth": 200
+    },
+    "28990": {
+      "text": "South of the shrine in Tai Bwo Wannai Village",
+      "nativeLines143": 2,
+      "nativeWidth": 248
+    },
+    "28991": {
+      "text": "Castle Wars bank",
+      "nativeLines143": 1,
+      "nativeWidth": 97
+    },
+    "28992": {
+      "text": "Barbarian Outpost obstacle course",
+      "nativeLines143": 2,
+      "nativeWidth": 198
+    },
+    "28993": {
+      "text": "Gnome Stronghold balancing rope",
+      "nativeLines143": 2,
+      "nativeWidth": 189
+    },
+    "28994": {
+      "text": "Outside Yanille bank",
+      "nativeLines143": 1,
+      "nativeWidth": 114
+    },
+    "28995": {
+      "text": "Observatory",
+      "nativeLines143": 1,
+      "nativeWidth": 72
+    },
+    "28996": {
+      "text": "Ogre cage in the Ardougne Training Camp",
+      "nativeLines143": 2,
+      "nativeWidth": 230
+    },
+    "28997": {
+      "text": "Digsite",
+      "nativeLines143": 1,
+      "nativeWidth": 39
+    },
+    "28998": {
+      "text": "Hickton\u0027s Archery Emporium",
+      "nativeLines143": 2,
+      "nativeWidth": 156
+    },
+    "28999": {
+      "text": "Shantay Pass",
+      "nativeLines143": 1,
+      "nativeWidth": 78
+    },
+    "34736": {
+      "text": "Aris\u0027s tent",
+      "nativeLines143": 1,
+      "nativeWidth": 61
+    },
+    "34737": {
+      "text": "Iffie Nitter in Varrock",
+      "nativeLines143": 1,
+      "nativeWidth": 120
+    },
+    "34738": {
+      "text": "Bob\u0027s Brilliant Axes in Lumbridge",
+      "nativeLines143": 2,
+      "nativeWidth": 184
+    }
+  }
+}
