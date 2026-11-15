@@ -1,0 +1,16 @@
+{
+  "6245": {
+    "file": 6245,
+    "group": 34,
+    "index": 2,
+    "params": {
+      "1077": 451,
+      "1078": 0,
+      "1086": "STASH units take equipped items",
+      "1088": "Hidey holes take equipped items from worn",
+      "1096": "When active, when putting items back into a STASH UNIT, equipped items will be taken. Your inventory takes priority.",
+      "2314": 1
+    },
+    "sha256": "c160459064efde53b1fb24881c3a17c85d8e12d8999e5ed327b63a177f6b1bae"
+  }
+}
