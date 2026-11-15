@@ -26,7 +26,7 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
-for module in (['game'] if selected == 'core-tests' else [selected] if selected else ['game', 'plugins']):
+for module in (['game'] if selected == 'core-tests' else ['plugins'] if selected == 'step-tests' else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -59,4 +59,23 @@ if selected == 'core-tests':
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     subprocess.run([str(java),'-Xmx512m','-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore',
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
+                   cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
+
+if selected == 'step-tests':
+    # This explicit list checks only A's changed step model and puzzle generator.
+    testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
+               ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
+                'junit/junit', 'org.hamcrest/hamcrest-core']]
+    cp = [str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
+          str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
+    names = ['TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests']
+    test_sources = [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in names]
+    target = out/'step-tests'; target.mkdir(exist_ok=True)
+    args = ['-no-stdlib','-no-reflect','-jvm-target','11','-cp',';'.join(cp),'-d',str(target)] + [str(p) for p in test_sources]
+    argfile=out/'step-tests.args'
+    argfile.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args),encoding='utf-8')
+    subprocess.run([str(java),'-Xmx512m','-cp',';'.join(compiler),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','@'+str(argfile)],
+                   cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
+    subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
+                   ['gg.rsmod.plugins.content.scrolls.'+name for name in names],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)

@@ -73,19 +73,20 @@ class TreasureTrailSlidingPuzzle private constructor(private val board: IntArray
 
         fun decode(encoded: String): TreasureTrailSlidingPuzzle = restore(encoded.split(',').map { it.toInt() }.toIntArray())
 
-        /** Uniform permutations folded onto the solvable half; never create an impossible board. */
+        /** Wiki Puzzle box / Mod Ash: standard trails scramble with exactly 101 legal slides. */
         fun create(random: Random): TreasureTrailSlidingPuzzle {
-            val values = IntArray(CELLS) { (it + 1) % CELLS }
-            do {
-                values.shuffle(random)
-                val nonblank = values.filter { it != 0 }
-                val inversions = nonblank.indices.sumOf { left -> (left + 1 until nonblank.size).count { nonblank[left] > nonblank[it] } }
-                if (inversions % 2 != 0) {
-                    val a = values.indexOf(1); val b = values.indexOf(2)
-                    values[a] = 2; values[b] = 1
+            val puzzle = restore(IntArray(CELLS) { (it + 1) % CELLS })
+            repeat(101) {
+                val blank = puzzle.board.indexOf(0)
+                val neighbours = listOf(blank - WIDTH, blank - 1, blank + 1, blank + WIDTH).filter { index ->
+                    index in 0 until CELLS && abs(index / WIDTH - blank / WIDTH) + abs(index % WIDTH - blank % WIDTH) == 1
                 }
-            } while (values.indices.all { values[it] == (it + 1) % CELLS })
-            return restore(values)
+                check(puzzle.move(neighbours[random.nextInt(neighbours.size)]))
+            }
+            // Every slide swaps the blank's checkerboard colour. An odd number
+            // cannot return to the solved board; no extra reroll changes the count.
+            check(!puzzle.solved)
+            return puzzle
         }
     }
 }

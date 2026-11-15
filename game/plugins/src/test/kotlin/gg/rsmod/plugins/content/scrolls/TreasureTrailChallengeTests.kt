@@ -39,8 +39,26 @@ class TreasureTrailChallengeTests {
         repeat(128) { seed ->
             val generated = TreasureTrailSlidingPuzzle.create(Random(seed))
             assertFalse(generated.solved)
+            val blank = generated.tiles().indexOf(0)
+            assertEquals(1, (blank / 5 + blank % 5) % 2, "101 slides must change the blank's checkerboard colour")
             assertContentEquals(generated.tiles(), TreasureTrailSlidingPuzzle.decode(generated.encode()).tiles())
         }
+    }
+
+    @Test fun `standard treasure trail scramble makes exactly 101 legal random choices`() {
+        var choices = 0
+        val random = object : Random() {
+            override fun nextBits(bitCount: Int): Int = error("Only a neighbour index should be rolled")
+            override fun nextInt(until: Int): Int {
+                assertTrue(until in 2..4)
+                choices++
+                return 0
+            }
+        }
+        val puzzle = TreasureTrailSlidingPuzzle.create(random)
+        assertEquals(101, choices)
+        assertFalse(puzzle.solved)
+        assertContentEquals(puzzle.tiles(), TreasureTrailSlidingPuzzle.decode(puzzle.encode()).tiles())
     }
 
     @Test fun `light box requires solvable wiring keeps sessions separate and accepts only its eight switches`() {
