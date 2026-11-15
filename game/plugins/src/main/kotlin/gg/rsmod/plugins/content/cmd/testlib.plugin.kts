@@ -85,6 +85,33 @@ CommandServerCommands.handlers["testunwatch"] = { _, a ->
     if (p == null) "usage: testunwatch <name>" else { TestLib.unwatch(p); "not watching ${p.username}" }
 }
 
+// `droproll <name> <npc id> [n=1000]` (N620/N614): rolls the npc's REAL registered kill table n times for that player (rate 1.0, nothing
+// spawned) and lists per item: count of drops, total amount and 1/x - to check a table against the wiki in seconds instead of killing.
+CommandServerCommands.handlers["droproll"] = { _, a ->
+    val p = findPlayer(a)
+    val npcId = a.getOrNull(1)?.toIntOrNull()
+    val n = (a.getOrNull(2)?.toIntOrNull() ?: 1000).coerceIn(1, 200_000)
+    if (p == null || npcId == null) {
+        "usage: droproll <name> <npc id> [n]"
+    } else if (!gg.rsmod.plugins.content.drops.DropTableFactory.hasTable(npcId)) {
+        "droproll: no kill table registered for npc $npcId"
+    } else {
+        val hits = HashMap<Int, Int>()
+        val amounts = HashMap<Int, Long>()
+        repeat(n) {
+            gg.rsmod.plugins.content.drops.DropTableFactory.getDrop(p, npcId, rate = 1.0)?.forEach { item ->
+                hits.merge(item.id, 1, Int::plus)
+                amounts.merge(item.id, item.amount.toLong(), Long::plus)
+            }
+        }
+        val defs = p.world.definitions
+        "droproll npc $npcId x$n: " + hits.entries.sortedByDescending { it.value }.joinToString(" | ") { (id, c) ->
+            val name = runCatching { defs.get(gg.rsmod.game.fs.def.ItemDef::class.java, id).name }.getOrDefault("?")
+            "$id $name ${c}x (1/${"%.1f".format(n.toDouble() / c)}) amt=${amounts[id]}"
+        }
+    }
+}
+
 CommandServerCommands.handlers["tp"] = { w, a ->
     val p = findPlayer(a)
     val n = a.drop(1).filter { it != "force" }.map { it.toIntOrNull() }
