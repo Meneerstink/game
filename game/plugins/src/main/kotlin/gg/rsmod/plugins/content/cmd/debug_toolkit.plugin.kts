@@ -534,6 +534,20 @@ gg.rsmod.game.CommandServerCommands.handlers["pairpos"] = { w, a ->
     if (p == null || o == null) "usage: pairpos <a> <b>" else "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} ${o.username}@${o.tile.x},${o.tile.z}"
 }
 // `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
+// `menutest <name> <n>` (N605 15-11): opens a plain options() menu with n entries ('Option 1'..'Option n') and reports the pick in the
+// chat - the paged 6+ menus can be checked in the client without walking to a content NPC.
+gg.rsmod.game.CommandServerCommands.handlers["menutest"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    val n = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || n == null || n !in 1..20) "usage: menutest <name> <1-20>"
+    else {
+        p.queue {
+            val pick = options(*(1..n).map { "Option $it" }.toTypedArray(), title = "Menu test ($n)")
+            p.message("menutest picked $pick")
+        }
+        "menutest $n for ${p.username}"
+    }
+}
 // `opheldu <name> <from item id> <to item id>` (N415 15-11): use one inventory item on another through the real OpHeldU route (the
 // client's 'Use X -> Y'), e.g. Ancient fabric on an imbued god cape - the first inventory slot holding each id is used.
 gg.rsmod.game.CommandServerCommands.handlers["opheldu"] = { w, a ->
