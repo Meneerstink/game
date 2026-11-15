@@ -50,15 +50,16 @@ val guard =
             obj(Items.STEEL_ARROW, quantity = 5, slots = 1)
             obj(Items.COINS_995, quantity = 1, slots = 19)
             obj(Items.COINS_995, quantity = 4, slots = 8)
-            obj(Items.COINS_995, quantity = 5, slots = 18)
+            // N614 (15-11, OSRS Wiki Guard): '5 coins 18/128' is the FEMALE guard's line only; with it the table filled 146 of 128
+            // slots and every rate was diluted. The wiki table for the guards here sums to exactly 128 without it.
             obj(Items.COINS_995, quantity = 7, slots = 16)
             obj(Items.COINS_995, quantity = 12, slots = 9)
             obj(Items.COINS_995, quantity = 17, slots = 4)
             obj(Items.COINS_995, quantity = 25, slots = 4)
             obj(Items.COINS_995, quantity = 30, slots = 2)
             obj(Items.IRON_DAGGER, slots = 6)
-            obj(Items.BODY_TALISMAN, slots = 2)
-            obj(Items.LAW_TALISMAN, slots = 1)
+            // OSRS Wiki Guard: Body talisman 3/128 (members); no Law talisman on the table.
+            obj(Items.BODY_TALISMAN, slots = 3)
             obj(Items.GRAIN, slots = 1)
             obj(Items.IRON_ORE, slots = 1)
 

@@ -35,14 +35,15 @@ val iceGiant =
             obj(Items.DEATH_RUNE, quantity = 3, slots = 8)
             obj(Items.BLOOD_RUNE, quantity = 2, slots = 8)
 
-            table(Seeds.allotmentSeedTable, slots = 64)
+            table(Seeds.uncommonSeedTable, slots = 64) // wiki: the uncommon seed table (8/128)
 
-            obj(Items.COINS_995, quantity = 117, slots = 224)
-            obj(Items.COINS_995, quantity = 53, slots = 76)
-            obj(Items.COINS_995, quantity = 196, slots = 72)
-            obj(Items.COINS_995, quantity = 5, slots = 64)
-            obj(Items.COINS_995, quantity = 8, slots = 54)
-            obj(Items.COINS_995, quantity = 2, slots = 48)
+            // N614 (15-11): coins exactly the OSRS Wiki Ice giant table (x8 over 1024, members): 117 32/128, 53 12/128, 196 10/128, 8 7/128,
+            // 22 6/128 (was 2 coins), 400 2/128; the 5-coin line is free-to-play only. Before the table filled 1026 of 1024.
+            obj(Items.COINS_995, quantity = 117, slots = 256)
+            obj(Items.COINS_995, quantity = 53, slots = 96)
+            obj(Items.COINS_995, quantity = 196, slots = 80)
+            obj(Items.COINS_995, quantity = 8, slots = 56)
+            obj(Items.COINS_995, quantity = 22, slots = 48)
             obj(Items.COINS_995, quantity = 400, slots = 16)
 
             obj(Items.JUG_OF_WINE, slots = 24)
