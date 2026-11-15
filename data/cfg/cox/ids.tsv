@@ -780,15 +780,20 @@ seq	255	17591	classic
 seq	256	17592	classic
 seq	257	17510	classic for npc 7548
 seq	258	17593	classic
+seq	373	17710	spotanim 1339
+seq	465	17704	spotanim 1294
 seq	493	17484	classic
 seq	502	17524	classic for npc 7580
 seq	522	17482	classic
+seq	692	15725	spotanim 1347
+seq	693	15715	spotanim 1295
 seq	808	808	classic for npc 7559
 seq	813	15392	classic for npc 7560
 seq	819	819	classic for npc 7559
 seq	820	820	classic for npc 7559
 seq	821	821	classic for npc 7559
 seq	822	822	classic for npc 7559
+seq	1055	17712	spotanim 1359
 seq	1146	15393	classic for npc 7599
 seq	1205	15400	classic for npc 7560
 seq	1206	15401	classic for npc 7560
@@ -801,6 +806,9 @@ seq	1313	17609	classic
 seq	1314	17610	classic
 seq	1315	17611	classic
 seq	1316	17612	classic
+seq	1570	17711	spotanim 1341
+seq	1571	17319	spotanim 1342
+seq	1573	17714	spotanim 1366
 seq	1578	15557	classic for npc 7586
 seq	1579	15558	classic for npc 7586
 seq	1580	15644	classic
@@ -809,25 +817,38 @@ seq	1582	15646	classic
 seq	2368	17613	classic
 seq	2995	17485	classic
 seq	3101	17690	classic
+seq	3151	16106	spotanim 1327
 seq	3280	17519	classic for npc 7571
+seq	3354	15407	spotanim 645
+seq	3912	17715	spotanim 1367
+seq	3941	17716	spotanim 659
+seq	3942	17323	spotanim 660
 seq	4037	17527	classic for npc 7594
 seq	4038	17622	classic
 seq	4039	17623	classic
 seq	4040	17624	classic
 seq	4041	17625	classic
 seq	4042	17626	classic
+seq	4730	17703	spotanim 1293
+seq	5034	17707	spotanim 1325
+seq	5035	17706	spotanim 1324
 seq	5356	17594	classic
+seq	5358	17702	spotanim 1291
+seq	5422	17303	spotanim 1328
 seq	5479	17530	classic for npc 7604
 seq	5483	17529	classic for npc 7604
 seq	5485	17684	classic
 seq	5489	17685	classic
 seq	5491	17686	classic
 seq	5523	17687	classic
+seq	5526	17705	spotanim 1321
 seq	5745	17486	classic
 seq	5771	17487	classic
+seq	5835	17713	spotanim 1363
 seq	6120	17491	classic for npc 7489
 seq	6646	17512	classic for npc 7558
 seq	6853	15822	classic
+seq	6924	17708	spotanim 1326
 seq	6946	17595	classic
 seq	7152	17596	classic
 seq	7156	17483	classic
@@ -986,6 +1007,7 @@ seq	7496	17688	classic
 seq	7497	17689	classic
 seq	7498	17528	classic for npc 7603
 seq	7499	17489	classic
+seq	7502	17709	spotanim 1338
 seq	7503	17490	classic
 seq	7504	17680	classic
 seq	7505	17681	classic
@@ -1016,3 +1038,59 @@ seq	8200	17607	classic
 seq	8637	15907	classic
 seq	8639	15914	classic
 seq	12093	17629	classic
+spotanim	40	3452	model 65801
+spotanim	645	3453	model 66664
+spotanim	659	3454	model 66665
+spotanim	660	3455	model 66666
+spotanim	1291	3403	model 66642
+spotanim	1293	3404	model 66643
+spotanim	1294	3405	model 66644
+spotanim	1295	3406	model 4034
+spotanim	1321	3407	model 66645
+spotanim	1322	3408	model 66645
+spotanim	1324	3409	model 66646
+spotanim	1325	3410	model 66647
+spotanim	1326	3411	model 66648
+spotanim	1327	3412	model 4972
+spotanim	1328	3413	model 65801
+spotanim	1329	3414	model 66646
+spotanim	1330	3415	model 66647
+spotanim	1331	3416	model 66649
+spotanim	1332	3417	model 66650
+spotanim	1333	3418	model 66650
+spotanim	1334	3419	model 66650
+spotanim	1337	3420	model 66648
+spotanim	1338	3421	model 66648
+spotanim	1339	3422	model 66651
+spotanim	1340	3423	model 66652
+spotanim	1341	3424	model 65822
+spotanim	1342	3425	model 65822
+spotanim	1343	3426	model 65822
+spotanim	1344	3427	model 65822
+spotanim	1345	3428	model 65822
+spotanim	1346	3429	model 65822
+spotanim	1347	3430	model 4059
+spotanim	1348	3431	model 4059
+spotanim	1349	3432	model 66653
+spotanim	1350	3433	model 66653
+spotanim	1351	3434	model 66654
+spotanim	1352	3435	model 66655
+spotanim	1353	3436	model 66648
+spotanim	1354	3437	model 66642
+spotanim	1355	3438	model 66642
+spotanim	1356	3439	model 66656
+spotanim	1357	3440	model 66657
+spotanim	1358	3441	model 66658
+spotanim	1359	3442	model 66659
+spotanim	1360	3443	model 66659
+spotanim	1361	3444	model 66659
+spotanim	1362	3445	model 66659
+spotanim	1363	3446	model 66660
+spotanim	1364	3447	model 66642
+spotanim	1365	3448	model 66661
+spotanim	1366	3449	model 66662
+spotanim	1367	3450	model 66663
+spotanim	1368	3451	model 65801
+synth	3821	10822	synth
+synth	3834	10272	synth
+synth	3952	10823	synth

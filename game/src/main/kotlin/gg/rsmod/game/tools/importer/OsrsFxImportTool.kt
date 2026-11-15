@@ -230,6 +230,12 @@ object OsrsFxImportTool {
             "toa-census-fx-existing" to listOf(131, 1463),
             // N609 14-11: Zebak additional acid splatter = TOB_XARPUS_ACIDSPIT 1555 (ToA Extended Zebak PROJECTILE_ID_VENOM_SPLASH).
             "toa-zebak-splash" to listOf(1555),
+            // CoX rooms (dossier COX.txt 15-11 22:5x): RuneLite gameval SpotanimID LIZARDMAN_SPIT 1291, LIZARDSHAMAN_SPIT_ACID /
+            // _ACID_SPLASH / _SPAWN_EXPLODE 1293-1295, SKELETON_BIG_CASTING_PURPLE / _RED 1321-1322, RAIDS_ICEDEMON_* 1324-1325,
+            // RAIDS_LASERCRABS_SHATTERCRYSTAL 1326, RAIDS_VASANISTIRIO_* 1327-1330, RAIDS_VANGUARD_* 1331-1334, RAIDS_OLM_* / OLM_*
+            // 1337-1363, RAIDS_VESPULA_* 1364-1368, OLM_CRYSTAL_BOMB_EXPLODE 40, MOTHERLODE_ROCKFALL 645 (Guardians' stomp rock),
+            // WILD_FALLOFF_METEOR_BLAST / _FLYING 659-660 (Tekton's sparks). Used ids per room: tsps docs chambers-of-xeric.md (rsprox).
+            "cox-fx" to listOf(1291, 1293, 1294, 1295, 1321, 1322) + (1324..1334).toList() + (1337..1368).toList() + listOf(40, 645, 659, 660),
         )
 
     /**
@@ -434,6 +440,9 @@ object OsrsFxImportTool {
             // Owner 2026-09-19 (breach monsters "sounds, animations, everything"): OSRS server-sent attack / hit / death sounds of the
             // OSRS-only breach monsters are not public, so the owner chose real OSRS sounds picked by Jagex config name (OSRS Wiki
             // "List of sound IDs", raw wikitext 2026-09-19). Imported even where the id is below ~3800 so the bytes are OSRS's own.
+            // CoX (tsps rsprox captures): sounds above ~3800 differ between the caches - room-crystal shatter 3821, Vasa's stomp 3834,
+            // the Mystics' portal overlay 3952.
+            "cox-synth" to listOf(3821, 3834, 3952),
             "breachsfx" to
                 listOf(
                     400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)
