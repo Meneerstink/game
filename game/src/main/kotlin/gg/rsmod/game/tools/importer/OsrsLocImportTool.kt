@@ -30,6 +30,8 @@ object OsrsLocImportTool {
             // crystal 30027 by the steps turns into it when the Olm dies, tsps), RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030, and the
             // first room's closed bank chest 47419 (47420 -> 47419 as the raid begins, tsps rsprox).
             "cox-locs" to listOf(30028, 30029, 30030, 47419),
+            // CoX first-room steps for the leader before the start (gameval RAIDS_EXIT_STEPS_RELOAD 50000; child of the multiloc 49999, tsps Reload).
+            "cox-reload" to listOf(50000),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241
