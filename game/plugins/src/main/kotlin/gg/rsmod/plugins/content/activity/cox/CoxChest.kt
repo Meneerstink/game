@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.activity.cox
 
+import gg.rsmod.plugins.api.ext.message
+
 import gg.rsmod.game.message.impl.LocAddChangeMessage
 import gg.rsmod.game.message.impl.LocDelMessage
 import gg.rsmod.game.message.impl.UpdateZonePartialFollowsMessage
@@ -49,6 +51,15 @@ object CoxChest {
         CoxRewards.generate(raid, raiders) { p, osrs -> CoxLootItems.local(osrs)?.let { p.inventory.contains(it) || p.bank.contains(it) } ?: false }
         raid.progress = 5
         CoxPartyTab.updateAll(raid)
+        // tsps Rewards.ChambersOfXeric.js completed() (rsprox: friendschatnotification messages): the duration and the completion count.
+        val size = maxOf(1, raid.points.size)
+        val team = if (size == 1) "Solo" else "$size players"
+        raiders.forEach { p ->
+            p.message("Congratulations - your raid is complete! Team size: $team Duration: <col=ff0000>${CoxRaids.duration(raid)}</col>",
+                gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+            p.message("Your completed Chambers of Xeric count is: <col=ff0000>${p.attr[CoxRewards.COMPLETIONS] ?: 0}</col>.",
+                gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+        }
         raid.world.queue {
             wait(CHEST_DELAY)
             if (raid.closed) return@queue
