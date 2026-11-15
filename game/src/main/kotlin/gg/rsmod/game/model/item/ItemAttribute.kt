@@ -103,4 +103,8 @@ enum class ItemAttribute {
     MIMIC_ATTEMPT_SERIAL,
     MIMIC_SETTLED_SERIAL,
 
+    /** Per-scroll Falo/Sherlock task and successful action. Appended for existing saves. */
+    CLUE_TASK_KEY,
+    CLUE_TASK_COMPLETE,
+
 }

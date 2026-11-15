@@ -94,3 +94,40 @@ No account-global pending answer is introduced.
 tests passed**. This is the shared guard for the forthcoming subtype handlers;
 no donor step registration has been replaced by this helper alone. A focused
 Gradle run is still required when the actual consumers are integrated.
+
+## Falo source/runtime checkpoint, 15 November 15:30
+
+New source action, catalogue and dialogue: `TreasureTrailSourceStep`,
+`TreasureTrailTaskCatalogue`, `TreasureTrailFalo`, `TreasureTrailFaloDialogue` and
+`treasure_trail_falo.plugin.kts`. Seven pinned lyrics; actual requested canonical
+and ornamented variants, unnoted only; shown object is retained. The chosen lyric
+is an appended per-item attribute, survives copies/drop/bank/relog and is not
+rerolled by repeat dialogue. Successful skill state has a separate appended field
+for the next Sherlock handlers. Existing enum ordinals remain unchanged.
+
+The shared lifecycle clears these two task fields only on a genuinely new step
+or removed-step migration, preserving them on a valid reread/re-pick. The exact
+pending interaction guard also rejects death before inventory recovery runs.
+Falo dialogues revalidate the exact clue and shown object after suspension.
+The source uses a Fremennik name; like existing Olaf, this world uses the account
+name because it has no Fremennik-name provider. Ordinary quests already count as
+completed through QuestStatus; no new quest or unlock bypass is added.
+
+`python tools/clue/check_compile.py HEAD falo-tests`: **18 fresh standalone tests
+passed**, 6 Falo / 2 NPC asset guards / 5 interaction contracts / 5 real lifecycle.
+Includes actual full-inventory Falo advancement, retaining charged gear, wrong and
+noted items, unknown saved-task refusal, serialization, two accounts, stale clicks,
+death, removed donor migration and task reset. The seven production libraries,
+modified manager and appended core enum compile. New script still needs the next
+actual Gradle/plugin-script acceptance; no client or release acceptance yet.
+
+`build_challenge_runtime.py` derives 7 Falo and 13 Sherlock entries from pinned
+source hashes. `build_npc_mapping.py` audits both native caches and the actual
+ledger, verifies source/native models, portraits, menu/size/level and movement set,
+and publishes no runtime mapping while the 9-source `clue-steps` batch is missing.
+Audit now reports **0 verified / 9 awaiting imports**. Runtime `ClueNpcs` accepts
+only a complete applied mapping and rechecks loaded definitions; sourced Wiki
+examines are installed after validation. No proposed source ID becomes a local ID.
+After the batch, Falo is placed at the source 2689,3549 pin/radius4 with Talk-to and
+item-on-NPC handlers; one Falo source step registers. The donor pool is still
+present elsewhere: this checkpoint does not claim all 69 steps are active.

@@ -13,7 +13,7 @@ class ClueStepContract private constructor(
     private val key: Int,
     private val progress: Int,
 ) {
-    fun valid(player: Player): Boolean = player === owner &&
+    fun valid(player: Player): Boolean = player === owner && !player.isDead() &&
         player.inventory.any { it === scroll } && scroll.getAttr(ItemAttribute.CLUE_STEP_KEY) == key &&
         ClueScrollManager.activeStep(player, tier) === step && ClueScrollManager.progress(player, tier) == progress
 

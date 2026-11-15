@@ -1,0 +1,137 @@
+{
+  "6586": {
+    "name": "Sherlock",
+    "level": 0,
+    "options": [
+      "Talk-to",
+      null,
+      null,
+      null,
+      null
+    ],
+    "heads": 1,
+    "cacheSha256": "b40b96e98500dd15babb99c320f042cb61567f63c3c158ec50ebb531464fef8c",
+    "examine": "Master of all clues.",
+    "wiki": "https://oldschool.runescape.wiki/w/Sherlock"
+  },
+  "7306": {
+    "name": "Falo the Bard",
+    "level": 0,
+    "options": [
+      "Talk-to",
+      null,
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "e87b81c54b34c69800d224a6ce13b37ea79a9d00099ca80ac81e50c55c12011a",
+    "examine": "A forgetful Fremennik bard.",
+    "wiki": "https://oldschool.runescape.wiki/w/Falo_the_Bard"
+  },
+  "7312": {
+    "name": "Double agent",
+    "level": 141,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "7421954f22ac5763c0f9b80157d435b25ffe84364a9be8b0fe58525130adbad2",
+    "examine": "He's playing both sides!",
+    "wiki": "https://oldschool.runescape.wiki/w/Double_agent"
+  },
+  "6587": {
+    "name": "Armadylean guard",
+    "level": 97,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 0,
+    "cacheSha256": "fc8b48f89ba9a4546bd7b6038aff5a0209f08edd419d8508df741fd431ddb1ff",
+    "examine": "A servant of Armadyl.",
+    "wiki": "https://oldschool.runescape.wiki/w/Armadylean_guard"
+  },
+  "6588": {
+    "name": "Bandosian guard",
+    "level": 125,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 0,
+    "cacheSha256": "df081d5dc1b6332c775143e56fec68203e81ab85c6d817aa100717194dfd31f1",
+    "examine": "A follower of Bandos.",
+    "wiki": "https://oldschool.runescape.wiki/w/Bandosian_guard"
+  },
+  "7307": {
+    "name": "Ancient Wizard",
+    "level": 98,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "b93cd58da1aa16c41c8b895ed420a01436dd237cf4d0735c091a416b97ca4d84",
+    "examine": "He may be old, but you made him mad.",
+    "wiki": "https://oldschool.runescape.wiki/w/Ancient_Wizard"
+  },
+  "7308": {
+    "name": "Ancient Wizard",
+    "level": 98,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "46ac2d7b1b12fea1e974fde1ba8357b9e7af12295802a75d74a27fb0d9c978ba",
+    "examine": "He may be old, but you made him mad.",
+    "wiki": "https://oldschool.runescape.wiki/w/Ancient_Wizard"
+  },
+  "7309": {
+    "name": "Ancient Wizard",
+    "level": 112,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "1dece42ab593564c3df217b9456d58ccc44a9b836c1a358b2998afa54ef77c48",
+    "examine": "He may be old, but you made him mad.",
+    "wiki": "https://oldschool.runescape.wiki/w/Ancient_Wizard"
+  },
+  "7310": {
+    "name": "Brassican Mage",
+    "level": 140,
+    "options": [
+      null,
+      "Attack",
+      null,
+      null,
+      null
+    ],
+    "heads": 3,
+    "cacheSha256": "d65a852e1d4e2fe972d0c313dab2dd65347e3b267e96b60757ec4810c423e087",
+    "examine": "Rather old and smells of cabbage.",
+    "wiki": "https://oldschool.runescape.wiki/w/Brassican_Mage"
+  }
+}

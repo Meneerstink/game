@@ -60,6 +60,7 @@ class ClueScrollManager(
             player.attr.remove(activeStepAttrs.getValue(tier))
             val step = available.random()
             item.putAttr(ItemAttribute.CLUE_STEP_KEY, step.persistenceId)
+            item.removeAttr(ItemAttribute.CLUE_TASK_KEY).removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
             if (previousKey == null || player.attr[lengthAttrs.getValue(tier)] == null) {
                 player.attr[progressAttrs.getValue(tier)] = 0
                 player.attr[lengthAttrs.getValue(tier)] = tier.rollTrailLength(Random.Default)
@@ -150,6 +151,7 @@ class ClueScrollManager(
                 val available = steps.getValue(tier)
                 if (available.isEmpty()) return false
                 staged[slot]!!.putAttr(ItemAttribute.CLUE_STEP_KEY, available.random().persistenceId)
+                staged[slot]!!.removeAttr(ItemAttribute.CLUE_TASK_KEY).removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
             }
             if (player.inventory[slot] !== scroll) return false
             for (i in 0 until staged.capacity) {

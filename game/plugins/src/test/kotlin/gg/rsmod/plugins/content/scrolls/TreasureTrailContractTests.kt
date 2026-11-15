@@ -83,4 +83,13 @@ class TreasureTrailContractTests {
         every { ClueScrollManager.activeStep(p, tier) } returns null
         assertNull(ClueStepContract.capture(p, step))
     }
+
+    @Test fun `death invalidates a suspended clue answer before inventory recovery runs`() {
+        val p = player()
+        val ticket = assertNotNull(ClueStepContract.capture(p, step))
+        every { p.isDead() } returns true
+        assertFalse(ticket.valid(p))
+        assertFalse(ticket.advance(p))
+        verify(exactly = 0) { ClueScrollManager.advance(any(), any(), any(), any(), any()) }
+    }
 }

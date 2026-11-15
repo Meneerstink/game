@@ -1,0 +1,51 @@
+{
+  "sourceCache": 2686,
+  "verified": [],
+  "missing": [
+    {
+      "source": 6586,
+      "name": "Sherlock",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7306,
+      "name": "Falo the Bard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7312,
+      "name": "Double agent",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 6587,
+      "name": "Armadylean guard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 6588,
+      "name": "Bandosian guard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7307,
+      "name": "Ancient Wizard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7308,
+      "name": "Ancient Wizard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7309,
+      "name": "Ancient Wizard",
+      "reason": "No applied ledger-owned NPC import"
+    },
+    {
+      "source": 7310,
+      "name": "Brassican Mage",
+      "reason": "No applied ledger-owned NPC import"
+    }
+  ]
+}
