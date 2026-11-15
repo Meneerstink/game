@@ -421,6 +421,10 @@ loc	29750	66665	IMPORT [cox-map]
 loc	29751	66666	IMPORT [cox-map]
 loc	29752	66667	IMPORT [cox-map]
 loc	29753	66840	loc-tool tx-20261115-220742
+loc	29754	66885	loc-tool tx-20261115-224615
+loc	29755	66886	loc-tool tx-20261115-224615
+loc	29756	66887	loc-tool tx-20261115-224615
+loc	29757	66888	loc-tool tx-20261115-224615
 loc	29758	66668	IMPORT [cox-map]
 loc	29759	66669	IMPORT [cox-map]
 loc	29760	66670	IMPORT [cox-map]
@@ -890,6 +894,7 @@ seq	5489	17685	classic
 seq	5491	17686	classic
 seq	5523	17687	classic
 seq	5526	17705	spotanim 1321
+seq	5528	17724	classic
 seq	5745	17486	classic
 seq	5771	17487	classic
 seq	5835	17713	spotanim 1363

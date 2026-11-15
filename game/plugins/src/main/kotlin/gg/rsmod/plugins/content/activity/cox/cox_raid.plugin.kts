@@ -276,6 +276,10 @@ on_command("coxroom", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     val raid = CoxRaids.raidAt(player.tile) ?: run { player.message("Not in a CoX raid."); return@on_command }
     val args = player.getCommandArgs()
+    if (args.firstOrNull() == "olmgate") {
+        player.teleportTo(CoxMap.olmTile(raid.map, CoxMap.OLM_ENTRANCE_SOURCE))
+        return@on_command
+    }
     if (args.firstOrNull() == "olm") {
         player.teleportTo(CoxMap.olmTile(raid.map, CoxMap.OLM_CENTRE_SOURCE))
         return@on_command

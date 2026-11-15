@@ -171,6 +171,7 @@ object CoxRaids : KLogging() {
             world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach { CoxPointsOverlay.update(it, raid) }
             gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.tick(raid)
         }
+        CoxPotions.tick(world)
     }
 
     /** Is [tile] in the first room of [raid] (the start room, floor 1 room 0)? */
@@ -277,6 +278,7 @@ object CoxRaids : KLogging() {
         CoxPartyTab.close(player)
         CoxPointsOverlay.close(player)
         CoxRewards.dropUnclaimed(player, player.world)
+        CoxPotions.clear(player)
         if (raid != null) releaseIfEmpty(raid)
     }
 

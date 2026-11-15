@@ -128,6 +128,13 @@ CoxIds.npc(7558)?.let { id ->
     }
 }
 
+/** The raid's gourd potions (CoxPotions). */
+gg.rsmod.plugins.content.activity.cox.CoxPotions.DOSES.forEach { (osrs, dose) ->
+    gg.rsmod.plugins.content.activity.cox.CoxPotions.local(dose)?.let { id ->
+        on_item_option(item = id, option = "Drink") { gg.rsmod.plugins.content.activity.cox.CoxPotions.drink(player, player.getInteractingItemSlot(), osrs) }
+    }
+}
+
 /** Test server / check accounts: ::coxclear = every npc of the room you stand in dies (puzzles: their own ending, later). */
 on_command("coxclear", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command

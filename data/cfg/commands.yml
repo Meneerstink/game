@@ -1417,7 +1417,7 @@
   example: "::coxstart 6 42"
 - name: coxroom
   rank: admin
-  usage: "::coxroom <floor 1|2> <room index> | ::coxroom olm"
+  usage: "::coxroom <floor 1|2> <room index> | ::coxroom olm | ::coxroom olmgate"
   description: "Test server / check accounts only: teleport to the middle of a room of your Chambers of Xeric raid."
   example: "::coxroom 1 3"
 - name: coxbegin
