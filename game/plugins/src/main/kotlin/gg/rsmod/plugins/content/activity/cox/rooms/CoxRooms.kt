@@ -26,13 +26,19 @@ object CoxRooms {
         RoomType.VANGUARD to ::VanguardsRoom,
         RoomType.VASA_NISTIRIO to ::VasaRoom,
         RoomType.MUTTADILES to ::MuttadilesRoom,
+        RoomType.VESPULA to ::VespulaRoom,
+        RoomType.ICE_DEMON to ::IceDemonRoom,
+        RoomType.DEATHLY_ROOM to ::TightropeRoom,
+        RoomType.CRAB_PUZZLE to ::CrabsRoom,
+        RoomType.CREATURE_KEEPER to ::ThievingRoom,
     )
 
     fun rooms(raid: CoxRaid): List<CoxRoom> = byRaid[raid.id] ?: emptyList()
 
     fun load(raid: CoxRaid) {
         if (byRaid.containsKey(raid.id)) return
-        val rooms = raid.layout.floors.flatMapIndexed { f, floor -> floor.mapNotNull { laid -> factories[laid.room]?.invoke(raid, f, laid) } }
+        val rooms = raid.layout.floors.flatMapIndexed { f, floor -> floor.mapNotNull { laid -> factories[laid.room]?.invoke(raid, f, laid) } } +
+            OlmRoom(raid, raid.layout.floors.last().last())
         byRaid[raid.id] = rooms
         rooms.forEach { room ->
             runCatching { room.load() }.onFailure { CoxRaidLog.logger.error(it) { "CoX room ${room.laid.room} load in raid ${raid.id}" } }
@@ -66,11 +72,17 @@ object CoxRooms {
         return msg
     }
 
+    /** A room refusing [p] the passage at [passage] (its exit crystal, the Thieving scavenger ...): the line to show, or null. */
+    fun passRefusal(raid: CoxRaid, p: gg.rsmod.game.model.entity.Player, passage: gg.rsmod.game.model.Tile): String? =
+        rooms(raid).firstNotNullOfOrNull { r -> if (r.closed || r.completed) null else r.passRefusal(p, passage) }
+
+    fun olm(raid: CoxRaid): OlmRoom? = rooms(raid).filterIsInstance<OlmRoom>().firstOrNull()
+
     /** The room [npc] belongs to. */
     fun of(npc: Npc): CoxRoom? = owner[npc]
 
     /** Local ids of every npc a room drives itself (the generic auto-retaliate loop is switched off for them). */
-    val DRIVEN_OSRS: List<Int> = listOf(7561, 7562, 7563, 7564, 7565, 7566, 7567, 7568, 7525, 7526, 7527, 7528, 7529, 7540, 7541, 7542, 7543, 7544, 7545, 7548, 7549, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7604, 7605, 7606)
+    val DRIVEN_OSRS: List<Int> = listOf(7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7602, 7603, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7559, 7560, 7584, 7585, 7586, 7530, 7531, 7532, 7533, 7534, 7535, 7536, 7537, 7538, 7539, 7561, 7562, 7563, 7564, 7565, 7566, 7567, 7568, 7525, 7526, 7527, 7528, 7529, 7540, 7541, 7542, 7543, 7544, 7545, 7548, 7549, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7604, 7605, 7606)
 
 }
 

@@ -61,11 +61,70 @@ gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { 
     if (action == gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.PRAYER) CoxRooms.prayerRefusal(p) else null
 }
 
-/** The meat tree (Muttadiles' room, npc 7564 'Chop'). */
+/** The meat tree (Muttadiles room, npc 7564 op Cut). */
 CoxIds.npc(7564)?.let { id ->
-    on_npc_option(npc = id, option = "Chop") {
+    on_npc_option(npc = id, option = "Cut") {
         val raid = CoxRaids.raidAt(player.tile) ?: return@on_npc_option
         CoxRooms.rooms(raid).filterIsInstance<MuttadilesRoom>().firstOrNull { it.contains(player.tile) }?.chop(player)
+    }
+}
+
+/** Vespula's room: medivaemia roots (30068 'Pick') and blossoms (20892) on the lux grubs (7534-7536). */
+fun vespulaRoom(p: gg.rsmod.game.model.entity.Player): VespulaRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<VespulaRoom>().firstOrNull { it.contains(p.tile) } }
+CoxIds.loc(30068)?.let { id -> on_obj_option(obj = id, option = "Pick") { vespulaRoom(player)?.pick(player, player.getInteractingGameObj()) } }
+CoxIds.item(20892)?.let { blossom ->
+    listOf(7534, 7535, 7536).mapNotNull(CoxIds::npc).forEach { grub ->
+        on_item_on_npc(item = blossom, npc = grub) { vespulaRoom(player)?.feed(player, player.getInteractingNpc()) }
+    }
+}
+
+/** Ice Demon braziers: unlit 29747 'Light' (map loc), lit 29748 'Fuel'. */
+fun iceRoom(p: gg.rsmod.game.model.entity.Player): IceDemonRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<IceDemonRoom>().firstOrNull { it.contains(p.tile) } }
+CoxIds.loc(29747)?.let { id -> world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).options.firstOrNull { it != null && it.isNotBlank() }?.let { op ->
+    on_obj_option(obj = id, option = op) { iceRoom(player)?.light(player, player.getInteractingGameObj()) }
+} }
+CoxIds.loc(29748)?.let { id -> on_obj_option(obj = id, option = "Fuel") { iceRoom(player)?.fuel(player, player.getInteractingGameObj()) } }
+
+/** The first cache option of an OSRS loc (template locs whose op names we read from the definition, never guessed). */
+fun firstOp(osrsLoc: Int): Pair<Int, String>? = CoxIds.loc(osrsLoc)?.let { id ->
+    world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).options.firstOrNull { !it.isNullOrBlank() }?.let { id to it }
+}
+
+/** Tightrope room: rope 29750, keystone 29751, barrier 29749 'Dispel' (+ keystone on it). */
+fun ropeRoom(p: gg.rsmod.game.model.entity.Player): TightropeRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<TightropeRoom>().firstOrNull { it.contains(p.tile) } }
+firstOp(29750)?.let { (id, op) -> on_obj_option(obj = id, option = op) { ropeRoom(player)?.cross(player, player.getInteractingGameObj()) } }
+firstOp(29751)?.let { (id, op) -> on_obj_option(obj = id, option = op) { ropeRoom(player)?.take(player) } }
+CoxIds.loc(29749)?.let { id ->
+    on_obj_option(obj = id, option = "Dispel") { ropeRoom(player)?.dispel(player) }
+    CoxIds.item(20884)?.let { key -> on_item_on_obj(obj = id, item = key) { ropeRoom(player)?.dispel(player) } }
+}
+
+/** Jewelled crabs: 'Smash' (only registered when the cache npc has that option). */
+listOf(7576, 7577, 7578, 7579).mapNotNull(CoxIds::npc).forEach { id ->
+    if (world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it == "Smash" }) on_npc_option(npc = id, option = "Smash") {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_npc_option
+        CoxRooms.rooms(raid).filterIsInstance<CrabsRoom>().firstOrNull { it.contains(player.tile) }?.smash(player, player.getInteractingNpc())
+    }
+}
+
+/** Thieving room: chests 29742 (first cache op), troughs 29746 / 29874 'Deposit'. */
+fun thiefRoom(p: gg.rsmod.game.model.entity.Player): ThievingRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<ThievingRoom>().firstOrNull { it.contains(p.tile) } }
+firstOp(29742)?.let { (id, op) -> on_obj_option(obj = id, option = op) { thiefRoom(player)?.search(player, player.getInteractingGameObj()) } }
+listOf(29746, 29874).mapNotNull(::firstOp).forEach { (id, op) -> on_obj_option(obj = id, option = op) { thiefRoom(player)?.deposit(player, player.getInteractingGameObj()) } }
+
+/** The Olm: the mystical barrier 29879 ('Pass' asks, 'Quick-pass' doesn't) and the fire walls' 'Douse' (npc 7558). */
+CoxIds.loc(29879)?.let { id ->
+    val ops = world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).options.filterNotNull()
+    if ("Pass" in ops) on_obj_option(obj = id, option = "Pass") { CoxRaids.raidAt(player.tile)?.let { CoxRooms.olm(it) }?.passBarrier(player, player.getInteractingGameObj(), true) }
+    if ("Quick-pass" in ops) on_obj_option(obj = id, option = "Quick-pass") { CoxRaids.raidAt(player.tile)?.let { CoxRooms.olm(it) }?.passBarrier(player, player.getInteractingGameObj(), false) }
+}
+CoxIds.npc(7558)?.let { id ->
+    if (world.definitions.get(gg.rsmod.game.fs.def.NpcDef::class.java, id).options.any { it == "Douse" }) on_npc_option(npc = id, option = "Douse") {
+        CoxRaids.raidAt(player.tile)?.let { CoxRooms.olm(it) }?.douse(player, player.getInteractingNpc())
     }
 }
 
@@ -74,6 +133,8 @@ on_command("coxclear", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
     val room = CoxRooms.rooms(raid).firstOrNull { it.contains(player.tile) } ?: run { player.message("No CoX encounter here."); return@on_command }
+    if (room is OlmRoom) { room.testKill(); player.message("CoX: the Olm dies (test)."); return@on_command }
+    room.testClear = true
     room.npcs.toList().filter { room.alive(it) }.forEach { n ->
         val hp = n.getCurrentLifepoints().toDouble()
         player.dealHit(n, minHit = hp, maxHit = hp, landHit = true, delay = 0, hitType = gg.rsmod.plugins.api.HitType.REGULAR_HIT)

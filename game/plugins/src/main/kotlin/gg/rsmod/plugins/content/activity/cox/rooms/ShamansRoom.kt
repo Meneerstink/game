@@ -133,6 +133,8 @@ class ShamansRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         }
     }
 
+    override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, blockers.map { it.tile })
+
     override fun onNpcDeath(npc: Npc) {
         if (npc !in shamans || shamans.any { alive(it) }) return
         completed = true

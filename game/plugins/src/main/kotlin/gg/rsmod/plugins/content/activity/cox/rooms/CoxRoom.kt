@@ -45,6 +45,8 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         private set
 
     private val osrsOf = HashMap<Npc, Int>()
+    /** prepareAttack overwrites combatDef.attackStyleType with the last style (a cast left MAGIC there: 'Invalid combat style'). */
+    private val meleeStyleOf = HashMap<Npc, StyleType>()
     private val bossOf = HashMap<Npc, Boolean>()
     val npcs = mutableListOf<Npc>()
     private val deadSeen = HashSet<Npc>()
@@ -52,6 +54,9 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
     private data class Event(val tick: Int, val action: () -> Unit)
     private val events = mutableListOf<Event>()
     private var exitCrystal: GameObject? = null
+
+    /** ::coxclear (test command): every hit lands in full from then on (submerged/shelled/anvil immunities skipped). */
+    var testClear = false
 
     /** Points this room has paid; capped at [pointsCap] (tsps: 5 x the room's monsters' hitpoints, +5%, unverified). */
     private var paid = 0
@@ -65,7 +70,7 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
     fun tile(x: Int, z: Int, size: Int = 1, sizeZ: Int = size): Tile = CoxMap.roomTile(raid.map, floor, laid, Tile(x, z), size, sizeZ)
     fun <T> respective(west: T, straight: T, east: T): T = when (variant) { 0 -> west; 1 -> straight; else -> east }
 
-    fun contains(t: Tile): Boolean = CoxMap.roomAt(raid.map, raid.layout, t)?.let { (f, r) -> f == floor && r === laid } ?: false
+    open fun contains(t: Tile): Boolean = CoxMap.roomAt(raid.map, raid.layout, t)?.let { (f, r) -> f == floor && r === laid } ?: false
     fun raiders(): List<Player> = world.players.entries.filterNotNull().filter { it.isOnline && !it.isDead() && contains(it.tile) }
 
     /** Raiders the raid scales to: those there at the start (Wiki: 'raid party at the start'), at least 1. */
@@ -98,6 +103,7 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
     /** Gives [npc] the scaled stats of [osrsNpc] (a form change keeps the current hitpoints when [keepHp]). */
     fun configure(npc: Npc, osrsNpc: Int, speed: Int = 4, deathSeq: Int = -1, meleeStyle: StyleType = StyleType.CRUSH, keepHp: Boolean = false) {
         osrsOf[npc] = osrsNpc
+        meleeStyleOf[npc] = meleeStyle
         val monster = CoxMonsters.of(osrsNpc)
         bossOf[npc] = monster?.boss ?: false
         val scaled = CoxMonsters.scale(osrsNpc, scaling()) ?: return
@@ -112,7 +118,7 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
             val source = hit.source
             if (source is Player && !raid.map.area.contains(source.tile)) hit.hitmarks.forEach { it.damage = 0 }
             else {
-                incoming(npc, hit)
+                if (!testClear) incoming(npc, hit)
                 if (source is Player) {
                     val dealt = minOf(hit.hitmarks.sumOf { it.damage }, npc.getCurrentLifepoints())
                     val points = CoxDuration.pointsFor(dealt, bossOf[npc] == true).coerceAtMost((pointsCap - paid).coerceAtLeast(0))
@@ -182,6 +188,35 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         exitCrystal = placeLoc(osrsLoc, tile(src.x, src.z, 2))
     }
 
+    /**
+     * May [p] go through the passage at [passage]? Null = yes, else the refusal line. Passages move a player through (cox_raid.plugin.kts), so
+     * a room's own blockers must answer here: the exit crystal standing by that passage keeps it shut ('I can't reach that!').
+     */
+    open fun passRefusal(p: Player, passage: Tile): String? {
+        val c = exitCrystal ?: return null
+        return if (c.tile.height == passage.height && c.tile.getDistance(passage) <= 4) "I can't reach that!" else null
+    }
+
+    /** 'I can't reach that!' when one of [blockers] stands within 4 tiles of [passage]. */
+    fun blockedNear(passage: Tile, blockers: List<Tile>): String? =
+        if (blockers.any { it.height == passage.height && it.getDistance(passage) <= 4 }) "I can't reach that!" else null
+
+    /** Every loc of this room (template map locs included) with one of the OSRS ids. */
+    fun roomLocs(vararg osrs: Int): List<GameObject> {
+        val ids = HashSet<Int>()
+        for (o in osrs) gg.rsmod.plugins.content.activity.cox.CoxIds.loc(o)?.let { ids.add(it) }
+        val x0 = raid.map.area.bottomLeftX + laid.gridX * CoxMap.ROOM_TILES
+        val z0 = raid.map.area.bottomLeftZ + laid.gridZ * CoxMap.ROOM_TILES
+        val h = gg.rsmod.plugins.content.activity.cox.CoxLayouts.FLOOR_PLANES[floor]
+        val out = mutableListOf<GameObject>()
+        for (cx in 0 until CoxMap.ROOM_TILES step 8) for (cz in 0 until CoxMap.ROOM_TILES step 8) {
+            val chunk = world.chunks.get(Tile(x0 + cx, z0 + cz, h), createIfNeeded = false) ?: continue
+            chunk.getEntities<GameObject>(gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                .filterTo(out) { it.id in ids && it.tile.height == h }
+        }
+        return out
+    }
+
     /** The encounter is done: the crystal shatters and goes 4 ticks later. */
     fun clearExit() {
         completed = true
@@ -199,7 +234,10 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
     fun seq(osrs: Int): Int = CoxIds.seq(osrs) ?: -1
     fun seqFor(npc: Npc, osrsSeq: Int): Int {
         val o = osrsOf[npc]
-        return (if (o != null) CoxIds.npcSeq(o, osrsSeq) else CoxIds.seq(osrsSeq)) ?: run { missing("seq $osrsSeq for npc $o"); -1 }
+        // Old human/skeleton sequences (2007 ids below 6000: 426 bow, 440 sweep, 836 death, 1162 cast, 1203, 5528) are the same in the
+        // 667 cache and drive the same rigs; only newer ones must be imported.
+        return (if (o != null) CoxIds.npcSeq(o, osrsSeq) else CoxIds.seq(osrsSeq)) ?: osrsSeq.takeIf { it in 0 until 6000 }
+            ?: run { missing("seq $osrsSeq for npc $o"); -1 }
     }
     fun animate(npc: Npc, osrsSeq: Int) { seqFor(npc, osrsSeq).takeIf { it >= 0 }?.let { npc.animate(it) } }
     fun animatePlayer(p: Player, osrsSeq: Int) { (CoxIds.seq(osrsSeq) ?: osrsSeq.takeIf { it < 7000 })?.let { p.animate(it) } }
@@ -253,7 +291,7 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
                accuracy: Boolean = true, after: (Int) -> Unit = {}) {
         if (!alive(npc) || !p.isOnline || p.isDead()) return
         npc.prepareAttack(style, when (style) {
-            CombatClass.MELEE -> npc.combatDef.attackStyleType
+            CombatClass.MELEE -> meleeStyleOf[npc] ?: StyleType.CRUSH
             CombatClass.RANGED -> StyleType.RANGED
             else -> StyleType.MAGIC
         }, WeaponStyle.ACCURATE)

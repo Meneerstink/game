@@ -70,6 +70,10 @@ CoxIds.loc(29789)?.let { passage ->
             }
             return@on_obj_option
         }
+        gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.passRefusal(raid, player, obj.tile)?.let { refusal ->
+            player.message(refusal)
+            return@on_obj_option
+        }
         val def = obj.getDef(world.definitions)
         val exit = CoxRaids.passageExit(player.tile, obj.tile, def.getRotatedWidth(obj), def.getRotatedLength(obj))
         player.faceTile(obj.tile, def.getRotatedWidth(obj), def.getRotatedLength(obj))

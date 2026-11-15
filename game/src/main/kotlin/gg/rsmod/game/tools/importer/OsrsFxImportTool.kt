@@ -313,6 +313,9 @@ object OsrsFxImportTool {
             // DRAGON_SLAYER_QIP_FIRE 6645 (Tekton/Vasa fire), CASTLEWARS_PORTALGLOW 1433 (tightrope barrier), RAIDS_VESPULAR_PORTAL_CLOSED
             // 7501 (Vespula's pillars); + EMOTE_STAMPFEET 4278 (the Guardians' stomp, tsps rsprox).
             "cox-rooms-seq" to listOf(3105, 7000, 8456, 6645, 1433, 7501, 4278),
+            // CoX 15-11 23:4x: gameval SKELETON_UPDATE_MAGE_CASTING_SWANSONG 5528 (Skeletal Mystics' cast) is an OSRS skeleton-update
+            // sequence (its siblings 5485/5491 came in classic with the npcs), not the 667 one.
+            "cox-rooms-seq2" to listOf(5528),
             // CoX weapons (dossier COX.txt 21:3x): gameval HUMAN_DINHS_BULWARK_CRUSH 7507 / _READY 7508 / _RUN 7509 / _WALK 7510 / _BASH 7511
             // / _BLOCK 7512, HUMAN_ELDER_MAUL_READY 7518 / _RUN 7519 / _WALK 7520 (its _ATTACK 7516 / _BLOCK 7517 are in already, OsrsSeq),
             // SPOT_DINHS_BULWARK_IDLE 7522 / _BLOCK 7523.

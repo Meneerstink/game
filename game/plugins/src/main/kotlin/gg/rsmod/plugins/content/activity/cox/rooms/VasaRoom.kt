@@ -230,6 +230,8 @@ class VasaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, flo
         }
     }
 
+    override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, exits.map { it.tile })
+
     override fun incoming(npc: Npc, hit: Hit) {
         val src = hit.source as? Player
         var pct = 100

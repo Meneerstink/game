@@ -64,6 +64,8 @@ class MysticsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         }
     }
 
+    override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, listOfNotNull(mark?.tile))
+
     override fun onNpcDeath(npc: Npc) {
         if (npc !in mystics || mystics.any { alive(it) }) return
         completed = true
