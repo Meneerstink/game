@@ -11,19 +11,36 @@ import kotlin.random.Random
  * own check accounts may enter (CoxTestGate); anyone else gets the rev-667 'Nothing interesting happens.' as for any unhandled option.
  */
 
+/** The entrance warning was accepted once (tsps: only the first time). */
+val COX_WARNED = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey = "cox_entrance_warned")
+
 CoxIds.loc(29777)?.let { steps ->
     on_obj_option(obj = steps, option = "enter") {
         if (!CoxTestGate.allowed(player)) {
             player.message("Nothing interesting happens.")
             return@on_obj_option
         }
-        CoxRaids.enter(player)
+        // tsps 'The entrance' (rsprox): the first time a warning, "Accept warning and proceed." or "Cancel.".
+        if (player.attr[COX_WARNED] == true) {
+            CoxRaids.enter(player)
+            return@on_obj_option
+        }
+        player.queue {
+            messageBox("Items left in a dungeon cannot be retrieved. Participants may be ejected at any time. Don't risk dropping items that you want to keep.")
+            if (options("Accept warning and proceed.", "Cancel.") == 1) {
+                player.attr[COX_WARNED] = true
+                CoxRaids.enter(player)
+            }
+        }
     }
 }
 
 CoxIds.loc(29778)?.let { exit ->
     on_obj_option(obj = exit, option = "climb") {
-        CoxRaids.leave(player)
+        // tsps 'Leaving' (rsprox): "You will not be able to rejoin this raid again." (Leave the raid. / Stay.).
+        player.queue {
+            if (options("Leave the raid.", "Stay.", title = "You will not be able to rejoin this raid again.") == 1) CoxRaids.leave(player)
+        }
     }
 }
 
