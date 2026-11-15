@@ -263,9 +263,9 @@ The source generator preserves those exceptions and the two master anagram
 puzzle choices. The old 41-donor-step registration still requires replacement;
 no complete-step-pool claim is made by these source/backend commits.
 
-## STASH batch blueprint - NOT yet implemented
+## STASH batch blueprint (source identities; implementation below)
 
-`data/cfg/clue/stashes.json` is the exact source/cache blueprint for the seventeen selected units, including each placement/type/rotation/physical and effective planes, source varbit/varp/bit position, construction recipe, required equipment and asset hashes. No STASH batch has been added to OsrsLocImportTool yet: the name below is an implementation proposal, not an executable existing command.
+`data/cfg/clue/stashes.json` is the exact source/cache blueprint for the seventeen selected units, including each placement/type/rotation/physical and effective planes, source varbit/varp/bit position, construction recipe, required equipment and asset hashes. The dedicated ClueStashCacheTool below now implements the batch; OsrsLocImportTool is unchanged.
 
 Proposed batch: `clue-stash`. Import/remap the following 39 source object definitions (17 base multilocs + 22 shared forms), rather than using a coincidentally matching 667 numeric ID:
 
@@ -275,3 +275,23 @@ Proposed batch: `clue-stash`. Import/remap the following 39 source object defini
 The selectors in the blueprint are SOURCE identities only. Allocate collision-free local selectors or implement a proven equivalent per-player visual route, preserving Build/Search options and ordinary terrain/object collision. Do not just copy the source varbit IDs. Every static placement and personal built/filled state must be scoped to the exact unit/tile, not just its shared visual form ID. Cache work stays PLAN/PREFLIGHT for GPT; Claude alone applies after reviewing the complete batch.
 
 Storage rules from pinned STASH revision: full set only; seven legal nail metals (no dragon); ten nails of one metal; no bending; withdrawal all at once; inventory before equipment; equipped items only with the setting. Source catalogue includes boostable level/XP/three ticks, hammer+saw and master Gold leaf 8784. Nothing in this paragraph claims a storage handler or Watson chart exists.
+
+## B checkpoint 15 November 10:03: STASH preflight and mandatory client decoder
+
+`ClueStashCacheTool` PREFLIGHT **tx-20261115-090151** passed: 17 units, **69 logical mutations**, 68 allocated identities. Exact source/local rows: `STASH-PREFLIGHT.tsv`. Proposals: 39 locs **66313..66351**, 17 selectors **9979..9995**, private control varp **2408** (bits 0..16), nine models **66084..66092**, source texture 8 -> **1423**, its sprite -> **8922**. The new control is appended beyond every physical local varp definition/selector reference. Source selectors are never copied into the old client namespace.
+
+**Apply/release `CLIENT-WIDE-STASH.patch` BEFORE using this cache batch**, in the same new client as the existing `CLIENT-WIDE-INTERFACE.patch`. Existing locs already exceed 65535; their multiloc destinations therefore need the staged opcode 242 (u16 selector IDs, signed g4 destinations and fallback). Old loc opcodes 77/92 keep their byte layout. Server ObjectDef previously dropped the legacy fallback: now it retains it like the real 667 LocType decoder. This is shared core code and requires Claude's review. The live/client trees were not edited.
+
+Exact command (first PLAN/PREFLIGHT, Claude alone adds application flag after client review):
+
+```powershell
+.\gradlew.bat :game:runClueStashCacheTool --priority low --args="data/cfg/clue/stashes.json data/cfg/clue/stash-mapping.tsv docs/CLUE/STASH-PREFLIGHT.tsv"
+```
+
+The tool publishes `stash-mapping.tsv` and appends its identity records to the existing import ledger ONLY after both caches verify. Runtime refuses a plan-only mapping. Do not copy/rename the preflight TSV into runtime. Cache/ledger/mapping proof: `build/clue/stash-preflight/read-only-proof.json` (all cache dat/index file sizes/mtimes plus ledger SHA identical). No apply occurred. Item/UI/NPC/STASH plans currently share unreserved model/sprite/texture IDs; rerun each later batch in the actual chosen application order.
+
+Validation: 10 STASH storage/build regressions, four import/codec regressions; `python tools/clue/verify_stash_client.py` compiles only staged real LocType and checks legacy/wide/default/invisible destinations, byte alignment and actual source texture pixels through the real client IndexedImage. The binary cutout of source texture 8 is preserved (material alpha mode 1), rather than flattened. Source geometry and sprite pixels also pass decode/encode/decode equality. No client window started.
+
+Runtime posts only verified mapped units on their exact effective tiles and routes Build/Search by base identity AND tile/type, so shared forms do not share inventory or state. Build checks resources immediately and again after the source three ticks; materials/XP are spent once. Login restores private built flags; Search stores/returns complete sets with item attributes. Existing scenery at a placement is retained and reported as PROBLEM, never overwritten.
+
+Still open: Construction animation/audio identity verification, the Settings entry for the equipped-item toggle, source chart 493/Watson noticeboard integration, and Claude's loaded-client/collision checks (notably source physical plane 1/effective plane 0 at Wizards' Tower). The remaining clue-step pool/guards/Mimic source gates are unchanged. **This is not full CLUE acceptance.**

@@ -24,6 +24,8 @@ object ModelArchive {
 
     /** Wide model opcodes (g4 ids) of the 78 client, see the class doc. */
     const val LOC_WIDE_MODELS = 241
+    /** CLUE STASH: multiloc destinations above the original unsigned-short namespace. */
+    const val LOC_WIDE_TRANSFORMS = 242
     const val NPC_WIDE_MODELS = 241
     const val NPC_WIDE_HEADS = 242
     const val OBJ_WIDE_MODEL = 240

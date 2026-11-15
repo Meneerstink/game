@@ -1,0 +1,149 @@
+[
+  {
+    "index": 3,
+    "group": 493,
+    "file": 1,
+    "sha256": "69e3e35debd9347e239671efc8832f8a6882bc9d98100e839edb62071619ff94",
+    "strings": [
+      "  STASH Units"
+    ]
+  },
+  {
+    "index": 12,
+    "group": 6640,
+    "file": 0,
+    "sha256": "203f065060a88cfbb31fd141ca4a82acb02e09a4b2ed4c936815198585e0d54f",
+    "strings": [
+      " S.T.A.S.H"
+    ]
+  },
+  {
+    "index": 12,
+    "group": 6643,
+    "file": 0,
+    "sha256": "22346ac3361bee8e6bd41aea1c68c410237662a16df0455ce97d5d6e042b3d9a",
+    "strings": [
+      " S.T.A.S.H"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 34,
+    "file": 1120,
+    "sha256": "82e53865e4768b3d143099b4d7630687a70f02bcff316e6c15422849a8630ca8",
+    "strings": [
+      " p- This item will allow you to \u003ccol\u003d#\u003eTeleport\u003c/col\u003e to any S.T.A.S.H unit and Falo the Bard (Respecting area unlocks).\u003cbr\u003e\u003cbr\u003e- It has the ability to teleport you to your current clue step, if you have one. Note - this will not work on clue steps that require you to kill a certain NPC.\u003cbr\u003e\u003cbr\u003e- This item ignores wilderness teleport restrictions.\u003cbr\u003e\u003cbr\u003e- This item cannot be used to teleport to an area you haven\u0027t unlocked."
+    ]
+  },
+  {
+    "index": 2,
+    "group": 34,
+    "file": 6245,
+    "sha256": "c160459064efde53b1fb24881c3a17c85d8e12d8999e5ed327b63a177f6b1bae",
+    "strings": [
+      " \u003eSTASH units take equipped items",
+      " HWhen active, when putting items back into a STASH UNIT, equipped items will be taken. Your inventory takes priority."
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 5790,
+    "sha256": "842b7baa146bde9a59bd80468a1e9a2f227bc44177422acdbf3605c805465b8e",
+    "strings": [
+      "d   $ S.T.A.S.H chart"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 6952,
+    "sha256": "4d3d64f05d0e113bc30404756c57d7717655647361ddf33f541347573ad3434c",
+    "strings": [
+      "  $ - This item will allow you to \u003ccol\u003d#\u003eTeleport\u003c/col\u003e to any S.T.A.S.H unit and Falo the Bard (Respecting area unlocks).\u003cbr\u003e\u003cbr\u003e- It has the ability to teleport you to your current clue step, if you have one. Note - this will not work on clue steps that require you to kill a certain NPC.\u003cbr\u003e\u003cbr\u003e- This item ignores wilderness teleport restrictions.\u003cbr\u003e\u003cbr\u003e- This item cannot be used to teleport to an area you haven\u0027t unlocked."
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10118,
+    "sha256": "f117fa88e3238d6e969610e7f025433dd14291bbf9a64e22b9367ba613405ec0",
+    "strings": [
+      "d   $ S.T.A.S.H chart"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10376,
+    "sha256": "9928a214f7a5d083383507c67e128856fd8405c1478ac158a4d3738dddfaf21c",
+    "strings": [
+      "[x  $ STASH units (beginner)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10385,
+    "sha256": "545ce67e81e85f242057f29cacdb722b9e763cf2b2e7dcb10ce0fd1b2aa7d671",
+    "strings": [
+      "P4  $ STASH units (easy)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10396,
+    "sha256": "3f8d3de013393b31a1791530dfa926776979c567ebd9aa81cad1539b1c623dc5",
+    "strings": [
+      "P5  $ STASH units (medium)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10406,
+    "sha256": "18941fe28e95278c2bbfeea5d49ad47358d5c931b523620927bf2cfcb48937ca",
+    "strings": [
+      "P6  $ STASH units (hard)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10423,
+    "sha256": "4bb44d4183faaae6b3e9b7e112f7e2564fefa72963975e5e7365b1ef57a168ff",
+    "strings": [
+      "P7  $ STASH units (elite)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 10432,
+    "sha256": "cac058c907b11ab8f936e74a99cc943934748b908ebddb0801ca9f94776b16a1",
+    "strings": [
+      "P8  $ STASH units (master)"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 14847,
+    "sha256": "80fd331b1f25bbb4db1140b35655681820f27794e454d854dbc95e7df98436d6",
+    "strings": [
+      " $ Fill a Hard STASH Unit",
+      "  $ Build a Hard STASH unit and fill it with the relevant items"
+    ]
+  },
+  {
+    "index": 2,
+    "group": 38,
+    "file": 14851,
+    "sha256": "5efdf2f1e9377963b563b2a3910a98c971d79e4ee0a2663e4ba6e740bb32d928",
+    "strings": [
+      " $ Fill a Medium STASH Unit",
+      "  $ Build a Medium STASH unit and fill it with the relevant items"
+    ]
+  }
+]

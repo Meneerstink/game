@@ -13,3 +13,9 @@ Validation: `python tools/clue/build_stash_catalogue.py` and `python tools/clue/
 Still required for this part: scenery/selector imports and preflight; world placement; contextual Build/Search handlers with the three-tick build; equipped-item setting UI; chart/noticeboard UI; client/collision proof. No STASH runtime registration or cache write occurred.
 
 The lockpick in the raw magic-axe-hut source template is already correctly excluded from the generated equipment array; no nonexistent gameplay bug was patched.
+
+## 10:03 scene/codec checkpoint
+
+Source hash/mapping proof and the exact 69-mutation transaction are in CLAUDE-HANDOFF.md. Shared ObjectDef fallback correction and new opcode 242 need core review. Ordinary loc bytes are unchanged. A separate staged real-client LocType decoder passed the same four server-produced fixtures (77/92/242 with visible/invisible defaults), and real IndexedImage preserved the source binary texture cutout. All ten current STASH tests and four current importer tests passed standalone with fresh outputs. New world/script integration is not accepted until the frozen targeted Gradle run completes.
+
+No client/server operation, canonical client edit, cache application or import-ledger mutation occurred. Remaining STASH gates: animation/audio, setting UI, chart/Watson board, actual placement/collision/client verification.

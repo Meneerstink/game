@@ -1150,3 +1150,11 @@ task runClueInterfaceImportTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ClueInterfaceImportTool'
     workingDir = rootProject.projectDir
 }
+
+task runClueStashCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE selected STASH scenery/selectors. Default preflight: <stashes.json> <runtime-mapping.tsv> <plan.tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueStashCacheTool'
+    workingDir = rootProject.projectDir
+}

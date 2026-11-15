@@ -26,7 +26,7 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests'):
     out /= selected # Independent test modes cannot reuse a stale patch from another mode.
 if selected == 'step-tests':
     # Self-contained across a fresh output directory: do not depend on classes
@@ -34,16 +34,19 @@ if selected == 'step-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
                ['TreasureTrailChallenges', 'TreasureTrailStepCatalogue', 'ClueScrollManager',
                 'ClueDeathItems', 'TreasureTrailTornParts']]
+elif selected == 'stash-import-tests':
+    sources = [ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer'/(name+'.kt') for name in
+               ['ClueStashCacheTool', 'Rev667WorldCodec', 'ModelArchive']] + [ROOT/'game/src/main/kotlin/gg/rsmod/game/fs/def/ObjectDef.kt']
 elif selected == 'stash-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
-               ['TreasureTrailStepCatalogue', 'TreasureTrailStashes']]
+               ['TreasureTrailStepCatalogue', 'TreasureTrailStashes', 'TreasureTrailStashWorld']]
 elif selected == 'npc-tests':
     # Repository source is compiled with its tests below. Normal core/plugin
     # integration must additionally pass Gradle on frozen input.
     sources = []
 elif selected == 'mimic-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicCombat.kt']
-for module in (['game'] if selected in ('core-tests', 'npc-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests') else [selected] if selected else ['game', 'plugins']):
+for module in (['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests') else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -78,7 +81,7 @@ if selected == 'core-tests':
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests'):
     # Explicit classes only. This is not a substitute for Gradle script/core integration.
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
@@ -93,6 +96,8 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests'):
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
     if selected == 'npc-tests':
         names = ['gg.rsmod.game.plugin.ClueNpcOptionOverrideTests']
+    elif selected == 'stash-import-tests':
+        names = ['gg.rsmod.game.tools.importer.ClueStashImportTests']
     elif selected == 'stash-tests':
         names = ['gg.rsmod.plugins.content.scrolls.TreasureTrailStashTests']
     elif selected == 'mimic-tests':
@@ -113,6 +118,6 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests'):
     argfile.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args),encoding='utf-8')
     subprocess.run([str(java),'-Xmx512m','-cp',';'.join(compiler),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','@'+str(argfile)],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
-    subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
+    subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-Dclue.fixtures='+str(out/'fixtures'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
                    names,
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)

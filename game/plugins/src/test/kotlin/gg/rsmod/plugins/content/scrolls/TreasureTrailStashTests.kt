@@ -159,4 +159,17 @@ class TreasureTrailStashTests {
         other.inventory[0] = Item(2347); other.inventory[1] = Item(9626)
         assertEquals(TreasureTrailStashes.Result.LEVEL, TreasureTrailStashes.build(other, unit))
     }
+
+    @Test fun `construction precheck cannot spend materials and missing materials after a delay cancel cleanly`() {
+        val p = player()
+        p.inventory[0] = Item(2347); p.inventory[1] = Item(8794)
+        p.inventory[2] = Item(960, 2); p.inventory[3] = Item(1539, 10)
+        assertEquals(TreasureTrailStashes.Result.BUILT, TreasureTrailStashes.buildCheck(p, unit))
+        assertFalse(TreasureTrailStashes.built(p, unit))
+        assertEquals(2, p.inventory.getItemCount(960)); assertEquals(10, p.inventory.getItemCount(1539))
+        p.inventory[3] = null
+        assertEquals(TreasureTrailStashes.Result.MATERIALS, TreasureTrailStashes.build(p, unit))
+        assertEquals(2, p.inventory.getItemCount(960))
+        assertFalse(TreasureTrailStashes.built(p, unit))
+    }
 }
