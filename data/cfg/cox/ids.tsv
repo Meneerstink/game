@@ -11,8 +11,13 @@ item	10577	24802	Noxifer seed count 10577
 item	10578	24809	Golpar seed count 10578
 item	10579	24801	Noxifer seed count 10579
 item	10580	24808	Golpar seed count 10580
+item	13391	24919	Lizardman fang
 item	13392	24917	Xeric's talisman (inert)
 item	13393	24918	Xeric's talisman
+item	13421	24920	Saltpetre
+item	13422	24921	Saltpetre (noted)
+item	13573	24922	Dynamite
+item	13574	24923	Dynamite (noted)
 item	20799	24755	Kindling
 item	20800	24756	Empty gourd vial
 item	20801	24757	Water-filled gourd vial
@@ -575,6 +580,9 @@ loc	29996	66776	IMPORT [cox-map]
 loc	30014	66777	IMPORT [cox-map]
 loc	30018	66778	IMPORT [cox-map]
 loc	30027	66779	IMPORT [cox-map]
+loc	30028	66836	loc-tool tx-20261115-194927
+loc	30029	66837	loc-tool tx-20261115-194927
+loc	30030	66838	loc-tool tx-20261115-194927
 loc	30035	66780	IMPORT [cox-map]
 loc	30036	66781	IMPORT [cox-map]
 loc	30037	66782	IMPORT [cox-map]
@@ -668,6 +676,7 @@ loc	47355	66589	IMPORT [cox-entrance]
 loc	47357	66590	IMPORT [cox-entrance]
 loc	47372	66591	IMPORT [cox-entrance]
 loc	47374	66592	IMPORT [cox-entrance]
+loc	47419	66839	loc-tool tx-20261115-194927
 loc	47420	66834	IMPORT [cox-map]
 loc	49491	66593	IMPORT [cox-entrance]
 loc	49999	66835	IMPORT [cox-map]
