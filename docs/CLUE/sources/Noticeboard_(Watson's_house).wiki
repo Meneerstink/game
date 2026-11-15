@@ -1,0 +1,30 @@
+{{Infobox Scenery
+|name = Noticeboard
+|image = [[File:Noticeboard (Watson's house).png|240px]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|location = [[Watson's house]]
+|options = Read
+|examine = Keep track of your STASH.
+|map = {{Map|x=1644|y=3575|plane=0|r=4|mapID=-1|mtype=square}}
+|id = 29718
+}}
+
+The '''noticeboard''' is located in [[Watson's house]]. Upon clicking it, it opens up an interface in which players can check where all [[STASH|STASH unit]] locations are, and whether they have built and filled them.
+
+A [[S.t.a.s.h chart]] can be built to display the same information in the [[study]] in a [[player-owned house]].
+
+[[File:Noticeboard (Watson's house) interface.png|thumb|left|The menu when reading the noticeboard, selected on the "Elite" tier]]
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 7 January 2026
+|update = QoL Tweaks & Fixes
+|change = The noticeboard now lists the 3 [[STASH]] units released with the [[Sailing]] skill.
+}}
+{{Subject changes footer}}
+
+{{Treasure Trails}}

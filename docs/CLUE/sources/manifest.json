@@ -1085,6 +1085,22 @@
       "file": "Barrows_gloves.wiki",
       "sha256": "4fc678f43cce873dcb9bd2194784527098700c1e6348d6e355726d684d101810",
       "url": "https://oldschool.runescape.wiki/w/Barrows_gloves"
+    },
+    {
+      "page": "Noticeboard (Watson's house)",
+      "revision": 15101341,
+      "revision_time": "2026-01-07T12:41:24Z",
+      "file": "Noticeboard_(Watson's_house).wiki",
+      "sha256": "13b1a92cee9b28bc837947ff43e56462bd307cd48e8ec8be843167cf38338c16",
+      "url": "https://oldschool.runescape.wiki/w/Noticeboard_%28Watson%27s_house%29"
+    },
+    {
+      "page": "S.t.a.s.h chart",
+      "revision": 15194550,
+      "revision_time": "2026-04-22T06:24:36Z",
+      "file": "S.t.a.s.h_chart.wiki",
+      "sha256": "faa867baef599078d4074538122c293b7329175b5c4ef09a64ffddbebec40ec6",
+      "url": "https://oldschool.runescape.wiki/w/S.t.a.s.h_chart"
     }
   ]
 }

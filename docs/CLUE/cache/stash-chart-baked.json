@@ -3735,23 +3735,58 @@
     "tiers": {
       "easy": {
         "body": 6,
-        "tab": 30
+        "tab": 30,
+        "sprites": [
+          49,
+          50,
+          51
+        ],
+        "label": 52,
+        "text": "Easy"
       },
       "medium": {
         "body": 8,
-        "tab": 31
+        "tab": 31,
+        "sprites": [
+          53,
+          54,
+          55
+        ],
+        "label": 56,
+        "text": "Medium"
       },
       "hard": {
         "body": 10,
-        "tab": 32
+        "tab": 32,
+        "sprites": [
+          57,
+          58,
+          59
+        ],
+        "label": 60,
+        "text": "Hard"
       },
       "elite": {
         "body": 12,
-        "tab": 33
+        "tab": 33,
+        "sprites": [
+          61,
+          62,
+          63
+        ],
+        "label": 64,
+        "text": "Elite"
       },
       "master": {
         "body": 14,
-        "tab": 34
+        "tab": 34,
+        "sprites": [
+          65,
+          66,
+          67
+        ],
+        "label": 68,
+        "text": "78"
       }
     },
     "checks": [
@@ -3925,11 +3960,24 @@
         "sourceId": 29059,
         "filled": true
       }
-    ]
+    ],
+    "states": {
+      "selectedSprites": [
+        998,
+        999,
+        1000
+      ],
+      "unselectedSprites": [
+        1001,
+        1002,
+        1003
+      ],
+      "selectedColour": 16754735,
+      "unselectedColour": 16750623
+    }
   },
   "pending": [
-    "Tab hover1483 translation",
-    "Scrollbar parity at small native viewport",
+    "Scrollbar/client verification at small native viewport",
     "IF3 import/preflight and runtime chart bindings"
   ]
 }

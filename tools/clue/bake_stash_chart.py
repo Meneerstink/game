@@ -216,16 +216,29 @@ def main():
                 if node.get('parentId') == (493<<16)|tab and node.get('text') == 'Master':
                     node['text']='78'
         nodes[tab]['originalX']-=40 # Remove the owner's excluded beginner tab; centre five original 80px tabs in 480px.
-        controls['tiers'][tier]=dict(body=body,tab=tab)
+        children=sorted(((id,n) for id,n in nodes.items() if n.get('parentId')==(493<<16)|tab),
+                        key=lambda p:p[1]['sourceDynamicIndex'])
+        assert [n['type'] for _,n in children]==[5,5,5,4]
+        controls['tiers'][tier]=dict(body=body,tab=tab,sprites=[id for id,_ in children[:3]],
+            label=children[3][0],text='78' if tier=='master' else tier.title())
     assert len(controls['checks'])==34
     nodes[4]['isHidden']=nodes[5]['isHidden']=nodes[29]['isHidden']=True
-    # The source chart's tabs are drawn by 1482; retain their exact labels/panel geometry in the next UI stage.
+    hover=json.loads((ROOT/'docs/CLUE/cache/stash-tab-hover-script.json').read_text())['1483']
+    values=[arg for op,arg in zip(hover['instructions'],hover['intOperands']) if op==0 and arg>=900]
+    assert values==[998,999,1000,1001,1002,1003]
+    selected=controls['tiers']['easy'];unselected=controls['tiers']['medium']
+    states=dict(selectedSprites=[nodes[id]['spriteId'] for id in selected['sprites']],
+        unselectedSprites=[nodes[id]['spriteId'] for id in unselected['sprites']],
+        selectedColour=nodes[selected['label']]['textColor'],unselectedColour=nodes[unselected['label']]['textColor'])
+    assert states['selectedSprites']==values[:3] and states['unselectedSprites']==values[3:]
+    controls['states']=states
     result=dict(sourceGroup=493,activation='Baked review only; no cache/runtime mapping',
         sourceFrameScripts=[703,711,98,6388,1972], sourceRowsScript=1478,
         components={str(id):node for id,node in nodes.items()},controls=controls,
-        pending=['Tab hover1483 translation','Scrollbar parity at small native viewport','IF3 import/preflight and runtime chart bindings'])
+        pending=['Scrollbar/client verification at small native viewport','IF3 import/preflight and runtime chart bindings'])
     (ROOT/'docs/CLUE/cache/stash-chart-baked.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
-    print('Source frame/rows baked:',len(nodes),'components, 34 private check marks; no cache/runtime writes')
+    (ROOT/'data/cfg/clue/stash-chart.json').write_text(json.dumps(controls,indent=2)+'\n',encoding='utf8')
+    print('Source frame/rows baked:',len(nodes),'components, 34 private check marks; no cache or runtime mapping writes')
 
 
 if __name__=='__main__':

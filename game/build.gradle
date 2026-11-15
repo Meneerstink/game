@@ -1166,3 +1166,11 @@ task runClueWatsonCacheTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ClueWatsonCacheTool'
     workingDir = rootProject.projectDir
 }
+
+task runClueStashChartCacheTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE source 493 STASH chart. Default preflight: <baked.json> <runtime-mapping.tsv> <plan.tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueStashChartCacheTool'
+    workingDir = rootProject.projectDir
+}

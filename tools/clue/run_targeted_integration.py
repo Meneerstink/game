@@ -13,26 +13,29 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[2]
 CORE = ['gg.rsmod.game.plugin.ClueNpcOptionOverrideTests', 'gg.rsmod.game.tools.importer.ClueStashImportTests',
+        'gg.rsmod.game.tools.importer.ClueWatsonCacheTests', 'gg.rsmod.game.tools.importer.ClueStashChartImportTests',
         'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueForearmImportTests',
         'gg.rsmod.game.tools.importer.ClueImportDryRunTests', 'gg.rsmod.game.model.entity.TransformResolutionTests',
         'gg.rsmod.game.action.ObjectInteractionDispatchTests']
 PLUGINS = ['gg.rsmod.plugins.content.areas.watson.' + name for name in
            ['MimicChallengeTests', 'MimicRewardsTests', 'OsrsMimicImportTests', 'StrangeCasketTests',
-            'TheMimicCombatDefTests', 'WatsonClueTests']]
+            'TheMimicCombatDefTests', 'WatsonClueTests', 'WatsonAppearanceTests']]
 PLUGINS += ['gg.rsmod.plugins.content.items.osrs.' + name for name in
             ['OsrsCasketOrnamentsImportTests', 'OsrsCasketTeleportScrollsImportTests', 'OsrsCasketWeaponsImportTests']]
 PLUGINS += ['gg.rsmod.plugins.content.items.OsrsEliteCasketTests']
 PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
             ['ClueCasketTransactionTests', 'ClueDropIndexTests', 'ClueDropOwnershipTests', 'ClueInterfacesTests',
              'ClueLogCatalogueTests', 'ClueNpcSourcesTests', 'ClueRewardCatalogueTests', 'ClueScrollLifecycleTests',
-             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests']]
+             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests']]
 
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
     allowed = [p for p in sorted(set(tracked + untracked))
-               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith('data/cfg/clue/')]
+               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith('data/cfg/clue/') or p in {
+                   'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
+                   'docs/CLUE/cache/interfaces.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
 
@@ -41,6 +44,7 @@ def main():
     out = ROOT / 'build/clue' / ('integration-' + stamp)
     out.mkdir(parents=True)
     before = inputs()
+    started = datetime.now(timezone.utc).timestamp()
     args = ['cmd.exe', '/d', '/c', str(ROOT/'gradlew.bat'), '-I', 'tools/clue/test-init.gradle', ':game:test']
     for name in CORE:
         args += ['--tests', name]
@@ -66,11 +70,14 @@ def main():
                 continue
             suite = ET.parse(path).getroot()
             reports.append(dict(name=name, tests=int(suite.attrib['tests']), failures=int(suite.attrib['failures']),
-                                errors=int(suite.attrib['errors']), modified=path.stat().st_mtime))
+                                errors=int(suite.attrib['errors']), skipped=int(suite.attrib.get('skipped', '0')),
+                                modified=path.stat().st_mtime, fresh=path.stat().st_mtime >= started))
     changed = [p for p in sorted(set(before) | set(after)) if before.get(p) != after.get(p)]
-    accepted = result.returncode == 0 and not changed and not missing and all(r['failures'] == r['errors'] == 0 for r in reports)
+    # Gradle may legitimately reuse an up-to-date test task; a successful task graph
+    # validates that cache entry against its declared inputs. Record freshness separately.
+    accepted = result.returncode == 0 and not changed and not missing and all(r['failures'] == r['errors'] == r['skipped'] == 0 for r in reports)
     summary = dict(exit=result.returncode, unchangedInputs=not changed, changed=changed, missing=missing,
-                   accepted=accepted, tests=sum(r['tests'] for r in reports), classes=reports)
+                   accepted=accepted, tests=sum(r['tests'] for r in reports), skipped=sum(r['skipped'] for r in reports), classes=reports)
     (out/'summary.json').write_text(json.dumps(summary, indent=2))
     print('Integration complete:', {k:v for k,v in summary.items() if k != 'classes'}, flush=True)
     if not accepted:

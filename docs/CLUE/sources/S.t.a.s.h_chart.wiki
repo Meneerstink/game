@@ -1,0 +1,49 @@
+{{Infobox Construction
+|name = S.t.a.s.h chart
+|image = [[File:S.T.A.S.H chart built.png|250px]]
+|icon = [[File:S.t.a.s.h chart icon.png]]
+|furniturename = S.T.A.S.H chart
+|release = [[7 April]] [[2021]]
+|update = Collection Log Improvements and The Last of Poll 74
+|level = 40
+|experience = 16
+|room = [[Study]]
+|hotspot = [[Wall chart space]]
+|flatpack = No
+|options = View
+|examine = Lets you look up any S.T.A.S.H built.
+|id = 41434
+|itemid = 25611
+}}
+A '''S.t.a.s.h chart''' can be built in the [[wall chart space]] of the [[study]] in a [[player-owned house]]. It requires 40 [[Construction]] to build and gives 16 [[experience]].
+
+The chart acts as the equivalent of the [[Noticeboard (Watson's house)|noticeboard]] in [[Watson's house]], and players can check where all [[STASH|STASH unit]] locations are, and whether they have built and filled them.
+
+==Creation==
+{{Recipe
+|skill1 = Construction
+|skill1lvl = 40
+|skill1boostable = Yes
+|skill1exp = 16 
+|members = Yes
+|ticks = 5
+|tools = Saw, Hammer
+|mat1 = Bolt of cloth
+|mat1quantity = 1
+|mat2 = S.t.a.s.h blueprint
+|mat2quantity = 1
+|mat2cost = 500
+|output1 = S.t.a.s.h chart
+|output1pic = S.t.a.s.h chart icon
+|output1cost = 0
+}}
+
+[[File:Noticeboard (Watson's house) interface.png|thumb|The menu when reading the noticeboard, selected on the "Elite" tier|none]]
+
+==Trivia==
+* '''S.T.A.S.H''' stands for "'''S'''tore '''T'''hings '''A'''nd '''S'''tuff '''H'''ere".
+* Periods between letters are usually used for initialisms, where each letter is pronounced individually, however, S.T.A.S.H is pronounced as one word, like an acronym.
+* This is the only item built in the wall chart space that provides any practical, game-related purpose, despite being the lowest tier item.
+
+{{Study}}
+{{Treasure Trails}}

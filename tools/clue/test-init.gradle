@@ -3,6 +3,10 @@ gradle.projectsEvaluated {
     allprojects {
         tasks.withType(Test).configureEach {
             systemProperty 'rsps.data', new File(rootProject.projectDir, 'data').absolutePath
+            inputs.dir(new File(rootProject.projectDir, 'data/cfg/clue'))
+            inputs.files(['data/cfg/objs.yml', 'docs/CLUE/cache/interfaces.json',
+                          'docs/CLUE/cache/hover.json', 'docs/CLUE/cache/stash-chart-baked.json']
+                         .collect { new File(rootProject.projectDir, it) })
         }
     }
 }
