@@ -84,6 +84,8 @@ listOfNotNull(CoxIds.loc(29734), CoxIds.loc(29735)).forEach { hole ->
             player.teleportTo(landing)
             player.unlock()
             player.message("<col=ff289d>$level level complete! Duration: </col><col=ff0000>${CoxRaids.duration(raid)}</col>")
+            val reached = if (last) 4 else floor + 2
+            if (reached > raid.progress) { raid.progress = reached; CoxPartyTab.updateAll(raid) }
         }
     }
 }
@@ -126,12 +128,14 @@ CoxIds.loc(47420)?.let { chest ->
 on_command("coxbegin", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
-    if (raid.started) return@on_command
-    raid.started = true
-    raid.startCycle = world.currentCycle
-    // tsps r123: the raid's announcements are friendschatnotification messages (type 11).
-    world.players.forEach { p ->
-        if (raid.map.area.contains(p.tile)) p.message("The raid has begun!", gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+    CoxRaids.begin(player, raid)
+}
+
+/** The party tab's 'Start raid' (OSRS 500:14, rebuilt as component 24 - CoxPartyTab): the leader begins the raid. */
+CoxInterfaces.of(CoxInterfaces.PARTY_TAB)?.let { tab ->
+    on_button(tab, CoxPartyTab.START) {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_button
+        CoxRaids.begin(player, raid)
     }
 }
 

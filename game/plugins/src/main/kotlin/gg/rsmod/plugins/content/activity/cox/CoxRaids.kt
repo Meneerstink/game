@@ -4,6 +4,7 @@ import gg.rsmod.game.model.Tile
 import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.instance.InstancedMap
+import gg.rsmod.plugins.api.ext.message
 import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
@@ -14,6 +15,8 @@ class CoxRaid(val id: Long, val layout: CoxLayout, val map: InstancedMap, val wo
     /** tsps r118: the first room's passage stays shut until the leader starts the raid (party tab; ::coxbegin on the test server). */
     @Volatile var started = false
     var startCycle = -1
+    /** raids_client_progress (CoxPartyTab): 0 before the start, 1 upper level, 2 next level, 4 the Olm, 5 complete. */
+    @Volatile var progress = 0
 }
 
 /**
@@ -49,7 +52,22 @@ object CoxRaids : KLogging() {
         raids[map] = raid
         logger.info { "[cox] raid ${raid.id} ${player.username} base=${map.area.bottomLeftX},${map.area.bottomLeftZ} pattern=${layout.pattern} floors=${layout.floors.map { f -> f.map { "${it.room}@${it.gridX},${it.gridZ}/${it.entry}/v${it.variant}" } }}" }
         player.teleportTo(spawnTile(raid))
+        CoxPartyTab.open(player, raid)
         return raid
+    }
+
+    /** The leader starts the raid ('Start raid' in the party tab; ::coxbegin on the test server). */
+    fun begin(player: Player, raid: CoxRaid): Boolean {
+        if (raid.started || player.username != raid.leader) return false
+        raid.started = true
+        raid.progress = 1
+        raid.startCycle = raid.world.currentCycle
+        // tsps r123 (rsprox): the raid's announcements are friendschatnotification messages (type 11).
+        raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach {
+            it.message("The raid has begun!", gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+        }
+        CoxPartyTab.updateAll(raid)
+        return true
     }
 
     /** Is [tile] in the first room of [raid] (the start room, floor 1 room 0)? */
@@ -123,6 +141,7 @@ object CoxRaids : KLogging() {
     fun leave(player: Player) {
         val raid = raidAt(player.tile)
         player.moveTo(OUTSIDE)
+        CoxPartyTab.close(player)
         if (raid != null) releaseIfEmpty(raid)
     }
 

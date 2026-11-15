@@ -317,6 +317,42 @@ object OsrsInterfacePortTool {
             sprites += 4661; sprites += 4662
             extras += "hud party slots (6577) components=$first..${next - 1} (per slot: text, filler graphic; slot i text=$first+2i, filler=$first+2i+1)"
         }
+        if (group == 500) {
+            // CoX party tab (osrs-dumps@5cdf0f47 [clientscript,raids_sidepanel_init] 1538 + [proc,raids_sidepanel_data] 1540): in the bottom
+            // layer 500:12 a thinbox, the data line (p11 0xff981f, size 6/23 minus/abs at 0,2 centre/top: "Party size: ... Combat level: ...")
+            // and the progress line (p12 0xff981f, size 6/24 minus/minus at 0,2 centre/bottom: "Waiting for your leader..." etc.). The
+            // leader's "Start raid" (500:14, width parawidth("Start raid", p12) + 20, op 1 "Start raid", drawn by [proc,raids_sidepanel_drawbutton]
+            // = v2 stone button) is rebuilt as a hidden stone button 74x25 centred at the bottom of 500:12; the server shows it.
+            val first = next
+            list += C(next++, 3, 0, 0, 0, 0, 12, 1, 1, 1, 1, false, colour = 0x0e0e0c)
+            list += C(next++, 3, 0, 0, 2, 2, 12, 1, 1, 1, 1, false, colour = 0x474745)
+            val data = next
+            list += C(next++, 4, 0, 2, 6, 23, 12, 1, 0, 1, 0, false, font = font(494), text = "", alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            val progress = next
+            list += C(next++, 4, 0, 2, 6, 24, 12, 1, 1, 1, 2, false, font = font(495), text = "", alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            val start = stoneButton(12, 0, 3, 74, 25, 1, 2, "Start raid", hidden = true)
+            extras += "party tab bottom components=$first..${next - 1} (thinbox 2, data text=$data, progress text=$progress, start button=$start)"
+            // [clientscript,raids_sidepanel_initlines] 1547 / [proc,raids_sidepanel_entry_setup] 1551: member row r in the list 500:10 = a white
+            // filled rectangle 13 high at (0, r*13) (trans 255 even = invisible, 235 odd) and p11 0xff981f centred shadowed texts: name (width =
+            // the list minus 87 = sort_name 500:7), combat level (32 wide), skill total (the 55 px left). Max party 8 (owner besluit 5a) -> 8 rows,
+            // hidden; the server fills ([clientscript,raids_sidepanel_addline] 1548: name | combat | total) and shows them.
+            val rowsFirst = next
+            for (r in 0 until 8) {
+                list += C(next++, 3, 0, r * 13, 0, 13, 10, 1, 0, 1, 0, true, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 255 else 235)
+                list += C(next++, 4, 0, r * 13, 87, 13, 10, 1, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 55, r * 13, 32, 13, 10, 0, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 0, r * 13, 55, 13, 10, 0, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            // [proc,raids_sidepanel_setsort] 1554 -> [proc,raids_sidepanel_sortbutton_draw] 1556 per header 500:7 name / 500:8 combat / 500:9
+            // total: "sortarrows,0" (1050) 7x5 centred, trans 0 on the default sort (%raids_listsort_details 0 = name), 100 on the others.
+            val arrowsFirst = next
+            listOf(7 to 0, 8 to 100, 9 to 100).forEach { (p, trans) ->
+                sprites += 1050
+                list += C(next++, 5, 0, 0, 7, 5, p, 0, 0, 1, 1, false, sprite = 1050, opacity = trans)
+            }
+            extras += "party tab rows components=$rowsFirst..${arrowsFirst - 1} (per row 4 from $rowsFirst + 4r: background, name, combat, total); " +
+                "sort arrows=$arrowsFirst..${next - 1}"
+        }
         if (group == 771) {
             // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: twelve 36x32 item
             // slots, 3 columns x 4 rows (x 0/28/56, y 0/29/58/87) - one roll holds up to 10 lines (3 commons, pet, thread, jewel, clue, 3 kits,
