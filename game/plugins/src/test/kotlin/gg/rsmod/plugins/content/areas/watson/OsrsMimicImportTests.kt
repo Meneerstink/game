@@ -5,8 +5,8 @@ import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.AnimDef
 import gg.rsmod.game.fs.def.NpcDef
 import gg.rsmod.game.fs.def.SpotAnimDef
+import gg.rsmod.game.RspsPaths
 import gg.rsmod.plugins.api.cfg.Npcs
-import java.nio.file.Paths
 import kotlin.test.AfterTest
 import kotlin.test.Test
 import kotlin.test.assertEquals
@@ -32,7 +32,11 @@ class OsrsMimicImportTests {
             Expected(Npcs.WATSON, "Watson", listOf("Talk-to", null, null, null, null), 1),
         )
 
-    private val library = CacheLibrary(Paths.get("..", "..", "data", "cache").toFile().toString())
+    // The task worktree deliberately has no cache. Keep its runtime catalogues in rsps.data,
+    // but read this installed-asset audit from the explicit, read-only cache location.
+    private val library = CacheLibrary(
+        System.getProperty("rsps.clue.test.cache") ?: RspsPaths.root("game/game/data/cache"),
+    )
 
     @AfterTest
     fun close() {
