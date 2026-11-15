@@ -1,9 +1,12 @@
 # CLUE — Claude cache/client handoff (in progress)
 
-This card is not ready to merge/release. A resumed the entire card on
-`gpt-a/clue-scrolls-4` from B's WIP `05286a72c` (dossier 15 November 07:02).
+This card is not ready to merge/release. B resumed the entire card on
+`gpt-b/clue-scrolls-7` from `bfbc07b8e` (dossier 15 November 14:3x).
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
+
+Current continuation/results: `REVIEW-B-7.md`. The older checkpoints below are
+historical evidence, with remaining gates explicitly superseded by later entries.
 
 ## Exact item batch
 
@@ -342,3 +345,47 @@ Existing noticeboard **62735** (source 29718) is already correctly imported: nat
 Validation: four new targeted tests, no failures; `verify_stash_chart_client.py` compiled the actual unmodified Component decoder and decoded all 130 server-generated components, including three-sprite hover hooks, close hover, row fills, 78 label and complete byte alignment. Frozen Gradle/script integration is the next gate. Client checks: Read/Close; all five tabs; hover selected/unselected; no beginner; long two/three-line labels at fixed and stretched viewports; all 17 built/filled marks before/after store/withdraw; relog; second account; no cropped content or dead clicks. The largest selected source row set is short, but actual viewport/scrollbar correctness remains a client check.
 
 **Q5 resolved, dossier 15 November 11:1x:** retain the owner's 10 October POH decision. No Study, POH chart or blueprint sale/drop. Watson noticeboard provides the STASH overview; its dialogue uses only the pinned source explanation. The unreachable blueprint purchase backend and its obsolete test have been removed. Equipped-item Settings entry and sourced build animation/audio remain open.
+
+## B checkpoint 15 November 14:46: equipped STASH setting
+
+Pinned OSRS struct **6245**, label parameter1086 and help parameter1096, SHA256
+`c160459064efde53b1fb24881c3a17c85d8e12d8999e5ed327b63a177f6b1bae`.
+The tool reads that actual source struct and refuses a changed hash. It never
+copies parameter1077 into a native varp. The existing persistent
+`clue_stash_take_equipped` flag controls the setting and actual storage together.
+Default off; inventory still takes priority; login and Settings remount restore
+the checkbox; closed-pane clicks cannot enable equipment removal.
+
+PREFLIGHT **tx-20261115-134520**, **three** logical mutations. Exact unapplied
+proposal: native Settings **261:26/27/28** = toggle layer/checkbox/label, at the
+verified free band **176..202**, between the existing button rows. Source checkbox
+sprites **8378/8379** are already installed as **8515/8516** by Keybinding; both
+native groups were verified byte-identical to cache2686, so no new sprite/model,
+client opcode or selector is added. Existing components 0..25 are untouched.
+The full source label wraps into the existing sidebar's available width; this is
+a 667 Settings presentation, not a claim that its layout is the modern OSRS menu.
+
+```powershell
+.\gradlew.bat :game:runClueStashSettingCacheTool --args="data/cfg/clue/stash-setting-mapping.tsv docs/CLUE/STASH-SETTING-PREFLIGHT.tsv" --priority low
+```
+
+Run PLAN/PREFLIGHT again after other Settings changes; only Claude adds `--apply`.
+Mapping is published only after both caches verify; failure rolls back. The tool
+refuses occupied unowned components or growth outside the reviewed layout.
+The existing Keybinding tool currently refuses any later Settings additions;
+do not rerun it blindly after this batch (it will safely refuse the expanded tab).
+
+`python tools/clue/preflight_stash_setting.py` proved both caches, ledger SHA and
+runtime mappings unchanged: `build/clue/stash-setting-preflight/read-only-proof.json`.
+`STASH-SETTING-PREFLIGHT.tsv` is a non-reserving proposal, never a runtime mapping.
+Five new standalone tests passed (2 importer + 3 setting/storage-flag checks).
+`python tools/clue/verify_stash_setting_client.py` compiled the actual unmodified
+Component decoder and decoded all three actual server fixtures with full byte
+alignment, exact source label, Toggle and checkbox. No window/canonical-client
+edit. Actual script/Gradle integration is the next acceptance gate.
+
+Claude checks: Settings fixed/resizable/stretched, full two-line label without
+clipping, click and checkbox, close/remount, relog, second account, inventory
+priority, equipped-item removal and unequip restrictions. Recheck every old
+Settings/Keybinding button. This completes the setting implementation, not the
+remaining STASH construction animation/audio or the whole CLUE card.

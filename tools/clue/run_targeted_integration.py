@@ -14,6 +14,7 @@ import xml.etree.ElementTree as ET
 ROOT = Path(__file__).resolve().parents[2]
 CORE = ['gg.rsmod.game.plugin.ClueNpcOptionOverrideTests', 'gg.rsmod.game.tools.importer.ClueStashImportTests',
         'gg.rsmod.game.tools.importer.ClueWatsonCacheTests', 'gg.rsmod.game.tools.importer.ClueStashChartImportTests',
+        'gg.rsmod.game.tools.importer.ClueStashSettingImportTests',
         'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueForearmImportTests',
         'gg.rsmod.game.tools.importer.ClueImportDryRunTests', 'gg.rsmod.game.model.entity.TransformResolutionTests',
         'gg.rsmod.game.action.ObjectInteractionDispatchTests']
@@ -26,7 +27,7 @@ PLUGINS += ['gg.rsmod.plugins.content.items.OsrsEliteCasketTests']
 PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
             ['ClueCasketTransactionTests', 'ClueDropIndexTests', 'ClueDropOwnershipTests', 'ClueInterfacesTests',
              'ClueLogCatalogueTests', 'ClueNpcSourcesTests', 'ClueRewardCatalogueTests', 'ClueScrollLifecycleTests',
-             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests']]
+             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests']]
 
 
 def inputs():
@@ -35,7 +36,7 @@ def inputs():
     allowed = [p for p in sorted(set(tracked + untracked))
                if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith('data/cfg/clue/') or p in {
                    'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
-                   'docs/CLUE/cache/interfaces.json'}]
+                   'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
 

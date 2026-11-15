@@ -42,3 +42,14 @@ challenge interfaces, guardians, acquisition gaps and the Mimic Q1 source gate
 remain open. Claude alone performs the previously documented client-first cache
 application, multiloc traversal/door/farming checks, Watson bootcheck and loaded
 client/live proof. POH Study/chart/blueprint sales remain excluded by Q5.
+
+## Equipped STASH setting, 14:46
+
+`ClueStashSettingCacheTool` + `TreasureTrailStashSetting` and its script implement
+the pinned source setting in the existing Settings tab, using the same persistent
+flag as the tested storage transaction. Five focused standalone tests passed;
+the real native Component decoder accepted all three server fixtures. Read-only
+preflight tx-20261115-134520 passed three logical mutations, both caches/ledger/
+runtime mappings unchanged. Exact IDs, command, source, batch ordering and client
+checks are in CLAUDE-HANDOFF.md. No cache apply or client window. Full Gradle/script
+integration remains required after this checkpoint.

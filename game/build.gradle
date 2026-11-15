@@ -23,7 +23,16 @@ test {
     systemProperty 'rsps.data', rootProject.file('data').absolutePath
     inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
     inputs.files(rootProject.file('docs/CLUE/cache/stash-chart-baked.json'),
-        rootProject.file('docs/CLUE/cache/hover.json')).withPropertyName('clueStashChartFixtures')
+        rootProject.file('docs/CLUE/cache/hover.json'),
+        rootProject.file('docs/CLUE/cache/stash-setting.json')).withPropertyName('clueStashFixtures')
+}
+
+tasks.register('runClueStashSettingCacheTool', JavaExec) {
+    group = 'tools'
+    description = 'STASH equipped-item setting in native Settings; PLAN/PREFLIGHT unless Claude applies.'
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'gg.rsmod.game.tools.importer.ClueStashSettingCacheTool'
+    workingDir = rootProject.projectDir
 }
 
 dependencies {

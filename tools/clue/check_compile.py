@@ -26,9 +26,12 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests'):
     out /= selected # Independent test modes cannot reuse a stale patch from another mode.
-if selected == 'stash-chart-tests':
+if selected == 'stash-setting-tests':
+    sources = [ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer/ClueStashSettingCacheTool.kt',
+               ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls/TreasureTrailStashSetting.kt']
+elif selected == 'stash-chart-tests':
     sources = [ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer/ClueStashChartCacheTool.kt'] + [
         ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
         ['TreasureTrailStepCatalogue', 'TreasureTrailStashes', 'TreasureTrailStashChart']]
@@ -53,7 +56,7 @@ elif selected == 'npc-tests':
     sources = []
 elif selected == 'mimic-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicCombat.kt']
-for module in (['game','plugins'] if selected in ('watson-tests', 'stash-chart-tests') else ['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests') else [selected] if selected else ['game', 'plugins']):
+for module in (['game','plugins'] if selected in ('watson-tests', 'stash-chart-tests', 'stash-setting-tests') else ['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests') else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -88,7 +91,7 @@ if selected == 'core-tests':
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests'):
     # Explicit classes only. This is not a substitute for Gradle script/core integration.
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
@@ -101,7 +104,9 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
                  'org.jetbrains.kotlin/kotlin-reflect/1.8.0']]
     cp = [str(out/'game'), str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
-    if selected == 'stash-chart-tests':
+    if selected == 'stash-setting-tests':
+        names = ['gg.rsmod.game.tools.importer.ClueStashSettingImportTests', 'gg.rsmod.plugins.content.scrolls.TreasureTrailStashSettingTests']
+    elif selected == 'stash-chart-tests':
         names = ['gg.rsmod.game.tools.importer.ClueStashChartImportTests', 'gg.rsmod.plugins.content.scrolls.TreasureTrailStashChartTests']
     elif selected == 'watson-tests':
         names = ['gg.rsmod.game.tools.importer.ClueWatsonCacheTests', 'gg.rsmod.plugins.content.areas.watson.WatsonAppearanceTests']
@@ -131,5 +136,5 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-Dclue.fixtures='+str(out/'fixtures'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
                    names,
-                   cwd=ROOT/'game' if selected == 'stash-chart-tests' else ROOT,
+                   cwd=ROOT/'game' if selected in ('stash-chart-tests', 'stash-setting-tests') else ROOT,
                    check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
