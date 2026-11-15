@@ -7,7 +7,7 @@ import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.*
 import java.io.File
 
-/** Same personal source chart for Watson's board and a future authorised POH chart. */
+/** Personal source chart for Watson's board; POH Study/chart excluded by dossier Q5. */
 object TreasureTrailStashChart {
     const val NOTICEBOARD = 62735 // Source 29718; installed Watson-house ledger and scene readback.
     data class Layout(val group: Int, val control: Int, val sprites: Map<Int, Int>)
