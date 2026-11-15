@@ -177,6 +177,14 @@ CoxIds.loc(29765)?.let { patch -> CoxSupplies.HERBS.mapNotNull { CoxIds.item(it.
 }
 on_world_init { world.queue { while (true) { wait(1); CoxSupplies.growTick(world) } } }
 
+/** The large scavenger room's shortcut: rocks 29738 'Mine', rotten sapling 29736 'Chop', boulder 29740 'Push', rubble 29739 / stump 29737 'Cross'. */
+fun scavRoom(p: gg.rsmod.game.model.entity.Player): ScavengersRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<ScavengersRoom>().firstOrNull { it.contains(p.tile) } }
+CoxIds.loc(29738)?.let { id -> on_obj_option(obj = id, option = "Mine") { scavRoom(player)?.mine(player) } }
+CoxIds.loc(29736)?.let { id -> on_obj_option(obj = id, option = "Chop") { scavRoom(player)?.chopSapling(player) } }
+CoxIds.loc(29740)?.let { id -> on_obj_option(obj = id, option = "Push") { scavRoom(player)?.push(player) } }
+listOf(29739, 29737).mapNotNull(CoxIds::loc).forEach { id -> on_obj_option(obj = id, option = "Cross") { scavRoom(player)?.cross(player, player.getInteractingGameObj()) } }
+
 /** Test server / check accounts: ::coxclear = every npc of the room you stand in dies (puzzles: their own ending, later). */
 on_command("coxclear", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
