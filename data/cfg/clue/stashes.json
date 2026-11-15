@@ -7,7 +7,65 @@
     "sha256": "18b91fcad7e8e15cee28a7eed1d32394797bb64e18d9c6036741f755b4fd609f",
     "url": "https://oldschool.runescape.wiki/w/STASH"
   },
-  "cacheEvidenceSha256": "8a3737352581abfa1c7074de602180583302d0ab0ec4dcafdf09f8011afa600c",
+  "toolSources": [
+    {
+      "page": "Hammer",
+      "revision": 15398500,
+      "revision_time": "2026-11-10T22:37:53Z",
+      "file": "Hammer.wiki",
+      "sha256": "92a796491b43eddad005911eaf2aad218a6f6ead3720e22729c1c367a17e64cc",
+      "url": "https://oldschool.runescape.wiki/w/Hammer"
+    },
+    {
+      "page": "Saw",
+      "revision": 15214288,
+      "revision_time": "2026-05-21T02:13:16Z",
+      "file": "Saw.wiki",
+      "sha256": "b1774ec8ada9c5aafd4695c2d8c5dc938ea69232061e954842c273dc11048485",
+      "url": "https://oldschool.runescape.wiki/w/Saw"
+    },
+    {
+      "page": "Imcando hammer",
+      "revision": 15325383,
+      "revision_time": "2026-08-30T11:44:39Z",
+      "file": "Imcando_hammer.wiki",
+      "sha256": "b9abe43a88eafa03f0b321f07bf98c6160ee22c50efadf056ac5966164aafcde",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer"
+    },
+    {
+      "page": "Imcando hammer (off-hand)",
+      "revision": 15397614,
+      "revision_time": "2026-11-09T18:41:46Z",
+      "file": "Imcando_hammer_(off-hand).wiki",
+      "sha256": "7ae8f18fae4f9de6f5901b441592092c3367824f4d007ea3a99eb9b8df5f4657",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer_%28off-hand%29"
+    },
+    {
+      "page": "Amy's saw",
+      "revision": 15391407,
+      "revision_time": "2026-11-03T13:32:05Z",
+      "file": "Amy's_saw.wiki",
+      "sha256": "2d320f73b78539906db3b4f4baeac884ea3f9c82c08d18c83a9532a1860e16d2",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw"
+    },
+    {
+      "page": "Amy's saw (off-hand)",
+      "revision": 15284105,
+      "revision_time": "2026-07-31T10:21:11Z",
+      "file": "Amy's_saw_(off-hand).wiki",
+      "sha256": "b6a5a699171fd709da89e371b8aba6e888f2b725d25a132aaecacef15a37e3b5",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw_%28off-hand%29"
+    },
+    {
+      "page": "Crystal saw",
+      "revision": 15367086,
+      "revision_time": "2026-10-06T19:49:43Z",
+      "file": "Crystal_saw.wiki",
+      "sha256": "58ff80cef11d6435788fa9f24ef1261a7723ab8884d8287277d436ca39c9be96",
+      "url": "https://oldschool.runescape.wiki/w/Crystal_saw"
+    }
+  ],
+  "cacheEvidenceSha256": "cda94b36c1e8ce0d81311ca1ab23749aa2beddb2fa296eb9c54455bbedfcde70",
   "activation": "Pending object import/varbit remapping, world placement, personal storage handlers and client verification",
   "rules": {
     "sameNailMetal": true,
@@ -24,17 +82,51 @@
       "boostable": true,
       "ticks": 3,
       "tools": [
-        {
-          "name": "Hammer",
-          "osrsId": 2347,
-          "existingLocal": 2347
-        },
-        {
-          "name": "Saw",
-          "osrsId": 8794,
-          "existingLocal": 8794
-        }
+        [
+          {
+            "name": "Hammer",
+            "osrsId": 2347,
+            "existingLocal": 2347
+          },
+          {
+            "name": "Imcando hammer",
+            "osrsId": 25644,
+            "existingLocal": null
+          },
+          {
+            "name": "Imcando hammer (off-hand)",
+            "osrsId": 29775,
+            "existingLocal": null
+          }
+        ],
+        [
+          {
+            "name": "Saw",
+            "osrsId": 8794,
+            "existingLocal": 8794
+          },
+          {
+            "name": "Crystal saw",
+            "osrsId": 9625,
+            "existingLocal": 9625
+          },
+          {
+            "name": "Amy's saw",
+            "osrsId": 24880,
+            "existingLocal": null
+          },
+          {
+            "name": "Amy's saw (off-hand)",
+            "osrsId": 29774,
+            "existingLocal": null
+          }
+        ]
       ],
+      "crystalSaw": {
+        "name": "Crystal saw",
+        "osrsId": 9625,
+        "existingLocal": 9625
+      },
       "materials": [
         {
           "amount": 2,
@@ -96,17 +188,51 @@
       "boostable": true,
       "ticks": 3,
       "tools": [
-        {
-          "name": "Hammer",
-          "osrsId": 2347,
-          "existingLocal": 2347
-        },
-        {
-          "name": "Saw",
-          "osrsId": 8794,
-          "existingLocal": 8794
-        }
+        [
+          {
+            "name": "Hammer",
+            "osrsId": 2347,
+            "existingLocal": 2347
+          },
+          {
+            "name": "Imcando hammer",
+            "osrsId": 25644,
+            "existingLocal": null
+          },
+          {
+            "name": "Imcando hammer (off-hand)",
+            "osrsId": 29775,
+            "existingLocal": null
+          }
+        ],
+        [
+          {
+            "name": "Saw",
+            "osrsId": 8794,
+            "existingLocal": 8794
+          },
+          {
+            "name": "Crystal saw",
+            "osrsId": 9625,
+            "existingLocal": 9625
+          },
+          {
+            "name": "Amy's saw",
+            "osrsId": 24880,
+            "existingLocal": null
+          },
+          {
+            "name": "Amy's saw (off-hand)",
+            "osrsId": 29774,
+            "existingLocal": null
+          }
+        ]
       ],
+      "crystalSaw": {
+        "name": "Crystal saw",
+        "osrsId": 9625,
+        "existingLocal": 9625
+      },
       "materials": [
         {
           "amount": 2,
@@ -168,17 +294,51 @@
       "boostable": true,
       "ticks": 3,
       "tools": [
-        {
-          "name": "Hammer",
-          "osrsId": 2347,
-          "existingLocal": 2347
-        },
-        {
-          "name": "Saw",
-          "osrsId": 8794,
-          "existingLocal": 8794
-        }
+        [
+          {
+            "name": "Hammer",
+            "osrsId": 2347,
+            "existingLocal": 2347
+          },
+          {
+            "name": "Imcando hammer",
+            "osrsId": 25644,
+            "existingLocal": null
+          },
+          {
+            "name": "Imcando hammer (off-hand)",
+            "osrsId": 29775,
+            "existingLocal": null
+          }
+        ],
+        [
+          {
+            "name": "Saw",
+            "osrsId": 8794,
+            "existingLocal": 8794
+          },
+          {
+            "name": "Crystal saw",
+            "osrsId": 9625,
+            "existingLocal": 9625
+          },
+          {
+            "name": "Amy's saw",
+            "osrsId": 24880,
+            "existingLocal": null
+          },
+          {
+            "name": "Amy's saw (off-hand)",
+            "osrsId": 29774,
+            "existingLocal": null
+          }
+        ]
       ],
+      "crystalSaw": {
+        "name": "Crystal saw",
+        "osrsId": 9625,
+        "existingLocal": 9625
+      },
       "materials": [
         {
           "amount": 2,
@@ -240,17 +400,51 @@
       "boostable": true,
       "ticks": 3,
       "tools": [
-        {
-          "name": "Hammer",
-          "osrsId": 2347,
-          "existingLocal": 2347
-        },
-        {
-          "name": "Saw",
-          "osrsId": 8794,
-          "existingLocal": 8794
-        }
+        [
+          {
+            "name": "Hammer",
+            "osrsId": 2347,
+            "existingLocal": 2347
+          },
+          {
+            "name": "Imcando hammer",
+            "osrsId": 25644,
+            "existingLocal": null
+          },
+          {
+            "name": "Imcando hammer (off-hand)",
+            "osrsId": 29775,
+            "existingLocal": null
+          }
+        ],
+        [
+          {
+            "name": "Saw",
+            "osrsId": 8794,
+            "existingLocal": 8794
+          },
+          {
+            "name": "Crystal saw",
+            "osrsId": 9625,
+            "existingLocal": 9625
+          },
+          {
+            "name": "Amy's saw",
+            "osrsId": 24880,
+            "existingLocal": null
+          },
+          {
+            "name": "Amy's saw (off-hand)",
+            "osrsId": 29774,
+            "existingLocal": null
+          }
+        ]
       ],
+      "crystalSaw": {
+        "name": "Crystal saw",
+        "osrsId": 9625,
+        "existingLocal": 9625
+      },
       "materials": [
         {
           "amount": 2,
@@ -312,17 +506,51 @@
       "boostable": true,
       "ticks": 3,
       "tools": [
-        {
-          "name": "Hammer",
-          "osrsId": 2347,
-          "existingLocal": 2347
-        },
-        {
-          "name": "Saw",
-          "osrsId": 8794,
-          "existingLocal": 8794
-        }
+        [
+          {
+            "name": "Hammer",
+            "osrsId": 2347,
+            "existingLocal": 2347
+          },
+          {
+            "name": "Imcando hammer",
+            "osrsId": 25644,
+            "existingLocal": null
+          },
+          {
+            "name": "Imcando hammer (off-hand)",
+            "osrsId": 29775,
+            "existingLocal": null
+          }
+        ],
+        [
+          {
+            "name": "Saw",
+            "osrsId": 8794,
+            "existingLocal": 8794
+          },
+          {
+            "name": "Crystal saw",
+            "osrsId": 9625,
+            "existingLocal": 9625
+          },
+          {
+            "name": "Amy's saw",
+            "osrsId": 24880,
+            "existingLocal": null
+          },
+          {
+            "name": "Amy's saw (off-hand)",
+            "osrsId": 29774,
+            "existingLocal": null
+          }
+        ]
       ],
+      "crystalSaw": {
+        "name": "Crystal saw",
+        "osrsId": 9625,
+        "existingLocal": 9625
+      },
       "materials": [
         {
           "amount": 2,

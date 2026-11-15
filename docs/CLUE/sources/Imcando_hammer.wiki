@@ -1,0 +1,135 @@
+{{Otheruses|def=no|the offhand mode of this hammer|Imcando hammer (off-hand)}}
+{{Infobox Item
+|version1 = Repaired
+|version2 = Broken
+|name1 = Imcando hammer
+|name2 = Imcando hammer (broken)
+|image1 = [[File:Imcando hammer.png]]
+|image2 = [[File:Imcando hammer (broken).png]]
+|release = [[14 April]] [[2021]]
+|update = Below Ice Mountain
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable1 = Yes
+|equipable2 = No
+|stackable = No
+|noteable = 
+|options1 = Wield, Swap, Drop
+|options2 = Drop
+|examine1 = It's good for holding and hitting things!
+|examine2 = Once, this was good for holding and hitting things!
+|value = 1
+|weight1 = 2.000
+|weight2 = 0.907
+|id1 = 25644
+|id2 = 25633
+|leagueRegion = Asgarnia
+}}
+{{Synced switch
+|version1 = [[File:Imcando hammer detail.png|left|120px]]
+|version2 = [[File:Imcando hammer (broken) detail.png|left|120px]]
+}}
+The '''Imcando hammer''' is a wieldable variant of a [[hammer]] mostly used for [[Smithing]], [[Crafting]], or [[Construction]]. It can be obtained through smashing [[Barronite deposit|barronite deposits]] on the [[Barronite Crusher|barronite crusher]] in the [[Ruins of Camdozaal]] after completing the [[Below Ice Mountain]] [[quest]]. 
+
+When first obtained, the hammer will be in a broken state. The broken hammer can be fixed by using it on [[Ramarno]], who will repair it for 1,250 barronite shards. Once repaired, it can be used as a hammer, both while equipped and unequipped, in any way that a normal hammer can be used.
+
+The Imcando hammer is especially useful in a few situations:
+
+* When fighting [[Tempoross]], it will not be destroyed by flames nor be washed away by waves.
+* When doing [[Mahogany Homes]] or [[Wintertodt]], it saves an inventory slot if wielded.
+* In [[Barbarian Assault]], it can be used by the Defender to repair the Penance Runner traps. In this case, the Defender will save a small amount of time that is normally spent collecting a hammer from the battlefield.
+* When doing [[Motherlode Mine]], you can repair the wheels without picking up a hammer first. You are also able to repair the struts without a small tick-delay (2 - 3 ticks).
+* When [[crafting golem]]s. While using a [[gem pouch]] and [[large fur pouch]], a player can make 5 golems instead of 4 per inventory, increasing XP per hour and requiring fewer inputs.
+
+The hammer can be swapped via the "Swap" option, converting it to its [[Imcando hammer (off-hand)|off-hand variant]] so that it can be equipped in the [[shield slot]]. This allows it to be equipped alongside [[Amy's saw]], a [[mist battlestaff]], an [[Harpoon (weapon)|equippable harpoon]], or a [[pickaxe]] when doing the aforementioned activities.
+
+{{Costume storage|magic wardrobe}} Both the normal and off-hand variant can be stored in the magic wardrobe at the same time. Unwanted broken hammers can be exchanged at [[Ramarno]] for 350 barronite shards, while the fixed hammer can be exchanged for 500 barronite shards.
+
+It can also be used in a [[free-to-play]] [[Server|world]], despite being a members item. Though it can only be equipped in a [[members]]' world, if it is already equipped or in the player's inventory upon logging into a free-to-play world, the hammer retains its usual functionality, regardless of the player's membership status.
+
+==Combat stats==
+{{Infobox Bonuses
+|bucketname = Repaired
+|astab = 0
+|aslash = 0
+|acrush = 0
+|amagic = 0
+|arange = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 0
+|drange = 0
+|str = 0
+|rstr = 0
+|mdmg = 0
+|prayer = 0
+|slot = weapon
+|speed = 6
+|attackrange = 1
+|combatstyle = Blunt
+|image = [[File:Imcando hammer equipped.png|120px]]
+|altimage = [[File:Imcando hammer equipped female.png|120px]]
+}}
+
+{{CombatStyles|Blunt|speed=6|attackrange=1}}
+
+==Creation==
+{{Recipe
+|members = Yes
+|ticks = 0
+|facilities = Ramarno
+|mat1 = Imcando hammer (broken)
+|mat1cost = no
+|mat2 = Barronite shards
+|mat2quantity = 1250
+|mat2cost = no
+|output1 = Imcando hammer
+|output1cost = no
+}}
+
+==Item sources==
+===Broken imcando hammer===
+{{Drop sources|Imcando hammer (broken)}}
+
+==Used in recommended equipment==
+{{Used in recommended equipment|Imcando hammer}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 30 April 2025
+|update = Poll 84: Batch II
+|poll = Poll 84 - PvM Improvements, Agility Shortcuts & more!
+|change = Both the main-hand and off-hand variants of the Imcando hammer can now be used on [[Entrana]].
+}}
+{{Subject changes
+|date = 14 August 2024
+|update = Slayer Partners
+|poll = Poll 82 - Minigame Changes
+|change = A "Swap" option has been added, converting the hammer to its [[Imcando hammer (off-hand)|off-hand variant]].
+}}
+{{Subject changes
+|date = 28 April 2021
+|update = Arceuus Spellbook Beta and A Kingdom Divided Preparation
+|change = 
+*You can now exchange the hammer to Ramarno for 500 barronite shards, or a broken hammer for 350 shards.
+*The Imcando Hammer has been updated to include some of the original Hammer's functions that were missing.
+*You can now store the Imcando Hammer in your Player Owned House.
+}}
+{{Subject changes
+|date = 15 April 2021
+|type = Hotfix
+|update = Below Ice Mountain
+|change =
+* Unique items from Barronite are now 8x rarer to receive, with the Broken hammer being 3x rarer.
+}}
+{{Subject changes footer}}
+
+{{Ruins of Camdozaal}}
+{{Tools}}
+[[Category:Collection log items]]
+[[Category:Items storable in the costume room]]
+[[Category:Smithing]]
+[[Category:Construction]]

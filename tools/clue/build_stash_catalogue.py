@@ -42,6 +42,23 @@ def main():
         fields = next(templates(pinned(page), 'Infobox Item'))
         assert identity(page)['osrsId'] == int(fields['id'])
 
+    def tool_identity(page, field='id'):
+        fields = next(templates(pinned(page), 'Infobox Item'))
+        osrs = int(fields[field])
+        name = fields.get('name', fields.get('name1', page))
+        source = source_items[str(osrs)]
+        assert source['name'] == name
+        local = local_items.get(str(osrs), {})
+        existing = osrs if local.get('name') == name and not local.get('98') else None
+        return dict(name=name, osrsId=osrs, existingLocal=existing)
+
+    tool_groups = [
+        [tool_identity('Hammer'), tool_identity('Imcando hammer', 'id1'), tool_identity('Imcando hammer (off-hand)')],
+        [tool_identity('Saw'), tool_identity('Crystal saw'), tool_identity("Amy's saw"), tool_identity("Amy's saw (off-hand)")],
+    ]
+    crystal_saw = tool_identity('Crystal saw')
+    assert 'Charges are not consumed when building [[STASH]]' in pinned('Crystal saw')
+
     recipes = {}
     for recipe in templates(raw, 'Recipe'):
         tier = recipe.get('output1subtxt', '').lower()
@@ -58,7 +75,7 @@ def main():
             materials.append(dict(amount=amount, alternatives=[identity(n) for n in accepted], sameMetal=True if accepted == nails else None))
         recipes[tier] = dict(level=int(recipe['skill1lvl']), experience=int(recipe['skill1exp']),
             boostable=recipe['skill1boostable'].casefold() == 'yes', ticks=int(recipe['ticks']),
-            tools=[identity(n.strip()) for n in recipe['tools'].split(',')], materials=materials)
+            tools=tool_groups, crystalSaw=crystal_saw, materials=materials)
     assert set(recipes) == set(TIERS)
 
     evidence_file = ROOT/'docs/CLUE/cache/step-assets.json'
@@ -84,7 +101,9 @@ def main():
             type=loc['type'], rotation=loc['rotation'], unbuiltId=forms[0], builtId=forms[1], sourceVarbit=selector,
             objectSha256=loc['sha256'], formSha256=loc['formSha256'], equipment=step['equipment']))
     assert len(units) == 17 and len({r['osrsId'] for r in units}) == 17
-    result = dict(source=manifest['STASH'], cacheEvidenceSha256=sha256(evidence_file.read_bytes()).hexdigest(),
+    result = dict(source=manifest['STASH'], toolSources=[manifest[page] for page in
+        ('Hammer', 'Saw', 'Imcando hammer', 'Imcando hammer (off-hand)', "Amy's saw", "Amy's saw (off-hand)", 'Crystal saw')],
+        cacheEvidenceSha256=sha256(evidence_file.read_bytes()).hexdigest(),
         activation='Pending object import/varbit remapping, world placement, personal storage handlers and client verification',
         rules=dict(sameNailMetal=True, nailsBend=False, fullSetOnly=True, withdrawAllOnly=True,
                    inventoryBeforeEquipment=True, equippedItemsRequireSetting=True), recipes=recipes, units=units)

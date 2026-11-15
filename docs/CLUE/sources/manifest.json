@@ -1009,6 +1009,62 @@
       "file": "Nails.wiki",
       "sha256": "c36722bb956d845716f423b6a465785906c0c155cca917a3a07e84c13651a839",
       "url": "https://oldschool.runescape.wiki/w/Nails"
+    },
+    {
+      "page": "Hammer",
+      "revision": 15398500,
+      "revision_time": "2026-11-10T22:37:53Z",
+      "file": "Hammer.wiki",
+      "sha256": "92a796491b43eddad005911eaf2aad218a6f6ead3720e22729c1c367a17e64cc",
+      "url": "https://oldschool.runescape.wiki/w/Hammer"
+    },
+    {
+      "page": "Saw",
+      "revision": 15214288,
+      "revision_time": "2026-05-21T02:13:16Z",
+      "file": "Saw.wiki",
+      "sha256": "b1774ec8ada9c5aafd4695c2d8c5dc938ea69232061e954842c273dc11048485",
+      "url": "https://oldschool.runescape.wiki/w/Saw"
+    },
+    {
+      "page": "Imcando hammer",
+      "revision": 15325383,
+      "revision_time": "2026-08-30T11:44:39Z",
+      "file": "Imcando_hammer.wiki",
+      "sha256": "b9abe43a88eafa03f0b321f07bf98c6160ee22c50efadf056ac5966164aafcde",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer"
+    },
+    {
+      "page": "Amy's saw",
+      "revision": 15391407,
+      "revision_time": "2026-11-03T13:32:05Z",
+      "file": "Amy's_saw.wiki",
+      "sha256": "2d320f73b78539906db3b4f4baeac884ea3f9c82c08d18c83a9532a1860e16d2",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw"
+    },
+    {
+      "page": "Crystal saw",
+      "revision": 15367086,
+      "revision_time": "2026-10-06T19:49:43Z",
+      "file": "Crystal_saw.wiki",
+      "sha256": "58ff80cef11d6435788fa9f24ef1261a7723ab8884d8287277d436ca39c9be96",
+      "url": "https://oldschool.runescape.wiki/w/Crystal_saw"
+    },
+    {
+      "page": "Imcando hammer (off-hand)",
+      "revision": 15397614,
+      "revision_time": "2026-11-09T18:41:46Z",
+      "file": "Imcando_hammer_(off-hand).wiki",
+      "sha256": "7ae8f18fae4f9de6f5901b441592092c3367824f4d007ea3a99eb9b8df5f4657",
+      "url": "https://oldschool.runescape.wiki/w/Imcando_hammer_%28off-hand%29"
+    },
+    {
+      "page": "Amy's saw (off-hand)",
+      "revision": 15284105,
+      "revision_time": "2026-07-31T10:21:11Z",
+      "file": "Amy's_saw_(off-hand).wiki",
+      "sha256": "b6a5a699171fd709da89e371b8aba6e888f2b725d25a132aaecacef15a37e3b5",
+      "url": "https://oldschool.runescape.wiki/w/Amy%27s_saw_%28off-hand%29"
     }
   ]
 }
