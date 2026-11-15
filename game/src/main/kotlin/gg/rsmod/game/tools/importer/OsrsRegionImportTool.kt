@@ -288,6 +288,11 @@ object OsrsRegionImportTool {
             // 1245,3557) + the fairy ring BLS route 5174 (ring 1295,3493) + 4918/5175 between them - all four absent from our 667 map, in place.
             "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
                 clearTileFlags = 0x8, dropHiddenOverlays = true),
+            // CoX 15-11 18:3x (test client screens\COX\pad-midden.png: the lake south of the mountain drew as a flat dark-grey plate while the
+            // minimap shows water): OSRS overlay 5 (water texture 1) had gone to the grey 133 (404044, tex 301) and overlay 6 (water texture 25)
+            // to the lilac 38 - both onto our water overlay 6 (rgb 387b61), as the wilderness imports do (6 to 6). Re-tile only.
+            "cox-entrance-water" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance water on the rev-667 water overlay",
+                clearTileFlags = 0x8, dropHiddenOverlays = true, retileTargets = true, overlayOverrides = mapOf(5 to 6, 6 to 6)),
             // CoX raid map: the room template banks x 51-52 y 80-89 (RuneLite InstanceTemplates + tsps CoxLayout: rooms chunk x 408/412/416,
             // chunk y 644-712, wall chunk 416,647) and the Olm's chamber 12889 (chunks 402..406 x 713..719). 7 of them are rev-667 squares in
             // use (13138 13140 13141 13145 13393 13401 12889) -> the whole block moves +0,+24 squares (= +1536 tiles, same z-offset as ToA) to
@@ -296,6 +301,13 @@ object OsrsRegionImportTool {
             // the upstairs starts 712-715 = square 89), so only those.
             "cox-map" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
                 "Chambers of Xeric room banks + Olm (moved +0,+24)", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 0 to 24),
+            // CoX 15-11 18:4x (test client screens\COX\rooms-6-42: a pale speckled plain all round the rooms where OSRS is black): OSRS
+            // overlay 36 (rgb 0, NO texture, 45742 tiles = the void round the rooms) had gone to our 38 (rgb 0, texture 17) -> our plain black
+            // 51 (rgb 0, no texture). Only that one: 'plainOverlaysStayPlain' sent 16 (663300) to a grey 249 and 29 (eeeeee) to a blue 150
+            // (dry-run 18:37), so those keep the first pass' choice. Re-tile only.
+            "cox-map-floors" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
+                "Chambers of Xeric floors: the black void on a plain black overlay", clearTileFlags = 0x8, dropHiddenOverlays = true,
+                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51)),
             // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
             // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
             // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667

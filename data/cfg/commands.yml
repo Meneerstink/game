@@ -1405,6 +1405,21 @@
   usage: "::toastart [entry|normal|expert]"
   description: "Test server only: put yourself in the ToA lobby and start a solo raid in that mode."
   example: "::toastart normal"
+- name: coxstart
+  rank: admin
+  usage: "::coxstart [layout 0-26] [seed]"
+  description: "Test server / check accounts only: start a solo Chambers of Xeric raid with that OSRS layout code (random without one)."
+  example: "::coxstart 6 42"
+- name: coxroom
+  rank: admin
+  usage: "::coxroom <floor 1|2> <room index> | ::coxroom olm"
+  description: "Test server / check accounts only: teleport to the middle of a room of your Chambers of Xeric raid."
+  example: "::coxroom 1 3"
+- name: coxleave
+  rank: admin
+  usage: "::coxleave"
+  description: "Test server / check accounts only: leave the Chambers of Xeric raid to the entrance steps."
+  example: "::coxleave"
 - name: toajoin
   rank: admin
   usage: "::toajoin <leader>"
