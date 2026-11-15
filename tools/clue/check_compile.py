@@ -26,13 +26,21 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
+if selected in ('step-tests', 'npc-tests', 'mimic-tests'):
+    out /= selected # Independent test modes cannot reuse a stale patch from another mode.
 if selected == 'step-tests':
     # Self-contained across a fresh output directory: do not depend on classes
     # left by a previous invocation after HEAD moved to the next small commit.
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
                ['TreasureTrailChallenges', 'TreasureTrailStepCatalogue', 'ClueScrollManager',
                 'ClueDeathItems', 'TreasureTrailTornParts']]
-for module in (['game'] if selected == 'core-tests' else ['plugins'] if selected == 'step-tests' else [selected] if selected else ['game', 'plugins']):
+elif selected == 'npc-tests':
+    # Repository source is compiled with its tests below. Normal core/plugin
+    # integration must additionally pass Gradle on frozen input.
+    sources = []
+elif selected == 'mimic-tests':
+    sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicCombat.kt']
+for module in (['game'] if selected in ('core-tests', 'npc-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests') else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -46,7 +54,7 @@ for module in (['game'] if selected == 'core-tests' else ['plugins'] if selected
     argfile = out / f'{module}.args'
     argfile.write_text('\n'.join('"' + a.replace('\\', '/') + '"' for a in args), encoding='utf-8')
     print(f'Compiling {len(batch)} {module} files', flush=True)
-    subprocess.run([str(java), '-Xmx512m' if selected == 'step-tests' else '-Xmx2g', '-cp', ';'.join(compiler),
+    subprocess.run([str(java), '-Xmx512m' if selected and selected.endswith('-tests') else '-Xmx2g', '-cp', ';'.join(compiler),
                     'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '@' + str(argfile)], cwd=ROOT, check=True,
                    creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
@@ -67,8 +75,8 @@ if selected == 'core-tests':
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
-if selected == 'step-tests':
-    # This explicit list checks only A's changed step model and puzzle generator.
+if selected in ('step-tests', 'npc-tests', 'mimic-tests'):
+    # Explicit classes only. This is not a substitute for Gradle script/core integration.
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
                 'junit/junit', 'org.hamcrest/hamcrest-core']]
@@ -78,17 +86,28 @@ if selected == 'step-tests':
                 ['net.bytebuddy/byte-buddy/1.12.20', 'net.bytebuddy/byte-buddy-agent/1.12.20',
                  'org.objenesis/objenesis/3.3', 'org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.6.4',
                  'org.jetbrains.kotlin/kotlin-reflect/1.8.0']]
-    cp = [str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
+    cp = [str(out/'game'), str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
-    names = ['TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests',
-             'ClueScrollLifecycleTests', 'TreasureTrailTornPartsTests']
-    test_sources = [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in names]
-    target = out/'step-tests'; target.mkdir(exist_ok=True)
+    if selected == 'npc-tests':
+        names = ['gg.rsmod.game.plugin.ClueNpcOptionOverrideTests']
+    elif selected == 'mimic-tests':
+        names = ['gg.rsmod.plugins.content.areas.watson.TheMimicCombatDefTests']
+    else:
+        names = ['gg.rsmod.plugins.content.scrolls.'+name for name in
+                 ['TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests',
+                  'ClueScrollLifecycleTests', 'TreasureTrailTornPartsTests']]
+    test_sources = [ROOT/('game/plugins/src/test/kotlin' if name.startswith('gg.rsmod.plugins.') else 'game/src/test/kotlin')/
+                    (name.replace('.', '/')+'.kt') for name in names]
+    if selected == 'npc-tests':
+        test_sources.append(ROOT/'game/src/main/kotlin/gg/rsmod/game/plugin/PluginRepository.kt')
+    target = out/'tests'; target.mkdir(parents=True, exist_ok=True)
     args = ['-no-stdlib','-no-reflect','-jvm-target','11','-cp',';'.join(cp),'-d',str(target)] + [str(p) for p in test_sources]
-    argfile=out/'step-tests.args'
+    if selected == 'npc-tests':
+        args += ['-Xfriend-paths='+str(ROOT/'game/build/classes/kotlin/main')]
+    argfile=out/(selected+'.args')
     argfile.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args),encoding='utf-8')
     subprocess.run([str(java),'-Xmx512m','-cp',';'.join(compiler),'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler','@'+str(argfile)],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
-                   ['gg.rsmod.plugins.content.scrolls.'+name for name in names],
+                   names,
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
