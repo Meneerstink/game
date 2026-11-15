@@ -10,6 +10,16 @@ class TreasureTrailStepCatalogueTests {
     private val raw get() = File(RspsPaths.data("cfg/clue/steps.json")).readText()
     private val rows get() = TreasureTrailStepCatalogue.parse(raw).rows
 
+    @Test fun `historical Jarvis event answer is not an unconditional ordinary challenge answer`() {
+        val step = rows.single { it.key.endsWith("AREA CHEF TREK") }
+        assertEquals(TreasureTrailStepCatalogue.Challenge.NUMBER, step.challenge)
+        assertEquals(setOf(19), step.answers)
+        assertFalse(20 in step.answers)
+        val record = JsonParser().parse(raw).asJsonArray.single { it.asJsonObject["key"].asString == step.key }.asJsonObject
+        assertEquals("19 or 20", record["challenge"].asJsonObject["sourceAnswer"].asString)
+        assertEquals(20, record["challenge"].asJsonObject["unavailableEventAnswer"].asJsonObject["answer"].asInt)
+    }
+
     @Test fun `selected steps keep their tiers exceptional fights and master puzzle gates`() {
         val selection = rows
         assertEquals(mapOf(ClueScrollTier.EASY to 15, ClueScrollTier.MEDIUM to 15, ClueScrollTier.HARD to 15,

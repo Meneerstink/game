@@ -97,6 +97,14 @@ def main():
             if question or answer:
                 assert question and answer, key
                 challenge = dict(type="NUMBER", question=question[1], answer=answer[1])
+                if name == "AREA CHEF TREK":
+                    # The source's second answer is conditional on failing to save
+                    # Jarvis in Halloween 2017. This event/state does not exist here;
+                    # ordinary players therefore answer 19, never an unconditional 20.
+                    condition = "If players failed to save [[Jarvis]] during the [[2017 Halloween event]], the answer is 20 instead of 19."
+                    assert answer[1] == "19 or 20" and condition in notes, key
+                    challenge.update(answer="19", sourceAnswer=answer[1],
+                        unavailableEventAnswer=dict(answer=20, condition=condition))
             elif "[[puzzle box]]" in notes.lower():
                 challenge = dict(type="SLIDING_PUZZLE")
             if row["kind"] == "COORDINATE":

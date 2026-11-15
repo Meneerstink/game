@@ -53,3 +53,30 @@ preflight tx-20261115-134520 passed three logical mutations, both caches/ledger/
 runtime mappings unchanged. Exact IDs, command, source, batch ordering and client
 checks are in CLAUDE-HANDOFF.md. No cache apply or client window. Full Gradle/script
 integration remains required after this checkpoint.
+
+## Frozen branch acceptance, 15 November 15:10
+
+`build/clue/integration-20261115-134729/summary.json`: **accepted=true**,
+**124 tests / 35 explicit classes**, zero failures/errors/skips/missing reports.
+All **4,453** Kotlin/Gradle/runtime-catalogue/used-fixture hashes stayed identical.
+Core + plugin libraries + all plugin scripts compiled in the actual task graph;
+**BUILD SUCCESSFUL / 22m12s**. This includes the new Settings script and ordinary
+STASH worktree paths, the inherited Watson variants/noticeboard, shared multiloc
+fallback/dispatch regressions, reward/log/viewer/lifecycle and Mimic tests.
+No live/testserver/client operation or cache write occurred.
+
+Requested Mimic definition XML:
+`game/plugins/build/test-results/test/TEST-gg.rsmod.plugins.content.areas.watson.TheMimicCombatDefTests.xml`
+— **tests=1, failures=0, errors=0, skipped=0**, fresh this run. This supersedes the
+missing-XML discussion. Encounter acceptance still requires the documented Q1
+source timing and full mechanics/client checks.
+
+The Father Aereck correction is also tested: ordinary state accepts **19**;
+source answer20 remains recorded with its exact Jarvis/Halloween2017 condition.
+Both source curation and runtime generation reproduce the correction and verify
+the pinned source SHA. The new explicit catalogue regression passed. No event
+state or unconditional alternate answer was invented.
+
+This is a tested source/backend checkpoint, not full CLUE completion: donor pool
+replacement, subtype handlers, challenge UI/physical items, dig combat, unresolved
+source/area/variant cases, and Claude's client/cache/live gates remain open.

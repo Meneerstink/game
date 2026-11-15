@@ -1072,7 +1072,12 @@
     "challenge": {
       "type": "NUMBER",
       "question": "How many gravestones are in the church graveyard?",
-      "answer": "19 or 20"
+      "answer": "19",
+      "sourceAnswer": "19 or 20",
+      "unavailableEventAnswer": {
+        "answer": 20,
+        "condition": "If players failed to save [[Jarvis]] during the [[2017 Halloween event]], the answer is 20 instead of 19."
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
