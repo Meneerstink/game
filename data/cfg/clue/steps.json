@@ -1198,7 +1198,14 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -1223,7 +1230,14 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -1248,7 +1262,14 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -1740,7 +1761,16 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "WIZARD"
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -1765,7 +1795,14 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "WIZARD"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -1790,7 +1827,16 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "WIZARD"
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -2314,7 +2360,17 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "GUARD"
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -2339,7 +2395,17 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "GUARD"
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -2835,7 +2901,16 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "WIZARDS"
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
     },
     "requirements": {},
     "requirementsSource": null,
@@ -2860,7 +2935,16 @@
     "npcCandidates": [],
     "equipment": [],
     "challenge": {
-      "type": "WIZARDS"
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
     },
     "requirements": {},
     "requirementsSource": null,

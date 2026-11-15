@@ -881,7 +881,14 @@
     "subtype": "COORDINATE",
     "sourceSha256": "36d947ebd5407c5d54c9439304613e5d4f8b4bf14c295875e986b5ce4e3dede0",
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -915,7 +922,14 @@
     "subtype": "COORDINATE",
     "sourceSha256": "78f63c7260b2e158fc5362c981488bde678815992e70aa6496ad3b07e6fbddce",
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -949,7 +963,14 @@
     "subtype": "COORDINATE",
     "sourceSha256": "3dd8c97c370153f8bf1fa6ed720857ae8e60f87a40c9d5b028cce78e876ecae0",
     "challenge": {
-      "type": "NONE"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -1393,7 +1414,16 @@
     "subtype": "COORDINATE",
     "sourceSha256": "0438f4de471240878c52856371350914512e485493ddbbff71bc6873f8d7ba7a",
     "challenge": {
-      "type": "WIZARD"
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -1427,7 +1457,14 @@
     "subtype": "COORDINATE",
     "sourceSha256": "9f8176d0ad1c3e93a52359cd421aa8951e62fc8d5ec3b6b73d07e284b6b54171",
     "challenge": {
-      "type": "WIZARD"
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -1461,7 +1498,16 @@
     "subtype": "COORDINATE",
     "sourceSha256": "565a89763805b6d94e7b1f069cd5c850e3667f73db61f1d04bca2b96393e2117",
     "challenge": {
-      "type": "WIZARD"
+      "type": "GUARD",
+      "guards": [
+        2955
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Hard.wiki",
+        "sha256": "124ce6b0669bfe70a39b1de8502badefb86f0700ec3fc72bd92c18a70721797c",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -1990,7 +2036,17 @@
     "subtype": "COORDINATE",
     "sourceSha256": "e744798d9f8d584a09506e87562501ec207f98842398c0413a7bbe685f1055ca",
     "challenge": {
-      "type": "GUARD"
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -2024,7 +2080,17 @@
     "subtype": "COORDINATE",
     "sourceSha256": "2917b1aa5d128d8000447a38c08391e13a20a0ae6ca2b77bd7f2f043d611010b",
     "challenge": {
-      "type": "GUARD"
+      "type": "GUARD",
+      "guards": [
+        6587,
+        6588
+      ],
+      "spawnMode": "CHOICE",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Elite.wiki",
+        "sha256": "16fc0867f8a97091cd0b2bd9faace95f552746d9e24c6dc701f1b0d34deab0ec",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -2404,7 +2470,16 @@
     "subtype": "COORDINATE",
     "sourceSha256": "acb0f3644411927282ba9566ce6ab51cea648919f5b7344b644513e5ec4543e9",
     "challenge": {
-      "type": "WIZARDS"
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
@@ -2435,7 +2510,16 @@
     "subtype": "COORDINATE",
     "sourceSha256": "2de2bb453c0173852079630aaf69154f329241b19b7868777a28d158621d5628",
     "challenge": {
-      "type": "WIZARDS"
+      "type": "GUARD",
+      "guards": [
+        7310
+      ],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Master.wiki",
+        "sha256": "9970aec8d93d41ac4523af8358e027efefd0967a3871e636e61016fa7829d55d",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
+      }
     },
     "activation": "pending target assets, subtype handler and client verification"
   },

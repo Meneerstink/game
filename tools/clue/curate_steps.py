@@ -9,6 +9,7 @@ from hashlib import sha256
 from pathlib import Path
 import json
 import re
+from build_step_catalogue import templates
 
 ROOT = Path(__file__).resolve().parents[2]
 SOURCES = ROOT / "docs/CLUE/sources"
@@ -99,7 +100,33 @@ def main():
             elif "[[puzzle box]]" in notes.lower():
                 challenge = dict(type="SLIDING_PUZZLE")
             if row["kind"] == "COORDINATE":
-                challenge = dict(type={"medium": "NONE", "hard": "WIZARD", "elite": "GUARD", "master": "WIZARDS"}[tier])
+                # The per-coordinate table is authoritative, including its
+                # exceptions. The hard Emir's Arena step explicitly has NO
+                # fight; both selected master steps explicitly use Brassican.
+                guide = f"Treasure_Trails__Guide__Coordinates__{tier.title()}.wiki"
+                guide_raw = (SOURCES/guide).read_bytes()
+                guide_pin = guide_pins[guide]
+                guide_hash = sha256(guide_raw).hexdigest()
+                assert guide_hash == guide_pin['sha256'], guide
+                def coordinates(fields):
+                    parts = re.findall(r'(\d+)\s*degrees\s*(\d+)\s*minutes\s*(north|south|east|west)',
+                                       fields.get('coords',''), re.I)
+                    return ' '.join(f'{int(d):02}.{int(m):02}{direction[0].upper()}' for d,m,direction in parts)
+                # Match the written coordinates. The Crandor table's image
+                # filename says 12.16E, whereas its actual coordinates say 12.18E.
+                matches = [f for f in templates(guide_raw.decode('utf8'), 'Coordinates') if coordinates(f) == name]
+                assert len(matches) == 1, (key, matches)
+                fight = matches[0]['fight']
+                identities = {'Saradomin wizard': [2955], 'Zamorak wizard': [2954],
+                              'Armadylean guard': [6587], 'Bandosian guard': [6588],
+                              'Brassican Mage': [7310], 'Ancient Wizard': [7307,7308,7309]}
+                names = re.findall(r'\[\[([^]|]+)', fight)
+                assert (fight == 'No') != bool(names), (key, fight)
+                assert all(n in identities for n in names), (key, names)
+                challenge = dict(type='GUARD' if names else 'NONE',
+                                 guards=[id for n in names for id in identities[n]],
+                                 spawnMode='CHOICE' if len(names)>1 else 'ALL',
+                                 source=dict(file=guide, sha256=guide_hash, url=guide_pin['url']))
             if row["kind"] == "EMOTE":
                 second = row["fields"].get("emote2")
                 if tier == "medium" and second is None:
