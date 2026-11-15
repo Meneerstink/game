@@ -66,6 +66,10 @@ object FairyRings {
             "blp" to Destination("Dungeons: TzHaar area", Tile(2437, 5126, 0)),
             "blq" to Destination("Other Realms: Yu'biusk", Tile(2228, 4244, 1)),
             "blr" to Destination("Kandarin: Legends' Guild", Tile(2740, 3351, 0)),
+            // CoX (dossier COX.txt TOEGANG): OSRS Wiki Fairy ring BLS "Kebos Lowlands: South of Mount Quidamortem" - ring at 1295,3493
+            // (square 5174, imported in place by OsrsRegionImportTool 'cox-entrance'); the Wiki route to the Chambers of Xeric entrance
+            // 1245,3557 is 'Run west, then take the path leading up the mountain in the north-west'. Landing = ring tile like 'akp'.
+            "bls" to Destination("Kebos Lowlands: South of Mount Quidamortem", Tile(1295, 3493, 0)),
             "cip" to Destination("Islands: Miscellania", Tile(2513, 3884, 0)),
             "ciq" to Destination("Kandarin: North-west of Yanille", Tile(2528, 3127, 0)),
             "cjr" to Destination("Kandarin: Sinclair Mansion (east)", Tile(2705, 3576, 0)),

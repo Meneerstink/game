@@ -292,6 +292,13 @@ object OsrsFxImportTool {
             // N462 Necropolis squares (OsrsRegionImportTool 'necropolis'): gameval AnimationID HAZARDOUS_WATER_SUNBAKED_01_3X3_IDLE_01 13509,
             // _2X2_IDLE_01 13510, _2X2_IDLE_02 13511, _1X1_IDLE_01 13512, _1X1_IDLE_02 13513, SEAWEED_SURFACE_IDLE01 13564.
             "necropolis-seq" to listOf(13509, 13510, 13511, 13512, 13513, 13564),
+            // CoX entrance squares (OsrsRegionImportTool 'cox-entrance', dry-run 15-11 15:29): gameval AnimationID WATER_FOAM 522,
+            // POLLBOOTH 7156 (loc animations of the Mount Quidamortem / BLS scenery).
+            "cox-entrance-seq" to listOf(522, 7156),
+            // CoX raid map (OsrsRegionImportTool 'cox-map', dry-run 15-11 15:54): gameval AnimationID LAVABUBBLES 493, DEVIOUS_DEAD 2995,
+            // DORGESH_WIRE_CHIMNEY_SMOKE 5745, FRIS_GEYSER 5771, HEAL_CASTING_LOOP 7390, RAIDS_VESPULAR_PORTAL_ACTIVE 7499,
+            // RAIDS_OLMS_LAIR_ENTRANCE 7503 (loc animations of the room templates + Olm's chamber).
+            "cox-map-seq" to listOf(493, 2995, 5745, 5771, 7390, 7499, 7503),
             // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
             // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
             "necropolis-west-seq" to listOf(3743, 9845, 13159),

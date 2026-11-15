@@ -284,6 +284,18 @@ object OsrsRegionImportTool {
             "tob-area-tiles" to Batch(listOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), emptyList(), "Theatre of Blood tiles without flag 0x8",
                 replaceSquares = setOf(14642, 12613, 13125, 13122, 13123, 12612, 12611), clearTileFlags = 0x8, tilesOnly = true),
             "web-chasm" to Batch(listOf(6580), listOf(47078), "Web Chasm (Spindel)"),
+            // CoX (owner 2026-11-15 14:3x 'chambers of xeric volledig zoals toa'; dossier COX.txt): entrance Mount Quidamortem 4919 (ingang
+            // 1245,3557) + the fairy ring BLS route 5174 (ring 1295,3493) + 4918/5175 between them - all four absent from our 667 map, in place.
+            "cox-entrance" to Batch(listOf(4918, 4919, 5174, 5175), emptyList(), "Chambers of Xeric entrance: Mount Quidamortem + fairy ring BLS",
+                clearTileFlags = 0x8, dropHiddenOverlays = true),
+            // CoX raid map: the room template banks x 51-52 y 80-89 (RuneLite InstanceTemplates + tsps CoxLayout: rooms chunk x 408/412/416,
+            // chunk y 644-712, wall chunk 416,647) and the Olm's chamber 12889 (chunks 402..406 x 713..719). 7 of them are rev-667 squares in
+            // use (13138 13140 13141 13145 13393 13401 12889) -> the whole block moves +0,+24 squares (= +1536 tiles, same z-offset as ToA) to
+            // x 50-52 y 104-113: free in xteas, outside the ToA bank (64-70 x 104-108), no code there (Claude 15-11 14:5x).
+            // 15-11 dry-run: 'No modern key for 13142' - squares y 86-88 hold nothing in OSRS (rooms use chunk y 644-683 = squares 80-85 and
+            // the upstairs starts 712-715 = square 89), so only those.
+            "cox-map" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
+                "Chambers of Xeric room banks + Olm (moved +0,+24)", clearTileFlags = 0x8, dropHiddenOverlays = true, squareOffset = 0 to 24),
             // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
             // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
             // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667
