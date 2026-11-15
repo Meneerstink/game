@@ -58,20 +58,4 @@ object WatsonClues {
         }
         return result
     }
-
-    enum class Purchase { GIVEN, NO_COINS, NO_SPACE, MISSING_IMPORT }
-    fun buyBlueprint(player: Player, blueprint: Int? = ClueItems.local(25612)): Purchase {
-        if (blueprint == null) return Purchase.MISSING_IMPORT
-        if (player.inventory.getItemCount(995) < 500) return Purchase.NO_COINS
-        // The transcript explicitly requires an empty slot before payment.
-        if (!player.inventory.hasSpace) return Purchase.NO_SPACE
-        val staged = ItemContainer(player.inventory)
-        if (!staged.remove(995, 500, assureFullRemoval = true).hasSucceeded()) return Purchase.NO_COINS
-        if (!staged.add(blueprint, 1, assureFullInsertion = true).hasSucceeded()) return Purchase.NO_SPACE
-        for (slot in 0 until staged.capacity) {
-            val old = player.inventory[slot]; val next = staged[slot]
-            if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[slot] = next
-        }
-        return Purchase.GIVEN
-    }
 }

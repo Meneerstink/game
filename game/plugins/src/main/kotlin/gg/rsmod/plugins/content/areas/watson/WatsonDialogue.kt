@@ -58,7 +58,7 @@ object WatsonDialogue {
                     say(task, "That is for you to find out, ${task.player.username}.")
                 }
                 "I have something for you." -> { chooseOffer(task); return }
-                "What is that noticeboard for?" -> { blueprint(task); return }
+                "What is that noticeboard for?" -> { noticeboard(task); return }
                 "Can you tell me about scroll boxes?" -> { boxes(task); return }
                 "Goodbye." -> { task.chatPlayer("Goodbye.", wrap = true); return }
                 else -> return
@@ -115,25 +115,10 @@ object WatsonDialogue {
         }
     }
 
-    private suspend fun blueprint(task: QueueTask) {
+    /** Q5, dossier 15-Nov 11:1x: no Study, POH chart or blueprint sales. */
+    private suspend fun noticeboard(task: QueueTask) {
         task.chatPlayer("What is that noticeboard for?", wrap = true)
         say(task, "It lets you view any of your S.T.A.S.H units that you have built around Gielinor.")
-        task.chatPlayer("Oh that seems really useful! It's a bit of a shame I need to come here everytime to check though.", wrap = true)
-        say(task, "Well it's just a board with some notes on it. I'm sure you could figure something out.")
-        task.chatPlayer("I suppose you're right, I don't suppose you have a spare one I could buy off you to save me the hassle?", wrap = true)
-        say(task, "No, but I could write down the instructions to make one. Then all you'd need is a house with a study to build it in, and a bolt of cloth.")
-        when (task.options("Yes", "No", title = "Pay Watson 500 coins for a S.T.A.S.H blueprint?")) {
-            1 -> when (WatsonClues.buyBlueprint(task.player)) {
-                WatsonClues.Purchase.GIVEN -> say(task, "Here you go.")
-                WatsonClues.Purchase.NO_COINS -> say(task, "I'm not giving it away for free, 500 coins is just covering my expenses!")
-                WatsonClues.Purchase.NO_SPACE -> say(task, "You don't have enough space for it.")
-                WatsonClues.Purchase.MISSING_IMPORT -> {
-                    println("PROBLEM CLUE Watson blueprint 25612 not imported; no coins consumed")
-                    task.player.message("This service is temporarily unavailable.")
-                }
-            }
-            2 -> say(task, "Alright, feel free to carry on using mine.")
-        }
     }
 
     private suspend fun boxes(task: QueueTask) {

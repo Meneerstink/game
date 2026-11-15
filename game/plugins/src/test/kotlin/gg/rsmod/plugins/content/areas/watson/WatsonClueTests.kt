@@ -122,22 +122,4 @@ class WatsonClueTests {
             assertEquals(2, player.inventory.getItemCount(box))
         } finally { unmockkObject(ClueItems) }
     }
-
-    @Test fun `blueprint purchase is atomic and free slots are checked before charging`() {
-        val player = player()
-        val blueprint = 25612 // synthetic source identity
-        player.inventory[0] = Item(995, 499)
-        assertEquals(WatsonClues.Purchase.NO_COINS, WatsonClues.buyBlueprint(player, blueprint))
-        assertEquals(499, player.inventory.getItemCount(995))
-        player.inventory[0] = Item(995, 500)
-        (1..27).forEach { player.inventory[it] = Item(1000 + it) }
-        assertEquals(WatsonClues.Purchase.NO_SPACE, WatsonClues.buyBlueprint(player, blueprint))
-        assertEquals(500, player.inventory.getItemCount(995))
-        player.inventory[1] = null
-        assertEquals(WatsonClues.Purchase.MISSING_IMPORT, WatsonClues.buyBlueprint(player, null))
-        assertEquals(500, player.inventory.getItemCount(995))
-        assertEquals(WatsonClues.Purchase.GIVEN, WatsonClues.buyBlueprint(player, blueprint))
-        assertEquals(0, player.inventory.getItemCount(995))
-        assertEquals(1, player.inventory.getItemCount(blueprint))
-    }
 }
