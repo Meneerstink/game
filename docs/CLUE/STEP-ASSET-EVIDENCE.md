@@ -52,4 +52,12 @@ No STASH was imported, placed, built or activated. The exporter follows the sour
 
 The coordinate generator now reads each coordinate table instead of inferring the enemy from the tier. The hard Emir's Arena point 02.39N 29.58E explicitly says `fight = No`. Both selected master points (Crandor 03.26N 12.18E and Witchaven 03.50N 09.07E) explicitly say Brassican Mage 7310. Crandor's image filename has a 12.16E typo; the generator matches the written coordinates 12.18E. Both elite points list Armadylean or Bandosian, without a pinned numeric selection probability; do not invent one.
 
-Evidence JSON SHA-256: `bb0c734227307cd74a4a630a62b960f5d6d128b46273c59da36e1753313b9745`.
+Evidence JSON SHA-256: `4d982f42c3cd29268462dd8895ab13561a02d1fc53e6eb339d6890b5223c81e2`.
+
+## Mimic minions and combat XP
+
+The read-only source export now includes all three existing imported minions: OSRS 8635/8636/8637, verified local 14403/14404/14405 by name and combat level. `guardians.json` preserves their complete pinned Wiki stats and the combat-XP bonus for all fourteen variants. Negative bonuses are intentional: warrior magic defence -4; mage ranged defence -5.
+
+Mimic has a source XP bonus of 25%; Third Age Warrior 7.5%, Ranger/Mage 0%. The runtime boss definition still needs its 1.25 multiplier and a targeted test. Minion combat routing, attack visuals, candy and forward movement are not activated by this data export.
+
+The Double agent source also explicitly exempts the first step of a trail from spawning an agent. Hard/master emote handlers must preserve that exception, require the agent defeat on later steps, and recheck clue gear when talking to Uri.

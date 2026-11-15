@@ -17,7 +17,7 @@ class ClueStepAssetProbe {
         var steps = new JsonParser().parse(Files.readString(Path.of(args[1]))).getAsJsonArray();
         try (var source = new ModernCacheReader(new File(args[0]))) {
             var defs = source.files(2, 9);
-            for (int id : new int[]{1774,1775,1776,6584,7311,1777,1778,7312,2954,2955,6587,6588,7307,7308,7309,7310,306,5081,6586,7306}) {
+            for (int id : new int[]{1774,1775,1776,6584,7311,1777,1778,7312,2954,2955,6587,6588,7307,7308,7309,7310,306,5081,6586,7306,8635,8636,8637}) {
                 byte[] raw=defs.get(id);
                 if (raw == null) throw new IllegalStateException("Missing pinned source npc " + id);
                 var row = new LinkedHashMap<String,Object>();
@@ -38,7 +38,17 @@ class ClueStepAssetProbe {
                     for (int rx=(x-12)>>6;rx<=(x+12)>>6;rx++) for (int rz=(z-12)>>6;rz<=(z+12)>>6;rz++) {
                       int sceneId=(rx<<8)|rz;
                       var region=regions.get(sceneId);
-                      if (region==null) { region=ModernRegion.Companion.load(source,sceneId,null); regions.put(sceneId,region); }
+                      if (region==null) {
+                        // Read source 2686 directly even when the installed runtime
+                        // jars predate the importer's unnamed-map-group adapter.
+                        if (!source.index(5).getHasNames()) {
+                          var files=source.files(5,sceneId);
+                          byte[] terrain=Objects.requireNonNull(files.get(0)), locations=Objects.requireNonNull(files.get(1));
+                          region=new ModernRegion(rx,rz,ModernRegion.Companion.decodeTiles(terrain),
+                              ModernRegion.Companion.decodeLocs(locations),terrain.length,locations.length);
+                        } else region=ModernRegion.Companion.load(source,sceneId,null);
+                        regions.put(sceneId,region);
+                      }
                       for (var loc : region.getLocs()) {
                         int lx=region.getRx()*64+loc.getLocalX(), lz=region.getRz()*64+loc.getLocalZ();
                         // Search footprint only. This is not a gameplay completion radius.

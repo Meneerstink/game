@@ -12,6 +12,8 @@ SPECS = [
     ('Armadylean guard', 0, 6587, None), ('Bandosian guard', 0, 6588, None),
     ('Ancient Wizard', 1, 7307, None), ('Ancient Wizard', 2, 7308, None), ('Ancient Wizard', 3, 7309, None),
     ('Brassican Mage', 0, 7310, None),
+    ('Third Age Warrior', 0, 8635, 14403), ('Third Age Ranger', 0, 8636, 14404),
+    ('Third Age Mage', 0, 8637, 14405),
 ]
 
 
@@ -32,7 +34,7 @@ def main():
 
         def number(key):
             value = field(key)
-            assert re.fullmatch(r'\d+(?:\.\d+)?', value), (page, version, key, value)
+            assert re.fullmatch(r'-?\d+(?:\.\d+)?', value), (page, version, key, value)
             return float(value) if '.' in value else int(value)
 
         npc = source[str(osrs)]['definition']
@@ -44,6 +46,7 @@ def main():
             assert target['name'].casefold() == npc['name'].casefold() and target['level'] == npc['combat']
         row = dict(osrsId=osrs, existingLocal=existing, name=npc['name'], level=npc['combat'], size=npc['size'],
                    examine=text(field('examine')), hitpoints=number('hitpoints'), attackSpeed=number('attack speed'),
+                   experienceBonusPercent=number('xpbonus'),
                    attackStyle=text(field('attack style')), maxHitText=text(field('max hit')),
                    stats={name: number(key) for name, key in dict(attack='att', strength='str', defence='def', magic='mage', ranged='range').items()},
                    bonuses={name: number(key) for name, key in dict(attackMelee='attbns', strengthMelee='strbns', attackMagic='amagic',
@@ -54,10 +57,10 @@ def main():
                    source=dict(url=pin['url'], revision=pin['revision'], file=pin['file'], sha256=pin['sha256'],
                                cacheSha256=source[str(osrs)]['sha256']))
         rows.append(row)
-    assert len(rows) == 11 and len({r['osrsId'] for r in rows}) == 11
+    assert len(rows) == len(SPECS) and len({r['osrsId'] for r in rows}) == len(SPECS)
     destination = ROOT/'data/cfg/clue/guardians.json'
     destination.write_text(json.dumps(rows,indent=2)+'\n',encoding='utf8')
-    print('11 source/cache-checked guardian variants; no combat activation or cache writes')
+    print(f'{len(rows)} source/cache-checked guardians/minions; no combat activation or cache writes')
     for row in rows: print(row['osrsId'], row['name'], 'HP', row['hitpoints'], row['attackStyle'], 'speed', row['attackSpeed'])
 
 

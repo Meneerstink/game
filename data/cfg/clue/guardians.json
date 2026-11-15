@@ -8,6 +8,7 @@
     "examine": "He's playing both sides!",
     "hitpoints": 80,
     "attackSpeed": 4,
+    "experienceBonusPercent": 0.0,
     "attackStyle": "Crush",
     "maxHitText": "5",
     "stats": {
@@ -52,6 +53,7 @@
     "examine": "He's playing both sides!",
     "hitpoints": 120,
     "attackSpeed": 4,
+    "experienceBonusPercent": 2.5,
     "attackStyle": "Crush",
     "maxHitText": "14",
     "stats": {
@@ -96,6 +98,7 @@
     "examine": "He's playing both sides!",
     "hitpoints": 160,
     "attackSpeed": 4,
+    "experienceBonusPercent": 5,
     "attackStyle": "Crush",
     "maxHitText": "19",
     "stats": {
@@ -140,6 +143,7 @@
     "examine": "A servant of Zamorak.",
     "hitpoints": 76,
     "attackSpeed": 4,
+    "experienceBonusPercent": 0,
     "attackStyle": "Magic",
     "maxHitText": "20",
     "stats": {
@@ -184,6 +188,7 @@
     "examine": "A follower of Saradomin.",
     "hitpoints": 120,
     "attackSpeed": 4,
+    "experienceBonusPercent": 2.5,
     "attackStyle": "Stab, Magic",
     "maxHitText": "14 (Melee), 20 (Magic)",
     "stats": {
@@ -228,6 +233,7 @@
     "examine": "A servant of Armadyl.",
     "hitpoints": 132,
     "attackSpeed": 4,
+    "experienceBonusPercent": 0,
     "attackStyle": "Ranged",
     "maxHitText": "10",
     "stats": {
@@ -272,6 +278,7 @@
     "examine": "A follower of Bandos.",
     "hitpoints": 130,
     "attackSpeed": 5,
+    "experienceBonusPercent": 0,
     "attackStyle": "Stab",
     "maxHitText": "13",
     "stats": {
@@ -316,6 +323,7 @@
     "examine": "He may be old, but you made him mad.",
     "hitpoints": 80,
     "attackSpeed": 4,
+    "experienceBonusPercent": 0.0,
     "attackStyle": "Magic",
     "maxHitText": "18",
     "stats": {
@@ -360,6 +368,7 @@
     "examine": "He may be old, but you made him mad.",
     "hitpoints": 80,
     "attackSpeed": 4,
+    "experienceBonusPercent": 0.0,
     "attackStyle": "Ranged",
     "maxHitText": "23",
     "stats": {
@@ -404,6 +413,7 @@
     "examine": "He may be old, but you made him mad.",
     "hitpoints": 80,
     "attackSpeed": 4,
+    "experienceBonusPercent": 5,
     "attackStyle": "Stab",
     "maxHitText": "36",
     "stats": {
@@ -448,6 +458,7 @@
     "examine": "Rather old and smells of cabbage.",
     "hitpoints": 150,
     "attackSpeed": 3,
+    "experienceBonusPercent": 0,
     "attackStyle": "Typeless Magic",
     "maxHitText": "16",
     "stats": {
@@ -481,6 +492,141 @@
       "file": "Brassican_Mage.wiki",
       "sha256": "caf846b4c99c5c0c4771218307e0e99c3b9f9ff891d82099b2432336ebbecce5",
       "cacheSha256": "d65a852e1d4e2fe972d0c313dab2dd65347e3b267e96b60757ec4810c423e087"
+    }
+  },
+  {
+    "osrsId": 8635,
+    "existingLocal": 14403,
+    "name": "Third Age Warrior",
+    "level": 83,
+    "size": 1,
+    "examine": "A reanimated warrior wearing the garb of ancient times.",
+    "hitpoints": 40,
+    "attackSpeed": 5,
+    "experienceBonusPercent": 7.5,
+    "attackStyle": "Slash",
+    "maxHitText": "18",
+    "stats": {
+      "attack": 90,
+      "strength": 75,
+      "defence": 80,
+      "magic": 1,
+      "ranged": 1
+    },
+    "bonuses": {
+      "attackMelee": 105,
+      "strengthMelee": 75,
+      "attackMagic": 0,
+      "magicDamage": 0,
+      "attackRanged": 0,
+      "strengthRanged": 0,
+      "defenceStab": 96,
+      "defenceSlash": 108,
+      "defenceCrush": 113,
+      "defenceMagic": -4,
+      "defenceRangedLight": 97,
+      "defenceRangedStandard": 97,
+      "defenceRangedHeavy": 97
+    },
+    "poisonous": "No",
+    "poisonResistance": 0,
+    "venomResistance": 0,
+    "source": {
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Warrior",
+      "revision": 15200126,
+      "file": "Third_Age_Warrior.wiki",
+      "sha256": "d8dbc1cd8d8800f0e6e3834c8c4373d9e6aa6f4cdf8f202fb7908d9f9c23ed42",
+      "cacheSha256": "3fe5bd5b0520284e9dca01c51c3d09b61d66ed6c2b0a718610de3259eb89f460"
+    }
+  },
+  {
+    "osrsId": 8636,
+    "existingLocal": 14404,
+    "name": "Third Age Ranger",
+    "level": 76,
+    "size": 1,
+    "examine": "A reanimated ranger wearing the garb of ancient times.",
+    "hitpoints": 40,
+    "attackSpeed": 4,
+    "experienceBonusPercent": 0,
+    "attackStyle": "Ranged",
+    "maxHitText": "12",
+    "stats": {
+      "attack": 1,
+      "strength": 1,
+      "defence": 80,
+      "magic": 1,
+      "ranged": 95
+    },
+    "bonuses": {
+      "attackMelee": 0,
+      "strengthMelee": 0,
+      "attackMagic": 0,
+      "magicDamage": 0,
+      "attackRanged": 140,
+      "strengthRanged": 7,
+      "defenceStab": 55,
+      "defenceSlash": 47,
+      "defenceCrush": 60,
+      "defenceMagic": 60,
+      "defenceRangedLight": 55,
+      "defenceRangedStandard": 55,
+      "defenceRangedHeavy": 55
+    },
+    "poisonous": "No",
+    "poisonResistance": 0,
+    "venomResistance": 0,
+    "source": {
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Ranger",
+      "revision": 15200128,
+      "file": "Third_Age_Ranger.wiki",
+      "sha256": "ed5fdb1000a59d7e4d1558b8ac3ebfb7f6900b12e3b36fe31bcb7736e4a93205",
+      "cacheSha256": "cf167bbea2b61470ddf8e96dc152b858e035699b97dcb259d60f748b189fa475"
+    }
+  },
+  {
+    "osrsId": 8637,
+    "existingLocal": 14405,
+    "name": "Third Age Mage",
+    "level": 83,
+    "size": 1,
+    "examine": "A reanimated mage wearing the garb of ancient times.",
+    "hitpoints": 40,
+    "attackSpeed": 4,
+    "experienceBonusPercent": 0,
+    "attackStyle": "Magic",
+    "maxHitText": "16",
+    "stats": {
+      "attack": 1,
+      "strength": 1,
+      "defence": 80,
+      "magic": 110,
+      "ranged": 1
+    },
+    "bonuses": {
+      "attackMelee": 0,
+      "strengthMelee": 0,
+      "attackMagic": 145,
+      "magicDamage": 24,
+      "attackRanged": 0,
+      "strengthRanged": 0,
+      "defenceStab": 5,
+      "defenceSlash": 6,
+      "defenceCrush": 5,
+      "defenceMagic": 65,
+      "defenceRangedLight": -5,
+      "defenceRangedStandard": -5,
+      "defenceRangedHeavy": -5
+    },
+    "poisonous": "No",
+    "poisonResistance": 0,
+    "venomResistance": 0,
+    "source": {
+      "url": "https://oldschool.runescape.wiki/w/Third_Age_Mage",
+      "revision": 15200127,
+      "file": "Third_Age_Mage.wiki",
+      "sha256": "38dfd53ecce4397c79fce7e011611768276185a851d5b4b8613e65cce82e8b93",
+      "cacheSha256": "100bd9e4d7bb80802047e114301a419ecdbec6726771d4eecf59cd4077dff54c"
     }
   }
 ]

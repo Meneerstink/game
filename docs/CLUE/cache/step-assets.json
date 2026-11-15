@@ -1572,6 +1572,235 @@
         "dropped": []
       },
       "sha256": "e87b81c54b34c69800d224a6ce13b37ea79a9d00099ca80ac81e50c55c12011a"
+    },
+    "8635": {
+      "definition": {
+        "id": 8635,
+        "name": "Third Age Warrior",
+        "models": [
+          20137,
+          20154,
+          20120,
+          179,
+          37027,
+          185,
+          28618,
+          20167,
+          250
+        ],
+        "chatheads": [],
+        "size": 1,
+        "stand": 808,
+        "walk": 819,
+        "idleTurnLeft": -1,
+        "idleTurnRight": -1,
+        "walk180": 820,
+        "walkLeft": 821,
+        "walkRight": 822,
+        "run": -1,
+        "run180": -1,
+        "runLeft": -1,
+        "runRight": -1,
+        "crawl": -1,
+        "crawl180": -1,
+        "crawlLeft": -1,
+        "crawlRight": -1,
+        "ops": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "recolorFind": [
+          4550,
+          6798,
+          10004,
+          4626
+        ],
+        "recolorReplace": [
+          5165,
+          21530,
+          32910,
+          32910
+        ],
+        "retextures": 0,
+        "minimap": true,
+        "combat": 83,
+        "widthScale": 128,
+        "heightScale": 128,
+        "renderPriority": 0,
+        "ambient": 0,
+        "contrast": 0,
+        "rotationSpeed": 32,
+        "interactable": true,
+        "rotationFlag": true,
+        "follower": false,
+        "height": -1,
+        "footprint": -1,
+        "multiNpc": false,
+        "dropped": [
+          "stat 0 \u003d 90",
+          "stat 1 \u003d 80",
+          "stat 2 \u003d 75",
+          "stat 3 \u003d 40",
+          "category 1316",
+          "params (8)"
+        ]
+      },
+      "sha256": "3fe5bd5b0520284e9dca01c51c3d09b61d66ed6c2b0a718610de3259eb89f460"
+    },
+    "8636": {
+      "definition": {
+        "id": 8636,
+        "name": "Third Age Ranger",
+        "models": [
+          20134,
+          20162,
+          20126,
+          20130,
+          20145,
+          185,
+          28622,
+          250
+        ],
+        "chatheads": [],
+        "size": 1,
+        "stand": 808,
+        "walk": 819,
+        "idleTurnLeft": -1,
+        "idleTurnRight": -1,
+        "walk180": 820,
+        "walkLeft": 821,
+        "walkRight": 822,
+        "run": -1,
+        "run180": -1,
+        "runLeft": -1,
+        "runRight": -1,
+        "crawl": -1,
+        "crawl180": -1,
+        "crawlLeft": -1,
+        "crawlRight": -1,
+        "ops": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "recolorFind": [
+          4550,
+          6798,
+          10004,
+          4626
+        ],
+        "recolorReplace": [
+          5165,
+          21530,
+          26776,
+          26776
+        ],
+        "retextures": 0,
+        "minimap": true,
+        "combat": 76,
+        "widthScale": 128,
+        "heightScale": 128,
+        "renderPriority": 0,
+        "ambient": 0,
+        "contrast": 0,
+        "rotationSpeed": 32,
+        "interactable": true,
+        "rotationFlag": true,
+        "follower": false,
+        "height": -1,
+        "footprint": -1,
+        "multiNpc": false,
+        "dropped": [
+          "stat 4 \u003d 95",
+          "stat 1 \u003d 80",
+          "stat 3 \u003d 40",
+          "category 1316",
+          "params (9)"
+        ]
+      },
+      "sha256": "cf167bbea2b61470ddf8e96dc152b858e035699b97dcb259d60f748b189fa475"
+    },
+    "8637": {
+      "definition": {
+        "id": 8637,
+        "name": "Third Age Mage",
+        "models": [
+          20136,
+          20160,
+          20124,
+          179,
+          20143,
+          185,
+          28619,
+          20151,
+          28483,
+          250
+        ],
+        "chatheads": [],
+        "size": 1,
+        "stand": 813,
+        "walk": 1205,
+        "idleTurnLeft": -1,
+        "idleTurnRight": -1,
+        "walk180": 1206,
+        "walkLeft": 1207,
+        "walkRight": 1208,
+        "run": -1,
+        "run180": -1,
+        "runLeft": -1,
+        "runRight": -1,
+        "crawl": -1,
+        "crawl180": -1,
+        "crawlLeft": -1,
+        "crawlRight": -1,
+        "ops": [
+          null,
+          "Attack",
+          null,
+          null,
+          null
+        ],
+        "recolorFind": [
+          4550,
+          6798,
+          10004,
+          4626
+        ],
+        "recolorReplace": [
+          5165,
+          21530,
+          32926,
+          32926
+        ],
+        "retextures": 0,
+        "minimap": true,
+        "combat": 83,
+        "widthScale": 128,
+        "heightScale": 128,
+        "renderPriority": 0,
+        "ambient": 0,
+        "contrast": 0,
+        "rotationSpeed": 32,
+        "interactable": true,
+        "rotationFlag": true,
+        "follower": false,
+        "height": -1,
+        "footprint": -1,
+        "multiNpc": false,
+        "dropped": [
+          "stat 5 \u003d 110",
+          "stat 1 \u003d 80",
+          "stat 3 \u003d 40",
+          "category 1316",
+          "params (9)"
+        ]
+      },
+      "sha256": "100bd9e4d7bb80802047e114301a419ecdbec6726771d4eecf59cd4077dff54c"
     }
   },
   "scenes": [
