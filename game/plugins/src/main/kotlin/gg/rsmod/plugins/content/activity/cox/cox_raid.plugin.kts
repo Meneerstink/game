@@ -17,7 +17,7 @@ CoxIds.loc(29777)?.let { steps ->
             player.message("Nothing interesting happens.")
             return@on_obj_option
         }
-        CoxRaids.start(player)
+        CoxRaids.enter(player)
     }
 }
 
@@ -40,10 +40,10 @@ CoxIds.loc(29789)?.let { passage ->
         val obj = player.getInteractingGameObj()
         if (!raid.started && CoxRaids.inStartRoom(raid, player.tile)) {
             player.queue {
-                if (player.username == raid.leader) {
+                if (player.username.lowercase() == CoxRaids.leaderOf(raid)) {
                     messageBox("Use the controls on the <col=7f0000>side-panel</col><br>when you are ready to begin the raid.")
                 } else {
-                    messageBox("You cannot proceed until ${raid.leader} has started the raid.")
+                    messageBox("You cannot proceed until ${CoxRaids.leaderName(raid)} has started the raid.")
                 }
             }
             return@on_obj_option
@@ -243,7 +243,7 @@ on_command("coxstart", Privilege.ADMIN_POWER) {
     val pattern = args.getOrNull(0)?.toIntOrNull()?.takeIf { it in CoxLayouts.PATTERNS.indices }
     val layout = if (pattern != null) CoxLayouts.normal(Random(seed), listOf(CoxLayouts.PATTERNS[pattern])) else CoxLayouts.normal(Random(seed))
     if (CoxRaids.raidAt(player.tile) != null) CoxRaids.leave(player)
-    val raid = CoxRaids.start(player, layout)
+    val raid = CoxRaids.enter(player, layout)
     player.message("CoX test raid ${raid?.id}: ${layout.pattern} seed $seed")
 }
 
@@ -275,4 +275,31 @@ on_command("coxpoints", Privilege.ADMIN_POWER) {
 on_command("coxleave", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     CoxRaids.leave(player)
+}
+
+/*
+ * The recruiting board (RAIDS_RECRUITING_BOARD 29776 'Read' on Mount Quidamortem, OSRS 499) and the party details (OSRS 507): CoxPartyBoard.
+ * Parties are 78legacy's own (besluit 5a, ToA pattern) instead of OSRS's chat-channel parties.
+ */
+CoxIds.loc(29776)?.let { board ->
+    on_obj_option(obj = board, option = "read") {
+        if (!CoxTestGate.allowed(player)) {
+            player.message("Nothing interesting happens.")
+            return@on_obj_option
+        }
+        CoxPartyBoard.openBoard(player)
+    }
+}
+
+CoxInterfaces.of(CoxInterfaces.PARTY_LIST)?.let { iface ->
+    (listOf(CoxPartyBoard.REFRESH, CoxPartyBoard.MAKE_PARTY, CoxPartyBoard.MY_PARTY) +
+        (0 until CoxPartyBoard.MAX_ROWS).map { CoxPartyBoard.ROWS + CoxPartyBoard.ROW_SIZE * it }).forEach { component ->
+        on_button(iface, component) { CoxPartyBoard.clickBoard(player, component) }
+    }
+}
+
+CoxInterfaces.of(CoxInterfaces.PARTY_DETAILS)?.let { iface ->
+    listOf(CoxPartyBoard.D_JOIN, CoxPartyBoard.D_ADVERTISE, CoxPartyBoard.D_DISBAND, CoxPartyBoard.D_BACK, CoxPartyBoard.D_REFRESH).forEach { component ->
+        on_button(iface, component) { CoxPartyBoard.clickDetails(player, component) }
+    }
 }

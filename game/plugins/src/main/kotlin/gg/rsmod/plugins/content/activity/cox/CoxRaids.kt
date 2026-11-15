@@ -67,9 +67,46 @@ object CoxRaids : KLogging() {
         return raid
     }
 
+    /**
+     * The entrance steps (tsps 'The entrance': you need a party; you can't enter a started raid; the raid is built on the first entry).
+     * 78legacy has no raid chat-channel (besluit 5a, ToA pattern): without a party the steps make one of you alone (advies, COX.txt 21:3x).
+     */
+    fun enter(player: Player, layout: CoxLayout = CoxLayouts.normal(Random.Default)): CoxRaid? {
+        val party = CoxParties.of(player.username) ?: CoxParties.create(player.username) ?: return null
+        val existing = byId(party.raidId)
+        if (existing != null) {
+            if (existing.started) {
+                // tsps 'Starting and stages': "No-one may join the party after the raid begins."
+                player.message("No-one may join the party after the raid begins.")
+                return null
+            }
+            player.teleportTo(spawnTile(existing))
+            CoxPartyTab.open(player, existing)
+            existing.world.players.entries.filterNotNull().filter { it !== player && existing.map.area.contains(it.tile) }
+                .forEach { CoxPartyTab.update(it, existing) }
+            return existing
+        }
+        val raid = start(player, layout) ?: return null
+        party.raidId = raid.id
+        // tsps: 'Settings can't change once the party has entered' - the advert goes with it (ONZEKER: no capture of the board then).
+        party.advertisedUntil = -1
+        return raid
+    }
+
+    /** The raid's leader: its party's leader (a leader who left hands it on, CoxParty.leave), else whoever built it. */
+    fun leaderOf(raid: CoxRaid): String =
+        CoxParties.all().firstOrNull { it.raidId == raid.id }?.leader ?: raid.leader.lowercase()
+
+    /** The leader's name as written (the online player's own spelling), for messages. */
+    fun leaderName(raid: CoxRaid): String {
+        val key = leaderOf(raid)
+        return raid.world.players.entries.filterNotNull().firstOrNull { it.username.lowercase() == key }?.username
+            ?: if (raid.leader.lowercase() == key) raid.leader else key
+    }
+
     /** The leader starts the raid ('Start raid' in the party tab; ::coxbegin on the test server). */
     fun begin(player: Player, raid: CoxRaid): Boolean {
-        if (raid.started || player.username != raid.leader) return false
+        if (raid.started || player.username.lowercase() != leaderOf(raid)) return false
         raid.started = true
         raid.progress = 1
         raid.startCycle = raid.world.currentCycle
@@ -244,6 +281,7 @@ object CoxRaids : KLogging() {
         if (raid.world.players.any { it.isOnline && raid.map.area.contains(it.tile) }) return
         raid.closed = true
         raids.remove(raid.map)
+        CoxParties.all().filter { it.raidId == raid.id }.forEach { it.raidId = -1 }
         runCatching { raid.world.instanceAllocator.release(raid.world, raid.map) }.onFailure { logger.error(it) { "CoX release ${raid.id}" } }
     }
 }

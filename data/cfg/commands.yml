@@ -1400,6 +1400,11 @@
   usage: "::gear_maxmage"
   description: "Test set: max magic gear (counterpart of gear_max / gear_maxrange). Worn gear goes to the bank. Test bots follow it with bot_buff.sh."
   example: "::gear_maxmage"
+- name: gear_magearena
+  rank: owner
+  usage: "::gear_magearena"
+  description: "Test set: max god-spell magic for Mage Arena (Ancestral, charged Toxic staff of the dead, Elidinis' ward (f), occult, tormented). Worn gear goes to the bank."
+  example: "::gear_magearena"
 - name: toastart
   rank: admin
   usage: "::toastart [entry|normal|expert]"

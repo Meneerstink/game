@@ -66,7 +66,7 @@ object CoxPartyTab {
     fun update(player: Player, raid: CoxRaid) {
         val iface = CoxInterfaces.of(CoxInterfaces.PARTY_TAB) ?: return
         val members = raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }
-        val leader = player.username == raid.leader
+        val leader = player.username.lowercase() == CoxRaids.leaderOf(raid)
         player.setComponentText(iface, DATA, dataText(members.size.coerceAtLeast(1), members.maxOfOrNull { it.combatLevel } ?: player.combatLevel))
         player.setComponentText(iface, PROGRESS, progressText(raid.progress, leader))
         player.setComponentHidden(iface, START, !(leader && raid.progress == 0))
