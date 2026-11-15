@@ -1440,6 +1440,16 @@
   usage: "::coxleave"
   description: "Test server / check accounts only: leave the Chambers of Xeric raid to the entrance steps."
   example: "::coxleave"
+- name: coxclear
+  rank: admin
+  usage: "::coxclear"
+  description: "Test server / check accounts only: kill every monster of the Chambers of Xeric room you stand in."
+  example: "::coxclear"
+- name: coxrooms
+  rank: admin
+  usage: "::coxrooms"
+  description: "Test server / check accounts only: list the rooms of your Chambers of Xeric raid with their encounter state."
+  example: "::coxrooms"
 - name: toajoin
   rank: admin
   usage: "::toajoin <leader>"

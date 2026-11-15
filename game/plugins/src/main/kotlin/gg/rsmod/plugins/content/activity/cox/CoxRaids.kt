@@ -127,6 +127,8 @@ object CoxRaids : KLogging() {
         val open = CoxIds.loc(47420)
         val shut = CoxIds.loc(47419)
         if (open != null && shut != null) replaceInRoom(raid, 0, raid.layout.floors[0][0], open, shut)
+        // The rooms' encounters (tsps 'The raid has started: spawn what the room holds').
+        gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.load(raid)
         return true
     }
 
@@ -167,6 +169,7 @@ object CoxRaids : KLogging() {
     fun tick(world: World) {
         raids.values.filter { it.world === world && !it.closed && it.started }.forEach { raid ->
             world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach { CoxPointsOverlay.update(it, raid) }
+            gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.tick(raid)
         }
     }
 
@@ -289,6 +292,7 @@ object CoxRaids : KLogging() {
         raids.remove(raid.map)
         CoxParties.all().filter { it.raidId == raid.id }.forEach { it.raidId = -1 }
         CoxChest.forget(raid)
+        gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.unload(raid)
         runCatching { raid.world.instanceAllocator.release(raid.world, raid.map) }.onFailure { logger.error(it) { "CoX release ${raid.id}" } }
     }
 }
