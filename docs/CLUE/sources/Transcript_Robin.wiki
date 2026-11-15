@@ -1,0 +1,63 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+===Before Ghosts Ahoy===
+* '''Player:''' It's nice to see another human face around here.
+* '''Robin:''' Leave me be, peasant - I am relaxing.
+* '''Player:''' Well, that's nice!
+* '''Robin:''' Do you know who I am?
+* '''Player:''' I'm sorry, I haven't had the privilege.
+* '''Robin:''' I, peasant, am Robin, Master Bowman. I am very famous you know.
+* '''Player:''' Oh, Robin, Master Bowman, I see.
+* '''Robin:''' So have you heard of me?
+* '''Player:''' No.
+* '''Robin:''' Would you do me a favour? I appear to have run out of bed linen. Can you run along to the innkeeper and get me a clean bedsheet?
+* {{tselect|Select an option}}
+* {{topt|Anything for a famous person such as yourself.}}
+** '''Player:''' Anything for a famous person such as yourself.
+** '''Robin:''' Now that sounds more like it. Run along now, get me my sheet.
+** {{Tact|end}}
+* {{topt|Go and get it yourself.}}
+** '''Player:''' Go and get it yourself.
+** '''Robin:''' Oh charming. You just can't get the staff these days.
+** {{Tact|end}}
+
+====With a clean bedsheet====
+* '''Player:''' I've brought you a clean bedsheet, Robin.
+* '''Robin:''' Well it's about time. Run along now, I need some Robin time.
+* {{Tact|end}}
+
+===After [[Ghosts Ahoy]]===
+* '''Player:''' So, still here then?
+* '''Robin:''' Do you want another game of Runedraw?
+* '''Player:''' No!
+* {{tact|end}}
+
+===Using the right-click Claim-slime option===
+* {{tcond|Without at least the medium [[Morytania Diary]] completed:}}
+** '''Robin:''' Sorry, my orders are that I can only give slime to those who have completed the Morytania medium, hard or elite diaries.
+** '''Robin:''' There's a diary master in Canifis, go and speak to her.
+** {{tact|end}}
+* {{tcond|If the player has no bones in their inventory:}}
+** '''Robin:''' You do not have any bones for me to convert for you.
+** {{tact|end}}
+* {{tcond|If the player has bones in their inventory:}}
+** {{tcond|If the player has hit their daily limit:}}
+*** '''Robin:''' You have already claimed your daily slime and bonemeal. Come back again tomorrow for some more.
+*** {{tact|end}}
+** {{tcond|If the player does not have enough free inventory slots:}}
+*** '''Robin:''' You do not have enough space for both bonemeal and slime. Come back to me when you have space.
+*** {{tact|end}}
+** {{tbox|pic=bucket of slime detail.png|pic2=bonemeal (bones) detail.png|Robin hands you some buckets of slime and bonemeal.}}
+
+==Treasure Trails==
+===Master===
+====If the player does not have +180 Ranged attack, or has the toxic blowpipe equipped====
+* '''Robin:''' As THE Master Bowman, I am quite impressed by your equipment, but it's not the sort I'd recommend myself. Try more conventional forms of accuracy enhancement.
+* {{tact|end}}
+
+====If the player has +180 Ranged attack and does not have the toxic blowpipe equipped====
+* '''Robin:''' As THE Master Bowman, I am most impressed by your equipment, peasant.
+* '''Robin:''' Here you go.
+* {{tbox|You are handed a torn part of a clue scroll.}}
+* {{tact|end}}

@@ -27,6 +27,7 @@ class ClueStepAssetProbe {
             }
             var regions = new HashMap<Integer,ModernRegion>();
             var objects = source.files(2,6);
+            var varbits = source.files(2,14);
             for (var value : steps) {
                 var step=value.getAsJsonObject();
                 String action=step.get("action").getAsString();
@@ -55,11 +56,13 @@ class ClueStepAssetProbe {
                         if ((!action.equals("EMOTE") && loc.getPlane()!=plane) || Math.max(Math.abs(lx-x),Math.abs(lz-z))>(action.equals("EMOTE")?12:1)) continue;
                         var raw=objects.get(loc.getId()); var def=ModernObjectDef.Companion.decode(loc.getId(),raw);
                         var forms=new LinkedHashMap<Integer,Object>();
+                        var formHashes=new LinkedHashMap<Integer,String>();
                         boolean stash=def.getName().toLowerCase(Locale.ROOT).contains("inconspicuous");
                         if (def.getTransforms()!=null) for(int id:def.getTransforms()) {
                             if(id<0 || !objects.containsKey(id))continue;
                             var form=ModernObjectDef.Companion.decode(id,objects.get(id));
                             forms.put(id,form);
+                            formHashes.put(id,hash(objects.get(id)));
                             stash |= form.getName().toLowerCase(Locale.ROOT).contains("inconspicuous");
                         }
                         if (action.equals("EMOTE") && !stash) continue;
@@ -69,6 +72,13 @@ class ClueStepAssetProbe {
                         row.put("effectivePlane",loc.getPlane()>0 && bridge!=0 ? loc.getPlane()-1 : loc.getPlane());
                         row.put("type",loc.getType()); row.put("rotation",loc.getRotation());
                         row.put("definition",def); row.put("forms",forms); row.put("sha256",hash(raw));
+                        row.put("formSha256",formHashes);
+                        if (stash && def.getVarbitId()>=0) {
+                          byte[] bits=Objects.requireNonNull(varbits.get(def.getVarbitId()));
+                          if(bits.length!=6 || bits[0]!=1 || bits[5]!=0) throw new IllegalStateException("Unknown STASH varbit layout");
+                          row.put("sourceVarbit",Map.of("id",def.getVarbitId(),"varp",((bits[1]&255)<<8)|(bits[2]&255),
+                              "leastBit",bits[3]&255,"mostBit",bits[4]&255,"sha256",hash(bits)));
+                        }
                         placements.add(row);
                       }
                     }

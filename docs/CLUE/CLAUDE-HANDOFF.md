@@ -9,9 +9,9 @@ All cache application, testserver/client operation, merge and release belong to 
 
 * Source: `C:/RSPS/import-source/openrs2-2686/cache`.
 * Batch: `OsrsItemImportTool clue --clue-roster=<this worktree>/data/cfg/clue/import-items.tsv`.
-* The roster is the exact 227-source-item list (including notes where marked).
-  The 15 November preflight generated **418 definitions**, proposed local IDs
-  **24755–25172**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
+* The roster is the exact 245-source-item list (including notes where marked).
+  The 15 November 08:04 preflight generated **436 definitions**, proposed local IDs
+  **24755–25190**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
   These local IDs are proposals, not reservations: rerun against the current
   canonical caches immediately before applying, then regenerate `items.tsv`.
 * Use the reviewed importer/forearm fix from this branch. The old importer
@@ -249,7 +249,7 @@ wizard 1007 are not duplicated. Wizard Traiborn / Lumbridge Guide identity/name
 adapters still need review (source names versus existing Traiborn / Lumbridge
 Sage). Abbot Langley and Robin are already spawned in the current world.
 
-`data/cfg/clue/guardians.json` contains all 11 Wiki/cache-checked combat variants,
+`data/cfg/clue/guardians.json` contains 14 Wiki/cache-checked guardian/minion variants,
 including 76 HP Zamorak wizard, 160 HP master agent, the 80 HP ancient trio and
 Brassican's typeless magic. This is source data, **not an activated combat script**.
 The NPC importer drops stats because they belong in server combat definitions.
@@ -262,3 +262,16 @@ the two selected master coordinates require Brassican, not a random trio.
 The source generator preserves those exceptions and the two master anagram
 puzzle choices. The old 41-donor-step registration still requires replacement;
 no complete-step-pool claim is made by these source/backend commits.
+
+## STASH batch blueprint - NOT yet implemented
+
+`data/cfg/clue/stashes.json` is the exact source/cache blueprint for the seventeen selected units, including each placement/type/rotation/physical and effective planes, source varbit/varp/bit position, construction recipe, required equipment and asset hashes. No STASH batch has been added to OsrsLocImportTool yet: the name below is an implementation proposal, not an executable existing command.
+
+Proposed batch: `clue-stash`. Import/remap the following 39 source object definitions (17 base multilocs + 22 shared forms), rather than using a coincidentally matching 667 numeric ID:
+
+* Bases: 28968,28965,28973,28959,28974,29005,29001,28991,28989,29014,29010,29013,29029,29028,29038,29059,29056.
+* Forms: 6657,15943,16014,16015,16016,16017,16018,16019,16024,28933,28936,28937,28940,28941,28944,28945,28948,28949,28950,28951,28952,28953.
+
+The selectors in the blueprint are SOURCE identities only. Allocate collision-free local selectors or implement a proven equivalent per-player visual route, preserving Build/Search options and ordinary terrain/object collision. Do not just copy the source varbit IDs. Every static placement and personal built/filled state must be scoped to the exact unit/tile, not just its shared visual form ID. Cache work stays PLAN/PREFLIGHT for GPT; Claude alone applies after reviewing the complete batch.
+
+Storage rules from pinned STASH revision: full set only; seven legal nail metals (no dragon); ten nails of one metal; no bending; withdrawal all at once; inventory before equipment; equipped items only with the setting. Source catalogue includes boostable level/XP/three ticks, hammer+saw and master Gold leaf 8784. Nothing in this paragraph claims a storage handler or Watson chart exists.

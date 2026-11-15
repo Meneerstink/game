@@ -52,12 +52,20 @@ No STASH was imported, placed, built or activated. The exporter follows the sour
 
 The coordinate generator now reads each coordinate table instead of inferring the enemy from the tier. The hard Emir's Arena point 02.39N 29.58E explicitly says `fight = No`. Both selected master points (Crandor 03.26N 12.18E and Witchaven 03.50N 09.07E) explicitly say Brassican Mage 7310. Crandor's image filename has a 12.16E typo; the generator matches the written coordinates 12.18E. Both elite points list Armadylean or Bandosian, without a pinned numeric selection probability; do not invent one.
 
-Evidence JSON SHA-256: `4d982f42c3cd29268462dd8895ab13561a02d1fc53e6eb339d6890b5223c81e2`.
+Evidence JSON SHA-256: `8a3737352581abfa1c7074de602180583302d0ab0ec4dcafdf09f8011afa600c`.
 
 ## Mimic minions and combat XP
 
 The read-only source export now includes all three existing imported minions: OSRS 8635/8636/8637, verified local 14403/14404/14405 by name and combat level. `guardians.json` preserves their complete pinned Wiki stats and the combat-XP bonus for all fourteen variants. Negative bonuses are intentional: warrior magic defence -4; mage ranged defence -5.
 
-Mimic has a source XP bonus of 25%; Third Age Warrior 7.5%, Ranger/Mage 0%. The runtime boss definition still needs its 1.25 multiplier and a targeted test. Minion combat routing, attack visuals, candy and forward movement are not activated by this data export.
+Mimic has a source XP bonus of 25%; Third Age Warrior 7.5%, Ranger/Mage 0%. Commit `a999e4037` adds the runtime boss multiplier 1.25; the targeted built-definition test passed. Minion combat routing, attack visuals, candy and forward movement are not activated by this data export.
 
 The Double agent source also explicitly exempts the first step of a trail from spawning an agent. Hard/master emote handlers must preserve that exception, require the agent defeat on later steps, and recheck clue gear when talking to Uri.
+
+## Selected STASH recipe/selector catalogue
+
+`data/cfg/clue/stashes.json` pins seventeen unique selected base objects, twenty-two shared visual forms, all source varbit definitions/hashes and five exact Wiki construction recipes. Seven nail metals are accepted; all ten nails must be the same metal and cannot bend. Dragon nails are explicitly excluded. Each construction takes three ticks; boostable levels are 27/42/55/77/88 and XP 150/250/400/600/1500 for easy through master. Master additionally consumes one Gold leaf.
+
+Materials and tools have verified source/native item identities. `Gold_leaf.wiki` independently selects 8784 (not the same-name quest item 4692); `Steel_nails.wiki` selects 1539 (not event duplicate 32923). The source rules require the full equipment set for storage and enough inventory room to retrieve every item; taking equipped items requires the corresponding setting, with inventory priority.
+
+The catalogue is research data, not an active STASH. A safe seventeen-selector cache mapping, placement/client checks, player persistence, setting, all-or-nothing build/store/withdraw transactions and Watson chart integration remain to be built. Do not reuse OSRS varp/varbit IDs in 667 without allocation proof. The source bridge uses physical plane 1 / effective plane 0; the upstairs Monastery clue is on plane 1 while its STASH is on the ground floor.

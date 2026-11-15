@@ -969,6 +969,46 @@
       "file": "Challenge_scroll.wiki",
       "sha256": "27177f50a23c9518066b25f6226ccc23ff7363a53a9d2b0139201cf1271cb1a2",
       "url": "https://oldschool.runescape.wiki/w/Challenge_scroll"
+    },
+    {
+      "page": "Transcript:Abbot Langley",
+      "revision": 15324395,
+      "revision_time": "2026-08-29T11:06:14Z",
+      "file": "Transcript_Abbot_Langley.wiki",
+      "sha256": "2b711b2d6a23d2dfdf80cd90cb228bc475b20618e88c871e0ebea23eea353f7a",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AAbbot_Langley"
+    },
+    {
+      "page": "Transcript:Robin",
+      "revision": 15173500,
+      "revision_time": "2026-04-12T01:00:38Z",
+      "file": "Transcript_Robin.wiki",
+      "sha256": "ca568c7567fda8eef9f961d33d90c10e306e1916b903b01d489ecefb3bca85ce",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ARobin"
+    },
+    {
+      "page": "Gold leaf",
+      "revision": 15184226,
+      "revision_time": "2026-04-22T03:01:15Z",
+      "file": "Gold_leaf.wiki",
+      "sha256": "6fe35d5f2c1bf4bb4ca647ea515ca4f9eeaa7b12d0600c4ac79fb090683809ce",
+      "url": "https://oldschool.runescape.wiki/w/Gold_leaf"
+    },
+    {
+      "page": "Steel nails",
+      "revision": 15218378,
+      "revision_time": "2026-05-27T22:14:21Z",
+      "file": "Steel_nails.wiki",
+      "sha256": "158ac28ef9b53ab32552760ce9743fdeda51f4a7a5019c10c92a51747a9b7811",
+      "url": "https://oldschool.runescape.wiki/w/Steel_nails"
+    },
+    {
+      "page": "Nails",
+      "revision": 15068452,
+      "revision_time": "2025-11-26T18:24:55Z",
+      "file": "Nails.wiki",
+      "sha256": "c36722bb956d845716f423b6a465785906c0c155cca917a3a07e84c13651a839",
+      "url": "https://oldschool.runescape.wiki/w/Nails"
     }
   ]
 }

@@ -1,0 +1,38 @@
+{{External|rs|rsc}}
+{{otheruses|def=no|nail beasts|Nail beasts|their nail drops|Nail beast nails}}
+[[File:Steel nails detail.png|200px|right|thumb|Steel nails]]
+'''Nails''' are [[metal]] items used in a variety of quests and for various skill applications. They can be created through [[Smithing]] on an [[anvil]] except [[Dragon nails]] which can be produced at the [[Dragon forge]], with each [[bar]] creating 15 nails. [[Steel nails]] are the only type of nail available to [[free-to-play]] players.
+
+Nails are commonly used for [[Construction]] and [[Sailing]], particularly for building low-level furniture and [[Facilities]] on boats. Though most pieces of higher-tier furniture do not require nails to construct, there are some exceptions like [[STASH]] units and the [[Bridge (Hallowed Sepulchre)|bridges]] within the [[Hallowed Sepulchre]]. While using nails in Construction, there's a chance of bending them depending on what metal the nails are made of and the player's Construction level, with the chances lowering with better nails and higher Construction level. If multiple types of nails are carried at the same time, the higher tier ones are used first.
+
+Nails are also used in [[Fletching]] to create [[brutal arrows]], and in [[Crafting]] to create [[leather shield]]s.
+
+{{CostTableHead|class=sortable}}
+{{CostLine|Bronze nails}}
+{{CostLine|Iron nails}}
+{{CostLine|Steel nails}}
+{{CostLine|Black nails}}
+{{CostLine|Mithril nails}}
+{{CostLine|Adamantite nails}}
+{{CostLine|Rune nails}}
+{{CostLine|Dragon nails}}
+{{CostTableBottom}}
+
+==Uses==
+===Quests===
+* [[Getting Ahead]]: 6+ x any nails
+* [[Scrambled!]]: 6 x any nails
+* [[Darkness of Hallowvale]]: 8 x any nails
+* [[Sleeping Giants]]: 10 x any nails
+* [[Dragon Slayer II]]: 12+ x any nails
+* [[The Great Brain Robbery]]: 38+ x any nails
+* [[Cold War]]: 10 steel nails
+* [[Horror from the Deep]]: 60 steel nails
+* [[Dragon Slayer I]]: 90 steel nails
+* [[In Search of the Myreque]]: 225 steel nails
+
+===Miniquests===
+*[[Daddy's Home]]: 16 × any nails
+
+{{Construction items}}
+{{Sailing resources}}
