@@ -931,11 +931,16 @@ gg.rsmod.game.CommandServerCommands.handlers["dlg"] = { w, a ->
 val cmdBots = mutableMapOf<String, gg.rsmod.game.model.entity.Client>()
 gg.rsmod.game.CommandServerCommands.handlers["botlogin"] = { w, a ->
     val name = a.getOrNull(0)
-    val n = a.drop(1).map { it.toIntOrNull() }
-    if (name == null || n.size < 2 || n.take(2).any { it == null }) "usage: botlogin <name> <x> <z> [height]"
+    val n = a.drop(1).filter { it != "admin" }.map { it.toIntOrNull() }
+    if (name == null || n.size < 2 || n.take(2).any { it == null }) "usage: botlogin <name> <x> <z> [height] [admin]"
     else if (w.getPlayerForName(name) != null) "$name is already online"
     else {
         val bot = gg.rsmod.plugins.content.cmd.conformance.Bots.create(w, gg.rsmod.game.model.Tile(n[0]!!, n[1]!!, n.getOrNull(2) ?: 0), name)
+        // N620: 'admin' = the team test accounts' privilege, so a bot can run the player test commands (gear_max, god, botstate ...).
+        if ("admin" in a && System.getProperty("rsps.testServer") == "true") {
+            // The team test accounts' privilege (owner powers: gear_max, god ...) - TeamTestAccounts.PRIVILEGE_ID, as their login gets.
+            bot.privilege = w.privileges.get(gg.rsmod.game.service.serializer.TeamTestAccounts.PRIVILEGE_ID) ?: bot.privilege
+        }
         cmdBots[name] = bot
         "bot $name online at ${bot.tile.x},${bot.tile.z},${bot.tile.height}"
     }
