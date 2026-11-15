@@ -7,7 +7,7 @@ import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Rare
 import gg.rsmod.plugins.content.drops.global.Seeds
 
-val ids = intArrayOf(Npcs.NECHRYAEL)
+val ids = intArrayOf(Npcs.NECHRYAEL, Npcs.NECHRYAEL_10702) // N614: 10702 had the osrsbox bulk table (Drop Viewer)
 
 val table = DropTableFactory
 val nechryael =

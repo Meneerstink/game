@@ -16,7 +16,7 @@ import gg.rsmod.plugins.content.drops.global.Rare
  * @author Harley <https://github.com/HarleyGilpin>
  */
 
-val ids = intArrayOf(Npcs.GARGOYLE, Npcs.GARGOYLE_9087)
+val ids = intArrayOf(Npcs.GARGOYLE, Npcs.GARGOYLE_9087, Npcs.GARGOYLE_1827) // N614: 1827 had the osrsbox bulk table (Drop Viewer)
 
 val table = DropTableFactory
 val gargoyle =

@@ -112,6 +112,24 @@ CommandServerCommands.handlers["droproll"] = { _, a ->
     }
 }
 
+// `dropview <name> <source key>` (N620): opens the Drop Viewer straight on one source (key = '<name lowercase>|<level>', spaces as _,
+// e.g. nechryael|115) - a screenshot of one table without clicking through the list.
+CommandServerCommands.handlers["dropview"] = { _, a ->
+    val p = findPlayer(a)
+    val key = a.getOrNull(1)?.replace("_", " ")
+    if (p == null || key == null) "usage: dropview <name> <source name or key, e.g. nechryael>" else {
+        // 15-11: the key's level is OUR npc level (not the wiki's) - match the exact key, else the first key starting with the name.
+        val all = gg.rsmod.plugins.content.quests.tab.DropSources.all(p)
+        // keys are 'npc:<id>' / 'barrows' / the ToA page; the shown name is Source.name -> exact key, else exact name, else name contains
+        val hit = all.firstOrNull { it.key == key } ?: all.firstOrNull { it.name.equals(key, true) }
+            ?: all.firstOrNull { it.name.contains(key, true) }
+        if (hit == null) "dropview: no source matching '$key'" else {
+            gg.rsmod.plugins.content.quests.tab.DropViewer.open(p, hit.key)
+            "dropview ${p.username} -> ${hit.key}"
+        }
+    }
+}
+
 CommandServerCommands.handlers["tp"] = { w, a ->
     val p = findPlayer(a)
     val n = a.drop(1).filter { it != "force" }.map { it.toIntOrNull() }
