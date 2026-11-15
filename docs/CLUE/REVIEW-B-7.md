@@ -204,3 +204,16 @@ mode initially misclassified its source paths, then one test called ItemContaine
 isEmpty as a function. Both corrected before the green run. The tested five
 libraries remain in build/clue/next until promoted. Source dialogue strings use
 the pinned NPC transcripts; Baraek's mislabeled Dunstan prompt is omitted.
+
+
+## UI camera source promoted, B15-Nov20:34
+
+Five staged codec tests and real unchanged667 Component decoder passed. Actual
+ClueInterfaceImportTool + ClueInterfaceImportTests are normalized-byte identical
+to those tested files (interface-port/promoted-proof.json). Expected camera now
+comes from preserved raw OSRS bytes, not only a hardcoded converter expectation.
+The normal codec verifier now reads actual sources again; temporary staged mode
+removed. Corrected UI PREFLIGHT tx-20261115-193224 passed27 mutations and all
+cache/ledger/runtime mapping fingerprints stayed identical. Exact current IDs
+in UI-PREFLIGHT.tsv and latest CLAUDE-HANDOFF section. No apply/client process.
+Whole-branch Gradle acceptance for the subsequent gameplay changes is still due.

@@ -1,0 +1,1572 @@
+{
+  "73": {
+    "1": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        640
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "fadc41198acacbf025e6a7aaf16cdaedbcca0c800272ae189529acc44d57b40c",
+      "rawBase64": "/wYAAADoAJ4AIAAgAAAAAAAAAAAADUMAAAAAAgAAAAAAAoD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "2": {
+      "rawCamera": [
+        104,
+        761,
+        0,
+        914
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e65316e084af1be1e9feb18975a0c6ec7f6ec80c5e6cfa3a0cd576040349799c",
+      "rawBase64": "/wYAAACuANQAIAAgAAAAAP//AAAABMoAAAAAAGgC+QAAA5L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    }
+  },
+  "203": {
+    "0": {
+      "rawCamera": [
+        520,
+        1,
+        0,
+        599
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "0ffc8f711bbe3ac6a51b13e2572b82dbbf0ee3b7dd3c648a805e3c1cb662d6f8",
+      "rawBase64": "/wYAAADjAKIAIAAgAAAAAP//AAAADUMAAAAAAggAAQAAAlf//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    }
+  },
+  "351": {
+    "0": {
+      "rawCamera": [
+        520,
+        1,
+        0,
+        599
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "0ffc8f711bbe3ac6a51b13e2572b82dbbf0ee3b7dd3c648a805e3c1cb662d6f8",
+      "rawBase64": "/wYAAADjAKIAIAAgAAAAAP//AAAADUMAAAAAAggAAQAAAlf//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "1": {
+      "rawCamera": [
+        474,
+        1775,
+        0,
+        1349
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5bd3b6d53726a5a2bd35492ff2387d3c5e0204b20f1191763c33c282a7f2086f",
+      "rawBase64": "/wYAAABmAFsAIAAgAAAAAAAEAAAADT0AAAAAAdoG7wAABUX//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "2": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "7f616d63250160cd641aff82bc4e7ec0bd7698a4ed36bf872a373436d27c9207",
+      "rawBase64": "/wYAAABOAJcAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "3": {
+      "rawCamera": [
+        368,
+        2042,
+        0,
+        915
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "f801198eb0c3a6cdd5342b144aaf6e4e0e1d0347211d00f687692193ba8e61ba",
+      "rawBase64": "/wYAAACLAGAAIAAgAAAAAAAEAAAADUYAAAAAAXAH+gAAA5P//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "5": {
+      "rawCamera": [
+        493,
+        18,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "25441888cade7f0a603cafcc0d0028d9afb3a184aefb978ab87c4f603902ba28",
+      "rawBase64": "/wYAAACWAOUAIAAgAAAAAP//AAAADTwAAAAAAe0AEgAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "6": {
+      "rawCamera": [
+        527,
+        515,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9dfa5612728264239683581d31c7ffb4154f1726d4284bb97ff3608cabf90c3e",
+      "rawBase64": "/wYAAAClADEAIAAgAAAAAP//AAAADTwAAAAAAg8CAwAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "7": {
+      "rawCamera": [
+        578,
+        1030,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a7a041bf460a001b996ac4d2348fd390c3432074daf291d23f5e10d51c94c41e",
+      "rawBase64": "/wYAAAFUAD4AIAAgAAAAAP//AAAADTwAAAAAAkIEBgAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "8": {
+      "rawCamera": [
+        576,
+        1544,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a4b87ec41fd5944f6a6c20618d856ab3daad71dfd9360a3273698f4d13e0d684",
+      "rawBase64": "/wYAAAFBAPUAIAAgAAAAAP//AAAADTwAAAAAAkAGCAAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "9": {
+      "rawCamera": [
+        379,
+        515,
+        0,
+        744
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "74a5991be9b1ec84b351061ec8c9a085832f618342ac5b15970a2e6bd9f713b2",
+      "rawBase64": "/wYAAABWALsAIAAgAAAAAAAEAAAADUYAAAAAAXsCAwAAAuj//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "10": {
+      "rawCamera": [
+        431,
+        776,
+        0,
+        900
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5d52dad8e81196bb8fe231b9217e4dfa951d563ef7dfadaefa7c83713dd58e6b",
+      "rawBase64": "/wYAAAAzALUAIAAgAAAAAAAEAAAADUcAAAAAAa8DCAAAA4T//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "11": {
+      "rawCamera": [
+        359,
+        262,
+        0,
+        900
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "157151f78c8726bf5b0cf4ab749d2545a7e8849843f5efc4eceb131dc39a3ed9",
+      "rawBase64": "/wYAAAB5ALUAIAAgAAAAAAAEAAAADUcAAAAAAWcBBgAAA4T//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "12": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        708
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "93b3d9aad7525eb9c345c2149df3bc02d5d775bf743fb42a3af12f85e2a82530",
+      "rawBase64": "/wYAAACJALAAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAsT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "13": {
+      "rawCamera": [
+        379,
+        515,
+        0,
+        744
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "018cb2d7c34e35f635049268e05ec89d02966ae2667b6f6b3b8427c1db134839",
+      "rawBase64": "/wYAAAATALAAIAAgAAAAAAAEAAAADUYAAAAAAXsCAwAAAuj//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "14": {
+      "rawCamera": [
+        379,
+        515,
+        0,
+        744
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "51105353b9a429eb7d1d19ba3ba723a3f78fa43edf7ca3bfe5b6f1d2593e6fa1",
+      "rawBase64": "/wYAAP/+ALAAIAAgAAAAAAAEAAAADUYAAAAAAXsCAwAAAuj//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "15": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        708
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "61c224fe1e1b778631d37f8902131a6618b539eec9dc03c4d8c1e06acb63a489",
+      "rawBase64": "/wYAAACbALAAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAsT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "16": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9e0f4e892a27da2c6f5af9ece5ef4059dda0e77214457c42cf295a92774ef651",
+      "rawBase64": "/wYAAACmAPAAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "17": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "10f5933e6b6c45d16d42941e47f0f64f6beee69cb817ac853578bfaef8f0a4bd",
+      "rawBase64": "/wYAAAC8APIAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "18": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "56412e22b07e6e6f988b0e6838695107a2afbc750dc5806175fd61319c174fc8",
+      "rawBase64": "/wYAAADSAPEAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "19": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "aa4bb2e6eb1e31cc769c2e3fd5ecf2a18a0ba79f4f9872365872a23883fc2c46",
+      "rawBase64": "/wYAAADcAPkAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "20": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "544d2c312c3d04dc3f0135c3b974cfa06e33e2e7974aeb1952e8b3ca2278425b",
+      "rawBase64": "/wYAAAD2APoAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "21": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8ad02c7770c8b81ef729b6192caa1981e0eedc80dee80af4a1c260b6cdd89a8c",
+      "rawBase64": "/wYAAAEZAPoAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "22": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "b3129013e392a4212e5d556cdc0ba03d1a4bbae10ed73d1df00d1ce2fed5f471",
+      "rawBase64": "/wYAAAEyAPkAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "23": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        682
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "4bc0293e9cce779e59092c61ebde8d252f4f06e121e1a27167a26d3af6ae0d0a",
+      "rawBase64": "/wYAAAE9APAAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAqr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "24": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "f3f69deb33134f8ca4faf07a88bf9d5b4cc4a0a254eff3d9f4de39989f67005d",
+      "rawBase64": "/wYAAABeAJcAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "25": {
+      "rawCamera": [
+        386,
+        247,
+        0,
+        885
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "da5b01a26dc1cb88ff1d191f72666f85aeb963aa145150a91f6fa510dbd94c62",
+      "rawBase64": "/wYAAAB6AIUAIAAgAAAAAAAEAAAADUYAAAAAAYIA9wAAA3X//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "26": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "d5561d8ea3c0ba638a2eb19f1f90ef5ea825ea211019f6b8d6a276d8b4ebe2af",
+      "rawBase64": "/wYAAAAwAIgAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "27": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "4729c5d74e7bc6c1b2be697baaef636bbc2d7a5ef5c478fe89c7e75183534a6c",
+      "rawBase64": "/wYAAAARAJAAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "28": {
+      "rawCamera": [
+        615,
+        1021,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "645f662f46060367016a494e98e2fac3a0fd1221a134d980c8bbfbe954873c04",
+      "rawBase64": "/wYAAP/rAG4AIAAgAAAAAAAEAAAADUcAAAAAAmcD/QAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "29": {
+      "rawCamera": [
+        246,
+        837,
+        0,
+        812
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "bd2e66b78cc5b540398c66be7a28d6dadeff8ed29868ea45a54a18a2d1f6ba05",
+      "rawBase64": "/wYAAP//AIoAIAAgAAAAAAAEAAAADUcAAAAAAPYDRQAAAyz//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "30": {
+      "rawCamera": [
+        473,
+        790,
+        0,
+        845
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e521dca0b8a9ea00cac522ebb54099d3d597fc80af097c656f29a01068ec2126",
+      "rawBase64": "/wYAAAA9AI4AIAAgAAAAAAAEAAAADUcAAAAAAdkDFgAAA03//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "31": {
+      "rawCamera": [
+        345,
+        285,
+        0,
+        998
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "13910c1fe766ae5295f1803e6859eca2a8e71c06d8899a42827000128df12b77",
+      "rawBase64": "/wYAAAAhAIwAIAAgAAAAAAAEAAAADUcAAAAAAVkBHQAAA+b//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "32": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        524
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3e6b05299ccf39f695a1b8dc16c22872e38917f5d5dc4c01216250f540f8320f",
+      "rawBase64": "/wYAAACqALsAIAAgAAAAAP//AAAADToAAAAAAfQAAAAAAgz//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "33": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        1965
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "dc4e1addbf23f8aad3dfeb8f10afde32a9431bd3ff02254c22865d720ac527b3",
+      "rawBase64": "/wYAAADfANIAIAAgAAAAAP//AAAADUUAAAAAAfQAAAAAB63//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "34": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3bb729b238395527988d7ed1c90de8ca804e58e7ede829de17f604007d289f55",
+      "rawBase64": "/wYAAAB2ADwAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "35": {
+      "rawCamera": [
+        397,
+        500,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "2cb109b6ce77024ec6f863fb873df2e838035cfbd1f27de7fad4426f2674fcd4",
+      "rawBase64": "/wYAAABaADAAIAAgAAAAAAAEAAAADUcAAAAAAY0B9AAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "36": {
+      "rawCamera": [
+        597,
+        1009,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "296714bdcd4c24a1d15b8e453b9acb0150b3d7e6ad6e18775c579bd1fff78f8d",
+      "rawBase64": "/wYAAAAEADcAIAAgAAAAAAAEAAAADUcAAAAAAlUD8QAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "37": {
+      "rawCamera": [
+        553,
+        493,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "96f71e36450090763209e2c55f5fc971cc0e1c3874ff3a7cec2cb8eff4e47a12",
+      "rawBase64": "/wYAAAAiAC8AIAAgAAAAAAAEAAAADUcAAAAAAikB7QAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "38": {
+      "rawCamera": [
+        553,
+        493,
+        0,
+        1338
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "402aac62b4fb4c86e03cbb1dce4abe6dff938e397b18b65eb66e4de30e3d8041",
+      "rawBase64": "/wYAAAA+ACMAIAAgAAAAAAAEAAAADUcAAAAAAikB7QAABTr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "39": {
+      "rawCamera": [
+        553,
+        493,
+        0,
+        1338
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "c0c2f91c26922013ffdc5d014c4c4b421f0c6df04f39cf4ba5e2485749c4905f",
+      "rawBase64": "/wYAAAA+ACQAIAAgAAAAAAAEAAAADUcAAAAAAikB7QAABTr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "40": {
+      "rawCamera": [
+        595,
+        285,
+        0,
+        942
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "ab791ee88b351ce60bc5cdf2e2d561d52b0ba7ebda922ae423c4e6f911bc2f84",
+      "rawBase64": "/wYAAAA0ACkAIAAgAAAAAAAEAAAADUcAAAAAAlMBHQAAA67//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "41": {
+      "rawCamera": [
+        601,
+        762,
+        0,
+        942
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "b4a3fc4a0de58dbba7e61942b0d11afb187c9a990b0cd30a0ff804ad420e806e",
+      "rawBase64": "/wYAAABJACkAIAAgAAAAAAAEAAAADUcAAAAAAlkC+gAAA67//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "42": {
+      "rawCamera": [
+        406,
+        201,
+        0,
+        996
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "cb4da28bff8dd237593c19d78f596519635f3d5f14bddfabeb5f82f07ba15946",
+      "rawBase64": "/wYAAP/7AFAAIAAgAAAAAAAEAAAADUYAAAAAAZYAyQAAA+T//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "43": {
+      "rawCamera": [
+        249,
+        845,
+        0,
+        777
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "23977f8a888fce7f23e7c6c1199555e55961dc18ee14fa33e5117cadafd5c56d",
+      "rawBase64": "/wYAAP/xAH4AIAAgAAAAAAAEAAAADUcAAAAAAPkDTQAAAwn//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "44": {
+      "rawCamera": [
+        615,
+        1021,
+        0,
+        820
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "f68ded8459bfcb005238d7b4c5eea4e25da3ebad3b4e50eabaf65438024be7b9",
+      "rawBase64": "/wYAAP/rAGoAIAAgAAAAAAAEAAAADUcAAAAAAmcD/QAAAzT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "45": {
+      "rawCamera": [
+        601,
+        762,
+        0,
+        1019
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "4582d6dd3f2d3b082fa47dbdc66479abe3554fe8c5d62e3360b26dda926c84d1",
+      "rawBase64": "/wYAAABnADYAIAAgAAAAAAAEAAAADUcAAAAAAlkC+gAAA/v//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "46": {
+      "rawCamera": [
+        601,
+        762,
+        0,
+        1019
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "bfa1ddf61817937f07ecdf2fc0b660ad3bed9b614cc0a3840519d358e055307d",
+      "rawBase64": "/wYAAACEAEEAIAAgAAAAAAAEAAAADUcAAAAAAlkC+gAAA/v//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "47": {
+      "rawCamera": [
+        368,
+        2042,
+        0,
+        915
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "0e73e0dff5ab156d8c1f57aace310717ea0cc6e61acf42e819acfbe0c524dbdb",
+      "rawBase64": "/wYAAACLAFgAIAAgAAAAAAAEAAAADUYAAAAAAXAH+gAAA5P//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "48": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        1965
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8c70304abdafb747075dca38e27c6c5ad4873a74b7c3247111453b0e8da35346",
+      "rawBase64": "/wYAAAFRAJ0AIAAgAAAAAP//AAAADUUAAAAAAfQAAAAAB63//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "49": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        2036
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "99bec865a7bffb67ef273b1af19b4ae8b01108c41f952782c6feb81b924d24b4",
+      "rawBase64": "/wYAAAD8AJIAIAAgAAAAAP//AAAADUkAAAAAAfQAAAAAB/T//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "50": {
+      "rawCamera": [
+        495,
+        2017,
+        0,
+        1999
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "2dce728d5b3c7e9f8e1df2856fe80b50f30b383a19d6151c5e7659a077215b65",
+      "rawBase64": "/wYAAAEMAK8AIAAgAAAAAP//AAAADT8AAAAAAe8H4QAAB8///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "51": {
+      "rawCamera": [
+        518,
+        43,
+        0,
+        2009
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "72b3c7a9576e9e09dc069e1ebde441d9ded840c5e7a0285772aee71bce8285c3",
+      "rawBase64": "/wYAAADcAJUAIAAgAAAAAP//AAAADT8AAAAAAgYAKwAAB9n//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "52": {
+      "rawCamera": [
+        505,
+        18,
+        0,
+        2080
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "d8a9d37bb60b4644bd3ebfcca0ed5b90b897e6a05a2d4b5a05b337f918c56bfe",
+      "rawBase64": "/wYAAADvAHsAIAAgAAAAAP//AAAADT8AAAAAAfkAEgAACCD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "53": {
+      "rawCamera": [
+        499,
+        2032,
+        0,
+        1971
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "64cf14688d709966908b4c657d0d37d43cc9d7269824b5490498b983595f0f12",
+      "rawBase64": "/wYAAADNAHoAIAAgAAAAAP//AAAADUkAAAAAAfMH8AAAB7P//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "54": {
+      "rawCamera": [
+        505,
+        12,
+        0,
+        2080
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "14676fbbe6fbf15683929381eeb79743bf8b502f53661f46c353e37ab7f13652",
+      "rawBase64": "/wYAAACzAJAAIAAgAAAAAP//AAAADT8AAAAAAfkADAAACCD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "55": {
+      "rawCamera": [
+        501,
+        2034,
+        0,
+        2079
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9d492b8446001782e2de77fd23fd649b3ddd0d7325476a53fdb95ed2e5eb89f1",
+      "rawBase64": "/wYAAAC/AKsAIAAgAAAAAP//AAAADUkAAAAAAfUH8gAACB///wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "56": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        1969
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "b3e35b25778ca112a47f68700b7578d14ca3d42a450d3f88b384f73ad13a9db9",
+      "rawBase64": "/wYAAADIAEcAIAAgAAAAAP//AAAADUUAAAAAAfQAAAAAB7H//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "57": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        2054
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e283029ef4a693f291140dfb14d60d0e488ac64c5e45559dec8c36a35f1d90c7",
+      "rawBase64": "/wYAAACkAFMAIAAgAAAAAP//AAAADUUAAAAAAfQAAAAACAb//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "58": {
+      "rawCamera": [
+        500,
+        0,
+        0,
+        1965
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "1a5e72b7d5e1c174754a2fb6d547fa54b1a6c288e36f7d6d95fa8ce2b435e062",
+      "rawBase64": "/wYAAAEqAJMAIAAgAAAAAP//AAAADUUAAAAAAfQAAAAAB63//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    }
+  },
+  "354": {
+    "0": {
+      "rawCamera": [
+        520,
+        1,
+        0,
+        599
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "0ffc8f711bbe3ac6a51b13e2572b82dbbf0ee3b7dd3c648a805e3c1cb662d6f8",
+      "rawBase64": "/wYAAADjAKIAIAAgAAAAAP//AAAADUMAAAAAAggAAQAAAlf//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "1": {
+      "rawCamera": [
+        539,
+        1583,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "aa3b92a38416d8df21e94c426a67513f831cb2c0b98e8119297f32d37cf1f163",
+      "rawBase64": "/wYAAAEzAPQAIAAgAAAAAP//AAAAEDoAAAAAAhsGLwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "2": {
+      "rawCamera": [
+        539,
+        1644,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a1297dd16624fde041cb311a230cc0af4497abad73daa254821e7d2c30fef533",
+      "rawBase64": "/wYAAAERAOIAIAAgAAAAAP//AAAAEDoAAAAAAhsGbAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "3": {
+      "rawCamera": [
+        567,
+        1676,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e6e83d75ebdcf9a03128741d72fb1b32e8d44e184fcdeaee5e7688a00b44905c",
+      "rawBase64": "/wYAAAEoAPEAIAAgAAAAAP//AAAAEDoAAAAAAjcGjAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "4": {
+      "rawCamera": [
+        589,
+        1750,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8f94069891366dfa863171bf2a8b371c1e0aea3a04ec5e49ca7f0d39d6ffbbf0",
+      "rawBase64": "/wYAAAEbAOgAIAAgAAAAAP//AAAAEDoAAAAAAk0G1gAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "5": {
+      "rawCamera": [
+        589,
+        1738,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "35463256be4b2e80b0edf6d06234eeb93e78a94e84e86fe5f450accfff6d6666",
+      "rawBase64": "/wYAAAEiAO0AIAAgAAAAAP//AAAAEDoAAAAAAk0GygAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "6": {
+      "rawCamera": [
+        587,
+        1665,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "6ade5a9bba01a416378392a74d5770fc3d3f2849487215801d3c143ff8639a98",
+      "rawBase64": "/wYAAAE8APcAIAAgAAAAAP//AAAAEDoAAAAAAksGgQAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "7": {
+      "rawCamera": [
+        587,
+        1665,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "2a4d1d4e5639b065cc51462618e8ea28782e4642650291539f18207a26bec752",
+      "rawBase64": "/wYAAAFCAPoAIAAgAAAAAP//AAAAEDoAAAAAAksGgQAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "8": {
+      "rawCamera": [
+        493,
+        18,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "25441888cade7f0a603cafcc0d0028d9afb3a184aefb978ab87c4f603902ba28",
+      "rawBase64": "/wYAAACWAOUAIAAgAAAAAP//AAAADTwAAAAAAe0AEgAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "9": {
+      "rawCamera": [
+        527,
+        515,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9dfa5612728264239683581d31c7ffb4154f1726d4284bb97ff3608cabf90c3e",
+      "rawBase64": "/wYAAAClADEAIAAgAAAAAP//AAAADTwAAAAAAg8CAwAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "10": {
+      "rawCamera": [
+        578,
+        1030,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a7a041bf460a001b996ac4d2348fd390c3432074daf291d23f5e10d51c94c41e",
+      "rawBase64": "/wYAAAFUAD4AIAAgAAAAAP//AAAADTwAAAAAAkIEBgAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "11": {
+      "rawCamera": [
+        586,
+        1607,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "56373479c35e1836a8972d1a906c817740fd93bb41e74b73d04cdf2e7d424e74",
+      "rawBase64": "/wYAAABkALYAIAAgAAAAAAA4AAAAEDoAAAAAAkoGRwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "12": {
+      "rawCamera": [
+        567,
+        1536,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5ab62fb0487791cbb4bcfe3fa4ff5e5714a537dc00ee6188d326b75cffbf44be",
+      "rawBase64": "/wYAAAB1ALYAIAAgAAAAAAA4AAAAEDoAAAAAAjcGAAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "13": {
+      "rawCamera": [
+        576,
+        1544,
+        0,
+        531
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a4b87ec41fd5944f6a6c20618d856ab3daad71dfd9360a3273698f4d13e0d684",
+      "rawBase64": "/wYAAAFBAPUAIAAgAAAAAP//AAAADTwAAAAAAkAGCAAAAhP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "14": {
+      "rawCamera": [
+        586,
+        1607,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "aa5a3cb8e95de95313e6afb36162f1ed69ce7da3cc4e072dee60c576644258b8",
+      "rawBase64": "/wYAAABSAKoAIAAgAAAAAAA4AAAAEDoAAAAAAkoGRwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "15": {
+      "rawCamera": [
+        631,
+        1686,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "bdda116371c12131847ed746a13772cd9c72de9839bfc6cd19e4affd36592bd3",
+      "rawBase64": "/wYAAAA2AJMAIAAgAAAAAAA4AAAAEDoAAAAAAncGlgAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "16": {
+      "rawCamera": [
+        508,
+        1956,
+        0,
+        1332
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "87047fe91c8172fc34904e9287c5ce8fca6acb06591cd7e8434fcc982b6d0596",
+      "rawBase64": "/wYAAAAmAE8AIAAgAAAAAAA4AAAADUQAAAAAAfwHpAAABTT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "17": {
+      "rawCamera": [
+        516,
+        913,
+        0,
+        1332
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a02b71bc5f636bf47b2e093519382e52193e9e34194543ca7423e56eb8c2aa76",
+      "rawBase64": "/wYAAAAXAJYAIAAgAAAAAAA4AAAADUQAAAAAAgQDkQAABTT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "18": {
+      "rawCamera": [
+        665,
+        2003,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "0857ad799e11cb60488320bc3e74b29bfecf25db28d35934adc50629bba1d2a5",
+      "rawBase64": "/wYAAAArAGMAIAAgAAAAAAA4AAAAEDoAAAAAApkH0wAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "19": {
+      "rawCamera": [
+        512,
+        62,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "1a0ace0e2f0254b842688a76f364a6504ac8fab30322d22dfb3f98dac97dfbb6",
+      "rawBase64": "/wYAAAArAG0AIAAgAAAAAAA4AAAAEDoAAAAAAgAAPgAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "20": {
+      "rawCamera": [
+        513,
+        32,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3cef43546058825cdb9de2461be22827d828b3128a8916b99b8286d677dcbdb9",
+      "rawBase64": "/wYAAAApAHgAIAAgAAAAAAA4AAAAEDoAAAAAAgEAIAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "21": {
+      "rawCamera": [
+        512,
+        1979,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "2c0b5ada363cb8dbfd36003f3f3b306bba35b58749682e68fc223f141b45f76d",
+      "rawBase64": "/wYAAAAqAIMAIAAgAAAAAAA4AAAAEDoAAAAAAgAHuwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "22": {
+      "rawCamera": [
+        495,
+        1880,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "785839dc8c59759c7c82252c586525228158e982676fa5b15a132187ffacca55",
+      "rawBase64": "/wYAAAAvAIwAIAAgAAAAAAA4AAAAEDoAAAAAAe8HWAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "23": {
+      "rawCamera": [
+        670,
+        1780,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "f78c055ace7f7a3726f99a569165cb7a9a1a27cdf19883d9f04f259b104683cb",
+      "rawBase64": "/wYAAAA/AJgAIAAgAAAAAAA4AAAAEDoAAAAAAp4G9AAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "24": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3ae004399b863f42a16304dc7399c7522e5a3d992b635382d2f368fec6f77456",
+      "rawBase64": "/wYAAABrAIEAIAAgAAAAAAA4AAAADUYAAAAAAgAAAAAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "25": {
+      "rawCamera": [
+        670,
+        1780,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "f96c4911adaa64cdafb915ad73b1d80b57f15920be3cb929df9bf2f5ebdb8c90",
+      "rawBase64": "/wYAAABKAKYAIAAgAAAAAAA4AAAAEDoAAAAAAp4G9AAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "26": {
+      "rawCamera": [
+        706,
+        1903,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a3a95a3cfa7d6010f81e3fef1e5777ee06de28b2636fb7204057151cc270962f",
+      "rawBase64": "/wYAAABFAKAAIAAgAAAAAAA4AAAAEDoAAAAAAsIHbwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "27": {
+      "rawCamera": [
+        702,
+        1778,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "fa990bf72c97a98002d3e48b01ba575b88589657faaa82b579529a0134e2a6b3",
+      "rawBase64": "/wYAAABdALMAIAAgAAAAAAA4AAAAEDoAAAAAAr4G8gAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "28": {
+      "rawCamera": [
+        747,
+        1849,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a4e6197eb874105a74339059571751685275a80b4ca0e9c88eacaefbdcbbf18b",
+      "rawBase64": "/wYAAABYAK4AIAAgAAAAAAA4AAAAEDoAAAAAAusHOQAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "29": {
+      "rawCamera": [
+        506,
+        1942,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "30b8043ffe3c0c94e84712f7c9c58c765bc0915cdda3551242614153a7f21f5e",
+      "rawBase64": "/wYAAAAgADwAIAAgAAAAAAA4AAAAEDoAAAAAAfoHlgAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "30": {
+      "rawCamera": [
+        521,
+        1993,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8bbaa64846d5353b4024c72168611d078310bcc4fbeabfb78d18945a2cdf9050",
+      "rawBase64": "/wYAAAAeADIAIAAgAAAAAAA4AAAAEDoAAAAAAgkHyQAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "31": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        1332
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "d55b6f31d524e1a28fa591cf89bc5b0f1a946d83cb326259566726ead3c008ba",
+      "rawBase64": "/wYAAAAcAB0AIAAgAAAAAAA4AAAADUQAAAAAAgAAAAAABTT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "32": {
+      "rawCamera": [
+        533,
+        100,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "23649de98a252edab27c81701b0c813d928a70e95fd7b2be0f36c40861378d02",
+      "rawBase64": "/wYAAAAfAAgAIAAgAAAAAAA4AAAAEDoAAAAAAhUAZAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "33": {
+      "rawCamera": [
+        506,
+        1091,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "635d52661c7ebc564449f5227479dacb60b7d6971f0dd7a85c1270922ad6356a",
+      "rawBase64": "/wYAAAAbAKoAIAAgAAAAAAA4AAAAEDoAAAAAAfoEQwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "34": {
+      "rawCamera": [
+        521,
+        1216,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9f68faffb092fabc4501b9c0a00b0e231abcc7501f213d637ad66a079695e690",
+      "rawBase64": "/wYAAAAWALMAIAAgAAAAAAA4AAAAEDoAAAAAAgkEwAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "35": {
+      "rawCamera": [
+        488,
+        1016,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "19e61cb2422a3989db889f60bb4957c7964c00e85ea816997490b4037ed65bf8",
+      "rawBase64": "/wYAAAATAIIAIAAgAAAAAAA4AAAAEDoAAAAAAegD+AAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "36": {
+      "rawCamera": [
+        518,
+        1111,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "aa334775ff15e1c35bd8ae2f36fc9f9e4d2fba1e77b5f0c674c86a11e79aac83",
+      "rawBase64": "/wYAAAATAHgAIAAgAAAAAAA4AAAAEDoAAAAAAgYEVwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "37": {
+      "rawCamera": [
+        514,
+        1057,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "eb8023a30de9b9499b628813fee89fa985d30a6945f5078d43a96250d9268adc",
+      "rawBase64": "/wYAAAAVAG4AIAAgAAAAAAA4AAAAEDoAAAAAAgIEIQAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "38": {
+      "rawCamera": [
+        505,
+        943,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "ac9562b13fe0e2132f9600e09ea3872ab92e1f31f4332929140b9d8019988b02",
+      "rawBase64": "/wYAAAAUAGQAIAAgAAAAAAA4AAAAEDoAAAAAAfkDrwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "39": {
+      "rawCamera": [
+        505,
+        943,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "6c3eb50ace95762a609b1b19995e52e14a3d32fc72ae0012217db1dd948e70bf",
+      "rawBase64": "/wYAAAARAFoAIAAgAAAAAAA4AAAAEDoAAAAAAfkDrwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "40": {
+      "rawCamera": [
+        505,
+        943,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "717fbf51099663a5cdd7043148509587072dc7a8be7a348c3505b15a0c451a54",
+      "rawBase64": "/wYAAAAOAE8AIAAgAAAAAAA4AAAAEDoAAAAAAfkDrwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "41": {
+      "rawCamera": [
+        505,
+        943,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "7c7cee885ee36e65fe3426f28bd90fc280e8a9c12d9b4db446ec957e8fb95605",
+      "rawBase64": "/wYAAAALAEQAIAAgAAAAAAA4AAAAEDoAAAAAAfkDrwAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "42": {
+      "rawCamera": [
+        529,
+        947,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "edfc7059187244548a4a42d465b97195c9ef917d746ed496bfd2f944fa210ea7",
+      "rawBase64": "/wYAAAAIADkAIAAgAAAAAAA4AAAAEDoAAAAAAhEDswAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "43": {
+      "rawCamera": [
+        569,
+        1020,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "d79bdc24f5bb22ff7a3496c42ff3df6908d89eb146960105d48558c6e1d7285b",
+      "rawBase64": "/wYAAAAHAC8AIAAgAAAAAAA4AAAAEDoAAAAAAjkD/AAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "44": {
+      "rawCamera": [
+        516,
+        1021,
+        0,
+        1332
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e991a3c9253c53a3950fb7d5e7db051c61119a2307d00e0e8d27c5353c8c93c2",
+      "rawBase64": "/wYAAAAGABoAIAAgAAAAAAA4AAAADUQAAAAAAgQD/QAABTT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "45": {
+      "rawCamera": [
+        521,
+        1108,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3adac4e92154975c1426235cfe5047eb1e24046bf2cb0572eac390d8fcb7488b",
+      "rawBase64": "/wYAAAAIAAYAIAAgAAAAAAA4AAAAEDoAAAAAAgkEVAAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "46": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        1796
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5613fde79847df4e0bf4b166f967c6a552ff4211c6d97beba7dff1687a685db0",
+      "rawBase64": "/wYAAADaAKQAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAABwT//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "47": {
+      "rawCamera": [
+        502,
+        1508,
+        0,
+        1213
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5326015dc9bf669db14e83a5b33afff0c37702d7f28a89f35ed3e15098c69a07",
+      "rawBase64": "/wYAAABsALYAIAAgAAAAAAA4AAAAEDoAAAAAAfYF5AAABL3//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "48": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "63cce4284d10d95908e4259e1b144b910f8a3f444e67bcf1a2094c45d7a32889",
+      "rawBase64": "/wYAAACkAIAAIAAgAAAAAAA4AAAADUYAAAAAAgAAAAAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "49": {
+      "rawCamera": [
+        474,
+        1775,
+        0,
+        1349
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "6e1438336bb3dfd534fc52a0103436a285a8d0e036600a499591af1db546a738",
+      "rawBase64": "/wYAAAESAIEAIAAgAAAAAP//AAAADT0AAAAAAdoG7wAABUX//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "50": {
+      "rawCamera": [
+        512,
+        505,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "19a7a0a0c094d9e8830883b1f941197e5e763545a49a7572c7d93a65a9f49182",
+      "rawBase64": "/wYAAAB4AJkANwAjAAAAAAA4AAAADUYAAAAAAgAB+QAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "51": {
+      "rawCamera": [
+        512,
+        505,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5acd62b87a90374f6e732431e8d76a33c8c2ce069fd437b207d4d36908e7ae22",
+      "rawBase64": "/wYAAACCAJkANwAjAAAAAAA4AAAADUYAAAAAAgAB+QAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "52": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5a7223aafe0a190f504bd27833d426d3dd8420023a2a8229e6a42f059cd071bd",
+      "rawBase64": "/wYAAACkAHkAIAAgAAAAAAA4AAAADUYAAAAAAgAAAAAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "53": {
+      "rawCamera": [
+        512,
+        0,
+        0,
+        882
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "62aa0b07efeba218035c0d9e5ec6bb792f8495f9df026277a2e3d68cba242c70",
+      "rawBase64": "/wYAAABrAHgAIAAgAAAAAAA4AAAADUYAAAAAAgAAAAAAA3L//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "54": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "021ca9549426b0f605bd7717e08a9328a5501acbb3e185557d218bc08ab4017b",
+      "rawBase64": "/wYAAACaAGIAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "55": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8bf54605d586a4484c0edc8ad03fc2f3ee0f2f1b83c304ee080a795eff23fa4b",
+      "rawBase64": "/wYAAAB0AGIAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "57": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        403
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "c378544672e59a9ab15413084a89db06d08fe6a63d60e0b8d216080f8fc1597d",
+      "rawBase64": "/wYAAAAeAIIAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAZP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "58": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        403
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "3de62d43a0b7cb38048f3279b3bd9735261c09278509147e080fda30b69f7eb5",
+      "rawBase64": "/wYAAAAeAH4AIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAZP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "59": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        403
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "4988a856ba38d3a1d65ad465aace274c9027a3b0003034f207d25672b0a67ba9",
+      "rawBase64": "/wYAAAAeAIMAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAZP//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "60": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "be086fea36336ef5272eb1d9f3e2e8e6851d38a1d2241de9df357ec22f324448",
+      "rawBase64": "/wYAAABqAFMAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "61": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "4625daf6e5ba1a249d50a094cf9298cf509aad0cee189825270d8878dcd19ddf",
+      "rawBase64": "/wYAAAChAFIAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "62": {
+      "rawCamera": [
+        512,
+        1005,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e2f7b262e935b360adf9b6d7435e445fb11807ccdd7d8dec28d60a73642eedcb",
+      "rawBase64": "/wYAAACNAEAAIAAgAAAAAAA4AAAADUcAAAAAAgAD7QAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "63": {
+      "rawCamera": [
+        499,
+        778,
+        0,
+        1257
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "969452f6b79c00112865c7d64ca25618068f4c50e4c55f8395ad854ff01e6972",
+      "rawBase64": "/wYAAACRAE4AIAAgAAAAAAA4AAAADUcAAAAAAfMDCgAABOn//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "64": {
+      "rawCamera": [
+        512,
+        271,
+        0,
+        1257
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a438743385e4af681c8ca61fb2722bd8dddacd4daaee207a728ec0268466e918",
+      "rawBase64": "/wYAAAB6AE8AIAAgAAAAAAA4AAAADUcAAAAAAgABDwAABOn//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "65": {
+      "rawCamera": [
+        512,
+        1005,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "790209d37dbbcd8968afc60f7b9764f015c53469ccb0afd99017cb731732a7a5",
+      "rawBase64": "/wYAAAB8AEEAIAAgAAAAAAA4AAAADUcAAAAAAgAD7QAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "66": {
+      "rawCamera": [
+        512,
+        1005,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "68eb83f360636c50dddfd38a2410b21b498f457af3caa644825732dfc39de861",
+      "rawBase64": "/wYAAABaAFsAIAAgAAAAAAA4AAAADUcAAAAAAgAD7QAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "67": {
+      "rawCamera": [
+        512,
+        1005,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "87d9a4f686bdec80902b07eb6c851c565427c01cfaaccdf97fc852ab89159606",
+      "rawBase64": "/wYAAABaAIEAIAAgAAAAAAA4AAAADUcAAAAAAgAD7QAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "68": {
+      "rawCamera": [
+        512,
+        1005,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "5b1d042bdfe67c56e342359faccd7e4707971e53613f61cd22f0ab7196cf518a",
+      "rawBase64": "/wYAAACzAFsAIAAgAAAAAAA4AAAADUcAAAAAAgAD7QAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "69": {
+      "rawCamera": [
+        512,
+        510,
+        0,
+        811
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "ec526cdc44af0b497d4714d7d59132de07da5a7a5c4c1b52fae3504f595cea62",
+      "rawBase64": "/wYAAACrAFIAIAAgAAAAAAA4AAAADUcAAAAAAgAB/gAAAyv//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "70": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "e9297f197bc7dfa4dfe3b53fe81440179cfb75a73528b83f3e3a8088eb7949b7",
+      "rawBase64": "/wYAAADUAIkAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "71": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "ecd4c162f94797ce123959e76eb69faa16f41583eba1aef15038aec40edc9cba",
+      "rawBase64": "/wYAAADqAHMAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "72": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8380c38ed6244075d4b56232d05830ae0084855bd16628452ffa926196b8b7e3",
+      "rawBase64": "/wYAAADaAGIAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "73": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "b3efdccc41d141af1e31a0da7686c423e5cd17d13c3c17e0169072a2c37dfec5",
+      "rawBase64": "/wYAAAFPAHkAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "74": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "8848e03a751c3ee5976b3153540266788bae630c78cd4c5d7e9d5ad4aaafee4c",
+      "rawBase64": "/wYAAAFUAJQAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "75": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "9c3f5867f67d0cdeb5cbd61326fdd6345baad48c49d5fc769e864b63d9dd4ab2",
+      "rawBase64": "/wYAAAFFAMIAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "76": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "497275c6e25fca01f25d65a5afd9951cc63ef80159b690741799157f7d8ae503",
+      "rawBase64": "/wYAAAE2ANUAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "77": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "a14df0d068861c7f08f579c351b79e1d23f9066b978716bf710404ac0d346f03",
+      "rawBase64": "/wYAAAFLANsAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "78": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "1e34c9f8eca381f03ac83b49a350749e0834346347a3c282fd4e38ffe7f8412d",
+      "rawBase64": "/wYAAAE4AGwAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "79": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "902b4565dfd651baa9146ab1e6d7fdf1362f8e7ad2efb2a4fd427c57509891ae",
+      "rawBase64": "/wYAAAFLAF8AIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "80": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "409343667c4225b360aa3c0726defd9891c29ccd4a2b4ef2c2f02eed6d3a88df",
+      "rawBase64": "/wYAAAFAAFAAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    },
+    "81": {
+      "rawCamera": [
+        467,
+        2031,
+        0,
+        2074
+      ],
+      "sourceCameraOffset": 27,
+      "sha256": "803d5b9197232d55da700686f17777e83245c2625ca67d29fecca3f201c5317e",
+      "rawBase64": "/wYAAAFLADsAIAAgAAAAAP//AAAADUUAAAAAAdMH7wAACBr//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA\u003d\u003d"
+    }
+  }
+}

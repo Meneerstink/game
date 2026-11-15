@@ -40,7 +40,8 @@ object ClueInterfaceImportTool {
                 lineHeight = n.int("lineHeight"), alignX = n.int("xTextAlignment"), alignY = n.int("yTextAlignment"), shadow = n.flag("textShadowed"),
                 colour = n.int("textColor"), ops = n["actions"]?.map { it.asText() }.orEmpty(), opBase = n["name"]?.asText().orEmpty(),
                 model = if (type == 6) models.getValue(n.int("modelId")) else -1,
-                originX = n.int("offsetX2d"), originY = n.int("offsetY2d"), xan = n.int("rotationX"), yan = n.int("rotationY"), zan = n.int("rotationZ"),
+                originX = n.int("offsetX2d"), originY = n.int("offsetY2d"), // RuneLite names the raw second/third angles Z/Y; 667 reads them as yan/zan.
+                xan = n.int("rotationX"), yan = n.int("rotationZ"), zan = n.int("rotationY"),
                 zoom = n.int("modelZoom"), ortho = n.flag("orthogonal"),
                 mouseOver = n.hover("onMouseOverListener"), mouseLeave = n.hover("onMouseLeaveListener"))
         }.toMutableList()

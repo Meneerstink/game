@@ -453,3 +453,27 @@ account name in the existing world's missing Fremennik-name provider, as Olaf do
 This is not the entire sourced step-pool replacement. The old donor registration
 and remaining subtype/puzzle/guard work are still called out in REVIEW-B-7.md.
 Script/Gradle acceptance must be recorded separately from standalone tests.
+
+
+## Latest UI camera correction, B15-Nov20:34 (supersedes earlier UI plans)
+
+Use the corrected ClueInterfaceImportTool from this branch: RuneLite's source
+angle labels are X/Z/Y in raw order, and native Component reads X/Y/Z. The
+reward chest must receive104,761,0,914. Earlier regression104,0,761,914 was wrong.
+Source raw bytes/hashes: cache/ui-camera-order.json; explanation UI-CAMERA-ORDER.md.
+Five focused codec tests + actual unchanged667 Component decode/hover/wide-model
+cache-key tests passed on the exact promoted sources. No canonical client edits.
+
+Read-only corrected PREFLIGHT tx-20261115-193224:27 logical mutations, both
+caches/ledger/runtime mapping unchanged. UI-PREFLIGHT.tsv is the exact proposal:
+interface73->1201,203->1202; model3395->66637,1226->66638; source sprite468->8954
+(texture),539->8955,540->8956; texture22->1423. No IDs are reserved. Rerun AFTER
+preceding batches. Command: python tools/clue/preflight_ui.py, after compiling
+current UI codec classes with python tools/clue/verify_interface_port.py.
+Read-only proof: build/clue/ui-preflight-current/read-only-proof.json.
+
+Claude: retain the previously staged wide-IF3 client patch/release ordering;
+load the corrected reward screen in OpenGL and compare the chest orientation
+against the source, check text paper, Close/hover/fixed/resizable/Stretched.
+New final-branch Gradle acceptance follows separately. This is not whole CLUE
+release acceptance; map/puzzle/guardian/source gates remain open.

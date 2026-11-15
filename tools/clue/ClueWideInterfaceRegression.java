@@ -12,7 +12,7 @@ class ClueWideInterfaceRegression {
             int expected=mode.equals("legacy") ? 60002 : mode.equals("wide") ? 66085 : -1;
             require(component.obj==expected,mode+" model: "+component.obj);
             require(component.type==6,mode+" type");
-            require(component.xan2d==104 && component.yan2d==0 && component.zan2d==761 && component.zoom2d==914,mode+" camera");
+            require(component.xan2d==104 && component.yan2d==761 && component.zan2d==0 && component.zoom2d==914,mode+" camera");
             require(packet.pos==bytes.length,mode+" decoder alignment");
         }
         byte[] closeBytes=Files.readAllBytes(dir.resolve("close.bin"));

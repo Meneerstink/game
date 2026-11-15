@@ -24,7 +24,9 @@ test {
     inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
     inputs.files(rootProject.file('docs/CLUE/cache/stash-chart-baked.json'),
         rootProject.file('docs/CLUE/cache/hover.json'),
-        rootProject.file('docs/CLUE/cache/stash-setting.json')).withPropertyName('clueStashFixtures')
+        rootProject.file('docs/CLUE/cache/stash-setting.json'),
+        rootProject.file('docs/CLUE/cache/interfaces.json'),
+        rootProject.file('docs/CLUE/cache/ui-camera-order.json')).withPropertyName('clueStashFixtures')
 }
 
 tasks.register('runClueStashSettingCacheTool', JavaExec) {

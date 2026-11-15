@@ -2,6 +2,9 @@ package gg.rsmod.game.tools.importer
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import java.io.File
+import java.nio.ByteBuffer
+import java.security.MessageDigest
+import java.util.Base64
 import kotlin.test.*
 
 class ClueInterfaceImportTests {
@@ -25,12 +28,28 @@ class ClueInterfaceImportTests {
         val bytes = OsrsInterfacePortTool.encode(components[2])
         assertEquals(0x46, bytes[1].toInt() and 255)
         assertEquals(66085, InterfaceHookProbeTool.componentModelId(bytes))
-        assertContentEquals(intArrayOf(104, 0, 761, 914), InterfaceHookProbeTool.componentModelCamera(bytes))
+        assertContentEquals(intArrayOf(104, 761, 0, 914), InterfaceHookProbeTool.componentModelCamera(bytes))
         val legacy = ClueInterfaceImportTool.components(73, root["73"], fonts, models, sprites)
         val oldBytes = OsrsInterfacePortTool.encode(legacy[2])
         assertEquals(6, oldBytes[1].toInt() and 255)
         assertEquals(60002, InterfaceHookProbeTool.componentModelId(oldBytes))
         assertEquals(oldBytes.size + 2, bytes.size)
+    }
+
+    @Test fun `camera adapter preserves the raw pinned OSRS angles rather than similarly named fields`() {
+        val proof = ObjectMapper().readTree(File("../docs/CLUE/cache/ui-camera-order.json"))
+        for (group in listOf(73,203)) {
+            val components = ClueInterfaceImportTool.components(group,root[group.toString()],fonts,models,sprites)
+            for (component in components.filter { it.type == 6 }) {
+                val source = proof[group.toString()][component.id.toString()]
+                val raw = Base64.getDecoder().decode(source["rawBase64"].asText())
+                val hash = MessageDigest.getInstance("SHA-256").digest(raw).joinToString("") { "%02x".format(it.toInt() and 255) }
+                assertEquals(source["sha256"].asText(),hash)
+                val camera = ByteBuffer.wrap(raw,source["sourceCameraOffset"].asInt(),8)
+                val expected = IntArray(4) { camera.short.toInt() and 65535 }
+                assertContentEquals(expected,InterfaceHookProbeTool.componentModelCamera(OsrsInterfacePortTool.encode(component)))
+            }
+        }
     }
 
     @Test fun `source reward screen retains its paper chest close button and all twelve inventory slots`() {
