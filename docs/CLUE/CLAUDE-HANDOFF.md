@@ -1,7 +1,7 @@
 # CLUE — Claude cache/client handoff (in progress)
 
-This card is not ready to merge/release. B resumed the entire card on
-`gpt-b/clue-scrolls-3` from A's WIP `79dd2c6f0` (dossier 15 November 04:2x).
+This card is not ready to merge/release. A resumed the entire card on
+`gpt-a/clue-scrolls-4` from B's WIP `05286a72c` (dossier 15 November 07:02).
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
@@ -16,8 +16,8 @@ All cache application, testserver/client operation, merge and release belong to 
   canonical caches immediately before applying, then regenerate `items.tsv`.
 * Use the reviewed importer/forearm fix from this branch. The old importer
   stopped on Ancient/Armadyl/Bandos platebodies (12460/12470/12480).
-* Plan report: `build/clue/item-preflight.txt`. The reported transaction was
-  `tx-20261114-231054`, `applied=false`. See `DRY-RUN-INCIDENT.md` for the
+* Plan report: `build/clue/item-preflight-245.txt`. The reported transaction was
+  `tx-20261115-070458`, `applied=false`, `finalized=0`, `recovered=0`. See `DRY-RUN-INCIDENT.md` for the
   corrected ledger-recovery side effect; no cache bytes were applied.
 * Obtain/merge the importer's `--yml-out=<review file>` metadata on Claude's
   application run. Replace entries by ID; never blindly append duplicate IDs.
@@ -168,12 +168,12 @@ to Claude's loaded-client check.
 Exact preflight invocation (no apply):
 
 ```
-.\gradlew.bat :game:runClueInterfaceImportTool --priority low --args="C:/RSPS/work/gpt-b/docs/CLUE/cache/interfaces.json C:/RSPS/work/gpt-b/data/cfg/clue/interfaces.tsv C:/RSPS/work/gpt-b/build/clue/interface-preflight.tsv"
+.\gradlew.bat :game:runClueInterfaceImportTool --priority low --args="C:/RSPS/work/gpt-a/docs/CLUE/cache/interfaces.json C:/RSPS/work/gpt-a/data/cfg/clue/interfaces.tsv C:/RSPS/work/gpt-a/build/clue/interface-preflight.tsv"
 ```
 
 For Claude's application run, the second argument must be the canonical runtime
 `data/cfg/clue/interfaces.tsv`. The tool writes that mapping only after successful
-cache verification. Rerun after the 227-item batch and any other cache changes.
+cache verification. Rerun after the 245-item batch and the clue-step NPC batch and any other cache changes.
 `INTERFACE-PREFLIGHT.tsv` records transaction `tx-20261115-041434`, applied=false:
 
 * OSRS 73 -> proposed local interface 1196 (17 components; slots 5..16).
@@ -187,3 +187,78 @@ cache verification. Rerun after the 227-item batch and any other cache changes.
 These are proposals, not reservations. Runtime integration of the receipt/text
 window and source close-button hover are still to be completed after the current
 NPC/Mimic regression run. No UI-ready or release-ready claim is made here.
+
+
+## A checkpoint 15 November 08:12: current preflights and source steps
+
+Inherited runtime baseline is recorded in `REVIEW-A.md`: **68 tests / 19 classes**,
+zero failures/errors, scripts compiled (31m04s). Earlier dossier total 81 was an
+arithmetic error; 68 is the XML-derived total. The newer typed step catalogue and
+101-slide puzzle generator passed **7 additional tests / 2 explicit classes**
+with `python tools/clue/check_compile.py dec080e2e step-tests`.
+The later atomic advance / removed-donor-key migration / torn-parts backend is
+still awaiting its targeted Gradle run. It is not yet registered as gameplay.
+
+### Item and UI plans
+
+* Current item transaction `tx-20261115-070458`: 245 source roster entries,
+  436 definitions including linked notes, proposed local **24755?25190**.
+  `ITEM-PREFLIGHT.tsv` is regenerated from this run. The additional 18 source
+  step objects are challenge scrolls (2842/7269/12128), puzzle pictures
+  (2795/3565/3569/12161/20280/20281/20282/23417), light box and its lamp display
+  items (20355/20356/20357), torn parts (19837/19838/19839), and master strange
+  device (19939). No beginner objects are added.
+* UI transaction `tx-20261115-070939`: **27** logical mutations, not the older
+  26-mutation plan. Added source hover sprite 540 -> proposed **8924**; source
+  close sprite 539 -> 8923. Interfaces remain proposed 1196/1197; models
+  66084/66085; texture 1423; texture sprite 8922. Actual rows are in
+  `INTERFACE-PREFLIGHT.tsv`.
+* Both runs compared the import-ledger SHA-256 and every cache data/index file's
+  size and mtime before/after: unchanged. No application, finalization, runtime
+  mapping publication, testserver/client operation or canonical-client edit.
+* All allocator IDs are **proposals**, not reservations. Item, NPC and UI plans
+  independently used the same free model namespace. Apply in a reviewed order
+  and rerun each later batch against the result of the earlier batch. Never
+  paste model numbers from these separate dry runs into a combined transaction.
+
+### Exact NPC batch
+
+```
+.\gradlew.bat :game:runOsrsNpcImportTool --priority low --args="clue-steps"
+```
+
+Source cache: `import-source/openrs2-2686/cache`. A ran the compiled tool's
+PREFLIGHT only. Transaction `tx-20261115-064813`: 161 logical mutations, 63 source
+asset records. Complete output: `NPC-PREFLIGHT.txt`. The ledger hash and all cache
+file sizes/mtimes were unchanged before/after.
+
+| Source | Role | Proposed local NPC |
+|---:|---|---:|
+| 6586 | Sherlock | 15234 |
+| 7306 | Falo the Bard | 15235 |
+| 7312 | Master double agent | 15236 |
+| 6587 | Armadylean guard | 15237 |
+| 6588 | Bandosian guard | 15238 |
+| 7307 | Ancient Wizard (mage) | 15239 |
+| 7308 | Ancient Wizard (ranger) | 15240 |
+| 7309 | Ancient Wizard (melee) | 15241 |
+| 7310 | Brassican Mage | 15242 |
+
+Existing Uri 5141?5143, hard agents 5144/5145, Saradomin wizard 1264 and Zamorak
+wizard 1007 are not duplicated. Wizard Traiborn / Lumbridge Guide identity/name
+adapters still need review (source names versus existing Traiborn / Lumbridge
+Sage). Abbot Langley and Robin are already spawned in the current world.
+
+`data/cfg/clue/guardians.json` contains all 11 Wiki/cache-checked combat variants,
+including 76 HP Zamorak wizard, 160 HP master agent, the 80 HP ancient trio and
+Brassican's typeless magic. This is source data, **not an activated combat script**.
+The NPC importer drops stats because they belong in server combat definitions.
+Its report also notes unrepresentable face z-offsets on Brassican's two meshes:
+Claude must inspect these in the loaded client before accepting the asset chain.
+
+`STEP-ASSET-EVIDENCE.md` records all 17 selected STASH placements and the actual
+unsupported swamp-hut bookcase. The hard Emir's Arena coordinate has no fight;
+the two selected master coordinates require Brassican, not a random trio.
+The source generator preserves those exceptions and the two master anagram
+puzzle choices. The old 41-donor-step registration still requires replacement;
+no complete-step-pool claim is made by these source/backend commits.

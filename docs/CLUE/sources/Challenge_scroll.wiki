@@ -1,0 +1,69 @@
+{{External|rs}}
+{{Otheruses|def=no|the riddle answers|Treasure Trails/Guide/Challenge scrolls}}
+{{Infobox Item
+|version1 = Medium
+|version2 = Hard
+|version3 = Elite
+|name1 = Challenge scroll (medium)
+|name2 = Challenge scroll (hard)
+|name3 = Challenge scroll (elite)
+|image1 = [[File:Clue scroll (medium).png]]
+|image2 = [[File:Clue scroll (hard).png]]
+|image3 = [[File:Clue scroll (elite).png]]
+|release1 = [[5 May]] [[2004]]
+|release2 = [[20 February]] [[2006]]
+|release3 = [[12 June]] [[2014]]
+|update1 = Bigger Banks & Treasure Trails
+|update2 = Updates, updates and more updates...
+|update3 = Treasure Trail Expansion
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Read, Drop
+|examine = I need to answer this correctly.
+|value = 20
+|weight = 0.020
+|id1 = 2842,2844,2846,2850,2852,2854,7275,7277,7279,7281,7283,7285,12056,12058,12060,12062,12064,12066,12068,12070,12072,19735,19737,19739,19741,19743,19745,19747,19749,19751,19753,19755,19757,19759,19763,19765,19767,19769,19771,19773,23132,23134,25785
+|id2 = 7269,7271,7273,12567,12569,12571,12573,12575,12577,19847,19855,19859,19885,19893,19899,19907
+|id3 = 12128,12139
+}}
+{{Synced switch
+|version1 = [[File:Clue scroll (medium) detail.png|left|150px]]
+|version2 = [[File:Clue scroll (hard) detail.png|left|150px]]
+|version3 = [[File:Clue scroll (elite) detail.png|left|150px]]
+}}
+'''Challenge scrolls''' are riddles given to players by an [[NPC]] during a [[Treasure Trail]]. Challenge scrolls appear in medium, hard, and elite clue steps. Players must solve the challenge scroll in order to advance in their Treasure Trail. The challenge scroll is not a separate step in the Treasure Trail.
+
+The questions for the challenge scrolls are always the same. Players do not have to read the challenge scroll in order to answer the question. Players only need to talk to the NPC again after receiving the scroll to answer the answer. There are no penalties for incorrect answers.
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 9 March 2017
+|update = General QoL!
+|change = The item's value was increased from 1 to 20.
+}}
+{{Subject changes
+|date = 6 March 2014
+|update = Patch Notes (6 March 2014)
+|change = The item was renamed from "Challenge scroll" to "Challenge scroll (difficulty)".
+}}
+{{Subject changes
+|date = 18 June 2007
+|update = Game Improvements
+|change = Medium difficulty scrolls were renamed from "Clue scroll" to "Challenge scroll".
+}}
+{{Subject changes
+|date = 5 December 2006
+|update = Treasure Trails, spiders and sheep
+|change = Medium difficulty scrolls were renamed from "Challenge scroll" to "Clue scroll".
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Multiple challenge scrolls can be obtained through the drop-trick. However, players can only have 1 challenge scroll in their [[inventory]] or the [[bank]].
+
+{{Treasure Trails}}

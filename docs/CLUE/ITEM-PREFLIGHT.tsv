@@ -1,420 +1,438 @@
-# PLAN ONLY 2026-11-15; allocator IDs must be refreshed by Claude before apply
-osrs_id	planned_local_id	name	models
-7370	24755	Green d'hide body (g)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-7371	24756	Green d'hide body (g) (noted)	[]
-7372	24757	Green d'hide body (t)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-7373	24758	Green d'hide body (t) (noted)	[]
-7374	24759	Blue d'hide body (g)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-7375	24760	Blue d'hide body (g) (noted)	[]
-7376	24761	Blue d'hide body (t)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-7377	24762	Blue d'hide body (t) (noted)	[]
-7378	24763	Green d'hide chaps (g)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-7379	24764	Green d'hide chaps (g) (noted)	[]
-7380	24765	Green d'hide chaps (t)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-7381	24766	Green d'hide chaps (t) (noted)	[]
-7382	24767	Blue d'hide chaps (g)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-7383	24768	Blue d'hide chaps (g) (noted)	[]
-7384	24769	Blue d'hide chaps (t)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-7385	24770	Blue d'hide chaps (t) (noted)	[]
-7390	24771	Blue wizard robe (g)	[upstream_model:11396->66084, upstream_model:10979->66085, upstream_model:10984->66086, upstream_model:11348->66087, upstream_model:11359->66088, upstream_model:151->29538]
-7391	24772	Blue wizard robe (g) (noted)	[]
-7392	24773	Blue wizard robe (t)	[upstream_model:11396->66084, upstream_model:10979->66085, upstream_model:10984->66086, upstream_model:11348->66087, upstream_model:11359->66088, upstream_model:151->29538]
-7393	24774	Blue wizard robe (t) (noted)	[]
-7394	24775	Blue wizard hat (g)	[upstream_model:11400->66089, upstream_model:11331->66090, upstream_model:11354->66091, upstream_model:11403->66092, upstream_model:11407->66093]
-7395	24776	Blue wizard hat (g) (noted)	[]
-7396	24777	Blue wizard hat (t)	[upstream_model:11400->66089, upstream_model:11331->66090, upstream_model:11354->66091, upstream_model:11403->66092, upstream_model:11407->66093]
-7397	24778	Blue wizard hat (t) (noted)	[]
-10316	24779	Bob's red shirt	[upstream_model:20228->66094, upstream_model:20161->66095, upstream_model:20125->66096, upstream_model:20210->66097, upstream_model:20176->66098, upstream_model:151->29538]
-10317	24780	Bob's red shirt (noted)	[]
-10318	24781	Bob's blue shirt	[upstream_model:20228->66094, upstream_model:20161->66095, upstream_model:20125->66096, upstream_model:20210->66097, upstream_model:20176->66098, upstream_model:151->29538]
-10319	24782	Bob's blue shirt (noted)	[]
-10320	24783	Bob's green shirt	[upstream_model:20228->66094, upstream_model:20161->66095, upstream_model:20125->66096, upstream_model:20210->66097, upstream_model:20176->66098, upstream_model:151->29538]
-10321	24784	Bob's green shirt (noted)	[]
-10322	24785	Bob's black shirt	[upstream_model:20228->66094, upstream_model:20161->66095, upstream_model:20125->66096, upstream_model:20210->66097, upstream_model:20176->66098, upstream_model:151->29538]
-10323	24786	Bob's black shirt (noted)	[]
-10324	24787	Bob's purple shirt	[upstream_model:20228->66094, upstream_model:20161->66095, upstream_model:20125->66096, upstream_model:20210->66097, upstream_model:20176->66098, upstream_model:151->29538]
-10325	24788	Bob's purple shirt (noted)	[]
-10368	24789	Zamorak bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-10369	24790	Zamorak bracers (noted)	[]
-10370	24791	Zamorak d'hide body	[upstream_model:20233->66102, upstream_model:20157->66103, upstream_model:20121->66104, upstream_model:20213->66105, upstream_model:20177->66106, upstream_model:151->29538]
-10371	24792	Zamorak d'hide body (noted)	[]
-10376	24793	Guthix bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-10377	24794	Guthix bracers (noted)	[]
-10378	24795	Guthix d'hide body	[upstream_model:20232->66107, upstream_model:20155->66108, upstream_model:20121->66104, upstream_model:20211->66109, upstream_model:20177->66106, upstream_model:151->29538]
-10379	24796	Guthix d'hide body (noted)	[]
-10384	24797	Saradomin bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-10385	24798	Saradomin bracers (noted)	[]
-10386	24799	Saradomin d'hide body	[upstream_model:20224->66110, upstream_model:20156->66111, upstream_model:20121->66104, upstream_model:20212->66112, upstream_model:20177->66106, upstream_model:151->29538]
-10387	24800	Saradomin d'hide body (noted)	[]
-12193	24801	Ancient robe top	[upstream_model:28747->66113, upstream_model:28536->66114, upstream_model:28527->66115, upstream_model:28600->66116, upstream_model:28594->66117, upstream_model:151->29538]
-12194	24802	Ancient robe top (noted)	[]
-12205	24803	Bronze platebody (g)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12206	24804	Bronze platebody (g) (noted)	[]
-12207	24805	Bronze platelegs (g)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12208	24806	Bronze platelegs (g) (noted)	[]
-12209	24807	Bronze plateskirt (g)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12210	24808	Bronze plateskirt (g) (noted)	[]
-12211	24809	Bronze full helm (g)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12212	24810	Bronze full helm (g) (noted)	[]
-12213	24811	Bronze kiteshield (g)	[upstream_model:2339->66134, upstream_model:486->66135]
-12214	24812	Bronze kiteshield (g) (noted)	[]
-12215	24813	Bronze platebody (t)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12216	24814	Bronze platebody (t) (noted)	[]
-12217	24815	Bronze platelegs (t)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12218	24816	Bronze platelegs (t) (noted)	[]
-12219	24817	Bronze plateskirt (t)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12220	24818	Bronze plateskirt (t) (noted)	[]
-12221	24819	Bronze full helm (t)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12222	24820	Bronze full helm (t) (noted)	[]
-12223	24821	Bronze kiteshield (t)	[upstream_model:2339->66134, upstream_model:486->66135]
-12224	24822	Bronze kiteshield (t) (noted)	[]
-12225	24823	Iron platebody (t)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12226	24824	Iron platebody (t) (noted)	[]
-12227	24825	Iron platelegs (t)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12228	24826	Iron platelegs (t) (noted)	[]
-12229	24827	Iron plateskirt (t)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12230	24828	Iron plateskirt (t) (noted)	[]
-12231	24829	Iron full helm (t)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12232	24830	Iron full helm (t) (noted)	[]
-12233	24831	Iron kiteshield (t)	[upstream_model:2339->66134, upstream_model:486->66135]
-12234	24832	Iron kiteshield (t) (noted)	[]
-12235	24833	Iron platebody (g)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12236	24834	Iron platebody (g) (noted)	[]
-12237	24835	Iron platelegs (g)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12238	24836	Iron platelegs (g) (noted)	[]
-12239	24837	Iron plateskirt (g)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12240	24838	Iron plateskirt (g) (noted)	[]
-12241	24839	Iron full helm (g)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12242	24840	Iron full helm (g) (noted)	[]
-12243	24841	Iron kiteshield (g)	[upstream_model:2339->66134, upstream_model:486->66135]
-12244	24842	Iron kiteshield (g) (noted)	[]
-12245	24843	Beanie	[upstream_model:28730->66136, upstream_model:54280->66137, upstream_model:332->66138, upstream_model:28761->66139, upstream_model:63->44344, upstream_model:28794->66140, upstream_model:120->44348]
-12246	24844	Beanie (noted)	[]
-12247	24845	Red beret	[upstream_model:3373->66141, upstream_model:198->66142, upstream_model:373->66143, upstream_model:40->66144, upstream_model:98->66145]
-12248	24846	Red beret (noted)	[]
-12249	24847	Imp mask	[upstream_model:28741->66146, upstream_model:18558->66147, upstream_model:28555->66148, upstream_model:28754->66149, upstream_model:28780->66150, upstream_model:120->44348]
-12250	24848	Imp mask (noted)	[]
-12251	24849	Goblin mask	[upstream_model:28666->66151, upstream_model:18556->66152, upstream_model:28553->66153, upstream_model:28752->66154, upstream_model:28781->66155]
-12252	24850	Goblin mask (noted)	[]
-12253	24851	Armadyl robe top	[upstream_model:28695->66156, upstream_model:28542->66157, upstream_model:28529->66158, upstream_model:28604->66159, upstream_model:28593->66160, upstream_model:151->29538]
-12254	24852	Armadyl robe top (noted)	[]
-12265	24853	Bandos robe top	[upstream_model:28722->66161, upstream_model:28533->66162, upstream_model:28523->66163, upstream_model:28605->66164, upstream_model:28596->66165, upstream_model:151->29538]
-12266	24854	Bandos robe top (noted)	[]
-12277	24855	Mithril platebody (g)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12278	24856	Mithril platebody (g) (noted)	[]
-12279	24857	Mithril platelegs (g)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12280	24858	Mithril platelegs (g) (noted)	[]
-12281	24859	Mithril kiteshield (g)	[upstream_model:2339->66134, upstream_model:486->66135]
-12282	24860	Mithril kiteshield (g) (noted)	[]
-12283	24861	Mithril full helm (g)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12284	24862	Mithril full helm (g) (noted)	[]
-12285	24863	Mithril plateskirt (g)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12286	24864	Mithril plateskirt (g) (noted)	[]
-12287	24865	Mithril platebody (t)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-12288	24866	Mithril platebody (t) (noted)	[]
-12289	24867	Mithril platelegs (t)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-12290	24868	Mithril platelegs (t) (noted)	[]
-12291	24869	Mithril kiteshield (t)	[upstream_model:2339->66134, upstream_model:486->66135]
-12292	24870	Mithril kiteshield (t) (noted)	[]
-12293	24871	Mithril full helm (t)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-12294	24872	Mithril full helm (t) (noted)	[]
-12295	24873	Mithril plateskirt (t)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-12296	24874	Mithril plateskirt (t) (noted)	[]
-12297	24875	Black pickaxe	[upstream_model:2529->52687, upstream_model:509->52689]
-12298	24876	Black pickaxe (noted)	[]
-12299	24877	White headband	[upstream_model:3377->66166, upstream_model:201->66167, upstream_model:376->66168, upstream_model:43->66169, upstream_model:101->66170]
-12300	24878	White headband (noted)	[]
-12301	24879	Blue headband	[upstream_model:3377->66166, upstream_model:201->66167, upstream_model:376->66168, upstream_model:43->66169, upstream_model:101->66170]
-12302	24880	Blue headband (noted)	[]
-12303	24881	Gold headband	[upstream_model:3377->66166, upstream_model:201->66167, upstream_model:376->66168, upstream_model:43->66169, upstream_model:101->66170]
-12304	24882	Gold headband (noted)	[]
-12305	24883	Pink headband	[upstream_model:3377->66166, upstream_model:201->66167, upstream_model:376->66168, upstream_model:43->66169, upstream_model:101->66170]
-12306	24884	Pink headband (noted)	[]
-12307	24885	Green headband	[upstream_model:3377->66166, upstream_model:201->66167, upstream_model:376->66168, upstream_model:43->66169, upstream_model:101->66170]
-12308	24886	Green headband (noted)	[]
-12309	24887	Pink boater	[upstream_model:11399->66171, upstream_model:11330->66172, upstream_model:11353->66173, upstream_model:11402->66174, upstream_model:11406->66175]
-12310	24888	Pink boater (noted)	[]
-12311	24889	Purple boater	[upstream_model:11399->66171, upstream_model:11330->66172, upstream_model:11353->66173, upstream_model:11402->66174, upstream_model:11406->66175]
-12312	24890	Purple boater (noted)	[]
-12313	24891	White boater	[upstream_model:11399->66171, upstream_model:11330->66172, upstream_model:11353->66173, upstream_model:11402->66174, upstream_model:11406->66175]
-12314	24892	White boater (noted)	[]
-12315	24893	Pink elegant shirt	[upstream_model:20235->66176, upstream_model:20158->66177, upstream_model:20122->66178, upstream_model:20214->66179, upstream_model:20178->66180, upstream_model:151->29538]
-12316	24894	Pink elegant shirt (noted)	[]
-12317	24895	Pink elegant legs	[upstream_model:20234->66181, upstream_model:20140->66182, upstream_model:20195->66183]
-12318	24896	Pink elegant legs (noted)	[]
-12319	24897	Crier hat	[upstream_model:28737->66184, upstream_model:27149->66185, upstream_model:28764->66186, upstream_model:28797->66187]
-12320	24898	Crier hat (noted)	[]
-12321	24899	White cavalier	[upstream_model:2451->66188, upstream_model:186->66189, upstream_model:362->66190, upstream_model:28->66191, upstream_model:86->66192]
-12322	24900	White cavalier (noted)	[]
-12323	24901	Red cavalier	[upstream_model:2451->66188, upstream_model:186->66189, upstream_model:362->66190, upstream_model:28->66191, upstream_model:86->66192]
-12324	24902	Red cavalier (noted)	[]
-12325	24903	Navy cavalier	[upstream_model:2451->66188, upstream_model:186->66189, upstream_model:362->66190, upstream_model:28->66191, upstream_model:86->66192]
-12326	24904	Navy cavalier (noted)	[]
-12327	24905	Red d'hide body (g)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-12328	24906	Red d'hide body (g) (noted)	[]
-12329	24907	Red d'hide chaps (g)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-12330	24908	Red d'hide chaps (g) (noted)	[]
-12331	24909	Red d'hide body (t)	[upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056]
-12332	24910	Red d'hide body (t) (noted)	[]
-12333	24911	Red d'hide chaps (t)	[upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059]
-12334	24912	Red d'hide chaps (t) (noted)	[]
-12339	24913	Pink elegant blouse	[upstream_model:20237->66193, upstream_model:20159->66194, upstream_model:20123->66195, upstream_model:20215->66196, upstream_model:20179->66197, upstream_model:151->29538]
-12340	24914	Pink elegant blouse (noted)	[]
-12341	24915	Pink elegant skirt	[upstream_model:20236->66198, upstream_model:20141->66199, upstream_model:20196->66200]
-12342	24916	Pink elegant skirt (noted)	[]
-12343	24917	Gold elegant blouse	[upstream_model:20237->66193, upstream_model:20159->66194, upstream_model:20123->66195, upstream_model:20215->66196, upstream_model:20179->66197, upstream_model:151->29538]
-12344	24918	Gold elegant blouse (noted)	[]
-12345	24919	Gold elegant skirt	[upstream_model:20236->66198, upstream_model:20141->66199, upstream_model:20196->66200]
-12346	24920	Gold elegant skirt (noted)	[]
-12347	24921	Gold elegant shirt	[upstream_model:20235->66176, upstream_model:20158->66177, upstream_model:20122->66178, upstream_model:20214->66179, upstream_model:20178->66180, upstream_model:151->29538]
-12348	24922	Gold elegant shirt (noted)	[]
-12349	24923	Gold elegant legs	[upstream_model:20234->66181, upstream_model:20140->66182, upstream_model:20195->66183]
-12350	24924	Gold elegant legs (noted)	[]
-12359	24925	Leprechaun hat	[upstream_model:28642->66201, upstream_model:28514->66202, upstream_model:28589->66203, upstream_model:28770->66204, upstream_model:28795->66205]
-12360	24926	Leprechaun hat (noted)	[]
-12361	24927	Cat mask	[upstream_model:151->66206, upstream_model:20135->66207, upstream_model:292->66208, upstream_model:28762->66209, upstream_model:28801->66210]
-12362	24928	Cat mask (noted)	[]
-12363	24929	Bronze dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12364	24930	Bronze dragon mask (noted)	[]
-12365	24931	Iron dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12366	24932	Iron dragon mask (noted)	[]
-12367	24933	Steel dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12368	24934	Steel dragon mask (noted)	[]
-12369	24935	Mithril dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12370	24936	Mithril dragon mask (noted)	[]
-12375	24937	Black cane	[upstream_model:28667->66211, upstream_model:28616->66212]
-12376	24938	Black cane (noted)	[]
-12377	24939	Adamant cane	[upstream_model:28667->66211, upstream_model:28616->66212]
-12378	24940	Adamant cane (noted)	[]
-12379	24941	Rune cane	[upstream_model:28667->66211, upstream_model:28616->66212]
-12380	24942	Rune cane (noted)	[]
-12428	24943	Penguin mask	[upstream_model:28674->66213, upstream_model:54279->66214, upstream_model:54255->66215, upstream_model:28753->66216, upstream_model:28778->66217]
-12429	24944	Penguin mask (noted)	[]
-12432	24945	Top hat	[upstream_model:28643->66218, upstream_model:28517->66219, upstream_model:28587->66220, upstream_model:28765->66221, upstream_model:28792->66222]
-12433	24946	Top hat (noted)	[]
-12445	24947	Black skirt (g)	[upstream_model:11395->66223, upstream_model:10982->66224, upstream_model:11357->66225]
-12446	24948	Black skirt (g) (noted)	[]
-12447	24949	Black skirt (t)	[upstream_model:11395->66223, upstream_model:10982->66224, upstream_model:11357->66225]
-12448	24950	Black skirt (t) (noted)	[]
-12449	24951	Black wizard robe (g)	[upstream_model:11396->66084, upstream_model:10979->66085, upstream_model:10984->66086, upstream_model:11348->66087, upstream_model:11359->66088, upstream_model:151->29538]
-12450	24952	Black wizard robe (g) (noted)	[]
-12451	24953	Black wizard robe (t)	[upstream_model:11396->66084, upstream_model:10979->66085, upstream_model:10984->66086, upstream_model:11348->66087, upstream_model:11359->66088, upstream_model:151->29538]
-12452	24954	Black wizard robe (t) (noted)	[]
-12453	24955	Black wizard hat (g)	[upstream_model:11400->66089, upstream_model:11331->66090, upstream_model:11354->66091, upstream_model:11403->66092, upstream_model:11407->66093]
-12454	24956	Black wizard hat (g) (noted)	[]
-12455	24957	Black wizard hat (t)	[upstream_model:11400->66089, upstream_model:11331->66090, upstream_model:11354->66091, upstream_model:11403->66092, upstream_model:11407->66093]
-12456	24958	Black wizard hat (t) (noted)	[]
-12460	24959	Ancient platebody	[upstream_model:28657->66226, upstream_model:3379->66227, upstream_model:164->66120, upstream_model:28486->66228, upstream_model:3383->66121, upstream_model:344->66122]
-12461	24960	Ancient platebody (noted)	[]
-12470	24961	Armadyl platebody	[upstream_model:28725->66229, upstream_model:3379->66227, upstream_model:164->66120, upstream_model:28488->66230, upstream_model:3383->66121, upstream_model:344->66122]
-12471	24962	Armadyl platebody (noted)	[]
-12480	24963	Bandos platebody	[upstream_model:28704->66231, upstream_model:3379->66227, upstream_model:164->66120, upstream_model:28487->66232, upstream_model:3383->66121, upstream_model:344->66122]
-12481	24964	Bandos platebody (noted)	[]
-12490	24965	Ancient bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-12491	24966	Ancient bracers (noted)	[]
-12492	24967	Ancient d'hide body	[upstream_model:28670->66233, upstream_model:28543->66234, upstream_model:20121->66104, upstream_model:28601->66235, upstream_model:20177->66106, upstream_model:151->29538]
-12493	24968	Ancient d'hide body (noted)	[]
-12498	24969	Bandos bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-12499	24970	Bandos bracers (noted)	[]
-12500	24971	Bandos d'hide body	[upstream_model:28748->66236, upstream_model:28539->66237, upstream_model:20121->66104, upstream_model:28615->66238, upstream_model:20177->66106, upstream_model:151->29538]
-12501	24972	Bandos d'hide body (noted)	[]
-12506	24973	Armadyl bracers	[upstream_model:20264->66099, upstream_model:20129->66100, upstream_model:20180->66101]
-12507	24974	Armadyl bracers (noted)	[]
-12508	24975	Armadyl d'hide body	[upstream_model:28668->66239, upstream_model:28530->66240, upstream_model:20121->66104, upstream_model:28610->66241, upstream_model:20177->66106, upstream_model:151->29538]
-12509	24976	Armadyl d'hide body (noted)	[]
-12514	24977	Explorer backpack	[upstream_model:28637->66242, upstream_model:28485->66243]
-12515	24978	Explorer backpack (noted)	[]
-12516	24979	Pith helmet	[upstream_model:28644->66244, upstream_model:28520->66245, upstream_model:28590->66246, upstream_model:28772->66247, upstream_model:28791->66248]
-12517	24980	Pith helmet (noted)	[]
-12518	24981	Green dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12519	24982	Green dragon mask (noted)	[]
-12520	24983	Blue dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12521	24984	Blue dragon mask (noted)	[]
-12522	24985	Red dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12523	24986	Red dragon mask (noted)	[]
-12524	24987	Black dragon mask	[upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704]
-12525	24988	Black dragon mask (noted)	[]
-12598	24989	Holy sandals	[upstream_model:28815->66249, upstream_model:28811->66250, upstream_model:28814->66251]
-12599	24990	Holy sandals (noted)	[]
-13648	24991	Clue bottle (easy)	[upstream_model:31044->66252]
-13649	24992	Clue bottle (medium)	[upstream_model:31044->66252]
-13650	24993	Clue bottle (hard)	[upstream_model:31044->66252]
-13651	24994	Clue bottle (elite)	[upstream_model:31044->66252]
-19712	24995	Clue nest (easy)	[upstream_model:31957->66253]
-19714	24996	Clue nest (medium)	[upstream_model:31957->66253]
-19716	24997	Clue nest (hard)	[upstream_model:31957->66253]
-19718	24998	Clue nest (elite)	[upstream_model:31957->66253]
-19835	24999	Clue scroll (master)	[upstream_model:37183->66254]
-19836	25000	Reward casket (master)	[upstream_model:2450->58987]
-19912	25001	Zombie head	[upstream_model:32008->66255, upstream_model:31912->66256, upstream_model:31910->66257]
-19913	25002	Zombie head (noted)	[]
-19915	25003	Cyclops head	[upstream_model:31974->66258, upstream_model:31745->66259, upstream_model:31832->66260, upstream_model:31936->66261, upstream_model:31949->66262]
-19916	25004	Cyclops head (noted)	[]
-19918	25005	Nunchaku	[upstream_model:32005->66263, upstream_model:31906->66264]
-19919	25006	Nunchaku (noted)	[]
-19921	25007	Ancient d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19922	25008	Ancient d'hide boots (noted)	[]
-19924	25009	Bandos d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19925	25010	Bandos d'hide boots (noted)	[]
-19927	25011	Guthix d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19928	25012	Guthix d'hide boots (noted)	[]
-19930	25013	Armadyl d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19931	25014	Armadyl d'hide boots (noted)	[]
-19933	25015	Saradomin d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19934	25016	Saradomin d'hide boots (noted)	[]
-19936	25017	Zamorak d'hide boots	[upstream_model:32033->66265, upstream_model:31819->66266, upstream_model:31879->66267]
-19937	25018	Zamorak d'hide boots (noted)	[]
-19941	25019	Heavy casket	[upstream_model:32028->66268, upstream_model:31907->66269]
-20164	25020	Large spade	[upstream_model:2418->52696, upstream_model:13938->52701]
-20166	25021	Wooden shield (g)	[upstream_model:2601->66270, upstream_model:517->66271]
-20167	25022	Wooden shield (g) (noted)	[]
-20169	25023	Steel platebody (g)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-20170	25024	Steel platebody (g) (noted)	[]
-20172	25025	Steel platelegs (g)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-20173	25026	Steel platelegs (g) (noted)	[]
-20175	25027	Steel plateskirt (g)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-20176	25028	Steel plateskirt (g) (noted)	[]
-20178	25029	Steel full helm (g)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-20179	25030	Steel full helm (g) (noted)	[]
-20181	25031	Steel kiteshield (g)	[upstream_model:2339->66134, upstream_model:486->66135]
-20182	25032	Steel kiteshield (g) (noted)	[]
-20184	25033	Steel platebody (t)	[upstream_model:2378->66118, upstream_model:3379->66119, upstream_model:164->66120, upstream_model:3383->66121, upstream_model:344->66122, upstream_model:151->29538]
-20185	25034	Steel platebody (t) (noted)	[]
-20187	25035	Steel platelegs (t)	[upstream_model:2582->66123, upstream_model:268->66124, upstream_model:432->66125]
-20188	25036	Steel platelegs (t) (noted)	[]
-20190	25037	Steel plateskirt (t)	[upstream_model:4208->66126, upstream_model:4206->66127, upstream_model:4207->66128]
-20191	25038	Steel plateskirt (t) (noted)	[]
-20193	25039	Steel full helm (t)	[upstream_model:2813->66129, upstream_model:218->66130, upstream_model:394->66131, upstream_model:56->66132, upstream_model:116->66133]
-20194	25040	Steel full helm (t) (noted)	[]
-20196	25041	Steel kiteshield (t)	[upstream_model:2339->66134, upstream_model:486->66135]
-20197	25042	Steel kiteshield (t) (noted)	[]
-20199	25043	Monk's robe top (g)	[upstream_model:11396->66084, upstream_model:10979->66085, upstream_model:10984->66086, upstream_model:11348->66087, upstream_model:11359->66088, upstream_model:151->29538]
-20200	25044	Monk's robe top (g) (noted)	[]
-20202	25045	Monk's robe (g)	[upstream_model:11395->66223, upstream_model:10982->66224, upstream_model:11357->66225]
-20203	25046	Monk's robe (g) (noted)	[]
-20205	25047	Golden chef's hat	[upstream_model:2782->66272, upstream_model:199->66273, upstream_model:374->66274, upstream_model:41->66275, upstream_model:99->66276]
-20206	25048	Golden chef's hat (noted)	[]
-20208	25049	Golden apron	[upstream_model:2592->66277, upstream_model:305->66278, upstream_model:467->66279]
-20209	25050	Golden apron (noted)	[]
-20211	25051	Team cape zero	[upstream_model:31971->66280, upstream_model:31772->66281]
-20212	25052	Team cape zero (noted)	[]
-20214	25053	Team cape x	[upstream_model:31988->66282, upstream_model:31773->66283]
-20215	25054	Team cape x (noted)	[]
-20217	25055	Team cape i	[upstream_model:32011->66284, upstream_model:31770->66285]
-20218	25056	Team cape i (noted)	[]
-20238	25057	Charge dragonstone jewellery scroll	[upstream_model:31979->66286]
-20240	25058	Crier coat	[upstream_model:32016->66287, upstream_model:31813->66288, upstream_model:31804->66289, upstream_model:31876->66290, upstream_model:31868->66291, upstream_model:151->29538]
-20241	25059	Crier coat (noted)	[]
-20243	25060	Crier bell	[upstream_model:32022->66292, upstream_model:2847->66293]
-20244	25061	Crier bell (noted)	[]
-20246	25062	Black leprechaun hat	[upstream_model:28642->66201, upstream_model:28514->66202, upstream_model:28589->66203, upstream_model:28770->66204, upstream_model:28795->66205]
-20247	25063	Black leprechaun hat (noted)	[]
-20249	25064	Clueless scroll	[upstream_model:32037->66294, upstream_model:31905->66295]
-20251	25065	Arceuus banner	[upstream_model:32025->66296, upstream_model:31896->66297]
-20252	25066	Arceuus banner (noted)	[]
-20254	25067	Hosidius banner	[upstream_model:31963->66298, upstream_model:31900->66299]
-20255	25068	Hosidius banner (noted)	[]
-20257	25069	Lovakengj banner	[upstream_model:32014->66300, upstream_model:31909->66301]
-20258	25070	Lovakengj banner (noted)	[]
-20260	25071	Piscarilius banner	[upstream_model:32006->66302, upstream_model:31901->66303]
-20261	25072	Piscarilius banner (noted)	[]
-20263	25073	Shayzien banner	[upstream_model:32047->66304, upstream_model:31908->66305]
-20264	25074	Shayzien banner (noted)	[]
-20266	25075	Black unicorn mask	[upstream_model:31966->66306, upstream_model:31757->66307, upstream_model:31834->66308, upstream_model:31926->66309]
-20267	25076	Black unicorn mask (noted)	[]
-20269	25077	White unicorn mask	[upstream_model:31966->66306, upstream_model:31757->66307, upstream_model:31834->66308, upstream_model:31926->66309]
-20270	25078	White unicorn mask (noted)	[]
-20272	25079	Cabbage round shield	[upstream_model:32010->66310, upstream_model:31911->66311]
-20273	25080	Cabbage round shield (noted)	[]
-20275	25081	Gnomish firelighter	[upstream_model:32038->66312, upstream_model:31903->66313]
-20276	25082	Gnomish firelighter (noted)	[]
-20358	25083	Clue geode (easy)	[upstream_model:31953->66314]
-20360	25084	Clue geode (medium)	[upstream_model:31953->66314]
-20362	25085	Clue geode (hard)	[upstream_model:31953->66314]
-20364	25086	Clue geode (elite)	[upstream_model:31953->66314]
-21387	25087	Master scroll book (empty)	[upstream_model:33179->66315]
-21388	25088	Master scroll book (empty) (noted)	[]
-22675	25089	Scroll sack	[upstream_model:36023->66316, upstream_model:5201->66317]
-23188	25090	Guthix d'hide shield	[upstream_model:37161->66318, upstream_model:37092->66319]
-23189	25091	Guthix d'hide shield (noted)	[]
-23191	25092	Saradomin d'hide shield	[upstream_model:37208->66320, upstream_model:37074->66321]
-23192	25093	Saradomin d'hide shield (noted)	[]
-23194	25094	Zamorak d'hide shield	[upstream_model:37198->66322, upstream_model:37089->66323]
-23195	25095	Zamorak d'hide shield (noted)	[]
-23197	25096	Ancient d'hide shield	[upstream_model:37186->66324, upstream_model:37075->66325]
-23198	25097	Ancient d'hide shield (noted)	[]
-23200	25098	Armadyl d'hide shield	[upstream_model:37154->66326, upstream_model:37080->66327]
-23201	25099	Armadyl d'hide shield (noted)	[]
-23203	25100	Bandos d'hide shield	[upstream_model:37159->66328, upstream_model:37091->66329]
-23204	25101	Bandos d'hide shield (noted)	[]
-23206	25102	Dual sai	[upstream_model:37153->66330, upstream_model:37082->66331, upstream_model:37079->66332]
-23207	25103	Dual sai (noted)	[]
-23209	25104	Rune platebody (h1)	[upstream_model:37173->66333, upstream_model:37031->66334, upstream_model:37066->66335, upstream_model:151->29538]
-23210	25105	Rune platebody (h1) (noted)	[]
-23212	25106	Rune platebody (h2)	[upstream_model:37210->66336, upstream_model:37034->66337, upstream_model:37060->66338, upstream_model:151->29538]
-23213	25107	Rune platebody (h2) (noted)	[]
-23215	25108	Rune platebody (h3)	[upstream_model:37184->66339, upstream_model:37035->66340, upstream_model:37065->66341, upstream_model:151->29538]
-23216	25109	Rune platebody (h3) (noted)	[]
-23218	25110	Rune platebody (h4)	[upstream_model:37185->66342, upstream_model:37030->66343, upstream_model:37061->66344, upstream_model:151->29538]
-23219	25111	Rune platebody (h4) (noted)	[]
-23221	25112	Rune platebody (h5)	[upstream_model:37160->66345, upstream_model:37037->66346, upstream_model:37064->66347, upstream_model:151->29538]
-23222	25113	Rune platebody (h5) (noted)	[]
-23224	25114	Thieving bag	[upstream_model:37201->66348, upstream_model:37021->66349]
-23225	25115	Thieving bag (noted)	[]
-23351	25116	Cape of skulls	[upstream_model:37197->66350, upstream_model:37019->66351, upstream_model:37051->66352]
-23352	25117	Cape of skulls (noted)	[]
-23354	25118	Amulet of power (t)	[upstream_model:37196->66353, upstream_model:37015->66354, upstream_model:37045->66355]
-23355	25119	Amulet of power (t) (noted)	[]
-23357	25120	Rain bow	[upstream_model:37190->66356, upstream_model:37095->66357, upstream_model:37086->66358]
-23358	25121	Rain bow (noted)	[]
-23360	25122	Ham joint	[upstream_model:37206->66359, upstream_model:37084->66360, upstream_model:37077->66361]
-23361	25123	Ham joint (noted)	[]
-23363	25124	Staff of Bob the Cat	[upstream_model:37177->66362, upstream_model:37094->66363, upstream_model:37087->66364]
-23364	25125	Staff of Bob the Cat (noted)	[]
-23366	25126	Black platebody (h1)	[upstream_model:37173->66333, upstream_model:37031->66334, upstream_model:37066->66335, upstream_model:151->29538]
-23367	25127	Black platebody (h1) (noted)	[]
-23369	25128	Black platebody (h2)	[upstream_model:37210->66336, upstream_model:37034->66337, upstream_model:37060->66338, upstream_model:151->29538]
-23370	25129	Black platebody (h2) (noted)	[]
-23372	25130	Black platebody (h3)	[upstream_model:37184->66339, upstream_model:37035->66340, upstream_model:37065->66341, upstream_model:151->29538]
-23373	25131	Black platebody (h3) (noted)	[]
-23375	25132	Black platebody (h4)	[upstream_model:37185->66342, upstream_model:37030->66343, upstream_model:37061->66344, upstream_model:151->29538]
-23376	25133	Black platebody (h4) (noted)	[]
-23378	25134	Black platebody (h5)	[upstream_model:37160->66345, upstream_model:37037->66346, upstream_model:37064->66347, upstream_model:151->29538]
-23379	25135	Black platebody (h5) (noted)	[]
-23381	25136	Leather body (g)	[upstream_model:37187->66365, upstream_model:37032->66366, upstream_model:37062->66367]
-23382	25137	Leather body (g) (noted)	[]
-23384	25138	Leather chaps (g)	[upstream_model:37189->66368, upstream_model:37024->66369, upstream_model:37057->66370]
-23385	25139	Leather chaps (g) (noted)	[]
-23392	25140	Adamant platebody (h1)	[upstream_model:37173->66333, upstream_model:37031->66334, upstream_model:37066->66335, upstream_model:151->29538]
-23393	25141	Adamant platebody (h1) (noted)	[]
-23395	25142	Adamant platebody (h2)	[upstream_model:37210->66336, upstream_model:37034->66337, upstream_model:37060->66338, upstream_model:151->29538]
-23396	25143	Adamant platebody (h2) (noted)	[]
-23398	25144	Adamant platebody (h3)	[upstream_model:37184->66339, upstream_model:37035->66340, upstream_model:37065->66341, upstream_model:151->29538]
-23399	25145	Adamant platebody (h3) (noted)	[]
-23401	25146	Adamant platebody (h4)	[upstream_model:37185->66342, upstream_model:37030->66343, upstream_model:37061->66344, upstream_model:151->29538]
-23402	25147	Adamant platebody (h4) (noted)	[]
-23404	25148	Adamant platebody (h5)	[upstream_model:37160->66345, upstream_model:37037->66346, upstream_model:37064->66347, upstream_model:151->29538]
-23405	25149	Adamant platebody (h5) (noted)	[]
-23407	25150	Wolf mask	[upstream_model:37195->66371, upstream_model:37012->66372, upstream_model:37044->66373, upstream_model:37148->66374, upstream_model:63->44344, upstream_model:120->44348]
-23408	25151	Wolf mask (noted)	[]
-23410	25152	Wolf cloak	[upstream_model:37199->66375, upstream_model:37022->66376, upstream_model:37050->66377]
-23411	25153	Wolf cloak (noted)	[]
-23413	25154	Climbing boots (g)	[upstream_model:37174->66378, upstream_model:37039->66379, upstream_model:37071->66380]
-23414	25155	Climbing boots (g) (noted)	[]
-24362	25156	Scroll box (easy)	[upstream_model:39031->66381]
-24363	25157	Scroll box (medium)	[upstream_model:39033->66382]
-24364	25158	Scroll box (hard)	[upstream_model:39028->66383]
-24365	25159	Scroll box (elite)	[upstream_model:39032->66384]
-24366	25160	Scroll box (master)	[upstream_model:39029->66385]
-25612	25161	S.t.a.s.h blueprint	[upstream_model:40874->66386]
-30906	25162	Minor easy scroll case	[upstream_model:56318->66387]
-30908	25163	Major easy scroll case	[upstream_model:56311->66388]
-30910	25164	Minor medium scroll case	[upstream_model:56314->66389]
-30912	25165	Major medium scroll case	[upstream_model:56319->66390]
-30914	25166	Minor hard scroll case	[upstream_model:56317->66391]
-30916	25167	Major hard scroll case	[upstream_model:56322->66392]
-30918	25168	Minor elite scroll case	[upstream_model:56320->66393]
-30920	25169	Major elite scroll case	[upstream_model:56312->66394]
-30922	25170	Minor master scroll case	[upstream_model:56321->66395]
-30924	25171	Major master scroll case	[upstream_model:56315->66396]
-30926	25172	Mimic scroll case	[upstream_model:56313->66397]
+# tx-20261115-070458; applied=false; 245 source roster entries including linked notes
+# OSRS id	proposed local id	name	definition bytes	model mappings
+2795	24755	Puzzle box (hard)	50	upstream_model:3372->66084
+2842	24756	Challenge scroll (medium)	58	upstream_model:37152->66085
+3565	24757	Puzzle box (hard)	50	upstream_model:4204->66086
+3569	24758	Puzzle box (hard)	50	upstream_model:4205->66087
+7269	24759	Challenge scroll (hard)	56	upstream_model:37181->66088
+7370	24760	Green d'hide body (g)	77	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+7371	24761	Green d'hide body (g) (noted)	7	[]
+7372	24762	Green d'hide body (t)	77	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+7373	24763	Green d'hide body (t) (noted)	7	[]
+7374	24764	Blue d'hide body (g)	85	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+7375	24765	Blue d'hide body (g) (noted)	7	[]
+7376	24766	Blue d'hide body (t)	85	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+7377	24767	Blue d'hide body (t) (noted)	7	[]
+7378	24768	Green d'hide chaps (g)	85	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+7379	24769	Green d'hide chaps (g) (noted)	7	[]
+7380	24770	Green d'hide chaps (t)	85	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+7381	24771	Green d'hide chaps (t) (noted)	7	[]
+7382	24772	Blue d'hide chaps (g)	93	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+7383	24773	Blue d'hide chaps (g) (noted)	7	[]
+7384	24774	Blue d'hide chaps (t)	93	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+7385	24775	Blue d'hide chaps (t) (noted)	7	[]
+7390	24776	Blue wizard robe (g)	89	upstream_model:11396->66089, upstream_model:10979->66090, upstream_model:10984->66091, upstream_model:11348->66092, upstream_model:11359->66093, upstream_model:151->29538
+7391	24777	Blue wizard robe (g) (noted)	7	[]
+7392	24778	Blue wizard robe (t)	89	upstream_model:11396->66089, upstream_model:10979->66090, upstream_model:10984->66091, upstream_model:11348->66092, upstream_model:11359->66093, upstream_model:151->29538
+7393	24779	Blue wizard robe (t) (noted)	7	[]
+7394	24780	Blue wizard hat (g)	81	upstream_model:11400->66094, upstream_model:11331->66095, upstream_model:11354->66096, upstream_model:11403->66097, upstream_model:11407->66098
+7395	24781	Blue wizard hat (g) (noted)	7	[]
+7396	24782	Blue wizard hat (t)	81	upstream_model:11400->66094, upstream_model:11331->66095, upstream_model:11354->66096, upstream_model:11403->66097, upstream_model:11407->66098
+7397	24783	Blue wizard hat (t) (noted)	7	[]
+10316	24784	Bob's red shirt	93	upstream_model:20228->66099, upstream_model:20161->66100, upstream_model:20125->66101, upstream_model:20210->66102, upstream_model:20176->66103, upstream_model:151->29538
+10317	24785	Bob's red shirt (noted)	7	[]
+10318	24786	Bob's blue shirt	94	upstream_model:20228->66099, upstream_model:20161->66100, upstream_model:20125->66101, upstream_model:20210->66102, upstream_model:20176->66103, upstream_model:151->29538
+10319	24787	Bob's blue shirt (noted)	7	[]
+10320	24788	Bob's green shirt	95	upstream_model:20228->66099, upstream_model:20161->66100, upstream_model:20125->66101, upstream_model:20210->66102, upstream_model:20176->66103, upstream_model:151->29538
+10321	24789	Bob's green shirt (noted)	7	[]
+10322	24790	Bob's black shirt	95	upstream_model:20228->66099, upstream_model:20161->66100, upstream_model:20125->66101, upstream_model:20210->66102, upstream_model:20176->66103, upstream_model:151->29538
+10323	24791	Bob's black shirt (noted)	7	[]
+10324	24792	Bob's purple shirt	96	upstream_model:20228->66099, upstream_model:20161->66100, upstream_model:20125->66101, upstream_model:20210->66102, upstream_model:20176->66103, upstream_model:151->29538
+10325	24793	Bob's purple shirt (noted)	7	[]
+10368	24794	Zamorak bracers	80	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+10369	24795	Zamorak bracers (noted)	7	[]
+10370	24796	Zamorak d'hide body	105	upstream_model:20233->66107, upstream_model:20157->66108, upstream_model:20121->66109, upstream_model:20213->66110, upstream_model:20177->66111, upstream_model:151->29538
+10371	24797	Zamorak d'hide body (noted)	7	[]
+10376	24798	Guthix bracers	79	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+10377	24799	Guthix bracers (noted)	7	[]
+10378	24800	Guthix d'hide body	92	upstream_model:20232->66112, upstream_model:20155->66113, upstream_model:20121->66109, upstream_model:20211->66114, upstream_model:20177->66111, upstream_model:151->29538
+10379	24801	Guthix d'hide body (noted)	7	[]
+10384	24802	Saradomin bracers	82	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+10385	24803	Saradomin bracers (noted)	7	[]
+10386	24804	Saradomin d'hide body	107	upstream_model:20224->66115, upstream_model:20156->66116, upstream_model:20121->66109, upstream_model:20212->66117, upstream_model:20177->66111, upstream_model:151->29538
+10387	24805	Saradomin d'hide body (noted)	7	[]
+12128	24806	Challenge scroll (elite)	88	upstream_model:37167->66118
+12161	24807	Puzzle box (elite)	64	upstream_model:4204->66086
+12193	24808	Ancient robe top	90	upstream_model:28747->66119, upstream_model:28536->66120, upstream_model:28527->66121, upstream_model:28600->66122, upstream_model:28594->66123, upstream_model:151->29538
+12194	24809	Ancient robe top (noted)	7	[]
+12205	24810	Bronze platebody (g)	93	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12206	24811	Bronze platebody (g) (noted)	7	[]
+12207	24812	Bronze platelegs (g)	84	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12208	24813	Bronze platelegs (g) (noted)	7	[]
+12209	24814	Bronze plateskirt (g)	89	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12210	24815	Bronze plateskirt (g) (noted)	7	[]
+12211	24816	Bronze full helm (g)	86	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12212	24817	Bronze full helm (g) (noted)	7	[]
+12213	24818	Bronze kiteshield (g)	93	upstream_model:2339->66140, upstream_model:486->66141
+12214	24819	Bronze kiteshield (g) (noted)	7	[]
+12215	24820	Bronze platebody (t)	93	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12216	24821	Bronze platebody (t) (noted)	7	[]
+12217	24822	Bronze platelegs (t)	84	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12218	24823	Bronze platelegs (t) (noted)	7	[]
+12219	24824	Bronze plateskirt (t)	89	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12220	24825	Bronze plateskirt (t) (noted)	7	[]
+12221	24826	Bronze full helm (t)	86	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12222	24827	Bronze full helm (t) (noted)	7	[]
+12223	24828	Bronze kiteshield (t)	93	upstream_model:2339->66140, upstream_model:486->66141
+12224	24829	Bronze kiteshield (t) (noted)	7	[]
+12225	24830	Iron platebody (t)	91	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12226	24831	Iron platebody (t) (noted)	7	[]
+12227	24832	Iron platelegs (t)	82	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12228	24833	Iron platelegs (t) (noted)	7	[]
+12229	24834	Iron plateskirt (t)	87	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12230	24835	Iron plateskirt (t) (noted)	7	[]
+12231	24836	Iron full helm (t)	84	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12232	24837	Iron full helm (t) (noted)	7	[]
+12233	24838	Iron kiteshield (t)	91	upstream_model:2339->66140, upstream_model:486->66141
+12234	24839	Iron kiteshield (t) (noted)	7	[]
+12235	24840	Iron platebody (g)	91	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12236	24841	Iron platebody (g) (noted)	7	[]
+12237	24842	Iron platelegs (g)	82	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12238	24843	Iron platelegs (g) (noted)	7	[]
+12239	24844	Iron plateskirt (g)	87	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12240	24845	Iron plateskirt (g) (noted)	7	[]
+12241	24846	Iron full helm (g)	84	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12242	24847	Iron full helm (g) (noted)	7	[]
+12243	24848	Iron kiteshield (g)	91	upstream_model:2339->66140, upstream_model:486->66141
+12244	24849	Iron kiteshield (g) (noted)	7	[]
+12245	24850	Beanie	69	upstream_model:28730->66142, upstream_model:54280->66143, upstream_model:332->66144, upstream_model:28761->66145, upstream_model:63->44344, upstream_model:28794->66146, upstream_model:120->44348
+12246	24851	Beanie (noted)	7	[]
+12247	24852	Red beret	72	upstream_model:3373->66147, upstream_model:198->66148, upstream_model:373->66149, upstream_model:40->66150, upstream_model:98->66151
+12248	24853	Red beret (noted)	7	[]
+12249	24854	Imp mask	71	upstream_model:28741->66152, upstream_model:18558->66153, upstream_model:28555->66154, upstream_model:28754->66155, upstream_model:28780->66156, upstream_model:120->44348
+12250	24855	Imp mask (noted)	7	[]
+12251	24856	Goblin mask	68	upstream_model:28666->66157, upstream_model:18556->66158, upstream_model:28553->66159, upstream_model:28752->66160, upstream_model:28781->66161
+12252	24857	Goblin mask (noted)	7	[]
+12253	24858	Armadyl robe top	90	upstream_model:28695->66162, upstream_model:28542->66163, upstream_model:28529->66164, upstream_model:28604->66165, upstream_model:28593->66166, upstream_model:151->29538
+12254	24859	Armadyl robe top (noted)	7	[]
+12265	24860	Bandos robe top	89	upstream_model:28722->66167, upstream_model:28533->66168, upstream_model:28523->66169, upstream_model:28605->66170, upstream_model:28596->66171, upstream_model:151->29538
+12266	24861	Bandos robe top (noted)	7	[]
+12277	24862	Mithril platebody (g)	94	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12278	24863	Mithril platebody (g) (noted)	7	[]
+12279	24864	Mithril platelegs (g)	85	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12280	24865	Mithril platelegs (g) (noted)	7	[]
+12281	24866	Mithril kiteshield (g)	90	upstream_model:2339->66140, upstream_model:486->66141
+12282	24867	Mithril kiteshield (g) (noted)	7	[]
+12283	24868	Mithril full helm (g)	87	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12284	24869	Mithril full helm (g) (noted)	7	[]
+12285	24870	Mithril plateskirt (g)	86	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12286	24871	Mithril plateskirt (g) (noted)	7	[]
+12287	24872	Mithril platebody (t)	94	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+12288	24873	Mithril platebody (t) (noted)	7	[]
+12289	24874	Mithril platelegs (t)	85	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+12290	24875	Mithril platelegs (t) (noted)	7	[]
+12291	24876	Mithril kiteshield (t)	90	upstream_model:2339->66140, upstream_model:486->66141
+12292	24877	Mithril kiteshield (t) (noted)	7	[]
+12293	24878	Mithril full helm (t)	87	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+12294	24879	Mithril full helm (t) (noted)	7	[]
+12295	24880	Mithril plateskirt (t)	86	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+12296	24881	Mithril plateskirt (t) (noted)	7	[]
+12297	24882	Black pickaxe	74	upstream_model:2529->52687, upstream_model:509->52689
+12298	24883	Black pickaxe (noted)	7	[]
+12299	24884	White headband	81	upstream_model:3377->66172, upstream_model:201->66173, upstream_model:376->66174, upstream_model:43->66175, upstream_model:101->66176
+12300	24885	White headband (noted)	7	[]
+12301	24886	Blue headband	80	upstream_model:3377->66172, upstream_model:201->66173, upstream_model:376->66174, upstream_model:43->66175, upstream_model:101->66176
+12302	24887	Blue headband (noted)	7	[]
+12303	24888	Gold headband	80	upstream_model:3377->66172, upstream_model:201->66173, upstream_model:376->66174, upstream_model:43->66175, upstream_model:101->66176
+12304	24889	Gold headband (noted)	7	[]
+12305	24890	Pink headband	80	upstream_model:3377->66172, upstream_model:201->66173, upstream_model:376->66174, upstream_model:43->66175, upstream_model:101->66176
+12306	24891	Pink headband (noted)	7	[]
+12307	24892	Green headband	81	upstream_model:3377->66172, upstream_model:201->66173, upstream_model:376->66174, upstream_model:43->66175, upstream_model:101->66176
+12308	24893	Green headband (noted)	7	[]
+12309	24894	Pink boater	77	upstream_model:11399->66177, upstream_model:11330->66178, upstream_model:11353->66179, upstream_model:11402->66180, upstream_model:11406->66181
+12310	24895	Pink boater (noted)	7	[]
+12311	24896	Purple boater	79	upstream_model:11399->66177, upstream_model:11330->66178, upstream_model:11353->66179, upstream_model:11402->66180, upstream_model:11406->66181
+12312	24897	Purple boater (noted)	7	[]
+12313	24898	White boater	78	upstream_model:11399->66177, upstream_model:11330->66178, upstream_model:11353->66179, upstream_model:11402->66180, upstream_model:11406->66181
+12314	24899	White boater (noted)	7	[]
+12315	24900	Pink elegant shirt	104	upstream_model:20235->66182, upstream_model:20158->66183, upstream_model:20122->66184, upstream_model:20214->66185, upstream_model:20178->66186, upstream_model:151->29538
+12316	24901	Pink elegant shirt (noted)	7	[]
+12317	24902	Pink elegant legs	94	upstream_model:20234->66187, upstream_model:20140->66188, upstream_model:20195->66189
+12318	24903	Pink elegant legs (noted)	7	[]
+12319	24904	Crier hat	66	upstream_model:28737->66190, upstream_model:27149->66191, upstream_model:28764->66192, upstream_model:28797->66193
+12320	24905	Crier hat (noted)	7	[]
+12321	24906	White cavalier	81	upstream_model:2451->66194, upstream_model:186->66195, upstream_model:362->66196, upstream_model:28->66197, upstream_model:86->66198
+12322	24907	White cavalier (noted)	7	[]
+12323	24908	Red cavalier	75	upstream_model:2451->66194, upstream_model:186->66195, upstream_model:362->66196, upstream_model:28->66197, upstream_model:86->66198
+12324	24909	Red cavalier (noted)	7	[]
+12325	24910	Navy cavalier	76	upstream_model:2451->66194, upstream_model:186->66195, upstream_model:362->66196, upstream_model:28->66197, upstream_model:86->66198
+12326	24911	Navy cavalier (noted)	7	[]
+12327	24912	Red d'hide body (g)	84	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+12328	24913	Red d'hide body (g) (noted)	7	[]
+12329	24914	Red d'hide chaps (g)	96	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+12330	24915	Red d'hide chaps (g) (noted)	7	[]
+12331	24916	Red d'hide body (t)	84	upstream_model:11390->49054, upstream_model:11345->49055, upstream_model:11361->49056
+12332	24917	Red d'hide body (t) (noted)	7	[]
+12333	24918	Red d'hide chaps (t)	92	upstream_model:11371->49057, upstream_model:11411->49058, upstream_model:11355->49059
+12334	24919	Red d'hide chaps (t) (noted)	7	[]
+12339	24920	Pink elegant blouse	93	upstream_model:20237->66199, upstream_model:20159->66200, upstream_model:20123->66201, upstream_model:20215->66202, upstream_model:20179->66203, upstream_model:151->29538
+12340	24921	Pink elegant blouse (noted)	7	[]
+12341	24922	Pink elegant skirt	91	upstream_model:20236->66204, upstream_model:20141->66205, upstream_model:20196->66206
+12342	24923	Pink elegant skirt (noted)	7	[]
+12343	24924	Gold elegant blouse	93	upstream_model:20237->66199, upstream_model:20159->66200, upstream_model:20123->66201, upstream_model:20215->66202, upstream_model:20179->66203, upstream_model:151->29538
+12344	24925	Gold elegant blouse (noted)	7	[]
+12345	24926	Gold elegant skirt	91	upstream_model:20236->66204, upstream_model:20141->66205, upstream_model:20196->66206
+12346	24927	Gold elegant skirt (noted)	7	[]
+12347	24928	Gold elegant shirt	104	upstream_model:20235->66182, upstream_model:20158->66183, upstream_model:20122->66184, upstream_model:20214->66185, upstream_model:20178->66186, upstream_model:151->29538
+12348	24929	Gold elegant shirt (noted)	7	[]
+12349	24930	Gold elegant legs	90	upstream_model:20234->66187, upstream_model:20140->66188, upstream_model:20195->66189
+12350	24931	Gold elegant legs (noted)	7	[]
+12359	24932	Leprechaun hat	74	upstream_model:28642->66207, upstream_model:28514->66208, upstream_model:28589->66209, upstream_model:28770->66210, upstream_model:28795->66211
+12360	24933	Leprechaun hat (noted)	7	[]
+12361	24934	Cat mask	65	upstream_model:151->66212, upstream_model:20135->66213, upstream_model:292->66214, upstream_model:28762->66215, upstream_model:28801->66216
+12362	24935	Cat mask (noted)	7	[]
+12363	24936	Bronze dragon mask	92	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12364	24937	Bronze dragon mask (noted)	7	[]
+12365	24938	Iron dragon mask	90	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12366	24939	Iron dragon mask (noted)	7	[]
+12367	24940	Steel dragon mask	91	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12368	24941	Steel dragon mask (noted)	7	[]
+12369	24942	Mithril dragon mask	93	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12370	24943	Mithril dragon mask (noted)	7	[]
+12375	24944	Black cane	83	upstream_model:28667->66217, upstream_model:28616->66218
+12376	24945	Black cane (noted)	7	[]
+12377	24946	Adamant cane	71	upstream_model:28667->66217, upstream_model:28616->66218
+12378	24947	Adamant cane (noted)	7	[]
+12379	24948	Rune cane	82	upstream_model:28667->66217, upstream_model:28616->66218
+12380	24949	Rune cane (noted)	7	[]
+12428	24950	Penguin mask	69	upstream_model:28674->66219, upstream_model:54279->66220, upstream_model:54255->66221, upstream_model:28753->66222, upstream_model:28778->66223
+12429	24951	Penguin mask (noted)	7	[]
+12432	24952	Top hat	64	upstream_model:28643->66224, upstream_model:28517->66225, upstream_model:28587->66226, upstream_model:28765->66227, upstream_model:28792->66228
+12433	24953	Top hat (noted)	7	[]
+12445	24954	Black skirt (g)	75	upstream_model:11395->66229, upstream_model:10982->66230, upstream_model:11357->66231
+12446	24955	Black skirt (g) (noted)	7	[]
+12447	24956	Black skirt (t)	75	upstream_model:11395->66229, upstream_model:10982->66230, upstream_model:11357->66231
+12448	24957	Black skirt (t) (noted)	7	[]
+12449	24958	Black wizard robe (g)	90	upstream_model:11396->66089, upstream_model:10979->66090, upstream_model:10984->66091, upstream_model:11348->66092, upstream_model:11359->66093, upstream_model:151->29538
+12450	24959	Black wizard robe (g) (noted)	7	[]
+12451	24960	Black wizard robe (t)	90	upstream_model:11396->66089, upstream_model:10979->66090, upstream_model:10984->66091, upstream_model:11348->66092, upstream_model:11359->66093, upstream_model:151->29538
+12452	24961	Black wizard robe (t) (noted)	7	[]
+12453	24962	Black wizard hat (g)	86	upstream_model:11400->66094, upstream_model:11331->66095, upstream_model:11354->66096, upstream_model:11403->66097, upstream_model:11407->66098
+12454	24963	Black wizard hat (g) (noted)	7	[]
+12455	24964	Black wizard hat (t)	86	upstream_model:11400->66094, upstream_model:11331->66095, upstream_model:11354->66096, upstream_model:11403->66097, upstream_model:11407->66098
+12456	24965	Black wizard hat (t) (noted)	7	[]
+12460	24966	Ancient platebody	93	upstream_model:28657->66232, upstream_model:3379->66233, upstream_model:164->66126, upstream_model:28486->66234, upstream_model:3383->66127, upstream_model:344->66128
+12461	24967	Ancient platebody (noted)	7	[]
+12470	24968	Armadyl platebody	93	upstream_model:28725->66235, upstream_model:3379->66233, upstream_model:164->66126, upstream_model:28488->66236, upstream_model:3383->66127, upstream_model:344->66128
+12471	24969	Armadyl platebody (noted)	7	[]
+12480	24970	Bandos platebody	92	upstream_model:28704->66237, upstream_model:3379->66233, upstream_model:164->66126, upstream_model:28487->66238, upstream_model:3383->66127, upstream_model:344->66128
+12481	24971	Bandos platebody (noted)	7	[]
+12490	24972	Ancient bracers	80	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+12491	24973	Ancient bracers (noted)	7	[]
+12492	24974	Ancient d'hide body	105	upstream_model:28670->66239, upstream_model:28543->66240, upstream_model:20121->66109, upstream_model:28601->66241, upstream_model:20177->66111, upstream_model:151->29538
+12493	24975	Ancient d'hide body (noted)	7	[]
+12498	24976	Bandos bracers	79	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+12499	24977	Bandos bracers (noted)	7	[]
+12500	24978	Bandos d'hide body	104	upstream_model:28748->66242, upstream_model:28539->66243, upstream_model:20121->66109, upstream_model:28615->66244, upstream_model:20177->66111, upstream_model:151->29538
+12501	24979	Bandos d'hide body (noted)	7	[]
+12506	24980	Armadyl bracers	80	upstream_model:20264->66104, upstream_model:20129->66105, upstream_model:20180->66106
+12507	24981	Armadyl bracers (noted)	7	[]
+12508	24982	Armadyl d'hide body	101	upstream_model:28668->66245, upstream_model:28530->66246, upstream_model:20121->66109, upstream_model:28610->66247, upstream_model:20177->66111, upstream_model:151->29538
+12509	24983	Armadyl d'hide body (noted)	7	[]
+12514	24984	Explorer backpack	68	upstream_model:28637->66248, upstream_model:28485->66249
+12515	24985	Explorer backpack (noted)	7	[]
+12516	24986	Pith helmet	68	upstream_model:28644->66250, upstream_model:28520->66251, upstream_model:28590->66252, upstream_model:28772->66253, upstream_model:28791->66254
+12517	24987	Pith helmet (noted)	7	[]
+12518	24988	Green dragon mask	91	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12519	24989	Green dragon mask (noted)	7	[]
+12520	24990	Blue dragon mask	90	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12521	24991	Blue dragon mask (noted)	7	[]
+12522	24992	Red dragon mask	89	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12523	24993	Red dragon mask (noted)	7	[]
+12524	24994	Black dragon mask	91	upstream_model:28739->48614, upstream_model:28508->48629, upstream_model:28552->48649, upstream_model:28749->48681, upstream_model:28779->48704
+12525	24995	Black dragon mask (noted)	7	[]
+12598	24996	Holy sandals	63	upstream_model:28815->66255, upstream_model:28811->66256, upstream_model:28814->66257
+12599	24997	Holy sandals (noted)	7	[]
+13648	24998	Clue bottle (easy)	53	upstream_model:31044->66258
+13649	24999	Clue bottle (medium)	61	upstream_model:31044->66258
+13650	25000	Clue bottle (hard)	59	upstream_model:31044->66258
+13651	25001	Clue bottle (elite)	60	upstream_model:31044->66258
+19712	25002	Clue nest (easy)	49	upstream_model:31957->66259
+19714	25003	Clue nest (medium)	57	upstream_model:31957->66259
+19716	25004	Clue nest (hard)	55	upstream_model:31957->66259
+19718	25005	Clue nest (elite)	56	upstream_model:31957->66259
+19835	25006	Clue scroll (master)	66	upstream_model:37183->66260
+19836	25007	Reward casket (master)	62	upstream_model:2450->58987
+19837	25008	Torn clue scroll (part 1)	79	upstream_model:37180->66261
+19838	25009	Torn clue scroll (part 2)	79	upstream_model:37214->66262
+19839	25010	Torn clue scroll (part 3)	79	upstream_model:31958->66263
+19912	25011	Zombie head	66	upstream_model:32008->66264, upstream_model:31912->66265, upstream_model:31910->66266
+19913	25012	Zombie head (noted)	7	[]
+19915	25013	Cyclops head	69	upstream_model:31974->66267, upstream_model:31745->66268, upstream_model:31832->66269, upstream_model:31936->66270, upstream_model:31949->66271
+19916	25014	Cyclops head (noted)	7	[]
+19918	25015	Nunchaku	64	upstream_model:32005->66272, upstream_model:31906->66273
+19919	25016	Nunchaku (noted)	7	[]
+19921	25017	Ancient d'hide boots	97	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19922	25018	Ancient d'hide boots (noted)	7	[]
+19924	25019	Bandos d'hide boots	96	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19925	25020	Bandos d'hide boots (noted)	7	[]
+19927	25021	Guthix d'hide boots	84	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19928	25022	Guthix d'hide boots (noted)	7	[]
+19930	25023	Armadyl d'hide boots	93	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19931	25024	Armadyl d'hide boots (noted)	7	[]
+19933	25025	Saradomin d'hide boots	99	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19934	25026	Saradomin d'hide boots (noted)	7	[]
+19936	25027	Zamorak d'hide boots	97	upstream_model:32033->66274, upstream_model:31819->66275, upstream_model:31879->66276
+19937	25028	Zamorak d'hide boots (noted)	7	[]
+19939	25029	Strange device	47	upstream_model:31914->29341
+19941	25030	Heavy casket	76	upstream_model:32028->66277, upstream_model:31907->66278
+20164	25031	Large spade	72	upstream_model:2418->52696, upstream_model:13938->52701
+20166	25032	Wooden shield (g)	82	upstream_model:2601->66279, upstream_model:517->66280
+20167	25033	Wooden shield (g) (noted)	7	[]
+20169	25034	Steel platebody (g)	84	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+20170	25035	Steel platebody (g) (noted)	7	[]
+20172	25036	Steel platelegs (g)	75	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+20173	25037	Steel platelegs (g) (noted)	7	[]
+20175	25038	Steel plateskirt (g)	80	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+20176	25039	Steel plateskirt (g) (noted)	7	[]
+20178	25040	Steel full helm (g)	81	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+20179	25041	Steel full helm (g) (noted)	7	[]
+20181	25042	Steel kiteshield (g)	84	upstream_model:2339->66140, upstream_model:486->66141
+20182	25043	Steel kiteshield (g) (noted)	7	[]
+20184	25044	Steel platebody (t)	84	upstream_model:2378->66124, upstream_model:3379->66125, upstream_model:164->66126, upstream_model:3383->66127, upstream_model:344->66128, upstream_model:151->29538
+20185	25045	Steel platebody (t) (noted)	7	[]
+20187	25046	Steel platelegs (t)	75	upstream_model:2582->66129, upstream_model:268->66130, upstream_model:432->66131
+20188	25047	Steel platelegs (t) (noted)	7	[]
+20190	25048	Steel plateskirt (t)	80	upstream_model:4208->66132, upstream_model:4206->66133, upstream_model:4207->66134
+20191	25049	Steel plateskirt (t) (noted)	7	[]
+20193	25050	Steel full helm (t)	81	upstream_model:2813->66135, upstream_model:218->66136, upstream_model:394->66137, upstream_model:56->66138, upstream_model:116->66139
+20194	25051	Steel full helm (t) (noted)	7	[]
+20196	25052	Steel kiteshield (t)	84	upstream_model:2339->66140, upstream_model:486->66141
+20197	25053	Steel kiteshield (t) (noted)	7	[]
+20199	25054	Monk's robe top (g)	88	upstream_model:11396->66089, upstream_model:10979->66090, upstream_model:10984->66091, upstream_model:11348->66092, upstream_model:11359->66093, upstream_model:151->29538
+20200	25055	Monk's robe top (g) (noted)	7	[]
+20202	25056	Monk's robe (g)	75	upstream_model:11395->66229, upstream_model:10982->66230, upstream_model:11357->66231
+20203	25057	Monk's robe (g) (noted)	7	[]
+20205	25058	Golden chef's hat	83	upstream_model:2782->66281, upstream_model:199->66282, upstream_model:374->66283, upstream_model:41->66284, upstream_model:99->66285
+20206	25059	Golden chef's hat (noted)	7	[]
+20208	25060	Golden apron	72	upstream_model:2592->66286, upstream_model:305->66287, upstream_model:467->66288
+20209	25061	Golden apron (noted)	7	[]
+20211	25062	Team cape zero	70	upstream_model:31971->66289, upstream_model:31772->66290
+20212	25063	Team cape zero (noted)	7	[]
+20214	25064	Team cape x	67	upstream_model:31988->66291, upstream_model:31773->66292
+20215	25065	Team cape x (noted)	7	[]
+20217	25066	Team cape i	67	upstream_model:32011->66293, upstream_model:31770->66294
+20218	25067	Team cape i (noted)	7	[]
+20238	25068	Charge dragonstone jewellery scroll	70	upstream_model:31979->66295
+20240	25069	Crier coat	70	upstream_model:32016->66296, upstream_model:31813->66297, upstream_model:31804->66298, upstream_model:31876->66299, upstream_model:31868->66300, upstream_model:151->29538
+20241	25070	Crier coat (noted)	7	[]
+20243	25071	Crier bell	83	upstream_model:32022->66301, upstream_model:2847->66302
+20244	25072	Crier bell (noted)	7	[]
+20246	25073	Black leprechaun hat	106	upstream_model:28642->66207, upstream_model:28514->66208, upstream_model:28589->66209, upstream_model:28770->66210, upstream_model:28795->66211
+20247	25074	Black leprechaun hat (noted)	7	[]
+20249	25075	Clueless scroll	77	upstream_model:32037->66303, upstream_model:31905->66304
+20251	25076	Arceuus banner	70	upstream_model:32025->66305, upstream_model:31896->66306
+20252	25077	Arceuus banner (noted)	7	[]
+20254	25078	Hosidius banner	71	upstream_model:31963->66307, upstream_model:31900->66308
+20255	25079	Hosidius banner (noted)	7	[]
+20257	25080	Lovakengj banner	72	upstream_model:32014->66309, upstream_model:31909->66310
+20258	25081	Lovakengj banner (noted)	7	[]
+20260	25082	Piscarilius banner	74	upstream_model:32006->66311, upstream_model:31901->66312
+20261	25083	Piscarilius banner (noted)	7	[]
+20263	25084	Shayzien banner	71	upstream_model:32047->66313, upstream_model:31908->66314
+20264	25085	Shayzien banner (noted)	7	[]
+20266	25086	Black unicorn mask	101	upstream_model:31966->66315, upstream_model:31757->66316, upstream_model:31834->66317, upstream_model:31926->66318
+20267	25087	Black unicorn mask (noted)	7	[]
+20269	25088	White unicorn mask	75	upstream_model:31966->66315, upstream_model:31757->66316, upstream_model:31834->66317, upstream_model:31926->66318
+20270	25089	White unicorn mask (noted)	7	[]
+20272	25090	Cabbage round shield	76	upstream_model:32010->66319, upstream_model:31911->66320
+20273	25091	Cabbage round shield (noted)	7	[]
+20275	25092	Gnomish firelighter	69	upstream_model:32038->66321, upstream_model:31903->66322
+20276	25093	Gnomish firelighter (noted)	7	[]
+20280	25094	Puzzle box (master)	61	upstream_model:32007->66323
+20281	25095	Puzzle box (master)	61	upstream_model:32032->66324
+20282	25096	Puzzle box (master)	61	upstream_model:31983->66325
+20355	25097	Light box	54	upstream_model:31954->66326
+20356	25098	null	33	upstream_model:32052->66327
+20357	25099	null	33	upstream_model:32053->66328
+20358	25100	Clue geode (easy)	50	upstream_model:31953->66329
+20360	25101	Clue geode (medium)	58	upstream_model:31953->66329
+20362	25102	Clue geode (hard)	56	upstream_model:31953->66329
+20364	25103	Clue geode (elite)	57	upstream_model:31953->66329
+21387	25104	Master scroll book (empty)	63	upstream_model:33179->66330
+21388	25105	Master scroll book (empty) (noted)	7	[]
+22675	25106	Scroll sack	71	upstream_model:36023->66331, upstream_model:5201->66332
+23188	25107	Guthix d'hide shield	76	upstream_model:37161->66333, upstream_model:37092->66334
+23189	25108	Guthix d'hide shield (noted)	7	[]
+23191	25109	Saradomin d'hide shield	79	upstream_model:37208->66335, upstream_model:37074->66336
+23192	25110	Saradomin d'hide shield (noted)	7	[]
+23194	25111	Zamorak d'hide shield	77	upstream_model:37198->66337, upstream_model:37089->66338
+23195	25112	Zamorak d'hide shield (noted)	7	[]
+23197	25113	Ancient d'hide shield	77	upstream_model:37186->66339, upstream_model:37075->66340
+23198	25114	Ancient d'hide shield (noted)	7	[]
+23200	25115	Armadyl d'hide shield	77	upstream_model:37154->66341, upstream_model:37080->66342
+23201	25116	Armadyl d'hide shield (noted)	7	[]
+23203	25117	Bandos d'hide shield	76	upstream_model:37159->66343, upstream_model:37091->66344
+23204	25118	Bandos d'hide shield (noted)	7	[]
+23206	25119	Dual sai	60	upstream_model:37153->66345, upstream_model:37082->66346, upstream_model:37079->66347
+23207	25120	Dual sai (noted)	7	[]
+23209	25121	Rune platebody (h1)	98	upstream_model:37173->66348, upstream_model:37031->66349, upstream_model:37066->66350, upstream_model:151->29538
+23210	25122	Rune platebody (h1) (noted)	7	[]
+23212	25123	Rune platebody (h2)	98	upstream_model:37210->66351, upstream_model:37034->66352, upstream_model:37060->66353, upstream_model:151->29538
+23213	25124	Rune platebody (h2) (noted)	7	[]
+23215	25125	Rune platebody (h3)	98	upstream_model:37184->66354, upstream_model:37035->66355, upstream_model:37065->66356, upstream_model:151->29538
+23216	25126	Rune platebody (h3) (noted)	7	[]
+23218	25127	Rune platebody (h4)	98	upstream_model:37185->66357, upstream_model:37030->66358, upstream_model:37061->66359, upstream_model:151->29538
+23219	25128	Rune platebody (h4) (noted)	7	[]
+23221	25129	Rune platebody (h5)	98	upstream_model:37160->66360, upstream_model:37037->66361, upstream_model:37064->66362, upstream_model:151->29538
+23222	25130	Rune platebody (h5) (noted)	7	[]
+23224	25131	Thieving bag	67	upstream_model:37201->66363, upstream_model:37021->66364
+23225	25132	Thieving bag (noted)	7	[]
+23351	25133	Cape of skulls	69	upstream_model:37197->66365, upstream_model:37019->66366, upstream_model:37051->66367
+23352	25134	Cape of skulls (noted)	7	[]
+23354	25135	Amulet of power (t)	75	upstream_model:37196->66368, upstream_model:37015->66369, upstream_model:37045->66370
+23355	25136	Amulet of power (t) (noted)	7	[]
+23357	25137	Rain bow	66	upstream_model:37190->66371, upstream_model:37095->66372, upstream_model:37086->66373
+23358	25138	Rain bow (noted)	7	[]
+23360	25139	Ham joint	63	upstream_model:37206->66374, upstream_model:37084->66375, upstream_model:37077->66376
+23361	25140	Ham joint (noted)	7	[]
+23363	25141	Staff of Bob the Cat	75	upstream_model:37177->66377, upstream_model:37094->66378, upstream_model:37087->66379
+23364	25142	Staff of Bob the Cat (noted)	7	[]
+23366	25143	Black platebody (h1)	99	upstream_model:37173->66348, upstream_model:37031->66349, upstream_model:37066->66350, upstream_model:151->29538
+23367	25144	Black platebody (h1) (noted)	7	[]
+23369	25145	Black platebody (h2)	99	upstream_model:37210->66351, upstream_model:37034->66352, upstream_model:37060->66353, upstream_model:151->29538
+23370	25146	Black platebody (h2) (noted)	7	[]
+23372	25147	Black platebody (h3)	99	upstream_model:37184->66354, upstream_model:37035->66355, upstream_model:37065->66356, upstream_model:151->29538
+23373	25148	Black platebody (h3) (noted)	7	[]
+23375	25149	Black platebody (h4)	99	upstream_model:37185->66357, upstream_model:37030->66358, upstream_model:37061->66359, upstream_model:151->29538
+23376	25150	Black platebody (h4) (noted)	7	[]
+23378	25151	Black platebody (h5)	99	upstream_model:37160->66360, upstream_model:37037->66361, upstream_model:37064->66362, upstream_model:151->29538
+23379	25152	Black platebody (h5) (noted)	7	[]
+23381	25153	Leather body (g)	72	upstream_model:37187->66380, upstream_model:37032->66381, upstream_model:37062->66382
+23382	25154	Leather body (g) (noted)	7	[]
+23384	25155	Leather chaps (g)	70	upstream_model:37189->66383, upstream_model:37024->66384, upstream_model:37057->66385
+23385	25156	Leather chaps (g) (noted)	7	[]
+23392	25157	Adamant platebody (h1)	101	upstream_model:37173->66348, upstream_model:37031->66349, upstream_model:37066->66350, upstream_model:151->29538
+23393	25158	Adamant platebody (h1) (noted)	7	[]
+23395	25159	Adamant platebody (h2)	101	upstream_model:37210->66351, upstream_model:37034->66352, upstream_model:37060->66353, upstream_model:151->29538
+23396	25160	Adamant platebody (h2) (noted)	7	[]
+23398	25161	Adamant platebody (h3)	101	upstream_model:37184->66354, upstream_model:37035->66355, upstream_model:37065->66356, upstream_model:151->29538
+23399	25162	Adamant platebody (h3) (noted)	7	[]
+23401	25163	Adamant platebody (h4)	101	upstream_model:37185->66357, upstream_model:37030->66358, upstream_model:37061->66359, upstream_model:151->29538
+23402	25164	Adamant platebody (h4) (noted)	7	[]
+23404	25165	Adamant platebody (h5)	101	upstream_model:37160->66360, upstream_model:37037->66361, upstream_model:37064->66362, upstream_model:151->29538
+23405	25166	Adamant platebody (h5) (noted)	7	[]
+23407	25167	Wolf mask	72	upstream_model:37195->66386, upstream_model:37012->66387, upstream_model:37044->66388, upstream_model:37148->66389, upstream_model:63->44344, upstream_model:120->44348
+23408	25168	Wolf mask (noted)	7	[]
+23410	25169	Wolf cloak	60	upstream_model:37199->66390, upstream_model:37022->66391, upstream_model:37050->66392
+23411	25170	Wolf cloak (noted)	7	[]
+23413	25171	Climbing boots (g)	79	upstream_model:37174->66393, upstream_model:37039->66394, upstream_model:37071->66395
+23414	25172	Climbing boots (g) (noted)	7	[]
+23417	25173	Puzzle box (master)	61	upstream_model:37191->66396
+24362	25174	Scroll box (easy)	51	upstream_model:39031->66397
+24363	25175	Scroll box (medium)	53	upstream_model:39033->66398
+24364	25176	Scroll box (hard)	51	upstream_model:39028->66399
+24365	25177	Scroll box (elite)	52	upstream_model:39032->66400
+24366	25178	Scroll box (master)	53	upstream_model:39029->66401
+25612	25179	S.t.a.s.h blueprint	52	upstream_model:40874->66402
+30906	25180	Minor easy scroll case	67	upstream_model:56318->66403
+30908	25181	Major easy scroll case	64	upstream_model:56311->66404
+30910	25182	Minor medium scroll case	69	upstream_model:56314->66405
+30912	25183	Major medium scroll case	66	upstream_model:56319->66406
+30914	25184	Minor hard scroll case	67	upstream_model:56317->66407
+30916	25185	Major hard scroll case	64	upstream_model:56322->66408
+30918	25186	Minor elite scroll case	68	upstream_model:56320->66409
+30920	25187	Major elite scroll case	65	upstream_model:56312->66410
+30922	25188	Minor master scroll case	69	upstream_model:56321->66411
+30924	25189	Major master scroll case	66	upstream_model:56315->66412
+30926	25190	Mimic scroll case	59	upstream_model:56313->66413

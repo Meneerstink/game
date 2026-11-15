@@ -1,4 +1,9 @@
 # OSRS id	noted variant required	OSRS cache name
+2795	false	Puzzle box (hard)
+2842	false	Challenge scroll (medium)
+3565	false	Puzzle box (hard)
+3569	false	Puzzle box (hard)
+7269	false	Challenge scroll (hard)
 7370	true	Green d'hide body (g)
 7372	true	Green d'hide body (t)
 7374	true	Blue d'hide body (g)
@@ -22,6 +27,8 @@
 10378	true	Guthix d'hide body
 10384	true	Saradomin bracers
 10386	true	Saradomin d'hide body
+12128	false	Challenge scroll (elite)
+12161	false	Puzzle box (elite)
 12193	true	Ancient robe top
 12205	true	Bronze platebody (g)
 12207	true	Bronze platelegs (g)
@@ -127,6 +134,9 @@
 19718	false	Clue nest (elite)
 19835	false	Clue scroll (master)
 19836	false	Reward casket (master)
+19837	false	Torn clue scroll (part 1)
+19838	false	Torn clue scroll (part 2)
+19839	false	Torn clue scroll (part 3)
 19912	true	Zombie head
 19915	true	Cyclops head
 19918	true	Nunchaku
@@ -136,6 +146,7 @@
 19930	true	Armadyl d'hide boots
 19933	true	Saradomin d'hide boots
 19936	true	Zamorak d'hide boots
+19939	false	Strange device
 19941	false	Heavy casket
 20164	false	Large spade
 20166	true	Wooden shield (g)
@@ -170,6 +181,12 @@
 20269	true	White unicorn mask
 20272	true	Cabbage round shield
 20275	true	Gnomish firelighter
+20280	false	Puzzle box (master)
+20281	false	Puzzle box (master)
+20282	false	Puzzle box (master)
+20355	false	Light box
+20356	false	null
+20357	false	null
 20358	false	Clue geode (easy)
 20360	false	Clue geode (medium)
 20362	false	Clue geode (hard)
@@ -209,6 +226,7 @@
 23407	true	Wolf mask
 23410	true	Wolf cloak
 23413	true	Climbing boots (g)
+23417	false	Puzzle box (master)
 24362	false	Scroll box (easy)
 24363	false	Scroll box (medium)
 24364	false	Scroll box (hard)

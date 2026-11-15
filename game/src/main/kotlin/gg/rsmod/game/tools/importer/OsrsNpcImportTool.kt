@@ -66,6 +66,10 @@ object OsrsNpcImportTool {
             // Owner answer Q10: The Mimic encounter (RuneLite gameval NpcID TRAIL_MIMIC_NONCOMBAT 7979, TRAIL_MIMIC_COMBAT 8633,
             // TRAIL_MIMIC_SPAWN_MELEE / RANGER / MAGE 8635-8637) and Watson (TRAIL_WATSON_PRE_TALK 7303, OSRS Wiki infobox 7303,7304).
             "mimic" to listOf(7979, 8633, 8635, 8636, 8637, 7303),
+            // CLUE: individually pinned Wiki NPCs, verified against cache 2686
+            // by ClueStepAssetProbe (docs/CLUE/cache/step-assets.json). Existing
+            // Uri, hard agents and god wizards are reused, never duplicated.
+            "clue-steps" to listOf(6586, 7306, 7312, 6587, 6588, 7307, 7308, 7309, 7310),
             // Owner 2026-09-17 ("gebruik exact de deadmanmode guard van osrs"): OSRS Wiki "Guard (Deadman Mode)" Varrock
             // variants 6582 (slash) and 11203 (ranged), and "Wizguard" 14792. Combat stats/anims are server-side (city_guards.plugin.kts).
             // Owner 2026-09-19 (100 % OSRS): every per-city melee/ranged variant from the same infobox (ids 6574-6583, 6698-6702,

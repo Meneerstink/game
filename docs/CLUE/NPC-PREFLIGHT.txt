@@ -1,0 +1,76 @@
+WARNING: An illegal reflective access operation has occurred
+WARNING: Illegal reflective access by io.netty.util.internal.PlatformDependent0 (file:/C:/RSPS/work/gpt-a/game/build/install/game/lib/netty-all-4.0.34.Final.jar) to field java.nio.Buffer.address
+WARNING: Please consider reporting this to the maintainers of io.netty.util.internal.PlatformDependent0
+WARNING: Use --illegal-access=warn to enable warnings of further illegal reflective access operations
+WARNING: All illegal access operations will be denied in a future release
+[07:47:55.785 INFO ] PlatformDependent    | Your platform does not provide complete low-level API for accessing direct buffers reliably. Unless explicitly requested, heap buffer will always be preferred to avoid potential system unstability.
+CENSUS npc_model_candidates=64988 next npc=15234 bas=2488 seq=17482 frameset=5796 base=3799 synth=10810
+PLAN npc 6586 'Sherlock' -> 15234 bas=2488 models=[230, 246, 28504, 315, 29313, 26887, 176, 27139, 18561]->[54618, 54630, 66084, 66085, 66086, 66087, 53822, 29263, 66088] heads=[28751]->[66089] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[Talk-to, null, null, null, null]
+PLAN npc 7306 'Falo the Bard' -> 15235 bas=2489 models=[215, 249, 28515, 27154, 179, 4226, 4218, 4391, 244, 317, 4394]->[56724, 54854, 54781, 66090, 56739, 61330, 61331, 66091, 66092, 61283, 66093] heads=[53, 81, 77]->[56734, 54855, 66094] seqs={1321=17482} ops=[Talk-to, null, null, null, null]
+PLAN npc 7312 'Double agent' -> 15236 bas=2488 models=[13705, 215, 10039, 28515, 323, 26619, 177, 8954, 265, 181, 5434]->[58906, 56724, 58910, 54781, 66095, 54799, 56708, 58932, 61351, 58335, 66096] heads=[53, 13701, 10030]->[56734, 66097, 66098] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[null, Attack, null, null, null]
+PLAN npc 6587 'Armadylean guard' -> 15237 bas=2490 models=[27942, 27956, 27948, 27937, 27963, 27978]->[66099, 66100, 66101, 61464, 66102, 66103] heads=[]->[] seqs={6952=17483, 6953=17484} ops=[null, Attack, null, null, null]
+PLAN npc 6588 'Bandosian guard' -> 15238 bas=2491 models=[27662, 27659, 16314]->[66104, 66105, 66106] heads=[]->[] seqs={4318=16139, 4319=16140} ops=[null, Attack, null, null, null]
+PLAN npc 7307 'Ancient Wizard' -> 15239 bas=2492 models=[31793, 214, 250, 31806, 3189, 31796, 177, 31782, 181, 6232]->[66107, 54914, 54814, 66108, 53718, 66109, 56708, 66110, 58335, 62575] heads=[82, 52, 31945]->[54850, 55072, 66111] seqs={813=15392, 819=819, 820=820, 821=821, 822=822} ops=[null, Attack, null, null, null]
+PLAN npc 7308 'Ancient Wizard' -> 15240 bas=2493 models=[31793, 214, 250, 31806, 3189, 31796, 177, 31782, 181, 16846]->[66107, 54914, 54814, 66108, 53718, 66109, 56708, 66110, 58335, 66112] heads=[82, 52, 31945]->[54850, 55072, 66111] seqs={4591=17485, 4226=17486, 4227=17487, 821=821, 822=822} ops=[null, Attack, null, null, null]
+PLAN npc 7309 'Ancient Wizard' -> 15241 bas=2488 models=[31793, 214, 250, 31806, 3189, 31796, 177, 31782, 181, 539]->[66107, 54914, 54814, 66108, 53718, 66109, 56708, 66110, 58335, 66113] heads=[82, 52, 31945]->[54850, 55072, 66111] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[null, Attack, null, null, null]
+PLAN npc 7310 'Brassican Mage' -> 15242 bas=2488 models=[31794, 214, 250, 31805, 31797, 177, 31783, 181, 31911, 31889]->[66114, 54914, 54814, 66115, 66116, 56708, 66117, 58335, 66118, 66119] heads=[82, 52, 31944]->[54850, 55072, 66120] seqs={808=808, 819=819, 820=820, 821=821, 822=822} ops=[null, Attack, null, null, null]
+DROPPED model 28504: face z-offsets (not representable in 667)
+DROPPED model 28751: face z-offsets (not representable in 667)
+DROPPED model 53: face z-offsets (not representable in 667)
+DROPPED seq 1321: vertical offset 8
+DROPPED seq 1321: hand item 3953 (OSRS item id, not imported)
+DROPPED model 181: face z-offsets (not representable in 667)
+DROPPED npc 7312: stat 0 = 130
+DROPPED npc 7312: stat 1 = 100
+DROPPED npc 7312: stat 2 = 105
+DROPPED npc 7312: stat 3 = 160
+DROPPED npc 7312: stat 5 = 95
+DROPPED npc 7312: params (8)
+DROPPED model 27948: face z-offsets (not representable in 667)
+DROPPED seq 6952: vertical offset 10
+DROPPED seq 6953: vertical offset 10
+DROPPED npc 6587: stat 1 = 82
+DROPPED npc 6587: stat 4 = 90
+DROPPED npc 6587: stat 3 = 132
+DROPPED npc 6587: stat 5 = 80
+DROPPED npc 6587: params (6)
+DROPPED npc 6588: stat 0 = 110
+DROPPED npc 6588: stat 1 = 80
+DROPPED npc 6588: stat 2 = 115
+DROPPED npc 6588: stat 3 = 130
+DROPPED npc 6588: params (8)
+DROPPED model 52: face z-offsets (not representable in 667)
+DROPPED npc 7307: stat 5 = 150
+DROPPED npc 7307: stat 3 = 80
+DROPPED npc 7307: stat 0 = 50
+DROPPED npc 7307: stat 1 = 20
+DROPPED npc 7307: stat 2 = 30
+DROPPED npc 7307: params (2)
+DROPPED model 16846: face z-offsets (not representable in 667)
+DROPPED seq 4591: vertical offset 8
+DROPPED seq 4226: vertical offset 8
+DROPPED seq 4227: vertical offset 8
+DROPPED npc 7308: stat 5 = 80
+DROPPED npc 7308: stat 4 = 150
+DROPPED npc 7308: stat 3 = 80
+DROPPED npc 7308: stat 0 = 50
+DROPPED npc 7308: stat 1 = 20
+DROPPED npc 7308: stat 2 = 30
+DROPPED npc 7308: params (3)
+DROPPED npc 7309: stat 5 = 80
+DROPPED npc 7309: stat 3 = 80
+DROPPED npc 7309: stat 0 = 120
+DROPPED npc 7309: stat 1 = 20
+DROPPED npc 7309: stat 2 = 150
+DROPPED npc 7309: params (3)
+DROPPED model 31911: face z-offsets (not representable in 667)
+DROPPED model 31889: face z-offsets (not representable in 667)
+DROPPED npc 7310: stat 5 = 170
+DROPPED npc 7310: stat 4 = 140
+DROPPED npc 7310: stat 3 = 150
+DROPPED npc 7310: stat 0 = 80
+DROPPED npc 7310: stat 1 = 80
+DROPPED npc 7310: stat 2 = 70
+DROPPED npc 7310: params (3)
+PREFLIGHT transaction=tx-20261115-064813 mutations=161 outcomes={NO_OP=58, CREATE=264}
+DRY_RUN records=63
