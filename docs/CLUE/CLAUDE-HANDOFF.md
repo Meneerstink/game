@@ -503,3 +503,22 @@ real19835 and unknown flags rejected. Claude must rerun core PLAN/PREFLIGHT
 AFTER the item batch so imported19835/19836 can be renamed; source IDs remain
 19835=78 clue scroll and19836=Reward casket(78). Never map these to legacy items.
 The gold/onyx recolours remain Claude cache work from the existing handoff.
+
+
+## Source bucket menu, B15-Nov21:15
+
+PREFLIGHT tx-20261115-200231: exactly1 mutation, native object9568
+index16/group37/file96; append opcode30 Search before terminator. Existing
+geometry and all prior bytes retained; no IDs allocated. Actual paired raw
+bytes+SHA: cache/search-bucket.json. Two focused tests passed. Read-only proof
+build/clue/search-menu-preflight/read-only-proof.json confirms both caches,
+ledger and stash mapping unchanged. Rerun python tools/clue/preflight_search_menu.py
+after compiling current tool (check_compile.py HEAD basic-tests). Claude applies
+ClueSearchMenuCacheTool through the normal cache workflow; no --apply used here.
+Test jail bucket9568 at3013,3179,0: Search completes only its active source clue;
+other steps/accounts/objects must retain ordinary behaviour.
+
+Final new-component Gradle run integration-20261115-200204:3core+13plugin
+classes requested,4513 source/fixture inputs frozen; waiting on Claude buildslot.
+No result accepted until summary.json reports accepted=true. Map drafts remain
+under build/clue/next and are excluded from this frozen run.

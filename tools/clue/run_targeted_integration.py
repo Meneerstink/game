@@ -30,6 +30,18 @@ PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
              'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests',
              'TreasureTrailFaloTests', 'TreasureTrailSherlockTests', 'TreasureTrailContractTests', 'ClueNpcAssetsTests']]
 
+if '--basic' in sys.argv:
+    CORE = ['gg.rsmod.game.tools.importer.' + name for name in
+            ['ClueSearchMenuImportTests', 'ClueCoreCacheTests', 'ClueInterfaceImportTests']]
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests',
+                'ClueStepSelectionTests', 'TreasureTrailStepCatalogueTests',
+                'TreasureTrailTornPartsTests', 'TreasureTrailContractTests',
+                'ClueScrollLifecycleTests', 'TreasureTrailFaloTests',
+                'TreasureTrailSherlockTests', 'ClueNpcAssetsTests',
+                'ClueDropOwnershipTests', 'ClueCasketTransactionTests']]
+    PLUGINS += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests']
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
@@ -39,6 +51,7 @@ def inputs():
                    'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
                    'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
                    'docs/CLUE/cache/ui-camera-order.json', 'docs/CLUE/cache/search-bucket.json',
+                   'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
                    'docs/CLUE/NPC-DIALOGUE-SOURCES.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
