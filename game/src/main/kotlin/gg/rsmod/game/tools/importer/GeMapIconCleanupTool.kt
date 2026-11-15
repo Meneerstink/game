@@ -40,6 +40,9 @@ object GeMapIconCleanupTool {
             Removal(7389, 3187, 3511, 0, "transport icon 612"),
             Removal(39510, 3141, 3515, 0, "shortcut icon 1093"),
             Removal(43522, 3145, 3472, 0, "music icon 225"),
+            // N542 (owner 2026-11-14 '4 B'): the agility-shortcut icon (element 632) at the GE tunnel's west end, region 12342 -
+            // the owner wants it off the minimap and world map even though OSRS has it.
+            Removal(29992, 3128, 3515, 0, "N542 shortcut icon 632 (GE tunnel west end)"),
         )
 
     /** Marker locs that must survive (bank 560 and Grand Exchange 637), checked after the edit. */
@@ -68,13 +71,19 @@ object GeMapIconCleanupTool {
                             locs.filter {
                                 it.id == r.locId && it.localX == r.x - rx * 64 && it.localZ == r.z - rz * 64 && it.plane == r.plane
                             }
+                        // Re-runnable (N542 15-11): a marker removed by an earlier apply is reported and skipped.
+                        if (hit.isEmpty()) {
+                            println("ALREADY GONE ${r.label} loc=${r.locId} at ${r.x},${r.z},${r.plane}")
+                            return@map null
+                        }
                         check(hit.size == 1) {
                             "${r.label}: expected exactly one placement of ${r.locId} at ${r.x},${r.z},${r.plane}, found ${hit.size}"
                         }
                         check(hit[0].type == 22) { "${r.label}: not a map-marker (type ${hit[0].type})" }
                         println("REMOVE ${r.label} loc=${r.locId} at ${r.x},${r.z},${r.plane} region=$regionId")
                         hit[0]
-                    }
+                    }.filterNotNull()
+                if (toRemove.isEmpty()) return@forEach
                 val kept = locs - toRemove.toSet()
                 println("KEPT markers: " + kept.filter { it.id in KEPT }.joinToString { "${it.id}@${rx * 64 + it.localX},${rz * 64 + it.localZ},${it.plane}" })
                 val newBytes = Rev667LocCodec.encode(kept)
