@@ -31,7 +31,9 @@ object ToaUpperTileFlagTool {
             "lobby" -> lobby
             "necropolis" -> exterior
             "all" -> raid + lobby + exterior
-            else -> error("Unknown scope $scope; expected raid|lobby|necropolis|all")
+            // CoX (16-11): the raid banks + Olm, moved +0,+24 squares (OsrsRegionImportTool 'cox-map'). Read-only probes (TileFloorProbeTool pairs cox).
+            "cox" -> (((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889).associateWith { "m${it shr 8}_${(it and 255) + 24}" }
+            else -> error("Unknown scope $scope; expected raid|lobby|necropolis|all|cox")
         }
     }
 

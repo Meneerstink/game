@@ -62,6 +62,12 @@ object OsrsRegionImportTool {
          * overlay ids are the shared pre-2008 floors (OSRS 9 and rev-667 9 are both rgb 505050), so 11 -> 11 (rgb 665d58, stone).
          */
         val overlayOverrides: Map<Int, Int> = emptyMap(),
+        /**
+         * CoX 16-11: OSRS underlay id -> rev-667 overlay id for tiles that end up WITHOUT an overlay. Every rev-667 underlay carries a
+         * texture, so OSRS's black void underlay (71 = 030303) drew as texture 521 (beige planes beside the raid rooms, visual-2 photos);
+         * a plain black overlay on those tiles draws them black as OSRS does.
+         */
+        val voidUnderlayOverlay: Map<Int, Int> = emptyMap(),
         /** OSRS loc types left out of the squares (the server places its own working copy, or the content is not ours). */
         val excludeOsrsLocs: Set<Int> = emptySet(),
         /**
@@ -307,7 +313,7 @@ object OsrsRegionImportTool {
             // (dry-run 18:37), so those keep the first pass' choice. Re-tile only.
             "cox-map-floors" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
                 "Chambers of Xeric floors: the black void on a plain black overlay", clearTileFlags = 0x8, dropHiddenOverlays = true,
-                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51)),
+                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51), voidUnderlayOverlay = mapOf(71 to 51, 138 to 51)),
             // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
             // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
             // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667
@@ -772,6 +778,10 @@ object OsrsRegionImportTool {
                         dst.overlayId = if (src.overlayId != 0 && !hidden) mapOverlay(src.overlayId) else 0
                         if (dst.overlayId != 0) overlayUse.merge(src.overlayId, 1, Int::plus)
                         dst.underlayId = if (src.underlayId != 0) mapUnderlay(src.underlayId) else 0
+                        if (dst.overlayId == 0 && src.underlayId != 0) batch.voidUnderlayOverlay[src.underlayId - 1]?.let { void ->
+                            dst.overlayId = void + 1; dst.overlayShape = 0; dst.overlayRotation = 0
+                            overlayUse.merge(-src.underlayId, 1, Int::plus)
+                        }
                     }
                     val locs =
                         if (batch.locsOnlyWithout != null) {
