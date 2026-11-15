@@ -112,6 +112,20 @@ class GeHomeHallCollisionTests {
 
     private data class Step(val from: Tile, val dir: Direction)
 
+    /** The step that first reached each tile in [walk] - the failure messages print the route to a bad tile. */
+    private val firstStep = HashMap<Tile, Step>()
+
+    private fun routeTo(tile: Tile): String {
+        val route = ArrayList<String>()
+        var t = tile
+        while (route.size < 12) {
+            val step = firstStep[t] ?: break
+            route += "${step.from.x},${step.from.z} ${step.dir}"
+            t = step.from
+        }
+        return route.joinToString(" <- ")
+    }
+
     /** Every tile a player reaches on [level] from its [entrances] with the server's own step rule, and every step taken. */
     private fun walk(level: Int): Pair<Set<Tile>, List<Step>> {
         val seen = HashSet<Tile>()
@@ -125,7 +139,10 @@ class GeHomeHallCollisionTests {
                 if (next.x !in WALK_X || next.z !in WALK_Z) continue
                 if (!world.collision.canStep(t, dir)) continue
                 steps += Step(t, dir)
-                if (seen.add(next)) queue += next
+                if (seen.add(next)) {
+                    queue += next
+                    firstStep.putIfAbsent(next, Step(t, dir))
+                }
             }
         }
         return seen to steps
@@ -215,7 +232,7 @@ class GeHomeHallCollisionTests {
             val balconies = if (level == 1) RoyalHallMapTool.BALCONIES else RoyalHallMapTool.BALCONIES_2
             reached.forEach { t ->
                 val ground = map.tiles[level][t.x - 49 * 64][t.z - 54 * 64]
-                if (ground.overlayId == 0) problems += "level $level ${t.x},${t.z}: walkable air (no floor)"
+                if (ground.overlayId == 0) problems += "level $level ${t.x},${t.z}: walkable air (no floor), reached via ${routeTo(t)}"
                 val hall = t.x in floorX && t.z in floorZ
                 val balcony = balconies.any { t.x in it.xs && t.z in it.zs }
                 // The upper doorways' wall-ring tiles lead onto the balconies (and are part of them).
