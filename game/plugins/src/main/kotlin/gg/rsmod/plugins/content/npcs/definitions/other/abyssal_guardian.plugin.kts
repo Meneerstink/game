@@ -75,7 +75,7 @@ val guard =
             obj(Items.CRIMSON_CHARM, quantity = 1, slots = 30)
             obj(Items.BLUE_CHARM, quantity = 1, slots = 1)
             obj(Items.ABYSSAL_CHARM, quantity = 2, slots = 64)
-            nothing(slots = 880)
+            nothing(slots = 675) // N614 (15-11): 1000 - 325; 880 (template value) made the table fill 1205 of 1000
         }
     }
 

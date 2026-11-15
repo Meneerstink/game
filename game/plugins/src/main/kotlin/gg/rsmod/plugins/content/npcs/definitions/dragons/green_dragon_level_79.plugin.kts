@@ -49,7 +49,7 @@ val dragon =
             obj(Items.BASS, slots = 24)
             obj(Items.ADAMANTITE_ORE, slots = 24)
 
-            nothing(5)
+            // N614 (15-11): no main-table Nothing on the OSRS Wiki (its 1/51.29 Nothing is inside the gem table); nothing(5) made it 1029/1024.
 
             table(Gems.gemTable, slots = 40)
         }
