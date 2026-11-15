@@ -45,7 +45,7 @@ object OsrsWeaponLooks {
 
     private val looks = mutableMapOf<Int, Look>()
 
-    private fun register(
+    fun register(
         look: Look,
         vararg items: Int,
     ) = items.forEach { looks[it] = look }

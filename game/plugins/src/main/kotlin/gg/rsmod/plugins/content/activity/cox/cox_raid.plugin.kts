@@ -308,3 +308,19 @@ CoxInterfaces.of(CoxInterfaces.PARTY_DETAILS)?.let { iface ->
  */
 CoxLootItems.local(21003)?.let { gg.rsmod.game.model.RenderAnimations.register(2530, it) }
 CoxLootItems.local(21015)?.let { gg.rsmod.game.model.RenderAnimations.register(2531, it) }
+
+/*
+ * CoX weapons' attack / block (OsrsWeaponLooks): Elder maul = HUMAN_ELDER_MAUL_ATTACK 7516 / _BLOCK 7517 on every style (OsrsSeq, imported
+ * with the Colossal blade); Dinh's bulwark = HUMAN_DINHS_BULWARK_CRUSH 7507 (Pummel) / _BLOCK 7512 (fx 'cox-weapons-seq').
+ * ONZEKER: Dinh's 'Block' style (no attack) and its special 'Shield bash' (HUMAN_DINHS_BULWARK_BASH 7511) come with the K-ITEM work.
+ */
+CoxLootItems.local(21003)?.let { maul ->
+    val a = gg.rsmod.plugins.content.items.osrs.OsrsSeq.ELDER_MAUL_ATTACK
+    gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.register(
+        gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(intArrayOf(a, a, a, a), block = gg.rsmod.plugins.content.items.osrs.OsrsSeq.ELDER_MAUL_DEFEND), maul)
+}
+CoxLootItems.local(21015)?.let { bulwark ->
+    val crush = CoxIds.seq(7507) ?: return@let
+    gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.register(
+        gg.rsmod.plugins.content.items.osrs.OsrsWeaponLooks.Look(intArrayOf(crush, crush, crush, crush), block = CoxIds.seq(7512)), bulwark)
+}
