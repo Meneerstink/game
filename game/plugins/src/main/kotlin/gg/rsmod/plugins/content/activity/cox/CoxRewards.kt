@@ -34,6 +34,11 @@ object CoxRewards {
 
     fun has(player: Player): Boolean = pending[player.username.lowercase()]?.isNotEmpty() == true
 
+    /** Raiders whose chest holds a unique (the purple light, CoxChest). */
+    private val uniqueFinders = java.util.concurrent.ConcurrentHashMap.newKeySet<String>()
+
+    fun hadUnique(player: Player): Boolean = player.username.lowercase() in uniqueFinders
+
     /**
      * The raid is complete: the team's uniques (by team points) go to raiders weighted by personal points; everybody else rolls commons.
      * [owned] answers whether a raider already owns an OSRS item (ancient tablet, dark journal).
@@ -46,6 +51,8 @@ object CoxRewards {
             val who = CoxLoot.pickReceiver(points.filterKeys { it !in uniques }, random) ?: return@repeat
             uniques[who] = CoxLoot.pickUnique(random)
         }
+        uniqueFinders.removeAll(byName.keys)
+        uniqueFinders.addAll(uniques.keys)
         byName.forEach { (name, player) ->
             player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
             val drops = CoxLoot.chest(uniques[name], points[name] ?: 0, owned(player, CoxLoot.ANCIENT_TABLET), owned(player, CoxLoot.DARK_JOURNAL), random)
@@ -92,8 +99,9 @@ object CoxRewards {
             BOOK -> book?.let { take(player, list, it) }
             in FIRST_SLOT until FIRST_SLOT + SLOTS -> items.getOrNull(component - FIRST_SLOT)?.let { take(player, list, it) }
         }
-        if (list.isEmpty()) pending.remove(key)
+        if (list.isEmpty()) { pending.remove(key); uniqueFinders.remove(key) }
         draw(player, iface)
+        CoxChest.refresh(player)
     }
 
     private fun take(player: Player, list: MutableList<Reward>, r: Reward) {
@@ -103,6 +111,7 @@ object CoxRewards {
 
     /** Leaving with unclaimed loot: it is placed on the ground (tsps rsprox) where the raider leaves. */
     fun dropUnclaimed(player: Player, world: World) {
+        uniqueFinders.remove(player.username.lowercase())
         val list = pending.remove(player.username.lowercase()) ?: return
         list.forEach { world.spawn(GroundItem(it.item, it.amount, player.tile, player)) }
     }

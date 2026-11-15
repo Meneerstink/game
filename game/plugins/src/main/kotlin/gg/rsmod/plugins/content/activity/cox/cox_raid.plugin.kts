@@ -198,10 +198,8 @@ CoxInterfaces.of(CoxInterfaces.REWARDS)?.let { iface ->
 on_command("coxloot", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
-    val raiders = world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }
-    CoxRewards.generate(raid, raiders) { p, osrs -> CoxLootItems.local(osrs)?.let { p.inventory.contains(it) || p.bank.contains(it) } ?: false }
-    raid.progress = 5
-    CoxPartyTab.updateAll(raid)
+    // The raid's end as the Olm's death does it (CoxChest): loot rolled, the crystal by the steps turns into the chest 6 ticks later.
+    CoxChest.complete(raid)
     CoxRewards.open(player)
 }
 

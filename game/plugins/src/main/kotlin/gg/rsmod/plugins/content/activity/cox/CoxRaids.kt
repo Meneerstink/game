@@ -282,6 +282,7 @@ object CoxRaids : KLogging() {
         raid.closed = true
         raids.remove(raid.map)
         CoxParties.all().filter { it.raidId == raid.id }.forEach { it.raidId = -1 }
+        CoxChest.forget(raid)
         runCatching { raid.world.instanceAllocator.release(raid.world, raid.map) }.onFailure { logger.error(it) { "CoX release ${raid.id}" } }
     }
 }

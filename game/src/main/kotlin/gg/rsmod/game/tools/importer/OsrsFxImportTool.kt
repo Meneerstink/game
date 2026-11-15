@@ -299,6 +299,13 @@ object OsrsFxImportTool {
             // DORGESH_WIRE_CHIMNEY_SMOKE 5745, FRIS_GEYSER 5771, HEAL_CASTING_LOOP 7390, RAIDS_VESPULAR_PORTAL_ACTIVE 7499,
             // RAIDS_OLMS_LAIR_ENTRANCE 7503 (loc animations of the room templates + Olm's chamber).
             "cox-map-seq" to listOf(493, 2995, 5745, 5771, 7390, 7499, 7503),
+            // CoX loot beams RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030 (loc-tool 'cox-locs' dropped their animation): gameval
+            // AnimationID ENAKH_LIGHT_STREAMING 3101.
+            "cox-lootbeam-seq" to listOf(3101),
+            // CoX weapons (dossier COX.txt 21:3x): gameval HUMAN_DINHS_BULWARK_CRUSH 7507 / _READY 7508 / _RUN 7509 / _WALK 7510 / _BASH 7511
+            // / _BLOCK 7512, HUMAN_ELDER_MAUL_READY 7518 / _RUN 7519 / _WALK 7520 (its _ATTACK 7516 / _BLOCK 7517 are in already, OsrsSeq),
+            // SPOT_DINHS_BULWARK_IDLE 7522 / _BLOCK 7523.
+            "cox-weapons-seq" to listOf(7507, 7508, 7509, 7510, 7511, 7512, 7518, 7519, 7520, 7522, 7523),
             // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
             // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
             "necropolis-west-seq" to listOf(3743, 9845, 13159),
