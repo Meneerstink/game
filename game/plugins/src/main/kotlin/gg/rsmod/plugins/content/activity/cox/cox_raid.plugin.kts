@@ -26,6 +26,52 @@ CoxIds.loc(29778)?.let { exit ->
     }
 }
 
+/*
+ * Passages between rooms (RAIDS_DOORWAY 29789, op 'Enter'; placed by the cache map on every room edge - e.g. 6458,47 rot 0 in the
+ * Muttadile room of layout 6/42, test server 15-11). tsps chambers-of-xeric.md 'Getting around the raid, from rsprox captures':
+ * 'Passages: the player faces it and is through 2 ticks after arriving. Before the start the leader gets "Use the controls on the
+ * <col=7f0000>side-panel</col><br>when you are ready to begin the raid." and the rest "You cannot proceed until <leader> has started the
+ * raid." (message boxes).' Combat rooms' exit crystals (server-spawned, gone when the room is beaten) come with the rooms.
+ */
+CoxIds.loc(29789)?.let { passage ->
+    on_obj_option(obj = passage, option = "enter") {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_obj_option
+        val obj = player.getInteractingGameObj()
+        if (!raid.started && CoxRaids.inStartRoom(raid, player.tile)) {
+            player.queue {
+                if (player.username == raid.leader) {
+                    messageBox("Use the controls on the <col=7f0000>side-panel</col><br>when you are ready to begin the raid.")
+                } else {
+                    messageBox("You cannot proceed until ${raid.leader} has started the raid.")
+                }
+            }
+            return@on_obj_option
+        }
+        val def = obj.getDef(world.definitions)
+        val exit = CoxRaids.passageExit(player.tile, obj.tile, def.getRotatedWidth(obj), def.getRotatedLength(obj))
+        player.faceTile(obj.tile, def.getRotatedWidth(obj), def.getRotatedLength(obj))
+        player.lock()
+        player.queue {
+            wait(2)
+            player.moveTo(exit)
+            player.unlock()
+        }
+    }
+}
+
+/** Test server / check accounts: ::coxbegin = the leader starts the raid (the party tab's start button follows with the party UI). */
+on_command("coxbegin", Privilege.ADMIN_POWER) {
+    if (!CoxTestGate.allowed(player)) return@on_command
+    val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
+    if (raid.started) return@on_command
+    raid.started = true
+    raid.startCycle = world.currentCycle
+    // tsps r123: the raid's announcements are friendschatnotification messages (type 11).
+    world.players.forEach { p ->
+        if (raid.map.area.contains(p.tile)) p.message("The raid has begun!", gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+    }
+}
+
 on_world_init {
     world.queue {
         while (true) {

@@ -9,8 +9,11 @@ import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
 
 /** One running Chambers of Xeric instance (fase 5, first slice: solo entry into a generated layout; party/rooms follow). */
-class CoxRaid(val id: Long, val layout: CoxLayout, val map: InstancedMap, val world: World) {
+class CoxRaid(val id: Long, val layout: CoxLayout, val map: InstancedMap, val world: World, val leader: String) {
     @Volatile var closed = false
+    /** tsps r118: the first room's passage stays shut until the leader starts the raid (party tab; ::coxbegin on the test server). */
+    @Volatile var started = false
+    var startCycle = -1
 }
 
 /**
@@ -21,8 +24,11 @@ class CoxRaid(val id: Long, val layout: CoxLayout, val map: InstancedMap, val wo
  * The starting room's spawn per version (west / straight / east) = CoxMap.RAID_START_SPAWN (tsps BOUND.RAID_START).
  */
 object CoxRaids : KLogging() {
-    /** The tile in front of the entrance steps (walked to from fairy ring BLS on the test server 15-11: 1233,3571 is reachable). */
-    val OUTSIDE = Tile(1233, 3571, 0)
+    /**
+     * Where leaving puts you: 1246,3558 on the mountain (RSPSApp/tsps chambers-of-xeric.md 'Out is (1246, 3558)', from rsprox OSRS
+     * captures; the OSRS Wiki map pin of the Chambers of Xeric is 1245,3557 next to it). Walkable: the bot walked BLS -> 1233,3571 past it.
+     */
+    val OUTSIDE = Tile(1246, 3558, 0)
 
     private val raids = ConcurrentHashMap<InstancedMap, CoxRaid>()
     private var nextId = 1L
@@ -39,11 +45,34 @@ object CoxRaids : KLogging() {
             logger.warn { "CoX: no free instance space for ${player.username}" }
             return null
         }
-        val raid = CoxRaid(nextId++, layout, map, world)
+        val raid = CoxRaid(nextId++, layout, map, world, player.username)
         raids[map] = raid
         logger.info { "[cox] raid ${raid.id} ${player.username} base=${map.area.bottomLeftX},${map.area.bottomLeftZ} pattern=${layout.pattern} floors=${layout.floors.map { f -> f.map { "${it.room}@${it.gridX},${it.gridZ}/${it.entry}/v${it.variant}" } }}" }
         player.teleportTo(spawnTile(raid))
         return raid
+    }
+
+    /** Is [tile] in the first room of [raid] (the start room, floor 1 room 0)? */
+    fun inStartRoom(raid: CoxRaid, tile: Tile): Boolean = CoxMap.roomAt(raid.map, raid.layout, tile)?.let { (f, room) ->
+        f == 0 && room === raid.layout.floors[0][0]
+    } ?: false
+
+    /**
+     * Where a passage (RAIDS_DOORWAY 29789, op 'Enter') puts [from]: just past the passage's footprint on the opposite side, along the axis
+     * the player stands off it (the passages sit on a room's edge: crossing one changes room).
+     */
+    fun passageExit(from: Tile, obj: Tile, width: Int, length: Int): Tile {
+        val cx2 = obj.x * 2 + width - 1
+        val cz2 = obj.z * 2 + length - 1
+        val dx2 = from.x * 2 - cx2
+        val dz2 = from.z * 2 - cz2
+        return if (kotlin.math.abs(dx2) >= kotlin.math.abs(dz2)) {
+            val z = from.z.coerceIn(obj.z, obj.z + length - 1)
+            if (dx2 < 0) Tile(obj.x + width, z, from.height) else Tile(obj.x - 1, z, from.height)
+        } else {
+            val x = from.x.coerceIn(obj.x, obj.x + width - 1)
+            if (dz2 < 0) Tile(x, obj.z + length, from.height) else Tile(x, obj.z - 1, from.height)
+        }
     }
 
     fun spawnTile(raid: CoxRaid): Tile {
