@@ -94,12 +94,36 @@ inline val QueueTask.npc: Npc get() = ctx as Npc
 const val MAX_DIALOG_LINES = 4
 const val MAX_DIALOG_OPTIONS = 8
 
+/** N605: the largest chatbox menu that this client draws completely (interface 234); longer menus are paged. */
+const val MAX_PAGE_OPTIONS = 5
+
+/** N605: OSRS's entry for the next page of a long chatbox menu. */
+const val MORE_OPTIONS = "More..."
+
 suspend fun QueueTask.options(
     vararg options: String,
     title: String = "Select an Option",
 ): Int {
     gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.INTERFACE) { "dialogue options for ${player.username}: $title | ${options.joinToString(" | ")}" }
     if (terminated) return -1
+    // N605 (15-11): the 6..8-option chatboxes (236/238/240) show only their first line in this client. OSRS pages long menus with a
+    // "More..." entry instead: 4 options + "More..." per page, the last page's "More..." returns to the first. The returned index is
+    // the same as before (position in the full, non-empty list), so callers do not change.
+    val real = options.filterNot { it.isEmpty() }
+    if (real.size > MAX_PAGE_OPTIONS) {
+        val pages = real.chunked(MAX_PAGE_OPTIONS - 1)
+        var page = 0
+        while (true) {
+            val shown = pages[page] + MORE_OPTIONS
+            val pick = options(*shown.toTypedArray(), title = title)
+            if (pick < 1) return -1
+            if (pick == shown.size) {
+                page = (page + 1) % pages.size
+                continue
+            }
+            return page * (MAX_PAGE_OPTIONS - 1) + pick
+        }
+    }
     // Interfaces 228..240 are the 2..8 option chatboxes. 226 (the "1 option" slot) only defines components 0 and 1,
     // so a single-option call used to write to a component the interface does not have and the client dropped the
     // connection. Pad to the smallest real layout instead, and never ask for more entries than 240 provides.
