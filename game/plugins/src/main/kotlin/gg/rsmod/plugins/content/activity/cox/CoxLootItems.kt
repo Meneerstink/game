@@ -24,8 +24,12 @@ object CoxLootItems {
         12073 to Items.CLUE_SCROLL_ELITE, // OSRS Clue scroll (elite) -> our elite clue
     )
 
-    /** Highest item id of the revision-667 cache that OSRS shares unchanged (coins, runes, gems such as onyx 6573, seeds). */
-    private const val SHARED_BELOW = 14_000
+    /**
+     * Item ids the revision-667 cache shares unchanged with OSRS (coins, runes, ores, herbs, seeds, onyx 6573, dragon arrow 11212). 15-11:
+     * NOT 14,000 like ToA - the Kourend items of the chest's common table differ: OSRS 13391 Lizardman fang = 667 Brass hand, 13573
+     * Dynamite = 667 Bowl of honey (Items.kt) -> those come from the 'cox-items' import.
+     */
+    private const val SHARED_BELOW = 12_000
 
     fun local(osrsItem: Int): Int? =
         EARLIER_IMPORTS[osrsItem] ?: CoxIds.item(osrsItem) ?: osrsItem.takeIf { it < SHARED_BELOW }

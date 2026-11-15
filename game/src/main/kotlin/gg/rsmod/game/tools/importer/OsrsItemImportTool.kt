@@ -329,6 +329,9 @@ object OsrsItemImportTool {
             "cox-items" to
                 (listOf(20799, 20800, 20801) + (20853..20885) + listOf(20886, 20888, 20890, 20892, 20893, 20895, 20897, 20899) + (20901..20996) +
                     listOf(21027, 21036) + (21037..21042) + listOf(21046, 21047, 13392, 13393)).map { Spec(it) },
+            // CoX chest commons that the revision-667 cache has under other ids (OSRS 13391 = 667 Brass hand, 13573 = 667 Bowl of honey):
+            // Lizardman fang 13391, Saltpetre 13421 (noted on the Wiki table), Dynamite 13573 (noted).
+            "cox-commons" to listOf(Spec(13391), Spec(13421, noted = true), Spec(13573, noted = true)),
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),
