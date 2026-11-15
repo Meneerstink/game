@@ -26,9 +26,12 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests'):
     out /= selected # Independent test modes cannot reuse a stale patch from another mode.
-if selected == 'step-tests':
+if selected == 'watson-tests':
+    sources = [ROOT/'game/src/main/kotlin/gg/rsmod/game/tools/importer/ClueWatsonCacheTool.kt'] + [
+        ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson'/(name+'.kt') for name in ['WatsonAppearance', 'WatsonDialogue']]
+elif selected == 'step-tests':
     # Self-contained across a fresh output directory: do not depend on classes
     # left by a previous invocation after HEAD moved to the next small commit.
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
@@ -46,7 +49,7 @@ elif selected == 'npc-tests':
     sources = []
 elif selected == 'mimic-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicCombat.kt']
-for module in (['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests') else [selected] if selected else ['game', 'plugins']):
+for module in (['game','plugins'] if selected == 'watson-tests' else ['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests') else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -81,7 +84,7 @@ if selected == 'core-tests':
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests'):
     # Explicit classes only. This is not a substitute for Gradle script/core integration.
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
@@ -94,7 +97,9 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
                  'org.jetbrains.kotlin/kotlin-reflect/1.8.0']]
     cp = [str(out/'game'), str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
-    if selected == 'npc-tests':
+    if selected == 'watson-tests':
+        names = ['gg.rsmod.game.tools.importer.ClueWatsonCacheTests', 'gg.rsmod.plugins.content.areas.watson.WatsonAppearanceTests']
+    elif selected == 'npc-tests':
         names = ['gg.rsmod.game.plugin.ClueNpcOptionOverrideTests']
     elif selected == 'stash-import-tests':
         names = ['gg.rsmod.game.tools.importer.ClueStashImportTests']
@@ -112,7 +117,7 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
         test_sources.append(ROOT/'game/src/main/kotlin/gg/rsmod/game/plugin/PluginRepository.kt')
     target = out/'tests'; target.mkdir(parents=True, exist_ok=True)
     args = ['-no-stdlib','-no-reflect','-jvm-target','11','-cp',';'.join(cp),'-d',str(target)] + [str(p) for p in test_sources]
-    if selected == 'npc-tests':
+    if selected in ('npc-tests', 'watson-tests'):
         args += ['-Xfriend-paths='+str(ROOT/'game/build/classes/kotlin/main')]
     argfile=out/(selected+'.args')
     argfile.write_text('\n'.join('"'+a.replace('\\','/')+'"' for a in args),encoding='utf-8')

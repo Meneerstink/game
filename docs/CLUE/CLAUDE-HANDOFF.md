@@ -295,3 +295,30 @@ Validation: 10 STASH storage/build regressions, four import/codec regressions; `
 Runtime posts only verified mapped units on their exact effective tiles and routes Build/Search by base identity AND tile/type, so shared forms do not share inventory or state. Build checks resources immediately and again after the source three ticks; materials/XP are spent once. Login restores private built flags; Search stores/returns complete sets with item attributes. Existing scenery at a placement is retained and reported as PROBLEM, never overwritten.
 
 Still open: Construction animation/audio identity verification, the Settings entry for the equipped-item toggle, source chart 493/Watson noticeboard integration, and Claude's loaded-client/collision checks (notably source physical plane 1/effective plane 0 at Wizards' Tower). The remaining clue-step pool/guards/Mimic source gates are unchanged. **This is not full CLUE acceptance.**
+
+## Watson personal pre/post-introduction variants — B, 15 November 11:04
+
+Pinned cache 2686 NPC 7303 has only Talk-to; 7304 adds Check in slot 3. All other decoded fields match. Existing installed 14406 is byte-identical to the pinned pre-introduction conversion, using its ledger-owned models/chathead and existing BAS. `ClueWatsonCacheTool` refuses a mismatch rather than adding an invented option to 7303.
+
+Exact read-only proof: `build/clue/watson-import/read-only-proof.json`, transaction `tx-20261115-100537`. **Four** logical mutations; both caches, ledger SHA and runtime mappings unchanged. Proposed mappings in `WATSON-PREFLIGHT.tsv`:
+
+| Role | Source | Proposed native identity |
+|---|---:|---:|
+| Pre-introduction variant | NPC 7303 | NPC 15234 |
+| Post-introduction variant | NPC 7304 | NPC 15235 |
+| Existing physical Watson/root | NPC 7303 | NPC 14406 (owned definition update) |
+| Personal introduction selector | local control | varp 2408 |
+
+**These are not reservations.** They overlap the current clue-steps/STASH proposals because none of these batches is applied. Apply this Watson batch after the earlier NPC/STASH batches, rerunning its PLAN/PREFLIGHT then; retain the newly generated exact IDs. No new models, animation or client opcode is needed. NPC opcode 118 is already understood by the actual unmodified 667 client; `python tools/clue/verify_watson_client.py` passed the real decoder on the tested server fixture.
+
+Claude command (first run WITHOUT apply):
+
+```powershell
+.\gradlew.bat :game:runClueWatsonCacheTool --args="data/cfg/clue/watson-mapping.tsv docs/CLUE/WATSON-PREFLIGHT.tsv" --priority low
+```
+
+Only Claude may add `--apply` after reviewing the fresh preflight. The tool publishes mapping/ledger records only after both caches verify; verification failure rolls back. Preserve all four mapping rows when copying runtime cfg. The root stays 14406 and there is still exactly one spawned Watson.
+
+Runtime: `WatsonAppearance` validates the applied mappings and source menu slots, reconstructs the private varp from the persistent `watson_introduced` attribute on login and updates it after the introduction. Talk-to and item hand-ins route through the real physical/transformed IDs. The previous unconditional missing Check binding is removed; without the batch the pre-introduction Talk-to remains and a PROBLEM identifies the missing post-introduction assets.
+
+Client checks: two accounts with different introduction states must see their own Talk-to/Check menus; first full introduction must unlock Check without relog; check partial/all/duplicate hand-ins and Astral Contact; relog restores the correct menu; one physical NPC, no other NPC menu changes. The server's existing generic NPC fallback behavior was not changed. New Watson scripts still need the next frozen Gradle/plugin-script acceptance; standalone checks are separately recorded in REVIEW-B-5.md.

@@ -33,3 +33,11 @@ The source STASH chart 493 is decoded with its actual frame/row/tab scripts. `st
 ### 11:00 cache-test correction accepted
 
 The isolated `:game:plugins:test --tests '*OsrsMimicImportTests*' --priority low` rerun completed successfully in 8m30s: two tests, zero failures/errors/skips (XML timestamp 09:57:40 UTC). Together with the 109 unaffected passing tests on the frozen snapshot, all 111 selected checks are now green. `rsps.clue.test.cache` can explicitly override the read-only installed cache, whose default is `RspsPaths.root("game/game/data/cache")`; rsps.data remains the reviewed worktree's catalogues. No cache copy or change was needed. New Watson variants/chart work after this snapshot is not covered by that acceptance.
+
+## Watson source variants, 11:06
+
+`ClueWatsonCacheTool` + `WatsonAppearance` replace the unconditional missing-option assumption with two actual source variants and one personal native selector. The imported physical NPC remains 14406. Source 7303 must re-encode byte-identically to the installed pre-introduction NPC, and source 7304 must differ only in its source options; no models/animation are duplicated. Default PLAN/PREFLIGHT, no cache application.
+
+Validation: **four tests, zero failures** in the two new targeted classes (`python tools/clue/check_compile.py HEAD watson-tests`, fresh isolated compiler output). Includes exact option slot, invalid selectors/duplicate/self-referencing forms, unverified mapping refusal, two accounts, changed introduction flag and relog reconstruction. `verify_watson_client.py` compiled the actual unmodified native NPCType and read the server fixture with correct selectors, before/after/fallback forms, root menu, BAS and complete byte alignment. Read-only preflight `tx-20261115-100537` passed four mutations; both cache file sets, ledger SHA and runtime mapping hashes remained unchanged. Proposed IDs overlap earlier unapplied batches and must be recalculated in the documented order.
+
+Watson plugin-script changes still require the next frozen Gradle integration and Claude's live-client menu/hand-in checks. This checkpoint does not accept remaining Watson noticeboard/POH chart functionality or complete CLUE.

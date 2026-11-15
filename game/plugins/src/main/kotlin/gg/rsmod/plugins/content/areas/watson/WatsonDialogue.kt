@@ -26,6 +26,7 @@ object WatsonDialogue {
             introduction(task)
             if (task.terminated) return
             task.player.attr[WatsonClues.INTRODUCED] = true
+            WatsonAppearance.sync(task.player)
         } else task.chatNpc("Hello there ${task.player.username}.", npc = Npcs.WATSON, wrap = true)
         if (WatsonClues.stored(task.player).size == WatsonClues.TIERS.size) {
             offer(task, emptySet())
