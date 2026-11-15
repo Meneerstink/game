@@ -188,6 +188,9 @@ class PvpDeathBreakablesTests {
     @Test
     fun `ornamented items without the base plus kit rule keep the default death handling`() {
         val kept = gg.rsmod.plugins.content.items.osrs.OsrsOrnamentKits.ALL.filterNot { it.pvpConvert }
+        // ToA ornaments by OSRS id (N462 import table): Osmumten's fang (or) and the four jewelled keris partisans.
+        val toaOrnamented = listOf(27246, 25981, 27287, 27291, 30891).mapNotNull { gg.rsmod.plugins.content.activity.toa.ToaIds.item(it) }.toSet()
+        assertEquals(5, toaOrnamented.size, "all five ToA ornaments are imported")
         assertEquals(
             setOf(
                 // Bounty Hunter kits (untradeable): the kit goes to the victim's gravestone, not to the killer - their own row since owner
@@ -203,11 +206,17 @@ class PvpDeathBreakablesTests {
                 Items.DRAGON_DEFENDER_T,
                 // K01 deel 5: Rune defender (t) - OSRS Wiki "Rune defender (t)", the same broken rule.
                 Items.RUNE_DEFENDER_T,
-            ),
+            ) + toaOrnamented,
             kept.map { it.ornamented }.toSet(),
         )
+        // N621 (15-11): the ToA ornaments - OSRS Wiki "Osmumten's fang (or)": "If a player loses Osmumten's fang (or) in a PvP death, the
+        // cursed phalanx will be placed in their gravestone"; the jewelled keris partisans follow the same kit-to-gravestone rule (owner
+        // question N621, advice = this). Their kit goes to the victim's gravestone via the K01 kit rule.
+        kept.filter { it.ornamented in toaOrnamented }.forEach { ornament ->
+            assertEquals(listOf(ornament.kit), PvpDeathBreakables.VICTIM_GRAVE[ornament.ornamented], "${ornament.ornamented}: kit to the gravestone")
+        }
         // Elidinis' ward (or) (owner Q14=A) and the Bounty Hunter kits (owner 2026-10-06) have their own rows: see the conversion-set test below.
-        kept.filterNot { it.ornamented == Items.ELIDINIS_WARD_OR || it.ornamented in PvpDeathBreakables.BOUNTY_HUNTER_KITTED }.forEach { ornament ->
+        kept.filterNot { it.ornamented == Items.ELIDINIS_WARD_OR || it.ornamented in PvpDeathBreakables.BOUNTY_HUNTER_KITTED || it.ornamented in toaOrnamented }.forEach { ornament ->
             val lost = listOf(DeathSlotItem(DeathContainerSource.INVENTORY, 0, Item(ornament.ornamented, 1)))
             val (result, converting) = PvpDeathBreakables.split(DeathResolutionResult(DeathContext.WILDERNESS_PVP, newPlayer(), newPlayer(), DeathItemRiskResult(0, emptyList(), lost)))
             assertTrue(converting.isEmpty(), "${ornament.ornamented} is not converted")
