@@ -16,6 +16,35 @@ object ClueCoreCacheTool {
     val LEGACY = linkedMapOf(2677 to 2677, 2801 to 2801, 2722 to 2722, 12073 to 19043,
         20546 to 2714, 20545 to 2802, 20544 to 2724, 20543 to 19039)
 
+    fun clueName(source: ModernItemDef): String = when (source.id) {
+        19835 -> "78 clue scroll"
+        19836 -> "Reward casket (78)"
+        else -> source.name
+    }
+
+    /** Preserve imported models/recolours. Opcode160 is not evidence that a clue stacks. */
+    fun patch(before: ByteArray, source: ModernItemDef): ByteArray {
+        val stacks = when (source.stackable) {
+            0 -> false
+            1 -> true
+            // Pinned Clue scroll(master) Wiki explicitly says non-stackable.
+            // Decoder stores unverified opcode160 as2; do not generalize its meaning.
+            2 -> { require(source.id == 19835) { "Unreviewed CLUE stack flag for ${source.id}" }; false }
+            else -> error("Unsupported CLUE stack flag ${source.stackable}")
+        }
+        val strings = mutableMapOf(2 to clueName(source))
+        source.inventoryOptions.forEachIndexed { i, option -> if (option != null) strings[35+i] = option }
+        val remove = (35..39).filter { source.inventoryOptions[it-35] == null }.toSet()+11
+        val clone = ItemDefCodec.cloneWithOverrides(before,strings,removedOpcodes=remove)
+        val edited = if (stacks) clone.copyOf(clone.size+1).also {
+            it[clone.size-1] = 11; it[clone.size] = 0
+        } else clone
+        val decoded = ItemDef(0).also { it.decode(Unpooled.wrappedBuffer(edited)) }
+        check(decoded.name == clueName(source) && decoded.stacks == stacks)
+        check(decoded.inventoryMenu.toList() == source.inventoryOptions.toList())
+        return edited
+    }
+
     @JvmStatic fun main(args: Array<String>) {
         val apply = "--apply" in args
         val ids = LinkedHashMap(LEGACY)
@@ -34,19 +63,10 @@ object ClueCoreCacheTool {
             try {
                 for ((osrs, id) in ids) {
                     val def = ModernItemDefDecoder.decode(osrs, definitions.getValue(osrs))
-                    val name = when (osrs) { 19835 -> "78 clue scroll"; 19836 -> "Reward casket (78)"; else -> def.name }
-                    val strings = mutableMapOf(2 to name)
-                    def.inventoryOptions.forEachIndexed { i, op -> if (op != null) strings[35 + i] = op }
-                    val remove = (35..39).filter { def.inventoryOptions[it - 35] == null }.toSet() + 11
+                    val name = clueName(def)
                     val before = local.data(19, id ushr 8, id and 255) ?: error("Local CLUE item $id missing")
-                    val clone = ItemDefCodec.cloneWithOverrides(before, strings, removedOpcodes = remove)
-                    require(def.stackable in 0..1)
-                    val edited = if (def.stackable == 1) clone.copyOf(clone.size + 1).also {
-                        it[clone.size - 1] = 11; it[clone.size] = 0
-                    } else clone
+                    val edited = patch(before,def)
                     val decoded = ItemDef(id).also { it.decode(Unpooled.wrappedBuffer(edited)) }
-                    check(decoded.name == name && decoded.stacks == (def.stackable == 1))
-                    check(decoded.inventoryMenu.toList() == def.inventoryOptions.toList())
                     if (!before.contentEquals(edited)) mutations += CacheMutation(19, id ushr 8, id and 255, edited,
                         "CLUE core $osrs -> $id: OSRS name/stack/options", CacheItemProbeTool.sha1(before))
                     println("PLAN core osrs=$osrs local=$id name='$name' stack=${decoded.stacks} options=${decoded.inventoryMenu.toList()}")

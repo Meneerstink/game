@@ -490,3 +490,16 @@ Four focused TornParts tests passed with freshly compiled libraries. Final
 Gradle/script acceptance follows. Claude: wrong gear, Robin180 with/without
 blowpipe, full inventory, part juggling/bank, Combine wrong clue and replay.
 No cache application, server/client start or release performed.
+
+
+## Core master identity preflight fix, B15-Nov21:08
+
+ClueCoreCacheTool now accepts actual source19835 opcode160 through a narrowly
+scoped, Wiki-proven nonstackable master override. Previously it crashed after
+the master item import. No general opcode160 meaning was invented. Ten pinned
+source item records+SHA in cache/core-source-items.json. Three fresh own tests
+passed: all10 options/names/stacking, original model/value retained, idempotence,
+real19835 and unknown flags rejected. Claude must rerun core PLAN/PREFLIGHT
+AFTER the item batch so imported19835/19836 can be renamed; source IDs remain
+19835=78 clue scroll and19836=Reward casket(78). Never map these to legacy items.
+The gold/onyx recolours remain Claude cache work from the existing handoff.
