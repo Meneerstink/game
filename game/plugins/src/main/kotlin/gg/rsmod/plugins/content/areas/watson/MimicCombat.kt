@@ -9,6 +9,7 @@ object MimicCombat {
         configs {
             respawnDelay = 0
             attackSpeed = 3
+            xpMultiplier = 1.25 // Wiki The Mimic: 25% combat experience bonus.
             poisonImmune = true
             venomImmune = true
             attackStyle = StyleType.CRUSH

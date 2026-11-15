@@ -13,6 +13,7 @@ class TheMimicCombatDefTests {
         val def = MimicCombat.definition()
         assertEquals(230, def.lifepoints)
         assertEquals(3, def.attackSpeed)
+        assertEquals(1.25, def.xpMultiplier)
         assertEquals(StyleType.CRUSH, def.attackStyleType)
         assertTrue(def.poisonImmunity)
         assertTrue(def.venomImmunity)
