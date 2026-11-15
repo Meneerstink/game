@@ -27,6 +27,7 @@ test {
         rootProject.file('docs/CLUE/cache/stash-setting.json'),
         rootProject.file('docs/CLUE/cache/interfaces.json'),
         rootProject.file('docs/CLUE/cache/ui-camera-order.json'),
+        rootProject.file('docs/CLUE/cache/map-interfaces.json'),
         rootProject.file('docs/CLUE/cache/search-bucket.json'),
         rootProject.file('docs/CLUE/cache/core-source-items.json'),
         rootProject.file('docs/CLUE/sources/Clue_scroll_(master).wiki')).withPropertyName('clueStashFixtures')

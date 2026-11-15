@@ -47,18 +47,22 @@ def main():
                                'junit/junit', 'org.hamcrest/hamcrest-core']]
     run([JAVA/'java.exe', '-Xmx256m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('tests.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp+testing),
-             '-d', OUT/'tests', ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt'])])
+             '-d', OUT/'tests', ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt',
+             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'tests')]+cp+testing),
-         'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests'], ROOT/'game')
+         'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests'], ROOT/'game')
     run([JAVA/'javac.exe', argument_file('fixtures.args', ['-cp', ';'.join(cp), '-d', OUT/'fixtures',
          ROOT/'tools/clue/ClueInterfaceFixtureProbe.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'fixtures')]+cp), 'ClueInterfaceFixtureProbe',
          ROOT/'docs/CLUE/cache/interfaces.json', OUT/'fixtures'])
     run(['python', ROOT/'tools/clue/prepare_client_patch.py'])
     client_cp = [str(CLIENT/'runescape/build/classes/java/main'), jar('org.openrs2/openrs2-deob-annotations')]
-    run([JAVA/'javac.exe', argument_file('client.args', ['-cp', ';'.join(client_cp), '-d', OUT/'client',
-         ROOT/'build/clue/client-patch/Component.java', ROOT/'tools/clue/ClueWideInterfaceRegression.java'])])
+    run([JAVA/'javac.exe', argument_file('client.args', ['-cp', ';'.join(client_cp+cp), '-d', OUT/'client',
+         ROOT/'build/clue/client-patch/Component.java', ROOT/'tools/clue/ClueWideInterfaceRegression.java',
+         ROOT/'tools/clue/ClueMapClientRegression.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp), 'ClueWideInterfaceRegression', OUT/'fixtures'])
+    run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
+         'ClueMapClientRegression', ROOT/'docs/CLUE/cache/map-interfaces.json'])
     print('CLUE codec regressions passed; canonical caches/client untouched', flush=True)
 
 

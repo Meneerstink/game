@@ -522,3 +522,37 @@ Final new-component Gradle run integration-20261115-200204:3core+13plugin
 classes requested,4513 source/fixture inputs frozen; waiting on Claude buildslot.
 No result accepted until summary.json reports accepted=true. Map drafts remain
 under build/clue/next and are excluded from this frozen run.
+
+
+## Nine map clues, B16-Nov00:51
+
+Use the current ClueInterfaceImportTool, with --maps and
+`docs/CLUE/cache/map-interfaces.json`, SAME verified mapping
+`data/cfg/clue/interfaces.tsv`, plan `docs/CLUE/MAP-UI-PREFLIGHT.tsv`.
+Read-only command: `python tools/clue/preflight_maps.py`, after compiling the
+current codec via `python tools/clue/verify_interface_port.py`.
+
+PREFLIGHT tx-20261115-234848:693 mutations=675components+16models+2sprites.
+Current non-reserving proposal: source groups86,348,350,351,353,354,356,360,362
+->local1201..1209;source539/540->8955/8956;16models66715..66730 (exact TSV).
+CoX8954 is occupied and was not used. Reward/text and map proposals currently
+OVERLAP because neither is applied: APPLY reward/text first, rerun map preflight
+with its now-verified interfaces.tsv, THEN apply maps. Both tool modes preserve
+all other verified entries; common paper/model/sprites are reused. Never publish
+a preflight TSV as the runtime mapping. Wide IF3 client patch/release first.
+No map asset or model ID is hardcoded into runtime; without imports, maps are
+excluded from the pool. Source group counts include their real final Close.
+
+Eight importer tests and675-component native decoder proof passed;84 actual
+library tests green. New Read/Close test and final Gradle/scripts acceptance
+recorded separately. Source illustrations+URL/hash manifest in sources/map-images.
+
+Claude OpenGL checks: all9drawings beside their Wiki images, camera orientation,
+parent clipping, zoom/paper/frame, Close+hover+Escape, fixed/resizable/Stretched.
+Dig every8dig point on the wrong tile/plane then the exact point; search the
+Lumber Yard crate2620 at3309,3503,0 instead of digging it. Full inventory must
+replace clue with next clue/casket once. Bank/drop/re-pick/relog/second account;
+no map should give a free step from Read or another player's interaction. No
+monsters spawn on map digs. Those client/live gates remain Claude's responsibility.
+
+16-Nov00:54: Read/Close test rerun passed3/3 on freshly compiled production classes. Initial verification failure included static extension calls from the prior successful opens; used a separate missing-import account to isolate that assertion. No production change for this test correction. Unique standalone cohort now85 tests. Final Gradle/script integration starts on frozen inputs next.

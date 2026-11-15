@@ -196,6 +196,7 @@ class ClueScrollManager(
                 val step = activeStep(player, tier) ?: return@on_item_option
                 if (TreasureTrailNumberChallenge.read(player, step)) return@on_item_option
                 if (TreasureTrailSherlock.read(player, step)) return@on_item_option
+                if (TreasureTrailMaps.read(player, step)) return@on_item_option
                 val mapInterfaceId = step.mapInterfaceId
                 if (mapInterfaceId != null) {
                     player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = mapInterfaceId)

@@ -6,6 +6,7 @@ import gg.rsmod.game.model.entity.Player
 class TreasureTrailSourceStep(val source: TreasureTrailStepCatalogue.Step) : ClueStep {
     override val tier get() = source.tier
     override val hint get() = source.hint
+    override val mapInterfaceId get() = TreasureTrailMaps.interfaceOf(source)
     override val persistenceId get() = source.id
     override fun onAttempt(player: Player) = false
 }

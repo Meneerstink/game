@@ -13,10 +13,14 @@ object ClueInterfaceImportTool {
     const val REWARD_FIRST = 5
     const val REWARD_SLOTS = 12 // cache 2686 config 2/5/141 = [2, 0, 12, 0]
     val GROUPS = listOf(73, 203)
+    // Exact source child counts, including the Close component. Reject a truncated final child too.
+    val MAP_COUNTS = mapOf(86 to 119, 348 to 48, 350 to 49, 351 to 60, 353 to 64,
+        354 to 83, 356 to 83, 360 to 84, 362 to 85)
+    val MAP_GROUPS = MAP_COUNTS.keys.toList()
 
 
     fun components(group: Int, node: JsonNode, fonts: Map<Int, Int>, models: Map<Int, Int>, sprites: Map<Int, Int>): List<OsrsInterfacePortTool.C> {
-        require(group in GROUPS)
+        require(group in GROUPS || group in MAP_GROUPS)
         fun JsonNode.int(key: String, default: Int = 0) = get(key)?.asInt() ?: default
         fun JsonNode.flag(key: String) = get(key)?.asBoolean() ?: false
         fun JsonNode.hover(key: String): List<Int> {
@@ -26,7 +30,8 @@ object ClueInterfaceImportTool {
             return listOf(44, hook[1], sprites.getValue(hook[2]))
         }
         val ids = node.fieldNames().asSequence().map(String::toInt).sorted().toList()
-        require(ids == (0 until if (group == 73) 5 else 3).toList())
+        require(ids == (0 until when (group) { 73 -> 5; 203 -> 3; else -> MAP_COUNTS.getValue(group) }).toList())
+        require(ids.isNotEmpty())
         val out = ids.map { id ->
             val n = node[id.toString()]
             val type = n.int("type")
@@ -62,10 +67,12 @@ object ClueInterfaceImportTool {
         require(args.size >= 3) { "Usage: <source-json> <mapping-tsv> <plan-tsv> [--apply]" }
         val sourceJson = File(args[0]); val mappingFile = File(args[1]); val planFile = File(args[2])
         val apply = "--apply" in args
+        val groups = if ("--maps" in args) MAP_GROUPS else GROUPS
         val root = ObjectMapper().readTree(sourceJson)
         val old = if (mappingFile.isFile) mappingFile.readLines().filter { it.isNotBlank() && !it.startsWith("#") }
             .map { it.split('\t') }.associate { (it[0] to it[1].toInt()) to it[2].toInt() } else emptyMap()
         val mapping = LinkedHashMap<Pair<String, Int>, Int>()
+        mapping.putAll(old) // Both batches share one verified mapping; preserve the other batch on reruns.
         val libraries = OsrsItemImportTool.TARGETS.map { CacheLibrary(it) }
         val mutations = mutableListOf<CacheMutation>()
         try {
@@ -98,7 +105,7 @@ object ClueInterfaceImportTool {
             }
             ModernCacheReader(File(OsrsItemImportTool.SOURCE_CACHE)).use { source ->
                 check(source.file(2, 5, 141)!!.contentEquals(byteArrayOf(2, 0, REWARD_SLOTS.toByte(), 0)))
-                val modelIds = GROUPS.flatMap { group -> root[group.toString()].elements().asSequence().filter { it["type"].asInt() == 6 }.map { it["modelId"].asInt() }.toList() }.distinct()
+                val modelIds = groups.flatMap { group -> root[group.toString()].elements().asSequence().filter { it["type"].asInt() == 6 }.map { it["modelId"].asInt() }.toList() }.distinct()
                 val decoded = modelIds.associateWith { id ->
                     val bytes = source.file(7, id, 0) ?: error("Source model $id missing")
                     runCatching { ModernModelDecoder.decode(bytes, false) }.getOrElse { Rev667ModelDecoder.decode(bytes, false) }
@@ -148,7 +155,7 @@ object ClueInterfaceImportTool {
                     check(ModelConvertTool.compare(model, Rev667ModelDecoder.decode(bytes)).isEmpty())
                     add(7, localId, 0, bytes, "CLUE OSRS UI model $id")
                 }
-                val sprites = GROUPS.flatMap { group -> root[group.toString()].elements().asSequence().flatMap { n ->
+                val sprites = groups.flatMap { group -> root[group.toString()].elements().asSequence().flatMap { n ->
                     sequence {
                         if (n["type"].asInt() == 5) yield(n["spriteId"].asInt())
                         listOf("onMouseOverListener", "onMouseLeaveListener").forEach { hook ->
@@ -159,7 +166,7 @@ object ClueInterfaceImportTool {
                 sprites.forEach { id -> add(8, allocate("sprite", id) { nextSprite++ }, 0, source.file(8, id, 0) ?: error("Sprite $id missing"), "CLUE OSRS sprite $id") }
                 val modelMap = mapping.filterKeys { it.first == "model" }.mapKeys { it.key.second }
                 val spriteMap = mapping.filterKeys { it.first == "sprite" }.mapKeys { it.key.second }
-                GROUPS.forEach { group ->
+                groups.forEach { group ->
                     val target = allocate("interface", group) { nextInterface++ }
                     components(group, root[group.toString()], fonts, modelMap, spriteMap).forEach { component ->
                         add(3, target, component.id, OsrsInterfacePortTool.encode(component), "CLUE OSRS interface $group:${component.id}")

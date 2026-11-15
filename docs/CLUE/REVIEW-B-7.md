@@ -261,3 +261,40 @@ Mod Ash16-May2024: choose a category equally, then a step within it. Tests cover
 all7 categories and differently sized groups; other tiers do not inherit an
 unproven equal-category rule. The active subset still has explicit missing
 subtypes; this is not whole-card or loaded-client acceptance.
+
+
+## Resumed maps, B16-Nov00:51
+
+Resumed at0258ffc25 plus the uncommitted map probes/source exports. The previous
+integration200204 was killed while waiting; no summary, no acceptance. Both
+native/server caches remain Claude-owned and were only opened read-only here.
+
+Nine selected source illustrations compared manually against pinned Wiki images
+and decoded cache2686 model geometry/cameras; sources/map-images/manifest.json
+pins URLs and downloaded SHA256s. Reproducible build_map_sources.py ties all nine
+selected map keys to those illustrations, source DB rows/hashes and real Close
+components. Geometry preview is a navigation aid, not a client rendering proof.
+
+ClueInterfaceImportTool supports all675 actual source map components with exact
+child counts/parents/cameras/model imports. Both UI batch modes now preserve the
+other batch's verified mapping on reruns. Missing interior or final children are
+rejected. Missing map imports cannot disclose the answer as plain-text hints.
+Reading enables the actual source Close; dig/search use the held-clue contract.
+No monsters are attached to map digs, per Wiki Maps. No beginner content added.
+
+Eight fresh source-code importer tests passed. The independent native Component
+decoder passed all675 encoded map components, including wide model IDs, parent
+hierarchy, dimensions, raw camera order and Close hover hooks. Initial fixture
+failure: did not set Component.slot to its group before decode (normal loader
+does); corrected without changing production bytes. Actual source libraries
+compiled with84 focused tests green. Added Read/Close regression follows in its
+own narrow test rerun and final Gradle/script acceptance.
+
+PREFLIGHT tx-20261115-234848:693 logical mutations, no apply. Exact proposal in
+MAP-UI-PREFLIGHT.tsv:16models66715..66730,2sprites8955/8956,9interfaces1201..1209.
+The8954 CoX sprite was respected. This overlaps UNAPPLIED reward/text proposals;
+apply reward/text first, rerun maps against the same interfaces.tsv, then apply.
+Both caches/ledger/runtime mappings unchanged: maps-preflight/read-only-proof.json.
+Fullcard remains open (Uri/emotes/guards/puzzles/hotcold/Mimic-Q1/client checks).
+
+16-Nov00:54: Read/Close test rerun passed3/3 on freshly compiled production classes. Initial verification failure included static extension calls from the prior successful opens; used a separate missing-import account to isolate that assertion. No production change for this test correction. Unique standalone cohort now85 tests. Final Gradle/script integration starts on frozen inputs next.

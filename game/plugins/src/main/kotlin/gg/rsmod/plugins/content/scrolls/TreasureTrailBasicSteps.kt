@@ -9,7 +9,8 @@ import gg.rsmod.plugins.api.ext.*
 object TreasureTrailBasicSteps {
     /** Only implemented subtypes with their actual assets enter the random pool. */
     fun available(playerWorld: gg.rsmod.game.model.World, row: TreasureTrailStepCatalogue.Step): Boolean {
-        if (row.tornPart || row.kind == "MAP") return false // dedicated handlers/assets required
+        if (row.tornPart) return false
+        if (row.kind == "MAP" && TreasureTrailMaps.interfaceOf(row) == null) return false
         return when (row.action) {
             TreasureTrailStepCatalogue.Action.DIG -> row.challenge == TreasureTrailStepCatalogue.Challenge.NONE
             TreasureTrailStepCatalogue.Action.TALK -> {
