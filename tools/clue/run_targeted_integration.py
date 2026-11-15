@@ -41,7 +41,7 @@ def main():
     out = ROOT / 'build/clue' / ('integration-' + stamp)
     out.mkdir(parents=True)
     before = inputs()
-    args = ['cmd.exe', '/d', '/c', 'gradlew.bat', '-I', 'tools/clue/test-init.gradle', ':game:test']
+    args = ['cmd.exe', '/d', '/c', str(ROOT/'gradlew.bat'), '-I', 'tools/clue/test-init.gradle', ':game:test']
     for name in CORE:
         args += ['--tests', name]
     args += [':game:plugins:test']
