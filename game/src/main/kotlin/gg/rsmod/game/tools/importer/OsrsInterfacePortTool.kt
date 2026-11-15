@@ -374,6 +374,39 @@ object OsrsInterfacePortTool {
                 colour = 0xffffff)
             extras += "points overlay components=$first..${next - 1} (labels=$labels, values=$values; data box 513:3 = 140x49)"
         }
+        if (group == 499) {
+            // CoX recruiting board 'Raiding Parties' ([clientscript,raids_partylist_init] 1563 / [clientscript,raids_partylist_addline] 1566 /
+            // [proc,raids_partylist_entry_init] 1567): party row r = 499:16+r (40 rows) in the list 499:15, 18 high, op 1 "View party:", a white
+            // filled background (trans 245 even / 230 odd) and p12 centred shadowed texts at the header columns 499:7..14: members 35 (0xff981f),
+            // target size 45 ("/ <n>" or grey "-"), leader name 145, preferred combat 40, preferred skill total 45, scaling 35, challenge 20
+            // (grey), age right-aligned in the last 94. Rows hidden; the server fills and shows them. Header arrows ([proc,raids_partylist_
+            // sortbutton_draw] 1572): "sortarrows,0" (1050) 7x5 centred, trans 0 on the default sort (%raids_listsort_list 0 = members), 100 else.
+            val first = next
+            val columns = listOf(0 to 35, 35 to 45, 80 to 145, 225 to 40, 265 to 45, 310 to 35, 345 to 20)
+            for (r in 0 until 40) {
+                val row = 16 + r
+                val index = list.indexOfFirst { it.id == row }
+                list[index] = C(row, 0, 0, r * 18, 0, 18, 15, 1, 0, 1, 0, true, ops = listOf("View party:"))
+                list += C(next++, 3, 0, 0, 0, 0, row, 1, 1, 1, 1, false, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 245 else 230)
+                columns.forEachIndexed { c, (x, w) ->
+                    list += C(next++, 4, x, 0, w, 0, row, 0, 1, 0, 1, false, font = font(495), alignX = 1, alignY = 1, shadow = true,
+                        colour = if (c == 6) 0x9f9f9f else 0xff981f)
+                }
+                list += C(next++, 4, 18, 0, 94, 0, row, 0, 1, 2, 1, false, font = font(495), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            list.first { it.id == 15 }.scrollH = 40 * 18
+            val arrows = next
+            (7..14).forEach { p ->
+                sprites += 1050
+                list += C(next++, 5, 0, 0, 7, 5, p, 0, 0, 1, 1, false, sprite = 1050, opacity = if (p == 7) 0 else 100)
+            }
+            // [proc,raids_partylist_setpartybutton] / [proc,script1558]: 499:57 "Refresh", 499:59 "Make party" | "My party" (stone buttons).
+            val refresh = stoneButton(3, 80, 0, 100, 25, 0, 2, "Refresh", hidden = false)
+            val make = stoneButton(3, 80, 0, 100, 25, 2, 2, "Make party", hidden = true)
+            val mine = stoneButton(3, 80, 0, 100, 25, 2, 2, "My party", hidden = true)
+            extras += "party rows components=$first..${arrows - 1} (per row 16+r: background + 8 texts = 9 each from $first + 9r) arrows=$arrows.." +
+                "${arrows + 7} buttons refresh=$refresh make=$make mine=$mine"
+        }
         if (group == 539) {
             // CoX rewards ([clientscript,raids_rewards_init] 1579 -> [proc,raids_rewards_build] 1581 / [proc,raids_rewards_drawitem] 1582) in
             // raids_rewards:items 539:5: item i (inv raids_rewards) = a 36x32 object graphic, outline 1, shadow 0x333333, op 1 "Take", op 10
