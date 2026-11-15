@@ -77,6 +77,8 @@ class TreasureTrailTornPartsTests {
         p.equipment[EquipmentType.CHEST.id] = Item(7004)
         assertFalse(step.qualifies(p, robin))
         p.equipment[EquipmentType.CAPE.id] = Item(7005)
+        assertFalse(step.qualifies(p, robin)) // Transcript rejects wearing a blowpipe even with180 from other gear.
+        p.equipment[EquipmentType.WEAPON.id] = null
         assertTrue(step.qualifies(p, robin))
     }
 

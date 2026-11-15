@@ -28,6 +28,11 @@ class TreasureTrailThreePartStep(val components: List<TreasureTrailStepCatalogue
     fun qualifies(player: Player, part: Int): Boolean {
         val requirement = components.getOrNull(part) ?: return false
         if (!requirement.acceptsEquipment(player.equipment.rawItems.map { it?.id })) return false
+        // Transcript:Robin explicitly rejects an equipped blowpipe, even if the
+        // remaining equipment already reaches180. The guide also excludes its bonus.
+        if (requirement.excludeBlowpipe && player.equipment.filterNotNull().any {
+            it.getDef(player.world.definitions).name.startsWith("Toxic blowpipe", ignoreCase=true)
+        }) return false
         fun bonus(slot: BonusSlot, excludeBlowpipe: Boolean = false): Int = player.equipment.filterNotNull().sumOf { item ->
             val def = item.getDef(player.world.definitions)
             if (excludeBlowpipe && def.name.startsWith("Toxic blowpipe", ignoreCase = true)) 0 else def.bonuses.getOrElse(slot.id) { 0 }

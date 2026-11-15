@@ -477,3 +477,16 @@ load the corrected reward screen in OpenGL and compare the chest orientation
 against the source, check text paper, Close/hover/fixed/resizable/Stretched.
 New final-branch Gradle acceptance follows separately. This is not whole CLUE
 release acceptance; map/puzzle/guardian/source gates remain open.
+
+
+## Torn master step activation, B15-Nov21:06
+
+19837/19838/19839 must be imported through the existing 245-item batch.
+Only then registers the single three-part master step and Combine handlers.
+Abbot/Robin use pinned transcripts and actual equipment checks; Robin rejects
+any equipped toxic blowpipe even if other equipment reaches180. Pieces do not
+advance the trail individually; Combine removes all3 atomically and advances1.
+Four focused TornParts tests passed with freshly compiled libraries. Final
+Gradle/script acceptance follows. Claude: wrong gear, Robin180 with/without
+blowpipe, full inventory, part juggling/bank, Combine wrong clue and replay.
+No cache application, server/client start or release performed.
