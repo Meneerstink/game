@@ -106,7 +106,16 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         meleeStyleOf[npc] = meleeStyle
         val monster = CoxMonsters.of(osrsNpc)
         bossOf[npc] = monster?.boss ?: false
-        val scaled = CoxMonsters.scale(osrsNpc, scaling()) ?: return
+        val scaled = CoxMonsters.scale(osrsNpc, scaling())
+        if (scaled == null) {
+            // Npcs without Wiki combat stats (crabs, grubs, the meat tree, blockers, bats ...) still pass every hit through the room.
+            npc.hitModifier = { hit ->
+                val source = hit.source
+                if (source is Player && !raid.map.area.contains(source.tile)) hit.hitmarks.forEach { it.damage = 0 }
+                else if (!testClear) incoming(npc, hit)
+            }
+            return
+        }
         val hp = npc.getCurrentLifepoints()
         npc.combatDef = CoxMonsters.definition(scaled, speed, if (deathSeq >= 0) seqFor(npc, deathSeq) else -1, meleeStyle)
         npc.equipmentBonuses.fill(0)

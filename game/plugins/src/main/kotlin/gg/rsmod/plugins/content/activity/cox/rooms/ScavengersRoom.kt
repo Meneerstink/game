@@ -36,6 +36,7 @@ class ScavengersRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(rai
             if (!free(t) || homes.values.any { it.getDistance(t) <= 2 }) continue
             beast(t)
         }
+        firstCap = pointsCap
     }
 
     private fun free(t: Tile): Boolean {
@@ -46,8 +47,12 @@ class ScavengersRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(rai
         return true
     }
 
+    /** The room's points cap is the first beasts' (tsps combatPoints(): 5 x their hitpoints, +5%) - respawns don't raise it. */
+    private var firstCap = -1
+
     private fun beast(t: Tile) {
         spawn(listOf(7548, 7549).random(), t, speed = 4, deathSeq = 258)?.let { homes[it] = t; fighters[it] = Fighter(4, 1) }
+        if (firstCap >= 0) pointsCap = firstCap
     }
 
     override fun onTick() = fight(::bite)
