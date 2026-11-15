@@ -62,6 +62,12 @@ object CoxRaids : KLogging() {
         val raid = CoxRaid(nextId++, layout, map, world, player.username)
         raids[map] = raid
         logger.info { "[cox] raid ${raid.id} ${player.username} base=${map.area.bottomLeftX},${map.area.bottomLeftZ} pattern=${layout.pattern} floors=${layout.floors.map { f -> f.map { "${it.room}@${it.gridX},${it.gridZ}/${it.entry}/v${it.variant}" } }}" }
+        // The first room's steps are RAIDS_EXIT_STEPS_MULTI 49999, a varbit multiloc (RAIDS_EXIT_STEPS 29778, or _RELOAD 50000 for the
+        // leader before the start - tsps 'Reload'); the import dropped its transform (base = invisible, no ops), so the room gets 29778.
+        // ONZEKER/LATER: the leader's 'Reload' (50000) is not built.
+        val multi = CoxIds.loc(49999)
+        val steps = CoxIds.loc(29778)
+        if (multi != null && steps != null) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps)
         player.teleportTo(spawnTile(raid))
         CoxPartyTab.open(player, raid)
         return raid

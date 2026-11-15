@@ -37,9 +37,14 @@ CoxIds.loc(29777)?.let { steps ->
 
 CoxIds.loc(29778)?.let { exit ->
     on_obj_option(obj = exit, option = "climb") {
-        // tsps 'Leaving' (rsprox): "You will not be able to rejoin this raid again." (Leave the raid. / Stay.).
+        // tsps (rsprox): the first room's steps ask "You will not be able to rejoin this raid again." (Leave the raid. / Stay.); the exit
+        // steps by the ancient chest in the Olm's chamber ask "You won't be able to re-enter." (Leave. / Stay.).
+        val raid = CoxRaids.raidAt(player.tile)
+        val olmChamber = raid != null && CoxMap.roomAt(raid.map, raid.layout, player.tile) == null
         player.queue {
-            if (options("Leave the raid.", "Stay.", title = "You will not be able to rejoin this raid again.") == 1) CoxRaids.leave(player)
+            val leave = if (olmChamber) options("Leave.", "Stay.", title = "You won't be able to re-enter.")
+                else options("Leave the raid.", "Stay.", title = "You will not be able to rejoin this raid again.")
+            if (leave == 1) CoxRaids.leave(player)
         }
     }
 }
