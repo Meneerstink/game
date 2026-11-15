@@ -131,3 +131,56 @@ examines are installed after validation. No proposed source ID becomes a local I
 After the batch, Falo is placed at the source 2689,3549 pin/radius4 with Talk-to and
 item-on-NPC handlers; one Falo source step registers. The donor pool is still
 present elsewhere: this checkpoint does not claim all 69 steps are active.
+
+
+## Sherlock checkpoint, B 15 November 16:08 - commit 0f1466238
+
+Thirteen selected source tasks connect to actual successful skill actions and a
+Nechryael kill in the sourced Tower top-floor/basement. Correct product/location
+and a physically held issued task are required; having the finished product does
+not count. Current visible boosts satisfy the source level requirements. Actions
+mark once; return to Sherlock is required before advancing.
+
+Elite handover replaces the physical clue with imported source12128 in the same
+slot, preserving attributes and supporting a full inventory. Successful return
+atomically restores the canonical clue or gives a casket. Inventory/bank/grave/
+Death/Mimic-recovery ownership, box counts, Read and Watson recognize this alias.
+Completed tasks take priority over incomplete other-tier assignments (pinned Wiki
+Sherlock8-Dec-2016). Master retains the owner's78 branding. Missing imports retain
+the original clue and progress. New scripts require the applied9-NPC mapping.
+
+python tools/clue/check_compile.py HEAD sherlock-tests: 40 fresh standalone tests
+passed:12 Sherlock,6 Falo,2 NPC guards,5 contracts,5 lifecycle,4 drop-ownership,
+6 Watson. Compiled the appended core enum and51 libraries, including12 actual
+skill hook files. First compile's missing Items import was fixed before the green
+run. New script/Gradle acceptance is pending in the frozen39-class integration.
+Exact source/cache/client instructions: CLAUDE-HANDOFF.md Falo/Sherlock section.
+The old donor registration and remaining subtype/guard/puzzle work remain open.
+
+
+## Resumed source probes, B 15 November 19:43
+
+Reviewed the three interrupted Java probes. ClueDbRowProbe decoded all16,844
+config2/38 rows in cache2686. Framing/types checked against primary RuneLite
+DBRowLoader/DBTableLoader/ScriptVarType; code guidance, not gameplay evidence.
+Unknown field types now fail. cache/selected-step-db.json keeps60 selected
+clue identities,149 referenced rows and4 explicit unresolved Wiki IDs; no guess.
+
+ClueSearchSceneProbe rechecked all4 selected searches in both actual scenes,
+including menus/planes/bridge flags/SHA256s. Keys are never printed. Evidence:
+cache/search-scenes.json. Swamp bookcase absent; Duke closed chest37009 at
+3209,3218,1 differs from nearby quest chest6910; jail bucket9568 lacks Search;
+Lumber Yard crate2620 matches. First invocation used the wrong input schema;
+fixed before export. Probe now filters SEARCH from the runtime steps file.
+
+ClueMapMatchProbe compares rendered native geometry units. No complete
+field-for-field mesh match found; no native map artwork assumed equivalent.
+Map imports remain required. These probes call no cache writer.
+
+Reproduce via Java11 source mode, classpath game/build/classes/kotlin/main;
+game/build/install/game/lib/* (semicolon joins paths). DB arguments:
+<source-cache> build/clue/db-rows.json all. Search arguments: <source-cache>
+<native-cache> <native-data>/xteas data/cfg/clue/steps.json
+build/clue/next/search-scenes.json. Then python tools/clue/build_step_evidence.py.
+Generator/py_compile/diffcheck passed. Full39-class integration started19:36,
+4469 frozen inputs; waits for Claude/buildslot/4GB. No acceptance result yet.
