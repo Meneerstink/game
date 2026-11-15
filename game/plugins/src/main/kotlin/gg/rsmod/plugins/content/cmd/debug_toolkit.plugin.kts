@@ -5,6 +5,7 @@ import gg.rsmod.game.model.Trace
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
+import gg.rsmod.plugins.api.ext.isMulti
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import java.io.File
 import java.time.LocalDateTime
@@ -534,6 +535,17 @@ gg.rsmod.game.CommandServerCommands.handlers["pairpos"] = { w, a ->
     if (p == null || o == null) "usage: pairpos <a> <b>" else "tick=${w.currentCycle} ${p.username}@${p.tile.x},${p.tile.z} ${o.username}@${o.tile.x},${o.tile.z}"
 }
 // `opnpcitem <name> <inventory slot> <npc id>`: use an inventory item on the nearest npc with that id (OpNpcT, the real handler path).
+// `multiat <name>` (N603 15-11): whether the player's tile is multi-combat (Tile.isMulti, the same check combat uses) and whether it
+// is an instance tile - proves an instance's zone without needing two attackers.
+gg.rsmod.game.CommandServerCommands.handlers["multiat"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: multiat <name>"
+    else {
+        val t = p.tile
+        val map = w.instanceAllocator.getMap(t)
+        "${p.username} at ${t.x},${t.z},${t.height} region ${t.regionId}: multi=${t.isMulti(w)} instance=${map != null}"
+    }
+}
 // `menutest <name> <n>` (N605 15-11): opens a plain options() menu with n entries ('Option 1'..'Option n') and reports the pick in the
 // chat - the paged 6+ menus can be checked in the client without walking to a content NPC.
 gg.rsmod.game.CommandServerCommands.handlers["menutest"] = { w, a ->
