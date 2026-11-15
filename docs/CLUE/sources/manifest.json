@@ -711,12 +711,156 @@
       "url": "https://oldschool.runescape.wiki/w/Item_Retrieval_Service"
     },
     {
+      "page": "Transcript:Uri",
+      "revision": 15267517,
+      "revision_time": "2026-07-19T13:36:09Z",
+      "file": "Transcript_Uri.wiki",
+      "sha256": "d51d73a079635223b846019f6cea8f8eed0e154b8c34d7b47ad911b856bd75bf",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AUri"
+    },
+    {
+      "page": "Double agent",
+      "revision": 15199596,
+      "revision_time": "2026-04-28T07:21:37Z",
+      "file": "Double_agent.wiki",
+      "sha256": "fa7a749e08886469a76c8f140399b385789af6f8b15568b1d6deddf41f837232",
+      "url": "https://oldschool.runescape.wiki/w/Double_agent"
+    },
+    {
+      "page": "Saradomin wizard",
+      "revision": 15382759,
+      "revision_time": "2026-10-26T13:02:53Z",
+      "file": "Saradomin_wizard.wiki",
+      "sha256": "c5a2a5addc63c5217733afaa7a14208a64adc5219634a2f4da50f41c64b59c67",
+      "url": "https://oldschool.runescape.wiki/w/Saradomin_wizard"
+    },
+    {
+      "page": "Zamorak wizard",
+      "revision": 15302930,
+      "revision_time": "2026-08-16T10:18:14Z",
+      "file": "Zamorak_wizard.wiki",
+      "sha256": "cd0b069f9fa04242bd326db82e508b2a00959bf097b9108f8662138f9da30462",
+      "url": "https://oldschool.runescape.wiki/w/Zamorak_wizard"
+    },
+    {
+      "page": "Ancient Wizard",
+      "revision": 15355202,
+      "revision_time": "2026-09-24T06:15:13Z",
+      "file": "Ancient_Wizard.wiki",
+      "sha256": "6b2a0bc7b68ee4ac8be15d36521131ebe4961219b7c5863731d046b66cfe65b0",
+      "url": "https://oldschool.runescape.wiki/w/Ancient_Wizard"
+    },
+    {
+      "page": "Brassican Mage",
+      "revision": 15375119,
+      "revision_time": "2026-10-18T15:31:08Z",
+      "file": "Brassican_Mage.wiki",
+      "sha256": "caf846b4c99c5c0c4771218307e0e99c3b9f9ff891d82099b2432336ebbecce5",
+      "url": "https://oldschool.runescape.wiki/w/Brassican_Mage"
+    },
+    {
+      "page": "Falo the Bard/Challenges",
+      "missing": true
+    },
+    {
       "page": "Transcript:Mimic",
       "revision": 14996569,
       "revision_time": "2025-09-29T16:54:03Z",
       "file": "Transcript_Mimic.wiki",
       "sha256": "4320420fbdbf70f7d78b5d9359ed3e1c34e6e395ff24ab4c381929ccb925cfe3",
       "url": "https://oldschool.runescape.wiki/w/Transcript%3AMimic"
+    },
+    {
+      "page": "Sherlock",
+      "revision": 15392246,
+      "revision_time": "2026-11-03T16:32:17Z",
+      "file": "Sherlock.wiki",
+      "sha256": "e71b6de520573716ff6da3ca78c79f6c43c4a25012aae99add2bd194821b1ea2",
+      "url": "https://oldschool.runescape.wiki/w/Sherlock"
+    },
+    {
+      "page": "Armadylean guard",
+      "revision": 15384117,
+      "revision_time": "2026-10-27T22:50:23Z",
+      "file": "Armadylean_guard.wiki",
+      "sha256": "359da7fa668a362175230a28437999b8cf5fbd90edc77ce25e093514783404a2",
+      "url": "https://oldschool.runescape.wiki/w/Armadylean_guard"
+    },
+    {
+      "page": "Bandosian guard",
+      "revision": 15356200,
+      "revision_time": "2026-09-26T03:57:55Z",
+      "file": "Bandosian_guard.wiki",
+      "sha256": "c9c105468f4a4604efc61afb855f959583aa4f447c90e8bfe87a631eda11840d",
+      "url": "https://oldschool.runescape.wiki/w/Bandosian_guard"
+    },
+    {
+      "page": "Treasure Trails Guide Coordinates Intro",
+      "missing": true
+    },
+    {
+      "page": "Light box",
+      "revision": 15187673,
+      "revision_time": "2026-04-22T04:16:36Z",
+      "file": "Light_box.wiki",
+      "sha256": "4626afb78b4eb70131aab042691806e2ad9a291018999b64fd7c31e0868b22f1",
+      "url": "https://oldschool.runescape.wiki/w/Light_box"
+    },
+    {
+      "page": "Puzzle box",
+      "revision": 15185934,
+      "revision_time": "2026-04-22T03:15:09Z",
+      "file": "Puzzle_box.wiki",
+      "sha256": "981b6c79b24191f6e45a31034f7b3bc73eeaf2440b5f0bf9ad86aaae491728e2",
+      "url": "https://oldschool.runescape.wiki/w/Puzzle_box"
+    },
+    {
+      "page": "Transcript:Sherlock",
+      "revision": 15255825,
+      "revision_time": "2026-07-07T09:46:05Z",
+      "file": "Transcript_Sherlock.wiki",
+      "sha256": "4733acf0a854a4a115d10c0edb0426f4979997581dae8aa6df7f41330f276461",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ASherlock"
+    },
+    {
+      "page": "Transcript:Falo the Bard",
+      "revision": 15079095,
+      "revision_time": "2025-12-06T00:10:26Z",
+      "file": "Transcript_Falo_the_Bard.wiki",
+      "sha256": "bc77824edde984dd18d3b647c85e486e187bb8695acf48d0991dec30f080858b",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AFalo_the_Bard"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Coordinates Intro",
+      "revision": 15330961,
+      "revision_time": "2026-09-04T19:54:06Z",
+      "file": "Template_Treasure_Trails_Guide_Coordinates_Intro.wiki",
+      "sha256": "ea5e40f96f3cf72e6d8120e316e669c9e8fe2f35f94aa6f22ec2b4a179b38662",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Coordinates_Intro"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Emote Clues Intro",
+      "revision": 14435986,
+      "revision_time": "2023-07-16T13:26:01Z",
+      "file": "Template_Treasure_Trails_Guide_Emote_Clues_Intro.wiki",
+      "sha256": "96d9c9dc76d6e04906a82f7666b326d5aa431ba28347eb1c31e327b9a9418744",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Emote_Clues_Intro"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Cryptic Clues Intro",
+      "revision": 14854995,
+      "revision_time": "2025-02-24T20:38:33Z",
+      "file": "Template_Treasure_Trails_Guide_Cryptic_Clues_Intro.wiki",
+      "sha256": "858b08a7b9142386c72f867dcb7e1406dbe2d19e80e2741a39e14db0fa3e060d",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Cryptic_Clues_Intro"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Anagrams Intro",
+      "revision": 14435989,
+      "revision_time": "2023-07-16T13:27:53Z",
+      "file": "Template_Treasure_Trails_Guide_Anagrams_Intro.wiki",
+      "sha256": "cc6475e4ba4b867575af046e15fa8fc7e88fd4f52db4aedefc970e91d5ae2567",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Anagrams_Intro"
     }
   ]
 }

@@ -1,0 +1,127 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Uri:''' A great captain is always ready to change course.
+* {{topt|Dialogue 2}}
+** '''Uri:''' Actions have consequences.
+* {{topt|Dialogue 3}}
+** '''Uri:''' Can I have your teabag?
+* {{topt|Dialogue 4}}
+** '''Uri:''' Can you stand me?
+* {{topt|Dialogue 5}}
+** '''Uri:''' Have you found the key to the secret room?
+* {{topt|Dialogue 6}}
+** '''Uri:''' I am the egg man, are you one of the egg men?
+* {{topt|Dialogue 7}}
+** '''Uri:''' I believe that it is very rainy in Varrock.
+* {{topt|Dialogue 8}}
+** '''Uri:''' I have a story about that.
+* {{topt|Dialogue 9}}
+** '''Uri:''' I heard that the tall man fears only strong winds.
+* {{topt|Dialogue 10}}
+** '''Uri:''' I quite fancy an onion.
+* {{topt|Dialogue 11}}
+** '''Uri:''' In Canifis the men are known for eating much spam.
+* {{topt|Dialogue 12}}
+** '''Uri:''' In the end, only the three-legged will survive.
+* {{topt|Dialogue 13}}
+** '''Uri:''' It is possible to commit no mistakes and still lose.
+* {{topt|Dialogue 14}}
+** '''Uri:''' Loser says what.
+* {{topt|Dialogue 15}}
+** '''Uri:''' My magic carpet is full of eels.
+* {{topt|Dialogue 16}}
+** '''Uri:''' Once, I was a poor man, but then I found a party hat.
+* {{topt|Dialogue 17}}
+** '''Uri:''' Quickly! I've got a bee sticking out of my arm!
+* {{topt|Dialogue 18}}
+** '''Uri:''' The slowest of fishermen catch the swiftest of fish.
+* {{topt|Dialogue 19}}
+** '''Uri:''' *sneezes* What?
+* {{topt|Dialogue 20}}
+** '''Uri:''' The sudden appearance of a deaf squirrel is most puzzling, comrade.
+* {{topt|Dialogue 21}}
+** '''Uri:''' There were three goblins in a bar, which one left first?
+* {{topt|Dialogue 22}}
+** '''Uri:''' Up in the north, I hear they keep milk in bags rather than buckets.
+* {{topt|Dialogue 23}}
+** '''Uri:''' Want to see me bend a spoon?
+* {{topt|Dialogue 24}}
+** '''Uri:''' What's cheese?
+* {{topt|Dialogue 25}}
+** '''Uri:''' Would you like to buy a pewter spoon?
+* '''Player:''' What?
+* {{tbox|You have been given a [new clue/casket]!}}
+* {{tact|end}}
+
+== Speaking with another player's Uri or with incorrect attire ==
+* '''Uri:''' I do not believe we have any business, Comrade.
+* {{tact|end}}
+
+== Panic outside the Twilight Temple step additional dialogue or with incorrect attire ==
+* '''Uri:''' The puffins are up to something!
+* ''(Standard dialogue)''
+
+==Historical phrases==
+These were formerly part of Uri's random phrases but have been removed.
+
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Uri:''' 9 years my princess, forever my light.
+* {{topt|Dialogue 2}}
+** '''Uri:''' Ahhhhhh, leeches!
+* {{topt|Dialogue 3}}
+** '''Uri:''' The Ankou's are a lie.
+* {{topt|Dialogue 4}}
+** '''Uri:''' (Breathing intensifies)
+* {{topt|Dialogue 5}}
+** '''Uri:''' Brother, do you even lift?
+* {{topt|Dialogue 6}}
+** '''Uri:''' Connection lost. Please wait - attempting to reestablish.
+* {{topt|Dialogue 7}}
+** '''Uri:''' Do you want ants? Because that's how you get ants.
+* {{topt|Dialogue 8}}
+** '''Uri:''' Don't forget to find the jade monkey.
+* {{topt|Dialogue 9}}
+** '''Uri:''' Fancy a holiday? I heard there was a whole other world to the west.
+* {{topt|Dialogue 10}}
+** '''Uri:''' Guys, let's lake dive!
+* {{topt|Dialogue 11}}
+** '''Uri:''' I don't like pineapple, it has that bone in it.
+* {{topt|Dialogue 12}}
+** '''Uri:''' I gave you what you needed; not what you think you needed.
+* {{topt|Dialogue 13}}
+** '''Uri:''' I once named a duck after a girl. Big mistake, they all hated it.
+* {{topt|Dialogue 14}}
+** '''Uri:''' I told him not to go near that fence, and what did he do? Sheesh....
+* {{topt|Dialogue 15}}
+** '''Uri:''' I took a college course in bowling; still not any good.
+* {{topt|Dialogue 16}}
+** '''Uri:''' I'm going to get married, to the night.
+* {{topt|Dialogue 17}}
+** '''Uri:''' I'm looking for a girl named Molly. I can't seem to find her. any assistance?
+* {{topt|Dialogue 18}}
+** '''Uri:''' Init doe. Lyk, I hope yer reward iz goodd aye?
+* {{topt|Dialogue 19}}
+** '''Uri:''' Is that Deziree?
+* {{topt|Dialogue 20}}
+** '''Uri:''' It is quite easy being green.
+* {{topt|Dialogue 21}}
+** '''Uri:''' Mate, mate... I'm the best.
+* {{topt|Dialogue 22}}
+** '''Uri:''' Mother's parsnips tasted like onion.
+* {{topt|Dialogue 23}}
+** '''Uri:''' Oranges are the fruit of the vegetable.
+* {{topt|Dialogue 24}}
+** '''Uri:''' Some say...
+* {{topt|Dialogue 25}}
+** '''Uri:''' There's this guy I sit next to. Makes weird faces and sounds. Kind of an odd fellow.
+* {{topt|Dialogue 26}}
+** '''Uri:''' This is the last night you'll spend alone.
+* {{topt|Dialogue 27}}
+** '''Uri:''' Tonight we dine................quite nicely actually.
+* {{topt|Dialogue 28}}
+** '''Uri:''' Took a hair dryer to a party in my handbag. Ah, so fabulous!!
+* {{tact|end}}

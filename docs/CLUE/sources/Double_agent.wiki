@@ -1,0 +1,127 @@
+{{External|rs}}
+{{Infobox Monster
+|version1 = Level 65
+|version2 = Level 108
+|version3 = Level 141
+|name = Double agent
+|image = [[File:Uri.png|130px]]
+|release1 = [[5 December]] [[2006]]
+|release2 = [[5 December]] [[2006]]
+|release3 = [[6 July]] [[2016]]
+|update1 = Treasure Trails, spiders and sheep
+|update2 = Treasure Trails, spiders and sheep
+|update3 = Treasure Trail Expansion (2016)
+|members = Yes
+|combat1 = 65
+|combat2 = 108
+|combat3 = 141
+|size = 1
+|examine = He's playing both sides!
+|xpbonus1 = 0.0
+|xpbonus2 = 2.5
+|xpbonus3 = 5
+|max hit1 = 5
+|max hit2 = 14
+|max hit3 = 19
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Crush]]
+|attack speed = 4
+|slayxp = None
+|hitpoints1 = 80
+|hitpoints2 = 120
+|hitpoints3 = 160
+|att1 = 80
+|att2 = 100
+|att3 = 130
+|str1 = 43
+|str2 = 80
+|str3 = 105
+|def1 = 24
+|def2 = 80
+|def3 = 100
+|mage1 = 24
+|mage2 = 80
+|mage3 = 95
+|range = 1
+|attbns1 = 0
+|attbns2 = 40
+|attbns3 = 40
+|strbns1 = 0
+|strbns2 = 40
+|strbns3 = 40
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab1 = 3
+|dstab2 = 20
+|dstab3 = 20
+|dslash1 = 3
+|dslash2 = 20
+|dslash3 = 20
+|dcrush1 = 3
+|dcrush2 = 20
+|dcrush3 = 20
+|dmagic = 0
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|id1 = 1777
+|id2 = 1778
+|id3 = 7312
+}}
+'''Double agents''' appear when doing [[Clue scroll (hard)|hard]] or [[Clue scroll (master)|master clue scroll]] emote clues. They call ''"I expect you to die!"'' upon appearing. They have a combat level of 108 for hard clues outside of the Wilderness and 65 within. They are level 141 for master clues.
+
+After summoning the double agent, you may switch out of the equipment that the clue instructed, into equipment that is more suited for combat. If the double agent is killed while the player is wearing the equipment instructed to wear for the clue, [[Uri]] will immediately appear. Otherwise, the player must re-equip the items and perform the emote again.
+
+For double agents fought in the Wilderness, players should avoid bringing items they are unwilling to lose. It is highly recommended that the corresponding [[STASH]] unit be built to store the item there rather than having to take it out from the bank.
+
+==Drops==
+===100%===
+{{DropsTableHead|leagueRegion=Misthalin}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Tertiary===
+{{DropsTableHead|leagueRegion=Wilderness}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|raritynotes=<ref group=d>Looting bags are only dropped by those found in the [[Wilderness]].</ref>|gemw=No}}
+{{DropsTableBottom}}
+{{Reflist|group=d}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 6 July 2016
+|update = Treasure Trail Expansion (2016)
+|change = Level 141 Double agents now appear ingame when doing Master clue scrolls.
+}}
+{{Subject changes
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+|poll = 
+|change =
+* All treasure trail combat NPCs now cannot prevent a player from being attacked by a player inside a single combat zone of the wilderness. 
+* All treasure trail combat NPCs now also do not allow a player to be attacked by several players at once in a single combat zone.
+}}
+{{Subject changes
+|date = 12 June 2014
+|update = Treasure Trail Expansion
+|change = Level 141 Double agents were added to the cache, presumably to appear when doing Elite clue scrolls, but were unused.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Their appearance is identical to [[Uri]].
+*The double agent will not appear during an emote clue if it is the first step in the Treasure Trail; the reasoning behind this is unknown.
+*The phrase ''"I expect you to die!" ''is a reference to the 1964 film ''{{Wp|Goldfinger (film)|Goldfinger}}'' which was based on an {{Wp|Ian Fleming}} novel.
+
+{{Treasure Trails}}
+[[Category:Monsters that take priority in combat]]

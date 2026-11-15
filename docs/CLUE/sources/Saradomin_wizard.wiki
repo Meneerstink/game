@@ -1,0 +1,120 @@
+{{External|rs}}
+{{redirect|Saradomin mage|the Saradomin mages inside [[Mage Arena]]|Battle mage}}
+{{Infobox Monster
+|name = Saradomin wizard
+|image = [[File:Saradomin wizard.png|150px]]
+|release = [[26 October]] [[2004]]
+|update = Treasure Trails and Changes
+|members = Yes
+|combat = 108
+|size = 1
+|examine = A follower of Saradomin.
+|xpbonus = 2.5
+|max hit = 14 ([[Melee]]), 20 ([[Magic]])
+|aggressive = Yes
+|poisonous = Yes (6)
+|attack style = [[Stab]], [[Magic]]
+|attack speed = 4
+|hitpoints = 120
+|att = 100
+|str = 80
+|def = 80
+|mage = 80
+|range = 1
+|attbns = 40
+|strbns = 40
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 0
+|dslash = 0
+|dcrush = 0
+|dmagic = 30
+|dlight = 0
+|dstandard = 0
+|dheavy = 0
+|poisonresistance = 0
+|venomresistance = 0
+|immunecannon = No
+|immunethrall = No
+|id = 2955
+|leagueRegion = Misthalin,Karamja,Asgarnia,Fremennik,Kandarin,Desert,Morytania,Tirannwn,Kourend
+}}
+'''Saradomin wizards''' are hostile followers of [[Saradomin]] that appear when doing [[clue scroll (hard)|hard clue scroll]] coordinates outside of the [[Wilderness]].
+
+Upon appearing, they will call out {{overhead|For Saradomin!}}, immediately attacking the player with a poisoned [[dragon dagger]]. They will change attack styles between Melee and Magic to counter protection [[prayer]]s if activated within melee distance. Keeping distance while praying [[Protect from Magic]] will cause them to attack only with Magic, allowing the player to negate all damage. The player may choose to pray [[Protect from Melee]] to prevent the poison on the first hit, then switch to [[Protect from Magic]] once at a distance. Alternatively, an [[antipoison]] may be used.
+
+==Drops==
+{{DropLogProject|kills=589317}}
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons and armour===
+{{DropsTableHead}}
+{{DropsLine|name=Air battlestaff|quantity=1|rarity=2/128}}
+{{DropsLine|name=Water battlestaff|quantity=1|rarity=3/128}}
+{{DropsLine|name=Earth battlestaff|quantity=1|rarity=3/128}}
+{{DropsLine|name=Fire battlestaff|quantity=1|rarity=1/128}}
+{{DropsTableBottom}}
+
+===Runes===
+{{DropsTableHead}}
+{{DropsLine|name=Air rune|quantity=60|rarity=3/128}}
+{{DropsLine|name=Air rune|quantity=189|rarity=2/128}}
+{{DropsLine|name=Water rune|quantity=42|rarity=3/128}}
+{{DropsLine|name=Water rune|quantity=126|rarity=2/128}}
+{{DropsLine|name=Earth rune|quantity=79|rarity=3/128}}
+{{DropsLine|name=Earth rune|quantity=86|rarity=4/128}}
+{{DropsLine|name=Earth rune|quantity=107|rarity=2/128}}
+{{DropsLine|name=Fire rune|quantity=51|rarity=3/128}}
+{{DropsLine|name=Fire rune|quantity=180|rarity=2/128}}
+{{DropsLine|name=Cosmic rune|quantity=25|rarity=1/128}}
+{{DropsLine|name=Nature rune|quantity=28|rarity=3/128}}
+{{DropsLine|name=Nature rune|quantity=30|rarity=7/128}}
+{{DropsLine|name=Law rune|quantity=9|rarity=1/128}}
+{{DropsLine|name=Law rune|quantity=10|rarity=4/128}}
+{{DropsLine|name=Death rune|quantity=45|rarity=6/128}}
+{{DropsLine|name=Blood rune|quantity=8|rarity=12/128}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead}}
+{{DropsLine|name=Coins|quantity=77|rarity=17/128}}
+{{DropsLine|name=Coins|quantity=89|rarity=25/128}}
+{{DropsLine|name=Coins|quantity=240|rarity=3/128}}
+{{DropsTableBottom}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+|poll = 
+|change =
+* All treasure trail combat NPCs now cannot prevent a player from being attacked by a player inside a single combat zone of the wilderness. 
+* All treasure trail combat NPCs now also do not allow a player to be attacked by several players at once in a single combat zone.
+}}
+{{Subject changes
+|date = 5 December 2006
+|update = Treasure Trails, spiders and sheep
+|change = The NPC was renamed from "Saradomin Wizard" to "Saradomin wizard".
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Interestingly, the Saradomin wizard can cast Saradomin Strike while wielding a dragon dagger, even though players can only cast the spell while wielding a [[Saradomin staff]]. This trait is also shared by [[Saradomin priest]]s.
+*Surprisingly, there is a rare effect that enables the wizard to sometimes inflict poison when using Saradomin Strike, even if he does not use melee at all throughout the fight. This is actually caused by the mechanic that the wizard uses to poison the player. If the wizard is in melee range and the player is not using [[Protect from Melee]], the wizard has about a 95% chance of causing poison for each game tick that passes. The first game tick could fail, for example, but the poison might be inflicted on the second or third tick. Activating Protect from Melee prevents this from happening by causing the wizard to use Magic instead.
+*It's possible to imitate a Saradomin wizard by wearing [[desert shirt]] and [[desert robe|robe]], [[yellow cape]], [[dragon dagger|dragon dagger (p++)]] and [[leather boots]] while having the default avatar head characteristics.
+*It is possible to stop a Saradomin Wizard attacking you if you accept the beer and kebab from the [[Drunken Dwarf]] random event during the encounter.
+*If the player manages to hide from a Saradomin wizard and digs again in the correct coordinate spot, another wizard will appear.
+*Attempting to attack another player's Saradomin wizard gives the message {{mes|It's not after you...}}.
+
+{{Treasure Trails}}
+[[Category:Saradominists]]
+[[Category:Monsters that take priority in combat]]

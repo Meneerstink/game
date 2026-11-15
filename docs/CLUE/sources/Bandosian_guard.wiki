@@ -1,0 +1,122 @@
+{{Infobox Monster
+|name = Bandosian guard
+|image = [[File:Bandosian guard.png|250px]]
+|release = [[12 June]] [[2014]]
+|update = Treasure Trail Expansion
+|members = Yes
+|combat = 125
+|size = 1
+|examine = A follower of Bandos.
+|xpbonus = 0
+|max hit = 13
+|aggressive = Yes
+|poisonous = No
+|attack style = [[Stab]]
+|attack speed = 5
+|hitpoints = 130
+|att = 110
+|str = 115
+|def = 80
+|mage = 1
+|range = 1
+|attbns = 19
+|strbns = 4
+|amagic = 0
+|mbns = 0
+|arange = 0
+|rngbns = 0
+|dstab = 12
+|dslash = 14
+|dcrush = 13
+|dmagic = 5
+|dlight = 13
+|dstandard = 13
+|dheavy = 13
+|poisonresistance = 0
+|venomresistance = 0
+|id = 6588
+|leagueRegion = Misthalin
+}}
+'''Bandosian guards''' are [[ork]]s that appear and attack the player when doing [[coordinate]] steps of [[elite clue scroll]]s. Bandosian guards use only melee attacks, so [[Protect from Melee]] will prevent all damage taken from them. Upon killing the guard, players can dig a second time in the correct location in order to receive the next clue.
+
+On clue scroll steps where the Bandosian guard can appear, alternatively an [[Armadylean guard]] may appear in its place. The lone exceptions are [[Clue scroll (elite) - 06.28S 03.48W|on]] the [[Isle of Souls]], and [[Clue scroll (elite) - 00.35N 35.50E|at]] [[Meiyerditch]], where a Bandosian guard will always appear. The former is a guarantee, while the latter is due to the coordinate's dig spot being too small to fit the Armadylean guard.
+
+==Drops==
+{{DropLogProject|kills=184330}}
+
+{{Average drop value}}
+
+===100%===
+{{DropsTableHead}}
+{{DropsLine|name=Bones|quantity=1|rarity=Always}}
+{{DropsTableBottom}}
+
+===Weapons and armour===
+{{DropsTableHead}}
+{{DropsLine|name=Rune spear|quantity=1|rarity=1/128}}
+{{DropsLine|name=Rune thrownaxe|quantity=6|rarity=3/128}}
+{{DropsLine|name=Armadyl helmet|quantity=1|rarity=1/2000000|raritynotes={{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1014521968853385216|date=4 July 2018|archiveurl=https://reldo.runescape.wiki/i/103646|archivedate=4 September 2023|quote=Regarding those, I noticed that their 1 / 1m chance of giving an Armadyl or Bandos item is random as to which it gives. So if you hit the 1 / 1m chance, you get either the Armadyl or Bandos item, with equal chances, regardless of which NPC you'd fought. Strange but true.|name=twomillion}}}}
+{{DropsLine|name=Bandos boots|quantity=1|rarity=1/2000000|raritynotes={{NamedRef|twomillion}}}}
+{{DropsTableBottom}}
+
+===Runes===
+{{DropsTableHead}}
+{{DropsLine|name=Nature rune|quantity=20|rarity=5/128}}
+{{DropsLine|name=Blood rune|quantity=20|rarity=5/128}}
+{{DropsLine|name=Cosmic rune|quantity=20|rarity=5/128}}
+{{DropsTableBottom}}
+
+===Herbs===
+{{HerbDropTableInfo|10/128}}
+{{DropsTableHead}}
+{{HerbDropLines|10/128}}
+{{DropsTableBottom}}
+
+===Coins===
+{{DropsTableHead}}
+{{DropsLine|name=Coins|quantity=35|rarity=37/128|gemw=No}}
+{{DropsLine|name=Coins|quantity=350|rarity=12/128|gemw=No}}
+{{DropsTableBottom}}
+
+===Other===
+{{DropsTableHead}}
+{{DropsLine|name=Hammer|quantity=1|rarity=5/128}}
+{{DropsLine|name=Coal|quantity=1|rarity=7/128}}
+{{DropsLine|name=Feather|quantity=30|rarity=5/128}}
+{{DropsLine|name=Headless arrow|quantity=30|rarity=10/128}}
+{{DropsLine|name=Adamantite bar|quantity=5 (noted)|rarity=1/128}}
+{{DropsLine|name=Shark|quantity=1|rarity=3/128}}
+{{DropsTableBottom}}
+
+===Gem drop table===
+{{GemDropTable|9/128|chaostalisman=yes|naturetalisman=yes}}
+
+===Tertiary===
+{{DropsTableHead|leagueRegion=Wilderness}}
+{{DropsLine|name=Looting bag|quantity=1|rarity=1/3|raritynotes=<ref group=d>Looting bags are only dropped by those found in the [[Wilderness]].</ref>|gemw=No}}
+{{DropsTableBottom}}
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 10 September 2015
+|update = Slayer Assignment Rework
+|poll = 
+|change =
+* All treasure trail combat NPCs now cannot prevent a player from being attacked by a player inside a single combat zone of the wilderness. 
+* All treasure trail combat NPCs now also do not allow a player to be attacked by several players at once in a single combat zone.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+* Instead of using conventional weaponry, the Bandosian guard is wielding a large meat cleaver and wears a saucepan as a helmet.
+
+==References==
+{{Reflist}}
+
+{{Treasure Trails}}
+[[Category:Bandosians]]
+[[Category:Monsters that take priority in combat]]

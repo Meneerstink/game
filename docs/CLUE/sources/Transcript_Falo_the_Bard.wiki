@@ -1,0 +1,51 @@
+{{Transcript|npc}}
+{{incomplete|Casket receiving dialogue is missing}}
+
+==Standard dialogue==
+* '''Player:''' Hi there! Who are you?
+** {{tcond|If the player has started Fremennik Trials}}
+*** '''Falo the Bard:''' Hi there [player name]. I am Falo the bard! Like my brother Olaf, who lives in Rellekka, I also write music.
+*** (continues below)
+** {{tcond|If the player has completed Fremennik Trials}}
+*** '''Falo the Bard:''' Hi there [Fremennik name]. I am Falo the bard! Like my brother Olaf, who lives in Rellekka, I also write music.
+*** (continues below)
+* '''Player:''' Do you write about anything in particular?
+* '''Falo the Bard:''' Oh most certainly! I write about all the objects in the lands. From weapons and armour to palm trees and sands. That's why I wander far from Rellekka to seek inspiration.
+* '''Falo the Bard:''' I have one problem though. I am very forgetful, I can never remember which particular object a song was about.
+* '''Player:''' Surely the lyrics for such a song would be enough to help you remember?
+* '''Falo the Bard:''' I am afraid not. It saddens me deeply, so I often send out messages to adventurers to help me discreetly.
+* '''Player:''' I'll keep a look out for them! Goodbye Falo.
+* {{tact|end}}
+
+===If the player has not started Fremennik Trials===
+* '''Player:''' Hi there! Who are you?
+* '''Falo the Bard:''' Get away! I do not speak to outlanders.
+* {{tact|end}}
+
+==Treasure Trails==
+===Master===
+* '''Falo the Bard:''' Thank you for coming [Fremennik name], I need your help.
+* '''Falo the Bard:''' I have one of my old songs stuck in my head, but I cannot remember what the object it refers to is. I am so forgetful. I'll sing it to you.
+* '''Falo the Bard:''' Here goes... [one of his [[Falo the Bard#List of lyrics|random song]]s]
+* '''Player:''' What a beautiful song!
+* '''Falo the Bard:''' You have very kind words. I would be extremely grateful if you could remind me which object the song was about.
+* {{tact|end}}
+====When talked to again====
+* '''Falo the Bard:''' I really hope you can help me. Please show me the object my song is about!
+* '''Player:''' Can you sing me the song again?
+* '''Falo the Bard:''' Okay, here goes... [random song]
+* {{tact|end}}
+====When the correct item is used on him====
+* {{tbox|You show your object to Falo.}}
+* {{tbox|Falo's eyes light up.}}
+* '''Falo the Bard:''' Yes yes yes! That is it, thank you so much [Fremennik name]. The memories have come flooding back. I get why the lyrics are what they are now.
+* {{tact|receives=a new clue/casket}}
+* {{tbox|pic=Clue scroll (master) detail.png|You've been given a new clue!}}
+* '''Player:''' I'm glad to have helped, hopefully you'll never forget again!
+* {{tact|end}}
+
+====When an incorrect item is used on him====
+* {{tbox|You show your object to Falo.}}
+* {{tbox|Falo's eyes fail to light up.}}
+* '''Falo the Bard:''' No no no! That's not it. Please have another think about it, [Fremennik name].
+* {{tact|end}}
