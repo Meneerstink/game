@@ -10,10 +10,20 @@ mainClassName = 'gg.rsmod.game.Launcher'
 
 run {
     workingDir = rootProject.projectDir
+    // Local runs use this checkout's catalogues; deployed launchers still pass their own rsps.data.
+    systemProperty 'rsps.data', System.getProperty('rsps.data', rootProject.file('data').absolutePath)
     // Audit mode: `gradlew :game:run -Drsmod.tolerateDuplicateBinds=true` logs every duplicate
     // plugin binding (DUPLICATE-BIND) in one boot instead of crashing on the first one.
     def tolerateDups = System.getProperty('rsmod.tolerateDuplicateBinds')
     if (tolerateDups != null) systemProperty 'rsmod.tolerateDuplicateBinds', tolerateDups
+}
+
+test {
+    // Source-backed clue catalogues must never fall back to another branch's data.
+    systemProperty 'rsps.data', rootProject.file('data').absolutePath
+    inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
+    inputs.files(rootProject.file('docs/CLUE/cache/stash-chart-baked.json'),
+        rootProject.file('docs/CLUE/cache/hover.json')).withPropertyName('clueStashChartFixtures')
 }
 
 dependencies {

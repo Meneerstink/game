@@ -24,6 +24,9 @@ dependencies {
 // cache-backed class and the suite started failing with OutOfMemoryError in a different, random
 // class on each run.
 test {
+    // Ordinary targeted Gradle runs need the same branch data as the clue integration runner.
+    systemProperty 'rsps.data', rootProject.file('data').absolutePath
+    inputs.dir(rootProject.file('data/cfg/clue')).withPropertyName('clueCatalogues')
     // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.
     maxHeapSize = '4g'
     // 2026-10-22: -PtestForks=2 runs two test JVMs (only when the laptop has ~9 GB free); default stays 1.

@@ -6,7 +6,7 @@ import java.util.Base64
 import kotlin.test.*
 
 class ClueStashChartImportTests {
-    private val root = ObjectMapper().readTree(File(gg.rsmod.game.RspsPaths.data("../docs/CLUE/cache/stash-chart-baked.json")))
+    private val root = ObjectMapper().readTree(File("../docs/CLUE/cache/stash-chart-baked.json"))
     private val graphics = root["components"].elements().asSequence().filter { it["type"].asInt() == 5 }.map { it["spriteId"].asInt() }.toSet() + 832
     private val sprites = graphics.associateWith { 9000 + it }
 
@@ -35,7 +35,7 @@ class ClueStashChartImportTests {
     }
 
     @Test fun `source hover updates all three static graphics and leaves the selected tab untouched`() {
-        val hover = ObjectMapper().readTree(File(gg.rsmod.game.RspsPaths.data("../docs/CLUE/cache/hover.json")))
+        val hover = ObjectMapper().readTree(File("../docs/CLUE/cache/hover.json"))
         val bytes = ClueStashChartCacheTool.hoverScript(Base64.getDecoder().decode(hover["targetBytes"].asText()), 2410)
         val script = ClientScriptEditor.decode(bytes)
         assertEquals(7, script.intArgs); assertEquals(7, script.intLocals)

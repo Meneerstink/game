@@ -131,4 +131,5 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
     subprocess.run([str(java),'-Xmx256m','-Drsps.data='+str(ROOT/'data'),'-Dclue.fixtures='+str(out/'fixtures'),'-cp',';'.join([str(target)]+cp),'org.junit.runner.JUnitCore'] +
                    names,
-                   cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
+                   cwd=ROOT/'game' if selected == 'stash-chart-tests' else ROOT,
+                   check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
