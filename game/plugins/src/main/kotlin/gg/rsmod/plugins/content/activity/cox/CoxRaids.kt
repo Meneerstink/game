@@ -17,6 +17,15 @@ class CoxRaid(val id: Long, val layout: CoxLayout, val map: InstancedMap, val wo
     var startCycle = -1
     /** raids_client_progress (CoxPartyTab): 0 before the start, 1 upper level, 2 next level, 4 the Olm, 5 complete. */
     @Volatile var progress = 0
+    /** Personal points by lower-case username (tsps: 'Only raiders there at the start earn points'). */
+    val points = java.util.concurrent.ConcurrentHashMap<String, Int>()
+
+    fun totalPoints(): Int = points.values.sum()
+
+    fun addPoints(username: String, amount: Int) {
+        if (amount <= 0) return
+        points.merge(username.lowercase(), amount) { a, b -> (a.toLong() + b).coerceAtMost(Int.MAX_VALUE.toLong()).toInt() }
+    }
 }
 
 /**
@@ -67,9 +76,34 @@ object CoxRaids : KLogging() {
         // tsps r123 (rsprox): the raid's announcements are friendschatnotification messages (type 11).
         raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach {
             it.message("The raid has begun!", gg.rsmod.plugins.api.ChatMessageType.FRIENDS_CHAT_NOTIFICATION)
+            raid.points.putIfAbsent(it.username.lowercase(), 0)
+            CoxPointsOverlay.open(it)
         }
         CoxPartyTab.updateAll(raid)
         return true
+    }
+
+    /**
+     * OSRS Wiki Chambers of Xeric 'Reward system': 'If a player dies in a raid, they will lose 40% of the points that they had before their
+     * death. If the player dies with none, or extremely few, personal points (less than 5% of the total points before death), the team's
+     * overall points are reduced instead by 5%.' The team's 5% is taken from every raider's points.
+     */
+    fun deathPenalty(raid: CoxRaid, username: String) {
+        val key = username.lowercase()
+        val mine = raid.points[key] ?: 0
+        val total = raid.totalPoints()
+        if (total > 0 && mine * 20 < total) {
+            raid.points.replaceAll { _, v -> v - v / 20 }
+        } else {
+            raid.points[key] = mine - mine * 2 / 5
+        }
+    }
+
+    /** Every tick (cox_raid.plugin.kts): the points overlay of every raider (texts only on a change). */
+    fun tick(world: World) {
+        raids.values.filter { it.world === world && !it.closed && it.started }.forEach { raid ->
+            world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }.forEach { CoxPointsOverlay.update(it, raid) }
+        }
     }
 
     /** Is [tile] in the first room of [raid] (the start room, floor 1 room 0)? */
@@ -174,6 +208,7 @@ object CoxRaids : KLogging() {
         val raid = raidAt(player.tile)
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)
+        CoxPointsOverlay.close(player)
         if (raid != null) releaseIfEmpty(raid)
     }
 

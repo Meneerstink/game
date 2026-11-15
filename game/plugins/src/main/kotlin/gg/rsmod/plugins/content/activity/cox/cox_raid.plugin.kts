@@ -136,6 +136,7 @@ gg.rsmod.plugins.content.mechanics.death.SafeDeath.register { player -> CoxRaids
 on_player_death_start {
     val raid = CoxRaids.raidAt(player.tile) ?: return@on_player_death_start
     player.attr[COX_DIED_IN] = raid.id
+    if (raid.started) CoxRaids.deathPenalty(raid, player.username)
     val raidOnly = CoxRaids.raidOnlyLocal()
     val tile = player.tile
     listOf(player.inventory, player.equipment).forEach { container ->
@@ -201,6 +202,12 @@ on_world_init {
             CoxRaids.releaseEmpty(world)
         }
     }
+    world.queue {
+        while (true) {
+            wait(1)
+            CoxRaids.tick(world)
+        }
+    }
 }
 
 /** Test server / check accounts: ::coxstart [pattern index 0-26] [seed] = a raid with that OSRS layout code (CoxLayouts.LAYOUT_CODES). */
@@ -230,6 +237,14 @@ on_command("coxroom", Privilege.ADMIN_POWER) {
     val middle = gg.rsmod.game.model.Tile(room.sourceChunkX * 8 + 16, room.room.chunkZ * 8 + 16)
     player.teleportTo(CoxMap.roomTile(raid.map, floor, room, middle))
     player.message("CoX room ${floor + 1}/$index ${room.room} entry=${room.entry} v${room.variant}")
+}
+
+/** Test server / check accounts: ::coxpoints [n] = add n personal points (until the rooms give points), always tells the points. */
+on_command("coxpoints", Privilege.ADMIN_POWER) {
+    if (!CoxTestGate.allowed(player)) return@on_command
+    val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
+    player.getCommandArgs().firstOrNull()?.toIntOrNull()?.let { raid.addPoints(player.username, it) }
+    player.message("CoX points: mine ${raid.points[player.username.lowercase()] ?: 0}, total ${raid.totalPoints()}")
 }
 
 on_command("coxleave", Privilege.ADMIN_POWER) {

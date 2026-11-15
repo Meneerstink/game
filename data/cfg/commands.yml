@@ -1420,6 +1420,11 @@
   usage: "::coxbegin"
   description: "Test server / check accounts only: start your Chambers of Xeric raid (opens the first room's passage) until the party tab is built."
   example: "::coxbegin"
+- name: coxpoints
+  rank: admin
+  usage: "::coxpoints [n]"
+  description: "Test server / check accounts only: add n Chambers of Xeric points to yourself and show your/total points."
+  example: "::coxpoints 1000"
 - name: coxleave
   rank: admin
   usage: "::coxleave"
