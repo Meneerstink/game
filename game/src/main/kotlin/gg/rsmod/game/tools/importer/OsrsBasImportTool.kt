@@ -54,6 +54,10 @@ object OsrsBasImportTool {
             Stance("zamorak_spear_osrs", ready = 1713, walk = 1703, run = 1707, readyTurn = 1702, walkBack = 1704, walkLeft = 1706, walkRight = 1705),
             // HUMAN_WEAPON_GIANT01_READY / WALK / RUN / WALKL / WALKR: Colossal blade (owner 153608).
             Stance("colossal_blade", ready = 9460, walk = 9461, run = 9459, walkLeft = 10055, walkRight = 10054),
+            // CoX (dossier COX.txt 21:3x; seqs from OsrsFxImportTool 'cox-weapons-seq'): HUMAN_ELDER_MAUL_READY / _WALK / _RUN.
+            Stance("elder_maul", ready = 7518, walk = 7520, run = 7519),
+            // HUMAN_DINHS_BULWARK_READY / _WALK / _RUN.
+            Stance("dinhs_bulwark", ready = 7508, walk = 7510, run = 7509),
         )
 
     /** Payload width of every fixed-size BASType opcode (`BASType.decode`, rev-667 client). */
