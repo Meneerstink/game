@@ -124,6 +124,37 @@ CoxIds.loc(47420)?.let { chest ->
     }
 }
 
+/*
+ * Death in the chambers (OSRS Wiki Chambers of Xeric 'Death mechanics' - owner besluit 6a 'dood zoals OSRS'): safe (items kept, never
+ * ejected), raid-only items dropped where the raider fell, respawn at the floor's respawn point (CoxRaids.respawnTile). The points
+ * penalty (-40%, or the team -5%) comes with the points system.
+ */
+val COX_DIED_IN = gg.rsmod.game.model.attr.AttributeKey<Long>()
+
+gg.rsmod.plugins.content.mechanics.death.SafeDeath.register { player -> CoxRaids.raidAt(player.tile) != null }
+
+on_player_death_start {
+    val raid = CoxRaids.raidAt(player.tile) ?: return@on_player_death_start
+    player.attr[COX_DIED_IN] = raid.id
+    val raidOnly = CoxRaids.raidOnlyLocal()
+    val tile = player.tile
+    listOf(player.inventory, player.equipment).forEach { container ->
+        for (slot in 0 until container.capacity) {
+            val item = container[slot] ?: continue
+            if (item.id !in raidOnly) continue
+            container.remove(item.id, item.amount, beginSlot = slot)
+            world.spawn(gg.rsmod.game.model.entity.GroundItem(item.id, item.amount, tile, player))
+        }
+    }
+}
+
+on_player_death {
+    val id = player.attr[COX_DIED_IN] ?: return@on_player_death
+    player.attr.remove(COX_DIED_IN)
+    val raid = CoxRaids.byId(id) ?: return@on_player_death
+    player.teleportTo(CoxRaids.respawnTile(raid))
+}
+
 /** Test server / check accounts: ::coxbegin = the leader starts the raid (the party tab's start button follows with the party UI). */
 on_command("coxbegin", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command

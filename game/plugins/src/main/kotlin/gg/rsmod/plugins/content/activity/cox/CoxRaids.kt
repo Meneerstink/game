@@ -41,6 +41,8 @@ object CoxRaids : KLogging() {
 
     fun raidAt(tile: Tile): CoxRaid? = raids.values.firstOrNull { !it.closed && it.map.area.contains(tile) }
 
+    fun byId(id: Long): CoxRaid? = raids.values.firstOrNull { !it.closed && it.id == id }
+
     /** Creates a raid with [layout] (default: a random OSRS small layout, besluit 9a) and moves [player] to the starting room. */
     fun start(player: Player, layout: CoxLayout = CoxLayouts.normal(Random.Default)): CoxRaid? {
         val world = player.world
@@ -125,6 +127,36 @@ object CoxRaids : KLogging() {
         val source = CoxMap.FLOOR_END_HOLE[end.variant] ?: return null
         return nearestOpen(raid.world, CoxMap.roomTile(raid.map, above, end, source))
     }
+
+    /**
+     * Where a raider who dies respawns (OSRS Wiki Chambers of Xeric/Strategies: 'dying on the first floor places players back at its
+     * beginning, while having entered the second floor will move it to the end of the first floor, and having entered the final floor
+     * likewise moves the respawn point to the end of the second floor'): progress 0/1 -> the first room's spawn; floor n reached -> the
+     * end room of floor n-1 (at the bottom of its hole); the Olm (progress 4) -> the last floor's end room.
+     */
+    fun respawnTile(raid: CoxRaid): Tile {
+        val floors = raid.layout.floors
+        val reachedFloor = when {
+            raid.progress >= 4 -> floors.size
+            raid.progress >= 2 -> raid.progress - 1
+            else -> 0
+        }
+        if (reachedFloor <= 0) return spawnTile(raid)
+        val endFloor = reachedFloor - 1
+        val end = floors[endFloor].last()
+        val source = CoxMap.FLOOR_END_HOLE[end.variant] ?: CoxMap.FLOOR_END_HOLE.filterNotNull().first()
+        return nearestOpen(raid.world, CoxMap.roomTile(raid.map, endFloor, end, source))
+    }
+
+    /**
+     * Raid-only items (Wiki: 'All raid-unique items (potions, planks, food) are dropped on death'; tsps: 'Raid-only items drop where they
+     * fell'): the raid supplies of the 'cox-items' batch - wood, vials, bait, fish/bats, keystone, grubs, Vespula herb, herbs/seeds/
+     * ingredients, every raid potion, plank, storage kits. Not the rewards (dark journal, relic, tablet, torn scroll, talisman, books).
+     */
+    val RAID_ONLY_OSRS: Set<Int> = (listOf(20799, 20800, 20801) + (20853..20885) + listOf(20892) + (20901..20996) + listOf(21036) +
+        (21037..21042)).toSet()
+
+    fun raidOnlyLocal(): Set<Int> = RAID_ONLY_OSRS.mapNotNull { CoxIds.item(it) }.toSet()
 
     /** 'm:ss' of the ticks since the raid began (tsps: durations are ticks since "The raid has begun!"). */
     fun duration(raid: CoxRaid): String {
