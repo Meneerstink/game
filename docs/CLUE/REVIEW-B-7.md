@@ -217,3 +217,47 @@ removed. Corrected UI PREFLIGHT tx-20261115-193224 passed27 mutations and all
 cache/ledger/runtime mapping fingerprints stayed identical. Exact current IDs
 in UI-PREFLIGHT.tsv and latest CLAUDE-HANDOFF section. No apply/client process.
 Whole-branch Gradle acceptance for the subsequent gameplay changes is still due.
+
+
+## Basic source routes and paper challenges, B15-Nov20:55
+
+Actual source libraries compile: two core files and45 scroll/Watson libraries.
+The focused14-class cohort has82 passing tests after fixture correction:
+76 passed in its first run;6 failed only because MockK nested property getters
+were recorded in stubs and a core fixture used a module-relative path from the
+standalone root. Both corrected. The2 affected classes then passed all7 tests;
+no gameplay library changed between those runs. Final Gradle/script validation
+is still required. Temporary staged helper modes have been retired; use actual
+source command python tools/clue/check_compile.py HEAD basic-tests.
+
+The former41 donor steps are no longer registered in every tier. The registry
+now admits implemented source types with their real menus/assets: plain cryptic
+and guard-free coordinate digs; sourced kill; three exact Search crates and the
+jail bucket only after its actual Search menu exists; plain sourced NPC hand-ins;
+nine numeric challenges when the corresponding NPC/paper import is available.
+Falo/Sherlock keep their dedicated registrations. The unused old donor data
+classes remain for now; their removal waits for the new emote/map adapters.
+No guarded/puzzle/map/emote/hot-cold row becomes an unguarded free completion.
+
+Numeric papers2842/7269/12139 are tier aliases in ownership, bank/grave/Death,
+box capacity, Read/Check steps and Watson. Same-slot handover preserves a full
+inventory and all progress. The exact held-item/account/step/progress contract
+rejects stale answers, a replacement item and replay. Wrong answers spend
+nothing; ordinary Father Aereck accepts19, not the unimplemented Jarvis event20.
+Read shows the actual question.11 tests also pin every emitted line to the
+original conditional transcript+SHA, preserving the PLAYER interjection and
+omitting Baraek's misattributed Dunstan prompt. Missing dialogue remains absent.
+
+Two searches replaced unsupported routes without adding scenery: swamp hut
+bookcase and ambiguous closed Duke chest -> Rommik9533 at2946,3207,0 and
+Varrock Castle source5113/native46266 at3224,3492,0. Both actual scenes, exact
+menus and hashes are preserved; excluded pair evidence is retained separately.
+The Lumber Yard crate2620 and jail bucket9568 remain. Bucket cache-menu patch
+only appends the sourced Search option and preserves all existing model/other
+bytes. Its real native decoder test passed; PLAN/PREFLIGHT still to run.
+
+Master category selection now follows pinned Full guide/Master15384814 / cited
+Mod Ash16-May2024: choose a category equally, then a step within it. Tests cover
+all7 categories and differently sized groups; other tiers do not inherit an
+unproven equal-category rule. The active subset still has explicit missing
+subtypes; this is not whole-card or loaded-client acceptance.

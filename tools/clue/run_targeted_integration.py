@@ -35,9 +35,11 @@ def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
     allowed = [p for p in sorted(set(tracked + untracked))
-               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith('data/cfg/clue/') or p in {
+               if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith(('data/cfg/clue/', 'docs/CLUE/sources/Transcript_')) or p in {
                    'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
-                   'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json'}]
+                   'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
+                   'docs/CLUE/cache/ui-camera-order.json', 'docs/CLUE/cache/search-bucket.json',
+                   'docs/CLUE/NPC-DIALOGUE-SOURCES.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
 

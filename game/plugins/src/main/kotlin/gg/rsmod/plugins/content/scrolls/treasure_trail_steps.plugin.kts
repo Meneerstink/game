@@ -1,16 +1,11 @@
 package gg.rsmod.plugins.content.scrolls
 
-/**
- * Registers the 41 real Treasure Trail steps ported from Novite (24 map/dig clues, 17 emote
- * clues) under every [ClueScrollTier] - see [MAP_CLUE_LOCATIONS]/[EMOTE_CLUE_LOCATIONS] and
- * [MapClueStep]/[EmoteClueStep] doc comments for why these are shared across all four tiers
- * rather than split (no per-tier classification exists in the donor).
- */
-ClueScrollTier.values().forEach { tier ->
-    MAP_CLUE_LOCATIONS.forEach { location ->
-        ClueScrollManager.registerStep(MapClueStep(tier, location))
-    }
-    EMOTE_CLUE_LOCATIONS.forEach { location ->
-        ClueScrollManager.registerStep(EmoteClueStep(tier, location))
-    }
+// A subtype is enabled only after its handler and source/native assets exist.
+TreasureTrailStepCatalogue.current.rows.filter { TreasureTrailBasicSteps.available(world, it) }.forEach {
+    ClueScrollManager.registerStep(TreasureTrailSourceStep(it))
 }
+on_world_init {
+    world.plugins.bindNpcOverride { player, npc, option -> TreasureTrailBasicSteps.talk(player, npc, option) }
+    world.plugins.bindObjectOverride { player, obj, option -> TreasureTrailSearchTargets.attempt(player, obj, option) }
+}
+on_npc_killed { player, npc -> TreasureTrailBasicSteps.killed(player, npc) }

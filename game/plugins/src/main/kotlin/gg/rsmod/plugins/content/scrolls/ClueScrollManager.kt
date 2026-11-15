@@ -60,7 +60,7 @@ class ClueScrollManager(
             // A removed donor step cannot remain an unreadable permanent clue.
             // Its former list index has no meaning in the sourced tier pool.
             player.attr.remove(activeStepAttrs.getValue(tier))
-            val step = available.random()
+            val step = ClueStepSelection.choose(available)
             item.putAttr(ItemAttribute.CLUE_STEP_KEY, step.persistenceId)
             item.removeAttr(ItemAttribute.CLUE_TASK_KEY).removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
             if (previousKey == null || player.attr[lengthAttrs.getValue(tier)] == null) {
@@ -87,6 +87,7 @@ class ClueScrollManager(
          * scrolls of more than one tier at once.
          */
         fun tryDig(player: Player): Boolean {
+            if (TreasureTrailBasicSteps.dig(player)) return true
             for (tier in ClueScrollTier.values()) {
                 val step = activeStep(player, tier) ?: continue
                 if (step.mapInterfaceId != null && step.onAttempt(player)) {
@@ -153,7 +154,7 @@ class ClueScrollManager(
                 val available = steps.getValue(tier)
                 if (available.isEmpty()) return false
                 if (staged[slot]!!.id != tier.scrollId) staged[slot] = Item(tier.scrollId).copyAttr(staged[slot]!!)
-                staged[slot]!!.putAttr(ItemAttribute.CLUE_STEP_KEY, available.random().persistenceId)
+                staged[slot]!!.putAttr(ItemAttribute.CLUE_STEP_KEY, ClueStepSelection.choose(available).persistenceId)
                 staged[slot]!!.removeAttr(ItemAttribute.CLUE_TASK_KEY).removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
             }
             if (player.inventory[slot] !== scroll) return false
@@ -193,6 +194,7 @@ class ClueScrollManager(
                 val item = ClueOwnership.carried(player, tier) ?: return@on_item_option
                 prepare(player, item, tier)
                 val step = activeStep(player, tier) ?: return@on_item_option
+                if (TreasureTrailNumberChallenge.read(player, step)) return@on_item_option
                 if (TreasureTrailSherlock.read(player, step)) return@on_item_option
                 val mapInterfaceId = step.mapInterfaceId
                 if (mapInterfaceId != null) {

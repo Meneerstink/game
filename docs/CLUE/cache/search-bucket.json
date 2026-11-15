@@ -1,0 +1,12 @@
+{
+  "osrsId": 9568,
+  "localId": 9568,
+  "source": {
+    "rawBase64": "HlNlYXJjaAASBwEAAAldAkJ1Y2tldAAA",
+    "sha256": "8fa21873331c6b2db8938616b52bf96512d68352b15f9b5040a9aef45cde63ee"
+  },
+  "native": {
+    "rawBase64": "EgEBCgEJXQJCdWNrZXQAZwA\u003d",
+    "sha256": "9fdf235f71ee20b7001bcff15919031bfa8cbc7170014aa8f5fb911772943fef"
+  }
+}

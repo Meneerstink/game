@@ -14,6 +14,7 @@ object ClueOwnership {
     fun items(tier: ClueScrollTier): Set<Int> = buildSet {
         if (tier.scrollId >= 0) add(tier.scrollId)
         if (tier == ClueScrollTier.ELITE) ClueItems.local(12128)?.let { add(it) }
+        TreasureTrailNumberChallenge.sources[tier]?.let(ClueItems::local)?.let { add(it) }
     }
 
     fun tier(item: Int): ClueScrollTier? = if (item < 0) null else ClueScrollTier.values().firstOrNull { item in items(it) }

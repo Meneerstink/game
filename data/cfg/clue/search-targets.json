@@ -1,0 +1,62 @@
+[
+  {
+    "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+    "osrsId": 9533,
+    "existingLocal": 9533,
+    "point": [
+      2946,
+      3207,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "7a55c9830f9cd91163c501d3d9593a61d145b50bdd83d23ba641e3dfff9c4d57",
+    "nativeSha256": "702e19487826f7a4a34520bdafc66361d30aa7375db37544284d7af388a00c44",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
+    "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+    "osrsId": 5113,
+    "existingLocal": 46266,
+    "point": [
+      3224,
+      3492,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "45847e25a3b2b165de0b5231698d354c4f7f1615e14203fce07a3f2056fe5d61",
+    "nativeSha256": "51f6bc61fb5d113040c0a0faa579d09ec3b6d9844141ddddd3d0d70c0732e1a6",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
+    "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",
+    "osrsId": 9568,
+    "existingLocal": 9568,
+    "point": [
+      3013,
+      3179,
+      0
+    ],
+    "name": "Bucket",
+    "sourceSha256": "8fa21873331c6b2db8938616b52bf96512d68352b15f9b5040a9aef45cde63ee",
+    "nativeSha256": "9fdf235f71ee20b7001bcff15919031bfa8cbc7170014aa8f5fb911772943fef",
+    "option": "Search",
+    "requiresMenuPatch": true
+  },
+  {
+    "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+    "osrsId": 2620,
+    "existingLocal": 2620,
+    "point": [
+      3309,
+      3503,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "4e233faeb372e541d7fe5921e4ef125fa903a5dac3995c1fb8a1aae1b5d0b578",
+    "nativeSha256": "b3619a6c69bf87da976f4745078a5ff8cb6f8d322b79b8f6cb976d784c110287",
+    "option": "Search",
+    "requiresMenuPatch": false
+  }
+]

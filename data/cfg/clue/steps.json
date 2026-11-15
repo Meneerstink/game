@@ -489,15 +489,15 @@
     "sourceSha256": "ea86453a5fdc80f461438bf4c0294b27bbcad65eb8e4ec1366129d1a7d59ab3d"
   },
   {
-    "key": "Clue scroll (easy) - Search a bookcase in Lumbridge Swamp",
+    "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "SEARCH",
-    "hint": "The cryptic reveals where to search:\n\nSearch a bookcase in Lumbridge Swamp.",
+    "hint": "The cryptic reveals where to search:\n\nSearch the crate in Rommiks crafting shop in Rimmington.",
     "points": [
       [
-        3146,
-        3177,
+        2946,
+        3207,
         0
       ]
     ],
@@ -507,21 +507,21 @@
     "challenge": {},
     "requirements": {},
     "requirementsSource": null,
-    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_a_bookcase_in_Lumbridge_Swamp",
-    "sourceFile": "Clue_scroll_(easy)_-_Search_a_bookcase_in_Lumbridge_Swamp.wiki",
-    "sourceSha256": "143579ab1f392eb745973b5f9b0d031b4346a0cd93aa15a8471af43ac77b92e4"
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_crate_in_Rommiks_crafting_shop_in_Rimmington",
+    "sourceFile": "Clue_scroll_(easy)_-_Search_the_crate_in_Rommiks_crafting_shop_in_Rimmington.wiki",
+    "sourceSha256": "67154b405cf7bb51083761f9c9cd25f9871b0afe2b1900104ee55c4770d4d8d5"
   },
   {
-    "key": "Clue scroll (easy) - Search the chest in the Duke of Lumbridge's bedroom",
+    "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
     "tier": "easy",
     "kind": "CRYPTIC",
     "action": "SEARCH",
-    "hint": "The cryptic reveals where to search:\n\nSearch the chest in the Duke of Lumbridge's bedroom.",
+    "hint": "The cryptic reveals where to search:\n\nSearch for a crate in Varrock Castle.",
     "points": [
       [
-        3209,
-        3218,
-        1
+        3224,
+        3492,
+        0
       ]
     ],
     "npcName": null,
@@ -530,9 +530,9 @@
     "challenge": {},
     "requirements": {},
     "requirementsSource": null,
-    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_the_chest_in_the_Duke_of_Lumbridge%27s_bedroom",
-    "sourceFile": "Clue_scroll_(easy)_-_Search_the_chest_in_the_Duke_of_Lumbridge's_bedroom.wiki",
-    "sourceSha256": "4cc35af345adc7c49bf6e0c9b1fd5e1a1863625a9a703824f8faad2cacea8a1a"
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Search_for_a_crate_in_Varrock_Castle",
+    "sourceFile": "Clue_scroll_(easy)_-_Search_for_a_crate_in_Varrock_Castle.wiki",
+    "sourceSha256": "9229696b77412936b1c20c7f4e8d9683a9979bf5aa716fee40a043fb09c91938"
   },
   {
     "key": "Clue scroll (easy) - Search the bucket in the Port Sarim jail",

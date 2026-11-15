@@ -47,10 +47,18 @@ def main():
 
     destination = ROOT/'docs/CLUE/cache/selected-step-db.json'
     destination.write_text(json.dumps(dict(source='openrs2-2686 config 2/38', steps=links, gaps=gaps, rows=selected),
-                                      indent=2)+'\n', encoding='utf8')
-    scenes = ROOT/'build/clue/next/search-scenes.json'
-    assert len(json.loads(scenes.read_text())) == 4
-    (destination.parent/'search-scenes.json').write_bytes(scenes.read_bytes())
+                                      indent=2, sort_keys=True)+'\n', encoding='utf8')
+    scenes = json.loads((ROOT/'build/clue/next/search-scenes.json').read_text())
+    replacement = ROOT/'build/clue/next/replacement-search-scenes.json'
+    if replacement.exists():
+        scenes += json.loads(replacement.read_text())
+    scenes = {row['key']: row for row in scenes}
+    active = {row['key'] for row in steps if row['action'] == 'SEARCH'}
+    selected_scenes = [scenes[key] for key in sorted(active)]
+    assert len(selected_scenes) == 4
+    (destination.parent/'search-scenes.json').write_text(json.dumps(selected_scenes,indent=2,sort_keys=True)+'\n',encoding='utf8')
+    (destination.parent/'excluded-search-scenes.json').write_text(json.dumps(
+        [row for key,row in scenes.items() if key not in active],indent=2,sort_keys=True)+'\n',encoding='utf8')
     print(f'{len(links)} selected clue identities, {len(selected)} source DB rows, {len(gaps)} explicit ID gaps; 4 paired search scenes')
     print('DB evidence SHA256', sha256(destination.read_bytes()).hexdigest())
 

@@ -23,7 +23,7 @@ SELECTION = {
         "Brother Galahad's house", "Directly behind the Wizards' Tower",
         "Dig between some ominous stones in Falador", "Dig near some giant mushrooms",
         "I wonder how many bronze shortswords he has handed out", "One of the sailors in Port Sarim",
-        "Search a bookcase in Lumbridge Swamp", "Search the chest in the Duke of Lumbridge's bedroom",
+        "Search the crate in Rommiks crafting shop in Rimmington", "Search for a crate in Varrock Castle",
         "Search the bucket in the Port Sarim jail",
     ],
     "medium": [
