@@ -184,3 +184,23 @@ game/build/install/game/lib/* (semicolon joins paths). DB arguments:
 build/clue/next/search-scenes.json. Then python tools/clue/build_step_evidence.py.
 Generator/py_compile/diffcheck passed. Full39-class integration started19:36,
 4469 frozen inputs; waits for Claude/buildslot/4GB. No acceptance result yet.
+
+
+## Frozen inherited integration accepted, B15-Nov20:29
+
+build/clue/integration-20261115-183642/summary.json: accepted=true, exit0,
+unchangedInputs=true (4469), changed=[], missing=[], tests149, skipped0;
+39 explicit classes all failures/errors0. Actual Gradle BUILD SUCCESSFUL51m33s,
+including buildslot/RAM waiting. Core/plugins and all plugin scripts compiled.
+This accepts the inherited Falo/Sherlock implementation at0f1466238 and the
+other selected CLUE regressions. It does not accept the later staged changes or
+client/live behaviour. No runtime/cfg/Gradle file changed during that run.
+
+Staged new numeric backend: check_compile.py HEAD basic-staged-tests eventually
+passed10 fresh tests, including full inventory, wrong/conditional answers,
+exact-item and account guard, bank/drop/serialization/death/slot movement,
+last-step casket and Watson hand-in. Earlier rejected attempts: the new staged
+mode initially misclassified its source paths, then one test called ItemContainer
+isEmpty as a function. Both corrected before the green run. The tested five
+libraries remain in build/clue/next until promoted. Source dialogue strings use
+the pinned NPC transcripts; Baraek's mislabeled Dunstan prompt is omitted.

@@ -1245,6 +1245,46 @@
       "file": "Gem_stall.wiki",
       "sha256": "e1a6a6106605fdd0502c2d7bd1a3cd284bfe4f5ff34b7af586720776672cccbe",
       "url": "https://oldschool.runescape.wiki/w/Gem_stall"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Easy",
+      "revision": 15026500,
+      "revision_time": "2025-11-13T05:31:18Z",
+      "file": "Treasure_Trails__Full_guide__Easy.wiki",
+      "sha256": "0c8a9625b4635c56e467b03b5d7316b976e5726c0caba59fd3e80fb1cd0f0681",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Easy"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Medium",
+      "revision": 15399244,
+      "revision_time": "2026-11-11T15:21:09Z",
+      "file": "Treasure_Trails__Full_guide__Medium.wiki",
+      "sha256": "06c8156a7d5b2ea9a925f845b703b02ef4f6f595f8468b9e540db215bec7ef13",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Medium"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Hard",
+      "revision": 15263478,
+      "revision_time": "2026-07-14T21:32:34Z",
+      "file": "Treasure_Trails__Full_guide__Hard.wiki",
+      "sha256": "e70fff4836f01d0334f420598a8e8afd8a66bd380149d3dea50fed366f745697",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Hard"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Elite",
+      "revision": 15230460,
+      "revision_time": "2026-06-09T19:51:38Z",
+      "file": "Treasure_Trails__Full_guide__Elite.wiki",
+      "sha256": "2ec06acbe3ceda6a067b3fe3d1794c4b5e62b5b8ad2234df077a4fc7890cc5fc",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Elite"
+    },
+    {
+      "page": "Treasure Trails/Full guide/Master",
+      "revision": 15384814,
+      "revision_time": "2026-10-28T18:00:22Z",
+      "file": "Treasure_Trails__Full_guide__Master.wiki",
+      "sha256": "9799ee40c443d4623a9fa28b8c2150566317d38525bf210e524b0ec2ec012830",
+      "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Full_guide/Master"
     }
   ]
 }

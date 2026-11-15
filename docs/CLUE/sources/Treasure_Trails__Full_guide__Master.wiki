@@ -1,0 +1,107 @@
+{{ToC|right}}
+{{Shortcut|ttfg5}}
+
+For the main article, see [[Treasure Trails]].
+
+==Preparation==
+{{See also|Treasure Trails/Guide/Emote clues/Items}}
+[[Clue scroll (master)|Master clue scrolls]] can be between six and eight clues long, with multiple fights and puzzles, and can have very high-levelled quest and [[skill]] requirements. For each master clue step, there is an equal chance of rolling each category of step.{{CiteTwitter|author=Mod Ash|url=https://x.com/JagexAsh/status/1791072390098657427|date=16 May 2024|archiveurl=https://reldo.runescape.wiki/i/27964587|archivedate=28 October 2026|quote=Category is rolled first, then clue within that category. For master clues, the categories have equal weighting regardless of how many clues exist for them; other tiers handle that differently.|group=p}} Once the step category is rolled, then there is an equal chance of rolling each step within that category. For a suggested inventory setup, see the [[Treasure Trails/Strategies#Setups | Setups page]].
+
+{|class="wikitable align-center-1"
+! colspan=2 | Item
+! Description
+|-
+| {{plinkt|Clue scroll (master)|txt=Clue scroll}}
+| Must be in the inventory in order to receive the next step or reward.
+|-
+| {{plinkp|Spade}} {{plinkp|Eastfloor spade}}
+| [[Spade]] or [[Eastfloor spade]]
+| Digging in certain locations is required for some clues.
+|-
+| {{plinkp|Law rune}} {{plinkp|Amulet of glory(4)}}
+| [[Teleportation]] [[runes]] and enchanted [[jewellery]]
+| Used to travel over large distances.
+|-
+| {{plinkp|Energy potion}} {{plinkp|Super energy}} {{plinkp|Stamina potion}}
+| [[Energy potion]]s ([[Super energy potion|super]]) or [[stamina potion]]s
+| Use these to restore [[energy]].
+|-
+| {{plinkp|Coins|pic=Coins 10000}}
+| [[Money]]
+| Use this to buy items needed for [[emote clues]] and travel costs.
+|-
+| {{plinkp|Dramen staff}} {{plinkp|Lunar staff}}
+| [[Dramen staff|Dramen]] or [[lunar staff]] (or [[Lumbridge & Draynor Elite]] Diary)
+| Use this to access the [[Fairy ring]] network shortly into [[Fairytale II - Cure a Queen]] (especially useful for [[medium clue]]s).
+|-
+| {{plinkp|Dragon scimitar}} {{plinkp|Black d'hide body}}
+| [[Weapon]] and [[armour]]
+| Some clue steps require combat.
+|-
+| {{plinkp|Shark}}
+| [[Food]]
+| Used to restore [[Hitpoints]].
+|-
+| {{plinkt|Prayer potion}}s
+| Used to restore [[prayer points]].
+|-
+| {{plinkp|Superantipoison}}
+| ([[Superantipoison|Super]]) [[antipoison]] potions
+| Use this to cure [[poison]] caused by [[Ancient Wizard]]s.
+|-
+| {{plinkt|Clue box}}
+| Protects clue scrolls while in the Wilderness.
+|-
+| {{plinkt|Kandarin headgear 4}}
+| Used to teleport to [[Sherlock]].
+|-
+| {{plinkt|Music cape}}
+| Used to teleport to [[Falo the Bard]].
+|}
+
+==Requirements==
+{{:Clue scroll (master)}}
+
+==Anagrams==
+{{shortcut|ttga}}
+{{Treasure Trails Guide Anagrams Intro}}
+{{:Treasure Trails/Guide/Anagrams/Master}}
+
+==Coordinates==
+{{shortcut|ttgc}}
+Quick links: [[#500|00]] [[#501|01]] [[#502|02]] [[#503|03]] [[#504|04]] [[#505|05]] [[#506|06]] [[#507|07]] [[#508|08]] [[#509|09]] [[#510|10]] [[#511|11]] [[#512|12]] [[#513|13]] [[#514|14]] [[#515|15]] [[#516|16]] [[#517|17]] [[#518|18]] [[#519|19]] [[#520|20]] [[#521|21]] [[#522|22]] [[#523|23]] [[#524|24]] [[#525|25]]
+{{Treasure Trails Guide Coordinates Intro}}
+{{:Treasure Trails/Guide/Coordinates/Master}}
+
+==Cryptic clues==
+{{shortcut|ttgcr}}
+{{Treasure Trails Guide Cryptic Clues Intro}}
+{{:Treasure Trails/Guide/Cryptic clues/Master}}
+
+==Emote clues==
+{{shortcut|ttge}}
+{{Treasure Trails Guide Emote Clues Intro}}
+{{:Treasure Trails/Guide/Emote clues/Master}}
+
+==Hot Cold==
+{{Treasure Trails Guide Hot Cold Intro|master}}
+{{:Treasure Trails/Guide/Hot Cold/Master}}
+
+==Falo the Bard==
+{{:Falo the Bard}}
+
+==Sherlock==
+{{Sherlock Intro}}
+{{:Sherlock/Master}}
+
+==Puzzle boxes==
+{{Puzzle Box Guide|master=display}}
+
+==Light boxes==
+{{:Treasure Trails/Guide/Light boxes}}
+
+==References==
+{{Reflist|group="p"}}
+
+{{Treasure Trails}}
+[[Category:Guides]]
