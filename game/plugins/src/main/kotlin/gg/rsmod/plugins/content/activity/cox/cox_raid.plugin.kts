@@ -291,7 +291,7 @@ CoxIds.loc(29776)?.let { board ->
 
 CoxInterfaces.of(CoxInterfaces.PARTY_LIST)?.let { iface ->
     (listOf(CoxPartyBoard.REFRESH, CoxPartyBoard.MAKE_PARTY, CoxPartyBoard.MY_PARTY) +
-        (0 until CoxPartyBoard.MAX_ROWS).map { CoxPartyBoard.ROWS + CoxPartyBoard.ROW_SIZE * it }).forEach { component ->
+        (0 until CoxPartyBoard.MAX_ROWS).map { CoxPartyBoard.ROW_CONTAINER + it }).forEach { component ->
         on_button(iface, component) { CoxPartyBoard.clickBoard(player, component) }
     }
 }
@@ -301,3 +301,10 @@ CoxInterfaces.of(CoxInterfaces.PARTY_DETAILS)?.let { iface ->
         on_button(iface, component) { CoxPartyBoard.clickDetails(player, component) }
     }
 }
+
+/*
+ * CoX weapons' stand / walk / run (OsrsBasImportTool stances 'elder_maul' -> BAS 2530 = HUMAN_ELDER_MAUL_READY 7518 / _WALK 7520 / _RUN 7519,
+ * 'dinhs_bulwark' -> BAS 2531 = HUMAN_DINHS_BULWARK_READY 7508 / _WALK 7510 / _RUN 7509; cache round 5 tx in COX.txt).
+ */
+CoxLootItems.local(21003)?.let { gg.rsmod.game.model.RenderAnimations.register(2530, it) }
+CoxLootItems.local(21015)?.let { gg.rsmod.game.model.RenderAnimations.register(2531, it) }

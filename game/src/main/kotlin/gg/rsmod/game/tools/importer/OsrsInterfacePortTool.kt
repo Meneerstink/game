@@ -407,6 +407,44 @@ object OsrsInterfacePortTool {
             extras += "party rows components=$first..${arrows - 1} (per row 16+r: background + 8 texts = 9 each from $first + 9r) arrows=$arrows.." +
                 "${arrows + 7} buttons refresh=$refresh make=$make mine=$mine"
         }
+        if (group == 507) {
+            // CoX party details ([clientscript,raids_partydetails_init] 1516 / [clientscript,script1524] / [proc,script1530] /
+            // [clientscript,raids_partydetails_addline] 1517; osrs-dumps@5cdf0f47). The frame 507:2 gets ~steelborder at run time with the
+            // title ("Raiding Party of <leader> (<n>)", Wiki gallery) -> static steelborder, the server sets the title text.
+            val title = steelborder(2, "")
+            // script1530: each preference layer (13 size, 17 combat, 21 skill total, 22 scaling, 23 challenge, 24 map layout) holds one p11
+            // 0xff981f centred shadowed text over the whole layer ("Preferred party size: 4" ... - script1533 fills it).
+            val prefs = listOf(13, 17, 21, 22, 23, 24).associateWith { p ->
+                val t = next
+                list += C(next++, 4, 0, 0, 0, 0, p, 1, 1, 1, 1, false, font = font(494), text = "", alignX = 1, alignY = 1, shadow = true,
+                    colour = 0xff981f)
+                t
+            }
+            // script1524 -> [proc,script1558]: a stone button in each button layer (32 advertise, 33 disband, 34 join, 35 back, 36 refresh),
+            // labels set by the server ("<col=00ff00>Join</col>" / "<col=ff0000>Leave</col>", "Advertise (<n>)" / "De-list",
+            // "<col=ff0000>Disband</col>", "Back", "Refresh"); the layers stay hidden until the server shows the ones that apply.
+            val buttons = listOf(32, 33, 34, 35, 36).associateWith { b ->
+                val o = list.first { it.id == b }
+                val labels = mapOf(32 to "Advertise", 33 to "Disband", 34 to "Join", 35 to "Back", 36 to "Refresh")
+                stoneButton(b, 0, 0, o.w, o.h, 0, 0, labels.getValue(b), text = "")
+            }
+            // raids_partydetails_addline: member row r = a white filled rectangle 14 high at (0, r*14) ([proc,raids_partydetails_entry_init]:
+            // trans 235 like the side panel's odd rows - ONZEKER which rows) and p11 0xff981f centred shadowed texts: name (the width of
+            // sort_name 507:7 = 102), combat (sort_comlevel 507:8 = 30), skill total (30), kill count (the rest, right). Party max 8
+            // (besluit 5a) -> 8 rows, hidden; the server fills and shows them.
+            val rowsFirst = next
+            for (r in 0 until 8) {
+                list += C(next++, 3, 0, r * 14, 0, 14, 11, 1, 0, 1, 0, true, colour = 0xffffff, filled = true, opacity = if (r % 2 == 0) 255 else 235)
+                list += C(next++, 4, 0, r * 14, 102, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 102, r * 14, 30, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 132, r * 14, 30, 14, 11, 0, 0, 0, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+                list += C(next++, 4, 0, r * 14, 162, 14, 11, 1, 0, 2, 0, true, font = font(494), alignX = 1, alignY = 1, shadow = true, colour = 0xff981f)
+            }
+            list.first { it.id == 11 }.scrollH = 8 * 14
+            extras += "party details title=$title prefs=${prefs.entries.joinToString(",") { "${it.key}:${it.value}" }} " +
+                "buttons=${buttons.entries.joinToString(",") { "${it.key}:${it.value}" }} rows=$rowsFirst..${next - 1} (per row 5 from $rowsFirst + 5r: " +
+                "background, name, combat, total, kills)"
+        }
         if (group == 539) {
             // CoX rewards ([clientscript,raids_rewards_init] 1579 -> [proc,raids_rewards_build] 1581 / [proc,raids_rewards_drawitem] 1582) in
             // raids_rewards:items 539:5: item i (inv raids_rewards) = a 36x32 object graphic, outline 1, shadow 0x333333, op 1 "Take", op 10
