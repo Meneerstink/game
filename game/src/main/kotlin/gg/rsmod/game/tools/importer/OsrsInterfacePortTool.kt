@@ -353,6 +353,27 @@ object OsrsInterfacePortTool {
             extras += "party tab rows components=$rowsFirst..${arrowsFirst - 1} (per row 4 from $rowsFirst + 4r: background, name, combat, total); " +
                 "sort arrows=$arrowsFirst..${next - 1}"
         }
+        if (group == 513) {
+            // CoX points overlay ([clientscript,raids_overlay_init] 1505 -> [proc,raids_overlay_content] 4663 / [proc,raids_overlay_databox]
+            // 1511) in raids_overlay:data 513:3: a tiling tradebacking, a thinstonebox, the labels "Total:<br><name>:<br>Time:" (p12 0xff981f,
+            // left/centre) and the values (p12 white, right/centre), both size minus 8. The script sizes 513:3 to the widest line + 8 by 49;
+            // 667 has no server IF_SETSIZE -> a fixed 140 x 49 (ONZEKER: fits a 12-character name and 131,071 points).
+            val index = list.indexOfFirst { it.id == 3 }
+            val o = list[index]
+            list[index] = C(o.id, o.type, o.x, o.y, 140, 49, o.parent, 0, 0, o.xMode, o.yMode, o.hidden)
+            val first = next
+            sprites += TRADEBACKING
+            list += C(next++, 5, 0, 0, 0, 0, 3, 1, 1, 1, 1, false, sprite = TRADEBACKING, tiling = true)
+            list += C(next++, 3, 0, 0, 0, 0, 3, 1, 1, 1, 1, false, colour = 0x383023)
+            list += C(next++, 3, 0, 0, 2, 2, 3, 1, 1, 1, 1, false, colour = 0x5a5245)
+            val labels = next
+            list += C(next++, 4, 0, 0, 8, 0, 3, 1, 1, 1, 1, false, font = font(495), text = "Total:<br>:<br>Time:", alignX = 0, alignY = 1,
+                shadow = true, colour = 0xff981f)
+            val values = next
+            list += C(next++, 4, 0, 0, 8, 0, 3, 1, 1, 1, 1, false, font = font(495), text = "", alignX = 2, alignY = 1, shadow = true,
+                colour = 0xffffff)
+            extras += "points overlay components=$first..${next - 1} (labels=$labels, values=$values; data box 513:3 = 140x49)"
+        }
         if (group == 771) {
             // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: twelve 36x32 item
             // slots, 3 columns x 4 rows (x 0/28/56, y 0/29/58/87) - one roll holds up to 10 lines (3 commons, pet, thread, jewel, clue, 3 kits,

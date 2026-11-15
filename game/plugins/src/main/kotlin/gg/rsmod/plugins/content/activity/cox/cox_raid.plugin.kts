@@ -155,6 +155,30 @@ on_player_death {
     player.teleportTo(CoxRaids.respawnTile(raid))
 }
 
+/*
+ * The raid's rules (tsps chambers-of-xeric.md from rsprox captures, word for word): 'no teleporting ("You cannot teleport from the Chambers
+ * of Xeric."); no dropping items before the raid starts ("You should keep your raiding dungeon tidy until your raid has begun.")'.
+ * Teleports go through ActivityRestrictions (every teleport route asks it). Dropping: the global drop confirmation of OpHeld5Handler, wrapped
+ * at world init so the untradeable drop warning (drop_warning.plugin.kts) keeps working outside the raid. Escape crystals: later (COX.txt).
+ */
+gg.rsmod.plugins.content.mechanics.restrictions.ActivityRestrictions.register { player, action ->
+    if (action == gg.rsmod.plugins.content.mechanics.restrictions.RestrictedAction.TELEPORT && CoxRaids.raidAt(player.tile) != null)
+        "You cannot teleport from the Chambers of Xeric." else null
+}
+
+on_world_init {
+    val previous = gg.rsmod.game.message.handler.OpHeld5Handler.confirm
+    gg.rsmod.game.message.handler.OpHeld5Handler.confirm = { player, item, slot ->
+        val raid = CoxRaids.raidAt(player.tile)
+        if (raid != null && !raid.started) {
+            player.message("You should keep your raiding dungeon tidy until your raid has begun.")
+            true
+        } else {
+            previous?.invoke(player, item, slot) ?: false
+        }
+    }
+}
+
 /** Test server / check accounts: ::coxbegin = the leader starts the raid (the party tab's start button follows with the party UI). */
 on_command("coxbegin", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
