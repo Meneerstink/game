@@ -364,6 +364,7 @@ loc	25333	66636	IMPORT [cox-map]
 loc	25334	66637	IMPORT [cox-map]
 loc	25335	66638	IMPORT [cox-map]
 loc	25773	66476	IMPORT [cox-entrance]
+loc	26209	66842	loc-tool tx-20261115-220742
 loc	26301	66477	IMPORT [cox-entrance]
 loc	26303	66478	IMPORT [cox-entrance]
 loc	26813	66479	IMPORT [cox-entrance]
@@ -403,22 +404,40 @@ loc	29495	66494	IMPORT [cox-entrance]
 loc	29711	66659	IMPORT [cox-map]
 loc	29734	66660	IMPORT [cox-map]
 loc	29735	66661	IMPORT [cox-map]
+loc	29736	66863	loc-tool tx-20261115-220742
+loc	29737	66864	loc-tool tx-20261115-220742
+loc	29738	66865	loc-tool tx-20261115-220742
+loc	29739	66866	loc-tool tx-20261115-220742
+loc	29740	66867	loc-tool tx-20261115-220742
+loc	29741	66848	loc-tool tx-20261115-220742
 loc	29742	66662	IMPORT [cox-map]
+loc	29743	66872	loc-tool tx-20261115-220742
+loc	29745	66873	loc-tool tx-20261115-220742
 loc	29746	66663	IMPORT [cox-map]
 loc	29747	66664	IMPORT [cox-map]
+loc	29748	66843	loc-tool tx-20261115-220742
+loc	29749	66875	loc-tool tx-20261115-220742
 loc	29750	66665	IMPORT [cox-map]
 loc	29751	66666	IMPORT [cox-map]
 loc	29752	66667	IMPORT [cox-map]
+loc	29753	66840	loc-tool tx-20261115-220742
 loc	29758	66668	IMPORT [cox-map]
 loc	29759	66669	IMPORT [cox-map]
 loc	29760	66670	IMPORT [cox-map]
 loc	29761	66671	IMPORT [cox-map]
+loc	29762	66841	loc-tool tx-20261115-220742
 loc	29763	66672	IMPORT [cox-map]
+loc	29764	66862	loc-tool tx-20261115-220742
 loc	29765	66673	IMPORT [cox-map]
+loc	29766	66861	loc-tool tx-20261115-220742
+loc	29767	66845	loc-tool tx-20261115-220742
+loc	29768	66868	loc-tool tx-20261115-220742
 loc	29769	66674	IMPORT [cox-map]
 loc	29771	66675	IMPORT [cox-map]
 loc	29772	66676	IMPORT [cox-map]
 loc	29773	66677	IMPORT [cox-map]
+loc	29774	66876	loc-tool tx-20261115-220742
+loc	29775	66877	loc-tool tx-20261115-220742
 loc	29776	66495	IMPORT [cox-entrance]
 loc	29777	66496	IMPORT [cox-entrance]
 loc	29778	66678	IMPORT [cox-map]
@@ -505,12 +524,20 @@ loc	29864	66758	IMPORT [cox-map]
 loc	29865	66759	IMPORT [cox-map]
 loc	29866	66760	IMPORT [cox-map]
 loc	29867	66761	IMPORT [cox-map]
+loc	29874	66874	loc-tool tx-20261115-220742
 loc	29875	66762	IMPORT [cox-map]
+loc	29876	66844	loc-tool tx-20261115-220742
 loc	29877	66763	IMPORT [cox-map]
 loc	29878	66764	IMPORT [cox-map]
 loc	29879	66765	IMPORT [cox-map]
+loc	29880	66852	loc-tool tx-20261115-220742
+loc	29881	66853	loc-tool tx-20261115-220742
 loc	29882	66766	IMPORT [cox-map]
+loc	29883	66854	loc-tool tx-20261115-220742
+loc	29884	66855	loc-tool tx-20261115-220742
 loc	29885	66767	IMPORT [cox-map]
+loc	29886	66856	loc-tool tx-20261115-220742
+loc	29887	66857	loc-tool tx-20261115-220742
 loc	29888	66768	IMPORT [cox-map]
 loc	29889	66769	IMPORT [cox-map]
 loc	29890	66770	IMPORT [cox-map]
@@ -577,12 +604,23 @@ loc	29990	66552	IMPORT [cox-entrance]
 loc	29991	66553	IMPORT [cox-entrance]
 loc	29995	66775	IMPORT [cox-map]
 loc	29996	66776	IMPORT [cox-map]
+loc	30012	66846	loc-tool tx-20261115-220742
+loc	30013	66847	loc-tool tx-20261115-220742
 loc	30014	66777	IMPORT [cox-map]
+loc	30016	66878	loc-tool tx-20261115-220742
+loc	30017	66869	loc-tool tx-20261115-220742
 loc	30018	66778	IMPORT [cox-map]
+loc	30019	66879	loc-tool tx-20261115-220742
+loc	30021	66870	loc-tool tx-20261115-220742
+loc	30023	66871	loc-tool tx-20261115-220742
+loc	30024	66880	loc-tool tx-20261115-220742
 loc	30027	66779	IMPORT [cox-map]
 loc	30028	66836	loc-tool tx-20261115-194927
 loc	30029	66837	loc-tool tx-20261115-194927
 loc	30030	66838	loc-tool tx-20261115-194927
+loc	30032	66858	loc-tool tx-20261115-220742
+loc	30033	66859	loc-tool tx-20261115-220742
+loc	30034	66860	loc-tool tx-20261115-220742
 loc	30035	66780	IMPORT [cox-map]
 loc	30036	66781	IMPORT [cox-map]
 loc	30037	66782	IMPORT [cox-map]
@@ -616,8 +654,12 @@ loc	30064	66809	IMPORT [cox-map]
 loc	30065	66810	IMPORT [cox-map]
 loc	30066	66811	IMPORT [cox-map]
 loc	30067	66812	IMPORT [cox-map]
+loc	30068	66881	loc-tool tx-20261115-220742
 loc	30069	66813	IMPORT [cox-map]
+loc	30070	66882	loc-tool tx-20261115-220742
+loc	30071	66883	loc-tool tx-20261115-220742
 loc	30072	66814	IMPORT [cox-map]
+loc	30073	66884	loc-tool tx-20261115-220742
 loc	30074	66815	IMPORT [cox-map]
 loc	30075	66816	IMPORT [cox-map]
 loc	30076	66817	IMPORT [cox-map]
@@ -679,6 +721,9 @@ loc	47374	66592	IMPORT [cox-entrance]
 loc	47419	66839	loc-tool tx-20261115-194927
 loc	47420	66834	IMPORT [cox-map]
 loc	49491	66593	IMPORT [cox-entrance]
+loc	49996	66849	loc-tool tx-20261115-220742
+loc	49997	66850	loc-tool tx-20261115-220742
+loc	49998	66851	loc-tool tx-20261115-220742
 loc	49999	66835	IMPORT [cox-map]
 loc	56208	66594	IMPORT [cox-entrance]
 npc	7489	15234	classic null
@@ -806,6 +851,7 @@ seq	1313	17609	classic
 seq	1314	17610	classic
 seq	1315	17611	classic
 seq	1316	17612	classic
+seq	1433	17721	classic
 seq	1570	17711	spotanim 1341
 seq	1571	17319	spotanim 1342
 seq	1573	17714	spotanim 1366
@@ -817,6 +863,7 @@ seq	1582	15646	classic
 seq	2368	17613	classic
 seq	2995	17485	classic
 seq	3101	17690	classic
+seq	3105	17717	classic
 seq	3151	16106	spotanim 1327
 seq	3280	17519	classic for npc 7571
 seq	3354	15407	spotanim 645
@@ -829,6 +876,7 @@ seq	4039	17623	classic
 seq	4040	17624	classic
 seq	4041	17625	classic
 seq	4042	17626	classic
+seq	4278	17723	classic
 seq	4730	17703	spotanim 1293
 seq	5034	17707	spotanim 1325
 seq	5035	17706	spotanim 1324
@@ -846,10 +894,12 @@ seq	5745	17486	classic
 seq	5771	17487	classic
 seq	5835	17713	spotanim 1363
 seq	6120	17491	classic for npc 7489
+seq	6645	17720	classic
 seq	6646	17512	classic for npc 7558
 seq	6853	15822	classic
 seq	6924	17708	spotanim 1326
 seq	6946	17595	classic
+seq	7000	17718	classic
 seq	7152	17596	classic
 seq	7156	17483	classic
 seq	7157	17597	classic
@@ -1007,6 +1057,7 @@ seq	7496	17688	classic
 seq	7497	17689	classic
 seq	7498	17528	classic for npc 7603
 seq	7499	17489	classic
+seq	7501	17722	classic
 seq	7502	17709	spotanim 1338
 seq	7503	17490	classic
 seq	7504	17680	classic
@@ -1035,6 +1086,7 @@ seq	8196	17614	classic
 seq	8198	17605	classic
 seq	8199	17606	classic
 seq	8200	17607	classic
+seq	8456	17719	classic
 seq	8637	15907	classic
 seq	8639	15914	classic
 seq	12093	17629	classic

@@ -32,6 +32,16 @@ object OsrsLocImportTool {
             "cox-locs" to listOf(30028, 30029, 30030, 47419),
             // CoX first-room steps for the leader before the start (gameval RAIDS_EXIT_STEPS_RELOAD 50000; child of the multiloc 49999, tsps Reload).
             "cox-reload" to listOf(50000),
+            // CoX rooms (dossier COX.txt 15-11 23:xx): the locs the rooms' encounters place (not on the cache map), ids from the tsps room
+            // units (rsprox captures) = gameval RAIDS_*: crab crystals 29753/29762, guardian blocker 26209, ice-demon lit brazier/storm
+            // 29748/29876, muttadile tendrils/rocks/felled tree 29767/30012/30013, mystics' Mark of Power + portals 29741/49996-49998, Olm
+            // rising/risen head + claws 29880/29881/29883/29884/29886/29887, acid/crystal clusters 30032-30034, bomb 29766, resources stump
+            // 29764, scavenger shortcuts 29736-29740, shaman tendrils 29768, Tekton crystal/fire/block 30017/30021/30023, thieving chest/
+            // trough states 29743/29745/29874, tightrope barrier 29749, Vasa crystals/exit/fire 29774/29775/30016/30019, Vespula
+            // tendrils/root/boils/pillars 30024/30068/30070/30071/30073.
+            "cox-rooms" to listOf(29753, 29762, 26209, 29748, 29876, 29767, 30012, 30013, 29741, 49996, 49997, 49998, 29880, 29881, 29883,
+                29884, 29886, 29887, 30032, 30033, 30034, 29766, 29764, 29736, 29737, 29738, 29739, 29740, 29768, 30017, 30021, 30023, 29743,
+                29745, 29874, 29749, 29774, 29775, 30016, 30019, 30024, 30068, 30070, 30071, 30073),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241

@@ -308,6 +308,11 @@ object OsrsFxImportTool {
             // CoX loot beams RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030 (loc-tool 'cox-locs' dropped their animation): gameval
             // AnimationID ENAKH_LIGHT_STREAMING 3101.
             "cox-lootbeam-seq" to listOf(3101),
+            // CoX room locs (OsrsLocImportTool 'cox-rooms' dry-run 15-11 23:0x dropped their animations): gameval FIRE_EFFECT 3105 (lit
+            // brazier), GODWARS_SNOWING_ANIM 7000 (ice demon storm), PRIF_AGILITY_SHORTCUT_PORTAL_IDLE 8456 (mystics' portals),
+            // DRAGON_SLAYER_QIP_FIRE 6645 (Tekton/Vasa fire), CASTLEWARS_PORTALGLOW 1433 (tightrope barrier), RAIDS_VESPULAR_PORTAL_CLOSED
+            // 7501 (Vespula's pillars); + EMOTE_STAMPFEET 4278 (the Guardians' stomp, tsps rsprox).
+            "cox-rooms-seq" to listOf(3105, 7000, 8456, 6645, 1433, 7501, 4278),
             // CoX weapons (dossier COX.txt 21:3x): gameval HUMAN_DINHS_BULWARK_CRUSH 7507 / _READY 7508 / _RUN 7509 / _WALK 7510 / _BASH 7511
             // / _BLOCK 7512, HUMAN_ELDER_MAUL_READY 7518 / _RUN 7519 / _WALK 7520 (its _ATTACK 7516 / _BLOCK 7517 are in already, OsrsSeq),
             // SPOT_DINHS_BULWARK_IDLE 7522 / _BLOCK 7523.
