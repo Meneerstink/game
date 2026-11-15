@@ -31,13 +31,13 @@ object CoxChest {
 
     private val beams = java.util.concurrent.ConcurrentHashMap<Long, Spot>()
 
-    private fun olmObjects(raid: CoxRaid, osrs: Int): List<GameObject> {
+    private fun olmObjects(raid: CoxRaid, osrs: Int, height: Int = 0): List<GameObject> {
         val id = CoxIds.loc(osrs) ?: return emptyList()
         val base = CoxMap.olmTile(raid.map, Tile(CoxMap.OLM_CHUNK_X * 8, CoxMap.OLM_CHUNK_Z * 8, 0))
         val out = ArrayList<GameObject>()
         for (cx in 0 until 5) for (cz in 0 until 7) {
-            val chunk = raid.world.chunks.get(Tile(base.x + cx * 8, base.z + cz * 8, 0), createIfNeeded = false) ?: continue
-            chunk.getEntities<GameObject>(EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).filterTo(out) { it.id == id && it.tile.height == 0 }
+            val chunk = raid.world.chunks.get(Tile(base.x + cx * 8, base.z + cz * 8, height), createIfNeeded = false) ?: continue
+            chunk.getEntities<GameObject>(EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).filterTo(out) { it.id == id && it.tile.height == height }
         }
         return out
     }
@@ -57,7 +57,8 @@ object CoxChest {
                 raid.world.remove(o)
                 raid.world.spawn(DynamicObject(chest, o.type, o.rot, o.tile))
             }
-            olmObjects(raid, BEAM_SPOT).firstOrNull()?.let { beams[raid.id] = Spot(it.tile, it.type, it.rot) }
+            // The spot sits right above the crystal, on plane 1 (testserver 15-11 22:0x: 6417,111,1 over the crystal at 6417,111,0).
+            olmObjects(raid, BEAM_SPOT, 1).firstOrNull()?.let { beams[raid.id] = Spot(it.tile, it.type, it.rot) }
             raiders.filter { it.isOnline && raid.map.area.contains(it.tile) }.forEach { showBeam(it, raid) }
         }
     }
