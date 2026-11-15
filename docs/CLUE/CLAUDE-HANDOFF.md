@@ -13,14 +13,20 @@ historical evidence, with remaining gates explicitly superseded by later entries
 * Source: `C:/RSPS/import-source/openrs2-2686/cache`.
 * Batch: `OsrsItemImportTool clue --clue-roster=<this worktree>/data/cfg/clue/import-items.tsv`.
 * The roster is the exact 245-source-item list (including notes where marked).
-  The 15 November 08:04 preflight generated **436 definitions**, proposed local IDs
+  The latest 15 November 15:29 preflight generated **436 definitions**, proposed local IDs
   **24755–25190**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
   These local IDs are proposals, not reservations: rerun against the current
   canonical caches immediately before applying, then regenerate `items.tsv`.
 * Use the reviewed importer/forearm fix from this branch. The old importer
   stopped on Ancient/Armadyl/Bandos platebodies (12460/12470/12480).
-* Plan report: `build/clue/item-preflight-245.txt`. The reported transaction was
-  `tx-20261115-070458`, `applied=false`, `finalized=0`, `recovered=0`. See `DRY-RUN-INCIDENT.md` for the
+* Current roster correction: **remove 25612 (unused STASH blueprint; owner Q5),
+  add 12139 (numeric elite challenge)**. Sherlock's distinct skill challenge
+  **12128** remains included. Do not apply the older roster or its shifted ID rows.
+* Repeat read-only with `python tools/clue/preflight_items.py` after core compile.
+  Plan report: `build/clue/item-preflight-current/result.txt`; proof records both
+  cache file fingerprints, ledger SHA, roster and mapping SHA before/after.
+  Latest transaction **`tx-20261115-142946`**, `applied=false`, `finalized=0`, `recovered=0`.
+  See `DRY-RUN-INCIDENT.md` for the
   corrected ledger-recovery side effect; no cache bytes were applied.
 * Obtain/merge the importer's `--yml-out=<review file>` metadata on Claude's
   application run. Replace entries by ID; never blindly append duplicate IDs.

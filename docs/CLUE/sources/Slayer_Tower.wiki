@@ -1,0 +1,185 @@
+{{External|rs}}
+{{Infobox Location
+|name = Slayer Tower
+|image = [[File:Slayer Tower entrance.png|300px]]
+|release = [[26 January]] [[2005]]
+|update = Slayer Skill
+|members = Yes
+|aka = Viggora's Folly
+|floors = 4
+|location = [[Morytania]]
+|race = [[Demons]], [[Humans]], [[Ghosts]]
+|music = * [[The Terrible Tower]]
+* [[Tempest]] (on the rooftop)
+|map = {{Map|name=Slayer Tower|3429,3555|plane=0|mapID=0}}
+|type = building
+|leagueRegion = Morytania
+}}
+The '''Slayer Tower''', also known as '''Viggora's Folly''', is a tall granite tower located north-west of [[Canifis]] that was built by [[Viggora]], a follower of [[Zaros]], during the [[Second Age]]. There are three levels, each with increasingly dangerous [[Slayer monsters]]. All monsters within the building require a certain [[Slayer]] level to kill, the lowest being [[crawling hand]]s at level 5, and the highest being [[abyssal demon]]s at level 85 Slayer.
+
+Players may also earn bonus Slayer experience depending on their progress on the [[Morytania Diary]]. The amount of bonus experience gained starts at 2.5% with the easy tasks completed, increasing by 2.5% for each set complete, up to 10% with the elite tasks completed.
+
+Attempting to wait out a monster's 10 minute [[Tolerance|aggression timer]] can be done on a different floor. For example, the [[aberrant spectre]] aggression can be waited out at the top of the staircase leading to the {{FloorNumber|uk=2}}.
+
+[[Dwarf multicannon]]s '''cannot''' be used here. If attempted, players will receive the message, ''"A strange magical force won't let you set up a cannon here."''
+
+==History==
+During the [[Second Age]], the tower's construction was overseen by General [[Viggora]], who was at that time a follower of [[Zaros]].{{CiteNews|url=http://services.runescape.com/m=news/revenant-cave-rewards-revisited-content-poll--theatre-of-blood?oldschool=1|title=Revenant Cave Rewards: Revisited, Content Poll & Theatre of Blood|newsdate=27 June 2018|quote=Viggorra was the creator of the Slayer Tower, and the only human among the Empty Lord's trusted generals.}} The tower itself, constructed out of granite,{{citeText|text=The Living Statues|quote=We marched northwards until we stumbled upon a tall tower made of granite. I knew what it was. We had found Viggora's Folly, left to collect dust since his demise.}} was very large, full of large rooms, winding passageways decorated with assorted items. The most important of these were the [[gargoyle]]s, which also included two unique gargoyle statues (who a Dorgeshuun assistant would call [[Dusk]] and [[Dawn]] due to how they were placed) at the rooftop with a [[The Cloister Bell|Cloister Bell]], intended to be rung during times of conflict.{{CiteText|text=The Cloister Bell|quote=To be struck in times of conflict.}} However, an unknown incident soon caused the tower to be renamed as Viggora's Folly, and it was eventually abandoned.
+
+During the [[Third Age]], at the time of the [[God Wars]], [[Bandos]] sent the [[ourg]] general [[Snaarldor]] along with a group of Bandosians to the tower, desiring stronger soldiers after having been disappointed by the frailness of his goblins. Snaarldor took along Bandosian metal along with a tourmaline core and made his way to the tower's rooftop, performing a ritual at high noon with the core and metal, causing all of the gargoyle statues to animate.{{citeText|text=The Living Statues|quote=As I ran down the stairs through the lower floors, I saw that the many hideous statues we passed had also come to life.}} The two gargoyle statues at the top of the tower looked at Snaarldor, and Snaarldor believed he had won their loyalty and issued commands to attack Bandos's enemies, including [[Zamorak]].{{citeText|text=The Living Statues|quote=Ecstatic with his creation, Snaarldor gave a big speech about the glory of the Big High War God and the such, as if he expected some lumps of carved rock to understand a single thing. After that, Snaarldor gave commands to fight against the forces of Armadyl, Saradomin, and Zamorak.}}
+
+With Viggora having betrayed Zaros for Zamorak, the tower was filled with Zamorakian magic, causing the gargoyles to instead attack the Bandosian forces,{{citeText|text=The Living Statues|quote=The guardians turned their head at the lattermost name. Snaarldor thought this meant that he had gained their loyalty. However, I knew better than to think that. Viggora was a follower of Zamorak, and I knew the tower would be filled with his magic. I wanted to tell Snaarldor this, but once again he threatened me with a long list of what he would do to me.}} with Dusk battling the ourg general mid-air. Snaarldor chopped off one of Dusk's wings before the gargoyle dropped him into the swamp below, and upon recovering, Snaarldor immediately ordered his remaining forces to retreat.{{citeText|text=The Living Statues|quote=I looked up and saw the hulking bodies of Snaarldor and one of the statues exchanging strikes in mid air. Snaarldor landed a chop that broke off a wing, and they both fell. The statue landed back on top of the tower while Snaarldor made contact with the nearby swamp. After getting up from the fall, Snaarldor immediately called for his remaining forces to retreat.}} The two gargoyle guardians then returned to their positions on their plinths, and the rooftop entrance would soon be locked, either by the Bandosians or future inhabitants.
+
+A group of [[infernal mage|infernal magi]] are based in the tower, along with various other inhabitants, though their relationship to the tower is unknown.
+
+==Transportation==
+[[File:Slayer Tower map.png|300px|thumb|The layout of the tower.]]
+*The [[Slayer ring]] can be used to teleport to the main entrance of the tower.
+*[[Fairy ring]] code {{Fairycode|CKS}} lands you in the west of [[Canifis]], just south of the tower.
+*The [[Salve Graveyard Teleport]] (requires [[Arceuus spellbook]]) will take you to the graveyard just south of the tower.
+*The [[Kharyrll teleport]] (requires completion of [[Desert Treasure I]]) (spell, tablet, POH portal) will take the player to Canifis, where it is a short run north-west.
+*Go west after casting [[Fenkenstrain's Castle Teleport]] or using the [[Fenkenstrain's castle teleport (tablet)|tablet]].
+*The player can use the [[Ectophial]] to teleport to [[Port Phasmatys]], and walk from there.
+*You can walk from [[Varrock]] or the [[digsite]] through [[Paterdomus]], though this is by far the longest route.
+
+==Layout==
+[[File:Slayer Tower basement.png|thumb|The basement of the tower.]]
+===Basement===
+The basement can be accessed through a ladder on the {{FloorNumber|uk=0}}, near the entrance. Monsters here can only be killed on a Slayer task. [[Raulyn]] will stop players who attempt to attack monsters that are not on their Slayer task.
+
+The basement is dimly lit, although a [[light source]] is not required to enter.
+
+{{LocationMonsterTableHead|showslayer=yes}}
+{{LocationMonsterTableLine|name=Bloodveld|levels=76|slayerlevel=50|slayerxp=120|spawns=12}}
+{{LocationMonsterTableLine|name=Gargoyle|levels=111|slayerlevel=75|slayerxp=105|spawns=12}}
+{{LocationMonsterTableLine|name=Nechryael|levels=115|slayerlevel=80|slayerxp=105|spawns=12}}
+{{LocationMonsterTableLine|name=Abyssal demon|levels=124|slayerlevel=85|slayerxp=150|spawns=14}}
+{{LocationMonsterTableBottom}}
+
+==={{FloorNumber|uk=0|caps=y|nohelp=y}}===
+The {{FloorNumber|uk=0}} is inhabited by only [[crawling hand]]s in the west wing and part of the east wing. [[Banshee]]s are found in the east part of the wing.
+
+Near a group of crawling hands is a spiked chain requiring 61 [[Agility]] (can be boosted) to use. Using this spike will take the player to the {{FloorNumber|uk=1}}, where the [[aberrant spectre]]s are located. '''Do not''' climb up if you do not have a [[nose peg]] or [[Slayer helmet]], or your stats will be drained by them if one aggros upon climbing up.
+
+Outside the tower are two Agility shortcuts; some [[ivy]] to the west requiring 81 Agility (can be boosted), leading up to the start of the top floor, and a [[Broken window (Slayer Tower)|broken window]] to the east requiring 18 Agility (can be boosted) leading to the banshees and stairs to the second floor.
+
+{{LocationMonsterTableHead|showslayer=yes}}
+{{LocationMonsterTableLine|name=Crawling Hand|levels=8, 12|slayerlevel=5|slayerxp=12|spawns=24}}
+{{LocationMonsterTableLine|name=Banshee|levels=23|slayerlevel=15|slayerxp=22|spawns=8}}
+{{LocationMonsterTableBottom}}
+
+==={{FloorNumber|uk=1|caps=y|nohelp=y}}===
+The {{FloorNumber|uk=1}} is inhabited by [[infernal mage]]s in the north-eastern part of the wing, [[bloodveld]]s in the north-western part of the wing, and [[aberrant spectre]]s in the south part of the wing. A large door separates the bloodveld and aberrant spectre room.
+
+Another spiked chain can be found in the infernal mage room. This chain requires 71 Agility (can be boosted) to take players to the {{FloorNumber|uk=2}}, where the [[nechryael]] are located. The spiked chain in the aberrant spectre room can be used to climb back down to the {{FloorNumber|uk=0}}, requiring 61 Agility (can be boosted).
+
+{{LocationMonsterTableHead|showslayer=yes}}
+{{LocationMonsterTableLine|name=Infernal Mage|levels=66|slayerlevel=45|slayerxp=60|spawns=15}}
+{{LocationMonsterTableLine|name=Bloodveld|levels=76|slayerlevel=50|slayerxp=120|spawns=15}}
+{{LocationMonsterTableLine|name=Aberrant spectre|levels=96|slayerlevel=60|slayerxp=90|spawns=14}}
+{{LocationMonsterTableBottom}}
+
+==={{FloorNumber|uk=2|caps=y|nohelp=y}}===
+The {{FloorNumber|uk=2}} is where the strongest monsters in the tower reside. [[Gargoyle]]s inhabit the south-eastern wing, [[nechryael]] in the north-eastern and [[abyssal demon]]s in the north-western wings.
+
+Near the staircases of this floor lies a rooftop entrance and a magical chest. The rooftop entrance is locked, requiring a [[brittle key]] which permanently unlocks the entrance. This also unlocks the [[Grotesque Guardians]] boss fight. The magical chest nearby collects items lost on death during the fight, requiring 50,000 coins to reclaim them.
+
+A spiked chain can be found at the nechryael room which takes players down to the {{FloorNumber|uk=1}}, where the infernal mages reside. This requires 71 Agility (can be boosted).
+
+[[Ivy]] can be found growing up the wall next to the entrance to the tower, which the player can use to climb right to the {{FloorNumber|uk=2}}, near the entrance to the Grotesque Guardians and the elite clue step.
+
+{{LocationMonsterTableHead|showslayer=yes}}
+{{LocationMonsterTableLine|name=Gargoyle|levels=111|slayerlevel=75|slayerxp=105|spawns=8}}
+{{LocationMonsterTableLine|name=Nechryael|levels=115|slayerlevel=80|slayerxp=105|spawns=11}}
+{{LocationMonsterTableLine|name=Abyssal demon|levels=124|slayerlevel=85|slayerxp=150|spawns=14}}
+{{LocationMonsterTableBottom}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 20 August 2025
+|update = More Doom Tweaks, Poll 84, & Summer Sweep Up Changes
+|poll =
+|change = Added two agility shortcuts on the first floor; one to the west requiring 81 Agility and leading to the top floor, and another to the east requiring 18 Agility and leading to the banshees.
+}}
+{{Subject changes
+|date = 10 July 2024
+|update = While Guthix Sleeps
+|poll = 
+|change = Statues of [[Statue of Turael|Turael]] and [[Statue of Duradel|Duradel]] were added in front of the entrance.
+}}
+{{Subject changes
+|date = 20 March 2024
+|update = Varlamore: Part One
+|poll = 
+|change = Players can now cast [[Telekinetic Grab]] on the spade in the basement.
+}}
+{{Subject changes
+|date = 22 February 2018
+|update = Old School RuneScape's 5th Birthday
+|change = The entrance to the Grotesque Guardians has been altered to be more fitting with the environment. 
+}}
+{{Subject changes
+|date = 25 May 2017
+|update = World Map & Balancing Changes
+|change = Fixed a typo in the Slayer tower basement.
+}}
+{{Subject changes
+|date = 4 May 2017
+|update = Skotos & Dark Claws
+|change = Abyssal demons in the Slayer Tower Basement will now count towards the Morytania Achievement Diary.
+}}
+{{Subject changes
+|date = 27 April 2017
+|update = Diverse Dungeons
+|change = A task-only basement area was added to the Slayer Tower.
+}}
+{{Subject changes
+|date = 28 April 2016
+|update = Calling Pets & Deadman Death
+|poll = Old School Content Poll 41: Bank placeholders & Skillcapes
+|change = More gargoyle, bloodveld, aberrant spectre, abyssal demon, and nechryael spawns have been added to the Slayer Tower.
+}}
+{{Subject changes
+|date = 24 March 2016
+|update = White & Black Graceful
+|poll = Old School Content Poll 40: Vanilla LootShare & QoL
+|change = A nechryael spawn has been moved to prevent them wandering out of the nechryael room.
+}}
+{{Subject changes
+|date = 18 February 2016
+|update = Dragon Claws & 3rd Birthday
+|change = The most southern Abyssal Demons in the Slayer Tower have been moved north marginally to prevent them from leaving their room.
+}}
+{{Subject changes
+|date = 5 March 2015
+|update = Achievement Diaries
+|poll = Old School Achievement Diary Rewards Poll
+|change = You will now receive 2.5% more [[Slayer]] [[experience]] when killing a creature on [[Slayer task|task]] in the Slayer Tower if you have completed the [[Morytania Easy Diary]], increasing with additional 2.5% for each tier to a maximum of 10%.
+}}
+{{Subject changes
+|date = 26 January 2005
+|update = Slayer Skill
+|change = The area was made accessible to players.
+}}
+{{Subject changes
+|date = 17 November 2004
+|update = Horror From The Deep
+|change = The area was first added ingame but was inaccessible. It was labelled as '''(due Jan-2005)''' on the world map.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*Prior to the addition of superior turoth and kurask, the Slayer Tower was the only slayer area in ''[[Old School RuneScape]]'' that had [[Superior slayer monster|superior variants]] for all of its inhabitants.
+*Prior to the [[Client of Kourend]] update, players could only earn bonus experience if they have completed all the tasks of the [[Morytania Diary]], but after the update was then scaled depending on the difficulty of the diary.
+*Occasionally searching a chest in the Slayer Tower Basement will result in the message, "For a moment you think you've found Zamorak's teddy bear, but the chest is empty." This is a reference to the list [[Pontak]] gives you during [[The Fremennik Trials]].
+*Bringing a light source to the basement will remove the dim lighting effect.
+*In ''RuneScape 3'', Viggora built the tower to try and prove to the other non-human generals of Zaros that humans were more than just pets, but the other generals just laughed at him. He kept building until the ground beneath it failed and sank a good portion of the tower. The only general not to laugh was Zamorak, which resulted in Viggora joining his side. The Slayer Tower in ''RuneScape 3'' received a graphical update reflecting this.
+
+==References==
+{{Reflist}}
+
+{{Slayer locations}}
+{{Zarosian Empire}}
+{{Canifis}}
+[[Category:Towers]]

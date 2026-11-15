@@ -28,6 +28,7 @@
 10384	true	Saradomin bracers
 10386	true	Saradomin d'hide body
 12128	false	Challenge scroll (elite)
+12139	false	Challenge scroll (elite)
 12161	false	Puzzle box (elite)
 12193	true	Ancient robe top
 12205	true	Bronze platebody (g)
@@ -232,7 +233,6 @@
 24364	false	Scroll box (hard)
 24365	false	Scroll box (elite)
 24366	false	Scroll box (master)
-25612	false	S.t.a.s.h blueprint
 30906	false	Minor easy scroll case
 30908	false	Major easy scroll case
 30910	false	Minor medium scroll case

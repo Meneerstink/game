@@ -266,11 +266,11 @@ def main():
     log = {tier: dict(enum=id, items=enum_items(enums[str(id)])) for tier, id in enum_ids.items()}
     # Source enum 3607 is the separate Scroll Cases log. Owner excludes its two beginner slots.
     log["cases"] = dict(enum=3607, items=[id for id in enum_items(enums["3607"]) if id not in (30902, 30904)])
-    extra.extend((20164, 20249, 19941, 22675, 25612))  # Wiki milestones + Watson's S.t.a.s.h blueprint.
+    extra.extend((20164, 20249, 19941, 22675))  # Wiki milestones. Q5: no unusable POH/STASH blueprint.
     # Step objects, from the pinned Challenge scroll / Puzzle box / Light box /
     # Torn clue scroll / Strange device infoboxes. Tier challenge scrolls and
     # puzzle pictures are dynamic server contexts, like the five base clues.
-    extra.extend((2842, 7269, 12128, 2795, 3565, 3569, 12161,
+    extra.extend((2842, 7269, 12128, 12139, 2795, 3565, 3569, 12161,
                   20280, 20281, 20282, 23417, 20355, 20356, 20357,
                   19837, 19838, 19839, 19939))
     mimic_file = OUT / 'mimic-rewards.json'

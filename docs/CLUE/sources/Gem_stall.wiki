@@ -1,0 +1,193 @@
+{{External|rs=Gem stall|rsc=Gems Stall (scenery)}}
+{{Otheruses|thievable Gem stalls across Gielinor|the thievable shop counter in [[Mor Ul Rek]]|Shop Counter (gems)|other stalls|Gem stall (disambiguation)}}
+{{Infobox Scenery
+|version1 = Ardougne and Kourend
+|version2 = Keldagrim
+|version3 = Prifddinas
+|version4 = Civitas illa Fortis
+|name1 = Gem stall
+|name2 = Gem Stall
+|name3 = Gem stall
+|name4 = Gem stall
+|image1 = [[File:Gem stall.png|250x250px]]
+|image2 = [[File:Gem Stall (Keldagrim).png|250x250px]]
+|image3 = [[File:Gem stall (Prifddinas).png|250x250px]]
+|image4 = [[File:Gem stall (Civitas illa Fortis).png|250x250px]]
+|release1 = [[30 April]] [[2002]]
+|release2 = [[21 March]] [[2005]]
+|release3 = [[25 July]] [[2019]]
+|release4 = [[20 March]] [[2024]]
+|update1 = Latest RuneScape News (30 April 2002)
+|update2 = Between a Rock...
+|update3 = Song of the Elves
+|update4 = Varlamore: Part One
+|members = Yes
+|quest = No
+|location1 = [[Ardougne]], [[Great Kourend]]
+|location2 = [[Keldagrim]]
+|location3 = [[Prifddinas]]
+|location4 = [[Civitas illa Fortis]]
+|options = Steal-from
+|examine1 = Precious stones from around the world.
+|examine2 = Finest precious stones.
+|examine3 = Finest precious stones.
+|examine4 = Precious stones from around the world.
+|map = No
+|id1 = 11731
+|id2 = 6162
+|id3 = 36571
+|id4 = 51935
+}}
+A '''gem stall''' is a [[stall]], which may be stolen from at level 75 [[Thieving]], granting 408 Thieving [[experience]]. There is a respawn time of 60 seconds.
+
+Thieving from the [[Green Gemstone Gems]] stall is a requirement for the [[Fremennik Diary|Fremennik Hard Diary]].
+
+A [[Gem stall (Al Kharid)|gem stall]] can be found next to the [[Gem trader]] in [[Al Kharid]], but players cannot steal from it.
+
+==Locations==
+{{ObjectTableHead}}
+{{ObjectLocLine
+|name = Gem stall
+|location = [[East Ardougne]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:2668,y:3303
+|mtype = pin
+|leagueRegion = Kandarin
+}}
+{{ObjectLocLine
+|name = Gem stall
+|location = [[Keldagrim]] (partial completion of {{SCP|Quest}} [[The Giant Dwarf]])
+|members = Yes
+|mapID = 10
+|plane = 0
+|x:2887,y:10210
+|mtype = pin
+|leagueRegion = Fremennik
+}}
+{{ObjectLocLine
+|name = Gem stall
+|location = [[Great Kourend]]
+|members = Yes
+|mapID = 0
+|plane = 0
+|x:1634,y:3684|mtype = pin
+|x:1640,y:3662
+|leagueRegion = Kourend
+}}
+{{ObjectLocLine
+|name = Gem stall
+|location = [[Prifddinas]] (completion of {{SCP|Quest}} [[Song of the Elves]])
+|members = Yes
+|mapID = 29
+|plane = 0
+|x:3277,y:6101
+|mtype = pin
+|leagueRegion = Tirannwn
+}}
+{{ObjectLocLine
+|name = Gem stall
+|location = [[Civitas illa Fortis]] (completion of {{SCP|Quest}} [[Children of the Sun]])
+|members = Yes
+|mapID = -1
+|plane = 0
+|x:1674,y:3101
+|x:1676,y:3098
+|mtype = pin
+|leagueRegion = Varlamore
+}}
+{{ObjectTableBottom}}
+
+==Thieving info==
+{{Thieving info
+|name = Gem stall
+|level = 75
+|xp = 408
+|type = Stall
+|time = 60 seconds
+}}
+
+Stealing from a gem stall is worth {{Coins|{{Average drop value|mob=Gem stall|raw=y}}}} on average.
+
+===Regular===
+{{DropLogProject|jagex=yes}}{{CiteTwitter|author=Mod Ash|url=https://twitter.com/JagexAsh/status/1260210901434630145|date=12 May 2020|archiveurl=https://reldo.runescape.wiki/i/101774|archivedate=29 May 2020|quote=Out of 128:
+105 - sapphire
+17 - emerald
+5 - Ruby
+1 - diamond}}
+
+{{DropsTableHead}}
+{{DropsLineSkill|name=Uncut sapphire|quantity=1|rarity=105/128|skill=Thieving}}
+{{DropsLineSkill|name=Uncut emerald|quantity=1|rarity=17/128|skill=Thieving}}
+{{DropsLineSkill|name=Uncut ruby|quantity=1|rarity=5/128|skill=Thieving}}
+{{DropsLineSkill|name=Uncut diamond|quantity=1|rarity=1/128|skill=Thieving}}
+{{DropsTableBottom}}
+
+Note that standard gem stalls do not drop [[dragonstone]] or [[onyx]]; these are only available from the [[Shop Counter (gems)|shop counter]] in [[Mor Ul Rek]].
+===Tertiary===
+{{DropsTableHead}}
+{{DropsLineSkill
+|name=Rocky
+|quantity=1
+|skill=thieving
+|rarity=1/34,615
+|altrarity=1/34,015
+|altraritydash=yes
+|raritynotes=
+{{CiteTwitter
+|author=Mod Kieren
+|url=https://twitter.com/JagexKieren/status/780410304731709440
+|date=26 September 2016
+|archiveurl=https://reldo.runescape.wiki/i/104505
+|archivedate=26 May 2020
+|quote=Okay... first one! Thieving pet rates! Others soon :). Retweet! [https://pbs.twimg.com/media/CtSTBe9XEAABH3h.jpg]
+}}{{Refn|group=d| The drop rate increases with Thieving level; see [[Rocky#Drop_rates|Rocky]] page for more details.}}
+}}
+{{DropsTableBottom}}
+==Treasure Trails==
+*{{SherlockChallenge|Stealing from the Ardougne gem stall|master}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 8 May 2024
+|update = Project Rebalance: Skilling & Poll 81 MTA Changes
+|change = 
+* The [[Thieving]] [[experience]] awarded for stealing from the stall has been increased from 160 to 408.
+* The respawn timer for the stall has been reduced from 100 to 60 seconds.
+}}
+{{Subject changes
+|date = 24 November 2016
+|update = Quality of Life & Bugfixes
+|change = The gem and baker stalls no longer reference Ardougne.
+}}
+{{Subject changes
+|date = 29 May 2014
+|update = Salamanders and Special Attack
+|change = Stealing from gem stalls now yields 160 experience, rather than 16.
+}}
+{{Subject changes
+|date = 15 February 2005
+|update = Ghosts Ahoy and Slayer Update
+|change = The scenery in Al Kharid and Ardougne were graphically updated.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Gem stall (historical).png|center|300x150px]]
+|[[File:Gem stall.png|center|300x150px]]
+|-
+|29 March 2004 –<br>15 February 2005
+|15 February 2005 –<br>present
+|}
+
+==Trivia==
+*A [[Gem stall (Sophanem)|variant]] of the gem stall was added in April 2005 that would have presumably appeared in [[Sophanem]], but is unused. A graphically updated version was also added with the release of [[Contact!]]
+
+==References==
+{{reflist}}
+
+{{Stalls}}
+[[Category:Thieving]]

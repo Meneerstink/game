@@ -1221,6 +1221,30 @@
       "file": "Transcript_Radimus_Erkle.wiki",
       "sha256": "680283d88aa561020e37b802e18f5da85f75409e5193e7b8aa0011bf45f3965d",
       "url": "https://oldschool.runescape.wiki/w/Transcript%3ARadimus_Erkle"
+    },
+    {
+      "page": "Slayer Tower",
+      "revision": 15399874,
+      "revision_time": "2026-11-11T19:57:17Z",
+      "file": "Slayer_Tower.wiki",
+      "sha256": "d634ee51c47b87db6b89ec4a29796edfbfd6a5c63fc948025d73563fad344043",
+      "url": "https://oldschool.runescape.wiki/w/Slayer_Tower"
+    },
+    {
+      "page": "Nechryael",
+      "revision": 15385695,
+      "revision_time": "2026-10-29T16:23:44Z",
+      "file": "Nechryael.wiki",
+      "sha256": "4b6b69932ca9b60c9078eef3308086c7cdd080109454d9b6b2e60a04d09490d4",
+      "url": "https://oldschool.runescape.wiki/w/Nechryael"
+    },
+    {
+      "page": "Gem stall",
+      "revision": 15362094,
+      "revision_time": "2026-10-03T12:46:29Z",
+      "file": "Gem_stall.wiki",
+      "sha256": "e1a6a6106605fdd0502c2d7bd1a3cd284bfe4f5ff34b7af586720776672cccbe",
+      "url": "https://oldschool.runescape.wiki/w/Gem_stall"
     }
   ]
 }
