@@ -1,8 +1,11 @@
 package gg.rsmod.plugins.content.skills.herblore.mixing
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.queue.QueueTask
 import gg.rsmod.plugins.api.Skills
+import gg.rsmod.plugins.api.cfg.Items
 import gg.rsmod.plugins.api.cfg.Anims
 import gg.rsmod.plugins.api.cfg.Sfx
 import gg.rsmod.plugins.api.ext.doubleItemMessageBox
@@ -44,7 +47,8 @@ class CreateFinishedPotionAction {
                         ).hasSucceeded()
             if (success) {
                 player.addXp(Skills.HERBLORE, potion.experience)
-                player.inventory.add(potion.product)
+                val made = player.inventory.add(potion.product)
+                if (made.hasSucceeded() && potion.product == Items.SUPER_DEFENCE_3) ClueTasks.succeeded(player, ClueTasks.Action.SUPER_DEFENCE)
                 val ingredientName =
                     player.world.definitions
                         .get(ItemDef::class.java, secondaryUsed!!)

@@ -33,7 +33,7 @@ object WatsonClues {
         TIERS.forEachIndexed { index, tier ->
             val flag = 1 shl index
             if (tier !in offered || bits and flag != 0) return@forEachIndexed
-            val slot = staged.rawItems.indexOfFirst { it?.id == tier.scrollId }
+            val slot = staged.rawItems.indexOfFirst { it != null && ClueOwnership.tier(it.id) == tier }
             if (slot < 0) return@forEachIndexed
             val source = staged[slot]!!
             staged[slot] = if (source.amount == 1) null else Item(source, source.amount - 1)

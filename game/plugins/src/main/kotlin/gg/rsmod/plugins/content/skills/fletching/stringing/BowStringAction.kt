@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.fletching.stringing
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.queue.QueueTask
@@ -90,7 +92,8 @@ class BowStringAction(
             if (!inventory.remove(Items.BOW_STRING, assureFullRemoval = true).hasSucceeded()) {
                 return
             }
-            inventory.add(bowItem.product, bowItem.amount)
+            val made = inventory.add(bowItem.product, bowItem.amount)
+            if (made.hasSucceeded() && bowItem.product == Items.YEW_LONGBOW) ClueTasks.succeeded(player, ClueTasks.Action.YEW_LONGBOW)
             player.filterableMessage("You add a string to the $productName.")
             player.addXp(Skills.FLETCHING, bowItem.experience)
             task.wait(1)

@@ -23,8 +23,9 @@ class ClueStepContract private constructor(
 
     companion object {
         fun capture(player: Player, step: ClueStep): ClueStepContract? {
+            if (player.isDead()) return null
             if (ClueScrollManager.activeStep(player, step.tier) !== step) return null
-            val scroll = player.inventory.firstOrNull { it?.id == step.tier.scrollId } ?: return null
+            val scroll = ClueOwnership.carried(player, step.tier) ?: return null
             val key = scroll.getAttr(ItemAttribute.CLUE_STEP_KEY) ?: return null
             if (key != step.persistenceId) return null
             return ClueStepContract(player, step.tier, scroll, step, key, ClueScrollManager.progress(player, step.tier))

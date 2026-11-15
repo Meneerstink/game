@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.firemaking
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.MovementQueue
 import gg.rsmod.game.model.collision.ObjectType
@@ -84,6 +86,7 @@ object FiremakingAction {
                 player.filterableMessage("The fire catches and the logs begin to burn.")
                 player.animate(Anims.RESET)
                 player.addXp(Skills.FIREMAKING, data.experience, checkBrawlingGloves = true)
+                if (data == FiremakingData.MAGIC_LOGS) ClueTasks.succeeded(player, ClueTasks.Action.MAGIC_LOG)
 
                 val targetTile = player.findWesternTile()
                 if (targetTile != player.tile) {

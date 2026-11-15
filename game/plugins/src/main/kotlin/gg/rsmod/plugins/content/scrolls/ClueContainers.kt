@@ -30,7 +30,7 @@ object ClueContainers {
     fun capacity(player: Player, tier: ClueScrollTier): Int = 2 + cases.count { (it.tier == tier || it.tier == null) && opened(player, it) }
     fun count(player: Player, tier: ClueScrollTier): Int {
         val box = ClueItems.local(boxes.getValue(tier))
-        return ClueOwnership.stored(player).filter { it.id == tier.scrollId || it.id == box }
+        return ClueOwnership.stored(player).filter { ClueOwnership.tier(it.id) == tier || it.id == box }
             .sumOf { it.amount.coerceAtLeast(0).toLong() }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
     }
     fun mayTakeBox(player: Player, tier: ClueScrollTier): Boolean = (count(player, tier) < capacity(player, tier)).also {

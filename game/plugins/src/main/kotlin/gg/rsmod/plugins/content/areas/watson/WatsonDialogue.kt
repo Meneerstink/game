@@ -6,6 +6,7 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.*
 import gg.rsmod.plugins.content.scrolls.ClueContainers
 import gg.rsmod.plugins.content.scrolls.ClueScrollTier
+import gg.rsmod.plugins.content.scrolls.ClueOwnership
 
 /** Transcript:Watson, pinned in docs/CLUE/sources. The owner's tier name is 78. */
 object WatsonDialogue {
@@ -38,7 +39,7 @@ object WatsonDialogue {
     private suspend fun menu(task: QueueTask) {
         while (!task.terminated) {
             val actions = mutableListOf("Who are you?", "Have you heard of Sherlock?", "So what are master clue scrolls anyway?")
-            if (ClueScrollTier.values().any { task.player.inventory.contains(it.scrollId) }) actions += "I have something for you."
+            if (ClueScrollTier.values().any { ClueOwnership.carried(task.player, it) != null }) actions += "I have something for you."
             actions += listOf("What is that noticeboard for?", "Can you tell me about scroll boxes?", "Goodbye.")
             val selected = task.options(*actions.toTypedArray())
             when (actions.getOrNull(selected - 1)) {
@@ -83,7 +84,7 @@ object WatsonDialogue {
             say(task, "Sorry ${task.player.username}. That scroll is for you, not me."); return
         }
         val available = WatsonClues.TIERS.filter {
-            task.player.inventory.contains(it.scrollId) && it !in WatsonClues.stored(task.player) && (only == null || it == only)
+            ClueOwnership.carried(task.player, it) != null && it !in WatsonClues.stored(task.player) && (only == null || it == only)
         }
         if (available.isEmpty()) { offer(task, emptySet()); return }
         val labels = available.map { "Hand over ${it.name.lowercase()} clue." } +

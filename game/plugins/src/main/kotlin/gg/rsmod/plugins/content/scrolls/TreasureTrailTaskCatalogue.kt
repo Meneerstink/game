@@ -30,6 +30,7 @@ class TreasureTrailTaskCatalogue private constructor(val falo: List<Falo>, val s
             } }
             require(falo.isNotEmpty() && falo.map { it.id }.distinct().size == falo.size)
             require(sherlock.distinctBy { it.tier to it.key }.size == sherlock.size)
+            require(sherlock.distinctBy { it.tier to it.key.hashCode() }.size == sherlock.size)
             return TreasureTrailTaskCatalogue(falo, sherlock)
         }
     }

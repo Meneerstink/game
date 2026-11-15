@@ -27,7 +27,8 @@ PLUGINS += ['gg.rsmod.plugins.content.items.OsrsEliteCasketTests']
 PLUGINS += ['gg.rsmod.plugins.content.scrolls.' + name for name in
             ['ClueCasketTransactionTests', 'ClueDropIndexTests', 'ClueDropOwnershipTests', 'ClueInterfacesTests',
              'ClueLogCatalogueTests', 'ClueNpcSourcesTests', 'ClueRewardCatalogueTests', 'ClueScrollLifecycleTests',
-             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests']]
+             'TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests',
+             'TreasureTrailFaloTests', 'TreasureTrailSherlockTests', 'TreasureTrailContractTests', 'ClueNpcAssetsTests']]
 
 
 def inputs():

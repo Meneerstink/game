@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.crafting.jewellery
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.queue.QueueTask
@@ -55,7 +57,8 @@ object JewelleryAction {
             ) {
                 return
             }
-            inventory.add(data.resultItem, assureFullInsertion = true)
+            val made = inventory.add(data.resultItem, assureFullInsertion = true)
+            if (made.hasSucceeded() && data.resultItem == Items.DRAGONSTONE_AMMY) ClueTasks.succeeded(player, ClueTasks.Action.DRAGONSTONE_AMULET)
             player.addXp(Skills.CRAFTING, data.experience)
             task.wait(2)
         }

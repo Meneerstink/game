@@ -395,3 +395,61 @@ clipping, click and checkbox, close/remount, relog, second account, inventory
 priority, equipped-item removal and unequip restrictions. Recheck every old
 Settings/Keybinding button. This completes the setting implementation, not the
 remaining STASH construction animation/audio or the whole CLUE card.
+
+
+## Falo and Sherlock services, B 15 November (source implementation)
+
+Use the existing **OsrsNpcImportTool clue-steps** batch, exact source IDs:
+**6586,7306,7312,6587,6588,7307,7308,7309,7310**. Do not allocate duplicates or
+copy these numeric source IDs into runtime. `NPC-PREFLIGHT.tsv` remains a proposal;
+rerun after other imports because all proposals share the same free namespaces.
+
+After Claude actually applies/verifies both caches and the import ledger:
+
+```powershell
+python tools/clue/build_npc_mapping.py --write
+```
+
+This command only reads caches/ledger and writes the worktree's runtime TSV/profile;
+it never applies a cache transaction. Without `--write` it is audit only. Current
+audit is **0 verified / 9 waiting** and publishes no runtime NPC mapping. It checks
+both caches' actual name, size, menu, combat level, body/head model ledger references
+and movement set. Ship the generated `data/cfg/clue/npcs.tsv` with
+`npc-assets.json`; runtime rechecks loaded definitions before installing source
+Wiki examines. A missing or partial mapping disables these services and prints
+PROBLEM rather than guessing a local ID. Source pins: Falo **2689,3549,0/r4**;
+Sherlock **2733,3413,0/r5**. Recheck pathing/head models after cache application.
+
+Falo's seven selected source lyrics and Sherlock's thirteen selected tasks are
+reproducibly generated from pinned Wiki hashes by `build_challenge_runtime.py`.
+Only these supported tasks are selected; no inaccessible full-OSRS task pool is
+silently enabled. Appended ItemAttribute fields CLUE_TASK_KEY / CLUE_TASK_COMPLETE
+preserve existing ordinals. Per-scroll task survives ordinary item serialization,
+drop/re-pick and bank. Exact-account/Item/progress guards protect suspended dialogue.
+
+Sherlock elite replaces its actual clue with source **12128**, preserving all
+attributes in the same inventory slot. It blocks another elite in inventory,
+bank, grave, Death's Office and Mimic recovery, and Watson accepts it as sourced.
+After actual successful skill action, return to Sherlock is required before the
+atomic step advance restores the canonical clue or gives the casket. Source
+current-level requirements allow temporary boosts. The source's completed-task
+priority when another tier is unfinished is preserved. Master stays the owner's
+78 clue scroll. Unnoted Falo shown gear is retained, including item attributes.
+
+Claude client checks: all seven lyrics (canonical and accepted ornamented gear),
+wrong/noted item, full inventory, relog, bank/drop, death, second account, pending
+click after clue replacement. Sherlock: all thirteen real actions with the issued
+paper held; wrong product/location, banked paper, temporary boost/drain; return
+before advance; both elite/78 assignments; Check completion / Check steps;
+Watson in full inventory; no duplicate tier via boxes or loot.
+
+UI adaptation choice (owner 15 November 14:4x allows following own advice): the
+source catalogue proves the Check steps option and stored numeric count but not
+its exact server sentence; native chatbox currently renders that label plus the
+actual count. Check completion before success shows the actual pinned task text.
+These are native presentations, not fabricated OSRS dialogue. Falo uses the
+account name in the existing world's missing Fremennik-name provider, as Olaf does.
+
+This is not the entire sourced step-pool replacement. The old donor registration
+and remaining subtype/puzzle/guard work are still called out in REVIEW-B-7.md.
+Script/Gradle acceptance must be recorded separately from standalone tests.

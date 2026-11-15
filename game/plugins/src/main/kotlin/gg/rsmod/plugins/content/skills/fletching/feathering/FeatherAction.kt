@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.fletching.feathering
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.fs.DefinitionSet
 import gg.rsmod.game.fs.def.ItemDef
 import gg.rsmod.game.model.attr.BROAD_FLETCHING
@@ -63,7 +65,8 @@ class FeatherAction(
                 break
             }
 
-            inventory.add(data.product, amount = amountToFeather)
+            val made = inventory.add(data.product, amount = amountToFeather)
+            if (made.hasSucceeded() && data.product == Items.RUNE_DART) ClueTasks.succeeded(player, ClueTasks.Action.RUNE_DART)
             player.addXp(Skills.FLETCHING, data.experience * amountToFeather)
             completed++
         }

@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.skills.thieving.stalls
 
+import gg.rsmod.plugins.content.scrolls.TreasureTrailSherlock as ClueTasks
+
 import gg.rsmod.game.model.entity.DynamicObject
 import gg.rsmod.game.model.entity.GameObject
 import gg.rsmod.game.model.entity.Npc
@@ -52,6 +54,7 @@ object Stalls {
             }
             DropTableFactory.createDropInventory(player, target.id, DropTableType.STALL)
             player.addXp(Skills.THIEVING, targetInfo.xp, checkBrawlingGloves = true)
+            if (targetInfo == StallTarget.GemStall && ClueTasks.ardougneGem(target.tile)) ClueTasks.succeeded(player, ClueTasks.Action.ARDOUGNE_GEM_STALL)
             gg.rsmod.plugins.content.skills.summoning.SkillingPets.stall(player, targetInfo)
             player.filterableMessage(targetInfo.message)
         }

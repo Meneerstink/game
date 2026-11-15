@@ -14,6 +14,8 @@ import gg.rsmod.plugins.api.InterfaceDestination
 import gg.rsmod.plugins.api.ext.message
 import gg.rsmod.plugins.api.ext.openInterface
 import gg.rsmod.plugins.api.ext.player
+import gg.rsmod.plugins.api.ext.messageBox
+import gg.rsmod.game.fs.def.ItemDef
 import kotlin.random.Random
 
 /**
@@ -72,7 +74,7 @@ class ClueScrollManager(
             player: Player,
             tier: ClueScrollTier,
         ): ClueStep? {
-            val item = player.inventory.firstOrNull { it?.id == tier.scrollId } ?: return null
+            val item = ClueOwnership.carried(player, tier) ?: return null
             val id = item.getAttr(ItemAttribute.CLUE_STEP_KEY) ?: return null
             val available = steps.getValue(tier)
             return available.firstOrNull { it.persistenceId == id }
@@ -132,7 +134,7 @@ class ClueScrollManager(
             expectedProgress: Int? = null,
             consume: List<Int> = emptyList(),
         ): Boolean {
-            val slot = player.inventory.rawItems.indexOfFirst { it?.id == tier.scrollId }
+            val slot = player.inventory.rawItems.indexOfFirst { it != null && ClueOwnership.tier(it.id) == tier }
             if (slot < 0) return false
             val scroll = player.inventory[slot] ?: return false
             if (expected != null && scroll !== expected) return false
@@ -150,6 +152,7 @@ class ClueScrollManager(
             } else {
                 val available = steps.getValue(tier)
                 if (available.isEmpty()) return false
+                if (staged[slot]!!.id != tier.scrollId) staged[slot] = Item(tier.scrollId).copyAttr(staged[slot]!!)
                 staged[slot]!!.putAttr(ItemAttribute.CLUE_STEP_KEY, available.random().persistenceId)
                 staged[slot]!!.removeAttr(ItemAttribute.CLUE_TASK_KEY).removeAttr(ItemAttribute.CLUE_TASK_COMPLETE)
             }
@@ -172,18 +175,25 @@ class ClueScrollManager(
     }
 
     init {
-        ClueScrollTier.values().filter { it.scrollId >= 0 }.forEach { tier ->
-            set_ground_item_condition(tier.scrollId) { ClueOwnership.mayReceive(player, tier.scrollId) }
-            on_item_option(tier.scrollId, "read") {
+        ClueScrollTier.values().filter { it.scrollId >= 0 }.forEach { tier -> ClueOwnership.items(tier).forEach { id ->
+            set_ground_item_condition(id) { ClueOwnership.mayReceive(player, id) }
+            if (world.definitions.get(ItemDef::class.java, id).inventoryMenu.any { it.equals("Check steps", true) }) {
+                on_item_option(id, "check steps") {
+                    // Native chatbox presentation: sourced option label and actual persistent tier count.
+                    player.queue { messageBox("Check steps: ${progress(player, tier)}") }
+                }
+            }
+            on_item_option(id, "read") {
                 val available = steps.getValue(tier)
                 if (available.isEmpty()) {
                     player.message("Your ${tier.name.lowercase()} clue scroll trail has not been recorded yet.")
                     return@on_item_option
                 }
 
-                val item = player.inventory.firstOrNull { it?.id == tier.scrollId } ?: return@on_item_option
+                val item = ClueOwnership.carried(player, tier) ?: return@on_item_option
                 prepare(player, item, tier)
                 val step = activeStep(player, tier) ?: return@on_item_option
+                if (TreasureTrailSherlock.read(player, step)) return@on_item_option
                 val mapInterfaceId = step.mapInterfaceId
                 if (mapInterfaceId != null) {
                     player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = mapInterfaceId)
@@ -191,7 +201,7 @@ class ClueScrollManager(
                     ClueInterfaces.text(player, step.hint)
                 }
             }
-        }
+        } }
         on_global_item_pickup {
             player.attr[GROUNDITEM_PICKUP_TRANSACTION]?.get()?.items?.forEach { slot ->
                 ClueOwnership.tier(slot.item.id)?.let { prepare(player, slot.item, it) }
