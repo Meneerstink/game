@@ -1,0 +1,53 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* {{trandom}}
+* {{topt|Dialogue 1}}
+** '''Weird Old Man:''' She likes to be tickled hehehehe.
+** '''Player:''' Okay...
+** {{tact|end}}
+* {{topt|Dialogue 2}}
+** '''Weird Old Man:''' No thanks, I don't want any.
+** {{tact|end}}
+* {{topt|Dialogue 3}}
+** '''Weird Old Man:''' Pst, wanna hear a secret?
+** {{topt|Sure!}}
+*** '''Player:''' Sure!
+*** '''Weird Old Man:''' They've got six legs... SIX!
+** {{topt|No thanks.}}
+*** '''Player:''' No thanks.
+** {{tact|end}}
+* {{topt|Dialogue 4}}
+** '''Weird Old Man:''' AAAAAAAAARRRRRRGGGGGHHHHHHHH!
+** {{topt|What's wrong?}}
+*** '''Player:''' What's wrong?
+*** '''Weird Old Man:''' AAAAAAAAARRRRRRGGGGGHHHHHHHH!
+*** {{tact|initial}}
+** {{topt|I'll leave you to it then...}}
+*** '''Player:''' I'll leave you to it then...
+*** {{tact|end}}
+
+==Treasure Trails==
+===Hard===
+* '''Weird Old Man:''' Ah! This is for you.
+* '''Player:''' What?
+* '''Weird Old Man:''' I need answers.
+* {{tact|receives=a challenge scroll}}
+* {{tbox|pic=Clue scroll (hard) detail.png|The Weird Old Man has given you a challenge scroll!}}
+* {{tact|end}}
+
+====When spoken to again====
+* '''Weird Old Man:''' AHHH HELP! What's the answer?
+* {{tcond|When given the wrong answer:}}
+** '''Weird Old Man:''' They like it when you scream! AHHHHHHH. That's not right!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Weird Old Man:''' Spot on!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|The Weird Old Man has given you another clue scroll!}}
+*** {{tact|receives=a [[clue scroll (hard)]]}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a [[reward casket (hard)]]}}
+*** {{tact|end}}

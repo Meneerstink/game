@@ -1,0 +1,51 @@
+{{Transcript|npc}}
+{{incomplete|non-master clue dialogue are missing}}
+==Standard dialogue==
+* {{tbox|Radimus looks busy...}}
+* '''Radimus Erkle:''' Excuse me a moment won't you. Do feel free to explore the rest of the building
+* {{tact|end}}
+
+==After completion of [[Legends' Quest]]==
+* '''Radimus Erkle:''' Hello there! How are you enjoying the Legends Guild?
+* {{topt|It's legendary.}}
+** '''Player:''' It's legendary.
+** '''Radimus Erkle:''' That's nice. Excuse me now, I have other matters to attend to. Please feel free to explore the rest of the building.
+** {{tact|end}}
+* {{topt|It's okay.}}
+** '''Player:''' It's okay.
+** {{tact|above}}
+* {{topt|It's lame.}}
+** '''Player:''' It's lame.
+** {{tact|above}}
+* {{topt|Have you got anything for me?}}
+** '''Player:''' Have you got anything for me?
+** '''Radimus Erkle:''' One of our other members visited the Kharazi Jungle, following in your illustrious footsteps, and they found some weird daggers. Would you like one?
+** {{tbox|Radimus shows you a familiar-looking dagger.}}
+** {{tact|opens2=Dark Dagger collection}}
+** {{tbox|<nowiki>Radimus gives you [another/[amount]] [dagger/daggers].</nowiki>}}
+** {{tact|receives=the chosen amount of [[Dark dagger]]s}}
+** {{tact|end}}
+
+===Claiming Additional XP Lamps===
+* '''Radimus Erkle:''' Hello there. I have something for you. Enjoy!
+* {{tact|receives=up to four [[Antique lamp (Legends' Quest)|antique lamps]]}}
+
+==Searching the cupboard north of the papyrus spawn after the Legends' Quest==
+* '''Radimus Erkle:''' Hey, I think it's about time you started buying your own machetes. I'm sure there must be some jungle native down in Karamja who can sell you one.
+* {{tact|end}}
+
+==Treasure Trails==
+===Master===
+* '''Radimus Erkle:''' Here, solve this.
+* {{tact|receives=a puzzle box}}
+* {{tbox|Radimus Erkle hands you a puzzlebox!}}
+* {{tact|end}}
+====Talking again====
+* {{tcond|If the puzzle box is not solved:}}
+** '''Radimus Erkle:''' That doesn't look solved to me.
+** {{tact|end}}
+* {{tcond|If the puzzle box is solved:}}
+** '''Radimus Erkle:''' Well done [player name]. Here you go.
+** {{tact|receives=a [new clue/casket]}}
+** {{tbox|You've obtained a [new clue/casket]!}}
+** {{tact|end}}

@@ -1,0 +1,119 @@
+{{Transcript|npc}}
+{{incomplete|Sub 40 Combat dialogue is missing}}
+
+==Standard dialogue==
+* '''Vannaka:''' 'Ello, and what are you after then?
+* {{topt|I need another assignment.}}
+** '''Player:''' I need another assignment.
+** {{tcond|If the player doesn't have an assignment yet:}}
+*** '''Vannaka:''' Excellent, you're doing great. Your new task is to kill [amount] [task monster].
+*** {{tselect|Select an Option}}
+*** {{topt|Got any tips for me?}}
+**** '''Player:''' Got any tips for me?
+**** {{tact|Vannaka provides the corresponding [[Slayer task tip]].}}
+**** '''Player:''' Great, thanks!
+**** {{tact|end}}
+*** {{topt|Okay, great!}}
+**** '''Player:''' Okay, great!
+**** '''Vannaka:''' Good luck! Don't forget to come back when you need a new assignment.
+**** {{tact|end}}
+*** {{tact|end}}
+** {{tcond|If the player already has an assignment:}}
+*** '''Vannaka:''' You're still hunting [task monster]; you have [amount] to go. Come back when you've finished your task.
+*** {{tact|end}}
+** {{tcond|If the player already has an assignment, and they have become ineligible for this assignment:}}
+*** '''Vannaka:''' You're still hunting [monster], with [amount] to go.
+*** '''Vannaka:''' I don't think that's a suitable task for you. Shall I cancel it? This will not wipe your task streaks.
+*** {{tselect|Select an option}}
+*** {{topt|Yes, please cancel it.}}
+**** '''Player:''' Yes, please cancel it.
+**** '''Vannaka:''' Alright, consider the task cancelled. You can now get a new assignment when you want one.
+**** {{tact|end}}
+*** {{topt|No, thanks, I want to try doing it.}}
+**** '''Player:''' No, thanks, I want to try doing it.
+**** '''Vannaka:''' Good luck with that.
+**** {{tact|end}}
+* {{topt|Have you any rewards for me, or anything to trade?}}
+** '''Player:''' Have you any rewards for me, or anything to trade?
+** '''Vannaka:''' I have quite a few rewards you can earn, and a wide variety of Slayer equipment for sale.
+** {{topt|Look at rewards.}}
+*** {{tact|opens=Slayer Rewards}}
+** {{topt|Look at shop.}}
+*** {{tact|opens=Slayer Equipment (shop){{!}}Slayer Equipment}}
+** {{topt|Cancel.}}
+*** {{tact|end}}
+* {{topt|Let's talk about the difficulty of my assignments.}}
+** '''Player:''' Let's talk about the difficulty of my assignments.
+** {{tcond|If the player has disabled combat checking:}}
+*** '''Vannaka:''' The Slayer Masters may currently assign you any task in our lists, regardless of your combat level.
+*** {{topt|That's fine - I can handle any task.}}
+**** '''Player:''' That's fine - I can handle any task.
+**** '''Vannaka:''' That's the spirit.
+**** {{tact|end}}
+*** {{topt|In future, please don't give anything too tough.}}
+**** '''Player:''' In future, please don't give anything too tough.
+**** '''Vannaka:''' Okay, from now on, all the Slayer Masters will take your combat level into account when choosing tasks for you, so you shouldn't get anything too hard.
+**** {{tact|Slayer Masters will now take the player's combat level into account.}}
+**** {{tact|end}}
+** {{tcond|If the player has enabled combat checking:}}
+*** '''Vannaka:''' The Slayer Masters will take your combat level into account when choosing tasks for you, so you shouldn't get anything too hard.
+*** {{topt|That's fine - I don't want anything too tough.}}
+**** '''Player:''' That's fine - I don't want anything too tough.
+**** '''Vannaka:''' Okay, we'll keep checking your combat level.
+**** {{tact|end}}
+*** {{topt|Stop checking my combat level - I can take anything!}}
+**** '''Player:''' Stop checking my combat level - I can take anything!
+**** '''Vannaka:''' Okay, from now on, all the Slayer Masters will assign you anything from their lists, regardless of your combat level.
+**** {{tact|Slayer Masters will no longer take the player's combat level into account.}}
+**** {{tact|end}}
+* {{topt|Er... Nothing...}}
+** '''Player:''' Er... Nothing...
+** {{tact|end}}
+
+==Via the [[Astral Contact]] spell==
+* '''Vannaka:''' 'Ello, can I help you?
+* {{topt|I need another assignment.}}
+** {{tact|above}}
+* {{topt|Let's talk about the difficulty of my assignments.}}
+** {{tact|above}}
+* {{topt|Err... Nothing...}}
+** {{tact|above}}
+
+===Before the update [[Update:Game Improvements (26 March 2020)|Game Improvements (26 March 2020)]]===
+* '''Player:''' Hello?
+* '''Vannaka:''' 'Ello, who's that?
+* '''Player:''' I'm [player name]. I'm using my magic to communicate with you.
+* '''Vannaka:''' Bizarre, go on, what do you want then?
+* {{topt|I need another assignment.}}
+** {{tact|above}}
+* {{topt|Let's talk about the difficulty of my assignments.}}
+** {{tact|above}}
+* {{topt|Err... Nothing...}}
+** {{tact|above}}
+
+==Getting a task bypassing the combat level requirement with a slayer cape==
+* '''Vannaka:''' Your cape attests that you are experienced enough to be taught by me. I will overlook your lack of experience in combat.
+* {{tact|above}}
+
+==Treasure Trails==
+===Easy===
+* '''Vannaka:''' Here, have this.
+* {{tcond|If the reward is another clue scroll:}}
+** {{tact|receives=another [[Clue scroll (easy)|clue scroll]]}}
+** {{tbox|pic=Clue scroll (easy) detail.png|You've found another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tbox|pic=Reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}
+
+===Elite===
+* {{tcond|When given another clue scroll:}}
+** {{tact|receives=another [[Clue scroll (elite)|clue scroll]]}}
+** {{tbox|pic=Clue scroll (elite) detail.png|You've been given a new clue!}}
+** '''Vannaka:''' Here, have this!
+** {{tact|end}}
+* {{tcond|When given a reward casket:}}
+** {{tact|receives=an [[Reward casket (elite)|elite reward casket]]}}
+** {{tbox|pic=Reward casket (elite) detail.png|You've obtained a casket!}}
+** {{tact|above}}

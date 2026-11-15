@@ -1,0 +1,589 @@
+{{Transcript|npc}}
+
+==Standard dialogue==
+* {{Tcond|First time:}}
+** '''Lumbridge Guide:''' Greetings, adventurer! I see that you're new here. My name is Phileas, but people often call me the Lumbridge Guide. I'm always happy to give out tips to budding adventurers. Is there anything I can help you with?
+** {{tact|continue}}
+* {{Tcond|Subsequent times:}}
+** {{tcond|If the player has experience to claim:}}
+*** '''Lumbridge Guide:''' It seems you're missing out on some valuable experience. Would you like it?
+*** {{tbox|You are owed the following: [list of experience the player can claim]}}
+*** {{tselect|Claim your owed XP?}}
+*** {{topt|Yes please.}}
+**** '''Player:''' Yes please.
+**** {{tact|receives=owed experience}}
+**** '''Lumbridge Guide:''' There you go.
+**** {{tact|continue}}<!--skips introduction and goes straight to "select an option"-->
+*** {{topt|No thanks.}}
+**** '''Player:''' No thanks.
+**** '''Lumbridge Guide:''' Fair enough.
+**** {{tact|continue}}<!--skips introduction and goes straight to "select an option"-->
+** '''Lumbridge Guide:''' Hello there, adventurer! Is there anything I can help you with?
+* {{tselect|Select an option}}
+* {{topt|What kind of goals should I be aiming for?}}
+** '''Player:''' What kind of goals should I be aiming for?
+** {{tcond|Unknown condition:}}
+*** '''Lumbridge Guide:''' Well, in truth, I'm not really sure. I think you've managed to reach a point where my advice isn't really going to be useful any more. I'd say it's all on you now.
+*** {{tact|other}}
+* {{topt|I'm looking for a quest to go on.}}
+** {{tmissing|Seems probably mostly the same as original dialogue, but he now recommends the mudfoot quest}}
+* {{topt|What's the best way to get better at combat?}}
+** '''Lumbridge Guide:''' For that, I'd suggest you talk to Captain Harlan. He's the local expert on combat. You'll find him just north of the castle, outside the General Store.
+** {{tact|other}}
+* {{topt|How should I go about improving my skills?}}
+** '''Player:''' How should I go about improving my skills?
+** '''Lumbridge Guide:''' Well, in general you'll find that practice makes perfect. The best way to improve a skill is to quite simply keep working at it.
+** '''Lumbridge Guide:''' As for specifics, I can't cover every skill, but I can give you a few tips for some of the more common ones.
+** '''Lumbridge Guide:''' For mining, you'll want to head to a mine like the one south of Lumbridge and mine some ores with a pickaxe. You can either sell the ores for money, or smelt them into bars.
+** {{tbox|pic=5082 detail.png|Ores can be mined at mining sites, provided you have a pickaxe. To find a mining site, just look for the relevant icon on your map.}}
+** '''Lumbridge Guide:''' On that topic, you can improve your smithing by smelting ores into bars and then by smithing those bars into weapons and armour. Might be you'll want those weapons and armour yourself, or you could sell them.
+** {{tbox|pic=5084 detail.png|Ores can be smelted into bars at a furnace. To find a furnace, just look for the relevant icon on your map.}}
+** {{tbox|pic=Smithing icon (interface) detail.png|Metal bars can be smithed into weapons and armour at an anvil, provided you have a hammer. To find an anvil, just look for the relevant icon on your map.}}
+** '''Lumbridge Guide:''' For fishing, you can catch all kinds of fish at various fishing spots. You could just sell what you catch, but I'd suggest cooking them into food, which will also improve your cooking abilities.
+** {{tbox|pic=5088 detail.png|Fish can be caught at various fishing spots, provided you have the suitable equipment. To find a fishing spot, just look for the relevant icon on your map.}}
+** {{tbox|pic=5090 detail.png|Food can be cooked on either a fire or a range, but you'll be less likely to burn things on a range. To find a range, just look for the relevant icon on your map.}}
+** '''Lumbridge Guide:''' Woodcutting is much like mining. Just grab an axe, head to some trees, and chop away. You can then sell the logs, or burn them.
+** {{tbox|pic=9713 detail.png|You can chop trees all over the world, provided you have an axe. You'll rarely have trouble finding a common tree, but to find rarer trees, look for the relevant icon on your map.}}
+** '''Lumbridge Guide:''' I could keep going, but I think you get the idea. In general, most skills are trained in specific locations, or using specific items. Gather what you need, head to where you need to go, then get to work.
+** '''Lumbridge Guide:''' A lot of the time, you'll find yourself gathering or producing something. You can then sell those things, or keep them and use them yourself.
+** '''Lumbridge Guide:''' If you need any more tips, you'll find plenty of people around here willing to lend you a hand. No doubt you'll end up finding a few other useful resources out there as well.
+** {{tbox|pic=Stats icon.png|To learn more about a specific skill, see the relevant guide in the Skills panel.}}
+** {{tact|other}}
+* {{topt|More options...}}
+** {{tselect|Select an option}}
+** {{topt|What's a good way to make money?}}
+*** '''Player:''' What's a good way to make money?
+*** '''Lumbridge Guide:''' Normally the most reliable way is to sell things. As for where you get said things, you could collect items from dead foes. Goblins for example sometimes have a few things of note on them.
+*** '''Lumbridge Guide:''' Alternatively, you could make or gather items to then sell on. For example, logs from woodcutting, ores from mining, weapons and armour from smithing... the list goes on.
+*** '''Lumbridge Guide:''' As for where to sell things, that depends. The quick and easy way is to sell to a General Store. They're easy to find and will accept almost anything, but they're unlikely to give you the best prices.
+*** '''Lumbridge Guide:''' A better but slower option is to sell to specialist stores. For example, a blacksmith will most likely offer you a better price for weapons and armour, but won't accept any of your other goods.
+*** '''Lumbridge Guide:''' All that said, the best option is often the Grand Exchange. You can buy or sell pretty much anything there, and in many cases it's where you'll get the best prices.
+*** '''Lumbridge Guide:''' However, it does require a trek up to Varrock, and the road isn't always the safest, so I'd only recommend making the journey once you're feeling comfortable.
+*** '''Lumbridge Guide:''' Whatever you decide, don't forget that you don't need to go carrying everything on you. You can store all of your items, including any goods you've gathered or made, in your bank.
+*** {{tact|other}}
+** {{topt|Where can I find a bank?}}
+*** '''Player:''' Where can I find a bank?
+*** '''Lumbridge Guide:''' Most towns have one. The one here in Lumbridge is on the roof of the castle.
+*** {{tbox|pic=5080 detail.png|You can store your items in a bank. To find one, look for the relevant icon on your map.}}
+*** {{tact|other}}
+** {{topt|cond=If the player lost the Amulet of the Eye:|I lost that amulet you gave me.}}
+*** '''Player:''' I lost that amulet you gave me.
+*** '''Lumbridge Guide:''' Not to worry. I found it again.
+*** {{tcond|If the player has no inventory space:}}
+**** '''Lumbridge Guide:''' However, you'll need to make space for it before I can give it to you.
+**** {{tact|end}}
+*** {{tbox|pic=Amulet of the Eye detail.png|Phileas hands you the Amulet of the Eye.}}
+*** '''Player:''' Thanks. I'll try not to lose it this time.
+*** '''Lumbridge Guide:''' Any time.
+*** {{tact|previous}}
+** {{topt|I'd better be off.}}
+*** '''Player:''' I'd better be off.
+*** '''Lumbridge Guide:''' Until next time, adventurer,{{sic}}
+*** {{tact|end}}
+** {{topt|Previous options...}}
+*** {{tact|initial}}
+
+==Contacting through [[Astral Contact]]s Random option==
+* '''Player:''' Hello!
+* '''Lumbridge Guide:''' What, who's that?
+* '''Player:''' Hehe... ahem...
+* '''Player:''' This is the voice of your conscience! You've been a very naughty boy haven't you?
+* '''Lumbridge Guide:''' What? No I haven't!
+* '''Player:''' You know what I'm talking about! Don't lie!
+* '''Lumbridge Guide:''' Okay, okay! I'm sorry, I'll never do it again!
+* '''Player:''' If you do it again, you'll be in deep trouble.
+* {{tact|end}}
+
+==Treasure Trails==
+===Hard===
+* {{tact|receives=a puzzle box}}
+* '''Lumbridge Guide:''' I'm supposed to be the local source of knowledge, but I cannot even solve this puzzle! Do me a favour and solve it for me.
+* {{tbox|pic=Puzzle_box_tree_detail.png|The Lumbridge Guide has given you a puzzle box!}}
+* {{tact|end}}
+
+====While holding the puzzle box====
+* {{tcond|If the puzzle box is not solved:}}
+** '''Lumbridge Guide:''' Sorry but you haven't solved the puzzle yet.
+** {{tact|end}}
+* {{tcond|If the puzzle box is solved:}}
+** '''Lumbridge Guide:''' Thanks [player name]!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|The Lumbridge Guide has given you another clue scroll!}}
+*** {{tact|receives=another clue scroll}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a reward casket}}
+*** {{tact|end}}
+
+==Giving him the tarnished locket==
+===First time===
+* '''Player:''' Does the name 'Philly' mean anything to you by chance?
+* {{tbox|pic=Tarnished locket detail.png|You present the locket to the Lumbridge Guide.}}
+* '''Lumbridge Guide:''' That locket! Where did you get it?
+* '''Player:''' I found it in a magical rift. Does it belong to you?
+* '''Lumbridge Guide:''' Not exactly... It's a long and sad story.
+* {{topt|It's okay, I have time to listen.}}
+** '''Player:''' It's okay, I have time to listen.
+** '''Lumbridge Guide:''' Well, if you're sure then.
+** '''Lumbridge Guide:''' It all started in my youth when I was part of the Order of Wizards. I frequently spent time travelling across Gielinor, which kept me away from my beloved who worked here in Lumbridge.
+** '''Lumbridge Guide:''' Due to being apart, I would often send her gifts. This locket was one of them.
+** '''Player:''' I see... I'm not sure I like where this story is going. How come I found the locket in a magic rift then?
+** '''Lumbridge Guide:''' As I said, my research often kept me away from home. During one of my trips away, our house was robbed. My dear Thenia tried to stop them, but they took her life in return. The locket was taken in the robbery.
+** '''Player:''' Oh my... I'm so sorry for your loss.
+** '''Lumbridge Guide:''' I appreciate your kind words, but this was a long time ago. The pain of losing a loved one never fades, but in time you come to live with it.
+** '''Lumbridge Guide:''' Anyway, after that I stepped down from the Order of Wizards. I now spend my days offering guidance to those who come through Lumbridge.
+** '''Player:''' I'm still curious to know how it ended up in some rift. Do you have any theories?
+** '''Lumbridge Guide:''' Well... where was this rift?
+** '''Player:''' In an ancient temple. Most things in the rift came from the Abyss.
+** '''Lumbridge Guide:''' The Abyss? I wasn't aware anyone had ever been to the Abyss.
+** '''Player:''' They hadn't until recently, but the Z.M.I. found a way there.
+** '''Lumbridge Guide:''' The Z.M.I.? But could that mean...
+** '''Player:''' What?
+** '''Lumbridge Guide:''' Oh, nothing to worry about. Just me being a silly old man. Tell me more about this temple.
+** '''Player:''' It's called the Temple of the Eye. It was built by Saradominist wizards long ago to house a powerful artefact.
+** '''Lumbridge Guide:''' The Eye?
+** '''Player:''' You've heard of it?
+** '''Lumbridge Guide:''' Only stories, of which there are very few. Still, I always believed them to be real. After all, why else would an eye be the symbol of the Order of Wizards?
+** '''Lumbridge Guide:''' Ah, but that reminds me, I was not the first in my family to join the order. This amulet was passed down from generation to generation.
+** {{tbox|pic=Amulet of the Eye detail.png|Phileas shows you an amulet.}}
+** '''Player:''' That looks just like the amulet that led us to the temple!
+** '''Lumbridge Guide:''' As soon as you mentioned it, I wondered if there might be a connection.
+** '''Lumbridge Guide:''' The origin of this amulet was something I spent much time puzzling over when I was younger. I'm glad you have answered the question I couldn't.
+** '''Lumbridge Guide:''' I'd be happy to give you this amulet in return for that locket. I have no use for it, but that locket is something which holds a lot of sentimental value to me.
+** {{topt|Of course you can have the locket.}}
+*** '''Player:''' Of course you can have the locket.
+*** {{tbox|pic=Tarnished locket detail.png|pic2=Amulet of the Eye detail.png|You exchange the locket for the amulet.}}
+*** '''Lumbridge Guide:''' Thank you for returning this to me. I wish you the best of luck on the rest of your adventures.
+*** '''Player:''' Thanks, Phileas. I wish you luck also.
+*** {{tact|end}}
+** {{topt|I'd rather keep the locket for myself.}}
+*** '''Lumbridge Guide:''' Oh, I see. I guess I can't really force you to hand it over. The offer still stands if you ever change your mind.
+*** {{tact|end}}
+* {{topt|Never mind then. I have to go.}}
+** '''Player:''' Never mind then. I have to go.
+** {{tact|end}}
+
+===After not giving him the amulet===
+* '''Lumbridge Guide:''' You're back. Would you consider giving me that locket? It holds a lot of sentimental value to me. I'll give you that amulet in return.
+* {{topt|Of course you can have the locket.}}
+** {{tact|above}}
+* {{topt|I'd rather keep the locket for myself.}}
+** {{tact|above}}
+
+==Claiming owed experience==
+* '''Lumbridge Guide:''' It seems you're missing out on some valuable experience. Would you like it?
+* {{tbox|You are owed the following: 800 Cooking XP. 4,000 Crafting XP. 3,200 Firemaking XP. 1,000 Fishing XP. 5,700 Mining XP. 500 Runecraft XP. 2,500 Smithing XP. 2,500 Woodcutting XP. 2,000 Agility XP. 1,000 Farming XP. 1,000 Hunter XP. }}
+* {{tselect|Claim your owed XP?}}
+* {{topt|Yes please.}}
+** '''Player:''' Yes please.
+** '''Lumbridge Guide:''' There you go.
+** {{tact|Continues with standard dialogue}}
+* {{topt|No thanks.}}
+** '''Player:''' No thanks.
+** '''Lumbridge Guide:''' Fair enough.
+** {{tact|Continues with standard dialogue}}
+
+==Historical==
+* '''Lumbridge Guide:''' Greetings, adventurer. I am Phileas, the Lumbridge Guide. I am here to give information and directions to new players. Is there anything I can help you with?
+* {{topt|Where can I find a quest to go on?}}
+** '''Player:''' Where can I find a quest to go on?
+** {{tcond|If the player has completed all of [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], [[Misthalin Mystery]], or [[Rune Mysteries]]:}}
+*** '''Lumbridge Guide:''' I'm afraid I can't think of any more quests for you. Don't worry though, there'll be plenty more out there. You'll just need to find them.
+*** {{tbox|pic=Quests.png|The minimap in the top right corner of the screen has various icons to show different points of interest. Look for the icon to the left to find quest start points.}}
+*** '''Lumbridge Guide:''' Is there anything else you need help with?
+*** {{topt|Yes please.}}
+**** '''Player:''' Yes please.
+**** {{tact|initial}}
+*** {{topt|No thank you.}}
+**** '''Player:''' No thank you.
+**** {{tact|end}}
+** {{tcond|If the player has not started any of [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], [[Misthalin Mystery]], or [[Rune Mysteries]]:}}
+*** {{tcond|If the player has not completed [[Cook's Assistant]]:}}
+**** '''Lumbridge Guide:''' Well, I've heard my friend the cook is in need of a spot of help. He'll be in the kitchen of this here castle. Just talk to him and he'll set you off.
+**** {{tact|continue}}
+*** {{tcond|If the player completed [[Cook's Assistant]] but not [[The Restless Ghost]]:}}
+**** '''Lumbridge Guide:''' Well, I heard that Father Aereck could use a hand. You'll find him in the church just here. Talk to him and he'll give you the details.
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]] and [[The Restless Ghost]] but not [[X Marks the Spot]]:}}
+**** '''Lumbridge Guide:''' Well, I heard that a chap called Veos needs help finding some treasure. Last I heard, he was looking for assistance in the pub just north of here. Talk to him and see if you can help.
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], and [[X Marks the Spot]] but not [[Sheep Shearer]]:}}
+**** '''Lumbridge Guide:''' Well, I heard that Farmer Fred could use some help. You'll find him on the farm just north of here. Talk to him and see if he needs a hand.
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], and [[Sheep Shearer]] but not [[Misthalin Mystery]]:}}
+**** '''Lumbridge Guide:''' Well, I heard there was some commotion in the swamp to the south. Might be worth looking into.
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], and [[Misthalin Mystery]] but not [[Rune Mysteries]]:}}
+**** '''Lumbridge Guide:''' Well, I believe the Duke of Lumbridge requires an errand running for him. You can find him upstairs in the castle. Just talk to him to get the details.
+**** {{tact|continue}}
+*** {{tbox|pic=Quests.png|The minimap in the top right corner of the screen has various icons to show different points of interest. Look for the icon to the left to find quest start points.}}
+*** '''Lumbridge Guide:''' Is there anything else you need help with?
+*** {{topt|Yes please.}}
+**** '''Player:''' Yes please.
+**** {{tact|initial}}
+*** {{topt|No thank you.}}
+**** '''Player:''' No thank you.
+**** {{tact|end}}
+** {{tcond|If the player has started one of the above six quests:}}
+*** {{tcond|If the player has started [[Cook's Assistant]]:}}
+**** '''Lumbridge Guide:''' I heard you were already helping the cook. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]] and has started [[The Restless Ghost]]:}}
+**** '''Lumbridge Guide:''' I heard you were already helping Father Aereck. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], and has started [[X Marks the Spot]]:}}
+**** '''Lumbridge Guide:''' I heard you were already helping Veos. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], and has started [[Sheep Shearer]]:}}
+**** '''Lumbridge Guide:''' I heard you were already helping Farmer Fred. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], and has started [[Misthalin Mystery]]:}}
+**** '''Lumbridge Guide:''' I heard you were already investigating the issue in the swamp. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{tcond|If the player has completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], [[Misthalin Mystery]], and has started [[Rune Mysteries]]:}}
+**** '''Lumbridge Guide:''' I heard you were already helping the Duke. Are you sure you need another quest?
+**** {{tact|continue}}
+*** {{topt|I want another quest.}}
+**** '''Player:''' I want another quest.
+**** {{tcond|If the player has neither started nor completed [[Cook's Assistant]]:}}
+***** '''Lumbridge Guide:''' Well, I've heard my friend the cook is in need of a spot of help. He'll be in the kitchen of this here castle. Just talk to him and he'll set you off.
+***** {{tact|continue}}
+**** {{tcond|If the player has started or completed [[Cook's Assistant]] but not [[The Restless Ghost]]:}}
+***** '''Lumbridge Guide:''' Well, I heard that Father Aereck could use a hand. You'll find him in the church just here. Talk to him and he'll give you the details.
+***** {{tact|continue}}
+**** {{tcond|If the player has started or completed [[Cook's Assistant]] and [[The Restless Ghost]] but not [[X Marks the Spot]]:}}
+***** '''Lumbridge Guide:''' Well, I heard that a chap called Veos needs help finding some treasure. Last I heard, he was looking for assistance in the pub just north of here. Talk to him and see if you can help.
+***** {{tact|continue}}
+**** {{tcond|If the player has started or completed [[Cook's Assistant]], [[The Restless Ghost]], and [[X Marks the Spot]] but not [[Sheep Shearer]]:}}
+***** '''Lumbridge Guide:''' Well, I heard that Farmer Fred could use some help. You'll find him on the farm just north of here. Talk to him and see if he needs a hand.
+***** {{tact|continue}}
+**** {{tcond|If the player has started or completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], and [[Sheep Shearer]] but not [[Misthalin Mystery]]:}}
+***** '''Lumbridge Guide:''' Well, I heard there was some commotion in the swamp to the south. Might be worth looking into.
+***** {{tact|continue}}
+**** {{tcond| If the player has started or completed [[Cook's Assistant]], [[The Restless Ghost]], [[X Marks the Spot]], [[Sheep Shearer]], and [[Misthalin Mystery]] but not [[Rune Mysteries]]:}}
+***** '''Lumbridge Guide:''' Well, I believe the Duke of Lumbridge requires an errand running for him. You can find him upstairs in the castle. Just talk to him to get the details.
+***** {{tact|continue}}
+**** {{tcond|If the player has either started or completed all six quests:}}
+***** '''Lumbridge Guide:''' I'm afraid I can't think of any more quests for you. Don't worry though, there'll be plenty more out there. You'll just need to find them.
+***** {{tact|continue}}
+**** {{tbox|pic=Quests.png|The minimap in the top right corner of the screen has various icons to show different points of interest. Look for the icon to the left to find quest start points.}}
+**** '''Lumbridge Guide:''' Is there anything else you need help with?
+**** {{topt|Yes please.}}
+***** '''Player:''' Yes please.
+***** {{tact|initial}}
+**** {{topt|No thank you.}}
+***** '''Player:''' No thank you.
+***** {{tact|end}}
+*** {{topt|I'm not too sure what to do.}}
+*** '''Lumbridge Guide:''' Well if you need a reminder, try having a look at your quest journal.
+*** '''Lumbridge Guide:''' Is there anything else you need help with?
+*** {{topt|Yes please.}}
+**** '''Player:''' Yes please.
+**** {{tact|initial}}
+*** {{topt|No thank you.}}
+**** '''Player:''' No thank you.
+**** {{tact|end}}
+*** {{topt|Actually, I'm fine.}}
+*** '''Player:''' Actually, I'm fine.
+*** {{tact|end}}
+* {{topt|What monsters should I fight?}}
+** '''Player:''' What monsters should I fight?
+** {{tcond|If the player has a Combat level below X:}}
+*** {{tcond|If the player does not have a weapon in their inventory or equipped:}}
+**** '''Lumbridge Guide:''' It's going to be tough fighting monsters without a weapon. I suggest you find one of those first.
+**** {{topt|How can I get a weapon?}}
+***** '''Player:''' How can I get a weapon?
+***** '''Lumbridge Guide:''' Well you can either make them, find them or buy them.
+***** {{topt|Where can I find a weapon?}}
+****** '''Player:''' Where can I find a weapon?
+****** '''Lumbridge Guide:''' If you visit the combat tutors south of the general store they may be able to help you with that. Failing that there are a few cheap weapons lying around in the world. For example, you can get an iron dagger if you
+****** '''Lumbridge Guide:''' cross the bridge and look in the little hut where some goblins live. If it's not there it probably means someone else has taken it. If you wait a while a new one should appear. As you explore you may find other weapons,
+****** '''Lumbridge Guide:''' too.
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|No thank you.}}
+******* '''Player:''' No thank you.
+******* {{tact|end}}
+****** {{topt|I'd like to know more about getting weapons.}}
+******* {{tact|previous}}
+****** {{topt|I'd like to know about something else.}}
+******* '''Player:''' I'd like to know about something else.
+******* '''Lumbridge Guide:''' Well, what would you like to know?
+******* {{tact|initial}}
+***** {{topt|How do I make a weapon?}}
+****** '''Player:''' How do I make a weapon?
+****** {{tcond|If the player has above X Smithing:}}
+*******  '''Lumbridge Guide:''' You already have a reasonable Smithing level, so I think you know that already.
+******* {{tact|end}}
+****** '''Lumbridge Guide:''' The Smithing skill allows you to make armour and weapons. Talk to the boy who smelts metal in the furnace, I'm sure he can help.
+****** '''Player:''' Where can I smith?
+****** '''Lumbridge Guide:''' You will find a helpful Smithing tutor in the west of Varrock - that's north of here. Follow the path across the river and head north.
+****** {{tbox|pic=22574 detail.png|Look for this icon in the west of Varrock.}}
+****** {{tbox|pic=5082 detail.png|The minimap in the top right corner of the game screen has various icons showing the locations of things. This icon to the left shows where Mining sites are.}}
+****** '''Lumbridge Guide:''' I suggest you go and mine some ore; find the Mining symbol - with the guide symbol near it - in the swamp south of here. The Mining guide there can teach you how to mine ore.
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|Yes please.}}
+******* '''Player:''' Yes please.
+******* {{tact|initial}}
+****** {{topt|No thank you.}}
+******* '''Player:''' No thank you.
+******* {{tact|end}}
+***** {{topt|Where can I buy a weapon?}}
+****** '''Player:''' Where can I buy a weapon?
+****** '''Lumbridge Guide:''' You can get a weapon free from the combat tutors if they think you need it. Failing that, the nearest shop that would sell you something of that nature is Bob's Brilliant Axes in this very town. If you want a bigger
+****** '''Lumbridge Guide:''' choice I suggest you head to one of the big cities. If you follow the road east over the bridge and then head north you will eventually reach Varrock, where you can buy all manner of things. You can use the world map
+****** '''Lumbridge Guide:''' to help you find your way.
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|No thank you.}}
+******* '''Player:''' No thank you.
+******* {{tact|end}}
+****** {{topt|I'd like to know more about getting weapons.}}
+******* {{tact|previous}}
+****** {{topt|I'd like to know about something else.}}
+******* '''Player:''' I'd like to know about something else.
+******* '''Lumbridge Guide:''' Well, what would you like to know?
+******* {{tact|initial}}
+**** {{topt|Could I get a staff like yours?}}
+***** '''Player:''' Could I get a staff like yours?
+***** '''Lumbridge Guide:''' There is no other staff like this in all the land. It's a very important staff. It shows who holds the job as the Lumbridge Guide, and that's me.
+***** '''Lumbridge Guide:''' Is there anything else you need help with?
+***** {{topt|I'd like to know more about getting weapons.}}
+****** {{tact|previous}}
+***** {{topt|I'd like to know about something else.}}
+****** '''Player:''' I'd like to know about something else.
+****** '''Lumbridge Guide:''' Well, what would you like to know?
+****** {{tact|initial}}
+***** {{topt|No thank you.}}
+****** '''Player:''' No thank you.
+****** {{tact|end}}
+**** {{topt|Yes, but what should I fight once I have got a weapon?}}
+***** '''Player:''' Yes, but what should I fight once I have got a weapon?
+***** {{tact|below}}
+*** {{tcond|If the player has a weapon equipped or in their inventory:}}
+**** '''Lumbridge Guide:''' There's lots of beasts to fight in the woods around here, especially to the west. There are certainly some goblins and spiders that are pests and could do with being cleared out. There's also a chicken farm or two up the
+**** '''Lumbridge Guide:''' road for some fairly easy pickings. Non-player characters usually appear as yellow dots on your minimap, although there are some that you won't be able to fight, such as myself. A monster's combat level is
+**** '''Lumbridge Guide:''' shown next to their 'Attack' option. If that level is coloured green it means the monster is weaker than you. If it is red, it means that the monster is tougher than you.
+**** '''Lumbridge Guide:''' Remember, you will do better if you have better armour and weapons and it's always worth carrying a bit of food to heal yourself.
+**** {{topt|Where can I get food to heal myself?}}
+***** '''Player:''' Where can I get food to heal myself?
+***** '''Lumbridge Guide:''' There are many different foods in the game such as cabbage, fish, meat and many more. Which do you wish to hear about?
+***** {{topt|How do I get cabbages?}}
+****** '''Player:''' How do I get cabbages?
+****** '''Lumbridge Guide:''' There is a field a little distance to the north of here packed full of cabbages which are there for the picking.
+****** '''Lumbridge Guide:''' You could also farm your own cabbages; there's a Farming patch just south of Falador.
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|I'd like to know about other food.}}
+******* {{tact|previous}}
+****** {{topt|I'd like to know about something else.}}
+******* '''Player:''' I'd like to know about something else.
+******* '''Lumbridge Guide:''' Well, what would you like to know?
+******* {{tact|initial}}
+****** {{topt|No thank you.}}
+****** '''Player:''' No thank you.
+****** {{tact|end}}
+***** {{topt|How do I fish?}}
+****** '''Player:''' How do I fish?
+****** {{tcond|If the player has above X Fishing:}}
+******* '''Lumbridge Guide:''' I am confused. You are already an experienced fisher. You should know the answer to that already.
+******* {{tact|end}}
+****** '''Lumbridge Guide:''' Fishing spots require different levels and equipment to use. To start Fishing, you'll want to talk to the Fishing tutor who can be found in the swamps south of here. He will also give you a small fishing net if you don't
+****** '''Lumbridge Guide:''' own one already.
+****** {{tbox|pic=5088 detail.png|The minimap in the top right corner of the game screen has various icons showing the locations of things. This icon to the left shows where Fishing spots are.}}
+****** {{tbox|pic=small fishing net detail.png|You will need some Fishing equipment. At the Fishing spots to the south you can only use a small fishing net.}}
+****** '''Player:''' Where could I find one of those?
+****** '''Lumbridge Guide:''' You can get them from a Fishing shop or our Fishing Tutor south of here in the swamp. There is a Fishing shop in Port Sarim; you can find it on the world map. Port Sarim is some way to the west of here, beyond
+****** '''Lumbridge Guide:''' the village of Draynor.
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|I'd like to know about other food.}}
+******* {{tact|previous}}
+****** {{topt|I'd like to know about something else.}}
+******* '''Player:''' I'd like to know about something else.
+******* '''Lumbridge Guide:''' Well, what would you like to know?
+******* {{tact|initial}}
+****** {{topt|No thank you.}}
+****** '''Player:''' No thank you.
+****** {{tact|end}}
+***** {{topt|Where can I find meat?}}
+****** '''Player:''' Where can I find meat?
+****** '''Lumbridge Guide:''' I suggest you go and kill some chickens. The roads on either side of this river eventually go past a chicken farm. When you have killed some chickens, cook them. You could either make a fire or use a range.
+****** '''Lumbridge Guide:''' There is a range at the southern end in this town and a Cooking tutor in south Lumbridge near Bob's Brilliant Axes shop.
+****** {{tbox|pic=5090 detail.png|The minimap in the top right corner of the game screen has various icons showing the locations of things. This icon to the left shows where Cooking ranges are.}}
+****** '''Lumbridge Guide:''' Is there anything else you need help with?
+****** {{topt|I'd like to know about other food.}}
+******* {{tact|previous}}
+****** {{topt|I'd like to know about something else.}}
+******* '''Player:''' I'd like to know about something else.
+******* '''Lumbridge Guide:''' Well, what would you like to know?
+******* {{tact|initial}}
+****** {{topt|No thank you.}}
+****** '''Player:''' No thank you.
+****** {{tact|end}}
+**** {{topt|Where can I get better armour and weapons?}}
+***** '''Lumbridge Guide:''' Well, you can make them, buy them or talk to the combat tutors just west of here.
+***** {{topt|How do I make a weapon?}}
+****** {{tact|above}}
+***** {{topt|Where can I buy a weapon?}}
+****** {{tact|above}}
+***** {{topt|Could I get a staff like yours?}}
+****** {{tact|above}}
+**** {{topt|Okay, thanks, I will go and kill things.}}
+***** '''Player:''' Okay, thanks, I will go and kill things.
+***** {{tact|end}}
+**** {{topt|Can I kill other players?}}
+***** '''Player:''' Can I kill other players?
+***** '''Lumbridge Guide:''' Well, you can go to the Wilderness. That is the area for killing other players. Just keep heading north and eventually you will be bound to reach it. Be very careful, though. Player-killing is not for the unprepared.
+***** '''Lumbridge Guide:''' I'd suggest that you leave any items you don't want to lose in the bank and take a good supply of food with you.
+***** '''Lumbridge Guide:''' Is there anything else you need help with?
+***** {{topt|No thank you.}}
+****** '''Player:''' No thank you.
+****** {{tact|end}}
+***** {{topt|I'd like to know more about combat.}}
+****** {{tact|previous}}
+***** {{topt|I'd like to know about something else.}}
+****** '''Player:''' I'd like to know about something else.
+****** '''Lumbridge Guide:''' Well, what would you like to know?
+****** {{tact|initial}}
+** {{tcond|If the player has a Combat level above X:}}
+*** '''Lumbridge Guide:''' You're strong enough to work out what monsters to fight for yourself now, but the combat tutors might help you with any questions you have about the skills; they're just over there to the south of the general store.
+*** {{tbox|pic=22577 detail.png|The minimap in the top right corner of the game screen has various icons showing the locations of things. This icon to the left shows where Combat tutors are.}}
+*** {{tact|initial}}
+* {{topt|Where can I make money?}}
+** '''Player:''' Where can I make money?
+** '''Lumbridge Guide:''' There are many ways to make money in the game. I would suggest either killing monsters or doing a trade skill such as Smithing or Fishing.
+** '''Lumbridge Guide:''' Please don't try to get money by begging off other players. It will make you unpopular. Nobody likes a beggar. It is very irritating to have other players asking for your hard-earned cash.
+** {{topt|Where can I smith?}}
+*** '''Player:''' Where can I smith?
+*** {{tact|above}}
+** {{topt|How do I fish?}}
+*** '''Player:''' How do I fish?
+*** {{tact|above}}
+*** {{tact|end}}
+** {{topt|What monsters should I fight?}}
+*** {{tact|above}}
+* {{topt|Where can I find more information?}}
+** '''Player:''' Where can I find more information?
+** {{tact|opens2=Useful links section of the account management tab}}
+** '''Lumbridge Guide:''' What you'll want is the OSRS Wiki! I've taken the liberty of opening the useful links section of the account management tab for you. Here you can find a link to the wiki. There's information and guides on almost
+** '''Lumbridge Guide:''' everything, all easily searched and it's even written and maintained by players.
+** '''Lumbridge Guide:''' Is there anything else you need help with?
+** {{topt|Yes please.}}
+*** '''Player:''' Yes please.
+*** {{tact|initial}}
+** {{topt|No thank you.}}
+*** '''Player:''' No thank you.
+*** {{tact|end}}
+* {{topt|More options...}}
+** {{topt|I'd like to know more about security.}}
+*** '''Player:''' I'd like to know more about security.
+*** '''Lumbridge Guide:''' First I must warn you to take every precaution to keep your RuneScape password and PIN secure. The most important thing to remember is to never give your password to, or share your account with, anyone.
+*** '''Lumbridge Guide:''' I can also tell you about password security, avoiding item scamming and in-game moderation. I can also tell you about a place called the Stronghold of Security, where you can learn more about account security and
+*** '''Lumbridge Guide:''' have a bit of an adventure at the same time.
+*** {{topt|I'd like to know about password security.}}
+**** '''Player:''' I'd like to know about password security.
+**** '''Lumbridge Guide:''' Well, the first thing to remember with password security, which I can't stress enough, is to never tell your password, bank PIN or authenticator details to anyone, not even if they claim to be Jagex staff. Real
+**** '''Lumbridge Guide:''' Jagex staff will NEVER ask for your password. Sharing your account is a very bad idea, even if you think that you know and trust the person you are sharing with. Players have lost items and even their
+**** '''Lumbridge Guide:''' account this way. Sharing accounts is also against the rules.
+**** '''Player:''' Is there anything else to be aware of?
+**** '''Lumbridge Guide:''' Yes, also be careful where you enter your password. Be aware that fake Old School RuneScape websites exist. These are sites that claim to give things such as item/stat upgrades, free items, beta testing and
+**** '''Lumbridge Guide:''' moderator applications. Jagex do not offer any of these services.
+**** '''Lumbridge Guide:''' Also be aware of trojans and keyloggers. These nasty programs can send everything you type into your device back to the computers of malicious people, so you can lose more than just your Old School RuneScape
+**** '''Lumbridge Guide:''' password in this way. To avoid getting these on your device, be very wary of what you download, especially when it comes to downloading third party software. Also be very wary of email attachments and instant
+**** '''Lumbridge Guide:''' messenger file transfers, which can contain such things.
+**** '''Lumbridge Guide:''' Finally, remember the game doesn't censor your password or bank PIN when you type them; anyone who tells you otherwise is probably trying to steal your character or items.
+**** '''Lumbridge Guide:''' Is there anything else you need help with?
+**** {{topt|Tell me more about security.}}
+***** '''Player:''' I'd like to know more about security.
+***** '''Lumbridge Guide:''' First I must warn you to take every precaution to keep your RuneScape password and PIN secure. The most important thing to remember is to never give your password to, or share your account with, anyone.
+***** '''Lumbridge Guide:''' I can also tell you about password security, avoiding item scamming and in-game moderation. I can also tell you about a place called the Stronghold of Security, where you can learn more about account security and
+***** '''Lumbridge Guide:''' have a bit of an adventure at the same time.
+***** {{topt|I'd like to know about password security.}}
+****** {{tact|below}}
+***** {{topt|I'd like to know more about avoiding item scamming.}}
+****** {{tact|below}}
+***** {{topt|I'd like to know more about in-game moderation.}}
+****** {{tact|below}}
+***** {{topt|I'd like to know about the Stronghold of Security.}}
+****** {{tact|below}}
+**** {{topt|I'd like to know more about something else.}}
+***** '''Player:''' I'd like to know about something else.
+***** '''Lumbridge Guide:''' Well, what would you like to know?
+***** {{tact|initial}}
+**** {{topt|No thank you.}}
+***** '''Player:''' No thank you.
+***** {{tact|end}}
+*** {{topt|I'd like to know more about avoiding item scamming.}}
+**** '''Player:''' I'd like to know more about avoiding item scamming.
+**** '''Lumbridge Guide:''' There are many nice and helpful players in Old School RuneScape; unfortunately, as in real life, there are some who aren't so honest. Some people may try to trick you out of your items. Try not to fall for this as
+**** '''Lumbridge Guide:''' Jagex policy is to never return lost items to players that have been scammed. Doing so just encourages users to claim they lost items they never had to gain an unfair advantage. However, people carrying out such
+**** '''Lumbridge Guide:''' scams will get banned as it is against the rules.
+**** '''Lumbridge Guide:''' When trading, you have a second trade confirmation screen. Always double check that you are getting the items you expect on this page as some people may try and change what they are trading at the last minute on
+**** '''Lumbridge Guide:''' the first trade screen. Remember when you have clicked accept on the second trade screen, the trade is not reversible.
+**** '''Lumbridge Guide:''' Try and find out from someone else what an item is before spending a lot of money on it. Not all merchants are honest about the rarity or the uses of their wares. For example, some people try to pass off spinach rolls as
+**** '''Lumbridge Guide:''' rare when in fact they're as common as cabbages!
+**** '''Lumbridge Guide:''' Be wary of people offering to improve your items. For example, some people will claim they can add a trim to your armour or upgrade your sword to a more powerful one. This is not possible and they are trying
+**** '''Lumbridge Guide:''' to steal your hard-earned equipment.
+**** '''Lumbridge Guide:''' Is there anything else you need help with?
+**** {{topt|Tell me more about security.}}
+***** {{tact|above}}
+**** {{topt|I'd like to know about something else.}}
+***** '''Player:''' I'd like to know about something else.
+***** '''Lumbridge Guide:''' Well, what would you like to know?
+***** {{tact|initial}}
+**** {{topt|No thank you.}}
+***** '''Player:''' No thank you.
+***** {{tact|end}}
+*** {{topt|I'd like to know more about in-game moderation.}}
+**** '''Player:''' I'd like to know more about in-game moderation.
+**** '''Lumbridge Guide:''' You will, from time to time, see moderator characters in game. Remember: a real staff member will never ask for your password or any other personal information. There are two types of moderator. You may see Jagex
+**** '''Lumbridge Guide:''' staff characters in game - these can be identified by a gold crown next to their name and are the people who work in the Jagex offices. They might be from Customer Support, or they might be a tester or a
+**** '''Lumbridge Guide:''' programmer. You may also see player moderators - these can be identified by a silver crown next to their name. Player moderators are trusted players of Old School RuneScape that help keep in-game behaviour in
+**** '''Lumbridge Guide:''' line with the Old School RuneScape rules.
+**** '''Player:''' How do I become a player moderator?
+**** '''Lumbridge Guide:''' The only way to become a player moderator is to know and play by the rules laid down by Jagex. Report those who break the rules, help players who need it and one day you might find an invite to become a moderator in
+**** '''Lumbridge Guide:''' your Old School RuneScape inbox. Note that Jagex will never contact you in game or by email to become a player moderator.
+**** '''Lumbridge Guide:''' Is there anything else you need help with?
+**** {{topt|No, thank you.}}
+***** '''Player:''' No thank you.
+***** {{tact|end}}
+**** {{topt|Yes, please.}}
+***** '''Player:''' Yes please.
+***** {{tact|initial}}
+**** {{topt|Tell me more about security.}}
+***** {{tact|above}}
+*** {{topt|I'd like to know about the Stronghold of Security.}}
+**** '''Player:''' I'd like to know about the Stronghold of Security.
+**** '''Lumbridge Guide:''' An exciting new discovery has been made in the Barbarian Village. Soon after they started mining in the middle of the village, one of the miners got caught in a cave.
+**** '''Player:''' Sounds painful, did he fall on his head?
+**** '''Lumbridge Guide:''' No, but it turned out that he had discovered a place unlike any other.
+**** '''Player:''' How so?
+**** '''Lumbridge Guide:''' Well an explorer went to look down there, it's full of new and exciting creatures and other surprises on top of that. It turns out this place can also help you to secure your account more effectively.
+**** '''Player:''' Wow, that sounds good. Where can I find the explorer to learn more?
+**** '''Lumbridge Guide:''' Sadly the explorer went missing and has not been found. However, here is some information to get you started on securing your account. You can find the Barbarian Village north of Falador and west of Varrock.
+**** {{tcond|If the player doesn't have a security book yet:}}
+***** {{tact|receives=security book}}
+***** {{tbox|pic=security book detail.png|The guide hands you a book.}}
+***** {{tact|continues}}
+**** '''Lumbridge Guide:''' Is there anything else you need help with?
+**** {{topt|Tell me more about security.}}
+***** {{tact|above}}
+**** {{topt|I'd like to know about something else.}}
+***** {{tact|above}}
+**** {{topt|No thank you.}}
+***** '''Player:''' No thank you.
+***** {{tact|end}}
+** {{topt|Where can I find a bank?}}
+*** '''Player:''' Where can I find a bank?
+*** '''Lumbridge Guide:''' You'll find a bank upstairs in Lumbridge Castle - go right to the top.
+*** The minimap in the top right corner of the game screen has various icons showing the locations of things. This icon to the left shows where banks are.
+*** '''Lumbridge Guide:''' Is there anything else you need help with?
+*** {{topt|Yes please.}}
+**** '''Player:''' Yes please.
+***** {{tact|initial}}
+*** {{topt|No thank you.}}
+**** '''Player:''' No thank you.
+**** {{tact|end}}
+** {{topt|I don't need any help.}}
+*** '''Player:''' No, I can find things myself thank you.
+*** {{tact|end}}
+** {{topt|Previous options...}}
+*** {{tact|previous2}}

@@ -1,0 +1,59 @@
+{{Transcript|npc}}
+{{incomplete|Casket receiving dialogue is missing}}
+
+==Standard dialogue==
+* '''Wizard Traiborn:''' Ello young thingummywut.
+* {{topt|What's a thingummywut?}}
+** '''Player:''' What's a thingummywut?
+** '''Wizard Traiborn:''' A thingummywut? Where? Where?
+** '''Wizard Traiborn:''' Those pesky thingummywuts. They get everywhere. They leave a terrible mess too.
+** {{topt|Err you just called me a thingummywut.}}
+*** '''Player:''' Err you just called me thingummywut.
+*** '''Wizard Traiborn:''' You're a thingummywut? I've never seen one up close before. They said I was mad!
+*** '''Wizard Traiborn:''' Now you are my proof! There ARE thingummywuts in this tower. Now where can I find a cage big enough to keep you?
+*** {{topt|Err I'd better be off really.}}
+**** '''Player:''' Err I'd better be off really.
+**** '''Wizard Traiborn:''' Oh ok, have a good time, and watch out for sheep! They're more cunning than they look.
+**** {{tact|end}}
+*** {{topt|They're right, you are mad.}}
+**** '''Player:''' They're right, you are mad.
+**** '''Wizard Traiborn:''' That's a pity. I thought maybe they were winding me up.
+**** {{tact|end}}
+** {{topt|Tell me what they look like and I'll mash 'em.}}
+*** '''Player:''' Tell me what they look like and I'll mash 'em.
+*** '''Wizard Traiborn:''' Don't be ridiculous. No-one has ever seen one.
+*** '''Wizard Traiborn:''' They're invisible, or a myth, or a figment of my imagination. Can't remember which right now.
+*** {{tact|end}}
+* {{topt|Teach me to be a mighty and powerful wizard.}}
+** '''Player:''' Teach me to be a mighty and powerful wizard.
+** '''Wizard Traiborn:''' Wizard eh? You don't want any truck with that sort. They're not to be trusted. That's what I've heard anyways.
+** {{topt|So aren't you a wizard?}}
+*** '''Player:''' So aren't you a wizard?
+*** '''Wizard Traiborn:''' How dare you? Of course I'm a wizard. Now don't be so cheeky or I'll turn you into a frog.
+*** {{tact|end}}
+** {{topt|Oh I'd better stop talking to you then.}}
+*** '''Player:''' Oh I'd better stop talking to you then.
+*** '''Wizard Traiborn:''' Cheerio then. It was nice chatting to you.
+*** {{tact|end}}
+
+==Treasure Trails==
+===Medium===
+* '''Wizard Traiborn:''' Ello young thingummywut.
+* '''Wizard Traiborn:''' Here you go!
+* '''Player:''' What?
+* '''Wizard Traiborn:''' I need you to answer this for me like a good thingummywut.
+* {{tact|receives=a challenge scroll}}
+* {{tbox|Wizard Traiborn has given you a challenge scroll!}}
+* {{tact|end}}
+
+====When talked to again====
+* '''Wizard Traiborn:''' Ello young thingummywut.
+* '''Wizard Traiborn:''' Please give me your answer, young thingummywut!
+* {{tcond|When given the wrong answer:}}
+** '''Wizard Traiborn:''' How can that be? Go check again, silly thingummywut!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Wizard Traiborn:''' Spot on!
+** {{tact|receives=[another clue scroll/a casket]}}
+** {{tbox|Wizard Traiborn has given you another clue scroll!}}
+** {{tact|end}}

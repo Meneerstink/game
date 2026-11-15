@@ -1,0 +1,55 @@
+{{Transcript|npc}}
+{{Incomplete|Missing Ring of Charos(a) dialogue}}
+
+==Standard dialogue==
+===Before completing Pandemonium===
+* '''Captain Tobias:''' Hello there. Do you want to go on a trip to Karamja? We can take you to Musa Point for only 30 coins.
+* {{tselect|Select an Option}}
+* {{topt|Yes please.}}
+** {{tcond|If the player does not have enough coins in their inventory:}}
+*** '''Player:''' Oh dear, I don't seem to have enough money.
+*** {{tact|end}}
+** '''Player:''' Yes please.
+** {{tact|The player is then transported to Karamja.}}
+** {{tact|end}}
+* {{topt|No, thank you.}}
+** '''Player:''' No, thank you.
+** {{tact|end}}
+
+===After completing Pandemonium===
+* {{tcond|If the player is not wearing Karamja gloves:}}
+** '''Captain Tobias:''' Hello there. Do you want to travel somewhere? We can take you to Musa Point on Karamja, or if you prefer, we can drop you off at the Pandemonium on the way. It only costs 30 coins.
+** {{Tact|continues}}
+* {{tcond|If the player is wearing Karamja gloves:}}
+** '''Captain Tobias:''' Hello there. Do you want to travel somewhere? We can take you to Musa Point on Karamja for 15 coins, or if you prefer, for 30 coins we can drop you off at the Pandemonium on the way.
+** {{Tact|continues}}
+* {{tselect|Select an option}}
+* {{topt|Yes please.}}
+** '''Player:''' Yes please.
+** '''Captain Tobias:''' Where would you like to go?
+** {{tselect|Select an option}}
+** {{topt|I'd like to go to Musa Point.}}
+*** '''Player:''' I'd like to go to Musa Point.
+*** {{tact|The player is then transported to Karamja.}}
+*** {{tact|end}}
+** {{topt|I'd like to go to the Pandemonium.}}
+*** '''Player:''' I'd like to go to the Pandemonium.
+*** {{tact|The player is then transported to the Pandemonium.}}
+*** {{tact|end}}
+** {{topt|Actually, I don't want to go anywhere.}}
+*** '''Player:''' Actually, I don't want to go anywhere.
+*** {{tact|end}}
+* {{topt|No thank you.}}
+** {{tact|above}}
+
+==Treasure Trails==
+===Easy===
+* '''Captain Tobias:''' Well done, matey! Here you go!
+* {{tcond|If the reward is another clue scroll:}}
+** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've found another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}
