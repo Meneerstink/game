@@ -80,7 +80,28 @@ object CoxRaids : KLogging() {
             CoxPointsOverlay.open(it)
         }
         CoxPartyTab.updateAll(raid)
+        // tsps rsprox: 'The first room's bank chest shuts as the raid begins (47420 to 47419).'
+        val open = CoxIds.loc(47420)
+        val shut = CoxIds.loc(47419)
+        if (open != null && shut != null) replaceInRoom(raid, 0, raid.layout.floors[0][0], open, shut)
         return true
+    }
+
+    /** Swaps every loc [from] in [room] of floor [floor] for [to] (same shape and rotation). */
+    fun replaceInRoom(raid: CoxRaid, floor: Int, room: CoxLaidRoom, from: Int, to: Int) {
+        val world = raid.world
+        val x0 = raid.map.area.bottomLeftX + room.gridX * CoxMap.ROOM_TILES
+        val z0 = raid.map.area.bottomLeftZ + room.gridZ * CoxMap.ROOM_TILES
+        val h = CoxLayouts.FLOOR_PLANES[floor]
+        for (cx in 0 until CoxMap.ROOM_TILES step 8) for (cz in 0 until CoxMap.ROOM_TILES step 8) {
+            val chunk = world.chunks.get(Tile(x0 + cx, z0 + cz, h), createIfNeeded = false) ?: continue
+            chunk.getEntities<gg.rsmod.game.model.entity.GameObject>(gg.rsmod.game.model.EntityType.STATIC_OBJECT, gg.rsmod.game.model.EntityType.DYNAMIC_OBJECT)
+                .filter { it.id == from && it.tile.height == h }
+                .forEach { o ->
+                    world.remove(o)
+                    world.spawn(gg.rsmod.game.model.entity.DynamicObject(to, o.type, o.rot, o.tile))
+                }
+        }
     }
 
     /**
