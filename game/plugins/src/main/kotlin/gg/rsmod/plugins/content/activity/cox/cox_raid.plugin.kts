@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.activity.cox
 
 import gg.rsmod.game.model.priv.Privilege
+import gg.rsmod.plugins.content.inter.bank.openBank
 import kotlin.random.Random
 
 /*
@@ -99,6 +100,25 @@ CoxIds.loc(29995)?.let { rope ->
             player.teleportTo(landing)
             player.unlock()
         }
+    }
+}
+
+/*
+ * The first room's bank chest (cox-map import: 47420 'Bank chest' ops Use / Collect). OSRS Wiki Chambers of Xeric: 'The entrance room
+ * contains a bank chest to allow players to adjust their inventories ... the bank chest will be closed shut once the raid begins'
+ * (tsps rsprox: 47420 -> 47419 as the raid begins). Until the closed chest 47419 is imported the open one stays and refuses after the start.
+ * 'Collect' = the Grand Exchange collection box like every Bank+Collect chest/banker (banker_collect / ToA Bank Camel).
+ */
+CoxIds.loc(47420)?.let { chest ->
+    on_obj_option(obj = chest, option = "use") {
+        val raid = CoxRaids.raidAt(player.tile)
+        if (raid != null && raid.started) return@on_obj_option
+        player.openBank()
+    }
+    on_obj_option(obj = chest, option = "collect") {
+        val raid = CoxRaids.raidAt(player.tile)
+        if (raid != null && raid.started) return@on_obj_option
+        gg.rsmod.plugins.content.mechanics.exchange.GrandExchangeInterface.openCollectionBox(player)
     }
 }
 
