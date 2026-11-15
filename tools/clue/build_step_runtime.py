@@ -136,10 +136,28 @@ def main():
         if 'prayerBonusBelow' in extra or 'rangedBonusAtLeast' in extra:
             guide = 'Treasure_Trails__Guide__Cryptic_clues__Master.wiki'
             requirements_source = dict(file=guide, sha256=sha256((SOURCES/guide).read_bytes()).hexdigest())
+        challenge = dict(row.get('challenge', {}))
+        hint = row.get('hint')
+        if row.get('challenges'):
+            # Guide-only master anagrams have no Clue-info template. Losing
+            # these fields turned both into a plain talk-to completion.
+            assert kind == 'ANAGRAM' and row.get('anagram')
+            challenge = dict(type='PUZZLE_CHOICE', alternatives=row['challenges'])
+            hint = row['anagram']
+        if row['key'] == 'master:sherlock':
+            assert '|clue=Show this to Sherlock.' in raw.decode('utf8')
+            hint = 'Show this to Sherlock.'
+        if row['key'] == 'master:jorral':
+            text = raw.decode('utf8')
+            first = "Buried beneath the ground, who knows where it's found."
+            second = 'Lucky for you, A man called Jorral may have a clue.'
+            assert first in text and second in text
+            hint = first + '<br><br>' + second
+        assert isinstance(hint, str) and hint.strip(), row['key']
         record = dict(key=row['key'], tier=row['tier'], kind=kind, action=action,
-            hint=row.get('hint'), points=row.get('points', []), npcName=npc,
+            hint=hint, points=row.get('points', []), npcName=npc,
             npcCandidates=npcs[normalize(npc)] if npc else [], equipment=equipment,
-            challenge=row.get('challenge', {}), requirements=extra, requirementsSource=requirements_source,
+            challenge=challenge, requirements=extra, requirementsSource=requirements_source,
             source=row['source'], sourceFile=row['sourceFile'], sourceSha256=row['sourceSha256'])
         result.append(record)
         if missing: gaps.append(dict(key=row['key'], problems=missing))

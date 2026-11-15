@@ -2956,7 +2956,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": null,
+    "hint": "Dim Tharn",
     "points": [],
     "npcName": "Mandrith",
     "npcCandidates": [
@@ -2974,7 +2974,13 @@
       }
     ],
     "equipment": [],
-    "challenge": {},
+    "challenge": {
+      "type": "PUZZLE_CHOICE",
+      "alternatives": [
+        "LIGHT_BOX",
+        "SLIDING_PUZZLE"
+      ]
+    },
     "requirements": {},
     "requirementsSource": null,
     "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
@@ -2986,7 +2992,7 @@
     "tier": "master",
     "kind": "ANAGRAM",
     "action": "TALK",
-    "hint": null,
+    "hint": "Mus Kil Reader",
     "points": [],
     "npcName": "Radimus Erkle",
     "npcCandidates": [
@@ -3004,7 +3010,13 @@
       }
     ],
     "equipment": [],
-    "challenge": {},
+    "challenge": {
+      "type": "PUZZLE_CHOICE",
+      "alternatives": [
+        "LIGHT_BOX",
+        "SLIDING_PUZZLE"
+      ]
+    },
     "requirements": {},
     "requirementsSource": null,
     "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
@@ -3062,7 +3074,7 @@
     "tier": "master",
     "kind": "SHERLOCK",
     "action": "SHERLOCK",
-    "hint": null,
+    "hint": "Show this to Sherlock.",
     "points": [],
     "npcName": "Sherlock",
     "npcCandidates": [],
@@ -3079,7 +3091,7 @@
     "tier": "master",
     "kind": "HOT_COLD",
     "action": "HOT_COLD",
-    "hint": null,
+    "hint": "Buried beneath the ground, who knows where it's found.<br><br>Lucky for you, A man called Jorral may have a clue.",
     "points": [],
     "npcName": "Jorral",
     "npcCandidates": [
