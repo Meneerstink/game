@@ -24,6 +24,7 @@ class ClueAssetProbe {
                     try { source = ModernModelDecoder.INSTANCE.decode(a,false); }
                     catch (Throwable old) { source = Rev667ModelDecoder.INSTANCE.decode(a,false); }
                     var target = Rev667ModelDecoder.INSTANCE.decode(b,true);
+                    row.put("sourceTextures",source.getFaceTexture());
                     row.put("differences", ModelConvertTool.INSTANCE.compare(source,target));
                 } catch (Throwable error) { row.put("decodeError",error.toString()); }
                 report.put("model:"+id,row);

@@ -14,8 +14,13 @@ class ClueWidgetProbe {
         var groups = new LinkedHashMap<Integer, Object>();
         var models = new LinkedHashMap<Integer, String>();
         try (ModernCacheReader reader = new ModernCacheReader(new File(args[0]))) {
+            byte[] rewardInventory = reader.file(2, 5, 141);
+            if (rewardInventory == null) throw new IllegalStateException("Source reward inventory 141 missing");
+            System.out.println("Reward inventory 141: " + java.util.Arrays.toString(rewardInventory));
             var loader = new InterfaceLoader();
-            for (int group : new int[]{73, 203, 306}) {
+            int[] selected = args.length > 2 ? java.util.Arrays.stream(args[2].split(",")).mapToInt(Integer::parseInt).toArray()
+                    : new int[]{73, 203, 306, 322};
+            for (int group : selected) {
                 var components = new LinkedHashMap<Integer, Object>();
                 for (var component : reader.files(3, group).entrySet()) {
                     byte[] bytes = component.getValue();
