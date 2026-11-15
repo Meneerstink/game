@@ -4,5 +4,5 @@ package gg.rsmod.plugins.content.scrolls
 object ClueDeathItems {
     private val sourceBoxes = listOf(24362, 24363, 24364, 24365, 24366)
     fun contains(item: Int): Boolean = ClueScrollTier.values().any { it.scrollId == item || it.casketId == item } ||
-        sourceBoxes.any { ClueItems.local(it) == item }
+        (sourceBoxes + TreasureTrailTornParts.SOURCE_IDS).any { ClueItems.local(it) == item }
 }

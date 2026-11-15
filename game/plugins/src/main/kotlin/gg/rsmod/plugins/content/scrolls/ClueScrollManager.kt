@@ -52,18 +52,22 @@ class ClueScrollManager(
         /** An uninitialised newly obtained clue resets tier progress; re-picking a read clue does not. */
         fun prepare(player: Player, item: Item, tier: ClueScrollTier) {
             val available = steps.getValue(tier)
-            if (available.isEmpty() || item.getAttr(ItemAttribute.CLUE_STEP_KEY) != null) return
-            // Convert the old per-player index once. All new scrolls store their own step.
-            val legacy = player.attr[activeStepAttrs.getValue(tier)]
+            if (available.isEmpty()) return
+            val previousKey = item.getAttr(ItemAttribute.CLUE_STEP_KEY)
+            if (previousKey != null && available.any { it.persistenceId == previousKey }) return
+            // A removed donor step cannot remain an unreadable permanent clue.
+            // Its former list index has no meaning in the sourced tier pool.
             player.attr.remove(activeStepAttrs.getValue(tier))
-            val step = legacy?.let { available.getOrNull(it) } ?: available.random()
+            val step = available.random()
             item.putAttr(ItemAttribute.CLUE_STEP_KEY, step.persistenceId)
-            player.attr[progressAttrs.getValue(tier)] = 0
-            player.attr[lengthAttrs.getValue(tier)] = tier.rollTrailLength(Random.Default)
+            if (previousKey == null || player.attr[lengthAttrs.getValue(tier)] == null) {
+                player.attr[progressAttrs.getValue(tier)] = 0
+                player.attr[lengthAttrs.getValue(tier)] = tier.rollTrailLength(Random.Default)
+            }
             player.inventory.dirty = true
         }
 
-        private fun activeStep(
+        fun activeStep(
             player: Player,
             tier: ClueScrollTier,
         ): ClueStep? {
@@ -111,35 +115,57 @@ class ClueScrollManager(
          * Length is rolled once per trail, with OSRS bounds, rather than an
          * unbounded donor percentage on every step. Validate replacement before mutation.
          */
-        private fun complete(
+        private fun complete(player: Player, tier: ClueScrollTier) {
+            advance(player, tier)
+        }
+
+        /**
+         * Advance only the exact scroll a delayed NPC/puzzle interaction started
+         * with. Auxiliary items (three torn parts) and the next clue/casket are
+         * committed together; a full inventory or missing casket spends nothing.
+         */
+        fun advance(
             player: Player,
             tier: ClueScrollTier,
-        ) {
+            expected: Item? = null,
+            expectedProgress: Int? = null,
+            consume: List<Int> = emptyList(),
+        ): Boolean {
             val slot = player.inventory.rawItems.indexOfFirst { it?.id == tier.scrollId }
-            if (slot < 0) return
-            val scroll = player.inventory[slot] ?: return
+            if (slot < 0) return false
+            val scroll = player.inventory[slot] ?: return false
+            if (expected != null && scroll !== expected) return false
+            if (expectedProgress != null && progress(player, tier) != expectedProgress) return false
             val completed = progress(player, tier) + 1
-            val length = player.attr[lengthAttrs.getValue(tier)] ?: return
+            val length = player.attr[lengthAttrs.getValue(tier)] ?: return false
+            val staged = ItemContainer(player.inventory)
+            for (id in consume) {
+                if (!staged.remove(id, 1, assureFullRemoval = true).hasSucceeded()) return false
+            }
             if (completed >= length) {
-                if (tier.casketId < 0) return
-                val staged = ItemContainer(player.inventory)
+                if (tier.casketId < 0) return false
                 staged[slot] = null
-                if (!staged.add(tier.casketId, 1, assureFullInsertion = true).hasSucceeded()) return
-                if (player.inventory[slot] !== scroll) return
-                for (i in 0 until staged.capacity) {
-                    val old = player.inventory[i]
-                    val next = staged[i]
-                    if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next
-                }
+                if (!staged.add(tier.casketId, 1, assureFullInsertion = true).hasSucceeded()) return false
+            } else {
+                val available = steps.getValue(tier)
+                if (available.isEmpty()) return false
+                staged[slot]!!.putAttr(ItemAttribute.CLUE_STEP_KEY, available.random().persistenceId)
+            }
+            if (player.inventory[slot] !== scroll) return false
+            for (i in 0 until staged.capacity) {
+                val old = player.inventory[i]
+                val next = staged[i]
+                if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next
+            }
+            if (completed >= length) {
                 player.attr.remove(progressAttrs.getValue(tier))
                 player.attr.remove(lengthAttrs.getValue(tier))
                 player.message("You've found a casket!")
             } else {
-                scroll.putAttr(ItemAttribute.CLUE_STEP_KEY, steps.getValue(tier).random().persistenceId)
-                player.inventory.dirty = true
                 player.attr[progressAttrs.getValue(tier)] = completed
                 player.message("You've found another clue scroll!")
             }
+            return true
         }
     }
 

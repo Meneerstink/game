@@ -26,6 +26,12 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
+if selected == 'step-tests':
+    # Self-contained across a fresh output directory: do not depend on classes
+    # left by a previous invocation after HEAD moved to the next small commit.
+    sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
+               ['TreasureTrailChallenges', 'TreasureTrailStepCatalogue', 'ClueScrollManager',
+                'ClueDeathItems', 'TreasureTrailTornParts']]
 for module in (['game'] if selected == 'core-tests' else ['plugins'] if selected == 'step-tests' else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
@@ -40,7 +46,7 @@ for module in (['game'] if selected == 'core-tests' else ['plugins'] if selected
     argfile = out / f'{module}.args'
     argfile.write_text('\n'.join('"' + a.replace('\\', '/') + '"' for a in args), encoding='utf-8')
     print(f'Compiling {len(batch)} {module} files', flush=True)
-    subprocess.run([str(java), '-Xmx2g', '-cp', ';'.join(compiler),
+    subprocess.run([str(java), '-Xmx512m' if selected == 'step-tests' else '-Xmx2g', '-cp', ';'.join(compiler),
                     'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler', '@' + str(argfile)], cwd=ROOT, check=True,
                    creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
@@ -66,9 +72,16 @@ if selected == 'step-tests':
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
                 'junit/junit', 'org.hamcrest/hamcrest-core']]
+    testing += [str(next((CACHE/'io.mockk'/name/'1.13.4').rglob('*.jar'))) for name in
+                ['mockk-agent-api-jvm', 'mockk-agent-jvm', 'mockk-core-jvm', 'mockk-dsl-jvm', 'mockk-jvm']]
+    testing += [str(next((CACHE/m).rglob('*.jar'))) for m in
+                ['net.bytebuddy/byte-buddy/1.12.20', 'net.bytebuddy/byte-buddy-agent/1.12.20',
+                 'org.objenesis/objenesis/3.3', 'org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.6.4',
+                 'org.jetbrains.kotlin/kotlin-reflect/1.8.0']]
     cp = [str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
-    names = ['TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests']
+    names = ['TreasureTrailChallengeTests', 'TreasureTrailStepCatalogueTests',
+             'ClueScrollLifecycleTests', 'TreasureTrailTornPartsTests']
     test_sources = [ROOT/'game/plugins/src/test/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in names]
     target = out/'step-tests'; target.mkdir(exist_ok=True)
     args = ['-no-stdlib','-no-reflect','-jvm-target','11','-cp',';'.join(cp),'-d',str(target)] + [str(p) for p in test_sources]

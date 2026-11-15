@@ -86,4 +86,42 @@ class ClueScrollLifecycleTests {
         ClueScrollManager.prepare(player, player.inventory[0]!!, tier)
         assertEquals(0, ClueScrollManager.progress(player, tier))
     }
+
+    @Test fun `removed donor step migrates without resetting a started trail`() {
+        val player = player()
+        val tier = ClueScrollTier.EASY
+        val scroll = Item(tier.scrollId)
+        player.inventory[0] = scroll
+        ClueScrollManager.prepare(player, scroll, tier)
+        assertTrue(ClueScrollManager.tryDig(player))
+        val held = player.inventory[0]!!
+        held.putAttr(ItemAttribute.CLUE_STEP_KEY, Int.MIN_VALUE)
+        ClueScrollManager.prepare(player, held, tier)
+        assertNotEquals(Int.MIN_VALUE, held.getAttr(ItemAttribute.CLUE_STEP_KEY))
+        assertEquals(1, ClueScrollManager.progress(player, tier))
+    }
+
+    @Test fun `torn part consumption and progress are atomic and stale NPC responses cannot repeat them`() {
+        val player = player()
+        val tier = ClueScrollTier.EASY // Fixture exercises the shared transaction, not source master allocation.
+        val scroll = Item(tier.scrollId)
+        player.inventory[0] = scroll
+        ClueScrollManager.prepare(player, scroll, tier)
+        player.inventory[1] = Item(10001)
+        player.inventory[2] = Item(10002)
+        assertFalse(ClueScrollManager.advance(player, tier, scroll, 0, listOf(10001, 10002, 10003)))
+        assertEquals(1, player.inventory.getItemCount(10001))
+        assertEquals(1, player.inventory.getItemCount(10002))
+        assertEquals(0, ClueScrollManager.progress(player, tier))
+        player.inventory[3] = Item(10003)
+        assertTrue(ClueScrollManager.advance(player, tier, scroll, 0, listOf(10001, 10002, 10003)))
+        assertEquals(1, ClueScrollManager.progress(player, tier))
+        assertTrue((10001..10003).all { !player.inventory.contains(it) })
+        assertFalse(ClueScrollManager.advance(player, tier, scroll, 0))
+        assertEquals(1, ClueScrollManager.progress(player, tier))
+        val replacement = Item(player.inventory[0]!!)
+        player.inventory[0] = replacement
+        assertFalse(ClueScrollManager.advance(player, tier, scroll, 1))
+        assertEquals(1, ClueScrollManager.progress(player, tier))
+    }
 }
