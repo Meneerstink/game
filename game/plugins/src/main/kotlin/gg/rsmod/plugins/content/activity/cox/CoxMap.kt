@@ -97,9 +97,9 @@ object CoxMap {
             InstancedMapConfiguration.Builder().setExitTile(exit).addAttribute(InstancedMapAttribute.MANAGED_LIFETIME)
                 // 15-11 18:2x (testserver: 'Could not copy object due to its size and rotation outcome' on loc 66743 in a turned room):
                 // the OSRS client places a turned multi-tile loc whose rotated south-west tile leaves its chunk in the NEIGHBOUR chunk (it
-                // only checks the scene bounds). The engine's bypass drops such locs on the server side (client still draws them) -
-                // TODO COX.txt 'ENGINE-PUNT': own flag that adds them to the neighbour chunk (Pest Control/POH keep today's bypass).
-                .setBypassObjectChunkBounds(true).build())
+                // only checks the scene bounds). The plain bypass dropped them server-side - also the last floor's hole 29735 (3x3, rot 3
+                // at 3307,6710 in a room turned west: rotated x = -1), so nobody could go down to the Olm (test server 15-11 19:1x).
+                .addAttribute(InstancedMapAttribute.OBJECTS_OVERFLOW_INTO_NEIGHBOUR_CHUNK).build())
 
     /** An OSRS tile of [room]'s source block, where it lands in the raid ([plane] = the floor's instance plane). */
     fun roomTile(baseX: Int, baseZ: Int, plane: Int, room: CoxLaidRoom, source: Tile, sizeX: Int = 1, sizeZ: Int = sizeX): Tile {

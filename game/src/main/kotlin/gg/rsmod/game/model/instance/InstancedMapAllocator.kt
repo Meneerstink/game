@@ -291,6 +291,12 @@ class InstancedMapAllocator {
 
                                 if (insideChunk) {
                                     newChunk.addEntity(world, newObj, newObj.tile)
+                                } else if (InstancedMapAttribute.OBJECTS_OVERFLOW_INTO_NEIGHBOUR_CHUNK in map.attr) {
+                                    // CoX: like the OSRS client - the turned object belongs to the neighbour chunk; outside the map it is
+                                    // not drawn by the client either, so it is left out.
+                                    if (map.area.contains(newObj.tile)) {
+                                        world.chunks.get(newObj.tile.chunkCoords, createIfNeeded = true)!!.addEntity(world, newObj, newObj.tile)
+                                    }
                                 } else if (!bypassObjectChunkBounds) {
                                     throw IllegalStateException(
                                         "Could not copy object due to its size and rotation outcome (object rotation + chunk rotation). " +

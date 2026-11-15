@@ -75,6 +75,45 @@ object CoxRaids : KLogging() {
         }
     }
 
+    /** tsps r115 (rsprox): 'Landings on ropes and holes move to the nearest open tile'. Ring by ring up to [r]. */
+    fun nearestOpen(world: World, t: Tile, r: Int = 6): Tile {
+        fun open(c: Tile) = gg.rsmod.game.model.Direction.NESW.any { d -> world.collision.canTraverse(tile = c, direction = d, projectile = false, water = false) }
+        if (open(t)) return t
+        for (d in 1..r) for (dx in -d..d) for (dz in -d..d) {
+            if (maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz)) != d) continue
+            val c = t.transform(dx, dz)
+            if (open(c)) return c
+        }
+        return t
+    }
+
+    /** Where the hole of floor [floor]'s end room leads: the next floor's start room (its rope tile) or, from the last floor, the Olm. */
+    fun holeLanding(raid: CoxRaid, floor: Int): Tile {
+        val next = floor + 1
+        val tile = if (next < raid.layout.floors.size) {
+            val start = raid.layout.floors[next][0]
+            CoxMap.roomTile(raid.map, next, start, CoxMap.FLOOR_START_ROPE[start.variant])
+        } else {
+            CoxMap.olmTile(raid.map, CoxMap.OLM_ENTRANCE_SOURCE)
+        }
+        return nearestOpen(raid.world, tile)
+    }
+
+    /** Where floor [floor]'s start rope leads: the floor above's end room, at the bottom of its hole. */
+    fun ropeLanding(raid: CoxRaid, floor: Int): Tile? {
+        val above = floor - 1
+        if (above < 0) return null
+        val end = raid.layout.floors[above].last()
+        val source = CoxMap.FLOOR_END_HOLE[end.variant] ?: return null
+        return nearestOpen(raid.world, CoxMap.roomTile(raid.map, above, end, source))
+    }
+
+    /** 'm:ss' of the ticks since the raid began (tsps: durations are ticks since "The raid has begun!"). */
+    fun duration(raid: CoxRaid): String {
+        val seconds = if (raid.startCycle < 0) 0 else ((raid.world.currentCycle - raid.startCycle) * 6 / 10)
+        return "%d:%02d".format(seconds / 60, seconds % 60)
+    }
+
     fun spawnTile(raid: CoxRaid): Tile {
         val first = raid.layout.floors[0][0]
         return CoxMap.roomTile(raid.map, 0, first, CoxMap.RAID_START_SPAWN[first.variant])

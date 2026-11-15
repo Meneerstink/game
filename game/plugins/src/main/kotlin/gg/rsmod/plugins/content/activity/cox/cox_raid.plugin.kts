@@ -59,6 +59,49 @@ CoxIds.loc(29789)?.let { passage ->
     }
 }
 
+/*
+ * Between floors (import log cox-map: RAIDS_DESCENTTO2 29734 / RAIDS_BOSSENTRANCE 29735 'Hole' op 'Enter' 2x2; RAIDS_ASCENTTO3 29995 'Rope'
+ * op 'Climb-up' 1x3). tsps chambers-of-xeric.md (rsprox): 'Holes down: 2 ticks after arriving, the climb and fade; "<col=ff289d>Upper level
+ * complete! Duration: </col><col=ff0000>m:ss</col>" (Middle, Lower)'; climb animations 827/828; landings move to the nearest open tile.
+ * The screen fade is not done here (no 667 fade interface found yet - COX.txt).
+ */
+val LEVEL_NAMES = listOf("Upper", "Middle", "Lower")
+
+listOfNotNull(CoxIds.loc(29734), CoxIds.loc(29735)).forEach { hole ->
+    on_obj_option(obj = hole, option = "enter") {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_obj_option
+        val floor = CoxMap.roomAt(raid.map, raid.layout, player.tile)?.first ?: return@on_obj_option
+        val landing = CoxRaids.holeLanding(raid, floor)
+        val last = floor + 1 >= raid.layout.floors.size
+        // Normal mode has two floors: leaving the top one completes 'Upper', reaching the Olm completes 'Lower'.
+        val level = if (last) "Lower" else LEVEL_NAMES[floor]
+        player.lock()
+        player.queue {
+            wait(2)
+            player.animate(827)
+            wait(1)
+            player.teleportTo(landing)
+            player.unlock()
+            player.message("<col=ff289d>$level level complete! Duration: </col><col=ff0000>${CoxRaids.duration(raid)}</col>")
+        }
+    }
+}
+
+CoxIds.loc(29995)?.let { rope ->
+    on_obj_option(obj = rope, option = "climb-up") {
+        val raid = CoxRaids.raidAt(player.tile) ?: return@on_obj_option
+        val floor = CoxMap.roomAt(raid.map, raid.layout, player.tile)?.first ?: return@on_obj_option
+        val landing = CoxRaids.ropeLanding(raid, floor) ?: return@on_obj_option
+        player.lock()
+        player.queue {
+            player.animate(828)
+            wait(2)
+            player.teleportTo(landing)
+            player.unlock()
+        }
+    }
+}
+
 /** Test server / check accounts: ::coxbegin = the leader starts the raid (the party tab's start button follows with the party UI). */
 on_command("coxbegin", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
