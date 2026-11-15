@@ -114,11 +114,9 @@ object FightCaves {
             player.message("The cave is too crowded right now. Try again in a moment.")
             return
         }
-        for (rx in (map.area.bottomLeftX shr 6)..(map.area.topRightX shr 6)) {
-            for (rz in (map.area.bottomLeftZ shr 6)..(map.area.topRightZ shr 6)) {
-                world.plugins.addMultiCombatRegion((rx shl 8) or rz)
-            }
-        }
+        // N603 (15-11): no addMultiCombatRegion for the instance any more. Tile.isMulti already makes an instance tile multi through its
+        // copy source, and the source region 9551 is listed in data/cfg/areas/multi.yml (ROOT_CAUSES #142). The old registration was
+        // never removed, so every later instance allocated on those regions (e.g. a ToA party) became multi as well.
         val session = Session(player, map)
         session.wave = wave
         sessions[player] = session
