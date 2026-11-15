@@ -196,7 +196,9 @@ class GeHomeHallCollisionTests {
                 0 to listOf(Tile(3164, 3488, 0), Tile(3160, 3495, 0), Tile(3169, 3495, 0)) + GeHomeHall.STAIRS.map { it.floor },
                 1 to listOf(Tile(3164, 3488, 1), Tile(3164, 3483, 1), Tile(3164, 3500, 1), Tile(3155, 3491, 1), Tile(3174, 3491, 1)),
                 // 3165,3488: the aisle between the south card tables since the owner moved them (10-09/10-10, N19; 3164 is under one).
-                2 to listOf(Tile(3165, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3164, 3499, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
+                // T7 (15-11): NOT the north balcony 3164,3499 - the owner moved the two casino tables to 3162/3167,3497 (world_edits
+                // groups 646 + 657), which closes the north aisle; in-game unreachable too (clipmap 08:4x). Owner's layout stays (advice A).
+                2 to listOf(Tile(3165, 3488, 2), Tile(3159, 3490, 2), Tile(3170, 3490, 2), Tile(3164, 3484, 2), Tile(3156, 3491, 2), Tile(3173, 3491, 2)),
             )
         wanted.forEach { (level, tiles) ->
             val (reached, _) = walk(level)
