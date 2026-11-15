@@ -1,0 +1,7 @@
+{
+  "source": "C:\\RSPS\\2011scape-client\\2011scape-client\\runescape\\src\\main\\java\\Component.java",
+  "sourceSha256": "b2877616624db396995cedb02535675f99c9adbe09ceacf07d9458811d01e9d6",
+  "purpose": "IF3 type flag 0x40: g4 static model, existing archive37 routing; no gameplay values",
+  "clientWritten": false,
+  "stagedSource": "C:\\RSPS\\work\\gpt-b\\build\\clue\\client-patch\\Component.java"
+}

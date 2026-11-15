@@ -476,6 +476,9 @@ object InterfaceHookProbeTool {
         if (version == 255) version = -1
 
         var type = p.g1()
+        val wideModel = (type and 0x40) != 0
+        type = type and 0xBF
+        require(!wideModel || (type and 0x7F) == TYPE_MODEL) { "Wide model flag on non-model component" }
         var name: String? = null
         if ((type and 0x80) != 0) {
             type = type and 0x7F
@@ -522,7 +525,8 @@ object InterfaceHookProbeTool {
                 if (version >= 3) p.g1() // clickMask
             }
             TYPE_MODEL -> {
-                modelId = p.g2().let { if (it == 0xFFFF) -1 else it } // obj
+                modelId = if (wideModel) p.g4().also { require(it in ModelArchive.EXT_BASE..ModelArchive.MAX_MODEL_ID) }
+                    else p.g2().let { if (it == 0xFFFF) -1 else it } // obj
                 val modelFlags = p.g1()
                 val ortho2d = (modelFlags and 0x1) == 1
                 val orthoView = (modelFlags and 0x2) == 2

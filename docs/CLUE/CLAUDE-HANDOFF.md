@@ -1,7 +1,7 @@
 # CLUE — Claude cache/client handoff (in progress)
 
-This card is not ready to merge/release. A resumed the entire card on
-`gpt-a/clue-scrolls-2` from B's WIP `be512be6a` (dossier 15 November 00:4x).
+This card is not ready to merge/release. B resumed the entire card on
+`gpt-b/clue-scrolls-3` from A's WIP `79dd2c6f0` (dossier 15 November 04:2x).
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
@@ -136,3 +136,54 @@ passed for 106 main Wiki pages and five acquisition HTML snapshots at A's first
 source commit; the step archive has its own separate manifest. Four core import
 tests passed at 02:27 (two forearm, two dry-run). The ongoing run's plugin result
 and runtime commits must be recorded before review/merge; no client/live proof yet.
+
+
+## B checkpoint 15 November 05:15: wide UI models (preflight only)
+
+The normal model archive is full. A fresh census found no free model id that fits
+an IF3 u16 model field. The exact source paper/chest therefore use archive 37;
+no existing mesh is overwritten, and no synthetic gameplay items are created.
+
+**Install/review `CLIENT-WIDE-INTERFACE.patch` before applying this UI batch.**
+It changes only Component's static MODEL decoder and its model cache key:
+IF3 type flag 0x40 selects a g4 model id, and model bit 16 gets a separate cache
+bit. All legacy component bytes and legacy cache keys remain unchanged. The
+existing client Mesh/JS5 archive-37 route is reused. The patch is prepared in
+this worktree; B has not edited or built the canonical client.
+
+Reproducible independent codec verification:
+
+```
+python tools/clue/verify_interface_port.py
+```
+
+This compiled only the three changed server codec files plus the staged actual
+client Component against existing outputs: 3 targeted JUnit tests passed. The
+client decoded the real server-generated legacy/wide/absent fixtures, retained
+104/0/761/914 camera values, consumed every byte, preserved legacy model-cache
+keys and separated low model 548 from wide model 66084. It opens no client/window
+and changes neither canonical client nor cache. OpenGL rendering still belongs
+to Claude's loaded-client check.
+
+Exact preflight invocation (no apply):
+
+```
+.\gradlew.bat :game:runClueInterfaceImportTool --priority low --args="C:/RSPS/work/gpt-b/docs/CLUE/cache/interfaces.json C:/RSPS/work/gpt-b/data/cfg/clue/interfaces.tsv C:/RSPS/work/gpt-b/build/clue/interface-preflight.tsv"
+```
+
+For Claude's application run, the second argument must be the canonical runtime
+`data/cfg/clue/interfaces.tsv`. The tool writes that mapping only after successful
+cache verification. Rerun after the 227-item batch and any other cache changes.
+`INTERFACE-PREFLIGHT.tsv` records transaction `tx-20261115-041434`, applied=false:
+
+* OSRS 73 -> proposed local interface 1196 (17 components; slots 5..16).
+* OSRS 203 -> proposed local interface 1197 (3 components; clue text component 2).
+* Source models 3395/1226 -> proposed 66084/66085 (archive 37 groups 548/549).
+* Source static chest texture 22 / sprite 468 -> texture 1423 / sprite 8922.
+  Source texture pixels survive a decode/encode/decode equality check; scrolling
+  is zero. Source close sprite 539 -> proposed sprite 8923.
+* 26 logical mutations across both caches; all preflight checks passed.
+
+These are proposals, not reservations. Runtime integration of the receipt/text
+window and source close-button hover are still to be completed after the current
+NPC/Mimic regression run. No UI-ready or release-ready claim is made here.

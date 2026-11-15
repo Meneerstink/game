@@ -1,0 +1,55 @@
+package gg.rsmod.game.tools.importer
+
+import com.fasterxml.jackson.databind.ObjectMapper
+import java.io.File
+import kotlin.test.*
+
+class ClueInterfaceImportTests {
+    private val root = ObjectMapper().readTree(File("../docs/CLUE/cache/interfaces.json"))
+    private val fonts = mapOf(497 to 999)
+    private val models = mapOf(3395 to 60001, 1226 to 60002)
+    private val sprites = mapOf(539 to 9000)
+
+    @Test fun `wide IF3 model preserves all seventeen id bits and the exact source camera`() {
+        val components = ClueInterfaceImportTool.components(73, root["73"], fonts, mapOf(3395 to 66084, 1226 to 66085), sprites)
+        val bytes = OsrsInterfacePortTool.encode(components[2])
+        assertEquals(0x46, bytes[1].toInt() and 255)
+        assertEquals(66085, InterfaceHookProbeTool.componentModelId(bytes))
+        assertContentEquals(intArrayOf(104, 0, 761, 914), InterfaceHookProbeTool.componentModelCamera(bytes))
+        val legacy = ClueInterfaceImportTool.components(73, root["73"], fonts, models, sprites)
+        val oldBytes = OsrsInterfacePortTool.encode(legacy[2])
+        assertEquals(6, oldBytes[1].toInt() and 255)
+        assertEquals(60002, InterfaceHookProbeTool.componentModelId(oldBytes))
+        assertEquals(oldBytes.size + 2, bytes.size)
+    }
+
+    @Test fun `source reward screen retains its paper chest close button and all twelve inventory slots`() {
+        val components = ClueInterfaceImportTool.components(73, root["73"], fonts, models, sprites)
+        assertEquals(17, components.size)
+        assertEquals(60001, components[1].model)
+        assertEquals(60002, components[2].model)
+        assertEquals(listOf("Close"), components[4].ops)
+        val slots = components.drop(ClueInterfaceImportTool.REWARD_FIRST)
+        assertEquals(12, slots.size)
+        assertEquals(listOf(0, 0, 0, 34, 34, 34, 68, 68, 68, 102, 102, 102), slots.map { it.y })
+        assertEquals(List(4) { listOf(0, 1, 2) }.flatten(), slots.map { it.xMode })
+        assertTrue(slots.all { it.w == 36 && it.h == 32 && it.parent == 3 && it.hidden })
+        assertEquals((0..16).toList(), components.map { it.id })
+        assertTrue(components.all { OsrsInterfacePortTool.encode(it).isNotEmpty() })
+    }
+
+    @Test fun `clue text keeps source q8 font line spacing centering and viewport`() {
+        val components = ClueInterfaceImportTool.components(203, root["203"], fonts, models, sprites)
+        assertEquals(3, components.size)
+        assertEquals(60001, components[0].model)
+        val text = components[2]
+        assertEquals(999, text.font)
+        assertEquals(25, text.lineHeight)
+        assertEquals(1, text.alignX); assertEquals(1, text.alignY)
+        assertEquals(listOf(126, 37, 266, 256), listOf(text.x, text.y, text.w, text.h))
+        assertTrue(text.shadow)
+        assertFailsWith<NoSuchElementException> { ClueInterfaceImportTool.components(203, root["203"], emptyMap(), models, sprites) }
+        assertFailsWith<NoSuchElementException> { ClueInterfaceImportTool.components(73, root["73"], fonts, emptyMap(), sprites) }
+        assertFailsWith<IllegalArgumentException> { ClueInterfaceImportTool.components(322, root["322"], fonts, models, sprites) }
+    }
+}

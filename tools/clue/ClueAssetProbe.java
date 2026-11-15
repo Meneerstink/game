@@ -25,6 +25,12 @@ class ClueAssetProbe {
                     catch (Throwable old) { source = Rev667ModelDecoder.INSTANCE.decode(a,false); }
                     var target = Rev667ModelDecoder.INSTANCE.decode(b,true);
                     row.put("sourceTextures",source.getFaceTexture());
+                    row.put("sourceX",source.getVertexX());
+                    row.put("sourceY",source.getVertexY());
+                    row.put("sourceZ",source.getVertexZ());
+                    row.put("targetX",target.getVertexX());
+                    row.put("targetY",target.getVertexY());
+                    row.put("targetZ",target.getVertexZ());
                     row.put("differences", ModelConvertTool.INSTANCE.compare(source,target));
                 } catch (Throwable error) { row.put("decodeError",error.toString()); }
                 report.put("model:"+id,row);

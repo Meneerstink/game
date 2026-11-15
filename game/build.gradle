@@ -1142,3 +1142,11 @@ task runToaObjectTexturePlanTool(type: JavaExec) {
     main = 'gg.rsmod.game.tools.importer.ToaObjectTexturePlanTool'
     workingDir = rootProject.projectDir
 }
+
+task runClueInterfaceImportTool(type: JavaExec) {
+    group = 'tools'
+    description = 'CLUE cache 2686 reward/text interfaces. Defaults to preflight: <source-json> <mapping-tsv> <plan-tsv> [--apply]'
+    classpath = sourceSets.main.runtimeClasspath
+    main = 'gg.rsmod.game.tools.importer.ClueInterfaceImportTool'
+    workingDir = rootProject.projectDir
+}
