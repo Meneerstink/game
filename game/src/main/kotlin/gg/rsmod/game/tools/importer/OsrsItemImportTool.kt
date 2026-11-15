@@ -320,6 +320,15 @@ object OsrsItemImportTool {
                     Spec(27368), Spec(27369), // Dawn scarab egg, Ancient key
                     Spec(27300), Spec(27302), Spec(27304), Spec(27306), Spec(27308), Spec(27310), Spec(27312), // ToA books
                 ),
+            // CoX (owner 2026-11-15 14:3x; dossier COX.txt 'ITEMS BIJ ONS'): every raid item without weapon params (RuneLite gameval ItemID
+            // RAIDS_*): wood 20799, vials 20800/20801, fishing bait 20853, fish + bats raw/cooked/burnt 20854-20883, tightrope keystone 20884,
+            // cavern grubs 20885, the six raid books 20886/20888/20890/20893/20895/20897 + dark journal 20899, Vespula herb 20892, herbs/seeds
+            // 20901-20912, the seven potion families x weak/normal/strong x 4-1 doses 20913-20996, dark relic 21027, mallignum root plank
+            // 21036, storage-unit kits 21037-21042, ancient tablet 21046, torn prayer scroll 21047, Xeric's talisman (inert 13392 / 13393).
+            // Raid items are untradeable in OSRS: no noted variants. Elder maul / Dinh's bulwark (weapon params + special) come separately.
+            "cox-items" to
+                (listOf(20799, 20800, 20801) + (20853..20885) + listOf(20886, 20888, 20890, 20892, 20893, 20895, 20897, 20899) + (20901..20996) +
+                    listOf(21027, 21036) + (21037..21042) + listOf(21046, 21047, 13392, 13393)).map { Spec(it) },
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),
