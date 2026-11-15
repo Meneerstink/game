@@ -15,7 +15,11 @@ MageArenaII.assets.symbol?.let { symbol ->
             return@on_item_option
         }
         val gods = MageArenaII.trackable(player)
-        if (gods.isEmpty()) return@on_item_option
+        if (gods.isEmpty()) {
+            // OSRS gives no message here (nothing left to track); N620: tests see why.
+            gg.rsmod.plugins.content.cmd.TestLib.deny(player, "MA2 symbol: nothing trackable (started=${MageArenaII.started(player)} completed=${MageArenaII.completed(player)})")
+            return@on_item_option
+        }
         player.queue {
             if (MageArenaIITracking.locations(player) == null) {
                 MageArenaIITracking.rotate(player)
@@ -29,7 +33,10 @@ MageArenaII.assets.symbol?.let { symbol ->
                 val pick = options(*(gods.map { it.title } + "Cancel").toTypedArray(), title = "Select an option")
                 gods.getOrNull(pick - 1) ?: return@queue
             }
-            if (!player.inventory.contains(symbol) || player.isDead() || !MageArenaIITracking.usableAt(player.tile)) return@queue
+            if (!player.inventory.contains(symbol) || player.isDead() || !MageArenaIITracking.usableAt(player.tile)) {
+                gg.rsmod.plugins.content.cmd.TestLib.deny(player, "MA2 symbol: symbol gone / dead / left the usable area while choosing")
+                return@queue
+            }
             MageArenaIITracking.locate(player, god)
         }
     }
