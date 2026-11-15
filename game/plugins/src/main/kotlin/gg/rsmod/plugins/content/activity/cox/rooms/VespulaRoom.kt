@@ -258,7 +258,7 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
         if (npc !== portal) return
         completed = true
         // Wiki 'Vespula' drops (where Vespula falls): Xeric's aid (+)(4) x2, revitalisation (+)(4), prayer enhance (+)(4), overload (+)(4).
-        Tile(vespula?.tile ?: npc.tile).let { at -> drop(at, 20984, 2); drop(at, 20960); drop(at, 20972); drop(at, 20996) }
+        Tile(vespula?.tile ?: npc.tile).let { at -> dropBook(at, 20893); drop(at, 20984, 2); drop(at, 20960); drop(at, 20972); drop(at, 20996) }
         clearExit()
         world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }
             .forEach { it.message("<col=ef20ff>As the link to the Abyss disintegrates, the abyssal creatures perish.</col>") }

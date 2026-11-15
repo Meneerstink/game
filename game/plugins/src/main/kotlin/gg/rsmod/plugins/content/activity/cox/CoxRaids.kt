@@ -295,6 +295,7 @@ object CoxRaids : KLogging() {
         CoxParties.all().filter { it.raidId == raid.id }.forEach { it.raidId = -1 }
         CoxChest.forget(raid)
         CoxStorage.forget(raid)
+        gg.rsmod.plugins.content.activity.cox.rooms.CoxSupplies.forget(raid.id)
         gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.unload(raid)
         runCatching { raid.world.instanceAllocator.release(raid.world, raid.map) }.onFailure { logger.error(it) { "CoX release ${raid.id}" } }
     }

@@ -171,6 +171,11 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         world.spawn(gg.rsmod.game.model.entity.GroundItem(id, amount, Tile(at)))
     }
 
+    /** A lore book (CoxLoreBooks) on [at], while any raider in the room has not read it (Wiki 'No longer dropped after reading'). */
+    fun dropBook(at: Tile, osrs: Int) {
+        if (raiders().any { !gg.rsmod.plugins.content.activity.cox.CoxLoreBooks.hasRead(it, osrs) }) drop(at, osrs)
+    }
+
     /** Drops every pending timed action (an encounter that ended: no attack lands after the death). */
     fun cancelEvents() = events.clear()
 

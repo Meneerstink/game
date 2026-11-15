@@ -183,6 +183,7 @@ class MuttadilesRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(rai
                 // Wiki 'Muttadile' (large): big bones, overload (+)(4), prayer enhance (+)(4), Xeric's aid (+)(4), revitalisation (+)(4); long bone 1/400.
                 val at = Tile(npc.tile)
                 drop(at, 532, classic = true); drop(at, 20996); drop(at, 20972); drop(at, 20984); drop(at, 20960)
+                dropBook(at, 20897)
                 if (world.random(399) == 0) drop(at, 10976, classic = true)
                 clearExit(); later(2) { tendrils.toList().forEach { removeLoc(it) }; tendrils.clear() } }
         }

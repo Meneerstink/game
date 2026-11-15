@@ -263,6 +263,16 @@ on_world_init {
 on_command("coxstart", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     val args = player.getCommandArgs()
+    if (args.firstOrNull() == "find") {
+        val want = CoxRoom.values().firstOrNull { it.name.equals(args.getOrNull(1), ignoreCase = true) }
+            ?: run { player.message("Rooms: ${CoxRoom.values().joinToString(" ")}"); return@on_command }
+        val found = (1..2000).firstNotNullOfOrNull { s -> CoxLayouts.normal(Random(s)).takeIf { l -> l.floors.any { f -> f.any { it.room == want } } }?.let { s to it } }
+            ?: run { player.message("No seed with $want."); return@on_command }
+        if (CoxRaids.raidAt(player.tile) != null) CoxRaids.leave(player)
+        val raid = CoxRaids.enter(player, found.second)
+        player.message("CoX test raid ${raid?.id}: ${found.second.pattern} seed ${found.first} (has $want)")
+        return@on_command
+    }
     val seed = args.getOrNull(1)?.toIntOrNull() ?: Random.Default.nextInt()
     val pattern = args.getOrNull(0)?.toIntOrNull()?.takeIf { it in CoxLayouts.PATTERNS.indices }
     val layout = if (pattern != null) CoxLayouts.normal(Random(seed), listOf(CoxLayouts.PATTERNS[pattern])) else CoxLayouts.normal(Random(seed))
@@ -284,8 +294,11 @@ on_command("coxroom", Privilege.ADMIN_POWER) {
         player.teleportTo(CoxMap.olmTile(raid.map, CoxMap.OLM_CENTRE_SOURCE))
         return@on_command
     }
-    val floor = (args.getOrNull(0)?.toIntOrNull() ?: 1) - 1
-    val index = args.getOrNull(1)?.toIntOrNull() ?: 0
+    val named = CoxRoom.values().firstOrNull { it.name.equals(args.firstOrNull(), ignoreCase = true) }
+    val hit = named?.let { n -> raid.layout.floors.withIndex().firstNotNullOfOrNull { (f, rooms) -> rooms.indexOfFirst { it.room == n }.takeIf { it >= 0 }?.let { f to it } } }
+    if (named != null && hit == null) { player.message("No $named in this raid."); return@on_command }
+    val floor = hit?.first ?: ((args.getOrNull(0)?.toIntOrNull() ?: 1) - 1)
+    val index = hit?.second ?: (args.getOrNull(1)?.toIntOrNull() ?: 0)
     val room = raid.layout.floors.getOrNull(floor)?.getOrNull(index) ?: run { player.message("No room $floor/$index."); return@on_command }
     val middle = gg.rsmod.game.model.Tile(room.sourceChunkX * 8 + 16, room.room.chunkZ * 8 + 16)
     player.teleportTo(CoxRaids.nearestOpen(world, CoxMap.roomTile(raid.map, floor, room, middle), 10))

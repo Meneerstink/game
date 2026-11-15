@@ -206,7 +206,7 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
         }
         val last = living().isEmpty()
         if (world.random(2) == 0 || (last && overloads == 0)) { drop(at, 20996); overloads++ }
-        if (last) clearExit()
+        if (last) { dropBook(at, 20895); clearExit() }
     }
 
     companion object {

@@ -37,3 +37,26 @@ CoxInterfaces.of(550)?.let { iface ->
     }
     on_interface_close(iface) { CoxStorage.close(player) }
 }
+
+/** CoX lore books: Read (book interface, marks it read), the creature keeper's corpse 29875 'Search' gives his journal (Wiki). */
+CoxLoreBooks.ALL.forEach { b ->
+    CoxIds.item(b.osrs)?.let { id ->
+        val book = gg.rsmod.plugins.content.items.books.Book.fromText(b.title, b.text)
+        on_item_option(id, option = "Read") {
+            if (player.inventory[player.getInteractingItemSlot()]?.id != id) return@on_item_option
+            CoxLoreBooks.markRead(player, b.osrs)
+            book.open(player)
+        }
+    }
+}
+CoxIds.loc(29875)?.let { body ->
+    on_obj_option(obj = body, option = "Search") {
+        if (CoxRaids.raidAt(player.tile) == null) return@on_obj_option
+        val journal = CoxIds.item(CoxLoreBooks.KEEPER) ?: return@on_obj_option
+        // tsps (code help): 'You need some more free space to search the body.' / 'You already have a journal.' / 'You find the creature keeper's journal.'
+        if (player.inventory.contains(journal)) { player.queue { messageBox("You already have a journal.") }; return@on_obj_option }
+        if (player.inventory.isFull) { player.message("You need some more free space to search the body."); return@on_obj_option }
+        player.inventory.add(journal)
+        player.queue { messageBox("You find the creature keeper's journal.") }
+    }
+}

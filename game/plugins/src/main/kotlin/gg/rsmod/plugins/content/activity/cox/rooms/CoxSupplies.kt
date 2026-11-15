@@ -36,6 +36,32 @@ object CoxSupplies {
     val FOOD: Map<Int, Int> = (FISH + BATS).associate { it.raw + 1 to it.heal }
     val RAW: Map<Int, Catch> = (FISH + BATS).associateBy { it.raw }
 
+    /** Per raid: cook -> cooked food (OSRS id) -> pieces not yet eaten; and the pieces eaten that granted points. */
+    private val cooked = java.util.concurrent.ConcurrentHashMap<Long, MutableMap<String, MutableMap<Int, Int>>>()
+    private val eatenForPoints = java.util.concurrent.ConcurrentHashMap<Long, Int>()
+
+    fun forget(raidId: Long) { cooked.remove(raidId); eatenForPoints.remove(raidId) }
+
+    private fun tierOf(food: Int): Int = (FISH + BATS).firstOrNull { it.raw + 1 == food }?.let { (FISH + BATS).indexOf(it) % 7 + 1 } ?: 1
+
+    /** Wiki 'Cooking Food' points to the cook; the eater's own food first. ONZEKER: the curve between the soft (20 x party) and hard
+     *  (40 x party) cap is 'gradually diminishing' without a formula - linear here. Which cook a piece came from is not tracked per item:
+     *  the eater's own cooked pieces count first, else the cook with the most left. */
+    private fun foodPoints(p: Player, food: Int) {
+        val r = raid(p) ?: return
+        val ledger = cooked[r.id] ?: return
+        val me = p.username.lowercase()
+        val cook = if ((ledger[me]?.get(food) ?: 0) > 0) me else ledger.entries.filter { (it.value[food] ?: 0) > 0 }.maxByOrNull { it.value[food]!! }?.key ?: return
+        ledger[cook]!!.merge(food, -1, Int::plus)
+        val party = maxOf(1, r.points.size)
+        val n = eatenForPoints.merge(r.id, 1, Int::plus)!!
+        if (n > 40 * party) return
+        var points = 4.0 + 8 * tierOf(food)
+        if (cook != me) points *= 1.5
+        if (n > 20 * party) points *= (40.0 * party - n) / (20.0 * party)
+        if (points >= 1) r.addPoints(cook, points.toInt())
+    }
+
     const val KINDLING = 20799
     const val EMPTY_GOURD = 20800
     const val WATER_GOURD = 20801
@@ -115,6 +141,7 @@ object CoxSupplies {
                 p.inventory.remove(rawLocal, 1)
                 // ONZEKER: no burn chance on the Wiki for raid food - always cooked.
                 local(osrs + 1)?.let { p.inventory.add(it) }
+                raid(p)?.let { r -> cooked.getOrPut(r.id) { java.util.concurrent.ConcurrentHashMap() }.getOrPut(p.username.lowercase()) { mutableMapOf() }.merge(osrs + 1, 1, Int::plus) }
                 p.addXp(Skills.COOKING, c.cookXp)
             }
         }
@@ -125,6 +152,7 @@ object CoxSupplies {
         val id = local(osrs) ?: return
         if (p.inventory[slot]?.id != id || p.timers.has(FOOD_DELAY)) return
         p.inventory.remove(id, 1, beginSlot = slot)
+        if (p.getCurrentLifepoints() < p.getMaximumLifepoints()) foodPoints(p, osrs)
         p.animate(Anims.EAT_FOOD)
         p.playSound(2393)
         p.heal(heal)

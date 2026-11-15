@@ -313,7 +313,7 @@ object OsrsRegionImportTool {
             // (dry-run 18:37), so those keep the first pass' choice. Re-tile only.
             "cox-map-floors" to Batch(((80..85) + 89).flatMap { y -> listOf((51 shl 8) or y, (52 shl 8) or y) } + 12889, emptyList(),
                 "Chambers of Xeric floors: the black void on a plain black overlay", clearTileFlags = 0x8, dropHiddenOverlays = true,
-                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51), voidUnderlayOverlay = mapOf(71 to 51, 138 to 51)),
+                squareOffset = 0 to 24, retileTargets = true, overlayOverrides = mapOf(36 to 51), voidUnderlayOverlay = mapOf(71 to 51, 138 to 51, 102 to 51)),
             // N462 ToA map (owner 2026-11-06 17:5x 'kaart importeren'; ChatGPT-A N462-notities\toa\40-*.tsv, cache 2499 squares byte-equal to
             // 2686): the raid block - nexus 14160, Scabaras 14162/Kephri 14164, Het 14674/Akkha 14676, Apmeken 15186/Ba-Ba 15188,
             // Crondis 15698/Zebak 15700, Wardens 15184/15696, rewards 14672 (OSRS squares 55..61 x 80..84). Five of them are rev-667
