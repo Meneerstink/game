@@ -103,6 +103,7 @@ object Woodcutting {
         farmingTreeState: PatchState?,
     ): Boolean {
         player.addXp(Skills.WOODCUTTING, tree.xp, checkBrawlingGloves = true)
+        gg.rsmod.plugins.content.scrolls.ClueSkilling.woodcutting(player, tree)
         when (tree) {
             TreeType.IVY -> {
                 player.filterableMessage("You successfully chop away some ivy.")

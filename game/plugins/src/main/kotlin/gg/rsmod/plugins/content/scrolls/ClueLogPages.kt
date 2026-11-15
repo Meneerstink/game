@@ -2,7 +2,7 @@ package gg.rsmod.plugins.content.scrolls
 
 import gg.rsmod.plugins.content.quests.tab.CollectionLogPages
 
-/** Six complete source-enum pages; a missing import is an error, never a shorter log. */
+/** Seven complete source-enum pages; a missing import is an error, never a shorter log. */
 object ClueLogPages {
     const val SHARED = "clue_shared"
     const val CASES = "clue_cases"

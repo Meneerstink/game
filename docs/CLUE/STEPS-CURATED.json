@@ -2500,65 +2500,36 @@
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
-    "key": "Clue scroll (master) - A chisel and hammer reside in his home, strange for one of magic",
     "tier": "master",
-    "kind": "CRYPTIC",
-    "hint": "The clue reveals who to speak to:\n\nA chisel and hammer reside in his home, strange for one of magic. Impress him with your magical equipment.",
-    "points": [
-      [
-        2682,
-        3325,
-        0
-      ]
+    "key": "master:mandrith",
+    "kind": "ANAGRAM",
+    "sourceFile": "Treasure_Trails__Guide__Anagrams__Master.wiki",
+    "sourceSha256": "10c3d25d65f9db42b9ee7732dc236addba91bd7380cf3404e96db26117b8572b",
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
+    "revision": 14896740,
+    "anagram": "Dim Tharn",
+    "npc": "Mandrith",
+    "challenges": [
+      "LIGHT_BOX",
+      "SLIDING_PUZZLE"
     ],
-    "osrsScrollIds": [],
-    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_A_chisel_and_hammer_reside_in_his_home%2C_strange_for_one_of_magic",
-    "sourceFile": "Clue_scroll_(master)_-_A_chisel_and_hammer_reside_in_his_home,_strange_for_one_of_magic.wiki",
-    "revision": 15248279,
-    "fields": {
-      "id": "729",
-      "text": "The clue reveals who to speak to:<br><br>A chisel and hammer reside in his home, strange for one of magic. Impress him with your magical equipment.",
-      "notes": "Speak to [[Wizard Cromperty]] in the north-east corner of [[East Ardougne]].",
-      "map": "{{Map|2682,3325|mtype=pin|plane=0|mapID=-1}}"
-    },
-    "missingSquares": [],
-    "eventSpecific": false,
-    "subtype": "THREE_PART_COMPONENT",
-    "sourceSha256": "16778a79f64a558ff7e6dd9177f5e520bf8d784a5fcb05563707107bbd98fd0c",
-    "challenge": {},
-    "activation": "pending target assets, subtype handler and client verification"
+    "activation": "pending subtype handler and client verification"
   },
   {
-    "key": "Clue scroll (master) - Hopefully this set of armour will help you to keep surviving",
     "tier": "master",
-    "kind": "CRYPTIC",
-    "hint": "The clue reveals who to speak to:\n\nHopefully this set of armour will help you to keep surviving.",
-    "points": [
-      [
-        2982,
-        3336,
-        2
-      ]
+    "key": "master:radimus",
+    "kind": "ANAGRAM",
+    "sourceFile": "Treasure_Trails__Guide__Anagrams__Master.wiki",
+    "sourceSha256": "10c3d25d65f9db42b9ee7732dc236addba91bd7380cf3404e96db26117b8572b",
+    "source": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Anagrams/Master",
+    "revision": 14896740,
+    "anagram": "Mus Kil Reader",
+    "npc": "Radimus Erkle",
+    "challenges": [
+      "LIGHT_BOX",
+      "SLIDING_PUZZLE"
     ],
-    "osrsScrollIds": [],
-    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28master%29_-_Hopefully_this_set_of_armour_will_help_you_to_keep_surviving",
-    "sourceFile": "Clue_scroll_(master)_-_Hopefully_this_set_of_armour_will_help_you_to_keep_surviving.wiki",
-    "revision": 15375577,
-    "fields": {
-      "id": "730",
-      "text": "The clue reveals who to speak to:<br><br>Hopefully this set of armour will help you to keep surviving.",
-      "items": "Equip a [[white platebody]] and [[white platelegs]].",
-      "equipment1": "White platebody",
-      "equipment2": "White platelegs",
-      "notes": "Speak to [[Sir Vyvin]] in the [[White Knight's Castle]].",
-      "map": "{{Map|2982,3336|mtype=pin|plane=2|mapID=-1}}"
-    },
-    "missingSquares": [],
-    "eventSpecific": false,
-    "subtype": "THREE_PART_COMPONENT",
-    "sourceSha256": "a54a3f3e6fa2f4c19cec5a4ecd2ba2c2a72a1046016b0664662aa7056819e21e",
-    "challenge": {},
-    "activation": "pending target assets, subtype handler and client verification"
+    "activation": "pending subtype handler and client verification"
   },
   {
     "key": "Clue scroll (master) - Falo the bard wants to see you",

@@ -861,6 +861,74 @@
       "file": "Template_Treasure_Trails_Guide_Anagrams_Intro.wiki",
       "sha256": "cc6475e4ba4b867575af046e15fa8fc7e88fd4f52db4aedefc970e91d5ae2567",
       "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Anagrams_Intro"
+    },
+    {
+      "page": "Torn clue scroll",
+      "revision": 15263135,
+      "revision_time": "2026-07-14T16:08:44Z",
+      "file": "Torn_clue_scroll.wiki",
+      "sha256": "b0a1d981bb44fe5eb86d3e5dd9df2cc3bacf1ebe08593cc999459b9834fab984",
+      "url": "https://oldschool.runescape.wiki/w/Torn_clue_scroll"
+    },
+    {
+      "page": "Template:Cryptics",
+      "revision": 14097345,
+      "revision_time": "2021-06-17T01:40:22Z",
+      "file": "Template_Cryptics.wiki",
+      "sha256": "e452b958d1df99fb69be3f20e30df78e725988f6101ec87ed25dc0865824bb95",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ACryptics"
+    },
+    {
+      "page": "Transcript:Reward casket (master)",
+      "missing": true
+    },
+    {
+      "page": "Jorral",
+      "revision": 15256447,
+      "revision_time": "2026-07-07T17:37:58Z",
+      "file": "Jorral.wiki",
+      "sha256": "8bdd7233965bbf7632d52a2505bdf71c4b388ad2cd7e238820b0eb92656530c9",
+      "url": "https://oldschool.runescape.wiki/w/Jorral"
+    },
+    {
+      "page": "Mandrith",
+      "revision": 15382757,
+      "revision_time": "2026-10-26T13:01:40Z",
+      "file": "Mandrith.wiki",
+      "sha256": "b9d378d81d34cb982d9f83c868a8270c8993522bd98fc36b8cd1864b227c6c48",
+      "url": "https://oldschool.runescape.wiki/w/Mandrith"
+    },
+    {
+      "page": "Radimus Erkle",
+      "revision": 14927498,
+      "revision_time": "2025-06-27T00:07:25Z",
+      "file": "Radimus_Erkle.wiki",
+      "sha256": "c0773fa1bc601c82a98e33568c9808084f465986f4acab49fd69999658a2e847",
+      "url": "https://oldschool.runescape.wiki/w/Radimus_Erkle"
+    },
+    {
+      "page": "Strange device",
+      "revision": 15373639,
+      "revision_time": "2026-10-16T02:01:45Z",
+      "file": "Strange_device.wiki",
+      "sha256": "6e232302457666373bd1899bfa742b5a03ff924ecf4dd57025bb9bf63ded83b9",
+      "url": "https://oldschool.runescape.wiki/w/Strange_device"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Hot Cold Intro",
+      "revision": 15376193,
+      "revision_time": "2026-10-19T18:56:38Z",
+      "file": "Template_Treasure_Trails_Guide_Hot_Cold_Intro.wiki",
+      "sha256": "73705fdd0d9e32fe6d1baf3a042966d881407b1e6bdd432d270a0ca4136193b4",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Hot_Cold_Intro"
+    },
+    {
+      "page": "Goreu",
+      "revision": 15388208,
+      "revision_time": "2026-11-01T15:14:45Z",
+      "file": "Goreu.wiki",
+      "sha256": "92e746c047bb7642e075f73eb4a7569b9f2dbbfe77afdc040b3fb2d95cd0e654",
+      "url": "https://oldschool.runescape.wiki/w/Goreu"
     }
   ]
 }

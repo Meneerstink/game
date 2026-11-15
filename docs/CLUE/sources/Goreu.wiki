@@ -1,0 +1,95 @@
+{{External|rs}}
+{{Infobox NPC
+|name = Goreu
+|image = [[File:Goreu.png|111px]]
+|release = [[19 July]] [[2005]]
+|update = Plague City Series Continued
+|members = Yes
+|race = [[Elf]]
+|location = [[Lletya]]
+|gender = Male
+|options = Talk-to, Pickpocket
+|examine = An elf of Lletya.
+|map = {{Map|name=Goreu|x=2336|y=3161|plane=0|r=4|mtype=square}}
+|id = 5297
+|leagueRegion = Tirannwn
+}}
+[[File:Goreu chathead.png|left]]
+'''Goreu''' is one of the many citizens of [[Lletya]].
+
+The player can only access Goreu to [[Thieving#Pickpocketing|pickpocket]] after starting [[Mourning's End Part I]] and require level 85 [[Thieving]]. A successful pickpocket yields [[coins]] or other items and 353.3 [[Thieving]] experience.
+
+==Treasure Trails==
+{{Anagram|Goreu|master|RUE GO}}. He will then give the player either a [[light box]] or a [[puzzle box]].
+
+==Pickpocketing==
+===Pickpocket chance===
+{{Skilling success chart|label=Elf pickpocket chance|showbefore=no
+|label1=Normal|low1=6|high1=100|req1=85|color1=gray|image1=Thief Elf.png
+|label2=Gloves of silence|low2=6|high2=105|req2=85|color2=darkblue|image2=Gloves of silence.png
+|label3=Ardougne Diary|low3=6|high3=110|req3=85|color3=black|image3=Ardougne cloak 3.png
+|label4=Thieving cape + Ardougne Diary|low4=6|high4=121|req4=99|color4=purple|image4=Thieving cape.png
+}}
+
+===Pickpocketing info===
+{{Thieving info
+|name = Goreu
+|level = 85
+|xp = 353.3
+|type = Pickpocket
+|timename = [[Stun_(status)#Thieving|Stun]] Timer
+|time = 6s
+|damage = 5
+}}
+
+===Loot===
+{{Pickpocket/Elf}}
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 5 September 2019
+|update = PvP Balancing, LMS, and Elf Graphics
+|poll = Crystal kit charges, Elves and the Iorwerth Dungeon
+|change = Goreu's [[chathead]] was updated again.
+}}
+{{Subject changes
+|date = 25 July 2019
+|update = Song of the Elves
+|change = Goreu's chathead and model were updated.
+}}
+{{Subject changes
+|date = 26 July 2005
+|update = The Forgettable Tale...
+|change = The NPC's chathead was graphically updated.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Goreu v1.png|center|300x150px]]
+|[[File:Goreu v1.png|center|300x150px]]
+|[[File:Goreu.png|center|300x150px]]
+|
+|-
+|[[File:Goreu chathead (historical).png|center]]
+|[[File:Goreu chathead v1.png|center]]
+|[[File:Goreu chathead v2.png|center]]
+|[[File:Goreu chathead.png|center]]
+|-
+|19 July 2005 –<br/>26 July 2005
+|26 July 2005 –<br/>25 July 2019
+|25 July 2019 –<br/>5 September 2019
+|5 September 2019 –<br/>present
+|}
+
+==Trivia==
+*Goreu derives from the word "Gorau", which is a Welsh word for "Best".
+
+{{Lletya}}
+{{Pickpocket}}
+[[Category:Elves]]
+[[Category:Serenists]]

@@ -11,13 +11,8 @@ object MimicRewardView {
         val failures = held?.let { MimicChallenge.failures(it) } ?: 0
         val table = MimicRewards.current.tables.getValue(tier)
         val rolls = (table.attempts - failures).coerceAtLeast(0)
-        val catalogue = ClueRewardCatalogue.current
-        val ordinary = ClueRewardView.lines(tier, ClueItems::local, { DropSources.itemName(player.world, it) }, catalogue).map { line ->
-            val osrs = line.key.substringAfter("clue:").toInt()
-            val chance = catalogue.outcomes.getValue(tier).filter { it.rows.any { row -> row.osrsId == osrs } }.sumOf { it.probability }
-            val perCasket = 1.0 - Math.pow(1.0 - chance, rolls.toDouble())
-            DropSources.Line(line.key, line.item, line.name, line.quantity, perCasket, perCasket, note = "$rolls ordinary rolls; quantity per roll")
-        }
+        if (rolls == 0) return DropSources.View(emptyList(), emptyList())
+        val ordinary = ClueRewardView.view(player, tier, rolls..rolls, includeMimic = false).lines
         fun line(osrs: Int, quantity: Int, chance: Double, key: String) = ClueItems.local(osrs)?.let { local ->
             DropSources.Line(key, local, DropSources.itemName(player.world, local), quantity.toString(), chance, chance)
         } ?: error("CLUE Mimic viewer asset $osrs not imported")

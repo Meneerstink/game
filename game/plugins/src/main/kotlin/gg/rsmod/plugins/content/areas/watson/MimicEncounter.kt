@@ -27,7 +27,10 @@ object MimicEncounter {
         fun tile(x: Int, z: Int) = Tile(map.area.bottomLeftX + x - 2688, map.area.bottomLeftZ + z - 4288, 1)
     }
 
-    data class Assets(val imported: Boolean, val keyhole: Int?, val candyInterval: Int?, val impactDelay: Int?, val stepChance: Double?)
+    data class Assets(val imported: Boolean, val keyhole: Int?, val candyInterval: Int?, val impactDelay: Int?, val stepChance: Double?) {
+        val timingsReady: Boolean get() = candyInterval != null && candyInterval > 0 && impactDelay != null && impactDelay > 0 &&
+            stepChance != null && stepChance.isFinite() && stepChance in 0.0..1.0
+    }
     val assets by lazy {
         val obj = JsonParser().parse(File(RspsPaths.data("cfg/clue/mimic-encounter.json")).readText()).asJsonObject
         fun number(key: String) = obj[key]?.takeUnless { it.isJsonNull }

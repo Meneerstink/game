@@ -1,0 +1,21 @@
+<noinclude>{|class="wikitable" width="100%"
+!Clue
+!Notes
+!Image
+!Task
+|}{{/doc}}</noinclude>
+<includeonly>|-
+|style="font-style:italic" |{{{clue}}}
+|{{{note}}}
+|{{#switch: {{{task}}} 
+|key= {{plinkp|Key (Treasure Trails)}}
+|puzzle= {{plinkp|Puzzle box|pic=Puzzle box tree}}
+|challenge= {{plinkp|Treasure Trails/Guide/Challenge scroll|pic=Clue scroll}}
+|talk= [[File:Talk.png]]
+|dig= [[File:Spade.png]]
+|kill = [[File:Skull.png]]
+|search = [[File:Search.png]]
+|sherlock = [[File:Sherlock chathead.png|30px|link=Sherlock]]
+|hotcold = [[File:Strange device.png|link=Treasure Trails/Guide/Hot Cold]]
+|none=}}
+|{{#if:{{{image|}}}|[[File:{{{image}}}|200px]]|}}</includeonly>

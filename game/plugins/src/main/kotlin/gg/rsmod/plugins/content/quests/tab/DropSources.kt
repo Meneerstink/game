@@ -43,7 +43,7 @@ import kotlin.math.pow
 object DropSources {
     enum class Group(val title: String) { FAVOURITES("Favourites"), DEADMAN("Deadman"), BOSSES("Bosses"), MONSTERS("Monsters"), CLUES("Clues") }
 
-    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE, MIMIC }
+    enum class Kind { NPC, BREACH, CHEST, GUARDIAN, BARROWS, JAD, TOA, CLUE, MIMIC, IMPLING_JAR }
 
     class Source(
         val key: String,
@@ -174,6 +174,12 @@ object DropSources {
         gg.rsmod.plugins.content.scrolls.ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
             out += Source(tier.key, tier.casketName, -1, intArrayOf(), 0, Group.CLUES, Kind.CLUE, modelItem = tier.casketId)
         }
+        gg.rsmod.plugins.content.skills.hunter.ImplingData.JAR_TIERS.filter {
+            it.npcId in gg.rsmod.plugins.content.scrolls.ClueImplings.sources
+        }.forEach { tier ->
+            out += Source("impling_jar:${tier.jarItem}", itemName(world, tier.jarItem), -1, intArrayOf(), 0,
+                Group.CLUES, Kind.IMPLING_JAR, tableNpc = tier.npcId, modelItem = tier.jarItem)
+        }
         return out
     }
 
@@ -190,13 +196,14 @@ object DropSources {
 
     private fun playerDependent(npcId: Int): Boolean =
         gg.rsmod.plugins.content.areas.wilderness.npcs.WildernessNpcDrops.isPlayerDependent(npcId) ||
+            gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(npcId) ||
             npcId in gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossClues.NPCS
 
     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
         // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
         // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
-        val base = if (source.kind == Kind.CLUE || source.kind == Kind.MIMIC || playerDependent(source.tableNpc)) {
+        val base = if (source.kind == Kind.CLUE || source.kind == Kind.MIMIC || source.kind == Kind.IMPLING_JAR || playerDependent(source.tableNpc)) {
             buildView(player, source, rate)
         } else viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
         val personal = personal(player, source, base)
@@ -247,6 +254,8 @@ object DropSources {
                 if (source.key == "mimic_elite") gg.rsmod.plugins.content.scrolls.ClueScrollTier.ELITE else gg.rsmod.plugins.content.scrolls.ClueScrollTier.MASTER)
             Kind.CLUE -> gg.rsmod.plugins.content.scrolls.ClueRewardView.view(player,
                 checkNotNull(gg.rsmod.plugins.content.scrolls.ClueCompletions.tierForKey(source.key)))
+            Kind.IMPLING_JAR -> gg.rsmod.plugins.content.scrolls.ClueImplingView.view(player,
+                checkNotNull(gg.rsmod.plugins.content.skills.hunter.ImplingData.byJar(source.modelItem)))
         }
     }
 
@@ -305,6 +314,7 @@ object DropSources {
         }
         petLine(world, source.tableNpc, rate)?.let { lines += it }
         lines += trinketLines(world, source.tableNpc)
+        lines += gg.rsmod.plugins.content.scrolls.ClueNpcSources.lines(player, source.tableNpc)
         return View(mergeAlways(always), sorted(world, merge(lines)))
     }
 

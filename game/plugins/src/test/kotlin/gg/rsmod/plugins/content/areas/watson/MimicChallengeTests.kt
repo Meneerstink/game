@@ -4,8 +4,65 @@ import gg.rsmod.game.model.item.Item
 import gg.rsmod.game.model.item.ItemAttribute
 import gg.rsmod.plugins.content.scrolls.ClueScrollTier
 import kotlin.test.*
+import gg.rsmod.game.fs.DefinitionSet
+import gg.rsmod.game.fs.def.ItemDef
+import gg.rsmod.game.model.attr.AttributeMap
+import gg.rsmod.game.model.container.ContainerStackType
+import gg.rsmod.game.model.container.ItemContainer
+import gg.rsmod.game.model.entity.Player
+import io.mockk.every
+import io.mockk.mockk
 
 class MimicChallengeTests {
+    private fun recoveryPlayer(): Player {
+        val definitions = mockk<DefinitionSet>()
+        every { definitions.get(ItemDef::class.java, any()) } answers {
+            ItemDef(secondArg()).also { it.stacks = it.id == 995 }
+        }
+        return mockk<Player>(relaxed = true).also { player ->
+            every { player.attr } returns AttributeMap()
+            every { player.inventory } returns ItemContainer(definitions, 1, ContainerStackType.NORMAL)
+            every { player.bank } returns ItemContainer(definitions, 10, ContainerStackType.STACK)
+        }
+    }
+
+    @Test fun `partial Mimic IRS retrieval pays once preserves item state and never shares another account storage`() {
+        val player = recoveryPlayer()
+        player.bank.add(995, 100000)
+        val mimic = MimicChallenge.create(23729, ClueScrollTier.ELITE)
+        val token = assertNotNull(MimicChallenge.begin(mimic))
+        assertTrue(MimicChallenge.settle(mimic, token, won = true))
+        MimicRecovery.store(player, listOf(Item(995, 50000), Item(2000), mimic))
+        assertTrue(MimicRecovery.items(recoveryPlayer()).isEmpty())
+        assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
+        assertEquals(10000, player.bank.getItemCount(995))
+        assertEquals(50000, player.inventory.getItemCount(995))
+        assertEquals(2, MimicRecovery.items(player).size)
+        player.inventory[0] = null
+        assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
+        assertEquals(2000, player.inventory[0]?.id)
+        player.inventory[0] = null
+        assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
+        assertTrue(MimicChallenge.defeated(player.inventory[0]!!))
+        assertEquals(5, MimicChallenge.remaining(player.inventory[0]!!))
+        assertEquals(10000, player.bank.getItemCount(995))
+        assertTrue(MimicRecovery.items(player).isEmpty())
+        assertEquals(MimicRecovery.Result.EMPTY, MimicRecovery.retrieve(player))
+    }
+
+    @Test fun `full inventory and insufficient funds leave Mimic IRS items and wallet unchanged`() {
+        val player = recoveryPlayer()
+        MimicRecovery.store(player, listOf(Item(2000)))
+        assertEquals(MimicRecovery.Result.NO_COINS, MimicRecovery.retrieve(player))
+        player.bank.add(995, 100000)
+        player.inventory[0] = Item(2001)
+        assertEquals(MimicRecovery.Result.NO_SPACE, MimicRecovery.retrieve(player))
+        assertEquals(100000, player.bank.getItemCount(995))
+        assertEquals(2001, player.inventory[0]?.id)
+        assertEquals(2000, MimicRecovery.items(player).single().id)
+        assertFalse(player.attr[MimicRecovery.PAID] == true)
+    }
+
     @Test fun `each failed attempt costs exactly one roll across repeated exit death and logout callbacks`() {
         for ((tier, attempts) in listOf(ClueScrollTier.ELITE to 5,ClueScrollTier.MASTER to 6)) {
             val item = MimicChallenge.create(23729,tier)

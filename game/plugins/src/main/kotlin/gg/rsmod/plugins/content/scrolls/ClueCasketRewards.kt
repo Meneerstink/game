@@ -63,7 +63,15 @@ object ClueCasketRewards {
             player.message("You cannot open this on Entrana, the monks are watching you too closely.")
             return null
         }
-        val logMissing = ClueLogCatalogue.current.pages.values.flatMap { it.osrsItems }.distinct().filter { ClueItems.local(it) == null }
+        fun loaded(osrs: Int): Int? = ClueItems.local(osrs)?.takeIf {
+            player.world.definitions.getNullable(ItemDef::class.java, it) != null
+        }
+        val missingRewards = catalogue.missing(tier, ::loaded)
+        if (missingRewards.isNotEmpty()) {
+            println("PROBLEM CLUE ${tier.name} reward definitions not loaded: ${missingRewards.sorted()}; casket retained")
+            return null
+        }
+        val logMissing = ClueLogCatalogue.current.pages.values.flatMap { it.osrsItems }.distinct().filter { loaded(it) == null }
         if (logMissing.isNotEmpty()) {
             println("PROBLEM CLUE collection-log assets not mapped: ${logMissing.sorted()}; casket retained")
             return null
@@ -73,7 +81,7 @@ object ClueCasketRewards {
         val milestone = milestone(tier)
         if (milestone != null && completed >= milestone.first && !ClueContainers.held(player, ClueItems.local(milestone.second) ?: -1)) sourceExtras += milestone.second
         val mapped = sourceExtras.map { osrs ->
-            val id = ClueItems.local(osrs) ?: run { println("PROBLEM CLUE milestone item $osrs not imported; casket retained"); return null }
+            val id = loaded(osrs) ?: run { println("PROBLEM CLUE milestone item $osrs not imported/loaded; casket retained"); return null }
             Item(id)
         }.toMutableList()
         val master = if (tier.masterChance > 0) ClueContainers.rewardId(player, ClueScrollTier.MASTER, notify = false) else null
@@ -82,7 +90,7 @@ object ClueCasketRewards {
             val masterEligible = if (ClueContainers.enabled(player))
                 ClueContainers.count(player, ClueScrollTier.MASTER) < ClueContainers.capacity(player, ClueScrollTier.MASTER)
                 else !ClueOwnership.owns(player, ClueScrollTier.MASTER)
-            if (masterEligible && master == null) {
+            if (masterEligible && (master == null || player.world.definitions.getNullable(ItemDef::class.java, master) == null)) {
                 println("PROBLEM CLUE 78 clue/scroll box reward import missing; casket retained")
                 return null
             }
@@ -131,7 +139,7 @@ object ClueCasketRewards {
         player.playJingle(193)
         player.message("Well done, you've completed the Treasure Trail!")
         player.message("<col=ff0000>You have completed $count ${plan.tier.displayName.lowercase()} Treasure Trails.</col>")
-        overflow.forEach { player.world.spawn(GroundItem(it, player.tile, player)) }
+        overflow.forEach { player.world.spawn(ClueGroundItems.configure(GroundItem(it, player.tile, player))) }
         runCatching { CollectionLog.record(player, plan.tier.key, plan.rewards.map { it.id to it.amount }) }
             .onFailure { gg.rsmod.game.model.Trace.crash("clue collection log", it) }
         plan.rewards.forEach { ClueOwnership.tier(it.id)?.let { tier -> player.inventory.firstOrNull { it?.id == tier.scrollId }?.let { ClueScrollManager.prepare(player, it, tier) } } }

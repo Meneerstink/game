@@ -1,21 +1,26 @@
 package gg.rsmod.plugins.content.areas.watson
 
-import java.io.File
-import kotlin.test.Test
-import kotlin.test.assertTrue
+import gg.rsmod.game.model.combat.StyleType
+import gg.rsmod.plugins.api.BonusSlot
+import gg.rsmod.plugins.api.NpcSkills
+import kotlin.test.*
 
-/** Owner answer Q10: The Mimic's combat definition equals the OSRS Wiki infobox (id 8633) field by field. */
+/** Exercise the built combat definition: a text check missed 23 HP instead of 230. */
 class TheMimicCombatDefTests {
-    @Test
-    fun `every sourced infobox value is in the combat definition`() {
-        val plugin = File("src/main/kotlin/gg/rsmod/plugins/content/areas/watson/the_mimic_combat.plugin.kts").readText()
-        listOf(
-            "set_combat_def(Npcs.THE_MIMIC_14402)",
-            "respawnDelay = 0", "attackSpeed = 3", "poisonImmune = true", "attackStyle = StyleType.CRUSH", "neverAggro()",
-            "hitpoints = 230", "attack = 185", "strength = 120", "defence = 120", "magic = 60", "ranged = 1",
-            "attackBonus = 135", "strengthBonus = 48", "attackMagic = 180", "attackRanged = 0",
-            "defenceStab = 160", "defenceSlash = 165", "defenceCrush = 150", "defenceMagic = 30", "defenceRanged = 145",
-            "attack = 15404", "death = 15406",
-        ).forEach { assertTrue(it in plugin, it) }
+    @Test fun `runtime stats and bonuses match the Wiki in real HP units`() {
+        val def = MimicCombat.definition()
+        assertEquals(230, def.lifepoints)
+        assertEquals(3, def.attackSpeed)
+        assertEquals(StyleType.CRUSH, def.attackStyleType)
+        assertTrue(def.poisonImmunity)
+        assertTrue(def.venomImmunity)
+        assertEquals(0, def.respawnDelay)
+        assertEquals(15404, def.attackAnimation)
+        assertEquals(listOf(15406), def.deathAnimation)
+        for ((skill, level) in listOf(NpcSkills.ATTACK to 185, NpcSkills.STRENGTH to 120,
+            NpcSkills.DEFENCE to 120, NpcSkills.MAGIC to 60, NpcSkills.RANGED to 1)) assertEquals(level, def.stats[skill])
+        for ((slot, bonus) in listOf(BonusSlot.ATTACK_CRUSH to 135, BonusSlot.STRENGTH_BONUS to 48,
+            BonusSlot.ATTACK_MAGIC to 180, BonusSlot.DEFENCE_STAB to 160, BonusSlot.DEFENCE_SLASH to 165,
+            BonusSlot.DEFENCE_CRUSH to 150, BonusSlot.DEFENCE_MAGIC to 30, BonusSlot.DEFENCE_RANGED to 145)) assertEquals(bonus, def.bonuses[slot.id])
     }
 }

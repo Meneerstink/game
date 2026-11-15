@@ -511,6 +511,7 @@ object DropViewer {
             }
             DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
             DropSources.Kind.CLUE -> "Caskets opened <col=ffffff>${N108Ui.number(kc)}</col>"
+            DropSources.Kind.IMPLING_JAR -> "Loot from one jar"
             // N462: the chances are those of one reference raid (DropSources.toaView); the count is the account's completions.
             DropSources.Kind.TOA -> "Solo Normal, ${N108Ui.number(DropSources.TOA_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0)}</col>"
             else -> {

@@ -1,0 +1,19 @@
+{{mainonly|[[Category:Treasure Trails]]}}
+[[File:Strange device detail.png|left|100px]]
+'''Hot Cold''' clues are clues in which a [[strange device]] will tell the player in the [[Chat interface|chatbox]] whether the player is ''Hot'' (close to) or ''Cold'' (far away from) the intended location to dig. This is based on an {{wp|Hunt the Thimble|old children's game}}.
+
+When a hot cold clue is read, it gives the text "Buried beneath the ground, who knows where it's found. Lucky for you, A man called Reldo/Jorral may have a clue.", with Reldo and Jorral being substituted when reading a beginner or master clue respectively.
+
+To find your location, click on the strange device and it will tell you how close you are to the treasure. (if solving a master clue, you will also take some damage). Its temperature is based on the distance of the treasure from the player, measured in the number of steps it would take to reach the treasure, ignoring any obstacles (this is the {{wp|Chebyshev distance}} between the player and treasure). Then, teleport or walk to another location, and check to see if the strange device has gotten warmer. Repeat to pinpoint a location. You can also use the list or map to help you find your location. For each location, there is a 9x9 square in which you can dig to find the treasure.
+{{#switch:{{{1|}}}|beginner|all=<nowiki/><!-- preserve newlines -->
+
+===Beginner Clues===
+Beginner tier Hot Cold clues can direct the player to one of five locations. These locations are not far away from each other and are all positioned in [[Asgarnia]] and [[Misthalin]]. The beginner clue version of the strange device can be obtained by talking to [[Reldo]] in the [[Varrock Palace Library]]. There are no requirements to begin and complete these clues.}}
+{{#switch:{{{1|}}}|master|all=<nowiki/><!-- preserve newlines -->
+
+===Master Clues===
+Master tier Hot Cold clues can direct the player anywhere on the mainland. The player will always take 3-8 damage when feeling the strange device. Note: This damage can be fatal. The master clue strange device can be obtained by talking to [[Jorral]] in the outpost north-west of [[West Ardougne]]. '''Note:''' Completion of the [[Making History]] quest is required to collect the master clue strange device from Jorral, and proceed with any Hot Cold clue of master Treasure Trails.
+
+When fully locating and digging at the correct spot, you will be attacked by a [[Brassican Mage]] in a single-combat area, or three [[Ancient Wizard]]s if your clue leads you to a [[Multicombat area]]. Due to the damage given from the strange device prior to locating the spot, it is highly recommended to bring food and heal before and during the fight.
+
+In the fight against the Brassican Mage, his attacks are not affected by [[protection prayers]]; however, [[ranged armour]] seems to help. The Ancient Wizards each cover an attack style of the whole [[combat triangle]], with the [[Melee]] one [[poison]]ing you (poison cannot be blocked by protection prayers). After defeating the foe(s), dig at the spot again to complete the Hot Cold clue.}}

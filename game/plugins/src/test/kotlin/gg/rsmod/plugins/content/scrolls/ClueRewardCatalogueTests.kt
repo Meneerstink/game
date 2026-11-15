@@ -64,4 +64,15 @@ class ClueRewardCatalogueTests {
             }
         }
     }
+
+    @Test fun `Mimic viewer probabilities use its remaining fixed rolls including zero after exhaustion`() {
+        val tier = ClueScrollTier.MASTER
+        val outcome = catalogue.outcomes.getValue(tier).first()
+        val id = outcome.rows.first().osrsId
+        val chance = catalogue.outcomes.getValue(tier).filter { event -> event.rows.any { it.osrsId == id } }.sumOf { it.probability }
+        for (rolls in 0..6) assertEquals(1.0 - Math.pow(1.0 - chance, rolls.toDouble()),
+            catalogue.casketChance(tier, id, rolls..rolls), 1e-15)
+        assertFailsWith<IllegalArgumentException> { catalogue.casketChance(tier, id, -1..1) }
+        assertFailsWith<IllegalArgumentException> { catalogue.casketChance(tier, id, 5..4) }
+    }
 }

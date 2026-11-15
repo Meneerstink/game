@@ -1,5 +1,7 @@
 package gg.rsmod.plugins.content.scrolls
 
+gg.rsmod.game.message.handler.OpHeld5Handler.configureFloor = { ClueGroundItems.configure(it, playerDrop = true) }
+
 ClueContainers.boxes.forEach { (tier, osrs) ->
     ClueItems.local(osrs)?.let { id ->
         set_ground_item_condition(id) { ClueContainers.mayTakeBox(player, tier) }

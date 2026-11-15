@@ -13,6 +13,7 @@ object MimicCaskets {
     val RECEIVED = AttributeKey<Boolean>(persistenceKey = "mimic_casket_received")
 
     fun supported(tier: ClueScrollTier) = tier == ClueScrollTier.ELITE || tier == ClueScrollTier.MASTER
+    // Wiki Mimic explicitly checks inventory; dropped Mimics may be juggled and picked up together.
     fun held(player: Player) = player.inventory.any { it?.id == ClueItems.local(23184) }
 
     fun chance(player: Player, tier: ClueScrollTier): Double {
@@ -44,7 +45,9 @@ object MimicCaskets {
         val tier = MimicChallenge.tier(source) ?: return null
         if (!MimicChallenge.defeated(source) || MimicChallenge.active(source) || MimicChallenge.remaining(source) <= 0) return null
         val catalogue = MimicRewards.current
-        if (catalogue.missing(tier).isNotEmpty()) {
+        if (catalogue.missing(tier) { osrs -> ClueItems.local(osrs)?.takeIf {
+                player.world.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it) != null
+            } }.isNotEmpty()) {
             println("PROBLEM CLUE Mimic bonus assets not mapped; casket retained")
             return null
         }

@@ -5,7 +5,6 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.content.quests.tab.CollectionLog
 
 /** Wiki Scroll box / Scroll case, cache 2686 IDs. Cases increase capacity; they never permit two active clues of one tier. */
 object ClueContainers {
@@ -21,16 +20,19 @@ object ClueContainers {
         Case(30926, null, 1, "mimic"),
     )
     private val flags = cases.associateWith { AttributeKey<Boolean>(persistenceKey = "clue_case_${it.flag}") }
+    private val missingBoxesReported = mutableSetOf<Int>()
     fun opened(player: Player, case: Case): Boolean = player.attr[flags.getValue(case)] == true
     // Owner 2026-11-15 00:2x: everyone has the X Marks the Spot box unlock; no beginner quest here.
     fun enabled(@Suppress("UNUSED_PARAMETER") player: Player): Boolean = true
     fun boxTier(item: Int): ClueScrollTier? = boxes.entries.firstOrNull { ClueItems.local(it.value) == item }?.key
     fun containers(player: Player) = listOf(player.inventory, player.bank, player.gravestone, player.deathRecovery)
-    fun held(player: Player, item: Int): Boolean = item >= 0 && containers(player).any { it.contains(item) }
+    fun held(player: Player, item: Int): Boolean = item >= 0 && ClueOwnership.stored(player).any { it.id == item }
     fun capacity(player: Player, tier: ClueScrollTier): Int = 2 + cases.count { (it.tier == tier || it.tier == null) && opened(player, it) }
-    fun count(player: Player, tier: ClueScrollTier): Int = containers(player).fold(0L) { total, inv ->
-        total + inv.getItemCount(tier.scrollId).coerceAtLeast(0) + (ClueItems.local(boxes.getValue(tier))?.let { inv.getItemCount(it) } ?: 0)
-    }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    fun count(player: Player, tier: ClueScrollTier): Int {
+        val box = ClueItems.local(boxes.getValue(tier))
+        return ClueOwnership.stored(player).filter { it.id == tier.scrollId || it.id == box }
+            .sumOf { it.amount.coerceAtLeast(0).toLong() }.coerceAtMost(Int.MAX_VALUE.toLong()).toInt()
+    }
     fun mayTakeBox(player: Player, tier: ClueScrollTier): Boolean = (count(player, tier) < capacity(player, tier)).also {
         if (!it) player.message("You can't take any more of that tier of scroll box.")
     }
@@ -49,7 +51,10 @@ object ClueContainers {
             if (notify) player.message("You have a sneaking suspicion that you would have received a ${tier.displayName.lowercase()} scroll box.")
             return null
         }
-        return ClueItems.local(boxes.getValue(tier))
+        val source = boxes.getValue(tier)
+        return ClueItems.local(source).also {
+            if (it == null && missingBoxesReported.add(source)) println("PROBLEM CLUE ${tier.name} scroll box $source not mapped; reward unavailable")
+        }
     }
 
     fun openBox(player: Player, slot: Int, source: Item, tier: ClueScrollTier): Boolean {
@@ -72,7 +77,7 @@ object ClueContainers {
         if (opened(player, case)) { player.message("You've already obtained this scroll case!"); return false }
         player.inventory[slot] = if (source.amount == 1) null else Item(source, source.amount - 1)
         player.attr[flags.getValue(case)] = true
-        CollectionLog.record(player, case.tier?.key ?: ClueLogPages.CASES, listOf(source.id to 1))
+        // The award transaction records the case when received. Consuming it must not log a second copy.
         return true
     }
 

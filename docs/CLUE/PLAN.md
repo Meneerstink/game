@@ -1,6 +1,8 @@
 # CLUE - OSRS Treasure Trails
 
-ChatGPT-A, branch `gpt-a/clue-scrolls`, 14 November 2026. This is an implementation
+ChatGPT-A, branch `gpt-a/clue-scrolls-2`, resumed 15 November 2026 from B's WIP
+`be512be6a`. The 00:4x dossier handoff assigns the entire card to A; B stays off
+these files while A owns it. This is an implementation
 branch, not evidence that any content has passed the loaded testclient or live gate.
 Claude owns cache application, testclient verification, merge and release.
 
@@ -51,8 +53,8 @@ the former rarity heuristic and provide all items in source order.
    agents/STASH, cryptic/search/talk, anagrams/challenges/ciphers, coordinates and
    wizards, maps, puzzles, light boxes, hot/cold, Falo, Charlie and Sherlock.
    Record each excluded step and the proven missing map/area in the dossier.
-4. GPT-B owns Watson hand-in/check/NPC Contact, Mimic arena/combat/death/rewards.
-   GPT-A supplies reward/log APIs and source evidence; do not overlap B's files.
+4. Finish and independently review the inherited Watson hand-in/check/NPC Contact,
+   Mimic arena/combat/death/rewards. A owns all of these after the 00:4x handoff.
 5. Source-by-source acquisition: NPC drop tables, nests/geodes/bottles, implings,
    activities, clue/scroll boxes. Preserve the approved drop-rate modifiers only
    where a current owner decision requires them, and show the actual roll rate.
@@ -65,7 +67,8 @@ the former rarity heuristic and provide all items in source order.
   runtime data, entry points, sources and log pages must not expose that tier.
 * The current Wiki contains scroll boxes/cases (July 2025), unlike the donor.
   They are in pinned cache 2686 and therefore belong to the parity work. Quest
-  condition X Marks the Spot must be checked, not assumed complete for everyone.
+  Owner 15 November 00:2x explicitly grants the X Marks the Spot box unlock to
+  everyone; no beginner quest or beginner tier is introduced.
 * Bloodhound's Dig option was added after the pinned cache (8 September 2026):
   runtime option/ID needs a source-compatible import plan, not a guessed slot.
 * Owner 14-11 22:1x keeps kits shop-only. Kit outcomes reroll over the remaining
@@ -74,6 +77,27 @@ the former rarity heuristic and provide all items in source order.
   No kit slots become nothing and no shop offer is removed.
 * No client layout, runtime sound, arena collision or death recovery claim is
   accepted from source tests alone. Those checks remain Claude's assigned gate.
+
+## Current acquisition implementation (15 November, A)
+
+Source commit `0ef8878ea` contains 564 combat clue routes for 526 current cache
+NPC definitions and 46 source base rates for supported skilling activities.
+Kill, thieving and reward sources are distinguished by the Wiki HTML's actual
+method icon. Runtime NPC matches require both name and combat level; a named
+Deadman breach boss is not presumed to be its ordinary OSRS counterpart.
+Eleven conflicting Jelly variants and 235 unmatched source rows are fully listed
+in `NPC-SOURCE-CONFLICTS.json` and `NPC-SOURCE-GAPS.json`. Missing NPCs, different
+variants and differing levels are review gates, not invented drop rates.
+
+The runtime replaces a verified tier's legacy clue slots with nothing at their
+original weights, then rolls its sourced clue independently of bracket boosts.
+The viewer reads the same source rows without sharing account capacity/ring
+state in its cache. Ten impling clue rolls cover both jars and barehanded loot.
+Woodcutting/mining/fishing use independent tier rolls and visible skill levels;
+RS2-only activities have no guessed OSRS equivalent. The server has no Combat
+Achievements provider, so no reward from that system is assumed unlocked.
+These runtime changes remain uncommitted/unverified until the current targeted
+Gradle run and its regressions finish; source-data checks alone are not acceptance.
 
 Every completed step is appended to `C:\RSPS\team\dossiers\CLUE.txt`. Do not mark
 CLUE complete while this plan or the handoff still contains unimplemented work.

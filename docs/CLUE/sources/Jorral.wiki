@@ -1,0 +1,36 @@
+{{External|rs}}
+{{confuse|Jorra}}
+{{Infobox NPC
+|name = Jorral
+|image = [[File:Jorral.png|120px]]
+|release = [[22 November]] [[2005]]
+|update = Making History and minor changes
+|members = Yes
+|race = [[Human]]
+|quest = {{*}} [[Making History]]<br/>{{*}} [[The Slug Menace]]
+|location = [[Outpost]]
+|gender = Male
+|options = Talk-to
+|examine = A sensible looking man.
+|map = {{Map|name=Jorral|x=2436|y=3346|r=5|mtype=square}}
+|id = 3490
+|leagueRegion = Kandarin
+}}
+[[File:Jorral chathead.png|left]]
+'''Jorral''' is a historian located at his [[Outpost]], which is surrounded by [[Aggressiveness|aggressive]] level 64 [[Wolf|wolves]] and level 42 [[hobgoblin]]s, north of West Ardougne. He starts the [[Making History]] [[Quests|quest]]. During Making History, Jorral enlists the help of the player to save the outpost from [[King Lathas]] by researching its past. After the player saves the outpost, Jorral turns it into a small museum.
+
+He also features in [[The Slug Menace]] quest, where the player takes a [[Door transcription|transcript of the runes]] to take him for translating which leads him to describing [[Mother Mallum]]'s history.
+
+The quickest way to get to Jorral is by using the [[Necklace of passage]]'s outpost option.
+
+== Treasure Trails ==
+Jorral plays a major role in master difficulty [[Treasure Trails]]. During a [[hot & cold]] [[master clue]] which directs players to speak to Jorral, he will give players a [[strange device]] needed to locate the next clue or casket. '''Note:''' The Making History quest must be completed before accepting the strange device from Jorral and proceeding with any master Hot Cold clue. 
+
+==Dialogue==
+{{Hastranscript|npc}}
+
+==Trivia==
+*If you talk to Jorral for a master clue before finishing the quest [[Making History]] your character will try to mention the clue, but swiftly be interrupted with "Stop! I can't help you unless you help me out first".
+
+{{The Slug Menace}}
+{{Making History}}

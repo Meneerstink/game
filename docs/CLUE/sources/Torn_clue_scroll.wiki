@@ -1,0 +1,144 @@
+{{Infobox Item
+|version1 = Part 1
+|version2 = Part 2
+|version3 = Part 3
+|name1 = Torn clue scroll (part 1)
+|name2 = Torn clue scroll (part 2)
+|name3 = Torn clue scroll (part 3)
+|image1 = [[File:Torn clue scroll (part 1).png]]
+|image2 = [[File:Torn clue scroll (part 2).png]]
+|image3 = [[File:Torn clue scroll (part 3).png]]
+|release = [[6 July]] [[2016]]
+|update = Treasure Trail Expansion (2016)
+|members = Yes
+|quest = No
+|tradeable = No
+|equipable = No
+|stackable = No
+|noteable = No
+|options = Combine, Inspect, Destroy
+|destroy = Are you sure you wish to destroy it? You'll have to solve another clue to re-obtain it.
+|examine = A clue scroll, at least partially.
+|value = 20
+|weight = 0.020
+|id1 = 19837
+|id2 = 19838
+|id3 = 19839
+}}
+{{Synced switch
+|version1 = [[File:Torn clue scroll (part 1) detail.png|left|100px]]
+|version2 = [[File:Torn clue scroll (part 2) detail.png|left|130px]]
+|version3 = [[File:Torn clue scroll (part 3) detail.png|left|170px]]
+}}
+'''Torn clue scrolls''' are parts of the next clue scroll step during a [[master clue]]. Solving each part of a three-part master [[cryptic clue]] gives a torn clue scroll, which can be combined to continue the [[treasure trail]].
+
+[[File:Ultimate ironman chat badge.png]] Note for Ultimate Ironmen: When dying with a torn clue scroll, the pieces will drop to the ground. However, torn clue scrolls will be destroyed upon attempting to pick them up, and the player will receive the chatbox message "The torn clue scroll disintegrates".
+
+Torn clue scrolls are always kept on death, whether protected or not, as it is an untradeable item. If not protected it will go to the gravestone. In the Wilderness a [[clue box]] can be brought if the player prefers an unprotected clue scroll to remain in their inventory upon death. Note that the box will always be lost. 
+
+In [[Guide:Clue Juggling|clue juggling]], torn clue scrolls can only be juggled with another clue which also has 3 parts needed to solve it. Attempting to combine the clue scroll parts after swapping out the clue scroll in your inventory with a different master clue that only requires 1 action (e.g. a [[Falo the Bard]] clue) results in the parts being discarded, forcing the player to gather them again.
+
+==Transcript==
+{{Hastranscript|item}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 18 April 2019
+|update = QoL and Treasure Trails Feedback Changes
+|change = Part 3 was given a graphical update, while part 2 was given a second graphical update.
+}}
+{{Subject changes
+|date = 11 April 2019
+|update = Treasure Trails Expansion and Easter 2019
+|poll = Old School Content Poll 65: Treasure Trails Expansion
+|change = Parts 1 and 2 were given a [[graphical update]].
+}}
+{{Subject changes
+|date = 9 November 2017
+|update = The Queen of Thieves & The Depths of Despair
+|poll =
+|type =
+|change = The torn clue scrolls had their ''Drop'' option changed to a ''Destroy'' option.
+}}
+{{Subject changes
+|date = 17 August 2017
+|update = Runes and Ammunition & Log In Screen Competition!
+|change = *A left-click "Combine" option was added.
+*The "Inspect" option was made right-click.
+}}
+{{Subject changes
+|date = 9 March 2017
+|update = General QoL!
+|change = The items' values were increased from 1 to 20.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{{Switch infobox
+|text1 = Part 1
+|item1 =
+|text2 = Part 2
+|item2 =
+|text3 = Part 3
+|item3 =
+}}
+{|style="text-align: center" cellpadding="15"
+|
+{{Synced switch
+|version1 = [[File:Torn clue scroll (part 1) (v1) detail.png|center|300x150px]]
+|version2 = [[File:Torn clue scroll (part 2) (v1) detail.png|center|300x150px]]
+|version3 = [[File:Torn clue scroll (part 3) (v1) detail.png|center|300x150px]]
+}}
+|
+{{Synced switch
+|version1 =  
+|version2 = [[File:Torn clue scroll (part 2) (v2) detail.png|center|300x150px]]
+|version3 =  
+}}
+|
+{{Synced switch
+|version1 = [[File:Torn clue scroll (part 1) detail.png|center|300x150px]]
+|version2 = [[File:Torn clue scroll (part 2) detail.png|center|300x150px]]
+|version3 = [[File:Torn clue scroll (part 3) detail.png|center|300x150px]]
+}}
+|-
+|
+{{Synced switch
+|version1 = [[File:Torn clue scroll (part 1) v1.png|center]]
+|version2 = [[File:Torn clue scroll (part 2) v1.png|center]]
+|version3 = [[File:Torn clue scroll (part 3) v1.png|center]]
+}}
+|
+{{Synced switch
+|version1 =  
+|version2 = [[File:Torn clue scroll (part 2) v2.png|center]]
+|version3 =  
+}}
+|
+{{Synced switch
+|version1 = [[File:Torn clue scroll (part 1).png|center]]
+|version2 = [[File:Torn clue scroll (part 2).png|center]]
+|version3 = [[File:Torn clue scroll (part 3).png|center]]
+}}
+|-
+|
+{{Synced switch
+|version1 = 6 July 2016 –<br/>11 April 2019
+|version2 = 6 July 2016 –<br/>11 April 2019
+|version3 = 6 July 2016 –<br/>18 April 2019
+}}
+|
+{{Synced switch
+|version1 =  
+|version2 = 11 April 2019 –<br/>18 April 2019
+|version3 =  
+}}
+|
+{{Synced switch
+|version1 = 11 April 2019 –<br/>present
+|version2 = 18 April 2019 –<br/>present
+|version3 = 18 April 2019 –<br/>present
+}}
+|}
+{{Treasure Trails}}

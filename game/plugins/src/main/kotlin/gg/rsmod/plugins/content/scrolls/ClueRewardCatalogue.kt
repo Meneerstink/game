@@ -53,9 +53,10 @@ class ClueRewardCatalogue private constructor(val tiers: Map<ClueScrollTier, Lis
     }
 
     /** Actual probability of at least one of an item across the tier's equally likely casket lengths. */
-    fun casketChance(tier: ClueScrollTier, osrsId: Int): Double {
+    fun casketChance(tier: ClueScrollTier, osrsId: Int, rolls: IntRange = tier.rewardRolls): Double {
+        require(!rolls.isEmpty() && rolls.first >= 0 && rolls.last <= tier.rewardRolls.last)
         val perRoll = outcomes.getValue(tier).filter { entry -> entry.rows.any { it.osrsId == osrsId } }.sumOf { it.probability }
-        return tier.rewardRolls.map { 1.0 - Math.pow(1.0 - perRoll, it.toDouble()) }.average()
+        return rolls.map { 1.0 - Math.pow(1.0 - perRoll, it.toDouble()) }.average()
     }
 
     fun missing(tier: ClueScrollTier, local: (Int) -> Int?): Set<Int> = outcomes.getValue(tier).flatMap { it.rows }.map { it.osrsId }.filter { local(it) == null }.toSet()

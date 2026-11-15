@@ -1,0 +1,46 @@
+{{External|rs|rsc=Sir Radimus Erkle}}
+{{Redirect|Erkle|Radimus's brother|Siegfried Erkle}}
+{{Infobox NPC
+|name = Radimus Erkle
+|image = [[File:Radimus Erkle.png|120px]]
+|release = [[20 August]] [[2003]]
+|update = New - Legends Quest!
+|members = Yes
+|race = [[Human]]
+|quest = [[Legends' Quest]]
+|location = [[Legends' Guild]]
+|gender = Male
+|options = Talk-to
+|examine = Radimus is the Grand Vizier of the Legends' Guild.
+|map = {{Map|name=Radimus Erkle|x=2726|y=3368|plane=0|r=3|mtype=square}}
+|id = 3953
+|leagueRegion = Kandarin
+}}
+[[File:Radimus Erkle chathead.png|left]]
+'''Radimus Erkle''' is the Grand Vizier of the [[Legends' Guild]] and is in charge of admissions into the guild. He is also the brother of [[Siegfried Erkle]], who owns the [[Legends Guild Shop of Useful Items]].
+
+He will send players off to complete the [[Legends' Quest]] as proof that they are worthy enough to enter the guild. After the quest, [[dark dagger]]s can be freely reclaimed from him.
+
+Radimus appears to be wearing a [[rune platebody]], [[rune platelegs]], [[leather gloves]], a white cape, and the [[boots of lightness]].
+
+==Treasure Trails==
+{{Anagram|Radimus Erkle|master|MUS KIL READER}}. He will ask you to solve either a [[light box|light]] or [[puzzle box]].
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 28 April 2021
+|update = Arceuus Spellbook Beta and A Kingdom Divided Preparation
+|change = Radimus Erkle's clone has been removed, meaning he will no longer appear in two places at once.
+}}
+{{Subject changes footer}}
+
+==Trivia==
+*If you choose to take a machete from the cupboard during [[Legends' Quest]], but have multiple machetes in the bank, Radimus will stop you, stating "''Hey, I hear that you have enough machetes in your bank to start your own store. Please don't take my generosity for granted.''"
+**Doing so after the quest prompts him to say "''Hey, I think it's about time you started buying your own machetes. I'm sure there must be some jungle native down in Karamja who can sell you one.''"
+
+{{Legends' Quest}}
+{{Legends' Guild}}

@@ -57,7 +57,8 @@ object DropTableFactory {
     }
 
     /** Every registered table id of [type] (the debug toolkit's `sweep drops` rolls each one). */
-    fun tableIds(type: DropTableType = DropTableType.KILL): Set<Int> = tables[type]!!.keys.toSet()
+    fun tableIds(type: DropTableType = DropTableType.KILL): Set<Int> = tables[type]!!.keys.toSet() +
+        if (type == DropTableType.KILL) gg.rsmod.plugins.content.scrolls.ClueNpcSources.npcIds else emptySet()
 
     /**
      * Whether a table is registered for [id], so data-sourced fallbacks can defer to hand-written ones.
@@ -65,7 +66,7 @@ object DropTableFactory {
     fun hasTable(
         id: Int,
         type: DropTableType = DropTableType.KILL,
-    ): Boolean = tables[type]!!.containsKey(id)
+    ): Boolean = tables[type]!!.containsKey(id) || type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(id)
 
     /** Wiki Drop table: wilderness uniques are pre-rolled; a successful roll replaces the main loot, not tertiaries. */
     fun mainReplacementTable(npcId: Int, tables: List<DropTable>): DropTable? =
@@ -190,9 +191,11 @@ object DropTableFactory {
         tableId: Int,
         type: DropTableType = DropTableType.KILL,
     ): List<DropTable>? {
-        val bldr = tables[type]!![tableId] ?: return null
+        val bldr = tables[type]!![tableId]
+        if (bldr == null && !(type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(tableId))) return null
         return try {
-            DropTableBuilder(player, prng).apply(bldr).build()
+            val built = DropTableBuilder(player, prng).also { if (bldr != null) bldr(it) }.build()
+            if (type == DropTableType.KILL) gg.rsmod.plugins.content.scrolls.ClueNpcSources.tables(player, tableId, built) else built
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop viewer table $tableId", e)
             null
@@ -211,11 +214,11 @@ object DropTableFactory {
     ): MutableList<Item>? {
         val items = mutableListOf<Item>()
 
-        val bldr = tables[type]!![tableId] ?: return null
+        val bldr = tables[type]!![tableId]
+        if (bldr == null && !(type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(tableId))) return null
         try {
-            val table = DropTableBuilder(player, prng).apply(bldr)
-
-            val tables = table.tables.entries.map { it.value }
+            val built = DropTableBuilder(player, prng).also { if (bldr != null) bldr(it) }.build()
+            val tables = if (type == DropTableType.KILL) gg.rsmod.plugins.content.scrolls.ClueNpcSources.tables(player, tableId, built) else built
 
             val guaranteed = tables.firstOrNull { it.name == GUARANTEED_TABLE_NAME }
             val remaining = tables.filterNot { it.name == GUARANTEED_TABLE_NAME }
@@ -243,6 +246,7 @@ object DropTableFactory {
             val clueAdjusted = gg.rsmod.plugins.content.scrolls.ClueAcquisition.transform(player, items)
             items.clear()
             items.addAll(clueAdjusted)
+            if (type == DropTableType.KILL) items.addAll(gg.rsmod.plugins.content.scrolls.ClueNpcSources.roll(player, tableId))
             return items
         } catch (e: Exception) {
             gg.rsmod.game.model.Trace.crash("drop table", e)
@@ -416,6 +420,7 @@ object DropTableFactory {
         val def = world.definitions.get(ItemDef::class.java, item.id)
         if (def.stackable) {
             val ground = GroundItem(item.id, item.amount, tile, owner as Player)
+            gg.rsmod.plugins.content.scrolls.ClueGroundItems.configure(ground)
             world.spawn(ground)
         }
         else {
@@ -423,6 +428,7 @@ object DropTableFactory {
             // non-stackable loot (armour, weapons) was public to every player the moment it landed.
             for (i in 0 until item.amount) {
                 val ground = GroundItem(item.id, 1, tile, owner as? Player)
+                gg.rsmod.plugins.content.scrolls.ClueGroundItems.configure(ground)
                 world.spawn(ground)
             }
         }

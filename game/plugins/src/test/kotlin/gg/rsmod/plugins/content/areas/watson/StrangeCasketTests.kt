@@ -27,8 +27,10 @@ class StrangeCasketTests {
             "No, I want to keep getting mimic challenges.",
             "on_obj_option(obj = StrangeCasket.LOC, option = \"search\")",
             "it.player.attr[StrangeCasket.MIMIC_CHALLENGES] = true", "it.player.attr.remove(StrangeCasket.MIMIC_CHALLENGES)",
-            "on_item_option(item = Items.MIMIC, option = \"open\")", "player.message(StrangeCasket.OPEN_BEFORE_FIGHT)",
         ).forEach { assertTrue(it in plugin, it) }
+        val encounter = File("src/main/kotlin/gg/rsmod/plugins/content/areas/watson/mimic_encounter.plugin.kts").readText()
+        assertTrue("on_item_option(Items.MIMIC, \"open\")" in encounter)
+        assertTrue("player.message(StrangeCasket.OPEN_BEFORE_FIGHT)" in encounter)
         assertEquals(23729, gg.rsmod.plugins.api.cfg.Items.MIMIC)
         assertEquals("Visit the Strange Casket, upstairs in Watson's house in Hosidius, to attempt the Mimic's challenge.", StrangeCasket.OPEN_BEFORE_FIGHT)
         // Line-ending agnostic: the checkout may carry CRLF (git autocrlf), the entry is what is asserted.

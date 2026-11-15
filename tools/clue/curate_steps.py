@@ -49,8 +49,7 @@ SELECTION = {
     "master": [
         "Show your anger at the Wise old man", "Clap in the magic axe hut", "03.26N 12.18E",
         "03.50N 09.07E", "Anger Abbot Langley", "Robin wishes to see your finest ranged equipment",
-        "A chisel and hammer reside in his home, strange for one of magic",
-        "Hopefully this set of armour will help you to keep surviving", "Falo the bard wants to see you",
+        "@Mandrith", "@Radimus", "Falo the bard wants to see you",
         "A massive battle rages beneath",
         # Sherlock and normal Jorral hot/cold have guide entries, not individual Clue-info pages.
         "@Sherlock", "@Jorral",
@@ -70,13 +69,17 @@ def main():
         assert len(names) == (15 if tier in ("easy", "medium", "hard") else 12)
         for name in names:
             if name.startswith("@"):
-                file = "Treasure_Trails__Guide__Cryptic_clues__Master.wiki"
+                anagram = name in ("@Mandrith", "@Radimus")
+                file = "Treasure_Trails__Guide__Anagrams__Master.wiki" if anagram else "Treasure_Trails__Guide__Cryptic_clues__Master.wiki"
                 pin = guide_pins[file]
                 digest = sha256((SOURCES/file).read_bytes()).hexdigest()
                 assert digest == pin["sha256"], file
+                special = dict(anagram="Dim Tharn", npc="Mandrith", challenges=["LIGHT_BOX", "SLIDING_PUZZLE"]) if name == "@Mandrith" else (
+                    dict(anagram="Mus Kil Reader", npc="Radimus Erkle", challenges=["LIGHT_BOX", "SLIDING_PUZZLE"]) if name == "@Radimus" else {})
                 result.append(dict(tier=tier, key=f"master:{name[1:].lower()}",
-                                   kind="SHERLOCK" if name == "@Sherlock" else "HOT_COLD",
+                                   kind="ANAGRAM" if anagram else "SHERLOCK" if name == "@Sherlock" else "HOT_COLD",
                                    sourceFile=file, sourceSha256=digest, source=pin["url"], revision=pin["revision"],
+                                   **special,
                                    activation="pending subtype handler and client verification"))
                 continue
             key = f"Clue scroll ({tier}) - {name}"

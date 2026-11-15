@@ -16,9 +16,14 @@ ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
             if (MimicCaskets.supported(tier)) {
                 if (player.attr[MimicCaskets.ASKED] != true && player.attr[StrangeCasket.MIMIC_CHALLENGES] != true) {
                     messageBox(StrangeCasket.OPEN_BEFORE_FIGHT)
-                    if (options("Yes, I'd like to get Mimic challenges.", "No, I don't think I want that.") == 1)
-                        player.attr[StrangeCasket.MIMIC_CHALLENGES] = true
+                    val wantsChallenge = options("Yes, I'd like to get Mimic challenges.", "No, I don't think I want that.") == 1
                     player.attr[MimicCaskets.ASKED] = true
+                    // Wiki Mimic: the first opening directs to the Strange casket to opt in.
+                    // Only its sourced dialogue enables challenges; this prompt must not do so.
+                    if (wantsChallenge) {
+                        messageBox(StrangeCasket.OPEN_BEFORE_FIGHT)
+                        return@queue
+                    }
                 }
                 if (MimicCaskets.held(player)) {
                     if (options("Yes", "No", title = "You already have a Mimic, and cannot be given another one. Do you wish to open the casket anyway?") != 1) return@queue

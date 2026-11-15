@@ -1,6 +1,7 @@
 # CLUE — Claude cache/client handoff (in progress)
 
-This card is not ready to merge/release. B is still implementing and testing it.
+This card is not ready to merge/release. A resumed the entire card on
+`gpt-a/clue-scrolls-2` from B's WIP `be512be6a` (dossier 15 November 00:4x).
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
@@ -73,7 +74,7 @@ Read-only cache evidence establishes:
 
 ## Claude's loaded-client checks
 
-After B records tested commits and all asset gates pass:
+After A records tested commits and all asset gates pass:
 
 1. Open every tier with room and with a full inventory; verify all rewards,
    private overflow, one counter increment, log pages and golden 78 message.
@@ -89,5 +90,49 @@ After B records tested commits and all asset gates pass:
 6. Dropped clues/boxes/caskets, wrong gear/emotes, STASH, dig monsters and the
    limited sourced step set remain explicit gameplay gates.
 
-Open source/owner questions are in `C:/RSPS/team/dossiers/CLUE.txt`; B continues
+Open source/owner questions are in `C:/RSPS/team/dossiers/CLUE.txt`; A continues
 independent work while Claude obtains missing source evidence.
+
+## A's acquisition and regression checkpoint (15 November)
+
+Source data commit: `0ef8878ea`. No additional cache IDs are allocated by the new
+NPC/skilling/impling routes; they use the five scroll boxes in the existing item
+roster. Runtime changes are still pending the targeted build, not release-ready.
+
+* `ClueNpcSources`: 564 exact tier routes for 526 NPC identities; old replaced
+  clue entries become nothing without changing other slot weights. Normal/Your
+  chances share this source and only the appropriate Wilderness RoW modifier.
+  This clue roll is outside the Annihilation bracket multiplier. Account-specific
+  eligibility must bypass the viewer cache. Preserve the approved renderer.
+* `ClueSkilling`: 46 activities from the pinned nest/geode/bottle formulas.
+  Visible levels only; independent easy/medium/hard/elite rolls; no beginner,
+  78/master skilling roll, 200m modifier, familiar boost or woodcutting cape boost.
+  No Combat Achievements system exists here; its rewards are not invented.
+* `ClueImplings`: baby/young/gourmet -> easy (100/50/25); earth/essence/eclectic ->
+  medium (100/50/25); nature/magpie/ninja -> hard (100/50/25); dragon -> elite (50).
+  Check both jars and existing barehanded catch routes, full inventory and cap.
+* `ClueOwnership`/`ClueContainers`: include the Mimic IRS in clue ownership and box
+  capacity; opening a case does not log a second copy of the already awarded case.
+* `ClueGroundItems`: player-dropped clues/Mimics 6000 ticks; boxes 300 ticks at
+  award/drop routes; explicit D1-D20 death timings win. `OpHeld5Handler` gets one
+  content timing callback after confirmation and requires the exact held Item.
+* `MimicCombat`: 230 real HP (DSL input 2300, not 230), poison/venom immunity.
+  Its regression builds the actual definition, rather than checking strings.
+* Casket/Mimic viewer: conversion replaces ordinary and tertiary contents together;
+  the post-fight source includes the ordinary casket extras and fixed remaining
+  reward-roll count. First-casket prompt directs to Strange casket; it cannot
+  enable Mimic challenges by itself.
+
+Reproduce source generation without refetching or touching a cache writer:
+
+```
+python tools/clue/fetch_acquisition_sources.py --from-snapshot
+python tools/clue/build_npc_catalogue.py
+python tools/clue/build_skilling_catalogue.py
+```
+
+The census is read-only against the canonical cache. Source SHA-256 validation
+passed for 106 main Wiki pages and five acquisition HTML snapshots at A's first
+source commit; the step archive has its own separate manifest. Four core import
+tests passed at 02:27 (two forearm, two dry-run). The ongoing run's plugin result
+and runtime commits must be recorded before review/merge; no client/live proof yet.

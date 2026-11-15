@@ -133,7 +133,7 @@ object ImplingData {
             ),
         )
 
-    fun byNpc(npc: Int): ImplingTier? = TIERS.firstOrNull { it.npcId == npc }
+    fun byNpc(npc: Int): ImplingTier? = JAR_TIERS.firstOrNull { it.npcId == npc }
 
     val JAR_TIERS = TIERS + dragonJar
 
@@ -212,9 +212,7 @@ object Impling {
         val broken = player.world.random(0..9) == 0
         val rewards = mutableListOf(Item(item, amount))
         if (!broken) rewards += Item(Items.IMPLING_JAR)
-        if (tier === ImplingData.dragonJar && player.world.random(0..49) == 0 &&
-            !player.inventory.contains(Items.CLUE_SCROLL_ELITE) && !player.bank.contains(Items.CLUE_SCROLL_ELITE)
-        ) rewards += Item(Items.CLUE_SCROLL_ELITE)
+        gg.rsmod.plugins.content.scrolls.ClueImplings.roll(player, tier.npcId)?.let { rewards += it }
         val staged = ItemContainer(player.inventory)
         staged[slot] = null
         if (rewards.any { !staged.add(it, assureFullInsertion = true).hasSucceeded() }) {
@@ -236,7 +234,7 @@ object Impling {
         tier: ImplingTier,
     ) {
         val rare = tier.rare.isNotEmpty() && RANDOM.nextInt(100) < 30
-        val table = if (rare) tier.rare else tier.common
+        val table = if (rare) tier.rare else ImplingData.mainLoot(player, tier)
         if (table.isEmpty()) return
         val (item, amounts) = table[RANDOM.nextInt(table.size)]
         val amount = amounts.first + RANDOM.nextInt(amounts.last - amounts.first + 1)
@@ -244,6 +242,10 @@ object Impling {
             player.inventory.add(item, amount)
         } else {
             player.world.spawn(GroundItem(item, amount, player.tile, player))
+        }
+        gg.rsmod.plugins.content.scrolls.ClueImplings.roll(player, tier.npcId)?.let { clue ->
+            if (!player.inventory.add(clue, assureFullInsertion = true).hasSucceeded())
+                player.world.spawn(gg.rsmod.plugins.content.scrolls.ClueGroundItems.configure(GroundItem(clue, player.tile, player)))
         }
     }
 }
