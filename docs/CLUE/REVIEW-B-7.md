@@ -80,3 +80,17 @@ state or unconditional alternate answer was invented.
 This is a tested source/backend checkpoint, not full CLUE completion: donor pool
 replacement, subtype handlers, challenge UI/physical items, dig combat, unresolved
 source/area/variant cases, and Claude's client/cache/live gates remain open.
+
+## Delayed clue interaction guard, 15 November 15:13
+
+`ClueStepContract` captures the actual account, held Item reference, step key,
+registered step object and tier progress before a dialogue/puzzle suspends. A
+later answer must still match them all before the existing atomic advance/consume
+transaction runs. Moving the same inventory item is allowed; a copied/replaced,
+banked or different-account clue, changed progress/key and replay are rejected.
+No account-global pending answer is introduced.
+
+`python tools/clue/check_compile.py HEAD contract-tests`: **four fresh standalone
+tests passed**. This is the shared guard for the forthcoming subtype handlers;
+no donor step registration has been replaced by this helper alone. A focused
+Gradle run is still required when the actual consumers are integrated.
