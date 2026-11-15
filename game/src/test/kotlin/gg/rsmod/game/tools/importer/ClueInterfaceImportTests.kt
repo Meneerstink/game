@@ -8,7 +8,17 @@ class ClueInterfaceImportTests {
     private val root = ObjectMapper().readTree(File("../docs/CLUE/cache/interfaces.json"))
     private val fonts = mapOf(497 to 999)
     private val models = mapOf(3395 to 60001, 1226 to 60002)
-    private val sprites = mapOf(539 to 9000)
+    private val sprites = mapOf(539 to 9000, 540 to 9001)
+
+    @Test fun `close hover preserves the sourced callback and translated normal and highlighted sprites`() {
+        for ((group, close) in listOf(73 to 4, 203 to 1)) {
+            val component = ClueInterfaceImportTool.components(group, root[group.toString()], fonts, models, sprites)[close]
+            val hooks = InterfaceHookProbeTool.componentHooks(OsrsInterfacePortTool.encode(component))
+            assertEquals(listOf(44, -2147483645, 9001), hooks["onMouseOver"])
+            assertEquals(listOf(44, -2147483645, 9000), hooks["onMouseLeave"])
+            assertTrue(hooks.filterKeys { it !in setOf("onMouseOver", "onMouseLeave") }.values.all { it == null })
+        }
+    }
 
     @Test fun `wide IF3 model preserves all seventeen id bits and the exact source camera`() {
         val components = ClueInterfaceImportTool.components(73, root["73"], fonts, mapOf(3395 to 66084, 1226 to 66085), sprites)

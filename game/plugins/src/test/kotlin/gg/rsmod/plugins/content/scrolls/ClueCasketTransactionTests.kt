@@ -28,6 +28,7 @@ class ClueCasketTransactionTests {
         every { definitions.get(ItemDef::class.java, any()) } answers { ItemDef(secondArg()) }
         every { definitions.getNullable(ItemDef::class.java, any()) } answers { ItemDef(secondArg()) }
         every { world.definitions } returns definitions
+        every { world.getService(gg.rsmod.game.service.log.LoggerService::class.java, searchSubclasses = true) } returns null
         every { player.world } returns world
         every { player.tile } returns Tile(3200, 3200)
         every { player.attr } returns AttributeMap()

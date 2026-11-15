@@ -4,6 +4,7 @@ import gg.rsmod.game.model.attr.AttributeKey
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 import gg.rsmod.plugins.content.scrolls.*
 import kotlin.random.Random
 
@@ -32,7 +33,7 @@ object MimicCaskets {
         val mimic = ClueItems.local(23184) ?: return false
         val staged = ItemContainer(player.inventory)
         staged[slot] = if (source.amount == 1) null else Item(source, source.amount - 1)
-        if (!staged.add(MimicChallenge.create(mimic, tier), assureFullInsertion = true).hasSucceeded()) return false
+        if (!staged.addPreservingAttr(MimicChallenge.create(mimic, tier), assureFullInsertion = true).hasSucceeded()) return false
         for (i in 0 until staged.capacity) {
             val old = player.inventory[i]; val next = staged[i]
             if (old?.id != next?.id || old?.amount != next?.amount || old?.attr != next?.attr) player.inventory[i] = next

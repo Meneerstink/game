@@ -19,6 +19,12 @@ object ClueInterfaceImportTool {
         require(group in GROUPS)
         fun JsonNode.int(key: String, default: Int = 0) = get(key)?.asInt() ?: default
         fun JsonNode.flag(key: String) = get(key)?.asBoolean() ?: false
+        fun JsonNode.hover(key: String): List<Int> {
+            val hook = get(key)?.takeUnless { it.isNull }?.map { it.asInt() }.orEmpty()
+            if (hook.isEmpty()) return emptyList()
+            require(hook.size == 3 && hook[0] == 44 && hook[1] == -2147483645) { "Unsupported source hover: $hook" }
+            return listOf(44, hook[1], sprites.getValue(hook[2]))
+        }
         val ids = node.fieldNames().asSequence().map(String::toInt).sorted().toList()
         require(ids == (0 until if (group == 73) 5 else 3).toList())
         val out = ids.map { id ->
@@ -35,7 +41,8 @@ object ClueInterfaceImportTool {
                 colour = n.int("textColor"), ops = n["actions"]?.map { it.asText() }.orEmpty(), opBase = n["name"]?.asText().orEmpty(),
                 model = if (type == 6) models.getValue(n.int("modelId")) else -1,
                 originX = n.int("offsetX2d"), originY = n.int("offsetY2d"), xan = n.int("rotationX"), yan = n.int("rotationY"), zan = n.int("rotationZ"),
-                zoom = n.int("modelZoom"), ortho = n.flag("orthogonal"))
+                zoom = n.int("modelZoom"), ortho = n.flag("orthogonal"),
+                mouseOver = n.hover("onMouseOverListener"), mouseLeave = n.hover("onMouseLeaveListener"))
         }.toMutableList()
         if (group == 73) {
             // Source proc 2090: 36x32 items; three columns with left/centre/right anchoring.
@@ -62,6 +69,14 @@ object ClueInterfaceImportTool {
         val mutations = mutableListOf<CacheMutation>()
         try {
             val local = libraries.first()
+            // Both caches already contain this exact two-argument IF_SETGRAPHIC script.
+            // Pin bytes rather than assuming an OSRS script ID means the same operation in 667.
+            val hover = ObjectMapper().readTree(File(sourceJson.parentFile, "hover.json"))
+            libraries.forEach { cache ->
+                check(CacheItemProbeTool.sha1(cache.data(12, 44, 0) ?: error("Close hover script 44 missing")) == hover["targetSha1"].asText()) {
+                    "Close hover script 44 differs from reviewed source-compatible bytecode"
+                }
+            }
             fun next(index: Int) = libraries.maxOf { (it.index(index).archiveIds().maxOrNull() ?: -1) + 1 }
             var nextInterface = next(3); var nextSprite = next(8)
             fun allocate(kind: String, id: Int, fresh: () -> Int): Int = mapping.getOrPut(kind to id) { old[kind to id] ?: fresh() }
@@ -132,7 +147,14 @@ object ClueInterfaceImportTool {
                     check(ModelConvertTool.compare(model, Rev667ModelDecoder.decode(bytes)).isEmpty())
                     add(7, localId, 0, bytes, "CLUE OSRS UI model $id")
                 }
-                val sprites = GROUPS.flatMap { group -> root[group.toString()].elements().asSequence().filter { it["type"].asInt() == 5 }.map { it["spriteId"].asInt() }.toList() }.distinct()
+                val sprites = GROUPS.flatMap { group -> root[group.toString()].elements().asSequence().flatMap { n ->
+                    sequence {
+                        if (n["type"].asInt() == 5) yield(n["spriteId"].asInt())
+                        listOf("onMouseOverListener", "onMouseLeaveListener").forEach { hook ->
+                            n[hook]?.takeUnless { it.isNull }?.let { yield(it[2].asInt()) }
+                        }
+                    }
+                }.toList() }.distinct()
                 sprites.forEach { id -> add(8, allocate("sprite", id) { nextSprite++ }, 0, source.file(8, id, 0) ?: error("Sprite $id missing"), "CLUE OSRS sprite $id") }
                 val modelMap = mapping.filterKeys { it.first == "model" }.mapKeys { it.key.second }
                 val spriteMap = mapping.filterKeys { it.first == "sprite" }.mapKeys { it.key.second }

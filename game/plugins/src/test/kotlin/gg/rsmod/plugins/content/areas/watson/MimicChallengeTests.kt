@@ -12,8 +12,34 @@ import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
+import gg.rsmod.plugins.content.scrolls.ClueItems
 
 class MimicChallengeTests {
+    @Test fun `casket conversion preserves the actual Mimic source tier and full inventory never spends a stacked casket`() {
+        mockkObject(ClueItems)
+        try {
+            every { ClueItems.local(any()) } answers { callOriginal() }
+            every { ClueItems.local(19836) } returns 20002 // synthetic DefinitionSet fixture
+            for (tier in listOf(ClueScrollTier.ELITE, ClueScrollTier.MASTER)) {
+                val player = recoveryPlayer()
+                val stacked = Item(tier.casketId, 2)
+                player.inventory[0] = stacked
+                assertFalse(MimicCaskets.convert(player, 0, stacked, tier))
+                assertSame(stacked, player.inventory[0]); assertEquals(2, stacked.amount)
+                assertFalse(player.attr[MimicCaskets.RECEIVED] == true)
+                val single = Item(tier.casketId)
+                player.inventory[0] = single
+                assertTrue(MimicCaskets.convert(player, 0, single, tier))
+                val mimic = assertNotNull(player.inventory[0])
+                assertEquals(tier, MimicChallenge.tier(mimic))
+                assertNotNull(MimicChallenge.begin(mimic))
+                assertFalse(MimicCaskets.convert(player, 0, single, tier))
+            }
+        } finally { unmockkObject(ClueItems) }
+    }
+
     private fun recoveryPlayer(): Player {
         val definitions = mockk<DefinitionSet>()
         every { definitions.get(ItemDef::class.java, any()) } answers {
@@ -32,7 +58,7 @@ class MimicChallengeTests {
         val mimic = MimicChallenge.create(23729, ClueScrollTier.ELITE)
         val token = assertNotNull(MimicChallenge.begin(mimic))
         assertTrue(MimicChallenge.settle(mimic, token, won = true))
-        MimicRecovery.store(player, listOf(Item(995, 50000), Item(2000), mimic))
+        MimicRecovery.store(player, listOf(Item(995, 50000), Item(2000).putAttr(ItemAttribute.CHARGES, 17), mimic))
         assertTrue(MimicRecovery.items(recoveryPlayer()).isEmpty())
         assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
         assertEquals(10000, player.bank.getItemCount(995))
@@ -41,6 +67,7 @@ class MimicChallengeTests {
         player.inventory[0] = null
         assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
         assertEquals(2000, player.inventory[0]?.id)
+        assertEquals(17, player.inventory[0]?.getAttr(ItemAttribute.CHARGES))
         player.inventory[0] = null
         assertEquals(MimicRecovery.Result.RETRIEVED, MimicRecovery.retrieve(player))
         assertTrue(MimicChallenge.defeated(player.inventory[0]!!))

@@ -1,6 +1,7 @@
 package gg.rsmod.plugins.content.areas.watson
 
 import gg.rsmod.plugins.content.scrolls.ClueCasketRewards
+import gg.rsmod.plugins.content.scrolls.ClueInterfaces
 
 val mimicTimer = TimerKey()
 on_world_init { world.timers[mimicTimer] = 1 }
@@ -22,13 +23,10 @@ on_item_option(Items.MIMIC, "open") {
         MimicEncounter.inArena(player) -> player.message("It'd be bad taste to try opening that in here.")
         !MimicChallenge.defeated(source) -> player.message(StrangeCasket.OPEN_BEFORE_FIGHT)
         else -> {
+            if (!ClueInterfaces.requireRewardScreen(player)) return@on_item_option
             val plan = MimicCaskets.rewards(player, source) ?: return@on_item_option
             val award = ClueCasketRewards.award(player, slot, source, plan) ?: return@on_item_option
-            player.queue {
-                itemMessageBox("You open the casket. Inside you find " + award.rewards.joinToString(", ") {
-                    "${it.amount} x ${it.getName(player.world.definitions)}"
-                } + ".", item = award.rewards.first().id)
-            }
+            ClueInterfaces.rewards(player, award.rewards)
         }
     }
 }

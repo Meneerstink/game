@@ -62,11 +62,12 @@ object DropTableFactory {
 
     /**
      * Whether a table is registered for [id], so data-sourced fallbacks can defer to hand-written ones.
+     * A sourced clue roll is an extra, not a registered loot table: bulk registration must still supply the ordinary loot.
      */
     fun hasTable(
         id: Int,
         type: DropTableType = DropTableType.KILL,
-    ): Boolean = tables[type]!!.containsKey(id) || type == DropTableType.KILL && gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(id)
+    ): Boolean = tables[type]!!.containsKey(id)
 
     /** Wiki Drop table: wilderness uniques are pre-rolled; a successful roll replaces the main loot, not tertiaries. */
     fun mainReplacementTable(npcId: Int, tables: List<DropTable>): DropTable? =

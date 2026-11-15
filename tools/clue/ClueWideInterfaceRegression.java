@@ -15,6 +15,13 @@ class ClueWideInterfaceRegression {
             require(component.xan2d==104 && component.yan2d==0 && component.zan2d==761 && component.zoom2d==914,mode+" camera");
             require(packet.pos==bytes.length,mode+" decoder alignment");
         }
+        byte[] closeBytes=Files.readAllBytes(dir.resolve("close.bin"));
+        Packet closePacket=new Packet(closeBytes);
+        Component close=new Component(); close.decode(closePacket);
+        require(close.graphic==9000,"close normal sprite");
+        require(java.util.Arrays.equals(close.onMouseOver,new Object[]{44,-2147483645,9001}),"close hover hook");
+        require(java.util.Arrays.equals(close.onMouseLeave,new Object[]{44,-2147483645,9000}),"close leave hook");
+        require(closePacket.pos==closeBytes.length,"close hook decoder alignment");
         long crc=0x1abde5423L;
         for (int toolkit=0;toolkit<32;toolkit++) {
             for (int id: new int[]{0,548,60002,65534}) {

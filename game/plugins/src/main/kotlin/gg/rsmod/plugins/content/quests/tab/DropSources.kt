@@ -199,11 +199,14 @@ object DropSources {
             gg.rsmod.plugins.content.scrolls.ClueNpcSources.has(npcId) ||
             npcId in gg.rsmod.plugins.content.areas.wilderness.bosses.WildernessBossClues.NPCS
 
+    private fun playerDependent(source: Source): Boolean = source.kind == Kind.CLUE || source.kind == Kind.MIMIC ||
+        source.kind == Kind.IMPLING_JAR || playerDependent(source.tableNpc)
+
     /** The view of [source] at [rate] for [player] (cached per source + rate; the player-specific parts are added on top). */
     fun view(player: Player, source: Source, rate: Double = DropTableFactory.killRate(player)): View {
         // N522: Avarice notes, RoW, MM2 and diary tables are evaluated for the requesting player. A shared base would leak
         // the first viewer's state to everyone else. This is table data only; rendering and all existing sources stay unchanged.
-        val base = if (source.kind == Kind.CLUE || source.kind == Kind.MIMIC || source.kind == Kind.IMPLING_JAR || playerDependent(source.tableNpc)) {
+        val base = if (playerDependent(source)) {
             buildView(player, source, rate)
         } else viewCache.getOrPut("${source.key}|$rate") { buildView(player, source, rate) }
         val personal = personal(player, source, base)
@@ -708,12 +711,11 @@ object DropSources {
 
     /** N522: refresh only the new player-dependent NPC contributions in an otherwise shared item-search index. */
     internal fun personalWildernessIndex(player: Player, base: ItemIndex, rate: Double, sources: List<Source> = all(player)): ItemIndex {
-        val dependent = ::playerDependent
-        val dynamic = sources.filter { dependent(it.tableNpc) }
+        val dynamic = sources.filter { playerDependent(it) }
         if (dynamic.isEmpty()) return base
         val names = HashMap(base.names)
         val bySource = base.sources.mapValuesTo(HashMap()) { (_, entries) ->
-            entries.filterNot { dependent(it.first.tableNpc) }.toMutableList()
+            entries.filterNot { playerDependent(it.first) }.toMutableList()
         }
         bySource.entries.removeIf { it.value.isEmpty() }
         dynamic.forEach { source ->

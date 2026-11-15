@@ -66,6 +66,7 @@ object OsrsInterfacePortTool {
         val ops: List<String> = emptyList(), val opBase: String = "",
         val model: Int = -1, val originX: Int = 0, val originY: Int = 0, val xan: Int = 0, val yan: Int = 0, val zan: Int = 0,
         val zoom: Int = 0, val ortho: Boolean = false, val flipH: Boolean = false,
+        val mouseOver: List<Int> = emptyList(), val mouseLeave: List<Int> = emptyList(),
     )
 
     /** OSRS model -> local model recorded by an import (OsrsLocImportTool fx_kind osrs_loc_model, region import role loc_model). */
@@ -117,7 +118,11 @@ object OsrsInterfacePortTool {
         }
         o.p3(0); o.p1(0); o.str(c.opBase); o.p1(c.ops.size); c.ops.forEach { o.str(it) }
         o.str(""); o.p1(0); o.p1(0); o.p1(0); o.str("")
-        repeat(20) { o.p1(0) }
+        repeat(20) { hook ->
+            val arguments = when (hook) { 1 -> c.mouseOver; 2 -> c.mouseLeave; else -> emptyList() }
+            o.p1(arguments.size)
+            arguments.forEach { o.p1(0); o.p4(it) }
+        }
         repeat(5) { o.p1(0) }
         return o.b.toByteArray()
     }

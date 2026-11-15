@@ -34,13 +34,13 @@ ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
                 }
             }
             if (player.inventory[slot] !== source) return@queue
+            if (!ClueInterfaces.requireRewardScreen(player)) return@queue
             val plan = ClueCasketRewards.planForPlayer(player, tier) ?: run {
                 player.message("This reward casket is temporarily unavailable.")
                 return@queue
             }
             val award = ClueCasketRewards.award(player, slot, source, plan) ?: return@queue
-            val text = award.rewards.joinToString(", ") { "${it.amount} x ${it.getName(player.world.definitions)}" }
-            itemMessageBox("You open the casket. Inside you find $text.", item = award.rewards.first().id)
+            ClueInterfaces.rewards(player, award.rewards)
         }
     }
 }

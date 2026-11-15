@@ -160,7 +160,7 @@ class ClueScrollManager(
                 if (mapInterfaceId != null) {
                     player.openInterface(dest = InterfaceDestination.MAIN_SCREEN_FULL, interfaceId = mapInterfaceId)
                 } else {
-                    player.message(step.hint)
+                    ClueInterfaces.text(player, step.hint)
                 }
             }
         }

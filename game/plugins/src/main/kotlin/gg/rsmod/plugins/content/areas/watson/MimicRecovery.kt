@@ -6,6 +6,7 @@ import gg.rsmod.game.model.attr.DEATH_COFFER_ATTR
 import gg.rsmod.game.model.container.ItemContainer
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.item.Item
+import gg.rsmod.plugins.api.ext.addPreservingAttr
 
 /** OSRS Item Retrieval Service: 90,000 coins, persists, lost on another unsafe death. */
 object MimicRecovery {
@@ -47,7 +48,7 @@ object MimicRecovery {
         val left = mutableListOf<Item>()
         var transferred = 0
         for (item in remaining.filter { it.amount > 0 }) {
-            val added = inventory.add(item, assureFullInsertion = false)
+            val added = inventory.addPreservingAttr(item, assureFullInsertion = false)
             transferred += added.completed
             if (added.getLeftOver() > 0) left += Item(item, added.getLeftOver())
         }
