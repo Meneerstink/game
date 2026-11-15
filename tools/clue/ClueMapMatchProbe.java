@@ -31,12 +31,19 @@ class ClueMapMatchProbe {
                     var matches=new ArrayList<Integer>();
                     var row=new LinkedHashMap<String,Object>();
                     try {
-                        // Native model version 13+ stores coordinates in quarter units.
-                        // The renderer scales them; compare actual rendered geometry units.
-                        var model=Rev667ModelDecoder.INSTANCE.decode(raw,true);
+                        var model=Rev667ModelDecoder.INSTANCE.decode(raw,false);
+                        // Native Mesh scales version<13 by four. Modern OSRS uses
+                        // the old geometry units; normalize only exactly divisible native coordinates.
+                        if(model.getVersion()>=13) {
+                            for(int[] coordinates:new int[][]{model.getVertexX(),model.getVertexY(),model.getVertexZ()}) {
+                                for(int coordinate:coordinates) if(coordinate%4!=0) throw new IllegalStateException("Non-integral native geometry unit");
+                                for(int i=0;i<coordinates.length;i++)coordinates[i]/=4;
+                            }
+                        }
                         for(var candidate:sourceModels.entrySet()) {
                             if(ModelConvertTool.INSTANCE.compare(candidate.getValue(),model).isEmpty())matches.add(candidate.getKey());
                         }
+                        if(sourceModels.containsKey(id)) row.put("sameNumericIdDifferences",ModelConvertTool.INSTANCE.compare(sourceModels.get(id),model));
                     } catch(IllegalArgumentException | IllegalStateException unsupported) {
                         row.put("unsupported",unsupported.toString());
                     }

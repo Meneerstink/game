@@ -36,8 +36,8 @@ class ClueMapCompare {
         }
         var decode=InterfaceHookProbeTool.class.getDeclaredMethod("decodeComponent",byte[].class); decode.setAccessible(true);
         try(var osrs=new ModernCacheReader(new File(args[0])); var local=new ModernCacheReader(new File(args[1]))) {
-            for(int group=337;group<=362;group++) {
-                if(group==345 || group==356)continue;
+            for(int group=337;group<=363;group++) {
+                if(!local.index(3).getGroups().containsKey(group))continue;
                 var glyphs=new ArrayList<List<Integer>>();
                 for(var component:local.files(3,group).entrySet()) {
                     byte[] bytes=component.getValue();
@@ -66,6 +66,23 @@ class ClueMapCompare {
             matches.put(local.getKey(),same);
         }
         result.put("sourceGlyphs",sourceGlyphs); result.put("targetGlyphs",localGlyphs);result.put("identicalLayoutMatches",matches);
+        // Source labels read X/Z/Y, whereas the native decoder labels the same
+        // raw tuple X/Y/Z. A diagram signature is a navigation aid only; it does
+        // not establish mesh equivalence, a dig point, or rendering acceptance.
+        var diagramMatches=new LinkedHashMap<Integer,List<Integer>>();
+        for(var nativeMap:localGlyphs.entrySet()) {
+            var a=new ArrayList<String>();
+            for(var g:nativeMap.getValue())if(g.get(0)!=3395)a.add(Arrays.asList(g.get(0),g.get(5),g.get(6),g.get(7),g.get(8)).toString());
+            Collections.sort(a);
+            var candidates=new ArrayList<Integer>();
+            for(var sourceMap:sourceGlyphs.entrySet()) {
+                var b=new ArrayList<String>();
+                for(var g:sourceMap.getValue())if(g.get(0)!=3395)b.add(Arrays.asList(g.get(0),g.get(5),g.get(7),g.get(6),g.get(8)).toString());
+                Collections.sort(b);if(!a.isEmpty() && a.equals(b))candidates.add(sourceMap.getKey());
+            }
+            diagramMatches.put(nativeMap.getKey(),candidates);
+        }
+        result.put("cameraGlyphCandidates",diagramMatches);
         Files.writeString(Path.of(args[3]),new GsonBuilder().setPrettyPrinting().serializeNulls().create().toJson(result)+"\n");
         for(var match:matches.entrySet())System.out.println(match.getKey()+" -> "+match.getValue());
     }

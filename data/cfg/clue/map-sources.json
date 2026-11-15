@@ -1,0 +1,83 @@
+[
+  {
+    "key": "Clue scroll (easy) - At the standing stones north of Falador",
+    "group": 351,
+    "close": 59,
+    "wikiImage": "Map clue Falador stones.png",
+    "imageSha256": "5ebe67c0270cb6226dec3d0735ce332283dc27cf7417291eeda12ab154120263",
+    "dbRow": 2231,
+    "dbSha256": "9712aaba9bafc85e016ca1b150a420d8bdc1c51a6003cba095faf4b199d7c762"
+  },
+  {
+    "key": "Clue scroll (easy) - Brother Galahad's house",
+    "group": 354,
+    "close": 82,
+    "wikiImage": "Map clue Galahad.png",
+    "imageSha256": "d70c2fc653be4d39afea1399f221906b74cd944f46df4703036021ef339fe193",
+    "dbRow": 2232,
+    "dbSha256": "e2d2848757b97135e22e8f000d9fec9363280979b895fb39a4286093fe9c9dcd"
+  },
+  {
+    "key": "Clue scroll (easy) - Directly behind the Wizards' Tower",
+    "group": 356,
+    "close": 82,
+    "wikiImage": "Map clue Wizard tower.png",
+    "imageSha256": "340306ddec69da232629a0244eea217376f769669314fc2a978a138323c9d015",
+    "dbRow": 2233,
+    "dbSha256": "e4edf8fc0865d71a2688115c75351ddadfee529a9ae50da31091c84b9407c9da"
+  },
+  {
+    "key": "Clue scroll (medium) - South of Draynor Village bank",
+    "group": 348,
+    "close": 47,
+    "wikiImage": "Map clue Draynor willows.png",
+    "imageSha256": "125986f286cebde762f535b01df497606d7a6934912f6c1eaeb600b9cbc4045a",
+    "dbRow": 2235,
+    "dbSha256": "202dab51a3ef23530a483ff89035eceff1bd48ced57ec580f0e43956fe9b1e91"
+  },
+  {
+    "key": "Clue scroll (medium) - Behind the Chemist's house in Rimmington",
+    "group": 362,
+    "close": 84,
+    "wikiImage": "Map clue Chemist house.png",
+    "imageSha256": "55be4de0ef4d75d1f4a7e4317b2883eee0d2175c44bd732e8710682d1c7eceed",
+    "dbRow": 2240,
+    "dbSha256": "eb0e1176eb26eb647a7ec7a998131b0af13320460514e5adf4d5384226118a4e"
+  },
+  {
+    "key": "Clue scroll (medium) - North of the Tower of Life",
+    "group": 360,
+    "close": 83,
+    "wikiImage": "Map clue Tower of Life.png",
+    "imageSha256": "2464ec251972316ad7beb13ac01999530ec965ca00a9a71bc3d073406861a9d8",
+    "dbRow": 2238,
+    "dbSha256": "2957d8dada791d815e2933edf85d006107bac3e4ff6cb05274510caefb179bf8"
+  },
+  {
+    "key": "Clue scroll (hard) - Yanille anvils",
+    "group": 353,
+    "close": 63,
+    "wikiImage": "Map clue Yanille anvil.png",
+    "imageSha256": "8aad83bae94ac2f733c70c2fd2281b9734a56c427c45caa83ed5c19743a99783",
+    "dbRow": 2248,
+    "dbSha256": "6827f2140a31cf309f78e54dbd6749fecb0637c3c28175d1053bd92192c65c80"
+  },
+  {
+    "key": "Clue scroll (hard) - A crate in the Lumber Yard",
+    "group": 350,
+    "close": 48,
+    "wikiImage": "Map clue Lumberyard.png",
+    "imageSha256": "b502b865f3444a8b9701d32561421d47312d40c5ba5fdea040527c7a613b21ce",
+    "dbRow": 2247,
+    "dbSha256": "f7f7b29f59f50bc8ebbd870982d3a6c1e16257105a7330f669dd1df2a2cb6856"
+  },
+  {
+    "key": "Clue scroll (elite) - South-west of Tree Gnome Village",
+    "group": 86,
+    "close": 118,
+    "wikiImage": "Map clue Castle Wars.png",
+    "imageSha256": "d790e1201e33a2f089741c08f24ede3647636a7b071716a873ece8493ebcc2b8",
+    "dbRow": 2254,
+    "dbSha256": "11e723bde61edc4efa28df9396266027b16e98bfee1652db6872d5a8ee030cd0"
+  }
+]
