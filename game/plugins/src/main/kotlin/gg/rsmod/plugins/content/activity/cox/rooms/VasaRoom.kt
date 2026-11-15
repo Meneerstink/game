@@ -254,6 +254,8 @@ class VasaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, flo
         }
         state = State.DEAD
         completed = true
+        // Wiki 'Vasa Nistirio' drops: overload (+)(4), endarkened juice x5, Xeric's aid (+)(4) x2, twisted (+)(4) x2.
+        Tile(npc.tile).let { at -> drop(at, 20996); drop(at, 20911, 5); drop(at, 20984, 2); drop(at, 20936, 2) }
         (near + far).forEach { CoxRooms.blockPrayers(it, 0, null) }
         val left = crystals.filterNotNull(); val f = fire; fire = null
         later(3) {

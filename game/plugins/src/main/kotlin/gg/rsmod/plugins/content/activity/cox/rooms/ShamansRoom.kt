@@ -135,7 +135,17 @@ class ShamansRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
 
     override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, blockers.map { it.tile })
 
+    /** Wiki drops: big bones, golpar/buchu/noxifer seeds 5-10 each; long bone 1/400, curved bone 1/5012.5. */
+    private fun seedDrops(npc: Npc) {
+        val at = Tile(npc.tile)
+        drop(at, 532, classic = true)
+        listOf(20906, 20909, 20903).forEach { drop(at, it, world.random(5..10)) }
+        if (world.random(399) == 0) drop(at, 10976, classic = true)
+        if (world.random(50124) < 10) drop(at, 10977, classic = true)
+    }
+
     override fun onNpcDeath(npc: Npc) {
+        if (npc in shamans) seedDrops(npc)
         if (npc !in shamans || shamans.any { alive(it) }) return
         completed = true
         later(5) { blockers.forEach { explode(it, 1, 3) } }

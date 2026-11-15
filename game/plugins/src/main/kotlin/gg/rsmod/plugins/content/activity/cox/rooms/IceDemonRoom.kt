@@ -219,6 +219,9 @@ class IceDemonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid,
         if (npc !== demon) return
         stage = Stage.DEAD
         completed = true
+        // Wiki 'Ice demon' drops: stinkhorn mushroom x7, endarkened juice x7, cicely x5 (fiendish ashes: not in our game).
+        val at = Tile(npc.tile)
+        drop(at, 20910, 7); drop(at, 20911, 7); drop(at, 20912, 5)
         clearExit()
         val s = storm; storm = null
         later(5) { removeLoc(s) }

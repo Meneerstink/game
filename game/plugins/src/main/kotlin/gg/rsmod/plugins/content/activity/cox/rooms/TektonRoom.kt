@@ -225,6 +225,10 @@ class TektonRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, f
         if (npc !== tekton) return
         state = State.DEAD
         removeLoc(block); block = null
+        // Wiki 'Tekton' drops: stinkhorn mushroom x5, overload (+)(4) x2, prayer enhance (+)(4), revitalisation (+)(4); onyx 1/450 (solo rate).
+        val at = Tile(npc.tile)
+        drop(at, 20910, 5); drop(at, 20996, 2); drop(at, 20972); drop(at, 20960)
+        if (world.random(449) == 0) drop(at, 6573, classic = true)
         clearExit()
         val f = fire; fire = null
         later(3) { removeLoc(f) }

@@ -153,6 +153,15 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         tick++
     }
 
+    /**
+     * A raid drop on [at] for everyone (tsps rsprox: raid drops are public at once). [osrs] goes through CoxIds (raid items); [classic] is an
+     * id shared by both caches (bones, onyx, long/curved bone).
+     */
+    fun drop(at: Tile, osrs: Int, amount: Int = 1, classic: Boolean = false) {
+        val id = if (classic) osrs else CoxIds.item(osrs) ?: run { missing("item $osrs"); return }
+        world.spawn(gg.rsmod.game.model.entity.GroundItem(id, amount, Tile(at)))
+    }
+
     /** Drops every pending timed action (an encounter that ended: no attack lands after the death). */
     fun cancelEvents() = events.clear()
 

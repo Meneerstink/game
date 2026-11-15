@@ -100,6 +100,8 @@ class GuardiansRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
         val i = guardians.indexOf(npc)
         if (i < 0) return
         val at = Tile(npc.tile)
+        // Wiki 'Guardian (Chambers of Xeric)' drops: buchu / golpar / noxifer seeds 3-5 each.
+        listOf(20909, 20906, 20903).forEach { drop(at, it, world.random(3..5)) }
         // tsps: the same npc turns to its remains (id + 2) 2 ticks after crumbling; here the remains are spawned in its place.
         later(2) { spawn(listOf(7571, 7572)[i], at)?.let { fighters.remove(it) } }
         if (++downs < 2) return

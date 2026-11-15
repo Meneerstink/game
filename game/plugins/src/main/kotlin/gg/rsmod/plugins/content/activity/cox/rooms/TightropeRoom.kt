@@ -90,6 +90,9 @@ class TightropeRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
 
     override fun passRefusal(p: Player, passage: Tile): String? = blockedNear(passage, listOfNotNull(barrier?.tile))
 
+    /** Wiki 'Deathly ranger' / 'Deathly mage' drops: bones. */
+    override fun onNpcDeath(npc: Npc) { if (npc in guards) drop(Tile(npc.tile), 526, classic = true) }
+
     /** Guards answer whoever attacks them. */
     override fun incoming(npc: Npc, hit: gg.rsmod.game.model.Hit) {
         val p = hit.source as? Player ?: return

@@ -190,9 +190,23 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
         }
     }
 
+    private var overloads = 0
+
+    /**
+     * Wiki 'Vanguard' drops: by style - melee elder (+)(4) + Xeric's aid (+)(4) x2, ranged twisted (+)(4) + Xeric's aid + revitalisation (+)(4)
+     * x2, magic kodai (+)(4) + Xeric's aid + prayer enhance (+)(4); overload (+)(4) 1/3 each, at least one per room (the last one gives it).
+     */
     override fun onNpcDeath(npc: Npc) {
         if (npc !in vanguards) return
-        if (living().isEmpty()) clearExit()
+        val at = Tile(npc.tile)
+        when (roleOf[npc]?.form) {
+            7527 -> { drop(at, 20924); drop(at, 20984, 2) }
+            7528 -> { drop(at, 20936); drop(at, 20984); drop(at, 20960, 2) }
+            7529 -> { drop(at, 20948); drop(at, 20984); drop(at, 20972) }
+        }
+        val last = living().isEmpty()
+        if (world.random(2) == 0 || (last && overloads == 0)) { drop(at, 20996); overloads++ }
+        if (last) clearExit()
     }
 
     companion object {

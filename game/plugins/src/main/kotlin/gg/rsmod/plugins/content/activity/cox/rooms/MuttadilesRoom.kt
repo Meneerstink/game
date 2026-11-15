@@ -171,9 +171,20 @@ class MuttadilesRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(rai
 
     override fun onNpcDeath(npc: Npc) {
         when {
-            npc === small -> later(3) { emerge() }
+            npc === small -> {
+                // Wiki 'Muttadile' (small): big bones, overload (+)(4), prayer enhance (+)(4), stinkhorn 1-3; long bone 1/400.
+                val at = Tile(npc.tile)
+                drop(at, 532, classic = true); drop(at, 20996); drop(at, 20972); drop(at, 20910, world.random(1..3))
+                if (world.random(399) == 0) drop(at, 10976, classic = true)
+                later(3) { emerge() }
+            }
             npc === tree -> { val b = treeBase; treeBase = null; removeLoc(b); placeLoc(30013, Tile(treeTile), rotation = 0) }
-            npc === large -> { clearExit(); later(2) { tendrils.toList().forEach { removeLoc(it) }; tendrils.clear() } }
+            npc === large -> {
+                // Wiki 'Muttadile' (large): big bones, overload (+)(4), prayer enhance (+)(4), Xeric's aid (+)(4), revitalisation (+)(4); long bone 1/400.
+                val at = Tile(npc.tile)
+                drop(at, 532, classic = true); drop(at, 20996); drop(at, 20972); drop(at, 20984); drop(at, 20960)
+                if (world.random(399) == 0) drop(at, 10976, classic = true)
+                clearExit(); later(2) { tendrils.toList().forEach { removeLoc(it) }; tendrils.clear() } }
         }
     }
 
