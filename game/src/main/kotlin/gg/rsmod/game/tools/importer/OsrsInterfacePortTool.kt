@@ -32,8 +32,13 @@ import java.io.File
 object OsrsInterfacePortTool {
     val SOURCE_CACHE = OsrsItemImportTool.SOURCE_CACHE
     val TARGETS = OsrsItemImportTool.TARGETS
-    val JSON = File(RspsPaths.root("team/dossiers/N462-notities/toa/cache/interfaces.json"))
-    val REPORT = File(RspsPaths.root("team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
+    // CoX 15-11: the raid's own decode/report/table ('cox' as the group list) - a CoX run must never read or merge into the ToA files.
+    private var raid = "toa"
+    val JSON get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/cache/interfaces.json" else "team/dossiers/N462-notities/toa/cache/interfaces.json"))
+    val REPORT get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/94-cox-interfaces-claude.tsv" else "team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
+    private val TABLE get() = File(RspsPaths.data("cfg/$raid/interfaces.tsv"))
+    /** CoX (tsps rsprox): 499 recruitment board, 500 party tab, 507 party details, 513 points overlay, 539 rewards. */
+    val COX = listOf(499, 500, 507, 513, 539)
     const val INDEX_INTERFACES = 3
     const val INDEX_SPRITES = 8
     const val SPRITE_FLOOR = 8819
@@ -522,7 +527,8 @@ object OsrsInterfacePortTool {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        val groups = args.first().let { if (it == "toa") TOA else it.split(',').map(String::toInt) }
+        raid = if (args.first() == "cox" || "--cox" in args) "cox" else "toa"
+        val groups = args.first().let { if (it == "toa") TOA else if (it == "cox") COX else it.split(',').map(String::toInt) }
         val apply = "--apply" in args
         val root = ObjectMapper().readTree(JSON)
         val library = CacheLibrary(TARGETS[0])
@@ -541,7 +547,7 @@ object OsrsInterfacePortTool {
         val ported = groups.map { g -> port(g, root[g.toString()] ?: error("group $g not in $JSON"), fonts) }
         // --reuse (07-11): re-port onto the interface/sprite ids of the previous run (data/cfg/toa/interfaces.tsv) - the server and the
         // ported scripts already point at them; only groups/sprites not in that table get new ids.
-        val previous = if ("--reuse" in args) File(RspsPaths.data("cfg/toa/interfaces.tsv")).takeIf { it.isFile }?.readLines()
+        val previous = if ("--reuse" in args) TABLE.takeIf { it.isFile }?.readLines()
             ?.filter { it.isNotBlank() && !it.startsWith("#") }?.map { it.split('\t') }.orEmpty() else emptyList()
         val oldInterfaces = previous.filter { it[0] == "interface" }.associate { it[1].toInt() to it[2].toInt() }
         val oldSprites = previous.filter { it[0] == "sprite" }.associate { it[1].toInt() to it[2].toInt() }
@@ -598,7 +604,7 @@ object OsrsInterfacePortTool {
         // The server reads the ids at start (activity/toa/ui/ToaInterfaces.kt): interface per OSRS group, sprite per OSRS sprite.
         // N604 (12-11): MERGE into the table - a run for some groups used to overwrite it with only those groups and their sprites, so
         // the server lost the ids of every other ported window (481, 482, 771, 773, 775-778) until the file was merged by hand.
-        val table = File(RspsPaths.data("cfg/toa/interfaces.tsv")).apply { parentFile.mkdirs() }
+        val table = TABLE.apply { parentFile.mkdirs() }
         val merged = LinkedHashMap<Pair<String, String>, String>()
         if (table.isFile) table.readLines().filter { it.isNotBlank() && !it.startsWith("#") }.forEach { line ->
             val f = line.split('\t'); if (f.size >= 3) merged[f[0] to f[1]] = line
