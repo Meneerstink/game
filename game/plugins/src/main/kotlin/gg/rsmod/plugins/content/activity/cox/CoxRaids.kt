@@ -209,6 +209,7 @@ object CoxRaids : KLogging() {
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)
         CoxPointsOverlay.close(player)
+        CoxRewards.dropUnclaimed(player, player.world)
         if (raid != null) releaseIfEmpty(raid)
     }
 

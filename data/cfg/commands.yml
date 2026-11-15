@@ -1425,6 +1425,11 @@
   usage: "::coxpoints [n]"
   description: "Test server / check accounts only: add n Chambers of Xeric points to yourself and show your/total points."
   example: "::coxpoints 1000"
+- name: coxloot
+  rank: admin
+  usage: "::coxloot"
+  description: "Test server / check accounts only: complete your Chambers of Xeric raid now (Ancient chest loot by points) and open the rewards."
+  example: "::coxloot"
 - name: coxleave
   rank: admin
   usage: "::coxleave"

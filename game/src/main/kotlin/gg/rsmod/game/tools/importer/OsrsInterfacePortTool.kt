@@ -374,6 +374,20 @@ object OsrsInterfacePortTool {
                 colour = 0xffffff)
             extras += "points overlay components=$first..${next - 1} (labels=$labels, values=$values; data box 513:3 = 140x49)"
         }
+        if (group == 539) {
+            // CoX rewards ([clientscript,raids_rewards_init] 1579 -> [proc,raids_rewards_build] 1581 / [proc,raids_rewards_drawitem] 1582) in
+            // raids_rewards:items 539:5: item i (inv raids_rewards) = a 36x32 object graphic, outline 1, shadow 0x333333, op 1 "Take", op 10
+            // "Examine" (667: op 2), at (0, i*37) for i < 3, else (46, (i-2)*37); the reward book (needsrewardbook) at (46, 0). Six slots
+            // + the book, hidden; the server sets the objects (IF_SETOBJECT) and shows them.
+            val first = next
+            for (i in 0 until 6) {
+                val (x, y) = if (i < 3) 0 to i * 37 else 46 to (i - 2) * 37
+                list += C(next++, 5, x, y, 36, 32, 5, 0, 0, 0, 0, true, ops = listOf("Take", "Examine"))
+            }
+            val book = next
+            list += C(next++, 5, 46, 0, 36, 32, 5, 0, 0, 0, 0, true, ops = listOf("Take", "Examine"))
+            extras += "reward slots components=$first..${next - 1} (6 items, book=$book)"
+        }
         if (group == 771) {
             // toa_chests:items (771:10, 92x119): the script that draws the chest's items (inv 811) is not in the dump. ONZEKER: twelve 36x32 item
             // slots, 3 columns x 4 rows (x 0/28/56, y 0/29/58/87) - one roll holds up to 10 lines (3 commons, pet, thread, jewel, clue, 3 kits,

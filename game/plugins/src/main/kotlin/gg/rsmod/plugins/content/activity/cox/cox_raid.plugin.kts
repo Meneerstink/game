@@ -180,6 +180,31 @@ on_world_init {
     }
 }
 
+/*
+ * The Ancient chest (RAIDS_REWARD_CHEST 30028 'Search', OsrsLocImportTool 'cox-locs'): opens the rewards (CoxRewards, OSRS 539). The chest
+ * replaces the crystal 30027 when the Olm dies (with the Olm). ::coxloot (test server / check accounts) = the raid's completion now.
+ */
+CoxIds.loc(30028)?.let { chest ->
+    on_obj_option(obj = chest, option = "search") { if (CoxRewards.has(player)) CoxRewards.open(player) }
+}
+
+CoxInterfaces.of(CoxInterfaces.REWARDS)?.let { iface ->
+    (listOf(CoxRewards.BANK_ALL, CoxRewards.TAKE_ALL, CoxRewards.DISCARD_ALL, CoxRewards.BOOK) +
+        (CoxRewards.FIRST_SLOT until CoxRewards.FIRST_SLOT + CoxRewards.SLOTS)).forEach { component ->
+        on_button(iface, component) { CoxRewards.click(player, component) }
+    }
+}
+
+on_command("coxloot", Privilege.ADMIN_POWER) {
+    if (!CoxTestGate.allowed(player)) return@on_command
+    val raid = CoxRaids.raidAt(player.tile) ?: return@on_command
+    val raiders = world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }
+    CoxRewards.generate(raid, raiders) { p, osrs -> CoxLootItems.local(osrs)?.let { p.inventory.contains(it) || p.bank.contains(it) } ?: false }
+    raid.progress = 5
+    CoxPartyTab.updateAll(raid)
+    CoxRewards.open(player)
+}
+
 /** Test server / check accounts: ::coxbegin = the leader starts the raid (the party tab's start button follows with the party UI). */
 on_command("coxbegin", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command

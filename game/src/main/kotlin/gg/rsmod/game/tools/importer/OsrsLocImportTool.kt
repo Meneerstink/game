@@ -26,6 +26,10 @@ object OsrsLocImportTool {
             // N462 07-11: the empty rocks of the OSRS ore rocks imported with the Necropolis (RuneLite gameval ObjectID ROCKS1 11390 /
             // ROCKS2 11391; CLAYROCK1..ADAMANTITEROCK2 deplete to them) - OsrsImportedRocks sets them as the depleted form.
             "necropolis-rocks" to listOf(11390, 11391),
+            // CoX (dossier COX.txt): server-placed locs that are not on the cache map - RAIDS_REWARD_CHEST 30028 'Ancient chest' (Search; the
+            // crystal 30027 by the steps turns into it when the Olm dies, tsps), RAIDS_REWARD_LOOTBEAM_BASIC 30029 / _SPECIAL 30030, and the
+            // first room's closed bank chest 47419 (47420 -> 47419 as the raid begins, tsps rsprox).
+            "cox-locs" to listOf(30028, 30029, 30030, 47419),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241
