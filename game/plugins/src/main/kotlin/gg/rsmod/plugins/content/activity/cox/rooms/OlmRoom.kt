@@ -783,6 +783,7 @@ class OlmRoom(raid: CoxRaid, laid: CoxLaidRoom) : CoxRoom(raid, raid.layout.floo
     private fun defeated() {
         if (dead) return
         dead = true
+        cancelEvents()
         crystalsUntil = -1
         headAnim(intArrayOf(7348, 7348))
         val raiders = world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) }

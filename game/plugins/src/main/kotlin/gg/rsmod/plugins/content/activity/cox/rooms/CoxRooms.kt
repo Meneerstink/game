@@ -31,6 +31,8 @@ object CoxRooms {
         RoomType.DEATHLY_ROOM to ::TightropeRoom,
         RoomType.CRAB_PUZZLE to ::CrabsRoom,
         RoomType.CREATURE_KEEPER to ::ThievingRoom,
+        RoomType.RESOURCES_A to ::ResourcesRoom,
+        RoomType.RESOURCES_B to ::ResourcesRoom,
     )
 
     fun rooms(raid: CoxRaid): List<CoxRoom> = byRaid[raid.id] ?: emptyList()
@@ -82,7 +84,7 @@ object CoxRooms {
     fun of(npc: Npc): CoxRoom? = owner[npc]
 
     /** Local ids of every npc a room drives itself (the generic auto-retaliate loop is switched off for them). */
-    val DRIVEN_OSRS: List<Int> = listOf(7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7602, 7603, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7559, 7560, 7584, 7585, 7586, 7530, 7531, 7532, 7533, 7534, 7535, 7536, 7537, 7538, 7539, 7561, 7562, 7563, 7564, 7565, 7566, 7567, 7568, 7525, 7526, 7527, 7528, 7529, 7540, 7541, 7542, 7543, 7544, 7545, 7548, 7549, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7604, 7605, 7606)
+    val DRIVEN_OSRS: List<Int> = listOf(7587, 7588, 7589, 7590, 7591, 7592, 7593, 7594, 7550, 7551, 7552, 7553, 7554, 7555, 7556, 7557, 7558, 7602, 7603, 7576, 7577, 7578, 7579, 7580, 7581, 7582, 7583, 7559, 7560, 7584, 7585, 7586, 7530, 7531, 7532, 7533, 7534, 7535, 7536, 7537, 7538, 7539, 7561, 7562, 7563, 7564, 7565, 7566, 7567, 7568, 7525, 7526, 7527, 7528, 7529, 7540, 7541, 7542, 7543, 7544, 7545, 7548, 7549, 7569, 7570, 7571, 7572, 7573, 7574, 7575, 7604, 7605, 7606)
 
 }
 

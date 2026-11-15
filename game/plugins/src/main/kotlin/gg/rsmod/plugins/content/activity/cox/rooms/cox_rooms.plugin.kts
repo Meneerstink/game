@@ -135,6 +135,48 @@ gg.rsmod.plugins.content.activity.cox.CoxPotions.DOSES.forEach { (osrs, dose) ->
     }
 }
 
+/** Gathering and food (CoxSupplies, ResourcesRoom): op names from the cache (tools/cache667 locs.py / npcs.py, 15-11 23:5x). */
+fun resRoom(p: gg.rsmod.game.model.entity.Player): ResourcesRoom? =
+    CoxRaids.raidAt(p.tile)?.let { raid -> CoxRooms.rooms(raid).filterIsInstance<ResourcesRoom>().firstOrNull { it.contains(p.tile) } }
+CoxIds.loc(29889)?.let { id -> on_obj_option(obj = id, option = "Fish") { CoxSupplies.fish(player, player.getInteractingGameObj()) } }
+CoxIds.loc(29763)?.let { id -> on_obj_option(obj = id, option = "Chop") { CoxSupplies.chop(player, player.getInteractingGameObj()) } }
+CoxIds.loc(29772)?.let { id ->
+    on_obj_option(obj = id, option = "Pick") { CoxSupplies.pickGourds(player, false) }
+    on_obj_option(obj = id, option = "Pick-lots") { CoxSupplies.pickGourds(player, true) }
+}
+CoxIds.loc(29878)?.let { id ->
+    on_obj_option(obj = id, option = "Use") { CoxSupplies.fillGourds(player) }
+    CoxIds.item(CoxSupplies.EMPTY_GOURD)?.let { g -> on_item_on_obj(obj = id, item = g) { CoxSupplies.fillGourds(player) } }
+}
+CoxIds.loc(29773)?.let { id -> on_obj_option(obj = id, option = "Rake") { CoxSupplies.rake(player) } }
+CoxIds.loc(29771)?.let { id ->
+    on_obj_option(obj = id, option = "Take Rake") { CoxSupplies.takeTool(player, 5341) }
+    on_obj_option(obj = id, option = "Take Spade") { CoxSupplies.takeTool(player, 952) }
+    on_obj_option(obj = id, option = "Take Seed Dibber") { CoxSupplies.takeTool(player, 5343) }
+}
+mapOf(31862 to 1351, 29711 to 2347, 31634 to 590, 41754 to 1267).forEach { (loc, item) ->
+    CoxIds.loc(loc)?.let { id -> on_obj_option(obj = id, option = "Take") { CoxSupplies.takeTool(player, item) } }
+}
+CoxIds.loc(30066)?.let { id -> on_obj_option(obj = id, option = "Touch") { CoxSupplies.touchWell(player) } }
+(7587..7593).mapNotNull(CoxIds::npc).forEach { id -> on_npc_option(npc = id, option = "Catch") { resRoom(player)?.catchBat(player, player.getInteractingNpc()) } }
+CoxIds.item(CoxSupplies.KINDLING)?.let { k -> on_item_on_item(item1 = 590, item2 = k) { CoxSupplies.lightFire(player) } }
+CoxSupplies.RAW.keys.mapNotNull(CoxIds::item).forEach { raw ->
+    on_item_on_obj(obj = CoxSupplies.FIRE_LOC, item = raw) { CoxSupplies.cook(player, raw) }
+}
+CoxSupplies.FOOD.keys.forEach { osrs ->
+    CoxIds.item(osrs)?.let { id -> on_item_option(item = id, option = "Eat") { CoxSupplies.eat(player, osrs, player.getInteractingItemSlot()) } }
+}
+
+/** Herb patches: a seed on the empty patch 29765, Pick / Clear on the grown ones (30009-30011). */
+CoxIds.loc(29765)?.let { patch -> CoxSupplies.HERBS.mapNotNull { CoxIds.item(it.seed) }.forEach { seed ->
+    on_item_on_obj(obj = patch, item = seed) { CoxSupplies.plant(player, player.getInteractingGameObj(), seed) }
+} }
+(30009..30011).mapNotNull(CoxIds::loc).forEach { id ->
+    on_obj_option(obj = id, option = "Pick") { CoxSupplies.pick(player, player.getInteractingGameObj()) }
+    on_obj_option(obj = id, option = "Clear") { CoxSupplies.clear(player, player.getInteractingGameObj()) }
+}
+on_world_init { world.queue { while (true) { wait(1); CoxSupplies.growTick(world) } } }
+
 /** Test server / check accounts: ::coxclear = every npc of the room you stand in dies (puzzles: their own ending, later). */
 on_command("coxclear", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command

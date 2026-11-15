@@ -153,6 +153,9 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         tick++
     }
 
+    /** Drops every pending timed action (an encounter that ended: no attack lands after the death). */
+    fun cancelEvents() = events.clear()
+
     fun alive(npc: Npc?): Boolean = npc != null && npc.isSpawned() && !npc.isDead()
 
     fun close() {

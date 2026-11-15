@@ -44,6 +44,9 @@ object OsrsLocImportTool {
                 29745, 29874, 29749, 29774, 29775, 30016, 30019, 30024, 30068, 30070, 30071, 30073),
             // CoX crab puzzle: the dark crystal brightening a step per lit crystal (gameval RAIDS_LASERCRABS_* 29754-29757, tsps OBJECT.DARK + lit).
             "cox-rooms2" to listOf(29754, 29755, 29756, 29757),
+            // CoX herb patches: the growing / grown patch per herb and stage (tsps Resources GROWING_PATCHES 29997-30011: noxifer 29997, golpar
+            // 29998, buchu 29999, + 3 a stage to stage 4).
+            "cox-patches" to (29997..30011).toList(),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241

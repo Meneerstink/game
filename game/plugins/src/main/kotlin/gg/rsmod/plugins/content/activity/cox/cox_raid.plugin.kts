@@ -277,7 +277,7 @@ on_command("coxroom", Privilege.ADMIN_POWER) {
     val raid = CoxRaids.raidAt(player.tile) ?: run { player.message("Not in a CoX raid."); return@on_command }
     val args = player.getCommandArgs()
     if (args.firstOrNull() == "olmgate") {
-        player.teleportTo(CoxMap.olmTile(raid.map, CoxMap.OLM_ENTRANCE_SOURCE))
+        player.teleportTo(CoxRaids.nearestOpen(world, CoxMap.olmTile(raid.map, CoxMap.OLM_ENTRANCE_SOURCE)))
         return@on_command
     }
     if (args.firstOrNull() == "olm") {
@@ -288,7 +288,7 @@ on_command("coxroom", Privilege.ADMIN_POWER) {
     val index = args.getOrNull(1)?.toIntOrNull() ?: 0
     val room = raid.layout.floors.getOrNull(floor)?.getOrNull(index) ?: run { player.message("No room $floor/$index."); return@on_command }
     val middle = gg.rsmod.game.model.Tile(room.sourceChunkX * 8 + 16, room.room.chunkZ * 8 + 16)
-    player.teleportTo(CoxMap.roomTile(raid.map, floor, room, middle))
+    player.teleportTo(CoxRaids.nearestOpen(world, CoxMap.roomTile(raid.map, floor, room, middle), 10))
     player.message("CoX room ${floor + 1}/$index ${room.room} entry=${room.entry} v${room.variant}")
 }
 
