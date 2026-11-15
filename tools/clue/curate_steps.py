@@ -29,7 +29,7 @@ SELECTION = {
         "Cheer in the Edgeville general store", "Shrug in Catherby bank",
         "Yawn in the Castle Wars lobby", "Spin on the bridge by the Barbarian Village",
         "00.13S 13.58E", "00.20S 23.15E", "00.30N 24.16E",
-        "A BAKER", "HALT US", "AREA CHEF TREK", "BZOSZHM GZQKZM", "XJABSE USBJCPSO",
+        "A BAKER", "HALT US", "AREA CHEF TREK", "GUHCHO", "XJABSE USBJCPSO",
         "South of Draynor Village bank", "Behind the Chemist's house in Rimmington",
         "North of the Tower of Life",
     ],

@@ -1,0 +1,103 @@
+{{External|rs=Captain Harlan}}
+{{Infobox NPC
+|version1=Captain Harlan
+|version2=Tutor (removed)
+|name1 = Captain Harlan
+|name2 = Melee combat tutor
+|image1 = [[File:Captain Harlan.png|125px]]
+|image2 = [[File:Melee combat tutor.png|125px]]
+|release1 = [[3 November]] [[2026]]
+|release2 = [[27 September]] [[2006]]
+|update1 = Quest Month Kick Off, TFA Tweaks & More
+|update2 = Skill Tutors
+|members = No
+|race = [[Human]]
+|location = [[Lumbridge]]
+|shop = [[Defence cape]]
+|gender = Male
+|options1 = Talk-to, Claim-weapons
+|options2 = Talk-to
+|examine1 = An expert in swordplay.
+|examine2 = Harlan, ready to teach swordplay.
+|map = {{Map|name=Captain Harlan|x=3218|y=3238|r=4|mtype=square|bucket=yes}}
+|id1 = 16821
+|id2 = hist3216
+|leagueRegion = Misthalin
+}}
+{{Synced switch
+|version1 = [[File:Captain Harlan chathead.png|left]]
+|version2 = [[File:Melee combat tutor chathead.png|left]]
+}}
+'''Captain Harlan''' is a combat tutor and the head of the [[Lumbridge]] Guard found on a small hill outside of [[Lumbridge Castle]]. Players can acquire basic weapons from him for all 3 combat styles during and after the quest [[Mudfoot's Big Adventure]]. If a player has achieved [[Skill mastery|level 99]] in [[Defence]], they can purchase a [[Defence cape]] and its respective [[Defence hood|hood]] from him for {{NoCoins|99000}} coins.
+
+Prior to an update, he was the '''melee combat tutor''' and would only explain melee combat. He also would hand out [[training shortsword]]s and [[training shield]]s.
+
+==Treasure Trails==
+{{Cipher|Captain Harlan|medium|[[Clue scroll (medium) - BZOSZHM GZQKZM|BZOSZHM GZQKZM]]}}. He will present the player a [[challenge scroll]] asking, "''How many [[snakeskin]]s are needed in order to [[Crafting|craft]] 44 [[Snakeskin boots|boots]], 29 [[Snakeskin vambraces|vambraces]] and 34 [[Snakeskin bandana|bandanas]]?''", the answer to which is 666.
+
+==Stock==
+If a player has at least one other 99, they will receive the [[Defence cape#Trimmed|trimmed variant]] of the cape instead.
+{{StoreTableHead|hidebuy=y|hidege=y|hidecaption=y|hidestock=y|hiderestock=y|members=Yes}}
+{{StoreLine|name=Defence cape|stock=inf|sell=99000|buy=N/A|gemw=n}}
+{{StoreLine|name=Defence cape(t)|stock=inf|sell=99000|buy=N/A|gemw=n}}
+{{StoreTableBottom}}
+
+==Drops==
+{{DropsTableHead|leagueRegion=Misthalin}}
+{{DropsLineReward|name=Bronze shortsword|quantity=1|rarity=Always|raritynotes=<ref group=d name="minute">When talked to, only once every 30 minutes.</ref>}}
+{{DropsLineReward|name=Wooden shield|quantity=1|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsLineReward|name=Shortbow|quantity=1|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsLineReward|name=Bronze arrow|quantity=40|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsLineReward|name=Staff|quantity=1|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsLineReward|name=Air rune|quantity=40|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsLineReward|name=Mind rune|quantity=40|rarity=Always|raritynotes=<ref group=d name="minute"></ref>}}
+{{DropsTableBottom}}
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 November 2026
+|update = Quest Month Kick Off, TFA Tweaks & More
+|change = * The melee combat tutor was renamed to Captain Harlan, and his dialogue was updated. 
+* He now fills the role of all three combat tutors, and offers free equipment for all three combat styles every 30 minutes if the player has progressed far enough in [[Mudfoot's Big Adventure]].
+}}
+{{Subject changes
+|date = 2 July 2020
+|update = Poll 71 and Death Feedback Changes
+|change = The Combat Tutor’s dialogue has been improved.
+}}
+{{Subject changes
+|date = 31 October 2019
+|update = Mobile Anniversary and BH Hotspots
+|change = A grammatical error has been fixed in the melee combat tutor's dialogue.
+}}
+{{Subject changes
+|date = 11 January 2018
+|update = The Return of Galvek
+|change = The combat tutors in Lumbridge will now more consistently hand out items.
+}}
+{{Subject changes
+|date = 18 October 2006
+|update = Capes of Achievement... and Goats!
+|change = The NPC was graphically updated.
+}}
+{{Subject changes footer}}
+
+===Gallery (historical)===
+{|style="text-align: center" cellpadding="15"
+|[[File:Melee combat tutor (historical).png|center|300x150px]]
+|[[File:Melee combat tutor.png|center|300x150px]]
+|-
+|27 September 2006 –<br/>18 October 2006
+|18 October 2006 –<br/>present
+|}
+
+==Trivia==
+*His platebody looks very similar to [[White decorative body]], but the colours are reversed. The platelegs are almost identical to [[White decorative legs]].
+
+{{Skillcape}}
+{{Tutors}}
+{{Lumbridge}}

@@ -1,0 +1,9 @@
+{{Transcript|item}}
+
+==Combining a torn clue scroll==
+* {{tcond|If the player does not have all 3 pieces:}}
+** {{tbox|pic=Torn clue scroll (part 1) detail.png|pic2=Torn clue scroll (part 2) detail.png|I cannot combine the pieces without having all 3.}}
+** {{tact|end}}
+* {{tcond|If the player has all 3 pieces:}}
+** {{tbox|pic=Clue scroll (master) detail.png|You've obtained a new clue!}}
+** {{tact|end}}

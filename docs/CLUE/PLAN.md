@@ -118,3 +118,25 @@ OWNER 2026-11-14 22:2x: include the monsters that appear when digging / performi
 OWNER 2026-11-14 22:2x: GPT-B builds WATSON + MIMIC (own worktree, from 23:27). GPT-A: do NOT start Watson/Mimic; your part = OSRS casket rewards, Collection Log, Drop Viewer, scroll boxes, master tier, the ~70 steps and the dig monsters.
 
 OWNER 2026-11-14 22:4x (binding, owner-requested custom): the master tier is named "78 clue scroll" and its casket "Reward casket (78)"; colours Gold & onyx (scroll) / gold casket with onyx bands+lock (screens/N415-78clue). Mechanics and reward table stay OSRS master. Extra: a GOLD world broadcast on a rare 78-casket reward, and an opening effect (existing OSRS graphic+sound, note the source). Claude does the cache rename/recolour - list the item ids in your handoff. Exclusive cosmetic = later.
+
+## B source selection checkpoint: 15 November 05:36
+
+`data/cfg/clue/steps.json` resolves the 69 reviewed candidates into explicit
+DIG/TALK/SEARCH/EMOTE/KILL/FALO/SHERLOCK/HOT_COLD actions, preserving source
+hashes, challenge requirements and source equipment alternatives. This is data,
+not an activated step pool. Five NPC routes and optional equipment alternatives
+remain in `STEP-ASSET-GAPS.json`; missing identities never become empty gear.
+
+The medium Captain Harlan cipher was replaced with the sourced Drezel cipher
+GUHCHO. Captain Harlan's current ID 16821 is absent from pinned cache 2686 (NPC
+maximum 16358); source 3216 still names the old Melee combat tutor. Neither a
+made-up appearance nor an unproven renamed NPC is substituted. Drezel's source
+point 3440,9895,0, question and answer 7 are present in our supported area.
+`cache/step-source-npcs.json` pins the read-only source NPC probe output.
+
+Master cryptic components must generate the three physical torn clue parts
+19837/19838/19839 and require Combine; selecting one component cannot complete
+a whole master step. The source permits parts to be reused while juggling, so
+parts must not be bound to one clue identity. Abbot's negative prayer bonus and
+Robin's 180 ranged bonus excluding blowpipe are explicit requirements. They
+remain inactive pending their actual handlers and challenge UI/guards.

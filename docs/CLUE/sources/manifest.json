@@ -847,28 +847,12 @@
       "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Emote_Clues_Intro"
     },
     {
-      "page": "Template:Treasure Trails Guide Cryptic Clues Intro",
-      "revision": 14854995,
-      "revision_time": "2025-02-24T20:38:33Z",
-      "file": "Template_Treasure_Trails_Guide_Cryptic_Clues_Intro.wiki",
-      "sha256": "858b08a7b9142386c72f867dcb7e1406dbe2d19e80e2741a39e14db0fa3e060d",
-      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Cryptic_Clues_Intro"
-    },
-    {
       "page": "Template:Treasure Trails Guide Anagrams Intro",
       "revision": 14435989,
       "revision_time": "2023-07-16T13:27:53Z",
       "file": "Template_Treasure_Trails_Guide_Anagrams_Intro.wiki",
       "sha256": "cc6475e4ba4b867575af046e15fa8fc7e88fd4f52db4aedefc970e91d5ae2567",
       "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Anagrams_Intro"
-    },
-    {
-      "page": "Torn clue scroll",
-      "revision": 15263135,
-      "revision_time": "2026-07-14T16:08:44Z",
-      "file": "Torn_clue_scroll.wiki",
-      "sha256": "b0a1d981bb44fe5eb86d3e5dd9df2cc3bacf1ebe08593cc999459b9834fab984",
-      "url": "https://oldschool.runescape.wiki/w/Torn_clue_scroll"
     },
     {
       "page": "Template:Cryptics",
@@ -899,14 +883,6 @@
       "url": "https://oldschool.runescape.wiki/w/Mandrith"
     },
     {
-      "page": "Radimus Erkle",
-      "revision": 14927498,
-      "revision_time": "2025-06-27T00:07:25Z",
-      "file": "Radimus_Erkle.wiki",
-      "sha256": "c0773fa1bc601c82a98e33568c9808084f465986f4acab49fd69999658a2e847",
-      "url": "https://oldschool.runescape.wiki/w/Radimus_Erkle"
-    },
-    {
       "page": "Strange device",
       "revision": 15373639,
       "revision_time": "2026-10-16T02:01:45Z",
@@ -929,6 +905,62 @@
       "file": "Goreu.wiki",
       "sha256": "92e746c047bb7642e075f73eb4a7569b9f2dbbfe77afdc040b3fb2d95cd0e654",
       "url": "https://oldschool.runescape.wiki/w/Goreu"
+    },
+    {
+      "page": "Template:Treasure Trails Guide Cryptic Clues Intro",
+      "revision": 14854995,
+      "revision_time": "2025-02-24T20:38:33Z",
+      "file": "Template_Treasure_Trails_Guide_Cryptic_Clues_Intro.wiki",
+      "sha256": "858b08a7b9142386c72f867dcb7e1406dbe2d19e80e2741a39e14db0fa3e060d",
+      "url": "https://oldschool.runescape.wiki/w/Template%3ATreasure_Trails_Guide_Cryptic_Clues_Intro"
+    },
+    {
+      "page": "Torn clue scroll",
+      "revision": 15263135,
+      "revision_time": "2026-07-14T16:08:44Z",
+      "file": "Torn_clue_scroll.wiki",
+      "sha256": "b0a1d981bb44fe5eb86d3e5dd9df2cc3bacf1ebe08593cc999459b9834fab984",
+      "url": "https://oldschool.runescape.wiki/w/Torn_clue_scroll"
+    },
+    {
+      "page": "Captain Harlan",
+      "revision": 15397099,
+      "revision_time": "2026-11-09T00:23:37Z",
+      "file": "Captain_Harlan.wiki",
+      "sha256": "be433a1f8546085609f3737ed2d7564a9a5475f72184058eb18161f159346258",
+      "url": "https://oldschool.runescape.wiki/w/Captain_Harlan"
+    },
+    {
+      "page": "Wizard Traiborn",
+      "revision": 15002750,
+      "revision_time": "2025-10-12T13:04:44Z",
+      "file": "Wizard_Traiborn.wiki",
+      "sha256": "db7282f06c991fbf8f349cc560594756b52dfce63ad884e99dc5a53866976c31",
+      "url": "https://oldschool.runescape.wiki/w/Wizard_Traiborn"
+    },
+    {
+      "page": "Lumbridge Guide",
+      "revision": 15401287,
+      "revision_time": "2026-11-12T18:08:50Z",
+      "file": "Lumbridge_Guide.wiki",
+      "sha256": "49c7aa7961a0a848154a771b4e26665b552771dcaa9e45f84fba507352dc5076",
+      "url": "https://oldschool.runescape.wiki/w/Lumbridge_Guide"
+    },
+    {
+      "page": "Radimus Erkle",
+      "revision": 14927498,
+      "revision_time": "2025-06-27T00:07:25Z",
+      "file": "Radimus_Erkle.wiki",
+      "sha256": "c0773fa1bc601c82a98e33568c9808084f465986f4acab49fd69999658a2e847",
+      "url": "https://oldschool.runescape.wiki/w/Radimus_Erkle"
+    },
+    {
+      "page": "Transcript:Torn clue scroll",
+      "revision": 14375727,
+      "revision_time": "2023-02-11T20:05:28Z",
+      "file": "Transcript_Torn_clue_scroll.wiki",
+      "sha256": "65b55bf23335aada229ad1344a4d33a478aea94f1f093bcb072586d10dbf5d53",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ATorn_clue_scroll"
     }
   ]
 }

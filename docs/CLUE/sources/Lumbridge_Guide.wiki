@@ -1,0 +1,53 @@
+{{external|rs=Lumbridge Sage|rsc=Guide (Lumbridge)}}
+{{Otheruses|the NPC|the subquest|Recipe for Disaster/Freeing the Lumbridge Guide}}
+{{otheruses|def=no|Phileas of Shayzien|Phileas Rimor}}
+{{Infobox NPC
+|name = Lumbridge Guide
+|image = [[File:Lumbridge Guide.png|125px]]
+|release = [[6 June]] [[2005]]
+|update = Seeds, Bankspace And Advisors
+|members = No
+|race = [[Human]]
+|quest = {{*}} [[Recipe for Disaster]]<br/>{{*}} [[Death to the Dorgeshuun]]
+|location = [[Lumbridge]]
+|gender = Male
+|options = Talk-to
+|icon = [[File:Lumbridge Guide icon.png]]
+|examine = He provides new players with useful information.
+|map = {{Map|name=Lumbridge Guide|x=3238|y=3220|r=3|mtype=square}}
+|id = 306,1179,1181,3393
+|leagueRegion = Misthalin
+}}
+[[File:Lumbridge Guide chathead.png|left]]
+'''Phileas''' the '''Lumbridge Guide''' gives information to new players about where certain places are and what map [[icon]]s mean. He tells other players not to tell people their password, and gives general advice such as what to kill, how to make money, and more. He does not specialise tutoring in any non-combat or combat [[skill]].
+
+He also plays a role in the [[Recipe for Disaster]] [[quest]], where the player must save him from the [[Culinaromancer]]. To do this, they must visit [[Wizard Traiborn]], and have him assist them in making a [[Cake of Guidance]].
+
+In his younger days, Phileas was a part of the [[Order of Wizards]] until his beloved, Thenia, was murdered during a robbery. Players can exchange the [[tarnished locket]] for the [[Amulet of the Eye]].
+
+Like with [[Perdu]], players can claim owed experience rewards from the Lumbridge Guide if they have completed certain quests prior to certain updates.
+
+==Treasure Trails==
+{{Anagram|Lumbridge Guide|hard|[[Clue scroll (hard) - BLUE GRIM GUIDED|BLUE GRIM GUIDED]]}}. He will give you a [[puzzle box]].
+
+==Dialogue==
+{{hastranscript|NPC}}
+
+==Changes==
+{{Subject changes header}}
+{{Subject changes
+|date = 3 November 2026
+|update = Quest Month Kick Off, TFA Tweaks & More
+|change = 
+* The dialogue of the NPC was updated to be more appropriate in-universe.
+* Players are now able to claim their owed XP if they completed certain novice, intermediate, and experienced quests before the [[Update:Quest Month Kick Off, TFA Tweaks & More|update]] that added quest experience rewards. 
+** Additionally, players are now able to claim their owed XP if they completed certain master and grandmaster quests before [[Update:The Garden of Death & More|this update]] to increase quest experience rewards.
+}}
+{{Subject changes footer}}
+
+{{Tutors}}
+{{Another Cook's Quest}}
+{{Freeing the Lumbridge Guide}}
+{{Death to the Dorgeshuun}}
+{{Lumbridge}}
+{{NPC Contact}}

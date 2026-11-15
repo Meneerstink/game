@@ -1056,37 +1056,37 @@
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
-    "key": "Clue scroll (medium) - BZOSZHM GZQKZM",
+    "key": "Clue scroll (medium) - GUHCHO",
     "tier": "medium",
     "kind": "CIPHER",
-    "hint": "The cipher reveals who to speak to:\n\nBZOSZHM GZQKZM",
+    "hint": "The cipher reveals who to speak to:\n\nGUHCHO",
     "points": [
       [
-        3218,
-        3238,
+        3440,
+        9895,
         0
       ]
     ],
     "osrsScrollIds": [
-      19770
+      19772
     ],
-    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_BZOSZHM_GZQKZM",
-    "sourceFile": "Clue_scroll_(medium)_-_BZOSZHM_GZQKZM.wiki",
-    "revision": 15392270,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_GUHCHO",
+    "sourceFile": "Clue_scroll_(medium)_-_GUHCHO.wiki",
+    "revision": 15191771,
     "fields": {
-      "id": "929",
-      "text": "The cipher reveals who to speak to:<br><br>BZOSZHM GZQKZM",
-      "notes": "Speak to the [[Captain Harlan]] outside of [[Lumbridge Castle]].\nThe clue requires completion of a [[challenge scroll]]:\n\nQuestion: ''How many snakeskins are needed in order to craft 44 boots, 29 vambraces and 34 bandanas?''\n\nAnswer: '''666'''",
-      "map": "{{Map|name=Captain Harlan|x=3218|y=3238|r=4|mtype=square|bucket=yes}}"
+      "id": "928",
+      "text": "The cipher reveals who to speak to:<br><br>GUHCHO",
+      "notes": "Speak to [[Drezel]] in [[Paterdomus]].\nThe clue requires completion of a [[challenge scroll]]:\n\nQuestion: ''Please solve this for x: 7x - 28=21''\n\nAnswer: '''7'''",
+      "map": "{{Map|3440,9895|mtype=pin|plane=0|mapID=-1}}"
     },
     "missingSquares": [],
     "eventSpecific": false,
     "subtype": "CIPHER",
-    "sourceSha256": "383da737d69a0bf6b541a74772738e2b5eafb1f5e26f39c0b9a50141674eddcf",
+    "sourceSha256": "8f055e04aa63aa7035f8d65e58e4924fde3e8bd41fd80c61acbb0ebe215d805b",
     "challenge": {
       "type": "NUMBER",
-      "question": "How many snakeskins are needed in order to craft 44 boots, 29 vambraces and 34 bandanas?",
-      "answer": "666"
+      "question": "Please solve this for x: 7x - 28=21",
+      "answer": "7"
     },
     "activation": "pending target assets, subtype handler and client verification"
   },
