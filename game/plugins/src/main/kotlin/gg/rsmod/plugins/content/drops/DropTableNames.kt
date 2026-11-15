@@ -22,6 +22,7 @@ object DropTableNames {
             Herbs.usefulHerbTable to "Herb drop table",
             Seeds.allotmentSeedTable to "Seed drop table",
             Seeds.uncommonSeedTable to "Seed drop table",
+            Seeds.rareSeedTable to "Rare seed drop table",
         )
     }
 

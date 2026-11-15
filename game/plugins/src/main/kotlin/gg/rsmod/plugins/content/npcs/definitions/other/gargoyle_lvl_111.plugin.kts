@@ -9,6 +9,7 @@ import gg.rsmod.plugins.api.cfg.Npcs
 import gg.rsmod.plugins.api.ext.npc
 import gg.rsmod.plugins.content.combat.getCombatTarget
 import gg.rsmod.plugins.content.drops.DropTableFactory
+import gg.rsmod.plugins.content.drops.global.Gems
 import gg.rsmod.plugins.content.drops.global.Rare
 
 /**
@@ -20,33 +21,49 @@ val ids = intArrayOf(Npcs.GARGOYLE, Npcs.GARGOYLE_9087)
 val table = DropTableFactory
 val gargoyle =
     table.build {
+        // N614 (15-11): OSRS Wiki 'Gargoyle' drops (x/128). Pre-rolls: granite maul 1/256, mystic robe top (dark) 1/512.
+        // NVT: brimstone key (no Konar), brittle key (no Grotesque Guardians). Charms = our Summoning (kept).
         main {
-            total(total = 546)
-            // WEAPONS
-            obj(Items.STEEL_2H_SWORD, quantity = 1, slots = 64)
-            obj(Items.STEEL_BATTLEAXE, quantity = 1, slots = 64)
-            obj(Items.STEEL_HATCHET, quantity = 1, slots = 64)
-            obj(Items.GRANITE_MAUL, quantity = 1, slots = 2)
-            // ARMOUR
-            obj(Items.RUNE_FULL_HELM, quantity = 1, slots = 12)
-            obj(Items.ADAMANT_BOOTS, quantity = 1, slots = 12)
-            obj(Items.STEEL_FULL_HELM, quantity = 1, slots = 4)
+            total(128)
+            obj(Items.ADAMANT_PLATELEGS, quantity = 1, slots = 4)
+            obj(Items.RUNE_FULL_HELM, quantity = 1, slots = 3)
+            obj(Items.RUNE_2H_SWORD, quantity = 1, slots = 2)
+            obj(Items.ADAMANT_BOOTS, quantity = 1, slots = 1)
+            obj(Items.RUNE_BATTLEAXE, quantity = 1, slots = 1)
+            obj(Items.RUNE_PLATELEGS, quantity = 1, slots = 1)
+
+            obj(Items.FIRE_RUNE, quantity = 75, slots = 10)
+            obj(Items.CHAOS_RUNE, quantity = 30, slots = 8)
+            obj(Items.FIRE_RUNE, quantity = 150, slots = 6)
+            obj(Items.DEATH_RUNE, quantity = 15, slots = 5)
+
+            obj(Items.GOLD_ORE_NOTED, quantityRange = 10..20, slots = 10)
+            obj(Items.PURE_ESSENCE_NOTED, quantity = 150, slots = 6)
+            obj(Items.STEEL_BAR_NOTED, quantity = 15, slots = 6)
+            obj(Items.GOLD_BAR_NOTED, quantityRange = 10..15, slots = 3)
+            obj(Items.MITHRIL_BAR_NOTED, quantity = 15, slots = 2)
+            obj(Items.RUNITE_ORE, quantity = 1, slots = 2)
+
+            obj(Items.COINS_995, quantityRange = 400..800, slots = 28)
+            obj(Items.COINS_995, quantityRange = 500..1000, slots = 20)
+            obj(Items.COINS_995, quantity = 10000, slots = 5)
+
+            table(Gems.gemTable, slots = 5)
+        }
+        table("Granite maul") {
+            total(256)
+            obj(Items.GRANITE_MAUL, quantity = 1, slots = 1)
+            nothing(slots = 255)
+        }
+        table("Mystic robe top (dark)") {
+            total(512)
             obj(Items.MYSTIC_ROBE_TOP_4101, quantity = 1, slots = 1)
-            // RUNES
-            obj(Items.FIRE_RUNE, quantity = listOf(37, 75).random(), slots = 64)
-            obj(Items.CHAOS_RUNE, quantity = 15, slots = 64)
-            obj(Items.DEATH_RUNE, quantity = 5, slots = 16)
-            // OTHER
-            obj(Items.COINS_995, quantity = listOf(11, 44, 132, 220, 460).random(), slots = 64)
-            obj(Items.PURE_ESSENCE_NOTED, quantity = 35, slots = 24)
-            obj(Items.STEEL_BAR, quantity = 3, slots = 24)
-            obj(Items.GOLD_BAR, quantity = 1, slots = 12)
-            obj(Items.THREAD, quantity = 10, slots = 16)
-            obj(Items.FEROCIOUS_RING_5, quantity = 1, slots = 16)
-            obj(Items.CLUE_SCROLL_HARD, quantity = 1, slots = 2)
-            obj(Items.STARVED_ANCIENT_EFFIGY, quantity = 1, slots = 1)
-            // RARE
-            table(Rare.rareTable, slots = 20)
+            nothing(slots = 511)
+        }
+        table("Hard clue") {
+            total(128)
+            obj(Items.CLUE_SCROLL_HARD, quantity = 1, slots = 1)
+            nothing(slots = 127)
         }
         table("Charms") {
             total(1000)
