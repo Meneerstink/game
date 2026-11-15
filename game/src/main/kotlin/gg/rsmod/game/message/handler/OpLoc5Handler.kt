@@ -11,7 +11,6 @@ import gg.rsmod.game.model.attr.INTERACTING_OPT_ATTR
 import gg.rsmod.game.model.attr.ID_INSPECTOR_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GameObject
-import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -28,7 +27,7 @@ class OpLoc5Handler : MessageHandler<OpLoc5Message> {
          * If tile is too far away, don't process it.
          */
         val tile = Tile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) {
+        if (!client.inBuildArea(tile)) {
             gg.rsmod.game.model.AvTrace.log { "loc-op5 refused gate=view id=${message.id} at=$tile from=${client.tile}" }
             return
         }

@@ -60,6 +60,15 @@ abstract class Player(
     var lastKnownRegionBase: Coordinate? = null
 
     /**
+     * Whether a loc/ground-item option on [target] can have come from this player's client: the client only offers
+     * menu options for the 104 x 104 map it has loaded (the build area), and the walk there is still bounded by the
+     * player route search. The old gate was a Euclidean 32-tile radius, which silently ignored clicks the client did
+     * offer on a diagonal (N602, 2026-11-15: ToA Crondis corner 6807,155 -> waterfall 6820,186 = 33.6 tiles, no step,
+     * no message; 6811,156 = 31.3 tiles walked). Before the first map build the old radius is used.
+     */
+    fun inBuildArea(target: Tile): Boolean = inBuildArea(lastKnownRegionBase, tile, target)
+
+    /**
      * A flag that indicates whether the [login] method has been executed.
      * This is currently used so that we don't send player updates when the player
      * hasn't been fully initialized. We can test later to see if this is even
@@ -1464,6 +1473,18 @@ abstract class Player(
          * and objects.
          */
         const val TILE_VIEW_DISTANCE = 32
+
+        /** [Player.inBuildArea] for a map [base] and the player's own tile [from] (pure, for tests). */
+        fun inBuildArea(
+            base: Coordinate?,
+            from: Tile,
+            target: Tile,
+        ): Boolean {
+            if (target.height != from.height) return false
+            if (base == null) return target.viewableFrom(from, TILE_VIEW_DISTANCE)
+            val size = gg.rsmod.game.model.region.Chunk.MAX_VIEWPORT
+            return target.x in base.x until base.x + size && target.z in base.z until base.z + size
+        }
 
         const val PRAYER_VARBIT = 9816
     }

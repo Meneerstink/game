@@ -9,7 +9,6 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.attr.*
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GroundItem
-import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -26,7 +25,7 @@ class OpObjUHandler : MessageHandler<OpObjUMessage> {
          * If tile is too far away, don't process it.
          */
         val tile = Tile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) {
+        if (!client.inBuildArea(tile)) {
             return
         }
 

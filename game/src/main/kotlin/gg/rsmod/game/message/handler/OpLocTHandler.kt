@@ -13,7 +13,6 @@ import gg.rsmod.game.model.attr.INTERACTING_ITEM_SLOT
 import gg.rsmod.game.model.attr.INTERACTING_OBJ_ATTR
 import gg.rsmod.game.model.entity.Client
 import gg.rsmod.game.model.entity.GameObject
-import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.priv.Privilege
 import java.lang.ref.WeakReference
 
@@ -105,7 +104,7 @@ class OpLocTHandler : MessageHandler<OpLocTMessage> {
         message: OpLocTMessage,
     ): GameObject? {
         val tile = Tile(message.x, message.z, client.tile.height)
-        if (!tile.viewableFrom(client.tile, Player.TILE_VIEW_DISTANCE)) return null
+        if (!client.inBuildArea(tile)) return null
         return world.chunks.getOrCreate(tile)
             .getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
             .firstOrNull { it.id == message.id }
