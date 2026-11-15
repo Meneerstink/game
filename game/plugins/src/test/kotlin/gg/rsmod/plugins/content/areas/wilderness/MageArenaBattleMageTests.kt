@@ -36,6 +36,9 @@ class MageArenaBattleMageTests {
             every { player.equipment } returns equipment
             every { player.isOnline } returns true
             every { player.invisible } returns false
+            // canAttack -> MageArenaBattleMages.tolerates -> MageArena.dueling reads the player's duel attributes (14-11 fix):
+            // a relaxed mock would hand back a bare Object for the WeakReference attribute.
+            every { player.attr } returns gg.rsmod.game.model.attr.AttributeMap()
         }
         fun script(name: String): Any = URLClassLoader(
             arrayOf(File("scripts/build/classes/kotlin/main").toURI().toURL()), javaClass.classLoader,

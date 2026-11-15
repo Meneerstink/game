@@ -111,6 +111,11 @@ class PvpDeathBreakablesTests {
                 Items.ELITE_VOID_KNIGHT_ROBE_19788 to 250_000, Items.ELITE_VOID_KNIGHT_ROBE_19790 to 250_000, Items.FIGHTER_TORSO to 150_000,
                 Items.INFERNAL_MAX_CAPE to 225_000, Items.DIZANAS_QUIVER to 270_000, Items.DIZANAS_QUIVER_UNCHARGED to 270_000,
                 Items.BLESSED_DIZANAS_QUIVER to 400_000,
+            ) + listOfNotNull(
+                // N415 (Mage Arena II, 14-11): Imbued ancient cape = the imbued god cape repair, its max cape = the imbued max cape repair
+                // (AncientCape.breakables; killerCoins 0 like the god capes, owner V3).
+                gg.rsmod.plugins.content.items.osrs.AncientCape.assets.cape?.let { it to 96_000 },
+                gg.rsmod.plugins.content.items.osrs.AncientCape.assets.max?.let { it to 99_000 },
             ),
             PvpDeathBreakables.ALL.associate { it.itemId to it.repairCost },
         )
