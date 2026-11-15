@@ -29,6 +29,9 @@ object CoxRewards {
 
     private val pending = java.util.concurrent.ConcurrentHashMap<String, MutableList<Reward>>()
 
+    /** Completed raids per account (Collection Log / Drop Viewer count, like ToaChest.COMPLETIONS). */
+    val COMPLETIONS = gg.rsmod.game.model.attr.AttributeKey<Int>(persistenceKey = "cox_completions")
+
     fun has(player: Player): Boolean = pending[player.username.lowercase()]?.isNotEmpty() == true
 
     /**
@@ -44,6 +47,7 @@ object CoxRewards {
             uniques[who] = CoxLoot.pickUnique(random)
         }
         byName.forEach { (name, player) ->
+            player.attr[COMPLETIONS] = (player.attr[COMPLETIONS] ?: 0) + 1
             val drops = CoxLoot.chest(uniques[name], points[name] ?: 0, owned(player, CoxLoot.ANCIENT_TABLET), owned(player, CoxLoot.DARK_JOURNAL), random)
             pending[name] = drops.mapNotNull { d ->
                 val local = CoxLootItems.local(d.osrs) ?: return@mapNotNull null

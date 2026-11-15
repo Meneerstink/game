@@ -113,6 +113,7 @@ object DropViewerAudit {
                         if (Math.abs(l.normal - Pets.dropChance(npc)) > 1e-12) bad("pet ${l.name}: Normal ${N108Ui.chance(l.normal)} is not the OSRS chance")
                     }
                     DropSources.Kind.TOA -> if (l.item != gg.rsmod.plugins.content.activity.toa.core.ToaLootItems.local(gg.rsmod.plugins.content.activity.toa.core.ToaLoot.TUMEKENS_GUARDIAN)) bad("pet ${l.name} is not Tumeken's guardian")
+                    DropSources.Kind.COX -> if (l.item != gg.rsmod.plugins.content.activity.cox.CoxLootItems.local(gg.rsmod.plugins.content.activity.cox.CoxLoot.OLMLET)) bad("pet ${l.name} is not the Olmlet")
                     else -> bad("pet ${l.name} on a ${s.kind} entry")
                 }
             }

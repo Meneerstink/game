@@ -21,6 +21,7 @@ object KillCounts {
             "barrows" -> player.attr[Barrows.CHEST_COUNT] ?: 0
             "chest" -> player.attr[CHESTS] ?: 0
             CollectionLogPages.TOA -> player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0
+            CollectionLogPages.COX -> player.attr[gg.rsmod.plugins.content.activity.cox.CoxRewards.COMPLETIONS] ?: 0
             else -> DropSources.byKey(player, key)?.let { source -> ofNpcs(player, source.npcs) } ?: 0
         }
 

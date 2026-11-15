@@ -43,6 +43,8 @@ object DropViewerPlaces {
                 DropSources.Kind.BARROWS -> Tile(3565, 3289)
                 // N462: the Jaltevas Pyramid entrance in the Necropolis (toa_necropolis.plugin.kts ENTRANCE).
                 DropSources.Kind.TOA -> Tile(3357, 2711)
+                // CoX: the entrance steps on Mount Quidamortem (cox_raid.plugin.kts, RAIDS_ENTRANCE_STEPS 29777 at 1232,3573).
+                DropSources.Kind.COX -> Tile(1232, 3573)
                 else -> spawnOf(world, source.modelNpc)
             } ?: return null
         return place(world, tile)

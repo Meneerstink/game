@@ -507,6 +507,8 @@ object DropViewer {
             DropSources.Kind.BARROWS -> "All six brothers${dot}Chests <col=ffffff>${N108Ui.number(kc)}</col>"
             // N462: the chances are those of one reference raid (DropSources.toaView); the count is the account's completions.
             DropSources.Kind.TOA -> "Solo Normal, ${N108Ui.number(DropSources.TOA_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.toa.ToaChest.COMPLETIONS] ?: 0)}</col>"
+            // CoX: the chances of one reference raid (DropSources.coxView); the count is the account's completions.
+            DropSources.Kind.COX -> "Solo, ${N108Ui.number(DropSources.COX_REFERENCE_POINTS)} points${dot}Raids <col=ffffff>${N108Ui.number(player.attr[gg.rsmod.plugins.content.activity.cox.CoxRewards.COMPLETIONS] ?: 0)}</col>"
             else -> {
                 val level = if (source.level > 0) "<col=ffff00>Level ${source.level}</col>$dot" else ""
                 "${level}Kill count <col=ffffff>${N108Ui.number(kc)}</col>"
