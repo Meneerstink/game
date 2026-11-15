@@ -138,6 +138,12 @@ fun storeIntoOpenQuiver(
 on_button(interfaceId = QUIVER_INVENTORY, component = 0) {
     val invSlot = player.getInteractingSlot()
     val itemId = player.getInteractingItemId()
+    // The same 667 side panel serves the CoX storage units (CoxStorage) - their Store ops while a storage window is open.
+    if (gg.rsmod.plugins.content.activity.cox.CoxStorage.sideOpen(player)) {
+        gg.rsmod.plugins.content.activity.cox.CoxStorage.sideClick(player, invSlot,
+            gg.rsmod.plugins.content.inter.slayer.SlayerRewardsUi.opOf(player.getInteractingOpcode()))
+        return@on_button
+    }
     when (player.getInteractingOpcode()) {
         61 -> storeIntoOpenQuiver(player, invSlot, itemId, 1)
         64 ->

@@ -47,6 +47,8 @@ object OsrsLocImportTool {
             // CoX herb patches: the growing / grown patch per herb and stage (tsps Resources GROWING_PATCHES 29997-30011: noxifer 29997, golpar
             // 29998, buchu 29999, + 3 a stage to stage 4).
             "cox-patches" to (29997..30011).toList(),
+            // CoX storage units, the upgraded tiers (Wiki: small 29770, medium 29779, large 29780, massive 37978; tiny 29769 is on the map).
+            "cox-storage" to listOf(29770, 29779, 29780, 37978),
             // Owner 2026-09-19 (exact OSRS Deadman breaches): OSRS Wiki "Breach (scenery)" id 49561 and "Boss Spawn" id 49563.
             "deadman-breach" to listOf(49561, 49563),
             // Owner 2026-10-10 ("de rejuvenation pool model van osrs importeren en die in de poh plaatsen"): OSRS loc 29241

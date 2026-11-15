@@ -38,7 +38,7 @@ object OsrsInterfacePortTool {
     val REPORT get() = File(RspsPaths.root(if (raid == "cox") "team/dossiers/COX-notities/94-cox-interfaces-claude.tsv" else "team/dossiers/N462-notities/toa/94-toa-interfaces-claude.tsv"))
     private val TABLE get() = File(RspsPaths.data("cfg/$raid/interfaces.tsv"))
     /** CoX (tsps rsprox): 499 recruitment board, 500 party tab, 507 party details, 513 points overlay, 539 rewards. */
-    val COX = listOf(499, 500, 507, 513, 539)
+    val COX = listOf(499, 500, 507, 513, 539, 271, 550) // + storage units (tsps Storage.ChambersOfXeric.js: private 271, shared 550; the side panel = 667 1125)
     const val INDEX_INTERFACES = 3
     const val INDEX_SPRITES = 8
     const val SPRITE_FLOOR = 8819
@@ -466,6 +466,20 @@ object OsrsInterfacePortTool {
             val first = next
             for (slot in 0 until 12) list += C(next++, 5, (slot % 3) * 28, (slot / 3) * 29, 36, 32, 10, 0, 0, 0, 0, true)
             extras += "chest items (ONZEKER layout) components=$first..${next - 1}"
+        }
+        if (group == 271 || group == 550) {
+            // CoX storage units (OSRS onLoad 404 / 1589 fill the item layer 271:6 / 550:7 from inv 583 / 582 - not run by the 667 client).
+            // ONZEKER layout: 8 columns at the inventory pitch (42 x 36) inside the layer, which scrolls ([scrollH]); private holds at most
+            // 120 (Massive), shared 1,500 (250 shown). Ops (tsps 'Withdraw/deposit 1, 5, 10, All, X'): Withdraw-1/5/10/All/X. Slots start hidden; the
+            // server sets the objects (IF_SETOBJECT) and shows them.
+            val layer = if (group == 271) 6 else 7
+            // Shared: 250 slots (Small unit) - every slot is its own component with its own IF_SETEVENTS; LATER the bigger tiers.
+            val count = if (group == 271) 120 else 250
+            val first = next
+            for (slot in 0 until count) list += C(next++, 5, (slot % 8) * 42, (slot / 8) * 36, 36, 32, layer, 0, 0, 0, 0, true,
+                ops = listOf("Withdraw-1", "Withdraw-5", "Withdraw-10", "Withdraw-All", "Withdraw-X"))
+            list.first { it.id == layer }.scrollH = ((count + 7) / 8) * 36
+            extras += "storage slots (${if (group == 271) "private" else "shared"}) components=$first..${next - 1}"
         }
         if (group == 778) {
             // [proc,toa_midraidloot_bag_draw] (6784) into toa_midraidloot_bag:items (778:5): one 36x32 item graphic per bag slot at

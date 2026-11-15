@@ -113,6 +113,8 @@ object CoxRewards {
     fun dropUnclaimed(player: Player, world: World) {
         uniqueFinders.remove(player.username.lowercase())
         val list = pending.remove(player.username.lowercase()) ?: return
-        list.forEach { world.spawn(GroundItem(it.item, it.amount, player.tile, player)) }
+        // OSRS Wiki 'Storage unit' (30107, by the mountain's bank chest): it holds 'any rewards the player did not retrieve from the ancient
+        // chest at the end of the raid' - into the account's private storage, not on the ground.
+        CoxStorage.addUnclaimed(player, list.map { it.item to it.amount })
     }
 }
