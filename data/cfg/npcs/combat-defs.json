@@ -12969,7 +12969,7 @@
     "max_hit": 14,
     "attack_speed": 4,
     "aggressive": true,
-    "poison": 4,
+    "poison": 6,
     "poison_immune": false,
     "slayer_req": 1,
     "slayer_xp": 0,
@@ -12987,7 +12987,7 @@
       "defence_magic": 30,
       "defence_ranged": 0,
       "attack_bonus": 40,
-      "strength_bonus": 44,
+      "strength_bonus": 40,
       "ranged_strength_bonus": 0,
       "magic_damage_bonus": 0
     },
@@ -47689,7 +47689,7 @@
       "defence_magic": 0,
       "defence_ranged": 0,
       "attack_bonus": 0,
-      "strength_bonus": 3,
+      "strength_bonus": 0,
       "ranged_strength_bonus": 0,
       "magic_damage_bonus": 0
     },
@@ -47736,7 +47736,7 @@
       "defence_magic": 0,
       "defence_ranged": 0,
       "attack_bonus": 40,
-      "strength_bonus": 44,
+      "strength_bonus": 40,
       "ranged_strength_bonus": 0,
       "magic_damage_bonus": 0
     },
