@@ -18,13 +18,14 @@ object MimicEncounter {
     val OUTSIDE = Tile(1646, 3569, 1)
     val SAVED_INSIDE = AttributeKey<Boolean>(persistenceKey = "mimic_inside")
     private val sessions = HashMap<Player, Session>()
+    private val entering = HashSet<Player>()
     class Session(val player: Player, val map: InstancedMap, val casket: Item, val token: Int) {
         var boss: Npc? = null
         var stompTicks = 0
         var won = false
         var finished = false
         val minions = mutableListOf<Npc>()
-        fun tile(x: Int, z: Int) = Tile(map.area.bottomLeftX + x - 2688, map.area.bottomLeftZ + z - 4288, 1)
+        fun tile(x: Int, z: Int) = arenaTile(map, x, z)
     }
 
     data class Assets(val imported: Boolean, val keyhole: Int?, val candyInterval: Int?, val impactDelay: Int?, val stepChance: Double?) {
@@ -43,9 +44,16 @@ object MimicEncounter {
     fun inArena(player: Player) = sessions[player]?.map?.area?.contains(player.tile) == true
     fun contains(tile: Tile) = sessions.values.any { it.map.area.contains(tile) }
 
-    fun enter(player: Player, casket: Item): Boolean {
-        if (sessions.containsKey(player) || !player.inventory.any { it === casket } ||
-            MimicChallenge.tier(casket) == null || MimicChallenge.defeated(casket) || MimicChallenge.remaining(casket) == 0) return false
+    fun enter(player: Player, casket: Item, assets: Assets = MimicEncounter.assets,
+              spawn: (Player, InstancedMap) -> Npc? = ::spawnIdle): Boolean {
+        if (!entering.add(player)) return false
+        return try { enterOnce(player, casket, assets, spawn) } finally { entering.remove(player) }
+    }
+
+    private fun enterOnce(player: Player, casket: Item, assets: Assets,
+                          spawn: (Player, InstancedMap) -> Npc?): Boolean {
+        if (player.isDead() || sessions.containsKey(player) || !player.inventory.any { it === casket } ||
+            MimicChallenge.tier(casket) == null || MimicChallenge.defeated(casket) || MimicChallenge.remaining(casket) == 0 || MimicChallenge.active(casket)) return false
         if (!assets.imported || assets.keyhole == null) {
             println("PROBLEM CLUE Mimic arena assets not applied/verified; attempt retained")
             player.message("This challenge is temporarily unavailable.")
@@ -58,30 +66,58 @@ object MimicEncounter {
             .addAttribute(InstancedMapAttribute.DEALLOCATE_ON_LOGOUT)
             .addAttribute(InstancedMapAttribute.DEALLOCATE_ON_DEATH).build()
         val map = player.world.instanceAllocator.allocate(player.world, chunks.build(), config) ?: return false
-        val token = MimicChallenge.begin(casket) ?: run { player.world.instanceAllocator.release(player.world, map); return false }
+        // A refused NPC spawn is not an attempt. Publish the actor before issuing a token.
+        val boss = spawn(player, map) ?: run {
+            player.world.instanceAllocator.release(player.world, map)
+            return false
+        }
+        if (!player.inventory.any { it === casket } || player.isDead()) {
+            player.world.remove(boss)
+            player.world.instanceAllocator.release(player.world, map)
+            return false
+        }
+        val token = MimicChallenge.begin(casket) ?: run {
+            player.world.remove(boss)
+            player.world.instanceAllocator.release(player.world, map)
+            return false
+        }
         val session = Session(player, map, casket, token)
+        session.boss = boss
         sessions[player] = session
         player.attr[SAVED_INSIDE] = true
         player.inventory.dirty = true
         // Plane 1 is established by the actual keyhole/coins placements in cache 2686.
         // These clear interior staging tiles still require Claude's collision/client check.
         player.teleportTo(session.tile(2719, 4314))
-        val boss = Npc(Npcs.THE_MIMIC, session.tile(2716, 4317), player.world)
-        boss.respawns = false
-        session.boss = boss
-        player.world.spawn(boss)
         player.persistNow()
         return true
     }
 
-    fun challenge(player: Player, npc: Npc) {
+    private fun arenaTile(map: InstancedMap, x: Int, z: Int) =
+        Tile(map.area.bottomLeftX + x - 2688, map.area.bottomLeftZ + z - 4288, 1)
+
+    private fun spawnIdle(player: Player, map: InstancedMap): Npc? {
+        val npc = Npc(Npcs.THE_MIMIC, arenaTile(map, 2716, 4317), player.world)
+        npc.respawns = false
+        if (player.world.spawn(npc)) return npc
+        println("PROBLEM CLUE Mimic passive spawn refused; no attempt spent")
+        return null
+    }
+
+    private fun spawnFighting(idle: Npc): Npc? {
+        val npc = Npc(Npcs.THE_MIMIC_14402, idle.tile, idle.world)
+        npc.respawns = false
+        if (idle.world.spawn(npc)) return npc
+        println("PROBLEM CLUE Mimic fighting spawn refused; passive actor retained")
+        return null
+    }
+
+    fun challenge(player: Player, npc: Npc, spawn: (Npc) -> Npc? = ::spawnFighting) {
         val session = sessions[player] ?: return
         if (session.boss !== npc || session.finished || session.won || npc.id != Npcs.THE_MIMIC) return
-        val fighting = Npc(Npcs.THE_MIMIC_14402, npc.tile, npc.world)
-        fighting.respawns = false
+        val fighting = spawn(npc) ?: return
         npc.world.remove(npc)
         session.boss = fighting
-        npc.world.spawn(fighting)
         fighting.attack(player)
         player.attack(fighting)
     }
