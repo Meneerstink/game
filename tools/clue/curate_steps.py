@@ -5,6 +5,7 @@ handlers and loaded-client reachability must be resolved before registration.
 No source row is silently replaced by a donor's similarly named step.
 """
 from collections import Counter
+import argparse
 from hashlib import sha256
 from pathlib import Path
 import json
@@ -69,6 +70,21 @@ LEGACY_SELECTION = {
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--original-maps', dest='original_maps', action='store_true')
+    mode.add_argument('--base-only', dest='original_maps', action='store_false')
+    parser.set_defaults(original_maps=True)
+    parser.add_argument('--output', type=Path, default=ROOT/'docs/CLUE/STEPS-CURATED.json')
+    args = parser.parse_args()
+    if not args.original_maps:
+        assert args.output.resolve() != (ROOT/'docs/CLUE/STEPS-CURATED.json').resolve(), 'Historical selection needs a separate research output'
+    legacy = {key: list(value) for key, value in LEGACY_SELECTION.items()}
+    if args.original_maps:
+        from audit_original_pool import MAPS
+        for tier, name in MAPS.values():
+            if name not in SELECTION[tier] and name not in legacy.get(tier, []):
+                legacy.setdefault(tier, []).append(name)
     archive = json.loads((ROOT / "docs/CLUE/steps-source.json").read_text(encoding="utf-8"))
     index = {row["key"]: row for row in archive}
     manifest = json.loads((SOURCES / "step-manifest.json").read_text(encoding="utf-8"))
@@ -78,7 +94,7 @@ def main():
     result = []
     for tier, names in SELECTION.items():
         assert len(names) == (15 if tier in ("easy", "medium", "hard") else 12)
-        for name in names + LEGACY_SELECTION.get(tier, []):
+        for name in names + legacy.get(tier, []):
             if name.startswith("@"):
                 anagram = name in ("@Mandrith", "@Radimus")
                 file = "Treasure_Trails__Guide__Anagrams__Master.wiki" if anagram else "Treasure_Trails__Guide__Cryptic_clues__Master.wiki"
@@ -166,11 +182,12 @@ def main():
             if name == "Falo the bard wants to see you":
                 subtype = "FALO"
             result.append(dict(row, subtype=subtype, sourceSha256=digest, challenge=challenge,
-                               restoredOriginal=name in LEGACY_SELECTION.get(tier, []),
+                               restoredOriginal=name in legacy.get(tier, []),
                                activation="pending target assets, subtype handler and client verification"))
-    assert len(result) == 75 and len({r["key"] for r in result}) == 75
-    assert sum(r.get('restoredOriginal', False) for r in result) == 6
-    destination = ROOT / "docs/CLUE/STEPS-CURATED.json"
+    expected = 92 if args.original_maps else 75
+    assert len(result) == expected and len({r["key"] for r in result}) == expected
+    assert sum(r.get('restoredOriginal', False) for r in result) == (23 if args.original_maps else 6)
+    destination = args.output
     destination.write_text(json.dumps(result, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
     print(f"{len(result)} source candidates; {Counter(r['tier'] for r in result)}")
     print("Research only: no runtime registration or cache writes.")

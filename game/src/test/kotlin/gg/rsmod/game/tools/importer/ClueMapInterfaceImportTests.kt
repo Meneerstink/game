@@ -4,7 +4,7 @@ import java.io.File
 import kotlin.test.*
 class ClueMapInterfaceImportTests {
     private val source=ObjectMapper().readTree(File("../docs/CLUE/cache/map-interfaces.json"))
-    @Test fun `all nine source maps preserve their full widget hierarchy and every model camera`() {
+    @Test fun `all twenty six source maps preserve their full widget hierarchy and every model camera`() {
         for(group in ClueInterfaceImportTool.MAP_GROUPS) {
             val rows=source[group.toString()]
             val models=rows.map { it["modelId"].asInt() }.distinct().associateWith { it+70000 }

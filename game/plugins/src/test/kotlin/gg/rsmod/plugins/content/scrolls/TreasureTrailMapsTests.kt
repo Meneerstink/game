@@ -19,9 +19,9 @@ import kotlin.test.*
 class TreasureTrailMapsTests {
     @AfterTest fun cleanup() = unmockkAll()
 
-    @Test fun `all nine source illustrations resolve only with their verified import`() {
+    @Test fun `all twenty six source illustrations resolve only with their verified import`() {
         val maps = TreasureTrailStepCatalogue.current.rows.filter { it.kind == "MAP" }
-        assertEquals(9, maps.size)
+        assertEquals(26, maps.size)
         assertEquals(maps.map { it.key }.toSet(), TreasureTrailMaps.sources.map { it.key }.toSet())
         for (row in maps) {
             assertNull(TreasureTrailMaps.interfaceOf(row) { null })

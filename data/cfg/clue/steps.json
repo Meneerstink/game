@@ -794,6 +794,78 @@
     "restoredOriginal": true
   },
   {
+    "key": "Clue scroll (easy) - North of Falador.",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Falador statue crossroads.png",
+    "points": [
+      [
+        2970,
+        3415,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_North_of_Falador.",
+    "sourceFile": "Clue_scroll_(easy)_-_North_of_Falador..wiki",
+    "sourceSha256": "042ebbb6cec92c14af7be06995dce04c6baa89f4776306318a973c0f3d4ea038",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - West of the Champions' Guild",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue Champions guild.png",
+    "points": [
+      [
+        3166,
+        3361,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_West_of_the_Champions%27_Guild",
+    "sourceFile": "Clue_scroll_(easy)_-_West_of_the_Champions'_Guild.wiki",
+    "sourceSha256": "8a5f2159f8347f622c537916e4385e135381b91e98811bfa1369832e46d2e56a",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - South-east Varrock mine",
+    "tier": "easy",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nFile:Map clue South-eastern Varrock Mine.png",
+    "points": [
+      [
+        3290,
+        3373,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_South-east_Varrock_mine",
+    "sourceFile": "Clue_scroll_(easy)_-_South-east_Varrock_mine.wiki",
+    "sourceSha256": "f8aef7d6f7e6d02ecd646f28665ad590686fbc21db7e3fb47307b037f4258c69",
+    "restoredOriginal": true
+  },
+  {
     "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
     "tier": "medium",
     "kind": "EMOTE",
@@ -2242,6 +2314,222 @@
     "restoredOriginal": true
   },
   {
+    "key": "Clue scroll (medium) - Miscellania",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nMiscellania. Fairy ring {{Fairycode|CIP}}.",
+    "points": [
+      [
+        2536,
+        3865,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Miscellania",
+    "sourceFile": "Clue_scroll_(medium)_-_Miscellania.wiki",
+    "sourceSha256": "cbed4ac0ebae3b70123cb59b2b3c4081235ebe0aeb5ff6c2e9809bc6ee8910a3",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Mort Myre Swamp",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nMort Myre Swamp, west of Mort'ton. Fairy ring {{Fairycode|BIP}}.",
+    "points": [
+      [
+        3434,
+        3266,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Mort_Myre_Swamp",
+    "sourceFile": "Clue_scroll_(medium)_-_Mort_Myre_Swamp.wiki",
+    "sourceSha256": "1962cf46d35a18f485b8d9859fa0ba5e8b62f750c36d09018b77f463f1e81c34",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - At the entrance to the Ourania Cave",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nAt the entrance to the Ourania Cave.",
+    "points": [
+      [
+        2454,
+        3230,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_At_the_entrance_to_the_Ourania_Cave",
+    "sourceFile": "Clue_scroll_(medium)_-_At_the_entrance_to_the_Ourania_Cave.wiki",
+    "sourceSha256": "865a1380fc379a31700ddfc8de29743b4e48968c00545aedd8cc109b1b6d3db7",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - South-east of the Lighthouse",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth-east of the Lighthouse. Fairy ring {{Fairycode|ALP}}.",
+    "points": [
+      [
+        2578,
+        3597,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_South-east_of_the_Lighthouse",
+    "sourceFile": "Clue_scroll_(medium)_-_South-east_of_the_Lighthouse.wiki",
+    "sourceSha256": "e6216cea32ba0db44903b12e74570a959091804b13ac4fc324b87d9d8d1ca3f3",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Between Seers' Village and Rellekka",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nBetween Seers' Village and Rellekka. South-west of Fairy ring {{Fairycode|CJR}}.",
+    "points": [
+      [
+        2667,
+        3562,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Between_Seers%27_Village_and_Rellekka",
+    "sourceFile": "Clue_scroll_(medium)_-_Between_Seers'_Village_and_Rellekka.wiki",
+    "sourceSha256": "0da840aec88209a52f51fb89e63d1c3f846896ef0bd46cf2e52cc6dca67188a4",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - To the east of the Ranging guild",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nTo the east of the Ranging Guild.",
+    "points": [
+      [
+        2702,
+        3429,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_To_the_east_of_the_Ranging_guild",
+    "sourceFile": "Clue_scroll_(medium)_-_To_the_east_of_the_Ranging_guild.wiki",
+    "sourceSha256": "91863fce7972d8b9bfe3ed1c13a7f444ac59f801ef30d2a313e60b690007c89e",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - West of the Crafting Guild",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nWest of the Crafting Guild.",
+    "points": [
+      [
+        2907,
+        3295,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_West_of_the_Crafting_Guild",
+    "sourceFile": "Clue_scroll_(medium)_-_West_of_the_Crafting_Guild.wiki",
+    "sourceSha256": "d0c5ad715cdecbbfc5ae76bc3bff5c9e1e30993ecd7f84c52d5d93074c21bc35",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nThe crate in McGrubor's Wood. Fairy ring {{Fairycode|ALS}}.",
+    "points": [
+      [
+        2658,
+        3488,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_in_McGrubor%27s_Wood",
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_in_McGrubor's_Wood.wiki",
+    "sourceSha256": "d8a31f7a110dc2f5361807855415c3cdda27617681645359508f32cddc67df18",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+    "tier": "medium",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nThe crate west of the Clock Tower.",
+    "points": [
+      [
+        2565,
+        3248,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_The_crate_west_of_the_Clock_Tower",
+    "sourceFile": "Clue_scroll_(medium)_-_The_crate_west_of_the_Clock_Tower.wiki",
+    "sourceSha256": "f886e858b8f679e0ef021865a37538e019bf690e21fc04044d5107684eb21efc",
+    "restoredOriginal": true
+  },
+  {
     "key": "Clue scroll (hard) - Salute in the banana plantation",
     "tier": "hard",
     "kind": "EMOTE",
@@ -2806,6 +3094,126 @@
     "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_Aggie_I_see",
     "sourceFile": "Clue_scroll_(hard)_-_Aggie_I_see.wiki",
     "sourceSha256": "b395b6901d48ce96a709c5933ed81b875a26e318502a76de3865c981652ccd2f"
+  },
+  {
+    "key": "Clue scroll (hard) - South-east of the Wilderness Agility Course",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth-east of the Wilderness Agility Course in level 50 Wilderness.",
+    "points": [
+      [
+        3021,
+        3912,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South-east_of_the_Wilderness_Agility_Course",
+    "sourceFile": "Clue_scroll_(hard)_-_South-east_of_the_Wilderness_Agility_Course.wiki",
+    "sourceSha256": "7adda851eb750bcf917fe97cb752810a482b3bba564680ec03bd8a99227921dc",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - South of the Legends' Guild",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nSouth of the Legends' Guild. Fairy ring {{Fairycode|BLR}}.",
+    "points": [
+      [
+        2722,
+        3338,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_South_of_the_Legends%27_Guild",
+    "sourceFile": "Clue_scroll_(hard)_-_South_of_the_Legends'_Guild.wiki",
+    "sourceSha256": "46f632cbe792592b40f5fd4b895a6099ac862fd78847abccb78969c3fd6aeca5",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In the western section of West Ardougne",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "DIG",
+    "hint": "The map reveals where to dig:\n\nIn the western section of West Ardougne.",
+    "points": [
+      [
+        2488,
+        3308,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_the_western_section_of_West_Ardougne",
+    "sourceFile": "Clue_scroll_(hard)_-_In_the_western_section_of_West_Ardougne.wiki",
+    "sourceSha256": "56d20159ae790721c0fb7c68b87ffb64b76cf76bfe409ca3b13ba553986fe44c",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nIn a crate by the stairs to the Observatory Dungeon.",
+    "points": [
+      [
+        2457,
+        3182,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon",
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_by_the_stairs_to_the_Observatory_Dungeon.wiki",
+    "sourceSha256": "a975ec676cda6d08ea638685126debfefdbeb54b5d070b844de35643d74b3f46",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+    "tier": "hard",
+    "kind": "MAP",
+    "action": "SEARCH",
+    "hint": "The map reveals where to search:\n\nIn a crate at the Dark Warriors' Fortress in level 14 Wilderness.",
+    "points": [
+      [
+        3026,
+        3628,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_In_a_crate_at_the_Dark_Warriors%27_Fortress",
+    "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_at_the_Dark_Warriors'_Fortress.wiki",
+    "sourceSha256": "3b4224941b0664ff71cfce9cd7a40f208c1dbc24ae59e3bfeff4d4ef2c306a0a",
+    "restoredOriginal": true
   },
   {
     "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",

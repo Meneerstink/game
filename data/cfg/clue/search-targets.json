@@ -45,6 +45,36 @@
     "requiresMenuPatch": true
   },
   {
+    "key": "Clue scroll (medium) - The crate in McGrubor's Wood",
+    "osrsId": 357,
+    "existingLocal": 24202,
+    "point": [
+      2658,
+      3488,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "956609681e93b1659aad1a1b2631f3203c98ffbd7da3719a56a1739cf5b9e3dc",
+    "nativeSha256": "5d23fd8a009900dbf82b5abdaf850d0a007b31fa34e322d630d874ac228c5f4c",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
+    "key": "Clue scroll (medium) - The crate west of the Clock Tower",
+    "osrsId": 354,
+    "existingLocal": 46331,
+    "point": [
+      2565,
+      3248,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "315aa8db1ebc07f4c5840d49b6655fbbd62cf457e7288d57654ae51e071d4448",
+    "nativeSha256": "5d23fd8a009900dbf82b5abdaf850d0a007b31fa34e322d630d874ac228c5f4c",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
     "key": "Clue scroll (hard) - A crate in the Lumber Yard",
     "osrsId": 2620,
     "existingLocal": 2620,
@@ -56,6 +86,36 @@
     "name": "Crate",
     "sourceSha256": "4e233faeb372e541d7fe5921e4ef125fa903a5dac3995c1fb8a1aae1b5d0b578",
     "nativeSha256": "b3619a6c69bf87da976f4745078a5ff8cb6f8d322b79b8f6cb976d784c110287",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate by the stairs to the Observatory Dungeon",
+    "osrsId": 18506,
+    "existingLocal": 18506,
+    "point": [
+      2457,
+      3182,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "05d0c24d7901b8aa436ecc0ba947b9b07ac9e9e19ddb086f473205014c434ad4",
+    "nativeSha256": "b8a6890369b4b9a97ad74bb8ff3f04758d95abaef04efb291948fd526e7518a3",
+    "option": "Search",
+    "requiresMenuPatch": false
+  },
+  {
+    "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
+    "osrsId": 354,
+    "existingLocal": 46331,
+    "point": [
+      3026,
+      3628,
+      0
+    ],
+    "name": "Crate",
+    "sourceSha256": "315aa8db1ebc07f4c5840d49b6655fbbd62cf457e7288d57654ae51e071d4448",
+    "nativeSha256": "5d23fd8a009900dbf82b5abdaf850d0a007b31fa34e322d630d874ac228c5f4c",
     "option": "Search",
     "requiresMenuPatch": false
   }

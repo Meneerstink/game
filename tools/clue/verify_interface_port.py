@@ -6,11 +6,15 @@ existing build outputs. All products stay under this worktree's build/clue.
 from pathlib import Path
 import os
 import subprocess
+import sys
 
 ROOT = Path(__file__).resolve().parents[2]
 CACHE = Path(os.environ['USERPROFILE']) / '.gradle/caches/modules-2/files-2.1'
 JAVA = Path('C:/Program Files/Eclipse Adoptium/jdk-11.0.32.101-hotspot/bin')
 OUT = ROOT / 'build/clue/interface-port'
+STAGE = ROOT/'build/clue/original-maps/next' if '--staged-original-maps' in sys.argv else None
+if STAGE:
+    OUT = ROOT/'build/clue/original-maps/codec'
 CLIENT = Path('C:/RSPS/2011scape-client/2011scape-client')
 
 
@@ -39,6 +43,8 @@ def main():
     cp = [str(ROOT / 'game/build/classes/kotlin/main')] + [str(p) for p in installed]
     sources = [ROOT / 'game/src/main/kotlin/gg/rsmod/game/tools/importer' / (name + '.kt') for name in
                ['ClueInterfaceImportTool', 'OsrsInterfacePortTool', 'InterfaceHookProbeTool', 'CluePuzzleInterfaceBake']]
+    if STAGE:
+        sources[0] = STAGE/'ClueInterfaceImportTool.kt'
     print('Compiling only the four changed CLUE server codec files (512m, low priority)', flush=True)
     run([JAVA/'java.exe', '-Xmx512m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('server.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp), '-d', OUT/'server'] + sources)])
@@ -48,7 +54,7 @@ def main():
     run([JAVA/'java.exe', '-Xmx256m', '-cp', ';'.join(compiler), 'org.jetbrains.kotlin.cli.jvm.K2JVMCompiler',
          argument_file('tests.args', ['-no-stdlib', '-no-reflect', '-jvm-target', '11', '-cp', ';'.join(cp+testing),
              '-d', OUT/'tests', ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueInterfaceImportTests.kt',
-             ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt',
+             STAGE/'ClueMapInterfaceImportTests.kt' if STAGE else ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/ClueMapInterfaceImportTests.kt',
              ROOT/'game/src/test/kotlin/gg/rsmod/game/tools/importer/CluePuzzleInterfaceTests.kt'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'tests')]+cp+testing),
          '-Drsps.data='+str(ROOT/'data'), 'org.junit.runner.JUnitCore', 'gg.rsmod.game.tools.importer.ClueInterfaceImportTests', 'gg.rsmod.game.tools.importer.ClueMapInterfaceImportTests', 'gg.rsmod.game.tools.importer.CluePuzzleInterfaceTests'], ROOT/'game')
@@ -63,7 +69,7 @@ def main():
          ROOT/'tools/clue/ClueMapClientRegression.java', ROOT/'tools/clue/CluePuzzleClientRegression.java'])])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp), 'ClueWideInterfaceRegression', OUT/'fixtures'])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
-         'ClueMapClientRegression', ROOT/'docs/CLUE/cache/map-interfaces.json'])
+         'ClueMapClientRegression', STAGE/'cache/map-interfaces.json' if STAGE else ROOT/'docs/CLUE/cache/map-interfaces.json'])
     run([JAVA/'java.exe', '-Xmx128m', '-cp', ';'.join([str(OUT/'client')]+client_cp+cp),
          'CluePuzzleClientRegression', ROOT/'docs/CLUE/cache/puzzle-interface.json'])
     print('CLUE codec regressions passed; canonical caches/client untouched', flush=True)

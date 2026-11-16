@@ -54,10 +54,10 @@ the former rarity heuristic and provide all items in source order.
    Record each excluded step and the proven missing map/area in the dossier.
    The donor's every-tier registration, incorrect gear and automatic completion
    cannot be reinstated. ORIGINAL-POOL-AUDIT.json reconciles all41 old locations:
-   21 now have catalogue records,20 still require source/asset/handler review.
+   38 now have catalogue records,3 still require source/asset/handler review.
    The initial69 selection overlaps15 originals, leaving54 unique additions.
    Six other originals have now been restored with source equipment/tiers/Uri
-   and23 total STASH units. Current catalogue75 (19/17/15/12/12) is NOT an
+   and23 total STASH units. Current catalogue92 (22/26/20/12/12) is NOT an
    active-pool count; three torn parts form one choice. Quantity acceptance
    remains open until the original pool and69 unique additions are reconciled.
 4. Finish and independently review the inherited Watson hand-in/check/NPC Contact,

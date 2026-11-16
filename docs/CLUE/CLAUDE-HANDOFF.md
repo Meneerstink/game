@@ -54,6 +54,28 @@ The ordinary item247/NPC10 importer lists remain unchanged; UI source coverage
 is still being reconciled with the20 deferred original steps. This is not a
 request to apply a partial clue bundle.
 
+## Current map extension, B16-Nov22:42
+
+Supersedes the earlier75-record/9-map checkpoint:26drawings/1998components,
+including17restored original maps and4new searches at exact existing scenery.
+Details/source conflicts: ORIGINAL-MAPS/README.md.12runtime+10codec tests and
+1998real decoder fixtures pass. Whole Gradle/scripts pending below.
+
+PREFLIGHT tx-20261116-212134 passed2025mutations; exact rows MAP-UI-PREFLIGHT.tsv.
+Proposals:interfaces1203..1228,models66727..66751,sprites8955/8956. Both caches,
+ledger and mappings unchanged:validation/original-maps-preflight.json. Rerun
+all allocators after previous batches. Item247/NPC10/STASH23 rosters unchanged.
+Current catalogue92(22/26/20/12/12),38originals represented,54unique additions;
+three torn parts form one choice. It is not an active-pool or count-acceptance claim.
+
+Queued integration210040 was deliberately cancelled BEFORE compilation to fold
+this tested extension into one combined run. Its stale XML counts are not new
+evidence; accepted=false. Replacement213117 freezes4543inputs,5core/27plugin
+classes. Source/cfg/Gradle inputs stay frozen until result. To resolve its memory
+gate under the existing below2GB rule, Gradle--status confirmed11760IDLE7.6;
+only that idle4.6GB daemon was stopped. Active4644, servers and client untouched.
+The new run is compiling core. No cache/server/client/live operation by B.
+
 ## Applying the prepared batches (Claude)
 
 Rerun each batch against the caches produced by preceding batches; commit its

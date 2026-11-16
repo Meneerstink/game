@@ -2,18 +2,22 @@
 import hashlib
 import json
 import subprocess
+import sys
 from preflight_stashes import snapshot, ROOT
 
 
 def main():
-    out = ROOT/'build/clue/maps-preflight'
+    staged = '--staged-original-maps' in sys.argv
+    out = ROOT/'build/clue/original-maps/preflight' if staged else ROOT/'build/clue/maps-preflight'
     out.mkdir(parents=True, exist_ok=True)
     runtime = ROOT/'data/cfg/clue/interfaces.tsv'
-    args = [json.loads(line) for line in (ROOT/'build/clue/interface-port/server.args').read_text().splitlines()]
-    cp = str(ROOT/'build/clue/interface-port/server')+';'+args[args.index('-cp')+1]
+    codec = ROOT/'build/clue/original-maps/codec' if staged else ROOT/'build/clue/interface-port'
+    args = [json.loads(line) for line in (codec/'server.args').read_text().splitlines()]
+    cp = str(codec/'server')+';'+args[args.index('-cp')+1]
     command = ['C:/Program Files/Eclipse Adoptium/jdk-11.0.32.101-hotspot/bin/java.exe', '-Xmx512m', '-cp', cp,
-               'gg.rsmod.game.tools.importer.ClueInterfaceImportTool', str(ROOT/'docs/CLUE/cache/map-interfaces.json'),
-               str(runtime), str(ROOT/'docs/CLUE/MAP-UI-PREFLIGHT.tsv'), '--maps']
+               'gg.rsmod.game.tools.importer.ClueInterfaceImportTool',
+               str(ROOT/'build/clue/original-maps/next/cache/map-interfaces.json' if staged else ROOT/'docs/CLUE/cache/map-interfaces.json'),
+               str(runtime), str(out/'MAP-UI-PREFLIGHT.tsv' if staged else ROOT/'docs/CLUE/MAP-UI-PREFLIGHT.tsv'), '--maps']
 
     def state():
         value = snapshot()

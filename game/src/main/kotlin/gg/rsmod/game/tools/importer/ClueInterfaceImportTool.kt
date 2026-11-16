@@ -14,8 +14,7 @@ object ClueInterfaceImportTool {
     const val REWARD_SLOTS = 12 // cache 2686 config 2/5/141 = [2, 0, 12, 0]
     val GROUPS = listOf(73, 203)
     // Exact source child counts, including the Close component. Reject a truncated final child too.
-    val MAP_COUNTS = mapOf(86 to 119, 348 to 48, 350 to 49, 351 to 60, 353 to 64,
-        354 to 83, 356 to 83, 360 to 84, 362 to 85)
+    val MAP_COUNTS = mapOf(86 to 119, 337 to 82, 338 to 13, 339 to 52, 340 to 86, 341 to 113, 342 to 18, 343 to 147, 344 to 108, 346 to 49, 347 to 67, 348 to 48, 349 to 58, 350 to 49, 351 to 60, 352 to 70, 353 to 64, 354 to 83, 355 to 65, 356 to 83, 357 to 94, 358 to 59, 359 to 124, 360 to 84, 361 to 118, 362 to 85)
     val MAP_GROUPS = MAP_COUNTS.keys.toList()
     val PUZZLE_GROUPS = listOf(306)
 

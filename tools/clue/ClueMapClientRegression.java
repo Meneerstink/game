@@ -50,6 +50,6 @@ class ClueMapClientRegression {
                 total++;
             }
         }
-        System.out.println("CLUE map source/native decoder regression: "+total+" components, 9 groups OK");
+        System.out.println("CLUE map source/native decoder regression: "+total+" components, "+ClueInterfaceImportTool.INSTANCE.getMAP_GROUPS().size()+" groups OK");
     }
 }

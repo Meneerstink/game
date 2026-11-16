@@ -62,7 +62,8 @@ if '--continuation' in sys.argv:
 
 if '--restored' in sys.argv:
     CORE = ['gg.rsmod.game.tools.importer.' + name for name in
-            ['ClueStashImportTests', 'ClueStashChartImportTests']]
+            ['ClueStashImportTests', 'ClueStashChartImportTests', 'ClueMapInterfaceImportTests',
+             'ClueInterfaceImportTests', 'CluePuzzleInterfaceTests']]
     PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
                ['ClueScrollLifecycleTests', 'TreasureTrailContractTests', 'TreasureTrailGuardianTests',
                 'TreasureTrailStepCatalogueTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests',

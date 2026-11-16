@@ -42,6 +42,17 @@ def main():
         rows.append(dict(key=step['key'], group=group, close=close, wikiImage=name,
                          imageSha256=image_hash, dbRow=dbrow,
                          dbSha256=database[str(dbrow)]['sha256']))
+    originals = ROOT/'docs/CLUE/ORIGINAL-MAPS'
+    for candidate in json.loads((originals/'candidates.json').read_text()):
+        key = candidate['key']; group = candidate['candidateGroup']
+        step, = [s for s in steps if s['key'] == key and s['kind'] == 'MAP']
+        assert step['sourceSha256'] == candidate['sourceSha256']
+        name = candidate['image']
+        assert sha256((originals/'images'/name).read_bytes()).hexdigest() == candidate['imageSha256']
+        assert database[str(candidate['dbRow'])]['sha256'] == candidate['dbSha256']
+        close, = [int(k) for k,w in widgets[str(group)].items() if w.get('actions') == ['Close']]
+        rows.append(dict(key=key, group=group, close=close, wikiImage=name,
+            imageSha256=candidate['imageSha256'], dbRow=candidate['dbRow'], dbSha256=candidate['dbSha256']))
     assert {r['key'] for r in rows} == {s['key'] for s in steps if s['kind'] == 'MAP'}
     target = ROOT/'data/cfg/clue/map-sources.json'
     target.write_text(json.dumps(rows, indent=2)+'\n')

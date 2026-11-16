@@ -4,6 +4,7 @@ No cache writes. Unresolved equipment/NPC identities stay visible in the report;
 they never become an empty requirement or a permissive name-only fallback.
 """
 from collections import defaultdict, Counter
+import argparse
 from hashlib import sha256
 from pathlib import Path
 import json
@@ -18,7 +19,18 @@ def normalize(name):
 
 
 def main():
-    rows = json.loads((ROOT/'docs/CLUE/STEPS-CURATED.json').read_text(encoding='utf8'))
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--input', type=Path, default=ROOT/'docs/CLUE/STEPS-CURATED.json')
+    parser.add_argument('--output', type=Path, default=ROOT/'data/cfg/clue/steps.json')
+    parser.add_argument('--gaps-output', type=Path, default=ROOT/'docs/CLUE/STEP-ASSET-GAPS.json')
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument('--original-maps', dest='original_maps', action='store_true')
+    mode.add_argument('--base-only', dest='original_maps', action='store_false')
+    parser.set_defaults(original_maps=True)
+    args = parser.parse_args()
+    if not args.original_maps:
+        assert args.output.resolve() != (ROOT/'data/cfg/clue/steps.json').resolve(), 'Historical selection needs a separate research output'
+    rows = json.loads(args.input.read_text(encoding='utf8'))
     source_items = json.loads((ROOT/'build/clue/osrs-items.json').read_text(encoding='utf8'))
     local_items = json.loads((ROOT/'build/clue/local-items.json').read_text(encoding='utf8'))
     source_names = defaultdict(list)
@@ -165,9 +177,9 @@ def main():
         absent = [item for group in equipment for item in group if item['local'] is None]
         if absent: gaps.append(dict(key=row['key'], reason='Unresolved optional equipment alternatives', items=absent))
         if npc and not record['npcCandidates']: gaps.append(dict(key=row['key'], npc=npc, reason='NPC absent from target cache'))
-    assert len(result) == 75
-    (ROOT/'data/cfg/clue/steps.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
-    (ROOT/'docs/CLUE/STEP-ASSET-GAPS.json').write_text(json.dumps(gaps,indent=2)+'\n',encoding='utf8')
+    assert len(result) == (92 if args.original_maps else 75)
+    args.output.write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
+    args.gaps_output.write_text(json.dumps(gaps,indent=2)+'\n',encoding='utf8')
     print(len(result), 'explicit runtime records:', dict(Counter(r['action'] for r in result)), '; source/asset gaps:', len(gaps))
     print('No runtime registration or cache writes. Missing target alternatives remain local=null.')
 

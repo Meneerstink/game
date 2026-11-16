@@ -18,7 +18,7 @@ object TreasureTrailMaps {
             MapSource(row["key"].asString,row["group"].asInt,row["close"].asInt)
         } }
         require(rows.map { it.key }.distinct().size==rows.size && rows.map { it.group }.distinct().size==rows.size)
-        require(rows.all { it.group in setOf(86,348,350,351,353,354,356,360,362) && it.close in 0..255 })
+        require(rows.all { it.group in setOf(86,337,338,339,340,341,342,343,344,346,347,348,349,350,351,352,353,354,355,356,357,358,359,360,361,362) && it.close in 0..255 })
         return rows
     }
     /** Handled even when the UI is missing: never disclose the answer as fallback hint text. */

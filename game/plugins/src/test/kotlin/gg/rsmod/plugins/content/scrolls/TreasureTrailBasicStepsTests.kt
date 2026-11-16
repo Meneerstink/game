@@ -83,7 +83,7 @@ class TreasureTrailBasicStepsTests {
     }
 
     @Test fun `search requires the exact source-mapped object tile and menu`() {
-        val row = catalogue.single { it.key.endsWith("Search for a crate in Varrock Castle") }
+        for (row in catalogue.filter { it.action == TreasureTrailStepCatalogue.Action.SEARCH }) {
         val (p, _) = account(row)
         val target = TreasureTrailSearchTargets.current.single { it.key == row.key }
         val def = ObjectDef(target.localId).also { it.name = target.name; it.options[0] = "Search" }
@@ -102,6 +102,7 @@ class TreasureTrailBasicStepsTests {
         def.options[0] = "Search"
         assertTrue(TreasureTrailSearchTargets.attempt(p,obj,1))
         verify(exactly=1) { ClueScrollManager.advance(p,row.tier,any(),0,emptyList()) }
+        }
     }
 
     @Test fun `ordinary Talk-to and trades fall through without a matching held clue`() {

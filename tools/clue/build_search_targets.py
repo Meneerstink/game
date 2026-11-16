@@ -8,6 +8,10 @@ TARGETS = {
     'Search for a crate in Varrock Castle': (5113, 46266, 'Crate'),
     'Search the bucket in the Port Sarim jail': (9568, 9568, 'Bucket'),
     'A crate in the Lumber Yard': (2620, 2620, 'Crate'),
+    "The crate in McGrubor's Wood": (357, 24202, 'Crate'),
+    'In a crate by the stairs to the Observatory Dungeon': (18506, 18506, 'Crate'),
+    "In a crate at the Dark Warriors' Fortress": (354, 46331, 'Crate'),
+    'The crate west of the Clock Tower': (354, 46331, 'Crate'),
 }
 
 
