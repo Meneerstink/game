@@ -50,7 +50,7 @@ class TreasureTrailEmoteTests {
     @Test fun `all easy and elite URI steps need exact emote tile plane and attire then one talk completion`() {
         val rows = catalogue.filter { it.action == TreasureTrailStepCatalogue.Action.EMOTE &&
             it.challenge == TreasureTrailStepCatalogue.Challenge.URI && it.secondEmote == null }
-        assertEquals(8, rows.size)
+        assertEquals(12, rows.size)
         for (row in rows) {
             val (p, uri) = account(row)
             var spawned=0

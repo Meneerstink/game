@@ -81,3 +81,37 @@ Worktree-scoped Rsps-Lint -Changed: one modified gameplay source, zero findings.
 The lint script was copied under build/clue and its fixed canonical root was
 redirected to this worktree. Doctor was not run: its fixed canonical checkout
 and crash-log inspection are outside this task card's permitted checks.
+
+## Resumed21:33: guardian state, Mimic readiness and restored originals
+
+The prior84-test continuation was independently checked and committed19c6963dc.
+Guardian controller5ac0a0c is now production source, with separate appended item
+attributes; all28 earlier attribute ordinals are unchanged. Twelve guardian
+breach tests and lifecycle preservation/reset checks pass. No guarded-step
+combat/loot/PvP adapter or activation is claimed.
+
+Mimic readiness/conversion commitc1b219a37 fixes a real unused gate: an arena
+import could otherwise enable melee-only combat. Runtime cannot enable an
+unimplemented encounter through configuration. Selected unavailable Mimics
+retain the ordinary casket, first-Mimic eligibility and attempts.17 fresh tests
+pass. The four-tick candy impact is Claude's authorized video estimate; unknown
+attack/forward-step probabilities remain null. Full Mimic still open.
+
+Six other original emotes restored through the existing Uri handler, with
+source tiers, corrected gear, exact second emotes and23STASH units. The initial
+69 overlaps15originals:54unique additions. Current catalogue75,21originals
+represented,20deferred; these are NOT active-pool counts. Source mappings and
+all41old locations are in ORIGINAL-POOL-AUDIT.json. Counts remain open.
+Actual-source cohort117tests passes (2core/50plugin libraries compiled), plus
+4chart/import tests and150real Component decoder fixtures. The chart's original
+130-node contract correctly rejected expansion; importer/test/decoder now
+review the150-node artifact. The expanded source/native-font rows fit226px;
+maximum content141px. Both23-unit STASH and150-node chart preflights passed
+with caches/ledger/runtime mappings identical; durable proofs in validation/.
+Exact transactions, proposed IDs, batch order and client checks are in handoff.
+
+One combined Gradle run integration-20261116-210040 now checks2core/27plugin
+classes on4543frozen inputs. It is pending; do not count standalone checks as
+Gradle/script acceptance. Native source files/cfg/Gradle files stay unchanged.
+Further map research is outside the frozen runtime inputs. No apply/server/
+client/live/push. All client rendering, combat, audio and live gates stay Claude's.

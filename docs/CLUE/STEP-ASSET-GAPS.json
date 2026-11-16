@@ -26,6 +26,27 @@
     "reason": "NPC absent from target cache"
   },
   {
+    "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+    "reason": "Unresolved optional equipment alternatives",
+    "items": [
+      {
+        "osrs": 20211,
+        "local": null,
+        "name": "Team cape zero"
+      },
+      {
+        "osrs": 20214,
+        "local": null,
+        "name": "Team cape x"
+      },
+      {
+        "osrs": 20217,
+        "local": null,
+        "name": "Team cape i"
+      }
+    ]
+  },
+  {
     "key": "Clue scroll (hard) - BLUE GRIM GUIDED",
     "npc": "Lumbridge Guide",
     "reason": "NPC absent from target cache"

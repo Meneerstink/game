@@ -20,7 +20,7 @@ object TreasureTrailStashChart {
     val marks by lazy { source["checks"].asJsonArray.map { value -> value.asJsonObject.let {
         Mark(it["component"].asInt, it["sourceId"].asInt, it["filled"].asBoolean)
     } }.also { rows ->
-        require(rows.size == 34 && rows.map { it.component }.distinct().size == rows.size)
+        require(rows.size == 2 * TreasureTrailStashCatalogue.current.units.size && rows.map { it.component }.distinct().size == rows.size)
         require(rows.map { it.source }.toSet() == TreasureTrailStashCatalogue.current.units.map { it.sourceId }.toSet())
         require(rows.groupBy { it.source }.values.all { it.map { mark -> mark.filled }.toSet() == setOf(false, true) })
     } }

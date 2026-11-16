@@ -1,4 +1,4 @@
-"""Resolve the reviewed 69-step selection into explicit runtime actions and cache identities.
+"""Resolve the reviewed selection and source-corrected originals into runtime records.
 
 No cache writes. Unresolved equipment/NPC identities stay visible in the report;
 they never become an empty requirement or a permissive name-only fallback.
@@ -159,15 +159,16 @@ def main():
             npcCandidates=npcs[normalize(npc)] if npc else [], equipment=equipment,
             challenge=challenge, requirements=extra, requirementsSource=requirements_source,
             source=row['source'], sourceFile=row['sourceFile'], sourceSha256=row['sourceSha256'])
+        if row.get('restoredOriginal'): record['restoredOriginal'] = True
         result.append(record)
         if missing: gaps.append(dict(key=row['key'], problems=missing))
         absent = [item for group in equipment for item in group if item['local'] is None]
         if absent: gaps.append(dict(key=row['key'], reason='Unresolved optional equipment alternatives', items=absent))
         if npc and not record['npcCandidates']: gaps.append(dict(key=row['key'], npc=npc, reason='NPC absent from target cache'))
-    assert len(result) == 69
+    assert len(result) == 75
     (ROOT/'data/cfg/clue/steps.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
     (ROOT/'docs/CLUE/STEP-ASSET-GAPS.json').write_text(json.dumps(gaps,indent=2)+'\n',encoding='utf8')
-    print('69 explicit runtime records:', dict(Counter(r['action'] for r in result)), '; source/asset gaps:', len(gaps))
+    print(len(result), 'explicit runtime records:', dict(Counter(r['action'] for r in result)), '; source/asset gaps:', len(gaps))
     print('No runtime registration or cache writes. Missing target alternatives remain local=null.')
 
 

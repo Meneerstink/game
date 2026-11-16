@@ -12,7 +12,7 @@ class ClueStashChartImportTests {
 
     @Test fun `source rows frame checks five tabs and hover destinations survive the native encoder`() {
         val components = ClueStashChartCacheTool.components(root, 1300, (494..497).associateWith { it }, sprites, 6100)
-        assertEquals(130, components.size)
+        assertEquals(150, components.size)
         assertTrue(components[4].hidden && components[5].hidden && components[29].hidden)
         assertTrue(components.filter { it.ops.isNotEmpty() }.map { it.ops }.flatten().containsAll(listOf("Easy", "Medium", "Hard", "Elite", "78", "Close")))
         assertTrue(components.none { it.text == "Master" })

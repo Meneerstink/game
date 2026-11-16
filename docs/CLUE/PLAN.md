@@ -1,7 +1,7 @@
 # CLUE - OSRS Treasure Trails
 
-ChatGPT-B, branch `gpt-b/clue-scrolls-3`, resumed 15 November 2026 at 04:27
-from A's WIP `79dd2c6f0`. The latest dossier handoff assigns the entire card to B.
+ChatGPT-B, branch `gpt-b/clue-scrolls-7`, resumed 16 November 2026 at 21:33.
+The latest dossier handoff assigns the entire card to B.
 This is an implementation branch, not evidence of client or live acceptance.
 Claude owns cache application, testclient verification, merge and release.
 
@@ -48,10 +48,18 @@ the former rarity heuristic and provide all items in source order.
    master clue rolls, milestone rewards, bloodhound, Entrana rules, complete log
    and Drop Viewer data in the approved layout. All missing assets must resolve
    before a reward is consumed; never silently remove/reweight missing items.
-3. Replace the donor step pool with a limited source-classified selection (about 70 new steps): emotes/Uri/double
+3. Preserve source-correct originals alongside a limited source-classified selection (about 70 NEW steps): emotes/Uri/double
    agents/STASH, cryptic/search/talk, anagrams/challenges/ciphers, coordinates and
    wizards, maps, puzzles, light boxes, hot/cold, Falo, Charlie and Sherlock.
    Record each excluded step and the proven missing map/area in the dossier.
+   The donor's every-tier registration, incorrect gear and automatic completion
+   cannot be reinstated. ORIGINAL-POOL-AUDIT.json reconciles all41 old locations:
+   21 now have catalogue records,20 still require source/asset/handler review.
+   The initial69 selection overlaps15 originals, leaving54 unique additions.
+   Six other originals have now been restored with source equipment/tiers/Uri
+   and23 total STASH units. Current catalogue75 (19/17/15/12/12) is NOT an
+   active-pool count; three torn parts form one choice. Quantity acceptance
+   remains open until the original pool and69 unique additions are reconciled.
 4. Finish and independently review the inherited Watson hand-in/check/NPC Contact,
    Mimic arena/combat/death/rewards. B owns all of these after the 04:2x handoff.
 5. Source-by-source acquisition: NPC drop tables, nests/geodes/bottles, implings,

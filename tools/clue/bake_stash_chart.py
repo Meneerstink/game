@@ -208,7 +208,11 @@ def main():
             y+=h
         nodes[body]['scrollHeight']=y
         nodes[body]['isHidden']=index!=0
-        # Selected pool has at most three rows: the source scrollbar is unnecessary when all rows fit.
+        # Keep the source row dimensions; reject expansions that would require
+        # the as-yet unported scrollbar at the native fixed viewport.
+        assert all(nodes[id]['heightMode'] == 1 for id in (0, 2, body))
+        native_height = 334 - sum(nodes[id]['originalHeight'] for id in (0, 2, body))
+        assert y <= native_height, (tier, 'source rows no longer fit native fixed viewport', y, native_height)
         nodes[scroll]['isHidden']=True
         nodes[tab]['actions']=[tier.title() if tier!='master' else '78']
         if tier == 'master':
@@ -221,7 +225,7 @@ def main():
         assert [n['type'] for _,n in children]==[5,5,5,4]
         controls['tiers'][tier]=dict(body=body,tab=tab,sprites=[id for id,_ in children[:3]],
             label=children[3][0],text='78' if tier=='master' else tier.title())
-    assert len(controls['checks'])==34
+    assert len(controls['checks'])==2*len(by_id)
     nodes[4]['isHidden']=nodes[5]['isHidden']=nodes[29]['isHidden']=True
     hover=json.loads((ROOT/'docs/CLUE/cache/stash-tab-hover-script.json').read_text())['1483']
     values=[arg for op,arg in zip(hover['instructions'],hover['intOperands']) if op==0 and arg>=900]
@@ -238,7 +242,7 @@ def main():
         pending=['Scrollbar/client verification at small native viewport','IF3 import/preflight and runtime chart bindings'])
     (ROOT/'docs/CLUE/cache/stash-chart-baked.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
     (ROOT/'data/cfg/clue/stash-chart.json').write_text(json.dumps(controls,indent=2)+'\n',encoding='utf8')
-    print('Source frame/rows baked:',len(nodes),'components, 34 private check marks; no cache or runtime mapping writes')
+    print('Source frame/rows baked:',len(nodes),'components,',len(controls['checks']),'private check marks; no cache or runtime mapping writes')
 
 
 if __name__=='__main__':

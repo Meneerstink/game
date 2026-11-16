@@ -29,7 +29,7 @@ object ClueStashChartCacheTool {
         val tabs = root["controls"]["tiers"].elements().asSequence().mapIndexed { index, node -> node["tab"].asInt() to (index to node) }.toMap()
         val states = root["controls"]["states"]
         val ids = nodes.fieldNames().asSequence().map(String::toInt).sorted().toList()
-        require(ids == (0 until 130).toList()) { "STASH chart source component contract changed" }
+        require(ids == (0 until 150).toList()) { "STASH chart source component contract changed" }
         return ids.map { id ->
             val n = nodes[id.toString()]; val type = n.i("type")
             require(type in setOf(0, 3, 4, 5))

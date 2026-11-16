@@ -65,7 +65,7 @@
       "url": "https://oldschool.runescape.wiki/w/Crystal_saw"
     }
   ],
-  "cacheEvidenceSha256": "cda94b36c1e8ce0d81311ca1ab23749aa2beddb2fa296eb9c54455bbedfcde70",
+  "cacheEvidenceSha256": "98c83f9db3f2329c47acd49303b65b638938d9a6b229ed7f5af0b72a204ccebf",
   "activation": "Pending object import/varbit remapping, world placement, personal storage handlers and client verification",
   "rules": {
     "sameNailMetal": true,
@@ -634,11 +634,11 @@
       "unbuiltId": 6657,
       "builtId": 15943,
       "sourceVarbit": {
-        "varp": 1365,
         "mostBit": 10,
-        "sha256": "5f2cd077056ab10c2943811c1ba1f83fd1de82e44cfd90f10fa29c0c388a5eb2",
+        "varp": 1365,
+        "id": 5206,
         "leastBit": 10,
-        "id": 5206
+        "sha256": "5f2cd077056ab10c2943811c1ba1f83fd1de82e44cfd90f10fa29c0c388a5eb2"
       },
       "objectSha256": "343069ca6d8626586b95a1139aa2b0517a02b76f999bddd3282dd4ea68e528a4",
       "formSha256": {
@@ -684,11 +684,11 @@
       "unbuiltId": 16014,
       "builtId": 16015,
       "sourceVarbit": {
-        "varp": 1365,
         "mostBit": 7,
-        "sha256": "4c021a05025fb22e4b37f08b730ee2a634172a84e51fc0bb2921ef65959b3606",
+        "varp": 1365,
+        "id": 5203,
         "leastBit": 7,
-        "id": 5203
+        "sha256": "4c021a05025fb22e4b37f08b730ee2a634172a84e51fc0bb2921ef65959b3606"
       },
       "objectSha256": "c03af6eded4f14cef73386384ba6ece3585477bfaa5c758906c095d36bfd886f",
       "formSha256": {
@@ -734,11 +734,11 @@
       "unbuiltId": 16014,
       "builtId": 16015,
       "sourceVarbit": {
-        "varp": 1365,
         "mostBit": 15,
-        "sha256": "aeb51a8990500aebc741fcbcf82fa8c927e9be5f9b5d697ec1bb675935e6730f",
+        "varp": 1365,
+        "id": 5211,
         "leastBit": 15,
-        "id": 5211
+        "sha256": "aeb51a8990500aebc741fcbcf82fa8c927e9be5f9b5d697ec1bb675935e6730f"
       },
       "objectSha256": "33c19958c89e69825fb1674eb8e738cb2c60df79724278c5b0f6ef24b094a0a2",
       "formSha256": {
@@ -784,11 +784,11 @@
       "unbuiltId": 16016,
       "builtId": 16017,
       "sourceVarbit": {
-        "varp": 1365,
         "mostBit": 1,
-        "sha256": "588de276b36713caab2bfff6b1419af52a5b2efca8852526d6da0972bfe328aa",
+        "varp": 1365,
+        "id": 5197,
         "leastBit": 1,
-        "id": 5197
+        "sha256": "588de276b36713caab2bfff6b1419af52a5b2efca8852526d6da0972bfe328aa"
       },
       "objectSha256": "16cc02cfc55f265a2cd2b787d83c2003dcbd20fbe8d016f32cd0b5f0a1c63c07",
       "formSha256": {
@@ -834,11 +834,11 @@
       "unbuiltId": 6657,
       "builtId": 15943,
       "sourceVarbit": {
-        "varp": 1365,
         "mostBit": 16,
-        "sha256": "a6351558b277e3a09a386ef6277854ab52a54ed0b57c4e4214e3961094cb39db",
+        "varp": 1365,
+        "id": 5212,
         "leastBit": 16,
-        "id": 5212
+        "sha256": "a6351558b277e3a09a386ef6277854ab52a54ed0b57c4e4214e3961094cb39db"
       },
       "objectSha256": "361d210f4ae4684cfccba18635fd79278fcce6d4579714fa688068eb80b5fd1b",
       "formSha256": {
@@ -870,6 +870,206 @@
       ]
     },
     {
+      "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "tier": "easy",
+      "osrsId": 28977,
+      "physicalPoint": [
+        2608,
+        3393,
+        0
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 1,
+      "unbuiltId": 15944,
+      "builtId": 15945,
+      "sourceVarbit": {
+        "mostBit": 19,
+        "varp": 1365,
+        "id": 5215,
+        "leastBit": 19,
+        "sha256": "727d2961b10e3c71c2e0475dc569a576eeec44b2f90e1b8950c97171a9903801"
+      },
+      "objectSha256": "00fc78d77d53c4f2addda84c581dc0f34da1bedc0e2b6ccd22d82f8e63f1c8e5",
+      "formSha256": {
+        "15944": "1bc7d36a953b965206d138e74970a98e4059240d9a7c61e2ccae91f7d487eccd",
+        "15945": "b6459c181893623f8bec94d5615ab18db6f7497dcdf1bcd99fbad8574458e82c"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1639,
+            "local": 1639,
+            "name": "Emerald ring"
+          }
+        ],
+        [
+          {
+            "osrs": 1694,
+            "local": 1694,
+            "name": "Sapphire amulet"
+          }
+        ],
+        [
+          {
+            "osrs": 1103,
+            "local": 1103,
+            "name": "Bronze chainbody"
+          }
+        ]
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "tier": "easy",
+      "osrsId": 28958,
+      "physicalPoint": [
+        3201,
+        3171,
+        0
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 0,
+      "unbuiltId": 15944,
+      "builtId": 15945,
+      "sourceVarbit": {
+        "mostBit": 0,
+        "varp": 1365,
+        "id": 5196,
+        "leastBit": 0,
+        "sha256": "98b724e7ab914fe6211bf010891b0d8d2b97251e1e6b6eb39eee21ef2b84cfd3"
+      },
+      "objectSha256": "43fc57b5bf9ab6f7fa2d356803db5dfc04032b867f9dec0fb4eb465f892d86be",
+      "formSha256": {
+        "15944": "1bc7d36a953b965206d138e74970a98e4059240d9a7c61e2ccae91f7d487eccd",
+        "15945": "b6459c181893623f8bec94d5615ab18db6f7497dcdf1bcd99fbad8574458e82c"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1205,
+            "local": 1205,
+            "name": "Bronze dagger"
+          }
+        ],
+        [
+          {
+            "osrs": 1153,
+            "local": 1153,
+            "name": "Iron full helm"
+          }
+        ],
+        [
+          {
+            "osrs": 1635,
+            "local": 1635,
+            "name": "Gold ring"
+          }
+        ]
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the Party Room",
+      "tier": "easy",
+      "osrsId": 28972,
+      "physicalPoint": [
+        3043,
+        3371,
+        0
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 0,
+      "unbuiltId": 6657,
+      "builtId": 15943,
+      "sourceVarbit": {
+        "mostBit": 14,
+        "varp": 1365,
+        "id": 5210,
+        "leastBit": 14,
+        "sha256": "199801ade27d6cffe5ac6210879c4a8ad6b47af7474158ef90af2c7a7f04a522"
+      },
+      "objectSha256": "df4db94713c072e9c34143723cc70f917f49ea7a839e7f86b9a031015f5d8d20",
+      "formSha256": {
+        "6657": "5d40787778111b32de64d2fdd767b49751b12407ba7df362ec031318cc2e67db",
+        "15943": "5d03494b48a64426abf42bd49f9196260b411b13333ede35c939dad90d2a4d64"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1157,
+            "local": 1157,
+            "name": "Steel full helm"
+          }
+        ],
+        [
+          {
+            "osrs": 1119,
+            "local": 1119,
+            "name": "Steel platebody"
+          }
+        ],
+        [
+          {
+            "osrs": 1081,
+            "local": 1081,
+            "name": "Iron plateskirt"
+          }
+        ]
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "tier": "easy",
+      "osrsId": 28964,
+      "physicalPoint": [
+        3050,
+        3237,
+        1
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 2,
+      "unbuiltId": 16016,
+      "builtId": 16017,
+      "sourceVarbit": {
+        "mostBit": 6,
+        "varp": 1365,
+        "id": 5202,
+        "leastBit": 6,
+        "sha256": "c5727705840efa4a84e91ad0c8a798ca4904dddd06f2a35f607c1991f147f63a"
+      },
+      "objectSha256": "7d03e99497737e095d202addaed0c84a8f3bf76172594860a1bb0f63ee91e7e5",
+      "formSha256": {
+        "16016": "abe7d2a78c0b7aa333bcf41f856a71b7e7e71e20b20cdaa96a8602f204a6d23c",
+        "16017": "9af51e624d9ac7903c94a636811b19266cc1aa315f8023f4a26c8d84819a420f"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1169,
+            "local": 1169,
+            "name": "Coif"
+          }
+        ],
+        [
+          {
+            "osrs": 1083,
+            "local": 1083,
+            "name": "Steel plateskirt"
+          }
+        ],
+        [
+          {
+            "osrs": 1656,
+            "local": 1656,
+            "name": "Sapphire necklace"
+          }
+        ]
+      ]
+    },
+    {
       "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
       "tier": "medium",
       "osrsId": 29005,
@@ -884,11 +1084,11 @@
       "unbuiltId": 16018,
       "builtId": 16019,
       "sourceVarbit": {
-        "varp": 1366,
         "mostBit": 18,
-        "sha256": "a8a9a5e8daa68b7ebe51d1d40dc8a3c44fac015834f92991bbf0e1a6f1bfe3c5",
+        "varp": 1366,
+        "id": 5244,
         "leastBit": 18,
-        "id": 5244
+        "sha256": "a8a9a5e8daa68b7ebe51d1d40dc8a3c44fac015834f92991bbf0e1a6f1bfe3c5"
       },
       "objectSha256": "8fcffa3bdcd75585444ff3b09f087d707d900eebc2e25b48832ff72c05630782",
       "formSha256": {
@@ -934,11 +1134,11 @@
       "unbuiltId": 16018,
       "builtId": 16019,
       "sourceVarbit": {
-        "varp": 1366,
         "mostBit": 14,
-        "sha256": "33a2457f0d4766dc4235b472b1d35c518dd76336babe391057a27f08d23b4e56",
+        "varp": 1366,
+        "id": 5240,
         "leastBit": 14,
-        "id": 5240
+        "sha256": "33a2457f0d4766dc4235b472b1d35c518dd76336babe391057a27f08d23b4e56"
       },
       "objectSha256": "8f7c1dfc7864815f5029687bd530e023776b60b39bf11504551180931a3510c1",
       "formSha256": {
@@ -984,11 +1184,11 @@
       "unbuiltId": 16024,
       "builtId": 28933,
       "sourceVarbit": {
-        "varp": 1366,
         "mostBit": 4,
-        "sha256": "785336e54f9894fed8922ac6bb8cde94643bcf7fc3a871dc406d3322d6a557ec",
+        "varp": 1366,
+        "id": 5230,
         "leastBit": 4,
-        "id": 5230
+        "sha256": "785336e54f9894fed8922ac6bb8cde94643bcf7fc3a871dc406d3322d6a557ec"
       },
       "objectSha256": "713b3c865540bc97dafaf9013a621a681a082a1e38691a03775472b0b22c8e27",
       "formSha256": {
@@ -1294,11 +1494,11 @@
       "unbuiltId": 16018,
       "builtId": 16019,
       "sourceVarbit": {
-        "varp": 1366,
         "mostBit": 2,
-        "sha256": "244b19b3f3b29eca0f3ef15d81241aac9d7488666cef1d8994aabe057bf09190",
+        "varp": 1366,
+        "id": 5228,
         "leastBit": 2,
-        "id": 5228
+        "sha256": "244b19b3f3b29eca0f3ef15d81241aac9d7488666cef1d8994aabe057bf09190"
       },
       "objectSha256": "4dfdeae76c90090558458fc2c1f4b18bf721e0580f2c5f345cbdaa7e466d1dc3",
       "formSha256": {
@@ -1410,6 +1610,371 @@
       ]
     },
     {
+      "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "tier": "medium",
+      "osrsId": 28992,
+      "physicalPoint": [
+        2541,
+        3550,
+        0
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 1,
+      "unbuiltId": 16018,
+      "builtId": 16019,
+      "sourceVarbit": {
+        "mostBit": 5,
+        "varp": 1366,
+        "id": 5231,
+        "leastBit": 5,
+        "sha256": "8f13239e56499aecec4a3083f27f1ac8b33de2b270a05ec6af2c10740400add7"
+      },
+      "objectSha256": "dc93fe5d6af38a76bd0951adf9d8479d1611941dbe1dbafd39d0dd2bf44dd4c2",
+      "formSha256": {
+        "16018": "2e1df0427042bf568940bbc3c9b21ef1f102b4d1b0cdcf3d4335550b5aa96a58",
+        "16019": "fbda8f2a23597c89e49d062e801f64ddb8281da17ccb05aa9259fb2e64d184ae"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1119,
+            "local": 1119,
+            "name": "Steel platebody"
+          }
+        ],
+        [
+          {
+            "osrs": 853,
+            "local": 853,
+            "name": "Maple shortbow"
+          },
+          {
+            "osrs": 20403,
+            "local": 853,
+            "name": "Maple shortbow"
+          }
+        ],
+        [
+          {
+            "osrs": 4315,
+            "local": 4315,
+            "name": "Team-1 cape"
+          },
+          {
+            "osrs": 4317,
+            "local": 4317,
+            "name": "Team-2 cape"
+          },
+          {
+            "osrs": 4319,
+            "local": 4319,
+            "name": "Team-3 cape"
+          },
+          {
+            "osrs": 4321,
+            "local": 4321,
+            "name": "Team-4 cape"
+          },
+          {
+            "osrs": 4323,
+            "local": 4323,
+            "name": "Team-5 cape"
+          },
+          {
+            "osrs": 4325,
+            "local": 4325,
+            "name": "Team-6 cape"
+          },
+          {
+            "osrs": 4327,
+            "local": 4327,
+            "name": "Team-7 cape"
+          },
+          {
+            "osrs": 4329,
+            "local": 4329,
+            "name": "Team-8 cape"
+          },
+          {
+            "osrs": 4331,
+            "local": 4331,
+            "name": "Team-9 cape"
+          },
+          {
+            "osrs": 4333,
+            "local": 4333,
+            "name": "Team-10 cape"
+          },
+          {
+            "osrs": 4335,
+            "local": 4335,
+            "name": "Team-11 cape"
+          },
+          {
+            "osrs": 4337,
+            "local": 4337,
+            "name": "Team-12 cape"
+          },
+          {
+            "osrs": 4339,
+            "local": 4339,
+            "name": "Team-13 cape"
+          },
+          {
+            "osrs": 4341,
+            "local": 4341,
+            "name": "Team-14 cape"
+          },
+          {
+            "osrs": 4343,
+            "local": 4343,
+            "name": "Team-15 cape"
+          },
+          {
+            "osrs": 4345,
+            "local": 4345,
+            "name": "Team-16 cape"
+          },
+          {
+            "osrs": 4347,
+            "local": 4347,
+            "name": "Team-17 cape"
+          },
+          {
+            "osrs": 4349,
+            "local": 4349,
+            "name": "Team-18 cape"
+          },
+          {
+            "osrs": 4351,
+            "local": 4351,
+            "name": "Team-19 cape"
+          },
+          {
+            "osrs": 4353,
+            "local": 4353,
+            "name": "Team-20 cape"
+          },
+          {
+            "osrs": 4355,
+            "local": 4355,
+            "name": "Team-21 cape"
+          },
+          {
+            "osrs": 4357,
+            "local": 4357,
+            "name": "Team-22 cape"
+          },
+          {
+            "osrs": 4359,
+            "local": 4359,
+            "name": "Team-23 cape"
+          },
+          {
+            "osrs": 4361,
+            "local": 4361,
+            "name": "Team-24 cape"
+          },
+          {
+            "osrs": 4363,
+            "local": 4363,
+            "name": "Team-25 cape"
+          },
+          {
+            "osrs": 4365,
+            "local": 4365,
+            "name": "Team-26 cape"
+          },
+          {
+            "osrs": 4367,
+            "local": 4367,
+            "name": "Team-27 cape"
+          },
+          {
+            "osrs": 4369,
+            "local": 4369,
+            "name": "Team-28 cape"
+          },
+          {
+            "osrs": 4371,
+            "local": 4371,
+            "name": "Team-29 cape"
+          },
+          {
+            "osrs": 4373,
+            "local": 4373,
+            "name": "Team-30 cape"
+          },
+          {
+            "osrs": 4375,
+            "local": 4375,
+            "name": "Team-31 cape"
+          },
+          {
+            "osrs": 4377,
+            "local": 4377,
+            "name": "Team-32 cape"
+          },
+          {
+            "osrs": 4379,
+            "local": 4379,
+            "name": "Team-33 cape"
+          },
+          {
+            "osrs": 4381,
+            "local": 4381,
+            "name": "Team-34 cape"
+          },
+          {
+            "osrs": 4383,
+            "local": 4383,
+            "name": "Team-35 cape"
+          },
+          {
+            "osrs": 4385,
+            "local": 4385,
+            "name": "Team-36 cape"
+          },
+          {
+            "osrs": 4387,
+            "local": 4387,
+            "name": "Team-37 cape"
+          },
+          {
+            "osrs": 4389,
+            "local": 4389,
+            "name": "Team-38 cape"
+          },
+          {
+            "osrs": 4391,
+            "local": 4391,
+            "name": "Team-39 cape"
+          },
+          {
+            "osrs": 4393,
+            "local": 4393,
+            "name": "Team-40 cape"
+          },
+          {
+            "osrs": 4395,
+            "local": 4395,
+            "name": "Team-41 cape"
+          },
+          {
+            "osrs": 4397,
+            "local": 4397,
+            "name": "Team-42 cape"
+          },
+          {
+            "osrs": 4399,
+            "local": 4399,
+            "name": "Team-43 cape"
+          },
+          {
+            "osrs": 4401,
+            "local": 4401,
+            "name": "Team-44 cape"
+          },
+          {
+            "osrs": 4403,
+            "local": 4403,
+            "name": "Team-45 cape"
+          },
+          {
+            "osrs": 4405,
+            "local": 4405,
+            "name": "Team-46 cape"
+          },
+          {
+            "osrs": 4407,
+            "local": 4407,
+            "name": "Team-47 cape"
+          },
+          {
+            "osrs": 4409,
+            "local": 4409,
+            "name": "Team-48 cape"
+          },
+          {
+            "osrs": 4411,
+            "local": 4411,
+            "name": "Team-49 cape"
+          },
+          {
+            "osrs": 4413,
+            "local": 4413,
+            "name": "Team-50 cape"
+          },
+          {
+            "osrs": 20211,
+            "local": null,
+            "name": "Team cape zero"
+          },
+          {
+            "osrs": 20214,
+            "local": null,
+            "name": "Team cape x"
+          },
+          {
+            "osrs": 20217,
+            "local": null,
+            "name": "Team cape i"
+          }
+        ]
+      ]
+    },
+    {
+      "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "tier": "medium",
+      "osrsId": 28994,
+      "physicalPoint": [
+        2603,
+        3091,
+        0
+      ],
+      "effectivePlane": 0,
+      "type": 10,
+      "rotation": 1,
+      "unbuiltId": 16022,
+      "builtId": 16023,
+      "sourceVarbit": {
+        "mostBit": 7,
+        "varp": 1366,
+        "id": 5233,
+        "leastBit": 7,
+        "sha256": "1aae3a99c769efd9e7d2ad17c61f8d88ac20b622e43a417896f8fd34eefd3463"
+      },
+      "objectSha256": "fad44895c9215356aad0c74726dbf7e963e9ed1fe70639166bed96031726b585",
+      "formSha256": {
+        "16022": "2b8340f8fe9251f649989af6bc58741e541ebcba676fa31dc6564d8bba6a7568",
+        "16023": "e9bc41a87fce15d5dcd990d836c3ede1c85bf6a5e3c4b520ad9683ea84a2a632"
+      },
+      "equipment": [
+        [
+          {
+            "osrs": 1757,
+            "local": 1757,
+            "name": "Brown apron"
+          }
+        ],
+        [
+          {
+            "osrs": 1145,
+            "local": 1145,
+            "name": "Adamant med helm"
+          }
+        ],
+        [
+          {
+            "osrs": 6324,
+            "local": 6324,
+            "name": "Snakeskin chaps"
+          }
+        ]
+      ]
+    },
+    {
       "key": "Clue scroll (hard) - Salute in the banana plantation",
       "tier": "hard",
       "osrsId": 29014,
@@ -1424,11 +1989,11 @@
       "unbuiltId": 28940,
       "builtId": 28941,
       "sourceVarbit": {
-        "varp": 1367,
         "mostBit": 5,
-        "sha256": "c4b91646e1cbfc5c259e4f7dabf54811ab8611e2ff9ab80a66f9ad03b1f68551",
+        "varp": 1367,
+        "id": 5254,
         "leastBit": 5,
-        "id": 5254
+        "sha256": "c4b91646e1cbfc5c259e4f7dabf54811ab8611e2ff9ab80a66f9ad03b1f68551"
       },
       "objectSha256": "ba342fc02571fd3cdad56fe86aeb5db09ce9cfdd541cb625eaa178011671579a",
       "formSha256": {
@@ -1472,11 +2037,11 @@
       "unbuiltId": 28940,
       "builtId": 28941,
       "sourceVarbit": {
-        "varp": 1367,
         "mostBit": 1,
-        "sha256": "350d0a163b00239bdf55cf7b297b18fd66e20654bb2387f8bab05358da9f7a92",
+        "varp": 1367,
+        "id": 5250,
         "leastBit": 1,
-        "id": 5250
+        "sha256": "350d0a163b00239bdf55cf7b297b18fd66e20654bb2387f8bab05358da9f7a92"
       },
       "objectSha256": "b6904879abfc091b4f3b80839be73733de7f8aab4a3db2df4514ba066aacd9ab",
       "formSha256": {
@@ -1527,11 +2092,11 @@
       "unbuiltId": 28936,
       "builtId": 28937,
       "sourceVarbit": {
-        "varp": 1367,
         "mostBit": 4,
-        "sha256": "5738a06a0880df6356efc2115cee132a4461b825ed898b8c1d762a0e73fdc104",
+        "varp": 1367,
+        "id": 5253,
         "leastBit": 4,
-        "id": 5253
+        "sha256": "5738a06a0880df6356efc2115cee132a4461b825ed898b8c1d762a0e73fdc104"
       },
       "objectSha256": "07d9edc5bb383ec0d67abc82a7b5ec7db799247bc4872dc0ba19567cc218d8f0",
       "formSha256": {
@@ -1577,11 +2142,11 @@
       "unbuiltId": 28948,
       "builtId": 28949,
       "sourceVarbit": {
-        "varp": 1368,
         "mostBit": 5,
-        "sha256": "496bd20415b45f83ef51679cea4b53b3235a40d0e11be965ae3e64b539e4b5ef",
+        "varp": 1368,
+        "id": 5270,
         "leastBit": 5,
-        "id": 5270
+        "sha256": "496bd20415b45f83ef51679cea4b53b3235a40d0e11be965ae3e64b539e4b5ef"
       },
       "objectSha256": "b14916b8ddfca155e24ca7fbfa1022f68b6ad905fbbc232a5a192eda048daf11",
       "formSha256": {
@@ -1643,11 +2208,11 @@
       "unbuiltId": 28944,
       "builtId": 28945,
       "sourceVarbit": {
-        "varp": 1368,
         "mostBit": 4,
-        "sha256": "9b0a5f0503c6da3a33cecccf3f3a0f5b4aaec89cca56fb4411dd2dde7dc1fff0",
+        "varp": 1368,
+        "id": 5269,
         "leastBit": 4,
-        "id": 5269
+        "sha256": "9b0a5f0503c6da3a33cecccf3f3a0f5b4aaec89cca56fb4411dd2dde7dc1fff0"
       },
       "objectSha256": "b7ca847291b6132c63f25c3f64ed70aac94b4dcd1bcfa6849c32f14f3bf93942",
       "formSha256": {
@@ -1679,11 +2244,11 @@
       "unbuiltId": 28944,
       "builtId": 28945,
       "sourceVarbit": {
-        "varp": 1368,
         "mostBit": 14,
-        "sha256": "1c985f7392c23ded01bb9ad91ef1594428d4a2e918671268caee09574512edc2",
+        "varp": 1368,
+        "id": 5279,
         "leastBit": 14,
-        "id": 5279
+        "sha256": "1c985f7392c23ded01bb9ad91ef1594428d4a2e918671268caee09574512edc2"
       },
       "objectSha256": "8b9f6619777a3130b56f9ab6b5fed77010e7bcb40709ebd68297a6cf33128edc",
       "formSha256": {
@@ -1739,11 +2304,11 @@
       "unbuiltId": 28950,
       "builtId": 28951,
       "sourceVarbit": {
-        "varp": 1369,
         "mostBit": 19,
-        "sha256": "36eb2e76406d746aa1c58a10ebdd32e84c029046c2f7dddc9f8f2ccfb54f553b",
+        "varp": 1369,
+        "id": 5301,
         "leastBit": 19,
-        "id": 5301
+        "sha256": "36eb2e76406d746aa1c58a10ebdd32e84c029046c2f7dddc9f8f2ccfb54f553b"
       },
       "objectSha256": "5fd7f3433927e5bf4e43f4d85b8bacfecef2ed2ff7d3bdf1d2fdefa89ac3e057",
       "formSha256": {
@@ -1819,11 +2384,11 @@
       "unbuiltId": 28952,
       "builtId": 28953,
       "sourceVarbit": {
-        "varp": 1369,
         "mostBit": 16,
-        "sha256": "162d9b81f83993a30c983ac0265a56117b5e270b040abc90b86e97a0cd245902",
+        "varp": 1369,
+        "id": 5298,
         "leastBit": 16,
-        "id": 5298
+        "sha256": "162d9b81f83993a30c983ac0265a56117b5e270b040abc90b86e97a0cd245902"
       },
       "objectSha256": "ac16ba5d064291971a91abce13b7800063611d2cfe65b3e507868df8d1edd5ee",
       "formSha256": {

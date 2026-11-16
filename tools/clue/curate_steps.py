@@ -57,6 +57,16 @@ SELECTION = {
     ],
 }
 
+# Retain the old pool through the same source handlers, with OSRS tiers,
+# equipment and second emotes. These six non-overlapping originals need no new
+# item identity. Other original maps/emotes are audited separately, never
+# restored with the donor's every-tier registration or its incorrect gear.
+LEGACY_SELECTION = {
+    "easy": ["Dance a jig by the entrance to the Fishing Guild", "Dance in the shack in Lumbridge Swamp",
+             "Dance in the Party Room", "Cheer for the monks at Port Sarim"],
+    "medium": ["Cheer in the Barbarian Agility Arena", "Jump for joy in Yanille bank"],
+}
+
 
 def main():
     archive = json.loads((ROOT / "docs/CLUE/steps-source.json").read_text(encoding="utf-8"))
@@ -68,7 +78,7 @@ def main():
     result = []
     for tier, names in SELECTION.items():
         assert len(names) == (15 if tier in ("easy", "medium", "hard") else 12)
-        for name in names:
+        for name in names + LEGACY_SELECTION.get(tier, []):
             if name.startswith("@"):
                 anagram = name in ("@Mandrith", "@Radimus")
                 file = "Treasure_Trails__Guide__Anagrams__Master.wiki" if anagram else "Treasure_Trails__Guide__Cryptic_clues__Master.wiki"
@@ -156,8 +166,10 @@ def main():
             if name == "Falo the bard wants to see you":
                 subtype = "FALO"
             result.append(dict(row, subtype=subtype, sourceSha256=digest, challenge=challenge,
+                               restoredOriginal=name in LEGACY_SELECTION.get(tier, []),
                                activation="pending target assets, subtype handler and client verification"))
-    assert len(result) == 69 and len({r["key"] for r in result}) == 69
+    assert len(result) == 75 and len({r["key"] for r in result}) == 75
+    assert sum(r.get('restoredOriginal', False) for r in result) == 6
     destination = ROOT / "docs/CLUE/STEPS-CURATED.json"
     destination.write_text(json.dumps(result, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
     print(f"{len(result)} source candidates; {Counter(r['tier'] for r in result)}")

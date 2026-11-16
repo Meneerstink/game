@@ -9,6 +9,51 @@ Current continuation/results: `REVIEW-B-16NOV.md`; earlier details: `REVIEW-B-7.
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 
+## Continuation 16-Nov21:59: Mimic readiness and preserved originals
+
+The Mimic is deliberately unavailable until its remaining combat exists.
+`MimicCombat.ENCOUNTER_IMPLEMENTED=false` is a code gate: setting arenaImported
+or filling timing JSON cannot enable a melee-only encounter. Both entry and
+casket conversion require the complete readiness state. A selected unavailable
+Mimic retains its ordinary casket and first-encounter eligibility; no attempt,
+conversion or completion is spent. The existing opt-in probabilities are intact.
+Claude17:1x video measurement pins candy impact to approximately4ticks; the
+JSON retains its video/frame-sheet hash and unknown candy/forward-step chances.
+A fixed candyInterval is no longer a claimed model. Seventeen freshly compiled
+Mimic lifecycle/conversion/combat-definition tests passed. Gradle/scripts follow.
+
+`ORIGINAL-POOL-AUDIT.json` enumerates every original41 location and pins its
+candidate Wiki identity; it is NOT an active-step list. The initial69 overlaps
+15 originals, so contains54 unique additions. Six other original emotes are now
+restored through existing Uri/gear/second-emote handlers. Source catalogue75:
+19easy/17medium/15hard/12elite/12master;21originals represented,20deferred
+(17map assets, modern Emir office scene,2unmapped historical emotes). Three torn
+parts still form one trail choice. Count requirement remains OPEN.
+
+The six restored steps require no additional item/NPC identities. Item roster247
+and clue-steps NPC roster10 remain unchanged. STASH grows17->23; rerun its batch
+and the Watson chart with the current source data, not an older17-unit/130-node
+artifact. Chart is now150nodes/46personal marks, with source/native-font rows
+fitting the fixed viewport (largest content height141 versus226 available).
+Latest exact STASH plan: STASH-PREFLIGHT.tsv, tx-20261116-205658,
+23units/85mutations/84asset records; proposed control2408, varbits9979..10001.
+Watson chart: STASH-CHART-PREFLIGHT.tsv, tx-20261116-210151,
+174mutations/150nodes, proposed group1203/script5425/control2408,
+22sprites8955..8976. Both proofs are preserved under validation/restored-*.
+These separate plans share unreserved control2408: apply STASH first, rerun the
+chart allocator afterwards. Sprite8954 (CoX) is avoided. No cache was applied.
+Four chart/import/runtime tests and all150 real Component decoder fixtures pass.
+
+New source STASH bases:28977(Fishing Guild entrance),28958(Lumbridge Swamp),
+28972(Party Room),28964(Port Sarim monks),28992(Barbarian Agility),28994(Yanille).
+Source28964 uses physical plane1/effective plane0, just like the earlier
+Wizards' Tower bridge case. Claude must inspect placement/collision and both
+accounts' personal built/filled states, fill/withdraw/full-inventory/relog.
+23base+26shared-form definitions now replace the historical17base+22forms.
+The ordinary item247/NPC10 importer lists remain unchanged; UI source coverage
+is still being reconciled with the20 deferred original steps. This is not a
+request to apply a partial clue bundle.
+
 ## Applying the prepared batches (Claude)
 
 Rerun each batch against the caches produced by preceding batches; commit its

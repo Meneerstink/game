@@ -29,14 +29,14 @@ class ClueStashImportTests {
     }
     @Test fun `private STASH selectors remain independent and survive the real varp codec`() {
         val varps = VarpSet(setOf(3200))
-        val selectors = (0 until 17).map { bit -> VarbitDef(15000 + bit).also {
+        val selectors = (0 until 23).map { bit -> VarbitDef(15000 + bit).also {
             it.decode(Unpooled.wrappedBuffer(ClueStashCacheTool.selector(3200, bit)))
         } }
-        listOf(0, 8, 16).forEach { bit -> selectors[bit].let { varps.setBit(it.varp, it.startBit, it.endBit, 1) } }
+        listOf(0, 8, 16, 22).forEach { bit -> selectors[bit].let { varps.setBit(it.varp, it.startBit, it.endBit, 1) } }
         selectors.forEachIndexed { bit, selector ->
-            assertEquals(if (bit in setOf(0, 8, 16)) 1 else 0, varps.getBit(selector.varp, selector.startBit, selector.endBit))
+            assertEquals(if (bit in setOf(0, 8, 16, 22)) 1 else 0, varps.getBit(selector.varp, selector.startBit, selector.endBit))
         }
-        assertEquals((1 shl 0) or (1 shl 8) or (1 shl 16), varps.getState(3200))
+        assertEquals((1 shl 0) or (1 shl 8) or (1 shl 16) or (1 shl 22), varps.getState(3200))
     }
 
     @Test fun `selector construction refuses nontransmitted controls and invalid bit positions`() {

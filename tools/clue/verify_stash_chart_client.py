@@ -1,4 +1,4 @@
-"""Compile the unmodified native Component decoder and inspect all 130 server fixtures."""
+"""Compile the unmodified native Component decoder and inspect all current chart fixtures."""
 from pathlib import Path
 import os
 import subprocess

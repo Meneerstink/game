@@ -43,7 +43,7 @@ class TreasureTrailStashTests {
     }
 
     @Test fun `all selected source stashes have the right tier recipe and only wearable gear`() {
-        assertEquals(17, catalogue.units.size)
+        assertEquals(23, catalogue.units.size)
         assertEquals(listOf(27, 42, 55, 77, 88), ClueScrollTier.values().map { tier -> catalogue.units.first { it.step.tier == tier }.recipe.level })
         assertEquals(listOf(150, 250, 400, 600, 1500), ClueScrollTier.values().map { tier -> catalogue.units.first { it.step.tier == tier }.recipe.experience })
         assertTrue(catalogue.units.all { it.recipe.ticks == 3 })

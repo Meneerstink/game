@@ -2000,11 +2000,11 @@
             "15943": "5d03494b48a64426abf42bd49f9196260b411b13333ede35c939dad90d2a4d64"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 10,
-            "sha256": "5f2cd077056ab10c2943811c1ba1f83fd1de82e44cfd90f10fa29c0c388a5eb2",
+            "varp": 1365,
+            "id": 5206,
             "leastBit": 10,
-            "id": 5206
+            "sha256": "5f2cd077056ab10c2943811c1ba1f83fd1de82e44cfd90f10fa29c0c388a5eb2"
           }
         }
       ]
@@ -2201,11 +2201,11 @@
             "16015": "9541292d22637b9dc5435673f45a0639e44b39f3d128e521e118f273ea02739c"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 7,
-            "sha256": "4c021a05025fb22e4b37f08b730ee2a634172a84e51fc0bb2921ef65959b3606",
+            "varp": 1365,
+            "id": 5203,
             "leastBit": 7,
-            "id": 5203
+            "sha256": "4c021a05025fb22e4b37f08b730ee2a634172a84e51fc0bb2921ef65959b3606"
           }
         }
       ]
@@ -2402,11 +2402,11 @@
             "16015": "9541292d22637b9dc5435673f45a0639e44b39f3d128e521e118f273ea02739c"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 15,
-            "sha256": "aeb51a8990500aebc741fcbcf82fa8c927e9be5f9b5d697ec1bb675935e6730f",
+            "varp": 1365,
+            "id": 5211,
             "leastBit": 15,
-            "id": 5211
+            "sha256": "aeb51a8990500aebc741fcbcf82fa8c927e9be5f9b5d697ec1bb675935e6730f"
           }
         }
       ]
@@ -2603,11 +2603,11 @@
             "16017": "9af51e624d9ac7903c94a636811b19266cc1aa315f8023f4a26c8d84819a420f"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 1,
-            "sha256": "588de276b36713caab2bfff6b1419af52a5b2efca8852526d6da0972bfe328aa",
+            "varp": 1365,
+            "id": 5197,
             "leastBit": 1,
-            "id": 5197
+            "sha256": "588de276b36713caab2bfff6b1419af52a5b2efca8852526d6da0972bfe328aa"
           }
         }
       ]
@@ -2808,34 +2808,34 @@
             "15943": "5d03494b48a64426abf42bd49f9196260b411b13333ede35c939dad90d2a4d64"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 16,
-            "sha256": "a6351558b277e3a09a386ef6277854ab52a54ed0b57c4e4214e3961094cb39db",
+            "varp": 1365,
+            "id": 5212,
             "leastBit": 16,
-            "id": 5212
+            "sha256": "a6351558b277e3a09a386ef6277854ab52a54ed0b57c4e4214e3961094cb39db"
           }
         }
       ]
     },
     {
-      "key": "Clue scroll (easy) - Search a bookcase in Lumbridge Swamp",
-      "region": 12593,
+      "key": "Clue scroll (easy) - Search the crate in Rommiks crafting shop in Rimmington",
+      "region": 11826,
       "placements": [
         {
-          "id": 1838,
+          "id": 196,
           "point": [
-            3145,
-            3177,
+            2946,
+            3206,
             0
           ],
           "effectivePlane": 0,
           "type": 4,
-          "rotation": 1,
+          "rotation": 0,
           "definition": {
-            "id": 1838,
+            "id": 196,
             "name": "null",
             "models": [
-              2116
+              2255
             ],
             "modelTypes": [
               4
@@ -2849,9 +2849,9 @@
             "contouredGroundValue": 0,
             "mergeNormals": false,
             "modelClipped": false,
-            "animationId": -1,
+            "animationId": 481,
             "decorDisplacement": 16,
-            "ambient": 50,
+            "ambient": 20,
             "contrast": 0,
             "options": [
               null,
@@ -2890,24 +2890,24 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "1c10a8e80192115543a5915c8d6a04f28a64a988069f9780e79181490874b0e2",
+          "sha256": "bc4cb63f642d5c6cd7183006b3b7f3575acd20599d76001ac78f412369857982",
           "formSha256": {}
         },
         {
-          "id": 5536,
+          "id": 4340,
           "point": [
-            3145,
-            3178,
+            2946,
+            3206,
             0
           ],
           "effectivePlane": 0,
           "type": 22,
           "rotation": 0,
           "definition": {
-            "id": 5536,
+            "id": 4340,
             "name": "null",
             "models": [
-              4487
+              1139
             ],
             "modelTypes": [
               22
@@ -2923,7 +2923,7 @@
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 20,
+            "ambient": 0,
             "contrast": 0,
             "options": [
               null,
@@ -2933,14 +2933,14 @@
               null
             ],
             "recolourFind": [
-              82,
-              61,
-              41
+              4892,
+              4899,
+              5921
             ],
             "recolourReplace": [
-              13212,
-              13987,
-              13985
+              8481,
+              8481,
+              8481
             ],
             "retextureFind": null,
             "retextureReplace": null,
@@ -2970,532 +2970,40 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "020f1e49488b11a61a5876e3962dbe4f8ec477a8107fbc32365af04b21d57a97",
+          "sha256": "3c2de386c242fb8044f11d98cb66d422fc4e5388bbe672bddbf741544b088a9d",
           "formSha256": {}
         },
         {
-          "id": 5536,
+          "id": 5533,
           "point": [
-            3146,
-            3178,
+            2945,
+            3208,
             0
           ],
           "effectivePlane": 0,
           "type": 22,
-          "rotation": 1,
-          "definition": {
-            "id": 5536,
-            "name": "null",
-            "models": [
-              4487
-            ],
-            "modelTypes": [
-              22
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": 0,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 20,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              82,
-              61,
-              41
-            ],
-            "recolourReplace": [
-              13212,
-              13987,
-              13985
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "020f1e49488b11a61a5876e3962dbe4f8ec477a8107fbc32365af04b21d57a97",
-          "formSha256": {}
-        },
-        {
-          "id": 5536,
-          "point": [
-            3147,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 22,
-          "rotation": 0,
-          "definition": {
-            "id": 5536,
-            "name": "null",
-            "models": [
-              4487
-            ],
-            "modelTypes": [
-              22
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": 0,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 20,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              82,
-              61,
-              41
-            ],
-            "recolourReplace": [
-              13212,
-              13987,
-              13985
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "020f1e49488b11a61a5876e3962dbe4f8ec477a8107fbc32365af04b21d57a97",
-          "formSha256": {}
-        },
-        {
-          "id": 9523,
-          "point": [
-            3146,
-            3177,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 10,
-          "rotation": 1,
-          "definition": {
-            "id": 9523,
-            "name": "Bookcase",
-            "models": [
-              9500
-            ],
-            "modelTypes": null,
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              "Search",
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 120,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 29,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "bb0258f20d88f0134fddc0aaae97a4be8b109f3eda54f17f9d7327e756547105",
-          "formSha256": {}
-        },
-        {
-          "id": 10372,
-          "point": [
-            3145,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 0,
-          "rotation": 3,
-          "definition": {
-            "id": 10372,
-            "name": "null",
-            "models": [
-              4368,
-              4369,
-              4370,
-              4371
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              6594,
-              5559,
-              5404,
-              5524
-            ],
-            "recolourReplace": [
-              6443,
-              6563,
-              6563,
-              6682
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 120,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "7d621c5f7e1f325210c69e1e8fcb9869727a6101b80bb0c6fbcff4775c6f7572",
-          "formSha256": {}
-        },
-        {
-          "id": 10372,
-          "point": [
-            3146,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 0,
-          "rotation": 3,
-          "definition": {
-            "id": 10372,
-            "name": "null",
-            "models": [
-              4368,
-              4369,
-              4370,
-              4371
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              6594,
-              5559,
-              5404,
-              5524
-            ],
-            "recolourReplace": [
-              6443,
-              6563,
-              6563,
-              6682
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 120,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "7d621c5f7e1f325210c69e1e8fcb9869727a6101b80bb0c6fbcff4775c6f7572",
-          "formSha256": {}
-        },
-        {
-          "id": 10372,
-          "point": [
-            3147,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 0,
-          "rotation": 3,
-          "definition": {
-            "id": 10372,
-            "name": "null",
-            "models": [
-              4368,
-              4369,
-              4370,
-              4371
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              6594,
-              5559,
-              5404,
-              5524
-            ],
-            "recolourReplace": [
-              6443,
-              6563,
-              6563,
-              6682
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 120,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "7d621c5f7e1f325210c69e1e8fcb9869727a6101b80bb0c6fbcff4775c6f7572",
-          "formSha256": {}
-        },
-        {
-          "id": 15682,
-          "point": [
-            3147,
-            3176,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 11,
           "rotation": 2,
           "definition": {
-            "id": 15682,
+            "id": 5533,
             "name": "null",
             "models": [
-              1170
+              4489
             ],
-            "modelTypes": null,
+            "modelTypes": [
+              22
+            ],
             "sizeX": 1,
             "sizeY": 1,
             "interactType": 2,
             "blocksProjectile": true,
             "wallOrDoor": 0,
-            "contouredGround": -1,
+            "contouredGround": 0,
             "contouredGroundValue": 0,
             "mergeNormals": false,
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 0,
+            "ambient": 20,
             "contrast": 0,
             "options": [
               null,
@@ -3505,12 +3013,14 @@
               null
             ],
             "recolourFind": [
-              5908,
-              4886
+              82,
+              61,
+              41
             ],
             "recolourReplace": [
-              5660,
-              4884
+              13212,
+              13987,
+              13985
             ],
             "retextureFind": null,
             "retextureReplace": null,
@@ -3540,28 +3050,188 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "80e398f220b02d6c618f1ddb7460ccf140e1eb84194ba459ec772d5bf67c8a6c",
+          "sha256": "a4ee094885a15a5b98629c8153aa6921a28d439146d291774f85adf0391c934b",
           "formSha256": {}
         },
         {
-          "id": 15684,
+          "id": 5534,
           "point": [
-            3147,
-            3177,
+            2945,
+            3206,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 2,
+          "definition": {
+            "id": 5534,
+            "name": "null",
+            "models": [
+              4494
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": 0,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 20,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              82,
+              61,
+              41
+            ],
+            "recolourReplace": [
+              13212,
+              13987,
+              13985
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "27057259ec607b5cca67c03c90d9fa1437c51099e209040210063547b44ca963",
+          "formSha256": {}
+        },
+        {
+          "id": 5534,
+          "point": [
+            2945,
+            3207,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 2,
+          "definition": {
+            "id": 5534,
+            "name": "null",
+            "models": [
+              4494
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": 0,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 20,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              82,
+              61,
+              41
+            ],
+            "recolourReplace": [
+              13212,
+              13987,
+              13985
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "27057259ec607b5cca67c03c90d9fa1437c51099e209040210063547b44ca963",
+          "formSha256": {}
+        },
+        {
+          "id": 9533,
+          "point": [
+            2946,
+            3207,
             0
           ],
           "effectivePlane": 0,
           "type": 10,
-          "rotation": 3,
+          "rotation": 0,
           "definition": {
-            "id": 15684,
-            "name": "Table",
+            "id": 9533,
+            "name": "Crate",
             "models": [
-              7712
+              5256
             ],
             "modelTypes": null,
             "sizeX": 1,
-            "sizeY": 2,
+            "sizeY": 1,
             "interactType": 2,
             "blocksProjectile": false,
             "wallOrDoor": -1,
@@ -3571,171 +3241,7 @@
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 20,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              6443,
-              6439,
-              6451
-            ],
-            "recolourReplace": [
-              5660,
-              6451,
-              6563
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": 169,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "0c3725c9505c0ae40d24988a2d94aafdb71d41d924b2a07542628d63cdb98524",
-          "formSha256": {}
-        },
-        {
-          "id": 15689,
-          "point": [
-            3147,
-            3177,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 4,
-          "rotation": 1,
-          "definition": {
-            "id": 15689,
-            "name": "null",
-            "models": [
-              11821
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": 3107,
-            "decorDisplacement": 16,
-            "ambient": 43,
-            "contrast": 550,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": [
-              41,
-              7952,
-              8076,
-              7050,
-              6024,
-              3974
-            ],
-            "recolourReplace": [
-              6563,
-              4884,
-              4884,
-              3862,
-              3864,
-              4884
-            ],
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "fef59ff4887e3a2c889bb9ed1ab6f77cbd9a45698257e3ab8fb3243a8f396769",
-          "formSha256": {}
-        },
-        {
-          "id": 15693,
-          "point": [
-            3145,
-            3177,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 10,
-          "rotation": 1,
-          "definition": {
-            "id": 15693,
-            "name": "Crates",
-            "models": [
-              7704
-            ],
-            "modelTypes": null,
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 5,
+            "ambient": 35,
             "contrast": 0,
             "options": [
               "Search",
@@ -3745,16 +3251,20 @@
               null
             ],
             "recolourFind": [
-              6443,
-              6439,
-              6563,
-              6558
+              5417,
+              5413,
+              5537,
+              5532,
+              5656,
+              5652
             ],
             "recolourReplace": [
-              6684,
-              6682,
-              6684,
-              6806
+              6032,
+              5908,
+              5784,
+              5665,
+              5541,
+              5660
             ],
             "retextureFind": null,
             "retextureReplace": null,
@@ -3784,536 +3294,30 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "7bac2ea2a185bfebc31bdcf0a0e4bd89734f3420d9fbd602be171c1ef7465587",
+          "sha256": "7a55c9830f9cd91163c501d3d9593a61d145b50bdd83d23ba641e3dfff9c4d57",
           "formSha256": {}
         },
         {
-          "id": 18496,
+          "id": 9534,
           "point": [
-            3145,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 5,
-          "rotation": 3,
-          "definition": {
-            "id": 18496,
-            "name": "null",
-            "models": [
-              18517
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 50,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "5f06ebb8d091435de95462f4ab9f8b1e9deba39ae0ab1e89d73cd48d61a70be5",
-          "formSha256": {}
-        },
-        {
-          "id": 24161,
-          "point": [
-            3146,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 5,
-          "rotation": 3,
-          "definition": {
-            "id": 24161,
-            "name": "null",
-            "models": [
-              11576
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 50,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "9cc6e7c951771958803c8cc7e3409cd9515c16a8d5fd525254e541573fdc15ac",
-          "formSha256": {}
-        },
-        {
-          "id": 24163,
-          "point": [
-            3147,
-            3178,
-            0
-          ],
-          "effectivePlane": 0,
-          "type": 5,
-          "rotation": 3,
-          "definition": {
-            "id": 24163,
-            "name": "null",
-            "models": [
-              11576
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": 0,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 50,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": true,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "b9dfd112ea281c79e9e7fd2505e37cd141516d3aa825a014490260d0c6b704f1",
-          "formSha256": {}
-        }
-      ]
-    },
-    {
-      "key": "Clue scroll (easy) - Search the chest in the Duke of Lumbridge\u0027s bedroom",
-      "region": 12850,
-      "placements": [
-        {
-          "id": 196,
-          "point": [
-            3209,
-            3217,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 5,
-          "rotation": 1,
-          "definition": {
-            "id": 196,
-            "name": "null",
-            "models": [
-              2255
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": 481,
-            "decorDisplacement": 16,
-            "ambient": 20,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "bc4cb63f642d5c6cd7183006b3b7f3575acd20599d76001ac78f412369857982",
-          "formSha256": {}
-        },
-        {
-          "id": 196,
-          "point": [
-            3209,
-            3218,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 4,
-          "rotation": 3,
-          "definition": {
-            "id": 196,
-            "name": "null",
-            "models": [
-              2255
-            ],
-            "modelTypes": [
-              4
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": 481,
-            "decorDisplacement": 16,
-            "ambient": 20,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "bc4cb63f642d5c6cd7183006b3b7f3575acd20599d76001ac78f412369857982",
-          "formSha256": {}
-        },
-        {
-          "id": 346,
-          "point": [
+            2947,
             3208,
-            3219,
-            1
+            0
           ],
-          "effectivePlane": 1,
+          "effectivePlane": 0,
           "type": 10,
           "rotation": 0,
           "definition": {
-            "id": 346,
-            "name": "Cabinet",
-            "models": [
-              1274
-            ],
-            "modelTypes": null,
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "81da772ee8579cecde56b494e3cd62f848a0c95babaa7e993d4499f3ef75fb84",
-          "formSha256": {}
-        },
-        {
-          "id": 347,
-          "point": [
-            3208,
-            3218,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 10,
-          "rotation": 0,
-          "definition": {
-            "id": 347,
-            "name": "Cabinet",
-            "models": [
-              1187
-            ],
-            "modelTypes": null,
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "766a58a5dfe0653321e2cae5fb0301b27730bdf3885624b52c118eb306a24c1d",
-          "formSha256": {}
-        },
-        {
-          "id": 366,
-          "point": [
-            3210,
-            3218,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 10,
-          "rotation": 0,
-          "definition": {
-            "id": 366,
+            "id": 9534,
             "name": "Crate",
             "models": [
-              2143
+              7699
             ],
             "modelTypes": null,
             "sizeX": 1,
             "sizeY": 1,
             "interactType": 2,
-            "blocksProjectile": true,
+            "blocksProjectile": false,
             "wallOrDoor": -1,
             "contouredGround": -1,
             "contouredGroundValue": 0,
@@ -4321,7 +3325,7 @@
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 0,
+            "ambient": 35,
             "contrast": 0,
             "options": [
               "Search",
@@ -4330,11 +3334,25 @@
               null,
               null
             ],
-            "recolourFind": null,
-            "recolourReplace": null,
+            "recolourFind": [
+              6443,
+              6439,
+              6563,
+              6558,
+              6682,
+              6806
+            ],
+            "recolourReplace": [
+              5541,
+              5665,
+              5660,
+              5784,
+              5908,
+              6032
+            ],
             "retextureFind": null,
             "retextureReplace": null,
-            "category": -1,
+            "category": 209,
             "rotated": false,
             "shadow": true,
             "modelSizeX": 128,
@@ -4360,100 +3378,114 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "fd85fa4f420d557edd24cc01621854207c2c2181e20d89f712f1c2f000d72075",
+          "sha256": "b87e2f548861c72e37e0132735ce71337c3d4001285b41c75ef1e5e3427d6993",
           "formSha256": {}
         },
         {
-          "id": 375,
+          "id": 9535,
           "point": [
-            3209,
-            3218,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 10,
-          "rotation": 0,
-          "definition": {
-            "id": 375,
-            "name": "Closed chest",
-            "models": [
-              1249
-            ],
-            "modelTypes": null,
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": false,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              "Open",
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 30,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "09cfb806836015f0914d733313d29abbabd601f6e2900b8c403c8cc58d96fe11",
-          "formSha256": {}
-        },
-        {
-          "id": 575,
-          "point": [
+            2946,
             3208,
-            3217,
-            1
+            0
           ],
-          "effectivePlane": 1,
+          "effectivePlane": 0,
           "type": 10,
           "rotation": 0,
           "definition": {
-            "id": 575,
-            "name": "Statue",
+            "id": 9535,
+            "name": "Crates",
             "models": [
-              1165
+              7700
             ],
             "modelTypes": null,
             "sizeX": 1,
             "sizeY": 1,
             "interactType": 2,
             "blocksProjectile": true,
+            "wallOrDoor": -1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 35,
+            "contrast": 0,
+            "options": [
+              "Search",
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              6443,
+              6439,
+              6563,
+              6558,
+              6682,
+              6806
+            ],
+            "recolourReplace": [
+              5541,
+              5665,
+              5660,
+              5784,
+              5908,
+              6032
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 2307,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "c66994e36d1554e78e2d7ec4040c5f40a4f5dfbe71de1ff8cf55d4c592784394",
+          "formSha256": {}
+        },
+        {
+          "id": 9615,
+          "point": [
+            2947,
+            3207,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 3,
+          "definition": {
+            "id": 9615,
+            "name": "Table",
+            "models": [
+              9590
+            ],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": false,
             "wallOrDoor": -1,
             "contouredGround": -1,
             "contouredGroundValue": 0,
@@ -4470,8 +3502,108 @@
               null,
               null
             ],
-            "recolourFind": null,
-            "recolourReplace": null,
+            "recolourFind": [
+              6451,
+              6443,
+              6439,
+              6563
+            ],
+            "recolourReplace": [
+              6697,
+              6693,
+              6817,
+              6812
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 155,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "fe11a2a20e1267fef959605c55e957e7f9c16a759d8b124c92ca4a7498c6665e",
+          "formSha256": {}
+        },
+        {
+          "id": 9626,
+          "point": [
+            2945,
+            3206,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 2,
+          "definition": {
+            "id": 9626,
+            "name": "null",
+            "models": [
+              9563,
+              9564,
+              9565,
+              9566
+            ],
+            "modelTypes": [
+              0,
+              2,
+              3,
+              9
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": true,
+            "modelClipped": true,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              7465,
+              7461,
+              7585,
+              7580,
+              7704
+            ],
+            "recolourReplace": [
+              6697,
+              6693,
+              6817,
+              6812,
+              6936
+            ],
             "retextureFind": null,
             "retextureReplace": null,
             "category": -1,
@@ -4500,24 +3632,204 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "f72e7b1e6429b843eb0955a50076d65f23aebf0b55697b95053a653ec6f585db",
+          "sha256": "4a98df5ccd2a616d7b0e277060170002adae5b12fd7fb9f8f4bf8160500e59d6",
           "formSha256": {}
         },
         {
-          "id": 899,
+          "id": 9626,
           "point": [
-            3210,
-            3217,
-            1
+            2945,
+            3208,
+            0
           ],
-          "effectivePlane": 1,
-          "type": 5,
-          "rotation": 1,
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 2,
           "definition": {
-            "id": 899,
-            "name": "Hanging banner",
+            "id": 9626,
+            "name": "null",
             "models": [
-              2065
+              9563,
+              9564,
+              9565,
+              9566
+            ],
+            "modelTypes": [
+              0,
+              2,
+              3,
+              9
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": true,
+            "modelClipped": true,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              7465,
+              7461,
+              7585,
+              7580,
+              7704
+            ],
+            "recolourReplace": [
+              6697,
+              6693,
+              6817,
+              6812,
+              6936
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "4a98df5ccd2a616d7b0e277060170002adae5b12fd7fb9f8f4bf8160500e59d6",
+          "formSha256": {}
+        },
+        {
+          "id": 20002,
+          "point": [
+            2945,
+            3207,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 2,
+          "definition": {
+            "id": 20002,
+            "name": "null",
+            "models": [
+              20364
+            ],
+            "modelTypes": [
+              0
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": true,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              7465,
+              7461,
+              7585,
+              7580,
+              7704
+            ],
+            "recolourReplace": [
+              6697,
+              6693,
+              6817,
+              6812,
+              6936
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "30f7803fcd7ffed46341516ba84474d711d3c0a9a95c5bda7295b3edac3d1b04",
+          "formSha256": {}
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Search for a crate in Varrock Castle",
+      "region": 12854,
+      "placements": [
+        {
+          "id": 2645,
+          "point": [
+            3224,
+            3491,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 5,
+          "rotation": 3,
+          "definition": {
+            "id": 2645,
+            "name": "Shelves",
+            "models": [
+              12536
             ],
             "modelTypes": [
               4
@@ -4533,8 +3845,8 @@
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 30,
-            "contrast": 2500,
+            "ambient": 25,
+            "contrast": 625,
             "options": [
               null,
               null,
@@ -4542,8 +3854,14 @@
               null,
               null
             ],
-            "recolourFind": null,
-            "recolourReplace": null,
+            "recolourFind": [
+              6707,
+              7952
+            ],
+            "recolourReplace": [
+              7587,
+              8078
+            ],
             "retextureFind": null,
             "retextureReplace": null,
             "category": -1,
@@ -4572,53 +3890,66 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "132ddf51105277d49d1ee5b4170a6d542923f8d9aafc62e3f35448658e339d60",
+          "sha256": "66878b45cf6f1c7a6f435c9bd5c7a7e1d1f7eb1001462ed5af0801a6af5cc2f7",
           "formSha256": {}
         },
         {
-          "id": 925,
+          "id": 5106,
           "point": [
-            3209,
-            3219,
-            1
+            3224,
+            3491,
+            0
           ],
-          "effectivePlane": 1,
-          "type": 22,
+          "effectivePlane": 0,
+          "type": 10,
           "rotation": 3,
           "definition": {
-            "id": 925,
-            "name": "null",
+            "id": 5106,
+            "name": "Crate",
             "models": [
-              1110
+              7685,
+              16950
             ],
-            "modelTypes": [
-              22
-            ],
+            "modelTypes": null,
             "sizeX": 1,
             "sizeY": 1,
             "interactType": 2,
-            "blocksProjectile": true,
+            "blocksProjectile": false,
             "wallOrDoor": -1,
             "contouredGround": -1,
             "contouredGroundValue": 0,
-            "mergeNormals": true,
+            "mergeNormals": false,
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 0,
+            "ambient": 20,
             "contrast": 0,
             "options": [
-              null,
+              "Search",
               null,
               null,
               null,
               null
             ],
-            "recolourFind": null,
-            "recolourReplace": null,
+            "recolourFind": [
+              6443,
+              6439,
+              6563,
+              6558,
+              6682,
+              6806
+            ],
+            "recolourReplace": [
+              7587,
+              7582,
+              7706,
+              7830,
+              7954,
+              8078
+            ],
             "retextureFind": null,
             "retextureReplace": null,
-            "category": -1,
+            "category": 209,
             "rotated": false,
             "shadow": true,
             "modelSizeX": 128,
@@ -4644,336 +3975,25 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "fd4dd5d93c6625619385b198f2ee58a0eeb6d57144209bcb259a0be80a200f1c",
+          "sha256": "8937f65a93351d19064d93034cf575b38cf1f361616cdc98a0fa44bc9c49a3b8",
           "formSha256": {}
         },
         {
-          "id": 925,
+          "id": 5113,
           "point": [
-            3210,
-            3219,
-            1
+            3224,
+            3492,
+            0
           ],
-          "effectivePlane": 1,
-          "type": 22,
-          "rotation": 2,
-          "definition": {
-            "id": 925,
-            "name": "null",
-            "models": [
-              1110
-            ],
-            "modelTypes": [
-              22
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": false,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 0,
-            "contrast": 0,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 0,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "fd4dd5d93c6625619385b198f2ee58a0eeb6d57144209bcb259a0be80a200f1c",
-          "formSha256": {}
-        },
-        {
-          "id": 1902,
-          "point": [
-            3208,
-            3217,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 0,
-          "rotation": 1,
-          "definition": {
-            "id": 1902,
-            "name": "null",
-            "models": [
-              634,
-              635,
-              574,
-              575,
-              576
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3,
-              9
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": true,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 25,
-            "contrast": 625,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 1,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "f8f9d93c087dc258120a46fe0b4fec5f3d9a2e36d83b9be977cdf936906bc43a",
-          "formSha256": {}
-        },
-        {
-          "id": 1902,
-          "point": [
-            3209,
-            3217,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 0,
-          "rotation": 1,
-          "definition": {
-            "id": 1902,
-            "name": "null",
-            "models": [
-              634,
-              635,
-              574,
-              575,
-              576
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3,
-              9
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": true,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 25,
-            "contrast": 625,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 1,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "f8f9d93c087dc258120a46fe0b4fec5f3d9a2e36d83b9be977cdf936906bc43a",
-          "formSha256": {}
-        },
-        {
-          "id": 1902,
-          "point": [
-            3210,
-            3217,
-            1
-          ],
-          "effectivePlane": 1,
-          "type": 0,
-          "rotation": 1,
-          "definition": {
-            "id": 1902,
-            "name": "null",
-            "models": [
-              634,
-              635,
-              574,
-              575,
-              576
-            ],
-            "modelTypes": [
-              0,
-              1,
-              2,
-              3,
-              9
-            ],
-            "sizeX": 1,
-            "sizeY": 1,
-            "interactType": 2,
-            "blocksProjectile": true,
-            "wallOrDoor": -1,
-            "contouredGround": -1,
-            "contouredGroundValue": 0,
-            "mergeNormals": true,
-            "modelClipped": true,
-            "animationId": -1,
-            "decorDisplacement": 16,
-            "ambient": 25,
-            "contrast": 625,
-            "options": [
-              null,
-              null,
-              null,
-              null,
-              null
-            ],
-            "recolourFind": null,
-            "recolourReplace": null,
-            "retextureFind": null,
-            "retextureReplace": null,
-            "category": -1,
-            "rotated": false,
-            "shadow": true,
-            "modelSizeX": 128,
-            "modelSizeHeight": 128,
-            "modelSizeY": 128,
-            "mapSceneId": -1,
-            "blockingMask": 0,
-            "offsetX": 0,
-            "offsetHeight": 1,
-            "offsetY": 0,
-            "obstructsGround": false,
-            "hollow": false,
-            "supportsItems": -1,
-            "varbitId": -1,
-            "varpId": -1,
-            "transforms": null,
-            "ambientSoundId": -1,
-            "mapAreaId": -1,
-            "randomizeAnimStart": true,
-            "deferAnimChange": false,
-            "params": null,
-            "unknownOpcodes": [],
-            "subOps": []
-          },
-          "forms": {},
-          "sha256": "f8f9d93c087dc258120a46fe0b4fec5f3d9a2e36d83b9be977cdf936906bc43a",
-          "formSha256": {}
-        },
-        {
-          "id": 6910,
-          "point": [
-            3209,
-            3217,
-            1
-          ],
-          "effectivePlane": 1,
+          "effectivePlane": 0,
           "type": 10,
           "rotation": 2,
           "definition": {
-            "id": 6910,
-            "name": "Chest",
+            "id": 5113,
+            "name": "Crate",
             "models": [
-              1249
+              7685,
+              16950
             ],
             "modelTypes": null,
             "sizeX": 1,
@@ -4987,27 +4007,41 @@
             "modelClipped": false,
             "animationId": -1,
             "decorDisplacement": 16,
-            "ambient": 0,
+            "ambient": 20,
             "contrast": 0,
             "options": [
-              "Open",
+              "Search",
               null,
               null,
               null,
               null
             ],
-            "recolourFind": null,
-            "recolourReplace": null,
+            "recolourFind": [
+              5388,
+              6439,
+              6563,
+              6558,
+              6682,
+              6806
+            ],
+            "recolourReplace": [
+              790,
+              7582,
+              7706,
+              7830,
+              7954,
+              8078
+            ],
             "retextureFind": null,
             "retextureReplace": null,
-            "category": -1,
+            "category": 209,
             "rotated": false,
             "shadow": true,
             "modelSizeX": 128,
             "modelSizeHeight": 128,
             "modelSizeY": 128,
             "mapSceneId": -1,
-            "blockingMask": 30,
+            "blockingMask": 0,
             "offsetX": 0,
             "offsetHeight": 0,
             "offsetY": 0,
@@ -5026,17 +4060,333 @@
             "subOps": []
           },
           "forms": {},
-          "sha256": "db5ad1c7615b926a439ed5a2507e7023f098184113a08859df6837a5dfbb4fe7",
+          "sha256": "45847e25a3b2b165de0b5231698d354c4f7f1615e14203fce07a3f2056fe5d61",
+          "formSha256": {}
+        },
+        {
+          "id": 6838,
+          "point": [
+            3225,
+            3492,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 0,
+          "definition": {
+            "id": 6838,
+            "name": "null",
+            "models": [
+              4491
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": 0,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 20,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              82,
+              61,
+              41
+            ],
+            "recolourReplace": [
+              17694,
+              17694,
+              17694
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "8a69bd6828fffda975abee8a148dc13133a298722e9c311d92d2200806dc648b",
+          "formSha256": {}
+        },
+        {
+          "id": 6839,
+          "point": [
+            3225,
+            3491,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 0,
+          "definition": {
+            "id": 6839,
+            "name": "null",
+            "models": [
+              4490
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": 0,
+            "contouredGround": 0,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 20,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              82,
+              61,
+              41
+            ],
+            "recolourReplace": [
+              17694,
+              17694,
+              17694
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "77f1adeae884dd6333738597965eedfc33fab438876983003311a872279dc44a",
+          "formSha256": {}
+        },
+        {
+          "id": 7447,
+          "point": [
+            3223,
+            3492,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 2,
+          "definition": {
+            "id": 7447,
+            "name": "null",
+            "models": [
+              11818
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 0,
+            "blocksProjectile": false,
+            "wallOrDoor": 0,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              7977,
+              7580
+            ],
+            "recolourReplace": [
+              14499,
+              14511
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 32,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "9f1ccbc91c5057f91d2c1de38ef0196b7ba1a0728b42fdf1b9c5873532290d73",
+          "formSha256": {}
+        },
+        {
+          "id": 7447,
+          "point": [
+            3223,
+            3493,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 22,
+          "rotation": 1,
+          "definition": {
+            "id": 7447,
+            "name": "null",
+            "models": [
+              11818
+            ],
+            "modelTypes": [
+              22
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 0,
+            "blocksProjectile": false,
+            "wallOrDoor": 0,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": [
+              7977,
+              7580
+            ],
+            "recolourReplace": [
+              14499,
+              14511
+            ],
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 32,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "9f1ccbc91c5057f91d2c1de38ef0196b7ba1a0728b42fdf1b9c5873532290d73",
           "formSha256": {}
         },
         {
           "id": 10627,
           "point": [
-            3209,
-            3218,
-            1
+            3224,
+            3492,
+            0
           ],
-          "effectivePlane": 1,
+          "effectivePlane": 0,
           "type": 22,
           "rotation": 0,
           "definition": {
@@ -5099,6 +4449,382 @@
           },
           "forms": {},
           "sha256": "b3bd6eb242a3a0795407287331eaace46a5ec27d0b54af3101bc6a2e839c6b23",
+          "formSha256": {}
+        },
+        {
+          "id": 11772,
+          "point": [
+            3224,
+            3493,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 1,
+          "definition": {
+            "id": 11772,
+            "name": "Door",
+            "models": [
+              15236
+            ],
+            "modelTypes": [
+              0
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 15,
+            "contrast": 375,
+            "options": [
+              "Close",
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 168,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 158,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 1,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": 0,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "76b31e07c8721277466037f79c0deb913e7f5d96afd1955355aff7559330a5f9",
+          "formSha256": {}
+        },
+        {
+          "id": 23818,
+          "point": [
+            3225,
+            3491,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 2,
+          "rotation": 3,
+          "definition": {
+            "id": 23818,
+            "name": "null",
+            "models": [
+              15235,
+              15238,
+              15239,
+              15240
+            ],
+            "modelTypes": [
+              0,
+              1,
+              2,
+              9
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": -1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 32,
+            "ambient": 25,
+            "contrast": 625,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 1,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "0ab59d42642e2df684f5ae65ee1898504c2fc826f59bdee499dfe6ebeb02fb68",
+          "formSha256": {}
+        },
+        {
+          "id": 23824,
+          "point": [
+            3224,
+            3491,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 3,
+          "definition": {
+            "id": 23824,
+            "name": "null",
+            "models": [
+              15237,
+              15242,
+              15243,
+              15244
+            ],
+            "modelTypes": [
+              0,
+              1,
+              2,
+              9
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": -1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 32,
+            "ambient": 25,
+            "contrast": 625,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "2f95b684672ddfe2a21d18c812fd46d9e4c8b03efaa0c74b09f3508f4155147b",
+          "formSha256": {}
+        },
+        {
+          "id": 23825,
+          "point": [
+            3223,
+            3491,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 3,
+          "definition": {
+            "id": 23825,
+            "name": "null",
+            "models": [
+              15241,
+              24641
+            ],
+            "modelTypes": [
+              0,
+              2
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": -1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 32,
+            "ambient": 25,
+            "contrast": 625,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "6383eef00fd834b689299411669798a6d026c27f38e97202a9a81261b430d491",
+          "formSha256": {}
+        },
+        {
+          "id": 23826,
+          "point": [
+            3225,
+            3492,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 0,
+          "rotation": 0,
+          "definition": {
+            "id": 23826,
+            "name": "null",
+            "models": [
+              15247,
+              15248
+            ],
+            "modelTypes": [
+              0,
+              9
+            ],
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 2,
+            "blocksProjectile": true,
+            "wallOrDoor": -1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 32,
+            "ambient": 25,
+            "contrast": 625,
+            "options": [
+              null,
+              null,
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": -1,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": -1,
+            "varpId": -1,
+            "transforms": null,
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {},
+          "sha256": "aa0584d9391be963cc2e84f90544f4e6e15f7a95715395c0d06f6520ee7b0a35",
           "formSha256": {}
         }
       ]
@@ -6360,6 +6086,814 @@
       ]
     },
     {
+      "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+      "region": 10292,
+      "placements": [
+        {
+          "id": 28977,
+          "point": [
+            2608,
+            3393,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 1,
+          "definition": {
+            "id": 28977,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5215,
+            "varpId": -1,
+            "transforms": [
+              15944,
+              15945,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "15944": {
+              "id": 15944,
+              "name": "Inconspicuous hole (easy)",
+              "models": [
+                32058
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "15945": {
+              "id": 15945,
+              "name": "STASH (easy)",
+              "models": [
+                32060
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "00fc78d77d53c4f2addda84c581dc0f34da1bedc0e2b6ccd22d82f8e63f1c8e5",
+          "formSha256": {
+            "15944": "1bc7d36a953b965206d138e74970a98e4059240d9a7c61e2ccae91f7d487eccd",
+            "15945": "b6459c181893623f8bec94d5615ab18db6f7497dcdf1bcd99fbad8574458e82c"
+          },
+          "sourceVarbit": {
+            "mostBit": 19,
+            "varp": 1365,
+            "id": 5215,
+            "leastBit": 19,
+            "sha256": "727d2961b10e3c71c2e0475dc569a576eeec44b2f90e1b8950c97171a9903801"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+      "region": 12849,
+      "placements": [
+        {
+          "id": 28958,
+          "point": [
+            3201,
+            3171,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 0,
+          "definition": {
+            "id": 28958,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5196,
+            "varpId": -1,
+            "transforms": [
+              15944,
+              15945,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "15944": {
+              "id": 15944,
+              "name": "Inconspicuous hole (easy)",
+              "models": [
+                32058
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "15945": {
+              "id": 15945,
+              "name": "STASH (easy)",
+              "models": [
+                32060
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "43fc57b5bf9ab6f7fa2d356803db5dfc04032b867f9dec0fb4eb465f892d86be",
+          "formSha256": {
+            "15944": "1bc7d36a953b965206d138e74970a98e4059240d9a7c61e2ccae91f7d487eccd",
+            "15945": "b6459c181893623f8bec94d5615ab18db6f7497dcdf1bcd99fbad8574458e82c"
+          },
+          "sourceVarbit": {
+            "mostBit": 0,
+            "varp": 1365,
+            "id": 5196,
+            "leastBit": 0,
+            "sha256": "98b724e7ab914fe6211bf010891b0d8d2b97251e1e6b6eb39eee21ef2b84cfd3"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Dance in the Party Room",
+      "region": 12084,
+      "placements": [
+        {
+          "id": 28972,
+          "point": [
+            3043,
+            3371,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 0,
+          "definition": {
+            "id": 28972,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5210,
+            "varpId": -1,
+            "transforms": [
+              6657,
+              15943,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "6657": {
+              "id": 6657,
+              "name": "Inconspicuous bush (easy)",
+              "models": [
+                1565,
+                20041
+              ],
+              "modelTypes": [
+                10,
+                22
+              ],
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "15943": {
+              "id": 15943,
+              "name": "STASH (easy)",
+              "models": [
+                32056
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "df4db94713c072e9c34143723cc70f917f49ea7a839e7f86b9a031015f5d8d20",
+          "formSha256": {
+            "6657": "5d40787778111b32de64d2fdd767b49751b12407ba7df362ec031318cc2e67db",
+            "15943": "5d03494b48a64426abf42bd49f9196260b411b13333ede35c939dad90d2a4d64"
+          },
+          "sourceVarbit": {
+            "mostBit": 14,
+            "varp": 1365,
+            "id": 5210,
+            "leastBit": 14,
+            "sha256": "199801ade27d6cffe5ac6210879c4a8ad6b47af7474158ef90af2c7a7f04a522"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+      "region": 12082,
+      "placements": [
+        {
+          "id": 28964,
+          "point": [
+            3050,
+            3237,
+            1
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 2,
+          "definition": {
+            "id": 28964,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5202,
+            "varpId": -1,
+            "transforms": [
+              16016,
+              16017,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "16016": {
+              "id": 16016,
+              "name": "Inconspicuous crate (easy)",
+              "models": [
+                31450
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "16017": {
+              "id": 16017,
+              "name": "STASH (easy)",
+              "models": [
+                32057
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "7d03e99497737e095d202addaed0c84a8f3bf76172594860a1bb0f63ee91e7e5",
+          "formSha256": {
+            "16016": "abe7d2a78c0b7aa333bcf41f856a71b7e7e71e20b20cdaa96a8602f204a6d23c",
+            "16017": "9af51e624d9ac7903c94a636811b19266cc1aa315f8023f4a26c8d84819a420f"
+          },
+          "sourceVarbit": {
+            "mostBit": 6,
+            "varp": 1365,
+            "id": 5202,
+            "leastBit": 6,
+            "sha256": "c5727705840efa4a84e91ad0c8a798ca4904dddd06f2a35f607c1991f147f63a"
+          }
+        }
+      ]
+    },
+    {
       "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
       "region": 12342,
       "placements": [
@@ -6555,11 +7089,11 @@
             "16019": "fbda8f2a23597c89e49d062e801f64ddb8281da17ccb05aa9259fb2e64d184ae"
           },
           "sourceVarbit": {
-            "varp": 1366,
             "mostBit": 18,
-            "sha256": "a8a9a5e8daa68b7ebe51d1d40dc8a3c44fac015834f92991bbf0e1a6f1bfe3c5",
+            "varp": 1366,
+            "id": 5244,
             "leastBit": 18,
-            "id": 5244
+            "sha256": "a8a9a5e8daa68b7ebe51d1d40dc8a3c44fac015834f92991bbf0e1a6f1bfe3c5"
           }
         }
       ]
@@ -6760,11 +7294,11 @@
             "16019": "fbda8f2a23597c89e49d062e801f64ddb8281da17ccb05aa9259fb2e64d184ae"
           },
           "sourceVarbit": {
-            "varp": 1366,
             "mostBit": 14,
-            "sha256": "33a2457f0d4766dc4235b472b1d35c518dd76336babe391057a27f08d23b4e56",
+            "varp": 1366,
+            "id": 5240,
             "leastBit": 14,
-            "id": 5240
+            "sha256": "33a2457f0d4766dc4235b472b1d35c518dd76336babe391057a27f08d23b4e56"
           }
         }
       ]
@@ -6961,11 +7495,11 @@
             "28933": "63065c9cc861422dac471482086ffa2afddebe57ab82eab44cf552d0d6b5f55f"
           },
           "sourceVarbit": {
-            "varp": 1366,
             "mostBit": 4,
-            "sha256": "785336e54f9894fed8922ac6bb8cde94643bcf7fc3a871dc406d3322d6a557ec",
+            "varp": 1366,
+            "id": 5230,
             "leastBit": 4,
-            "id": 5230
+            "sha256": "785336e54f9894fed8922ac6bb8cde94643bcf7fc3a871dc406d3322d6a557ec"
           }
         }
       ]
@@ -7166,11 +7700,417 @@
             "16019": "fbda8f2a23597c89e49d062e801f64ddb8281da17ccb05aa9259fb2e64d184ae"
           },
           "sourceVarbit": {
-            "varp": 1366,
             "mostBit": 2,
-            "sha256": "244b19b3f3b29eca0f3ef15d81241aac9d7488666cef1d8994aabe057bf09190",
+            "varp": 1366,
+            "id": 5228,
             "leastBit": 2,
-            "id": 5228
+            "sha256": "244b19b3f3b29eca0f3ef15d81241aac9d7488666cef1d8994aabe057bf09190"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+      "region": 10039,
+      "placements": [
+        {
+          "id": 28992,
+          "point": [
+            2541,
+            3550,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 1,
+          "definition": {
+            "id": 28992,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5231,
+            "varpId": -1,
+            "transforms": [
+              16018,
+              16019,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "16018": {
+              "id": 16018,
+              "name": "Inconspicuous bush (medium)",
+              "models": [
+                1565,
+                20041
+              ],
+              "modelTypes": [
+                10,
+                22
+              ],
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "16019": {
+              "id": 16019,
+              "name": "STASH (medium)",
+              "models": [
+                32056
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "dc93fe5d6af38a76bd0951adf9d8479d1611941dbe1dbafd39d0dd2bf44dd4c2",
+          "formSha256": {
+            "16018": "2e1df0427042bf568940bbc3c9b21ef1f102b4d1b0cdcf3d4335550b5aa96a58",
+            "16019": "fbda8f2a23597c89e49d062e801f64ddb8281da17ccb05aa9259fb2e64d184ae"
+          },
+          "sourceVarbit": {
+            "mostBit": 5,
+            "varp": 1366,
+            "id": 5231,
+            "leastBit": 5,
+            "sha256": "8f13239e56499aecec4a3083f27f1ac8b33de2b270a05ec6af2c10740400add7"
+          }
+        }
+      ]
+    },
+    {
+      "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+      "region": 10288,
+      "placements": [
+        {
+          "id": 28994,
+          "point": [
+            2603,
+            3091,
+            0
+          ],
+          "effectivePlane": 0,
+          "type": 10,
+          "rotation": 1,
+          "definition": {
+            "id": 28994,
+            "name": "null",
+            "models": [],
+            "modelTypes": null,
+            "sizeX": 1,
+            "sizeY": 1,
+            "interactType": 1,
+            "blocksProjectile": false,
+            "wallOrDoor": 1,
+            "contouredGround": -1,
+            "contouredGroundValue": 0,
+            "mergeNormals": false,
+            "modelClipped": false,
+            "animationId": -1,
+            "decorDisplacement": 16,
+            "ambient": 0,
+            "contrast": 0,
+            "options": [
+              "Build",
+              "Search",
+              null,
+              null,
+              null
+            ],
+            "recolourFind": null,
+            "recolourReplace": null,
+            "retextureFind": null,
+            "retextureReplace": null,
+            "category": 960,
+            "rotated": false,
+            "shadow": true,
+            "modelSizeX": 128,
+            "modelSizeHeight": 128,
+            "modelSizeY": 128,
+            "mapSceneId": -1,
+            "blockingMask": 0,
+            "offsetX": 0,
+            "offsetHeight": 0,
+            "offsetY": 0,
+            "obstructsGround": false,
+            "hollow": false,
+            "supportsItems": -1,
+            "varbitId": 5233,
+            "varpId": -1,
+            "transforms": [
+              16022,
+              16023,
+              -1
+            ],
+            "ambientSoundId": -1,
+            "mapAreaId": -1,
+            "randomizeAnimStart": true,
+            "deferAnimChange": false,
+            "params": null,
+            "unknownOpcodes": [],
+            "subOps": []
+          },
+          "forms": {
+            "16022": {
+              "id": 16022,
+              "name": "Inconspicuous rocks (medium)",
+              "models": [
+                32059
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                "Build",
+                null,
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            },
+            "16023": {
+              "id": 16023,
+              "name": "STASH (medium)",
+              "models": [
+                32055
+              ],
+              "modelTypes": null,
+              "sizeX": 1,
+              "sizeY": 1,
+              "interactType": 2,
+              "blocksProjectile": true,
+              "wallOrDoor": 1,
+              "contouredGround": -1,
+              "contouredGroundValue": 0,
+              "mergeNormals": false,
+              "modelClipped": false,
+              "animationId": -1,
+              "decorDisplacement": 16,
+              "ambient": 0,
+              "contrast": 0,
+              "options": [
+                null,
+                "Search",
+                null,
+                null,
+                null
+              ],
+              "recolourFind": null,
+              "recolourReplace": null,
+              "retextureFind": null,
+              "retextureReplace": null,
+              "category": -1,
+              "rotated": false,
+              "shadow": true,
+              "modelSizeX": 128,
+              "modelSizeHeight": 128,
+              "modelSizeY": 128,
+              "mapSceneId": -1,
+              "blockingMask": 0,
+              "offsetX": 0,
+              "offsetHeight": 0,
+              "offsetY": 0,
+              "obstructsGround": false,
+              "hollow": false,
+              "supportsItems": -1,
+              "varbitId": -1,
+              "varpId": -1,
+              "transforms": null,
+              "ambientSoundId": -1,
+              "mapAreaId": -1,
+              "randomizeAnimStart": true,
+              "deferAnimChange": false,
+              "params": null,
+              "unknownOpcodes": [],
+              "subOps": []
+            }
+          },
+          "sha256": "fad44895c9215356aad0c74726dbf7e963e9ed1fe70639166bed96031726b585",
+          "formSha256": {
+            "16022": "2b8340f8fe9251f649989af6bc58741e541ebcba676fa31dc6564d8bba6a7568",
+            "16023": "e9bc41a87fce15d5dcd990d836c3ede1c85bf6a5e3c4b520ad9683ea84a2a632"
+          },
+          "sourceVarbit": {
+            "mostBit": 7,
+            "varp": 1366,
+            "id": 5233,
+            "leastBit": 7,
+            "sha256": "1aae3a99c769efd9e7d2ad17c61f8d88ac20b622e43a417896f8fd34eefd3463"
           }
         }
       ]
@@ -7367,11 +8307,11 @@
             "28941": "d6323a44558fd90eccf9838dbdbab82b3767f6daca1aeafa3dda401d981c0b5a"
           },
           "sourceVarbit": {
-            "varp": 1367,
             "mostBit": 5,
-            "sha256": "c4b91646e1cbfc5c259e4f7dabf54811ab8611e2ff9ab80a66f9ad03b1f68551",
+            "varp": 1367,
+            "id": 5254,
             "leastBit": 5,
-            "id": 5254
+            "sha256": "c4b91646e1cbfc5c259e4f7dabf54811ab8611e2ff9ab80a66f9ad03b1f68551"
           }
         }
       ]
@@ -7568,11 +8508,11 @@
             "28941": "d6323a44558fd90eccf9838dbdbab82b3767f6daca1aeafa3dda401d981c0b5a"
           },
           "sourceVarbit": {
-            "varp": 1367,
             "mostBit": 1,
-            "sha256": "350d0a163b00239bdf55cf7b297b18fd66e20654bb2387f8bab05358da9f7a92",
+            "varp": 1367,
+            "id": 5250,
             "leastBit": 1,
-            "id": 5250
+            "sha256": "350d0a163b00239bdf55cf7b297b18fd66e20654bb2387f8bab05358da9f7a92"
           }
         }
       ]
@@ -7769,11 +8709,11 @@
             "28937": "c242dadba324e1bdbe67f54610edd40de62634868e6f942ac7547887ca6da2ab"
           },
           "sourceVarbit": {
-            "varp": 1367,
             "mostBit": 4,
-            "sha256": "5738a06a0880df6356efc2115cee132a4461b825ed898b8c1d762a0e73fdc104",
+            "varp": 1367,
+            "id": 5253,
             "leastBit": 4,
-            "id": 5253
+            "sha256": "5738a06a0880df6356efc2115cee132a4461b825ed898b8c1d762a0e73fdc104"
           }
         }
       ]
@@ -8911,11 +9851,11 @@
             "28949": "1d7bb9f87f1e19fc73f85855b9b6f986513d4708cea2ed3a94f85b1ab7ed5bd7"
           },
           "sourceVarbit": {
-            "varp": 1368,
             "mostBit": 5,
-            "sha256": "496bd20415b45f83ef51679cea4b53b3235a40d0e11be965ae3e64b539e4b5ef",
+            "varp": 1368,
+            "id": 5270,
             "leastBit": 5,
-            "id": 5270
+            "sha256": "496bd20415b45f83ef51679cea4b53b3235a40d0e11be965ae3e64b539e4b5ef"
           }
         }
       ]
@@ -9112,11 +10052,11 @@
             "28945": "62436e2ce114a41dbb24495d26f3464b36c6cda2b4cb5b4af6a68261ea22c2a0"
           },
           "sourceVarbit": {
-            "varp": 1368,
             "mostBit": 4,
-            "sha256": "9b0a5f0503c6da3a33cecccf3f3a0f5b4aaec89cca56fb4411dd2dde7dc1fff0",
+            "varp": 1368,
+            "id": 5269,
             "leastBit": 4,
-            "id": 5269
+            "sha256": "9b0a5f0503c6da3a33cecccf3f3a0f5b4aaec89cca56fb4411dd2dde7dc1fff0"
           }
         },
         {
@@ -9307,11 +10247,11 @@
             "28957": "191718a4ce022f4d54a1cc283cb935a2ed3fa50b24e84fed01eb0242c7b39116"
           },
           "sourceVarbit": {
-            "varp": 1369,
             "mostBit": 7,
-            "sha256": "667dfb33773ec14c95b948bc49642199eab22ac6f1d073dc8a16a5b1b0f65dc8",
+            "varp": 1369,
+            "id": 5289,
             "leastBit": 7,
-            "id": 5289
+            "sha256": "667dfb33773ec14c95b948bc49642199eab22ac6f1d073dc8a16a5b1b0f65dc8"
           }
         }
       ]
@@ -9508,11 +10448,11 @@
             "28945": "62436e2ce114a41dbb24495d26f3464b36c6cda2b4cb5b4af6a68261ea22c2a0"
           },
           "sourceVarbit": {
-            "varp": 1368,
             "mostBit": 14,
-            "sha256": "1c985f7392c23ded01bb9ad91ef1594428d4a2e918671268caee09574512edc2",
+            "varp": 1368,
+            "id": 5279,
             "leastBit": 14,
-            "id": 5279
+            "sha256": "1c985f7392c23ded01bb9ad91ef1594428d4a2e918671268caee09574512edc2"
           }
         }
       ]
@@ -9709,11 +10649,11 @@
             "15945": "b6459c181893623f8bec94d5615ab18db6f7497dcdf1bcd99fbad8574458e82c"
           },
           "sourceVarbit": {
-            "varp": 1365,
             "mostBit": 2,
-            "sha256": "c24d005fa55574d7cd861c2dca5fceb315be83621006a496afe4eea6dfa74943",
+            "varp": 1365,
+            "id": 5198,
             "leastBit": 2,
-            "id": 5198
+            "sha256": "c24d005fa55574d7cd861c2dca5fceb315be83621006a496afe4eea6dfa74943"
           }
         },
         {
@@ -9908,11 +10848,11 @@
             "28951": "5b88fb9055a69216137e79e48ea3891f0f5534f5fc0ebd5c9c9b5edb636ec338"
           },
           "sourceVarbit": {
-            "varp": 1369,
             "mostBit": 19,
-            "sha256": "36eb2e76406d746aa1c58a10ebdd32e84c029046c2f7dddc9f8f2ccfb54f553b",
+            "varp": 1369,
+            "id": 5301,
             "leastBit": 19,
-            "id": 5301
+            "sha256": "36eb2e76406d746aa1c58a10ebdd32e84c029046c2f7dddc9f8f2ccfb54f553b"
           }
         }
       ]
@@ -10109,11 +11049,11 @@
             "28953": "2c1f19fa2b5a3d953bce65c10445053c70f5f9289d5bef0c93f431a11377d32c"
           },
           "sourceVarbit": {
-            "varp": 1369,
             "mostBit": 16,
-            "sha256": "162d9b81f83993a30c983ac0265a56117b5e270b040abc90b86e97a0cd245902",
+            "varp": 1369,
+            "id": 5298,
             "leastBit": 16,
-            "id": 5298
+            "sha256": "162d9b81f83993a30c983ac0265a56117b5e270b040abc90b86e97a0cd245902"
           }
         }
       ]

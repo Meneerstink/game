@@ -60,6 +60,20 @@ if '--continuation' in sys.argv:
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.' + name for name in
                 ['MimicEncounterTests', 'MimicChallengeTests', 'WatsonClueTests']]
 
+if '--restored' in sys.argv:
+    CORE = ['gg.rsmod.game.tools.importer.' + name for name in
+            ['ClueStashImportTests', 'ClueStashChartImportTests']]
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['ClueScrollLifecycleTests', 'TreasureTrailContractTests', 'TreasureTrailGuardianTests',
+                'TreasureTrailStepCatalogueTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests',
+                'TreasureTrailStashTests', 'TreasureTrailStashChartTests', 'TreasureTrailStashSettingTests',
+                'TreasureTrailBasicStepsTests', 'ClueStepSelectionTests', 'TreasureTrailTornPartsTests',
+                'TreasureTrailFaloTests', 'TreasureTrailSherlockTests', 'TreasureTrailNumberChallengeTests',
+                'TreasureTrailMapsTests', 'TreasureTrailPuzzleBoxTests', 'ClueDropOwnershipTests',
+                'ClueCasketTransactionTests', 'ClueInterfacesTests', 'ClueNpcAssetsTests', 'ClueDropIndexTests']]
+    PLUGINS += ['gg.rsmod.plugins.content.areas.watson.' + name for name in
+                ['WatsonClueTests', 'MimicEncounterTests', 'MimicChallengeTests', 'TheMimicCombatDefTests', 'MimicRewardsTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()

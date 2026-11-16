@@ -558,6 +558,242 @@
     "sourceSha256": "0a9e9bcbe00801fb8e00ff5085331265d5db64e5d09503aad2c69ec8a1c8ccbd"
   },
   {
+    "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nDance a jig by the entrance to the Fishing Guild. Equip an emerald ring, a sapphire amulet, and a bronze chain body.",
+    "points": [
+      [
+        2610,
+        3391,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1639,
+          "local": 1639,
+          "name": "Emerald ring"
+        }
+      ],
+      [
+        {
+          "osrs": 1694,
+          "local": 1694,
+          "name": "Sapphire amulet"
+        }
+      ],
+      [
+        {
+          "osrs": 1103,
+          "local": 1103,
+          "name": "Bronze chainbody"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Jig",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Emerald ring",
+        "equipment2": "Sapphire amulet",
+        "equipment3": "Bronze chainbody"
+      },
+      "requirements": "Equip an [[emerald ring]], a [[sapphire amulet]], and a [[bronze chainbody]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild.wiki",
+    "sourceSha256": "246c8a1a7539b00c800ae940ba6d2a305b46f970c78acab6681632add61cf87d",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nDance in the shack in Lumbridge Swamp. Equip a bronze dagger, iron full helmet and a gold ring.",
+    "points": [
+      [
+        3203,
+        3169,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1205,
+          "local": 1205,
+          "name": "Bronze dagger"
+        }
+      ],
+      [
+        {
+          "osrs": 1153,
+          "local": 1153,
+          "name": "Iron full helm"
+        }
+      ],
+      [
+        {
+          "osrs": 1635,
+          "local": 1635,
+          "name": "Gold ring"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Bronze dagger",
+        "equipment2": "Iron full helm",
+        "equipment3": "Gold ring"
+      },
+      "requirements": "Equip a [[bronze dagger]], [[iron full helmet]] and a [[gold ring]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_shack_in_Lumbridge_Swamp",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_shack_in_Lumbridge_Swamp.wiki",
+    "sourceSha256": "1d9c325c9634d9b1a09c980708b1639f4af287206cf765e38ba276dbf43f49f7",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the Party Room",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nDance in the Party Room. Equip a steel full helmet, steel platebody and an iron plateskirt.",
+    "points": [
+      [
+        3045,
+        3376,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1157,
+          "local": 1157,
+          "name": "Steel full helm"
+        }
+      ],
+      [
+        {
+          "osrs": 1119,
+          "local": 1119,
+          "name": "Steel platebody"
+        }
+      ],
+      [
+        {
+          "osrs": 1081,
+          "local": 1081,
+          "name": "Iron plateskirt"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Steel full helm",
+        "equipment2": "Steel platebody",
+        "equipment3": "Iron plateskirt"
+      },
+      "requirements": "Equip a [[steel full helmet]], [[steel platebody]] and an [[iron plateskirt]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_Party_Room",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_Party_Room.wiki",
+    "sourceSha256": "d213f7b523261163bcd539387d822d2e059569b2ff41d53097c5c5ed67151848",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nCheer for the monks at Port Sarim. Equip a coif, steel plateskirt and a sapphire necklace.",
+    "points": [
+      [
+        3047,
+        3237,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1169,
+          "local": 1169,
+          "name": "Coif"
+        }
+      ],
+      [
+        {
+          "osrs": 1083,
+          "local": 1083,
+          "name": "Steel plateskirt"
+        }
+      ],
+      [
+        {
+          "osrs": 1656,
+          "local": 1656,
+          "name": "Sapphire necklace"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Coif",
+        "equipment2": "Steel plateskirt",
+        "equipment3": "Sapphire necklace"
+      },
+      "requirements": "Equip a [[coif]], [[steel plateskirt]] and a [[sapphire necklace]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_for_the_monks_at_Port_Sarim",
+    "sourceFile": "Clue_scroll_(easy)_-_Cheer_for_the_monks_at_Port_Sarim.wiki",
+    "sourceSha256": "ab8eb4ccea33071710d356f8859300945a6c4021eb52ff6b4b3ef4d381166327",
+    "restoredOriginal": true
+  },
+  {
     "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
     "tier": "medium",
     "kind": "EMOTE",
@@ -1569,6 +1805,441 @@
     "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_North_of_the_Tower_of_Life",
     "sourceFile": "Clue_scroll_(medium)_-_North_of_the_Tower_of_Life.wiki",
     "sourceSha256": "e79b89c6d8f1a4985197cf3e281e0c47edd9cf55e156b3366b57a2a2ecd0d4ba"
+  },
+  {
+    "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nCheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape.",
+    "points": [
+      [
+        2552,
+        3556,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1119,
+          "local": 1119,
+          "name": "Steel platebody"
+        }
+      ],
+      [
+        {
+          "osrs": 853,
+          "local": 853,
+          "name": "Maple shortbow"
+        },
+        {
+          "osrs": 20403,
+          "local": 853,
+          "name": "Maple shortbow"
+        }
+      ],
+      [
+        {
+          "osrs": 4315,
+          "local": 4315,
+          "name": "Team-1 cape"
+        },
+        {
+          "osrs": 4317,
+          "local": 4317,
+          "name": "Team-2 cape"
+        },
+        {
+          "osrs": 4319,
+          "local": 4319,
+          "name": "Team-3 cape"
+        },
+        {
+          "osrs": 4321,
+          "local": 4321,
+          "name": "Team-4 cape"
+        },
+        {
+          "osrs": 4323,
+          "local": 4323,
+          "name": "Team-5 cape"
+        },
+        {
+          "osrs": 4325,
+          "local": 4325,
+          "name": "Team-6 cape"
+        },
+        {
+          "osrs": 4327,
+          "local": 4327,
+          "name": "Team-7 cape"
+        },
+        {
+          "osrs": 4329,
+          "local": 4329,
+          "name": "Team-8 cape"
+        },
+        {
+          "osrs": 4331,
+          "local": 4331,
+          "name": "Team-9 cape"
+        },
+        {
+          "osrs": 4333,
+          "local": 4333,
+          "name": "Team-10 cape"
+        },
+        {
+          "osrs": 4335,
+          "local": 4335,
+          "name": "Team-11 cape"
+        },
+        {
+          "osrs": 4337,
+          "local": 4337,
+          "name": "Team-12 cape"
+        },
+        {
+          "osrs": 4339,
+          "local": 4339,
+          "name": "Team-13 cape"
+        },
+        {
+          "osrs": 4341,
+          "local": 4341,
+          "name": "Team-14 cape"
+        },
+        {
+          "osrs": 4343,
+          "local": 4343,
+          "name": "Team-15 cape"
+        },
+        {
+          "osrs": 4345,
+          "local": 4345,
+          "name": "Team-16 cape"
+        },
+        {
+          "osrs": 4347,
+          "local": 4347,
+          "name": "Team-17 cape"
+        },
+        {
+          "osrs": 4349,
+          "local": 4349,
+          "name": "Team-18 cape"
+        },
+        {
+          "osrs": 4351,
+          "local": 4351,
+          "name": "Team-19 cape"
+        },
+        {
+          "osrs": 4353,
+          "local": 4353,
+          "name": "Team-20 cape"
+        },
+        {
+          "osrs": 4355,
+          "local": 4355,
+          "name": "Team-21 cape"
+        },
+        {
+          "osrs": 4357,
+          "local": 4357,
+          "name": "Team-22 cape"
+        },
+        {
+          "osrs": 4359,
+          "local": 4359,
+          "name": "Team-23 cape"
+        },
+        {
+          "osrs": 4361,
+          "local": 4361,
+          "name": "Team-24 cape"
+        },
+        {
+          "osrs": 4363,
+          "local": 4363,
+          "name": "Team-25 cape"
+        },
+        {
+          "osrs": 4365,
+          "local": 4365,
+          "name": "Team-26 cape"
+        },
+        {
+          "osrs": 4367,
+          "local": 4367,
+          "name": "Team-27 cape"
+        },
+        {
+          "osrs": 4369,
+          "local": 4369,
+          "name": "Team-28 cape"
+        },
+        {
+          "osrs": 4371,
+          "local": 4371,
+          "name": "Team-29 cape"
+        },
+        {
+          "osrs": 4373,
+          "local": 4373,
+          "name": "Team-30 cape"
+        },
+        {
+          "osrs": 4375,
+          "local": 4375,
+          "name": "Team-31 cape"
+        },
+        {
+          "osrs": 4377,
+          "local": 4377,
+          "name": "Team-32 cape"
+        },
+        {
+          "osrs": 4379,
+          "local": 4379,
+          "name": "Team-33 cape"
+        },
+        {
+          "osrs": 4381,
+          "local": 4381,
+          "name": "Team-34 cape"
+        },
+        {
+          "osrs": 4383,
+          "local": 4383,
+          "name": "Team-35 cape"
+        },
+        {
+          "osrs": 4385,
+          "local": 4385,
+          "name": "Team-36 cape"
+        },
+        {
+          "osrs": 4387,
+          "local": 4387,
+          "name": "Team-37 cape"
+        },
+        {
+          "osrs": 4389,
+          "local": 4389,
+          "name": "Team-38 cape"
+        },
+        {
+          "osrs": 4391,
+          "local": 4391,
+          "name": "Team-39 cape"
+        },
+        {
+          "osrs": 4393,
+          "local": 4393,
+          "name": "Team-40 cape"
+        },
+        {
+          "osrs": 4395,
+          "local": 4395,
+          "name": "Team-41 cape"
+        },
+        {
+          "osrs": 4397,
+          "local": 4397,
+          "name": "Team-42 cape"
+        },
+        {
+          "osrs": 4399,
+          "local": 4399,
+          "name": "Team-43 cape"
+        },
+        {
+          "osrs": 4401,
+          "local": 4401,
+          "name": "Team-44 cape"
+        },
+        {
+          "osrs": 4403,
+          "local": 4403,
+          "name": "Team-45 cape"
+        },
+        {
+          "osrs": 4405,
+          "local": 4405,
+          "name": "Team-46 cape"
+        },
+        {
+          "osrs": 4407,
+          "local": 4407,
+          "name": "Team-47 cape"
+        },
+        {
+          "osrs": 4409,
+          "local": 4409,
+          "name": "Team-48 cape"
+        },
+        {
+          "osrs": 4411,
+          "local": 4411,
+          "name": "Team-49 cape"
+        },
+        {
+          "osrs": 4413,
+          "local": 4413,
+          "name": "Team-50 cape"
+        },
+        {
+          "osrs": 20211,
+          "local": null,
+          "name": "Team cape zero"
+        },
+        {
+          "osrs": 20214,
+          "local": null,
+          "name": "Team cape x"
+        },
+        {
+          "osrs": 20217,
+          "local": null,
+          "name": "Team cape i"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": "Headbang",
+      "equipment": {
+        "equipment1": "Steel platebody",
+        "equipment2": "Maple shortbow",
+        "equipment3": "Team-1 cape",
+        "equipment3alt1": "Team-2 cape",
+        "equipment3alt2": "Team-3 cape",
+        "equipment3alt3": "Team-4 cape",
+        "equipment3alt4": "Team-5 cape",
+        "equipment3alt5": "Team-6 cape",
+        "equipment3alt6": "Team-7 cape",
+        "equipment3alt7": "Team-8 cape",
+        "equipment3alt8": "Team-9 cape",
+        "equipment3alt9": "Team-10 cape",
+        "equipment3alt10": "Team-11 cape",
+        "equipment3alt11": "Team-12 cape",
+        "equipment3alt12": "Team-13 cape",
+        "equipment3alt13": "Team-14 cape",
+        "equipment3alt14": "Team-15 cape",
+        "equipment3alt15": "Team-16 cape",
+        "equipment3alt16": "Team-17 cape",
+        "equipment3alt17": "Team-18 cape",
+        "equipment3alt18": "Team-19 cape",
+        "equipment3alt19": "Team-20 cape",
+        "equipment3alt20": "Team-21 cape",
+        "equipment3alt21": "Team-22 cape",
+        "equipment3alt22": "Team-23 cape",
+        "equipment3alt23": "Team-24 cape",
+        "equipment3alt24": "Team-25 cape",
+        "equipment3alt25": "Team-26 cape",
+        "equipment3alt26": "Team-27 cape",
+        "equipment3alt27": "Team-28 cape",
+        "equipment3alt28": "Team-29 cape",
+        "equipment3alt29": "Team-30 cape",
+        "equipment3alt30": "Team-31 cape",
+        "equipment3alt31": "Team-32 cape",
+        "equipment3alt32": "Team-33 cape",
+        "equipment3alt33": "Team-34 cape",
+        "equipment3alt34": "Team-35 cape",
+        "equipment3alt35": "Team-36 cape",
+        "equipment3alt36": "Team-37 cape",
+        "equipment3alt37": "Team-38 cape",
+        "equipment3alt38": "Team-39 cape",
+        "equipment3alt39": "Team-40 cape",
+        "equipment3alt40": "Team-41 cape",
+        "equipment3alt41": "Team-42 cape",
+        "equipment3alt42": "Team-43 cape",
+        "equipment3alt43": "Team-44 cape",
+        "equipment3alt44": "Team-45 cape",
+        "equipment3alt45": "Team-46 cape",
+        "equipment3alt46": "Team-47 cape",
+        "equipment3alt47": "Team-48 cape",
+        "equipment3alt48": "Team-49 cape",
+        "equipment3alt49": "Team-50 cape",
+        "equipment3alt50": "Team cape zero",
+        "equipment3alt51": "Team cape x",
+        "equipment3alt52": "Team cape i"
+      },
+      "requirements": "Equip a [[steel platebody]], [[maple shortbow]] and a [[Wilderness cape]]."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Barbarian_Agility_Arena",
+    "sourceFile": "Clue_scroll_(medium)_-_Cheer_in_the_Barbarian_Agility_Arena.wiki",
+    "sourceSha256": "f65ebad4fdab7767bb3cfccfae911f884474b98ffce835470fb1a911540543ff",
+    "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "action": "EMOTE",
+    "hint": "The emote reveals \n\nJump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps.",
+    "points": [
+      [
+        2610,
+        3092,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [
+      [
+        {
+          "osrs": 1757,
+          "local": 1757,
+          "name": "Brown apron"
+        }
+      ],
+      [
+        {
+          "osrs": 1145,
+          "local": 1145,
+          "name": "Adamant med helm"
+        }
+      ],
+      [
+        {
+          "osrs": 6324,
+          "local": 6324,
+          "name": "Snakeskin chaps"
+        }
+      ]
+    ],
+    "challenge": {
+      "type": "URI",
+      "emote": "Jump for Joy",
+      "secondEmote": "Jig",
+      "equipment": {
+        "equipment1": "Brown apron",
+        "equipment2": "Adamant med helm",
+        "equipment3": "Snakeskin chaps"
+      },
+      "requirements": "Equip a [[brown apron]], [[adamant med helm]] and [[snakeskin chap]]s."
+    },
+    "requirements": {
+      "onlyListedEquipment": false,
+      "emptySlots": []
+    },
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Jump_for_joy_in_Yanille_bank",
+    "sourceFile": "Clue_scroll_(medium)_-_Jump_for_joy_in_Yanille_bank.wiki",
+    "sourceSha256": "ec8e2c574697f6410f7e6e47bbb3036d4081cd741529622e4475130e949e0a49",
+    "restoredOriginal": true
   },
   {
     "key": "Clue scroll (hard) - Salute in the banana plantation",

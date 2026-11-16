@@ -5,7 +5,7 @@ import java.util.Arrays;
 /** Real, unmodified native Component decoder; all chart nodes, no client window. */
 class ClueStashChartClientRegression {
     public static void main(String[] args) throws Exception {
-        Path dir=Path.of(args[0]); Component[] nodes=new Component[130];
+        Path dir=Path.of(args[0]); Component[] nodes=new Component[150];
         for(int i=0;i<nodes.length;i++) {
             byte[] bytes=Files.readAllBytes(dir.resolve("chart-"+i+".bin"));
             Packet packet=new Packet(bytes); Component node=new Component();node.id=(1300<<16)|i;node.decode(packet);
@@ -21,7 +21,7 @@ class ClueStashChartClientRegression {
         require(Arrays.equals(nodes[48].onMouseOver,new Object[]{44,-2147483645,9832}),"source close hover");
         require(Arrays.stream(nodes).anyMatch(n->n.type==3 && n.filled && n.colour==16777215),"source row shading");
         require(Arrays.stream(nodes).anyMatch(n->n.type==4 && n.text.equals("78")),"owner's tier label");
-        System.out.println("CLUE real Component: all 130 STASH chart nodes, source hover hooks, row shading and 78 label OK");
+        System.out.println("CLUE real Component: all 150 STASH chart nodes, source hover hooks, row shading and 78 label OK");
     }
     static void require(boolean condition,String message) { if(!condition) throw new AssertionError(message); }
 }

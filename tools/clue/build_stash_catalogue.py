@@ -100,7 +100,8 @@ def main():
         units.append(dict(key=step['key'], tier=tier, osrsId=loc['id'], physicalPoint=loc['point'], effectivePlane=loc['effectivePlane'],
             type=loc['type'], rotation=loc['rotation'], unbuiltId=forms[0], builtId=forms[1], sourceVarbit=selector,
             objectSha256=loc['sha256'], formSha256=loc['formSha256'], equipment=step['equipment']))
-    assert len(units) == 17 and len({r['osrsId'] for r in units}) == 17
+    expected = sum(step['action'] == 'EMOTE' for step in steps.values())
+    assert len(units) == expected and len({r['osrsId'] for r in units}) == expected
     result = dict(source=manifest['STASH'], toolSources=[manifest[page] for page in
         ('Hammer', 'Saw', 'Imcando hammer', 'Imcando hammer (off-hand)', "Amy's saw", "Amy's saw (off-hand)", 'Crystal saw')],
         cacheEvidenceSha256=sha256(evidence_file.read_bytes()).hexdigest(),
@@ -108,7 +109,7 @@ def main():
         rules=dict(sameNailMetal=True, nailsBend=False, fullSetOnly=True, withdrawAllOnly=True,
                    inventoryBeforeEquipment=True, equippedItemsRequireSetting=True), recipes=recipes, units=units)
     (ROOT/'data/cfg/clue/stashes.json').write_text(json.dumps(result, indent=2)+'\n', encoding='utf8')
-    print('17 source/cache-checked STASH units; five exact recipes; seven legal nail metals; no activation/cache writes')
+    print(len(units), 'source/cache-checked STASH units; five exact recipes; seven legal nail metals; no activation/cache writes')
 
 
 if __name__ == '__main__':

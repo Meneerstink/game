@@ -45,6 +45,7 @@
       },
       "requirements": "Equip an [[iron chainbody]], a [[sapphire ring]] and a [[longbow]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -93,6 +94,7 @@
       },
       "requirements": "Equip a [[desert shirt]], [[leather gloves]] and [[leather boot]]s."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -141,6 +143,7 @@
       },
       "requirements": "Equip a [[blue wizard hat]], a [[bronze 2h sword]] and [[HAM boots]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -189,6 +192,7 @@
       },
       "requirements": "Equip an [[iron med helmet]], [[emerald ring]] and a [[white apron]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -237,6 +241,7 @@
       },
       "requirements": "Equip a [[desert shirt]], [[Green robe bottoms|green gnome robe bottom]]s and a [[steel axe]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -269,6 +274,7 @@
     "subtype": "MAP",
     "sourceSha256": "f42b420bceb8a3d3bd481c983aa660a965ad106d9e2f0075c5e2713f9027bc65",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -301,6 +307,7 @@
     "subtype": "MAP",
     "sourceSha256": "cd59136e4726372aaaa1874718b664d04b48e53c8b47c035202df6a5319dec7f",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -333,6 +340,7 @@
     "subtype": "MAP",
     "sourceSha256": "1b5a460a4ac0a502a99b25bfe1252896f39eff8c77d5a5e7b8d3d0ce471330ab",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -364,6 +372,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "3b2ac8a0fa72996d35057f3647ab1bf0711474cf609f012a89b64155498efa1d",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -395,6 +404,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "33c108294bb85dc89b3130083d202de2108b3d61b2d527a49ad720b5a3019aaa",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -426,6 +436,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "fe3ebe0669171f1fbc8d542a932cc9598e4b42bb4e454f6dd499acd4537f153f",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -457,6 +468,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "ea86453a5fdc80f461438bf4c0294b27bbcad65eb8e4ec1366129d1a7d59ab3d",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -489,6 +501,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "67154b405cf7bb51083761f9c9cd25f9871b0afe2b1900104ee55c4770d4d8d5",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -520,6 +533,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "9229696b77412936b1c20c7f4e8d9683a9979bf5aa716fee40a043fb09c91938",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -551,6 +565,203 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "0a9e9bcbe00801fb8e00ff5085331265d5db64e5d09503aad2c69ec8a1c8ccbd",
     "challenge": {},
+    "restoredOriginal": false,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (easy) - Dance a jig by the entrance to the Fishing Guild",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nDance a jig by the entrance to the Fishing Guild. Equip an emerald ring, a sapphire amulet, and a bronze chain body.",
+    "points": [
+      [
+        2610,
+        3391,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10220
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_a_jig_by_the_entrance_to_the_Fishing_Guild.wiki",
+    "revision": 15320030,
+    "fields": {
+      "id": "289",
+      "tier": "easy",
+      "emote": "Jig",
+      "text": "The emote reveals <br><br>Dance a jig by the entrance to the Fishing Guild. Equip an emerald ring, a sapphire amulet, and a bronze chain body.",
+      "location": "By the entrance to the [[Fishing Guild]]",
+      "items": "Equip an [[emerald ring]], a [[sapphire amulet]], and a [[bronze chainbody]].",
+      "equipment1": "Emerald ring",
+      "equipment2": "Sapphire amulet",
+      "equipment3": "Bronze chainbody",
+      "notes": "Perform the [[jig]] emote outside the [[Fishing Guild]].",
+      "map": "{{Map|2610,3391|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "246c8a1a7539b00c800ae940ba6d2a305b46f970c78acab6681632add61cf87d",
+    "challenge": {
+      "type": "URI",
+      "emote": "Jig",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Emerald ring",
+        "equipment2": "Sapphire amulet",
+        "equipment3": "Bronze chainbody"
+      },
+      "requirements": "Equip an [[emerald ring]], a [[sapphire amulet]], and a [[bronze chainbody]]."
+    },
+    "restoredOriginal": true,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the shack in Lumbridge Swamp",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nDance in the shack in Lumbridge Swamp. Equip a bronze dagger, iron full helmet and a gold ring.",
+    "points": [
+      [
+        3203,
+        3169,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10180
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_shack_in_Lumbridge_Swamp",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_shack_in_Lumbridge_Swamp.wiki",
+    "revision": 15320034,
+    "fields": {
+      "id": "293",
+      "tier": "easy",
+      "emote": "Dance",
+      "text": "The emote reveals <br><br>Dance in the shack in Lumbridge Swamp. Equip a bronze dagger, iron full helmet and a gold ring.",
+      "location": "Outside the shack that leads to [[Zanaris]] in [[Lumbridge Swamp]]",
+      "items": "Equip a [[bronze dagger]], [[iron full helmet]] and a [[gold ring]].",
+      "equipment1": "Bronze dagger",
+      "equipment2": "Iron full helm",
+      "equipment3": "Gold ring",
+      "notes": "Perform the [[dance]] emote near the shed in [[Lumbridge Swamp]].",
+      "map": "{{Map|3203,3169|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "1d9c325c9634d9b1a09c980708b1639f4af287206cf765e38ba276dbf43f49f7",
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Bronze dagger",
+        "equipment2": "Iron full helm",
+        "equipment3": "Gold ring"
+      },
+      "requirements": "Equip a [[bronze dagger]], [[iron full helmet]] and a [[gold ring]]."
+    },
+    "restoredOriginal": true,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (easy) - Dance in the Party Room",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nDance in the Party Room. Equip a steel full helmet, steel platebody and an iron plateskirt.",
+    "points": [
+      [
+        3045,
+        3376,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10208
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Dance_in_the_Party_Room",
+    "sourceFile": "Clue_scroll_(easy)_-_Dance_in_the_Party_Room.wiki",
+    "revision": 15320033,
+    "fields": {
+      "id": "292",
+      "tier": "easy",
+      "emote": "Dance",
+      "text": "The emote reveals <br><br>Dance in the Party Room. Equip a steel full helmet, steel platebody and an iron plateskirt.",
+      "location": "By the entrance to the [[Falador Party Room]]",
+      "items": "Equip a [[steel full helmet]], [[steel platebody]] and an [[iron plateskirt]].",
+      "equipment1": "Steel full helm",
+      "equipment2": "Steel platebody",
+      "equipment3": "Iron plateskirt",
+      "notes": "Perform the [[dance]] emote outside the [[Falador Party Room]].",
+      "map": "{{Map|3045,3376|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "d213f7b523261163bcd539387d822d2e059569b2ff41d53097c5c5ed67151848",
+    "challenge": {
+      "type": "URI",
+      "emote": "Dance",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Steel full helm",
+        "equipment2": "Steel platebody",
+        "equipment3": "Iron plateskirt"
+      },
+      "requirements": "Equip a [[steel full helmet]], [[steel platebody]] and an [[iron plateskirt]]."
+    },
+    "restoredOriginal": true,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (easy) - Cheer for the monks at Port Sarim",
+    "tier": "easy",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nCheer for the monks at Port Sarim. Equip a coif, steel plateskirt and a sapphire necklace.",
+    "points": [
+      [
+        3047,
+        3237,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10192
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Cheer_for_the_monks_at_Port_Sarim",
+    "sourceFile": "Clue_scroll_(easy)_-_Cheer_for_the_monks_at_Port_Sarim.wiki",
+    "revision": 15320259,
+    "fields": {
+      "id": "285",
+      "tier": "easy",
+      "emote": "Cheer",
+      "text": "The emote reveals <br><br>Cheer for the monks at Port Sarim. Equip a coif, steel plateskirt and a sapphire necklace.",
+      "location": "Near the [[Monks of Entrana]] in [[Port Sarim]]",
+      "items": "Equip a [[coif]], [[steel plateskirt]] and a [[sapphire necklace]].",
+      "equipment1": "Coif",
+      "equipment2": "Steel plateskirt",
+      "equipment3": "Sapphire necklace",
+      "notes": "Perform the [[cheer]] emote near the [[Entrana]] ferry in [[Port Sarim]].",
+      "map": "{{Map|3047,3237|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "ab8eb4ccea33071710d356f8859300945a6c4021eb52ff6b4b3ef4d381166327",
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": null,
+      "equipment": {
+        "equipment1": "Coif",
+        "equipment2": "Steel plateskirt",
+        "equipment3": "Sapphire necklace"
+      },
+      "requirements": "Equip a [[coif]], [[steel plateskirt]] and a [[sapphire necklace]]."
+    },
+    "restoredOriginal": true,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -600,6 +811,7 @@
       },
       "requirements": "Equip a [[brown apron]], [[leather boots]] and [[leather gloves]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -649,6 +861,7 @@
       },
       "requirements": "Equip a [[maple longbow]], [[green d'hide chaps]] and an [[iron med helm]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -801,6 +1014,7 @@
       },
       "requirements": "Equip a [[ruby amulet]], a [[mithril scimitar]] and a [[Wilderness cape]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -850,6 +1064,7 @@
       },
       "requirements": "Equip [[purple gloves]], a [[steel kiteshield]] and a [[mithril full helmet]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -891,6 +1106,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -932,6 +1148,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -973,6 +1190,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1008,6 +1226,7 @@
       "question": "How many stalls are there in Varrock Square?",
       "answer": "5"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1040,6 +1259,7 @@
     "subtype": "ANAGRAM",
     "sourceSha256": "a8f7babd9d3c16b83eb9dc1803d252e5864dbcb3dd889b5d1ee833f39001fd3f",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1080,6 +1300,7 @@
         "condition": "If players failed to save [[Jarvis]] during the [[2017 Halloween event]], the answer is 20 instead of 19."
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1115,6 +1336,7 @@
       "question": "Please solve this for x: 7x - 28=21",
       "answer": "7"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1150,6 +1372,7 @@
       "question": "How many air runes would I need to cast 630 wind waves?",
       "answer": "3150"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1182,6 +1405,7 @@
     "subtype": "MAP",
     "sourceSha256": "054f6f23d4c3cae3eeca0253a71e17a8601fdc7e0e4b711f71b7cc992b15920a",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1214,6 +1438,7 @@
     "subtype": "MAP",
     "sourceSha256": "3ee934f53e6cfdde1e36c37b78ac0882173b73fa6f4f5ec4f616b845645cc783",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1246,6 +1471,211 @@
     "subtype": "MAP",
     "sourceSha256": "e79b89c6d8f1a4985197cf3e281e0c47edd9cf55e156b3366b57a2a2ecd0d4ba",
     "challenge": {},
+    "restoredOriginal": false,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (medium) - Cheer in the Barbarian Agility Arena",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nCheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape.",
+    "points": [
+      [
+        2552,
+        3556,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10264
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Cheer_in_the_Barbarian_Agility_Arena",
+    "sourceFile": "Clue_scroll_(medium)_-_Cheer_in_the_Barbarian_Agility_Arena.wiki",
+    "revision": 15320067,
+    "fields": {
+      "id": "313",
+      "tier": "medium",
+      "emote": "Cheer",
+      "emote2": "Headbang",
+      "text": "The emote reveals <br><br>Cheer in the Barbarian Agility Arena. Headbang before you talk to me. Equip a steel platebody, maple shortbow and a Wilderness cape.",
+      "location": "Centre of the [[Barbarian Outpost Agility Course]]",
+      "items": "Equip a [[steel platebody]], [[maple shortbow]] and a [[Wilderness cape]].",
+      "equipment1": "Steel platebody",
+      "equipment2": "Maple shortbow",
+      "equipment3": "Team-1 cape",
+      "equipment3alt1": "Team-2 cape",
+      "equipment3alt2": "Team-3 cape",
+      "equipment3alt3": "Team-4 cape",
+      "equipment3alt4": "Team-5 cape",
+      "equipment3alt5": "Team-6 cape",
+      "equipment3alt6": "Team-7 cape",
+      "equipment3alt7": "Team-8 cape",
+      "equipment3alt8": "Team-9 cape",
+      "equipment3alt9": "Team-10 cape",
+      "equipment3alt10": "Team-11 cape",
+      "equipment3alt11": "Team-12 cape",
+      "equipment3alt12": "Team-13 cape",
+      "equipment3alt13": "Team-14 cape",
+      "equipment3alt14": "Team-15 cape",
+      "equipment3alt15": "Team-16 cape",
+      "equipment3alt16": "Team-17 cape",
+      "equipment3alt17": "Team-18 cape",
+      "equipment3alt18": "Team-19 cape",
+      "equipment3alt19": "Team-20 cape",
+      "equipment3alt20": "Team-21 cape",
+      "equipment3alt21": "Team-22 cape",
+      "equipment3alt22": "Team-23 cape",
+      "equipment3alt23": "Team-24 cape",
+      "equipment3alt24": "Team-25 cape",
+      "equipment3alt25": "Team-26 cape",
+      "equipment3alt26": "Team-27 cape",
+      "equipment3alt27": "Team-28 cape",
+      "equipment3alt28": "Team-29 cape",
+      "equipment3alt29": "Team-30 cape",
+      "equipment3alt30": "Team-31 cape",
+      "equipment3alt31": "Team-32 cape",
+      "equipment3alt32": "Team-33 cape",
+      "equipment3alt33": "Team-34 cape",
+      "equipment3alt34": "Team-35 cape",
+      "equipment3alt35": "Team-36 cape",
+      "equipment3alt36": "Team-37 cape",
+      "equipment3alt37": "Team-38 cape",
+      "equipment3alt38": "Team-39 cape",
+      "equipment3alt39": "Team-40 cape",
+      "equipment3alt40": "Team-41 cape",
+      "equipment3alt41": "Team-42 cape",
+      "equipment3alt42": "Team-43 cape",
+      "equipment3alt43": "Team-44 cape",
+      "equipment3alt44": "Team-45 cape",
+      "equipment3alt45": "Team-46 cape",
+      "equipment3alt46": "Team-47 cape",
+      "equipment3alt47": "Team-48 cape",
+      "equipment3alt48": "Team-49 cape",
+      "equipment3alt49": "Team-50 cape",
+      "equipment3alt50": "Team cape zero",
+      "equipment3alt51": "Team cape x",
+      "equipment3alt52": "Team cape i",
+      "notes": "Perform the [[cheer]] and [[headbang]] emotes in the [[Barbarian Outpost Agility Course|barbarian Outpost obstacle course]].",
+      "map": "{{Map|2552,3556|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "f65ebad4fdab7767bb3cfccfae911f884474b98ffce835470fb1a911540543ff",
+    "challenge": {
+      "type": "URI",
+      "emote": "Cheer",
+      "secondEmote": "Headbang",
+      "equipment": {
+        "equipment1": "Steel platebody",
+        "equipment2": "Maple shortbow",
+        "equipment3": "Team-1 cape",
+        "equipment3alt1": "Team-2 cape",
+        "equipment3alt2": "Team-3 cape",
+        "equipment3alt3": "Team-4 cape",
+        "equipment3alt4": "Team-5 cape",
+        "equipment3alt5": "Team-6 cape",
+        "equipment3alt6": "Team-7 cape",
+        "equipment3alt7": "Team-8 cape",
+        "equipment3alt8": "Team-9 cape",
+        "equipment3alt9": "Team-10 cape",
+        "equipment3alt10": "Team-11 cape",
+        "equipment3alt11": "Team-12 cape",
+        "equipment3alt12": "Team-13 cape",
+        "equipment3alt13": "Team-14 cape",
+        "equipment3alt14": "Team-15 cape",
+        "equipment3alt15": "Team-16 cape",
+        "equipment3alt16": "Team-17 cape",
+        "equipment3alt17": "Team-18 cape",
+        "equipment3alt18": "Team-19 cape",
+        "equipment3alt19": "Team-20 cape",
+        "equipment3alt20": "Team-21 cape",
+        "equipment3alt21": "Team-22 cape",
+        "equipment3alt22": "Team-23 cape",
+        "equipment3alt23": "Team-24 cape",
+        "equipment3alt24": "Team-25 cape",
+        "equipment3alt25": "Team-26 cape",
+        "equipment3alt26": "Team-27 cape",
+        "equipment3alt27": "Team-28 cape",
+        "equipment3alt28": "Team-29 cape",
+        "equipment3alt29": "Team-30 cape",
+        "equipment3alt30": "Team-31 cape",
+        "equipment3alt31": "Team-32 cape",
+        "equipment3alt32": "Team-33 cape",
+        "equipment3alt33": "Team-34 cape",
+        "equipment3alt34": "Team-35 cape",
+        "equipment3alt35": "Team-36 cape",
+        "equipment3alt36": "Team-37 cape",
+        "equipment3alt37": "Team-38 cape",
+        "equipment3alt38": "Team-39 cape",
+        "equipment3alt39": "Team-40 cape",
+        "equipment3alt40": "Team-41 cape",
+        "equipment3alt41": "Team-42 cape",
+        "equipment3alt42": "Team-43 cape",
+        "equipment3alt43": "Team-44 cape",
+        "equipment3alt44": "Team-45 cape",
+        "equipment3alt45": "Team-46 cape",
+        "equipment3alt46": "Team-47 cape",
+        "equipment3alt47": "Team-48 cape",
+        "equipment3alt48": "Team-49 cape",
+        "equipment3alt49": "Team-50 cape",
+        "equipment3alt50": "Team cape zero",
+        "equipment3alt51": "Team cape x",
+        "equipment3alt52": "Team cape i"
+      },
+      "requirements": "Equip a [[steel platebody]], [[maple shortbow]] and a [[Wilderness cape]]."
+    },
+    "restoredOriginal": true,
+    "activation": "pending target assets, subtype handler and client verification"
+  },
+  {
+    "key": "Clue scroll (medium) - Jump for joy in Yanille bank",
+    "tier": "medium",
+    "kind": "EMOTE",
+    "hint": "The emote reveals \n\nJump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps.",
+    "points": [
+      [
+        2610,
+        3092,
+        0
+      ]
+    ],
+    "osrsScrollIds": [
+      10268
+    ],
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_Jump_for_joy_in_Yanille_bank",
+    "sourceFile": "Clue_scroll_(medium)_-_Jump_for_joy_in_Yanille_bank.wiki",
+    "revision": 15320047,
+    "fields": {
+      "id": "326",
+      "tier": "medium",
+      "emote": "Jump for Joy",
+      "emote2": "Jig",
+      "text": "The emote reveals <br><br>Jump for joy in Yanille bank. Dance a jig before you talk to me. Equip a brown apron, adamantite medium helmet and snakeskin chaps.",
+      "location": "Outside of [[Yanille]] bank, by the entrance to the [[Wizards' Guild]]",
+      "items": "Equip a [[brown apron]], [[adamant med helm]] and [[snakeskin chap]]s.",
+      "equipment1": "Brown apron",
+      "equipment2": "Adamant med helm",
+      "equipment3": "Snakeskin chaps",
+      "notes": "Perform the [[jump for joy]] and [[jig]] emotes near outside [[Yanille]] bank.",
+      "map": "{{Map|2610,3092|mtype=pin|plane=0|mapID=-1}}"
+    },
+    "missingSquares": [],
+    "eventSpecific": false,
+    "subtype": "EMOTE",
+    "sourceSha256": "ec8e2c574697f6410f7e6e47bbb3036d4081cd741529622e4475130e949e0a49",
+    "challenge": {
+      "type": "URI",
+      "emote": "Jump for Joy",
+      "secondEmote": "Jig",
+      "equipment": {
+        "equipment1": "Brown apron",
+        "equipment2": "Adamant med helm",
+        "equipment3": "Snakeskin chaps"
+      },
+      "requirements": "Equip a [[brown apron]], [[adamant med helm]] and [[snakeskin chap]]s."
+    },
+    "restoredOriginal": true,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1292,6 +1722,7 @@
       },
       "requirements": "Equip a [[diamond ring]], [[amulet of power]], and nothing on your chest and legs."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1340,6 +1771,7 @@
       },
       "requirements": "Equip an [[elemental shield]], [[blue dragonhide chaps]] and a [[rune warhammer]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1388,6 +1820,7 @@
       },
       "requirements": "Equip an [[adamant square shield]], [[blue d'hide vambraces]] and a [[rune pickaxe]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1431,6 +1864,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1472,6 +1906,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1515,6 +1950,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Hard"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1548,6 +1984,7 @@
     "challenge": {
       "type": "SLIDING_PUZZLE"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1583,6 +2020,7 @@
       "question": "What is 40 divided by 1/2 plus 15?",
       "answer": "95"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1618,6 +2056,7 @@
       "question": "How many natural fires burn in Rogue's Den?",
       "answer": "2"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1651,6 +2090,7 @@
     "challenge": {
       "type": "SLIDING_PUZZLE"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1686,6 +2126,7 @@
       "question": "SIX LEGS! All of them have 6! There are 25 of them! How many legs?",
       "answer": "150"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1718,6 +2159,7 @@
     "subtype": "MAP",
     "sourceSha256": "a1a2125d26a40e7366552117dd12117f4236333599eaaa38ff72093e1a178b50",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1750,6 +2192,7 @@
     "subtype": "MAP",
     "sourceSha256": "525f4bad07c263b68be4dbee7bc0aaa1f0f5b8031fba746ae2ab3afd34a63a68",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1782,6 +2225,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "04d4d8364669e54f34d3dd5bf90fc8d953299d0207326b374e27337f5c90f852",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1814,6 +2258,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "b395b6901d48ce96a709c5933ed81b875a26e318502a76de3865c981652ccd2f",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1916,6 +2361,7 @@
       },
       "requirements": "Equip a completed [[god book|prayer book]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -1960,6 +2406,7 @@
       },
       "requirements": "Equip only a [[black salamander]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2010,6 +2457,7 @@
       },
       "requirements": "Equip a [[Castlewars bracelet]], a [[dragonstone amulet]] and a [[ring of forging]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2054,6 +2502,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2098,6 +2547,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Elite"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2133,6 +2583,7 @@
       "question": "How many scorpions live under the pit?",
       "answer": "28"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2168,6 +2619,7 @@
       "question": "What is the combined combat level of each species that live in Slayer tower?",
       "answer": "619"
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2200,6 +2652,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "f7fd0c4f0c359e9c1ca7532434c0f5f13f425edc46f13ec6d899328a02b19043",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2232,6 +2685,7 @@
     "subtype": "CRYPTIC",
     "sourceSha256": "ad328f2e21a52d7e2e0907b7f149acb820ac1642900f3f545d7ea5251ff9330b",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2264,6 +2718,7 @@
     "subtype": "MAP",
     "sourceSha256": "b06c207050f1d4ca62b3c3231def6100569b7e6d441a5dee04141c94f0203d64",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2288,6 +2743,7 @@
     "subtype": "KILL",
     "sourceSha256": "2608cfacc15f126347fb2055423f296f5ac967c3bbe092559e66e2cbf980313f",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2320,6 +2776,7 @@
     "subtype": "SHERLOCK",
     "sourceSha256": "c7c77deede6005d268de3d9673b3545852c36d442c8aa44359856e541809a059",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2402,6 +2859,7 @@
       },
       "requirements": "Equip an [[abyssal whip]], a [[Cape of Legends|legend's cape]] and some [[spined chaps]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2447,6 +2905,7 @@
       },
       "requirements": "Equip only some [[flared trousers]]."
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2487,6 +2946,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2527,6 +2987,7 @@
         "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Master"
       }
     },
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2557,6 +3018,7 @@
     "subtype": "THREE_PART_COMPONENT",
     "sourceSha256": "045944d4ed4770b97e40d35aada18d42226d08e4000be8475fc75df792092412",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2587,6 +3049,7 @@
     "subtype": "THREE_PART_COMPONENT",
     "sourceSha256": "4b62d454cfba1031c5b93c358692c4c65682f26ed82985590dbf8ce1ca01c53e",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2648,6 +3111,7 @@
     "subtype": "FALO",
     "sourceSha256": "e8d2589131be7b6f8661298c94c76f4a8ba55862d7742a4d189320d0d43ab934",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
@@ -2677,6 +3141,7 @@
     "subtype": "THREE_PART_COMPONENT",
     "sourceSha256": "75f24146490d5dbc6f6e6d96585cd1fd764ff1c460677d94cf24720b450c1289",
     "challenge": {},
+    "restoredOriginal": false,
     "activation": "pending target assets, subtype handler and client verification"
   },
   {
