@@ -58,7 +58,7 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         for (c in crabs) {
             if (colourUntil.containsKey(c)) continue
             val near = raiders().firstOrNull { it.tile.getDistance(c.tile) <= 3 } ?: continue
-            if (!meleeReach(c, near.tile)) { c.walkTo(near.tile); continue }
+            if (!meleeReach(c, near.tile)) { c.walkTo(besideOf(near.tile, c.tile)); continue }
             if (tick >= (nextBite[c] ?: 0)) { nextBite[c] = tick + 4; animate(c, 2368); attack(c, near, 10, CombatClass.MELEE) }
         }
         if (focus == null && tick >= nextFocusAt) sendFocus() else if (focus != null) moveFocus()
@@ -87,6 +87,18 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         f.stopMovement()
         later(1) { remove(f) }
     }
+
+    /**
+     * Where a following crab heads: the free tile straight beside [player] nearest to it (16-11: walking to the player's own tile, a crab
+     * standing diagonally only had the occupied tile as its step and stood still - it could never be led onto the orb's row).
+     */
+    private fun besideOf(player: Tile, from: Tile): Tile =
+        listOf(1 to 0, -1 to 0, 0 to 1, 0 to -1).map { (dx, dz) -> player.transform(dx, dz) }
+            .filter { t -> crabs.none { alive(it) && it.tile.x == t.x && it.tile.z == t.z } }
+            // a tile it can stand on (not a crystal / wall): open towards the player it follows
+            .filter { t -> world.collision.canTraverse(t, gg.rsmod.game.model.Direction.between(t, player), projectile = false, water = false) }
+            .minByOrNull { maxOf(kotlin.math.abs(it.x - from.x), kotlin.math.abs(it.z - from.z)) * 4 + kotlin.math.abs(it.x - from.x) + kotlin.math.abs(it.z - from.z) }
+            ?: player
 
     private fun crabAt(x: Int, z: Int) = crabs.firstOrNull { alive(it) && it.tile.x == x && it.tile.z == z }
 
