@@ -208,12 +208,17 @@ object CoxRaids : KLogging() {
 
     /** tsps r115 (rsprox): 'Landings on ropes and holes move to the nearest open tile'. Ring by ring up to [r]. */
     fun nearestOpen(world: World, t: Tile, r: Int = 6): Tile {
+        // 16-11: first a tile open in ALL four directions - a half-wall edge tile (open one way) left a raider stuck on the Vespula ledge
+        // ('I can't reach that!'); only when none is near, any tile one can step off.
+        fun fully(c: Tile) = gg.rsmod.game.model.Direction.NESW.all { d -> world.collision.canTraverse(tile = c, direction = d, projectile = false, water = false) }
         fun open(c: Tile) = gg.rsmod.game.model.Direction.NESW.any { d -> world.collision.canTraverse(tile = c, direction = d, projectile = false, water = false) }
-        if (open(t)) return t
-        for (d in 1..r) for (dx in -d..d) for (dz in -d..d) {
-            if (maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz)) != d) continue
-            val c = t.transform(dx, dz)
-            if (open(c)) return c
+        for (test in listOf(::fully, ::open)) {
+            if (test(t)) return t
+            for (d in 1..r) for (dx in -d..d) for (dz in -d..d) {
+                if (maxOf(kotlin.math.abs(dx), kotlin.math.abs(dz)) != d) continue
+                val c = t.transform(dx, dz)
+                if (test(c)) return c
+            }
         }
         return t
     }
