@@ -48,6 +48,13 @@ object CoxRaids : KLogging() {
     /** Guarded like the ToA raid (GuardedZones): party members fight the chambers, never each other. */
     fun isRaidTile(tile: Tile): Boolean = raids.values.any { !it.closed && it.map.area.contains(tile) }
 
+    /**
+     * The gathering plateau at the entrance on Mount Quidamortem (recruiting boards 1224,3562 / 1240,3549 / 1246,3562, the steps, the
+     * storage unit 1256,3572, the second board 1232,3573): guarded like the ToA lobby (N609 owner report 'de entree lobby toa dangerous
+     * zone'). Eigen advies 16-11 (dossier COX.txt): the same rule for the CoX party area; the bounds are the plateau around those locs.
+     */
+    fun inLobby(tile: Tile): Boolean = tile.height == 0 && tile.x in 1220..1260 && tile.z in 3545..3578
+
     fun raidAt(tile: Tile): CoxRaid? = raids.values.firstOrNull { !it.closed && it.map.area.contains(tile) }
 
     fun byId(id: Long): CoxRaid? = raids.values.firstOrNull { !it.closed && it.id == id }

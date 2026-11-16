@@ -273,6 +273,8 @@ object GuardedZones {
             gg.rsmod.plugins.content.activity.toa.ToaLobby.isRaidTile(tile) ||
             // Chambers of Xeric (dossier COX.txt): the raid instance, like ToA - the party fights the chambers, never each other.
             gg.rsmod.plugins.content.activity.cox.CoxRaids.isRaidTile(tile) ||
+            // CoX entrance plateau (CoxRaids.inLobby): where CoX parties gather, guarded like the ToA lobby below.
+            gg.rsmod.plugins.content.activity.cox.CoxRaids.inLobby(tile) ||
             // N609 14-11 (owner report: 'de entree lobby toa dangerous zone'): the ToA lobby where parties gather (Grouping obelisk,
             // Scoreboard, Invocation Board) is guarded like the Pest Control lander decks above - nobody fights each other there.
             gg.rsmod.plugins.content.activity.toa.ToaMap.inLobby(tile)
