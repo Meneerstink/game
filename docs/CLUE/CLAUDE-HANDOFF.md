@@ -9,6 +9,27 @@ Current continuation/results: `REVIEW-B-16NOV.md`; earlier details: `REVIEW-B-7.
 The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 
+## Applying the prepared batches (Claude)
+
+Rerun each batch against the caches produced by preceding batches; commit its
+regenerated runtime mapping before continuing. This refreshes every allocator,
+including sprites after the CoX8954 allocation.
+
+1. Combined247-item roster and generated YAML metadata; refresh items.tsv and
+   reward/log mappings. Then rerun the core-item patch, including source19835/19836
+   and the owner's 78 names/Gold-onyx presentation described below.
+2. Current10-NPC clue-steps batch; regenerate the complete verified npcs.tsv.
+3. Watson/STASH objects, noticeboard, setting and search-menu batches with their
+   per-batch preflights and mappings. Keep the owner's POH Study exclusion.
+4. Reward/text UI first, maps second, puzzle UI third, sharing interfaces.tsv.
+   Rerun the allocator before every application; the older ID ranges overlap.
+5. Follow the client codec patch/release and loaded-client checks in this handoff.
+   Keep the Mimic encounter marked unavailable until its full combat/source work
+   is complete; arena import/collision checking is only part of that chain.
+
+The item/NPC snapshots under validation/ preserve this session's read-only
+proofs. NPC-PREFLIGHT.tsv and ITEM-PREFLIGHT.tsv contain the current proposals.
+
 ## Exact item batch
 
 * Source: `C:/RSPS/import-source/openrs2-2686/cache`.

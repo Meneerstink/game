@@ -5,12 +5,20 @@ integration-20261116-162314 passed **202 tests in 50 classes** (14 core, 36 plug
 and every plugin script compiled. Duration 32m59. This accepts fff1c00b2 and its
 preceding map/Uri/tree-puzzle work; the interrupted integration155637 stays invalid.
 Proof: build/clue/integration-20261116-162314/summary.json and exact command.json.
+The accepted summary, command, source commit and unchanged input-manifest hash
+are also preserved in validation/integration-20261116-162314.json.
 
 ## Guardian state and source review
 
 Nine staged tests passed, durable source checkpoint a05083196. No guardian steps
 activated; GUARDIAN-SOURCE-AUDIT.md lists the combat/PvP/loot and source gaps.
 This is separate from the 202-test baseline.
+
+The current source ledger has 69 total records (15 easy, 15 medium, 15 hard,
+12 elite, 12 master), including three components of one master step. This is
+67 possible trail choices before subtype/asset gates, not proof of approximately
+25 active choices per tier or 70 additions beyond the original pool. Keep the
+owner's count requirement open when completing/reconciling the final step pool.
 
 Three native guardian bulk records corrected against pinned Wiki values:
 5144 strength 3->0; 5145 strength 44->40; 1264 strength 44->40 and poison 4->6.
@@ -37,6 +45,8 @@ Removed the unreferenced 288-line donor step file, generic map/emote completion
 fallback and onAttempt API. Player actions use the source subtype handlers.
 Transaction fixtures now call the real advance transaction directly; a new
 regression rejects dig/emote completion from map metadata alone.
+The rebuilt plugin JAR was inspected: MapClueStep, EmoteClueStep,
+MapClueLocation, EmoteClueLocation and TreasureTrailStepsKt are absent.
 
 Fifteen freshly compiled lifecycle/contract/torn tests passed. Initial two
 failures were missing MimicRecovery in the small runner's classpath; adding the
@@ -55,10 +65,19 @@ Current 10-NPC clue-steps PREFLIGHT tx-20261116-170726 also passed: 168 logical
 mutations, 70 source asset records, proposals 15314..15323. Both caches, ledger,
 runtime NPC mapping and profile hashes unchanged. NPC-PREFLIGHT.tsv lists every
 source/NPC/model/head/sequence mapping, including source306 Lumbridge Guide.
+Both complete read-only before/after proofs are preserved under validation/.
 
 ## Continuation gate
 
 integration-20261116-170010: 4541 frozen inputs, 14 explicitly filtered plugin
 classes, no core test task. The helper never emits an unfiltered test task for
-an empty module. Result pending; the 202-test baseline does not accept these
-later runtime changes. No apply/server/client/live/push.
+an empty module. Accepted: 84 tests/14 classes, no failures/errors/skips/missing, all4541 input
+hashes identical. Core/plugins/all scripts compiled; 31m29. Durable evidence:
+validation/integration-20261116-170010.json. This validates the donor cleanup,
+Mimic spawn rollback and three native combat-stat corrections. Full gameplay
+acceptance still requires the open source/asset/client gates. No apply/server/client/live/push.
+
+Worktree-scoped Rsps-Lint -Changed: one modified gameplay source, zero findings.
+The lint script was copied under build/clue and its fixed canonical root was
+redirected to this worktree. Doctor was not run: its fixed canonical checkout
+and crash-log inspection are outside this task card's permitted checks.
