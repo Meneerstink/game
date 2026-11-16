@@ -20,7 +20,7 @@ object TreasureTrailBasicSteps {
                     } == true
                 }
                 npc && when (row.challenge) {
-                    TreasureTrailStepCatalogue.Challenge.NONE -> row.npcName in setOf("Vannaka", "Captain Tobias", "Luthas")
+                    TreasureTrailStepCatalogue.Challenge.NONE -> (row.npcName in setOf("Vannaka", "Captain Tobias", "Luthas") || TreasureTrailNpcSteps.supports(row))
                     TreasureTrailStepCatalogue.Challenge.NUMBER -> row.npcName in TreasureTrailNumberDialogue.lines &&
                         TreasureTrailNumberChallenge.sources[row.tier]?.let(ClueItems::local)?.let {
                             playerWorld.definitions.getNullable(gg.rsmod.game.fs.def.ItemDef::class.java, it)
@@ -58,7 +58,7 @@ object TreasureTrailBasicSteps {
     }
 
     fun matches(npc: Npc, row: TreasureTrailStepCatalogue.Step): Boolean {
-        if (npc.id !in row.existingNpcs) return false
+        if (npc.id !in row.existingNpcs || !TreasureTrailNpcSteps.matchesActor(npc, row)) return false
         val definition = npc.world.definitions.get(NpcDef::class.java, npc.id)
         return definition.name.equals(row.npcName, ignoreCase = true)
     }
@@ -83,6 +83,7 @@ object TreasureTrailBasicSteps {
                 return TreasureTrailNumberDialogue.talk(player, npc, step)
             }
             if (row.challenge != TreasureTrailStepCatalogue.Challenge.NONE || row.tornPart) continue
+            if (TreasureTrailNpcSteps.supports(row)) return TreasureTrailNpcSteps.talk(player, npc, step)
             val line = when (row.npcName) {
                 // Exact pinned Transcript pages; no fabricated quest/shop override dialogue.
                 "Vannaka" -> "Here, have this."

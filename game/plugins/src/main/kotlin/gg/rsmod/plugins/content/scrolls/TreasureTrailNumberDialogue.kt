@@ -10,6 +10,11 @@ object TreasureTrailNumberDialogue {
     // The Player's interjection is represented explicitly, never attributed to the NPC.
     const val PLAYER_WHAT = "<player>What?"
     private val handovers = mapOf(
+        "Bolkoy" to "Bolkoy has given you a challenge scroll!",
+        "Gnome Coach" to "The coach has given you a challenge scroll!",
+        "Brother Omad" to "Brother Omad has given you a challenge scroll!",
+        "Wise Old Man" to "The wise old man has given you a challenge scroll!",
+        "Otto Godblessed" to "Otto Godblessed has given you a challenge scroll!",
         "Baraek" to "Baraek has given you a challenge scroll!",
         "Father Aereck" to "Father Aereck has given you a challenge scroll!",
         "Drezel" to "Drezel has given you a challenge scroll!",
@@ -20,6 +25,11 @@ object TreasureTrailNumberDialogue {
         "old crone" to "You've been given a challenge scroll!",
     )
     val lines = mapOf(
+        "Bolkoy" to Lines(listOf("Hello! I take it you're here about the trail?", "<player>Yes, do you have a challenge for me?", "Yes, right here!"), listOf("Please enter the answer to the question."), "What's the matter with you? Can't you count? Try harder!", "Lucky for you, that's the right answer!"),
+        "Gnome Coach" to Lines(listOf("Ah! Here you go!", PLAYER_WHAT, "I need you to answer this for me."), listOf("Please enter the answer to the question."), "How can that be? Go check again!", "Spot on!"),
+        "Brother Omad" to Lines(listOf("Ah! Here you go!", PLAYER_WHAT, "I need you to answer this for me."), listOf("Please enter the answer to the question."), "How can that be? Go check again!", "Spot on!"),
+        "Wise Old Man" to Lines(listOf("Ah! Here you go!", PLAYER_WHAT, "I need you to answer this for me."), listOf("Please enter the answer to the question."), "How can that be? Try again!", "Spot on!"),
+        "Otto Godblessed" to Lines(listOf("Ah! Here you go!", PLAYER_WHAT, "I need you to answer this for me."), listOf("Please tell me your answer."), "Nope, Go check again!", "Spot on!"),
         "Baraek" to Lines(listOf("I must ask you something..."), emptyList(), "Wrong! Try again.", "Correct."),
         // Baraek's source wrongly labels the repeated prompt as Dunstan. Omit that unverified line.
         "Father Aereck" to Lines(listOf("I have a question for you."), listOf("Please enter the answer to the question."), "No, try again.", "Correct!"),
@@ -40,7 +50,7 @@ object TreasureTrailNumberDialogue {
         player.queue {
             if (current == null) {
                 for (line in text.initial) {
-                    if (line == PLAYER_WHAT) chatPlayer("What?", wrap = true) else chatNpc(line, npc = npc.id, wrap = true)
+                    if (line.startsWith("<player>")) chatPlayer(line.removePrefix("<player>"), wrap = true) else chatNpc(line, npc = npc.id, wrap = true)
                     if (terminated || !before.valid(player)) return@queue
                 }
                 // Same-slot replacement after dialogue: cancelling/stale clues lose nothing.

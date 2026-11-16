@@ -67,7 +67,7 @@ def main():
     pins = {r['file']: r for r in json.loads((ROOT/'docs/CLUE/sources/step-manifest.json').read_text())['pages'] if 'file' in r}
     runtime = {r['key']: r for r in json.loads((ROOT/'data/cfg/clue/steps.json').read_text())}
     curated = json.loads((ROOT/'docs/CLUE/STEPS-CURATED.json').read_text())
-    initial_selection = {r['key'] for r in curated if not r.get('restoredOriginal')}
+    initial_selection = {r['key'] for r in curated if not r.get('restoredOriginal') and not r.get('additionalSource')}
     assert len(initial_selection) == 69
     records = []
 
@@ -98,6 +98,10 @@ def main():
     assert len(records) == 41
     present = [r for r in records if r['inCurrentCatalogue']]
     overlaps = {r['candidateSource'] for r in records if r['overlapsInitial69']}
+    additions = {r['key'] for r in curated if r.get('additionalSource')}
+    originals = {r['candidateSource'] for r in records if r['candidateSource']}
+    assert not additions & originals
+    assert not additions & initial_selection
     result = dict(donorBlob=BLOB, donorBlobSha256=sha256(raw).hexdigest(),
         caveat='Source-catalogue counts only; NOT actual active choices. No donor interface is reused by numeric coincidence.',
         originalLocations=41, originalInCatalogue=len(present), originalDeferred=41-len(present),
@@ -105,6 +109,7 @@ def main():
         originalInCatalogueTiers=dict(Counter(r['sourceTier'] for r in present)),
         initialSelectionRecords=69, initialSelectionOriginalOverlap=len(overlaps),
         initialSelectionUniqueAdditions=69-len(overlaps),
+        additionalUniqueSteps=len(additions), totalUniqueAdditions=69-len(overlaps)+len(additions),
         currentCatalogueRecords=len(runtime), currentCatalogueTiers=dict(Counter(r['tier'] for r in runtime.values())),
         tornPartsAreOneChoice=True, records=records)
     (ROOT/'docs/CLUE/ORIGINAL-POOL-AUDIT.json').write_text(json.dumps(result, indent=2)+'\n')

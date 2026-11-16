@@ -558,5 +558,65 @@
     ],
     "incomplete": false,
     "activation": "research; runtime must preserve these conditions"
+  },
+  {
+    "npc": "Bolkoy",
+    "source": {
+      "page": "Transcript:Bolkoy",
+      "revision": 15110932,
+      "revision_time": "2026-01-22T11:54:08Z",
+      "file": "Transcript_Bolkoy.wiki",
+      "sha256": "1b69a91634d30e4ab1c4a0bed15c00ad1b2bddff7ff2d4b441e0c030d005c27f",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABolkoy"
+    },
+    "section": "\n* '''Bolkoy:''' Hello! I take it you're here about the trail?\n* '''Player:''' Yes, do you have a challenge for me?\n* '''Bolkoy:''' Yes, right here!\n* {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you a challenge scroll!}}\n* {{tact|receives=a challenge scroll}}\n* {{tact|end}}\n\n====Talking to him again====\n* '''Bolkoy:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Bolkoy:''' What's the matter with you? Can't you count? Try harder!\n** {{tact|end}}\n* {{tcond|When given the right answer:}}\n** '''Bolkoy:''' Lucky for you, that's the right answer!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Bolkoy has given you another clue scroll!}}\n*** {{tact|receives=a clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a reward casket}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Gnome Coach",
+    "source": {
+      "page": "Transcript:Gnome Coach",
+      "revision": 14631087,
+      "revision_time": "2024-04-14T08:49:53Z",
+      "file": "Transcript_Gnome_Coach.wiki",
+      "sha256": "3778bb1066ac4fe6b7bebee8ba70cc52b84fbbdf192b6fc1711adef36da2d5d9",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AGnome_Coach"
+    },
+    "section": "==Treasure Trails==\n* '''Gnome Coach:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Gnome Coach:''' I need you to answer this for me.\n* {{tact|receives=a challenge scroll}}\n* {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you a challenge scroll!}}\n* {{tact|end}}\n\n===When spoken to again===\n* '''Gnome Coach:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Gnome Coach:''' How can that be? Go check again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Gnome Coach:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The coach has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=a [[reward casket (hard)]]}}\n*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Brother Omad",
+    "source": {
+      "page": "Transcript:Brother Omad",
+      "revision": 15094851,
+      "revision_time": "2025-12-26T09:26:13Z",
+      "file": "Transcript_Brother_Omad.wiki",
+      "sha256": "8c30c4bac651ed8bbf2c6fd3aa26b18d23b1a124b3fef56c42428ee61016ef5e",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3ABrother_Omad"
+    },
+    "section": "\n* '''Brother Omad:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Brother Omad:''' I need you to answer this for me.\n* {{tact|receives=a challenge scroll}}\n* Brother Omad has given you a challenge scroll!\n* {{tact|end}}\n\n====While holding the challenge scroll====\n* '''Brother Omad:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Brother Omad:''' How can that be? Go check again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Brother Omad:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tact|receives=[[clue scroll (hard)]]}}\n*** {{tbox|pic=clue scroll (hard) detail.png|Brother Omad has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tact|receives=[[reward casket (hard)]]}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Otto Godblessed",
+    "source": {
+      "page": "Transcript:Otto Godblessed",
+      "revision": 15131427,
+      "revision_time": "2026-02-20T15:52:32Z",
+      "file": "Transcript_Otto_Godblessed.wiki",
+      "sha256": "335c9a51c600243f91e45bf77c0fd0714e2ecb535c5cdf8513698005dbe4148b",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AOtto_Godblessed"
+    },
+    "section": "\n====Getting the challenge====\n* '''Otto Godblessed:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Otto Godblessed:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you a challenge scroll!}}{{^|pic should be Challenge scroll (hard)}}\n* {{tact|end}}\n====Solving the challenge====\n* '''Otto Godblessed:''' Please tell me your answer.\n* {{tinput|Enter amount:}}\n* {{tcond|If the answer was incorrect:}}\n** '''Otto Godblessed:''' Nope, Go check again!\n** {{tact|end}}\n* {{tcond|If the answer was correct:}}\n** '''Otto Godblessed:''' Spot on!\n** {{tcond|If the player gets another clue:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|Otto Godblessed has given you another clue scroll!}}\n*** {{tact|end}}\n** {{tcond|If the player gets a casket:}}\n*** {{tbox|pic=reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|end}}"
+  },
+  {
+    "npc": "Wise Old Man",
+    "source": {
+      "page": "Transcript:Wise Old Man",
+      "revision": 15393729,
+      "revision_time": "2026-11-04T11:09:27Z",
+      "file": "Transcript_Wise_Old_Man.wiki",
+      "sha256": "08a6e9c21c54afae4b1a379c1cf90b5cd0f159e47bc1a250a45dbb6cb3864922",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AWise_Old_Man"
+    },
+    "section": "\n* '''Wise Old Man:''' Ah! Here you go!\n* '''Player:''' What?\n* '''Wise Old Man:''' I need you to answer this for me.\n* {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you a challenge scroll!}}\n* {{tact|receives=a challenge scroll}}\n* {{tact|end}}\n\n====When talked to again====\n* '''Wise Old Man:''' Please enter the answer to the question.\n* {{tcond|When given the wrong answer:}}\n** '''Wise Old Man:''' How can that be? Try again!\n** {{tact|end}}\n* {{tcond|When given the correct answer:}}\n** '''Wise Old Man:''' Spot on!\n** {{tcond|When given another clue scroll:}}\n*** {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you another clue scroll!}}\n*** {{tact|receives=another clue scroll}}\n*** {{tact|end}}\n** {{tcond|When given a reward casket:}}\n*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}\n*** {{tact|receives=a hard reward casket}}\n*** {{tact|end}}"
   }
 ]

@@ -866,6 +866,289 @@
     "restoredOriginal": true
   },
   {
+    "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Hans to solve the clue.",
+    "points": [
+      [
+        3221,
+        3218,
+        0
+      ]
+    ],
+    "npcName": "Hans",
+    "npcCandidates": [
+      {
+        "id": 0,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "53197234405ca41359932b4a687b6032106a65a4ee055e6d874477285be2b562"
+      },
+      {
+        "id": 7935,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "1372e16dfbf82fe76c21a400427cf634e3087e054040ef6e7be719aed25b1caf"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Hans_to_solve_the_clue",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Hans_to_solve_the_clue.wiki",
+    "sourceSha256": "b113d524e067dd693e08e0406473aae8bed14de065e4d5306df98a82bbfe3474",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Doric, who lives north of Falador.",
+    "points": [
+      [
+        2951,
+        3450,
+        0
+      ]
+    ],
+    "npcName": "Doric",
+    "npcCandidates": [
+      {
+        "id": 284,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "7ac4f6a6dce55d9fca8362e817432f6c91b9e120e60eb27bc8b61680e72234e1"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Doric%2C_who_lives_north_of_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Doric,_who_lives_north_of_Falador.wiki",
+    "sourceSha256": "5f100a2f452e96ad2529eb743f7b61beca7e06dc8199c5c4aede4fb802647184",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Arhein in Catherby.",
+    "points": [
+      [
+        2803,
+        3430,
+        0
+      ]
+    ],
+    "npcName": "Arhein",
+    "npcCandidates": [
+      {
+        "id": 563,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "a62b554542acb670a424e0fde5c4a8fa0b4ad683feda86a9f8467433a13c5160"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Arhein_in_Catherby",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Arhein_in_Catherby.wiki",
+    "sourceSha256": "9b701f12d1137b0c80aeb445f651c572aa246b139a7e19ae1bb8119317828de7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Ellis in Al Kharid.",
+    "points": [
+      [
+        3276,
+        3191,
+        0
+      ]
+    ],
+    "npcName": "Ellis",
+    "npcCandidates": [
+      {
+        "id": 2824,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "3b425da1d803bde1ceaa510e8eaf9c7d33a714026b992a782e415d20f81437ed"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ellis_in_Al_Kharid",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Ellis_in_Al_Kharid.wiki",
+    "sourceSha256": "b690e3999ef4567594120ac4e53d5acc539741c1941b387fba69767aff1da0ee",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Ned in Draynor Village.",
+    "points": [
+      [
+        3098,
+        3258,
+        0
+      ]
+    ],
+    "npcName": "Ned",
+    "npcCandidates": [
+      {
+        "id": 918,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "96090946517ea6c6172d901f7219616897bec56c1758df365c1bf7a42e84e7d6"
+      },
+      {
+        "id": 4475,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "b9e23ea8d91059d79f19bc3364c75749e3c0069ab39eac695e37a60f693015e2"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Ned_in_Draynor_Village",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Ned_in_Draynor_Village.wiki",
+    "sourceSha256": "50eb1e7c9ba55ba004750cc7847b98132f48c76de4dfc74bab927e92d1c6674a",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nSpeak to Gaius in Taverley.",
+    "points": [
+      [
+        2884,
+        3450,
+        0
+      ]
+    ],
+    "npcName": "Gaius",
+    "npcCandidates": [
+      {
+        "id": 586,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "378be220594d2bd01e7d13d220a612c79038e31bdb2cc25074aea9627a0afc76"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Speak_to_Gaius_in_Taverley",
+    "sourceFile": "Clue_scroll_(easy)_-_Speak_to_Gaius_in_Taverley.wiki",
+    "sourceSha256": "88d476012a06dfd1ddf997ebc1c7dbe4163d0da489f135bfac8da4295a2f62c7",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+    "tier": "easy",
+    "kind": "CRYPTIC",
+    "action": "TALK",
+    "hint": "The cryptic reveals who to speak to:\n\nTalk to Cassie in Falador.",
+    "points": [
+      [
+        2975,
+        3383,
+        0
+      ]
+    ],
+    "npcName": "Cassie",
+    "npcCandidates": [
+      {
+        "id": 577,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "7bdf1c3857186323480f5e7801c6eb4fcd3d8c7c9ddfc6c637488bd29342d089"
+      }
+    ],
+    "equipment": [],
+    "challenge": {},
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28easy%29_-_Talk_to_Cassie_in_Falador",
+    "sourceFile": "Clue_scroll_(easy)_-_Talk_to_Cassie_in_Falador.wiki",
+    "sourceSha256": "83bdafc4afed4c9b86421a15c58acd1d51a05da7d3ebcac737b1a0308703c0b0",
+    "additionalSource": true
+  },
+  {
     "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
     "tier": "medium",
     "kind": "EMOTE",
@@ -2530,6 +2813,105 @@
     "restoredOriginal": true
   },
   {
+    "key": "Clue scroll (medium) - 00.31S 17.43E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "The coordinate reveals where to dig:\n\n00.31S 17.43E",
+    "points": [
+      [
+        3007,
+        3144,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_00.31S_17.43E",
+    "sourceFile": "Clue_scroll_(medium)_-_00.31S_17.43E.wiki",
+    "sourceSha256": "4b16b6ef63c12b35d90051b82accbd5503dde6b3ac3ca73f278cc0814d8a08f8",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 02.48N 22.30E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "The coordinate reveals where to dig:\n\n02.48N 22.30E",
+    "points": [
+      [
+        3160,
+        3251,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_02.48N_22.30E",
+    "sourceFile": "Clue_scroll_(medium)_-_02.48N_22.30E.wiki",
+    "sourceSha256": "a1274c4f9ed7bdfcf04cd3fc932868db50265ef8ef1fadceea383774abf2a4a2",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (medium) - 05.43N 23.05E",
+    "tier": "medium",
+    "kind": "COORDINATE",
+    "action": "DIG",
+    "hint": "The coordinate reveals where to dig:\n\n05.43N 23.05E",
+    "points": [
+      [
+        3179,
+        3344,
+        0
+      ]
+    ],
+    "npcName": null,
+    "npcCandidates": [],
+    "equipment": [],
+    "challenge": {
+      "type": "NONE",
+      "guards": [],
+      "spawnMode": "ALL",
+      "source": {
+        "file": "Treasure_Trails__Guide__Coordinates__Medium.wiki",
+        "sha256": "eac4b98f45ef73703f982f232de07531e1dd1a58c66b65e7aa877e67a77c0446",
+        "url": "https://oldschool.runescape.wiki/w/Treasure_Trails/Guide/Coordinates/Medium"
+      }
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28medium%29_-_05.43N_23.05E",
+    "sourceFile": "Clue_scroll_(medium)_-_05.43N_23.05E.wiki",
+    "sourceSha256": "7fa49c03efe338e6ef74fb2c31aff3614d28acb568de3c61961da142354454a2",
+    "additionalSource": true
+  },
+  {
     "key": "Clue scroll (hard) - Salute in the banana plantation",
     "tier": "hard",
     "kind": "EMOTE",
@@ -3214,6 +3596,355 @@
     "sourceFile": "Clue_scroll_(hard)_-_In_a_crate_at_the_Dark_Warriors'_Fortress.wiki",
     "sourceSha256": "3b4224941b0664ff71cfce9cd7a40f208c1dbc24ae59e3bfeff4d4ef2c306a0a",
     "restoredOriginal": true
+  },
+  {
+    "key": "Clue scroll (hard) - BY LOOK",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "The anagram reveals who to speak to:\n\nBY LOOK",
+    "points": [
+      [
+        2529,
+        3162,
+        0
+      ]
+    ],
+    "npcName": "Bolkoy",
+    "npcCandidates": [
+      {
+        "id": 471,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          "Trade",
+          null,
+          null
+        ],
+        "sha256": "c32257260b16ce3947c25707b40b9eb125e1200f76f250b7a71efc5df7687699"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many flowers are there in the clearing below this platform?",
+      "answer": "13"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_BY_LOOK",
+    "sourceFile": "Clue_scroll_(hard)_-_BY_LOOK.wiki",
+    "sourceSha256": "16327e56b2746d092135982534dd1df269ba0d7180d78ad9547318055ef7094d",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - C ON GAME HOC",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "The anagram reveals who to speak to:\n\nC ON GAME HOC",
+    "points": [
+      [
+        2395,
+        3486,
+        0
+      ]
+    ],
+    "npcName": "Gnome Coach",
+    "npcCandidates": [
+      {
+        "id": 2802,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "3ff83e10ac1fe073eb117decbfcc692b5fb00900fd75766c3e37aa33411e6e9c"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many gnomes on the Gnome ball field have red patches on their uniforms?",
+      "answer": "6"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_C_ON_GAME_HOC",
+    "sourceFile": "Clue_scroll_(hard)_-_C_ON_GAME_HOC.wiki",
+    "sourceSha256": "884d8fb18c627fcdb688a079d3c061b71f27fad8da3c27c6c934a5c1833c5ec4",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - MOTHERBOARD",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "The anagram reveals who to speak to:\n\nMOTHERBOARD",
+    "points": [
+      [
+        2606,
+        3211,
+        0
+      ]
+    ],
+    "npcName": "Brother Omad",
+    "npcCandidates": [
+      {
+        "id": 279,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "a5fc63327456c2e7dc9d19e29b853155829458db1c1cafe304d978085060cf94"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "What is the next number? 12, 13, 15, 17, 111, 113, 117, 119, 123....?",
+      "answer": "129"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_MOTHERBOARD",
+    "sourceFile": "Clue_scroll_(hard)_-_MOTHERBOARD.wiki",
+    "sourceSha256": "2b95dde5b6ce32e0382df961bdb40d006c98f32d010c1d0ceef288ad1d01886f",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - SLIDE WOMAN",
+    "tier": "hard",
+    "kind": "ANAGRAM",
+    "action": "TALK",
+    "hint": "The anagram reveals\nwho to speak to:\n\nSLIDE WOMAN",
+    "points": [
+      [
+        3088,
+        3253,
+        0
+      ]
+    ],
+    "npcName": "Wise Old Man",
+    "npcCandidates": [
+      {
+        "id": 2253,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "79bc43568848d73da969b463b995f212f9021995d51ab43536d16e8ce98b95a5"
+      },
+      {
+        "id": 2566,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "2a54edb392c38e57a8ebc704bf844cf03c836b671dd8ab7e64f80288f7000bba"
+      },
+      {
+        "id": 2567,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "f0ed77a25c8a0faeaf001d17d84461762f90477911b0b6f2abb9df5717afb1a0"
+      },
+      {
+        "id": 2633,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "6d792d8f19110161e5f082cd3532a739725536993c9cceab12fa87352ae0f645"
+      },
+      {
+        "id": 3821,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "76147179c82e3b7cdc2dea131ce927e0dcf65eb44d057c7061112fa872844441"
+      },
+      {
+        "id": 3838,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "d7ee13b57476e2d5796a72e1e532ec7336293b7414e2ceaae3ef2efedd7577fc"
+      },
+      {
+        "id": 3839,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "0f33fc29c8480ee8e8f0de4d9280fa30bbee6d137b6f3e94bd4457119ff0eb8f"
+      },
+      {
+        "id": 7090,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "49a435aba5755d91faf5b0ddebbcbf78bc090f8f3c6b99a4f5bf9ce422fac1da"
+      },
+      {
+        "id": 8182,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "2916d54a8708e25ec8b32c7bc421a9d0cc04a919b637abcd5305db39729f19dd"
+      },
+      {
+        "id": 11568,
+        "level": 0,
+        "options": [
+          null,
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "60464e29e126f7f1e8b2b924a5f617e9d1ca9555c9ecfbee09d6236496378f52"
+      },
+      {
+        "id": 11569,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "d3ab8540910c4dce2a39d944193e64a52e584551e11eb7cc4be6027d4e46f8ef"
+      },
+      {
+        "id": 11575,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "87a4bb3d416a6273964699f94c2d6cdc79822cd03a042b50d5b775d943b68c0a"
+      },
+      {
+        "id": 11583,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "87a4bb3d416a6273964699f94c2d6cdc79822cd03a042b50d5b775d943b68c0a"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many bookcases are in the Wise Old Man's house?",
+      "answer": "28"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_SLIDE_WOMAN",
+    "sourceFile": "Clue_scroll_(hard)_-_SLIDE_WOMAN.wiki",
+    "sourceSha256": "f492efd4b651df6c631ed7ddbb51abcd7a5c048eaa96ecbe1e0d406f14f72939",
+    "additionalSource": true
+  },
+  {
+    "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+    "tier": "hard",
+    "kind": "CIPHER",
+    "action": "TALK",
+    "hint": "The cipher reveals who to speak to:\n\nUZZU MUJHRKYYKJ",
+    "points": [
+      [
+        2501,
+        3487,
+        0
+      ]
+    ],
+    "npcName": "Otto Godblessed",
+    "npcCandidates": [
+      {
+        "id": 2725,
+        "level": 0,
+        "options": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "sha256": "46e5d49dd1c85163fbfaac8b6f174a0c71a92ce0adb668e5bfa376600d1e6fd7"
+      }
+    ],
+    "equipment": [],
+    "challenge": {
+      "type": "NUMBER",
+      "question": "How many pyre sites are found around this lake?",
+      "answer": "3"
+    },
+    "requirements": {},
+    "requirementsSource": null,
+    "source": "https://oldschool.runescape.wiki/w/Clue_scroll_%28hard%29_-_UZZU_MUJHRKYYKJ",
+    "sourceFile": "Clue_scroll_(hard)_-_UZZU_MUJHRKYYKJ.wiki",
+    "sourceSha256": "6ab0dc56912320400a94d0db1e80a89cae53cce0049054d96d2ab062dc82c00e",
+    "additionalSource": true
   },
   {
     "key": "Clue scroll (elite) - Bow upstairs in the Edgeville Monastery",

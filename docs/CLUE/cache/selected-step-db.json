@@ -544,6 +544,42 @@
       "sha256": "32eb6f5cdac077475d62acfc486b230cffd36f1e34edfe02ca6df3905b56885d",
       "table": 25
     },
+    "1182": {
+      "bytes": 79,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many flowers are there in the clearing below this platform?",
+            13
+          ]
+        }
+      },
+      "sha256": "2b2dc4aca0fe5bb1efa82bb07267031752a8eb7dede9d29988fb822807512651",
+      "table": 25
+    },
+    "1183": {
+      "bytes": 91,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many gnomes on the Gnome ball field have red patches on their uniforms?",
+            6
+          ]
+        }
+      },
+      "sha256": "c9fd0ea895a9a154958d5647dc8b4ddb916ee36253d5c73e025c7f17f54ae008",
+      "table": 25
+    },
     "1186": {
       "bytes": 50,
       "columnCount": 1,
@@ -562,6 +598,24 @@
       "sha256": "2f8bd3881237eb31a696de7b15990b63022f62f4d4dd68329323805817d7596a",
       "table": 25
     },
+    "1188": {
+      "bytes": 85,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "What is the next number? 12, 13, 15, 17, 111, 113, 117, 119, 123....?",
+            129
+          ]
+        }
+      },
+      "sha256": "26c79a95877cd2ff61548be9ea562b765db11fa9205d8ddcc329919aa206f0a4",
+      "table": 25
+    },
     "1191": {
       "bytes": 59,
       "columnCount": 1,
@@ -578,6 +632,24 @@
         }
       },
       "sha256": "2d811e8f0f8845b05b592c9ad7df96c7eb45fa6e348cf8bdaca2b72539356c1e",
+      "table": 25
+    },
+    "1192": {
+      "bytes": 67,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many bookcases are in the Wise Old Man's house?",
+            28
+          ]
+        }
+      },
+      "sha256": "1e1a18cb21051bf4940ed78b9e7f9918a9de1181c0761cc9aa07ce177e03fba1",
       "table": 25
     },
     "1196": {
@@ -670,6 +742,24 @@
       "sha256": "74647b13ec3328151da50ba3364ae7fe5ae132af7d8d2f43d8cf647ec659d36f",
       "table": 25
     },
+    "1231": {
+      "bytes": 63,
+      "columnCount": 1,
+      "columns": {
+        "0": {
+          "types": [
+            36,
+            0
+          ],
+          "values": [
+            "How many pyre sites are found around this lake?",
+            3
+          ]
+        }
+      },
+      "sha256": "fa7c7ffca7e6a0f990f0eead2db9d0bc054c867e9b08fa3d37a7104643b9db49",
+      "table": 25
+    },
     "1244": {
       "bytes": 101,
       "columnCount": 15,
@@ -718,6 +808,102 @@
       "sha256": "1bfaf477d2454939cbf30b58719b6da254553daa06f48d9349d090590f0b8f9a",
       "table": 8
     },
+    "1246": {
+      "bytes": 75,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            649
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Ned in Draynor Village."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            943
+          ]
+        }
+      },
+      "sha256": "c982fe8a58279558b106a5c0a18d4ac7e73b8d2d2577d77b14c005181ada7bce",
+      "table": 8
+    },
+    "1247": {
+      "bytes": 75,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            650
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Hans to solve the clue."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            933
+          ]
+        }
+      },
+      "sha256": "5281389f7c046917b408fcc79e602be532a97194787339ae724f92f216c6d1d8",
+      "table": 8
+    },
     "1252": {
       "bytes": 93,
       "columnCount": 15,
@@ -764,6 +950,246 @@
         }
       },
       "sha256": "d11ee6dc2af0f9e393321d0a5fa321a22151f4fa109eb5bcbf2c3bcb0074a4ba",
+      "table": 8
+    },
+    "1255": {
+      "bytes": 70,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            658
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Gaius in Taverley."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            951
+          ]
+        }
+      },
+      "sha256": "a17e1aa5a547f7e23f9302a2ef4942132d3724b1d53396756cfffee7ba29d89c",
+      "table": 8
+    },
+    "1258": {
+      "bytes": 71,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            661
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Arhein in Catherby."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            953
+          ]
+        }
+      },
+      "sha256": "d6a81f226f81913058f8a6baf0803e5c085f5189eb47407730cee2d22ab560fb",
+      "table": 8
+    },
+    "1259": {
+      "bytes": 86,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            662
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Doric, who lives north of Falador."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            835
+          ]
+        }
+      },
+      "sha256": "d1a3b6fc2a24d87759db92a0591259f8f935724facfef81632ed9d0206a657bd",
+      "table": 8
+    },
+    "1262": {
+      "bytes": 69,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            665
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Talk to Cassie in Falador."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            955
+          ]
+        }
+      },
+      "sha256": "b8a3404e3c472dc16174ea0764cab588f16845ed5decb1232756e698268f7010",
+      "table": 8
+    },
+    "1271": {
+      "bytes": 71,
+      "columnCount": 15,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            674
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        },
+        "10": {
+          "types": [
+            0
+          ],
+          "values": [
+            6
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Speak to Ellis in Al Kharid."
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            963
+          ]
+        }
+      },
+      "sha256": "e94a84ba5db26c6e087bfae1c46810dc600b6e3989e241482de026e10aa6d0aa",
       "table": 8
     },
     "1280": {
@@ -1657,6 +2083,118 @@
       "sha256": "9c5575a0f51a1364ef6f672a1072b107196e1705278c8870817baf4497827c84",
       "table": 4
     },
+    "1555": {
+      "bytes": 58,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            57
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "By Look"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            885
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1182
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "f7481b5f1071b6c14658b35fd183ec544108330f2c6b02691e0d304b5df33413",
+      "table": 4
+    },
+    "1556": {
+      "bytes": 64,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            58
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "C On Game Hoc"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            886
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1183
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "64ae022ac6a7b4d3ff90e88c01e33f42143364b602ba94cc88b75bd9a47069d9",
+      "table": 4
+    },
     "1560": {
       "bytes": 62,
       "columnCount": 9,
@@ -1713,6 +2251,62 @@
       "sha256": "3ba7e2d5c287ebcce9822a611acaf08dfcca051a75fb271def3aed59ac523b83",
       "table": 4
     },
+    "1563": {
+      "bytes": 62,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            65
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Motherboard"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            893
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1188
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "5e39ba6fa34e6caf2ea5a69ab2993776ed69cf1f790e731150bb26cb601ecc8a",
+      "table": 4
+    },
     "1567": {
       "bytes": 65,
       "columnCount": 9,
@@ -1767,6 +2361,62 @@
         }
       },
       "sha256": "d30a5c317f70d5ac074b5fd47913f39217c4ac674d85c886401ae2a153f29ee6",
+      "table": 4
+    },
+    "1568": {
+      "bytes": 62,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            70
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Slide Woman"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            898
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1192
+          ]
+        },
+        "5": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "a091fa69e4a3b00bb4c4c38af9520778aee0931f3932556d7c674b5a3038c00f",
       "table": 4
     },
     "1573": {
@@ -3185,6 +3835,54 @@
       "sha256": "141da46fc6c444b02c1c42261a8537b8b935809765a6240c5637feb14fc20ad8",
       "table": 7
     },
+    "1928": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            393
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "00.31S 17.43E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            467
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        }
+      },
+      "sha256": "a261a68065184c2871d64b2b165f4981b1775d0ca2c8aa5eb86456093536bdf2",
+      "table": 7
+    },
     "193": {
       "bytes": 68,
       "columnCount": 3,
@@ -3209,6 +3907,54 @@
       "sha256": "42a62b8b6b4feeeab3c7160d25d5a0b0c6467ff33e453dfd33530eb4b39dd91f",
       "table": 18
     },
+    "1933": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            398
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "02.48N 22.30E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            472
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "3e919a2ca8ab2b3221d74bbad37ddf67d68da9cc33d63b2656d10cd37f6dc428",
+      "table": 7
+    },
     "194": {
       "bytes": 36,
       "columnCount": 3,
@@ -3232,6 +3978,54 @@
       },
       "sha256": "c49e9510c886d109fadd988d5279ad7ca4db2e81c0898c9459263270ad1597a7",
       "table": 18
+    },
+    "1940": {
+      "bytes": 56,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            405
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            2
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "05.43N 23.05E"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            479
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            1
+          ]
+        }
+      },
+      "sha256": "189934eaf4d3ff5abd941d89309c8e7cc833dea8c4ca6d35d0fe6680908a7e64",
+      "table": 7
     },
     "195": {
       "bytes": 46,
@@ -6702,6 +7496,62 @@
       "sha256": "f7df95297567ad1266a260b922ed0e684dc99f6ed22d3d15015084914e8971ab",
       "table": 6
     },
+    "2272": {
+      "bytes": 66,
+      "columnCount": 9,
+      "columns": {
+        "0": {
+          "types": [
+            0
+          ],
+          "values": [
+            936
+          ]
+        },
+        "1": {
+          "types": [
+            0
+          ],
+          "values": [
+            3
+          ]
+        },
+        "2": {
+          "types": [
+            36
+          ],
+          "values": [
+            "UZZU MUJHRKYYKJ"
+          ]
+        },
+        "3": {
+          "types": [
+            74
+          ],
+          "values": [
+            855
+          ]
+        },
+        "4": {
+          "types": [
+            74
+          ],
+          "values": [
+            1231
+          ]
+        },
+        "6": {
+          "types": [
+            0
+          ],
+          "values": [
+            4
+          ]
+        }
+      },
+      "sha256": "b61e8417198d9b8d8bf278398f79f8440f0083d59bbba50cd129c74e47465453",
+      "table": 6
+    },
     "2276": {
       "bytes": 59,
       "columnCount": 9,
@@ -7286,6 +8136,78 @@
       "sha256": "0074d3e4574269228127ff974c607dba3eaf709547af6cb0db95918383ce89c5",
       "table": 18
     },
+    "467": {
+      "bytes": 68,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            49269832
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the Asgarnian Ice Dungeon. Fairy ring (AIQ)."
+          ]
+        }
+      },
+      "sha256": "7693e16ab865c7308d3485e18b8e298e7eab6cd1959e8aed97d913a4e961a9c3",
+      "table": 18
+    },
+    "472": {
+      "bytes": 46,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            51776691
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "West of the H.A.M. Hideout."
+          ]
+        }
+      },
+      "sha256": "618fd99a1febe0d1ab17b594457d496acc183c669108e8fd97df57fa2bc356fd",
+      "table": 18
+    },
+    "479": {
+      "bytes": 66,
+      "columnCount": 3,
+      "columns": {
+        "0": {
+          "types": [
+            22
+          ],
+          "values": [
+            52088080
+          ]
+        },
+        "1": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the cow pen north of the Lumbridge windmill."
+          ]
+        }
+      },
+      "sha256": "766735f9f5e637ceb0c1cb8f7d7d1e9ee58e52ce4333e4488777b73e6a4751b4",
+      "table": 18
+    },
     "506": {
       "bytes": 38,
       "columnCount": 3,
@@ -7638,6 +8560,38 @@
       "sha256": "a7f02dd649fa3756179f58e206a0718067b9ab73c53fa782c8bd06b6a26d52bf",
       "table": 26
     },
+    "835": {
+      "bytes": 44,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3893
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48352634
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "North of Falador."
+          ]
+        }
+      },
+      "sha256": "0e4049090025e605c2cdd242b4fdadb4a8b281c209097a5608d6795b9778190a",
+      "table": 15
+    },
     "841": {
       "bytes": 60,
       "columnCount": 4,
@@ -7700,6 +8654,38 @@
         }
       },
       "sha256": "c038522ae9e900f19dba0ca298df8fdd1eaa9c1e54a931305cab72889b518732",
+      "table": 15
+    },
+    "855": {
+      "bytes": 76,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2914
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            40979871
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "South of the Barbarian Outpost, in Otto's Grotto."
+          ]
+        }
+      },
+      "sha256": "b6c5bbc089961522c78abd04b359a20bbc0aff77686f9332f936607f8a783084",
       "table": 15
     },
     "858": {
@@ -7766,6 +8752,70 @@
       "sha256": "3df9c3378774a46aa17a84a4aac990a99363c67b2dd0e3f1e76b70ec8eaddfb0",
       "table": 15
     },
+    "885": {
+      "bytes": 67,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4965
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            41438298
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "In the Tree Gnome Village general store."
+          ]
+        }
+      },
+      "sha256": "b90b726780066975a0f43d5962f0a0bfdabb6b34f768bd13256ac2420b34d8ca",
+      "table": 15
+    },
+    "886": {
+      "bytes": 79,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3142
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            39243166
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the Gnome Ball course in Tree Gnome Stronghold."
+          ]
+        }
+      },
+      "sha256": "763dfda4dead301e5acd3713fc7afefd467c36af2906061bb8fc2b73317eeb63",
+      "table": 15
+    },
     "890": {
       "bytes": 60,
       "columnCount": 4,
@@ -7806,6 +8856,38 @@
       "sha256": "435625de5c0169851bfec81af20af83a174753020d362624c30aa78156a03bdb",
       "table": 15
     },
+    "893": {
+      "bytes": 55,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4244
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            42699915
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Monastery south of Ardougne."
+          ]
+        }
+      },
+      "sha256": "e1f9e809a16ad5f42887cbb04606777dca7007dce1395d4207b08657d7594e08",
+      "table": 15
+    },
     "897": {
       "bytes": 39,
       "columnCount": 4,
@@ -7836,6 +8918,46 @@
         }
       },
       "sha256": "0e9ae0cfbcb0472de60e3802292b175371042c8e7357a7adc73d7c7ab2a52141",
+      "table": 15
+    },
+    "898": {
+      "bytes": 51,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            2109
+          ]
+        },
+        "1": {
+          "types": [
+            32
+          ],
+          "values": [
+            2108
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50597045
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Draynor Village."
+          ]
+        }
+      },
+      "sha256": "1449285ab321efcb598e6859fb12a850553c38799e2d0dc421687719cdb593b0",
       "table": 15
     },
     "902": {
@@ -7902,6 +9024,70 @@
       "sha256": "448177cfab8eda99d2a3de93bab677d647ae8de374c5e291ba485dbb4892243e",
       "table": 15
     },
+    "933": {
+      "bytes": 72,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3105
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            52776082
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Talk to Hans walking around Lumbridge Castle."
+          ]
+        }
+      },
+      "sha256": "d40056dccf5d28743efa736299ed419152db3cf3039a5f11fe78ad7191492cb2",
+      "table": 15
+    },
+    "943": {
+      "bytes": 66,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            4280
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            50760890
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Ned is found north of the Draynor bank."
+          ]
+        }
+      },
+      "sha256": "255b789b8c70000bdec52e34f5f92a751e0fd5ab2c09e9c8c1a67d7f66bc2868",
+      "table": 15
+    },
     "948": {
       "bytes": 48,
       "columnCount": 4,
@@ -7932,6 +9118,134 @@
         }
       },
       "sha256": "2fc25707f13bbcd4b7d1963464ebaeddc5823791d268b537ac8be0c9ab54fd07",
+      "table": 15
+    },
+    "951": {
+      "bytes": 36,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            7798
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            47254906
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Taverley."
+          ]
+        }
+      },
+      "sha256": "a9a675cb6efc0149b67b520eea91a4a70b0e9b2fb10b26b28f5880e50747c511",
+      "table": 15
+    },
+    "953": {
+      "bytes": 46,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3200
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            45927782
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near Catherby bank."
+          ]
+        }
+      },
+      "sha256": "7e7a3e4e7f9c070dd95b906717b675ea42c8b9934f4db1aec76cbc21017a91a8",
+      "table": 15
+    },
+    "955": {
+      "bytes": 58,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3214
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            48745783
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Near the northern Falador gate."
+          ]
+        }
+      },
+      "sha256": "d4ddcdcff44f2af952d51c90a620a8cc69bfcc6c89bdb8ef02e7bd293e9e2d8c",
+      "table": 15
+    },
+    "963": {
+      "bytes": 45,
+      "columnCount": 4,
+      "columns": {
+        "0": {
+          "types": [
+            32
+          ],
+          "values": [
+            3231
+          ]
+        },
+        "2": {
+          "types": [
+            22
+          ],
+          "values": [
+            53677175
+          ]
+        },
+        "3": {
+          "types": [
+            36
+          ],
+          "values": [
+            "Al Kharid Tannery."
+          ]
+        }
+      },
+      "sha256": "529d1a9b1ec424b850e685c69b03dfb1fcfa09fb6049feef599da975c0d68e18",
       "table": 15
     },
     "971": {
@@ -8112,6 +9426,41 @@
       "wikiClueId": 108
     },
     {
+      "dbRow": 1247,
+      "key": "Clue scroll (easy) - Speak to Hans to solve the clue",
+      "wikiClueId": 650
+    },
+    {
+      "dbRow": 1259,
+      "key": "Clue scroll (easy) - Speak to Doric, who lives north of Falador",
+      "wikiClueId": 662
+    },
+    {
+      "dbRow": 1258,
+      "key": "Clue scroll (easy) - Speak to Arhein in Catherby",
+      "wikiClueId": 661
+    },
+    {
+      "dbRow": 1271,
+      "key": "Clue scroll (easy) - Speak to Ellis in Al Kharid",
+      "wikiClueId": 674
+    },
+    {
+      "dbRow": 1246,
+      "key": "Clue scroll (easy) - Speak to Ned in Draynor Village",
+      "wikiClueId": 649
+    },
+    {
+      "dbRow": 1255,
+      "key": "Clue scroll (easy) - Speak to Gaius in Taverley",
+      "wikiClueId": 658
+    },
+    {
+      "dbRow": 1262,
+      "key": "Clue scroll (easy) - Talk to Cassie in Falador",
+      "wikiClueId": 665
+    },
+    {
       "dbRow": 2125,
       "key": "Clue scroll (medium) - Cheer in the Edgeville general store",
       "wikiClueId": 314
@@ -8237,6 +9586,21 @@
       "wikiClueId": 117
     },
     {
+      "dbRow": 1928,
+      "key": "Clue scroll (medium) - 00.31S 17.43E",
+      "wikiClueId": 393
+    },
+    {
+      "dbRow": 1933,
+      "key": "Clue scroll (medium) - 02.48N 22.30E",
+      "wikiClueId": 398
+    },
+    {
+      "dbRow": 1940,
+      "key": "Clue scroll (medium) - 05.43N 23.05E",
+      "wikiClueId": 405
+    },
+    {
       "dbRow": 2159,
       "key": "Clue scroll (hard) - Yawn in the rogues' general store",
       "wikiClueId": 348
@@ -8325,6 +9689,31 @@
       "dbRow": 2251,
       "key": "Clue scroll (hard) - In a crate at the Dark Warriors' Fortress",
       "wikiClueId": 129
+    },
+    {
+      "dbRow": 1555,
+      "key": "Clue scroll (hard) - BY LOOK",
+      "wikiClueId": 57
+    },
+    {
+      "dbRow": 1556,
+      "key": "Clue scroll (hard) - C ON GAME HOC",
+      "wikiClueId": 58
+    },
+    {
+      "dbRow": 1563,
+      "key": "Clue scroll (hard) - MOTHERBOARD",
+      "wikiClueId": 65
+    },
+    {
+      "dbRow": 1568,
+      "key": "Clue scroll (hard) - SLIDE WOMAN",
+      "wikiClueId": 70
+    },
+    {
+      "dbRow": 2272,
+      "key": "Clue scroll (hard) - UZZU MUJHRKYYKJ",
+      "wikiClueId": 936
     },
     {
       "dbRow": 2162,

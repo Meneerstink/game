@@ -172,12 +172,21 @@ def main():
             challenge=challenge, requirements=extra, requirementsSource=requirements_source,
             source=row['source'], sourceFile=row['sourceFile'], sourceSha256=row['sourceSha256'])
         if row.get('restoredOriginal'): record['restoredOriginal'] = True
+        if row.get('additionalSource'): record['additionalSource'] = True
         result.append(record)
         if missing: gaps.append(dict(key=row['key'], problems=missing))
         absent = [item for group in equipment for item in group if item['local'] is None]
         if absent: gaps.append(dict(key=row['key'], reason='Unresolved optional equipment alternatives', items=absent))
         if npc and not record['npcCandidates']: gaps.append(dict(key=row['key'], npc=npc, reason='NPC absent from target cache'))
-    assert len(result) == (92 if args.original_maps else 75)
+    added = sum(r.get('additionalSource', False) for r in result)
+    assert added in (0, 15)
+    if added:
+        approved = ROOT/'docs/CLUE/ADDITIONAL-STEPS.json'
+        names = json.loads(approved.read_text()) if approved.exists() else {}
+        expected_extra = {f'Clue scroll ({tier}) - {name}' for tier, group in names.items() for name in group}
+        actual_extra = {r['key'] for r in result if r.get('additionalSource')}
+        assert actual_extra == expected_extra or args.output.resolve() != (ROOT/'data/cfg/clue/steps.json').resolve(), 'Unreviewed additions need a separate staged output'
+    assert len(result) == (92 if args.original_maps else 75) + added
     args.output.write_text(json.dumps(result,indent=2)+'\n',encoding='utf8')
     args.gaps_output.write_text(json.dumps(gaps,indent=2)+'\n',encoding='utf8')
     print(len(result), 'explicit runtime records:', dict(Counter(r['action'] for r in result)), '; source/asset gaps:', len(gaps))

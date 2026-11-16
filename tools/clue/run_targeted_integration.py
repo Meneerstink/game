@@ -75,6 +75,13 @@ if '--restored' in sys.argv:
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.' + name for name in
                 ['WatsonClueTests', 'MimicEncounterTests', 'MimicChallengeTests', 'TheMimicCombatDefTests', 'MimicRewardsTests']]
 
+if '--unique' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['TreasureTrailNpcStepsTests', 'TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests',
+                'TreasureTrailStepCatalogueTests', 'ClueScrollLifecycleTests', 'TreasureTrailContractTests',
+                'TreasureTrailEmoteTests', 'ClueStepSelectionTests', 'TreasureTrailMapsTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
@@ -88,7 +95,7 @@ def inputs():
                    'docs/CLUE/cache/core-source-items.json', 'docs/CLUE/cache/puzzle-source-items.json', 'docs/CLUE/cache/puzzle-routes.json',
                    'docs/CLUE/sources/Puzzle_box.wiki', 'docs/CLUE/sources/Clue_scroll_(hard)_-_BLUE_GRIM_GUIDED.wiki',
                    'docs/CLUE/sources/Clue_scroll_(hard)_-_IWPPLQTP.wiki', 'docs/CLUE/sources/Clue_scroll_(master).wiki',
-                   'docs/CLUE/NPC-DIALOGUE-SOURCES.json'}]
+                   'docs/CLUE/NPC-DIALOGUE-SOURCES.json', 'docs/CLUE/NPC-COMPLETION-SOURCES.json'}]
     return {p: sha256((ROOT/p).read_bytes()).hexdigest() for p in allowed if (ROOT/p).is_file()}
 
 

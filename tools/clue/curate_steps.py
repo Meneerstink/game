@@ -76,10 +76,18 @@ def main():
     mode.add_argument('--base-only', dest='original_maps', action='store_false')
     parser.set_defaults(original_maps=True)
     parser.add_argument('--output', type=Path, default=ROOT/'docs/CLUE/STEPS-CURATED.json')
+    parser.add_argument('--extra-spec', type=Path)
     args = parser.parse_args()
     if not args.original_maps:
         assert args.output.resolve() != (ROOT/'docs/CLUE/STEPS-CURATED.json').resolve(), 'Historical selection needs a separate research output'
     legacy = {key: list(value) for key, value in LEGACY_SELECTION.items()}
+    approved = ROOT/'docs/CLUE/ADDITIONAL-STEPS.json'
+    extra_spec = args.extra_spec or (approved if args.original_maps and approved.exists() else None)
+    extra = json.loads(extra_spec.read_text()) if extra_spec else {}
+    assert set(extra) <= set(SELECTION)
+    if extra:
+        assert {tier:len(names) for tier,names in extra.items()} == {'easy':7, 'medium':3, 'hard':5}
+        assert extra_spec.resolve() == approved.resolve() or args.output.resolve() != (ROOT/'docs/CLUE/STEPS-CURATED.json').resolve(), 'Unreviewed additions need a separate staged output'
     if args.original_maps:
         from audit_original_pool import MAPS
         for tier, name in MAPS.values():
@@ -94,7 +102,8 @@ def main():
     result = []
     for tier, names in SELECTION.items():
         assert len(names) == (15 if tier in ("easy", "medium", "hard") else 12)
-        for name in names + legacy.get(tier, []):
+        assert not set(extra.get(tier, [])) & set(names + legacy.get(tier, []))
+        for name in names + legacy.get(tier, []) + extra.get(tier, []):
             if name.startswith("@"):
                 anagram = name in ("@Mandrith", "@Radimus")
                 file = "Treasure_Trails__Guide__Anagrams__Master.wiki" if anagram else "Treasure_Trails__Guide__Cryptic_clues__Master.wiki"
@@ -183,10 +192,13 @@ def main():
                 subtype = "FALO"
             result.append(dict(row, subtype=subtype, sourceSha256=digest, challenge=challenge,
                                restoredOriginal=name in legacy.get(tier, []),
+                               additionalSource=name in extra.get(tier, []),
                                activation="pending target assets, subtype handler and client verification"))
-    expected = 92 if args.original_maps else 75
+    expected = (92 if args.original_maps else 75) + sum(map(len, extra.values()))
     assert len(result) == expected and len({r["key"] for r in result}) == expected
     assert sum(r.get('restoredOriginal', False) for r in result) == (23 if args.original_maps else 6)
+    for row in result:
+        if not row.get('additionalSource'): row.pop('additionalSource', None)
     destination = args.output
     destination.write_text(json.dumps(result, indent=2, ensure_ascii=False)+"\n", encoding="utf-8")
     print(f"{len(result)} source candidates; {Counter(r['tier'] for r in result)}")

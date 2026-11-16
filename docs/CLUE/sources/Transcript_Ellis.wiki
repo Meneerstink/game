@@ -1,0 +1,62 @@
+{{Transcript|npc}}
+{{Incomplete|Confirm the condition for Ali Morrisane dialogue option}}
+
+==Standard dialogue==
+* '''Ellis:''' Greetings friend. I am a manufacturer of leather.
+* {{topt|Can I buy some leather then?}}
+** '''Player:''' Can I buy some leather then?
+** '''Ellis:''' I make leather from animal hides. Bring me some cowhides and one gold coin per hide, and I'll tan them into soft leather for you.
+** {{tact|end}}
+* {{topt|Leather is rather weak stuff.}}
+** '''Player:''' Leather is rather weak stuff.
+** '''Ellis:''' Normal leather may be quite weak, but it's very cheap - I make it from cowhides for only 1 gp per hide - and it's so easy to craft that anyone can work with it.
+** '''Ellis:''' Alternatively you could try hard leather. It's not so easy to craft, but I only charge 3 gp per cowhide to prepare it, and it makes much sturdier armour.
+** '''Ellis:''' I can also tan snake hides and dragonhides, suitable for crafting into the highest quality armour for rangers.
+** '''Player:''' Thanks, I'll bear it in mind.
+** {{tact|end}}
+* {{topt|cond=With Rogue Trader completed?{{Fact}}|What can you tell me about Ali Morrisane?}}
+** '''Player:''' What can you tell me about Ali Morrisane?
+** '''Ellis:''' I wouldn't mind him setting up shop, but he's brought others in.
+** '''Ellis:''' Two of them came here and said they were going to put me out of business if I didn't listen to them!
+** '''Ellis:''' Hah, as if they think they could threaten me with a hammer and a pair of scissors.
+** '''Player:''' What will you do about the threats?
+** '''Ellis:''' The other shopkeepers and I won't give in to their threats. Osman's also told us that he'll make sure we're protected.
+** '''Ellis:''' I'll keep tanning leather for people like you to make into clothes and armour.
+** {{tact|end}}
+
+==With one or more hides in the inventory==
+* '''Ellis:''' Greetings friend. I am a manufacturer of leather.
+* {{tcond| If one hide in the inventory:}}
+** '''Ellis:''' I see you have brought me a hide. Would you like me to tan it for you?
+* {{tcond| If more than one hide in the inventory:}}
+** '''Ellis:''' I see you have brought me some hides. Would you like me to tan them for you?
+* {{topt|Yes please.}}
+** '''Player:''' Yes please.
+** {{tact|opens2=Tanning}}
+* {{topt|No thanks.}}
+** '''Player:''' No thanks.
+** '''Ellis:''' Very well, [sir/madam], as you wish.
+** {{tact|end}}
+
+==Using items on Ellis==
+===Using any untanned leather===
+* {{tact|opens2=Tanning}}
+
+===Using any tanned leather===
+* '''Ellis:''' Er... I have no use for that, I make the stuff!
+* {{tact|end}}
+
+===Using any other item===
+* '''Ellis:''' Er... Thanks, but no thanks!
+* {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* {{tcond|If the reward is another clue scroll:}}
+** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've been given another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}

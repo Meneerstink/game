@@ -1,0 +1,1153 @@
+{{Transcript|npc}}
+{{Incomplete|Gem reward for WOM tasks missing}}
+
+==Standard dialogue==
+===Initial dialogue===
+* '''Wise Old Man:''' Greetings, [player name].
+* '''Player:''' So you're a wise old man, huh?
+* '''Wise Old Man:''' Less of the 'old' man, if you please!
+* '''Wise Old Man:''' But yes, I suppose you could say that. I prefer to think of myself as a sage.
+* '''Player:''' So what's a sage doing here?
+* '''Wise Old Man:''' I've spent most of my life studying this world in which we live. I've strode through the depths of the deadliest dungeons, roamed the murky jungles of Karamja, meditated on the glories of Saradomin on Entrana,
+* '''Wise Old Man:''' and read some dusty tomes in the Library of Varrock.
+* '''Wise Old Man:''' Now I'm not as young as I used to be, I'm settling here where it's peaceful.
+* {{tcond|If the player has not completed [[Vampyre Slayer]]:}}
+** '''Wise Old Man:''' It's a pity about that vampyre that keeps attacking the village. At least Saradomin protects me.
+** {{tact|continue}}
+* '''Player:''' That's quite an exciting life you've had.
+* '''Wise Old Man:''' Exciting? Yes, I suppose so.
+* '''Wise Old Man:''' Now I'm here, perhaps I could offer you the benefit of my experience and wisdom?
+* '''Player:''' Thanks! So you can help me?
+* '''Wise Old Man:''' Well, I imagine you've gathered up quite a lot of stuff on your travels. Things you used for quests a long time ago that you don't need now.<!--Varbit 596 changed: 0 -> 1--><!--He also says this for players with no bank and 0 quest points.-->
+* '''Wise Old Man:''' If you like, I can look through your bank and see if there's anything you can chuck away.
+* '''Wise Old Man:''' Alternatively, you can bring items here and show them to me. If I see that it's something you don't need, I'll let you know. I might even be willing to buy it.
+* '''Player:''' So you'll help me clear junk out of my bank?
+* '''Wise Old Man:''' Yes, that's right. Or I'd be happy to chat with you about the wonders of this world!
+* {{topt|Could I have some free stuff, please?}}
+** '''Player:''' Could I have some free stuff, please?
+** '''Wise Old Man:''' Deary deary me...
+** {{tcond|If the player is in a F2P world:}}
+*** '''Wise Old Man:''' I'm not giving out free money, but if you try again later I'd be glad to reward you if you'd do a little job for me.
+*** {{tact|end}}
+** {{tcond|If the player is in a members world:}}
+*** '''Wise Old Man:''' I'm not giving out free money, but I'd be happy to reward you if you'll do a little job for me.
+*** {{topt|Ok, what do you want me to do?}}
+**** '''Player:''' Ok, what do you want me to do?
+**** '''Wise Old Man:''' I'm sure I can think of a few little jobs. This won't be a quest, mind you, just a little favour...
+**** ''(Player gets assigned a [[Wise Old Man tasks|Wise Old Man task]])''
+*** {{topt|Thanks, maybe some other time.}}
+**** '''Player:''' Thanks, maybe some other time.
+**** {{tact|end}}
+* {{topt|I'd just like to ask you something.}}
+** '''Player:''' I'd just like to ask you something.
+** '''Wise Old Man:''' Please do!
+** {{tact|(See subsequent dialogue section down below)}}
+* {{topt|Is there anything I can do for you?}}
+** '''Player:''' Is there anything I can do for you?
+** '''Wise Old Man:''' I'm sure I can think of a few little jobs. This won't be a quest, mind you, just a little favour...
+** {{tact|Continues to [[Transcript:Wise Old Man#Wise Old Man Tasks|his tasks]]}}
+* {{topt|Could you check my items for junk, please?}}
+** '''Player:''' Could you check my items for junk, please?
+** {{tact|(Game opens the [[Wise Old Man/Recycling Centre|Wise Old Man's Recycling Center]] interface)}}
+* {{topt|Thanks, maybe some other time.}}
+** '''Player:''' Thanks, maybe some other time.
+** {{tact|end}}
+
+===Subsequent dialogue===
+* '''Wise Old Man:''' Greetings, [player name].
+* {{tselect|Select an option}}
+* {{topt|Can I get another hood for my Quest Point Cape?}}
+** '''Player:''' Can I get another hood for my Quest Point Cape?
+** {{tbox|pic=Quest_point_hood_detail.png|The Wise Old Man hands you a free hood.}}
+* {{tcond|If the player has no inventory space:}}
+** '''Wise Old Man:''' You don't appear to have enough space in your inventory. Come back and see me when you do.
+** {{tact|above}}
+* {{topt|Can I buy a Quest Point Cape, please?}}
+** '''Player:''' Can I buy a Quest Point Cape, please?
+** '''Wise Old Man:''' Gladly, though they cost 99,000 coins.
+** {{topt|Okay, 99,000 coins is fine.}}
+*** '''Player:''' Okay, 99,000 coins is fine.
+*** {{tbox|pic=Quest_point_hood_detail.png|pic2=Quest_point_cape_detail.png|The Wise Old Man sells you a Quest Point Cape and a hood to wear with it.}}
+*** {{tact|above}}
+*** {{tcond|If the player only has one or no inventory space open:}}
+**** '''Wise Old Man:''' All skillcapes come with a hood - you're not going to be able to hold them now. Try again another time.
+**** {{tact|above}}
+*** {{tcond|If the player doesn't have enough coins:}}
+*** '''Player:''' I'll have to come back another time.
+*** {{tact|above}}
+** {{topt|Actually, no thanks.}}
+*** '''Player:''' Actually, no thanks.
+*** {{tact|above}}
+* {{topt|More...}}
+** {{topt|Is there anything I can do for you?}}
+** {{tcond|If the player is in a F2P world:}}
+*** '''Wise Old Man:''' Thanks, but I don't have anything I need doing right now.
+*** {{tact|end}}
+** {{tcond|If the player is in a members world:}}
+*** {{tact|Continues to [[Transcript:Wise Old Man#Wise Old Man Tasks|his tasks]]}}
+** {{topt|What did you ask me to do?}}
+*** {{tact|Continues to [[Transcript:Wise Old Man#Wise Old Man Tasks|his tasks]]}}
+** {{topt|Could you check my items for junk, please?}}
+*** '''Player:''' Could you check my items for junk, please?
+*** {{tact|(Game opens the [[Wise Old Man/Recycling Centre|Wise Old Man's Recycling Center]] interface)}}
+*** {{tact|end}}
+** {{topt|I'd just like to ask you something.}}
+*** '''Player:''' I'd just like to ask you something.
+*** '''Wise Old Man:''' Please do!
+*** {{topt|Distant lands}}
+**** {{topt|The Wilderness}}
+***** '''Player:''' Could you tell me about the Wilderness, please?
+***** '''Wise Old Man:''' If Entrana is a land dedicated to the glory of Saradomin, the Wilderness is surely the land of Zamorak.
+***** '''Wise Old Man:''' It's a dangerous place, where adventurers such as yourself may attack each other, using all their combat skills in the struggle for survival.
+***** '''Wise Old Man:''' The Wilderness has different levels. In a low level area, you can only fight adventurers whose combat level is close to yours.
+***** '''Wise Old Man:''' But if you venture into the high level areas in the far north, you can be attacked by adventurers who are significantly stronger than you.
+***** '''Wise Old Man:''' Of course, you'd be able to attack considerably weaker people too, so it can be worth the risk.
+***** '''Wise Old Man:''' If you dare to go to the far north-west of the Wilderness, there's a building called the Mage Arena where you can learn to summon the power of Saradomin himself!
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** '''Player:''' Yes please.
+****** {{topt|Distant lands}}
+******* {{tact|above}}
+****** {{topt|Strange beasts}}
+******* {{tact|below}}
+****** {{topt|Days gone by}}
+******* {{tact|below}}
+****** {{topt|Gods and demons}}
+******* {{tact|below}}
+****** {{topt|Something to do with you...}}
+******* {{tact|below}}
+***** {{topt|Thanks, maybe some other time.}}
+****** '''Player:''' Thanks, maybe some other time.
+****** '''Wise Old Man:''' As you wish. Farewell, [player name].
+****** {{tact|end}}
+**** {{topt|Misty jungles}}
+***** '''Player:''' What can you tell me about jungles?
+***** '''Wise Old Man:''' If it's jungle you want, look no further than the southern regions of Karamja.
+***** '''Wise Old Man:''' Once you get south of Brimhaven, the whole island is pretty much covered in exotic trees, creepers and shrubs.
+***** '''Wise Old Man:''' There's a small settlement called Tai Bwo Wannai Village in the middle of the island. It's a funny place; the chieftain's an unfriendly chap and his sons are barking mad.
+***** '''Wise Old Man:''' Honestly, one of them asked me to stuff a dead monkey with seaweed so he could EAT it!
+***** {{tcond|If the player has completed [[Tai Bwo Wannai Trio]]:}}
+****** '''Player:''' Yes, I've met them.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Further south you'll find Shilo Village. It's been under attack by terrifying zombies in recent months, if my sources are correct.
+***** {{tcond|If the player has completed [[Shilo Village]]:}}
+****** '''Player:''' I've dealt with them, although there are a few still knocking about.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' The jungle's filled with nasty creatures. There are vicious spiders that you can hardly see before they try to bite your legs off, and great big jungle ogres.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Underground domains}}
+***** '''Player:''' Tell me about what's underground.
+***** '''Wise Old Man:''' Oh, the dwarven realms?
+***** '''Wise Old Man:''' Yes, there was a time, back in the Fourth Age, when we humans wouldn't have been able to venture underground. That was before we had magic; the dwarves were quite a threat.
+***** '''Wise Old Man:''' Still, it's much more friendly now. You can visit the vast dwarven mine if you like; the entrance is on the mountain north of Falador.
+***** '''Wise Old Man:''' If you go further west you may be able to visit the dwarven city of Keldagrim. But they were a bit cautious about letting humans in, last time I asked.
+***** '''Wise Old Man:''' On the other hand, if you go west of Brimhaven, you'll find a huge underground labyrinth full of giants, demons, dogs and dragons to fight. It's even bigger than the caves under Taverley, although the Taverley
+***** '''Wise Old Man:''' dungeon's pretty good for training your combat skills.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Mystical realms}}
+***** '''Player:''' What mystical realms can I visit?
+***** '''Wise Old Man:''' Well, you've been to Zanaris. I met a fairy years ago who said she lived there. She was an incredible warrior, considering that she wasn't even a metre tall.
+***** '''Wise Old Man:''' Also, in my research I came across ancient references to some kind of Abyss. Demons from the Abyss have already escaped into this land; Saradomin be thanked that they are very rare!
+***** {{tcond|If the player has completed [[Shadow of the Storm]]:}}
+****** '''Player:''' I've been through a portal into the lair of some ancient demon. It was in the city of Uzer.
+****** '''Wise Old Man:''' Ah, Uzer. A city much favoured by Saradomin, destroyed by Thammaron, the elder-demon, late in the Third Age.
+****** '''Player:''' Yeah, there isn't much left there.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+*** {{topt|Strange beasts}}
+**** {{topt|Biggest & Baddest}}
+***** '''Player:''' What's the biggest monster in the world?
+***** '''Wise Old Man:''' There's a mighty fire-breathing dragon living underground in the deep Wilderness, known as the King Black Dragon. It's a fearsome beast, with a breath that can poison you, freeze you to the ground or
+***** '''Wise Old Man:''' incinerate you where you stand.
+***** '''Wise Old Man:''' But even more deadly is the Queen of the Kalphites. As if her giant mandibles of death were not enough, she also throws her spines at her foes with deadly force. She can even cast rudimentary spells.
+***** '''Wise Old Man:''' Some dark power must be protecting her, for she can block attacks using prayer just as humans do.
+***** '''Wise Old Man:''' Another beast that's worthy of a special mention is the Shaikahan. It dwells in the eastern reaches of Karamja, and is almost impossible to kill except with specially prepared weapons.
+***** {{tcond|If the player has completed [[Tai Bwo Wannai Trio]]:}}
+****** '''Player:''' Actually, that one's dead. I've been helping a barmy hunter who'd sworn to kill it.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Poison and how to survive it}}
+***** '''Player:''' What does poison do?
+***** '''Wise Old Man:''' Many monsters use poison against their foes. If you get poisoned, you will not feel it at the time, but later you will begin to suffer its effects, and your life will drain slowly from you.
+***** '''Wise Old Man:''' Over time the effects dwindle to nothing, but if you had already been wounded you might die before they wear off completely.
+***** '''Wise Old Man:''' Fortunately, followers of Guthix have devised potions that can cure the poison or even give immunity to it.
+***** '''Wise Old Man:''' Should you wish to use poison against your own enemies and those of our Lord Saradomin, there is a potion that you can smear on your daggers, arrows, spears, javelins and throwing knives.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Wealth through slaughter}}
+***** '''Player:''' What monsters drop good items?
+***** '''Wise Old Man:''' As a general rule, tougher monsters drop more valuable items. But even a lowly hobgoblin can drop valuable gems; it just does this extremely rarely.
+***** '''Wise Old Man:''' If you can persuade the Slayer Masters to train you as a Slayer, you will be able to fight certain monsters that drop valuable items far more often.
+***** '''Wise Old Man:''' You might care to invest in an enchanted dragonstone ring. These are said to make a monster drop its most valuable items a little more often.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Random events}}
+***** '''Player:''' What are these strange monsters that keep appearing out of nowhere and attacking me when I'm training?
+***** '''Wise Old Man:''' Ah, I imagine you see a lot of those.
+***** '''Wise Old Man:''' Creatures such as the rock golem, river troll and tree spirit dwell in places where adventurers frequently go to train their skills. While you're training you will often disturb one by accident. It will then get angry and
+***** '''Wise Old Man:''' attack you. The safest way to deal with them is to run away immediately, but they sometimes drop valuable items if you kill them.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+*** {{topt|Days gone by}}
+**** {{topt|Heroic figures}}
+***** '''Player:''' Tell me about valiant heroes!
+***** '''Wise Old Man:''' Ha ha ha... There are plenty of heroes. Always have been, always will be, until the fall of the world.
+***** {{tcond|If the player has less than 80 [[quest points]]:}}
+****** '''Wise Old Man:''' If you'd do a few more quests, you'd soon become a fairly noted adventurer yourself.
+****** {{tact|continue}}
+***** {{tcond|If the player has 80 or more [[quest points]]:}}
+****** '''Wise Old Man:''' You're quite a noted adventurer yourself!
+****** {{tact|continue}}
+***** '''Wise Old Man:''' But I suppose I could tell you of a couple...
+***** '''Wise Old Man:''' Yes, there was a man called Arrav. No-one knew where he came from, but he was a fearsome fighter, a skillful hunter and a remarkable farmer. He lived in the ancient settlement of Avarrocka, defending it from
+***** '''Wise Old Man:''' goblins, until he went forth in search of some strange artefact long desired by the dreaded Mahjarrat.
+***** '''Wise Old Man:''' Perhaps some day I shall be able to tell you what became of him.
+***** '''Wise Old Man:''' But do not let your head be turned by heroics. Randas was another great man, but he let himself be beguiled into turning to serve Zamorak, and they say he is now a mindless creature deep in the Underground Pass that
+***** '''Wise Old Man:''' leads to Isafdar.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|The origin of magic}}
+***** '''Player:''' Where did humans learn to use magic?
+***** '''Wise Old Man:''' Ah, that was quite a discovery! It revolutionised our way of life and jolted us into this Fifth Age of the world.
+***** '''Wise Old Man:''' They say a traveller in the north discovered the key, although no records state exactly what he found. From this he was able to summon the magic of the four elements, using magic as a tool and a weapon. He and
+***** '''Wise Old Man:''' his followers learnt how to bind the power into little stones so that others could use it.
+***** '''Wise Old Man:''' in the land south of here they constructed an immense tower where the power could be studied, but followers of Zamorak destroyed it with fire many years ago, and most of the knowledge was lost.
+***** {{tcond|If the player hasn't completed [[Rune Mysteries]]:}}
+****** '''Wise Old Man:''' Perhaps one day those lost secrets will be uncovered once more.
+****** {{tact|continue}}
+***** {{tcond|If the player has completed [[Rune Mysteries]]:}}
+****** '''Wise Old Man:''' I hear you've been very helpful to the wizards who are working on the mysteries of the rune stones.
+****** '''Player:''' Well, I didn't do much...
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|Settlements}}
+***** '''Player:''' I suppose you'd know about the history of today's cities?
+***** '''Wise Old Man:''' Yes, there are fairly good records of the formation of the cities from primitive settlements.
+***** '''Wise Old Man:''' In the early part of the Fourth Age, of course, there were no permanent settlements. Tribes wandered the lands, staying where they could until the resources were exhausted.
+***** '''Wise Old Man:''' This changed as people learnt to grow crops and breed animals, and now there are very few of the old nomadic tribes. There's at least one tribe roaming between the Troll Stronghold and Rellekka, though.
+***** {{tcond|If the player has completed [[Mountain Daughter]]:}}
+****** '''Player:''' Yes, I've met them. They're all mad.
+****** '''Wise Old Man:''' Truly, their faith in natural spirits is rather foolish, but they're a pleasant enough people.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Anyway, what was I saying? Ah, yes...
+***** '''Wise Old Man:''' One settlement was Avarrocka, a popular trading centre.
+***** '''Wise Old Man:''' In the west, Ardougne gradually formed under the leadership of the Carnillean family, despite the threat of the Mahjarrat warlord Hazeel who dwelt in that area until his downfall.
+***** {{tcond|If the player sided with the cultists in [[Hazeel Cult]]:}}
+****** '''Player:''' He'll be back, just you wait!
+****** '''Wise Old Man:''' Oh dear, I hope you haven't done anything rash!
+****** {{tact|continue}}
+***** {{tcond|If the player sided with Ceril in [[Hazeel Cult]]:}}
+****** '''Player:''' I've foiled a dastardly Zamorakian plot to have Hazeel resurrected.
+****** '''Wise Old Man:''' So I'd heard. Lord Saradomin is smiling on you.
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|The Wise Old Man of Draynor Village}}
+***** '''Player:''' Tell me about yourself, old man.
+***** '''Wise Old Man:''' Ah, so you want to know about me, eh?
+***** '''Wise Old Man:''' Mmm... what could I say about myself? Let's see what I've done...
+***** '''Wise Old Man:''' I've delved into the dungeon west of Brimhaven and heard the terrifying CRASH of the steel dragons battling each other for territory.
+***** '''Wise Old Man:''' I spent some years on Entrana, where I learnt the techniques of pure meditation.
+***** '''Wise Old Man:''' I've wandered through the vast desert that lies south of Al Kharid and seen the great walls of Menaphos and Sophanem.
+***** {{tcond|If the player has completed [[Icthlarin's Little Helper]]:}}
+****** '''Player:''' That feline statue you've got on your bookshelf there - I'm sure I saw something like that when I was in Sophanem.
+****** '''Wise Old Man:''' I've always liked to collect little trinkets to remind me of the time when my life was more - ah - exciting.
+****** '''Player:''' So you've spoken to the Sphinx, then?
+****** '''Wise Old Man:''' Spoken to a sphinx, you say? My dear young lady, you can't possibly be serious!
+****** '''Player:''' What do you mean?
+****** '''Wise Old Man:''' Ha ha ha! The people who live deep in the shifting sands of the desert will often tell travellers tall tales of strange beasts, but that doesn't mean any of it's remotely true!
+****** '''Player:''' But I've met the Sph...
+****** '''Wise Old Man:''' Please, adventurer, there is nothing to be gained by interfering in matters you do not understand.
+****** '''Wise Old Man:''' Even if such a creature were to exist...
+****** '''Player:''' ... which it does...
+****** '''Wise Old Man:''' EVEN IF SUCH A CREATURE WERE TO EXIST it would be terribly dangerous for you to get involved in its business.
+****** '''Wise Old Man:''' I have heard of terrible things happening to travellers in that land, and I would not wish for you to be dragged into anything like that.
+****** '''Wise Old Man:''' Indeed, I have heard of adventurers doing the most shameful and blasphemous deeds believing themselves to be acting on behalf of some false god!
+****** '''Player:''' Hmmm?
+****** '''Wise Old Man:''' So please do not speak to me of this matter again. Now, I believe I was telling you of my adventurous youth...
+****** {{tact|continue}}
+***** '''Wise Old Man:''' Apart from all that, I've spent many a happy hour in dusty libraries, searching through ancient scrolls and texts for the wisdom of those who have passed on.
+***** '''Wise Old Man:''' Plus plenty of other adventures, quests, journeys... Is there anything else you'd like to know?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+*** {{topt|Gods and demons}}
+**** {{topt|Three gods?}}
+***** '''Player:''' I heard that Gielinor has three gods.
+***** '''Wise Old Man:''' Indeed. This is correct: Saradomin, Guthix and Zamorak.
+***** '''Wise Old Man:''' Saradomin, the great and glorious, gives life to this world.
+***** '''Wise Old Man:''' Zamorak craves only death and destruction.
+***** '''Wise Old Man:''' Guthix, calling itself a god of 'balance', holds no allegiance, but simply aids whatever cause suits its shifting purpose.
+***** {{tcond|If the player has completed [[The Dig Site]]:}}
+****** '''Player:''' So who's Zaros?
+****** '''Wise Old Man:''' What did you say?
+****** '''Player:''' I discovered a buried altar to a god called Zaros.
+****** '''Wise Old Man:''' Please, do not speak further of this. No good can come of meddling in such things.
+****** '''Player:''' So Zaros is real?
+****** '''Wise Old Man:''' Adventurer, my patience is limited. Speak to me no further of this - this - this foolishness.
+****** {{tcond|If the player has completed [[Desert Treasure I]]:}}
+******* '''Player:''' Does that mean I shouldn't ask you about the ancient magicks I learnt in that pyramid north of Sophanem?
+******* '''Wise Old Man:''' ENOUGH! Begone from me, you foul trickster!
+******* {{tact|end}}
+***** {{tcond|If the player has completed [[Temple of Ikov]] but not [[Desert Treasure I]]:}}
+****** '''Player:''' I've heard of another god, called Armadyl.
+****** '''Wise Old Man:''' What is this of which you speak?
+****** '''Player:''' A strange man asked me to go into the Temple of Ikov and steal the Staff of Armadyl.
+****** '''Wise Old Man:''' And what makes you believe in this 'Armadyl'?
+****** '''Player:''' Well, there were servants of Armadyl living down in the depths of the temple. They'd been there for generations, guarding the staff.
+****** '''Wise Old Man:''' So you trusted the word of these people who had been sitting down a hole all their lives?
+****** '''Player:''' Um... Yes, I suppose so.
+****** '''Wise Old Man:''' I wouldn't worry about this sacred 'armadyllo' anymore. Just another foolish myth.
+****** {{tact|(If the player sided with the Guardians of Armadyl:)}}
+******* '''Player:''' Oh well, the servants rewarded me very kindly for defeating Lucien for them.
+******* '''Wise Old Man:''' That is an impressive feat, adventurer. Truly you must be beloved in the eyes of Saradomin.
+****** {{tact|(If the player sided with Lucien:)}}
+******* '''Player:''' It's lucky there's no Armadyl! I've pinched his staff and given it to Lucien.
+******* '''Wise Old Man:''' YOU'VE DONE WHAT?
+******* '''Wise Old Man:''' Adventurer, I beg of you, do not meddle in the gods' affairs. No good can come of it.
+****** {{tact|If the player has completed [[Icthlarin's Little Helper]] but not [[Desert Treasure I]]:}}
+****** '''Player:''' How about Tumeken, Elindis{{sic}}, Icthlarin and the Devourer?
+****** '''Wise Old Man:''' What names are these?
+****** '''Player:''' Down in Sophanem, they've got a chief god named Tumeken, plus a fertility goddess named Elindis{{sic}}. Icthlarin is their god of the dead and the Devourer...
+****** '''Wise Old Man:''' Adventurer, what folly leads you to think any of these - things, exist?
+****** '''Player:''' But I've met Icthlarin! He'd{{sic}} got a jackal's head!
+****** '''Wise Old Man:''' It is hot in that land, and the heat can affect a traveller in strange ways. Tell me, when you met 'Icthlarin', had you been feeling at all unwell?
+****** '''Player:''' Well, now you mention it, I'd just been hypnotised by a weird woman I met in the desert.
+****** '''Wise Old Man:''' So a strange woman interfered with your mind, then you met a man with the head of a jackal, and you decided he must be a god?
+****** '''Player:''' Umm...
+****** '''Wise Old Man:''' Well, make sure you don't get hypnotised again, and I'm sure you'll not meet any more jackal-headed men claiming to be gods!
+****** '''Player:''' But...?
+****** '''Wise Old Man:''' It'd probably be best if you don't go there again.
+****** '''Player:''' But you've been all around that area, haven't you? When you were travelling?
+****** '''Wise Old Man:''' Indeed, I have.
+****** '''Player:''' So you'd know all about their gods?
+****** '''Wise Old Man:''' I know what I know.
+****** '''Wise Old Man:''' And knowing what I know, I do not speak of this matter. Perhaps you would be wise to heed my example.
+****** {{tact|above}}
+**** {{topt|The wars of the gods}}
+***** '''Player:''' I wanna know about the wars of the gods!
+***** '''Wise Old Man:''' Ah, that was a terrible time. The armies of Saradomin fought gloriously against the minions of Zamorak, but many brave warriors and noble cities were overthrown and destroyed utterly.
+***** {{tcond|If the player has completed [[Shadow of the Storm]]:}}
+****** '''Wise Old Man:''' You have visited Uzer, and seen for yourself the damage that could be wrought by an elder-demon in its wrath.
+****** {{tact|continue}}
+***** '''Player:''' How did it all end?
+***** '''Wise Old Man:''' Before the Zamorakian forces could be utterly routed, Lord Saradomin took pity on them and the battle- scarred world, and allowed a truce.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|The Mahjarrat}}
+***** '''Player:''' What are the Mahjarrat?
+***** '''Wise Old Man:''' Very little is written about the tribe of the Mahjarrat. They are believed to be from the realm of Freneskae, or Frenaskrae - the spelling in this tongue is only approximate.
+***** '''Wise Old Man:''' One of them, the foul Zamorak, has achieved godhood, although none knows how this came about.
+***** '''Wise Old Man:''' Other Mahjarrat who have been particularly active upon this plane are Hazeel, Lucien, Azzanadra and Zemouregal.
+***** {{tcond|If the player sided with the cultists in [[Hazeel Cult]]:}}
+****** '''Player:''' Hazeel will rise again, you'll see!
+****** '''Wise Old Man:''' Adventurer, your actions fill me with concern!
+****** {{tact|continue}}
+***** {{tcond|If the player sided with Ceril in [[Hazeel Cult]]:}}
+****** '''Player:''' I've foiled a dastardly Zamorakian plot to have Hazeel resurrected.
+****** '''Wise Old Man:''' So I'd heard. Lord Saradomin is smiling on you.
+****** {{tact|continue}}
+***** {{tcond|If the player sided with the Guardians of Armadyl in [[Temple of Ikov]]:}}
+****** '''Player:''' I've defeated Lucien.
+****** '''Wise Old Man:''' Truly, your bravery exceeds your stature. But I fear his defeat will not be permanent.
+****** {{tact|continue}}
+***** {{tcond|If the player sided with Lucien in [[Temple of Ikov]]:}}
+****** '''Player:''' I've met Lucien. He paid me very nicely for bringing him a staff he wanted.
+****** '''Wise Old Man:''' Traveller, I beg of you, do not have further dealings with such creatures! You do not know their power as I do.
+****** {{tact|continue}}
+***** {{tcond|If the player has completed [[Desert Treasure I]]:}}
+****** '''Player:''' Azzanadra taught me some ancient magical powers after I unlocked the pyramid where he had been trapped.
+****** '''Wise Old Man:''' Leave me, traveller; I am old, and your words fill me with horror.
+***** {{tact|end}}
+**** {{topt|Wielding the power of the gods}}
+***** '''Player:''' Can I wield the power of Saradomin myself?
+***** {{tcond|If the player has completed [[Mage Arena I]]:}}
+****** '''Wise Old Man:''' I see you are already learning to summon the power of Saradomin.
+****** {{tact|continue}}
+***** {{tcond|If the player hasn't completed [[Mage Arena I]]:}}
+****** '''Wise Old Man:''' If you travel to the Mage Arena in the north-west reaches of the Wilderness, the battle mage Kolodion may be willing to let you learn to summon the power of Saradomin, should you be able to pass his test.
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+*** {{topt|Something to do with you...}}
+**** {{topt|Your hat!}}
+***** '''Player:''' I want to ask you about your hat.
+***** '''Wise Old Man:''' Why, thank you! I rather like it myself.
+***** {{tcond|If the player has not yet seen the recording of the [[Draynor Bank Robbery]]:}}
+****** '''Player:''' Did you steal it from the bank?
+****** '''Wise Old Man:''' Me? Steal from the bank? Whatever do you mean?
+****** '''Player:''' There's been a break-in at Draynor Bank, and I bet you did it.
+****** '''Wise Old Man:''' Oh my goodness, what in the world could make you think I did such a thing?
+****** '''Player:''' Well, you've been sitting here looking at the bank ever since you moved into this house. Now someone's robbed the bank, and suddenly your house is full of expensive stuff!
+****** '''Wise Old Man:''' Oh dear, oh dear...
+****** '''Wise Old Man:''' So what do you think I did? March across the street, smash the bank wall, knock out the bankers and steal all the money?
+****** '''Wise Old Man:''' I'm an old man! I walk with a stick! How could I possibly have done that?
+****** '''Player:''' So you didn't rob the bank?
+****** '''Wise Old Man:''' Just run along now, be a good lad, and don't worry yourself about me or my finances!
+****** '''Player:''' Hmmm... But I'll be keeping an eye on you.
+****** '''Wise Old Man:''' Now you've got that off your chest, would you like to ask me about anything else?
+****** {{topt|How can I get a hat like that?}}
+******* {{tact|below}}
+****** {{topt|Yes please.}}
+******* {{tact|above}}
+***** {{tcond|If the player has seen the recording of the Draynor Bank Robbery:}}
+***** {{topt|You stole it off that woman in the bank!}}
+****** '''Player:''' You stole it off that woman in the bank! You stole all this valuable stuff too!
+****** '''Wise Old Man:''' Stole it? How could you possibly think I did such a thing?
+****** '''Player:''' I saw you robbing the bank! You killed all those people!
+****** '''Wise Old Man:''' Deary me, [player name], your imagination is running wild! What could make you think you saw me do that?
+****** '''Player:''' I've seen a security recording that shows you robbing the bank. The bank's guard showed it to me.
+****** '''Wise Old Man:''' You've seen the bank's security recording?
+****** '''Wise Old Man:''' Tut tut tut... Oh well, at least you'll never be able to tell the bank about me. They'll never listen.
+****** '''Player:''' So you're just going to get away with it?
+****** '''Wise Old Man:''' That's my plan, yes.
+****** '''Player:''' But that's... well, it's WRONG!
+****** '''Wise Old Man:''' Wrong? WRONG? I'll tell you what's wrong!
+****** '''Wise Old Man:''' I've spent my whole life travelling the world, doing quests for people, saving lives, saving villages from terrifying monsters and all that sort of thing.
+****** '''Wise Old Man:''' Now I'm old, and where do I have to live? In this freezing old house next to a pig-sty, with a bunch of yobs outside who can't keep their hands off the market stalls! What sort of reward is that?
+****** '''Wise Old Man:''' So don't talk to me about right and wrong!
+****** '''Player:''' Maybe someone SHOULD talk to you about right and wrong...
+****** '''Wise Old Man:''' Bah!
+****** '''Player:''' Hmmph!
+****** '''Wise Old Man:''' Now you've got that off your chest, would you like to ask me about anything else?
+****** {{topt|How can I get a hat like that?}}
+******* {{tact|below}}
+****** {{topt|Yes please.}}
+******* {{tact|above}}
+****** {{topt|Thanks, maybe some other time.}}
+******* {{tact|above}}
+***** {{topt|How can I get a hat like that?}}
+****** '''Player:''' How can I get a hat like that?
+****** '''Wise Old Man:''' You could buy one off another player, or wait until they're next made available by the Council.
+****** '''Player:''' Can I buy your hat?
+****** '''Wise Old Man:''' Ohhh no, I don't intend to part with this. Would you like to ask me about something else?
+****** {{topt|You should give it back, you know.}}
+******* {{tact|below}}
+****** {{topt|Yes please.}}
+******* {{tact|above}}
+****** {{topt|Thanks, maybe some other time.}}
+******* {{tact|above}}
+***** {{topt|You should give it back, you know.}}
+****** '''Player:''' You should give it back, you know.
+****** '''Wise Old Man:''' No, I think I'll keep it.
+****** '''Player:''' But...
+****** '''Wise Old Man:''' Now you've got that off your chest, would you like to ask me about anything else?
+****** {{topt|How can I get a hat like that?}}
+******* {{tact|above}}
+****** {{topt|Yes please.}}
+******* {{tact|above}}
+****** {{topt|Thanks, maybe some other time.}}
+******* {{tact|above}}
+***** {{topt|How can I get a hat like that?}}
+****** {{tact|above}}
+**** {{topt|cond=If the player has completed [[Swan Song]]:|That quest we did together...}}
+***** '''Player:''' That was quite an exciting quest we did together!
+***** '''Wise Old Man:''' Oh yes, it was certainly a fitting end to my adventuring days. Your fight against the Sea Troll Queen was highly impressive!
+***** '''Player:''' Are you tempted to go on another quest in the future?
+***** '''Wise Old Man:''' No, I feel I am a bit old for that kind of thing now. New times need new heroes, and I'm sure you'll always be there to answer the call!
+***** '''Player:''' I'll certainly see what I can do!
+***** '''Wise Old Man:''' Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+**** {{topt|cond=If the player has completed [[Swan Song]]:|Your retirement}}
+***** '''Player:''' When we finished fighting those sea trolls, you said you'd finished with adventuring, didn't you?
+***** '''Wise Old Man:''' Yes, that's right. I'm an old man, there's no denying it, and I need a nice quiet retirement.
+***** '''Wise Old Man:''' Besides, I think you've proved that the new generation has its own heroes and adventurers - I should step back and let you get on with it!
+***** '''Player:''' Does this mean you're not going to do any more big robberies?
+***** '''Wise Old Man:''' Well, since you saved my life when we were fighting the Sea Troll Queen, I don't mind telling you... I trust you won't tell anyone about this?
+***** '''Player:''' Go on...
+***** '''Wise Old Man:''' I might just have something in mind. After all, that little bank incident went very smoothly.
+***** '''Player:''' But you're retired!
+***** '''Wise Old Man:''' I retired from adventuring and questing. The episode in the bank was hardly a quest, more like a shopping trip!
+***** '''Player:''' Your shopping trip killed 3 bank staff and several innocent bystanders, not to mention the watchman!
+***** '''Wise Old Man:''' I've saved countless villages from unspeakable terrors and slain innumerable evil monsters - surely I deserve some sort of reward in return? Yet what did I get? NOTHING!
+***** '''Wise Old Man:''' You yourself would get pretty angry if you did a long and dangerous quest and didn't get any reward from it, eh? I'm sure you would!
+***** '''Wise Old Man:''' Well imagine how I felt at the end of a long life of questing when was left penniless, and I had to move into this thief-infested village! This little shack was falling apart when I arrived!
+***** '''Wise Old Man:''' You go speak to that hag who keeps looking through my window - she'll show you how it used to look before I could afford to redecorate it!
+***** '''Wise Old Man:''' Being noble and virtuous simply doesn't put food on the table, and I don't intend to sit in banks begging like so many people do these days.
+***** '''Player:''' So all those quests in the past, when you saved people from monsters and stuff like that... You only helped them because you wanted a reward?
+***** '''Wise Old Man:''' No, it wasn't always like that. I used to be satisfied just knowing that I'd helped, and that was reward enough.
+***** '''Wise Old Man:''' But eventually I realised that people forgot about me as soon as the danger was gone, and I wasn't even getting paid properly for my services. Sometimes they offered training in the various skills, but that's no use to me!
+***** '''Wise Old Man:''' I eventually realised that the only way I could get a proper reward for my life's efforts is if I took the reward myself. So I took up my cape and staff and headed for the bank.
+***** '''Player:''' And now you're planning to do another robbery? Didn't you get enough from the bank?
+***** '''Wise Old Man:''' Perhaps not... But enough of this matter! Is there anything else you'd like to ask?
+***** {{topt|Yes please.}}
+****** {{tact|above}}
+***** {{topt|Thanks, maybe some other time.}}
+****** {{tact|above}}
+
+==Using items on Wise Old Man==
+* {{tcond|If the player has not gone through the initial dialogue first:}}
+** '''Wise Old Man:''' Humph! You could at least say hello before waving your items in my face.
+** {{tact|end}}
+
+===Item with offensive stats===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' I suppose you could use that in combat.
+* '''Player:''' Thanks, old man.
+* {{tact|end}}
+
+===Item with only defensive stats===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' I suppose you could use that for defense.
+* '''Player:''' Thanks, old man.
+* {{tact|end}}
+
+===Low-value runes===
+* '''Player:''' Do you think I need to keep this?
+* ''(Wise Old Man takes five runes from you.)''
+* '''Wise Old Man:''' Runes are very useful things, but I'll take some of those off your hands for you.
+* {{tact|end}}
+
+===High-value runes===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' Ooh, runes? Yes, they're quite valuable.
+* {{tact|end}}
+
+===Coins===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' That's called 'money'. Money is fantastically important if you haven't got enough of it, but when you've got as much as I have, you realise that money doesn't matter.
+* '''Player:''' Right...
+* {{tact|end}}
+
+===[[Book on chickens]], [[Book of folklore]], or [[Strange book]]===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' That's mine. I'll take it back, thank you very much!
+* ''(Wise Old Man takes all copies of any of the three books from your inventory)''
+* {{tact|end}}
+
+===The [[Banker's briefcase]]===
+* '''Wise Old Man:''' How did you get your hands on that?!
+* '''Wise Old Man:''' Get out of here this instant.
+* {{tact|end}}
+
+===Items with no information===
+* '''Player:''' Do you think I need to keep this?
+* '''Wise Old Man:''' Tell you what, rather than you showing me items individually, I'll look through all your possessions to see if I can find anything worth discarding.
+* {{tact|(Game opens the [[Wise Old Man/Recycling Centre|Wise Old Man's Recycling Center]] interface)}}
+
+==Searching through his bookcases without having talked to him first==
+* '''Wise Old Man:''' It'd be politer to come and talk to me before you start messing around with my possessions!
+* {{tact|end}}
+
+==After observing his telescope==
+* '''Player:''' I see you've got your telescope pointing at the Wizards' Tower.
+* '''Wise Old Man:''' Oh, do I? Well, why does that interest you?
+* {{tcond|If the player has not seen the bank robbery cutscene:}}
+** '''Player:''' It just seems a bit odd.
+** '''Wise Old Man:''' Odd? There's nothing odd about a fascination with the magical arts. Besides, the architecture of that Tower is truly remarkable, for one who studies such things.
+** '''Player:''' So you're not planning to attack the Tower?
+** '''Wise Old Man:''' No, I wouldn't dream of doing anything of the sort!
+** '''Player:''' Hmmm...
+** {{tact|end}}
+* {{tcond|If the player has seen the bank robbery cutscene:}}
+** '''Player:''' Well, you robbed a bank, and I bet you're now planning something to do with that Tower!
+** '''Wise Old Man:''' No, no. I'm not planning anything like that again.
+** '''Player:''' Well I'll be watching you...
+** {{tact|end}}
+
+===If the Wise Old Man is in the [[Old Man's coffin]]===
+* '''Player:''' Oh, he's not here.
+* {{tact|end}}
+
+==Wise Old Man Tasks==
+===Delivering items to the Wise Old Man===
+* {{trandom}}
+* {{topt|Thing under the bed}}
+** '''Wise Old Man:''' Well, this is rather embarrassing, but I think there's some kind of monster in my house. Could you go upstairs and get rid of it, please?
+** {{tselect|What would you like to say?}}
+** {{topt|Where do I need to go?}}
+*** '''Player:''' Where do I need to go?
+*** '''Wise Old Man:''' I think it's somewhere upstairs. It kept me awake all last night.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bronze bar}}
+** '''Wise Old Man:''' I need some bronze bars. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Mine some copper ore and tin ore. The furnace in Lumbridge can smelt them into bars of bronze.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{tcond|If the wise man needs bronze items:}}
+** {{topt|Bronze dagger}}
+*** '''Wise Old Man:''' I need a few bronze daggers to keep the goblins at bay. Please bring me [#].
+** {{topt|Bronze maces}}
+*** '''Wise Old Man:''' I'd like some maces made of bronze. Please bring me [#].
+** {{topt|Bronze arrowtips}}
+*** '''Wise Old Man:''' I need a few bronze arrowheads to complete some arrows I was making. Please bring me [#].
+** {{topt|Bronze knives}}
+*** '''Wise Old Man:''' I'd like some bronze knives to throw at goblins. Please bring me [#].
+** {{topt|Bronze sword}}
+*** '''Wise Old Man:''' My weapons collection isn't all it used to be. Some short swords made of bronze would be much appreciated. Please bring me [#].
+** {{topt|Bronze axe}}
+*** '''Wise Old Man:''' The head fell off my axe when I was chopping wood last week, so I need some more bronze axes. Please bring me [#].
+** {{topt|Bronze warhammer}}
+*** '''Wise Old Man:''' Could you fetch me some big warhammers made of bronze? Please bring me [#].
+** {{topt|Bronze med helm}}
+*** '''Wise Old Man:''' I could do with some medium-sized helmets. I'd like bronze ones. Please bring me [#].
+** {{topt|Bronze wire}}
+*** '''Wise Old Man:''' I need some lengths of bronze wire to repair something. Please bring me [#].
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where can I get that?}}
+**** '''Player:''' Where can I get that?
+**** '''Wise Old Man:''' Try smelting some copper and tin ore to make bronze. Then hammer the bronze on an anvil to make [daggers/maces/arrowheads/throwing knives/short swords/axes/warhammers/helmets/wire].
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+* {{topt|Iron bar}}
+** '''Wise Old Man:''' I need some iron bars. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Mine some iron ore. The furnace in Lumbridge can smelt them into bars of iron.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{tcond|If the wise man needs iron items:}}
+** {{topt|Iron arrowtips}}
+*** '''Wise Old Man:''' I need some iron arrowheads to put on the arrows I was making. Please bring me [#].
+** {{topt|Iron knife}}
+*** '''Wise Old Man:''' I could do with some iron throwing knives to keep the goblins away from my house. Please bring me [#].
+** {{topt|Iron warhammer}}
+*** '''Wise Old Man:''' I'd like some chunky iron warhammers. Please bring me [#].
+** {{topt|Iron mace}}
+*** '''Wise Old Man:''' Some iron maces would be useful. Please bring me [#].
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where can I get that?}}
+**** '''Player:''' Where can I get that?
+**** '''Wise Old Man:''' Try smelting some iron. Then hammer the bronze on an anvil to make [arrowtips/throwing knives/warhammers/maces].
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+* {{topt|Iron ore}}
+** '''Wise Old Man:''' A few lumps of iron ore would be nice. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' It should be easy enough for you to mine some iron ore.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Cadava berries}}
+** '''Wise Old Man:''' I've found a use for cadava berries. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Just look around the woods south-west of Varrock.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Leather cowls}}
+** '''Wise Old Man:''' The hail can be very heavy here, so I'd like a few leather cowls. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you get the tanner in Al Kharid to turn some cowhides into leather, you'll be able to make the cowls yourself. Buy needles & thread from the crafting shop in Al Kharid if you need any.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Beer}}
+** '''Wise Old Man:''' Strange as it may seem, I want a lot of beer! Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a pub not far from here that will sell you plenty of that. Go west to Port Sarim.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bread}}
+** '''Wise Old Man:''' I don't have a decent larder here, so I can't store food very well. Now I'm out of loaves of bread. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Mix some flour and water to make bread dough, then bake it on a cooking range.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Soft leather}}
+** '''Wise Old Man:''' I'll be needing a few pieces of soft leather. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a tanner in Al Kharid who will turn cowhides into leather.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Balls of wool}}
+** '''Wise Old Man:''' I saw an interesting bed in Karamja called a 'hammock'. It seemed to be made out of string, and I'd like some balls of wool so I can make my own. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You can buy shears from the general store east of here. Shear some sheep, then spin the wool into balls on the spinning wheel in Lumbridge Castle.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Leather gloves}}
+** '''Wise Old Man:''' It's a bit nippy in this house, and my hands are cold. I need some leather gloves. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you get the tanner in Al Kharid to turn some cowhides into leather, you'll be able to sew the gloves yourself. Buy a needle & thread from the crafting shop in Al Kharid.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Eggs}}
+** '''Wise Old Man:''' I'm going to make an omelette, so I'll need some eggs. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Eggs are usually found where chickens are farmed.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Silk}}
+** '''Wise Old Man:''' My undergarments are getting a bit worn out. I'll be needing some sheets of silk to patch them. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a man in Al Kharid who sells it very cheaply. If you ever take any to Ardougne you'll get a good profit.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Soft clay}}
+** '''Wise Old Man:''' I'll need some clay that's been softened so I can craft it. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you mine some clay, you can use containers of water on it to soften it.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Unfired clay pots}}
+** '''Wise Old Man:''' Believe it or not, I need a few unfired clay pots. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Mine some clay. Then use a container full of water to soften it. In the Barbarian Village you'll be able to form this into pots. Just don't bake them.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Swamp paste}}
+** '''Wise Old Man:''' My roof is leaking, so I need some swamp paste to fix it. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Swamp tar is found south-east of here. Add it to a pot of flour and cook it on an open fire to make the paste.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Potatoes}}
+* '''Wise Old Man:''' I need some potatoes, if you'd be so kind. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a field of those north of Lumbridge.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Headless arrows}}
+** '''Wise Old Man:''' I want to make some arrows, so I'll need some headless arrows that have the feathers attached. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Use a knife to chop some logs into arrowshafts. Then add a feather to each arrowshaft.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bronze spear}}
+** '''Wise Old Man:''' I need some bronze spears. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you kill some of those pesky goblins, you're bound to get some bronze spears.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Beer glass}}
+** '''Wise Old Man:''' My glassware got damaged when I moved here, so I need some new beer glasses. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you get some seaweed and a bucket of sand, you'll be able to mix them at a furnace to make molten glass. Then use a glassblowing pipe to make beer glasses. Most of what you need can be found on Entrana.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bones}}
+** '''Wise Old Man:''' My plans for today require some sets of bones, the normal-sized sort you get from goblins. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You'll find bones easily enough if you fight creatures.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Unfired pie dish}}
+** '''Wise Old Man:''' Strange as this may seem, I need some unfired pie dishes. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Mine some clay. Then use a container full of water to soften it. In the Barbarian Village you'll be able to form this into pie dishes. Just don't bake them.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Raw rat meat}}
+** '''Wise Old Man:''' I hear pet cats are getting popular these days. I'd like some raw rat in case I get one. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You should find some big rats south-east of here in the swamp.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Copper ore}}
+** '''Wise Old Man:''' I need a few lumps of copper ore. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' It should be easy enough for you to mine some copper ore.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Pot of flour}}
+** '''Wise Old Man:''' I'm out of flour, so I could do with a few pots of that. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a windmill north of here. You can use it to grind grain into flour. Then use an empty pot to collect the flour.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Feather}}
+** '''Wise Old Man:''' I need a handful of feathers to stick in my beard. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' The cheapest way to get feathers is to kill chickens.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Logs}}
+** '''Wise Old Man:''' This house is a bit cold, so I could do with some normal logs to burn. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' I suggest you take an axe and chop down some standard trees.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Cooked chicken}}
+** '''Wise Old Man:''' I'm running short of food, so I'd like some cooked chickens. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You could try killing some chickens, then cooking their meat.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Leather boots}}
+** '''Wise Old Man:''' My footwear is getting a bit worn out, so I need a few pairs of leather boots. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you get the tanner in Al Kharid to turn some cowhides into leather, you'll be able to make the boots yourself. Buy needles & thread from the crafting shop in Al Kharid if you need any.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Cowhide}}
+** '''Wise Old Man:''' I'd like a few cowhides. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you slaughter some cows, you'll get cowhides easily enough.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bow string}}
+** '''Wise Old Man:''' My shortbow's string is getting a bit worn out, so could you fetch me some bow strings? Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' If you pick some flax, you can use the spinning wheel in Lumbridge Castle to spin it into bowstrings.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Cooked meat}}
+** '''Wise Old Man:''' I'm a bit hungry. I'd like some cooked meat, not chicken or any sort of bird. And definitely not camel or rabbit either! Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Just cook some beef, rat or bear.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Bronze arrows}}
+** '''Wise Old Man:''' I'm short of ammunition, so I could do with some bronze arrows. That way I can shoot at goblins through my window. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You can make them by chopping a log into arrowshafts and adding feathers to them, then smithing a bronze bar into arrowheads to complete the arrows.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Grain}}
+** '''Wise Old Man:''' I'd like a bit of grain. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' There's a field full of it north of here.
+*** '''Player:''' Right, I'll see you later.
+** {{topt|Right, I'll see you later.}}
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Tin ore}}
+** '''Wise Old Man:''' I need a few lumps of tin ore. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' You shouldn't have any trouble mining tin ore.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Cooked anchovies/cooked shrimps}}
+** '''Wise Old Man:''' I could do with some freshly cooked [anchovies/shrimps] for a salad I'm planning. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Use a small fishing net to get [anchovies/shrimps] from the sea south of here. Then cook them on a fire or range.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Rune essence}}
+** '''Wise Old Man:''' I'd like to study the rune essence that the wizards have been talking about recently, so I need a few pieces. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Ask the Archmage in the tower south of here to teleport you to the Rune Essence mine. Then you can mine me some pieces.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{topt|Molten glass}}
+** '''Wise Old Man:''' Some chunks of molten glass would be the ideal patch for my cracked window. Please bring me [#].
+** {{tselect|What would you like to say?}}
+** {{topt|Where can I get that?}}
+*** '''Player:''' Where can I get that?
+*** '''Wise Old Man:''' Use a bucket of sand with some soda ash on a furnace.
+*** '''Player:''' Right, I'll see you later.
+*** {{tact|end}}
+* {{tcond|If the player killed the thing under the bed:}}
+** '''Wise Old Man:''' Greetings, [player name].
+** '''Player:''' I've killed a creature that was under your bed.
+** '''Wise Old Man:''' Ah, thank you very much! Now I shall be able to sleep in peace.
+** '''Wise Old Man:''' Allow me to offer you an appropriate reward for your assistance...
+** {{tbox|pic=Hitpoints icon (detail).png|The Wise Old Man waves his arms at you. You gain some Hitpoints xp.}}
+** {{tact|end}}
+* {{tcond|If the player has a partial amount of the item required:}}
+** '''Wise Old Man:''' Greetings, [player name].
+** '''Player:''' I've got some of the stuff you wanted.
+** '''Wise Old Man:''' Ahh, you are very kind.
+** '''Player:''' I'll come back when I've got the rest.
+** {{tact|end}}
+** {{tcond|If the player brings the rest of the item required:}}
+*** '''Wise Old Man:''' Greetings, [player name].
+*** '''Player:''' I've got all the stuff you asked me to fetch.
+*** {{tcond|If the reward is Prayer experience:}}
+**** '''Wise Old Man:''' Thank you, thank you! In thanks, I shall bestow on you a simple blessing.
+**** {{tbox|pic=Prayer icon.png|The Wise Old Man blesses you. <br/> You gain some Prayer xp.}}
+**** {{tact|end}}
+*** {{tcond|If the reward is coins:}}
+**** {{tbox|pic=Coins_250.png|{{colour|#000080|The Wise Old Man gives you some coins.}}}}
+**** {{tact|receives=a random amount of [[Wise_Old_Man_tasks#Coins|coins]]}}
+**** '''Wise Old Man:''' Thank you, thank you! Please take this money as a sign of my gratitude.
+**** {{tact|end}}
+*** {{tcond|If the reward is seeds:}}
+**** {{tbox|pic=Potato seed detail.png|{{colour|#000080|The Wise Old Man gives you some seeds.}}}}
+**** {{tact|receives=a random amount of [[Wise_Old_Man_tasks#Seeds|seeds]]}}
+**** '''Wise Old Man:''' Thank you, thank you! Please take these seeds as a sign of my gratitude.
+**** {{tact|end}}
+*** {{tcond|If the reward is herbs:}}
+**** {{tbox|pic=Grimy tarromin detail.png|{{Colour|#000080|The Wise Old Man gives you some backnotes that can be exchanged for herbs.}}}}
+**** {{tact|receives=a random amount of [[Wise_Old_Man_tasks#Herbs|herbs]]}}
+**** '''Wise Old Man:''' Thank you, thank you! Please take these herbs as a sign of my gratitude.
+**** {{tact|end}}
+*** {{tcond|If the reward is runes:}}
+**** {{tbox|pic=Nature rune detail.png|pic2=Water rune detail.png|{{colour|#000080|The Wise Old Man gives you some runes.}}}}
+**** {{tact|receives=a random amount of [[Wise_Old_Man_tasks#Runes|runes]]}}
+**** '''Wise Old Man:''' Thank you, thank you! Please take these runes as a sign of my gratitude.
+**** {{tact|end}}
+*** {{tcond|If the reward is gems:}}
+**** '''Wise Old Man:''' Thank you, thank you! Please take this gem as a sign of my gratitude.
+**** {{trandom}}
+**** {{topt|Emeralds}}
+***** {{tbox|pic=Uncut emerald detail.png|{{colour|#000080|The Wise Old Man gives you an Uncut emerald!}}}}
+***** {{tact|receives=an uncut emerald}}
+***** {{tact|end}}
+**** {{topt|Diamonds}}
+***** {{tbox|pic=Uncut diamond detail.png|{{colour|#000080|The Wise Old Man gives you an Uncut diamond!}}}}
+***** {{tact|receives=an uncut diamond}}
+***** {{tact|end}}
+**** {{topt|Rubies}}
+***** {{tbox|pic=Uncut ruby detail.png|{{colour|#000080|The Wise Old Man gives you an Uncut ruby!}}}}
+***** {{tact|receives=an uncut ruby}}
+***** {{tact|end}}
+**** {{topt|Sapphires}}
+***** {{tbox|pic=Uncut sapphire detail.png|{{colour|#000080|The Wise Old Man gives you an Uncut sapphire.}}}}
+***** {{tact|receives=an uncut sapphire}}
+***** {{tact|end}}
+**** {{topt|Red topaz}}
+***** {{tbox|pic=Uncut red topaz detail.png|{{colour|#000080|The Wise Old Man gives you an Uncut red topaz.}}}}
+***** {{tact|receives=an uncut red topaz}}
+***** {{tact|end}}
+* {{tcond|If the player has a noted version of the item required:}}
+** '''Wise Old Man:''' Greetings, [player name].
+** '''Player:''' Here, I've got the items you wanted.
+** '''Wise Old Man:''' Those are banknotes! I can't use those!
+** {{tact|end}}
+* {{tcond|If the player has no space in their inventory along with their required items:}}
+** '''Wise Old Man:''' Greetings, [player name].
+** '''Player:''' I've got all the stuff you asked me to fetch.
+** '''Wise Old Man:''' I'd give you a reward, but you don't seem to have any space for it. Come back when you do.
+** {{tact|end}}
+
+===Delivering the Wise Old Man's Letters===
+* {{tcond|If the player has no inventory space for a [[Old man's message|letter]]:}}
+** '''Wise Old Man:''' If you come back with at least one inventory space, I'll give you another copy.
+** {{tact|initial}}
+* {{tcond|If the player has inventory space for a letter:}}
+** {{trandom}}
+** {{topt|Father Aereck}}
+*** '''Wise Old Man:''' Father Aereck in Lumbridge is sure to reward you if you take a note to him for me.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' Just head eastwards to Lumbridge. He'll be in the church.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+*** {{topt|Right, I'll see you later.}}
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|High Priest (Entrana)}}
+*** '''Wise Old Man:''' Could you please take a message to the High Priest of Entrana for me?
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' There are some monks in Port Sarim, west of here, who will take you there so long as you're not carrying any weapons or armour.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|Reldo}}
+*** '''Wise Old Man:''' Reldo, the librarian in Varrock Palace, wrote to me recently about something. I need you to take my reply to him.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' The library is on the ground floor of the Palace in Varrock.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|Thurgo}}
+*** '''Wise Old Man:''' Thurgo the dwarf is from an ancient tribe. I've found some of its history that he was asking about, and I need you to deliver the information to him.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' Go west to Port Sarim, then southwards to some cliffs. He lives on the beach there.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|Father Lawrence}}
+*** '''Wise Old Man:''' I hear my old friend Fr{{sic}} Lawrence in Varrock is drinking a bit too much. I'd like to get a letter to him about it.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' Varrock is a fairly long way north-east of here. The church is at the eastern side of the town, near the Palace.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|Abbot Langley}}
+*** '''Wise Old Man:''' I've written a letter to my old friend Abbot Langley that I'd like you to deliver.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' Walk northwards, past Draynor Manor. When you reach the Barbarian Village, go north-west until you find his Monastery. He'll be downstairs.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{topt|Oracle}}
+*** '''Wise Old Man:''' I'd like to get a note up to the Oracle on Ice Mountain.
+*** '''Wise Old Man:''' Here's the letter.
+*** {{tact|receives=a [[Old man's message|letter]]}}
+*** {{tselect|What would you like to say?}}
+*** {{topt|Where do I need to go?}}
+**** '''Player:''' Where do I need to go?
+**** '''Wise Old Man:''' Walk northwards, past Draynor Manor. When you reach the Barbarian Village, go north-west until you see the Ice Mountain. It'll be at the top.
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+*** {{topt|Right, I'll see you later.}}
+**** '''Player:''' Right, I'll see you later.
+**** {{tact|end}}
+** {{tcond|If the player uses his letter on him:}}
+*** '''Player:''' Do you think I need to keep this?
+*** '''Wise Old Man:''' Yes, you're meant to be delivering it for me!
+*** {{tact|end}}
+** {{tcond|If the player completed delivering the letter but uses a duplicate on him:}}
+*** '''Player:''' Do you think I need to keep this?
+*** '''Wise Old Man:''' I asked you to deliver that for me. But I may as well take it back now.
+*** {{tact|end}}
+** {{tcond|If the player loses the letter:}}
+*** '''Wise Old Man:''' Greetings, [player name].
+*** {{tselect|What would you like to say?}}
+*** {{topt|What did you ask me to do?}}
+**** {{tact|The Wise Old Man repeats his initial request verbatim.}}
+**** '''Wise Old Man:''' You seem to have mislaid my letter, so here's another copy.
+**** {{tact|receives=a [[Old man's message|letter]]}}
+**** {{tact|end}}
+*** {{topt|quest=No|Could you check my items for junk, please?}}
+*** {{topt|quest=No|I'd just like to ask you something.}}
+
+===Subsequent dialogue===
+* {{tcond|If the player needs to be reminded of the task:}}
+** '''Wise Old Man:''' Greetings, [player name].
+** {{tselect|What would you like to say?}}
+** {{topt|What did you ask me to do?}}
+*** {{tact|The Wise Old Man repeats his initial request verbatim.}}
+*** {{tact|previous}}
+** {{topt|quest=No|Could you check my items for junk, please?}}
+** {{topt|quest=No|I'd just like to ask you something.}}
+
+==Treasure Trails==
+===Hard===
+* '''Wise Old Man:''' Ah! Here you go!
+* '''Player:''' What?
+* '''Wise Old Man:''' I need you to answer this for me.
+* {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you a challenge scroll!}}
+* {{tact|receives=a challenge scroll}}
+* {{tact|end}}
+
+====When talked to again====
+* '''Wise Old Man:''' Please enter the answer to the question.
+* {{tcond|When given the wrong answer:}}
+** '''Wise Old Man:''' How can that be? Try again!
+** {{tact|end}}
+* {{tcond|When given the correct answer:}}
+** '''Wise Old Man:''' Spot on!
+** {{tcond|When given another clue scroll:}}
+*** {{tbox|pic=Clue scroll (hard) detail.png|The wise old man has given you another clue scroll!}}
+*** {{tact|receives=another clue scroll}}
+*** {{tact|end}}
+** {{tcond|When given a reward casket:}}
+*** {{tbox|pic=Reward casket (hard) detail.png|You've obtained a casket!}}
+*** {{tact|receives=a hard reward casket}}
+*** {{tact|end}}

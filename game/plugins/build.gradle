@@ -35,6 +35,7 @@ test {
         rootProject.file('docs/CLUE/cache/interfaces.json'),
         rootProject.file('docs/CLUE/cache/uri-source.json'),
         rootProject.file('docs/CLUE/NPC-DIALOGUE-SOURCES.json'),
+        rootProject.file('docs/CLUE/NPC-COMPLETION-SOURCES.json'),
         fileTree(dir: rootProject.file('docs/CLUE/sources'), include: 'Transcript_*.wiki')).withPropertyName('clueNpcDialogueSources')
     // Extra headroom for cache-backed suites; keep a single test worker on the 16 GB host.
     maxHeapSize = '4g'

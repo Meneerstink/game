@@ -1,0 +1,53 @@
+{{Transcript|npc}}
+
+==Initial dialogue==
+* '''Arhein:''' Hello there!
+* '''Player:''' Hello! Who are you?
+* '''Arhein:''' The name's Arhein. I'm a local merchant. I have a variety of useful goods to sell here, and I also use my ship to deliver various items further afield.
+* {{Tact|end}}
+
+==Subsequent dialogue==
+* '''Arhein:''' Hello again!
+* {{topt|What do you have for sale?}}
+** '''Player:''' What do you have for sale?
+** '''Arhein:''' All sorts of things! Why don't you take a look?
+** {{tact|opens=Arhein's General Goods}}
+* {{topt|What's with the duck?}}
+** {{tact|Continues in [[Transcript:Current Affairs]]}}
+* {{topt|cond=If the player has lost the Mayor of Catherby:|I'm sorry, but I've lost the mayor.}}
+** '''Player:''' I'm sorry, but I've lost the mayor.
+** '''Arhein:''' Oh dear. Good job we have backups now. Here you go.
+** {{tbox|pic=Mayor of Catherby detail.png|Arhein gives you a new mayor.}}
+** '''Arhein:''' I believe that puts us at mayor [# of replaced mayors + 27] now. Long live the mayor.
+** {{tact|end}}
+* {{topt|Where abouts do you make deliveries to?}}
+** '''Arhein:''' Oh, various places up and down the coast. Mostly Karamja and Port Sarim.
+** {{topt|I don't suppose I could get a lift anywhere?}}
+*** '''Player:''' I don't suppose I could get a lift anywhere?
+*** '''Arhein:''' Sorry, but that's not the kind of service I offer. Why not try the charter ship?
+*** '''Player:''' I might do that. Thanks.
+*** {{tact|end}}
+** {{topt|I see. Well, I'd best be off.}}
+*** '''Player:''' I see. Well, I'd best be off.
+*** '''Arhein:''' Until next time!
+*** {{tact|end}}
+* {{topt|I'd best be off.}}
+** '''Player:''' I'd best be off.
+** {{tact|end}}
+
+===When attempting to board his ship===
+* '''Arhein:''' Hey! Did I say you could board my ship?
+* '''Player:''' Oh... sorry.
+* {{tact|end}}
+
+==Treasure Trails==
+===Easy===
+* '''Arhein:''' Well done, matey!
+* {{tcond|If the reward is another clue scroll:}}
+** {{tact|receives=an [[Clue scroll (easy)|easy clue scroll]]}}
+** {{tbox|pic=clue scroll (easy) detail.png|You've found another clue!}}
+** {{tact|end}}
+* {{tcond|If the reward is a casket:}}
+** {{tact|receives=an [[Reward casket (easy)|easy reward casket]]}}
+** {{tbox|pic=reward casket (easy) detail.png|You've obtained a casket!}}
+** {{tact|end}}

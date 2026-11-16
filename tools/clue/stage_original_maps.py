@@ -95,7 +95,8 @@ def main():
         (OUT/original.name).write_text(text)
     files = [p for p in OUT.rglob('*') if p.is_file() and p.name != 'source-sha256.json']
     (OUT/'source-sha256.json').write_text(json.dumps({str(p.relative_to(OUT)): sha256(p.read_bytes()).hexdigest() for p in files}, indent=2)+'\n')
-    print('Staged92 records/26 drawings/8 searches;', sum(len(v) for v in components.values()), 'source components. NO runtime changes.')
+    print('Staged',len(json.loads((data/'steps.json').read_text())), 'records/26 drawings/8 searches;',
+          sum(len(v) for v in components.values()), 'source components. NO runtime changes.')
 
 
 if __name__ == '__main__':

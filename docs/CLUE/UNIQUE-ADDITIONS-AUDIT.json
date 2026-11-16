@@ -1,0 +1,313 @@
+{
+  "source": "OSRS Wiki pinned clue/transcript pages; local cache identities; existing own-server spawn code",
+  "records": 107,
+  "additionalUniqueSteps": 15,
+  "tiers": {
+    "easy": 7,
+    "medium": 3,
+    "hard": 5
+  },
+  "actors": [
+    {
+      "name": "Hans",
+      "localId": 0,
+      "spawn": {
+        "id": 0,
+        "tile": [
+          3219,
+          3227,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_12850.plugin.kts",
+        "fileSha256": "2c61a18c31bd6170cc8b500b071f02d93756b00b47b6f4418eefc0986e6f735a"
+      },
+      "nativeName": "Hans",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "53197234405ca41359932b4a687b6032106a65a4ee055e6d874477285be2b562",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Doric",
+      "localId": 284,
+      "spawn": {
+        "id": 284,
+        "tile": [
+          2953,
+          3450,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_11829.plugin.kts",
+        "fileSha256": "8c65e43fc374e5d271da2fb3cd8d8730eefa94ed1e58ce503afda0ad2f1bccd8"
+      },
+      "nativeName": "Doric",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "7ac4f6a6dce55d9fca8362e817432f6c91b9e120e60eb27bc8b61680e72234e1",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Arhein",
+      "localId": 563,
+      "spawn": {
+        "id": 563,
+        "tile": [
+          2803,
+          3430,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_11061.plugin.kts",
+        "fileSha256": "cef6558af7a9b415b22dfb2e15f8f3a9bcfd4a3ec5ac88f908d3f6f64542d6da"
+      },
+      "nativeName": "Arhein",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        "Trade",
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "a62b554542acb670a424e0fde5c4a8fa0b4ad683feda86a9f8467433a13c5160",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Ellis",
+      "localId": 2824,
+      "spawn": {
+        "id": 2824,
+        "tile": [
+          3275,
+          3193,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_13105.plugin.kts",
+        "fileSha256": "28cd48f9c38a88ff53cb21107bb898e01e810fa5eeae97a18d2dc5a616b7a9da"
+      },
+      "nativeName": "Ellis",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        "Trade",
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "3b425da1d803bde1ceaa510e8eaf9c7d33a714026b992a782e415d20f81437ed",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Ned",
+      "localId": 918,
+      "spawn": {
+        "id": 918,
+        "tile": [
+          3098,
+          3257,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_12338.plugin.kts",
+        "fileSha256": "540f458e5f68f19e59f96d3025ae5bdce0d0b8e124c3810c1525d95d1885b36a"
+      },
+      "nativeName": "Ned",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "96090946517ea6c6172d901f7219616897bec56c1758df365c1bf7a42e84e7d6",
+      "otherSameIdSpawns": [
+        {
+          "id": 918,
+          "tile": [
+            3048,
+            3209,
+            1
+          ],
+          "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_12082.plugin.kts",
+          "fileSha256": "475942e87eb0b0669d7c6e6078f886f64fa2c29a03fd4ae604add661fdf424a8"
+        }
+      ]
+    },
+    {
+      "name": "Gaius",
+      "localId": 586,
+      "spawn": {
+        "id": 586,
+        "tile": [
+          2884,
+          3450,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_11573.plugin.kts",
+        "fileSha256": "f5be00f64b1e713b18b7bd52a640e8a4f1b119b7ce251411454264e837ddd0d4"
+      },
+      "nativeName": "Gaius",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        "Trade",
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "378be220594d2bd01e7d13d220a612c79038e31bdb2cc25074aea9627a0afc76",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Cassie",
+      "localId": 577,
+      "spawn": {
+        "id": 577,
+        "tile": [
+          2975,
+          3384,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_11828.plugin.kts",
+        "fileSha256": "beb5cd83a5f29d23aea0c591a36e3adc24bf1e2272103a7a6c099286c31431ae"
+      },
+      "nativeName": "Cassie",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        "Trade",
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "7bdf1c3857186323480f5e7801c6eb4fcd3d8c7c9ddfc6c637488bd29342d089",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Bolkoy",
+      "localId": 471,
+      "spawn": {
+        "id": 471,
+        "tile": [
+          2527,
+          3161,
+          1
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_10033.plugin.kts",
+        "fileSha256": "948ce8b6217563b95f9af7786cf4be05d9a2034634f3fd690cceca98debfbeb1"
+      },
+      "nativeName": "Bolkoy",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        "Trade",
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "c32257260b16ce3947c25707b40b9eb125e1200f76f250b7a71efc5df7687699",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Gnome Coach",
+      "localId": 2802,
+      "spawn": {
+        "id": 2802,
+        "tile": [
+          2406,
+          3498,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_9526.plugin.kts",
+        "fileSha256": "4543ad31a89fa34f1a5fea4944a0e6849941776ce91ede3a1c124725b0624aa6"
+      },
+      "nativeName": "Gnome Coach",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "3ff83e10ac1fe073eb117decbfcc692b5fb00900fd75766c3e37aa33411e6e9c",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Brother Omad",
+      "localId": 279,
+      "spawn": {
+        "id": 279,
+        "tile": [
+          2604,
+          3209,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_10290.plugin.kts",
+        "fileSha256": "2c4e9e604308effe39e1b937e4db055f8be698b5209548fb0b919206630af150"
+      },
+      "nativeName": "Brother Omad",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "a5fc63327456c2e7dc9d19e29b853155829458db1c1cafe304d978085060cf94",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Wise Old Man",
+      "localId": 2253,
+      "spawn": {
+        "id": 2253,
+        "tile": [
+          3088,
+          3255,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_12338.plugin.kts",
+        "fileSha256": "540f458e5f68f19e59f96d3025ae5bdce0d0b8e124c3810c1525d95d1885b36a"
+      },
+      "nativeName": "Wise Old Man",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "79bc43568848d73da969b463b995f212f9021995d51ab43536d16e8ce98b95a5",
+      "otherSameIdSpawns": []
+    },
+    {
+      "name": "Otto Godblessed",
+      "localId": 2725,
+      "spawn": {
+        "id": 2725,
+        "tile": [
+          2502,
+          3487,
+          0
+        ],
+        "file": "game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/spawns/spawns_10038.plugin.kts",
+        "fileSha256": "e222a69bc1a36e92bc4cae3a87392311dbb30bf294c6bece325db777f661135b"
+      },
+      "nativeName": "Otto Godblessed",
+      "nativeOptions": [
+        "Talk-to",
+        null,
+        null,
+        null,
+        null
+      ],
+      "nativeDefinitionSha256": "46e5d49dd1c85163fbfaac8b6f174a0c71a92ce0adb668e5bfa376600d1e6fd7",
+      "otherSameIdSpawns": []
+    }
+  ],
+  "importChanges": "none: item247/NPC10/STASH23/UI26map rosters unchanged",
+  "caveat": "Source/identity proof, not active-world or client reachability acceptance."
+}

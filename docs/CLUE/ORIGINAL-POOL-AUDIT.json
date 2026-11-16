@@ -19,11 +19,13 @@
   "initialSelectionRecords": 69,
   "initialSelectionOriginalOverlap": 15,
   "initialSelectionUniqueAdditions": 54,
-  "currentCatalogueRecords": 92,
+  "additionalUniqueSteps": 15,
+  "totalUniqueAdditions": 69,
+  "currentCatalogueRecords": 107,
   "currentCatalogueTiers": {
-    "easy": 22,
-    "medium": 26,
-    "hard": 20,
+    "easy": 29,
+    "medium": 29,
+    "hard": 25,
     "elite": 12,
     "master": 12
   },

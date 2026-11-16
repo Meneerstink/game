@@ -46,7 +46,7 @@ class TreasureTrailNumberChallengeTests {
             val section=source["section"].asString
             assertTrue(raw.toString(Charsets.UTF_8).contains(section),name)
             for (line in lines.initial+lines.prompt+listOfNotNull(lines.wrong,lines.correct,lines.handover)) {
-                val spoken=if (line==TreasureTrailNumberDialogue.PLAYER_WHAT) "What?" else line
+                val spoken=line.removePrefix("<player>")
                 assertTrue(section.contains(spoken),"$name: $spoken")
             }
         }
@@ -191,5 +191,22 @@ class TreasureTrailNumberChallengeTests {
         assertEquals(setOf(step.tier),WatsonClues.stored(p))
         assertTrue(p.inventory.isEmpty)
         assertEquals(TreasureTrailNumberChallenge.Answer.STALE,TreasureTrailNumberChallenge.answer(p,assignment,5))
+    }
+    @Test fun `five added hard answers reject mistakes and consume their paper only on the sourced answer`() {
+        val answers=mapOf("Bolkoy" to 13,"Gnome Coach" to 6,"Brother Omad" to 129,"Wise Old Man" to 28,"Otto Godblessed" to 3)
+        for ((name,answer) in answers) {
+            val step=step(name); val row=step.source
+            assertEquals(setOf(answer),row.answers,name)
+            val p=account(step)
+            (1..27).forEach { p.inventory[it]=Item(995) }
+            val task=assertNotNull(TreasureTrailNumberChallenge.begin(p,step))
+            val paper=p.inventory[0]
+            assertEquals(TreasureTrailNumberChallenge.Answer.WRONG,TreasureTrailNumberChallenge.answer(p,task,answer+1))
+            assertSame(paper,p.inventory[0])
+            assertEquals(TreasureTrailNumberChallenge.Answer.CORRECT,TreasureTrailNumberChallenge.answer(p,task,answer))
+            assertEquals(0,p.inventory.freeSlotCount)
+            assertEquals(27,p.inventory.getItemCount(995))
+            assertEquals(TreasureTrailNumberChallenge.Answer.STALE,TreasureTrailNumberChallenge.answer(p,task,answer))
+        }
     }
 }

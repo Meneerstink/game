@@ -728,3 +728,22 @@ predecessors: guardian state, Mimic readiness,23STASH units/chart150nodes,
 Client/cache/live checks are still open. Item247/NPC10/STASH23 rosters unchanged;
 fifteen new unique NPC/coordinate steps are staged and need their own acceptance.
 No cache apply, server/client lifecycle, live or push action performed.
+
+## Fifteen additional distinct source steps, resumed 16-Nov
+
+107 source records now preserve 38/41 original locations and 69 distinct additions
+(the original 69 selection overlaps 15 originals, corrected by 7 easy/3 medium/5 hard).
+Catalogue tiers:29/29/25/12/12. Three torn parts still form one trail choice.
+These are catalogue counts; actual asset/handler availability remains separate.
+Seven easy NPC handovers use pinned conditional transcripts, including silent
+Hans/Ellis/Cassie handovers. Five extra number challenges retain exact wording,
+answers and real actor spawn identity; other Ned/Wise Old Man forms cannot claim them.
+No item247/NPC10/STASH23/map26 import roster changes.
+
+Fresh command python tools/clue/test_unique_additions.py:25 tests across4 affected
+classes passed against compiled actual production delta in one JVM; source/data
+SHA256 unchanged. audit_unique_additions.py and audit_original_pool.py passed;
+git diff --check passed. This is not Gradle/script/client acceptance.
+Claude: each new NPC clue and numeric paper, wrong answer, trade vs Talk-to,
+full inventory final/nonfinal handover, wrong spawn/account, bank/drop/relog.
+Next: guardian combat adapter, hot/cold/lightbox and full Mimic mechanics.
