@@ -213,6 +213,11 @@ object OsrsLocImportTool {
                             val default = table.last().let { if (it == -1) -1 else locIdMap[it] ?: error("loc $osrsId: default variant $it not in this batch") }
                             varbit to IntArray(table.size) { i -> if (i == table.size - 1 || table[i] == -1) default else locIdMap[table[i]] ?: default }
                         }
+                    // 16-11 (CoX Reload, rolled back): the rev-667 loc type stores every transform as an UNSIGNED SHORT (65535 = none) and
+                    // the client reads it so - a variant id >= 65535 silently wraps (66678 -> 1142). Refuse instead of writing a wrong loc.
+                    multiloc?.let { (_, dest) ->
+                        check(dest.all { it == -1 || it < 65535 }) { "loc $osrsId: multiloc variants ${dest.toList()} - ids >= 65535 do not fit the 667 loc type (u16)" }
+                    }
                     multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId ${if (multilocVarp) "varp" else "varbit"} ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
                     // The loc's idle animation points at the local id OsrsFxImportTool gave the OSRS sequence.
                     val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc, multilocVarp) { importedSeqs["seq:$it"] }
