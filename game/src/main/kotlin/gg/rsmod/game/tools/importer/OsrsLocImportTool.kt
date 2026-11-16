@@ -130,6 +130,17 @@ object OsrsLocImportTool {
     private val STRIPPED_OPTIONS: Map<String, Set<String>> =
         mapOf("poh-pool" to setOf("Remove", "Upgrade"), "poh-house" to setOf("Remove", "Upgrade", "Arceuus", "Configuration"))
 
+    /** The raid's id table (data/cfg/cox/ids.tsv, 'loc<TAB>osrs<TAB>local<TAB>...') for a 'cox-' batch; empty otherwise. */
+    internal fun raidIds(batch: String): Map<String, Int> {
+        if (!batch.startsWith("cox-")) return emptyMap()
+        val file = File(gg.rsmod.game.RspsPaths.data("cfg/cox/ids.tsv"))
+        if (!file.isFile) return emptyMap()
+        return file.readLines().mapNotNull { line ->
+            val p = line.split('\t')
+            if (p.size < 3) null else p[2].toIntOrNull()?.let { "${p[0]}:${p[1]}" to it }
+        }.toMap()
+    }
+
     @JvmStatic
     fun main(args: Array<String>) {
         val batch = BATCHES[args.getOrNull(0)] ?: error("Usage: <${BATCHES.keys.joinToString("|")}> [--apply]")
@@ -190,7 +201,9 @@ object OsrsLocImportTool {
                     }
                     // A re-import rewrites the loc id the asset map already records, pinned to the bytes it replaces, so
                     // fixing a batch never leaves the first import behind as an orphan loc.
-                    val previous = importedSeqs["osrs_loc_loc:$osrsId"]
+                    // 16-11: locs that came in with a REGION import (CoX map: 29778 -> 66678, 49999 -> 66835) are only in the raid's id
+                    // table, not in the asset map - re-use them too, or the batch makes a second copy and the map keeps the old one.
+                    val previous = importedSeqs["osrs_loc_loc:$osrsId"] ?: raidIds(args[0])["loc:$osrsId"]
                     val localId = previous ?: nextLocId++
                     locIdMap[osrsId] = localId
                     val multilocVarp = osrsId in MULTILOC_VARPS
