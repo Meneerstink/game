@@ -69,11 +69,23 @@ suspend fun QueueTask.castHome(endTile: Tile) {
         wait(1)
         if (hit()) return terminate()
     }
-    for (stage in HOME_TELEPORT_ANIMATIONS.indices) {
-        player.animate(HOME_TELEPORT_ANIMATIONS[stage])
-        player.graphic(HOME_TELEPORT_GRAPHICS[stage])
-        wait(1)
-        if (hit()) return terminate()
+    val styleStages = gg.rsmod.plugins.content.mechanics.deadman.DeadmanHomeTeleport.stages(player)
+    if (styleStages != null) {
+        for (stage in styleStages) {
+            player.animate(stage.animation)
+            player.graphic(stage.graphic)
+            repeat(stage.ticks) {
+                wait(1)
+                if (hit()) return terminate()
+            }
+        }
+    } else {
+        for (stage in HOME_TELEPORT_ANIMATIONS.indices) {
+            player.animate(HOME_TELEPORT_ANIMATIONS[stage])
+            player.graphic(HOME_TELEPORT_GRAPHICS[stage])
+            wait(1)
+            if (hit()) return terminate()
+        }
     }
     player.animate(-1)
     player.graphic(-1)
