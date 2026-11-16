@@ -236,6 +236,9 @@ object OsrsFxImportTool {
             // 1337-1363, RAIDS_VESPULA_* 1364-1368, OLM_CRYSTAL_BOMB_EXPLODE 40, MOTHERLODE_ROCKFALL 645 (Guardians' stomp rock),
             // WILD_FALLOFF_METEOR_BLAST / _FLYING 659-660 (Tekton's sparks). Used ids per room: tsps docs chambers-of-xeric.md (rsprox).
             "cox-fx" to listOf(1291, 1293, 1294, 1295, 1321, 1322) + (1324..1334).toList() + (1337..1368).toList() + listOf(40, 645, 659, 660),
+            // Elder maul special 'Pulverize' (Wiki: added 29 May 2024): gameval SpotanimID SPOTANIM_ELDER_MAUL_SPECIAL 2804 (seq 11125
+            // VFX_ELDER_MAUL_SPECIAL) and SPOTANIM_ELDER_MAUL_SPECIAL_IMPACT 2805 (seq 11126).
+            "cox-maul-fx" to listOf(2804, 2805),
         )
 
     /**
@@ -320,6 +323,8 @@ object OsrsFxImportTool {
             // / _BLOCK 7512, HUMAN_ELDER_MAUL_READY 7518 / _RUN 7519 / _WALK 7520 (its _ATTACK 7516 / _BLOCK 7517 are in already, OsrsSeq),
             // SPOT_DINHS_BULWARK_IDLE 7522 / _BLOCK 7523.
             "cox-weapons-seq" to listOf(7507, 7508, 7509, 7510, 7511, 7512, 7518, 7519, 7520, 7522, 7523),
+            // Elder maul special: gameval AnimationID HUMAN_ELDER_MAUL_SPEC 11124 (Wiki 'Pulverize', added 29 May 2024).
+            "cox-maul-seq" to listOf(11124),
             // N462 07-11 square 13098 ('necropolis-west'): gameval AnimationID TEMPLETREK_BOAT_RIPPLES 3743, LIGHT_BEAM_BUTTERFLY 9845,
             // SAILING_BT_VFX_WATER_RAPIDS01_GENTLE01 13159 (loc animations of its scenery).
             "necropolis-west-seq" to listOf(3743, 9845, 13159),

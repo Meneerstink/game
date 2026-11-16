@@ -334,6 +334,14 @@ object OsrsItemImportTool {
             "cox-commons" to listOf(Spec(13391), Spec(13421, noted = true), Spec(13573, noted = true)),
             // CoX antipoisons (Wiki Antipoison (-) / Antipoison potion / Antipoison (+)): RAIDS_VIAL_ANTIPOISON_WEAK/-/STRONG_1-4, untradeable.
             "cox-antipoison" to (25754..25765).map { Spec(it) },
+            // CoX weapons (Wiki Elder maul / Dinh's bulwark; tradeable, noted). Two wield requirements = 749/750 + 751/752 (667 Granite maul 4153:
+            // 0/50 + 2/50, style set 686 10, special bar 687 1). Elder maul: 'Blunt' styles = the 667 hammer set 10, Attack + Strength 75.
+            // Dinh's bulwark: Attack + Defence 75; OSRS styles 'Bulwark' (Pummel / Block) have no 667 set - set 10 until the client set exists
+            // (dossier COX.txt, OPEN). Their stances come from BAS 2530 / 2531 (RenderAnimations, cox_raid.plugin.kts), not param 644.
+            "cox-weapons" to listOf(
+                Spec(21003, noted = true, rev667Params = mapOf(686 to 10, 687 to 1, 749 to 0, 750 to 75, 751 to 2, 752 to 75), weaponType = 10, attackAudio = 2504),
+                Spec(21015, noted = true, rev667Params = mapOf(686 to 10, 687 to 1, 749 to 0, 750 to 75, 751 to 1, 752 to 75), weaponType = 10, attackAudio = 2504),
+            ),
             // N462 Beneath Cursed Sands (short quest) reward: Circlet of water (uncharged) 26967 and charged 26969 (OSRS Wiki Circlet of water;
             // GPT-A 60-quest.tsv). The Keris partisan comes from toa-items.
             "bcs-items" to listOf(Spec(26967), Spec(26969)),
