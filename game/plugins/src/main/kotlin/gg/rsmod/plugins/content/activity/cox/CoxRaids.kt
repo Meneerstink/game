@@ -5,7 +5,7 @@ import gg.rsmod.game.model.World
 import gg.rsmod.game.model.entity.Player
 import gg.rsmod.game.model.instance.InstancedMap
 import gg.rsmod.plugins.api.ext.message
-import gg.rsmod.plugins.api.ext.setVarp
+
 import mu.KLogging
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.random.Random
@@ -121,11 +121,12 @@ object CoxRaids : KLogging() {
         raids[map] = raid
         logger.info { "[cox] raid ${raid.id} ${player.username} base=${map.area.bottomLeftX},${map.area.bottomLeftZ} pattern=${layout.pattern} floors=${layout.floors.map { f -> f.map { "${it.room}@${it.gridX},${it.gridZ}/${it.entry}/v${it.variant}" } }}" }
         // The first room's steps are RAIDS_EXIT_STEPS_MULTI 49999, a multiloc (RAIDS_EXIT_STEPS 29778, or _RELOAD 50000 for the leader
-        // before the start - tsps 'Reload'). Imported with its table on varp RELOAD_VARP (OsrsLocImportTool 'cox-reload', 16-11) the room
-        // keeps it and each client shows the right steps; an older cache without the table: plain 29778 for everyone.
+        // before the start - tsps 'Reload'). The 667 loc type stores multiloc variants as u16 and our imported locs are >= 65536 (16-11:
+        // the cache table wrapped to 1142/1372, rolled back), so the room gets plain 29778 and the leader is SHOWN 50000 on that tile per
+        // player (LocAddChange + engine LOC_ALIAS_ATTR, [syncReload]).
         val multi = CoxIds.loc(49999)
         val steps = CoxIds.loc(29778)
-        if (multi != null && steps != null && !reloadReady(world)) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps)
+        if (multi != null && steps != null) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps).firstOrNull()?.let { reloadSteps[raid.id] = it }
         player.teleportTo(spawnTile(raid))
         CoxMusic.floor(player, 0)
         CoxPartyTab.open(player, raid)
@@ -133,19 +134,41 @@ object CoxRaids : KLogging() {
         return raid
     }
 
-    /** The varp of the first room's multiloc steps 49999: 1 = the 'Reload' steps 50000 (the leader before the start), 0 = steps 29778. */
-    const val RELOAD_VARP = 2386
-
-    private fun reloadReady(world: World): Boolean = CoxIds.loc(49999)?.let { id ->
-        runCatching { world.definitions.get(gg.rsmod.game.fs.def.ObjectDef::class.java, id).transforms != null }.getOrDefault(false)
-    } ?: false
+    /** The first room's steps (29778 in the world) per raid id - the tile the leader is shown the 'Reload' steps 50000 on. */
+    private val reloadSteps = ConcurrentHashMap<Long, gg.rsmod.game.model.entity.GameObject>()
 
     /** Shows 'Reload' on the first room's steps to the raid's leader until the raid begins (and [extra], who may not be inside yet). */
     fun syncReload(raid: CoxRaid, extra: Player? = null) {
         val leader = leaderOf(raid)
+        val steps = reloadSteps[raid.id] ?: return
+        val reload = CoxIds.loc(50000)
         (raid.world.players.entries.filterNotNull().filter { raid.map.area.contains(it.tile) } + listOfNotNull(extra)).distinct().forEach {
-            it.setVarp(RELOAD_VARP, if (!raid.started && it.username.lowercase() == leader) 1 else 0)
+            showSteps(it, steps, if (reload != null && !raid.started && !raid.closed && it.username.lowercase() == leader) reload else null)
         }
+    }
+
+    /** Sends [player] the steps as [shown] (or back to the world's own id when null) and keeps the engine alias in step with it. */
+    private fun showSteps(player: Player, steps: gg.rsmod.game.model.entity.GameObject, shown: Int?) {
+        val key = gg.rsmod.game.model.attr.locAliasKey(steps.tile, steps.id)
+        val aliases = player.attr[gg.rsmod.game.model.attr.LOC_ALIAS_ATTR]
+        if (shown == null && aliases?.containsKey(key) != true) return
+        if (shown == null) aliases!!.remove(key)
+        else (aliases ?: HashMap<Long, Int>().also { player.attr[gg.rsmod.game.model.attr.LOC_ALIAS_ATTR] = it })[key] = shown
+        // Sent 2 ticks later: right after a teleport into the raid the client first rebuilds the region (which sends the world's 29778).
+        player.world.queue {
+            wait(2)
+            sendSteps(player, steps, shown)
+        }
+    }
+
+    private fun sendSteps(player: Player, steps: gg.rsmod.game.model.entity.GameObject, shown: Int?) {
+        val base = player.lastKnownRegionBase ?: return
+        if (!player.isOnline || !player.tile.isWithinRadius(steps.tile, 32)) return
+        val local = base.toLocal(steps.tile)
+        val settings = (steps.type shl 2) or (steps.rot and 3)
+        val hash = (steps.tile.chunkOffsetX shl 4) or (steps.tile.chunkOffsetZ and 0x7)
+        player.write(gg.rsmod.game.message.impl.UpdateZonePartialFollowsMessage(local.x shr 3, local.z shr 3, steps.tile.height))
+        player.write(gg.rsmod.game.message.impl.LocAddChangeMessage(shown ?: steps.id, settings, hash))
     }
 
     /**
@@ -222,7 +245,8 @@ object CoxRaids : KLogging() {
     }
 
     /** Swaps every loc [from] in [room] of floor [floor] for [to] (same shape and rotation). */
-    fun replaceInRoom(raid: CoxRaid, floor: Int, room: CoxLaidRoom, from: Int, to: Int) {
+    fun replaceInRoom(raid: CoxRaid, floor: Int, room: CoxLaidRoom, from: Int, to: Int): List<gg.rsmod.game.model.entity.DynamicObject> {
+        val placed = ArrayList<gg.rsmod.game.model.entity.DynamicObject>()
         val world = raid.world
         val x0 = raid.map.area.bottomLeftX + room.gridX * CoxMap.ROOM_TILES
         val z0 = raid.map.area.bottomLeftZ + room.gridZ * CoxMap.ROOM_TILES
@@ -233,9 +257,12 @@ object CoxRaids : KLogging() {
                 .filter { it.id == from && it.tile.height == h }
                 .forEach { o ->
                     world.remove(o)
-                    world.spawn(gg.rsmod.game.model.entity.DynamicObject(to, o.type, o.rot, o.tile))
+                    val d = gg.rsmod.game.model.entity.DynamicObject(to, o.type, o.rot, o.tile)
+                    world.spawn(d)
+                    placed += d
                 }
         }
+        return placed
     }
 
     /**
@@ -369,7 +396,7 @@ object CoxRaids : KLogging() {
     fun leave(player: Player) {
         val raid = raidAt(player.tile)
         if (raid != null) dropRaidItems(player, player.tile)
-        player.setVarp(RELOAD_VARP, 0)
+        player.attr[gg.rsmod.game.model.attr.LOC_ALIAS_ATTR]?.clear()   // no 'Reload' steps alias outside (only CoX uses it)
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)
         CoxPointsOverlay.close(player)
@@ -388,6 +415,7 @@ object CoxRaids : KLogging() {
         if (raid.world.players.any { it.isOnline && raid.map.area.contains(it.tile) }) return
         raid.closed = true
         raids.remove(raid.map)
+        reloadSteps.remove(raid.id)
         CoxParties.all().filter { it.raidId == raid.id }.forEach { it.raidId = -1 }
         CoxChest.forget(raid)
         CoxStorage.forget(raid)

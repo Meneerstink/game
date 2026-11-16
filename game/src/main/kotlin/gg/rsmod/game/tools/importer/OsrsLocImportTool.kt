@@ -31,8 +31,8 @@ object OsrsLocImportTool {
             // first room's closed bank chest 47419 (47420 -> 47419 as the raid begins, tsps rsprox).
             "cox-locs" to listOf(30028, 30029, 30030, 47419),
             // CoX first-room steps for the leader before the start (gameval RAIDS_EXIT_STEPS_RELOAD 50000; child of the multiloc 49999, tsps Reload).
-            // 16-11: + the plain steps 29778 and the multiloc 49999 itself (variants first, the multiloc points at them; varp 2386).
-            "cox-reload" to listOf(29778, 50000, 49999),
+            // 16-11 18:xx: ONLY 50000 - the multiloc 49999 cannot point at ids >= 65535 (u16, rolled back); the leader is shown it per player.
+            "cox-reload" to listOf(50000),
             // CoX rooms (dossier COX.txt 15-11 23:xx): the locs the rooms' encounters place (not on the cache map), ids from the tsps room
             // units (rsprox captures) = gameval RAIDS_*: crab crystals 29753/29762, guardian blocker 26209, ice-demon lit brazier/storm
             // 29748/29876, muttadile tendrils/rocks/felled tree 29767/30012/30013, mystics' Mark of Power + portals 29741/49996-49998, Olm

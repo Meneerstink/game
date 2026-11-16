@@ -50,8 +50,8 @@ fun climbSteps(player: gg.rsmod.game.model.entity.Player) {
 CoxIds.loc(29778)?.let { exit -> on_obj_option(obj = exit, option = "climb") { climbSteps(player) } }
 
 /*
- * The leader's steps before the start (RAIDS_EXIT_STEPS_RELOAD 50000 'Steps' [Climb, Reload], shown through the multiloc 49999 on
- * CoxRaids.RELOAD_VARP): tsps (rsprox 2528) 'Reload the raid to generate a new layout?'. ONZEKER: the answer options (no capture text) ->
+ * The leader's steps before the start (RAIDS_EXIT_STEPS_RELOAD 50000 'Steps' [Climb, Reload], shown to the leader per player on the
+ * steps tile - CoxRaids.syncReload + engine LOC_ALIAS_ATTR): tsps (rsprox 2528) 'Reload the raid to generate a new layout?'. ONZEKER: the answer options (no capture text) ->
  * 'Yes.' / 'No.'.
  */
 CoxIds.loc(50000)?.let { reload ->

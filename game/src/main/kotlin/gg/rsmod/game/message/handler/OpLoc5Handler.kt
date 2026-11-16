@@ -46,8 +46,8 @@ class OpLoc5Handler : MessageHandler<OpLoc5Message> {
         val chunk = world.chunks.getOrCreate(tile)
         val obj =
             chunk.getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT).firstOrNull {
-                it.id ==
-                    message.id
+                it.id == message.id ||
+                    gg.rsmod.game.model.attr.locAliasOf(client, it) == message.id
             }
                 ?: run {
                     gg.rsmod.game.model.AvTrace.log { "loc-op5 refused gate=no-object id=${message.id} at=$tile" }

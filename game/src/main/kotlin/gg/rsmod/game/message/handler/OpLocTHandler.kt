@@ -107,7 +107,7 @@ class OpLocTHandler : MessageHandler<OpLocTMessage> {
         if (!client.inBuildArea(tile)) return null
         return world.chunks.getOrCreate(tile)
             .getEntities<GameObject>(tile, EntityType.STATIC_OBJECT, EntityType.DYNAMIC_OBJECT)
-            .firstOrNull { it.id == message.id }
+            .firstOrNull { it.id == message.id || gg.rsmod.game.model.attr.locAliasOf(client, it) == message.id }
     }
 
     companion object {
