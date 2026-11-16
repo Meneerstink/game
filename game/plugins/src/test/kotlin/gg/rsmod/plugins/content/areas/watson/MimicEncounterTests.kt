@@ -20,7 +20,8 @@ import kotlin.test.*
 
 class MimicEncounterTests {
     private val accounts=mutableListOf<Player>()
-    private val cacheReady=MimicEncounter.Assets(true,1,null,null,null) // synthetic applied-arena fixture, no timing claim
+    // Synthetic complete encounter fixture for lifecycle tests; probabilities are not OSRS assertions.
+    private val cacheReady=MimicEncounter.Assets(true,1,0.0,4,0.0,true)
     data class Account(val player:Player,val world:World,val allocator:InstancedMapAllocator,
                        val map:InstancedMap,val idle:Npc,val casket:Item)
     @AfterTest fun cleanup() { accounts.forEach { MimicEncounter.leave(it,moveOutside=false) };unmockkAll() }
@@ -58,6 +59,18 @@ class MimicEncounterTests {
         assertNull(a.player.attr[MimicEncounter.SAVED_INSIDE])
         verify(exactly=1) { a.allocator.release(a.world,a.map) }
         verify(exactly=0) { a.player.teleportTo(any()) }
+    }
+
+    @Test fun `an arena import alone cannot activate incomplete combat or spend an attempt`() {
+        val a=account()
+        assertFalse(MimicCombat.ENCOUNTER_IMPLEMENTED)
+        for (assets in listOf(cacheReady.copy(combatImplemented=false), cacheReady.copy(candyChance=null),
+                cacheReady.copy(impactDelay=null), cacheReady.copy(stepChance=null), cacheReady.copy(candyChance=Double.NaN))) {
+            assertFalse(MimicEncounter.enter(a.player,a.casket,assets){_,_->error("incomplete encounter cannot spawn")})
+            assertFalse(MimicChallenge.active(a.casket))
+            assertEquals(0,MimicChallenge.failures(a.casket))
+        }
+        verify(exactly=0) { a.allocator.allocate(any(),any(),any()) }
     }
 
     @Test fun `missing arena banked casket and an outstanding attempt do not allocate or spend another attempt`() {

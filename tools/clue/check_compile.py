@@ -26,9 +26,12 @@ sources = sorted(set(changed + untracked))
 sources = [ROOT / s for s in sources if '/src/main/kotlin/' in s and s.endswith('.kt') and (ROOT / s).is_file()]
 out = ROOT / 'build/clue/compile'
 selected = sys.argv[2] if len(sys.argv) > 2 else None
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'contract-tests', 'falo-tests', 'sherlock-tests', 'basic-tests', 'puzzle-tests', 'clue-core-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'mimic-encounter-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'contract-tests', 'falo-tests', 'sherlock-tests', 'basic-tests', 'puzzle-tests', 'clue-core-tests'):
     out /= selected # Independent test modes cannot reuse a stale patch from another mode.
-if selected == 'puzzle-tests':
+if selected == 'mimic-encounter-tests':
+    sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson'/(name+'.kt') for name in
+               ['MimicCombat', 'MimicEncounter', 'MimicCaskets']]
+elif selected == 'puzzle-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/scrolls'/(name+'.kt') for name in
         ['ClueScrollManager', 'ClueStepContract', 'ClueOwnership', 'TreasureTrailPuzzleBoxes',
          'TreasureTrailPuzzleDialogue', 'TreasureTrailChallenges', 'TreasureTrailUri', 'TreasureTrailEmotes']]
@@ -80,7 +83,7 @@ elif selected == 'npc-tests':
     sources = []
 elif selected == 'mimic-tests':
     sources = [ROOT/'game/plugins/src/main/kotlin/gg/rsmod/plugins/content/areas/watson/MimicCombat.kt']
-for module in (['game','plugins'] if selected in ('watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'falo-tests', 'sherlock-tests', 'basic-tests') else ['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests', 'clue-core-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'contract-tests', 'puzzle-tests') else [selected] if selected else ['game', 'plugins']):
+for module in (['game','plugins'] if selected in ('watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'falo-tests', 'sherlock-tests', 'basic-tests') else ['game'] if selected in ('core-tests', 'npc-tests', 'stash-import-tests', 'clue-core-tests') else ['plugins'] if selected in ('step-tests', 'mimic-tests', 'mimic-encounter-tests', 'stash-tests', 'stash-import-tests', 'contract-tests', 'puzzle-tests') else [selected] if selected else ['game', 'plugins']):
     batch = [p for p in sources if ('/plugins/' in p.as_posix()) == (module == 'plugins')]
     if not batch:
         continue
@@ -115,7 +118,7 @@ if selected == 'core-tests':
                     'gg.rsmod.game.tools.importer.ClueForearmImportTests','gg.rsmod.game.tools.importer.ClueImportDryRunTests'],
                    cwd=ROOT,check=True,creationflags=subprocess.BELOW_NORMAL_PRIORITY_CLASS)
 
-if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'contract-tests', 'falo-tests', 'sherlock-tests', 'basic-tests', 'puzzle-tests', 'clue-core-tests'):
+if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'mimic-encounter-tests', 'stash-tests', 'stash-import-tests', 'watson-tests', 'stash-chart-tests', 'stash-setting-tests', 'contract-tests', 'falo-tests', 'sherlock-tests', 'basic-tests', 'puzzle-tests', 'clue-core-tests'):
     # Explicit classes only. This is not a substitute for Gradle script/core integration.
     testing = [str(sorted((CACHE/m).rglob('*.jar'))[-1]) for m in
                ['org.jetbrains.kotlin/kotlin-test/1.8.0', 'org.jetbrains.kotlin/kotlin-test-junit/1.8.0',
@@ -128,7 +131,10 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
                  'org.jetbrains.kotlin/kotlin-reflect/1.8.0']]
     cp = [str(out/'game'), str(out/'plugins'), str(ROOT/'game/build/classes/kotlin/main'),
           str(ROOT/'game/plugins/build/classes/kotlin/main')] + [str(p) for p in libs] + testing
-    if selected == 'puzzle-tests':
+    if selected == 'mimic-encounter-tests':
+        names = ['gg.rsmod.plugins.content.areas.watson.'+name for name in
+                 ['MimicEncounterTests', 'MimicChallengeTests', 'TheMimicCombatDefTests']]
+    elif selected == 'puzzle-tests':
         names = ['gg.rsmod.plugins.content.scrolls.TreasureTrailPuzzleBoxTests',
                  'gg.rsmod.plugins.content.scrolls.ClueNpcAssetsTests']
     elif selected == 'clue-core-tests':
@@ -138,7 +144,7 @@ if selected in ('step-tests', 'npc-tests', 'mimic-tests', 'stash-tests', 'stash-
             ['TreasureTrailNumberChallengeTests', 'TreasureTrailBasicStepsTests', 'ClueStepSelectionTests',
              'TreasureTrailStepCatalogueTests', 'TreasureTrailTornPartsTests', 'TreasureTrailContractTests',
              'ClueScrollLifecycleTests', 'TreasureTrailFaloTests', 'TreasureTrailSherlockTests',
-             'ClueNpcAssetsTests', 'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests']]
+             'ClueNpcAssetsTests', 'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'TreasureTrailGuardianTests', 'TreasureTrailStashTests']]
         names += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests',
                   'gg.rsmod.game.tools.importer.ClueSearchMenuImportTests']
     elif selected == 'sherlock-tests':

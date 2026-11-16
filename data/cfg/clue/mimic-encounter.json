@@ -2,8 +2,21 @@
   "source": "OSRS Wiki The Mimic + Strategies; OSRS cache 2686 region 10819",
   "arenaImported": false,
   "keyholeLocalId": null,
-  "candyIntervalTicks": null,
-  "candyImpactDelayTicks": null,
+  "candyImpactDelayTicks": 4,
   "forwardStepChance": null,
-  "timingEvidence": null
+  "timingEvidence": {
+    "source": "Claude dossier CLUE 2026-11-16 17:1x/17:2x; owner decision 1A video measurement",
+    "videoUrl": "https://www.youtube.com/watch?v=FRohVjhXiaA",
+    "throwSeconds": 74.8,
+    "impactSeconds": 77.0,
+    "estimatedImpactTicks": 4,
+    "frameSheet": "C:/RSPS/work/clue-video/mimic_746_776.png",
+    "frameSheetSha256": "91382b436810fe931a610f5bdbc494e3bf22f37e78d10b129bf314c5c911c181",
+    "uncertain": [
+      "candyAttackChance",
+      "forwardStepChance"
+    ],
+    "note": "Throws at about39,52,75,85 seconds do not prove a fixed cycle or attack probability. No value invented."
+  },
+  "candyAttackChance": null
 }

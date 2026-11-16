@@ -26,18 +26,28 @@ class MimicChallengeTests {
                 val player = recoveryPlayer()
                 val stacked = Item(tier.casketId, 2)
                 player.inventory[0] = stacked
-                assertFalse(MimicCaskets.convert(player, 0, stacked, tier))
+                assertFalse(MimicCaskets.convert(player, 0, stacked, tier, encounterReady=true))
                 assertSame(stacked, player.inventory[0]); assertEquals(2, stacked.amount)
                 assertFalse(player.attr[MimicCaskets.RECEIVED] == true)
                 val single = Item(tier.casketId)
                 player.inventory[0] = single
-                assertTrue(MimicCaskets.convert(player, 0, single, tier))
+                assertTrue(MimicCaskets.convert(player, 0, single, tier, encounterReady=true))
                 val mimic = assertNotNull(player.inventory[0])
                 assertEquals(tier, MimicChallenge.tier(mimic))
                 assertNotNull(MimicChallenge.begin(mimic))
-                assertFalse(MimicCaskets.convert(player, 0, single, tier))
+                assertFalse(MimicCaskets.convert(player, 0, single, tier, encounterReady=true))
             }
         } finally { unmockkObject(ClueItems) }
+    }
+
+    @Test fun `unavailable encounter retains the ordinary casket and its guaranteed first Mimic eligibility`() {
+        val player=recoveryPlayer()
+        val source=Item(ClueScrollTier.ELITE.casketId)
+        player.inventory[0]=source
+        assertFalse(MimicCaskets.convert(player,0,source,ClueScrollTier.ELITE))
+        assertSame(source,player.inventory[0])
+        assertNull(player.attr[MimicCaskets.RECEIVED])
+        assertNull(source.getAttr(ItemAttribute.MIMIC_SOURCE_TIER))
     }
 
     private fun recoveryPlayer(): Player {

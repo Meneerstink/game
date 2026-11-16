@@ -5,6 +5,9 @@ import gg.rsmod.plugins.api.dsl.NpcCombatDsl
 
 /** Wiki The Mimic, pinned revision in docs/CLUE/sources/manifest.json. */
 object MimicCombat {
+    /** Candy, minions and forward stepping must be implemented before arena import enables entry. */
+    const val ENCOUNTER_IMPLEMENTED = false
+
     fun definition() = NpcCombatDsl.Builder().apply {
         configs {
             respawnDelay = 0

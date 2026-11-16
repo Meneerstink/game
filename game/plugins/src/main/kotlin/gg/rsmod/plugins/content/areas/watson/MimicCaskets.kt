@@ -27,8 +27,9 @@ object MimicCaskets {
     fun selected(player: Player, tier: ClueScrollTier, random: Random = Random.Default) = random.nextDouble() < chance(player, tier)
 
     /** Exact source object is required after any confirmation dialogue. No partial conversion. */
-    fun convert(player: Player, slot: Int, source: Item, tier: ClueScrollTier): Boolean {
-        if (!supported(tier) || source.id != tier.casketId || source.amount < 1 ||
+    fun convert(player: Player, slot: Int, source: Item, tier: ClueScrollTier,
+                encounterReady: Boolean = MimicEncounter.assets.ready): Boolean {
+        if (!encounterReady || !supported(tier) || source.id != tier.casketId || source.amount < 1 ||
             player.inventory[slot] !== source || held(player)) return false
         val mimic = ClueItems.local(23184) ?: return false
         val staged = ItemContainer(player.inventory)

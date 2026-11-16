@@ -28,15 +28,19 @@ object MimicEncounter {
         fun tile(x: Int, z: Int) = arenaTile(map, x, z)
     }
 
-    data class Assets(val imported: Boolean, val keyhole: Int?, val candyInterval: Int?, val impactDelay: Int?, val stepChance: Double?) {
-        val timingsReady: Boolean get() = candyInterval != null && candyInterval > 0 && impactDelay != null && impactDelay > 0 &&
+    data class Assets(val imported: Boolean, val keyhole: Int?, val candyChance: Double?, val impactDelay: Int?, val stepChance: Double?,
+                      val combatImplemented: Boolean = false) {
+        val timingsReady: Boolean get() = candyChance != null && candyChance.isFinite() && candyChance in 0.0..1.0 &&
+            impactDelay != null && impactDelay > 0 &&
             stepChance != null && stepChance.isFinite() && stepChance in 0.0..1.0
+        val ready: Boolean get() = imported && keyhole != null && combatImplemented && timingsReady
     }
     val assets by lazy {
         val obj = JsonParser().parse(File(RspsPaths.data("cfg/clue/mimic-encounter.json")).readText()).asJsonObject
         fun number(key: String) = obj[key]?.takeUnless { it.isJsonNull }
         Assets(obj["arenaImported"].asBoolean, number("keyholeLocalId")?.asInt,
-            number("candyIntervalTicks")?.asInt, number("candyImpactDelayTicks")?.asInt, number("forwardStepChance")?.asDouble)
+            number("candyAttackChance")?.asDouble, number("candyImpactDelayTicks")?.asInt, number("forwardStepChance")?.asDouble,
+            MimicCombat.ENCOUNTER_IMPLEMENTED)
     }
 
     fun session(player: Player) = sessions[player]
@@ -54,8 +58,8 @@ object MimicEncounter {
                           spawn: (Player, InstancedMap) -> Npc?): Boolean {
         if (player.isDead() || sessions.containsKey(player) || !player.inventory.any { it === casket } ||
             MimicChallenge.tier(casket) == null || MimicChallenge.defeated(casket) || MimicChallenge.remaining(casket) == 0 || MimicChallenge.active(casket)) return false
-        if (!assets.imported || assets.keyhole == null) {
-            println("PROBLEM CLUE Mimic arena assets not applied/verified; attempt retained")
+        if (!assets.ready) {
+            println("PROBLEM CLUE Mimic arena/combat not implemented or verified; attempt retained")
             player.message("This challenge is temporarily unavailable.")
             return false
         }

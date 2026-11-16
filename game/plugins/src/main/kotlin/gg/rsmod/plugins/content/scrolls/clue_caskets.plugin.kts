@@ -28,6 +28,10 @@ ClueScrollTier.values().filter { it.casketId >= 0 }.forEach { tier ->
                 if (MimicCaskets.held(player)) {
                     if (options("Yes", "No", title = "You already have a Mimic, and cannot be given another one. Do you wish to open the casket anyway?") != 1) return@queue
                 } else if (MimicCaskets.selected(player, tier)) {
+                    if (!gg.rsmod.plugins.content.areas.watson.MimicEncounter.assets.ready) {
+                        player.message("This challenge is temporarily unavailable.")
+                        return@queue
+                    }
                     if (MimicCaskets.convert(player, slot, source, tier)) player.message("The chest turned out to be the Mimic!")
                     else player.message("You don't have enough inventory space to hold that item.")
                     return@queue
