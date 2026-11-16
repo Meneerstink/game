@@ -92,7 +92,7 @@ class VanguardsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid
             val t = nearest(npc) ?: continue
             val melee = r.form == 7527
             val inReach = if (melee) meleeReach(npc, t.tile) else distance(t.tile, npc) <= 10
-            if (!inReach) { if (melee) npc.walkTo(t.tile); continue }
+            if (!inReach) { if (melee) chase(npc, t.tile); continue }
             npc.stopMovement(); npc.facePawn(t)
             if (tick >= (npcNext[npc] ?: 0)) { npcNext[npc] = tick + 4; swing(npc, r, t) }
         }

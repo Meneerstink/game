@@ -59,6 +59,56 @@ object CoxRaids : KLogging() {
 
     fun byId(id: Long): CoxRaid? = raids.values.firstOrNull { !it.closed && it.id == id }
 
+    /**
+     * Raid-only items can't leave the raid (tsps CoxRaid.dropRaidItems, rsprox): taken from the inventory and equipment and dropped
+     * where the raider stood - on death, on leaving and on logging out (16-11 breaktest: only death did it, so an overload walked out
+     * of the raid with a coxleave or a logout).
+     */
+    fun dropRaidItems(player: Player, at: Tile) {
+        val raidOnly = raidOnlyLocal()
+        listOf(player.inventory, player.equipment).forEach { container ->
+            for (slot in 0 until container.capacity) {
+                val item = container[slot] ?: continue
+                if (item.id !in raidOnly) continue
+                container.remove(item.id, item.amount, beginSlot = slot)
+                player.world.spawn(gg.rsmod.game.model.entity.GroundItem(item.id, item.amount, Tile(at), player))
+            }
+        }
+    }
+
+    /** Who logged out of a raid that had begun (username -> raid id): logging in brings them back while it lasts. */
+    private val rejoining = HashMap<String, Long>()
+
+    /**
+     * A raider logged out inside a raid (cox_raid.plugin.kts on_logout; the engine has already put them on the instance's exit tile,
+     * [inside] is where they stood). tsps CoxRaid.playerLeftArea/removePlayer (rsprox): raid-only items drop there; a member of a raid that
+     * has begun may come back ('takeRejoin'); Wiki: 'the raid can also be exited through ... logging out until the raid party has all
+     * left' - when nobody is left the instance goes (releaseEmpty) and there is nothing to come back to.
+     */
+    fun loggedOut(player: Player, inside: Tile) {
+        val raid = raidAt(inside) ?: return
+        dropRaidItems(player, inside)
+        CoxPotions.clear(player)
+        val key = player.username.lowercase()
+        if (raid.started && raid.points.containsKey(key)) rejoining[key] = raid.id
+    }
+
+    /**
+     * Logging in after [loggedOut]: back into the raid at its respawn point if it is still on (tsps Raid.returnOnLogin -> admit(): the
+     * raid's respawn), else outside - where the engine's exit tile already put them - with tsps' 'Your party could not be re-found.'
+     */
+    fun loggedIn(player: Player) {
+        val id = rejoining.remove(player.username.lowercase()) ?: return
+        val raid = byId(id)
+        if (raid == null) {
+            player.message("Your party could not be re-found.")
+            return
+        }
+        player.moveTo(respawnTile(raid))
+        CoxPartyTab.open(player, raid)
+        CoxPointsOverlay.open(player)
+    }
+
     /** Creates a raid with [layout] (default: a random OSRS small layout, besluit 9a) and moves [player] to the starting room. */
     fun start(player: Player, layout: CoxLayout = CoxLayouts.normal(Random.Default)): CoxRaid? {
         val world = player.world
@@ -288,6 +338,7 @@ object CoxRaids : KLogging() {
     /** Out of the chambers (exit steps / test command); the map goes once nobody of it is left inside. */
     fun leave(player: Player) {
         val raid = raidAt(player.tile)
+        if (raid != null) dropRaidItems(player, player.tile)
         player.moveTo(OUTSIDE)
         CoxPartyTab.close(player)
         CoxPointsOverlay.close(player)

@@ -273,7 +273,7 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
             }
         }
         val p = nearest(s) ?: return
-        if (!meleeReach(s, p.tile)) { if (landed) s.walkTo(p.tile); return }
+        if (!meleeReach(s, p.tile)) { if (landed) chase(s, p.tile); return }
         if (tick < (soldierNext[s] ?: 0)) return
         soldierNext[s] = tick + 4
         animate(s, 7454); play(p, 819)

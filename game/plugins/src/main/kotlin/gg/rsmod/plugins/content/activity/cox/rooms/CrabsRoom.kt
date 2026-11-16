@@ -40,6 +40,12 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
     private var nextFocusAt = 0
     private val lastHitBy = HashMap<Npc, Player>()
     private val nextBite = HashMap<Npc, Int>()
+    /**
+     * Smash stuns a crab where it stands (Wiki: 50-60 ticks solo ... 10-20 for 6+) - longer than its red colour lasts (Wiki 'The crab will
+     * retain the colour for roughly five seconds'; tsps ~12 ticks). 16-11: the stun was the colour's own timer, so a smashed crab stayed
+     * red for the whole stun and a solo raider could never pin a WHITE crab (the 'resmash' of the solo guides) - version 0 needs three.
+     */
+    private val stunnedUntil = HashMap<Npc, Int>()
 
     override fun load() {
         CRABS[variant].forEach { s -> spawn(WHITE_CRAB, tile(s.x, s.z))?.let { crabs += it; colourOf[it] = WHITE_CRAB } }
@@ -58,7 +64,9 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         for (c in crabs) {
             if (colourUntil.containsKey(c)) continue
             val near = raiders().firstOrNull { it.tile.getDistance(c.tile) <= 3 } ?: continue
-            if (!meleeReach(c, near.tile)) { c.walkTo(besideOf(near.tile, c.tile)); continue }
+            // Stunned: it stays put (it still bites a raider beside it - Wiki: stunning 'keeps their aggression').
+            val stunned = tick < (stunnedUntil[c] ?: 0)
+            if (!meleeReach(c, near.tile)) { if (!stunned) c.walkTo(besideOf(near.tile, c.tile)); continue }
             if (tick >= (nextBite[c] ?: 0)) { nextBite[c] = tick + 4; animate(c, 2368); attack(c, near, 10, CombatClass.MELEE) }
         }
         if (focus == null && tick >= nextFocusAt) sendFocus() else if (focus != null) moveFocus()
@@ -130,9 +138,8 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
                 }
                 lastHitBy[crab]?.let { sender = it }
                 if (++turns >= 2) { endFocus("fizzle"); return }
-                // 'every time the white orb impacts a crab it is deflected to the right of the orb's perspective' (guide video
-                // 'JEWELLED CRABS - In 90 Seconds or Less', 16-11): east -> south -> west -> north.
-                direction = (direction + 1) and 3
+                // The turn per version, see [TURN].
+                direction = (direction + TURN[variant]) and 3
                 continue
             }
             val next = Tile(x, z, here.height)
@@ -191,7 +198,7 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         if (npc !in crabs) return
         hit.hitmarks.forEach { it.damage = 0 }
         val colour = when (hit.sourceCombatClass) { CombatClass.MAGIC -> BLUE_CRAB; CombatClass.RANGED -> GREEN_CRAB; else -> RED_CRAB }
-        colour(npc, colour, 12)
+        colour(npc, colour, COLOUR_TICKS)
         (hit.source as? Player)?.let { p -> lastHitBy[npc] = p; gg.rsmod.plugins.content.combat.Combat.reset(p) }
     }
 
@@ -199,6 +206,23 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         colourOf[crab] = osrs
         CoxIds.npc(osrs)?.let { crab.setTransmogId(it) }
         colourUntil[crab] = tick + ticks
+    }
+
+    /**
+     * TEST ONLY (command port 'coxcrabs', test server): puts the room's crabs on [spots] in order - each stunned for [ticks] and, when its
+     * colour is not white, coloured that long - and every other crab stunned where it stands. Proves the orb's route rules with exact
+     * crab tiles; luring/smashing a crab there is the player's part (proven separately with the bot). Returns what it did.
+     */
+    fun testSet(spots: List<Pair<Tile, Int>>, ticks: Int): String {
+        val alive = crabs.filter { alive(it) }
+        spots.forEachIndexed { i, (t, osrs) ->
+            val c = alive.getOrNull(i) ?: return@forEachIndexed
+            c.stopMovement(); c.moveTo(t)
+            stunnedUntil[c] = tick + ticks
+            if (osrs != WHITE_CRAB) colour(c, osrs, ticks) else { colourUntil.remove(c); colourOf[c] = WHITE_CRAB; c.setTransmogId(-1) }
+        }
+        alive.drop(spots.size).forEach { stunnedUntil[it] = tick + ticks }
+        return alive.take(spots.size).joinToString { "${it.index}@${it.tile.x},${it.tile.z}:${colourOf[it]}" }
     }
 
     /** 'Smash' (Wiki): needs a hammer or blunt weapon; red and stunned by party size. */
@@ -212,7 +236,8 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         areaSound(crab.tile, 2727, radius = 5, delay = 30)
         val n = scaling().size
         val ticks = when { n <= 1 -> world.random(50..60); n <= 3 -> world.random(30..40); n <= 5 -> world.random(20..30); else -> world.random(10..20) }
-        colour(crab, RED_CRAB, ticks)
+        colour(crab, RED_CRAB, COLOUR_TICKS)
+        stunnedUntil[crab] = tick + ticks
         lastHitBy[crab] = p
         gfxOn(crab, 245, height = 100, delay = 30)
         crab.stopMovement()
@@ -224,16 +249,26 @@ class CrabsRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, fl
         const val GREEN_CRAB = 7578
         const val BLUE_CRAB = 7579
         const val WHITE_FOCUS = 7580
+        /** How long a struck crab keeps its colour (tsps rsprox ~12 ticks; Wiki 'roughly five seconds'). */
+        const val COLOUR_TICKS = 12
         /** The orb each small crystal (by index) needs (tsps): white, blue, green, red. */
         val NEEDS = listOf(7580, 7583, 7582, 7581)
         /**
-         * The orb's way out of the sculpture per version, in template terms (index into [DIRECTIONS]), turned with the room. The orb is
-         * deflected to its RIGHT at every crab (guide video 'JEWELLED CRABS - In 90 Seconds or Less'), so it must leave with the room on
-         * its right: version 0 (focus 3277,5353, every crab/crystal north-east of it) = NORTH - it was east (16-11: along the wall with the
-         * room on its left, every deflection went into the wall, the room could not be solved); 1 (3318,5363, all south-west) = south;
-         * 2 (3346,5358, all west) = west. ONZEKER: derived from the room shape + the right-turn rule, not from a capture.
+         * The orb's way out of the 'Glowing carving' (29752, 1x3, the Wiki's 'carved sculpture') per version, in template terms (index
+         * into [DIRECTIONS]), turned with the room: straight away from the carving, from the tile in front of its middle. Cache 2686
+         * (ObjectPlacementProbeTool, templates at z+1536): v0 carving 3276,5352 orientation 2 -> east; v1 3317,5364 orientation 3 ->
+         * south; v2 3347,5357 orientation 0 -> west. Guide video 'JEWELLED CRABS - In 90 Seconds or Less' 50-60 s (version 0): the orb
+         * leaves the carving and runs straight along the room's edge away from it (16-11 chat 2; the 13:xx 'north' for v0 was wrong).
          */
-        val START_DIRECTION = listOf(3, 1, 2)
+        val START_DIRECTION = listOf(0, 1, 2)
+        /**
+         * How the orb turns at a crab per version (+1 = clockwise = to the orb's right). Guide video 'JEWELLED CRABS - In 90 Seconds or
+         * Less': 'every time the white orb impacts a crab it is deflected to the right of the orb's perspective' (its 13-25 s clip: two
+         * right turns); Wiki Strategies: 'All layouts need three crabs' - with the right turn version 0 (orb down the west edge, every
+         * crystal on its left) needs exactly three per crystal: down the lane, a crab turns it west, a second north, a third east along
+         * the crystal's row (16-11: a left turn for v0 tried first needed only one crab = against the Wiki; rejected).
+         */
+        val TURN = listOf(1, 1, 1)
         /** East, south, west, north: clockwise. */
         val DIRECTIONS = listOf(1 to 0, 0 to -1, -1 to 0, 0 to 1)
         val BURST = mapOf(7580 to (119 to 160), 7581 to (128 to 157), 7582 to (119 to 166), 7583 to (122 to 163))

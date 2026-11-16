@@ -16,7 +16,7 @@ val COX_WARNED = gg.rsmod.game.model.attr.AttributeKey<Boolean>(persistenceKey =
 
 CoxIds.loc(29777)?.let { steps ->
     on_obj_option(obj = steps, option = "enter") {
-        if (!CoxTestGate.allowed(player)) {
+        if (!CoxTestGate.entrance(player)) {
             player.message("Nothing interesting happens.")
             return@on_obj_option
         }
@@ -165,17 +165,17 @@ on_player_death_start {
     val raid = CoxRaids.raidAt(player.tile) ?: return@on_player_death_start
     player.attr[COX_DIED_IN] = raid.id
     if (raid.started) CoxRaids.deathPenalty(raid, player.username)
-    val raidOnly = CoxRaids.raidOnlyLocal()
-    val tile = player.tile
-    listOf(player.inventory, player.equipment).forEach { container ->
-        for (slot in 0 until container.capacity) {
-            val item = container[slot] ?: continue
-            if (item.id !in raidOnly) continue
-            container.remove(item.id, item.amount, beginSlot = slot)
-            world.spawn(gg.rsmod.game.model.entity.GroundItem(item.id, item.amount, tile, player))
-        }
-    }
+    CoxRaids.dropRaidItems(player, player.tile)
 }
+
+/** Logging out inside / logging back in (CoxRaids.loggedOut / loggedIn; 16-11 breaktest). The engine moved them to the exit tile first. */
+on_logout {
+    // A real logout: the engine's instance logout ran first and left the tile inside here; test bots (botlogout) skip it - their own tile.
+    val inside = player.attr[gg.rsmod.game.model.attr.INSTANCE_LOGOUT_TILE_ATTR] ?: player.tile
+    CoxRaids.loggedOut(player, inside)
+}
+
+on_login { CoxRaids.loggedIn(player) }
 
 on_player_death {
     val id = player.attr[COX_DIED_IN] ?: return@on_player_death
@@ -268,7 +268,9 @@ on_command("coxstart", Privilege.ADMIN_POWER) {
     if (args.firstOrNull() == "find") {
         val want = CoxRoom.values().firstOrNull { it.name.equals(args.getOrNull(1), ignoreCase = true) }
             ?: run { player.message("Rooms: ${CoxRoom.values().joinToString(" ")}"); return@on_command }
-        val found = (1..2000).firstNotNullOfOrNull { s -> CoxLayouts.normal(Random(s)).takeIf { l -> l.floors.any { f -> f.any { it.room == want } } }?.let { s to it } }
+        // ::coxstart find <ROOM> [version 0-2] (16-11: without a version 'find' always gave the same seed = the same version).
+        val version = args.getOrNull(2)?.toIntOrNull()
+        val found = (1..2000).firstNotNullOfOrNull { s -> CoxLayouts.normal(Random(s)).takeIf { l -> l.floors.any { f -> f.any { it.room == want && (version == null || it.variant == version) } } }?.let { s to it } }
             ?: run { player.message("No seed with $want."); return@on_command }
         if (CoxRaids.raidAt(player.tile) != null) CoxRaids.leave(player)
         val raid = CoxRaids.enter(player, found.second)
@@ -315,6 +317,39 @@ on_command("coxpoints", Privilege.ADMIN_POWER) {
     player.message("CoX points: mine ${raid.points[player.username.lowercase()] ?: 0}, total ${raid.totalPoints()}")
 }
 
+/**
+ * Command port only (test server, bots): `coxjoin <member> <leader>` = the member joins the leader's party and enters its raid through the
+ * steps' own route (CoxRaids.enter) - the party board's Join + 'Enter' without the interfaces (CoX breaktest 16-11: two raiders).
+ */
+gg.rsmod.game.CommandServerCommands.handlers["coxjoin"] = { w, a ->
+    val member = w.getPlayerForName(a.getOrNull(0) ?: "")
+    val party = CoxParties.of(a.getOrNull(1) ?: "")
+    if (member == null || party == null) "usage: coxjoin <member online> <leader with a party>"
+    else if (!party.join(member.username) && !party.isMember(member.username)) "coxjoin: party full"
+    else "coxjoin: ${member.username} -> raid ${CoxRaids.enter(member)?.id}"
+}
+
+/**
+ * Command port only (test server): `coxcrabs <player> <ticks> <x,z:c> [x,z:c ...]` (c = w|r|g|b) = CrabsRoom.testSet in the player's raid:
+ * the crabs exactly on those tiles, stunned (and coloured) for <ticks> - the orb-route proof of the Crab puzzle (16-11).
+ */
+gg.rsmod.game.CommandServerCommands.handlers["coxcrabs"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0) ?: "")
+    val raid = p?.let { CoxRaids.raidAt(it.tile) }
+    val room = raid?.let { r -> gg.rsmod.plugins.content.activity.cox.rooms.CoxRooms.rooms(r).filterIsInstance<gg.rsmod.plugins.content.activity.cox.rooms.CrabsRoom>().firstOrNull() }
+    val ticks = a.getOrNull(1)?.toIntOrNull()
+    if (p == null || room == null || ticks == null) "usage: coxcrabs <player in a raid with crabs> <ticks> <x,z:w|r|g|b> ..."
+    else {
+        val colours = mapOf("w" to 7576, "r" to 7577, "g" to 7578, "b" to 7579)
+        val spots = a.drop(2).mapNotNull { s ->
+            val (xz, c) = s.split(":").let { it[0] to (it.getOrNull(1) ?: "w") }
+            val (x, z) = xz.split(",").map { it.toInt() }
+            gg.rsmod.game.model.Tile(x, z, p.tile.height) to (colours[c] ?: 7576)
+        }
+        "coxcrabs: " + room.testSet(spots, ticks)
+    }
+}
+
 on_command("coxleave", Privilege.ADMIN_POWER) {
     if (!CoxTestGate.allowed(player)) return@on_command
     CoxRaids.leave(player)
@@ -326,7 +361,7 @@ on_command("coxleave", Privilege.ADMIN_POWER) {
  */
 CoxIds.loc(29776)?.let { board ->
     on_obj_option(obj = board, option = "read") {
-        if (!CoxTestGate.allowed(player)) {
+        if (!CoxTestGate.entrance(player)) {
             player.message("Nothing interesting happens.")
             return@on_obj_option
         }

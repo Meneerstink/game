@@ -1412,7 +1412,7 @@
   example: "::toastart normal"
 - name: coxstart
   rank: admin
-  usage: "::coxstart [layout 0-26] [seed]"
+  usage: "::coxstart [layout 0-26] [seed] | ::coxstart find <ROOM> [version 0-2]"
   description: "Test server / check accounts only: start a solo Chambers of Xeric raid with that OSRS layout code (random without one)."
   example: "::coxstart 6 42"
 - name: coxroom

@@ -6,5 +6,5 @@ package gg.rsmod.plugins.content.activity.cox
  * that is not open. Set to true in the live bundle that opens the raid (owner: 'volledig geintegreerd zoals ToA').
  */
 object CoxRelease {
-    const val OPEN = false
+    const val OPEN = true
 }

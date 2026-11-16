@@ -12,4 +12,7 @@ object CoxTestGate {
     fun testServer(): Boolean = System.getProperty("rsps.testServer") == "true"
 
     fun allowed(player: Player): Boolean = testServer() || player.username.lowercase() in LIVE_CHECK_ACCOUNTS
+
+    /** The entrance steps and the recruiting board: everyone once the raid is released (CoxRelease.OPEN), else as [allowed]. */
+    fun entrance(player: Player): Boolean = CoxRelease.OPEN || allowed(player)
 }

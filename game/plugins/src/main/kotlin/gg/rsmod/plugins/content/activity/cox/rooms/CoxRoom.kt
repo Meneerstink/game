@@ -302,6 +302,26 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
         return maxOf(maxOf(o.x - t.x, 0, t.x - (o.x + s - 1)), maxOf(o.z - t.z, 0, t.z - (o.z + s - 1)))
     }
 
+    /**
+     * Moves a melee npc towards [target] the OSRS npc way (follow mode: diagonal first, then straight) until its body borders the raider
+     * on a side. 16-11: `walkTo(target.tile)` is a plain walk to the raider's OWN tile - an npc standing diagonally then only has that
+     * occupied tile as its step, the mover refuses it and the npc stands still for ever (Jewelled crab; Scavenger probe
+     * cox_diag_probe.sh: 30 s on one tile, no swing). An interaction route (touch radius 1) arrives beside the raider and takes the
+     * straight step (NaivePathFindingStrategy 'Arrival for an interaction').
+     */
+    fun chase(npc: Npc, target: Tile) {
+        if (npc.timers.has(gg.rsmod.game.model.timer.FROZEN_TIMER) || npc.timers.has(gg.rsmod.game.model.timer.STUN_TIMER)) return
+        val s = npc.getSize().coerceAtLeast(1)
+        val request = gg.rsmod.game.model.path.PathRequest.Builder()
+            .setPoints(Tile(npc.tile), Tile(target))
+            .setSourceSize(s, s)
+            .setTargetSize(1, 1)
+            .setTouchRadius(1)
+            .build()
+        val route = gg.rsmod.game.model.path.strategy.NaivePathFindingStrategy(world.collision, npc).calculateRoute(request)
+        npc.walkPath(route.path, gg.rsmod.game.model.MovementQueue.StepType.NORMAL, detectCollision = true)
+    }
+
     /** Next to [npc]'s body on a side (not a corner), no wall between (engine MeleeReach). */
     fun meleeReach(npc: Npc, t: Tile): Boolean {
         if (t.height != npc.tile.height) return false
@@ -374,7 +394,7 @@ abstract class CoxRoom(val raid: CoxRaid, val floor: Int, val laid: CoxLaidRoom)
             val target = nearest(npc) ?: continue
             val inReach = if (f.range <= 1) meleeReach(npc, target.tile) else distance(target.tile, npc) <= f.range &&
                 world.collision.raycast(npc.tile, target.tile, projectile = true)
-            if (!inReach) { npc.walkTo(target.tile); continue }
+            if (!inReach) { if (f.range <= 1) chase(npc, target.tile) else npc.walkTo(target.tile); continue }
             npc.stopMovement()
             npc.facePawn(target)
             if (tick >= f.next) { f.next = tick + f.speed; swing(npc, target) }

@@ -72,6 +72,12 @@ CommandServerCommands.handlers["teststate"] = { _, a ->
 
 // `npcstats <npc index>`: the npc's CURRENT combat levels (attack/strength/defence/magic/ranged) + hp - to prove stat drains (CoX 16-11:
 // Elder maul Pulverize -35% Defence, Dinh's bulwark Shield Bash -5%).
+// `kill <name>` (CoX breaktest 16-11): a hit of all the player's lifepoints + 10 with no source, as `toabot kill` does - a death that no
+// PvP rule blocks (a player's ::damage on a player is refused in guarded areas such as the raids).
+CommandServerCommands.handlers["kill"] = { w, a ->
+    val p = w.getPlayerForName(a.getOrNull(0)?.replace("_", " ") ?: "")
+    if (p == null) "usage: kill <name>" else { p.hit(p.getCurrentLifepoints() + 10); "kill ${p.username}: hit ${p.getCurrentLifepoints() + 10}" }
+}
 CommandServerCommands.handlers["npcstats"] = { w, a ->
     val n = a.getOrNull(0)?.toIntOrNull()?.let { i -> w.npcs.entries.filterNotNull().firstOrNull { it.index == i } }
     if (n == null) "usage: npcstats <npc index>" else {
