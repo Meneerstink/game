@@ -5,27 +5,31 @@ This card is not ready to merge/release. B resumed the entire card on
 Do not interpret a successful cache preflight as a completed gameplay chain.
 All cache application, testserver/client operation, merge and release belong to Claude.
 
-Current continuation/results: `REVIEW-B-7.md`. The older checkpoints below are
+Current continuation/results: `REVIEW-B-16NOV.md`; earlier details: `REVIEW-B-7.md`.
+The older checkpoints below are
 historical evidence, with remaining gates explicitly superseded by later entries.
 
 ## Exact item batch
 
 * Source: `C:/RSPS/import-source/openrs2-2686/cache`.
 * Batch: `OsrsItemImportTool clue --clue-roster=<this worktree>/data/cfg/clue/import-items.tsv`.
-* The roster is the exact 245-source-item list (including notes where marked).
-  The latest 15 November 15:29 preflight generated **436 definitions**, proposed local IDs
-  **24755–25190**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
+* The current roster has **247 source items** (including notes where marked):
+  the reviewed245 plus exact hard puzzle boxes19887/23173. The combined
+  16November17:57 preflight generated **438 definitions**, proposed local IDs
+  **24940..25377**. Every source/local/model row is in `ITEM-PREFLIGHT.tsv`.
   These local IDs are proposals, not reservations: rerun against the current
   canonical caches immediately before applying, then regenerate `items.tsv`.
 * Use the reviewed importer/forearm fix from this branch. The old importer
   stopped on Ancient/Armadyl/Bandos platebodies (12460/12470/12480).
-* Current roster correction: **remove 25612 (unused STASH blueprint; owner Q5),
-  add 12139 (numeric elite challenge)**. Sherlock's distinct skill challenge
-  **12128** remains included. Do not apply the older roster or its shifted ID rows.
+* Current roster corrections: **remove25612 (unused STASH blueprint; ownerQ5),
+  add12139 (numeric elite challenge),19887 and23173 (two exact tree puzzle boxes)**.
+  Sherlock's distinct skill challenge12128 remains included. The two-box-only
+  dry-run is in PUZZLE-ITEM-PREFLIGHT.tsv; it is not the combined247 allocation.
+  Do not apply an older roster or reuse its shifted ID rows.
 * Repeat read-only with `python tools/clue/preflight_items.py` after core compile.
   Plan report: `build/clue/item-preflight-current/result.txt`; proof records both
   cache file fingerprints, ledger SHA, roster and mapping SHA before/after.
-  Latest transaction **`tx-20261115-142946`**, `applied=false`, `finalized=0`, `recovered=0`.
+  Latest transaction **`tx-20261116-165714`**, `applied=false`, `finalized=0`, `recovered=0`.
   See `DRY-RUN-INCIDENT.md` for the
   corrected ledger-recovery side effect; no cache bytes were applied.
 * Obtain/merge the importer's `--yml-out=<review file>` metadata on Claude's
@@ -59,6 +63,11 @@ The master source IDs are 19835/19836, never 19837. Use the newly allocated
 local IDs from the mapping. Claude applies the owner's Gold & onyx scroll and
 gold/onyx-banded casket A recolours (`screens/N415-78clue/`). Source master
 mechanics/rewards remain unchanged. No exclusive cosmetic reward is introduced.
+
+The current combined-item preflight proposes **19835 -> 25192** and
+**19836 -> 25193** for that presentation. Numeric elite challenge12139 proposes
+24992; exact tree boxes19887/23173 propose25197/25294. Resolve the final applied
+mapping after rerunning, rather than hard-coding these proposed IDs into runtime.
 
 The opening effect is the existing OSRS Treasure Trails jingle, index 11/group
 193; the source and local payloads are byte-identical. Test with sound enabled.
@@ -232,31 +241,39 @@ still awaiting its targeted Gradle run. It is not yet registered as gameplay.
 
 ### Exact NPC batch
 
+Current batch: **10 source NPCs**, including Lumbridge Guide306. The table below
+is the 16November18:07 proposal. Rerun clue-steps against the current caches and
+regenerate the complete mapping after application. No ID is reserved.
+
 ```
 .\gradlew.bat :game:runOsrsNpcImportTool --priority low --args="clue-steps"
 ```
 
-Source cache: `import-source/openrs2-2686/cache`. A ran the compiled tool's
-PREFLIGHT only. Transaction `tx-20261115-064813`: 161 logical mutations, 63 source
-asset records. Complete output: `NPC-PREFLIGHT.txt`. The ledger hash and all cache
-file sizes/mtimes were unchanged before/after.
+Source cache: `import-source/openrs2-2686/cache`. Repeat read-only with
+`python tools/clue/preflight_npcs.py`. B ran the compiled tool's PREFLIGHT only:
+transaction `tx-20261116-170726`, 168 logical mutations, 70 source asset records.
+Complete output: `NPC-PREFLIGHT.txt`; every source/native/asset row:
+`NPC-PREFLIGHT.tsv`. The ledger hash, both cache file fingerprints, runtime NPC
+mapping and profile hash were unchanged: npc-preflight-current/read-only-proof.json.
 
 | Source | Role | Proposed local NPC |
 |---:|---|---:|
-| 6586 | Sherlock | 15234 |
-| 7306 | Falo the Bard | 15235 |
-| 7312 | Master double agent | 15236 |
-| 6587 | Armadylean guard | 15237 |
-| 6588 | Bandosian guard | 15238 |
-| 7307 | Ancient Wizard (mage) | 15239 |
-| 7308 | Ancient Wizard (ranger) | 15240 |
-| 7309 | Ancient Wizard (melee) | 15241 |
-| 7310 | Brassican Mage | 15242 |
+| 306 | Lumbridge Guide | 15314 |
+| 6586 | Sherlock | 15315 |
+| 7306 | Falo the Bard | 15316 |
+| 7312 | Master double agent | 15317 |
+| 6587 | Armadylean guard | 15318 |
+| 6588 | Bandosian guard | 15319 |
+| 7307 | Ancient Wizard (mage) | 15320 |
+| 7308 | Ancient Wizard (ranger) | 15321 |
+| 7309 | Ancient Wizard (melee) | 15322 |
+| 7310 | Brassican Mage | 15323 |
 
-Existing Uri 5141?5143, hard agents 5144/5145, Saradomin wizard 1264 and Zamorak
-wizard 1007 are not duplicated. Wizard Traiborn / Lumbridge Guide identity/name
-adapters still need review (source names versus existing Traiborn / Lumbridge
-Sage). Abbot Langley and Robin are already spawned in the current world.
+Existing Uri5141..5143, hard agents5144/5145, Saradomin wizard1264 and Zamorak
+wizard1007 are not duplicated. Lumbridge Guide uses its exact source306 import,
+not the unrelated local Lumbridge Sage. Abbot Langley and Robin already exist.
+The Guide's ordinary quest-advice dialogue still has the source gap described
+in the latest puzzle handover section below.
 
 `data/cfg/clue/guardians.json` contains 14 Wiki/cache-checked guardian/minion variants,
 including 76 HP Zamorak wizard, 160 HP master agent, the 80 HP ancient trio and
@@ -269,8 +286,9 @@ Claude must inspect these in the loaded client before accepting the asset chain.
 unsupported swamp-hut bookcase. The hard Emir's Arena coordinate has no fight;
 the two selected master coordinates require Brassican, not a random trio.
 The source generator preserves those exceptions and the two master anagram
-puzzle choices. The old 41-donor-step registration still requires replacement;
-no complete-step-pool claim is made by these source/backend commits.
+puzzle choices. The old41-donor-step registration was replaced in2f21cdd90;
+the source pool still excludes subtype handlers/assets that are not ready.
+No complete-step-pool claim is made by these source/backend commits.
 
 ## STASH batch blueprint (source identities; implementation below)
 

@@ -4,7 +4,7 @@ gradle.projectsEvaluated {
         tasks.withType(Test).configureEach {
             systemProperty 'rsps.data', new File(rootProject.projectDir, 'data').absolutePath
             inputs.dir(new File(rootProject.projectDir, 'data/cfg/clue'))
-            inputs.files(['data/cfg/objs.yml', 'docs/CLUE/cache/interfaces.json',
+            inputs.files(['data/cfg/objs.yml', 'data/cfg/npcs/combat-defs.json', 'docs/CLUE/cache/interfaces.json',
                           'docs/CLUE/cache/hover.json', 'docs/CLUE/cache/stash-chart-baked.json',
                           'docs/CLUE/cache/stash-setting.json', 'docs/CLUE/cache/ui-camera-order.json']
                          .collect { new File(rootProject.projectDir, it) })

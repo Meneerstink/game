@@ -1,4 +1,4 @@
-"""One low-priority Gradle run for the inherited CLUE handoff and current STASH changes.
+"""One low-priority Gradle run for the changed CLUE classes.
 
 Records the input hashes before and after, so a source-drift run cannot be accepted.
 No server/client process, apply flag, broad test suite or unrelated data is accessed.
@@ -50,13 +50,23 @@ if '--basic' in sys.argv:
                 'ClueDropOwnershipTests', 'ClueCasketTransactionTests', 'TreasureTrailMapsTests', 'TreasureTrailEmoteTests', 'TreasureTrailUriSourceTests', 'TreasureTrailPuzzleBoxTests']]
     PLUGINS += ['gg.rsmod.plugins.content.areas.watson.WatsonClueTests']
 
+if '--continuation' in sys.argv:
+    CORE = []
+    PLUGINS = ['gg.rsmod.plugins.content.scrolls.' + name for name in
+               ['ClueScrollLifecycleTests', 'TreasureTrailContractTests', 'TreasureTrailTornPartsTests',
+                'TreasureTrailBasicStepsTests', 'TreasureTrailEmoteTests', 'TreasureTrailNumberChallengeTests',
+                'TreasureTrailMapsTests', 'ClueStepSelectionTests', 'ClueCasketTransactionTests',
+                'ClueDropOwnershipTests', 'ClueGuardianCombatDataTests']]
+    PLUGINS += ['gg.rsmod.plugins.content.areas.watson.' + name for name in
+                ['MimicEncounterTests', 'MimicChallengeTests', 'WatsonClueTests']]
+
 
 def inputs():
     tracked = subprocess.check_output(['git', 'ls-files'], cwd=ROOT, text=True).splitlines()
     untracked = subprocess.check_output(['git', 'ls-files', '--others', '--exclude-standard'], cwd=ROOT, text=True).splitlines()
     allowed = [p for p in sorted(set(tracked + untracked))
                if p.endswith(('.kt', '.kts', '.gradle')) or p.startswith(('data/cfg/clue/', 'docs/CLUE/sources/Transcript_')) or p in {
-                   'data/cfg/objs.yml', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
+                   'data/cfg/objs.yml', 'data/cfg/npcs/combat-defs.json', 'docs/CLUE/cache/stash-chart-baked.json', 'docs/CLUE/cache/hover.json',
                    'docs/CLUE/cache/interfaces.json', 'docs/CLUE/cache/stash-setting.json',
                    'docs/CLUE/cache/map-interfaces.json', 'docs/CLUE/cache/puzzle-interface.json', 'docs/CLUE/cache/puzzle-pictures.json', 'docs/CLUE/cache/uri-source.json',
                    'docs/CLUE/cache/ui-camera-order.json', 'docs/CLUE/cache/search-bucket.json',
@@ -73,12 +83,14 @@ def main():
     out.mkdir(parents=True)
     before = inputs()
     started = datetime.now(timezone.utc).timestamp()
-    args = ['cmd.exe', '/d', '/c', str(ROOT/'gradlew.bat'), '-I', 'tools/clue/test-init.gradle', ':game:test']
-    for name in CORE:
-        args += ['--tests', name]
-    args += [':game:plugins:test']
-    for name in PLUGINS:
-        args += ['--tests', name]
+    assert CORE or PLUGINS
+    args = ['cmd.exe', '/d', '/c', str(ROOT/'gradlew.bat'), '-I', 'tools/clue/test-init.gradle']
+    # Never emit an unfiltered test task when a module has no selected classes.
+    for task, names in [(':game:test', CORE), (':game:plugins:test', PLUGINS)]:
+        if names:
+            args += [task]
+            for name in names:
+                args += ['--tests', name]
     args += ['--priority', 'low', '--console=plain']
     (out/'inputs-before.json').write_text(json.dumps(before, indent=2))
     (out/'command.json').write_text(json.dumps(args, indent=2))

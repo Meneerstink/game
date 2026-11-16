@@ -39,6 +39,10 @@ must still supply source/native actor mappings, verified combat, atomic spawn
 rollback, exact loot/Drop Viewer and ownership/PvP hooks. Elite guard selection
 has no guessed probability; the adapter must supply a sourced choice. Hot/cold
 needs its source target selection and device/Jorral route as well.
+Before wiring hot/cold, separate the guardian victory attributes from its target
+selection: that target also needs CLUE_TASK_KEY. Append dedicated guardian fields
+without changing existing ItemAttribute ordinals, then clear them with step changes.
+The checkpoint is a coordinate/emote controller, not that combined integration.
 
 Nine staged tests passed after two harness/fixture corrections: add kotlin-reflect
 to the small runner's classpath, and capture the actor's actual World before a

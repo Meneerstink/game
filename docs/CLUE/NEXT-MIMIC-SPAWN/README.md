@@ -12,5 +12,7 @@ casket, active/duplicate entry, death during spawn, exact teleport, release once
 one failure on leave and separate accounts. No cache/client/server was operated.
 
 This is not the missing candy/minion/forward-step implementation or full Mimic
-acceptance. Promote these exact sources after the frozen integration finishes,
-then include MimicEncounterTests in the next narrow Gradle gate.
+acceptance. These sources were promoted after the frozen integration finished,
+with an additional recursive-entry/dead-player guard and regression. The runtime
+version is covered by the pending 14-class continuation Gradle gate. These
+checkpoint files retain the exact earlier six-test source for audit purposes.
