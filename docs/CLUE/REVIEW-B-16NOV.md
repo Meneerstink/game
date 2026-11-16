@@ -115,3 +115,21 @@ classes on4543frozen inputs. It is pending; do not count standalone checks as
 Gradle/script acceptance. Native source files/cfg/Gradle files stay unchanged.
 Further map research is outside the frozen runtime inputs. No apply/server/
 client/live/push. All client rendering, combat, audio and live gates stay Claude's.
+
+## Accepted restoration integration, B16-Nov23:20
+
+integration-20261116-213117 accepted:171 tests in32 explicitly selected classes
+(5core/27plugins),0failures/errors/skips/missing; all32 reports fresh and4543
+input hashes identical. Core/plugins/all scripts compile. BUILD SUCCESSFUL48m7s
+includes the buildslot/memory wait. Durable proof:
+validation/integration-20261116-213117.json. This validates guardian state,
+Mimic readiness,23STASH units/chart150nodes and26maps/1998components, through
+runtime commitd1381c985. Current source catalogue92,38of41original locations;
+54unique additions, not69. Detailed maps/scene proof: ORIGINAL-MAPS/README.md.
+
+The earlier integration210040 was canceled before compilation and is NOT an
+acceptance result. This accepted32-class run supersedes its pending status.
+After completion gradlew --status proved4644IDLE; jcmd4644GC.run increased free
+RAM from1.7GB to4.6GB. The daemon remains running. No active daemon/server/client
+was stopped. Fifteen additional unique steps remain staged outside production;
+their own tests must pass before promotion and a focused follow-up gate.

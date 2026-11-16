@@ -716,3 +716,15 @@ attributes retained, missing clue/box, wrong NPC, duplicate boxes, full inventor
 final casket, other account, death value100 vs clue20 and normal box floor timer.
 Boxes are additional inventory items, not replacements for their hard clue.
 Backend/identity tests13green; whole-branch Gradle/scripts acceptance follows.
+
+## Accepted restoration gate, B16-Nov23:20
+
+integration-20261116-213117:171tests/32fresh classes (5core/27plugins), zero
+failures/errors/skips/missing,4543unchanged source inputs; core/plugins/ALL
+scripts compile,48m7s including queue. Durable proof:
+validation/integration-20261116-213117.json. Validates source d1381c985 and
+predecessors: guardian state, Mimic readiness,23STASH units/chart150nodes,
+26maps/1998components. Supersedes the unaccepted canceled210040 checkpoint.
+Client/cache/live checks are still open. Item247/NPC10/STASH23 rosters unchanged;
+fifteen new unique NPC/coordinate steps are staged and need their own acceptance.
+No cache apply, server/client lifecycle, live or push action performed.
