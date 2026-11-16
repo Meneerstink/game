@@ -109,6 +109,7 @@ listOfNotNull(CoxIds.loc(29734), CoxIds.loc(29735)).forEach { hole ->
             wait(1)
             player.teleportTo(landing)
             player.unlock()
+            CoxMusic.floor(player, floor + 1, olm = last)
             player.message("<col=ff289d>$level level complete! Duration: </col><col=ff0000>${CoxRaids.duration(raid)}</col>")
             val reached = if (last) 4 else floor + 2
             if (reached > raid.progress) { raid.progress = reached; CoxPartyTab.updateAll(raid) }
@@ -127,6 +128,7 @@ CoxIds.loc(29995)?.let { rope ->
             wait(2)
             player.teleportTo(landing)
             player.unlock()
+            CoxMusic.floor(player, floor - 1)
         }
     }
 }

@@ -3022,3 +3022,9 @@ laid_to_rest:  # ToA burial chamber, rewards (OSRS 14672)
   index: 953
   areas:
     - region: 17000
+# CoX 16-11: OSRS Wiki Ascent (#527, cache 494) 'Unlocked near Mount Quidamortem' - the CoX entrance square (OSRS 4919, imported in place).
+# The raid floors play Upper Depths / Lower Depths / Fire in the Deep from the raid code (CoxMusic: one template square for every floor).
+ascent:
+  index: 1024
+  areas:
+    - region: 4919

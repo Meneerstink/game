@@ -69,6 +69,7 @@ object CoxRaids : KLogging() {
         val steps = CoxIds.loc(29778)
         if (multi != null && steps != null) replaceInRoom(raid, 0, layout.floors[0][0], multi, steps)
         player.teleportTo(spawnTile(raid))
+        CoxMusic.floor(player, 0)
         CoxPartyTab.open(player, raid)
         return raid
     }
@@ -87,6 +88,7 @@ object CoxRaids : KLogging() {
                 return null
             }
             player.teleportTo(spawnTile(existing))
+            CoxMusic.floor(player, 0)
             CoxPartyTab.open(player, existing)
             existing.world.players.entries.filterNotNull().filter { it !== player && existing.map.area.contains(it.tile) }
                 .forEach { CoxPartyTab.update(it, existing) }
