@@ -1,9 +1,11 @@
-# N462 OsrsInterfacePortTool, last transaction tx-20261115-210735 (merged) - generated, do not edit
+# N462 OsrsInterfacePortTool, last transaction tx-20261115-235858 (merged) - generated, do not edit
 interface	499	1196
 interface	500	1197
 interface	507	1198
 interface	513	1199
 interface	539	1200
+interface	271	1201
+interface	550	1202
 sprite	297	8922
 sprite	310	8923
 sprite	311	8924

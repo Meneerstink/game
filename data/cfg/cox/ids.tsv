@@ -158,6 +158,10 @@ item	20993	24903	Overload (+)(1)
 item	20994	24904	Overload (+)(2)
 item	20995	24905	Overload (+)(3)
 item	20996	24906	Overload (+)(4)
+item	21003	24936	Elder maul
+item	21004	24937	Elder maul (noted)
+item	21015	24938	Dinh's bulwark
+item	21016	24939	Dinh's bulwark (noted)
 item	21027	24907	Dark relic
 item	21036	24908	Mallignum root plank
 item	21037	24909	Small storage unit
@@ -168,6 +172,18 @@ item	21041	24913	Large storage unit
 item	21042	24914	Large storage unit
 item	21046	24915	Ancient tablet
 item	21047	24916	Torn prayer scroll
+item	25754	24924	Antipoison (-)(1)
+item	25755	24925	Antipoison (-)(2)
+item	25756	24926	Antipoison (-)(3)
+item	25757	24927	Antipoison (-)(4)
+item	25758	24928	Antipoison potion (1)
+item	25759	24929	Antipoison potion (2)
+item	25760	24930	Antipoison potion (3)
+item	25761	24931	Antipoison potion (4)
+item	25762	24932	Antipoison (+)(1)
+item	25763	24933	Antipoison (+)(2)
+item	25764	24934	Antipoison (+)(3)
+item	25765	24935	Antipoison (+)(4)
 loc	83	66595	IMPORT [cox-map]
 loc	85	66313	IMPORT [cox-entrance]
 loc	320	66314	IMPORT [cox-entrance]
@@ -437,6 +453,7 @@ loc	29766	66861	loc-tool tx-20261115-220742
 loc	29767	66845	loc-tool tx-20261115-220742
 loc	29768	66868	loc-tool tx-20261115-220742
 loc	29769	66674	IMPORT [cox-map]
+loc	29770	66904	loc-tool tx-20261115-235954
 loc	29771	66675	IMPORT [cox-map]
 loc	29772	66676	IMPORT [cox-map]
 loc	29773	66677	IMPORT [cox-map]
@@ -445,6 +462,8 @@ loc	29775	66877	loc-tool tx-20261115-220742
 loc	29776	66495	IMPORT [cox-entrance]
 loc	29777	66496	IMPORT [cox-entrance]
 loc	29778	66678	IMPORT [cox-map]
+loc	29779	66905	loc-tool tx-20261115-235954
+loc	29780	66906	loc-tool tx-20261115-235954
 loc	29781	66679	IMPORT [cox-map]
 loc	29782	66680	IMPORT [cox-map]
 loc	29783	66681	IMPORT [cox-map]
@@ -715,6 +734,7 @@ loc	33631	66569	IMPORT [cox-entrance]
 loc	33632	66570	IMPORT [cox-entrance]
 loc	33633	66571	IMPORT [cox-entrance]
 loc	33641	66572	IMPORT [cox-entrance]
+loc	37978	66907	loc-tool tx-20261115-235954
 loc	40377	66573	IMPORT [cox-entrance]
 loc	40379	66574	IMPORT [cox-entrance]
 loc	41754	66832	IMPORT [cox-map]
@@ -1109,6 +1129,9 @@ seq	8200	17607	classic
 seq	8456	17719	classic
 seq	8637	15907	classic
 seq	8639	15914	classic
+seq	11124	17725	classic
+seq	11125	17726	spotanim 2804
+seq	11126	17727	spotanim 2805
 seq	12093	17629	classic
 spotanim	40	3452	model 65801
 spotanim	645	3453	model 66664
@@ -1163,6 +1186,9 @@ spotanim	1365	3448	model 66661
 spotanim	1366	3449	model 66662
 spotanim	1367	3450	model 66663
 spotanim	1368	3451	model 65801
+spotanim	2804	3456	model 66724
+spotanim	2805	3457	model 3872
 synth	3821	10822	synth
 synth	3834	10272	synth
 synth	3952	10823	synth
+synth	8984	10824	synth
