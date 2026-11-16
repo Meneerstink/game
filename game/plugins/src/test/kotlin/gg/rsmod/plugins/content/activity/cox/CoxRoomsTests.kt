@@ -67,8 +67,9 @@ class CoxRoomsTests {
     }
 
     @Test
-    fun `potions cover 7 kinds x 3 strengths x 4 doses`() {
-        assertEquals(84, CoxPotions.DOSES.size)
+    fun `potions cover 8 kinds x 3 strengths x 4 doses`() {
+        // 7 kinds x 3 strengths x 4 doses + the antipoisons (Wiki Antipoison (-) / potion / (+), 16-11): 8 x 3 x 4.
+        assertEquals(96, CoxPotions.DOSES.size)
         assertEquals(CoxPotions.Kind.OVERLOAD, CoxPotions.DOSES.getValue(20996).kind)
         assertEquals(2, CoxPotions.DOSES.getValue(20996).tier)
         assertEquals(4, CoxPotions.DOSES.getValue(20996).doses)

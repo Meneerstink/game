@@ -13,7 +13,7 @@ import gg.rsmod.plugins.content.combat.specialattack.SpecialAttacks
  * Elder maul 'Pulverize': 50% energy, accuracy +25%, a successful hit lowers the target's CURRENT Defence by 35% (rounded down, stacking,
  * each from the current level). Against Tekton the first special from an elder maul always hits; a later miss still lowers his Defence
  * by 5%. Look: gameval HUMAN_ELDER_MAUL_SPEC 11124, SPOTANIM_ELDER_MAUL_SPECIAL 2804 on the player, _IMPACT 2805 on the target (batches
- * cox-maul-seq / cox-maul-fx). ONZEKER: the sound (no Wiki audio; the Dragon warhammer's smash sound is used, as its weaker twin).
+ * cox-maul-seq / cox-maul-fx); sound 8984 elder_maul_special_attack_composite_01 (OSRS Wiki 'List of sound IDs', batch cox-maul-synth).
  *
  * Dinh's bulwark 'Shield Bash': 50% energy, accuracy +20% rolled against crush defence; in multicombat up to 10 targets within 5 tiles
  * (11x11), the chosen target hit twice and the others once; every target hit loses 5% of its highest offensive stat (not on the primary's
@@ -36,7 +36,7 @@ CoxLootItems.local(21003)?.let { maul ->
         val victim = target
         CoxIds.seq(11124)?.let { player.animate(it) }
         CoxIds.spot(2804)?.let { player.graphic(it) }
-        player.playSound(Sfx.TZHAAR_KET_OM_CRUSH)
+        CoxIds.synth(8984)?.let { player.playSound(it) }
         val maxHit = MeleeCombatFormula.getMaxHit(player, victim)
         val firstOnTekton = victim is Npc && isTekton(victim) && tektonHit.add(victim)
         val landHit = firstOnTekton || MeleeCombatFormula.getAccuracy(player, victim, specialAttackMultiplier = 1.25) >= world.randomDouble()

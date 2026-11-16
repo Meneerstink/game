@@ -456,6 +456,8 @@ object OsrsFxImportTool {
             // CoX (tsps rsprox captures): sounds above ~3800 differ between the caches - room-crystal shatter 3821, Vasa's stomp 3834,
             // the Mystics' portal overlay 3952.
             "cox-synth" to listOf(3821, 3834, 3952),
+            // Elder maul special (OSRS Wiki 'List of sound IDs'): 8984 elder_maul_special_attack_composite_01 (swing + hit in one).
+            "cox-maul-synth" to listOf(8984),
             "breachsfx" to
                 listOf(
                     400, 404, 403, // demon_attack / demon_hit / demon_death (Porazdir, ADAPTED family)
