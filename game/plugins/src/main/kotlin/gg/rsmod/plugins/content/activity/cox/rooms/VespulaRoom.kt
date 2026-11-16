@@ -92,7 +92,11 @@ class VespulaRoom(raid: CoxRaid, floor: Int, laid: CoxLaidRoom) : CoxRoom(raid, 
             val near = (t.x - 16..t.x + size + 16).flatMap { x -> (t.z - 16..t.z + size + 16).map { z -> Tile(x, z, t.height) } }
                 // A tile a player can really stand on: open in all four directions (the ledge's edge tiles are half walls).
                 .filter { t2 -> contains(t2) && !world.collision.isClipped(t2) && DIRS.none { d -> world.collision.isBlocked(t2, d, false) } }
+                // Straight in front of the portal (aligned with one of its sides): a stray corner tile measured diagonally is not where
+                // players stand (16-11: 6434,16 counted 7 diagonally while the ledge in front was 8 away).
+                .filter { t2 -> t2.x in t.x until t.x + size || t2.z in t.z until t.z + size }
                 .minByOrNull { gap(t, it) } ?: return t
+            gg.rsmod.game.model.Trace.log(gg.rsmod.game.model.Trace.Cat.PLUGIN) { "CoX vespula portal at ${t.x},${t.z} nearest accessible ${near.x},${near.z} gap ${gap(t, near)}" }
             if (gap(t, near) <= 7) return t
             val sx = if (near.x < t.x) -1 else if (near.x > t.x + size - 1) 1 else 0
             val sz = if (near.z < t.z) -1 else if (near.z > t.z + size - 1) 1 else 0
