@@ -11,7 +11,7 @@ import gg.rsmod.plugins.api.ext.*
  * XP 33.5/50/66.5) and come out no stronger than the level allows. Golpar + stinkhorn / cicely / endarkened juice = elder / twisted / kodai;
  * buchu + the same = revitalisation / prayer enhance / Xeric's aid. Code help: tsps Herblore.ChambersOfXeric.js.
  * Messages (tsps): 'You clean the <herb>.', 'You mix your <herb> together with your <a> into a potion perfectly!'. Anim 363, sounds 3923 / 2608.
- * LATER: the noxifer antipoison (its potions 25754-25765 are not imported).
+ * Noxifer + cicely = antipoison (-) / antipoison potion / antipoison (+) at 60/75/90, XP 13.5/20/26.5 (Wiki item pages).
  */
 object CoxHerblore {
     data class Herb(val name: String, val grimy: Int, val clean: Int, val level: Int, val xp: Double)
@@ -38,6 +38,8 @@ object CoxHerblore {
         Mix("prayer enhance potion", BUCHU, CICELY, intArrayOf(20964, 20968, 20972), BUCHU_LEVELS, BUCHU_XP),
         Mix("xeric's aid potion", BUCHU, ENDARKENED, intArrayOf(20976, 20980, 20984), BUCHU_LEVELS, BUCHU_XP),
     )
+    /** Checked after the overload (noxifer is also the overload's herb): only when no overload set is held. */
+    val ANTIPOISON = Mix("antipoison", NOXIFER, CICELY, intArrayOf(25757, 25761, 25765), intArrayOf(60, 75, 90), doubleArrayOf(13.5, 20.0, 26.5))
     private val OVERLOAD_OUT = intArrayOf(20988, 20992, 20996)
     private val OVERLOAD_LEVELS = intArrayOf(60, 75, 90)
     private val OVERLOAD_XP = doubleArrayOf(33.5, 50.0, 66.5)
@@ -95,6 +97,16 @@ object CoxHerblore {
                 p.message("You mix your noxifer together with your elder potion, twisted potion and kodai potion into a potion perfectly!")
                 return
             }
+        }
+        val a = ANTIPOISON
+        if (tier(a.levels, level) >= 0 && has(p, a.herb.clean) && has(p, a.secondary) && has(p, WATER_GOURD)) {
+            val t = tier(a.levels, level)
+            take(p, a.herb.clean); take(p, a.secondary); take(p, WATER_GOURD)
+            CoxIds.item(a.fourDose[t])?.let { p.inventory.add(it, 1) }
+            p.animate(363); p.playSound(2608)
+            p.addXp(Skills.HERBLORE, a.xp[t])
+            p.message("You mix your noxifer together with your cicely into a potion perfectly!")
+            return
         }
         p.message("Nothing interesting happens.")
     }

@@ -18,13 +18,14 @@ import java.util.concurrent.ConcurrentHashMap
  * last sip.
  * ONZEKER (donor tsps Potions.plugin.js, not on the Wiki per strength): Elder/Twisted/Kodai flat+percent = the overload's per strength;
  * Revitalisation restores 6+20% / 8+25% / 11+30%; Prayer enhance a point every 6 ticks for 268 / 375 / 483 ticks; Xeric's aid +10/15/20%
- * Defence and Hitpoints, -5/7.5/10% of the others (+2). LATER: the raid's antipoisons (25754-25765, not imported) and potion points.
+ * Defence and Hitpoints, -5/7.5/10% of the others (+2). Antipoison (-) / potion / (+) = antipoison / superantipoison / antidote+ (Wiki). LATER: potion points (Wiki gives no numbers).
  */
 object CoxPotions {
     enum class Kind(val firstDose: IntArray) {
         ELDER(intArrayOf(20913, 20917, 20921)), TWISTED(intArrayOf(20925, 20929, 20933)), KODAI(intArrayOf(20937, 20941, 20945)),
         REVITALISATION(intArrayOf(20949, 20953, 20957)), PRAYER_ENHANCE(intArrayOf(20961, 20965, 20969)),
         XERICS_AID(intArrayOf(20973, 20977, 20981)), OVERLOAD(intArrayOf(20985, 20989, 20993)),
+        ANTIPOISON(intArrayOf(25754, 25758, 25762)),
     }
 
     data class Dose(val kind: Kind, val tier: Int, val doses: Int, val osrs: Int)
@@ -100,6 +101,13 @@ object CoxPotions {
                     val cur = p.skills.getCurrentLevel(s)
                     p.skills.setCurrentLevel(s, maxOf(0, cur - (2 + cur * down / 1000)))
                 }
+            }
+            Kind.ANTIPOISON -> {
+                gg.rsmod.plugins.content.mechanics.poison.Poison.cure(p)
+                p.timers[gg.rsmod.game.model.timer.POISON_IMMUNITY] = intArrayOf(
+                    gg.rsmod.plugins.content.items.potion.PotionEffects.ANTIPOISON_IMMUNITY_TICKS,
+                    gg.rsmod.plugins.content.items.potion.PotionEffects.SUPER_ANTIPOISON_IMMUNITY_TICKS,
+                    gg.rsmod.plugins.content.items.potion.PotionEffects.ANTIPOISON_PLUS_IMMUNITY_TICKS)[t]
             }
             Kind.OVERLOAD -> {
                 COMBAT.forEach { boost(p, it, FLAT[t], PERCENT[t]) }
