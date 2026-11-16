@@ -202,7 +202,7 @@ object OsrsLocImportTool {
                         }
                     multiloc?.let { (varbit, dest) -> println("PLAN multiloc $osrsId ${if (multilocVarp) "varp" else "varbit"} ${def.varbitId}->$varbit transforms=${def.transforms?.toList()}->${dest.toList()}") }
                     // The loc's idle animation points at the local id OsrsFxImportTool gave the OSRS sequence.
-                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc, { importedSeqs["seq:$it"] }, multilocVarp)
+                    val bytes = Rev667LocType.encodeFromModern(def, { modelIdMap.getValue(it) }, dropped, multiloc, multilocVarp) { importedSeqs["seq:$it"] }
                     check(Rev667LocType.decode(localId, bytes).allModels == def.models.map { modelIdMap.getValue(it) }) { "loc $osrsId model mismatch" }
                     val current = if (previous == null) null else library.data(FeroxImportTool.LOC_INDEX, localId ushr 8, localId and 0xFF)
                     mutations +=

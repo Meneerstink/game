@@ -408,8 +408,8 @@ class Rev667LocType(val id: Int) {
             modelRemap: (Int) -> Int,
             dropped: MutableList<String>,
             multiloc: Pair<Int, IntArray>? = null,
-            seqRemap: ((Int) -> Int?)? = null,
             multilocVarp: Boolean = false,
+            seqRemap: ((Int) -> Int?)? = null,
         ): ByteArray {
             val out = ByteArrayOutputStream()
             fun u8(v: Int) = out.write(v and 0xFF)
