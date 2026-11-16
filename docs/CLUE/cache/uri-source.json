@@ -1,0 +1,263 @@
+{
+  "sources": {
+    "Uri": {
+      "page": "Uri",
+      "revision": 15396490,
+      "revision_time": "2026-11-07T22:33:54Z",
+      "file": "Uri.wiki",
+      "sha256": "99029589305afb96fb33d8c2e6f22e270ee8867f201e35f5e059816ad949bcbf",
+      "url": "https://oldschool.runescape.wiki/w/Uri"
+    },
+    "Transcript:Uri": {
+      "page": "Transcript:Uri",
+      "revision": 15267517,
+      "revision_time": "2026-07-19T13:36:09Z",
+      "file": "Transcript_Uri.wiki",
+      "sha256": "d51d73a079635223b846019f6cea8f8eed0e154b8c34d7b47ad911b856bd75bf",
+      "url": "https://oldschool.runescape.wiki/w/Transcript%3AUri"
+    }
+  },
+  "phrases": [
+    "A great captain is always ready to change course.",
+    "Actions have consequences.",
+    "Can I have your teabag?",
+    "Can you stand me?",
+    "Have you found the key to the secret room?",
+    "I am the egg man, are you one of the egg men?",
+    "I believe that it is very rainy in Varrock.",
+    "I have a story about that.",
+    "I heard that the tall man fears only strong winds.",
+    "I quite fancy an onion.",
+    "In Canifis the men are known for eating much spam.",
+    "In the end, only the three-legged will survive.",
+    "It is possible to commit no mistakes and still lose.",
+    "Loser says what.",
+    "My magic carpet is full of eels.",
+    "Once, I was a poor man, but then I found a party hat.",
+    "Quickly! I've got a bee sticking out of my arm!",
+    "The slowest of fishermen catch the swiftest of fish.",
+    "*sneezes* What?",
+    "The sudden appearance of a deaf squirrel is most puzzling, comrade.",
+    "There were three goblins in a bar, which one left first?",
+    "Up in the north, I hear they keep milk in bags rather than buckets.",
+    "Want to see me bend a spoon?",
+    "What's cheese?",
+    "Would you like to buy a pewter spoon?"
+  ],
+  "player": "What?",
+  "refusal": "I do not believe we have any business, Comrade.",
+  "examine": "Uri Molotov - shaken, not stirred.",
+  "tiers": {
+    "easy": {
+      "source": 1774,
+      "local": 5141,
+      "sourceSha256": "48057a3a90f777d5318ba616a17a016df427cbfc7e1cdffc640fd2f709d164a1"
+    },
+    "medium": {
+      "source": 1775,
+      "local": 5142,
+      "sourceSha256": "5d97b414c1affab6b976197a794677c72b3326ed37afdd7df84d2bcafe12e511"
+    },
+    "hard": {
+      "source": 1776,
+      "local": 5143,
+      "sourceSha256": "9fa88982e2219a1fe64debc9b9dd75b63cb51fd5b362ce5f3b047860ce8d9731"
+    },
+    "elite": {
+      "source": 6584,
+      "local": 5143,
+      "sourceSha256": "7829550cd6c696270c6a3f5867fdbf17a27dcfb5b72432e6d0249c596a5ac2a0"
+    },
+    "master": {
+      "source": 7311,
+      "local": 5143,
+      "sourceSha256": "148ab66db0192f2bf4fec857ea44809350fc7e9488fdadd62e3e726056724b40"
+    }
+  },
+  "native": {
+    "5141": {
+      "sha256": "f0f4503115064819b9757524b6b7a9bee9f2a820eec8052b1e225c76ba9c23ce",
+      "definition": {
+        "name": "Uri",
+        "models": [
+          13705,
+          215,
+          10039,
+          292,
+          323,
+          170,
+          177,
+          8954,
+          265,
+          181,
+          5434
+        ],
+        "ops": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          39836,
+          39232,
+          39417
+        ],
+        "size": 1,
+        "recol": [
+          [
+            25238,
+            61347
+          ],
+          [
+            8741,
+            61347
+          ],
+          [
+            926,
+            61347
+          ],
+          [
+            7700,
+            61347
+          ],
+          [
+            11200,
+            61347
+          ],
+          [
+            6032,
+            61347
+          ]
+        ],
+        "bas": 4,
+        "level": 0
+      }
+    },
+    "5142": {
+      "sha256": "f0f4503115064819b9757524b6b7a9bee9f2a820eec8052b1e225c76ba9c23ce",
+      "definition": {
+        "name": "Uri",
+        "models": [
+          13705,
+          215,
+          10039,
+          292,
+          323,
+          170,
+          177,
+          8954,
+          265,
+          181,
+          5434
+        ],
+        "ops": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          39836,
+          39232,
+          39417
+        ],
+        "size": 1,
+        "recol": [
+          [
+            25238,
+            61347
+          ],
+          [
+            8741,
+            61347
+          ],
+          [
+            926,
+            61347
+          ],
+          [
+            7700,
+            61347
+          ],
+          [
+            11200,
+            61347
+          ],
+          [
+            6032,
+            61347
+          ]
+        ],
+        "bas": 4,
+        "level": 0
+      }
+    },
+    "5143": {
+      "sha256": "f0f4503115064819b9757524b6b7a9bee9f2a820eec8052b1e225c76ba9c23ce",
+      "definition": {
+        "name": "Uri",
+        "models": [
+          13705,
+          215,
+          10039,
+          292,
+          323,
+          170,
+          177,
+          8954,
+          265,
+          181,
+          5434
+        ],
+        "ops": [
+          "Talk-to",
+          null,
+          null,
+          null,
+          null
+        ],
+        "heads": [
+          39836,
+          39232,
+          39417
+        ],
+        "size": 1,
+        "recol": [
+          [
+            25238,
+            61347
+          ],
+          [
+            8741,
+            61347
+          ],
+          [
+            926,
+            61347
+          ],
+          [
+            7700,
+            61347
+          ],
+          [
+            11200,
+            61347
+          ],
+          [
+            6032,
+            61347
+          ]
+        ],
+        "bas": 4,
+        "level": 0
+      }
+    }
+  },
+  "unresolved": {
+    "lifetimeTicks": "No pinned numeric source. Do not invent a timeout.",
+    "spawnAnimation": "No pinned Uri-specific spawn/vanish sequence; do not guess teleport IDs."
+  }
+}
